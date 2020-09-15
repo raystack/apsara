@@ -3,11 +3,11 @@
   <br>
     👋Welcome to APSARA Design System
   <br>
-</div>
-<p align="center">
+  <p align="center">
   <a href="#fire-overview">Overview</a> •
   <a href="#getting-started-with-apsara">Getting Started</a>
 </p>
+</div>
 
 ## :fire: Overview
 
