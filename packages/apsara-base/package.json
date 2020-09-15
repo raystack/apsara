@@ -1,0 +1,29 @@
+{
+  "name": "@apsara/base",
+  "version": "1.0.0",
+  "description": "A list of base components for apsara",
+  "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -d",
+    "dev": "tsc --watch",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://source.golabs.io/asgard/apsara"
+  }
+}

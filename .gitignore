@@ -3,3 +3,8 @@ lib
 .eslintcache
 *.log
 coverage
+
+# production
+/build
+/dist
+/packages/**/lib/
