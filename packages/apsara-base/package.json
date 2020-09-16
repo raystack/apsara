@@ -1,6 +1,6 @@
 {
   "name": "@apsara/base",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
   "description": "A list of base components for apsara",
   "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
   "homepage": "",
@@ -17,10 +17,11 @@
   "scripts": {
     "build": "tsc -d",
     "dev": "tsc --watch",
+    "prepare": "yarn run build",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.com/"
+    "registry": "https://npm.golabs.io/"
   },
   "repository": {
     "type": "git",

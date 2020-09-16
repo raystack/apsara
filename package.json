@@ -1,7 +1,7 @@
 {
   "name": "apsara",
+  "version": "1.0.0",
   "description": "APSARA is an experimental and work in progress design system written in TypeScript on top of Ant Design",
-  "private": true,
   "workspaces": [
     "packages/*"
   ],
@@ -11,7 +11,6 @@
     "clean": "lerna exec -- rimraf lib",
     "build": "lerna run build",
     "dev": "lerna run dev",
-    "publish": "lerna run build && lerna publish",
     "commit": "git-cz",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
