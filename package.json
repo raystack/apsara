@@ -2,6 +2,7 @@
   "name": "apsara",
   "version": "1.0.0",
   "description": "APSARA is an experimental and work in progress design system written in TypeScript on top of Ant Design",
+  "private": true,
   "workspaces": [
     "packages/*"
   ],
@@ -41,6 +42,7 @@
     "react": "^16.13.1",
     "react-docgen-typescript-loader": "^3.7.2",
     "react-dom": "^16.13.1",
+    "rollup": "^2.27.0",
     "style-loader": "^1.2.1",
     "styled-components": "^5.2.0",
     "typescript": "^4.0.2"

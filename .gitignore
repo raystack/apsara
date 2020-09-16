@@ -1,5 +1,7 @@
 node_modules
 lib
+esm
+cjs
 .eslintcache
 *.log
 coverage
