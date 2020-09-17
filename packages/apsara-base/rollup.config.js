@@ -6,7 +6,12 @@ import tsImportPluginFactory from "ts-import-plugin";
 const NODE_MODULES = path.resolve(__dirname, "../../node_modules");
 
 export default {
-  input: ["src/**/*.ts", "src/**/*.tsx"],
+  input: [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "!src/**/*.stories.[tj]s[x]",
+    "!src/**/*.test.[tj]s[x]",
+  ],
   /*
   ES Modules have a static module structure, which helps building tool that target ESM to perform tree shaking
   Note: Tree shaking is a process of dead code elimination where Bundlers will attempt to only bundle code 

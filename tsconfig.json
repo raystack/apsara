@@ -40,6 +40,6 @@
         "node_modules",
         "**/*.spec.ts",
         "**/*.stories.[tj]sx",
-        "**/*.test.[tj]s"
+        "**/*.test.[tj]sx"
     ]
 }

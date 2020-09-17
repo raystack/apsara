@@ -19,7 +19,10 @@
     "build": "rollup -c",
     "dev": "tsc --watch",
     "prepare": "yarn run build",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
+    "jest:cache": "jest --clearCache",
+    "jest:coverage": "jest --coverage"
   },
   "publishConfig": {
     "registry": "https://npm.golabs.io/"
