@@ -1,7 +1,7 @@
 <div align="center">
   <h1>APSARA</h1>
   <br>
-    👋Welcome to APSARA Design System
+    👋 Welcome to APSARA Design System
   <br>
   <p align="center">
   <a href="#fire-overview">Overview</a> •
@@ -34,14 +34,6 @@ yarn install
 
 to download and install all required packages and set up the yarn workspace.
 
-#### Launch development server for apsara examples
-
-```sh
-yarn install
-```
-
-To launch webpack-dev-server. Open http://localhost:8080/ in your favorite browser.
-
 #### Launch storybook
 
 ```sh
@@ -49,3 +41,11 @@ yarn storybook
 ```
 
 in order to run Storybook, Open http://localhost:6006/ in your favorite browser.
+
+### Testing
+
+```sh
+yarn test
+```
+
+in order to run test.
