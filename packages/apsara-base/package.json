@@ -22,7 +22,9 @@
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watch",
     "jest:cache": "jest --clearCache",
-    "jest:coverage": "jest --coverage"
+    "jest:coverage": "jest --coverage",
+    "lint": "eslint src --ext .js,.ts,.tsx",
+    "lint:fix": "eslint src --ext .js,.ts,.tsx --fix"
   },
   "publishConfig": {
     "registry": "https://npm.golabs.io/"
