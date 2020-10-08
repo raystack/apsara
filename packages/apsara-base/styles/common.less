@@ -1,0 +1,231 @@
+@import 'variable';
+@import 'mixins';
+
+// ---------------------------------
+//            Utilities
+// ---------------------------------
+.media-full {
+  width: 100%;
+}
+
+.media-max {
+  max-width: 100%;
+}
+
+.u-pull-right {
+  float: right;
+}
+
+.u-mr-default {
+  margin-right: 20px;
+}
+
+.u-full-width {
+  width: 100%;
+}
+
+// MAIN
+// contentWrapper is used by old app ui
+.main__container,
+.contentWrapper {
+  height: calc(100vh - @layout-header-height);
+  overflow-y: auto;
+  width: 100%;
+
+  &>div,
+  &>section {
+    padding: 40px 40px 0px;
+  }
+}
+
+// Header section for Firehose, Topic Details page
+.details__wrapper {
+  padding: 32px 40px !important;
+}
+
+.details__wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .ant-tabs {
+    flex: auto;
+  }
+
+  .ant-tabs-content {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .log-container {
+    height: 100%;
+  }
+}
+
+.daggerViewBodyWrapper {
+  .log-container {
+    .log-viewer {
+      position: relative;
+    }
+  }
+}
+
+.details--header {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  height: 24px;
+
+  .action__container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .action__container--item {
+    margin-left: 32px;
+    display: flex !important;
+    align-items: center;
+
+    &:last-child {
+      padding-right: 2px;
+    }
+
+    .ant-switch-small.ant-switch-checked .ant-switch-handle {
+      left: calc(100% - 12px - 2px) !important;
+    }
+
+  }
+}
+
+.modal__footer--actions {
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #e5e5e5;
+  background-color: white;
+  padding: 16px 24px;
+  left: 0;
+  right: 0;
+
+  button {
+    height: 40px;
+    min-width: 120px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  color: fade(@black, 20%) !important;
+}
+
+// Right sidebar wrapper
+.rightSidebarWrapper {
+  margin-top: 100px;
+  padding-left: 48px;
+  position: fixed;
+  width: @datlantis-right-sidebar-width;
+
+  .btn-create {
+    font-size: 16px;
+    width: 100%;
+    height: 40px;
+  }
+
+  .description {
+    .Text();
+    margin-top: 24px;
+    line-height: 16px;
+  }
+}
+
+.RightSideBar {
+  padding-right: 0 !important;
+  border-right: 1px solid #e6e6e6;
+}
+
+@editor-border: 1px solid rgb(229, 229, 229);
+
+.right-sidebar {
+  overflow: scroll;
+  height: calc(100vh - 64px);
+
+  .right-sidebar__header {
+    .Text(@size: @datlantis-size-md, @fade: 70%, @ls: 0.4px);
+    display: flex;
+    width: 100%;
+    border-bottom: @editor-border;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 @datlantis-size-md;
+    height: 40px;
+  }
+
+  .right-sidebar__close-btn {
+    .Text(@size: 30px);
+    cursor: pointer;
+  }
+
+  .right-sidebar__heading {
+    >h4 {
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+
+  .right-sidebar__body {
+    line-height: 16px;
+    padding: @datlantis-size-lg @datlantis-size-md;
+
+    .contents {
+      margin-bottom: @datlantis-size-lg;
+
+      &> :first-child {
+        .Text(@size: @datlantis-font-sm, @fade: 70%, @ls: 0px);
+        font-weight: bold;
+        margin-bottom: @datlantis-size-sm;
+      }
+
+      &> :last-child {
+        word-break: break-word;
+        .Text(@size: @datlantis-font-sm, @fade: 70%, @ls: 0px);
+      }
+
+      &.row {
+        display: flex;
+
+        div {
+          word-break: break-word;
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
+// Color
+.red {
+  background-color: @red-6  !important;
+}
+
+.yellow {
+  background-color: #f9a63f !important;
+}
+
+.green {
+  background-color: #70d5a4 !important;
+}
+
+.gray {
+  background-color: fade(@border-color-base, 80) !important;
+}
+
+.hover-link {
+  color: inherit;
+
+  &:hover {
+    color: @primary-color;
+  }
+}

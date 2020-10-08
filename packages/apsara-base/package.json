@@ -36,9 +36,12 @@
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "antd": "^4.6.4",
+    "react-window": "^1.8.5",
     "styled-components": "^5.2.0"
   },
   "devDependencies": {
+    "@types/react-window": "^1.8.2",
+    "rc-resize-observer": "^0.2.5",
     "rollup-plugin-multi-input": "^1.1.1",
     "rollup-plugin-typescript2": "^0.27.2",
     "ts-import-plugin": "^1.6.6"

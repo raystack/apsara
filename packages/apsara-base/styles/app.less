@@ -1,0 +1,26 @@
+@import 'variable';
+@import 'font';
+@import 'common';
+@import 'antd-overrides';
+
+html,
+body {
+  min-height: 100%;
+  overflow: hidden;
+  line-height: 1;
+  .scrollbar();
+}
+
+.MainContent {
+  padding: 40px;
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+
+.padding0 {
+  padding: 0 !important;
+}
+
+.paddingBottom {
+  padding-bottom: 20px !important;
+}
