@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>4740cc4f-f46c-4f54-9b14-555b63f0dc7b@1.00x</title>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/stats">
+            <g id="Icons/background" fill="currentColor" fill-opacity="0">
+                <rect id="Rectangle" x="0" y="0" width="24" height="24" rx="2"></rect>
+            </g>
+            <g id="equalizer-24px" transform="translate(4.000000, 4.000000)" fill="currentColor">
+                <path d="M6.16666667,15.3333333 L9.83333333,15.3333333 L9.83333333,0.666666667 L6.16666667,0.666666667 L6.16666667,15.3333333 Z M0.666666667,15.3333333 L4.33333333,15.3333333 L4.33333333,8 L0.666666667,8 L0.666666667,15.3333333 Z M11.6666667,5.25 L11.6666667,15.3333333 L15.3333333,15.3333333 L15.3333333,5.25 L11.6666667,5.25 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

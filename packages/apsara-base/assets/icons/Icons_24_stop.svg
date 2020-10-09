@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 61 (101010) - https://sketch.com -->
+    <title>0c650a6b-3700-416c-ab06-2c8e2edfdf7f@1.00x</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/24/stop">
+            <g id="stop-24px-(1)">
+                <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                <g id="Group" transform="translate(4.000000, 4.000000)">
+                    <circle id="Oval" fill="currentColor" cx="8" cy="8" r="8"></circle>
+                    <path d="M10.8947917,5.06666667 C11.0093756,5.06666667 11.0666667,5.12395776 11.0666667,5.23854167 L11.0666667,10.8947917 C11.0666667,11.0093756 11.0093756,11.0666667 10.8947917,11.0666667 L5.23854167,11.0666667 C5.12395776,11.0666667 5.06666667,11.0093756 5.06666667,10.8947917 L5.06666667,5.23854167 C5.06666667,5.12395776 5.12395776,5.06666667 5.23854167,5.06666667 L10.8947917,5.06666667 Z" id="" fill="#FFFFFF" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

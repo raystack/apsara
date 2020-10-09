@@ -1,10 +1,15 @@
 import React from "react";
 
 import Button from "./Button";
+import Text from "../Text";
 
 export default {
-    title: "Button",
+    title: "General/Button",
     component: Button,
 };
 
-export const Text = () => <Button type="primary">Button</Button>;
+export const Primary = () => (
+    <Button type="primary">
+        <Text size={11}>Hello</Text>
+    </Button>
+);

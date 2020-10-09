@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 61.2 (101010) - https://sketch.com -->
+    <title>d9c91bcb-5478-48bd-8d50-0a4fe4b1de8c@1.00x</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/24/notification">
+            <g id="notification_important-24px">
+                <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                <path d="M16.7692308,14.8846154 L16.7692308,11.0384615 C16.7692308,8.67692308 15.5076923,6.7 13.3076923,6.17692308 L13.3076923,5.65384615 C13.3076923,5.01538462 12.7923077,4.5 12.1538462,4.5 C11.5153846,4.5 11,5.01538462 11,5.65384615 L11,6.17692308 C8.79230769,6.7 7.53846154,8.66923077 7.53846154,11.0384615 L7.53846154,14.8846154 L6,16.4230769 L6,17.1923077 L18.3076923,17.1923077 L18.3076923,16.4230769 L16.7692308,14.8846154 Z M12.1538462,19.5 C13,19.5 13.6923077,18.8076923 13.6923077,17.9615385 L10.6153846,17.9615385 C10.6153846,18.8076923 11.3,19.5 12.1538462,19.5 Z" id="Shape" fill="currentColor"></path>
+            </g>
+        </g>
+    </g>
+</svg>

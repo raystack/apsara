@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="32px" viewBox="0 0 33 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 61 (101010) - https://sketch.com -->
+    <title>3c8af500-6bf7-46eb-aa4f-4f9db9ecda3c@1.00x</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/32/daggers" transform="translate(0.000000, 0.000000)" fill-rule="nonzero">
+            <g id="Icon_Acquisition" transform="translate(5.000000, 8.000000)">
+                <rect id="Rectangle" fill="currentColor" x="0" y="0" width="4.375" height="4.41176471"></rect>
+                <rect id="Rectangle-Copy-41" fill="currentColor" x="0" y="10.5882353" width="4.375" height="4.41176471"></rect>
+                <ellipse id="Oval-Copy-18" fill="currentColor" opacity="0.5" cx="14.4375" cy="7.5" rx="6.5625" ry="6.61764706"></ellipse>
+                <ellipse id="Oval" fill="currentColor" cx="14.4375" cy="7.5" rx="3.0625" ry="3.08823529"></ellipse>
+                <path d="M2.625,13.2352941 C3.20833333,9.24836601 7.58333333,7.47639797 15.75,7.91938998" id="Path-9" stroke="currentColor"></path>
+                <path d="M2.625,7.94117647 C3.20833333,2.64705882 7.58333333,0.294117647 15.75,0.882352941" id="Path-9-Copy" stroke="currentColor" transform="translate(9.187500, 4.367647) scale(1, -1) translate(-9.187500, -4.367647) "></path>
+            </g>
+        </g>
+    </g>
+</svg>

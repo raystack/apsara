@@ -1,5 +1,6 @@
 import React from "react";
 import { Table as AntTable, Empty } from "antd";
+import { TableProps } from "antd/lib/table";
 
 const EmptyComponent = () => {
     return (
@@ -11,13 +12,13 @@ const EmptyComponent = () => {
 };
 
 import "./Table.style.less";
-interface TableProps {
+
+interface ITableProps extends TableProps<any> {
     items: Record<string, unknown>[];
-    selectedRowId: number | null;
-    onRowClick: () => null;
-    alternate: boolean;
-    alternateHover: boolean;
-    rowKey: string;
+    selectedRowId?: number | null;
+    onRowClick?: (event: any, rowIndexData: any) => null;
+    alternate?: boolean;
+    alternateHover?: boolean;
 }
 
 const Table = ({
@@ -28,7 +29,7 @@ const Table = ({
     alternate,
     alternateHover,
     ...props
-}: TableProps) => {
+}: ITableProps) => {
     return (
         <AntTable
             dataSource={items}

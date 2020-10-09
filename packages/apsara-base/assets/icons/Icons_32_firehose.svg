@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="32px" viewBox="0 0 33 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 61 (101010) - https://sketch.com -->
+    <title>c8afd4f9-2caa-4c3b-b5ae-1913cbc04bcf@1.00x</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/32/firehose" transform="translate(0.000000, 0.000000)" fill-rule="nonzero">
+            <g id="Icon_Real-Time" transform="translate(5.000000, 7.000000)">
+                <rect id="Rectangle" fill="currentColor" opacity="0.5" x="0" y="7.2" width="18.375" height="10.8" rx="5.4"></rect>
+                <ellipse id="Oval" fill="currentColor" cx="12.25" cy="9" rx="8.75" ry="9"></ellipse>
+                <polyline id="Path-7" stroke="#B0B3BC" stroke-width="2" stroke-linecap="round" points="17.5 9.9 11.375 9.9 11.375 3.6"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

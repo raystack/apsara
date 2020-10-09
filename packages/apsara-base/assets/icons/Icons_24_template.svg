@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 61 (101010) - https://sketch.com -->
+    <title>f871594f-98f4-4811-be49-53550b8b2b55@1.00x</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/24/template">
+            <g id="note_add-24px">
+                <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                <path d="M14,4 L7.6,4 C6.72,4 6.008,4.72 6.008,5.6 L6,18.4 C6,19.28 6.712,20 7.592,20 L17.2,20 C18.08,20 18.8,19.28 18.8,18.4 L18.8,8.8 L14,4 Z M13.2,9.6 L13.2,5.2 L17.6,9.6 L13.2,9.6 Z" id="Shape" fill="currentColor"></path>
+            </g>
+        </g>
+    </g>
+</svg>

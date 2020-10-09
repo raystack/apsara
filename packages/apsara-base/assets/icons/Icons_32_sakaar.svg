@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 61 (101010) - https://sketch.com -->
+    <title>2cf4fcc7-54bf-49ca-8527-3fe97172769d@1.00x</title>
+    <desc>Created with sketchtool.</desc>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/32/sakaar" fill-rule="nonzero">
+            <g id="Icon_Conversions" transform="translate(9.000000, 7.000000)">
+                <line x1="0.4375" y1="13.752" x2="13.125" y2="3.6" id="Line-7" stroke="currentColor" stroke-width="3" stroke-linecap="square"></line>
+                <path d="M4.375,7.2 C6.30875,7.2 7.875,5.589 7.875,3.6 C7.875,1.611 6.30875,0 4.375,0 C2.44125,0 0.875,1.611 0.875,3.6 C0.875,5.589 2.44125,7.2 4.375,7.2 Z" id="Path" fill="currentColor"></path>
+                <path d="M9.625,17.352 C11.55875,17.352 13.125,15.741 13.125,13.752 C13.125,11.763 11.55875,10.152 9.625,10.152 C7.69125,10.152 6.125,11.763 6.125,13.752 C6.125,15.741 7.69125,17.352 9.625,17.352 Z" id="Path-Copy" fill="currentColor"></path>
+            </g>
+        </g>
+    </g>
+</svg>

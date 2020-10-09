@@ -1,20 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 import { VariableSizeGrid as Grid } from "react-window";
 import ResizeObserver from "rc-resize-observer";
+import { TableProps } from "antd/lib/table";
 
 import Table from "./Table";
 
 const DEFAULT_HEIGHT = 700;
 
-interface IVirtualTable {
-    columns: Record<string, unknown>[];
-    items: Record<string, unknown>[];
-    selectedRowId: number | null;
-    scroll: any;
-    onRowClick: () => null;
+interface IVirtualTable extends TableProps<any> {
+    columns: any[];
+    items: any[];
+    selectedRowId?: number | null;
+    scroll?: any;
+    onRowClick?: (event: any, rowIndexData: any) => null;
 }
-const VirtualTableComponent = (props: IVirtualTable) => {
-    const { columns = [], scroll, selectedRowId = null } = props;
+const VirtualTableComponent = ({
+    columns = [],
+    scroll,
+    selectedRowId = null,
+    onRowClick = () => null,
+    ...props
+}: IVirtualTable) => {
     const [tableWidth, setTableWidth] = useState(0);
 
     const widthColumnCount = columns.filter(({ width }) => !width).length;
@@ -88,7 +94,7 @@ const VirtualTableComponent = (props: IVirtualTable) => {
               ${columnIndex === mergedColumns.length - 1 ? "virtual-table-last-child" : ""} 
               ${rowIndexData?.id === selectedRowId ? "highlightRow" : ""}`}
                             style={style}
-                            onClick={(event) => props.onRowClick(event, rowIndexData)}
+                            onClick={(event) => onRowClick(event, rowIndexData)}
                         >
                             {columnIndexData?.render
                                 ? columnIndexData.render(rowIndexData[columnIndexData.dataIndex], rowIndexData)
@@ -106,12 +112,15 @@ const VirtualTableComponent = (props: IVirtualTable) => {
             }}
         >
             <Table
+                {...props}
+                scroll={scroll}
+                selectedRowId={selectedRowId}
                 columns={mergedColumns}
+                onRowClick={onRowClick}
                 pagination={false}
                 components={{
                     body: renderVirtualList,
                 }}
-                {...props}
             />
         </ResizeObserver>
     );
