@@ -5,6 +5,7 @@ import tsImportPluginFactory from "ts-import-plugin";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
 import rollupPostcssLessLoader from "rollup-plugin-postcss-webpack-alias-less-loader";
+import svgr from "@svgr/rollup";
 import Theme from "./theme";
 
 export default {
@@ -61,5 +62,6 @@ export default {
                 }),
             ],
         }),
+        svgr(),
     ],
 };

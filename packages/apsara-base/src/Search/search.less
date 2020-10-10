@@ -1,0 +1,145 @@
+@import '../../styles/variable';
+@import '../../styles/mixins';
+
+.search__wrapper {
+  display: flex;
+  position: relative;
+
+  &:first-child {
+    flex: 1;
+  }
+
+  &> :not(:first-child) {
+    margin-left: 12px;
+  }
+
+  .ant-input-affix-wrapper {
+    width: auto;
+    flex: 1;
+  }
+
+  .ant-input-affix-wrapper .ant-input:not(:last-child) {
+    padding-left: 30px;
+  }
+
+  .searchfilter,
+  .search {
+    position: absolute;
+    transform: translateY(50%);
+  }
+
+  input {
+    .Text(@fade: 70%, @size: 10px);
+  }
+
+  .input-placeholder( {
+      .Text(@fade: 40%, @size: 10px)
+    }
+
+  ) !important;
+
+  &.secondary {
+    .ant-input {
+      border: none !important;
+      background: @background-color-base;
+      transition: border-color 0.5s ease;
+    }
+  }
+}
+
+.RightSideBar .search__wrapper {
+  &> :last-child {
+
+    margin-right: 40px !important;
+  }
+}
+
+.header--wrapper--search {
+  display: inline-flex;
+  margin-right: @datlantis-size-lg;
+
+  input {
+    .Text();
+  }
+
+  .input-placeholder( {
+      .Text(@fade: 40%)
+    }
+
+  ) !important;
+}
+
+.navbar--search-form {
+  display: inline-flex;
+  position: relative;
+  margin: 16px 0;
+}
+
+.navbar--search {
+  min-width: 400px;
+  max-width: 700px;
+  width: 35vw;
+
+  .ant-input {
+    border: 1px solid rgb(204, 204, 204) !important;
+    border-radius: 2px;
+    background: @datlantis-bg-color  !important;
+    .Text(@size: 14px);
+    padding: 0px 32px !important;
+    height: 30px;
+  }
+
+  input:focus {
+    border: 1px solid @datlantis-bg-color  !important;
+    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  .search {
+    transform: translateY(-50%);
+    top: 50%;
+  }
+
+  .input-placeholder( {
+      .Text(@fade: 40%, @size: 14px)
+    }
+
+  ) !important;
+}
+
+.navbar--search-dropdown {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  margin: 0 !important;
+  background-color: @datlantis-bg-color;
+  box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
+  padding: 0 12px 12px 12px;
+  max-height: 308px;
+  overflow: auto;
+  z-index: 10;
+}
+
+.navbar--search-dropdown-item {
+  position: relative;
+  padding: 12px 0 6px 0;
+  margin: 0 !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  .Text(@size: 14px, @fade: 70%);
+  line-height: 1;
+
+  span:not(.anticon) {
+    margin-left: 8px !important;
+  }
+
+  .search {
+    position: relative;
+    transform: none;
+  }
+}
+
+.navbar--search-dropdown-active,
+.navbar--search-dropdown-item:hover {
+  .Text(@size: 14px, @fade: 90%);
+}
