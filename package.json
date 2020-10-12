@@ -13,7 +13,7 @@
     "build": "lerna run build",
     "dev": "lerna run dev",
     "commit": "git-cz",
-    "storybook": "start-storybook -s ./ -p 6006",
+    "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "test": "lerna run test",
     "lint": "lerna run lint",

@@ -1,6 +1,6 @@
 {
   "name": "@apsara/base",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "A list of base components for apsara",
   "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
   "homepage": "",
@@ -33,9 +33,14 @@
     "type": "git",
     "url": "https://source.golabs.io/asgard/apsara"
   },
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "antd": "^4.6.4",
+    "ramda": "^0.27.1",
     "react-window": "^1.8.5",
     "styled-components": "^5.2.0"
   },
