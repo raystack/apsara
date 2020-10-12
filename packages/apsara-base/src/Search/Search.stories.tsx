@@ -7,4 +7,9 @@ export default {
     component: Search,
 };
 
-export const Keyboard = () => <Search className="paddingBottom" />;
+export const search = () => (
+    <>
+        <Search className="paddingBottom" />
+        <Search value="12345" />
+    </>
+);
