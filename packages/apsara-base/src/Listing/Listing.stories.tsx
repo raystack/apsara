@@ -10,47 +10,45 @@ export default {
 export const Keyboard = () => (
     <Listing
         loading={false}
-        list={[
-            {
-                id: 1,
-                name: "first",
-                class: "active",
+        list={new Array(100).fill(0).map((_, index) => {
+            return {
+                id: index,
+                name: `name ${index}`,
+                class: index % 2 === 0 ? "active" : "inactive",
+                address: "10 Downing Street",
+            };
+        })}
+        tableProps={{
+            getColumnList: () => {
+                return [
+                    {
+                        title: "Name",
+                        dataIndex: "name",
+                        key: "name",
+                    },
+                    {
+                        title: "Class",
+                        dataIndex: "class",
+                        key: "class",
+                    },
+                ];
             },
-            {
-                id: 2,
-                name: "second",
-                class: "inactive",
-            },
-            {
-                id: 3,
-                name: "third",
-                class: "inactive",
-            },
-        ]}
-        getColumnList={() => {
-            return [
-                {
-                    title: "Name",
-                    dataIndex: "name",
-                    key: "name",
-                },
-                {
-                    title: "Class",
-                    dataIndex: "class",
-                    key: "class",
-                },
-            ];
+            scroll: { y: 300, x: "100vw" },
         }}
-        filterFieldList={[
-            {
-                name: "Status",
-                data: ["active", "inactive"].map((d) => {
-                    return { label: d, value: d.toLowerCase() };
-                }),
-                slug: "class",
-            },
-        ]}
-        searchFields={["name", "class"]}
+        filterProps={{
+            filterFieldList: [
+                {
+                    name: "Status",
+                    data: ["active", "inactive"].map((d) => {
+                        return { label: d, value: d.toLowerCase() };
+                    }),
+                    slug: "class",
+                },
+            ],
+        }}
+        searchProps={{
+            searchFields: ["name", "class"],
+        }}
         resourceName="beast"
         resourcePath="/beast"
     />

@@ -3,25 +3,19 @@ import React from "react";
 import Search from "../Search";
 import Filters from "./Filters";
 import { ListLoader } from "../Loader";
-import VirtualisedTable from "../Table";
+import VirtualisedTable from "../Table/VirtualisedTable";
 import useSearchFilter from "./useSearchFilter";
 
 interface ListingProps {
     list: any[];
     loading: boolean;
-    getColumnList: any;
-    filterFieldList: any[];
-    searchFields: any;
     resourceName?: string;
     resourcePath?: string;
     rowKey?: string;
-    wrapLink?: boolean;
-    handleRowClick?: () => null;
-    searchPlaceholder?: string;
     className?: string;
-    selectedRowId?: number;
-    disabled?: boolean;
-    extraTableProps?: any;
+    tableProps: { getColumnList: any; handleRowClick?: () => null; selectedRowId?: number };
+    filterProps: { filterFieldList: any[] };
+    searchProps: { searchPlaceholder?: string; searchFields: any[]; disabled?: boolean };
     renderExtraFilters?: any;
     renderHeader?: any;
     renderBody?: any;
@@ -30,17 +24,11 @@ interface ListingProps {
 const Listing = ({
     list = [],
     loading = false,
-    getColumnList = () => [],
-    filterFieldList,
     rowKey,
-    wrapLink = true,
-    handleRowClick = () => null,
-    searchFields,
-    searchPlaceholder,
     className = "",
-    selectedRowId,
-    extraTableProps = {},
-    disabled = false,
+    filterProps: { filterFieldList = [] },
+    searchProps: { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps },
+    tableProps: { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps },
     renderExtraFilters = null,
     renderHeader = null,
     renderBody = null,
@@ -56,17 +44,8 @@ const Listing = ({
         filteredList,
         filteredFieldData,
     } = useSearchFilter({ list, searchFields });
-    const columns = getColumnList(resourcePath, sortedInfo);
 
-    // ? this wraps a link on the whole row so that user can open resources on a new tab
-    // ? recommended way to wrap a link on a table row is to wrap each column with a link ie: <td> <a> {children} </a></td>
-    if (wrapLink) {
-        columns.forEach((column: any) => {
-            const { render: childRender } = column;
-            // eslint-disable-next-line no-param-reassign
-            column.render = (text: string, rowData: any) => (childRender ? childRender(text, rowData) : text);
-        });
-    }
+    const columns = getColumnList(resourcePath, sortedInfo);
 
     if (loading) return <ListLoader className={className} />;
 
@@ -78,6 +57,7 @@ const Listing = ({
                 value={searchTerm}
                 placeholder={searchPlaceholder}
                 disabled={disabled}
+                {...extraSearchProps}
             >
                 {filterFieldList && (
                     <Filters
