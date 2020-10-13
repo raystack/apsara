@@ -1,6 +1,6 @@
 {
   "name": "@apsara/base",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.7",
   "description": "A list of base components for apsara",
   "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
   "homepage": "",
@@ -13,7 +13,9 @@
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "styles",
+    "assets"
   ],
   "scripts": {
     "build": "rollup -c",
