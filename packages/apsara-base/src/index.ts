@@ -5,6 +5,8 @@ import Search from "./Search";
 import Table from "./Table";
 import VTable from "./Table/VirtualisedTable";
 import Text from "./Text";
+import Tag from "./Tag";
+import FormBuilder from "./FormBuilder";
 
 import DEFAULT_THEME from "./theme";
-export { DEFAULT_THEME, Button, Icon, Listing, Search, Table, VTable, Text };
+export { DEFAULT_THEME, Button, Icon, Listing, Search, Table, VTable, Text, Tag, FormBuilder };
