@@ -6,9 +6,22 @@ import Table from "./Table";
 import VTable from "./Table/VirtualisedTable";
 import Text from "./Text";
 import Tag from "./Tag";
-import Error from "./ErrorScreen";
+import ErrorScreen from "./ErrorScreen";
 import notification from "./Notification";
 import FormBuilder from "./FormBuilder";
 
 import DEFAULT_THEME from "./theme";
-export { DEFAULT_THEME, Button, Icon, Listing, Search, Table, VTable, Text, Tag, FormBuilder, Error, notification };
+export {
+    DEFAULT_THEME,
+    Button,
+    Icon,
+    Listing,
+    Search,
+    Table,
+    VTable,
+    Text,
+    Tag,
+    FormBuilder,
+    ErrorScreen,
+    notification,
+};
