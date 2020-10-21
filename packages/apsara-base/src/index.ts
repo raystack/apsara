@@ -9,6 +9,8 @@ import Tag from "./Tag";
 import ErrorScreen from "./ErrorScreen";
 import notification from "./Notification";
 import FormBuilder from "./FormBuilder";
+import Learn from "./Learn";
+import Markdown from "./Markdown";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -24,4 +26,6 @@ export {
     FormBuilder,
     ErrorScreen,
     notification,
+    Learn,
+    Markdown,
 };
