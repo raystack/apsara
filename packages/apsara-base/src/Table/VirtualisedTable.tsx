@@ -42,6 +42,9 @@ const VirtualTableComponent = ({
                 }
             },
         });
+        Object.defineProperty(obj, "ownerDocument", {
+            get: () => document.body.ownerDocument,
+        });
 
         return obj;
     });
