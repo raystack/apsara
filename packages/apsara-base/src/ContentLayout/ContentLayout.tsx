@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "antd";
-import * as Theme from "../theme";
+import Theme from "../theme";
 
 const { Sider, Content } = Layout;
 const RIGHT_SIDEBAR_WIDTH = Theme["@datlantis-right-sidebar-width"];
