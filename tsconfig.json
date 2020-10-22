@@ -28,6 +28,7 @@
 
         /* Module Resolution Options */
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
 
