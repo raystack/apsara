@@ -11,6 +11,7 @@ import notification from "./Notification";
 import FormBuilder from "./FormBuilder";
 import Learn from "./Learn";
 import Markdown from "./Markdown";
+import ContentLayout from "./ContentLayout";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -28,4 +29,5 @@ export {
     notification,
     Learn,
     Markdown,
+    ContentLayout,
 };
