@@ -12,6 +12,7 @@ import FormBuilder from "./FormBuilder";
 import Learn from "./Learn";
 import Markdown from "./Markdown";
 import ContentLayout from "./ContentLayout";
+import Sidebar from "./Sidebar";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -30,4 +31,5 @@ export {
     Learn,
     Markdown,
     ContentLayout,
+    Sidebar,
 };

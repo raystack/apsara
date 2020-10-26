@@ -14,7 +14,7 @@
     "dev": "lerna run dev",
     "commit": "git-cz",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "build-storybook": "build-storybook -o build",
     "test": "lerna run test",
     "lint": "lerna run lint",
     "lint:fix": "lerna run lint:fix"
@@ -28,6 +28,7 @@
     "@babel/preset-typescript": "^7.10.4",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@storybook/addon-actions": "^6.0.21",
     "@storybook/addon-links": "^6.0.21",
     "@storybook/react": "^6.0.21",

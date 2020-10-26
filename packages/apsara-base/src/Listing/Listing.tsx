@@ -13,7 +13,7 @@ interface ListingProps {
     resourcePath?: string;
     rowKey?: string;
     className?: string;
-    tableProps: { getColumnList: any; handleRowClick?: () => null; selectedRowId?: number };
+    tableProps: { getColumnList: any; handleRowClick?: () => null; selectedRowId?: number; scroll: any };
     filterProps: { filterFieldList: any[] };
     searchProps: { searchPlaceholder?: string; searchFields: any[]; disabled?: boolean };
     renderExtraFilters?: any;

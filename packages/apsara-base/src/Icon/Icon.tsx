@@ -30,7 +30,6 @@ const CustomIcon = ({
                 color: !active ? "#cccc" : "#4d85f4",
                 fill: "#4d85f4",
                 fontSize: `${size}px`,
-                lineHeight: "10px",
                 ...styleOverride,
             }}
             onClick={onClick}
