@@ -64,7 +64,7 @@ module.exports = {
 
         config.module.rules.push({
             test: /.svg$/,
-            use: ["@svgr/webpack", "url-loader"],
+            use: ["@svgr/webpack"],
         });
         return config;
     },
