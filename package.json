@@ -14,7 +14,7 @@
     "dev": "lerna run dev",
     "commit": "git-cz",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook -o build",
+    "build-storybook": "build-storybook -o public",
     "test": "lerna run test",
     "lint": "lerna run lint",
     "lint:fix": "lerna run lint:fix"

@@ -14,5 +14,5 @@ pages:
     - yarn build-storybook --quiet
   artifacts:
     paths:
-      - build
+      - public
   when: manual
