@@ -9,9 +9,9 @@ cache:
 pages:
   stage: pages
   script:
-    - apt-get update && apt-get install libpng-dev -y --no-install-recommends
     - yarn install
-    - yarn build-storybook
+    - yarn build
+    - yarn build-storybook --quiet
   artifacts:
     paths:
       - build
