@@ -1,0 +1,18 @@
+image: "artifactory-gojek.golabs.io:6555/cx-node:12.13.0"
+
+stages:
+  - pages
+
+cache:
+  paths:
+    - node_modules/
+pages:
+  stage: pages
+  script:
+    - apt-get update && apt-get install libpng-dev -y --no-install-recommends
+    - yarn install
+    - yarn build-storybook
+  artifacts:
+    paths:
+      - build
+  when: manual
