@@ -3,21 +3,21 @@ import Icon from "../Icon";
 
 import "./style.less";
 
-type ModalProps = {
+type DrawerProps = {
     onClose?: () => void;
     open?: boolean;
     className?: string;
-    type?: "left" | "right";
+    position?: "left" | "right";
     children?: React.ReactNode;
 };
 
-const Modal = ({ onClose, open = false, children, className = "", type = "right" }: ModalProps) => {
+const Drawer = ({ onClose, open = false, children, className = "", position = "right" }: DrawerProps) => {
     if (!open) return null;
 
     return (
-        <div className="modal__container">
-            <div className="modal__container--overlay">
-                <div className={`modal__container--body ${className} ${type}`}>
+        <div className="drawer__container">
+            <div className="drawer__container--overlay">
+                <div className={`drawer__container--body ${className} ${position}`}>
                     <Icon name="cross" onClick={onClose} />
                     {children}
                 </div>
@@ -26,4 +26,4 @@ const Modal = ({ onClose, open = false, children, className = "", type = "right"
     );
 };
 
-export default Modal;
+export default Drawer;

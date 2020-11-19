@@ -13,7 +13,7 @@ import Learn from "./Learn";
 import Markdown from "./Markdown";
 import ContentLayout from "./ContentLayout";
 import Sidebar from "./Sidebar";
-import Modal from "./Modal";
+import Drawer from "./Drawer";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -33,5 +33,5 @@ export {
     Markdown,
     ContentLayout,
     Sidebar,
-    Modal,
+    Drawer,
 };

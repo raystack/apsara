@@ -5,7 +5,8 @@
   <br>
   <p align="center">
   <a href="#fire-overview">Overview</a> •
-  <a href="#getting-started-with-apsara">Getting Started</a>
+  <a href="#getting-started-with-apsara">Getting Started</a> •
+  <a target="_blank" href="https://asgard.pages.golabs.io/apsara/">StoryBook</a>
 </p>
 </div>
 
@@ -15,14 +16,14 @@ APSARA is an experimental and work in progress design system written in TypeScri
 
 list of tech stack used:
 
-- [ReactJs](https://facebook.github.io/react/) v16
-- [TypeScript](https://www.typescriptlang.org/) used to transpile TS code into javascript
-- [Antd Design](https://ant.design/) for base components
-- [Jest](https://jestjs.io/) and [Testing library](https://testing-library.com/) for unit/ui testing
-- [Husky](https://github.com/typicode/husky) for automate Git hooks
-- [Eslint](https://github.com/eslint/eslint) for code linting
-- [Prettier](https://prettier.io/) for code formatting
-- [Storybook](https://storybook.js.org/)
+-   [ReactJs](https://facebook.github.io/react/) v16
+-   [TypeScript](https://www.typescriptlang.org/) used to transpile TS code into javascript
+-   [Antd Design](https://ant.design/) for base components
+-   [Jest](https://jestjs.io/) and [Testing library](https://testing-library.com/) for unit/ui testing
+-   [Husky](https://github.com/typicode/husky) for automate Git hooks
+-   [Eslint](https://github.com/eslint/eslint) for code linting
+-   [Prettier](https://prettier.io/) for code formatting
+-   [Storybook](https://storybook.js.org/)
 
 ### Getting started with apsara
 
