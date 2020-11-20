@@ -3,7 +3,7 @@ const Theme = require("./theme");
 
 module.exports = {
     stories: ["../packages/**/*.stories.[tj]sx"],
-    addons: ["@storybook/addon-actions", "@storybook/addon-links"],
+    addons: ["@storybook/addon-actions", "@storybook/addon-links", "@storybook/addon-storysource", "@storybook/addon-docs"],
     typescript: {
         check: true,
         checkOptions: {},
