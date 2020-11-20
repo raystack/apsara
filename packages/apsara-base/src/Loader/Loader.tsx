@@ -3,17 +3,17 @@ import { Row, Col, Skeleton } from "antd";
 import "./style.less";
 
 interface ListLoaderProps {
-    className: string;
+    className?: string;
     rows?: number;
 }
-export const ListLoader = ({ className, rows = 20 }: ListLoaderProps) => {
+export const ListLoader = ({ className = "", rows = 20 }: ListLoaderProps) => {
     return <Skeleton className={className} active title={false} paragraph={{ rows, width: "100%" }} />;
 };
 
 interface EditorLoaderProps {
-    className: string;
+    className?: string;
 }
-export const EditorLoader = ({ className }: EditorLoaderProps) => {
+export const EditorLoader = ({ className = "" }: EditorLoaderProps) => {
     return <Skeleton className={className} active title={false} paragraph={{ rows: 5, width: "80%" }} />;
 };
 
