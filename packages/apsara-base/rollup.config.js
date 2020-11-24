@@ -7,6 +7,7 @@ import postcss from "rollup-plugin-postcss";
 import rollupPostcssLessLoader from "rollup-plugin-postcss-webpack-alias-less-loader";
 import svgr from "@svgr/rollup";
 import json from "@rollup/plugin-json";
+import url from "@rollup/plugin-url";
 
 import Theme from "./theme";
 
@@ -27,9 +28,16 @@ export default {
             sourcemap: true,
         },
     ],
-
     plugins: [
         multiInput(),
+        url({
+            // by default, rollup-plugin-url will not handle font files
+            include: ["**/*.woff", "**/*.woff2", "**/*.otf"],
+            // setting infinite limit will ensure that the files
+            // are always bundled with the code, not copied to /dist
+            limit: Infinity,
+            sourceDir: path.join(__dirname, "assets"),
+        }),
         postcss({
             use: [["less", { javascriptEnabled: true, modifyVars: Theme }]],
             loaders: [

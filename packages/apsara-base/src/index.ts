@@ -19,7 +19,7 @@ import { ListLoader, EditorLoader, DetailsLoader } from "./Loader";
 import Tabs from "./Tabs";
 import Title from "./Title";
 import Segments from "./Segments";
-
+import Provider from "./Provider";
 import DEFAULT_THEME from "./theme";
 export {
     DEFAULT_THEME,
@@ -46,4 +46,5 @@ export {
     Tabs,
     Title,
     Segments,
+    Provider,
 };

@@ -29,6 +29,7 @@
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-url": "^5.0.1",
     "@storybook/addon-actions": "^6.0.21",
     "@storybook/addon-docs": "^6.1.1",
     "@storybook/addon-links": "^6.0.21",
