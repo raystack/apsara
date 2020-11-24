@@ -17,6 +17,7 @@ import Drawer from "./Drawer";
 import Header from "./Header";
 import { ListLoader, EditorLoader, DetailsLoader } from "./Loader";
 import Tabs from "./Tabs";
+import Title from "./Title";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -42,4 +43,5 @@ export {
     EditorLoader,
     DetailsLoader,
     Tabs,
+    Title,
 };
