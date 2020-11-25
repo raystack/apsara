@@ -22,6 +22,7 @@ import Segments from "./Segments";
 import Provider from "./Provider";
 import Codeblock from "./Codeblock";
 import Popover from "./Popover";
+import ConfirmModal from "./ConfirmModal";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -54,4 +55,5 @@ export {
     Provider,
     Codeblock,
     Popover,
+    ConfirmModal,
 };
