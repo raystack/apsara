@@ -1,6 +1,6 @@
 export { notification } from "antd";
 import React from "react";
-import Theme from "../../theme";
+import Theme from "../theme";
 import { notification } from "antd";
 import Icon from "../Icon";
 
