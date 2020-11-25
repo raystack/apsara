@@ -15,6 +15,7 @@ export { default as refresh } from "../../assets/icons/Icons_refresh.svg";
 export { default as update } from "../../assets/icons/Icons_32_update.svg";
 export { default as cross } from "../../assets/icons/Icons_24_cross_outline.svg";
 export { default as copy } from "../../assets/icons/Icons_32_copy.svg";
+export { default as copy2 } from "../../assets/icons/Icons_Copy.svg";
 
 export { default as chevronright } from "../../assets/icons/Icons_32_chevron_outline_right.svg";
 export { default as searchfilter } from "../../assets/icons/Icons_20_search_filter.svg";

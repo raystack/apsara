@@ -7,7 +7,7 @@ import VTable from "./Table/VirtualisedTable";
 import Text from "./Text";
 import Tag from "./Tag";
 import ErrorScreen from "./ErrorScreen";
-import notification from "./Notification";
+import notification, { showError, showSuccess } from "./Notification";
 import FormBuilder from "./FormBuilder";
 import Learn from "./Learn";
 import Markdown from "./Markdown";
@@ -20,6 +20,7 @@ import Tabs from "./Tabs";
 import Title from "./Title";
 import Segments from "./Segments";
 import Provider from "./Provider";
+import Codeblock from "./Codeblock";
 import DEFAULT_THEME from "./theme";
 export {
     DEFAULT_THEME,
@@ -34,6 +35,8 @@ export {
     FormBuilder,
     ErrorScreen,
     notification,
+    showError,
+    showSuccess,
     Learn,
     Markdown,
     ContentLayout,
@@ -47,4 +50,5 @@ export {
     Title,
     Segments,
     Provider,
+    Codeblock,
 };
