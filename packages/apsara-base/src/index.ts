@@ -21,6 +21,8 @@ import Title from "./Title";
 import Segments from "./Segments";
 import Provider from "./Provider";
 import Codeblock from "./Codeblock";
+import Popover from "./Popover";
+
 import DEFAULT_THEME from "./theme";
 export {
     DEFAULT_THEME,
@@ -51,4 +53,5 @@ export {
     Segments,
     Provider,
     Codeblock,
+    Popover,
 };
