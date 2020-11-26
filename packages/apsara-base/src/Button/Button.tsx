@@ -1,5 +1,6 @@
 import { Button as AntButton, Tooltip } from "antd";
 import { NativeButtonProps } from "antd/lib/button/button";
+import { TooltipPlacement } from "antd/lib/tooltip";
 import * as React from "react";
 import styled from "styled-components";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -13,19 +14,7 @@ const Button: React.FC<NativeButtonProps> = styled(AntButton)`
 interface CustomButtonProps {
     className?: string;
     tooltipMessage?: string;
-    tooltipPlacement?:
-        | "left"
-        | "right"
-        | "top"
-        | "bottom"
-        | "topLeft"
-        | "topRight"
-        | "bottomLeft"
-        | "bottomRight"
-        | "leftTop"
-        | "leftBottom"
-        | "rightTop"
-        | "rightBottom";
+    tooltipPlacement?: TooltipPlacement;
     type?: "link" | "text" | "default" | "primary" | "ghost" | "dashed" | "barebone";
     styleOverride?: Record<string, string>;
     loading?: boolean;

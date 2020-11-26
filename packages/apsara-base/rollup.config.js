@@ -23,8 +23,13 @@ export default {
   */
     output: [
         {
-            dir: "lib",
+            dir: "lib/cjs",
             format: "cjs",
+            sourcemap: true,
+        },
+        {
+            dir: "lib/esm",
+            format: "esm",
             sourcemap: true,
         },
     ],
