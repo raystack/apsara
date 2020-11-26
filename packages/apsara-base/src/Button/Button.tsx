@@ -47,7 +47,7 @@ const CustomButton = ({
     iconSize = 24,
     children,
     ...props
-}: CustomButtonProps) => {
+}: Omit<NativeButtonProps, "type"> & CustomButtonProps) => {
     const IconComponent = () => {
         // ? --inline style is expected by antd
         if (loading) {
