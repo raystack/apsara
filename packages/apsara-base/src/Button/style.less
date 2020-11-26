@@ -1,0 +1,71 @@
+@import '../../styles/variable';
+@import '../../styles/mixins';
+
+.skeleton-btn {
+  display: flex;
+  align-items: center;
+  height: inherit;
+
+  &.barebone {
+    padding: 0px;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    font-size: 16px;
+    letter-spacing: 0.4px;
+    line-height: 16px;
+    color: @primary-color;
+    font-weight: bold;
+
+    &.ant-btn[disabled],
+    >.ant-btn[disabled] {
+      height: inherit;
+      display: flex;
+      align-self: center;
+      align-items: center;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+      border: none !important;
+      background: transparent !important;
+      color: #bfbfbf;
+
+      >.anticon {
+        vertical-align: text-bottom;
+      }
+
+      >span {
+        font-size: 16px;
+      }
+    }
+
+    &.btn-error,
+    &.btn-error>.anticon {
+      color: @error-color  !important;
+    }
+
+    &.btn-success {
+      color: @success-color;
+    }
+
+    span.anticon {
+      margin: 0
+    }
+  }
+
+  &.btn-font-sm,
+  &.btn-font-sm button.ant-btn[disabled]>span {
+    font-size: @datlantis-font-sm;
+  }
+
+  .ant-btn {
+    padding: 0px;
+  }
+
+  &.ant-btn>.anticon+span,
+  .ant-btn>.anticon+span,
+  span {
+    margin-left: 4px;
+    display: flex;
+    text-transform: capitalize;
+  }
+}

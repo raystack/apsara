@@ -14,5 +14,8 @@ export const listOfButton = () => (
         <Button type="dashed">Dashed Button</Button>
         <Button type="text">Text Button</Button>
         <Button type="link">Link Button</Button>
+        <Button type="barebone" iconName="copy2">
+            Copy
+        </Button>
     </>
 );
