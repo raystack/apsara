@@ -23,6 +23,8 @@ import Provider from "./Provider";
 import Codeblock from "./Codeblock";
 import Popover from "./Popover";
 import ConfirmModal from "./ConfirmModal";
+import Colors from "./Colors";
+import Shadows from "./Shadows";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -56,4 +58,6 @@ export {
     Codeblock,
     Popover,
     ConfirmModal,
+    Colors,
+    Shadows,
 };

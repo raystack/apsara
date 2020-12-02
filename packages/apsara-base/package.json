@@ -1,6 +1,6 @@
 {
     "name": "@apsara/base",
-    "version": "0.4.5",
+    "version": "0.4.6",
     "description": "A list of base components for apsara",
     "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
     "license": "ISC",
