@@ -12,8 +12,9 @@ interface CodeblockProps {
 const Codeblock = ({ lang = "text", children = "", copy = false }: CodeblockProps) => {
     const codeRef = useRef(null);
     function fallbackCopyTextToClipboard() {
-        if (window.getSelection) {
-            window.getSelection().selectAllChildren(codeRef?.current);
+        const node = codeRef?.current;
+        if (window.getSelection && node) {
+            window.getSelection()?.selectAllChildren(node);
             document.execCommand("Copy");
             showSuccess("Copied to Clipboard");
         } else {
