@@ -24,12 +24,13 @@ const VirtualTableComponent = ({
     const [tableWidth, setTableWidth] = useState(0);
 
     const widthColumnCount = columns.filter(({ width }) => !width).length;
+    const totalColumnDefinedWidth = columns.reduce((acc, { width = 0 }) => acc + width, 0);
     const mergedColumns = columns.map((column) => {
         if (column.width) {
             return column;
         }
-
-        return { ...column, width: Math.floor(tableWidth / widthColumnCount) };
+        const remaningWidth = tableWidth > widthColumnCount ? tableWidth - totalColumnDefinedWidth : tableWidth;
+        return { ...column, width: Math.floor(remaningWidth / widthColumnCount) };
     });
     const gridRef = useRef<any>();
     const [connectObject] = useState<any>(() => {
