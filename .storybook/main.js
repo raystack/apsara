@@ -1,14 +1,33 @@
 const path = require("path");
 const Theme = require("./theme");
+const TSDocgenPlugin = require("react-docgen-typescript-webpack-plugin");
 
 module.exports = {
-    stories: ["../packages/**/*.stories.[tj]sx"],
-    addons: ["@storybook/addon-actions", "@storybook/addon-links", "@storybook/addon-storysource", "@storybook/addon-docs"],
+    stories: ["../packages/**/*.stories.[tj]sx", "../packages/**/*.stories.mdx"],
+    addons: [
+        "@storybook/addon-actions",
+        "@storybook/addon-links",
+        "@storybook/addon-storysource",
+        {
+            name: "@storybook/addon-docs",
+            options: {
+                configureJSX: true,
+            },
+        },
+    ],
     typescript: {
-        check: true,
-        checkOptions: {},
-        reactDocgenTypescriptOptions: {
-            propFilter: (prop) => ["label", "disabled"].includes(prop.name),
+        typescript: {
+            check: true,
+            checkOptions: {},
+            reactDocgen: "react-docgen-typescript",
+            reactDocgenTypescriptOptions: {
+                shouldExtractLiteralValuesFromEnum: true,
+                // propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
+                compilerOptions: {
+                    allowSyntheticDefaultImports: false,
+                    esModuleInterop: false,
+                },
+            },
         },
     },
     webpackFinal: async (config) => {
@@ -26,10 +45,6 @@ module.exports = {
                             ["@babel/plugin-proposal-class-properties", { loose: true }],
                         ],
                     },
-                },
-                // Automatics props for typescript
-                {
-                    loader: require.resolve("react-docgen-typescript-loader"),
                 },
             ],
         });
@@ -50,6 +65,7 @@ module.exports = {
             ],
             include: path.resolve(__dirname, "../"),
         });
+        config.plugins.push(new TSDocgenPlugin());
         config.resolve.extensions.push(".ts", ".tsx");
         // Replaces the webpack rule that loads SVGs as static files to leave out SVG files for us to handle
         const indexOfRuleToRemove = config.module.rules.findIndex((rule) => rule.test.toString().includes("svg"));
