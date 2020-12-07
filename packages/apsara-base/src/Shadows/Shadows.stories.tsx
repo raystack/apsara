@@ -3,7 +3,7 @@ import Shadows from "./Shadows";
 import { showSuccess, showError } from "../Notification";
 
 export default {
-    title: "General/Shadow",
+    title: "General/Shadows",
     component: Shadows,
 };
 
@@ -16,7 +16,7 @@ const styles = {
     display: "inline-block",
 };
 
-export const ShadowList = () => {
+export const shadows = () => {
     const handleCopy = (color: string) => {
         navigator.clipboard
             .writeText(color)

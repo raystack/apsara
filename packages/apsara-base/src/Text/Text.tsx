@@ -1,7 +1,6 @@
 import { Typography } from "antd";
 import { TextProps } from "antd/lib/typography/Text";
 
-import * as React from "react";
 import styled from "styled-components";
 
 const styleMap = {
@@ -87,7 +86,7 @@ interface IText extends TextProps {
     size?: number;
 }
 
-const Text: React.FC<IText> = styled(AntText).attrs((props: IText) => ({
+const Text = styled(AntText).attrs((props: IText) => ({
     size: props.size || 14,
 }))`
     font-size: ${(props) => styleMap[props.size].fontSize};

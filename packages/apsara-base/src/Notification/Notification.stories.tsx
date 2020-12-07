@@ -3,7 +3,7 @@ import Button from "../Button";
 import { showSuccess, showError } from "./Notification";
 
 export default {
-    title: "General/Notifications",
+    title: "Feedback/Notifications",
 };
 
 export const notifications = () => {

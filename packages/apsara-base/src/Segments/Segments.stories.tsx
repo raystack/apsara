@@ -3,11 +3,11 @@ import React from "react";
 import Segments from "./Segments";
 
 export default {
-    title: "General/Segments",
+    title: "DATA DISPLAY/Segments",
     component: Segments,
 };
 
-export const segment = () => {
+export const segments = () => {
     const rowData = [
         { label: "foo", value: "bar" },
         { label: "foo", value: "bar" },

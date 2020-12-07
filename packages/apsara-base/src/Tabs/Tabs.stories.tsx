@@ -3,7 +3,7 @@ import React from "react";
 import Tabs from "./Tabs";
 
 export default {
-    title: "General/Tabs",
+    title: "Navigation/Tabs",
     component: Tabs,
 };
 

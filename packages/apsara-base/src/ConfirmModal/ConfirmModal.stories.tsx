@@ -6,7 +6,7 @@ import Button from "../Button";
 import { Radio } from "antd";
 
 export default {
-    title: "General/ConfirmModal",
+    title: "Feedback/ConfirmModal",
     component: ConfirmModal,
 };
 

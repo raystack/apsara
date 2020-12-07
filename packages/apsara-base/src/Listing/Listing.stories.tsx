@@ -2,7 +2,7 @@ import React from "react";
 import Listing from "./Listing";
 
 export default {
-    title: "General/Listing",
+    title: "Data Display/Listing",
     component: Listing,
 };
 

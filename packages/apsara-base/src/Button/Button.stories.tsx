@@ -4,10 +4,9 @@ import Button from "./Button";
 
 export default {
     title: "General/Button",
-    component: Button,
 };
 
-export const listOfButton = () => (
+export const button = () => (
     <>
         <Button type="primary">Primary Button</Button>
         <Button>Default Button</Button>

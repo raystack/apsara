@@ -28,7 +28,7 @@ interface SearchProps {
     onIconClick?: () => null;
     disabled?: boolean;
 }
-export default ({
+const Search = ({
     placeholder = "Search list items",
     onChange,
     children,
@@ -83,3 +83,4 @@ export default ({
         </div>
     );
 };
+export default Search;

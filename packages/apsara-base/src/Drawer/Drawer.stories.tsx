@@ -3,7 +3,7 @@ import React from "react";
 import Drawer from "./Drawer";
 
 export default {
-    title: "General/Drawer",
+    title: "Feedback/Drawer",
     component: Drawer,
 };
 

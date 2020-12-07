@@ -4,7 +4,7 @@ import Listing from "../Listing";
 import Button from "../Button";
 
 export default {
-    title: "General/ContentLayout",
+    title: "Layout/ContentLayout",
     component: ContentLayout,
 };
 

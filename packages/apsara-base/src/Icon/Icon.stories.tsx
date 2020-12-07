@@ -4,7 +4,7 @@ import { Tooltip } from "antd";
 import Icon from "./Icon";
 
 export default {
-    title: "General/Icon",
+    title: "General/Icons",
     component: Icon,
 };
 

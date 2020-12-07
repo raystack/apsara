@@ -2,7 +2,7 @@ import React from "react";
 import { ListLoader, EditorLoader, DetailsLoader } from "./Loader";
 
 export default {
-    title: "General/Loader",
+    title: "Feedback/Loader",
 };
 export const listloader = () => <ListLoader />;
 export const editorloader = () => <EditorLoader />;

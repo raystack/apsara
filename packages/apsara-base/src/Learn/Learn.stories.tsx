@@ -9,12 +9,13 @@ export default {
 };
 
 export const learn = () => (
-    <Learn
-        isVisible
-        content={
-            <Markdown
-                style={{ height: "calc(100vh - 60px)" }}
-                data={`<ol>
+    <div style={{ minHeight: "500px" }}>
+        <Learn
+            isVisible
+            content={
+                <Markdown
+                    style={{ height: "calc(100vh - 60px)" }}
+                    data={`<ol>
                     <li><p>What is Beast?</p>
                     <p>Beast is a fully managed data ingestion pipeline to BigQuery that minimizes latency, processing time, and operational overhead through autoscaling and one click deployments. With its cloud-native approach to resource provisioning and management, access to virtually limitless capacity to solve the biggest data ingestion challenges, ensuring Data Warehouse developer to simply focus on ETL management. <a target="_blank" href="http://data.golabs.io/products/beast/#introduction">Learn More</a></p>
                     </li>
@@ -42,7 +43,8 @@ export const learn = () => (
                     <p>Read about the Site Reliability Engineering (SRE) for Beast <a target="_blank" href="http://data.golabs.io/products/beast/docs/resources/service-level-objectives-service-level-objectives">here</a>.</p>
                     </li>
                 </ol>`}
-            />
-        }
-    />
+                />
+            }
+        />
+    </div>
 );

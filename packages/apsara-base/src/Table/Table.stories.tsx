@@ -4,7 +4,7 @@ import Table from "./Table";
 import VTable from "./VirtualisedTable";
 
 export default {
-    title: "Data/Table",
+    title: "Data Display/Table",
     component: VTable,
 };
 

@@ -7,7 +7,7 @@ export default {
     component: Text,
 };
 
-export const Typography = () => (
+export const text = () => (
     <>
         <Text size={11}>11. Apsara</Text>
         <br />

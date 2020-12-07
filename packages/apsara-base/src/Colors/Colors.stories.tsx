@@ -16,7 +16,7 @@ const styles = {
     display: "inline-block",
 };
 
-export const ColorsList = () => {
+export const colors = () => {
     const handleCopy = (color: string) => {
         navigator.clipboard
             .writeText(color)
