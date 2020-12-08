@@ -24,7 +24,7 @@ interface CustomButtonProps {
     children?: React.ReactNode;
 }
 
-const CustomButton = ({
+function CustomButton({
     className = "",
     tooltipMessage = "",
     tooltipPlacement = "bottom",
@@ -36,7 +36,7 @@ const CustomButton = ({
     iconSize = 24,
     children,
     ...props
-}: Omit<NativeButtonProps, "type"> & CustomButtonProps) => {
+}: Omit<NativeButtonProps, "type"> & CustomButtonProps) {
     const IconComponent = () => {
         // ? --inline style is expected by antd
         if (loading) {
@@ -64,6 +64,6 @@ const CustomButton = ({
             {children}
         </Button>
     );
-};
+}
 
 export default CustomButton;

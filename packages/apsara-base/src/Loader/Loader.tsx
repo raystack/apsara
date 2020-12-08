@@ -6,16 +6,16 @@ interface ListLoaderProps {
     className?: string;
     rows?: number;
 }
-export const ListLoader = ({ className = "", rows = 20 }: ListLoaderProps) => {
+export function ListLoader({ className = "", rows = 20 }: ListLoaderProps) {
     return <Skeleton className={className} active title={false} paragraph={{ rows, width: "100%" }} />;
-};
+}
 
 interface EditorLoaderProps {
     className?: string;
 }
-export const EditorLoader = ({ className = "" }: EditorLoaderProps) => {
+export function EditorLoader({ className = "" }: EditorLoaderProps) {
     return <Skeleton className={className} active title={false} paragraph={{ rows: 5, width: "80%" }} />;
-};
+}
 
 export const DetailsLoader = () => {
     return (

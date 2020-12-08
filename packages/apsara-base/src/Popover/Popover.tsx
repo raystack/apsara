@@ -28,7 +28,7 @@ interface ButtonConfirmationPopover extends ButtonPopoverContentProps {
     children?: React.ReactNode;
 }
 
-const ConfirmationPopover = ({ title = "", message = "", onOk, children }: ButtonConfirmationPopover) => {
+function ConfirmationPopover({ title = "", message = "", onOk, children }: ButtonConfirmationPopover) {
     const [visible, setVisible] = useState(false);
 
     const onClick = () => {
@@ -47,6 +47,6 @@ const ConfirmationPopover = ({ title = "", message = "", onOk, children }: Butto
             {children}
         </Popover>
     );
-};
+}
 
 export default ConfirmationPopover;

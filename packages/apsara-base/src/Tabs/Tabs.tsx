@@ -13,9 +13,9 @@ interface CustomTabsProps {
 
 // ? Types of tabs: primary, secondary, card, think
 // ? Sizes of tabs: xs, md, lg
-const CustomTabs = ({ type = "primary", size = "md", className = "", ...props }: CustomTabsProps) => (
-    <Tabs className={`skeleton-tabs ${className} ${size} ${type}`} {...props} />
-);
+function CustomTabs({ type = "primary", size = "md", className = "", ...props }: CustomTabsProps) {
+    return <Tabs className={`skeleton-tabs ${className} ${size} ${type}`} {...props} />;
+}
 
 CustomTabs.TabPane = TabPane;
 export default CustomTabs;

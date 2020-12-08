@@ -130,10 +130,10 @@ const VirtualTableComponent = ({
     );
 };
 
-const VirtualTable = ({ items = [], columns = [], ...props }: IVirtualTable) => {
+function VirtualTable({ items = [], columns = [], ...props }: IVirtualTable) {
     return (
         <VirtualTableComponent columns={columns} items={items} scroll={{ y: DEFAULT_HEIGHT, x: "100vw" }} {...props} />
     );
-};
+}
 
 export default VirtualTable;

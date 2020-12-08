@@ -11,7 +11,7 @@ interface CustomIconProps {
     disabled?: boolean;
     onClick?: () => void;
 }
-const CustomIcon = ({
+function CustomIcon({
     name,
     className = "",
     active = false,
@@ -19,7 +19,7 @@ const CustomIcon = ({
     onClick = () => null,
     styleOverride = {},
     ...restProps
-}: CustomIconProps) => {
+}: CustomIconProps) {
     if (!name) return null;
     const iconComponent = CustomIconMap[name];
     return (
@@ -36,7 +36,7 @@ const CustomIcon = ({
             {...restProps}
         />
     );
-};
+}
 
 export const CustomIconImage = ({ name }: { name: string }) => {
     if (!name) return null;

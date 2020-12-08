@@ -21,7 +21,7 @@ interface ITableProps extends TableProps<any> {
     alternateHover?: boolean;
 }
 
-const Table = ({
+function Table({
     items,
     rowKey = "id",
     selectedRowId = null,
@@ -29,7 +29,7 @@ const Table = ({
     alternate,
     alternateHover,
     ...props
-}: ITableProps) => {
+}: ITableProps) {
     return (
         <AntTable
             dataSource={items}
@@ -47,6 +47,6 @@ const Table = ({
             {...props}
         />
     );
-};
+}
 
 export default Table;
