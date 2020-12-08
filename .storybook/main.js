@@ -5,7 +5,6 @@ const TSDocgenPlugin = require("react-docgen-typescript-webpack-plugin");
 module.exports = {
     stories: ["../packages/**/*.stories.[tj]sx", "../packages/**/*.stories.mdx"],
     addons: [
-        "@storybook/addon-actions",
         "@storybook/addon-links",
         "@storybook/addon-storysource",
         {
