@@ -5,6 +5,7 @@ import Icon from "../Icon";
 
 export default {
     title: "Feedback/Notifications",
+    component: showNotification,
 };
 
 export const notifications = () => {
