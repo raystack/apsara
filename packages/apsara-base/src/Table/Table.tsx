@@ -19,11 +19,13 @@ interface ITableProps extends TableProps<any> {
     onRowClick?: (event: any, rowIndexData: any) => null;
     alternate?: boolean;
     alternateHover?: boolean;
+    className?: string;
 }
 
 function Table({
     items,
     rowKey = "id",
+    className = "",
     selectedRowId = null,
     onRowClick = () => null,
     alternate,
@@ -36,7 +38,7 @@ function Table({
             rowKey={rowKey}
             pagination={false}
             showSorterTooltip={false}
-            className={`skeleton-table ${alternate && "alternate"} ${alternateHover && "alternate-hover"}`}
+            className={`skeleton-table ${alternate && "alternate"} ${alternateHover && "alternate-hover"} ${className}`}
             locale={{ emptyText: <EmptyComponent /> }}
             rowClassName={(record: any) => (selectedRowId === record.id ? "highlightRow" : "")}
             onRow={(record: any) => {
