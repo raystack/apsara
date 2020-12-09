@@ -75,3 +75,8 @@ export { default as profile } from "../../assets/icons/Icons_24_profile.svg";
 export { default as logout } from "../../assets/icons/Icons_24_logout.svg";
 
 export { default as noData } from "../../assets/images/no-data.svg";
+
+export { default as doc } from "../../assets/icons/doc.svg";
+export { default as rocket } from "../../assets/icons/rocket.svg";
+export { default as running } from "../../assets/icons/running.svg";
+export { default as block } from "../../assets/icons/block.svg";
