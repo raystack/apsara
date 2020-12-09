@@ -78,8 +78,18 @@ module.exports = {
         });
 
         config.module.rules.push({
-            test: /.svg$/,
-            use: ["@svgr/webpack"],
+            test: /\.svg$/,
+            use: [
+                {
+                    loader: '@svgr/webpack',
+                    options: {
+                        svgoConfig: {
+                            plugins: [{
+                                removeViewBox: false
+                            }]
+                        }
+                    }
+                }],
         });
         return config;
     },

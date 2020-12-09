@@ -22,22 +22,22 @@ export const all = () => (
 export const withColors = () => (
     <>
         <Tooltip placement="bottom" title={"stop"}>
-            <Icon name="stop" styleOverride={{ color: Colors.Black[800] }} />
+            <Icon name="stop" size={48} styleOverride={{ color: Colors.Black[800] }} />
         </Tooltip>
         <Tooltip placement="bottom" title={"doc"}>
-            <Icon name="doc" styleOverride={{ color: Colors.Blue[400] }} />
+            <Icon name="doc" size={48} styleOverride={{ color: Colors.Blue[400] }} />
         </Tooltip>
         <Tooltip placement="bottom" title={"running"}>
-            <Icon name="running" styleOverride={{ color: Colors.Blue[300] }} />
+            <Icon name="running" size={48} styleOverride={{ color: Colors.Blue[300] }} />
         </Tooltip>
         <Tooltip placement="bottom" title={"rocket"}>
-            <Icon name="rocket" styleOverride={{ color: Colors.Green[300] }} />
+            <Icon name="rocket" size={48} styleOverride={{ color: Colors.Green[300] }} />
         </Tooltip>
         <Tooltip placement="bottom" title={"checkcircle"}>
-            <Icon name="checkcircle" styleOverride={{ color: Colors.Green[300] }} />
+            <Icon name="checkcircle" size={48} styleOverride={{ color: Colors.Green[300] }} />
         </Tooltip>
         <Tooltip placement="bottom" title={"block"}>
-            <Icon name="block" styleOverride={{ color: Colors.Red[400] }} />
+            <Icon name="block" size={48} styleOverride={{ color: Colors.Red[400] }} />
         </Tooltip>
     </>
 );
