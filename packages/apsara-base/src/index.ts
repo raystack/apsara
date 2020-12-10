@@ -25,6 +25,7 @@ import Popover from "./Popover";
 import ConfirmModal from "./ConfirmModal";
 import Colors from "./Colors";
 import Shadows from "./Shadows";
+import Tooltip from "./Tooltip";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -60,4 +61,5 @@ export {
     ConfirmModal,
     Colors,
     Shadows,
+    Tooltip,
 };
