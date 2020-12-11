@@ -1,6 +1,6 @@
 import Button from "./Button";
 import Icon from "./Icon";
-import Listing from "./Listing";
+import Listing, { useSearchFilter } from "./Listing";
 import Search from "./Search";
 import Table from "./Table";
 import VTable from "./Table/VirtualisedTable";
@@ -33,6 +33,7 @@ export {
     Button,
     Icon,
     Listing,
+    useSearchFilter,
     Search,
     Table,
     VTable,

@@ -1,2 +1,3 @@
-import Listing from "./Listing";
+import Listing, { useSearchFilter } from "./Listing";
 export default Listing;
+export { useSearchFilter };

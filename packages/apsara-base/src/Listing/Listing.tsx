@@ -95,3 +95,4 @@ const Listing = ({
 };
 
 export default Listing;
+export { useSearchFilter };
