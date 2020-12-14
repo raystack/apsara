@@ -14,6 +14,9 @@ export const button = () => (
         <Button type="dashed">Dashed Button</Button>
         <Button type="text">Text Button</Button>
         <Button type="link">Link Button</Button>
+        <Button tooltipMessage="default with tooltip" tooltipPlacement="right">
+            Copy
+        </Button>
         <Button type="barebone" iconName="copy2" tooltipMessage="button">
             Copy
         </Button>

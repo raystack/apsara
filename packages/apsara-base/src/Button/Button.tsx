@@ -14,7 +14,7 @@ const Button: React.FC<NativeButtonProps> = styled(AntButton)`
 
 interface CustomButtonProps {
     className?: string;
-    tooltipMessage?: string;
+    tooltipMessage?: React.ReactNode;
     tooltipPlacement?: TooltipPlacement;
     type?: "link" | "text" | "default" | "primary" | "ghost" | "dashed" | "barebone";
     styleOverride?: Record<string, string>;
@@ -52,18 +52,25 @@ function CustomButton({
         ) : null;
     };
 
-    return tooltipMessage || type === "barebone" ? (
-        <Tooltip placement={tooltipPlacement} title={tooltipMessage}>
+    const button =
+        type === "barebone" ? (
             <Button disabled={disabled} className={`skeleton-btn ${className} ${type}`} {...props}>
                 <IconComponent />
                 {children}
             </Button>
+        ) : (
+            <Button disabled={disabled} className={className} type={type} {...props}>
+                <IconComponent />
+                {children}
+            </Button>
+        );
+
+    return tooltipMessage ? (
+        <Tooltip placement={tooltipPlacement} title={tooltipMessage}>
+            {button}
         </Tooltip>
     ) : (
-        <Button disabled={disabled} className={className} type={type} {...props}>
-            <IconComponent />
-            {children}
-        </Button>
+        button
     );
 }
 
