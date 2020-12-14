@@ -1,4 +1,4 @@
-import { Button as AntButton, Tooltip } from "antd";
+import { Button as AntButton } from "antd";
 import { NativeButtonProps } from "antd/lib/button/button";
 import { TooltipPlacement } from "antd/lib/tooltip";
 import * as React from "react";
@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { LoadingOutlined } from "@ant-design/icons";
 import Icon from "../Icon";
 import "./style.less";
+import Tooltip from "../Tooltip";
 
 const Button: React.FC<NativeButtonProps> = styled(AntButton)`
     // custom-props

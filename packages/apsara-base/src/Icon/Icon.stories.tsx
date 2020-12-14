@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip } from "antd";
+import Tooltip from "../Tooltip";
 
 import Icon from "./Icon";
 import Colors from "../Colors";

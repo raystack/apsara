@@ -1,6 +1,6 @@
 import React from "react";
-import { Tooltip } from "antd";
 import Icon from "../Icon";
+import Tooltip from "../Tooltip";
 import "./style.less";
 
 interface TitleProps {

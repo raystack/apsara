@@ -1,8 +1,8 @@
 import React from "react";
 import * as R from "ramda";
 import PropTypes from "prop-types";
-import { Form, Tooltip } from "antd";
-
+import { Form } from "antd";
+import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
 import FormBuilderField from "./FormBuilderField";
 
