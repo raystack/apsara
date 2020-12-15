@@ -67,7 +67,7 @@ function CustomButton({
 
     return tooltipMessage ? (
         <Tooltip placement={tooltipPlacement} title={tooltipMessage}>
-            {button}
+            <span>{button}</span>
         </Tooltip>
     ) : (
         button
