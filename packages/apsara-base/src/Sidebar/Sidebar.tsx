@@ -14,7 +14,7 @@ const renderMenuItemLink = (
     return (
         <Menu.Item key={key} onClick={() => onItemClick(url)}>
             <LinkRender to={url}>
-                <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                     <CustomIcon styleOverride={{ color: "#4D4D4D" }} name={icon} />
                     <span className="nav-text">{linkText}</span>
                 </div>
@@ -45,6 +45,7 @@ interface SidebarProps {
     headerProps: {
         name?: string;
         logo?: string;
+        icon?: React.ReactNode;
     };
     activePath: string;
     navigationList: any[];
@@ -55,7 +56,7 @@ interface SidebarProps {
 
 const rightSidebarState = localStorage.getItem("NAV_SIDEBAR_STATE") === "true";
 const Sidebar = ({
-    headerProps: { name = "", logo = "" },
+    headerProps: { name = "", logo = "", icon },
     activePath,
     navigationList,
     onItemClick = () => null,
@@ -85,7 +86,8 @@ const Sidebar = ({
             {...extraProps}
         >
             <div className="sidebar__wrapper--logo">
-                <img src={logo} alt="" className="img__logo" />
+                {icon ? <span className="img__logo">{icon}</span> : null}
+                {logo ? <img src={logo} alt="" className="img__logo" /> : null}
                 <span className="sidebar__wrapper--title">{name}</span>
             </div>
             <Menu mode="inline" style={{ borderRight: 0 }} selectedKeys={[activePath]}>

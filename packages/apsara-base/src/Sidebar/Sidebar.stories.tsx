@@ -1,5 +1,7 @@
 import React from "react";
 import Sidebar from "./Sidebar";
+import Icon from "../Icon";
+import Colors from "../Colors";
 
 export default {
     title: "Layout/Sidebar",
@@ -13,7 +15,10 @@ const LinkRender = ({ children, to }: any) => {
 
 export const sidebar = () => (
     <Sidebar
-        headerProps={{ name: "Console", logo: "" }}
+        headerProps={{
+            name: "Console",
+            icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.Blue[400] }} />,
+        }}
         linkRender={LinkRender}
         activePath={"discovery"}
         onItemClick={() => null}
