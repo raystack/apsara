@@ -80,3 +80,5 @@ export { default as doc } from "../../assets/icons/doc.svg";
 export { default as rocket } from "../../assets/icons/rocket.svg";
 export { default as running } from "../../assets/icons/running.svg";
 export { default as block } from "../../assets/icons/block.svg";
+export { default as litmus } from "../../assets/icons/litmus.svg";
+export { default as experiment } from "../../assets/icons/experiment.svg";
