@@ -6,13 +6,21 @@ import "./Sidebar.less";
 
 const { Sider } = Layout;
 
+interface RenderItem {
+    key: string;
+    url: string;
+    linkText: string;
+    icon: string;
+}
+
 const renderMenuItemLink = (
-    { key, url, linkText, icon }: any,
-    onItemClick: (url: string) => void,
+    item: RenderItem,
+    onItemClick: (item: RenderItem) => void,
     LinkRender: ({ children }: any) => ReactElement,
 ) => {
+    const { key, url, linkText, icon } = item;
     return (
-        <Menu.Item key={key} onClick={() => onItemClick(url)}>
+        <Menu.Item key={key} onClick={() => onItemClick(item)}>
             <LinkRender to={url}>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                     <CustomIcon styleOverride={{ color: "#4D4D4D" }} name={icon} />
@@ -48,8 +56,8 @@ interface SidebarProps {
         icon?: React.ReactNode;
     };
     activePath: string;
-    navigationList: any[];
-    onItemClick?: (url: string) => void;
+    navigationList: RenderItem[];
+    onItemClick?: (item: RenderItem) => void;
     children?: ReactNode;
     linkRender?: ({ children }: any) => ReactElement;
 }
