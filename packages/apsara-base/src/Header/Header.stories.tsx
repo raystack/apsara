@@ -17,6 +17,11 @@ export const header = () => (
                 name: "Logout",
                 icon: "logout",
             },
+            {
+                name: "a tag",
+                icon: "placeholder",
+                href: "https://google.com",
+            },
         ]}
     />
 );

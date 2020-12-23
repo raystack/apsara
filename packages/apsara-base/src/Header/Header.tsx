@@ -18,7 +18,7 @@ const getMenuList = (menuList: any[]) => (
             <Menu.Item key={menu.name}>
                 <a
                     rel="noopener noreferrer"
-                    href="#"
+                    href={menu.href ? menu.href : "#"}
                     onClick={menu.onClick ? menu.onClick : () => null}
                     className="header--wrapper--dropdown-item"
                 >
