@@ -46,7 +46,7 @@ export const VirtualTableWithData = () => <VTable items={dataSource} columns={co
 
 export const VirtualTableWithInfiniteData = () => {
     const [page, setPage] = useState(1);
-    function loadMore() {
+    async function loadMore() {
         setPage(page + 1);
     }
     return <VTable items={getData(page)} columns={columns} loadMore={loadMore} />;

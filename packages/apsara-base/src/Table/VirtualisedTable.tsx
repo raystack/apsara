@@ -7,12 +7,31 @@ import Table from "./Table";
 
 const DEFAULT_HEIGHT = 700;
 
+const Row = ({ columnData, rowData, onRowClick, totalColumns, columnIndex, rowIndex, selectedRowId, style }: any) => {
+    return (
+        <div
+            role="presentation"
+            className={`virtual-table-cell ${columnIndex === totalColumns - 1 ? "virtual-table-cell-last" : ""} ${
+                rowIndex % 2 === 0 ? "virtual-table-even" : "virtual-table-odd"
+            } ${columnIndex === 0 ? "virtual-table-first-child" : ""}
+${columnIndex === totalColumns - 1 ? "virtual-table-last-child" : ""}
+${rowData?.id === selectedRowId ? "highlightRow" : ""}`}
+            style={style}
+            onClick={(event) => onRowClick(event, rowData)}
+        >
+            {columnData?.render
+                ? columnData.render(rowData[columnData.dataIndex], rowData)
+                : rowData[columnData.dataIndex]}
+        </div>
+    );
+};
+
 interface IVirtualTable extends TableProps<any> {
     columns: any[];
     items: any[];
     selectedRowId?: number | null;
     scroll?: any;
-    loadMore?: () => void;
+    loadMore?: () => Promise<void> | null;
     onRowClick?: (event: any, rowIndexData: any) => null;
 }
 const VirtualTableComponent = ({
@@ -69,9 +88,9 @@ const VirtualTableComponent = ({
         const rowCount = rawData.length;
         const isItemLoaded = (index: number) => index < lastIndex;
 
-        function loadMoreItems(_startIndex: number, stopIndex: number) {
+        async function loadMoreItems(_: number, stopIndex: number) {
             if (stopIndex === rowCount - 1) {
-                loadMore();
+                await loadMore();
             }
             setLastIndex(stopIndex);
         }
@@ -114,22 +133,16 @@ const VirtualTableComponent = ({
                             const columnIndexData = mergedColumns[columnIndex];
                             const rowIndexData = rawData[rowIndex];
                             return (
-                                <div
-                                    role="presentation"
-                                    className={`virtual-table-cell ${
-                                        columnIndex === mergedColumns.length - 1 ? "virtual-table-cell-last" : ""
-                                    } ${rowIndex % 2 === 0 ? "virtual-table-even" : "virtual-table-odd"} ${
-                                        columnIndex === 0 ? "virtual-table-first-child" : ""
-                                    }
-                              ${columnIndex === mergedColumns.length - 1 ? "virtual-table-last-child" : ""}
-                              ${rowIndexData?.id === selectedRowId ? "highlightRow" : ""}`}
+                                <Row
+                                    columnData={columnIndexData}
+                                    rowData={rowIndexData}
                                     style={style}
-                                    onClick={(event) => onRowClick(event, rowIndexData)}
-                                >
-                                    {columnIndexData?.render
-                                        ? columnIndexData.render(rowIndexData[columnIndexData.dataIndex], rowIndexData)
-                                        : rowIndexData[columnIndexData.dataIndex]}
-                                </div>
+                                    totalColumns={mergedColumns.length}
+                                    columnIndex={columnIndex}
+                                    rowIndex={rowIndex}
+                                    selectedRowId={selectedRowId}
+                                    onRowClick={onRowClick}
+                                />
                             );
                         }}
                     </Grid>
