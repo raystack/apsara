@@ -41,7 +41,7 @@ export default function useSearchFilter({ list, searchFields = [] }: any) {
         setSortedInfo,
         onGroupFilter,
         onClearGroupFilter,
-    } = useSearchFilterState({});
+    } = useSearchFilterState();
 
     const filteredList = useCallback(getFilterList(list, filteredFieldData, searchTerm, searchFields), [
         list,
