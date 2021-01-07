@@ -4,7 +4,7 @@ import Search from "../Search";
 import Filters from "./Filters";
 import { ListLoader } from "../Loader";
 import VirtualisedTable from "../Table/VirtualisedTable";
-import useSearchFilter from "./useSearchFilter";
+import useSearchFilter, { IGroupOptions } from "./useSearchFilter";
 
 interface ListingProps {
     list: any[];
@@ -14,7 +14,7 @@ interface ListingProps {
     rowKey?: string;
     className?: string;
     tableProps: { getColumnList: any; handleRowClick?: () => null; selectedRowId?: number; scroll: any };
-    filterProps: { filterFieldList: any[] };
+    filterProps: { filterFieldList: IGroupOptions[] };
     searchProps: { searchPlaceholder?: string; searchFields: any[]; disabled?: boolean };
     renderExtraFilters?: any;
     renderHeader?: any;

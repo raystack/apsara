@@ -26,6 +26,7 @@ export const listing = () => (
                 id: index,
                 name: `name ${index}`,
                 class: index % 2 === 0 ? "active" : "inactive",
+                isEven: index % 2 === 0 ? "true" : "false",
                 address: "10 Downing Street",
             };
         })}
@@ -42,6 +43,11 @@ export const listing = () => (
                         dataIndex: "class",
                         key: "class",
                     },
+                    {
+                        title: "is Even",
+                        dataIndex: "isEven",
+                        key: "isEven",
+                    },
                 ];
             },
             scroll: { y: 300, x: "100vw" },
@@ -54,6 +60,14 @@ export const listing = () => (
                         return { label: d, value: d.toLowerCase() };
                     }),
                     slug: "class",
+                    multi: false,
+                },
+                {
+                    name: "Is Even",
+                    data: ["true", "false"].map((d) => {
+                        return { label: d, value: d.toLowerCase() };
+                    }),
+                    slug: "isEven",
                 },
             ],
         }}
