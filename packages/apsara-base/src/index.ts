@@ -26,6 +26,7 @@ import ConfirmModal from "./ConfirmModal";
 import Colors from "./Colors";
 import Shadows from "./Shadows";
 import Tooltip from "./Tooltip";
+import Input from "./Input";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -64,4 +65,5 @@ export {
     Colors,
     Shadows,
     Tooltip,
+    Input,
 };

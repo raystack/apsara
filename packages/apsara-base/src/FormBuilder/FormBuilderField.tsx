@@ -3,10 +3,11 @@
 
 import React, { useMemo } from "react";
 import * as R from "ramda";
-import { Input, InputNumber, Radio, Select, Switch, DatePicker } from "antd";
+import { InputNumber, Radio, Select, Switch, DatePicker } from "antd";
 import Moment from "moment";
 
 import Tag from "../Tag";
+import Input from "../Input";
 import { getStringValue } from "./helper";
 
 const { Option } = Select;
