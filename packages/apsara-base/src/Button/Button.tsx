@@ -2,6 +2,7 @@ import { Button as AntButton } from "antd";
 import { NativeButtonProps } from "antd/lib/button/button";
 import { TooltipPlacement } from "antd/lib/tooltip";
 import * as React from "react";
+import clsx from "clsx";
 import styled from "styled-components";
 import { LoadingOutlined } from "@ant-design/icons";
 import Icon from "../Icon";
@@ -54,7 +55,7 @@ function CustomButton({
 
     const button =
         type === "barebone" ? (
-            <Button disabled={disabled} className={`skeleton-btn ${className} ${type}`} {...props}>
+            <Button disabled={disabled} className={clsx("skeleton-btn", className, type)} {...props}>
                 <IconComponent />
                 {children}
             </Button>

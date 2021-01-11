@@ -42,6 +42,7 @@
     "dependencies": {
         "@ant-design/icons": "^4.2.2",
         "antd": "^4.6.4",
+        "clsx": "^1.1.1",
         "moment": "^2.29.1",
         "ramda": "^0.27.1",
         "react-infinite-scroll-hook": "^3.0.0",

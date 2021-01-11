@@ -4,21 +4,21 @@ import ResizeObserver from "rc-resize-observer";
 import { TableProps } from "antd/lib/table";
 import InfiniteLoader from "react-window-infinite-loader";
 import Table from "./Table";
+import clsx from "clsx";
 
 const DEFAULT_HEIGHT = 700;
 
-const Row = ({ columnData, rowData, onRowClick, totalColumns, columnIndex, rowIndex, selectedRowId, style }: any) => {
+const Cell = ({ columnData, rowData, onRowClick, totalColumns, columnIndex, rowIndex, selectedRowId, style }: any) => {
+    const className = clsx("virtual-table-cell", {
+        "virtual-table-cell-last": columnIndex === totalColumns - 1,
+        "virtual-table-even": rowIndex % 2 === 0,
+        "virtual-table-odd": rowIndex % 2 !== 0,
+        "virtual-table-first-child": columnIndex === 0,
+        "virtual-table-last-child": columnIndex === totalColumns - 1,
+        highlightRow: rowData?.id === selectedRowId,
+    });
     return (
-        <div
-            role="presentation"
-            className={`virtual-table-cell ${columnIndex === totalColumns - 1 ? "virtual-table-cell-last" : ""} ${
-                rowIndex % 2 === 0 ? "virtual-table-even" : "virtual-table-odd"
-            } ${columnIndex === 0 ? "virtual-table-first-child" : ""}
-${columnIndex === totalColumns - 1 ? "virtual-table-last-child" : ""}
-${rowData?.id === selectedRowId ? "highlightRow" : ""}`}
-            style={style}
-            onClick={(event) => onRowClick(event, rowData)}
-        >
+        <div role="presentation" className={className} style={style} onClick={(event) => onRowClick(event, rowData)}>
             {columnData?.render
                 ? columnData.render(rowData[columnData.dataIndex], rowData)
                 : rowData[columnData.dataIndex]}
@@ -133,7 +133,7 @@ const VirtualTableComponent = ({
                             const columnIndexData = mergedColumns[columnIndex];
                             const rowIndexData = rawData[rowIndex];
                             return (
-                                <Row
+                                <Cell
                                     columnData={columnIndexData}
                                     rowData={rowIndexData}
                                     style={style}

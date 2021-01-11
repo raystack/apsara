@@ -10,7 +10,7 @@ export default {
 
 export const layout = () => (
     <>
-        <ContentLayout siderProps={{ width: 310 }}>
+        <ContentLayout>
             <Listing
                 loading={false}
                 list={new Array(100).fill(0).map((_, index) => {

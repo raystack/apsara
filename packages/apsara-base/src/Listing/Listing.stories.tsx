@@ -103,9 +103,14 @@ export const infiniteListing = () => {
                             key: "name",
                         },
                         {
-                            title: "Class",
-                            dataIndex: "class",
-                            key: "class",
+                            title: "Age",
+                            dataIndex: "age",
+                            key: "age",
+                        },
+                        {
+                            title: "Address",
+                            dataIndex: "address",
+                            key: "address",
                         },
                     ];
                 },
@@ -114,11 +119,11 @@ export const infiniteListing = () => {
             filterProps={{
                 filterFieldList: [
                     {
-                        name: "Status",
-                        data: ["active", "inactive"].map((d) => {
+                        name: "Age",
+                        data: ["10", "20"].map((d) => {
                             return { label: d, value: d.toLowerCase() };
                         }),
-                        slug: "class",
+                        slug: "age",
                     },
                 ],
             }}

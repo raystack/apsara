@@ -5,6 +5,7 @@ import Filters from "./Filters";
 import { ListLoader } from "../Loader";
 import VirtualisedTable from "../Table/VirtualisedTable";
 import { useSearchFilterState } from "./useSearchFilter";
+import clsx from "clsx";
 
 interface ILoadMoreProps {
     nextPage: number;
@@ -118,7 +119,7 @@ const InfiniteListing = ({
         );
     }
     return (
-        <div className={`Listing ${className}`}>
+        <div className={clsx("Listing", className)}>
             {renderHeader}
             {renderBody}
         </div>

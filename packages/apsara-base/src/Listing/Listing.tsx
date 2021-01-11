@@ -5,6 +5,7 @@ import Filters from "./Filters";
 import { ListLoader } from "../Loader";
 import VirtualisedTable from "../Table/VirtualisedTable";
 import useSearchFilter, { IGroupOptions } from "./useSearchFilter";
+import clsx from "clsx";
 
 interface ListingProps {
     list: any[];
@@ -87,7 +88,7 @@ const Listing = ({
         );
     }
     return (
-        <div className={`Listing ${className}`}>
+        <div className={clsx("Listing", className)}>
             {renderHeader}
             {renderBody}
         </div>

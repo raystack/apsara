@@ -2,14 +2,16 @@ import React, { useRef } from "react";
 import "./style.less";
 import Icon from "../Icon";
 import { showSuccess, showError } from "../Notification";
+import clsx from "clsx";
 
 interface CodeblockProps {
     lang?: string;
     children?: string;
     copy?: boolean;
+    className?: string;
 }
 
-const Codeblock = ({ lang = "text", children = "", copy = false }: CodeblockProps) => {
+const Codeblock = ({ lang = "text", children = "", copy = false, className = "" }: CodeblockProps) => {
     const codeRef = useRef(null);
     function fallbackCopyTextToClipboard() {
         const node = codeRef?.current;
@@ -37,7 +39,7 @@ const Codeblock = ({ lang = "text", children = "", copy = false }: CodeblockProp
         }
     };
     return (
-        <div className="code-container">
+        <div className={clsx("code-container", className)}>
             {copy ? (
                 <div className="code-copy-btn" onClick={handleCopy}>
                     <Icon name="copy2" styleOverride={{ color: "white" }} />

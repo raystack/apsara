@@ -6,17 +6,13 @@ const { Sider, Content } = Layout;
 const RIGHT_SIDEBAR_WIDTH = Theme["@datlantis-right-sidebar-width"];
 
 interface ContentLayoutProps {
-    style?: any;
-    className?: any;
+    style?: React.CSSProperties;
+    className?: string;
     children?: any;
     siderProps?: any;
 }
-const ContentLayout = ({
-    children,
-    style,
-    className,
-    siderProps: { siderStyle = { background: "#fff" }, ...restSiderProps },
-}: ContentLayoutProps) => {
+const ContentLayout = ({ children, style, className, siderProps = {} }: ContentLayoutProps) => {
+    const { siderStyle = { background: "#fff" }, ...restSiderProps } = siderProps;
     const length = React.Children.count(children);
     const getContentStyle = () =>
         window.innerWidth <= 1680 ? { minWidth: "480px", maxWidth: "480px", flex: 1 } : { minWidth: "414px", flex: 1 };
