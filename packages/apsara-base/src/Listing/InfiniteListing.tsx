@@ -6,6 +6,7 @@ import { ListLoader } from "../Loader";
 import VirtualisedTable from "../Table/VirtualisedTable";
 import { useSearchFilterState } from "./useSearchFilter";
 import clsx from "clsx";
+import "./style.less";
 
 interface ILoadMoreProps {
     nextPage: number;

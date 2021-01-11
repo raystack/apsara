@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { VariableSizeGrid as Grid } from "react-window";
 import ResizeObserver from "rc-resize-observer";
 import { TableProps } from "antd/lib/table";
@@ -8,8 +8,19 @@ import clsx from "clsx";
 
 const DEFAULT_HEIGHT = 700;
 
-const Cell = ({ columnData, rowData, onRowClick, totalColumns, columnIndex, rowIndex, selectedRowId, style }: any) => {
-    const className = clsx("virtual-table-cell", {
+const Cell = ({
+    columnData,
+    rowData,
+    onRowClick,
+    totalColumns,
+    columnIndex,
+    rowIndex,
+    selectedRowId,
+    style,
+    onRowMouseEnter,
+    onRowMouseLeave,
+}: any) => {
+    const className = clsx("virtual-table-cell", `virtual-table-row-${rowIndex}`, {
         "virtual-table-cell-last": columnIndex === totalColumns - 1,
         "virtual-table-even": rowIndex % 2 === 0,
         "virtual-table-odd": rowIndex % 2 !== 0,
@@ -17,8 +28,16 @@ const Cell = ({ columnData, rowData, onRowClick, totalColumns, columnIndex, rowI
         "virtual-table-last-child": columnIndex === totalColumns - 1,
         highlightRow: rowData?.id === selectedRowId,
     });
+
     return (
-        <div role="presentation" className={className} style={style} onClick={(event) => onRowClick(event, rowData)}>
+        <div
+            role="presentation"
+            className={className}
+            style={style}
+            onClick={(event) => onRowClick(event, rowData)}
+            onMouseEnter={() => onRowMouseEnter(rowIndex)}
+            onMouseLeave={() => onRowMouseLeave(rowIndex)}
+        >
             {columnData?.render
                 ? columnData.render(rowData[columnData.dataIndex], rowData)
                 : rowData[columnData.dataIndex]}
@@ -82,6 +101,20 @@ const VirtualTableComponent = ({
     useEffect(() => resetVirtualGrid, []);
     useEffect(() => resetVirtualGrid, [tableWidth]);
 
+    const onRowMouseEnter = useCallback((index) => {
+        const cells = Array.from(document.getElementsByClassName(`virtual-table-row-${index}`));
+        cells.forEach((cell) => {
+            cell.classList.add("virtual-table-row-hover");
+        });
+    }, []);
+
+    const onRowMouseLeave = useCallback((index) => {
+        const cells = Array.from(document.getElementsByClassName(`virtual-table-row-${index}`));
+        cells.forEach((cell) => {
+            cell.classList.remove("virtual-table-row-hover");
+        });
+    }, []);
+
     const renderVirtualList = (rawData: Record<string, unknown>[], { scrollbarSize, ref, onScroll }: any) => {
         // eslint-disable-next-line no-param-reassign
         ref.current = connectObject;
@@ -142,6 +175,8 @@ const VirtualTableComponent = ({
                                     rowIndex={rowIndex}
                                     selectedRowId={selectedRowId}
                                     onRowClick={onRowClick}
+                                    onRowMouseEnter={onRowMouseEnter}
+                                    onRowMouseLeave={onRowMouseLeave}
                                 />
                             );
                         }}
