@@ -56,7 +56,7 @@ export const listing = () => (
             filterFieldList: [
                 {
                     name: "Status",
-                    data: ["active", "inactive"].map((d) => {
+                    data: ["active", "inactive", "foo", "bar", "a", "b", "c", "d"].map((d) => {
                         return { label: d, value: d.toLowerCase() };
                     }),
                     slug: "class",
