@@ -23,7 +23,7 @@ const renderMenuItemLink = (
         <Menu.Item key={key} onClick={() => onItemClick(item)}>
             <LinkRender to={url}>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                    <CustomIcon styleOverride={{ color: "#4D4D4D" }} name={icon} />
+                    <CustomIcon styleOverride={{ color: "#4D4D4D", lineHeight: 1, height: "24px" }} name={icon} />
                     <span className="nav-text">{linkText}</span>
                 </div>
             </LinkRender>
@@ -37,7 +37,7 @@ interface collapsedProps {
 const SidebarFooter = ({ collapsed }: collapsedProps) => (
     <div className="footer__sidebar">
         <div className="sidebar__wrapper--footer">
-            <div style={{ display: "flex", minHeight: "40px" }}>
+            <div style={{ display: "flex", minHeight: "40px", alignItems: "center" }}>
                 <CustomIcon
                     className={collapsed ? "" : "rotate"}
                     styleOverride={{ color: "#999999" }}
