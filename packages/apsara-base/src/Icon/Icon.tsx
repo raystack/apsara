@@ -1,6 +1,7 @@
 import React from "react";
 import Icon from "@ant-design/icons";
 import * as CustomIconMap from "./customicons";
+import Colors from "../Colors";
 
 interface CustomIconProps {
     name: string;
@@ -27,7 +28,7 @@ function CustomIcon({
             className={`skeleton-icon ${name} ${className}`}
             component={iconComponent}
             style={{
-                color: !active ? "#cccc" : "#4d85f4",
+                color: !active ? Colors.Black[800] : "#4d85f4",
                 fill: "#4d85f4",
                 fontSize: `${size}px`,
                 ...styleOverride,
