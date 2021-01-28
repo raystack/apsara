@@ -1,6 +1,6 @@
 {
     "name": "@apsara/base",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "description": "A list of base components for apsara",
     "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
     "license": "ISC",
@@ -32,7 +32,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://source.golabs.io/asgard/apsara"
+        "url": "https://github.com/odpf-io/apsara"
     },
     "homepage": "https://asgard.pages.golabs.io/apsara",
     "peerDependencies": {
