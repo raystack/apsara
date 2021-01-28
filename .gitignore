@@ -8,6 +8,7 @@ coverage
 
 # production
 /build
+/public
 /dist
 /packages/**/lib/
 /storybook-static
