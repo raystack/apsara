@@ -13,11 +13,14 @@ jobs:
         uses: actions/checkout@v2.3.1
         with:
           persist-credentials: false
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
       - name: Install and Build 🔧
         run: | # Install npm packages and build the Storybook files
-          npm install
-          npm run build
-          npm run build-storybook
+          yarn install
+          yarn run build
+          yarn build-storybook
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
         with:
