@@ -6,7 +6,7 @@
   <p align="center">
   <a href="#fire-overview">Overview</a> •
   <a href="#getting-started-with-apsara">Getting Started</a> •
-  <a target="_blank" href="https://asgard.pages.golabs.io/apsara/">StoryBook</a>
+  <a target="_blank" href="">StoryBook</a>
 </p>
 </div>
 
