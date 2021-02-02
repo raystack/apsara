@@ -1,7 +1,6 @@
 import React from "react";
 
 import Text from "./Text";
-
 export default {
     title: "General/Text",
     component: Text,
@@ -36,5 +35,29 @@ export const text = () => (
         <Text size={50}>50. Apsara</Text>
         <br />
         <Text size={60}>60. Apsara</Text>
+    </>
+);
+
+export const customStyles = () => (
+    <>
+        <Text size={40} style={{ fontWeight: "normal" }}>
+            Normal abcdefghijklmnopqrstuvwxyz
+        </Text>
+        <br />
+        <Text size={40} style={{ fontWeight: "bold" }}>
+            Bold abcdefghijklmnopqrstuvwxyz
+        </Text>
+        <br />
+        <Text size={40} style={{ fontWeight: 900 }}>
+            Bolder abcdefghijklmnopqrstuvwxyz
+        </Text>
+        <br />
+        <Text size={40} style={{ fontStyle: "italic" }}>
+            italic abcdefghijklmnopqrstuvwxyz
+        </Text>
+        <br />
+        <Text size={40} style={{ fontStyle: "italic", fontWeight: "bold" }}>
+            bold italic abcdefghijklmnopqrstuvwxyz
+        </Text>
     </>
 );
