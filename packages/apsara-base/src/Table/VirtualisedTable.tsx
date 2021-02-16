@@ -115,7 +115,7 @@ const VirtualTableComponent = ({
         });
     }, []);
 
-    const renderVirtualList = (rawData: Record<string, unknown>[], { scrollbarSize, ref, onScroll }: any) => {
+    const RenderVirtualList = (rawData: readonly Record<string, unknown>[], { scrollbarSize, ref, onScroll }: any) => {
         // eslint-disable-next-line no-param-reassign
         ref.current = connectObject;
         const rowCount = rawData.length;
@@ -199,7 +199,7 @@ const VirtualTableComponent = ({
                 onRowClick={onRowClick}
                 pagination={false}
                 components={{
-                    body: renderVirtualList,
+                    body: RenderVirtualList,
                 }}
             />
         </ResizeObserver>
