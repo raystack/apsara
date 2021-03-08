@@ -12,7 +12,7 @@ addons.setConfig({
         appBorderRadius: 6,
 
         // Typography
-        fontBase: '"MaisonNeue", sans-serif',
+        fontBase: '"Roboto", sans-serif',
 
         barTextColor: "#1890FF",
         barSelectedColor: "#7D4CDB",

@@ -24,7 +24,7 @@ module.exports = {
     "@background-color-light": "#F5F5F5",
     "@background-color-base": "#F5F5F5",
 
-    "@font-family": "MaisonNeue",
+    "@font-family": "Roboto",
 
     // Layout
     "@layout-body-background": "transparent",
