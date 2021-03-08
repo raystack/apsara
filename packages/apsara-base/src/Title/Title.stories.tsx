@@ -10,12 +10,12 @@ export default {
 export const title = () => {
     return (
         <>
-            <Title title="title" />
-            <Title title="title" icon={{ name: "checkcircle", color: "#3AC581" }} />
-            <Title title="title" icon={{ name: "crossfilled", color: "red" }} />
-            <Title title="title" icon={{ name: "checkcircle", color: "#3AC581" }} status="to infinity and beyond" />
+            <Title title="Title" />
+            <Title title="Title" icon={{ name: "checkcircle", color: "#3AC581" }} />
+            <Title title="Title" icon={{ name: "crossfilled", color: "red" }} />
+            <Title title="Title" icon={{ name: "checkcircle", color: "#3AC581" }} status="to infinity and beyond" />
             <Title
-                title="icon with tooltip"
+                title="Icon with tooltip"
                 icon={{ name: "checkcircle", color: "#3AC581" }}
                 status="to infinity and beyond"
                 iconToolTipText="Running"

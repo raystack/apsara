@@ -7,18 +7,12 @@ export default {
     component: Button,
 };
 
+const style = { marginRight: "10px" };
+
 export const button = () => (
     <>
-        <Button type="primary">Primary Button</Button>
-        <Button>Default Button</Button>
-        <Button type="dashed">Dashed Button</Button>
-        <Button type="text">Text Button</Button>
-        <Button type="link">Link Button</Button>
-        <Button tooltipMessage="default with tooltip" tooltipPlacement="right">
-            Copy
-        </Button>
-        <Button type="barebone" iconName="copy2" tooltipMessage="button">
-            Copy
-        </Button>
+        <Button loading style={style}></Button>
+        <Button type="primary" loading style={style}></Button>
+        <Button style={style}>Button</Button>
     </>
 );

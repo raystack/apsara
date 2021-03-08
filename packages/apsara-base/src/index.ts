@@ -6,7 +6,7 @@ import Table from "./Table";
 import VTable from "./Table/VirtualisedTable";
 import Text from "./Text";
 import Tag from "./Tag";
-import ErrorScreen from "./ErrorScreen";
+import States from "./States";
 import notification, { showError, showSuccess } from "./Notification";
 import FormBuilder from "./FormBuilder";
 import Learn from "./Learn";
@@ -42,7 +42,7 @@ export {
     Text,
     Tag,
     FormBuilder,
-    ErrorScreen,
+    States,
     notification,
     showError,
     showSuccess,

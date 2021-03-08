@@ -12,7 +12,7 @@ addParameters({
         showRoots: true,
         storySort: sortEachDepth([
             ["Intro", "General", "Navigation", "Data Entry", "Data Display", "..."],
-            ["Intro", "Features Overview", "...", "System"],
+            ["General", "Colors", "Text", "Title", "Icons", "Button", "Input", "..."],
             ["Overview", "...", "_internals"],
         ]),
     },
