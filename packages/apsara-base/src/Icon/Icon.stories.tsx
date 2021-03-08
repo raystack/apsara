@@ -42,13 +42,18 @@ export const withColors = () => (
             />
         </Tooltip>
         <Tooltip placement="bottom" title={"doc"}>
-            <Icon name="doc" size={36} styleOverride={{ color: Colors.blue[400] }} onClick={() => handleCopy("doc")} />
+            <Icon
+                name="doc"
+                size={36}
+                styleOverride={{ color: Colors.primary[400] }}
+                onClick={() => handleCopy("doc")}
+            />
         </Tooltip>
         <Tooltip placement="bottom" title={"running"}>
             <Icon
                 name="running"
                 size={36}
-                styleOverride={{ color: Colors.blue[300] }}
+                styleOverride={{ color: Colors.primary[300] }}
                 onClick={() => handleCopy("running")}
             />
         </Tooltip>
@@ -56,7 +61,7 @@ export const withColors = () => (
             <Icon
                 name="rocket"
                 size={36}
-                styleOverride={{ color: Colors.green[300] }}
+                styleOverride={{ color: Colors.success[300] }}
                 onClick={() => handleCopy("rocket")}
             />
         </Tooltip>
@@ -64,7 +69,7 @@ export const withColors = () => (
             <Icon
                 name="checkcircle"
                 size={36}
-                styleOverride={{ color: Colors.green[300] }}
+                styleOverride={{ color: Colors.success[300] }}
                 onClick={() => handleCopy("checkcircle")}
             />
         </Tooltip>
@@ -72,7 +77,7 @@ export const withColors = () => (
             <Icon
                 name="block"
                 size={36}
-                styleOverride={{ color: Colors.red[400] }}
+                styleOverride={{ color: Colors.error[400] }}
                 onClick={() => handleCopy("rocblockket")}
             />
         </Tooltip>

@@ -1,8 +1,4 @@
 const Colors = {
-    primary: "#4d85f4",
-    warning: "#ecad4b",
-    success: "#3ac581",
-    error: "#F1456C",
     black: {
         0: "#ffffff",
         50: "#fafafa",
@@ -18,7 +14,7 @@ const Colors = {
         700: "#0a0a0a",
         transparent: "rgba(255, 255, 255, 0)",
     },
-    blue: {
+    primary: {
         50: "#e8effd",
         100: "#cbdbf3",
         200: "#7aaae8",
@@ -27,7 +23,7 @@ const Colors = {
         500: "#0f6ad6",
         600: "#1a5fba",
     },
-    green: {
+    success: {
         100: "#a0d9b6",
         200: "#63cb91",
         300: "#3eb97a",
@@ -35,7 +31,7 @@ const Colors = {
         500: "#418e63",
         600: "#3e7b58",
     },
-    red: {
+    error: {
         100: "#f3c0c0",
         200: "#f09191",
         300: "#ed6368",
@@ -43,7 +39,7 @@ const Colors = {
         500: "#ce2c34",
         600: "#b7292d",
     },
-    orange: {
+    warning: {
         100: "#f4c48f",
         200: "#f3a855",
         300: "#ef9121",
@@ -51,7 +47,7 @@ const Colors = {
         500: "#b26519",
         600: "#9c5a1e",
     },
-    pink: {
+    secondary: {
         100: "#ecc1d5",
         200: "#e68bb7",
         300: "#e362a6",

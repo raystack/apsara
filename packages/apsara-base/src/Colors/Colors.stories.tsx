@@ -77,132 +77,132 @@ export const colors = () => {
             </div>
             <div>
                 <span
-                    style={{ ...styles, backgroundColor: Colors.blue[100] }}
-                    onClick={() => handleCopy("Colors.blue[100]")}
+                    style={{ ...styles, backgroundColor: Colors.primary[100] }}
+                    onClick={() => handleCopy("Colors.primary[100]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.blue[200] }}
-                    onClick={() => handleCopy("Colors.blue[200]")}
+                    style={{ ...styles, backgroundColor: Colors.primary[200] }}
+                    onClick={() => handleCopy("Colors.primary[200]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.blue[300] }}
-                    onClick={() => handleCopy("Colors.blue[300]")}
+                    style={{ ...styles, backgroundColor: Colors.primary[300] }}
+                    onClick={() => handleCopy("Colors.primary[300]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.blue[400] }}
-                    onClick={() => handleCopy("Colors.blue[400]")}
+                    style={{ ...styles, backgroundColor: Colors.primary[400] }}
+                    onClick={() => handleCopy("Colors.primary[400]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.blue[500] }}
-                    onClick={() => handleCopy("Colors.blue[500]")}
+                    style={{ ...styles, backgroundColor: Colors.primary[500] }}
+                    onClick={() => handleCopy("Colors.primary[500]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.blue[800] }}
-                    onClick={() => handleCopy("Colors.blue[800]")}
-                />
-            </div>
-            <div>
-                <span
-                    style={{ ...styles, backgroundColor: Colors.green[100] }}
-                    onClick={() => handleCopy("Colors.green[100]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.green[200] }}
-                    onClick={() => handleCopy("Colors.green[200]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.green[300] }}
-                    onClick={() => handleCopy("Colors.green[300]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.green[400] }}
-                    onClick={() => handleCopy("Colors.green[400]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.green[500] }}
-                    onClick={() => handleCopy("Colors.green[500]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.green[800] }}
-                    onClick={() => handleCopy("Colors.green[800]")}
+                    style={{ ...styles, backgroundColor: Colors.primary[800] }}
+                    onClick={() => handleCopy("Colors.primary[800]")}
                 />
             </div>
             <div>
                 <span
-                    style={{ ...styles, backgroundColor: Colors.red[100] }}
-                    onClick={() => handleCopy("Colors.red[100]")}
+                    style={{ ...styles, backgroundColor: Colors.success[100] }}
+                    onClick={() => handleCopy("Colors.success[100]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.red[200] }}
-                    onClick={() => handleCopy("Colors.red[200]")}
+                    style={{ ...styles, backgroundColor: Colors.success[200] }}
+                    onClick={() => handleCopy("Colors.success[200]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.red[300] }}
-                    onClick={() => handleCopy("Colors.red[300]")}
+                    style={{ ...styles, backgroundColor: Colors.success[300] }}
+                    onClick={() => handleCopy("Colors.success[300]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.red[400] }}
-                    onClick={() => handleCopy("Colors.red[400]")}
+                    style={{ ...styles, backgroundColor: Colors.success[400] }}
+                    onClick={() => handleCopy("Colors.success[400]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.red[500] }}
-                    onClick={() => handleCopy("Colors.red[500]")}
+                    style={{ ...styles, backgroundColor: Colors.success[500] }}
+                    onClick={() => handleCopy("Colors.success[500]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.red[800] }}
-                    onClick={() => handleCopy("Colors.red[800]")}
-                />
-            </div>
-            <div>
-                <span
-                    style={{ ...styles, backgroundColor: Colors.orange[100] }}
-                    onClick={() => handleCopy("Colors.orange[100]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.orange[200] }}
-                    onClick={() => handleCopy("Colors.orange[200]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.orange[300] }}
-                    onClick={() => handleCopy("Colors.orange[300]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.orange[400] }}
-                    onClick={() => handleCopy("Colors.orange[400]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.orange[500] }}
-                    onClick={() => handleCopy("Colors.orange[500]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.orange[800] }}
-                    onClick={() => handleCopy("Colors.orange[800]")}
+                    style={{ ...styles, backgroundColor: Colors.success[800] }}
+                    onClick={() => handleCopy("Colors.success[800]")}
                 />
             </div>
             <div>
                 <span
-                    style={{ ...styles, backgroundColor: Colors.pink[100] }}
-                    onClick={() => handleCopy("Colors.pink[100]")}
+                    style={{ ...styles, backgroundColor: Colors.error[100] }}
+                    onClick={() => handleCopy("Colors.error[100]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.pink[200] }}
-                    onClick={() => handleCopy("Colors.pink[200]")}
+                    style={{ ...styles, backgroundColor: Colors.error[200] }}
+                    onClick={() => handleCopy("Colors.error[200]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.pink[300] }}
-                    onClick={() => handleCopy("Colors.pink[300]")}
+                    style={{ ...styles, backgroundColor: Colors.error[300] }}
+                    onClick={() => handleCopy("Colors.error[300]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.pink[400] }}
-                    onClick={() => handleCopy("Colors.pink[400]")}
+                    style={{ ...styles, backgroundColor: Colors.error[400] }}
+                    onClick={() => handleCopy("Colors.error[400]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.pink[500] }}
-                    onClick={() => handleCopy("Colors.pink[500]")}
+                    style={{ ...styles, backgroundColor: Colors.error[500] }}
+                    onClick={() => handleCopy("Colors.error[500]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.pink[800] }}
-                    onClick={() => handleCopy("Colors.pink[800]")}
+                    style={{ ...styles, backgroundColor: Colors.error[800] }}
+                    onClick={() => handleCopy("Colors.error[800]")}
+                />
+            </div>
+            <div>
+                <span
+                    style={{ ...styles, backgroundColor: Colors.warning[100] }}
+                    onClick={() => handleCopy("Colors.warning[100]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.warning[200] }}
+                    onClick={() => handleCopy("Colors.warning[200]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.warning[300] }}
+                    onClick={() => handleCopy("Colors.warning[300]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.warning[400] }}
+                    onClick={() => handleCopy("Colors.warning[400]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.warning[500] }}
+                    onClick={() => handleCopy("Colors.warning[500]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.warning[800] }}
+                    onClick={() => handleCopy("Colors.warning[800]")}
+                />
+            </div>
+            <div>
+                <span
+                    style={{ ...styles, backgroundColor: Colors.secondary[100] }}
+                    onClick={() => handleCopy("Colors.secondary[100]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.secondary[200] }}
+                    onClick={() => handleCopy("Colors.secondary[200]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.secondary[300] }}
+                    onClick={() => handleCopy("Colors.secondary[300]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.secondary[400] }}
+                    onClick={() => handleCopy("Colors.secondary[400]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.secondary[500] }}
+                    onClick={() => handleCopy("Colors.secondary[500]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.secondary[800] }}
+                    onClick={() => handleCopy("Colors.secondary[800]")}
                 />
             </div>
         </>
