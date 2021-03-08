@@ -5,6 +5,7 @@ cjs
 .eslintcache
 *.log
 coverage
+package-lock.json 
 
 # production
 /build
