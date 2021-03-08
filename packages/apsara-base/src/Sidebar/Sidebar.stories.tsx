@@ -17,7 +17,7 @@ export const sidebar = () => (
     <Sidebar
         headerProps={{
             name: "Console",
-            icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.Blue[400] }} />,
+            icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.Blue[300] }} />,
         }}
         linkRender={LinkRender}
         activePath={"discovery"}

@@ -31,12 +31,24 @@ export const colors = () => {
         <>
             <div>
                 <span
+                    style={{ ...styles, backgroundColor: Colors.Black[0] }}
+                    onClick={() => handleCopy("Colors.Black[0]")}
+                />
+                <span
                     style={{ ...styles, backgroundColor: Colors.Black[50] }}
                     onClick={() => handleCopy("Colors.Black[50]")}
                 />
                 <span
+                    style={{ ...styles, backgroundColor: Colors.Black[75] }}
+                    onClick={() => handleCopy("Colors.Black[75]")}
+                />
+                <span
                     style={{ ...styles, backgroundColor: Colors.Black[100] }}
                     onClick={() => handleCopy("Colors.Black[100]")}
+                />
+                <span
+                    style={{ ...styles, backgroundColor: Colors.Black[125] }}
+                    onClick={() => handleCopy("Colors.Black[125]")}
                 />
                 <span
                     style={{ ...styles, backgroundColor: Colors.Black[150] }}
@@ -59,20 +71,8 @@ export const colors = () => {
                     onClick={() => handleCopy("Colors.Black[500]")}
                 />
                 <span
-                    style={{ ...styles, backgroundColor: Colors.Black[800] }}
-                    onClick={() => handleCopy("Colors.Black[800]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.Black[1200] }}
-                    onClick={() => handleCopy("Colors.Black[1200]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.Black[1600] }}
-                    onClick={() => handleCopy("Colors.Black[1600]")}
-                />
-                <span
-                    style={{ ...styles, backgroundColor: Colors.Black[2000] }}
-                    onClick={() => handleCopy("Colors.Black[2000]")}
+                    style={{ ...styles, backgroundColor: Colors.Black[600] }}
+                    onClick={() => handleCopy("Colors.Black[600]")}
                 />
             </div>
             <div>

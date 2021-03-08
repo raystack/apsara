@@ -28,8 +28,8 @@ function CustomIcon({
             className={`skeleton-icon ${name} ${className}`}
             component={iconComponent}
             style={{
-                color: !active ? Colors.Black[800] : "#4d85f4",
-                fill: "#4d85f4",
+                color: !active ? Colors.Black[400] : Colors.Blue[300],
+                fill: Colors.Blue[300],
                 fontSize: `${size}px`,
                 ...styleOverride,
             }}
