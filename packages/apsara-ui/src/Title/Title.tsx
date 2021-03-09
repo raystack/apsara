@@ -1,6 +1,7 @@
 import React from "react";
 import Icon from "../Icon";
 import Tooltip from "../Tooltip";
+import Text from "../Text";
 import "./style.less";
 
 interface TitleProps {
@@ -17,7 +18,7 @@ interface TitleProps {
 const Title = ({ title, icon, styleOverride = {}, iconToolTipText = "", status = "" }: TitleProps) => {
     return (
         <div className="skeleton-title" style={styleOverride}>
-            <span> {title} </span>
+            <Text size={18}> {title} </Text>
             {icon ? (
                 iconToolTipText ? (
                     <Tooltip title={iconToolTipText} placement="right">
@@ -27,7 +28,9 @@ const Title = ({ title, icon, styleOverride = {}, iconToolTipText = "", status =
                     <Icon name={icon.name} styleOverride={{ color: icon.color }} />
                 )
             ) : null}
-            <span className="status_info"> {status} </span>
+            <Text size={12} className="status_info">
+                {status}{" "}
+            </Text>
         </div>
     );
 };
