@@ -10,15 +10,13 @@ export default {
 export const left = () => (
     <>
         <Drawer open position="left">
-            <h1>Position Left</h1>
+            position left
         </Drawer>
     </>
 );
 
 export const right = () => (
     <>
-        <Drawer open>
-            <h1>Position Right</h1>
-        </Drawer>
+        <Drawer open>position right(default)</Drawer>
     </>
 );

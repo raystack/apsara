@@ -32,6 +32,9 @@ const styleMap = {
 const Button: React.FC<NativeButtonProps> = styled(AntButton).attrs((props: any) => ({
     size: props.size || defaultSize,
 }))`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: ${(props) => styleMap[props.size].fontSize || styleMap[defaultSize].fontSize};
     line-height: ${(props) => styleMap[props.size].lineHeight || styleMap[defaultSize].lineHeight};
     letter-spacing: ${(props) => styleMap[props.size].letterSpacing || styleMap[defaultSize].letterSpacing};
