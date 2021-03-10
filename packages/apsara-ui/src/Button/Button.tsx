@@ -4,13 +4,37 @@ import { TooltipPlacement } from "antd/lib/tooltip";
 import * as React from "react";
 import clsx from "clsx";
 import styled from "styled-components";
+import { SizeType } from "antd/lib/config-provider/SizeContext";
 import { LoadingOutlined } from "@ant-design/icons";
 import Icon from "../Icon";
 import "./style.less";
 import Tooltip from "../Tooltip";
 
-const Button: React.FC<NativeButtonProps> = styled(AntButton)`
-    // custom-props
+const defaultSize = "default";
+const styleMap = {
+    small: {
+        fontSize: "11px",
+        lineHeight: "13px",
+        letterSpacing: "0.11px",
+    },
+    default: {
+        fontSize: "14px",
+        lineHeight: "16px",
+        letterSpacing: "0.14px",
+    },
+    large: {
+        fontSize: "16px",
+        lineHeight: "19px",
+        letterSpacing: "0.16px",
+    },
+};
+
+const Button: React.FC<NativeButtonProps> = styled(AntButton).attrs((props: any) => ({
+    size: props.size || defaultSize,
+}))`
+    font-size: ${(props) => styleMap[props.size].fontSize || styleMap[defaultSize].fontSize};
+    line-height: ${(props) => styleMap[props.size].lineHeight || styleMap[defaultSize].lineHeight};
+    letter-spacing: ${(props) => styleMap[props.size].letterSpacing || styleMap[defaultSize].letterSpacing};
 `;
 
 interface CustomButtonProps {
@@ -24,6 +48,7 @@ interface CustomButtonProps {
     iconName?: string;
     iconSize?: number;
     children?: React.ReactNode;
+    size?: SizeType;
 }
 
 function CustomButton({
@@ -60,7 +85,7 @@ function CustomButton({
                 {children}
             </Button>
         ) : (
-            <Button disabled={disabled} className={className} type={type} {...props}>
+            <Button disabled={disabled} className={clsx("skeleton-btn", className)} type={type} {...props}>
                 <IconComponent />
                 {children}
             </Button>

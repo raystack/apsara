@@ -3,6 +3,7 @@ import { TextProps } from "antd/lib/typography/Text";
 
 import styled from "styled-components";
 
+const defaultSize = 14;
 const styleMap = {
     11: {
         fontSize: "11px",
@@ -87,11 +88,12 @@ interface IText extends TextProps {
 }
 
 const Text = styled(AntText).attrs((props: IText) => ({
-    size: props.size || 14,
+    size: props.size || defaultSize,
+    verticalAlign: "middle",
 }))`
-    font-size: ${(props) => styleMap[props.size].fontSize};
-    line-height: ${(props) => styleMap[props.size].lineHeight};
-    letter-spacing: ${(props) => styleMap[props.size].letterSpacing};
+    font-size: ${(props) => styleMap[props.size].fontSize || styleMap[defaultSize].fontSize};
+    line-height: ${(props) => styleMap[props.size].lineHeight || styleMap[defaultSize].lineHeight};
+    letter-spacing: ${(props) => styleMap[props.size].letterSpacing || styleMap[defaultSize].letterSpacing};
 `;
 
 export default Text;
