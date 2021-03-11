@@ -5,14 +5,15 @@ const TSDocgenPlugin = require("react-docgen-typescript-webpack-plugin");
 module.exports = {
     stories: ["../packages/**/*.stories.[tj]sx", "../packages/**/*.stories.mdx"],
     addons: [
-        "@storybook/addon-links",
-        "@storybook/addon-storysource",
         {
             name: "@storybook/addon-docs",
             options: {
                 configureJSX: true,
             },
         },
+        "@storybook/addon-controls",
+        "@storybook/addon-links",
+        "@storybook/addon-storysource",
     ],
     typescript: {
         typescript: {
@@ -81,15 +82,18 @@ module.exports = {
             test: /\.svg$/,
             use: [
                 {
-                    loader: '@svgr/webpack',
+                    loader: "@svgr/webpack",
                     options: {
                         svgoConfig: {
-                            plugins: [{
-                                removeViewBox: false
-                            }]
-                        }
-                    }
-                }],
+                            plugins: [
+                                {
+                                    removeViewBox: false,
+                                },
+                            ],
+                        },
+                    },
+                },
+            ],
         });
         return config;
     },

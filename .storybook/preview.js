@@ -12,8 +12,15 @@ addParameters({
         showRoots: true,
         storySort: sortEachDepth([
             ["Intro", "General", "Navigation", "Data Entry", "Data Display", "..."],
-            ["General", "Colors", "Text", "Title", "Icons", "Button", "Input", "..."],
+            ["General", "Colors", "Icons", "Button", "Text", "Title", "Input", "..."],
             ["Overview", "...", "_internals"],
         ]),
     },
 });
+
+export const parameters = {
+    controls: { expanded: true },
+    docs: {
+        inlineStories: true,
+    },
+};

@@ -1,0 +1,49 @@
+import { Meta, Preview, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Icon from "./Icon";
+import * as customIcons from "./customicons";
+export const iconsList = Object.keys(customIcons);
+
+<Meta
+    title="General/Icons"
+    argTypes={{
+        name: {
+            name: "Name",
+            description: "Icon name",
+            control: { type: "select", options: iconsList },
+        },
+        size: {
+            description: "Icon size",
+            control: { type: "range", min: 24, max: 320 },
+        },
+        color: {
+            control: { type: "color" },
+        },
+    }}
+/>
+
+# Icons
+
+<IconGallery>
+    {iconsList.map((name, index) => (
+        <IconItem key={name} name={name}>
+            <Icon name={name} size={36} />
+        </IconItem>
+    ))}
+</IconGallery>
+
+## Playground
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            name: "stop",
+            size: "48",
+            color: "black",
+        }}
+    >
+        {(args) => <Icon {...args} styleOverride={{ color: args.color }} />}
+    </Story>
+</Preview>
+
+<ArgsTable story="Playground" />

@@ -1,4 +1,5 @@
 const Colors = {
+    transparent: "rgba(255, 255, 255, 0)",
     black: {
         0: "#ffffff",
         50: "#fafafa",
@@ -12,7 +13,6 @@ const Colors = {
         500: "#4b4b4b",
         600: "#2c2c2c",
         700: "#0a0a0a",
-        transparent: "rgba(255, 255, 255, 0)",
     },
     primary: {
         50: "#e8effd",

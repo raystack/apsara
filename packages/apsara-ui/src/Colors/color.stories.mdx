@@ -1,0 +1,22 @@
+import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs/blocks";
+import Color from "./Colors";
+
+<Meta title="General/Colors" />
+
+<ColorPalette>
+    <ColorItem title="black" subtitle="black colors" colors={Color.black} />
+    <ColorItem title="primary" subtitle="primary colors" colors={Color.primary} />
+    <ColorItem title="secondary" subtitle="secondary colors" colors={Color.secondary} />
+    <ColorItem title="success" subtitle="success colors" colors={Color.success} />
+    <ColorItem title="error" subtitle="error colors" colors={Color.error} />
+    <ColorItem title="warning" subtitle="warning colors" colors={Color.warning} />
+    <ColorItem colors={{ transparent: Color.transparent }} />
+</ColorPalette>
+
+## Uses
+
+```js
+import { Colors } from "@odpf/apsara";
+// Color.primary.100
+// that's it! All components will be imported with styles
+```
