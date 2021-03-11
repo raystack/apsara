@@ -6,14 +6,12 @@ module.exports = {
     stories: ["../packages/**/*.stories.[tj]sx", "../packages/**/*.stories.mdx"],
     addons: [
         {
-            name: "@storybook/addon-docs",
+            name: "@storybook/addon-essentials",
             options: {
-                configureJSX: true,
+                backgrounds: false,
             },
         },
-        "@storybook/addon-controls",
         "@storybook/addon-links",
-        "@storybook/addon-storysource",
     ],
     typescript: {
         typescript: {

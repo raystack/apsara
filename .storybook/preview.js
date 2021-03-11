@@ -19,6 +19,16 @@ addParameters({
 });
 
 export const parameters = {
+    previewTabs: {
+        "storybook/docs/panel": { index: -1 },
+        docs: {
+            hidden: false,
+        },
+        canvas: {
+            title: "Story",
+            hidden: false,
+        },
+    },
     controls: { expanded: true },
     docs: {
         inlineStories: true,

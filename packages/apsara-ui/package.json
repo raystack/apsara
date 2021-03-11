@@ -1,5 +1,5 @@
 {
-    "name": "@apsara/base",
+    "name": "@odpf/apsara",
     "version": "0.7.6",
     "description": "A list of base components for apsara",
     "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
@@ -49,12 +49,29 @@
         "styled-components": "^5.2.0"
     },
     "devDependencies": {
-        "@storybook/addon-controls": "^6.1.21",
+        "@rollup/plugin-json": "^4.1.0",
+        "@rollup/plugin-url": "^5.0.1",
+        "@storybook/addon-essentials": "^6.1.21",
+        "@storybook/addon-links": "^6.1.10",
+        "@storybook/addon-storysource": "^6.1.10",
+        "@storybook/react": "^6.1.10",
+        "@svgr/rollup": "^5.4.0",
+        "@svgr/webpack": "^5.4.0",
         "@types/react-window": "^1.8.2",
         "@types/react-window-infinite-loader": "^1.0.3",
+        "css-loader": "^4.3.0",
+        "file-loader": "^6.1.1",
+        "less": "^3.12.2",
+        "less-loader": "^7.0.1",
         "rc-resize-observer": "^0.2.5",
+        "react-docgen-typescript-webpack-plugin": "^1.1.0",
+        "rollup": "^2.27.0",
         "rollup-plugin-multi-input": "^1.1.1",
+        "rollup-plugin-peer-deps-external": "^2.2.3",
+        "rollup-plugin-postcss": "^3.1.8",
+        "rollup-plugin-postcss-webpack-alias-less-loader": "^1.0.0",
         "rollup-plugin-typescript2": "^0.27.2",
+        "style-loader": "^1.2.1",
         "ts-import-plugin": "^1.6.6"
     },
     "bugs": {

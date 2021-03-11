@@ -2614,7 +2614,7 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@storybook/addon-actions@^6.1.10":
+"@storybook/addon-actions@6.1.21":
   version "6.1.21"
   resolved "https://registry.yarnpkg.com/@storybook/addon-actions/-/addon-actions-6.1.21.tgz#881dceb0ed650fe28086d9993703f8081b29f4ce"
   integrity sha512-H+nhSgK3X5L+JfArsC9ufvgJzQwPN9UXBxhMl74faEDCo9RGmq9ywNcjn9XlZGGnJ3jCaYrI/T1u0J7F6PBrTA==
@@ -2637,7 +2637,25 @@
     util-deprecate "^1.0.2"
     uuid "^8.0.0"
 
-"@storybook/addon-controls@^6.1.21":
+"@storybook/addon-backgrounds@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-backgrounds/-/addon-backgrounds-6.1.21.tgz#ada6c0a8a375855f99da0a7de770dd2c245d536d"
+  integrity sha512-4kJB6UcrqOo8fjm1BnfEOvw8ysPSfzIn2j5Q7h3WzoQF0VbU62+EQLTznluFfMjJ1I2FMCTz8YcwDOZn1FNlig==
+  dependencies:
+    "@storybook/addons" "6.1.21"
+    "@storybook/api" "6.1.21"
+    "@storybook/client-logger" "6.1.21"
+    "@storybook/components" "6.1.21"
+    "@storybook/core-events" "6.1.21"
+    "@storybook/theming" "6.1.21"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    memoizerific "^1.11.3"
+    regenerator-runtime "^0.13.7"
+    ts-dedent "^2.0.0"
+    util-deprecate "^1.0.2"
+
+"@storybook/addon-controls@6.1.21", "@storybook/addon-controls@^6.1.21":
   version "6.1.21"
   resolved "https://registry.yarnpkg.com/@storybook/addon-controls/-/addon-controls-6.1.21.tgz#14e3473cfa6dcdb88e57a74e1a42b57bd87c69ee"
   integrity sha512-IJgZWD2E9eLKj8DJLA9lT63N4jPfVneFJ05gnPco01ZJCEiDAo7babP5Ns2UTJDUaQEtX0m04UoIkidcteWKsA==
@@ -2651,7 +2669,7 @@
     core-js "^3.0.1"
     ts-dedent "^2.0.0"
 
-"@storybook/addon-docs@^6.1.10":
+"@storybook/addon-docs@6.1.21":
   version "6.1.21"
   resolved "https://registry.yarnpkg.com/@storybook/addon-docs/-/addon-docs-6.1.21.tgz#2ab12698200e7353c4789d705b0a1972f6d268d8"
   integrity sha512-MvTmxrOSo+zZ5MaMx9LVWM8DlvVHeryCJKPJx8BYCEN38r8mIK7uCFYok8oMPmACrVe0MfXOdJCm1HKkBKjsMg==
@@ -2697,6 +2715,24 @@
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
+"@storybook/addon-essentials@^6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-essentials/-/addon-essentials-6.1.21.tgz#ed528fbdebbc841459a8264f74e517c04b0e1a27"
+  integrity sha512-kdQ/hnfwwodWVFvMdvSbhOyLv/cUJyhgVRyIamrURP9I0OlWhpOAHhwMjAT2KKceutN3UjNpSCqFNSL4dMu25g==
+  dependencies:
+    "@storybook/addon-actions" "6.1.21"
+    "@storybook/addon-backgrounds" "6.1.21"
+    "@storybook/addon-controls" "6.1.21"
+    "@storybook/addon-docs" "6.1.21"
+    "@storybook/addon-toolbars" "6.1.21"
+    "@storybook/addon-viewport" "6.1.21"
+    "@storybook/addons" "6.1.21"
+    "@storybook/api" "6.1.21"
+    "@storybook/node-logger" "6.1.21"
+    core-js "^3.0.1"
+    regenerator-runtime "^0.13.7"
+    ts-dedent "^2.0.0"
+
 "@storybook/addon-links@^6.1.10":
   version "6.1.21"
   resolved "https://registry.yarnpkg.com/@storybook/addon-links/-/addon-links-6.1.21.tgz#59b04c4a0bd1c8dc86fecea64a2531154df382e6"
@@ -2733,6 +2769,34 @@
     prettier "~2.0.5"
     prop-types "^15.7.2"
     react-syntax-highlighter "^13.5.0"
+    regenerator-runtime "^0.13.7"
+
+"@storybook/addon-toolbars@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-toolbars/-/addon-toolbars-6.1.21.tgz#7e03ef74fe448c5b4e378cb08e1d79b9d8496d9f"
+  integrity sha512-89NtiqLT3ltb7Jb7rAug7jnWIDh6SxXa9i3mOoKEIcvuRJEmxGLF1Z79A+zXOJOKBUEEUgfJCtVS2lixakgwKA==
+  dependencies:
+    "@storybook/addons" "6.1.21"
+    "@storybook/api" "6.1.21"
+    "@storybook/client-api" "6.1.21"
+    "@storybook/components" "6.1.21"
+    core-js "^3.0.1"
+
+"@storybook/addon-viewport@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-viewport/-/addon-viewport-6.1.21.tgz#893090cca12f55abb4d8acade5f04e58e6317b1f"
+  integrity sha512-FrQk0BXCI4HdbBn9+8b+Cp2HvsweZkgW/joKfcF2vVLoasUBB4bl+9uU3HV/3a08glgjPl24caDMPgoRKS90WQ==
+  dependencies:
+    "@storybook/addons" "6.1.21"
+    "@storybook/api" "6.1.21"
+    "@storybook/client-logger" "6.1.21"
+    "@storybook/components" "6.1.21"
+    "@storybook/core-events" "6.1.21"
+    "@storybook/theming" "6.1.21"
+    core-js "^3.0.1"
+    global "^4.3.2"
+    memoizerific "^1.11.3"
+    prop-types "^15.7.2"
     regenerator-runtime "^0.13.7"
 
 "@storybook/addons@6.1.21":
