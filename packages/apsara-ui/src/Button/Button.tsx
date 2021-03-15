@@ -35,12 +35,12 @@ const Button: React.FC<NativeButtonProps> = styled(AntButton).attrs((props: any)
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: ${(props) => styleMap[props.size].fontSize || styleMap[defaultSize].fontSize};
-    line-height: ${(props) => styleMap[props.size].lineHeight || styleMap[defaultSize].lineHeight};
-    letter-spacing: ${(props) => styleMap[props.size].letterSpacing || styleMap[defaultSize].letterSpacing};
+    font-size: ${(props) => styleMap[props.size]?.fontSize || styleMap[defaultSize].fontSize};
+    line-height: ${(props) => styleMap[props.size]?.lineHeight || styleMap[defaultSize].lineHeight};
+    letter-spacing: ${(props) => styleMap[props.size]?.letterSpacing || styleMap[defaultSize].letterSpacing};
 `;
 
-interface CustomButtonProps {
+export interface CustomButtonProps {
     className?: string;
     tooltipMessage?: React.ReactNode;
     tooltipPlacement?: TooltipPlacement;

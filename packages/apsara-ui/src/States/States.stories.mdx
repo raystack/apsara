@@ -1,0 +1,45 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import States from "./States";
+import Button from "../Button";
+
+<Meta
+    title="Feedback/States"
+    argTypes={{
+        type: {
+            description: "Can be set to",
+            control: { type: "select", options: ["error", "unknown"] },
+            table: {
+                type: { summary: ["error"] },
+                defaultValue: { summary: "error" },
+            },
+        },
+    }}
+/>
+
+<Preview>
+    <Story
+        style={{ minHeight: "400px" }}
+        name="Playground"
+        args={{
+            type: "error",
+            title: "Oops! Something went wrong",
+            subTitle: "There is a problem with this feedback",
+            onClick: () => null,
+        }}
+    >
+        {(args) => (
+            <div style={{ minHeight: "400px" }}>
+                <States
+                    {...args}
+                    extra={
+                        <Button onClick={() => null} type="primary">
+                            Go to Home
+                        </Button>
+                    }
+                />
+            </div>
+        )}
+    </Story>
+</Preview>
+
+<ArgsTable story="Playground" />

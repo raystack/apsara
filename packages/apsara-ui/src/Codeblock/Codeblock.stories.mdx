@@ -1,0 +1,46 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Codeblock from "./Codeblock";
+
+export const code = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Semper auctor neque vitae tempus quam pellentesque nec nam aliquam. Faucibus et molestie ac feugiat sed lectus vestibulum. Adipiscing at in tellus integer feugiat scelerisque varius morbi enim. Non quam lacus suspendisse faucibus interdum posuere lorem ipsum.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Semper auctor neque vitae tempus quam pellentesque nec nam aliquam. Faucibus et molestie ac feugiat sed lectus vestibulum. Adipiscing at in tellus integer feugiat scelerisque varius morbi enim. Non quam lacus suspendisse faucibus interdum posuere lorem ipsum.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Semper auctor neque vitae tempus quam pellentesque nec nam aliquam. Faucibus et molestie ac feugiat sed lectus vestibulum. Adipiscing at in tellus integer feugiat scelerisque varius morbi enim. Non quam lacus suspendisse faucibus interdum posuere lorem ipsum.`;
+
+<Meta
+    title="General/Codeblock"
+    argTypes={{
+        copy: {
+            control: { type: "boolean" },
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: false },
+            },
+        },
+    }}
+/>
+
+# Codeblock
+
+<Canvas>
+    <Story
+        name="with copy"
+        args={{
+            copy: true,
+        }}
+    >
+        {(args) => <Codeblock {...args}>{code}</Codeblock>}
+    </Story>
+    <Story
+        name="without copy"
+        args={{
+            copy: false,
+        }}
+    >
+        {(args) => <Codeblock {...args}>{code}</Codeblock>}
+    </Story>
+</Canvas>
+
+<Preview>
+    <Story name="Playground">{(args) => <Codeblock {...args}>{code}</Codeblock>}</Story>
+</Preview>
+
+<ArgsTable story="Playground" />

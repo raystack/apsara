@@ -1,0 +1,91 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import { default as ButtonTemplate, CustomButtonProps } from "./Button";
+const style = { marginRight: "10px", marginBottom: "10px" };
+const sizes = ["small", "normal", "large"];
+
+<Meta
+    title="General/Button"
+    argTypes={{
+        loading: {
+            name: "loading",
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: true },
+            },
+        },
+        size: {
+            name: "size",
+            control: { type: "select", options: sizes },
+            table: {
+                type: { summary: sizes },
+                defaultValue: { summary: "normal" },
+            },
+        },
+        type: {
+            name: "type",
+            table: {
+                defaultValue: { summary: "primary" },
+            },
+        },
+        onClick: { action: "btn clicked" },
+    }}
+/>
+
+# Buttons
+
+<Canvas>
+    <Story
+        name="small button"
+        args={{
+            type: "primary",
+            children: "small button",
+            size: "small",
+            style,
+        }}
+    >
+        {(args) => <Button {...args} />}
+    </Story>
+    <Story
+        name="normal button"
+        args={{
+            type: "primary",
+            children: "Button",
+        }}
+    >
+        {(args) => <Button {...args} />}
+    </Story>
+    <Story
+        name="large button"
+        args={{
+            type: "primary",
+            children: "large button",
+            size: "large",
+            style,
+        }}
+    >
+        {(args) => <Button {...args} />}
+    </Story>
+</Canvas>
+
+## Playground
+
+export const Button = (args) => <ButtonTemplate {...args} />;
+
+<Preview>
+    <Story
+        name="loading"
+        args={{
+            loading: true,
+            type: "primary",
+            children: "loading",
+        }}
+    >
+        {(args) => <Button {...args} />}
+    </Story>
+</Preview>
+
+<ArgsTable story="loading" />
+
+## Props
+
+<ArgsTable of={ButtonTemplate} />

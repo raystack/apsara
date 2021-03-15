@@ -1,0 +1,55 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Search from "./Search";
+
+<Meta
+    title="General/Search"
+    argTypes={{
+        placeholder: {
+            control: { type: "text" },
+            table: {
+                type: { summary: "string" },
+                defaultValue: { summary: "Search list items" },
+            },
+        },
+        value: {
+            control: { type: "text" },
+            table: {
+                type: { summary: "string" },
+                defaultValue: { summary: "" },
+            },
+        },
+    }}
+/>
+
+# Inputs
+
+<Canvas>
+    <Story
+        name="with value"
+        args={{
+            value: "12345",
+        }}
+    >
+        {(args) => <Search {...args} />}
+    </Story>
+    <Story name="without value" args={{}}>
+        {(args) => <Search {...args} />}
+    </Story>
+</Canvas>
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            value: "",
+        }}
+    >
+        {(args) => <Search {...args} />}
+    </Story>
+</Preview>
+
+<ArgsTable story="Playground" />
+
+# Props
+
+<ArgsTable of={Search} />

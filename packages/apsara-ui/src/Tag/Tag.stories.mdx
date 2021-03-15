@@ -1,0 +1,32 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Tag from "./Tag";
+
+<Meta
+    title="Data Display/Tag"
+    argTypes={{
+        type: {
+            description: "Can be set to",
+            control: { type: "select", options: ["primary"] },
+            table: {
+                type: { summary: ["primary"] },
+                defaultValue: { summary: "primary" },
+            },
+        },
+        closable: {
+            description: "Whether the Tag can be closed",
+            control: { type: "boolean" },
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: false },
+            },
+        },
+    }}
+/>
+
+<Preview>
+    <Story name="Playground" args={{ type: "primary" }}>
+        {(args) => <Tag {...args}>Hello</Tag>}
+    </Story>
+</Preview>
+
+<ArgsTable story="Playground" />

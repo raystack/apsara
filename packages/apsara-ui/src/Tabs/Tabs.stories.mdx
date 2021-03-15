@@ -1,0 +1,110 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Tabs from "./Tabs";
+
+<Meta
+    title="Navigation/Tabs"
+    argTypes={{
+        type: {
+            control: { type: "select", options: ["primary", "secondary", "card", "think"] },
+            table: {
+                defaultValue: { summary: "primary" },
+            },
+        },
+        size: {
+            control: { type: "select", options: ["xs", "md", "lg"] },
+            table: {
+                defaultValue: { summary: "md" },
+            },
+        },
+    }}
+/>
+
+# Codeblock
+
+### Primary
+
+<Canvas>
+    <Story
+        name="primary tabs"
+        args={{
+            type: "primary",
+        }}
+    >
+        {(args) => (
+            <Tabs {...args}>
+                <Tabs.TabPane tab="tab1" key="tab1">
+                    Tab 1
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab2" key="tab2">
+                    Tab 2
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab3" key="tab3">
+                    Tab 3
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab4" key="tab4">
+                    Tab 4
+                </Tabs.TabPane>
+            </Tabs>
+        )}
+    </Story>
+</Canvas>
+
+### Secondry
+
+<Canvas>
+    <Story
+        name="secondry tabs"
+        args={{
+            type: "secondry",
+        }}
+    >
+        {(args) => (
+            <Tabs {...args}>
+                <Tabs.TabPane tab="tab1" key="tab1">
+                    Tab 1
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab2" key="tab2">
+                    Tab 2
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab3" key="tab3">
+                    Tab 3
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab4" key="tab4">
+                    Tab 4
+                </Tabs.TabPane>
+            </Tabs>
+        )}
+    </Story>
+</Canvas>
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            type: "primary",
+        }}
+    >
+        {(args) => (
+            <Tabs {...args}>
+                <Tabs.TabPane tab="tab1" key="tab1">
+                    Tab 1
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab2" key="tab2">
+                    Tab 2
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab3" key="tab3">
+                    Tab 3
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="tab4" key="tab4">
+                    Tab 4
+                </Tabs.TabPane>
+            </Tabs>
+        )}
+    </Story>
+</Preview>
+
+<ArgsTable story="Playground" />
+
+# Props
+
+<ArgsTable of={Tabs} />
