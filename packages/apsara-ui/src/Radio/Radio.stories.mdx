@@ -1,0 +1,55 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Radio from "./Radio";
+
+export const optionType = ["default", "button"];
+export const options = [
+    { label: "Apple", value: "Apple" },
+    { label: "Pear", value: "Pear" },
+    { label: "Orange", value: "Orange", disabled: true },
+];
+
+<Meta
+    title="General/Radio"
+    argTypes={{
+        options: {
+            control: { type: "object" },
+            description: "Set children optional",
+            table: {
+                type: { summary: "string[] | Array<{ label: string value: string disabled?: boolean }>" },
+            },
+        },
+        value: {
+            control: { type: "text" },
+            description: "Used for setting the currently selected value",
+            table: {
+                type: { summary: "string" },
+                defaultValue: { summary: "" },
+            },
+        },
+        optionType: {
+            control: { type: "select", options: optionType },
+            description: "Set Radio optionType",
+            table: {
+                type: { summary: optionType },
+                defaultValue: { summary: "default" },
+            },
+        },
+    }}
+/>
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            options: options,
+            value: "Apple",
+            optionType: "default",
+        }}
+    >
+        {(args) => <Radio.Group {...args} />}
+    </Story>
+</Preview>
+
+# Props
+
+<ArgsTable story="Playground" />

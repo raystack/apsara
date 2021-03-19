@@ -1,7 +1,17 @@
-import { Input } from "antd";
+import { Input as AntdInput } from "antd";
 import styled from "styled-components";
+import { width, height, zIndex, textAlign, borderRadius, space, background } from "styled-system";
 
-const CustomInput = styled(Input)`
+const Input = styled(AntdInput)`
+    && {
+        ${width}
+        ${height}
+    ${zIndex}
+    ${textAlign};
+        ${borderRadius};
+        ${space};
+        ${background}
+    }
     &:disabled {
         color: #b3b3b3;
         ::placeholder {
@@ -10,4 +20,4 @@ const CustomInput = styled(Input)`
     }
 `;
 
-export default CustomInput;
+export default Input;

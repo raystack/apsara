@@ -1,0 +1,56 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Switch from "./Switch";
+
+<Meta
+    title="General/Switch"
+    argTypes={{
+        checked: {
+            control: { type: "boolean" },
+            description: "Determine whether the Switch is checkedl",
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: "false" },
+            },
+        },
+        defaultChecked: {
+            control: { type: "boolean" },
+            description: "Whether to set the initial state",
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: "false" },
+            },
+        },
+        loading: {
+            control: { type: "boolean" },
+            description: "Loading state of switch",
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: "false" },
+            },
+        },
+        size: {
+            control: { type: "select", options: ["default", "small"] },
+            description: "The size of the Switch, options: default small",
+            table: {
+                type: { summary: ["default", "small"] },
+                defaultValue: { summary: "default" },
+            },
+        },
+        onClick: { action: "switch clicked" },
+    }}
+/>
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            checked: true,
+        }}
+    >
+        {(args) => <Switch {...args} />}
+    </Story>
+</Preview>
+
+# Props
+
+<ArgsTable story="Playground" />

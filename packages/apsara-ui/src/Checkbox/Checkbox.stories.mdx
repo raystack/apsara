@@ -1,0 +1,45 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Checkbox from "./Checkbox";
+
+export const options = [
+    { label: "Apple", value: "Apple" },
+    { label: "Pear", value: "Pear" },
+    { label: "Orange", value: "Orange", disabled: true },
+];
+
+<Meta
+    title="General/Checkbox"
+    argTypes={{
+        options: {
+            control: { type: "object" },
+            description: "Set children optional",
+            table: {
+                type: { summary: "string[] | Array<{ label: string value: string disabled?: boolean }>" },
+            },
+        },
+        value: {
+            control: { type: "text" },
+            description: "Used for setting the currently selected value",
+            table: {
+                type: { summary: "string" },
+                defaultValue: { summary: "" },
+            },
+        },
+    }}
+/>
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            options: options,
+            value: "Apple",
+        }}
+    >
+        {(args) => <Checkbox.Group {...args} />}
+    </Story>
+</Preview>
+
+# Props
+
+<ArgsTable story="Playground" />
