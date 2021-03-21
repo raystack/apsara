@@ -1,0 +1,64 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Slider from "./Slider";
+
+<Meta
+    title="General/Slider"
+    argTypes={{
+        disabled: {
+            control: { type: "boolean" },
+            description: "If true, the slider will not be interactable",
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: "false" },
+            },
+        },
+        defaultValue: {
+            control: { type: "number" },
+            description:
+                "The default value of slider. When range is false, use number, otherwise, use [number, number]",
+            table: {
+                type: { summary: "number | [number, number]" },
+                defaultValue: { summary: "0 | [0, 0]" },
+            },
+        },
+        value: {
+            control: { type: "number" },
+            description: "The value of slider. When range is false, use number, otherwise, use [number, number]",
+            table: {
+                type: { summary: "number | [number, number]" },
+                defaultValue: { summary: "false" },
+            },
+        },
+        max: {
+            control: { type: "number" },
+            description: "The maximum value the slider can slide to",
+            table: {
+                type: { summary: "number" },
+                defaultValue: { summary: 100 },
+            },
+        },
+        min: {
+            control: { type: "number" },
+            description: "The minimum value the slider can slide to",
+            table: {
+                type: { summary: "number" },
+                defaultValue: { summary: 0 },
+            },
+        },
+    }}
+/>
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            defaultValue: 30,
+        }}
+    >
+        {(args) => <Slider {...args} />}
+    </Story>
+</Preview>
+
+# Props
+
+<ArgsTable story="Playground" />
