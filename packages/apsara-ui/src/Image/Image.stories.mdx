@@ -1,0 +1,55 @@
+import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
+import Image from "./Image";
+
+<Meta
+    title="General/Image"
+    argTypes={{
+        src: {
+            name: "path",
+            description: "Image path",
+            control: { type: "string" },
+            table: {
+                type: { summary: "string" },
+                defaultValue: { summary: "NoData" },
+            },
+        },
+        width: {
+            description: "Image width",
+            control: { type: "number" },
+            table: {
+                type: { summary: "number" },
+            },
+        },
+        height: {
+            description: "Image height",
+            control: { type: "number" },
+            table: {
+                type: { summary: "number" },
+            },
+        },
+        preview: {
+            control: { type: "boolean" },
+            description: "preview config, disabled when false",
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: false },
+            },
+        },
+    }}
+/>
+
+<Preview>
+    <Story
+        name="Playground"
+        args={{
+            src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+            width: 100,
+        }}
+    >
+        {(args) => <Image {...args} />}
+    </Story>
+</Preview>
+
+# Props
+
+<ArgsTable story="Playground" />

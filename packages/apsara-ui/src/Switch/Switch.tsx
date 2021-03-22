@@ -1,4 +1,3 @@
-import styled from "styled-components";
-import { Switch as AntdSwitch } from "antd";
+import { Switch } from "antd";
 
-export default styled(AntdSwitch)``;
+export default Switch;

@@ -2,7 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import Colors from "../Colors";
 
-const Container = styled.div`
+const DIV = styled.div``;
+const Container = styled(DIV)<{ active: boolean }>`
     max-width: 275px;
     border-bottom: 1px solid #f2f2f2;
     cursor: pointer;
