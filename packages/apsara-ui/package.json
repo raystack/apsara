@@ -37,20 +37,22 @@
     },
     "dependencies": {
         "@ant-design/icons": "^4.2.2",
-        "@storybook/addon-controls": "^6.1.21",
         "antd": "^4.6.4",
         "clsx": "^1.1.1",
         "moment": "^2.29.1",
         "ramda": "^0.27.1",
+        "rc-resize-observer": "^1.0.0",
         "react-infinite-scroll-hook": "^3.0.0",
         "react-lottie": "^1.2.3",
         "react-window": "^1.8.5",
         "react-window-infinite-loader": "^1.0.5",
-        "styled-components": "^5.2.0"
+        "styled-components": "^5.2.0",
+        "styled-system": "^5.1.5"
     },
     "devDependencies": {
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-url": "^5.0.1",
+        "@storybook/addon-controls": "^6.1.21",
         "@storybook/addon-essentials": "^6.1.21",
         "@storybook/addon-links": "^6.1.10",
         "@storybook/addon-storysource": "^6.1.10",
@@ -64,7 +66,6 @@
         "file-loader": "^6.1.1",
         "less": "^3.12.2",
         "less-loader": "^7.0.1",
-        "rc-resize-observer": "^0.2.5",
         "react-docgen-typescript-webpack-plugin": "^1.1.0",
         "rollup": "^2.27.0",
         "rollup-plugin-multi-input": "^1.1.1",
@@ -73,7 +74,6 @@
         "rollup-plugin-postcss-webpack-alias-less-loader": "^1.0.0",
         "rollup-plugin-typescript2": "^0.27.2",
         "style-loader": "^1.2.1",
-        "styled-system": "^5.1.5",
         "ts-import-plugin": "^1.6.6"
     },
     "bugs": {
