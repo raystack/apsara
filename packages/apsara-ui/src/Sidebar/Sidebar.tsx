@@ -50,13 +50,13 @@ const SidebarFooter = ({ collapsed }: collapsedProps) => (
 );
 
 interface SidebarProps {
-    headerProps: {
+    headerProps?: {
         name?: string;
         logo?: string;
         icon?: React.ReactNode;
     };
-    activePath: string;
-    navigationList: RenderItem[];
+    activePath?: string;
+    navigationList?: RenderItem[];
     onItemClick?: (item: RenderItem) => void;
     children?: ReactNode;
     linkRender?: ({ children }: any) => ReactElement;
@@ -64,14 +64,15 @@ interface SidebarProps {
 
 const rightSidebarState = localStorage.getItem("NAV_SIDEBAR_STATE") === "true";
 const Sidebar = ({
-    headerProps: { name = "", logo = "", icon },
-    activePath,
-    navigationList,
+    headerProps = {},
+    activePath = "",
+    navigationList = [],
     onItemClick = () => null,
     linkRender = ({ children }) => <React.Fragment>{children}</React.Fragment>,
     children,
     ...extraProps
 }: SidebarProps) => {
+    const { name = "", logo = "", icon } = headerProps;
     const [collapsed, setCollapsed] = useState(rightSidebarState || false);
 
     useEffect(() => {
