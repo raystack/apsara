@@ -3,7 +3,7 @@ import Icon from "@ant-design/icons";
 import * as CustomIconMap from "./customicons";
 import Colors from "../Colors";
 
-interface CustomIconProps {
+export interface CustomIconProps {
     name: string;
     className?: string;
     active?: boolean;
@@ -11,12 +11,14 @@ interface CustomIconProps {
     styleOverride?: any;
     disabled?: boolean;
     onClick?: () => void;
+    color?: string;
 }
 function CustomIcon({
     name,
     className = "",
     active = false,
     size = 24,
+    color = "",
     onClick = () => null,
     styleOverride = {},
     ...restProps
@@ -28,8 +30,8 @@ function CustomIcon({
             className={`skeleton-icon ${name} ${className}`}
             component={iconComponent}
             style={{
-                color: !active ? Colors.black[400] : Colors.primary[300],
-                fill: Colors.primary[300],
+                color: color ? color : !active ? Colors.black[400] : Colors.primary[300],
+                fill: color ? color : Colors.primary[300],
                 fontSize: `${size}px`,
                 ...styleOverride,
             }}
