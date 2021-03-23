@@ -13,11 +13,43 @@ const LinkRender = ({ children, to }: any) => {
     return <React.Fragment>{children}</React.Fragment>;
 };
 
+export const sidebarWithIconComponent = () => (
+    <Sidebar
+        headerProps={{
+            name: "Console",
+            iconComponent: <Icon name="doc" size={32} styleOverride={{ color: Colors.primary[300] }} />,
+        }}
+        linkRender={LinkRender}
+        activePath={"discovery"}
+        onItemClick={() => null}
+        navigationList={[
+            {
+                key: "discovery",
+                url: "/discovery/",
+                linkText: "Discovery",
+                icon: "discovery",
+            },
+            {
+                key: "dashboard",
+                url: "/dashboard/",
+                linkText: "Dashboard",
+                icon: "dashboard",
+            },
+            {
+                key: "health",
+                url: "/health/",
+                linkText: "Health",
+                icon: "health",
+            },
+        ]}
+    />
+);
+
 export const sidebar = () => (
     <Sidebar
         headerProps={{
             name: "Console",
-            icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.primary[300] }} />,
+            icon: { name: "doc", color: Colors.primary[300], size: 32 },
         }}
         linkRender={LinkRender}
         activePath={"discovery"}

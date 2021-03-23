@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect, ReactElement, ReactNode } from "react";
 import { Layout, Menu } from "antd";
-import CustomIcon from "../Icon";
+import CustomIcon, { CustomIconProps } from "../Icon/Icon";
 import "./Sidebar.less";
 
 const { Sider } = Layout;
@@ -53,7 +53,8 @@ interface SidebarProps {
     headerProps?: {
         name?: string;
         logo?: string;
-        icon?: React.ReactNode;
+        iconComponent?: React.ReactNode;
+        icon?: CustomIconProps;
     };
     activePath?: string;
     navigationList?: RenderItem[];
@@ -72,7 +73,7 @@ const Sidebar = ({
     children,
     ...extraProps
 }: SidebarProps) => {
-    const { name = "", logo = "", icon } = headerProps;
+    const { name = "", logo = "", icon, iconComponent = null } = headerProps;
     const [collapsed, setCollapsed] = useState(rightSidebarState || false);
 
     useEffect(() => {
@@ -82,7 +83,6 @@ const Sidebar = ({
     const onCollapse = (val: boolean) => {
         setCollapsed(val);
     };
-
     return (
         <Sider
             width={180}
@@ -95,7 +95,8 @@ const Sidebar = ({
             {...extraProps}
         >
             <div className="sidebar__wrapper--logo">
-                {icon ? <span className="img__logo">{icon}</span> : null}
+                {icon ? <CustomIcon {...icon} className="img__logo" /> : null}
+                {iconComponent ? <span className="img__logo">{iconComponent}</span> : null}
                 {logo ? <img src={logo} alt="" className="img__logo" /> : null}
                 <span className="sidebar__wrapper--title">{name}</span>
             </div>
