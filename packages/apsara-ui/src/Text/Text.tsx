@@ -84,7 +84,7 @@ const styleMap = {
 
 const { Text: AntText } = Typography;
 interface IText extends TextProps {
-    size?: number;
+    size?: keyof typeof styleMap;
 }
 
 const Text = styled(AntText).attrs((props: IText) => ({
