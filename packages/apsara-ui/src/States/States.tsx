@@ -1,6 +1,7 @@
 import React, { CSSProperties } from "react";
 import Icon from "@ant-design/icons";
-import Result, { ResultProps, ExceptionStatusType } from "antd/lib/result";
+import { Result } from "antd";
+import { ResultProps, ExceptionStatusType } from "antd/lib/result";
 
 const pageCenterStyle: CSSProperties = {
     position: "absolute",
