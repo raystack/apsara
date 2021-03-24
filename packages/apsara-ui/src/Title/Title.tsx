@@ -1,13 +1,13 @@
 import React from "react";
-import Icon from "../Icon";
 import Tooltip from "../Tooltip";
 import Text from "../Text";
 import "./style.less";
+import Icon, { IconName } from "../Icon/Icon";
 
 interface TitleProps {
     title: string;
     icon?: {
-        name: string;
+        name: IconName;
         color: string;
     };
     styleOverride?: Record<string, unknown>;

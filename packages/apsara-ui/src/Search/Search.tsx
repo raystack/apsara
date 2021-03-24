@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "antd";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 
-import CustomIcon from "../Icon";
+import CustomIcon, { IconName } from "../Icon/Icon";
 import Theme from "../theme";
 import "./search.less";
 
@@ -46,8 +46,8 @@ const Search = ({
     disabled = false,
 }: SearchProps) => {
     const iconObj = secondary
-        ? { name: "search", color: SECONDARY_SEARCH_ICON_COLOR }
-        : { name: "searchfilter", color: PRIMARY_SEARCH_ICON_COLOR };
+        ? { name: "search" as IconName, color: SECONDARY_SEARCH_ICON_COLOR }
+        : { name: "searchfilter" as IconName, color: PRIMARY_SEARCH_ICON_COLOR };
     const isIconClickFn = typeof onIconClick === "function";
 
     const handleIconClick = () => {

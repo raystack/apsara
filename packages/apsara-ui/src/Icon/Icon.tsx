@@ -3,8 +3,9 @@ import Icon from "@ant-design/icons";
 import * as CustomIconMap from "./customicons";
 import Colors from "../Colors";
 
+export type IconName = keyof typeof CustomIconMap;
 export interface CustomIconProps {
-    name: string;
+    name: IconName;
     className?: string;
     active?: boolean;
     size?: number;

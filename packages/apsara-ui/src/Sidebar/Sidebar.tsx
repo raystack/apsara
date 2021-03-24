@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect, ReactElement, ReactNode } from "react";
 import { Layout, Menu } from "antd";
-import CustomIcon, { CustomIconProps } from "../Icon/Icon";
+import CustomIcon, { CustomIconProps, IconName } from "../Icon/Icon";
 import "./Sidebar.less";
 
 const { Sider } = Layout;
@@ -10,7 +10,7 @@ interface RenderItem {
     key: string;
     url: string;
     linkText: string;
-    icon: string;
+    icon: IconName;
 }
 
 const renderMenuItemLink = (

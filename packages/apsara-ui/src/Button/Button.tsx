@@ -9,6 +9,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Icon from "../Icon";
 import "./style.less";
 import Tooltip from "../Tooltip";
+import { IconName } from "../Icon/Icon";
 
 const defaultSize = "default";
 const styleMap = {
@@ -48,7 +49,7 @@ export interface CustomButtonProps {
     styleOverride?: Record<string, string>;
     loading?: boolean;
     disabled?: boolean;
-    iconName?: string;
+    iconName?: IconName;
     iconSize?: number;
     children?: React.ReactNode;
     size?: SizeType;
