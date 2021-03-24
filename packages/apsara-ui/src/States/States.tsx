@@ -1,18 +1,25 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
-import React from "react";
+import React, { CSSProperties } from "react";
 import Icon from "@ant-design/icons";
-import { Result } from "antd";
+import Result, { ResultProps, ExceptionStatusType } from "antd/lib/result";
 
-const pageCenterStyle = {
+const pageCenterStyle: CSSProperties = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
 };
 
-const stateInfo = {
+interface StatesInfo {
+    [name: string]: {
+        icon?: string | null;
+        status: ExceptionStatusType;
+        title: string;
+        subTitle: string;
+        extra?: null;
+    };
+}
+
+const stateInfo: StatesInfo = {
     error: {
         icon: null,
         status: "500",
@@ -28,7 +35,13 @@ const stateInfo = {
     },
 };
 
-export default function States({ type = "error", icon, imageIcon, ...props }: any) {
+interface StateProps extends ResultProps {
+    type?: "error" | "unknown";
+    icon?: string;
+    imageIcon?: React.ReactNode;
+}
+
+export default function States({ type = "error", icon, imageIcon, ...props }: StateProps) {
     const modifiedProps = { ...stateInfo[type], ...props, icon: imageIcon || <Icon type={icon} /> };
     return <Result style={pageCenterStyle} {...modifiedProps} />;
 }
