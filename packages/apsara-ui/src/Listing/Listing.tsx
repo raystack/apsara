@@ -8,15 +8,15 @@ import useSearchFilter, { IGroupOptions } from "./useSearchFilter";
 import clsx from "clsx";
 
 interface ListingProps {
-    list: any[];
-    loading: boolean;
+    list?: any[];
+    loading?: boolean;
     resourceName?: string;
     resourcePath?: string;
     rowKey?: string;
     className?: string;
-    tableProps: { getColumnList: any; handleRowClick?: () => null; selectedRowId?: number; scroll: any };
-    filterProps: { filterFieldList: IGroupOptions[] };
-    searchProps: { searchPlaceholder?: string; searchFields: any[]; disabled?: boolean };
+    tableProps?: { getColumnList?: any; handleRowClick?: () => null; selectedRowId?: number; scroll?: any };
+    filterProps?: { filterFieldList?: IGroupOptions[] };
+    searchProps?: { searchPlaceholder?: string; searchFields?: any[]; disabled?: boolean };
     renderExtraFilters?: any;
     renderHeader?: any;
     renderBody?: any;
@@ -27,14 +27,17 @@ const Listing = ({
     loading = false,
     rowKey,
     className = "",
-    filterProps: { filterFieldList = [] },
-    searchProps: { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps },
-    tableProps: { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps },
+    filterProps = {},
+    searchProps = {},
+    tableProps = {},
     renderExtraFilters = null,
     renderHeader = null,
     renderBody = null,
     resourcePath = "/",
 }: ListingProps) => {
+    const { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps } = tableProps;
+    const { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps;
+    const { filterFieldList = [] } = filterProps;
     const {
         searchTerm,
         sortedInfo,
