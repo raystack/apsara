@@ -1,10 +1,11 @@
 import React from "react";
 import * as R from "ramda";
 import PropTypes from "prop-types";
-import { Form } from "antd";
+import { ColProps, Form, FormInstance, FormItemProps } from "antd";
 import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
 import FormBuilderField from "./FormBuilderField";
+import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
 
 /*
 Example:
@@ -43,13 +44,51 @@ const shouldShow = (config: any, dependenciesFieldValue: any) => {
     return evaluateExpression(config.depends, dependenciesFieldValue?.toString());
 };
 
-const FormBuilderItems = (props: any) => {
+interface FormMetaFields {
+    formItemLayout?: {
+        labelCol: ColProps;
+        wrapperCol: ColProps;
+    };
+    readOnly?: boolean;
+    rules?: Rule[];
+    required?: boolean;
+    message: string;
+    pattern?: RegExp;
+    label: string;
+    patternMsg: string;
+    children: React.ReactNode;
+    className: string;
+    formItemProps: FormItemProps;
+    dependencies?: InternalNamePath[];
+    disabled?: boolean;
+    name: string;
+    widget: "node";
+    title: string;
+    fieldProps: {};
+    initialValue?: any;
+    tooltip?: React.ReactNode | string;
+}
+
+export interface FormBuilderItemsProps {
+    form?: FormInstance;
+    meta: {
+        fields?: FormMetaFields[];
+        readOnly?: boolean;
+        formItemLayout?: {
+            labelCol: ColProps;
+            wrapperCol: ColProps;
+        };
+    };
+}
+const emptyFn = () => {};
+
+const FormBuilderItems = (props: FormBuilderItemsProps) => {
     const { form = null, meta } = props;
     if (!meta) return null;
 
     const { fields = [] } = meta;
 
-    return fields.map((config: any) => {
+    return fields.map((config: FormMetaFields) => {
         // TODO: utilize form formItemLayout for all form item
         let formItemLayout = config.formItemLayout || meta.formItemLayout;
 
@@ -109,7 +148,7 @@ const FormBuilderItems = (props: any) => {
             ...config.formItemProps,
         };
 
-        const dependenciesFieldsValue = R.map(form.getFieldValue, config.dependencies || []);
+        const dependenciesFieldsValue = R.map(form?.getFieldValue || emptyFn, config.dependencies || []);
 
         const shouldDisabledByFieldsValue =
             dependenciesFieldsValue.some(R.isEmpty) || dependenciesFieldsValue.some(R.isNil);
@@ -156,8 +195,8 @@ const FormBuilderItems = (props: any) => {
 
         if (isReadOnly) {
             return (
-                <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
-                    {form.getFieldValue(config.name) || config.initialValue}
+                <Form.Item {...formItemProps} name={config.name} label={config.label} key={uniqeKey}>
+                    {form?.getFieldValue(config.name) || config.initialValue}
                 </Form.Item>
             );
         }
@@ -168,7 +207,7 @@ const FormBuilderItems = (props: any) => {
         );
 
         return shouldShowField ? (
-            <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
+            <Form.Item {...formItemProps} name={config.name} label={config.label} key={uniqeKey}>
                 <FormBuilderToolTip form={form} title={config.title} {...formFieldProps} />
             </Form.Item>
         ) : null;

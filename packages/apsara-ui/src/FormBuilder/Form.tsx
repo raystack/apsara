@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "antd";
+import { Form, FormProps } from "antd";
 import PropTypes from "prop-types";
 import { FormInstance } from "antd/lib/form";
 import FormBuilderItems from "./FormBuilderItems";
@@ -9,7 +9,7 @@ const validateMessages = {
     required: "${label} is required!",
 };
 
-interface CustomFormProps {
+interface CustomFormProps extends FormProps {
     form: FormInstance;
 }
 
