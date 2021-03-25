@@ -11,6 +11,11 @@ import Input from "../Input";
 import { getStringValue } from "./helper";
 
 const { Option } = Select;
+
+interface OptionProps {
+    label: string;
+    value: any;
+}
 interface FormBuilderFieldProps {
     id?: any;
     widget?: string;
@@ -18,6 +23,7 @@ interface FormBuilderFieldProps {
     component?: any;
     rows?: number;
     enableTag?: boolean;
+    options?: OptionProps[];
 }
 const FormBuilderField = ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -32,7 +38,7 @@ const FormBuilderField = ({
 }: FormBuilderFieldProps) => {
     if (widget === "range") return <InputNumber {...props} />;
     if (widget === "radio") {
-        const options = props.options.map((option: any) => {
+        const options = props.options.map((option: OptionProps) => {
             return (
                 <Radio key={option.label} value={getStringValue(option.value)}>
                     {option.label}
@@ -48,7 +54,7 @@ const FormBuilderField = ({
     if (widget === "select") {
         const { options = [], ...restProps } = props;
         const sortedOptions = useMemo(() => R.sortBy(R.prop("label"))(options), [options]);
-        const optionsData = sortedOptions.map(({ value, label }: any) => {
+        const optionsData = sortedOptions.map(({ value, label }: OptionProps) => {
             return (
                 <Option key={value} value={value}>
                     {label}
