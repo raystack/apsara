@@ -27,6 +27,11 @@ import Colors from "./Colors";
 import Shadows from "./Shadows";
 import Tooltip from "./Tooltip";
 import Input from "./Input";
+import Radio from "./Radio";
+import Checkbox from "./Checkbox";
+import Image from "./Image";
+import Select from "./Select";
+import Tile from "./Tile";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -66,4 +71,9 @@ export {
     Shadows,
     Tooltip,
     Input,
+    Radio,
+    Checkbox,
+    Image,
+    Select,
+    Tile,
 };
