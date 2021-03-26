@@ -52,7 +52,6 @@ export const layout = () => (
                 searchProps={{
                     searchFields: ["name", "class"],
                 }}
-                resourceName="beast"
                 resourcePath="/beast"
             />
             <div style={{ textAlign: "center", paddingTop: "100px", paddingLeft: "48px" }}>

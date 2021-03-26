@@ -74,7 +74,6 @@ export const listing = () => (
         searchProps={{
             searchFields: ["name", "class"],
         }}
-        resourceName="beast"
         resourcePath="/beast"
     />
 );
@@ -127,7 +126,6 @@ export const infiniteListing = () => {
                     },
                 ],
             }}
-            resourceName="beast"
             resourcePath="/beast"
             page={page}
             loadMore={loadMore}

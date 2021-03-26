@@ -17,7 +17,6 @@ interface ILoadMoreProps {
 interface InfiniteListingProps {
     list: any[];
     loading: boolean;
-    resourceName?: string;
     resourcePath?: string;
     rowKey?: string;
     className?: string;
