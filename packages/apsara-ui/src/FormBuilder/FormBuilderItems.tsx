@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { ColProps, Form, FormInstance, FormItemProps } from "antd";
 import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
-import FormBuilderField from "./FormBuilderField";
+import FormBuilderField, { Widget } from "./FormBuilderField";
 import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
 
 /*
@@ -52,19 +52,19 @@ interface FormMetaFields {
     readOnly?: boolean;
     rules?: Rule[];
     required?: boolean;
-    message: string;
+    message?: string;
     pattern?: RegExp;
-    label: string;
-    patternMsg: string;
-    children: React.ReactNode;
-    className: string;
-    formItemProps: FormItemProps;
+    label?: string;
+    patternMsg?: string;
+    children?: React.ReactNode;
+    className?: string;
+    formItemProps?: FormItemProps;
     dependencies?: InternalNamePath[];
     disabled?: boolean;
-    name: string;
-    widget: "node";
+    name: string | string[];
+    widget: Widget;
     title: string;
-    fieldProps: {};
+    fieldProps?: {};
     initialValue?: any;
     tooltip?: React.ReactNode | string;
 }

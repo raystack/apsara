@@ -12,19 +12,22 @@ import { getStringValue } from "./helper";
 
 const { Option } = Select;
 
+export type Widget = "range" | "radio" | "select" | "textarea" | "switch" | "datepicker" | "node" | "input";
+
 interface OptionProps {
     label: string;
     value: any;
 }
 interface FormBuilderFieldProps {
     id?: any;
-    widget?: string;
+    widget?: Widget;
     widgetType?: string;
     component?: any;
     rows?: number;
     enableTag?: boolean;
     options?: OptionProps[];
 }
+
 const FormBuilderField = ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id,
