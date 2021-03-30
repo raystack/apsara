@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/odpf/apsara/compare/v0.2.1...v0.3.0) (2021-03-30)
+
+
+### Features
+
+* **icon:** add commit icon ([d0362d7](https://github.com/odpf/apsara/commit/d0362d7a0306175f609160442479471b9b0da6f9))
+* **icon:** add save and history icon ([2854c5d](https://github.com/odpf/apsara/commit/2854c5d826ca032182012b40aec08ad96b239ceb))
+* **listing:** make props optional in infinite listing ([6b48649](https://github.com/odpf/apsara/commit/6b48649db7508fdb44cd08b181917793e192e93b))
+
+
+
+
+
 ## [0.2.1](https://github.com/odpf/apsara/compare/v0.2.0...v0.2.1) (2021-03-26)
 
 
