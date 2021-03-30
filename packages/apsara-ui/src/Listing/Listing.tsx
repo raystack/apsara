@@ -14,7 +14,12 @@ interface ListingProps {
     resourcePath?: string;
     rowKey?: string;
     className?: string;
-    tableProps?: { getColumnList?: any; handleRowClick?: () => null; selectedRowId?: number; scroll?: any };
+    tableProps?: {
+        getColumnList?: any;
+        handleRowClick?: (event: any, rowIndexData: any) => void;
+        selectedRowId?: number;
+        scroll?: any;
+    };
     filterProps?: { filterFieldList?: IGroupOptions[] };
     searchProps?: { searchPlaceholder?: string; searchFields?: any[]; disabled?: boolean };
     renderExtraFilters?: any;

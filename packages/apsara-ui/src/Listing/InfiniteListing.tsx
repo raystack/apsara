@@ -15,13 +15,18 @@ interface ILoadMoreProps {
 }
 
 interface InfiniteListingProps {
-    list: any[];
-    loading: boolean;
+    list?: any[];
+    loading?: boolean;
     resourcePath?: string;
     rowKey?: string;
     className?: string;
-    tableProps: { getColumnList: any; handleRowClick?: () => null; selectedRowId?: number; scroll: any };
-    filterProps: { filterFieldList: any[] };
+    tableProps?: {
+        getColumnList?: any;
+        handleRowClick?: (event: any, rowIndexData: any) => void;
+        selectedRowId?: number;
+        scroll?: any;
+    };
+    filterProps?: { filterFieldList?: any[] };
     searchProps?: { searchPlaceholder?: string; disabled?: boolean };
     renderExtraFilters?: any;
     renderHeader?: any;
@@ -37,9 +42,9 @@ const InfiniteListing = ({
     loading = false,
     rowKey,
     className = "",
-    filterProps: { filterFieldList = [] },
-    searchProps,
-    tableProps: { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps },
+    filterProps = {},
+    searchProps = {},
+    tableProps = {},
     renderExtraFilters = null,
     renderHeader = null,
     renderBody = null,
@@ -49,6 +54,9 @@ const InfiniteListing = ({
     onSearch = () => null,
     onFilter = () => null,
 }: InfiniteListingProps) => {
+    const { getColumnList = () => [], handleRowClick = () => ({}), selectedRowId, ...extraTableProps } = tableProps;
+    const { filterFieldList = [] } = filterProps;
+
     const {
         sortedInfo,
         searchTerm,

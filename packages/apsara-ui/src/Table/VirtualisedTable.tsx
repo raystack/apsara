@@ -51,7 +51,7 @@ interface IVirtualTable extends TableProps<any> {
     selectedRowId?: number | null;
     scroll?: any;
     loadMore?: () => Promise<void> | null;
-    onRowClick?: (event: any, rowIndexData: any) => null;
+    onRowClick?: (event: any, rowIndexData: any) => void;
 }
 const VirtualTableComponent = ({
     columns = [],

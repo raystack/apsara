@@ -16,7 +16,7 @@ import "./Table.style.less";
 interface ITableProps extends TableProps<any> {
     items: Record<string, unknown>[];
     selectedRowId?: number | null;
-    onRowClick?: (event: any, rowIndexData: any) => null;
+    onRowClick?: (event: any, rowIndexData: any) => void;
     alternate?: boolean;
     alternateHover?: boolean;
     className?: string;

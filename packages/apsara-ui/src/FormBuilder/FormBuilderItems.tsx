@@ -63,7 +63,7 @@ interface FormMetaFields {
     disabled?: boolean;
     name: string | string[];
     widget: Widget;
-    title: string;
+    title?: string;
     fieldProps?: {};
     initialValue?: any;
     tooltip?: React.ReactNode | string;
