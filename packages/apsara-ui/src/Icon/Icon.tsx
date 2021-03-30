@@ -1,9 +1,10 @@
 import React from "react";
 import Icon from "@ant-design/icons";
-import * as CustomIconMap from "./customicons";
 import Colors from "../Colors";
+// @ts-ignore
+import * as Icons from "@odpf/icons";
 
-export type IconName = keyof typeof CustomIconMap;
+export type IconName = string;
 export interface CustomIconProps {
     name: IconName;
     className?: string;
@@ -25,7 +26,7 @@ function CustomIcon({
     ...restProps
 }: CustomIconProps) {
     if (!name) return null;
-    const iconComponent = CustomIconMap[name];
+    const iconComponent = Icons[name];
     return (
         <Icon
             className={`skeleton-icon ${name} ${className}`}
@@ -44,7 +45,7 @@ function CustomIcon({
 
 export const CustomIconImage = ({ name }: { name: string }) => {
     if (!name) return null;
-    const iconComponent = CustomIconMap[name];
+    const iconComponent = Icons[name];
     return <img alt={name} className={`skeleton-icon-image ${name}`} src={iconComponent} />;
 };
 
