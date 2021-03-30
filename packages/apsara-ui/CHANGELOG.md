@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/odpf/apsara/compare/v0.3.0...v0.4.0) (2021-03-30)
+
+
+### Features
+
+* **icon:** create seperate icon component ([e8c4423](https://github.com/odpf/apsara/commit/e8c442336e809fb464e1f298307565a1c9b1223c))
+
+
+
+
+
 # [0.3.0](https://github.com/odpf/apsara/compare/v0.2.1...v0.3.0) (2021-03-30)
 
 
