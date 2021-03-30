@@ -59,7 +59,7 @@ function buildIndex(list, format) {
     return list.reduce((acc, { exportName, componentName }) => {
         const content =
             format === "esm"
-                ? `import ${componentName} from './${componentName}.js';\nexport const ${exportName} = ${componentName};\n`
+                ? `export { default as ${exportName} } from './${componentName}';\n`
                 : `const ${componentName} = require('./${componentName}.js');\nmodule.${exportName} = ${componentName};\n`;
         return acc + content;
     }, baseImport);
@@ -71,13 +71,14 @@ async function writeIndexFiles(componentList) {
     return Promise.all([
         fs.writeFile(`${esmDir}/index.js`, indexEsmContent, "utf8"),
         fs.writeFile(`${cjsDir}/index.js`, indexCjsContent, "utf8"),
+        fs.writeFile(`${cjsDir}/index.d.ts`, indexEsmContent, "utf8"),
     ]);
 }
 
-async function writeIconFiles({ esmContent, types, cjsContent, componentName }) {
+async function writeIconFiles({ esmContent, cjsContent, componentName }) {
+    const types = `import * as React from 'react';\ndeclare function ${componentName}(props: React.ComponentProps<'svg'>): JSX.Element;\nexport default ${componentName};\n`;
     return Promise.all([
         fs.writeFile(`${esmDir}/${componentName}.js`, esmContent, "utf8"),
-        fs.writeFile(`${esmDir}/${componentName}.d.ts`, types, "utf8"),
         fs.writeFile(`${cjsDir}/${componentName}.js`, cjsContent, "utf8"),
         fs.writeFile(`${cjsDir}/${componentName}.d.ts`, types, "utf8"),
     ]);
@@ -100,10 +101,7 @@ async function main() {
             icons.flatMap(async ({ exportName, componentName, svg }) => {
                 const esmContent = await transform(svg, componentName, "esm");
                 const cjsContent = await transform(svg, componentName, "cjs");
-                const types = `import * as React from 'react';\n
-          declare function ${componentName}(props: React.ComponentProps<'svg'>): JSX.Element;\n
-          export default ${componentName};\n`;
-                await writeIconFiles({ esmContent, cjsContent, types, componentName });
+                await writeIconFiles({ esmContent, cjsContent, componentName });
                 return {
                     exportName,
                     componentName,

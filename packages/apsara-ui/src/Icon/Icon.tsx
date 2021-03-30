@@ -1,10 +1,9 @@
 import React from "react";
 import Icon from "@ant-design/icons";
 import Colors from "../Colors";
-// @ts-ignore
 import * as Icons from "@odpf/icons";
 
-export type IconName = string;
+export type IconName = keyof typeof Icons;
 export interface CustomIconProps {
     name: IconName;
     className?: string;
