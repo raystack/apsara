@@ -18,6 +18,7 @@ export { default as copy } from "../../assets/icons/Icons_32_copy.svg";
 export { default as copy2 } from "../../assets/icons/Icons_Copy.svg";
 export { default as save } from "../../assets/icons/Icons_save.svg";
 export { default as history } from "../../assets/icons/Icons_history.svg";
+export { default as commit } from "../../assets/icons/Icons_commit.svg";
 
 export { default as chevronright } from "../../assets/icons/Icons_32_chevron_outline_right.svg";
 export { default as searchfilter } from "../../assets/icons/Icons_20_search_filter.svg";
