@@ -26,6 +26,8 @@ interface FormBuilderFieldProps {
     rows?: number;
     enableTag?: boolean;
     options?: OptionProps[];
+    mode?: string;
+    tokenSeparators?: string[];
 }
 
 const FormBuilderField = ({

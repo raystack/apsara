@@ -64,7 +64,7 @@ interface FormMetaFields {
     name: string | string[];
     widget: Widget;
     title?: string;
-    fieldProps?: {};
+    fieldProps?: Record<string, unknown>;
     initialValue?: any;
     tooltip?: React.ReactNode | string;
 }
@@ -80,7 +80,7 @@ export interface FormBuilderItemsProps {
         };
     };
 }
-const emptyFn = () => {};
+const emptyFn = () => ({});
 
 const FormBuilderItems = (props: FormBuilderItemsProps) => {
     const { form = null, meta } = props;
