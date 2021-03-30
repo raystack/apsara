@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/odpf/apsara/compare/v0.4.0...v0.4.1) (2021-03-30)
+
+
+### Features
+
+* **icons:** add type definitions to index file ([902cf7f](https://github.com/odpf/apsara/commit/902cf7fd084f30e0f922c7b06d46fc173a9f2c1a))
+
+
+
+
+
 # [0.4.0](https://github.com/odpf/apsara/compare/v0.3.0...v0.4.0) (2021-03-30)
 
 

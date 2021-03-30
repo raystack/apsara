@@ -1,6 +1,6 @@
 {
     "name": "@odpf/icons",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "description": "Apsara icons",
     "scripts": {
         "build": "node scripts/build.js",
