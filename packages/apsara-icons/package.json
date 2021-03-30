@@ -1,0 +1,25 @@
+{
+    "name": "@odpf/icons",
+    "version": "0.0.0",
+    "description": "Apsara icons",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/odpf/apsara.git"
+    },
+    "author": "",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/odpf/apsara/issues"
+    },
+    "homepage": "https://github.com/odpf/apsara#readme",
+    "devDependencies": {
+        "@babel/core": "^7.13.14",
+        "@babel/plugin-transform-react-jsx": "^7.13.12",
+        "@svgr/core": "^5.5.0",
+        "rimraf": "^3.0.2"
+    }
+}
