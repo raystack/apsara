@@ -1,20 +1,37 @@
-<div align="center">
-  <h1>APSARA</h1>
-  <br>
-    👋 Welcome to APSARA Design System
-  <br>
-  <p align="center">
-  <a href="#fire-overview">Overview</a> •
-  <a href="#getting-started-with-apsara">Getting Started</a> •
-  <a target="_blank" href="">StoryBook</a>
-</p>
-</div>
+# Apsara
+![build workflow](https://github.com/odpf/apsara/actions/workflows/storybook.yml/badge.svg)
 
-## :fire: Overview
+Apsara 🧜‍♀️ is an React UI framework written in TypeScript on top of [Ant Design](https://ant.design/) to power the projects for Open Data Platform. Open Data Platform has a large number of enterprise-level products. With complex scenarios, designers and developers often need to respond fast due to frequent changes in product demands and concurrent R & D workflow. Many similar contents exist in the process. Through abstraction, we could obtain some stable and highly reusable components and pages on top of Ant Design.
+  
+<p align="center"><img src="./storybook/images/banner.png" /></p>
 
-APSARA is an experimental and work in progress design system written in TypeScript on top of [Ant Design](https://ant.design/).
+## Key Features
+Discover why users choose Apsara as the design system for their projects
 
-list of tech stack used:
+* **Flexible** Apsara components are built on top of a Ant UI Primitive for endless composability.
+* **Enterprise-grade** Apsara features a UI design language for enterprise-grade web applications.
+* **Abstraction** Apsara provides abstracted components for bulding complex data interfaces.
+
+## Usage
+
+Explore the [Storybook](odpf.github.io/apsara/) to learn about all the Apsara components.
+
+```sh
+$ yarn add odpf/apsara
+# or
+$ npm install --save odpf/apsara
+```
+
+```js
+import { Button } from "@odpf/apsara";
+
+<Button size="small" type="barebone" iconName="save">
+  I am using 🧜‍♀️ Apsara!
+</Button>
+```
+
+## Built with
+List of open source technologies used to build Apsara:
 
 -   [ReactJs](https://facebook.github.io/react/) v16
 -   [TypeScript](https://www.typescriptlang.org/) used to transpile TS code into javascript
@@ -23,30 +40,37 @@ list of tech stack used:
 -   [Husky](https://github.com/typicode/husky) for automate Git hooks
 -   [Eslint](https://github.com/eslint/eslint) for code linting
 -   [Prettier](https://prettier.io/) for code formatting
--   [Storybook](https://storybook.js.org/)
+-   [Storybook](https://storybook.js.org/) for documenting components
 
-### Getting started with apsara
-
-#### Download dependencies
+## Running locally
 
 ```sh
-yarn install
+# Download and install all required packages and set up the yarn workspace.
+$ yarn install
+
+# Launch storybook
+$ yarn storybook
 ```
 
-to download and install all required packages and set up the yarn workspace.
+Open http://localhost:6006/ in your favorite browser.
 
-#### Launch storybook
-
-```sh
-yarn storybook
-```
-
-in order to run Storybook, Open http://localhost:6006/ in your favorite browser.
-
-### Testing
+## Running Tests
 
 ```sh
 yarn test
 ```
 
-in order to run test.
+## Contribute
+
+Development of Apsara happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving Apsara.
+
+Read our [contributing guide](docs/contribute/contribution.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Apsara.
+
+To help you get your feet wet and get you familiar with our contribution process, we have a list of [good first issues](https://github.com/odpf/apsara/labels/good%20first%20issue) that contain bugs which have a relatively limited scope. This is a great place to get started.
+
+## Credits
+
+This project exists thanks to all the [contributors](https://github.com/odpf/apsara/graphs/contributors).
+
+## License
+Apsara is [Apache 2.0](LICENSE) licensed.
