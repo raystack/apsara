@@ -41,7 +41,7 @@ const Button: React.FC<NativeButtonProps> = styled(AntButton).attrs((props: any)
     letter-spacing: ${(props) => styleMap[props.size]?.letterSpacing || styleMap[defaultSize].letterSpacing};
 `;
 
-export interface CustomButtonProps {
+export interface CustomButtonProps extends Omit<NativeButtonProps, "type"> {
     className?: string;
     tooltipMessage?: React.ReactNode;
     tooltipPlacement?: TooltipPlacement;
@@ -67,7 +67,7 @@ function CustomButton({
     iconSize = 24,
     children,
     ...props
-}: Omit<NativeButtonProps, "type"> & CustomButtonProps) {
+}: CustomButtonProps) {
     const IconComponent = () => {
         // ? --inline style is expected by antd
         if (loading) {

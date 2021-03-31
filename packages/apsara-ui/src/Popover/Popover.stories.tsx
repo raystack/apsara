@@ -16,3 +16,22 @@ export const popover = () => (
         </Popover>
     </>
 );
+
+export const popoverContent = () => (
+    <>
+        <Popover
+            title="Confirmation"
+            content={
+                <div>
+                    <input></input>
+                </div>
+            }
+            onOk={() => {}}
+            cancelBtnProps={{
+                text: "Cancel",
+            }}
+        >
+            <Button>Default Button</Button>
+        </Popover>
+    </>
+);
