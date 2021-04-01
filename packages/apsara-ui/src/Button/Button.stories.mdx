@@ -1,5 +1,6 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
-import { default as ButtonTemplate, CustomButtonProps } from "./Button";
+import { default as ButtonTemplate } from "./Button";
+import { Props } from "./Button.types";
 const style = { marginRight: "10px", marginBottom: "10px" };
 const sizes = ["small", "normal", "large"];
 
@@ -24,6 +25,9 @@ const sizes = ["small", "normal", "large"];
         type: {
             name: "type",
             table: {
+                type: {
+                    summary: `Defines the type of the button`,
+                },
                 defaultValue: { summary: "primary" },
             },
         },
@@ -31,7 +35,31 @@ const sizes = ["small", "normal", "large"];
     }}
 />
 
-# Buttons
+# Button
+
+To trigger an operation.
+
+Buttons allow users to take actions, and make choices, with a single tap. Buttons communicate actions that users can take.
+
+Inspired by [Ant Design Button](https://ant.design/components/button/)
+
+## When to use it
+
+A button means an operation (or a series of operations). Clicking a button will trigger corresponding business logic.
+
+-   To perform actions (send, delete, edit, cancel, and more).
+-   To confirm the displayed information.
+-   Generally, to be used when actions caused by users affect back-end and/or front-end of the application.
+
+## Usage
+
+```js
+import { Button } from "@odpf/apsara";
+
+<Button loading type="primary">
+    Click for signup
+</Button>;
+```
 
 <Canvas>
     <Story
@@ -77,10 +105,9 @@ export const Button = (args) => <ButtonTemplate {...args} />;
         args={{
             loading: true,
             type: "primary",
-            children: "loading",
         }}
     >
-        {(args) => <Button {...args} />}
+        {(args) => <Button {...args}>loading</Button>}
     </Story>
 </Preview>
 

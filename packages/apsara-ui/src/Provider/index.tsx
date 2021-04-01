@@ -39,14 +39,8 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-type ThemePropsVars = {
-    variables?: { [key: string]: string };
-    spaces?: number[];
-    breakpoints?: string[];
-};
-
 export interface ThemeProviderProps {
-    theme?: ThemePropsVars & {
+    theme?: {
         [key: string]: any;
     };
     children?: React.ReactNode;

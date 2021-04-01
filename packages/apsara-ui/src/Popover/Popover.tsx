@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Popover } from "antd";
 import "./style.less";
-import Button, { CustomButtonProps } from "../Button/Button";
+import Button from "../Button/Button";
+import { CustomButtonProps } from "../Button/Button.types";
 
 interface ButtonPopoverContentProps {
     title: string;
