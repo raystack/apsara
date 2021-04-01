@@ -1,11 +1,12 @@
 import React from "react";
-import "../../styles/app.less";
+import { ThemeProvider as ThemeProviderBase } from "styled-components";
 import { createGlobalStyle } from "styled-components";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
 import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
 import RobotoBoldItalic from "../../assets/fonts/Roboto-BoldItalic.ttf";
 import RobotoBlack from "../../assets/fonts/Roboto-Black.ttf";
+import "../../styles/app.less";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -38,17 +39,36 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-interface ProviderProps {
+type ThemePropsVars = {
+    variables?: { [key: string]: string };
+    spaces?: number[];
+    breakpoints?: string[];
+};
+
+export interface ThemeProviderProps {
+    theme?: ThemePropsVars & {
+        [key: string]: any;
+    };
     children?: React.ReactNode;
 }
 
-const Provider = ({ children }: ProviderProps) => {
+const ThemeProvider: React.FC<ThemeProviderProps> = (props: ThemeProviderProps) => {
+    const { theme, children } = props;
     return (
-        <>
-            <GlobalStyle />
-            {children}
-        </>
+        <ThemeProviderBase
+            theme={{
+                ...theme,
+            }}
+        >
+            <>
+                <GlobalStyle />
+                {children}
+            </>
+        </ThemeProviderBase>
     );
 };
 
-export default Provider;
+ThemeProvider.defaultProps = {
+    theme: {},
+};
+export default ThemeProvider;
