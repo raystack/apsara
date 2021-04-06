@@ -147,27 +147,31 @@
   }
 
   &:not(.card) {
-
     // Margin sizes for tab
     &>.ant-tabs-nav {
-      .ant-tabs-nav-list .ant-tabs-tab {
-        margin-right: 48px;
+      .ant-tabs-nav-list {
+        .ant-tabs-tab + .ant-tabs-tab {
+          margin-right: 0 0 0 48px;
+        } 
       }
     }
 
     &.xs {
       &>.ant-tabs-nav {
-        .ant-tabs-nav-list .ant-tabs-tab {
-          margin-right: 32px;
+        .ant-tabs-nav-list {
+          .ant-tabs-tab + .ant-tabs-tab {
+            margin: 0 0 0 32px;
+          } 
         }
       }
     }
 
     &.lg {
       &>.ant-tabs-nav {
-        .ant-tabs-nav-list .ant-tabs-tab {
-          margin-right: 96px;
-        }
+        .ant-tabs-tab + .ant-tabs-tab {
+          margin: 0 0 0 96px;
+        } 
+  
       }
     }
   }
