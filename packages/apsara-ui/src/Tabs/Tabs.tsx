@@ -1,10 +1,10 @@
 import React from "react";
-import { Tabs } from "antd";
+import { Tabs, TabsProps } from "antd";
 import "./style.less";
 
 const { TabPane } = Tabs;
 
-interface CustomTabsProps {
+interface CustomTabsProps extends Omit<TabsProps, "type" | "size"> {
     type?: "primary" | "secondary" | "card" | "think";
     size?: "xs" | "md" | "lg";
     className?: string;
