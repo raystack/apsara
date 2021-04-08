@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
-import Icon from "@ant-design/icons";
 import { Result } from "antd";
 import { ResultProps, ResultStatusType } from "antd/lib/result";
+import CustomIcon, { CustomIconProps } from "../Icon/Icon";
 
 const pageCenterStyle: CSSProperties = {
     position: "absolute",
@@ -47,11 +47,12 @@ const stateInfo: StatesInfo = {
 
 interface StateProps extends ResultProps {
     type?: keyof typeof stateInfo;
-    icon?: string;
-    imageIcon?: React.ReactNode;
+    icon?: React.ReactNode;
+    iconProps?: CustomIconProps;
 }
 
-export default function States({ type = "", icon, imageIcon, ...props }: StateProps) {
-    const modifiedProps = { ...stateInfo[type], ...props, icon: imageIcon || <Icon type={icon} /> };
+export default function States({ type = "", icon, iconProps, ...props }: StateProps) {
+    const resultIcon = icon || <CustomIcon {...iconProps} />;
+    const modifiedProps = { ...stateInfo[type], ...props, icon: resultIcon };
     return <Result style={pageCenterStyle} {...modifiedProps} />;
 }

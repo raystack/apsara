@@ -42,4 +42,31 @@ import Button from "../Button";
     </Story>
 </Preview>
 
+<Canvas>
+    <Story
+        style={{ minHeight: "400px" }}
+        name="CustomIcon"
+        args={{
+            type: "info",
+            iconProps: { name: "running", size: 200 },
+            title: "Oops! Something went wrong",
+            subTitle: "There is a problem with this feedback",
+            onClick: () => null,
+        }}
+    >
+        {(args) => (
+            <div style={{ minHeight: "400px" }}>
+                <States
+                    {...args}
+                    extra={
+                        <Button onClick={() => null} type="primary">
+                            Go to Home
+                        </Button>
+                    }
+                />
+            </div>
+        )}
+    </Story>
+</Canvas>
+
 <ArgsTable story="Playground" />
