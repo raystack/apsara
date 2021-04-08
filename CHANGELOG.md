@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/odpf/apsara/compare/v0.4.1...v0.5.0) (2021-04-08)
+
+
+### Features
+
+* **button:** add iconProps to override button icon ([3d3a79f](https://github.com/odpf/apsara/commit/3d3a79f2fd3ba2c25386ad686c79513ccc1960c1))
+* **icon:** make name props optional ([015ba09](https://github.com/odpf/apsara/commit/015ba0933c50a6536de61741ecaeefefe60dec64))
+* **popover:** add custom content body and cancel btn ([92385e3](https://github.com/odpf/apsara/commit/92385e3e8c89e71b7f7787fb9df0995b5cbd5834))
+* **states:** update icon props from string to react component ([b069d8f](https://github.com/odpf/apsara/commit/b069d8f42c0d71d90b77bebb568f0285196cda4a))
+* **tabs:** extends props type definitions ([b788255](https://github.com/odpf/apsara/commit/b788255a9709e9af462da50bc0b06e24ff05eb1d))
+
+
+* refactor(sidebar)!: rename icon to iconProps ([1b1ea60](https://github.com/odpf/apsara/commit/1b1ea60382051331ebccb081758c2f01205e0034))
+
+
+### Bug Fixes
+
+* **tabs:** add missing class name in lg tabs ([e5bb0b9](https://github.com/odpf/apsara/commit/e5bb0b92bd60919e942c3698390a59ba25be8385))
+* **tabs:** override antd default margin ([25ca519](https://github.com/odpf/apsara/commit/25ca5196cba1ff0626c457203eb8b9885e9bcb80))
+
+
+### BREAKING CHANGES
+
+* old `icon` is renamed as `iconProps` and `iconComponent` as `icon`
+* **states:** old `imageIcon` is renamed as `icon`, old `icon` name is `iconProps.name`
+
+
+
+
+
 ## [0.4.1](https://github.com/odpf/apsara/compare/v0.4.0...v0.4.1) (2021-03-30)
 
 
