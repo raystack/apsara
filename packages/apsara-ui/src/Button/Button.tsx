@@ -9,7 +9,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import Icon from "../Icon";
 import "./style.less";
 import Tooltip from "../Tooltip";
-import { IconName } from "../Icon/Icon";
+import { CustomIconProps, IconName } from "../Icon/Icon";
 
 const defaultSize = "default";
 const styleMap = {
@@ -46,14 +46,26 @@ export interface CustomButtonProps extends Omit<NativeButtonProps, "type"> {
     tooltipMessage?: React.ReactNode;
     tooltipPlacement?: TooltipPlacement;
     type?: "link" | "text" | "default" | "primary" | "ghost" | "dashed" | "barebone";
+    /**
+     * @deprecated use `iconProps={{styleOverride: {}}}`
+     */
     styleOverride?: Record<string, string>;
     loading?: boolean;
     disabled?: boolean;
+    /**
+     * @deprecated use `iconProps={{name: "name"}}`
+     */
     iconName?: IconName;
+    /**
+     * @deprecated use `iconProps={{size: size}}`
+     */
     iconSize?: number;
+    iconProps?: CustomIconProps;
     children?: React.ReactNode;
     size?: SizeType;
 }
+
+const defaultIconSize = 24;
 
 function CustomButton({
     className = "",
@@ -64,7 +76,8 @@ function CustomButton({
     loading = false,
     disabled = false,
     iconName,
-    iconSize = 24,
+    iconSize = defaultIconSize,
+    iconProps,
     children,
     ...props
 }: CustomButtonProps) {
@@ -72,13 +85,13 @@ function CustomButton({
         // ? --inline style is expected by antd
         if (loading) {
             // ? need to subtract 6px because antd's icon has no padding while our icon has.
-            const loadingIconSize = `calc(${iconSize}px - 6px)`;
+            const loadingIconSize = `calc(${iconSize || iconProps?.size || defaultIconSize}px - 6px)`;
             return (
                 <LoadingOutlined style={{ fontSize: loadingIconSize, height: loadingIconSize, marginRight: "2px" }} />
             );
         }
-        return iconName ? (
-            <Icon size={iconSize} name={iconName} styleOverride={styleOverride} active={!disabled} />
+        return iconName || iconProps ? (
+            <Icon size={iconSize} name={iconName} styleOverride={styleOverride} active={!disabled} {...iconProps} />
         ) : null;
     };
 
