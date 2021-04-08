@@ -13,11 +13,11 @@ const LinkRender = ({ children, to }: any) => {
     return <React.Fragment>{children}</React.Fragment>;
 };
 
-export const sidebarWithIconComponent = () => (
+export const iconComponent = () => (
     <Sidebar
         headerProps={{
             name: "Console",
-            iconComponent: <Icon name="doc" size={32} styleOverride={{ color: Colors.primary[300] }} />,
+            icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.primary[300] }} />,
         }}
         linkRender={LinkRender}
         activePath={"discovery"}
@@ -27,29 +27,29 @@ export const sidebarWithIconComponent = () => (
                 key: "discovery",
                 url: "/discovery/",
                 linkText: "Discovery",
-                icon: "discovery",
+                iconProps: { name: "discovery" },
             },
             {
                 key: "dashboard",
                 url: "/dashboard/",
                 linkText: "Dashboard",
-                icon: "dashboard",
+                iconProps: { name: "dashboard" },
             },
             {
                 key: "health",
                 url: "/health/",
                 linkText: "Health",
-                icon: "health",
+                iconProps: { name: "health" },
             },
         ]}
     />
 );
 
-export const sidebar = () => (
+export const iconProps = () => (
     <Sidebar
         headerProps={{
             name: "Console",
-            icon: { name: "doc", color: Colors.primary[300], size: 32 },
+            iconProps: { name: "doc", color: Colors.primary[300], size: 32 },
         }}
         linkRender={LinkRender}
         activePath={"discovery"}
@@ -59,19 +59,19 @@ export const sidebar = () => (
                 key: "discovery",
                 url: "/discovery/",
                 linkText: "Discovery",
-                icon: "discovery",
+                iconProps: { name: "discovery" },
             },
             {
                 key: "dashboard",
                 url: "/dashboard/",
                 linkText: "Dashboard",
-                icon: "dashboard",
+                iconProps: { name: "dashboard" },
             },
             {
                 key: "health",
                 url: "/health/",
                 linkText: "Health",
-                icon: "health",
+                iconProps: { name: "health" },
             },
         ]}
     />

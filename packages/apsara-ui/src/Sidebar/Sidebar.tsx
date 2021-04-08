@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect, ReactElement, ReactNode } from "react";
 import { Layout, Menu } from "antd";
-import CustomIcon, { CustomIconProps, IconName } from "../Icon/Icon";
+import CustomIcon, { CustomIconProps } from "../Icon/Icon";
 import "./Sidebar.less";
 
 const { Sider } = Layout;
@@ -10,7 +10,7 @@ interface RenderItem {
     key: string;
     url: string;
     linkText: string;
-    icon: IconName;
+    iconProps: CustomIconProps;
 }
 
 const renderMenuItemLink = (
@@ -18,12 +18,12 @@ const renderMenuItemLink = (
     onItemClick: (item: RenderItem) => void,
     LinkRender: ({ children }: any) => ReactElement,
 ) => {
-    const { key, url, linkText, icon } = item;
+    const { key, url, linkText, iconProps } = item;
     return (
         <Menu.Item key={key} onClick={() => onItemClick(item)}>
             <LinkRender to={url}>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                    <CustomIcon styleOverride={{ color: "#4D4D4D", lineHeight: 1, height: "24px" }} name={icon} />
+                    <CustomIcon {...iconProps} />
                     <span className="nav-text">{linkText}</span>
                 </div>
             </LinkRender>
@@ -49,13 +49,19 @@ const SidebarFooter = ({ collapsed }: collapsedProps) => (
     </div>
 );
 
+interface HeaderProps {
+    name?: string;
+    logo?: never;
+    icon?: never;
+    iconProps?: never;
+}
+
+type OnlyLogo = Omit<HeaderProps, "logo"> & { logo?: string };
+type OnlyIcon = Omit<HeaderProps, "icon"> & { icon?: React.ReactNode };
+type OnlyIconProps = Omit<HeaderProps, "iconProps"> & { iconProps?: CustomIconProps };
+
 interface SidebarProps {
-    headerProps?: {
-        name?: string;
-        logo?: string;
-        iconComponent?: React.ReactNode;
-        icon?: CustomIconProps;
-    };
+    headerProps?: OnlyIcon | OnlyIconProps | OnlyLogo;
     activePath?: string;
     navigationList?: RenderItem[];
     onItemClick?: (item: RenderItem) => void;
@@ -73,7 +79,7 @@ const Sidebar = ({
     children,
     ...extraProps
 }: SidebarProps) => {
-    const { name = "", logo = "", icon, iconComponent = null } = headerProps;
+    const { name = "", logo = "", iconProps, icon = null } = headerProps;
     const [collapsed, setCollapsed] = useState(rightSidebarState || false);
 
     useEffect(() => {
@@ -95,8 +101,8 @@ const Sidebar = ({
             {...extraProps}
         >
             <div className="sidebar__wrapper--logo">
-                {icon ? <CustomIcon {...icon} className="img__logo" /> : null}
-                {iconComponent ? <span className="img__logo">{iconComponent}</span> : null}
+                {iconProps ? <CustomIcon {...iconProps} className="img__logo" /> : null}
+                {icon ? <span className="img__logo">{icon}</span> : null}
                 {logo ? <img src={logo} alt="" className="img__logo" /> : null}
                 <span className="sidebar__wrapper--title">{name}</span>
             </div>
