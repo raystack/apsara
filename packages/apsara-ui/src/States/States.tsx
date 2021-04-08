@@ -52,7 +52,7 @@ interface StateProps extends ResultProps {
 }
 
 export default function States({ type = "", icon, iconProps, ...props }: StateProps) {
-    const resultIcon = icon || <CustomIcon {...iconProps} />;
+    const resultIcon = icon || iconProps ? <CustomIcon {...iconProps} /> : null;
     const modifiedProps = { ...stateInfo[type], ...props, icon: resultIcon };
     return <Result style={pageCenterStyle} {...modifiedProps} />;
 }
