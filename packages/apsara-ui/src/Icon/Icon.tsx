@@ -5,7 +5,7 @@ import * as Icons from "@odpf/icons";
 
 export type IconName = keyof typeof Icons;
 export interface CustomIconProps {
-    name: IconName;
+    name?: IconName;
     className?: string;
     active?: boolean;
     size?: number;
@@ -15,7 +15,7 @@ export interface CustomIconProps {
     color?: string;
 }
 function CustomIcon({
-    name,
+    name = "placeholder",
     className = "",
     active = false,
     size = 24,
