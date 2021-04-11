@@ -21,9 +21,9 @@ Discover why users choose Apsara as the design system for their projects
 Explore the [Storybook](https://odpf.github.io/apsara/) to learn about all the Apsara components.
 
 ```sh
-$ yarn add odpf/apsara
+$ yarn add @odpf/apsara
 # or
-$ npm install --save odpf/apsara
+$ npm install --save @odpf/apsara
 ```
 
 Use Apsara components inside your react project
