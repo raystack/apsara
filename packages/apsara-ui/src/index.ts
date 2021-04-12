@@ -32,6 +32,7 @@ import Checkbox from "./Checkbox";
 import Image from "./Image";
 import Select from "./Select";
 import Tile from "./Tile";
+import Switch from "./Switch";
 
 import DEFAULT_THEME from "./theme";
 export {
@@ -76,4 +77,5 @@ export {
     Image,
     Select,
     Tile,
+    Switch,
 };
