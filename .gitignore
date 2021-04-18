@@ -6,6 +6,7 @@ cjs
 *.log
 coverage
 package-lock.json 
+.DS_Store
 
 # production
 /build
