@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/odpf/apsara/compare/v0.5.0...v0.5.1) (2021-04-20)
+
+
+### Features
+
+* **icons:**  add area, bar, bubble, map, pie, and table chart icons ([3509b5a](https://github.com/odpf/apsara/commit/3509b5a19cedea70ccbff1d76f1c036496a39c7c))
+* **icons:** add chevron right filled icon ([25669a7](https://github.com/odpf/apsara/commit/25669a7db3c10b7f4fa211e7dfafb449b469e94d))
+
+
+
+
+
 # [0.5.0](https://github.com/odpf/apsara/compare/v0.4.1...v0.5.0) (2021-04-08)
 
 **Note:** Version bump only for package @odpf/icons

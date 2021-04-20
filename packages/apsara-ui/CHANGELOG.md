@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1](https://github.com/odpf/apsara/compare/v0.5.0...v0.5.1) (2021-04-20)
+
+
+### Features
+
+* export switch component ([69871cc](https://github.com/odpf/apsara/commit/69871ccd42cc2c5900df0086406429f9f8cfec0b))
+* **states:** hide icon if iconProps is not passed ([700c79e](https://github.com/odpf/apsara/commit/700c79ebbc6edc96edde5ecdc461ce25749c1e76))
+
+
+
+
+
 # [0.5.0](https://github.com/odpf/apsara/compare/v0.4.1...v0.5.0) (2021-04-08)
 
 
