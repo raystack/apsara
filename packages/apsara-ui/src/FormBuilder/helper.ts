@@ -10,6 +10,7 @@ export const getStringValue = (value: any): string => {
 const getOperator = R.cond([
     [R.equals("Eq"), R.always(R.equals)],
     [R.equals("NotEq"), R.always(R.complement(R.equals))],
+    [R.equals("In"), R.always(R.includes)],
     [R.T, R.T],
 ]);
 

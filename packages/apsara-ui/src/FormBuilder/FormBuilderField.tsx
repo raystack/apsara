@@ -1,18 +1,26 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
 import React, { useMemo } from "react";
 import * as R from "ramda";
-import { InputNumber, Radio, Select, Switch, DatePicker } from "antd";
+import { InputNumber, Radio, Select, Switch, DatePicker, Checkbox } from "antd";
 import Moment from "moment";
 
-import Tag from "../Tag";
 import Input from "../Input";
+import Tag from "../Tag";
 import { getStringValue } from "./helper";
 
+const { RangePicker } = DatePicker;
 const { Option } = Select;
-
-export type Widget = "range" | "radio" | "select" | "textarea" | "switch" | "datepicker" | "node" | "input";
+export type Widget =
+    | "range"
+    | "radio"
+    | "select"
+    | "textarea"
+    | "switch"
+    | "datepicker"
+    | "node"
+    | "input"
+    | "rangepicker";
 
 interface OptionProps {
     label: string;
@@ -38,7 +46,6 @@ const FormBuilderField = ({
     component = null,
     rows,
     enableTag,
-
     ...props
 }: FormBuilderFieldProps) => {
     if (widget === "range") return <InputNumber {...props} />;
@@ -56,12 +63,18 @@ const FormBuilderField = ({
             </Radio.Group>
         );
     }
+    if (widget === "checkbox") {
+        return <Checkbox.Group value={getStringValue(props.value)} {...props} />;
+    }
     if (widget === "select") {
-        const { options = [], ...restProps } = props;
-        const sortedOptions = useMemo(() => R.sortBy(R.prop("label"))(options), [options]);
-        const optionsData = sortedOptions.map(({ value, label }: OptionProps) => {
+        const { options = [], disableSort, ...restProps } = props;
+        const modifiedOptions = useMemo(() => (disableSort ? options : R.sortBy(R.prop("label"))(options)), [
+            options,
+            disableSort,
+        ]);
+        const optionsData = modifiedOptions.map(({ value, label, disabled }) => {
             return (
-                <Option key={value} value={value}>
+                <Option key={value} value={value} disabled={disabled}>
                     {label}
                 </Option>
             );
@@ -82,7 +95,17 @@ const FormBuilderField = ({
                 >
                     {optionsData}
                 </Select>
-                {enableTag && props.value && <Tag style={{ marginTop: "8px" }}>{props.value}</Tag>}
+                {enableTag &&
+                    props.value &&
+                    (props.value instanceof Array ? (
+                        props.value.map((singleVal) => (
+                            <Tag key={singleVal} style={{ marginTop: "4px" }}>
+                                {singleVal}
+                            </Tag>
+                        ))
+                    ) : (
+                        <Tag style={{ marginTop: "8px" }}>{props.value}</Tag>
+                    ))}
             </React.Fragment>
         );
     }
@@ -97,6 +120,9 @@ const FormBuilderField = ({
         const { value: timestamp, ...restProps } = props;
         const momentDate = timestamp && Moment(timestamp);
         return <DatePicker {...restProps} value={momentDate} />;
+    }
+    if (widget === "rangepicker") {
+        return <RangePicker {...props} />;
     }
 
     // Todo: Need to move this out and make this a custom form builder item instead of node
