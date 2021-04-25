@@ -107,135 +107,140 @@ const FormBuilderItems = (props: FormBuilderItemsProps) => {
         [form, fields],
     );
 
-    return fields.map((config: any) => {
-        // TODO: utilize form formItemLayout for all form item
-        let formItemLayout = config.formItemLayout || meta.formItemLayout;
+    return (
+        <React.Fragment>
+            {fields.map((config: any) => {
+                // TODO: utilize form formItemLayout for all form item
+                let formItemLayout = config.formItemLayout || meta.formItemLayout;
 
-        // custom:: Get styleing for form items
-        if (Array.isArray(formItemLayout) && formItemLayout.length >= 2) {
-            const [labelCol, wrapperCol] = formItemLayout;
-            formItemLayout = {
-                labelCol: { span: labelCol },
-                wrapperCol: { span: wrapperCol },
-            };
-        }
+                // custom:: Get styleing for form items
+                if (Array.isArray(formItemLayout) && formItemLayout.length >= 2) {
+                    const [labelCol, wrapperCol] = formItemLayout;
+                    formItemLayout = {
+                        labelCol: { span: labelCol },
+                        wrapperCol: { span: wrapperCol },
+                    };
+                }
 
-        // custom:: readOnly global has more precedence than local config
-        const isReadOnly = meta.readOnly || config.readOnly;
+                // custom:: readOnly global has more precedence than local config
+                const isReadOnly = meta.readOnly || config.readOnly;
 
-        // custom:: handle required props
-        const rules = [...(config.rules || [])];
-        if (config.required) {
-            rules.unshift({ required: true, message: config.message });
-        }
-        if (config.pattern) {
-            rules.unshift({
-                pattern: config.pattern,
-                message: `${config.label} - ${config.patternMsg}`,
-            });
-        }
+                // custom:: handle required props
+                const rules = [...(config.rules || [])];
+                if (config.required) {
+                    rules.unshift({ required: true, message: config.message });
+                }
+                if (config.pattern) {
+                    rules.unshift({
+                        pattern: config.pattern,
+                        message: `${config.label} - ${config.patternMsg}`,
+                    });
+                }
 
-        //
-        // custom:: TODO: handle initialValue if needed
+                //
+                // custom:: TODO: handle initialValue if needed
 
-        // FOR FORM ITEM PROPS
-        const formItemProps = {
-            children: config.children,
-            rules,
-            ...(formItemLayout !== null ? formItemLayout : {}),
-            ...R.pick(
-                [
-                    "name",
-                    "label",
-                    "labelCol",
-                    "wrapperCol",
-                    "noStyle",
-                    "hidden",
-                    "validateStatus",
-                    "hasFeedback",
-                    "shouldUpdate",
-                    "dependencies",
-                    "initialValue",
-                    "validateTrigger",
-                    "help",
-                    "extra",
-                    "normalize",
-                    "preserve",
-                ],
-                config,
-            ),
-            className: config.className,
-            ...config.formItemProps,
-        };
+                // FOR FORM ITEM PROPS
+                const formItemProps = {
+                    children: config.children,
+                    rules,
+                    ...(formItemLayout !== null ? formItemLayout : {}),
+                    ...R.pick(
+                        [
+                            "name",
+                            "label",
+                            "labelCol",
+                            "wrapperCol",
+                            "noStyle",
+                            "hidden",
+                            "validateStatus",
+                            "hasFeedback",
+                            "shouldUpdate",
+                            "dependencies",
+                            "initialValue",
+                            "validateTrigger",
+                            "help",
+                            "extra",
+                            "normalize",
+                            "preserve",
+                        ],
+                        config,
+                    ),
+                    className: config.className,
+                    ...config.formItemProps,
+                };
 
-        // ! dependent fields should either render before the current element or they should be part of the fields array of the current element
-        const dependenciesFieldsValue = R.map(getDependencyFieldValueByNamePath, config.dependencies || []);
+                // ! dependent fields should either render before the current element or they should be part of the fields array of the current element
+                const dependenciesFieldsValue = R.map(getDependencyFieldValueByNamePath, config.dependencies || []);
 
-        const shouldDisabledByFieldsValue =
-            dependenciesFieldsValue.some(R.isEmpty) || dependenciesFieldsValue.some(R.isNil);
-        const isDisabled = config.disabled || shouldDisabledByFieldsValue;
+                const shouldDisabledByFieldsValue =
+                    dependenciesFieldsValue.some(R.isEmpty) || dependenciesFieldsValue.some(R.isNil);
+                const isDisabled = config.disabled || shouldDisabledByFieldsValue;
 
-        // FOR FORM FIELD PROPS
-        const formFieldProps = {
-            widget: config.widget,
-            ...R.pick(
-                [
-                    "value",
-                    "loading",
-                    "placeholder",
-                    "widgetType",
-                    "component",
-                    "min",
-                    "max",
-                    "options",
-                    "tooltip",
-                    "viewModifier",
-                    "showSearch",
-                    "tokenSeparators",
-                    "enableTag",
-                    "mode",
-                    "checked",
-                    "suffix",
-                    "prefix",
-                    "onChange",
-                    "optionLabelProp",
-                    "disabledDate",
-                    "onSearch",
-                    "tagRender",
-                    "showArrow",
-                ],
-                config,
-            ),
-            disabled: isDisabled,
-            ...config.fieldProps,
-        };
-        const uniqeKey = Array.isArray(config.name) ? config.name.join(".") : config.name;
+                // FOR FORM FIELD PROPS
+                const formFieldProps = {
+                    widget: config.widget,
+                    ...R.pick(
+                        [
+                            "value",
+                            "loading",
+                            "placeholder",
+                            "widgetType",
+                            "component",
+                            "min",
+                            "max",
+                            "options",
+                            "tooltip",
+                            "viewModifier",
+                            "showSearch",
+                            "tokenSeparators",
+                            "enableTag",
+                            "mode",
+                            "checked",
+                            "suffix",
+                            "prefix",
+                            "onChange",
+                            "optionLabelProp",
+                            "disabledDate",
+                            "onSearch",
+                            "tagRender",
+                            "showArrow",
+                        ],
+                        config,
+                    ),
+                    disabled: isDisabled,
+                    ...config.fieldProps,
+                };
+                const uniqeKey = Array.isArray(config.name) ? config.name.join(".") : config.name;
 
-        // Don't create any form item if widget is React.Node
-        // TODO: Ideally node type should be a FormBuilderItem rather than a FormBuilderField
-        if (config.widget === "node") {
-            return <FormBuilderField key={uniqeKey} {...formFieldProps} />;
-        }
+                // Don't create any form item if widget is React.Node
+                // TODO: Ideally node type should be a FormBuilderItem rather than a FormBuilderField
+                if (config.widget === "node") {
+                    return <FormBuilderField key={uniqeKey} {...formFieldProps} />;
+                }
 
-        if (isReadOnly) {
-            return (
-                <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
-                    {form?.getFieldValue(config.name) || config.initialValue}
-                </Form.Item>
-            );
-        }
+                if (isReadOnly) {
+                    return (
+                        <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
+                            {form?.getFieldValue(config.name) || config.initialValue}
+                        </Form.Item>
+                    );
+                }
 
-        const isTrue = (currentValue: boolean) => currentValue === true;
-        const shouldShowField = R.map((dependency) => shouldShow(config, dependency), dependenciesFieldsValue).every(
-            isTrue,
-        );
+                const isTrue = (currentValue: boolean) => currentValue === true;
+                const shouldShowField = R.map(
+                    (dependency) => shouldShow(config, dependency),
+                    dependenciesFieldsValue,
+                ).every(isTrue);
 
-        return shouldShowField ? (
-            <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
-                <FormBuilderToolTip form={form} title={config.title} {...formFieldProps} />
-            </Form.Item>
-        ) : null;
-    });
+                return shouldShowField ? (
+                    <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
+                        <FormBuilderToolTip form={form} title={config.title} {...formFieldProps} />
+                    </Form.Item>
+                ) : null;
+            })}
+        </React.Fragment>
+    );
 };
 
 export const FormBuilderToolTip = ({ placement = "rightTop", tooltip, children, ...props }: any) => {
