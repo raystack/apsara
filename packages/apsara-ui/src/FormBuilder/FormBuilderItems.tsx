@@ -44,7 +44,7 @@ const shouldShow = (config: any, dependenciesFieldValue: any) => {
     return evaluateExpression(config.depends, dependenciesFieldValue?.toString());
 };
 
-interface FormMetaFields {
+export interface FormMetaFields {
     formItemLayout?: {
         labelCol: ColProps;
         wrapperCol: ColProps;
@@ -67,6 +67,10 @@ interface FormMetaFields {
     fieldProps?: Record<string, unknown>;
     initialValue?: any;
     tooltip?: React.ReactNode | string;
+    options?: Array<{ label: string; value: string }>;
+    placeholder?: string;
+    mode?: "multiple" | "tags";
+    component?: React.ReactNode;
 }
 
 export interface FormBuilderItemsProps {
