@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.5](https://github.com/odpf/apsara/compare/v0.5.4...v0.5.5) (2021-04-30)
+
+
+### Features
+
+* **form:** export `FormMetaFields` type definition ([8376520](https://github.com/odpf/apsara/commit/8376520425320f1aa5b551ff3392f9093c496cc8))
+
+
+
+
+
 ## [0.5.1](https://github.com/odpf/apsara/compare/v0.5.0...v0.5.1) (2021-04-20)
 
 
