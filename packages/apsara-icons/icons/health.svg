@@ -2,7 +2,7 @@
 <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>53870b1d-0733-460a-b397-58f36b29bfc0@1.00x</title>
     <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Icons/32/Products/health-dashboard/default" stroke="#4C4C4C" stroke-width="2">
+        <g id="Icons/32/Products/health-dashboard/default" stroke="currentColor" stroke-width="2">
             <polyline id="Path-5" transform="translate(16.000000, 16.000000) scale(-1, 1) translate(-16.000000, -16.000000) " points="7 16 11 16 14 22 18 10 21 15.9504229 25 15.9504229"></polyline>
         </g>
     </g>
