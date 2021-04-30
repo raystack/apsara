@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.6](https://github.com/odpf/apsara/compare/v0.5.5...v0.5.6) (2021-04-30)
+
+
+### Bug Fixes
+
+* **button:** add barebone button style ([834bb76](https://github.com/odpf/apsara/commit/834bb7646b0ebfb8d218b59658be14598f7e2e18))
+
+
+
+
+
 ## [0.5.5](https://github.com/odpf/apsara/compare/v0.5.4...v0.5.5) (2021-04-30)
 
 
