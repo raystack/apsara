@@ -9,7 +9,7 @@ export type CustomButtonProps = Omit<ButtonProps, "type"> & {
      *
      * @default secondary
      */
-    type?: "primary" | "ghost" | "dashed" | "link" | "text" | "default";
+    type?: "primary" | "ghost" | "dashed" | "link" | "text" | "default" | "barebone";
 
     /**
      * Set the loading status of button

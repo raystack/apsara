@@ -1,5 +1,6 @@
 import * as React from "react";
 import { LoadingOutlined } from "@ant-design/icons";
+import clsx from "clsx";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";
 import * as AC from "./Button.styles";
@@ -39,7 +40,7 @@ const Button = ({
     };
 
     const button = (
-        <AC.AntdButton disabled={disabled} className={className} type={type} size={size} {...props}>
+        <AC.AntdButton disabled={disabled} className={clsx(className, type)} type={type} size={size} {...props}>
             <IconComponent />
             {children}
         </AC.AntdButton>

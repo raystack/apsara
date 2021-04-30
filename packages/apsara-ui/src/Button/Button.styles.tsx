@@ -40,7 +40,51 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         }
     }
 
+    &&.barebone {
+        padding: 0px;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        color: ${Colors.primary[500]};
+        font-weight: bold;
+
+        &.ant-btn[disabled],
+        > .ant-btn[disabled] {
+            height: inherit;
+            display: flex;
+            align-self: center;
+            align-items: center;
+            font-weight: bold;
+            border: none !important;
+            background: transparent !important;
+            color: #bfbfbf;
+
+            > .anticon {
+                vertical-align: text-bottom;
+            }
+        }
+
+        &.btn-error,
+        &.btn-error > .anticon {
+            color: ${Colors.error[500]} !important;
+        }
+
+        &.btn-success {
+            color: ${Colors.success[500]};
+        }
+
+        span.anticon {
+            margin: 0;
+        }
+    }
+
     &&:hover {
         background: transparent;
+    }
+
+    &&.ant-btn > .anticon + span,
+    .ant-btn > .anticon + span,
+    span {
+        display: flex;
     }
 `;
