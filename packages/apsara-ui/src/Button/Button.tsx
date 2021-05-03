@@ -16,9 +16,7 @@ const Button = ({
         message: "",
         placement: "bottom",
     },
-    iconProps = {
-        size: 24,
-    },
+    iconProps,
     styleOverride = {},
     iconName,
     iconSize = defaultIconSize,
@@ -29,7 +27,7 @@ const Button = ({
     const IconComponent = () => {
         if (loading) {
             // ? need to subtract 6px because antd's icon has no padding while our icon has.
-            const loadingIconSize = `calc(${iconProps?.size}px - 6px)`;
+            const loadingIconSize = `calc(${iconProps?.size || defaultIconSize}px - 6px)`;
             return (
                 <LoadingOutlined style={{ fontSize: loadingIconSize, height: loadingIconSize, marginRight: "2px" }} />
             );
