@@ -52,6 +52,8 @@ interface IVirtualTable extends TableProps<any> {
     scroll?: any;
     loadMore?: () => Promise<void> | null;
     onRowClick?: (event: any, rowIndexData: any) => void;
+    calculateRowHeight?: any;
+    calculateColumnWidth?: any;
 }
 const VirtualTableComponent = ({
     columns = [],
@@ -59,6 +61,8 @@ const VirtualTableComponent = ({
     selectedRowId = null,
     onRowClick = () => null,
     loadMore = () => null,
+    calculateRowHeight,
+    calculateColumnWidth,
     ...props
 }: IVirtualTable) => {
     const [tableWidth, setTableWidth] = useState(0);
@@ -150,11 +154,23 @@ const VirtualTableComponent = ({
                         columnCount={mergedColumns.length}
                         columnWidth={(index) => {
                             const { width } = mergedColumns[index];
-                            return index === mergedColumns.length - 1 ? width - scrollbarSize - 1 : width;
+                            const columnWidthValue =
+                                index === mergedColumns.length - 1 ? width - scrollbarSize - 1 : width;
+
+                            if (calculateColumnWidth) {
+                                return calculateColumnWidth(index, columnWidthValue);
+                            }
+                            return columnWidthValue;
                         }}
                         height={scroll.y}
                         rowCount={rowCount}
-                        rowHeight={() => 54}
+                        rowHeight={(index) => {
+                            const defaultRowHeight = 54;
+                            if (calculateRowHeight) {
+                                return calculateRowHeight(index, defaultRowHeight);
+                            }
+                            return defaultRowHeight;
+                        }}
                         width={tableWidth}
                         onScroll={({ scrollLeft }) => {
                             onScroll({

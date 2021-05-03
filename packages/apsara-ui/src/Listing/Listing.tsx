@@ -25,8 +25,9 @@ interface ListingProps {
     renderExtraFilters?: any;
     renderHeader?: any;
     renderBody?: any;
+    calculateRowHeight?: any;
+    calculateColumnWidth?: any;
 }
-
 const Listing = ({
     list = [],
     loading = false,
@@ -39,6 +40,8 @@ const Listing = ({
     renderHeader = null,
     renderBody = null,
     resourcePath = "/",
+    calculateRowHeight,
+    calculateColumnWidth,
 }: ListingProps) => {
     const { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps } = tableProps;
     const { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps;
@@ -92,6 +95,8 @@ const Listing = ({
                 onChange={(_pagination, _filters, sorter) => setSortedInfo(sorter)}
                 onRowClick={handleRowClick}
                 {...extraTableProps}
+                calculateRowHeight={calculateRowHeight}
+                calculateColumnWidth={calculateColumnWidth}
             />
         );
     }
