@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.9](https://github.com/odpf/apsara/compare/v0.5.8...v0.5.9) (2021-05-03)
+
+
+### Bug Fixes
+
+* **iam:** don't show default icon if iconprops are not passed ([60999a1](https://github.com/odpf/apsara/commit/60999a1edc21f46e4ecffefdb326f02288b23104))
+
+
+
+
+
 ## [0.5.6](https://github.com/odpf/apsara/compare/v0.5.5...v0.5.6) (2021-04-30)
 
 
