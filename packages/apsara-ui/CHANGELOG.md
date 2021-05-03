@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.7](https://github.com/odpf/apsara/compare/v0.5.6...v0.5.7) (2021-05-03)
+
+
+### Bug Fixes
+
+* **iam:** implement calculateRowHeight, calculateColumnWidth for virtual list ([9f3f361](https://github.com/odpf/apsara/commit/9f3f3619c241ae35904e3a62d459d2a879b30b48))
+
+
+
+
+
 ## [0.5.6](https://github.com/odpf/apsara/compare/v0.5.5...v0.5.6) (2021-04-30)
 
 
