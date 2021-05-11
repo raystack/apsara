@@ -1,13 +1,7 @@
 import { useState, useCallback } from "react";
-import { getFilterList } from "./utils";
+import { getFilterList } from "../helpers";
 import * as R from "ramda";
-
-export interface IGroupOptions {
-    name: string;
-    slug: string;
-    multi?: boolean;
-    data: { label: string; value: string }[];
-}
+import { IGroupOptions } from "../Listing.types";
 
 export const useSearchFilterState = () => {
     const [filteredFieldData, setFilteredFieldData] = useState({});
@@ -16,7 +10,10 @@ export const useSearchFilterState = () => {
 
     const onGroupFilter = (group: IGroupOptions, filteredArr: any) => {
         const { slug, multi = true } = group;
-        setFilteredFieldData({ ...filteredFieldData, ...{ [slug]: multi ? filteredArr : R.takeLast(1, filteredArr) } });
+        setFilteredFieldData({
+            ...filteredFieldData,
+            ...{ [slug]: multi ? filteredArr : R.takeLast(1, filteredArr) },
+        });
     };
 
     const onClearGroupFilter = () => setFilteredFieldData({});
@@ -43,6 +40,7 @@ export default function useSearchFilter({ list, searchFields = [] }: any) {
         onClearGroupFilter,
     } = useSearchFilterState();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const filteredList = useCallback(getFilterList(list, filteredFieldData, searchTerm, searchFields), [
         list,
         searchTerm,

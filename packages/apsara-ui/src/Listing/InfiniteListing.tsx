@@ -4,7 +4,7 @@ import Search from "../Search";
 import Filters from "./Filters";
 import { ListLoader } from "../Loader";
 import VirtualisedTable from "../Table/VirtualisedTable";
-import { useSearchFilterState } from "./useSearchFilter";
+import { useSearchFilterState } from "./hooks/useSearchFilter";
 import clsx from "clsx";
 import "./style.less";
 

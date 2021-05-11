@@ -2,50 +2,28 @@
 import React from "react";
 import Search from "../Search";
 import Filters from "./Filters";
-import { ListLoader } from "../Loader";
 import VirtualisedTable from "../Table/VirtualisedTable";
-import useSearchFilter, { IGroupOptions } from "./useSearchFilter";
+import useSearchFilter from "./hooks/useSearchFilter";
 import clsx from "clsx";
+import { ListingProps } from "./Listing.types";
 
-interface ListingProps {
-    list?: any[];
-    loading?: boolean;
-    resourceName?: string;
-    resourcePath?: string;
-    rowKey?: string;
-    className?: string;
-    tableProps?: {
-        getColumnList?: any;
-        handleRowClick?: (event: any, rowIndexData: any) => void;
-        selectedRowId?: number;
-        scroll?: any;
-    };
-    filterProps?: { filterFieldList?: IGroupOptions[] };
-    searchProps?: { searchPlaceholder?: string; searchFields?: any[]; disabled?: boolean };
-    renderExtraFilters?: any;
-    renderHeader?: any;
-    renderBody?: any;
-    calculateRowHeight?: any;
-    calculateColumnWidth?: any;
-}
 const Listing = ({
-    list = [],
-    loading = false,
     rowKey,
     className = "",
+    list = [],
     filterProps = {},
     searchProps = {},
     tableProps = {},
-    renderExtraFilters = null,
     renderHeader = null,
     renderBody = null,
+    renderExtraFilters = null,
     resourcePath = "/",
     calculateRowHeight,
     calculateColumnWidth,
 }: ListingProps) => {
     const { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps } = tableProps;
     const { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps;
-    const { filterFieldList = [] } = filterProps;
+    const { filterFieldList } = filterProps;
     const {
         searchTerm,
         sortedInfo,
@@ -58,9 +36,6 @@ const Listing = ({
     } = useSearchFilter({ list, searchFields });
 
     const columns = getColumnList(resourcePath, sortedInfo);
-
-    if (loading) return <ListLoader className={className} />;
-
     if (!renderHeader) {
         renderHeader = (
             <Search
@@ -74,7 +49,7 @@ const Listing = ({
                 {filterFieldList && (
                     <Filters
                         disabled={disabled}
-                        filterFieldList={filterFieldList}
+                        filterFieldList={filterFieldList || []}
                         filteredFieldData={filteredFieldData}
                         onGroupFilter={onGroupFilter}
                         onClearGroupFilter={onClearGroupFilter}
@@ -94,9 +69,9 @@ const Listing = ({
                 selectedRowId={selectedRowId}
                 onChange={(_pagination, _filters, sorter) => setSortedInfo(sorter)}
                 onRowClick={handleRowClick}
-                {...extraTableProps}
                 calculateRowHeight={calculateRowHeight}
                 calculateColumnWidth={calculateColumnWidth}
+                {...extraTableProps}
             />
         );
     }
@@ -109,4 +84,3 @@ const Listing = ({
 };
 
 export default Listing;
-export { useSearchFilter };
