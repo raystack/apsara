@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.10](https://github.com/odpf/apsara/compare/v0.5.9...v0.5.10) (2021-05-11)
+
+
+### Features
+
+* add diffTimeline & dynamicList into apsara ([f47fb3e](https://github.com/odpf/apsara/commit/f47fb3e5d3803ef7dce10609f79ede491f0d0e83))
+
+
+
+
+
 ## [0.5.9](https://github.com/odpf/apsara/compare/v0.5.8...v0.5.9) (2021-05-03)
 
 
