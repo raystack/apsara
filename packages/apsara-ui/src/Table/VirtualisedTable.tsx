@@ -45,7 +45,7 @@ const Cell = ({
     );
 };
 
-interface IVirtualTable extends TableProps<any> {
+export interface IVirtualTable extends TableProps<any> {
     columns: any[];
     items: any[];
     selectedRowId?: number | null;

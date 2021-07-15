@@ -1,3 +1,4 @@
+import { IVirtualTable } from "../Table/VirtualisedTable";
 export interface ListingProps {
     list?: any[];
     loading?: boolean;
@@ -10,7 +11,7 @@ export interface ListingProps {
         handleRowClick?: (event: any, rowIndexData: any) => void;
         selectedRowId?: number;
         scroll?: any;
-    };
+    } & Omit<IVirtualTable, "columns" | "items">;
     filterProps?: { filterFieldList?: IGroupOptions[] };
     searchProps?: {
         searchPlaceholder?: string;
