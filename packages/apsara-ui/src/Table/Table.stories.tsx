@@ -49,5 +49,5 @@ export const VirtualTableWithInfiniteData = () => {
     async function loadMore() {
         setPage(page + 1);
     }
-    return <VTable items={getData(page)} columns={columns} loadMore={loadMore} />;
+    return <VTable items={getData(page)} columns={columns} loadMore={loadMore} alternate alternateHover />;
 };

@@ -54,6 +54,9 @@ export interface IVirtualTable extends TableProps<any> {
     onRowClick?: (event: any, rowIndexData: any) => void;
     calculateRowHeight?: any;
     calculateColumnWidth?: any;
+    alternate?: boolean;
+    alternateHover?: boolean;
+    className?: string;
 }
 const VirtualTableComponent = ({
     columns = [],
@@ -63,6 +66,9 @@ const VirtualTableComponent = ({
     loadMore = () => null,
     calculateRowHeight,
     calculateColumnWidth,
+    className = "",
+    alternate,
+    alternateHover,
     ...props
 }: IVirtualTable) => {
     const [tableWidth, setTableWidth] = useState(0);
@@ -209,6 +215,9 @@ const VirtualTableComponent = ({
         >
             <Table
                 {...props}
+                className={`skeleton-table ${alternate && "alternate"} ${
+                    alternateHover && "alternate-hover"
+                } ${className}`}
                 scroll={scroll}
                 selectedRowId={selectedRowId}
                 columns={mergedColumns}
