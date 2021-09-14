@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.13](https://github.com/odpf/apsara/compare/v0.5.12...v0.5.13) (2021-09-14)
+
+
+### Bug Fixes
+
+* **sidebar:** use linkText as title instead of children ([915c024](https://github.com/odpf/apsara/commit/915c024f71547dcc837fd019074cff3accbb32ca))
+* **tabs:** update tab margin property ([cd74d52](https://github.com/odpf/apsara/commit/cd74d52339c1480500637d6a04a21d249ef66ce9))
+
+
+
+
+
 ## [0.5.12](https://github.com/odpf/apsara/compare/v0.5.11...v0.5.12) (2021-07-15)
 
 
