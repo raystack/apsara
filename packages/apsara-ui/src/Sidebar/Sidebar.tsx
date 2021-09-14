@@ -20,7 +20,7 @@ const renderMenuItemLink = (
 ) => {
     const { key, url, linkText, iconProps } = item;
     return (
-        <Menu.Item key={key} onClick={() => onItemClick(item)}>
+        <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)}>
             <LinkRender to={url}>
                 <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                     <CustomIcon {...iconProps} />
