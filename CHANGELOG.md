@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.14](https://github.com/odpf/apsara/compare/v0.5.13...v0.5.14) (2021-09-14)
+
+
+### Features
+
+* **sidebar:** add support for extra component ([ee4157e](https://github.com/odpf/apsara/commit/ee4157e431f834261879ceee1ed2394944f8c9d2))
+
+
+
+
+
 ## [0.5.13](https://github.com/odpf/apsara/compare/v0.5.12...v0.5.13) (2021-09-14)
 
 
