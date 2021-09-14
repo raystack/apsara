@@ -11,6 +11,7 @@ interface RenderItem {
     url: string;
     linkText: string;
     iconProps: CustomIconProps;
+    extraComponent?: React.ReactNode;
 }
 
 const renderMenuItemLink = (
@@ -18,15 +19,18 @@ const renderMenuItemLink = (
     onItemClick: (item: RenderItem) => void,
     LinkRender: ({ children }: any) => ReactElement,
 ) => {
-    const { key, url, linkText, iconProps } = item;
+    const { key, url, linkText, iconProps, extraComponent = null } = item;
     return (
-        <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)}>
-            <LinkRender to={url}>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                    <CustomIcon {...iconProps} />
-                    <span className="nav-text">{linkText}</span>
-                </div>
-            </LinkRender>
+        <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)} style={{}}>
+            <>
+                <LinkRender to={url}>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                        <CustomIcon {...iconProps} />
+                        <span className="nav-text">{linkText}</span>
+                    </div>
+                </LinkRender>
+                {extraComponent}
+            </>
         </Menu.Item>
     );
 };

@@ -14,65 +14,72 @@ const LinkRender = ({ children, to }: any) => {
 };
 
 export const iconComponent = () => (
-    <Sidebar
-        headerProps={{
-            name: "Console",
-            icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.primary[300] }} />,
-        }}
-        linkRender={LinkRender}
-        activePath={"discovery"}
-        onItemClick={() => null}
-        navigationList={[
-            {
-                key: "discovery",
-                url: "/discovery/",
-                linkText: "Discovery",
-                iconProps: { name: "discovery" },
-            },
-            {
-                key: "dashboard",
-                url: "/dashboard/",
-                linkText: "Dashboard",
-                iconProps: { name: "dashboard" },
-            },
-            {
-                key: "health",
-                url: "/health/",
-                linkText: "Health",
-                iconProps: { name: "health" },
-            },
-        ]}
-    />
+    <>
+        <Sidebar
+            headerProps={{
+                name: "Console",
+                icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.primary[300] }} />,
+            }}
+            linkRender={LinkRender}
+            activePath={"discovery"}
+            onItemClick={() => null}
+            navigationList={[
+                {
+                    key: "discovery",
+                    url: "/discovery/",
+                    linkText: "Discovery",
+                    iconProps: { name: "discovery" },
+                    extraComponent: <div style={{ position: "absolute", left: "100%" }}>Hello Wolrd</div>,
+                },
+                {
+                    key: "dashboard",
+                    url: "/dashboard/",
+                    linkText: "Dashboard",
+                    iconProps: { name: "dashboard" },
+                },
+                {
+                    key: "health",
+                    url: "/health/",
+                    linkText: "Health",
+                    iconProps: { name: "health" },
+                },
+            ]}
+        />
+        <div />
+    </>
 );
 
 export const iconProps = () => (
-    <Sidebar
-        headerProps={{
-            name: "Console",
-            iconProps: { name: "doc", color: Colors.primary[300], size: 32 },
-        }}
-        linkRender={LinkRender}
-        activePath={"discovery"}
-        onItemClick={() => null}
-        navigationList={[
-            {
-                key: "discovery",
-                url: "/discovery/",
-                linkText: "Discovery",
-                iconProps: { name: "discovery" },
-            },
-            {
-                key: "dashboard",
-                url: "/dashboard/",
-                linkText: "Dashboard",
-                iconProps: { name: "dashboard" },
-            },
-            {
-                key: "health",
-                url: "/health/",
-                linkText: "Health",
-                iconProps: { name: "health" },
-            },
-        ]}
-    />
+    <>
+        <Sidebar
+            headerProps={{
+                name: "Console",
+                iconProps: { name: "doc", color: Colors.primary[300], size: 32 },
+            }}
+            linkRender={LinkRender}
+            activePath={"discovery"}
+            onItemClick={() => null}
+            navigationList={[
+                {
+                    key: "discovery",
+                    url: "/discovery/",
+                    linkText: "Discovery",
+                    iconProps: { name: "discovery" },
+                },
+                {
+                    key: "dashboard",
+                    url: "/dashboard/",
+                    linkText: "Dashboard",
+                    iconProps: { name: "dashboard" },
+                },
+                {
+                    key: "health",
+                    url: "/health/",
+                    linkText: "Health",
+                    iconProps: { name: "health" },
+                },
+            ]}
+        />
+        <div />
+    </>
 );
