@@ -29,7 +29,6 @@ export const iconComponent = () => (
                     url: "/discovery/",
                     linkText: "Discovery",
                     iconProps: { name: "discovery" },
-                    extraComponent: <div style={{ position: "absolute", left: "100%" }}>Hello Wolrd</div>,
                 },
                 {
                     key: "dashboard",
