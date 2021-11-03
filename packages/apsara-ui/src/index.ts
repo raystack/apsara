@@ -23,7 +23,7 @@ import Provider from "./Provider";
 import Codeblock from "./Codeblock";
 import Popover from "./Popover";
 import ConfirmModal from "./ConfirmModal";
-import Colors from "./Colors";
+import Colors, { Light as LightColors, Dark as DarkColors } from "./Colors";
 import Shadows from "./Shadows";
 import Tooltip from "./Tooltip";
 import Input from "./Input";
@@ -71,6 +71,8 @@ export {
     Popover,
     ConfirmModal,
     Colors,
+    LightColors,
+    DarkColors,
     Shadows,
     Tooltip,
     Input,

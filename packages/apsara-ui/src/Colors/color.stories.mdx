@@ -1,16 +1,32 @@
 import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs/blocks";
 import Color from "./Colors";
+import light from "./light";
+import dark from "./dark";
 
 <Meta title="General/Colors" />
 
+## Light
+
 <ColorPalette>
-    <ColorItem title="black" subtitle="black colors" colors={Color.black} />
-    <ColorItem title="primary" subtitle="primary colors" colors={Color.primary} />
-    <ColorItem title="secondary" subtitle="secondary colors" colors={Color.secondary} />
-    <ColorItem title="success" subtitle="success colors" colors={Color.success} />
-    <ColorItem title="error" subtitle="error colors" colors={Color.error} />
-    <ColorItem title="warning" subtitle="warning colors" colors={Color.warning} />
-    <ColorItem colors={{ transparent: Color.transparent }} />
+    <ColorItem title="black" subtitle="black colors" colors={light.black} />
+    <ColorItem title="primary" subtitle="primary colors" colors={light.primary} />
+    <ColorItem title="secondary" subtitle="secondary colors" colors={light.secondary} />
+    <ColorItem title="success" subtitle="success colors" colors={light.success} />
+    <ColorItem title="error" subtitle="error colors" colors={light.error} />
+    <ColorItem title="warning" subtitle="warning colors" colors={light.warning} />
+    <ColorItem colors={{ transparent: light.transparent }} />
+</ColorPalette>
+
+## Dark
+
+<ColorPalette>
+    <ColorItem title="black" subtitle="black colors" colors={dark.black} />
+    <ColorItem title="primary" subtitle="primary colors" colors={dark.primary} />
+    <ColorItem title="secondary" subtitle="secondary colors" colors={dark.secondary} />
+    <ColorItem title="success" subtitle="success colors" colors={dark.success} />
+    <ColorItem title="error" subtitle="error colors" colors={dark.error} />
+    <ColorItem title="warning" subtitle="warning colors" colors={dark.warning} />
+    <ColorItem colors={{ transparent: dark.transparent }} />
 </ColorPalette>
 
 ## Uses
