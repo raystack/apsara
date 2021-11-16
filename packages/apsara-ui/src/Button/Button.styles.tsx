@@ -1,5 +1,5 @@
 import Button from "antd/lib/button";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Colors from "../Colors";
 
 const defaultSize = "default";
@@ -21,6 +21,12 @@ const styleMap = {
     },
 };
 
+const colorStyles = (color: string, background: string, border: string) => css`
+    color: ${color};
+    border-color: ${border};
+    background: ${background};
+`;
+
 export const AntdButton: any = styled(Button).attrs((props: any) => ({
     size: props.size || defaultSize,
 }))`
@@ -32,11 +38,54 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         line-height: ${(props) => styleMap[props.size]?.lineHeight || styleMap[defaultSize].lineHeight};
         letter-spacing: ${(props) => styleMap[props.size]?.letterSpacing || styleMap[defaultSize].letterSpacing};
 
-        &&.ant-btn-primary {
-            &:hover {
-                background-color: ${Colors.primary[500]};
-                border-color: ${Colors.primary[500]};
-            }
+        ${(props) =>
+            colorStyles(
+                props?.theme?.colors?.primary[4],
+                props?.theme?.colors?.trasparent,
+                props?.theme?.colors?.primary[4],
+            )}
+        &:hover,
+        &:focus {
+            ${(props) =>
+                colorStyles(
+                    props?.theme?.colors?.primary[5],
+                    props?.theme?.colors?.trasparent,
+                    props?.theme?.colors?.primary[5],
+                )}
+        }
+        &:active {
+            ${(props) =>
+                colorStyles(
+                    props?.theme?.colors?.primary[6],
+                    props?.theme?.colors?.trasparent,
+                    props?.theme?.colors?.primary[6],
+                )}
+        }
+    }
+
+    &&.ant-btn-primary {
+        ${(props) =>
+            colorStyles(
+                props?.theme?.colors?.black[0],
+                props?.theme?.colors?.primary[4],
+                props?.theme?.colors?.primary[4],
+            )}
+        &:hover,
+        &:focus {
+            ${(props) =>
+                colorStyles(
+                    props?.theme?.colors?.black[0],
+                    props?.theme?.colors?.primary[5],
+                    props?.theme?.colors?.primary[5],
+                )}
+        }
+        &:active {
+            ${(props) =>
+                colorStyles(
+                    props?.theme?.colors?.black[0],
+                    props?.theme?.colors?.primary[6],
+                    props?.theme?.colors?.primary[6],
+                )}
         }
     }
 
@@ -76,10 +125,6 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         span.anticon {
             margin: 0;
         }
-    }
-
-    &&:hover {
-        background: transparent;
     }
 
     &&.ant-btn > .anticon + span,
