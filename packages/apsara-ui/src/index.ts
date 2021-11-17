@@ -23,7 +23,7 @@ import Provider from "./Provider";
 import Codeblock from "./Codeblock";
 import Popover from "./Popover";
 import ConfirmModal from "./ConfirmModal";
-import Colors, { Light as LightColors, Dark as DarkColors } from "./Colors";
+import Colors from "./Colors";
 import Shadows from "./Shadows";
 import Tooltip from "./Tooltip";
 import Input from "./Input";
@@ -33,6 +33,7 @@ import Image from "./Image";
 import Select from "./Select";
 import Tile from "./Tile";
 import Switch from "./Switch";
+import Themes from "./Provider/theme";
 export { default as DiffTimeline } from "./DiffTimeline";
 export { DynamicList } from "./DynamicList";
 
@@ -71,8 +72,6 @@ export {
     Popover,
     ConfirmModal,
     Colors,
-    LightColors,
-    DarkColors,
     Shadows,
     Tooltip,
     Input,
@@ -82,4 +81,5 @@ export {
     Select,
     Tile,
     Switch,
+    Themes,
 };

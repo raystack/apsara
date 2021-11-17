@@ -1,38 +1,36 @@
 import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs/blocks";
-import Color from "./Colors";
-import light from "./light";
-import dark from "./dark";
+import Colors from ".";
 
 <Meta title="General/Colors" />
 
 ## Light
 
 <ColorPalette>
-    <ColorItem title="black" subtitle="black colors" colors={light.black} />
-    <ColorItem title="primary" subtitle="primary colors" colors={light.primary} />
-    <ColorItem title="secondary" subtitle="secondary colors" colors={light.secondary} />
-    <ColorItem title="success" subtitle="success colors" colors={light.success} />
-    <ColorItem title="error" subtitle="error colors" colors={light.error} />
-    <ColorItem title="warning" subtitle="warning colors" colors={light.warning} />
-    <ColorItem colors={{ transparent: light.transparent }} />
+    <ColorItem title="black" subtitle="black colors" colors={Colors.light.black} />
+    <ColorItem title="primary" subtitle="primary colors" colors={Colors.light.primary} />
+    <ColorItem title="secondary" subtitle="secondary colors" colors={Colors.light.secondary} />
+    <ColorItem title="success" subtitle="success colors" colors={Colors.light.success} />
+    <ColorItem title="error" subtitle="error colors" colors={Colors.light.error} />
+    <ColorItem title="warning" subtitle="warning colors" colors={Colors.light.warning} />
+    <ColorItem colors={{ transparent: Colors.light.transparent }} />
 </ColorPalette>
 
 ## Dark
 
 <ColorPalette>
-    <ColorItem title="black" subtitle="black colors" colors={dark.black} />
-    <ColorItem title="primary" subtitle="primary colors" colors={dark.primary} />
-    <ColorItem title="secondary" subtitle="secondary colors" colors={dark.secondary} />
-    <ColorItem title="success" subtitle="success colors" colors={dark.success} />
-    <ColorItem title="error" subtitle="error colors" colors={dark.error} />
-    <ColorItem title="warning" subtitle="warning colors" colors={dark.warning} />
-    <ColorItem colors={{ transparent: dark.transparent }} />
+    <ColorItem title="black" subtitle="black colors" colors={Colors.dark.black} />
+    <ColorItem title="primary" subtitle="primary colors" colors={Colors.dark.primary} />
+    <ColorItem title="secondary" subtitle="secondary colors" colors={Colors.dark.secondary} />
+    <ColorItem title="success" subtitle="success colors" colors={Colors.dark.success} />
+    <ColorItem title="error" subtitle="error colors" colors={Colors.dark.error} />
+    <ColorItem title="warning" subtitle="warning colors" colors={Colors.dark.warning} />
+    <ColorItem colors={{ transparent: Colors.dark.transparent }} />
 </ColorPalette>
 
 ## Uses
 
 ```js
 import { Colors } from "@odpf/apsara";
-// Color.primary.100
+// Colors.light.primary[4]
 // that's it! All components will be imported with styles
 ```

@@ -1,7 +1,5 @@
 import React from "react";
-import Text from "../Text";
-
-import "./index.less";
+import { LearnWindow, LearnHead, LearnBody, LearnTitle, LearnCloseBtn } from "./Learn.styles";
 
 interface LearnProps {
     content: any;
@@ -9,24 +7,21 @@ interface LearnProps {
     style?: any;
     setVisibility?: (visibility: boolean) => void;
 }
-const Learn = ({ isVisible, content, setVisibility = () => null, style }: LearnProps) => {
-    const classNames = isVisible ? "learn-window show" : "learn-window";
-    return (
-        <React.Fragment>
-            <div className={classNames} id="learn-panel" style={style}>
-                <div className="learn-head">
-                    <Text strong size={16} className="learn-title">
-                        Learn
-                    </Text>
-                    <div className="learn-close-btn" onClick={() => setVisibility(false)}>
-                        <span>&times;</span>
-                    </div>
-                </div>
+const Learn = ({ isVisible, content, setVisibility = () => null, style }: LearnProps) => (
+    <React.Fragment>
+        <LearnWindow isVisible={isVisible} id="learn-panel" style={style}>
+            <LearnHead>
+                <LearnTitle strong size={16}>
+                    Learn
+                </LearnTitle>
+                <LearnCloseBtn onClick={() => setVisibility(false)}>
+                    <span>&times;</span>
+                </LearnCloseBtn>
+            </LearnHead>
 
-                <div className="learn-body">{content}</div>
-            </div>
-        </React.Fragment>
-    );
-};
+            <LearnBody>{content}</LearnBody>
+        </LearnWindow>
+    </React.Fragment>
+);
 
 export default Learn;

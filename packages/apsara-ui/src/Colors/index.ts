@@ -1,5 +1,9 @@
-import Colors from "./Colors";
-export { default as Light } from "./light";
-export { default as Dark } from "./dark";
+import light from "./light";
+import dark from "./dark";
+
+const Colors = {
+    light,
+    dark,
+};
 
 export default Colors;

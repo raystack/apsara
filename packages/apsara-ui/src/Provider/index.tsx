@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider as ThemeProviderBase } from "styled-components";
 import { createGlobalStyle } from "styled-components";
+import Themes from "./theme";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
 import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
@@ -40,29 +41,14 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export interface ThemeProviderProps {
-    theme?: {
-        [key: string]: any;
-    };
-    children?: React.ReactNode;
+    theme?: Record<string, any>;
 }
 
-const ThemeProvider: React.FC<ThemeProviderProps> = (props: ThemeProviderProps) => {
-    const { theme, children } = props;
-    return (
-        <ThemeProviderBase
-            theme={{
-                ...theme,
-            }}
-        >
-            <>
-                <GlobalStyle />
-                {children}
-            </>
-        </ThemeProviderBase>
-    );
-};
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ theme = Themes.light, children }) => (
+    <ThemeProviderBase theme={theme}>
+        <GlobalStyle />
+        {children}
+    </ThemeProviderBase>
+);
 
-ThemeProvider.defaultProps = {
-    theme: {},
-};
 export default ThemeProvider;

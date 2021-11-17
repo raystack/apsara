@@ -1,6 +1,5 @@
 import Button from "antd/lib/button";
 import styled, { css } from "styled-components";
-import Colors from "../Colors";
 
 const defaultSize = "default";
 const styleMap = {
@@ -40,9 +39,9 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
 
         ${(props) =>
             colorStyles(
-                props?.theme?.colors?.primary[4],
+                props?.theme?.colors?.black[9],
                 props?.theme?.colors?.trasparent,
-                props?.theme?.colors?.primary[4],
+                props?.theme?.colors?.black[4],
             )}
         &:hover,
         &:focus {
@@ -94,7 +93,7 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         background: transparent;
         border: 0;
         box-shadow: none;
-        color: ${Colors.primary[500]};
+        color: ${({ theme }) => theme?.colors?.primary[5]};
         font-weight: bold;
 
         &.ant-btn[disabled],
@@ -115,11 +114,11 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
 
         &.btn-error,
         &.btn-error > .anticon {
-            color: ${Colors.error[500]} !important;
+            color: ${({ theme }) => theme?.colors?.error[4]} !important;
         }
 
         &.btn-success {
-            color: ${Colors.success[500]};
+            color: ${({ theme }) => theme?.colors?.success[4]};
         }
 
         span.anticon {

@@ -18,7 +18,7 @@ export const iconComponent = () => (
         <Sidebar
             headerProps={{
                 name: "Console",
-                icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.primary[300] }} />,
+                icon: <Icon name="doc" size={32} styleOverride={{ color: Colors.light.primary[3] }} />,
             }}
             linkRender={LinkRender}
             activePath={"discovery"}
@@ -53,7 +53,7 @@ export const iconProps = () => (
         <Sidebar
             headerProps={{
                 name: "Console",
-                iconProps: { name: "doc", color: Colors.primary[300], size: 32 },
+                iconProps: { name: "doc", color: Colors.light.primary[3], size: 32 },
             }}
             linkRender={LinkRender}
             activePath={"discovery"}

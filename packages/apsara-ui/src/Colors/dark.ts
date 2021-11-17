@@ -1,4 +1,4 @@
-const colors = {
+const dark = {
     transparent: "rgba(255, 255, 255, 0)",
     black: [
         "#f5f5f5",
@@ -21,4 +21,4 @@ const colors = {
     secondary: ["#db61a2", "#bf4b8a", "#9e3670", "#7d2457", "#5e103e", "#42062a"],
 };
 
-export default colors;
+export default dark;

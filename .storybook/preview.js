@@ -1,7 +1,7 @@
 import React from "react";
 import { addDecorator, addParameters } from "@storybook/react";
 import sortEachDepth from "./sortEachDepth";
-import { Provider, LightColors, DarkColors } from "@odpf/apsara";
+import { Provider, Themes } from "@odpf/apsara";
 
 // Apply global styles for storybook
 import "!style-loader!css-loader!less-loader!./storybook.less";
@@ -37,8 +37,8 @@ export const parameters = {
 };
 
 const MyThemes = {
-    light: { colors: LightColors },
-    dark: { colors: DarkColors },
+    light: Themes.light,
+    dark: Themes.dark,
 };
 
 // Function to obtain the intended theme
