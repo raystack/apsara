@@ -37,28 +37,13 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         line-height: ${(props) => styleMap[props.size]?.lineHeight || styleMap[defaultSize].lineHeight};
         letter-spacing: ${(props) => styleMap[props.size]?.letterSpacing || styleMap[defaultSize].letterSpacing};
 
-        ${(props) =>
-            colorStyles(
-                props?.theme?.colors?.black[9],
-                props?.theme?.colors?.trasparent,
-                props?.theme?.colors?.black[4],
-            )}
+        ${(props) => colorStyles(props?.theme?.colors?.black[9], "transparent", props?.theme?.colors?.black[4])}
         &:hover,
         &:focus {
-            ${(props) =>
-                colorStyles(
-                    props?.theme?.colors?.primary[5],
-                    props?.theme?.colors?.trasparent,
-                    props?.theme?.colors?.primary[5],
-                )}
+            ${(props) => colorStyles(props?.theme?.colors?.primary[5], "transparent", props?.theme?.colors?.primary[5])}
         }
         &:active {
-            ${(props) =>
-                colorStyles(
-                    props?.theme?.colors?.primary[6],
-                    props?.theme?.colors?.trasparent,
-                    props?.theme?.colors?.primary[6],
-                )}
+            ${(props) => colorStyles(props?.theme?.colors?.primary[6], "transparent", props?.theme?.colors?.primary[6])}
         }
     }
 

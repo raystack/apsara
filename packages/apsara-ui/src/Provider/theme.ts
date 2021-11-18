@@ -23,6 +23,10 @@ const light = {
         bg: "#101d35",
         text: "#bae67e",
     },
+    popover: {
+        bg: Colors?.light?.black[0],
+        text: Colors?.light?.black[8],
+    },
 };
 
 const dark = {
@@ -41,6 +45,10 @@ const dark = {
     codeblock: {
         bg: Colors?.dark?.black[3],
         text: Colors?.dark?.black[9],
+    },
+    popover: {
+        bg: Colors?.dark?.black[8],
+        text: Colors?.dark?.black[1],
     },
 };
 

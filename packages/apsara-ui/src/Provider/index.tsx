@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeProvider as ThemeProviderBase } from "styled-components";
+import { DefaultTheme, ThemeProvider as ThemeProviderBase } from "styled-components";
 import { createGlobalStyle } from "styled-components";
 import Themes from "./theme";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
@@ -40,8 +40,16 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+// extend DefaultTheme definitions
+declare module "styled-components" {
+    export interface DefaultTheme extends Record<string, any> {
+        fontSizes: string[];
+        colors: Record<string, string | string[]>;
+    }
+}
+
 export interface ThemeProviderProps {
-    theme?: Record<string, any>;
+    theme?: DefaultTheme;
 }
 
 const ThemeProvider: React.FC<ThemeProviderProps> = ({ theme = Themes.light, children }) => (
