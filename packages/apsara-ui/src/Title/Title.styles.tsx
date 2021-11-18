@@ -1,12 +1,6 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Text from "../Text";
-
-const textStyles = (size = "12px", fade = 0.7, ls = "0px") => css`
-    font-size: ${size} !important;
-    font-weight: 300;
-    color: rgba(0, 0, 0, ${fade}) !important;
-    letter-spacing: ${ls};
-`;
+import { textStyles } from "../mixin";
 
 export const Wrapper = styled.div`
     display: flex;

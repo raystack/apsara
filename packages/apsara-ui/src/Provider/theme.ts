@@ -8,12 +8,40 @@ const base = {
 
 const light = {
     ...base,
-    colors: Colors.light,
+    colors: Colors?.light,
+    learn: {
+        bg: Colors?.light?.black[0],
+        title: Colors?.light?.black[9],
+        close: Colors?.light?.black[8],
+    },
+    markdown: {
+        text: Colors?.light?.black[8],
+        heading: Colors?.light?.black[9],
+        link: Colors?.light?.primary[4],
+    },
+    codeblock: {
+        bg: "#101d35",
+        text: "#bae67e",
+    },
 };
 
 const dark = {
     ...base,
-    colors: Colors.dark,
+    colors: Colors?.dark,
+    learn: {
+        bg: Colors?.dark?.black[9],
+        title: Colors?.dark?.black[0],
+        close: Colors?.light?.black[5],
+    },
+    markdown: {
+        text: Colors?.dark?.black[5],
+        heading: Colors?.dark?.black[0],
+        link: Colors?.dark?.primary[1],
+    },
+    codeblock: {
+        bg: Colors?.dark?.black[3],
+        text: Colors?.dark?.black[9],
+    },
 };
 
 const Themes = {

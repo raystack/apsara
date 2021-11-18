@@ -1,7 +1,7 @@
 import React from "react";
 import { addDecorator, addParameters } from "@storybook/react";
 import sortEachDepth from "./sortEachDepth";
-import { Provider, Themes } from "@odpf/apsara";
+import { Provider, Themes } from "../packages/apsara-ui/src";
 
 // Apply global styles for storybook
 import "!style-loader!css-loader!less-loader!./storybook.less";

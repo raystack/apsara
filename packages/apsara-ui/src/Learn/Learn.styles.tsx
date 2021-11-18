@@ -8,7 +8,7 @@ export const LearnWindow = styled.div<{ isVisible: boolean }>`
     top: 0;
     width: 310px;
     box-shadow: -1px 0px 4px 0px rgba(0, 0, 0, 0.1);
-    background: ${({ theme }) => theme?.colors?.black[0]};
+    background: ${({ theme }) => theme?.learn?.bg};
     height: 100vh;
     display: flex;
     flex-wrap: wrap;
@@ -33,8 +33,7 @@ export const LearnBody = styled.div`
 `;
 
 export const LearnTitle = styled(Text)`
-    line-height: 16px;
-    font-size: ${({ theme }) => theme?.fontSizes[1]};
+    color: ${({ theme }) => theme?.learn?.title};
 `;
 
 export const LearnCloseBtn = styled.div`
@@ -42,10 +41,7 @@ export const LearnCloseBtn = styled.div`
     text-align: end;
     font-size: ${({ theme }) => theme?.fontSizes[2]};
     position: relative;
-
-    h4 {
-        margin: 0;
-    }
+    color: ${({ theme }) => theme?.learn?.close};
 
     > span {
         font-size: 30px;
