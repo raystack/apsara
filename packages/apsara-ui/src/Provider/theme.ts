@@ -27,6 +27,14 @@ const light = {
         bg: Colors?.light?.black[0],
         text: Colors?.light?.black[8],
     },
+    input: {
+        bg: Colors?.light?.black[0],
+        text: Colors?.light?.black[10],
+        border: Colors?.light?.black[5],
+        placeholder: Colors?.light?.black[6],
+        hover: Colors?.light?.primary[4],
+        disabled: Colors?.light?.black[2],
+    },
 };
 
 const dark = {
@@ -49,6 +57,14 @@ const dark = {
     popover: {
         bg: Colors?.dark?.black[8],
         text: Colors?.dark?.black[1],
+    },
+    input: {
+        bg: Colors?.dark?.black[0],
+        text: Colors?.dark?.black[10],
+        border: Colors?.dark?.black[5],
+        placeholder: Colors?.dark?.black[6],
+        hover: Colors?.dark?.primary[4],
+        disabled: Colors?.dark?.black[2],
     },
 };
 
