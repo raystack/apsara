@@ -55,7 +55,8 @@ const checkboxStyles = css`
     }
 `;
 
-const Checkbox = styled(AntdCheckbox)`
+// TODO: fix the Group type
+const Checkbox: typeof AntdCheckbox & { Group: any } = styled(AntdCheckbox)`
     ${checkboxStyles}
 `;
 

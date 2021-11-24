@@ -3,6 +3,7 @@ import React from "react";
 
 import Popover from "./Popover";
 import Button from "../Button";
+import Input from "../Input";
 
 export default {
     title: "General/Popover",
@@ -23,7 +24,7 @@ export const popoverContent = () => (
             title="Confirmation"
             content={
                 <div>
-                    <input></input>
+                    <Input />
                 </div>
             }
             onOk={() => {}}

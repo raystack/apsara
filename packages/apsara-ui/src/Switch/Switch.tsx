@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Switch as AntdSwitch } from "antd";
 
-const Switch = styled(AntdSwitch)`
+const Switch: typeof AntdSwitch = styled(AntdSwitch)`
     &.ant-switch-checked {
         background-color: ${({ theme }) => theme?.colors?.primary[4]};
         .ant-switch-loading-icon {

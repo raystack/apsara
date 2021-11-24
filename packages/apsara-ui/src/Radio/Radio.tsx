@@ -39,7 +39,8 @@ const radioStyles = css`
     }
 `;
 
-const Radio = styled(AntdRadio)`
+// TODO: fix the Group type
+const Radio: typeof AntdRadio & { Group: any } = styled(AntdRadio)`
     ${radioStyles}
 `;
 
