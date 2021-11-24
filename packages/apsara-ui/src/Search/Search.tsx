@@ -1,14 +1,11 @@
-import React from "react";
-import { Input } from "antd";
+import React, { useContext } from "react";
+import { ThemeContext } from "styled-components";
+import Input from "../Input";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 
 import CustomIcon, { IconName } from "../Icon/Icon";
-import Theme from "../theme";
-import "./search.less";
+import { Wrapper } from "./Search.styles";
 
-const PRIMARY_SEARCH_ICON_COLOR = Theme["@outline-color"];
-const SECONDARY_SEARCH_ICON_COLOR = Theme["@table-header-color"];
-const ICON_SIZE = Theme["@datlantis-font-lg"];
 const nullFn = () => null;
 
 interface SearchProps {
@@ -45,9 +42,10 @@ const Search = ({
     onIconClick = nullFn,
     disabled = false,
 }: SearchProps) => {
+    const theme = useContext(ThemeContext);
     const iconObj = secondary
-        ? { name: "search" as IconName, color: SECONDARY_SEARCH_ICON_COLOR }
-        : { name: "searchfilter" as IconName, color: PRIMARY_SEARCH_ICON_COLOR };
+        ? { name: "search" as IconName, color: theme?.colors?.black[6] }
+        : { name: "searchfilter" as IconName, color: theme?.colors?.black[7] };
     const isIconClickFn = typeof onIconClick === "function";
 
     const handleIconClick = () => {
@@ -55,7 +53,7 @@ const Search = ({
     };
 
     return (
-        <div className={`search__wrapper ${className} ${secondary && "secondary"}`} style={style}>
+        <Wrapper className={className} secondary={secondary} style={style}>
             <Input
                 disabled={disabled}
                 size={size}
@@ -71,7 +69,7 @@ const Search = ({
             <CustomIcon
                 disabled={disabled}
                 styleOverride={{
-                    fontSize: ICON_SIZE,
+                    fontSize: theme?.fontSizes[2],
                     color: iconObj.color,
                     cursor: isIconClickFn ? "pointer" : "initial",
                     ...iconStyle,
@@ -80,7 +78,8 @@ const Search = ({
                 onClick={handleIconClick}
             />
             {children}
-        </div>
+        </Wrapper>
     );
 };
+
 export default Search;
