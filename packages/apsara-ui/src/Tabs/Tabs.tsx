@@ -1,20 +1,20 @@
 import React from "react";
-import { Tabs, TabsProps } from "antd";
-import "./style.less";
+import { TabsProps } from "antd";
+import { StyledTabs } from "./Tabs.styles";
 
-const { TabPane } = Tabs;
+const { TabPane } = StyledTabs;
 
 interface CustomTabsProps extends Omit<TabsProps, "type" | "size"> {
-    type?: "primary" | "secondary" | "card" | "think";
+    type?: "primary" | "secondary" | "thin";
     size?: "xs" | "md" | "lg";
     className?: string;
     children?: React.ReactNode;
 }
 
-// ? Types of tabs: primary, secondary, card, think
+// ? Types of tabs: primary, secondary, thin
 // ? Sizes of tabs: xs, md, lg
 function CustomTabs({ type = "primary", size = "md", className = "", ...props }: CustomTabsProps) {
-    return <Tabs className={`skeleton-tabs ${className} ${size} ${type}`} {...props} />;
+    return <StyledTabs className={`${className} ${size} ${type}`} {...props} />;
 }
 
 CustomTabs.TabPane = TabPane;
