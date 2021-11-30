@@ -6,3 +6,11 @@ export const textStyles = (size = "12px", color = "rgba(0, 0, 0, 0.7)", ls = "0p
     color: ${color} !important;
     letter-spacing: ${ls};
 `;
+
+export const capitalize = css`
+    text-transform: lowercase;
+
+    &::first-line {
+        text-transform: capitalize;
+    }
+`;

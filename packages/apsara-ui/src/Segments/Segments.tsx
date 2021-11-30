@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
-import { Row, Col, Collapse } from "antd";
-import "./style.less";
+import { Col, Collapse } from "antd";
+import { Row, Key, Value, Title, StyledRow } from "./Segments.styles";
 
 const { Panel } = Collapse;
 
@@ -10,11 +10,7 @@ interface SegmentsProps {
     children?: React.ReactNode;
 }
 
-const Segments = ({ span = 10, children }: SegmentsProps) => (
-    <Col className="segment__container" span={span}>
-        {children}
-    </Col>
-);
+const Segments = ({ span = 10, children }: SegmentsProps) => <Col span={span}>{children}</Col>;
 
 interface SegmentRowsProps {
     label: string;
@@ -23,17 +19,17 @@ interface SegmentRowsProps {
 }
 
 const SegmentRow = ({ label, value }: SegmentRowsProps) => (
-    <div className="segment__row">
-        <div className="segment__row--key">{label}</div>
-        <div className="segment__row--value">{value}</div>
-    </div>
+    <Row>
+        <Key>{label}</Key>
+        <Value>{value}</Value>
+    </Row>
 );
 
 interface SegmentTitleProps {
     title: string;
 }
 
-const SegmentTitle = ({ title }: SegmentTitleProps) => <div className="segment__title">{title}</div>;
+const SegmentTitle = ({ title }: SegmentTitleProps) => <Title>{title}</Title>;
 
 interface SegmentProps {
     title: string;
@@ -42,13 +38,13 @@ interface SegmentProps {
 }
 
 const Segment = ({ title, rowData = [], children }: SegmentProps) => (
-    <Row className="segment">
+    <StyledRow>
         <SegmentTitle title={title} />
         {rowData.map((data, index) => (
             <SegmentRow key={`${data.key}_${index}`} {...data} />
         ))}
         {children}
-    </Row>
+    </StyledRow>
 );
 
 interface AdvancedConfigProps {
@@ -58,7 +54,7 @@ interface AdvancedConfigProps {
 
 const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations" }: AdvancedConfigProps) => {
     return (
-        <Row className="segment advanced-segment">
+        <StyledRow advance>
             <Collapse expandIconPosition="right" bordered={false}>
                 <Panel header={title} key="1">
                     {rowData.map((d, index) => (
@@ -66,7 +62,7 @@ const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations
                     ))}
                 </Panel>
             </Collapse>
-        </Row>
+        </StyledRow>
     );
 };
 

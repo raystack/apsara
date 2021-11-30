@@ -35,6 +35,11 @@ const light = {
         hover: Colors?.light?.primary[4],
         disabled: Colors?.light?.black[2],
     },
+    tag: {
+        bg: Colors?.light?.primary[0],
+        text: Colors?.light?.black[10],
+        close: Colors?.light?.black[9],
+    },
 };
 
 const dark = {
@@ -65,6 +70,11 @@ const dark = {
         placeholder: Colors?.dark?.black[6],
         hover: Colors?.dark?.primary[4],
         disabled: Colors?.dark?.black[2],
+    },
+    tag: {
+        bg: Colors?.dark?.primary[0],
+        text: Colors?.dark?.black[10],
+        close: Colors?.dark?.black[9],
     },
 };
 
