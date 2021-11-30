@@ -3,8 +3,8 @@ import { TextProps } from "antd/lib/typography/Text";
 
 import styled from "styled-components";
 
-const defaultSize = 14;
-const styleMap = {
+export const defaultSize = 14;
+export const styleMap = {
     11: {
         fontSize: "11px",
         lineHeight: "13px",
