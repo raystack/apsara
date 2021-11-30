@@ -5,7 +5,7 @@ import Tabs from "./Tabs";
     title="Navigation/Tabs"
     argTypes={{
         type: {
-            control: { type: "select", options: ["primary", "secondary", "card", "think"] },
+            control: { type: "select", options: ["primary", "secondary", "thin"] },
             table: {
                 defaultValue: { summary: "primary" },
             },
@@ -38,7 +38,7 @@ import Tabs from "./Tabs";
                 <Tabs.TabPane tab="tab2" key="tab2">
                     Tab 2
                 </Tabs.TabPane>
-                <Tabs.TabPane tab="tab3" key="tab3">
+                <Tabs.TabPane tab="tab3" key="tab3" disabled>
                     Tab 3
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="tab4" key="tab4">
@@ -53,9 +53,9 @@ import Tabs from "./Tabs";
 
 <Canvas>
     <Story
-        name="secondry tabs"
+        name="secondary tabs"
         args={{
-            type: "secondry",
+            type: "secondary",
         }}
     >
         {(args) => (
@@ -66,7 +66,7 @@ import Tabs from "./Tabs";
                 <Tabs.TabPane tab="tab2" key="tab2">
                     Tab 2
                 </Tabs.TabPane>
-                <Tabs.TabPane tab="tab3" key="tab3">
+                <Tabs.TabPane tab="tab3" key="tab3" disabled>
                     Tab 3
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="tab4" key="tab4">
@@ -92,7 +92,7 @@ import Tabs from "./Tabs";
                 <Tabs.TabPane tab="tab2" key="tab2">
                     Tab 2
                 </Tabs.TabPane>
-                <Tabs.TabPane tab="tab3" key="tab3">
+                <Tabs.TabPane tab="tab3" key="tab3" disabled>
                     Tab 3
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="tab4" key="tab4">
