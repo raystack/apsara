@@ -33,43 +33,28 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: ${(props) => styleMap[props.size]?.fontSize || styleMap[defaultSize].fontSize};
-        line-height: ${(props) => styleMap[props.size]?.lineHeight || styleMap[defaultSize].lineHeight};
-        letter-spacing: ${(props) => styleMap[props.size]?.letterSpacing || styleMap[defaultSize].letterSpacing};
+        font-size: ${({ size }) => styleMap[size]?.fontSize || styleMap[defaultSize].fontSize};
+        line-height: ${({ size }) => styleMap[size]?.lineHeight || styleMap[defaultSize].lineHeight};
+        letter-spacing: ${({ size }) => styleMap[size]?.letterSpacing || styleMap[defaultSize].letterSpacing};
 
-        ${(props) => colorStyles(props?.theme?.colors?.black[9], "transparent", props?.theme?.colors?.black[4])}
+        ${({ theme }) => colorStyles(theme?.colors?.black[9], "transparent", theme?.colors?.black[4])}
         &:hover,
         &:focus {
-            ${(props) => colorStyles(props?.theme?.colors?.primary[5], "transparent", props?.theme?.colors?.primary[5])}
+            ${({ theme }) => colorStyles(theme?.colors?.primary[5], "transparent", theme?.colors?.primary[5])}
         }
         &:active {
-            ${(props) => colorStyles(props?.theme?.colors?.primary[6], "transparent", props?.theme?.colors?.primary[6])}
+            ${({ theme }) => colorStyles(theme?.colors?.primary[6], "transparent", theme?.colors?.primary[6])}
         }
     }
 
     &&.ant-btn-primary {
-        ${(props) =>
-            colorStyles(
-                props?.theme?.colors?.black[0],
-                props?.theme?.colors?.primary[4],
-                props?.theme?.colors?.primary[4],
-            )}
+        ${({ theme }) => colorStyles(theme?.colors?.black[0], theme?.colors?.primary[4], theme?.colors?.primary[4])}
         &:hover,
         &:focus {
-            ${(props) =>
-                colorStyles(
-                    props?.theme?.colors?.black[0],
-                    props?.theme?.colors?.primary[5],
-                    props?.theme?.colors?.primary[5],
-                )}
+            ${({ theme }) => colorStyles(theme?.colors?.black[0], theme?.colors?.primary[5], theme?.colors?.primary[5])}
         }
         &:active {
-            ${(props) =>
-                colorStyles(
-                    props?.theme?.colors?.black[0],
-                    props?.theme?.colors?.primary[6],
-                    props?.theme?.colors?.primary[6],
-                )}
+            ${({ theme }) => colorStyles(theme?.colors?.black[0], theme?.colors?.primary[6], theme?.colors?.primary[6])}
         }
     }
 

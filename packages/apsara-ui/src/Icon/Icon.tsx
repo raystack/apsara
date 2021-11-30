@@ -27,13 +27,15 @@ function CustomIcon({
     const theme = useContext(ThemeContext);
     if (!name) return null;
     const iconComponent = Icons[name];
+    const defaultColor = !active ? theme?.colors?.black[8] : theme?.colors?.primary[3];
+    const defaultFill = theme?.colors?.primary[3];
     return (
         <Icon
             className={`skeleton-icon ${name} ${className}`}
             component={iconComponent}
             style={{
-                color: color ? color : !active ? theme?.colors?.black[8] : theme?.colors?.primary[3],
-                fill: color ? color : theme?.colors?.primary[3],
+                color: color || defaultColor,
+                fill: color || defaultFill,
                 fontSize: `${size}px`,
                 ...styleOverride,
             }}
