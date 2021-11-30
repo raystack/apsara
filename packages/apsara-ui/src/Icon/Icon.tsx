@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeContext } from "styled-components";
 import Icon from "@ant-design/icons";
-import Colors from "../Colors";
 import * as Icons from "@odpf/icons";
 
 export type IconName = keyof typeof Icons;
@@ -24,15 +24,18 @@ function CustomIcon({
     styleOverride = {},
     ...restProps
 }: CustomIconProps) {
+    const theme = useContext(ThemeContext);
     if (!name) return null;
     const iconComponent = Icons[name];
+    const defaultColor = !active ? theme?.colors?.black[8] : theme?.colors?.primary[3];
+    const defaultFill = theme?.colors?.primary[3];
     return (
         <Icon
             className={`skeleton-icon ${name} ${className}`}
             component={iconComponent}
             style={{
-                color: color ? color : !active ? Colors.black[400] : Colors.primary[300],
-                fill: color ? color : Colors.primary[300],
+                color: color || defaultColor,
+                fill: color || defaultFill,
                 fontSize: `${size}px`,
                 ...styleOverride,
             }}

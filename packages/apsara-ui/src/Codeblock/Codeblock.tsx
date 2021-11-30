@@ -1,8 +1,7 @@
 import React, { useRef } from "react";
-import "./style.less";
 import Icon from "../Icon";
 import { showSuccess, showError } from "../Notification";
-import clsx from "clsx";
+import { Container, CopyBtn, Viewer } from "./Codeblock.styles";
 
 interface CodeblockProps {
     lang?: string;
@@ -39,16 +38,16 @@ const Codeblock = ({ lang = "text", children = "", copy = false, className = "" 
         }
     };
     return (
-        <div className={clsx("code-container", className)}>
+        <Container className={className}>
             {copy ? (
-                <div className="code-copy-btn" onClick={handleCopy}>
+                <CopyBtn onClick={handleCopy}>
                     <Icon name="copy2" styleOverride={{ color: "white" }} />
-                </div>
+                </CopyBtn>
             ) : null}
-            <pre className="code-viewer" lang={lang} ref={codeRef}>
+            <Viewer lang={lang} ref={codeRef}>
                 {children}
-            </pre>
-        </div>
+            </Viewer>
+        </Container>
     );
 };
 

@@ -1,22 +1,36 @@
 import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs/blocks";
-import Color from "./Colors";
+import Colors from ".";
 
 <Meta title="General/Colors" />
 
+## Light
+
 <ColorPalette>
-    <ColorItem title="black" subtitle="black colors" colors={Color.black} />
-    <ColorItem title="primary" subtitle="primary colors" colors={Color.primary} />
-    <ColorItem title="secondary" subtitle="secondary colors" colors={Color.secondary} />
-    <ColorItem title="success" subtitle="success colors" colors={Color.success} />
-    <ColorItem title="error" subtitle="error colors" colors={Color.error} />
-    <ColorItem title="warning" subtitle="warning colors" colors={Color.warning} />
-    <ColorItem colors={{ transparent: Color.transparent }} />
+    <ColorItem title="black" subtitle="black colors" colors={Colors.light.black} />
+    <ColorItem title="primary" subtitle="primary colors" colors={Colors.light.primary} />
+    <ColorItem title="secondary" subtitle="secondary colors" colors={Colors.light.secondary} />
+    <ColorItem title="success" subtitle="success colors" colors={Colors.light.success} />
+    <ColorItem title="error" subtitle="error colors" colors={Colors.light.error} />
+    <ColorItem title="warning" subtitle="warning colors" colors={Colors.light.warning} />
+    <ColorItem colors={{ transparent: Colors.light.transparent }} />
+</ColorPalette>
+
+## Dark
+
+<ColorPalette>
+    <ColorItem title="black" subtitle="black colors" colors={Colors.dark.black} />
+    <ColorItem title="primary" subtitle="primary colors" colors={Colors.dark.primary} />
+    <ColorItem title="secondary" subtitle="secondary colors" colors={Colors.dark.secondary} />
+    <ColorItem title="success" subtitle="success colors" colors={Colors.dark.success} />
+    <ColorItem title="error" subtitle="error colors" colors={Colors.dark.error} />
+    <ColorItem title="warning" subtitle="warning colors" colors={Colors.dark.warning} />
+    <ColorItem colors={{ transparent: Colors.dark.transparent }} />
 </ColorPalette>
 
 ## Uses
 
 ```js
 import { Colors } from "@odpf/apsara";
-// Color.primary.100
+// Colors.light.primary[4]
 // that's it! All components will be imported with styles
 ```

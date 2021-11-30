@@ -1,6 +1,7 @@
 import React from "react";
-import { ThemeProvider as ThemeProviderBase } from "styled-components";
+import { DefaultTheme, ThemeProvider as ThemeProviderBase } from "styled-components";
 import { createGlobalStyle } from "styled-components";
+import Themes from "./theme";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
 import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
@@ -39,30 +40,23 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export interface ThemeProviderProps {
-    theme?: {
-        [key: string]: any;
-    };
-    children?: React.ReactNode;
+// extend DefaultTheme definitions
+declare module "styled-components" {
+    export interface DefaultTheme extends Record<string, any> {
+        fontSizes: string[];
+        colors: Record<string, string | string[]>;
+    }
 }
 
-const ThemeProvider: React.FC<ThemeProviderProps> = (props: ThemeProviderProps) => {
-    const { theme, children } = props;
-    return (
-        <ThemeProviderBase
-            theme={{
-                ...theme,
-            }}
-        >
-            <>
-                <GlobalStyle />
-                {children}
-            </>
-        </ThemeProviderBase>
-    );
-};
+export interface ThemeProviderProps {
+    theme?: DefaultTheme;
+}
 
-ThemeProvider.defaultProps = {
-    theme: {},
-};
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ theme = Themes.light, children }) => (
+    <ThemeProviderBase theme={theme}>
+        <GlobalStyle />
+        {children}
+    </ThemeProviderBase>
+);
+
 export default ThemeProvider;

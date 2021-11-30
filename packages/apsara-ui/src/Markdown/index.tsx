@@ -2,10 +2,11 @@
 // @ts-nocheck
 
 import React from "react";
-import "./style.less";
+import { Wrapper } from "./Markdown.styles";
 
 const Markdown = ({ data, style }: any) => {
     // eslint-disable-next-line react/no-danger
-    return <div className="markdown-wrapper" style={style} dangerouslySetInnerHTML={{ __html: data }} />;
+    return <Wrapper style={style} dangerouslySetInnerHTML={{ __html: data }} />;
 };
+
 export default Markdown;

@@ -1,6 +1,7 @@
 import React from "react";
 import { addDecorator, addParameters } from "@storybook/react";
 import sortEachDepth from "./sortEachDepth";
+import { Provider, Themes } from "../packages/apsara-ui/src";
 
 // Apply global styles for storybook
 import "!style-loader!css-loader!less-loader!./storybook.less";
@@ -34,3 +35,39 @@ export const parameters = {
         inlineStories: true,
     },
 };
+
+const MyThemes = {
+    light: Themes.light,
+    dark: Themes.dark,
+};
+
+// Function to obtain the intended theme
+const getTheme = (themeName) => {
+    return MyThemes[themeName];
+};
+
+export const globalTypes = {
+    theme: {
+        name: "Theme",
+        description: "Global theme for components",
+        defaultValue: "light",
+        toolbar: {
+            icon: "circlehollow",
+            // Array of plain string values or MenuItem shape (see below)
+            items: Object.keys(MyThemes),
+            // Property that specifies if the name of the item will be displayed
+            showName: true,
+        },
+    },
+};
+
+const withThemeProvider = (Story, context) => {
+    const theme = getTheme(context.globals.theme);
+    return (
+        <Provider theme={theme}>
+            <Story {...context} />
+        </Provider>
+    );
+};
+
+export const decorators = [withThemeProvider];

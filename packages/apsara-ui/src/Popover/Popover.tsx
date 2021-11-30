@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Popover } from "antd";
-import "./style.less";
 import Button from "../Button/Button";
 import { CustomButtonProps } from "../Button/Button.types";
+import { Container, Content, Message, Title, Footer, StyledPopover } from "./Popover.styles";
 
 interface ButtonPopoverContentProps {
     title: string;
@@ -31,12 +30,12 @@ export const PopoverContent = ({
     const { text: cancelText, ...restCancelBtnProps } = cancelBtnProps;
 
     return (
-        <div className="popover-container">
-            <div className="popover-content">
-                <div className="popover-title">{title}</div>
-                <div className="popover-message">{message || content}</div>
-            </div>
-            <div className="popover-footer">
+        <Container>
+            <Content>
+                <Title>{title}</Title>
+                <Message>{message || content}</Message>
+            </Content>
+            <Footer>
                 <Button onClick={onOk} size="small" type="primary" {...restOkBtnProps}>
                     {okText}
                 </Button>
@@ -45,8 +44,8 @@ export const PopoverContent = ({
                         {cancelText}
                     </Button>
                 ) : null}
-            </div>
-        </div>
+            </Footer>
+        </Container>
     );
 };
 
@@ -77,7 +76,7 @@ function ConfirmationPopover({
     };
 
     return (
-        <Popover
+        <StyledPopover
             visible={visible}
             onVisibleChange={setVisible}
             content={
@@ -95,7 +94,7 @@ function ConfirmationPopover({
             placement="bottomRight"
         >
             {children}
-        </Popover>
+        </StyledPopover>
     );
 }
 

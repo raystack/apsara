@@ -33,6 +33,7 @@ import Image from "./Image";
 import Select from "./Select";
 import Tile from "./Tile";
 import Switch from "./Switch";
+import Themes from "./Provider/theme";
 export { default as DiffTimeline } from "./DiffTimeline";
 export { DynamicList } from "./DynamicList";
 
@@ -80,4 +81,5 @@ export {
     Select,
     Tile,
     Switch,
+    Themes,
 };
