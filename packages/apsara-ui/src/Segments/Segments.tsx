@@ -54,7 +54,7 @@ interface AdvancedConfigProps {
 
 const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations" }: AdvancedConfigProps) => {
     return (
-        <Wrapper advance>
+        <Wrapper $advance>
             <Collapse expandIconPosition="right" bordered={false}>
                 <Panel header={title} key="1">
                     {rowData.map((d, index) => (

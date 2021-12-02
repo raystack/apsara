@@ -4,7 +4,7 @@ import Button from "../../Button";
 import { textStyles } from "../../mixin";
 
 export const FilterPopup = styled.div`
-    ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.colors?.black[9])}
+    ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.listing?.filterText)}
     display: flex;
     margin: -12px -16px;
     flex-direction: column;
@@ -24,14 +24,14 @@ export const FilterColumn = styled.div`
     padding: 16px 24px 2px 24px;
 
     &:not(:last-child) {
-        border-right: 1px solid ${({ theme }) => theme?.colors?.black[2]};
+        border-right: 1px solid ${({ theme }) => theme?.listing?.filterBorder};
     }
     .ant-checkbox-group {
         overflow-y: auto;
         max-height: 260px;
     }
     .ant-checkbox-wrapper {
-        ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.colors?.black[9])}
+        ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.listing?.filterText)}
     }
 `;
 
@@ -47,18 +47,24 @@ export const FilterLabel = styled.div`
 
 export const FilterFooter = styled.div`
     padding: 16px;
-    border-top: 1px solid ${({ theme }) => theme?.colors?.black[2]};
+    border-top: 1px solid ${({ theme }) => theme?.listing?.filterBorder};
     span {
         cursor: pointer;
         color: ${({ theme }) => theme?.colors?.primary[4]};
         letter-spacing: 0.3px;
         font-weight: bold;
+        &.disabled {
+            pointer-events: none;
+            color: ${({ theme }) => theme?.listing?.filterClear};
+        }
     }
 `;
 
 export const FilterButton = styled(Button)`
-    ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.colors?.black[9])};
-    &:hover {
+    ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.listing?.filterText)};
+    &:hover,
+    &:focus,
+    &:active {
         border-color: ${({ theme }) => theme?.colors?.black[7]} !important;
     }
     .anticon-caret-down {

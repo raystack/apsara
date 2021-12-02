@@ -4,9 +4,13 @@ import { VariableSizeGrid } from "react-window";
 import { textStyles } from "../mixin";
 
 export const StyledTable = styled(Table)`
+    .ant-table {
+        background: transparent;
+    }
+
     .ant-table-body,
     .ant-table-container {
-        ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.colors?.black[9])}
+        ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.table?.text)}
 
         .ant-table-thead>tr>th,
         .ant-table-tbody>tr>td,
@@ -16,8 +20,9 @@ export const StyledTable = styled(Table)`
 
             min-width: 120px;
             padding: var(--cell-padding-tb) var(--cell-padding-lr);
-            border-color: ${({ theme }) => theme?.colors?.black[2]};
-            border-bottom: 1px solid ${({ theme }) => theme?.colors?.black[2]};
+            border-color: ${({ theme }) => theme?.table?.border};
+            border-bottom: 1px solid ${({ theme }) => theme?.table?.border};
+            background-color: transparent;
         }
 
         .ant-table-thead {
@@ -26,7 +31,14 @@ export const StyledTable = styled(Table)`
             }
             th {
                 font-weight: bold;
+                color: ${({ theme }) => theme?.table?.heading};
             }
+        }
+
+        .ant-table-thead
+            > tr
+            > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+            background-color: ${({ theme }) => theme?.table?.border};
         }
 
         .ant-table-tbody > tr > td,
@@ -64,7 +76,7 @@ export const StyledTable = styled(Table)`
         }
 
         .ant-table-tbody > tr.ant-table-row:hover > td {
-            background: ${({ theme }) => theme?.colors?.black[2]};
+            background: ${({ theme }) => theme?.table?.highlight};
         }
 
         // FIX ME
@@ -83,7 +95,7 @@ export const StyledTable = styled(Table)`
             height: 48px;
 
             &.highlightRow {
-                background: ${({ theme }) => theme?.colors?.black[2]};
+                background: ${({ theme }) => theme?.table?.highlight};
 
                 td:last-child {
                     border-right: 1px solid ${({ theme }) => theme?.colors?.primary[3]};
@@ -95,7 +107,7 @@ export const StyledTable = styled(Table)`
             }
 
             td:first-child {
-                ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.colors?.black[10])}
+                ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.table?.title)}
             }
 
             td.text-hover-highlight .highlight a {
@@ -126,7 +138,7 @@ export const StyledTable = styled(Table)`
     &.alternate {
         tbody tr:nth-child(odd),
         .virtual-table-odd {
-            background: ${({ theme }) => theme?.colors?.black[2]};
+            background: ${({ theme }) => theme?.table?.highlight};
         }
 
         .ant-table-tbody > tr > td,
@@ -140,7 +152,7 @@ export const StyledTable = styled(Table)`
 
             &:hover {
                 td:first-child {
-                    ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.colors?.black[10])}
+                    ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.table?.title)}
                 }
             }
 
@@ -192,9 +204,9 @@ export const StyledGrid = styled(VariableSizeGrid)`
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        background: ${({ theme }) => theme?.colors?.black[0]};
+        background: transparent;
         &.highlightRow {
-            background: ${({ theme }) => theme?.colors?.black[2]};
+            background: ${({ theme }) => theme?.table?.highlight};
 
             &.virtual-table-last-child {
                 border-right: 2px solid ${({ theme }) => theme?.colors?.primary[3]};
@@ -203,7 +215,7 @@ export const StyledGrid = styled(VariableSizeGrid)`
     }
 
     .virtual-table-first-child {
-        ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.colors?.black[10])}
+        ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.table?.title)}
     }
 
     .virtual-table-first-child:hover {
@@ -226,15 +238,11 @@ export const StyledEmpty = styled(Empty)`
 `;
 
 export const EmptyHeader = styled.p`
-    ${({ theme }) => textStyles(theme?.fontSizes[2], theme?.colors?.black[10], "0.5px")}
-    text-transform: capitalize;
-    font-weight: bold;
-    text-transform: none;
-    color: ${({ theme }) => theme?.colors?.black[9]} !important;
+    ${({ theme }) => textStyles(theme?.fontSizes[2], theme?.table?.empty, "0.5px", "bold")}
     line-height: 16px;
 `;
 
 export const EmptyText = styled.p`
-    ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.colors?.black[9])}
+    ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.table?.empty)}
     line-height: 16px;
 `;

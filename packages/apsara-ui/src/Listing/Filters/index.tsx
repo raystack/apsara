@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { CaretDownFilled } from "@ant-design/icons";
-import { Popover } from "antd";
 import Checkbox from "../../Checkbox";
+import { StyledPopover } from "../../Popover/Popover.styles";
 import {
     FilterPopup,
     FilterBody,
@@ -59,7 +59,7 @@ const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...pr
     }, 0);
 
     return (
-        <Popover
+        <StyledPopover
             visible={visible}
             onVisibleChange={setVisible}
             trigger="click"
@@ -72,7 +72,7 @@ const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...pr
                     <CaretDownFilled className={visible ? "rotate" : ""} style={{ fontSize: "10px" }} />
                 </FilterButton>
             </StyledBadge>
-        </Popover>
+        </StyledPopover>
     );
 };
 

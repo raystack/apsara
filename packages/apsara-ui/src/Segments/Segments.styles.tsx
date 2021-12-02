@@ -12,13 +12,13 @@ export const Row = styled.div`
 
 export const Key = styled.div`
     ${capitalize}
-    color: ${({ theme }) => theme?.colors?.black[10]};
+    color: ${({ theme }) => theme?.segments?.key};
     font-weight: bold;
 `;
 
 export const Value = styled.div`
     letter-spacing: 0.3px;
-    color: ${({ theme }) => theme?.colors?.black[8]};
+    color: ${({ theme }) => theme?.segments?.value};
     word-break: break-word;
 
     ${StyledTag} {
@@ -34,7 +34,7 @@ export const Title = styled.div`
     ${capitalize}
     font-size: ${({ theme }) => theme?.fontSizes[1]};
     font-weight: bold;
-    color: ${({ theme }) => theme?.colors?.black[9]};
+    color: ${({ theme }) => theme?.segments?.title};
     margin-bottom: 16px;
     letter-spacing: 0.3px;
 
@@ -43,37 +43,40 @@ export const Title = styled.div`
     }
 `;
 
-export const Wrapper = styled(AntdRow)<{ advance?: boolean }>`
+export const Wrapper = styled(AntdRow)<{ $advance?: boolean }>`
     display: flex;
     flex-direction: column;
-    padding: ${({ advance }) => (advance ? "32px 0px 0px 0px" : "24px 0px 32px 0px")};
+    padding: ${({ $advance }) => ($advance ? "32px 0px 0px 0px" : "24px 0px 32px 0px")};
 
     &:not(:last-child) {
-        border-bottom: 1px solid ${({ theme }) => theme?.colors?.black[2]};
+        border-bottom: 1px solid ${({ theme }) => theme?.segments?.border};
     }
 
     &:first-child {
         padding: 0px 0px 32px 0px;
     }
 
-    ${({ advance }) =>
-        advance &&
+    ${({ $advance }) =>
+        $advance &&
         css`
             .ant-collapse {
                 background: transparent;
 
                 .ant-collapse-header {
-                    padding: 0px 16px;
+                    padding: 0px;
                     padding-right: 40px;
                     font-size: ${({ theme }) => theme?.fontSizes[1]};
-                    color: ${({ theme }) => theme?.colors?.black[9]};
+                    color: ${({ theme }) => theme?.segments?.title};
                     letter-spacing: 0.3px;
                     font-weight: bold;
+                    display: inline-block;
                 }
 
                 .ant-collapse-content {
                     .ant-collapse-content-box {
                         padding-bottom: 0px;
+                        padding-left: 0px;
+                        padding-right: 0px;
                     }
                 }
 

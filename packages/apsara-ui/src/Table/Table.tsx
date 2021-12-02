@@ -36,7 +36,7 @@ function Table({
             rowKey={rowKey}
             pagination={false}
             showSorterTooltip={false}
-            className={`${alternate && "alternate"} ${alternateHover && "alternate-hover"} ${className}`}
+            className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""} ${className}`}
             locale={{ emptyText: <EmptyComponent /> }}
             rowClassName={(record: any) => (selectedRowId === record.id ? "highlightRow" : "")}
             onRow={(record: any) => {

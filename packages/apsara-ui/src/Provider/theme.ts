@@ -40,6 +40,26 @@ const light = {
         text: Colors?.light?.black[10],
         close: Colors?.light?.black[9],
     },
+    segments: {
+        key: Colors?.light?.black[10],
+        value: Colors?.light?.black[7],
+        title: Colors?.light?.black[9],
+        border: Colors?.light?.black[2],
+    },
+    table: {
+        border: Colors?.light?.black[2],
+        empty: Colors?.light?.black[9],
+        heading: Colors?.light?.black[6],
+        text: Colors?.light?.black[9],
+        highlight: Colors?.light?.black[2],
+        title: Colors?.light?.black[10],
+    },
+    listing: {
+        filterText: Colors?.light?.black[9],
+        filterBorder: Colors?.light?.black[2],
+        tableHighlight: Colors?.light?.black[2],
+        filterClear: Colors?.light?.black[5],
+    },
 };
 
 const dark = {
@@ -75,6 +95,26 @@ const dark = {
         bg: Colors?.dark?.primary[0],
         text: Colors?.dark?.black[10],
         close: Colors?.dark?.black[9],
+    },
+    segments: {
+        key: Colors?.dark?.black[3],
+        value: Colors?.dark?.black[5],
+        title: Colors?.dark?.black[1],
+        border: Colors?.dark?.black[6],
+    },
+    table: {
+        border: Colors?.dark?.black[8],
+        empty: Colors?.dark?.black[5],
+        heading: Colors?.dark?.black[6],
+        text: Colors?.dark?.black[2],
+        highlight: Colors?.dark?.black[8],
+        title: Colors?.dark?.black[1],
+    },
+    listing: {
+        filterText: Colors?.dark?.black[2],
+        filterBorder: Colors?.dark?.black[7],
+        tableHighlight: Colors?.dark?.black[8],
+        filterClear: Colors?.light?.black[6],
     },
 };
 

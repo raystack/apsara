@@ -3,7 +3,7 @@ import Search from "../Search";
 
 export const ListingWrapper = styled.div`
     .virtual-table-row-hover {
-        background: #f5f5f5;
+        background: ${({ theme }) => theme?.listing?.tableHighlight} !important;
     }
 `;
 
