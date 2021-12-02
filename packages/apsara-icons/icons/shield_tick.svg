@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>14DEB156-7DA2-418B-AB1B-70576E467EFF@1x</title>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons/shield/tick">
+            <g id="Group" fill="#000000" fill-opacity="0">
+                <g id="Rectangle">
+                    <rect x="0" y="0" width="24" height="24" rx="2"></rect>
+                </g>
+            </g>
+            <g id="gpp_good_black_24dp" transform="translate(4.500000, 2.650000)" fill="currentColor">
+                <path d="M7.5,0 L0,2.8125 L0,8.521875 C0,13.25625 3.196875,17.671875 7.5,18.75 C11.803125,17.671875 15,13.25625 15,8.521875 L15,2.8125 L7.5,0 Z M6.50625,12.69375 L3.1875,9.375 L4.509375,8.053125 L6.496875,10.040625 L10.471875,6.065625 L11.79375,7.3875 L6.50625,12.69375 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
