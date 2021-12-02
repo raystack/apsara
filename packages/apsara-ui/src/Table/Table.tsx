@@ -1,17 +1,15 @@
 import React from "react";
-import { Table as AntTable, Empty } from "antd";
-import { TableProps } from "antd/lib/table";
+import { TableProps } from "antd";
+import { StyledTable, StyledEmpty, EmptyHeader, EmptyText } from "./Table.styles";
 
 const EmptyComponent = () => {
     return (
-        <Empty description={false}>
-            <p className="empty__header"> We could not find it! </p>
-            <p className="empty__text"> We are sorry, but your search did not have any result </p>
-        </Empty>
+        <StyledEmpty description={false}>
+            <EmptyHeader> We could not find it! </EmptyHeader>
+            <EmptyText> We are sorry, but your search did not have any result </EmptyText>
+        </StyledEmpty>
     );
 };
-
-import "./Table.style.less";
 
 interface ITableProps extends TableProps<any> {
     items: Record<string, unknown>[];
@@ -33,12 +31,12 @@ function Table({
     ...props
 }: ITableProps) {
     return (
-        <AntTable
+        <StyledTable
             dataSource={items}
             rowKey={rowKey}
             pagination={false}
             showSorterTooltip={false}
-            className={`skeleton-table ${alternate && "alternate"} ${alternateHover && "alternate-hover"} ${className}`}
+            className={`${alternate && "alternate"} ${alternateHover && "alternate-hover"} ${className}`}
             locale={{ emptyText: <EmptyComponent /> }}
             rowClassName={(record: any) => (selectedRowId === record.id ? "highlightRow" : "")}
             onRow={(record: any) => {

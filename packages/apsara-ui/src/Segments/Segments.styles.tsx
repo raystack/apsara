@@ -43,7 +43,7 @@ export const Title = styled.div`
     }
 `;
 
-export const StyledRow = styled(AntdRow)<{ advance?: boolean }>`
+export const Wrapper = styled(AntdRow)<{ advance?: boolean }>`
     display: flex;
     flex-direction: column;
     padding: ${({ advance }) => (advance ? "32px 0px 0px 0px" : "24px 0px 32px 0px")};

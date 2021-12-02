@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { VariableSizeGrid as Grid } from "react-window";
 import ResizeObserver from "rc-resize-observer";
 import { TableProps } from "antd/lib/table";
 import InfiniteLoader from "react-window-infinite-loader";
-import Table from "./Table";
 import clsx from "clsx";
+import Table from "./Table";
+import { StyledGrid } from "./Table.styles";
 
 const DEFAULT_HEIGHT = 700;
 
@@ -141,7 +141,7 @@ const VirtualTableComponent = ({
         return (
             <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={rowCount} loadMoreItems={loadMoreItems}>
                 {({ onItemsRendered }) => (
-                    <Grid
+                    <StyledGrid
                         onItemsRendered={({
                             visibleRowStartIndex,
                             visibleRowStopIndex,
@@ -156,7 +156,6 @@ const VirtualTableComponent = ({
                             })
                         }
                         ref={gridRef}
-                        className="virtual-grid"
                         columnCount={mergedColumns.length}
                         columnWidth={(index) => {
                             const { width } = mergedColumns[index];
@@ -202,7 +201,7 @@ const VirtualTableComponent = ({
                                 />
                             );
                         }}
-                    </Grid>
+                    </StyledGrid>
                 )}
             </InfiniteLoader>
         );
@@ -215,9 +214,9 @@ const VirtualTableComponent = ({
         >
             <Table
                 {...props}
-                className={`skeleton-table ${alternate && "alternate"} ${
-                    alternateHover && "alternate-hover"
-                } ${className}`}
+                className={className}
+                alternate={alternate}
+                alternateHover={alternateHover}
                 scroll={scroll}
                 selectedRowId={selectedRowId}
                 columns={mergedColumns}

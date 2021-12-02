@@ -1,12 +1,10 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect } from "react";
-import Search from "../Search";
 import Filters from "./Filters";
 import { ListLoader } from "../Loader";
 import VirtualisedTable from "../Table/VirtualisedTable";
 import { useSearchFilterState } from "./hooks/useSearchFilter";
-import clsx from "clsx";
-import "./style.less";
+import { ListingSearch, ListingWrapper } from "./Listing.styles";
 
 interface ILoadMoreProps {
     nextPage: number;
@@ -90,8 +88,7 @@ const InfiniteListing = ({
 
     if (!renderHeader) {
         renderHeader = (
-            <Search
-                className="paddingBottom"
+            <ListingSearch
                 onChange={handleSearch}
                 value={searchTerm}
                 placeholder={searchPlaceholder}
@@ -108,7 +105,7 @@ const InfiniteListing = ({
                     />
                 )}
                 {renderExtraFilters}
-            </Search>
+            </ListingSearch>
         );
     }
 
@@ -127,10 +124,10 @@ const InfiniteListing = ({
         );
     }
     return (
-        <div className={clsx("Listing", className)}>
+        <ListingWrapper className={className}>
             {renderHeader}
             {renderBody}
-        </div>
+        </ListingWrapper>
     );
 };
 

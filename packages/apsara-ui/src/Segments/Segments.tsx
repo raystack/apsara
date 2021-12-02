@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
 import { Col, Collapse } from "antd";
-import { Row, Key, Value, Title, StyledRow } from "./Segments.styles";
+import { Row, Key, Value, Title, Wrapper } from "./Segments.styles";
 
 const { Panel } = Collapse;
 
@@ -38,13 +38,13 @@ interface SegmentProps {
 }
 
 const Segment = ({ title, rowData = [], children }: SegmentProps) => (
-    <StyledRow>
+    <Wrapper>
         <SegmentTitle title={title} />
         {rowData.map((data, index) => (
             <SegmentRow key={`${data.key}_${index}`} {...data} />
         ))}
         {children}
-    </StyledRow>
+    </Wrapper>
 );
 
 interface AdvancedConfigProps {
@@ -54,7 +54,7 @@ interface AdvancedConfigProps {
 
 const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations" }: AdvancedConfigProps) => {
     return (
-        <StyledRow advance>
+        <Wrapper advance>
             <Collapse expandIconPosition="right" bordered={false}>
                 <Panel header={title} key="1">
                     {rowData.map((d, index) => (
@@ -62,7 +62,7 @@ const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations
                     ))}
                 </Panel>
             </Collapse>
-        </StyledRow>
+        </Wrapper>
     );
 };
 

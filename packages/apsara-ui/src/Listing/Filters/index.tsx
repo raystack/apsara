@@ -2,8 +2,18 @@
 
 import React, { useState } from "react";
 import { CaretDownFilled } from "@ant-design/icons";
-import { Checkbox, Popover, Button, Badge } from "antd";
-import "./filters.less";
+import { Popover } from "antd";
+import Checkbox from "../../Checkbox";
+import {
+    FilterPopup,
+    FilterBody,
+    FilterColumn,
+    FilterTitle,
+    FilterLabel,
+    FilterFooter,
+    FilterButton,
+    StyledBadge,
+} from "./Filters.styles";
 
 const renderFilterList = ({
     filterFieldList,
@@ -13,32 +23,32 @@ const renderFilterList = ({
     onClearGroupFilter,
 }: any) => {
     return (
-        <div className="filter__popup">
-            <div className="filter__popup--body">
+        <FilterPopup>
+            <FilterBody>
                 {filterFieldList.map((group: any) => (
-                    <div className="filter__popup--column" key={group.name}>
-                        <div className="filter__popup--title">{group.name}</div>
+                    <FilterColumn key={group.name}>
+                        <FilterTitle>{group.name}</FilterTitle>
                         <div>
                             <Checkbox.Group
                                 value={filteredFieldData[group.slug] || []}
-                                onChange={(args) => onGroupFilter(group, args)}
+                                onChange={(args: any) => onGroupFilter(group, args)}
                             >
                                 {group.data.map((obj: any) => (
-                                    <div className="filter__popup--label" key={obj.value}>
+                                    <FilterLabel key={obj.value}>
                                         <Checkbox value={obj.value}>{obj.label}</Checkbox>
-                                    </div>
+                                    </FilterLabel>
                                 ))}
                             </Checkbox.Group>
                         </div>
-                    </div>
+                    </FilterColumn>
                 ))}
-            </div>
-            <div className="filter__popup-footer">
+            </FilterBody>
+            <FilterFooter>
                 <span onClick={onClearGroupFilter} className={`${filteredFieldDataLength ? "" : "disabled"}`}>
                     Clear All Filters
                 </span>
-            </div>
-        </div>
+            </FilterFooter>
+        </FilterPopup>
     );
 };
 
@@ -56,12 +66,12 @@ const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...pr
             placement="bottomRight"
             content={renderFilterList({ filteredFieldData, filteredFieldDataLength, ...props })}
         >
-            <Badge dot={!!filteredFieldDataLength}>
-                <Button type="default" className="btn-filter" disabled={disabled}>
+            <StyledBadge dot={!!filteredFieldDataLength}>
+                <FilterButton type="default" disabled={disabled}>
                     {label}
                     <CaretDownFilled className={visible ? "rotate" : ""} style={{ fontSize: "10px" }} />
-                </Button>
-            </Badge>
+                </FilterButton>
+            </StyledBadge>
         </Popover>
     );
 };
