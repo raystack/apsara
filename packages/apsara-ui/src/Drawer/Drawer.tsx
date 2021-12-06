@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeContext } from "styled-components";
 import Icon from "../Icon";
-
-import "./style.less";
+import { Overlay, Body } from "./Drawer.styles";
 
 type DrawerProps = {
     onClose?: () => void;
@@ -12,17 +12,16 @@ type DrawerProps = {
 };
 
 const Drawer = ({ onClose, open = false, children, className = "", position = "right" }: DrawerProps) => {
-    if (!open) return null;
+    const theme = useContext(ThemeContext);
 
+    if (!open) return null;
     return (
-        <div className="drawer__container">
-            <div className="drawer__container--overlay">
-                <div className={`drawer__container--body ${className} ${position}`}>
-                    <Icon name="cross" onClick={onClose} />
-                    {children}
-                </div>
-            </div>
-        </div>
+        <Overlay>
+            <Body className={className} position={position}>
+                <Icon name="cross" onClick={onClose} color={theme?.drawer?.close} />
+                {children}
+            </Body>
+        </Overlay>
     );
 };
 

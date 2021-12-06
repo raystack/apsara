@@ -64,6 +64,15 @@ const light = {
         bg: Colors?.light?.black[11],
         text: Colors?.light?.black[0],
     },
+    loader: {
+        main: Colors?.light?.black[2],
+        active: Colors?.light?.black[3],
+    },
+    drawer: {
+        bg: Colors?.light?.black[0],
+        text: Colors?.light?.black[9],
+        close: Colors?.light?.black[8],
+    },
 };
 
 const dark = {
@@ -71,8 +80,8 @@ const dark = {
     colors: Colors?.dark,
     learn: {
         bg: Colors?.dark?.black[9],
-        title: Colors?.dark?.black[0],
-        close: Colors?.light?.black[5],
+        text: Colors?.dark?.black[0],
+        close: Colors?.dark?.black[5],
     },
     markdown: {
         text: Colors?.dark?.black[5],
@@ -118,11 +127,20 @@ const dark = {
         filterText: Colors?.dark?.black[2],
         filterBorder: Colors?.dark?.black[7],
         tableHighlight: Colors?.dark?.black[8],
-        filterClear: Colors?.light?.black[6],
+        filterClear: Colors?.dark?.black[6],
     },
     tooltip: {
         bg: Colors?.dark?.black[8],
         text: Colors?.dark?.black[1],
+    },
+    loader: {
+        main: Colors?.dark?.black[8],
+        active: Colors?.dark?.black[7],
+    },
+    drawer: {
+        bg: Colors?.dark?.black[9],
+        text: Colors?.dark?.black[0],
+        close: Colors?.dark?.black[5],
     },
 };
 

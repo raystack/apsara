@@ -1,34 +1,34 @@
 import React from "react";
-import { Row, Col, Skeleton } from "antd";
-import "./style.less";
+import { Col } from "antd";
+import { StyledRow, StyledSkeleton } from "./Loader.styles";
 
 interface ListLoaderProps {
     className?: string;
     rows?: number;
 }
 export function ListLoader({ className = "", rows = 20 }: ListLoaderProps) {
-    return <Skeleton className={className} active title={false} paragraph={{ rows, width: "100%" }} />;
+    return <StyledSkeleton className={className} active title={false} paragraph={{ rows, width: "100%" }} />;
 }
 
 interface EditorLoaderProps {
     className?: string;
 }
 export function EditorLoader({ className = "" }: EditorLoaderProps) {
-    return <Skeleton className={className} active title={false} paragraph={{ rows: 5, width: "80%" }} />;
+    return <StyledSkeleton className={className} active title={false} paragraph={{ rows: 5, width: "80%" }} />;
 }
 
 export const DetailsLoader = () => {
     return (
         <div>
-            <Row className="top-row" justify="space-between">
+            <StyledRow className="top-row" justify="space-between">
                 <Col span={4}>
-                    <Skeleton active title={false} paragraph={{ rows: 1, width: "100%" }} />
+                    <StyledSkeleton active title={false} paragraph={{ rows: 1, width: "100%" }} />
                 </Col>
                 <Col span={8}>
-                    <Skeleton active title={false} paragraph={{ rows: 1, width: "100%" }} />
+                    <StyledSkeleton active title={false} paragraph={{ rows: 1, width: "100%" }} />
                 </Col>
-            </Row>
-            <Skeleton active paragraph={{ rows: 15, width: "100%" }} />
+            </StyledRow>
+            <StyledSkeleton active paragraph={{ rows: 15, width: "100%" }} />
         </div>
     );
 };
