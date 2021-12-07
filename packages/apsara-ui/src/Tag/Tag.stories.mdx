@@ -6,10 +6,10 @@ import Tag from "./Tag";
     argTypes={{
         type: {
             description: "Can be set to",
-            control: { type: "select", options: ["primary"] },
+            control: { type: "select", options: ["round", "rect"] },
             table: {
-                type: { summary: ["primary"] },
-                defaultValue: { summary: "primary" },
+                type: { summary: ["round", "rect"] },
+                defaultValue: { summary: "round" },
             },
         },
         closable: {
@@ -24,7 +24,7 @@ import Tag from "./Tag";
 />
 
 <Preview>
-    <Story name="Playground" args={{ type: "primary" }}>
+    <Story name="Playground" args={{ type: "round" }}>
         {(args) => <Tag {...args}>Hello</Tag>}
     </Story>
 </Preview>

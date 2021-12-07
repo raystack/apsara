@@ -1,6 +1,6 @@
 import React from "react";
 import CustomIcon from "../Icon";
-import "./style.less";
+import { FilterActions } from "./Listing.styles";
 
 const getColor = (active: string, type: string) => {
     return active === type ? "#4c4c4c" : "rgba(76, 76, 76, .40)";
@@ -15,7 +15,7 @@ icons = [{
 
 const RenderExtraFilters = ({ active, icons = [], onClick }: any) => {
     return (
-        <span className="header--filter__actions">
+        <FilterActions>
             {icons.map((icon: any) => (
                 <CustomIcon
                     key={icon.name}
@@ -24,7 +24,7 @@ const RenderExtraFilters = ({ active, icons = [], onClick }: any) => {
                     onClick={() => onClick(icon.url)}
                 />
             ))}
-        </span>
+        </FilterActions>
     );
 };
 

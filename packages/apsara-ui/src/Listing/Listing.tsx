@@ -1,11 +1,10 @@
 /* eslint-disable no-param-reassign */
 import React from "react";
-import Search from "../Search";
 import Filters from "./Filters";
 import VirtualisedTable from "../Table/VirtualisedTable";
 import useSearchFilter from "./hooks/useSearchFilter";
-import clsx from "clsx";
 import { ListingProps } from "./Listing.types";
+import { ListingSearch, ListingWrapper } from "./Listing.styles";
 
 const Listing = ({
     rowKey,
@@ -38,8 +37,7 @@ const Listing = ({
     const columns = getColumnList(resourcePath, sortedInfo);
     if (!renderHeader) {
         renderHeader = (
-            <Search
-                className="paddingBottom"
+            <ListingSearch
                 onChange={({ target: { value } }: any) => setSearchTerm(value)}
                 value={searchTerm}
                 placeholder={searchPlaceholder}
@@ -56,7 +54,7 @@ const Listing = ({
                     />
                 )}
                 {renderExtraFilters}
-            </Search>
+            </ListingSearch>
         );
     }
 
@@ -76,10 +74,10 @@ const Listing = ({
         );
     }
     return (
-        <div className={clsx("Listing", className)}>
+        <ListingWrapper className={className}>
             {renderHeader}
             {renderBody}
-        </div>
+        </ListingWrapper>
     );
 };
 
