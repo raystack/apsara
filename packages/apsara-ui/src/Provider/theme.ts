@@ -73,6 +73,13 @@ const light = {
         text: Colors?.light?.black[9],
         close: Colors?.light?.black[8],
     },
+    states: {
+        text: Colors?.light?.black[9],
+    },
+    confirmModal: {
+        bg: Colors?.light?.black[0],
+        text: Colors?.light?.black[9],
+    },
 };
 
 const dark = {
@@ -141,6 +148,13 @@ const dark = {
         bg: Colors?.dark?.black[9],
         text: Colors?.dark?.black[0],
         close: Colors?.dark?.black[5],
+    },
+    states: {
+        text: Colors?.dark?.black[0],
+    },
+    confirmModal: {
+        bg: Colors?.dark?.black[8],
+        text: Colors?.dark?.black[1],
     },
 };
 

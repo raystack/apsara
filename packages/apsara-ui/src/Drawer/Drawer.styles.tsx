@@ -8,7 +8,7 @@ export const Overlay = styled.div`
     width: 100vw;
     height: 100vh;
     z-index: 1000;
-    background: ${({ theme }) => theme?.colors?.black[6]};
+    background: rgba(0, 0, 0, 0.3);
 `;
 
 export const Body = styled.div<{ position: "left" | "right" }>`
