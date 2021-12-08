@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Badge } from "antd";
+import { Badge, BadgeProps } from "antd";
 import Button from "../../Button";
 import { textStyles } from "../../mixin";
 
@@ -77,7 +77,7 @@ export const FilterButton = styled(Button)`
     }
 `;
 
-export const StyledBadge = styled(Badge)`
+export const StyledBadge: React.FC<BadgeProps> = styled(Badge)`
     .ant-badge-dot {
         background: ${({ theme }) => theme?.colors?.primary[4]};
     }

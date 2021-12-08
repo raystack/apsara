@@ -8,7 +8,7 @@ import { Wrapper } from "./Search.styles";
 
 const nullFn = () => null;
 
-interface SearchProps {
+export interface SearchProps {
     placeholder?: string;
     onChange?: (data: any) => void;
     children?: any;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Search from "../Search";
+import Search, { SearchProps } from "../Search/Search";
 
 export const ListingWrapper = styled.div`
     .virtual-table-row-hover {
@@ -7,7 +7,7 @@ export const ListingWrapper = styled.div`
     }
 `;
 
-export const ListingSearch = styled(Search)`
+export const ListingSearch: React.FC<SearchProps> = styled(Search)`
     padding-bottom: 20px;
 `;
 
