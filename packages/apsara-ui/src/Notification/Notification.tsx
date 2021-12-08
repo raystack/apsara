@@ -1,18 +1,16 @@
 export { notification } from "antd";
 import React from "react";
-import Theme from "../theme";
 import { notification } from "antd";
 import Icon from "../Icon";
-import "./style.less";
 
-const CrossIcon = <Icon name="cross" styleOverride={{ color: Theme["@datlantis-close-icon-color"] }} />;
+const CrossIcon = <Icon name="cross" />;
 
 export function showError(title: string, content?: string) {
     notification.error({
         message: title,
         description: content || "",
         placement: "bottomRight",
-        icon: <Icon name="error" size={32} styleOverride={{ color: Theme["@red-6"] }} />,
+        icon: <Icon name="error" size={32} />,
         closeIcon: CrossIcon,
     });
 }
@@ -22,7 +20,7 @@ export function showSuccess(title: string, content?: string) {
         message: title,
         description: content,
         placement: "bottomRight",
-        icon: <Icon name="checkcircle" size={32} styleOverride={{ color: Theme["@green-6"] }} />,
+        icon: <Icon name="checkcircle" size={32} />,
         closeIcon: CrossIcon,
     });
 }
@@ -37,7 +35,7 @@ interface NotificationProps {
 export function showNotification({
     title = "",
     content = "",
-    icon = <Icon name="checkcircle" size={32} styleOverride={{ color: Theme["@green-6"] }} />,
+    icon = <Icon name="checkcircle" size={32} />,
     footer = null,
 }: NotificationProps) {
     const description = (

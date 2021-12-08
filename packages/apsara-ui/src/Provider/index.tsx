@@ -2,6 +2,7 @@ import React from "react";
 import { DefaultTheme, ThemeProvider as ThemeProviderBase } from "styled-components";
 import { createGlobalStyle } from "styled-components";
 import Themes from "./theme";
+import { NotificationStyle } from "../Notification/Notification.styles";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
 import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
@@ -38,6 +39,7 @@ const GlobalStyle = createGlobalStyle`
     font-weight: 900;
     src: url(${RobotoBlack}) format('truetype');
   }
+  ${NotificationStyle}
 `;
 
 // extend DefaultTheme definitions
