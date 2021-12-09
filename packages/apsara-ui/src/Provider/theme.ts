@@ -85,6 +85,17 @@ const light = {
         text: Colors?.light?.black[9],
         content: Colors?.light?.black[8],
     },
+    contentLayout: {
+        sidebarWidth: "310px",
+    },
+    header: {
+        title: Colors?.light?.black[11],
+        avatar: Colors?.light?.black[0],
+        learn: Colors?.light?.black[4],
+        menuBg: Colors?.light?.black[0],
+        menuText: Colors?.light?.black[9],
+        menuHover: Colors?.light?.black[2],
+    },
 };
 
 const dark = {
@@ -165,6 +176,17 @@ const dark = {
         bg: Colors?.dark?.black[9],
         text: Colors?.dark?.black[0],
         content: Colors?.dark?.black[1],
+    },
+    contentLayout: {
+        sidebarWidth: "310px",
+    },
+    header: {
+        title: Colors?.dark?.black[0],
+        avatar: Colors?.dark?.black[11],
+        learn: Colors?.dark?.black[4],
+        menuBg: Colors?.dark?.black[8],
+        menuText: Colors?.dark?.black[1],
+        menuHover: Colors?.dark?.black[9],
     },
 };
 
