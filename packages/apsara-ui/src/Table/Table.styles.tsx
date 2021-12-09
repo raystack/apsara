@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Table, Empty } from "antd";
+import { Table, Empty, EmptyProps } from "antd";
 import { VariableSizeGrid } from "react-window";
 import { textStyles } from "../mixin";
 
@@ -225,7 +225,7 @@ export const StyledGrid = styled(VariableSizeGrid)`
     }
 `;
 
-export const StyledEmpty = styled(Empty)`
+export const StyledEmpty: React.FC<EmptyProps> = styled(Empty)`
     margin: 90px 8px;
 
     .ant-empty-footer {

@@ -26,6 +26,7 @@ export const Wrapper = styled.div<{ secondary: boolean }>`
     .search {
         position: absolute;
         transform: translateY(50%);
+        z-index: 2;
     }
 
     .ant-input {
