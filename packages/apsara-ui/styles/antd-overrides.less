@@ -119,62 +119,8 @@ h4.ant-typography {
     --antd-wave-shadow-color: transparent !important;
 }
 
-.ant-skeleton-content {
-    .ant-skeleton-title {
-        height: @datlantis-size-xxl;
-        margin-bottom: @datlantis-size-xxl;
-    }
-
-    .ant-skeleton-paragraph > li + li {
-        margin-top: @datlantis-size-lg;
-    }
-
-    .ant-skeleton-paragraph > li {
-        height: @datlantis-size-lg;
-    }
-}
-
-.ant-skeleton.ant-skeleton-active .ant-skeleton-content .ant-skeleton-title,
-.ant-skeleton.ant-skeleton-active .ant-skeleton-content .ant-skeleton-paragraph > li {
-    background: linear-gradient(
-        90deg,
-        @datlantis-skeleton-bg-color-1 25%,
-        @datlantis-skeleton-bg-color-2 37%,
-        @datlantis-skeleton-bg-color-1 63%
-    );
-    background-size: 400% 100%;
-    animation: ant-skeleton-loading 1.4s ease infinite;
-    border-radius: 4px;
-}
-
-.ant-tooltip-inner {
-    min-width: unset;
-    min-height: unset;
-    font-size: 10px;
-    padding: 4px 8px;
-}
-
 .ant-input-number-focused {
     box-shadow: unset;
-}
-
-.ant-notification {
-    width: fit-content;
-    min-width: 384px;
-    max-width: 420px;
-
-    .ant-notification-notice-with-icon {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-
-        .ant-notification-notice-message {
-            margin-bottom: 0px;
-            font-weight: bold;
-            font-size: @datlantis-font-lg;
-            letter-spacing: 0.4px;
-        }
-    }
 }
 
 .ant-descriptions {

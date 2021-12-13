@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
-import { Result } from "antd";
 import { ResultProps, ResultStatusType } from "antd/lib/result";
 import CustomIcon, { CustomIconProps } from "../Icon/Icon";
+import { StyledResult } from "./States.styles";
 
 const pageCenterStyle: CSSProperties = {
     position: "absolute",
@@ -54,5 +54,5 @@ interface StateProps extends ResultProps {
 export default function States({ type = "", icon, iconProps, ...props }: StateProps) {
     const resultIcon = icon || iconProps ? <CustomIcon {...iconProps} /> : null;
     const modifiedProps = { ...stateInfo[type], ...props, icon: resultIcon };
-    return <Result style={pageCenterStyle} {...modifiedProps} />;
+    return <StyledResult style={pageCenterStyle} {...modifiedProps} />;
 }
