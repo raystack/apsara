@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import ConfirmModal from "./ConfirmModal";
 import Button from "../Button";
-import { Radio } from "antd";
+import Radio from "../Radio";
 
 export default {
     title: "Feedback/ConfirmModal",
@@ -36,10 +36,10 @@ export const withForm = () => {
                 onCancel={() => setVisible(false)}
                 visible={visible}
             >
-                <Radio value={1} className="confirmbox__radio">
+                <Radio value={1} style={{ display: "block" }}>
                     One
                 </Radio>
-                <Radio value={2} className="confirmbox__radio">
+                <Radio value={2} style={{ display: "block" }}>
                     Two
                 </Radio>
             </ConfirmModal>
