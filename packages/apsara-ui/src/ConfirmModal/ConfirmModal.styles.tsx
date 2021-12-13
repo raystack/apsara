@@ -32,6 +32,7 @@ export const Title = styled.h3`
 
 export const ActionWrapper = styled.div`
     margin-top: 24px;
+    display: flex;
 
     ${AntdButton} {
         font-size: 12px;
