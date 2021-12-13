@@ -96,6 +96,14 @@ const light = {
         menuText: Colors?.light?.black[9],
         menuHover: Colors?.light?.black[2],
     },
+    sidebar: {
+        bg: Colors?.light?.black[2],
+        border: Colors?.light?.black[3],
+        nav: Colors?.light?.black[8],
+        active: Colors?.light?.primary[4],
+        trigger: Colors?.light?.black[7],
+        title: Colors?.light?.primary[3],
+    },
 };
 
 const dark = {
@@ -187,6 +195,14 @@ const dark = {
         menuBg: Colors?.dark?.black[8],
         menuText: Colors?.dark?.black[1],
         menuHover: Colors?.dark?.black[9],
+    },
+    sidebar: {
+        bg: Colors?.dark?.black[9],
+        border: Colors?.dark?.black[8],
+        nav: Colors?.dark?.black[3],
+        active: Colors?.dark?.primary[2],
+        trigger: Colors?.dark?.black[5],
+        title: Colors?.dark?.primary[1],
     },
 };
 
