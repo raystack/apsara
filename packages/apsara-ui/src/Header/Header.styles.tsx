@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { Layout, Avatar as AntdAvatar, Menu as AntdMenu } from "antd";
+import { Layout, Avatar as AntdAvatar, AvatarProps, Menu as AntdMenu } from "antd";
 import { textStyles } from "../mixin";
 
 const { Header } = Layout;
@@ -29,7 +29,7 @@ export const Holder = styled.span`
     margin-left: 8px;
 `;
 
-export const Avatar = styled(AntdAvatar)<{ $learn?: boolean }>`
+export const Avatar: React.FC<AvatarProps> = styled(AntdAvatar)<{ $learn?: boolean }>`
     background: ${({ $learn, theme }) => ($learn ? theme?.header?.learn : theme?.header?.title)};
     color: ${({ theme }) => theme?.header?.avatar};
     vertical-align: middle;
