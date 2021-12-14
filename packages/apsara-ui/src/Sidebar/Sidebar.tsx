@@ -1,17 +1,14 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect, ReactElement, ReactNode } from "react";
-import { Layout, Menu } from "antd";
+import { Menu } from "antd";
 import CustomIcon, { CustomIconProps } from "../Icon/Icon";
-import "./Sidebar.less";
-
-const { Sider } = Layout;
+import { StyledSider, LogoWrapper, Title, Footer, FooterWrapper } from "./Sidebar.styles";
 
 interface RenderItem {
     key: string;
     url: string;
     linkText: string;
     iconProps: CustomIconProps;
-    extraComponent?: React.ReactNode;
 }
 
 const renderMenuItemLink = (
@@ -19,18 +16,15 @@ const renderMenuItemLink = (
     onItemClick: (item: RenderItem) => void,
     LinkRender: ({ children }: any) => ReactElement,
 ) => {
-    const { key, url, linkText, iconProps, extraComponent = null } = item;
+    const { key, url, linkText, iconProps } = item;
     return (
-        <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)} style={{}}>
-            <>
-                <LinkRender to={url}>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                        <CustomIcon {...iconProps} />
-                        <span className="nav-text">{linkText}</span>
-                    </div>
-                </LinkRender>
-                {extraComponent}
-            </>
+        <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)}>
+            <LinkRender to={url}>
+                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                    <CustomIcon {...iconProps} />
+                    <span className="nav-text">{linkText}</span>
+                </div>
+            </LinkRender>
         </Menu.Item>
     );
 };
@@ -39,18 +33,14 @@ interface collapsedProps {
     collapsed: boolean;
 }
 const SidebarFooter = ({ collapsed }: collapsedProps) => (
-    <div className="footer__sidebar">
-        <div className="sidebar__wrapper--footer">
+    <Footer>
+        <FooterWrapper>
             <div style={{ display: "flex", minHeight: "40px", alignItems: "center" }}>
-                <CustomIcon
-                    className={collapsed ? "" : "rotate"}
-                    styleOverride={{ color: "#999999" }}
-                    name="chevronright"
-                />
+                <CustomIcon className={collapsed ? "" : "rotate"} name="chevronright" />
             </div>
             <span className="nav-text">Collapse</span>
-        </div>
-    </div>
+        </FooterWrapper>
+    </Footer>
 );
 
 interface HeaderProps {
@@ -94,27 +84,26 @@ const Sidebar = ({
         setCollapsed(val);
     };
     return (
-        <Sider
+        <StyledSider
             width={180}
             collapsedWidth={65}
-            className="sidebar__wrapper"
             collapsible
             collapsed={collapsed}
             onCollapse={onCollapse}
             trigger={<SidebarFooter collapsed={collapsed} />}
             {...extraProps}
         >
-            <div className="sidebar__wrapper--logo">
+            <LogoWrapper>
                 {iconProps ? <CustomIcon {...iconProps} className="img__logo" /> : null}
                 {icon ? <span className="img__logo">{icon}</span> : null}
                 {logo ? <img src={logo} alt="" className="img__logo" /> : null}
-                <span className="sidebar__wrapper--title">{name}</span>
-            </div>
+                <Title>{name}</Title>
+            </LogoWrapper>
             <Menu mode="inline" style={{ borderRight: 0 }} selectedKeys={[activePath]}>
                 {navigationList.map((link) => renderMenuItemLink(link, onItemClick, linkRender))}
             </Menu>
             {children}
-        </Sider>
+        </StyledSider>
     );
 };
 

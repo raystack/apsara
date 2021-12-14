@@ -1,9 +1,9 @@
 import { css } from "styled-components";
 
 export const textStyles = (size = "12px", color = "#4b4b4b", ls = "0px", weight = "300") => css`
-    font-size: ${size} !important;
+    font-size: ${size};
     font-weight: ${weight};
-    color: ${color} !important;
+    color: ${color};
     letter-spacing: ${ls};
 `;
 
@@ -13,4 +13,10 @@ export const capitalize = css`
     &::first-line {
         text-transform: capitalize;
     }
+`;
+
+export const ellipsis = css`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;

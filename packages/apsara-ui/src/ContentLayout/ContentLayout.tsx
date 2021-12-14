@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { ThemeContext } from "styled-components";
 import { Layout } from "antd";
-import Theme from "../theme";
 
 const { Sider, Content } = Layout;
-const RIGHT_SIDEBAR_WIDTH = Theme["@datlantis-right-sidebar-width"];
 
 interface ContentLayoutProps {
     style?: React.CSSProperties;
@@ -11,8 +10,10 @@ interface ContentLayoutProps {
     children?: any;
     siderProps?: any;
 }
+
 const ContentLayout = ({ children, style, className, siderProps = {} }: ContentLayoutProps) => {
-    const { siderStyle = { background: "#fff" }, ...restSiderProps } = siderProps;
+    const theme = useContext(ThemeContext);
+    const { siderStyle = { background: theme?.colors?.transparent }, ...restSiderProps } = siderProps;
     const length = React.Children.count(children);
     const getContentStyle = () =>
         window.innerWidth <= 1680 ? { minWidth: "480px", maxWidth: "480px", flex: 1 } : { minWidth: "414px", flex: 1 };
@@ -28,7 +29,7 @@ const ContentLayout = ({ children, style, className, siderProps = {} }: ContentL
         return (
             <Layout style={style} className={className}>
                 <Content>{children[0]}</Content>
-                <Sider width={RIGHT_SIDEBAR_WIDTH} style={siderStyle} {...restSiderProps}>
+                <Sider width={theme?.contentLayout?.sidebarWidth} style={siderStyle} {...restSiderProps}>
                     {children[1]}
                 </Sider>
             </Layout>

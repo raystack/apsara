@@ -1,30 +1,28 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import React, { ReactChildren } from "react";
-import { Layout, Avatar, Menu, Dropdown } from "antd";
+import React, { ReactChildren, useContext } from "react";
+import { ThemeContext } from "styled-components";
+import { Dropdown } from "antd";
 import Lottie from "react-lottie";
 import CustomIcon from "../Icon";
 import Learn from "../Learn";
 import Markdown from "../Markdown";
 import learnAnimation from "./learn.json";
+import { Wrapper, RightBar, Title, Holder, Avatar, Menu, MenuLink } from "./Header.styles";
 
-import "./header.less";
-const AntHeader = Layout.Header;
-
-const getMenuList = (menuList: any[]) => (
-    <Menu className="header--wrapper--dropdown">
+const getMenuList = (menuList: any[], iconColor: string) => (
+    <Menu>
         {menuList.map((menu: any) => (
             <Menu.Item key={menu.name}>
-                <a
+                <MenuLink
                     rel="noopener noreferrer"
                     href={menu.href ? menu.href : "#"}
                     onClick={menu.onClick ? menu.onClick : () => null}
-                    className="header--wrapper--dropdown-item"
                 >
-                    {menu.icon && <CustomIcon name={menu.icon} size={24} styleOverride={{ color: "#4C4C4C" }} />}
+                    {menu.icon && <CustomIcon name={menu.icon} size={24} styleOverride={{ color: iconColor }} />}
                     {menu.name}
-                </a>
+                </MenuLink>
             </Menu.Item>
         ))}
     </Menu>
@@ -55,8 +53,9 @@ const Header = ({
     username = "admin",
     learnProps,
 }: HeaderProps) => {
+    const theme = useContext(ThemeContext);
     const { isLearnVisible = false, content, toggleLearnVisibility, style: learnStyle } = learnProps || {};
-    const menu = getMenuList(menuList);
+    const menu = getMenuList(menuList, theme?.header?.menuText);
 
     const defaultOptions = {
         loop: true,
@@ -68,24 +67,24 @@ const Header = ({
     };
 
     return (
-        <AntHeader style={style} className={`header--wrapper ${className}`}>
-            <span className="header--wrapper--title">{title}</span>
-            <div className="header--wrapper--right">
+        <Wrapper style={style} className={className}>
+            <Title>{title}</Title>
+            <RightBar>
                 {children}
                 {menuList.length > 0 && (
                     <Dropdown placement="bottomRight" style={{ height: "100%" }} overlay={menu} trigger={["click"]}>
-                        <span className="header--wrapper--holder">
-                            <Avatar className="header--wrapper--avatar">{username[0]}</Avatar>
-                        </span>
+                        <Holder>
+                            <Avatar>{username[0]}</Avatar>
+                        </Holder>
                     </Dropdown>
                 )}
                 {learnProps && (
                     <React.Fragment>
-                        <Avatar onClick={toggleLearnVisibility} className="header--wrapper--avatar learn">
+                        <Avatar onClick={toggleLearnVisibility} $learn>
                             {isLearnVisible ? (
-                                <CustomIcon name="learn" style={{ backgroundColor: "#e4e4e4", fontSize: "24px" }} />
+                                <CustomIcon name="learn" style={{ fontSize: "24px" }} />
                             ) : (
-                                <div className="learn__anim" onClick={toggleLearnVisibility}>
+                                <div onClick={toggleLearnVisibility}>
                                     <Lottie options={defaultOptions} height={30} width={30} isStopped={false} />
                                 </div>
                             )}
@@ -100,8 +99,8 @@ const Header = ({
                         content={<Markdown data={content} />}
                     />
                 )}
-            </div>
-        </AntHeader>
+            </RightBar>
+        </Wrapper>
     );
 };
 
