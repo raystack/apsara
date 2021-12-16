@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { textStyles } from "../mixin";
 
 export const Wrapper = styled.div`
-    overflow-y: auto;
-
     // list
     ol {
         list-style: none;
@@ -36,16 +34,15 @@ export const Wrapper = styled.div`
 
         ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.markdown?.text, "0.35px")}
         letter-spacing: 0.35px;
-        color: ${({ theme }) => theme?.colors?.black[11]};
         line-height: 1.35; // ? text looks congested without line-height
+    }
 
-        a,
-        &:first-child {
-            ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.markdown?.heading, "0.35px", "bold")}
-            margin-bottom: 8px;
-        }
-        a {
-            color: ${({ theme }) => theme?.markdown?.link} !important;
-        }
+    a,
+    p:first-child {
+        ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.markdown?.heading, "0.35px", "bold")}
+        margin-bottom: 8px;
+    }
+    a {
+        color: ${({ theme }) => theme?.markdown?.link} !important;
     }
 `;

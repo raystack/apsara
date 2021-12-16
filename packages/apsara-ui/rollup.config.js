@@ -58,7 +58,6 @@ export default {
 
         // Prevents Rollup from bundling the peer dependencies
         peerDepsExternal(),
-
         // Transpiles our TypeScript code into JavaScript
         typescript({
             clean: true,

@@ -37,9 +37,7 @@ import Themes from "./Provider/theme";
 export { default as DiffTimeline } from "./DiffTimeline";
 export { DynamicList } from "./DynamicList";
 
-import DEFAULT_THEME from "./theme";
 export {
-    DEFAULT_THEME,
     Button,
     Icon,
     Listing,

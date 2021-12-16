@@ -10,10 +10,9 @@ export const LearnWindow = styled.div<{ isVisible: boolean }>`
     box-shadow: -1px 0px 4px 0px rgba(0, 0, 0, 0.1);
     background: ${({ theme }) => theme?.learn?.bg};
     height: 100vh;
-    display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-content: flex-start;
-    display: ${({ isVisible }) => (isVisible ? "block" : "none")};
+    display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
 `;
 
 export const LearnHead = styled.div`
@@ -30,6 +29,7 @@ export const LearnBody = styled.div`
     display: flex;
     flex-wrap: wrap;
     font-size: ${({ theme }) => theme?.fontSizes[1]};
+    overflow: auto;
 `;
 
 export const LearnTitle = styled(Text)`

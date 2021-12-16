@@ -8,20 +8,17 @@ import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
 import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
 import RobotoBoldItalic from "../../assets/fonts/Roboto-BoldItalic.ttf";
 import RobotoBlack from "../../assets/fonts/Roboto-Black.ttf";
-import "../../styles/app.less";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'Roboto';
     src: url(${RobotoRegular}) format('truetype');
   }
-
   @font-face {
     font-family: 'Roboto';
     font-style: italic;
     src: url(${RobotoItalic}) format('truetype');
   }
-
   @font-face {
     font-family: 'Roboto';
     font-weight: bold;
@@ -33,12 +30,17 @@ const GlobalStyle = createGlobalStyle`
     font-style: italic;
     src: url(${RobotoBoldItalic}) format('truetype');
   }
-
   @font-face {
     font-family: 'Roboto';
     font-weight: 900;
     src: url(${RobotoBlack}) format('truetype');
   }
+
+  body {
+    font-family: "Roboto";
+    color: ${({ theme }) => theme?.colors?.black[9]};
+  }
+
   ${NotificationStyle}
 `;
 

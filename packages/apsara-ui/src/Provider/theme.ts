@@ -111,7 +111,7 @@ const dark = {
     colors: Colors?.dark,
     learn: {
         bg: Colors?.dark?.black[9],
-        text: Colors?.dark?.black[0],
+        title: Colors?.dark?.black[0],
         close: Colors?.dark?.black[5],
     },
     markdown: {

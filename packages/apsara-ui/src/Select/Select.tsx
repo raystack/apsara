@@ -71,9 +71,19 @@ const Select = styled(({ className, ...props }) => <StyledSelect {...props} sele
     &.ant-select {
         color: ${({ theme }) => theme?.colors?.black[10]};
     }
-    &.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    &:not(.ant-select-customize-input) .ant-select-selector {
         background-color: ${({ theme }) => theme?.colors?.black[0]};
         border-color: ${({ theme }) => theme?.colors?.black[4]};
+        height: 35px;
+
+        &::after,
+        .ant-select-selection-item,
+        .ant-select-selection-placeholder {
+            line-height: 33px;
+        }
+        .ant-select-selection-search-input {
+            height: 33px;
+        }
     }
     &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
         border-color: ${({ theme }) => theme?.colors?.primary[5]};
@@ -100,6 +110,31 @@ const Select = styled(({ className, ...props }) => <StyledSelect {...props} sele
     }
     .ant-select-clear:hover {
         color: ${({ theme }) => theme?.colors?.black[7]};
+    }
+
+    &.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+        height: 40px;
+
+        &::after,
+        .ant-select-selection-item,
+        .ant-select-selection-placeholder {
+            line-height: 38px;
+        }
+        .ant-select-selection-search-input {
+            height: 38px;
+        }
+    }
+    &.ant-select-sm:not(.ant-select-customize-input) .ant-select-selector {
+        height: 24px;
+
+        &::after,
+        .ant-select-selection-item,
+        .ant-select-selection-placeholder {
+            line-height: 22px;
+        }
+        .ant-select-selection-search-input {
+            height: 22px;
+        }
     }
 `;
 

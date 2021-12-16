@@ -68,10 +68,10 @@ const FormBuilderField = ({
     }
     if (widget === "select") {
         const { options = [], disableSort, ...restProps } = props;
-        const modifiedOptions = useMemo(() => (disableSort ? options : R.sortBy(R.prop("label"))(options)), [
-            options,
-            disableSort,
-        ]);
+        const modifiedOptions = useMemo(
+            () => (disableSort ? options : R.sortBy(R.prop("label"))(options)),
+            [options, disableSort],
+        );
         const optionsData = modifiedOptions.map(({ value, label, disabled }) => {
             return (
                 <Option key={value} value={value} disabled={disabled}>
