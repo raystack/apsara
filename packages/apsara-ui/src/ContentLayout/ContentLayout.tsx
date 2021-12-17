@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "styled-components";
-import { Layout } from "antd";
+import { Layout } from "./ContentLayout.styles";
 
 const { Sider, Content } = Layout;
 

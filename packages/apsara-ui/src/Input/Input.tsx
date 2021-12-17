@@ -7,10 +7,6 @@ const Input = styled(AntdInput)`
         background-color: ${({ theme }) => theme?.input?.bg};
         border: 1px solid ${({ theme }) => theme?.input?.border};
 
-        ::placeholder {
-            color: ${({ theme }) => theme?.input?.placeholder};
-        }
-
         :hover {
             border-color: ${({ theme }) => theme?.input?.hover};
         }
@@ -29,6 +25,25 @@ const Input = styled(AntdInput)`
                 border-color: ${({ theme }) => theme?.input?.border};
             }
         }
+    }
+
+    &::placeholder,
+    .ant-input::placeholder {
+        color: ${({ theme }) => theme?.input?.placeholder};
+        font-style: italic;
+    }
+
+    &.ant-input-affix-wrapper,
+    &.ant-input {
+        padding: 5.5px 11px;
+    }
+    &.ant-input-affix-wrapper-lg,
+    &.ant-input-lg {
+        padding: 6.5px 11px;
+    }
+    &.ant-input-affix-wrapper-sm,
+    &.ant-input-sm {
+        padding: 4px 7px;
     }
 `;
 

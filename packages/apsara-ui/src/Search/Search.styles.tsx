@@ -63,10 +63,4 @@ export const Wrapper = styled.div<{ secondary: boolean }>`
                 transition: border-color 0.5s ease;
             }
         `}
-
-    .RightSideBar & {
-        & > :last-child {
-            margin-right: 40px !important;
-        }
-    }
 `;

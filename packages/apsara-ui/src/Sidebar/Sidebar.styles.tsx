@@ -12,6 +12,47 @@ export const StyledSider = styled(Sider)`
 
     .ant-menu {
         background: transparent;
+
+        .ant-menu-item {
+            padding: 0 0 0 14px !important;
+            margin: 8px 0 !important;
+            height: 32px;
+            display: inline-flex;
+            border-left: 2px solid transparent;
+            overflow: visible !important;
+            width: 100%;
+            a {
+                align-items: center;
+                height: inherit;
+                display: inline-flex;
+            }
+
+            span.nav-text {
+                ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.sidebar?.nav, "0.3px")}
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+            }
+
+            span.anticon {
+                margin-right: 16px;
+                color: ${({ theme }) => theme?.sidebar?.nav} !important;
+            }
+        }
+
+        .ant-menu-item-selected {
+            border-left: 2px solid ${({ theme }) => theme?.sidebar?.active};
+            background-color: transparent;
+
+            span.anticon,
+            span.nav-text {
+                color: ${({ theme }) => theme?.sidebar?.active} !important;
+            }
+
+            &:after {
+                border-right: 0;
+            }
+        }
     }
 
     .ant-menu-inline-collapsed {
@@ -21,46 +62,6 @@ export const StyledSider = styled(Sider)`
             span.anticon {
                 margin-right: 0;
             }
-        }
-    }
-
-    .ant-menu-item {
-        padding: 0 0 0 14px !important;
-        margin: 8px 0 !important;
-        height: 32px;
-        display: inline-flex;
-        border-left: 2px solid transparent;
-        overflow: visible !important;
-        width: 100%;
-        a {
-            align-items: center;
-            height: inherit;
-            display: inline-flex;
-        }
-
-        span.nav-text {
-            ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.sidebar?.nav, "0.3px")}
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-
-        span.anticon {
-            margin-right: 16px;
-            color: ${({ theme }) => theme?.sidebar?.nav} !important;
-        }
-    }
-
-    .ant-menu-item-selected {
-        border-left: 2px solid ${({ theme }) => theme?.sidebar?.active};
-
-        span.anticon,
-        span.nav-text {
-            color: ${({ theme }) => theme?.sidebar?.active} !important;
-        }
-
-        &:after {
-            border-right: 0;
         }
     }
 

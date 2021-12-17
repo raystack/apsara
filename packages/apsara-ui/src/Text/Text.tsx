@@ -91,6 +91,7 @@ const Text = styled(AntText).attrs((props: IText) => ({
     size: props.size || defaultSize,
     verticalAlign: "middle",
 }))`
+    color: ${({ theme }) => theme?.colors?.black[9]};
     font-size: ${(props) => styleMap[props.size].fontSize || styleMap[defaultSize].fontSize};
     line-height: ${(props) => styleMap[props.size].lineHeight || styleMap[defaultSize].lineHeight};
     letter-spacing: ${(props) => styleMap[props.size].letterSpacing || styleMap[defaultSize].letterSpacing};

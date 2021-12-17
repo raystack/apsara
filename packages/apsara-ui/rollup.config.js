@@ -3,13 +3,9 @@ import multiInput from "rollup-plugin-multi-input";
 import typescript from "rollup-plugin-typescript2";
 import tsImportPluginFactory from "ts-import-plugin";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-import postcss from "rollup-plugin-postcss";
-import rollupPostcssLessLoader from "rollup-plugin-postcss-webpack-alias-less-loader";
 import svgr from "@svgr/rollup";
 import json from "@rollup/plugin-json";
 import url from "@rollup/plugin-url";
-
-import Theme from "./theme";
 
 export default {
     input: ["src/**/*.ts", "src/**/*.tsx", "!src/**/*.stories.[tj]s[x]", "!src/**/*.test.[tj]s[x]"],
@@ -43,22 +39,9 @@ export default {
             limit: Infinity,
             sourceDir: path.join(__dirname, "assets"),
         }),
-        postcss({
-            use: [["less", { javascriptEnabled: true, modifyVars: Theme }]],
-            loaders: [
-                rollupPostcssLessLoader({
-                    nodeModulePath: path.resolve(__dirname, "./node_modules"),
-                    aliases: {},
-                    options: {
-                        javascriptEnabled: true,
-                    },
-                }),
-            ],
-        }),
 
         // Prevents Rollup from bundling the peer dependencies
         peerDepsExternal(),
-
         // Transpiles our TypeScript code into JavaScript
         typescript({
             clean: true,
@@ -72,7 +55,7 @@ export default {
                     before: tsImportPluginFactory({
                         libraryName: "antd",
                         libraryDirectory: "lib",
-                        style: true,
+                        style: "css",
                     }),
                 }),
             ],
