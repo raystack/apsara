@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/odpf/apsara/compare/v0.6.0...v0.6.1) (2022-01-06)
+
+
+### Bug Fixes
+
+* antd css dependencies in build ([#21](https://github.com/odpf/apsara/issues/21)) ([f43af75](https://github.com/odpf/apsara/commit/f43af753f222bc0b9b46da5a3ae748c962b6d258))
+
+
+
+
+
 ## [0.5.14](https://github.com/odpf/apsara/compare/v0.5.13...v0.5.14) (2021-09-14)
 
 
