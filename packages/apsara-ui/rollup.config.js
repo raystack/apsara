@@ -3,6 +3,7 @@ import multiInput from "rollup-plugin-multi-input";
 import typescript from "rollup-plugin-typescript2";
 import tsImportPluginFactory from "ts-import-plugin";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
 import json from "@rollup/plugin-json";
 import url from "@rollup/plugin-url";
@@ -29,8 +30,14 @@ export default {
             sourcemap: true,
         },
     ],
+    external: [
+        // Make antd library styles to be external to current project
+        /^antd[.]*/,
+    ],
     plugins: [
         multiInput(),
+        // Prevents Rollup from bundling the peer dependencies
+        peerDepsExternal(),
         url({
             // by default, rollup-plugin-url will not handle font files
             include: ["**/*.woff", "**/*.woff2", "**/*.otf", "**/*.ttf"],
@@ -39,9 +46,6 @@ export default {
             limit: Infinity,
             sourceDir: path.join(__dirname, "assets"),
         }),
-
-        // Prevents Rollup from bundling the peer dependencies
-        peerDepsExternal(),
         // Transpiles our TypeScript code into JavaScript
         typescript({
             clean: true,
@@ -62,5 +66,6 @@ export default {
         }),
         svgr(),
         json(),
+        postcss(),
     ],
 };
