@@ -55,6 +55,15 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         &:active {
             ${({ theme }) => colorStyles(theme?.colors?.primary[6], "transparent", theme?.colors?.primary[6])}
         }
+
+        &[disabled] {
+            &,
+            &:hover,
+            &:focus,
+            &:active {
+                ${({ theme }) => colorStyles(theme?.colors?.black[6], "transparent", theme?.colors?.black[4])}
+            }
+        }
     }
 
     &&.ant-btn-primary {
@@ -65,6 +74,35 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
         }
         &:active {
             ${({ theme }) => colorStyles(theme?.colors?.black[0], theme?.colors?.primary[6], theme?.colors?.primary[6])}
+        }
+
+        &[disabled] {
+            &,
+            &:hover,
+            &:focus,
+            &:active {
+                ${({ theme }) => colorStyles(theme?.colors?.black[0], theme?.colors?.black[6], theme?.colors?.black[6])}
+            }
+        }
+    }
+
+    &&.ant-btn-text {
+        ${({ theme }) => colorStyles(theme?.colors?.primary[4], "transparent", "transparent")}
+        &:hover,
+        &:focus {
+            ${({ theme }) => colorStyles(theme?.colors?.primary[5], "transparent", "transparent")}
+        }
+        &:active {
+            ${({ theme }) => colorStyles(theme?.colors?.primary[6], "transparent", "transparent")}
+        }
+
+        &[disabled] {
+            &,
+            &:hover,
+            &:focus,
+            &:active {
+                ${({ theme }) => colorStyles(theme?.colors?.black[6], "transparent", "transparent")}
+            }
         }
     }
 
@@ -78,14 +116,13 @@ export const AntdButton: any = styled(Button).attrs((props: any) => ({
 
         &.ant-btn[disabled],
         > .ant-btn[disabled] {
-            height: inherit;
             display: flex;
             align-self: center;
             align-items: center;
             font-weight: bold;
             border: none !important;
             background: transparent !important;
-            color: #bfbfbf;
+            color: ${({ theme }) => theme?.colors?.black[6]};
 
             > .anticon {
                 vertical-align: text-bottom;

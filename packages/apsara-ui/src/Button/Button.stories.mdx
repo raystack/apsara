@@ -68,6 +68,7 @@ import { Button } from "@odpf/apsara";
             type: "primary",
             children: "small button",
             size: "small",
+            disabled: false,
             style,
         }}
     >
@@ -78,6 +79,7 @@ import { Button } from "@odpf/apsara";
         args={{
             type: "primary",
             children: "Button",
+            disabled: false,
         }}
     >
         {(args) => <Button {...args} />}
@@ -88,6 +90,7 @@ import { Button } from "@odpf/apsara";
             type: "primary",
             children: "large button",
             size: "large",
+            disabled: false,
             style,
         }}
     >
@@ -105,6 +108,7 @@ export const Button = (args) => <ButtonTemplate {...args} />;
         args={{
             loading: true,
             type: "primary",
+            disabled: false,
         }}
     >
         {(args) => <Button {...args}>loading</Button>}
