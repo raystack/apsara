@@ -32,19 +32,6 @@ const Input = styled(AntdInput)`
         color: ${({ theme }) => theme?.input?.placeholder};
         font-style: italic;
     }
-
-    &.ant-input-affix-wrapper,
-    &.ant-input {
-        padding: 5.5px 11px;
-    }
-    &.ant-input-affix-wrapper-lg,
-    &.ant-input-lg {
-        padding: 6.5px 11px;
-    }
-    &.ant-input-affix-wrapper-sm,
-    &.ant-input-sm {
-        padding: 4px 7px;
-    }
 `;
 
 export default Input;

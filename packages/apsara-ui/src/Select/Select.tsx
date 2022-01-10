@@ -74,15 +74,15 @@ const Select = styled(({ className, ...props }) => <StyledSelect {...props} sele
     &:not(.ant-select-customize-input) .ant-select-selector {
         background-color: ${({ theme }) => theme?.colors?.black[0]};
         border-color: ${({ theme }) => theme?.colors?.black[4]};
-        height: 35px;
+        height: 32px;
 
         &::after,
         .ant-select-selection-item,
         .ant-select-selection-placeholder {
-            line-height: 33px;
+            line-height: 30px;
         }
         .ant-select-selection-search-input {
-            height: 33px;
+            height: 30px;
         }
     }
     &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {

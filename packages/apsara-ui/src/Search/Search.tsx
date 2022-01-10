@@ -33,7 +33,7 @@ const Search = ({
     value,
     style = {},
     secondary = false,
-    size = "small",
+    size = "middle",
     onFocus = nullFn,
     onKeyDown = nullFn,
     inputId = "",
