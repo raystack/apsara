@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.2](https://github.com/odpf/apsara/compare/v0.6.1...v0.6.2) (2022-01-10)
+
+
+### Bug Fixes
+
+* **segments:** fix segments line height ([f92cc3e](https://github.com/odpf/apsara/commit/f92cc3e84188b47a4f90f82e545c63e8b0ed02d1))
+* input and select height issues ([5db7aa6](https://github.com/odpf/apsara/commit/5db7aa659b0ffd41a92f7693fe38e9cc4e00112f))
+* **button:** fix text and disabled button styles ([5ea4280](https://github.com/odpf/apsara/commit/5ea428087a11702bdb73e57b5dc9423e2909566d))
+
+
+
+
+
 ## [0.6.1](https://github.com/odpf/apsara/compare/v0.6.0...v0.6.1) (2022-01-06)
 
 
