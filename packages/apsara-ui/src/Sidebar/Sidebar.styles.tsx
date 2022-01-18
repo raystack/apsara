@@ -21,10 +21,15 @@ export const StyledSider = styled(Sider)`
             border-left: 2px solid transparent;
             overflow: visible !important;
             width: 100%;
+
+            :active {
+                background: transparent;
+            }
+
             a {
                 align-items: center;
                 height: inherit;
-                display: inline-flex;
+                display: flex;
             }
 
             span.nav-text {
