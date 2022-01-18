@@ -11,7 +11,8 @@ const Input = styled(AntdInput)`
             border-color: ${({ theme }) => theme?.input?.hover};
         }
 
-        :focus {
+        &:focus,
+        &.ant-input-affix-wrapper-focused {
             border-color: ${({ theme }) => theme?.input?.hover};
             box-shadow: none;
         }

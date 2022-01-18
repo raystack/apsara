@@ -1,8 +1,9 @@
 import React from "react";
-import { Form, FormProps } from "antd";
+import { FormProps } from "antd";
 import PropTypes from "prop-types";
 import { FormInstance } from "antd/lib/form";
 import FormBuilderItems from "./FormBuilderItems";
+import { StyledForm } from "./Form.styles";
 
 const validateMessages = {
     // eslint-disable-next-line no-template-curly-in-string
@@ -14,8 +15,8 @@ interface CustomFormProps extends FormProps {
 }
 
 const CustomForm = ({ form: inForm, ...props }: CustomFormProps) => {
-    const [form] = Form.useForm(inForm);
-    return <Form validateMessages={validateMessages} form={form} {...props} />;
+    const [form] = StyledForm.useForm(inForm);
+    return <StyledForm validateMessages={validateMessages} form={form} {...props} />;
 };
 
 CustomForm.defaultProps = {
@@ -39,8 +40,8 @@ CustomForm.propTypes = {
     scrollToFirstError: PropTypes.bool,
 };
 
-CustomForm.Provider = Form.Provider;
-CustomForm.useForm = Form.useForm;
+CustomForm.Provider = StyledForm.Provider;
+CustomForm.useForm = StyledForm.useForm;
 CustomForm.Items = FormBuilderItems;
 
 CustomForm.useForceUpdate = () => {

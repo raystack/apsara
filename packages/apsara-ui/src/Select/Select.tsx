@@ -1,6 +1,6 @@
 import React from "react";
 import { Select as AntdSelect } from "antd";
-import styled from "styled-components";
+import styled, { DefaultTheme, StyledComponent } from "styled-components";
 import { textStyles } from "../mixin";
 
 const StyledSelect = styled(({ className, selectClassName, ...props }) => (
@@ -40,6 +40,8 @@ const StyledSelect = styled(({ className, selectClassName, ...props }) => (
         background-color: ${({ theme }) => theme?.colors?.black[2]};
     }
 `;
+
+type SelectType = StyledComponent<typeof AntdSelect, DefaultTheme>;
 
 const Select = styled(({ className, ...props }) => <StyledSelect {...props} selectClassName={className} />)`
     &.ant-select-single.ant-select-open .ant-select-selection-item {
@@ -87,6 +89,7 @@ const Select = styled(({ className, ...props }) => <StyledSelect {...props} sele
     }
     &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
         border-color: ${({ theme }) => theme?.colors?.primary[5]};
+        box-shadow: none;
     }
     &.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
         color: ${({ theme }) => theme?.colors?.black[6]};
@@ -100,6 +103,7 @@ const Select = styled(({ className, ...props }) => <StyledSelect {...props} sele
     }
     .ant-select-selection-placeholder {
         color: ${({ theme }) => theme?.colors?.black[6]};
+        font-style: italic;
     }
     .ant-select-arrow {
         color: ${({ theme }) => theme?.colors?.black[6]};
@@ -136,6 +140,9 @@ const Select = styled(({ className, ...props }) => <StyledSelect {...props} sele
             height: 22px;
         }
     }
-`;
+` as SelectType;
+
+Select.Option = AntdSelect.Option;
+Select.OptGroup = AntdSelect.OptGroup;
 
 export default Select;

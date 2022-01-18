@@ -2,10 +2,14 @@
 // @ts-nocheck
 import React, { useMemo } from "react";
 import * as R from "ramda";
-import { InputNumber, Radio, Select, Switch, DatePicker, Checkbox } from "antd";
+import { InputNumber, DatePicker } from "antd";
 import Moment from "moment";
 
 import Input from "../Input";
+import Radio from "../Radio";
+import Select from "../Select";
+import Checkbox from "../Checkbox";
+import Switch from "../Switch";
 import Tag from "../Tag";
 import { getStringValue } from "./helper";
 
