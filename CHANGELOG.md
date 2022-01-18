@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.3](https://github.com/odpf/apsara/compare/v0.6.2...v0.6.3) (2022-01-18)
+
+
+### Bug Fixes
+
+* **form-builder:** fix styles for form builder ([149b4c6](https://github.com/odpf/apsara/commit/149b4c6f8f1a7eb459ff9cbbf5ea02b9076ff591))
+
+
+
+
+
 ## [0.6.2](https://github.com/odpf/apsara/compare/v0.6.1...v0.6.2) (2022-01-10)
 
 
