@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.5](https://github.com/odpf/apsara/compare/v0.6.4...v0.6.5) (2022-02-16)
+
+
+### Bug Fixes
+
+* **notification:** remove duplicate notification import ([1d70ebe](https://github.com/odpf/apsara/commit/1d70ebe6275247e2d15d902da15e97d65def03ad))
+
+
+
+
+
 ## [0.6.4](https://github.com/odpf/apsara/compare/v0.6.3...v0.6.4) (2022-01-18)
 
 
