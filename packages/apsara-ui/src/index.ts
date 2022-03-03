@@ -1,5 +1,5 @@
 import Button from "./Button";
-import Icon from "./Icon";
+import Icon, { IconImage } from "./Icon";
 import Listing, { useSearchFilter, InfiniteListing } from "./Listing";
 import Search from "./Search";
 import Table from "./Table";
@@ -33,6 +33,7 @@ import Image from "./Image";
 import Select from "./Select";
 import Tile from "./Tile";
 import Switch from "./Switch";
+import Slider from "./Slider";
 import Themes from "./Provider/theme";
 export { default as DiffTimeline } from "./DiffTimeline";
 export { DynamicList } from "./DynamicList";
@@ -40,6 +41,7 @@ export { DynamicList } from "./DynamicList";
 export {
     Button,
     Icon,
+    IconImage,
     Listing,
     InfiniteListing,
     useSearchFilter,
@@ -79,5 +81,6 @@ export {
     Select,
     Tile,
     Switch,
+    Slider,
     Themes,
 };
