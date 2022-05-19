@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Result } from "antd";
 
 export const StyledResult = styled(Result)`
+    background-color: ${({ theme }) => theme?.states?.bg};
     .ant-result-icon {
         margin-bottom: 39px;
     }

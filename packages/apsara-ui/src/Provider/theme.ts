@@ -145,6 +145,7 @@ const dark = {
         value: Colors?.dark?.black[5],
         title: Colors?.dark?.black[1],
         border: Colors?.dark?.black[6],
+        bg: Colors?.dark?.black[8],
     },
     table: {
         border: Colors?.dark?.black[8],
@@ -153,6 +154,7 @@ const dark = {
         text: Colors?.dark?.black[2],
         highlight: Colors?.dark?.black[8],
         title: Colors?.dark?.black[1],
+        bg: Colors?.dark?.black[7],
     },
     listing: {
         filterText: Colors?.dark?.black[2],
@@ -175,6 +177,7 @@ const dark = {
     },
     states: {
         text: Colors?.dark?.black[0],
+        bg: Colors?.light?.black[8],
     },
     confirmModal: {
         bg: Colors?.dark?.black[8],

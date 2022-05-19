@@ -8,7 +8,7 @@ export const Wrapper = styled(Header)`
     display: flex;
     align-items: center;
     padding: 0 40px;
-    background: ${({ theme }) => theme?.colors?.transparent};
+    background-color: ${({ theme }) => theme?.header?.menuBg};
     border-bottom: solid 1px ${({ theme }) => theme?.colors?.black[3]};
 `;
 

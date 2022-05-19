@@ -6,6 +6,7 @@ import { textStyles } from "../mixin";
 export const StyledTable = styled(Table)`
     .ant-table {
         background: transparent;
+        background-color: ${({ theme }) => theme?.table?.bg};
     }
 
     .ant-table-body,

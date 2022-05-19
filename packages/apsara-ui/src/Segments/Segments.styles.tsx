@@ -47,6 +47,7 @@ export const Wrapper = styled(AntdRow)<{ $advance?: boolean }>`
     display: flex;
     flex-direction: column;
     padding: ${({ $advance }) => ($advance ? "32px 0px 0px 0px" : "24px 0px 32px 0px")};
+    background-color: ${({ theme }) => theme?.segments?.bg};
 
     &:not(:last-child) {
         border-bottom: 1px solid ${({ theme }) => theme?.segments?.border};
