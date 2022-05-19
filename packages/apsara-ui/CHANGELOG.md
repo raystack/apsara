@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.7](https://github.com/odpf/apsara/compare/v0.6.6...v0.6.7) (2022-05-19)
+
+
+### Bug Fixes
+
+* multi selection height of selection ([9bd47de](https://github.com/odpf/apsara/commit/9bd47deeada107511d5b77daa484c7c8175aba4a))
+
+
+
+
+
 ## [0.6.6](https://github.com/odpf/apsara/compare/v0.6.5...v0.6.6) (2022-03-03)
 
 **Note:** Version bump only for package @odpf/apsara
