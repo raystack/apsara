@@ -1,5 +1,5 @@
-import React from "react";
 import { Select as AntdSelect } from "antd";
+import React from "react";
 import styled, { DefaultTheme, StyledComponent } from "styled-components";
 import { textStyles } from "../mixin";
 
@@ -76,7 +76,7 @@ const Select = styled(({ className, ...props }) => <StyledSelect {...props} sele
     &:not(.ant-select-customize-input) .ant-select-selector {
         background-color: ${({ theme }) => theme?.colors?.black[0]};
         border-color: ${({ theme }) => theme?.colors?.black[4]};
-        height: 32px;
+        min-height: 32px;
 
         &::after,
         .ant-select-selection-item,
