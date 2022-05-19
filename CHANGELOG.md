@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.8](https://github.com/odpf/apsara/compare/v0.6.7...v0.6.8) (2022-05-19)
+
+
+### Bug Fixes
+
+* background theme color ([d5dbf3a](https://github.com/odpf/apsara/commit/d5dbf3abc6102a7e8866e11ceb156a503476b10e))
+
+
+
+
+
 ## [0.6.7](https://github.com/odpf/apsara/compare/v0.6.6...v0.6.7) (2022-05-19)
 
 
