@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.10](https://github.com/odpf/apsara/compare/v0.6.8...v0.6.10) (2022-05-30)
+
+
+### Bug Fixes
+
+* lint issue ([464a23a](https://github.com/odpf/apsara/commit/464a23afe80ef5ab7c7cac3e8df8e4b1f9ac1d2f))
+
+
+
+
+
 ## [0.6.9](https://github.com/odpf/apsara/compare/v0.6.8...v0.6.9) (2022-05-30)
 
 **Note:** Version bump only for package @odpf/apsara
