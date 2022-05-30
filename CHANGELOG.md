@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.9](https://github.com/odpf/apsara/compare/v0.6.8...v0.6.9) (2022-05-30)
+
+
+### Features
+
+* **icons:** add datlantis logo ([e27e697](https://github.com/odpf/apsara/commit/e27e69760fd8790a18a09f43d147e0be857265ab))
+
+
+
+
+
 ## [0.6.8](https://github.com/odpf/apsara/compare/v0.6.7...v0.6.8) (2022-05-19)
 
 
