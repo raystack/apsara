@@ -6,8 +6,8 @@ import clsx from "clsx";
 import Table from "./Table";
 import { StyledGrid } from "./Table.styles";
 
-const DEFAULT_HEIGHT = "80vh";
-const DEFAULT_ROW_HEIGHT = "6vh";
+const DEFAULT_HEIGHT = 700;
+const DEFAULT_ROW_HEIGHT = 6;
 
 const Cell = ({
     columnData,
@@ -72,6 +72,7 @@ const VirtualTableComponent = ({
     alternateHover,
     ...props
 }: IVirtualTable) => {
+    const [tableHeight,setTableHeight] = useState(0);
     const [tableWidth, setTableWidth] = useState(0);
     const [lastIndex, setLastIndex] = useState(0);
     const widthColumnCount = columns.filter(({ width }) => !width).length;
@@ -139,8 +140,6 @@ const VirtualTableComponent = ({
             setLastIndex(stopIndex);
         }
 
-        const caculatedheight = rowCount * DEFAULT_ROW_HEIGHT;
-        const height = DEFAULT_HEIGHT > caculatedheight ? caculatedheight : DEFAULT_ROW_HEIGHT;
         return (
             <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={rowCount} loadMoreItems={loadMoreItems}>
                 {({ onItemsRendered }) => (
@@ -170,13 +169,13 @@ const VirtualTableComponent = ({
                             }
                             return columnWidthValue;
                         }}
-                        height={height}
+                        height={tableHeight}
                         rowCount={rowCount}
                         rowHeight={(index) => {
                             if (calculateRowHeight) {
                                 return calculateRowHeight(index, DEFAULT_ROW_HEIGHT);
                             }
-                            return DEFAULT_ROW_HEIGHT;
+                            return `${DEFAULT_ROW_HEIGHT}vh`;
                         }}
                         width={tableWidth}
                         onScroll={({ scrollLeft }) => {
@@ -210,8 +209,9 @@ const VirtualTableComponent = ({
     };
     return (
         <ResizeObserver
-            onResize={({ width }) => {
+            onResize={({ width, height }) => {
                 setTableWidth(width);
+                setTableHeight(height)
             }}
         >
             <Table
