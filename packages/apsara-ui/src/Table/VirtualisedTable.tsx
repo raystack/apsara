@@ -7,7 +7,6 @@ import Table from "./Table";
 import { StyledGrid } from "./Table.styles";
 
 const DEFAULT_HEIGHT = 700;
-const DEFAULT_ROW_HEIGHT = 6;
 
 const Cell = ({
     columnData,
@@ -72,8 +71,8 @@ const VirtualTableComponent = ({
     alternateHover,
     ...props
 }: IVirtualTable) => {
-    const [tableHeight, setTableHeight] = useState(0);
     const [tableWidth, setTableWidth] = useState(0);
+    const [tableHeight, setTableHeight] = useState(0);
     const [lastIndex, setLastIndex] = useState(0);
     const widthColumnCount = columns.filter(({ width }) => !width).length;
     const totalColumnDefinedWidth = columns.reduce((acc, { width = 0 }) => acc + width, 0);
@@ -172,10 +171,11 @@ const VirtualTableComponent = ({
                         height={tableHeight}
                         rowCount={rowCount}
                         rowHeight={(index) => {
+                            const defaultRowHeight = 54;
                             if (calculateRowHeight) {
-                                return calculateRowHeight(index, DEFAULT_ROW_HEIGHT);
+                                return calculateRowHeight(index, defaultRowHeight);
                             }
-                            return `${DEFAULT_ROW_HEIGHT}vh`;
+                            return defaultRowHeight;
                         }}
                         width={tableWidth}
                         onScroll={({ scrollLeft }) => {
