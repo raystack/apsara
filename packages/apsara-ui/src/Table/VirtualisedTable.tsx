@@ -72,7 +72,7 @@ const VirtualTableComponent = ({
     alternateHover,
     ...props
 }: IVirtualTable) => {
-    const [tableHeight,setTableHeight] = useState(0);
+    const [tableHeight, setTableHeight] = useState(0);
     const [tableWidth, setTableWidth] = useState(0);
     const [lastIndex, setLastIndex] = useState(0);
     const widthColumnCount = columns.filter(({ width }) => !width).length;
@@ -211,7 +211,7 @@ const VirtualTableComponent = ({
         <ResizeObserver
             onResize={({ width, height }) => {
                 setTableWidth(width);
-                setTableHeight(height)
+                setTableHeight(height);
             }}
         >
             <Table
