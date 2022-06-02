@@ -5,6 +5,7 @@ import InfiniteLoader from "react-window-infinite-loader";
 import clsx from "clsx";
 import Table from "./Table";
 import { StyledGrid } from "./Table.styles";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const DEFAULT_HEIGHT = 700;
 
@@ -72,7 +73,6 @@ const VirtualTableComponent = ({
     ...props
 }: IVirtualTable) => {
     const [tableWidth, setTableWidth] = useState(0);
-    const [tableHeight, setTableHeight] = useState(0);
     const [lastIndex, setLastIndex] = useState(0);
     const widthColumnCount = columns.filter(({ width }) => !width).length;
     const totalColumnDefinedWidth = columns.reduce((acc, { width = 0 }) => acc + width, 0);
@@ -139,6 +139,8 @@ const VirtualTableComponent = ({
             setLastIndex(stopIndex);
         }
 
+        const { height } = useWindowDimensions();
+
         return (
             <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={rowCount} loadMoreItems={loadMoreItems}>
                 {({ onItemsRendered }) => (
@@ -168,7 +170,7 @@ const VirtualTableComponent = ({
                             }
                             return columnWidthValue;
                         }}
-                        height={tableHeight}
+                        height={height - 120}
                         rowCount={rowCount}
                         rowHeight={(index) => {
                             const defaultRowHeight = 54;
@@ -209,9 +211,8 @@ const VirtualTableComponent = ({
     };
     return (
         <ResizeObserver
-            onResize={({ width, height }) => {
+            onResize={({ width }) => {
                 setTableWidth(width);
-                setTableHeight(height);
             }}
         >
             <Table
