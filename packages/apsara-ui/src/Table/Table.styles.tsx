@@ -111,6 +111,10 @@ export const StyledTable = styled(Table)`
                 ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.table?.title)}
             }
 
+            td:last-child {
+                word-break: break-word;
+            }
+
             td.text-hover-highlight .highlight a {
                 display: inline-block;
             }

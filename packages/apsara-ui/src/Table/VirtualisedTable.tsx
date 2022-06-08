@@ -5,6 +5,7 @@ import InfiniteLoader from "react-window-infinite-loader";
 import clsx from "clsx";
 import Table from "./Table";
 import { StyledGrid } from "./Table.styles";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const DEFAULT_HEIGHT = 700;
 
@@ -138,6 +139,8 @@ const VirtualTableComponent = ({
             setLastIndex(stopIndex);
         }
 
+        const { height } = useWindowDimensions();
+
         return (
             <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={rowCount} loadMoreItems={loadMoreItems}>
                 {({ onItemsRendered }) => (
@@ -167,7 +170,7 @@ const VirtualTableComponent = ({
                             }
                             return columnWidthValue;
                         }}
-                        height={scroll.y}
+                        height={height - 120}
                         rowCount={rowCount}
                         rowHeight={(index) => {
                             const defaultRowHeight = 54;
