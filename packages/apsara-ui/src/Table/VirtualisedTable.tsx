@@ -51,6 +51,10 @@ export interface IVirtualTable extends TableProps<any> {
     items: any[];
     selectedRowId?: number | null;
     scroll?: any;
+    margin?: {
+        top?: number;
+        bottom?: number;
+    };
     loadMore?: () => Promise<void> | null;
     onRowClick?: (event: any, rowIndexData: any) => void;
     calculateRowHeight?: any;
@@ -65,6 +69,7 @@ const VirtualTableComponent = ({
     selectedRowId = null,
     onRowClick = () => null,
     loadMore = () => null,
+    margin = { top: 0, bottom: 0 },
     calculateRowHeight,
     calculateColumnWidth,
     className = "",
@@ -170,7 +175,7 @@ const VirtualTableComponent = ({
                             }
                             return columnWidthValue;
                         }}
-                        height={height - 120}
+                        height={height - (margin?.top || 0) - (margin?.bottom || 0)}
                         rowCount={rowCount}
                         rowHeight={(index) => {
                             const defaultRowHeight = 54;
