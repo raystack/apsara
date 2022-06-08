@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.11](https://github.com/odpf/apsara/compare/v0.6.10...v0.6.11) (2022-06-08)
+
+**Note:** Version bump only for package apsara
+
+
+
+
+
 ## [0.6.10](https://github.com/odpf/apsara/compare/v0.6.8...v0.6.10) (2022-05-30)
 
 
