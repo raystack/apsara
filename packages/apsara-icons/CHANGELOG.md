@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.0](https://github.com/odpf/apsara/compare/v0.6.11...v0.7.0-alpha.0) (2022-06-14)
+
+**Note:** Version bump only for package @odpf/icons
+
+
+
+
+
 ## [0.6.10](https://github.com/odpf/apsara/compare/v0.6.8...v0.6.10) (2022-05-30)
 
 
