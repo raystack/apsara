@@ -31,8 +31,8 @@
     },
     "homepage": "https://odpf.github.io/apsara/",
     "peerDependencies": {
-        "react": "^16.13.1",
-        "react-dom": "^16.13.1"
+        "react": "^18.1.0",
+        "react-dom": "^18.1.0"
     },
     "dependencies": {
         "@ant-design/icons": "^4.2.2",
