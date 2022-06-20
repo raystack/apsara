@@ -18,9 +18,9 @@ const renderMenuItemLink = (
     LinkRender: ({ children }: any) => ReactElement,
 ) => {
     const { key, url, linkText, iconProps, isSubMenu } = item;
-    var styleDetails = { display: "flex", flexDirection: "row", alignItems: "center" }
-    if(isSubMenu){
-      styleDetails[ "paddingLeft" ] = "15%";
+    const styleDetails = { display: "flex", alignItems: "center", container: { flexDirection: "row" } };
+    if (isSubMenu) {
+        styleDetails["paddingLeft"] = "15%";
     }
     return (
         <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)}>
