@@ -9,6 +9,7 @@ interface RenderItem {
     url: string;
     linkText: string;
     iconProps: CustomIconProps;
+    isSubMenu: boolean;
 }
 
 const renderMenuItemLink = (
@@ -16,11 +17,15 @@ const renderMenuItemLink = (
     onItemClick: (item: RenderItem) => void,
     LinkRender: ({ children }: any) => ReactElement,
 ) => {
-    const { key, url, linkText, iconProps } = item;
+    const { key, url, linkText, iconProps, isSubMenu } = item;
+    const styleDetails = { display: "flex", alignItems: "center", container: { flexDirection: "row" } };
+    if (isSubMenu) {
+        styleDetails["paddingLeft"] = "15%";
+    }
     return (
         <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)}>
             <LinkRender to={url}>
-                <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                <div style={styleDetails}>
                     <CustomIcon {...iconProps} />
                     <span className="nav-text">{linkText}</span>
                 </div>

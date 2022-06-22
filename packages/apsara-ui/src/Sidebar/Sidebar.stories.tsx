@@ -36,6 +36,20 @@ export const iconComponent = () => (
                 iconProps: { name: "dashboard" },
             },
             {
+                key: "topics",
+                url: "/dashboard/topics",
+                linkText: "Topics",
+                iconProps: { name: "topic" },
+                isSubMenu: true,
+            },
+            {
+                key: "tables",
+                url: "/dashboard/tables",
+                linkText: "Tables",
+                iconProps: { name: "warehouse" },
+                isSubMenu: true,
+            },
+            {
                 key: "health",
                 url: "/health/",
                 linkText: "Health",
