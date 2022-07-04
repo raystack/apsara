@@ -84,5 +84,5 @@ export {
     Switch,
     Slider,
     Themes,
-    InfoModal
+    InfoModal,
 };

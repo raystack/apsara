@@ -23,12 +23,16 @@ export const InfoBox = styled.div`
     z-index: 2;
 `;
 
-export const Title = styled.div`
+export const Title = styled.a`
     font-size: 16px;
     font-weight: bold;
     color: #4b4b4b;
     float: left;
     padding-top: 4px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 50vh;
 `;
 
 export const CloseDiv = styled.div`
@@ -37,5 +41,5 @@ export const CloseDiv = styled.div`
 
 export const HeadingWrapper = styled.div`
     display: inline-block;
-    width:100%;
+    width: 100%;
 `;

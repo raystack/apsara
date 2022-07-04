@@ -15,11 +15,7 @@ export const infoModal = () => {
     return (
         <>
             <Button onClick={() => setVisible(true)}>Open Modal</Button>
-            <InfoModal
-                heading="Modal Heading"
-                onClose={() => setVisible(false)}
-                visible={visible}
-            />
+            <InfoModal heading="Modal Heading" onClose={() => setVisible(false)} visible={visible} />
         </>
     );
 };
@@ -29,11 +25,7 @@ export const withForm = () => {
     return (
         <>
             <Button onClick={() => setVisible(true)}>Open Modal</Button>
-            <InfoModal
-                heading="Modal Heading"
-                onClose={() => setVisible(false)}
-                visible={visible}
-            >
+            <InfoModal heading="Modal Heading" onClose={() => setVisible(false)} visible={visible}>
                 <Radio value={1} style={{ display: "block" }}>
                     One
                 </Radio>

@@ -6,27 +6,19 @@ import { CloseOutlined } from "@ant-design/icons";
 interface InfoModalProps {
     children?: React.ReactNode;
     heading: string;
-    loading?: boolean;
     onClose: () => void;
     visible?: boolean;
 }
 
-const InfoModal = ({
-    children,
-    heading = "",
-    loading = false,
-    onClose,
-    visible = false,
-    ...props
-}: InfoModalProps) => {
+const InfoModal = ({ children, heading = "", onClose, visible = false, ...props }: InfoModalProps) => {
     return visible ? (
         <Overlay>
             <InfoBox {...props}>
                 <HeadingWrapper>
-                    <Title>{heading}</Title>
+                    <Title title={heading}>{heading}</Title>
                     <CloseDiv>
                         <Button type="text" onClick={onClose}>
-                            <CloseOutlined style={{ fontSize: '20px'}}/>
+                            <CloseOutlined style={{ fontSize: "20px" }} />
                         </Button>
                     </CloseDiv>
                 </HeadingWrapper>
