@@ -16,8 +16,5 @@ export const StyledResult = styled(Result)`
         color: ${({ theme }) => theme?.states?.text};
         line-height: 1.4;
         margin-top: 12px;
-        overflow: auto;
-        max-height: calc(100vh - 500px);
-        max-width: 80vw;
     }
 `;

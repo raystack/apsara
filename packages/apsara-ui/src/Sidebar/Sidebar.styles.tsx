@@ -91,7 +91,7 @@ export const LogoWrapper = styled.div`
     ${ellipsis}
 
     .img__logo {
-        width: 32px;
+        min-width: 32px;
         height: auto;
         margin-right: 16px;
 
