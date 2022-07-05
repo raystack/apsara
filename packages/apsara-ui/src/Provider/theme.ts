@@ -80,6 +80,10 @@ const light = {
         bg: Colors?.light?.black[0],
         text: Colors?.light?.black[9],
     },
+    infoModal: {
+        bg: Colors?.light?.black[0],
+        text: Colors?.light?.black[9],
+    },
     notification: {
         bg: Colors?.light?.black[0],
         text: Colors?.light?.black[9],
@@ -180,6 +184,10 @@ const dark = {
         bg: Colors?.light?.black[8],
     },
     confirmModal: {
+        bg: Colors?.dark?.black[8],
+        text: Colors?.dark?.black[1],
+    },
+    infoModal: {
         bg: Colors?.dark?.black[8],
         text: Colors?.dark?.black[1],
     },

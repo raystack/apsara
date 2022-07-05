@@ -23,6 +23,7 @@ import Provider from "./Provider";
 import Codeblock from "./Codeblock";
 import Popover from "./Popover";
 import ConfirmModal from "./ConfirmModal";
+import InfoModal from "./InfoModal";
 import Colors from "./Colors";
 import Shadows from "./Shadows";
 import Tooltip from "./Tooltip";
@@ -83,4 +84,5 @@ export {
     Switch,
     Slider,
     Themes,
+    InfoModal,
 };
