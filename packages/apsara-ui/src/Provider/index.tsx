@@ -38,9 +38,14 @@ const GlobalStyle = createGlobalStyle`
     src: url(${RobotoBlack}) format('truetype');
   }
 
+  h1, h2, h3, h4, h5, h6, p {
+    color: ${({ theme }) => theme?.body?.color};
+  }
+
   body {
     font-family: "Roboto";
-    color: ${({ theme }) => theme?.colors?.black[9]};
+    background-color: ${({ theme }) => theme?.body?.bg};
+    color: ${({ theme }) => theme?.body?.color};
   }
 
   ${NotificationStyle}

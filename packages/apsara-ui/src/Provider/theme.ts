@@ -1,4 +1,5 @@
 import Colors from "../Colors";
+import {  mauve, blackA} from '@radix-ui/colors';
 
 const fontSizes = ["12px", "14px", "16px", "20px", "24px", "32px", "48px", "64px", "72px"];
 
@@ -8,6 +9,10 @@ const base = {
 
 const light = {
     ...base,
+    body:{
+        bg : "white",
+        color : Colors?.light?.black[9]
+    },
     colors: Colors?.light,
     learn: {
         bg: Colors?.light?.black[0],
@@ -108,10 +113,32 @@ const light = {
         trigger: Colors?.light?.black[7],
         title: Colors?.light?.primary[3],
     },
+    select:{
+        bg:"white",
+        label:mauve.mauve11,
+        separator:Colors?.light?.primary[1],
+        scroll: Colors?.light?.primary[3],
+        trigger:{
+            color: Colors?.light?.primary[3],
+            bg: "white",
+            shadow: blackA.blackA7,
+            hover: mauve.mauve3
+        },
+        item:{
+            color: Colors?.light?.primary[3],
+            disabled:mauve.mauve8,
+            focusColor: Colors?.light?.primary[0],
+            focusBg: Colors?.light?.primary[3]
+        }
+    }
 };
 
 const dark = {
     ...base,
+    body:{
+        bg : "black",
+        color : Colors?.dark?.black[0]
+    },
     colors: Colors?.dark,
     learn: {
         bg: Colors?.dark?.black[9],
@@ -215,6 +242,24 @@ const dark = {
         trigger: Colors?.dark?.black[5],
         title: Colors?.dark?.primary[1],
     },
+    select:{
+        bg: "#065656",
+        label:"#C1FAFA",
+        separator:"black",
+        scroll: "#48EEF3",
+        trigger:{
+            color:  "#48EEF3",
+            bg: "#065656",
+            shadow: blackA.blackA7,
+            hover: "#064D4D"
+        },
+        item:{
+            color: "#48EEF3",
+            disabled:mauve.mauve8,
+            focusColor: "#48EEF3",
+            focusBg: "black"
+        }
+    }
 };
 
 const Themes = {

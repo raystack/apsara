@@ -6,6 +6,7 @@ import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
 import FormBuilderField, { Widget } from "./FormBuilderField";
 import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
+import { SelectProps } from "../Select/Select";
 
 /*
 Example:
@@ -67,7 +68,7 @@ export interface FormMetaFields {
     fieldProps?: Record<string, unknown>;
     initialValue?: any;
     tooltip?: React.ReactNode | string;
-    options?: Array<{ label: string; value: string }>;
+    options?: Array<{ label: string; value: string }> | SelectProps;
     placeholder?: string;
     mode?: "multiple" | "tags";
     component?: React.ReactNode;
