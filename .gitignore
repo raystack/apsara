@@ -9,7 +9,7 @@ package-lock.json
 .DS_Store
 
 # production
-/build
+**/build
 /public
 /dist
 /packages/**/lib/
