@@ -2,7 +2,7 @@ name: Build
 on:
     push:
         branches:
-            - github_workflow_testing
+            - main
 
 jobs:
     deploy:
