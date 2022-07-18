@@ -130,6 +130,11 @@ const light = {
             focusColor: Colors?.light?.primary[0],
             focusBg: Colors?.light?.primary[3]
         }
+    },
+    switch:{
+        color: "black",
+        bg: blackA.blackA9,
+        shadow: blackA.blackA7
     }
 };
 
@@ -259,6 +264,11 @@ const dark = {
             focusColor: "#48EEF3",
             focusBg: "black"
         }
+    },
+    switch:{
+        color: "#065656",
+        bg: Colors.dark.black[5],
+        shadow: blackA.blackA7
     }
 };
 
