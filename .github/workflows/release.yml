@@ -28,13 +28,13 @@ jobs:
             echo "registry=http://registry.npmjs.org/" >> .npmrc
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
           env:
-            NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
         - name: Publish packages
           run: yarn lerna publish from-package --yes
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
             
         - name: Github Release
           run: gh release create ${{ github.ref }} --generate-notes
