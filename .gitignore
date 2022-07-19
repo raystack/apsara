@@ -7,9 +7,10 @@ cjs
 coverage
 package-lock.json 
 .DS_Store
+.turbo
 
 # production
-/build
+**/build
 /public
 /dist
 /packages/**/lib/
