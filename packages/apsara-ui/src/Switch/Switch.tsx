@@ -6,7 +6,7 @@ type StyleProps = {
     style?: React.CSSProperties
 }
 
-type SwitchProps = {
+export type SwitchProps = {
     defaultChecked? : boolean,
     checked? : boolean,
     onCheckedChange? : (checked: boolean) => void,

@@ -4,9 +4,8 @@ import PropTypes from "prop-types";
 import { ColProps, Form, FormInstance, FormItemProps } from "antd";
 import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
-import FormBuilderField, { Widget } from "./FormBuilderField";
+import FormBuilderField, { Widget , CommonProps} from "./FormBuilderField";
 import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
-import { SelectProps } from "../Select/Select";
 
 /*
 Example:
@@ -68,7 +67,7 @@ export interface FormMetaFields {
     fieldProps?: Record<string, unknown>;
     initialValue?: any;
     tooltip?: React.ReactNode | string;
-    options?: Array<{ label: string; value: string }> | SelectProps;
+    options?: Array<{ label: string; value: string }> | CommonProps;
     placeholder?: string;
     mode?: "multiple" | "tags";
     component?: React.ReactNode;

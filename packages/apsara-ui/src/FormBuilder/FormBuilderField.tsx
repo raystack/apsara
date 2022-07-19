@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import * as R from "ramda";
 import { InputNumber, DatePicker } from "antd";
 import Moment from "moment";
-
 import Input from "../Input";
 import Radio from "../Radio";
 import Select from "../Select";
@@ -13,6 +12,7 @@ import Switch from "../Switch";
 import Tag from "../Tag";
 import { getStringValue } from "./helper";
 import { SelectProps } from "../Select/Select";
+import { SwitchProps } from "../Switch/Switch";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -27,10 +27,15 @@ export type Widget =
     | "input"
     | "rangepicker";
 
+export type CommonProps = 
+    | SelectProps
+    | SwitchProps
+
 interface OptionProps {
     label: string;
     value: any;
 }
+
 interface FormBuilderFieldProps {
     id?: any;
     widget?: Widget;
@@ -38,7 +43,7 @@ interface FormBuilderFieldProps {
     component?: any;
     rows?: number;
     enableTag?: boolean;
-    options?: OptionProps[] | SelectProps;
+    options?: OptionProps[] | CommonProps;
     mode?: string;
     tokenSeparators?: string[];
 }
@@ -81,8 +86,8 @@ const FormBuilderField = ({
         return <Input.TextArea size="large" rows={rows} {...props} />;
     }
     if (widget === "switch") {
-        const { value, ...switchProps } = props;
-        return <Switch {...switchProps} checked={value} />;
+        const { options } = props;
+        return <Switch {...options} />;
     }
     if (widget === "datepicker") {
         const { value: timestamp, ...restProps } = props;
