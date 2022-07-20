@@ -4,8 +4,10 @@ import PropTypes from "prop-types";
 import { ColProps, Form, FormInstance, FormItemProps } from "antd";
 import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
-import FormBuilderField, { Widget , CommonProps} from "./FormBuilderField";
+import FormBuilderField, { Widget } from "./FormBuilderField";
 import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
+import { SelectProps } from "../Select/Select";
+import { SwitchProps } from "../Switch/Switch";
 
 /*
 Example:
@@ -44,6 +46,10 @@ const shouldShow = (config: any, dependenciesFieldValue: any) => {
     return evaluateExpression(config.depends, dependenciesFieldValue?.toString());
 };
 
+type CommonProps = 
+    | SelectProps
+    | SwitchProps
+
 export interface FormMetaFields {
     formItemLayout?: {
         labelCol: ColProps;
@@ -64,10 +70,10 @@ export interface FormMetaFields {
     name: string | string[];
     widget: Widget;
     title?: string;
-    fieldProps?: Record<string, unknown>;
+    fieldProps?: Record<string, unknown> | CommonProps;
     initialValue?: any;
     tooltip?: React.ReactNode | string;
-    options?: Array<{ label: string; value: string }> | CommonProps;
+    options?: Array<{ label: string; value: string }>;
     placeholder?: string;
     mode?: "multiple" | "tags";
     component?: React.ReactNode;

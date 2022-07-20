@@ -9,7 +9,7 @@ type StyleProps = {
 export type SwitchProps = {
     defaultChecked? : boolean,
     checked? : boolean,
-    onCheckedChange? : (checked: boolean) => void,
+    onChange? : (checked: boolean) => void,
     disabled? : boolean,
     required? : boolean,
     name? : string,
@@ -23,7 +23,7 @@ export type SwitchProps = {
 const Switch = ({
     defaultChecked = false,
     checked,
-    onCheckedChange,
+    onChange,
     disabled = false,
     required,
     name,
@@ -32,7 +32,7 @@ const Switch = ({
     ...props
 }: SwitchProps)=> {
     return (
-        <StyledSwitch defaultChecked={defaultChecked} checked={checked} onCheckedChange={onCheckedChange}
+        <StyledSwitch defaultChecked={defaultChecked} checked={checked} onCheckedChange={onChange}
          disabled={disabled} required={required} name = {name} value = {value} style = {props.style} 
          className= {props.className} color={color}> 
             <StyledThumb {...props.thumbProps}/>

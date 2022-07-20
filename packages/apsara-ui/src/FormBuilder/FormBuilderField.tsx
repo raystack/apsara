@@ -11,8 +11,7 @@ import Checkbox from "../Checkbox";
 import Switch from "../Switch";
 import Tag from "../Tag";
 import { getStringValue } from "./helper";
-import { SelectProps } from "../Select/Select";
-import { SwitchProps } from "../Switch/Switch";
+
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -27,10 +26,6 @@ export type Widget =
     | "input"
     | "rangepicker";
 
-export type CommonProps = 
-    | SelectProps
-    | SwitchProps
-
 interface OptionProps {
     label: string;
     value: any;
@@ -43,7 +38,7 @@ interface FormBuilderFieldProps {
     component?: any;
     rows?: number;
     enableTag?: boolean;
-    options?: OptionProps[] | CommonProps;
+    options?: OptionProps[];
     mode?: string;
     tokenSeparators?: string[];
 }
@@ -77,17 +72,15 @@ const FormBuilderField = ({
         return <Checkbox.Group value={getStringValue(props.value)} {...props} />;
     }
     if (widget === "select") {
-        const { options } = props;
-        if(!options || !options.groups)
+        if(!props.groups)
         return null;
-        return <Select {...options}/>
+        return <Select {...props}/>
     }
     if (widget === "textarea") {
         return <Input.TextArea size="large" rows={rows} {...props} />;
     }
     if (widget === "switch") {
-        const { options } = props;
-        return <Switch {...options} />;
+        return <Switch {...props} />;
     }
     if (widget === "datepicker") {
         const { value: timestamp, ...restProps } = props;

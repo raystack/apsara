@@ -1,12 +1,13 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
 import Switch from "./Switch";
 
+
 <Meta
     title="General/Switch"
     argTypes={{
         checked: {
             control: { type: "boolean" },
-            description: "Determine whether the Switch is checkedl",
+            description: "Determine whether the Switch is checked",
             table: {
                 type: { summary: "boolean" },
                 defaultValue: { summary: "false" },
@@ -20,23 +21,33 @@ import Switch from "./Switch";
                 defaultValue: { summary: "false" },
             },
         },
-        loading: {
-            control: { type: "boolean" },
-            description: "Loading state of switch",
+        color:{
+            control:{ type: "text"},
+            description: "Color of switch when checked.",
             table: {
-                type: { summary: "boolean" },
-                defaultValue: { summary: "false" },
+                type: { summary: "string" },
+                defaultValue: { summary: "black" },
             },
         },
-        size: {
-            control: { type: "select", options: ["default", "small"] },
-            description: "The size of the Switch, options: default small",
-            table: {
-                type: { summary: ["default", "small"] },
-                defaultValue: { summary: "default" },
+        onChange: {
+             action: "switch state changed",
+             description: "whenever switch state change's it will be called",
+             table: {
+                type: { summary: "(state: boolean)=>void" },
             },
         },
-        onClick: { action: "switch clicked" },
+        name: {
+            description:"Used when switch is used in Form",
+            table:{
+                type: { summary: "string" },
+            }
+        },
+        value: {
+            description:"value that will be submitted in a form",
+            table:{
+                type: { summary: "string" },
+            }
+        }
     }}
 />
 
@@ -45,6 +56,7 @@ import Switch from "./Switch";
         name="Playground"
         args={{
             checked: true,
+            color: "red"
         }}
     >
         {(args) => <Switch {...args} />}

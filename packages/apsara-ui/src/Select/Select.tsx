@@ -24,7 +24,7 @@ export type SelectProps = {
     defaultValue? : string,
     value? : string,
     name? : string,
-    onValueChange? : (value: string) => void
+    onChange? : (value: string) => void
     groups : Group[],
     defaultOpen? : boolean,
     open? : boolean,
@@ -42,7 +42,7 @@ const Select = ({
     defaultValue,
     value,
     name,
-    onValueChange,
+    onChange,
     groups,
     defaultOpen = false,
     open,
@@ -51,8 +51,8 @@ const Select = ({
 } : SelectProps)=>{
     
     const lastInd = groups.length-1
-    return (<SelectRoot  defaultValue={defaultValue} value={value} name={name} onValueChange={onValueChange} 
-    defaultOpen = {defaultOpen} open = {open} onOpenChange = {onOpenChange} >
+    return (<SelectRoot  defaultValue={defaultValue} value={value} name={name} onValueChange={onChange} 
+    defaultOpen = {defaultOpen} open = {open} onOpenChange = {onOpenChange}>
                 <SelectTrigger {...props.triggerProps}>
                     <SelectValue />
                     <SelectIcon>
@@ -65,12 +65,12 @@ const Select = ({
                     </SelectScrollUpButton>
                     <SelectViewport>
                     {groups.map((group: Group, i)=>(
-                    <>
+                    <div key ={i}>
                         <SelectGroup >
                             {group.label && <SelectLabel>{group.label}</SelectLabel>}
                             
                             {group.items.map((item: Item)=>(
-                                <SelectItem value={item.value} disabled = {item.disabled} {...props.itemProps}>
+                                <SelectItem key={item.value} value={item.value} disabled = {item.disabled} {...props.itemProps}>
                                     <SelectItemText>{item.displayText}</SelectItemText>
                                     <SelectItemIndicator>
                                     <CheckIcon />
@@ -80,7 +80,7 @@ const Select = ({
                         </SelectGroup>
 
                         {i!=lastInd && <SelectSeparator {...props.separatorProps}/>}
-                    </>
+                    </div>
                     
                     ))}
                     </SelectViewport>

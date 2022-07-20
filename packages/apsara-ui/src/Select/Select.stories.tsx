@@ -5,7 +5,7 @@ import { SelectProps } from "./Select";
 export default {
     title : "General/Select",
     component : Select,
-    argTypes : {onValueChange : {action : "changed value"}}
+    argTypes : {onChange : {action : "changed value"}}
 }
 
 const groups = [
