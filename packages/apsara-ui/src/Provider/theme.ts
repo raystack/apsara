@@ -281,7 +281,7 @@ const dark = {
         disabled:Colors.dark.black[2],
         hover:blue.blue3,
         focus:"#065656",
-        shadow:"#48EEFF",
+        shadow:"white",
         label:"white",
     }
 };

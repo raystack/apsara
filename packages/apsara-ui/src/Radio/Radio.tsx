@@ -2,10 +2,10 @@ import React from "react";
 import { RadioGroup, StyledRadioItem, StyledIndicator, Label, Flex } from "./Radio.styles";
 
 type RadioItem ={
-    label: string,
+    label?: string,
     value: string,
-    disabled: boolean,
-    required: boolean
+    disabled?: boolean,
+    required?: boolean
 }
 
 type styleProps={
