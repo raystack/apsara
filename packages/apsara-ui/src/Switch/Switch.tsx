@@ -1,19 +1,43 @@
-import styled from "styled-components";
-import { Switch as AntdSwitch } from "antd";
+import React from "react";
+import { StyledSwitch, StyledThumb } from "./Switch.styles";
 
-const Switch: typeof AntdSwitch = styled(AntdSwitch)`
-    &.ant-switch-checked {
-        background-color: ${({ theme }) => theme?.colors?.primary[4]};
-        .ant-switch-loading-icon {
-            color: ${({ theme }) => theme?.colors?.primary[4]};
-        }
-    }
-    .ant-switch-inner {
-        color: ${({ theme }) => theme?.colors?.black[0]};
-    }
-    .ant-switch-handle::before {
-        background-color: ${({ theme }) => theme?.colors?.black[0]};
-    }
-`;
+type StyleProps = {
+    className?: string,
+    style?: React.CSSProperties
+}
+
+export type SwitchProps = {
+    defaultChecked? : boolean,
+    checked? : boolean,
+    onChange? : (checked: boolean) => void,
+    disabled? : boolean,
+    required? : boolean,
+    name? : string,
+    value? : string,
+    color? : string,
+    style? : React.CSSProperties,
+    className? : string,
+    thumbProps? : StyleProps
+}
+
+const Switch = ({
+    defaultChecked = false,
+    checked,
+    onChange,
+    disabled = false,
+    required,
+    name,
+    value,
+    color,
+    ...props
+}: SwitchProps)=> {
+    return (
+        <StyledSwitch defaultChecked={defaultChecked} checked={checked} onCheckedChange={onChange}
+         disabled={disabled} required={required} name = {name} value = {value} style = {props.style} 
+         className= {props.className} color={color}> 
+            <StyledThumb {...props.thumbProps}/>
+        </StyledSwitch>
+    )
+}
 
 export default Switch;

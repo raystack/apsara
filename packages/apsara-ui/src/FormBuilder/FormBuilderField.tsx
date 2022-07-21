@@ -4,7 +4,6 @@ import React, { useMemo } from "react";
 import * as R from "ramda";
 import { InputNumber, DatePicker } from "antd";
 import Moment from "moment";
-
 import Input from "../Input";
 import Radio from "../Radio";
 import Select from "../Select";
@@ -12,6 +11,7 @@ import Checkbox from "../Checkbox";
 import Switch from "../Switch";
 import Tag from "../Tag";
 import { getStringValue } from "./helper";
+
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -30,6 +30,7 @@ interface OptionProps {
     label: string;
     value: any;
 }
+
 interface FormBuilderFieldProps {
     id?: any;
     widget?: Widget;
@@ -71,54 +72,15 @@ const FormBuilderField = ({
         return <Checkbox.Group value={getStringValue(props.value)} {...props} />;
     }
     if (widget === "select") {
-        const { options = [], disableSort, ...restProps } = props;
-        const modifiedOptions = useMemo(() => (disableSort ? options : R.sortBy(R.prop("label"))(options)), [
-            options,
-            disableSort,
-        ]);
-        const optionsData = modifiedOptions.map(({ value, label, disabled }) => {
-            return (
-                <Option key={value} value={value} disabled={disabled}>
-                    {label}
-                </Option>
-            );
-        });
-        return (
-            <React.Fragment>
-                <Select
-                    showSearch
-                    className={["multiple", "tags"].includes(props.mode) ? "skeleton-multiselect" : ""}
-                    optionFilterProp="children"
-                    filterOption={(input, option) => {
-                        const inputStr = input.toLowerCase();
-                        const optionVal = option.children.toLowerCase ? option.children : option.value;
-                        return optionVal.toLowerCase().includes(inputStr);
-                    }}
-                    tokenSeparators={props.tokenSeparators}
-                    {...restProps}
-                >
-                    {optionsData}
-                </Select>
-                {enableTag &&
-                    props.value &&
-                    (props.value instanceof Array ? (
-                        props.value.map((singleVal) => (
-                            <Tag key={singleVal} style={{ marginTop: "4px" }}>
-                                {singleVal}
-                            </Tag>
-                        ))
-                    ) : (
-                        <Tag style={{ marginTop: "8px" }}>{props.value}</Tag>
-                    ))}
-            </React.Fragment>
-        );
+        if(!props.groups)
+        return null;
+        return <Select {...props}/>
     }
     if (widget === "textarea") {
         return <Input.TextArea size="large" rows={rows} {...props} />;
     }
     if (widget === "switch") {
-        const { value, ...switchProps } = props;
-        return <Switch {...switchProps} checked={value} />;
+        return <Switch {...props} />;
     }
     if (widget === "datepicker") {
         const { value: timestamp, ...restProps } = props;
