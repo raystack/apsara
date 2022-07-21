@@ -8,6 +8,7 @@ import FormBuilderField, { Widget } from "./FormBuilderField";
 import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
 import { SelectProps } from "../Select/Select";
 import { SwitchProps } from "../Switch/Switch";
+import { RadioProps } from "../Radio/Radio";
 
 /*
 Example:
@@ -49,7 +50,7 @@ const shouldShow = (config: any, dependenciesFieldValue: any) => {
 type CommonProps = 
     | SelectProps
     | SwitchProps
-
+    | RadioProps
 export interface FormMetaFields {
     formItemLayout?: {
         labelCol: ColProps;

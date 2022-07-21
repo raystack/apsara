@@ -1,5 +1,5 @@
 import Colors from "../Colors";
-import {  mauve, blackA} from '@radix-ui/colors';
+import {  mauve, blackA, blue} from '@radix-ui/colors';
 
 const fontSizes = ["12px", "14px", "16px", "20px", "24px", "32px", "48px", "64px", "72px"];
 
@@ -135,6 +135,13 @@ const light = {
         color: "black",
         bg: blackA.blackA9,
         shadow: blackA.blackA7
+    },
+    radio:{
+        disabled:blackA.blackA3,
+        hover:blue.blue3,
+        focus:blue.blue10,
+        shadow:blackA.blackA8,
+        label:"black"
     }
 };
 
@@ -269,6 +276,13 @@ const dark = {
         color: "#065656",
         bg: Colors.dark.black[5],
         shadow: blackA.blackA7
+    },
+    radio:{
+        disabled:Colors.dark.black[2],
+        hover:blue.blue3,
+        focus:"#065656",
+        shadow:"#48EEFF",
+        label:"white",
     }
 };
 
