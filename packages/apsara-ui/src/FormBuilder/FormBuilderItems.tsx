@@ -51,6 +51,7 @@ type CommonProps =
     | SelectProps
     | SwitchProps
     | RadioProps
+
 export interface FormMetaFields {
     formItemLayout?: {
         labelCol: ColProps;
