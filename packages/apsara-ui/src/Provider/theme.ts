@@ -142,6 +142,15 @@ const light = {
         focus:blue.blue10,
         shadow:blackA.blackA8,
         label:"black"
+    },
+    slider:{
+        track:blackA.blackA6,
+        range:blackA.blackA10,
+        thumb: blue.blue10,
+        thumbHover: blue.blue8,
+        thumbFocus: blackA.blackA8,
+        shadow:blackA.blackA7,
+        disabled: Colors.dark.black[2]
     }
 };
 
@@ -283,6 +292,15 @@ const dark = {
         focus:"#065656",
         shadow:"white",
         label:"white",
+    },
+    slider:{
+        track:Colors.dark.black[2],
+        range:"#065656",
+        thumb: "white",
+        thumbHover: "#81DEDE",
+        thumbFocus: Colors.dark.black[1],
+        shadow:Colors.dark.black[6],
+        disabled: Colors.dark.black[4]
     }
 };
 

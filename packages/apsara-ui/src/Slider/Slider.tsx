@@ -1,16 +1,36 @@
-import styled from "styled-components";
-import { Slider as AntdSlider } from "antd";
+import React from 'react';
+import { StyledSlider, StyledRange, StyledThumb, StyledTrack } from './Slider.styles';
 
-const Slider = styled(AntdSlider)`
-    &&:not(.ant-slider-disabled) {
-        .ant-slider-track {
-            background-color: ${({ theme }) => theme?.colors?.primary[5]};
-        }
-        .ant-slider-handle {
-            border: solid 2px ${({ theme }) => theme?.colors?.primary[5]};
-            background-color: ${({ theme }) => theme?.colors?.primary[5]};
-        }
-    }
-`;
+type SliderProps={
+    defaultValue? : number[],
+    value? : number[],
+    name?: string,
+    disabled?: boolean,
+    onChange?: (value: number[])=> void,
+    orientation?: "horizontal" | "vertical",
+    dir?: "ltr" | "rtl",
+    min?: number,
+    max?: number,
+    step?: number,
+}
+
+const Slider = ({
+    defaultValue,
+    value,
+    onChange,
+    min,
+    max,
+    step,
+    ...props
+}: SliderProps) => (
+    <StyledSlider defaultValue={defaultValue} value={value} onValueChange={onChange} min={min}
+    max={max} step={step} disabled = {props.disabled} name = {props.name} orientation={props.orientation}
+    dir ={props.dir}  aria-label="Volume">
+      <StyledTrack>
+        <StyledRange />
+      </StyledTrack>
+      <StyledThumb />
+    </StyledSlider>
+);
 
 export default Slider;

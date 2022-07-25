@@ -1,6 +1,10 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
 import Slider from "./Slider";
 
+export const orientationTypes = ['horizontal','vertical']
+
+export const dirTypes = ['ltr', 'rtl', undefined]
+
 <Meta
     title="General/Slider"
     argTypes={{
@@ -13,20 +17,18 @@ import Slider from "./Slider";
             },
         },
         defaultValue: {
-            control: { type: "number" },
+            control: { type: "number[]" },
             description:
                 "The default value of slider. When range is false, use number, otherwise, use [number, number]",
             table: {
-                type: { summary: "number | [number, number]" },
-                defaultValue: { summary: "0 | [0, 0]" },
+                type: { summary: "number[]" },
             },
         },
         value: {
-            control: { type: "number" },
+            control: { type: "number[]" },
             description: "The value of slider. When range is false, use number, otherwise, use [number, number]",
             table: {
-                type: { summary: "number | [number, number]" },
-                defaultValue: { summary: "false" },
+                type: { summary: "number[]" },
             },
         },
         max: {
@@ -45,6 +47,29 @@ import Slider from "./Slider";
                 defaultValue: { summary: 0 },
             },
         },
+        orientation: {
+            control: { type: "select", options: orientationTypes },
+            description: "Set Slider Orientation",
+            table: {
+                type: { summary: 'horizontal | vertical' },
+                defaultValue: { summary: 'horizontal' },
+            },
+        },
+        dir:{
+            control: { type: "select", options: dirTypes },
+            description: "Set Slider Direction",
+            table: {
+                type: { summary: 'ltr | rtl | undefined' },
+                defaultValue: { summary: undefined },
+            },
+        },
+        onChange: {
+            action: 'clicked',
+            description: "whenever slider position changes corresponding value is passed into this function.",
+            table:{
+                type: {summary: '(value: number[]) => void'}
+            }
+        }
     }}
 />
 
@@ -52,7 +77,7 @@ import Slider from "./Slider";
     <Story
         name="Playground"
         args={{
-            defaultValue: 30,
+            defaultValue: [30],
         }}
     >
         {(args) => <Slider {...args} />}
