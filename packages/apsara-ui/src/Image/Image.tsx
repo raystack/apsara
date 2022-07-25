@@ -1,16 +1,18 @@
 import React from "react";
-import { Image as StyledImage } from "antd";
 
-interface CustomIllustrationProps {
+interface ImageProps {
     src: string;
     width?: number;
     height?: number;
-    preview?: boolean;
 }
 
-function Image({ preview = false, ...props }: CustomIllustrationProps) {
-    if (!props.src) return null;
-    return <StyledImage preview={preview} {...props} />;
+function Image({
+    src,
+    width,
+    height,
+}: ImageProps) {
+    if (!src) return null;
+    return <img src={src} width={width} height={height}/>;
 }
 
 export default Image;
