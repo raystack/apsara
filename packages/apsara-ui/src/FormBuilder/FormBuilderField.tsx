@@ -9,7 +9,6 @@ import Radio from "../Radio";
 import Select from "../Select";
 import Checkbox from "../Checkbox";
 import Switch from "../Switch";
-import Tag from "../Tag";
 import { getStringValue } from "./helper";
 
 
