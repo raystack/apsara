@@ -9,7 +9,6 @@ import Radio from "../Radio";
 import Select from "../Select";
 import Checkbox from "../Checkbox";
 import Switch from "../Switch";
-import Tag from "../Tag";
 import { getStringValue } from "./helper";
 
 
@@ -55,17 +54,10 @@ const FormBuilderField = ({
 }: FormBuilderFieldProps) => {
     if (widget === "range") return <InputNumber {...props} />;
     if (widget === "radio") {
-        const options = props.options.map((option: OptionProps) => {
-            return (
-                <Radio key={option.label} value={getStringValue(option.value)}>
-                    {option.label}
-                </Radio>
-            );
-        });
+        if(!props.items)
+        return null;
         return (
-            <Radio.Group value={getStringValue(props.value)} {...props}>
-                {options}
-            </Radio.Group>
+            <Radio {...props}/>
         );
     }
     if (widget === "checkbox") {

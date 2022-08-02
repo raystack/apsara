@@ -27,14 +27,14 @@ import Image from "./Image";
                 type: { summary: "number" },
             },
         },
-        preview: {
-            control: { type: "boolean" },
-            description: "preview config, disabled when false",
+        preview:{
+            description: "when preview is set to true , if we click the image it will be shown in full screen",
+            control:{type:"boolean"},
             table: {
                 type: { summary: "boolean" },
                 defaultValue: { summary: false },
             },
-        },
+        }
     }}
 />
 
@@ -44,6 +44,7 @@ import Image from "./Image";
         args={{
             src: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
             width: 100,
+            preview: false
         }}
     >
         {(args) => <Image {...args} />}

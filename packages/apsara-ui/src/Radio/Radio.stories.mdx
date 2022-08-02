@@ -1,21 +1,32 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
 import Radio from "./Radio";
 
-export const optionType = ["default", "button"];
-export const options = [
-    { label: "Apple", value: "Apple" },
-    { label: "Pear", value: "Pear" },
-    { label: "Orange", value: "Orange", disabled: true },
-];
+export const items = [
+    {label: 'Apple',value: 'Apple'},
+    {label: 'Pear',value: 'Pear'},
+    {disabled: true,label: 'Orange',value: 'Orange'}
+]
+
+export const orientationTypes = ['horizontal','vertical',undefined]
+
+export const dirTypes = ['ltr', 'rtl', undefined]
+
 
 <Meta
     title="General/Radio"
     argTypes={{
-        options: {
+        items: {
             control: { type: "object" },
-            description: "Set children optional",
+            description: "list of radio items containing label, value and some other optionals",
             table: {
-                type: { summary: "string[] | Array<{ label: string value: string disabled?: boolean }>" },
+                type: { summary: "{label?: string, value: string, disabled?: boolean, required?: boolean}[]" },
+            },
+        },
+        defaultValue:{
+            control: { type: "text" },
+            description: "Used when value is not controlled",
+            table: {
+                type: { summary: "string" },
             },
         },
         value: {
@@ -26,14 +37,29 @@ export const options = [
                 defaultValue: { summary: "" },
             },
         },
-        optionType: {
-            control: { type: "select", options: optionType },
-            description: "Set Radio optionType",
+        orientation: {
+            control: { type: "select", options: orientationTypes },
+            description: "Set Radio Orientation",
             table: {
-                type: { summary: optionType },
-                defaultValue: { summary: "default" },
+                type: { summary: 'horizontal | vertical | undefined' },
+                defaultValue: { summary: undefined },
             },
         },
+        dir:{
+            control: { type: "select", options: dirTypes },
+            description: "Set Radio Items Direction",
+            table: {
+                type: { summary: 'ltr | rtl | undefined' },
+                defaultValue: { summary: undefined },
+            },
+        },
+        onChange: {
+            action: 'clicked',
+            description: "whenever a radio is clicked the corresponding value is passed into this function.",
+            table:{
+                type: {summary: '(value: string) => void'}
+            }
+        }
     }}
 />
 
@@ -41,12 +67,12 @@ export const options = [
     <Story
         name="Playground"
         args={{
-            options: options,
-            value: "Apple",
-            optionType: "default",
+            items: items,
+            defaultValue: "Apple",
+            orientation: "horizontal",
         }}
     >
-        {(args) => <Radio.Group {...args} />}
+        {(args) => <Radio {...args} />}
     </Story>
 </Preview>
 

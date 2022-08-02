@@ -1,5 +1,5 @@
 import Colors from "../Colors";
-import {  mauve, blackA} from '@radix-ui/colors';
+import {  mauve, blackA, blue} from '@radix-ui/colors';
 
 const fontSizes = ["12px", "14px", "16px", "20px", "24px", "32px", "48px", "64px", "72px"];
 
@@ -135,6 +135,22 @@ const light = {
         color: "black",
         bg: blackA.blackA9,
         shadow: blackA.blackA7
+    },
+    radio:{
+        disabled:blackA.blackA3,
+        hover:blue.blue3,
+        focus:blue.blue10,
+        shadow:blackA.blackA8,
+        label:"black"
+    },
+    slider:{
+        track:blackA.blackA6,
+        range:blackA.blackA10,
+        thumb: blue.blue10,
+        thumbHover: blue.blue8,
+        thumbFocus: blackA.blackA8,
+        shadow:blackA.blackA7,
+        disabled: Colors.dark.black[2]
     }
 };
 
@@ -269,6 +285,22 @@ const dark = {
         color: "#065656",
         bg: Colors.dark.black[5],
         shadow: blackA.blackA7
+    },
+    radio:{
+        disabled:Colors.dark.black[2],
+        hover:blue.blue3,
+        focus:"#065656",
+        shadow:"white",
+        label:"white",
+    },
+    slider:{
+        track:Colors.dark.black[2],
+        range:"#065656",
+        thumb: "white",
+        thumbHover: "#81DEDE",
+        thumbFocus: Colors.dark.black[1],
+        shadow:Colors.dark.black[6],
+        disabled: Colors.dark.black[4]
     }
 };
 
