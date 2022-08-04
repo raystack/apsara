@@ -41,7 +41,6 @@ export const DropdownStyle = css`
         display: inline-flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px;
         padding-right: 20px;
     }
 
@@ -221,10 +220,11 @@ export const StyledMultiSelect = styled(Select)<{showInputIcon?:boolean}>`
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-top:5px;
-                margin-bottom:5px;
+                margin-top:3px;
+                margin-bottom:3px;
                 border: 1px solid ${theme?.combobox?.border};
-                border-radius: 5px;
+                border-radius: 2px;
+                font-size : 12px;
             `:
             css`color: ${theme?.combobox?.color}`
         }

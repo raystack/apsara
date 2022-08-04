@@ -119,15 +119,15 @@ const light = {
         separator:Colors?.light?.primary[1],
         scroll: Colors?.light?.primary[3],
         trigger:{
-            color: Colors?.light?.primary[3],
-            bg: "white",
-            shadow: blackA.blackA7,
-            hover: mauve.mauve3
+            color: Colors?.light?.black[10],
+            bg: Colors?.light?.black[2],
+            hover: mauve.mauve3,
+            border: Colors?.light?.primary[3]
         },
         item:{
-            color: Colors?.light?.primary[3],
+            color: Colors?.light?.black[10],
             disabled:mauve.mauve8,
-            focusColor: Colors?.light?.primary[0],
+            focusColor: "#fff",
             focusBg: Colors?.light?.primary[3]
         }
     },
@@ -140,15 +140,15 @@ const light = {
         disabled:blackA.blackA3,
         hover:blue.blue3,
         focus:blue.blue10,
-        shadow:blackA.blackA8,
+        border:blackA.blackA8,
         label:"black"
     },
     slider:{
         track:blackA.blackA6,
-        range:blackA.blackA10,
+        range:blue.blue10,
         thumb: blue.blue10,
         thumbHover: blue.blue8,
-        thumbFocus: blackA.blackA8,
+        thumbFocus: blue.blue5,
         shadow:blackA.blackA7,
         disabled: Colors.dark.black[2]
     },
@@ -285,8 +285,8 @@ const dark = {
         trigger:{
             color:  "#48EEF3",
             bg: "#065656",
-            shadow: blackA.blackA7,
-            hover: "#064D4D"
+            hover: "#064D4D",
+            border: Colors?.light?.primary[3]
         },
         item:{
             color: "#48EEF3",

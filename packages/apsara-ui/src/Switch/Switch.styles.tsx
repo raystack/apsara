@@ -11,10 +11,13 @@ export const StyledSwitch = styled(SwitchPrimitive.Root)`
     box-shadow: 0 2px 10px ${({theme})=>theme?.switch?.shadow};
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     &:focus {
-        box-shadow: 0 0 0 1px black;
+        box-shadow: 0 0 0 2px #d9d9d9;
     }
     &[data-state="checked"] {
         background-color: ${({color, theme})=>color? color :theme?.switch?.color};
+    }
+    &:hover{
+        cursor : pointer;
     }
 `
 

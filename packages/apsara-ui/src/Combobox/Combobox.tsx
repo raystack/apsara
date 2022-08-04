@@ -68,6 +68,7 @@ const Combobox = ({
             onChange={onValuesChange} onSearch={onValueSearch} onDropdownVisibleChange={onDropDownToogle} open={open}
             onSelect = {onValueSelect} onDeselect={onValueDeselect} options={options} notFoundContent={notFoundContent}
             animation="slide">
+                {props.children}
         </StyledMultiSelect>
     )
 }

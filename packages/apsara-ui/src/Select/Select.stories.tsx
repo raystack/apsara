@@ -103,7 +103,6 @@ SelectWithCustomStyles.args = {
     triggerProps:{
         style: {
             color: "red",
-            backgroundColor : "white"
         }
     },
     itemProps:{

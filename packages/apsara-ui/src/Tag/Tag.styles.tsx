@@ -14,6 +14,6 @@ export const StyledTag = styled('div')<{ type: "round" | "rect" , color: string,
     border-width: 1px;
     border-style: solid;
     background-color: ${({color}) => color};
-    padding: 3px ${({closable})=> closable?"0px":"10px" } 3px ${({icon})=> icon?"0px":"10px" };
+    padding: 2px ${({closable})=> closable?"0px":"10px" } 2px ${({icon})=> icon?"0px":"10px" };
 `;
 

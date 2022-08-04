@@ -46,13 +46,12 @@ export const StyledRange = styled(SliderPrimitive.Range)`
 export const StyledThumb = styled(SliderPrimitive.Thumb)`
     all: unset;
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     background-color: ${({theme})=>theme?.slider?.thumb};
     box-shadow: 0 2px 10px ${({theme})=>theme?.slider?.shadow};
     border-radius: 10px;
-    &:hover { background-color: ${({theme})=>theme?.slider?.thumbHover} }
-    &:focus { box-shadow: 0 0 0 3px ${({theme})=>theme?.slider?.thumbFocus} }
+    &:focus { box-shadow: 0 0 0 4px ${({theme})=>theme?.slider?.thumbFocus} }
     &[data-disabled]{
         background-color: ${({theme})=>theme?.slider?.disabled}
     }
