@@ -9,6 +9,7 @@ import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
 import { SelectProps } from "../Select/Select";
 import { SwitchProps } from "../Switch/Switch";
 import { RadioProps } from "../Radio/Radio";
+import {SelectProps as ComboboxProps} from 'rc-select';
 
 /*
 Example:
@@ -51,6 +52,7 @@ type CommonProps =
     | SelectProps
     | SwitchProps
     | RadioProps
+    | ComboboxProps;
 
 export interface FormMetaFields {
     formItemLayout?: {

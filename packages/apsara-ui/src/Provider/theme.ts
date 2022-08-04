@@ -151,6 +151,20 @@ const light = {
         thumbFocus: blackA.blackA8,
         shadow:blackA.blackA7,
         disabled: Colors.dark.black[2]
+    },
+    combobox:{
+        active: "#4291ee",
+        optionClr:"#666",
+        optionBg: "#ddd",
+        focus:"#4291ee",
+        placeholder: "#aaa",
+        tagBg: "#f3f3f3",
+        tagClr: "#000",
+        selector: "#fff",
+        dropdown: "#fff",
+        border:"#d9d9d9",
+        color:"#000",
+        activeClr: "#fff"
     }
 };
 
@@ -301,6 +315,20 @@ const dark = {
         thumbFocus: Colors.dark.black[1],
         shadow:Colors.dark.black[6],
         disabled: Colors.dark.black[4]
+    },
+    combobox:{
+        active: "#000",
+        optionClr:"#36CEC2",
+        optionBg: "#000",
+        focus:"#36CEC2",
+        placeholder: "#36CEC2",
+        tagBg: "#000",
+        tagClr: "#36CEC2",
+        selector: "#065656",
+        dropdown: "#065656",
+        border:"#065656",
+        color:"#48EEF3",
+        activeClr:"#48EEF3"
     }
 };
 
