@@ -1,6 +1,6 @@
 {
     "name": "@odpf/apsara",
-    "version": "0.7.1-alpha.1",
+    "version": "0.7.1-alpha.2",
     "description": "A list of base components for apsara",
     "author": "Praveen Yadav <praveen.yadav@go-jek.com>",
     "license": "Apache-2.0",
@@ -36,7 +36,7 @@
     },
     "dependencies": {
         "@ant-design/icons": "^4.2.2",
-        "@odpf/icons": "^0.7.1-alpha.1",
+        "@odpf/icons": "^0.7.1-alpha.2",
         "@radix-ui/colors": "^0.1.8",
         "@radix-ui/react-icons": "^1.1.1",
         "@radix-ui/react-radio-group": "^1.0.0",
