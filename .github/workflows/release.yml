@@ -1,4 +1,4 @@
-name : Release
+name: Release
 
 on:
   push:
@@ -6,38 +6,39 @@ on:
       - "v*"
 
 jobs:
-    publish: 
-      name: Build and Publish
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-          with:
-            fetch-depth: 0
+  publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-        - uses: actions/setup-node@v2
-          with:
-            node-version: "16.x"
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16.x"
 
-        - name: Install and Build Packages
-          run: |
-            yarn install
-            yarn build
+      - name: Install and Build Packages
+        run: |
+          yarn install
+          yarn build
 
-        - name: Authenticate with Registry
-          run: |
-            echo "registry=http://registry.npmjs.org/" >> .npmrc
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
-          env:
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Authenticate with Registry
+        run: |
+          echo "@odpf:registry=http://registry.npmjs.org/" > .npmrc
+          echo "registry=http://registry.npmjs.org/" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm whoami
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-        - name: Publish packages
-          run: yarn lerna publish from-package --yes
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-            
-        - name: Github Release
-          run: gh release create ${{ github.ref }} --generate-notes
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+      - name: Publish packages
+        run: yarn lerna publish from-package --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Github Release
+        run: gh release create ${{ github.ref }} --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
