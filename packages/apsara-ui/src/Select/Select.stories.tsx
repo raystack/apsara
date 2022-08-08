@@ -3,117 +3,115 @@ import Select from "./Select";
 import { SelectProps } from "./Select";
 
 export default {
-    title : "General/Select",
-    component : Select,
-    argTypes : {onChange : {action : "changed value"}}
-}
+    title: "General/Select",
+    component: Select,
+    argTypes: { onChange: { action: "changed value" } },
+};
 
 const groups = [
     {
-        label :"fruits",
-        items : [
+        label: "fruits",
+        items: [
             {
-                value : "apple",
-                displayText : "Apple"
+                value: "apple",
+                displayText: "Apple",
             },
             {
-                value : "banana",
-                displayText : "Banana"
+                value: "banana",
+                displayText: "Banana",
             },
             {
-                value : "mango",
-                displayText : "Mango"
+                value: "mango",
+                displayText: "Mango",
             },
-        ]
+        ],
     },
     {
-        label :"cars",
-        items : [
+        label: "cars",
+        items: [
             {
-                value : "ferrari",
-                displayText : "Ferrari"
+                value: "ferrari",
+                displayText: "Ferrari",
             },
             {
-                value : "rolls-roycs",
-                displayText : "Rolla Royce",
-                disabled : true
+                value: "rolls-roycs",
+                displayText: "Rolla Royce",
+                disabled: true,
             },
             {
-                value : "jaguar",
-                displayText : "Jaguar"
+                value: "jaguar",
+                displayText: "Jaguar",
             },
-        ]
-    }
-]
+        ],
+    },
+];
 
-const Template = (args : SelectProps) => <Select {...args}/>
+const Template = (args: SelectProps) => <Select {...args} />;
 
-export const SelectWithTwoGroups = Template.bind({})
+export const SelectWithTwoGroups = Template.bind({});
 
 SelectWithTwoGroups.args = {
-    defaultValue : "apple",
-    groups : groups,
-}
+    defaultValue: "apple",
+    groups: groups,
+};
 
 const groups1 = [
     {
-        items : [
+        items: [
             {
-                value : "a",
-                displayText : "Godata Platform Production",
+                value: "a",
+                displayText: "Godata Platform Production",
             },
             {
-                value : "b",
-                displayText : "Godata Production Id"
+                value: "b",
+                displayText: "Godata Production Id",
             },
             {
-                value : "c",
-                displayText : "Gojek Production Id"
+                value: "c",
+                displayText: "Gojek Production Id",
             },
             {
-                value : "d",
-                displayText : "Godata Integration Id"
+                value: "d",
+                displayText: "Godata Integration Id",
             },
             {
-                value : "e",
-                displayText : "Godata Systems Integration"
+                value: "e",
+                displayText: "Godata Systems Integration",
             },
             {
-                value : "f",
-                displayText : "Gojek Integration Id"
+                value: "f",
+                displayText: "Gojek Integration Id",
             },
-        ]
-    }
-    
-]
+        ],
+    },
+];
 
-export const SelectWithoutLabels = Template.bind({})
+export const SelectWithoutLabels = Template.bind({});
 
 SelectWithoutLabels.args = {
-    defaultValue : "a",
-    groups : groups1,
-}
+    defaultValue: "a",
+    groups: groups1,
+};
 
-
-export const SelectWithCustomStyles = Template.bind({})
+export const SelectWithCustomStyles = Template.bind({});
 
 SelectWithCustomStyles.args = {
-    defaultValue : "a",
-    groups : groups1,
-    triggerProps:{
+    defaultValue: "a",
+    groups: groups1,
+    triggerProps: {
         style: {
             color: "red",
-        }
+        },
     },
-    itemProps:{
-        className:"item",
-        style:{
-            color:"red"
-        }
+    itemProps: {
+        className: "item",
+        style: {
+            color: "red",
+        },
     },
-    separatorProps:{
-        style:{
-            backgroundColor:"red"
-        }
-    }
-}
+    separatorProps: {
+        style: {
+            backgroundColor: "red",
+        },
+    },
+};

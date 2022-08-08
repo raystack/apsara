@@ -5,10 +5,10 @@ interface ImageProps {
     src: string;
     width?: number;
     height?: number;
-    preview?:  boolean
+    preview?: boolean;
 }
 
-const Overlay = styled('div')`
+const Overlay = styled("div")`
     position: fixed;
     display: none;
     align-items: center;
@@ -19,27 +19,27 @@ const Overlay = styled('div')`
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 2;
     cursor: pointer;
-`
+`;
 
-function Image({
-    src,
-    width,
-    height,
-    preview
-}: ImageProps) {
+function Image({ src, width, height, preview }: ImageProps) {
     const [show, setShow] = useState(false);
     if (!src) return null;
     return (
-    <>
-        <Overlay onClick={()=>setShow(false)} style={{display:show?"flex":"none"}}>
-            {show && <img  src={src} width="80%" />}
-        </Overlay>
-        <img onClick={preview? ()=>setShow(true): () => null } src={src} width={width} height={height} 
-            style={{cursor: preview? "pointer": "auto"}}/>
-    </>
+        <>
+            <Overlay onClick={() => setShow(false)} style={{ display: show ? "flex" : "none" }}>
+                {show && <img src={src} width="80%" />}
+            </Overlay>
+            <img
+                onClick={preview ? () => setShow(true) : () => null}
+                src={src}
+                width={width}
+                height={height}
+                style={{ cursor: preview ? "pointer" : "auto" }}
+            />
+        </>
     );
 }
 

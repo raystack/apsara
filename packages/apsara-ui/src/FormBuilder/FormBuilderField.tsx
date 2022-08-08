@@ -12,7 +12,6 @@ import Switch from "../Switch";
 import Combobox from "../Combobox";
 import { getStringValue } from "./helper";
 
-
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 export type Widget =
@@ -56,22 +55,18 @@ const FormBuilderField = ({
 }: FormBuilderFieldProps) => {
     if (widget === "range") return <InputNumber {...props} />;
     if (widget === "radio") {
-        if(!props.items)
-        return null;
-        return (
-            <Radio {...props}/>
-        );
+        if (!props.items) return null;
+        return <Radio {...props} />;
     }
     if (widget === "checkbox") {
         return <Checkbox.Group value={getStringValue(props.value)} {...props} />;
     }
     if (widget === "select") {
-        if(!props.groups)
-        return null;
-        return <Select {...props}/>
+        if (!props.groups) return null;
+        return <Select {...props} />;
     }
     if (widget === "combobox") {
-        return <Combobox {...props}/>
+        return <Combobox {...props} />;
     }
     if (widget === "textarea") {
         return <Input.TextArea size="large" rows={rows} {...props} />;
