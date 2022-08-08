@@ -9,6 +9,7 @@ import Radio from "../Radio";
 import Select from "../Select";
 import Checkbox from "../Checkbox";
 import Switch from "../Switch";
+import Combobox from "../Combobox";
 import { getStringValue } from "./helper";
 
 
@@ -23,7 +24,8 @@ export type Widget =
     | "datepicker"
     | "node"
     | "input"
-    | "rangepicker";
+    | "rangepicker"
+    | "combobox";
 
 interface OptionProps {
     label: string;
@@ -67,6 +69,9 @@ const FormBuilderField = ({
         if(!props.groups)
         return null;
         return <Select {...props}/>
+    }
+    if (widget === "combobox") {
+        return <Combobox {...props}/>
     }
     if (widget === "textarea") {
         return <Input.TextArea size="large" rows={rows} {...props} />;

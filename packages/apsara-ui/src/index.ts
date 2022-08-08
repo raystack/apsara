@@ -31,6 +31,7 @@ import Input from "./Input";
 import Radio from "./Radio";
 import Checkbox from "./Checkbox";
 import Image from "./Image";
+import Combobox from "./Combobox";
 import Select from "./Select";
 import Tile from "./Tile";
 import Switch from "./Switch";
@@ -80,6 +81,7 @@ export {
     Checkbox,
     Image,
     Select,
+    Combobox,
     Tile,
     Switch,
     Slider,

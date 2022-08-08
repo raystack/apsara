@@ -16,12 +16,11 @@ const StyledTrigger = styled(SelectPrimitive.SelectTrigger)`
     box-sizing: border-box;
     background-color: ${({theme})=> theme?.select?.trigger?.bg};
     color: ${({theme})=>theme?.select?.trigger?.color};
-    box-shadow: 0 2px 10px ${({theme})=>theme?.select?.trigger?.shadow};
     &:hover { 
       background-color: ${({theme})=>theme?.select?.trigger?.hover}; 
     }
     &:focus {
-      box-shadow: 0 0 0 1px ${({theme})=>theme?.select?.trigger?.color};
+      box-shadow: 0 0 0 1px ${({theme})=>theme?.select?.trigger?.border};
     }
 
   `

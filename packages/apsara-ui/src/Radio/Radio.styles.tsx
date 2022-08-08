@@ -4,19 +4,22 @@ import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 export const StyledRadioItem = styled(RadioGroupPrimitive.Item)`
     all: unset;
     background-color: white;
-    width: 25px;
-    height: 25px;
+    width: 17px;
+    height: 17px;
     border-radius: 100%;
-    box-shadow: 0 2px 10px ${({theme})=>theme?.radio?.shadow};
+    border: 1px solid ${({theme})=>theme?.radio?.border} ;
     &:hover {
          background-color: ${({theme})=>theme?.radio?.hover};
+         border-color: ${({theme})=>theme?.radio?.focus};
     }
-    &:focus {
-         box-shadow: 0 0 0 1px ${({theme})=>theme?.radio?.focus};
-    }
+    
     &[data-disabled] {
         background-color: ${({theme})=>theme?.radio?.disabled};
         cursor: not-allowed;
+        border-color: ${({theme})=>theme?.radio?.border};
+    }
+    &[data-state="checked"] {
+        border-color: ${({theme})=>theme?.radio?.focus};
     }
 `
 
@@ -30,8 +33,8 @@ export const StyledIndicator = styled(RadioGroupPrimitive.Indicator)`
     &::after {
         content: "";
         display: block;
-        width: 11px;
-        height: 11px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         background-color: ${({theme})=>theme?.radio?.focus};
     }
@@ -46,7 +49,7 @@ export const RadioGroup = styled(RadioGroupPrimitive.Root)`
 
 export const Label = styled('label')`
     color: ${({theme})=>theme?.radio?.label};
-    margin:${({dir})=>dir==='rtl'&&'10px'};
+    margin:${({dir})=>dir==='rtl'&&'8px'};
     font-size: 15px;
     line-height: 1px;
     user-select: none;
@@ -55,7 +58,7 @@ export const Label = styled('label')`
 
 export const Flex = styled('div')`
     display: flex;
-    margin: 10px ${({dir})=>dir==='rtl'?'0px':'10px'};
+    margin: 8px ${({dir})=>dir==='rtl'?'0px':'8px'};
     align-items: center;
 `
 

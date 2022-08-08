@@ -119,15 +119,15 @@ const light = {
         separator:Colors?.light?.primary[1],
         scroll: Colors?.light?.primary[3],
         trigger:{
-            color: Colors?.light?.primary[3],
-            bg: "white",
-            shadow: blackA.blackA7,
-            hover: mauve.mauve3
+            color: Colors?.light?.black[10],
+            bg: Colors?.light?.black[2],
+            hover: mauve.mauve3,
+            border: Colors?.light?.primary[3]
         },
         item:{
-            color: Colors?.light?.primary[3],
+            color: Colors?.light?.black[10],
             disabled:mauve.mauve8,
-            focusColor: Colors?.light?.primary[0],
+            focusColor: "#fff",
             focusBg: Colors?.light?.primary[3]
         }
     },
@@ -140,17 +140,31 @@ const light = {
         disabled:blackA.blackA3,
         hover:blue.blue3,
         focus:blue.blue10,
-        shadow:blackA.blackA8,
+        border:blackA.blackA8,
         label:"black"
     },
     slider:{
         track:blackA.blackA6,
-        range:blackA.blackA10,
+        range:blue.blue10,
         thumb: blue.blue10,
         thumbHover: blue.blue8,
-        thumbFocus: blackA.blackA8,
+        thumbFocus: blue.blue5,
         shadow:blackA.blackA7,
         disabled: Colors.dark.black[2]
+    },
+    combobox:{
+        active: "#4291ee",
+        optionClr:"#666",
+        optionBg: "#ddd",
+        focus:"#4291ee",
+        placeholder: "#aaa",
+        tagBg: "#f3f3f3",
+        tagClr: "#000",
+        selector: "#fff",
+        dropdown: "#fff",
+        border:"#d9d9d9",
+        color:"#000",
+        activeClr: "#fff"
     }
 };
 
@@ -271,8 +285,8 @@ const dark = {
         trigger:{
             color:  "#48EEF3",
             bg: "#065656",
-            shadow: blackA.blackA7,
-            hover: "#064D4D"
+            hover: "#064D4D",
+            border: Colors?.light?.primary[3]
         },
         item:{
             color: "#48EEF3",
@@ -301,6 +315,20 @@ const dark = {
         thumbFocus: Colors.dark.black[1],
         shadow:Colors.dark.black[6],
         disabled: Colors.dark.black[4]
+    },
+    combobox:{
+        active: "#000",
+        optionClr:"#36CEC2",
+        optionBg: "#000",
+        focus:"#36CEC2",
+        placeholder: "#36CEC2",
+        tagBg: "#000",
+        tagClr: "#36CEC2",
+        selector: "#065656",
+        dropdown: "#065656",
+        border:"#065656",
+        color:"#48EEF3",
+        activeClr:"#48EEF3"
     }
 };
 

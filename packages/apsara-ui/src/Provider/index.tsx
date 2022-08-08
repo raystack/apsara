@@ -3,6 +3,7 @@ import { DefaultTheme, ThemeProvider as ThemeProviderBase } from "styled-compone
 import { createGlobalStyle } from "styled-components";
 import Themes from "./theme";
 import { NotificationStyle } from "../Notification/Notification.styles";
+import { DropdownStyle } from "../Combobox/Combobox.styles";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
 import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
@@ -49,6 +50,8 @@ const GlobalStyle = createGlobalStyle`
   }
 
   ${NotificationStyle}
+
+  ${DropdownStyle}
 `;
 
 // extend DefaultTheme definitions

@@ -12,7 +12,7 @@ export const Profile = Icons['profile'];
             control: { type: "select", options: ["round", "rect"] },
             table: {
                 type: { summary: ["round", "rect"] },
-                defaultValue: { summary: "round" },
+                defaultValue: { summary: "rect" },
             },
         },
         closable: {
@@ -49,7 +49,7 @@ export const Profile = Icons['profile'];
 />
 
 <Preview>
-    <Story name="Playground" args={{ icon:<Profile style={{height:"15px"}}/>,type: "round", color:"#55acee"}}>
+    <Story name="Playground" args={{ icon:<Profile style={{height:"15px"}}/>,type: "rect", color:"#55acee"}}>
         {(args) => <Tag {...args}>Hello</Tag>}
     </Story>
 </Preview>
