@@ -9,7 +9,7 @@ import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
 import { SelectProps } from "../Select/Select";
 import { SwitchProps } from "../Switch/Switch";
 import { RadioProps } from "../Radio/Radio";
-import {SelectProps as ComboboxProps} from 'rc-select';
+import { SelectProps as ComboboxProps } from "rc-select";
 
 /*
 Example:
@@ -48,11 +48,7 @@ const shouldShow = (config: any, dependenciesFieldValue: any) => {
     return evaluateExpression(config.depends, dependenciesFieldValue?.toString());
 };
 
-type CommonProps = 
-    | SelectProps
-    | SwitchProps
-    | RadioProps
-    | ComboboxProps;
+type CommonProps = SelectProps | SwitchProps | RadioProps | ComboboxProps;
 
 export interface FormMetaFields {
     formItemLayout?: {
