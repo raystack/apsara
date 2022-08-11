@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import {
     SelectRoot,
@@ -50,7 +50,7 @@ export type SelectProps = {
 };
 
 const Select = ({
-    defaultValue,
+    defaultValue = "",
     value,
     name,
     onChange,
@@ -61,12 +61,28 @@ const Select = ({
     ...props
 }: SelectProps) => {
     const lastInd = groups.length - 1;
+    const [showDefaultItem, setShowDefaultItem] = useState(true);
+
+    useEffect(() => {
+        const val = value ? value : defaultValue;
+        let bool = true;
+        groups.forEach((group) => {
+            group.items.forEach((item) => {
+                bool = item.value != val ? (bool ? true : false) : false;
+            });
+        });
+        setShowDefaultItem(bool);
+    }, []);
+
     return (
         <SelectRoot
             defaultValue={defaultValue}
             value={value}
             name={name}
-            onValueChange={onChange}
+            onValueChange={(value) => {
+                if (value != "") setShowDefaultItem(false);
+                onChange && onChange(value);
+            }}
             defaultOpen={defaultOpen}
             open={open}
             onOpenChange={onOpenChange}
@@ -82,6 +98,14 @@ const Select = ({
                     <ChevronUpIcon />
                 </SelectScrollUpButton>
                 <SelectViewport>
+                    {showDefaultItem && (
+                        <SelectItem value={value || defaultValue}>
+                            <SelectItemText>{value || defaultValue}</SelectItemText>
+                            <SelectItemIndicator>
+                                <CheckIcon />
+                            </SelectItemIndicator>
+                        </SelectItem>
+                    )}
                     {groups.map((group: Group, i) => (
                         <div key={i}>
                             <SelectGroup>
