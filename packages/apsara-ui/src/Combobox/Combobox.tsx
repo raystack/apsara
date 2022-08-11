@@ -21,9 +21,6 @@ const Combobox = ({
     onSearch,
     onSelect,
     onDeselect,
-    defaultValue,
-    optionFilterProp,
-    filterOption,
     allowClear = true,
     showSearch = true,
     showArrow = true,
@@ -67,6 +64,7 @@ const Combobox = ({
 
     return (
         <StyledMultiSelect
+            notFoundContent={notFoundContent}
             {...props}
             showInputIcon={showInputIcon || !allowClear}
             showSearch={showSearch}
@@ -83,7 +81,6 @@ const Combobox = ({
             onSelect={onValueSelect}
             onDeselect={onValueDeselect}
             options={options}
-            notFoundContent={notFoundContent}
             animation="slide"
         >
             {props.children}

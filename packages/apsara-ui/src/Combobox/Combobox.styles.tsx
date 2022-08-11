@@ -22,6 +22,11 @@ export const DropdownStyle = css`
         position: absolute;
     }
 
+    .rc-select-item-option-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     .rc-select-item {
         padding: 5px;
         padding-left: 10px;
@@ -133,10 +138,25 @@ export const DropdownStyle = css`
             transform: scaleY(0);
         }
     }
+
+    .rc-select-disabled .rc-select-selector {
+        background-color: rgb(245, 245, 245);
+        &:hover {
+            border-color: ${({ theme }) => theme?.combobox?.border};
+            cursor: not-allowed;
+        }
+    }
+
+    .rc-select-disabled .rc-select-selection-search-input {
+        &:hover {
+            cursor: not-allowed;
+        }
+    }
 `;
 
 export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
     .rc-select-selection-search-input {
+        box-sizing: border-box;
         width: auto;
         border: none;
         font-size: 100%;
@@ -175,6 +195,9 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
     }
 
     .rc-select-selection-placeholder {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         position: absolute;
         top: 0;
         left: 0px;
@@ -199,6 +222,16 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
         text-overflow: ellipsis;
     }
 
+    .rc-select-selection-overflow-item {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .rc-select-selection-overflow-item-suffix {
+        overflow: visible;
+    }
+
     .rc-select-selection-search-mirror {
         display: none;
     }
@@ -206,6 +239,9 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
     .rc-select-selection-item {
         box-sizing: border-box;
         margin-left: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         ${({ mode, theme }) =>
             mode == "multiple" || mode == "tags"
@@ -225,6 +261,12 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
                 : css`
                       color: ${theme?.combobox?.color};
                   `}
+    }
+
+    .rc-select-selection-item-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .rc-select-selection-item-remove-icon {

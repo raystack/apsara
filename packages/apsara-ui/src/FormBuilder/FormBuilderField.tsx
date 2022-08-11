@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { useMemo } from "react";
-import * as R from "ramda";
+import React from "react";
 import { InputNumber, DatePicker } from "antd";
 import Moment from "moment";
 import Input from "../Input";
@@ -13,7 +12,6 @@ import Combobox from "../Combobox";
 import { getStringValue } from "./helper";
 
 const { RangePicker } = DatePicker;
-const { Option } = Select;
 export type Widget =
     | "range"
     | "radio"
@@ -50,7 +48,7 @@ const FormBuilderField = ({
     widgetType,
     component = null,
     rows,
-    enableTag,
+    enableTag, // eslint-disable-line
     ...props
 }: FormBuilderFieldProps) => {
     if (widget === "range") return <InputNumber {...props} />;
@@ -69,7 +67,7 @@ const FormBuilderField = ({
         return <Combobox {...props} />;
     }
     if (widget === "combobox") {
-        return <Combobox {...props}/>
+        return <Combobox {...props} />;
     }
     if (widget === "textarea") {
         return <Input.TextArea size="large" rows={rows} {...props} />;

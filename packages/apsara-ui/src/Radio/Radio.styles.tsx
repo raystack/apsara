@@ -8,6 +8,7 @@ export const StyledRadioItem = styled(RadioGroupPrimitive.Item)`
     height: 17px;
     border-radius: 100%;
     border: 1px solid ${({ theme }) => theme?.radio?.border};
+    transition: border-color 0.5s;
     &:hover {
         background-color: ${({ theme }) => theme?.radio?.hover};
         border-color: ${({ theme }) => theme?.radio?.focus};
@@ -61,4 +62,30 @@ export const Flex = styled("div")`
     display: flex;
     margin: 8px ${({ dir }) => (dir === "rtl" ? "0px" : "8px")};
     align-items: center;
+`;
+
+export const StyledRadioButton = styled("button")`
+    box-sizing: border-box;
+    background-color: transparent;
+    border: 1px solid #cacaca;
+    color: black;
+    transition: color 0.5s;
+    margin: 5px;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &[data-state="checked"] {
+        border-color: #4291ee;
+        color: #4291ee;
+    }
+    &:hover {
+        border-color: #4291ee;
+        color: #4291ee;
+    }
 `;

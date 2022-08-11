@@ -1,11 +1,20 @@
 import React from "react";
-import { RadioGroup, StyledRadioItem, StyledIndicator, Label, Flex } from "./Radio.styles";
+import { RadioGroup, StyledRadioItem, StyledIndicator, Label, Flex, StyledRadioButton } from "./Radio.styles";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 
 type RadioItem = {
     label?: string;
     value: string;
     disabled?: boolean;
     required?: boolean;
+};
+
+type RadioButtonType = {
+    label?: string;
+    value: string;
+    children?: React.ReactNode;
+    style?: React.CSSProperties;
+    className?: string;
 };
 
 type styleProps = {
@@ -16,7 +25,7 @@ type styleProps = {
 export type RadioProps = {
     defaultValue?: string;
     value?: string;
-    items: RadioItem[];
+    items?: RadioItem[];
     onChange?: (value: string) => void;
     name?: string;
     required?: boolean;
@@ -25,6 +34,7 @@ export type RadioProps = {
     className?: string;
     style?: React.CSSProperties;
     itemStyle?: styleProps;
+    children?: React.ReactNode;
 };
 
 const Radio = ({ defaultValue, value, items, onChange, required, orientation, dir, ...props }: RadioProps) => {
@@ -40,24 +50,42 @@ const Radio = ({ defaultValue, value, items, onChange, required, orientation, di
             style={props.style}
             aria-label="View density"
         >
-            {items.map((item, i) => (
-                <Flex dir={dir} key={i}>
-                    <StyledRadioItem
-                        value={item.value}
-                        disabled={item.disabled}
-                        required={item.required}
-                        {...props.itemStyle}
-                        id={i.toString()}
-                    >
-                        <StyledIndicator />
-                    </StyledRadioItem>
-                    <Label dir={dir} htmlFor={i.toString()}>
-                        {item.label}
-                    </Label>
-                </Flex>
-            ))}
+            {items &&
+                items.map((item, i) => (
+                    <Flex dir={dir} key={i}>
+                        <StyledRadioItem
+                            value={item.value}
+                            disabled={item.disabled}
+                            required={item.required}
+                            {...props.itemStyle}
+                            id={i.toString()}
+                        >
+                            <StyledIndicator />
+                        </StyledRadioItem>
+                        <Label dir={dir} htmlFor={i.toString()}>
+                            {item.label}
+                        </Label>
+                    </Flex>
+                ))}
+            {props.children}
         </RadioGroup>
     );
 };
+
+const RadioButton = ({ label, value, children, ...props }: RadioButtonType) => {
+    return (
+        <RadioGroupPrimitive.Item value={value} asChild={true}>
+            <StyledRadioButton {...props}>
+                {children}
+                {label}
+            </StyledRadioButton>
+        </RadioGroupPrimitive.Item>
+    );
+};
+
+Radio.Root = RadioGroup;
+Radio.Item = RadioGroupPrimitive.Item;
+Radio.Indicator = RadioGroupPrimitive.Indicator;
+Radio.Button = RadioButton;
 
 export default Radio;
