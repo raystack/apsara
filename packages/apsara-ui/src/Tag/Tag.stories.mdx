@@ -1,8 +1,8 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
 import Tag from "./Tag";
-import * as Icons from '@odpf/icons'
+import * as Icons from "@odpf/icons";
 
-export const Profile = Icons['profile'];
+export const Profile = Icons["profile"];
 
 <Meta
     title="Data Display/Tag"
@@ -23,24 +23,24 @@ export const Profile = Icons['profile'];
                 defaultValue: { summary: false },
             },
         },
-        color:{
+        color: {
             description: "Background color of the tag",
-            control: {type: "text"},
+            control: { type: "text" },
             table: {
                 type: { summary: "string" },
-                defaultValue: { summary: 'lightblue' },
+                defaultValue: { summary: "lightblue" },
             },
         },
-        icon:{
+        icon: {
             description: "Custom icon component which will be displayed before the tag text",
-            control: {type: "object"},
+            control: { type: "object" },
             table: {
                 type: { summary: "ReactNode" },
             },
         },
-        closeIcon:{
+        closeIcon: {
             description: "Custom close Icon",
-            control: {type: "object"},
+            control: { type: "object" },
             table: {
                 type: { summary: "ReactNode" },
             },
@@ -49,7 +49,7 @@ export const Profile = Icons['profile'];
 />
 
 <Preview>
-    <Story name="Playground" args={{ icon:<Profile style={{height:"15px"}}/>,type: "rect", color:"#55acee"}}>
+    <Story name="Playground" args={{ icon: <Profile style={{ height: "15px" }} />, type: "rect", color: "#55acee" }}>
         {(args) => <Tag {...args}>Hello</Tag>}
     </Story>
 </Preview>

@@ -49,6 +49,7 @@ export const StyledRange = styled(SliderPrimitive.Range)`
 
 export const StyledThumb = styled(SliderPrimitive.Thumb)`
     all: unset;
+    position: relative;
     display: block;
     width: 15px;
     height: 15px;
@@ -60,5 +61,42 @@ export const StyledThumb = styled(SliderPrimitive.Thumb)`
     }
     &[data-disabled] {
         background-color: ${({ theme }) => theme?.slider?.disabled};
+    }
+    &::after,
+    &::before {
+        --scale: 0;
+        --arrow-size: 6px;
+
+        position: absolute;
+        top: -0.25rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(var(--translate-y, 0)) scale(var(--scale));
+        transition: 100ms transform;
+        transform-origin: bottom center;
+    }
+
+    &::before {
+        --translate-y: calc(-100% - var(--arrow-size));
+        content: attr(data-tooltip);
+        background: #333;
+        color: white;
+        padding: 0.4rem;
+        border-radius: 0.1rem;
+        border-width: 0px;
+        text-align: center;
+        width: max-content;
+    }
+
+    &:hover::before,
+    &:hover::after {
+        --scale: 1;
+    }
+
+    &::after {
+        --translate-y: calc(-1 * var(--arrow-size));
+        content: "";
+        border: var(--arrow-size) solid transparent;
+        border-top-color: #333;
+        transform-origin: top center;
     }
 `;
