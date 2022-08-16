@@ -52,7 +52,7 @@ const Radio = ({ defaultValue, value, items, onChange, required, orientation, di
         >
             {items &&
                 items.map((item, i) => (
-                    <Flex dir={dir} key={i}>
+                    <Flex dir={dir} key={item.value}>
                         <StyledRadioItem
                             value={item.value}
                             disabled={item.disabled}
@@ -67,7 +67,7 @@ const Radio = ({ defaultValue, value, items, onChange, required, orientation, di
                         </Label>
                     </Flex>
                 ))}
-            {props.children}
+            {!items && props.children}
         </RadioGroup>
     );
 };
@@ -84,8 +84,8 @@ const RadioButton = ({ label, value, children, ...props }: RadioButtonType) => {
 };
 
 Radio.Root = RadioGroup;
-Radio.Item = RadioGroupPrimitive.Item;
-Radio.Indicator = RadioGroupPrimitive.Indicator;
+Radio.Item = StyledRadioItem;
+Radio.Indicator = StyledIndicator;
 Radio.Button = RadioButton;
 
 export default Radio;

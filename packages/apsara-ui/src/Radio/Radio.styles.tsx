@@ -84,7 +84,7 @@ export const StyledRadioButton = styled("button")`
         border-color: #4291ee;
         color: #4291ee;
     }
-    &:hover {
+    &:focus {
         border-color: #4291ee;
         color: #4291ee;
     }
