@@ -186,7 +186,7 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
         background: transparent;
         border: 1px solid ${({ theme }) => theme?.combobox?.border};
         padding-right: 45px;
-        overflow-x: hidden;
+        overflow: hidden;
 
         &:hover {
             border-color: ${({ theme }) => theme?.combobox?.focus};
@@ -195,15 +195,17 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
     }
 
     .rc-select-selection-placeholder {
+        box-sizing: border-box;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        display: inline-block;
         position: absolute;
         top: 0;
         left: 0px;
+        padding-top: 3.5px;
         padding-left: 10px;
-        display: flex;
-        align-items: center;
+        padding-right: 40px;
         width: 100%;
         height: 100%;
         color: ${({ theme }) => theme?.combobox?.placeholder};

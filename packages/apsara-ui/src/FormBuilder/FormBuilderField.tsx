@@ -10,6 +10,7 @@ import Checkbox from "../Checkbox";
 import Switch from "../Switch";
 import Combobox from "../Combobox";
 import { getStringValue } from "./helper";
+import Tag from "../Tag";
 
 const { RangePicker } = DatePicker;
 export type Widget =
@@ -64,10 +65,24 @@ const FormBuilderField = ({
         return <Select {...props} />;
     }
     if (widget === "combobox") {
-        return <Combobox {...props} />;
-    }
-    if (widget === "combobox") {
-        return <Combobox {...props} />;
+        return (
+            <React.Fragment>
+                <Combobox {...props} />
+                {enableTag &&
+                    props.value &&
+                    (props.value instanceof Array ? (
+                        props.value.map((singleVal) => (
+                            <Tag type="round" color="rgb(232, 239, 253)" key={singleVal} style={{ marginTop: "4px" }}>
+                                {singleVal}
+                            </Tag>
+                        ))
+                    ) : (
+                        <Tag type="round" color="rgb(232, 239, 253)" style={{ marginTop: "8px" }}>
+                            {props.value}
+                        </Tag>
+                    ))}
+            </React.Fragment>
+        );
     }
     if (widget === "textarea") {
         return <Input.TextArea size="large" rows={rows} {...props} />;
