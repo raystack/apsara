@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from "react";
-import { StyledTag } from "./Tag.styles";
+import { StyledTag, TagWrapper } from "./Tag.styles";
 import * as Icons from "@odpf/icons";
 import Colors from "../Colors";
 
@@ -28,27 +28,29 @@ const Tag = ({
     const [visible, setVisible] = useState(true);
     if (!visible) return null;
     return (
-        <StyledTag {...props} type={type} color={color} closable={closable} icon={icon ? true : false}>
-            {icon}
-            <span>{children}</span>
-            {closable && (
-                <a onClick={() => setVisible(false)}>
-                    {closeIcon ? (
-                        closeIcon
-                    ) : (
-                        <Cross
-                            style={{
-                                color: Colors.dark.black[9],
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "start",
-                                height: "15px",
-                            }}
-                        />
-                    )}
-                </a>
-            )}
-        </StyledTag>
+        <TagWrapper>
+            <StyledTag {...props} type={type} color={color} closable={closable} icon={icon ? true : false}>
+                <span className="tag_icon">{icon}</span>
+                <span className="tag_content">{children}</span>
+                {closable && (
+                    <a onClick={() => setVisible(false)}>
+                        {closeIcon ? (
+                            closeIcon
+                        ) : (
+                            <Cross
+                                style={{
+                                    color: Colors.dark.black[9],
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "start",
+                                    height: "15px",
+                                }}
+                            />
+                        )}
+                    </a>
+                )}
+            </StyledTag>
+        </TagWrapper>
     );
 };
 

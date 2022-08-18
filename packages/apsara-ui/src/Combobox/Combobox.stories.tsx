@@ -9,7 +9,7 @@ export default {
 };
 
 const options = [
-    { value: "2", label: "Lamborghini Diablo" },
+    { value: "2", label: "pilotdata-integration:bq_smoke_test_json_insert_all_dataset - Bigquery Dataset" },
     { value: "3", label: "Ford Raptor" },
     { value: "4", label: "Ferrari Testarossa" },
     { value: "5", label: "Porsche 911 Carrera" },

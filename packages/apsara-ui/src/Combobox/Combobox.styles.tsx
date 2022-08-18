@@ -22,6 +22,11 @@ export const DropdownStyle = css`
         position: absolute;
     }
 
+    .rc-select-item-option-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     .rc-select-item {
         padding: 5px;
         padding-left: 10px;
@@ -133,10 +138,25 @@ export const DropdownStyle = css`
             transform: scaleY(0);
         }
     }
+
+    .rc-select-disabled .rc-select-selector {
+        background-color: rgb(245, 245, 245);
+        &:hover {
+            border-color: ${({ theme }) => theme?.combobox?.border};
+            cursor: not-allowed;
+        }
+    }
+
+    .rc-select-disabled .rc-select-selection-search-input {
+        &:hover {
+            cursor: not-allowed;
+        }
+    }
 `;
 
 export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
     .rc-select-selection-search-input {
+        box-sizing: border-box;
         width: auto;
         border: none;
         font-size: 100%;
@@ -166,7 +186,7 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
         background: transparent;
         border: 1px solid ${({ theme }) => theme?.combobox?.border};
         padding-right: 45px;
-        overflow-x: hidden;
+        overflow: hidden;
 
         &:hover {
             border-color: ${({ theme }) => theme?.combobox?.focus};
@@ -175,12 +195,17 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
     }
 
     .rc-select-selection-placeholder {
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
         position: absolute;
         top: 0;
         left: 0px;
+        padding-top: 3.5px;
         padding-left: 10px;
-        display: flex;
-        align-items: center;
+        padding-right: 40px;
         width: 100%;
         height: 100%;
         color: ${({ theme }) => theme?.combobox?.placeholder};
@@ -199,6 +224,16 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
         text-overflow: ellipsis;
     }
 
+    .rc-select-selection-overflow-item {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .rc-select-selection-overflow-item-suffix {
+        overflow: visible;
+    }
+
     .rc-select-selection-search-mirror {
         display: none;
     }
@@ -206,6 +241,9 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
     .rc-select-selection-item {
         box-sizing: border-box;
         margin-left: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         ${({ mode, theme }) =>
             mode == "multiple" || mode == "tags"
@@ -225,6 +263,12 @@ export const StyledMultiSelect = styled(Select)<{ showInputIcon?: boolean }>`
                 : css`
                       color: ${theme?.combobox?.color};
                   `}
+    }
+
+    .rc-select-selection-item-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .rc-select-selection-item-remove-icon {

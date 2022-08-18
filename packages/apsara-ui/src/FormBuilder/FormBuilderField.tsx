@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { useMemo } from "react";
-import * as R from "ramda";
+import React from "react";
 import { InputNumber, DatePicker } from "antd";
 import Moment from "moment";
 import Input from "../Input";
@@ -11,9 +10,9 @@ import Checkbox from "../Checkbox";
 import Switch from "../Switch";
 import Combobox from "../Combobox";
 import { getStringValue } from "./helper";
+import Tag from "../Tag";
 
 const { RangePicker } = DatePicker;
-const { Option } = Select;
 export type Widget =
     | "range"
     | "radio"
@@ -50,7 +49,7 @@ const FormBuilderField = ({
     widgetType,
     component = null,
     rows,
-    enableTag,
+    enableTag, // eslint-disable-line
     ...props
 }: FormBuilderFieldProps) => {
     if (widget === "range") return <InputNumber {...props} />;
@@ -66,7 +65,24 @@ const FormBuilderField = ({
         return <Select {...props} />;
     }
     if (widget === "combobox") {
-        return <Combobox {...props} />;
+        return (
+            <React.Fragment>
+                <Combobox {...props} />
+                {enableTag &&
+                    props.value &&
+                    (props.value instanceof Array ? (
+                        props.value.map((singleVal) => (
+                            <Tag type="round" color="rgb(232, 239, 253)" key={singleVal} style={{ marginTop: "4px" }}>
+                                {singleVal}
+                            </Tag>
+                        ))
+                    ) : (
+                        <Tag type="round" color="rgb(232, 239, 253)" style={{ marginTop: "8px" }}>
+                            {props.value}
+                        </Tag>
+                    ))}
+            </React.Fragment>
+        );
     }
     if (widget === "textarea") {
         return <Input.TextArea size="large" rows={rows} {...props} />;
