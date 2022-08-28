@@ -3,14 +3,15 @@ import { LoadingOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import Tooltip from "../Tooltip";
 import Icon from "../Icon";
-import * as AC from "./Button.styles";
+// import * as AC from "./Button.styles";
 import { CustomButtonProps } from "./Button.types";
+import { StyledButton } from "./Button.styles";
 
 const defaultIconSize = 24;
 const Button = ({
     type = "default",
     className,
-    disabled,
+    disabled = false,
     loading = false,
     tooltipProps = {
         message: "",
@@ -22,6 +23,9 @@ const Button = ({
     iconSize = defaultIconSize,
     children,
     size = "middle",
+    block = false,
+    shape = "round",
+    onClick = () => null,
     ...props
 }: CustomButtonProps) => {
     const IconComponent = () => {
@@ -38,13 +42,24 @@ const Button = ({
     };
 
     const button = (
-        <AC.AntdButton disabled={disabled} className={clsx(className, type)} type={type} size={size} {...props}>
-            <IconComponent />
-            {children}
-        </AC.AntdButton>
+        <StyledButton role="button" type={type} size={size} block={block} shape={shape}>
+            <button
+                disabled={disabled}
+                onClick={(e) => {
+                    onClick(e);
+                }}
+                className={`apsara-btn ${clsx(className, type)}`}
+                {...props}
+            >
+                <IconComponent />
+                {children}
+            </button>
+        </StyledButton>
     );
 
     return tooltipProps?.message ? (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore:next-line
         <Tooltip placement={tooltipProps?.placement} title={tooltipProps?.message}>
             <span>{button}</span>
         </Tooltip>
