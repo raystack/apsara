@@ -1,5 +1,5 @@
 import Colors from "../Colors";
-import { mauve, blackA, blue } from "@radix-ui/colors";
+import { mauve, blackA, blue, blueA } from "@radix-ui/colors";
 
 const fontSizes = ["12px", "14px", "16px", "20px", "24px", "32px", "48px", "64px", "72px"];
 
@@ -166,6 +166,12 @@ const light = {
         color: "#000",
         activeClr: "#fff",
     },
+    checkbox: {
+        bg: "rgb(30, 122, 232)",
+        indicator: "white",
+        shadow: blueA.blueA5,
+        border: blue.blue10,
+    },
 };
 
 const dark = {
@@ -329,6 +335,12 @@ const dark = {
         border: "#065656",
         color: "#48EEF3",
         activeClr: "#48EEF3",
+    },
+    checkbox: {
+        bg: "rgb(30, 122, 232)",
+        indicator: "white",
+        shadow: blueA.blueA5,
+        border: blue.blue10,
     },
 };
 
