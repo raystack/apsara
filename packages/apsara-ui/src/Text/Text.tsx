@@ -1,7 +1,6 @@
-import { Typography } from "antd";
-import { TextProps } from "antd/lib/typography/Text";
+import React from "react";
 
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const defaultSize = 14;
 export const styleMap = {
@@ -82,19 +81,146 @@ export const styleMap = {
     },
 };
 
-const { Text: AntText } = Typography;
-interface IText extends TextProps {
+type TextProps = {
+    type?: "default" | "secondary" | "success" | "warning" | "danger";
+    disabled?: boolean;
+    mark?: boolean;
+    code?: boolean;
+    keyboard?: boolean;
+    underline?: boolean;
+    strike?: boolean;
+    strong?: boolean;
+    italic?: boolean;
+    ellipsis?: boolean;
     size?: keyof typeof styleMap;
-}
+} & React.HTMLAttributes<HTMLParagraphElement>;
 
-const Text = styled(AntText).attrs((props: IText) => ({
-    size: props.size || defaultSize,
-    verticalAlign: "middle",
-}))`
-    color: ${({ theme }) => theme?.colors?.black[9]};
-    font-size: ${(props) => styleMap[props.size].fontSize || styleMap[defaultSize].fontSize};
-    line-height: ${(props) => styleMap[props.size].lineHeight || styleMap[defaultSize].lineHeight};
-    letter-spacing: ${(props) => styleMap[props.size].letterSpacing || styleMap[defaultSize].letterSpacing};
+const colorMap = {
+    default: "black",
+    secondary: "rgba(0, 0, 0, 0.45)",
+    success: "#52c41a",
+    warning: "#faad14",
+    danger: "#ff4d4f",
+};
+
+const StyledText = styled("span")<{
+    type: "default" | "secondary" | "success" | "warning" | "danger";
+    disabled: boolean;
+    mark: boolean;
+    code: boolean;
+    keyboard: boolean;
+    underline: boolean;
+    strike: boolean;
+    strong: boolean;
+    italic: boolean;
+    size: keyof typeof styleMap;
+    ellipsis: boolean;
+}>`
+    vertical-align: middle;
+    color: ${({ type }) => colorMap[type]};
+    ${({ size }) => css`
+        font-size: ${styleMap[size].fontSize};
+        line-height: ${styleMap[size].lineHeight};
+        letter-spacing: ${styleMap[size].letterSpacing};
+    `}
+
+    ${({ ellipsis }) =>
+        ellipsis &&
+        css`
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        `}
+
+    ${({ mark }) =>
+        mark &&
+        css`
+            background-color: #ffe58f;
+        `}
+
+    ${({ code }) =>
+        code &&
+        css`
+            margin: 0 0.2em;
+            padding: 0.2em 0.4em 0.1em;
+            font-size: 85%;
+            background: rgba(150, 150, 150, 0.1);
+            border: 1px solid rgba(100, 100, 100, 0.2);
+            border-radius: 3px;
+        `}
+
+    ${({ keyboard }) =>
+        keyboard &&
+        css`
+            margin: 0 0.2em;
+            padding: 0.15em 0.4em 0.1em;
+            font-size: 90%;
+            background: rgba(150, 150, 150, 0.06);
+            border: 1px solid rgba(100, 100, 100, 0.2);
+            border-bottom-width: 2px;
+            border-radius: 3px;
+        `}
+
+    ${({ underline }) =>
+        underline &&
+        css`
+            text-decoration: underline;
+            text-decoration-skip-ink: auto;
+        `}
+
+    ${({ strike }) =>
+        strike &&
+        css`
+            text-decoration: line-through;
+        `}
+
+    ${({ strong }) =>
+        strong &&
+        css`
+            font-weight: 600;
+        `}
+
+    ${({ italic }) =>
+        italic &&
+        css`
+            font-style: italic;
+        `}
 `;
+
+const Text = ({
+    type = "default",
+    disabled = false,
+    mark = false,
+    code = false,
+    keyboard = false,
+    underline = false,
+    strike = false,
+    strong = false,
+    italic = false,
+    size = defaultSize,
+    ellipsis = false,
+    ...props
+}: TextProps) => {
+    const { children, className, ...restProps } = props;
+    return (
+        <StyledText
+            type={type}
+            disabled={disabled}
+            mark={mark}
+            code={code}
+            keyboard={keyboard}
+            underline={underline}
+            strike={strike}
+            strong={strong}
+            italic={italic}
+            size={size}
+            ellipsis={ellipsis}
+            className={`${className} apsara-text`}
+            {...restProps}
+        >
+            {children}
+        </StyledText>
+    );
+};
 
 export default Text;
