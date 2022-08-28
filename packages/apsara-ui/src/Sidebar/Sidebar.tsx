@@ -1,8 +1,16 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect, ReactElement, ReactNode } from "react";
-import { Menu } from "antd";
 import CustomIcon, { CustomIconProps } from "../Icon/Icon";
-import { StyledSider, LogoWrapper, Title, Footer, FooterWrapper } from "./Sidebar.styles";
+import {
+    StyledSider,
+    LogoWrapper,
+    SidebarTitle,
+    Footer,
+    FooterWrapper,
+    StyledSiderMenu,
+    NavigationItemWrapper,
+} from "./Sidebar.styles";
+import Tooltip from "../Tooltip";
 
 interface RenderItem {
     key: string;
@@ -16,34 +24,74 @@ const renderMenuItemLink = (
     item: RenderItem,
     onItemClick: (item: RenderItem) => void,
     LinkRender: ({ children }: any) => ReactElement,
+    selected: string,
+    collapsed: boolean,
 ) => {
     const { key, url, linkText, iconProps, isSubMenu } = item;
     const styleDetails = { display: "flex", alignItems: "center", container: { flexDirection: "row" } };
     if (isSubMenu) {
         styleDetails["paddingLeft"] = "15%";
     }
+
+    const icon = <CustomIcon {...iconProps} />;
     return (
-        <Menu.Item key={key} title={linkText} onClick={() => onItemClick(item)}>
+        <NavigationItemWrapper selected={selected === item.key} key={key} onClick={() => onItemClick(item)}>
             <LinkRender to={url}>
                 <div style={styleDetails}>
-                    <CustomIcon {...iconProps} />
-                    <span className="nav-text">{linkText}</span>
+                    {collapsed ? (
+                        <Tooltip title={item.linkText} placement="right">
+                            {icon}
+                        </Tooltip>
+                    ) : (
+                        icon
+                    )}
+                    <span className="apsara-nav-text">{linkText}</span>
                 </div>
             </LinkRender>
-        </Menu.Item>
+        </NavigationItemWrapper>
+    );
+};
+
+type SiderMenuProps = {
+    selectedLink: string;
+    navigationList: RenderItem[];
+    onItemClick: (item: RenderItem) => void;
+    linkRender: ({ children }: any) => ReactElement;
+    collapsed: boolean;
+};
+
+const SiderMenu = ({ selectedLink, navigationList, onItemClick, linkRender, collapsed }: SiderMenuProps) => {
+    if (!selectedLink) selectedLink = navigationList[0].key;
+    const [link, setLink] = useState(selectedLink);
+    useEffect(() => {
+        setLink(selectedLink);
+    }, [selectedLink]);
+
+    const onChange = (item: RenderItem) => {
+        setLink(item.key);
+        onItemClick(item);
+    };
+
+    return (
+        <StyledSiderMenu>
+            {navigationList &&
+                navigationList.map((item) => renderMenuItemLink(item, onChange, linkRender, link, collapsed))}
+        </StyledSiderMenu>
     );
 };
 
 interface collapsedProps {
     collapsed: boolean;
+    onClick?: React.MouseEventHandler<HTMLDivElement>;
 }
-const SidebarFooter = ({ collapsed }: collapsedProps) => (
-    <Footer>
+
+const SidebarFooter = ({ collapsed, onClick }: collapsedProps) => (
+    <Footer onClick={onClick} className="apsara-sidebar-footer">
         <FooterWrapper>
             <div style={{ display: "flex", minHeight: "40px", alignItems: "center" }}>
                 <CustomIcon className={collapsed ? "" : "rotate"} name="chevronright" />
             </div>
-            <span className="nav-text">Collapse</span>
+            <span className="apsara-nav-text">Collapse</span>
         </FooterWrapper>
     </Footer>
 );
@@ -66,6 +114,8 @@ interface SidebarProps {
     onItemClick?: (item: RenderItem) => void;
     children?: ReactNode;
     linkRender?: ({ children }: any) => ReactElement;
+    width?: number;
+    collapsedWidth?: number;
 }
 
 const rightSidebarState = localStorage.getItem("NAV_SIDEBAR_STATE") === "true";
@@ -76,7 +126,8 @@ const Sidebar = ({
     onItemClick = () => null,
     linkRender = ({ children }) => <React.Fragment>{children}</React.Fragment>,
     children,
-    ...extraProps
+    width = 180,
+    collapsedWidth = 65,
 }: SidebarProps) => {
     const { name = "", logo = "", iconProps, icon = null } = headerProps;
     const [collapsed, setCollapsed] = useState(rightSidebarState || false);
@@ -85,29 +136,28 @@ const Sidebar = ({
         localStorage.setItem("NAV_SIDEBAR_STATE", collapsed.toString());
     }, [collapsed]);
 
-    const onCollapse = (val: boolean) => {
-        setCollapsed(val);
-    };
     return (
-        <StyledSider
-            width={180}
-            collapsedWidth={65}
-            collapsible
-            collapsed={collapsed}
-            onCollapse={onCollapse}
-            trigger={<SidebarFooter collapsed={collapsed} />}
-            {...extraProps}
-        >
+        <StyledSider width={width} collapsedWidth={collapsedWidth} collapsed={collapsed}>
             <LogoWrapper>
                 {iconProps ? <CustomIcon {...iconProps} className="img__logo" /> : null}
                 {icon ? <span className="img__logo">{icon}</span> : null}
                 {logo ? <img src={logo} alt="" className="img__logo" /> : null}
-                <Title>{name}</Title>
+                <SidebarTitle className="apsara-nav-title">{name}</SidebarTitle>
             </LogoWrapper>
-            <Menu mode="inline" style={{ borderRight: 0 }} selectedKeys={[activePath]}>
-                {navigationList.map((link) => renderMenuItemLink(link, onItemClick, linkRender))}
-            </Menu>
+            <SiderMenu
+                selectedLink={activePath}
+                navigationList={navigationList}
+                onItemClick={onItemClick}
+                linkRender={linkRender}
+                collapsed={collapsed}
+            />
             {children}
+            <SidebarFooter
+                onClick={() => {
+                    setCollapsed(!collapsed);
+                }}
+                collapsed={collapsed}
+            />
         </StyledSider>
     );
 };
