@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import { CaretDownFilled } from "@ant-design/icons";
 import Checkbox from "../../Checkbox";
-import { StyledPopover } from "../../Popover/Popover.styles";
+import { PopoverTrigger, StyledArrow, StyledContent, StyledPopover } from "../../Popover/Popover.styles";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
 import {
     FilterPopup,
     FilterBody,
     FilterColumn,
     FilterTitle,
-    FilterLabel,
     FilterFooter,
     FilterButton,
     StyledBadge,
@@ -32,13 +32,9 @@ const renderFilterList = ({
                             <Checkbox.Group
                                 value={filteredFieldData[group.slug] || []}
                                 onChange={(args: any) => onGroupFilter(group, args)}
-                            >
-                                {group.data.map((obj: any) => (
-                                    <FilterLabel key={obj.value}>
-                                        <Checkbox value={obj.value}>{obj.label}</Checkbox>
-                                    </FilterLabel>
-                                ))}
-                            </Checkbox.Group>
+                                options={group.data}
+                                orientation="vertical"
+                            />
                         </div>
                     </FilterColumn>
                 ))}
@@ -53,25 +49,29 @@ const renderFilterList = ({
 };
 
 const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...props }: any) => {
-    const [visible, setVisible] = useState(false);
+    const [open, setOpen] = useState(false);
     const filteredFieldDataLength = Object.keys(filteredFieldData).reduce((acc, key) => {
         return acc + filteredFieldData[key].length;
     }, 0);
 
     return (
-        <StyledPopover
-            visible={visible}
-            onVisibleChange={setVisible}
-            trigger="click"
-            placement="bottomRight"
-            content={renderFilterList({ filteredFieldData, filteredFieldDataLength, ...props })}
-        >
-            <StyledBadge dot={!!filteredFieldDataLength}>
-                <FilterButton type="default" disabled={disabled}>
-                    {label}
-                    <CaretDownFilled className={visible ? "rotate" : ""} style={{ fontSize: "10px" }} />
-                </FilterButton>
-            </StyledBadge>
+        <StyledPopover open={open} onOpenChange={(open) => setOpen(open)}>
+            <PopoverTrigger asChild>
+                <span aria-label="Update dimensions">
+                    <StyledBadge dot={!!filteredFieldDataLength}>
+                        <FilterButton type="default" disabled={disabled}>
+                            {label}
+                            <CaretDownFilled className={open ? "rotate" : ""} style={{ fontSize: "10px" }} />
+                        </FilterButton>
+                    </StyledBadge>
+                </span>
+            </PopoverTrigger>
+            <PopoverPrimitive.Portal>
+                <StyledContent side="bottom" align="end">
+                    {renderFilterList({ filteredFieldData, filteredFieldDataLength, ...props })}
+                    <StyledArrow />
+                </StyledContent>
+            </PopoverPrimitive.Portal>
         </StyledPopover>
     );
 };
