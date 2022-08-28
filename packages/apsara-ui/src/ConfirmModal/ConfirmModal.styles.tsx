@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AntdButton } from "../Button/Button.styles";
+import { StyledButton } from "../Button/Button.styles";
 import { textStyles } from "../mixin";
 
 export const Overlay = styled.div`
@@ -34,7 +34,7 @@ export const ActionWrapper = styled.div`
     margin-top: 24px;
     display: flex;
 
-    ${AntdButton} {
+    .apsara-btn {
         font-size: 12px;
         letter-spacing: 0.12px;
         line-height: 16px;
@@ -42,7 +42,7 @@ export const ActionWrapper = styled.div`
         min-width: 120px;
     }
 
-    ${AntdButton}+${AntdButton} {
+    ${StyledButton}+${StyledButton} {
         margin-left: 16px;
     }
 `;

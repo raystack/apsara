@@ -36,12 +36,14 @@ export const withForm = () => {
                 onCancel={() => setVisible(false)}
                 visible={visible}
             >
-                <Radio value={1} style={{ display: "block" }}>
-                    One
-                </Radio>
-                <Radio value={2} style={{ display: "block" }}>
-                    Two
-                </Radio>
+                <Radio
+                    defaultValue="1"
+                    items={[
+                        { label: "one", value: "1" },
+                        { label: "two", value: "2" },
+                    ]}
+                    style={{ display: "block" }}
+                />
             </ConfirmModal>
         </>
     );
