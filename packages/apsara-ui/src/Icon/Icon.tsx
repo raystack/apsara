@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "styled-components";
-import Icon from "@ant-design/icons";
+import { IconWrapper } from "./Icon.styles";
 import * as Icons from "@odpf/icons";
 
 export type IconName = keyof typeof Icons;
@@ -14,6 +14,7 @@ export interface CustomIconProps {
     onClick?: () => void;
     color?: string;
 }
+
 function CustomIcon({
     name = "placeholder",
     className = "",
@@ -22,26 +23,27 @@ function CustomIcon({
     color = "",
     onClick = () => null,
     styleOverride = {},
-    ...restProps
+    disabled = false,
 }: CustomIconProps) {
     const theme = useContext(ThemeContext);
     if (!name) return null;
-    const iconComponent = Icons[name];
+    const IconComponent = Icons[name];
     const defaultColor = !active ? theme?.colors?.black[8] : theme?.colors?.primary[3];
     const defaultFill = theme?.colors?.primary[3];
+    const { fontSize = `${size}px`, ...restStyles } = styleOverride;
     return (
-        <Icon
-            className={`skeleton-icon ${name} ${className}`}
-            component={iconComponent}
+        <IconWrapper
+            className={`apsara_icon skeleton-icon ${name} ${className}`}
+            onClick={onClick}
+            disabled={disabled}
             style={{
                 color: color || defaultColor,
                 fill: color || defaultFill,
-                fontSize: `${size}px`,
-                ...styleOverride,
+                ...restStyles,
             }}
-            onClick={onClick}
-            {...restProps}
-        />
+        >
+            <IconComponent style={{ width: fontSize, height: fontSize }} />
+        </IconWrapper>
     );
 }
 
