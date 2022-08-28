@@ -53,8 +53,9 @@ const Search = ({
     };
 
     return (
-        <Wrapper className={className} secondary={secondary} style={style}>
+        <Wrapper className={className} secondary={secondary}>
             <Input
+                style={style}
                 disabled={disabled}
                 size={size}
                 allowClear
@@ -65,18 +66,22 @@ const Search = ({
                 id={inputId}
                 onKeyDown={onKeyDown}
                 autoComplete={autoComplete}
+                className="search_input"
+                prefix={
+                    <CustomIcon
+                        disabled={disabled}
+                        styleOverride={{
+                            fontSize: theme?.fontSizes[2],
+                            color: iconObj.color,
+                            cursor: isIconClickFn ? "pointer" : "initial",
+                            ...iconStyle,
+                        }}
+                        name={iconObj.name}
+                        onClick={handleIconClick}
+                    />
+                }
             />
-            <CustomIcon
-                disabled={disabled}
-                styleOverride={{
-                    fontSize: theme?.fontSizes[2],
-                    color: iconObj.color,
-                    cursor: isIconClickFn ? "pointer" : "initial",
-                    ...iconStyle,
-                }}
-                name={iconObj.name}
-                onClick={handleIconClick}
-            />
+
             {children}
         </Wrapper>
     );
