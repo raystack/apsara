@@ -1,1 +1,1 @@
-export { showSuccess, showError, showNotification } from "./Notification";
+export { ShowNotification, NotificationRef } from "./Notification";
