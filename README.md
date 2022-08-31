@@ -1,7 +1,7 @@
 # Apsara
 
 ![build workflow](https://github.com/odpf/apsara/actions/workflows/storybook.yml/badge.svg)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.apsaras.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 <a href="https://odpf.github.io/apsara/" target="_blank"><img src="https://raw.githubusercontent.com/storybooks/brand/master/badge/badge-storybook.svg"></a>
 
 
@@ -36,18 +36,6 @@ import { Button } from "@odpf/apsara";
 </Button>
 ```
 
-## Built with
-List of open source technologies used to build Apsara:
-
--   [ReactJs](https://facebook.github.io/react/) v16
--   [TypeScript](https://www.typescriptlang.org/) used to transpile TS code into javascript
--   [Antd Design](https://ant.design/) for base components
--   [Jest](https://jestjs.io/) and [Testing library](https://testing-library.com/) for unit/ui testing
--   [Husky](https://github.com/typicode/husky) for automate Git hooks
--   [Eslint](https://github.com/eslint/eslint) for code linting
--   [Prettier](https://prettier.io/) for code formatting
--   [Storybook](https://storybook.js.org/) for documenting components
-
 ## Running locally
 
 ```sh
@@ -66,19 +54,20 @@ Open http://localhost:6006/ in your favorite browser.
 $ yarn test
 ```
 
-
-
 ## Contribute
 
-Development of Apsara happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving Apsara.
+Development of Apsara happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and
+improvements. Read below to learn how you can take part in improving Apsara.
 
-Read our [contributing guide](docs/contribute/contribution.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Apsara.
+Read our contributing guide to learn about our development process, how to propose
+bugfixes and improvements, and how to build and test your changes to Apsara.
 
-To help you get your feet wet and get you familiar with our contribution process, we have a list of [good first issues](https://github.com/odpf/apsara/labels/good%20first%20issue) that contain bugs which have a relatively limited scope. This is a great place to get started.
-
-## Credits
+To help you get your feet wet and get you familiar with our contribution process, we have a list of
+[good first issues](https://github.com/odpf/apsara/labels/good%20first%20issue) that contain bugs which have a relatively
+limited scope. This is a great place to get started.
 
 This project exists thanks to all the [contributors](https://github.com/odpf/apsara/graphs/contributors).
 
 ## License
+
 Apsara is [Apache 2.0](LICENSE) licensed.
