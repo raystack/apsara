@@ -1,18 +1,57 @@
-import React, { useContext, ReactNode } from "react";
-import { ThemeContext } from "styled-components";
-import { TagProps } from "antd";
-import { StyledTag } from "./Tag.styles";
+import React, { useState, ReactNode } from "react";
+import { StyledTag, TagWrapper } from "./Tag.styles";
+import * as Icons from "@odpf/icons";
+import Colors from "../Colors";
 
-interface CustomTagProps extends Omit<TagProps, "color"> {
+const Cross = Icons["cross"];
+
+type TagProps = {
     children?: ReactNode;
     type?: "round" | "rect";
-}
+    color?: string;
+    closable?: boolean;
+    closeIcon?: ReactNode;
+    icon?: ReactNode;
+    className?: string;
+    style?: React.CSSProperties;
+};
 
-export default function CustomTag({ children, type = "round", ...props }: CustomTagProps) {
-    const theme = useContext(ThemeContext);
+const Tag = ({
+    children,
+    color = "lightblue",
+    type = "rect",
+    closable = false,
+    closeIcon,
+    icon,
+    ...props
+}: TagProps) => {
+    const [visible, setVisible] = useState(true);
+    if (!visible) return null;
     return (
-        <StyledTag {...props} type={type} color={theme?.tag?.bg}>
-            {children}
-        </StyledTag>
+        <TagWrapper>
+            <StyledTag {...props} type={type} color={color} closable={closable} icon={icon ? true : false}>
+                <span className="tag_icon">{icon}</span>
+                <span className="tag_content">{children}</span>
+                {closable && (
+                    <a onClick={() => setVisible(false)}>
+                        {closeIcon ? (
+                            closeIcon
+                        ) : (
+                            <Cross
+                                style={{
+                                    color: Colors.dark.black[9],
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "start",
+                                    height: "15px",
+                                }}
+                            />
+                        )}
+                    </a>
+                )}
+            </StyledTag>
+        </TagWrapper>
     );
-}
+};
+
+export default Tag;

@@ -1,5 +1,8 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
 import Tag from "./Tag";
+import * as Icons from "@odpf/icons";
+
+export const Profile = Icons["profile"];
 
 <Meta
     title="Data Display/Tag"
@@ -9,7 +12,7 @@ import Tag from "./Tag";
             control: { type: "select", options: ["round", "rect"] },
             table: {
                 type: { summary: ["round", "rect"] },
-                defaultValue: { summary: "round" },
+                defaultValue: { summary: "rect" },
             },
         },
         closable: {
@@ -20,11 +23,33 @@ import Tag from "./Tag";
                 defaultValue: { summary: false },
             },
         },
+        color: {
+            description: "Background color of the tag",
+            control: { type: "text" },
+            table: {
+                type: { summary: "string" },
+                defaultValue: { summary: "lightblue" },
+            },
+        },
+        icon: {
+            description: "Custom icon component which will be displayed before the tag text",
+            control: { type: "object" },
+            table: {
+                type: { summary: "ReactNode" },
+            },
+        },
+        closeIcon: {
+            description: "Custom close Icon",
+            control: { type: "object" },
+            table: {
+                type: { summary: "ReactNode" },
+            },
+        },
     }}
 />
 
 <Preview>
-    <Story name="Playground" args={{ type: "round" }}>
+    <Story name="Playground" args={{ icon: <Profile style={{ height: "15px" }} />, type: "rect", color: "#55acee" }}>
         {(args) => <Tag {...args}>Hello</Tag>}
     </Story>
 </Preview>

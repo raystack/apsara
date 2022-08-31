@@ -6,6 +6,10 @@ import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
 import FormBuilderField, { Widget } from "./FormBuilderField";
 import { InternalNamePath, Rule } from "rc-field-form/lib/interface";
+import { SelectProps } from "../Select/Select";
+import { SwitchProps } from "../Switch/Switch";
+import { RadioProps } from "../Radio/Radio";
+import { SelectProps as ComboboxProps } from "rc-select";
 
 /*
 Example:
@@ -44,6 +48,8 @@ const shouldShow = (config: any, dependenciesFieldValue: any) => {
     return evaluateExpression(config.depends, dependenciesFieldValue?.toString());
 };
 
+type CommonProps = SelectProps | SwitchProps | RadioProps | ComboboxProps;
+
 export interface FormMetaFields {
     formItemLayout?: {
         labelCol: ColProps;
@@ -64,7 +70,7 @@ export interface FormMetaFields {
     name: string | string[];
     widget: Widget;
     title?: string;
-    fieldProps?: Record<string, unknown>;
+    fieldProps?: Record<string, unknown> | CommonProps;
     initialValue?: any;
     tooltip?: React.ReactNode | string;
     options?: Array<{ label: string; value: string }>;

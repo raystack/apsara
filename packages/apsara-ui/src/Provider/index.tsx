@@ -3,6 +3,7 @@ import { DefaultTheme, ThemeProvider as ThemeProviderBase } from "styled-compone
 import { createGlobalStyle } from "styled-components";
 import Themes from "./theme";
 import { NotificationStyle } from "../Notification/Notification.styles";
+import { DropdownStyle } from "../Combobox/Combobox.styles";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
 import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
@@ -38,12 +39,19 @@ const GlobalStyle = createGlobalStyle`
     src: url(${RobotoBlack}) format('truetype');
   }
 
+  h1, h2, h3, h4, h5, h6, p {
+    color: ${({ theme }) => theme?.body?.color};
+  }
+
   body {
     font-family: "Roboto";
-    color: ${({ theme }) => theme?.colors?.black[9]};
+    background-color: ${({ theme }) => theme?.body?.bg};
+    color: ${({ theme }) => theme?.body?.color};
   }
 
   ${NotificationStyle}
+
+  ${DropdownStyle}
 `;
 
 // extend DefaultTheme definitions

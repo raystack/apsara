@@ -1,4 +1,5 @@
 import Colors from "../Colors";
+import { mauve, blackA, blue } from "@radix-ui/colors";
 
 const fontSizes = ["12px", "14px", "16px", "20px", "24px", "32px", "48px", "64px", "72px"];
 
@@ -8,6 +9,10 @@ const base = {
 
 const light = {
     ...base,
+    body: {
+        bg: "white",
+        color: Colors?.light?.black[9],
+    },
     colors: Colors?.light,
     learn: {
         bg: Colors?.light?.black[0],
@@ -108,10 +113,67 @@ const light = {
         trigger: Colors?.light?.black[7],
         title: Colors?.light?.primary[3],
     },
+    select: {
+        bg: "white",
+        label: mauve.mauve11,
+        separator: Colors?.light?.primary[1],
+        scroll: Colors?.light?.primary[3],
+        trigger: {
+            color: Colors?.light?.black[10],
+            bg: Colors?.light?.black[2],
+            hover: mauve.mauve3,
+            border: Colors?.light?.primary[3],
+        },
+        item: {
+            color: Colors?.light?.black[10],
+            disabled: mauve.mauve8,
+            focusColor: "#fff",
+            focusBg: Colors?.light?.primary[3],
+        },
+    },
+    switch: {
+        color: "black",
+        bg: blackA.blackA9,
+        shadow: blackA.blackA7,
+    },
+    radio: {
+        disabled: blackA.blackA3,
+        hover: blue.blue3,
+        focus: blue.blue10,
+        border: blackA.blackA8,
+        label: "black",
+    },
+    slider: {
+        track: blackA.blackA6,
+        range: blue.blue10,
+        thumb: blue.blue10,
+        thumbHover: blue.blue8,
+        thumbFocus: blue.blue5,
+        shadow: blackA.blackA7,
+        disabled: Colors.dark.black[2],
+    },
+    combobox: {
+        active: "#4291ee",
+        optionClr: "#666",
+        optionBg: "#ddd",
+        focus: "#4291ee",
+        placeholder: "#aaa",
+        tagBg: "#f3f3f3",
+        tagClr: "#000",
+        selector: "#fff",
+        dropdown: "#fff",
+        border: "#d9d9d9",
+        color: "#000",
+        activeClr: "#fff",
+    },
 };
 
 const dark = {
     ...base,
+    body: {
+        bg: "black",
+        color: Colors?.dark?.black[0],
+    },
     colors: Colors?.dark,
     learn: {
         bg: Colors?.dark?.black[9],
@@ -214,6 +276,59 @@ const dark = {
         active: Colors?.dark?.primary[2],
         trigger: Colors?.dark?.black[5],
         title: Colors?.dark?.primary[1],
+    },
+    select: {
+        bg: "#065656",
+        label: "#C1FAFA",
+        separator: "black",
+        scroll: "#48EEF3",
+        trigger: {
+            color: "#48EEF3",
+            bg: "#065656",
+            hover: "#064D4D",
+            border: Colors?.light?.primary[3],
+        },
+        item: {
+            color: "#48EEF3",
+            disabled: mauve.mauve8,
+            focusColor: "#48EEF3",
+            focusBg: "black",
+        },
+    },
+    switch: {
+        color: "#065656",
+        bg: Colors.dark.black[5],
+        shadow: blackA.blackA7,
+    },
+    radio: {
+        disabled: Colors.dark.black[2],
+        hover: blue.blue3,
+        focus: "#065656",
+        shadow: "white",
+        label: "white",
+    },
+    slider: {
+        track: Colors.dark.black[2],
+        range: "#065656",
+        thumb: "white",
+        thumbHover: "#81DEDE",
+        thumbFocus: Colors.dark.black[1],
+        shadow: Colors.dark.black[6],
+        disabled: Colors.dark.black[4],
+    },
+    combobox: {
+        active: "#000",
+        optionClr: "#36CEC2",
+        optionBg: "#000",
+        focus: "#36CEC2",
+        placeholder: "#36CEC2",
+        tagBg: "#000",
+        tagClr: "#36CEC2",
+        selector: "#065656",
+        dropdown: "#065656",
+        border: "#065656",
+        color: "#48EEF3",
+        activeClr: "#48EEF3",
     },
 };
 

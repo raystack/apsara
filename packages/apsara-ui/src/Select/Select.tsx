@@ -1,148 +1,141 @@
-import { Select as AntdSelect } from "antd";
-import React from "react";
-import styled, { DefaultTheme, StyledComponent } from "styled-components";
-import { textStyles } from "../mixin";
+import React, { useEffect, useState } from "react";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import {
+    SelectRoot,
+    SelectTrigger,
+    SelectValue,
+    SelectIcon,
+    SelectContent,
+    SelectViewport,
+    SelectGroup,
+    SelectItem,
+    SelectItemText,
+    SelectItemIndicator,
+    SelectLabel,
+    SelectSeparator,
+    SelectScrollUpButton,
+    SelectScrollDownButton,
+} from "./Select.styles";
 
-const StyledSelect = styled(({ className, selectClassName, ...props }) => (
-    <AntdSelect {...props} dropdownClassName={className} className={selectClassName} />
-))`
-    &.ant-select-dropdown {
-        color: ${({ theme }) => theme?.colors?.black[10]};
-        background-color: ${({ theme }) => theme?.colors?.black[0]};
-    }
-    &.ant-select-dropdown-empty {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-    .ant-select-item-empty {
-        color: ${({ theme }) => theme?.colors?.black[10]};
-        color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-    .ant-select-item {
-        color: ${({ theme }) => theme?.colors?.black[10]};
-    }
-    .ant-select-item-group {
-        color: ${({ theme }) => theme?.colors?.black[7]};
-    }
-    .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
-        background-color: ${({ theme }) => theme?.colors?.black[2]};
-    }
-    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
-        color: ${({ theme }) => theme?.colors?.black[10]};
-        background-color: ${({ theme }) => theme?.colors?.black[4]};
-    }
-    .ant-select-item-option-selected:not(.ant-select-item-option-disabled) .ant-select-item-option-state {
-        color: ${({ theme }) => theme?.colors?.primary[4]};
-    }
-    .ant-select-item-option-disabled {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-    .ant-select-item-option-disabled.ant-select-item-option-selected {
-        background-color: ${({ theme }) => theme?.colors?.black[2]};
-    }
-`;
+type Item = {
+    value: string;
+    displayText: string;
+    disabled?: boolean;
+};
 
-type SelectType = StyledComponent<typeof AntdSelect, DefaultTheme>;
+export type Group = {
+    label?: string;
+    items: Item[];
+};
 
-const Select = styled(({ className, ...props }) => <StyledSelect {...props} selectClassName={className} />)`
-    &.ant-select-single.ant-select-open .ant-select-selection-item {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-    &.ant-select-disabled.ant-select-multiple .ant-select-selector {
-        background: ${({ theme }) => theme?.colors?.black[2]};
-    }
-    &.ant-select-multiple .ant-select-selection-item {
-        height: 21px;
-        display: flex;
-        align-items: center;
-        background: ${({ theme }) => theme?.colors?.black[2]};
-        border-color: ${({ theme }) => theme?.colors?.black[3]};
-        border-radius: 10.5px;
-        border: 0;
-        ${({ theme }) => textStyles("10px", theme?.colors?.black[10], "0.25px")}
-    }
-    &.ant-select-disabled.ant-select-multiple .ant-select-selection-item {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-        border-color: ${({ theme }) => theme?.colors?.black[4]};
-    }
-    &.ant-select-multiple .ant-select-selection-item-remove {
-        color: ${({ theme }) => theme?.colors?.black[7]};
-    }
-    &.ant-select-multiple .ant-select-selection-item-remove:hover {
-        color: ${({ theme }) => theme?.colors?.black[9]};
-    }
-    &.ant-select {
-        color: ${({ theme }) => theme?.colors?.black[10]};
-    }
-    &:not(.ant-select-customize-input) .ant-select-selector {
-        background-color: ${({ theme }) => theme?.colors?.black[0]};
-        border-color: ${({ theme }) => theme?.colors?.black[4]};
-        min-height: 32px;
+type StyleProps = {
+    className?: string;
+    style?: React.CSSProperties;
+};
 
-        &::after,
-        .ant-select-selection-item,
-        .ant-select-selection-placeholder {
-            line-height: 30px;
-        }
-        .ant-select-selection-search-input {
-            height: 30px;
-        }
-    }
-    &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-        border-color: ${({ theme }) => theme?.colors?.primary[5]};
-        box-shadow: none;
-    }
-    &.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-        background: ${({ theme }) => theme?.colors?.black[2]};
-    }
-    &.ant-select-multiple.ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
-        background: ${({ theme }) => theme?.colors?.black[2]};
-    }
-    &.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
-        border-color: ${({ theme }) => theme?.colors?.primary[5]};
-    }
-    .ant-select-selection-placeholder {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-        font-style: italic;
-    }
-    .ant-select-arrow {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-    .ant-select-clear {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-        background: ${({ theme }) => theme?.colors?.black[0]};
-    }
-    .ant-select-clear:hover {
-        color: ${({ theme }) => theme?.colors?.black[7]};
-    }
+export type SelectProps = {
+    defaultValue?: string;
+    value?: string;
+    name?: string;
+    onChange?: (value: string) => void;
+    groups: Group[];
+    defaultOpen?: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    triggerProps?: StyleProps;
+    contentProps?: StyleProps;
+    scrollButtonProps?: StyleProps;
+    separatorProps?: StyleProps;
+    itemProps?: StyleProps;
+};
 
-    &.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
-        height: 40px;
+const Select = ({
+    defaultValue = "",
+    value,
+    name,
+    onChange,
+    groups,
+    defaultOpen = false,
+    open,
+    onOpenChange,
+    ...props
+}: SelectProps) => {
+    const lastInd = groups.length - 1;
+    const [showDefaultItem, setShowDefaultItem] = useState(true);
 
-        &::after,
-        .ant-select-selection-item,
-        .ant-select-selection-placeholder {
-            line-height: 38px;
-        }
-        .ant-select-selection-search-input {
-            height: 38px;
-        }
-    }
-    &.ant-select-sm:not(.ant-select-customize-input) .ant-select-selector {
-        height: 24px;
+    useEffect(() => {
+        const val = value ? value : defaultValue;
+        let bool = true;
+        groups.forEach((group) => {
+            group.items.forEach((item) => {
+                bool = item.value != val ? (bool ? true : false) : false;
+            });
+        });
+        setShowDefaultItem(bool);
+    }, []);
 
-        &::after,
-        .ant-select-selection-item,
-        .ant-select-selection-placeholder {
-            line-height: 22px;
-        }
-        .ant-select-selection-search-input {
-            height: 22px;
-        }
-    }
-` as SelectType;
+    return (
+        <SelectRoot
+            defaultValue={defaultValue}
+            value={value}
+            name={name}
+            onValueChange={(value) => {
+                if (value != "") setShowDefaultItem(false);
+                onChange && onChange(value);
+            }}
+            defaultOpen={defaultOpen}
+            open={open}
+            onOpenChange={onOpenChange}
+        >
+            <SelectTrigger {...props.triggerProps}>
+                <SelectValue />
+                <SelectIcon>
+                    <ChevronDownIcon />
+                </SelectIcon>
+            </SelectTrigger>
+            <SelectContent {...props.contentProps}>
+                <SelectScrollUpButton {...props.scrollButtonProps}>
+                    <ChevronUpIcon />
+                </SelectScrollUpButton>
+                <SelectViewport>
+                    {showDefaultItem && (
+                        <SelectItem value={value || defaultValue}>
+                            <SelectItemText>{value || defaultValue}</SelectItemText>
+                            <SelectItemIndicator>
+                                <CheckIcon />
+                            </SelectItemIndicator>
+                        </SelectItem>
+                    )}
+                    {groups.map((group: Group, i) => (
+                        <div key={i}>
+                            <SelectGroup>
+                                {group.label && <SelectLabel>{group.label}</SelectLabel>}
 
-Select.Option = AntdSelect.Option;
-Select.OptGroup = AntdSelect.OptGroup;
+                                {group.items.map((item: Item) => (
+                                    <SelectItem
+                                        key={item.value}
+                                        value={item.value}
+                                        disabled={item.disabled}
+                                        {...props.itemProps}
+                                    >
+                                        <SelectItemText>{item.displayText}</SelectItemText>
+                                        <SelectItemIndicator>
+                                            <CheckIcon />
+                                        </SelectItemIndicator>
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+
+                            {i != lastInd && <SelectSeparator {...props.separatorProps} />}
+                        </div>
+                    ))}
+                </SelectViewport>
+                <SelectScrollDownButton {...props.scrollButtonProps}>
+                    <ChevronDownIcon />
+                </SelectScrollDownButton>
+            </SelectContent>
+        </SelectRoot>
+    );
+};
 
 export default Select;
