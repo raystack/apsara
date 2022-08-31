@@ -75,10 +75,10 @@ export const FooterWrapper = styled.div`
         transform: rotate(0);
         transition: transform 0.5s;
         color: ${({ theme }) => theme?.sidebar?.trigger} !important;
+    }
 
-        & .rotate {
-            transform: rotate(180deg);
-        }
+    & .rotate {
+        transform: rotate(180deg);
     }
 
     .apsara-nav-text {
