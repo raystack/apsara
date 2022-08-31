@@ -85,7 +85,6 @@ export const FooterWrapper = styled.div`
         ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.sidebar?.trigger, "0.3px")}
         ${ellipsis}
         font-weight: bold;
-        transition: opacity 0.4s;
     }
 `;
 
