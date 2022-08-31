@@ -2,7 +2,6 @@ import React from "react";
 import { DefaultTheme, ThemeProvider as ThemeProviderBase } from "styled-components";
 import { createGlobalStyle } from "styled-components";
 import Themes from "./theme";
-import { NotificationStyle } from "../Notification/Notification.styles";
 import { DropdownStyle } from "../Combobox/Combobox.styles";
 import RobotoRegular from "../../assets/fonts/Roboto-Regular.ttf";
 import RobotoItalic from "../../assets/fonts/Roboto-Italic.ttf";
@@ -49,7 +48,7 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme?.body?.color};
   }
 
-  ${NotificationStyle}
+
 
   ${DropdownStyle}
 `;

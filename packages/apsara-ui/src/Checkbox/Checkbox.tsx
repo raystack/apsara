@@ -1,71 +1,100 @@
-import { Checkbox as AntdCheckbox } from "antd";
-import styled, { css } from "styled-components";
+import { CheckIcon } from "@radix-ui/react-icons";
+import React, { useEffect, useState } from "react";
+import { CheckboxWrapper, StyledCheckbox, StyledIndicator } from "./Checkbox.styles";
 
-const checkboxStyles = css`
-    color: ${({ theme }) => theme?.colors?.black[10]};
-    .ant-checkbox {
-        color: ${({ theme }) => theme?.colors?.black[10]};
-    }
-    :hover .ant-checkbox-inner,
-    .ant-checkbox:hover .ant-checkbox-inner,
-    .ant-checkbox-input:focus + .ant-checkbox-inner {
-        border-color: ${({ theme }) => theme?.colors?.primary[4]};
-    }
-    .ant-checkbox-checked::after {
-        border-color: ${({ theme }) => theme?.colors?.primary[4]};
-        animation: none;
-    }
-    .ant-checkbox-inner {
-        background-color: ${({ theme }) => theme?.colors?.black[0]};
-        border-color: ${({ theme }) => theme?.colors?.black[5]};
-    }
-    .ant-checkbox-inner::after {
-        border-color: ${({ theme }) => theme?.colors?.black[0]};
-    }
-    .ant-checkbox-checked .ant-checkbox-inner::after {
-        border-color: ${({ theme }) => theme?.colors?.black[0]};
-    }
-    .ant-checkbox-checked .ant-checkbox-inner {
-        background-color: ${({ theme }) => theme?.colors?.primary[4]};
-        border-color: ${({ theme }) => theme?.colors?.primary[4]};
-    }
-    .ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner::after {
-        border-color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-    .ant-checkbox-disabled .ant-checkbox-inner {
-        background-color: ${({ theme }) => theme?.colors?.black[2]};
-        border-color: ${({ theme }) => theme?.colors?.black[5]} !important;
-    }
-    .ant-checkbox-disabled .ant-checkbox-inner::after {
-        border-color: ${({ theme }) => theme?.colors?.black[2]};
-    }
-    .ant-checkbox-disabled + span {
-        color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-    .ant-checkbox-indeterminate .ant-checkbox-inner {
-        background-color: ${({ theme }) => theme?.colors?.black[0]};
-        border-color: ${({ theme }) => theme?.colors?.black[5]};
-    }
-    .ant-checkbox-indeterminate .ant-checkbox-inner::after {
-        background-color: ${({ theme }) => theme?.colors?.primary[4]};
-    }
-    .ant-checkbox-indeterminate.ant-checkbox-disabled .ant-checkbox-inner::after {
-        background-color: ${({ theme }) => theme?.colors?.black[6]};
-        border-color: ${({ theme }) => theme?.colors?.black[6]};
-    }
-`;
+type CheckboxProps = {
+    defaultChecked?: boolean;
+    checked?: boolean;
+    onChange?: (checked: boolean | "indeterminate") => void;
+    disabled?: boolean;
+    required?: boolean;
+    name?: string;
+    label?: string;
+    value?: string;
+    className?: string;
+    style?: React.CSSProperties;
+};
 
-// TODO: fix the Group type
-const Checkbox: typeof AntdCheckbox & { Group: any } = styled(AntdCheckbox)`
-    ${checkboxStyles}
-`;
+type CheckboxGroupProps = {
+    defaultValue?: string[];
+    value?: string[];
+    onChange?: (values: string[]) => void;
+    disabled?: boolean;
+    required?: boolean;
+    orientation?: "horizontal" | "vertical";
+    name?: string;
+    options?: CheckboxProps[];
+};
 
-const CheckboxGroup = styled(AntdCheckbox.Group)`
-    color: ${({ theme }) => theme?.colors?.black[10]};
-    .ant-checkbox-wrapper {
-        ${checkboxStyles}
-    }
-`;
+const Checkbox = ({
+    defaultChecked = true,
+    checked,
+    onChange,
+    disabled,
+    required,
+    name,
+    value,
+    style,
+}: CheckboxProps) => {
+    return (
+        <StyledCheckbox
+            defaultChecked={defaultChecked}
+            id="c1"
+            checked={checked}
+            onCheckedChange={onChange}
+            disabled={disabled}
+            required={required}
+            name={name}
+            value={value}
+            style={style}
+        >
+            <StyledIndicator>
+                <CheckIcon style={{ width: "13px", height: "13px" }} />
+            </StyledIndicator>
+        </StyledCheckbox>
+    );
+};
+
+const CheckboxGroup = ({
+    defaultValue,
+    value,
+    options,
+    onChange,
+    orientation = "horizontal",
+    ...props
+}: CheckboxGroupProps) => {
+    const [selectedValues, setSelectedValues] = useState(defaultValue || value || []);
+
+    useEffect(() => {
+        setSelectedValues(value || []);
+    }, [value]);
+
+    const onValuesChange = (value: string, checked: boolean | "indeterminate") => {
+        if (checked) return [...selectedValues, value];
+        else return selectedValues.filter((selectedValue) => selectedValue !== value);
+    };
+
+    return (
+        <CheckboxWrapper orientation={orientation}>
+            {options &&
+                options.map((option) => (
+                    <div className="checkbox_label_wrapper" key={option.value}>
+                        <Checkbox
+                            onChange={(checked) => {
+                                const newSelectedValues = onValuesChange(option.value || "", checked);
+                                setSelectedValues(newSelectedValues);
+                                onChange && onChange(newSelectedValues);
+                            }}
+                            checked={selectedValues.includes(option.value || "")}
+                            value={option.value}
+                            {...props}
+                        />
+                        <label className="checkbox_label">{option.label}</label>
+                    </div>
+                ))}
+        </CheckboxWrapper>
+    );
+};
 
 Checkbox.Group = CheckboxGroup;
 

@@ -1,13 +1,14 @@
 import React from "react";
-import Tooltip from "./Tooltip";
+import Tooltip, { TooltipProps } from "./Tooltip";
 
 export default {
     title: "Feedback/Tooltip",
     component: Tooltip,
 };
 
-export const tooltip = () => (
-    <Tooltip title="Tooltip" placement="right" visible>
-        Tooltip
-    </Tooltip>
-);
+const Template = (args: TooltipProps) => <Tooltip {...args}>Tooltip</Tooltip>;
+export const tooltip = Template.bind({});
+tooltip.args = {
+    title: "tooltip",
+    placement: "right",
+};

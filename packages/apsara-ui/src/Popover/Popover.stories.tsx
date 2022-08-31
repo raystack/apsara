@@ -30,6 +30,7 @@ export const popoverContent = () => (
             onOk={() => {}}
             cancelBtnProps={{
                 text: "Cancel",
+                style: { marginLeft: "10px" },
             }}
         >
             <Button>Default Button</Button>

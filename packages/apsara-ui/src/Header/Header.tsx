@@ -20,7 +20,13 @@ const getMenuList = (menuList: any[], iconColor: string) => (
                     href={menu.href ? menu.href : "#"}
                     onClick={menu.onClick ? menu.onClick : () => null}
                 >
-                    {menu.icon && <CustomIcon name={menu.icon} size={24} styleOverride={{ color: iconColor }} />}
+                    {menu.icon && (
+                        <CustomIcon
+                            name={menu.icon}
+                            size={24}
+                            styleOverride={{ color: iconColor, marginRight: "15px" }}
+                        />
+                    )}
                     {menu.name}
                 </MenuLink>
             </Menu.Item>

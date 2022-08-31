@@ -1,5 +1,6 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
 import Tabs from "./Tabs";
+import Button from "../Button";
 
 <Meta
     title="Navigation/Tabs"
@@ -28,24 +29,15 @@ import Tabs from "./Tabs";
         name="primary tabs"
         args={{
             type: "primary",
+            tabContent: [
+                { value: "tabs1", content: "Tabs1", title: "tabs1" },
+                { value: "tabs2", content: "Tabs2", title: "tabs2" },
+                { value: "tabs3", content: "Tabs3", title: "tabs3", disabled: true },
+                { value: "tabs4", content: "Tabs4", title: "tabs4" },
+            ],
         }}
     >
-        {(args) => (
-            <Tabs {...args}>
-                <Tabs.TabPane tab="tab1" key="tab1">
-                    Tab 1
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab2" key="tab2">
-                    Tab 2
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab3" key="tab3" disabled>
-                    Tab 3
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab4" key="tab4">
-                    Tab 4
-                </Tabs.TabPane>
-            </Tabs>
-        )}
+        {(args) => <Tabs {...args} />}
     </Story>
 </Canvas>
 
@@ -56,24 +48,15 @@ import Tabs from "./Tabs";
         name="secondary tabs"
         args={{
             type: "secondary",
+            tabContent: [
+                { value: "tabs1", content: "Tabs1", title: "tabs1" },
+                { value: "tabs2", content: "Tabs2", title: "tabs2" },
+                { value: "tabs3", content: "Tabs3", title: "tabs3", disabled: true },
+                { value: "tabs4", content: "Tabs4", title: "tabs4" },
+            ],
         }}
     >
-        {(args) => (
-            <Tabs {...args}>
-                <Tabs.TabPane tab="tab1" key="tab1">
-                    Tab 1
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab2" key="tab2">
-                    Tab 2
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab3" key="tab3" disabled>
-                    Tab 3
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab4" key="tab4">
-                    Tab 4
-                </Tabs.TabPane>
-            </Tabs>
-        )}
+        {(args) => <Tabs {...args} />}
     </Story>
 </Canvas>
 
@@ -82,24 +65,16 @@ import Tabs from "./Tabs";
         name="Playground"
         args={{
             type: "primary",
+            tabContent: [
+                { value: "tabs1", content: "Tabs1", title: "tabs1" },
+                { value: "tabs2", content: "Tabs2", title: "tabs2" },
+                { value: "tabs3", content: "Tabs3", title: "tabs3" },
+                { value: "tabs4", content: "Tabs4", title: "tabs4" },
+            ],
+            tabExtraContentRight: <Button>action</Button>,
         }}
     >
-        {(args) => (
-            <Tabs {...args}>
-                <Tabs.TabPane tab="tab1" key="tab1">
-                    Tab 1
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab2" key="tab2">
-                    Tab 2
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab3" key="tab3" disabled>
-                    Tab 3
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="tab4" key="tab4">
-                    Tab 4
-                </Tabs.TabPane>
-            </Tabs>
-        )}
+        {(args) => <Tabs {...args} />}
     </Story>
 </Preview>
 

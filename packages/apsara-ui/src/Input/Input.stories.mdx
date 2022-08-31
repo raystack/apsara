@@ -1,5 +1,6 @@
 import { Meta, Preview, Canvas, Story, ArgsTable, IconGallery, IconItem } from "@storybook/addon-docs/blocks";
 import Input from "./Input";
+import Icon from "../Icon";
 
 export const sizes = [11, 12, 14, 15, 16, 18, 20, 22, 25, 28, 32, 36, 40, 50, 60];
 
@@ -25,6 +26,47 @@ export const sizes = [11, 12, 14, 15, 16, 18, 20, 22, 25, 28, 32, 36, 40, 50, 60
             table: {
                 type: { summary: "boolean" },
                 defaultValue: { summary: false },
+            },
+        },
+        allowClear: {
+            control: { type: "boolean" },
+            table: {
+                type: { summary: "boolean" },
+                defaultValue: { summary: false },
+            },
+        },
+        size: {
+            control: { type: "select" },
+            options: ["small", "middle", "large"],
+            table: {
+                defaultValue: {
+                    summary: "middle",
+                },
+                type: {
+                    summary: "size of input",
+                },
+            },
+        },
+        suffix: {
+            control: { type: "object" },
+            table: {
+                defaultValue: {
+                    summary: "",
+                },
+                type: {
+                    summary: "ReactNode",
+                },
+            },
+        },
+        prefix: {
+            control: { type: "object" },
+            table: {
+                defaultValue: {
+                    summary: "",
+                },
+                type: {
+                    summary: "ReactNode",
+                },
             },
         },
     }}
@@ -60,6 +102,9 @@ export const sizes = [11, 12, 14, 15, 16, 18, 20, 22, 25, 28, 32, 36, 40, 50, 60
             placeholder: "Disabled with Placeholder",
             value: "",
             disabled: false,
+            size: "middle",
+            allowClear: false,
+            suffix: "_imt",
         }}
     >
         {(args) => <Input {...args} />}

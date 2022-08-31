@@ -7,7 +7,7 @@ import VTable from "./Table/VirtualisedTable";
 import Text from "./Text";
 import Tag from "./Tag";
 import States from "./States";
-import { showError, showSuccess, showNotification } from "./Notification";
+import { ShowNotification, NotificationRef } from "./Notification";
 import FormBuilder from "./FormBuilder";
 import Learn from "./Learn";
 import Markdown from "./Markdown";
@@ -54,9 +54,8 @@ export {
     Tag,
     FormBuilder,
     States,
-    showError,
-    showSuccess,
-    showNotification,
+    ShowNotification,
+    NotificationRef,
     Learn,
     Markdown,
     ContentLayout,

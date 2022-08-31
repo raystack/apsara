@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import Icon from "../Icon";
-import { showSuccess, showError } from "../Notification";
+import { ShowNotification, NotificationRef } from "../Notification";
 import { Container, CopyBtn, Viewer } from "./Codeblock.styles";
 
 interface CodeblockProps {
@@ -11,15 +11,16 @@ interface CodeblockProps {
 }
 
 const Codeblock = ({ lang = "text", children = "", copy = false, className = "" }: CodeblockProps) => {
+    const notificationRef = useRef<NotificationRef>();
     const codeRef = useRef(null);
     function fallbackCopyTextToClipboard() {
         const node = codeRef?.current;
         if (window.getSelection && node) {
             window.getSelection()?.selectAllChildren(node);
             document.execCommand("Copy");
-            showSuccess("Copied to Clipboard");
+            notificationRef?.current?.showSuccess("Copied to Clipboard");
         } else {
-            showError("Unable to Copy");
+            notificationRef?.current?.showError("Unable to Copy");
         }
     }
 
@@ -28,10 +29,10 @@ const Codeblock = ({ lang = "text", children = "", copy = false, className = "" 
             navigator.clipboard
                 .writeText(children)
                 .then(() => {
-                    showSuccess("Copied to Clipboard");
+                    notificationRef?.current?.showSuccess("Copied to Clipboard");
                 })
                 .catch(() => {
-                    showError("Unable to Copy");
+                    notificationRef?.current?.showError("Unable to Copy");
                 });
         } else {
             fallbackCopyTextToClipboard();
@@ -47,6 +48,7 @@ const Codeblock = ({ lang = "text", children = "", copy = false, className = "" 
             <Viewer lang={lang} ref={codeRef}>
                 {children}
             </Viewer>
+            <ShowNotification ref={notificationRef} />
         </Container>
     );
 };

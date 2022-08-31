@@ -28,12 +28,14 @@ export const iconComponent = () => (
                 url: "/discovery/",
                 linkText: "Discovery",
                 iconProps: { name: "discovery" },
+                isSubMenu: false,
             },
             {
                 key: "dashboard",
                 url: "/dashboard/",
                 linkText: "Dashboard",
                 iconProps: { name: "dashboard" },
+                isSubMenu: false,
             },
             {
                 key: "topics",
@@ -54,6 +56,7 @@ export const iconComponent = () => (
                 url: "/health/",
                 linkText: "Health",
                 iconProps: { name: "health" },
+                isSubMenu: false,
             },
         ]}
     />
@@ -74,18 +77,21 @@ export const iconProps = () => (
                 url: "/discovery/",
                 linkText: "Discovery",
                 iconProps: { name: "discovery" },
+                isSubMenu: false,
             },
             {
                 key: "dashboard",
                 url: "/dashboard/",
                 linkText: "Dashboard",
                 iconProps: { name: "dashboard" },
+                isSubMenu: false,
             },
             {
                 key: "health",
                 url: "/health/",
                 linkText: "Health",
                 iconProps: { name: "health" },
+                isSubMenu: false,
             },
         ]}
     />

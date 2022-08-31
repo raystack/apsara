@@ -1,7 +1,18 @@
 import React, { useState } from "react";
 import Button from "../Button/Button";
 import { CustomButtonProps } from "../Button/Button.types";
-import { Container, Content, Message, Title, Footer, StyledPopover } from "./Popover.styles";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import {
+    StyledPopover,
+    PopoverTrigger,
+    StyledArrow,
+    Container,
+    Content,
+    Footer,
+    Message,
+    Title,
+    StyledContent,
+} from "./Popover.styles";
 
 interface ButtonPopoverContentProps {
     title: string;
@@ -63,37 +74,37 @@ function ConfirmationPopover({
     cancelBtnProps,
     children,
 }: ButtonConfirmationPopover) {
-    const [visible, setVisible] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const onOKClick = () => {
-        setVisible(false);
+        setOpen(false);
         onOk();
     };
 
     const onCancelClick = () => {
-        setVisible(false);
+        setOpen(false);
         onCancel();
     };
 
     return (
-        <StyledPopover
-            visible={visible}
-            onVisibleChange={setVisible}
-            content={
-                <PopoverContent
-                    title={title}
-                    message={message}
-                    content={content}
-                    onOk={onOKClick}
-                    onCancel={onCancelClick}
-                    okBtnProps={okBtnProps}
-                    cancelBtnProps={cancelBtnProps}
-                />
-            }
-            trigger="click"
-            placement="bottomRight"
-        >
-            {children}
+        <StyledPopover open={open} onOpenChange={(open) => setOpen(open)}>
+            <PopoverTrigger asChild>
+                <span aria-label="Update dimensions">{children}</span>
+            </PopoverTrigger>
+            <PopoverPrimitive.Portal>
+                <StyledContent className="apsara-popover-content" side="bottom" align="end">
+                    <PopoverContent
+                        title={title}
+                        message={message}
+                        content={content}
+                        onOk={onOKClick}
+                        onCancel={onCancelClick}
+                        okBtnProps={okBtnProps}
+                        cancelBtnProps={cancelBtnProps}
+                    />
+                    <StyledArrow />
+                </StyledContent>
+            </PopoverPrimitive.Portal>
         </StyledPopover>
     );
 }

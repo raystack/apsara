@@ -9,7 +9,10 @@ export const ListingWrapper = styled.div`
 `;
 
 export const ListingSearch: React.FC<SearchProps> = styled(Search)`
-    padding-bottom: 20px;
+    margin-bottom: 20px;
+    .search_input {
+        margin-right: 10px !important;
+    }
 `;
 
 export const FilterActions = styled.span`

@@ -1,9 +1,38 @@
-import React from "react";
-import { TooltipProps } from "antd";
+import React, { HTMLAttributes } from "react";
 import { StyledTooltip } from "./Tooltip.styles";
 
-const CustomTooltip: React.FC<TooltipProps> = ({ className = "", ...props }) => (
-    <StyledTooltip {...props} tooltipClassName={className} />
-);
+export type TooltipProps = {
+    title?: React.ReactNode;
+    placement?:
+        | "left"
+        | "right"
+        | "top"
+        | "bottom"
+        | "rightTop"
+        | "rightBottom"
+        | "leftTop"
+        | "leftBottom"
+        | "topLeft"
+        | "topRight"
+        | "bottomLeft"
+        | "bottomRight";
+    color?: string;
+    arrowSize?: string;
+} & HTMLAttributes<HTMLDivElement>;
 
-export default CustomTooltip;
+const Tooltip = ({
+    title = "",
+    placement = "top",
+    color = "#333",
+    children,
+    arrowSize = "5px",
+    ...props
+}: TooltipProps) => {
+    return (
+        <StyledTooltip data-tooltip={title} placement={placement} color={color} arrowSize={arrowSize} {...props}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export default Tooltip;
