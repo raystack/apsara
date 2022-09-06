@@ -14,6 +14,7 @@ import {
     FilterButton,
     StyledBadge,
 } from "./Filters.styles";
+import Button from "../../Button";
 
 const renderFilterList = ({
     filterFieldList,
@@ -21,6 +22,8 @@ const renderFilterList = ({
     filteredFieldDataLength,
     onGroupFilter,
     onClearGroupFilter,
+    withButton,
+    onApplyBtn,
 }: any) => {
     return (
         <FilterPopup>
@@ -30,8 +33,8 @@ const renderFilterList = ({
                         <FilterTitle>{group.name}</FilterTitle>
                         <div>
                             <Checkbox.Group
-                                value={filteredFieldData[group.slug] || []}
-                                onChange={(args: any) => onGroupFilter(group, args)}
+                                value={filteredFieldData[group.slug] || null}
+                                onChange={(args: any) => onGroupFilter(group, args, withButton)}
                                 options={group.data}
                                 orientation="vertical"
                             />
@@ -43,12 +46,20 @@ const renderFilterList = ({
                 <span onClick={onClearGroupFilter} className={`${filteredFieldDataLength ? "" : "disabled"}`}>
                     Clear All Filters
                 </span>
+                {withButton &&
+                        <Button
+                            onClick={() => onApplyBtn()}
+                            type="default"
+                        >
+                            Apply All
+                        </Button>
+                }
             </FilterFooter>
         </FilterPopup>
     );
 };
 
-const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...props }: any) => {
+const Filters = ({ filteredFieldData, label = "Filters", disabled = false, withButton = false, onApplyBtn, ...props }: any) => {
     const [open, setOpen] = useState(false);
     const filteredFieldDataLength = Object.keys(filteredFieldData).reduce((acc, key) => {
         return acc + filteredFieldData[key].length;
@@ -68,7 +79,7 @@ const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...pr
             </PopoverTrigger>
             <PopoverPrimitive.Portal>
                 <StyledContent side="bottom" align="end">
-                    {renderFilterList({ filteredFieldData, filteredFieldDataLength, ...props })}
+                    {renderFilterList({ filteredFieldData, filteredFieldDataLength,withButton, onApplyBtn, ...props })}
                     <StyledArrow />
                 </StyledContent>
             </PopoverPrimitive.Portal>

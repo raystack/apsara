@@ -22,7 +22,7 @@ const Listing = ({
 }: ListingProps) => {
     const { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps } = tableProps;
     const { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps;
-    const { filterFieldList } = filterProps;
+    const { filterFieldList, withButton } = filterProps;
     const {
         searchTerm,
         sortedInfo,
@@ -32,6 +32,7 @@ const Listing = ({
         onClearGroupFilter,
         filteredList,
         filteredFieldData,
+        onApplyBtn,
     } = useSearchFilter({ list, searchFields });
 
     const columns = getColumnList(resourcePath, sortedInfo);
@@ -51,6 +52,8 @@ const Listing = ({
                         filteredFieldData={filteredFieldData}
                         onGroupFilter={onGroupFilter}
                         onClearGroupFilter={onClearGroupFilter}
+                        withButton={withButton}
+                        onApplyBtn={onApplyBtn}
                     />
                 )}
                 {renderExtraFilters}

@@ -48,6 +48,9 @@ export const FilterLabel = styled.div`
 export const FilterFooter = styled.div`
     padding: 16px;
     border-top: 1px solid ${({ theme }) => theme?.listing?.filterBorder};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     span {
         cursor: pointer;
         color: ${({ theme }) => theme?.colors?.primary[4]};

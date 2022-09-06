@@ -12,7 +12,7 @@ export interface ListingProps {
         selectedRowId?: number;
         scroll?: any;
     } & Omit<IVirtualTable, "columns" | "items">;
-    filterProps?: { filterFieldList?: IGroupOptions[] };
+    filterProps?: { filterFieldList?: IGroupOptions[]; withButton?: boolean };
     searchProps?: {
         searchPlaceholder?: string;
         searchFields?: any[];

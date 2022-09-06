@@ -4,28 +4,62 @@ import * as R from "ramda";
 import { IGroupOptions } from "../Listing.types";
 
 export const useSearchFilterState = () => {
-    const [filteredFieldData, setFilteredFieldData] = useState({});
+    const [filteredFieldData, setFilteredFieldData] = useState({}); // for updating UI
+    const [triggerFieldData, setTriggerFieldData] = useState({}); // for triggering filter function
     const [searchTerm, setSearchTerm] = useState("");
     const [sortedInfo, setSortedInfo] = useState({});
+    const [savedFilterWithBtn, setSavedFilterWithBtn] = useState({}); // save all incoming filter data wrt btn
+    const [tempCachedFilter, setTempCachedFilter] = useState({}); // temp state for all incoming data
 
-    const onGroupFilter = (group: IGroupOptions, filteredArr: any) => {
+    const onGroupFilter = (group: IGroupOptions, filteredArr: any, withBtn: boolean) => {
         const { slug, multi = true } = group;
-        setFilteredFieldData({
+        const temp = { [slug]: multi ? filteredArr : R.takeLast(1, filteredArr) };
+        const cacheFilter = {
             ...filteredFieldData,
-            ...{ [slug]: multi ? filteredArr : R.takeLast(1, filteredArr) },
-        });
+            ...temp,
+        };
+        const tempFilterWithBtn = {
+            ...tempCachedFilter,
+            ...temp,
+        };
+        if (!multi) {
+            tempFilterWithBtn[slug] = R.takeLast(1, filteredArr);
+        }
+        setTempCachedFilter(tempFilterWithBtn);
+        if (!withBtn) {
+            setFilteredFieldData(cacheFilter);
+            setTriggerFieldData(cacheFilter);
+        } else if (withBtn && !multi) {
+            setFilteredFieldData(cacheFilter);
+            setSavedFilterWithBtn(tempFilterWithBtn);
+        } else if (withBtn && multi) {
+            setFilteredFieldData(tempFilterWithBtn);
+            setSavedFilterWithBtn(tempFilterWithBtn);
+        }
     };
 
-    const onClearGroupFilter = () => setFilteredFieldData({});
+    const onApplyBtn = () => {
+        setFilteredFieldData(savedFilterWithBtn);
+        setTriggerFieldData(savedFilterWithBtn);
+    };
+
+    const onClearGroupFilter = () => {
+        setFilteredFieldData({});
+        setTriggerFieldData({});
+        setTempCachedFilter({});
+        setSavedFilterWithBtn({});
+    };
 
     return {
         sortedInfo,
         searchTerm,
         filteredFieldData,
+        triggerFieldData,
         setSearchTerm,
         setSortedInfo,
         onGroupFilter,
         onClearGroupFilter,
+        onApplyBtn,
     };
 };
 
@@ -34,17 +68,19 @@ export default function useSearchFilter({ list, searchFields = [] }: any) {
         sortedInfo,
         searchTerm,
         filteredFieldData,
+        triggerFieldData,
         setSearchTerm,
         setSortedInfo,
         onGroupFilter,
         onClearGroupFilter,
+        onApplyBtn,
     } = useSearchFilterState();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const filteredList = useCallback(getFilterList(list, filteredFieldData, searchTerm, searchFields), [
+    const filteredList = useCallback(getFilterList(list, triggerFieldData, searchTerm, searchFields), [
         list,
         searchTerm,
-        filteredFieldData,
+        triggerFieldData,
         searchFields,
     ]);
 
@@ -57,5 +93,6 @@ export default function useSearchFilter({ list, searchFields = [] }: any) {
         onClearGroupFilter,
         filteredList,
         filteredFieldData,
+        onApplyBtn,
     };
 }

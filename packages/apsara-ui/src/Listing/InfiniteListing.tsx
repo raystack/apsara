@@ -24,7 +24,7 @@ interface InfiniteListingProps {
         selectedRowId?: number;
         scroll?: any;
     };
-    filterProps?: { filterFieldList?: any[] };
+    filterProps?: { filterFieldList?: any[]; withButton?: boolean };
     searchProps?: { searchPlaceholder?: string; disabled?: boolean };
     renderExtraFilters?: any;
     renderHeader?: any;
@@ -53,7 +53,7 @@ const InfiniteListing = ({
     onFilter = () => null,
 }: InfiniteListingProps) => {
     const { getColumnList = () => [], handleRowClick = () => ({}), selectedRowId, ...extraTableProps } = tableProps;
-    const { filterFieldList = [] } = filterProps;
+    const { filterFieldList = [], withButton } = filterProps;
 
     const {
         sortedInfo,
@@ -63,6 +63,7 @@ const InfiniteListing = ({
         setSortedInfo,
         onGroupFilter,
         onClearGroupFilter,
+        onApplyBtn,
     } = useSearchFilterState();
     const { disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps || {};
     async function handleLoadMore() {
@@ -102,6 +103,8 @@ const InfiniteListing = ({
                         filteredFieldData={filteredFieldData}
                         onGroupFilter={onGroupFilter}
                         onClearGroupFilter={onClearGroupFilter}
+                        withButton={withButton}
+                        onApplyBtn={onApplyBtn}
                     />
                 )}
                 {renderExtraFilters}
