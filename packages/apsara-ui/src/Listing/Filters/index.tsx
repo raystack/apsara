@@ -14,6 +14,7 @@ import {
     FilterButton,
     StyledBadge,
 } from "./Filters.styles";
+import Button from "../../Button";
 
 const renderFilterList = ({
     filterFieldList,
@@ -21,6 +22,7 @@ const renderFilterList = ({
     filteredFieldDataLength,
     onGroupFilter,
     onClearGroupFilter,
+    onApplyClick,
 }: any) => {
     return (
         <FilterPopup>
@@ -40,9 +42,12 @@ const renderFilterList = ({
                 ))}
             </FilterBody>
             <FilterFooter>
-                <span onClick={onClearGroupFilter} className={`${filteredFieldDataLength ? "" : "disabled"}`}>
+                <span onClick={onClearGroupFilter} className={`clear-btn ${filteredFieldDataLength ? "" : "disabled"}`}>
                     Clear All Filters
                 </span>
+                {onApplyClick &&
+                    <Button type="default" onClick={onApplyClick} className="apply-btn">Apply</Button>
+                }
             </FilterFooter>
         </FilterPopup>
     );
