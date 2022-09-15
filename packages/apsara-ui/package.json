@@ -47,6 +47,7 @@
         "@radix-ui/react-switch": "^0.1.5",
         "@radix-ui/react-tabs": "^1.0.0",
         "@radix-ui/react-toast": "^1.0.0",
+        "@radix-ui/react-dialog": "^1.0.0",
         "antd": "^4.16.13",
         "clsx": "^1.1.1",
         "moment": "^2.29.1",
