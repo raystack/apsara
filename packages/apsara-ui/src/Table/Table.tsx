@@ -4,7 +4,7 @@ import { StyledTable, StyledEmpty, EmptyHeader, EmptyText } from "./Table.styles
 
 const EmptyComponent = () => {
     return (
-        <StyledEmpty description={false}>
+        <StyledEmpty>
             <EmptyHeader> We could not find it! </EmptyHeader>
             <EmptyText> We are sorry, but your search did not have any result </EmptyText>
         </StyledEmpty>
@@ -32,13 +32,11 @@ function Table({
 }: ITableProps) {
     return (
         <StyledTable
-            dataSource={items}
+            data={items}
             rowKey={rowKey}
-            pagination={false}
-            showSorterTooltip={false}
             className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""} ${className}`}
-            locale={{ emptyText: <EmptyComponent /> }}
             rowClassName={(record: any) => (selectedRowId === record.id ? "highlightRow" : "")}
+            emptyText={<EmptyComponent />}
             onRow={(record: any) => {
                 return {
                     onClick: (event) => onRowClick(event, record),

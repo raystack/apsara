@@ -1,20 +1,20 @@
 import styled from "styled-components";
-import { Table, Empty, EmptyProps } from "antd";
+import Table from "rc-table";
 import { VariableSizeGrid } from "react-window";
 import { textStyles } from "../mixin";
 
 export const StyledTable = styled(Table)`
-    .ant-table {
+    .rc-table {
         background: transparent;
         background-color: ${({ theme }) => theme?.table?.bg};
     }
 
-    .ant-table-body,
-    .ant-table-container {
+    .rc-table-body,
+    .rc-table-container {
         ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.table?.text)}
 
-        .ant-table-thead>tr>th,
-        .ant-table-tbody>tr>td,
+        .rc-table-thead>tr>th,
+        .rc-table-tbody>tr>td,
         .virtual-table-cell {
             --cell-padding-tb: 13px;
             --cell-padding-lr: 16px;
@@ -26,8 +26,12 @@ export const StyledTable = styled(Table)`
             background-color: transparent;
         }
 
-        .ant-table-thead {
-            .ant-table-column-title {
+        .rc-table-thead>tr>th{
+            text-align:left
+        }
+
+        .rc-table-thead {
+            .rc-table-column-title {
                 text-transform: capitalize;
             }
             th {
@@ -36,13 +40,13 @@ export const StyledTable = styled(Table)`
             }
         }
 
-        .ant-table-thead
+        .rc-table-thead
             > tr
-            > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+            > th:not(:last-child):not(.rc-table-selection-column):not(.rc-table-row-expand-icon-cell):not([colspan])::before {
             background-color: ${({ theme }) => theme?.table?.border};
         }
 
-        .ant-table-tbody > tr > td,
+        .rc-table-tbody > tr > td,
         .virtual-table-cell {
             cursor: pointer;
 
@@ -72,26 +76,26 @@ export const StyledTable = styled(Table)`
             }
         }
 
-        .ant-table-tbody > tr > td.ant-table-column-sort {
+        .rc-table-tbody > tr > td.rc-table-column-sort {
             background: unset;
         }
 
-        .ant-table-tbody > tr.ant-table-row:hover > td {
+        .rc-table-tbody > tr.rc-table-row:hover > td {
             background: ${({ theme }) => theme?.table?.highlight};
         }
 
         // FIX ME
-        .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner .ant-table-column-sorter-up,
-        .ant-table-thead
+        .rc-table-thead > tr > th .rc-table-column-sorter .rc-table-column-sorter-inner .rc-table-column-sorter-up,
+        .rc-table-thead
             > tr
             > th
-            .ant-table-column-sorter
-            .ant-table-column-sorter-inner
-            .ant-table-column-sorter-down {
+            .rc-table-column-sorter
+            .rc-table-column-sorter-inner
+            .rc-table-column-sorter-down {
             font-size: 10px;
         }
 
-        .ant-table-row {
+        .rc-table-row {
             cursor: pointer;
             height: 48px;
 
@@ -126,16 +130,16 @@ export const StyledTable = styled(Table)`
             }
         }
 
-        .ant-table-column-title {
+        .rc-table-column-title {
             font-weight: bold;
             letter-spacing: 0.3px;
         }
 
-        .anticon {
+        .rcicon {
             margin-right: 10px;
         }
 
-        .ant-table-row td.table-description {
+        .rc-table-row td.table-description {
             line-height: 16px !important;
         }
     }
@@ -146,12 +150,12 @@ export const StyledTable = styled(Table)`
             background: ${({ theme }) => theme?.table?.highlight};
         }
 
-        .ant-table-tbody > tr > td,
+        .rc-table-tbody > tr > td,
         .virtual-table-cell {
             border-bottom: none;
         }
 
-        .ant-table-row,
+        .rc-table-row,
         .virtual-table-cell {
             cursor: text;
 
@@ -168,13 +172,13 @@ export const StyledTable = styled(Table)`
             }
         }
 
-        .ant-table-tbody > tr:hover > td {
+        .rc-table-tbody > tr:hover > td {
             background: transparent;
         }
     }
 
     &.alternate-hover {
-        .ant-table-row {
+        .rc-table-row {
             td:first-child {
                 border-left: 1px solid transparent;
             }
@@ -189,12 +193,12 @@ export const StyledTable = styled(Table)`
         }
     }
 
-    .ant-table-placeholder {
+    .rc-table-placeholder {
         border-bottom: 0;
     }
 
-    .ant-table-ping-right:not(.ant-table-has-fix-right) .ant-table-container::after,
-    .ant-table-ping-left:not(.ant-table-has-fix-left) .ant-table-container::before {
+    .rc-table-ping-right:not(.rc-table-has-fix-right) .rc-table-container::after,
+    .rc-table-ping-left:not(.rc-table-has-fix-left) .rc-table-container::before {
         box-shadow: none;
     }
 `;
@@ -230,14 +234,14 @@ export const StyledGrid = styled(VariableSizeGrid)`
     }
 `;
 
-export const StyledEmpty: React.FC<EmptyProps> = styled(Empty)`
+export const StyledEmpty = styled.div`
     margin: 90px 8px;
 
-    .ant-empty-footer {
+    .rc-empty-footer {
         margin-top: 32px;
     }
 
-    .ant-empty-image {
+    .rc-empty-image {
         height: 100%;
     }
 `;
