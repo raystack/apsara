@@ -13,6 +13,14 @@ export const StyledTable = styled(Table)`
     .rc-table-container {
         ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.table?.text)}
 
+        .rc-table-content table {
+            width: 100%;
+            text-align: left;
+            border-radius: 2px 2px 0 0;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
         .rc-table-thead>tr>th,
         .rc-table-tbody>tr>td,
         .virtual-table-cell {
@@ -236,6 +244,9 @@ export const StyledGrid = styled(VariableSizeGrid)`
 
 export const StyledEmpty = styled.div`
     margin: 90px 8px;
+    font-size: 14px;
+    line-height: 1.5715;
+    text-align: center;
 
     .rc-empty-footer {
         margin-top: 32px;
