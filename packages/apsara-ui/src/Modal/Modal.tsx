@@ -14,7 +14,7 @@ interface ModalProps {
     width?: string;
 }
 
-const Modal = ({ children, heading = "", closable = true, onClose, open = false, width = "50vw", ...props }: ModalProps) => {
+const Modal = ({ children, heading = "", closable = true, onClose, open = false, width = "50vw" }: ModalProps) => {
     return (
         <Dialog.Root open={open} onOpenChange={closable ? onClose : () => { }} >
             <Dialog.Portal>
