@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from "styled-components";
+import styled, { css } from "styled-components";
 import { capitalize } from "../mixin";
 import { StyledTag } from "../Tag/Tag.styles";
 
