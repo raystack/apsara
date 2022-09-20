@@ -1,4 +1,3 @@
-import * as Collapsible from '@radix-ui/react-collapsible';
 import styled, { css, keyframes } from "styled-components";
 import { capitalize } from "../mixin";
 import { StyledTag } from "../Tag/Tag.styles";
