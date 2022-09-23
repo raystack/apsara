@@ -7,6 +7,7 @@ import postcss from "rollup-plugin-postcss";
 import svgr from "@svgr/rollup";
 import json from "@rollup/plugin-json";
 import url from "@rollup/plugin-url";
+import less from 'rollup-plugin-less';
 
 export default {
     input: ["src/**/*.ts", "src/**/*.tsx", "!src/**/*.stories.[tj]s[x]", "!src/**/*.test.[tj]s[x]"],
@@ -67,5 +68,6 @@ export default {
         svgr(),
         json(),
         postcss(),
+        less()
     ],
 };

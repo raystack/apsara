@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Badge, BadgeProps } from "antd";
+import {DotBadge} from "../../Badge";
+import {BadgeProps} from "../../Badge/DotBadge";
 import Button from "../../Button";
 import { textStyles } from "../../mixin";
 
@@ -25,13 +26,6 @@ export const FilterColumn = styled.div`
 
     &:not(:last-child) {
         border-right: 1px solid ${({ theme }) => theme?.listing?.filterBorder};
-    }
-    .ant-checkbox-group {
-        overflow-y: auto;
-        max-height: 260px;
-    }
-    .ant-checkbox-wrapper {
-        ${({ theme }) => textStyles(theme?.fontSizes[0], theme?.listing?.filterText)}
     }
 `;
 
@@ -74,18 +68,6 @@ export const FilterButton = styled(Button)`
     &:active {
         border-color: ${({ theme }) => theme?.colors?.black[7]} !important;
     }
-    .anticon-caret-down {
-        font-size: 10px;
-        transform: rotate(0);
-        transition: transform 0.5s;
-        &.rotate {
-            transform: rotate(-180deg) translate(0, 2px);
-        }
-    }
 `;
 
-export const StyledBadge: React.FC<BadgeProps> = styled(Badge)`
-    .ant-badge-dot {
-        background: ${({ theme }) => theme?.colors?.primary[4]};
-    }
-`;
+export const StyledBadge: React.FC<BadgeProps> = styled(DotBadge)``;

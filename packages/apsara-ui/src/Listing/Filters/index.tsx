@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React, { useState } from "react";
-import { CaretDownFilled } from "@ant-design/icons";
+import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import Checkbox from "../../Checkbox";
 import { PopoverTrigger, StyledArrow, StyledContent, StyledPopover } from "../../Popover/Popover.styles";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
@@ -63,10 +63,10 @@ const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...pr
         <StyledPopover open={open} onOpenChange={(open) => setOpen(open)}>
             <PopoverTrigger asChild>
                 <span aria-label="Update dimensions">
-                    <StyledBadge dot={!!filteredFieldDataLength}>
+                    <StyledBadge dot={!!filteredFieldDataLength} >
                         <FilterButton type="default" disabled={disabled}>
                             {label}
-                            <CaretDownFilled className={open ? "rotate" : ""} style={{ fontSize: "10px" }} />
+                            {open ? <CaretUpIcon/> :  <CaretDownIcon/>}
                         </FilterButton>
                     </StyledBadge>
                 </span>

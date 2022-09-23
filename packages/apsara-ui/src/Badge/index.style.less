@@ -1,0 +1,59 @@
+@badge-cls: badge;
+@zoom-cls: zoom;
+@animation-duration-slow: 0.3s;
+@ease-out-back: cubic-bezier(0.12, 0.4, 0.29, 1.46);
+@ease-in-back: cubic-bezier(0.71, -0.46, 0.88, 0.6);
+
+@keyframes zoomBadgeIn {
+  0% {
+    transform: scale(0) translate(50%, -50%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1) translate(50%, -50%);
+  }
+}
+
+@keyframes zoomBadgeOut {
+  0% {
+    transform: scale(1) translate(50%, -50%);
+  }
+
+  100% {
+    transform: scale(0) translate(50%, -50%);
+    opacity: 0;
+  }
+}
+
+.@{badge-cls} {
+	&-dot-pos {
+		position: absolute;
+	    top: 0;
+	    right: 0;
+	    transform: translate(50%, -50%);
+	    transform-origin: 100% 0%;
+	}
+
+	&-dot {
+		z-index: auto;
+	    width: 6px;
+	    min-width: 6px;
+	    height: 6px;
+	    background:rgb(30, 122, 232);
+	    border-radius: 100%;
+	    box-shadow: 0 0 0 1px #fff;
+	}
+}
+
+.@{zoom-cls} {
+	&-enter {
+		animation: zoomBadgeIn @animation-duration-slow @ease-out-back;
+		animation-fill-mode: both;
+	}
+
+	&-leave {
+	    animation: zoomBadgeOut @animation-duration-slow @ease-in-back;
+	    animation-fill-mode: both;
+	}
+}
