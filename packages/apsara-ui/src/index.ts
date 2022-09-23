@@ -37,7 +37,7 @@ import Tile from "./Tile";
 import Switch from "./Switch";
 import Slider from "./Slider";
 import Themes from "./Provider/theme";
-export { default as DiffTimeline } from "./DiffTimeline";
+import DiffTimeline from "./DiffTimeline";
 export { DynamicList } from "./DynamicList";
 
 export {
@@ -86,4 +86,5 @@ export {
     Slider,
     Themes,
     InfoModal,
+    DiffTimeline,
 };
