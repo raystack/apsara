@@ -1,21 +1,21 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import React, { ReactChildren, useContext } from "react";
+import React, { ReactChildren, useContext, useState } from "react";
 import { ThemeContext } from "styled-components";
-import { Dropdown } from "antd";
 import Lottie from "react-lottie";
 import CustomIcon from "../Icon";
 import Learn from "../Learn";
 import Markdown from "../Markdown";
 import learnAnimation from "./learn.json";
-import { Wrapper, RightBar, Title, Holder, Avatar, Menu, MenuLink } from "./Header.styles";
+import { Wrapper, RightBar, Title, Avatar, AvatarImage, AvatarFallback, DropDownContent, DropDownContentInner, MenuListItem } from "./Header.styles";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 
 const getMenuList = (menuList: any[], iconColor: string) => (
-    <Menu>
+    <DropDownContentInner className="dropDownMenu">
         {menuList.map((menu: any) => (
-            <Menu.Item key={menu.name}>
-                <MenuLink
+            <DropdownMenuPrimitive.Item key={menu.name}>
+                <MenuListItem
                     rel="noopener noreferrer"
                     href={menu.href ? menu.href : "#"}
                     onClick={menu.onClick ? menu.onClick : () => null}
@@ -28,10 +28,10 @@ const getMenuList = (menuList: any[], iconColor: string) => (
                         />
                     )}
                     {menu.name}
-                </MenuLink>
-            </Menu.Item>
+                </MenuListItem>
+            </DropdownMenuPrimitive.Item>
         ))}
-    </Menu>
+    </DropDownContentInner>
 );
 
 interface HeaderProps {
@@ -42,13 +42,13 @@ interface HeaderProps {
     style?: any;
     username?: string;
     learnProps?:
-        | {
-              style: any;
-              content: string;
-              isLearnVisible: boolean;
-              toggleLearnVisibility: () => void;
-          }
-        | any;
+    | {
+        style: any;
+        content: string;
+        isLearnVisible: boolean;
+        toggleLearnVisibility: () => void;
+    }
+    | any;
 }
 const Header = ({
     title,
@@ -78,22 +78,34 @@ const Header = ({
             <RightBar>
                 {children}
                 {menuList.length > 0 && (
-                    <Dropdown placement="bottomRight" style={{ height: "100%" }} overlay={menu} trigger={["click"]}>
-                        <Holder>
-                            <Avatar>{username[0]}</Avatar>
-                        </Holder>
-                    </Dropdown>
+                    <DropdownMenuPrimitive.Root>
+                        <DropdownMenuPrimitive.Trigger asChild={true}>
+                            <Avatar>
+                                <AvatarImage src="" alt="" />
+                                <AvatarFallback>{username[0]}</AvatarFallback>
+                            </Avatar>
+                        </DropdownMenuPrimitive.Trigger>
+                        <DropdownMenuPrimitive.Portal>
+                            <DropDownContent sideOffset={22} align="end">
+                                {menu}
+                            </DropDownContent>
+                        </DropdownMenuPrimitive.Portal>
+                    </DropdownMenuPrimitive.Root>
+
                 )}
                 {learnProps && (
                     <React.Fragment>
                         <Avatar onClick={toggleLearnVisibility} $learn>
-                            {isLearnVisible ? (
-                                <CustomIcon name="learn" style={{ fontSize: "24px" }} />
-                            ) : (
-                                <div onClick={toggleLearnVisibility}>
-                                    <Lottie options={defaultOptions} height={30} width={30} isStopped={false} />
-                                </div>
-                            )}
+                            <AvatarImage src="" />
+                            <AvatarFallback $learn>
+                                {isLearnVisible ? (
+                                    <CustomIcon name="learn" style={{ fontSize: "24px" }} />
+                                ) : (
+                                    <div onClick={toggleLearnVisibility}>
+                                        <Lottie options={defaultOptions} height={30} width={30} isStopped={false} />
+                                    </div>
+                                )}
+                            </AvatarFallback>
                         </Avatar>
                     </React.Fragment>
                 )}
@@ -106,7 +118,7 @@ const Header = ({
                     />
                 )}
             </RightBar>
-        </Wrapper>
+        </Wrapper >
     );
 };
 
