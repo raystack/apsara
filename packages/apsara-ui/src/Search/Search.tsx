@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "styled-components";
 import Input from "../Input";
-import { SizeType } from "antd/lib/config-provider/SizeContext";
 
 import CustomIcon, { IconName } from "../Icon/Icon";
 import { Wrapper } from "./Search.styles";
 
 const nullFn = () => null;
+declare type SizeType = 'small' | 'middle' | 'large' | undefined;
 
 export interface SearchProps {
     placeholder?: string;
