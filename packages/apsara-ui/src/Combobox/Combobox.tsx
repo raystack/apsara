@@ -81,6 +81,8 @@ const Combobox = ({
             onSelect={onValueSelect}
             onDeselect={onValueDeselect}
             options={options}
+            filterOption={true}
+            optionFilterProp="label"
             animation="slide"
         >
             {props.children}
