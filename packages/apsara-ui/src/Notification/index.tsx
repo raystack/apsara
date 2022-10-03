@@ -1,1 +1,1 @@
-export { ShowNotification, NotificationRef } from "./Notification";
+export * from "./Notification";

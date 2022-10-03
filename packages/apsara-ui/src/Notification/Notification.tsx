@@ -1,5 +1,5 @@
-/* eslint-disable react/display-name */
-import React, { forwardRef, Ref, useImperativeHandle, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
+
 import Icon from "../Icon";
 import {
     Toast,
@@ -12,9 +12,7 @@ import {
     IconTitleWrapper,
 } from "./Notification.styles";
 
-const CrossIcon = <Icon name="cross" />;
-
-interface NotificationProps {
+export interface Notification {
     title: string;
     content?: React.ReactNode;
     icon?: React.ReactNode;
@@ -22,11 +20,93 @@ interface NotificationProps {
     id?: string;
 }
 
-export interface NotificationRef {
-    showNotification: (toast: NotificationProps) => void;
+export interface Notifier {
+    showNotification: (toast: Notification) => void;
     showSuccess: (title: string, content?: string) => void;
     showError: (title: string, content?: string) => void;
 }
+
+export const useNotification = () => {
+    return useContext(NotificationContext)
+}
+
+export const NotificationProvider = ({ children }: any) => {
+    const [toasts, setToasts] = useState<Notification[]>([]);
+
+    const showNotification = (toast: Notification) => {
+        setToasts([...toasts, { ...toast, id: uuid() }]);
+    }
+
+    const showSuccess = (title: string, content?: string) => {
+        setToasts([
+            ...toasts,
+            {
+                title: title,
+                content: content,
+                id: uuid(),
+                icon: <Icon name="checkcircle" color="green" size={32} />,
+            },
+        ]);
+    }
+
+    const showError = (title: string, content?: string) => {
+        setToasts([
+            ...toasts,
+            {
+                title: title,
+                content: content,
+                id: uuid(),
+                icon: <Icon name="error" color="red" size={32} />,
+            },
+        ]);
+    }
+
+    return (
+        <NotificationContext.Provider value={{
+            showNotification,
+            showSuccess,
+            showError,
+        }}>
+            {children}
+            <ToastProvider swipeDirection="right">
+                {toasts.map((toast) => {
+                    return (
+                        <Toast
+                            key={toast.id}
+                            onOpenChange={() => {
+                                setToasts(toasts.filter((t) => t.id !== toast.id));
+                            }}
+                            duration={3000}
+                        >
+                            <ToastTitle>
+                                <IconTitleWrapper>
+                                    {toast.icon || defaultIcon}
+                                    {toast.title}
+                                </IconTitleWrapper>
+                            </ToastTitle>
+                            <ToastDescription asChild>
+                                <DescriptionWrapper>
+                                    {toast.content}
+                                    {toast.footer}
+                                </DescriptionWrapper>
+                            </ToastDescription>
+                            <ToastAction asChild altText="Goto schedule to undo">
+                                <Icon name="cross" />
+                            </ToastAction>
+                        </Toast>
+                    );
+                })}
+                <ToastViewport />
+            </ToastProvider>
+        </NotificationContext.Provider>
+    );
+};
+
+const NotificationContext = createContext<Notifier>({
+    showNotification: (_toast: Notification) => null,
+    showSuccess: (_title: string, _content?: string) => null,
+    showError: (_title: string, _content?: string) => null,
+})
 
 const uuid = () => {
     let dt = new Date().getTime();
@@ -38,70 +118,3 @@ const uuid = () => {
 };
 
 const defaultIcon = <Icon name="checkcircle" color="green" size={32} />;
-
-export const ShowNotification = forwardRef((_, ref?: Ref<NotificationRef | undefined>) => {
-    const [toasts, setToasts] = useState<NotificationProps[]>([]);
-
-    useImperativeHandle(ref, () => ({
-        showNotification(toast: NotificationProps) {
-            setToasts([...toasts, { ...toast, id: uuid() }]);
-        },
-
-        showSuccess(title: string, content?: string) {
-            setToasts([
-                ...toasts,
-                {
-                    title: title,
-                    content: content,
-                    id: uuid(),
-                    icon: <Icon name="checkcircle" color="green" size={32} />,
-                },
-            ]);
-        },
-
-        showError(title: string, content?: string) {
-            setToasts([
-                ...toasts,
-                {
-                    title: title,
-                    content: content,
-                    id: uuid(),
-                    icon: <Icon name="error" color="red" size={32} />,
-                },
-            ]);
-        },
-    }));
-
-    return (
-        <ToastProvider swipeDirection="right">
-            {toasts.map((toast) => {
-                return (
-                    <Toast
-                        key={toast.id}
-                        onOpenChange={() => {
-                            setToasts(toasts.filter((t) => t.id !== toast.id));
-                        }}
-                        duration={3000}
-                    >
-                        <ToastTitle>
-                            <IconTitleWrapper>
-                                {toast.icon || defaultIcon}
-                                {toast.title}
-                            </IconTitleWrapper>
-                        </ToastTitle>
-                        <ToastDescription asChild>
-                            <DescriptionWrapper>
-                                {toast.content}
-                                {toast.footer}
-                            </DescriptionWrapper>
-                        </ToastDescription>
-                        <ToastAction asChild altText="Goto schedule to undo">
-                            {CrossIcon}
-                        </ToastAction>
-                    </Toast>
-                );
-            })}
-            <ToastViewport />
-        </ToastProvider>
-    );
-});
