@@ -1,34 +1,47 @@
+import React from "react";
+
 import Button from "../Button";
-import React, { useRef } from "react";
 import Icon from "../Icon";
-import { NotificationRef, ShowNotification } from "./Notification";
+import { NotificationProvider, useNotification } from "./Notification";
 
 export default {
     title: "Feedback/Notifications",
-    component: ShowNotification,
 };
 
 export const notifications = () => {
-    const toastRef = useRef<NotificationRef>();
+    return (
+        <NotificationProvider>
+            <_Notifications />
+        </NotificationProvider>
+    )
+}
+
+const _Notifications = () => {
+    const {
+        showError,
+        showNotification,
+        showSuccess,
+    } = useNotification()
+
     return (
         <div style={{ display: "flex" }}>
             <Button
                 onClick={() => {
-                    toastRef?.current?.showSuccess("Success", "this is a test");
+                    showSuccess("Success", "this is a test");
                 }}
             >
                 show Success
             </Button>
             <Button
                 onClick={() => {
-                    toastRef?.current?.showError("Error", "this is a test");
+                    showError("Error", "this is a test");
                 }}
             >
                 show Error
             </Button>
             <Button
                 onClick={() => {
-                    toastRef?.current?.showNotification({
+                    showNotification({
                         title: "Alerts Configured",
                         icon: <Icon name="copy2" />,
                         content:
@@ -57,7 +70,6 @@ export const notifications = () => {
             >
                 custom notification with action
             </Button>
-            <ShowNotification ref={toastRef} />
         </div>
     );
 };
