@@ -1,6 +1,6 @@
 {
-    "name": "apsara-utsav",
-    "version": "1.2.0",
+    "name": "utsav-apsara",
+    "version": "1.4.0",
     "description": "APSARA is an experimental and work in progress design system written in TypeScript on top of Ant Design",
     "workspaces": [
         "packages/*"
