@@ -1,0 +1,35 @@
+// @import (reference) '../../style/themes/index';
+
+.custom-form-inline {
+  display: flex;
+  flex-wrap: wrap;
+
+  .custom-form-item {
+    flex: none;
+    flex-wrap: nowrap;
+    margin-right: 16px;
+    margin-bottom: 0;
+
+    &-with-help {
+      margin-bottom: 24px;
+    }
+
+    > .custom-form-item-label,
+    > .custom-form-item-control {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    > .custom-form-item-label {
+      flex: none;
+    }
+
+    .custom-form-text {
+      display: inline-block;
+    }
+
+    .custom-form-item-has-feedback {
+      display: inline-block;
+    }
+  }
+}

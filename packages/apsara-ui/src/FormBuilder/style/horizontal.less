@@ -1,0 +1,19 @@
+// @import (reference) '../../style/themes/index';
+
+.custom-form-horizontal {
+  .custom-form-item-label {
+    flex-grow: 0;
+  }
+  .custom-form-item-control {
+    flex: 1 1 0;
+    // https://github.com/ant-design/ant-design/issues/32777
+    // https://github.com/ant-design/ant-design/issues/33773
+    min-width: 0;
+  }
+  // https://github.com/ant-design/ant-design/issues/32980
+  // https://github.com/ant-design/ant-design/issues/34903
+  .custom-form-item-label[class$='-24'] + .custom-form-item-control,
+  .custom-form-item-label[class*='-24 '] + .custom-form-item-control {
+    min-width: unset;
+  }
+}

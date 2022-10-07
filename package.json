@@ -1,7 +1,8 @@
 {
-    "name": "utsav-apsara",
-    "version": "1.4.0",
+    "name": "apsara",
+    "version": "1.0.0",
     "description": "APSARA is an experimental and work in progress design system written in TypeScript on top of Ant Design",
+    "private": true,
     "workspaces": [
         "packages/*"
     ],
@@ -53,14 +54,14 @@
         "jest": "^26.4.2",
         "jest-styled-components": "^7.0.3",
         "lerna": "^3.22.1",
-        "postcss": "^8.0.0",
         "prettier": "^2.1.2",
         "ramda": "^0.27.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "ts-jest": "^26.3.0",
         "turbo": "^1.3.1",
-        "typescript": "^4.0.2"
+        "typescript": "^4.0.2",
+        "postcss": "^8.0.0"
     },
     "peerDependencies": {
         "postcss": "^8.0.0"

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import {DotBadge} from "../../Badge";
-import {BadgeProps} from "../../Badge/DotBadge";
+import { DotBadge } from "../../Badge";
+import { BadgeProps } from "../../Badge/DotBadge";
 import Button from "../../Button";
 import { textStyles } from "../../mixin";
 

@@ -1,53 +1,118 @@
-import React from "react";
-import { FormProps } from "antd";
-import PropTypes from "prop-types";
-import { FormInstance } from "antd/lib/form";
-import FormBuilderItems from "./FormBuilderItems";
-import { StyledForm } from "./Form.styles";
+import * as React from "react";
+import { useMemo } from "react";
+import classNames from "classnames";
+import FieldForm, { List } from "rc-field-form";
+import { FormProps as RcFormProps } from "rc-field-form/lib/Form";
+import { ValidateErrorEntity } from "rc-field-form/lib/interface";
+import { ColProps } from "./grid/col";
+import { FormContext, FormContextProps } from "./context";
+import { FormLabelAlign } from "./interface";
+import useForm, { FormInstance } from "./hooks/useForm";
+// import type  { FormInstance } from 'rc-field-form';
+import SizeContext, { SizeType, SizeContextProvider } from "./SizeContext";
+
+export type RequiredMark = boolean | "optional";
+export type FormLayout = "horizontal" | "inline" | "vertical";
 
 const validateMessages = {
-    // eslint-disable-next-line no-template-curly-in-string
     required: "${label} is required!",
 };
 
-interface CustomFormProps extends FormProps {
-    form: FormInstance;
+export interface FormProps<Values = any> extends Omit<RcFormProps<Values>, "form"> {
+    prefixCls?: string;
+    colon?: boolean;
+    name?: string;
+    layout?: FormLayout;
+    labelAlign?: FormLabelAlign;
+    labelCol?: ColProps;
+    wrapperCol?: ColProps;
+    form?: FormInstance<Values>;
+    size?: SizeType;
+    requiredMark?: RequiredMark;
 }
 
-const CustomForm = ({ form: inForm, ...props }: CustomFormProps) => {
-    const [form] = StyledForm.useForm(inForm);
-    return <StyledForm validateMessages={validateMessages} form={form} {...props} />;
+const InternalForm: React.ForwardRefRenderFunction<FormInstance, FormProps> = (props, ref) => {
+    const contextSize = React.useContext(SizeContext);
+
+    const {
+        className = "",
+        size = contextSize,
+        form,
+        colon,
+        labelAlign,
+        labelCol,
+        wrapperCol,
+        layout = "horizontal",
+        requiredMark,
+        onFinishFailed,
+        name,
+        ...restFormProps
+    } = props;
+
+    const mergedRequiredMark = useMemo(() => {
+        if (requiredMark !== undefined) {
+            return requiredMark;
+        }
+        return false;
+    }, [requiredMark]);
+
+    const prefixCls = "custom-form";
+
+    const formClassName = classNames(
+        prefixCls,
+        {
+            [`${prefixCls}-${layout}`]: true,
+            [`${prefixCls}-hide-required-mark`]: mergedRequiredMark === false,
+            [`${prefixCls}-${size}`]: size,
+        },
+        className,
+    );
+
+    const [wrapForm] = useForm(form);
+    const { __INTERNAL__ } = wrapForm;
+    __INTERNAL__.name = name;
+
+    const formContextValue = useMemo<FormContextProps>(
+        () => ({
+            name,
+            labelAlign,
+            labelCol,
+            wrapperCol,
+            vertical: layout === "vertical",
+            colon,
+            requiredMark: mergedRequiredMark,
+            itemRef: __INTERNAL__.itemRef,
+        }),
+        [name, labelAlign, labelCol, wrapperCol, layout, colon, mergedRequiredMark],
+    );
+
+    React.useImperativeHandle(ref, () => wrapForm);
+
+    const onInternalFinishFailed = (errorInfo: ValidateErrorEntity) => {
+        onFinishFailed?.(errorInfo);
+    };
+
+    return (
+        <SizeContextProvider size={size}>
+            <FormContext.Provider value={formContextValue}>
+                <FieldForm
+                    id={name}
+                    {...restFormProps}
+                    name={name}
+                    onFinishFailed={onInternalFinishFailed}
+                    form={wrapForm}
+                    className={formClassName}
+                    validateMessages={validateMessages}
+                />
+            </FormContext.Provider>
+        </SizeContextProvider>
+    );
 };
 
-CustomForm.defaultProps = {
-    name: "form",
-    colon: false,
-    layout: "vertical",
-    labelAlign: "left",
-    hideRequiredMark: true,
-    initialValues: {},
-    scrollToFirstError: true,
-};
+const Form = React.forwardRef<FormInstance, FormProps>(InternalForm) as <Values = any>(
+    props: React.PropsWithChildren<FormProps<Values>> & { ref?: React.Ref<FormInstance<Values>> },
+) => React.ReactElement;
 
-CustomForm.propTypes = {
-    name: PropTypes.string.isRequired,
-    colon: PropTypes.bool,
-    layout: PropTypes.oneOf(["horizontal", "inline", "vertical"]),
-    labelAlign: PropTypes.oneOf(["left", "right"]),
-    hideRequiredMark: PropTypes.bool,
-    initialValues: PropTypes.object,
-    preserve: PropTypes.bool,
-    scrollToFirstError: PropTypes.bool,
-};
+export { useForm, List, FormInstance };
 
-CustomForm.Provider = StyledForm.Provider;
-CustomForm.useForm = StyledForm.useForm;
-CustomForm.Items = FormBuilderItems;
-
-CustomForm.useForceUpdate = () => {
-    const [, updateState] = React.useState({});
-    const forceUpdate = React.useCallback(() => updateState({}), []);
-    return forceUpdate;
-};
-
-export default CustomForm;
+export default Form;
