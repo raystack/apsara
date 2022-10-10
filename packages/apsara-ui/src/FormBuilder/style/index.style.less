@@ -118,8 +118,7 @@
   }
 
   &-hidden,
-  &-hidden.ant-row {
-    // https://github.com/ant-design/ant-design/issues/26141
+  &-hidden.custom-row {
     display: none;
   }
 
@@ -220,7 +219,7 @@
     flex-direction: column;
     flex-grow: 1;
 
-    &:first-child:not([class^=~"'ant-col-'"]):not([class*=~"' ant-col-'"]) {
+    &:first-child:not([class^=~"'custom-col-'"]):not([class*=~"'custom-col-'"]) {
       width: 100%;
     }
   }
