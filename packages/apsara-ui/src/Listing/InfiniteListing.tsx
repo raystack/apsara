@@ -67,7 +67,7 @@ const InfiniteListing = ({
         onClearGroupFilter,
     } = useSearchFilterState();
     const { disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps || {};
-    const currFilterState = { nextPage: page + 1, search: searchTerm, filters: filteredFieldData }
+    const currFilterState = { nextPage: page + 1, search: searchTerm, filters: filteredFieldData };
 
     async function handleLoadMore() {
         await loadMore(currFilterState);

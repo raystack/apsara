@@ -13,15 +13,11 @@ export const notifications = () => {
         <NotificationProvider>
             <_Notifications />
         </NotificationProvider>
-    )
-}
+    );
+};
 
 const _Notifications = () => {
-    const {
-        showError,
-        showNotification,
-        showSuccess,
-    } = useNotification()
+    const { showError, showNotification, showSuccess } = useNotification();
 
     return (
         <div style={{ display: "flex" }}>

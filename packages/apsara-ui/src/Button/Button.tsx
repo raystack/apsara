@@ -26,6 +26,7 @@ const Button = ({
     block = false,
     shape = "round",
     onClick = () => null,
+    href = "",
     ...props
 }: CustomButtonProps) => {
     const IconComponent = () => {
@@ -46,7 +47,8 @@ const Button = ({
             <button
                 disabled={disabled}
                 onClick={(e) => {
-                    onClick(e);
+                    if (onClick) onClick(e);
+                    if (href) window.location.href = href;
                 }}
                 className={`apsara-btn ${clsx(className, type)}`}
                 {...props}

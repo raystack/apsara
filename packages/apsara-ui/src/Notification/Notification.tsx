@@ -27,15 +27,15 @@ export interface Notifier {
 }
 
 export const useNotification = () => {
-    return useContext(NotificationContext)
-}
+    return useContext(NotificationContext);
+};
 
 export const NotificationProvider = ({ children }: any) => {
     const [toasts, setToasts] = useState<Notification[]>([]);
 
     const showNotification = (toast: Notification) => {
         setToasts([...toasts, { ...toast, id: uuid() }]);
-    }
+    };
 
     const showSuccess = (title: string, content?: string) => {
         setToasts([
@@ -47,7 +47,7 @@ export const NotificationProvider = ({ children }: any) => {
                 icon: <Icon name="checkcircle" color="green" size={32} />,
             },
         ]);
-    }
+    };
 
     const showError = (title: string, content?: string) => {
         setToasts([
@@ -59,14 +59,16 @@ export const NotificationProvider = ({ children }: any) => {
                 icon: <Icon name="error" color="red" size={32} />,
             },
         ]);
-    }
+    };
 
     return (
-        <NotificationContext.Provider value={{
-            showNotification,
-            showSuccess,
-            showError,
-        }}>
+        <NotificationContext.Provider
+            value={{
+                showNotification,
+                showSuccess,
+                showError,
+            }}
+        >
             {children}
             <ToastProvider swipeDirection="right">
                 {toasts.map((toast) => {
@@ -106,7 +108,7 @@ const NotificationContext = createContext<Notifier>({
     showNotification: (_toast: Notification) => null,
     showSuccess: (_title: string, _content?: string) => null,
     showError: (_title: string, _content?: string) => null,
-})
+});
 
 const uuid = () => {
     let dt = new Date().getTime();
