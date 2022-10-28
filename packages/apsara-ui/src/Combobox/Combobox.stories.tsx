@@ -33,4 +33,5 @@ MultiSelectWithSearch.args = {
     showSearch: true,
     showArrow: true,
     mode: "multiple",
+    optionFilterProp: "label",
 };
