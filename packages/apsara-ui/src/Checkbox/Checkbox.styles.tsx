@@ -26,7 +26,13 @@ export const StyledCheckbox = styled(CheckboxPrimitive.Root)`
     }
 `;
 
-export const CheckboxWrapper = styled("div")<{ orientation?: "horizontal" | "vertical" }>`
+export const CheckboxWrapper = styled("div")`
+    display: flex;
+    gap: 10px;
+    align-items: center;
+`;
+
+export const CheckboxGroupWrapper = styled("div")<{ orientation?: "horizontal" | "vertical" }>`
     display: flex;
     ${({ orientation }) => {
         return orientation === "vertical"
