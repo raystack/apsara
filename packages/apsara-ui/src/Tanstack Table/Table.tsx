@@ -23,11 +23,18 @@ interface ITableProps {
     scroll?: any;
     columnsData: any[];
     sortable?: boolean;
+    paginate?: boolean;
     fullPagination?: boolean;
-    dataFetchFunction?: (options: { pageIndex: number; pageSize: number }) => any;
+    dataFetchFunction?: (options: { pageIndex?: number; pageSize?: number }) => any;
 }
 
-function Table({ columnsData, sortable = false, fullPagination = true, dataFetchFunction }: ITableProps) {
+function Table({
+    columnsData,
+    sortable = false,
+    paginate = true,
+    fullPagination = true,
+    dataFetchFunction,
+}: ITableProps) {
     const columns: any[] = [];
     const columnHelper = createColumnHelper();
     columnsData.map((item) => {
@@ -52,7 +59,9 @@ function Table({ columnsData, sortable = false, fullPagination = true, dataFetch
 
     const dataQuery = useQuery(
         ["data", fetchDataOptions],
-        () => dataFetchFunction && dataFetchFunction({ pageIndex: pageIndex - 1, pageSize }),
+        () =>
+            dataFetchFunction &&
+            (paginate ? dataFetchFunction({ pageIndex: pageIndex - 1, pageSize }) : dataFetchFunction({})),
         {
             keepPreviousData: true,
         },
@@ -115,7 +124,7 @@ function Table({ columnsData, sortable = false, fullPagination = true, dataFetch
     };
 
     return (
-        <StyledTable className="p-2">
+        <StyledTable>
             <TableWrapper>
                 <table>
                     <thead>
@@ -130,12 +139,12 @@ function Table({ columnsData, sortable = false, fullPagination = true, dataFetch
                                                     justifyContent: "space-between",
                                                     alignItems: "center",
                                                 }}
-                                                {...{
+                                                {...(sortable && {
                                                     className: header.column.getCanSort()
                                                         ? "cursor-pointer select-none"
                                                         : "",
                                                     onClick: header.column.getToggleSortingHandler(),
-                                                }}
+                                                })}
                                             >
                                                 {flexRender(header.column.columnDef.header, header.getContext())}
 
@@ -177,7 +186,7 @@ function Table({ columnsData, sortable = false, fullPagination = true, dataFetch
                     </tbody>
                 </table>
             </TableWrapper>
-            {fullPagination && (
+            {paginate && fullPagination && (
                 <PaginationWrapper>
                     <Pagination
                         className="pagination-data"
@@ -214,7 +223,7 @@ function Table({ columnsData, sortable = false, fullPagination = true, dataFetch
                     </select>
                 </PaginationWrapper>
             )}
-            {!fullPagination && (
+            {paginate && !fullPagination && (
                 <PaginationWrapper>
                     <button
                         className="pagination-item"
