@@ -11,7 +11,7 @@ interface CodeblockProps {
     className?: string;
 }
 const Codeblock = ({ lang = "text", children = "", copy = false, className = "" }: CodeblockProps) => {
-    const { showSuccess, showError } = useNotification()
+    const { showSuccess, showError } = useNotification();
 
     const codeRef = useRef(null);
     function fallbackCopyTextToClipboard() {
@@ -56,6 +56,7 @@ const Codeblock = ({ lang = "text", children = "", copy = false, className = "" 
     );
 };
 
+// eslint-disable-next-line react/display-name
 export default (props: CodeblockProps) => (
     <NotificationProvider>
         <Codeblock {...props} />

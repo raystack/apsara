@@ -171,4 +171,10 @@ export const StyledButton = styled("span")<{
                   `
                 : null}
     }
+    a.disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+        border-color: #b3b3b3;
+        background: #b3b3b3;
+    }
 `;
