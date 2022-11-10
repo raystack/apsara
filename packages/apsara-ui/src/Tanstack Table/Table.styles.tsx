@@ -53,6 +53,10 @@ export const StyledTable = styled.div`
         padding: var(--cell-padding-tb) var(--cell-padding-lr);
         border-color: ${({ theme }) => theme?.table?.border};
         border-bottom: 1px solid ${({ theme }) => theme?.table?.border};
+
+        a {
+            display: block;
+        }
     }
     tbody {
         border-bottom: 1px solid lightgray;

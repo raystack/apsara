@@ -35,11 +35,18 @@ function getPaginatedData(options: { pageIndex?: number; pageSize?: number }) {
     };
 }
 
+function rowClick(props: any) {
+    console.log(props.original);
+}
+
 const columns = [
     {
         title: "Name",
         dataIndex: "name",
         key: "name",
+        render: function Render({ row }) {
+            return <a href="/">{row.original.name}</a>;
+        },
     },
     {
         title: "Age",
@@ -62,6 +69,7 @@ export const TableWithData = () => (
             paginate={true}
             fullPagination={true}
             showPageSizeChanger={true}
+            rowClick={rowClick}
             dataFetchFunction={getPaginatedData}
         />
     </QueryClientProvider>

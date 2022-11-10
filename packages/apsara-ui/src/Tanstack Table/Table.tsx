@@ -27,6 +27,7 @@ interface ITableProps {
     fullPagination?: boolean;
     showPageSizeChanger?: boolean;
     dataFetchFunction?: (options: { pageIndex?: number; pageSize?: number }) => any;
+    rowClick?: (props: any) => any;
 }
 
 function Table({
@@ -36,13 +37,14 @@ function Table({
     fullPagination = true,
     showPageSizeChanger = true,
     dataFetchFunction,
+    rowClick,
 }: ITableProps) {
     const columns: any[] = [];
     const columnHelper = createColumnHelper();
     columnsData.map((item) => {
         columns.push(
             columnHelper.accessor(item.key, {
-                cell: (info) => info.getValue(),
+                cell: item.render ? item.render : (info) => info.getValue(),
                 header: item.title ?? item.dataIndex,
             }),
         );
@@ -179,7 +181,7 @@ function Table({
                     </thead>
                     <tbody>
                         {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id}>
+                            <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
                                 {row.getVisibleCells().map((cell) => (
                                     <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
                                 ))}
