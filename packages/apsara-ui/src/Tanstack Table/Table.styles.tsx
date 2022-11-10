@@ -56,8 +56,17 @@ export const StyledTable = styled.div`
 
         a {
             display: block;
+            color: unset;
         }
     }
+
+    tr:hover {
+            td > a {
+                color: rgb(30, 122, 232) !important;
+            }
+        }
+    }
+
     tbody {
         border-bottom: 1px solid lightgray;
 
