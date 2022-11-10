@@ -25,6 +25,7 @@ interface ITableProps {
     sortable?: boolean;
     paginate?: boolean;
     fullPagination?: boolean;
+    showPageSizeChanger?: boolean;
     dataFetchFunction?: (options: { pageIndex?: number; pageSize?: number }) => any;
 }
 
@@ -33,6 +34,7 @@ function Table({
     sortable = false,
     paginate = true,
     fullPagination = true,
+    showPageSizeChanger = true,
     dataFetchFunction,
 }: ITableProps) {
     const columns: any[] = [];
@@ -186,76 +188,67 @@ function Table({
                     </tbody>
                 </table>
             </TableWrapper>
-            {paginate && fullPagination && (
+            {paginate && (
                 <PaginationWrapper>
-                    <Pagination
-                        className="pagination-data"
-                        onChange={PaginationChange}
-                        total={dataQuery.data?.total}
-                        current={pageIndex}
-                        pageSize={pageSize}
-                        itemRender={PrevNextArrow}
-                        locale={{
-                            // Options.jsx
-                            items_per_page: "/ page",
-                            jump_to: "Go to",
-                            jump_to_confirm: "confirm",
-                            page: "Page",
-                            // Pagination.jsx
-                            prev_page: "Previous Page",
-                            next_page: "Next Page",
-                            prev_3: "Previous 3 Pages",
-                            next_3: "Next 3 Pages",
-                        }}
-                    />
-                    <select
-                        className="pageSizeSelector"
-                        value={table.getState().pagination.pageSize}
-                        onChange={(e) => {
-                            PaginationChange(pageIndex, Number(e.target.value), pageSize);
-                        }}
-                    >
-                        {[100, 200, 500, 1000].map((pageSize) => (
-                            <option key={pageSize} value={pageSize}>
-                                {pageSize} / page
-                            </option>
-                        ))}
-                    </select>
-                </PaginationWrapper>
-            )}
-            {paginate && !fullPagination && (
-                <PaginationWrapper>
-                    <button
-                        className="pagination-item"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        <span className="navIcon">
-                            <ChevronLeftIcon />
-                        </span>
-                    </button>
-                    <button
-                        className="pagination-item"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        <span className="navIcon">
-                            <ChevronRightIcon />
-                        </span>
-                    </button>
-                    <select
-                        className="pageSizeSelector"
-                        value={table.getState().pagination.pageSize}
-                        onChange={(e) => {
-                            PaginationChange(pageIndex, Number(e.target.value), pageSize);
-                        }}
-                    >
-                        {[100, 200, 500, 1000].map((pageSize) => (
-                            <option key={pageSize} value={pageSize}>
-                                {pageSize} / page
-                            </option>
-                        ))}
-                    </select>
+                    {fullPagination && (
+                        <Pagination
+                            className="pagination-data"
+                            onChange={PaginationChange}
+                            total={dataQuery.data?.total}
+                            current={pageIndex}
+                            pageSize={pageSize}
+                            itemRender={PrevNextArrow}
+                            locale={{
+                                // Options.jsx
+                                items_per_page: "/ page",
+                                jump_to: "Go to",
+                                jump_to_confirm: "confirm",
+                                page: "Page",
+                                // Pagination.jsx
+                                prev_page: "Previous Page",
+                                next_page: "Next Page",
+                                prev_3: "Previous 3 Pages",
+                                next_3: "Next 3 Pages",
+                            }}
+                        />
+                    )}
+                    {!fullPagination && (
+                        <>
+                            <button
+                                className="pagination-item"
+                                onClick={() => table.previousPage()}
+                                disabled={!table.getCanPreviousPage()}
+                            >
+                                <span className="navIcon">
+                                    <ChevronLeftIcon />
+                                </span>
+                            </button>
+                            <button
+                                className="pagination-item"
+                                onClick={() => table.nextPage()}
+                                disabled={!table.getCanNextPage()}
+                            >
+                                <span className="navIcon">
+                                    <ChevronRightIcon />
+                                </span>
+                            </button>
+                        </>
+                    )}
+                    {showPageSizeChanger && (
+                        <select
+                            className="pageSizeSelector"
+                            value={table.getState().pagination.pageSize}
+                            onChange={(e) => {
+                                PaginationChange(pageIndex, Number(e.target.value), pageSize);
+                            }}
+                        >
+                            {[100, 200, 500, 1000].map((pageSize) => (
+                                <option key={pageSize} value={pageSize}>
+                                    {pageSize} / page
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 </PaginationWrapper>
             )}
         </StyledTable>

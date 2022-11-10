@@ -61,6 +61,7 @@ export const TableWithData = () => (
             sortable={true}
             paginate={true}
             fullPagination={true}
+            showPageSizeChanger={true}
             dataFetchFunction={getPaginatedData}
         />
     </QueryClientProvider>
