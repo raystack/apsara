@@ -1,9 +1,8 @@
 import React from "react";
 import Button from "../Button";
 import { Overlay, Content, Title, HeadingWrapper, CloseDiv } from "./Modal.styles";
-import { CloseOutlined } from "@ant-design/icons";
+import { Cross2Icon } from "@radix-ui/react-icons";
 import * as Dialog from "@radix-ui/react-dialog";
-
 
 interface ModalProps {
     children?: React.ReactNode;
@@ -16,7 +15,7 @@ interface ModalProps {
 
 const Modal = ({ children, heading = "", closable = true, onClose, open = false, width = "50vw" }: ModalProps) => {
     return (
-        <Dialog.Root open={open} onOpenChange={closable ? onClose : () => { }} >
+        <Dialog.Root open={open} onOpenChange={closable ? onClose : () => {}}>
             <Dialog.Portal>
                 <Overlay>
                     <Content style={{ width: `${width}` }}>
@@ -26,21 +25,18 @@ const Modal = ({ children, heading = "", closable = true, onClose, open = false,
                                 {closable && (
                                     <CloseDiv>
                                         <Button type="text" onClick={onClose}>
-                                            <CloseOutlined style={{ fontSize: "20px" }} />
+                                            <Cross2Icon transform="scale(1.3334)" />
                                         </Button>
                                     </CloseDiv>
-                                )
-                                }
+                                )}
                             </Title>
                         </HeadingWrapper>
-                        <Dialog.Description>
-                            {children}
-                        </Dialog.Description>
+                        <Dialog.Description>{children}</Dialog.Description>
                     </Content>
                 </Overlay>
             </Dialog.Portal>
         </Dialog.Root>
-    )
+    );
 };
 
 export default Modal;
