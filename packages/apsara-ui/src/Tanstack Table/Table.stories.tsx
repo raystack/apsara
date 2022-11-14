@@ -2,6 +2,7 @@ import React from "react";
 
 import Table from "./Table";
 import { QueryClient, QueryClientProvider } from "react-query";
+import VirtualTable from "./VirtualisedTable";
 
 export default {
     title: "Data Display/TanstackTable",
@@ -16,7 +17,7 @@ export const TableWithoutData = () => (
 const queryClient = new QueryClient();
 
 function getPaginatedData(options: { pageIndex?: number; pageSize?: number }) {
-    const items = new Array(1000).fill(0).map((_, index) => {
+    const items = new Array(10000).fill(0).map((_, index) => {
         return {
             key: index,
             name: `name ${index}`,
@@ -73,4 +74,13 @@ export const TableWithData = () => (
             dataFetchFunction={getPaginatedData}
         />
     </QueryClientProvider>
+);
+
+export const VirtualTableWithData = () => (
+    <VirtualTable
+        columnsData={columns}
+        scroll={{ x: true, y: 300 }}
+        sortable={true}
+        dataFetchFunction={getPaginatedData}
+    />
 );
