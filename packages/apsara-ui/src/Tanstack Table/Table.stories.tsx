@@ -2,7 +2,9 @@ import React from "react";
 
 import Table from "./Table";
 import { QueryClient, QueryClientProvider } from "react-query";
-import VirtualTable from "./VirtualisedTable";
+import VirtualisedTable from "./VirtualisedTable";
+import VirtualisedTableWithInfiniteScroll from "./VirtualisedTableWithInfiniteData";
+import { ColumnSort, SortingState } from "@tanstack/react-table";
 
 export default {
     title: "Data Display/TanstackTable",
@@ -38,6 +40,35 @@ function getPaginatedData(options: { pageIndex?: number; pageSize?: number }) {
 
 function rowClick(props: any) {
     console.log(props.original);
+}
+
+function getInfiniteData(start: number, size: number, sorting: SortingState) {
+    const items = new Array(1000).fill(0).map((_, index) => {
+        return {
+            key: index,
+            name: `name ${index}`,
+            age: index,
+            full_address: "10 Downing Street",
+        };
+    });
+
+    if (sorting.length) {
+        const sort = sorting[0] as ColumnSort;
+        const { id, desc } = sort as { id: any; desc: boolean };
+        items.sort((a, b) => {
+            if (desc) {
+                return a[id] < b[id] ? 1 : -1;
+            }
+            return a[id] > b[id] ? 1 : -1;
+        });
+    }
+
+    return {
+        data: items.slice(start, start + size),
+        meta: {
+            totalRowCount: items.length,
+        },
+    };
 }
 
 const columns = [
@@ -77,10 +108,22 @@ export const TableWithData = () => (
 );
 
 export const VirtualTableWithData = () => (
-    <VirtualTable
+    <VirtualisedTable
         columnsData={columns}
         scroll={{ x: true, y: 300 }}
         sortable={true}
         dataFetchFunction={getPaginatedData}
     />
+);
+
+export const VirtualTableWithInfiniteData = () => (
+    <QueryClientProvider client={queryClient}>
+        <VirtualisedTableWithInfiniteScroll
+            columnsData={columns}
+            scroll={{ x: true, y: 300 }}
+            sortable={true}
+            dataFetchFunction={getInfiniteData}
+            fetchSize={50}
+        />
+    </QueryClientProvider>
 );

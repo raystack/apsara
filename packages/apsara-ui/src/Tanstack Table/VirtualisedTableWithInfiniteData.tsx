@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
 import { StyledTable, TableWrapper, EmptyHeader, EmptyText } from "./Table.styles";
 import {
     createColumnHelper,
@@ -9,8 +9,8 @@ import {
     getSortedRowModel,
 } from "@tanstack/react-table";
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
-import { StyledEmpty } from "../Table/Table.styles";
 import { useVirtual } from "react-virtual";
+import { useInfiniteQuery } from "react-query";
 
 interface ITableProps {
     selectedRowId?: number | null;
@@ -20,10 +20,20 @@ interface ITableProps {
     scroll?: any;
     columnsData: any[];
     sortable?: boolean;
-    dataFetchFunction: (options: { pageIndex?: number; pageSize?: number }) => any;
+    dataFetchFunction: (
+        start: number,
+        size: number,
+        sorting: SortingState,
+    ) => { data: any[]; meta: { totalRowCount: number } };
+    fetchSize?: number;
 }
 
-function VirtualisedTable({ columnsData, sortable = false, dataFetchFunction }: ITableProps) {
+function VirtualisedTableWithInfiniteScroll({
+    columnsData,
+    sortable = false,
+    dataFetchFunction,
+    fetchSize = 10,
+}: ITableProps) {
     const columns: any[] = [];
     const columnHelper = createColumnHelper();
     columnsData.map((item) => {
@@ -35,11 +45,46 @@ function VirtualisedTable({ columnsData, sortable = false, dataFetchFunction }: 
         );
     });
 
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [data] = React.useState(() => dataFetchFunction({}));
+    const [sorting, setSorting] = useState<SortingState>([]);
+
+    const tableContainerRef = useRef<HTMLDivElement>(null);
+
+    const { data, fetchNextPage, isFetching } = useInfiniteQuery(
+        ["table-data", sorting],
+        async ({ pageParam = 0 }) => {
+            const start = pageParam * fetchSize;
+            const fetchedData = dataFetchFunction(start, fetchSize, sorting);
+            return fetchedData;
+        },
+        {
+            getNextPageParam: (_lastGroup, groups) => groups.length,
+            keepPreviousData: true,
+            refetchOnWindowFocus: false,
+        },
+    );
+
+    const flatData = useMemo(() => data?.pages?.flatMap((page) => page.data) ?? [], [data]);
+    const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0;
+    const totalFetched = flatData.length;
+
+    const fetchMoreOnBottomReached = useCallback(
+        (containerRefElement?: HTMLDivElement | null) => {
+            if (containerRefElement) {
+                const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+                if (scrollHeight - scrollTop - clientHeight < 300 && !isFetching && totalFetched < totalDBRowCount) {
+                    fetchNextPage();
+                }
+            }
+        },
+        [fetchNextPage, isFetching, totalFetched, totalDBRowCount],
+    );
+
+    useEffect(() => {
+        fetchMoreOnBottomReached(tableContainerRef.current);
+    }, [fetchMoreOnBottomReached]);
 
     const table = useReactTable({
-        data: data?.rows,
+        data: flatData,
         columns,
         state: {
             sorting,
@@ -49,17 +94,6 @@ function VirtualisedTable({ columnsData, sortable = false, dataFetchFunction }: 
         getSortedRowModel: getSortedRowModel(),
         debugTable: true,
     });
-
-    if (!data?.rows?.length) {
-        return (
-            <StyledEmpty>
-                <EmptyHeader> We could not find it! </EmptyHeader>
-                <EmptyText> We are sorry, but your search did not have any result </EmptyText>
-            </StyledEmpty>
-        );
-    }
-
-    const tableContainerRef = React.useRef<HTMLDivElement>(null);
 
     const { rows } = table.getRowModel();
     const rowVirtualizer = useVirtual({
@@ -73,7 +107,11 @@ function VirtualisedTable({ columnsData, sortable = false, dataFetchFunction }: 
 
     return (
         <StyledTable>
-            <TableWrapper ref={tableContainerRef} className="container">
+            <TableWrapper
+                className="container"
+                onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
+                ref={tableContainerRef}
+            >
                 <table>
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -155,4 +193,4 @@ function VirtualisedTable({ columnsData, sortable = false, dataFetchFunction }: 
     );
 }
 
-export default VirtualisedTable;
+export default VirtualisedTableWithInfiniteScroll;
