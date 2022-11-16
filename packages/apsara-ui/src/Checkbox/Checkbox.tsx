@@ -1,6 +1,6 @@
 import { CheckIcon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
-import { CheckboxWrapper, StyledCheckbox, StyledIndicator } from "./Checkbox.styles";
+import { CheckboxWrapper, CheckboxGroupWrapper, StyledCheckbox, StyledIndicator } from "./Checkbox.styles";
 
 type CheckboxProps = {
     defaultChecked?: boolean;
@@ -13,6 +13,7 @@ type CheckboxProps = {
     value?: string;
     className?: string;
     style?: React.CSSProperties;
+    id?: string;
 };
 
 type CheckboxGroupProps = {
@@ -27,31 +28,47 @@ type CheckboxGroupProps = {
 };
 
 const Checkbox = ({
-    defaultChecked = true,
+    defaultChecked = false,
     checked,
     onChange,
     disabled,
     required,
     name,
     value,
+    label,
     style,
+    id = "c1",
 }: CheckboxProps) => {
+    const [isChecked, setIsChecked] = useState<boolean | "indeterminate">(checked || defaultChecked || false);
+
+    useEffect(() => {
+        setIsChecked(checked || false);
+    }, [checked]);
+
     return (
-        <StyledCheckbox
-            defaultChecked={defaultChecked}
-            id="c1"
-            checked={checked}
-            onCheckedChange={onChange}
-            disabled={disabled}
-            required={required}
-            name={name}
-            value={value}
-            style={style}
-        >
-            <StyledIndicator>
-                <CheckIcon style={{ width: "13px", height: "13px" }} />
-            </StyledIndicator>
-        </StyledCheckbox>
+        <CheckboxWrapper>
+            <StyledCheckbox
+                defaultChecked={defaultChecked}
+                id={id}
+                checked={isChecked}
+                onCheckedChange={
+                    onChange ||
+                    function (checked) {
+                        setIsChecked(checked);
+                    }
+                }
+                disabled={disabled}
+                required={required}
+                name={name}
+                value={value}
+                style={style}
+            >
+                <StyledIndicator>
+                    <CheckIcon style={{ width: "13px", height: "13px" }} />
+                </StyledIndicator>
+            </StyledCheckbox>
+            {label && <label htmlFor={id}>{label}</label>}
+        </CheckboxWrapper>
     );
 };
 
@@ -66,8 +83,8 @@ const CheckboxGroup = ({
     const [selectedValues, setSelectedValues] = useState(defaultValue || value || []);
 
     useEffect(() => {
-        setSelectedValues(value || []);
-    }, [value]);
+        setSelectedValues(defaultValue || value || []);
+    }, [value, defaultValue]);
 
     const onValuesChange = (value: string, checked: boolean | "indeterminate") => {
         if (checked) return [...selectedValues, value];
@@ -75,9 +92,9 @@ const CheckboxGroup = ({
     };
 
     return (
-        <CheckboxWrapper orientation={orientation}>
+        <CheckboxGroupWrapper orientation={orientation}>
             {options &&
-                options.map((option) => (
+                options.map((option, index) => (
                     <div className="checkbox_label_wrapper" key={option.value}>
                         <Checkbox
                             onChange={(checked) => {
@@ -85,14 +102,17 @@ const CheckboxGroup = ({
                                 setSelectedValues(newSelectedValues);
                                 onChange && onChange(newSelectedValues);
                             }}
+                            id={`c${index}`}
                             checked={selectedValues.includes(option.value || "")}
                             value={option.value}
                             {...props}
                         />
-                        <label className="checkbox_label">{option.label}</label>
+                        <label className="checkbox_label" htmlFor={`c${index}`}>
+                            {option.label}
+                        </label>
                     </div>
                 ))}
-        </CheckboxWrapper>
+        </CheckboxGroupWrapper>
     );
 };
 

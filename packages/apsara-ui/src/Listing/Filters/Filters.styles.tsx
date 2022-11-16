@@ -48,7 +48,10 @@ export const FilterLabel = styled.div`
 export const FilterFooter = styled.div`
     padding: 16px;
     border-top: 1px solid ${({ theme }) => theme?.listing?.filterBorder};
-    span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .clear-btn {
         cursor: pointer;
         color: ${({ theme }) => theme?.colors?.primary[4]};
         letter-spacing: 0.3px;
@@ -57,6 +60,10 @@ export const FilterFooter = styled.div`
             pointer-events: none;
             color: ${({ theme }) => theme?.listing?.filterClear};
         }
+    }
+
+    .apply-btn {
+        margin-left: 10px;
     }
 `;
 

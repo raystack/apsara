@@ -38,4 +38,5 @@ export type CustomButtonProps = Omit<ButtonProps, "type"> & {
      * Sets the handler to handle `click` event
      */
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+    href?: string;
 };

@@ -16,10 +16,20 @@ import Checkbox from "./Checkbox";
 />
 
 <Preview>
-    <Story
-        name="Playground"
+ <Story
+        name="Checkbox"
         args={{
-            defaultValue: "apple",
+            value: "apple",
+            label:"Apple",
+            checked: false
+        }}
+    >
+        {(args) => <Checkbox {...args} />}
+    </Story>
+    <Story
+        name="Checkbox Group"
+        args={{
+            defaultValue: ["apple"],
             options: [
                 { value: "apple", label: "Apple" },
                 { value: "mango", label: "Mango" },

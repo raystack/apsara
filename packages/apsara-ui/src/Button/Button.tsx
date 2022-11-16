@@ -26,6 +26,7 @@ const Button = ({
     block = false,
     shape = "round",
     onClick = () => null,
+    href = "",
     ...props
 }: CustomButtonProps) => {
     const IconComponent = () => {
@@ -43,17 +44,29 @@ const Button = ({
 
     const button = (
         <StyledButton role="button" type={type} size={size} block={block} shape={shape}>
-            <button
-                disabled={disabled}
-                onClick={(e) => {
-                    onClick(e);
-                }}
-                className={`apsara-btn ${clsx(className, type)}`}
-                {...props}
-            >
-                <IconComponent />
-                {children}
-            </button>
+            {!href && (
+                <button
+                    disabled={disabled}
+                    onClick={(e) => {
+                        onClick(e);
+                    }}
+                    className={`apsara-btn ${clsx(className, type)}`}
+                    {...props}
+                >
+                    <IconComponent />
+                    {children}
+                </button>
+            )}
+            {href && (
+                <a
+                    href={href}
+                    className={`apsara-btn ${clsx(className, type)} ${disabled ? "disabled" : ""}`}
+                    {...props}
+                >
+                    <IconComponent />
+                    {children}
+                </a>
+            )}
         </StyledButton>
     );
 

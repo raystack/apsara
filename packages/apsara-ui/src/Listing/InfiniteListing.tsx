@@ -30,9 +30,10 @@ interface InfiniteListingProps {
     renderHeader?: any;
     renderBody?: any;
     page?: number;
-    loadMore: (data: ILoadMoreProps) => Promise<void> | null;
-    onSearch: (data: ILoadMoreProps) => void | null;
-    onFilter: (data: ILoadMoreProps) => void | null;
+    loadMore?: (data: ILoadMoreProps) => Promise<void> | null;
+    onSearch?: (data: ILoadMoreProps) => void | null;
+    onFilter?: (data: ILoadMoreProps) => void | null;
+    onApply?: (data: ILoadMoreProps) => void | null;
 }
 
 const InfiniteListing = ({
@@ -48,6 +49,7 @@ const InfiniteListing = ({
     renderBody = null,
     resourcePath = "/",
     page = 1,
+    onApply,
     loadMore = () => null,
     onSearch = () => null,
     onFilter = () => null,
@@ -65,8 +67,10 @@ const InfiniteListing = ({
         onClearGroupFilter,
     } = useSearchFilterState();
     const { disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps || {};
+    const currFilterState = { nextPage: page + 1, search: searchTerm, filters: filteredFieldData };
+
     async function handleLoadMore() {
-        await loadMore({ nextPage: page + 1, search: searchTerm, filters: filteredFieldData });
+        await loadMore(currFilterState);
     }
 
     function handleSearch({ target: { value } }: any) {
@@ -79,7 +83,7 @@ const InfiniteListing = ({
     }
 
     useEffect(() => {
-        onFilter({ nextPage: page + 1, search: searchTerm, filters: filteredFieldData });
+        onFilter(currFilterState);
     }, [filteredFieldData]);
 
     const columns = getColumnList(resourcePath, sortedInfo);
@@ -102,6 +106,7 @@ const InfiniteListing = ({
                         filteredFieldData={filteredFieldData}
                         onGroupFilter={onGroupFilter}
                         onClearGroupFilter={onClearGroupFilter}
+                        onApplyClick={onApply ? () => onApply(currFilterState) : null}
                     />
                 )}
                 {renderExtraFilters}

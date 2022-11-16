@@ -25,6 +25,7 @@ const Combobox = ({
     showSearch = true,
     showArrow = true,
     placeholder,
+    optionFilterProp,
     ...props
 }: SelectProps) => {
     const [showInputIcon, setShowInputIcon] = useState(true);
@@ -81,6 +82,8 @@ const Combobox = ({
             onSelect={onValueSelect}
             onDeselect={onValueDeselect}
             options={options}
+            filterOption={true}
+            optionFilterProp={optionFilterProp || "value"}
             animation="slide"
         >
             {props.children}

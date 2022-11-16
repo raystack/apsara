@@ -7,7 +7,6 @@ import VTable from "./Table/VirtualisedTable";
 import Text from "./Text";
 import Tag from "./Tag";
 import States from "./States";
-import { ShowNotification, NotificationRef } from "./Notification";
 import FormBuilder from "./FormBuilder";
 import Learn from "./Learn";
 import Markdown from "./Markdown";
@@ -40,6 +39,7 @@ import Themes from "./Provider/theme";
 import DiffTimeline from "./DiffTimeline";
 export { DynamicList } from "./DynamicList";
 
+export * from "./Notification";
 export {
     Button,
     Icon,
@@ -54,8 +54,6 @@ export {
     Tag,
     FormBuilder,
     States,
-    ShowNotification,
-    NotificationRef,
     Learn,
     Markdown,
     ContentLayout,

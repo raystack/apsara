@@ -80,12 +80,12 @@ export const listing = () => (
 
 export const infiniteListing = () => {
     const [page, setPage] = useState(1);
-    async function loadMore(data) {
+    async function loadMore(data: any) {
         console.log(data);
         setPage(data.nextPage);
     }
 
-    function onSearchFilter(data) {
+    function onSearchFilter(data: any) {
         console.log(data);
     }
 
@@ -131,6 +131,57 @@ export const infiniteListing = () => {
             loadMore={loadMore}
             onSearch={onSearchFilter}
             onFilter={onSearchFilter}
+        />
+    );
+};
+
+export const infiniteListingWithApply = () => {
+    const [page, _setPage] = useState(1);
+
+    function handleApply(data: any) {
+        console.log(data);
+    }
+
+    return (
+        <InfiniteListing
+            loading={false}
+            list={getData(page)}
+            tableProps={{
+                getColumnList: () => {
+                    return [
+                        {
+                            title: "Name",
+                            dataIndex: "name",
+                            key: "name",
+                        },
+                        {
+                            title: "Age",
+                            dataIndex: "age",
+                            key: "age",
+                        },
+                        {
+                            title: "Address",
+                            dataIndex: "address",
+                            key: "address",
+                        },
+                    ];
+                },
+                scroll: { y: 500, x: "100vw" },
+            }}
+            filterProps={{
+                filterFieldList: [
+                    {
+                        name: "Age",
+                        data: ["10", "20"].map((d) => {
+                            return { label: d, value: d.toLowerCase() };
+                        }),
+                        slug: "age",
+                    },
+                ],
+            }}
+            resourcePath="/beast"
+            page={page}
+            onApply={handleApply}
         />
     );
 };
