@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "styled-components";
-import { Layout } from "./ContentLayout.styles";
-
-const { Sider, Content } = Layout;
+import { Layout, MainContent, SidebarContent } from './ContentLayout.styles';
 
 interface ContentLayoutProps {
     style?: React.CSSProperties;
@@ -13,32 +11,29 @@ interface ContentLayoutProps {
 
 const ContentLayout = ({ children, style, className, siderProps = {} }: ContentLayoutProps) => {
     const theme = useContext(ThemeContext);
-    const { siderStyle = { background: theme?.colors?.transparent }, ...restSiderProps } = siderProps;
+    const { siderStyle = { background: theme?.colors?.transparent } } = siderProps;
     const length = React.Children.count(children);
-    const getContentStyle = () =>
-        window.innerWidth <= 1680 ? { minWidth: "480px", maxWidth: "480px", flex: 1 } : { minWidth: "414px", flex: 1 };
 
     if (length === 1) {
         return (
-            <Layout style={style} className={className}>
-                <Content style={getContentStyle()}>{children}</Content>
+            <Layout className={className}>
+                {children}
             </Layout>
         );
     }
     if (length > 1) {
         return (
-            <Layout style={style} className={className}>
-                <Content>{children[0]}</Content>
-                <Sider width={theme?.contentLayout?.sidebarWidth} style={siderStyle} {...restSiderProps}>
-                    {children[1]}
-                </Sider>
+            <Layout className={className}>
+                <MainContent className="mainContent">{children[0]}</MainContent>
+                <SidebarContent className="sidebarContent" style={{ width: theme?.contentLayout?.sidebarWidth, ...siderStyle }}>{children[1]}</SidebarContent>
             </Layout>
+
         );
     }
 
     return (
         <Layout style={style} className={className}>
-            <Content>{children}</Content>
+            <div>{children}</div>
         </Layout>
     );
 };

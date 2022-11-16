@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { ResultProps, ResultStatusType } from "antd/lib/result";
+import { ResultProps, ResultStatusType } from "./Result";
 import CustomIcon, { CustomIconProps } from "../Icon/Icon";
 import { StyledResult } from "./States.styles";
 

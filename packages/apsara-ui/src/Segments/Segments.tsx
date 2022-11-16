@@ -1,16 +1,19 @@
 /* eslint-disable react/no-array-index-key */
-import React from "react";
-import { Col, Collapse } from "antd";
-import { Row, Key, Value, Title, Wrapper } from "./Segments.styles";
-
-const { Panel } = Collapse;
+import React, { useState } from "react";
+import { Row, Key, Value, Title, Wrapper, CollapsibleHeader } from "./Segments.styles";
+import * as Collapsible from '@radix-ui/react-collapsible';
+import { ChevronRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 
 interface SegmentsProps {
     span?: number;
     children?: React.ReactNode;
 }
 
-const Segments = ({ span = 10, children }: SegmentsProps) => <Col span={span}>{children}</Col>;
+const calculateWidth = (span: number) => {
+    return (span / 24) * 100 + '%'
+}
+
+const Segments = ({ span = 10, children }: SegmentsProps) => <div style={{ maxWidth: calculateWidth(span) }}> {children}</ div>;
 
 interface SegmentRowsProps {
     label: string;
@@ -53,15 +56,22 @@ interface AdvancedConfigProps {
 }
 
 const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations" }: AdvancedConfigProps) => {
+    const [open, setOpen] = useState(false);
     return (
         <Wrapper $advance>
-            <Collapse expandIconPosition="right" bordered={false}>
-                <Panel header={title} key="1">
+            <Collapsible.Root open={open}>
+                <CollapsibleHeader className="radix-collpase-header" onClick={() => setOpen(!open)} >
+                    <span style={{ paddingRight: '10px' }}>
+                        {title}
+                    </span>
+                    {open ? <ChevronDownIcon /> : <ChevronRightIcon />}
+                </CollapsibleHeader>
+                <Collapsible.CollapsibleContent>
                     {rowData.map((d, index) => (
                         <SegmentRow key={`${d.key}_${index}`} {...d} />
                     ))}
-                </Panel>
-            </Collapse>
+                </Collapsible.CollapsibleContent>
+            </Collapsible.Root>
         </Wrapper>
     );
 };

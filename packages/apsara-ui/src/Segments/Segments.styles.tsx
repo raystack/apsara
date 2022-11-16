@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import { Row as AntdRow } from "antd";
 import { capitalize } from "../mixin";
 import { StyledTag } from "../Tag/Tag.styles";
 
@@ -43,7 +42,7 @@ export const Title = styled.div`
     }
 `;
 
-export const Wrapper = styled(AntdRow)<{ $advance?: boolean }>`
+export const Wrapper = styled.div<{ $advance?: boolean }>`
     display: flex;
     flex-direction: column;
     padding: ${({ $advance }) => ($advance ? "32px 0px 0px 0px" : "24px 0px 32px 0px")};
@@ -87,3 +86,12 @@ export const Wrapper = styled(AntdRow)<{ $advance?: boolean }>`
             }
         `}
 `;
+
+export const CollapsibleHeader = styled.div`
+        font-size: ${({ theme }) => theme?.fontSizes[1]};
+        color: ${({ theme }) => theme?.segments?.title};
+        letter-spacing: 0.3px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+`
