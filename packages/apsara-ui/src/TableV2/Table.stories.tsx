@@ -7,7 +7,7 @@ import VirtualisedTableWithInfiniteScroll from "./VirtualisedTableWithInfiniteDa
 import { ColumnSort, SortingState } from "@tanstack/react-table";
 
 export default {
-    title: "Data Display/TanstackTable",
+    title: "Data Display/TableV2",
     component: Table,
 };
 
