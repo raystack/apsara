@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo, useCallback } from "react";
-import { StyledTable, TableWrapper, EmptyHeader, EmptyText } from "./Table.styles";
+import { StyledTable, TableWrapper } from "./Table.styles";
 import {
     createColumnHelper,
     flexRender,

@@ -109,7 +109,7 @@ function Table({
         setPagination({ pageIndex, pageSize });
     };
 
-    const PrevNextArrow = (page: any, type: string, originalElement: any) => {
+    const PrevNextArrow = (_page: any, type: string, originalElement: any) => {
         if (type === "prev") {
             return (
                 <button>
