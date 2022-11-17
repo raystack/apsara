@@ -8,8 +8,8 @@ import { ColProps } from "./grid/col";
 import { FormContext, FormContextProps } from "./context";
 import { FormLabelAlign } from "./interface";
 import useForm, { FormInstance } from "./hooks/useForm";
-// import type  { FormInstance } from 'rc-field-form';
 import SizeContext, { SizeType, SizeContextProvider } from "./SizeContext";
+import { FormWrapper } from "./FormBuilder.styles";
 
 export type RequiredMark = boolean | "optional";
 export type FormLayout = "horizontal" | "inline" | "vertical";
@@ -95,15 +95,17 @@ const InternalForm: React.ForwardRefRenderFunction<FormInstance, FormProps> = (p
     return (
         <SizeContextProvider size={size}>
             <FormContext.Provider value={formContextValue}>
-                <FieldForm
-                    id={name}
-                    {...restFormProps}
-                    name={name}
-                    onFinishFailed={onInternalFinishFailed}
-                    form={wrapForm}
-                    className={formClassName}
-                    validateMessages={validateMessages}
-                />
+                <FormWrapper>
+                    <FieldForm
+                        id={name}
+                        {...restFormProps}
+                        name={name}
+                        onFinishFailed={onInternalFinishFailed}
+                        form={wrapForm}
+                        className={formClassName}
+                        validateMessages={validateMessages}
+                    />
+                </FormWrapper>
             </FormContext.Provider>
         </SizeContextProvider>
     );

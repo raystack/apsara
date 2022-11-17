@@ -3,7 +3,6 @@ import { FormProvider } from "./context";
 import type { FormInstance } from "rc-field-form";
 import InternalForm, { FormProps, useForm } from "./Form";
 import FormBuilderItems from "./FormBuilderItems";
-import "./style/index.style.less";
 
 type InternalFormType = typeof InternalForm;
 
