@@ -86,13 +86,10 @@ export const Form: FC = () => {
         ],
     };
 
-    const handleSubmit = () => {
-        console.log("Account Type: ", form.getFieldValue(["account_type"]));
-        console.log("Sample Id: ", form.getFieldValue(["sample_id"]));
-        console.log("Account Id: ", form.getFieldValue(["account_id"]));
-        console.log("Duration: ", form.getFieldValue(["resources", 0, "options", "duration"]));
-        console.log("All:", form.getFieldsValue());
-        console.log("Submitted");
+    const handleSubmit = (values: any) => {
+        values.policies.map((value: any) => {
+            console.log(value);
+        });
     };
 
     return (
