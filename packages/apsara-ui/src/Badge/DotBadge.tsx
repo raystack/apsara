@@ -2,7 +2,7 @@ import classNames from "classnames";
 import CSSMotion from "rc-motion";
 import * as React from "react";
 import { useMemo, useRef } from "react";
-import "./index.style.less";
+import { BadgeWrapper } from "./DotBadge.styles";
 
 type CompoundedComponent = React.FC<BadgeProps>;
 
@@ -28,7 +28,7 @@ const Badge: CompoundedComponent = ({ children, dot = false, style, ...restProps
     const reactNode: React.ReactNode = undefined;
     const component = "sup";
     return (
-        <span {...restProps}>
+        <BadgeWrapper {...restProps}>
             {children}
             <CSSMotion visible={!isHidden} motionName={`zoom`} motionAppear={false} motionDeadline={1000}>
                 {({ className: motionClassName }) => {
@@ -45,7 +45,7 @@ const Badge: CompoundedComponent = ({ children, dot = false, style, ...restProps
                     return React.createElement(component as any, newProps, reactNode);
                 }}
             </CSSMotion>
-        </span>
+        </BadgeWrapper>
     );
 };
 
