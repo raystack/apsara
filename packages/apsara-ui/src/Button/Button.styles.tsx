@@ -35,7 +35,7 @@ export const StyledButton = styled("span")<{
     type: "primary" | "ghost" | "dashed" | "link" | "text" | "default" | "barebone";
     size: string | "small" | "middle" | "large";
     block: boolean;
-    shape: "circle" | "round";
+    shape: "circle" | "round" | "default";
 }>`
     .apsara-btn {
         display: inline-flex;

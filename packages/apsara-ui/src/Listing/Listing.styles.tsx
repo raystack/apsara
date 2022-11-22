@@ -18,11 +18,4 @@ export const ListingSearch: React.FC<SearchProps> = styled(Search)`
 export const FilterActions = styled.span`
     display: flex;
     align-items: center;
-
-    & > .anticon {
-        padding: 3px 8px;
-        border: 1px solid ${({ theme }) => theme?.colors?.black[4]};
-        border-radius: 2px;
-        border-right: 0;
-    }
 `;

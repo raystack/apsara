@@ -1,7 +1,10 @@
 import React, { useCallback } from "react";
 import * as R from "ramda";
 import PropTypes from "prop-types";
-import { ColProps, Form, FormInstance, FormItemProps } from "antd";
+import FormItem from "./FormItem";
+import type { FormInstance } from "rc-field-form";
+import { ColProps, FormItemLabelProps, FormItemInputProps } from "./interface";
+import type { ValidateStatus, LabelTooltipType } from "./interface";
 import Tooltip from "../Tooltip";
 import { evaluateExpression } from "./helper";
 import FormBuilderField, { Widget } from "./FormBuilderField";
@@ -10,6 +13,7 @@ import { SelectProps } from "../Select/Select";
 import { SwitchProps } from "../Switch/Switch";
 import { RadioProps } from "../Radio/Radio";
 import { SelectProps as ComboboxProps } from "rc-select";
+import type { FieldProps } from "rc-field-form/lib/Field";
 
 /*
 Example:
@@ -42,6 +46,28 @@ const [form] = Form.useForm();
  *      rules
  * }
  */
+
+type RenderChildren<Values = any> = (form: FormInstance<Values>) => React.ReactNode;
+type RcFieldProps<Values = any> = Omit<FieldProps<Values>, "children">;
+type ChildrenType<Values = any> = RenderChildren<Values> | React.ReactNode;
+
+export interface FormItemProps<Values = any> extends FormItemLabelProps, FormItemInputProps, RcFieldProps<Values> {
+    prefixCls?: string;
+    noStyle?: boolean;
+    style?: React.CSSProperties;
+    className?: string;
+    children?: ChildrenType<Values>;
+    id?: string;
+    hasFeedback?: boolean;
+    validateStatus?: ValidateStatus;
+    required?: boolean;
+    hidden?: boolean;
+    initialValue?: any;
+    messageVariables?: Record<string, string>;
+    tooltip?: LabelTooltipType;
+    /** @deprecated No need anymore */
+    fieldKey?: React.Key | React.Key[];
+}
 
 const shouldShow = (config: any, dependenciesFieldValue: any) => {
     if (!config.dependencies || !config.depends) return true;
@@ -98,7 +124,7 @@ const FormBuilderItems = (props: FormBuilderItemsProps) => {
     const { fields = [] } = meta;
 
     const getInitialDependencyFieldValueByNamePath = useCallback(
-        (namePath) => {
+        (namePath: any) => {
             // otherwise if not loaded in form then search within the fields map and return initialValue
             const dependentField = fields.find((field: any) => R.equals(field.name, namePath));
             return R.propOr(undefined, "initialValue", dependentField);
@@ -107,7 +133,7 @@ const FormBuilderItems = (props: FormBuilderItemsProps) => {
     );
 
     const getDependencyFieldValueByNamePath = useCallback(
-        (namePath) => {
+        (namePath: any) => {
             // if its already set in form then return
             if (form?.getFieldValue(namePath)) return form?.getFieldValue(namePath);
 
@@ -231,9 +257,9 @@ const FormBuilderItems = (props: FormBuilderItemsProps) => {
 
                 if (isReadOnly) {
                     return (
-                        <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
+                        <FormItem name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
                             {form?.getFieldValue(config.name) || config.initialValue}
-                        </Form.Item>
+                        </FormItem>
                     );
                 }
 
@@ -244,9 +270,9 @@ const FormBuilderItems = (props: FormBuilderItemsProps) => {
                 ).every(isTrue);
 
                 return shouldShowField ? (
-                    <Form.Item name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
+                    <FormItem name={config.name} label={config.label} key={uniqeKey} {...formItemProps}>
                         <FormBuilderToolTip form={form} title={config.title} {...formFieldProps} />
-                    </Form.Item>
+                    </FormItem>
                 ) : null;
             })}
         </React.Fragment>

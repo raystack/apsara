@@ -136,7 +136,7 @@ export const infiniteListing = () => {
 };
 
 export const infiniteListingWithApply = () => {
-    const [page, _setPage] = useState(1);
+    const [page, _setPage] = useState(1); // eslint-disable-line
 
     function handleApply(data: any) {
         console.log(data);

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Icon from "../Icon";
 import FormBuilder from "../FormBuilder";
 import * as R from "ramda";
-import { Form } from "antd";
+import { List } from "rc-field-form";
 import { Field, getFormListItemFields } from "./helper";
 import { DynamicListContainer } from "./DynamicList.styles";
 
@@ -65,7 +65,7 @@ const FormItemDynamicList = ({ form, add, meta, remove, formListfields, addBtnTe
 
 export const DynamicList = ({ form, meta, addBtnText = "Add" }: any) => {
     return (
-        <Form.List name={meta.name}>
+        <List name={meta.name}>
             {(formListfields, { add, remove }) => (
                 <FormItemDynamicList
                     form={form}
@@ -76,7 +76,7 @@ export const DynamicList = ({ form, meta, addBtnText = "Add" }: any) => {
                     addBtnText={addBtnText}
                 />
             )}
-        </Form.List>
+        </List>
     );
 };
 

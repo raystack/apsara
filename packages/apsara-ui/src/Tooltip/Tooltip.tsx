@@ -1,8 +1,10 @@
 import React, { HTMLAttributes } from "react";
 import { StyledTooltip } from "./Tooltip.styles";
 
+type RenderFunction = () => React.ReactNode;
+
 export type TooltipProps = {
-    title?: React.ReactNode;
+    title?: React.ReactNode | RenderFunction | string;
     placement?:
         | "left"
         | "right"

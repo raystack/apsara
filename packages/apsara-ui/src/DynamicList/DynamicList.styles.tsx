@@ -6,16 +6,12 @@ const baseButtonStyles = css`
     margin: 8px 0;
     font-weight: bold;
     cursor: pointer;
-
-    .anticon {
-        margin-right: 4px;
-    }
 `;
 
 export const DynamicListContainer = styled.div`
     .form-dynamic-list__item {
         display: flex;
-        .ant-form-item {
+        .custom-form-item {
             margin-right: 24px;
         }
     }
