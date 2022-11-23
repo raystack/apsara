@@ -6,7 +6,7 @@ import CustomIcon, { IconName } from "../Icon/Icon";
 import { Wrapper } from "./Search.styles";
 
 const nullFn = () => null;
-declare type SizeType = 'small' | 'middle' | 'large' | undefined;
+declare type SizeType = "small" | "middle" | "large" | undefined;
 
 export interface SearchProps {
     placeholder?: string;

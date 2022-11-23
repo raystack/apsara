@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import moment from "moment";
 import * as R from "ramda";
 
-import { DiffTimelineContainer, DiffTableContainer, CollapsibleHeader, CollapsibleContent } from "./DiffTimeline.styles";
+import {
+    DiffTimelineContainer,
+    DiffTableContainer,
+    CollapsibleHeader,
+    CollapsibleContent,
+} from "./DiffTimeline.styles";
 import Icon from "../Icon";
 import * as Collapsible from "@radix-ui/react-collapsible";
 
@@ -50,8 +55,9 @@ const DiffTable = ({ diff }: any) => {
                 return (
                     <div key={diffKey} className="diff-table__section">
                         <div
-                            className={`"diff-table__header" ${isRemoved && "diff-table__text--deletion diff-table__text--strikethrough"
-                                } ${isAdded && "diff-table__text--addition"}`}
+                            className={`"diff-table__header" ${
+                                isRemoved && "diff-table__text--deletion diff-table__text--strikethrough"
+                            } ${isAdded && "diff-table__text--addition"}`}
                         >
                             {diffKey}
                         </div>
@@ -77,7 +83,10 @@ const DiffTimelineBlock = ({ timelineBlockData }: any) => {
     return (
         <li className="apsara-timeline-item diff-timeline__block" color="black">
             <div className="apsara-timeline-item-tail"></div>
-            <div className="apsara-timeline-item-head apsara-timeline-item-head-black" style={{ borderColor: 'black' }}></div>
+            <div
+                className="apsara-timeline-item-head apsara-timeline-item-head-black"
+                style={{ borderColor: "black" }}
+            ></div>
             <div className="apsara-timeline-item-content">
                 <div className="diff-timeline__reason">{timelineBlockData.reason}</div>
 
@@ -92,9 +101,9 @@ const DiffTimelineBlock = ({ timelineBlockData }: any) => {
                 </div>
                 {!R.isEmpty(timelineBlockData.diff) && (
                     <Collapsible.Root open={isActive}>
-                        <CollapsibleHeader onClick={() => setIsActive(!isActive)} >
+                        <CollapsibleHeader onClick={() => setIsActive(!isActive)}>
                             <Icon size={12} name={isActive ? "removeOutlineBox" : "addOutlineBox"} />
-                            <span style={{ paddingLeft: '10px', fontWeight: "normal", cursor: 'pointer' }}>
+                            <span style={{ paddingLeft: "10px", fontWeight: "normal", cursor: "pointer" }}>
                                 {<div> {isActive ? "Hide" : "See"} details </div>}
                             </span>
                         </CollapsibleHeader>
@@ -102,7 +111,6 @@ const DiffTimelineBlock = ({ timelineBlockData }: any) => {
                             <DiffTable diff={timelineBlockData.diff} />
                         </CollapsibleContent>
                     </Collapsible.Root>
-
                 )}
             </div>
         </li>

@@ -4,6 +4,8 @@ import Listing, { useSearchFilter, InfiniteListing } from "./Listing";
 import Search from "./Search";
 import Table from "./Table";
 import VTable from "./Table/VirtualisedTable";
+import TableV2 from "./TableV2";
+import VTableV2 from "./TableV2/VirtualisedTable";
 import Text from "./Text";
 import Tag from "./Tag";
 import States from "./States";
@@ -50,6 +52,8 @@ export {
     Search,
     Table,
     VTable,
+    TableV2,
+    VTableV2,
     Text,
     Tag,
     FormBuilder,

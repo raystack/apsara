@@ -6,5 +6,5 @@ export default {
     component: ListSkeleton,
 };
 export const listloader = () => <ListSkeleton />;
-export const editorLoader = () => <EditorSkeleton lastLineWidth="80%" />
-export const detailsloader = () => <DetailsSkeleton />
+export const editorLoader = () => <EditorSkeleton lastLineWidth="80%" />;
+export const detailsloader = () => <DetailsSkeleton />;

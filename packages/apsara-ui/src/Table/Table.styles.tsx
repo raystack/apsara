@@ -21,8 +21,8 @@ export const StyledTable = styled(Table)`
             border-spacing: 0;
         }
 
-        .rc-table-thead>tr>th,
-        .rc-table-tbody>tr>td,
+        .rc-table-thead > tr > th,
+        .rc-table-tbody > tr > td,
         .virtual-table-cell {
             --cell-padding-tb: 13px;
             --cell-padding-lr: 16px;
@@ -34,8 +34,8 @@ export const StyledTable = styled(Table)`
             background-color: transparent;
         }
 
-        .rc-table-thead>tr>th{
-            text-align:left
+        .rc-table-thead > tr > th {
+            text-align: left;
         }
 
         .rc-table-thead {
@@ -94,12 +94,7 @@ export const StyledTable = styled(Table)`
 
         // FIX ME
         .rc-table-thead > tr > th .rc-table-column-sorter .rc-table-column-sorter-inner .rc-table-column-sorter-up,
-        .rc-table-thead
-            > tr
-            > th
-            .rc-table-column-sorter
-            .rc-table-column-sorter-inner
-            .rc-table-column-sorter-down {
+        .rc-table-thead > tr > th .rc-table-column-sorter .rc-table-column-sorter-inner .rc-table-column-sorter-down {
             font-size: 10px;
         }
 

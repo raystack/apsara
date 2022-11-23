@@ -1,50 +1,49 @@
 import styled from "styled-components";
 import * as Collapsible from "@radix-ui/react-collapsible";
 export const DiffTimelineContainer = styled.div`
+    .apsara-timeline {
+        box-sizing: border-box;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        font-feature-settings: "tnum";
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
 
-.apsara-timeline {
-    box-sizing: border-box;
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 14px;
-    font-variant: tabular-nums;
-    line-height: 1.5715;
-    font-feature-settings: 'tnum';
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
+    .apsara-timeline-item {
+        position: relative;
+        margin: 0;
+        padding-bottom: 20px;
+        font-size: 14px;
+        list-style: none;
+    }
 
-  .apsara-timeline-item {
-    position: relative;
-    margin: 0;
-    padding-bottom: 20px;
-    font-size: 14px;
-    list-style: none;
-  }
+    .apsara-timeline-item-tail {
+        position: absolute;
+        top: 10px;
+        left: 4px;
+        height: calc(100% - 10px);
+        border-left: 2px solid #f0f0f0;
+    }
 
-  .apsara-timeline-item-tail {
-    position: absolute;
-    top: 10px;
-    left: 4px;
-    height: calc(100% - 10px);
-    border-left: 2px solid #f0f0f0;
-  }
+    .apsara-timeline-item-content {
+        position: relative;
+        top: -7.001px;
+        margin: 0 0 0 26px;
+        word-break: break-word;
+    }
 
-  .apsara-timeline-item-content {
-    position: relative;
-    top: -7.001px;
-    margin: 0 0 0 26px;
-    word-break: break-word;
-  }
-
-  .apsara-timeline-item-head {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: #fff;
-    border: 2px solid transparent;
-    border-radius: 100px;
-  }
+    .apsara-timeline-item-head {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #fff;
+        border: 2px solid transparent;
+        border-radius: 100px;
+    }
 
     margin-left: 16px;
 
@@ -168,15 +167,15 @@ export const DiffTableContainer = styled.div`
 `;
 
 export const CollapsibleHeader = styled.div`
-        font-size: ${({ theme }) => theme?.fontSizes[1]};
-        color: ${({ theme }) => theme?.segments?.title};
-        letter-spacing: 0.3px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        padding: 12px 16px
-`
+    font-size: ${({ theme }) => theme?.fontSizes[1]};
+    color: ${({ theme }) => theme?.segments?.title};
+    letter-spacing: 0.3px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+`;
 
 export const CollapsibleContent = styled(Collapsible.CollapsibleContent)`
-padding: 4px 16px 16px 16px
-`
+    padding: 4px 16px 16px 16px;
+`;

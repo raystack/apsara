@@ -8,7 +8,17 @@ import CustomIcon from "../Icon";
 import Learn from "../Learn";
 import Markdown from "../Markdown";
 import learnAnimation from "./learn.json";
-import { Wrapper, RightBar, Title, Avatar, AvatarImage, AvatarFallback, DropDownContent, DropDownContentInner, MenuListItem } from "./Header.styles";
+import {
+    Wrapper,
+    RightBar,
+    Title,
+    Avatar,
+    AvatarImage,
+    AvatarFallback,
+    DropDownContent,
+    DropDownContentInner,
+    MenuListItem,
+} from "./Header.styles";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 
 const getMenuList = (menuList: any[], iconColor: string) => (
@@ -42,13 +52,13 @@ interface HeaderProps {
     style?: any;
     username?: string;
     learnProps?:
-    | {
-        style: any;
-        content: string;
-        isLearnVisible: boolean;
-        toggleLearnVisibility: () => void;
-    }
-    | any;
+        | {
+              style: any;
+              content: string;
+              isLearnVisible: boolean;
+              toggleLearnVisibility: () => void;
+          }
+        | any;
 }
 const Header = ({
     title,
@@ -91,7 +101,6 @@ const Header = ({
                             </DropDownContent>
                         </DropdownMenuPrimitive.Portal>
                     </DropdownMenuPrimitive.Root>
-
                 )}
                 {learnProps && (
                     <React.Fragment>
@@ -118,7 +127,7 @@ const Header = ({
                     />
                 )}
             </RightBar>
-        </Wrapper >
+        </Wrapper>
     );
 };
 

@@ -88,10 +88,10 @@ export const Wrapper = styled.div<{ $advance?: boolean }>`
 `;
 
 export const CollapsibleHeader = styled.div`
-        font-size: ${({ theme }) => theme?.fontSizes[1]};
-        color: ${({ theme }) => theme?.segments?.title};
-        letter-spacing: 0.3px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-`
+    font-size: ${({ theme }) => theme?.fontSizes[1]};
+    color: ${({ theme }) => theme?.segments?.title};
+    letter-spacing: 0.3px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+`;
