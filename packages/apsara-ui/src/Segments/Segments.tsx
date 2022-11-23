@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useState } from "react";
 import { Row, Key, Value, Title, Wrapper, CollapsibleHeader } from "./Segments.styles";
-import * as Collapsible from '@radix-ui/react-collapsible';
+import * as Collapsible from "@radix-ui/react-collapsible";
 import { ChevronRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 
 interface SegmentsProps {
@@ -10,10 +10,12 @@ interface SegmentsProps {
 }
 
 const calculateWidth = (span: number) => {
-    return (span / 24) * 100 + '%'
-}
+    return (span / 24) * 100 + "%";
+};
 
-const Segments = ({ span = 10, children }: SegmentsProps) => <div style={{ maxWidth: calculateWidth(span) }}> {children}</ div>;
+const Segments = ({ span = 10, children }: SegmentsProps) => (
+    <div style={{ maxWidth: calculateWidth(span) }}> {children}</div>
+);
 
 interface SegmentRowsProps {
     label: string;
@@ -60,10 +62,8 @@ const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations
     return (
         <Wrapper $advance>
             <Collapsible.Root open={open}>
-                <CollapsibleHeader className="radix-collpase-header" onClick={() => setOpen(!open)} >
-                    <span style={{ paddingRight: '10px' }}>
-                        {title}
-                    </span>
+                <CollapsibleHeader className="radix-collpase-header" onClick={() => setOpen(!open)}>
+                    <span style={{ paddingRight: "10px" }}>{title}</span>
                     {open ? <ChevronDownIcon /> : <ChevronRightIcon />}
                 </CollapsibleHeader>
                 <Collapsible.CollapsibleContent>
