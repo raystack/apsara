@@ -9,7 +9,7 @@ import VTableV2 from "./TableV2/VirtualisedTable";
 import Text from "./Text";
 import Tag from "./Tag";
 import States from "./States";
-import FormBuilder from "./FormBuilder";
+import FormBuilder, { Form, FormInstance } from "./FormBuilder";
 import Learn from "./Learn";
 import Markdown from "./Markdown";
 import ContentLayout from "./ContentLayout";
@@ -57,6 +57,8 @@ export {
     Text,
     Tag,
     FormBuilder,
+    FormInstance,
+    Form,
     States,
     Learn,
     Markdown,

@@ -1,30 +1,70 @@
 import React from "react";
 import { FormProvider } from "./context";
-import type { FormInstance } from "rc-field-form";
-import InternalForm, { FormProps, useForm } from "./Form";
+import InternalForm, { FormInstance, FormProps, useForm } from "./Form";
 import FormBuilderItems from "./FormBuilderItems";
+import Item from "./FormItem";
+import PropTypes from "prop-types";
+import { List } from "rc-field-form";
 
 type InternalFormType = typeof InternalForm;
 
 interface FormInterface extends InternalFormType {
     useForm: typeof useForm;
-    Items: typeof FormBuilderItems;
+    Item: typeof Item;
+    List: typeof List;
     Provider: typeof FormProvider;
-    useForceUpdate: () => any;
 }
 
 const Form = InternalForm as FormInterface;
 
-Form.Items = FormBuilderItems;
+Form.Item = Item;
+Form.List = List;
 Form.useForm = useForm;
 Form.Provider = FormProvider;
 
-Form.useForceUpdate = () => {
+const validateMessages = {
+    required: "${label} is required!",
+};
+
+interface CustomFormProps extends FormProps {
+    form: FormInstance;
+}
+
+const CustomForm = ({ form: inForm, ...props }: CustomFormProps) => {
+    const [form] = Form.useForm(inForm);
+    return <Form validateMessages={validateMessages} form={form} {...props} />;
+};
+
+CustomForm.defaultProps = {
+    name: "form",
+    colon: false,
+    layout: "vertical",
+    labelAlign: "left",
+    hideRequiredMark: true,
+    initialValues: {},
+    scrollToFirstError: true,
+};
+
+CustomForm.propTypes = {
+    name: PropTypes.string.isRequired,
+    colon: PropTypes.bool,
+    layout: PropTypes.oneOf(["horizontal", "inline", "vertical"]),
+    labelAlign: PropTypes.oneOf(["left", "right"]),
+    hideRequiredMark: PropTypes.bool,
+    initialValues: PropTypes.object,
+    preserve: PropTypes.bool,
+    scrollToFirstError: PropTypes.bool,
+};
+
+CustomForm.Provider = Form.Provider;
+CustomForm.useForm = Form.useForm;
+CustomForm.Items = FormBuilderItems;
+
+CustomForm.useForceUpdate = () => {
     const [, updateState] = React.useState({});
     const forceUpdate = React.useCallback(() => updateState({}), []);
     return forceUpdate;
 };
 
-export { FormInstance, FormProps };
-
-export default Form;
+export { Form, FormInstance };
+export default CustomForm;
