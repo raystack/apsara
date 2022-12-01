@@ -58,7 +58,7 @@ export const StyledTable = styled(Table)`
         .virtual-table-cell {
             cursor: pointer;
 
-            a {
+            > a {
                 display: block;
                 color: inherit;
                 white-space: nowrap;
