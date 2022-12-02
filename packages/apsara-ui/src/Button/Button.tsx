@@ -60,7 +60,7 @@ const Button = ({
             {href && (
                 <a
                     href={href}
-                    className={`apsara-btn btn-link ${clsx(className, type)} ${disabled ? "disabled" : ""}`}
+                    className={`apsara-btn ${clsx(className, type)} ${disabled ? "disabled" : ""}`}
                     {...props}
                 >
                     <IconComponent />

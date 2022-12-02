@@ -58,7 +58,7 @@ export const StyledTable = styled(Table)`
         .virtual-table-cell {
             cursor: pointer;
 
-            a:not(.btn-link) {
+            a:not(.apsara-btn) {
                 display: block;
                 color: inherit;
                 white-space: nowrap;
