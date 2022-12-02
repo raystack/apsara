@@ -16,7 +16,7 @@ import ContentLayout from "./ContentLayout";
 import Sidebar from "./Sidebar";
 import Drawer from "./Drawer";
 import Header from "./Header";
-import { ListLoader, EditorLoader, DetailsLoader } from "./Loader";
+import { ListSkeleton, EditorSkeleton, DetailsSkeleton } from "./Skeleton/Skeleton";
 import Tabs from "./Tabs";
 import Title from "./Title";
 import Segments from "./Segments";
@@ -66,9 +66,9 @@ export {
     Sidebar,
     Drawer,
     Header,
-    ListLoader,
-    EditorLoader,
-    DetailsLoader,
+    ListSkeleton,
+    EditorSkeleton,
+    DetailsSkeleton,
     Tabs,
     Title,
     Segments,

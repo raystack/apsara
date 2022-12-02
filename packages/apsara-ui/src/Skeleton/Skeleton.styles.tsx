@@ -10,7 +10,10 @@ li + li {
 
 li:last-child {
     width: ${({ $editor, $props }) => ($editor ? $props.lastLineWidth : "")}
+}
 
+ul.skeleton-paragraph{
+    padding:0;
 `;
 
 export const ListItem = styled.li`
