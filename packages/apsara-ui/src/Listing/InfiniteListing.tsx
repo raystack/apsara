@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect } from "react";
 import Filters from "./Filters";
-import { ListLoader } from "../Loader";
+import { ListSkeleton } from "../Skeleton/";
 import VirtualisedTable from "../Table/VirtualisedTable";
 import { useSearchFilterState } from "./hooks/useSearchFilter";
 import { ListingSearch, ListingWrapper } from "./Listing.styles";
@@ -88,7 +88,7 @@ const InfiniteListing = ({
 
     const columns = getColumnList(resourcePath, sortedInfo);
 
-    if (loading) return <ListLoader className={className} />;
+    if (loading) return <ListSkeleton className={className} />;
 
     if (!renderHeader) {
         renderHeader = (

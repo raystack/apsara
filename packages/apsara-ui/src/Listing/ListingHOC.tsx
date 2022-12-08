@@ -1,5 +1,5 @@
 import React from "react";
-import { ListLoader } from "../Loader";
+import { ListSkeleton } from "../Skeleton";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ListingHOCProps {}
@@ -10,7 +10,7 @@ export default function ListingHOC<T extends ListingHOCProps = ListingHOCProps>(
     const displayName = WrappedComponent.displayName || WrappedComponent.name || "Component";
 
     const ComponentListingHOC = ({ loading = false, ...props }: Omit<T, keyof ListingHOCProps> | any) => {
-        if (loading) return <ListLoader />;
+        if (loading) return <ListSkeleton />;
         // props comes afterwards so the can override the default ones.
         return <WrappedComponent {...(props as T)} />;
     };
