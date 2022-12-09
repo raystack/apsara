@@ -61,7 +61,7 @@ export const Wrapper = styled.div`
     padding: 0 40px;
     background-color: ${({ theme }) => theme?.header?.menuBg};
     border-bottom: solid 1px ${({ theme }) => theme?.colors?.black[3]};
-    height: 64px;
+    line-height: 64px;
 `;
 
 export const RightBar = styled.div`
