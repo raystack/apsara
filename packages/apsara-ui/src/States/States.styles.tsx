@@ -38,6 +38,7 @@ export const StyledResult = styled(Result)`
         font-size: ${({ theme }) => theme?.fontSizes[3]};
         font-weight: bold;
         line-height: 1.4;
+        text-align: center;
     }
     .apsara-result-subtitle {
         color: ${({ theme }) => theme?.states?.text};
