@@ -14,6 +14,7 @@ import { useQuery } from "react-query";
 import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 import Pagination from "rc-pagination";
 import { StyledEmpty } from "../Table/Table.styles";
+import { ListSkeleton } from "../Skeleton";
 
 interface ITableProps {
     selectedRowId?: number | null;
@@ -26,8 +27,12 @@ interface ITableProps {
     paginate?: boolean;
     fullPagination?: boolean;
     showPageSizeChanger?: boolean;
+    items?: any[];
+    totalItems?: number;
+    setPage?: (page: number, pageSize: number) => any;
     dataFetchFunction?: (options: { pageIndex?: number; pageSize?: number }) => any;
     rowClick?: (props: any) => any;
+    isLoading?: boolean;
 }
 
 function Table({
@@ -36,8 +41,14 @@ function Table({
     paginate = true,
     fullPagination = true,
     showPageSizeChanger = true,
+    items,
+    totalItems,
+    setPage,
     dataFetchFunction,
     rowClick,
+    isLoading = false,
+    alternate = false,
+    alternateHover = false,
 }: ITableProps) {
     const columns: any[] = [];
     const columnHelper = createColumnHelper();
@@ -60,16 +71,18 @@ function Table({
         pageIndex,
         pageSize,
     };
-
-    const dataQuery = useQuery(
-        ["data", fetchDataOptions],
-        () =>
-            dataFetchFunction &&
-            (paginate ? dataFetchFunction({ pageIndex: pageIndex - 1, pageSize }) : dataFetchFunction({})),
-        {
-            keepPreviousData: true,
-        },
-    );
+    let dataQuery;
+    if (!items) {
+        dataQuery = useQuery(
+            ["data", fetchDataOptions],
+            () =>
+                dataFetchFunction &&
+                (paginate ? dataFetchFunction({ pageIndex: pageIndex - 1, pageSize }) : dataFetchFunction({})),
+            {
+                keepPreviousData: true,
+            },
+        );
+    }
     const pagination = React.useMemo(
         () => ({
             pageIndex,
@@ -77,11 +90,10 @@ function Table({
         }),
         [pageIndex, pageSize],
     );
-
     const table = useReactTable({
-        data: dataQuery.data?.rows ?? [],
+        data: items || (dataQuery && dataQuery.data?.rows) || [],
         columns,
-        pageCount: dataQuery.data?.pageCount ?? -1,
+        pageCount: (dataQuery && dataQuery.data?.pageCount) ?? -1,
         getCoreRowModel: getCoreRowModel(),
         state: {
             sorting,
@@ -94,7 +106,7 @@ function Table({
         debugTable: true,
     });
 
-    if (!columns.length || !dataQuery.data?.rows?.length) {
+    if (!columns.length || (dataQuery && !dataQuery.data?.rows?.length && items)) {
         return (
             <StyledEmpty>
                 <EmptyHeader> We could not find it! </EmptyHeader>
@@ -107,6 +119,7 @@ function Table({
         if (currentPageSize && currentPageSize < pageSize)
             pageIndex = Math.ceil(pageIndex * (currentPageSize / pageSize));
         setPagination({ pageIndex, pageSize });
+        if (setPage) setPage(pageIndex, pageSize);
     };
 
     const PrevNextArrow = (_page: any, type: string, originalElement: any) => {
@@ -128,7 +141,7 @@ function Table({
     };
 
     return (
-        <StyledTable>
+        <StyledTable className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""}`}>
             <TableWrapper>
                 <table>
                     <thead>
@@ -179,16 +192,28 @@ function Table({
                             </tr>
                         ))}
                     </thead>
-                    <tbody>
-                        {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
+                    {!isLoading && (
+                        <tbody>
+                            {table.getRowModel().rows.map((row) => (
+                                <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
+                                    {row.getVisibleCells().map((cell) => (
+                                        <td key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))}
+                            {!table.getRowModel().rows.length && (
+                                <tr className="apsara-table-placeholder">
+                                    <td colSpan={columnsData.length} style={{ textAlign: "center" }}>
+                                        No Data
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    )}
                 </table>
+                {isLoading && <ListSkeleton />}
             </TableWrapper>
             {paginate && (
                 <PaginationWrapper>
@@ -196,7 +221,7 @@ function Table({
                         <Pagination
                             className="pagination-data"
                             onChange={PaginationChange}
-                            total={dataQuery.data?.total}
+                            total={totalItems || (dataQuery && dataQuery.data?.total)}
                             current={pageIndex}
                             pageSize={pageSize}
                             itemRender={PrevNextArrow}
