@@ -203,7 +203,7 @@ function Table({
                                     ))}
                                 </tr>
                             ))}
-                            {!table.getRowModel().rows.length && (
+                            {!table.getRowModel().rows.length && !isLoading && (
                                 <tr className="apsara-table-placeholder">
                                     <td colSpan={columnsData.length} style={{ textAlign: "center" }}>
                                         No Data
