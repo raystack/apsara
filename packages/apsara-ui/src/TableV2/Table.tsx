@@ -15,6 +15,7 @@ import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 import Pagination from "rc-pagination";
 import { StyledEmpty } from "../Table/Table.styles";
 import { ListSkeleton } from "../Skeleton";
+import Empty from "./Empty";
 
 interface ITableProps {
     selectedRowId?: number | null;
@@ -109,6 +110,7 @@ function Table({
     if (!columns.length || (dataQuery && !dataQuery.data?.rows?.length && items)) {
         return (
             <StyledEmpty>
+                <Empty />
                 <EmptyHeader> We could not find it! </EmptyHeader>
                 <EmptyText> We are sorry, but your search did not have any result </EmptyText>
             </StyledEmpty>

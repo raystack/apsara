@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ResizeObserver from "rc-resize-observer";
-import { TableProps } from "antd/lib/table";
+import { TableProps } from "./TableProps";
 import InfiniteLoader from "react-window-infinite-loader";
 import clsx from "clsx";
 import Table from "./Table";
