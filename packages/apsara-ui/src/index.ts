@@ -39,6 +39,9 @@ import Switch from "./Switch";
 import Slider from "./Slider";
 import Themes from "./Provider/theme";
 import DiffTimeline from "./DiffTimeline";
+import InputNumber from "./InputNumber";
+import DatePicker from "./DatePicker/DatePicker";
+import RangePicker from "./DatePicker/RangePicker";
 export { DynamicList } from "./DynamicList";
 
 export * from "./Notification";
@@ -91,4 +94,7 @@ export {
     Themes,
     InfoModal,
     DiffTimeline,
+    InputNumber,
+    DatePicker,
+    RangePicker,
 };
