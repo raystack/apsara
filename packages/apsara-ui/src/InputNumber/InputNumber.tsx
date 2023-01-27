@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
 import type { InputNumberProps as RcInputNumberProps } from "rc-input-number";
 import RcInputNumber from "rc-input-number";
-import type { ValueType } from "@rc-component/mini-decimal";
 import { CaretUpIcon, CaretDownIcon } from "@radix-ui/react-icons";
 import classNames from "classnames";
 import { StyledRcInputNumberWrapper } from "./InputNumber.styles";
 
+export type ValueType = string | number;
 export type DisabledType = true | false | undefined;
 const DisabledContext = React.createContext<DisabledType>(false);
 const InputStatuses = ["warning", "error", ""] as const;

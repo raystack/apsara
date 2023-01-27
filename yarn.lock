@@ -4452,7 +4452,7 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@rc-component/mini-decimal@1.0.1", "@rc-component/mini-decimal@^1.0.1":
+"@rc-component/mini-decimal@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@rc-component/mini-decimal/-/mini-decimal-1.0.1.tgz#e5dbc20a6a5b0e234d279bc71ce730ab865d3910"
   integrity sha512-9N8nRk0oKj1qJzANKl+n9eNSMUGsZtjwNuDCiZ/KA+dt1fE3zq5x2XxclRcAbOIXnZcJ53ozP2Pa60gyELXagA==
