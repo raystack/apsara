@@ -11,6 +11,18 @@ export default {
     component: Table,
 };
 
+function getData(page = 1) {
+    return new Array(page * 100).fill(0).map((_, index) => {
+        return {
+            key: index,
+            name: `name ${index}`,
+            age: index,
+            full_address: "10 Downing Street",
+        };
+    });
+}
+const dataSource = getData();
+
 export const TableWithoutData = () => (
     <QueryClientProvider client={queryClient}>
         <Table columnsData={[]} />
@@ -76,7 +88,7 @@ const columns = [
         title: "Name",
         dataIndex: "name",
         key: "name",
-        render: function Render({ row }) {
+        render: function Render({ row }: any) {
             return <a href="/">{row.original.name}</a>;
         },
     },
@@ -103,6 +115,22 @@ export const TableWithData = () => (
             showPageSizeChanger={true}
             rowClick={rowClick}
             dataFetchFunction={getPaginatedData}
+        />
+    </QueryClientProvider>
+);
+
+export const TableWithDataWithoutPagination = () => (
+    <QueryClientProvider client={queryClient}>
+        <Table
+            columnsData={columns}
+            scroll={{ x: true, y: 300 }}
+            sortable={true}
+            paginate={false}
+            fullPagination={false}
+            showPageSizeChanger={false}
+            rowClick={rowClick}
+            dataFetchFunction={getPaginatedData}
+            alternate
         />
     </QueryClientProvider>
 );

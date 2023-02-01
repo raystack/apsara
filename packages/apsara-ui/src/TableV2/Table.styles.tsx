@@ -11,6 +11,7 @@ export const StyledTable = styled.div`
         border-radius: 2px 2px 0 0;
         border-collapse: separate;
         border-spacing: 0;
+        font-size: 12px;
     }
 
     thead > tr > th:not(:last-child):not([colspan])::before {
@@ -25,7 +26,6 @@ export const StyledTable = styled.div`
         content: "";
     }
     thead {
-        font-size: 12px;
         color: #4b4b4b;
         text-indent: initial;
         border-spacing: 2px;
@@ -36,12 +36,73 @@ export const StyledTable = styled.div`
         text-transform: capitalize;
     }
 
+    &.alternate {
+        tbody tr:nth-child(odd),
+        .virtual-table-odd {
+            background: ${({ theme }) => theme?.table?.highlight};
+        }
+
+        .rc-table-tbody > tr > td,
+        .virtual-table-cell {
+            border-bottom: none;
+        }
+
+        .rc-table-row,
+        .virtual-table-cell {
+            cursor: text;
+
+            &:hover {
+                td:first-child {
+                    ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.table?.title)}
+                }
+            }
+
+            height: 40px;
+
+            td {
+                line-height: 14px;
+            }
+        }
+
+        .rc-table-tbody > tr:hover > td {
+            background: transparent;
+        }
+    }
+
+    &.alternate-hover {
+        .rc-table-row {
+            td:first-child {
+                border-left: 1px solid transparent;
+            }
+
+            &:hover td:first-child {
+                border-left: 1px solid ${({ theme }) => theme?.colors?.primary[3]};
+            }
+
+            &:hover td a {
+                text-decoration: underline;
+            }
+        }
+    }
+
     tr > td,
     tfoot > tr > th,
     tfoot > tr > td {
         position: relative;
         padding: 16px 16px;
         overflow-wrap: break-word;
+    }
+
+    td:first-child {
+        ${({ theme }) => textStyles(theme?.fontSizes[1], theme?.table?.title)}
+    }
+
+    td:last-child {
+        word-break: break-word;
+    }
+
+    tr.apsara-table-placeholder > td:first-child{
+        color: rgba(0,0,0,.25);
     }
 
     tr > th,
@@ -94,7 +155,7 @@ export const StyledTable = styled.div`
 `;
 
 export const TableWrapper = styled.div`
-    height: calc(100vh - 90px);
+    height: calc(100vh - 200px);
     overflow: auto;
 `;
 
@@ -203,7 +264,7 @@ export const PaginationWrapper = styled.div`
         justify-content: center;
         font-size: 12px;
         font-weight: 500;
-        color: #656f84;
+        color: rgba(0, 0, 0, 0.85);
         transition: 0.3s;
         -webkit-transition: 0.3s;
         -moz-transition: 0.3s;
@@ -223,6 +284,7 @@ export const PaginationWrapper = styled.div`
             cursor: not-allowed;
         }
         button {
+            color: rgba(0, 0, 0, 0.25);
             &:hover {
                 cursor: not-allowed;
             }

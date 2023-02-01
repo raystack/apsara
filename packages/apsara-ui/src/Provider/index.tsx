@@ -9,8 +9,6 @@ import RobotoBold from "../../assets/fonts/Roboto-Bold.ttf";
 import RobotoBoldItalic from "../../assets/fonts/Roboto-BoldItalic.ttf";
 import RobotoBlack from "../../assets/fonts/Roboto-Black.ttf";
 
-import "antd/lib/style/index.css";
-
 const GlobalStyle = createGlobalStyle`
   @font-face {
     font-family: 'Roboto';

@@ -1,7 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React from "react";
-import { InputNumber, DatePicker } from "antd";
+import InputNumber from "../InputNumber";
+import DatePicker from "../DatePicker";
+import RangePicker from "../DatePicker/RangePicker";
 import Moment from "moment";
 import Input from "../Input";
 import Radio from "../Radio";
@@ -12,7 +14,6 @@ import Combobox from "../Combobox";
 import { getStringValue } from "./helper";
 import Tag from "../Tag";
 
-const { RangePicker } = DatePicker;
 export type Widget =
     | "range"
     | "radio"

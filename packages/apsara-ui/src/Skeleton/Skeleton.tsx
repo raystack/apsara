@@ -9,9 +9,9 @@ interface ListSkeletonProps {
 export function ListSkeleton({ className = "", rows = 20, width = "100%" }: ListSkeletonProps) {
     return (
         <StyledSkeleton className={className} $props={{ width: width }}>
-            <ul>
-                {[...Array(rows)].map(() => (
-                    <ListItem />
+            <ul className="skeleton-paragraph">
+                {[...Array(rows)].map((index) => (
+                    <ListItem key={index} />
                 ))}
             </ul>
         </StyledSkeleton>
@@ -26,9 +26,9 @@ interface EditorSkeletonProps {
 export function EditorSkeleton({ className = "", width = "100%", lastLineWidth = "100%" }: EditorSkeletonProps) {
     return (
         <StyledSkeleton className={className} $props={{ width: width, lastLineWidth: lastLineWidth }} $editor={true}>
-            <ul>
-                {[...Array(5)].map(() => (
-                    <ListItem />
+            <ul className="skeleton-paragraph">
+                {[...Array(5)].map((index) => (
+                    <ListItem key={index} />
                 ))}
             </ul>
         </StyledSkeleton>
@@ -44,9 +44,9 @@ export const DetailsSkeleton = ({ className = "", height = "32px" }) => {
             </div>
             <StyledRow style={{ marginTop: "30px" }} $props={{ height: "40px", maxWidth: 9, width: 9 }} />
             <StyledSkeleton className={className} style={{ marginTop: "40px" }}>
-                <ul style={{ padding: 0 }}>
-                    {[...Array(15)].map(() => (
-                        <ListItem />
+                <ul className="skeleton-paragraph">
+                    {[...Array(15)].map((index) => (
+                        <ListItem key={index} />
                     ))}
                 </ul>
             </StyledSkeleton>
