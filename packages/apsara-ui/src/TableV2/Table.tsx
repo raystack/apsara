@@ -144,7 +144,7 @@ function Table({
 
     return (
         <StyledTable className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""}`}>
-            <TableWrapper>
+            <TableWrapper className="apsara-table-content">
                 <table>
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (

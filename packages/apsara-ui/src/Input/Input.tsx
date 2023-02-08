@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import StyledWrapper, { TextAreaWrapper } from "./Input.styles";
 
-type InputProps = {
+export type InputProps = {
     size?: "small" | "middle" | "large";
     allowClear?: boolean;
     suffix?: React.ReactNode;

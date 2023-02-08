@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Row, Key, Value, Title, Wrapper, CollapsibleHeader } from "./Segments.styles";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { ChevronRightIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 interface SegmentsProps {
     span?: number;
@@ -62,11 +62,15 @@ const AdvancedConfigsSegment = ({ rowData = [], title = "Advanced configurations
     return (
         <Wrapper $advance>
             <Collapsible.Root open={open}>
-                <CollapsibleHeader className="radix-collpase-header" onClick={() => setOpen(!open)}>
+                <CollapsibleHeader
+                    className="radix-collpase-header"
+                    onClick={() => setOpen(!open)}
+                    data-state={open ? "open" : "closed"}
+                >
                     <span style={{ paddingRight: "10px" }}>{title}</span>
-                    {open ? <ChevronDownIcon /> : <ChevronRightIcon />}
+                    {<ChevronRightIcon />}
                 </CollapsibleHeader>
-                <Collapsible.CollapsibleContent>
+                <Collapsible.CollapsibleContent className="AccordionContent" data-state={open ? "open" : "closed"}>
                     {rowData.map((d, index) => (
                         <SegmentRow key={`${d.key}_${index}`} {...d} />
                     ))}

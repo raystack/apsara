@@ -11,13 +11,22 @@ interface ModalProps {
     onClose?: () => void;
     open?: boolean;
     width?: string;
+    maskStyle?: React.CSSProperties;
 }
 
-const Modal = ({ children, heading = "", closable = true, onClose, open = false, width = "50vw" }: ModalProps) => {
+const Modal = ({
+    children,
+    heading = "",
+    closable = true,
+    onClose,
+    open = false,
+    width = "50vw",
+    maskStyle = { background: "rgba(0 0 0 / 0.5);" },
+}: ModalProps) => {
     return (
         <Dialog.Root open={open} onOpenChange={closable ? onClose : () => {}}>
             <Dialog.Portal>
-                <Overlay>
+                <Overlay style={maskStyle}>
                     <Content style={{ width: `${width}` }}>
                         <HeadingWrapper>
                             <Title>

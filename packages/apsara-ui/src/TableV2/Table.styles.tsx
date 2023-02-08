@@ -118,7 +118,9 @@ export const StyledTable = styled.div`
         a {
             display: block;
             color: unset;
+            text-decoration: none; 
         }
+        cursor: pointer;
     }
 
     tr:hover {
@@ -155,7 +157,6 @@ export const StyledTable = styled.div`
 `;
 
 export const TableWrapper = styled.div`
-    height: calc(100vh - 200px);
     overflow: auto;
 `;
 
@@ -166,6 +167,7 @@ export const PaginationWrapper = styled.div`
 
     ul {
         list-style: none;
+        margin: 0;
     }
 
     .rc-pagination {
@@ -254,8 +256,6 @@ export const PaginationWrapper = styled.div`
     .rc-pagination-total-text button {
         padding: 6px 8px;
         height: auto;
-        min-width: 32px;
-        min-height: 32px;
         border-radius: 8px;
         border: 1px solid transparent;
         background-color: transparent;
@@ -263,7 +263,6 @@ export const PaginationWrapper = styled.div`
         align-items: center;
         justify-content: center;
         font-size: 12px;
-        font-weight: 500;
         color: rgba(0, 0, 0, 0.85);
         transition: 0.3s;
         -webkit-transition: 0.3s;
@@ -274,9 +273,20 @@ export const PaginationWrapper = styled.div`
         }
     }
 
+    .rc-pagination-prev,
+    .rc-pagination-item,
+    .rc-pagination-next {
+        button {
+            cursor: pointer;
+        }
+    }
+
     .rc-pagination-item-active {
         border: 1px solid #1890ff;
-        color: #1890ff !important;
+        a {
+            font-weight: 500;
+            color: #1890ff !important;
+        }
     }
 
     .rc-pagination-disabled {
