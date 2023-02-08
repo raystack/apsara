@@ -1,7 +1,21 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { capitalize } from "../mixin";
 import { StyledTag } from "../Tag/Tag.styles";
 
+const slideDown = keyframes`
+from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-collapsible-content-height);
+  }`;
+const slideUp = keyframes`
+from {
+    height: var(--radix-collapsible-content-height);
+  }
+  to {
+    height: 0;
+  }`;
 export const Row = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -47,6 +61,17 @@ export const Wrapper = styled.div<{ $advance?: boolean }>`
     flex-direction: column;
     padding: ${({ $advance }) => ($advance ? "32px 0px 0px 0px" : "24px 0px 32px 0px")};
     background-color: ${({ theme }) => theme?.segments?.bg};
+
+    .AccordionContent {
+        overflow: hidden;
+        font-size: 15px;
+    }
+    .AccordionContent[data-state="open"] {
+        animation: ${slideDown} 300ms cubic-bezier(0.87, 0, 0.13, 1);
+    }
+    .AccordionContent[data-state="closed"] {
+        animation: ${slideUp} 300ms cubic-bezier(0.87, 0, 0.13, 1);
+    }
 
     &:not(:last-child) {
         border-bottom: 1px solid ${({ theme }) => theme?.segments?.border};
@@ -94,4 +119,17 @@ export const CollapsibleHeader = styled.div`
     font-weight: bold;
     display: flex;
     align-items: center;
+
+    &[data-state="open"] {
+        svg {
+            transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
+            transform: rotate(90deg);
+        }
+    }
+    &[data-state="closed"] {
+        svg {
+            transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
+            transform: rotate(0deg);
+        }
+    }
 `;
