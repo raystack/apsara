@@ -50,6 +50,7 @@ import { Col } from "./FormBuilder/grid/";
 import { InputProps } from "./Input/Input";
 import { TooltipPlacement } from "./Table/TableProps";
 import Modal from "./Modal";
+import Alert from "./Alert";
 export { DynamicList } from "./DynamicList";
 
 export * from "./Notification";
@@ -113,4 +114,5 @@ export {
     InputProps,
     TooltipPlacement,
     Modal,
+    Alert,
 };
