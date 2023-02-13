@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React from "react";
+import React, { useState } from "react";
 
 import Popover from "./Popover";
 import Button from "../Button";
@@ -10,14 +10,6 @@ export default {
     component: Popover,
 };
 
-export const popover = () => (
-    <>
-        <Popover title="Confirmation" message="please confirm" onOk={() => {}}>
-            <Button>Default Button</Button>
-        </Popover>
-    </>
-);
-
 export const popoverContent = () => (
     <>
         <Popover
@@ -27,7 +19,10 @@ export const popoverContent = () => (
                     <Input />
                 </div>
             }
-            onOk={() => {}}
+            okBtnProps={{
+                text: "ok",
+                style: { marginLeft: "10px" },
+            }}
             cancelBtnProps={{
                 text: "Cancel",
                 style: { marginLeft: "10px" },
@@ -37,3 +32,27 @@ export const popoverContent = () => (
         </Popover>
     </>
 );
+
+export const popoverContentParam = () => {
+    const [open, setOpen] = useState(false);
+    return (
+        <>
+            <Popover
+                title="Confirmation"
+                content={
+                    <div>
+                        <Input />
+                    </div>
+                }
+                cancelBtnProps={{
+                    text: "Cancel",
+                    style: { marginLeft: "10px" },
+                }}
+                open={open}
+                onOpenChange={setOpen}
+            >
+                <Button>Default Button</Button>
+            </Popover>
+        </>
+    );
+};

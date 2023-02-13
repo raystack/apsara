@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "../Button/Button";
 import { CustomButtonProps } from "../Button/Button.types";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
@@ -19,7 +19,7 @@ interface ButtonPopoverContentProps {
     message?: string;
     content?: React.ReactNode | null;
     onOpenChange?: (open: boolean) => void;
-    visible?: boolean;
+    open?: boolean;
     onOk?: () => void;
     onCancel?: () => void;
     okBtnProps?: {
@@ -74,40 +74,53 @@ function ConfirmationPopover({
     title = "",
     message = "",
     content = null,
-    visible = false,
+    open,
     onOpenChange = () => ({}),
-    onOk = () => ({}),
-    onCancel = () => ({}),
+    onOk,
+    onCancel,
     okBtnProps,
     cancelBtnProps,
     children,
 }: ButtonConfirmationPopover) {
-    const [open, setOpen] = useState(visible);
-
-    useEffect(() => {
-        setOpen(visible);
-    }, [visible]);
+    const [internalOpen, setInternalOpen] = useState(false);
+    const controlled = typeof open !== "boolean";
 
     const onOKClick = () => {
-        setOpen(false);
-        onOk();
+        if (controlled) {
+            setInternalOpen(false);
+        }
+        if (onOk) {
+            onOk();
+        } else if (onOpenChange) {
+            onOpenChange(false);
+        }
     };
 
     const onCancelClick = () => {
-        setOpen(false);
-        onCancel();
+        if (controlled) {
+            setInternalOpen(false);
+        }
+        if (onCancel) {
+            onCancel();
+        } else if (onOpenChange) {
+            onOpenChange(false);
+        }
     };
+
+    const finalOpen = controlled ? internalOpen : open;
 
     return (
         <StyledPopover
-            open={open}
-            onOpenChange={(open) => {
-                setOpen(open);
-                onOpenChange(open);
+            open={finalOpen}
+            onOpenChange={(value) => {
+                if (controlled) setInternalOpen(value);
+                else {
+                    onOpenChange && onOpenChange(value);
+                }
             }}
         >
             <PopoverTrigger asChild>
-                <span>{children}</span>
+                <span aria-label="Update dimensions">{children}</span>
             </PopoverTrigger>
             <PopoverPrimitive.Portal>
                 <StyledContent className="apsara-popover-content" side="bottom" align="end">
