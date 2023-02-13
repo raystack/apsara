@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
     font-size: 12px;
-    width: 260px;
+    width: fit-content;
     margin: -12px -16px;
 `;
 

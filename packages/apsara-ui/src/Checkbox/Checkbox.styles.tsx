@@ -34,6 +34,7 @@ export const CheckboxWrapper = styled("div")`
 
 export const CheckboxGroupWrapper = styled("div")<{ orientation?: "horizontal" | "vertical" }>`
     display: flex;
+    flex-wrap: wrap;
     ${({ orientation }) => {
         return orientation === "vertical"
             ? css`

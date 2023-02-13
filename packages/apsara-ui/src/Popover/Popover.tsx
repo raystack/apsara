@@ -18,7 +18,9 @@ interface ButtonPopoverContentProps {
     title: string;
     message?: string;
     content?: React.ReactNode | null;
-    onOk: () => void;
+    onOpenChange?: (open: boolean) => void;
+    open?: boolean;
+    onOk?: () => void;
     onCancel?: () => void;
     okBtnProps?: {
         text?: string;
@@ -37,7 +39,7 @@ export const PopoverContent = ({
     okBtnProps = {},
     cancelBtnProps = {},
 }: ButtonPopoverContentProps) => {
-    const { text: okText = "Yes", ...restOkBtnProps } = okBtnProps;
+    const { text: okText, ...restOkBtnProps } = okBtnProps;
     const { text: cancelText, ...restCancelBtnProps } = cancelBtnProps;
 
     return (
@@ -46,16 +48,20 @@ export const PopoverContent = ({
                 <Title>{title}</Title>
                 <Message>{message || content}</Message>
             </Content>
-            <Footer>
-                <Button onClick={onOk} size="small" type="primary" {...restOkBtnProps}>
-                    {okText}
-                </Button>
-                {cancelText ? (
-                    <Button onClick={onCancel} size="small" {...restCancelBtnProps}>
-                        {cancelText}
-                    </Button>
-                ) : null}
-            </Footer>
+            {(okText || cancelText) && (
+                <Footer className="apsara-popover-footer">
+                    {okText ? (
+                        <Button onClick={onOk} size="small" type="primary" {...restOkBtnProps}>
+                            {okText}
+                        </Button>
+                    ) : null}
+                    {cancelText ? (
+                        <Button onClick={onCancel} size="small" {...restCancelBtnProps}>
+                            {cancelText}
+                        </Button>
+                    ) : null}
+                </Footer>
+            )}
         </Container>
     );
 };
@@ -68,26 +74,51 @@ function ConfirmationPopover({
     title = "",
     message = "",
     content = null,
+    open,
+    onOpenChange = () => ({}),
     onOk,
-    onCancel = () => ({}),
+    onCancel,
     okBtnProps,
     cancelBtnProps,
     children,
 }: ButtonConfirmationPopover) {
-    const [open, setOpen] = useState(false);
+    const [internalOpen, setInternalOpen] = useState(false);
+    const controlled = typeof open !== "boolean";
 
     const onOKClick = () => {
-        setOpen(false);
-        onOk();
+        if (controlled) {
+            setInternalOpen(false);
+        }
+        if (onOk) {
+            onOk();
+        } else if (onOpenChange) {
+            onOpenChange(false);
+        }
     };
 
     const onCancelClick = () => {
-        setOpen(false);
-        onCancel();
+        if (controlled) {
+            setInternalOpen(false);
+        }
+        if (onCancel) {
+            onCancel();
+        } else if (onOpenChange) {
+            onOpenChange(false);
+        }
     };
 
+    const finalOpen = controlled ? internalOpen : open;
+
     return (
-        <StyledPopover open={open} onOpenChange={(open) => setOpen(open)}>
+        <StyledPopover
+            open={finalOpen}
+            onOpenChange={(value) => {
+                if (controlled) setInternalOpen(value);
+                else {
+                    onOpenChange && onOpenChange(value);
+                }
+            }}
+        >
             <PopoverTrigger asChild>
                 <span aria-label="Update dimensions">{children}</span>
             </PopoverTrigger>

@@ -46,7 +46,7 @@ const Checkbox = ({
     }, [checked]);
 
     return (
-        <CheckboxWrapper>
+        <CheckboxWrapper className="apsara-checkbox-wrapper">
             <StyledCheckbox
                 defaultChecked={defaultChecked}
                 id={id}
@@ -92,7 +92,7 @@ const CheckboxGroup = ({
     };
 
     return (
-        <CheckboxGroupWrapper orientation={orientation}>
+        <CheckboxGroupWrapper orientation={orientation} className="apsara-checkbox-group">
             {options &&
                 options.map((option, index) => (
                     <div className="checkbox_label_wrapper" key={option.value}>
