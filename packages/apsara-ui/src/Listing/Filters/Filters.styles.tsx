@@ -27,6 +27,31 @@ export const FilterColumn = styled.div`
     &:not(:last-child) {
         border-right: 1px solid ${({ theme }) => theme?.listing?.filterBorder};
     }
+
+    .apsara-checkbox-group {
+        overflow-y: auto;
+        max-height: 260px;
+        flex-direction: column;
+        align-items: start;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        font-variant: tabular-nums;
+        line-height: 1.5715;
+        list-style: none;
+        font-feature-settings: "tnum", "tnum";
+        display: inline-block;
+    }
+    .checkbox_label_wrapper {
+        font-size: 12px;
+        font-weight: 300;
+        color: ${({ theme }) => theme?.listing?.filterText};
+        letter-spacing: 0px;
+        justify-content: start;
+        padding: 6px 0;
+    }
 `;
 
 export const FilterTitle = styled.div`
