@@ -107,7 +107,7 @@ function ConfirmationPopover({
             }}
         >
             <PopoverTrigger asChild>
-                <span aria-label="Update dimensions">{children}</span>
+                <span>{children}</span>
             </PopoverTrigger>
             <PopoverPrimitive.Portal>
                 <StyledContent className="apsara-popover-content" side="bottom" align="end">
