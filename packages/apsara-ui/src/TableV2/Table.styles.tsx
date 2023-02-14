@@ -119,6 +119,14 @@ export const StyledTable = styled.div`
             display: block;
             color: unset;
             text-decoration: none; 
+            &:only-child{
+                width:100%;
+            }
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 13px 16px;
+            margin: -13px -16px;
         }
         cursor: pointer;
     }
