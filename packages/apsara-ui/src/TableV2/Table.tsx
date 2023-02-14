@@ -104,7 +104,7 @@ function Table({
         onPaginationChange: setPagination,
         onSortingChange: setSorting,
         manualPagination: true,
-        debugTable: true,
+        debugTable: false,
     });
 
     if (!columns.length || (dataQuery && !dataQuery.data?.rows?.length && items)) {
