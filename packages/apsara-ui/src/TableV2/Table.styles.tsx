@@ -127,8 +127,8 @@ export const StyledTable = styled.div`
             text-overflow: ellipsis;
             padding: 13px 16px;
             margin: -13px -16px;
+            cursor: pointer;
         }
-        cursor: pointer;
     }
 
     tr:hover {
