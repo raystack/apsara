@@ -4,7 +4,7 @@ import InternalForm, { FormInstance, FormProps, useForm } from "./Form";
 import FormBuilderItems from "./FormBuilderItems";
 import Item from "./FormItem";
 import PropTypes from "prop-types";
-import { List } from "rc-field-form";
+import { List, Field } from "rc-field-form";
 
 type InternalFormType = typeof InternalForm;
 
@@ -66,5 +66,5 @@ CustomForm.useForceUpdate = () => {
     return forceUpdate;
 };
 
-export { Form, FormInstance };
+export { Form, FormInstance, Field };
 export default CustomForm;
