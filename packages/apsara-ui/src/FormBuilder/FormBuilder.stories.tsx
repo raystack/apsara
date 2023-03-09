@@ -1,5 +1,7 @@
-import React, { FC } from "react";
-import FormBuilder from "./index";
+import React, { FC, useEffect } from "react";
+
+import FormBuilder, { Form, Field } from "./index";
+import Tabs from "../Tabs";
 import Button from "../Button";
 
 export default {
@@ -7,7 +9,7 @@ export default {
     component: FormBuilder,
 };
 
-export const Form: FC = () => {
+export const Basic: FC = () => {
     const [form] = FormBuilder.useForm();
     const forceUpdate = FormBuilder.useForceUpdate();
     const accountTypeOptions = [
@@ -85,3 +87,66 @@ export const Form: FC = () => {
         </div>
     );
 };
+
+export const WithTabs = () => {
+    const [form] = Form.useForm()
+
+    useEffect(() => {
+        form.setFieldsValue({
+            name: 'Test',
+            hobbies: [
+                { label: 'drawing', since: '2yo' },
+                { label: 'cooking', since: '5yo' },
+            ],
+        })
+    }, [])
+
+    const onFinish = () => {
+        // we need to pass `true` to form.getFieldsValue(true) to make sure we all the fields from the form
+        // not passing `true` will only give you the fields that are currently rendered
+        console.log('form values:', form.getFieldsValue(true))
+    }
+
+    return (
+        <Form form={form} onFinish={onFinish}>
+            <Tabs
+                tabContent={[
+                    {
+                        title: 'General',
+                        value: 'general_tab',
+                        content: (
+                            <div>
+                                <Field name="name">
+                                    <input placeholder="Sample Name" />
+                                </Field>
+                            </div>
+                        ),
+                    },
+                    {
+                        title: 'Hobbies',
+                        value: 'hobby_tab',
+                        content: (
+                            <div>
+                                <Form.List name="hobbies">
+                                    {(fields) => fields.map((field) => (
+                                        <>
+                                            <Field name={[field.name, 'label']}>
+                                                <input placeholder="Label" />
+                                            </Field>
+                                            <Field name={[field.name, 'since']}>
+                                                <input placeholder="Since" />
+                                            </Field>
+                                            <br />
+                                        </>
+                                    ))}
+                                </Form.List>
+                            </div>
+                        ),
+                    }
+                ]}
+            />
+            <button>Submit</button>
+        </Form>
+
+    )
+}
