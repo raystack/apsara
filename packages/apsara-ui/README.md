@@ -1,1 +1,1 @@
-# `@odpf/apsara`
+# `@goto-company/apsara`

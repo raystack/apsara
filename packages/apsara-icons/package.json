@@ -1,6 +1,6 @@
 {
-    "name": "@odpf/icons",
-    "version": "0.8.2",
+    "name": "@goto-company/icons",
+    "version": "0.2.0",
     "description": "Apsara icons",
     "scripts": {
         "build": "node scripts/build.js",
@@ -18,14 +18,14 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/odpf/apsara.git"
+        "url": "git+ssh://git@github.com/goto/apsara.git"
     },
     "author": "",
     "license": "Apache-2.0",
     "bugs": {
-        "url": "https://github.com/odpf/apsara/issues"
+        "url": "https://github.com/goto/apsara/issues"
     },
-    "homepage": "https://github.com/odpf/apsara#readme",
+    "homepage": "https://github.com/goto/apsara#readme",
     "devDependencies": {
         "@babel/core": "^7.13.14",
         "@babel/plugin-transform-react-jsx": "^7.13.12",

@@ -2604,6 +2604,11 @@
     "@floating-ui/dom" "^0.5.3"
     use-isomorphic-layout-effect "^1.1.1"
 
+"@goto-company/icons@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.npmjs.org/@goto-company/icons/-/icons-0.1.0.tgz#11a9d6537d4bc19a432924f7a40c60a4d2dbfbcd"
+  integrity sha512-8+gRNfxBQqMK40qwHCnROuc2SE39j0ypoUhkeDULhnWLDBMdg0giAKJRuumJM5Q2EISo54D/9mWc/bAvIFvIqA==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -3698,11 +3703,6 @@
   integrity sha512-eZTTWJxGBon01Ra4EX86rvlMZGkU5SeJ8BtwQlsv2wEqZttpjtefLetJndZTVbJ25qFKoyKMWsRFnwlOx7ZaDQ==
   dependencies:
     "@octokit/openapi-types" "^5.3.1"
-
-"@odpf/icons@^0.7.1-alpha.3":
-  version "0.7.5"
-  resolved "https://registry.yarnpkg.com/@odpf/icons/-/icons-0.7.5.tgz#7ec9eb2c378faae384865258faeb27e12655dc60"
-  integrity sha512-JDrmUam8etZ3rCI1st5EM7ARFtwqCpoodIzrZPwkhvjrN5MTCYIlj0Bn4M0ev9mvTPojz6rZ0j91jv4exvBF7g==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.5.3":
   version "0.5.6"

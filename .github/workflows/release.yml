@@ -25,7 +25,7 @@ jobs:
 
       - name: Authenticate with Registry
         run: |
-          echo "@odpf:registry=https://registry.npmjs.org/" > .npmrc
+          echo "@goto-company:registry=https://registry.npmjs.org/" > .npmrc
           echo "registry=https://registry.npmjs.org/" >> .npmrc
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
         env:
