@@ -1,0 +1,64 @@
+{
+    "name": "@odpf/apsara",
+    "version": "0.9.0",
+    "description": "",
+    "main": "dist/index.js",
+    "module": "dist/index.es.js",
+    "browser": "dist/index.umd.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "prettier": "prettier --write .",
+        "apsara:build": "rollup -c",
+        "apsara:release": "npm run apsara:build && np",
+        "test": "echo \"Error: no test specified\" && exit 0",
+        "prepare": "husky install"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/odpf/apsara.git"
+    },
+    "keywords": [],
+    "author": "pyadav9678@gmail.com",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/odpf/apsara/issues"
+    },
+    "homepage": "https://github.com/odpf/apsara#readme",
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    },
+    "dependencies": {
+        "@radix-ui/colors": "^0.1.8",
+        "@stitches/react": "^1.2.8",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "^18.15.5",
+        "@types/react": "^18.0.28",
+        "@types/react-dom": "^18.0.11",
+        "husky": "^8.0.3",
+        "lint-staged": "^13.2.0",
+        "next": "^13.2.4",
+        "np": "^7.6.4",
+        "prettier": "^2.8.6",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "rollup": "^2.79.1",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-typescript2": "^0.34.1",
+        "typescript": "4.7"
+    },
+    "lint-staged": {
+        "*.{json,js,ts,jsx,tsx,html}": [
+            "prettier --write"
+        ]
+    }
+}
