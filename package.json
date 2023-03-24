@@ -36,11 +36,11 @@
     },
     "dependencies": {
         "@radix-ui/colors": "^0.1.8",
-        "@stitches/react": "^1.2.8",
-        "rollup-plugin-commonjs": "^10.1.0",
-        "rollup-plugin-node-resolve": "^5.2.0"
+        "@stitches/react": "^1.2.8"
     },
     "devDependencies": {
+        "@rollup/plugin-commonjs": "^24.0.1",
+        "@rollup/plugin-node-resolve": "^15.0.1",
         "@types/node": "^18.15.5",
         "@types/react": "^18.0.28",
         "@types/react-dom": "^18.0.11",
