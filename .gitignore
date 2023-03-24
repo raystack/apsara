@@ -35,7 +35,8 @@ yarn-error.log*
 
 # https://github.com/hashicorp/next-mdx-enhanced#installation
 .mdx-data
-
-/dist
-
 .parcel-cache
+
+# project
+dist/
+@odpf
