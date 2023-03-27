@@ -1,5 +1,8 @@
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { Box } from "~/components/box";
+import { Button } from "~/components/button";
+import { Flex } from "~/components/flex";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,7 +15,25 @@ export default function Home() {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className={inter.className}>Apasara 2.0</main>
+            <Box as="main" className={inter.className} css={{ padding: "$4", maxWidth: "1200px", margin: "auto" }}>
+                <Box>
+                    <Flex direction="row" gap="6">
+                        <Button size="small" variant="primary">
+                            Button
+                        </Button>
+                        <Button variant="primary">Button</Button>
+                        <Button size="large" variant="primary">
+                            Button
+                        </Button>
+                    </Flex>
+
+                    <Flex direction="row" gap="6" css={{ mt: "$6" }}>
+                        <Button size="small">Button</Button>
+                        <Button>Button</Button>
+                        <Button size="large">Button</Button>
+                    </Flex>
+                </Box>
+            </Box>
         </>
     );
 }
