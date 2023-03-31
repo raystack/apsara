@@ -1,6 +1,6 @@
 import * as React from "react";
 import { CustomIconProps, IconName } from "../Icon/Icon";
-
+import { TooltipPlacement } from "../Tooltip/Tooltip";
 const ButtonTypes = ["default", "primary", "ghost", "dashed", "link", "text"] as const;
 export type ButtonType = typeof ButtonTypes[number];
 const ButtonShapes = ["default", "circle", "round"] as const;
@@ -41,20 +41,6 @@ export type NativeButtonProps = {
     Omit<React.ButtonHTMLAttributes<any>, "type" | "onClick">;
 
 export type ButtonProps = Partial<AnchorButtonProps & NativeButtonProps>;
-
-export type TooltipPlacement =
-    | "top"
-    | "left"
-    | "right"
-    | "bottom"
-    | "topLeft"
-    | "topRight"
-    | "bottomLeft"
-    | "bottomRight"
-    | "leftTop"
-    | "leftBottom"
-    | "rightTop"
-    | "rightBottom";
 
 export type CustomButtonProps = Omit<ButtonProps, "type"> & {
     /**

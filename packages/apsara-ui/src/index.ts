@@ -48,7 +48,7 @@ import Collapse from "./Collapse";
 import { Row } from "./FormBuilder/grid/";
 import { Col } from "./FormBuilder/grid/";
 import { InputProps } from "./Input/Input";
-import { TooltipPlacement } from "./Table/TableProps";
+import { TooltipPlacement } from "./Tooltip/Tooltip";
 import Modal from "./Modal";
 import Alert from "./Alert";
 export { DynamicList } from "./DynamicList";

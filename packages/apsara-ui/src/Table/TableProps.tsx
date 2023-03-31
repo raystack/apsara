@@ -3,6 +3,7 @@ import type { ColumnType as RcColumnType, FixedType, RenderedCell as RcRenderedC
 import type { PaginationProps as RcPaginationProps } from "rc-pagination";
 import type { TooltipProps as RcTooltipProps } from "rc-tooltip/lib/Tooltip";
 import type { placements as Placements } from "rc-tooltip/lib/placements";
+import { TooltipPlacement } from "../Tooltip/Tooltip";
 
 export type SortOrder = "descend" | "ascend" | null;
 export type Key = React.Key;
@@ -307,19 +308,6 @@ export interface AdjustOverflow {
     adjustX?: 0 | 1;
     adjustY?: 0 | 1;
 }
-export type TooltipPlacement =
-    | "top"
-    | "left"
-    | "right"
-    | "bottom"
-    | "topLeft"
-    | "topRight"
-    | "bottomLeft"
-    | "bottomRight"
-    | "leftTop"
-    | "leftBottom"
-    | "rightTop"
-    | "rightBottom";
 export interface AbstractTooltipProps extends LegacyTooltipProps {
     style?: React.CSSProperties;
     className?: string;

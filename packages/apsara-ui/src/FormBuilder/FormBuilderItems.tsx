@@ -279,7 +279,7 @@ const FormBuilderItems = (props: FormBuilderItemsProps) => {
     );
 };
 
-export const FormBuilderToolTip = ({ placement = "rightTop", tooltip, children, ...props }: any) => {
+export const FormBuilderToolTip = ({ placement = "right", tooltip, children, ...props }: any) => {
     const renderFormItem = (
         <div className="custom-form-field">
             <FormBuilderField {...props} />

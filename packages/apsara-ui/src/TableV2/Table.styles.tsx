@@ -36,6 +36,25 @@ export const StyledTable = styled.div`
         text-transform: capitalize;
     }
 
+    .virtual-table-cell{
+        align-items: center;
+        height: 48px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background: transparent;
+
+        a:not(.apsara-btn) {
+            display: block;
+            color: inherit;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 13px 16px;
+            margin: -13px -16px;
+        }
+    }
+
     &.alternate {
         tbody tr:nth-child(odd),
         .virtual-table-odd {

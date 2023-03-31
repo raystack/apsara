@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React from "react";
 import Filters from "./Filters";
-import VirtualisedTable from "../Table/VirtualisedTable";
+import VirtualisedTable from "../TableV2/VirtualisedTable";
 import useSearchFilter from "./hooks/useSearchFilter";
 import { ListingProps } from "./Listing.types";
 import { ListingSearch, ListingWrapper } from "./Listing.styles";
@@ -19,15 +19,16 @@ const Listing = ({
     resourcePath = "/",
     calculateRowHeight,
     calculateColumnWidth,
+    rowClick,
+    sortable = false,
 }: ListingProps) => {
-    const { getColumnList = () => [], handleRowClick = () => null, selectedRowId, ...extraTableProps } = tableProps;
+    const { getColumnList = () => [], selectedRowId, ...extraTableProps } = tableProps;
     const { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps;
     const { filterFieldList } = filterProps;
     const {
         searchTerm,
         sortedInfo,
         setSearchTerm,
-        setSortedInfo,
         onGroupFilter,
         onClearGroupFilter,
         filteredList,
@@ -62,13 +63,13 @@ const Listing = ({
         renderBody = (
             <VirtualisedTable
                 items={filteredList}
-                columns={columns}
+                columnsData={columns}
                 rowKey={rowKey}
                 selectedRowId={selectedRowId}
-                onChange={(_pagination, _filters, sorter) => setSortedInfo(sorter)}
-                onRowClick={handleRowClick}
+                rowClick={rowClick}
                 calculateRowHeight={calculateRowHeight}
                 calculateColumnWidth={calculateColumnWidth}
+                sortable={sortable}
                 {...extraTableProps}
             />
         );

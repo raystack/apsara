@@ -23,6 +23,8 @@ export interface ListingProps {
     renderBody?: any;
     calculateRowHeight?: any;
     calculateColumnWidth?: any;
+    rowClick?: (props: any) => any;
+    sortable?: boolean;
 }
 
 export interface IGroupOptions {
@@ -30,6 +32,7 @@ export interface IGroupOptions {
     slug: string;
     multi?: boolean;
     data: { label: string; value: string }[];
+    searchEnabled?: boolean;
 }
 
 export interface ILoadMoreProps {

@@ -21,6 +21,7 @@ function getData(page = 1) {
 export const listing = () => (
     <Listing
         loading={false}
+        sortable
         list={new Array(100).fill(0).map((_, index) => {
             return {
                 id: index,
@@ -61,6 +62,7 @@ export const listing = () => (
                     }),
                     slug: "class",
                     multi: false,
+                    searchEnabled: true,
                 },
                 {
                     name: "Is Even",
