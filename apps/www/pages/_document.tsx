@@ -1,5 +1,5 @@
+import { getCssText, reset } from "@odpf/apsara";
 import { Head, Html, Main, NextScript } from "next/document";
-import { getCssText, reset } from "~/stitches.config";
 
 /**
  * Get the css and reset the internal css representation.
