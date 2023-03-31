@@ -49,6 +49,8 @@ export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
 export { TextArea } from "./components/textarea";
 export { TextField } from "./components/textfield";
+// theme
+export { ApsaraThemeProvider, useApsaraTheme } from "./components/themeprovider";
 export { Toggle } from "./components/toggle";
 export { Tooltip } from "./components/tooltip";
 export { TreeItem } from "./components/treeitem";
