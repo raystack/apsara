@@ -12,8 +12,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     line-height: 1;
 
-    background-color: #171716;
-    color: #F2F2F2
+    background-color: var(--colors-loContrast);
+    color: var(--colors-hiContrast);
 }
 
 svg {
