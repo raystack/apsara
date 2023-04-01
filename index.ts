@@ -1,4 +1,3 @@
-export { config, createTheme, css, getCssText, globalCss, keyframes, reset, styled, theme } from "~/stitches.config";
 // components
 export { Accordion } from "./components/accordion";
 export { Alert } from "./components/alert";
@@ -54,3 +53,15 @@ export { ApsaraThemeProvider, useApsaraTheme } from "./components/themeprovider"
 export { Toggle } from "./components/toggle";
 export { Tooltip } from "./components/tooltip";
 export { TreeItem } from "./components/treeitem";
+export {
+    config,
+    createTheme,
+    css,
+    dark,
+    getCssText,
+    globalCss,
+    keyframes,
+    reset,
+    styled,
+    theme,
+} from "./stitches.config";

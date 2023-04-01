@@ -20,3 +20,9 @@ svg {
     display: block;
     vertical-align: middle;
 }
+
+pre[class*=language-] {
+    color: #fff;
+    background: #011627;
+    border-radius: 8px
+}

@@ -14,7 +14,9 @@ const getCssAndReset = () => {
 export default function Document() {
     return (
         <Html lang="en">
-            <Head />
+            <Head>
+                <link href="https://unpkg.com/prism-theme-night-owl@1.4.0/build/style.css" rel="stylesheet" />
+            </Head>
             <body>
                 <Main />
                 <NextScript />
