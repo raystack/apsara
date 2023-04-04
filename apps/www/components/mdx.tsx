@@ -1,4 +1,19 @@
-import { Box, Code, Heading, Kbd, Link, Paragraph, Separator, Text } from "@odpf/apsara";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+    Avatar,
+    Box,
+    Code,
+    Flex,
+    Heading,
+    Kbd,
+    Link,
+    Paragraph,
+    Separator,
+    Text,
+} from "@odpf/apsara";
 import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { Frontmatter } from "~/types/frontmatter";
@@ -146,6 +161,13 @@ export const components = {
 
     Kbd: Kbd,
     Code: Code,
+    Flex: Flex,
+    Text: Text,
+    Avatar: Avatar,
+    Accordion: Accordion,
+    AccordionItem: AccordionItem,
+    AccordionTrigger: AccordionTrigger,
+    AccordionContent: AccordionContent,
 };
 
 const LinkHeading = ({ id, children, css }: { id: string; children: React.ReactNode; css?: any }) => (

@@ -1,0 +1,87 @@
+---
+name: Accordion
+title: Accordion
+description: A vertically stacked set of interactive headings that each reveal an associated section of content.
+---
+
+# Accordion
+
+<Description>
+A vertically stacked set of interactive headings that each reveal an associated section of content.
+</Description>
+
+## Installation
+
+1. Install the component from your command line.
+
+```bash
+npm install @odpf/apsara
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@odpf/apsara';
+```
+
+<Accordion type="single">
+  <AccordionItem value="accordion-one">
+    <AccordionTrigger>
+      Accordion one
+    </AccordionTrigger>
+    <AccordionContent>
+      <Text size="3" css={{ lineHeight: '23px' }}>
+        The other main improvement is with tables, which we'll probably use a lot. With
+        horizontal overflow on small devices and when zoomed in, tables are a pain to
+        navigate. I added a focus wrapper that will announce the table context to the
+        user when focused, which also allows keyboard users to navigate the overflow
+        more easily.
+      </Text>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="accordion-two">
+    <AccordionTrigger>
+     Accordion two
+    </AccordionTrigger>
+    <AccordionContent>
+      <Text size="3" css={{ lineHeight: '23px' }}>
+        The other main improvement is with tables, which we'll probably use a lot. With
+        horizontal overflow on small devices and when zoomed in, tables are a pain to
+        navigate. I added a focus wrapper that will announce the table context to the
+        user when focused, which also allows keyboard users to navigate the overflow
+        more easily.
+      </Text>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion> 
+
+
+2. Copy and paste the following code into your project.
+
+```tsx
+<Accordion type="single">
+  <AccordionItem value="accordion-one">
+    <AccordionTrigger>
+      Accordion one
+    </AccordionTrigger>
+    <AccordionContent>
+      <Text size="3" css={{ lineHeight: '23px' }}>
+        The other main improvement is with tables, which we'll probably use a lot. With
+        horizontal overflow on small devices and when zoomed in, tables are a pain to
+        navigate. I added a focus wrapper that will announce the table context to the
+        user when focused, which also allows keyboard users to navigate the overflow
+        more easily.
+      </Text>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="accordion-two">
+    <AccordionTrigger>
+     Accordion two
+    </AccordionTrigger>
+    <AccordionContent>
+      <Text size="3" css={{ lineHeight: '23px' }}>
+        The other main improvement is with tables, which we'll probably use a lot. With
+        horizontal overflow on small devices and when zoomed in, tables are a pain to
+        navigate. I added a focus wrapper that will announce the table context to the
+        user when focused, which also allows keyboard users to navigate the overflow
+        more easily.
+      </Text>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion> 
+```

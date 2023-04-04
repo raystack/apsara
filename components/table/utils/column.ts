@@ -33,7 +33,7 @@ export const getAllColumnsData = (table: Table<any>) => {
     const headers = table.getHeaderGroups()[0].headers;
     return headers
         .filter((header) => {
-            const headerColumnMeta = header.column.columnDef.meta;
+            const headerColumnMeta = header.column.columnDef.meta as any;
             return headerColumnMeta?.headerFilter !== false;
         })
         .map((header) => ({

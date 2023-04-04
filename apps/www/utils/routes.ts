@@ -8,7 +8,10 @@ export const primitivesRoutes = [
     },
     {
         label: "Components",
-        pages: [{ title: "Avatar", slug: "docs/primitives/components/avatar" }],
+        pages: [
+            { title: "Avatar", slug: "docs/primitives/components/avatar" },
+            { title: "Accordion", slug: "docs/primitives/components/accordion" },
+        ],
     },
 ];
 
