@@ -45,6 +45,7 @@ export {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./components/dropdownmenu";
+export { EmptyState } from "./components/emptystate";
 export { Flex } from "./components/flex";
 export { Grid } from "./components/grid";
 export { Heading } from "./components/heading";
@@ -81,7 +82,17 @@ export { Status } from "./components/status";
 export { Sub } from "./components/sub";
 export { Sup } from "./components/sup";
 export { Switch } from "./components/switch";
-export { Caption, Table, Tbody, Td, Tfoot, Th, Thead, Tr } from "./components/table";
+export {
+    SimpleCaption,
+    SimpleTable,
+    SimpleTbody,
+    SimpleTd,
+    SimpleTfoot,
+    SimpleTh,
+    SimpleThead,
+    SimpleTr,
+    Table,
+} from "./components/table";
 export { TabLink } from "./components/tablink";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs";
 export { Text } from "./components/text";

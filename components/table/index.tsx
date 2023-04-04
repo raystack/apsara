@@ -1,19 +1,19 @@
 import { styled } from "~/stitches.config";
 
-export const Caption = styled("caption", {
+export const SimpleCaption = styled("caption", {
     textAlign: "start",
     marginBottom: "$5",
 });
 
-export const Tbody = styled("tbody", {
+export const SimpleTbody = styled("tbody", {
     width: "100%",
 });
 
-export const Tfoot = styled("tfoot", {});
+export const SimpleTfoot = styled("tfoot", {});
 
-export const Tr = styled("tr", {});
+export const SimpleTr = styled("tr", {});
 
-export const Th = styled("th", {
+export const SimpleTh = styled("th", {
     fontWeight: "unset",
     textAlign: "start",
     fontSize: "$2",
@@ -46,7 +46,7 @@ export const Th = styled("th", {
     },
 });
 
-export const Td = styled("td", {
+export const SimpleTd = styled("td", {
     py: "$2",
     borderBottom: "1px solid $gray4",
     fontSize: "$2",
@@ -77,26 +77,26 @@ export const Td = styled("td", {
     },
 });
 
-export const Thead = styled("thead", {
-    [`& ${Th}`]: {
+export const SimpleThead = styled("thead", {
+    [`& ${SimpleTh}`]: {
         fontSize: "$1",
         color: "$gray11",
     },
-    [`& ${Td}`]: {
+    [`& ${SimpleTd}`]: {
         fontSize: "$1",
         color: "$gray11",
     },
 });
 
-export const Table = styled("table", {
+export const SimpleTable = styled("table", {
     width: "100%",
     tableLayout: "fixed",
     borderSpacing: 0,
     variants: {
         striped: {
             true: {
-                [`& ${Tbody}`]: {
-                    [`& ${Tr}`]: {
+                [`& ${SimpleTbody}`]: {
+                    [`& ${SimpleTr}`]: {
                         "&:nth-child(odd)": {
                             bc: "$gray2",
                         },
@@ -106,3 +106,5 @@ export const Table = styled("table", {
         },
     },
 });
+
+export { Table } from "./Table";
