@@ -40,7 +40,7 @@ const StyledTrigger = styled(AccordionPrimitive.Trigger, {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    p: "$2",
+    padding: "$2",
     color: "$hiContrast",
     width: "100%",
 
@@ -63,6 +63,10 @@ const StyledTrigger = styled(AccordionPrimitive.Trigger, {
         svg: {
             transform: "rotate(180deg)",
         },
+    },
+
+    "& > p": {
+        marginBottom: "unset",
     },
 });
 
