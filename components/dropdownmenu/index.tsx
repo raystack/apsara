@@ -13,7 +13,7 @@ const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 const StyledContent = styled(DropdownMenuPrimitive.Content, menuCss, panelStyles);
 
 type DropdownMenuContentPrimitiveProps = React.ComponentProps<typeof DropdownMenuPrimitive.Content>;
-type DropdownMenuContentProps = DropdownMenuContentPrimitiveProps & { css?: CSS };
+export type DropdownMenuContentProps = DropdownMenuContentPrimitiveProps & { css?: CSS };
 
 const DropdownMenuContent = React.forwardRef<React.ElementRef<typeof StyledContent>, DropdownMenuContentProps>(
     (props, forwardedRef) => (
