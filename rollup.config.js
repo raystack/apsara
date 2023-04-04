@@ -42,7 +42,6 @@ export default {
         commonjs(),
         typescript({
             clean: true,
-            tsconfig: "rollup-tsconfig.json",
             typescript: require("typescript"),
         }),
     ],
