@@ -39,10 +39,10 @@ const ColumnDropdown = ({ name, data, onMenuSelect, search = true }: ColumnDropd
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Text css={{ padding: "$4 $8", lineHeight: "normal" }}>{name}</Text>
+                <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{name}</Text>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
-                <Box css={{ px: "$8" }}>
+                <Box css={{ px: "$2" }}>
                     <TextField value={searchValue} onChange={onChange} css={{ height: "20px" }} />
                 </Box>
                 <DropdownMenuGroup>

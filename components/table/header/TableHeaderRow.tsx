@@ -20,7 +20,7 @@ const TableRow = styled("tr", {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    height: "4rem",
+    height: "2rem",
     cursor: "pointer",
     "&:hover": {
         backgroundColor: "$gray6",

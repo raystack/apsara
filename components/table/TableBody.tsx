@@ -59,7 +59,7 @@ const TableRow = styled("tr", {
     justifyContent: "space-between",
     cursor: "pointer",
     borderBottom: "1px solid $gray3",
-    py: "$8",
+    py: "$2",
     "&:hover": {
         backgroundColor: "$gray6",
     },

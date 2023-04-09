@@ -13,10 +13,10 @@ export const TableColumnFilterChips = () => {
     return (
         <Flex
             css={{
-                padding: "1.6rem 2.4rem",
+                padding: "$4 $6",
                 flexDirection: "row",
                 alignItems: "center",
-                gap: "$8",
+                gap: "$2",
             }}
         >
             {filterQuery.map((q, index) => {

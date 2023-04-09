@@ -64,11 +64,11 @@ export const TextField = styled("input", {
             "1": {
                 borderRadius: "$1",
                 height: "$5",
-                fontSize: "$1",
+                fontSize: "$2",
                 px: "$1",
                 lineHeight: "$sizes$5",
                 "&:-webkit-autofill::first-line": {
-                    fontSize: "$1",
+                    fontSize: "$2",
                 },
             },
             "2": {

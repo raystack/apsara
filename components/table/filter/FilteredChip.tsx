@@ -83,7 +83,7 @@ export function FilteredChip<T extends RowData>({ column, columnQuery, index }: 
                 borderRadius: "$4",
             }}
         >
-            <Text css={{ padding: "$4 $8", lineHeight: "normal" }}>{getColumnName(column)}</Text>
+            <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{getColumnName(column)}</Text>
 
             <ColumnDropdown
                 index={index}
@@ -115,7 +115,7 @@ type ColumnDropdownProps = {
 const ColumnDropdown = ({ index, name, data, onMenuSelect, selectKey }: ColumnDropdownProps) => (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
-            <Text css={{ padding: "$4 $8", lineHeight: "normal" }}>{name}</Text>
+            <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{name}</Text>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
             <DropdownMenuGroup>

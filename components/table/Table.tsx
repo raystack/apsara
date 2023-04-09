@@ -168,7 +168,7 @@ const TableContainer = styled("table", {
     flexDirection: "column",
 
     "& td:first-of-type, th:first-of-type": {
-        paddingLeft: "2.4rem",
+        paddingLeft: "$6",
     },
     "& tbody td": {
         verticalAlign: "top",

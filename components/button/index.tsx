@@ -23,7 +23,7 @@ export const Button = styled("button", {
     // Custom
     height: "$25",
     px: "$10",
-    fontSize: "$14",
+    fontSize: "$3",
     fontWeight: 500,
 
     "&:disabled": {
@@ -46,7 +46,7 @@ export const Button = styled("button", {
                 borderRadius: "$1",
                 height: "$5",
                 px: "$3",
-                fontSize: "$3",
+                fontSize: "$2",
                 lineHeight: "$sizes$5",
             },
             large: {
@@ -102,12 +102,34 @@ export const Button = styled("button", {
                         boxShadow: "inset 0 0 0 1px $colors$slate8",
                     },
             },
+            gray: {
+                backgroundColor: "$loContrast",
+                boxShadow: "inset 0 0 0 1px $colors$slate7",
+                color: "$gray11",
+                "@hover": {
+                    "&:hover": {
+                        boxShadow: "inset 0 0 0 1px $colors$slate8",
+                    },
+                },
+                "&:active": {
+                    backgroundColor: "$slate2",
+                    boxShadow: "inset 0 0 0 1px $colors$slate8",
+                },
+                "&:focus": {
+                    boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
+                },
+                '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
+                    {
+                        backgroundColor: "$slate4",
+                        boxShadow: "inset 0 0 0 1px $colors$slate8",
+                    },
+            },
         },
     },
 
     defaultVariants: {
         size: "normal",
-        variant: "secondary",
+        variant: "gray",
     },
 });
 
@@ -120,7 +142,7 @@ export const IconButton = styled("button", {
     display: "inline-flex",
     flexShrink: 0,
     fontFamily: "inherit",
-    fontSize: "14px",
+    fontSize: "$3",
     justifyContent: "center",
     lineHeight: "1",
     outline: "none",

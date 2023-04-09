@@ -93,7 +93,7 @@ export const Text = styled("span", {
         },
     },
     defaultVariants: {
-        size: "3",
+        size: "2",
         variant: "contrast",
     },
 });

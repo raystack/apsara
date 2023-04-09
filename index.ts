@@ -92,6 +92,7 @@ export {
     SimpleThead,
     SimpleTr,
     Table,
+    useTable,
 } from "./components/table";
 export { TabLink } from "./components/tablink";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/tabs";

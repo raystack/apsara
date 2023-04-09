@@ -11,7 +11,7 @@ export default function TableColumnsFilter({ children }: any) {
         <Popover modal>
             <PopoverTrigger asChild>{children}</PopoverTrigger>
             <PopoverContent css={{ padding: "$4" }}>
-                <Flex css={labelContainer}>
+                <Flex direction="column" css={labelContainer}>
                     <Label css={labelStyle}>
                         <input
                             {...{
@@ -44,16 +44,16 @@ export default function TableColumnsFilter({ children }: any) {
 }
 
 const labelContainer = {
-    padding: "$8",
+    padding: "$2",
     maxHeight: "16rem",
     overflow: "scroll",
 
     input: {
-        marginRight: "$8",
+        marginRight: "$2",
     },
 };
 const labelStyle = {
     display: "flex",
     align: "center",
-    padding: "$4 $8",
+    padding: "$1 $2",
 };

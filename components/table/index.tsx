@@ -107,4 +107,5 @@ export const SimpleTable = styled("table", {
     },
 });
 
+export { useTable } from "./hooks/useTable";
 export { Table } from "./Table";
