@@ -16,6 +16,7 @@ import type TableColumnsFilter from "./filter/TableColumnsViewFilter";
 import type { TableGlobalSearch } from "./search/TableGlobalSearch";
 import type { TableBottomContainer } from "./TableBottomContainer";
 import type { onTableChangeEvent, TableFormType } from "./TableContext";
+import { TableDetailContainer } from "./TableDetailContainer";
 import type { TableTopContainer } from "./TableTopContainer";
 import type { RaypointAggregationFns } from "./utils/aggregationFns";
 import type { RaypointFilterFns } from "./utils/filterFns";
@@ -76,6 +77,7 @@ export interface TableType {
     TableColumnsFilter: typeof TableColumnsFilter;
     TableGlobalSearch: typeof TableGlobalSearch;
     TopContainer: typeof TableTopContainer;
+    DetailContainer: typeof TableDetailContainer;
     BottomContainer: typeof TableBottomContainer;
     ColumnSelect: typeof TableColumnSelect;
     ColumnFilterSelection: typeof TableColumnFilterSelection;

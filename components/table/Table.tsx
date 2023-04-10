@@ -9,6 +9,7 @@ import { useUpdateEffect } from "usehooks-ts";
 import { Box } from "~/components/box";
 import { EmptyState } from "~/components/emptystate";
 import { styled } from "~/stitches.config";
+import { Flex } from "../flex";
 import { TableColumnSelect } from "./filter/TableColumnClearSelection";
 import { TableColumnFilterChips } from "./filter/TableColumnFilterChips";
 import TableColumnFilterSelection from "./filter/TableColumnFilterSelection";
@@ -22,6 +23,7 @@ import type { TableProps, TableType } from "./Table.types";
 import { TableBody } from "./TableBody";
 import { TableBottomContainer } from "./TableBottomContainer";
 import { TableContext } from "./TableContext";
+import { TableDetailContainer } from "./TableDetailContainer";
 import { TablePerPage } from "./TablePerPage";
 import { TableTopContainer } from "./TableTopContainer";
 import { RaypointFilterFns } from "./utils/filterFns";
@@ -47,6 +49,7 @@ export const Table: TableType = <T,>({
     const convertedChildren = Children.toArray(children) as ReactElement[];
     const header = convertedChildren.find((child) => child.type === TableTopContainer);
     const footer = convertedChildren.find((child) => child.type === TableBottomContainer);
+    const detail = convertedChildren.find((child) => child.type === TableDetailContainer);
 
     const { predicates, ...initialStateValues } = initialState;
     const [orderedcolumns, setOrderedColumns] = useState(defaultColumns);
@@ -121,7 +124,7 @@ export const Table: TableType = <T,>({
     }, [resetQuery, state]);
 
     return (
-        <Box ref={outsideClickRef} css={{ width: "100%" }}>
+        <Box ref={outsideClickRef} css={{ width: "100%", ...css }}>
             <TableContext.Provider
                 value={{
                     table,
@@ -142,18 +145,21 @@ export const Table: TableType = <T,>({
             >
                 {header}
                 {!!filterQuery.length && <TableColumnFilterChips />}
-                <TableContainer css={css}>
-                    {isHeaderVisible && <TableHeader headerGroups={table.getHeaderGroups()} />}
-                    {rows.length ? (
-                        <TableBody rows={rows} />
-                    ) : (
-                        <Box as="tbody" css={{ height: "100%" }}>
-                            <EmptyState as="tr">
-                                <td colSpan={columns.length}>{noDataChildren}</td>
-                            </EmptyState>
-                        </Box>
-                    )}
-                </TableContainer>
+                <Flex>
+                    <TableContainer>
+                        {isHeaderVisible && <TableHeader headerGroups={table.getHeaderGroups()} />}
+                        {rows.length ? (
+                            <TableBody rows={rows} />
+                        ) : (
+                            <Box as="tbody" css={{ height: "100%" }}>
+                                <EmptyState as="tr">
+                                    <td colSpan={columns.length}>{noDataChildren}</td>
+                                </EmptyState>
+                            </Box>
+                        )}
+                    </TableContainer>
+                    {detail}
+                </Flex>
                 {footer}
             </TableContext.Provider>
         </Box>
@@ -178,6 +184,7 @@ const TableContainer = styled("table", {
 Table.TableGlobalSearch = TableGlobalSearch;
 Table.TableColumnsFilter = TableColumnsFilter;
 Table.TopContainer = TableTopContainer;
+Table.DetailContainer = TableDetailContainer;
 Table.BottomContainer = TableBottomContainer;
 Table.ColumnSelect = TableColumnSelect;
 Table.ColumnFilterSelection = TableColumnFilterSelection;
