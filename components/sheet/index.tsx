@@ -103,19 +103,21 @@ const StyledCloseButton = styled(DialogPrimitive.Close, {
 
 type SheetContentVariants = VariantProps<typeof StyledContent>;
 type DialogContentPrimitiveProps = React.ComponentProps<typeof DialogPrimitive.Content>;
-type SheetContentProps = DialogContentPrimitiveProps & SheetContentVariants & { css?: CSS };
+type SheetContentProps = DialogContentPrimitiveProps & SheetContentVariants & { css?: CSS; close?: boolean };
 
 const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, SheetContentProps>(
-    ({ children, ...props }, forwardedRef) => (
+    ({ children, close, ...props }, forwardedRef) => (
         <DialogPrimitive.Portal>
             <StyledOverlay />
             <StyledContent {...props} ref={forwardedRef}>
                 {children}
-                <StyledCloseButton asChild>
-                    <IconButton variant="ghost">
-                        <Cross1Icon />
-                    </IconButton>
-                </StyledCloseButton>
+                {close && (
+                    <StyledCloseButton asChild>
+                        <IconButton variant="ghost">
+                            <Cross1Icon />
+                        </IconButton>
+                    </StyledCloseButton>
+                )}
             </StyledContent>
         </DialogPrimitive.Portal>
     ),
