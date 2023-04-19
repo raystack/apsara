@@ -1,12 +1,16 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { getFilterList } from "../helpers";
 import * as R from "ramda";
 import { IGroupOptions } from "../Listing.types";
 
-export const useSearchFilterState = () => {
+export const useSearchFilterState = (defaultSearchTerm: string) => {
     const [filteredFieldData, setFilteredFieldData] = useState({});
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState(defaultSearchTerm);
     const [sortedInfo, setSortedInfo] = useState({});
+
+    useEffect(() => {
+        setSearchTerm(defaultSearchTerm);
+    }, [defaultSearchTerm]);
 
     const onGroupFilter = (group: IGroupOptions, filteredArr: any) => {
         const { slug, multi = true } = group;
@@ -29,7 +33,7 @@ export const useSearchFilterState = () => {
     };
 };
 
-export default function useSearchFilter({ list, searchFields = [] }: any) {
+export default function useSearchFilter({ list, searchFields = [], defaultSearchTerm }: any) {
     const {
         sortedInfo,
         searchTerm,
@@ -38,7 +42,7 @@ export default function useSearchFilter({ list, searchFields = [] }: any) {
         setSortedInfo,
         onGroupFilter,
         onClearGroupFilter,
-    } = useSearchFilterState();
+    } = useSearchFilterState(defaultSearchTerm);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const filteredList = useCallback(getFilterList(list, filteredFieldData, searchTerm, searchFields), [

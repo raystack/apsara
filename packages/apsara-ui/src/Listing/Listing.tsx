@@ -21,6 +21,8 @@ const Listing = ({
     calculateColumnWidth,
     rowClick,
     sortable = false,
+    defaultSearchTerm = "",
+    onChangeCallback,
 }: ListingProps) => {
     const { getColumnList = () => [], selectedRowId, ...extraTableProps } = tableProps;
     const { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps;
@@ -33,13 +35,15 @@ const Listing = ({
         onClearGroupFilter,
         filteredList,
         filteredFieldData,
-    } = useSearchFilter({ list, searchFields });
-
+    } = useSearchFilter({ list, searchFields, defaultSearchTerm });
     const columns = getColumnList(resourcePath, sortedInfo);
     if (!renderHeader) {
         renderHeader = (
             <ListingSearch
-                onChange={({ target: { value } }: any) => setSearchTerm(value)}
+                onChange={({ target: { value } }: any) => {
+                    onChangeCallback && onChangeCallback(value);
+                    return setSearchTerm(value);
+                }}
                 value={searchTerm}
                 placeholder={searchPlaceholder}
                 disabled={disabled}

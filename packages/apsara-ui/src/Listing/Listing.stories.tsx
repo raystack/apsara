@@ -22,6 +22,7 @@ export const listing = () => (
     <Listing
         loading={false}
         sortable
+        defaultSearchTerm="name 1"
         list={new Array(100).fill(0).map((_, index) => {
             return {
                 id: index,
