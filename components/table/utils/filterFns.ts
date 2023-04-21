@@ -4,14 +4,12 @@ import type { FilterFn, Row } from "@tanstack/react-table";
 import { filterFns } from "@tanstack/react-table";
 
 export const globalFilterFn: FilterFn<any> = (row, columnId: string, filterValue: string) => {
-    console.log("> ", row, columnId, filterValue);
     const value = row.getValue<string>(columnId);
     if (!value) return false;
     return value.toString().toLowerCase().includes(filterValue.toString().toLowerCase());
 };
 
 export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-    console.log("ds");
     const itemRank = rankItem(row.getValue(columnId), value);
     addMeta({
         itemRank,

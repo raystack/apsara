@@ -16,6 +16,7 @@ export default function Document() {
         <Html lang="en">
             <Head>
                 <link href="https://unpkg.com/prism-theme-night-owl@1.4.0/build/style.css" rel="stylesheet" />
+                <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssAndReset() }} />
             </Head>
             <body>
                 <Main />
