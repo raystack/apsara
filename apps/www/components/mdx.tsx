@@ -1,26 +1,16 @@
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-    Avatar,
-    Box,
-    Code,
-    Flex,
-    Heading,
-    Kbd,
-    Link,
-    Paragraph,
-    Separator,
-    Text,
-} from "@odpf/apsara";
+import * as Apsara from "@odpf/apsara";
 import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { Frontmatter } from "~/types/frontmatter";
+import { Preview } from "./preview";
+import { Searchbar } from "./Searchbar";
 
 export const components = {
+    ...Apsara,
+    Preview: Preview,
+    Searchbar: Searchbar,
     h1: (props: any) => (
-        <Text
+        <Apsara.Text
             {...props}
             as="h1"
             size="8"
@@ -32,40 +22,47 @@ export const components = {
         // https://github.com/wooorm/xdm/issues/47
         const childText = typeof children === "string" ? children : children.props.children;
         return (
-            <Paragraph size="2" {...props} as="p" css={{ mt: "$2", mb: "$7" }}>
+            <Apsara.Paragraph size="2" {...props} as="p" css={{ mt: "$2", mb: "$7" }}>
                 {childText}
-            </Paragraph>
+            </Apsara.Paragraph>
         );
     },
     h2: ({ children, id, ...props }: any) => {
         return (
             <LinkHeading id={id} css={{ mt: "$7", mb: "$2" }}>
-                <Heading size="2" {...props} id={id} as={"h2" as any} css={{ scrollMarginTop: "$9" }} data-heading>
+                <Apsara.Heading
+                    size="2"
+                    {...props}
+                    id={id}
+                    as={"h2" as any}
+                    css={{ scrollMarginTop: "$9" }}
+                    data-heading
+                >
                     {children}
-                </Heading>
+                </Apsara.Heading>
             </LinkHeading>
         );
     },
     h3: ({ children, id, ...props }: any) => (
         <LinkHeading id={id} css={{ mt: "$7", mb: "$1" }}>
-            <Heading {...props} id={id} as={"h3" as any} css={{ scrollMarginTop: "$9" }} data-heading>
+            <Apsara.Heading {...props} id={id} as={"h3" as any} css={{ scrollMarginTop: "$9" }} data-heading>
                 {children}
-            </Heading>
+            </Apsara.Heading>
         </LinkHeading>
     ),
     h4: (props: any) => (
-        <Text
+        <Apsara.Text
             as="h4"
             {...props}
             size="4"
             css={{ scrollMarginTop: "$9", mb: "$3", lineHeight: "27px", fontWeight: 500 }}
         />
     ),
-    p: (props: any) => <Paragraph {...props} css={{ mb: "$3" }} as="p" />,
+    p: (props: any) => <Apsara.Paragraph {...props} css={{ mb: "$3" }} as="p" />,
     a: ({ href = "", ...props }) => {
         if (href.startsWith("http")) {
             return (
-                <Link
+                <Apsara.Link
                     {...props}
                     variant="blue"
                     href={href}
@@ -75,26 +72,32 @@ export const components = {
                 />
             );
         }
-        return <Link href={href} {...props} css={{ color: "inherit", fontSize: "inherit" }} />;
+        return <Apsara.Link href={href} {...props} css={{ color: "inherit", fontSize: "inherit" }} />;
     },
-    hr: (props: any) => <Separator size="2" {...props} css={{ my: "$6", mx: "auto" }} />,
+    hr: (props: any) => <Apsara.Separator size="2" {...props} css={{ my: "$6", mx: "auto" }} />,
     ul: (props: any) => (
-        <Box {...props} css={{ color: "$hiContrast", pl: "1.15em", mb: "$3", listStyleType: "circle" }} as="ul" />
+        <Apsara.Box
+            {...props}
+            css={{ color: "$hiContrast", pl: "1.15em", mb: "$3", listStyleType: "circle" }}
+            as="ul"
+        />
     ),
-    ol: (props: any) => <Box {...props} css={{ color: "$hiContrast", mb: "$3" }} as="ol" />,
+    ol: (props: any) => <Apsara.Box {...props} css={{ color: "$hiContrast", mb: "$3" }} as="ol" />,
     li: (props: any) => (
         <li>
-            <Paragraph {...props} />
+            <Apsara.Paragraph {...props} />
         </li>
     ),
-    strong: (props: any) => <Text {...props} css={{ display: "inline", fontSize: "inherit", fontWeight: 500 }} />,
+    strong: (props: any) => (
+        <Apsara.Text {...props} css={{ display: "inline", fontSize: "inherit", fontWeight: 500 }} />
+    ),
     img: ({ ...props }) => (
-        <Box css={{ my: "$6" }}>
-            <Box as="img" {...props} css={{ maxWidth: "100%", verticalAlign: "middle", ...props.css }} />
-        </Box>
+        <Apsara.Box css={{ my: "$6" }}>
+            <Apsara.Box as="img" {...props} css={{ maxWidth: "100%", verticalAlign: "middle", ...props.css }} />
+        </Apsara.Box>
     ),
     blockquote: (props: any) => (
-        <Box
+        <Apsara.Box
             css={{
                 mt: "$6",
                 mb: "$5",
@@ -115,13 +118,13 @@ export const components = {
         // if it's a codeblock (``` block in markdown), it'll have a className from prism
         const isInlineCode = !className;
         return isInlineCode ? (
-            <Code className={className} {...props} css={{ whiteSpace: "break-spaces" }} />
+            <Apsara.Code className={className} {...props} css={{ whiteSpace: "break-spaces" }} />
         ) : (
             <code className={className} {...props} data-invert-line-highlight={line !== undefined} />
         );
     },
     Note: (props: any) => (
-        <Box
+        <Apsara.Box
             as="aside"
             css={{
                 mt: "$5",
@@ -138,7 +141,7 @@ export const components = {
         />
     ),
     Alert: (props: any) => (
-        <Box
+        <Apsara.Box
             as="aside"
             css={{
                 display: "block",
@@ -158,21 +161,11 @@ export const components = {
             {...props}
         />
     ),
-
-    Kbd: Kbd,
-    Code: Code,
-    Flex: Flex,
-    Text: Text,
-    Avatar: Avatar,
-    Accordion: Accordion,
-    AccordionItem: AccordionItem,
-    AccordionTrigger: AccordionTrigger,
-    AccordionContent: AccordionContent,
 };
 
 const LinkHeading = ({ id, children, css }: { id: string; children: React.ReactNode; css?: any }) => (
-    <Box css={{ ...css }}>
-        <Box
+    <Apsara.Box css={{ ...css }}>
+        <Apsara.Box
             as="a"
             href={`#${id}`}
             // data-id={id}
@@ -191,11 +184,11 @@ const LinkHeading = ({ id, children, css }: { id: string; children: React.ReactN
             }}
         >
             {children}
-            <Box as="span" css={{ ml: "$2", color: "$slate10" }}>
+            <Apsara.Box as="span" css={{ ml: "$2", color: "$slate10" }}>
                 <Link2Icon aria-hidden />
-            </Box>
-        </Box>
-    </Box>
+            </Apsara.Box>
+        </Apsara.Box>
+    </Apsara.Box>
 );
 
 export const FrontmatterContext = React.createContext<Frontmatter>({} as any);

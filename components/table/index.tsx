@@ -50,6 +50,7 @@ export const SimpleTd = styled("td", {
     py: "$2",
     borderBottom: "1px solid $gray4",
     fontSize: "$2",
+    lineHeight: "$1",
     variants: {
         align: {
             start: {

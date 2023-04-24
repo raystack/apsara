@@ -1,8 +1,6 @@
 import { Badge, Box, Container, Flex, ScrollArea, styled, Text } from "@odpf/apsara";
-import { Slot } from "@radix-ui/react-slot";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { RemoveScroll } from "react-remove-scroll";
 import { primitivesRoutes, RouteProps } from "~/utils/routes";
 
 function useCurrentPageSlug() {
@@ -92,33 +90,31 @@ function NavWrapper({ children, isMobileMenuOpen }: any) {
     }, []);
 
     return (
-        <RemoveScroll as={Slot} allowPinchZoom enabled={isMobileLayout && isMobileMenuOpen}>
-            <Box
-                css={{
-                    position: "fixed",
-                    top: "$sizes$8",
-                    left: 0,
-                    bottom: 0,
-                    zIndex: 1,
+        <Box
+            css={{
+                position: "fixed",
+                top: "$sizes$8",
+                left: 0,
+                bottom: 0,
+                zIndex: 1,
 
-                    width: "100%",
-                    maxHeight: "auto",
+                width: "100%",
+                maxHeight: "auto",
 
-                    overflowX: "hidden",
-                    WebkitOverflowScrolling: "touch",
+                overflowX: "hidden",
+                WebkitOverflowScrolling: "touch",
 
-                    backgroundColor: "$loContrast",
+                backgroundColor: "$loContrast",
 
-                    display: isMobileMenuOpen ? "block" : "none",
-                    "@bp2": { display: "block", width: "250px" },
-                }}
-            >
-                <ScrollArea>
-                    <Box css={{ px: "$2" }}>{children}</Box>
-                    <Box css={{ height: "$5", "@bp2": { height: "$8" } }} />
-                </ScrollArea>
-            </Box>
-        </RemoveScroll>
+                display: isMobileMenuOpen ? "block" : "none",
+                "@bp2": { display: "block", width: "250px" },
+            }}
+        >
+            <ScrollArea>
+                <Box css={{ px: "$2" }}>{children}</Box>
+                <Box css={{ height: "$5", "@bp2": { height: "$8" } }} />
+            </ScrollArea>
+        </Box>
     );
 }
 

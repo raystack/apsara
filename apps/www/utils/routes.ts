@@ -11,6 +11,7 @@ export const primitivesRoutes = [
         pages: [
             { title: "Avatar", slug: "docs/primitives/components/avatar" },
             { title: "Accordion", slug: "docs/primitives/components/accordion" },
+            { title: "SearchField", slug: "docs/primitives/components/searchfield" },
         ],
     },
 ];

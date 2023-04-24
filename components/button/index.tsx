@@ -34,6 +34,17 @@ export const Button = styled("button", {
     },
 
     variants: {
+        ghost: {
+            true: {
+                bg: "transparent",
+                "&:hover": {
+                    bg: "transparent",
+                },
+                "&:focus": {
+                    bg: "transparent",
+                },
+            },
+        },
         size: {
             small: {
                 borderRadius: "$1",
@@ -126,6 +137,25 @@ export const Button = styled("button", {
             },
         },
     },
+    compoundVariants: [
+        {
+            variant: "gray",
+            ghost: "true",
+            css: {
+                color: "$gray11",
+                bg: "transparent",
+                "&:hover": {
+                    color: "$gray11",
+                    bg: "transparent",
+                },
+                "&:focus": {
+                    color: "$gray11",
+                    bg: "transparent",
+                    boxShadow: "none",
+                },
+            },
+        },
+    ],
 
     defaultVariants: {
         size: "normal",

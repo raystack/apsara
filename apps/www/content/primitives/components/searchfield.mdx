@@ -1,0 +1,93 @@
+---
+title: SearchField
+description: A basic text input field used as search.
+---
+# SearchField
+
+<Description>
+  A basic text input field used as search.
+</Description>
+
+### Example
+
+<Preview>
+  <Container css={{ px: "$md" }}>
+    <Searchbar />
+  </Container>
+</Preview>
+
+```tsx outline=true
+import { SearchField } from "@styple/design-system";
+
+// Boilerplate component of how to implement a searchbar with SearchField
+export const Searchbar = () => {
+  const [query, setQuery] = useState("");
+
+  function keyPressed(e: React.KeyboardEvent) {
+    // Check and prevent default for 'Enter'
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+  }
+
+  return (
+    <form style={{ width: "100%" }}>
+      <SearchField
+        query={query}
+        setQuery={setQuery}
+        keyPressed={keyPressed}
+        placeholder="Search input.."
+      />
+    </form>
+  );
+};
+```
+
+### API Reference
+
+#### SearchField
+
+A styled component using `TextField` internally. Custom props:
+
+<SimpleTable>
+  <SimpleThead>
+    <SimpleTr>
+      <SimpleTh>Prop</SimpleTh>
+      <SimpleTh>Type</SimpleTh>
+      <SimpleTh>Default</SimpleTh>
+      <SimpleTh>Explanation</SimpleTh>
+    </SimpleTr>
+  </SimpleThead>
+  <SimpleTbody>
+    <SimpleTr>
+      <SimpleTh>
+        <Code>query</Code>
+      </SimpleTh>
+      <SimpleTd>
+        <Code color="normal">string</Code>
+      </SimpleTd>
+      <SimpleTd>-</SimpleTd>
+      <SimpleTd><Text>The current text string.</Text></SimpleTd>
+    </SimpleTr>
+    <SimpleTr>
+      <SimpleTh>
+        <Code>setQuery</Code>
+      </SimpleTh>
+      <SimpleTd>
+        <Code color="normal">SetStateAction</Code>
+      </SimpleTd>
+      <SimpleTd>-</SimpleTd>
+      <SimpleTd><Text>React state setter called `onChange` with target value.</Text></SimpleTd>
+    </SimpleTr>
+    <SimpleTr>
+      <SimpleTh>
+        <Code>keyPressed</Code>
+      </SimpleTh>
+      <SimpleTd>
+        <Code color="normal">KeyboardEventHandler</Code>
+      </SimpleTd>
+      <SimpleTd>-</SimpleTd>
+      <SimpleTd><Text>Keyboard event called `onKeyPress` with event.</Text></SimpleTd>
+    </SimpleTr>
+  </SimpleTbody>
+</SimpleTable>

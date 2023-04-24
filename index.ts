@@ -72,6 +72,7 @@ export { Radio, RadioGroup } from "./components/radio";
 export { RadioCard, RadioCardGroup } from "./components/radiocard";
 export { RadioGrid } from "./components/radiogrid";
 export { ScrollArea } from "./components/scrollbar";
+export { SearchField } from "./components/SearchField";
 export { Section } from "./components/section";
 export { Select } from "./components/select";
 export { Separator } from "./components/separator";
