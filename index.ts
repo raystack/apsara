@@ -108,6 +108,7 @@ export { TreeItem } from "./components/treeitem";
 export {
     config,
     createTheme,
+    CSS,
     css,
     dark,
     getCssText,
