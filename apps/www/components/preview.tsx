@@ -11,6 +11,7 @@ export const Preview = ({ css, ...props }: PreviewProps) => (
             alignItems: "flex-start",
             justifyContent: "center",
             p: "$4",
+            mb: "$4",
             borderTopLeftRadius: "$4",
             borderTopRightRadius: "$4",
             boxShadow: "inset 0 0 0 1px $gray8",

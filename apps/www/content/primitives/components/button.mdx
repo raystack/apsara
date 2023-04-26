@@ -1,0 +1,45 @@
+---
+name: button
+title: Button
+description: Enables the user to perform an action.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    <Flex gap="2">
+      <Button>Basic button</Button>
+      <Button variant="primary">Primary Button</Button>
+      <Button variant="secondry">Secondry Button</Button>
+      <Button ghost>Ghost button</Button>
+    </Flex>
+
+    <Flex gap="3">
+      <Button size="small">Small button</Button>
+      <Button size="normal">Normal button</Button>
+      <Button size="large">Large button</Button>
+      <Button disabled>Disabled button</Button>
+    </Flex>
+
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Button } from '@odpf/apsara'
+
+<Button>Basic button</Button>
+<Button variant="primary">Primary Button</Button>
+<Button variant="secondry">Secondry Button</Button>
+<Button ghost>Ghost button</Button>
+ <Button size="small">Small button</Button>
+<Button size="normal">Normal button</Button>
+<Button size="large">Large button</Button>
+<Button disabled>Disabled button</Button>
+```

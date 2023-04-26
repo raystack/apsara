@@ -3,7 +3,7 @@ import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { Frontmatter } from "~/types/frontmatter";
 import { Preview } from "./preview";
-import { Searchbar } from "./Searchbar";
+import { Searchbar } from "./searchbar";
 
 export const components = {
     ...Apsara,

@@ -6,6 +6,7 @@ export const Button = styled("button", {
     alignItems: "center",
     boxSizing: "border-box",
     userSelect: "none",
+    cursor: "pointer",
     "&::before": {
         boxSizing: "border-box",
     },
@@ -21,15 +22,15 @@ export const Button = styled("button", {
     WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
     // Custom
-    height: "$25",
-    px: "$10",
-    fontSize: "$3",
+    px: "$2",
+    fontSize: "$4",
     fontWeight: 500,
 
     "&:disabled": {
         backgroundColor: "$slate2",
         boxShadow: "inset 0 0 0 1px $colors$slate7",
         color: "$slate8",
+        opacity: "0.6",
         pointerEvents: "none",
     },
 
@@ -47,25 +48,31 @@ export const Button = styled("button", {
         },
         size: {
             small: {
-                borderRadius: "$1",
-                height: "$4",
-                px: "$2",
+                py: "$2",
+                px: "$3",
                 fontSize: "$1",
-                lineHeight: "$sizes$4",
+                lineHeight: "10px",
+                borderRadius: "$2",
             },
             normal: {
-                borderRadius: "$1",
-                height: "$5",
+                py: "$2",
                 px: "$3",
                 fontSize: "$2",
-                lineHeight: "$sizes$5",
+                lineHeight: "12px",
+                borderRadius: "$3",
             },
             large: {
-                borderRadius: "$1",
-                height: "$6",
+                py: "$2",
                 px: "$4",
                 fontSize: "$4",
-                lineHeight: "$sizes$6",
+                lineHeight: "16px",
+                borderRadius: "$3",
+            },
+            circle: {
+                p: "$2",
+                width: "40px",
+                height: "40px",
+                borderRadius: "$round",
             },
         },
         variant: {
@@ -144,9 +151,12 @@ export const Button = styled("button", {
             css: {
                 color: "$gray11",
                 bg: "transparent",
+                boxShadow: "none",
+
                 "&:hover": {
                     color: "$gray11",
                     bg: "transparent",
+                    boxShadow: "none",
                 },
                 "&:focus": {
                     color: "$gray11",
