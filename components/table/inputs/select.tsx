@@ -5,13 +5,7 @@ import { Text } from "~/components/text";
 import { TextField } from "~/components/textfield";
 
 import React from "react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "~/components/dropdownmenu";
+import { DropdownMenu } from "~/components/dropdownmenu";
 import type { TableColumnMetadata } from "~/types/types";
 
 type ColumnDropdownProps = {
@@ -38,21 +32,21 @@ const ColumnDropdown = ({ name, data, onMenuSelect, search = true }: ColumnDropd
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenu.Trigger asChild>
                 <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{name}</Text>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content align="start">
                 <Box css={{ px: "$2" }}>
                     <TextField value={searchValue} onChange={onChange} css={{ height: "20px" }} />
                 </Box>
-                <DropdownMenuGroup>
+                <DropdownMenu.Group>
                     {selectValues.map((column, _index) => (
-                        <DropdownMenuItem key={`${column.key}_${_index}`} onSelect={() => onMenuSelect(column.value)}>
+                        <DropdownMenu.Item key={`${column.key}_${_index}`} onSelect={() => onMenuSelect(column.value)}>
                             {column.name}
-                        </DropdownMenuItem>
+                        </DropdownMenu.Item>
                     ))}
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
+                </DropdownMenu.Group>
+            </DropdownMenu.Content>
         </DropdownMenu>
     );
 };

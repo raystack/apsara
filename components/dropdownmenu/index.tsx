@@ -7,9 +7,6 @@ import { Flex } from "../flex";
 import { itemCss, labelCss, menuCss, separatorCss } from "../menu";
 import { panelStyles } from "../panel";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
-
 const StyledContent = styled(DropdownMenuPrimitive.Content, menuCss, panelStyles);
 
 type DropdownMenuContentPrimitiveProps = React.ComponentProps<typeof DropdownMenuPrimitive.Content>;
@@ -76,15 +73,14 @@ const DropdownMenuRadioItem = React.forwardRef<
     </StyledDropdownMenuRadioItem>
 ));
 
-export {
-    DropdownMenu,
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuGroup,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuCheckboxItem,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-};
+export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
+    Trigger: DropdownMenuPrimitive.Trigger,
+    Content: DropdownMenuContent,
+    Item: DropdownMenuItem,
+    Group: DropdownMenuGroup,
+    Label: DropdownMenuLabel,
+    Separator: DropdownMenuSeparator,
+    CheckboxItem: DropdownMenuCheckboxItem,
+    RadioGroup: DropdownMenuRadioGroup,
+    RadioItem: DropdownMenuRadioItem,
+});

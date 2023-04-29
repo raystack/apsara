@@ -3,14 +3,14 @@ import React from "react";
 import { CSS, styled } from "../../stitches.config";
 import { Separator } from "../separator";
 
-export const Tabs = styled(TabsPrimitive.Root, {
+const TabsRoot = styled(TabsPrimitive.Root, {
     display: "flex",
     '&[data-orientation="horizontal"]': {
         flexDirection: "column",
     },
 });
 
-export const TabsTrigger = styled(TabsPrimitive.Trigger, {
+const TabsTrigger = styled(TabsPrimitive.Trigger, {
     flexShrink: 0,
     height: "$5",
     display: "inline-flex",
@@ -68,19 +68,23 @@ const StyledTabsList = styled(TabsPrimitive.List, {
 type TabsListPrimitiveProps = React.ComponentProps<typeof TabsPrimitive.List>;
 type TabsListProps = TabsListPrimitiveProps & { css?: CSS };
 
-export const TabsList = React.forwardRef<React.ElementRef<typeof StyledTabsList>, TabsListProps>(
-    (props, forwardedRef) => (
-        <>
-            <StyledTabsList {...props} ref={forwardedRef} />
-            <Separator />
-        </>
-    ),
-);
+const TabsList = React.forwardRef<React.ElementRef<typeof StyledTabsList>, TabsListProps>((props, forwardedRef) => (
+    <>
+        <StyledTabsList {...props} ref={forwardedRef} />
+        <Separator />
+    </>
+));
 
-export const TabsContent = styled(TabsPrimitive.Content, {
+const TabsContent = styled(TabsPrimitive.Content, {
     flexGrow: 1,
     "&:focus": {
         outline: "none",
         boxShadow: "inset 0 0 0 1px $slate8, 0 0 0 1px $slate8",
     },
+});
+
+export const Tabs = Object.assign(TabsRoot, {
+    Trigger: TabsTrigger,
+    Content: TabsContent,
+    List: TabsList,
 });

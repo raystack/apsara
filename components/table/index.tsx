@@ -1,19 +1,19 @@
 import { styled } from "~/stitches.config";
 
-export const SimpleCaption = styled("caption", {
+const SimpleCaption = styled("caption", {
     textAlign: "start",
     marginBottom: "$5",
 });
 
-export const SimpleTbody = styled("tbody", {
+const SimpleTbody = styled("tbody", {
     width: "100%",
 });
 
-export const SimpleTfoot = styled("tfoot", {});
+const SimpleTfoot = styled("tfoot", {});
 
-export const SimpleTr = styled("tr", {});
+const SimpleTr = styled("tr", {});
 
-export const SimpleTh = styled("th", {
+const SimpleTh = styled("th", {
     fontWeight: "unset",
     textAlign: "start",
     fontSize: "$2",
@@ -46,7 +46,7 @@ export const SimpleTh = styled("th", {
     },
 });
 
-export const SimpleTd = styled("td", {
+const SimpleTd = styled("td", {
     py: "$2",
     borderBottom: "1px solid $gray4",
     fontSize: "$2",
@@ -78,7 +78,7 @@ export const SimpleTd = styled("td", {
     },
 });
 
-export const SimpleThead = styled("thead", {
+const SimpleThead = styled("thead", {
     [`& ${SimpleTh}`]: {
         fontSize: "$1",
         color: "$gray11",
@@ -89,7 +89,7 @@ export const SimpleThead = styled("thead", {
     },
 });
 
-export const SimpleTable = styled("table", {
+const SimpleTableRoot = styled("table", {
     width: "100%",
     tableLayout: "fixed",
     borderSpacing: 0,
@@ -110,3 +110,13 @@ export const SimpleTable = styled("table", {
 
 export { useTable } from "./hooks/useTable";
 export { Table } from "./Table";
+
+export const SimpleTable = Object.assign(SimpleTableRoot, {
+    Thead: SimpleThead,
+    Td: SimpleTd,
+    Th: SimpleTh,
+    Tr: SimpleTr,
+    Body: SimpleTbody,
+    Footer: SimpleTfoot,
+    Caption: SimpleCaption,
+});

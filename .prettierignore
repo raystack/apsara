@@ -1,3 +1,6 @@
 .next
 dist
 coverage/
+examples/
+apps/
+*.mdx

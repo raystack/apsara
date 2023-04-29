@@ -5,9 +5,6 @@ import { CSS, keyframes, styled, VariantProps } from "~/stitches.config";
 import { IconButton } from "../button";
 import { overlayStyles } from "../overlay";
 
-const Sheet = DialogPrimitive.Root;
-const SheetTrigger = DialogPrimitive.Trigger;
-
 const fadeIn = keyframes({
     from: { opacity: "0" },
     to: { opacity: "1" },
@@ -123,8 +120,10 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
     ),
 );
 
-const SheetClose = DialogPrimitive.Close;
-const SheetTitle = DialogPrimitive.Title;
-const SheetDescription = DialogPrimitive.Description;
-
-export { Sheet, SheetTrigger, SheetContent, SheetClose, SheetTitle, SheetDescription };
+export const Sheet = Object.assign(DialogPrimitive.Root, {
+    Trigger: DialogPrimitive.Trigger,
+    Content: SheetContent,
+    Close: DialogPrimitive.Close,
+    Title: DialogPrimitive.Title,
+    Description: DialogPrimitive.Description,
+});

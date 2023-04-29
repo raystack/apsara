@@ -226,12 +226,12 @@ const StyledAvatarFallback = styled(AvatarPrimitive.Fallback, {
     },
 });
 
-export const AvatarNestedItem = styled("div", {
+const AvatarNestedItem = styled("div", {
     boxShadow: "0 0 0 2px $colors$loContrast",
     borderRadius: "50%",
 });
 
-export const AvatarGroup = styled("div", {
+const AvatarGroup = styled("div", {
     display: "flex",
     flexDirection: "row-reverse",
     [`& ${AvatarNestedItem}:nth-child(n+2)`]: {
@@ -253,7 +253,7 @@ type AvatarOwnProps = AvatarPrimitiveProps &
         status?: StatusColors["variant"];
     };
 
-export const Avatar = React.forwardRef<React.ElementRef<typeof StyledAvatar>, AvatarOwnProps>(
+const AvatarRoot = React.forwardRef<React.ElementRef<typeof StyledAvatar>, AvatarOwnProps>(
     ({ alt, src, fallback, size, variant, shape, css, status, ...props }, forwardedRef) => {
         return (
             <Box
@@ -287,3 +287,10 @@ export const Avatar = React.forwardRef<React.ElementRef<typeof StyledAvatar>, Av
         );
     },
 );
+
+export const Avatar = Object.assign(AvatarRoot, {
+    Image: StyledAvatarImage,
+    Fallback: StyledAvatarFallback,
+    Group: AvatarGroup,
+    NestedItem: AvatarNestedItem,
+});

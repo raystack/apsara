@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex } from "~/components/flex";
 import { Label } from "~/components/label";
-import { Popover, PopoverContent, PopoverTrigger } from "~/components/popover";
+import { Popover } from "~/components/popover";
 import { Separator } from "~/components/separator";
 import { useTable } from "../hooks/useTable";
 
@@ -9,8 +9,8 @@ export default function TableColumnsFilter({ children }: any) {
     const { table } = useTable();
     return (
         <Popover modal>
-            <PopoverTrigger asChild>{children}</PopoverTrigger>
-            <PopoverContent css={{ padding: "$4" }}>
+            <Popover.Trigger asChild>{children}</Popover.Trigger>
+            <Popover.Content css={{ padding: "$4" }}>
                 <Flex direction="column" css={labelContainer}>
                     <Label css={labelStyle}>
                         <input
@@ -38,7 +38,7 @@ export default function TableColumnsFilter({ children }: any) {
                         );
                     })}
                 </Flex>
-            </PopoverContent>
+            </Popover.Content>
         </Popover>
     );
 }
