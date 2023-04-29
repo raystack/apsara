@@ -7,9 +7,6 @@ import { Flex } from "../flex";
 import { itemCss, labelCss, menuCss, separatorCss } from "../menu";
 import { panelStyles } from "../panel";
 
-const ContextMenu = ContextMenuPrimitive.Root;
-const ContextMenuTrigger = ContextMenuPrimitive.Trigger;
-
 const StyledContent = styled(ContextMenuPrimitive.Content, menuCss, panelStyles);
 
 type ContextMenuContentPrimitiveProps = React.ComponentProps<typeof ContextMenuPrimitive.Content>;
@@ -76,15 +73,14 @@ const ContextMenuRadioItem = React.forwardRef<
     </StyledContextMenuRadioItem>
 ));
 
-export {
-    ContextMenu,
-    ContextMenuTrigger,
-    ContextMenuContent,
-    ContextMenuItem,
-    ContextMenuGroup,
-    ContextMenuLabel,
-    ContextMenuSeparator,
-    ContextMenuCheckboxItem,
-    ContextMenuRadioGroup,
-    ContextMenuRadioItem,
-};
+export const ContextMenu = Object.assign(ContextMenuPrimitive.Root, {
+    Trigger: ContextMenuPrimitive.Trigger,
+    Content: ContextMenuContent,
+    Item: ContextMenuItem,
+    Group: ContextMenuGroup,
+    Label: ContextMenuLabel,
+    Separator: ContextMenuSeparator,
+    CheckboxItem: ContextMenuCheckboxItem,
+    RadioGroup: ContextMenuRadioGroup,
+    RadioItem: ContextMenuRadioItem,
+});

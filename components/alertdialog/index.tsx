@@ -4,9 +4,6 @@ import { CSS, styled } from "../../stitches.config";
 import { overlayStyles } from "../overlay";
 import { panelStyles } from "../panel";
 
-const AlertDialog = AlertDialogPrimitive.Root;
-const AlertDialogTrigger = AlertDialogPrimitive.Trigger;
-
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, overlayStyles, {
     position: "fixed",
     top: 0,
@@ -44,17 +41,11 @@ const AlertDialogContent = React.forwardRef<React.ElementRef<typeof StyledConten
     ),
 );
 
-const AlertDialogTitle = AlertDialogPrimitive.Title;
-const AlertDialogDescription = AlertDialogPrimitive.Description;
-const AlertDialogAction = AlertDialogPrimitive.Action;
-const AlertDialogCancel = AlertDialogPrimitive.Cancel;
-
-export {
-    AlertDialog,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogAction,
-    AlertDialogCancel,
-};
+export const AlertDialog = Object.assign(AlertDialogPrimitive.Root, {
+    Content: AlertDialogContent,
+    Trigger: AlertDialogPrimitive.Trigger,
+    Title: AlertDialogPrimitive.Title,
+    Description: AlertDialogPrimitive.Description,
+    Action: AlertDialogPrimitive.Action,
+    Cancel: AlertDialogPrimitive.Cancel,
+});

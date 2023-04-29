@@ -2,13 +2,7 @@ import { innerJoin } from "ramda";
 import type { ReactNode } from "react";
 import React, { useMemo } from "react";
 import type { DropdownMenuContentProps } from "~/components/dropdownmenu";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "~/components/dropdownmenu";
+import { DropdownMenu } from "~/components/dropdownmenu";
 import { useTable } from "../hooks/useTable";
 import { getAllColumnsData } from "../utils/column";
 
@@ -33,18 +27,18 @@ const TableFilterSelection = ({ children, ...props }: TableFilterSelectionProps)
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-            <DropdownMenuContent {...props}>
-                <DropdownMenuGroup>
+            <DropdownMenu.Trigger asChild>{children}</DropdownMenu.Trigger>
+            <DropdownMenu.Content {...props}>
+                <DropdownMenu.Group>
                     {filteredColumns.map((column, index) => {
                         return (
-                            <DropdownMenuItem key={column.key} onSelect={() => onMenuSelect(column.value)}>
+                            <DropdownMenu.Item key={column.key} onSelect={() => onMenuSelect(column.value)}>
                                 {column.name}
-                            </DropdownMenuItem>
+                            </DropdownMenu.Item>
                         );
                     })}
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
+                </DropdownMenu.Group>
+            </DropdownMenu.Content>
         </DropdownMenu>
     );
 };

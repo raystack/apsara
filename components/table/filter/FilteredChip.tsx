@@ -3,13 +3,7 @@ import type { Column, RowData } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import React from "react";
 import { Box } from "~/components/box";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "~/components/dropdownmenu";
+import { DropdownMenu } from "~/components/dropdownmenu";
 import { Flex } from "~/components/flex";
 import { Text } from "~/components/text";
 import type { TableColumnMetadata } from "~/types/types";
@@ -114,20 +108,20 @@ type ColumnDropdownProps = {
 
 const ColumnDropdown = ({ index, name, data, onMenuSelect, selectKey }: ColumnDropdownProps) => (
     <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenu.Trigger asChild>
             <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{name}</Text>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-            <DropdownMenuGroup>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content align="start">
+            <DropdownMenu.Group>
                 {data.map((column, _index) => (
-                    <DropdownMenuItem
+                    <DropdownMenu.Item
                         key={`${column.key}_${_index}`}
                         onSelect={() => onMenuSelect(index, selectKey, column.value)}
                     >
                         {column.name}
-                    </DropdownMenuItem>
+                    </DropdownMenu.Item>
                 ))}
-            </DropdownMenuGroup>
-        </DropdownMenuContent>
+            </DropdownMenu.Group>
+        </DropdownMenu.Content>
     </DropdownMenu>
 );

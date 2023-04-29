@@ -3,7 +3,7 @@ import React from "react";
 import { CSS, styled } from "~/stitches.config";
 import { Flex } from "../flex";
 
-export const Badge = styled("span", {
+const StyledBadge = styled("span", {
     // Reset
     alignItems: "center",
     appearance: "none",
@@ -464,10 +464,14 @@ const StyledVerifiedBadge = styled("div", Flex, {
 
 type VerifiedBadgeProps = React.ComponentProps<typeof StyledVerifiedBadge> & { css?: CSS };
 
-export const VerifiedBadge = React.forwardRef<React.ElementRef<typeof StyledVerifiedBadge>, VerifiedBadgeProps>(
+const VerifiedBadge = React.forwardRef<React.ElementRef<typeof StyledVerifiedBadge>, VerifiedBadgeProps>(
     (props, forwardedRef) => (
         <StyledVerifiedBadge {...props} ref={forwardedRef}>
             <CheckIcon />
         </StyledVerifiedBadge>
     ),
 );
+
+export const Badge = Object.assign(StyledBadge, {
+    Verified: VerifiedBadge,
+});

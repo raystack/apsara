@@ -6,9 +6,6 @@ import { IconButton } from "../button";
 import { overlayStyles } from "../overlay";
 import { panelStyles } from "../panel";
 
-const Dialog = DialogPrimitive.Root;
-const DialogTrigger = DialogPrimitive.Trigger;
-
 const StyledOverlay = styled(DialogPrimitive.Overlay, overlayStyles, {
     position: "fixed",
     top: 0,
@@ -64,8 +61,10 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof StyledContent>, D
     ),
 );
 
-const DialogClose = DialogPrimitive.Close;
-const DialogTitle = DialogPrimitive.Title;
-const DialogDescription = DialogPrimitive.Description;
-
-export { Dialog, DialogTrigger, DialogContent, DialogClose, DialogTitle, DialogDescription };
+export const Dialog = Object.assign(DialogPrimitive.Root, {
+    Trigger: DialogPrimitive.Trigger,
+    Content: DialogContent,
+    Close: DialogPrimitive.Close,
+    Title: DialogPrimitive.Title,
+    Description: DialogPrimitive.Description,
+});

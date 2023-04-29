@@ -52,19 +52,19 @@ export const separatorCss = css({
     backgroundColor: "$slate6",
 });
 
-export const Menu = styled(MenuPrimitive.Root, menuCss);
-export const MenuContent = styled(MenuPrimitive.Content, panelStyles);
+const MenuRoot = styled(MenuPrimitive.Root, menuCss);
+const MenuContent = styled(MenuPrimitive.Content, panelStyles);
 
-export const MenuSeparator = styled(MenuPrimitive.Separator, separatorCss);
+const MenuSeparator = styled(MenuPrimitive.Separator, separatorCss);
 
-export const MenuItem = styled(MenuPrimitive.Item, itemCss);
+const MenuItem = styled(MenuPrimitive.Item, itemCss);
 
 const StyledMenuRadioItem = styled(MenuPrimitive.RadioItem, itemCss);
 
 type MenuRadioItemPrimitiveProps = React.ComponentProps<typeof MenuPrimitive.RadioItem>;
 type MenuRadioItemProps = MenuRadioItemPrimitiveProps & { css?: CSS };
 
-export const MenuRadioItem = React.forwardRef<React.ElementRef<typeof StyledMenuRadioItem>, MenuRadioItemProps>(
+const MenuRadioItem = React.forwardRef<React.ElementRef<typeof StyledMenuRadioItem>, MenuRadioItemProps>(
     ({ children, ...props }, forwardedRef) => (
         <StyledMenuRadioItem {...props} ref={forwardedRef}>
             <Box as="span" css={{ position: "absolute", left: "$1" }}>
@@ -91,20 +91,30 @@ const StyledMenuCheckboxItem = styled(MenuPrimitive.CheckboxItem, itemCss);
 type MenuCheckboxItemPrimitiveProps = React.ComponentProps<typeof MenuPrimitive.CheckboxItem>;
 type MenuCheckboxItemProps = MenuCheckboxItemPrimitiveProps & { css?: CSS };
 
-export const MenuCheckboxItem = React.forwardRef<
-    React.ElementRef<typeof StyledMenuCheckboxItem>,
-    MenuCheckboxItemProps
->(({ children, ...props }, forwardedRef) => (
-    <StyledMenuCheckboxItem {...props} ref={forwardedRef}>
-        <Box as="span" css={{ position: "absolute", left: "$1" }}>
-            <MenuPrimitive.ItemIndicator>
-                <CheckIcon />
-            </MenuPrimitive.ItemIndicator>
-        </Box>
-        {children}
-    </StyledMenuCheckboxItem>
-));
+const MenuCheckboxItem = React.forwardRef<React.ElementRef<typeof StyledMenuCheckboxItem>, MenuCheckboxItemProps>(
+    ({ children, ...props }, forwardedRef) => (
+        <StyledMenuCheckboxItem {...props} ref={forwardedRef}>
+            <Box as="span" css={{ position: "absolute", left: "$1" }}>
+                <MenuPrimitive.ItemIndicator>
+                    <CheckIcon />
+                </MenuPrimitive.ItemIndicator>
+            </Box>
+            {children}
+        </StyledMenuCheckboxItem>
+    ),
+);
 
-export const MenuLabel = styled(MenuPrimitive.Label, labelCss);
-export const MenuRadioGroup = styled(MenuPrimitive.RadioGroup, {});
-export const MenuGroup = styled(MenuPrimitive.Group, {});
+const MenuLabel = styled(MenuPrimitive.Label, labelCss);
+const MenuRadioGroup = styled(MenuPrimitive.RadioGroup, {});
+const MenuGroup = styled(MenuPrimitive.Group, {});
+
+export const Menu = Object.assign(MenuRoot, {
+    Content: MenuContent,
+    Separator: MenuSeparator,
+    Item: MenuItem,
+    RadioItem: MenuRadioItem,
+    CheckboxItem: MenuCheckboxItem,
+    Label: MenuLabel,
+    Group: MenuGroup,
+    RadioGroup: MenuRadioGroup,
+});

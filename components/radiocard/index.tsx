@@ -2,7 +2,7 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import React from "react";
 import { CSS, styled } from "~/stitches.config";
 
-export const RadioCardGroup = styled(RadioGroupPrimitive.Root, {
+const RadioGroupRoot = styled(RadioGroupPrimitive.Root, {
     display: "block",
 });
 
@@ -67,3 +67,7 @@ export const RadioCard = React.forwardRef<React.ElementRef<typeof StyledRadio>, 
         </StyledRadio>
     ),
 );
+
+export const RadioGroup = Object.assign(RadioGroupRoot, {
+    Card: RadioCard,
+});

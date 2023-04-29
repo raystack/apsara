@@ -7,7 +7,7 @@ const StyledAccordion = styled(AccordionPrimitive.Root, {});
 type AccordionPrimitiveProps = React.ComponentProps<typeof AccordionPrimitive.Root>;
 type AccordionProps = AccordionPrimitiveProps & { css?: CSS };
 
-export const Accordion = React.forwardRef<React.ElementRef<typeof StyledAccordion>, AccordionProps>(
+const AccordionRoot = React.forwardRef<React.ElementRef<typeof StyledAccordion>, AccordionProps>(
     ({ children, ...props }, forwardedRef) => (
         <StyledAccordion ref={forwardedRef} {...props} {...(props.type === "single" ? { collapsible: true } : {})}>
             {children}
@@ -73,7 +73,7 @@ const StyledTrigger = styled(AccordionPrimitive.Trigger, {
 type AccordionTriggerPrimitiveProps = React.ComponentProps<typeof AccordionPrimitive.Trigger>;
 type AccordionTriggerProps = AccordionTriggerPrimitiveProps & { css?: CSS };
 
-export const AccordionTrigger = React.forwardRef<React.ElementRef<typeof StyledTrigger>, AccordionTriggerProps>(
+const AccordionTrigger = React.forwardRef<React.ElementRef<typeof StyledTrigger>, AccordionTriggerProps>(
     ({ children, ...props }, forwardedRef) => (
         <StyledHeader>
             <StyledTrigger {...props} ref={forwardedRef}>
@@ -88,5 +88,8 @@ const StyledContent = styled(AccordionPrimitive.Content, {
     padding: "$2",
 });
 
-export const AccordionItem = StyledItem;
-export const AccordionContent = StyledContent;
+export const Accordion = Object.assign(AccordionRoot, {
+    Item: StyledItem,
+    Content: StyledContent,
+    Trigger: AccordionTrigger,
+});

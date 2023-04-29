@@ -2,7 +2,7 @@ import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import React from "react";
 import { CSS, styled, VariantProps } from "~/stitches.config";
 
-export const RadioGroup = styled(RadioGroupPrimitive.Root, {
+export const RadioRoot = styled(RadioGroupPrimitive.Root, {
     display: "flex",
 });
 
@@ -87,8 +87,13 @@ type RadioVariants = VariantProps<typeof StyledRadio>;
 type RadioGroupItemPrimitiveProps = React.ComponentProps<typeof RadioGroupPrimitive.Item>;
 type RadioProps = RadioGroupItemPrimitiveProps & RadioVariants & { css?: CSS };
 
-export const Radio = React.forwardRef<React.ElementRef<typeof StyledRadio>, RadioProps>((props, forwardedRef) => (
+const RadioItem = React.forwardRef<React.ElementRef<typeof StyledRadio>, RadioProps>((props, forwardedRef) => (
     <StyledRadio {...props} ref={forwardedRef}>
         <StyledIndicator />
     </StyledRadio>
 ));
+
+export const Radio = Object.assign(RadioRoot, {
+    Indicator: StyledIndicator,
+    Item: RadioItem,
+});

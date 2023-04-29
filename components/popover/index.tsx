@@ -4,9 +4,6 @@ import { CSS, styled } from "../../stitches.config";
 import { Box } from "../box";
 import { panelStyles } from "../panel";
 
-const Popover = PopoverPrimitive.Root;
-const PopoverTrigger = PopoverPrimitive.Trigger;
-
 const StyledContent = styled(PopoverPrimitive.Content, panelStyles, {
     minWidth: 200,
     minHeight: "$6",
@@ -34,6 +31,8 @@ const PopoverContent = React.forwardRef<React.ElementRef<typeof StyledContent>, 
     ),
 );
 
-const PopoverClose = PopoverPrimitive.Close;
-
-export { Popover, PopoverTrigger, PopoverContent, PopoverClose };
+export const Popover = Object.assign(PopoverPrimitive.Root, {
+    Trigger: PopoverPrimitive.Trigger,
+    Content: PopoverContent,
+    Close: PopoverPrimitive.Close,
+});
