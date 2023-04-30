@@ -10,7 +10,7 @@
     },
     "dependencies": {
         "@mdx-js/loader": "^2.3.0",
-        "@odpf/apsara": "0.9.2",
+        "@odpf/apsara": "0.9.3",
         "@radix-ui/react-slot": "^1.0.1",
         "copy-to-clipboard": "^3.3.3",
         "next": "13.2.4"

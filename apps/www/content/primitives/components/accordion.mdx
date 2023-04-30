@@ -5,11 +5,11 @@ description: A vertically stacked set of interactive headings that each reveal a
 ---
 <Preview>
   <Accordion type="single" css={{width: "100%"}}>
-    <AccordionItem value="accordion-one">
-      <AccordionTrigger>
+    <Accordion.Item value="accordion-one">
+      <Accordion.Trigger>
         Accordion one
-      </AccordionTrigger>
-      <AccordionContent>
+      </Accordion.Trigger>
+      <Accordion.Content>
         <Text size="3" css={{ lineHeight: '23px' }}>
           The other main improvement is with tables, which we'll probably use a lot. With
           horizontal overflow on small devices and when zoomed in, tables are a pain to
@@ -17,13 +17,13 @@ description: A vertically stacked set of interactive headings that each reveal a
           user when focused, which also allows keyboard users to navigate the overflow
           more easily.
         </Text>
-      </AccordionContent>
-    </AccordionItem>
-    <AccordionItem value="accordion-two">
-      <AccordionTrigger>
+      </Accordion.Content>
+    </Accordion.Item>
+    <Accordion.Item value="accordion-two">
+      <Accordion.Trigger>
       Accordion two
-      </AccordionTrigger>
-      <AccordionContent>
+      </Accordion.Trigger>
+      <Accordion.Content>
         <Text size="3" css={{ lineHeight: '23px' }}>
           The other main improvement is with tables, which we'll probably use a lot. With
           horizontal overflow on small devices and when zoomed in, tables are a pain to
@@ -31,8 +31,8 @@ description: A vertically stacked set of interactive headings that each reveal a
           user when focused, which also allows keyboard users to navigate the overflow
           more easily.
         </Text>
-      </AccordionContent>
-    </AccordionItem>
+      </Accordion.Content>
+    </Accordion.Item>
   </Accordion> 
 </Preview>
 1. Install the component from your command line.
@@ -46,11 +46,11 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@o
 
 ```tsx
 <Accordion type="single">
-  <AccordionItem value="accordion-one">
-    <AccordionTrigger>
+  <Accordion.Item value="accordion-one">
+    <Accordion.Trigger>
       Accordion one
-    </AccordionTrigger>
-    <AccordionContent>
+    </Accordion.Trigger>
+    <Accordion.Content>
       <Text size="3" css={{ lineHeight: '23px' }}>
         The other main improvement is with tables, which we'll probably use a lot. With
         horizontal overflow on small devices and when zoomed in, tables are a pain to
@@ -58,13 +58,13 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@o
         user when focused, which also allows keyboard users to navigate the overflow
         more easily.
       </Text>
-    </AccordionContent>
-  </AccordionItem>
-  <AccordionItem value="accordion-two">
-    <AccordionTrigger>
+    </Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item value="accordion-two">
+    <Accordion.Trigger>
      Accordion two
-    </AccordionTrigger>
-    <AccordionContent>
+    </Accordion.Trigger>
+    <Accordion.Content>
       <Text size="3" css={{ lineHeight: '23px' }}>
         The other main improvement is with tables, which we'll probably use a lot. With
         horizontal overflow on small devices and when zoomed in, tables are a pain to
@@ -72,7 +72,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@o
         user when focused, which also allows keyboard users to navigate the overflow
         more easily.
       </Text>
-    </AccordionContent>
-  </AccordionItem>
+    </Accordion.Content>
+  </Accordion.Item>
 </Accordion> 
 ```

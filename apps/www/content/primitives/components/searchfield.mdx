@@ -44,44 +44,44 @@ export const Searchbar = () => {
 A styled component using `TextField` internally. Custom props:
 
 <SimpleTable>
-  <SimpleThead>
-    <SimpleTr>
-      <SimpleTh>Prop</SimpleTh>
-      <SimpleTh>Type</SimpleTh>
-      <SimpleTh>Default</SimpleTh>
-      <SimpleTh>Explanation</SimpleTh>
-    </SimpleTr>
-  </SimpleThead>
-  <SimpleTbody>
-    <SimpleTr>
-      <SimpleTh>
+  <SimpleTable.Thead>
+    <SimpleTable.Tr>
+      <SimpleTable.Th>Prop</SimpleTable.Th>
+      <SimpleTable.Th>Type</SimpleTable.Th>
+      <SimpleTable.Th>Default</SimpleTable.Th>
+      <SimpleTable.Th>Explanation</SimpleTable.Th>
+    </SimpleTable.Tr>
+  </SimpleTable.Thead>
+  <SimpleTable.Body>
+    <SimpleTable.Tr>
+      <SimpleTable.Th>
         <Code>query</Code>
-      </SimpleTh>
-      <SimpleTd>
+      </SimpleTable.Th>
+      <SimpleTable.Td>
         <Code color="normal">string</Code>
-      </SimpleTd>
-      <SimpleTd>-</SimpleTd>
-      <SimpleTd><Text>The current text string.</Text></SimpleTd>
-    </SimpleTr>
-    <SimpleTr>
-      <SimpleTh>
+      </SimpleTable.Td>
+      <SimpleTable.Td>-</SimpleTable.Td>
+      <SimpleTable.Td><Text>The current text string.</Text></SimpleTable.Td>
+    </SimpleTable.Tr>
+    <SimpleTable.Tr>
+      <SimpleTable.Th>
         <Code>setQuery</Code>
-      </SimpleTh>
-      <SimpleTd>
+      </SimpleTable.Th>
+      <SimpleTable.Td>
         <Code color="normal">SetStateAction</Code>
-      </SimpleTd>
-      <SimpleTd>-</SimpleTd>
-      <SimpleTd><Text>React state setter called `onChange` with target value.</Text></SimpleTd>
-    </SimpleTr>
-    <SimpleTr>
-      <SimpleTh>
+      </SimpleTable.Td>
+      <SimpleTable.Td>-</SimpleTable.Td>
+      <SimpleTable.Td><Text>React state setter called `onChange` with target value.</Text></SimpleTable.Td>
+    </SimpleTable.Tr>
+    <SimpleTable.Tr>
+      <SimpleTable.Th>
         <Code>keyPressed</Code>
-      </SimpleTh>
-      <SimpleTd>
+      </SimpleTable.Th>
+      <SimpleTable.Td>
         <Code color="normal">KeyboardEventHandler</Code>
-      </SimpleTd>
-      <SimpleTd>-</SimpleTd>
-      <SimpleTd><Text>Keyboard event called `onKeyPress` with event.</Text></SimpleTd>
-    </SimpleTr>
-  </SimpleTbody>
+      </SimpleTable.Td>
+      <SimpleTable.Td>-</SimpleTable.Td>
+      <SimpleTable.Td><Text>Keyboard event called `onKeyPress` with event.</Text></SimpleTable.Td>
+    </SimpleTable.Tr>
+  </SimpleTable.Body>
 </SimpleTable>
