@@ -31,7 +31,8 @@ const PopoverContent = React.forwardRef<React.ElementRef<typeof StyledContent>, 
     ),
 );
 
-export const Popover = Object.assign(PopoverPrimitive.Root, {
+const PopoverPrimitiveRoot = styled(PopoverPrimitive.Root, {});
+export const Popover = Object.assign(PopoverPrimitiveRoot, {
     Trigger: PopoverPrimitive.Trigger,
     Content: PopoverContent,
     Close: PopoverPrimitive.Close,

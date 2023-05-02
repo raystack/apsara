@@ -61,7 +61,8 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof StyledContent>, D
     ),
 );
 
-export const Dialog = Object.assign(DialogPrimitive.Root, {
+const DialogPrimitiveRoot = styled(DialogPrimitive.Root, {});
+export const Dialog = Object.assign(DialogPrimitiveRoot, {
     Trigger: DialogPrimitive.Trigger,
     Content: DialogContent,
     Close: DialogPrimitive.Close,

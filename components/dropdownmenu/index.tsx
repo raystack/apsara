@@ -73,7 +73,8 @@ const DropdownMenuRadioItem = React.forwardRef<
     </StyledDropdownMenuRadioItem>
 ));
 
-export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
+const DropdownMenuPrimitiveRoot = styled(DropdownMenuPrimitive.Root, {});
+export const DropdownMenu = Object.assign(DropdownMenuPrimitiveRoot, {
     Trigger: DropdownMenuPrimitive.Trigger,
     Content: DropdownMenuContent,
     Item: DropdownMenuItem,

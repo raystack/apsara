@@ -120,7 +120,8 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
     ),
 );
 
-export const Sheet = Object.assign(DialogPrimitive.Root, {
+const SheetRoot = styled(DialogPrimitive.Root, {});
+export const Sheet = Object.assign(SheetRoot, {
     Trigger: DialogPrimitive.Trigger,
     Content: SheetContent,
     Close: DialogPrimitive.Close,

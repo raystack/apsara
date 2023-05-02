@@ -73,7 +73,8 @@ const ContextMenuRadioItem = React.forwardRef<
     </StyledContextMenuRadioItem>
 ));
 
-export const ContextMenu = Object.assign(ContextMenuPrimitive.Root, {
+const ContextMenuPrimitiveRoot = styled(ContextMenuPrimitive.Root, {});
+export const ContextMenu = Object.assign(ContextMenuPrimitiveRoot, {
     Trigger: ContextMenuPrimitive.Trigger,
     Content: ContextMenuContent,
     Item: ContextMenuItem,

@@ -41,7 +41,8 @@ const AlertDialogContent = React.forwardRef<React.ElementRef<typeof StyledConten
     ),
 );
 
-export const AlertDialog = Object.assign(AlertDialogPrimitive.Root, {
+const AlertDialogRoot = styled(AlertDialogPrimitive.Root, {});
+export const AlertDialog = Object.assign(AlertDialogRoot, {
     Content: AlertDialogContent,
     Trigger: AlertDialogPrimitive.Trigger,
     Title: AlertDialogPrimitive.Title,
