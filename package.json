@@ -1,7 +1,7 @@
 {
     "name": "apsara",
     "version": "1.0.0",
-    "description": "APSARA is an experimental and work in progress design system written in TypeScript on top of Ant Design",
+    "description": "APSARA is an experimental and work in progress design system written in TypeScript",
     "private": true,
     "workspaces": [
         "packages/*"

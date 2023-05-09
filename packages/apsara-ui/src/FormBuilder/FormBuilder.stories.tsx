@@ -53,6 +53,12 @@ export const Basic: FC = () => {
             required: true,
         },
         {
+            key: "is_enabled",
+            label: "Is Enabled",
+            name: ["is_enabled"],
+            widget: "switch",
+        },
+        {
             key: "duration",
             label: "Duration",
             name: ["resources", 0, "options", "duration"],
@@ -65,15 +71,20 @@ export const Basic: FC = () => {
             disabled: false,
             loading: true,
         },
+        {
+            key: "conditional_field",
+            label: "Service Account",
+            name: ["account_id"],
+            dependencies: [["duration"]],
+            depends: {
+                operator: "NotEq",
+                value: undefined,
+            },
+        },
     ];
 
     const handleSubmit = () => {
-        console.log("Account Type: ", form.getFieldValue(["account_type"]));
-        console.log("Sample Id: ", form.getFieldValue(["sample_id"]));
-        console.log("Account Id: ", form.getFieldValue(["account_id"]));
-        console.log("Duration: ", form.getFieldValue(["resources", 0, "options", "duration"]));
-        console.log("All:", form.getFieldsValue());
-        console.log("Submitted");
+        console.log("Submitting:", form.getFieldsValue());
     };
 
     return (

@@ -89,7 +89,7 @@ const FormBuilderField = ({
         return <Input.TextArea size="large" rows={rows} {...props} />;
     }
     if (widget === "switch") {
-        return <Switch {...props} />;
+        return <Switch {...props} checked={translateSwitchValue(props.value)} />;
     }
     if (widget === "datepicker") {
         const { value: timestamp, ...restProps } = props;
@@ -107,6 +107,19 @@ const FormBuilderField = ({
     }
 
     return <Input type={widgetType} {...props} />;
+};
+
+const translateSwitchValue = (value: string | boolean | 0 | 1) => {
+    switch (typeof value) {
+        case "string":
+            return value === "true" ? true : false;
+        case "number":
+            return value === 1 ? true : false;
+        case "boolean":
+            return value;
+        default:
+            return false;
+    }
 };
 
 FormBuilderField.defaultProps = {

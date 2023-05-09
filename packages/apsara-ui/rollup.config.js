@@ -30,10 +30,6 @@ export default {
             sourcemap: true,
         },
     ],
-    external: [
-        // Make antd library styles to be external to current project
-        /^antd[.]*/,
-    ],
     plugins: [
         multiInput(),
         // Prevents Rollup from bundling the peer dependencies

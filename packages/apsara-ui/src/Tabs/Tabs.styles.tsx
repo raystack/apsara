@@ -1,7 +1,4 @@
 import styled, { css } from "styled-components";
-// import { Tabs } from "antd";
-// import React from "react";
-// import { styled } from '@stitches/react';
 import { mauve } from "@radix-ui/colors";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 

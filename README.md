@@ -5,14 +5,14 @@
 <a href="https://goto.github.io/apsara/" target="_blank"><img src="https://raw.githubusercontent.com/storybooks/brand/master/badge/badge-storybook.svg"></a>
 
 
-Apsara 🧚‍♀️ is a React UI framework written in TypeScript on top of [Ant Design](https://ant.design/) to power the projects for Open Data Platform. Open Data Platform has a large number of enterprise-level products. With complex scenarios, designers and developers often need to respond fast due to frequent changes in product demands and concurrent R & D workflow. Many similar contents exist in the process. Through abstraction, we could obtain some stable and highly reusable components and pages on top of Ant Design.
+Apsara 🧚‍♀️ is a React UI framework written in TypeScript on top of [Radix UI](https://www.radix-ui.com/) to power the projects for Open Data Platform. Open Data Platform has a large number of enterprise-level products. With complex scenarios, designers and developers often need to respond fast due to frequent changes in product demands and concurrent R & D workflow. Many similar contents exist in the process. Through abstraction, we could obtain some stable and highly reusable components and pages on top of [Radix UI](https://www.radix-ui.com/).
   
 <p align="center"><img  width=80% src="./.storybook/images/banner.png" /></p>
 
 ## Key Features
 Discover why users choose Apsara as the design system for their projects
 
-* **Flexible** Apsara components are built on top of a Ant UI Primitive for endless composability.
+* **Flexible** Apsara components are built on top of a Radix UI Primitive for endless composability.
 * **Enterprise-grade** Apsara features a UI design language for enterprise-grade web applications.
 * **Abstraction** Apsara provides abstracted components for bulding complex data interfaces.
 
