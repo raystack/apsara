@@ -453,7 +453,7 @@ const StyledBadge = styled("span", {
 
 const StyledVerifiedBadge = styled("div", Flex, {
     alignItems: "center",
-    backgroundColor: "$blue9",
+    backgroundColor: "$gray9",
     borderRadius: "$round",
     color: "white",
     flexShrink: 0,

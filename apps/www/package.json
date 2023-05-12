@@ -13,7 +13,8 @@
         "@odpf/apsara": "0.9.3",
         "@radix-ui/react-slot": "^1.0.1",
         "copy-to-clipboard": "^3.3.3",
-        "next": "13.2.4"
+        "next": "13.2.4",
+        "tslib": "^2.5.0"
     },
     "devDependencies": {
         "@mapbox/rehype-prism": "^0.8.0",
