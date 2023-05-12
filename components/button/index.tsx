@@ -23,7 +23,7 @@ export const Button = styled("button", {
 
     // Custom
     px: "$2",
-    fontSize: "$4",
+    fontSize: "$1",
     fontWeight: 500,
 
     "&:disabled": {
@@ -48,18 +48,21 @@ export const Button = styled("button", {
         },
         size: {
             small: {
-                py: "$2",
+                py: "$1",
                 px: "$3",
+                height: "$6",
                 borderRadius: "$2",
             },
             normal: {
-                py: "$3",
+                py: "$2",
                 px: "$3",
+                height: "$8",
                 borderRadius: "$3",
             },
             large: {
                 py: "$3",
                 px: "$4",
+                height: "$9",
                 borderRadius: "$3",
             },
             circle: {
@@ -108,13 +111,13 @@ export const Button = styled("button", {
 
                 "&:hover": {
                     backgroundColor: "$gray7",
-                    border: "1px solid $gray4",
+                    border: "1px solid $gray7",
                     boxShadow: "0 1px 1px 0 $colors$slate8",
                 },
 
                 "&:active": {
                     backgroundColor: "$gray7",
-                    border: "1px solid $gray4",
+                    border: "1px solid $gray7",
                     boxShadow: "0 1px 1px 0 $colors$slate8",
                     "&:hover": {
                         boxShadow: "0 1px 1px 0 $colors$slate8",
@@ -141,7 +144,8 @@ export const Button = styled("button", {
             variant: "secondary",
             size: "normal",
             css: {
-                py: "$2",
+                py: "$1",
+                height: "$6",
             },
         },
     ],

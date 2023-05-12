@@ -10,6 +10,7 @@ export { Button } from "./components/button";
 export { Card } from "./components/card";
 export { Checkbox } from "./components/checkbox";
 export { Code } from "./components/code";
+export * from "./components/command";
 export { Container } from "./components/container";
 export { ContextMenu } from "./components/contextmenu";
 export { ControlGroup } from "./components/controlgroup";
