@@ -50,22 +50,16 @@ export const Button = styled("button", {
             small: {
                 py: "$2",
                 px: "$3",
-                fontSize: "$1",
-                lineHeight: "10px",
                 borderRadius: "$2",
             },
             normal: {
-                py: "$2",
+                py: "$3",
                 px: "$3",
-                fontSize: "$2",
-                lineHeight: "12px",
                 borderRadius: "$3",
             },
             large: {
-                py: "$2",
+                py: "$3",
                 px: "$4",
-                fontSize: "$4",
-                lineHeight: "16px",
                 borderRadius: "$3",
             },
             circle: {
@@ -75,19 +69,28 @@ export const Button = styled("button", {
                 borderRadius: "$round",
             },
         },
+        filled: {
+            false: {
+                backgroundColor: "transparent",
+            },
+        },
+        outline: {
+            true: {
+                border: "1px dashed $gray6",
+            },
+        },
         variant: {
             primary: {
                 backgroundColor: "$violet9",
-                boxShadow: "inset 0 0 0 1px $colors$violet9",
                 color: "$gray1",
-                "@hover": {
-                    "&:hover": {
-                        boxShadow: "inset 0 0 0 1px $colors$violet10",
-                    },
+                "&:hover": {
+                    backgroundColor: "$violet10",
+                },
+                "&:disabled": {
+                    backgroundColor: "$violet8",
                 },
                 "&:active": {
                     backgroundColor: "$violet10",
-                    boxShadow: "inset 0 0 0 1px $colors$violet8",
                 },
                 "&:focus": {
                     boxShadow: "inset 0 0 0 1px $colors$violet8, 0 0 0 1px $colors$violet8",
@@ -95,81 +98,56 @@ export const Button = styled("button", {
                 '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
                     {
                         backgroundColor: "$violet10",
-                        boxShadow: "inset 0 0 0 1px $colors$violet8",
                     },
             },
             secondary: {
-                backgroundColor: "$loContrast",
-                boxShadow: "inset 0 0 0 1px $colors$slate7",
-                color: "$hiContrast",
-                "@hover": {
-                    "&:hover": {
-                        boxShadow: "inset 0 0 0 1px $colors$slate8",
-                    },
-                },
-                "&:active": {
-                    backgroundColor: "$slate2",
-                    boxShadow: "inset 0 0 0 1px $colors$slate8",
-                },
-                "&:focus": {
-                    boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
-                },
-                '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
-                    {
-                        backgroundColor: "$slate4",
-                        boxShadow: "inset 0 0 0 1px $colors$slate8",
-                    },
-            },
-            gray: {
-                backgroundColor: "$loContrast",
-                boxShadow: "inset 0 0 0 1px $colors$slate7",
+                backgroundColor: "$gray1",
                 color: "$gray11",
-                "@hover": {
+                border: "1px solid $gray6",
+                boxShadow: "0 1px 1px 0 $colors$slate8",
+
+                "&:hover": {
+                    backgroundColor: "$gray7",
+                    border: "1px solid $gray4",
+                    boxShadow: "0 1px 1px 0 $colors$slate8",
+                },
+
+                "&:active": {
+                    backgroundColor: "$gray7",
+                    border: "1px solid $gray4",
+                    boxShadow: "0 1px 1px 0 $colors$slate8",
                     "&:hover": {
-                        boxShadow: "inset 0 0 0 1px $colors$slate8",
+                        boxShadow: "0 1px 1px 0 $colors$slate8",
                     },
                 },
-                "&:active": {
-                    backgroundColor: "$slate2",
-                    boxShadow: "inset 0 0 0 1px $colors$slate8",
+                "&:disabled": {
+                    backgroundColor: "$gray1",
+                    border: "1px solid $gray6",
+                    boxShadow: "0 1px 1px 0 $colors$bslate8lack",
                 },
                 "&:focus": {
-                    boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
+                    boxShadow: "0 1px 1px 0 $colors$slate8, 0 1px 1px 0 $colors$slate8",
                 },
                 '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
                     {
-                        backgroundColor: "$slate4",
-                        boxShadow: "inset 0 0 0 1px $colors$slate8",
+                        backgroundColor: "$gray7",
+                        boxShadow: "0 1px 1px 0 $colors$slate8",
                     },
             },
         },
     },
     compoundVariants: [
         {
-            variant: "gray",
-            ghost: "true",
+            variant: "secondary",
+            size: "normal",
             css: {
-                color: "$gray11",
-                bg: "transparent",
-                boxShadow: "none",
-
-                "&:hover": {
-                    color: "$gray11",
-                    bg: "transparent",
-                    boxShadow: "none",
-                },
-                "&:focus": {
-                    color: "$gray11",
-                    bg: "transparent",
-                    boxShadow: "none",
-                },
+                py: "$2",
             },
         },
     ],
 
     defaultVariants: {
         size: "normal",
-        variant: "gray",
     },
 });
 
