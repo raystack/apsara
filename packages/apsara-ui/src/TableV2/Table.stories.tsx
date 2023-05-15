@@ -21,6 +21,7 @@ function getData(page = 1) {
         };
     });
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dataSource = getData();
 
 export const TableWithoutData = () => (

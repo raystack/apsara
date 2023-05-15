@@ -98,7 +98,7 @@ export const NavigationItemWrapper = styled("span")<{ selected: boolean }>`
     padding: 0 0 0 14px;
     margin: 8px 0;
     height: 32px;
-    display: inline-flex;
+    display: inline;
     border-left: 2px solid transparent;
     overflow: visible;
     width: 100%;
