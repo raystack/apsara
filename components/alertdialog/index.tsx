@@ -6,10 +6,8 @@ import { panelStyles } from "../panel";
 
 const StyledOverlay = styled(AlertDialogPrimitive.Overlay, overlayStyles, {
     position: "fixed",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
+    inset: 0,
+    zIndex: 2,
 });
 
 export const StyledContent = styled(AlertDialogPrimitive.Content, panelStyles, {
@@ -21,6 +19,7 @@ export const StyledContent = styled(AlertDialogPrimitive.Content, panelStyles, {
     maxHeight: "85vh",
     padding: "$4",
     marginTop: "-5vh",
+    zIndex: 50,
 
     "&:focus": {
         outline: "none",
@@ -42,11 +41,20 @@ const AlertDialogContent = React.forwardRef<React.ElementRef<typeof StyledConten
 );
 
 const AlertDialogRoot = styled(AlertDialogPrimitive.Root, {});
+const AlertTitle = styled(AlertDialogPrimitive.Title, {
+    fontSize: "$9",
+    lineHeight: "32px",
+});
+const AlertDescription = styled(AlertDialogPrimitive.Description, {
+    fontSize: "$2",
+    lineHeight: "16px",
+    letterSpacing: "0.4px",
+});
 export const AlertDialog = Object.assign(AlertDialogRoot, {
     Content: AlertDialogContent,
     Trigger: AlertDialogPrimitive.Trigger,
-    Title: AlertDialogPrimitive.Title,
-    Description: AlertDialogPrimitive.Description,
+    Title: AlertTitle,
+    Description: AlertDescription,
     Action: AlertDialogPrimitive.Action,
     Cancel: AlertDialogPrimitive.Cancel,
 });

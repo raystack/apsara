@@ -1,0 +1,34 @@
+---
+title: Menu
+description: A visually persistent menu common in desktop applications that provides quick access to a consistent set of commands.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >  
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Menu } from '@odpf/apsara'
+
+<Menu open onOpenChange={() => {}} >
+  <Menu.Content css={{position: "relative"}}>
+    <Menu.Item onSelect={() => console.log('undo')}>Undo</Menu.Item>
+    <Menu.Item onSelect={() => console.log('redo')}>Redo</Menu.Item>
+    <Menu.Separator />
+    <Menu.Item disabled onSelect={() => console.log('cut')}>
+      Cut
+    </Menu.Item>
+    <Menu.Item onSelect={() => console.log('copy')}>Copy</Menu.Item>
+    <Menu.Item onSelect={() => console.log('paste')}>Paste</Menu.Item>
+  </Menu.Content>
+</Menu>
+```

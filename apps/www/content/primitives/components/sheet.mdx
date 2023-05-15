@@ -1,0 +1,50 @@
+---
+title: Sheet
+description: Extends the Dialog component to display content that complements the main content of the screen.
+---
+
+<Preview>
+  <Flex
+    css={{
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    <Sheet>
+      <Sheet.Trigger asChild>
+        <Button variant="secondary" outline>Open Sheet</Button>
+      </Sheet.Trigger>
+      <Sheet.Content></Sheet.Content>
+    </Sheet>
+    <Sheet>
+      <Sheet.Trigger asChild>
+        <Button variant="secondary" outline>Top</Button>
+      </Sheet.Trigger>
+      <Sheet.Content side="top"></Sheet.Content>
+    </Sheet>
+    <Sheet>
+      <Sheet.Trigger asChild>
+        <Button variant="secondary" outline>Right</Button>
+      </Sheet.Trigger>
+      <Sheet.Content side="right"></Sheet.Content>
+    </Sheet>
+    <Sheet>
+      <Sheet.Trigger asChild>
+        <Button variant="secondary" outline>Bottom</Button>
+      </Sheet.Trigger>
+      <Sheet.Content side="bottom"></Sheet.Content>
+    </Sheet>
+    <Sheet>
+      <Sheet.Trigger asChild>
+        <Button variant="secondary" outline>Left</Button>
+      </Sheet.Trigger>
+      <Sheet.Content side="left"></Sheet.Content>
+    </Sheet>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Sheet } from '@odpf/apsara'
+```

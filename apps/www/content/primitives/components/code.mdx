@@ -1,0 +1,28 @@
+---
+title: Code
+description: Displays a pre component
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <Text>
+    There are 5 variants to choose from. Use <Code>console.log('apsara').console</Code> is
+    for positive states.
+  </Text>
+  
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Code } from '@odpf/apsara'
+
+<Code>console.log('apsara').console</Code> 
+```

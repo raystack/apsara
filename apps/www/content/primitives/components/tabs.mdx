@@ -1,0 +1,64 @@
+---
+title: Tabs
+description: A set of layered sections of content—known as tab panels—that are displayed one at a time.
+
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <Tabs defaultValue="tab-one">
+    <Tabs.List>
+      <Tabs.Trigger value="tab-one">General</Tabs.Trigger>
+      <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
+      <Tabs.Trigger value="tab-three">Editor</Tabs.Trigger>
+      <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
+      <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
+    </Tabs.List>
+    
+  </Tabs>
+
+  <Tabs defaultValue="tab-one">
+    <Tabs.List pill>
+      <Tabs.Trigger value="tab-one">General</Tabs.Trigger>
+      <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
+      <Tabs.Trigger value="tab-three">Editor</Tabs.Trigger>
+      <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
+      <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
+    </Tabs.List>
+  </Tabs>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Tabs } from '@odpf/apsara'
+
+
+<Tabs defaultValue="tab-one">
+  <Tabs.List>
+    <Tabs.Trigger value="tab-one">General</Tabs.Trigger>
+    <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
+    <Tabs.Trigger value="tab-three">Editor</Tabs.Trigger>
+    <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
+    <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
+  </Tabs.List>
+  
+</Tabs>
+
+<Tabs defaultValue="tab-one">
+  <Tabs.List pill>
+    <Tabs.Trigger value="tab-one">General</Tabs.Trigger>
+    <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
+    <Tabs.Trigger value="tab-three">Editor</Tabs.Trigger>
+    <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
+    <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
+  </Tabs.List>
+</Tabs>
+```

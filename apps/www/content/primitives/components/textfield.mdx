@@ -1,0 +1,49 @@
+---
+title: Text Field
+description: Displays a form text field or a component that looks like a text field.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <TextField
+    type="email"
+    size="2"
+    placeholder="Email"
+    autoComplete="off"
+    css={{ mb: '$3' }}
+  />
+  <TextField
+    type="password"
+    size="2"
+    placeholder="Password"
+    autoComplete="off"
+    css={{ mb: '$3' }}
+  />
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { TextField } from '@odpf/apsara'
+
+
+<TextField
+  type="email"
+  size="2"
+  placeholder="Email"
+  autoComplete="off"
+/>
+<TextField
+  type="password"
+  size="2"
+  placeholder="Password"
+  autoComplete="off"
+/>
+```

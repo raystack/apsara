@@ -1,0 +1,59 @@
+---
+title: Alert Dialog
+description: A modal dialog that interrupts the user with important content and expects a response.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    
+    <AlertDialog>
+      <AlertDialog.Trigger>Open</AlertDialog.Trigger>
+      <AlertDialog.Content>
+        <AlertDialog.Title>Are you sure absolutely sure?</AlertDialog.Title>
+          <AlertDialog.Description>
+            This action cannot be undone. This will permanently delete your account
+          </AlertDialog.Description>
+          <Flex css={{ justifyContent: "end", alignItems: "center", gap:"$2"}}>
+            <AlertDialog.Cancel asChild>
+              <Button variant="secondary" outline>Cancel</Button>
+            </AlertDialog.Cancel>
+            <AlertDialog.Action asChild>
+              <Button variant="primary" size="small">Ok</Button>
+            </AlertDialog.Action>
+            
+          </Flex>
+      </AlertDialog.Content>
+    </AlertDialog>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { AlertDialog } from '@odpf/apsara'
+
+<AlertDialog>
+  <AlertDialog.Trigger>Open</AlertDialog.Trigger>
+  <AlertDialog.Content>
+    <AlertDialog.Title>Are you sure absolutely sure?</AlertDialog.Title>
+      <AlertDialog.Description>
+        This action cannot be undone. This will permanently delete your account
+      </AlertDialog.Description>
+      <Flex css={{ justifyContent: "end", alignItems: "center", gap:"$2"}}>
+        <AlertDialog.Cancel asChild>
+          <Button variant="secondary" outline>Cancel</Button>
+        </AlertDialog.Cancel>
+        <AlertDialog.Action asChild>
+          <Button variant="primary" size="small">Ok</Button>
+        </AlertDialog.Action>
+        
+      </Flex>
+  </AlertDialog.Content>
+</AlertDialog>
+```

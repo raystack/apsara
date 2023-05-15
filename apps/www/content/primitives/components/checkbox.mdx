@@ -1,0 +1,26 @@
+---
+title: Checkbox
+description: A control that allows the user to toggle between checked and not checked.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+   <Checkbox css={{ mr: '$5' }} />
+   <Checkbox size="2" css={{ mr: '$5' }} />
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Checkbox } from '@odpf/apsara'
+
+<Checkbox css={{ mr: '$5' }} />
+<Checkbox size="2" css={{ mr: '$5' }} />
+```

@@ -25,7 +25,7 @@ export const TextField = styled("input", {
     fontVariantNumeric: "tabular-nums",
 
     "&:-webkit-autofill": {
-        boxShadow: "inset 0 0 0 1px $colors$blue6, inset 0 0 0 100px $colors$blue3",
+        boxShadow: "inset 0 0 0 1px $colors$violet6, inset 0 0 0 100px $colors$violet3",
     },
 
     "&:-webkit-autofill::first-line": {
@@ -34,10 +34,10 @@ export const TextField = styled("input", {
     },
 
     "&:focus": {
-        boxShadow: "inset 0px 0px 0px 1px $colors$blue8, 0px 0px 0px 1px $colors$blue8",
+        boxShadow: "inset 0px 0px 0px 1px $colors$violet8, 0px 0px 0px 1px $colors$violet8",
         "&:-webkit-autofill": {
             boxShadow:
-                "inset 0px 0px 0px 1px $colors$blue8, 0px 0px 0px 1px $colors$blue8, inset 0 0 0 100px $colors$blue3",
+                "inset 0px 0px 0px 1px $colors$violet8, 0px 0px 0px 1px $colors$violet8, inset 0 0 0 100px $colors$violet3",
         },
     },
     "&::placeholder": {
@@ -63,7 +63,7 @@ export const TextField = styled("input", {
         size: {
             "1": {
                 borderRadius: "$1",
-                height: "$5",
+                height: "$8",
                 fontSize: "$2",
                 px: "$1",
                 lineHeight: "$sizes$5",
@@ -73,7 +73,7 @@ export const TextField = styled("input", {
             },
             "2": {
                 borderRadius: "$2",
-                height: "$6",
+                height: "$8",
                 fontSize: "$3",
                 px: "$2",
                 lineHeight: "$sizes$6",
@@ -93,7 +93,7 @@ export const TextField = styled("input", {
                 },
                 "&:focus": {
                     backgroundColor: "$loContrast",
-                    boxShadow: "inset 0px 0px 0px 1px $colors$blue8, 0px 0px 0px 1px $colors$blue8",
+                    boxShadow: "inset 0px 0px 0px 1px $colors$violet8, 0px 0px 0px 1px $colors$violet8",
                 },
                 "&:disabled": {
                     backgroundColor: "transparent",

@@ -3,6 +3,7 @@ import React from "react";
 import { styled } from "~/stitches.config";
 import { Box } from "../box";
 import { Text } from "../text";
+export { TooltipProvider } from "@radix-ui/react-tooltip";
 
 type TooltipPrimitiveProps = React.ComponentProps<typeof TooltipPrimitive.Root>;
 type TooltipProps = TooltipPrimitiveProps &

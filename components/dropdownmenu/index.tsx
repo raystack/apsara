@@ -7,7 +7,11 @@ import { Flex } from "../flex";
 import { itemCss, labelCss, menuCss, separatorCss } from "../menu";
 import { panelStyles } from "../panel";
 
-const StyledContent = styled(DropdownMenuPrimitive.Content, menuCss, panelStyles);
+const StyledContent = styled(DropdownMenuPrimitive.Content, menuCss, panelStyles, {
+    zIndex: 50,
+    borderRadius: "2px",
+    boxShadow: "0px 0px 6px 1px #E2E2E2",
+});
 
 type DropdownMenuContentPrimitiveProps = React.ComponentProps<typeof DropdownMenuPrimitive.Content>;
 export type DropdownMenuContentProps = DropdownMenuContentPrimitiveProps & { css?: CSS };
@@ -21,7 +25,9 @@ const DropdownMenuContent = React.forwardRef<React.ElementRef<typeof StyledConte
 );
 
 const DropdownMenuItem = styled(DropdownMenuPrimitive.Item, itemCss);
-const DropdownMenuGroup = styled(DropdownMenuPrimitive.Group, {});
+const DropdownMenuGroup = styled(DropdownMenuPrimitive.Group, {
+    padding: "$2 $3",
+});
 const DropdownMenuLabel = styled(DropdownMenuPrimitive.Label, labelCss);
 const DropdownMenuSeparator = styled(DropdownMenuPrimitive.Separator, separatorCss);
 
@@ -35,7 +41,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     DialogMenuCheckboxItemProps
 >(({ children, ...props }, forwardedRef) => (
     <StyledDropdownMenuCheckboxItem {...props} ref={forwardedRef}>
-        <Box as="span" css={{ position: "absolute", left: "$1" }}>
+        <Box as="span" css={{ position: "absolute", left: "-$2" }}>
             <DropdownMenuPrimitive.ItemIndicator>
                 <CheckIcon />
             </DropdownMenuPrimitive.ItemIndicator>
@@ -55,7 +61,7 @@ const DropdownMenuRadioItem = React.forwardRef<
     DialogMenuRadioItemProps
 >(({ children, ...props }, forwardedRef) => (
     <StyledDropdownMenuRadioItem {...props} ref={forwardedRef}>
-        <Box as="span" css={{ position: "absolute", left: "$1" }}>
+        <Box as="span" css={{ position: "absolute", left: "-$2" }}>
             <DropdownMenuPrimitive.ItemIndicator>
                 <Flex css={{ width: "$3", height: "$3", alignItems: "center", justifyContent: "center" }}>
                     <Box

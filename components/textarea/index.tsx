@@ -19,7 +19,7 @@ export const TextArea = styled("textarea", {
     resize: "vertical",
 
     "&:focus": {
-        boxShadow: "inset 0px 0px 0px 1px $colors$blue8, 0px 0px 0px 1px $colors$blue8",
+        boxShadow: "inset 0px 0px 0px 1px $colors$violet8, 0px 0px 0px 1px $colors$violet8",
         zIndex: "1",
     },
     "&::placeholder": {

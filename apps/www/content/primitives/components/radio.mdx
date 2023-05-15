@@ -1,0 +1,30 @@
+---
+title: Radio
+description: 
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <Radio defaultValue="1">
+    <Radio.Item value="1" css={{ mr: '$5' }} />
+    <Radio.Item value="2" size="2" css={{ mr: '$5' }} />
+  </Radio>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Radio } from '@odpf/apsara'
+
+<Radio defaultValue="1">
+  <Radio.Item value="1" css={{ mr: '$5' }} />
+  <Radio.Item value="2" size="2" css={{ mr: '$5' }} />
+</Radio>
+```

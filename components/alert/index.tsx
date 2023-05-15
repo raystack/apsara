@@ -1,6 +1,8 @@
+import React from "react";
 import { styled } from "~/stitches.config";
+import { Text } from "../text";
 
-export const Alert = styled("div", {
+export const StyledRoot = styled("div", {
     // Reset
     boxSizing: "border-box",
     "&::before": {
@@ -10,40 +12,60 @@ export const Alert = styled("div", {
         boxSizing: "border-box",
     },
 
-    border: "1px solid",
+    border: "1px solid $gray8",
     borderRadius: "$2",
+    padding: "$2",
 
     variants: {
-        size: {
-            "1": {
-                p: "$3",
-            },
-        },
         variant: {
-            loContrast: {
-                backgroundColor: "$loContrast",
-                borderColor: "$slate6",
-            },
             gray: {
-                backgroundColor: "$slate2",
-                borderColor: "$slate6",
+                "&::before": {
+                    boxShadow: "inset 0 0 0 1px $colors$slate9",
+                },
             },
-            blue: {
-                backgroundColor: "$blue2",
-                borderColor: "$blue6",
+            info: {
+                "&::before": {
+                    boxShadow: "inset 0 0 0 1px $colors$violet9",
+                },
             },
-            green: {
-                backgroundColor: "$green2",
-                borderColor: "$green6",
+            success: {
+                "&::before": {
+                    boxShadow: "inset 0 0 0 1px $colors$green9",
+                },
             },
-            red: {
-                backgroundColor: "$red2",
-                borderColor: "$red6",
+            warning: {
+                "&::before": {
+                    boxShadow: "inset 0 0 0 1px $colors$orange9",
+                },
+            },
+            error: {
+                "&::before": {
+                    boxShadow: "inset 0 0 0 1px $colors$red9",
+                },
             },
         },
     },
-    defaultVariants: {
-        size: "1",
-        variant: "gray",
-    },
+});
+const AlertRoot = React.forwardRef<React.ElementRef<typeof StyledRoot>, React.ComponentProps<typeof StyledRoot>>(
+    ({ children, ...props }, forwardedRef) => (
+        <StyledRoot role="alert" ref={forwardedRef} {...props}>
+            {children}
+        </StyledRoot>
+    ),
+);
+AlertRoot.displayName = "Alert";
+
+const AlertTitle = React.forwardRef<React.ElementRef<typeof Text>, React.ComponentProps<typeof Text>>(
+    ({ className, ...props }, ref) => <Text ref={ref} css={{ fontWeight: "500" }} {...props} />,
+);
+AlertTitle.displayName = "AlertTitle";
+
+const AlertDescription = React.forwardRef<React.ElementRef<typeof Text>, React.ComponentProps<typeof Text>>(
+    ({ className, ...props }, ref) => <Text ref={ref} {...props} />,
+);
+AlertDescription.displayName = "AlertDescription";
+
+export const Alert = Object.assign(AlertRoot, {
+    Description: AlertDescription,
+    Title: AlertTitle,
 });

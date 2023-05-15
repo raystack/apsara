@@ -2,7 +2,6 @@ import { styled } from "~/stitches.config";
 
 export const Card = styled("div", {
     appearance: "none",
-    border: "none",
     boxSizing: "border-box",
     font: "inherit",
     lineHeight: "1",
@@ -12,12 +11,16 @@ export const Card = styled("div", {
     verticalAlign: "middle",
     WebkitTapHighlightColor: "rgba(0, 0, 0, 0)",
 
-    backgroundColor: "$panel",
-    display: "block",
+    backgroundColor: "$gray1",
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
     textDecoration: "none",
     color: "inherit",
     flexShrink: 0,
-    borderRadius: "$3",
+    p: "$4",
+    borderRadius: "$1",
+    border: "1px solid $gray4",
     position: "relative",
 
     "&::before": {
@@ -28,8 +31,7 @@ export const Card = styled("div", {
         right: 0,
         bottom: 0,
         left: 0,
-        boxShadow: "inset 0 0 0 1px rgba(0,0,0,.1)",
-        borderRadius: "$3",
+        borderRadius: "$1",
         pointerEvents: "none",
     },
 
@@ -39,13 +41,13 @@ export const Card = styled("div", {
                 "@hover": {
                     "&:hover": {
                         "&::before": {
-                            boxShadow: "inset 0 0 0 1px rgba(0,0,0,.2)",
+                            boxShadow: "0px 0px 6px 1px #E2E2E2",
                         },
                     },
                 },
                 "&:focus": {
                     "&::before": {
-                        boxShadow: "inset 0 0 0 1px $colors$blue8, 0 0 0 1px $colors$blue8",
+                        boxShadow: "0px 0px 6px 1px #E2E2E2",
                     },
                 },
             },
@@ -54,7 +56,7 @@ export const Card = styled("div", {
                 transition: "transform 200ms cubic-bezier(0.22, 1, 0.36, 1), background-color 25ms linear",
                 willChange: "transform",
                 "&::before": {
-                    boxShadow: "0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)",
+                    boxShadow: "0px 0px 6px 1px #E2E2E2",
                     opacity: "0",
                     transition: "all 200ms cubic-bezier(0.22, 1, 0.36, 1)",
                 },
@@ -71,23 +73,23 @@ export const Card = styled("div", {
                     transform: "translateY(0)",
                     transition: "none",
                     "&::before": {
-                        boxShadow: "0px 5px 16px -5px rgba(22, 23, 24, 0.35), 0px 5px 10px -7px rgba(22, 23, 24, 0.2)",
+                        boxShadow: "0px 0px 6px 1px #E2E2E2",
                         opacity: "1",
                     },
                 },
                 "&:focus": {
-                    boxShadow: "inset 0 0 0 1px $colors$blue8, 0 0 0 1px $colors$blue8",
+                    boxShadow: "0px 0px 6px 1px #E2E2E2",
                 },
             },
             active: {
                 transform: "translateY(0)",
                 transition: "none",
                 "&::before": {
-                    boxShadow: "0px 5px 16px -5px rgba(22, 23, 24, 0.35), 0px 5px 10px -7px rgba(22, 23, 24, 0.2)",
+                    boxShadow: "0px 0px 6px 1px #E2E2E2",
                     opacity: "1",
                 },
                 "&:focus": {
-                    boxShadow: "inset 0 0 0 1px $colors$blue8, 0 0 0 1px $colors$blue8",
+                    boxShadow: "0px 0px 6px 1px #E2E2E2",
                 },
             },
         },

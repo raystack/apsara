@@ -1,0 +1,57 @@
+---
+title: Command
+description: Fast, composable, unstyled command menu for React.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    <Command css={{background: "#FFF", width:"450px"}}>
+      <Command.Input placeholder="Type a command or search..." />
+      <Command.List>
+        <Command.Empty>No results found.</Command.Empty>
+        <Command.Group heading="Suggestions">
+          <Command.Item>Calendar</Command.Item>
+          <Command.Item>Search Emoji</Command.Item>
+          <Command.Item>Calculator</Command.Item>
+        </Command.Group>
+        <Command.Separator />
+        <Command.Group heading="Settings">
+          <Command.Item>Profile</Command.Item>
+          <Command.Item>Billing</Command.Item>
+          <Command.Item>Settings</Command.Item>
+        </Command.Group>
+      </Command.List>
+    </Command>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Command } from '@odpf/apsara'
+
+
+<Command css={{background: "#FFF", width:"450px"}}>
+  <Command.Input placeholder="Type a command or search..." />
+  <Command.List>
+    <Command.Empty>No results found.</Command.Empty>
+    <Command.Group heading="Suggestions">
+      <Command.Item>Calendar</Command.Item>
+      <Command.Item>Search Emoji</Command.Item>
+      <Command.Item>Calculator</Command.Item>
+    </Command.Group>
+    <Command.Separator />
+    <Command.Group heading="Settings">
+      <CommandItem>Profile</CommandItem>
+      <CommandItem>Billing</CommandItem>
+      <CommandItem>Settings</CommandItem>
+    </Command.Group>
+  </Command.List>
+</Command>
+```

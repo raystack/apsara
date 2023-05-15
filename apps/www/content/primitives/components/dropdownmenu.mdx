@@ -1,0 +1,48 @@
+---
+title: Dropdown Menu
+description: Displays a menu to the user — such as a set of actions or functions — triggered by a button.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    <DropdownMenu>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="secondary" outline>Dropdown button</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content align="end">
+        <DropdownMenu.Group>
+          <DropdownMenu.Item>Item</DropdownMenu.Item>
+          <DropdownMenu.Item>Item</DropdownMenu.Item>
+          <DropdownMenu.Item>Item</DropdownMenu.Item>
+        </DropdownMenu.Group>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Group>
+          <DropdownMenu.CheckboxItem>Item</DropdownMenu.CheckboxItem>
+          <DropdownMenu.CheckboxItem checked>Item</DropdownMenu.CheckboxItem>
+          <DropdownMenu.CheckboxItem>Item</DropdownMenu.CheckboxItem>
+        </DropdownMenu.Group>
+        <DropdownMenu.Separator />
+        <DropdownMenu.Group>
+          <DropdownMenu.Label>Choose one</DropdownMenu.Label>
+          <DropdownMenu.RadioGroup value="one">
+            <DropdownMenu.RadioItem value="one">Item</DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="two">Item</DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="three">Item</DropdownMenu.RadioItem>
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Group>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { DropdownMenu } from '@odpf/apsara'
+```

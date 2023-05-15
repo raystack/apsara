@@ -2,11 +2,13 @@ import * as Apsara from "@odpf/apsara";
 import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { Frontmatter } from "~/types/frontmatter";
+import Icons from "./icons";
 import { Preview } from "./preview";
 import { Searchbar } from "./searchbar";
 
 export const components = {
     ...Apsara,
+    ...Icons,
     Preview: Preview,
     Searchbar: Searchbar,
     h1: (props: any) => (
@@ -136,27 +138,6 @@ export const components = {
                     lineHeight: "23px",
                     margin: 0,
                 },
-            }}
-            {...props}
-        />
-    ),
-    Alert: (props: any) => (
-        <Apsara.Box
-            as="aside"
-            css={{
-                display: "block",
-                my: "$6",
-                py: "$2",
-                px: "$5",
-                borderRadius: "$3",
-                bc: "$yellow2",
-                boxShadow: "0 0 0 1px $colors$yellow5",
-                "&, & p": {
-                    fontSize: "$3",
-                    color: "$yellow11",
-                    lineHeight: "23px",
-                },
-                "& p": { margin: 0 },
             }}
             {...props}
         />

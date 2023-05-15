@@ -1,0 +1,45 @@
+---
+title: Popover
+description: Displays rich content in a portal, triggered by a button.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <Popover>
+    <Popover.Trigger asChild>
+      <Button variant="secondary" outline>Popover</Button>
+    </Popover.Trigger>
+    <Popover.Content css={{ padding: '$3' }} side="top">
+      <Text size="2" css={{ lineHeight: '18px' }}>
+        The other main improvement is with tables, which we'll probably use a lot. With
+        horizontal overflow on small devices and when zoomed in.
+      </Text>
+    </Popover.Content>
+  </Popover>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Popover } from '@odpf/apsara'
+
+
+<Popover>
+    <Popover.Trigger asChild>
+      <Button variant="secondary" outline>Popover</Button>
+    </Popover.Trigger>
+    <Popover.Content css={{ padding: '$3' }} side="top">
+      <Text size="2" css={{ lineHeight: '18px' }}>
+        The other main improvement is with tables, which we'll probably use a lot. With
+        horizontal overflow on small devices and when zoomed in.
+      </Text>
+    </Popover.Content>
+  </Popover>
+```

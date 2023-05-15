@@ -28,10 +28,10 @@ type CommandPrimitiveProps = React.ComponentProps<typeof CommandPrimitive>;
 type CommandPrimitiveVariants = VariantProps<typeof CommandPrimitive>;
 type CommandProps = CommandPrimitiveProps & CommandPrimitiveVariants & { css?: CSS };
 
-const Command = React.forwardRef<React.ElementRef<typeof CommandPrimitive>, CommandProps>(
+const CommandRoot = React.forwardRef<React.ElementRef<typeof CommandPrimitive>, CommandProps>(
     ({ className, ...props }, ref) => <StyledCommandPrimitive ref={ref} {...props} />,
 );
-Command.displayName = CommandPrimitive.displayName;
+CommandRoot.displayName = CommandPrimitive.displayName;
 
 interface CommandDialogProps extends DialogProps {}
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
@@ -194,14 +194,13 @@ const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanE
 };
 CommandShortcut.displayName = "CommandShortcut";
 
-export {
-    Command,
-    CommandDialog,
-    CommandInput,
-    CommandList,
-    CommandEmpty,
-    CommandGroup,
-    CommandItem,
-    CommandShortcut,
-    CommandSeparator,
-};
+export const Command = Object.assign(CommandRoot, {
+    Dialog: CommandDialog,
+    Input: CommandInput,
+    List: CommandList,
+    Empty: CommandEmpty,
+    Group: CommandGroup,
+    Item: CommandItem,
+    Shortcut: CommandShortcut,
+    Separator: CommandSeparator,
+});

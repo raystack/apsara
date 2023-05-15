@@ -46,12 +46,12 @@ export const EmptyState = styled("div", {
         },
         a: {
             cursor: "pointer",
-            color: "$blue11",
+            color: "$violet11",
             fontWeight: 500,
             padding: 4,
             borderRadius: 6,
             "&:hover": {
-                background: "$blue3",
+                background: "$violet3",
             },
         },
     },

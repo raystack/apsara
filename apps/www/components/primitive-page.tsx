@@ -1,4 +1,5 @@
 import { Badge, Box, Container, Flex, ScrollArea, styled, Text } from "@odpf/apsara";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { primitivesRoutes, RouteProps } from "~/utils/routes";
@@ -30,14 +31,11 @@ type NavItemProps = {
 };
 
 export function NavItem({ children, active, disabled, href, ...props }: NavItemProps) {
-    const isExternal = href.startsWith("http");
-
     return (
         <Box as="span">
             <Box
                 {...props}
-                href={href}
-                as={disabled ? "div" : "a"}
+                
                 css={{
                     display: "flex",
                     alignItems: "center",
@@ -63,7 +61,7 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
                     },
                 }}
             >
-                {children}
+                <Link href={href} style={{ textDecoration: "none"}}>{children}</Link>
             </Box>
         </Box>
     );
@@ -141,7 +139,6 @@ function ContentWrapper(props: any) {
 }
 
 export function PrimitivePage({ children }: { children: React.ReactNode }) {
-    const router = useRouter();
     const currentPageSlug = useCurrentPageSlug();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

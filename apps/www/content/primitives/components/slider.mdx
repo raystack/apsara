@@ -1,0 +1,27 @@
+---
+title: Slider
+description: An input where the user selects a value from within a given range.
+---
+
+<Preview>
+  <Grid
+    css={{
+      width:'300px',
+      gap: "$4",
+    }}
+  >
+    <Slider defaultValue={[50]} />
+    <Slider defaultValue={[25, 75]} />
+    <Slider defaultValue={[50]} orientation="vertical" css={{ height: 75 }} />
+  </Grid>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Slider } from '@odpf/apsara'
+
+<Slider defaultValue={[50]} />
+<Slider defaultValue={[25, 75]} />
+<Slider defaultValue={[50]} orientation="vertical" css={{ height: 75 }} />
+```

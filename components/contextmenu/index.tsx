@@ -7,7 +7,9 @@ import { Flex } from "../flex";
 import { itemCss, labelCss, menuCss, separatorCss } from "../menu";
 import { panelStyles } from "../panel";
 
-const StyledContent = styled(ContextMenuPrimitive.Content, menuCss, panelStyles);
+const StyledContent = styled(ContextMenuPrimitive.Content, menuCss, panelStyles, {
+    zIndex: 50,
+});
 
 type ContextMenuContentPrimitiveProps = React.ComponentProps<typeof ContextMenuPrimitive.Content>;
 type ContextMenuContentProps = ContextMenuContentPrimitiveProps & { css?: CSS };
@@ -21,7 +23,9 @@ const ContextMenuContent = React.forwardRef<React.ElementRef<typeof StyledConten
 );
 
 const ContextMenuItem = styled(ContextMenuPrimitive.Item, itemCss);
-const ContextMenuGroup = styled(ContextMenuPrimitive.Group, {});
+const ContextMenuGroup = styled(ContextMenuPrimitive.Group, {
+    padding: "$2 $3",
+});
 const ContextMenuLabel = styled(ContextMenuPrimitive.Label, labelCss);
 const ContextMenuSeparator = styled(ContextMenuPrimitive.Separator, separatorCss);
 
@@ -35,7 +39,7 @@ const ContextMenuCheckboxItem = React.forwardRef<
     ContextMenuCheckboxItemProps
 >(({ children, ...props }, forwardedRef) => (
     <StyledContextMenuCheckboxItem {...props} ref={forwardedRef}>
-        <Box as="span" css={{ position: "absolute", left: "$1" }}>
+        <Box as="span" css={{ position: "absolute", left: "-$2" }}>
             <ContextMenuPrimitive.ItemIndicator>
                 <CheckIcon />
             </ContextMenuPrimitive.ItemIndicator>
@@ -55,7 +59,7 @@ const ContextMenuRadioItem = React.forwardRef<
     ContextMenuRadioItemProps
 >(({ children, ...props }, forwardedRef) => (
     <StyledContextMenuRadioItem {...props} ref={forwardedRef}>
-        <Box as="span" css={{ position: "absolute", left: "$1" }}>
+        <Box as="span" css={{ position: "absolute", left: "-$2" }}>
             <ContextMenuPrimitive.ItemIndicator>
                 <Flex css={{ width: "$3", height: "$3", alignItems: "center", justifyContent: "center" }}>
                     <Box

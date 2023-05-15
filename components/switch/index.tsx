@@ -5,11 +5,11 @@ import { CSS, styled, VariantProps } from "~/stitches.config";
 const StyledThumb = styled(SwitchPrimitive.Thumb, {
     position: "absolute",
     left: 0,
-    width: 13,
-    height: 13,
-    backgroundColor: "white",
+    width: 16,
+    height: 16,
+    backgroundColor: "$gray1",
     borderRadius: "$round",
-    boxShadow: "rgba(0, 0, 0, 0.3) 0px 0px 1px, rgba(0, 0, 0, 0.2) 0px 1px 2px;",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
     transition: "transform 100ms cubic-bezier(0.22, 1, 0.36, 1)",
     transform: "translateX(1px)",
     willChange: "transform",
@@ -39,42 +39,24 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
     outline: "none",
     WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
-    backgroundColor: "$slate5",
-    borderRadius: "$pill",
+    width: "34px",
+    height: "20px",
+    backgroundColor: "$gray9",
+    borderRadius: "16px",
     position: "relative",
-    "&:focus": {
-        boxShadow: "0 0 0 2px $colors$slate8",
-    },
+    "&:focus": {},
 
     '&[data-state="checked"]': {
-        backgroundColor: "$blue9",
-        "&:focus": {
-            boxShadow: "0 0 0 2px $colors$blue8",
-        },
+        backgroundColor: "$violet9",
     },
 
-    variants: {
-        size: {
-            "1": {
-                width: "$5",
-                height: "$3",
-            },
-            "2": {
-                width: "$7",
-                height: "$5",
-                [`& ${StyledThumb}`]: {
-                    width: 21,
-                    height: 21,
-                    transform: "translateX(2px)",
-                    '&[data-state="checked"]': {
-                        transform: "translateX(22px)",
-                    },
-                },
-            },
+    [`& ${StyledThumb}`]: {
+        width: 16,
+        height: 16,
+        transform: "translateX(2px)",
+        '&[data-state="checked"]': {
+            transform: "translateX(16px)",
         },
-    },
-    defaultVariants: {
-        size: "1",
     },
 });
 

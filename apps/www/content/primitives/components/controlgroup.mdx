@@ -1,0 +1,44 @@
+---
+title: ControlGroup
+description: 
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    <ControlGroup>
+      <Button>Button</Button>
+      <Button>Button</Button>
+      <Button>Button</Button>
+      <Button>Button</Button>
+    </ControlGroup>
+
+    <ControlGroup css={{ mt: '$6' }}>
+      <TextField size="2" placeholder="Hello world" />
+      <Button size="2">Button</Button>
+    </ControlGroup>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { ControlGroup } from '@odpf/apsara'
+
+<ControlGroup>
+  <Button>Button</Button>
+  <Button>Button</Button>
+  <Button>Button</Button>
+  <Button>Button</Button>
+</ControlGroup>
+
+<ControlGroup>
+  <TextField size="2" placeholder="Hello world" />
+  <Button size="2">Button</Button>
+</ControlGroup>
+```

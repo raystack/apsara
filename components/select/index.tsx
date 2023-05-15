@@ -4,19 +4,16 @@ import { CSS, styled } from "~/stitches.config";
 
 const SelectWrapper = styled("div", {
     backgroundColor: "$loContrast",
-    borderRadius: "$2",
+
+    borderRadius: "$1",
+    color: "$gray12",
+    fontSize: "$2",
     boxShadow: "inset 0 0 0 1px $colors$slate7",
-    color: "$hiContrast",
-    fontFamily: "$untitled",
-    fontSize: "$1",
     fontVariantNumeric: "tabular-nums",
     fontWeight: 400,
-    height: "$5",
     flexShrink: 0,
-
     "&:focus-within": {
         zIndex: 1,
-        boxShadow: "inset 0px 0px 0px 1px $colors$blue8, 0px 0px 0px 1px $colors$blue8",
     },
 });
 
@@ -30,9 +27,9 @@ const StyledSelect = styled("select", {
     outline: "none",
     width: "100%",
     height: "100%",
-    pl: "$1",
-    pr: "$3",
-    lineHeight: "25px",
+    pl: "$3",
+    pr: "$4",
+    lineHeight: "32px",
 });
 
 const StyledCaretSortIcon = styled(CaretSortIcon, {
@@ -42,7 +39,7 @@ const StyledCaretSortIcon = styled(CaretSortIcon, {
 
     // Use margins instead of top/left to avoid setting "position: relative" on parent,
     // which would make stacking context tricky with Select used in a control group.
-    marginTop: 5,
+    marginTop: 8,
     marginLeft: -16,
 });
 

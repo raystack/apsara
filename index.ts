@@ -3,8 +3,8 @@ export { Accordion } from "./components/accordion";
 export { Alert } from "./components/alert";
 export { AlertDialog } from "./components/alertdialog";
 export { Avatar } from "./components/avatar";
+export { Badge } from "./components/badge";
 export { Banner } from "./components/banner";
-export { Badge } from "./components/bedge";
 export { Box } from "./components/box";
 export { Button } from "./components/button";
 export { Card } from "./components/card";
@@ -54,7 +54,7 @@ export { TextField } from "./components/textfield";
 // theme
 export { ApsaraThemeProvider, ThemeSwitcher, useApsaraTheme } from "./components/themeprovider";
 export { Toggle } from "./components/toggle";
-export { Tooltip } from "./components/tooltip";
+export { Tooltip, TooltipProvider } from "./components/tooltip";
 export { TreeItem } from "./components/treeitem";
 export {
     config,

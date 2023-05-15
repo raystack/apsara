@@ -1,0 +1,31 @@
+---
+title: Tooltip
+description: A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <TooltipProvider>
+    <Radio>
+      <Tooltip content="Tooltip A">
+        <Radio.Item value="a" css={{ mr: '$3' }} />
+      </Tooltip>
+      <Tooltip content="Tooltip B">
+        <Radio.Item value="b" css={{ mr: '$3' }} />
+      </Tooltip>
+    </Radio>
+  </TooltipProvider>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Tooltip } from '@odpf/apsara'
+```

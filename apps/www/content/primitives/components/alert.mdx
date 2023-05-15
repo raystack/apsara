@@ -1,0 +1,40 @@
+---
+title: Alert
+description: Displays a callout for user attention.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    
+    <Alert variant="green">
+      <Alert.Title>
+        <Terminal style={{width:20, height: 20}} />
+        <Text size="5">Heads up!</Text>
+      </Alert.Title>
+      <Alert.Description>
+        You can add components to your app using the cli.
+      </Alert.Description>
+    </Alert>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Alert } from '@odpf/apsara'
+
+<Alert>
+  <Alert.Title>
+    <Terminal style={{width:20, height: 20}} /> Heads up!
+  </Alert.Title>
+  <Alert.Description>
+    You can add components to your app using the cli.
+  </Alert.Description>
+</Alert>
+```

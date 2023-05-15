@@ -21,7 +21,7 @@ export const SearchField = React.forwardRef<React.ElementRef<typeof TextField>, 
                         height: "100%",
                         display: "flex",
                         alignItems: "center",
-                        pl: "$1",
+                        pl: "$2",
                         pr: "$2",
                     }}
                 >
@@ -35,7 +35,7 @@ export const SearchField = React.forwardRef<React.ElementRef<typeof TextField>, 
                     css={{
                         px: "$8",
                         height: "$8",
-                        borderRadius: "$3",
+                        borderRadius: "$1",
                     }}
                     {...props}
                 />
@@ -49,10 +49,11 @@ export const SearchField = React.forwardRef<React.ElementRef<typeof TextField>, 
                             top: "0",
                             right: "0",
                             height: "100%",
-                            padding: "0 4px",
-                            marginLeft: "4px",
+                            padding: "2px",
+                            margin: "0px 6px",
                             display: "flex",
                             alignItems: "center",
+                            color: "$gray8",
                         }}
                         onClick={() => setQuery("")}
                         aria-label="Remove search text"

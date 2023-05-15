@@ -1,7 +1,6 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import React from "react";
 import { CSS, styled } from "../../stitches.config";
-import { Separator } from "../separator";
 
 const TabsRoot = styled(TabsPrimitive.Root, {
     display: "flex",
@@ -12,42 +11,40 @@ const TabsRoot = styled(TabsPrimitive.Root, {
 
 const TabsTrigger = styled(TabsPrimitive.Trigger, {
     flexShrink: 0,
-    height: "$5",
+    border: "none",
     display: "inline-flex",
-    lineHeight: 1,
-    fontSize: "$1",
+    fontSize: "$2",
+    lineHeight: "16px",
     px: "$2",
+    py: "$1",
+
     userSelect: "none",
     outline: "none",
     alignItems: "center",
     justifyContent: "center",
-    color: "$slate11",
-    border: "1px solid transparent",
-    borderTopLeftRadius: "$2",
-    borderTopRightRadius: "$2",
+    color: "$gray11",
+    borderRadius: "$1",
     zIndex: "10",
 
     "@hover": {
         "&:hover": {
-            color: "$hiContrast",
+            color: "$gray12",
         },
     },
 
     '&[data-state="active"]': {
-        color: "$hiContrast",
-        borderColor: "$slate6",
-        borderBottomColor: "transparent",
+        background: "$gray1",
+        color: "$gray12",
+        boxShadow: "0px 1px 1px rgba(0, 0, 0, 0.1)",
     },
 
     '&[data-orientation="vertical"]': {
         justifyContent: "flex-start",
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: "$2",
-        borderBottomColor: "transparent",
 
         '&[data-state="active"]': {
-            borderBottomColor: "$slate6",
-            borderRightColor: "transparent",
+            background: "$gray1",
+            color: "$gray12",
+            boxShadow: "0px 1px 1px rgba(0, 0, 0, 0.1)",
         },
     },
 });
@@ -55,13 +52,42 @@ const TabsTrigger = styled(TabsPrimitive.Trigger, {
 const StyledTabsList = styled(TabsPrimitive.List, {
     flexShrink: 0,
     display: "flex",
+    alignItems: "center",
+    padding: "2px",
+    gap: "$1",
+    background: "$gray4",
+    borderRadius: "$1",
     "&:focus": {
         outline: "none",
-        boxShadow: "inset 0 0 0 1px $slate8, 0 0 0 1px $slate8",
     },
     '&[data-orientation="vertical"]': {
         flexDirection: "column",
-        boxShadow: "inset -1px 0 0 $slate6",
+    },
+
+    variants: {
+        pill: {
+            true: {
+                padding: 0,
+                background: "$gray1",
+                button: {
+                    background: "$gray1",
+                },
+
+                'button[data-state="active"]': {
+                    background: "$gray4",
+                    color: "$gray12",
+                },
+
+                'button[data-orientation="vertical"]': {
+                    justifyContent: "flex-start",
+
+                    '&[data-state="active"]': {
+                        background: "$gray4",
+                        color: "$gray12",
+                    },
+                },
+            },
+        },
     },
 });
 
@@ -71,7 +97,6 @@ type TabsListProps = TabsListPrimitiveProps & { css?: CSS };
 const TabsList = React.forwardRef<React.ElementRef<typeof StyledTabsList>, TabsListProps>((props, forwardedRef) => (
     <>
         <StyledTabsList {...props} ref={forwardedRef} />
-        <Separator />
     </>
 ));
 
@@ -79,7 +104,6 @@ const TabsContent = styled(TabsPrimitive.Content, {
     flexGrow: 1,
     "&:focus": {
         outline: "none",
-        boxShadow: "inset 0 0 0 1px $slate8, 0 0 0 1px $slate8",
     },
 });
 

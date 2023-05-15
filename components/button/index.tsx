@@ -22,7 +22,7 @@ export const Button = styled("button", {
     WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
     // Custom
-    px: "$2",
+    px: "$3",
     fontSize: "$1",
     fontWeight: 500,
 
@@ -51,24 +51,24 @@ export const Button = styled("button", {
                 py: "$1",
                 px: "$3",
                 height: "$6",
-                borderRadius: "$2",
+                borderRadius: "$1",
             },
             normal: {
                 py: "$2",
                 px: "$3",
                 height: "$8",
-                borderRadius: "$3",
+                borderRadius: "$1",
             },
             large: {
                 py: "$3",
                 px: "$4",
                 height: "$9",
-                borderRadius: "$3",
+                borderRadius: "$1",
             },
             circle: {
                 p: "$2",
-                width: "40px",
-                height: "40px",
+                width: "24px",
+                height: "24px",
                 borderRadius: "$round",
             },
         },
@@ -107,20 +107,20 @@ export const Button = styled("button", {
                 backgroundColor: "$gray1",
                 color: "$gray11",
                 border: "1px solid $gray6",
-                boxShadow: "0 1px 1px 0 $colors$slate8",
+                boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
 
                 "&:hover": {
-                    backgroundColor: "$gray7",
+                    backgroundColor: "$gray4",
                     border: "1px solid $gray7",
-                    boxShadow: "0 1px 1px 0 $colors$slate8",
+                    boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
                 },
 
                 "&:active": {
-                    backgroundColor: "$gray7",
+                    backgroundColor: "$gray4",
                     border: "1px solid $gray7",
-                    boxShadow: "0 1px 1px 0 $colors$slate8",
+                    boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
                     "&:hover": {
-                        boxShadow: "0 1px 1px 0 $colors$slate8",
+                        boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
                     },
                 },
                 "&:disabled": {
@@ -129,12 +129,12 @@ export const Button = styled("button", {
                     boxShadow: "0 1px 1px 0 $colors$bslate8lack",
                 },
                 "&:focus": {
-                    boxShadow: "0 1px 1px 0 $colors$slate8, 0 1px 1px 0 $colors$slate8",
+                    boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.1)",
                 },
                 '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
                     {
                         backgroundColor: "$gray7",
-                        boxShadow: "0 1px 1px 0 $colors$slate8",
+                        boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
                     },
             },
         },
@@ -207,17 +207,17 @@ export const IconButton = styled("button", {
                 width: "$5",
             },
             "2": {
-                borderRadius: "$2",
+                borderRadius: "$1",
                 height: "$6",
                 width: "$6",
             },
             "3": {
-                borderRadius: "$2",
+                borderRadius: "$1",
                 height: "$7",
                 width: "$7",
             },
             "4": {
-                borderRadius: "$3",
+                borderRadius: "$1",
                 height: "$8",
                 width: "$8",
             },

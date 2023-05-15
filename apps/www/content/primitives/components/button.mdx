@@ -1,7 +1,7 @@
 ---
 name: button
 title: Button
-description: Enables the user to perform an action.
+description: Displays a button or a component that looks like a button.
 ---
 
 <Preview>
@@ -12,18 +12,19 @@ description: Enables the user to perform an action.
       gap: "$3",
     }}
   >
-    <Flex gap="2">
+    <Flex gap="2" align="center">
       <Button>Basic button</Button>
-      <Button variant="primary">Primary Button</Button>
-      <Button variant="secondry">Secondry Button</Button>
-      <Button ghost>Ghost button</Button>
+      <Button variant="primary" size="small">Basic button</Button>
+      <Button variant="primary">Basic button</Button>
+      <Button variant="primary" size="large">Basic button</Button>
+      <Button variant="primary" size="circle">B</Button>
     </Flex>
 
-    <Flex gap="3">
-      <Button size="small">Small button</Button>
-      <Button size="normal">Normal button</Button>
-      <Button size="large">Large button</Button>
-      <Button disabled>Disabled button</Button>
+    <Flex gap="2" align="center">
+      <Button variant="secondary">Basic button</Button>
+      <Button variant="secondary" disabled>Basic button</Button>
+      <Button variant="secondary" outline>Basic button</Button>
+      <Button variant="secondary" filled={false}>Basic button</Button>
     </Flex>
 
   </Flex>
@@ -35,11 +36,12 @@ npm install @odpf/apsara
 import { Button } from '@odpf/apsara'
 
 <Button>Basic button</Button>
-<Button variant="primary">Primary Button</Button>
-<Button variant="secondry">Secondry Button</Button>
-<Button ghost>Ghost button</Button>
- <Button size="small">Small button</Button>
-<Button size="normal">Normal button</Button>
-<Button size="large">Large button</Button>
-<Button disabled>Disabled button</Button>
+<Button variant="primary" size="small">Basic button</Button>
+<Button variant="primary">Basic button</Button>
+<Button variant="primary" size="large">Basic button</Button>
+<Button variant="primary" size="circle">B</Button>
+<Button variant="secondary">Basic button</Button>
+<Button variant="secondary" size="large">Basic button</Button>
+<Button variant="secondary" outline>Basic button</Button>
+<Button variant="secondary" filled={false}>Basic button</Button>
 ```

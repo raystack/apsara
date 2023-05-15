@@ -1,0 +1,30 @@
+---
+title: Empty State
+description: 
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    <EmptyState css={{ marginTop: 160 }}>
+      <h3>No Design Systems</h3>
+      <p>You can create a new Design System by clicking the button.</p>
+    </EmptyState>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { EmptyState } from '@odpf/apsara'
+
+<EmptyState css={{ marginTop: 160 }}>
+  <h3>No Design Systems</h3>
+  <p>You can create a new Design System by clicking the button.</p>
+</EmptyState>
+```

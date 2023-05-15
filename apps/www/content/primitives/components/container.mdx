@@ -1,0 +1,26 @@
+---
+title: Container
+description: 
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+    <Container size="1">This is a much shorter paragraph of text, to demonstrate narrow text container. The reason we're using text here is because one common use case for this container size is a 3-up grid.</Container>
+    <Container>This is a really long paragraph of text, to demonstrate prose text, like for example, the kind you might read in a blog post. The reason we're using prose here is because the most common use case for this container size is longform text. So we're previewing some longform text here so we can make sure the container width provides an optimal line length for this font size.</Container>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Container } from '@odpf/apsara'
+
+<Container size="1">This is a much shorter paragraph of text, to demonstrate narrow text container. The reason we're using text here is because one common use case for this container size is a 3-up grid.</Container>
+<Container>This is a really long paragraph of text, to demonstrate prose text, like for example, the kind you might read in a blog post. The reason we're using prose here is because the most common use case for this container size is longform text. So we're previewing some longform text here so we can make sure the container width provides an optimal line length for this font size.</Container>
+```

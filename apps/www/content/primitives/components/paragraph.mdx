@@ -1,0 +1,43 @@
+---
+title: Paragraph
+description: Display a paragraph component
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <Paragraph size="2">This is a Paragraph size 2. Design in the target medium. Prototype with real
+    components. Handoff production code.</Paragraph>
+  <Paragraph size="1">This is a Paragraph size 1. A really long paragraph of text, to demonstrate prose
+    text, like for example, the kind you might read in a blog post. The reason we're
+    using prose here is because the most common use case for this container size is
+    longform text. So we're previewing some longform text here so we can make sure the
+    container width provides an optimal line length for this font size.</Paragraph>
+  <Paragraph>This is a Sup and Sub demo. The kind you might read in a blog post.<Sup>1</Sup> This
+    is a really long paragraph of text, to demonstrate prose text.<Sub>1</Sub></Paragraph>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Paragraph } from '@odpf/apsara'
+
+<Paragraph size="2">This is a Paragraph size 2. Design in the target medium. Prototype with real
+    components. Handoff production code.
+</Paragraph>
+<Paragraph size="1">This is a Paragraph size 1. A really long paragraph of text, to demonstrate prose
+    text, like for example, the kind you might read in a blog post. The reason we're
+    using prose here is because the most common use case for this container size is
+    longform text. So we're previewing some longform text here so we can make sure the
+    container width provides an optimal line length for this font size.
+</Paragraph>
+<Paragraph>This is a Sup and Sub demo. The kind you might read in a blog post.<Sup>1</Sup> This
+    is a really long paragraph of text, to demonstrate prose text.<Sub>1</Sub>
+</Paragraph>
+```

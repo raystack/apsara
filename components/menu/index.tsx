@@ -10,25 +10,22 @@ export const baseItemCss = css({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    fontFamily: "$untitled",
-    fontSize: "$1",
+    fontSize: "$2",
+    lineHeight: "16px",
     fontVariantNumeric: "tabular-nums",
-    lineHeight: "1",
-    cursor: "default",
+    cursor: "pointer",
     userSelect: "none",
     whiteSpace: "nowrap",
-    height: "$5",
-    px: "$5",
 });
 
 export const itemCss = css(baseItemCss, {
     position: "relative",
-    color: "$hiContrast",
+    color: "$gray12",
+    p: "$1 $2",
 
     "&[data-highlighted]": {
         outline: "none",
-        backgroundColor: "$blue9",
-        color: "white",
+        color: "$violet9",
     },
 
     "&[data-disabled]": {
@@ -38,6 +35,7 @@ export const itemCss = css(baseItemCss, {
 
 export const labelCss = css(baseItemCss, {
     color: "$slate11",
+    fontSize: "$1",
 });
 
 export const menuCss = css({
@@ -94,7 +92,7 @@ type MenuCheckboxItemProps = MenuCheckboxItemPrimitiveProps & { css?: CSS };
 const MenuCheckboxItem = React.forwardRef<React.ElementRef<typeof StyledMenuCheckboxItem>, MenuCheckboxItemProps>(
     ({ children, ...props }, forwardedRef) => (
         <StyledMenuCheckboxItem {...props} ref={forwardedRef}>
-            <Box as="span" css={{ position: "absolute", left: "$1" }}>
+            <Box as="span" css={{ position: "absolute", left: "-$4" }}>
                 <MenuPrimitive.ItemIndicator>
                     <CheckIcon />
                 </MenuPrimitive.ItemIndicator>

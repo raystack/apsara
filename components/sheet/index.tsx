@@ -21,6 +21,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, overlayStyles, {
     right: 0,
     bottom: 0,
     left: 0,
+    zIndex: 2,
 
     '&[data-state="open"]': {
         animation: `${fadeIn} 150ms cubic-bezier(0.22, 1, 0.36, 1)`,
@@ -45,6 +46,7 @@ const StyledContent = styled(DialogPrimitive.Content, {
     backgroundColor: "$panel",
     boxShadow: "$colors$shadowLight 0 0 38px -10px, $colors$shadowDark 0 0 35px -15px",
     position: "fixed",
+    zIndex: 50,
     top: 0,
     bottom: 0,
     width: 250,

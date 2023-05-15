@@ -1,0 +1,33 @@
+---
+title: Select
+description: Displays a list of options for the user to pick from—triggered by a button.
+---
+
+<Preview>
+  <Flex
+    css={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "$3",
+    }}
+  >
+  <Select>
+    <option value="option1" label="Scale"></option>
+    <option value="option2" label="Repeat X"></option>
+    <option value="option3" label="Repeat Y"></option>
+  </Select>
+  </Flex>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { Select } from '@odpf/apsara'
+
+
+<Select>
+  <option value="option1" label="Scale"></option>
+  <option value="option2" label="Repeat X"></option>
+  <option value="option3" label="Repeat Y"></option>
+</Select>
+```

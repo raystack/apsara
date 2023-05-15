@@ -1,0 +1,28 @@
+---
+title: Progress Bar
+description: Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.
+---
+
+<Preview>
+  <Grid
+    css={{
+      width: "100%",
+      gap: "$4",
+    }}
+  >
+
+  <ProgressBar />
+  <ProgressBar value={50} css={{ my: '$2' }} />
+  <ProgressBar max={100} value={80}  />
+  </Grid>
+</Preview>
+
+
+```tsx outline=true
+npm install @odpf/apsara
+import { ProgressBar } from '@odpf/apsara'
+
+<ProgressBar />
+<ProgressBar value={50} css={{ my: '$2' }} />
+<ProgressBar max={100} value={80}/>
+```
