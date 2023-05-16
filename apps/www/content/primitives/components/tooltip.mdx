@@ -1,7 +1,11 @@
 ---
 title: Tooltip
 description: A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
+radix:
+  link: https://www.radix-ui.com/docs/primitives/components/tooltip
+  api: https://www.radix-ui.com/docs/primitives/components/tooltip#api-reference
 ---
+## Preview
 
 <Preview>
   <Flex
@@ -24,8 +28,29 @@ description: A popup that displays information related to an element when the el
   </Flex>
 </Preview>
 
+## Installation
+
+Install the component from your command line.
+
+```bash
+npm install @odpf/apsara
+```
+
+
+## Anatomy
+Import all parts and piece them together.
 
 ```tsx outline=true
-npm install @odpf/apsara
 import { Tooltip } from '@odpf/apsara'
+
+<TooltipProvider>
+  <Radio>
+    <Tooltip content="Tooltip A">
+      <Radio.Item value="a" css={{ mr: '$3' }} />
+    </Tooltip>
+    <Tooltip content="Tooltip B">
+      <Radio.Item value="b" css={{ mr: '$3' }} />
+    </Tooltip>
+  </Radio>
+</TooltipProvider>
 ```

@@ -12,11 +12,10 @@ export const components = {
     Preview: Preview,
     Searchbar: Searchbar,
     h1: (props: any) => (
-        <Apsara.Text
+        <Apsara.Heading
             {...props}
             as="h1"
-            size="8"
-            css={{ scrollMarginTop: "$9", fontWeight: 500, mb: "$2", lineHeight: "40px" }}
+            size="3"
         />
     ),
     Description: ({ children, ...props }: any) => {
@@ -24,7 +23,7 @@ export const components = {
         // https://github.com/wooorm/xdm/issues/47
         const childText = typeof children === "string" ? children : children.props.children;
         return (
-            <Apsara.Paragraph size="2" {...props} as="p" css={{ mt: "$2", mb: "$7" }}>
+            <Apsara.Paragraph size="1" {...props} as="p" css={{ mt: "$2", mb: "$7" }}>
                 {childText}
             </Apsara.Paragraph>
         );
@@ -33,7 +32,7 @@ export const components = {
         return (
             <LinkHeading id={id} css={{ mt: "$7", mb: "$2" }}>
                 <Apsara.Heading
-                    size="2"
+                    size="1"
                     {...props}
                     id={id}
                     as={"h2" as any}

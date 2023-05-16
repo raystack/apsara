@@ -1,8 +1,12 @@
 ---
 title: Toggle
 description: A two-state button that can be either on or off.
+radix:
+  link: https://www.radix-ui.com/docs/primitives/components/toggle
+  api: https://www.radix-ui.com/docs/primitives/components/toggle#api-reference
 ---
 
+## Preview
 <Preview>
   <Flex
     css={{
@@ -15,8 +19,20 @@ description: A two-state button that can be either on or off.
   </Flex>
 </Preview>
 
+## Installation
+
+Install the component from your command line.
+
+```bash
+npm install @odpf/apsara
+```
+
+
+## Anatomy
+Import all parts and piece them together.
 
 ```tsx outline=true
-npm install @odpf/apsara
 import { Toggle } from '@odpf/apsara'
+
+<Toggle shape="circle"><ShadowNoneIcon /></Toggle>
 ```

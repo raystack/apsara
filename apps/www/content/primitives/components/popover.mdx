@@ -1,7 +1,11 @@
 ---
 title: Popover
 description: Displays rich content in a portal, triggered by a button.
+radix:
+  link: https://www.radix-ui.com/docs/primitives/components/popover
+  api: https://www.radix-ui.com/docs/primitives/components/popover#api-reference
 ---
+## Preview
 
 <Preview>
   <Flex
@@ -25,21 +29,31 @@ description: Displays rich content in a portal, triggered by a button.
   </Flex>
 </Preview>
 
+## Installation
+
+Install the component from your command line.
+
+```bash
+npm install @odpf/apsara
+```
+
+
+## Anatomy
+Import all parts and piece them together.
 
 ```tsx outline=true
-npm install @odpf/apsara
 import { Popover } from '@odpf/apsara'
 
 
 <Popover>
-    <Popover.Trigger asChild>
-      <Button variant="secondary" outline>Popover</Button>
-    </Popover.Trigger>
-    <Popover.Content css={{ padding: '$3' }} side="top">
-      <Text size="2" css={{ lineHeight: '18px' }}>
-        The other main improvement is with tables, which we'll probably use a lot. With
-        horizontal overflow on small devices and when zoomed in.
-      </Text>
-    </Popover.Content>
-  </Popover>
+  <Popover.Trigger asChild>
+    <Button variant="secondary" outline>Popover</Button>
+  </Popover.Trigger>
+  <Popover.Content css={{ padding: '$3' }} side="top">
+    <Text size="2" css={{ lineHeight: '18px' }}>
+      The other main improvement is with tables, which we'll probably use a lot. With
+      horizontal overflow on small devices and when zoomed in.
+    </Text>
+  </Popover.Content>
+</Popover>
 ```

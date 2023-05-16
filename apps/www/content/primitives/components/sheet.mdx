@@ -1,7 +1,12 @@
 ---
 title: Sheet
 description: Extends the Dialog component to display content that complements the main content of the screen.
+radix:
+  link: https://www.radix-ui.com/docs/primitives/components/dialog
+  api: https://www.radix-ui.com/docs/primitives/components/dialog#api-reference
 ---
+
+## Preview
 
 <Preview>
   <Flex
@@ -43,8 +48,49 @@ description: Extends the Dialog component to display content that complements th
   </Flex>
 </Preview>
 
+## Installation
+
+Install the component from your command line.
+
+```bash
+npm install @odpf/apsara
+```
+
+
+## Anatomy
+Import all parts and piece them together.
 
 ```tsx outline=true
-npm install @odpf/apsara
 import { Sheet } from '@odpf/apsara'
+
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button variant="secondary" outline>Open Sheet</Button>
+  </Sheet.Trigger>
+  <Sheet.Content></Sheet.Content>
+</Sheet>
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button variant="secondary" outline>Top</Button>
+  </Sheet.Trigger>
+  <Sheet.Content side="top"></Sheet.Content>
+</Sheet>
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button variant="secondary" outline>Right</Button>
+  </Sheet.Trigger>
+  <Sheet.Content side="right"></Sheet.Content>
+</Sheet>
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button variant="secondary" outline>Bottom</Button>
+  </Sheet.Trigger>
+  <Sheet.Content side="bottom"></Sheet.Content>
+</Sheet>
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button variant="secondary" outline>Left</Button>
+  </Sheet.Trigger>
+  <Sheet.Content side="left"></Sheet.Content>
+</Sheet>
 ```

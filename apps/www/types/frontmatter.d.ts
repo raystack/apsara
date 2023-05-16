@@ -6,4 +6,5 @@ export type Frontmatter = {
     publishedAt?: string;
     metaImage?: string;
     readingTime?: { text: string; minutes: number; time: number; words: number };
+    radix?: { link: string; api: string };
 };

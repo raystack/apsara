@@ -1,61 +1,71 @@
 ---
 title: Avatar
 description: An image element with a fallback for representing the user.
+radix:
+  link: https://www.radix-ui.com/docs/primitives/components/avatar
+  api: https://www.radix-ui.com/docs/primitives/components/avatar#api-reference
 ---
 
+## Preview
 
-<Flex css={{ fd: 'column', gap: '$6' }}>
-  <Flex css={{ ai: 'center', gap: '$6' }}>
-    <Avatar size="1" alt="John Smith" src="" fallback="J" />
+<Preview>
+  <Flex css={{ fd: 'column', gap: '$6' }}>
+    <Flex css={{ ai: 'center', gap: '$6' }}>
+      <Avatar size="1" alt="John Smith" src="" fallback="J" />
 
-    <Avatar
-      size="2"
-      alt="John Smith"
-      src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-      fallback="J"
-    />
+      <Avatar
+        size="2"
+        alt="John Smith"
+        src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+        fallback="J"
+      />
 
-    <Avatar
-      size="3"
-      alt="John Smith"
-      src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-      fallback="J"
-    />
+      <Avatar
+        size="3"
+        alt="John Smith"
+        src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+        fallback="J"
+      />
 
-    <Avatar
-      size="4"
-      alt="John Smith"
-      src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-      fallback="J"
-    />
+      <Avatar
+        size="4"
+        alt="John Smith"
+        src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+        fallback="J"
+      />
 
-    <Avatar
-      size="5"
-      alt="John Smith"
-      src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-      fallback="J"
-    />
+      <Avatar
+        size="5"
+        alt="John Smith"
+        src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+        fallback="J"
+      />
 
-    <Avatar
-      size="6"
-      alt="John Smith"
-      src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-      fallback="J"
-    />
+      <Avatar
+        size="6"
+        alt="John Smith"
+        src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+        fallback="J"
+      />
+    </Flex>
   </Flex>
-</Flex>
+</Preview>
+
 ## Installation
 
-1. Install the component from your command line.
+Install the component from your command line.
 
 ```bash
 npm install @odpf/apsara
-import { Avatar } from '@odpf/apsara';
 ```
 
-2. Copy and paste the following code into your project.
+
+## Anatomy
+Import all parts and piece them together.
 
 ```tsx
+import { Avatar } from '@odpf/apsara';
+
 <Avatar size="1" alt="John Smith" src="" fallback="J" />
 <Avatar size="2" alt="John Smith" src="" fallback="J" />
 <Avatar

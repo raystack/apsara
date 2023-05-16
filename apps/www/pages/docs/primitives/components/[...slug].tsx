@@ -1,4 +1,4 @@
-import { Box, Paragraph, Section, Text } from "@odpf/apsara";
+import { Box, Flex, Heading, Link, Paragraph, Section } from "@odpf/apsara";
 import { getMDXComponent } from "mdx-bundler/client";
 import React from "react";
 import { RemoveScroll } from "react-remove-scroll";
@@ -23,17 +23,40 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
 
             <MDXProvider frontmatter={frontmatter}>
                 <Section>
-                    <Text
+                    <Heading
                         as="h1"
-                        size="8"
+                        size="3"
                         css={{ scrollMarginTop: "$9", fontWeight: 500, mb: "$2", lineHeight: "40px" }}
                     >
                         {frontmatter.title}
-                    </Text>
+                    </Heading>
 
                     <Paragraph size="2" as="p" css={{ mt: "$2", mb: "$7" }}>
                         {frontmatter.description}
                     </Paragraph>
+                    {frontmatter.radix ? (
+                        <Flex gap="4">
+                            {frontmatter.radix?.link && (
+                                <Link
+                                    href={frontmatter.radix.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    Radix UI
+                                </Link>
+                            )}
+                            {frontmatter.radix?.api && (
+                                <Link
+                                    href={frontmatter.radix.api}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                   
+                                >
+                                    API Reference
+                                </Link>
+                            )}
+                        </Flex>
+                    ) : null}
                 </Section>
                 <Component components={components as any} />
             </MDXProvider>
