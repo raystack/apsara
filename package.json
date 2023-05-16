@@ -1,6 +1,6 @@
 {
     "name": "@odpf/apsara",
-    "version": "0.9.6",
+    "version": "0.9.7",
     "description": "",
     "main": "dist/index.js",
     "module": "dist/index.es.js",
