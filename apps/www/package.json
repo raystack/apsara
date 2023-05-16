@@ -9,6 +9,7 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@odpf/apsara": "0.9.7",
         "@mdx-js/loader": "^2.3.0",
         "@radix-ui/react-slot": "^1.0.1",
         "copy-to-clipboard": "^3.3.3",
