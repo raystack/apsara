@@ -11,6 +11,13 @@ export const components = {
     ...Icons,
     Preview: Preview,
     Searchbar: Searchbar,
+    pre: (props: any) => (
+        <Apsara.Text
+            {...props}
+            as="pre"
+            size="4"
+        />
+    ),
     h1: (props: any) => (
         <Apsara.Heading
             {...props}
