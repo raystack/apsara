@@ -37,7 +37,7 @@ export const StyledResult = styled(Result)`
         color: ${({ theme }) => theme?.states?.text};
         font-size: ${({ theme }) => theme?.fontSizes[3]};
         font-weight: bold;
-        line-height: 1.4;
+        line-height: 1.8;
         text-align: center;
     }
     .apsara-result-subtitle {
@@ -46,7 +46,7 @@ export const StyledResult = styled(Result)`
         margin-top: 12px;
         overflow: auto;
         max-height: calc(100vh - 500px);
-        max-width: 80vw;
+        text-align: center;
     }
     .apsara-result-extra {
         margin: 24px 0 0 0;

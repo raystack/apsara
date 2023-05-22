@@ -23,6 +23,7 @@ const Listing = ({
     sortable = false,
     defaultSearchTerm = "",
     onChangeCallback,
+    loading = false,
 }: ListingProps) => {
     const { getColumnList = () => [], selectedRowId, ...extraTableProps } = tableProps;
     const { searchFields = [], disabled = false, searchPlaceholder, ...extraSearchProps } = searchProps;
@@ -75,6 +76,7 @@ const Listing = ({
                 calculateColumnWidth={calculateColumnWidth}
                 sortable={sortable}
                 {...extraTableProps}
+                loading={loading}
             />
         );
     }

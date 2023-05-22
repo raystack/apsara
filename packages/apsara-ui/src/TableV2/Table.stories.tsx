@@ -11,18 +11,6 @@ export default {
     component: Table,
 };
 
-function getData(page = 1) {
-    return new Array(page * 100).fill(0).map((_, index) => {
-        return {
-            key: index,
-            name: `name ${index}`,
-            age: index,
-            full_address: "10 Downing Street",
-        };
-    });
-}
-const dataSource = getData();
-
 export const TableWithoutData = () => (
     <QueryClientProvider client={queryClient}>
         <Table columnsData={[]} />

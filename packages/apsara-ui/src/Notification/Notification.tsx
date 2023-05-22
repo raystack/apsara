@@ -105,8 +105,11 @@ export const NotificationProvider = ({ children }: any) => {
 };
 
 const NotificationContext = createContext<Notifier>({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showNotification: (_toast: Notification) => null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showSuccess: (_title: string, _content?: string) => null,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     showError: (_title: string, _content?: string) => null,
 });
 

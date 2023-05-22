@@ -37,7 +37,7 @@ const iconMapOutlined = {
 };
 
 const Alert = ({ description, message, className = "", style, showIcon = false, action, ...props }: AlertProps) => {
-    const [closed, _setClosed] = React.useState(false);
+    const [closed] = React.useState(false);
 
     const prefixCls = "apsara-alert";
 

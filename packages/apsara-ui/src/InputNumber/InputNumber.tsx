@@ -44,6 +44,7 @@ const InputNumber = React.forwardRef<HTMLInputElement, InputNumberProps>((props,
     const inputRef = React.useRef<HTMLInputElement>(null);
     const size = React.useContext(SizeContext);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     React.useImperativeHandle(ref, () => inputRef.current!);
     const {
         className,

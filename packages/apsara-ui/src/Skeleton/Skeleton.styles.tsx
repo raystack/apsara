@@ -10,7 +10,6 @@ const skeletonClsLoading = keyframes`
 `;
 
 export const StyledSkeleton = styled.div<{ $props?: any; $editor?: boolean }>`
-height:24px;
 width: ${({ $props }) => ($props?.width ? $props.width : "100%")};
 
 li + li {

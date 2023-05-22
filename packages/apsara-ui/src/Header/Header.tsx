@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import React, { ReactChildren, useContext, useState } from "react";
+import React, { ReactChildren, useContext } from "react";
 import { ThemeContext } from "styled-components";
 import Lottie from "react-lottie";
 import CustomIcon from "../Icon";

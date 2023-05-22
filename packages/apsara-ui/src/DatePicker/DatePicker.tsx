@@ -45,6 +45,7 @@ const DatePicker = ({
                     prefixCls={prefixCls}
                     locale={enUS}
                     picker={picker}
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     getPopupContainer={() => datePickerDropdownWrapperRef!.current!}
                     generateConfig={generateConfig}
                     prevIcon={<span className={`${prefixCls}-prev-icon`} />}

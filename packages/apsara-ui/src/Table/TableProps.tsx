@@ -301,7 +301,7 @@ export const PresetColors = [
 ] as const;
 
 export type PresetColorKey = typeof PresetColors[number];
-export type LiteralUnion<T extends string> = T | (string & {});
+export type LiteralUnion<T extends string> = T | (string & Record<string, unknown>);
 type InverseColor = `${PresetColorKey}-inverse`;
 export type PresetColorType = PresetColorKey | InverseColor;
 export interface AdjustOverflow {

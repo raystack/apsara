@@ -11,6 +11,8 @@ import {
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { StyledEmpty } from "../TableV2/Table.styles";
 import { useVirtual } from "react-virtual";
+import { ListSkeleton } from "../Skeleton";
+import Empty from "./Empty";
 
 interface ITableProps {
     selectedRowId?: number | null;
@@ -23,9 +25,17 @@ interface ITableProps {
     sortable?: boolean;
     rowClick?: (props: any) => any;
     dataFetchFunction?: (options: { pageIndex?: number; pageSize?: number }) => any;
+    loading?: boolean;
 }
 
-function VirtualisedTable({ columnsData, sortable = false, rowClick, dataFetchFunction, items }: ITableProps) {
+function VirtualisedTable({
+    columnsData,
+    sortable = false,
+    rowClick,
+    dataFetchFunction,
+    items,
+    loading = false,
+}: ITableProps) {
     useEffect(() => {
         if (!dataFetchFunction && items?.length) {
             setData({ rows: items });
@@ -61,7 +71,7 @@ function VirtualisedTable({ columnsData, sortable = false, rowClick, dataFetchFu
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        debugTable: true,
+        debugTable: false,
     });
 
     const { rows } = table.getRowModel();
@@ -74,9 +84,10 @@ function VirtualisedTable({ columnsData, sortable = false, rowClick, dataFetchFu
     const paddingTop = virtualRows.length > 0 ? virtualRows?.[0]?.start || 0 : 0;
     const paddingBottom = virtualRows.length > 0 ? totalSize - (virtualRows?.[virtualRows.length - 1]?.end || 0) : 0;
 
-    if (!data?.rows?.length) {
+    if (!loading && (!columns.length || !data?.rows?.length)) {
         return (
             <StyledEmpty>
+                <Empty />
                 <EmptyHeader> We could not find it! </EmptyHeader>
                 <EmptyText> We are sorry, but your search did not have any result </EmptyText>
             </StyledEmpty>
@@ -138,33 +149,36 @@ function VirtualisedTable({ columnsData, sortable = false, rowClick, dataFetchFu
                                 </tr>
                             ))}
                         </thead>
-                        <tbody>
-                            {paddingTop > 0 && (
-                                <tr>
-                                    <td style={{ height: `${paddingTop}px` }} />
-                                </tr>
-                            )}
-                            {virtualRows.map((virtualRow) => {
-                                const row = rows[virtualRow.index];
-                                return (
-                                    <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
-                                        {row.getVisibleCells().map((cell) => {
-                                            return (
-                                                <td key={cell.id} className="virtual-table-cell">
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </td>
-                                            );
-                                        })}
+                        {!loading && (
+                            <tbody>
+                                {paddingTop > 0 && (
+                                    <tr>
+                                        <td style={{ height: `${paddingTop}px` }} />
                                     </tr>
-                                );
-                            })}
-                            {paddingBottom > 0 && (
-                                <tr>
-                                    <td style={{ height: `${paddingBottom}px` }} />
-                                </tr>
-                            )}
-                        </tbody>
+                                )}
+                                {virtualRows.map((virtualRow) => {
+                                    const row = rows[virtualRow.index];
+                                    return (
+                                        <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
+                                            {row.getVisibleCells().map((cell) => {
+                                                return (
+                                                    <td key={cell.id} className="virtual-table-cell">
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </td>
+                                                );
+                                            })}
+                                        </tr>
+                                    );
+                                })}
+                                {paddingBottom > 0 && (
+                                    <tr>
+                                        <td style={{ height: `${paddingBottom}px` }} />
+                                    </tr>
+                                )}
+                            </tbody>
+                        )}
                     </table>
+                    {loading && <ListSkeleton />}
                 </TableWrapper>
             </StyledTable>
         );
