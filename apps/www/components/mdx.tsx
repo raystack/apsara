@@ -3,6 +3,8 @@ import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { Frontmatter } from "~/types/frontmatter";
 import Icons from "./icons";
+import DynamicLive from "./live";
+import Playground from "./playground";
 import { Preview } from "./preview";
 import { Searchbar } from "./searchbar";
 
@@ -11,6 +13,8 @@ export const components = {
     ...Icons,
     Preview: Preview,
     Searchbar: Searchbar,
+    DynamicLive: DynamicLive,
+    Playground: Playground,
     pre: (props: any) => (
         <Apsara.Text
             {...props}

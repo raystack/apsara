@@ -3,33 +3,40 @@ name: button
 title: Button
 description: Displays a button or a component that looks like a button.
 ---
-## Preview
+import { Button, Flex } from '@odpf/apsara'
 
-<Preview>
-  <Flex
-    css={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "$3",
-    }}
-  >
-    <Flex gap="2" align="center">
-      <Button>Basic button</Button>
-      <Button variant="primary" size="small">Basic button</Button>
-      <Button variant="primary">Basic button</Button>
-      <Button variant="primary" size="large">Basic button</Button>
-      <Button variant="primary" size="circle">B</Button>
-    </Flex>
+## Basic
+The basic `Button`
+<Playground scope={{ Button }} code={`<Button>Basic button</Button>`} />
 
-    <Flex gap="2" align="center">
-      <Button variant="secondary">Basic button</Button>
-      <Button variant="secondary" disabled>Basic button</Button>
-      <Button variant="secondary" outline>Basic button</Button>
-      <Button variant="secondary" filled={false}>Basic button</Button>
-    </Flex>
+## Primary
+The primary `Button`
+<Playground scope={{ Button }} code={`<Button variant="primary">Basic button</Button>`} />
 
+## Scondry
+The secondary `Button`
+<Playground scope={{ Button }} code={`<Button variant="secondary">Basic button</Button>`} />
+
+## Outline
+The Outline `Button`
+<Playground scope={{ Button }} code={`<Button variant="secondary" outline>Basic button</Button>`} />
+
+## Disabled
+
+Do not respond to any action.
+<Playground scope={{ Button }} code={`<Button variant="secondary" disabled>Basic button</Button>`} />
+
+## Scale
+Buttons of different sizes.
+<Playground scope={{ Button, Flex }} code={`
+  <Flex align="center" css={{gap: "8px"}}>
+    <Button variant="primary" size="small">Basic button</Button>
+    <Button variant="primary">Basic button</Button>
+    <Button variant="primary" size="large">Basic button</Button>
+    <Button variant="primary" size="circle">B</Button>
   </Flex>
-</Preview>
+`} />
+
 
 ## Installation
 
@@ -47,10 +54,7 @@ Import all parts and piece them together.
 import { Button } from '@odpf/apsara'
 
 <Button>Basic button</Button>
-<Button variant="primary" size="small">Basic button</Button>
-<Button variant="primary">Basic button</Button>
-<Button variant="primary" size="large">Basic button</Button>
-<Button variant="primary" size="circle">B</Button>
+
 <Button variant="secondary">Basic button</Button>
 <Button variant="secondary" size="large">Basic button</Button>
 <Button variant="secondary" outline>Basic button</Button>
