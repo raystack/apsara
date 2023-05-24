@@ -10,11 +10,12 @@ export const Preview = ({ css, ...props }: PreviewProps) => (
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "center",
-            p: "$4",
-            mb: "$4",
+            pt: "100px",
+            pb: "100px",
             borderTopLeftRadius: "$4",
             borderTopRightRadius: "$4",
             boxShadow: "inset 0 0 0 1px $gray8",
+            background: "url(/dot.svg)",
             ...css,
         }}
     />

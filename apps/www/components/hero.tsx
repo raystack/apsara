@@ -1,62 +1,58 @@
-import { Box, Container, Link, Paragraph, Section, Text } from "@odpf/apsara";
+import { Box, Flex, Heading, Link, Section, Text } from "@odpf/apsara";
 
 export const Hero = () => {
     return (
-        <Box css={{ position: "relative" }}>
+        <Flex css={{ minHeight: "calc(100vh - 10rem)", marginTop: "10rem" }}>
             <Box
                 css={{
-                    position: "absolute",
-                    inset: 0,
-                    bc: "$slate1",
-                    height: "100vh",
-                    overflow: "hidden",
-                    zIndex: -1,
-                }}
-            />
-            <Section
-                css={{
-                    paddingTop: "$4",
-                    // Starting at 850px viewport height, grow the padding top from $5 until it's $9.
-                    "@media (min-width: 900px) and (min-height: 850px)": {
-                        paddingTop: "min($9, calc($5 + 0.35 * (100vh - 850px)))",
-                    },
+                    paddingLeft: "1rem",
+                    paddingRight: "1rem",
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    maxWidth: "72rem",
                 }}
             >
-                <Container size="3">
-                    <Box css={{ mb: "$6" }}>
-                        <Text
-                            as="h1"
-                            size={{ "@initial": 8, "@bp1": 9 }}
+                <Section
+                    css={{
+                        position: "relative",
+                        paddingBottom: "2.5rem",
+                        paddingTop: "5rem",
+                    }}
+                >
+                    <Flex
+                        css={{
+                            display: "flex",
+                            paddingLeft: "0.5rem",
+                            paddingRight: "0.5rem",
+                            textAlign: "center",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "1rem",
+                        }}
+                    >
+                        <Heading
+                            
                             css={{
-                                color: "transparent",
-                                WebkitBackgroundClip: "text",
-                                backgroundImage: "radial-gradient(circle, $hiContrast, $colors$indigo12)",
-                                // Use padding rather than margin, or otherwise some descenders
-                                // may be clipped with WebkitBackgroundClip: 'text'
-                                pb: "$4",
-                                // Same issue, letters may be clipped horizontally
-                                px: "$2",
-                                mx: "-$2",
-                                fontWeight: 500,
-                                fontSize: "min(max($8, 11.2vw), $9)",
-                                letterSpacing: "max(min(-0.055em, -0.66vw), -0.07em)",
-                                "@media (min-width: 900px) and (min-height: 850px)": {
-                                    fontSize: "80px",
-                                    lineHeight: "0.85",
-                                },
+                                fontSize: "4.2rem",
+                                lineHeight: "6rem",
+                                fontWeight: "700",
+                                letterSpacing: "2px"
                             }}
                         >
                             Apsara 2.0
-                        </Text>
-                        <Box css={{ maxWidth: 500, mb: "$5" }}>
-                            <Paragraph size="2" as="p">
-                                Apsara is an open-source, ready-to-use design system
-                            </Paragraph>
+                        </Heading>
+                        <Box css={{ maxWidth: 900, mb: "$5" }}>
+                            <Text size="5" css={{color: "$gray11"}}>
+                                Apsara is an elegant and beautiful re-usable React UI components build using Radix UI
+                                and Stitches CSS-in-JS. With Apsara, you can easily create clean and powerful personal
+                                sites, or quickly build modern web applications based on highly customizable design
+                                system.
+                            </Text>
                         </Box>
-                        <Link href="/docs/primitives/overview/introduction">Install Primitives</Link>
-                    </Box>
-                </Container>
-            </Section>
-        </Box>
+                        <Link href="/docs/primitives/overview/introduction">Getting started</Link>
+                    </Flex>
+                </Section>
+            </Box>
+        </Flex>
     );
 };

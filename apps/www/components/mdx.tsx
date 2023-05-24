@@ -2,6 +2,7 @@ import * as Apsara from "@odpf/apsara";
 import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { Frontmatter } from "~/types/frontmatter";
+import { Attributes } from "./attributes";
 import Icons from "./icons";
 import DynamicLive from "./live";
 import Playground from "./playground";
@@ -11,6 +12,7 @@ import { Searchbar } from "./searchbar";
 export const components = {
     ...Apsara,
     ...Icons,
+    Attributes: Attributes,
     Preview: Preview,
     Searchbar: Searchbar,
     DynamicLive: DynamicLive,
@@ -34,7 +36,7 @@ export const components = {
         // https://github.com/wooorm/xdm/issues/47
         const childText = typeof children === "string" ? children : children.props.children;
         return (
-            <Apsara.Paragraph size="1" {...props} as="p" css={{ mt: "$2", mb: "$7" }}>
+            <Apsara.Paragraph size="1" {...props} as="p" css={{ mt: "$2", mb: "$10" }}>
                 {childText}
             </Apsara.Paragraph>
         );
@@ -128,12 +130,7 @@ export const components = {
 
     code: ({ className, line, ...props }: any) => {
         // if it's a codeblock (``` block in markdown), it'll have a className from prism
-        const isInlineCode = !className;
-        return isInlineCode ? (
-            <Apsara.Code className={className} {...props} css={{ whiteSpace: "break-spaces" }} />
-        ) : (
-            <code className={className} {...props} data-invert-line-highlight={line !== undefined} />
-        );
+        return <code className={className} {...props} style={{whiteSpace: "break-spaces"}}/>
     },
     Note: (props: any) => (
         <Apsara.Box

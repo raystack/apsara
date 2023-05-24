@@ -146,6 +146,7 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
     return (
         <MainWrapper>
             <NavWrapper isMobileMenuOpen={isMobileMenuOpen}>
+                <NavItem href={`/`}>Apsara2.0</NavItem>
                 <Box css={{ display: isSearchOpen ? "none" : undefined, mt: "$4" }}>
                     {primitivesRoutes.map((section: RouteProps) => (
                         <Box key={section.label} css={{ mb: "$4" }}>

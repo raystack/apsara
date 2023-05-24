@@ -5,38 +5,46 @@ description: Displays a button or a component that looks like a button.
 ---
 import { Button, Flex } from '@odpf/apsara'
 
+
+<Preview>
+  <Button variant="primary">primary button</Button>
+</Preview>
+
+<Description>
+Buttons are fundamental components in any user interface, serving as interactive elements for triggering actions or navigating through an application. Building reusable button primitives using Radix UI and Stitches CSS-in-JS can significantly enhance the efficiency and maintainability of your UI development process. 
+</Description>
+
 ## Basic
 The basic `Button`
-<Playground scope={{ Button }} code={`<Button>Basic button</Button>`} />
+<Playground scope={{ Button }} code={`<Button>button</Button>`} />
 
 ## Primary
 The primary `Button`
-<Playground scope={{ Button }} code={`<Button variant="primary">Basic button</Button>`} />
+<Playground scope={{ Button }} code={`<Button variant="primary">primary button</Button>`} />
 
 ## Scondry
 The secondary `Button`
-<Playground scope={{ Button }} code={`<Button variant="secondary">Basic button</Button>`} />
+<Playground scope={{ Button }} code={`<Button variant="secondary">secondary button</Button>`} />
 
 ## Outline
 The Outline `Button`
-<Playground scope={{ Button }} code={`<Button variant="secondary" outline>Basic button</Button>`} />
+<Playground scope={{ Button }} code={`<Button variant="secondary" outline>secondary button</Button>`} />
 
 ## Disabled
 
 Do not respond to any action.
-<Playground scope={{ Button }} code={`<Button variant="secondary" disabled>Basic button</Button>`} />
+<Playground scope={{ Button }} code={`<Button variant="secondary" disabled>secondary button</Button>`} />
 
 ## Scale
 Buttons of different sizes.
 <Playground scope={{ Button, Flex }} code={`
-  <Flex align="center" css={{gap: "8px"}}>
-    <Button variant="primary" size="small">Basic button</Button>
-    <Button variant="primary">Basic button</Button>
-    <Button variant="primary" size="large">Basic button</Button>
-    <Button variant="primary" size="circle">B</Button>
-  </Flex>
+<Flex align="center" css={{gap: "8px"}}>
+  <Button variant="primary" size="small">primary button</Button>
+  <Button variant="primary">primary button</Button>
+  <Button variant="primary" size="large">primary button</Button>
+  <Button variant="primary" size="circle">P</Button>
+</Flex>
 `} />
-
 
 ## Installation
 
@@ -44,19 +52,9 @@ Install the component from your command line.
 
 ```bash
 npm install @odpf/apsara
-```
-
-
-## Anatomy
-Import all parts and piece them together.
-
-```tsx outline=true
 import { Button } from '@odpf/apsara'
-
-<Button>Basic button</Button>
-
-<Button variant="secondary">Basic button</Button>
-<Button variant="secondary" size="large">Basic button</Button>
-<Button variant="secondary" outline>Basic button</Button>
-<Button variant="secondary" filled={false}>Basic button</Button>
 ```
+
+## API Reference
+<Attributes type="button" />
+
