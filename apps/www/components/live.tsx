@@ -6,6 +6,8 @@ import Editor from './editor';
 
 export interface Props {
   code: string
+  visible: boolean
+  setVisible: (value: boolean) => void
   scope: {
     [key: string]: any
   }
@@ -23,14 +25,14 @@ const Wrapper = styled('div', {
   background: "url(/dot.svg)",
 })
 
-const DynamicLive: React.FC<Props> = ({ code, scope }) => {
+const DynamicLive: React.FC<Props> = ({ code, scope, visible, setVisible }) => {
   return (
     <LiveProvider code={code} scope={scope}>
       <Wrapper>
         <LivePreview/>
         <LiveError className="live-error" />
       </Wrapper>
-      <Editor code={code} />
+      <Editor code={code} visible={visible} setVisible={setVisible} />
     </LiveProvider>
   )
 }

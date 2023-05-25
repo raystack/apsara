@@ -1,13 +1,15 @@
 import { styled } from "@odpf/apsara";
-import { ChevronRight, Copy } from "lucide-react";
-import { themes } from 'prism-react-renderer';
-import React, { useState } from "react";
-import { LiveEditor } from "react-live";
 
+import { ChevronRightIcon, CopyIcon } from '@radix-ui/react-icons';
+
+import React from "react";
+import LiveEditor from "./live-editor";
 import useCopyToClipboard from "./useClipboard";
 
 interface Props {
     code: string;
+    visible: boolean
+    setVisible: (value: boolean) => void
 }
 
 const StyledEditor = styled("div", {
@@ -51,23 +53,21 @@ const Action = styled("div", {
     },
 });
 
-const Area = styled("div", {
-    position: "relative",
-    boxSizing: "border-box",
-    whiteSpace: "pre",
-    fontFamily: "Consolas,Monaco",
-    lineHeight: '1.5',
-    color: "$gray4",
-    fontSize: "14px",
-    overflow: "hidden",
-    borderTop: "1px solid",
-    padding: "$4",
-});
+const StyledChevronRightIcon = styled(ChevronRightIcon, {
+    variants: {
+        visible: {
+            true: {
+                transform: "rotate(90deg)",
+                transition: "all .2s"
+            }
+        }
+    }
+})
 
-const Editor: React.FC<Props> = ({ code }) => {
+const Editor: React.FC<Props> = ({ code, visible, setVisible }) => {
     const [_, copy] = useCopyToClipboard();
 
-    const [visible, setVisible] = useState(false);
+    
     const clickHandler = (event: React.MouseEvent) => {
         event.stopPropagation();
         event.preventDefault();
@@ -86,23 +86,19 @@ const Editor: React.FC<Props> = ({ code }) => {
                 <Summary onClick={clickHandler}>
                     <SummarySafari>
                         <Action>
-                            <span className="arrow">
-                                <ChevronRight size={16} />
-                            </span>
+                            <StyledChevronRightIcon width={16} visible={visible} />
                             <span>{"Code Editor"}</span>
                         </Action>
                         <Action>
                             {visible && (
                                 <span className="copy" onClick={copyHandler} title={"Copy Code"}>
-                                    <Copy size={18} />
+                                    <CopyIcon width={18} />
                                 </span>
                             )}
                         </Action>
                     </SummarySafari>
                 </Summary>
-                <Area>
-                    <LiveEditor theme={themes.nightOwlLight} />
-                </Area>
+                <LiveEditor number code={code}/>
             </Details>
         </StyledEditor>
     );

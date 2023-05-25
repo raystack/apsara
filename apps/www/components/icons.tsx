@@ -1,8 +1,8 @@
-import { ShadowNoneIcon } from "@radix-ui/react-icons";
-import { Terminal } from "lucide-react";
+import { Component2Icon, ShadowNoneIcon } from "@radix-ui/react-icons";
+
 
 const Icons = {
-  Terminal,
+  Component2Icon,
   ShadowNoneIcon
 };
 

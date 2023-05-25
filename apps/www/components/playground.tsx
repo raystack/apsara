@@ -1,6 +1,6 @@
 import { styled, Tabs } from "@odpf/apsara";
 import dynamic from "next/dynamic";
-import React from "react";
+import React, { useState } from "react";
 
 const DynamicLive = dynamic(() => import("./live"), {
     ssr: false,
@@ -39,10 +39,12 @@ const StyledPlayground = styled("div", {
 
 const Playground: React.FC<PlaygroundProps> = React.memo(
     ({ code, tabs, scope }: PlaygroundProps & typeof defaultProps) => {
+        const [visible, setVisible] = useState(false);
+        
         if (code) {
             return (
                 <StyledPlayground>
-                    <DynamicLive code={code} scope={scope} />
+                    <DynamicLive code={code} scope={scope} visible={visible} setVisible={setVisible} />
                 </StyledPlayground>
             );
         }
@@ -58,7 +60,7 @@ const Playground: React.FC<PlaygroundProps> = React.memo(
                     </Tabs.List>
                     {tabs.map((tab) => (
                         <Tabs.Content value={tab.name} key={tab.name}>
-                            <DynamicLive code={tab.code} scope={scope} />
+                            <DynamicLive code={tab.code} scope={scope} visible={visible} setVisible={setVisible} />
                         </Tabs.Content>
                     ))}
                 </Tabs>

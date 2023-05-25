@@ -1,10 +1,11 @@
 import * as Apsara from "@odpf/apsara";
 import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
+import { LiveProvider } from "react-live";
 import { Frontmatter } from "~/types/frontmatter";
 import { Attributes } from "./attributes";
 import Icons from "./icons";
-import DynamicLive from "./live";
+import LiveEditor from "./live-editor";
 import Playground from "./playground";
 import { Preview } from "./preview";
 import { Searchbar } from "./searchbar";
@@ -15,7 +16,8 @@ export const components = {
     Attributes: Attributes,
     Preview: Preview,
     Searchbar: Searchbar,
-    DynamicLive: DynamicLive,
+    LiveProvider: LiveProvider,
+    LiveEditor: LiveEditor,
     Playground: Playground,
     pre: (props: any) => (
         <Apsara.Text
