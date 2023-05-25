@@ -13,10 +13,14 @@ export interface Props {
 
 const Wrapper = styled('div', {
   width: '100%',
-  padding: "$4",
-  display: "flex",
+  pt: "120px",
+  pb: "120px",
   gap: "$2",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   flexDirection: 'column',
+  background: "url(/dot.svg)",
 })
 
 const DynamicLive: React.FC<Props> = ({ code, scope }) => {

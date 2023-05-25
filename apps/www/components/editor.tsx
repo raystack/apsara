@@ -1,7 +1,9 @@
 import { styled } from "@odpf/apsara";
 import { ChevronRight, Copy } from "lucide-react";
+import { themes } from 'prism-react-renderer';
 import React, { useState } from "react";
 import { LiveEditor } from "react-live";
+
 import useCopyToClipboard from "./useClipboard";
 
 interface Props {
@@ -99,7 +101,7 @@ const Editor: React.FC<Props> = ({ code }) => {
                     </SummarySafari>
                 </Summary>
                 <Area>
-                    <LiveEditor />
+                    <LiveEditor theme={themes.nightOwlLight} />
                 </Area>
             </Details>
         </StyledEditor>
