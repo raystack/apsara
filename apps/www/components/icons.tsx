@@ -1,8 +1,9 @@
-import { Component2Icon, ShadowNoneIcon } from "@radix-ui/react-icons";
+import { Component2Icon, InfoCircledIcon, ShadowNoneIcon } from "@radix-ui/react-icons";
 
 
 const Icons = {
   Component2Icon,
+  InfoCircledIcon,
   ShadowNoneIcon
 };
 

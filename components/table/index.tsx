@@ -17,7 +17,7 @@ const SimpleTh = styled("th", {
     fontWeight: "unset",
     textAlign: "start",
     fontSize: "$2",
-    py: "$2",
+    py: "$3",
     borderBottom: "1px solid $gray4",
     variants: {
         align: {
@@ -47,7 +47,7 @@ const SimpleTh = styled("th", {
 });
 
 const SimpleTd = styled("td", {
-    py: "$2",
+    py: "$3",
     borderBottom: "1px solid $gray4",
     fontSize: "$2",
     lineHeight: "$1",

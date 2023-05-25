@@ -1,4 +1,4 @@
-import { Code, SimpleTable, Text } from "@odpf/apsara";
+import { SimpleTable } from "@odpf/apsara";
 import props from "~/configs/props";
 
 type AttributesProps = {
@@ -13,22 +13,22 @@ export const Attributes = ({ type }: AttributesProps) => {
             <SimpleTable.Thead>
                 <SimpleTable.Tr>
                     {headers.map((header) => (
-                        <SimpleTable.Th key={header}>{header}</SimpleTable.Th>
+                        <SimpleTable.Th key={header} css={{ py: "$3" }}>
+                            {header}
+                        </SimpleTable.Th>
                     ))}
                 </SimpleTable.Tr>
             </SimpleTable.Thead>
             <SimpleTable.Body>
                 {rows.map((row, index) => (
                     <SimpleTable.Tr key={index}>
-                        {row.map((column, index) => (
-                            <SimpleTable.Th key={index}>
-                                {column.type === "code" ? (
-                                    <Code css={{ whiteSpace: "break-spaces"}}>{column.value}</Code>
-                                ) : (
-                                    <Text>{column.value}</Text>
-                                )}
-                            </SimpleTable.Th>
-                        ))}
+                        {row.map((column, index) => {
+                            return (
+                                <SimpleTable.Td key={index} css={{ py: "$3" }}>
+                                    { column }
+                                </SimpleTable.Td>
+                            );
+                        })}
                     </SimpleTable.Tr>
                 ))}
             </SimpleTable.Body>
