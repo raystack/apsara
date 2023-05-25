@@ -14,15 +14,16 @@ description: A basic text input field used as search.
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { SearchField } from "@styple/design-system";
 
 // Boilerplate component of how to implement a searchbar with SearchField
@@ -47,7 +48,8 @@ export const Searchbar = () => {
     </form>
   );
 };
-```
+`} border />
+</LiveProvider>
 
 
 ## API Reference

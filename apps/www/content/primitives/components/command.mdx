@@ -36,17 +36,17 @@ description: Fast, composable, unstyled command menu for React.
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Command } from '@odpf/apsara'
-
 
 <Command css={{background: "#FFF", width:"450px"}}>
   <Command.Input placeholder="Type a command or search..." />
@@ -65,4 +65,5 @@ import { Command } from '@odpf/apsara'
     </Command.Group>
   </Command.List>
 </Command>
-```
+`} border />
+</LiveProvider>

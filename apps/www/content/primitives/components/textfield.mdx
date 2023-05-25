@@ -33,15 +33,16 @@ description: Displays a form text field or a component that looks like a text fi
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { TextField } from '@odpf/apsara'
 
 
@@ -57,4 +58,5 @@ import { TextField } from '@odpf/apsara'
   placeholder="Password"
   autoComplete="off"
 />
-```
+`} border />
+</LiveProvider>

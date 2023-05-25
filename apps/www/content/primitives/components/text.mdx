@@ -24,15 +24,16 @@ description:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Command } from '@odpf/apsara'
 
 <Text size="1">This is a test</Text> 
@@ -40,4 +41,5 @@ import { Command } from '@odpf/apsara'
 <Text size="3">This is a test</Text> 
 <Text size="4">This is a test</Text> 
 <Text size="5">This is a test</Text> 
-```
+`} border />
+</LiveProvider>

@@ -24,15 +24,16 @@ description: Displays a card with header, content, and footer.
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Card, Heading, Text } from '@odpf/apsara'
 
 <Card css={{ width: "400px" }}>
@@ -41,4 +42,5 @@ import { Card, Heading, Text } from '@odpf/apsara'
     BigQuery is Google's fully managed, serverless data warehouse that enables scalable analysis.
   </Text>
 </Card>
-```
+`} border />
+</LiveProvider>

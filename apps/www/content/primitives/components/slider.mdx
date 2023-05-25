@@ -24,18 +24,20 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Slider } from '@odpf/apsara'
 
 <Slider defaultValue={[50]} />
 <Slider defaultValue={[25, 75]} />
 <Slider defaultValue={[50]} orientation="vertical" css={{ height: 75 }} />
-```
+`} border />
+</LiveProvider>

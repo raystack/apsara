@@ -52,15 +52,16 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Sheet } from '@odpf/apsara'
 
 <Sheet>
@@ -93,4 +94,5 @@ import { Sheet } from '@odpf/apsara'
   </Sheet.Trigger>
   <Sheet.Content side="left"></Sheet.Content>
 </Sheet>
-```
+`} border />
+</LiveProvider>

@@ -27,15 +27,16 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Select } from '@odpf/apsara'
 
 
@@ -44,4 +45,5 @@ import { Select } from '@odpf/apsara'
   <option value="option2" label="Repeat X"></option>
   <option value="option3" label="Repeat Y"></option>
 </Select>
-```
+`} border />
+</LiveProvider>

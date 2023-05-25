@@ -15,7 +15,7 @@ const Area = styled("div", {
     fontFamily: "Consolas, Monaco",
     lineHeight: "1.5",
     color: "$gray4",
-    fontSize: "14px",
+    fontSize: "13px",
     overflow: "auto",
     px: "$2",
 
@@ -49,7 +49,7 @@ const StyledLiveEditor = styled(Editor, {
 const LiveEditor: React.FC<Props> = ({ code, number, border }) => {
     return (
         <Area border={border}>
-            <StyledLiveEditor theme={themes.nightOwlLight} number={number} code={code} />
+            <StyledLiveEditor theme={themes.nightOwlLight} number={number} code={code.trim()} />
         </Area>
     );
 };

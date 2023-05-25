@@ -47,15 +47,16 @@ description: Displays a menu to the user — such as a set of actions or functio
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { DropdownMenu } from '@odpf/apsara'
 
 <DropdownMenu>
@@ -85,4 +86,5 @@ import { DropdownMenu } from '@odpf/apsara'
     </DropdownMenu.Group>
   </DropdownMenu.Content>
 </DropdownMenu>
-```
+`} border />
+</LiveProvider>

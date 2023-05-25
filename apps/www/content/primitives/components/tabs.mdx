@@ -42,15 +42,16 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Tabs } from '@odpf/apsara'
 
 
@@ -74,4 +75,5 @@ import { Tabs } from '@odpf/apsara'
     <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
   </Tabs.List>
 </Tabs>
-```
+`} border />
+</LiveProvider>

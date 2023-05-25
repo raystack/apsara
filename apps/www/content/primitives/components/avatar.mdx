@@ -55,15 +55,16 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx
+<LiveProvider>
+    <LiveEditor code={`
 import { Avatar } from '@odpf/apsara';
 
 <Avatar size="1" alt="John Smith" src="" fallback="J" />
@@ -102,4 +103,5 @@ import { Avatar } from '@odpf/apsara';
   src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
   fallback="J"
 />
-```
+`} border />
+</LiveProvider>

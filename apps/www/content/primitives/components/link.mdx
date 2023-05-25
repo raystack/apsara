@@ -27,15 +27,16 @@ description: Display a hyperlink component
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Link } from '@odpf/apsara'
 
 <Link variant="blue" href="#">
@@ -47,4 +48,5 @@ import { Link } from '@odpf/apsara'
 <Link variant="contrast" href="#">
   <Text size="4">Hyperlink</Text>
 </Link>
-```
+`} border />
+</LiveProvider>

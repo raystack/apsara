@@ -21,17 +21,19 @@ description:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Container } from '@odpf/apsara'
 
 <Container size="1">This is a much shorter paragraph of text, to demonstrate narrow text container. The reason we're using text here is because one common use case for this container size is a 3-up grid.</Container>
 <Container>This is a really long paragraph of text, to demonstrate prose text, like for example, the kind you might read in a blog post. The reason we're using prose here is because the most common use case for this container size is longform text. So we're previewing some longform text here so we can make sure the container width provides an optimal line length for this font size.</Container>
-```
+`} border />
+</LiveProvider>

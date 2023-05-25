@@ -26,19 +26,21 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Radio } from '@odpf/apsara'
 
 <Radio defaultValue="1">
   <Radio.Item value="1" css={{ mr: '$5' }} />
   <Radio.Item value="2" size="2" css={{ mr: '$5' }} />
 </Radio>
-```
+`} border />
+</LiveProvider>

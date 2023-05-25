@@ -25,17 +25,19 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Checkbox } from '@odpf/apsara'
 
 <Checkbox css={{ mr: '$5' }} />
 <Checkbox size="2" css={{ mr: '$5' }} />
-```
+`} border />
+</LiveProvider>

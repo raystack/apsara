@@ -44,17 +44,17 @@ radix:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx
+<LiveProvider>
+    <LiveEditor code={`
 import { Accordion } from '@odpf/apsara';
-
 
 <Accordion type="single">
   <Accordion.Item value="accordion-one">
@@ -86,4 +86,5 @@ import { Accordion } from '@odpf/apsara';
     </Accordion.Content>
   </Accordion.Item>
 </Accordion> 
-```
+`} border />
+</LiveProvider>

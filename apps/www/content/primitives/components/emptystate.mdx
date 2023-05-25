@@ -23,19 +23,21 @@ description:
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { EmptyState } from '@odpf/apsara'
 
 <EmptyState css={{ marginTop: 160 }}>
   <h3>No Design Systems</h3>
   <p>You can create a new Design System by clicking the button.</p>
 </EmptyState>
-```
+`} border />
+</LiveProvider>

@@ -30,17 +30,17 @@ description: Displays a callout for user attention.
 
 Install the component from your command line.
 
-```bash
-npm install @odpf/apsara
-```
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
 
 
 ## Anatomy
 Import all parts and piece them together.
 
-```tsx outline=true
+<LiveProvider>
+    <LiveEditor code={`
 import { Alert } from '@odpf/apsara'
-
 <Alert>
   <Alert.Title>
     <Component2Icon style={{width:20, height: 20}} /> Heads up!
@@ -49,4 +49,5 @@ import { Alert } from '@odpf/apsara'
     You can add components to your app using the cli.
   </Alert.Description>
 </Alert>
-```
+`} border />
+</LiveProvider>

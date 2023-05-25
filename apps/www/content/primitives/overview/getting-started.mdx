@@ -26,8 +26,9 @@ npm install @odpf/apsara@latest
 
 Import and structure the parts.
 
-```jsx line=3,6-14
-// index.jsx
+
+<LiveProvider>
+    <LiveEditor code={`
 import * as React from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from '@odpf/apsara';
 
@@ -41,14 +42,16 @@ const PopoverDemo = () => (
 );
 
 export default PopoverDemo;
-```
+    `} border />
+</LiveProvider>
+
 
 ### 3. Add your styles
 
 Add styles where desired.
 
-```jsx line=4,8,10,12
-// index.jsx
+<LiveProvider>
+    <LiveEditor code={`
 import * as React from 'react';
 import * as Popover from '@radix-ui/react-popover';
 
@@ -62,7 +65,10 @@ const PopoverDemo = () => (
 );
 
 export default PopoverDemo;
-```
+    `} border />
+</LiveProvider>
+
+
 
 
 ## Summary
