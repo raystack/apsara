@@ -102,12 +102,12 @@ const CheckboxGroup = ({
                                 setSelectedValues(newSelectedValues);
                                 onChange && onChange(newSelectedValues);
                             }}
-                            id={`c${index}`}
+                            id={`${option.value}${index}`}
                             checked={selectedValues.includes(option.value || "")}
                             value={option.value}
                             {...props}
                         />
-                        <label className="checkbox_label" htmlFor={`c${index}`}>
+                        <label className="checkbox_label" htmlFor={`${option.value}${index}`}>
                             {option.label}
                         </label>
                     </div>
