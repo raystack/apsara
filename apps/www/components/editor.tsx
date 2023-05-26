@@ -1,15 +1,15 @@
 import { styled } from "@odpf/apsara";
-
-import { ChevronRightIcon, CopyIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 
 import React from "react";
+import { CopyButton } from "./button";
 import LiveEditor from "./live-editor";
 import useCopyToClipboard from "./useClipboard";
 
 interface Props {
     code: string;
-    visible: boolean
-    setVisible: (value: boolean) => void
+    visible: boolean;
+    setVisible: (value: boolean) => void;
 }
 
 const StyledEditor = styled("div", {
@@ -30,7 +30,7 @@ const Summary = styled("summary", {
     userSelect: "none",
     outline: "none",
     cursor: "pointer",
-    backgroundColor: "$gray1"
+    backgroundColor: "$gray1",
 });
 
 const SummarySafari = styled("div", {
@@ -58,16 +58,16 @@ const StyledChevronRightIcon = styled(ChevronRightIcon, {
         visible: {
             true: {
                 transform: "rotate(90deg)",
-                transition: "all .2s"
-            }
-        }
-    }
-})
+                transition: "all .2s",
+            },
+        },
+    },
+});
 
 const Editor: React.FC<Props> = ({ code, visible, setVisible }) => {
     const [_, copy] = useCopyToClipboard();
+    const [copying, setCopying] = React.useState<number>(0);
 
-    
     const clickHandler = (event: React.MouseEvent) => {
         event.stopPropagation();
         event.preventDefault();
@@ -78,6 +78,10 @@ const Editor: React.FC<Props> = ({ code, visible, setVisible }) => {
         event.stopPropagation();
         event.preventDefault();
         copy(code);
+        setCopying((c) => c + 1);
+        setTimeout(() => {
+            setCopying((c) => c - 1);
+        }, 2000);
     };
 
     return (
@@ -89,16 +93,10 @@ const Editor: React.FC<Props> = ({ code, visible, setVisible }) => {
                             <StyledChevronRightIcon width={16} visible={visible} />
                             <span>{"Code Editor"}</span>
                         </Action>
-                        <Action>
-                            {visible && (
-                                <span className="copy" onClick={copyHandler} title={"Copy Code"}>
-                                    <CopyIcon width={18} />
-                                </span>
-                            )}
-                        </Action>
+                        <Action>{visible && <CopyButton onClick={copyHandler} copying={copying} />}</Action>
                     </SummarySafari>
                 </Summary>
-                <LiveEditor number code={code}/>
+                <LiveEditor number code={code} />
             </Details>
         </StyledEditor>
     );

@@ -12,7 +12,7 @@ interface Props {
 const Area = styled("div", {
     position: "relative",
     whiteSpace: "pre",
-    fontFamily: "Consolas, Monaco",
+    fontFamily: "SF Mono, ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace",
     lineHeight: "1.5",
     color: "$gray4",
     fontSize: "13px",
@@ -23,7 +23,7 @@ const Area = styled("div", {
         border: {
             true: {
                 borderRadius: "$2",
-               border: "1px solid $gray4"
+                border: "1px solid $gray4",
             },
         },
     },

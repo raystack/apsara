@@ -2,7 +2,7 @@ import { Badge, Box, Container, Flex, ScrollArea, styled, Text } from "@odpf/aps
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { primitivesRoutes, RouteProps } from "~/utils/routes";
+import { PageProps, primitivesRoutes } from "~/utils/routes";
 
 function useCurrentPageSlug() {
     const router = useRouter();
@@ -35,7 +35,6 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
         <Box as="span">
             <Box
                 {...props}
-                
                 css={{
                     display: "flex",
                     alignItems: "center",
@@ -61,7 +60,9 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
                     },
                 }}
             >
-                <Link href={href} style={{ textDecoration: "none"}}>{children}</Link>
+                <Link href={href} style={{ textDecoration: "none" }}>
+                    {children}
+                </Link>
             </Box>
         </Box>
     );
@@ -77,7 +78,6 @@ export function NavItemTitle({ children }: any) {
 
 function NavWrapper({ children, isMobileMenuOpen }: any) {
     const [isMobileLayout, setIsMobileLayout] = useState(false);
-
     useEffect(() => {
         const mediaQueryList = window.matchMedia("(min-width: 900px)");
         const handleChange = () => setIsMobileLayout(!mediaQueryList.matches);
@@ -91,89 +91,101 @@ function NavWrapper({ children, isMobileMenuOpen }: any) {
         <Box
             css={{
                 position: "fixed",
-                top: "$sizes$8",
-                left: 0,
-                bottom: 0,
-                zIndex: 1,
-
-                width: "100%",
-                maxHeight: "auto",
-
-                overflowX: "hidden",
-                WebkitOverflowScrolling: "touch",
-
-                backgroundColor: "$loContrast",
-
+                top: "0",
+                bottom: "0",
+                width: "296px",
+                overflow: "hidden",
+                flexDirection: "column",
                 display: isMobileMenuOpen ? "block" : "none",
                 "@bp2": { display: "block", width: "250px" },
             }}
         >
-            <ScrollArea>
-                <Box css={{ px: "$2" }}>{children}</Box>
-                <Box css={{ height: "$5", "@bp2": { height: "$8" } }} />
-            </ScrollArea>
+            <Box css={{ px: "$2" }}>{children}</Box>
+            <Box css={{ height: "$5", "@bp2": { height: "$8" } }} />
         </Box>
     );
 }
 
-function MainWrapper(props: any) {
-    return (
-        <Box css={{ pt: "$8", position: "relative", zIndex: 1 }}>
-            <Flex css={{ flexDirection: "row" }} {...props} />
-        </Box>
-    );
-}
-
-const PageWrapper = styled(Box, {
-    maxWidth: "100%",
-    flex: 1,
-    py: "$5",
-    zIndex: 0,
-
-    "@bp2": { pt: "$8", pb: "$9", pl: "250px" },
-    "@media (min-width: 1440px)": { pr: "250px" },
+const PageWrapper = styled(Flex, {
+    width: "100%",
+    minHeight: "100vh",
+    maxWidth: "1250px",
+    margin: "0 auto",
 });
 
 function ContentWrapper(props: any) {
-    return <Container size="3" css={{ maxWidth: "780px", position: "relative" }} {...props} />;
+    return <Container css={{ maxWidth: "780px", position: "relative", margin: "0", marginLeft: "300px" }} {...props} />;
 }
 
 export function PrimitivePage({ children }: { children: React.ReactNode }) {
     const currentPageSlug = useCurrentPageSlug();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+    const [overviews, components] = primitivesRoutes;
     return (
-        <MainWrapper>
-            <NavWrapper isMobileMenuOpen={isMobileMenuOpen}>
-                <NavItem href={`/`}>Apsara2.0</NavItem>
-                <Box css={{ display: isSearchOpen ? "none" : undefined, mt: "$4" }}>
-                    {primitivesRoutes.map((section: RouteProps) => (
-                        <Box key={section.label} css={{ mb: "$4" }}>
-                            <NavHeading>{section.label}</NavHeading>
-
-                            {section.pages.map((page) => (
-                                <NavItem key={page.slug} href={`/${page.slug}`} active={currentPageSlug === page.slug}>
-                                    <NavItemTitle>{page.title}</NavItemTitle>
-                                    {page.preview && (
-                                        <Badge variant="blue" css={{ ml: "$2" }}>
-                                            Preview
-                                        </Badge>
-                                    )}
-                                    {page.deprecated && (
-                                        <Badge variant="yellow" css={{ ml: "$2" }}>
-                                            Deprecated
-                                        </Badge>
-                                    )}
-                                </NavItem>
-                            ))}
-                        </Box>
-                    ))}
-                </Box>
-            </NavWrapper>
+        <Flex>
             <PageWrapper>
+                <NavWrapper isMobileMenuOpen={isMobileMenuOpen}>
+                    <NavItem href={`/`}>Apsara2.0</NavItem>
+                    <ScrollArea>
+                        <Box
+                            css={{
+                                mt: "$4",
+                                maxHeight: "100vh",
+                                display: isSearchOpen ? "none" : undefined,
+                            }}
+                        >
+                            <Box key={overviews.label} css={{ mb: "$4" }}>
+                                <NavHeading>{overviews.label}</NavHeading>
+
+                                {overviews.pages.map((page: PageProps) => (
+                                    <NavItem
+                                        key={page.slug}
+                                        href={`/${page.slug}`}
+                                        active={currentPageSlug === page.slug}
+                                    >
+                                        <NavItemTitle>{page.title}</NavItemTitle>
+                                        {page.preview && (
+                                            <Badge variant="blue" css={{ ml: "$2" }}>
+                                                Preview
+                                            </Badge>
+                                        )}
+                                        {page.deprecated && (
+                                            <Badge variant="yellow" css={{ ml: "$2" }}>
+                                                Deprecated
+                                            </Badge>
+                                        )}
+                                    </NavItem>
+                                ))}
+                            </Box>
+                            <Box key={components.label} css={{ mb: "$4" }}>
+                                <NavHeading>{components.label}</NavHeading>
+
+                                {components.pages.map((page: PageProps) => (
+                                    <NavItem
+                                        key={page.slug}
+                                        href={`/${page.slug}`}
+                                        active={currentPageSlug === page.slug}
+                                    >
+                                        <NavItemTitle>{page.title}</NavItemTitle>
+                                        {page.preview && (
+                                            <Badge variant="blue" css={{ ml: "$2" }}>
+                                                Preview
+                                            </Badge>
+                                        )}
+                                        {page.deprecated && (
+                                            <Badge variant="yellow" css={{ ml: "$2" }}>
+                                                Deprecated
+                                            </Badge>
+                                        )}
+                                    </NavItem>
+                                ))}
+                            </Box>
+                        </Box>
+                    </ScrollArea>
+                </NavWrapper>
                 <ContentWrapper>{children}</ContentWrapper>
             </PageWrapper>
-        </MainWrapper>
+        </Flex>
     );
 }

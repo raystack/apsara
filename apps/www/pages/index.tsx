@@ -1,4 +1,4 @@
-import { EmptyState, Link } from "@odpf/apsara";
+import { Link } from "@odpf/apsara";
 import type { ColumnDef } from "@tanstack/react-table";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Inter } from "next/font/google";
@@ -74,11 +74,3 @@ export default function Home() {
         </>
     );
 }
-
-export const noDataChildren = (
-    <EmptyState>
-        <div className="svg-container"></div>
-        <h3>0 teams created into your workspace</h3>
-        <div className="pera">Try creating a new team.</div>
-    </EmptyState>
-);
