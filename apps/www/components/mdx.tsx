@@ -19,20 +19,8 @@ export const components = {
     LiveProvider: LiveProvider,
     LiveEditor: LiveEditor,
     Playground: Playground,
-    pre: (props: any) => (
-        <Apsara.Text
-            {...props}
-            as="pre"
-            size="4"
-        />
-    ),
-    h1: (props: any) => (
-        <Apsara.Heading
-            {...props}
-            as="h1"
-            size="3"
-        />
-    ),
+    pre: (props: any) => <Apsara.Text {...props} as="pre" size="4" />,
+    h1: (props: any) => <Apsara.Heading {...props} as="h1" size="3" />,
     Description: ({ children, ...props }: any) => {
         // takes the text even if it's wrapped in `<p>`
         // https://github.com/wooorm/xdm/issues/47
@@ -51,7 +39,7 @@ export const components = {
                     {...props}
                     id={id}
                     as={"h2" as any}
-                    css={{ scrollMarginTop: "$9" }}
+                    css={{ scrollMarginTop: "$9", fontSize: "$7" }}
                     data-heading
                 >
                     {children}
@@ -61,7 +49,7 @@ export const components = {
     },
     h3: ({ children, id, ...props }: any) => (
         <LinkHeading id={id} css={{ mt: "$7", mb: "$1" }}>
-            <Apsara.Heading {...props} id={id} as={"h3" as any} css={{ scrollMarginTop: "$9" }} data-heading>
+            <Apsara.Heading {...props} id={id} as={"h3" as any} css={{ scrollMarginTop: "$9", fontSize: "$6" }} data-heading>
                 {children}
             </Apsara.Heading>
         </LinkHeading>
@@ -71,7 +59,7 @@ export const components = {
             as="h4"
             {...props}
             size="4"
-            css={{ scrollMarginTop: "$9", mb: "$3", lineHeight: "27px", fontWeight: 500 }}
+            css={{ scrollMarginTop: "$9", mb: "$3", lineHeight: "27px", fontWeight: 500, fontSize: "$5" }}
         />
     ),
     p: (props: any) => <Apsara.Paragraph {...props} css={{ mb: "$3" }} as="p" />,
@@ -132,7 +120,7 @@ export const components = {
 
     code: ({ className, line, ...props }: any) => {
         // if it's a codeblock (``` block in markdown), it'll have a className from prism
-        return <code className={className} {...props} style={{whiteSpace: "break-spaces"}}/>
+        return <code className={className} {...props} style={{ whiteSpace: "break-spaces" }} />;
     },
     Note: (props: any) => (
         <Apsara.Box

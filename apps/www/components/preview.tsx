@@ -1,15 +1,13 @@
-import { Container } from "@odpf/apsara";
+import { Container, Flex } from "@odpf/apsara";
 
 type PreviewProps = React.ComponentProps<typeof Container>;
 export const Preview = ({ css, ...props }: PreviewProps) => (
-    <Container
+    <Flex
         {...props}
         data-preview
+        align="center"
+        justify="center"
         css={{
-            position: "relative",
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
             pt: "120px",
             pb: "120px",
             mb: "$10",

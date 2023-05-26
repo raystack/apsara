@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Link, Paragraph, Section } from "@odpf/apsara";
+import { Box, Flex, Heading, Link, Text } from "@odpf/apsara";
 import { getMDXComponent } from "mdx-bundler/client";
 import React from "react";
 import { RemoveScroll } from "react-remove-scroll";
@@ -22,18 +22,18 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
             </div>
 
             <MDXProvider frontmatter={frontmatter}>
-                <Section>
+                <>
                     <Heading
                         as="h1"
-                        size="3"
-                        css={{ scrollMarginTop: "$9", fontWeight: 500, mb: "$2", lineHeight: "40px" }}
+                        size="2"
+                        css={{ fontWeight: 500, lineHeight: "40px" }}
                     >
                         {frontmatter.title}
                     </Heading>
 
-                    <Paragraph size="2" as="p" css={{ mt: "$2", mb: "$7" }}>
+                    <Text size="4" as="p" css={{ mt:"$2",mb: "$7" }}>
                         {frontmatter.description}
-                    </Paragraph>
+                    </Text>
                     {frontmatter.radix ? (
                         <Flex gap="4">
                             {frontmatter.radix?.link && (
@@ -57,7 +57,7 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
                             )}
                         </Flex>
                     ) : null}
-                </Section>
+                </>
                 <Component components={components as any} />
             </MDXProvider>
 
@@ -85,7 +85,7 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
                     },
                 }}
             >
-                <Toc />
+                <Toc title={frontmatter.title}/>
             </Box>
         </>
     );

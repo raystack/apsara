@@ -48,7 +48,7 @@ export default function OverviewDoc({ frontmatter, code }: Doc) {
                     },
                 }}
             >
-                <Toc />
+                <Toc title={frontmatter.title} />
             </Box>
         </>
     );
