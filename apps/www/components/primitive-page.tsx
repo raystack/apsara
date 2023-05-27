@@ -1,4 +1,5 @@
-import { Badge, Box, Flex, ScrollArea, styled, Text } from "@odpf/apsara";
+import { Badge, Box, Flex, ScrollArea, styled, Text, useApsaraTheme } from "@odpf/apsara";
+import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -63,7 +64,7 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
                     },
                 }}
             >
-                <Link href={href} style={{ textDecoration: "none", padding: "12px 16px", width: "100%"}}>
+                <Link href={href} style={{ textDecoration: "none", padding: "12px 16px", width: "100%" }}>
                     <Text size="3" css={{ fontWeight: active ? "500" : "none" }}>
                         {children}
                     </Text>
@@ -93,7 +94,7 @@ function NavWrapper({ children, isMobileMenuOpen }: any) {
     }, []);
 
     return (
-        <Flex css={{ flexGrow: 1, display:"none", "@bp2": { display: "block" }, }}>
+        <Flex css={{ flexGrow: 1, display: "none", "@bp2": { display: "block" } }}>
             <Flex
                 direction="column"
                 css={{
@@ -123,6 +124,13 @@ const PageWrapper = styled(Flex, {
     padding: "0 1$4",
 });
 
+const iconStyle = {
+    padding: "4px",
+    borderRadius: "4px",
+    width: "20px",
+    height: "auto",
+};
+
 function ContentWrapper(props: any) {
     return (
         <Flex
@@ -132,7 +140,7 @@ function ContentWrapper(props: any) {
                 maxWidth: "100%",
                 paddingLeft: "40px",
                 padding: "40px $4",
-                "@bp2": { maxWidth: "calc(100% - 220px)", padding: "40px 60px", }
+                "@bp2": { maxWidth: "calc(100% - 220px)", padding: "40px 60px" },
             }}
             {...props}
         />
@@ -144,6 +152,9 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [overviews, components] = primitivesRoutes;
+    const { themePreference, setTheme, themeName, theme, themes, updateTheme } = useApsaraTheme();
+    const bgColor = themeName === "dark" ? "rgba(21, 23, 24, 0.9)" : "rgba(255, 255, 255, 0.9)";
+
     return (
         <Flex direction="column">
             <header style={{ display: "flex", height: "64px" }}>
@@ -157,14 +168,16 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
                         height: "64px",
                         paddingRight: "0",
                         borderBottom: "1px solid #d3d7df",
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        backgroundColor: `${bgColor}`,
                         zIndex: 999,
                     }}
                 >
-                    <Flex css={{ maxWidth: "1250px", margin: "auto", width: "100%"}}>
+                    <Flex align="center" css={{ maxWidth: "1250px", margin: "auto", width: "100%" }}>
                         <Flex direction="row" align="center">
                             <NavItem href={`/`}>
-                                <Text size="4" css={{fontWeight: "$700"}}>Apsara 2.0</Text>
+                                <Text size="4" css={{ fontWeight: "$700" }}>
+                                    Apsara 2.0
+                                </Text>
                             </NavItem>
                         </Flex>
                         <Flex direction="row" align="center" justify="center" gap="6" css={{ flexGrow: 1 }}>
@@ -177,6 +190,29 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
                             <Text css={{ fontWeight: "$500" }} size="2">
                                 Hooks
                             </Text>
+                        </Flex>
+                        <Flex gap="3" css={{ background: "$gray4", padding: "$2", borderRadius: "$3" }}>
+                            <DesktopIcon
+                                onClick={() => setTheme("auto")}
+                                style={{
+                                    ...iconStyle,
+                                    ...(themePreference === "auto" ? { background: `${bgColor}` } : {}),
+                                }}
+                            />
+                            <SunIcon
+                                onClick={() => setTheme("light")}
+                                style={{
+                                    ...iconStyle,
+                                    ...(themePreference === "light" ? { background: `${bgColor}` } : {}),
+                                }}
+                            />
+                            <MoonIcon
+                                onClick={() => setTheme("dark")}
+                                style={{
+                                    ...iconStyle,
+                                    ...(themePreference === "dark" ? { background: `${bgColor}` } : {}),
+                                }}
+                            />
                         </Flex>
                     </Flex>
                 </Flex>

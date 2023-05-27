@@ -1,4 +1,4 @@
-import { styled } from "@odpf/apsara";
+import { styled, useApsaraTheme } from "@odpf/apsara";
 import { themes } from "prism-react-renderer";
 import React from "react";
 import { LiveEditor as Editor } from "react-live";
@@ -47,9 +47,14 @@ const StyledLiveEditor = styled(Editor, {
 });
 
 const LiveEditor: React.FC<Props> = ({ code, number, border }) => {
+    const { themeName } = useApsaraTheme();
     return (
         <Area border={border}>
-            <StyledLiveEditor theme={themes.nightOwlLight} number={number} code={code.trim()} />
+            <StyledLiveEditor
+                theme={themeName === "light" ? themes.nightOwlLight : themes.nightOwl}
+                number={number}
+                code={code.trim()}
+            />
         </Area>
     );
 };
