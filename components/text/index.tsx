@@ -127,10 +127,13 @@ export const Text = styled("span", {
             contrast: {
                 color: "$hiContrast",
             },
+            default: {
+                color: "inherit",
+            },
         },
     },
     defaultVariants: {
         size: "2",
-        variant: "contrast",
+        variant: "default",
     },
 });

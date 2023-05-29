@@ -99,7 +99,7 @@ const SimpleTableRoot = styled("table", {
                 [`& ${SimpleTbody}`]: {
                     [`& ${SimpleTr}`]: {
                         "&:nth-child(odd)": {
-                            bc: "$gray2",
+                            backgroundColor: "$gray2",
                         },
                     },
                 },

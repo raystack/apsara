@@ -51,7 +51,7 @@ const Playground: React.FC<PlaygroundProps> = React.memo(
         return (
             <StyledPlayground>
                 <Tabs defaultValue={tabs[0]?.name} >
-                    <Tabs.List css={{background: "transparent", p: "$4", gap: "$3", borderBottom: "1px solid $gray4"}}>
+                    <Tabs.List css={{background: "transparent", padding: "$4", gap: "$3", borderBottom: "1px solid $gray4"}}>
                         {tabs.map((tab) => (
                             <Tabs.Trigger value={tab.name} key={tab.name}>
                                 {tab.name}

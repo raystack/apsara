@@ -21,7 +21,7 @@ export const baseItemCss = css({
 export const itemCss = css(baseItemCss, {
     position: "relative",
     color: "$gray12",
-    p: "$1 $2",
+    padding: "$1 $2",
 
     "&[data-highlighted]": {
         outline: "none",

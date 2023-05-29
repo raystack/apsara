@@ -276,8 +276,8 @@ const AvatarRoot = React.forwardRef<React.ElementRef<typeof StyledAvatar>, Avata
                             right: "0",
                             boxShadow: "0 0 0 3px $colors$loContrast",
                             borderRadius: "$round",
-                            mr: "-3px",
-                            mb: "-3px",
+                            marginRight: "-3px",
+                            marginBottom: "-3px",
                         }}
                     >
                         <Status size={size && size > 2 ? "2" : "1"} variant={status} />

@@ -22,7 +22,7 @@ const StyledContent = styled(TooltipPrimitive.Content, {
         multiline: {
             true: {
                 maxWidth: 250,
-                pb: 7,
+                paddingBottom: 7,
             },
         },
     },

@@ -27,8 +27,8 @@ const StyledSelect = styled("select", {
     outline: "none",
     width: "100%",
     height: "100%",
-    pl: "$3",
-    pr: "$4",
+    paddingLeft: "$3",
+    paddingRight: "$4",
     lineHeight: "32px",
 });
 

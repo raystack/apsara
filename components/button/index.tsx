@@ -18,12 +18,12 @@ export const Button = styled("button", {
     display: "inline-flex",
     flexShrink: 0,
     justifyContent: "center",
-    lineHeight: "1",
     WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
     // Custom
     px: "$3",
     fontSize: "$1",
+    lineHeight: "16px",
     fontWeight: 500,
 
     "&:disabled": {
@@ -48,25 +48,23 @@ export const Button = styled("button", {
         },
         size: {
             small: {
-                py: "$1",
+                py: "$2",
                 px: "$3",
-                height: "$6",
+
                 borderRadius: "$1",
             },
             normal: {
-                py: "$2",
+                py: "$3",
                 px: "$3",
-                height: "$8",
                 borderRadius: "$1",
             },
             large: {
-                py: "$3",
+                py: "$4",
                 px: "$4",
-                height: "$9",
                 borderRadius: "$1",
             },
             circle: {
-                p: "$2",
+                padding: "$2",
                 width: "24px",
                 height: "24px",
                 borderRadius: "$round",
@@ -144,8 +142,7 @@ export const Button = styled("button", {
             variant: "secondary",
             size: "normal",
             css: {
-                py: "$1",
-                height: "$6",
+                py: "$2",
             },
         },
     ],

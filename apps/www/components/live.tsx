@@ -13,10 +13,9 @@ export interface Props {
 }
 
 const Wrapper = styled("div", {
-    width: "100%",
-    pt: "120px",
-    pb: "120px",
     gap: "$2",
+    width: "100%",
+    minHeight: "280px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

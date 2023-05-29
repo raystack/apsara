@@ -31,7 +31,7 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
                         {frontmatter.title}
                     </Heading>
 
-                    <Text size="4" as="p" css={{ mt:"$2",mb: "$7" }}>
+                    <Text size="4" as="p" css={{ marginTop:"$2",marginBottom: "$7" }}>
                         {frontmatter.description}
                     </Text>
                     {frontmatter.radix ? (

@@ -6,8 +6,8 @@ export const Container = styled("div", {
     flexShrink: 0,
 
     // Custom
-    ml: "auto",
-    mr: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
     px: "$5",
 
     variants: {

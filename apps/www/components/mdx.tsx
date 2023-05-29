@@ -26,14 +26,14 @@ export const components = {
         // https://github.com/wooorm/xdm/issues/47
         const childText = typeof children === "string" ? children : children.props.children;
         return (
-            <Apsara.Paragraph size="1" {...props} as="p" css={{ mt: "$2", mb: "$10" }}>
+            <Apsara.Paragraph size="1" {...props} as="p" css={{ marginTop: "$2", marginBottom: "$10" }}>
                 {childText}
             </Apsara.Paragraph>
         );
     },
     h2: ({ children, id, ...props }: any) => {
         return (
-            <LinkHeading id={id} css={{ mt: "$7", mb: "$2" }}>
+            <LinkHeading id={id} css={{ marginTop: "$7", marginBottom: "$2" }}>
                 <Apsara.Heading
                     size="1"
                     {...props}
@@ -48,7 +48,7 @@ export const components = {
         );
     },
     h3: ({ children, id, ...props }: any) => (
-        <LinkHeading id={id} css={{ mt: "$7", mb: "$1" }}>
+        <LinkHeading id={id} css={{ marginTop: "$7", marginBottom: "$1" }}>
             <Apsara.Heading {...props} id={id} as={"h3" as any} css={{ scrollMarginTop: "$9", fontSize: "$6" }} data-heading>
                 {children}
             </Apsara.Heading>
@@ -59,10 +59,10 @@ export const components = {
             as="h4"
             {...props}
             size="4"
-            css={{ scrollMarginTop: "$9", mb: "$3", lineHeight: "27px", fontWeight: 500, fontSize: "$5" }}
+            css={{ scrollMarginTop: "$9", marginBottom: "$3", lineHeight: "27px", fontWeight: 500, fontSize: "$5" }}
         />
     ),
-    p: (props: any) => <Apsara.Paragraph {...props} css={{ mb: "$3" }} as="p" />,
+    p: (props: any) => <Apsara.Paragraph {...props} css={{ marginBottom: "$3" }} as="p" />,
     a: ({ href = "", ...props }) => {
         if (href.startsWith("http")) {
             return (
@@ -82,11 +82,11 @@ export const components = {
     ul: (props: any) => (
         <Apsara.Box
             {...props}
-            css={{ color: "$hiContrast", pl: "1.15em", mb: "$3", listStyleType: "circle" }}
+            css={{ color: "$hiContrast", paddingLeft: "1.15em", marginBottom: "$3", listStyleType: "circle" }}
             as="ul"
         />
     ),
-    ol: (props: any) => <Apsara.Box {...props} css={{ color: "$hiContrast", mb: "$3" }} as="ol" />,
+    ol: (props: any) => <Apsara.Box {...props} css={{ color: "$hiContrast", marginBottom: "$3" }} as="ol" />,
     li: (props: any) => (
         <li>
             <Apsara.Paragraph {...props} />
@@ -103,9 +103,9 @@ export const components = {
     blockquote: (props: any) => (
         <Apsara.Box
             css={{
-                mt: "$6",
-                mb: "$5",
-                pl: "$4",
+                marginTop: "$6",
+                marginBottom: "$5",
+                paddingLeft: "$4",
                 borderLeft: `1px solid $gray4`,
                 color: "orange",
                 "& p": {
@@ -126,8 +126,8 @@ export const components = {
         <Apsara.Box
             as="aside"
             css={{
-                mt: "$5",
-                mb: "$5",
+                marginTop: "$5",
+                marginBottom: "$5",
                 borderRadius: "$3",
                 "&, & p": {
                     fontSize: "$3",
@@ -162,7 +162,7 @@ const LinkHeading = ({ id, children, css }: { id: string; children: React.ReactN
             }}
         >
             {children}
-            <Apsara.Box as="span" css={{ ml: "$2", color: "$slate10" }}>
+            <Apsara.Box as="span" css={{ marginLeft: "$2", color: "$slate10" }}>
                 <Link2Icon aria-hidden />
             </Apsara.Box>
         </Apsara.Box>

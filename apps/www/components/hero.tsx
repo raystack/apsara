@@ -41,7 +41,7 @@ export const Hero = () => {
                         >
                             Apsara 2.0
                         </Heading>
-                        <Box css={{ maxWidth: 900, mb: "$5" }}>
+                        <Box css={{ maxWidth: 900, marginBottom: "$5" }}>
                             <Text size="5" css={{color: "$gray11"}}>
                                 Apsara is an elegant and beautiful re-usable React UI components build using Radix UI
                                 and Stitches CSS-in-JS. With Apsara, you can easily create clean and powerful personal

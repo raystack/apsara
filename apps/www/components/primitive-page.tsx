@@ -43,8 +43,8 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
                     textDecoration: "none",
                     color: disabled ? "$gray10" : "$hiContrast",
 
-                    mr: "$3",
-                    mb: "2px",
+                    marginRight: "$3",
+                    marginBottom: "2px",
                     borderRadius: "$2",
                     userSelect: "none",
                     minHeight: "$6",
@@ -52,7 +52,7 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
                     transition: "background-color 50ms linear",
                     ...(disabled ? { pointerEvents: "none" } : {}),
                     "&:not(:last-of-type)": {
-                        mb: 1,
+                        marginBottom: 1,
                     },
                     "&:hover": {
                         fontWeight: active ? "bold" : "none",
@@ -64,7 +64,7 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
                     },
                 }}
             >
-                <Link href={href} style={{ textDecoration: "none", padding: "12px 16px", width: "100%" }}>
+                <Link href={href} style={{ textDecoration: "none", padding: "12px 16px", width: "100%", color: "rgb(17, 24, 28)" }}>
                     <Text size="3" css={{ fontWeight: active ? "500" : "none" }}>
                         {children}
                     </Text>
@@ -76,7 +76,7 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
 
 export function NavItemTitle({ children, active }: any) {
     return (
-        <Text size="3" css={{ fontWeight: active ? "500" : "none" }}>
+        <Text size="3"  css={{ fontWeight: active ? "500" : "none" }}>
             {children}
         </Text>
     );
@@ -175,7 +175,7 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
                     <Flex align="center" css={{ maxWidth: "1250px", margin: "auto", width: "100%" }}>
                         <Flex direction="row" align="center">
                             <NavItem href={`/`}>
-                                <Text size="4" css={{ fontWeight: "$700" }}>
+                                <Text size="4" css={{ fontWeight: "$700" }} color="contrast">
                                     Apsara 2.0
                                 </Text>
                             </NavItem>
@@ -222,12 +222,12 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
                     <ScrollArea>
                         <Box
                             css={{
-                                mt: "$4",
+                                marginTop: "$4",
                                 maxHeight: "100vh",
                                 display: isSearchOpen ? "none" : undefined,
                             }}
                         >
-                            <Box key={overviews.label} css={{ mb: "$4" }}>
+                            <Box key={overviews.label} css={{ marginBottom: "$4" }}>
                                 <NavHeading>{overviews.label}</NavHeading>
 
                                 {overviews.pages.map((page: PageProps) => (
@@ -238,19 +238,19 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
                                     >
                                         <NavItemTitle active={currentPageSlug === page.slug}>{page.title}</NavItemTitle>
                                         {page.preview && (
-                                            <Badge variant="blue" css={{ ml: "$2" }}>
+                                            <Badge variant="blue" css={{ marginLeft: "$2" }}>
                                                 Preview
                                             </Badge>
                                         )}
                                         {page.deprecated && (
-                                            <Badge variant="yellow" css={{ ml: "$2" }}>
+                                            <Badge variant="yellow" css={{ marginLeft: "$2" }}>
                                                 Deprecated
                                             </Badge>
                                         )}
                                     </NavItem>
                                 ))}
                             </Box>
-                            <Box key={components.label} css={{ mb: "$4" }}>
+                            <Box key={components.label} css={{ marginBottom: "$4" }}>
                                 <NavHeading>{components.label}</NavHeading>
 
                                 {components.pages.map((page: PageProps) => (
@@ -261,12 +261,12 @@ export function PrimitivePage({ children }: { children: React.ReactNode }) {
                                     >
                                         {page.title}
                                         {page.preview && (
-                                            <Badge variant="blue" css={{ ml: "$2" }}>
+                                            <Badge variant="blue" css={{ marginLeft: "$2" }}>
                                                 Preview
                                             </Badge>
                                         )}
                                         {page.deprecated && (
-                                            <Badge variant="yellow" css={{ ml: "$2" }}>
+                                            <Badge variant="yellow" css={{ marginLeft: "$2" }}>
                                                 Deprecated
                                             </Badge>
                                         )}

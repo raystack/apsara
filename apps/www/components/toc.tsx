@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 
 const QuickNavUl = styled("ul", {
     listStyleType: "none",
-    p: 0,
-    m: 0,
+    padding: 0,
+    margin: 0,
 });
 
 const QuickNavLink = styled(Link, {
@@ -56,7 +56,7 @@ export function Toc({ title }: { title: string }) {
                 display: headings.length === 0 ? "none" : "block",
             }}
         >
-            <Text size="3" css={{ fontWeight: "bold", mb: "$3" }}>
+            <Text size="3" css={{ fontWeight: "bold", marginBottom: "$3" }}>
                 On this page
             </Text>
 

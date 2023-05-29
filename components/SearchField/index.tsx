@@ -21,8 +21,8 @@ export const SearchField = React.forwardRef<React.ElementRef<typeof TextField>, 
                         height: "100%",
                         display: "flex",
                         alignItems: "center",
-                        pl: "$2",
-                        pr: "$2",
+                        paddingLeft: "$2",
+                        paddingRight: "$2",
                     }}
                 >
                     <MagnifyingGlassIcon />
