@@ -16,7 +16,6 @@ const Area = styled("div", {
     lineHeight: "1.5",
     color: "$gray4",
     fontSize: "13px",
-    overflow: "auto",
     px: "$2",
 
     variants: {

@@ -1,5 +1,5 @@
 import { Box, Link, styled, Text } from "@odpf/apsara";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 
 const QuickNavUl = styled("ul", {
     listStyleType: "none",
@@ -21,7 +21,7 @@ const QuickNavText = styled(Text, {
     lineHeight: "20px",
 });
 
-export function Toc({ title }: { title: string }) {
+export function Toc({ title, containerElm }: { title: string; containerElm: MutableRefObject<null> }) {
     const [headings, setHeadings] = useState<HTMLHeadingElement[]>([]);
 
     useEffect(() => {
@@ -41,7 +41,8 @@ export function Toc({ title }: { title: string }) {
         const targetElement = document.querySelector(target) as HTMLLinkElement;
         const targetOffsetTop = targetElement.offsetTop - offset;
 
-        window.scrollTo({
+        // @ts-ignore
+        containerElm.current?.scrollTo({
             top: targetOffsetTop,
             behavior: "smooth",
         });
@@ -52,7 +53,7 @@ export function Toc({ title }: { title: string }) {
             as="nav"
             css={{
                 padding: "$5",
-                py: 68,
+                my: 16,
                 display: headings.length === 0 ? "none" : "block",
             }}
         >
