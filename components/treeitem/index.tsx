@@ -71,13 +71,13 @@ export const TreeItem = styled("div", {
                     backgroundColor: "$purple5",
                 },
             },
-            violet: {
-                backgroundColor: "$violet3",
+            primary: {
+                backgroundColor: "$primary3",
                 "&:hover": {
-                    backgroundColor: "$violet4",
+                    backgroundColor: "$primary4",
                 },
                 "&:active": {
-                    backgroundColor: "$violet5",
+                    backgroundColor: "$primary5",
                 },
             },
             indigo: {

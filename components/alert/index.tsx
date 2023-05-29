@@ -25,7 +25,7 @@ export const StyledRoot = styled("div", {
             },
             info: {
                 "&::before": {
-                    boxShadow: "inset 0 0 0 1px $colors$violet9",
+                    boxShadow: "inset 0 0 0 1px $colors$primary9",
                 },
             },
             success: {

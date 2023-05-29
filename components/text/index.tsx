@@ -88,8 +88,8 @@ export const Text = styled("span", {
             purple: {
                 color: "$purple11",
             },
-            violet: {
-                color: "$violet11",
+            primary: {
+                color: "$primary11",
             },
             indigo: {
                 color: "$indigo11",

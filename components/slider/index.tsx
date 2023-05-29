@@ -18,7 +18,7 @@ const SliderTrack = styled(SliderPrimitive.Track, {
 
 const SliderRange = styled(SliderPrimitive.Range, {
     position: "absolute",
-    background: "$violet9",
+    background: "$primary9",
     borderRadius: "inherit",
     '&[data-orientation="horizontal"]': {
         height: "100%",

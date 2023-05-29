@@ -22,7 +22,7 @@ const StyledRadioIndicator = styled("div", {
     borderRadius: "$round",
     width: 15,
     height: 15,
-    backgroundColor: "$violet9",
+    backgroundColor: "$primary9",
     transform: "scale(0)",
 });
 
@@ -47,7 +47,7 @@ const StyledRadio = styled(RadioGroupPrimitive.Item, {
         },
     },
     '&[data-state="checked"]': {
-        boxShadow: "inset 0 0 0 1px $colors$violet8, 0 0 0 1px $colors$violet8 !important",
+        boxShadow: "inset 0 0 0 1px $colors$primary8, 0 0 0 1px $colors$primary8 !important",
         [`& ${StyledRadioIndicator}`]: {
             transform: "scale(1)",
         },

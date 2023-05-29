@@ -7,7 +7,7 @@ description: Displays a button or a component that looks like a button.
 import { Button, Flex } from "@odpf/apsara";
 
 <Preview>
-    <Button variant="primary"><Text>primary button</Text></Button>
+    <Button variant="primary">Primary button</Button>
 </Preview>
 
 <Description>
@@ -51,11 +51,11 @@ Diffrent button variants
     tabs={[
         {
             name: "Primary",
-            code: `<Button variant="primary">primary button</Button>`,
+            code: `<Button variant="primary">Primary button</Button>`,
         },
         {
             name: "Secondry",
-            code: `<Button variant="secondary">secondary button</Button>`,
+            code: `<Button variant="secondary">Secondary button</Button>`,
         },
     ]}
 />
@@ -67,21 +67,18 @@ Buttons of different sizes.
 <Playground
     scope={{ Button, Flex }}
     tabs={[
-        {
-            name: "Default",
-            code: `<Button variant="primary">primary button</Button>`,
-        },
+        
         {
             name: "Small",
             code: `<Button variant="primary" size="small">primary button</Button>`,
         },
         {
-            name: "Large",
-            code: `<Button variant="primary" size="large">primary button</Button>`,
+            name: "Medium",
+            code: `<Button variant="primary" size="medium">primary button</Button>`,
         },
         {
-            name: "Circle",
-            code: `<Button variant="primary" size="circle">P</Button>`,
+            name: "Default",
+            code: `<Button variant="primary">primary button</Button>`,
         },
     ]}
 />

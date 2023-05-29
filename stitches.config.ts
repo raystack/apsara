@@ -2,6 +2,34 @@ import * as colors from "@radix-ui/colors";
 import type * as Stitches from "@stitches/react";
 import { createStitches } from "@stitches/react";
 
+const primary = {
+    primary1: "#FDFDFE",
+    primary2: "#F8FAFF",
+    primary3: "#F0F4FF",
+    primary4: "#E6EDFE",
+    primary5: "#D9E2FC",
+    primary6: "#C6D4F9",
+    primary7: "#AEC0F5",
+    primary8: "#8DA4EF",
+    primary9: "#3E63DD",
+    primary10: "#3A5CCC",
+    primary11: "#3451B2",
+    primary12: "#101D46",
+};
+const primaryA = {
+    primary1: "#131620",
+    primary2: "#15192D",
+    primary3: "#192140",
+    primary4: "#1C274F",
+    primary5: "#1F2C5C",
+    primary6: "#22346E",
+    primary7: "#273E89",
+    primary8: "#2F4EB2",
+    primary9: "#3E63DD",
+    primary10: "#5373E7",
+    primary11: "#849DFF",
+    primary12: "#EEF1FD",
+};
 export const { styled, css, theme, createTheme, getCssText, globalCss, keyframes, config, reset } = createStitches({
     theme: {
         colors: {
@@ -63,6 +91,7 @@ export const { styled, css, theme, createTheme, getCssText, globalCss, keyframes
             ...colors.goldA,
             ...colors.whiteA,
             ...colors.blackA,
+            ...primary,
 
             // Semantic colors
             hiContrast: "$slate12",
@@ -253,6 +282,7 @@ export const dark = createTheme("dark", {
         ...colors.brownDarkA,
         ...colors.bronzeDarkA,
         ...colors.goldDarkA,
+        ...primaryA,
 
         // Semantic colors
         hiContrast: "$slate12",

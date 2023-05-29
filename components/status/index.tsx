@@ -19,8 +19,8 @@ export const Status = styled("div", {
             gray: {
                 backgroundColor: "$slate7",
             },
-            violet: {
-                backgroundColor: "$violet7",
+            primary: {
+                backgroundColor: "$primary7",
             },
             blue: {
                 backgroundColor: "$blue9",

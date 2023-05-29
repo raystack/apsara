@@ -2,7 +2,6 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import React from "react";
 import { CSS, keyframes, styled, VariantProps } from "~/stitches.config";
-import { IconButton } from "../button";
 import { overlayStyles } from "../overlay";
 
 const fadeIn = keyframes({
@@ -112,9 +111,7 @@ const SheetContent = React.forwardRef<React.ElementRef<typeof StyledContent>, Sh
                 {children}
                 {close && (
                     <StyledCloseButton asChild>
-                        <IconButton variant="ghost">
-                            <Cross1Icon />
-                        </IconButton>
+                        <Cross1Icon />
                     </StyledCloseButton>
                 )}
             </StyledContent>

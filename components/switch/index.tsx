@@ -47,7 +47,7 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
     "&:focus": {},
 
     '&[data-state="checked"]': {
-        backgroundColor: "$violet9",
+        backgroundColor: "$primary9",
     },
 
     [`& ${StyledThumb}`]: {

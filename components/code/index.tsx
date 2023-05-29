@@ -12,9 +12,9 @@ export const Code = styled("code", {
                 backgroundColor: "$slate3",
                 color: "$slate11",
             },
-            violet: {
-                backgroundColor: "$violet3",
-                color: "$violet11",
+            primary: {
+                backgroundColor: "$primary3",
+                color: "$primary11",
             },
         },
     },
