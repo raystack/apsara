@@ -54,8 +54,20 @@ Diffrent button variants
             code: `<Button variant="primary">Primary button</Button>`,
         },
         {
-            name: "Secondry",
+            name: "Outline",
+            code: `<Button variant="outline">Outline button</Button>`,
+        },
+        {
+            name: "Secondary",
             code: `<Button variant="secondary">Secondary button</Button>`,
+        },
+        {
+            name: "Ghost",
+            code: `<Button variant="ghost">Ghost button</Button>`,
+        },
+        {
+            name: "Danger",
+            code: `<Button variant="danger">Danger button</Button>`,
         },
     ]}
 />
@@ -83,17 +95,20 @@ Buttons of different sizes.
     ]}
 />
 
-## Outline
-
-The Outline `Button`
-
-<Playground scope={{ Button }} code={`<Button variant="secondary" outline>secondary button</Button>`} />
 
 ## Disabled
 
 Do not respond to any action.
 
-<Playground scope={{ Button }} code={`<Button variant="secondary" disabled>secondary button</Button>`} />
+<Playground scope={{ Button, Flex }} code={`
+<Flex gap="2">
+    <Button variant="primary" disabled>secondary button</Button>
+    <Button variant="outline" disabled>secondary button</Button>
+    <Button variant="secondary" disabled>secondary button</Button>
+    <Button variant="ghost" disabled>secondary button</Button>
+    <Button variant="danger" disabled>secondary button</Button>
+</Flex>
+`} />
 
 
 ## API Reference

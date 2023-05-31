@@ -101,6 +101,50 @@ export const { styled, css, theme, createTheme, getCssText, globalCss, keyframes
             transparentPanel: "hsl(0 0% 0% / 97%)",
             shadowLight: "hsl(206 22% 7% / 35%)",
             shadowDark: "hsl(206 22% 7% / 20%)",
+
+            // apsara color
+            // forground
+            fgBase: "#3C4347",
+            fgMuted: "#687076",
+            fgSubtle: "#7E868C",
+            fgInverted: "#FBFCFD",
+            fgAccent: "#3E63DD",
+            fgAttention: "#FFB224",
+            fgDanger: "#E5484D",
+            fgSuccess: "#30A46C",
+
+            // background
+            bgBase: "#FBFCFD",
+            bgBaseHover: "#F1F3F5",
+            bgInset: "#F1F3F5",
+            bgSubtle: "#F8F9FA",
+            bgInverted: "#3C4347",
+            bgAccent: "#E6EDFE",
+            bgAccentInverted: "#3E63DD",
+            bgAccentInvertedHover: "#3A5CCC",
+            bgAttention: "#FFECBC",
+            bgAttentionInverted: "#FFB224",
+            bgDanger: "#FFE5E5",
+            bgDangerInverted: "#E5484D",
+            bgDangerInvertedHover: "#DC3D43",
+            bgSuccess: "#DDF3E4",
+            bgSuccessInverted: "#30A46C",
+
+            // border
+            borderBase: "#D7DBDF",
+            borderBaseHover: "#C1C8CD",
+            borderMuted: "#DFE3E6",
+            borderAccent: "#AEC0F5",
+            borderAccentInverted: "#3E63DD",
+            borderAccentInvertedHover: "#3A5CCC",
+
+            borderAttention: "#3A5CCC",
+            borderAttentionInverted: "#FFB224",
+            borderDanger: "#F3AEAF",
+            borderDangerInverted: "#E5484D",
+            borderDangerInvertedHover: "#DC3D43",
+            borderSuccess: "#92CEAC",
+            borderSuccessInverted: "#30A46C",
         },
         space: {
             1: "4px",

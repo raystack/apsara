@@ -37,12 +37,11 @@ const props = {
                 <Flex gap="1" align="center">
                     variant<InfoCircledIcon />
                 </Flex>,
-                <CodeText>primary | secondary</CodeText>,
+                <CodeText>primary | secondary | outline | ghost | danger</CodeText>,
                 "-",
             ],
-            ["size", <CodeText>small | large | circle</CodeText>, "-"],
+            ["size", <CodeText>small | medium | circle</CodeText>, "-"],
             ["disabled", <CodeText>bool</CodeText>, <CodeText>false</CodeText>],
-            ["outline", <CodeText>boolean</CodeText>, <CodeText>false</CodeText>],
             [
                 "ref",
                 <CodeText>

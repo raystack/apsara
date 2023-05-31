@@ -21,7 +21,7 @@ function useCurrentPageSlug() {
 
 export function NavHeading({ children, ...props }: { children: React.ReactNode }) {
     return (
-        <Text as="h4" size="3" css={{ fontWeight: 500, px: "$3", py: "$2" }} {...props}>
+        <Text as="h4" size="3" css={{ fontWeight: 500, margin: "$3" }} {...props}>
             {children}
         </Text>
     );
@@ -47,6 +47,7 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
                     color: disabled ? "$gray10" : "$hiContrast",
 
                     marginRight: "$3",
+                    marginLeft: "$3",
                     marginBottom: "2px",
                     borderRadius: "$2",
                     userSelect: "none",

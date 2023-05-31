@@ -35,17 +35,6 @@ export const Button = styled("button", {
     },
 
     variants: {
-        ghost: {
-            true: {
-                bg: "transparent",
-                "&:hover": {
-                    bg: "transparent",
-                },
-                "&:focus": {
-                    bg: "transparent",
-                },
-            },
-        },
         size: {
             small: {
                 py: "$1",
@@ -64,63 +53,114 @@ export const Button = styled("button", {
                 borderRadius: "$round",
             },
         },
-        outline: {
+        disabled: {
             true: {
-                border: "1px dashed $gray6",
+                opacity: "0.6",
             },
         },
         variant: {
             primary: {
-                backgroundColor: "$primary9",
-                color: "$gray1",
+                color: "$fgInverted",
+                backgroundColor: "$bgAccentInverted",
                 "&:hover": {
-                    backgroundColor: "$primary10",
+                    backgroundColor: "$bgAccentInvertedHover",
                 },
                 "&:disabled": {
-                    backgroundColor: "$primary8",
+                    opacity: 0.6,
                 },
                 "&:active": {
-                    backgroundColor: "$primary10",
-                },
-                "&:focus": {
-                    boxShadow: "inset 0 0 0 1px $colors$primary8, 0 0 0 1px $colors$primary8",
+                    backgroundColor: "$bgAccentInvertedHover",
                 },
                 '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
                     {
-                        backgroundColor: "$primary10",
+                        backgroundColor: "$bgAccentInvertedHover",
+                    },
+            },
+            outline: {
+                color: "$fgAccent",
+                backgroundColor: "$bgBase",
+                border: "1px solid $borderAccentInverted",
+
+                "&:hover": {
+                    backgroundColor: "$bgAccent",
+                    border: "1px solid $borderAccentInverted",
+                },
+                "&:disabled": {
+                    opacity: 0.6,
+                    pointerEvents: "none",
+                },
+                "&:active": {
+                    backgroundColor: "$bgAccent",
+                    border: "1px solid $borderAccentInverted",
+                },
+                '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
+                    {
+                        backgroundColor: "$bgAccent",
+                        border: "1px solid $borderAccentInverted",
                     },
             },
             secondary: {
-                backgroundColor: "$gray1",
-                color: "$gray11",
-                boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
+                color: "$fgBase",
+                backgroundColor: "$bgBase",
+                border: "1px solid $borderBase",
+                boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.09)",
 
                 "&:hover": {
-                    backgroundColor: "$gray4",
-                    border: "1px solid $gray7",
-                    boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
-                },
-
-                "&:active": {
-                    backgroundColor: "$gray4",
-                    border: "1px solid $gray7",
-                    boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
-                    "&:hover": {
-                        boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
-                    },
+                    backgroundColor: "$bgBaseHover",
+                    border: "1px solid $borderBaseHover",
                 },
                 "&:disabled": {
-                    backgroundColor: "$gray1",
-                    border: "1px solid $gray6",
-                    boxShadow: "0 1px 1px 0 $colors$bslate8lack",
+                    opacity: 0.6,
                 },
-                "&:focus": {
-                    boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1), 0 1px 1px 0 rgba(0, 0, 0, 0.1)",
+                "&:active": {
+                    backgroundColor: "$bgBaseHover",
+                    border: "1px solid $borderBaseHover",
                 },
                 '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
                     {
-                        backgroundColor: "$gray7",
-                        boxShadow: "0 1px 1px 0 rgba(0, 0, 0, 0.1)",
+                        backgroundColor: "$bgBaseHover",
+                        border: "1px solid $borderBaseHover",
+                    },
+            },
+            ghost: {
+                color: "$fgBase",
+                backgroundColor: "$bgBase",
+                border: "1px dashed $borderBase",
+                boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.09)",
+
+                "&:hover": {
+                    backgroundColor: "$bgBaseHover",
+                    border: "1px dashed $borderBaseHover",
+                },
+                "&:disabled": {
+                    opacity: 0.6,
+                },
+                "&:active": {
+                    backgroundColor: "$bgBaseHover",
+                    border: "1px dashed $borderBaseHover",
+                },
+                '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
+                    {
+                        backgroundColor: "$bgBaseHover",
+                        border: "1px dashed $borderBaseHover",
+                    },
+            },
+            danger: {
+                color: "$fgInverted",
+                backgroundColor: "$bgDangerInverted",
+
+                "&:hover": {
+                    backgroundColor: "$bgDangerInvertedHover",
+                },
+                "&:disabled": {
+                    opacity: 0.6,
+                },
+                "&:active": {
+                    backgroundColor: "$bgDangerInvertedHover",
+                },
+                '&[data-radix-popover-trigger][data-state="open"], &[data-radix-dropdown-menu-trigger][data-state="open"]':
+                    {
+                        backgroundColor: "$bgDangerInvertedHover",
                     },
             },
         },
