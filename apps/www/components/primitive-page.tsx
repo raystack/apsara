@@ -1,6 +1,5 @@
-import { Badge, Box, Flex, ScrollArea, styled, Text, useApsaraTheme } from "@odpf/apsara";
-import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { RemoveScroll } from "react-remove-scroll";
+import { Badge, Box, Button, Flex, ScrollArea, Sheet, styled, Text, useApsaraTheme } from "@odpf/apsara";
+import { DesktopIcon, DiscIcon, MoonIcon, SunIcon, TextAlignJustifyIcon } from "@radix-ui/react-icons";
 import type { Frontmatter } from "~/types/frontmatter";
 
 import Link from "next/link";
@@ -36,6 +35,7 @@ type NavItemProps = {
 };
 
 export function NavItem({ children, active, disabled, href, ...props }: NavItemProps) {
+    const { themeName } = useApsaraTheme();
     return (
         <Box as="span">
             <Box
@@ -69,7 +69,12 @@ export function NavItem({ children, active, disabled, href, ...props }: NavItemP
             >
                 <Link
                     href={href}
-                    style={{ textDecoration: "none", padding: "12px 16px", width: "100%", color: "rgb(17, 24, 28)" }}
+                    style={{
+                        textDecoration: "none",
+                        padding: "12px 16px",
+                        width: "100%",
+                        color: `${themeName === "dark" ? "#f2f2f2" : "rgb(17, 24, 28)"}`,
+                    }}
                 >
                     <Text size="3" css={{ fontWeight: active ? "500" : "none" }}>
                         {children}
@@ -120,7 +125,7 @@ function NavWrapper({ children, isMobileMenuOpen }: any) {
 const PageWrapper = styled(Flex, {
     height: "calc(100vh - 64px)",
     width: "100%",
-    padding: "16px",
+    padding: "0",
     overflow: "hidden",
 });
 
@@ -136,24 +141,29 @@ export function PrimitivePage({ children, frontmatter }: { children: React.React
     return (
         <Flex direction="column">
             <Header />
-            <PageWrapper>
-                <LeftSideBar />
-                <Flex
-                    ref={containerElm}
-                    direction="column"
-                    css={{
-                        width: "100%",
-                        maxWidth: "1080px",
-                        margin: "0 auto",
-                        "@bp2": { padding: "16px 60px" },
-                        overflow: "auto",
-                    }}
-                >
-                    {children}
-                </Flex>
+            <Flex css={{ height: "calc(100vh - 64px)" }}>
+                <NavWrapper>
+                    <LeftSideBar />
+                </NavWrapper>
+                <PageWrapper>
+                    <Flex ref={containerElm} css={{ overflowY: "scroll", width: "100%" }}>
+                        <Flex
+                            direction="column"
+                            css={{
+                                width: "100%",
+                                maxWidth: "1080px",
+                                margin: "0 auto",
+                                padding: "16px 32px",
+                                "@bp2": { padding: "32px 60px" },
+                            }}
+                        >
+                            {children}
+                        </Flex>
 
-                <RightSideBar frontmatter={frontmatter} containerElm={containerElm}/>
-            </PageWrapper>
+                        <RightSideBar frontmatter={frontmatter} containerElm={containerElm} />
+                    </Flex>
+                </PageWrapper>
+            </Flex>
         </Flex>
     );
 }
@@ -175,26 +185,21 @@ const Header = () => {
                     padding: "0 16px",
                     borderBottom: "1px solid #d3d7df",
                     backgroundColor: `${bgColor}`,
-                    zIndex: 999,
+                    zIndex: 1,
                 }}
             >
                 <Flex align="center" css={{ margin: "auto", width: "100%" }}>
                     <Flex direction="row" align="center">
                         <NavItem href={`/`}>
-                            <Text size="4" css={{ fontWeight: "$700" }} color="contrast">
-                                Apsara 2.0
-                            </Text>
+                            <DiscIcon />
                         </NavItem>
                     </Flex>
-                    <Flex direction="row" align="center" justify="center" gap="6" css={{ flexGrow: 1 }}>
+                    <Flex direction="row" align="center" justify="start" gap="6" css={{ flexGrow: 1 }}>
                         <Text css={{ fontWeight: "$500" }} size="2">
                             Overview
                         </Text>
                         <Text css={{ fontWeight: "$500" }} size="2">
                             Components
-                        </Text>
-                        <Text css={{ fontWeight: "$500" }} size="2">
-                            Hooks
                         </Text>
                     </Flex>
                     <Flex gap="3" css={{ background: "$gray4", padding: "$2", borderRadius: "$3" }}>
@@ -220,6 +225,16 @@ const Header = () => {
                             }}
                         />
                     </Flex>
+                    <Sheet>
+                        <Sheet.Trigger asChild>
+                            <Button css={{ display: "block", "@bp1": { display: "none" } }}>
+                                <TextAlignJustifyIcon />
+                            </Button>
+                        </Sheet.Trigger>
+                        <Sheet.Content side="left">
+                            <LeftSideBar />
+                        </Sheet.Content>
+                    </Sheet>
                 </Flex>
             </Flex>
         </header>
@@ -231,76 +246,80 @@ const LeftSideBar = () => {
     const [overviews, components] = primitivesRoutes;
 
     return (
-        <NavWrapper>
-            <ScrollArea>
-                <Box
-                    css={{
-                        marginTop: "$4",
-                        maxHeight: "100vh",
-                    }}
-                >
-                    <Box key={overviews.label} css={{ marginBottom: "$4" }}>
-                        <NavHeading>{overviews.label}</NavHeading>
+        <ScrollArea>
+            <Box
+                css={{
+                    marginTop: "$4",
+                    maxHeight: "100vh",
+                }}
+            >
+                <Box key={overviews.label} css={{ marginBottom: "$4" }}>
+                    <NavHeading>{overviews.label}</NavHeading>
 
-                        {overviews.pages.map((page: PageProps) => (
-                            <NavItem key={page.slug} href={`/${page.slug}`} active={currentPageSlug === page.slug}>
-                                <NavItemTitle active={currentPageSlug === page.slug}>{page.title}</NavItemTitle>
-                                {page.preview && (
-                                    <Badge variant="blue" css={{ marginLeft: "$2" }}>
-                                        Preview
-                                    </Badge>
-                                )}
-                                {page.deprecated && (
-                                    <Badge variant="yellow" css={{ marginLeft: "$2" }}>
-                                        Deprecated
-                                    </Badge>
-                                )}
-                            </NavItem>
-                        ))}
-                    </Box>
-                    <Box key={components.label} css={{ marginBottom: "$4" }}>
-                        <NavHeading>{components.label}</NavHeading>
-
-                        {components.pages.map((page: PageProps) => (
-                            <NavItem key={page.slug} href={`/${page.slug}`} active={currentPageSlug === page.slug}>
-                                {page.title}
-                                {page.preview && (
-                                    <Badge variant="blue" css={{ marginLeft: "$2" }}>
-                                        Preview
-                                    </Badge>
-                                )}
-                                {page.deprecated && (
-                                    <Badge variant="yellow" css={{ marginLeft: "$2" }}>
-                                        Deprecated
-                                    </Badge>
-                                )}
-                            </NavItem>
-                        ))}
-                    </Box>
+                    {overviews.pages.map((page: PageProps) => (
+                        <NavItem key={page.slug} href={`/${page.slug}`} active={currentPageSlug === page.slug}>
+                            <NavItemTitle active={currentPageSlug === page.slug}>{page.title}</NavItemTitle>
+                            {page.preview && (
+                                <Badge variant="blue" css={{ marginLeft: "$2" }}>
+                                    Preview
+                                </Badge>
+                            )}
+                            {page.deprecated && (
+                                <Badge variant="yellow" css={{ marginLeft: "$2" }}>
+                                    Deprecated
+                                </Badge>
+                            )}
+                        </NavItem>
+                    ))}
                 </Box>
-            </ScrollArea>
-        </NavWrapper>
+                <Box key={components.label} css={{ marginBottom: "$4" }}>
+                    <NavHeading>{components.label}</NavHeading>
+
+                    {components.pages.map((page: PageProps) => (
+                        <NavItem key={page.slug} href={`/${page.slug}`} active={currentPageSlug === page.slug}>
+                            {page.title}
+                            {page.preview && (
+                                <Badge variant="blue" css={{ marginLeft: "$2" }}>
+                                    Preview
+                                </Badge>
+                            )}
+                            {page.deprecated && (
+                                <Badge variant="yellow" css={{ marginLeft: "$2" }}>
+                                    Deprecated
+                                </Badge>
+                            )}
+                        </NavItem>
+                    ))}
+                </Box>
+            </Box>
+        </ScrollArea>
     );
 };
 
-const RightSideBar = ({ frontmatter, containerElm }: { frontmatter: Frontmatter, containerElm: MutableRefObject<null> }) => {
+const RightSideBar = ({
+    frontmatter,
+    containerElm,
+}: {
+    frontmatter: Frontmatter;
+    containerElm: MutableRefObject<null>;
+}) => {
     return (
         <Box
             as="aside"
-            className={RemoveScroll.classNames.zeroRight}
             css={{
                 display: "none",
-                height: "calc(100% - 64px)",
                 "@media (min-width: 1440px)": {
                     display: "block",
-                    width: 250,
+                    position: "sticky",
+                    top: 0,
+                    width: 280,
                     flexShrink: 0,
                     zIndex: 1,
                 },
             }}
         >
             <ScrollArea>
-                <Toc title={frontmatter.title} containerElm={containerElm}/>
+                <Toc title={frontmatter.title} containerElm={containerElm} />
             </ScrollArea>
         </Box>
     );
