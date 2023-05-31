@@ -15,7 +15,6 @@ export const CopyButton = ({ copying, onClick }: CopyButtonPorps) => {
         <Button
             css={{ width: "26px", height: "26px" }}
             variant="secondary"
-            outline
             onClick={onClick}
             aria-label="Copy code"
         >
