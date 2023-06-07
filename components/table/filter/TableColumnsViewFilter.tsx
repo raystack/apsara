@@ -2,7 +2,6 @@ import React from "react";
 import { Flex } from "~/components/flex";
 import { Label } from "~/components/label";
 import { Popover } from "~/components/popover";
-import { Separator } from "~/components/separator";
 import { useTable } from "../hooks/useTable";
 
 export default function TableColumnsFilter({ children }: any) {
@@ -10,7 +9,7 @@ export default function TableColumnsFilter({ children }: any) {
     return (
         <Popover modal>
             <Popover.Trigger asChild>{children}</Popover.Trigger>
-            <Popover.Content css={{ padding: "$4" }}>
+            <Popover.Content css={{ padding: "$2" }}>
                 <Flex direction="column" css={labelContainer}>
                     <Label css={labelStyle}>
                         <input
@@ -19,10 +18,10 @@ export default function TableColumnsFilter({ children }: any) {
                                 checked: table.getIsAllColumnsVisible(),
                                 onChange: table.getToggleAllColumnsVisibilityHandler(),
                             }}
-                        />{" "}
+                            style={{ margin: 0 }}
+                        />
                         Toggle All
                     </Label>
-                    <Separator></Separator>
                     {table.getAllLeafColumns().map((column) => {
                         return (
                             <Label css={labelStyle} key={column.id}>
@@ -32,7 +31,8 @@ export default function TableColumnsFilter({ children }: any) {
                                         checked: column.getIsVisible(),
                                         onChange: column.getToggleVisibilityHandler(),
                                     }}
-                                />{" "}
+                                    style={{ margin: 0 }}
+                                />
                                 {column.id}
                             </Label>
                         );
@@ -44,7 +44,6 @@ export default function TableColumnsFilter({ children }: any) {
 }
 
 const labelContainer = {
-    padding: "$2",
     maxHeight: "16rem",
     overflow: "scroll",
 
@@ -53,7 +52,8 @@ const labelContainer = {
     },
 };
 const labelStyle = {
-    display: "flex",
+    display: "flex !important",
     align: "center",
-    padding: "$1 $2",
+    padding: "$2",
+    gap: "$2",
 };

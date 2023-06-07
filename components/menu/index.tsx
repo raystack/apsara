@@ -12,6 +12,7 @@ export const baseItemCss = css({
     justifyContent: "space-between",
     fontSize: "$2",
     lineHeight: "16px",
+    color: "$fgBase",
     fontVariantNumeric: "tabular-nums",
     cursor: "pointer",
     userSelect: "none",
@@ -20,17 +21,12 @@ export const baseItemCss = css({
 
 export const itemCss = css(baseItemCss, {
     position: "relative",
-    color: "$gray12",
-    padding: "$1 $2",
-
+    padding: "$2",
     "&[data-highlighted]": {
         outline: "none",
-        color: "$primary9",
     },
 
-    "&[data-disabled]": {
-        color: "$slate9",
-    },
+    "&[data-disabled]": {},
 });
 
 export const labelCss = css(baseItemCss, {

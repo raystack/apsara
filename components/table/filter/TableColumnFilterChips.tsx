@@ -30,8 +30,8 @@ export const TableColumnFilterChips = () => {
             })}
             {filterQuery.length < allColumns.length && (
                 <TableFilterSelection align="end">
-                    <Flex align="center" css={{ padding: "$5" }}>
-                        <PlusIcon />
+                    <Flex align="center">
+                        <PlusIcon width={16} height={16} />
                     </Flex>
                 </TableFilterSelection>
             )}

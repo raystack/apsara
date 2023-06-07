@@ -31,6 +31,7 @@ const primaryA = {
     primary12: "#EEF1FD",
 };
 export const { styled, css, theme, createTheme, getCssText, globalCss, keyframes, config, reset } = createStitches({
+    prefix: "apsara",
     theme: {
         colors: {
             ...colors.gray,
@@ -135,6 +136,7 @@ export const { styled, css, theme, createTheme, getCssText, globalCss, keyframes
             borderBaseHover: "#C1C8CD",
             borderMuted: "#DFE3E6",
             borderAccent: "#AEC0F5",
+            borderSubtle: "#ECEEF0",
             borderAccentInverted: "#3E63DD",
             borderAccentInvertedHover: "#3A5CCC",
 

@@ -9,5 +9,5 @@ export function TextInput({ onChangeValue }: Props) {
         const value = e.target.value;
         onChangeValue(value);
     };
-    return <TextField onChange={onChange} css={{ height: "20px", width: "80px" }} />;
+    return <TextField onChange={onChange} style={{ height: "16px", width: "60px" }} />;
 }

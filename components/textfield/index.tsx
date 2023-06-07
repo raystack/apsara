@@ -63,20 +63,20 @@ export const TextField = styled("input", {
         size: {
             "1": {
                 borderRadius: "$1",
-                height: "$8",
+                height: "auto",
                 fontSize: "$2",
-                px: "$1",
-                lineHeight: "$sizes$5",
+                padding: "$1",
+                lineHeight: "$sizes$4",
                 "&:-webkit-autofill::first-line": {
                     fontSize: "$2",
                 },
             },
             "2": {
                 borderRadius: "$2",
-                height: "$8",
+                height: "auto",
                 fontSize: "$3",
-                px: "$2",
-                lineHeight: "$sizes$6",
+                padding: "$2",
+                lineHeight: "$sizes$4",
                 "&:-webkit-autofill::first-line": {
                     fontSize: "$3",
                 },

@@ -33,11 +33,11 @@ const ColumnDropdown = ({ name, data, onMenuSelect, search = true }: ColumnDropd
     return (
         <DropdownMenu>
             <DropdownMenu.Trigger asChild>
-                <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{name}</Text>
+                <Text>{name}</Text>
             </DropdownMenu.Trigger>
             <DropdownMenu.Content align="start">
-                <Box css={{ px: "$2" }}>
-                    <TextField value={searchValue} onChange={onChange} css={{ height: "20px" }} />
+                <Box css={{ padding: "$2" }}>
+                    <TextField value={searchValue} onChange={onChange} />
                 </Box>
                 <DropdownMenu.Group>
                     {selectValues.map((column, _index) => (

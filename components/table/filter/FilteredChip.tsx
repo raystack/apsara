@@ -71,14 +71,13 @@ export function FilteredChip<T extends RowData>({ column, columnQuery, index }: 
         <Box
             css={{
                 display: "inline-flex",
-                flexDirection: "row",
                 alignItems: "center",
-                border: "1px solid $gray6",
-                borderRadius: "$4",
+                border: "1px solid $borderBase",
+                borderRadius: "$1",
+                padding: "$1 $2",
             }}
         >
-            <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{getColumnName(column)}</Text>
-
+            <Text>{getColumnName(column)}</Text>
             <ColumnDropdown
                 index={index}
                 selectKey="operator"
@@ -91,7 +90,7 @@ export function FilteredChip<T extends RowData>({ column, columnQuery, index }: 
             {renderInputs()}
 
             {/* close filter chip */}
-            <Flex css={{ padding: ".6rem" }}>
+            <Flex css={{ marginLeft: "$2" }}>
                 <Cross1Icon height="12" width="12" onClick={() => removeFilter(index)} />
             </Flex>
         </Box>
@@ -109,7 +108,7 @@ type ColumnDropdownProps = {
 const ColumnDropdown = ({ index, name, data, onMenuSelect, selectKey }: ColumnDropdownProps) => (
     <DropdownMenu>
         <DropdownMenu.Trigger asChild>
-            <Text css={{ padding: "$1 $2", lineHeight: "normal" }}>{name}</Text>
+            <Text css={{ px: "$2" }}>{name}</Text>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="start">
             <DropdownMenu.Group>
