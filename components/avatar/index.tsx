@@ -2,16 +2,15 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import React from "react";
 import { CSS, styled, VariantProps } from "~/stitches.config";
 import { Box } from "../box";
-import { Status } from "../status";
 
 const StyledAvatar = styled(AvatarPrimitive.Root, {
+    display: "flex",
     alignItems: "center",
     justifyContent: "center",
     verticalAlign: "middle",
     overflow: "hidden",
     userSelect: "none",
     boxSizing: "border-box",
-    display: "flex",
     flexShrink: 0,
     position: "relative",
     border: "none",
@@ -31,6 +30,10 @@ const StyledAvatar = styled(AvatarPrimitive.Root, {
         bottom: 0,
         left: 0,
         borderRadius: "inherit",
+    },
+
+    "&:hover": {
+        border: "1px solid $borderAccent",
     },
 
     variants: {
@@ -64,9 +67,9 @@ const StyledAvatar = styled(AvatarPrimitive.Root, {
                 borderRadius: "50%",
             },
         },
-        inactive: {
+        disabled: {
             true: {
-                opacity: ".3",
+                opacity: ".6",
             },
         },
     },
@@ -129,8 +132,6 @@ const AvatarGroup = styled("div", {
         marginRight: "-$1",
     },
 });
-
-type StatusVariants = React.ComponentProps<typeof Status>;
 
 type AvatarVariants = VariantProps<typeof StyledAvatar>;
 type AvatarPrimitiveProps = React.ComponentProps<typeof AvatarPrimitive.Root>;

@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Flex, ScrollArea, Sheet, styled, Text, useApsaraTheme } from "@odpf/apsara";
+import { Box, Button, Flex, ScrollArea, Sheet, styled, Text, useApsaraTheme } from "@odpf/apsara";
 import { DesktopIcon, DiscIcon, MoonIcon, SunIcon, TextAlignJustifyIcon } from "@radix-ui/react-icons";
 import type { Frontmatter } from "~/types/frontmatter";
 
@@ -110,8 +110,9 @@ function NavWrapper({ children, isMobileMenuOpen }: any) {
             direction="column"
             css={{
                 display: "none",
-                width: "280px",
+                width: "260px",
                 marginRight: "20px",
+                borderRight: "1px solid $borderBase",
                 WebkitOverflowScrolling: "touch",
                 WebkitFlexShrink: "0",
                 zIndex: 1,
@@ -153,7 +154,7 @@ export function PrimitivePage({ children, frontmatter }: { children: React.React
                             css={{
                                 width: "100%",
                                 maxWidth: "1080px",
-                                margin: "0 auto",
+                                margin: "0 auto 20px",
                                 padding: "16px 32px",
                                 "@bp2": { padding: "32px 60px" },
                             }}
@@ -260,16 +261,7 @@ const LeftSideBar = () => {
                     {overviews.pages.map((page: PageProps) => (
                         <NavItem key={page.slug} href={`/${page.slug}`} active={currentPageSlug === page.slug}>
                             <NavItemTitle active={currentPageSlug === page.slug}>{page.title}</NavItemTitle>
-                            {page.preview && (
-                                <Badge variant="blue" css={{ marginLeft: "$2" }}>
-                                    Preview
-                                </Badge>
-                            )}
-                            {page.deprecated && (
-                                <Badge variant="yellow" css={{ marginLeft: "$2" }}>
-                                    Deprecated
-                                </Badge>
-                            )}
+                            
                         </NavItem>
                     ))}
                 </Box>
@@ -279,16 +271,6 @@ const LeftSideBar = () => {
                     {components.pages.map((page: PageProps) => (
                         <NavItem key={page.slug} href={`/${page.slug}`} active={currentPageSlug === page.slug}>
                             {page.title}
-                            {page.preview && (
-                                <Badge variant="blue" css={{ marginLeft: "$2" }}>
-                                    Preview
-                                </Badge>
-                            )}
-                            {page.deprecated && (
-                                <Badge variant="yellow" css={{ marginLeft: "$2" }}>
-                                    Deprecated
-                                </Badge>
-                            )}
                         </NavItem>
                     ))}
                 </Box>

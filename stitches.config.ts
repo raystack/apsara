@@ -125,7 +125,13 @@ export const { styled, css, theme, createTheme, getCssText, globalCss, keyframes
         letterSpacings: {},
         borderWidths: {},
         borderStyles: {},
-        shadows: {},
+        shadows: {
+            xs: "0px 1px 2px rgba(16, 24, 40, 0.06)",
+            sm: "0px 1px 4px rgba(0, 0, 0, 0.09)",
+            md: "0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)",
+            lg: "0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03)",
+            xl: "0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03)",
+        },
         transitions: {},
     },
     media: {

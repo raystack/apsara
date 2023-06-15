@@ -22,20 +22,22 @@ const StyledCheckbox = styled(CheckboxPrimitive.Root, {
     margin: "0",
     outline: "none",
     padding: "0",
-    WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
-    color: "$fgBase",
-    boxShadow: "inset 0 0 0 1px",
+    color: "#FFF",
     overflow: "hidden",
+    border: "1px solid $colors$borderBase",
+
     "@hover": {
         "&:hover": {
-            boxShadow: "inset 0 0 0 1px",
+            background: "$bgBaseHover",
+            border: "1px solid $colors$borderBaseHover",
         },
     },
-    "&:focus": {
+
+    '&[data-state="checked"]': {
         outline: "none",
-        borderColor: "$borderBaseHover",
-        boxShadow: "inset 0 0 0 1px, 0 0 0 1px",
+        border: "none",
+        background: "$bgAccentInverted",
     },
 
     variants: {

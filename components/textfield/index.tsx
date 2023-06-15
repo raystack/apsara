@@ -3,14 +3,12 @@ import { styled } from "~/stitches.config";
 export const TextField = styled("input", {
     // Reset
     appearance: "none",
-    borderWidth: "0",
     boxSizing: "border-box",
     fontFamily: "inherit",
     margin: "0",
     outline: "none",
     padding: "0",
     width: "100%",
-    WebkitTapHighlightColor: "rgba(0,0,0,0)",
     "&::before": {
         boxSizing: "border-box",
     },
@@ -20,12 +18,14 @@ export const TextField = styled("input", {
 
     // Custom
     backgroundColor: "$bgBase",
-    boxShadow: "inset 0 0 0 1px $borderBase",
+    border: "0.5px solid $colors$borderBase",
+    boxShadow: "$xs",
+    borderRadius: "$1",
     color: "$fgBase",
     fontVariantNumeric: "tabular-nums",
 
     "&:-webkit-autofill": {
-        boxShadow: "inset 0 0 0 1px $borderAccent, inset 0 0 0 100px $borderAccent",
+        boxShadow: "inset 0 0 0 1px $colors$borderAccent, inset 0 0 0 100px $colors$borderAccent",
     },
 
     "&:-webkit-autofill::first-line": {
@@ -34,34 +34,26 @@ export const TextField = styled("input", {
     },
 
     "&:focus": {
-        boxShadow: "inset 0px 0px 0px 1px $borderAccentHover, 0px 0px 0px 1px $borderAccentHover",
-        "&:-webkit-autofill": {
-            boxShadow:
-                "inset 0px 0px 0px 1px $borderAccentHover, 0px 0px 0px 1px $borderAccentHover, inset 0 0 0 100px $borderAccentHover",
-        },
+        border: "1px solid $borderAccentInverted",
     },
     "&::placeholder": {
-        color: "$fgBase",
+        color: "$fgSubtle",
+        fontSize: "12px",
+        lineHeight: "16px",
     },
+
     "&:disabled": {
-        pointerEvents: "none",
-        backgroundColor: "$bgBase",
-        color: "$fgBase",
         cursor: "not-allowed",
-        "&::placeholder": {
-            color: "$fgBase",
-        },
+        opacity: "0.6",
+        pointerEvents: "none",
     },
     "&:read-only": {
         backgroundColor: "$bgBase",
-        "&:focus": {
-            boxShadow: "inset 0px 0px 0px 1px $borderBase",
-        },
     },
 
     variants: {
         size: {
-            "1": {
+            sm: {
                 borderRadius: "$1",
                 height: "auto",
                 fontSize: "$2",
@@ -71,7 +63,7 @@ export const TextField = styled("input", {
                     fontSize: "$2",
                 },
             },
-            "2": {
+            md: {
                 borderRadius: "$2",
                 height: "auto",
                 fontSize: "$3",
@@ -82,42 +74,22 @@ export const TextField = styled("input", {
                 },
             },
         },
-        variant: {
-            ghost: {
-                boxShadow: "none",
-                backgroundColor: "transparent",
-                "@hover": {
-                    "&:hover": {
-                        boxShadow: "inset 0 0 0 1px $borderBase",
-                    },
-                },
-                "&:focus": {
-                    backgroundColor: "$bgBase",
-                    boxShadow:
-                        "inset 0px 0px 0px 1px $borderAccentInvertedHover, 0px 0px 0px 1px $borderAccentInvertedHover",
-                },
-                "&:disabled": {
-                    backgroundColor: "transparent",
-                },
-                "&:read-only": {
-                    backgroundColor: "transparent",
-                },
-            },
-        },
+
         state: {
             invalid: {
-                boxShadow: "inset 0 0 0 1px $borderDanger",
+                border: "1px solid $colors$borderDanger",
                 "&:focus": {
-                    boxShadow: "inset 0px 0px 0px 1px $borderDanger, 0px 0px 0px 1px $borderDanger",
+                    border: "1px solid $colors$borderDanger",
                 },
             },
             valid: {
-                boxShadow: "inset 0 0 0 1px $borderSuccess",
+                border: "1px solid $colors$borderSuccess",
                 "&:focus": {
-                    boxShadow: "inset 0px 0px 0px 1px $borderSuccess, 0px 0px 0px 1px $borderSuccess",
+                    border: "1px solid $colors$borderSuccess",
                 },
             },
         },
+
         cursor: {
             default: {
                 cursor: "default",
@@ -130,7 +102,8 @@ export const TextField = styled("input", {
             },
         },
     },
+
     defaultVariants: {
-        size: "1",
+        size: "sm",
     },
 });

@@ -7,6 +7,7 @@ description: Displays a form text field or a component that looks like a text fi
 <Preview>
   <Flex
     css={{
+      width: "320px",
       flexDirection: "column",
       alignItems: "center",
       gap: "$3",
@@ -14,14 +15,14 @@ description: Displays a form text field or a component that looks like a text fi
   >
   <TextField
     type="email"
-    size="2"
+    size="md"
     placeholder="Email"
     autoComplete="off"
     css={{ marginBottom: '$3' }}
   />
   <TextField
     type="password"
-    size="2"
+    size="md"
     placeholder="Password"
     autoComplete="off"
     css={{ marginBottom: '$3' }}
@@ -37,6 +38,34 @@ Install the component from your command line.
     <LiveEditor code={`npm install @odpf/apsara`} border/>
 </LiveProvider>
 
+
+## Variant
+
+Diffrent size variants
+
+<Playground
+    scope={{ TextField }}
+    tabs={[
+        {
+            name: "sm",
+            code: `<TextField
+              type="email"
+              size="sm"
+              placeholder="Email"
+              autoComplete="off"
+            />`,
+        },
+        {
+            name: "md",
+            code: `<TextField
+              type="email"
+              size="md"
+              placeholder="Email"
+              autoComplete="off"
+            />`,
+        },
+    ]}
+/>
 
 ## Anatomy
 Import all parts and piece them together.
