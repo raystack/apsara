@@ -38,7 +38,7 @@ const Th = styled("th", {
     minWidth: "min-content",
     padding: 0,
     letterSpacing: ".8px",
-    color: "$gray10",
+    color: "$fgBase",
 });
 
 const fistChildStyle = {

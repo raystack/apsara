@@ -12,80 +12,43 @@ export const ControlGroup = styled("div", {
 
     [`& ${Button}`]: {
         borderRadius: 0,
-        boxShadow: "inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7",
-        "&:hover": {
-            boxShadow:
-                "-1px 0 $colors$slate8, inset 0 1px $colors$slate8, inset -1px 0 $colors$slate8, inset 0 -1px $colors$slate8",
-        },
+
         "&:focus": {
             zIndex: 1,
-            boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
         },
         "&:first-child": {
             borderTopLeftRadius: "$1",
             borderBottomLeftRadius: "$1",
-            boxShadow: "inset 0 0 0 1px $colors$slate7",
-            "&:hover": {
-                boxShadow: "inset 0 0 0 1px $colors$slate8",
-            },
-            "&:focus": {
-                boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
-            },
         },
         "&:last-child": {
             borderTopRightRadius: "$1",
             borderBottomRightRadius: "$1",
-            boxShadow: "inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7",
-            "&:focus": {
-                boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
-            },
         },
     },
     [`& ${TextField}`]: {
         borderRadius: 0,
-        boxShadow: "inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7",
         "&:focus": {
             zIndex: 1,
-            boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
         },
         "&:first-child": {
             borderTopLeftRadius: "$1",
             borderBottomLeftRadius: "$1",
-            boxShadow: "inset 0 0 0 1px $colors$slate7",
-            "&:focus": {
-                boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
-            },
         },
         "&:last-child": {
             borderTopRightRadius: "$1",
             borderBottomRightRadius: "$1",
-            boxShadow: "inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7",
-            "&:focus": {
-                boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
-            },
         },
     },
     [`& ${Select}`]: {
         borderRadius: 0,
-        boxShadow: "inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7",
-        "&:focus-within": {
-            boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
-        },
+
         "&:first-child": {
             borderTopLeftRadius: "$1",
             borderBottomLeftRadius: "$1",
-            boxShadow: "inset 0 0 0 1px $colors$slate7",
-            "&:focus-within": {
-                boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
-            },
         },
         "&:last-child": {
             borderTopRightRadius: "$1",
             borderBottomRightRadius: "$1",
-            boxShadow: "inset 0 1px $colors$slate7, inset -1px 0 $colors$slate7, inset 0 -1px $colors$slate7",
-            "&:focus-within": {
-                boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
-            },
         },
     },
 });

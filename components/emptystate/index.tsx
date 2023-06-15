@@ -11,7 +11,7 @@ export const EmptyState = styled("div", {
     margin: "0 auto",
 
     ".svg-container": {
-        background: "$gray3",
+        background: "$bgBase",
         display: "flex",
         alignCenter: "center",
         justifyContent: "center",
@@ -20,28 +20,28 @@ export const EmptyState = styled("div", {
         svg: {
             width: 32,
             height: 32,
-            color: "$gray500",
+            color: "$fgBase",
         },
     },
     h3: {
         fontSize: "$4",
         fontWeight: 600,
-        color: "$gray12",
+        color: "$fgBase",
         marginTop: "$4",
     },
 
     ".pera": {
         fontSize: "$4",
-        color: "$gray11",
+        color: "$fgBase",
         marginTop: "$1",
         span: {
             cursor: "pointer",
-            color: "$gray12",
+            color: "$fgBase",
             fontWeight: 500,
             padding: 4,
             borderRadius: 6,
             "&:hover": {
-                background: "$gray3",
+                background: "$bgInset",
             },
         },
         a: {
@@ -51,7 +51,7 @@ export const EmptyState = styled("div", {
             padding: 4,
             borderRadius: 6,
             "&:hover": {
-                background: "$primary3",
+                background: "$bgInset",
             },
         },
     },

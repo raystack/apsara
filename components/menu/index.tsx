@@ -30,7 +30,7 @@ export const itemCss = css(baseItemCss, {
 });
 
 export const labelCss = css(baseItemCss, {
-    color: "$slate11",
+    color: "$fgBase",
     fontSize: "$1",
 });
 
@@ -43,7 +43,7 @@ export const menuCss = css({
 export const separatorCss = css({
     height: 1,
     my: "$1",
-    backgroundColor: "$slate6",
+    backgroundColor: "$bgBase",
 });
 
 const MenuRoot = styled(MenuPrimitive.Root, menuCss);

@@ -23,7 +23,7 @@ const TableRow = styled("tr", {
     height: "2rem",
     cursor: "pointer",
     "&:hover": {
-        backgroundColor: "$gray6",
+        backgroundColor: "$bgBase",
     },
     a: {
         textDecoration: "none",

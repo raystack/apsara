@@ -18,7 +18,7 @@ export const Toggle = styled(TogglePrimitive.Root, {
     textDecoration: "none",
     userSelect: "none",
     WebkitTapHighlightColor: "transparent",
-    color: "$hiContrast",
+    color: "$fgBase",
     "&::before": {
         boxSizing: "border-box",
     },
@@ -30,14 +30,14 @@ export const Toggle = styled(TogglePrimitive.Root, {
     backgroundColor: "transparent",
     "@hover": {
         "&:hover": {
-            backgroundColor: "$slateA3",
+            backgroundColor: "$bgBase",
         },
     },
     "&:active": {
-        backgroundColor: "$slateA4",
+        backgroundColor: "$bgBase",
     },
     "&:focus": {
-        boxShadow: "inset 0 0 0 1px $slateA8, 0 0 0 1px $slateA8",
+        boxShadow: "inset 0 0 0 1px $bgBase, 0 0 0 1px $bgBase",
         zIndex: 1,
     },
 
@@ -45,11 +45,11 @@ export const Toggle = styled(TogglePrimitive.Root, {
         backgroundColor: "$slateA5",
         "@hover": {
             "&:hover": {
-                backgroundColor: "$slateA5",
+                backgroundColor: "$bgBase",
             },
         },
         "&:active": {
-            backgroundColor: "$slateA7",
+            backgroundColor: "$bgBase",
         },
     },
 

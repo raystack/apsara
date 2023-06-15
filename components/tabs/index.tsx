@@ -22,19 +22,19 @@ const TabsTrigger = styled(TabsPrimitive.Trigger, {
     outline: "none",
     alignItems: "center",
     justifyContent: "center",
-    color: "$gray11",
+    color: "$fgBase",
     borderRadius: "$1",
     zIndex: "10",
 
     "@hover": {
         "&:hover": {
-            color: "$gray12",
+            color: "$fgSubtle",
         },
     },
 
     '&[data-state="active"]': {
-        background: "$gray1",
-        color: "$gray12",
+        background: "$bgBase",
+        color: "$fgBase",
         boxShadow: "0px 1px 1px rgba(0, 0, 0, 0.1)",
     },
 
@@ -42,8 +42,8 @@ const TabsTrigger = styled(TabsPrimitive.Trigger, {
         justifyContent: "flex-start",
 
         '&[data-state="active"]': {
-            background: "$gray1",
-            color: "$gray12",
+            background: "$bgSubtle",
+            color: "$fgBase",
             boxShadow: "0px 1px 1px rgba(0, 0, 0, 0.1)",
         },
     },
@@ -55,7 +55,7 @@ const StyledTabsList = styled(TabsPrimitive.List, {
     alignItems: "center",
     padding: "2px",
     gap: "$1",
-    background: "$gray4",
+    background: "$bgBase",
     borderRadius: "$1",
     "&:focus": {
         outline: "none",
@@ -68,22 +68,22 @@ const StyledTabsList = styled(TabsPrimitive.List, {
         pill: {
             true: {
                 padding: 0,
-                background: "$gray1",
+                background: "$bgBase",
                 button: {
-                    background: "$gray1",
+                    background: "$bgBase",
                 },
 
                 'button[data-state="active"]': {
-                    background: "$gray4",
-                    color: "$gray12",
+                    background: "$bgSubtle",
+                    color: "$fgSubtle",
                 },
 
                 'button[data-orientation="vertical"]': {
                     justifyContent: "flex-start",
 
                     '&[data-state="active"]': {
-                        background: "$gray4",
-                        color: "$gray12",
+                        background: "$bgSubtle",
+                        color: "$fbSubtle",
                     },
                 },
             },

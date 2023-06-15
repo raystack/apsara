@@ -3,7 +3,6 @@ import { styled } from "~/stitches.config";
 export const Button = styled("button", {
     // Reset
     all: "unset",
-    alignItems: "center",
     boxSizing: "border-box",
     userSelect: "none",
     cursor: "pointer",
@@ -16,35 +15,29 @@ export const Button = styled("button", {
 
     // Custom reset?
     display: "inline-flex",
-    flexShrink: 0,
+    alignItems: "center",
     justifyContent: "center",
-    WebkitTapHighlightColor: "rgba(0,0,0,0)",
+    flexShrink: 0,
 
     // Custom
+    py: "$1",
     px: "$3",
     fontSize: "$1",
     lineHeight: "16px",
+    borderRadius: "$1",
     fontWeight: 500,
 
     "&:disabled": {
-        backgroundColor: "$slate2",
-        boxShadow: "inset 0 0 0 1px $colors$slate7",
-        color: "$slate8",
-        opacity: "0.6",
-        pointerEvents: "none",
+        opacity: 0.6,
     },
 
     variants: {
         size: {
             small: {
                 py: "$1",
-                px: "$3",
-                borderRadius: "$1",
             },
             medium: {
                 py: "$2",
-                px: "$3",
-                borderRadius: "$1",
             },
             circle: {
                 padding: "$2",

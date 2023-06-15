@@ -58,10 +58,10 @@ const TableRow = styled("tr", {
     alignItems: "center",
     justifyContent: "space-between",
     cursor: "pointer",
-    borderBottom: "1px solid $gray3",
+    borderBottom: "1px solid $borderBase",
     py: "$2",
     "&:hover": {
-        backgroundColor: "$gray6",
+        backgroundColor: "$borderBaseHover",
     },
     a: {
         textDecoration: "none",
@@ -71,7 +71,7 @@ const TableRow = styled("tr", {
 const Td = styled("td", {
     display: "inline-flex",
     alignItems: "center",
-    color: "$gray12",
+    color: "$fgBase",
 });
 
 const fistChildStyle = {

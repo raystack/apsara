@@ -75,65 +75,8 @@ export const Text = styled("span", {
                 letterSpacing: "-0.25px",
             },
         },
-        variant: {
-            red: {
-                color: "$red11",
-            },
-            crimson: {
-                color: "$crimson11",
-            },
-            pink: {
-                color: "$pink11",
-            },
-            purple: {
-                color: "$purple11",
-            },
-            primary: {
-                color: "$primary11",
-            },
-            indigo: {
-                color: "$indigo11",
-            },
-            blue: {
-                color: "$blue11",
-            },
-            cyan: {
-                color: "$cyan11",
-            },
-            teal: {
-                color: "$teal11",
-            },
-            green: {
-                color: "$green11",
-            },
-            lime: {
-                color: "$lime11",
-            },
-            yellow: {
-                color: "$yellow11",
-            },
-            orange: {
-                color: "$orange11",
-            },
-            gold: {
-                color: "$gold11",
-            },
-            bronze: {
-                color: "$bronze11",
-            },
-            gray: {
-                color: "$slate11",
-            },
-            contrast: {
-                color: "$hiContrast",
-            },
-            default: {
-                color: "inherit",
-            },
-        },
     },
     defaultVariants: {
         size: "2",
-        variant: "default",
     },
 });

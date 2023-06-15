@@ -28,9 +28,9 @@ export const TableHeader: TableHeaderType = () => {
 };
 
 const StyledTableHeader = styled("thead", {
-    backgroundColor: "$gray",
+    backgroundColor: "$bgBase",
     tr: {
-        backgroundColor: "$gray2",
+        backgroundColor: "$bgBase",
     },
 
     input: {

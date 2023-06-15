@@ -55,7 +55,7 @@ const StyledCommandPrimitiveInput = styled(CommandPrimitive.Input, {
     borderRadius: "0.375rem",
     outline: "none",
     border: "none",
-    color: "$gray10",
+    color: "$fgBase",
     "&:placeholder": {
         color: "$gray6",
     },
@@ -71,7 +71,7 @@ const CommandInput = React.forwardRef<React.ElementRef<typeof CommandPrimitive.I
                 paddingLeft: "$4",
                 paddingRight: "$4",
                 alignItems: "center",
-                borderBottom: "1px solid $gray2",
+                borderBottom: "1px solid $borderBase",
             }}
             cmdk-input-wrapper=""
         >
@@ -165,11 +165,11 @@ const StyledCommandItem = styled(CommandPrimitive.Item, {
     px: 8,
     '&[aria-selected="true"]': {
         background: "#ededed",
-        color: "$gray10",
+        color: "$fgBase",
     },
 
     "&:active": {
-        background: "$gray2",
+        background: "$fgBase",
     },
 });
 

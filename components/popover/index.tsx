@@ -23,7 +23,7 @@ const PopoverContent = React.forwardRef<React.ElementRef<typeof StyledContent>, 
             <StyledContent sideOffset={0} {...props} ref={fowardedRef}>
                 {children}
                 {!hideArrow && (
-                    <Box css={{ color: "$panel" }}>
+                    <Box css={{ color: "$fgBase" }}>
                         <PopoverPrimitive.Arrow width={11} height={5} style={{ fill: "currentColor" }} />
                     </Box>
                 )}

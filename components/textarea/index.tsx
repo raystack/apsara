@@ -10,35 +10,35 @@ export const TextArea = styled("textarea", {
     padding: "$1",
     width: "100%",
     WebkitTapHighlightColor: "rgba(0,0,0,0)",
-    backgroundColor: "$loContrast",
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
-    color: "$hiContrast",
+    backgroundColor: "$bgBase",
+    boxShadow: "inset 0 0 0 1px $bgBase",
+    color: "$fgBase",
     fontVariantNumeric: "tabular-nums",
     position: "relative",
     minHeight: 80,
     resize: "vertical",
 
     "&:focus": {
-        boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
+        boxShadow: "inset 0px 0px 0px 1px $fgSubtle, 0px 0px 0px 1px $fgSubtle",
         zIndex: "1",
     },
     "&::placeholder": {
-        color: "$slate9",
+        color: "$fgSubtle",
     },
     "&:disabled": {
         pointerEvents: "none",
-        backgroundColor: "$slate2",
-        color: "$slate8",
+        backgroundColor: "$bgSubtle",
+        color: "$fgSubtle",
         cursor: "not-allowed",
         resize: "none",
         "&::placeholder": {
-            color: "$slate7",
+            color: "$fgBase",
         },
     },
     "&:read-only": {
-        backgroundColor: "$slate2",
+        backgroundColor: "$bgBase",
         "&:focus": {
-            boxShadow: "inset 0px 0px 0px 1px $colors$slate7",
+            boxShadow: "inset 0px 0px 0px 1px $bgBase",
         },
     },
 
@@ -65,15 +65,15 @@ export const TextArea = styled("textarea", {
         },
         state: {
             invalid: {
-                boxShadow: "inset 0 0 0 1px $colors$red7",
+                boxShadow: "inset 0 0 0 1px $fgDanger",
                 "&:focus": {
-                    boxShadow: "inset 0px 0px 0px 1px $colors$red8, 0px 0px 0px 1px $colors$red8",
+                    boxShadow: "inset 0px 0px 0px 1px $borderDanger, 0px 0px 0px 1px $borderDanger",
                 },
             },
             valid: {
-                boxShadow: "inset 0 0 0 1px $colors$green7",
+                boxShadow: "inset 0 0 0 1px $borderSuccess",
                 "&:focus": {
-                    boxShadow: "inset 0px 0px 0px 1px $colors$green8, 0px 0px 0px 1px $colors$green8",
+                    boxShadow: "inset 0px 0px 0px 1px $borderSuccess, 0px 0px 0px 1px $borderSuccess",
                 },
             },
         },

@@ -33,10 +33,10 @@ const SimpleTh = styled("th", {
         },
         border: {
             solid: {
-                borderBottom: "1px solid $gray4",
+                borderBottom: "1px solid $borderBase",
             },
             dashed: {
-                borderBottom: "1px dashed $gray8",
+                borderBottom: "1px dashed $borderBase",
             },
         },
     },
@@ -48,7 +48,7 @@ const SimpleTh = styled("th", {
 
 const SimpleTd = styled("td", {
     py: "$3",
-    borderBottom: "1px solid $gray4",
+    borderBottom: "1px solid $borderBase",
     fontSize: "$2",
     lineHeight: "$1",
     variants: {
@@ -65,10 +65,10 @@ const SimpleTd = styled("td", {
         },
         border: {
             solid: {
-                borderBottom: "1px solid $gray4",
+                borderBottom: "1px solid $borderBase",
             },
             dashed: {
-                borderBottom: "1px dashed $gray8",
+                borderBottom: "1px dashed $borderBase",
             },
         },
     },
@@ -81,11 +81,11 @@ const SimpleTd = styled("td", {
 const SimpleThead = styled("thead", {
     [`& ${SimpleTh}`]: {
         fontSize: "$1",
-        color: "$gray11",
+        color: "$fgBase",
     },
     [`& ${SimpleTd}`]: {
         fontSize: "$1",
-        color: "$gray11",
+        color: "$fgBase",
     },
 });
 
@@ -99,7 +99,7 @@ const SimpleTableRoot = styled("table", {
                 [`& ${SimpleTbody}`]: {
                     [`& ${SimpleTr}`]: {
                         "&:nth-child(odd)": {
-                            backgroundColor: "$gray2",
+                            backgroundColor: "$bgBase",
                         },
                     },
                 },

@@ -3,41 +3,21 @@ import { styled } from "~/stitches.config";
 export const Status = styled("div", {
     borderRadius: "50%",
     flexShrink: 0,
+    backgroundColor: "$bgBase",
 
     variants: {
         size: {
-            "1": {
+            sm: {
                 width: 5,
                 height: 5,
             },
-            "2": {
+            md: {
                 width: 9,
                 height: 9,
             },
         },
-        variant: {
-            gray: {
-                backgroundColor: "$slate7",
-            },
-            primary: {
-                backgroundColor: "$primary7",
-            },
-            blue: {
-                backgroundColor: "$blue9",
-            },
-            green: {
-                backgroundColor: "$green9",
-            },
-            yellow: {
-                backgroundColor: "$yellow9",
-            },
-            red: {
-                backgroundColor: "$red9",
-            },
-        },
     },
     defaultVariants: {
-        size: "2",
-        variant: "gray",
+        size: "md",
     },
 });

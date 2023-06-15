@@ -16,17 +16,14 @@ export const TabLink = styled("a", {
     textDecoration: "none",
     "@hover": {
         "&:hover": {
-            color: "$hiContrast",
+            color: "$fgSubtle",
         },
-    },
-    "&:focus": {
-        boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
     },
 
     variants: {
         active: {
             true: {
-                color: "$hiContrast",
+                color: "$fgBase",
                 cursor: "default",
                 "&::after": {
                     position: "absolute",
@@ -35,7 +32,7 @@ export const TabLink = styled("a", {
                     bottom: 0,
                     width: "100%",
                     height: 2,
-                    backgroundColor: "$primary9",
+                    backgroundColor: "$bgBase",
                 },
             },
         },

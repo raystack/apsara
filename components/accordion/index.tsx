@@ -16,9 +16,9 @@ const AccordionRoot = React.forwardRef<React.ElementRef<typeof StyledAccordion>,
 );
 
 const StyledItem = styled(AccordionPrimitive.Item, {
-    borderTop: "1px solid $colors$slate6",
+    borderTop: "1px solid $borderBase",
     "&:last-of-type": {
-        borderBottom: "1px solid $colors$slate6",
+        borderBottom: "1px solid $borderBase",
     },
 });
 
@@ -41,18 +41,17 @@ const StyledTrigger = styled(AccordionPrimitive.Trigger, {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "$2",
-    color: "$hiContrast",
+    color: "$fgBase",
     width: "100%",
 
     "@hover": {
         "&:hover": {
-            backgroundColor: "$slate2",
+            backgroundColor: "$bgBase",
         },
     },
 
     "&:focus": {
         outline: "none",
-        boxShadow: "inset 0 0 0 1px $colors$slate8, 0 0 0 1px $colors$slate8",
     },
 
     svg: {

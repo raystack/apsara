@@ -5,7 +5,7 @@ import { CSS, styled } from "~/stitches.config";
 const SliderTrack = styled(SliderPrimitive.Track, {
     position: "relative",
     flexGrow: 1,
-    backgroundColor: "$slate7",
+    backgroundColor: "$bgBase",
     borderRadius: "$pill",
     '&[data-orientation="horizontal"]': {
         height: 2,
@@ -78,7 +78,7 @@ export const StyledSlider = styled(SliderPrimitive.Root, {
     "@hover": {
         "&:hover": {
             [`& ${SliderTrack}`]: {
-                backgroundColor: "$slate8",
+                backgroundColor: "$bgInset",
             },
             [`& ${SliderThumb}`]: {
                 opacity: "1",

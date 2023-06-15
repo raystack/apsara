@@ -19,43 +19,43 @@ export const TextField = styled("input", {
     },
 
     // Custom
-    backgroundColor: "$loContrast",
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
-    color: "$hiContrast",
+    backgroundColor: "$bgBase",
+    boxShadow: "inset 0 0 0 1px $borderBase",
+    color: "$fgBase",
     fontVariantNumeric: "tabular-nums",
 
     "&:-webkit-autofill": {
-        boxShadow: "inset 0 0 0 1px $colors$primary6, inset 0 0 0 100px $colors$primary3",
+        boxShadow: "inset 0 0 0 1px $borderAccent, inset 0 0 0 100px $borderAccent",
     },
 
     "&:-webkit-autofill::first-line": {
         fontFamily: "$untitled",
-        color: "$hiContrast",
+        color: "$fgBase",
     },
 
     "&:focus": {
-        boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
+        boxShadow: "inset 0px 0px 0px 1px $borderAccentHover, 0px 0px 0px 1px $borderAccentHover",
         "&:-webkit-autofill": {
             boxShadow:
-                "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8, inset 0 0 0 100px $colors$primary3",
+                "inset 0px 0px 0px 1px $borderAccentHover, 0px 0px 0px 1px $borderAccentHover, inset 0 0 0 100px $borderAccentHover",
         },
     },
     "&::placeholder": {
-        color: "$slate9",
+        color: "$fgBase",
     },
     "&:disabled": {
         pointerEvents: "none",
-        backgroundColor: "$slate2",
-        color: "$slate8",
+        backgroundColor: "$bgBase",
+        color: "$fgBase",
         cursor: "not-allowed",
         "&::placeholder": {
-            color: "$slate7",
+            color: "$fgBase",
         },
     },
     "&:read-only": {
-        backgroundColor: "$slate2",
+        backgroundColor: "$bgBase",
         "&:focus": {
-            boxShadow: "inset 0px 0px 0px 1px $colors$slate7",
+            boxShadow: "inset 0px 0px 0px 1px $borderBase",
         },
     },
 
@@ -88,12 +88,13 @@ export const TextField = styled("input", {
                 backgroundColor: "transparent",
                 "@hover": {
                     "&:hover": {
-                        boxShadow: "inset 0 0 0 1px $colors$slateA7",
+                        boxShadow: "inset 0 0 0 1px $borderBase",
                     },
                 },
                 "&:focus": {
-                    backgroundColor: "$loContrast",
-                    boxShadow: "inset 0px 0px 0px 1px $colors$primary8, 0px 0px 0px 1px $colors$primary8",
+                    backgroundColor: "$bgBase",
+                    boxShadow:
+                        "inset 0px 0px 0px 1px $borderAccentInvertedHover, 0px 0px 0px 1px $borderAccentInvertedHover",
                 },
                 "&:disabled": {
                     backgroundColor: "transparent",
@@ -105,15 +106,15 @@ export const TextField = styled("input", {
         },
         state: {
             invalid: {
-                boxShadow: "inset 0 0 0 1px $colors$red7",
+                boxShadow: "inset 0 0 0 1px $borderDanger",
                 "&:focus": {
-                    boxShadow: "inset 0px 0px 0px 1px $colors$red8, 0px 0px 0px 1px $colors$red8",
+                    boxShadow: "inset 0px 0px 0px 1px $borderDanger, 0px 0px 0px 1px $borderDanger",
                 },
             },
             valid: {
-                boxShadow: "inset 0 0 0 1px $colors$green7",
+                boxShadow: "inset 0 0 0 1px $borderSuccess",
                 "&:focus": {
-                    boxShadow: "inset 0px 0px 0px 1px $colors$green8, 0px 0px 0px 1px $colors$green8",
+                    boxShadow: "inset 0px 0px 0px 1px $borderSuccess, 0px 0px 0px 1px $borderSuccess",
                 },
             },
         },

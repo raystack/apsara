@@ -10,7 +10,7 @@ export const Card = styled("div", {
     verticalAlign: "middle",
     WebkitTapHighlightColor: "rgba(0, 0, 0, 0)",
 
-    backgroundColor: "$gray1",
+    backgroundColor: "$bgBase",
     display: "flex",
     flexDirection: "column",
     gap: "20px",
@@ -19,7 +19,7 @@ export const Card = styled("div", {
     flexShrink: 0,
     padding: "$4",
     borderRadius: "$1",
-    border: "1px solid $gray4",
+    border: "1px solid $borderBase",
     position: "relative",
 
     "&::before": {
@@ -61,7 +61,7 @@ export const Card = styled("div", {
                 },
                 "@hover": {
                     "&:hover": {
-                        backgroundColor: "$panel",
+                        backgroundColor: "$bgBase",
                         transform: "translateY(-2px)",
                         "&::before": {
                             opacity: "1",

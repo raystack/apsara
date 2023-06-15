@@ -5,7 +5,7 @@ export const Separator = styled(SeparatorPrimitive.Root, {
     border: "none",
     margin: 0,
     flexShrink: 0,
-    backgroundColor: "$slate6",
+    backgroundColor: "$bgInset",
     cursor: "default",
 
     variants: {

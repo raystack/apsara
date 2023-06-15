@@ -13,7 +13,6 @@ const StyledRadioButton = styled("div", {
     borderRadius: "$round",
     width: 25,
     height: 25,
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
     flexShrink: 0,
     marginRight: "$3",
 });
@@ -22,7 +21,7 @@ const StyledRadioIndicator = styled("div", {
     borderRadius: "$round",
     width: 15,
     height: 15,
-    backgroundColor: "$primary9",
+    backgroundColor: "$bgBase",
     transform: "scale(0)",
 });
 
@@ -39,19 +38,7 @@ const StyledRadio = styled(RadioGroupPrimitive.Item, {
     display: "flex",
     alignItems: "center",
     borderRadius: "$2",
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
     padding: "$3",
-    "@hover": {
-        "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
-        },
-    },
-    '&[data-state="checked"]': {
-        boxShadow: "inset 0 0 0 1px $colors$primary8, 0 0 0 1px $colors$primary8 !important",
-        [`& ${StyledRadioIndicator}`]: {
-            transform: "scale(1)",
-        },
-    },
 });
 
 type RadioGroupItemPrimitiveProps = React.ComponentProps<typeof RadioGroupPrimitive.Item>;

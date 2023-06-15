@@ -22,23 +22,7 @@ export const Banner = styled("div", {
                 px: "$4",
             },
         },
-        variant: {
-            loContrast: {
-                backgroundColor: "$loContrast",
-            },
-            gray: {
-                backgroundColor: "$slate3",
-            },
-            blue: {
-                backgroundColor: "$blue3",
-            },
-            green: {
-                backgroundColor: "$green3",
-            },
-            red: {
-                backgroundColor: "$red3",
-            },
-        },
+
         rounded: {
             true: {
                 borderRadius: "$pill",
@@ -50,31 +34,7 @@ export const Banner = styled("div", {
             },
         },
     },
-    compoundVariants: [
-        {
-            border: "true",
-            variant: "gray",
-            css: {
-                borderColor: "$slate6",
-            },
-        },
-        {
-            border: "true",
-            variant: "blue",
-            css: {
-                borderColor: "$blue11",
-            },
-        },
-        {
-            border: "true",
-            variant: "loContrast",
-            css: {
-                borderColor: "$slate6",
-            },
-        },
-    ],
     defaultVariants: {
         size: "1",
-        variant: "gray",
     },
 });

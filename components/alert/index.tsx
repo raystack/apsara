@@ -12,35 +12,25 @@ export const StyledRoot = styled("div", {
         boxSizing: "border-box",
     },
 
-    border: "1px solid $gray8",
+    border: "1px solid $borderBase",
     borderRadius: "$2",
     padding: "$2",
 
     variants: {
         variant: {
-            gray: {
-                "&::before": {
-                    boxShadow: "inset 0 0 0 1px $colors$slate9",
-                },
-            },
-            info: {
-                "&::before": {
-                    boxShadow: "inset 0 0 0 1px $colors$primary9",
-                },
-            },
             success: {
                 "&::before": {
-                    boxShadow: "inset 0 0 0 1px $colors$green9",
+                    boxShadow: "inset 0 0 0 1px $borderSuccess",
                 },
             },
             warning: {
                 "&::before": {
-                    boxShadow: "inset 0 0 0 1px $colors$orange9",
+                    boxShadow: "inset 0 0 0 1px $borderAttention",
                 },
             },
             error: {
                 "&::before": {
-                    boxShadow: "inset 0 0 0 1px $colors$red9",
+                    boxShadow: "inset 0 0 0 1px $borderDanger",
                 },
             },
         },

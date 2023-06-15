@@ -9,6 +9,7 @@ export const Preview = ({ css, ...props }: PreviewProps) => (
         justify="center"
         css={{
             py: "120px",
+            px: "60px",
             marginBottom: "$10",
             borderRadius: "$4",
             border: "1px dashed #d3d7df",

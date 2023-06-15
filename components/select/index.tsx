@@ -3,15 +3,14 @@ import React from "react";
 import { CSS, styled } from "~/stitches.config";
 
 const SelectWrapper = styled("div", {
-    backgroundColor: "$loContrast",
-
+    backgroundColor: "$bgBase",
     borderRadius: "$1",
-    color: "$gray12",
+    color: "$fgBase",
     fontSize: "$2",
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
     fontVariantNumeric: "tabular-nums",
     fontWeight: 400,
     flexShrink: 0,
+    position: "relative",
     "&:focus-within": {
         zIndex: 1,
     },

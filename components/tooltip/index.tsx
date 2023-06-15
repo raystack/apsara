@@ -14,7 +14,7 @@ type TooltipProps = TooltipPrimitiveProps &
     };
 
 const StyledContent = styled(TooltipPrimitive.Content, {
-    backgroundColor: "$transparentPanel",
+    backgroundColor: "$bgBase",
     borderRadius: "$1",
     padding: "$1 $2",
 
@@ -49,13 +49,13 @@ export function Tooltip({
                         size="1"
                         as="p"
                         css={{
-                            color: "$loContrast",
+                            color: "$fgBase",
                             lineHeight: multiline ? "20px" : (undefined as any),
                         }}
                     >
                         {content}
                     </Text>
-                    <Box css={{ color: "$transparentExtreme" }}>
+                    <Box css={{ color: "$fgBase" }}>
                         <TooltipPrimitive.Arrow width={11} height={5} style={{ fill: "currentColor" }} />
                     </Box>
                 </StyledContent>

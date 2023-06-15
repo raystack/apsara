@@ -7,7 +7,7 @@ const StyledThumb = styled(SwitchPrimitive.Thumb, {
     left: 0,
     width: 16,
     height: 16,
-    backgroundColor: "$gray1",
+    backgroundColor: "$bgBase",
     borderRadius: "$round",
     boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
     transition: "transform 100ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -41,13 +41,13 @@ const StyledSwitch = styled(SwitchPrimitive.Root, {
 
     width: "34px",
     height: "20px",
-    backgroundColor: "$gray9",
+    backgroundColor: "$bgBase",
     borderRadius: "16px",
     position: "relative",
     "&:focus": {},
 
     '&[data-state="checked"]': {
-        backgroundColor: "$primary9",
+        backgroundColor: "$bgAccent",
     },
 
     [`& ${StyledThumb}`]: {

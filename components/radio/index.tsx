@@ -19,7 +19,7 @@ const StyledIndicator = styled(RadioGroupPrimitive.Indicator, {
         width: "7px",
         height: "7px",
         borderRadius: "50%",
-        backgroundColor: "$primary9",
+        backgroundColor: "$bgInset",
     },
 });
 
@@ -45,18 +45,18 @@ const StyledRadio = styled(RadioGroupPrimitive.Item, {
     WebkitTapHighlightColor: "rgba(0,0,0,0)",
 
     borderRadius: "50%",
-    color: "$hiContrast",
-    boxShadow: "inset 0 0 0 1px $colors$slate7",
+    color: "$fgBase",
+    boxShadow: "inset 0 0 0 1px",
+
     overflow: "hidden",
     "@hover": {
         "&:hover": {
-            boxShadow: "inset 0 0 0 1px $colors$slate8",
+            boxShadow: "inset 0 0 0 1px",
         },
     },
     "&:focus": {
         outline: "none",
-        borderColor: "$red7",
-        boxShadow: "inset 0 0 0 1px $colors$primary9, 0 0 0 1px $colors$primary9",
+        borderColor: "$borderBase",
     },
 
     variants: {

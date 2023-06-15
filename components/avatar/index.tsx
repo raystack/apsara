@@ -21,7 +21,7 @@ const StyledAvatar = styled(AvatarPrimitive.Root, {
     outline: "none",
     padding: "0",
     fontWeight: "500" as any,
-    color: "$hiContrast",
+    color: "$fgBase",
 
     "&::before": {
         content: '""',
@@ -31,114 +31,34 @@ const StyledAvatar = styled(AvatarPrimitive.Root, {
         bottom: 0,
         left: 0,
         borderRadius: "inherit",
-        boxShadow: "inset 0px 0px 1px rgba(0, 0, 0, 0.12)",
     },
 
     variants: {
         size: {
-            "1": {
-                width: "$3",
-                height: "$3",
-            },
-            "2": {
+            sm: {
                 width: "$5",
                 height: "$5",
             },
-            "3": {
+            md: {
                 width: "$6",
                 height: "$6",
             },
-            "4": {
+            lg: {
                 width: "$7",
                 height: "$7",
             },
-            "5": {
+            xl: {
                 width: "$8",
                 height: "$8",
             },
-            "6": {
+            "2xl": {
                 width: "$9",
                 height: "$9",
             },
         },
-        variant: {
-            hiContrast: {
-                backgroundColor: "$hiContrast",
-                color: "$loContrast",
-            },
-            gray: {
-                backgroundColor: "$slate5",
-            },
-            tomato: {
-                backgroundColor: "$tomato5",
-            },
-            red: {
-                backgroundColor: "$red5",
-            },
-            crimson: {
-                backgroundColor: "$crimson5",
-            },
-            pink: {
-                backgroundColor: "$pink5",
-            },
-            plum: {
-                backgroundColor: "$plum5",
-            },
-            purple: {
-                backgroundColor: "$purple5",
-            },
-            violet: {
-                backgroundColor: "$violet5",
-            },
-            indigo: {
-                backgroundColor: "$indigo5",
-            },
-            blue: {
-                backgroundColor: "$blue5",
-            },
-            cyan: {
-                backgroundColor: "$cyan5",
-            },
-            teal: {
-                backgroundColor: "$teal5",
-            },
-            green: {
-                backgroundColor: "$green5",
-            },
-            grass: {
-                backgroundColor: "$grass5",
-            },
-            brown: {
-                backgroundColor: "$brown5",
-            },
-            bronze: {
-                backgroundColor: "$bronze5",
-            },
-            gold: {
-                backgroundColor: "$gold5",
-            },
-            sky: {
-                backgroundColor: "$sky5",
-            },
-            mint: {
-                backgroundColor: "$mint5",
-            },
-            lime: {
-                backgroundColor: "$lime5",
-            },
-            yellow: {
-                backgroundColor: "$yellow5",
-            },
-            amber: {
-                backgroundColor: "$amber5",
-            },
-            orange: {
-                backgroundColor: "$orange5",
-            },
-        },
         shape: {
             square: {
-                borderRadius: "$2",
+                borderRadius: "$1",
             },
             circle: {
                 borderRadius: "50%",
@@ -149,39 +69,9 @@ const StyledAvatar = styled(AvatarPrimitive.Root, {
                 opacity: ".3",
             },
         },
-        interactive: {
-            true: {
-                "&::after": {
-                    content: '""',
-                    position: "absolute",
-                    top: "0",
-                    right: "0",
-                    bottom: "0",
-                    left: "0",
-                    backgroundColor: "rgba(0,0,0,.08)",
-                    opacity: "0",
-                    pointerEvents: "none",
-                    transition: "opacity 25ms linear",
-                },
-                "@hover": {
-                    "&:hover": {
-                        "&::after": {
-                            opacity: "1",
-                        },
-                    },
-                },
-                '&[data-state="open"]': {
-                    "&::after": {
-                        backgroundColor: "rgba(0,0,0,.12)",
-                        opacity: "1",
-                    },
-                },
-            },
-        },
     },
     defaultVariants: {
-        size: "2",
-        variant: "gray",
+        size: "sm",
         shape: "circle",
     },
 });
@@ -200,34 +90,35 @@ const StyledAvatarFallback = styled(AvatarPrimitive.Fallback, {
 
     variants: {
         size: {
-            "1": {
-                fontSize: "10px",
-                lineHeight: "15px",
+            sm: {
+                fontSize: "12px",
+                lineHeight: "16px",
             },
-            "2": {
-                fontSize: "$3",
+            md: {
+                fontSize: "16px",
+                lineHeight: "20px",
             },
-            "3": {
-                fontSize: "$6",
+            lg: {
+                fontSize: "20px",
+                lineHeight: "24px",
             },
-            "4": {
-                fontSize: "$7",
+            xl: {
+                fontSize: "24px",
+                lineHeight: "28px",
             },
-            "5": {
-                fontSize: "$8",
-            },
-            "6": {
-                fontSize: "$9",
+            "2xl": {
+                fontSize: "28px",
+                lineHeight: "32px",
             },
         },
     },
     defaultVariants: {
-        size: "2",
+        size: "sm",
     },
 });
 
 const AvatarNestedItem = styled("div", {
-    boxShadow: "0 0 0 2px $colors$loContrast",
+    boxShadow: "0 0 0 2px $borderBase",
     borderRadius: "50%",
 });
 
@@ -240,7 +131,6 @@ const AvatarGroup = styled("div", {
 });
 
 type StatusVariants = React.ComponentProps<typeof Status>;
-type StatusColors = Pick<StatusVariants, "variant">;
 
 type AvatarVariants = VariantProps<typeof StyledAvatar>;
 type AvatarPrimitiveProps = React.ComponentProps<typeof AvatarPrimitive.Root>;
@@ -250,11 +140,10 @@ type AvatarOwnProps = AvatarPrimitiveProps &
         alt?: string;
         src?: string;
         fallback?: React.ReactNode;
-        status?: StatusColors["variant"];
     };
 
 const AvatarRoot = React.forwardRef<React.ElementRef<typeof StyledAvatar>, AvatarOwnProps>(
-    ({ alt, src, fallback, size, variant, shape, css, status, ...props }, forwardedRef) => {
+    ({ alt, src, fallback, size, shape, css, ...props }, forwardedRef) => {
         return (
             <Box
                 css={{
@@ -264,25 +153,10 @@ const AvatarRoot = React.forwardRef<React.ElementRef<typeof StyledAvatar>, Avata
                     width: "fit-content",
                 }}
             >
-                <StyledAvatar {...props} ref={forwardedRef} size={size} variant={variant} shape={shape}>
+                <StyledAvatar {...props} ref={forwardedRef} size={size} shape={shape}>
                     <StyledAvatarImage alt={alt} src={src} />
                     <StyledAvatarFallback size={size}>{fallback}</StyledAvatarFallback>
                 </StyledAvatar>
-                {status && (
-                    <Box
-                        css={{
-                            position: "absolute",
-                            bottom: "0",
-                            right: "0",
-                            boxShadow: "0 0 0 3px $colors$loContrast",
-                            borderRadius: "$round",
-                            marginRight: "-3px",
-                            marginBottom: "-3px",
-                        }}
-                    >
-                        <Status size={size && size > 2 ? "2" : "1"} variant={status} />
-                    </Box>
-                )}
             </Box>
         );
     },
