@@ -10,7 +10,7 @@ declare type SizeType = "small" | "middle" | "large" | undefined;
 
 export interface SearchProps {
     placeholder?: string;
-    onChange?: (data: any) => void;
+    onChange?: (event: any) => void;
     children?: any;
     className?: string;
     value?: string;

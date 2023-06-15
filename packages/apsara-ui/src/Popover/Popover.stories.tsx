@@ -10,38 +10,48 @@ export default {
     component: Popover,
 };
 
-export const popoverContent = () => (
-    <>
-        <Popover
-            title="Confirmation"
-            content={
-                <div>
-                    <Input />
-                </div>
-            }
-            okBtnProps={{
-                text: "ok",
-                style: { marginLeft: "10px" },
-            }}
-            cancelBtnProps={{
-                text: "Cancel",
-                style: { marginLeft: "10px" },
-            }}
-        >
-            <Button>Default Button</Button>
-        </Popover>
-    </>
-);
-
-export const popoverContentParam = () => {
-    const [open, setOpen] = useState(false);
+export const popoverContent = () => {
+    const [val, setVal] = useState<string | number | readonly string[] | undefined>("");
+    const onChange: React.FormEventHandler<HTMLInputElement> = (event: any) => {
+        setVal(event.target.value);
+    };
     return (
         <>
             <Popover
                 title="Confirmation"
                 content={
                     <div>
-                        <Input />
+                        <Input value={val} onChange={onChange} />
+                    </div>
+                }
+                okBtnProps={{
+                    text: "ok",
+                    style: { marginLeft: "10px" },
+                }}
+                cancelBtnProps={{
+                    text: "Cancel",
+                    style: { marginLeft: "10px" },
+                }}
+            >
+                <Button>Default Button</Button>
+            </Popover>
+        </>
+    );
+};
+
+export const popoverContentParam = () => {
+    const [open, setOpen] = useState(false);
+    const [val, setVal] = useState<string | number | readonly string[] | undefined>("");
+    const onChange: React.FormEventHandler<HTMLInputElement> = (event: any) => {
+        setVal(event.target.value);
+    };
+    return (
+        <>
+            <Popover
+                title="Confirmation"
+                content={
+                    <div>
+                        <Input value={val} onChange={onChange} />
                     </div>
                 }
                 cancelBtnProps={{
