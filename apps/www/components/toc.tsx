@@ -66,7 +66,6 @@ export function Toc({ title, containerElm }: { title: string; containerElm: Muta
                     return (
                         <Box as="li" key={heading.id} data-level={getLevel(heading.nodeName)}>
                             <QuickNavLink
-                                variant="subtle"
                                 href={`#${heading.id}`}
                                 onClick={(e) => scrollToSection(e, `#${heading.id}`)}
                             >
