@@ -23,8 +23,8 @@ radix:
             alignItems: 'center',
             justifyContent: 'center',
             height: '$9',
-            backgroundColor: '$slate2',
-            border: '2px dashed $colors$slate6',
+            backgroundColor: '$bgBase',
+            border: '2px dashed $colors$borderBase',
             borderRadius: '$2',
             padding: "$3"
           }}
@@ -34,20 +34,9 @@ radix:
       </ContextMenu.Trigger>
       <ContextMenu.Content>
         <ContextMenu.Group>
-          <ContextMenu.Item>Item</ContextMenu.Item>
-          <ContextMenu.Item>Item</ContextMenu.Item>
-          <ContextMenu.Item>Item</ContextMenu.Item>
-          <ContextMenu.Separator />
-          <ContextMenu.CheckboxItem>Item</ContextMenu.CheckboxItem>
-          <ContextMenu.CheckboxItem checked>Item</ContextMenu.CheckboxItem>
-          <ContextMenu.CheckboxItem>Item</ContextMenu.CheckboxItem>
-          <ContextMenu.Separator />
-          <ContextMenu.Label>Choose one</ContextMenu.Label>
-          <ContextMenu.RadioGroup value="one">
-            <ContextMenu.RadioItem value="one">Item</ContextMenu.RadioItem>
-            <ContextMenu.RadioItem value="two">Item</ContextMenu.RadioItem>
-            <ContextMenu.RadioItem value="three">Item</ContextMenu.RadioItem>
-          </ContextMenu.RadioGroup>
+          <ContextMenu.Item>Cell Item</ContextMenu.Item>
+          <ContextMenu.Item>Cell Item</ContextMenu.Item>
+          <ContextMenu.Item>Cell Item</ContextMenu.Item>
         </ContextMenu.Group>
       </ContextMenu.Content>
     </ContextMenu>
@@ -76,20 +65,9 @@ import { ContextMenu } from '@odpf/apsara'
   </ContextMenu.Trigger>
   <ContextMenu.Content>
     <ContextMenu.Group>
-      <ContextMenu.Item>Item</ContextMenu.Item>
-      <ContextMenu.Item>Item</ContextMenu.Item>
-      <ContextMenu.Item>Item</ContextMenu.Item>
-      <ContextMenu.Separator />
-      <ContextMenu.CheckboxItem>Item</ContextMenu.CheckboxItem>
-      <ContextMenu.CheckboxItem checked>Item</ContextMenu.CheckboxItem>
-      <ContextMenu.CheckboxItem>Item</ContextMenu.CheckboxItem>
-      <ContextMenu.Separator />
-      <ContextMenu.Label>Choose one</ContextMenu.Label>
-      <ContextMenu.RadioGroup value="one">
-        <ContextMenu.RadioItem value="one">Item</ContextMenu.RadioItem>
-        <ContextMenu.RadioItem value="two">Item</ContextMenu.RadioItem>
-        <ContextMenu.RadioItem value="three">Item</ContextMenu.RadioItem>
-      </ContextMenu.RadioGroup>
+      <ContextMenu.Item>Cell Item</ContextMenu.Item>
+      <ContextMenu.Item>Cell Item</ContextMenu.Item>
+      <ContextMenu.Item>Cell Item</ContextMenu.Item>
     </ContextMenu.Group>
   </ContextMenu.Content>
 </ContextMenu>

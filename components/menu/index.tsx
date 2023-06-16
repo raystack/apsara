@@ -22,11 +22,21 @@ export const baseItemCss = css({
 export const itemCss = css(baseItemCss, {
     position: "relative",
     padding: "$2",
-    "&[data-highlighted]": {
-        outline: "none",
+
+    "&:hover": {
+        borderRadius: "$1",
+        background: "$bgBaseHover",
     },
 
-    "&[data-disabled]": {},
+    "&[data-highlighted]": {
+        outline: "none",
+        borderRadius: "$1",
+        background: "$bgInset",
+    },
+
+    "&[data-disabled]": {
+        opacity: 0.6,
+    },
 });
 
 export const labelCss = css(baseItemCss, {
@@ -37,13 +47,12 @@ export const labelCss = css(baseItemCss, {
 export const menuCss = css({
     boxSizing: "border-box",
     minWidth: 120,
-    py: "$1",
 });
 
 export const separatorCss = css({
     height: 1,
     my: "$1",
-    backgroundColor: "$bgBase",
+    backgroundColor: "$bgInset",
 });
 
 const MenuRoot = styled(MenuPrimitive.Root, menuCss);
@@ -68,7 +77,6 @@ const MenuRadioItem = React.forwardRef<React.ElementRef<typeof StyledMenuRadioIt
                             css={{
                                 width: "$1",
                                 height: "$1",
-                                backgroundColor: "currentColor",
                                 borderRadius: "$round",
                             }}
                         ></Box>

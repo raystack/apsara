@@ -53,7 +53,7 @@ export const SearchField = React.forwardRef<React.ElementRef<typeof TextField>, 
                             margin: "0px 6px",
                             display: "flex",
                             alignItems: "center",
-                            color: "$fgBase",
+                            color: "$fgMuted",
                         }}
                         onClick={() => setQuery("")}
                         aria-label="Remove search text"

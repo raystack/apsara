@@ -17,46 +17,24 @@ const TabsTrigger = styled(TabsPrimitive.Trigger, {
     lineHeight: "16px",
     px: "$2",
     py: "$1",
+    background: "none",
 
     userSelect: "none",
     outline: "none",
     alignItems: "center",
     justifyContent: "center",
-    color: "$fgBase",
     borderRadius: "$1",
     zIndex: "10",
-
-    "@hover": {
-        "&:hover": {
-            color: "$fgSubtle",
-        },
-    },
-
-    '&[data-state="active"]': {
-        background: "$bgBase",
-        color: "$fgBase",
-        boxShadow: "0px 1px 1px rgba(0, 0, 0, 0.1)",
-    },
-
-    '&[data-orientation="vertical"]': {
-        justifyContent: "flex-start",
-
-        '&[data-state="active"]': {
-            background: "$bgSubtle",
-            color: "$fgBase",
-            boxShadow: "0px 1px 1px rgba(0, 0, 0, 0.1)",
-        },
-    },
 });
 
 const StyledTabsList = styled(TabsPrimitive.List, {
     flexShrink: 0,
     display: "flex",
     alignItems: "center",
-    padding: "2px",
+    padding: 0,
     gap: "$1",
-    background: "$bgBase",
     borderRadius: "$1",
+
     "&:focus": {
         outline: "none",
     },
@@ -64,26 +42,61 @@ const StyledTabsList = styled(TabsPrimitive.List, {
         flexDirection: "column",
     },
 
-    variants: {
-        pill: {
-            true: {
-                padding: 0,
-                background: "$bgBase",
-                button: {
-                    background: "$bgBase",
-                },
+    button: {
+        color: "$fgMuted",
+    },
 
+    'button[data-state="active"]': {
+        background: "$bgInset",
+        color: "$fgBase",
+    },
+
+    'button[data-orientation="vertical"]': {
+        justifyContent: "flex-start",
+
+        '&[data-state="active"]': {
+            background: "$bgInset",
+            color: "$fgBase",
+        },
+    },
+
+    variants: {
+        underline: {
+            true: {
                 'button[data-state="active"]': {
-                    background: "$bgSubtle",
-                    color: "$fgSubtle",
+                    background: "none",
+                    color: "$fgAccent",
                 },
 
                 'button[data-orientation="vertical"]': {
                     justifyContent: "flex-start",
 
                     '&[data-state="active"]': {
-                        background: "$bgSubtle",
-                        color: "$fbSubtle",
+                        background: "none",
+                        color: "$fgAccent",
+                    },
+                },
+            },
+        },
+
+        elevated: {
+            true: {
+                padding: "2px",
+                background: "$bgInset",
+
+                'button[data-state="active"]': {
+                    background: "$bgBase",
+                    boxShadow: "$sm",
+                    color: "$fgBase",
+                },
+
+                'button[data-orientation="vertical"]': {
+                    justifyContent: "flex-start",
+
+                    '&[data-state="active"]': {
+                        background: "$bgBase",
+                        boxShadow: "$sm",
+                        color: "$fgBase",
                     },
                 },
             },

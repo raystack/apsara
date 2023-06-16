@@ -42,8 +42,8 @@ const slideOut = keyframes({
 });
 
 const StyledContent = styled(DialogPrimitive.Content, {
-    backgroundColor: "$bgInverted",
-    boxShadow: "$borderSubtle 0 0 38px -10px, $borderSubtle 0 0 35px -15px",
+    backgroundColor: "$bgInset",
+    boxShadow: "$sm",
     position: "fixed",
     zIndex: 50,
     top: 0,

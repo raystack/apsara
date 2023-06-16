@@ -13,13 +13,13 @@ description:
       gap: "$3",
     }}
   >
-  <Section size="1" css={{ backgroundColor: '$slate3' }}>
+  <Section size="1" css={{ backgroundColor: '$bgBase' }}>
     <Text as="p" size="4" css={{ textAlign: 'center' }}>Section 1</Text>
   </Section>
-  <Section size="2" css={{ backgroundColor: '$slate3', my: '$1' }}>
+  <Section size="2" css={{ backgroundColor: '$bgBase', my: '$1' }}>
     <Text as="p" size="4" css={{ textAlign: 'center' }}>Section 2</Text>
   </Section>
-  <Section size="3" css={{ backgroundColor: '$slate3' }}>
+  <Section size="3" css={{ backgroundColor: '$bgBase' }}>
     <Text as="p" size="4" css={{ textAlign: 'center' }}>Section 3</Text>
   </Section>
   </Container>
@@ -41,13 +41,13 @@ Import all parts and piece them together.
     <LiveEditor code={`
 import { Section } from '@odpf/apsara'
 
-<Section size="1" css={{ backgroundColor: '$slate3' }}>
+<Section size="1" css={{ backgroundColor: '$bgBase' }}>
   <Text as="p" size="4" css={{ textAlign: 'center' }}>Section 1</Text>
 </Section>
-<Section size="2" css={{ backgroundColor: '$slate3', my: '$1' }}>
+<Section size="2" css={{ backgroundColor: '$bgBase', my: '$1' }}>
   <Text as="p" size="4" css={{ textAlign: 'center' }}>Section 2</Text>
 </Section>
-<Section size="3" css={{ backgroundColor: '$slate3' }}>
+<Section size="3" css={{ backgroundColor: '$bgBase' }}>
   <Text as="p" size="4" css={{ textAlign: 'center' }}>Section 3</Text>
 </Section>
 `} border />

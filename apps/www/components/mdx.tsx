@@ -68,7 +68,6 @@ export const components = {
             return (
                 <Apsara.Link
                     {...props}
-                    variant="blue"
                     href={href}
                     css={{ fontSize: "inherit" }}
                     target="_blank"
@@ -110,7 +109,7 @@ export const components = {
                 color: "orange",
                 "& p": {
                     fontSize: "$3",
-                    color: "$gray11",
+                    color: "$fgBase",
                     lineHeight: "25px",
                 },
             }}
@@ -131,7 +130,7 @@ export const components = {
                 borderRadius: "$3",
                 "&, & p": {
                     fontSize: "$3",
-                    color: "$slate11",
+                    color: "$fgBase",
                     lineHeight: "23px",
                     margin: 0,
                 },
@@ -162,7 +161,7 @@ const LinkHeading = ({ id, children, css }: { id: string; children: React.ReactN
             }}
         >
             {children}
-            <Apsara.Box as="span" css={{ marginLeft: "$2", color: "$slate10" }}>
+            <Apsara.Box as="span" css={{ marginLeft: "$2", color: "$fgBase" }}>
                 <Link2Icon aria-hidden />
             </Apsara.Box>
         </Apsara.Box>

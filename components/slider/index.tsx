@@ -5,7 +5,7 @@ import { CSS, styled } from "~/stitches.config";
 const SliderTrack = styled(SliderPrimitive.Track, {
     position: "relative",
     flexGrow: 1,
-    backgroundColor: "$bgBase",
+    backgroundColor: "$bgInset",
     borderRadius: "$pill",
     '&[data-orientation="horizontal"]': {
         height: 2,
@@ -18,7 +18,7 @@ const SliderTrack = styled(SliderPrimitive.Track, {
 
 const SliderRange = styled(SliderPrimitive.Range, {
     position: "absolute",
-    background: "$primary9",
+    background: "$bgAccent",
     borderRadius: "inherit",
     '&[data-orientation="horizontal"]': {
         height: "100%",
@@ -34,9 +34,9 @@ const SliderThumb = styled(SliderPrimitive.Thumb, {
     width: 15,
     height: 15,
     outline: "none",
-    opacity: "0",
-    backgroundColor: "white",
-    boxShadow: "0 0 1px rgba(0,0,0,.3), 0 1px 4px rgba(0,0,0,.15)",
+    opacity: "0.6",
+    backgroundColor: "$bgAccent",
+    boxShadow: "$sm",
     borderRadius: "$round",
 
     "&::after": {
@@ -47,7 +47,6 @@ const SliderThumb = styled(SliderPrimitive.Thumb, {
         bottom: 0,
         left: 0,
         zIndex: -2,
-        backgroundColor: "hsla(0,0%,0%,.035)",
         transform: "scale(1)",
         borderRadius: "$round",
         transition: "transform 200ms cubic-bezier(0.22, 1, 0.36, 1)",

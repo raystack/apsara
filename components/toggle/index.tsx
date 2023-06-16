@@ -42,14 +42,14 @@ export const Toggle = styled(TogglePrimitive.Root, {
     },
 
     '&[data-state="on"]': {
-        backgroundColor: "$slateA5",
+        backgroundColor: "$bgBaseHover",
         "@hover": {
             "&:hover": {
-                backgroundColor: "$bgBase",
+                backgroundColor: "$bgBaseHover",
             },
         },
         "&:active": {
-            backgroundColor: "$bgBase",
+            backgroundColor: "$bgBaseHover",
         },
     },
 

@@ -8,7 +8,7 @@ const QuickNavUl = styled("ul", {
 });
 
 const QuickNavLink = styled(Link, {
-    color: "$slate11",
+    color: "$fgBase",
     display: "inline-flex",
     my: "$1",
 
