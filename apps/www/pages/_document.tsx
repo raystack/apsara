@@ -1,4 +1,4 @@
-import { getCssText, reset } from "@odpf/apsara";
+import { getCssText, reset } from "@raystack/apsara";
 import { Head, Html, Main, NextScript } from "next/document";
 
 /**
@@ -7,20 +7,23 @@ import { Head, Html, Main, NextScript } from "next/document";
  * and we don't want to have the css accumulated from previous requests
  */
 const getCssAndReset = () => {
-    const css = getCssText();
-    reset();
-    return css;
+  const css = getCssText();
+  reset();
+  return css;
 };
 export default function Document() {
-    return (
-        <Html lang="en">
-            <Head>
-                <style id="stitches" dangerouslySetInnerHTML={{ __html: getCssAndReset() }} />
-            </Head>
-            <body>
-                <Main />
-                <NextScript />
-            </body>
-        </Html>
-    );
+  return (
+    <Html lang="en">
+      <Head>
+        <style
+          id="stitches"
+          dangerouslySetInnerHTML={{ __html: getCssAndReset() }}
+        />
+      </Head>
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }
