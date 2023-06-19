@@ -1,3 +1,5 @@
+import "@raystack/ui/index.css";
+
 import {
   DesktopIcon,
   DiscIcon,

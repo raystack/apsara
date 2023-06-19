@@ -1,0 +1,46 @@
+{
+  "name": "@raystack/ui",
+  "version": "0.0.1",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./index.css": "./dist/index.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rollup --config",
+    "dev": "rollup --config --watch",
+    "lint": "eslint \"**/*.ts*\"",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-typescript": "^11.1.1",
+    "@types/react": "^18.2.12",
+    "class-variance-authority": "^0.6.0",
+    "eslint-config-custom": "workspace:*",
+    "i": "^0.3.7",
+    "npm": "^9.7.1",
+    "parcel": "^2.9.2",
+    "postcss": "^8.4.24",
+    "postcss-modules": "^6.0.0",
+    "react": "^18.2.0",
+    "rollup": "^3.25.1",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tsconfig": "workspace:*",
+    "typescript": "4.7"
+  },
+  "dependencies": {
+    "typescript-plugin-css-modules": "^5.0.1"
+  }
+}

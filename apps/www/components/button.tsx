@@ -1,4 +1,4 @@
-import { Button } from "@raystack/apsara";
+import { Button } from "@raystack/ui";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 
 type CopyButtonPorps = {
@@ -12,12 +12,7 @@ const variants = {
 };
 export const CopyButton = ({ copying, onClick }: CopyButtonPorps) => {
   return (
-    <Button
-      css={{ width: "26px", height: "26px" }}
-      variant="secondary"
-      onClick={onClick}
-      aria-label="Copy code"
-    >
+    <Button variant="ghost" onClick={onClick} aria-label="Copy code">
       <MotionConfig transition={{ duration: 0.15 }}>
         <AnimatePresence initial={false} mode="wait">
           {copying ? (
