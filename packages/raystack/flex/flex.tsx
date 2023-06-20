@@ -29,11 +29,11 @@ const flex = cva(styles.flex, {
       wrapReverse: styles["wrap-wrapReverse"],
     },
     gap: {
-      xs: styles["gap-xs"],
-      sm: styles["gap-sm"],
-      md: styles["gap-md"],
-      lg: styles["gap-lg"],
-      xl: styles["gap-xl"],
+      "extra-small": styles["gap-xs"],
+      small: styles["gap-sm"],
+      medium: styles["gap-md"],
+      large: styles["gap-lg"],
+      "extra-large": styles["gap-xl"],
     },
   },
   defaultVariants: {
