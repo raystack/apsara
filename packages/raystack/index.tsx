@@ -8,5 +8,6 @@ export { Flex } from "./flex";
 export { Grid } from "./grid";
 export { Radio } from "./radio";
 export { Switch } from "./switch";
+export { Tabs } from "./tabs";
 export { TextField } from "./textfield";
 
