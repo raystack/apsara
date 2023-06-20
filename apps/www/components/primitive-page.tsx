@@ -245,10 +245,8 @@ const Header = () => {
             <Text css={{ fontWeight: "$500" }} size="2">
               Overview
             </Text>
-            <Badge>hello</Badge>
-            <Text css={{ fontWeight: "$500" }} size="2">
-              Components
-            </Text>
+
+            <Badge style={{ fontWeight: "$500" }}>Components</Badge>
           </Flex>
           <Flex
             gap="3"

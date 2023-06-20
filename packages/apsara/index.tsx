@@ -3,7 +3,7 @@ export { Accordion } from "./components/accordion";
 export { Alert } from "./components/alert";
 export { AlertDialog } from "./components/alertdialog";
 export { Avatar } from "./components/avatar";
-// export { Badge } from "./components/badge";
+export { Badge } from "./components/badge";
 export { Banner } from "./components/banner";
 export { Box } from "./components/box";
 export { Button } from "./components/button";
