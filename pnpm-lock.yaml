@@ -44,6 +44,9 @@ importers:
       '@raystack/ui':
         specifier: workspace:*
         version: link:../../packages/raystack
+      '@tanstack/react-table':
+        specifier: ^8.9.2
+        version: 8.9.2(react-dom@18.2.0)(react@18.2.0)
       copy-to-clipboard:
         specifier: ^3.3.3
         version: 3.3.3
@@ -3185,12 +3188,10 @@ packages:
       '@tanstack/table-core': 8.9.2
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: true
 
   /@tanstack/table-core@8.9.2:
     resolution: {integrity: sha512-ajc0OF+karBAdaSz7OK09rCoAHB1XI1+wEhu+tDNMPc+XcO+dTlXXN/Vc0a8vym4kElvEjXEDd9c8Zfgt4bekA==}
     engines: {node: '>=12'}
-    dev: true
 
   /@trysound/sax@0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}

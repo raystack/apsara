@@ -4,7 +4,9 @@ title: Button
 description: Displays a button or a component that looks like a button.
 ---
 
-import { Button, Flex } from "@raystack/apsara";
+import {  Button } from "@raystack/apsara";
+
+
 
 <Preview>
     <Button variant="primary">Primary button</Button>
@@ -77,7 +79,7 @@ Diffrent button variants
 Buttons of different sizes.
 
 <Playground
-    scope={{ Button, Flex }}
+    scope={{ Button }}
     tabs={[
         
         {
@@ -100,14 +102,14 @@ Buttons of different sizes.
 
 Do not respond to any action.
 
-<Playground scope={{ Button, Flex }} code={`
-<Flex gap="2">
+<Playground scope={{ Button }} code={`
+<div style={{display:'flex', gap: '8px'}}>
     <Button variant="primary" disabled>secondary button</Button>
     <Button variant="outline" disabled>secondary button</Button>
     <Button variant="secondary" disabled>secondary button</Button>
     <Button variant="ghost" disabled>secondary button</Button>
     <Button variant="danger" disabled>secondary button</Button>
-</Flex>
+</div>
 `} />
 
 

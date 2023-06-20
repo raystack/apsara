@@ -17,11 +17,11 @@ import {
   Text,
   useApsaraTheme,
 } from "@raystack/apsara";
-import type { Frontmatter } from "~/types/frontmatter";
-
+import { Badge } from "@raystack/ui";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
+import type { Frontmatter } from "~/types/frontmatter";
 import { PageProps, primitivesRoutes } from "~/utils/routes";
 import { Toc } from "./toc";
 
@@ -245,6 +245,7 @@ const Header = () => {
             <Text css={{ fontWeight: "$500" }} size="2">
               Overview
             </Text>
+            <Badge>hello</Badge>
             <Text css={{ fontWeight: "$500" }} size="2">
               Components
             </Text>

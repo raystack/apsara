@@ -1,10 +1,9 @@
 // components
-export { SearchField } from "./components/SearchField";
 export { Accordion } from "./components/accordion";
 export { Alert } from "./components/alert";
 export { AlertDialog } from "./components/alertdialog";
 export { Avatar } from "./components/avatar";
-export { Badge } from "./components/badge";
+// export { Badge } from "./components/badge";
 export { Banner } from "./components/banner";
 export { Box } from "./components/box";
 export { Button } from "./components/button";
@@ -35,6 +34,7 @@ export { Radio } from "./components/radio";
 export { RadioCard } from "./components/radiocard";
 export { RadioGrid } from "./components/radiogrid";
 export { ScrollArea } from "./components/scrollbar";
+export { SearchField } from "./components/SearchField";
 export { Section } from "./components/section";
 export { Select } from "./components/select";
 export { Separator } from "./components/separator";
@@ -72,5 +72,5 @@ export {
   styled,
   theme,
 } from "./stitches.config";
-
 export type { CSS } from "./stitches.config";
+

@@ -10,10 +10,11 @@
   },
   "dependencies": {
     "@mdx-js/loader": "^2.3.0",
-    "@raystack/apsara": "workspace:*",
-    "@raystack/ui": "workspace:*",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-slot": "^1.0.1",
+    "@raystack/apsara": "workspace:*",
+    "@raystack/ui": "workspace:*",
+    "@tanstack/react-table": "^8.9.2",
     "copy-to-clipboard": "^3.3.3",
     "framer-motion": "^10.12.16",
     "next": "13.2.4",

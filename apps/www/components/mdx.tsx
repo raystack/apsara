@@ -1,5 +1,6 @@
 import { Link2Icon } from "@radix-ui/react-icons";
 import * as Apsara from "@raystack/apsara";
+import { Badge, Button } from "@raystack/ui";
 import * as React from "react";
 import { LiveProvider } from "react-live";
 import { Frontmatter } from "~/types/frontmatter";
@@ -13,6 +14,8 @@ import { Searchbar } from "./searchbar";
 export const components = {
   ...Apsara,
   ...Icons,
+  Badge,
+  Button,
   Attributes: Attributes,
   Preview: Preview,
   Searchbar: Searchbar,

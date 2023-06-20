@@ -1,0 +1,45 @@
+.badge {
+
+  box-sizing:border-box;
+  display: inline-flex; 
+  align-items:center;
+  justify-content:center;
+  appearance:none;
+  vertical-align:middle;
+  flex-shrink:0;
+
+  outline:none;
+  text-decoration:none;
+  padding:0;
+  user-select:none;
+  line-height: 1rem; 
+  white-space: nowrap;
+  
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem; 
+  padding-left: 0.625rem;
+  padding-right: 0.625rem; 
+  font-size: var(--fs-200);
+  font-weight: 500;
+  
+
+  background-color: var(--clr-bg-inset);
+  border-radius: var(--br-pill); 
+  color: var(--clr-fg-base);
+  
+}
+
+
+.badge:disabled {
+  opacity: 0.6;
+}
+
+.badge::before {
+  box-sizing: border-box;
+  content: '';
+}
+
+.badge::after {
+  box-sizing: border-box;
+  content: '';
+}
