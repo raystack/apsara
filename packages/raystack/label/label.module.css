@@ -1,0 +1,22 @@
+.label {
+  display: block;
+  line-height: 1;
+  margin: 0;
+  font-weight: 400;
+}
+
+.label-small {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.5px;  
+}
+.label-medium {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;  
+}
+.label-large {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;  
+}
