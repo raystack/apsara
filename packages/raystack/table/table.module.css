@@ -1,0 +1,35 @@
+.table {
+  width: 100%;
+  font-size: 12px;
+  line-height: 16px;
+  caption-side: bottom;
+}
+
+.caption{
+  margin-top: var(--mr-16);
+  color: var(--clr-fg-muted);
+}
+
+.header tr {
+  border-bottom: 1px solid var(--clr-fg-muted);
+}
+
+.head {
+  height: 3rem;
+  color: var(--clr-fg-muted);
+  font-weight: 500;
+  text-align: left;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  vertical-align: middle;
+}
+
+.row {
+  border-bottom: 1px solid #000;
+}
+
+.cell {
+  font-weight: 500;
+  vertical-align: middle;
+  padding: 1rem;
+}

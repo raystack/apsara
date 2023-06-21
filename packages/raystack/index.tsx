@@ -21,6 +21,7 @@ export { Select } from "./select";
 export { Separator } from "./separator";
 export { Sheet } from "./sheet";
 export { Switch } from "./switch";
+export { DataTable, Table } from "./table";
 export { Tabs } from "./tabs";
 export { Text } from "./text";
 export { TextField } from "./textfield";

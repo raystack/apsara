@@ -309,6 +309,12 @@ importers:
       '@rollup/plugin-typescript':
         specifier: ^11.1.1
         version: 11.1.1(rollup@3.25.1)(typescript@4.7.2)
+      '@tanstack/react-table':
+        specifier: ^8.9.2
+        version: 8.9.2(react-dom@18.2.0)(react@18.2.0)
+      '@tanstack/table-core':
+        specifier: ^8.9.2
+        version: 8.9.2
       '@types/react':
         specifier: ^18.2.12
         version: 18.2.12
@@ -348,6 +354,9 @@ importers:
       typescript:
         specifier: '4.7'
         version: 4.7.2
+      usehooks-ts:
+        specifier: ^2.9.1
+        version: 2.9.1(react-dom@18.2.0)(react@18.2.0)
 
   packages/tsconfig: {}
 
