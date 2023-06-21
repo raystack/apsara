@@ -1,0 +1,36 @@
+.link {
+  align-items: center;
+  gap: var(--pd-4);
+  flex-shrink: 0;
+  outline: 0;
+  text-decoration-line: none;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--clr-bg-subtle);
+}
+
+.link:hover {
+  text-decoration-line: underline;
+}
+
+.link:focus {
+  outline: 2px;
+  outline-style: solid;
+  outline-offset: 2px;
+  text-decoration-line: none;
+}
+
+.link-small {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.5px;  
+}
+.link-medium {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;  
+}
+.link-large {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;  
+}

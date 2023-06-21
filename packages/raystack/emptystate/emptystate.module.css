@@ -1,0 +1,11 @@
+.emptystate {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  flex-direction: column;
+  text-align: center;
+  width: 560px;
+  height: 100%;
+  margin: 0 auto;
+}

@@ -1,0 +1,20 @@
+.container {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.container-small {
+  max-width: 430px;
+}
+.container-small {
+  max-width: 715px;
+}
+.container-small {
+  max-width: 1145px;
+}
+.container-small {
+  max-width: none
+}
