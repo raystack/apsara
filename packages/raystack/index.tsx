@@ -6,7 +6,9 @@ export { Box } from "./box";
 export { Button } from "./button";
 export { Checkbox } from "./checkbox";
 export { Container } from "./container";
+export { Dialog } from "./dialog";
 export { Display } from "./display";
+export { DropdownMenu } from "./dropdown-menu";
 export { Emptystate } from "./emptystate";
 export { Flex } from "./flex";
 export { Grid } from "./grid";
@@ -15,16 +17,12 @@ export { Image } from "./image";
 export { Label } from "./label";
 export { Link } from "./link";
 export { Radio } from "./radio";
+export { Select } from "./select";
 export { Separator } from "./separator";
+export { Sheet } from "./sheet";
 export { Switch } from "./switch";
 export { Tabs } from "./tabs";
 export { Text } from "./text";
 export { TextField } from "./textfield";
 export { Title } from "./title";
 
-// DropdownMenu, 
-// Table, 
-// useTable, 
-// Sheet;
-// Separator;
-// Dialog;
