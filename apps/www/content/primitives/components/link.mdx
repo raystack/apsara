@@ -6,20 +6,15 @@ description: Display a hyperlink component
 
 <Preview>
   <Flex
-    css={{
+    style={{
       alignItems: "center",
-      gap: "$3",
+      flexDirection: "column",
+      gap: "8px",
     }}
   >
-    <Link variant="blue" href="#">
-      <Text size="4">Hyperlink</Text>
-    </Link>
-    <Link variant="subtle" href="#">
-      <Text size="4">Hyperlink</Text>
-    </Link>
-    <Link variant="contrast" href="#">
-      <Text size="4">Hyperlink</Text>
-    </Link>
+    <Link size="small" href="#">Hyperlink</Link>
+    <Link size="medium" href="#">Hyperlink</Link>
+    <Link size="large" href="#">Hyperlink</Link>
   </Flex>
 </Preview>
 
@@ -28,7 +23,7 @@ description: Display a hyperlink component
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
 </LiveProvider>
 
 
@@ -37,16 +32,10 @@ Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Link } from '@raystack/apsara'
+import { Link } from '@raystack/ui'
 
-<Link variant="blue" href="#">
-  <Text size="4">Hyperlink</Text>
-</Link>
-<Link variant="subtle" href="#">
-  <Text size="4">Hyperlink</Text>
-</Link>
-<Link variant="contrast" href="#">
-  <Text size="4">Hyperlink</Text>
-</Link>
+<Link size="small" href="#">Hyperlink</Link>
+<Link size="medium" href="#">Hyperlink</Link>
+<Link size="large" href="#">Hyperlink</Link>
 `} border />
 </LiveProvider>

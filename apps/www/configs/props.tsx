@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { Code, Flex, Popover } from "@raystack/apsara";
+import { Flex, Text } from "@raystack/ui";
 import React from "react";
 
 type ComponentProps = {
@@ -15,18 +15,7 @@ type Row = Column[];
 type Column = string | React.ReactNode;
 
 const CodeText = ({ children }: { children: React.ReactNode }) => (
-  <Code css={{ whiteSpace: "break-spaces" }}>{children}</Code>
-);
-
-const Info = ({ children }: { children: React.ReactNode }) => (
-  <Popover>
-    <Popover.Trigger asChild>
-      <InfoCircledIcon />
-    </Popover.Trigger>
-    <Popover.Content css={{ bg: "white" }} side="top">
-      {children}
-    </Popover.Content>
-  </Popover>
+  <Text style={{ whiteSpace: "break-spaces" }}>{children}</Text>
 );
 
 const props = {
@@ -34,7 +23,7 @@ const props = {
     headers: ["Prop", "Type", "Default"],
     rows: [
       [
-        <Flex gap="1" align="center">
+        <Flex gap="small" align="center">
           variant
           <InfoCircledIcon />
         </Flex>,

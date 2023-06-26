@@ -11,16 +11,16 @@ const link = cva(styles.link, {
     },
   },
   defaultVariants: {
-    size: "small",
+    size: "medium",
   },
 });
 
 type LinkProps = PropsWithChildren<VariantProps<typeof link>> &
   AnchorHTMLAttributes<HTMLAnchorElement>;
 
-export function Link({ children, className, ...props }: LinkProps) {
+export function Link({ children, className, size, ...props }: LinkProps) {
   return (
-    <a className={link({ className })} {...props}>
+    <a className={link({ size, className })} {...props}>
       {children}
     </a>
   );

@@ -9,14 +9,15 @@ radix:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "16px",
+      width: '100%'
     }}
   >
-    <Separator />
-    <Separator size="2"/>
+    <Separator size="half"/>
+    <Separator size="full"/>
   </Flex>
 </Preview>
 
@@ -25,7 +26,7 @@ radix:
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
 </LiveProvider>
 
 
@@ -34,9 +35,9 @@ Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Separator } from '@raystack/apsara'
+import { Separator } from '@raystack/ui'
 
-<Separator />
-<Separator size="2"/>
+<Separator size="half"/>
+<Separator size="full"/>
 `} border />
 </LiveProvider>

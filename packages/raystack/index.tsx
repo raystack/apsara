@@ -9,7 +9,7 @@ export { Container } from "./container";
 export { Dialog } from "./dialog";
 export { Display } from "./display";
 export { DropdownMenu } from "./dropdown-menu";
-export { Emptystate } from "./emptystate";
+export { EmptyState } from "./emptystate";
 export { Flex } from "./flex";
 export { Grid } from "./grid";
 export { Headline } from "./headline";
@@ -17,6 +17,7 @@ export { Image } from "./image";
 export { Label } from "./label";
 export { Link } from "./link";
 export { Radio } from "./radio";
+export { ScrollArea } from "./scroll-area";
 export { Select } from "./select";
 export { Separator } from "./separator";
 export { Sheet } from "./sheet";
@@ -25,5 +26,11 @@ export { DataTable, Table } from "./table";
 export { Tabs } from "./tabs";
 export { Text } from "./text";
 export { TextField } from "./textfield";
+export {
+  ApsaraThemeProvider,
+  ThemeSwitcher,
+  useApsaraTheme,
+} from "./themprovider";
 export { Title } from "./title";
+
 

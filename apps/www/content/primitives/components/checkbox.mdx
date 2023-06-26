@@ -10,14 +10,14 @@ radix:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "8px",
     }}
   >
-   <Checkbox css={{ marginRight: '$5' }} />
-   <Checkbox size="2" css={{ marginRight: '$5' }} />
+   <Checkbox />
+   <Checkbox size="medium" />
   </Flex>
 </Preview>
 
@@ -26,7 +26,7 @@ radix:
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
 </LiveProvider>
 
 
@@ -35,9 +35,9 @@ Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Checkbox } from '@raystack/apsara'
+import { Checkbox } from '@raystack/ui'
 
-<Checkbox css={{ marginRight: '$5' }} />
-<Checkbox size="2" css={{ marginRight: '$5' }} />
+<Checkbox />
+<Checkbox size="medium" />
 `} border />
 </LiveProvider>

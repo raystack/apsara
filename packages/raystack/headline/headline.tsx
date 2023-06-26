@@ -24,6 +24,7 @@ export function Headline({
   size,
   ...props
 }: HeadlineProps) {
+
   return (
     <span className={headline({ size, className })} {...props}>
       {children}

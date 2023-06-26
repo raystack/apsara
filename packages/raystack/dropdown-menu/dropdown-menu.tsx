@@ -76,7 +76,19 @@ const DropdownMenuGroup = React.forwardRef<
 ));
 DropdownMenuGroup.displayName = DropdownMenuPrimitive.Group.displayName;
 
-export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
+
+type DropdownMenuProps = React.ComponentProps<
+  typeof DropdownMenuPrimitive.Root
+>;
+export function RootDropdownMenu({ children, ...props }: DropdownMenuProps) {
+  return (
+    <DropdownMenuPrimitive.Root {...props}>
+      {children}
+    </DropdownMenuPrimitive.Root>
+  );
+}
+
+export const DropdownMenu = Object.assign(RootDropdownMenu, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,

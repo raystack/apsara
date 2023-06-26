@@ -19,7 +19,7 @@ In this quick tutorial, we will install and style the [Popover](../components/po
 Install the component from your command line.
 
 ```bash
-npm install @raystack/apsara@latest
+npm install @raystack/ui@latest
 ```
 
 ### 2. Import the parts
@@ -30,7 +30,7 @@ Import and structure the parts.
 <LiveProvider>
     <LiveEditor code={`
 import * as React from 'react';
-import { Popover, PopoverTrigger, PopoverContent } from '@raystack/apsara';
+import { Popover, PopoverTrigger, PopoverContent } from '@raystack/ui';
 
 const PopoverDemo = () => (
   <Popover>
@@ -56,9 +56,9 @@ import * as React from 'react';
 import * as Popover from '@radix-ui/react-popover';
 
 const PopoverDemo = () => (
-  <Popover css={{background: "$bgBase"}}>
-    <PopoverTrigger >More info</PopoverTrigger>
-      <PopoverContent css={{}}>
+  <Popover>
+    <PopoverTrigger>More info</PopoverTrigger>
+      <PopoverContent>
         Some more info…
       </PopoverContent>
   </Popover>

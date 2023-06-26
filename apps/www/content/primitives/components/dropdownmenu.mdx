@@ -6,26 +6,18 @@ description: Displays a menu to the user — such as a set of actions or functio
 ## Preview
 
 <Preview>
-  <Flex
-    css={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "$3",
-    }}
-  >
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" outline size="small">Dropdown button</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content align="end">
-        <DropdownMenu.Group>
-          <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
-          <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
-          <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
-        </DropdownMenu.Group>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  </Flex>
+  <DropdownMenu>
+    <DropdownMenu.Trigger asChild>
+      <Button variant="ghost"  size="small">Dropdown button</Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content align="end">
+      <DropdownMenu.Group>
+        <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
+        <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
+        <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
+      </DropdownMenu.Group>
+    </DropdownMenu.Content>
+  </DropdownMenu>
 </Preview>
 
 ## Installation
@@ -33,7 +25,7 @@ description: Displays a menu to the user — such as a set of actions or functio
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
 </LiveProvider>
 
 
@@ -42,7 +34,7 @@ Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { DropdownMenu } from '@raystack/apsara'
+import { DropdownMenu } from '@raystack/ui'
 
 <DropdownMenu>
   <DropdownMenu.Trigger asChild>

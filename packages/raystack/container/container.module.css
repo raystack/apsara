@@ -9,12 +9,12 @@
 .container-small {
   max-width: 430px;
 }
-.container-small {
+.container-medium {
   max-width: 715px;
 }
-.container-small {
+.container-large {
   max-width: 1145px;
 }
-.container-small {
+.container-none {
   max-width: none
 }

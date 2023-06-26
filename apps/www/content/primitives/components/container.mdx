@@ -6,14 +6,17 @@ description:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "8px",
+      fontSize: '14px',
+      color: 'var(--clr-fg-base)',
+      lineHeight: "20px"
     }}
   >
-    <Container size="1">This is a much shorter paragraph of text, to demonstrate narrow text container. The reason we're using text here is because one common use case for this container size is a 3-up grid.</Container>
-    <Container>This is a really long paragraph of text, to demonstrate prose text, like for example, the kind you might read in a blog post. The reason we're using prose here is because the most common use case for this container size is longform text. So we're previewing some longform text here so we can make sure the container width provides an optimal line length for this font size.</Container>
+    <Container size="small">This is a much shorter paragraph of text, to demonstrate narrow text container. The reason we're using text here is because one common use case for this container size is a 3-up grid.</Container>
+    <Container size="large">This is a really long paragraph of text, to demonstrate prose text, like for example, the kind you might read in a blog post. The reason we're using prose here is because the most common use case for this container size is longform text. So we're previewing some longform text here so we can make sure the container width provides an optimal line length for this font size.</Container>
   </Flex>
 </Preview>
 
@@ -22,7 +25,7 @@ description:
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
 </LiveProvider>
 
 
@@ -31,9 +34,14 @@ Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Container } from '@raystack/apsara'
+import { Container } from '@raystack/ui'
 
-<Container size="1">This is a much shorter paragraph of text, to demonstrate narrow text container. The reason we're using text here is because one common use case for this container size is a 3-up grid.</Container>
-<Container>This is a really long paragraph of text, to demonstrate prose text, like for example, the kind you might read in a blog post. The reason we're using prose here is because the most common use case for this container size is longform text. So we're previewing some longform text here so we can make sure the container width provides an optimal line length for this font size.</Container>
+<Container size="small">
+  This is a much shorter paragraph of text, to demonstrate narrow text container. The reason we're using text here is because one common use case for this container size is a 3-up grid.
+</Container>
+
+<Container size="large">
+  This is a really long paragraph of text, to demonstrate prose text, like for example, the kind you might read in a blog post. The reason we're using prose here is because the most common use case for this container size is longform text. So we're previewing some longform text here so we can make sure the container width provides an optimal line length for this font size.
+</Container>
 `} border />
 </LiveProvider>

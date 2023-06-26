@@ -1,6 +1,3 @@
-import { Link } from "@raystack/apsara";
-import type { ColumnDef } from "@tanstack/react-table";
-import { createColumnHelper } from "@tanstack/react-table";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { Hero } from "~/components/hero";
@@ -16,50 +13,6 @@ export type Team = {
   createdAt: string;
   updatedAt: string;
 };
-
-const columnHelper = createColumnHelper<Team>();
-export const columns: ColumnDef<Team, any>[] = [
-  {
-    header: () => null,
-    id: "select",
-    cell: ({ row }) => <div></div>,
-  },
-  columnHelper.accessor("id", {
-    header: "ID",
-    cell: ({ row, getValue }) => {
-      return <Link href={`${row.getValue("id")}`}>{getValue()}</Link>;
-    },
-  }),
-  {
-    header: "Organization ID",
-    accessorKey: "orgId",
-    cell: ({ row }) => <div>{row.getValue("id")}</div>,
-  },
-
-  {
-    header: "Name",
-    accessorKey: "name",
-    cell: (info) => info.getValue(),
-  },
-  {
-    header: "Slug",
-    accessorKey: "slug",
-    cell: (info) => info.getValue(),
-    footer: (props) => props.column.id,
-  },
-  {
-    header: "Create At",
-    accessorKey: "createdAt",
-    cell: (info) =>
-      new Date(info.getValue() as Date).toLocaleString("en", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      }),
-
-    footer: (props) => props.column.id,
-  },
-];
 
 export default function Home() {
   return (

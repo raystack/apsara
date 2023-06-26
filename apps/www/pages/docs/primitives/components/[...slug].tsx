@@ -1,7 +1,7 @@
-import { Flex, Heading, Link, Text } from "@raystack/apsara";
+import { Flex, Headline, Link, Text } from "@raystack/ui";
 import { getMDXComponent } from "mdx-bundler/client";
 import React from "react";
-import { components, MDXProvider } from "~/components/mdx";
+import { components, MDXProvider } from "~/components/markdown/mdx";
 import { PrimitivePage } from "~/components/primitive-page";
 import type { Frontmatter } from "~/types/frontmatter";
 import {
@@ -20,25 +20,20 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
 
   return (
     <PrimitivePage frontmatter={frontmatter}>
-      <div data-algolia-lvl0 style={{ display: "none" }}>
-        Components
-      </div>
-
       <MDXProvider frontmatter={frontmatter}>
         <>
-          <Heading
-            as="h1"
-            size="2"
-            css={{ fontWeight: 500, lineHeight: "40px" }}
+          <Headline
+            size="small"
+            style={{ fontWeight: 500, lineHeight: "40px" }}
           >
             {frontmatter.title}
-          </Heading>
+          </Headline>
 
-          <Text size="4" as="p" css={{ marginTop: "$2", marginBottom: "$7" }}>
+          <Text size={4} style={{ marginTop: "8px", marginBottom: "32px" }}>
             {frontmatter.description}
           </Text>
           {frontmatter.radix ? (
-            <Flex gap="4">
+            <Flex gap="small">
               {frontmatter.radix?.link && (
                 <Link
                   href={frontmatter.radix.link}

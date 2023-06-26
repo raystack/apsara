@@ -1,0 +1,41 @@
+---
+title: Headline
+description: 
+---
+## Preview
+
+<Preview>
+  <Flex
+    style={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "8px ",
+    }}
+  >
+  <Headline size="small">Headline</Headline>
+  <Headline size="medium">Headline</Headline>
+  <Headline size="large">Headline</Headline>
+  </Flex>
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
+</LiveProvider>
+
+
+## Anatomy
+Import all parts and piece them together.
+
+<LiveProvider>
+    <LiveEditor code={`
+import { Headline } from '@raystack/ui'
+
+<Headline size="small">Headline</Headline>
+<Headline size="medium">Headline</Headline>
+<Headline size="large">Headline</Headline>
+`} border />
+</LiveProvider>

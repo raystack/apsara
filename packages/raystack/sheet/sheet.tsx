@@ -84,7 +84,12 @@ export function CloseButton({
   );
 }
 
-export const Sheet = Object.assign(DialogPrimitive.Root, {
+type SheetProps = ComponentProps<typeof DialogPrimitive.Root>;
+export function RootSheet({ children, ...props }: SheetProps) {
+  return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>;
+}
+
+export const Sheet = Object.assign(RootSheet, {
   Trigger: DialogPrimitive.Trigger,
   Content: SheetContent,
   Close: DialogPrimitive.Close,

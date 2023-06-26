@@ -6,13 +6,13 @@ description:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "8px",
     }}
   >
-    <EmptyState css={{ marginTop: 160 }}>
+    <EmptyState style={{ marginTop: 160 }}>
       <h3>No Design Systems</h3>
       <p>You can create a new Design System by clicking the button.</p>
     </EmptyState>
@@ -24,7 +24,7 @@ description:
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
 </LiveProvider>
 
 
@@ -33,9 +33,9 @@ Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { EmptyState } from '@raystack/apsara'
+import { EmptyState } from '@raystack/ui'
 
-<EmptyState css={{ marginTop: 160 }}>
+<EmptyState style={{ marginTop: 160 }}>
   <h3>No Design Systems</h3>
   <p>You can create a new Design System by clicking the button.</p>
 </EmptyState>

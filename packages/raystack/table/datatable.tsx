@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 import React, { Children, ReactElement, ReactNode } from "react";
 import { Button } from "~/button";
-import { Flex } from "..";
+import { Flex } from "~/flex";
 import { Table } from "./table";
 import { TableBottomContainer } from "./TableBottomContainer";
 import { TableContext } from "./TableContext";

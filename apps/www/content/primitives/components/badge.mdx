@@ -1,21 +1,12 @@
 ---
-name: alert
-title: Alert
+name: badge
+title: Badge
 description: Displays a badge or a component that looks like a badge.
 ---
 ## Preview
 
 <Preview>
-  <Flex
-    css={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "$3",
-    }}
-  >
-    
-   <Badge>Badge</Badge>
-  </Flex>
+  <Badge>Badge</Badge>
 </Preview>
 
 ## Installation
@@ -23,7 +14,7 @@ description: Displays a badge or a component that looks like a badge.
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+    <LiveEditor code={`npm install @raystack/ui`} border/>
 </LiveProvider>
 
 
@@ -32,7 +23,7 @@ Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Badge } from '@raystack/apsara'
+import { Badge } from '@raystack/ui'
     
 <Badge>Badge</Badge>
 `} border />

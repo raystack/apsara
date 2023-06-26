@@ -1,26 +1,13 @@
-import "@raystack/ui/index.css";
-
-import {
-  DesktopIcon,
-  DiscIcon,
-  MoonIcon,
-  SunIcon,
-  TextAlignJustifyIcon,
-} from "@radix-ui/react-icons";
 import {
   Box,
-  Button,
   Flex,
+  Link,
   ScrollArea,
-  Sheet,
-  styled,
   Text,
   useApsaraTheme,
-} from "@raystack/apsara";
-import { Badge } from "@raystack/ui";
-import Link from "next/link";
+} from "@raystack/ui";
 import { useRouter } from "next/router";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useRef } from "react";
 import type { Frontmatter } from "~/types/frontmatter";
 import { PageProps, primitivesRoutes } from "~/utils/routes";
 import { Toc } from "./toc";
@@ -29,7 +16,6 @@ function useCurrentPageSlug() {
   const router = useRouter();
   const routerSlug = router.query.slug;
   let currentPageSlug = router.pathname.substring(1);
-
   if (Array.isArray(routerSlug)) {
     return currentPageSlug.replace("[...slug]", routerSlug[0]);
   }
@@ -43,7 +29,7 @@ export function NavHeading({
   children: React.ReactNode;
 }) {
   return (
-    <Text as="h4" size="3" css={{ fontWeight: 500, margin: "$3" }} {...props}>
+    <Text size={3} style={{ fontWeight: 500, margin: "12px" }} {...props}>
       {children}
     </Text>
   );
@@ -64,36 +50,19 @@ export function NavItem({
   ...props
 }: NavItemProps) {
   const { themeName } = useApsaraTheme();
+
   return (
-    <Box as="span">
+    <Box>
       <Box
         {...props}
-        css={{
+        style={{
           display: "flex",
           alignItems: "center",
-          textDecoration: "none",
-          color: disabled ? "$gray10" : "$hiContrast",
-
-          marginRight: "$3",
-          marginLeft: "$3",
           marginBottom: "2px",
-          borderRadius: "$2",
-          userSelect: "none",
-          minHeight: "$6",
-          backgroundColor: active ? "$gray4" : "transparent",
+          borderRadius: "var(--br-4)",
+          backgroundColor: active ? "var(--clr-bg-base-hover)" : "transparent",
           transition: "background-color 50ms linear",
           ...(disabled ? { pointerEvents: "none" } : {}),
-          "&:not(:last-of-type)": {
-            marginBottom: 1,
-          },
-          "&:hover": {
-            fontWeight: active ? "bold" : "none",
-            backgroundColor: "$gray2",
-          },
-          "&:focus": {
-            outline: "none",
-            boxShadow: "inset 0 0 0 1px $colors$primary7",
-          },
         }}
       >
         <Link
@@ -105,7 +74,7 @@ export function NavItem({
             color: `${themeName === "dark" ? "#f2f2f2" : "rgb(17, 24, 28)"}`,
           }}
         >
-          <Text size="3" css={{ fontWeight: active ? "500" : "none" }}>
+          <Text size={3} style={{ fontWeight: active ? "500" : "none" }}>
             {children}
           </Text>
         </Link>
@@ -116,55 +85,12 @@ export function NavItem({
 
 export function NavItemTitle({ children, active }: any) {
   return (
-    <Text size="3" css={{ fontWeight: active ? "500" : "none" }}>
+    <Text size={3} style={{ fontWeight: active ? "500" : "none" }}>
       {children}
     </Text>
   );
 }
 
-function NavWrapper({ children, isMobileMenuOpen }: any) {
-  const [isMobileLayout, setIsMobileLayout] = useState(false);
-  useEffect(() => {
-    const mediaQueryList = window.matchMedia("(min-width: 900px)");
-    const handleChange = () => setIsMobileLayout(!mediaQueryList.matches);
-    handleChange();
-
-    mediaQueryList.addEventListener("change", handleChange);
-    return () => mediaQueryList.removeEventListener("change", handleChange);
-  }, []);
-
-  return (
-    <Flex
-      direction="column"
-      css={{
-        display: "none",
-        width: "260px",
-        marginRight: "20px",
-        borderRight: "1px solid $borderBase",
-        WebkitOverflowScrolling: "touch",
-        WebkitFlexShrink: "0",
-        zIndex: 1,
-        "@bp2": { display: "block" },
-      }}
-    >
-      {children}
-    </Flex>
-  );
-}
-
-const PageWrapper = styled(Flex, {
-  height: "calc(100vh - 64px)",
-  width: "100%",
-  padding: "0",
-  overflow: "hidden",
-});
-
-const iconStyle = {
-  padding: "4px",
-  borderRadius: "4px",
-  width: "20px",
-  height: "auto",
-};
 export function PrimitivePage({
   children,
   frontmatter,
@@ -173,24 +99,37 @@ export function PrimitivePage({
   frontmatter: Frontmatter;
 }) {
   const containerElm = useRef(null);
-
   return (
     <Flex direction="column">
-      <Header />
-      <Flex css={{ height: "calc(100vh - 64px)" }}>
-        <NavWrapper>
+      <Flex style={{ height: "calc(100vh - 73px)" }}>
+        <Flex
+          style={{
+            display: "block",
+
+            position: "relative",
+            height: "100%",
+            width: "100%",
+            maxWidth: "260px",
+            overflow: "hidden",
+            borderRight: "1px solid var(--clr-border-base)",
+          }}
+        >
           <LeftSideBar />
-        </NavWrapper>
-        <PageWrapper>
-          <Flex ref={containerElm} css={{ overflowY: "scroll", width: "100%" }}>
+        </Flex>
+        <div
+          style={{
+            height: "calc(100vh - 73px)",
+            width: "100%",
+          }}
+        >
+          <Flex style={{ overflowY: "scroll", width: "100%", height: "100%" }}>
             <Flex
               direction="column"
-              css={{
+              style={{
                 width: "100%",
                 maxWidth: "1080px",
                 margin: "0 auto 20px",
                 padding: "16px 32px",
-                "@bp2": { padding: "32px 60px" },
               }}
             >
               {children}
@@ -201,100 +140,11 @@ export function PrimitivePage({
               containerElm={containerElm}
             />
           </Flex>
-        </PageWrapper>
+        </div>
       </Flex>
     </Flex>
   );
 }
-
-const Header = () => {
-  const { themePreference, setTheme, themeName, theme, themes, updateTheme } =
-    useApsaraTheme();
-  const bgColor =
-    themeName === "dark" ? "rgba(21, 23, 24, 0.9)" : "rgba(255, 255, 255, 0.9)";
-
-  return (
-    <header style={{ display: "flex", height: "64px" }}>
-      <Flex
-        align="center"
-        style={{
-          position: "fixed",
-          top: "0",
-          left: "0",
-          right: "0",
-          height: "64px",
-          padding: "0 16px",
-          borderBottom: "1px solid #d3d7df",
-          backgroundColor: `${bgColor}`,
-          zIndex: 1,
-        }}
-      >
-        <Flex align="center" css={{ margin: "auto", width: "100%" }}>
-          <Flex direction="row" align="center">
-            <NavItem href={`/`}>
-              <DiscIcon />
-            </NavItem>
-          </Flex>
-          <Flex
-            direction="row"
-            align="center"
-            justify="start"
-            gap="6"
-            css={{ flexGrow: 1 }}
-          >
-            <Text css={{ fontWeight: "$500" }} size="2">
-              Overview
-            </Text>
-
-            <Badge style={{ fontWeight: "$500" }}>Components</Badge>
-          </Flex>
-          <Flex
-            gap="3"
-            css={{ background: "$gray4", padding: "$2", borderRadius: "$3" }}
-          >
-            <DesktopIcon
-              onClick={() => setTheme("auto")}
-              style={{
-                ...iconStyle,
-                ...(themePreference === "auto"
-                  ? { background: `${bgColor}` }
-                  : {}),
-              }}
-            />
-            <SunIcon
-              onClick={() => setTheme("light")}
-              style={{
-                ...iconStyle,
-                ...(themePreference === "light"
-                  ? { background: `${bgColor}` }
-                  : {}),
-              }}
-            />
-            <MoonIcon
-              onClick={() => setTheme("dark")}
-              style={{
-                ...iconStyle,
-                ...(themePreference === "dark"
-                  ? { background: `${bgColor}` }
-                  : {}),
-              }}
-            />
-          </Flex>
-          <Sheet>
-            <Sheet.Trigger asChild>
-              <Button css={{ display: "block", "@bp1": { display: "none" } }}>
-                <TextAlignJustifyIcon />
-              </Button>
-            </Sheet.Trigger>
-            <Sheet.Content side="left">
-              <LeftSideBar />
-            </Sheet.Content>
-          </Sheet>
-        </Flex>
-      </Flex>
-    </header>
-  );
-};
 
 const LeftSideBar = () => {
   const currentPageSlug = useCurrentPageSlug();
@@ -302,15 +152,9 @@ const LeftSideBar = () => {
 
   return (
     <ScrollArea>
-      <Box
-        css={{
-          marginTop: "$4",
-          maxHeight: "100vh",
-        }}
-      >
-        <Box key={overviews.label} css={{ marginBottom: "$4" }}>
+      <Box style={{ padding: "var(--mr-16)" }}>
+        <Box key={overviews.label} style={{ marginBottom: "var(--mr-4)" }}>
           <NavHeading>{overviews.label}</NavHeading>
-
           {overviews.pages.map((page: PageProps) => (
             <NavItem
               key={page.slug}
@@ -323,9 +167,8 @@ const LeftSideBar = () => {
             </NavItem>
           ))}
         </Box>
-        <Box key={components.label} css={{ marginBottom: "$4" }}>
+        <Box key={components.label} style={{ marginBottom: "var(--mr-4)" }}>
           <NavHeading>{components.label}</NavHeading>
-
           {components.pages.map((page: PageProps) => (
             <NavItem
               key={page.slug}
@@ -350,17 +193,11 @@ const RightSideBar = ({
 }) => {
   return (
     <Box
-      as="aside"
-      css={{
-        display: "none",
-        "@media (min-width: 1440px)": {
-          display: "block",
-          position: "sticky",
-          top: 0,
-          width: 280,
-          flexShrink: 0,
-          zIndex: 1,
-        },
+      style={{
+        width: "260px",
+        display: "block",
+        position: "sticky",
+        top: 0,
       }}
     >
       <ScrollArea>

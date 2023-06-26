@@ -1,22 +1,21 @@
 .link {
-  align-items: center;
-  gap: var(--pd-4);
   flex-shrink: 0;
   outline: 0;
+  cursor: pointer;
   text-decoration-line: none;
   text-underline-offset: 3px;
-  text-decoration-color: var(--clr-bg-subtle);
+  color: var(--clr-fg-base);
 }
 
 .link:hover {
-  text-decoration-line: underline;
+  text-decoration-color: none;
+  text-decoration-line: trasparent;
 }
 
 .link:focus {
-  outline: 2px;
-  outline-style: solid;
-  outline-offset: 2px;
+  outline: 0;
   text-decoration-line: none;
+  text-decoration-color: trasparent;
 }
 
 .link-small {

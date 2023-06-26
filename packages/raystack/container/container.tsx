@@ -19,9 +19,14 @@ const container = cva(styles.container, {
 type ContainerProps = PropsWithChildren<VariantProps<typeof container>> &
   HTMLAttributes<HTMLElement>;
 
-export function Container({ children, className, ...props }: ContainerProps) {
+export function Container({
+  children,
+  size,
+  className,
+  ...props
+}: ContainerProps) {
   return (
-    <div className={container({ className })} {...props}>
+    <div className={container({ size, className })} {...props}>
       {children}
     </div>
   );

@@ -1,5 +1,4 @@
 import type { FC, ReactNode } from "react";
-import { useTable } from "./hooks/useTable";
 
 export interface TableBottomContainerProps {
   children?: ReactNode;
@@ -7,6 +6,6 @@ export interface TableBottomContainerProps {
 export const TableBottomContainer: FC<TableBottomContainerProps> = ({
   children,
 }) => {
-  const { clearSelection } = useTable();
+  // const { clearSelection } = useTable();
   return <div>{children}</div>;
 };
