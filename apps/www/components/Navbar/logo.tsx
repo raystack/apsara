@@ -1,11 +1,14 @@
-import { Flex } from "@raystack/ui";
+import { Link } from "@raystack/ui";
 import Image from "next/image";
 
 export const Logo = () => {
   return (
-    <Flex gap="small" align="center">
+    <Link
+      href="/"
+      style={{ display: "flex", alignItems: "center", gap: "8px" }}
+    >
       <Image src="/logo.svg" width={20} height={20} alt="Logo" />
       apsara
-    </Flex>
+    </Link>
   );
 };

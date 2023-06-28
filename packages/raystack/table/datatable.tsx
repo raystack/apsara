@@ -70,73 +70,78 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full">
+    <Flex
+      direction="column"
+      justify="between"
+      style={{ width: "100%", height: "100%" }}
+    >
       <TableContext.Provider
         value={{
           table,
           onChange: () => ({}),
         }}
       >
-        {header}
-        <Flex>
-          <Table>
-            <Table.Header>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <Table.Row key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <Table.Head key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </Table.Head>
-                    );
-                  })}
-                </Table.Row>
-              ))}
-            </Table.Header>
-            <Table.Body>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <Table.Row
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <Table.Cell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Table.Cell>
-                    ))}
+        <Flex direction="column" style={{ flex: 1 }}>
+          {header}
+          <Flex>
+            <Table>
+              <Table.Header>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <Table.Row key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <Table.Head key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </Table.Head>
+                      );
+                    })}
                   </Table.Row>
-                ))
-              ) : (
-                <Table.Row>
-                  <Table.Cell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </Table.Body>
-          </Table>
-          {detail}
+                ))}
+              </Table.Header>
+              <Table.Body>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <Table.Row
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <Table.Cell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </Table.Cell>
+                      ))}
+                    </Table.Row>
+                  ))
+                ) : (
+                  <Table.Row>
+                    <Table.Cell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+            {detail}
+          </Flex>
+          {footer}
         </Flex>
-        {footer}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "flex-end",
-            paddingTop: "1rem",
-            paddingBottom: "1rem",
+            padding: "1rem",
           }}
         >
           <div style={{ flex: 1, fontSize: "12px" }}>
@@ -163,6 +168,6 @@ export function DataTable<TData, TValue>({
           </div>
         </div>
       </TableContext.Provider>
-    </div>
+    </Flex>
   );
 }

@@ -21,6 +21,7 @@ export { ScrollArea } from "./scroll-area";
 export { Select } from "./select";
 export { Separator } from "./separator";
 export { Sheet } from "./sheet";
+export { Sidebar } from "./sidebar";
 export { Switch } from "./switch";
 export { DataTable, Table } from "./table";
 export { Tabs } from "./tabs";

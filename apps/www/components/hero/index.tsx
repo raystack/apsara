@@ -6,7 +6,7 @@ export const Hero = () => {
   const router = useRouter();
 
   return (
-    <Flex style={{ paddingTop: "calc(var(--pd-4) * 25)" }}>
+    <Flex style={{ paddingTop: "calc(var(--pd-4) * 10)" }}>
       <Container size="large">
         <Flex direction="column" align="center" gap="medium">
           <Badge>
