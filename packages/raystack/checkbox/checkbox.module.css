@@ -17,7 +17,7 @@
 
 .checkbox:hover {
   background: var(--clr-bg-base-hover);
-  border: var(--clr-border-base-hover);
+  border: 1px solid var(--clr-border-base-hover);
 }
 
 .checkbox[data-state="checked"] {

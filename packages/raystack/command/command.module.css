@@ -12,6 +12,7 @@
 
 .inputWrapper { 
   padding: 0 12px;
+  border-bottom: 1px solid var(--clr-border-base);
 }
 
 .inputIcon { 
@@ -29,6 +30,7 @@
   outline: none;
   border: none;
   color: var(--clr-fg-base);
+  
 }
 
 .input:placeholder {
@@ -68,4 +70,6 @@
   background-color: var(--clr-bg-hover);
 }
 
-.shortcut {}
+.separator {
+  border-bottom: 1px solid var(--clr-border-base);
+}

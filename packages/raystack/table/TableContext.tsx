@@ -12,7 +12,11 @@ export type TableFormType = {
 
 type TableContextType = {
   table: Table<any>;
-  onChange: () => {};
+  filteredColumns: string[];
+  addFilterColumn: (column: string) => void;
+  removeFilterColumn: (column: string) => void;
+  onChange: () => void;
+  resetColumns: () => void;
   globalFilter: string;
   onGlobalFilterChange: OnChangeFn<any>;
   // state: TableState;

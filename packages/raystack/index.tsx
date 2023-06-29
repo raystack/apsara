@@ -25,7 +25,16 @@ export { Separator } from "./separator";
 export { Sheet } from "./sheet";
 export { Sidebar } from "./sidebar";
 export { Switch } from "./switch";
-export { DataTable, Table, useTable } from "./table";
+export {
+  ApsaraAggregationFn,
+  ApsaraAggregationOption,
+  ApsaraColumnDef,
+  ApsaraFilterFn,
+  ApsaraFilterOption,
+  DataTable,
+  Table,
+  useTable,
+} from "./table";
 export { Tabs } from "./tabs";
 export { Text } from "./text";
 export { TextField } from "./textfield";
@@ -35,5 +44,4 @@ export {
   useApsaraTheme,
 } from "./themprovider";
 export { Title } from "./title";
-
 

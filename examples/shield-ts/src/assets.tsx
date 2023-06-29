@@ -68,11 +68,27 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
     ),
+    meta: {
+      data: [
+        {
+          label: "Pending",
+          value: "pending",
+        },
+        {
+          label: "Success",
+          value: "success",
+        },
+      ],
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    filterVariant: "text",
   },
   {
     accessorKey: "amount",
@@ -87,6 +103,7 @@ export const columns: ColumnDef<Payment>[] = [
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
+    filterVariant: "text",
   },
 ];
 
@@ -95,23 +112,39 @@ export const Assets = () => {
     <DataTable columns={columns} data={data}>
       <DataTable.Toolbar>
         <AssetsHeader />
-        <DataTable.FilterChips />
+        <DataTable.FilterChips style={{ paddingTop: "16px" }} />
       </DataTable.Toolbar>
+      <DataTable.Footer>
+        <AssetsFooter />
+      </DataTable.Footer>
     </DataTable>
   );
 };
 
 const AssetsHeader = () => {
-  const { table } = useTable();
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const { filteredColumns, table } = useTable();
+  const isFiltered = filteredColumns.length > 0;
   return (
     <Flex align="center" justify="between" style={{ width: "100%" }}>
-      <Text>Assets</Text>
+      <Text style={{ fontWeight: 500 }}>Assets</Text>
       <Flex gap="small">
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
-        <DataTable.GloabalSearch />
         <DataTable.ViewOptions />
+        <DataTable.GloabalSearch placeholder="Search assets..." />
       </Flex>
+    </Flex>
+  );
+};
+
+const AssetsFooter = () => {
+  const { table } = useTable();
+
+  return (
+    <Flex align="center" justify="between" style={{ width: "100%" }}>
+      <Text>
+        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+        {table.getFilteredRowModel().rows.length} row(s) selected.
+      </Text>
     </Flex>
   );
 };

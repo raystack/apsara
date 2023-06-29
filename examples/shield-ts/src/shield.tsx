@@ -71,6 +71,7 @@ export const Shield = () => {
         <Flex direction="column">
           <Sidebar.Logo />
           <Sidebar.Navigations
+            // @ts-ignore
             style={{
               marginTop: "22px",
               maxHeight: "calc(100vh - 280px)",
