@@ -1,4 +1,4 @@
-import { VariantProps, cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 import { PropsWithChildren, ReactNode } from "react";
 import { Flex } from "~/flex";
 import { Link } from "~/link";
@@ -41,10 +41,7 @@ const SidebarLogo = ({
   );
 };
 
-type SidebarNavigationsProps = VariantProps<typeof Flex> & {
-  children?: ReactNode;
-};
-
+type SidebarNavigationsProps = PropsWithChildren<VariantProps<typeof Flex>>;
 const SidebarNavigations = ({
   children,
   ...props

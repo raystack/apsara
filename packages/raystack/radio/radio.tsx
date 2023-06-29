@@ -7,7 +7,7 @@ const RedioRoot = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Root>,
   ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 >(({ className, ...props }, ref) => (
-  <RadioGroupPrimitive.Root ref={ref} style={{ display: "flex" }} {...props} />
+  <RadioGroupPrimitive.Root ref={ref} className={styles.radio} {...props} />
 ));
 
 const radioItem = cva(styles.radioitem, {

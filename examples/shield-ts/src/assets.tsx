@@ -1,4 +1,4 @@
-import { Button, Checkbox, DataTable } from "@raystack/ui";
+import { Checkbox, DataTable, Flex, Text, useTable } from "@raystack/ui";
 import { ColumnDef } from "@tanstack/react-table";
 import * as React from "react";
 
@@ -71,16 +71,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-        </Button>
-      );
-    },
+    header: "Email",
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
@@ -88,7 +79,6 @@ export const columns: ColumnDef<Payment>[] = [
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
-
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -100,4 +90,28 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export const Assets = () => <DataTable columns={columns} data={data} />;
+export const Assets = () => {
+  return (
+    <DataTable columns={columns} data={data}>
+      <DataTable.Toolbar>
+        <AssetsHeader />
+        <DataTable.FilterChips />
+      </DataTable.Toolbar>
+    </DataTable>
+  );
+};
+
+const AssetsHeader = () => {
+  const { table } = useTable();
+  const isFiltered = table.getState().columnFilters.length > 0;
+  return (
+    <Flex align="center" justify="between" style={{ width: "100%" }}>
+      <Text>Assets</Text>
+      <Flex gap="small">
+        {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
+        <DataTable.GloabalSearch />
+        <DataTable.ViewOptions />
+      </Flex>
+    </Flex>
+  );
+};

@@ -44,6 +44,12 @@
   opacity: 0.6 
 }
 
+.imageWrapper {
+  position: relative;  
+  height: fit-content;
+  width: fit-content;
+}
+
 .image {
   display: flex;
   object-fit: cover;

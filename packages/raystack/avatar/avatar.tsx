@@ -37,14 +37,7 @@ const AvatarRoot = forwardRef<
   ElementRef<typeof AvatarPrimitive.Root>,
   AvatarProps & { alt?: string; src?: string; fallback?: React.ReactNode }
 >(({ className, alt, src, fallback, size, shape, style, ...props }, ref) => (
-  <Box
-    style={{
-      ...style,
-      position: "relative",
-      height: "fit-content",
-      width: "fit-content",
-    }}
-  >
+  <Box className={styles.imageWrapper} style={style}>
     <AvatarPrimitive.Root
       ref={ref}
       className={avatar({ size, shape, className })}

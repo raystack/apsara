@@ -8,7 +8,6 @@ export const Preview = ({ ...props }: PreviewProps) => (
     align="center"
     justify="center"
     style={{
-      minHeight: "280px",
       padding: "120px 60px",
       marginBottom: "40px",
       borderRadius: "16px",

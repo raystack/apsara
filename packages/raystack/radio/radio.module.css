@@ -1,3 +1,7 @@
+.radio {
+  display: flex;
+}
+
 .radioitem {
   all: unset;
   box-sizing: border-box;

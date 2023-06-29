@@ -1,0 +1,71 @@
+.command {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  border-radius: var(--pd-4);
+  background-color: var(--clr-bg-base);
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--clr-border-base);
+}
+
+.inputWrapper { 
+  padding: 0 12px;
+}
+
+.inputIcon { 
+  opacity: 0.5;
+}
+
+.input {
+  display: flex;
+  padding: var(--pd-12) 0;
+  background-color: transparent;
+  font-size: 12px;
+  line-height: 16px;
+  width: 100%;
+  border-radius: car(--pd-4);
+  outline: none;
+  border: none;
+  color: var(--clr-fg-base);
+}
+
+.input:placeholder {
+  color: var(--clr-fg-base);
+}
+
+.list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 300px;
+}
+
+.empty {
+  font-size: 10px;
+  line-height: 16px;
+  padding: 30px 0;
+  text-align: center;
+}
+
+.group {
+  padding: var(--pd-4);
+}
+.group [cmdk-group-heading] {
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--clr-fg-base);
+  padding: var(--pd-4) var(--pd-8);
+}
+
+.item {
+  font-size: 12px;
+  line-height: 16px;
+  padding: var(--pd-4) var(--pd-8);
+}
+
+.item:hover {
+  background-color: var(--clr-bg-hover);
+}
+
+.shortcut {}

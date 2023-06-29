@@ -1,8 +1,11 @@
+import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -13,11 +16,17 @@ import {
 import React, { Children, ReactElement, ReactNode } from "react";
 import { Button } from "~/button";
 import { Flex } from "~/flex";
+import { Text } from "~/text";
+import { DataTableClearFilter } from "./DataTableClearFilter";
+import { DataTableFilterChips } from "./DataTableFilterChips";
+import { DataTableFilterOptions } from "./DataTableFilterOptions";
+import { DataTableGloabalSearch } from "./DataTableGloabalSearch";
+import { DataTableToolbar } from "./DataTableToolbar";
+import { DataTableViewOptions } from "./DataTableViewOptions";
 import { Table } from "./table";
 import { TableBottomContainer } from "./TableBottomContainer";
 import { TableContext } from "./TableContext";
 import { TableDetailContainer } from "./TableDetailContainer";
-import { TableTopContainer } from "./TableTopContainer";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,21 +35,21 @@ interface DataTableProps<TData, TValue> {
   children?: ReactNode;
 }
 
-export function DataTable<TData, TValue>({
+function DataTableRoot<TData, TValue>({
   columns,
   data,
   children,
 }: DataTableProps<TData, TValue>) {
   const convertedChildren = Children.toArray(children) as ReactElement[];
   const header = convertedChildren.find(
-    (child) => child.type === TableTopContainer
-  );
+    (child) => child.type === DataTableToolbar
+  ) || <></>;
   const footer = convertedChildren.find(
     (child) => child.type === TableBottomContainer
-  );
+  ) || <></>;
   const detail = convertedChildren.find(
     (child) => child.type === TableDetailContainer
-  );
+  ) || <></>;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -49,20 +58,27 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [globalFilter, setGlobalFilter] = React.useState("");
 
   const table = useReactTable({
     data,
     columns,
+    globalFilterFn: "auto",
+    enableRowSelection: true,
+    onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
       sorting,
+      globalFilter,
       columnFilters,
       columnVisibility,
       rowSelection,
@@ -78,6 +94,8 @@ export function DataTable<TData, TValue>({
       <TableContext.Provider
         value={{
           table,
+          globalFilter,
+          onGlobalFilterChange: setGlobalFilter,
           onChange: () => ({}),
         }}
       >
@@ -91,12 +109,24 @@ export function DataTable<TData, TValue>({
                     {headerGroup.headers.map((header) => {
                       return (
                         <Table.Head key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
+                          <Text
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                            {{
+                              asc: <ArrowUpIcon />,
+                              desc: <ArrowDownIcon />,
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </Text>
                         </Table.Head>
                       );
                     })}
@@ -171,3 +201,12 @@ export function DataTable<TData, TValue>({
     </Flex>
   );
 }
+
+export const DataTable = Object.assign(DataTableRoot, {
+  Toolbar: DataTableToolbar,
+  GloabalSearch: DataTableGloabalSearch,
+  FilterOptions: DataTableFilterOptions,
+  ViewOptions: DataTableViewOptions,
+  ClearFilter: DataTableClearFilter,
+  FilterChips: DataTableFilterChips,
+});

@@ -79,6 +79,7 @@ export const Shield = () => {
             <ScrollArea style={{ paddingRight: "var(--mr-16)" }}>
               {navigationList.map((nav) => (
                 <Sidebar.NavigationCell
+                  key={nav.name}
                   href={nav.href}
                   leadingIcon={nav.leadingIcon}
                   active={nav.active}

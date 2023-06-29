@@ -1,4 +1,4 @@
-import { Container, Flex } from "@raystack/ui";
+import { Button, Container, DropdownMenu, Flex } from "@raystack/ui";
 import { NavbarAcitons } from "./actions";
 import { NavbarLinks } from "./links";
 import { Logo } from "./logo";
@@ -23,6 +23,18 @@ export const Navbar = () => {
           <Logo />
           <NavbarLinks />
           <NavbarAcitons />
+          <DropdownMenu>
+            <DropdownMenu.Trigger asChild>
+              <Button variant="secondary">Dropdown button</Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content align="end">
+              <DropdownMenu.Group>
+                <DropdownMenu.Item>Cell Item</DropdownMenu.Item>
+                <DropdownMenu.Item>Cell Item</DropdownMenu.Item>
+                <DropdownMenu.Item>Cell Item</DropdownMenu.Item>
+              </DropdownMenu.Group>
+            </DropdownMenu.Content>
+          </DropdownMenu>
         </Flex>
       </Container>
     </div>

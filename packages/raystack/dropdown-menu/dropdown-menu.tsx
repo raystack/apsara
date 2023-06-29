@@ -88,7 +88,7 @@ export function RootDropdownMenu({ children, ...props }: DropdownMenuProps) {
   );
 }
 
-export const DropdownMenu = Object.assign(RootDropdownMenu, {
+export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,

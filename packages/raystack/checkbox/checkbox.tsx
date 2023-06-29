@@ -2,6 +2,8 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { cva, VariantProps } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { Flex } from "~/flex";
+import { Label } from "~/label";
 import styles from "./checkbox.module.css";
 
 const checkbox = cva(styles.checkbox, {
@@ -23,16 +25,19 @@ export interface CheckboxProps
 export const Checkbox = forwardRef<
   ElementRef<typeof CheckboxPrimitive.Root>,
   CheckboxProps
->(({ className, size, ...props }, forwardedRef) => (
-  <CheckboxPrimitive.Root
-    {...props}
-    ref={forwardedRef}
-    className={checkbox({ size, className })}
-  >
-    <CheckboxIndicator>
-      <CheckIcon />
-    </CheckboxIndicator>
-  </CheckboxPrimitive.Root>
+>(({ className, size, children, ...props }, forwardedRef) => (
+  <Flex gap="small">
+    <CheckboxPrimitive.Root
+      {...props}
+      ref={forwardedRef}
+      className={checkbox({ size, className })}
+    >
+      <CheckboxIndicator>
+        <CheckIcon />
+      </CheckboxIndicator>
+    </CheckboxPrimitive.Root>
+    <Label>{children}</Label>
+  </Flex>
 ));
 
 const indicator = cva(styles.indicator);

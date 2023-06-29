@@ -17,14 +17,7 @@ const SelectTrigger = React.forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDownIcon
-        style={{
-          width: "16px",
-          height: "16px",
-          opacity: 0.5,
-          marginLeft: "var(--mr-8)",
-        }}
-      />
+      <ChevronDownIcon className={styles.triggerIcon} />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -73,15 +66,7 @@ const SelectItem = React.forwardRef<
     {...props}
   >
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-    <span
-      style={{
-        height: "14px",
-        width: "14px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <span className={styles.menuitemIndicatorWapper}>
       <SelectPrimitive.ItemIndicator>
         <CheckIcon style={{ width: "16px", height: "16px" }} />
       </SelectPrimitive.ItemIndicator>

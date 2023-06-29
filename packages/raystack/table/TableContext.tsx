@@ -1,4 +1,4 @@
-import type { Table, TableState } from "@tanstack/react-table";
+import type { OnChangeFn, Table, TableState } from "@tanstack/react-table";
 import { createContext } from "react";
 
 export type onTableChangeEvent = (params: TableState & TableFormType) => void;
@@ -13,6 +13,8 @@ export type TableFormType = {
 type TableContextType = {
   table: Table<any>;
   onChange: () => {};
+  globalFilter: string;
+  onGlobalFilterChange: OnChangeFn<any>;
   // state: TableState;
   // setState: Dispatch<(prevState: TableState) => TableState>;
   // filterQuery: (typeof INITIAL_QUERY)[];

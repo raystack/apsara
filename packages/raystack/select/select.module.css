@@ -36,6 +36,14 @@
   pointer-events: none;
 }
 
+.menuitemIndicatorWapper {
+  height: 14px;
+  width: 14px;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
 .label{
   padding: var(--pd-6) var(--pd-8);
   font-weight: 500;
@@ -76,4 +84,11 @@
   color: var(--clr-fg-subtle);
   font-size: 12px;
   line-height: 16px;
+}
+
+.triggerIcon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  margin-left: var(--mr-8);
 }
