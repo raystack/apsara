@@ -1,4 +1,4 @@
-import { Tabs } from "@raystack/ui";
+import { Tabs } from "@odpf/apsara";
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
 

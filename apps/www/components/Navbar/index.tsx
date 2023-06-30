@@ -1,4 +1,4 @@
-import { Container, Flex } from "@raystack/ui";
+import { Container, Flex } from "@odpf/apsara";
 import { NavbarLinks } from "./links";
 import { Logo } from "./logo";
 import styles from "./navbar.module.css";

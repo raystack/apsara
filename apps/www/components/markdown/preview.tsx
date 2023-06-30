@@ -1,4 +1,4 @@
-import { Container, Flex } from "@raystack/ui";
+import { Container, Flex } from "@odpf/apsara";
 
 type PreviewProps = React.ComponentProps<typeof Container>;
 export const Preview = ({ ...props }: PreviewProps) => (

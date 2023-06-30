@@ -1,4 +1,4 @@
-import { useApsaraTheme } from "@raystack/ui";
+import { useApsaraTheme } from "@odpf/apsara";
 import { cva } from "class-variance-authority";
 import { themes } from "prism-react-renderer";
 import React from "react";
@@ -42,5 +42,3 @@ const LiveEditor: React.FC<Props> = ({ code, number, border }) => {
 };
 
 export default LiveEditor;
-
-

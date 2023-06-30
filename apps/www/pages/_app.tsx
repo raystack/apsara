@@ -1,5 +1,5 @@
-import { ApsaraThemeProvider } from "@raystack/ui";
-import "@raystack/ui/index.css";
+import { ApsaraThemeProvider } from "@odpf/apsara";
+import "@odpf/apsara/index.css";
 import type { AppProps } from "next/app";
 import { Inter, Roboto_Mono } from "next/font/google";
 import { Navbar } from "~/components/Navbar";

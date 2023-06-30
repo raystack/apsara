@@ -1,4 +1,4 @@
-import { Button } from "@raystack/ui";
+import { Button } from "@odpf/apsara";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 
 type CopyButtonPorps = {

@@ -1,5 +1,5 @@
+import * as Apsara from "@odpf/apsara";
 import { Link2Icon } from "@radix-ui/react-icons";
-import * as Apsara from "@raystack/ui";
 import * as React from "react";
 import { LiveProvider } from "react-live";
 import { Frontmatter } from "~/types/frontmatter";

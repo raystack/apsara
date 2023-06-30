@@ -5,7 +5,7 @@ import {
   ScrollArea,
   Text,
   useApsaraTheme,
-} from "@raystack/ui";
+} from "@odpf/apsara";
 import { useRouter } from "next/router";
 import { MutableRefObject, useRef } from "react";
 import type { Frontmatter } from "~/types/frontmatter";

@@ -41,15 +41,15 @@ importers:
       '@mdx-js/loader':
         specifier: ^2.3.0
         version: 2.3.0(webpack@5.87.0)
+      '@odpf/apsara':
+        specifier: workspace:*
+        version: link:../../packages/raystack
       '@radix-ui/react-icons':
         specifier: ^1.3.0
         version: 1.3.0(react@18.2.0)
       '@radix-ui/react-slot':
         specifier: ^1.0.1
         version: 1.0.2(@types/react@18.2.5)(react@18.2.0)
-      '@raystack/ui':
-        specifier: workspace:*
-        version: link:../../packages/raystack
       '@tanstack/react-table':
         specifier: ^8.9.2
         version: 8.9.2(react-dom@18.2.0)(react@18.2.0)
@@ -151,7 +151,7 @@ importers:
         specifier: ^8.9.2
         version: 8.9.2(react-dom@18.2.0)(react@18.2.0)
     devDependencies:
-      '@raystack/ui':
+      '@odpf/apsara':
         specifier: workspace:*
         version: link:../../packages/raystack
       '@rollup/plugin-node-resolve':

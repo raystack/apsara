@@ -1,4 +1,4 @@
-import { Flex, Link } from "@raystack/ui";
+import { Flex, Link } from "@odpf/apsara";
 
 export const NavbarLinks = () => {
   return (

@@ -1,4 +1,4 @@
-import { Table } from "@raystack/ui";
+import { Table } from "@odpf/apsara";
 import props from "~/configs/props";
 
 type AttributesProps = {

@@ -1,5 +1,5 @@
+import { Badge, Button, Container, Flex, Link, Text } from "@odpf/apsara";
 import { RocketIcon } from "@radix-ui/react-icons";
-import { Badge, Button, Container, Flex, Link, Text } from "@raystack/ui";
 import { useRouter } from "next/router";
 
 export const Hero = () => {
