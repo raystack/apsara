@@ -6,26 +6,18 @@ description: Displays a menu to the user — such as a set of actions or functio
 ## Preview
 
 <Preview>
-  <Flex
-    css={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "$3",
-    }}
-  >
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
-        <Button variant="ghost" outline size="small">Dropdown button</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content align="end">
-        <DropdownMenu.Group>
-          <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
-          <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
-          <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
-        </DropdownMenu.Group>
-      </DropdownMenu.Content>
-    </DropdownMenu>
-  </Flex>
+  <DropdownMenu>
+    <DropdownMenu.Trigger asChild>
+      <Button variant="ghost"  size="small">Dropdown button</Button>
+    </DropdownMenu.Trigger>
+    <DropdownMenu.Content align="end">
+      <DropdownMenu.Group>
+        <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
+        <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
+        <DropdownMenu.Item>Cell Label</DropdownMenu.Item>
+      </DropdownMenu.Group>
+    </DropdownMenu.Content>
+  </DropdownMenu>
 </Preview>
 
 ## Installation

@@ -1,6 +1,6 @@
 ---
 title: Checkbox
-description: A control that allows the user to toggle between checked and not checked.
+description: Checkbox is a user interface control that enables users to toggle between a checked and unchecked state
 radix:
   link: https://www.radix-ui.com/docs/primitives/components/checkbox
   api: https://www.radix-ui.com/docs/primitives/components/checkbox#api-reference
@@ -10,14 +10,14 @@ radix:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "8px",
     }}
   >
-   <Checkbox css={{ marginRight: '$5' }} />
-   <Checkbox size="2" css={{ marginRight: '$5' }} />
+   <Checkbox />
+   <Checkbox size="medium" />
   </Flex>
 </Preview>
 
@@ -37,7 +37,32 @@ Import all parts and piece them together.
     <LiveEditor code={`
 import { Checkbox } from '@odpf/apsara'
 
-<Checkbox css={{ marginRight: '$5' }} />
-<Checkbox size="2" css={{ marginRight: '$5' }} />
+<Checkbox />
+<Checkbox size="medium" />
 `} border />
 </LiveProvider>
+
+
+## Scale
+The Checkbox component offers different size options to suit various design needs. By selecting the "Medium" size, you can create a larger Checkbox that provides enhanced visibility and ease of interaction within the user interface. Additionally, the Checkbox component also supports the following size options:
+
+- Small
+- Medium
+
+These different size options allow you to customize the appearance of the Checkbox to match your specific design preferences and ensure a seamless user experience.
+
+<Playground
+    scope={{ Checkbox }}
+    tabs={[
+        
+        {
+            name: "Small",
+            code: `<Checkbox size="small" />`,
+        },
+        {
+            name: "Medium",
+            code: `<Checkbox size="medium" />`,
+        },
+       
+    ]}
+/>

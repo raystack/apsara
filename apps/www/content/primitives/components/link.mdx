@@ -6,20 +6,15 @@ description: Display a hyperlink component
 
 <Preview>
   <Flex
-    css={{
+    style={{
       alignItems: "center",
-      gap: "$3",
+      flexDirection: "column",
+      gap: "8px",
     }}
   >
-    <Link variant="blue" href="#">
-      <Text size="4">Hyperlink</Text>
-    </Link>
-    <Link variant="subtle" href="#">
-      <Text size="4">Hyperlink</Text>
-    </Link>
-    <Link variant="contrast" href="#">
-      <Text size="4">Hyperlink</Text>
-    </Link>
+    <Link size="small" href="#">Hyperlink</Link>
+    <Link size="medium" href="#">Hyperlink</Link>
+    <Link size="large" href="#">Hyperlink</Link>
   </Flex>
 </Preview>
 
@@ -39,14 +34,8 @@ Import all parts and piece them together.
     <LiveEditor code={`
 import { Link } from '@odpf/apsara'
 
-<Link variant="blue" href="#">
-  <Text size="4">Hyperlink</Text>
-</Link>
-<Link variant="subtle" href="#">
-  <Text size="4">Hyperlink</Text>
-</Link>
-<Link variant="contrast" href="#">
-  <Text size="4">Hyperlink</Text>
-</Link>
+<Link size="small" href="#">Hyperlink</Link>
+<Link size="medium" href="#">Hyperlink</Link>
+<Link size="large" href="#">Hyperlink</Link>
 `} border />
 </LiveProvider>

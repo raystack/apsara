@@ -1,0 +1,83 @@
+:root {
+  --clr-fg-base: #3C4347;
+  --clr-fg-muted: #687076;
+  --clr-fg-subtle: #7E868C;
+  --clr-fg-inverted: #FBFCFD;
+  --clr-fg-accent: #3E63DD;
+  --clr-fg-attention: #FFB224;
+  --clr-fg-danger: #E5484D;
+  --clr-fg-success: #30A46C;
+
+  --clr-bg-base: #FBFCFD;
+  --clr-bg-base-hover: #F1F3F5;
+  --clr-bg-inset: #F1F3F5;
+  --clr-bg-inset-hover: #E6E8EB;
+  --clr-bg-subtle: #F8F9FA;
+  --clr-bg-highlight: #889096;
+  --clr-bg-inverted: #3C4347;
+  --clr-bg-accent: #E6EDFE;
+  --clr-bg-accent-inverted: #3E63DD;
+  --clr-bg-accent-inverted-hover: #3A5CCC;
+  --clr-bg-danger: #FFE5E5;
+  --clr-bg-danger-inverted: #E5484D;
+  --clr-bg-danger-inverted-hover: #DC3D43;
+  --clr-bg-success: #DDF3E4;
+  --clr-bg-success-inverted: #30A46C;
+
+  --clr-border-base: #D7DBDF;
+  --clr-border-base-hover: #C1C8CD;
+  --clr-border-muted: #DFE3E6;
+  --clr-border-subtle: #ECEEF0;
+  --clr-border-accent: #AEC0F5;
+  --clr-border-accent-inverted: #3E63DD;
+  --clr-border-accent-inverted-hover: #3A5CCC;
+  --clr-border-attention: #3A5CCC;
+  --clr-border-attention-inverted: #FFB224;
+  --clr-border-danger: #F3AEAF;
+  --clr-border-danger-inverted: #E5484D;
+  --clr-border-danger-inverted-hover: #DC3D43;
+  --clr-border-success: #92CEAC;
+  --clr-border-success-inverted: #30A46C;
+
+  --ff-inter: 'Inter', -apple-system, system-ui, sans-serif;
+  --ff-mono: Söhne Mono, menlo, monospace;
+
+  --fs-100: 0.688rem;
+  --fs-200: 0.75rem;
+  --fs-300: 0.813rem;
+  --fs-400: 0.875rem;
+  --fs-500: 0.938rem;
+  --fs-600: 1rem;
+
+
+  --pd-2: 2px;
+  --pd-4: 4px;
+  --pd-6: 6px;
+  --pd-8: 8px;
+  --pd-12: 12px;
+  --pd-16: 16px;
+  --pd-32: 32px;
+
+  --mr-2: 2px;
+  --mr-4: 4px;
+  --mr-6: 6px;
+  --mr-8: 8px;
+  --mr-12: 12px;
+  --mr-16: 16px;
+  --mr-32: 32px;
+
+  --br-2: 2px;
+  --br-4: 4px;
+  --br-8: 8px;
+  --br-12: 12px;
+  --br-16: 16px;
+  --br-32: 32px;
+  --br-round: 50%;
+  --br-pill: 999px;
+
+  --shadow-xs: 0px 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-sm: 0px 1px 4px rgba(0, 0, 0, 0.09);
+  --shadow-md: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --shadow-lg: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  --shadow-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}

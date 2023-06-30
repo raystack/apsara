@@ -1,0 +1,69 @@
+.textfield {
+  appearance: none;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  height: auto;
+  width: 100%;
+
+  background-color: var(--clr-bg-base);
+  border: 0.5px solid var(--clr-border-base);
+  box-shadow: var(--shadow-xs);
+  border-radius: var(--br-4);
+  color: var(--clr-fg-base);
+}
+
+.textfield:-webkit-autofill {
+  box-shadow: var(--shadow-xs);
+}
+
+.textfield:focus {
+  border: 1px solid var(--clr-bg-accent-inverted);
+}
+
+.textfield::placeholder {
+  color: var(--clr-fg-subtle);
+  font-size: 12px;
+  line-height: 16px;
+},
+
+.textfield:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.textfield:read-only {
+  background-color: var(--clr-bg-base);
+}
+
+.textfield-sm {
+  border-radius: var(--br-4);
+  font-size: 12px;
+  line-height: 16px;
+  padding: var(--pd-4);
+}
+
+.textfield-md {
+  border-radius: var(--br-8);
+  font-size: 13px;
+  line-height: 16px;
+  padding: var(--pd-8);
+}
+
+.textfield-invlid {
+  border: 1px solid var(--clr-border-danger);
+}
+.textfield-invlid:focus {
+  border: 1px solid var(--clr-border-danger);
+}
+
+.textfield-valid {
+  border: 1px solid var(--clr-border-success);
+}
+
+.textfield-valid:focus {
+  border: 1px solid var(--clr-border-success);
+}
+

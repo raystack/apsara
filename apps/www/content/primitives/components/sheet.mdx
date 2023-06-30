@@ -10,40 +10,40 @@ radix:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       alignItems: "center",
-      gap: "$3",
+      gap: "12px",
     }}
   >
     <Sheet>
       <Sheet.Trigger asChild>
         <Button variant="secondary" size="small">Open Sheet</Button>
       </Sheet.Trigger>
-      <Sheet.Content></Sheet.Content>
+      <Sheet.Content close></Sheet.Content>
     </Sheet>
     <Sheet>
       <Sheet.Trigger asChild>
         <Button variant="secondary" size="small">Top</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="top"></Sheet.Content>
+      <Sheet.Content side="top" close></Sheet.Content>
     </Sheet>
     <Sheet>
       <Sheet.Trigger asChild>
         <Button variant="secondary" size="small">Right</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="right"></Sheet.Content>
+      <Sheet.Content side="right" close></Sheet.Content>
     </Sheet>
     <Sheet>
       <Sheet.Trigger asChild>
         <Button variant="secondary" size="small">Bottom</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="bottom"></Sheet.Content>
+      <Sheet.Content side="bottom" close></Sheet.Content>
     </Sheet>
     <Sheet>
       <Sheet.Trigger asChild>
         <Button variant="secondary" size="small">Left</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="left"></Sheet.Content>
+      <Sheet.Content side="left" close></Sheet.Content>
     </Sheet>
   </Flex>
 </Preview>

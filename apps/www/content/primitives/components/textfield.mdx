@@ -6,26 +6,25 @@ description: Displays a form text field or a component that looks like a text fi
 
 <Preview>
   <Flex
-    css={{
+    style={{
       width: "320px",
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "8px",
     }}
   >
   <TextField
     type="email"
-    size="md"
+    
     placeholder="Email"
     autoComplete="off"
-    css={{ marginBottom: '$3' }}
+    
   />
   <TextField
     type="password"
-    size="md"
+    size="small"
     placeholder="Password"
     autoComplete="off"
-    css={{ marginBottom: '$3' }}
   />
   </Flex>
 </Preview>
@@ -47,22 +46,24 @@ Diffrent size variants
     scope={{ TextField }}
     tabs={[
         {
-            name: "sm",
-            code: `<TextField
-              type="email"
-              size="sm"
-              placeholder="Email"
-              autoComplete="off"
-            />`,
+            name: "small",
+            code: `
+<TextField
+  type="email"
+  size="small"
+  placeholder="Email"
+  autoComplete="off"
+/>`,
         },
         {
-            name: "md",
-            code: `<TextField
-              type="email"
-              size="md"
-              placeholder="Email"
-              autoComplete="off"
-            />`,
+            name: "medium",
+            code: `
+<TextField
+  type="email"
+  size="medium"
+  placeholder="Email"
+  autoComplete="off"
+/>`,
         },
     ]}
 />
@@ -77,13 +78,13 @@ import { TextField } from '@odpf/apsara'
 
 <TextField
   type="email"
-  size="2"
+  size="small"
   placeholder="Email"
   autoComplete="off"
 />
 <TextField
   type="password"
-  size="2"
+  size="small"
   placeholder="Password"
   autoComplete="off"
 />

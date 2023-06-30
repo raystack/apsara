@@ -1,0 +1,33 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.datatable {
+  flex: 1;
+}
+
+.head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.toolbar {
+  width: 100%;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--clr-border-base);
+}
+
+.chipWrapper {
+  
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pd-8);
+  border: 1px solid var(--clr-border-base);
+  border-radius: var(--pd-4);
+  padding: var(--pd-4) var(--pd-8);
+}

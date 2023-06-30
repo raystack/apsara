@@ -1,0 +1,105 @@
+.root {
+  display: flex;
+}
+
+.root[data-orientation="horizontal"] {
+  flex-direction: column;
+}
+
+.tablist {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+  gap: var(--pd-4);
+  border-radius: var(--br-4);
+}
+
+.tablist:focus {
+  outline: none;
+}
+
+.tablist[data-orientation="vertical"]{
+  flex-direction: column;
+}
+
+.tablist button {
+  color: var(--clr-fg-muted);
+}
+
+.tablist button[data-state="active"] {
+  background: var(--clr-bg-inset);
+  color: var(--clr-fg-base);
+}
+
+.tablist button[data-orientation="vertical"] {
+  justify-content: flex-start;
+}
+
+.tablist button[data-orientation="vertical"][data-state="active"] {
+  background: var(--clr-bg-inset);
+  color: var(--clr-fg-base);
+}
+
+.tablist-underline button[data-state="active"] {
+  background: none;
+  color: var(--clr-fg-accent);
+}
+
+.tablist-underline button[data-orientation="vertical"] {
+  justify-content: flex-start;
+}
+
+.tablist-underline button[data-orientation="vertical"][data-state="active"] {
+  background: none;
+  color: var(--clr-fg-accent);
+}
+
+.tablist-elevated {
+  padding: var(--pd-2);
+  background: var(--clr-bg-inset);
+}
+
+.tablist-elevated button[data-state="active"] {
+  background: var(--clr-bg-base);
+  box-shadow: var(--shadow-xs);
+  color: var(--clr-fg-base);
+}
+
+.tablist-elevated button[data-orientation="vertical"] {
+  justify-content: flex-start;
+}
+
+.tablist-elevated button[data-orientation="vertical"][data-state="active"] {
+  background: var(--clr-bg-base);
+  box-shadow: var(--shadow-xs);
+  color: var(--clr-fg-base);
+}
+
+
+.content {
+  flex-grow: 1;
+}
+
+.content:focus {
+  outline: none;
+}
+
+.trigger {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; 
+  flex-shrink: 0;
+  border: none;
+  font-size: 12px;
+  line-height: 16px;
+  padding: var(--pd-4) var(--pd-8);
+  background: none;
+  outline: none;
+  border-radius: var(--br-4);
+  z-index: 10;
+}

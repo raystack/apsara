@@ -1,0 +1,20 @@
+.display {
+  display: block;
+  line-height: 1;
+  margin: 0;
+  font-weight: 400;
+}
+
+.display-small {
+  font-size: 36px;
+  line-height: 44px;
+}
+.display-medium {
+  font-size: 45px;
+  line-height: 52px;
+}
+.display-large {
+  font-size: 57px;
+  line-height: 64px;
+  letter-spacing: -0.25px
+}

@@ -1,0 +1,47 @@
+.sidebar {
+  width: 100%;
+  max-width: 220px;
+  height: 100%;
+  padding: var(--pd-16);
+  padding-right: 0;
+  border-right: 1px solid var(--clr-border-base);
+  overflow: hidden
+}
+
+.logo {
+  padding: var(--pd-8);
+  cursor: pointer;
+}
+
+.navigations {
+  gap: 2px;
+}
+
+.cell {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pd-8);
+  
+}
+
+.cell:hover,
+.active {
+  background: var(--clr-bg-base-hover);
+  border-radius: var(--pd-4)
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+.cellText {
+  font-weight: 500;
+}
+
+.footer {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

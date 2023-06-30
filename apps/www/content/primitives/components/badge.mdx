@@ -1,22 +1,18 @@
 ---
-name: alert
-title: Alert
-description: Displays a badge or a component that looks like a badge.
+name: badge
+title: Badge
+description: The Badge component is designed to display a visually distinct element resembling a badge.
 ---
 ## Preview
 
 <Preview>
-  <Flex
-    css={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "$3",
-    }}
-  >
-    
-   <Badge>Badge</Badge>
-  </Flex>
+  <Badge>Badge</Badge>
 </Preview>
+
+## Usage
+The Badge component renders its children as its text content. 
+It is advised to avoid placing complex content directly within the Badge and instead use it in conjunction with other components to compose the desired visual representation.
+The Badge is primarily intended for highlighting information, indicating status, or drawing attention to specific elements within a user interface.
 
 ## Installation
 

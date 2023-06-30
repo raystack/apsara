@@ -9,16 +9,18 @@ radix:
 ## Preview
 
 <Preview>
-  <Flex css={{ flexDirection: 'column', gap: '$6' }}>
-    <Flex css={{ alignItems: 'center', gap: '$6' }}>
-      <Avatar
-        alt="John Smith"
-        src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-        fallback="J"
-      />
-    </Flex>
-  </Flex>
+  <Avatar
+    alt="John Smith"
+    src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+    fallback="J"
+  />
 </Preview>
+
+## Usage
+The Avatar component utilizes a masked image when the source (src) is provided. 
+It functions as a visual embellishment, assuming that the accompanying textual description is available from nearby elements. 
+However, in cases where there is no textual content accessible, 
+it is recommended to include an aria-label attribute to ensure screen-reader accessibility.
 
 ## Installation
 
@@ -30,91 +32,82 @@ Install the component from your command line.
 
 ## Size
 
-Diffrent avatar size
+The Avatar component supports various sizes for displaying user profile pictures or images. 
+By specifying different size options, you can customize the visual representation of the avatar based on your design requirements.
 
 <Playground
     scope={{ Avatar }}
     tabs={[
         {
-            name: "sm",
-            code: `
-              <Avatar
-              size="sm"
-              alt="John Smith"
-              src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-              fallback="J"
-            />`,
+            name: "small",
+            code: 
+`<Avatar
+  size="small"
+  alt="John Smith"
+  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+  fallback="J"
+/>`,
         },
         {
-            name: "md",
+            name: "medium",
             code: `
-              <Avatar
-              size="md"
-              alt="John Smith"
-              src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-              fallback="J"
-            />`,
+<Avatar
+  size="medium"
+  alt="John Smith"
+  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+  fallback="J"
+/>`,
         },
         {
-            name: "lg",
+            name: "large",
             code: `
-              <Avatar
-              size="lg"
-              alt="John Smith"
-              src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-              fallback="J"
-            />`,
+<Avatar
+  size="large"
+  alt="John Smith"
+  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+  fallback="J"
+/>`,
         },
         {
-            name: "xl",
+            name: "extra-large",
             code: `
-              <Avatar
-              size="xl"
-              alt="John Smith"
-              src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-              fallback="J"
-            />`,
-        },
-        {
-            name: "2xl",
-            code: `
-              <Avatar
-              size="2xl"
-              alt="John Smith"
-              src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-              fallback="J"
-            />`,
+<Avatar
+  size="extra-large"
+  alt="John Smith"
+  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+  fallback="J"
+/>`,
         },
     ]}
 />
 
 ## shape
 
-Avatar of different shape.
+Avatar component offers various shapes for displaying user profile pictures or images. By choosing different shape options, you can enhance the visual appearance of the avatars based on your design preferences.
 
 <Playground
-    scope={{ Avatar, Flex }}
+    scope={{ Avatar }}
     tabs={[
         
         {
             name: "Square",
             code: `
-              <Avatar
-              shape="square"
-              alt="John Smith"
-              src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-              fallback="J"
-            />`,
+<Avatar
+  shape="square"
+  alt="John Smith"
+  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+  fallback="J"
+/>`,
         },
         {
             name: "Circle",
             code: `
-              <Avatar
-              shape="circle"
-              alt="John Smith"
-              src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-              fallback="J"
-            />`,
+<Avatar
+  shape="circle"
+  alt="John Smith"
+  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+  fallback="J"
+/>`,
         },
     ]}
 />

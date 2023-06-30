@@ -1,20 +1,16 @@
 ---
 name: button
 title: Button
-description: Displays a button or a component that looks like a button.
+description: Buttons play a vital role in user interfaces, serving as interactive elements that initiate actions or facilitate navigation within an application. They provide users with clickable elements to interact with the system and perform various tasks.
 ---
-
-import { Button, Flex } from "@odpf/apsara";
 
 <Preview>
     <Button variant="primary">Primary button</Button>
 </Preview>
 
-<Description>
-    Buttons are fundamental components in any user interface, serving as interactive elements for triggering actions or
-    navigating through an application. Building reusable button primitives using Radix UI and Stitches CSS-in-JS can
-    significantly enhance the efficiency and maintainability of your UI development process.
-</Description>
+## Usages
+Button component is utilized for clear and concise communication. 
+It is used for primary actions, such as submitting forms, confirming decisions, or initiating important processes. 
 
 ## Installation
 Install the component from your command line.
@@ -24,7 +20,7 @@ Install the component from your command line.
 </LiveProvider>
 
 
-## Usages
+
 
 Import all parts and piece them together.
 
@@ -36,15 +32,16 @@ import { Button } from '@odpf/apsara'
 </LiveProvider>
 
 
-## Basic
-
-The basic `Button`
-
-<Playground scope={{ Button }} code={`<Button>button</Button>`} />
-
 ## Variant
+The Button component provides various variants to enhance the visual appearance of buttons. you can create buttons with different variants such as:
 
-Diffrent button variants
+- Primary
+- Outline
+- Secondary
+- Ghost
+- Danger
+
+These variants allow you to customize the button's style, making it visually distinctive and suitable for different purposes within your user interface.
 
 <Playground
     scope={{ Button }}
@@ -73,11 +70,16 @@ Diffrent button variants
 />
 
 ## Scale
+The Button component offers different size options to accommodate various design requirements. By selecting the "large" size, you can create buttons that are visually larger, making them more prominent and noticeable within the user interface. Additionally, the Button component also supports the following size options:
+- Small
+- Medium
+- Large
 
-Buttons of different sizes.
+These different size options allow you to customize the appearance of buttons to suit your specific design needs.
+
 
 <Playground
-    scope={{ Button, Flex }}
+    scope={{ Button }}
     tabs={[
         
         {
@@ -89,28 +91,24 @@ Buttons of different sizes.
             code: `<Button variant="primary" size="medium">primary button</Button>`,
         },
         {
-            name: "Default",
-            code: `<Button variant="primary">primary button</Button>`,
+            name: "Large",
+            code: `<Button variant="primary" size="large">primary button</Button>`,
         },
     ]}
 />
 
 
 ## Disabled
+The Button component provides a "disabled" state, which prevents the button from responding to any user actions. When a button is disabled, it becomes unclickable and does not trigger any associated actions or events. This feature is useful when you want to indicate that a button is temporarily inactive or unavailable for interaction.
 
-Do not respond to any action.
-
-<Playground scope={{ Button, Flex }} code={`
-<Flex gap="2">
+<Playground scope={{ Button }} code={`
+<div style={{display:'flex', gap: '8px'}}>
     <Button variant="primary" disabled>secondary button</Button>
     <Button variant="outline" disabled>secondary button</Button>
     <Button variant="secondary" disabled>secondary button</Button>
     <Button variant="ghost" disabled>secondary button</Button>
     <Button variant="danger" disabled>secondary button</Button>
-</Flex>
+</div>
 `} />
 
 
-## API Reference
-
-<Attributes type="button" />

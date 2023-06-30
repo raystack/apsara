@@ -1,0 +1,17 @@
+.popover {
+  z-index: 50;
+  outline: 0;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 16px;
+
+  box-sizing: border-box;
+  min-width: 120px;
+  max-width: 18rem;
+
+  padding: var(--pd-8);
+  background-color: var(--clr-bg-base);
+  border-radius: var(--br-4);
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--clr-border-subtle);
+}

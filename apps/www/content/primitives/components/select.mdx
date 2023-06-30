@@ -8,55 +8,23 @@ radix:
 ## Preview
 
 <Preview>
-  <Flex
-    css={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "$3",
-    }}
-  >
   <Select>
-    <option value="option1" label="Scale"></option>
-    <option value="option2" label="Repeat X"></option>
-    <option value="option3" label="Repeat Y"></option>
+    <Select.Trigger className="w-[180px]">
+      <Select.Value placeholder="Select a fruit" />
+    </Select.Trigger>
+    <Select.Content>
+      <Select.Group>
+        <Select.Label>Fruits</Select.Label>
+        <Select.Item value="apple">Apple</Select.Item>
+        <Select.Item value="banana">Banana</Select.Item>
+        <Select.Item value="blueberry">Blueberry</Select.Item>
+        <Select.Item value="grapes">Grapes</Select.Item>
+        <Select.Item value="pineapple">Pineapple</Select.Item>
+      </Select.Group>
+    </Select.Content>
   </Select>
-  </Flex>
 </Preview>
 
-## Installation
-
-Install the component from your command line.
-
-<LiveProvider>
-    <LiveEditor code={`npm install @odpf/apsara`} border/>
-</LiveProvider>
-
-
-## Variant
-
-Diffrent size variants
-
-<Playground
-    scope={{ Select }}
-    tabs={[
-        {
-            name: "sm",
-            code: `<Select size="sm">
-              <option value="option1" label="Scale"></option>
-              <option value="option2" label="Repeat X"></option>
-              <option value="option3" label="Repeat Y"></option>
-            </Select>`,
-        },
-        {
-            name: "md",
-            code: `<Select size="md">
-              <option value="option1" label="Scale"></option>
-              <option value="option2" label="Repeat X"></option>
-              <option value="option3" label="Repeat Y"></option>
-            </Select>`,
-        },
-    ]}
-/>
 
 ## Anatomy
 Import all parts and piece them together.
@@ -67,9 +35,19 @@ import { Select } from '@odpf/apsara'
 
 
 <Select>
-  <option value="option1" label="Scale"></option>
-  <option value="option2" label="Repeat X"></option>
-  <option value="option3" label="Repeat Y"></option>
+  <Select.Trigger className="w-[180px]">
+    <Select.Value placeholder="Select a fruit" />
+  </Select.Trigger>
+  <Select.Content>
+    <Select.Group>
+      <Select.Label>Fruits</Select.Label>
+      <Select.Item value="apple">Apple</Select.Item>
+      <Select.Item value="banana">Banana</Select.Item>
+      <Select.Item value="blueberry">Blueberry</Select.Item>
+      <Select.Item value="grapes">Grapes</Select.Item>
+      <Select.Item value="pineapple">Pineapple</Select.Item>
+    </Select.Group>
+  </Select.Content>
 </Select>
 `} border />
 </LiveProvider>

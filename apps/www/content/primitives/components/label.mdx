@@ -9,16 +9,15 @@ radix:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "8px",
     }}
   >
-  <Label>Label</Label>
-  <Label size="3">Label</Label>
-  <Label size="4">Label</Label>
-  <Label size="5">Label</Label>
+  <Label size="small">Label</Label>
+  <Label size="medium">Label</Label>
+  <Label size="large">Label</Label>
   </Flex>
 </Preview>
 
@@ -39,7 +38,8 @@ Import all parts and piece them together.
     <LiveEditor code={`
 import { Label } from '@odpf/apsara'
 
-<Label>Label</Label>
-<Label size="3">Label</Label>
+<Label size="small">Label</Label>
+<Label size="medium">Label</Label>
+<Label size="large">Label</Label>
 `} border />
 </LiveProvider>

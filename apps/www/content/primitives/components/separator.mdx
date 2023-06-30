@@ -9,14 +9,15 @@ radix:
 
 <Preview>
   <Flex
-    css={{
+    style={{
       flexDirection: "column",
       alignItems: "center",
-      gap: "$3",
+      gap: "16px",
+      width: '100%'
     }}
   >
-    <Separator />
-    <Separator size="2"/>
+    <Separator size="half"/>
+    <Separator size="full"/>
   </Flex>
 </Preview>
 
@@ -36,7 +37,7 @@ Import all parts and piece them together.
     <LiveEditor code={`
 import { Separator } from '@odpf/apsara'
 
-<Separator />
-<Separator size="2"/>
+<Separator size="half"/>
+<Separator size="full"/>
 `} border />
 </LiveProvider>

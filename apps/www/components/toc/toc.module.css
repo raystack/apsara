@@ -1,0 +1,9 @@
+.toc {
+ 
+}
+
+.link {
+  color: var(--clr-fg-base);
+  display: inline-flex;
+  margin: "4px 0"
+}
