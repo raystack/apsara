@@ -5,7 +5,6 @@ export const NavbarLinks = () => {
     <Flex gap="large">
       <Link href="/docs/primitives/overview/introduction">Doccumentation</Link>
       <Link href="/examples">Examples</Link>
-      <Link href="/">FAQs</Link>
     </Flex>
   );
 };

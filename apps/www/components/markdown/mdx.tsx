@@ -17,8 +17,7 @@ export const components = {
   LiveProvider: LiveProvider,
   LiveEditor: LiveEditor,
   Playground: Playground,
-  pre: (props: any) => <Apsara.Text {...props} as="pre" size="4" />,
-  h1: (props: any) => <Apsara.Headline {...props} as="h1" size="3" />,
+  pre: (props: any) => <Apsara.Text {...props} size="4" />,
   Description: ({ children, ...props }: any) => {
     // takes the text even if it's wrapped in `<p>`
     // https://github.com/wooorm/xdm/issues/47
@@ -34,56 +33,42 @@ export const components = {
       </Apsara.Text>
     );
   },
+  h1: (props: any) => <Apsara.Headline {...props} />,
   h2: ({ children, id, ...props }: any) => {
     return (
       <LinkHeading
         id={id}
-        css={{ marginTop: "var(--mr-8)", marginBottom: "var(--mr-8)" }}
+        css={{ marginTop: "var(--mr-32)", marginBottom: "var(--mr-8)" }}
       >
-        <Apsara.Headline
+        <Apsara.Title
+          size="large"
           {...props}
           id={id}
-          as={"h2" as any}
           style={{ scrollMarginTop: "36px" }}
           data-heading
         >
           {children}
-        </Apsara.Headline>
+        </Apsara.Title>
       </LinkHeading>
     );
   },
   h3: ({ children, id, ...props }: any) => (
-    <LinkHeading id={id} css={{ marginTop: "28px", marginBottom: "4px" }}>
-      <Apsara.Headline
-        size="small"
+    <LinkHeading
+      id={id}
+      css={{ marginTop: "var(--mr-16)", marginBottom: "4px" }}
+    >
+      <Apsara.Title
+        size="medium"
         {...props}
         id={id}
         style={{ scrollMarginTop: "36px" }}
         data-heading
       >
         {children}
-      </Apsara.Headline>
+      </Apsara.Title>
     </LinkHeading>
   ),
-  h4: (props: any) => (
-    <Apsara.Text
-      {...props}
-      style={{
-        scrollMarginTop: "36px",
-        marginBottom: "12px",
-        lineHeight: "27px",
-        fontWeight: 500,
-        fontSize: "20px",
-      }}
-    />
-  ),
-  p: (props: any) => (
-    <Apsara.Text
-      size={4}
-      {...props}
-      style={{ marginBottom: "16px", lineHeight: "22px" }}
-    />
-  ),
+  h4: (props: any) => <Apsara.Title size="small" {...props} />,
   a: ({ href = "", ...props }) => {
     if (href.startsWith("http")) {
       return (
@@ -104,6 +89,13 @@ export const components = {
       />
     );
   },
+  p: (props: any) => (
+    <Apsara.Text
+      size="4"
+      {...props}
+      style={{ lineHeight: 1.5, margin: "var(--mr-8) 0" }}
+    />
+  ),
   hr: (props: any) => (
     <Apsara.Separator
       size="2"

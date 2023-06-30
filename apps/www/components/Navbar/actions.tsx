@@ -1,8 +1,14 @@
 import { SunIcon } from "@radix-ui/react-icons";
-import { Button } from "@raystack/ui";
+import { Button, useApsaraTheme } from "@raystack/ui";
 export const NavbarAcitons = () => {
+  const { setTheme, themeName } = useApsaraTheme();
+  console.log(themeName);
   return (
-    <Button onClick={() => {}}>
+    <Button
+      onClick={() => {
+        return themeName === "dark" ? setTheme("light") : setTheme("dark");
+      }}
+    >
       <SunIcon width="16" height="16" />
     </Button>
   );

@@ -10,10 +10,10 @@ body {
         "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1;
+    line-height: 1.5;
 
-    background-color: var(--colors-loContrast);
-    color: var(--colors-hiContrast);
+    background-color: var(--clr-bg-base);
+    color: var(--clr-fg-base);
 }
 
 svg {
@@ -22,11 +22,11 @@ svg {
 }
 
 pre[class*=language-] {
-	border-radius: 8px;
+	border-radius: 0 2px 2px 0;
 	line-height: 1.5;
 }
 
 pre.prism-code{
 	background-color: transparent !important;
-	border: none;
+	border-left: 2px solid var(--clr-border-base);
 }

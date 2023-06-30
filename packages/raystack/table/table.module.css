@@ -3,6 +3,7 @@
   font-size: 12px;
   line-height: 16px;
   caption-side: bottom;
+  color: var(--clr-fg-base)
 }
 
 .caption{

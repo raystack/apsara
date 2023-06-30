@@ -3,6 +3,7 @@
   line-height: 1;
   margin: 0;
   font-weight: 400;
+  color: var(--clr-fg-base)
 }
 
 .text-1 {

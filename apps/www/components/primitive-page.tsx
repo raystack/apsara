@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { MutableRefObject, useRef } from "react";
 import type { Frontmatter } from "~/types/frontmatter";
 import { PageProps, primitivesRoutes } from "~/utils/routes";
+import styles from "./page.module.css";
 import { Toc } from "./toc";
 
 function useCurrentPageSlug() {
@@ -71,7 +72,7 @@ export function NavItem({
             textDecoration: "none",
             padding: "12px 16px",
             width: "100%",
-            color: `${themeName === "dark" ? "#f2f2f2" : "rgb(17, 24, 28)"}`,
+            color: "var(--clr-fg-base)",
           }}
         >
           <Text size={3} style={{ fontWeight: active ? "500" : "none" }}>
@@ -123,16 +124,9 @@ export function PrimitivePage({
           }}
         >
           <Flex style={{ overflowY: "scroll", width: "100%", height: "100%" }}>
-            <Flex
-              direction="column"
-              style={{
-                width: "100%",
-                maxWidth: "1080px",
-                margin: "0 auto 20px",
-                padding: "16px 32px",
-              }}
-            >
+            <Flex direction="column" className={styles.content}>
               {children}
+              <div style={{ height: "60px" }}></div>
             </Flex>
 
             <RightSideBar

@@ -16,6 +16,12 @@ radix:
   />
 </Preview>
 
+## Usage
+The Avatar component utilizes a masked image when the source (src) is provided. 
+It functions as a visual embellishment, assuming that the accompanying textual description is available from nearby elements. 
+However, in cases where there is no textual content accessible, 
+it is recommended to include an aria-label attribute to ensure screen-reader accessibility.
+
 ## Installation
 
 Install the component from your command line.
@@ -26,7 +32,8 @@ Install the component from your command line.
 
 ## Size
 
-Diffrent avatar size
+The Avatar component supports various sizes for displaying user profile pictures or images. 
+By specifying different size options, you can customize the visual representation of the avatar based on your design requirements.
 
 <Playground
     scope={{ Avatar }}
@@ -76,7 +83,7 @@ Diffrent avatar size
 
 ## shape
 
-Avatar of different shape.
+Avatar component offers various shapes for displaying user profile pictures or images. By choosing different shape options, you can enhance the visual appearance of the avatars based on your design preferences.
 
 <Playground
     scope={{ Avatar }}

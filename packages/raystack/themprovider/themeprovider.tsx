@@ -15,7 +15,7 @@ import {
 
 const { createContext, useState, useEffect } = React;
 
-const defaultThemeName = "light";
+const defaultThemeName = "dark";
 type Theme = "dark" | "light";
 
 function isValidTheme(theme: string): theme is Theme {
@@ -67,6 +67,14 @@ const useTheme = (): ThemeProviderType => {
       setThemeName(osTheme ?? defaultThemeName);
     }
   }, [osTheme]);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    for (const k of ["dark", "light"]) {
+      html.classList.remove(k);
+    }
+    html.classList.add(themeName);
+  }, [themeName]);
 
   listenForOSPreferenceChanges((osPref) => {
     if (osPref === osTheme) return;

@@ -1,0 +1,10 @@
+.content {
+  width: 100%;
+  max-width: 1080px;
+  margin: 16px auto;
+  padding: 0 32px;
+}
+
+.content > :last-child {
+  margin-bottom: 100px;
+}

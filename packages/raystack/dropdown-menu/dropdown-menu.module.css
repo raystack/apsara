@@ -12,6 +12,7 @@
   border-radius: var(--br-4);
   box-shadow: var(--shadow-xs);
   border: 1px solid var(--clr-border-subtle);
+  color: var(--clr-fg-base)
 
 }
 

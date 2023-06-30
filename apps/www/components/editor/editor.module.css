@@ -5,6 +5,9 @@
 .details {
   transition: all 0.2s ease;
   overflow: hidden;
+  font-size: 14px;
+  color: var(--clr-fg-base);
+  cursor: pointer;
 }
 
 .summary {
@@ -16,7 +19,8 @@
   user-select: none;
   outline: none;
   cursor: pointer;
-  background-solor: var(--clr-bg-base)
+  background-color: var(--clr-bg-base);
+  margin-top: var(--pd-8) ;
 }
 
 .actionContainer {

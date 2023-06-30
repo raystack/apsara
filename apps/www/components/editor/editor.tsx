@@ -33,8 +33,8 @@ const Editor: React.FC<Props> = ({ code, visible, setVisible }) => {
 
   return (
     <div className={styles.editor}>
-      <div className={styles.details}>
-        <div className={styles.summary} onClick={clickHandler}>
+      <details className={styles.details} open={visible}>
+        <summary className={styles.summary} onClick={clickHandler}>
           <div className={styles.actionContainer}>
             <div className={styles.action}>
               <ChevronRightIcon width={16} />
@@ -46,9 +46,9 @@ const Editor: React.FC<Props> = ({ code, visible, setVisible }) => {
               )}
             </div>
           </div>
-        </div>
+        </summary>
         <LiveEditor number code={code} />
-      </div>
+      </details>
     </div>
   );
 };

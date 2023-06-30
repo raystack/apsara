@@ -23,8 +23,8 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
       <MDXProvider frontmatter={frontmatter}>
         <>
           <Headline
-            size="small"
-            style={{ fontWeight: 500, lineHeight: "40px" }}
+            size="medium"
+            style={{ fontWeight: "bold", lineHeight: "52px" }}
           >
             {frontmatter.title}
           </Headline>
