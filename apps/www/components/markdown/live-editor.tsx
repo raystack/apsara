@@ -33,7 +33,7 @@ const LiveEditor: React.FC<Props> = ({ code, number, border }) => {
     >
       <Editor
         className={editor({ number: number })}
-        theme={themeName === "light" ? themes.nightOwlLight : themes.nightOwl}
+        theme={themes.nightOwlLight}
         language="auto"
         code={code.trim()}
       />
