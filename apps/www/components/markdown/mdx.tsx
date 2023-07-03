@@ -3,6 +3,7 @@ import { Link2Icon } from "@radix-ui/react-icons";
 import * as React from "react";
 import { LiveProvider } from "react-live";
 import { Frontmatter } from "~/types/frontmatter";
+import { Assets } from "../datatable/datatable";
 import Icons from "../icons/icons";
 import { Attributes } from "./attributes";
 import LiveEditor from "./live-editor";
@@ -12,6 +13,7 @@ import { Preview } from "./preview";
 export const components = {
   ...Apsara,
   ...Icons,
+  DataTable: Assets,
   Attributes: Attributes,
   Preview: Preview,
   LiveProvider: LiveProvider,

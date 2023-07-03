@@ -1,0 +1,96 @@
+---
+title: Table
+description: A responsive table component.
+---
+
+
+## Preview
+
+<Preview>
+  <Table>
+    <Table.Caption>A list of your recent invoices.</Table.Caption>
+    <Table.Header>
+      <Table.Row>
+        <Table.Head>Invoice</Table.Head>
+        <Table.Head>Status</Table.Head>
+        <Table.Head>Method</Table.Head>
+        <Table.Head>Amount</Table.Head>
+      </Table.Row>
+    </Table.Header>
+    <Table.Body>
+      
+        <Table.Row>
+          <Table.Cell>INV001</Table.Cell>
+          <Table.Cell>Paid</Table.Cell>
+          <Table.Cell>$250.00</Table.Cell>
+          <Table.Cell>Credit Card</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>INV002</Table.Cell>
+          <Table.Cell>Pending</Table.Cell>
+          <Table.Cell>$150.00</Table.Cell>
+          <Table.Cell>PayPal</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.Cell>INV003</Table.Cell>
+          <Table.Cell>Unpaid</Table.Cell>
+          <Table.Cell>$350.00</Table.Cell>
+          <Table.Cell>Bank Transfer</Table.Cell>
+        </Table.Row>
+      
+    </Table.Body>
+  </Table>
+</Preview>
+
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
+
+
+## Anatomy
+Import all parts and piece them together.
+
+<LiveProvider>
+    <LiveEditor code={`
+import { Table } from  @odpf/apsara;
+
+<Table>
+  <Table.Caption>A list of your recent invoices.</Table.Caption>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Invoice</Table.Head>
+      <Table.Head>Status</Table.Head>
+      <Table.Head>Method</Table.Head>
+      <Table.Head>Amount</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    
+      <Table.Row>
+        <Table.Cell>INV001</Table.Cell>
+        <Table.Cell>Paid</Table.Cell>
+        <Table.Cell>$250.00</Table.Cell>
+        <Table.Cell>Credit Card</Table.Cell>
+      </Table.Row>
+      <Table.Row>
+        <Table.Cell>INV002</Table.Cell>
+        <Table.Cell>Pending</Table.Cell>
+        <Table.Cell>$150.00</Table.Cell>
+        <Table.Cell>PayPal</Table.Cell>
+      </Table.Row>
+      <Table.Row>
+        <Table.Cell>INV003</Table.Cell>
+        <Table.Cell>Unpaid</Table.Cell>
+        <Table.Cell>$350.00</Table.Cell>
+        <Table.Cell>Bank Transfer</Table.Cell>
+      </Table.Row>
+    
+  </Table.Body>
+</Table>
+`} border />
+</LiveProvider>

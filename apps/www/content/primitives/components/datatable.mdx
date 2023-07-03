@@ -1,0 +1,123 @@
+---
+title: DataTable
+description: A responsive data table component.
+---
+
+
+## Preview
+
+<Preview>
+  <DataTable />
+</Preview>
+
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+    <LiveEditor code={`npm install @odpf/apsara`} border/>
+</LiveProvider>
+
+## Basic Datatable
+Import all parts and piece them together.
+
+<LiveProvider>
+    <LiveEditor code={`
+import { DataTable, useTable } from "@odpf/apsara";
+import { ColumnDef } from "@tanstack/react-table";
+
+const data: Payment[] = [
+  {
+    id: "m5gr84i9",
+    amount: 316,
+    status: "success",
+    email: "ken99@yahoo.com",
+  }
+];
+
+export type Payment = {
+  id: string;
+  amount: number;
+  status: "pending" | "processing" | "success" | "failed";
+  email: string;
+};
+
+export const columns: ColumnDef<Payment>[] = [
+  {
+    id: "select",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    filterVariant: "text",
+  }
+];
+
+export const Assets = () => {
+  return (
+    <DataTable columns={columns} data={data}></DataTable>
+  );
+};
+`} border />
+</LiveProvider>
+
+
+## Reusable Components
+Here are some components you can use to build your data tables
+
+### Datatable Toobar
+Can be used to show search, filter & option items. some of sub components available are
+- DataTable.ClearFilter
+- DataTable.FilterOptions
+- DataTable.ViewOptions
+- DataTable.GloabalSearch etc.
+
+<LiveProvider>
+    <LiveEditor code={`
+<DataTable columns={columns} data={data}>
+  <DataTable.Toolbar>
+    <DataTable.ClearFilter /> 
+    <DataTable.FilterOptions />
+    <DataTable.ViewOptions />
+    <DataTable.GloabalSearch placeholder="Search assets..." />
+  </DataTable.Toolbar>
+</DataTable>
+`} border />
+</LiveProvider>
+
+
+### Datatable Footer
+Can be used to display any additional information. 
+
+<LiveProvider>
+    <LiveEditor code={`
+<DataTable columns={columns} data={data}>
+  <DataTable.Toolbar>
+    <DataTable.ClearFilter /> 
+    <DataTable.FilterOptions />
+    <DataTable.ViewOptions />
+    <DataTable.GloabalSearch placeholder="Search assets..." />
+  </DataTable.Toolbar>
+  <DataTable.Footer>
+  </DataTable.Footer>
+</DataTable>
+`} border />
+</LiveProvider>
+
+### Datatable usetable
+`usetable` can be used to create any custom table components
+
+<LiveProvider>
+    <LiveEditor code={`
+const { filteredColumns, table } = useTable();
+const isFiltered = filteredColumns.length > 0;
+
+<Flex gap="small">
+  {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
+  <DataTable.ViewOptions />
+  <DataTable.GloabalSearch placeholder="Search assets..." />
+</Flex>
+`} border />
+</LiveProvider>

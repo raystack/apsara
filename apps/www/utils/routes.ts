@@ -18,6 +18,7 @@ export const primitivesRoutes = [
       { title: "Command", slug: "docs/primitives/components/command" },
       { title: "Checkbox", slug: "docs/primitives/components/checkbox" },
       { title: "Container", slug: "docs/primitives/components/container" },
+      { title: "Datatable", slug: "docs/primitives/components/datatable" },
       { title: "Dialog", slug: "docs/primitives/components/dialog" },
       {
         title: "Dropdown Menu",
@@ -35,6 +36,7 @@ export const primitivesRoutes = [
       { title: "Sheet", slug: "docs/primitives/components/sheet" },
       { title: "Switch", slug: "docs/primitives/components/switch" },
       { title: "Tabs", slug: "docs/primitives/components/tabs" },
+      { title: "Table", slug: "docs/primitives/components/table" },
       { title: "Text", slug: "docs/primitives/components/text" },
       { title: "Text Field", slug: "docs/primitives/components/textfield" },
     ],
