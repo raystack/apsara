@@ -1,8 +1,11 @@
 {
   "name": "@odpf/apsara",
-  "version": "0.9.10",
+  "version": "0.10.0",
   "types": "dist/index.d.ts",
   "sideEffects": false,
+  "engines": {
+    "node": "14.21.3"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -18,7 +21,9 @@
     "build": "rollup --config",
     "dev": "rollup --config --watch",
     "lint": "eslint \"**/*.ts*\"",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
+    "publish": "npm run build && np",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "keywords": [],
   "author": "",
@@ -57,5 +62,8 @@
     "tsconfig": "workspace:*",
     "typescript": "4.7",
     "usehooks-ts": "^2.9.1"
+  },
+  "dependencies": {
+    "np": "^8.0.4"
   }
 }
