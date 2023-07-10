@@ -27,7 +27,7 @@ const LiveEditor: React.FC<Props> = ({ code, number, border }) => {
         position: "relative",
         whiteSpace: "pre",
         fontFamily: "var(--font-roboto)",
-        color: "var(--clr-fg-base)",
+        color: "var(--foreground-base)",
         fontSize: "13px",
       }}
     >

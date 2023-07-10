@@ -9,21 +9,21 @@
   outline: 0;
   overflow: hidden;
 
-  color: var(--clr-bg-base);
-  border: 1px solid var(--clr-border-base);
+  color: var(--background-base);
+  border: 1px solid var(--border-base);
   border-radius: var(--br-2);
   background: none;
 }
 
 .checkbox:hover {
-  background: var(--clr-bg-base-hover);
-  border: 1px solid var(--clr-border-base-hover);
+  background: var(--background-base-hover);
+  border: 1px solid var(--border-base-hover);
 }
 
 .checkbox[data-state="checked"] {
   outline: none;
   border: none;
-  background: var(--clr-bg-accent-inverted);
+  background: var(--background-accent-inverted);
 }
 
 .checkbox-sm {

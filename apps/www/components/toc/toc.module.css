@@ -3,7 +3,7 @@
 }
 
 .link {
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
   display: inline-flex;
   margin: "4px 0"
 }

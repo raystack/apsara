@@ -48,7 +48,7 @@ const Playground: React.FC<PlaygroundProps> = React.memo(
         <div
           style={{
             borderRadius: "8px",
-            border: "1px solid var(--clr-border-base)",
+            border: "1px solid var(--border-base)",
           }}
         >
           <DynamicLive
@@ -64,7 +64,7 @@ const Playground: React.FC<PlaygroundProps> = React.memo(
       <div
         style={{
           borderRadius: "8px",
-          border: "1px solid var(--clr-border-base)",
+          border: "1px solid var(--border-base)",
         }}
       >
         <Tabs defaultValue={tabs[0]?.name}>
@@ -73,7 +73,7 @@ const Playground: React.FC<PlaygroundProps> = React.memo(
               background: "transparent",
               padding: "16px",
               gap: "12px",
-              borderBottom: "1px solid var(--clr-border-base)",
+              borderBottom: "1px solid var(--border-base)",
             }}
           >
             {tabs.map((tab) => (

@@ -1,6 +1,6 @@
 {
-  "name": "@odpf/apsara",
-  "version": "0.10.0",
+  "name": "@raystack/apsara",
+  "version": "0.0.0",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "engines": {

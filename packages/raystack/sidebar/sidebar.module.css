@@ -4,7 +4,7 @@
   height: 100%;
   padding: var(--pd-16);
   padding-right: 0;
-  border-right: 1px solid var(--clr-border-base);
+  border-right: 1px solid var(--border-base);
   overflow: hidden
 }
 
@@ -28,7 +28,7 @@
 
 .cell:hover,
 .active {
-  background: var(--clr-bg-base-hover);
+  background: var(--background-base-hover);
   border-radius: var(--pd-4)
 }
 

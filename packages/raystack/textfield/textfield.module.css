@@ -7,11 +7,11 @@
   height: auto;
   width: 100%;
 
-  background-color: var(--clr-bg-base);
-  border: 0.5px solid var(--clr-border-base);
+  background-color: var(--background-base);
+  border: 0.5px solid var(--border-base);
   box-shadow: var(--shadow-xs);
   border-radius: var(--br-4);
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
 }
 
 .textfield:-webkit-autofill {
@@ -19,11 +19,11 @@
 }
 
 .textfield:focus {
-  border: 1px solid var(--clr-bg-accent-inverted);
+  border: 1px solid var(--background-accent-inverted);
 }
 
 .textfield::placeholder {
-  color: var(--clr-fg-subtle);
+  color: var(--foreground-subtle);
   font-size: 12px;
   line-height: 16px;
 },
@@ -35,7 +35,7 @@
 }
 
 .textfield:read-only {
-  background-color: var(--clr-bg-base);
+  background-color: var(--background-base);
 }
 
 .textfield-sm {
@@ -53,17 +53,17 @@
 }
 
 .textfield-invlid {
-  border: 1px solid var(--clr-border-danger);
+  border: 1px solid var(--border-danger);
 }
 .textfield-invlid:focus {
-  border: 1px solid var(--clr-border-danger);
+  border: 1px solid var(--border-danger);
 }
 
 .textfield-valid {
-  border: 1px solid var(--clr-border-success);
+  border: 1px solid var(--border-success);
 }
 
 .textfield-valid:focus {
-  border: 1px solid var(--clr-border-success);
+  border: 1px solid var(--border-success);
 }
 

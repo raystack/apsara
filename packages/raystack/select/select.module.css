@@ -7,10 +7,10 @@
   box-sizing: border-box;
 
   padding: var(--pd-4) var(--pd-8);
-  background-color: var(--clr-bg-base);
+  background-color: var(--background-base);
   border-radius: var(--br-4);
   box-shadow: var(--shadow-xs);
-  border: 1px solid var(--clr-border-subtle);
+  border: 1px solid var(--border-subtle);
 }
 
 .menuitem {
@@ -28,7 +28,7 @@
   outline: none;
   cursor: pointer;
   border-radius: var(--br-4);
-  background: var(--clr-bg-base-hover)
+  background: var(--background-base-hover)
 }
 
 .menuitem[data-disabled] {
@@ -51,7 +51,7 @@
 .separator{
   height: 1px;
   margin: var(--mr-4) calc(var(--mr-8) * -1);
-  background: var(--clr-bg-inset)
+  background: var(--background-inset)
 }
 
 .menugroup{
@@ -66,22 +66,22 @@
   align-items: center; 
   outline: none;
 
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
   padding: var(--pd-4) var(--pd-12);
-  background-color: var(--clr-bg-base); 
+  background-color: var(--background-base); 
   font-size: 12px;
   line-height: 16px; 
   border-radius: var(--br-4);
-  border: 0.5px solid var(--clr-border-base);
+  border: 0.5px solid var(--border-base);
   box-shadow: var(--shadow-xs);
 }
 
 .trigger:focus {
-  border: 1px solid var(--clr-border-accent-inverted)
+  border: 1px solid var(--border-accent-inverted)
 }
 
 .trigger::placeholder {
-  color: var(--clr-fg-subtle);
+  color: var(--foreground-subtle);
   font-size: 12px;
   line-height: 16px;
 }

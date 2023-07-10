@@ -6,13 +6,13 @@
   position: relative; 
   border: none;
   border-radius: var(--br-round);   
-  background: var(--clr-bg-inset);
+  background: var(--background-inset);
   width: 20px;
   height: 20px;
 }
 
 .avatar:hover {
-  border: 1px solid var(--clr-border-accent);
+  border: 1px solid var(--border-accent);
 }
 
 .avatar-sm {

@@ -8,11 +8,11 @@
   min-width: 120px;
 
   padding: var(--pd-8);
-  background-color: var(--clr-bg-base);
+  background-color: var(--background-base);
   border-radius: var(--br-4);
   box-shadow: var(--shadow-xs);
-  border: 1px solid var(--clr-border-subtle);
-  color: var(--clr-fg-base)
+  border: 1px solid var(--border-subtle);
+  color: var(--foreground-base)
 
 }
 
@@ -27,7 +27,7 @@
   outline: none;
   cursor: pointer;
   border-radius: var(--br-4);
-  background: var(--clr-bg-base-hover)
+  background: var(--background-base-hover)
 }
 
 .menuitem[data-disabled] {
@@ -42,7 +42,7 @@
 .separator{
   height: 1px;
   margin: var(--mr-4) calc(var(--mr-8) * -1);
-  background: var(--clr-bg-inset)
+  background: var(--background-inset)
 }
 
 .menugroup{

@@ -10,8 +10,8 @@
   max-width: 18rem;
 
   padding: var(--pd-8);
-  background-color: var(--clr-bg-base);
+  background-color: var(--background-base);
   border-radius: var(--br-4);
   box-shadow: var(--shadow-xs);
-  border: 1px solid var(--clr-border-subtle);
+  border: 1px solid var(--border-subtle);
 }

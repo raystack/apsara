@@ -5,7 +5,6 @@
   justify-content: center;
   border: none;
   cursor: pointer;
-
   font-family: inherit;
   font-size: var(--fs-100);
   font-weight: 500;
@@ -53,66 +52,66 @@
 
 
 .button-primary {
-  color: var(--clr-fg-inverted);
-  background-color: var(--clr-bg-accent-inverted)
+  color: var(--foreground-inverted);
+  background-color: var(--background-accent-inverted)
 }
 
 .button-primary:hover, 
 .button-primary:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--clr-bg-accent-inverted-hover)
+  background-color: var(--background-accent-inverted-hover)
 }
 
 .button-outline {
-  color: var(--clr-fg-accent);
-  background-color: var(--clr-bg-base);
-  border: 1px solid var(--clr-border-accent-inverted);
+  color: var(--foreground-accent);
+  background-color: var(--background-base);
+  border: 1px solid var(--border-accent-inverted);
 }
 
 .button-outline:hover, 
 .button-outline:active,
 .button-outline[data-radix-popover-trigger][data-state="open"],
 .button-outline[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--clr-bg-accent);
-  border: 1px solid var(--clr-border-accent-inverted-hover);
+  background-color: var(--background-accent);
+  border: 1px solid var(--border-accent-inverted-hover);
 }
 
 .button-secondary {
-  color: var(--clr-fg-base);
-  background-color: var(--clr-bg-base)
+  color: var(--foreground-base);
+  background-color: var(--background-base)
 }
 
 .button-secondary:hover, 
 .button-secondary:active,
 .button-secondary[data-radix-popover-trigger][data-state="open"],
 .button-secondary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--clr-bg-base-hover);
-  border: 1px solid var(--clr-border-base-hover);
+  background-color: var(--background-base-hover);
+  border: 1px solid var(--border-base-hover);
 }
 
 .button-ghost {
-  color: var(--clr-fg-base);
-  background-color: var(--clr-bg-base);
-  border: 1px dotted var(--clr-border-base);
+  color: var(--foreground-base);
+  background-color: var(--background-base);
+  border: 1px dotted var(--border-base);
 }
 
 .button-ghost:hover, 
 .button-ghost:active,
 .button-ghost[data-radix-popover-trigger][data-state="open"],
 .button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--clr-bg-base-hover);
-  border: 1px dotted var(--clr-border-base-hover);
+  background-color: var(--background-base-hover);
+  border: 1px dotted var(--border-base-hover);
 }
 
 .button-danger {
-  color: var(--clr-fg-inverted);
-  background-color: var(--clr-bg-danger-inverted)
+  color: var(--foreground-inverted);
+  background-color: var(--background-danger-inverted)
 }
 
 .button-danger:hover, 
 .button-danger:active,
 .button-danger[data-radix-popover-trigger][data-state="open"],
 .button-danger[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--clr-bg-danger-inverted-hover)
+  background-color: var(--background-danger-inverted-hover)
 }

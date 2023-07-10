@@ -14,7 +14,7 @@ export const Hero = () => {
               <Flex>
                 <RocketIcon
                   style={{
-                    color: "var(--clr-fg-accent)",
+                    color: "var(--foreground-accent)",
                     margin: "0 var(--mr-4)",
                   }}
                 />

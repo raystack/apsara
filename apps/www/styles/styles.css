@@ -12,8 +12,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     line-height: 1.5;
 
-    background-color: var(--clr-bg-base);
-    color: var(--clr-fg-base);
+    background-color: var(--background-base);
+    color: var(--foreground-base);
 }
 
 svg {
@@ -28,5 +28,5 @@ pre[class*=language-] {
 
 pre.prism-code{
 	background-color: transparent !important;
-	border-left: 2px solid var(--clr-border-base);
+	border-left: 2px solid var(--border-base);
 }

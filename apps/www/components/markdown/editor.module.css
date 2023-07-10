@@ -11,5 +11,5 @@
 
     padding: 0 .5em;
     margin-right: .5em;
-    color: var(--clr-fg-muted);
+    color: var(--foreground-muted);
 }

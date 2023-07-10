@@ -3,21 +3,21 @@
   font-size: 12px;
   line-height: 16px;
   caption-side: bottom;
-  color: var(--clr-fg-base)
+  color: var(--foreground-base)
 }
 
 .caption{
   margin-top: var(--mr-16);
-  color: var(--clr-fg-muted);
+  color: var(--foreground-muted);
 }
 
 .header tr {
-  border-bottom: 1px solid var(--clr-fg-muted);
+  border-bottom: 1px solid var(--foreground-muted);
 }
 
 .head {
   height: 3rem;
-  color: var(--clr-fg-muted);
+  color: var(--foreground-muted);
   font-weight: 500;
   text-align: left;
   padding-left: 1rem;

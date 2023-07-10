@@ -11,8 +11,8 @@ export const Navbar = () => {
         right: 0,
         top: 0,
         left: 0,
-        background: "var(--clr-bg-base)",
-        borderBottom: "1px solid var(--clr-border-base)",
+        background: "var(--background-base)",
+        borderBottom: "1px solid var(--border-base)",
         padding: "16px 0",
       }}
     >

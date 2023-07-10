@@ -9,13 +9,13 @@
   
   width: 34px;
   height: 20px;
-  background: var(--clr-bg-inset);
+  background: var(--background-inset);
   border-radius: var(--br-16);
 
 }
 
 .switch[data-state="checked"] {
-  background: var(--clr-bg-accent-inverted)
+  background: var(--background-accent-inverted)
 }
 
 .thumb {
@@ -23,7 +23,7 @@
   left: 0;
   width: 16px;
   height: 16px;
-  background: var(--clr-fg-inverted);
+  background: var(--foreground-inverted);
   border-radius: var(--br-round);
   box-shadow: var(--shadow-xs);
   transform: translateX(2px);

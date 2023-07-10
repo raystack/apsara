@@ -18,18 +18,18 @@
   overflow: hidden;
 
   border-radius: var(--br-round);
-  border: 1px solid var(--clr-border-base);
+  border: 1px solid var(--border-base);
 }
 
 .radioitem:hover {
-  background: var(--clr-bg-base-hover);
-  border: 1px solid var(--clr-border-base-hover);
+  background: var(--background-base-hover);
+  border: 1px solid var(--border-base-hover);
 }
 
 .radioitem[data-state="checked"] {
   border: none;
   outline: none;
-  background: var(--clr-bg-accent-inverted)
+  background: var(--background-accent-inverted)
 }
 
 .radioitem-small {
@@ -56,5 +56,5 @@
   width: 8px;
   height: 8px;
   border-radius: var(--br-round);
-  background: var(--clr-fg-inverted)
+  background: var(--foreground-inverted)
 }

@@ -10,10 +10,10 @@
   z-index: 50;
   will-change: transform;
 
-  background-color: var(--clr-bg-base);
+  background-color: var(--background-base);
   border-radius: var(--br-4);
   box-shadow: var(--shadow-xs);
-  border: 1px solid var(--clr-border-subtle);
+  border: 1px solid var(--border-subtle);
 }
 
 .dialogContent:focus {
@@ -41,5 +41,5 @@
 }
 
 .close:hover {
-  background-color: var(--clr-bg-base-hover);
+  background-color: var(--background-base-hover);
 }

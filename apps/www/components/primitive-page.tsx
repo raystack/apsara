@@ -61,7 +61,9 @@ export function NavItem({
           alignItems: "center",
           marginBottom: "2px",
           borderRadius: "var(--br-4)",
-          backgroundColor: active ? "var(--clr-bg-base-hover)" : "transparent",
+          backgroundColor: active
+            ? "var(--background-base-hover)"
+            : "transparent",
           transition: "background-color 50ms linear",
           ...(disabled ? { pointerEvents: "none" } : {}),
         }}
@@ -72,7 +74,7 @@ export function NavItem({
             textDecoration: "none",
             padding: "12px 16px",
             width: "100%",
-            color: "var(--clr-fg-base)",
+            color: "var(--foreground-base)",
           }}
         >
           <Text size={3} style={{ fontWeight: active ? "500" : "none" }}>
@@ -112,7 +114,7 @@ export function PrimitivePage({
             width: "100%",
             maxWidth: "260px",
             overflow: "hidden",
-            borderRight: "1px solid var(--clr-border-base)",
+            borderRight: "1px solid var(--border-base)",
           }}
         >
           <LeftSideBar />

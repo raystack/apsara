@@ -5,14 +5,14 @@
   height: 100%;
   width: 100%;
   border-radius: var(--pd-4);
-  background-color: var(--clr-bg-base);
+  background-color: var(--background-base);
   box-shadow: var(--shadow-xs);
-  border: 1px solid var(--clr-border-base);
+  border: 1px solid var(--border-base);
 }
 
 .inputWrapper { 
   padding: 0 12px;
-  border-bottom: 1px solid var(--clr-border-base);
+  border-bottom: 1px solid var(--border-base);
 }
 
 .inputIcon { 
@@ -29,12 +29,12 @@
   border-radius: car(--pd-4);
   outline: none;
   border: none;
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
   
 }
 
 .input:placeholder {
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
 }
 
 .list {
@@ -56,7 +56,7 @@
 .group [cmdk-group-heading] {
   font-size: 10px;
   line-height: 16px;
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
   padding: var(--pd-4) var(--pd-8);
 }
 
@@ -67,9 +67,9 @@
 }
 
 .item:hover {
-  background-color: var(--clr-bg-hover);
+  background-color: var(--background-base-hover);
 }
 
 .separator {
-  border-bottom: 1px solid var(--clr-border-base);
+  border-bottom: 1px solid var(--border-base);
 }

@@ -12,7 +12,7 @@
   user-select: none;
   /* disable browser handling of all panning and zooming gestures on touch devices */
   touch-action: none;
-  background: var(--clr-bg-inset);
+  background: var(--background-inset);
   transition: background 160ms ease-out;
 }
 
@@ -27,7 +27,7 @@
 
 .scrollbarthumb {
   flex: 1;
-  background: var(--clr-border-base);
+  background: var(--border-base);
   border-radius: var(--scrollbar-size);
   position: relative;
 }

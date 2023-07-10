@@ -23,9 +23,9 @@
   font-weight: 500;
   
 
-  background-color: var(--clr-bg-inset);
+  background-color: var(--background-inset);
   border-radius: var(--br-pill); 
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
   
 }
 

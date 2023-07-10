@@ -6,20 +6,20 @@
   transition: all 0.2s ease;
   overflow: hidden;
   font-size: 14px;
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
   cursor: pointer;
 }
 
 .summary {
   box-sizing: border-box;
-  border-top: 1px solid var(--clr-border-base);
-  color: var(--clr-fg-base);
+  border-top: 1px solid var(--border-base);
+  color: var(--foreground-base);
   width: 100%;
   list-style: none;
   user-select: none;
   outline: none;
   cursor: pointer;
-  background-color: var(--clr-bg-base);
+  background-color: var(--background-base);
   margin-top: var(--pd-8) ;
 }
 

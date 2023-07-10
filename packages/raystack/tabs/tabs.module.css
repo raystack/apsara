@@ -27,12 +27,12 @@
 }
 
 .tablist button {
-  color: var(--clr-fg-muted);
+  color: var(--foreground-muted);
 }
 
 .tablist button[data-state="active"] {
-  background: var(--clr-bg-inset);
-  color: var(--clr-fg-base);
+  background: var(--background-inset);
+  color: var(--foreground-base);
 }
 
 .tablist button[data-orientation="vertical"] {
@@ -40,13 +40,13 @@
 }
 
 .tablist button[data-orientation="vertical"][data-state="active"] {
-  background: var(--clr-bg-inset);
-  color: var(--clr-fg-base);
+  background: var(--background-inset);
+  color: var(--foreground-base);
 }
 
 .tablist-underline button[data-state="active"] {
   background: none;
-  color: var(--clr-fg-accent);
+  color: var(--foreground-accent);
 }
 
 .tablist-underline button[data-orientation="vertical"] {
@@ -55,18 +55,18 @@
 
 .tablist-underline button[data-orientation="vertical"][data-state="active"] {
   background: none;
-  color: var(--clr-fg-accent);
+  color: var(--foreground-accent);
 }
 
 .tablist-elevated {
   padding: var(--pd-2);
-  background: var(--clr-bg-inset);
+  background: var(--background-inset);
 }
 
 .tablist-elevated button[data-state="active"] {
-  background: var(--clr-bg-base);
+  background: var(--background-base);
   box-shadow: var(--shadow-xs);
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
 }
 
 .tablist-elevated button[data-orientation="vertical"] {
@@ -74,9 +74,9 @@
 }
 
 .tablist-elevated button[data-orientation="vertical"][data-state="active"] {
-  background: var(--clr-bg-base);
+  background: var(--background-base);
   box-shadow: var(--shadow-xs);
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
 }
 
 

@@ -4,7 +4,7 @@
   cursor: pointer;
   text-decoration-line: none;
   text-underline-offset: 3px;
-  color: var(--clr-fg-base);
+  color: var(--foreground-base);
 }
 
 .link:hover {
