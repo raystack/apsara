@@ -1,4 +1,4 @@
-import { useApsaraTheme } from "@odpf/apsara";
+import { useApsaraTheme } from "@raystack/apsara";
 import { cva } from "class-variance-authority";
 import { themes } from "prism-react-renderer";
 import React from "react";

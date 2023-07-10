@@ -1,4 +1,4 @@
-import { Flex, Headline, Link, Text } from "@odpf/apsara";
+import { Flex, Headline, Link, Text } from "@raystack/apsara";
 import { getMDXComponent } from "mdx-bundler/client";
 import React from "react";
 import { components, MDXProvider } from "~/components/markdown/mdx";

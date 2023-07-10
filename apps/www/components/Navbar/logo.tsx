@@ -1,4 +1,4 @@
-import { Link } from "@odpf/apsara";
+import { Link } from "@raystack/apsara";
 import Image from "next/image";
 
 export const Logo = () => {

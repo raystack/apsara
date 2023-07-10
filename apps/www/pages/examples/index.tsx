@@ -1,4 +1,4 @@
-import { Container } from "@odpf/apsara";
+import { Container } from "@raystack/apsara";
 import { Shield } from "@raystack/shield-ts";
 
 export default function ShieldExample() {

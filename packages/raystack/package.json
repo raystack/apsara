@@ -51,7 +51,7 @@
     "class-variance-authority": "^0.6.0",
     "cmdk": "^0.2.0",
     "eslint-config-custom": "workspace:*",
-    "i": "^0.3.7",
+    "np": "^8.0.4",
     "npm": "^9.7.1",
     "parcel": "^2.9.2",
     "postcss": "^8.4.24",
@@ -62,8 +62,5 @@
     "tsconfig": "workspace:*",
     "typescript": "4.7",
     "usehooks-ts": "^2.9.1"
-  },
-  "dependencies": {
-    "np": "^8.0.4"
   }
 }

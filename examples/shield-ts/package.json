@@ -24,7 +24,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@odpf/apsara": "workspace:*",
+    "@raystack/apsara": "workspace:*",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-typescript": "^11.1.1",
     "@types/react": "^18.2.12",

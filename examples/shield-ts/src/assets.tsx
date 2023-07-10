@@ -1,4 +1,4 @@
-import { Checkbox, DataTable, Flex, Text, useTable } from "@odpf/apsara";
+import { Checkbox, DataTable, Flex, Text, useTable } from "@raystack/apsara";
 import { ColumnDef } from "@tanstack/react-table";
 import * as React from "react";
 

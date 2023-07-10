@@ -1,4 +1,4 @@
-import { Box, Link, Text } from "@odpf/apsara";
+import { Box, Link, Text } from "@raystack/apsara";
 import { MutableRefObject, useEffect, useState } from "react";
 import styles from "./toc.module.css";
 

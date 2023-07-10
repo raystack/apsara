@@ -1,4 +1,4 @@
-import { Table } from "@odpf/apsara";
+import { Table } from "@raystack/apsara";
 import props from "~/configs/props";
 
 type AttributesProps = {

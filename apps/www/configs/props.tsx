@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
-import { Flex, Text } from "@odpf/apsara";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { Flex, Text } from "@raystack/apsara";
 import React from "react";
 
 type ComponentProps = {

@@ -1,5 +1,3 @@
-import { Flex, ScrollArea, Sidebar } from "@odpf/apsara";
-import "@odpf/apsara/index.css";
 import {
   BlendingModeIcon,
   BoxIcon,
@@ -12,6 +10,8 @@ import {
   ReaderIcon,
   TargetIcon,
 } from "@radix-ui/react-icons";
+import { Flex, ScrollArea, Sidebar } from "@raystack/apsara";
+import "@raystack/apsara/index.css";
 import React from "react";
 import { Assets } from "./assets";
 

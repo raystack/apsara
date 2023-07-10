@@ -1,5 +1,5 @@
 // import { QuickNav } from "@components/QuickNav";
-import { Headline, Text } from "@odpf/apsara";
+import { Headline, Text } from "@raystack/apsara";
 import { getMDXComponent } from "mdx-bundler/client";
 import React from "react";
 import { components, MDXProvider } from "~/components/markdown/mdx";
