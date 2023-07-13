@@ -13,7 +13,12 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import React, { Children, ReactElement, ReactNode } from "react";
+import React, {
+  Children,
+  ComponentProps,
+  ReactElement,
+  ReactNode,
+} from "react";
 import { Flex } from "~/flex";
 import { Text } from "~/text";
 import styles from "./datatable.module.css";
@@ -29,17 +34,20 @@ import { Table } from "./table";
 import { TableContext } from "./TableContext";
 import { TableDetailContainer } from "./TableDetailContainer";
 
-interface DataTableProps<TData, TValue> {
+type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   multiRowSelectionEnabled?: boolean;
   children?: ReactNode;
-}
+  emptyState?: ReactNode;
+} & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
   columns,
   data,
+  emptyState,
   children,
+  ...props
 }: DataTableProps<TData, TValue>) {
   const convertedChildren = Children.toArray(children) as ReactElement[];
   const header = convertedChildren.find(
@@ -104,7 +112,7 @@ function DataTableRoot<TData, TValue>({
       >
         <Flex direction="column" className={styles.datatable}>
           {header}
-          <Table>
+          <Table {...props}>
             <Table.Header>
               {table.getHeaderGroups().map((headerGroup) => (
                 <Table.Row key={headerGroup.id}>
@@ -148,7 +156,9 @@ function DataTableRoot<TData, TValue>({
                 ))
               ) : (
                 <Table.Row>
-                  <Table.Cell colSpan={columns.length}>No results.</Table.Cell>
+                  <Table.Cell colSpan={columns.length}>
+                    {emptyState || "No results."}
+                  </Table.Cell>
                 </Table.Row>
               )}
             </Table.Body>

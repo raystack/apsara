@@ -1,6 +1,12 @@
+import commonjs from "@rollup/plugin-commonjs";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
+
+const defaultGlobals = {
+  react: "React",
+  "react-dom": "ReactDOM",
+};
 
 export default {
   input: "index.tsx",
@@ -8,22 +14,22 @@ export default {
     {
       dir: "dist",
       format: "es",
-      preserveModules: true,
-      preserveModulesRoot: "src",
+
       sourcemap: true,
+      exports: "named",
     },
     {
       dir: "dist",
       format: "cjs",
-      preserveModules: true,
-      preserveModulesRoot: "src",
       sourcemap: true,
+      exports: "named",
       entryFileNames: "[name].cjs",
     },
   ],
-  external: [/node_modules/],
+  external: ["react", "react-dom"],
   plugins: [
     nodeResolve(),
+    commonjs(),
     postcss({
       extract: true,
       modules: true,

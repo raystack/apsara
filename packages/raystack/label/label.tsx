@@ -16,12 +16,12 @@ const label = cva(styles.label, {
 });
 
 type LabelProps = PropsWithChildren<VariantProps<typeof label>> &
-  HTMLAttributes<HTMLSpanElement>;
+  HTMLAttributes<HTMLLabelElement>;
 
 export function Label({ children, className, size, ...props }: LabelProps) {
   return (
-    <span className={label({ size, className })} {...props}>
+    <label className={label({ size, className })} {...props}>
       {children}
-    </span>
+    </label>
   );
 }

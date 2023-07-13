@@ -5,7 +5,7 @@ import { Link } from "~/link";
 import { Text } from "~/text";
 import styles from "./sidebar.module.css";
 
-type SidebarRootProps = VariantProps<typeof Flex> & { children: ReactNode };
+type SidebarRootProps = VariantProps<typeof Flex> & { children?: ReactNode };
 const baseLogo = <img src="./logo.svg" alt="apsara" width={16} height={16} />;
 
 const SidebarRoot = ({ children }: SidebarRootProps) => {
@@ -18,13 +18,13 @@ const SidebarRoot = ({ children }: SidebarRootProps) => {
 
 type SidebarLogoProps = {
   img?: ReactNode;
-  brandName?: string;
+  name?: string;
   onClick?: () => void;
 };
 
 const SidebarLogo = ({
   img = baseLogo,
-  brandName = "Apsara",
+  name = "Apsara",
   onClick,
 }: SidebarLogoProps) => {
   return (
@@ -36,7 +36,7 @@ const SidebarLogo = ({
       onClick={onClick}
     >
       {img}
-      <Text>{brandName}</Text>
+      <Text>{name}</Text>
     </Flex>
   );
 };

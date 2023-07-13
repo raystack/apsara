@@ -45,7 +45,7 @@ const flex = cva(styles.flex, {
 });
 
 type BoxProps = PropsWithChildren<VariantProps<typeof flex>> &
-  HTMLAttributes<HTMLElement>;
+  HTMLAttributes<HTMLDivElement>;
 
 export function Flex({
   children,

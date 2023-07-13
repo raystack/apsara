@@ -5,7 +5,7 @@ import styles from "./box.module.css";
 const box = cva(styles.box);
 
 type BoxProps = PropsWithChildren<VariantProps<typeof box>> &
-  HTMLAttributes<HTMLElement>;
+  HTMLAttributes<HTMLDivElement>;
 
 export function Box({ children, className, ...props }: BoxProps) {
   return (
