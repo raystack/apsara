@@ -51,6 +51,7 @@ import { InputProps } from "./Input/Input";
 import { TooltipPlacement } from "./Tooltip/Tooltip";
 import Modal from "./Modal";
 import Alert from "./Alert";
+import { DotBadge } from "./Badge";
 export { DynamicList } from "./DynamicList";
 
 export * from "./Notification";
@@ -115,4 +116,5 @@ export {
     TooltipPlacement,
     Modal,
     Alert,
+    DotBadge,
 };
