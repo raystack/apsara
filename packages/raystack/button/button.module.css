@@ -79,7 +79,8 @@
 
 .button-secondary {
   color: var(--foreground-base);
-  background-color: var(--background-base)
+  background-color: var(--background-base);
+  border: 1px solid var(--border-base)
 }
 
 .button-secondary:hover, 

@@ -15,6 +15,7 @@ export { Flex } from "./flex";
 export { Grid } from "./grid";
 export { Headline } from "./headline";
 export { Image } from "./image";
+export { InputField } from "./inputfield";
 export { Label } from "./label";
 export { Link } from "./link";
 export { Popover } from "./popover";
