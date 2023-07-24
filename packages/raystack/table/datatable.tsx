@@ -112,58 +112,60 @@ function DataTableRoot<TData, TValue>({
       >
         <Flex direction="column" className={styles.datatable}>
           {header}
-          <Table {...props}>
-            <Table.Header>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <Table.Row key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <Table.Head key={header.id}>
-                        <Text className={styles.head}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                          {{
-                            asc: <ArrowUpIcon />,
-                            desc: <ArrowDownIcon />,
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </Text>
-                      </Table.Head>
-                    );
-                  })}
-                </Table.Row>
-              ))}
-            </Table.Header>
-            <Table.Body>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <Table.Row
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <Table.Cell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Table.Cell>
-                    ))}
+          <Flex>
+            <Table {...props}>
+              <Table.Header>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <Table.Row key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <Table.Head key={header.id}>
+                          <Text className={styles.head}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                            {{
+                              asc: <ArrowUpIcon />,
+                              desc: <ArrowDownIcon />,
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </Text>
+                        </Table.Head>
+                      );
+                    })}
                   </Table.Row>
-                ))
-              ) : (
-                <Table.Row>
-                  <Table.Cell colSpan={columns.length}>
-                    {emptyState || "No results."}
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </Table.Body>
-          </Table>
-          {detail}
+                ))}
+              </Table.Header>
+              <Table.Body>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <Table.Row
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <Table.Cell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </Table.Cell>
+                      ))}
+                    </Table.Row>
+                  ))
+                ) : (
+                  <Table.Row>
+                    <Table.Cell colSpan={columns.length}>
+                      {emptyState || "No results."}
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+            {detail}
+          </Flex>
         </Flex>
         {footer}
       </TableContext.Provider>

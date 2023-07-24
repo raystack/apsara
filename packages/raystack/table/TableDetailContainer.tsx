@@ -7,6 +7,11 @@ export interface TableDetailContainerProps {
 
 export const TableDetailContainer: FC<TableDetailContainerProps> = ({
   children,
+  ...props
 }) => {
-  return <Flex direction="column">{children}</Flex>;
+  return (
+    <Flex direction="column" {...props}>
+      {children}
+    </Flex>
+  );
 };
