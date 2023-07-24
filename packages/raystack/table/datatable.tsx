@@ -2,6 +2,8 @@ import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
+  SortingState,
+  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -9,9 +11,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
-  VisibilityState,
 } from "@tanstack/react-table";
 import React, {
   Children,
@@ -21,7 +21,6 @@ import React, {
 } from "react";
 import { Flex } from "~/flex";
 import { Text } from "~/text";
-import styles from "./datatable.module.css";
 import { DataTableClearFilter } from "./DataTableClearFilter";
 import { DataTableFilterChips } from "./DataTableFilterChips";
 import { DataTableFilterOptions } from "./DataTableFilterOptions";
@@ -29,10 +28,11 @@ import { DataTableFooter } from "./DataTableFooter";
 import { DataTableGloabalSearch } from "./DataTableGloabalSearch";
 import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTableViewOptions } from "./DataTableViewOptions";
-import { useTableColumn } from "./hooks/useTableColumn";
-import { Table } from "./table";
 import { TableContext } from "./TableContext";
 import { TableDetailContainer } from "./TableDetailContainer";
+import styles from "./datatable.module.css";
+import { useTableColumn } from "./hooks/useTableColumn";
+import { Table } from "./table";
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -179,4 +179,5 @@ export const DataTable = Object.assign(DataTableRoot, {
   ClearFilter: DataTableClearFilter,
   FilterChips: DataTableFilterChips,
   Footer: DataTableFooter,
+  DetailContainer: TableDetailContainer,
 });
