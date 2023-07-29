@@ -39,10 +39,6 @@ export {
 export { Tabs } from "./tabs";
 export { Text } from "./text";
 export { TextField } from "./textfield";
-export {
-  ApsaraThemeProvider,
-  ThemeSwitcher,
-  useApsaraTheme,
-} from "./themprovider";
+export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
 export { Title } from "./title";
 

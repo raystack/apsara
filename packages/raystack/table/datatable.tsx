@@ -14,6 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import React, {
+  CSSProperties,
   Children,
   ComponentProps,
   ReactElement,
@@ -40,6 +41,7 @@ type DataTableProps<TData, TValue> = {
   multiRowSelectionEnabled?: boolean;
   children?: ReactNode;
   emptyState?: ReactNode;
+  parentStyle?: CSSProperties;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -47,6 +49,7 @@ function DataTableRoot<TData, TValue>({
   data,
   emptyState,
   children,
+  parentStyle,
   ...props
 }: DataTableProps<TData, TValue>) {
   const convertedChildren = Children.toArray(children) as ReactElement[];
@@ -112,7 +115,7 @@ function DataTableRoot<TData, TValue>({
       >
         <Flex direction="column" className={styles.datatable}>
           {header}
-          <Flex>
+          <Flex style={parentStyle}>
             <Table {...props}>
               <Table.Header>
                 {table.getHeaderGroups().map((headerGroup) => (
