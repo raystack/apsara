@@ -10,9 +10,10 @@ type DataTableToolbarProps<TData> = VariantProps<typeof Flex> & {
 
 export function DataTableToolbar<TData>({
   children,
+  ...props
 }: DataTableToolbarProps<TData>) {
   return (
-    <Flex direction="column" className={styles.toolbar}>
+    <Flex direction="column" className={styles.toolbar} {...props}>
       {children}
     </Flex>
   );

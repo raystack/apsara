@@ -1,7 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { PropsWithChildren, ReactNode } from "react";
 import { Flex } from "~/flex";
-import { Link } from "~/link";
 import { Text } from "~/text";
 import styles from "./sidebar.module.css";
 
@@ -70,7 +69,7 @@ type SidebarNavigationCellProps = PropsWithChildren<
   leadingIcon?: React.ReactNode;
   trailingIcon?: React.ReactNode;
   children?: string;
-  href?: string;
+  onClick?: () => void;
 };
 
 const SidebarNavigationCell = ({
@@ -79,16 +78,16 @@ const SidebarNavigationCell = ({
   active,
   disabled,
   children,
-  href = "#",
+  onClick,
 }: SidebarNavigationCellProps) => {
   return (
-    <Link className={cell({ active, disabled })} href={href}>
+    <Flex className={cell({ active, disabled })} onClick={onClick}>
       <Flex gap="small">
         {leadingIcon}
         <Text className={styles.cellText}>{children}</Text>
       </Flex>
       {trailingIcon}
-    </Link>
+    </Flex>
   );
 };
 

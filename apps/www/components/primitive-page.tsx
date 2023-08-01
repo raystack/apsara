@@ -1,11 +1,4 @@
-import {
-  Box,
-  Flex,
-  Link,
-  ScrollArea,
-  Text,
-  useApsaraTheme,
-} from "@raystack/apsara";
+import { Box, Flex, Link, ScrollArea, Text } from "@raystack/apsara";
 import { useRouter } from "next/router";
 import { MutableRefObject, useRef } from "react";
 import type { Frontmatter } from "~/types/frontmatter";
@@ -50,8 +43,6 @@ export function NavItem({
   href,
   ...props
 }: NavItemProps) {
-  const { themeName } = useApsaraTheme();
-
   return (
     <Box>
       <Box

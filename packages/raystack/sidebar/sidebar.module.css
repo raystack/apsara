@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--pd-8);
-  
+  cursor: pointer;
 }
 
 .cell:hover,

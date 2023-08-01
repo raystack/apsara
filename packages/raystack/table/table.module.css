@@ -3,10 +3,10 @@
   font-size: 12px;
   line-height: 16px;
   caption-side: bottom;
-  color: var(--foreground-base)
+  color: var(--foreground-base);
 }
 
-.caption{
+.caption {
   margin-top: var(--mr-16);
   color: var(--foreground-muted);
 }
@@ -23,13 +23,14 @@
   padding-left: 1rem;
   padding-right: 1rem;
   vertical-align: middle;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .row {
-  border-bottom: 1px solid #000;
 }
 
 .cell {
   font-weight: 500;
   padding: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
