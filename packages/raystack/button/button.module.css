@@ -9,6 +9,7 @@
   font-size: var(--fs-100);
   font-weight: 500;
   line-height: var(--fs-600);
+  width: fit-content;
   transition: background-color var(--transition);
   padding:  var(--pd-4) var(--pd-12);
   border-radius: var(--br-4);  
