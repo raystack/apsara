@@ -17,10 +17,11 @@ const SidebarRoot = ({ children }: SidebarRootProps) => {
 type SidebarLogoProps = {
   img?: ReactNode;
   name?: string;
+  logo?: ReactNode;
   onClick?: () => void;
 };
 
-const SidebarLogo = ({ name = "Apsara", onClick }: SidebarLogoProps) => {
+const SidebarLogo = ({ name = "Apsara", logo, onClick }: SidebarLogoProps) => {
   return (
     <Flex
       align="center"
@@ -29,17 +30,7 @@ const SidebarLogo = ({ name = "Apsara", onClick }: SidebarLogoProps) => {
       onClick={onClick}
       className={styles.logo}
     >
-      <Flex gap="small">
-        <div
-          style={{
-            width: "12px",
-            height: "12px",
-            borderRadius: "50%",
-            backgroundColor: "var(--background-danger-inverted)",
-            border: "1px solid var(--foreground-subtle)",
-          }}
-        ></div>
-      </Flex>
+      <Flex gap="small">{logo}</Flex>
       <Text>{name}</Text>
     </Flex>
   );
