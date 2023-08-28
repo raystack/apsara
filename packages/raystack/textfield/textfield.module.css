@@ -66,3 +66,7 @@
 .textfield-valid:focus {
   border: 1px solid var(--border-success);
 }
+
+.textfield-leading {
+  padding-left: 32px;
+}

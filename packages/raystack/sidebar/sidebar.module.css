@@ -23,6 +23,7 @@
 
 .navigationgroupcontent {
   padding-left: 24px;
+  gap: 1px;
 }
 
 .cell {
