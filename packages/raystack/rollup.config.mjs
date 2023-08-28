@@ -1,7 +1,9 @@
 import commonjs from "@rollup/plugin-commonjs";
+import image from "@rollup/plugin-image";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
+
 
 const defaultGlobals = {
   react: "React",
@@ -37,5 +39,6 @@ export default {
     typescript({
       tsconfig: "tsconfig.json",
     }),
+    image(),
   ],
 };

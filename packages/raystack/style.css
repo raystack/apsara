@@ -14,7 +14,7 @@
   --background-inset-hover: #E6E8EB;
   --background-subtle: #F8F9FA;
   --background-highlight: #889096;
-  --background-invertedd: #3C4347;
+  --background-inverted: #3C4347;
   --background-accent: #E6EDFE;
   --background-accent-inverted: #3E63DD;
   --background-accent-inverted-hover: #3A5CCC;
@@ -33,7 +33,7 @@
   --border-accent: #AEC0F5;
   --border-accent-inverted: #3E63DD;
   --border-accent-inverted-hover: #3A5CCC;
-  --border-attention: #3A5CCC;
+  --border-attention: #F3BA63;
   --border-attention-inverted: #FFB224;
   --border-danger: #F3AEAF;
   --border-danger-inverted: #E5484D;

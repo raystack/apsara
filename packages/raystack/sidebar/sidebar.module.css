@@ -3,18 +3,27 @@
   max-width: 220px;
   height: 100%;
   padding: var(--pd-16);
-  padding-right: 0;
   border-right: 1px solid var(--border-base);
-  overflow: hidden
-}
-
-.logo {
-  padding: var(--pd-8);
-  cursor: pointer;
+  background: var(--background-base)
 }
 
 .navigations {
+  width: 100%;
   gap: 2px;
+}
+
+.navigationgroup {
+  gap: var(--pd-2);
+}
+
+.navigationgroupheading {
+  gap: var(--pd-8);
+  padding: var(--pd-8);
+ 
+}
+
+.navigationgroupcontent {
+  padding-left: 24px;
 }
 
 .cell {
@@ -38,6 +47,7 @@
 
 .cellText {
   font-weight: 500;
+  color: var(--foreground-base);
 }
 
 .footer {

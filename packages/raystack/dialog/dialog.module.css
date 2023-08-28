@@ -3,10 +3,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 200;
-  max-height: 85vh;
+  min-width: 200px;
+  min-height: 200px;
   padding: var(--pd-16);
-  margin-top: -5vh;
   z-index: 50;
   will-change: transform;
 
@@ -24,7 +23,7 @@
   position: fixed;
   inset: 0;
 
-  background-color: rgba(0, 0, 0, .15);
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .close {
@@ -34,7 +33,7 @@
   border-radius: 4px;
   padding: 4px;
   font-weight: 500;
-  
+
   position: absolute;
   top: 8px;
   right: 8px;

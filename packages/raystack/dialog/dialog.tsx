@@ -20,7 +20,6 @@ export const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps & { close?: boolean }
 >(({ className, children, close, ...props }, forwardedRef) => {
-  console.log(close);
   return (
     <DialogPrimitive.Portal>
       <Overlay />

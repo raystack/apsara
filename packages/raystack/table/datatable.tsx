@@ -122,7 +122,12 @@ function DataTableRoot<TData, TValue>({
                   <Table.Row key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       return (
-                        <Table.Head key={header.id}>
+                        <Table.Head
+                          key={header.id}
+                          style={{
+                            ...(header.column.columnDef?.meta?.style ?? {}),
+                          }}
+                        >
                           <Text className={styles.head}>
                             {header.isPlaceholder
                               ? null
@@ -149,7 +154,12 @@ function DataTableRoot<TData, TValue>({
                       data-state={row.getIsSelected() && "selected"}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <Table.Cell key={cell.id}>
+                        <Table.Cell
+                          key={cell.id}
+                          style={{
+                            ...(cell.column.columnDef?.meta?.style ?? {}),
+                          }}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()

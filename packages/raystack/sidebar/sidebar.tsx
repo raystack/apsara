@@ -2,11 +2,10 @@ import { cva, VariantProps } from "class-variance-authority";
 import { PropsWithChildren, ReactNode } from "react";
 import { Flex } from "~/flex";
 import { Text } from "~/text";
+
 import styles from "./sidebar.module.css";
 
 type SidebarRootProps = VariantProps<typeof Flex> & { children?: ReactNode };
-const baseLogo = <img src="./logo.svg" alt="apsara" width={16} height={16} />;
-
 const SidebarRoot = ({ children }: SidebarRootProps) => {
   return (
     <Flex direction="column" justify="between" className={styles.sidebar}>
@@ -18,23 +17,20 @@ const SidebarRoot = ({ children }: SidebarRootProps) => {
 type SidebarLogoProps = {
   img?: ReactNode;
   name?: string;
+  logo?: ReactNode;
   onClick?: () => void;
 };
 
-const SidebarLogo = ({
-  img = baseLogo,
-  name = "Apsara",
-  onClick,
-}: SidebarLogoProps) => {
+const SidebarLogo = ({ name = "Apsara", logo, onClick }: SidebarLogoProps) => {
   return (
     <Flex
       align="center"
       direction="row"
       gap="small"
-      className={styles.logo}
       onClick={onClick}
+      className={styles.logo}
     >
-      {img}
+      <Flex gap="small">{logo}</Flex>
       <Text>{name}</Text>
     </Flex>
   );
@@ -52,6 +48,30 @@ const SidebarNavigations = ({
   );
 };
 
+type SidebarNavigationsGroupProps = PropsWithChildren<
+  VariantProps<typeof Flex> & { icon?: React.ReactNode; name: string }
+>;
+const SidebarNavigationsGroup = ({
+  icon,
+  name,
+  children,
+  ...props
+}: SidebarNavigationsGroupProps) => {
+  return (
+    <Flex direction="column" className={styles.navigationgroup} {...props}>
+      <Flex className={styles.navigationgroupheading}>
+        {icon && icon}
+        <Text size={2} style={{ color: "var(--foreground-muted)" }}>
+          {name}
+        </Text>
+      </Flex>
+      <Flex direction="column" className={styles.navigationgroupcontent}>
+        {children}
+      </Flex>
+    </Flex>
+  );
+};
+
 const cell = cva(styles.cell, {
   variants: {
     active: {
@@ -63,14 +83,13 @@ const cell = cva(styles.cell, {
   },
 });
 
-type SidebarNavigationCellProps = PropsWithChildren<
-  VariantProps<typeof cell>
-> & {
-  leadingIcon?: React.ReactNode;
-  trailingIcon?: React.ReactNode;
-  children?: string;
-  onClick?: () => void;
-};
+type SidebarNavigationCellProps = PropsWithChildren<VariantProps<typeof cell>> &
+  VariantProps<typeof Flex> & {
+    leadingIcon?: React.ReactNode;
+    trailingIcon?: React.ReactNode;
+    children?: React.ReactNode;
+    onClick?: () => void;
+  };
 
 const SidebarNavigationCell = ({
   leadingIcon,
@@ -78,15 +97,22 @@ const SidebarNavigationCell = ({
   active,
   disabled,
   children,
-  onClick,
-}: SidebarNavigationCellProps) => {
+  asChild = false,
+  ...props
+}: SidebarNavigationCellProps & { asChild?: boolean }) => {
   return (
-    <Flex className={cell({ active, disabled })} onClick={onClick}>
-      <Flex gap="small">
-        {leadingIcon}
-        <Text className={styles.cellText}>{children}</Text>
-      </Flex>
-      {trailingIcon}
+    <Flex className={cell({ active, disabled })} {...props}>
+      {asChild ? (
+        children
+      ) : (
+        <>
+          <Flex gap="small">
+            {leadingIcon}
+            <Text className={styles.cellText}>{children}</Text>
+          </Flex>
+          {trailingIcon}
+        </>
+      )}
     </Flex>
   );
 };
@@ -108,6 +134,7 @@ const SidebarFooter = ({ children, action }: SidebarFooterProps) => {
 export const Sidebar = Object.assign(SidebarRoot, {
   Logo: SidebarLogo,
   Navigations: SidebarNavigations,
+  NavigationGroup: SidebarNavigationsGroup,
   NavigationCell: SidebarNavigationCell,
   Footer: SidebarFooter,
 });
