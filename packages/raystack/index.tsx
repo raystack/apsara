@@ -11,6 +11,7 @@ export { Dialog } from "./dialog";
 export { Display } from "./display";
 export { DropdownMenu } from "./dropdown-menu";
 export { EmptyState } from "./emptystate";
+export { ErrorState } from "./errorstate";
 export { Flex } from "./flex";
 export { Grid } from "./grid";
 export { Headline } from "./headline";

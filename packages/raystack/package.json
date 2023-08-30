@@ -1,6 +1,6 @@
 {
   "name": "@raystack/apsara",
-  "version": "0.10.7",
+  "version": "0.10.8",
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "engines": {
