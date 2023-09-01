@@ -21,7 +21,7 @@
     "build": "rollup --config",
     "dev": "rollup --config --watch",
     "lint": "eslint \"**/*.ts*\"",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist && rm -rf react/dist",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "keywords": [],

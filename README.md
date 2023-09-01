@@ -1,81 +1,52 @@
-# Turborepo starter
+# Apsara
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](LICENSE)
 
-This is an official starter Turborepo.
 
-## Using this example
+Apsara 🧚‍♀️ is an open-source re-usable UI components build using Radix UI and Stitches CSS-in-JS to power the projects for Open Data Platform.
+Open Data Platform has a large number of enterprise-level products. With complex scenarios, designers and developers often need to respond fast due to frequent changes in product demands and concurrent R & D workflow. Many similar contents exist in the process. Through abstraction, we could obtain some stable and highly reusable components and pages on top of Radix UI.
+  
+<p align="center"><img  width=80% src="./apps/www/public/banner.png" /></p>
 
-Run the following command:
+## Key Features
+Discover why users choose Apsara as the design system for their projects
+
+* **Flexible** Apsara components are built on top of a Radix UI Primitive and Stitches CSS-in-JS for endless composability.
+* **Enterprise-grade** Apsara features a UI design language for enterprise-grade web applications.
+* **Abstraction** Apsara provides abstracted components for bulding complex data interfaces.
+
+## Usage
+
 
 ```sh
-npx create-turbo@latest
+$ yarn add @odpf/apsara
+# or
+$ npm install --save @odpf/apsara
 ```
 
-## What's inside?
+Use Apsara components inside your react project
 
-This Turborepo includes the following packages/apps:
+```js
+import { Button } from "@odpf/apsara";
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
+<Button type="primary">
+  I am using 🧚‍♀️ Apsara!
+</Button>
 ```
 
-### Develop
+## Contribute
 
-To develop all apps and packages, run the following command:
+Development of Apsara happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and
+improvements. Read below to learn how you can take part in improving Apsara.
 
-```
-cd my-turborepo
-pnpm dev
-```
+Read our contributing guide to learn about our development process, how to propose
+bugfixes and improvements, and how to build and test your changes to Apsara.
 
-### Remote Caching
+To help you get your feet wet and get you familiar with our contribution process, we have a list of
+[good first issues](https://github.com/odpf/apsara/labels/good%20first%20issue) that contain bugs which have a relatively
+limited scope. This is a great place to get started.
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+This project exists thanks to all the [contributors](https://github.com/odpf/apsara/graphs/contributors).
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+## License
 
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Apsara is [Apache 2.0](LICENSE) licensed.
