@@ -1,9 +1,9 @@
 import { PlusIcon } from "@radix-ui/react-icons";
 import { ComponentProps } from "react";
 import { Flex } from "~/flex";
-import styles from "./datatable.module.css";
 import { DataTableFilterOptions } from "./DataTableFilterOptions";
 import { FilteredChip } from "./FilteredChip";
+import styles from "./datatable.module.css";
 import { useTable } from "./hooks/useTable";
 
 type DataTableFilterChipsProps = ComponentProps<typeof Flex>;
@@ -22,7 +22,7 @@ export function DataTableFilterChips(props: DataTableFilterChipsProps) {
     <Flex gap="small" align="center" className={styles.chipWrapper} {...props}>
       {filteredColumns.map((filter, index) => {
         const filteredColumn = table.getColumn(filter)!;
-        return <FilteredChip column={filteredColumn} />;
+        return <FilteredChip key={index} column={filteredColumn} />;
       })}
 
       {filteredColumns.length < tableColumns.length && (

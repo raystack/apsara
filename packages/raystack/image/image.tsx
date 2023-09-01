@@ -7,6 +7,6 @@ const image = cva(styles.image);
 type ImageProps = PropsWithChildren<VariantProps<typeof image>> &
   ImgHTMLAttributes<HTMLImageElement>;
 
-export function Image({ children, className, ...props }: ImageProps) {
-  return <img className={image({ className })} {...props} />;
+export function Image({ alt, children, className, ...props }: ImageProps) {
+  return <img alt={alt} className={image({ className })} {...props} />;
 }
