@@ -2,6 +2,7 @@
   "name": "@raystack/shield-ts",
   "version": "0.0.1",
   "types": "dist/index.d.ts",
+  "private": true,
   "sideEffects": false,
   "exports": {
     ".": {

@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "changeset": "changeset",
     "build": "turbo build --filter=@raystack/apsara",
     "dev": "turbo dev --filter=@raystack/apsara",
     "lint": "turbo lint --filter=@raystack/apsara",
