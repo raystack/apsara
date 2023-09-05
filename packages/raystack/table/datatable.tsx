@@ -40,6 +40,7 @@ type DataTableProps<TData, TValue> = {
   data: TData[];
   multiRowSelectionEnabled?: boolean;
   children?: ReactNode;
+  ShouldShowHeader?: boolean;
   emptyState?: ReactNode;
   parentStyle?: CSSProperties;
 } & ComponentProps<typeof Table>;
@@ -50,18 +51,17 @@ function DataTableRoot<TData, TValue>({
   emptyState,
   children,
   parentStyle,
+  ShouldShowHeader = true,
   ...props
 }: DataTableProps<TData, TValue>) {
   const convertedChildren = Children.toArray(children) as ReactElement[];
-  const header = convertedChildren.find(
-    (child) => child.type === DataTableToolbar
-  ) || <></>;
-  const footer = convertedChildren.find(
-    (child) => child.type === DataTableFooter
-  ) || <></>;
-  const detail = convertedChildren.find(
-    (child) => child.type === TableDetailContainer
-  ) || <></>;
+  const header =
+    convertedChildren.find((child) => child.type === DataTableToolbar) || null;
+  const footer =
+    convertedChildren.find((child) => child.type === DataTableFooter) || null;
+  const detail =
+    convertedChildren.find((child) => child.type === TableDetailContainer) ||
+    null;
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -79,6 +79,7 @@ function DataTableRoot<TData, TValue>({
     columns,
     globalFilterFn: "auto",
     enableRowSelection: true,
+    manualPagination: true,
     onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -99,6 +100,8 @@ function DataTableRoot<TData, TValue>({
     },
   });
 
+  console.log(table.getRowModel().rows?.length);
+
   return (
     <Flex direction="column" justify="between" className={styles.wrapper}>
       <TableContext.Provider
@@ -115,36 +118,39 @@ function DataTableRoot<TData, TValue>({
       >
         <Flex direction="column" className={styles.datatable}>
           {header}
-          <Flex style={parentStyle}>
+          <Flex className={styles.tableContainer} style={parentStyle}>
             <Table {...props}>
               <Table.Header>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <Table.Row key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <Table.Head
-                          key={header.id}
-                          style={{
-                            ...(header.column.columnDef?.meta?.style ?? {}),
-                          }}
-                        >
-                          <Text className={styles.head}>
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                            {{
-                              asc: <ArrowUpIcon />,
-                              desc: <ArrowDownIcon />,
-                            }[header.column.getIsSorted() as string] ?? null}
-                          </Text>
-                        </Table.Head>
-                      );
-                    })}
-                  </Table.Row>
-                ))}
+                {ShouldShowHeader
+                  ? table.getHeaderGroups().map((headerGroup) => (
+                      <Table.Row key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => {
+                          return (
+                            <Table.Head
+                              key={header.id}
+                              style={{
+                                ...(header.column.columnDef?.meta?.style ?? {}),
+                              }}
+                            >
+                              <Text className={styles.head}>
+                                {header.isPlaceholder
+                                  ? null
+                                  : flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext()
+                                    )}
+                                {{
+                                  asc: <ArrowUpIcon />,
+                                  desc: <ArrowDownIcon />,
+                                }[header.column.getIsSorted() as string] ??
+                                  null}
+                              </Text>
+                            </Table.Head>
+                          );
+                        })}
+                      </Table.Row>
+                    ))
+                  : null}
               </Table.Header>
               <Table.Body>
                 {table.getRowModel().rows?.length ? (

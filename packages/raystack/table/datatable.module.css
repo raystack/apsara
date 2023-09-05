@@ -7,6 +7,11 @@
   flex: 1;
 }
 
+.table {
+  height: 100vh;
+  overflow: visible;
+}
+
 .head {
   display: flex;
   flex-direction: row;
@@ -17,10 +22,6 @@
   width: 100%;
   padding: 16px 24px;
   border-bottom: 1px solid var(--border-base);
-}
-
-.chipWrapper {
-  
 }
 
 .chip {
