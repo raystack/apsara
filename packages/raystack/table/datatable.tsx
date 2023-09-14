@@ -80,6 +80,7 @@ function DataTableRoot<TData, TValue>({
     globalFilterFn: "auto",
     enableRowSelection: true,
     manualPagination: true,
+    pageCount: -1,
     onGlobalFilterChange: setGlobalFilter,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -99,8 +100,6 @@ function DataTableRoot<TData, TValue>({
       rowSelection,
     },
   });
-
-  console.log(table.getRowModel().rows?.length);
 
   return (
     <Flex direction="column" justify="between" className={styles.wrapper}>
