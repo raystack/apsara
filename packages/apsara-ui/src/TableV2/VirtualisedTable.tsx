@@ -37,8 +37,8 @@ function VirtualisedTable({
     loading = false,
 }: ITableProps) {
     useEffect(() => {
-        if (!dataFetchFunction && items?.length) {
-            setData({ rows: items });
+        if (!dataFetchFunction) {
+            setData({ rows: items || [] });
         }
     }, [items]);
 
