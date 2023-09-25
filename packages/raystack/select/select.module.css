@@ -20,6 +20,7 @@
   
   gap: var(--pd-4);
   padding: var(--pd-4) var(--pd-8);
+  color: var(--foreground-base);
 }
 
 .menuitem:hover, 
