@@ -1,5 +1,12 @@
 # www
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [8eaeaec]
+  - @raystack/apsara@0.11.2
+
 ## 0.0.3
 
 ### Patch Changes

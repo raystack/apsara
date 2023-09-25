@@ -1,5 +1,11 @@
 # @raystack/apsara
 
+## 0.11.2
+
+### Patch Changes
+
+- 8eaeaec: fix: select options font color
+
 ## 0.11.1
 
 ### Patch Changes
