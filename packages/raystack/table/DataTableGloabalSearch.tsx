@@ -10,7 +10,9 @@ export function DataTableGloabalSearch(props: DataTableGloabalSearchProps) {
   return (
     <TextField
       // @ts-ignore
-      leading={<MagnifyingGlassIcon />}
+      leading={
+        <MagnifyingGlassIcon style={{ color: "var(--foreground-base)" }} />
+      }
       placeholder="Filter tasks..."
       value={globalFilter ?? ""}
       onChange={(event) => onGlobalFilterChange(String(event.target.value))}
