@@ -7,48 +7,56 @@ export default {
     component: Listing,
 };
 
-function getData(page = 1) {
+interface User {
+    key: number;
+    name: string;
+    status: "active" | "inactive";
+    age: number;
+    address: string;
+}
+
+function getData(page = 1): User[] {
     return new Array(page * 100).fill(0).map((_, index) => {
         return {
             key: index,
             name: `name ${index}`,
+            status: index%2 ? "active" : "inactive",
             age: index,
-            address: "10 Downing Street",
+            address: `A${index} Downing Street`,
         };
     });
 }
 
+const data = getData(1);
+
 export const listing = () => (
-    <Listing
+    <Listing<User>
         loading={false}
         sortable
         defaultSearchTerm="name 1"
-        list={new Array(100).fill(0).map((_, index) => {
-            return {
-                id: index,
-                name: `name ${index}`,
-                class: index % 2 === 0 ? "active" : "inactive",
-                isEven: index % 2 === 0 ? "true" : "false",
-                address: "10 Downing Street",
-            };
-        })}
+        list={data}
         tableProps={{
             getColumnList: () => {
                 return [
                     {
                         title: "Name",
-                        dataIndex: "name",
                         key: "name",
+                        render: ({ row: { original } }) => original.name,
                     },
                     {
-                        title: "Class",
-                        dataIndex: "class",
-                        key: "class",
+                        title: "Status",
+                        key: "status",
+                        render: ({ row: { original } }) => original.status,
                     },
                     {
-                        title: "is Even",
-                        dataIndex: "isEven",
-                        key: "isEven",
+                        title: "Age",
+                        key: "age",
+                        render: ({ row: { original } }) => original.age,
+                    },
+                    {
+                        title: "Address",
+                        key: "address",
+                        render: ({ row: { original } }) => original.address,
                     },
                 ];
             },
@@ -58,24 +66,17 @@ export const listing = () => (
             filterFieldList: [
                 {
                     name: "Status",
-                    data: ["active", "inactive", "foo", "bar", "a", "b", "c", "d"].map((d) => {
-                        return { label: d, value: d.toLowerCase() };
-                    }),
-                    slug: "class",
-                    multi: false,
-                    searchEnabled: true,
-                },
-                {
-                    name: "Is Even",
-                    data: ["true", "false"].map((d) => {
-                        return { label: d, value: d.toLowerCase() };
-                    }),
-                    slug: "isEven",
+                    data: [
+                        { label: "Active", value: "active" },
+                        { label: "Inactive", value: "inactive" },
+                    ],
+                    slug: "status",
+                    multi: true,
                 },
             ],
         }}
         searchProps={{
-            searchFields: ["name", "class"],
+            searchFields: ["name", "address"],
         }}
         resourcePath="/beast"
     />

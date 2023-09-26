@@ -1,28 +1,32 @@
+import { SorterResult } from "../Table/TableProps";
 import { IVirtualTable } from "../Table/VirtualisedTable";
-export interface ListingProps {
-    list?: any[];
+import { Column } from "../TableV2/VirtualisedTable";
+
+export type ColumnRenderFunc<T> = (path: string, sortedInfo: SorterResult<T>) => Column<T>[];
+
+export interface ListingProps<T> {
+    list?: T[];
     loading?: boolean;
     resourceName?: string;
     resourcePath?: string;
     rowKey?: string;
     className?: string;
     tableProps?: {
-        getColumnList?: any;
-        handleRowClick?: (event: any, rowIndexData: any) => void;
+        getColumnList?: ColumnRenderFunc<T>;
         selectedRowId?: number;
         scroll?: any;
     } & Omit<IVirtualTable, "columns" | "items">;
     filterProps?: { filterFieldList?: IGroupOptions[] };
     searchProps?: {
         searchPlaceholder?: string;
-        searchFields?: any[];
+        searchFields?: string[];
         disabled?: boolean;
     };
-    renderExtraFilters?: any;
-    renderHeader?: any;
-    renderBody?: any;
-    calculateRowHeight?: any;
-    calculateColumnWidth?: any;
+    calculateRowHeight?: (index: number, defaultRowHeight: number) => number;
+    calculateColumnWidth?: (index: number, defaultColumnWidth: number) => number;
+    renderExtraFilters?: React.ReactNode;
+    renderHeader?: React.ReactNode;
+    renderBody?: React.ReactNode;
     rowClick?: (props: any) => any;
     sortable?: boolean;
     defaultSearchTerm?: string;

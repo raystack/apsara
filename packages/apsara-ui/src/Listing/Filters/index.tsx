@@ -29,8 +29,9 @@ const renderFilterList = ({
     return (
         <FilterPopup>
             <FilterBody>
-                {filterFieldList.map((group: any) => (
+                {filterFieldList.map((group: any, index: number) => (
                     <RenderFilterBodyColumn
+                        key={index}
                         group={group}
                         filteredFieldData={filteredFieldData}
                         onGroupFilter={onGroupFilter}

@@ -57,8 +57,8 @@ export interface IVirtualTable extends TableProps<any> {
     };
     loadMore?: () => Promise<void> | null;
     onRowClick?: (event: any, rowIndexData: any) => void;
-    calculateRowHeight?: any;
-    calculateColumnWidth?: any;
+    calculateRowHeight?: (index: number, defaultRowHeight: number) => number;
+    calculateColumnWidth?: (index: number, defaultRowHeight: number) => number;
     alternate?: boolean;
     alternateHover?: boolean;
     className?: string;
