@@ -91,6 +91,9 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 export const Select = Object.assign(SelectPrimitive.Root, {
   Group: SelectPrimitive.Group,
   Value: SelectPrimitive.Value,
+  ScrollUpButton: SelectPrimitive.ScrollDownButton,
+  ScrollDownButton: SelectPrimitive.ScrollDownButton,
+  Viewport: SelectPrimitive.Viewport,
   Trigger: SelectTrigger,
   Content: SelectContent,
   Label: SelectLabel,
