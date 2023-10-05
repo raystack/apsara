@@ -7,6 +7,7 @@
   border: none;
   border-radius: var(--br-round);   
   background: var(--background-inset);
+  border: 1px solid transparent;
   width: 32px;
   height: 32px;
 }
