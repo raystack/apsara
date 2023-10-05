@@ -81,6 +81,11 @@
   border: 1px solid var(--border-accent-inverted)
 }
 
+.trigger:disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .trigger::placeholder {
   color: var(--foreground-subtle);
   font-size: 12px;
