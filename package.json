@@ -1,17 +1,15 @@
 {
   "private": true,
   "scripts": {
-    "changeset": "changeset",
     "build": "turbo build --filter=@raystack/apsara",
     "dev": "turbo dev --filter=@raystack/apsara",
     "lint": "turbo lint --filter=@raystack/apsara",
     "clean": "turbo clean --filter=@raystack/apsara",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "ci:version": "changeset version",
-    "ci:release": "turbo build --filter=@raystack/apsara... && changeset publish"
+    "ci:build": "turbo build --filter=@raystack/apsara",
+    "ci:release": "turbo release --filter=@raystack/apsara -- --ci --no-increment"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.26.2",
     "@parcel/packager-ts": "2.9.2",
     "@parcel/transformer-typescript-types": "2.9.2",
     "@turbo/gen": "^1.9.7",
