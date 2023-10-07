@@ -21,6 +21,7 @@
     "build": "rollup --config",
     "dev": "rollup --config --watch",
     "lint": "eslint \"**/*.ts*\"",
+    "release": "release-it",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist && rm -rf react/dist",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
@@ -63,5 +64,8 @@
     "tsconfig": "workspace:*",
     "typescript": "4.7",
     "usehooks-ts": "^2.9.1"
+  },
+  "dependencies": {
+    "release-it": "^16.2.1"
   }
 }
