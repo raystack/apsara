@@ -101,6 +101,10 @@ function DataTableRoot<TData, TValue>({
     },
   });
 
+  const tableStyle = table.getRowModel().rows?.length
+    ? { width: "100%" }
+    : { width: "100%", height: "100%" };
+
   return (
     <Flex direction="column" justify="between" className={styles.wrapper}>
       <TableContext.Provider
@@ -118,7 +122,7 @@ function DataTableRoot<TData, TValue>({
         <Flex direction="column" className={styles.datatable}>
           {header}
           <Flex className={styles.tableContainer} style={parentStyle}>
-            <Table {...props}>
+            <Table {...props} style={tableStyle}>
               <Table.Header>
                 {ShouldShowHeader
                   ? table.getHeaderGroups().map((headerGroup) => (
