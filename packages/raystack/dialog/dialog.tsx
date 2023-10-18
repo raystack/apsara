@@ -18,26 +18,35 @@ export interface DialogContentProps
 
 export const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
-  DialogContentProps & { close?: boolean }
->(({ className, children, close, ...props }, forwardedRef) => {
-  return (
-    <DialogPrimitive.Portal>
-      <Overlay />
-      <DialogPrimitive.Content
-        {...props}
-        ref={forwardedRef}
-        className={dialogContent({ className })}
-      >
-        {children}
-        {close && (
-          <CloseButton>
-            <Cross1Icon />
-          </CloseButton>
-        )}
-      </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
-  );
-});
+  DialogContentProps & {
+    close?: boolean;
+    overlayStyle?: React.CSSProperties;
+    overlayClassname?: string;
+  }
+>(
+  (
+    { className, children, close, overlayStyle, overlayClassname, ...props },
+    forwardedRef
+  ) => {
+    return (
+      <DialogPrimitive.Portal>
+        <Overlay className={overlayClassname} style={overlayStyle} />
+        <DialogPrimitive.Content
+          {...props}
+          ref={forwardedRef}
+          className={dialogContent({ className })}
+        >
+          {children}
+          {close && (
+            <CloseButton>
+              <Cross1Icon />
+            </CloseButton>
+          )}
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    );
+  }
+);
 
 const overlay = cva(styles.overlay);
 export interface OverlayProps
