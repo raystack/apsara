@@ -12,6 +12,7 @@
   box-shadow: var(--shadow-xs);
   border-radius: var(--br-4);
   color: var(--foreground-base);
+  padding: var(--pd-4);
 }
 
 .textfield:-webkit-autofill {

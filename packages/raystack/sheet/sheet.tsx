@@ -31,7 +31,7 @@ export interface DialogContentProps
 
 export const SheetContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
-  DialogContentProps & { close?: boolean }
+  DialogContentProps & { close?: boolean; children?: React.ReactNode }
 >(({ className, children, close, side, ...props }, forwardedRef) => {
   return (
     <DialogPrimitive.Portal>

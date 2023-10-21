@@ -29,13 +29,8 @@ type InputFieldProps = PropsWithChildren<VariantProps<typeof inputfield>> &
 
 export const InputField = ({ label, children, ...props }: InputFieldProps) => {
   return (
-    <Flex
-      direction="column"
-      style={{ width: "100%" }}
-      gap="extra-small"
-      {...props}
-    >
-      {label && <Label>{label}</Label>}
+    <Flex direction="column" gap="extra-small" {...props}>
+      {label && <Label className={styles.bold}>{label}</Label>}
       {children}
     </Flex>
   );

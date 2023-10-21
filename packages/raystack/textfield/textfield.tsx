@@ -1,5 +1,5 @@
 import { cva, cx, VariantProps } from "class-variance-authority";
-import { InputHTMLAttributes, PropsWithChildren, forwardRef } from "react";
+import { forwardRef, InputHTMLAttributes, PropsWithChildren } from "react";
 import { Flex } from "../flex";
 import styles from "./textfield.module.css";
 
@@ -24,8 +24,8 @@ const textfield = cva(styles.textfield, {
   },
 });
 
-type TextfieldProps = PropsWithChildren<VariantProps<typeof textfield>> &
-  InputHTMLAttributes<HTMLInputElement> & {
+type TextfieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
+  PropsWithChildren<VariantProps<typeof textfield>> & {
     leading?: React.ReactElement;
   };
 
