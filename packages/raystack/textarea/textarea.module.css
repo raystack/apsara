@@ -1,4 +1,4 @@
-.textfield {
+.textarea {
   appearance: none;
   box-sizing: border-box;
   margin: 0;
@@ -7,67 +7,69 @@
   height: auto;
   width: 100%;
 
+  min-height: 60px;
   background-color: var(--background-base);
   border: 0.5px solid var(--border-base);
   box-shadow: var(--shadow-xs);
   border-radius: var(--br-4);
+  font-size: 12px;
   color: var(--foreground-base);
+  padding: var(--pd-4);
 }
 
-.textfield:-webkit-autofill {
+.textarea:-webkit-autofill {
   box-shadow: var(--shadow-xs);
 }
 
-.textfield:focus {
+.textarea:focus {
   border: 1px solid var(--background-accent-inverted);
 }
 
-.textfield::placeholder {
+.textarea::placeholder {
   color: var(--foreground-subtle);
   font-size: 12px;
   line-height: 16px;
 }
 
-.textfield:disabled {
+.textarea:disabled {
   cursor: not-allowed;
   opacity: 0.6;
   pointer-events: none;
 }
 
-.textfield:read-only {
+.textarea:read-only {
   background-color: var(--background-base);
 }
 
-.textfield-sm {
+.textarea-sm {
   border-radius: var(--br-4);
   font-size: 12px;
   line-height: 16px;
   padding: var(--pd-4);
 }
 
-.textfield-md {
+.textarea-md {
   border-radius: var(--br-4);
   font-size: 13px;
   line-height: 16px;
   padding: var(--pd-8);
 }
 
-.textfield-invlid {
+.textarea-invlid {
   border: 1px solid var(--border-danger);
 }
-.textfield-invlid:focus {
+.textarea-invlid:focus {
   border: 1px solid var(--border-danger);
 }
 
-.textfield-valid {
+.textarea-valid {
   border: 1px solid var(--border-success);
 }
 
-.textfield-valid:focus {
+.textarea-valid:focus {
   border: 1px solid var(--border-success);
 }
 
-
-.bold {
-  font-weight: 500 !important;
+.textarea-leading {
+  padding-left: 32px;
 }

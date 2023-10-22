@@ -127,10 +127,10 @@ function DataTableRoot<TData, TValue>({
                 {ShouldShowHeader
                   ? table.getHeaderGroups().map((headerGroup) => (
                       <Table.Row key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => {
+                        {headerGroup.headers.map((header, index) => {
                           return (
                             <Table.Head
-                              key={header.id}
+                              key={`${header.id}_${index}`}
                               style={{
                                 ...(header.column.columnDef?.meta?.style ?? {}),
                               }}
@@ -162,9 +162,9 @@ function DataTableRoot<TData, TValue>({
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                     >
-                      {row.getVisibleCells().map((cell) => (
+                      {row.getVisibleCells().map((cell, index) => (
                         <Table.Cell
-                          key={cell.id}
+                          key={`${cell.id}_${index}`}
                           style={{
                             ...(cell.column.columnDef?.meta?.style ?? {}),
                           }}

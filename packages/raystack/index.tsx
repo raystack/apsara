@@ -21,6 +21,7 @@ export { Label } from "./label";
 export { Link } from "./link";
 export { Popover } from "./popover";
 export { Radio } from "./radio";
+export { RSelect } from "./rselect";
 export { ScrollArea } from "./scroll-area";
 export { Select } from "./select";
 export { Separator } from "./separator";
@@ -41,6 +42,7 @@ export {
 } from "./table";
 export { Tabs } from "./tabs";
 export { Text } from "./text";
+export { Textarea } from "./textarea";
 export { TextField } from "./textfield";
 export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
 export { Title } from "./title";
