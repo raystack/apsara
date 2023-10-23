@@ -39,22 +39,26 @@ export const primitivesRoutes = [
       { title: "Table", slug: "docs/primitives/components/table" },
       { title: "Text", slug: "docs/primitives/components/text" },
       { title: "Text Field", slug: "docs/primitives/components/textfield" },
+      { title: "Tooltip", slug: "docs/primitives/components/tooltip" },
     ],
   },
 ];
 
 export type PageProps = {
-    title: string;
-    slug: string;
-    deprecated?: boolean;
-    preview?: boolean;
+  title: string;
+  slug: string;
+  deprecated?: boolean;
+  preview?: boolean;
 };
 
 export type RouteProps = {
-    label: string;
-    pages: PageProps[];
+  label: string;
+  pages: PageProps[];
 };
 
-export const allPrimitivesRoutes = primitivesRoutes.reduce((acc: any, curr: RouteProps) => {
+export const allPrimitivesRoutes = primitivesRoutes.reduce(
+  (acc: any, curr: RouteProps) => {
     return [...acc, ...curr.pages];
-}, []);
+  },
+  []
+);

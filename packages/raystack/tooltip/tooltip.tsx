@@ -1,0 +1,39 @@
+import React from "react";
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { Text } from "../text";
+import styles from "./tooltip.module.css";
+
+interface TooltipProps {
+  disabled?: boolean;
+  children: React.ReactNode;
+  message: React.ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
+}
+
+export const Tooltip = ({
+  children,
+  message,
+  disabled,
+  side = "right",
+}: TooltipProps) => {
+  return disabled ? (
+    children
+  ) : (
+    <TooltipPrimitive.Provider>
+      <TooltipPrimitive.Root disableHoverableContent={false}>
+        <TooltipPrimitive.Trigger asChild>
+          <div className={styles.trigger}>{children}</div>
+        </TooltipPrimitive.Trigger>
+        <TooltipPrimitive.Portal>
+          <TooltipPrimitive.Content
+            side={side}
+            sideOffset={5}
+            className={styles.content}
+          >
+            {typeof message === "string" ? <Text>{message}</Text> : message}
+          </TooltipPrimitive.Content>
+        </TooltipPrimitive.Portal>
+      </TooltipPrimitive.Root>
+    </TooltipPrimitive.Provider>
+  );
+};

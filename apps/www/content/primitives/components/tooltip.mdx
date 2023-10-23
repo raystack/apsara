@@ -1,0 +1,33 @@
+---
+name: tooltip
+title: Tooltip
+description:
+---
+
+## Preview
+
+<Preview>
+  <Tooltip message="tooltip">
+    <Button variant="primary">primary button</Button>
+  </Tooltip>
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
+</LiveProvider>
+
+Import all parts and piece them together.
+
+<LiveProvider>
+    <LiveEditor code={`
+import { Button, Tooltip } from '@raystack/apsara'
+
+<Tooltip message="tooltip">
+  <Button variant="primary">primary button</Button>
+</Tooltip>
+`} border />
+</LiveProvider>
