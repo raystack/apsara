@@ -1,5 +1,6 @@
 .trigger {
   width: fit-content;
+  display: flex;
 }
 
 .content {
