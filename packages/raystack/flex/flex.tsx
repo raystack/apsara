@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { forwardRef, HTMLAttributes, PropsWithChildren } from "react";
 import styles from "./flex.module.css";
 
 const flex = cva(styles.flex, {
@@ -47,22 +47,19 @@ const flex = cva(styles.flex, {
 type BoxProps = PropsWithChildren<VariantProps<typeof flex>> &
   HTMLAttributes<HTMLDivElement>;
 
-export function Flex({
-  children,
-  direction,
-  align,
-  justify,
-  wrap,
-  gap,
-  className,
-  ...props
-}: BoxProps) {
-  return (
-    <div
-      className={flex({ direction, align, justify, wrap, gap, className })}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-}
+export const Flex = forwardRef<HTMLDivElement, BoxProps>(
+  (
+    { children, direction, align, justify, wrap, gap, className, ...props },
+    ref
+  ) => {
+    return (
+      <div
+        className={flex({ direction, align, justify, wrap, gap, className })}
+        {...props}
+        ref={ref}
+      >
+        {children}
+      </div>
+    );
+  }
+);
