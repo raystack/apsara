@@ -7,9 +7,13 @@
   background: var(--background-base);
 }
 
+.logo {
+  font-weight: 500;
+}
+
 .navigations {
   width: 100%;
-  gap: 2px;
+  gap: var(--pd-4);
 }
 
 .navigationgroup {

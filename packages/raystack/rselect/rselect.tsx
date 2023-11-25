@@ -9,7 +9,10 @@ type SelectRef = React.ElementRef<typeof CustomSelect>;
 const classNames: ClassNamesConfig = {
   control: () => cx(styles.control),
   option: () => cx(styles.option),
-  input: () => cx(styles.input),
+  input: () =>
+    cx(styles.input, {
+      isSelected: () => cx(styles.isSelected),
+    }),
   placeholder: () => cx(styles.placeholder),
   singleValue: () => cx(styles.singleValue),
   indicatorsContainer: () => cx(styles.indicatorsContainer),

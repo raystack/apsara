@@ -1,4 +1,5 @@
 import "./style.css";
+export { Accordion } from "./accordion";
 export { Avatar } from "./avatar";
 export { Badge } from "./badge";
 export { Body } from "./body";
@@ -46,3 +47,4 @@ export { Textarea } from "./textarea";
 export { TextField } from "./textfield";
 export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
 export { Title } from "./title";
+

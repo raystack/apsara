@@ -113,7 +113,7 @@ export const Assets = () => {
     <DataTable columns={columns} data={data}>
       <DataTable.Toolbar>
         <AssetsHeader />
-        <DataTable.FilterChips style={{ paddingTop: "16px" }} />
+        <DataTable.FilterChips />
       </DataTable.Toolbar>
       <DataTable.Footer>
         <AssetsFooter />

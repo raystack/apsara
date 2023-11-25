@@ -4,11 +4,16 @@ import { Flex } from "~/flex";
 import { Text } from "~/text";
 
 import styles from "./sidebar.module.css";
-
-type SidebarRootProps = VariantProps<typeof Flex> & { children?: ReactNode };
-const SidebarRoot = ({ children }: SidebarRootProps) => {
+;
+type SidebarRootProps = PropsWithChildren<VariantProps<typeof Flex>> & { children?: ReactNode };
+const SidebarRoot = ({ children, ...props }: SidebarRootProps) => {
   return (
-    <Flex direction="column" justify="between" className={styles.sidebar}>
+    <Flex
+      direction="column"
+      justify="between"
+      className={styles.sidebar}
+      {...props}
+    >
       {children}
     </Flex>
   );
@@ -21,17 +26,24 @@ type SidebarLogoProps = {
   onClick?: () => void;
 };
 
-const SidebarLogo = ({ name = "Apsara", logo, onClick }: SidebarLogoProps) => {
+const SidebarLogo = ({
+  name = "Apsara",
+  logo,
+  onClick,
+  ...props
+}: SidebarLogoProps) => {
   return (
     <Flex
       align="center"
       direction="row"
       gap="small"
       onClick={onClick}
-      className={styles.logo}
+      {...props}
     >
       <Flex gap="small">{logo}</Flex>
-      <Text>{name}</Text>
+      <Text size={2} className={styles.logo}>
+        {name}
+      </Text>
     </Flex>
   );
 };
@@ -42,7 +54,7 @@ const SidebarNavigations = ({
   ...props
 }: SidebarNavigationsProps) => {
   return (
-    <Flex direction="column" className={styles.navigations} {...props}>
+    <Flex direction="column" gap={"extra-small"} {...props}>
       {children}
     </Flex>
   );
