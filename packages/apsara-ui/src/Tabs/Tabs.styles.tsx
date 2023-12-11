@@ -8,7 +8,7 @@ const StyledTabs = styled(TabsPrimitive.Root)`
     width: 100%;
     [role="tabpanel"] {
         overflow-y: auto;
-        height: calc(100vh - 0px);
+        height: calc(100% - 0px);
     }
 `;
 

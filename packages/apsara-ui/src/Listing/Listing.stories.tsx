@@ -20,7 +20,7 @@ function getData(page = 1): User[] {
         return {
             key: index,
             name: `name ${index}`,
-            status: index%2 ? "active" : "inactive",
+            status: index % 2 ? "active" : "inactive",
             age: index,
             address: `A${index} Downing Street`,
         };
@@ -60,7 +60,7 @@ export const listing = () => (
                     },
                 ];
             },
-            scroll: { y: 300, x: "100vw" },
+            scroll: { y: 300, x: "100%" },
         }}
         filterProps={{
             filterFieldList: [
@@ -117,7 +117,7 @@ export const infiniteListing = () => {
                         },
                     ];
                 },
-                scroll: { y: 500, x: "100vw" },
+                scroll: { y: 500, x: "100%" },
             }}
             filterProps={{
                 filterFieldList: [
@@ -170,7 +170,7 @@ export const infiniteListingWithApply = () => {
                         },
                     ];
                 },
-                scroll: { y: 500, x: "100vw" },
+                scroll: { y: 500, x: "100%" },
             }}
             filterProps={{
                 filterFieldList: [
