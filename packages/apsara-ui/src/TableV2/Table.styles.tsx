@@ -1,7 +1,14 @@
 import styled from "styled-components";
 import { textStyles } from "../mixin";
 
-export const StyledTable = styled.div`
+export const StyledTable = styled.div<{
+    height?: string;
+  }>`
+    ${({ height }) => height && `
+        height: ${height};
+    `}
+    overflow-y: auto;
+    
     table {
         background: transparent;
         background-color: ${({ theme }) => theme?.table?.bg};

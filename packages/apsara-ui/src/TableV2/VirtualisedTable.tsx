@@ -27,6 +27,7 @@ interface ITableProps {
     rowClick?: (props: any) => any;
     dataFetchFunction?: (options: { pageIndex?: number; pageSize?: number }) => any;
     loading?: boolean;
+    height?: string;
 }
 
 type RenderFunction<T, U = T> = (props: { row: { original: U } }) => any;
@@ -48,6 +49,7 @@ function VirtualisedTable({
     rowClick,
     dataFetchFunction,
     items,
+    height,
     loading = false,
 }: ITableProps) {
     useEffect(() => {
@@ -108,7 +110,7 @@ function VirtualisedTable({
         );
     } else {
         return (
-            <StyledTable>
+            <StyledTable height={height}>
                 <TableWrapper ref={tableContainerRef} className="container">
                     <table>
                         <thead>

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import Search, { SearchProps } from "../Search/Search";
 
 export const ListingWrapper = styled.div`
-    height: 100vh;
+    height: 100%;
     .virtual-table-row-hover {
         background: ${({ theme }) => theme?.listing?.tableHighlight} !important;
     }

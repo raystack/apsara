@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useState } from "react";
 
 import Icon from "../Icon";
 import {
@@ -32,12 +32,12 @@ export const useNotification = () => {
 
 export const NotificationProvider = ({ children }: any) => {
     const [toasts, setToasts] = useState<Notification[]>([]);
-
-    const showNotification = (toast: Notification) => {
+    
+    const showNotification = useCallback((toast: Notification) => {
         setToasts([...toasts, { ...toast, id: uuid() }]);
-    };
+    }, [toasts, setToasts]);
 
-    const showSuccess = (title: string, content?: string) => {
+    const showSuccess = useCallback((title: string, content?: string) => {
         setToasts([
             ...toasts,
             {
@@ -47,9 +47,9 @@ export const NotificationProvider = ({ children }: any) => {
                 icon: <Icon name="checkcircle" color="green" size={32} />,
             },
         ]);
-    };
+    }, [toasts, setToasts]);
 
-    const showError = (title: string, content?: string) => {
+    const showError = useCallback((title: string, content?: string) => {
         setToasts([
             ...toasts,
             {
@@ -59,7 +59,7 @@ export const NotificationProvider = ({ children }: any) => {
                 icon: <Icon name="error" color="red" size={32} />,
             },
         ]);
-    };
+    }, [toasts, setToasts]);
 
     return (
         <NotificationContext.Provider
@@ -105,12 +105,9 @@ export const NotificationProvider = ({ children }: any) => {
 };
 
 const NotificationContext = createContext<Notifier>({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    showNotification: (_toast: Notification) => null,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    showSuccess: (_title: string, _content?: string) => null,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    showError: (_title: string, _content?: string) => null,
+    showNotification: (_toast: Notification) => {},
+    showSuccess: (_title: string, _content?: string) => {},
+    showError: (_title: string, _content?: string) => {},
 });
 
 const uuid = () => {

@@ -34,6 +34,7 @@ interface ITableProps {
     dataFetchFunction?: (options: { pageIndex?: number; pageSize?: number }) => any;
     rowClick?: (props: any) => any;
     isLoading?: boolean;
+    height?: string;
 }
 
 function Table({
@@ -47,6 +48,7 @@ function Table({
     setPage,
     dataFetchFunction,
     rowClick,
+    height,
     isLoading = false,
     alternate = false,
     alternateHover = false,
@@ -143,7 +145,7 @@ function Table({
     };
 
     return (
-        <StyledTable className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""}`}>
+        <StyledTable className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""}`} height={height}>
             <TableWrapper className="apsara-table-content">
                 <table>
                     <thead>

@@ -24,7 +24,7 @@ function Listing<T>({
     onChangeCallback,
     loading = false,
 }: ListingProps<T>) {
-    const { getColumnList = () => [], selectedRowId, ...extraTableProps } = tableProps;
+    const { getColumnList = () => [], ...extraTableProps } = tableProps;
     const { searchFields = [], disabled = false, searchPlaceholder } = searchProps;
     const { filterFieldList } = filterProps;
     const {
@@ -67,13 +67,13 @@ function Listing<T>({
             <VirtualisedTable
                 items={filteredList}
                 columnsData={columns}
-                selectedRowId={selectedRowId}
                 rowClick={rowClick}
                 calculateRowHeight={calculateRowHeight}
                 calculateColumnWidth={calculateColumnWidth}
                 sortable={sortable}
                 {...extraTableProps}
                 loading={loading}
+                height="calc(100% - 50px)"
             />
         );
     }
