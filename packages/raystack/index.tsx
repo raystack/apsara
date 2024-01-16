@@ -30,6 +30,7 @@ export { Sheet } from "./sheet";
 export { Sidebar } from "./sidebar";
 export { Switch } from "./switch";
 export { Tooltip } from "./tooltip";
+export { ToggleGroup } from "./toggle-group";
 
 export {
   ApsaraAggregationFn,
@@ -47,4 +48,3 @@ export { Textarea } from "./textarea";
 export { TextField } from "./textfield";
 export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
 export { Title } from "./title";
-
