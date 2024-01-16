@@ -40,6 +40,7 @@ export const primitivesRoutes = [
       { title: "Text", slug: "docs/primitives/components/text" },
       { title: "Text Field", slug: "docs/primitives/components/textfield" },
       { title: "Tooltip", slug: "docs/primitives/components/tooltip" },
+      { title: "Toggle Group", slug: "docs/primitives/components/togglegroup" },
     ],
   },
 ];
