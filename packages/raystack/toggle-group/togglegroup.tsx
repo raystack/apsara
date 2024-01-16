@@ -11,7 +11,6 @@ export type ToggleGroupProps = ComponentPropsWithoutRef<
   VariantProps<typeof root>;
 
 export const ToggleGroupRoot = ({ className, ...props }: ToggleGroupProps) => {
-  console.log(props);
   return (
     <ToggleGroupPrimitive.Root className={root({ className })} {...props} />
   );
