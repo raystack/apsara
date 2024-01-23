@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 import Icon from "../Icon";
 import {
@@ -21,7 +21,7 @@ export interface Notification {
 }
 
 export interface Notifier {
-    showNotification: (toast: Notification) => void;
+    showNotification: (notification: Notification) => void;
     showSuccess: (title: string, content?: string) => void;
     showError: (title: string, content?: string) => void;
 }
@@ -31,65 +31,77 @@ export const useNotification = () => {
 };
 
 export const NotificationProvider = ({ children }: any) => {
-    const [toasts, setToasts] = useState<Notification[]>([]);
-    
-    const showNotification = useCallback((toast: Notification) => {
-        setToasts([...toasts, { ...toast, id: uuid() }]);
-    }, [toasts, setToasts]);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
 
-    const showSuccess = useCallback((title: string, content?: string) => {
-        setToasts([
-            ...toasts,
-            {
-                title: title,
-                content: content,
-                id: uuid(),
-                icon: <Icon name="checkcircle" color="green" size={32} />,
-            },
-        ]);
-    }, [toasts, setToasts]);
+    const showNotification = useCallback(
+        (notification: Notification) => {
+            setNotifications((prevNotifications) => [...prevNotifications, { ...notification, id: uuid() }]);
+        },
+        [setNotifications],
+    );
 
-    const showError = useCallback((title: string, content?: string) => {
-        setToasts([
-            ...toasts,
-            {
-                title: title,
-                content: content,
-                id: uuid(),
-                icon: <Icon name="error" color="red" size={32} />,
-            },
-        ]);
-    }, [toasts, setToasts]);
+    const showSuccess = useCallback(
+        (title: string, content?: string) => {
+            setNotifications((prevNotifications) => [
+                ...prevNotifications,
+                {
+                    title: title,
+                    content: content,
+                    id: uuid(),
+                    icon: <Icon name="checkcircle" color="green" size={32} />,
+                },
+            ]);
+        },
+        [setNotifications],
+    );
+
+    const showError = useCallback(
+        (title: string, content?: string) => {
+            setNotifications((prevNotifications) => [
+                ...prevNotifications,
+                {
+                    title: title,
+                    content: content,
+                    id: uuid(),
+                    icon: <Icon name="error" color="red" size={32} />,
+                },
+            ]);
+        },
+        [setNotifications],
+    );
+
+    const contextValue = useMemo(
+        () => ({
+            showNotification,
+            showSuccess,
+            showError,
+        }),
+        [showNotification, showSuccess, showError],
+    );
 
     return (
-        <NotificationContext.Provider
-            value={{
-                showNotification,
-                showSuccess,
-                showError,
-            }}
-        >
+        <NotificationContext.Provider value={contextValue}>
             {children}
             <ToastProvider swipeDirection="right">
-                {toasts.map((toast) => {
+                {notifications.map((notification) => {
                     return (
                         <Toast
-                            key={toast.id}
+                            key={notification.id}
                             onOpenChange={() => {
-                                setToasts(toasts.filter((t) => t.id !== toast.id));
+                                setNotifications(notifications.filter((t) => t.id !== notification.id));
                             }}
                             duration={3000}
                         >
                             <ToastTitle>
                                 <IconTitleWrapper>
-                                    {toast.icon || defaultIcon}
-                                    {toast.title}
+                                    {notification.icon || defaultIcon}
+                                    {notification.title}
                                 </IconTitleWrapper>
                             </ToastTitle>
                             <ToastDescription asChild>
                                 <DescriptionWrapper>
-                                    {toast.content}
-                                    {toast.footer}
+                                    {notification.content}
+                                    {notification.footer}
                                 </DescriptionWrapper>
                             </ToastDescription>
                             <ToastAction asChild altText="Goto schedule to undo">
@@ -105,7 +117,7 @@ export const NotificationProvider = ({ children }: any) => {
 };
 
 const NotificationContext = createContext<Notifier>({
-    showNotification: (_toast: Notification) => {},
+    showNotification: (_notification: Notification) => {},
     showSuccess: (_title: string, _content?: string) => {},
     showError: (_title: string, _content?: string) => {},
 });
