@@ -16,18 +16,40 @@ const text = cva(styles.text, {
       9: styles["text-9"],
       10: styles["text-10"],
     },
+    weight: {
+      bold: styles["text-weight-bold"],
+      bolder: styles["text-weight-bolder"],
+      normal: styles["text-weight-normal"],
+      lighter: styles["text-weight-lighter"],
+      100: styles["text-weight-100"],
+      200: styles["text-weight-200"],
+      300: styles["text-weight-300"],
+      400: styles["text-weight-400"],
+      500: styles["text-weight-500"],
+      600: styles["text-weight-600"],
+      700: styles["text-weight-700"],
+      800: styles["text-weight-800"],
+      900: styles["text-weight-900"],
+    },
   },
   defaultVariants: {
     size: 2,
+    weight: 400,
   },
 });
 
 type TextProps = PropsWithChildren<VariantProps<typeof text>> &
   HTMLAttributes<HTMLSpanElement>;
 
-export function Text({ children, className, size, ...props }: TextProps) {
+export function Text({
+  children,
+  className,
+  size,
+  weight,
+  ...props
+}: TextProps) {
   return (
-    <span className={text({ size, className })} {...props}>
+    <span className={text({ size, className, weight })} {...props}>
       {children}
     </span>
   );
