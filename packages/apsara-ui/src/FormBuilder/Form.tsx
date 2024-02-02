@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useMemo } from "react";
 import classNames from "classnames";
-import FieldForm, { List } from "rc-field-form";
+import { List } from "rc-field-form";
 import { FormProps as RcFormProps } from "rc-field-form/lib/Form";
 import { ValidateErrorEntity } from "rc-field-form/lib/interface";
 import { ColProps } from "./grid/col";
@@ -9,7 +9,7 @@ import { FormContext, FormContextProps } from "./context";
 import { FormLabelAlign } from "./interface";
 import useForm, { FormInstance } from "./hooks/useForm";
 import SizeContext, { SizeType, SizeContextProvider } from "./SizeContext";
-import { FormWrapper } from "./FormBuilder.styles";
+import { StyledFieldForm } from "./FormBuilder.styles";
 
 export type RequiredMark = boolean | "optional";
 export type FormLayout = "horizontal" | "inline" | "vertical";
@@ -95,17 +95,15 @@ const InternalForm: React.ForwardRefRenderFunction<FormInstance, FormProps> = (p
     return (
         <SizeContextProvider size={size}>
             <FormContext.Provider value={formContextValue}>
-                <FormWrapper>
-                    <FieldForm
-                        id={name}
-                        {...restFormProps}
-                        name={name}
-                        onFinishFailed={onInternalFinishFailed}
-                        form={wrapForm}
-                        className={formClassName}
-                        validateMessages={validateMessages}
-                    />
-                </FormWrapper>
+                <StyledFieldForm
+                    id={name}
+                    {...restFormProps}
+                    name={name}
+                    onFinishFailed={onInternalFinishFailed}
+                    form={wrapForm}
+                    className={formClassName}
+                    validateMessages={validateMessages}
+                />
             </FormContext.Provider>
         </SizeContextProvider>
     );

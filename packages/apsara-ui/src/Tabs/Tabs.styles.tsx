@@ -9,7 +9,8 @@ const StyledTabs = styled(TabsPrimitive.Root)`
     height: 100%;
     overflow-y: auto;
     [role="tabpanel"] {
-        height: 100%
+        overflow-y: auto;
+        height: 100%;
     }
 `;
 

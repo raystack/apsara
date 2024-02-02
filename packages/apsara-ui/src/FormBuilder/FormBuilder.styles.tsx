@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import FieldForm from "rc-field-form";
 
 const explainShowHelpIn = keyframes`
 0% {
@@ -17,8 +18,8 @@ to {
 }
 `;
 
-export const FormWrapper = styled.div`
-.custom-form-inline {
+export const StyledFieldForm: typeof FieldForm = styled(FieldForm)`
+&.custom-form-inline {
 	display: flex;
 	flex-wrap: wrap;
 	.custom-form-item {
@@ -46,7 +47,7 @@ export const FormWrapper = styled.div`
 		margin-bottom: 24px;
 	}
 }
-.custom-form-horizontal {
+&.custom-form-horizontal {
 	.custom-form-item-label {
 		flex-grow: 0;
 	}
@@ -71,7 +72,7 @@ export const FormWrapper = styled.div`
 		}
 	}
 }
-.custom-form-vertical {
+&.custom-form-vertical {
 	.custom-form-item {
 		flex-direction: column;
 		.custom-form-item-control {
@@ -93,7 +94,7 @@ export const FormWrapper = styled.div`
 		text-align: left;
 	}
 }
-.custom-form-rtl.custom-form-vertical {
+&.custom-form-rtl.custom-form-vertical {
 	.custom-form-item-label {
 		text-align: right;
 	}
@@ -114,7 +115,7 @@ export const FormWrapper = styled.div`
 		color: #ff4d4f;
 	}
 }
-.custom-form {
+&.custom-form {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
@@ -187,7 +188,7 @@ export const FormWrapper = styled.div`
 		padding-right: 8px;
 	}
 }
-.custom-form-small {
+&.custom-form-small {
 	.custom-form-item-label {
 		>label {
 			height: 24px;
@@ -197,7 +198,7 @@ export const FormWrapper = styled.div`
 		min-height: 24px;
 	}
 }
-.custom-form-large {
+&.custom-form-large {
 	.custom-form-item-label {
 		>label {
 			height: 32px;
@@ -295,7 +296,7 @@ export const FormWrapper = styled.div`
 	line-height: 1.3215em;
 	white-space: unset;
 }
-.custom-form-hide-required-mark {
+&.custom-form-hide-required-mark {
 	.custom-form-item-label {
 		>label.custom-form-item-required {
 			&:not(.custom-form-item-required-mark-optional) {
@@ -409,7 +410,7 @@ export const FormWrapper = styled.div`
 	overflow: hidden;
 	transition: height 0.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
 }
-.custom-form-rtl {
+&.custom-form-rtl {
 	direction: rtl;
 	.custom-form-item-label {
 		text-align: left;
@@ -454,7 +455,7 @@ export const FormWrapper = styled.div`
 		}
 	}
 }
-.custom-form-rtl.custom-form-inline {
+&.custom-form-rtl.custom-form-inline {
 	.custom-form-item {
 		margin-right: 0;
 		margin-left: 16px;
