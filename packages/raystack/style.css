@@ -89,17 +89,43 @@
 html[data-theme="dark"] {
   --foreground-base: #ecedee;
   --foreground-muted: #9ba1a6;
+  --foreground-subtle: #787f85;
+  --foreground-inverted: #151718;
   --foreground-accent: #3e63dd;
+  --foreground-attention: #ffb224;
   --foreground-danger: #e5484d;
+  --foreground-success: #46a758;
 
   --background-base: #151718;
   --background-base-hover: #202425;
-  --background-inset: #26292b;
+  --background-inset: #202425;
   --background-inset-hover: #2b2f31;
-  --background-accent: #3e63dd;
-  --background-danger: #600000;
+  --background-subtle: #1a1d1e;
+  --background-highlight: #697177;
+  --background-inverted: #ecedee;
+  --background-accent: #1c274f;
+  --background-accent-inverted: #3e63dd;
+  --background-accent-inverted-hover: #5373e7;
+  --background-attention: #3f2200;
+  --background-attention-inverted: #ffb224;
+  --background-danger: #481a1d;
+  --background-danger-inverted: #e5484d;
+  --background-danger-inverted-hover: #f2555a;
+  --background-success: #16301d;
+  --background-success-inverted: #46a758;
 
   --border-base: #3a3f42;
+  --border-base-hover: #4c5155;
+  --border-muted: #313538;
   --border-subtle: #26292b;
-  --border-accent: #3a5ccc;
+  --border-accent: #273e89;
+  --border-accent-inverted: #3e63dd;
+  --border-accent-inverted-hover: #5373e7;
+  --border-attention: #693f05;
+  --border-attention-inverted: #ffb224;
+  --border-danger: #822025;
+  --border-danger-inverted: #e5484d;
+  --border-danger-inverted-hover: #f2555a;
+  --border-success: #245530;
+  --border-success-inverted: #46a758;
 }
