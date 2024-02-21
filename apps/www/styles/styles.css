@@ -1,32 +1,33 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
-        "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    line-height: 1.5;
+  margin: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 
-    background-color: var(--background-base);
-    color: var(--foreground-base);
+  background-color: var(--background-base);
+  color: var(--foreground-base);
 }
 
 svg {
-    display: block;
-    vertical-align: middle;
+  display: block;
+  vertical-align: middle;
 }
 
-pre[class*=language-] {
-	border-radius: 0 2px 2px 0;
-	line-height: 1.5;
+pre[class*="language-"] {
+  border-radius: 0 2px 2px 0;
+  line-height: 1.5;
 }
 
-pre.prism-code{
-	background-color: transparent !important;
-	border-left: 2px solid var(--border-base);
+pre.prism-code {
+  background-color: transparent !important;
+  border-left: 2px solid var(--border-base);
 }
