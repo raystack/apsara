@@ -42,8 +42,11 @@ export const FilteredChip = ({ column }: FilteredChipProps) => {
             </Select.Trigger>
             <Select.Content>
               <Select.Group>
-                <Select.Item value="apple">Apple</Select.Item>
-                <Select.Item value="xs">Ban</Select.Item>
+                {options.map((option) => (
+                  <Select.Item value={option.value} key={option.value}>
+                    {option?.label || option?.value}
+                  </Select.Item>
+                ))}
               </Select.Group>
             </Select.Content>
           </Select>
