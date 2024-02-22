@@ -5,11 +5,10 @@
   line-height: 1.5rem;
   counter-increment: line;
 }
-.editor pre span[class="token-line"]::before { 
-    content: counter(line);
-    display: inline-block;
+.editor pre span[class="token-line"]::before {
+  content: counter(line);
+  display: inline-block;
 
-    padding: 0 .5em;
-    margin-right: .5em;
-    color: var(--foreground-muted);
+  padding: 0 0.5em;
+  margin-right: 0.5em;
 }
