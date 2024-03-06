@@ -1,6 +1,7 @@
 import React from "react";
 import { RadioGroup, StyledRadioItem, StyledIndicator, Label, Flex, StyledRadioButton } from "./Radio.styles";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { generateRandomId } from "../helper";
 
 type RadioItem = {
     label?: string;
@@ -35,9 +36,20 @@ export type RadioProps = {
     style?: React.CSSProperties;
     itemStyle?: styleProps;
     children?: React.ReactNode;
+    id?: string;
 };
 
-const Radio = ({ defaultValue, value, items, onChange, required, orientation, dir, ...props }: RadioProps) => {
+const Radio = ({
+    defaultValue,
+    value,
+    items,
+    onChange,
+    required,
+    orientation,
+    dir,
+    id = generateRandomId(),
+    ...props
+}: RadioProps) => {
     return (
         <RadioGroup
             defaultValue={defaultValue}
@@ -58,11 +70,11 @@ const Radio = ({ defaultValue, value, items, onChange, required, orientation, di
                             disabled={item.disabled}
                             required={item.required}
                             {...props.itemStyle}
-                            id={i.toString()}
+                            id={`${id}${item.value}${i}`}
                         >
                             <StyledIndicator />
                         </StyledRadioItem>
-                        <Label dir={dir} htmlFor={i.toString()}>
+                        <Label dir={dir} htmlFor={`${id}${item.value}${i}`}>
                             {item.label}
                         </Label>
                     </Flex>

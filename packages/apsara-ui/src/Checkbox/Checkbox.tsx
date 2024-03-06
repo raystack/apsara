@@ -1,6 +1,7 @@
 import { CheckIcon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
 import { CheckboxWrapper, CheckboxGroupWrapper, StyledCheckbox, StyledIndicator } from "./Checkbox.styles";
+import { generateRandomId } from "../helper";
 
 type CheckboxProps = {
     defaultChecked?: boolean;
@@ -25,6 +26,7 @@ type CheckboxGroupProps = {
     orientation?: "horizontal" | "vertical";
     name?: string;
     options?: CheckboxProps[];
+    id?: string;
 };
 
 const Checkbox = ({
@@ -37,7 +39,7 @@ const Checkbox = ({
     value,
     label,
     style,
-    id = "c1",
+    id = generateRandomId(),
 }: CheckboxProps) => {
     const [isChecked, setIsChecked] = useState<boolean | "indeterminate">(checked || defaultChecked || false);
 
@@ -78,6 +80,7 @@ const CheckboxGroup = ({
     options,
     onChange,
     orientation = "horizontal",
+    id = generateRandomId(),
     ...props
 }: CheckboxGroupProps) => {
     const [selectedValues, setSelectedValues] = useState(defaultValue || value || []);
@@ -102,12 +105,12 @@ const CheckboxGroup = ({
                                 setSelectedValues(newSelectedValues);
                                 onChange && onChange(newSelectedValues);
                             }}
-                            id={`${option.value}${index}`}
+                            id={`${id}${option.value}${index}`}
                             checked={selectedValues.includes(option.value || "")}
                             value={option.value}
                             {...props}
                         />
-                        <label className="checkbox_label" htmlFor={`${option.value}${index}`}>
+                        <label className="checkbox_label" htmlFor={`${id}${option.value}${index}`}>
                             {option.label}
                         </label>
                     </div>
