@@ -31,6 +31,7 @@ const Combobox = ({
     allowClear = true,
     showSearch = true,
     showArrow = true,
+    filterOption = true,
     placeholder,
     optionFilterProp,
     ...props
@@ -89,7 +90,7 @@ const Combobox = ({
             onSelect={onValueSelect}
             onDeselect={onValueDeselect}
             options={options}
-            filterOption={true}
+            filterOption={filterOption}
             optionFilterProp={optionFilterProp || "value"}
             animation="slide"
         >
