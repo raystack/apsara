@@ -13,6 +13,13 @@ const notFoundContent = (
     </NotFoundContent>
 );
 
+const loadingContent = (
+    <NotFoundContent>
+        <Icon name="discovery" color="#36CEC2" size={30} />
+        <div style={{ fontSize: 15 }}>Loading</div>
+    </NotFoundContent>
+);
+
 const Combobox = ({
     options,
     mode,
@@ -65,7 +72,7 @@ const Combobox = ({
 
     return (
         <StyledMultiSelect
-            notFoundContent={notFoundContent}
+            notFoundContent={props.loading ? loadingContent : notFoundContent}
             {...props}
             showInputIcon={showInputIcon || !allowClear}
             showSearch={showSearch}
