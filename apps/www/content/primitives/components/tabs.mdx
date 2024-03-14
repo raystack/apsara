@@ -5,6 +5,7 @@ radix:
   link: https://www.radix-ui.com/docs/primitives/components/tabs
   api: https://www.radix-ui.com/docs/primitives/components/tabs#api-reference
 ---
+
 ## Preview
 
 <Preview>
@@ -52,17 +53,16 @@ radix:
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
 </LiveProvider>
 
-
 ## Anatomy
+
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
 import { Tabs } from '@raystack/apsara'
-
 
 <Tabs defaultValue="tab-one">
   <Tabs.List>
@@ -72,11 +72,20 @@ import { Tabs } from '@raystack/apsara'
     <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
     <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
   </Tabs.List>
-  
 </Tabs>
 
 <Tabs defaultValue="tab-one">
-  <Tabs.List pill>
+  <Tabs.List underline>
+    <Tabs.Trigger value="tab-one">General</Tabs.Trigger>
+    <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
+    <Tabs.Trigger value="tab-three">Editor</Tabs.Trigger>
+    <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
+    <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
+  </Tabs.List>
+</Tabs>
+
+<Tabs defaultValue="tab-one">
+  <Tabs.List elevated>
     <Tabs.Trigger value="tab-one">General</Tabs.Trigger>
     <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
     <Tabs.Trigger value="tab-three">Editor</Tabs.Trigger>
