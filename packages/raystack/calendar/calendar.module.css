@@ -1,0 +1,100 @@
+.calendarRoot {
+  padding: var(--pd-16);
+  border-radius: var(--br-8);
+  border: 1px solid var(--border-base);
+  background: var(--background-base);
+}
+
+.caption {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: var(--mr-12);
+}
+
+.caption_label {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  font-weight: 500;
+  color: var(--foreground-base);
+}
+
+.nav_button {
+  position: absolute;
+  top: 0;
+  border: 0px;
+  background: var(--background-base);
+}
+
+.nav_button_previous {
+  left: 0;
+}
+
+.nav_button_next {
+  right: 0;
+}
+
+.head {
+  color: var(--foreground-muted);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  font-weight: 500;
+}
+
+.head_cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--foreground-base);
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+
+  background-color: var(--background-base);
+  border-radius: var(--br-4);
+}
+
+.cell:hover {
+  background-color: var(--background-base-hover);
+}
+
+.cell:has([aria-selected="true"]) {
+  background-color: var(--background-highlight);
+}
+
+.cell:has(.day_today) {
+  background-color: var(--background-inset);
+  font-weight: 500;
+}
+
+.row {
+  display: flex;
+}
+
+.day {
+  color: var(--foreground-base);
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+.day_outside {
+  color: var(--foreground-subtle);
+}
+
+.day_today {
+  font-weight: 600;
+}
