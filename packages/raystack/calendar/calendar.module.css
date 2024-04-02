@@ -25,7 +25,9 @@
   position: absolute;
   top: 0;
   border: 0px;
+  color: var(--foreground-base);
   background: var(--background-base);
+  cursor: pointer;
 }
 
 .nav_button_previous {
@@ -59,7 +61,6 @@
   align-items: center;
   width: 36px;
   height: 36px;
-
   background-color: var(--background-base);
   border-radius: var(--br-4);
 }
@@ -69,12 +70,26 @@
 }
 
 .cell:has([aria-selected="true"]) {
-  background-color: var(--background-highlight);
+  background-color: var(--background-inverted);
 }
 
-.cell:has(.day_today) {
-  background-color: var(--background-inset);
-  font-weight: 500;
+.cell:has(.day_today):not(:has([aria-selected="true"])) {
+  background-color: var(--background-subtle);
+}
+
+.cell:has(.day_range_middle) {
+  border-radius: 0;
+  background-color: var(--background-base-hover);
+}
+
+.cell:has(.day_range_start):not(:has(.day_range_end)) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.cell:has(.day_range_end):not(:has(.day_range_start)) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
 
 .row {
@@ -97,4 +112,9 @@
 
 .day_today {
   font-weight: 600;
+}
+
+.day_range_start,
+.day_range_end {
+  color: var(--foreground-inverted);
 }

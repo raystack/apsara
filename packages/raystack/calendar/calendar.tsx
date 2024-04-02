@@ -1,9 +1,8 @@
-import { DateRange, DayPicker, DayPickerProps } from "react-day-picker";
+import { DayPicker, DayPickerProps } from "react-day-picker";
 import { cva } from "class-variance-authority";
 import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
-import { Text } from "~/text";
+
 import styles from "./calendar.module.css";
-import { useState } from "react";
 
 export type CalendarProps = DayPickerProps & {};
 
@@ -14,7 +13,6 @@ export const Calendar = function ({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
-  const [selected, setSelected] = useState<DateRange | undefined>();
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -36,11 +34,12 @@ export const Calendar = function ({
         day: styles.day,
         day_outside: styles.day_outside,
         day_today: styles.day_today,
+        day_range_middle: styles.day_range_middle,
+        day_range_end: styles.day_range_end,
+        day_range_start: styles.day_range_start,
       }}
       className={root({ className })}
-      mode="range"
-      onSelect={setSelected}
-      selected={selected}
+      {...props}
     />
   );
 };
