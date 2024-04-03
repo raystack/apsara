@@ -54,7 +54,7 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
               )}
               {frontmatter.links?.map(({ link, label }, i) => {
                 return (
-                  <Link href={link} target="_blank" rel="noreferrer">
+                  <Link href={link} target="_blank" rel="noreferrer" key={i}>
                     {label}
                   </Link>
                 );
