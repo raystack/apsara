@@ -10,6 +10,7 @@ const root = cva(styles.calendarRoot);
 
 export const Calendar = function ({
   className,
+  classNames,
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
@@ -37,6 +38,7 @@ export const Calendar = function ({
         day_range_middle: styles.day_range_middle,
         day_range_end: styles.day_range_end,
         day_range_start: styles.day_range_start,
+        ...classNames,
       }}
       className={root({ className })}
       {...props}
