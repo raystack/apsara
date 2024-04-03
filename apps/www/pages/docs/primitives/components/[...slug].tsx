@@ -32,7 +32,7 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
           <Text size={4} style={{ marginTop: "8px", marginBottom: "32px" }}>
             {frontmatter.description}
           </Text>
-          {frontmatter.radix ? (
+          {frontmatter.radix || frontmatter.links?.length ? (
             <Flex gap="small">
               {frontmatter.radix?.link && (
                 <Link
@@ -52,6 +52,13 @@ export default function ComponentsDoc({ frontmatter, code }: Doc) {
                   API Reference
                 </Link>
               )}
+              {frontmatter.links?.map(({ link, label }, i) => {
+                return (
+                  <Link href={link} target="_blank" rel="noreferrer" key={i}>
+                    {label}
+                  </Link>
+                );
+              })}
             </Flex>
           ) : null}
         </>

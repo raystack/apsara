@@ -15,6 +15,7 @@ export const primitivesRoutes = [
       { title: "Avatar", slug: "docs/primitives/components/avatar" },
       { title: "Badge", slug: "docs/primitives/components/badge" },
       { title: "Button", slug: "docs/primitives/components/button" },
+      { title: "Calendar", slug: "docs/primitives/components/calendar" },
       { title: "Command", slug: "docs/primitives/components/command" },
       { title: "Checkbox", slug: "docs/primitives/components/checkbox" },
       { title: "Container", slug: "docs/primitives/components/container" },

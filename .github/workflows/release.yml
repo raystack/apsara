@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "v*.*.*"
-  workflow_dispatch:
 
 jobs:
   release:
@@ -44,8 +43,15 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Bump Package Version
+        run: npm run bump-version
+        working-directory: ./packages/raystack
+        env:
+          GIT_REFNAME: ${{ github.ref_name }}
+
       - name: Run Release 🚀
-        run: npm run ci:release
+        run: npm run release:ci
+        working-directory: ./packages/raystack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
