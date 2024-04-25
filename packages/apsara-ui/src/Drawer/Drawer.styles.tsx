@@ -1,13 +1,18 @@
 import styled from "styled-components";
 
-export const Overlay = styled.div`
-    animation: opacity 200ms ease-out;
+export const Wrapper = styled.div`
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     z-index: 1000;
+`;
+
+export const Overlay = styled.div`
+    animation: opacity 200ms ease-out;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.3);
 `;
 
