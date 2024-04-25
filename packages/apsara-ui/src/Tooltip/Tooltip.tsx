@@ -10,6 +10,7 @@ export type TooltipProps = {
     title?: React.ReactNode | RenderFunction | string;
     placement?: TooltipPlacement;
     style?: React.CSSProperties;
+    defaultOpen?: boolean;
 } & HTMLAttributes<HTMLDivElement>;
 
 const Tooltip = ({
@@ -17,11 +18,12 @@ const Tooltip = ({
     placement = "right",
     style = { backgroundColor: "#333", color: "white" },
     children,
+    defaultOpen = false,
     ...props
 }: TooltipProps) => {
     return (
         <RadixTooltip.Provider delayDuration={100}>
-            <RadixTooltip.Root>
+            <RadixTooltip.Root defaultOpen={defaultOpen}>
                 <RadixTooltip.Trigger asChild>
                     <span>{children}</span>
                 </RadixTooltip.Trigger>
