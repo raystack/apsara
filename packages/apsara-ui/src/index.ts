@@ -52,6 +52,7 @@ import { TooltipPlacement } from "./Tooltip/Tooltip";
 import Modal from "./Modal";
 import Alert from "./Alert";
 import { DotBadge } from "./Badge";
+import InfiniteScroll from "./InfiniteScroll";
 export { DynamicList } from "./DynamicList";
 
 export * from "./Notification";
@@ -103,6 +104,7 @@ export {
     Slider,
     Themes,
     InfoModal,
+    InfiniteScroll,
     DiffTimeline,
     InputNumber,
     DatePicker,
