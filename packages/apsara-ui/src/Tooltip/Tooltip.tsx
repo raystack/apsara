@@ -1,40 +1,43 @@
 import React, { HTMLAttributes } from "react";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
-import { TooltipContentWrapper } from "./Tooltip.styles";
 
-type RenderFunction = () => React.ReactNode;
+import { TooltipContent } from "./Tooltip.styles";
 
 export type TooltipPlacement = "left" | "right" | "top" | "bottom";
 
 export type TooltipProps = {
-    title?: React.ReactNode | RenderFunction | string;
+    title?: React.ReactNode;
     placement?: TooltipPlacement;
     style?: React.CSSProperties;
     defaultOpen?: boolean;
+    open?: boolean;
+    onOpenChange?: ((open: boolean) => void) | undefined;
+    delayDuration?: number;
+    avoidCollisions?: boolean;
 } & HTMLAttributes<HTMLDivElement>;
 
 const Tooltip = ({
     title = "",
     placement = "right",
-    style = { backgroundColor: "#333", color: "white" },
+    delayDuration = 100,
+    style,
     children,
-    defaultOpen = false,
+    defaultOpen,
+    open,
+    onOpenChange,
+    avoidCollisions,
     ...props
 }: TooltipProps) => {
     return (
-        <RadixTooltip.Provider delayDuration={100}>
-            <RadixTooltip.Root defaultOpen={defaultOpen}>
+        <RadixTooltip.Provider delayDuration={delayDuration}>
+            <RadixTooltip.Root defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
                 <RadixTooltip.Trigger asChild>
                     <span>{children}</span>
                 </RadixTooltip.Trigger>
-                <RadixTooltip.Portal>
-                    <TooltipContentWrapper style={style}>
-                        <RadixTooltip.Content className="TooltipContent" sideOffset={5} side={placement} {...props}>
-                            {title}
-                            <RadixTooltip.Arrow className="TooltipArrow" />
-                        </RadixTooltip.Content>
-                    </TooltipContentWrapper>
-                </RadixTooltip.Portal>
+                <TooltipContent className="TooltipContent" sideOffset={5} side={placement} style={style} avoidCollisions={avoidCollisions} {...props}>
+                    {title}
+                    <RadixTooltip.Arrow className="TooltipArrow" />
+                </TooltipContent>
             </RadixTooltip.Root>
         </RadixTooltip.Provider>
     );
