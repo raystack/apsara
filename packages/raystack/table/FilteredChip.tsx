@@ -80,27 +80,61 @@ const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
     {
       label: "is",
       value: "is",
-      fn: (row, columnId, filterValue) => {
+      fn: (row, columnId, filterValue: FilterValue) => {
         return row.getValue(columnId) === filterValue.value;
       },
     },
     {
       label: "is not",
       value: "is not",
-      fn: (row, columnId, filterValue) => {
+      fn: (row, columnId, filterValue: FilterValue) => {
         return row.getValue(columnId) !== filterValue.value;
       },
     },
   ],
   [columnTypesMap.number]: [
-    { label: "=", value: "=" },
-    { label: "not =", value: "not =" },
-    { label: ">", value: ">" },
-    { label: ">=", value: ">=" },
-    { label: "<", value: "<" },
-    { label: "<=", value: "<=" },
-    { label: "is empty", value: "is empty" },
-    { label: "is not empty", value: "is not empty" },
+    {
+      label: "=",
+      value: "=",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return row.getValue(columnId) === filterValue.value;
+      },
+    },
+    {
+      label: "not =",
+      value: "not =",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return row.getValue(columnId) !== filterValue.value;
+      },
+    },
+    {
+      label: ">",
+      value: ">",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) > Number(filterValue.value);
+      },
+    },
+    {
+      label: ">=",
+      value: ">=",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) >= Number(filterValue.value);
+      },
+    },
+    {
+      label: "<",
+      value: "<",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) < Number(filterValue.value);
+      },
+    },
+    {
+      label: "<=",
+      value: "<=",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) <= Number(filterValue.value);
+      },
+    },
   ],
   [columnTypesMap.text]: [
     { label: "is", value: "is" },
