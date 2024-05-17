@@ -5,6 +5,7 @@ export interface FilterOperation {
   label: string;
   value: string;
   fn?: FilterFn<FilterValue>;
+  hideValueField?: boolean;
 }
 
 export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
@@ -69,13 +70,71 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
     },
   ],
   [columnTypesMap.text]: [
-    { label: "is", value: "is" },
-    { label: "is not", value: "is not" },
-    { label: "contains", value: "contains" },
-    { label: "does not contains", value: "does not contains" },
-    { label: "starts with", value: "starts with" },
-    { label: "ends with", value: "ends with" },
-    { label: "is empty", value: "is empty" },
-    { label: "is not empty", value: "is not empty" },
+    {
+      label: "is",
+      value: "is",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return row.getValue(columnId) === filterValue.value;
+      },
+    },
+    {
+      label: "is not",
+      value: "is not",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return row.getValue(columnId) !== filterValue.value;
+      },
+    },
+    {
+      label: "contains",
+      value: "contains",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return (row.getValue(columnId) as string).includes(
+          filterValue.value as string
+        );
+      },
+    },
+    {
+      label: "does not contains",
+      value: "does not contains",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return !(row.getValue(columnId) as string).includes(
+          filterValue.value as string
+        );
+      },
+    },
+    {
+      label: "starts with",
+      value: "starts with",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return (row.getValue(columnId) as string).startsWith(
+          filterValue.value as string
+        );
+      },
+    },
+    {
+      label: "ends with",
+      value: "ends with",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return (row.getValue(columnId) as string).endsWith(
+          filterValue.value as string
+        );
+      },
+    },
+    {
+      label: "is empty",
+      value: "is empty",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return (row.getValue(columnId) as string).length === 0;
+      },
+      hideValueField: true,
+    },
+    {
+      label: "is not empty",
+      value: "is not empty",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return (row.getValue(columnId) as string).length > 0;
+      },
+      hideValueField: true,
+    },
   ],
 };

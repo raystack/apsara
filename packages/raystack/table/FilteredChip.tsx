@@ -142,13 +142,13 @@ export const FilteredChip = ({
         columnType={filterVariant}
         onOperationSelect={setFilterOperation}
       />
-      <FilterValues
-        columnType={filterVariant}
-        options={options}
-        onValueChange={setFilterValue}
-      />
-
-      {/* render diffrent input base on filterVariant type */}
+      {filterOperation?.hideValueField ? null : (
+        <FilterValues
+          columnType={filterVariant}
+          options={options}
+          onValueChange={setFilterValue}
+        />
+      )}
 
       {/* close filter chip */}
       <Flex>
