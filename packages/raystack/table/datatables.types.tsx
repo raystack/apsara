@@ -41,6 +41,11 @@ export type tableFilterMap = Record<string, FilterFn<any>>;
 
 export type updateColumnFilter = (id: string, fn: FilterFn<any>) => void;
 
+export interface FilterValue {
+  value?: string | number;
+  values?: Array<string | number>;
+}
+
 export type ApsaraColumnDef<TData extends Record<string, any> = {}> = Omit<
   ColumnDef<TData, unknown>,
   | "accessorKey"

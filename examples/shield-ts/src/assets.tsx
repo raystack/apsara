@@ -80,9 +80,7 @@ export const columns: ColumnDef<Payment>[] = [
         },
       ],
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
+    filterVariant: "select",
   },
   {
     accessorKey: "email",
@@ -103,7 +101,7 @@ export const columns: ColumnDef<Payment>[] = [
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
-    filterVariant: "text",
+    filterVariant: "number",
   },
 ];
 

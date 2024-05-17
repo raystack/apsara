@@ -1,11 +1,7 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { Column, FilterFn } from "@tanstack/table-core";
+import { Column } from "@tanstack/table-core";
 import { Box } from "~/box";
-import { Button } from "~/button";
-import { Checkbox } from "~/checkbox";
-import { Command } from "~/command";
 import { Flex } from "~/flex";
-import { Popover } from "~/popover";
 import { Select } from "~/select";
 import { Text } from "~/text";
 import { TextField } from "~/textfield";
@@ -13,6 +9,7 @@ import { TableColumnMetadata } from "~/typing";
 import styles from "./datatable.module.css";
 import {
   ApsaraColumnDef,
+  FilterValue,
   columnTypes,
   columnTypesMap,
   filterValueType,
@@ -21,6 +18,7 @@ import {
 } from "./datatables.types";
 import { useTable } from "./hooks/useTable";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { FilterOperation, operationsOptions } from "./filterFns";
 
 type FilteredChipProps = {
   column: Column<any, unknown>;
@@ -69,85 +67,6 @@ const FilterValues = ({
   );
 };
 
-interface FilterOperation {
-  label: string;
-  value: string;
-  fn?: FilterFn<FilterValue>;
-}
-
-const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
-  [columnTypesMap.select]: [
-    {
-      label: "is",
-      value: "is",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) === filterValue.value;
-      },
-    },
-    {
-      label: "is not",
-      value: "is not",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) !== filterValue.value;
-      },
-    },
-  ],
-  [columnTypesMap.number]: [
-    {
-      label: "=",
-      value: "=",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) === filterValue.value;
-      },
-    },
-    {
-      label: "not =",
-      value: "not =",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) !== filterValue.value;
-      },
-    },
-    {
-      label: ">",
-      value: ">",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return Number(row.getValue(columnId)) > Number(filterValue.value);
-      },
-    },
-    {
-      label: ">=",
-      value: ">=",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return Number(row.getValue(columnId)) >= Number(filterValue.value);
-      },
-    },
-    {
-      label: "<",
-      value: "<",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return Number(row.getValue(columnId)) < Number(filterValue.value);
-      },
-    },
-    {
-      label: "<=",
-      value: "<=",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return Number(row.getValue(columnId)) <= Number(filterValue.value);
-      },
-    },
-  ],
-  [columnTypesMap.text]: [
-    { label: "is", value: "is" },
-    { label: "is not", value: "is not" },
-    { label: "contains", value: "contains" },
-    { label: "does not contains", value: "does not contains" },
-    { label: "starts with", value: "starts with" },
-    { label: "ends with", value: "ends with" },
-    { label: "is empty", value: "is empty" },
-    { label: "is not empty", value: "is not empty" },
-  ],
-};
-
 interface OperationProps {
   columnType?: columnTypes;
   onOperationSelect: (op: FilterOperation) => void;
@@ -185,11 +104,6 @@ const Operation = ({
   );
 };
 
-interface FilterValue {
-  value?: string | number;
-  values?: Array<string | number>;
-}
-
 export const FilteredChip = ({
   column,
   updateColumnCustomFilter,
@@ -203,7 +117,9 @@ export const FilteredChip = ({
     (column?.columnDef?.meta as any)?.data || [];
 
   const facets = column?.getFacetedUniqueValues();
-  const columnName = (column?.columnDef?.header as string) || column.id;
+  const columnHeader = column?.columnDef?.header;
+  const columnName =
+    (typeof columnHeader === "string" && columnHeader) || column.id;
 
   useEffect(() => {
     if (filterOperation?.fn && filterValue) {
@@ -211,6 +127,13 @@ export const FilteredChip = ({
       column.setFilterValue(filterValue);
     }
   }, [filterOperation, filterValue]);
+
+  function removeFilter() {
+    column.setFilterValue(undefined);
+    removeFilterColumn(column.id);
+    setFilterOperation(undefined);
+    setFilterValue({});
+  }
 
   return (
     <Box className={styles.chip}>
@@ -229,14 +152,7 @@ export const FilteredChip = ({
 
       {/* close filter chip */}
       <Flex>
-        <Cross1Icon
-          height="12"
-          width="12"
-          onClick={() => {
-            column.setFilterValue(undefined);
-            removeFilterColumn(column.id);
-          }}
-        />
+        <Cross1Icon height="12" width="12" onClick={removeFilter} />
       </Flex>
     </Box>
   );
