@@ -8,7 +8,7 @@ import { useTable } from "./hooks/useTable";
 
 type DataTableFilterChipsProps = ComponentProps<typeof Flex>;
 export function DataTableFilterChips(props: DataTableFilterChipsProps) {
-  const { filteredColumns, table } = useTable();
+  const { filteredColumns, table, updateColumnCustomFilter } = useTable();
   const tableColumns = table
     .getAllColumns()
     .filter(
@@ -22,7 +22,13 @@ export function DataTableFilterChips(props: DataTableFilterChipsProps) {
     <Flex gap="small" align="center" className={styles.chipWrapper} {...props}>
       {filteredColumns.map((filter, index) => {
         const filteredColumn = table.getColumn(filter)!;
-        return <FilteredChip key={index} column={filteredColumn} />;
+        return (
+          <FilteredChip
+            key={index}
+            column={filteredColumn}
+            updateColumnCustomFilter={updateColumnCustomFilter}
+          />
+        );
       })}
 
       {filteredColumns.length < tableColumns.length && (

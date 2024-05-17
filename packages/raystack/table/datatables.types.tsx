@@ -22,6 +22,25 @@ export type ApsaraAggregationFn<TData extends Record<string, any> = {}> =
   | AggregationFn<TData>
   | ApsaraAggregationOption;
 
+export const columnTypesMap = {
+  select: "select",
+  number: "number",
+  text: "text",
+} as const;
+
+export type columnTypes = keyof typeof columnTypesMap;
+
+export const filterValueTypeMap = {
+  select: "select",
+  text: "text",
+} as const;
+
+export type filterValueType = keyof typeof filterValueTypeMap;
+
+export type tableFilterMap = Record<string, FilterFn<any>>;
+
+export type updateColumnFilter = (id: string, fn: FilterFn<any>) => void;
+
 export type ApsaraColumnDef<TData extends Record<string, any> = {}> = Omit<
   ColumnDef<TData, unknown>,
   | "accessorKey"
@@ -39,14 +58,7 @@ export type ApsaraColumnDef<TData extends Record<string, any> = {}> = Omit<
     | ApsaraAggregationFn<TData>
     | Array<ApsaraAggregationFn<TData>>;
   filterFn?: ApsaraFilterFn<TData>;
-  filterVariant?:
-    | "checkbox"
-    | "date"
-    | "date-range"
-    | "multi-select"
-    | "range"
-    | "select"
-    | "text";
+  filterVariant?: columnTypes;
   columnDefType?: "data" | "display" | "group";
   columns?: ApsaraColumnDef<TData>[];
 };
