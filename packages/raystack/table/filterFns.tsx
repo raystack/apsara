@@ -71,53 +71,39 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
   ],
   [columnTypesMap.text]: [
     {
-      label: "is",
-      value: "is",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) === filterValue.value;
-      },
-    },
-    {
-      label: "is not",
-      value: "is not",
-      fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) !== filterValue.value;
-      },
-    },
-    {
       label: "contains",
       value: "contains",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return (row.getValue(columnId) as string).includes(
-          filterValue.value as string
-        );
+        const columnValue = (row.getValue(columnId) as string).toLowerCase();
+        const filterStr = (filterValue.value as string).toLowerCase();
+        return columnValue.includes(filterStr);
       },
     },
     {
       label: "does not contains",
       value: "does not contains",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return !(row.getValue(columnId) as string).includes(
-          filterValue.value as string
-        );
+        const columnValue = (row.getValue(columnId) as string).toLowerCase();
+        const filterStr = (filterValue.value as string).toLowerCase();
+        return !columnValue.includes(filterStr);
       },
     },
     {
       label: "starts with",
       value: "starts with",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return (row.getValue(columnId) as string).startsWith(
-          filterValue.value as string
-        );
+        const columnValue = (row.getValue(columnId) as string).toLowerCase();
+        const filterStr = (filterValue.value as string).toLowerCase();
+        return columnValue.startsWith(filterStr);
       },
     },
     {
       label: "ends with",
       value: "ends with",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return (row.getValue(columnId) as string).endsWith(
-          filterValue.value as string
-        );
+        const columnValue = (row.getValue(columnId) as string).toLowerCase();
+        const filterStr = (filterValue.value as string).toLowerCase();
+        return columnValue.endsWith(filterStr);
       },
     },
     {
