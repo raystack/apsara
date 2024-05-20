@@ -34,6 +34,7 @@ import { TableDetailContainer } from "./TableDetailContainer";
 import styles from "./datatable.module.css";
 import { useTableColumn } from "./hooks/useTableColumn";
 import { Table } from "./table";
+import { tableFilterMap, updateColumnFilter } from "./datatables.types";
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -54,6 +55,8 @@ function DataTableRoot<TData, TValue>({
   ShouldShowHeader = true,
   ...props
 }: DataTableProps<TData, TValue>) {
+  const [tableCustomFilter, setTableCustomFilter] =
+    React.useState<tableFilterMap>({});
   const convertedChildren = Children.toArray(children) as ReactElement[];
   const header =
     convertedChildren.find((child) => child.type === DataTableToolbar) || null;
@@ -67,6 +70,7 @@ function DataTableRoot<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -74,9 +78,22 @@ function DataTableRoot<TData, TValue>({
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
 
+  const columnWithCustomFilter = columns.map((col) => {
+    // @ts-ignore;
+    const colId = col.id || col?.accessorKey;
+    if (colId && tableCustomFilter.hasOwnProperty(colId)) {
+      col.filterFn = tableCustomFilter[colId];
+    }
+    return col;
+  });
+
+  const updateColumnCustomFilter: updateColumnFilter = (id, filterFn) => {
+    setTableCustomFilter((old) => ({ ...old, [id]: filterFn }));
+  };
+
   const table = useReactTable({
     data,
-    columns,
+    columns: columnWithCustomFilter,
     globalFilterFn: "auto",
     enableRowSelection: true,
     manualPagination: true,
@@ -117,6 +134,8 @@ function DataTableRoot<TData, TValue>({
           resetColumns,
           onGlobalFilterChange: setGlobalFilter,
           onChange: () => ({}),
+          tableCustomFilter,
+          updateColumnCustomFilter,
         }}
       >
         <Flex direction="column" className={styles.datatable}>

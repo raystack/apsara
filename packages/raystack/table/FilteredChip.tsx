@@ -1,145 +1,158 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Column } from "@tanstack/table-core";
 import { Box } from "~/box";
-import { Button } from "~/button";
-import { Checkbox } from "~/checkbox";
-import { Command } from "~/command";
 import { Flex } from "~/flex";
-import { Popover } from "~/popover";
 import { Select } from "~/select";
 import { Text } from "~/text";
 import { TextField } from "~/textfield";
 import { TableColumnMetadata } from "~/typing";
 import styles from "./datatable.module.css";
-import { ApsaraColumnDef } from "./datatables.types";
+import {
+  ApsaraColumnDef,
+  FilterValue,
+  columnTypes,
+  columnTypesMap,
+  filterValueType,
+  filterValueTypeMap,
+  updateColumnFilter,
+} from "./datatables.types";
 import { useTable } from "./hooks/useTable";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { FilterOperation, operationsOptions } from "./filterFns";
 
 type FilteredChipProps = {
   column: Column<any, unknown>;
+  updateColumnCustomFilter: updateColumnFilter;
 };
 
-export const FilteredChip = ({ column }: FilteredChipProps) => {
+interface FilterValuesProps {
+  columnType?: columnTypes;
+  onValueChange?: (value: FilterValue) => void;
+  options?: TableColumnMetadata[];
+}
+
+const FilterValues = ({
+  columnType = filterValueTypeMap.text,
+  options = [],
+  onValueChange,
+}: FilterValuesProps) => {
+  const [value, setValue] = useState("");
+  const valueType: filterValueType =
+    columnType === columnTypesMap.select
+      ? filterValueTypeMap.select
+      : filterValueTypeMap.text;
+
+  useEffect(() => {
+    if (value && onValueChange) {
+      onValueChange({ value });
+    }
+  }, [value]);
+  return valueType === filterValueTypeMap.select ? (
+    <Select value={value} onValueChange={setValue}>
+      <Select.Trigger>
+        <Select.Value placeholder="Select value" />
+      </Select.Trigger>
+      <Select.Content>
+        {options.map((opt) => {
+          return (
+            <Select.Item key={opt.key} value={opt.value}>
+              {opt.label || opt.value}
+            </Select.Item>
+          );
+        })}
+      </Select.Content>
+    </Select>
+  ) : (
+    <TextField value={value} onChange={(e) => setValue(e.target.value)} />
+  );
+};
+
+interface OperationProps {
+  columnType?: columnTypes;
+  onOperationSelect: (op: FilterOperation) => void;
+}
+
+const Operation = ({
+  columnType = columnTypesMap.text,
+  onOperationSelect,
+}: OperationProps) => {
+  const options = operationsOptions[columnType] || [];
+  const [value, setValue] = useState(options?.[0].value);
+
+  useEffect(() => {
+    const selectedOption = options.find((o) => o.value === value);
+    if (selectedOption) {
+      onOperationSelect(selectedOption);
+    }
+  }, [value]);
+
+  return (
+    <Select defaultValue={value} onValueChange={setValue}>
+      <Select.Trigger className={styles.filterOperator}>
+        <Select.Value placeholder="Select operation" />
+      </Select.Trigger>
+      <Select.Content>
+        {options.map((opt) => {
+          return (
+            <Select.Item key={opt.label} value={opt.label}>
+              {opt.label}
+            </Select.Item>
+          );
+        })}
+      </Select.Content>
+    </Select>
+  );
+};
+
+export const FilteredChip = ({
+  column,
+  updateColumnCustomFilter,
+}: FilteredChipProps) => {
+  const [filterOperation, setFilterOperation] = useState<FilterOperation>();
+  const [filterValue, setFilterValue] = useState<FilterValue>();
+
   const { table, removeFilterColumn } = useTable();
   const { filterVariant } = column?.columnDef as ApsaraColumnDef;
   const options: TableColumnMetadata[] =
     (column?.columnDef?.meta as any)?.data || [];
 
   const facets = column?.getFacetedUniqueValues();
+  const columnHeader = column?.columnDef?.header;
+  const columnName =
+    (typeof columnHeader === "string" && columnHeader) || column.id;
 
-  const renderInputs = () => {
-    switch (filterVariant) {
-      case "text": {
-        return (
-          <TextField onChange={(e) => column.setFilterValue(e.target.value)} />
-        );
-      }
-      case "select": {
-        const selectedValues = new Set(column?.getFilterValue() as string[]);
-        return (
-          <Select>
-            <Select.Trigger>
-              <Select.Value placeholder="Select a value" />
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Group>
-                {options.map((option) => (
-                  <Select.Item value={option.value} key={option.value}>
-                    {option?.label || option?.value}
-                  </Select.Item>
-                ))}
-              </Select.Group>
-            </Select.Content>
-          </Select>
-        );
-      }
-      default: {
-        const selectedValues = new Set(column?.getFilterValue() as string[]);
-        return (
-          <Popover>
-            <Popover.Trigger asChild>
-              <Button>{selectedValues.size} selected</Button>
-            </Popover.Trigger>
-            <Popover.Content align="start" style={{ padding: 0 }}>
-              <Command>
-                <Command.Input />
-                <Command.List>
-                  <Command.Empty>No results found.</Command.Empty>
-                  <Command.Group>
-                    {options.map((option: any) => {
-                      const isSelected = selectedValues.has(option.value);
-                      return (
-                        <Command.Item
-                          key={option.value}
-                          onSelect={() => {
-                            if (isSelected) {
-                              selectedValues.delete(option.value);
-                            } else {
-                              selectedValues.add(option.value);
-                            }
-                            const filterValues = Array.from(selectedValues);
-                            console.log(selectedValues, filterValues);
-                            column?.setFilterValue(
-                              filterValues.length ? filterValues : undefined
-                            );
-                          }}
-                        >
-                          <Flex justify="between" gap="small">
-                            <Flex align="center" gap="small">
-                              <Checkbox checked={isSelected} />
-                              {option.icon && (
-                                <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                              )}
-                              <span>{option.label}</span>
-                            </Flex>
-
-                            {facets?.get(option.value) && (
-                              <span>{facets.get(option.value)}</span>
-                            )}
-                          </Flex>
-                        </Command.Item>
-                      );
-                    })}
-                  </Command.Group>
-                  {selectedValues.size > 0 && (
-                    <>
-                      <Command.Separator />
-                      <Command.Group>
-                        <Command.Item
-                          onSelect={() => column?.setFilterValue(undefined)}
-                          className="justify-center text-center"
-                        >
-                          Clear filters
-                        </Command.Item>
-                      </Command.Group>
-                    </>
-                  )}
-                </Command.List>
-              </Command>
-            </Popover.Content>
-          </Popover>
-        );
-      }
+  useEffect(() => {
+    if (filterOperation?.fn && filterValue) {
+      updateColumnCustomFilter(column.id, filterOperation?.fn);
+      column.setFilterValue(filterValue);
     }
-  };
+  }, [filterOperation, filterValue]);
+
+  function removeFilter() {
+    column.setFilterValue(undefined);
+    removeFilterColumn(column.id);
+    setFilterOperation(undefined);
+    setFilterValue({});
+  }
 
   return (
     <Box className={styles.chip}>
-      <Text>{column.id}</Text>
-      <Text>is</Text>
-
-      {/* render diffrent input base on filterVariant type */}
-      {renderInputs()}
+      <Text>{columnName}</Text>
+      <Operation
+        columnType={filterVariant}
+        onOperationSelect={setFilterOperation}
+      />
+      {filterOperation?.hideValueField ? null : (
+        <FilterValues
+          columnType={filterVariant}
+          options={options}
+          onValueChange={setFilterValue}
+        />
+      )}
 
       {/* close filter chip */}
       <Flex>
-        <Cross1Icon
-          height="12"
-          width="12"
-          onClick={() => {
-            column.setFilterValue(undefined);
-            removeFilterColumn(column.id);
-          }}
-        />
+        <Cross1Icon height="12" width="12" onClick={removeFilter} />
       </Flex>
     </Box>
   );

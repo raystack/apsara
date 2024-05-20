@@ -1,5 +1,11 @@
-import type { OnChangeFn, Table, TableState } from "@tanstack/react-table";
+import type {
+  FilterFn,
+  OnChangeFn,
+  Table,
+  TableState,
+} from "@tanstack/react-table";
 import { createContext } from "react";
+import { tableFilterMap, updateColumnFilter } from "./datatables.types";
 
 export type onTableChangeEvent = (params: TableState & TableFormType) => void;
 
@@ -19,6 +25,9 @@ type TableContextType = {
   resetColumns: () => void;
   globalFilter: string;
   onGlobalFilterChange: OnChangeFn<any>;
+  tableCustomFilter: tableFilterMap;
+  updateColumnCustomFilter: updateColumnFilter;
+
   // state: TableState;
   // setState: Dispatch<(prevState: TableState) => TableState>;
   // filterQuery: (typeof INITIAL_QUERY)[];
