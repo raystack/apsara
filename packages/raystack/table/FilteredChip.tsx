@@ -112,7 +112,7 @@ export const FilteredChip = ({
   const [filterValue, setFilterValue] = useState<FilterValue>();
 
   const { table, removeFilterColumn } = useTable();
-  const { filterVariant } = column?.columnDef as ApsaraColumnDef;
+  const { filterVariant } = column?.columnDef as ApsaraColumnDef<unknown>;
   const options: TableColumnMetadata[] =
     (column?.columnDef?.meta as any)?.data || [];
 

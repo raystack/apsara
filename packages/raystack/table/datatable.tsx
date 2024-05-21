@@ -34,10 +34,14 @@ import { TableDetailContainer } from "./TableDetailContainer";
 import styles from "./datatable.module.css";
 import { useTableColumn } from "./hooks/useTableColumn";
 import { Table } from "./table";
-import { tableFilterMap, updateColumnFilter } from "./datatables.types";
+import {
+  ApsaraColumnDef,
+  tableFilterMap,
+  updateColumnFilter,
+} from "./datatables.types";
 
 type DataTableProps<TData, TValue> = {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ApsaraColumnDef<TData>[];
   data: TData[];
   multiRowSelectionEnabled?: boolean;
   children?: ReactNode;
@@ -80,7 +84,7 @@ function DataTableRoot<TData, TValue>({
 
   const columnWithCustomFilter = columns.map((col) => {
     // @ts-ignore;
-    const colId = col.id || col?.accessorKey;
+    const colId: string = col.id || col?.accessorKey;
     if (colId && tableCustomFilter.hasOwnProperty(colId)) {
       col.filterFn = tableCustomFilter[colId];
     }
@@ -93,7 +97,7 @@ function DataTableRoot<TData, TValue>({
 
   const table = useReactTable({
     data,
-    columns: columnWithCustomFilter,
+    columns: columnWithCustomFilter as unknown as ColumnDef<TData, TValue>[],
     globalFilterFn: "auto",
     enableRowSelection: true,
     manualPagination: true,
