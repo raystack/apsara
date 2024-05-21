@@ -123,4 +123,5 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
       hideValueField: true,
     },
   ],
+  [columnTypesMap.date]: [],
 };

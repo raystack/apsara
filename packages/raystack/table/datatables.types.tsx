@@ -25,6 +25,7 @@ export const columnTypesMap = {
   select: "select",
   number: "number",
   text: "text",
+  date: "date",
 } as const;
 
 export type columnTypes = keyof typeof columnTypesMap;
@@ -32,6 +33,7 @@ export type columnTypes = keyof typeof columnTypesMap;
 export const filterValueTypeMap = {
   select: "select",
   text: "text",
+  calendar: "calendar",
 } as const;
 
 export type filterValueType = keyof typeof filterValueTypeMap;

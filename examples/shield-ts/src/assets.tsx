@@ -124,7 +124,7 @@ export const columns: ApsaraColumnDef<Payment>[] = [
         {dayjs(getValue()).format("DD MMM YY HH:mm")}
       </div>
     ),
-    filterVariant: "text",
+    filterVariant: "date",
   },
 ];
 

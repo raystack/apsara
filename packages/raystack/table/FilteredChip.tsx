@@ -38,7 +38,9 @@ const FilterValues = ({
 }: FilterValuesProps) => {
   const [value, setValue] = useState("");
   const valueType: filterValueType =
-    columnType === columnTypesMap.select
+    columnType === columnTypesMap.date
+      ? filterValueTypeMap.calendar
+      : columnType === columnTypesMap.select
       ? filterValueTypeMap.select
       : filterValueTypeMap.text;
 
@@ -77,7 +79,7 @@ const Operation = ({
   onOperationSelect,
 }: OperationProps) => {
   const options = operationsOptions[columnType] || [];
-  const [value, setValue] = useState(options?.[0].value);
+  const [value, setValue] = useState(options?.[0]?.value);
 
   useEffect(() => {
     const selectedOption = options.find((o) => o.value === value);
@@ -137,7 +139,7 @@ export const FilteredChip = ({
 
   return (
     <Box className={styles.chip}>
-      <Text>{columnName}</Text>
+      <Text className={styles.filterText}>{columnName}</Text>
       <Operation
         columnType={filterVariant}
         onOperationSelect={setFilterOperation}
