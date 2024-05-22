@@ -31,7 +31,7 @@ export { Sidebar } from "./sidebar";
 export { Switch } from "./switch";
 export { Tooltip } from "./tooltip";
 export { ToggleGroup } from "./toggle-group";
-export { Calendar } from "./calendar";
+export { Calendar, DatePicker } from "./calendar";
 
 export {
   ApsaraAggregationFn,

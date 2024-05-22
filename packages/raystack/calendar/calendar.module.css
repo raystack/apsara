@@ -70,7 +70,11 @@
 }
 
 .cell:has([aria-selected="true"]) {
-  background-color: var(--background-inverted);
+  background-color: var(--background-highlight);
+
+  button {
+    color: var(--foreground-inverted);
+  }
 }
 
 .cell:has(.day_today):not(:has([aria-selected="true"])) {
@@ -117,4 +121,13 @@
 .day_range_start,
 .day_range_end {
   color: var(--foreground-inverted);
+}
+
+.calendarPopover {
+  padding: 0;
+  border: none;
+}
+
+.datePickerInput {
+  cursor: pointer;
 }

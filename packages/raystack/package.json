@@ -55,6 +55,7 @@
     "@types/react-select": "^5.0.1",
     "class-variance-authority": "^0.6.0",
     "cmdk": "^0.2.0",
+    "dayjs": "^1.11.11",
     "eslint-config-custom": "workspace:*",
     "np": "^8.0.4",
     "npm": "^9.7.1",

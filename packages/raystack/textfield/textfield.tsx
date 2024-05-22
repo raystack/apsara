@@ -27,7 +27,10 @@ const textfield = cva(styles.textfield, {
   },
 });
 
-type TextfieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
+export type TextfieldProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "size"
+> &
   PropsWithChildren<VariantProps<typeof textfield>> & {
     leading?: React.ReactElement;
     tailing?: React.ReactElement;

@@ -1,6 +1,9 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import React from "react";
 import styles from "./popover.module.css";
+import { cva } from "class-variance-authority";
+
+const popoverContent = cva(styles.popover);
 
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
@@ -11,7 +14,7 @@ const PopoverContent = React.forwardRef<
       ref={ref}
       align={align}
       sideOffset={sideOffset}
-      className={styles.popover}
+      className={popoverContent({ className })}
       {...props}
     />
   </PopoverPrimitive.Portal>
