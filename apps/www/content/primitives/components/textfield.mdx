@@ -2,6 +2,7 @@
 title: Text Field
 description: Displays a form text field or a component that looks like a text field.
 ---
+
 ## Preview
 
 <Preview>
@@ -13,19 +14,26 @@ description: Displays a form text field or a component that looks like a text fi
       gap: "8px",
     }}
   >
-  <TextField
-    type="email"
-    
-    placeholder="Email"
-    autoComplete="off"
-    
-  />
-  <TextField
-    type="password"
-    size="small"
-    placeholder="Password"
-    autoComplete="off"
-  />
+    <TextField type="email" placeholder="Email" autoComplete="off" />
+    <TextField
+      type="password"
+      size="small"
+      placeholder="Password"
+      autoComplete="off"
+    />
+    <TextField
+      type="text"
+      size="small"
+      placeholder="Leading"
+      leading={<InfoCircledIcon />}
+    />
+     <TextField
+      type="text"
+      size="small"
+      placeholder="Tailing"
+      tailing={<InfoCircledIcon />}
+    />
+
   </Flex>
 </Preview>
 
@@ -34,47 +42,46 @@ description: Displays a form text field or a component that looks like a text fi
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
 </LiveProvider>
-
 
 ## Variant
 
 Diffrent size variants
 
 <Playground
-    scope={{ TextField }}
-    tabs={[
-        {
-            name: "small",
-            code: `
+  scope={{ TextField }}
+  tabs={[
+    {
+      name: "small",
+      code: `
 <TextField
   type="email"
   size="small"
   placeholder="Email"
   autoComplete="off"
 />`,
-        },
-        {
-            name: "medium",
-            code: `
+    },
+    {
+      name: "medium",
+      code: `
 <TextField
   type="email"
   size="medium"
   placeholder="Email"
   autoComplete="off"
 />`,
-        },
-    ]}
+    },
+  ]}
 />
 
 ## Anatomy
+
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
 import { TextField } from '@raystack/apsara'
-
 
 <TextField
   type="email"
