@@ -8,20 +8,17 @@ links:
 ## Preview
 
 <Preview>
-  <Calendar />
+  <Calendar numberOfMonths={2} />
 </Preview>
 
 ## DatePicker
 
 <Preview>
-  <Flex
-    style={{
-      width: "320px",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "8px",
-    }}
-  >
+  <Flex direction="column" gap="medium">
+ 
     <DatePicker textFieldProps={{ size: "medium" }} />
+
+    <RangePicker textFieldProps={{ size: "medium" }} />
+
   </Flex>
 </Preview>

@@ -84,6 +84,9 @@
 .cell:has(.day_range_middle) {
   border-radius: 0;
   background-color: var(--background-base-hover);
+  button {
+    color: var(--foreground-base);
+  }
 }
 
 .cell:has(.day_range_start):not(:has(.day_range_end)) {
@@ -123,9 +126,15 @@
   color: var(--foreground-inverted);
 }
 
+.months {
+  display: flex;
+  gap: var(--pd-8);
+}
+
 .calendarPopover {
   padding: 0;
   border: none;
+  min-width: max-content;
 }
 
 .datePickerInput {
