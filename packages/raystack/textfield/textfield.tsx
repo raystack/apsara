@@ -15,8 +15,11 @@ const textfield = cva(styles.textfield, {
       valid: styles["textfield-valid"],
     },
 
-    leading: {
+    hasLeadingElement: {
       true: styles["textfield-leading"],
+    },
+    hasTrailingElement: {
+      true: styles["textfield-trailing"],
     },
   },
   defaultVariants: {
@@ -24,24 +27,44 @@ const textfield = cva(styles.textfield, {
   },
 });
 
-type TextfieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size"> &
+export type TextfieldProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "size"
+> &
   PropsWithChildren<VariantProps<typeof textfield>> & {
     leading?: React.ReactElement;
+    trailing?: React.ReactElement;
   };
 
 export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
-  ({ leading, className, src, size, state, style, ...props }, ref) => {
+  (
+    { leading, trailing, className, src, size, state, style, ...props },
+    ref
+  ) => {
+    const hasLeadingElement = Boolean(leading);
+    const hasTrailingElement = Boolean(trailing);
+
     return (
       <Flex align="center" style={{ position: "relative", width: "100%" }}>
-        {leading ? (
+        {hasLeadingElement ? (
           <Flex style={{ position: "absolute", left: "8px" }}>{leading}</Flex>
         ) : null}
         <input
-          className={cx(textfield({ size, state, className, leading }))}
-          style={leading ? { paddingLeft: "32px" } : {}}
+          className={cx(
+            textfield({
+              size,
+              state,
+              className,
+              hasLeadingElement,
+              hasTrailingElement,
+            })
+          )}
           {...props}
           ref={ref}
         />
+        {hasTrailingElement ? (
+          <Flex style={{ position: "absolute", right: "8px" }}>{trailing}</Flex>
+        ) : null}
       </Flex>
     );
   }

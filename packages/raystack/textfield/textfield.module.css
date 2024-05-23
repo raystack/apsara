@@ -71,3 +71,7 @@
 .textfield-leading {
   padding-left: 32px;
 }
+
+.textfield-trailing {
+  padding-right: 32px;
+}

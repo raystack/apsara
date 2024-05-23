@@ -4,8 +4,9 @@ import { Flex } from "~/flex";
 import { Text } from "~/text";
 
 import styles from "./sidebar.module.css";
-;
-type SidebarRootProps = PropsWithChildren<VariantProps<typeof Flex>> & { children?: ReactNode };
+type SidebarRootProps = PropsWithChildren<VariantProps<typeof Flex>> & {
+  children?: ReactNode;
+};
 const SidebarRoot = ({ children, ...props }: SidebarRootProps) => {
   return (
     <Flex
@@ -101,6 +102,7 @@ type SidebarNavigationCellProps = PropsWithChildren<VariantProps<typeof cell>> &
     trailingIcon?: React.ReactNode;
     children?: React.ReactNode;
     onClick?: () => void;
+    href?: string;
   };
 
 const SidebarNavigationCell = ({

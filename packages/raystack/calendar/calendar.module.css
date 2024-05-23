@@ -70,7 +70,11 @@
 }
 
 .cell:has([aria-selected="true"]) {
-  background-color: var(--background-inverted);
+  background-color: var(--background-highlight);
+
+  button {
+    color: var(--foreground-inverted);
+  }
 }
 
 .cell:has(.day_today):not(:has([aria-selected="true"])) {
@@ -80,6 +84,9 @@
 .cell:has(.day_range_middle) {
   border-radius: 0;
   background-color: var(--background-base-hover);
+  button {
+    color: var(--foreground-base);
+  }
 }
 
 .cell:has(.day_range_start):not(:has(.day_range_end)) {
@@ -117,4 +124,19 @@
 .day_range_start,
 .day_range_end {
   color: var(--foreground-inverted);
+}
+
+.months {
+  display: flex;
+  gap: var(--pd-8);
+}
+
+.calendarPopover {
+  padding: 0;
+  border: none;
+  min-width: max-content;
+}
+
+.datePickerInput {
+  cursor: pointer;
 }
