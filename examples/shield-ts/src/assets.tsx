@@ -1,5 +1,11 @@
-import { Checkbox, DataTable, Flex, Text, useTable } from "@raystack/apsara";
-import { ColumnDef } from "@tanstack/react-table";
+import {
+  ApsaraColumnDef,
+  Checkbox,
+  DataTable,
+  Flex,
+  Text,
+  useTable,
+} from "@raystack/apsara";
 import * as React from "react";
 
 const data: Payment[] = [
@@ -42,7 +48,7 @@ export type Payment = {
   email: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ApsaraColumnDef<Payment>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -107,6 +113,7 @@ export const columns: ColumnDef<Payment>[] = [
 
 export const Assets = () => {
   return (
+    // @ts-ignore
     <DataTable columns={columns} data={data}>
       <DataTable.Toolbar>
         <AssetsHeader />
