@@ -43,7 +43,7 @@ export function DatePicker({
       <Popover.Trigger asChild>
         <TextField
           value={dateValue}
-          tailing={<CalendarIcon />}
+          trailing={<CalendarIcon />}
           className={styles.datePickerInput}
           {...textFieldProps}
         />

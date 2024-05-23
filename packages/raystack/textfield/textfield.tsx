@@ -18,8 +18,8 @@ const textfield = cva(styles.textfield, {
     hasLeadingElement: {
       true: styles["textfield-leading"],
     },
-    hasTailingElement: {
-      true: styles["textfield-tailing"],
+    hasTrailingElement: {
+      true: styles["textfield-trailing"],
     },
   },
   defaultVariants: {
@@ -33,13 +33,16 @@ export type TextfieldProps = Omit<
 > &
   PropsWithChildren<VariantProps<typeof textfield>> & {
     leading?: React.ReactElement;
-    tailing?: React.ReactElement;
+    trailing?: React.ReactElement;
   };
 
 export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
-  ({ leading, tailing, className, src, size, state, style, ...props }, ref) => {
+  (
+    { leading, trailing, className, src, size, state, style, ...props },
+    ref
+  ) => {
     const hasLeadingElement = Boolean(leading);
-    const hasTailingElement = Boolean(tailing);
+    const hasTrailingElement = Boolean(trailing);
 
     return (
       <Flex align="center" style={{ position: "relative", width: "100%" }}>
@@ -53,14 +56,14 @@ export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
               state,
               className,
               hasLeadingElement,
-              hasTailingElement,
+              hasTrailingElement,
             })
           )}
           {...props}
           ref={ref}
         />
-        {hasTailingElement ? (
-          <Flex style={{ position: "absolute", right: "8px" }}>{tailing}</Flex>
+        {hasTrailingElement ? (
+          <Flex style={{ position: "absolute", right: "8px" }}>{trailing}</Flex>
         ) : null}
       </Flex>
     );

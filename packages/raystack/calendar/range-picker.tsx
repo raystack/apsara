@@ -54,13 +54,13 @@ export function RangePicker({
         <Flex gap={"medium"} className={pickerGroupClassName}>
           <TextField
             value={startDate}
-            tailing={<CalendarIcon />}
+            trailing={<CalendarIcon />}
             className={styles.datePickerInput}
             {...textFieldProps}
           />
           <TextField
             value={endDate}
-            tailing={<CalendarIcon />}
+            trailing={<CalendarIcon />}
             className={styles.datePickerInput}
             {...textFieldProps}
           />
