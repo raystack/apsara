@@ -56,6 +56,9 @@ importers:
       copy-to-clipboard:
         specifier: ^3.3.3
         version: 3.3.3
+      dayjs:
+        specifier: ^1.11.11
+        version: 1.11.11
       framer-motion:
         specifier: ^10.12.16
         version: 10.12.16(react-dom@18.2.0)(react@18.2.0)
@@ -75,9 +78,6 @@ importers:
       '@radix-ui/react-scroll-area':
         specifier: ^1.0.3
         version: 1.0.4(@types/react-dom@18.2.3)(@types/react@18.2.5)(react-dom@18.2.0)(react@18.2.0)
-      '@raystack/shield-ts':
-        specifier: workspace:*
-        version: link:../../examples/shield-ts
       '@types/mapbox__rehype-prism':
         specifier: ^0.8.0
         version: 0.8.0
