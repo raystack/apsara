@@ -84,6 +84,7 @@ const columns = [
         title: "Age",
         dataIndex: "age",
         key: "age",
+        width: 20,
     },
     {
         title: "Address",

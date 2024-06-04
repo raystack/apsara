@@ -60,6 +60,7 @@ function Table({
             columnHelper.accessor(item.key, {
                 cell: item.render ? item.render : (info) => info.getValue(),
                 header: item.title ?? item.dataIndex,
+                size: item.width,
             }),
         );
     });
@@ -145,14 +146,21 @@ function Table({
     };
 
     return (
-        <StyledTable className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""}`} height={height}>
+        <StyledTable
+            className={`${alternate ? "alternate" : ""} ${alternateHover ? "alternate-hover" : ""}`}
+            height={height}
+        >
             <TableWrapper className="apsara-table-content">
                 <table>
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <th key={header.id} className="table-cell">
+                                    <th
+                                        key={header.id}
+                                        className="table-cell"
+                                        style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
+                                    >
                                         {header.isPlaceholder ? null : (
                                             <div
                                                 style={{
@@ -201,7 +209,13 @@ function Table({
                             {table.getRowModel().rows.map((row) => (
                                 <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <td key={cell.id}>
+                                        <td
+                                            key={cell.id}
+                                            style={{
+                                                width:
+                                                    cell.column.getSize() !== 150 ? cell.column.getSize() : undefined,
+                                            }}
+                                        >
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </td>
                                     ))}

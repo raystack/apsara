@@ -74,6 +74,7 @@ function VirtualisedTable({
             columnHelper.accessor(item.key, {
                 cell: item.render ? item.render : (info) => info.getValue(),
                 header: item.title ?? item.dataIndex,
+                size: item.size,
             }),
         );
     });
@@ -117,7 +118,11 @@ function VirtualisedTable({
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <tr key={headerGroup.id}>
                                     {headerGroup.headers.map((header) => (
-                                        <th key={header.id} className="table-cell">
+                                        <th
+                                            key={header.id}
+                                            className="table-cell"
+                                            style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
+                                        >
                                             {header.isPlaceholder ? null : (
                                                 <div
                                                     style={{
@@ -178,7 +183,16 @@ function VirtualisedTable({
                                         <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
                                             {row.getVisibleCells().map((cell) => {
                                                 return (
-                                                    <td key={cell.id} className="virtual-table-cell">
+                                                    <td
+                                                        key={cell.id}
+                                                        className="virtual-table-cell"
+                                                        style={{
+                                                            width:
+                                                                cell.column.getSize() !== 150
+                                                                    ? cell.column.getSize()
+                                                                    : undefined,
+                                                        }}
+                                                    >
                                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                                     </td>
                                                 );
