@@ -93,7 +93,7 @@ const Filters = ({ filteredFieldData, label = "Filters", disabled = false, ...pr
 
     return (
         <StyledPopover open={open} onOpenChange={(open) => setOpen(open)}>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild className="popover-trigger">
                 <span aria-label="Update dimensions">
                     <StyledBadge dot={!!filteredFieldDataLength}>
                         <FilterButton type="default" disabled={disabled}>

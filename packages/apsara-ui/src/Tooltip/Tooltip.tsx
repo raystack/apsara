@@ -34,10 +34,19 @@ const Tooltip = ({
                 <RadixTooltip.Trigger asChild>
                     <span>{children}</span>
                 </RadixTooltip.Trigger>
-                <TooltipContent className="TooltipContent" sideOffset={5} side={placement} style={style} avoidCollisions={avoidCollisions} {...props}>
-                    {title}
-                    <RadixTooltip.Arrow className="TooltipArrow" />
-                </TooltipContent>
+                <RadixTooltip.Portal>
+                    <TooltipContent
+                        className="TooltipContent"
+                        sideOffset={5}
+                        side={placement}
+                        style={style}
+                        avoidCollisions={avoidCollisions}
+                        {...props}
+                    >
+                        {title}
+                        <RadixTooltip.Arrow className="TooltipArrow" />
+                    </TooltipContent>
+                </RadixTooltip.Portal>
             </RadixTooltip.Root>
         </RadixTooltip.Provider>
     );

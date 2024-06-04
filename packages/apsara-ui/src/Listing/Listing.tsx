@@ -15,6 +15,7 @@ function Listing<T>({
     renderHeader = null,
     renderBody = null,
     renderExtraFilters = null,
+    renderExtraItems = null,
     resourcePath = "/",
     calculateRowHeight,
     calculateColumnWidth,
@@ -58,6 +59,7 @@ function Listing<T>({
                     />
                 )}
                 {renderExtraFilters}
+                {renderExtraItems}
             </ListingSearch>
         );
     }
