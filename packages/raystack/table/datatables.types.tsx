@@ -7,6 +7,7 @@ import {
 } from "@tanstack/table-core";
 import type { ApsaraAggregationFns } from "./helpers/aggregationFns";
 import type { ApsaraFilterFns } from "./helpers/filterFns";
+import { DateRange } from "react-day-picker";
 
 type LiteralUnion<T extends U, U = string> = T | (U & Record<never, never>);
 
@@ -33,7 +34,8 @@ export type columnTypes = keyof typeof columnTypesMap;
 export const filterValueTypeMap = {
   select: "select",
   text: "text",
-  calendar: "calendar",
+  datePicker: "datePicker",
+  rangePicker: "rangePicker",
 } as const;
 
 export type filterValueType = keyof typeof filterValueTypeMap;
@@ -45,6 +47,8 @@ export type updateColumnFilter = (id: string, fn: FilterFn<any>) => void;
 export interface FilterValue {
   value?: string | number;
   values?: Array<string | number>;
+  date?: Date;
+  dateRange?: DateRange;
 }
 
 export type ApsaraColumnDef<TData> = Omit<

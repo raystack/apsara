@@ -6,6 +6,7 @@ import { Select } from "~/select";
 import { Text } from "~/text";
 import { TextField } from "~/textfield";
 import { TableColumnMetadata } from "~/typing";
+import { DatePicker, RangePicker } from "~/calendar";
 import styles from "./datatable.module.css";
 import {
   ApsaraColumnDef,
@@ -29,28 +30,43 @@ interface FilterValuesProps {
   columnType?: columnTypes;
   onValueChange?: (value: FilterValue) => void;
   options?: TableColumnMetadata[];
+  filterOperation?: FilterOperation;
 }
 
 const FilterValues = ({
   columnType = filterValueTypeMap.text,
   options = [],
   onValueChange,
+  filterOperation,
+  ...props
 }: FilterValuesProps) => {
-  const [value, setValue] = useState("");
-  const valueType: filterValueType =
-    columnType === columnTypesMap.date
-      ? filterValueTypeMap.calendar
-      : columnType === columnTypesMap.select
-      ? filterValueTypeMap.select
-      : filterValueTypeMap.text;
+  const [value, setValue] = useState<FilterValue>({
+    date: new Date(),
+    dateRange: {
+      to: new Date(),
+      from: new Date(),
+    },
+  });
+
+  const valueType: filterValueType = filterOperation?.component
+    ? filterOperation?.component
+    : columnType === columnTypesMap.date
+    ? filterValueTypeMap.datePicker
+    : columnType === columnTypesMap.select
+    ? filterValueTypeMap.select
+    : filterValueTypeMap.text;
 
   useEffect(() => {
-    if (value && onValueChange) {
-      onValueChange({ value });
+    if (onValueChange) {
+      onValueChange(value);
     }
   }, [value]);
+
   return valueType === filterValueTypeMap.select ? (
-    <Select value={value} onValueChange={setValue}>
+    <Select
+      value={value.value as string}
+      onValueChange={(value) => setValue({ value })}
+    >
       <Select.Trigger>
         <Select.Value placeholder="Select value" />
       </Select.Trigger>
@@ -64,8 +80,18 @@ const FilterValues = ({
         })}
       </Select.Content>
     </Select>
+  ) : valueType === filterValueTypeMap.datePicker ? (
+    <DatePicker onSelect={(date) => setValue({ date })} value={value.date} />
+  ) : valueType === filterValueTypeMap.rangePicker ? (
+    <RangePicker
+      onSelect={(dateRange) => setValue({ dateRange })}
+      value={value.dateRange}
+    />
   ) : (
-    <TextField value={value} onChange={(e) => setValue(e.target.value)} />
+    <TextField
+      value={value.value}
+      onChange={(e) => setValue({ value: e.target.value })}
+    />
   );
 };
 
@@ -149,6 +175,7 @@ export const FilteredChip = ({
           columnType={filterVariant}
           options={options}
           onValueChange={setFilterValue}
+          filterOperation={filterOperation}
         />
       )}
 

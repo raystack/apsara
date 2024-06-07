@@ -14,6 +14,7 @@ interface DatePickerProps {
   textFieldProps?: TextfieldProps;
   calendarProps?: CalendarProps;
   onSelect?: (date: Date) => void;
+  value?: Date;
 }
 
 export function DatePicker({
@@ -21,15 +22,14 @@ export function DatePicker({
   dateFormat = "DD/MM/YYYY",
   textFieldProps,
   calendarProps,
+  value = new Date(),
   onSelect = () => {},
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [value, setValue] = useState<Date>(new Date());
   const dateValue = dayjs(value).format(dateFormat);
 
   const handleSelect: SelectSingleEventHandler = (day, selectedDay) => {
     const selected = day || selectedDay;
-    setValue(selected);
     onSelect(selected);
     setShowCalendar(false);
   };
@@ -49,7 +49,13 @@ export function DatePicker({
         />
       </Popover.Trigger>
       <Popover.Content side={side} className={styles.calendarPopover}>
-        <Calendar mode="single" selected={value} onSelect={handleSelect} />
+        <Calendar
+          {...calendarProps}
+          mode="single"
+          selected={value}
+          defaultMonth={value}
+          onSelect={handleSelect}
+        />
       </Popover.Content>
     </Popover>
   );

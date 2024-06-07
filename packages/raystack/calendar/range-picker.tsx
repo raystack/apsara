@@ -16,6 +16,7 @@ interface RangePickerProps {
   calendarProps?: CalendarProps;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
+  value?: DateRange;
 }
 
 export function RangePicker({
@@ -24,20 +25,17 @@ export function RangePicker({
   textFieldProps,
   calendarProps,
   onSelect = () => {},
+  value = {
+    to: new Date(),
+    from: new Date(),
+  },
   pickerGroupClassName,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [value, setValue] = useState<DateRange>({
-    to: new Date(),
-    from: new Date(),
-  });
   const startDate = dayjs(value.from).format(dateFormat);
   const endDate = dayjs(value.to).format(dateFormat);
 
   const handleSelect: SelectRangeEventHandler = (range, selectedDay) => {
-    if (range) {
-      setValue(range);
-    }
     if (range?.to === selectedDay) {
       onOpenChange(false);
       onSelect(range);
@@ -68,7 +66,9 @@ export function RangePicker({
       </Popover.Trigger>
       <Popover.Content side={side} className={styles.calendarPopover}>
         <Calendar
+          showOutsideDays={false}
           numberOfMonths={2}
+          defaultMonth={value.from}
           {...calendarProps}
           mode="range"
           selected={value}

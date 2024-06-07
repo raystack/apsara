@@ -1,11 +1,18 @@
 import { FilterFn } from "@tanstack/table-core";
-import { columnTypes, columnTypesMap, FilterValue } from "./datatables.types";
+import {
+  columnTypes,
+  columnTypesMap,
+  FilterValue,
+  filterValueType,
+} from "./datatables.types";
+import dayjs from "dayjs";
 
 export interface FilterOperation {
   label: string;
   value: string;
   fn?: FilterFn<FilterValue>;
   hideValueField?: boolean;
+  component?: filterValueType;
 }
 
 export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
@@ -123,5 +130,45 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
       hideValueField: true,
     },
   ],
-  [columnTypesMap.date]: [],
+  [columnTypesMap.date]: [
+    {
+      label: "is",
+      value: "is",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isSame(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      label: "is before",
+      value: "is before",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isBefore(dayjs(filterValue.date));
+      },
+    },
+    {
+      label: "is after",
+      value: "is after",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isAfter(dayjs(filterValue.date));
+      },
+    },
+    {
+      label: "is between",
+      value: "is between",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return (
+          dayjs(row.getValue(columnId)).isBefore(
+            dayjs(filterValue.dateRange?.from)
+          ) &&
+          dayjs(row.getValue(columnId)).isAfter(
+            dayjs(filterValue.dateRange?.to)
+          )
+        );
+      },
+      component: "rangePicker",
+    },
+  ],
 };
