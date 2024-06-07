@@ -20,6 +20,7 @@
     "framer-motion": "^10.12.16",
     "next": "13.2.4",
     "react-live": "^4.1.6",
+    "react-loading-skeleton": "^3.4.0",
     "tslib": "^2.5.0"
   },
   "devDependencies": {

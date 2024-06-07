@@ -39,6 +39,7 @@ import {
   tableFilterMap,
   updateColumnFilter,
 } from "./datatables.types";
+import Skeleton from "react-loading-skeleton";
 
 type DataTableProps<TData, TValue> = {
   columns: ApsaraColumnDef<TData>[];
@@ -48,6 +49,7 @@ type DataTableProps<TData, TValue> = {
   ShouldShowHeader?: boolean;
   emptyState?: ReactNode;
   parentStyle?: CSSProperties;
+  isLoading?: boolean;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -56,6 +58,7 @@ function DataTableRoot<TData, TValue>({
   emptyState,
   children,
   parentStyle,
+  isLoading = false,
   ShouldShowHeader = true,
   ...props
 }: DataTableProps<TData, TValue>) {
@@ -88,6 +91,16 @@ function DataTableRoot<TData, TValue>({
     if (colId && tableCustomFilter.hasOwnProperty(colId)) {
       col.filterFn = tableCustomFilter[colId];
     }
+
+    col.cell = isLoading
+      ? () => (
+          <Skeleton
+            containerClassName={styles.flex1}
+            highlightColor="var(--background-base)"
+            baseColor="var(--background-base-hover)"
+          />
+        )
+      : col.cell;
     return col;
   });
 

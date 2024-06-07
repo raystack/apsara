@@ -44,3 +44,7 @@
 .filterText {
   min-width: fit-content;
 }
+
+.flex1 {
+  flex: 1;
+}

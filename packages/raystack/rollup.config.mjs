@@ -4,7 +4,6 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
 
-
 const defaultGlobals = {
   react: "React",
   "react-dom": "ReactDOM",
@@ -16,9 +15,9 @@ export default {
     {
       dir: "dist",
       format: "es",
-
       sourcemap: true,
       exports: "named",
+
     },
     {
       dir: "dist",
@@ -41,4 +40,10 @@ export default {
     }),
     image(),
   ],
+  onwarn: (warning, warn) => {
+    if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+      return;
+    }
+    warn(warning);
+  }
 };
