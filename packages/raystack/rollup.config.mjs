@@ -3,7 +3,7 @@ import image from "@rollup/plugin-image";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
-
+import alias from "@rollup/plugin-alias";
 
 const defaultGlobals = {
   react: "React",
@@ -30,6 +30,11 @@ export default {
   ],
   external: ["react", "react-dom"],
   plugins: [
+    alias({
+      entries: {
+        "~/*": "./*"
+      }
+    }),
     nodeResolve(),
     commonjs(),
     postcss({
