@@ -45,6 +45,7 @@ export function DatePicker({
           value={dateValue}
           trailing={<CalendarIcon />}
           className={styles.datePickerInput}
+          readOnly
           {...textFieldProps}
         />
       </Popover.Trigger>
