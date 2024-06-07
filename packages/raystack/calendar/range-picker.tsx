@@ -19,6 +19,8 @@ interface RangePickerProps {
   value?: DateRange;
 }
 
+type RangeFields = keyof DateRange;
+
 export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
@@ -32,13 +34,20 @@ export function RangePicker({
   pickerGroupClassName,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
+  const [currentRangeField, setCurrentRangeField] =
+    useState<RangeFields>("from");
   const startDate = dayjs(value.from).format(dateFormat);
   const endDate = dayjs(value.to).format(dateFormat);
 
   const handleSelect: SelectRangeEventHandler = (range, selectedDay) => {
-    if (range?.to === selectedDay) {
-      onOpenChange(false);
-      onSelect(range);
+    let from = value?.from || range?.from;
+    from = dayjs(from).isAfter(dayjs(selectedDay)) ? undefined : from;
+    if (currentRangeField === "to" && from) {
+      onSelect({ from, to: selectedDay });
+      setCurrentRangeField("from");
+    } else {
+      onSelect({ from: selectedDay });
+      setCurrentRangeField("to");
     }
   };
 

@@ -160,10 +160,10 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
       value: "is between",
       fn: (row, columnId, filterValue: FilterValue) => {
         return (
-          dayjs(row.getValue(columnId)).isBefore(
+          dayjs(row.getValue(columnId)).isAfter(
             dayjs(filterValue.dateRange?.from)
           ) &&
-          dayjs(row.getValue(columnId)).isAfter(
+          dayjs(row.getValue(columnId)).isBefore(
             dayjs(filterValue.dateRange?.to)
           )
         );
