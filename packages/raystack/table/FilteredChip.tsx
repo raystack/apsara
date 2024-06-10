@@ -26,6 +26,26 @@ type FilteredChipProps = {
   updateColumnCustomFilter: updateColumnFilter;
 };
 
+interface getFilterValueTypeOptions {
+  filterOperation?: FilterOperation;
+  columnType?: columnTypes;
+}
+
+const getFilterValueType = ({
+  filterOperation,
+  columnType,
+}: getFilterValueTypeOptions): filterValueType => {
+  if (filterOperation?.component) {
+    return filterOperation?.component;
+  } else if (columnType === columnTypesMap.date) {
+    return filterValueTypeMap.datePicker;
+  } else if (columnType === columnTypesMap.select) {
+    return filterValueTypeMap.select;
+  } else {
+    return filterValueTypeMap.text;
+  }
+};
+
 interface FilterValuesProps {
   columnType?: columnTypes;
   onValueChange?: (value: FilterValue) => void;
@@ -41,6 +61,7 @@ const FilterValues = ({
   ...props
 }: FilterValuesProps) => {
   const [value, setValue] = useState<FilterValue>({
+    value: "",
     date: new Date(),
     dateRange: {
       to: new Date(),
@@ -48,13 +69,7 @@ const FilterValues = ({
     },
   });
 
-  const valueType: filterValueType = filterOperation?.component
-    ? filterOperation?.component
-    : columnType === columnTypesMap.date
-    ? filterValueTypeMap.datePicker
-    : columnType === columnTypesMap.select
-    ? filterValueTypeMap.select
-    : filterValueTypeMap.text;
+  const valueType = getFilterValueType({ filterOperation, columnType });
 
   useEffect(() => {
     if (onValueChange) {
@@ -62,37 +77,49 @@ const FilterValues = ({
     }
   }, [value]);
 
-  return valueType === filterValueTypeMap.select ? (
-    <Select
-      value={value.value as string}
-      onValueChange={(value) => setValue({ value })}
-    >
-      <Select.Trigger>
-        <Select.Value placeholder="Select value" />
-      </Select.Trigger>
-      <Select.Content>
-        {options.map((opt) => {
-          return (
-            <Select.Item key={opt.key} value={opt.value}>
-              {opt.label || opt.value}
-            </Select.Item>
-          );
-        })}
-      </Select.Content>
-    </Select>
-  ) : valueType === filterValueTypeMap.datePicker ? (
-    <DatePicker onSelect={(date) => setValue({ date })} value={value.date} />
-  ) : valueType === filterValueTypeMap.rangePicker ? (
-    <RangePicker
-      onSelect={(dateRange) => setValue({ dateRange })}
-      value={value.dateRange}
-    />
-  ) : (
-    <TextField
-      value={value.value}
-      onChange={(e) => setValue({ value: e.target.value })}
-    />
-  );
+  switch (valueType) {
+    case filterValueTypeMap.select:
+      return (
+        <Select
+          value={value.value as string}
+          onValueChange={(value) => setValue({ value })}
+        >
+          <Select.Trigger>
+            <Select.Value placeholder="Select value" />
+          </Select.Trigger>
+          <Select.Content>
+            {options.map((opt) => {
+              return (
+                <Select.Item key={opt.key} value={opt.value}>
+                  {opt.label || opt.value}
+                </Select.Item>
+              );
+            })}
+          </Select.Content>
+        </Select>
+      );
+    case filterValueTypeMap.datePicker:
+      return (
+        <DatePicker
+          onSelect={(date) => setValue({ date })}
+          value={value.date}
+        />
+      );
+    case filterValueTypeMap.rangePicker:
+      return (
+        <RangePicker
+          onSelect={(dateRange) => setValue({ dateRange })}
+          value={value.dateRange}
+        />
+      );
+    default:
+      return (
+        <TextField
+          value={value.value}
+          onChange={(e) => setValue({ value: e.target.value })}
+        />
+      );
+  }
 };
 
 interface OperationProps {
