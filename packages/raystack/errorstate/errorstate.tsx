@@ -69,6 +69,7 @@ type ErrorStateProps = PropsWithChildren<VariantProps<typeof errorstate>> &
   HTMLAttributes<HTMLElement> & {
     icon?: React.ReactElement;
     status?: Status;
+    message?: string;
   };
 
 export function ErrorState({
@@ -76,6 +77,7 @@ export function ErrorState({
   className,
   status,
   icon,
+  message,
   ...props
 }: ErrorStateProps) {
   return (
@@ -92,7 +94,7 @@ export function ErrorState({
         {icon ? icon : getIcon(status)}
         <Flex direction="column" gap="medium">
           <Headline size="large">{getHeadline(status)}</Headline>
-          <Body size="large">{getMessage(status)}</Body>
+          <Body size="large">{message ? message : getMessage(status)}</Body>
         </Flex>
       </Flex>
     </Flex>
