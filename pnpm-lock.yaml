@@ -68,6 +68,9 @@ importers:
       react-live:
         specifier: ^4.1.6
         version: 4.1.6(react-dom@18.2.0)(react@18.2.0)
+      react-loading-skeleton:
+        specifier: ^3.4.0
+        version: 3.4.0(react@18.2.0)
       tslib:
         specifier: ^2.5.0
         version: 2.5.0
@@ -226,6 +229,9 @@ importers:
       react-day-picker:
         specifier: ^8.10.0
         version: 8.10.0(date-fns@3.6.0)(react@18.2.0)
+      react-loading-skeleton:
+        specifier: ^3.4.0
+        version: 3.4.0(react@18.2.0)
       release-it:
         specifier: ^16.2.1
         version: 16.2.1(typescript@5.4.3)
@@ -10848,6 +10854,14 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
       sucrase: 3.32.0
       use-editable: 2.3.3(react@18.2.0)
+    dev: false
+
+  /react-loading-skeleton@3.4.0(react@18.2.0):
+    resolution: {integrity: sha512-1oJEBc9+wn7BbkQQk7YodlYEIjgeR+GrRjD+QXkVjwZN7LGIcAFHrx4NhT7UHGBxNY1+zax3c+Fo6XQM4R7CgA==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-refresh@0.9.0:
