@@ -39,13 +39,17 @@ export function RangePicker({
   const startDate = dayjs(value.from).format(dateFormat);
   const endDate = dayjs(value.to).format(dateFormat);
 
+  // 1st click will select the start date.
+  // 2nd click will select the end date.
+  // 3rd click will select the start date again.
   const handleSelect: SelectRangeEventHandler = (range, selectedDay) => {
-    let from = value?.from || range?.from;
-    from = dayjs(from).isAfter(dayjs(selectedDay)) ? undefined : from;
-    if (currentRangeField === "to" && from) {
+    const from = value?.from || range?.from;
+    if (currentRangeField === "to" && dayjs(selectedDay).isAfter(dayjs(from))) {
+      // update the end date
       onSelect({ from, to: selectedDay });
       setCurrentRangeField("from");
     } else {
+      // reset the range and select start day
       onSelect({ from: selectedDay });
       setCurrentRangeField("to");
     }
