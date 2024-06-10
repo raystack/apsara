@@ -6,6 +6,11 @@ import {
   filterValueType,
 } from "./datatables.types";
 import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 export interface FilterOperation {
   label: string;
@@ -145,14 +150,20 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
       label: "is before",
       value: "is before",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return dayjs(row.getValue(columnId)).isBefore(dayjs(filterValue.date));
+        return dayjs(row.getValue(columnId)).isBefore(
+          dayjs(filterValue.date),
+          "day"
+        );
       },
     },
     {
       label: "is after",
       value: "is after",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return dayjs(row.getValue(columnId)).isAfter(dayjs(filterValue.date));
+        return dayjs(row.getValue(columnId)).isAfter(
+          dayjs(filterValue.date),
+          "day"
+        );
       },
     },
     {
@@ -160,11 +171,13 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
       value: "is between",
       fn: (row, columnId, filterValue: FilterValue) => {
         return (
-          dayjs(row.getValue(columnId)).isAfter(
-            dayjs(filterValue.dateRange?.from)
+          dayjs(row.getValue(columnId)).isSameOrAfter(
+            dayjs(filterValue.dateRange?.from),
+            "day"
           ) &&
-          dayjs(row.getValue(columnId)).isBefore(
-            dayjs(filterValue.dateRange?.to)
+          dayjs(row.getValue(columnId)).isSameOrBefore(
+            dayjs(filterValue.dateRange?.to),
+            "day"
           )
         );
       },
