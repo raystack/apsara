@@ -3,6 +3,7 @@
   "version": "0.0.5",
   "private": true,
   "scripts": {
+    "prebuild": "cd ../.. && npm run build:apsara",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -15,6 +16,7 @@
     "@raystack/apsara": "workspace:*",
     "@tanstack/react-table": "^8.9.2",
     "copy-to-clipboard": "^3.3.3",
+    "dayjs": "^1.11.11",
     "framer-motion": "^10.12.16",
     "next": "13.2.4",
     "react-live": "^4.1.6",
@@ -23,7 +25,6 @@
   "devDependencies": {
     "@mapbox/rehype-prism": "^0.8.0",
     "@radix-ui/react-scroll-area": "^1.0.3",
-    "@raystack/shield-ts": "workspace:*",
     "@types/mapbox__rehype-prism": "^0.8.0",
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.28",

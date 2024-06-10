@@ -40,3 +40,7 @@
 .filterOperator {
   min-width: fit-content;
 }
+
+.filterText {
+  min-width: fit-content;
+}

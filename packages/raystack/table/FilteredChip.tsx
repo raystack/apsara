@@ -6,6 +6,7 @@ import { Select } from "~/select";
 import { Text } from "~/text";
 import { TextField } from "~/textfield";
 import { TableColumnMetadata } from "~/typing";
+import { DatePicker, RangePicker } from "~/calendar";
 import styles from "./datatable.module.css";
 import {
   ApsaraColumnDef,
@@ -25,46 +26,100 @@ type FilteredChipProps = {
   updateColumnCustomFilter: updateColumnFilter;
 };
 
+interface getFilterValueTypeOptions {
+  filterOperation?: FilterOperation;
+  columnType?: columnTypes;
+}
+
+const getFilterValueType = ({
+  filterOperation,
+  columnType,
+}: getFilterValueTypeOptions): filterValueType => {
+  if (filterOperation?.component) {
+    return filterOperation?.component;
+  } else if (columnType === columnTypesMap.date) {
+    return filterValueTypeMap.datePicker;
+  } else if (columnType === columnTypesMap.select) {
+    return filterValueTypeMap.select;
+  } else {
+    return filterValueTypeMap.text;
+  }
+};
+
 interface FilterValuesProps {
   columnType?: columnTypes;
   onValueChange?: (value: FilterValue) => void;
   options?: TableColumnMetadata[];
+  filterOperation?: FilterOperation;
 }
 
 const FilterValues = ({
   columnType = filterValueTypeMap.text,
   options = [],
   onValueChange,
+  filterOperation,
+  ...props
 }: FilterValuesProps) => {
-  const [value, setValue] = useState("");
-  const valueType: filterValueType =
-    columnType === columnTypesMap.select
-      ? filterValueTypeMap.select
-      : filterValueTypeMap.text;
+  const [value, setValue] = useState<FilterValue>({
+    value: "",
+    date: new Date(),
+    dateRange: {
+      to: new Date(),
+      from: new Date(),
+    },
+  });
+
+  const valueType = getFilterValueType({ filterOperation, columnType });
 
   useEffect(() => {
-    if (value && onValueChange) {
-      onValueChange({ value });
+    if (onValueChange) {
+      onValueChange(value);
     }
   }, [value]);
-  return valueType === filterValueTypeMap.select ? (
-    <Select value={value} onValueChange={setValue}>
-      <Select.Trigger>
-        <Select.Value placeholder="Select value" />
-      </Select.Trigger>
-      <Select.Content>
-        {options.map((opt) => {
-          return (
-            <Select.Item key={opt.key} value={opt.value}>
-              {opt.label || opt.value}
-            </Select.Item>
-          );
-        })}
-      </Select.Content>
-    </Select>
-  ) : (
-    <TextField value={value} onChange={(e) => setValue(e.target.value)} />
-  );
+
+  switch (valueType) {
+    case filterValueTypeMap.select:
+      return (
+        <Select
+          value={value.value as string}
+          onValueChange={(value) => setValue({ value })}
+        >
+          <Select.Trigger>
+            <Select.Value placeholder="Select value" />
+          </Select.Trigger>
+          <Select.Content>
+            {options.map((opt) => {
+              return (
+                <Select.Item key={opt.key} value={opt.value}>
+                  {opt.label || opt.value}
+                </Select.Item>
+              );
+            })}
+          </Select.Content>
+        </Select>
+      );
+    case filterValueTypeMap.datePicker:
+      return (
+        <DatePicker
+          onSelect={(date) => setValue({ date })}
+          value={value.date}
+        />
+      );
+    case filterValueTypeMap.rangePicker:
+      return (
+        <RangePicker
+          onSelect={(dateRange) => setValue({ dateRange })}
+          value={value.dateRange}
+        />
+      );
+    default:
+      return (
+        <TextField
+          value={value.value}
+          onChange={(e) => setValue({ value: e.target.value })}
+        />
+      );
+  }
 };
 
 interface OperationProps {
@@ -77,7 +132,7 @@ const Operation = ({
   onOperationSelect,
 }: OperationProps) => {
   const options = operationsOptions[columnType] || [];
-  const [value, setValue] = useState(options?.[0].value);
+  const [value, setValue] = useState(options?.[0]?.value);
 
   useEffect(() => {
     const selectedOption = options.find((o) => o.value === value);
@@ -112,7 +167,7 @@ export const FilteredChip = ({
   const [filterValue, setFilterValue] = useState<FilterValue>();
 
   const { table, removeFilterColumn } = useTable();
-  const { filterVariant } = column?.columnDef as ApsaraColumnDef;
+  const { filterVariant } = column?.columnDef as ApsaraColumnDef<unknown>;
   const options: TableColumnMetadata[] =
     (column?.columnDef?.meta as any)?.data || [];
 
@@ -137,7 +192,7 @@ export const FilteredChip = ({
 
   return (
     <Box className={styles.chip}>
-      <Text>{columnName}</Text>
+      <Text className={styles.filterText}>{columnName}</Text>
       <Operation
         columnType={filterVariant}
         onOperationSelect={setFilterOperation}
@@ -147,6 +202,7 @@ export const FilteredChip = ({
           columnType={filterVariant}
           options={options}
           onValueChange={setFilterValue}
+          filterOperation={filterOperation}
         />
       )}
 

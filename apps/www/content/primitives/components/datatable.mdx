@@ -3,23 +3,22 @@ title: DataTable
 description: A responsive data table component.
 ---
 
-
 ## Preview
 
 <Preview>
   <DataTable />
 </Preview>
 
-
 ## Installation
 
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
 </LiveProvider>
 
 ## Basic Datatable
+
 Import all parts and piece them together.
 
 <LiveProvider>
@@ -28,12 +27,12 @@ import { DataTable, useTable } from "@raystack/apsara";
 import { ColumnDef } from "@tanstack/react-table";
 
 const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  }
+{
+id: "m5gr84i9",
+amount: 316,
+status: "success",
+email: "ken99@yahoo.com",
+}
 ];
 
 export type Payment = {
@@ -43,7 +42,7 @@ export type Payment = {
   email: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ApsaraColumnDef<Payment>[] = [
   {
     id: "select",
   },
@@ -63,19 +62,22 @@ export const Assets = () => {
 `} border />
 </LiveProvider>
 
-
 ## Reusable Components
+
 Here are some components you can use to build your data tables
 
 ### Datatable Toobar
+
 Can be used to show search, filter & option items. some of sub components available are
+
 - DataTable.ClearFilter
 - DataTable.FilterOptions
 - DataTable.ViewOptions
 - DataTable.GloabalSearch etc.
 
 <LiveProvider>
-    <LiveEditor code={`
+  <LiveEditor
+    code={`
 <DataTable columns={columns} data={data}>
   <DataTable.Toolbar>
     <DataTable.ClearFilter /> 
@@ -84,15 +86,18 @@ Can be used to show search, filter & option items. some of sub components availa
     <DataTable.GloabalSearch placeholder="Search assets..." />
   </DataTable.Toolbar>
 </DataTable>
-`} border />
+`}
+    border
+  />
 </LiveProvider>
 
-
 ### Datatable Footer
-Can be used to display any additional information. 
+
+Can be used to display any additional information.
 
 <LiveProvider>
-    <LiveEditor code={`
+  <LiveEditor
+    code={`
 <DataTable columns={columns} data={data}>
   <DataTable.Toolbar>
     <DataTable.ClearFilter /> 
@@ -103,10 +108,13 @@ Can be used to display any additional information.
   <DataTable.Footer>
   </DataTable.Footer>
 </DataTable>
-`} border />
+`}
+    border
+  />
 </LiveProvider>
 
 ### Datatable usetable
+
 `usetable` can be used to create any custom table components
 
 <LiveProvider>

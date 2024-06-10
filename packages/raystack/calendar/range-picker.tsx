@@ -16,7 +16,10 @@ interface RangePickerProps {
   calendarProps?: CalendarProps;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
+  value?: DateRange;
 }
+
+type RangeFields = keyof DateRange;
 
 export function RangePicker({
   side = "top",
@@ -24,23 +27,31 @@ export function RangePicker({
   textFieldProps,
   calendarProps,
   onSelect = () => {},
+  value = {
+    to: new Date(),
+    from: new Date(),
+  },
   pickerGroupClassName,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
-  const [value, setValue] = useState<DateRange>({
-    to: new Date(),
-    from: new Date(),
-  });
+  const [currentRangeField, setCurrentRangeField] =
+    useState<RangeFields>("from");
   const startDate = dayjs(value.from).format(dateFormat);
   const endDate = dayjs(value.to).format(dateFormat);
 
+  // 1st click will select the start date.
+  // 2nd click will select the end date.
+  // 3rd click will select the start date again.
   const handleSelect: SelectRangeEventHandler = (range, selectedDay) => {
-    if (range) {
-      setValue(range);
-    }
-    if (range?.to === selectedDay) {
-      onOpenChange(false);
-      onSelect(range);
+    const from = value?.from || range?.from;
+    if (currentRangeField === "to" && dayjs(selectedDay).isAfter(dayjs(from))) {
+      // update the end date
+      onSelect({ from, to: selectedDay });
+      setCurrentRangeField("from");
+    } else {
+      // reset the range and select start day
+      onSelect({ from: selectedDay });
+      setCurrentRangeField("to");
     }
   };
 
@@ -56,19 +67,23 @@ export function RangePicker({
             value={startDate}
             trailing={<CalendarIcon />}
             className={styles.datePickerInput}
+            readOnly
             {...textFieldProps}
           />
           <TextField
             value={endDate}
             trailing={<CalendarIcon />}
             className={styles.datePickerInput}
+            readOnly
             {...textFieldProps}
           />
         </Flex>
       </Popover.Trigger>
       <Popover.Content side={side} className={styles.calendarPopover}>
         <Calendar
+          showOutsideDays={false}
           numberOfMonths={2}
+          defaultMonth={value.from}
           {...calendarProps}
           mode="range"
           selected={value}

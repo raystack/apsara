@@ -1,11 +1,23 @@
 import { FilterFn } from "@tanstack/table-core";
-import { columnTypes, columnTypesMap, FilterValue } from "./datatables.types";
+import {
+  columnTypes,
+  columnTypesMap,
+  FilterValue,
+  filterValueType,
+} from "./datatables.types";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 export interface FilterOperation {
   label: string;
   value: string;
   fn?: FilterFn<FilterValue>;
   hideValueField?: boolean;
+  component?: filterValueType;
 }
 
 export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
@@ -121,6 +133,55 @@ export const operationsOptions: Record<columnTypes, Array<FilterOperation>> = {
         return (row.getValue(columnId) as string).length > 0;
       },
       hideValueField: true,
+    },
+  ],
+  [columnTypesMap.date]: [
+    {
+      label: "is",
+      value: "is",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isSame(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      label: "is before",
+      value: "is before",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isBefore(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      label: "is after",
+      value: "is after",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isAfter(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      label: "is between",
+      value: "is between",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return (
+          dayjs(row.getValue(columnId)).isSameOrAfter(
+            dayjs(filterValue.dateRange?.from),
+            "day"
+          ) &&
+          dayjs(row.getValue(columnId)).isSameOrBefore(
+            dayjs(filterValue.dateRange?.to),
+            "day"
+          )
+        );
+      },
+      component: "rangePicker",
     },
   ],
 };
