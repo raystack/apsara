@@ -1,4 +1,8 @@
-import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
+import {
+  CaretUpIcon,
+  CaretDownIcon,
+  CaretSortIcon,
+} from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -168,8 +172,10 @@ function DataTableRoot<TData, TValue>({
                             <Table.Head
                               key={`${header.id}_${index}`}
                               style={{
+                                cursor: "pointer",
                                 ...(header.column.columnDef?.meta?.style ?? {}),
                               }}
+                              onClick={header.column.getToggleSortingHandler()}
                             >
                               <Text className={styles.head}>
                                 {header.isPlaceholder
@@ -178,11 +184,14 @@ function DataTableRoot<TData, TValue>({
                                       header.column.columnDef.header,
                                       header.getContext()
                                     )}
-                                {{
-                                  asc: <ArrowUpIcon />,
-                                  desc: <ArrowDownIcon />,
-                                }[header.column.getIsSorted() as string] ??
-                                  null}
+                                {header.column.getCanSort()
+                                  ? {
+                                      asc: <CaretUpIcon />,
+                                      desc: <CaretDownIcon />,
+                                    }[
+                                      header.column.getIsSorted() as string
+                                    ] ?? <CaretSortIcon />
+                                  : null}
                               </Text>
                             </Table.Head>
                           );
