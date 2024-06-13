@@ -15,7 +15,9 @@ export function DataTableFilterOptions({
     .getAllColumns()
     .filter(
       (column) =>
-        typeof column.accessorFn !== "undefined" && column.getCanHide()
+        typeof column.accessorFn !== "undefined" &&
+        column.getCanHide() &&
+        column.getCanFilter()
     )
     .filter((column) => !filteredColumns.includes(column.id));
 
@@ -36,12 +38,15 @@ export function DataTableFilterOptions({
           <DropdownMenu.Label>Filter column</DropdownMenu.Label>
           <DropdownMenu.Separator />
           {availableColumns.map((column) => {
+            const columnHeader = column?.columnDef?.header;
+            const columnName =
+              (typeof columnHeader === "string" && columnHeader) || column.id;
             return (
               <DropdownMenu.Item
                 key={column.id}
                 onSelect={() => addFilterColumn(column.id)}
               >
-                {column.id}
+                {columnName}
               </DropdownMenu.Item>
             );
           })}
