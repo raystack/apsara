@@ -54,6 +54,7 @@ type DataTableProps<TData, TValue> = {
   emptyState?: ReactNode;
   parentStyle?: CSSProperties;
   isLoading?: boolean;
+  loaderRow?: number;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -64,6 +65,7 @@ function DataTableRoot<TData, TValue>({
   parentStyle,
   isLoading = false,
   ShouldShowHeader = true,
+  loaderRow = 5,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] =
@@ -82,6 +84,10 @@ function DataTableRoot<TData, TValue>({
     []
   );
 
+  const tableData = isLoading
+    ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
+    : data;
+
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
@@ -95,7 +101,6 @@ function DataTableRoot<TData, TValue>({
     if (colId && tableCustomFilter.hasOwnProperty(colId)) {
       col.filterFn = tableCustomFilter[colId];
     }
-
     col.cell = isLoading
       ? () => (
           <Skeleton
@@ -113,7 +118,7 @@ function DataTableRoot<TData, TValue>({
   };
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns: columnWithCustomFilter as unknown as ColumnDef<TData, TValue>[],
     globalFilterFn: "auto",
     enableRowSelection: true,

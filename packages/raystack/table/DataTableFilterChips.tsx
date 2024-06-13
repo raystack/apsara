@@ -13,7 +13,9 @@ export function DataTableFilterChips(props: DataTableFilterChipsProps) {
     .getAllColumns()
     .filter(
       (column) =>
-        typeof column.accessorFn !== "undefined" && column.getCanHide()
+        typeof column.accessorFn !== "undefined" &&
+        column.getCanHide() &&
+        column.getCanFilter()
     );
 
   if (!filteredColumns.length) return null;
