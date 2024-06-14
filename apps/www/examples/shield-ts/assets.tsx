@@ -103,10 +103,12 @@ export const columns: ApsaraColumnDef<Payment>[] = [
     filterVariant: "text",
   },
   {
+    id: "amount",
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+    accessorFn: (originalRow) => originalRow.amount,
+    cell: ({ getValue }) => {
+      const amount = parseFloat(getValue());
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -132,7 +134,11 @@ export const columns: ApsaraColumnDef<Payment>[] = [
 export const Assets = () => {
   return (
     // @ts-ignore
-    <DataTable columns={columns} data={data}>
+    <DataTable
+      columns={columns}
+      data={data}
+      initialState={{ sorting: [{ id: "amount", desc: true }] }}
+    >
       <DataTable.Toolbar>
         <AssetsHeader />
         <DataTable.FilterChips />
