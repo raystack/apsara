@@ -55,6 +55,7 @@ type DataTableProps<TData, TValue> = {
   parentStyle?: CSSProperties;
   isLoading?: boolean;
   loaderRow?: number;
+  onRowClick?: (d: TData) => void;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -66,6 +67,7 @@ function DataTableRoot<TData, TValue>({
   isLoading = false,
   ShouldShowHeader = true,
   loaderRow = 5,
+  onRowClick,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] =
@@ -144,9 +146,12 @@ function DataTableRoot<TData, TValue>({
     },
   });
 
-  const tableStyle = table.getRowModel().rows?.length
-    ? { width: "100%" }
-    : { width: "100%", height: "100%" };
+  const tableStyle = {
+    ...(table.getRowModel().rows?.length
+      ? { width: "100%" }
+      : { width: "100%", height: "100%" }),
+    ...{ "border-collapse": "collapse" },
+  };
 
   return (
     <Flex direction="column" justify="between" className={styles.wrapper}>
@@ -211,6 +216,10 @@ function DataTableRoot<TData, TValue>({
                     <Table.Row
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      onClick={() => onRowClick?.(row.original)}
+                      className={`${styles.tRow} ${
+                        onRowClick ? styles.tRowClick : ""
+                      }`}
                     >
                       {row.getVisibleCells().map((cell, index) => (
                         <Table.Cell

@@ -49,3 +49,11 @@
 .flex1 {
   flex: 1;
 }
+
+.tRow:hover {
+  background-color: var(--background-base-hover);
+}
+
+.tRowClick:hover {
+  cursor: pointer;
+}

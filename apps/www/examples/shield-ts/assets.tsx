@@ -68,6 +68,7 @@ export const columns: ApsaraColumnDef<Payment>[] = [
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
+        onClick={(event) => event.stopPropagation()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
       />
