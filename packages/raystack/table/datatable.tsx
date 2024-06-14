@@ -55,6 +55,7 @@ type DataTableProps<TData, TValue> = {
   parentStyle?: CSSProperties;
   isLoading?: boolean;
   loaderRow?: number;
+  onRowClick?: (d: TData) => void;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -66,6 +67,7 @@ function DataTableRoot<TData, TValue>({
   isLoading = false,
   ShouldShowHeader = true,
   loaderRow = 5,
+  onRowClick,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] =
@@ -211,6 +213,7 @@ function DataTableRoot<TData, TValue>({
                     <Table.Row
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      onClick={() => onRowClick?.(row.original)}
                     >
                       {row.getVisibleCells().map((cell, index) => (
                         <Table.Cell
