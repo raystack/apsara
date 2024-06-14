@@ -5,9 +5,8 @@ import {
 } from "@radix-ui/react-icons";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
+  InitialTableState,
+  TableState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -17,12 +16,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import React, {
+import {
   CSSProperties,
   Children,
   ComponentProps,
   ReactElement,
   ReactNode,
+  useState,
 } from "react";
 import { Flex } from "~/flex";
 import { Text } from "~/text";
@@ -54,7 +54,7 @@ type DataTableProps<TData, TValue> = {
   emptyState?: ReactNode;
   parentStyle?: CSSProperties;
   isLoading?: boolean;
-  loaderRow?: number;
+  initialState?: Partial<InitialTableState>;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -65,11 +65,12 @@ function DataTableRoot<TData, TValue>({
   parentStyle,
   isLoading = false,
   ShouldShowHeader = true,
-  loaderRow = 5,
+  initialState,
   ...props
 }: DataTableProps<TData, TValue>) {
-  const [tableCustomFilter, setTableCustomFilter] =
-    React.useState<tableFilterMap>({});
+  const [tableCustomFilter, setTableCustomFilter] = useState<tableFilterMap>(
+    {}
+  );
   const convertedChildren = Children.toArray(children) as ReactElement[];
   const header =
     convertedChildren.find((child) => child.type === DataTableToolbar) || null;
@@ -79,19 +80,8 @@ function DataTableRoot<TData, TValue>({
     convertedChildren.find((child) => child.type === TableDetailContainer) ||
     null;
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+  const [tableState, setTableState] = useState<Partial<TableState>>({});
 
-  const tableData = isLoading
-    ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
-    : data;
-
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [globalFilter, setGlobalFilter] = React.useState("");
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
 
@@ -101,6 +91,7 @@ function DataTableRoot<TData, TValue>({
     if (colId && tableCustomFilter.hasOwnProperty(colId)) {
       col.filterFn = tableCustomFilter[colId];
     }
+
     col.cell = isLoading
       ? () => (
           <Skeleton
@@ -118,30 +109,21 @@ function DataTableRoot<TData, TValue>({
   };
 
   const table = useReactTable({
-    data: tableData,
+    data,
     columns: columnWithCustomFilter as unknown as ColumnDef<TData, TValue>[],
     globalFilterFn: "auto",
     enableRowSelection: true,
     manualPagination: true,
     pageCount: -1,
-    onGlobalFilterChange: setGlobalFilter,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    onStateChange: (updater) => setTableState(updater as Partial<TableState>),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    state: {
-      sorting,
-      globalFilter,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
+    initialState,
+    state: tableState,
   });
 
   const tableStyle = table.getRowModel().rows?.length
@@ -153,12 +135,13 @@ function DataTableRoot<TData, TValue>({
       <TableContext.Provider
         value={{
           table,
-          globalFilter,
+          globalFilter: tableState.globalFilter,
           filteredColumns,
           addFilterColumn,
           removeFilterColumn,
           resetColumns,
-          onGlobalFilterChange: setGlobalFilter,
+          onGlobalFilterChange: (value) =>
+            setTableState((prev) => ({ ...prev, globalFilter: value })),
           onChange: () => ({}),
           tableCustomFilter,
           updateColumnCustomFilter,
