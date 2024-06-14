@@ -55,6 +55,7 @@ type DataTableProps<TData, TValue> = {
   parentStyle?: CSSProperties;
   isLoading?: boolean;
   initialState?: Partial<InitialTableState>;
+  loaderRow?: number;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -66,6 +67,7 @@ function DataTableRoot<TData, TValue>({
   isLoading = false,
   ShouldShowHeader = true,
   initialState,
+  loaderRow = 5,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] = useState<tableFilterMap>(
@@ -81,6 +83,10 @@ function DataTableRoot<TData, TValue>({
     null;
 
   const [tableState, setTableState] = useState<Partial<TableState>>({});
+
+  const tableData = isLoading
+    ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
+    : data;
 
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
@@ -109,7 +115,7 @@ function DataTableRoot<TData, TValue>({
   };
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns: columnWithCustomFilter as unknown as ColumnDef<TData, TValue>[],
     globalFilterFn: "auto",
     enableRowSelection: true,
