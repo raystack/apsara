@@ -146,9 +146,12 @@ function DataTableRoot<TData, TValue>({
     },
   });
 
-  const tableStyle = table.getRowModel().rows?.length
-    ? { width: "100%" }
-    : { width: "100%", height: "100%" };
+  const tableStyle = {
+    ...(table.getRowModel().rows?.length
+      ? { width: "100%" }
+      : { width: "100%", height: "100%" }),
+    ...{ "border-collapse": "collapse" },
+  };
 
   return (
     <Flex direction="column" justify="between" className={styles.wrapper}>
@@ -214,6 +217,9 @@ function DataTableRoot<TData, TValue>({
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       onClick={() => onRowClick?.(row.original)}
+                      className={`${styles.tRow} ${
+                        onRowClick ? styles.tRowClick : ""
+                      }`}
                     >
                       {row.getVisibleCells().map((cell, index) => (
                         <Table.Cell
