@@ -93,6 +93,7 @@ export const columns: ApsaraColumnDef<Payment>[] = [
           value: "success",
         },
       ],
+      defaultValue: "success",
     },
     filterVariant: "select",
   },
