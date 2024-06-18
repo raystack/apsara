@@ -19,11 +19,15 @@ export function DataTableClearFilter({
         table.resetColumnFilters();
         resetColumns();
       }}
-      style={{ width: "100%" }}
       {...props}
     >
       {children || (
-        <Flex gap="small" align="center" justify="center">
+        <Flex
+          gap="small"
+          align="center"
+          justify="center"
+          style={{ textWrap: "nowrap" }}
+        >
           Clear filters <Cross2Icon width={12} height="12" />
         </Flex>
       )}
