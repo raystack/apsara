@@ -51,23 +51,26 @@ interface FilterValuesProps {
   onValueChange?: (value: FilterValue) => void;
   options?: TableColumnMetadata[];
   filterOperation?: FilterOperation;
+  column?: Column<any, unknown>;
 }
 
 const FilterValues = ({
+  column,
   columnType = filterValueTypeMap.text,
   options = [],
   onValueChange,
   filterOperation,
   ...props
 }: FilterValuesProps) => {
-  const [value, setValue] = useState<FilterValue>({
-    value: "",
-    date: new Date(),
-    dateRange: {
-      to: new Date(),
-      from: new Date(),
-    },
-  });
+  const [value, setValue] = useState<FilterValue>(
+    (column?.columnDef?.meta as any)?.defaultValue
+      ? { value: (column?.columnDef.meta as any).defaultValue }
+      : {
+          value: "",
+          date: new Date(),
+          dateRange: { to: new Date(), from: new Date() },
+        }
+  );
 
   const valueType = getFilterValueType({ filterOperation, columnType });
 
@@ -199,6 +202,7 @@ export const FilteredChip = ({
       />
       {filterOperation?.hideValueField ? null : (
         <FilterValues
+          column={column}
           columnType={filterVariant}
           options={options}
           onValueChange={setFilterValue}
