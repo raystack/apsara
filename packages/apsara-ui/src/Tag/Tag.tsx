@@ -16,7 +16,7 @@ type TagProps = {
     icon?: ReactNode;
     className?: string;
     style?: React.CSSProperties;
-    size: TagSize;
+    size?: TagSize;
 };
 
 const Tag = ({
