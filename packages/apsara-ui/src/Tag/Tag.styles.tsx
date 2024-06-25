@@ -1,11 +1,24 @@
 import styled from "styled-components";
 import { textStyles } from "../mixin";
+import { TagSize } from "./Tag";
 
-export const StyledTag = styled("div")<{ type: "round" | "rect"; color: string; closable: boolean; icon: boolean }>`
+const fontSizeMap: Record<TagSize, string> = {
+    small: "9px",
+    medium: "11px",
+    large: "14px",
+};
+
+export const StyledTag = styled("div") <{
+    type: "round" | "rect";
+    color: string;
+    closable: boolean;
+    icon: boolean;
+    size: TagSize;
+}>`
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
-    ${({ theme }) => textStyles("11px", theme?.tag?.text, "0.11px", "normal")}
+    ${({ theme, size }) => textStyles(fontSizeMap[size], theme?.tag?.text, "0.11px", "normal")}
     border-radius: ${({ type }) => (type === "round" ? "10.5px" : "2px")};
     border-color: ${({ color }) => color};
     border-width: 1px;

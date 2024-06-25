@@ -5,6 +5,8 @@ import Colors from "../Colors";
 
 const Cross = Icons["cross"];
 
+export type TagSize = "small" | "medium" | "large";
+
 type TagProps = {
     children?: ReactNode;
     type?: "round" | "rect";
@@ -14,6 +16,7 @@ type TagProps = {
     icon?: ReactNode;
     className?: string;
     style?: React.CSSProperties;
+    size: TagSize;
 };
 
 const Tag = ({
@@ -23,13 +26,14 @@ const Tag = ({
     closable = false,
     closeIcon,
     icon,
+    size = "medium",
     ...props
 }: TagProps) => {
     const [visible, setVisible] = useState(true);
     if (!visible) return null;
     return (
         <TagWrapper>
-            <StyledTag {...props} type={type} color={color} closable={closable} icon={icon ? true : false}>
+            <StyledTag {...props} type={type} color={color} closable={closable} icon={icon ? true : false} size={size}>
                 <span className="tag_icon">{icon}</span>
                 <span className="tag_content">{children}</span>
                 {closable && (

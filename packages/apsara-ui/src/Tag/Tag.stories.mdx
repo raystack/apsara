@@ -45,6 +45,14 @@ export const Profile = Icons["profile"];
                 type: { summary: "ReactNode" },
             },
         },
+        size: {
+            description: "Size of the tag",
+            control: { type: "select", options: ["small", "medium", "large"] },
+            table: {
+                type: { summary: ["small", "medium", "large"] },
+                defaultValue: { summary: "medium" },
+            },
+        }
     }}
 />
 
