@@ -75,3 +75,9 @@
 .textfield-trailing {
   padding-right: 32px;
 }
+
+.leadingIcon,
+.trailingIcon {
+  position: absolute;
+  pointer-events: none;
+}

@@ -47,7 +47,9 @@ export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
     return (
       <Flex align="center" style={{ position: "relative", width: "100%" }}>
         {hasLeadingElement ? (
-          <Flex style={{ position: "absolute", left: "8px" }}>{leading}</Flex>
+          <Flex style={{ left: "8px" }} className={styles.leadingIcon}>
+            {leading}
+          </Flex>
         ) : null}
         <input
           className={cx(
@@ -63,7 +65,9 @@ export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
           ref={ref}
         />
         {hasTrailingElement ? (
-          <Flex style={{ position: "absolute", right: "8px" }}>{trailing}</Flex>
+          <Flex style={{ right: "8px" }} className={styles.trailingIcon}>
+            {trailing}
+          </Flex>
         ) : null}
       </Flex>
     );
