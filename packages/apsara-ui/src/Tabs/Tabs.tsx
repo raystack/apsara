@@ -6,7 +6,7 @@ import { TabsProps } from "@radix-ui/react-tabs";
 type TabContentProps = {
     value: string;
     content?: ReactNode;
-    title?: string;
+    title?: string | ReactNode;
     disabled?: boolean;
 };
 
