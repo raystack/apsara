@@ -21,6 +21,5 @@
     "turbo": "latest",
     "typescript": "4.7"
   },
-  "packageManager": "pnpm@7.15.0",
   "name": "apsara"
 }

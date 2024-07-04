@@ -49,3 +49,4 @@ export { Textarea } from "./textarea";
 export { TextField } from "./textfield";
 export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
 export { Title } from "./title";
+export { ToastContainer, toast } from "./toast";

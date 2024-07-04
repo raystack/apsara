@@ -1,0 +1,18 @@
+---
+title: Toast
+description: Toast wrapper and function
+---
+
+## Anatomy
+
+Import all parts and piece them together.
+
+<LiveProvider>
+    <LiveEditor code={`
+import { ToastContainer, toast, Button } from '@raystack/apsara'
+
+<Tooltip message="tooltip">
+  <Button variant="primary" onClick={() => toast("I am toast")}>Toast Yay!</Button>
+</Tooltip>
+`} border />
+</LiveProvider>
