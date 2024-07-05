@@ -32,10 +32,12 @@
 
 .nav_button_previous {
   left: 0;
+  height: 100%;
 }
 
 .nav_button_next {
   right: 0;
+  height: 100%;
 }
 
 .head {
@@ -56,9 +58,6 @@
 }
 
 .cell {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 36px;
   height: 36px;
   background-color: var(--background-base);
@@ -114,6 +113,8 @@
   width: 100%;
   height: 100%;
   padding: unset;
+  display: grid;
+  place-content: center;
 }
 
 .day_outside {
