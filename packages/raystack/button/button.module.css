@@ -11,8 +11,8 @@
   line-height: var(--fs-600);
   width: fit-content;
   transition: background-color var(--transition);
-  padding:  var(--pd-4) var(--pd-12);
-  border-radius: var(--br-4);  
+  padding: var(--pd-4) var(--pd-12);
+  border-radius: var(--br-4);
 }
 
 .button:before {
@@ -48,72 +48,71 @@
   padding-bottom: var(--pd-8);
   width: 24px;
   height: 24px;
-  border-radius: var(--br-round);  
+  border-radius: var(--br-round);
 }
-
 
 .button-primary {
-  color: var(--foreground-inverted);
-  background-color: var(--background-accent-inverted)
+  color: var(--ascent-contrast);
+  background-color: var(--background-accent-inverted);
 }
 
-.button-primary:hover, 
+.button-primary:hover,
 .button-primary:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent-inverted-hover)
+  background-color: var(--background-accent-inverted-hover);
 }
 
 .button-outline {
   color: var(--foreground-accent);
   background-color: var(--background-base);
-  border: 1px solid var(--border-accent-inverted);
+  outline: 1px solid var(--border-accent-inverted);
 }
 
-.button-outline:hover, 
+.button-outline:hover,
 .button-outline:active,
 .button-outline[data-radix-popover-trigger][data-state="open"],
 .button-outline[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--background-accent);
-  border: 1px solid var(--border-accent-inverted-hover);
+  outline: 1px solid var(--border-accent-inverted-hover);
 }
 
 .button-secondary {
   color: var(--foreground-base);
   background-color: var(--background-base);
-  border: 1px solid var(--border-base)
+  outline: 1px solid var(--border-base);
 }
 
-.button-secondary:hover, 
+.button-secondary:hover,
 .button-secondary:active,
 .button-secondary[data-radix-popover-trigger][data-state="open"],
 .button-secondary[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--background-base-hover);
-  border: 1px solid var(--border-base-hover);
+  outline: 1px solid var(--border-base-hover);
 }
 
 .button-ghost {
   color: var(--foreground-base);
   background-color: var(--background-base);
-  border: 1px dotted var(--border-base);
+  outline: 1px dotted var(--border-base);
 }
 
-.button-ghost:hover, 
+.button-ghost:hover,
 .button-ghost:active,
 .button-ghost[data-radix-popover-trigger][data-state="open"],
 .button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--background-base-hover);
-  border: 1px dotted var(--border-base-hover);
+  outline: 1px dotted var(--border-base-hover);
 }
 
 .button-danger {
-  color: var(--foreground-inverted);
-  background-color: var(--background-danger-inverted)
+  color: var(--ascent-contrast);
+  background-color: var(--background-danger-inverted);
 }
 
-.button-danger:hover, 
+.button-danger:hover,
 .button-danger:active,
 .button-danger[data-radix-popover-trigger][data-state="open"],
 .button-danger[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-danger-inverted-hover)
+  background-color: var(--background-danger-inverted-hover);
 }

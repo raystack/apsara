@@ -41,6 +41,8 @@
   --border-success: #92ceac;
   --border-success-inverted: #30a46c;
 
+  --ascent-contrast: #fff;
+
   --ff-inter: "Inter", -apple-system, system-ui, sans-serif;
   --ff-mono: Söhne Mono, menlo, monospace;
 
@@ -113,6 +115,8 @@ html[data-theme="dark"] {
   --background-danger-inverted-hover: #f2555a;
   --background-success: #16301d;
   --background-success-inverted: #46a758;
+
+  --ascent-contrast: #fff;
 
   --border-base: #3a3f42;
   --border-base-hover: #4c5155;
