@@ -47,6 +47,5 @@
     "remark-slug": "^7.0.1",
     "tsconfig": "workspace:*",
     "typescript": "4.7"
-  },
-  "packageManager": "pnpm@9.3.0"
+  }
 }
