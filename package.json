@@ -2,7 +2,6 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "build:apsara": "turbo build --filter=@raystack/apsara",
     "dev": "turbo dev --filter=@raystack/apsara",
     "lint": "turbo lint --filter=@raystack/apsara",
     "clean": "turbo clean --filter=@raystack/apsara",
