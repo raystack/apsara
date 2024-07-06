@@ -3,6 +3,7 @@
   "version": "0.0.5",
   "private": true,
   "scripts": {
+    "prebuild": "cd ../.. && npm run build:apsara",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
