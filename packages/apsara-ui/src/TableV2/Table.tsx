@@ -35,6 +35,7 @@ interface ITableProps {
     rowClick?: (props: any) => any;
     isLoading?: boolean;
     height?: string;
+    enableRowSelection?: boolean;
 }
 
 function Table({
@@ -52,6 +53,7 @@ function Table({
     isLoading = false,
     alternate = false,
     alternateHover = false,
+    enableRowSelection = false,
 }: ITableProps) {
     const columns: any[] = [];
     const columnHelper = createColumnHelper();
@@ -108,6 +110,8 @@ function Table({
         onSortingChange: setSorting,
         manualPagination: true,
         debugTable: false,
+        enableRowSelection: enableRowSelection,
+        enableMultiRowSelection: false,
     });
 
     if (!columns.length || (dataQuery && !dataQuery.data?.rows?.length && items)) {
@@ -207,7 +211,14 @@ function Table({
                     {!isLoading && (
                         <tbody>
                             {table.getRowModel().rows.map((row) => (
-                                <tr key={row.id} onClick={() => (rowClick ? rowClick(row) : "")}>
+                                <tr
+                                    key={row.id}
+                                    onClick={() => {
+                                        rowClick ? rowClick(row) : "";
+                                        enableRowSelection && row.toggleSelected();
+                                    }}
+                                    className={row.getIsSelected() ? "selected" : ""}
+                                >
                                     {row.getVisibleCells().map((cell) => (
                                         <td
                                             key={cell.id}

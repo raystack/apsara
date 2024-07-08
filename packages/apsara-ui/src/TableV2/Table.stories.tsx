@@ -104,6 +104,7 @@ export const TableWithData = () => (
             showPageSizeChanger={true}
             rowClick={rowClick}
             dataFetchFunction={getPaginatedData}
+            enableRowSelection={true}
         />
     </QueryClientProvider>
 );

@@ -3,8 +3,10 @@ import { textStyles } from "../mixin";
 
 export const StyledTable = styled.div<{
     height?: string;
-  }>`
-    ${({ height }) => height && `
+}>`
+    ${({ height }) =>
+        height &&
+        `
         height: ${height};
     `}
     overflow-y: auto;
@@ -167,9 +169,12 @@ export const StyledTable = styled.div<{
     tbody {
         border-bottom: 1px solid lightgray;
 
-        tr:hover > td {
+        tr:not(.selected):hover > td {
             background: ${({ theme }) => theme?.table?.highlight};
         }
+        tr.selected {
+            background-color: ${({ theme }) => theme?.table?.selectedRowHighlight};
+      }
     }
 
     th {

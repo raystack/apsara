@@ -57,6 +57,7 @@ const light = {
         heading: Colors?.light?.black[6],
         text: Colors?.light?.black[9],
         highlight: Colors?.light?.black[2],
+        selectedRowHighlight: Colors?.light?.primary[0],
         title: Colors?.light?.black[10],
     },
     listing: {
