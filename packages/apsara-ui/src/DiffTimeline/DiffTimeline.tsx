@@ -99,7 +99,7 @@ const DiffTimelineBlock = ({ timelineBlockData }: any) => {
                         </React.Fragment>
                     )}
                 </div>
-                {!R.isEmpty(timelineBlockData.diff) && (
+                {(!R.isEmpty(timelineBlockData.diff) || timelineBlockData.renderDiff) && (
                     <Collapsible.Root open={isActive}>
                         <CollapsibleHeader onClick={() => setIsActive(!isActive)}>
                             <Icon size={12} name={isActive ? "removeOutlineBox" : "addOutlineBox"} />
@@ -108,7 +108,11 @@ const DiffTimelineBlock = ({ timelineBlockData }: any) => {
                             </span>
                         </CollapsibleHeader>
                         <CollapsibleContent>
-                            <DiffTable diff={timelineBlockData.diff} />
+                            {timelineBlockData.renderDiff ?
+                                timelineBlockData.renderDiff()
+                                :
+                                <DiffTable diff={timelineBlockData.diff} />}
+                            
                         </CollapsibleContent>
                     </Collapsible.Root>
                 )}
