@@ -29,8 +29,7 @@
 }
 
 .button-small {
-  padding-top: var(--pd-4);
-  padding-bottom: var(--pd-4);
+  padding: var(--pd-4) var(--pd-8);
 }
 
 .button-medium {
@@ -94,7 +93,7 @@
 .button-ghost {
   color: var(--foreground-base);
   background-color: var(--background-base);
-  outline: 1px dotted var(--border-base);
+  outline: 1px dashed var(--border-base);
 }
 
 .button-ghost:hover,
@@ -102,7 +101,7 @@
 .button-ghost[data-radix-popover-trigger][data-state="open"],
 .button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--background-base-hover);
-  outline: 1px dotted var(--border-base-hover);
+  outline: 1px dashed var(--border-base-hover);
 }
 
 .button-danger {

@@ -34,11 +34,22 @@ export type TextfieldProps = Omit<
   PropsWithChildren<VariantProps<typeof textfield>> & {
     leading?: React.ReactElement;
     trailing?: React.ReactElement;
+    iconClass?: { leadingIcon?: string; trailingIcon?: string };
   };
 
 export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
   (
-    { leading, trailing, className, src, size, state, style, ...props },
+    {
+      leading,
+      trailing,
+      className,
+      src,
+      size,
+      state,
+      style,
+      iconClass,
+      ...props
+    },
     ref
   ) => {
     const hasLeadingElement = Boolean(leading);
@@ -47,10 +58,14 @@ export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
     return (
       <Flex align="center" style={{ position: "relative", width: "100%" }}>
         {hasLeadingElement ? (
-          <Flex style={{ left: "8px" }} className={styles.leadingIcon}>
+          <Flex
+            style={{ left: "8px" }}
+            className={cx(styles.leadingIcon, iconClass?.leadingIcon)}
+          >
             {leading}
           </Flex>
         ) : null}
+
         <input
           className={cx(
             textfield({
@@ -64,8 +79,12 @@ export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
           {...props}
           ref={ref}
         />
+
         {hasTrailingElement ? (
-          <Flex style={{ right: "8px" }} className={styles.trailingIcon}>
+          <Flex
+            style={{ right: "8px" }}
+            className={cx(styles.trailingIcon, iconClass?.trailingIcon)}
+          >
             {trailing}
           </Flex>
         ) : null}
