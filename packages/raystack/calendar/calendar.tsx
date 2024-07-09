@@ -39,6 +39,7 @@ export const Calendar = function ({
         day_range_end: styles.day_range_end,
         day_range_start: styles.day_range_start,
         months: styles.months,
+        // button: styles.button,
         ...classNames,
       }}
       className={root({ className })}
