@@ -206,9 +206,13 @@ function DataTableRoot<TData, TValue>({
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
                       onClick={() => onRowClick?.(row.original)}
-                      className={`${styles.tRow} ${
-                        onRowClick ? styles.tRowClick : ""
-                      }`}
+                      className={
+                        isLoading
+                          ? ""
+                          : `${styles.tRow} ${
+                              onRowClick ? styles.tRowClick : ""
+                            }`
+                      }
                     >
                       {row.getVisibleCells().map((cell, index) => (
                         <Table.Cell

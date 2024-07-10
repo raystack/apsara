@@ -6,20 +6,22 @@
 
   box-sizing: border-box;
 
-  padding: var(--pd-4) var(--pd-8);
+  padding: var(--pd-4);
   background-color: var(--background-base);
   border-radius: var(--br-4);
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-sm);
   outline: 1px solid var(--border-subtle);
+
+  min-width: var(--radix-select-trigger-width);
+  margin-top: 4px;
 }
 
 .menuitem {
   display: flex;
   align-items: center;
   position: relative;
-
   gap: var(--pd-4);
-  padding: var(--pd-4) var(--pd-8);
+  padding: var(--pd-8);
   color: var(--foreground-base);
 }
 
@@ -37,18 +39,6 @@
   pointer-events: none;
 }
 
-.menuitemIndicatorWapper {
-  height: 14px;
-  width: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.label {
-  padding: var(--pd-6) var(--pd-8);
-  font-weight: 500;
-}
 .separator {
   height: 1px;
   margin: var(--mr-4) calc(var(--mr-8) * -1);
@@ -63,16 +53,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  outline: none;
+  border: none;
 
   color: var(--foreground-base);
-  padding: var(--pd-4) var(--pd-12);
+  padding: var(--pd-8);
   background-color: var(--background-base);
   font-size: 12px;
   line-height: 16px;
   border-radius: var(--br-4);
   outline: 0.5px solid var(--border-base);
   box-shadow: var(--shadow-xs);
+  color: var(--foreground-subtle);
+
+  user-select: none;
+}
+
+.trigger:hover {
+  cursor: pointer;
 }
 
 .trigger:focus {
@@ -91,8 +88,7 @@
 }
 
 .triggerIcon {
-  width: 16px;
-  height: 16px;
-  opacity: 0.5;
+  width: 12px;
+  height: 12px;
   margin-left: var(--mr-8);
 }

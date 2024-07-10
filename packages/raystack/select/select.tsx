@@ -2,6 +2,7 @@ import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
+import { Text } from "../text";
 import styles from "./select.module.css";
 
 const trigger = cva(styles.trigger);
@@ -16,6 +17,7 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children}
+
     <SelectPrimitive.Icon asChild>
       <ChevronDownIcon className={styles.triggerIcon} />
     </SelectPrimitive.Icon>
@@ -42,19 +44,6 @@ const SelectContent = React.forwardRef<
 ));
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
-const label = cva(styles.label);
-const SelectLabel = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Label>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
->(({ className, ...props }, ref) => (
-  <SelectPrimitive.Label
-    ref={ref}
-    className={label({ className })}
-    {...props}
-  />
-));
-SelectLabel.displayName = SelectPrimitive.Label.displayName;
-
 const menuitem = cva(styles.menuitem);
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
@@ -65,12 +54,9 @@ const SelectItem = React.forwardRef<
     className={menuitem({ className })}
     {...props}
   >
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
-    <span className={styles.menuitemIndicatorWapper}>
-      <SelectPrimitive.ItemIndicator>
-        <CheckIcon style={{ width: "16px", height: "16px" }} />
-      </SelectPrimitive.ItemIndicator>
-    </span>
+    <SelectPrimitive.ItemText>
+      <Text>{children}</Text>
+    </SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
@@ -96,7 +82,6 @@ export const Select = Object.assign(SelectPrimitive.Root, {
   Viewport: SelectPrimitive.Viewport,
   Trigger: SelectTrigger,
   Content: SelectContent,
-  Label: SelectLabel,
   Item: SelectItem,
   Separator: SelectSeparator,
 });

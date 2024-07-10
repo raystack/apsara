@@ -5,6 +5,7 @@ radix:
   link: https://www.radix-ui.com/docs/primitives/components/select
   api: https://www.radix-ui.com/docs/primitives/components/select#api-reference
 ---
+
 ## Preview
 
 <Preview>
@@ -14,7 +15,6 @@ radix:
     </Select.Trigger>
     <Select.Content>
       <Select.Group>
-        <Select.Label>Fruits</Select.Label>
         <Select.Item value="apple">Apple</Select.Item>
         <Select.Item value="banana">Banana</Select.Item>
         <Select.Item value="blueberry">Blueberry</Select.Item>
@@ -25,14 +25,13 @@ radix:
   </Select>
 </Preview>
 
-
 ## Anatomy
+
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
 import { Select } from '@raystack/apsara'
-
 
 <Select>
   <Select.Trigger className="w-[180px]">
@@ -40,7 +39,6 @@ import { Select } from '@raystack/apsara'
   </Select.Trigger>
   <Select.Content>
     <Select.Group>
-      <Select.Label>Fruits</Select.Label>
       <Select.Item value="apple">Apple</Select.Item>
       <Select.Item value="banana">Banana</Select.Item>
       <Select.Item value="blueberry">Blueberry</Select.Item>
