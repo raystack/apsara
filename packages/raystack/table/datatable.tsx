@@ -22,6 +22,7 @@ import {
   ComponentProps,
   ReactElement,
   ReactNode,
+  useEffect,
   useState,
 } from "react";
 import { Flex } from "~/flex";
@@ -57,6 +58,7 @@ type DataTableProps<TData, TValue> = {
   initialState?: Partial<InitialTableState>;
   loaderRow?: number;
   onRowClick?: (d: TData) => void;
+  onStateChange?: (d: Partial<TableState>) => void;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -70,6 +72,7 @@ function DataTableRoot<TData, TValue>({
   initialState,
   loaderRow = 5,
   onRowClick,
+  onStateChange = () => {},
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] = useState<tableFilterMap>(
@@ -111,6 +114,12 @@ function DataTableRoot<TData, TValue>({
       : col.cell;
     return col;
   });
+
+  useEffect(() => {
+    if (onStateChange) {
+      onStateChange(tableState);
+    }
+  }, [tableState]);
 
   const updateColumnCustomFilter: updateColumnFilter = (id, filterFn) => {
     setTableCustomFilter((old) => ({ ...old, [id]: filterFn }));
