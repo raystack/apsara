@@ -27,6 +27,7 @@ type TableContextType = {
   onGlobalFilterChange: OnChangeFn<any>;
   tableCustomFilter: tableFilterMap;
   updateColumnCustomFilter: updateColumnFilter;
+  isLoading: boolean;
 
   // state: TableState;
   // setState: Dispatch<(prevState: TableState) => TableState>;

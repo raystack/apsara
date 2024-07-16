@@ -10,7 +10,7 @@ export function DataTableFilterOptions({
   children,
   ...props
 }: DataTableFilterOptionsProps) {
-  const { table, filteredColumns, addFilterColumn } = useTable();
+  const { table, filteredColumns, addFilterColumn, isLoading } = useTable();
   const availableColumns = table
     .getAllColumns()
     .filter(
@@ -23,7 +23,7 @@ export function DataTableFilterOptions({
 
   return (
     <DropdownMenu>
-      <DropdownMenu.Trigger asChild>
+      <DropdownMenu.Trigger asChild disabled={isLoading}>
         <Button variant="ghost" {...props}>
           {children || (
             <Flex gap="small" align="center" justify="center">
