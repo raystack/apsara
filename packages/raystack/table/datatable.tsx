@@ -165,6 +165,7 @@ function DataTableRoot<TData, TValue>({
           onChange: () => ({}),
           tableCustomFilter,
           updateColumnCustomFilter,
+          isLoading,
         }}
       >
         <Flex direction="column" className={styles.datatable}>
