@@ -172,7 +172,7 @@ function DataTableRoot<TData, TValue>({
           {header}
           <Flex className={styles.tableContainer} style={parentStyle}>
             <Table {...props} style={tableStyle}>
-              <Table.Header>
+              <Table.Header className={styles.header}>
                 {ShouldShowHeader
                   ? table.getHeaderGroups().map((headerGroup) => (
                       <Table.Row key={headerGroup.id}>
