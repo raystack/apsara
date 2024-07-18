@@ -1,19 +1,30 @@
-import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Text } from "../text";
 import styles from "./select.module.css";
 
-const trigger = cva(styles.trigger);
+const trigger = cva(styles.trigger, {
+  variants: {
+    size: {
+      small: styles["trigger-sm"],
+      medium: styles["trigger-md"],
+    },
+  },
+  defaultVariants: {
+    size: "medium",
+  },
+});
+
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
     React.PropsWithChildren<VariantProps<typeof trigger>>
->(({ className, children, ...props }, ref) => (
+>(({ size, className, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
-    className={trigger({ className })}
+    className={trigger({ size, className })}
     {...props}
   >
     {children}

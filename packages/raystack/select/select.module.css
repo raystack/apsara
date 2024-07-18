@@ -56,9 +56,9 @@
   border: none;
 
   color: var(--foreground-base);
-  padding: var(--pd-8);
   background-color: var(--background-base);
   font-size: 12px;
+
   line-height: 16px;
   border-radius: var(--br-4);
   outline: 0.5px solid var(--border-base);
@@ -66,6 +66,14 @@
   color: var(--foreground-subtle);
 
   user-select: none;
+}
+
+.trigger-sm {
+  padding: var(--pd-4);
+}
+
+.trigger-md {
+  padding: var(--pd-8);
 }
 
 .trigger:hover {
