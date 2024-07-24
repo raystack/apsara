@@ -23,6 +23,7 @@ import {
   ReactElement,
   ReactNode,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { Flex } from "~/flex";
@@ -96,24 +97,33 @@ function DataTableRoot<TData, TValue>({
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
 
-  const columnWithCustomFilter = columns.map((col) => {
-    // @ts-ignore;
-    const colId: string = col.id || col?.accessorKey;
-    if (colId && tableCustomFilter.hasOwnProperty(colId)) {
-      col.filterFn = tableCustomFilter[colId];
-    }
+  const columnWithCustomFilter = useMemo(
+    () =>
+      columns.map((col) => {
+        const colId = col.id || (col?.accessorKey as string);
+        const filterFn =
+          colId && tableCustomFilter.hasOwnProperty(colId)
+            ? tableCustomFilter[colId]
+            : undefined;
 
-    col.cell = isLoading
-      ? () => (
-          <Skeleton
-            containerClassName={styles.flex1}
-            highlightColor="var(--background-base)"
-            baseColor="var(--background-base-hover)"
-          />
-        )
-      : col.cell;
-    return col;
-  });
+        const cell = isLoading
+          ? () => (
+              <Skeleton
+                containerClassName={styles.flex1}
+                highlightColor="var(--background-base)"
+                baseColor="var(--background-base-hover)"
+              />
+            )
+          : col.cell;
+
+        return {
+          ...col,
+          cell,
+          filterFn,
+        };
+      }),
+    [isLoading, columns, tableCustomFilter]
+  );
 
   useEffect(() => {
     if (onStateChange) {
