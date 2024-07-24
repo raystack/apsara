@@ -3,6 +3,8 @@ import {
   Checkbox,
   DataTable,
   Flex,
+  Label,
+  Switch,
   Text,
   useTable,
 } from "@raystack/apsara";
@@ -133,15 +135,21 @@ export const columns: ApsaraColumnDef<Payment>[] = [
 ];
 
 export const Assets = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  function onSwitchChange() {
+    setIsLoading((prev) => !prev);
+  }
+
   return (
-    // @ts-ignore
     <DataTable
       columns={columns}
       data={data}
       initialState={{ sorting: [{ id: "amount", desc: true }] }}
+      isLoading={isLoading}
     >
       <DataTable.Toolbar>
-        <AssetsHeader />
+        <AssetsHeader onSwitchChange={onSwitchChange} />
         <DataTable.FilterChips />
       </DataTable.Toolbar>
       <DataTable.Footer>
@@ -151,12 +159,22 @@ export const Assets = () => {
   );
 };
 
-const AssetsHeader = () => {
+const AssetsHeader = ({ onSwitchChange }) => {
   const { filteredColumns, table } = useTable();
   const isFiltered = filteredColumns.length > 0;
   return (
-    <Flex align="center" justify="between" style={{ width: "100%" }}>
-      <Text style={{ fontWeight: 500 }}>Assets</Text>
+    <Flex
+      align="center"
+      justify="between"
+      style={{ width: "100%", padding: "4px" }}
+    >
+      <Flex gap="extra-large" align="center">
+        <Text style={{ fontWeight: 500 }}>Assets</Text>
+        <Flex gap="small" align="center">
+          <Label>Show Loader</Label>
+          <Switch onCheckedChange={onSwitchChange} />
+        </Flex>
+      </Flex>
       <Flex gap="small">
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
