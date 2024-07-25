@@ -1,18 +1,18 @@
 import { Popover } from "~/popover";
 import { TextField } from "~/textfield";
-import { Calendar, CalendarProps } from "./calendar";
+import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
 import { useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import { TextfieldProps } from "~/textfield/textfield";
-import { SelectSingleEventHandler } from "react-day-picker";
+import { PropsSingleRequired } from "react-day-picker";
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
   textFieldProps?: TextfieldProps;
-  calendarProps?: CalendarProps;
+  calendarProps?: PropsSingleRequired;
   onSelect?: (date: Date) => void;
   value?: Date;
 }
@@ -28,9 +28,8 @@ export function DatePicker({
   const [showCalendar, setShowCalendar] = useState(false);
   const dateValue = dayjs(value).format(dateFormat);
 
-  const handleSelect: SelectSingleEventHandler = (day, selectedDay) => {
-    const selected = day || selectedDay;
-    onSelect(selected);
+  const handleSelect = (day: Date) => {
+    onSelect(day);
     setShowCalendar(false);
   };
 
@@ -51,6 +50,7 @@ export function DatePicker({
       </Popover.Trigger>
       <Popover.Content side={side} className={styles.calendarPopover}>
         <Calendar
+          required={true}
           {...calendarProps}
           mode="single"
           selected={value}
