@@ -5,7 +5,11 @@ import * as React from "react";
 import { Text } from "../text";
 import styles from "./select.module.css";
 import { TextProps } from "~/text/text";
-import { IconProps } from "@radix-ui/react-icons/dist/types";
+
+export interface IconProps extends React.SVGAttributes<SVGElement> {
+  children?: never;
+  color?: string;
+}
 
 const trigger = cva(styles.trigger, {
   variants: {
