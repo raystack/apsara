@@ -6,13 +6,15 @@
 }
 
 .caption_label,
-.dropdowns > span {
+.dropdowns > span,
+.dropdown_trigger .dropdown_item_text {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.25px;
   font-weight: 500;
   color: var(--foreground-base);
   user-select: none;
+  font-family: var(--ff-inter);
 }
 
 .caption_label[aria-hidden="true"] {
@@ -160,5 +162,21 @@
 .dropdowns {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--pd-4);
+}
+
+.dropdown_trigger,
+.dropdown_trigger:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: var(--pd-2);
+}
+
+.dropdown_trigger:hover {
+  background-color: var(--background-base-hover);
+}
+
+.dropdown_icon {
+  margin-left: var(--mr-4);
 }

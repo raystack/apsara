@@ -1,14 +1,65 @@
-import { DayPicker, DayPickerProps } from "react-day-picker";
+import { DayPicker, DayPickerProps, DropdownProps } from "react-day-picker";
 import { cva } from "class-variance-authority";
-import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
-
+import {
+  ChevronRightIcon,
+  ChevronLeftIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@radix-ui/react-icons";
 import styles from "./calendar.module.css";
 import { Select } from "~/select";
 import { ChangeEvent } from "react";
+import { Flex } from "~/flex/flex";
 
 export type CalendarProps = DayPickerProps & {};
 
 const root = cva(styles.calendarRoot);
+
+function DropDown({ options = [], value, onChange }: DropdownProps) {
+  function handleChange(value: string) {
+    if (onChange) {
+      onChange({ target: { value } } as ChangeEvent<HTMLSelectElement>);
+    }
+  }
+  return (
+    <Select value={value?.toString()} onValueChange={handleChange}>
+      <Select.Trigger
+        className={styles.dropdown_trigger}
+        iconProps={{
+          className: styles.dropdown_icon,
+        }}
+      >
+        <Select.Value />
+      </Select.Trigger>
+      <Select.Content position="item-aligned">
+        <Select.ScrollUpButton asChild>
+          <Flex justify={"center"}>
+            <ChevronUpIcon />
+          </Flex>
+        </Select.ScrollUpButton>
+        <Select.Viewport>
+          {options.map((opt) => (
+            <Select.Item
+              value={opt.value.toString()}
+              key={opt.value}
+              disabled={opt.disabled}
+              textProps={{
+                className: styles.dropdown_item_text,
+              }}
+            >
+              {opt.label}
+            </Select.Item>
+          ))}
+        </Select.Viewport>
+        <Select.ScrollDownButton asChild>
+          <Flex justify={"center"}>
+            <ChevronDownIcon />
+          </Flex>
+        </Select.ScrollDownButton>
+      </Select.Content>
+    </Select>
+  );
+}
 
 export const Calendar = function ({
   className,
@@ -26,31 +77,7 @@ export const Calendar = function ({
           }
           return <ChevronRightIcon {...props} />;
         },
-        Dropdown: ({ options = [], value, onChange }) => {
-          function handleChange(value: string) {
-            if (onChange) {
-              onChange({ target: { value } } as ChangeEvent<HTMLSelectElement>);
-            }
-          }
-          return (
-            <Select value={value?.toString()} onValueChange={handleChange}>
-              <Select.Trigger>
-                <Select.Value />
-              </Select.Trigger>
-              <Select.Content>
-                {options.map((opt) => (
-                  <Select.Item
-                    value={opt.value.toString()}
-                    key={opt.value}
-                    disabled={opt.disabled}
-                  >
-                    {opt.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          );
-        },
+        Dropdown: DropDown,
       }}
       classNames={{
         caption_label: styles.caption_label,
