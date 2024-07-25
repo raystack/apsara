@@ -16,6 +16,7 @@ export const Calendar = function ({
 }: CalendarProps) {
   return (
     <DayPicker
+      showOutsideDays={showOutsideDays}
       components={{
         Chevron: (props) => {
           if (props.orientation === "left") {
@@ -41,6 +42,7 @@ export const Calendar = function ({
         range_middle: styles.range_middle,
         range_end: styles.range_end,
         range_start: styles.range_start,
+        hidden: styles.hidden,
         ...classNames,
       }}
       className={root({ className })}
