@@ -5,13 +5,18 @@
   background: var(--background-base);
 }
 
-.caption_label {
+.caption_label,
+.dropdowns > span {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.25px;
   font-weight: 500;
   color: var(--foreground-base);
   user-select: none;
+}
+
+.caption_label[aria-hidden="true"] {
+  display: none;
 }
 
 .nav_button {
@@ -150,4 +155,10 @@
 
 .datePickerInput {
   cursor: pointer;
+}
+
+.dropdowns {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }

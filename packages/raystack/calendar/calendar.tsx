@@ -1,8 +1,10 @@
-import { Button, DayPicker, DayPickerProps } from "react-day-picker";
+import { DayPicker, DayPickerProps } from "react-day-picker";
 import { cva } from "class-variance-authority";
 import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 
 import styles from "./calendar.module.css";
+import { Select } from "~/select";
+import { ChangeEvent } from "react";
 
 export type CalendarProps = DayPickerProps & {};
 
@@ -24,6 +26,31 @@ export const Calendar = function ({
           }
           return <ChevronRightIcon {...props} />;
         },
+        Dropdown: ({ options = [], value, onChange }) => {
+          function handleChange(value: string) {
+            if (onChange) {
+              onChange({ target: { value } } as ChangeEvent<HTMLSelectElement>);
+            }
+          }
+          return (
+            <Select value={value?.toString()} onValueChange={handleChange}>
+              <Select.Trigger>
+                <Select.Value />
+              </Select.Trigger>
+              <Select.Content>
+                {options.map((opt) => (
+                  <Select.Item
+                    value={opt.value.toString()}
+                    key={opt.value}
+                    disabled={opt.disabled}
+                  >
+                    {opt.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          );
+        },
       }}
       classNames={{
         caption_label: styles.caption_label,
@@ -43,6 +70,7 @@ export const Calendar = function ({
         range_end: styles.range_end,
         range_start: styles.range_start,
         hidden: styles.hidden,
+        dropdowns: styles.dropdowns,
         ...classNames,
       }}
       className={root({ className })}
