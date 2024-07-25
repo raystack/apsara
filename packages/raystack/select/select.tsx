@@ -4,6 +4,8 @@ import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Text } from "../text";
 import styles from "./select.module.css";
+import { TextProps } from "~/text/text";
+import { IconProps } from "@radix-ui/react-icons/dist/types";
 
 const trigger = cva(styles.trigger, {
   variants: {
@@ -20,8 +22,10 @@ const trigger = cva(styles.trigger, {
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
-    React.PropsWithChildren<VariantProps<typeof trigger>>
->(({ size, className, children, ...props }, ref) => (
+    React.PropsWithChildren<VariantProps<typeof trigger>> & {
+      iconProps?: IconProps;
+    }
+>(({ size, className, children, iconProps = {}, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={trigger({ size, className })}
@@ -30,7 +34,7 @@ const SelectTrigger = React.forwardRef<
     {children}
 
     <SelectPrimitive.Icon asChild>
-      <ChevronDownIcon className={styles.triggerIcon} />
+      <ChevronDownIcon className={styles.triggerIcon} {...iconProps} />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -58,15 +62,17 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 const menuitem = cva(styles.menuitem);
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+    textProps?: TextProps;
+  }
+>(({ className, textProps = {}, children, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={menuitem({ className })}
     {...props}
   >
     <SelectPrimitive.ItemText>
-      <Text>{children}</Text>
+      <Text {...textProps}>{children}</Text>
     </SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
