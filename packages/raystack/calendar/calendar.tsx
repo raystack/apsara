@@ -1,4 +1,4 @@
-import { DayPicker, DayPickerProps } from "react-day-picker";
+import { Button, DayPicker, DayPickerProps } from "react-day-picker";
 import { cva } from "class-variance-authority";
 import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
 
@@ -16,33 +16,35 @@ export const Calendar = function ({
 }: CalendarProps) {
   return (
     <DayPicker
-      showOutsideDays={showOutsideDays}
       components={{
-        IconLeft: () => <ChevronLeftIcon />,
-        IconRight: () => <ChevronRightIcon />,
+        Chevron: (props) => {
+          if (props.orientation === "left") {
+            return <ChevronLeftIcon {...props} />;
+          }
+          return <ChevronRightIcon {...props} />;
+        },
       }}
       classNames={{
-        caption: styles.caption,
         caption_label: styles.caption_label,
-        nav_button: styles.nav_button,
-        nav_button_previous: styles.nav_button_previous,
-        nav_button_next: styles.nav_button_next,
-        head: styles.head,
-        head_cell: styles.head_cell,
-        cell: styles.cell,
-        head_row: styles.row,
-        row: styles.row,
-        day: styles.day,
-        day_outside: styles.day_outside,
-        day_today: styles.day_today,
-        day_range_middle: styles.day_range_middle,
-        day_range_end: styles.day_range_end,
-        day_range_start: styles.day_range_start,
+        button_previous: `${styles.nav_button} ${styles.nav_button_previous}`,
+        button_next: `${styles.nav_button} ${styles.nav_button_next}`,
+        month_caption: styles.month_caption,
         months: styles.months,
-        // button: styles.button,
+        nav: styles.nav,
+        day: styles.day,
+        today: styles.today,
+        outside: styles.outside,
+        week: styles.week,
+        weekdays: styles.week,
+        weekday: styles.weekday,
+        day_button: styles.day_button,
+        range_middle: styles.range_middle,
+        range_end: styles.range_end,
+        range_start: styles.range_start,
         ...classNames,
       }}
       className={root({ className })}
+      mode="single"
       {...props}
     />
   );

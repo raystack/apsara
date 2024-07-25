@@ -5,14 +5,6 @@
   background: var(--background-base);
 }
 
-.caption {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-bottom: var(--mr-12);
-}
-
 .caption_label {
   font-size: 14px;
   line-height: 20px;
@@ -28,47 +20,56 @@
   color: var(--foreground-base);
   background: var(--background-base);
   cursor: pointer;
+  height: 16px;
 }
 
 .nav_button_previous {
   left: 0;
-  height: 100%;
 }
 
 .nav_button_next {
   right: 0;
-  height: 100%;
 }
 
-.head {
-  color: var(--foreground-muted);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
-  font-weight: 500;
+.months {
+  display: flex;
+  gap: var(--pd-8);
+  position: relative;
 }
 
-.head_cell {
+.nav {
+  position: absolute;
+  width: 100%;
+}
+
+.month_caption {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 36px;
-  height: 36px;
-  color: var(--foreground-base);
+  position: relative;
+  width: fit-content;
+  margin: 0 auto var(--mr-12) auto;
 }
 
-.cell {
+.day {
   width: 36px;
   height: 36px;
   background-color: var(--background-base);
   border-radius: var(--br-4);
+  color: var(--foreground-base);
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.cell:hover {
+.day:hover {
   background-color: var(--background-base-hover);
 }
 
-.cell:has([aria-selected="true"]) {
+.day:has([aria-selected="true"]) {
   background-color: var(--background-highlight);
 
   button {
@@ -76,11 +77,11 @@
   }
 }
 
-.cell:has(.day_today):not(:has([aria-selected="true"])) {
+.day:has(.today):not(:has([aria-selected="true"])) {
   background-color: var(--background-subtle);
 }
 
-.cell:has(.day_range_middle) {
+.day:has(.range_middle) {
   border-radius: 0;
   background-color: var(--background-base-hover);
   button {
@@ -88,25 +89,21 @@
   }
 }
 
-.cell:has(.day_range_start):not(:has(.day_range_end)) {
+.day:has(.range_start):not(:has(.range_end)) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.cell:has(.day_range_end):not(:has(.day_range_start)) {
+.cell:has(.range_end):not(:has(.range_start)) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.row {
+.week {
   display: flex;
 }
 
-.day {
-  color: var(--foreground-base);
-  font-size: 13px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+.day_button {
   cursor: pointer;
   border: none;
   background: transparent;
@@ -115,24 +112,35 @@
   padding: unset;
   display: grid;
   place-content: center;
+  color: var(--foreground-base);
 }
 
-.day_outside {
+.outside {
   color: var(--foreground-subtle);
 }
 
-.day_today {
+.today {
   font-weight: 600;
 }
 
-.day_range_start,
-.day_range_end {
+.range_start,
+.range_end {
   color: var(--foreground-inverted);
 }
 
-.months {
+.range_middle {
+}
+
+.weekday {
   display: flex;
-  gap: var(--pd-8);
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--foreground-base);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
 }
 
 .calendarPopover {
