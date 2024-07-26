@@ -180,3 +180,7 @@
 .dropdown_icon {
   margin-left: var(--mr-4);
 }
+
+.dropdown_content {
+  max-height: 400px;
+}

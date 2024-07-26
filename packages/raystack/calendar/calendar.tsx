@@ -31,7 +31,7 @@ function DropDown({ options = [], value, onChange }: DropdownProps) {
       >
         <Select.Value />
       </Select.Trigger>
-      <Select.Content position="item-aligned">
+      <Select.Content className={styles.dropdown_content}>
         <Select.ScrollUpButton asChild>
           <Flex justify={"center"}>
             <ChevronUpIcon />
