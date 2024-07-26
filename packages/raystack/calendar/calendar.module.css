@@ -31,6 +31,11 @@
   height: 20px;
 }
 
+.nav_button:disabled {
+  opacity: 0.5;
+  color: var(--foreground-subtle);
+}
+
 .nav_button_previous {
   left: 0;
 }
@@ -73,11 +78,11 @@
   align-items: center;
 }
 
-.day:hover {
+.day:hover:not(.disabled):not(.outside):not(.selected) {
   background-color: var(--background-base-hover);
 }
 
-.day[aria-selected="true"]:not(.range_middle) {
+.selected:not(.range_middle) {
   background-color: var(--background-highlight);
 
   button {
@@ -185,4 +190,9 @@
 .dropdown_content {
   max-height: 400px;
   border: 1px solid var(--border-base);
+}
+
+.disabled {
+  color: var(--foreground-subtle);
+  opacity: 0.8;
 }
