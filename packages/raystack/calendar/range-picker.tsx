@@ -1,19 +1,19 @@
 import { Popover } from "~/popover";
 import { TextField } from "~/textfield";
-import { Calendar, CalendarProps } from "./calendar";
+import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
 import { useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import { TextfieldProps } from "~/textfield/textfield";
-import { DateRange, SelectRangeEventHandler } from "react-day-picker";
+import { DateRange, PropsRangeRequired } from "react-day-picker";
 import { Flex } from "~/flex";
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
   textFieldProps?: TextfieldProps;
-  calendarProps?: CalendarProps;
+  calendarProps?: PropsRangeRequired;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
@@ -42,7 +42,7 @@ export function RangePicker({
   // 1st click will select the start date.
   // 2nd click will select the end date.
   // 3rd click will select the start date again.
-  const handleSelect: SelectRangeEventHandler = (range, selectedDay) => {
+  const handleSelect = (range: DateRange, selectedDay: Date) => {
     const from = value?.from || range?.from;
     if (currentRangeField === "to" && dayjs(selectedDay).isAfter(dayjs(from))) {
       // update the end date
@@ -84,6 +84,7 @@ export function RangePicker({
           showOutsideDays={false}
           numberOfMonths={2}
           defaultMonth={value.from}
+          required={true}
           {...calendarProps}
           mode="range"
           selected={value}

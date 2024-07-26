@@ -18,7 +18,7 @@
     "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.11",
     "framer-motion": "^10.12.16",
-    "next": "13.2.4",
+    "next": "14.2.5",
     "react-live": "^4.1.6",
     "react-loading-skeleton": "^3.4.0",
     "tslib": "^2.5.0"

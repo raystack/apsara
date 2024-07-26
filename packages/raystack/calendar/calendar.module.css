@@ -5,20 +5,20 @@
   background: var(--background-base);
 }
 
-.caption {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  margin-bottom: var(--mr-12);
-}
-
-.caption_label {
+.caption_label,
+.dropdowns > span,
+.dropdown_trigger .dropdown_item_text {
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.25px;
   font-weight: 500;
   color: var(--foreground-base);
+  user-select: none;
+  font-family: var(--ff-inter);
+}
+
+.caption_label[aria-hidden="true"] {
+  display: none;
 }
 
 .nav_button {
@@ -28,47 +28,56 @@
   color: var(--foreground-base);
   background: var(--background-base);
   cursor: pointer;
+  height: 20px;
 }
 
 .nav_button_previous {
   left: 0;
-  height: 100%;
 }
 
 .nav_button_next {
   right: 0;
-  height: 100%;
 }
 
-.head {
-  color: var(--foreground-muted);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
-  font-weight: 500;
+.months {
+  display: flex;
+  gap: var(--pd-8);
+  position: relative;
 }
 
-.head_cell {
+.nav {
+  position: absolute;
+  width: 100%;
+}
+
+.month_caption {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 36px;
-  height: 36px;
-  color: var(--foreground-base);
+  position: relative;
+  width: fit-content;
+  margin: 0 auto var(--mr-12) auto;
 }
 
-.cell {
+.day {
   width: 36px;
   height: 36px;
   background-color: var(--background-base);
   border-radius: var(--br-4);
+  color: var(--foreground-base);
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.cell:hover {
+.day:hover {
   background-color: var(--background-base-hover);
 }
 
-.cell:has([aria-selected="true"]) {
+.day[aria-selected="true"]:not(.range_middle) {
   background-color: var(--background-highlight);
 
   button {
@@ -76,11 +85,7 @@
   }
 }
 
-.cell:has(.day_today):not(:has([aria-selected="true"])) {
-  background-color: var(--background-subtle);
-}
-
-.cell:has(.day_range_middle) {
+.range_middle {
   border-radius: 0;
   background-color: var(--background-base-hover);
   button {
@@ -88,51 +93,60 @@
   }
 }
 
-.cell:has(.day_range_start):not(:has(.day_range_end)) {
+.range_start:not(.range_end) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
 
-.cell:has(.day_range_end):not(:has(.day_range_start)) {
+.range_end:not(.range_start) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.row {
+.week {
   display: flex;
 }
 
-.day {
-  color: var(--foreground-base);
-  font-size: 13px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+.day_button {
   cursor: pointer;
   border: none;
-  background: transparent;
   width: 100%;
   height: 100%;
   padding: unset;
   display: grid;
   place-content: center;
+  background: inherit;
+  color: inherit;
+  font-weight: inherit;
 }
 
-.day_outside {
+.outside {
   color: var(--foreground-subtle);
 }
 
-.day_today {
+.today {
   font-weight: 600;
 }
 
-.day_range_start,
-.day_range_end {
+.range_start,
+.range_end {
   color: var(--foreground-inverted);
 }
 
-.months {
+.weekday {
   display: flex;
-  gap: var(--pd-8);
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--foreground-base);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 .calendarPopover {
@@ -143,4 +157,31 @@
 
 .datePickerInput {
   cursor: pointer;
+}
+
+.dropdowns {
+  display: flex;
+  align-items: center;
+  gap: var(--pd-4);
+}
+
+.dropdown_trigger,
+.dropdown_trigger:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  padding: var(--pd-2);
+}
+
+.dropdown_trigger:hover {
+  background-color: var(--background-base-hover);
+}
+
+.dropdown_icon {
+  margin-left: var(--mr-4);
+}
+
+.dropdown_content {
+  max-height: 400px;
+  border: 1px solid var(--border-base);
 }

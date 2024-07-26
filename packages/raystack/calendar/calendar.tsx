@@ -1,12 +1,65 @@
-import { DayPicker, DayPickerProps } from "react-day-picker";
+import { DayPicker, DayPickerProps, DropdownProps } from "react-day-picker";
 import { cva } from "class-variance-authority";
-import { ChevronRightIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
-
+import {
+  ChevronRightIcon,
+  ChevronLeftIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@radix-ui/react-icons";
 import styles from "./calendar.module.css";
+import { Select } from "~/select";
+import { ChangeEvent } from "react";
+import { Flex } from "~/flex/flex";
 
 export type CalendarProps = DayPickerProps & {};
 
 const root = cva(styles.calendarRoot);
+
+function DropDown({ options = [], value, onChange }: DropdownProps) {
+  function handleChange(value: string) {
+    if (onChange) {
+      onChange({ target: { value } } as ChangeEvent<HTMLSelectElement>);
+    }
+  }
+  return (
+    <Select value={value?.toString()} onValueChange={handleChange}>
+      <Select.Trigger
+        className={styles.dropdown_trigger}
+        iconProps={{
+          className: styles.dropdown_icon,
+        }}
+      >
+        <Select.Value />
+      </Select.Trigger>
+      <Select.Content className={styles.dropdown_content}>
+        <Select.ScrollUpButton asChild>
+          <Flex justify={"center"}>
+            <ChevronUpIcon />
+          </Flex>
+        </Select.ScrollUpButton>
+        <Select.Viewport>
+          {options.map((opt) => (
+            <Select.Item
+              value={opt.value.toString()}
+              key={opt.value}
+              disabled={opt.disabled}
+              textProps={{
+                className: styles.dropdown_item_text,
+              }}
+            >
+              {opt.label}
+            </Select.Item>
+          ))}
+        </Select.Viewport>
+        <Select.ScrollDownButton asChild>
+          <Flex justify={"center"}>
+            <ChevronDownIcon />
+          </Flex>
+        </Select.ScrollDownButton>
+      </Select.Content>
+    </Select>
+  );
+}
 
 export const Calendar = function ({
   className,
@@ -18,31 +71,37 @@ export const Calendar = function ({
     <DayPicker
       showOutsideDays={showOutsideDays}
       components={{
-        IconLeft: () => <ChevronLeftIcon />,
-        IconRight: () => <ChevronRightIcon />,
+        Chevron: (props) => {
+          if (props.orientation === "left") {
+            return <ChevronLeftIcon {...props} />;
+          }
+          return <ChevronRightIcon {...props} />;
+        },
+        Dropdown: DropDown,
       }}
       classNames={{
-        caption: styles.caption,
         caption_label: styles.caption_label,
-        nav_button: styles.nav_button,
-        nav_button_previous: styles.nav_button_previous,
-        nav_button_next: styles.nav_button_next,
-        head: styles.head,
-        head_cell: styles.head_cell,
-        cell: styles.cell,
-        head_row: styles.row,
-        row: styles.row,
-        day: styles.day,
-        day_outside: styles.day_outside,
-        day_today: styles.day_today,
-        day_range_middle: styles.day_range_middle,
-        day_range_end: styles.day_range_end,
-        day_range_start: styles.day_range_start,
+        button_previous: `${styles.nav_button} ${styles.nav_button_previous}`,
+        button_next: `${styles.nav_button} ${styles.nav_button_next}`,
+        month_caption: styles.month_caption,
         months: styles.months,
-        // button: styles.button,
+        nav: styles.nav,
+        day: styles.day,
+        today: styles.today,
+        outside: styles.outside,
+        week: styles.week,
+        weekdays: styles.week,
+        weekday: styles.weekday,
+        day_button: styles.day_button,
+        range_middle: styles.range_middle,
+        range_end: styles.range_end,
+        range_start: styles.range_start,
+        hidden: styles.hidden,
+        dropdowns: styles.dropdowns,
         ...classNames,
       }}
       className={root({ className })}
+      mode="single"
       {...props}
     />
   );

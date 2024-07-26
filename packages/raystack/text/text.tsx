@@ -38,7 +38,7 @@ const text = cva(styles.text, {
   },
 });
 
-type TextProps = PropsWithChildren<VariantProps<typeof text>> &
+export type TextProps = PropsWithChildren<VariantProps<typeof text>> &
   HTMLAttributes<HTMLSpanElement>;
 
 export function Text({
