@@ -92,6 +92,8 @@ export const Calendar = function ({
         week: styles.week,
         weekdays: styles.week,
         weekday: styles.weekday,
+        disabled: styles.disabled,
+        selected: styles.selected,
         day_button: styles.day_button,
         range_middle: styles.range_middle,
         range_end: styles.range_end,
