@@ -183,4 +183,5 @@
 
 .dropdown_content {
   max-height: 400px;
+  border: 1px solid var(--border-base);
 }
