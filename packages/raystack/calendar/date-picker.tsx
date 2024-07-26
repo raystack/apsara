@@ -6,13 +6,13 @@ import { useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import { TextfieldProps } from "~/textfield/textfield";
-import { PropsSingleRequired } from "react-day-picker";
+import { PropsBase, PropsSingleRequired } from "react-day-picker";
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
   textFieldProps?: TextfieldProps;
-  calendarProps?: PropsSingleRequired;
+  calendarProps?: PropsSingleRequired & PropsBase;
   onSelect?: (date: Date) => void;
   value?: Date;
 }
