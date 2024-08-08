@@ -11,16 +11,24 @@ import { Select } from "~/select";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Flex } from "~/flex/flex";
 
-export type onDropdownOpen = () => {};
-export type CalendarProps = DayPickerProps & onDropdownOpen;
+interface OnDropdownOpen {
+  onDropdownOpen?: VoidFunction;
+}
+
+export type CalendarProps = DayPickerProps & OnDropdownOpen;
 
 const root = cva(styles.calendarRoot);
 
-function DropDown({ options = [], value, onChange, onDropdownOpen }: (DropdownProps & onDropdownOpen)) {
+function DropDown({
+  options = [],
+  value,
+  onChange,
+  onDropdownOpen,
+}: DropdownProps & OnDropdownOpen) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (open) onDropdownOpen();
+    if (open && onDropdownOpen) onDropdownOpen();
   }, [open]);
 
   function handleChange(value: string) {
@@ -30,7 +38,12 @@ function DropDown({ options = [], value, onChange, onDropdownOpen }: (DropdownPr
   }
 
   return (
-    <Select value={value?.toString()} onValueChange={handleChange} open={open} onOpenChange={setOpen}>
+    <Select
+      value={value?.toString()}
+      onValueChange={handleChange}
+      open={open}
+      onOpenChange={setOpen}
+    >
       <Select.Trigger
         className={styles.dropdown_trigger}
         iconProps={{
@@ -86,7 +99,9 @@ export const Calendar = function ({
           }
           return <ChevronRightIcon {...props} />;
         },
-        Dropdown: (props: DropdownProps) => <DropDown {...props} onDropdownOpen={onDropdownOpen} />,
+        Dropdown: (props: DropdownProps) => (
+          <DropDown {...props} onDropdownOpen={onDropdownOpen} />
+        ),
       }}
       classNames={{
         caption_label: styles.caption_label,
