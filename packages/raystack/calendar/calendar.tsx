@@ -8,21 +8,42 @@ import {
 } from "@radix-ui/react-icons";
 import styles from "./calendar.module.css";
 import { Select } from "~/select";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Flex } from "~/flex/flex";
 
-export type CalendarProps = DayPickerProps & {};
+interface OnDropdownOpen {
+  onDropdownOpen?: VoidFunction;
+}
+
+export type CalendarProps = DayPickerProps & OnDropdownOpen;
 
 const root = cva(styles.calendarRoot);
 
-function DropDown({ options = [], value, onChange }: DropdownProps) {
+function DropDown({
+  options = [],
+  value,
+  onChange,
+  onDropdownOpen,
+}: DropdownProps & OnDropdownOpen) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (open && onDropdownOpen) onDropdownOpen();
+  }, [open]);
+
   function handleChange(value: string) {
     if (onChange) {
       onChange({ target: { value } } as ChangeEvent<HTMLSelectElement>);
     }
   }
+
   return (
-    <Select value={value?.toString()} onValueChange={handleChange}>
+    <Select
+      value={value?.toString()}
+      onValueChange={handleChange}
+      open={open}
+      onOpenChange={setOpen}
+    >
       <Select.Trigger
         className={styles.dropdown_trigger}
         iconProps={{
@@ -65,6 +86,7 @@ export const Calendar = function ({
   className,
   classNames,
   showOutsideDays = true,
+  onDropdownOpen,
   ...props
 }: CalendarProps) {
   return (
@@ -77,7 +99,9 @@ export const Calendar = function ({
           }
           return <ChevronRightIcon {...props} />;
         },
-        Dropdown: DropDown,
+        Dropdown: (props: DropdownProps) => (
+          <DropDown {...props} onDropdownOpen={onDropdownOpen} />
+        ),
       }}
       classNames={{
         caption_label: styles.caption_label,
