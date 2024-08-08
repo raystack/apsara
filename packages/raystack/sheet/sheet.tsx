@@ -35,19 +35,20 @@ export const SheetContent = forwardRef<
 >(({ className, children, close, side, ...props }, forwardedRef) => {
   return (
     <DialogPrimitive.Portal>
-      <Overlay />
-      <DialogPrimitive.Content
-        {...props}
-        ref={forwardedRef}
-        className={sheetContent({ side, className })}
-      >
-        {children}
-        {close && (
-          <CloseButton>
-            <Cross1Icon />
-          </CloseButton>
-        )}
-      </DialogPrimitive.Content>
+      <Overlay>
+        <DialogPrimitive.Content
+          {...props}
+          ref={forwardedRef}
+          className={sheetContent({ side, className })}
+        >
+          {children}
+          {close && (
+            <CloseButton>
+              <Cross1Icon />
+            </CloseButton>
+          )}
+        </DialogPrimitive.Content>
+      </Overlay>
     </DialogPrimitive.Portal>
   );
 });
