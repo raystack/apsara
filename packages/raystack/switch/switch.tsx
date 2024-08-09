@@ -8,7 +8,8 @@ const switchVariants = cva(styles.switch);
 
 export interface SwitchProps
   extends ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>,
-    VariantProps<typeof switchVariants> {}
+    VariantProps<typeof switchVariants>,
+    SwitchPrimitive.SwitchProps {}
 
 export const Switch = forwardRef<
   ElementRef<typeof SwitchPrimitive.Root>,
