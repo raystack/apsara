@@ -20,7 +20,8 @@ const checkbox = cva(styles.checkbox, {
 
 export interface CheckboxProps
   extends ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
-    VariantProps<typeof checkbox> {}
+    VariantProps<typeof checkbox>,
+    CheckboxPrimitive.CheckboxProps {}
 
 export const Checkbox = forwardRef<
   ElementRef<typeof CheckboxPrimitive.Root>,
