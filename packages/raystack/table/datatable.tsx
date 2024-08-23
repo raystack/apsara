@@ -25,6 +25,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useRef,
 } from "react";
 import { Flex } from "~/flex";
 import { Text } from "~/text";
@@ -60,6 +61,8 @@ type DataTableProps<TData, TValue> = {
   loaderRow?: number;
   onRowClick?: (d: TData) => void;
   onStateChange?: (d: Partial<TableState>) => void;
+  onLoadMore?: () => void;
+  hasMore?: boolean;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -74,6 +77,8 @@ function DataTableRoot<TData, TValue>({
   loaderRow = 5,
   onRowClick,
   onStateChange = () => {},
+  onLoadMore,
+  hasMore,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] = useState<tableFilterMap>(
@@ -89,6 +94,8 @@ function DataTableRoot<TData, TValue>({
     null;
 
   const [tableState, setTableState] = useState<Partial<TableState>>({});
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const tableData = isLoading
     ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
@@ -153,6 +160,37 @@ function DataTableRoot<TData, TValue>({
     state: tableState,
   });
 
+  useEffect(() => {
+    if (onLoadMore && hasMore && tableContainerRef.current) {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          const firstEntry = entries[0];
+          if (firstEntry.isIntersecting) {
+            onLoadMore();
+          }
+        },
+        {
+          root: tableContainerRef.current,
+          rootMargin: "0px",
+          threshold: 1.0,
+        }
+      );
+
+      if (tableContainerRef.current) {
+        const observerTarget = tableContainerRef.current.querySelector("#observer-target");
+        if (observerTarget) {
+          observerRef.current.observe(observerTarget);
+        }
+      }
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [onLoadMore, hasMore, tableContainerRef]);
+
   const tableStyle = {
     ...(table.getRowModel().rows?.length
       ? { width: "100%" }
@@ -180,7 +218,11 @@ function DataTableRoot<TData, TValue>({
       >
         <Flex direction="column" className={styles.datatable}>
           {header}
-          <Flex className={styles.tableContainer} style={parentStyle}>
+          <Flex
+            className={styles.tableContainer}
+            style={parentStyle}
+            ref={tableContainerRef}
+          >
             <Table {...props} style={tableStyle}>
               <Table.Header className={styles.header}>
                 {ShouldShowHeader
@@ -238,6 +280,7 @@ function DataTableRoot<TData, TValue>({
                         <Table.Cell
                           key={`${cell.id}_${index}`}
                           style={{
+                            ...styles.tableBodyCell,
                             ...(cell.column.columnDef?.meta?.style ?? {}),
                           }}
                         >
@@ -261,6 +304,7 @@ function DataTableRoot<TData, TValue>({
             {detail}
           </Flex>
         </Flex>
+        <div id="observer-target" style={{ height: "1px" }} />
         {footer}
       </TableContext.Provider>
     </Flex>
