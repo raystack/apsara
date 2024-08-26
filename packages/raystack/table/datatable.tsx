@@ -22,6 +22,7 @@ import {
   ComponentProps,
   ReactElement,
   ReactNode,
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -62,7 +63,6 @@ type DataTableProps<TData, TValue> = {
   onRowClick?: (d: TData) => void;
   onStateChange?: (d: Partial<TableState>) => void;
   onLoadMore?: () => void;
-  hasMore?: boolean;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -78,7 +78,6 @@ function DataTableRoot<TData, TValue>({
   onRowClick,
   onStateChange = () => {},
   onLoadMore,
-  hasMore,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] = useState<tableFilterMap>(
@@ -160,36 +159,21 @@ function DataTableRoot<TData, TValue>({
     state: tableState,
   });
 
-  useEffect(() => {
-    if (onLoadMore && hasMore && tableContainerRef.current) {
-      observerRef.current = new IntersectionObserver(
-        (entries) => {
-          const firstEntry = entries[0];
-          if (firstEntry.isIntersecting) {
-            onLoadMore();
-          }
-        },
-        {
-          root: tableContainerRef.current,
-          rootMargin: "0px",
-          threshold: 1.0,
-        }
-      );
+  const lastRowRef = useCallback(
+    (node: HTMLElement | null) => {
+      if (isLoading) return;
+      if (observerRef.current) observerRef.current.disconnect();
 
-      if (tableContainerRef.current) {
-        const observerTarget = tableContainerRef.current.querySelector("#observer-target");
-        if (observerTarget) {
-          observerRef.current.observe(observerTarget);
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && onLoadMore) {
+          onLoadMore();
         }
-      }
-    }
+      });
 
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
-  }, [onLoadMore, hasMore, tableContainerRef]);
+      if (node) observerRef.current.observe(node);
+    },
+    [isLoading, onLoadMore]
+  );
 
   const tableStyle = {
     ...(table.getRowModel().rows?.length
@@ -263,7 +247,7 @@ function DataTableRoot<TData, TValue>({
               </Table.Header>
               <Table.Body>
                 {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
+                  table.getRowModel().rows.map((row, rowIndex) => (
                     <Table.Row
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -274,6 +258,11 @@ function DataTableRoot<TData, TValue>({
                           : `${styles.tRow} ${
                               onRowClick ? styles.tRowClick : ""
                             }`
+                      }
+                      ref={
+                        rowIndex === table.getRowModel().rows.length - 1
+                          ? lastRowRef
+                          : null
                       }
                     >
                       {row.getVisibleCells().map((cell, index) => (
