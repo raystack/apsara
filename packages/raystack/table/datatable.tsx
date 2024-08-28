@@ -299,7 +299,6 @@ function DataTableRoot<TData, TValue>({
             {detail}
           </Flex>
         </Flex>
-        <div id="observer-target" style={{ height: "1px" }} />
         {footer}
       </TableContext.Provider>
     </Flex>
