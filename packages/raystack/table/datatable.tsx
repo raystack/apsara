@@ -74,7 +74,7 @@ function DataTableRoot<TData, TValue>({
   isLoading = false,
   ShouldShowHeader = true,
   initialState,
-  loaderRow = 5,
+  loaderRow = 2,
   onRowClick,
   onStateChange = () => {},
   onLoadMore,
@@ -95,9 +95,27 @@ function DataTableRoot<TData, TValue>({
   const [tableState, setTableState] = useState<Partial<TableState>>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const tableData = isLoading
-    ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
-    : data;
+  const getLoader = (loaderRow: number, columns: ApsaraColumnDef<TData>[]) => (
+    [...new Array(loaderRow)].map((_, rowIndex) => (
+      <Table.Row key={`loader_${rowIndex}`}>
+        {columns.map((_, colIndex) => (
+          <Table.Cell key={`loader_${colIndex}`}>
+            <Skeleton
+              containerClassName={styles.flex1}
+              highlightColor="var(--background-base)"
+              baseColor="var(--background-base-hover)"
+            />
+          </Table.Cell>
+        ))}
+      </Table.Row>
+    ))
+  )
+
+  // const tableData = isLoading
+  //   ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
+  //   : data;
+
+  const tableData = data;
 
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
@@ -111,15 +129,17 @@ function DataTableRoot<TData, TValue>({
             ? tableCustomFilter[colId]
             : undefined;
 
-        const cell = isLoading
-          ? () => (
-              <Skeleton
-                containerClassName={styles.flex1}
-                highlightColor="var(--background-base)"
-                baseColor="var(--background-base-hover)"
-              />
-            )
-          : col.cell;
+        // const cell = isLoading
+        //   ? () => (
+        //       <Skeleton
+        //         containerClassName={styles.flex1}
+        //         highlightColor="var(--background-base)"
+        //         baseColor="var(--background-base-hover)"
+        //       />
+        //     )
+        //   : col.cell;
+
+        const { cell } = col;
 
         return {
           ...col,
@@ -291,6 +311,7 @@ function DataTableRoot<TData, TValue>({
                     </Table.Cell>
                   </Table.Row>
                 )}
+                {isLoading && getLoader(loaderRow, columns)}
               </Table.Body>
             </Table>
             {detail}
