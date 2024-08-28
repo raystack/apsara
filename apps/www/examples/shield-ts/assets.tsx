@@ -103,7 +103,7 @@ export const Assets = () => {
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
-      setIsLoading(true);
+      // setIsLoading(true);
       // API simulatiom call to fetch more data
       setTimeout(() => {
         const moreData = getData();
