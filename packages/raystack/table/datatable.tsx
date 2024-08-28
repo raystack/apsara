@@ -111,12 +111,6 @@ function DataTableRoot<TData, TValue>({
     ))
   )
 
-  // const tableData = isLoading
-  //   ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
-  //   : data;
-
-  const tableData = data;
-
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
 
@@ -128,16 +122,6 @@ function DataTableRoot<TData, TValue>({
           colId && tableCustomFilter.hasOwnProperty(colId)
             ? tableCustomFilter[colId]
             : undefined;
-
-        // const cell = isLoading
-        //   ? () => (
-        //       <Skeleton
-        //         containerClassName={styles.flex1}
-        //         highlightColor="var(--background-base)"
-        //         baseColor="var(--background-base-hover)"
-        //       />
-        //     )
-        //   : col.cell;
 
         const { cell } = col;
 
@@ -161,7 +145,7 @@ function DataTableRoot<TData, TValue>({
   };
 
   const table = useReactTable({
-    data: tableData,
+    data,
     columns: columnWithCustomFilter as unknown as ColumnDef<TData, TValue>[],
     globalFilterFn: "auto",
     enableRowSelection: true,
