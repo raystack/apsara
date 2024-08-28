@@ -1,3 +1,15 @@
+import {
+  BlendingModeIcon,
+  BoxIcon,
+  Component2Icon,
+  FaceIcon,
+  Half2Icon,
+  InfoCircledIcon,
+  Link2Icon,
+  ReaderIcon,
+  TargetIcon,
+} from "@radix-ui/react-icons";
+
 export type Payment = {
     id: string;
     amount: number;
@@ -187,3 +199,53 @@ const dummyData: Payment[] = [
   export const getData = () => {
     return dummyData;
   }
+
+
+export const navigationList = [
+  {
+    href: "#shield",
+    leadingIcon: <InfoCircledIcon />,
+    name: "Inbox",
+  },
+  {
+    active: true,
+    href: "#assets",
+    leadingIcon: <BlendingModeIcon />,
+    name: "Assets",
+  },
+  {
+    leadingIcon: <BoxIcon />,
+    name: "Lineage",
+    disabled: true,
+  },
+  {
+    leadingIcon: <Component2Icon />,
+    name: "Appeals",
+    disabled: true,
+  },
+  {
+    leadingIcon: <TargetIcon />,
+    name: "Grants",
+    disabled: true,
+  },
+  {
+    leadingIcon: <Half2Icon />,
+    name: "Policies",
+    disabled: true,
+  },
+  {
+    leadingIcon: <ReaderIcon />,
+    name: "Reports",
+    disabled: true,
+  },
+  {
+    leadingIcon: <FaceIcon />,
+    name: "Teams",
+    disabled: true,
+  },
+  {
+    leadingIcon: <Link2Icon />,
+    name: "Connections",
+    disabled: true,
+  },
+];

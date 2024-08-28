@@ -1,68 +1,13 @@
-import {
-  BlendingModeIcon,
-  BoxIcon,
-  Component2Icon,
-  DotsVerticalIcon,
-  FaceIcon,
-  Half2Icon,
-  InfoCircledIcon,
-  Link2Icon,
-  ReaderIcon,
-  TargetIcon,
-} from "@radix-ui/react-icons";
-import { Flex, ScrollArea, Sidebar } from "@raystack/apsara";
-import "@raystack/apsara/index.css";
 import React from "react";
-import { Assets } from "./assets";
+import {
+  DotsVerticalIcon
+} from "@radix-ui/react-icons";
 
-const navigationList = [
-  {
-    href: "#shield",
-    leadingIcon: <InfoCircledIcon />,
-    name: "Inbox",
-  },
-  {
-    active: true,
-    href: "#assets",
-    leadingIcon: <BlendingModeIcon />,
-    name: "Assets",
-  },
-  {
-    leadingIcon: <BoxIcon />,
-    name: "Lineage",
-    disabled: true,
-  },
-  {
-    leadingIcon: <Component2Icon />,
-    name: "Appeals",
-    disabled: true,
-  },
-  {
-    leadingIcon: <TargetIcon />,
-    name: "Grants",
-    disabled: true,
-  },
-  {
-    leadingIcon: <Half2Icon />,
-    name: "Policies",
-    disabled: true,
-  },
-  {
-    leadingIcon: <ReaderIcon />,
-    name: "Reports",
-    disabled: true,
-  },
-  {
-    leadingIcon: <FaceIcon />,
-    name: "Teams",
-    disabled: true,
-  },
-  {
-    leadingIcon: <Link2Icon />,
-    name: "Connections",
-    disabled: true,
-  },
-];
+import { Flex, ScrollArea, Sidebar } from "@raystack/apsara";
+import { Assets } from "./assets";
+import { navigationList } from "./data";
+
+import "@raystack/apsara/index.css";
 
 export const Shield = () => {
   return (

@@ -11,7 +11,7 @@ import {
   useTable,
 } from "@raystack/apsara";
 
-import { getData, Payment } from "./dummy";
+import { getData, Payment } from "./data";
 const TOTAL_PAGES = 3;
 
 export const columns: ApsaraColumnDef<Payment>[] = [
