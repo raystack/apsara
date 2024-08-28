@@ -273,7 +273,6 @@ function DataTableRoot<TData, TValue>({
                         <Table.Cell
                           key={`${cell.id}_${index}`}
                           style={{
-                            // ...styles.tableBodyCell,
                             ...(cell.column.columnDef?.meta?.style ?? {}),
                           }}
                         >
