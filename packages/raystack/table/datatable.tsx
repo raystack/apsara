@@ -93,7 +93,6 @@ function DataTableRoot<TData, TValue>({
     null;
 
   const [tableState, setTableState] = useState<Partial<TableState>>({});
-  const tableContainerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const tableData = isLoading
@@ -211,7 +210,6 @@ function DataTableRoot<TData, TValue>({
           <Flex
             className={styles.tableContainer}
             style={parentStyle}
-            ref={tableContainerRef}
           >
             <Table {...props} style={tableStyle}>
               <Table.Header className={styles.header}>
