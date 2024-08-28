@@ -74,7 +74,6 @@ export const Shield = () => {
             // @ts-ignore
             style={{
               marginTop: "22px",
-              maxHeight: "calc(100vh - 280px)",
             }}
           >
             <ScrollArea style={{ paddingRight: "var(--mr-16)" }}>
@@ -93,10 +92,10 @@ export const Shield = () => {
           </Sidebar.Navigations>
         </Flex>
         <Sidebar.Footer action={<DotsVerticalIcon />}>
-          pyadav9678@gmail.com
+          john.doe@apsara.com
         </Sidebar.Footer>
       </Sidebar>
-      <Flex style={{ flex: 1, width: "100%", overflow: "hidden" }}>
+      <Flex style={{ flex: 1, width: "100%", overflow: "auto" }}>
         <Assets />
       </Flex>
     </Flex>

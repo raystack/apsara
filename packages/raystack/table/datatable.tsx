@@ -175,6 +175,12 @@ function DataTableRoot<TData, TValue>({
     [isLoading, onLoadMore]
   );
 
+  useEffect(() => {
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, []);
+
   const tableStyle = {
     ...(table.getRowModel().rows?.length
       ? { width: "100%" }

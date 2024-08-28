@@ -5,15 +5,11 @@ export default function ShieldExample() {
   return (
     <>
       <Container
-        size="large"
+        size="none"
         style={{
           padding: 0,
-          height: "calc(100vh - 120px)",
-          margin: "30px auto",
+          height: "calc(100vh - 75px)",
           fontSize: "var(--fs-200)",
-          border: "2px solid var(--border-base)",
-          borderRadius: "var(--pd-8)",
-          marginTop: "var(--mr-16)",
         }}
       >
         <Shield />
