@@ -97,9 +97,9 @@ function DataTableRoot<TData, TValue>({
 
   const getLoader = (loaderRow: number, columns: ApsaraColumnDef<TData>[]) => (
     [...new Array(loaderRow)].map((_, rowIndex) => (
-      <Table.Row key={`loader_${rowIndex}`}>
+      <Table.Row key={`row_${rowIndex}`}>
         {columns.map((_, colIndex) => (
-          <Table.Cell key={`loader_${colIndex}`}>
+          <Table.Cell key={`col_${colIndex}`}>
             <Skeleton
               containerClassName={styles.flex1}
               highlightColor="var(--background-base)"
