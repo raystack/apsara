@@ -12,7 +12,7 @@ import {
 } from "@raystack/apsara";
 
 import { getData, Payment } from "./data";
-const TOTAL_PAGES = 3;
+const TOTAL_PAGES = 100;
 
 export const columns: ApsaraColumnDef<Payment>[] = [
   {
