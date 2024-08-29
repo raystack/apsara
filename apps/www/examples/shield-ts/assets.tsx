@@ -97,10 +97,6 @@ export const Assets = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
 
-  function onSwitchChange() {
-    setIsLoading((prev) => !prev);
-  }
-
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
       setIsLoading(true);
@@ -130,7 +126,7 @@ export const Assets = () => {
       onLoadMore={loadMoreData}
     >
       <DataTable.Toolbar>
-        <AssetsHeader onSwitchChange={onSwitchChange} />
+        <AssetsHeader />
         <DataTable.FilterChips />
       </DataTable.Toolbar>
       <DataTable.Footer>
@@ -140,7 +136,7 @@ export const Assets = () => {
   );
 };
 
-const AssetsHeader = ({ onSwitchChange }) => {
+const AssetsHeader = () => {
   const { filteredColumns, table } = useTable();
   const isFiltered = filteredColumns.length > 0;
   return (
@@ -151,10 +147,6 @@ const AssetsHeader = ({ onSwitchChange }) => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Flex gap="small" align="center">
-          <Label>Show Loader</Label>
-          <Switch onCheckedChange={onSwitchChange} />
-        </Flex>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
