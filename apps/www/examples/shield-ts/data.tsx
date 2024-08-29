@@ -30,7 +30,7 @@ export type Payment = {
   }
 
   export const getData = () => faker.helpers.multiple(createRandomData, {
-    count: 25,
+    count: 35,
   });
 
 
