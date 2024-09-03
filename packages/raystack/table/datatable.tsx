@@ -175,7 +175,7 @@ function DataTableRoot<TData, TValue>({
 
       if (node) observerRef.current.observe(node);
     },
-    [isLoading, onLoadMore]
+    [data, isLoading, onLoadMore]
   );
 
   useEffect(() => {
