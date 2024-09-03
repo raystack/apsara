@@ -289,11 +289,12 @@ function DataTableRoot<TData, TValue>({
                     </Table.Row>
                   ))
                 ) : (
+                  !isLoading ?
                   <Table.Row>
                     <Table.Cell colSpan={columns.length}>
                       {emptyState || "No results."}
                     </Table.Cell>
-                  </Table.Row>
+                  </Table.Row> : <></>
                 )}
                 {isLoading && getLoader(loaderRow, columns)}
               </Table.Body>
