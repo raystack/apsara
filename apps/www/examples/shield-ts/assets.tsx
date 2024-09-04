@@ -114,11 +114,7 @@ export const Assets = () => {
   }, [isLoading, hasMoreData, page]);
 
   useEffect(() => {
-    setIsLoading(true)
-    setTimeout(() => {
-      setData(getData())
-      setIsLoading(false)
-    }, 1000)
+    loadMoreData()
   }, [])
 
   return (
