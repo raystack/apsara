@@ -114,7 +114,7 @@ export const Assets = () => {
   }, [isLoading, hasMoreData, page]);
 
   useEffect(() => {
-    setData(getData())
+    loadMoreData()
   }, [])
 
   return (

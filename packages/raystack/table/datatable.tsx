@@ -94,6 +94,37 @@ function DataTableRoot<TData, TValue>({
 
   const [tableState, setTableState] = useState<Partial<TableState>>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const lastRowRef = useRef<HTMLTableRowElement | null>(null);
+
+  useEffect(() => {
+    if (!onLoadMore) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !isLoading) {
+        onLoadMore();
+      }
+    }, { threshold: 0.1 });
+
+    observerRef.current = observer;
+
+    return () => observer.disconnect();
+  }, [onLoadMore]);
+
+  useEffect(() => {
+    const observer = observerRef.current;
+    const lastRow = lastRowRef.current;
+
+    if (observer && lastRow) {
+      observer.disconnect();
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      if (observer && lastRow) {
+        observer.unobserve(lastRow);
+      }
+    };
+  }, [isLoading]);
 
   const getLoader = (loaderRow: number, columns: ApsaraColumnDef<TData>[]) => (
     [...new Array(loaderRow)].map((_, rowIndex) => (
@@ -161,28 +192,6 @@ function DataTableRoot<TData, TValue>({
     initialState,
     state: tableState,
   });
-
-  const lastRowRef = useCallback(
-    (node: HTMLElement | null) => {
-      if (isLoading) return;
-      if (observerRef.current) observerRef.current.disconnect();
-
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && onLoadMore) {
-          onLoadMore();
-        }
-      });
-
-      if (node) observerRef.current.observe(node);
-    },
-    [isLoading, onLoadMore]
-  );
-
-  useEffect(() => {
-    return () => {
-      if (observerRef.current) observerRef.current.disconnect();
-    };
-  }, []);
 
   const tableStyle = {
     ...(table.getRowModel().rows?.length
@@ -289,11 +298,12 @@ function DataTableRoot<TData, TValue>({
                     </Table.Row>
                   ))
                 ) : (
+                  !isLoading ?
                   <Table.Row>
                     <Table.Cell colSpan={columns.length}>
                       {emptyState || "No results."}
                     </Table.Cell>
-                  </Table.Row>
+                  </Table.Row> : <></>
                 )}
                 {isLoading && getLoader(loaderRow, columns)}
               </Table.Body>
