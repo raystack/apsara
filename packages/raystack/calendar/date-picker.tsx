@@ -2,7 +2,7 @@ import { Popover } from "~/popover";
 import { TextField } from "~/textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import { TextfieldProps } from "~/textfield/textfield";
@@ -28,13 +28,23 @@ export function DatePicker({
   const [showCalendar, setShowCalendar] = useState(false);
   const dateValue = dayjs(value).format(dateFormat);
 
+  const isDropdownOpenedRef = useRef(false);
+
   const handleSelect = (day: Date) => {
     onSelect(day);
     setShowCalendar(false);
   };
 
+  function onDropdownOpen() {
+    isDropdownOpenedRef.current = true;
+  }
+
   function onOpenChange(open?: boolean) {
-    setShowCalendar(Boolean(open));
+    if (!isDropdownOpenedRef.current) {
+      setShowCalendar(Boolean(open));
+    }
+
+    isDropdownOpenedRef.current = false;
   }
 
   return (
@@ -52,6 +62,7 @@ export function DatePicker({
         <Calendar
           required={true}
           {...calendarProps}
+          onDropdownOpen={onDropdownOpen}
           mode="single"
           selected={value}
           defaultMonth={value}

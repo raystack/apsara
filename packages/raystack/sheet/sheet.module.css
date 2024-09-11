@@ -48,8 +48,8 @@
 .overlay {
   position: fixed;
   inset: 0;
-
-  background-color: rgba(0, 0, 0, .15);
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .overlay[data-state="open"] {
@@ -65,7 +65,7 @@
   align-items: center;
   border-radius: 4px;
   font-weight: 500;
-  
+
   position: absolute;
   top: 8px;
   right: 8px;
@@ -76,11 +76,19 @@
 }
 
 @keyframes fadeIn {
-  0%   { opacity: 0 }
-  100% { opacity: 1 }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeOut {
-  0%   { opacity: 1 }
-  100% { opacity: 0 }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

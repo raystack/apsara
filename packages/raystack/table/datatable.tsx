@@ -22,9 +22,11 @@ import {
   ComponentProps,
   ReactElement,
   ReactNode,
+  useCallback,
   useEffect,
   useMemo,
   useState,
+  useRef,
 } from "react";
 import { Flex } from "~/flex";
 import { Text } from "~/text";
@@ -60,6 +62,7 @@ type DataTableProps<TData, TValue> = {
   loaderRow?: number;
   onRowClick?: (d: TData) => void;
   onStateChange?: (d: Partial<TableState>) => void;
+  onLoadMore?: () => void;
 } & ComponentProps<typeof Table>;
 
 function DataTableRoot<TData, TValue>({
@@ -71,9 +74,10 @@ function DataTableRoot<TData, TValue>({
   isLoading = false,
   ShouldShowHeader = true,
   initialState,
-  loaderRow = 5,
+  loaderRow = 2,
   onRowClick,
   onStateChange = () => {},
+  onLoadMore,
   ...props
 }: DataTableProps<TData, TValue>) {
   const [tableCustomFilter, setTableCustomFilter] = useState<tableFilterMap>(
@@ -89,10 +93,54 @@ function DataTableRoot<TData, TValue>({
     null;
 
   const [tableState, setTableState] = useState<Partial<TableState>>({});
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const lastRowRef = useRef<HTMLTableRowElement | null>(null);
 
-  const tableData = isLoading
-    ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
-    : data;
+  useEffect(() => {
+    if (!onLoadMore) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !isLoading) {
+        onLoadMore();
+      }
+    }, { threshold: 0.1 });
+
+    observerRef.current = observer;
+
+    return () => observer.disconnect();
+  }, [onLoadMore]);
+
+  useEffect(() => {
+    const observer = observerRef.current;
+    const lastRow = lastRowRef.current;
+
+    if (observer && lastRow) {
+      observer.disconnect();
+      observer.observe(lastRow);
+    }
+
+    return () => {
+      if (observer && lastRow) {
+        observer.unobserve(lastRow);
+      }
+    };
+  }, [isLoading]);
+
+  const getLoader = (loaderRow: number, columns: ApsaraColumnDef<TData>[]) => (
+    [...new Array(loaderRow)].map((_, rowIndex) => (
+      <Table.Row key={`row_${rowIndex}`}>
+        {columns.map((_, colIndex) => (
+          <Table.Cell key={`col_${colIndex}`}>
+            <Skeleton
+              containerClassName={styles.flex1}
+              highlightColor="var(--background-base)"
+              baseColor="var(--background-base-hover)"
+            />
+          </Table.Cell>
+        ))}
+      </Table.Row>
+    ))
+  )
 
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
@@ -106,15 +154,7 @@ function DataTableRoot<TData, TValue>({
             ? tableCustomFilter[colId]
             : undefined;
 
-        const cell = isLoading
-          ? () => (
-              <Skeleton
-                containerClassName={styles.flex1}
-                highlightColor="var(--background-base)"
-                baseColor="var(--background-base-hover)"
-              />
-            )
-          : col.cell;
+        const { cell } = col;
 
         return {
           ...col,
@@ -136,7 +176,7 @@ function DataTableRoot<TData, TValue>({
   };
 
   const table = useReactTable({
-    data: tableData,
+    data,
     columns: columnWithCustomFilter as unknown as ColumnDef<TData, TValue>[],
     globalFilterFn: "auto",
     enableRowSelection: true,
@@ -180,7 +220,10 @@ function DataTableRoot<TData, TValue>({
       >
         <Flex direction="column" className={styles.datatable}>
           {header}
-          <Flex className={styles.tableContainer} style={parentStyle}>
+          <Flex
+            className={styles.tableContainer}
+            style={parentStyle}
+          >
             <Table {...props} style={tableStyle}>
               <Table.Header className={styles.header}>
                 {ShouldShowHeader
@@ -221,7 +264,7 @@ function DataTableRoot<TData, TValue>({
               </Table.Header>
               <Table.Body>
                 {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
+                  table.getRowModel().rows.map((row, rowIndex) => (
                     <Table.Row
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
@@ -232,6 +275,11 @@ function DataTableRoot<TData, TValue>({
                           : `${styles.tRow} ${
                               onRowClick ? styles.tRowClick : ""
                             }`
+                      }
+                      ref={
+                        rowIndex === table.getRowModel().rows.length - 1
+                          ? lastRowRef
+                          : null
                       }
                     >
                       {row.getVisibleCells().map((cell, index) => (
@@ -250,12 +298,14 @@ function DataTableRoot<TData, TValue>({
                     </Table.Row>
                   ))
                 ) : (
+                  !isLoading ?
                   <Table.Row>
                     <Table.Cell colSpan={columns.length}>
                       {emptyState || "No results."}
                     </Table.Cell>
-                  </Table.Row>
+                  </Table.Row> : <></>
                 )}
+                {isLoading && getLoader(loaderRow, columns)}
               </Table.Body>
             </Table>
             {detail}

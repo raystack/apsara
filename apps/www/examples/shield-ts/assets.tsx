@@ -1,3 +1,5 @@
+import React, { useState, useCallback, useEffect } from "react";
+import dayjs from "dayjs";
 import {
   ApsaraColumnDef,
   Checkbox,
@@ -8,54 +10,9 @@ import {
   Text,
   useTable,
 } from "@raystack/apsara";
-import dayjs from "dayjs";
-import * as React from "react";
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-    created_at: "2023-10-10T13:02:56.12Z",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-    created_at: "2023-09-15T11:55:46.28Z",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-    created_at: "2023-07-01T10:02:50.60Z",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-    created_at: "2023-05-30T09:02:26.49Z",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-    created_at: "2024-04-20T21:02:01.25Z",
-  },
-];
-
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-  created_at: string;
-};
+import { getData, Payment } from "./data";
+const TOTAL_PAGES = 100;
 
 export const columns: ApsaraColumnDef<Payment>[] = [
   {
@@ -135,11 +92,30 @@ export const columns: ApsaraColumnDef<Payment>[] = [
 ];
 
 export const Assets = () => {
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMoreData, setHasMoreData] = useState(true);
+  const [data, setData] = useState<Payment[]>([]);
 
-  function onSwitchChange() {
-    setIsLoading((prev) => !prev);
-  }
+  const loadMoreData = useCallback(() => {
+    if (!isLoading && hasMoreData) {
+      setIsLoading(true);
+      // API simulation call to fetch more data
+      setTimeout(() => {
+        const moreData = getData();
+        setData((prevData) => [...prevData, ...moreData]);
+        setPage((prevPage) => prevPage + 1);
+        setIsLoading(false);
+        if (page >= TOTAL_PAGES) {
+          setHasMoreData(false);
+        }
+      }, 1000);
+    }
+  }, [isLoading, hasMoreData, page]);
+
+  useEffect(() => {
+    loadMoreData()
+  }, [])
 
   return (
     <DataTable
@@ -147,19 +123,20 @@ export const Assets = () => {
       data={data}
       initialState={{ sorting: [{ id: "amount", desc: true }] }}
       isLoading={isLoading}
+      onLoadMore={loadMoreData}
     >
       <DataTable.Toolbar>
-        <AssetsHeader onSwitchChange={onSwitchChange} />
+        <AssetsHeader />
         <DataTable.FilterChips />
       </DataTable.Toolbar>
       <DataTable.Footer>
-        <AssetsFooter />
+        <></>
       </DataTable.Footer>
     </DataTable>
   );
 };
 
-const AssetsHeader = ({ onSwitchChange }) => {
+const AssetsHeader = () => {
   const { filteredColumns, table } = useTable();
   const isFiltered = filteredColumns.length > 0;
   return (
@@ -170,12 +147,9 @@ const AssetsHeader = ({ onSwitchChange }) => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Flex gap="small" align="center">
-          <Label>Show Loader</Label>
-          <Switch onCheckedChange={onSwitchChange} />
-        </Flex>
       </Flex>
       <Flex gap="small">
+        <AssetsFooter />
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
         <DataTable.GloabalSearch placeholder="Search assets..." />
@@ -191,7 +165,7 @@ const AssetsFooter = () => {
     <Flex align="center" justify="between" style={{ width: "100%" }}>
       <Text>
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {getData().length * (TOTAL_PAGES + 1)} row(s) selected.
       </Text>
     </Flex>
   );

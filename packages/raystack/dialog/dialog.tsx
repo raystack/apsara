@@ -30,19 +30,20 @@ export const DialogContent = forwardRef<
   ) => {
     return (
       <DialogPrimitive.Portal>
-        <Overlay className={overlayClassname} style={overlayStyle} />
-        <DialogPrimitive.Content
-          {...props}
-          ref={forwardedRef}
-          className={dialogContent({ className })}
-        >
-          {children}
-          {close && (
-            <CloseButton>
-              <Cross1Icon />
-            </CloseButton>
-          )}
-        </DialogPrimitive.Content>
+        <Overlay className={overlayClassname} style={overlayStyle}>
+          <DialogPrimitive.Content
+            {...props}
+            ref={forwardedRef}
+            className={dialogContent({ className })}
+          >
+            {children}
+            {close && (
+              <CloseButton>
+                <Cross1Icon />
+              </CloseButton>
+            )}
+          </DialogPrimitive.Content>
+        </Overlay>
       </DialogPrimitive.Portal>
     );
   }
