@@ -52,10 +52,10 @@
   padding: var(--pd-8);
 }
 
-.textfield-invlid {
+.textfield-invalid {
   outline: 1px solid var(--border-danger);
 }
-.textfield-invlid:focus {
+.textfield-invalid:focus {
   outline: 1px solid var(--border-danger);
 }
 
