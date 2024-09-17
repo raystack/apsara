@@ -31,31 +31,33 @@ export function DatePicker({
   const [calendarVal, setCalendarVal] = useState(value);
   const [inputState, setInputState] = useState<Partial<React.ComponentProps<typeof TextField>['state']>>();
 
-  const isDropdownOpenedRef = useRef(false);
+  const dropdownRef = useRef(null);
+  const isDropdownOpenRef = useRef(false);
   const textFieldRef = useRef<HTMLInputElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const isInputFieldFocused = useRef(false);
 
-  const handleMouseUp = useCallback((event: MouseEvent) => {
-      const el = (event.target) as HTMLElement | null;
+  function isElementOutside(el: HTMLElement) {
+    return !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
+           !textFieldRef.current?.contains(el) && // TextField
+           !contentRef.current?.contains(el);
+  }
 
-      if (!isDropdownOpenedRef.current && // Month and Year dropdown from Date picker
-          !textFieldRef.current?.contains(el) && // TextField
-          !contentRef.current?.contains(el)) { // DatePicker Popper
-              removeEventListeners();
-         }
+  const handleMouseDown = useCallback((event: MouseEvent) => {
+      const el = (event.target) as HTMLElement | null;
+      if (el && isElementOutside(el)) removeEventListeners();
   }, [])
 
   function registerEventListeners() {
     isInputFieldFocused.current = true;
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mouseup', handleMouseDown, true);
   }
 
   function removeEventListeners() {
     isInputFieldFocused.current = false;
     setShowCalendar(false);
     if (inputState === undefined) onSelect(calendarVal);
-    document.removeEventListener('mouseup', handleMouseUp);
+    document.removeEventListener('mouseup', handleMouseDown);
   }
 
   const handleSelect = (day: Date) => {
@@ -68,22 +70,19 @@ export function DatePicker({
         textFieldRef.current.value = dayjs(day).format(dateFormat);
     }
 
-    setShowCalendar(false);
     removeEventListeners();
   };
 
   function onDropdownOpen() {
-    isDropdownOpenedRef.current = true;
+    isDropdownOpenRef.current = true;
   }
 
   function onOpenChange(open?: boolean) {
-    if (isInputFieldFocused.current && showCalendar) return;
-
-    if (!isDropdownOpenedRef.current) {
+    if (!isDropdownOpenRef.current && !(isInputFieldFocused.current && showCalendar)) {
       setShowCalendar(Boolean(open));
     }
 
-    isDropdownOpenedRef.current = false;
+    isDropdownOpenRef.current = false;
   }
 
   function handleInputFocus() {
@@ -91,9 +90,10 @@ export function DatePicker({
     if (!showCalendar) setShowCalendar(true);
   }
 
-  function handleInputBlur() {
+  function handleInputBlur(event: React.FocusEvent) {
     if (isInputFieldFocused.current) {
-        removeEventListeners();
+        const el = event.relatedTarget as HTMLElement | null;
+        if (el && isElementOutside(el)) removeEventListeners();
     } else {
         registerEventListeners();
         setTimeout(() => textFieldRef.current?.focus());
