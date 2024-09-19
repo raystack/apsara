@@ -31,7 +31,6 @@ export function DatePicker({
   const [calendarVal, setCalendarVal] = useState(value);
   const [inputState, setInputState] = useState<Partial<React.ComponentProps<typeof TextField>['state']>>();
 
-  const dropdownRef = useRef(null);
   const isDropdownOpenRef = useRef(false);
   const textFieldRef = useRef<HTMLInputElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
