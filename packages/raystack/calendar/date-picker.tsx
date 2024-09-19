@@ -19,7 +19,7 @@ interface DatePickerProps {
 
 export function DatePicker({
   side = "top",
-  dateFormat = "DD/MM/YYYY",
+  dateFormat = "MM/DD/YYYY",
   textFieldProps,
   calendarProps,
   value = new Date(),
