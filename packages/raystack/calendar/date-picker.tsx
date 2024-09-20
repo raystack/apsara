@@ -14,12 +14,14 @@ interface DatePickerProps {
   textFieldProps?: TextfieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
   onSelect?: (date: Date) => void;
+  placeholder?: string;
   value?: Date;
 }
 
 export function DatePicker({
   side = "top",
-  dateFormat = "MM/DD/YYYY",
+  dateFormat = "DD/MM/YYYY",
+  placeholder = 'DD/MM/YYYY',
   textFieldProps,
   calendarProps,
   value = new Date(),
@@ -55,20 +57,19 @@ export function DatePicker({
   function removeEventListeners() {
     isInputFieldFocused.current = false;
     setShowCalendar(false);
-    if (inputState === undefined) onSelect(calendarVal);
+
+    const updatedVal = dayjs(calendarVal).format(dateFormat);
+
+    if  (textFieldRef.current) textFieldRef.current.value = updatedVal;
+    if (inputState === undefined) onSelect(dayjs(updatedVal).toDate());
+
     document.removeEventListener('mouseup', handleMouseDown);
   }
 
   const handleSelect = (day: Date) => {
     onSelect(day);
     setCalendarVal(day);
-
     setInputState(undefined);
-
-    if  (textFieldRef.current) {
-        textFieldRef.current.value = dayjs(day).format(dateFormat);
-    }
-
     removeEventListeners();
   };
 
@@ -99,9 +100,16 @@ export function DatePicker({
     }
   }
 
+  function handleKeyUp(event: React.KeyboardEvent) {
+    if (event.code === 'Enter' && textFieldRef.current) {
+        textFieldRef.current.blur();
+        removeEventListeners();
+    }
+  }
+
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = (event.target);
-    const date = dayjs(value);
+    const date = dayjs((dayjs(value)).format(value.includes("/") ? "DD/MM/YYYY" : value.includes("-") ? "DD-MM-YYYY" : undefined))
 
     const isValidDate = date.isValid();
 
@@ -128,6 +136,8 @@ export function DatePicker({
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
           state={inputState}
+          placeholder={placeholder}
+          onKeyUp={handleKeyUp}
           {...textFieldProps}
       />
 
