@@ -22,7 +22,6 @@ StyleDictionary.registerTransform({
   }
 });
 
-// Ensure the transform group is correctly defined and registered
 StyleDictionary.registerTransformGroup({
   name: 'custom/css',
   transforms: StyleDictionary.transformGroup['css'].concat([
@@ -31,7 +30,6 @@ StyleDictionary.registerTransformGroup({
   ])
 });
 
-// Export the configuration
 export default {
   source: ['tokens.json'],
   platforms: {
