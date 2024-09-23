@@ -6,6 +6,7 @@
   "engines": {
     "node": ">=18"
   },
+  "type": "module",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -25,7 +26,8 @@
     "release:ci": "release-it --ci --no-increment --npm.ignoreVersion",
     "bump-version": "node scripts/bump-version.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist && rm -rf react/dist",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "gen:tokens": "node ./style-dictionary-wrapper.js"
   },
   "keywords": [],
   "author": "",
@@ -49,7 +51,8 @@
     "semver": "^7.6.0",
     "tsconfig": "workspace:*",
     "typescript": "~5.4.3",
-    "release-it": "^16.2.1"
+    "release-it": "^16.2.1",
+    "style-dictionary": "^3.7.0"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.1.2",
