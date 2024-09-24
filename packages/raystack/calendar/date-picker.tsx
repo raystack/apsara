@@ -26,7 +26,7 @@ interface DatePickerProps {
 export function DatePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
-  placeholder = 'DD/MM/YYYY',
+  placeholder = "DD/MM/YYYY",
   textFieldProps,
   calendarProps,
   value = new Date(),
@@ -113,7 +113,7 @@ export function DatePicker({
   }
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = (event.target);
+    const { value } = event.target;
 
     const format = value.includes("/") ? "DD/MM/YYYY" : value.includes("-") ? "DD-MM-YYYY" : undefined;
     const date = dayjs(value, format);
