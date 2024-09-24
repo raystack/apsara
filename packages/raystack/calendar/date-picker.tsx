@@ -2,11 +2,16 @@ import { Popover } from "~/popover";
 import { TextField } from "~/textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import { TextfieldProps } from "~/textfield/textfield";
 import { PropsBase, PropsSingleRequired } from "react-day-picker";
+
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
@@ -14,59 +19,145 @@ interface DatePickerProps {
   textFieldProps?: TextfieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
   onSelect?: (date: Date) => void;
+  placeholder?: string;
   value?: Date;
 }
 
 export function DatePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
+  placeholder = "DD/MM/YYYY",
   textFieldProps,
   calendarProps,
   value = new Date(),
   onSelect = () => {},
 }: DatePickerProps) {
-  const [showCalendar, setShowCalendar] = useState(false);
-  const dateValue = dayjs(value).format(dateFormat);
+  const defaultDate = dayjs(value).format(dateFormat);
 
-  const isDropdownOpenedRef = useRef(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [calendarVal, setCalendarVal] = useState(value);
+  const [inputState, setInputState] = useState<Partial<React.ComponentProps<typeof TextField>['state']>>();
+
+  const isDropdownOpenRef = useRef(false);
+  const textFieldRef = useRef<HTMLInputElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const isInputFieldFocused = useRef(false);
+
+  function isElementOutside(el: HTMLElement) {
+    return !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
+           !textFieldRef.current?.contains(el) && // TextField
+           !contentRef.current?.contains(el);
+  }
+
+  const handleMouseDown = useCallback((event: MouseEvent) => {
+      const el = (event.target) as HTMLElement | null;
+      if (el && isElementOutside(el)) removeEventListeners();
+  }, [])
+
+  function registerEventListeners() {
+    isInputFieldFocused.current = true;
+    document.addEventListener('mouseup', handleMouseDown, true);
+  }
+
+  function removeEventListeners() {
+    isInputFieldFocused.current = false;
+    setShowCalendar(false);
+
+    const updatedVal = dayjs(calendarVal).format(dateFormat);
+
+    if  (textFieldRef.current) textFieldRef.current.value = updatedVal;
+    if (inputState === undefined) onSelect(dayjs(updatedVal).toDate());
+
+    document.removeEventListener('mouseup', handleMouseDown);
+  }
 
   const handleSelect = (day: Date) => {
     onSelect(day);
-    setShowCalendar(false);
+    setCalendarVal(day);
+    setInputState(undefined);
+    removeEventListeners();
   };
 
   function onDropdownOpen() {
-    isDropdownOpenedRef.current = true;
+    isDropdownOpenRef.current = true;
   }
 
   function onOpenChange(open?: boolean) {
-    if (!isDropdownOpenedRef.current) {
+    if (!isDropdownOpenRef.current && !(isInputFieldFocused.current && showCalendar)) {
       setShowCalendar(Boolean(open));
     }
 
-    isDropdownOpenedRef.current = false;
+    isDropdownOpenRef.current = false;
+  }
+
+  function handleInputFocus() {
+    if (isInputFieldFocused.current) return;
+    if (!showCalendar) setShowCalendar(true);
+  }
+
+  function handleInputBlur(event: React.FocusEvent) {
+    if (isInputFieldFocused.current) {
+        const el = event.relatedTarget as HTMLElement | null;
+        if (el && isElementOutside(el)) removeEventListeners();
+    } else {
+        registerEventListeners();
+        setTimeout(() => textFieldRef.current?.focus());
+    }
+  }
+
+  function handleKeyUp(event: React.KeyboardEvent) {
+    if (event.code === 'Enter' && textFieldRef.current) {
+        textFieldRef.current.blur();
+        removeEventListeners();
+    }
+  }
+
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = event.target;
+
+    const format = value.includes("/") ? "DD/MM/YYYY" : value.includes("-") ? "DD-MM-YYYY" : undefined;
+    const date = dayjs(value, format);
+
+    const isValidDate = date.isValid();
+
+    const isAfter = calendarProps?.startMonth !== undefined ? dayjs(date).isSameOrAfter(calendarProps.startMonth) : true;
+    const isBefore = calendarProps?.endMonth !== undefined ? dayjs(date).isSameOrBefore(calendarProps.endMonth) : true;
+
+    const isValid = isValidDate && isAfter && isBefore && dayjs(date).isSameOrBefore(dayjs());
+
+    if (isValid) {
+        setCalendarVal(date.toDate());
+        if (inputState === 'invalid') setInputState(undefined);
+    } else {
+        setInputState('invalid');
+    }
   }
 
   return (
     <Popover open={showCalendar} onOpenChange={onOpenChange}>
-      <Popover.Trigger asChild>
-        <TextField
-          value={dateValue}
-          trailing={<CalendarIcon />}
-          className={styles.datePickerInput}
-          readOnly
+      <TextField
+          ref={textFieldRef}
+          defaultValue={defaultDate}
+          trailing={<Popover.Trigger asChild><CalendarIcon /></Popover.Trigger>}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          state={inputState}
+          placeholder={placeholder}
+          onKeyUp={handleKeyUp}
           {...textFieldProps}
-        />
-      </Popover.Trigger>
-      <Popover.Content side={side} className={styles.calendarPopover}>
+      />
+
+      <Popover.Content side={side} className={styles.calendarPopover} ref={contentRef}>
         <Calendar
           required={true}
           {...calendarProps}
           onDropdownOpen={onDropdownOpen}
           mode="single"
-          selected={value}
-          defaultMonth={value}
+          selected={calendarVal}
+          month={calendarVal}
           onSelect={handleSelect}
+          onMonthChange={setCalendarVal}
         />
       </Popover.Content>
     </Popover>

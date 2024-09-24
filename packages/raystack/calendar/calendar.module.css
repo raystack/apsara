@@ -161,10 +161,6 @@
   min-width: max-content;
 }
 
-.datePickerInput {
-  cursor: pointer;
-}
-
 .dropdowns {
   display: flex;
   align-items: center;
