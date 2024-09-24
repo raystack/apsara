@@ -8,6 +8,11 @@ import dayjs from "dayjs";
 import { TextfieldProps } from "~/textfield/textfield";
 import { PropsBase, PropsSingleRequired } from "react-day-picker";
 
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+
+
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
@@ -109,7 +114,9 @@ export function DatePicker({
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = (event.target);
-    const date = dayjs((dayjs(value)).format(value.includes("/") ? "DD/MM/YYYY" : value.includes("-") ? "DD-MM-YYYY" : undefined))
+
+    const format = value.includes("/") ? "DD/MM/YYYY" : value.includes("-") ? "DD-MM-YYYY" : undefined;
+    const date = dayjs(value, format);
 
     const isValidDate = date.isValid();
 
