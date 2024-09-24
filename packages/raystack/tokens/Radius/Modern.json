@@ -1,0 +1,26 @@
+{
+  "XS": {
+    "$type": "number",
+    "$value": 2
+  },
+  "S": {
+    "$type": "number",
+    "$value": 4
+  },
+  "L": {
+    "$type": "number",
+    "$value": 8
+  },
+  "XL": {
+    "$type": "number",
+    "$value": 12
+  },
+  "XXL": {
+    "$type": "number",
+    "$value": 16
+  },
+  "Full moon": {
+    "$type": "number",
+    "$value": 800
+  }
+}

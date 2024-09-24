@@ -1,0 +1,70 @@
+{
+  "gap_1": {
+    "$type": "number",
+    "$value": 2
+  },
+  "gap_2": {
+    "$type": "number",
+    "$value": 4
+  },
+  "gap_3": {
+    "$type": "number",
+    "$value": 8
+  },
+  "gap_4": {
+    "$type": "number",
+    "$value": 12
+  },
+  "gap_5": {
+    "$type": "number",
+    "$value": 16
+  },
+  "gap_6": {
+    "$type": "number",
+    "$value": 20
+  },
+  "gap_7": {
+    "$type": "number",
+    "$value": 24
+  },
+  "gap_9": {
+    "$type": "number",
+    "$value": 32
+  },
+  "gap_10": {
+    "$type": "number",
+    "$value": 40
+  },
+  "gap_11": {
+    "$type": "number",
+    "$value": 48
+  },
+  "gap_12": {
+    "$type": "number",
+    "$value": 56
+  },
+  "gap_13": {
+    "$type": "number",
+    "$value": 64
+  },
+  "gap_14": {
+    "$type": "number",
+    "$value": 72
+  },
+  "gap_15": {
+    "$type": "number",
+    "$value": 80
+  },
+  "gap_16": {
+    "$type": "number",
+    "$value": 96
+  },
+  "gap_17": {
+    "$type": "number",
+    "$value": 120
+  },
+  "gap_8": {
+    "$type": "number",
+    "$value": 28
+  }
+}

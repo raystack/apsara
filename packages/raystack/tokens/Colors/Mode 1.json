@@ -1,0 +1,342 @@
+{
+  "Foreground": {
+    "Base": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Neutral.12}"
+      },
+      "Secondary": {
+        "$type": "color",
+        "$value": "{Neutral.11}"
+      },
+      "Tertiary": {
+        "$type": "color",
+        "$value": "{Neutral.10}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Neutral.1}"
+      }
+    },
+    "Accent": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Accent.9}"
+      },
+      "Primary Hover": {
+        "$type": "color",
+        "$value": "{Accent.11}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Accent.contrast}"
+      }
+    },
+    "Attention": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Attention.9}"
+      },
+      "Primary Hover": {
+        "$type": "color",
+        "$value": "{Attention.11}"
+      }
+    },
+    "Danger": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Danger.9}"
+      },
+      "Primary Hover": {
+        "$type": "color",
+        "$value": "{Danger.11}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Danger.contrast}"
+      }
+    },
+    "Success": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Success.9}"
+      },
+      "Primary Hover": {
+        "$type": "color",
+        "$value": "{Success.11}"
+      }
+    }
+  },
+  "Background": {
+    "Base": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Neutral.1}"
+      },
+      "Secondary": {
+        "$type": "color",
+        "$value": "{Neutral.2}"
+      },
+      "Primary Hover": {
+        "$type": "color",
+        "$value": "{Neutral.3}"
+      }
+    },
+    "Neutral": {
+      "Secondary": {
+        "$type": "color",
+        "$value": "{Neutral.4}"
+      },
+      "Tertiary": {
+        "$type": "color",
+        "$value": "{Neutral.9}"
+      },
+      "Secondary Hover": {
+        "$type": "color",
+        "$value": "{Neutral.5}"
+      },
+      "Primary": {
+        "$type": "color",
+        "$value": "{Neutral.3}"
+      },
+      "Tertiary Hover": {
+        "$type": "color",
+        "$value": "{Neutral.10}"
+      }
+    },
+    "Accent": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Accent.4}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Accent.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Accent.10}"
+      }
+    },
+    "Attention": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Attention.4}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Attention.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Attention.10}"
+      }
+    },
+    "Danger": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Danger.4}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Danger.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Danger.10}"
+      }
+    },
+    "Success": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Success.4}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Success.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Success.10}"
+      }
+    }
+  },
+  "Border": {
+    "Base": {
+      "Tertiary": {
+        "$type": "color",
+        "$value": "{Neutral.7}"
+      },
+      "Focus": {
+        "$type": "color",
+        "$value": "{Neutral.8}"
+      },
+      "Primary": {
+        "$type": "color",
+        "$value": "{Neutral.4}"
+      },
+      "Secondary": {
+        "$type": "color",
+        "$value": "{Neutral.6}"
+      }
+    },
+    "Accent": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Accent.7}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Accent.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Accent.10}"
+      }
+    },
+    "Attention": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Attention.7}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Attention.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Attention.10}"
+      }
+    },
+    "Danger": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Danger.7}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Danger.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Danger.10}"
+      }
+    },
+    "Success": {
+      "Primary": {
+        "$type": "color",
+        "$value": "{Success.7}"
+      },
+      "Emphasis": {
+        "$type": "color",
+        "$value": "{Success.9}"
+      },
+      "Emphasis Hover": {
+        "$type": "color",
+        "$value": "{Success.10}"
+      }
+    }
+  },
+  "Overlay": {
+    "Black": {
+      "black-a1": {
+        "$type": "color",
+        "$value": "#0000000d"
+      },
+      "black-a2": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a3": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a4": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a5": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a6": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a7": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a8": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a9": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a10": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a11": {
+        "$type": "color",
+        "$value": "#0000001a"
+      },
+      "black-a12": {
+        "$type": "color",
+        "$value": "#0000001a"
+      }
+    },
+    "White": {
+      "white-a1": {
+        "$type": "color",
+        "$value": "#ffffff0d"
+      },
+      "white-a2": {
+        "$type": "color",
+        "$value": "#ffffff1a"
+      },
+      "white-a3": {
+        "$type": "color",
+        "$value": "#ffffff26"
+      },
+      "white-a4": {
+        "$type": "color",
+        "$value": "#ffffff33"
+      },
+      "white-a5": {
+        "$type": "color",
+        "$value": "#ffffff4d"
+      },
+      "white-a6": {
+        "$type": "color",
+        "$value": "#ffffff66"
+      },
+      "white-a7": {
+        "$type": "color",
+        "$value": "#ffffff80"
+      },
+      "white-a8": {
+        "$type": "color",
+        "$value": "#ffffff99"
+      },
+      "white-a9": {
+        "$type": "color",
+        "$value": "#ffffffb3"
+      },
+      "white-a10": {
+        "$type": "color",
+        "$value": "#ffffffcc"
+      },
+      "white-a11": {
+        "$type": "color",
+        "$value": "#ffffffe6"
+      },
+      "white-a12": {
+        "$type": "color",
+        "$value": "#fffffff2"
+      }
+    }
+  }
+}
