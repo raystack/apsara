@@ -42,6 +42,11 @@ export function DatePicker({
   const textFieldRef = useRef<HTMLInputElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const isInputFieldFocused = useRef(false);
+	const calendarValRef = useRef(value);
+
+	useEffect(() => {
+		calendarValRef.current = calendarVal;
+	}, [calendarVal]);
 
   function isElementOutside(el: HTMLElement) {
     return !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
@@ -56,14 +61,14 @@ export function DatePicker({
 
   function registerEventListeners() {
     isInputFieldFocused.current = true;
-    document.addEventListener('mouseup', handleMouseDown, true);
+    document.addEventListener('mouseup', handleMouseDown);
   }
 
   function removeEventListeners() {
     isInputFieldFocused.current = false;
     setShowCalendar(false);
 
-    const updatedVal = dayjs(calendarVal).format(dateFormat);
+    const updatedVal = dayjs(calendarValRef.current).format(dateFormat);
 
     if  (textFieldRef.current) textFieldRef.current.value = updatedVal;
     if (inputState === undefined) onSelect(dayjs(updatedVal).toDate());
@@ -74,6 +79,7 @@ export function DatePicker({
   const handleSelect = (day: Date) => {
     onSelect(day);
     setCalendarVal(day);
+		calendarValRef.current = day;
     setInputState(undefined);
     removeEventListeners();
   };
