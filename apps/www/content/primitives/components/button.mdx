@@ -36,10 +36,11 @@ import { Button } from '@raystack/apsara'
 The Button component provides various variants to enhance the visual appearance of buttons. you can create buttons with different variants such as:
 
 - Primary
-- Outline
 - Secondary
+- Outline
 - Ghost
 - Danger
+- text
 
 These variants allow you to customize the button's style, making it visually distinctive and suitable for different purposes within your user interface.
 
@@ -51,12 +52,12 @@ These variants allow you to customize the button's style, making it visually dis
             code: `<Button variant="primary">Primary button</Button>`,
         },
         {
-            name: "Outline",
-            code: `<Button variant="outline">Outline button</Button>`,
-        },
-        {
             name: "Secondary",
             code: `<Button variant="secondary">Secondary button</Button>`,
+        },
+        {
+            name: "Outline",
+            code: `<Button variant="outline">Outline button</Button>`,
         },
         {
             name: "Ghost",
@@ -66,14 +67,17 @@ These variants allow you to customize the button's style, making it visually dis
             name: "Danger",
             code: `<Button variant="danger">Danger button</Button>`,
         },
+        {
+            name: "Text",
+            code: `<Button variant="text">Text button</Button>`,
+        },
     ]}
 />
 
 ## Scale
 The Button component offers different size options to accommodate various design requirements. By selecting the "large" size, you can create buttons that are visually larger, making them more prominent and noticeable within the user interface. Additionally, the Button component also supports the following size options:
 - Small
-- Medium
-- Large
+- Normal
 
 These different size options allow you to customize the appearance of buttons to suit your specific design needs.
 
@@ -87,13 +91,9 @@ These different size options allow you to customize the appearance of buttons to
             code: `<Button variant="primary" size="small">primary button</Button>`,
         },
         {
-            name: "Medium",
-            code: `<Button variant="primary" size="medium">primary button</Button>`,
-        },
-        {
-            name: "Large",
-            code: `<Button variant="primary" size="large">primary button</Button>`,
-        },
+            name: "Normal",
+            code: `<Button variant="primary" size="normal">primary button</Button>`,
+        }
     ]}
 />
 
@@ -111,4 +111,14 @@ The Button component provides a "disabled" state, which prevents the button from
 </div>
 `} />
 
+## Loading
+The Button component offers loading states.
+
+<Playground scope={{ Button }} code={`
+<div style={{display:'flex', gap: '8px'}}>
+    <Button variant="primary" loading>Click here</Button>
+    <Button variant="primary" loading loaderText="Custom Loading...">Click here</Button>
+    <Button variant="primary" loading loaderText="Loading..." disabled>Click here</Button>
+</div>
+`} />
 
