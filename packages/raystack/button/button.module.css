@@ -8,23 +8,20 @@
   font-family: inherit;
   font-size: var(--fs-200);
   font-weight: 500;
-  line-height: var(--fs-600);
   width: fit-content;
   transition: background-color var(--transition);
   padding: var(--gap-3) var(--gap-4);
   border-radius: var(--br-4);
 }
 
-.button:before {
-  box-sizing: border-box;
-}
-
+.button:before,
 .button:after {
   box-sizing: border-box;
 }
 
-.button:disabled {
-  opacity: 0.6;
+.button:disabled,
+.button-disabled {
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -58,9 +55,15 @@
   background-color: var(--background-accent-inverted-hover);
 }
 
-.button-secondary {
+.button-secondary,
+.button-outline,
+.button-ghost,
+.button-text {
   color: var(--foreground-base);
   background-color: var(--background-base);
+}
+
+.button-secondary {
   outline: 1px solid var(--border-base);
 }
 
@@ -74,7 +77,6 @@
 
 .button-outline {
   color: var(--foreground-accent);
-  background-color: var(--background-base);
   outline: 1px solid var(--border-accent-inverted);
 }
 
@@ -87,8 +89,6 @@
 }
 
 .button-ghost {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
   outline: 1px dashed var(--border-base);
 }
 
@@ -112,21 +112,11 @@
   background-color: var(--background-danger-inverted-hover);
 }
 
-.button-text {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
-}
-
 .button-text:hover,
 .button-text:active,
 .button-text[data-radix-popover-trigger][data-state="open"],
 .button-text[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--background-base-hover);
-}
-
-.button-disabled {
-  opacity: 0.6;
-  pointer-events: none;
 }
 
 .button-loading {
@@ -212,5 +202,21 @@
 }
 
 .loaderOnlyButtonNormal {
-  padding: var(--gap-4) var(--gap-7);
+  padding: var(--gap-3) var(--gap-8);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: var(--gap-3);
+  max-height: var(--gap-3);
+}
+
+.icon-leading {
+  margin-right: var(--gap-2);
+}
+
+.icon-trailing {
+  margin-left: var(--gap-2);  
 }

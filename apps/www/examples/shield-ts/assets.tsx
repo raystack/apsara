@@ -146,7 +146,7 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Button size="normal" variant="primary">Button</Button>
+        <Button size="normal" variant="primary" disabled>Button</Button>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

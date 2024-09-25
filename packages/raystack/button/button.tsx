@@ -27,7 +27,16 @@ const button = cva(styles.button, {
   },
 });
 
-const getLoaderOnlyClass = (size: 'small' | 'normal' | null | undefined) => 
+const supportingIcon = cva(styles.icon, {
+  variants: {
+    iconPosition: {
+      leading: styles["icon-leading"],
+      trailing: styles["icon-trailing"],
+    }
+  }
+})
+
+const getLoaderOnlyClass = (size: 'small' | 'normal' | null) => 
   size === 'small' ? styles.loaderOnlyButtonSmall : styles.loaderOnlyButtonNormal
 
 type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
@@ -35,10 +44,12 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     asChild?: boolean;
     loading?: boolean;
     loaderText?: ReactNode;
+    icon?: ReactNode;
+    iconPosition?: 'leading' | 'trailing';
   };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, disabled, loading, loaderText, children, ...props }, ref) => {
+  ({ className, variant, size = 'normal', asChild = false, disabled, loading, loaderText, icon, iconPosition = 'leading', children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const isLoaderOnly = loading && !loaderText;
     return (
@@ -55,7 +66,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {loaderText && <span className={styles.loaderText}>{loaderText}</span>}
           </>
         ) : (
-          children
+          <>
+            {icon && iconPosition === 'leading' && <span className={supportingIcon({ iconPosition })}>{icon}</span>}
+            {children}
+            {icon && iconPosition === 'trailing' && <span className={supportingIcon({ iconPosition })}>{icon}</span>}
+          </>
         )}
       </Comp>
     );
