@@ -37,18 +37,21 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     loaderText?: ReactNode;
     leadingIcon?: ReactNode;
     trailingIcon?: ReactNode;
-    width?: String | Number;
+    width?: string | number
   };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, width, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const isLoaderOnly = loading && !loaderText;
+    const widthStyle = width ? { width } : {};
+
     return (
       <Comp
         className={`${button({ variant, size, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
         ref={ref}
         disabled={disabled}
+        style={ widthStyle }
         {...props}
       >
         {loading ? (

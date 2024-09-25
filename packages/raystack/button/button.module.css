@@ -212,8 +212,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: var(--gap-3);
-  max-height: var(--gap-3);
 }
 
 .icon-leading {
