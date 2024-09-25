@@ -12,6 +12,8 @@
   transition: background-color var(--transition);
   padding: var(--gap-3) var(--gap-4);
   border-radius: var(--br-4);
+  color: var(--ascent-contrast);
+  background-color: var(--background-accent-inverted);
 }
 
 .button:before,
@@ -188,7 +190,7 @@
   animation: spin 1s linear infinite;
 }
 
-.loaderText {
+.loader-text {
   margin-left: var(--gap-3);
 }
 
@@ -198,11 +200,11 @@
   100% { transform: rotate(360deg); }
 }
 
-.loaderOnlyButtonSmall {
+.loader-only-button-small {
   padding: var(--gap-2) var(--gap-6);
 }
 
-.loaderOnlyButtonNormal {
+.loader-only-button-normal {
   padding: var(--gap-3) var(--gap-8);
 }
 
@@ -215,9 +217,9 @@
 }
 
 .icon-leading {
-  margin-right: var(--gap-2);
+  margin-right: var(--gap-3);
 }
 
 .icon-trailing {
-  margin-left: var(--gap-2);  
+  margin-left: var(--gap-3);  
 }

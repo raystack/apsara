@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import styles from "./button.module.css";
 
-const button = cva(styles.button, {
+const button = cva(styles['button'], {
   variants: {
     variant: {
       primary: styles["button-primary"],
@@ -28,7 +28,7 @@ const button = cva(styles.button, {
 });
 
 const getLoaderOnlyClass = (size: 'small' | 'normal' | null) => 
-  size === 'small' ? styles.loaderOnlyButtonSmall : styles.loaderOnlyButtonNormal
+  size === 'small' ? styles['loader-only-button-small'] : styles['loader-only-button-normal']
 
 type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
   ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -54,14 +54,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <>
             {/* TODO: Replace this after Spinner component is built. */}
-            <span className={styles.loader}></span>
-            {loaderText && <span className={styles.loaderText}>{loaderText}</span>}
+            <span className={styles['loader']}></span>
+            {loaderText && <span className={styles['loader-text']}>{loaderText}</span>}
           </>
         ) : (
           <>
-            {leadingIcon && <span className={`${styles.icon} ${styles.iconLeading}`}>{leadingIcon}</span>}
+            {leadingIcon && <span className={`${styles['icon']} ${styles['icon-leading']}`}>{leadingIcon}</span>}
             {children}
-            {trailingIcon && <span className={`${styles.icon} ${styles.iconTrailing}`}>{trailingIcon}</span>}
+            {trailingIcon && <span className={`${styles['icon']} ${styles['icon-trailing']}`}>{trailingIcon}</span>}
           </>
         )}
       </Comp>
