@@ -28,6 +28,8 @@ const button = cva(styles.button, {
   },
 });
 
+const getLoaderOnlyClass = (size: 'small' | 'normal') => size === 'small' ? styles.loaderOnlyButtonSmall : styles.loaderOnlyButtonNormal
+
 type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
   ButtonHTMLAttributes<HTMLButtonElement> & {
     asChild?: boolean;
@@ -38,15 +40,17 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, disabled, loading, loaderText, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+    const isLoaderOnly = loading && !loaderText;
     return (
       <Comp
-        className={button({ variant, size, disabled, loading, className })}
+        className={`${button({ variant, size, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
         ref={ref}
         disabled={disabled}
         {...props}
       >
         {loading ? (
           <>
+            {/* TODO: Replace this after Spinner component is built. */}
             <span className={styles.loader}></span>
             {loaderText && <span className={styles.loaderText}>{loaderText}</span>}
           </>
