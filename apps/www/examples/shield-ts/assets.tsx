@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { PlusIcon } from "@radix-ui/react-icons";
+import { PlusIcon, BlendingModeIcon } from "@radix-ui/react-icons";
 import {
   ApsaraColumnDef,
   Button,
@@ -147,7 +147,7 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<>O</>}>Label</Button>
+        <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
