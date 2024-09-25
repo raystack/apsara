@@ -1,7 +1,6 @@
-import { Slot } from "@radix-ui/react-slot";
-
-import { cva, type VariantProps } from "class-variance-authority";
 import { ButtonHTMLAttributes, forwardRef, PropsWithChildren, ReactNode } from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
 
 import styles from "./button.module.css";
 
@@ -28,7 +27,8 @@ const button = cva(styles.button, {
   },
 });
 
-const getLoaderOnlyClass = (size: 'small' | 'normal') => size === 'small' ? styles.loaderOnlyButtonSmall : styles.loaderOnlyButtonNormal
+const getLoaderOnlyClass = (size: 'small' | 'normal' | null | undefined) => 
+  size === 'small' ? styles.loaderOnlyButtonSmall : styles.loaderOnlyButtonNormal
 
 type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
   ButtonHTMLAttributes<HTMLButtonElement> & {
