@@ -49,7 +49,7 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
   };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size = 'normal', asChild = false, disabled, loading, loaderText, icon, iconPosition = 'leading', children, ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'normal', asChild = false, disabled, loading, loaderText, icon, iconPosition = 'leading', children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const isLoaderOnly = loading && !loaderText;
     return (
