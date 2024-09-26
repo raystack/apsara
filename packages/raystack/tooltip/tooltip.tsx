@@ -29,7 +29,7 @@ export const Tooltip = ({
     <TooltipPrimitive.Provider>
       <TooltipPrimitive.Root disableHoverableContent={false}>
         <TooltipPrimitive.Trigger asChild>
-          <div className={clsx(styles.trigger, classes?.trigger)}>
+          <div className={clsx(styles.trigger, classes?.trigger ?? "")}>
             {children}
           </div>
         </TooltipPrimitive.Trigger>
@@ -37,7 +37,7 @@ export const Tooltip = ({
           <TooltipPrimitive.Content
             side={side}
             sideOffset={5}
-            className={clsx(styles.content, classes?.content)}
+            className={clsx(styles.content, classes?.content ?? "")}
           >
             {typeof message === "string" ? <Text>{message}</Text> : message}
           </TooltipPrimitive.Content>
