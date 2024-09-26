@@ -57,6 +57,14 @@
   background-color: var(--background-accent-inverted-hover);
 }
 
+.button-primary.button-disabled:hover,
+.button-primary.button-disabled:active,
+.button-primary[data-radix-popover-trigger][data-state="open"],
+.button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--ascent-contrast);
+  background-color: var(--background-accent-inverted);
+}
+
 .button-secondary,
 .button-outline,
 .button-ghost,
@@ -77,7 +85,20 @@
   outline: 1px solid var(--border-base-hover);
 }
 
+.button-secondary.button-disabled:hover,
+.button-outline.button-disabled:hover,
+.button-ghost.button-disabled:hover,
+.button-text.button-disabled:hover {
+  color: var(--foreground-base);
+  background-color: var(--background-base);
+}
+
 .button-outline {
+  color: var(--foreground-accent);
+  outline: 1px solid var(--border-accent-inverted);
+}
+
+.button-outline.button-disabled:hover {
   color: var(--foreground-accent);
   outline: 1px solid var(--border-accent-inverted);
 }
@@ -91,6 +112,10 @@
 }
 
 .button-ghost {
+  outline: 1px dashed var(--border-base);
+}
+
+.button-ghost.button-disabled:hover {
   outline: 1px dashed var(--border-base);
 }
 
