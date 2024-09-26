@@ -1,0 +1,226 @@
+{
+  "Sky 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Sky 11}"
+  },
+  "Sky 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Sky 9}"
+  },
+  "Sky 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Sky 8}"
+  },
+  "Sky 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Sky 6}"
+  },
+  "Mint 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Mint 11}"
+  },
+  "Mint 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Mint 9}"
+  },
+  "Mint 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Mint 8}"
+  },
+  "Mint 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Mint 6}"
+  },
+  "Lime 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Lime 11}"
+  },
+  "Lime 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Lime 9}"
+  },
+  "Lime 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Lime 8}"
+  },
+  "Lime 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Lime 6}"
+  },
+  "Grass 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Grass 11}"
+  },
+  "Grass 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Grass 9}"
+  },
+  "Grass 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Grass 8}"
+  },
+  "Grass 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Grass 6}"
+  },
+  "Green 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Green 11}"
+  },
+  "Green 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Green 9}"
+  },
+  "Green 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Green 8}"
+  },
+  "Green 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Green 6}"
+  },
+  "Jade 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Jade 11}"
+  },
+  "Jade 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Jade 9}"
+  },
+  "Jade 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Jade 8}"
+  },
+  "Jade 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Jade 6}"
+  },
+  "Cyan 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Cyan 11}"
+  },
+  "Cyan 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Cyan 9}"
+  },
+  "Cyan 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Cyan 8}"
+  },
+  "Cyan 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Cyan 6}"
+  },
+  "Blue 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Blue 11}"
+  },
+  "Blue 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Blue 9}"
+  },
+  "Blue 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Blue 8}"
+  },
+  "Blue 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Blue 6}"
+  },
+  "Iris 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Iris 11}"
+  },
+  "Iris 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Iris 9}"
+  },
+  "Iris 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Iris 8}"
+  },
+  "Iris 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Iris 6}"
+  },
+  "Purple 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Purple 11}"
+  },
+  "Purple 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Purple 9}"
+  },
+  "Purple 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Purple 8}"
+  },
+  "Purple 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Purple 6}"
+  },
+  "Pink 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Pink 11}"
+  },
+  "Pink 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Pink 9}"
+  },
+  "Pink 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Pink 8}"
+  },
+  "Pink 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Pink 6}"
+  },
+  "Orange 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Orange 11}"
+  },
+  "Orange 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Orange 9}"
+  },
+  "Orange 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Orange 8}"
+  },
+  "Orange 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Orange 6}"
+  },
+  "Crimson 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Crimson 11}"
+  },
+  "Crimson 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Crimson 9}"
+  },
+  "Crimson 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Crimson 8}"
+  },
+  "Crimson 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Crimson 6}"
+  },
+  "Gold 11": {
+    "$type": "color",
+    "$value": "{Data Viz.Gold 11}"
+  },
+  "Gold 9": {
+    "$type": "color",
+    "$value": "{Data Viz.Gold 9}"
+  },
+  "Gold 8": {
+    "$type": "color",
+    "$value": "{Data Viz.Gold 8}"
+  },
+  "Gold 6": {
+    "$type": "color",
+    "$value": "{Data Viz.Gold 6}"
+  }
+}

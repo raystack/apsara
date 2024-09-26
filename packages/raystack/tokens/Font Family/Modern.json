@@ -1,0 +1,12 @@
+{
+  "Font": {
+    "Title": {
+      "$type": "text",
+      "$value": "Inter"
+    },
+    "Body": {
+      "$type": "text",
+      "$value": "Inter"
+    }
+  }
+}

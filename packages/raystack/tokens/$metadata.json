@@ -1,0 +1,21 @@
+{
+  "tokenSetOrder": [
+    "global",
+    "Appearance/Light",
+    "Appearance/Dark",
+    "Colors/Mode 1",
+    "Gray/Gray",
+    "Gray/Mauve",
+    "Gray/Slate",
+    "Gray/Sage",
+    "Accent/Indigo",
+    "Accent/Orange",
+    "Accent/Mint",
+    "Data Visualization/Mode 1",
+    "Font Family/Modern",
+    "Font Family/Traditional",
+    "Radius/Modern",
+    "Radius/Traditional",
+    "Spacing/Mode 1"
+  ]
+}

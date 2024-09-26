@@ -1,0 +1,12 @@
+{
+  "Font": {
+    "Title": {
+      "$type": "text",
+      "$value": "Lora"
+    },
+    "Body": {
+      "$type": "text",
+      "$value": "Josefin Sans"
+    }
+  }
+}
