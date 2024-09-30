@@ -2,11 +2,10 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import {
   ApsaraColumnDef,
+  Avatar,
   Checkbox,
   DataTable,
   Flex,
-  Label,
-  Switch,
   Text,
   useTable,
 } from "@raystack/apsara";
@@ -147,6 +146,7 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
+        <Avatar radius="full" variant="soft">GS</Avatar>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

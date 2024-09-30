@@ -11,17 +11,37 @@ import styles from "./avatar.module.css";
 
 const avatar = cva(styles.avatar, {
   variants: {
-    shape: {
-      square: styles["avatar-square"],
-      circle: styles["avatar-circle"],
+    radius: {
+      small: styles["avatar-small"],
+      full: styles["avatar-full"],
     },
-
+    size: {
+      1: { '--avatar-size': 'var(--gap-5, 16px)' },
+      2: { '--avatar-size': 'var(--gap-6, 20px)' },
+      3: { '--avatar-size': 'var(--gap-7, 24px)' },
+      4: { '--avatar-size': 'var(--gap-8, 28px)' },
+      5: { '--avatar-size': 'var(--gap-9, 32px)' },
+      6: { '--avatar-size': 'var(--gap-10, 40px)' },
+      7: { '--avatar-size': 'var(--gap-11, 48px)' },
+      8: { '--avatar-size': 'var(--gap-12, 56px)' },
+      9: { '--avatar-size': 'var(--gap-13, 64px)' },
+      10: { '--avatar-size': 'var(--gap-14, 72px)' },
+      11: { '--avatar-size': 'var(--gap-15, 80px)' },
+      12: { '--avatar-size': 'var(--gap-16, 96px)' },
+      13: { '--avatar-size': 'var(--gap-17, 120px)' },
+    },
+    variant: {
+      solid: styles["avatar-solid"],
+      soft: styles["avatar-soft"],
+    },
     disabled: {
       true: styles["avatar-disabled"],
     },
   },
   defaultVariants: {
-    shape: "circle",
+    size: 3,
+    radius: "small",
+    variant: "soft",
   },
 });
 
@@ -40,13 +60,13 @@ const AvatarRoot = forwardRef<
   }
 >(
   (
-    { className, alt, src, fallback, shape, style, imageProps, ...props },
+    { className, alt, src, fallback, size, radius, variant, style, imageProps, ...props },
     ref
   ) => (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
-        className={avatar({ shape, className })}
+        className={avatar({ size, radius, variant, className })}
         style={imageProps}
         {...props}
       >
