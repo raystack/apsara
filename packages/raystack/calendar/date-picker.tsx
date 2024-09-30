@@ -107,7 +107,7 @@ export function DatePicker({
         if (el && isElementOutside(el)) removeEventListeners();
     } else {
         registerEventListeners();
-        setTimeout(() => textFieldRef.current?.focus());
+        setTimeout(() => textFieldRef.current?.select());
     }
   }
 
@@ -122,7 +122,9 @@ export function DatePicker({
     const { value } = event.target;
 
     const format = value.includes("/") ? "DD/MM/YYYY" : value.includes("-") ? "DD-MM-YYYY" : undefined;
-    const date = dayjs(value, format);
+    const date = dayjs(value.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, (_, day, month, year) => {
+				return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`; // Replaces [8/8/2024] to [08/08/2024]
+		}), format);
 
     const isValidDate = date.isValid();
 
