@@ -146,7 +146,7 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Avatar radius="full" variant="soft">GS</Avatar>
+        <Avatar radius="full" variant="soft" size={12} src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80">GS</Avatar>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
