@@ -1,4 +1,6 @@
+/* Light Theme Colors */
 :root {
+    /* Accent Colors */
     --accent-1: var(--light-1);
     --accent-2: var(--light-2);
     --accent-3: var(--light-3);
@@ -11,6 +13,8 @@
     --accent-10: var(--light-10);
     --accent-11: var(--light-11);
     --accent-12: var(--light-12);
+
+    /* Neutral Colors */
     --neutral-1: var(--light-1);
     --neutral-2: var(--light-2);
     --neutral-3: var(--light-3);
@@ -23,6 +27,8 @@
     --neutral-10: var(--light-10);
     --neutral-11: var(--light-11);
     --neutral-12: var(--light-12);
+
+    /* Attention Colors */
     --attention-1: #fefdfb;
     --attention-2: #fff9ed;
     --attention-3: #fff4d5;
@@ -35,8 +41,9 @@
     --attention-10: #ffa01c;
     --attention-11: #ad5700;
     --attention-12: #4e2009;
+
+    /* Success Colors */
     --success-1: #fbfefc;
-    --danger-1: #fffcfc;
     --success-2: #f2fcf5;
     --success-3: #e9f9ee;
     --success-4: #ddf3e4;
@@ -48,6 +55,9 @@
     --success-10: #299764;
     --success-11: #18794e;
     --success-12: #153226;
+
+    /* Danger Colors */
+    --danger-1: #fffcfc;
     --danger-2: #fff8f8;
     --danger-3: #ffefef;
     --danger-4: #ffe5e5;
@@ -59,7 +69,11 @@
     --danger-10: #dc3d43;
     --danger-11: #cd2b31;
     --danger-12: #381316;
+
+    /* Accent Contrast */
     --accent-contrast: var(--light-contrast);
+
+    /* Visualization Colors */
     --viz-sky-11: #00749e;
     --viz-sky-9: #7ce2fe;
     --viz-sky-8: #60b3d7;
@@ -116,12 +130,16 @@
     --viz-gold-9: #978365;
     --viz-gold-8: #b9a88d;
     --viz-gold-6: #d8d0bf;
+
+    /* Contrast Colors */
     --danger-contrast: #ffffff;
     --attention-contrast: #000000;
     --success-contrast: #ffffff;
 }
 
+/* Dark Theme Colors */
 html[data-theme="dark"] {
+    /* Accent Colors */
     --accent-1: var(--dark-1);
     --accent-2: var(--dark-2);
     --accent-3: var(--dark-3);
@@ -134,6 +152,8 @@ html[data-theme="dark"] {
     --accent-10: var(--dark-10);
     --accent-11: var(--dark-11);
     --accent-12: var(--dark-12);
+
+    /* Neutral Colors */
     --neutral-1: var(--dark-1);
     --neutral-2: var(--dark-2);
     --neutral-3: var(--dark-3);
@@ -146,6 +166,8 @@ html[data-theme="dark"] {
     --neutral-10: var(--dark-10);
     --neutral-11: var(--dark-11);
     --neutral-12: var(--dark-12);
+
+    /* Attention Colors */
     --attention-1: #1f1300;
     --attention-2: #271700;
     --attention-3: #341c00;
@@ -158,8 +180,9 @@ html[data-theme="dark"] {
     --attention-10: #ffcb47;
     --attention-11: #f1a10d;
     --attention-12: #fef3dd;
+
+    /* Success Colors */
     --success-1: #0d1912;
-    --danger-1: #1f1315;
     --success-2: #0f1e13;
     --success-3: #132819;
     --success-4: #16301d;
@@ -171,6 +194,9 @@ html[data-theme="dark"] {
     --success-10: #55b467;
     --success-11: #63c174;
     --success-12: #e5fbeb;
+
+    /* Danger Colors */
+    --danger-1: #1f1315;
     --danger-2: #291415;
     --danger-3: #3c181a;
     --danger-4: #481a1d;
@@ -182,7 +208,11 @@ html[data-theme="dark"] {
     --danger-10: #f2555a;
     --danger-11: #ff6369;
     --danger-12: #feecee;
+
+    /* Accent Contrast */
     --accent-contrast: var(--dark-contrast);
+
+    /* Visualization Colors */
     --viz-sky-11: #75c7f0;
     --viz-sky-9: #7ce2fe;
     --viz-sky-8: #197cae;
@@ -239,6 +269,8 @@ html[data-theme="dark"] {
     --viz-gold-9: #978365;
     --viz-gold-8: #696256;
     --viz-gold-6: #444039;
+
+    /* Contrast Colors */
     --danger-contrast: #ffffff;
     --attention-contrast: #000000;
     --success-contrast: #ffffff;
