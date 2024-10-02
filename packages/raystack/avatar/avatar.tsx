@@ -16,19 +16,19 @@ const avatar = cva(styles.avatar, {
       full: styles["avatar-full"],
     },
     size: {
-      1: styles["--avatar-size-1"],
-      2: styles["--avatar-size-2"],
-      3: styles["--avatar-size-3"],
-      4: styles["--avatar-size-4"],
-      5: styles["--avatar-size-5"],
-      6: styles["--avatar-size-6"],
-      7: styles["--avatar-size-7"],
-      8: styles["--avatar-size-8"],
-      9: styles["--avatar-size-9"],
-      10: styles["--avatar-size-10"],
-      11: styles["--avatar-size-11"],
-      12: styles["--avatar-size-12"],
-      13: styles["--avatar-size-13"],
+      1: styles["avatar-size-1"],
+      2: styles["avatar-size-2"],
+      3: styles["avatar-size-3"],
+      4: styles["avatar-size-4"],
+      5: styles["avatar-size-5"],
+      6: styles["avatar-size-6"],
+      7: styles["avatar-size-7"],
+      8: styles["avatar-size-8"],
+      9: styles["avatar-size-9"],
+      10: styles["avatar-size-10"],
+      11: styles["avatar-size-11"],
+      12: styles["avatar-size-12"],
+      13: styles["avatar-size-13"],
     },
     variant: {
       solid: styles["avatar-solid"],
@@ -48,7 +48,9 @@ const avatar = cva(styles.avatar, {
 const image = cva(styles.image);
 export interface AvatarProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
-    VariantProps<typeof avatar> {}
+    VariantProps<typeof avatar> {
+  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+}
 
 const AvatarRoot = forwardRef<
   ElementRef<typeof AvatarPrimitive.Root>,
