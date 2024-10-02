@@ -149,7 +149,8 @@ const AssetsHeader = () => {
         <Avatar
           radius="small"
           variant="soft"
-          size={12}
+          size={7}
+          color="mint"
           fallback={<>GS</>}
         />
       </Flex>

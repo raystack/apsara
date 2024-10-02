@@ -6,13 +6,12 @@
   position: relative; 
   border: none;
   border-radius: var(--br-round);   
-  background: var(--background-inset);
-  border: 1px solid transparent;
+  background-color: var(--background-inset);
+  color: var(--foreground-base);
   width: var(--avatar-size, var(--space-8, 32px));
   height: var(--avatar-size, var(--space-8, 32px));
   --fallback-font-size: calc(var(--avatar-size, var(--space-8, 32px)) * 0.4);
 }
-
 
 .avatar-full {
   border-radius: var(--radius-full) !important;
@@ -23,11 +22,56 @@
 }
 
 .avatar-solid {
-  background: var(--background-solid);
+  --avatar-opacity: 1;
 }
 
 .avatar-soft {
-  background: var(--background-soft);
+  --avatar-opacity: 0.2;
+}
+
+.avatar-color-indigo {
+  --avatar-hue: var(--background-accent-inverted);
+  --avatar-color: var(--foreground-accent);
+}
+
+.avatar-color-orange {
+  --avatar-hue: var(--background-attention-inverted);
+  --avatar-color: var(--foreground-attention);
+}
+
+.avatar-color-mint {
+  --avatar-hue: var(--background-success-inverted);
+  --avatar-color: var(--foreground-success);
+}
+
+.avatar-solid-indigo {
+  background-color: var(--avatar-hue);
+  color: var(--ascent-contrast);
+}
+
+.avatar-solid-orange {
+  background-color: var(--avatar-hue);
+  color: var(--ascent-contrast);
+}
+
+.avatar-solid-mint {
+  background-color: var(--avatar-hue);
+  color: var(--ascent-contrast);
+}
+
+.avatar-soft-indigo {
+  background-color: var(--background-accent);
+  color: var(--avatar-color);
+}
+
+.avatar-soft-orange {
+  background-color: var(--background-attention);
+  color: var(--avatar-color);
+}
+
+.avatar-soft-mint {
+  background-color: var(--background-success);
+  color: var(--avatar-color);
 }
 
 .imageWrapper {
@@ -51,8 +95,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--background-accent, #e2e8f0);
-  color: var(--foreground-accent, #64748b);
   font-size: var(--fallback-font-size);
   font-weight: 500;
   line-height: 1;

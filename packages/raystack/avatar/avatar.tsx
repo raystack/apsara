@@ -37,11 +37,25 @@ const avatar = cva(styles.avatar, {
     disabled: {
       true: styles["avatar-disabled"],
     },
+    color: {
+      indigo: styles["avatar-color-indigo"],
+      orange: styles["avatar-color-orange"],
+      mint: styles["avatar-color-mint"],
+    },
   },
+  compoundVariants: [
+    { variant: 'solid', color: 'indigo', className: styles['avatar-solid-indigo'] },
+    { variant: 'solid', color: 'orange', className: styles['avatar-solid-orange'] },
+    { variant: 'solid', color: 'mint', className: styles['avatar-solid-mint'] },
+    { variant: 'soft', color: 'indigo', className: styles['avatar-soft-indigo'] },
+    { variant: 'soft', color: 'orange', className: styles['avatar-soft-orange'] },
+    { variant: 'soft', color: 'mint', className: styles['avatar-soft-mint'] },
+  ],
   defaultVariants: {
     size: 3,
     radius: "small",
     variant: "soft",
+    color: "indigo",
   },
 });
 
@@ -54,6 +68,8 @@ export interface AvatarProps
   src?: string;
   alt?: string;
   fallback?: ReactNode;
+  variant?: "solid" | "soft";
+  color?: "indigo" | "orange" | "mint";
 }
 
 const AvatarRoot = forwardRef<
@@ -61,13 +77,13 @@ const AvatarRoot = forwardRef<
   AvatarProps
 >(
   (
-    { className, alt, src, fallback, size, radius, variant, style, ...props },
+    { className, alt, src, fallback, size, radius, variant, color, style, ...props },
     ref
   ) => (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
-        className={avatar({ size, radius, variant, className })}
+        className={avatar({ size, radius, variant, color, className })}
         {...props}
       >
         <AvatarPrimitive.Image
