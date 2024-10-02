@@ -2,9 +2,9 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cva, VariantProps } from "class-variance-authority";
 import {
   ComponentPropsWithoutRef,
-  CSSProperties,
   ElementRef,
   forwardRef,
+  ReactNode,
 } from "react";
 import { Box } from "../box";
 import styles from "./avatar.module.css";
@@ -46,34 +46,38 @@ const avatar = cva(styles.avatar, {
 });
 
 const image = cva(styles.image);
+
 export interface AvatarProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
     VariantProps<typeof avatar> {
   size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+  src?: string;
+  alt?: string;
+  fallback?: ReactNode;
 }
 
 const AvatarRoot = forwardRef<
   ElementRef<typeof AvatarPrimitive.Root>,
-  AvatarProps & {
-    alt?: string;
-    src?: string;
-    fallback?: React.ReactNode;
-    imageProps?: CSSProperties;
-  }
+  AvatarProps
 >(
   (
-    { className, alt, src, fallback, size, radius, variant, style, imageProps, ...props },
+    { className, alt, src, fallback, size, radius, variant, style, ...props },
     ref
   ) => (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
         className={avatar({ size, radius, variant, className })}
-        style={imageProps}
         {...props}
       >
-        <AvatarImage alt={alt} src={src} />
-        <AvatarFallback>{fallback}</AvatarFallback>
+        <AvatarPrimitive.Image
+          className={image()}
+          src={src}
+          alt={alt}
+        />
+        <AvatarPrimitive.Fallback className={styles.fallback}>
+          {fallback}
+        </AvatarPrimitive.Fallback>
       </AvatarPrimitive.Root>
     </Box>
   )
@@ -81,42 +85,4 @@ const AvatarRoot = forwardRef<
 
 AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
 
-export interface AvatarImageProps
-  extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>,
-    VariantProps<typeof image> {}
-
-const AvatarImage = forwardRef<
-  ElementRef<typeof AvatarPrimitive.Image>,
-  AvatarImageProps
->(({ className, sizes, ...props }, ref) => (
-  <AvatarPrimitive.Image
-    ref={ref}
-    className={image({ className })}
-    {...props}
-  />
-));
-AvatarImage.displayName = AvatarPrimitive.Image.displayName;
-
-const fallback = cva(styles.fallback);
-
-export interface FallbackProps
-  extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>,
-    VariantProps<typeof fallback> {}
-
-const AvatarFallback = forwardRef<
-  ElementRef<typeof AvatarPrimitive.Fallback>,
-  FallbackProps
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Fallback
-    ref={ref}
-    className={fallback({ className })}
-    {...props}
-  />
-));
-
-AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
-
-export const Avatar = Object.assign(AvatarRoot, {
-  Image: AvatarImage,
-  Fallback: AvatarFallback,
-});
+export const Avatar = AvatarRoot;
