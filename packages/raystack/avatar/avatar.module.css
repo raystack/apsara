@@ -13,12 +13,9 @@
   --fallback-font-size: calc(var(--avatar-size, var(--space-8, 32px)) * 0.4);
 }
 
-.avatar-small {
-  border-radius: var(--br-4);
-}
 
 .avatar-full {
-  border-radius: var(--br-round);
+  border-radius: var(--radius-full) !important;
 }
 
 .avatar-disabled {
@@ -65,76 +62,89 @@
   width: var(--space-5, 16px);
   height: var(--space-5, 16px);
   --fallback-font-size: calc(var(--space-5, 16px) * 0.4);
+  border-radius: var(--radius-2);
 }
 
 .avatar-size-2 {
   width: var(--space-6, 20px);
   height: var(--space-6, 20px);
   --fallback-font-size: calc(var(--space-6, 20px) * 0.4);
+  border-radius: var(--radius-2);
 }
 
 .avatar-size-3 {
   width: var(--space-7, 24px);
   height: var(--space-7, 24px);
   --fallback-font-size: calc(var(--space-7, 24px) * 0.3);
+  border-radius: var(--radius-2);
 }
 
 .avatar-size-4 {
   width: var(--space-8, 28px);
   height: var(--space-8, 28px);
   --fallback-font-size: calc(var(--space-8, 28px) * 0.35);
+  border-radius: var(--radius-2);
 }
 
 .avatar-size-5 {
   width: var(--space-9, 32px);
   height: var(--space-9, 32px);
   --fallback-font-size: calc(var(--space-9, 32px) * 0.3);
+  border-radius: var(--radius-2);
 }
 
 .avatar-size-6 {
   width: var(--space-10, 40px);
   height: var(--space-10, 40px);
   --fallback-font-size: calc(var(--space-10, 40px) * 0.25);
+  border-radius: var(--radius-4);
 }
 
 .avatar-size-7 {
   width: var(--space-11, 48px);
   height: var(--space-11, 48px);
   --fallback-font-size: calc(var(--space-11, 48px) * 0.25);
+  border-radius: var(--radius-4);
 }
 
 .avatar-size-8 {
   width: var(--space-12, 56px);
   height: var(--space-12, 56px);
   --fallback-font-size: calc(var(--space-12, 56px) * 0.25);
+  border-radius: var(--radius-4);
 }
 
 .avatar-size-9 {
   width: var(--space-13, 64px);
   height: var(--space-13, 64px);
   --fallback-font-size: calc(var(--space-13, 64px) * 0.25);
+  border-radius: var(--radius-4);
 }
 
 .avatar-size-10 {
   width: var(--space-14, 72px);
   height: var(--space-14, 72px);
   --fallback-font-size: calc(var(--space-14, 72px) * 0.25);
+  border-radius: var(--radius-5);
 }
 
 .avatar-size-11 {
   width: var(--space-15, 80px);
   height: var(--space-15, 80px);
   --fallback-font-size: calc(var(--space-15, 80px) * 0.25);
+  border-radius: var(--radius-5);
 }
 
 .avatar-size-12 {
   width: var(--space-16, 96px);
   height: var(--space-16, 96px);
   --fallback-font-size: calc(var(--space-17, 120px) * 0.2);
+  border-radius: var(--radius-5);
 }
 
 .avatar-size-13 {
   width: var(--space-17, 120px);
   height: var(--space-17, 120px);
   --fallback-font-size: calc(var(--space-17, 120px) * 0.2);
+  border-radius: var(--radius-5);
 }
