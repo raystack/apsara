@@ -190,3 +190,34 @@
   --fallback-font-size: calc(var(--space-17, 120px) * 0.2);
   border-radius: var(--radius-5);
 }
+
+.avatarGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.avatarWrapper {
+  margin-left: -1.2em;
+}
+
+.avatarWrapper:first-child {
+  margin-left: 0;
+}
+
+.avatarWrapper:not(:first-child) {
+  position: relative;
+}
+
+.avatarWrapper:hover {
+  z-index: 2;
+}
+
+.avatarWrapper:last-child {
+  z-index: 1;
+}
+
+.avatarGroup .avatar {
+  border: 1px solid var(--background-base, white);
+  box-sizing: content-box;
+}

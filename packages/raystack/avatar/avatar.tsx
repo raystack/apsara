@@ -1,5 +1,6 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cva, VariantProps } from "class-variance-authority";
+import { clsx } from 'clsx';
 import {
   ComponentPropsWithoutRef,
   ElementRef,
@@ -102,3 +103,36 @@ const AvatarRoot = forwardRef<
 AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
 
 export const Avatar = AvatarRoot;
+
+export interface AvatarGroupProps extends ComponentPropsWithoutRef<'div'> {
+  children: React.ReactElement<AvatarProps>[];
+  max?: number;
+}
+
+export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
+  ({ children, max, className, ...props }, ref) => {
+    const avatars = max ? children.slice(0, max) : children;
+    const count = max && children.length > max ? children.length - max : 0;
+
+    return (
+      <div
+        ref={ref}
+        className={clsx(styles.avatarGroup, className)}
+        {...props}
+      >
+        {avatars.map((avatar, index) => (
+          <div key={index} className={styles.avatarWrapper}>
+            {avatar}
+          </div>
+        ))}
+        {count > 0 && (
+          <Avatar size={avatars[0].props.size}>
+            <span>+{count}</span>
+          </Avatar>
+        )}
+      </div>
+    );
+  }
+);
+
+AvatarGroup.displayName = 'AvatarGroup';

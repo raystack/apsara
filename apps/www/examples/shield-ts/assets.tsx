@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import {
   ApsaraColumnDef,
   Avatar,
+  AvatarGroup,
   Checkbox,
   DataTable,
   Flex,
@@ -146,13 +147,29 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Avatar
-          radius="small"
-          variant="soft"
-          size={7}
-          color="mint"
-          fallback={<>GS</>}
-        />
+        <AvatarGroup max={2}>
+          <Avatar
+            radius="full"
+            variant="solid"
+            size={7}
+            color="indigo"
+            fallback={<>GS</>}
+          />
+          <Avatar
+            radius="full"
+            variant="solid"
+            size={7}
+            color="mint"
+            fallback={<>RK</>}
+          />
+          <Avatar
+            radius="full"
+            variant="solid"
+            size={7}
+            color="orange"
+            fallback={<>RK</>}
+          />
+        </AvatarGroup>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
