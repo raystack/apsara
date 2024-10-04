@@ -71,6 +71,7 @@ export interface AvatarProps
   fallback?: ReactNode;
   variant?: "solid" | "soft";
   color?: "indigo" | "orange" | "mint";
+  asChild?: boolean;
 }
 
 const AvatarRoot = forwardRef<
@@ -78,13 +79,14 @@ const AvatarRoot = forwardRef<
   AvatarProps
 >(
   (
-    { className, alt, src, fallback, size, radius, variant, color, style, ...props },
+    { className, alt, src, fallback, size, radius, variant, color, style, asChild, ...props },
     ref
   ) => (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
         className={avatar({ size, radius, variant, color, className })}
+        asChild={asChild}
         {...props}
       >
         <AvatarPrimitive.Image
@@ -126,9 +128,15 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
           </div>
         ))}
         {count > 0 && (
-          <Avatar size={avatars[0].props.size}>
-            <span>+{count}</span>
-          </Avatar>
+        <div className={styles.avatarWrapper}>
+            <Avatar
+              size={avatars[0].props.size}
+              radius={avatars[0].props.radius}
+              variant={avatars[0].props.variant}
+              color='indigo'
+              fallback={<span>+{count}</span>}
+            />
+          </div>
         )}
       </div>
     );
