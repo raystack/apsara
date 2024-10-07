@@ -1,7 +1,7 @@
 /* Light Theme Colors */
 :root {
     /* Accent Colors */
-    --rs-accent-1: var(--rs-light-1);
+    /* --rs-accent-1: var(--rs-light-1);
     --rs-accent-2: var(--rs-light-2);
     --rs-accent-3: var(--rs-light-3);
     --rs-accent-4: var(--rs-light-4);
@@ -12,8 +12,9 @@
     --rs-accent-9: var(--rs-light-9);
     --rs-accent-10: var(--rs-light-10);
     --rs-accent-11: var(--rs-light-11);
-    --rs-accent-12: var(--rs-light-12);
+    --rs-accent-12: var(--rs-light-12); */
 
+    /* TODO: Confirm with Design if we need this. */
     /* Neutral Colors */
     --rs-neutral-1: var(--rs-light-1);
     --rs-neutral-2: var(--rs-light-2);
@@ -56,6 +57,7 @@
     --rs-success-11: #18794e;
     --rs-success-12: #153226;
 
+    /* TODO: Discuss with Praveen if we need separate vars for colors instead of hardcoding this here?  Also, hex codes are repeated. Eg. #30a46c*/
     /* Danger Colors */
     --rs-danger-1: #fffcfc;
     --rs-danger-2: #fff8f8;
