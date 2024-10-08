@@ -1,33 +1,19 @@
 /* Light Theme Colors */
 :root {
-    /* Accent Colors */
-    /* --rs-accent-1: var(--rs-accent-1);
-    --rs-accent-2: var(--rs-accent-2);
-    --rs-accent-3: var(--rs-accent-3);
-    --rs-accent-4: var(--rs-accent-4);
-    --rs-accent-5: var(--rs-accent-5);
-    --rs-accent-6: var(--rs-accent-6);
-    --rs-accent-7: var(--rs-accent-7);
-    --rs-accent-8: var(--rs-accent-8);
-    --rs-accent-9: var(--rs-accent-9);
-    --rs-accent-10: var(--rs-accent-10);
-    --rs-accent-11: var(--rs-accent-11);
-    --rs-accent-12: var(--rs-accent-12); */
-
-    /* TODO: Confirm with Design if we need this. */
     /* Neutral Colors */
-    /* --rs-neutral-1: var(--rs-light-1);
-    --rs-neutral-2: var(--rs-light-2);
-    --rs-neutral-3: var(--rs-light-3);
-    --rs-neutral-4: var(--rs-light-4);
-    --rs-neutral-5: var(--rs-light-5);
-    --rs-neutral-6: var(--rs-light-6);
-    --rs-neutral-7: var(--rs-light-7);
-    --rs-neutral-8: var(--rs-light-8);
-    --rs-neutral-9: var(--rs-light-9);
-    --rs-neutral-10: var(--rs-light-10);
-    --rs-neutral-11: var(--rs-light-11);
-    --rs-neutral-12: var(--rs-light-12); */
+    --rs-neutral-1: var(--rs-gray-1);
+    --rs-neutral-2: var(--rs-gray-2);
+    --rs-neutral-3: var(--rs-gray-3);
+    --rs-neutral-4: var(--rs-gray-4);
+    --rs-neutral-5: var(--rs-gray-5);
+    --rs-neutral-6: var(--rs-gray-6);
+    --rs-neutral-7: var(--rs-gray-7);
+    --rs-neutral-8: var(--rs-gray-8);
+    --rs-neutral-9: var(--rs-gray-9);
+    --rs-neutral-10: var(--rs-gray-10);
+    --rs-neutral-11: var(--rs-gray-11);
+    --rs-neutral-12: var(--rs-gray-12);
+
 
     /* Attention Colors */
     --rs-attention-1: #fefdfb;
@@ -57,7 +43,6 @@
     --rs-success-11: #18794e;
     --rs-success-12: #153226;
 
-    /* TODO: Discuss with Praveen if we need separate vars for colors instead of hardcoding this here?  Also, hex codes are repeated. Eg. #30a46c*/
     /* Danger Colors */
     --rs-danger-1: #fffcfc;
     --rs-danger-2: #fff8f8;
@@ -71,9 +56,6 @@
     --rs-danger-10: #dc3d43;
     --rs-danger-11: #cd2b31;
     --rs-danger-12: #381316;
-
-    /* Accent Contrast */
-    --rs-accent-contrast: var(--rs-light-contrast);
 
     /* Visualization Colors */
     --rs-viz-sky-11: #00749e;
@@ -141,33 +123,19 @@
 
 /* Dark Theme Colors */
 html[data-theme="dark"] {
-    /* Accent Colors */
-    /* --rs-accent-1: var(--rs-accent-1);
-    --rs-accent-2: var(--rs-accent-2);
-    --rs-accent-3: var(--rs-accent-3);
-    --rs-accent-4: var(--rs-accent-4);
-    --rs-accent-5: var(--rs-accent-5);
-    --rs-accent-6: var(--rs-accent-6);
-    --rs-accent-7: var(--rs-accent-7);
-    --rs-accent-8: var(--rs-accent-8);
-    --rs-accent-9: var(--rs-accent-9);
-    --rs-accent-10: var(--rs-accent-10);
-    --rs-accent-11: var(--rs-accent-11);
-    --rs-accent-12: var(--rs-accent-12); */
-
     /* Neutral Colors */
-    /* --rs-neutral-1: var(--rs-accent-1);
-    --rs-neutral-2: var(--rs-accent-2);
-    --rs-neutral-3: var(--rs-accent-3);
-    --rs-neutral-4: var(--rs-accent-4);
-    --rs-neutral-5: var(--rs-accent-5);
-    --rs-neutral-6: var(--rs-accent-6);
-    --rs-neutral-7: var(--rs-accent-7);
-    --rs-neutral-8: var(--rs-accent-8);
-    --rs-neutral-9: var(--rs-accent-9);
-    --rs-neutral-10: var(--rs-accent-10);
-    --rs-neutral-11: var(--rs-accent-11);
-    --rs-neutral-12: var(--rs-accent-12); */
+    --rs-neutral-1: var(--rs-gray-1);
+    --rs-neutral-2: var(--rs-gray-2);
+    --rs-neutral-3: var(--rs-gray-3);
+    --rs-neutral-4: var(--rs-gray-4);
+    --rs-neutral-5: var(--rs-gray-5);
+    --rs-neutral-6: var(--rs-gray-6);
+    --rs-neutral-7: var(--rs-gray-7);
+    --rs-neutral-8: var(--rs-gray-8);
+    --rs-neutral-9: var(--rs-gray-9);
+    --rs-neutral-10: var(--rs-gray-10);
+    --rs-neutral-11: var(--rs-gray-11);
+    --rs-neutral-12: var(--rs-gray-12);
 
     /* Attention Colors */
     --rs-attention-1: #1f1300;
@@ -210,9 +178,6 @@ html[data-theme="dark"] {
     --rs-danger-10: #f2555a;
     --rs-danger-11: #ff6369;
     --rs-danger-12: #feecee;
-
-    /* Accent Contrast */
-    --rs-accent-contrast: var(--rs-dark-contrast);
 
     /* Visualization Colors */
     --rs-viz-sky-11: #75c7f0;

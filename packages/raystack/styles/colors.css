@@ -33,6 +33,12 @@
     --rs-background-danger-emphasis-hover: var(--rs-danger-10);
     --rs-background-success-emphasis: var(--rs-success-9);
 
+    /* Foreground Hover Colors */
+    --rs-foreground-accent-primary-hover: var(--rs-accent-11);
+    --rs-foreground-attention-primary-hover: var(--rs-attention-11);
+    --rs-foreground-danger-primary-hover: var(--rs-danger-11);
+    --rs-foreground-success-primary-hover: var(--rs-success-11);
+
     /* Border Colors */
     --rs-border-base-tertiary: var(--rs-neutral-7);
     --rs-border-base-focus: var(--rs-neutral-8);
@@ -77,12 +83,6 @@
     --rs-overlay-white-white-a11: #ffffff;
     --rs-overlay-white-white-a12: #ffffff;
 
-    /* Additional Hover Colors */
-    --rs-foreground-accent-primary-hover: var(--rs-accent-11);
-    --rs-foreground-attention-primary-hover: var(--rs-attention-11);
-    --rs-foreground-danger-primary-hover: var(--rs-danger-11);
-    --rs-foreground-success-primary-hover: var(--rs-success-11);
-
     /* Additional Background Colors */
     --rs-background-neutral-primary: var(--rs-neutral-3);
     --rs-background-neutral-tertiary-hover: var(--rs-neutral-10);
@@ -107,8 +107,83 @@
     --rs-visualization-sky-sky-8: var(--rs-viz-sky-8);
     --rs-visualization-sky-sky-6: var(--rs-viz-sky-6);
 
-    /* Other visualization colors (Mint, Lime, Grass, etc.) */
-    /* ... (similar pattern for each color) */
+    /* Mint */
+    --rs-visualization-mint-mint-11: var(--rs-viz-mint-11);
+    --rs-visualization-mint-mint-9: var(--rs-viz-mint-9);
+    --rs-visualization-mint-mint-8: var(--rs-viz-mint-8);
+    --rs-visualization-mint-mint-6: var(--rs-viz-mint-6);
+
+    /* Lime */
+    --rs-visualization-lime-lime-11: var(--rs-viz-lime-11);
+    --rs-visualization-lime-lime-9: var(--rs-viz-lime-9);
+    --rs-visualization-lime-lime-8: var(--rs-viz-lime-8);
+    --rs-visualization-lime-lime-6: var(--rs-viz-lime-6);
+
+    /* Grass */
+    --rs-visualization-grass-grass-11: var(--rs-viz-grass-11);
+    --rs-visualization-grass-grass-9: var(--rs-viz-grass-9);
+    --rs-visualization-grass-grass-8: var(--rs-viz-grass-8);
+    --rs-visualization-grass-grass-6: var(--rs-viz-grass-6);
+
+    /* Green */
+    --rs-visualization-green-green-11: var(--rs-viz-green-11);
+    --rs-visualization-green-green-9: var(--rs-viz-green-9);
+    --rs-visualization-green-green-8: var(--rs-viz-green-8);
+    --rs-visualization-green-green-6: var(--rs-viz-green-6);
+
+    /* Jade */
+    --rs-visualization-jade-jade-11: var(--rs-viz-jade-11);
+    --rs-visualization-jade-jade-9: var(--rs-viz-jade-9);
+    --rs-visualization-jade-jade-8: var(--rs-viz-jade-8);
+    --rs-visualization-jade-jade-6: var(--rs-viz-jade-6);
+
+    /* Cyan */
+    --rs-visualization-cyan-cyan-11: var(--rs-viz-cyan-11);
+    --rs-visualization-cyan-cyan-9: var(--rs-viz-cyan-9);
+    --rs-visualization-cyan-cyan-8: var(--rs-viz-cyan-8);
+    --rs-visualization-cyan-cyan-6: var(--rs-viz-cyan-6);
+
+    /* Blue */
+    --rs-visualization-blue-blue-11: var(--rs-viz-blue-11);
+    --rs-visualization-blue-blue-9: var(--rs-viz-blue-9);
+    --rs-visualization-blue-blue-8: var(--rs-viz-blue-8);
+    --rs-visualization-blue-blue-6: var(--rs-viz-blue-6);
+
+    /* Iris */
+    --rs-visualization-iris-iris-11: var(--rs-viz-iris-11);
+    --rs-visualization-iris-iris-9: var(--rs-viz-iris-9);
+    --rs-visualization-iris-iris-8: var(--rs-viz-iris-8);
+    --rs-visualization-iris-iris-6: var(--rs-viz-iris-6);
+
+    /* Purple */
+    --rs-visualization-purple-purple-11: var(--rs-viz-purple-11);
+    --rs-visualization-purple-purple-9: var(--rs-viz-purple-9);
+    --rs-visualization-purple-purple-8: var(--rs-viz-purple-8);
+    --rs-visualization-purple-purple-6: var(--rs-viz-purple-6);
+
+    /* Pink */
+    --rs-visualization-pink-pink-11: var(--rs-viz-pink-11);
+    --rs-visualization-pink-pink-9: var(--rs-viz-pink-9);
+    --rs-visualization-pink-pink-8: var(--rs-viz-pink-8);
+    --rs-visualization-pink-pink-6: var(--rs-viz-pink-6);
+
+    /* Crimson */
+    --rs-visualization-crimson-crimson-11: var(--rs-viz-crimson-11);
+    --rs-visualization-crimson-crimson-9: var(--rs-viz-crimson-9);
+    --rs-visualization-crimson-crimson-8: var(--rs-viz-crimson-8);
+    --rs-visualization-crimson-crimson-6: var(--rs-viz-crimson-6);
+
+    /* Orange */
+    --rs-visualization-orange-orange-11: var(--rs-viz-orange-11);
+    --rs-visualization-orange-orange-9: var(--rs-viz-orange-9);
+    --rs-visualization-orange-orange-8: var(--rs-viz-orange-8);
+    --rs-visualization-orange-orange-6: var(--rs-viz-orange-6);
+
+    /* Gold */
+    --rs-visualization-gold-gold-11: var(--rs-viz-gold-11);
+    --rs-visualization-gold-gold-9: var(--rs-viz-gold-9);
+    --rs-visualization-gold-gold-8: var(--rs-viz-gold-8);
+    --rs-visualization-gold-gold-6: var(--rs-viz-gold-6);
 
     /* Additional Base Colors */
     --rs-border-base-emphasis: var(--rs-neutral-12);

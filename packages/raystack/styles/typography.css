@@ -11,12 +11,12 @@
   --rs-font-body: var(--rs-font-inter);
 }
 
-[data-variant="modern"] {
+[data-style="modern"] {
   --rs-font-title: var(--rs-font-inter);
   --rs-font-body: var(--rs-font-inter);
 }
 
-[data-variant="traditional"] {
+[data-style="traditional"] {
   --rs-font-title: var(--rs-font-lora);
   --rs-font-body: var(--rs-font-josephin-sans);
 }
