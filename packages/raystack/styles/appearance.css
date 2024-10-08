@@ -1,22 +1,22 @@
 /* Light Theme Colors */
 :root {
     /* Accent Colors */
-    /* --rs-accent-1: var(--rs-light-1);
-    --rs-accent-2: var(--rs-light-2);
-    --rs-accent-3: var(--rs-light-3);
-    --rs-accent-4: var(--rs-light-4);
-    --rs-accent-5: var(--rs-light-5);
-    --rs-accent-6: var(--rs-light-6);
-    --rs-accent-7: var(--rs-light-7);
-    --rs-accent-8: var(--rs-light-8);
-    --rs-accent-9: var(--rs-light-9);
-    --rs-accent-10: var(--rs-light-10);
-    --rs-accent-11: var(--rs-light-11);
-    --rs-accent-12: var(--rs-light-12); */
+    /* --rs-accent-1: var(--rs-accent-1);
+    --rs-accent-2: var(--rs-accent-2);
+    --rs-accent-3: var(--rs-accent-3);
+    --rs-accent-4: var(--rs-accent-4);
+    --rs-accent-5: var(--rs-accent-5);
+    --rs-accent-6: var(--rs-accent-6);
+    --rs-accent-7: var(--rs-accent-7);
+    --rs-accent-8: var(--rs-accent-8);
+    --rs-accent-9: var(--rs-accent-9);
+    --rs-accent-10: var(--rs-accent-10);
+    --rs-accent-11: var(--rs-accent-11);
+    --rs-accent-12: var(--rs-accent-12); */
 
     /* TODO: Confirm with Design if we need this. */
     /* Neutral Colors */
-    --rs-neutral-1: var(--rs-light-1);
+    /* --rs-neutral-1: var(--rs-light-1);
     --rs-neutral-2: var(--rs-light-2);
     --rs-neutral-3: var(--rs-light-3);
     --rs-neutral-4: var(--rs-light-4);
@@ -27,7 +27,7 @@
     --rs-neutral-9: var(--rs-light-9);
     --rs-neutral-10: var(--rs-light-10);
     --rs-neutral-11: var(--rs-light-11);
-    --rs-neutral-12: var(--rs-light-12);
+    --rs-neutral-12: var(--rs-light-12); */
 
     /* Attention Colors */
     --rs-attention-1: #fefdfb;
@@ -142,32 +142,32 @@
 /* Dark Theme Colors */
 html[data-theme="dark"] {
     /* Accent Colors */
-    --rs-accent-1: var(--rs-dark-1);
-    --rs-accent-2: var(--rs-dark-2);
-    --rs-accent-3: var(--rs-dark-3);
-    --rs-accent-4: var(--rs-dark-4);
-    --rs-accent-5: var(--rs-dark-5);
-    --rs-accent-6: var(--rs-dark-6);
-    --rs-accent-7: var(--rs-dark-7);
-    --rs-accent-8: var(--rs-dark-8);
-    --rs-accent-9: var(--rs-dark-9);
-    --rs-accent-10: var(--rs-dark-10);
-    --rs-accent-11: var(--rs-dark-11);
-    --rs-accent-12: var(--rs-dark-12);
+    /* --rs-accent-1: var(--rs-accent-1);
+    --rs-accent-2: var(--rs-accent-2);
+    --rs-accent-3: var(--rs-accent-3);
+    --rs-accent-4: var(--rs-accent-4);
+    --rs-accent-5: var(--rs-accent-5);
+    --rs-accent-6: var(--rs-accent-6);
+    --rs-accent-7: var(--rs-accent-7);
+    --rs-accent-8: var(--rs-accent-8);
+    --rs-accent-9: var(--rs-accent-9);
+    --rs-accent-10: var(--rs-accent-10);
+    --rs-accent-11: var(--rs-accent-11);
+    --rs-accent-12: var(--rs-accent-12); */
 
     /* Neutral Colors */
-    --rs-neutral-1: var(--rs-dark-1);
-    --rs-neutral-2: var(--rs-dark-2);
-    --rs-neutral-3: var(--rs-dark-3);
-    --rs-neutral-4: var(--rs-dark-4);
-    --rs-neutral-5: var(--rs-dark-5);
-    --rs-neutral-6: var(--rs-dark-6);
-    --rs-neutral-7: var(--rs-dark-7);
-    --rs-neutral-8: var(--rs-dark-8);
-    --rs-neutral-9: var(--rs-dark-9);
-    --rs-neutral-10: var(--rs-dark-10);
-    --rs-neutral-11: var(--rs-dark-11);
-    --rs-neutral-12: var(--rs-dark-12);
+    /* --rs-neutral-1: var(--rs-accent-1);
+    --rs-neutral-2: var(--rs-accent-2);
+    --rs-neutral-3: var(--rs-accent-3);
+    --rs-neutral-4: var(--rs-accent-4);
+    --rs-neutral-5: var(--rs-accent-5);
+    --rs-neutral-6: var(--rs-accent-6);
+    --rs-neutral-7: var(--rs-accent-7);
+    --rs-neutral-8: var(--rs-accent-8);
+    --rs-neutral-9: var(--rs-accent-9);
+    --rs-neutral-10: var(--rs-accent-10);
+    --rs-neutral-11: var(--rs-accent-11);
+    --rs-neutral-12: var(--rs-accent-12); */
 
     /* Attention Colors */
     --rs-attention-1: #1f1300;
