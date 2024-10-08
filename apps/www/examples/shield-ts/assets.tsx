@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
+import { PlusIcon, BlendingModeIcon } from "@radix-ui/react-icons";
 import {
   ApsaraColumnDef,
+  Button,
   Checkbox,
   DataTable,
   Flex,
-  Label,
-  Switch,
   Text,
   useTable,
 } from "@raystack/apsara";
@@ -137,7 +137,7 @@ export const Assets = () => {
 };
 
 const AssetsHeader = () => {
-  const { filteredColumns, table } = useTable();
+  const { filteredColumns } = useTable();
   const isFiltered = filteredColumns.length > 0;
   return (
     <Flex
@@ -147,6 +147,7 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
+        <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
