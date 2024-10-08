@@ -42,7 +42,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
   nonce,
   style = "modern",
   accentColor = "indigo",
-  gray = "slate",
+  grayColor = "slate",
 }) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)
@@ -79,7 +79,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
 
     d.setAttribute('data-style', style);
     d.setAttribute('data-accent-color', accentColor);
-    d.setAttribute('data-gray', gray);
+    d.setAttribute('data-gray-color', grayColor);
 
     if (enableColorScheme) {
       const fallback = colorSchemes.includes(defaultTheme)
@@ -91,7 +91,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
     }
 
     enable?.();
-  }, [style, accentColor, gray, attribute, attrs, value, enableSystem, enableColorScheme, defaultTheme]);
+  }, [style, accentColor, grayColor, attribute, attrs, value, enableSystem, enableColorScheme, defaultTheme]);
 
   const setTheme = useCallback(
     (theme: string) => {
@@ -165,9 +165,9 @@ const Theme: React.FC<ThemeProviderProps> = ({
         | undefined,
       style,
       accentColor,
-      gray,
+      grayColor,
     }),
-    [theme, setTheme, forcedTheme, resolvedTheme, enableSystem, themes, style, accentColor, gray]
+    [theme, setTheme, forcedTheme, resolvedTheme, enableSystem, themes, style, accentColor, grayColor]
   );
 
   return (
@@ -188,7 +188,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
           nonce,
           style,
           accentColor,
-          gray,
+          grayColor,
         }}
       />
       {children}
@@ -209,7 +209,7 @@ const ThemeScript = memo(
     nonce,
     style,
     accentColor,
-    gray,
+    grayColor,
   }: ThemeProviderProps & { attrs: string[]; defaultTheme: string }) => {
     const defaultSystem = defaultTheme === "system";
 
@@ -280,7 +280,7 @@ const ThemeScript = memo(
 
     const scriptSrc = (() => {
       if (forcedTheme) {
-        return `!function(){${optimization}${updateDOM(forcedTheme)};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray','${gray}');}()`;
+        return `!function(){${optimization}${updateDOM(forcedTheme)};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray-color','${grayColor}');}()`;
       }
 
       if (enableSystem) {
@@ -292,7 +292,7 @@ const ThemeScript = memo(
           !defaultSystem
             ? `else{` + updateDOM(defaultTheme, false, false) + "}"
             : ""
-        }${fallbackColorScheme};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray','${gray}');}catch(e){}}()`;
+        }${fallbackColorScheme};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray-color','${grayColor}');}catch(e){}}()`;
       }
 
       return `!function(){try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${
@@ -301,7 +301,7 @@ const ThemeScript = memo(
         defaultTheme,
         false,
         false
-      )};}${fallbackColorScheme};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray','${gray}');}catch(t){}}();`;
+      )};}${fallbackColorScheme};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray-color','${grayColor}');}catch(t){}}();`;
     })();
 
     return (

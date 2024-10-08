@@ -45,5 +45,5 @@ export interface ThemeProviderProps {
 
   accentColor?: 'indigo' | 'orange' | 'mint';
 
-  gray?: 'gray' | 'mauve' | 'slate';
+  grayColor?: 'gray' | 'mauve' | 'slate';
 }
