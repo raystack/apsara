@@ -40,4 +40,10 @@ export interface ThemeProviderProps {
   nonce?: string;
 
   children?: React.ReactNode;
+
+  style?: 'modern' | 'traditional';
+
+  accentColor?: 'indigo' | 'orange' | 'mint';
+
+  gray?: 'gray' | 'mauve' | 'slate';
 }
