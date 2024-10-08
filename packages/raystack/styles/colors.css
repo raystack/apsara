@@ -1,0 +1,116 @@
+:root {
+    /* Base Foreground Colors */
+    --rs-foreground-base-primary: var(--rs-neutral-12);
+    --rs-foreground-base-secondary: var(--rs-neutral-11);
+    --rs-foreground-base-tertiary: var(--rs-neutral-10);
+    --rs-foreground-base-emphasis: var(--rs-neutral-1);
+
+    /* Semantic Foreground Colors */
+    --rs-foreground-accent-primary: var(--rs-accent-9);
+    --rs-foreground-attention-primary: var(--rs-attention-9);
+    --rs-foreground-danger-primary: var(--rs-danger-9);
+    --rs-foreground-success-primary: var(--rs-success-9);
+
+    /* Base Background Colors */
+    --rs-background-base-primary: var(--rs-neutral-1);
+    --rs-background-neutral-secondary: var(--rs-neutral-4);
+    --rs-background-base-secondary: var(--rs-neutral-2);
+    --rs-background-neutral-tertiary: var(--rs-neutral-9);
+
+    /* Semantic Background Colors */
+    --rs-background-accent-primary: var(--rs-accent-4);
+    --rs-background-attention-primary: var(--rs-attention-4);
+    --rs-background-danger-primary: var(--rs-danger-4);
+    --rs-background-success-primary: var(--rs-success-4);
+
+    /* Hover and Emphasis Background Colors */
+    --rs-background-base-primary-hover: var(--rs-neutral-3);
+    --rs-background-neutral-secondary-hover: var(--rs-neutral-5);
+    --rs-background-accent-emphasis: var(--rs-accent-9);
+    --rs-background-accent-emphasis-hover: var(--rs-accent-10);
+    --rs-background-attention-emphasis: var(--rs-attention-9);
+    --rs-background-danger-emphasis: var(--rs-danger-9);
+    --rs-background-danger-emphasis-hover: var(--rs-danger-10);
+    --rs-background-success-emphasis: var(--rs-success-9);
+
+    /* Border Colors */
+    --rs-border-base-tertiary: var(--rs-neutral-7);
+    --rs-border-base-focus: var(--rs-neutral-8);
+    --rs-border-base-primary: var(--rs-neutral-4);
+    --rs-border-accent-primary: var(--rs-accent-7);
+    --rs-border-accent-emphasis: var(--rs-accent-9);
+    --rs-border-accent-emphasis-hover: var(--rs-accent-10);
+    --rs-border-attention-primary: var(--rs-attention-7);
+    --rs-border-attention-emphasis: var(--rs-attention-9);
+    --rs-border-danger-primary: var(--rs-danger-7);
+    --rs-border-danger-emphasis: var(--rs-danger-9);
+    --rs-border-danger-emphasis-hover: var(--rs-danger-10);
+    --rs-border-success-primary: var(--rs-success-7);
+    --rs-border-success-emphasis: var(--rs-success-9);
+
+    /* Overlay Colors */
+    /* Black Overlay */
+    --rs-overlay-black-black-a1: #000000;
+    --rs-overlay-black-black-a2: #000000;
+    --rs-overlay-black-black-a3: #000000;
+    --rs-overlay-black-black-a4: #000000;
+    --rs-overlay-black-black-a5: #000000;
+    --rs-overlay-black-black-a6: #000000;
+    --rs-overlay-black-black-a7: #000000;
+    --rs-overlay-black-black-a8: #000000;
+    --rs-overlay-black-black-a9: #000000;
+    --rs-overlay-black-black-a10: #000000;
+    --rs-overlay-black-black-a11: #000000;
+    --rs-overlay-black-black-a12: #000000;
+
+    /* White Overlay */
+    --rs-overlay-white-white-a1: #ffffff;
+    --rs-overlay-white-white-a2: #ffffff;
+    --rs-overlay-white-white-a3: #ffffff;
+    --rs-overlay-white-white-a4: #ffffff;
+    --rs-overlay-white-white-a5: #ffffff;
+    --rs-overlay-white-white-a6: #ffffff;
+    --rs-overlay-white-white-a7: #ffffff;
+    --rs-overlay-white-white-a8: #ffffff;
+    --rs-overlay-white-white-a9: #ffffff;
+    --rs-overlay-white-white-a10: #ffffff;
+    --rs-overlay-white-white-a11: #ffffff;
+    --rs-overlay-white-white-a12: #ffffff;
+
+    /* Additional Hover Colors */
+    --rs-foreground-accent-primary-hover: var(--rs-accent-11);
+    --rs-foreground-attention-primary-hover: var(--rs-attention-11);
+    --rs-foreground-danger-primary-hover: var(--rs-danger-11);
+    --rs-foreground-success-primary-hover: var(--rs-success-11);
+
+    /* Additional Background Colors */
+    --rs-background-neutral-primary: var(--rs-neutral-3);
+    --rs-background-neutral-tertiary-hover: var(--rs-neutral-10);
+    --rs-background-attention-emphasis-hover: var(--rs-attention-10);
+    --rs-background-success-emphasis-hover: var(--rs-success-10);
+
+    /* Additional Border Colors */
+    --rs-border-base-secondary: var(--rs-neutral-6);
+    --rs-border-attention-emphasis-hover: var(--rs-attention-10);
+    --rs-border-success-emphasis-hover: var(--rs-success-10);
+
+    /* Emphasis Foreground Colors */
+    --rs-foreground-accent-emphasis: var(--rs-accent-contrast);
+    --rs-foreground-danger-emphasis: var(--rs-danger-contrast);
+    --rs-foreground-attention-emphasis: var(--rs-attention-contrast);
+    --rs-foreground-success-emphasis: var(--rs-success-contrast);
+
+    /* Visualization Colors */
+    /* Sky */
+    --rs-visualization-sky-sky-11: var(--rs-viz-sky-11);
+    --rs-visualization-sky-sky-9: var(--rs-viz-sky-9);
+    --rs-visualization-sky-sky-8: var(--rs-viz-sky-8);
+    --rs-visualization-sky-sky-6: var(--rs-viz-sky-6);
+
+    /* Other visualization colors (Mint, Lime, Grass, etc.) */
+    /* ... (similar pattern for each color) */
+
+    /* Additional Base Colors */
+    --rs-border-base-emphasis: var(--rs-neutral-12);
+    --rs-background-neutral-emphasis: var(--rs-neutral-12);
+}
