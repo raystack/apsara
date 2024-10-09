@@ -1,6 +1,6 @@
 import "./style.css";
 export { Accordion } from "./accordion";
-export { Avatar } from "./avatar";
+export { Avatar, AvatarGroup } from "./avatar";
 export { Badge } from "./badge";
 export { Body } from "./body";
 export { Box } from "./box";
