@@ -29,7 +29,7 @@
     --rs-gray-12: #eeeeee;
 }
 
-[data-gray-color='muave'] {
+[data-gray-color='mauve'] {
     --rs-gray-1: #fdfcfd;
     --rs-gray-2: #faf9fb;
     --rs-gray-3: #f2eff3;
@@ -44,7 +44,7 @@
     --rs-gray-12: #211f26;
 }
 
-[data-gray-color='muave'][data-theme='dark'] {
+[data-gray-color='mauve'][data-theme='dark'] {
     --rs-gray-1: #121113;
     --rs-gray-2: #1a191b;
     --rs-gray-3: #232225;
