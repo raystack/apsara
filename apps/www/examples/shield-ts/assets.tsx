@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
+import { PlusIcon, BlendingModeIcon } from "@radix-ui/react-icons";
 import {
   ApsaraColumnDef,
   Avatar,
   AvatarGroup,
+  Button,
   Checkbox,
   DataTable,
   Flex,
@@ -137,7 +139,7 @@ export const Assets = () => {
 };
 
 const AssetsHeader = () => {
-  const { filteredColumns, table } = useTable();
+  const { filteredColumns } = useTable();
   const isFiltered = filteredColumns.length > 0;
   return (
     <Flex
@@ -170,6 +172,7 @@ const AssetsHeader = () => {
             fallback={<>RK</>}
           />
         </AvatarGroup>
+        <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
