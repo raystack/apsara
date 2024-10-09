@@ -46,7 +46,6 @@
 .button-primary {
   color: var(--ascent-contrast);
   background-color: var(--rs-background-accent-emphasis);
-  /* background-color: red; */
 }
 
 .button-primary:hover,
