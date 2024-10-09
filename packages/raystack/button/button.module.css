@@ -12,8 +12,6 @@
   transition: background-color var(--transition);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--br-4);
-  color: var(--ascent-contrast);
-  background-color: var(--background-accent-inverted);
 }
 
 .button:before,
@@ -47,7 +45,8 @@
 
 .button-primary {
   color: var(--ascent-contrast);
-  background-color: var(--background-accent-inverted);
+  background-color: var(--rs-background-accent-emphasis);
+  /* background-color: red; */
 }
 
 .button-primary:hover,

@@ -18,7 +18,7 @@ const roboto = Roboto_Mono({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider>
+    <ThemeProvider accentColor="mint">
       <main className={`${inter.className} ${roboto.variable}`}>
         <Navbar />
         <div style={{ width: "100%" }}>
