@@ -38,6 +38,12 @@ export interface ThemeProviderProps {
   value?: ValueObject;
   /** Nonce string to pass to the inline script for CSP headers */
   nonce?: string;
-
+  /** React children to be rendered within the ThemeProvider */
   children?: React.ReactNode;
+  /** Style variant of the theme, either 'modern' or 'traditional'. Affects the radius and font properties. */
+  style?: 'modern' | 'traditional';
+  /** Accent color for the theme, options are 'indigo', 'orange', or 'mint' */
+  accentColor?: 'indigo' | 'orange' | 'mint';
+  /** Gray color variant for the theme, options are 'gray', 'mauve', or 'slate' */
+  grayColor?: 'gray' | 'mauve' | 'slate';
 }
