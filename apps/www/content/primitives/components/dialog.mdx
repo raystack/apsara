@@ -9,19 +9,51 @@ radix:
 ## Preview
 
 <Preview>
-  <Dialog>
-    <Dialog.Trigger asChild>
-      <Button variant="ghost" size="small">Dialog button</Button>
-    </Dialog.Trigger>
-    <Dialog.Content close>
-      <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>Dialog Heading</Text>
-      <Text size="3" style={{ lineHeight: '25px' }}>
-        There are 5 variants to choose from. Use is for positive states. This is a link
-        Traditional business literature won’t help you solve it- most of that stuff is
-        focused on life after product/market fit, after the Trough of Sorrow.
-      </Text>
-    </Dialog.Content>
-  </Dialog>
+  <Flex
+    style={{
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: '12px',
+    }}
+  >
+    <Dialog>
+      <Dialog.Trigger asChild>
+        <Button variant="ghost" size="small">
+          Dialog button
+        </Button>
+      </Dialog.Trigger>
+      <Dialog.Content close>
+        <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>
+          Dialog Heading
+        </Text>
+        <Text size="3" style={{ lineHeight: '25px' }}>
+          There are 5 variants to choose from. Use is for positive states. This
+          is a link Traditional business literature won’t help you solve it-
+          most of that stuff is focused on life after product/market fit, after
+          the Trough of Sorrow.
+        </Text>
+      </Dialog.Content>
+    </Dialog>
+
+    <Dialog>
+      <Dialog.Trigger asChild>
+        <Button variant="ghost" size="small">
+          Dialog with blur button
+        </Button>
+      </Dialog.Trigger>
+      <Dialog.Content overlayBlur={true} close>
+        <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>
+          Dialog Heading
+        </Text>
+        <Text size="3" style={{ lineHeight: '25px' }}>
+          There are 5 variants to choose from. Use is for positive states. This
+          is a link Traditional business literature won’t help you solve it-
+          most of that stuff is focused on life after product/market fit, after
+          the Trough of Sorrow.
+        </Text>
+      </Dialog.Content>
+    </Dialog>
+  </Flex>
 </Preview>
 
 ## Installation
@@ -53,5 +85,25 @@ import { Dialog } from '@raystack/apsara'
     </Text>
   </Dialog.Content>
 </Dialog>
+
+<Dialog>
+  <Dialog.Trigger asChild>
+    <Button variant="ghost" size="small">
+          Dialog with blur button
+    </Button>
+  </Dialog.Trigger>
+  <Dialog.Content overlayBlur={true} close>
+    <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>
+          Dialog Heading
+    </Text>
+    <Text size="3" style={{ lineHeight: '25px' }}>
+          There are 5 variants to choose from. Use is for positive states. This
+          is a link Traditional business literature won’t help you solve it-
+          most of that stuff is focused on life after product/market fit, after
+          the Trough of Sorrow.
+    </Text>
+  </Dialog.Content>
+</Dialog>
+
 `} border />
 </LiveProvider>

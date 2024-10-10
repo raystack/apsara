@@ -22,15 +22,16 @@ export const DialogContent = forwardRef<
     close?: boolean;
     overlayStyle?: React.CSSProperties;
     overlayClassname?: string;
+    overlayBlur?: boolean;
   }
 >(
   (
-    { className, children, close, overlayStyle, overlayClassname, ...props },
+    { className, children, close, overlayStyle, overlayClassname, overlayBlur, ...props },
     forwardedRef
   ) => {
     return (
       <DialogPrimitive.Portal>
-        <Overlay className={overlayClassname} style={overlayStyle}>
+        <Overlay className={overlayClassname} style={overlayStyle} blur={overlayBlur}>
           <DialogPrimitive.Content
             {...props}
             ref={forwardedRef}
@@ -49,7 +50,13 @@ export const DialogContent = forwardRef<
   }
 );
 
-const overlay = cva(styles.overlay);
+const overlay = cva(styles.overlay, {
+  variants: {
+    blur: {
+      true: styles.overlayBlur,
+    },
+  },
+});
 export interface OverlayProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
     VariantProps<typeof overlay> {}
@@ -57,10 +64,10 @@ export interface OverlayProps
 const Overlay = forwardRef<
   ElementRef<typeof DialogPrimitive.Overlay>,
   OverlayProps
->(({ className, ...props }, ref) => (
+>(({ className, blur, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
-    className={overlay({ className })}
+    className={overlay({ className, blur })}
     {...props}
   />
 ));
