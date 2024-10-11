@@ -108,7 +108,7 @@ function DataTableRoot<TData, TValue>({
     observerRef.current = observer;
 
     return () => observer.disconnect();
-  }, [onLoadMore]);
+  }, [onLoadMore, isLoading]);
 
   useEffect(() => {
     const observer = observerRef.current;
@@ -140,7 +140,11 @@ function DataTableRoot<TData, TValue>({
         ))}
       </Table.Row>
     ))
-  )
+  );
+
+  const tableData = onLoadMore ? data : (isLoading
+    ? [...new Array(loaderRow)].map((_, i) => ({ id: i } as TData))
+    : data);
 
   const { filteredColumns, addFilterColumn, removeFilterColumn, resetColumns } =
     useTableColumn();
@@ -154,7 +158,17 @@ function DataTableRoot<TData, TValue>({
             ? tableCustomFilter[colId]
             : undefined;
 
-        const { cell } = col;
+        const cell = onLoadMore
+          ? col.cell
+          : (isLoading
+              ? () => (
+                  <Skeleton
+                    containerClassName={styles.flex1}
+                    highlightColor="var(--background-base)"
+                    baseColor="var(--background-base-hover)"
+                  />
+                )
+              : col.cell);
 
         return {
           ...col,
@@ -162,7 +176,7 @@ function DataTableRoot<TData, TValue>({
           filterFn,
         };
       }),
-    [isLoading, columns, tableCustomFilter]
+    [isLoading, columns, tableCustomFilter, onLoadMore]
   );
 
   useEffect(() => {
@@ -176,7 +190,7 @@ function DataTableRoot<TData, TValue>({
   };
 
   const table = useReactTable({
-    data,
+    data: tableData,
     columns: columnWithCustomFilter as unknown as ColumnDef<TData, TValue>[],
     globalFilterFn: "auto",
     enableRowSelection: true,
@@ -277,7 +291,7 @@ function DataTableRoot<TData, TValue>({
                             }`
                       }
                       ref={
-                        rowIndex === table.getRowModel().rows.length - 1
+                        onLoadMore && rowIndex === table.getRowModel().rows.length - 1
                           ? lastRowRef
                           : null
                       }
@@ -305,7 +319,7 @@ function DataTableRoot<TData, TValue>({
                     </Table.Cell>
                   </Table.Row> : <></>
                 )}
-                {isLoading && getLoader(loaderRow, columns)}
+                {isLoading && onLoadMore && getLoader(loaderRow, columns)}
               </Table.Body>
             </Table>
             {detail}
