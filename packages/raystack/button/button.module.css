@@ -44,7 +44,7 @@
 }
 
 .button-primary {
-  color: var(--ascent-contrast);
+  color: var(--rs-foreground-accent-emphasis);
   background-color: var(--rs-background-accent-emphasis);
 }
 
@@ -52,61 +52,69 @@
 .button-primary:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent-inverted-hover);
+  background-color: var(--rs-background-accent-emphasis-hover);
 }
 
 .button-primary.button-disabled:hover,
 .button-primary.button-disabled:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  color: var(--ascent-contrast);
-  background-color: var(--background-accent-inverted);
+  color: var(--rs-foreground-accent-emphasis);
+  background-color: var(--rs-background-accent-emphasis);
 }
 
 .button-secondary,
 .button-outline,
 .button-ghost,
 .button-text {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
 }
 
 .button-secondary {
-  outline: 1px solid var(--border-base);
+  outline: 1px solid var(--rs-border-base-focus);
 }
 
 .button-secondary:hover,
 .button-secondary:active,
 .button-secondary[data-radix-popover-trigger][data-state="open"],
 .button-secondary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base-hover);
-  outline: 1px solid var(--border-base-hover);
+  background-color: var(--rs-background-base-primary-hover);
+  outline: 1px solid var(--rs-border-base-focus);
 }
 
 .button-secondary.button-disabled:hover,
 .button-outline.button-disabled:hover,
 .button-ghost.button-disabled:hover,
 .button-text.button-disabled:hover {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
 }
 
 .button-outline {
-  color: var(--foreground-accent);
-  outline: 1px solid var(--border-accent-inverted);
+  color: var(--rs-background-accent-emphasis);
+  outline: 1px solid var(--rs-background-accent-emphasis);
 }
 
 .button-outline.button-disabled:hover {
-  color: var(--foreground-accent);
-  outline: 1px solid var(--border-accent-inverted);
+  color: var();
+  outline: 1px solid var();
 }
 
 .button-outline:hover,
 .button-outline:active,
 .button-outline[data-radix-popover-trigger][data-state="open"],
 .button-outline[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent);
-  outline: 1px solid var(--border-accent-inverted-hover);
+  background-color: var(--rs-background-accent-primary);
+  outline: 1px solid var(--rs-background-accent-emphasis-hover);
+}
+
+.button-outline.button-loading:hover,
+.button-outline.button-loading:active,
+.button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--background-base);
+  outline: 1px solid var(--border-accent-inverted);
 }
 
 .button-ghost {
@@ -170,14 +178,6 @@
 .button-secondary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--background-base);
   outline: 1px solid var(--border-base);
-}
-
-.button-outline.button-loading:hover,
-.button-outline.button-loading:active,
-.button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base);
-  outline: 1px solid var(--border-accent-inverted);
 }
 
 .button-ghost.button-loading:hover,
