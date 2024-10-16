@@ -92,21 +92,26 @@
 }
 
 .button-outline {
-  color: var(--rs-background-accent-emphasis);
-  outline: 1px solid var(--rs-background-accent-emphasis);
+  background-color: transparent;
+  color: var(--rs-foreground-accent-primary);
+  border: 1px solid var(--rs-border-accent-primary);
 }
 
-.button-outline.button-disabled:hover {
-  color: var();
-  outline: 1px solid var();
-}
-
-.button-outline:hover,
-.button-outline:active,
-.button-outline[data-radix-popover-trigger][data-state="open"],
-.button-outline[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-outline:hover {
   background-color: var(--rs-background-accent-primary);
-  outline: 1px solid var(--rs-background-accent-emphasis-hover);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:active {
+  background-color: var(--rs-background-accent-emphasis);
+  color: var(--rs-foreground-accent-emphasis);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:disabled {
+  background-color: transparent;
+  color: var(--rs-foreground-base-tertiary);
+  border-color: var(--rs-border-base-primary);
 }
 
 .button-outline.button-loading:hover,
@@ -118,19 +123,32 @@
 }
 
 .button-ghost {
-  outline: 1px dashed var(--border-base);
-}
-
-.button-ghost.button-disabled:hover {
-  outline: 1px dashed var(--border-base);
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+  border: 1px dashed var(--rs-border-base-primary);
 }
 
 .button-ghost:hover,
 .button-ghost:active,
 .button-ghost[data-radix-popover-trigger][data-state="open"],
 .button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base-hover);
-  outline: 1px dashed var(--border-base-hover);
+  background-color: var(--rs-background-base-primary-hover);
+  border-color: var(--rs-border-base-focus);
+}
+
+.button-ghost:disabled,
+.button-ghost.button-disabled {
+  color: var(--rs-foreground-base-tertiary);
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-ghost.button-loading:hover,
+.button-ghost.button-loading:active,
+.button-ghost.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-ghost.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
 }
 
 .button-danger {
