@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { Inter, Roboto_Mono } from "next/font/google";
 import { Navbar } from "~/components/Navbar";
 import "@raystack/apsara/index.css";
-// import "~/styles/styles.css";
+import "~/styles/styles.css";
 
 const inter = Inter({
   style: ["normal"],
