@@ -40,7 +40,7 @@
     --rs-foreground-success-primary-hover: var(--rs-success-11);
 
     /* Border Colors */
-    --rs-border-base-tertiary: var(--rs-neutral-7);
+    --rs-border-base-tertiary: var(--rs-neutral-1);
     --rs-border-base-focus: var(--rs-neutral-8);
     --rs-border-base-primary: var(--rs-neutral-4);
     --rs-border-accent-primary: var(--rs-accent-7);
