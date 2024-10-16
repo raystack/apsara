@@ -1,7 +1,7 @@
 import "./style.css"; // Old styles file. To be removed after Apsara v2 release
 import "./styles/index.css"
 export { Accordion } from "./accordion";
-export { Avatar } from "./avatar";
+export { Avatar, AvatarGroup } from "./avatar";
 export { Badge } from "./badge";
 export { Body } from "./body";
 export { Box } from "./box";

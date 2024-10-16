@@ -1,57 +1,102 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cva, VariantProps } from "class-variance-authority";
+import { clsx } from 'clsx';
 import {
   ComponentPropsWithoutRef,
-  CSSProperties,
   ElementRef,
   forwardRef,
+  ReactNode,
 } from "react";
 import { Box } from "../box";
 import styles from "./avatar.module.css";
 
 const avatar = cva(styles.avatar, {
   variants: {
-    shape: {
-      square: styles["avatar-square"],
-      circle: styles["avatar-circle"],
+    radius: {
+      small: styles["avatar-small"],
+      full: styles["avatar-full"],
     },
-
+    size: {
+      1: styles["avatar-size-1"],
+      2: styles["avatar-size-2"],
+      3: styles["avatar-size-3"],
+      4: styles["avatar-size-4"],
+      5: styles["avatar-size-5"],
+      6: styles["avatar-size-6"],
+      7: styles["avatar-size-7"],
+      8: styles["avatar-size-8"],
+      9: styles["avatar-size-9"],
+      10: styles["avatar-size-10"],
+      11: styles["avatar-size-11"],
+      12: styles["avatar-size-12"],
+      13: styles["avatar-size-13"],
+    },
+    variant: {
+      solid: styles["avatar-solid"],
+      soft: styles["avatar-soft"],
+    },
     disabled: {
       true: styles["avatar-disabled"],
     },
+    color: {
+      indigo: styles["avatar-color-indigo"],
+      orange: styles["avatar-color-orange"],
+      mint: styles["avatar-color-mint"],
+    },
   },
+  compoundVariants: [
+    { variant: 'solid', color: 'indigo', className: styles['avatar-solid-indigo'] },
+    { variant: 'solid', color: 'orange', className: styles['avatar-solid-orange'] },
+    { variant: 'solid', color: 'mint', className: styles['avatar-solid-mint'] },
+    { variant: 'soft', color: 'indigo', className: styles['avatar-soft-indigo'] },
+    { variant: 'soft', color: 'orange', className: styles['avatar-soft-orange'] },
+    { variant: 'soft', color: 'mint', className: styles['avatar-soft-mint'] },
+  ],
   defaultVariants: {
-    shape: "circle",
+    size: 3,
+    radius: "small",
+    variant: "soft",
+    color: "indigo",
   },
 });
 
 const image = cva(styles.image);
+
 export interface AvatarProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
-    VariantProps<typeof avatar> {}
+    VariantProps<typeof avatar> {
+  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+  src?: string;
+  alt?: string;
+  fallback?: ReactNode;
+  variant?: "solid" | "soft";
+  color?: "indigo" | "orange" | "mint";
+  asChild?: boolean;
+}
 
 const AvatarRoot = forwardRef<
   ElementRef<typeof AvatarPrimitive.Root>,
-  AvatarProps & {
-    alt?: string;
-    src?: string;
-    fallback?: React.ReactNode;
-    imageProps?: CSSProperties;
-  }
+  AvatarProps
 >(
   (
-    { className, alt, src, fallback, shape, style, imageProps, ...props },
+    { className, alt, src, fallback, size, radius, variant, color, style, asChild, ...props },
     ref
   ) => (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
-        className={avatar({ shape, className })}
-        style={imageProps}
+        className={avatar({ size, radius, variant, color, className })}
+        asChild={asChild}
         {...props}
       >
-        <AvatarImage alt={alt} src={src} />
-        <AvatarFallback>{fallback}</AvatarFallback>
+        <AvatarPrimitive.Image
+          className={image()}
+          src={src}
+          alt={alt}
+        />
+        <AvatarPrimitive.Fallback className={styles.fallback}>
+          {fallback}
+        </AvatarPrimitive.Fallback>
       </AvatarPrimitive.Root>
     </Box>
   )
@@ -59,42 +104,43 @@ const AvatarRoot = forwardRef<
 
 AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
 
-export interface AvatarImageProps
-  extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>,
-    VariantProps<typeof image> {}
+export const Avatar = AvatarRoot;
 
-const AvatarImage = forwardRef<
-  ElementRef<typeof AvatarPrimitive.Image>,
-  AvatarImageProps
->(({ className, sizes, ...props }, ref) => (
-  <AvatarPrimitive.Image
-    ref={ref}
-    className={image({ className })}
-    {...props}
-  />
-));
-AvatarImage.displayName = AvatarPrimitive.Image.displayName;
+export interface AvatarGroupProps extends ComponentPropsWithoutRef<'div'> {
+  children: React.ReactElement<AvatarProps>[];
+  max?: number;
+}
 
-const fallback = cva(styles.fallback);
+export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
+  ({ children, max, className, ...props }, ref) => {
+    const avatars = max ? children.slice(0, max) : children;
+    const count = max && children.length > max ? children.length - max : 0;
 
-export interface FallbackProps
-  extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>,
-    VariantProps<typeof fallback> {}
+    return (
+      <div
+        ref={ref}
+        className={clsx(styles.avatarGroup, className)}
+        {...props}
+      >
+        {avatars.map((avatar, index) => (
+          <div key={index} className={styles.avatarWrapper}>
+            {avatar}
+          </div>
+        ))}
+        {count > 0 && (
+        <div className={styles.avatarWrapper}>
+            <Avatar
+              size={avatars[0].props.size}
+              radius={avatars[0].props.radius}
+              variant={avatars[0].props.variant}
+              color='indigo'
+              fallback={<span>+{count}</span>}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+);
 
-const AvatarFallback = forwardRef<
-  ElementRef<typeof AvatarPrimitive.Fallback>,
-  FallbackProps
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Fallback
-    ref={ref}
-    className={fallback({ className })}
-    {...props}
-  />
-));
-
-AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
-
-export const Avatar = Object.assign(AvatarRoot, {
-  Image: AvatarImage,
-  Fallback: AvatarFallback,
-});
+AvatarGroup.displayName = 'AvatarGroup';
