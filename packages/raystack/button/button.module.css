@@ -12,8 +12,6 @@
   transition: background-color var(--transition);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--br-4);
-  color: var(--ascent-contrast);
-  background-color: var(--background-accent-inverted);
 }
 
 .button:before,
@@ -25,6 +23,11 @@
 .button-disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.button:disabled:hover,
+.button-disabled:hover {
+  color: inherit;
 }
 
 .button-small {
@@ -46,104 +49,172 @@
 }
 
 .button-primary {
-  color: var(--ascent-contrast);
-  background-color: var(--background-accent-inverted);
+  color: var(--rs-foreground-accent-emphasis);
+  background-color: var(--rs-background-accent-emphasis);
 }
 
 .button-primary:hover,
 .button-primary:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent-inverted-hover);
+  background-color: var(--rs-background-accent-emphasis-hover);
 }
 
 .button-primary.button-disabled:hover,
 .button-primary.button-disabled:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  color: var(--ascent-contrast);
-  background-color: var(--background-accent-inverted);
+  color: var(--rs-foreground-accent-emphasis);
+  background-color: var(--rs-background-accent-emphasis);
 }
 
-.button-secondary,
-.button-outline,
-.button-ghost,
-.button-text {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
+.button-primary.button-loading:hover,
+.button-primary.button-loading:active,
+.button-primary.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-primary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-accent-emphasis);
 }
 
 .button-secondary {
-  outline: 1px solid var(--border-base);
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
+  border: 1px solid var(--rs-border-base-primary);
 }
 
 .button-secondary:hover,
 .button-secondary:active,
 .button-secondary[data-radix-popover-trigger][data-state="open"],
 .button-secondary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base-hover);
-  outline: 1px solid var(--border-base-hover);
+  background-color: var(--rs-background-base-primary-hover);
+  border-color: var(--rs-border-base-focus);
 }
 
-.button-secondary.button-disabled:hover,
-.button-outline.button-disabled:hover,
-.button-ghost.button-disabled:hover,
-.button-text.button-disabled:hover {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
+.button-secondary:disabled,
+.button-secondary.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-secondary:disabled:hover,
+.button-secondary.button-disabled:hover {
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
+  border-color: var(--rs-border-base-primary);
 }
 
 .button-outline {
-  color: var(--foreground-accent);
-  outline: 1px solid var(--border-accent-inverted);
+  background-color: transparent;
+  color: var(--rs-foreground-accent-primary);
+  border: 1px solid var(--rs-border-accent-primary);
 }
 
+.button-outline:hover {
+  background-color: var(--rs-background-accent-primary);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:active {
+  background-color: var(--rs-background-accent-emphasis);
+  color: var(--rs-foreground-accent-emphasis);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:disabled,
+.button-outline.button-disabled {
+  background-color: transparent;
+  color: var(--rs-foreground-base-tertiary);
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-outline:disabled:hover,
 .button-outline.button-disabled:hover {
-  color: var(--foreground-accent);
-  outline: 1px solid var(--border-accent-inverted);
+  background-color: transparent;
+  color: var(--rs-foreground-base-tertiary);
+  border-color: var(--rs-border-base-primary);
 }
 
-.button-outline:hover,
-.button-outline:active,
-.button-outline[data-radix-popover-trigger][data-state="open"],
-.button-outline[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent);
-  outline: 1px solid var(--border-accent-inverted-hover);
+.button-outline.button-loading:hover,
+.button-outline.button-loading:active,
+.button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-base-primary);
+  outline: 1px solid var(--rs-background-accent-emphasis-hover);
 }
 
 .button-ghost {
-  outline: 1px dashed var(--border-base);
-}
-
-.button-ghost.button-disabled:hover {
-  outline: 1px dashed var(--border-base);
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+  border: 1px dashed var(--rs-border-base-primary);
 }
 
 .button-ghost:hover,
 .button-ghost:active,
 .button-ghost[data-radix-popover-trigger][data-state="open"],
 .button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base-hover);
-  outline: 1px dashed var(--border-base-hover);
+  background-color: var(--rs-background-base-primary-hover);
+  border-color: var(--rs-border-base-focus);
+}
+
+.button-ghost:disabled,
+.button-ghost.button-disabled {
+  color: var(--rs-foreground-base-tertiary);
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-ghost:disabled:hover,
+.button-ghost.button-disabled:hover {
+  color: var(--rs-foreground-base-tertiary);
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
 }
 
 .button-danger {
-  color: var(--ascent-contrast);
-  background-color: var(--background-danger-inverted);
+  color: var(--rs-foreground-danger-emphasis);
+  background-color: var(--rs-background-danger-emphasis);
 }
 
 .button-danger:hover,
 .button-danger:active,
 .button-danger[data-radix-popover-trigger][data-state="open"],
 .button-danger[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-danger-inverted-hover);
+  background-color: var(--rs-background-danger-emphasis-hover);
+}
+
+.button-danger:disabled,
+.button-danger.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-danger:disabled:hover,
+.button-danger.button-disabled:hover {
+  color: var(--rs-foreground-danger-emphasis);
+  background-color: var(--rs-background-danger-emphasis);
+}
+
+.button-text {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
 }
 
 .button-text:hover,
 .button-text:active,
 .button-text[data-radix-popover-trigger][data-state="open"],
 .button-text[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base-hover);
+  background-color: var(--rs-background-base-primary-hover);
+}
+
+.button-text:disabled,
+.button-text.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-text:disabled:hover,
+.button-text.button-disabled:hover {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
 }
 
 .button-loading {
@@ -159,27 +230,12 @@
   cursor: not-allowed;
 }
 
-.button-primary.button-loading:hover,
-.button-primary.button-loading:active,
-.button-primary.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-primary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent-inverted);
-}
-
 .button-secondary.button-loading:hover,
 .button-secondary.button-loading:active,
 .button-secondary.button-loading[data-radix-popover-trigger][data-state="open"],
 .button-secondary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--background-base);
   outline: 1px solid var(--border-base);
-}
-
-.button-outline.button-loading:hover,
-.button-outline.button-loading:active,
-.button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base);
-  outline: 1px solid var(--border-accent-inverted);
 }
 
 .button-ghost.button-loading:hover,

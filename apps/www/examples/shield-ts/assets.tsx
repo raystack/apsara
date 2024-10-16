@@ -3,8 +3,6 @@ import dayjs from "dayjs";
 import { PlusIcon, BlendingModeIcon } from "@radix-ui/react-icons";
 import {
   ApsaraColumnDef,
-  Avatar,
-  AvatarGroup,
   Button,
   Checkbox,
   DataTable,
@@ -149,29 +147,6 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <AvatarGroup max={2}>
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={7}
-            color="orange"
-            fallback={<>GS</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={7}
-            color="mint"
-            fallback={<>RK</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={7}
-            color="orange"
-            fallback={<>RK</>}
-          />
-        </AvatarGroup>
         <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button>
       </Flex>
       <Flex gap="small">
