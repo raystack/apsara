@@ -132,8 +132,8 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
             <Avatar
               size={avatars[0].props.size}
               radius={avatars[0].props.radius}
-              variant={avatars[0].props.variant}
-              color='indigo'
+              variant="solid"
+              className={styles.avatarGroupCount}
               fallback={<span>+{count}</span>}
             />
           </div>

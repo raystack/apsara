@@ -6,15 +6,15 @@
   position: relative; 
   border: none;
   border-radius: var(--br-round);   
-  background-color: var(--background-inset);
-  color: var(--foreground-base);
-  width: var(--avatar-size, var(--space-8, 32px));
-  height: var(--avatar-size, var(--space-8, 32px));
-  --fallback-font-size: calc(var(--avatar-size, var(--space-8, 32px)) * 0.4);
+  background-color: var(--rs-background-neutral-secondary);
+  color: var(--rs-foreground-base-primary);
+  width: var(--avatar-size, var(--rs-space-9, 32px));
+  height: var(--avatar-size, var(--rs-space-9, 32px));
+  --fallback-font-size: calc(var(--avatar-size, var(--rs-space-9, 32px)) * 0.4);
 }
 
 .avatar-full {
-  border-radius: var(--radius-full) !important;
+  border-radius: var(--br-round) !important;
 }
 
 .avatar-disabled {
@@ -30,48 +30,40 @@
 }
 
 .avatar-color-indigo {
-  --avatar-hue: var(--background-accent-inverted);
-  --avatar-color: var(--foreground-accent);
+  --avatar-hue: var(--rs-background-accent-emphasis);
+  --avatar-color: var(--rs-foreground-accent-emphasis);
 }
 
 .avatar-color-orange {
-  --avatar-hue: var(--background-attention-inverted);
-  --avatar-color: var(--foreground-attention);
+  --avatar-hue: var(--rs-background-attention-emphasis);
+  --avatar-color: var(--rs-foreground-attention-emphasis);
 }
 
 .avatar-color-mint {
-  --avatar-hue: var(--background-success-inverted);
-  --avatar-color: var(--foreground-success);
+  --avatar-hue: var(--rs-background-success-emphasis);
+  --avatar-color: var(--rs-foreground-success-emphasis);
 }
 
-.avatar-solid-indigo {
-  background-color: var(--avatar-hue);
-  color: var(--ascent-contrast);
-}
-
-.avatar-solid-orange {
-  background-color: var(--avatar-hue);
-  color: var(--ascent-contrast);
-}
-
+.avatar-solid-indigo,
+.avatar-solid-orange,
 .avatar-solid-mint {
   background-color: var(--avatar-hue);
-  color: var(--ascent-contrast);
+  color: var(--avatar-color);
 }
 
 .avatar-soft-indigo {
-  background-color: var(--background-accent);
-  color: var(--avatar-color);
+  background-color: var(--rs-background-accent-primary);
+  color: var(--rs-foreground-accent-primary);
 }
 
 .avatar-soft-orange {
-  background-color: var(--background-attention);
-  color: var(--avatar-color);
+  background-color: var(--rs-background-attention-primary);
+  color: var(--rs-foreground-attention-primary);
 }
 
 .avatar-soft-mint {
-  background-color: var(--background-success);
-  color: var(--avatar-color);
+  background-color: var(--rs-background-success-primary);
+  color: var(--rs-foreground-success-primary);
 }
 
 .imageWrapper {
@@ -101,94 +93,94 @@
 }
 
 .avatar-size-1 {
-  width: var(--space-5, 16px);
-  height: var(--space-5, 16px);
-  --fallback-font-size: calc(var(--space-5, 16px) * 0.4);
-  border-radius: var(--radius-2);
+  width: var(--rs-space-5, 16px);
+  height: var(--rs-space-5, 16px);
+  --fallback-font-size: calc(var(--rs-space-5, 16px) * 0.4);
+  border-radius: var(--rs-radius-2);
 }
 
 .avatar-size-2 {
-  width: var(--space-6, 20px);
-  height: var(--space-6, 20px);
-  --fallback-font-size: calc(var(--space-6, 20px) * 0.4);
-  border-radius: var(--radius-2);
+  width: var(--rs-space-6, 20px);
+  height: var(--rs-space-6, 20px);
+  --fallback-font-size: calc(var(--rs-space-6, 20px) * 0.4);
+  border-radius: var(--rs-radius-2);
 }
 
 .avatar-size-3 {
-  width: var(--space-7, 24px);
-  height: var(--space-7, 24px);
-  --fallback-font-size: calc(var(--space-7, 24px) * 0.3);
-  border-radius: var(--radius-2);
+  width: var(--rs-space-7, 24px);
+  height: var(--rs-space-7, 24px);
+  --fallback-font-size: calc(var(--rs-space-7, 24px) * 0.3);
+  border-radius: var(--rs-radius-2);
 }
 
 .avatar-size-4 {
-  width: var(--space-8, 28px);
-  height: var(--space-8, 28px);
-  --fallback-font-size: calc(var(--space-8, 28px) * 0.35);
-  border-radius: var(--radius-2);
+  width: var(--rs-space-8, 28px);
+  height: var(--rs-space-8, 28px);
+  --fallback-font-size: calc(var(--rs-space-8, 28px) * 0.35);
+  border-radius: var(--rs-radius-2);
 }
 
 .avatar-size-5 {
-  width: var(--space-9, 32px);
-  height: var(--space-9, 32px);
-  --fallback-font-size: calc(var(--space-9, 32px) * 0.3);
-  border-radius: var(--radius-2);
+  width: var(--rs-space-9, 32px);
+  height: var(--rs-space-9, 32px);
+  --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.3);
+  border-radius: var(--rs-radius-2);
 }
 
 .avatar-size-6 {
-  width: var(--space-10, 40px);
-  height: var(--space-10, 40px);
-  --fallback-font-size: calc(var(--space-10, 40px) * 0.25);
-  border-radius: var(--radius-4);
+  width: var(--rs-space-10, 40px);
+  height: var(--rs-space-10, 40px);
+  --fallback-font-size: calc(var(--rs-space-10, 40px) * 0.25);
+  border-radius: var(--rs-radius-4);
 }
 
 .avatar-size-7 {
-  width: var(--space-11, 48px);
-  height: var(--space-11, 48px);
-  --fallback-font-size: calc(var(--space-11, 48px) * 0.25);
-  border-radius: var(--radius-4);
+  width: var(--rs-space-11, 48px);
+  height: var(--rs-space-11, 48px);
+  --fallback-font-size: calc(var(--rs-space-11, 48px) * 0.25);
+  border-radius: var(--rs-radius-4);
 }
 
 .avatar-size-8 {
-  width: var(--space-12, 56px);
-  height: var(--space-12, 56px);
-  --fallback-font-size: calc(var(--space-12, 56px) * 0.25);
-  border-radius: var(--radius-4);
+  width: var(--rs-space-12, 56px);
+  height: var(--rs-space-12, 56px);
+  --fallback-font-size: calc(var(--rs-space-12, 56px) * 0.25);
+  border-radius: var(--rs-radius-4);
 }
 
 .avatar-size-9 {
-  width: var(--space-13, 64px);
-  height: var(--space-13, 64px);
-  --fallback-font-size: calc(var(--space-13, 64px) * 0.25);
-  border-radius: var(--radius-4);
+  width: var(--rs-space-13, 64px);
+  height: var(--rs-space-13, 64px);
+  --fallback-font-size: calc(var(--rs-space-13, 64px) * 0.25);
+  border-radius: var(--rs-radius-4);
 }
 
 .avatar-size-10 {
-  width: var(--space-14, 72px);
-  height: var(--space-14, 72px);
-  --fallback-font-size: calc(var(--space-14, 72px) * 0.25);
-  border-radius: var(--radius-5);
+  width: var(--rs-space-14, 72px);
+  height: var(--rs-space-14, 72px);
+  --fallback-font-size: calc(var(--rs-space-14, 72px) * 0.25);
+  border-radius: var(--rs-radius-5);
 }
 
 .avatar-size-11 {
-  width: var(--space-15, 80px);
-  height: var(--space-15, 80px);
-  --fallback-font-size: calc(var(--space-15, 80px) * 0.25);
-  border-radius: var(--radius-5);
+  width: var(--rs-space-15, 80px);
+  height: var(--rs-space-15, 80px);
+  --fallback-font-size: calc(var(--rs-space-15, 80px) * 0.25);
+  border-radius: var(--rs-radius-5);
 }
 
 .avatar-size-12 {
-  width: var(--space-16, 96px);
-  height: var(--space-16, 96px);
-  --fallback-font-size: calc(var(--space-17, 120px) * 0.2);
-  border-radius: var(--radius-5);
+  width: var(--rs-space-16, 96px);
+  height: var(--rs-space-16, 96px);
+  --fallback-font-size: calc(var(--rs-space-16, 96px) * 0.2);
+  border-radius: var(--rs-radius-5);
 }
 
 .avatar-size-13 {
-  width: var(--space-17, 120px);
-  height: var(--space-17, 120px);
-  --fallback-font-size: calc(var(--space-17, 120px) * 0.2);
-  border-radius: var(--radius-5);
+  width: var(--rs-space-17, 120px);
+  height: var(--rs-space-17, 120px);
+  --fallback-font-size: calc(var(--rs-space-17, 120px) * 0.2);
+  border-radius: var(--rs-radius-5);
 }
 
 .avatarGroup {
@@ -218,6 +210,6 @@
 }
 
 .avatarGroup .avatar {
-  border: 1px solid var(--background-base, white);
+  border: 1px solid var(--rs-background-base-primary);
   box-sizing: content-box;
 }
