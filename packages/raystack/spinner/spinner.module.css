@@ -16,7 +16,6 @@
   opacity: 0.2;
 }
 
-/* Adjust the positioning and rotation of poles */
 .pole:nth-child(1) { transform: rotate(0deg); }
 .pole:nth-child(2) { transform: rotate(45deg); }
 .pole:nth-child(3) { transform: rotate(90deg); }
