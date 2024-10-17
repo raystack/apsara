@@ -12,9 +12,6 @@ const spinner = cva(styles.spinner, {
       4: styles["spinner-size-4"],
       5: styles["spinner-size-5"],
       6: styles["spinner-size-6"],
-      7: styles["spinner-size-7"],
-      8: styles["spinner-size-8"],
-      9: styles["spinner-size-9"],
     },
   },
   defaultVariants: {
@@ -25,7 +22,7 @@ const spinner = cva(styles.spinner, {
 export interface SpinnerProps
   extends ComponentPropsWithoutRef<"div">,
     VariantProps<typeof spinner> {
-  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  size?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 export const Spinner = forwardRef<ElementRef<"div">, SpinnerProps>(
