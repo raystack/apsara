@@ -36,6 +36,8 @@ interface ITableProps {
     isLoading?: boolean;
     height?: string;
     enableRowSelection?: boolean;
+    initialPageSize?: number;
+    initialPageIndex?: number;
 }
 
 function Table({
@@ -54,6 +56,8 @@ function Table({
     alternate = false,
     alternateHover = false,
     enableRowSelection = false,
+    initialPageIndex = 1,
+    initialPageSize = 100,
 }: ITableProps) {
     const columns: any[] = [];
     const columnHelper = createColumnHelper();
@@ -69,8 +73,8 @@ function Table({
 
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [{ pageIndex, pageSize }, setPagination] = React.useState<PaginationState>({
-        pageIndex: 1,
-        pageSize: 100,
+        pageIndex: initialPageIndex,
+        pageSize: initialPageSize,
     });
 
     const fetchDataOptions = {
