@@ -1,9 +1,9 @@
 import { ThemeProvider } from "@raystack/apsara";
-import "@raystack/apsara/index.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import type { AppProps } from "next/app";
 import { Inter, Roboto_Mono } from "next/font/google";
 import { Navbar } from "~/components/Navbar";
+import "@raystack/apsara/index.css";
 import "~/styles/styles.css";
 
 const inter = Inter({
@@ -18,7 +18,7 @@ const roboto = Roboto_Mono({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider>
+    <ThemeProvider accentColor="indigo">
       <main className={`${inter.className} ${roboto.variable}`}>
         <Navbar />
         <div style={{ width: "100%" }}>

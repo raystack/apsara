@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --rs-font-inter: 'Inter', sans-serif;
+  --rs-font-lora: 'Lora', serif;
+  --rs-font-josephin-sans: 'Josefin Sans', sans-serif;
+
+  --rs-font-title: var(--rs-font-inter);
+  --rs-font-body: var(--rs-font-inter);
+}
+
+[data-style="modern"] {
+  --rs-font-title: var(--rs-font-inter);
+  --rs-font-body: var(--rs-font-inter);
+}
+
+[data-style="traditional"] {
+  --rs-font-title: var(--rs-font-lora);
+  --rs-font-body: var(--rs-font-josephin-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--rs-font-title);
+}
+
+body, p, div, span {
+  font-family: var(--rs-font-body);
+}

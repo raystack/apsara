@@ -71,6 +71,14 @@
   --space-16: 96px;
   --space-17: 120px;
 
+  --radius-1: 2px;
+  --radius-2: 4px;
+  --radius-3: 6px;
+  --radius-4: 8px;
+  --radius-5: 12px;
+  --radius-6: 16px;
+  --radius-full: 800px;
+    
   --pd-2: 2px;
   --pd-4: 4px;
   --pd-6: 6px;

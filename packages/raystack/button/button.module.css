@@ -6,40 +6,38 @@
   border: none;
   cursor: pointer;
   font-family: inherit;
-  font-size: var(--fs-100);
+  font-size: var(--fs-200);
   font-weight: 500;
-  line-height: var(--fs-600);
   width: fit-content;
   transition: background-color var(--transition);
-  padding: var(--pd-4) var(--pd-12);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--br-4);
 }
 
-.button:before {
-  box-sizing: border-box;
-}
-
+.button:before,
 .button:after {
   box-sizing: border-box;
 }
 
-.button:disabled {
-  opacity: 0.6;
-  pointer-events: none;
+.button:disabled,
+.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover,
+.button-disabled:hover {
+  color: inherit;
 }
 
 .button-small {
-  padding: var(--pd-4) var(--pd-8);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-100);
 }
 
-.button-medium {
-  padding-top: var(--pd-8);
-  padding-bottom: var(--pd-8);
-}
-
-.button-large {
-  padding-top: var(--pd-12);
-  padding-bottom: var(--pd-12);
+.button-normal {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-200);
 }
 
 .button-round {
@@ -51,67 +49,255 @@
 }
 
 .button-primary {
-  color: var(--ascent-contrast);
-  background-color: var(--background-accent-inverted);
+  color: var(--rs-foreground-accent-emphasis);
+  background-color: var(--rs-background-accent-emphasis);
 }
 
 .button-primary:hover,
 .button-primary:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent-inverted-hover);
+  background-color: var(--rs-background-accent-emphasis-hover);
 }
 
-.button-outline {
-  color: var(--foreground-accent);
-  background-color: var(--background-base);
-  outline: 1px solid var(--border-accent-inverted);
+.button-primary.button-disabled:hover,
+.button-primary.button-disabled:active,
+.button-primary[data-radix-popover-trigger][data-state="open"],
+.button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--rs-foreground-accent-emphasis);
+  background-color: var(--rs-background-accent-emphasis);
 }
 
-.button-outline:hover,
-.button-outline:active,
-.button-outline[data-radix-popover-trigger][data-state="open"],
-.button-outline[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-accent);
-  outline: 1px solid var(--border-accent-inverted-hover);
+.button-primary.button-loading:hover,
+.button-primary.button-loading:active,
+.button-primary.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-primary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-accent-emphasis);
 }
 
 .button-secondary {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
-  outline: 1px solid var(--border-base);
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
+  border: 1px solid var(--rs-border-base-primary);
 }
 
 .button-secondary:hover,
 .button-secondary:active,
 .button-secondary[data-radix-popover-trigger][data-state="open"],
 .button-secondary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base-hover);
-  outline: 1px solid var(--border-base-hover);
+  background-color: var(--rs-background-base-primary-hover);
+  border-color: var(--rs-border-base-focus);
+}
+
+.button-secondary:disabled,
+.button-secondary.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-secondary:disabled:hover,
+.button-secondary.button-disabled:hover {
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-outline {
+  background-color: transparent;
+  color: var(--rs-foreground-accent-primary);
+  border: 1px solid var(--rs-border-accent-primary);
+}
+
+.button-outline:hover {
+  background-color: var(--rs-background-accent-primary);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:active {
+  background-color: var(--rs-background-accent-emphasis);
+  color: var(--rs-foreground-accent-emphasis);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:disabled,
+.button-outline.button-disabled {
+  background-color: transparent;
+  color: var(--rs-foreground-base-tertiary);
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-outline:disabled:hover,
+.button-outline.button-disabled:hover {
+  background-color: transparent;
+  color: var(--rs-foreground-base-tertiary);
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-outline.button-loading:hover,
+.button-outline.button-loading:active,
+.button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-base-primary);
+  outline: 1px solid var(--rs-background-accent-emphasis-hover);
 }
 
 .button-ghost {
-  color: var(--foreground-base);
-  background-color: var(--background-base);
-  outline: 1px dashed var(--border-base);
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+  border: 1px dashed var(--rs-border-base-primary);
 }
 
 .button-ghost:hover,
 .button-ghost:active,
 .button-ghost[data-radix-popover-trigger][data-state="open"],
 .button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-base-hover);
-  outline: 1px dashed var(--border-base-hover);
+  background-color: var(--rs-background-base-primary-hover);
+  border-color: var(--rs-border-base-focus);
+}
+
+.button-ghost:disabled,
+.button-ghost.button-disabled {
+  color: var(--rs-foreground-base-tertiary);
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-ghost:disabled:hover,
+.button-ghost.button-disabled:hover {
+  color: var(--rs-foreground-base-tertiary);
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
 }
 
 .button-danger {
-  color: var(--ascent-contrast);
-  background-color: var(--background-danger-inverted);
+  color: var(--rs-foreground-danger-emphasis);
+  background-color: var(--rs-background-danger-emphasis);
 }
 
 .button-danger:hover,
 .button-danger:active,
 .button-danger[data-radix-popover-trigger][data-state="open"],
 .button-danger[data-radix-dropdown-menu-trigger][data-state="open"] {
-  background-color: var(--background-danger-inverted-hover);
+  background-color: var(--rs-background-danger-emphasis-hover);
+}
+
+.button-danger:disabled,
+.button-danger.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-danger:disabled:hover,
+.button-danger.button-disabled:hover {
+  color: var(--rs-foreground-danger-emphasis);
+  background-color: var(--rs-background-danger-emphasis);
+}
+
+.button-text {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+}
+
+.button-text:hover,
+.button-text:active,
+.button-text[data-radix-popover-trigger][data-state="open"],
+.button-text[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-base-primary-hover);
+}
+
+.button-text:disabled,
+.button-text.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-text:disabled:hover,
+.button-text.button-disabled:hover {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+}
+
+.button-loading {
+  display: flex;
+  align-items: center;
+}
+
+.button-loading:hover,
+.button-loading:active,
+.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: inherit;
+  cursor: not-allowed;
+}
+
+.button-secondary.button-loading:hover,
+.button-secondary.button-loading:active,
+.button-secondary.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-secondary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--background-base);
+  outline: 1px solid var(--border-base);
+}
+
+.button-ghost.button-loading:hover,
+.button-ghost.button-loading:active,
+.button-ghost.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-ghost.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--background-base);
+  outline: 1px dashed var(--border-base);
+}
+
+.button-danger.button-loading:hover,
+.button-danger.button-loading:active,
+.button-danger.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-danger.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--background-danger-inverted);
+}
+
+.button-text.button-loading:hover,
+.button-text.button-loading:active,
+.button-text.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-text.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--background-base);
+}
+
+/* TODO: Replace this after Spinner component is built. */
+.loader {
+  border: 2px solid var(--background-base);
+  border-top: 2px solid var(--foreground-base);
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: spin 1s linear infinite;
+}
+
+.loader-text {
+  margin-left: var(--space-3);
+}
+
+/* TODO: Replace this after Spinner component is built. */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-only-button-small {
+  padding: var(--space-2) var(--space-6);
+}
+
+.loader-only-button-normal {
+  padding: var(--space-3) var(--space-8);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-leading {
+  margin-right: var(--space-3);
+}
+
+.icon-trailing {
+  margin-left: var(--space-3);  
 }
