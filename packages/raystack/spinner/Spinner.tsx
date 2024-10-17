@@ -40,7 +40,6 @@ export const Spinner = forwardRef<ElementRef<"div">, SpinnerProps>(
       {[...Array(8)].map((_, index) => (
         <div key={index} className={styles.pole} />
       ))}
-      <span className={styles.visuallyHidden}>Loading...</span>
     </div>
   )
 );
