@@ -1,0 +1,81 @@
+---
+title: Spinner
+description: A visual indicator of a loading or processing state.
+---
+
+## Preview
+
+<Preview>
+  <Flex
+    style={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "8px",
+    }}
+  >
+    <Spinner size={3} />
+  </Flex>
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+    <LiveEditor code={`npm install @raystack/apsara`} border/>
+</LiveProvider>
+
+## Anatomy
+
+Import and usage.
+
+<LiveProvider>
+    <LiveEditor code={`
+import { Spinner } from '@raystack/apsara'
+
+<Spinner size={3} />
+`} border />
+</LiveProvider>
+
+## Size
+
+The Spinner component offers different size options. You can customize the size of the spinner using the `size` prop. The available size options are:
+
+<Playground
+    scope={{ Spinner }}
+    tabs={[
+        {
+            name: "Size 1",
+            code: `<Spinner size={1} />`,
+        },
+        {
+            name: "Size 2",
+            code: `<Spinner size={2} />`,
+        },
+        {
+            name: "Size 3",
+            code: `<Spinner size={3} />`,
+        },
+        {
+            name: "Size 4",
+            code: `<Spinner size={4} />`,
+        },
+        {
+            name: "Size 5",
+            code: `<Spinner size={5} />`,
+        },
+        {
+            name: "Size 6",
+            code: `<Spinner size={6} />`,
+        },
+    ]}
+/>
+
+## Accessibility
+
+The Spinner component includes appropriate ARIA attributes for accessibility:
+
+- `role="status"`: Indicates that the element is a status indicator.
+- `aria-hidden="true"`: Hides the spinner from screen readers, as it's a visual indicator only.
+
+
