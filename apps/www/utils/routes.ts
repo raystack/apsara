@@ -36,6 +36,7 @@ export const primitivesRoutes = [
       { title: "Select", slug: "docs/primitives/components/select" },
       { title: "Seprator", slug: "docs/primitives/components/separator" },
       { title: "Sheet", slug: "docs/primitives/components/sheet" },
+      { title: "Spinner", slug: "docs/primitives/components/spinner" },
       { title: "Switch", slug: "docs/primitives/components/switch" },
       { title: "Tabs", slug: "docs/primitives/components/tabs" },
       { title: "Table", slug: "docs/primitives/components/table" },
