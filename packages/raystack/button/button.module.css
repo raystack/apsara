@@ -10,7 +10,7 @@
   font-weight: 500;
   width: fit-content;
   transition: background-color var(--transition);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--rs-space-3) var(--rs-space-4);
   border-radius: var(--br-4);
 }
 
@@ -31,12 +31,12 @@
 }
 
 .button-small {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--rs-space-2) var(--rs-space-3);
   font-size: var(--fs-100);
 }
 
 .button-normal {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--rs-space-3) var(--rs-space-4);
   font-size: var(--fs-200);
 }
 
@@ -271,7 +271,7 @@
 }
 
 .loader-text {
-  margin-left: var(--space-3);
+  margin-left: var(--rs-space-3);
 }
 
 /* TODO: Replace this after Spinner component is built. */
@@ -281,11 +281,11 @@
 }
 
 .loader-only-button-small {
-  padding: var(--space-2) var(--space-6);
+  padding: var(--rs-space-2) var(--rs-space-6);
 }
 
 .loader-only-button-normal {
-  padding: var(--space-3) var(--space-8);
+  padding: var(--rs-space-3) var(--rs-space-8);
 }
 
 .icon {
@@ -295,9 +295,9 @@
 }
 
 .icon-leading {
-  margin-right: var(--space-3);
+  margin-right: var(--rs-space-3);
 }
 
 .icon-trailing {
-  margin-left: var(--space-3);  
+  margin-left: var(--rs-space-3);  
 }
