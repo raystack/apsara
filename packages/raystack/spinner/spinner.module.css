@@ -9,7 +9,7 @@
   position: absolute;
   width: 12%;
   height: 30%;
-  background-color: var(--foreground-base);
+  background-color: var(--rs-foreground-base-secondary);
   border-radius: var(--rs-radius-full);
   animation: spin 1.2s linear infinite;
   transform-origin: center 150%;
