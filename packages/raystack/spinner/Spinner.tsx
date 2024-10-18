@@ -13,9 +13,14 @@ const spinner = cva(styles.spinner, {
       5: styles["spinner-size-5"],
       6: styles["spinner-size-6"],
     },
+    color: {
+      default: styles["spinner-color-default"],
+      inverted: styles["spinner-color-inverted"],
+    }
   },
   defaultVariants: {
     size: 1,
+    color: "default",
   },
 });
 
@@ -23,13 +28,14 @@ export interface SpinnerProps
   extends ComponentPropsWithoutRef<"div">,
     VariantProps<typeof spinner> {
   size?: 1 | 2 | 3 | 4 | 5 | 6;
+  color?: "default" | "inverted";
 }
 
 export const Spinner = forwardRef<ElementRef<"div">, SpinnerProps>(
-  ({ className, size, ...props }, ref) => (
+  ({ className, size, color, ...props }, ref) => (
     <div
       ref={ref}
-      className={spinner({ size, className })}
+      className={spinner({ size, color, className })}
       role="status"
       aria-hidden="true"
       {...props}
@@ -42,4 +48,3 @@ export const Spinner = forwardRef<ElementRef<"div">, SpinnerProps>(
 );
 
 Spinner.displayName = 'Spinner';
-
