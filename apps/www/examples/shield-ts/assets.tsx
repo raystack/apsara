@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { PlusIcon, BlendingModeIcon } from "@radix-ui/react-icons";
+import { PlusIcon, BlendingModeIcon, HomeIcon } from "@radix-ui/react-icons";
 import {
   ApsaraColumnDef,
   Button,
@@ -9,6 +9,7 @@ import {
   Flex,
   Text,
   useTable,
+  Breadcrumb
 } from "@raystack/apsara";
 
 import { getData, Payment } from "./data";
@@ -139,6 +140,12 @@ export const Assets = () => {
 const AssetsHeader = () => {
   const { filteredColumns } = useTable();
   const isFiltered = filteredColumns.length > 0;
+  const items = [
+    { label: 'Home', href: '/', icon: <HomeIcon /> },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' },
+  ];
   return (
     <Flex
       align="center"
@@ -148,6 +155,15 @@ const AssetsHeader = () => {
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
         <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button>
+        <Breadcrumb
+        items={items}
+        size="large"
+        maxVisibleItems={3}
+        useDropdown={true}
+        dropdownThreshold={4}
+        separator=">"
+        onItemClick={(item) => console.log('Clicked:', item)}
+      />
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
