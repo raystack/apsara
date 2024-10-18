@@ -148,7 +148,7 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Spinner size={2} />
+        <Button variant="danger" loading>Button</Button>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

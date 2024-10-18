@@ -64,3 +64,11 @@
   width: var(--rs-space-9);
   height: var(--rs-space-9);
 }
+
+.spinner-color-default .pole {
+  background-color: var(--rs-foreground-base-secondary);
+}
+
+.spinner-color-inverted .pole {
+  background-color: var(--rs-foreground-accent-emphasis);
+}
