@@ -156,7 +156,8 @@ const AssetsHeader = () => {
         <Text style={{ fontWeight: 500 }}>Assets</Text>
         <Breadcrumb
         items={items}
-        maxVisibleItems={3}
+        maxVisibleItems={2}
+        size="small"
         onItemClick={(item) => console.log('Clicked:', item)}
       />
       </Flex>

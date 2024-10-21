@@ -4,11 +4,11 @@
 }
 
 .breadcrumb-small {
-  font-size: var(--rs-font-size-100);
+  font-size: 12px;
 }
 
-.breadcrumb-large {
-  font-size: var(--rs-font-size-200);
+.breadcrumb-medium {
+  font-size: 14px;
 }
 
 .breadcrumb-list {
@@ -27,18 +27,18 @@
 .breadcrumb-link {
   display: flex;
   align-items: center;
-  color: var(--rs-color-foreground-secondary);
+  color: var(--rs-foreground-base-tertiary);
   text-decoration: none;
-  transition: color var(--rs-transition-duration) var(--rs-transition-timing-function);
 }
 
 .breadcrumb-link:hover {
-  color: var(--rs-color-foreground-primary);
+  color: var(--rs-color-foreground-secondary);
 }
 
 .breadcrumb-link-active {
   color: var(--rs-color-foreground-primary);
   font-weight: 600;
+  pointer-events: none;
 }
 
 .breadcrumb-icon {
@@ -48,11 +48,19 @@
 }
 
 .breadcrumb-separator {
-  margin: 0 var(--rs-space-2);
-  color: var(--rs-color-foreground-tertiary);
+  margin: 0 var(--rs-space-3);
+  color: var(--rs-foreground-base-tertiary);
 }
 
 .breadcrumb-ellipsis {
-  margin: 0 var(--rs-space-2);
-  color: var(--rs-color-foreground-tertiary);
+  display: flex;
+  align-items: center;
+  color: var(--rs-foreground-base-tertiary);
+  margin: 0 var(--rs-space-1);
+}
+
+.breadcrumb-ellipsis svg {
+  width: 16px;
+  height: 16px;
+  color: var(--rs-foreground-base-tertiary);
 }
