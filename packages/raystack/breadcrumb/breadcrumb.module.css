@@ -60,7 +60,7 @@
 }
 
 .breadcrumb-ellipsis svg {
-  width: 16px;
-  height: 16px;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
   color: var(--rs-foreground-base-tertiary);
 }
