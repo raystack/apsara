@@ -1,6 +1,7 @@
 import React, { forwardRef, PropsWithChildren } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import { DropdownMenu } from "~/dropdown-menu";
 
 import styles from "./breadcrumb.module.css";
 
@@ -8,6 +9,7 @@ interface BreadcrumbItem {
   label: string;
   href: string;
   icon?: React.ReactNode;
+  dropdownItems?: Array<{ label: string; href: string }>;
 }
 
 const breadcrumb = cva(styles['breadcrumb'], {
@@ -55,6 +57,28 @@ export const Breadcrumb = forwardRef<HTMLDivElement, BreadcrumbProps>(
           <span className={styles['breadcrumb-ellipsis']}>
             <DotsHorizontalIcon />
           </span>
+        ) : item?.dropdownItems ? (
+          <DropdownMenu>
+            <DropdownMenu.Trigger className={styles['breadcrumb-dropdown-trigger']}>
+              {item.icon && <span className={styles['breadcrumb-icon']}>{item.icon}</span>}
+              <span>{item.label}</span>
+              <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content className={styles['breadcrumb-dropdown-content']}>
+              {item.dropdownItems.map((dropdownItem, dropdownIndex) => (
+                <DropdownMenu.Item 
+                  key={dropdownIndex}
+                  className={styles['breadcrumb-dropdown-item']}
+                  onSelect={() => onItemClick && onItemClick({ 
+                    label: dropdownItem.label, 
+                    href: dropdownItem.href 
+                  })}
+                >
+                  {dropdownItem.label}
+                </DropdownMenu.Item>
+              ))}
+            </DropdownMenu.Content>
+          </DropdownMenu>
         ) : (
           <a 
             href={item.href}

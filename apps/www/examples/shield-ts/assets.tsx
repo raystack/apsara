@@ -143,9 +143,18 @@ const AssetsHeader = () => {
   const items = [
     { label: 'Home', href: '/', icon: <HomeIcon /> },
     { label: 'Category', href: '/category' },
-    { label: 'Subcategory', href: '/category/subcategory' },
+    { 
+      label: 'Subcategory', 
+      href: '/category/subcategory',
+      dropdownItems: [
+        { label: 'Option 1', href: '/category/subcategory/option1' },
+        { label: 'Option 2', href: '/category/subcategory/option2' },
+        { label: 'Option 3', href: '/category/subcategory/option3' },
+      ]
+    },
     { label: 'Current Page', href: '/category/subcategory/current' },
   ];
+
   return (
     <Flex
       align="center"
@@ -155,11 +164,11 @@ const AssetsHeader = () => {
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
         <Breadcrumb
-        items={items}
-        maxVisibleItems={2}
-        size="small"
-        onItemClick={(item) => console.log('Clicked:', item)}
-      />
+          items={items}
+          maxVisibleItems={2}
+          size="small"
+          onItemClick={(item) => console.log('Clicked:', item)}
+        />
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
