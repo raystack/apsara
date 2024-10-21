@@ -27,17 +27,17 @@
 .breadcrumb-link {
   display: flex;
   align-items: center;
-  color: var(--rs-foreground-base-secondary);
+  color: var(--rs-color-foreground-secondary);
   text-decoration: none;
   transition: color var(--rs-transition-duration) var(--rs-transition-timing-function);
 }
 
 .breadcrumb-link:hover {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-foreground-primary);
 }
 
 .breadcrumb-link-active {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-foreground-primary);
   font-weight: 600;
 }
 
@@ -49,10 +49,10 @@
 
 .breadcrumb-separator {
   margin: 0 var(--rs-space-2);
-  color: var(--rs-foreground-base-tertiary);
+  color: var(--rs-color-foreground-tertiary);
 }
 
 .breadcrumb-ellipsis {
   margin: 0 var(--rs-space-2);
-  color: var(--rs-foreground-base-tertiary);
+  color: var(--rs-color-foreground-tertiary);
 }

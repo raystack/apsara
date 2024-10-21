@@ -154,14 +154,9 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button>
         <Breadcrumb
         items={items}
-        size="large"
         maxVisibleItems={3}
-        useDropdown={true}
-        dropdownThreshold={4}
-        separator=">"
         onItemClick={(item) => console.log('Clicked:', item)}
       />
       </Flex>
