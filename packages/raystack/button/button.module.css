@@ -274,12 +274,6 @@
   margin-left: var(--rs-space-3);
 }
 
-/* TODO: Replace this after Spinner component is built. */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .loader-only-button-small {
   padding: var(--rs-space-2) var(--rs-space-6);
 }
