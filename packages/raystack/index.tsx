@@ -34,6 +34,7 @@ export { Switch } from "./switch";
 export { Tooltip } from "./tooltip";
 export { ToggleGroup } from "./toggle-group";
 export { Calendar, DatePicker, RangePicker } from "./calendar";
+export { Spinner } from "./spinner";
 
 export {
   ApsaraAggregationFn,
