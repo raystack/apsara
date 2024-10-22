@@ -29,7 +29,6 @@
   align-items: center;
   color: var(--rs-foreground-base-secondary);
   text-decoration: none;
-  margin-right: var(--rs-space-3);
 }
 
 .breadcrumb-link:hover {
@@ -50,20 +49,19 @@
 
 .breadcrumb-separator {
   color: var(--rs-foreground-base-secondary);
-  margin-left: 0;
-  margin-right: var(--rs-space-3);
+  margin: 0 var(--rs-space-2);
 }
 
 .breadcrumb-ellipsis {
   display: flex;
   align-items: center;
   color: var(--rs-foreground-base-secondary);
-  margin: 0 var(--rs-space-1);
+  margin: 0 var(--rs-space-2);
 }
 
 .breadcrumb-ellipsis svg {
-  width: var(--rs-space-5);
-  height: var(--rs-space-5);
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
   color: var(--rs-foreground-base-secondary);
 }
 
@@ -78,14 +76,7 @@
   font-size: inherit;
   font-weight: inherit;
   outline: none;
-}
-
-.breadcrumb-dropdown-trigger:hover {
-  color: var(--rs-foreground-base-primary);
-}
-
-.breadcrumb-dropdown-trigger:focus {
-  box-shadow: none;
+  padding: 0;
 }
 
 .breadcrumb-dropdown-icon {

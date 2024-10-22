@@ -82,7 +82,7 @@ export const Breadcrumb = forwardRef<HTMLDivElement, BreadcrumbProps>(
         ) : (
           <a 
             href={item.href}
-            className={`${styles['breadcrumb-link']} ${isLast ? `${styles['breadcrumb-link-last']} ${styles['breadcrumb-link-active']}` : ''}`}
+            className={`${styles['breadcrumb-link']} ${isLast ? styles['breadcrumb-link-active'] : ''}`}
             onClick={(e) => {
               if (onItemClick && item.href !== '#') {
                 e.preventDefault();
