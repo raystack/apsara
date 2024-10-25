@@ -166,7 +166,7 @@ const AssetsHeader = () => {
         <Text style={{ fontWeight: 500 }}>Assets</Text>
         <Breadcrumb
           items={items}
-          maxVisibleItems={20}
+          maxVisibleItems={2}
           size="small"
           onItemClick={(item) => console.log('Clicked:', item)}
         />
