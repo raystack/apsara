@@ -216,10 +216,6 @@
   position: relative;
 }
 
-.avatarWrapper:hover {
-  z-index: 2;
-}
-
 .avatarWrapper:last-child {
   z-index: 1;
 }
