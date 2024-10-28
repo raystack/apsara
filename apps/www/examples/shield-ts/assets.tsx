@@ -155,21 +155,21 @@ const AssetsHeader = () => {
           <Avatar
             radius="full"
             variant="solid"
-            size={4}
+            size={3}
             color="orange"
             fallback={<>GS</>}
           />
           <Avatar
             radius="full"
             variant="solid"
-            size={4}
+            size={3}
             color="mint"
             fallback={<>RK</>}
           />
           <Avatar
             radius="full"
             variant="solid"
-            size={4}
+            size={3}
             color="orange"
             fallback={<>RK</>}
           />

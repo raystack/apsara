@@ -8,9 +8,9 @@
   border-radius: var(--br-round);   
   background-color: var(--rs-background-neutral-secondary);
   color: var(--rs-foreground-base-primary);
-  width: var(--avatar-size, var(--rs-space-9, 32px));
-  height: var(--avatar-size, var(--rs-space-9, 32px));
-  --fallback-font-size: calc(var(--avatar-size, var(--rs-space-9, 32px)) * 0.4);
+  width: var(--rs-space-9, 32px);
+  height: var(--rs-space-9, 32px);
+  --fallback-font-size: calc(var(--rs-space-9, 32px)) * 0.4;
 }
 
 .avatar-full {
@@ -205,7 +205,7 @@
 }
 
 .avatarWrapper {
-  margin-left: -1.2em;
+  margin-left: calc(-0.5 * var(--avatar-overlap, 1.2em));
 }
 
 .avatarWrapper:first-child {
@@ -223,4 +223,56 @@
 .avatarGroup .avatar {
   border: 1px solid var(--rs-background-base-primary);
   box-sizing: content-box;
+}
+
+.avatar-size-1 .avatarWrapper {
+  --avatar-overlap: 0.8em;
+}
+
+.avatar-size-2 .avatarWrapper {
+  --avatar-overlap: 0.9em;
+}
+
+.avatar-size-3 .avatarWrapper {
+  --avatar-overlap: 1em;
+}
+
+.avatar-size-4 .avatarWrapper {
+  --avatar-overlap: 1.1em;
+}
+
+.avatar-size-5 .avatarWrapper {
+  --avatar-overlap: 1.2em;
+}
+
+.avatar-size-6 .avatarWrapper {
+  --avatar-overlap: 1.3em;
+}
+
+.avatar-size-7 .avatarWrapper {
+  --avatar-overlap: 1.4em;
+}
+
+.avatar-size-8 .avatarWrapper {
+  --avatar-overlap: 1.5em;
+}
+
+.avatar-size-9 .avatarWrapper {
+  --avatar-overlap: 1.6em;
+}
+
+.avatar-size-10 .avatarWrapper {
+  --avatar-overlap: 1.7em;
+}
+
+.avatar-size-11 .avatarWrapper {
+  --avatar-overlap: 1.8em;
+}
+
+.avatar-size-12 .avatarWrapper {
+  --avatar-overlap: 1.9em;
+}
+
+.avatar-size-13 .avatarWrapper {
+  --avatar-overlap: 2em;
 }
