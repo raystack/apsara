@@ -1,6 +1,7 @@
 import { ButtonHTMLAttributes, forwardRef, PropsWithChildren, ReactNode } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { Spinner } from "~/spinner";
 
 import styles from "./button.module.css";
 
@@ -46,6 +47,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isLoaderOnly = loading && !loaderText;
     const widthStyle = width ? { width } : {};
 
+    const spinnerColor = variant === 'primary' || variant === 'danger' ? 'inverted' : 'default';
+
     return (
       <Comp
         className={`${button({ variant, size, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
@@ -56,8 +59,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading ? (
           <>
-            {/* TODO: Replace this after Spinner component is built. */}
-            <span className={styles['loader']}></span>
+            <Spinner size={1} color={spinnerColor} />
             {loaderText && <span className={styles['loader-text']}>{loaderText}</span>}
           </>
         ) : (
