@@ -42,6 +42,7 @@ const avatar = cva(styles.avatar, {
       indigo: styles["avatar-color-indigo"],
       orange: styles["avatar-color-orange"],
       mint: styles["avatar-color-mint"],
+      neutral: styles["avatar-color-neutral"],
     },
   },
   compoundVariants: [
@@ -70,7 +71,7 @@ export interface AvatarProps
   alt?: string;
   fallback?: ReactNode;
   variant?: "solid" | "soft";
-  color?: "indigo" | "orange" | "mint";
+  color?: "indigo" | "orange" | "mint" | "neutral";
   asChild?: boolean;
 }
 
@@ -128,12 +129,12 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
           </div>
         ))}
         {count > 0 && (
-        <div className={styles.avatarWrapper}>
+          <div className={styles.avatarWrapper}>
             <Avatar
               size={avatars[0].props.size}
               radius={avatars[0].props.radius}
-              variant="solid"
-              className={styles.avatarGroupCount}
+              variant={avatars[0].props.variant}
+              color='neutral'
               fallback={<span>+{count}</span>}
             />
           </div>

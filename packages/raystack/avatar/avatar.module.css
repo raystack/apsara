@@ -66,6 +66,21 @@
   color: var(--rs-foreground-success-primary);
 }
 
+.avatar-color-neutral {
+  --avatar-hue: var(--rs-background-neutral-emphasis);
+  --avatar-color: var(--rs-foreground-base-emphasis);
+}
+
+.avatar-solid-neutral {
+  background-color: var(--avatar-hue);
+  color: var(--rs-foreground-base-emphasis);
+}
+
+.avatar-soft-neutral {
+  background-color: var(--rs-background-neutral-secondary);
+  color: var(--rs-foreground-base-secondary);
+}
+
 .imageWrapper {
   position: relative;  
   height: fit-content;
