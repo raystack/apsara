@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { PlusIcon, BlendingModeIcon } from "@radix-ui/react-icons";
+import { PlusIcon, BlendingModeIcon, HomeIcon } from "@radix-ui/react-icons";
 import {
   ApsaraColumnDef,
   Button,
@@ -10,6 +10,7 @@ import {
   Spinner,
   Text,
   useTable,
+  Breadcrumb
 } from "@raystack/apsara";
 
 import { getData, Payment } from "./data";
@@ -140,6 +141,21 @@ export const Assets = () => {
 const AssetsHeader = () => {
   const { filteredColumns } = useTable();
   const isFiltered = filteredColumns.length > 0;
+  const items = [
+    { label: 'Home', href: '/', icon: <HomeIcon /> },
+    { label: 'Category', href: '/category' },
+    { 
+      label: 'Subcategory', 
+      href: '/category/subcategory',
+      dropdownItems: [
+        { label: 'Option 1', href: '/category/subcategory/option1' },
+        { label: 'Option 2', href: '/category/subcategory/option2' },
+        { label: 'Option 3', href: '/category/subcategory/option3' },
+      ]
+    },
+    { label: 'Current Page', href: '/category/subcategory/current' },
+  ];
+
   return (
     <Flex
       align="center"
@@ -148,7 +164,12 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Button variant="danger" loading>Button</Button>
+        <Breadcrumb
+          items={items}
+          maxVisibleItems={2}
+          size="small"
+          onItemClick={(item) => console.log('Clicked:', item)}
+        />
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
