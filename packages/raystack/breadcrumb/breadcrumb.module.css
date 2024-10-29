@@ -58,7 +58,7 @@
   display: flex;
   align-items: center;
   color: var(--rs-foreground-base-secondary);
-  margin: 0 var(--rs-space-2);
+  margin: 0 var(--rs-space-3) 0 var(--rs-space-2);
 }
 
 .breadcrumb-ellipsis svg {
