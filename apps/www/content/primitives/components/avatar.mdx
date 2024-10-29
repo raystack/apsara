@@ -30,6 +30,18 @@ Install the component from your command line.
     <LiveEditor code={`npm install @raystack/apsara`} border language="shell"/>
 </LiveProvider>
 
+## Props
+
+The `Avatar` component accepts the following props:
+
+- `size`: Specifies the size of the avatar. Available sizes are 1 to 13.
+- `src`: The source URL of the image.
+- `alt`: Alternative text for the image.
+- `fallback`: Content to display when the image is not available.
+- `variant`: The style variant of the avatar. Options are `"solid"` and `"soft"`.
+- `color`: The color theme of the avatar. Options include `"indigo"`, `"orange"`, `"mint"`, `"neutral"`, `"sky"`, `"lime"`, `"grass"`, `"cyan"`, `"iris"`, `"purple"`, `"pink"`, `"crimson"`, and `"gold"`.
+- `radius`: The border radius of the avatar. Options are `"small"` and `"full"`.
+
 ## Size
 
 The Avatar component supports various sizes for displaying user profile pictures or images. 
@@ -81,14 +93,13 @@ By specifying different size options, you can customize the visual representatio
     ]}
 />
 
-## shape
+## Shape
 
 Avatar component offers various shapes for displaying user profile pictures or images. By choosing different shape options, you can enhance the visual appearance of the avatars based on your design preferences.
 
 <Playground
     scope={{ Avatar }}
     tabs={[
-        
         {
             name: "Square",
             code: `
