@@ -101,6 +101,7 @@ export interface AvatarProps
   color?: "indigo" | "orange" | "mint" | "neutral" | 
          "sky" | "lime" | "grass" | "cyan" | "iris" | "purple" | "pink" | "crimson" | "gold";
   asChild?: boolean;
+  className?: string;
 }
 
 const AvatarRoot = forwardRef<
@@ -114,7 +115,7 @@ const AvatarRoot = forwardRef<
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
-        className={avatar({ size, radius, variant, color, className })}
+        className={clsx(avatar({ size, radius, variant, color }), className)}
         asChild={asChild}
         {...props}
       >
