@@ -5,7 +5,7 @@
   overflow: hidden; 
   position: relative; 
   border: none;
-  border-radius: var(--br-round);   
+  border-radius: var(--rs-radius-full);
   background-color: var(--rs-background-neutral-secondary);
   color: var(--rs-foreground-base-primary);
   width: var(--rs-space-9, 32px);
@@ -15,7 +15,7 @@
 }
 
 .avatar-full {
-  border-radius: var(--br-round) !important;
+  border-radius: var(--rs-radius-full) !important;
 }
 
 .avatar-disabled {

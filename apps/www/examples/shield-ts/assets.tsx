@@ -151,7 +151,7 @@ const AssetsHeader = () => {
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
         <Button variant="primary" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button>
-        {/* <AvatarGroup max={2}> */}
+        <AvatarGroup max={3}>
           <Avatar
             radius="full"
             variant="solid"
@@ -159,21 +159,21 @@ const AssetsHeader = () => {
             color="iris"
             fallback={<>GS</>}
           />
-          {/* <Avatar
+          <Avatar
             radius="full"
             variant="solid"
-            size={3}
+            size={6}
             color="mint"
             fallback={<>RK</>}
           />
           <Avatar
             radius="full"
             variant="solid"
-            size={3}
+            size={6}
             color="orange"
             fallback={<>RK</>}
           />
-        </AvatarGroup> */}
+        </AvatarGroup>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
