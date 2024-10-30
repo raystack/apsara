@@ -8,3 +8,15 @@
 .content > :last-child {
   margin-bottom: 100px;
 }
+
+.badge {
+  background-color: #007bff; 
+  color: #fff;
+  padding: 0px 6px;
+  margin-left: 8px;
+  border-radius: 3px;
+  font-size: 0.55em;
+  font-weight: bold;
+  display: inline-block;
+  vertical-align: middle;
+}

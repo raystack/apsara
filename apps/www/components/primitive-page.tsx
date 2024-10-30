@@ -150,6 +150,7 @@ const LeftSideBar = () => {
             >
               <NavItemTitle active={currentPageSlug === page.slug}>
                 {page.title}
+                {page.newBadge && <span className={styles.badge}>New</span>}
               </NavItemTitle>
             </NavItem>
           ))}
@@ -162,7 +163,10 @@ const LeftSideBar = () => {
               href={`/${page.slug}`}
               active={currentPageSlug === page.slug}
             >
-              {page.title}
+              <NavItemTitle active={currentPageSlug === page.slug}>
+                {page.title}
+                {page.newBadge && <span className={styles.badge}>New</span>}
+              </NavItemTitle>
             </NavItem>
           ))}
         </Box>
