@@ -10,11 +10,11 @@
 }
 
 .badge {
-  background-color: #007bff; 
-  color: #fff;
-  padding: 0px 6px;
-  margin-left: 8px;
-  border-radius: 3px;
+  background-color: var(--rs-accent-9); 
+  color: var(--rs-accent-contrast);
+  padding: var(--rs-space-1) var(--rs-space-3);
+  margin-left: var(--rs-space-2);
+  border-radius: var(--rs-radius-2);
   font-size: 0.55em;
   font-weight: bold;
   display: inline-block;
