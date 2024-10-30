@@ -12,7 +12,7 @@
 .badge {
   background-color: var(--rs-accent-9); 
   color: var(--rs-accent-contrast);
-  padding: var(--rs-space-1) var(--rs-space-3);
+  padding: 0 var(--rs-space-2);
   margin-left: var(--rs-space-2);
   border-radius: var(--rs-radius-2);
   font-size: 0.55em;
