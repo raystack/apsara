@@ -8,9 +8,9 @@ const ToastContainer = (props: ToastContainerProps) => {
 };
 
 const toast: typeof sonnerToast = Object.assign(
-  (message: string, options?: { icon?: React.ReactNode; }) => {
-    const { icon, ...restOptions } = options || {};
-    sonnerToast(message, { icon, ...restOptions });
+  (message: string, options?: { icon?: React.ReactNode; duration?: number; }) => {
+    const { icon, duration, ...restOptions } = options || {};
+    sonnerToast(message, { icon, duration, ...restOptions });
   },
   sonnerToast
 );
