@@ -119,13 +119,32 @@ export const Assets = () => {
   const showToast = (variant: string) => {
     switch (variant) {
       case "success":
-        toast.success("Data loaded successfully!");
-        break;
+        toast.success('Data loaded successfully!',
+        { duration: Infinity,
+          action: <Button size="small" onClick={() => console.log("Button clicked!")}>
+              Click Me
+            </Button>
+         }
+        );
+        break;  
       case "error":
-        toast.info("Error loading data!");
+        toast.info('Error loading data!',
+        { 
+          duration: Infinity,
+          action: <Button size="small" onClick={() => console.log("Button clicked!")}>Retry</Button>
+        }
+        );
         break;
       default:
-        toast("Default message");
+        toast(
+          <div>
+            Default message
+            <Button size="small" onClick={() => console.log("Button clicked!")}>
+              Action
+            </Button>
+          </div>,
+          { duration: Infinity }
+        );
     }
   };
 

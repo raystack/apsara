@@ -7,10 +7,22 @@ const ToastContainer = (props: ToastContainerProps) => {
   return <Toaster {...props} />;
 };
 
+interface ToastOptions {
+  icon?: React.ReactNode;
+  duration?: number;
+  action?: React.ReactNode;
+}
+
 const toast: typeof sonnerToast = Object.assign(
-  (message: string, options?: { icon?: React.ReactNode; duration?: number; }) => {
-    const { icon, duration, ...restOptions } = options || {};
-    sonnerToast(message, { icon, duration, ...restOptions });
+  (message: string | React.ReactNode, options?: ToastOptions) => {
+    const { icon, duration, action, ...restOptions } = options || {};
+    sonnerToast(
+      <div>
+        {message}
+        {action && <div style={{ marginTop: '8px' }}>{action}</div>}
+      </div>,
+      { icon, duration, ...restOptions }
+    );
   },
   sonnerToast
 );
