@@ -10,9 +10,10 @@ import {
   Spinner,
   Text,
   useTable,
-  Breadcrumb
+  Breadcrumb,
+  toast,
+  ToastContainer
 } from "@raystack/apsara";
-
 import { getData, Payment } from "./data";
 const TOTAL_PAGES = 100;
 
@@ -115,26 +116,46 @@ export const Assets = () => {
     }
   }, [isLoading, hasMoreData, page]);
 
+  const showToast = (variant: string) => {
+    switch (variant) {
+      case "success":
+        toast.success("Data loaded successfully!");
+        break;
+      case "error":
+        toast.info("Error loading data!");
+        break;
+      default:
+        toast("Default message");
+    }
+  };
+
   useEffect(() => {
-    loadMoreData()
-  }, [])
+    loadMoreData();
+  }, []);
 
   return (
-    <DataTable
-      columns={columns}
-      data={data}
-      initialState={{ sorting: [{ id: "amount", desc: true }] }}
-      isLoading={isLoading}
-      onLoadMore={loadMoreData}
-    >
-      <DataTable.Toolbar>
-        <AssetsHeader />
-        <DataTable.FilterChips />
-      </DataTable.Toolbar>
-      <DataTable.Footer>
-        <></>
-      </DataTable.Footer>
-    </DataTable>
+    <>
+      <DataTable
+        columns={columns}
+        data={data}
+        initialState={{ sorting: [{ id: "amount", desc: true }] }}
+        isLoading={isLoading}
+        onLoadMore={loadMoreData}
+      >
+        <DataTable.Toolbar>
+          <AssetsHeader />
+          <DataTable.FilterChips />
+          <Flex gap="small">
+            <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast</Button>
+            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button>
+          </Flex>
+        </DataTable.Toolbar>
+        <DataTable.Footer>
+          <></>
+        </DataTable.Footer>
+      </DataTable>
+      <ToastContainer />
+    </>
   );
 };
 
