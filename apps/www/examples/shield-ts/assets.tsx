@@ -119,18 +119,21 @@ export const Assets = () => {
   const showToast = (variant: string) => {
     switch (variant) {
       case "success":
-        toast.success('Data loaded successfully!',
-        { duration: Infinity,
+        toast.success('Data loaded successfully.',
+        { 
+          duration: Infinity,
+          dismissible: true,
           action: <Button size="small" onClick={() => console.log("Button clicked!")}>
-              Click Me
-            </Button>
-         }
+            Click Me
+          </Button>
+        }
         );
         break;  
       case "error":
         toast.info('Error loading data!',
         { 
           duration: Infinity,
+          dismissible: true,
           action: <Button size="small" onClick={() => console.log("Button clicked!")}>Retry</Button>
         }
         );
@@ -143,7 +146,7 @@ export const Assets = () => {
               Action
             </Button>
           </div>,
-          { duration: Infinity }
+          { duration: Infinity, dismissible: true }
         );
     }
   };
