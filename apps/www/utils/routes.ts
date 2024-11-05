@@ -12,10 +12,10 @@ export const primitivesRoutes = [
   {
     label: "Components",
     pages: [
-      { title: "Avatar", slug: "docs/primitives/components/avatar" },
+      { title: "Avatar", slug: "docs/primitives/components/avatar", newBadge: true, },
       { title: "Badge", slug: "docs/primitives/components/badge" },
-      { title: "Breadcrumb", slug: "docs/primitives/components/breadcrumb" },
-      { title: "Button", slug: "docs/primitives/components/button" },
+      { title: "Breadcrumb", slug: "docs/primitives/components/breadcrumb", newBadge: true, },
+      { title: "Button", slug: "docs/primitives/components/button", newBadge: true, },
       { title: "Calendar", slug: "docs/primitives/components/calendar" },
       { title: "Command", slug: "docs/primitives/components/command" },
       { title: "Checkbox", slug: "docs/primitives/components/checkbox" },
@@ -37,7 +37,7 @@ export const primitivesRoutes = [
       { title: "Select", slug: "docs/primitives/components/select" },
       { title: "Seprator", slug: "docs/primitives/components/separator" },
       { title: "Sheet", slug: "docs/primitives/components/sheet" },
-      { title: "Spinner", slug: "docs/primitives/components/spinner" },
+      { title: "Spinner", slug: "docs/primitives/components/spinner", newBadge: true, },
       { title: "Switch", slug: "docs/primitives/components/switch" },
       { title: "Tabs", slug: "docs/primitives/components/tabs" },
       { title: "Table", slug: "docs/primitives/components/table" },
@@ -55,6 +55,7 @@ export type PageProps = {
   slug: string;
   deprecated?: boolean;
   preview?: boolean;
+  newBadge?: boolean;
 };
 
 export type RouteProps = {
