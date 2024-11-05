@@ -1,21 +1,36 @@
-import { DayPicker, DayPickerProps, DropdownProps } from "react-day-picker";
-import { cva } from "class-variance-authority";
+import {
+  dateLib,
+  DayPicker,
+  DayPickerProps,
+  DropdownProps,
+} from 'react-day-picker';
+import { cva } from 'class-variance-authority';
 import {
   ChevronRightIcon,
   ChevronLeftIcon,
   ChevronUpIcon,
   ChevronDownIcon,
-} from "@radix-ui/react-icons";
-import styles from "./calendar.module.css";
-import { Select } from "~/select";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Flex } from "~/flex/flex";
+} from '@radix-ui/react-icons';
+import styles from './calendar.module.css';
+import { Select } from '~/select';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Flex } from '~/flex/flex';
+import { Tooltip } from '~/tooltip';
+import Skeleton from 'react-loading-skeleton';
 
 interface OnDropdownOpen {
   onDropdownOpen?: VoidFunction;
 }
 
-export type CalendarProps = DayPickerProps & OnDropdownOpen;
+interface CalendarPropsExtended {
+  showTooltip?: boolean;
+  tooltipMessages?: { [key: string]: any };
+  loadingData?: boolean;
+}
+
+export type CalendarProps = DayPickerProps &
+  OnDropdownOpen &
+  CalendarPropsExtended;
 
 const root = cva(styles.calendarRoot);
 
@@ -54,7 +69,7 @@ function DropDown({
       </Select.Trigger>
       <Select.Content className={styles.dropdown_content}>
         <Select.ScrollUpButton asChild>
-          <Flex justify={"center"}>
+          <Flex justify={'center'}>
             <ChevronUpIcon />
           </Flex>
         </Select.ScrollUpButton>
@@ -73,7 +88,7 @@ function DropDown({
           ))}
         </Select.Viewport>
         <Select.ScrollDownButton asChild>
-          <Flex justify={"center"}>
+          <Flex justify={'center'}>
             <ChevronDownIcon />
           </Flex>
         </Select.ScrollDownButton>
@@ -87,6 +102,9 @@ export const Calendar = function ({
   classNames,
   showOutsideDays = true,
   onDropdownOpen,
+  showTooltip = false,
+  tooltipMessages = {},
+  loadingData = false,
   ...props
 }: CalendarProps) {
   return (
@@ -94,7 +112,7 @@ export const Calendar = function ({
       showOutsideDays={showOutsideDays}
       components={{
         Chevron: (props) => {
-          if (props.orientation === "left") {
+          if (props.orientation === 'left') {
             return <ChevronLeftIcon {...props} />;
           }
           return <ChevronRightIcon {...props} />;
@@ -102,6 +120,33 @@ export const Calendar = function ({
         Dropdown: (props: DropdownProps) => (
           <DropDown {...props} onDropdownOpen={onDropdownOpen} />
         ),
+        DayButton: (props) => {
+          const { day, ...buttonProps } = props;
+          const message =
+            tooltipMessages[dateLib.format(day.date, 'dd-MM-yyyy')];
+          return (
+            <Tooltip
+              side="top"
+              disabled={loadingData || !showTooltip || !message}
+              message={message}
+            >
+              <button {...buttonProps} />
+            </Tooltip>
+          );
+        },
+        MonthGrid: (props) =>
+          loadingData ? (
+            <Skeleton
+              count={6}
+              height={'12px'}
+              width={'252px'}
+              style={{ marginBottom: 'var(--space-5)' }}
+              highlightColor="var(--background-base)"
+              baseColor="var(--background-base-hover)"
+            />
+          ) : (
+            <table {...props} />
+          ),
       }}
       classNames={{
         caption_label: styles.caption_label,
