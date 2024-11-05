@@ -1,13 +1,21 @@
+import { ReactNode } from "react";
 import { Toaster, type ToasterProps, toast as sonnerToast } from "sonner";
 
 interface ToastContainerProps extends ToasterProps {}
 
-function ToastContainer(props: ToastContainerProps) {
+const ToastContainer = (props: ToastContainerProps) => {
   return <Toaster {...props} />;
-}
+};
 
 const toast: typeof sonnerToast = Object.assign(
-  (...props: Parameters<typeof sonnerToast>) => sonnerToast(...props),
+  (message: string | ReactNode, options?: ToasterProps) => {
+    sonnerToast(
+      <div style={{ marginRight: 8 }}>
+        {message}
+      </div>,
+      options
+    );
+  },
   sonnerToast
 );
 
