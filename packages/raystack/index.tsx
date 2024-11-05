@@ -5,6 +5,7 @@ export { Avatar, AvatarGroup } from "./avatar";
 export { Badge } from "./badge";
 export { Body } from "./body";
 export { Box } from "./box";
+export { Breadcrumb } from "./breadcrumb";
 export { Button } from "./button";
 export { Checkbox } from "./checkbox";
 export { Command } from "./command";

@@ -1,0 +1,106 @@
+.breadcrumb {
+  font-family: var(--rs-font-body);
+  font-weight: 500;
+}
+
+.breadcrumb-small {
+  font-size: 12px;
+}
+
+.breadcrumb-medium {
+  font-size: 14px;
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  margin-right: var(--rs-space-2);
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  color: var(--rs-foreground-base-secondary);
+  text-decoration: none;
+  margin-right: var(--rs-space-1);
+}
+
+.breadcrumb-link:hover {
+  color: var(--rs-foreground-base-primary);
+}
+
+.breadcrumb-link-active {
+  color: var(--rs-foreground-base-primary);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.breadcrumb-icon {
+  display: flex;
+  align-items: center;
+  margin-right: var(--rs-space-1);
+}
+
+.breadcrumb-separator {
+  color: var(--rs-foreground-base-secondary);
+  margin: 0 var(--rs-space-2);
+}
+
+.breadcrumb-ellipsis {
+  display: flex;
+  align-items: center;
+  color: var(--rs-foreground-base-secondary);
+  margin: 0 var(--rs-space-3) 0 var(--rs-space-2);
+}
+
+.breadcrumb-ellipsis svg {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  color: var(--rs-foreground-base-secondary);
+}
+
+.breadcrumb-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  color: var(--rs-foreground-base-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  outline: none;
+  padding: 0;
+  margin-right: var(--rs-space-1);
+}
+
+.breadcrumb-dropdown-icon {
+  margin-left: var(--rs-space-1);
+  height: var(--rs-space-3);
+}
+
+.breadcrumb-dropdown-content {
+  background-color: var(--rs-background-base-primary);
+  border-radius: var(--rs-radius-2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 100px;
+  border: 1px solid var(--rs-border-base-primary);
+  padding: var(--rs-space-1) var(--rs-space-1);
+}
+
+.breadcrumb-dropdown-item {
+  cursor: pointer;
+  color: var(--rs-foreground-base-primary);
+}
+
+.breadcrumb-dropdown-item:hover {
+  background-color: var(--rs-background-base-primary-hover);
+}

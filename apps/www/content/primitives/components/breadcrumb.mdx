@@ -1,0 +1,131 @@
+---
+title: Breadcrumb
+description: A navigation component for displaying a route trail.
+---
+
+## Preview
+
+<Preview>
+  <Breadcrumb
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Category', href: '/category' },
+      { label: 'Subcategory', href: '/category/subcategory' },
+      { label: 'Current Page', href: '/category/subcategory/current' }
+    ]}
+    maxVisibleItems={3}
+    size="medium"
+  />
+</Preview>
+
+## Usage
+
+The Breadcrumb component is used to display a trail of links representing the current page's location within a navigational hierarchy. It supports dropdowns for subcategories and can be customized with different sizes and separators.
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+    <LiveEditor code={`npm install @raystack/apsara`} border language="shell"/>
+</LiveProvider>
+
+## Size
+
+The Breadcrumb component supports different sizes to fit various design requirements. You can specify the size using the `size` prop.
+
+<Playground
+    scope={{ Breadcrumb }}
+    tabs={[
+        {
+            name: "small",
+            code: 
+`<Breadcrumb
+  size="small"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+        },
+        {
+            name: "medium",
+            code: `
+<Breadcrumb
+  size="medium"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+        },
+    ]}
+/>
+
+## Separator
+
+You can customize the separator between breadcrumb items using the `separator` prop.
+
+<Playground
+    scope={{ Breadcrumb }}
+    tabs={[
+        {
+            name: "Default Separator",
+            code: `
+<Breadcrumb
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+        },
+        {
+            name: "Custom Separator",
+            code: `
+<Breadcrumb
+  separator=">"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+        },
+    ]}
+/>
+
+## Dropdowns
+
+Breadcrumb items can include dropdowns for additional navigation options.
+
+<Playground
+    scope={{ Breadcrumb }}
+    tabs={[
+        {
+            name: "With Dropdown",
+            code: `
+<Breadcrumb
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { 
+      label: 'Subcategory', 
+      href: '/category/subcategory',
+      dropdownItems: [
+        { label: 'Option 1', href: '/category/subcategory/option1' },
+        { label: 'Option 2', href: '/category/subcategory/option2' }
+      ]
+    },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+        },
+    ]}
+/>
