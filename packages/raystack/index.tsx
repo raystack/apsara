@@ -53,3 +53,7 @@ export { TextField } from "./textfield";
 export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
 export { Title } from "./title";
 export { ToastContainer, toast } from "./toast";
+
+
+// v2 exports
+export * as v2 from "./v2"
