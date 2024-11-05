@@ -42,15 +42,43 @@ const avatar = cva(styles.avatar, {
       indigo: styles["avatar-color-indigo"],
       orange: styles["avatar-color-orange"],
       mint: styles["avatar-color-mint"],
+      neutral: styles["avatar-color-neutral"],
+      sky: styles["avatar-color-sky"],
+      lime: styles["avatar-color-lime"],
+      grass: styles["avatar-color-grass"],
+      cyan: styles["avatar-color-cyan"],
+      iris: styles["avatar-color-iris"],
+      purple: styles["avatar-color-purple"],
+      pink: styles["avatar-color-pink"],
+      crimson: styles["avatar-color-crimson"],
+      gold: styles["avatar-color-gold"],
     },
   },
   compoundVariants: [
     { variant: 'solid', color: 'indigo', className: styles['avatar-solid-indigo'] },
     { variant: 'solid', color: 'orange', className: styles['avatar-solid-orange'] },
     { variant: 'solid', color: 'mint', className: styles['avatar-solid-mint'] },
+    { variant: 'solid', color: 'sky', className: styles['avatar-solid-sky'] },
+    { variant: 'solid', color: 'lime', className: styles['avatar-solid-lime'] },
+    { variant: 'solid', color: 'grass', className: styles['avatar-solid-grass'] },
+    { variant: 'solid', color: 'cyan', className: styles['avatar-solid-cyan'] },
+    { variant: 'solid', color: 'iris', className: styles['avatar-solid-iris'] },
+    { variant: 'solid', color: 'purple', className: styles['avatar-solid-purple'] },
+    { variant: 'solid', color: 'pink', className: styles['avatar-solid-pink'] },
+    { variant: 'solid', color: 'crimson', className: styles['avatar-solid-crimson'] },
+    { variant: 'solid', color: 'gold', className: styles['avatar-solid-gold'] },
     { variant: 'soft', color: 'indigo', className: styles['avatar-soft-indigo'] },
     { variant: 'soft', color: 'orange', className: styles['avatar-soft-orange'] },
     { variant: 'soft', color: 'mint', className: styles['avatar-soft-mint'] },
+    { variant: 'soft', color: 'sky', className: styles['avatar-soft-sky'] },
+    { variant: 'soft', color: 'lime', className: styles['avatar-soft-lime'] },
+    { variant: 'soft', color: 'grass', className: styles['avatar-soft-grass'] },
+    { variant: 'soft', color: 'cyan', className: styles['avatar-soft-cyan'] },
+    { variant: 'soft', color: 'iris', className: styles['avatar-soft-iris'] },
+    { variant: 'soft', color: 'purple', className: styles['avatar-soft-purple'] },
+    { variant: 'soft', color: 'pink', className: styles['avatar-soft-pink'] },
+    { variant: 'soft', color: 'crimson', className: styles['avatar-soft-crimson'] },
+    { variant: 'soft', color: 'gold', className: styles['avatar-soft-gold'] },
   ],
   defaultVariants: {
     size: 3,
@@ -70,8 +98,10 @@ export interface AvatarProps
   alt?: string;
   fallback?: ReactNode;
   variant?: "solid" | "soft";
-  color?: "indigo" | "orange" | "mint";
+  color?: "indigo" | "orange" | "mint" | "neutral" | 
+         "sky" | "lime" | "grass" | "cyan" | "iris" | "purple" | "pink" | "crimson" | "gold";
   asChild?: boolean;
+  className?: string;
 }
 
 const AvatarRoot = forwardRef<
@@ -85,7 +115,7 @@ const AvatarRoot = forwardRef<
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
-        className={avatar({ size, radius, variant, color, className })}
+        className={clsx(avatar({ size, radius, variant, color }), className)}
         asChild={asChild}
         {...props}
       >
@@ -128,12 +158,12 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
           </div>
         ))}
         {count > 0 && (
-        <div className={styles.avatarWrapper}>
+          <div className={styles.avatarWrapper}>
             <Avatar
               size={avatars[0].props.size}
               radius={avatars[0].props.radius}
               variant={avatars[0].props.variant}
-              color='indigo'
+              color='neutral'
               fallback={<span>+{count}</span>}
             />
           </div>
