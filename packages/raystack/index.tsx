@@ -1,11 +1,10 @@
 import "./style.css"; // Old styles file. To be removed after Apsara v2 release
 import "./styles/index.css"
 export { Accordion } from "./accordion";
-export { Avatar, AvatarGroup } from "./avatar";
+export { Avatar } from "./avatar";
 export { Badge } from "./badge";
 export { Body } from "./body";
 export { Box } from "./box";
-export { Breadcrumb } from "./breadcrumb";
 export { Button } from "./button";
 export { Checkbox } from "./checkbox";
 export { Command } from "./command";
@@ -34,7 +33,6 @@ export { Switch } from "./switch";
 export { Tooltip } from "./tooltip";
 export { ToggleGroup } from "./toggle-group";
 export { Calendar, DatePicker, RangePicker } from "./calendar";
-export { Spinner } from "./spinner";
 
 export {
   ApsaraAggregationFn,
