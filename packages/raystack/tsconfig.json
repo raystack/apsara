@@ -7,7 +7,7 @@
     "isolatedModules": false,
     "paths": {
       "~/*": ["./*"],
-      "@raystack/apsara/v2": ["./v2/*"]
+      "~/v2/*": ["./v2/*"]
     }
   },
   "include": [".", "v2"],
