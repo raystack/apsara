@@ -11,7 +11,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./index.css": "./dist/index.css"
+    "./v2": {
+      "import": "./dist/v2/index.js",
+      "require": "./dist/v2/index.cjs"
+    },
+    "./style.css": "./dist/style.css"
   },
   "files": [
     "dist",
@@ -26,6 +30,12 @@
     "bump-version": "node scripts/bump-version.js",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist && rm -rf react/dist",
     "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "typesVersions": {
+    "*": {
+      "*": ["./dist/*"],
+      "v2": ["./dist/v2/index.d.ts"]
+    }
   },
   "keywords": [],
   "author": "",
