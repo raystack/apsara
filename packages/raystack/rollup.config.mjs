@@ -57,9 +57,9 @@ export default [
     plugins: createPlugins(),
     onwarn: sharedWarningHandler,
   },
-  // V2 bundle
+  // V1 bundle
   {
-    input: "v2/index.tsx",
+    input: "v1/index.tsx",
     output: [
       {
         dir: "dist",
@@ -67,7 +67,7 @@ export default [
         sourcemap: true,
         exports: "named",
         preserveModules: true,
-        preserveModulesRoot: "v2"
+        preserveModulesRoot: "v1"
       },
       {
         dir: "dist",
@@ -76,7 +76,7 @@ export default [
         exports: "named",
         entryFileNames: "[name].cjs",
         preserveModules: true,
-        preserveModulesRoot: "v2"
+        preserveModulesRoot: "v1"
       },
     ],
     external: ["react", "react-dom"],

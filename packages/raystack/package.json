@@ -11,9 +11,9 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./v2": {
-      "import": "./dist/v2/index.js",
-      "require": "./dist/v2/index.cjs"
+    "./v1": {
+      "import": "./dist/v1/index.js",
+      "require": "./dist/v1/index.cjs"
     },
     "./style.css": "./dist/style.css"
   },
@@ -34,7 +34,7 @@
   "typesVersions": {
     "*": {
       "*": ["./dist/*"],
-      "v2": ["./dist/v2/index.d.ts"]
+      "v1": ["./dist/v1/index.d.ts"]
     }
   },
   "keywords": [],

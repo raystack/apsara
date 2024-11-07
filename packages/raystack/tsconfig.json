@@ -7,9 +7,9 @@
     "isolatedModules": false,
     "paths": {
       "~/*": ["./*"],
-      "~/v2/*": ["./v2/*"]
+      "~/v1/*": ["./v1/*"]
     }
   },
-  "include": [".", "v2"],
+  "include": [".", "v1"],
   "exclude": ["dist", "build", "node_modules"]
 }
