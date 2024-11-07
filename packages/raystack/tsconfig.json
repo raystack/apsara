@@ -6,9 +6,10 @@
     "target": "esnext",
     "isolatedModules": false,
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./*"],
+      "@raystack/apsara/v2": ["./v2/*"]
     }
   },
-  "include": ["."],
+  "include": [".", "v2"],
   "exclude": ["dist", "build", "node_modules"]
 }
