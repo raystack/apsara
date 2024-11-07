@@ -6,9 +6,10 @@
     "target": "esnext",
     "isolatedModules": false,
     "paths": {
-      "~/*": ["./*"]
+      "~/*": ["./*"],
+      "~/v1/*": ["./v1/*"]
     }
   },
-  "include": ["."],
+  "include": [".", "v1"],
   "exclude": ["dist", "build", "node_modules"]
 }

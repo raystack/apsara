@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, forwardRef, PropsWithChildren, ReactNode } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Spinner } from "~/spinner";
+import { Spinner } from "../spinner";
 
 import styles from "./button.module.css";
 
