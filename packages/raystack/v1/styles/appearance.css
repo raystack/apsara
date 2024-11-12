@@ -1,5 +1,8 @@
 /* Light Theme Colors */
 :root {
+    /* Smooth theme switch transition */
+    transition: background-color 0.3s ease, color 0.3s ease;
+
     /* Neutral Colors */
     --rs-neutral-1: var(--rs-gray-1);
     --rs-neutral-2: var(--rs-gray-2);
@@ -123,6 +126,8 @@
 
 /* Dark Theme Colors */
 html[data-theme="dark"] {
+    transition: background-color 0.3s ease, color 0.3s ease;
+
     /* Neutral Colors */
     --rs-neutral-1: var(--rs-gray-1);
     --rs-neutral-2: var(--rs-gray-2);
