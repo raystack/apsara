@@ -5,7 +5,7 @@ import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
 import postcssImport from 'postcss-import';
 
-const createPlugins = () => [
+const createPlugins = (isV1 = false) => [
   nodeResolve(),
   commonjs(),
   postcss({
@@ -13,12 +13,16 @@ const createPlugins = () => [
       postcssImport(),
     ],
     extract: 'style.css',
-    minimize: true
+    minimize: true,
+    modules: true,
+    autoModules: true,
+    namedExports: true
   }),
   typescript({
     tsconfig: "tsconfig.json",
-    outDir: 'dist',
-    rootDir: ".",
+    declaration: true,
+    rootDir: isV1 ? "v1" : ".",
+    declarationDir: isV1 ? 'dist/v1' : 'dist',
   }),
   image(),
 ];
@@ -30,7 +34,13 @@ const sharedWarningHandler = (warning, warn) => {
   // This ignores the warnings generated during build from
   // CSS module imports which is not standard JS module syntax.
   if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
-  
+
+  // // Ignore CSS module naming warnings
+  // if (warning.code === 'PLUGIN_WARNING' && warning.plugin === 'postcss') return;
+
+  // // Ignore external dependency warnings
+  // if (warning.code === 'UNRESOLVED_IMPORT') return;
+
   warn(warning);
 };
 
@@ -44,6 +54,8 @@ export default [
         format: "es",
         sourcemap: true,
         exports: "named",
+        preserveModules: true,
+        preserveModulesRoot: "."
       },
       {
         dir: "dist",
@@ -51,10 +63,12 @@ export default [
         sourcemap: true,
         exports: "named",
         entryFileNames: "[name].cjs",
+        preserveModules: true,
+        preserveModulesRoot: "."
       },
     ],
     external: ["react", "react-dom"],
-    plugins: createPlugins(),
+    plugins: createPlugins(false),
     onwarn: sharedWarningHandler,
   },
   // V1 bundle
@@ -62,7 +76,7 @@ export default [
     input: "v1/index.tsx",
     output: [
       {
-        dir: "dist",
+        dir: "dist/v1",
         format: "es",
         sourcemap: true,
         exports: "named",
@@ -70,7 +84,7 @@ export default [
         preserveModulesRoot: "v1"
       },
       {
-        dir: "dist",
+        dir: "dist/v1",
         format: "cjs",
         sourcemap: true,
         exports: "named",
@@ -80,7 +94,7 @@ export default [
       },
     ],
     external: ["react", "react-dom"],
-    plugins: createPlugins(),
+    plugins: createPlugins(true),
     onwarn: sharedWarningHandler,
   },
 ];
