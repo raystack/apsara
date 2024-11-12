@@ -1,7 +1,7 @@
 import React, { forwardRef, PropsWithChildren } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { DotsHorizontalIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { DropdownMenu } from "~/dropdown-menu";
+import { DropdownMenu } from "../dropdown-menu";
 
 import styles from "./breadcrumb.module.css";
 

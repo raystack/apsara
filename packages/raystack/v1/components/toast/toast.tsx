@@ -19,7 +19,8 @@ const toast: typeof sonnerToast = Object.assign(
   sonnerToast
 );
 
-ToastContainer.displayName = "ToastContainer";
 (toast as typeof toast & { displayName: string }).displayName = "toast";
+
+ToastContainer.displayName = "ToastContainer";
 
 export { ToastContainer, toast };

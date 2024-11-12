@@ -1,7 +1,7 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cva, VariantProps } from "class-variance-authority";
 import { clsx } from 'clsx';
-import { Box } from "~/box";
+import { Box } from "../box";
 import {
   ComponentPropsWithoutRef,
   ElementRef,
