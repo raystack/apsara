@@ -2,19 +2,16 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { PlusIcon, BlendingModeIcon, HomeIcon } from "@radix-ui/react-icons";
 import {
-  ApsaraColumnDef,
-  Avatar,
-  AvatarGroup,
-  Button,
   Checkbox,
   DataTable,
   Flex,
   Text,
-  useTable,
-  toast,
-  ToastContainer
+  useTable
 } from "@raystack/apsara";
+
+import {toast, ToastContainer, Avatar, AvatarGroup, Button } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
+import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
 
 export const columns: ApsaraColumnDef<Payment>[] = [
@@ -119,30 +116,30 @@ export const Assets = () => {
   const showToast = (variant: string) => {
     switch (variant) {
       case "success":
-        toast.success('Data loaded successfully.',
+        const successToastId = toast.success('Data loaded successfully.',
         { 
           duration: Infinity,
           dismissible: true,
-          action: <Button size="small" onClick={() => console.log("Button clicked!")}>
+          action: <Button size="small" onClick={() => toast.dismiss(successToastId)}>
             Click Me
           </Button>
         }
         );
         break;  
       case "error":
-        toast.info('Error loading data!',
+        const errorToastId = toast.info('Error loading data!',
         { 
           duration: Infinity,
           dismissible: true,
-          action: <Button size="small" onClick={() => console.log("Button clicked!")}>Retry</Button>
+          action: <Button size="small" onClick={() => toast.dismiss(errorToastId)}>Retry</Button>
         }
         );
         break;
       default:
-        toast(
+        const defaultToastId = toast(
           <div>
             Default message
-            <Button size="small" onClick={() => console.log("Button clicked!")}>
+            <Button size="small" onClick={() => toast.dismiss(defaultToastId)}>
               Action
             </Button>
           </div>,
