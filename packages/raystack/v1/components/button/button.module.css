@@ -269,6 +269,18 @@
   cursor: not-allowed;
 }
 
+.button-text:disabled:hover,
+.button-text.button-disabled:hover,
+.button-text:disabled:active,
+.button-text.button-disabled:active,
+.button-text:disabled[data-radix-popover-trigger][data-state="open"],
+.button-text.button-disabled[data-radix-popover-trigger][data-state="open"],
+.button-text:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
+.button-text.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+}
+
 .button-loading {
   display: flex;
   align-items: center;
