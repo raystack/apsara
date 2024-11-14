@@ -14,9 +14,9 @@ const createPlugins = (isV1 = false) => [
     ],
     extract: 'style.css',
     minimize: true,
+    autoModules: true, // Auto process files ending with .module.css
     modules: true,
-    autoModules: true,
-    namedExports: true
+    namedExports: true // Enable named exports for CSS modules
   }),
   typescript({
     tsconfig: "tsconfig.json",
@@ -34,12 +34,6 @@ const sharedWarningHandler = (warning, warn) => {
   // This ignores the warnings generated during build from
   // CSS module imports which is not standard JS module syntax.
   if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
-
-  // // Ignore CSS module naming warnings
-  // if (warning.code === 'PLUGIN_WARNING' && warning.plugin === 'postcss') return;
-
-  // // Ignore external dependency warnings
-  // if (warning.code === 'UNRESOLVED_IMPORT') return;
 
   warn(warning);
 };
