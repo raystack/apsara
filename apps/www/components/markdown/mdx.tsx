@@ -1,5 +1,6 @@
 import { Link2Icon } from "@radix-ui/react-icons";
 import * as Apsara from "@raystack/apsara";
+import * as ApsaraV1 from "@raystack/apsara/v1";
 import * as React from "react";
 import { LiveProvider } from "react-live";
 import { Frontmatter } from "~/types/frontmatter";
@@ -11,7 +12,8 @@ import Playground from "./playground";
 import { Preview } from "./preview";
 
 export const components = {
-  ...Apsara,
+  ...Apsara, // Todo: remove this once we fully migrate to Apsara v1
+  ...ApsaraV1,
   ...Icons,
   DataTable: Assets,
   Attributes: Attributes,

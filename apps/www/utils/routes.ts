@@ -35,7 +35,7 @@ export const primitivesRoutes = [
       { title: "Popover", slug: "docs/primitives/components/popover" },
       { title: "Radio", slug: "docs/primitives/components/radio" },
       { title: "Select", slug: "docs/primitives/components/select" },
-      { title: "Seprator", slug: "docs/primitives/components/separator" },
+      { title: "Separator", slug: "docs/primitives/components/separator" },
       { title: "Sheet", slug: "docs/primitives/components/sheet" },
       { title: "Spinner", slug: "docs/primitives/components/spinner", newBadge: true, },
       { title: "Switch", slug: "docs/primitives/components/switch" },
@@ -45,7 +45,7 @@ export const primitivesRoutes = [
       { title: "Text Field", slug: "docs/primitives/components/textfield" },
       { title: "Tooltip", slug: "docs/primitives/components/tooltip" },
       { title: "Toggle Group", slug: "docs/primitives/components/togglegroup" },
-      { title: "Toast", slug: "docs/primitives/components/toast" },
+      { title: "Toast", slug: "docs/primitives/components/toast", newBadge: true },
     ],
   },
 ];

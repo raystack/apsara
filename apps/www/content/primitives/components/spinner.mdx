@@ -25,13 +25,11 @@ Install the component from your command line.
     <LiveEditor code={`npm install @raystack/apsara`} border/>
 </LiveProvider>
 
-## Anatomy
-
 Import and usage.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Spinner } from '@raystack/apsara'
+import { Spinner } from '@raystack/apsara/v1'
 
 <Spinner size={3} />
 `} border />
@@ -77,5 +75,7 @@ The Spinner component includes appropriate ARIA attributes for accessibility:
 
 - `role="status"`: Indicates that the element is a status indicator.
 - `aria-hidden="true"`: Hides the spinner from screen readers, as it's a visual indicator only.
+
+
 
 
