@@ -1,4 +1,3 @@
-import React from 'react';
 import { cva, VariantProps } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import styles from './spinner.module.css';
