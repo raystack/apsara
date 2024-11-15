@@ -1,7 +1,7 @@
 ---
 name: button
 title: Button
-description: Buttons play a vital role in user interfaces, serving as interactive elements that initiate actions or facilitate navigation within an application. They provide users with clickable elements to interact with the system and perform various tasks.
+description: Triggers a click action usually performed by the user to trigger an event such as submitting a form or closing a dialog.
 ---
 
 <Preview>
@@ -10,8 +10,7 @@ description: Buttons play a vital role in user interfaces, serving as interactiv
 
 ## Usages
 
-Button component is utilized for clear and concise communication.
-It is used for primary actions, such as submitting forms, confirming decisions, or initiating important processes.
+Button component is used for primary actions, such as submitting forms, confirming decisions, or initiating important processes.
 
 ## Installation
 
@@ -27,12 +26,12 @@ Import all parts and piece them together.
     <LiveEditor code={`
 import { Button } from '@raystack/apsara/v1'
 
-<Button variant="primary">primary button</Button>`} border />
+<Button variant="primary">Click here!</Button>`} border />
 </LiveProvider>
 
 ## Variant
 
-Variants allow you to customize the button's style, making it visually distinctive and suitable for different purposes.
+Variants allow you to customize the button's style, making it visually distinctive and suitable for different purposes. Default is `Primary`.
 
 <Playground
   scope={{ Button }}
@@ -66,12 +65,7 @@ Variants allow you to customize the button's style, making it visually distincti
 
 ## Scale
 
-The Button component offers different size options to accommodate various design requirements. By selecting the "large" size, you can create buttons that are visually larger, making them more prominent and noticeable within the user interface. Additionally, the Button component also supports the following size options:
-
-- Small
-- Normal
-
-These different size options allow you to customize the appearance of buttons to suit your specific design needs.
+The Button component offers two size options to accommodate various design requirements. By selecting the `normal` size, you can create buttons that are visually larger, making it more prominent and noticeable within the user interface. Default size is `normal`.
 
 <Playground
   scope={{ Button }}
@@ -89,7 +83,9 @@ These different size options allow you to customize the appearance of buttons to
 
 ## Disabled
 
-The Button component provides a "disabled" state, which prevents the button from responding to any user actions. When a button is disabled, it becomes unclickable and does not trigger any associated actions or events. This feature is useful when you want to indicate that a button is temporarily inactive or unavailable for interaction.
+The Button component provides a "disabled" state, which prevents the button from responding to any user actions. When a button is disabled, it becomes unclickable and does not trigger any associated actions or events.
+
+This feature is useful when you want to indicate that a button is temporarily inactive or unavailable for interaction. Default is `false`.
 
 <Playground
   scope={{ Button }}
@@ -123,7 +119,9 @@ The Button component provides a "disabled" state, which prevents the button from
 
 ## Loading
 
-The Button component offers loading states.
+The Button component offers inbuilt loading states. Loading state is used to signify an ongoing process after the user has clicked on the button. Loading is an optional prop.
+
+Note: A loading as `true` only disables the button click and displays a spinner within the button. `loading` does not changes the button appearance as disabled. For changing the appearance to disabled state, a `disabled` prop as `true` has to passed.
 
 <Playground
   scope={{ Button }}
@@ -138,7 +136,7 @@ The Button component offers loading states.
 
 ## With leading and trailing icons
 
-The button component accepts optional leading and/or trailing icons.
+The button component accepts optional leading and/or trailing icons. A `ReactNode` can be passed as a prop.
 
 <Playground
   scope={{ Button }}

@@ -9,7 +9,6 @@
   font-size: var(--fs-200);
   font-weight: 500;
   width: fit-content;
-  transition: background-color var(--transition);
   padding: var(--rs-space-3) var(--rs-space-4);
   border-radius: var(--br-4);
 }
@@ -38,14 +37,6 @@
 .button-normal {
   padding: var(--rs-space-3) var(--rs-space-4);
   font-size: var(--fs-200);
-}
-
-.button-round {
-  padding-top: var(--pd-8);
-  padding-bottom: var(--pd-8);
-  width: 24px;
-  height: 24px;
-  border-radius: var(--br-round);
 }
 
 .button-primary {
