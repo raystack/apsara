@@ -35,6 +35,17 @@ import { Spinner } from '@raystack/apsara/v1'
 `} border />
 </LiveProvider>
 
+
+## Props
+
+The `Spinner` component accepts the following props:
+
+- `size`: Size of the spinner (`1` | `2` | `3` | `4` | `5` | `6`, default: 1)
+- `color`: Color variant of the spinner (`"default"` | `"inverted"`, default: "default")
+- `className`: Additional CSS class names
+- All other HTMLDivElement attributes from React
+
+
 ## Size
 
 The Spinner component offers different size options. You can customize the size of the spinner using the `size` prop. The available size options are:
@@ -69,7 +80,7 @@ The Spinner component offers different size options. You can customize the size 
   ]}
 />
 
-## Size
+## Color
 
 The Spinner component offers two color options. This is mainly helpful if we want to render the Spinner inside another component with lighter or darker background color. Spinner uses a `color` prop.
 
@@ -98,3 +109,4 @@ The Spinner component includes appropriate ARIA attributes for accessibility:
 
 - `role="status"`: Indicates that the element is a status indicator.
 - `aria-hidden="true"`: Hides the spinner from screen readers, as it's a visual indicator only.
+
