@@ -29,6 +29,24 @@ import { Button } from '@raystack/apsara/v1'
 <Button variant="primary">Click here!</Button>`} border />
 </LiveProvider>
 
+
+## Props
+
+The `Button` component accepts the following props:
+
+- `variant`: Visual style variant (`"primary"` | `"secondary"` | `"outline"` | `"ghost"` | `"danger"` | `"text"`, default: "primary")
+- `size`: Size of the button (`"small"` | `"normal"`, default: "normal")
+- `disabled`: Whether the button is disabled (boolean, default: false)
+- `loading`: Shows a loading spinner inside the button (boolean)
+- `loaderText`: Optional text to display next to the loading spinner (ReactNode)
+- `leadingIcon`: Icon element to display before button text (ReactNode)
+- `trailingIcon`: Icon element to display after button text (ReactNode)
+- `width`: Custom width for the button (string | number)
+- `asChild`: Boolean to merge props onto child element
+- `className`: Additional CSS class names
+- All other ButtonHTMLAttributes from React
+
+
 ## Variant
 
 Variants allow you to customize the button's style, making it visually distinctive and suitable for different purposes. Default is `Primary`.
@@ -62,6 +80,7 @@ Variants allow you to customize the button's style, making it visually distincti
     },
   ]}
 />
+
 
 ## Scale
 
