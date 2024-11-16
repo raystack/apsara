@@ -221,7 +221,7 @@
 .avatar-size-3 {
   width: var(--rs-space-7, 24px);
   height: var(--rs-space-7, 24px);
-  --fallback-font-size: calc(var(--rs-space-7, 24px) * 0.3);
+  --fallback-font-size: calc(var(--rs-space-7, 24px) * 0.4);
   border-radius: var(--rs-radius-2);
 }
 
@@ -235,7 +235,7 @@
 .avatar-size-5 {
   width: var(--rs-space-9, 32px);
   height: var(--rs-space-9, 32px);
-  --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.3);
+  --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.4);
   border-radius: var(--rs-radius-2);
 }
 
