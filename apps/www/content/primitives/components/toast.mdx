@@ -2,18 +2,23 @@
 title: Toast
 description: Toast wrapper and function. Toast internally uses Sonner - https://sonner.emilkowal.ski/
 ---
-
 ## Installation
 
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { ToastContainer, toast, Button } from '@raystack/apsara'
+import { ToastContainer, toast, Button } from '@raystack/apsara/v1'
 
-<Tooltip message="tooltip">
-  <Button variant="primary" onClick={() => toast("I am toast")}>Toast Yay!</Button>
-</Tooltip>
+<ToastContainer />
+<Button variant="primary" onClick={() => toast.success('Data loaded successfully.',
+        { 
+          dismissible: true,
+          action: <Button size="small" onClick={() => console.log('Toast appears')}>
+            Click Me
+          </Button>
+        }
+    )}>Trigger toast</Button>
 `} border />
 </LiveProvider>
 
