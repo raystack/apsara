@@ -5,15 +5,13 @@ description: A navigation component for displaying a route trail.
 
 ## Preview
 
-<Preview
-  scope={{ Breadcrumb }}
->
+<Preview scope={{ Breadcrumb }}>
   <Breadcrumb
     items={[
-      { label: 'Home', href: '/' },
-      { label: 'Category', href: '/category' },
-      { label: 'Subcategory', href: '/category/subcategory' },
-      { label: 'Current Page', href: '/category/subcategory/current' }
+      { label: "Home", href: "/" },
+      { label: "Category", href: "/category" },
+      { label: "Subcategory", href: "/category/subcategory" },
+      { label: "Current Page", href: "/category/subcategory/current" },
     ]}
     maxVisibleItems={3}
     size="medium"
@@ -26,10 +24,27 @@ The Breadcrumb component is used to display a trail of links representing the cu
 
 ## Installation
 
-Install the component from your command line.
+Install the Apsara library from the terminal.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border language="shell"/>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
+</LiveProvider>
+
+Import and usage.
+
+<LiveProvider>
+  <LiveEditor
+    code={`<Breadcrumb
+    size="small"
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Category', href: '/category' },
+      { label: 'Subcategory', href: '/category/subcategory' },
+      { label: 'Current Page', href: '/category/subcategory/current' }
+    ]}
+  />`}
+    border
+  />
 </LiveProvider>
 
 ## Size
@@ -37,12 +52,11 @@ Install the component from your command line.
 The Breadcrumb component supports different sizes to fit various design requirements. You can specify the size using the `size` prop.
 
 <Playground
-    scope={{ Breadcrumb }}
-    tabs={[
-        {
-            name: "small",
-            code: 
-`<Breadcrumb
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "small",
+      code: `<Breadcrumb
   size="small"
   items={[
     { label: 'Home', href: '/' },
@@ -51,10 +65,10 @@ The Breadcrumb component supports different sizes to fit various design requirem
     { label: 'Current Page', href: '/category/subcategory/current' }
   ]}
 />`,
-        },
-        {
-            name: "medium",
-            code: `
+    },
+    {
+      name: "medium",
+      code: `
 <Breadcrumb
   size="medium"
   items={[
@@ -64,8 +78,8 @@ The Breadcrumb component supports different sizes to fit various design requirem
     { label: 'Current Page', href: '/category/subcategory/current' }
   ]}
 />`,
-        },
-    ]}
+    },
+  ]}
 />
 
 ## Separator
@@ -73,11 +87,11 @@ The Breadcrumb component supports different sizes to fit various design requirem
 You can customize the separator between breadcrumb items using the `separator` prop.
 
 <Playground
-    scope={{ Breadcrumb }}
-    tabs={[
-        {
-            name: "Default Separator",
-            code: `
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "Default Separator",
+      code: `
 <Breadcrumb
   items={[
     { label: 'Home', href: '/' },
@@ -86,10 +100,10 @@ You can customize the separator between breadcrumb items using the `separator` p
     { label: 'Current Page', href: '/category/subcategory/current' }
   ]}
 />`,
-        },
-        {
-            name: "Custom Separator",
-            code: `
+    },
+    {
+      name: "Custom Separator",
+      code: `
 <Breadcrumb
   separator=">"
   items={[
@@ -99,8 +113,8 @@ You can customize the separator between breadcrumb items using the `separator` p
     { label: 'Current Page', href: '/category/subcategory/current' }
   ]}
 />`,
-        },
-    ]}
+    },
+  ]}
 />
 
 ## Dropdowns
@@ -108,11 +122,11 @@ You can customize the separator between breadcrumb items using the `separator` p
 Breadcrumb items can include dropdowns for additional navigation options.
 
 <Playground
-    scope={{ Breadcrumb }}
-    tabs={[
-        {
-            name: "With Dropdown",
-            code: `
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "With Dropdown",
+      code: `
 <Breadcrumb
   items={[
     { label: 'Home', href: '/' },
@@ -128,6 +142,6 @@ Breadcrumb items can include dropdowns for additional navigation options.
     { label: 'Current Page', href: '/category/subcategory/current' }
   ]}
 />`,
-        },
-    ]}
+    },
+  ]}
 />
