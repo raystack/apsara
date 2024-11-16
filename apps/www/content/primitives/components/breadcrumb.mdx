@@ -202,3 +202,27 @@ Breadcrumb items can include icons either alongside text or as standalone elemen
   ]}
 />
 
+## Ellipsis
+
+Control the visibility of breadcrumb items using the `maxVisibleItems` prop. By default, all items are visible when `maxVisibleItems` is not specified.
+
+<Playground
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "With Ellipsis",
+      code: `
+        <Breadcrumb
+          maxVisibleItems={3}
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Category', href: '/category' },
+            { label: 'Subcategory', href: '/category/subcategory' },
+            { label: 'Products', href: '/category/subcategory/products' },
+            { label: 'Current Page', href: '/category/subcategory/products/current' }
+          ]}
+        />`,
+    }
+  ]}
+/>
+
