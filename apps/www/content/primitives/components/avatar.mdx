@@ -290,24 +290,24 @@ Choose between small and full border radius styles to match your design preferen
   scope={{ Avatar }}
   tabs={[
     {
-      name: "Small",
-      code: `
-<div style={{ display: 'flex', gap: '10px' }}>
-  <Avatar radius="small" fallback="S" size={5} color="indigo" />
-  <Avatar radius="small" fallback="S" size={5} color="orange" />
-  <Avatar radius="small" fallback="S" size={5} color="mint" />
-  <Avatar radius="small" fallback="S" size={5} color="neutral" />
-</div>`,
-    },
-    {
       name: "Full",
       code: `
-<div style={{ display: 'flex', gap: '10px' }}>
-  <Avatar radius="full" fallback="F" size={5} color="indigo" />
-  <Avatar radius="full" fallback="F" size={5} color="orange" />
-  <Avatar radius="full" fallback="F" size={5} color="mint" />
-  <Avatar radius="full" fallback="F" size={5} color="neutral" />
-</div>`,
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Avatar radius="full" fallback="F" size={5} color="indigo" />
+          <Avatar radius="full" fallback="F" size={5} color="orange" />
+          <Avatar radius="full" fallback="F" size={5} color="mint" />
+          <Avatar radius="full" fallback="F" size={5} color="neutral" />
+        </div>`,
+    },
+    {
+      name: "Small",
+      code: `
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Avatar radius="small" fallback="S" size={5} color="indigo" />
+          <Avatar radius="small" fallback="S" size={5} color="orange" />
+          <Avatar radius="small" fallback="S" size={5} color="mint" />
+          <Avatar radius="small" fallback="S" size={5} color="neutral" />
+        </div>`,
     }
   ]}
 />
