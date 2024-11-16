@@ -68,7 +68,7 @@ Install the component from your command line.
 </LiveProvider>
 
 <LiveProvider>
-    <LiveEditor code={`import { Avatar } from '@raystack/apsara'
+    <LiveEditor code={`import { Avatar, AvatarGroup } from '@raystack/apsara/v1'
 
 
   <Avatar
@@ -81,7 +81,7 @@ Install the component from your command line.
 </LiveProvider>
 
 
-## Props
+## Avatar Props
 
 The `Avatar` component accepts the following props:
 
@@ -95,6 +95,15 @@ The `Avatar` component accepts the following props:
   - Base colors: `"indigo"` | `"orange"` | `"mint"` | `"neutral"`
   - Extended colors: `"sky"` | `"lime"` | `"grass"` | `"cyan"` | `"iris"` | `"purple"` | `"pink"` | `"crimson"` | `"gold"`
 - `asChild`: Boolean to merge props onto child element
+- `className`: Additional CSS class names
+
+
+## AvatarGroup Props
+
+The `AvatarGroup` component accepts the following props:
+
+- `children`: Array of Avatar components to display
+- `max`: Maximum number of avatars to show before displaying a count (number)
 - `className`: Additional CSS class names
 
 ## Size
@@ -169,66 +178,66 @@ Avatar comes with a range of predefined colors including both base and extended 
     {
       name: "Base Colors",
       code: `
-<div style={{ display: 'flex', gap: '24px' }}>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="indigo" fallback="I" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Indigo</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="orange" fallback="O" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Orange</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="mint" fallback="M" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Mint</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="neutral" fallback="N" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Neutral</span>
-  </div>
-</div>`,
-    },
-    {
-      name: "Extended Colors",
-      code: `
-<div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="sky" fallback="S" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Sky</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="lime" fallback="L" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Lime</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="grass" fallback="G" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Grass</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="cyan" fallback="C" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Cyan</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="iris" fallback="I" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Iris</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="purple" fallback="P" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Purple</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="pink" fallback="P" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Pink</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="crimson" fallback="C" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Crimson</span>
-  </div>
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-    <Avatar color="gold" fallback="G" size={5} />
-    <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Gold</span>
-  </div>
-</div>`,
+      <div style={{ display: 'flex', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="indigo" fallback="I" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Indigo</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="orange" fallback="O" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Orange</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="mint" fallback="M" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Mint</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="neutral" fallback="N" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Neutral</span>
+        </div>
+      </div>`,
+          },
+          {
+            name: "Extended Colors",
+            code: `
+      <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="sky" fallback="S" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Sky</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="lime" fallback="L" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Lime</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="grass" fallback="G" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Grass</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="cyan" fallback="C" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Cyan</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="iris" fallback="I" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Iris</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="purple" fallback="P" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Purple</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="pink" fallback="P" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Pink</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="crimson" fallback="C" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Crimson</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="gold" fallback="G" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Gold</span>
+        </div>
+      </div>`,
     }
   ]}
 />
@@ -341,9 +350,3 @@ Avatar can display user images with graceful fallback to initials when images fa
     }
   ]}
 />
-
-
-## Avatar Group
-
-The AvatarGroup component allows you to display multiple avatars as a stack.
-
