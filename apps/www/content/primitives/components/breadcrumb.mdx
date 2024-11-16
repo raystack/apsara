@@ -145,3 +145,60 @@ Breadcrumb items can include dropdowns for additional navigation options.
     },
   ]}
 />
+
+## Icons
+
+Breadcrumb items can include icons either alongside text or as standalone elements.
+
+<Playground
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "Text with Icon",
+      code: `
+      <Breadcrumb
+        items={[
+          { 
+            label: 'Home', 
+            href: '/',
+            icon: <>O</>
+          },
+          { 
+            label: 'Documents', 
+            href: '/documents',
+            icon: <>O</>
+          },
+          { 
+            label: 'Settings', 
+            href: '/settings',
+            icon: <>O</>
+          }
+        ]}
+      />`,
+    },
+    {
+      name: "Only Icon",
+      code: `
+      <Breadcrumb
+        items={[
+          { 
+            label: '', 
+            href: '/',
+            icon: <>O</>
+          },
+          { 
+            label: '', 
+            href: '/documents',
+            icon: <>O</>
+          },
+          { 
+            label: '', 
+            href: '/settings',
+            icon: <>O</>
+          }
+        ]}
+      />`,
+    },
+  ]}
+/>
+
