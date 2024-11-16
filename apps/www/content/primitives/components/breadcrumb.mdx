@@ -47,6 +47,24 @@ Import and usage.
   />
 </LiveProvider>
 
+
+## Props
+
+The `Breadcrumb` component accepts the following props:
+
+- `items`: Array of breadcrumb items with the following structure:
+  - `label`: Text to display for the item (string)
+  - `href`: URL for the item link (string)
+  - `icon`: Optional icon element to display (ReactNode)
+  - `dropdownItems`: Optional array of dropdown items, each with `label` and `href`
+- `size`: Size variant of the breadcrumb (`"small"` | `"medium"`, default: "medium")
+- `maxVisibleItems`: Maximum number of items to display before showing ellipsis (number)
+- `separator`: Custom separator between items (ReactNode, default: "/")
+- `onItemClick`: Callback function when an item is clicked (Function)
+- `className`: Custom CSS class names
+
+
+
 ## Size
 
 The Breadcrumb component supports different sizes to fit various design requirements. You can specify the size using the `size` prop.
@@ -225,4 +243,3 @@ Control the visibility of breadcrumb items using the `maxVisibleItems` prop. By 
     }
   ]}
 />
-
