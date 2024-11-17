@@ -45,7 +45,7 @@
     --rs-accent-10: #ef5f00;
     --rs-accent-11: #cc4e00;
     --rs-accent-12: #582d1d;
-    --rs-accent-contrast: #000000;
+    --rs-accent-contrast: #ffffff;
 }
 
 [data-accent-color='orange'][data-theme='dark'] {
@@ -61,7 +61,7 @@
     --rs-accent-10: #ff801f;
     --rs-accent-11: #ffa057;
     --rs-accent-12: #ffe0c2;
-    --rs-accent-contrast: #000000;
+    --rs-accent-contrast: #ffffff;
 }
 
 [data-accent-color='mint'] {
