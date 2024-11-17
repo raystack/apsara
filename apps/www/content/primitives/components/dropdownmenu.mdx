@@ -4,11 +4,12 @@ description: Displays a menu to the user — such as a set of actions or functio
 ---
 
 ## Preview
+A basic example demonstrating the dropdown menu's appearance and interaction.
 
 <Preview>
   <DropdownMenu>
     <DropdownMenu.Trigger asChild>
-      <Button variant="ghost"  size="small">Dropdown button</Button>
+      <Button variant="ghost" size="small">Dropdown button</Button>
     </DropdownMenu.Trigger>
     <DropdownMenu.Content align="end">
       <DropdownMenu.Group>
@@ -21,6 +22,7 @@ description: Displays a menu to the user — such as a set of actions or functio
 </Preview>
 
 ## Installation
+Follow these steps to add the dropdown menu component to your project.
 
 Install the component from your command line.
 
@@ -28,25 +30,140 @@ Install the component from your command line.
     <LiveEditor code={`npm install @raystack/apsara`} border/>
 </LiveProvider>
 
-
 ## Anatomy
+Learn how the dropdown menu is structured and how its parts work together.
+
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { DropdownMenu } from '@raystack/apsara'
+import { DropdownMenu } from '@raystack/apsara/v1'
 
 <DropdownMenu>
   <DropdownMenu.Trigger asChild>
-    <Button variant="secondary" outline>Dropdown button</Button>
+    <Button variant="secondary">Dropdown button</Button>
   </DropdownMenu.Trigger>
-  <DropdownMenu.Content align="end">
-    <DropdownMenu.Group>
-      <DropdownMenu.Item>Cell Item</DropdownMenu.Item>
-      <DropdownMenu.Item>Cell Item</DropdownMenu.Item>
-      <DropdownMenu.Item>Cell Item</DropdownMenu.Item>
-    </DropdownMenu.Group>
+  <DropdownMenu.Content>
+    <DropdownMenu.Item>Item 1</DropdownMenu.Item>
+    <DropdownMenu.Item>Item 2</DropdownMenu.Item>
   </DropdownMenu.Content>
 </DropdownMenu>
 `} border />
 </LiveProvider>
+
+## Props
+Customize the dropdown menu's behavior and appearance with these configuration options.
+
+The `DropdownMenu` component is composed of several parts, each with their own props:
+
+### DropdownMenu.Trigger
+The button that opens the dropdown menu.
+
+- `asChild`: Boolean to merge props onto child element
+
+### DropdownMenu.Content
+The container that holds the dropdown menu items.
+
+- `align`: Alignment of the dropdown (`"start"` | `"center"` | `"end"`)
+- `sideOffset`: Offset from the trigger (number, default: 4)
+- `className`: Additional CSS class names
+
+### DropdownMenu.Item
+Individual clickable options within the dropdown menu.
+
+- `leadingIcon`: Icon element to display before item text (ReactNode)
+- `trailingIcon`: Icon element to display after item text (ReactNode)
+- `disabled`: Whether the item is disabled (boolean)
+- `className`: Additional CSS class names
+
+### DropdownMenu.Group
+A way to group related menu items together.
+
+- `className`: Additional CSS class names
+
+### DropdownMenu.Label
+Text labels to describe groups of menu items.
+
+- `className`: Additional CSS class names
+
+### DropdownMenu.Separator
+Visual divider between menu items or groups.
+
+- `className`: Additional CSS class names
+
+### DropdownMenu.EmptyState
+Placeholder content when there are no menu items to display.
+
+- `children`: React nodes to render in empty state
+- `className`: Additional CSS class names
+
+## Examples
+Explore different ways to implement the dropdown menu component.
+
+### Basic Usage
+A simple dropdown menu with basic functionality.
+
+<Playground
+  scope={{ DropdownMenu, Button }}
+  code={`
+<DropdownMenu>
+  <DropdownMenu.Trigger asChild>
+    <Button variant="secondary">Open Menu</Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Item>Profile</DropdownMenu.Item>
+    <DropdownMenu.Item>Settings</DropdownMenu.Item>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item>Logout</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu>
+`}
+/>
+
+### With Icons
+You can add icons to the dropdown items. Supports both leading and trailing icons.
+
+<Playground
+  scope={{ DropdownMenu, Button }}
+  code={`
+<DropdownMenu>
+  <DropdownMenu.Trigger asChild>
+    <Button variant="secondary">Actions</Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Item leadingIcon={<>📝</>}>Edit</DropdownMenu.Item>
+    <DropdownMenu.Item leadingIcon={<>📋</>} trailingIcon={<>⌘C</>}>Copy</DropdownMenu.Item>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Item leadingIcon={<>🗑️</>}>Delete</DropdownMenu.Item>
+  </DropdownMenu.Content>
+</DropdownMenu>
+`}
+/>
+
+### With Groups and Labels
+Organize related menu items into sections with descriptive headers.
+
+<Playground
+  scope={{ DropdownMenu, Button }}
+  code={`
+<DropdownMenu>
+  <DropdownMenu.Trigger asChild>
+    <Button variant="secondary">More</Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content>
+    <DropdownMenu.Label>Actions</DropdownMenu.Label>
+    <DropdownMenu.Group>
+      <DropdownMenu.Item>New File</DropdownMenu.Item>
+      <DropdownMenu.Item>New Folder</DropdownMenu.Item>
+    </DropdownMenu.Group>
+    <DropdownMenu.Separator />
+    <DropdownMenu.Label>Sort By</DropdownMenu.Label>
+    <DropdownMenu.Group>
+      <DropdownMenu.Item>Name</DropdownMenu.Item>
+      <DropdownMenu.Item>Date</DropdownMenu.Item>
+    </DropdownMenu.Group>
+  </DropdownMenu.Content>
+</DropdownMenu>
+`}
+/>
+
