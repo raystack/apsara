@@ -25,6 +25,7 @@ export const primitivesRoutes = [
       {
         title: "Dropdown Menu",
         slug: "docs/primitives/components/dropdownmenu",
+        newBadge: true
       },
       { title: "Empty State", slug: "docs/primitives/components/emptystate" },
       { title: "ErrorState", slug: "docs/primitives/components/errorstate" },
