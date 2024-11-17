@@ -9,7 +9,7 @@
   position: absolute;
   width: 12%;
   height: 30%;
-  background-color: var(--rs-foreground-base-secondary);
+  background-color: var(--rs-foreground-base-primary);
   border-radius: var(--rs-radius-full);
   animation: spin 1.2s linear infinite;
   transform-origin: center 150%;
@@ -25,14 +25,14 @@
 .pole:nth-child(8) { transform: rotate(315deg); animation-delay: -1.05s; }
 
 @keyframes spin {
-  0%, 100% { opacity: 1; }
-  12.5% { opacity: 0.9; }
-  25% { opacity: 0.8; }
-  37.5% { opacity: 0.7; }
-  50% { opacity: 0.6; }
-  62.5% { opacity: 0.5; }
-  75% { opacity: 0.4; }
-  87.5% { opacity: 0.3; }
+  0%, 100% { opacity: 0.8; }
+  12.5% { opacity: 0.7; }
+  25% { opacity: 0.6; }
+  37.5% { opacity: 0.5; }
+  50% { opacity: 0.4; }
+  62.5% { opacity: 0.3; }
+  75% { opacity: 0.2; }
+  87.5% { opacity: 0.1; }
 }
 
 .spinner-size-1 {
@@ -66,7 +66,7 @@
 }
 
 .spinner-color-default .pole {
-  background-color: var(--rs-foreground-base-secondary);
+  background-color: var(--rs-foreground-base-primary);
 }
 
 .spinner-color-inverted .pole {
