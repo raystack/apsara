@@ -8,6 +8,10 @@ enum Theme {
 }
 
 type Props = { size?: number };
+
+/**
+ * @deprecated Use ThemeSwitcher from '@raystack/apsara/v1' instead.
+ */
 export function ThemeSwitcher({ size = 30, ...props }: Props) {
   const { theme, setTheme } = useTheme();
   const onClickHandler = () => {

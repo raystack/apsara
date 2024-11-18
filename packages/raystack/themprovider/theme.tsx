@@ -16,8 +16,14 @@ const isServer = typeof window === "undefined";
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
 const defaultContext: UseThemeProps = { setTheme: (_) => {}, themes: [] };
 
+/**
+ * @deprecated Use useTheme from '@raystack/apsara/v1' instead.
+ */
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
+/**
+ * @deprecated Use ThemeProvider from '@raystack/apsara/v1' instead.
+ */
 export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
   const context = useContext(ThemeContext);
 
@@ -52,46 +58,61 @@ const Theme: React.FC<ThemeProviderProps> = ({
   );
   const attrs = !value ? themes : Object.values(value);
 
-  const applyTheme = useCallback((theme: string) => {
-    let resolved = theme;
-    if (!resolved) return;
+  const applyTheme = useCallback(
+    (theme: string) => {
+      let resolved = theme;
+      if (!resolved) return;
 
-    // If theme is system, resolve it before setting theme
-    if (theme === "system" && enableSystem) {
-      resolved = getSystemTheme();
-    }
-
-    const name = value ? value[resolved] : resolved;
-    const enable = disableTransitionOnChange ? disableAnimation() : null;
-    const d = document.documentElement;
-
-    if (attribute === "class") {
-      d.classList.remove(...attrs);
-
-      if (name) d.classList.add(name);
-    } else {
-      if (name) {
-        d.setAttribute(attribute, name);
-      } else {
-        d.removeAttribute(attribute);
+      // If theme is system, resolve it before setting theme
+      if (theme === "system" && enableSystem) {
+        resolved = getSystemTheme();
       }
-    }
 
-    d.setAttribute('data-style', style);
-    d.setAttribute('data-accent-color', accentColor);
-    d.setAttribute('data-gray-color', grayColor);
+      const name = value ? value[resolved] : resolved;
+      const enable = disableTransitionOnChange ? disableAnimation() : null;
+      const d = document.documentElement;
 
-    if (enableColorScheme) {
-      const fallback = colorSchemes.includes(defaultTheme)
-        ? defaultTheme
-        : null;
-      const colorScheme = colorSchemes.includes(resolved) ? resolved : fallback;
-      // @ts-ignore
-      d.style.colorScheme = colorScheme;
-    }
+      if (attribute === "class") {
+        d.classList.remove(...attrs);
 
-    enable?.();
-  }, [style, accentColor, grayColor, attribute, attrs, value, enableSystem, enableColorScheme, defaultTheme]);
+        if (name) d.classList.add(name);
+      } else {
+        if (name) {
+          d.setAttribute(attribute, name);
+        } else {
+          d.removeAttribute(attribute);
+        }
+      }
+
+      d.setAttribute("data-style", style);
+      d.setAttribute("data-accent-color", accentColor);
+      d.setAttribute("data-gray-color", grayColor);
+
+      if (enableColorScheme) {
+        const fallback = colorSchemes.includes(defaultTheme)
+          ? defaultTheme
+          : null;
+        const colorScheme = colorSchemes.includes(resolved)
+          ? resolved
+          : fallback;
+        // @ts-ignore
+        d.style.colorScheme = colorScheme;
+      }
+
+      enable?.();
+    },
+    [
+      style,
+      accentColor,
+      grayColor,
+      attribute,
+      attrs,
+      value,
+      enableSystem,
+      enableColorScheme,
+      defaultTheme,
+    ]
+  );
 
   const setTheme = useCallback(
     (theme: string) => {
@@ -167,7 +188,17 @@ const Theme: React.FC<ThemeProviderProps> = ({
       accentColor,
       grayColor,
     }),
-    [theme, setTheme, forcedTheme, resolvedTheme, enableSystem, themes, style, accentColor, grayColor]
+    [
+      theme,
+      setTheme,
+      forcedTheme,
+      resolvedTheme,
+      enableSystem,
+      themes,
+      style,
+      accentColor,
+      grayColor,
+    ]
   );
 
   return (
@@ -280,7 +311,9 @@ const ThemeScript = memo(
 
     const scriptSrc = (() => {
       if (forcedTheme) {
-        return `!function(){${optimization}${updateDOM(forcedTheme)};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray-color','${grayColor}');}()`;
+        return `!function(){${optimization}${updateDOM(
+          forcedTheme
+        )};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray-color','${grayColor}');}()`;
       }
 
       if (enableSystem) {
