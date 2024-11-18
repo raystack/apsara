@@ -1,8 +1,8 @@
 import { ThemeProvider } from "@raystack/apsara";
-import "react-loading-skeleton/dist/skeleton.css";
 import type { AppProps } from "next/app";
 import { Inter, Roboto_Mono } from "next/font/google";
 import { Navbar } from "~/components/Navbar";
+import "react-loading-skeleton/dist/skeleton.css";
 import "@raystack/apsara/style.css";
 
 const inter = Inter({
