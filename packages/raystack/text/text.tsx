@@ -41,6 +41,9 @@ const text = cva(styles.text, {
 export type TextProps = PropsWithChildren<VariantProps<typeof text>> &
   HTMLAttributes<HTMLSpanElement>;
 
+/**
+ * @deprecated Use Text from '@raystack/apsara/v1' instead.
+ */
 export function Text({
   children,
   className,
