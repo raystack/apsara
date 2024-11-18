@@ -1,15 +1,16 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { PlusIcon, BlendingModeIcon, HomeIcon } from "@radix-ui/react-icons";
+import { PlusIcon, BlendingModeIcon, HomeIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   Checkbox,
   DataTable,
   Flex,
   Text,
+  Title,
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -205,9 +206,21 @@ const AssetsHeader = () => {
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
         <Spinner size={3} />
-        <Button variant="primary" loading>Click here</Button>
-        {/* <Button variant="secondary" size="small" leadingIcon={<PlusIcon width={12} height="12" />} trailingIcon={<BlendingModeIcon width={12} height="12" />}>Label</Button> */}
-        {/* <AvatarGroup max={3}>
+        <Button variant="outline">Click here</Button>
+        <Breadcrumb items={items} />
+        <DropdownMenu>
+          <DropdownMenu.Trigger asChild>
+            <Button variant="secondary" size="small">Actions</Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start">
+            <DropdownMenu.EmptyState>
+              <Title>No insights yet</Title>
+              <Text>You need to run a model to generate insights</Text>
+              <Button>Action Button</Button>
+            </DropdownMenu.EmptyState>
+          </DropdownMenu.Content>
+        </DropdownMenu>
+        <AvatarGroup max={3}>
           <Avatar
             radius="full"
             variant="solid"
@@ -229,7 +242,8 @@ const AssetsHeader = () => {
             color="orange"
             fallback={<>RK</>}
           />
-        </AvatarGroup> */}
+        </AvatarGroup>
+
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
