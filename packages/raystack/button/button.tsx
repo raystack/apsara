@@ -27,6 +27,9 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     asChild?: boolean;
   };
 
+/**
+ * @deprecated Use Button from '@raystack/apsara/v1' instead.
+ */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";

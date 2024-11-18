@@ -88,6 +88,9 @@ export function RootDropdownMenu({ children, ...props }: DropdownMenuProps) {
   );
 }
 
+/**
+ * @deprecated Use DropdownMenu from '@raystack/apsara/v1' instead.
+ */
 export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Trigger: DropdownMenuPrimitive.Trigger,
   Content: DropdownMenuContent,

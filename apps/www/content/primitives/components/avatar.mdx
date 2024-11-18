@@ -1,26 +1,63 @@
 ---
 title: Avatar
 description: An image element with a fallback for representing the user.
-radix:
-  link: https://www.radix-ui.com/docs/primitives/components/avatar
-  api: https://www.radix-ui.com/docs/primitives/components/avatar#api-reference
 ---
 
 ## Preview
 
 <Preview>
-  <Avatar
-    alt="John Smith"
-    src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-    fallback="J"
-  />
+  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
+    <Avatar
+      fallback="S"
+      variant="soft"
+      color="orange"
+      size={5}
+    />
+
+    <Avatar
+      fallback="S"
+      variant="solid"
+      color="cyan"
+      size={5}
+    />
+
+    <Avatar
+      fallback="F"
+      variant="soft"
+      color="crimson"
+      radius="full"
+      size={5}
+    />
+
+    <Avatar
+      fallback="F"
+      variant="solid"
+      color="iris"
+      radius="full"
+      size={5}
+    />
+
+    <Avatar
+      alt="John Smith"
+      src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+      fallback="J"
+      radius="small"
+      size={5}
+    />
+
+    <Avatar
+      alt="John Smith"
+      src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+      fallback="J"
+      radius="full"
+      size={5}
+    />
+  </Flex>
 </Preview>
 
+
 ## Usage
-The Avatar component utilizes a masked image when the source (src) is provided. 
-It functions as a visual embellishment, assuming that the accompanying textual description is available from nearby elements. 
-However, in cases where there is no textual content accessible, 
-it is recommended to include an aria-label attribute to ensure screen-reader accessibility.
+The Avatar component displays a user's profile picture with support for fallback content when the image fails to load. It can be customized with different sizes, variants, and colors.
 
 ## Installation
 
@@ -30,84 +67,286 @@ Install the component from your command line.
     <LiveEditor code={`npm install @raystack/apsara`} border language="shell"/>
 </LiveProvider>
 
+<LiveProvider>
+    <LiveEditor code={`import { Avatar, AvatarGroup } from '@raystack/apsara/v1'
+
+
+  <Avatar
+    alt="John Smith"
+    src="/path/to/image.jpg"
+    fallback="JS"
+    size={5}
+  />
+`} border/>
+</LiveProvider>
+
+
+## Avatar Props
+
+The `Avatar` component accepts the following props:
+
+- `size`: Specifies the size of the avatar (1-13, default: 3)
+- `src`: The URL of the image to display
+- `alt`: Alternative text description for the image
+- `fallback`: Content to display when image fails to load or while loading
+- `variant`: Visual style variant (`"solid"` | `"soft"`, default: "soft")
+- `radius`: Border radius style (`"small"` | `"full"`, default: "small")
+- `color`: Color theme for the avatar:
+  - Base colors: `"indigo"` | `"orange"` | `"mint"` | `"neutral"`
+  - Extended colors: `"sky"` | `"lime"` | `"grass"` | `"cyan"` | `"iris"` | `"purple"` | `"pink"` | `"crimson"` | `"gold"`
+- `asChild`: Boolean to merge props onto child element
+- `className`: Additional CSS class names
+
+
+## AvatarGroup Props
+
+The `AvatarGroup` component accepts the following props:
+
+- `children`: Array of Avatar components to display
+- `max`: Maximum number of avatars to show before displaying a count (number)
+- `className`: Additional CSS class names
+
 ## Size
 
-The Avatar component supports various sizes for displaying user profile pictures or images. 
-By specifying different size options, you can customize the visual representation of the avatar based on your design requirements.
+The Avatar component supports 13 different sizes to accommodate various layout requirements and design needs.
 
 <Playground
-    scope={{ Avatar }}
-    tabs={[
-        {
-            name: "small",
-            code: 
-`<Avatar
-  size="small"
-  alt="John Smith"
-  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-  fallback="J"
-/>`,
-        },
-        {
-            name: "medium",
-            code: `
-<Avatar
-  size="medium"
-  alt="John Smith"
-  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-  fallback="J"
-/>`,
-        },
-        {
-            name: "large",
-            code: `
-<Avatar
-  size="large"
-  alt="John Smith"
-  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-  fallback="J"
-/>`,
-        },
-        {
-            name: "extra-large",
-            code: `
-<Avatar
-  size="extra-large"
-  alt="John Smith"
-  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-  fallback="J"
-/>`,
-        },
-    ]}
+  scope={{ Avatar }}
+  tabs={[
+    {
+      name: "Size 1",
+      code: `<Avatar size={1} fallback="S" />`,
+    },
+    {
+      name: "Size 2", 
+      code: `<Avatar size={2} fallback="M" />`,
+    },
+    {
+      name: "Size 3",
+      code: `<Avatar size={3} fallback="S" />`,
+    },
+    {
+      name: "Size 4", 
+      code: `<Avatar size={4} fallback="M" />`,
+    },
+    {
+      name: "Size 5",
+      code: `<Avatar size={5} fallback="S" />`,
+    },
+    {
+      name: "Size 6", 
+      code: `<Avatar size={6} fallback="M" />`,
+    },
+    {
+      name: "Size 7",
+      code: `<Avatar size={7} fallback="S" />`,
+    },
+    {
+      name: "Size 8", 
+      code: `<Avatar size={8} fallback="M" />`,
+    },
+    {
+      name: "Size 9",
+      code: `<Avatar size={9} fallback="L" />`,
+    },
+    {
+      name: "Size 10", 
+      code: `<Avatar size={10} fallback="M" />`,
+    },
+    {
+      name: "Size 11",
+      code: `<Avatar size={11} fallback="S" />`,
+    },
+    {
+      name: "Size 12", 
+      code: `<Avatar size={12} fallback="M" />`,
+    },
+    {
+      name: "Size 13",
+      code: `<Avatar size={13} fallback="L" />`,
+    }
+  ]}
 />
 
-## shape
+## Colors
 
-Avatar component offers various shapes for displaying user profile pictures or images. By choosing different shape options, you can enhance the visual appearance of the avatars based on your design preferences.
+Avatar comes with a range of predefined colors including both base and extended color options to match your design system.
 
 <Playground
-    scope={{ Avatar }}
-    tabs={[
-        
-        {
-            name: "Square",
+  scope={{ Avatar }}
+  tabs={[
+    {
+      name: "Base Colors",
+      code: `
+      <div style={{ display: 'flex', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="indigo" fallback="I" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Indigo</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="orange" fallback="O" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Orange</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="mint" fallback="M" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Mint</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="neutral" fallback="N" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Neutral</span>
+        </div>
+      </div>`,
+          },
+          {
+            name: "Extended Colors",
             code: `
-<Avatar
-  shape="square"
-  alt="John Smith"
-  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-  fallback="J"
-/>`,
-        },
-        {
-            name: "Circle",
-            code: `
-<Avatar
-  shape="circle"
-  alt="John Smith"
-  src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-  fallback="J"
-/>`,
-        },
-    ]}
+      <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="sky" fallback="S" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Sky</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="lime" fallback="L" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Lime</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="grass" fallback="G" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Grass</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="cyan" fallback="C" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Cyan</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="iris" fallback="I" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Iris</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="purple" fallback="P" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Purple</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="pink" fallback="P" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Pink</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="crimson" fallback="C" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Crimson</span>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <Avatar color="gold" fallback="G" size={5} />
+          <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Gold</span>
+        </div>
+      </div>`,
+    }
+  ]}
+/>
+
+
+## Variants
+
+Choose between soft and solid variants to control the visual weight and emphasis of the avatar in your interface.
+
+<Playground
+  scope={{ Avatar }}
+  tabs={[
+    {
+      name: "Soft",
+      code: `
+        <div style={{ display: 'flex', gap: '10px' }}>
+        <Avatar variant="soft" fallback="N" size={5} color="neutral" />
+          <Avatar variant="soft" fallback="S" size={5} color="indigo" />
+          <Avatar variant="soft" fallback="O" size={5} color="orange" />
+          <Avatar variant="soft" fallback="M" size={5} color="mint" />
+          <Avatar variant="soft" fallback="S" size={5} color="sky" />
+          <Avatar variant="soft" fallback="L" size={5} color="lime" />
+          <Avatar variant="soft" fallback="G" size={5} color="grass" />
+          <Avatar variant="soft" fallback="C" size={5} color="cyan" />
+          <Avatar variant="soft" fallback="I" size={5} color="iris" />
+          <Avatar variant="soft" fallback="P" size={5} color="purple" />
+          <Avatar variant="soft" fallback="P" size={5} color="pink" />
+          <Avatar variant="soft" fallback="C" size={5} color="crimson" />
+          <Avatar variant="soft" fallback="G" size={5} color="gold" />
+        </div>`,
+    },
+    {
+      name: "Solid",
+      code: `
+        <div style={{ display: 'flex', gap: '10px' }}>
+        <Avatar variant="solid" fallback="N" size={5} color="neutral" />
+          <Avatar variant="solid" fallback="S" size={5} color="indigo" />
+          <Avatar variant="solid" fallback="O" size={5} color="orange" />
+          <Avatar variant="solid" fallback="M" size={5} color="mint" />
+          <Avatar variant="solid" fallback="S" size={5} color="sky" />
+          <Avatar variant="solid" fallback="L" size={5} color="lime" />
+          <Avatar variant="solid" fallback="G" size={5} color="grass" />
+          <Avatar variant="solid" fallback="C" size={5} color="cyan" />
+          <Avatar variant="solid" fallback="I" size={5} color="iris" />
+          <Avatar variant="solid" fallback="P" size={5} color="purple" />
+          <Avatar variant="solid" fallback="P" size={5} color="pink" />
+          <Avatar variant="solid" fallback="C" size={5} color="crimson" />
+          <Avatar variant="solid" fallback="G" size={5} color="gold" />
+        </div>`,
+    },
+  ]}
+/>
+
+## Radius
+
+Choose between small and full border radius styles to match your design preferences.
+
+<Playground
+  scope={{ Avatar }}
+  tabs={[
+    {
+      name: "Full",
+      code: `
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Avatar radius="full" fallback="F" size={5} color="indigo" />
+          <Avatar radius="full" fallback="F" size={5} color="orange" />
+          <Avatar radius="full" fallback="F" size={5} color="mint" />
+          <Avatar radius="full" fallback="F" size={5} color="neutral" />
+        </div>`,
+    },
+    {
+      name: "Small",
+      code: `
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Avatar radius="small" fallback="S" size={5} color="indigo" />
+          <Avatar radius="small" fallback="S" size={5} color="orange" />
+          <Avatar radius="small" fallback="S" size={5} color="mint" />
+          <Avatar radius="small" fallback="S" size={5} color="neutral" />
+        </div>`,
+    }
+  ]}
+/>
+
+## With Image
+
+Avatar can display user images with graceful fallback to initials when images fail to load or aren't available.
+
+<Playground
+  scope={{ Avatar }}
+  tabs={[
+    {
+      name: "With Image",
+      code: `
+        <Avatar
+          alt="John Smith"
+          src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
+          fallback="J"
+          size={5}
+        />`,
+    },
+    {
+      name: "With Fallback",
+      code: `
+        <Avatar
+          alt="John Smith"
+          src="invalid-image-url.jpg"
+          fallback="GS"
+          size={5}
+        />`,
+    }
+  ]}
 />

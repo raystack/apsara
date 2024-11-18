@@ -1,17 +1,18 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
+import { PlusIcon, BlendingModeIcon, HomeIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
-  ApsaraColumnDef,
   Checkbox,
   DataTable,
   Flex,
-  Label,
-  Switch,
   Text,
-  useTable,
+  Title,
+  useTable
 } from "@raystack/apsara";
 
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
+import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
 
 export const columns: ApsaraColumnDef<Payment>[] = [
@@ -113,32 +114,89 @@ export const Assets = () => {
     }
   }, [isLoading, hasMoreData, page]);
 
+  const showToast = (variant: string) => {
+    switch (variant) {
+      case "success":
+        const successToastId = toast.success('Data loaded successfully.',
+        { 
+          duration: Infinity,
+          dismissible: true,
+          action: <Button size="small" onClick={() => toast.dismiss(successToastId)}>
+            Click Me
+          </Button>
+        }
+        );
+        break;  
+      case "error":
+        const errorToastId = toast.info('Error loading data!',
+        { 
+          duration: Infinity,
+          dismissible: true,
+          action: <Button size="small" onClick={() => toast.dismiss(errorToastId)}>Retry</Button>
+        }
+        );
+        break;
+      default:
+        const defaultToastId = toast(
+          <div>
+            Default message
+            <Button size="small" onClick={() => toast.dismiss(defaultToastId)}>
+              Action
+            </Button>
+          </div>,
+          { duration: Infinity, dismissible: true }
+        );
+    }
+  };
+
   useEffect(() => {
-    loadMoreData()
-  }, [])
+    loadMoreData();
+  }, []);
 
   return (
-    <DataTable
-      columns={columns}
-      data={data}
-      initialState={{ sorting: [{ id: "amount", desc: true }] }}
-      isLoading={isLoading}
-      onLoadMore={loadMoreData}
-    >
-      <DataTable.Toolbar>
-        <AssetsHeader />
-        <DataTable.FilterChips />
-      </DataTable.Toolbar>
-      <DataTable.Footer>
-        <></>
-      </DataTable.Footer>
-    </DataTable>
+    <>
+      <DataTable
+        columns={columns}
+        data={data}
+        initialState={{ sorting: [{ id: "amount", desc: true }] }}
+        isLoading={isLoading}
+        onLoadMore={loadMoreData}
+      >
+        <DataTable.Toolbar>
+          <AssetsHeader />
+          <DataTable.FilterChips />
+          <Flex gap="small">
+            <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast</Button>
+            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button>
+          </Flex>
+        </DataTable.Toolbar>
+        <DataTable.Footer>
+          <></>
+        </DataTable.Footer>
+      </DataTable>
+      <ToastContainer />
+    </>
   );
 };
 
 const AssetsHeader = () => {
-  const { filteredColumns, table } = useTable();
+  const { filteredColumns } = useTable();
   const isFiltered = filteredColumns.length > 0;
+  const items = [
+    { label: 'Home', href: '/', icon: <HomeIcon /> },
+    { label: 'Category', href: '/category' },
+    { 
+      label: 'Subcategory', 
+      href: '/category/subcategory',
+      dropdownItems: [
+        { label: 'Option 1', href: '/category/subcategory/option1' },
+        { label: 'Option 2', href: '/category/subcategory/option2' },
+        { label: 'Option 3', href: '/category/subcategory/option3' },
+      ]
+    },
+    { label: 'Current Page', href: '/category/subcategory/current' },
+  ];
+
   return (
     <Flex
       align="center"
@@ -147,6 +205,45 @@ const AssetsHeader = () => {
     >
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
+        <Spinner size={3} />
+        <Button variant="outline">Click here</Button>
+        <Breadcrumb items={items} />
+        <DropdownMenu>
+          <DropdownMenu.Trigger asChild>
+            <Button variant="secondary" size="small">Actions</Button>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="start">
+            <DropdownMenu.EmptyState>
+              <Title>No insights yet</Title>
+              <Text>You need to run a model to generate insights</Text>
+              <Button>Action Button</Button>
+            </DropdownMenu.EmptyState>
+          </DropdownMenu.Content>
+        </DropdownMenu>
+        <AvatarGroup max={3}>
+          <Avatar
+            radius="full"
+            variant="solid"
+            size={6}
+            color="iris"
+            fallback={<>GS</>}
+          />
+          <Avatar
+            radius="full"
+            variant="solid"
+            size={6}
+            color="mint"
+            fallback={<>RK</>}
+          />
+          <Avatar
+            radius="full"
+            variant="solid"
+            size={6}
+            color="orange"
+            fallback={<>RK</>}
+          />
+        </AvatarGroup>
+
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

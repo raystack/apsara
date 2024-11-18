@@ -1,4 +1,5 @@
-import "./style.css";
+import "./style.css"; // Old styles file. To be removed after Apsara v1 release
+import "./v1/styles/index.css"
 export { Accordion } from "./accordion";
 export { Avatar } from "./avatar";
 export { Badge } from "./badge";
@@ -50,3 +51,7 @@ export { TextField } from "./textfield";
 export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
 export { Title } from "./title";
 export { ToastContainer, toast } from "./toast";
+
+
+// v1 exports
+export * as v1 from "./v1"

@@ -1,0 +1,322 @@
+.button {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--fs-200);
+  font-weight: 500;
+  width: fit-content;
+  padding: var(--rs-space-3) var(--rs-space-4);
+  border-radius: var(--br-4);
+}
+
+.button:before,
+.button:after {
+  box-sizing: border-box;
+}
+
+.button:disabled,
+.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:disabled:hover,
+.button-disabled:hover {
+  color: inherit;
+}
+
+.button-small {
+  padding: var(--rs-space-2) var(--rs-space-3);
+  font-size: var(--fs-100);
+}
+
+.button-normal {
+  padding: var(--rs-space-3) var(--rs-space-4);
+  font-size: var(--fs-200);
+}
+
+.button-primary {
+  color: var(--rs-foreground-accent-emphasis);
+  background-color: var(--rs-background-accent-emphasis);
+}
+
+.button-primary:hover,
+.button-primary:active,
+.button-primary[data-radix-popover-trigger][data-state="open"],
+.button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-accent-emphasis-hover);
+}
+
+.button-primary.button-disabled:hover,
+.button-primary.button-disabled:active,
+.button-primary[data-radix-popover-trigger][data-state="open"],
+.button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--rs-foreground-accent-emphasis);
+  background-color: var(--rs-background-accent-emphasis);
+}
+
+.button-primary.button-loading:hover,
+.button-primary.button-loading:active,
+.button-primary.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-primary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-accent-emphasis);
+}
+
+.button-secondary {
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
+  border: 1px solid var(--rs-border-base-secondary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+}
+
+.button-secondary:hover,
+.button-secondary:active,
+.button-secondary[data-radix-popover-trigger][data-state="open"],
+.button-secondary[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-base-primary-hover);
+  border-color: var(--rs-border-base-focus);
+}
+
+.button-secondary:disabled,
+.button-secondary.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-secondary:disabled:hover,
+.button-secondary.button-disabled:hover,
+.button-secondary:disabled:active,
+.button-secondary.button-disabled:active,
+.button-secondary:disabled[data-radix-popover-trigger][data-state="open"],
+.button-secondary.button-disabled[data-radix-popover-trigger][data-state="open"],
+.button-secondary:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
+.button-secondary.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--rs-foreground-base-primary);
+  background-color: var(--rs-background-base-primary);
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-secondary.button-loading:hover,
+.button-secondary.button-loading:active,
+.button-secondary.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-secondary.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-base-primary);
+  border-color: var(--rs-border-base-primary);
+  cursor: not-allowed;
+}
+
+.button-outline {
+  background-color: var(--rs-background-base-primary);
+  color: var(--rs-foreground-accent-primary);
+  border: 1px solid var(--rs-border-accent-emphasis);
+}
+
+.button-outline:hover {
+  background-color: var(--rs-background-accent-primary);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:active {
+  background-color: var(--rs-background-accent-emphasis);
+  color: var(--rs-foreground-accent-emphasis);
+  border-color: var(--rs-border-accent-emphasis);
+}
+
+.button-outline:disabled,
+.button-outline.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-outline:disabled:hover,
+.button-outline.button-disabled:hover,
+.button-outline:disabled:active,
+.button-outline.button-disabled:active,
+.button-outline:disabled[data-radix-popover-trigger][data-state="open"],
+.button-outline.button-disabled[data-radix-popover-trigger][data-state="open"],
+.button-outline:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
+.button-outline.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: transparent;
+  color: var(--rs-foreground-accent-primary);
+  border-color: var(--rs-border-accent-primary);
+}
+
+.button-outline.button-loading:hover,
+.button-outline.button-loading:active,
+.button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: transparent;
+  color: var(--rs-foreground-accent-primary);
+  border-color: var(--rs-border-accent-primary);
+  cursor: not-allowed;
+}
+
+.button-ghost {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+  border: 1px dashed var(--rs-border-base-primary);
+}
+
+.button-ghost:hover,
+.button-ghost:active,
+.button-ghost[data-radix-popover-trigger][data-state="open"],
+.button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-base-primary-hover);
+  border-color: var(--rs-border-base-focus);
+}
+
+.button-ghost:disabled,
+.button-ghost.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-ghost:disabled:hover,
+.button-ghost.button-disabled:hover,
+.button-ghost:disabled:active,
+.button-ghost.button-disabled:active,
+.button-ghost:disabled[data-radix-popover-trigger][data-state="open"],
+.button-ghost.button-disabled[data-radix-popover-trigger][data-state="open"],
+.button-ghost:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
+.button-ghost.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
+}
+
+.button-ghost.button-loading:hover,
+.button-ghost.button-loading:active,
+.button-ghost.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-ghost.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: transparent;
+  border-color: var(--rs-border-base-primary);
+  cursor: not-allowed;
+}
+
+.button-danger {
+  color: var(--rs-foreground-danger-emphasis);
+  background-color: var(--rs-background-danger-emphasis);
+}
+
+.button-danger:hover,
+.button-danger:active,
+.button-danger[data-radix-popover-trigger][data-state="open"],
+.button-danger[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-danger-emphasis-hover);
+}
+
+.button-danger:disabled,
+.button-danger.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-danger.button-loading:hover,
+.button-danger.button-loading:active,
+.button-danger.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-danger.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-danger-emphasis);
+  cursor: not-allowed;
+}
+
+.button-danger:disabled:hover,
+.button-danger.button-disabled:hover,
+.button-danger:disabled:active,
+.button-danger.button-disabled:active,
+.button-danger:disabled[data-radix-popover-trigger][data-state="open"],
+.button-danger.button-disabled[data-radix-popover-trigger][data-state="open"],
+.button-danger:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
+.button-danger.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--rs-foreground-danger-emphasis);
+  background-color: var(--rs-background-danger-emphasis);
+}
+
+.button-text {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+}
+
+.button-text:hover,
+.button-text:active,
+.button-text[data-radix-popover-trigger][data-state="open"],
+.button-text[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: var(--rs-background-base-primary-hover);
+}
+
+.button-text:disabled,
+.button-text.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button-text.button-loading:hover,
+.button-text.button-loading:active,
+.button-text.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-text.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+.button-text:disabled:hover,
+.button-text.button-disabled:hover,
+.button-text:disabled:active,
+.button-text.button-disabled:active,
+.button-text:disabled[data-radix-popover-trigger][data-state="open"],
+.button-text.button-disabled[data-radix-popover-trigger][data-state="open"],
+.button-text:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
+.button-text.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+  color: var(--rs-foreground-base-primary);
+  background-color: transparent;
+}
+
+.button-loading {
+  display: flex;
+  align-items: center;
+}
+
+.button-loading:hover,
+.button-loading:active,
+.button-loading[data-radix-popover-trigger][data-state="open"],
+.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+  background-color: inherit;
+  cursor: not-allowed;
+}
+
+.loader {
+  border: 2px solid var(--background-base);
+  border-top: 2px solid var(--foreground-base);
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: spin 1s linear infinite;
+}
+
+.loader-text {
+  margin-left: var(--rs-space-3);
+}
+
+.loader-only-button-small {
+  padding: var(--rs-space-2) var(--rs-space-6);
+}
+
+.loader-only-button-normal {
+  padding: var(--rs-space-3) var(--rs-space-8);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-leading {
+  margin-right: var(--rs-space-3);
+}
+
+.icon-trailing {
+  margin-left: var(--rs-space-3);  
+}

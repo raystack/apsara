@@ -12,9 +12,10 @@ export const primitivesRoutes = [
   {
     label: "Components",
     pages: [
-      { title: "Avatar", slug: "docs/primitives/components/avatar" },
+      { title: "Avatar", slug: "docs/primitives/components/avatar", newBadge: true, },
       { title: "Badge", slug: "docs/primitives/components/badge" },
-      { title: "Button", slug: "docs/primitives/components/button" },
+      { title: "Breadcrumb", slug: "docs/primitives/components/breadcrumb", newBadge: true, },
+      { title: "Button", slug: "docs/primitives/components/button", newBadge: true, },
       { title: "Calendar", slug: "docs/primitives/components/calendar" },
       { title: "Command", slug: "docs/primitives/components/command" },
       { title: "Checkbox", slug: "docs/primitives/components/checkbox" },
@@ -24,6 +25,7 @@ export const primitivesRoutes = [
       {
         title: "Dropdown Menu",
         slug: "docs/primitives/components/dropdownmenu",
+        newBadge: true
       },
       { title: "Empty State", slug: "docs/primitives/components/emptystate" },
       { title: "ErrorState", slug: "docs/primitives/components/errorstate" },
@@ -34,8 +36,9 @@ export const primitivesRoutes = [
       { title: "Popover", slug: "docs/primitives/components/popover" },
       { title: "Radio", slug: "docs/primitives/components/radio" },
       { title: "Select", slug: "docs/primitives/components/select" },
-      { title: "Seprator", slug: "docs/primitives/components/separator" },
+      { title: "Separator", slug: "docs/primitives/components/separator" },
       { title: "Sheet", slug: "docs/primitives/components/sheet" },
+      { title: "Spinner", slug: "docs/primitives/components/spinner", newBadge: true, },
       { title: "Switch", slug: "docs/primitives/components/switch" },
       { title: "Tabs", slug: "docs/primitives/components/tabs" },
       { title: "Table", slug: "docs/primitives/components/table" },
@@ -43,7 +46,7 @@ export const primitivesRoutes = [
       { title: "Text Field", slug: "docs/primitives/components/textfield" },
       { title: "Tooltip", slug: "docs/primitives/components/tooltip" },
       { title: "Toggle Group", slug: "docs/primitives/components/togglegroup" },
-      { title: "Toast", slug: "docs/primitives/components/toast" },
+      { title: "Toast", slug: "docs/primitives/components/toast", newBadge: true },
     ],
   },
 ];
@@ -53,6 +56,7 @@ export type PageProps = {
   slug: string;
   deprecated?: boolean;
   preview?: boolean;
+  newBadge?: boolean;
 };
 
 export type RouteProps = {

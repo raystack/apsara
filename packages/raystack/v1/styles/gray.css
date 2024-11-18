@@ -1,0 +1,120 @@
+
+[data-gray-color='gray'] {
+    --rs-gray-1: #fcfcfc;
+    --rs-gray-2: #f9f9f9;
+    --rs-gray-3: #f0f0f0;
+    --rs-gray-4: #e8e8e8;
+    --rs-gray-5: #e0e0e0;
+    --rs-gray-6: #d9d9d9;
+    --rs-gray-7: #cecece;
+    --rs-gray-8: #bbbbbb;
+    --rs-gray-9: #8d8d8d;
+    --rs-gray-10: #838383;
+    --rs-gray-11: #646464;
+    --rs-gray-12: #202020;
+}
+
+[data-gray-color='gray'][data-theme='dark'] {
+    --rs-gray-1: #111111;
+    --rs-gray-2: #191919;
+    --rs-gray-3: #222222;
+    --rs-gray-4: #2a2a2a;
+    --rs-gray-5: #313131;
+    --rs-gray-6: #3a3a3a;
+    --rs-gray-7: #484848;
+    --rs-gray-8: #606060;
+    --rs-gray-9: #6e6e6e;
+    --rs-gray-10: #7b7b7b;
+    --rs-gray-11: #b4b4b4;
+    --rs-gray-12: #eeeeee;
+}
+
+[data-gray-color='mauve'] {
+    --rs-gray-1: #fdfcfd;
+    --rs-gray-2: #faf9fb;
+    --rs-gray-3: #f2eff3;
+    --rs-gray-4: #eae7ec;
+    --rs-gray-5: #e3dfe6;
+    --rs-gray-6: #dbd8e0;
+    --rs-gray-7: #d0cdd7;
+    --rs-gray-8: #bcbac7;
+    --rs-gray-9: #8e8c99;
+    --rs-gray-10: #84828e;
+    --rs-gray-11: #65636d;
+    --rs-gray-12: #211f26;
+}
+
+[data-gray-color='mauve'][data-theme='dark'] {
+    --rs-gray-1: #121113;
+    --rs-gray-2: #1a191b;
+    --rs-gray-3: #232225;
+    --rs-gray-4: #2b292d;
+    --rs-gray-5: #323035;
+    --rs-gray-6: #3c393f;
+    --rs-gray-7: #49474e;
+    --rs-gray-8: #625f69;
+    --rs-gray-9: #6f6d78;
+    --rs-gray-10: #7c7a85;
+    --rs-gray-11: #b5b2bc;
+    --rs-gray-12: #eeeef0;
+}
+
+[data-gray-color='slate'] {
+    --rs-gray-1: #fcfcfd;
+    --rs-gray-2: #f9f9fb;
+    --rs-gray-3: #f0f0f3;
+    --rs-gray-4: #e8e8ec;
+    --rs-gray-5: #e0e1e6;
+    --rs-gray-6: #d9d9e0;
+    --rs-gray-7: #cdced6;
+    --rs-gray-8: #b9bbc6;
+    --rs-gray-9: #8b8d98;
+    --rs-gray-10: #80838d;
+    --rs-gray-11: #60646c;
+    --rs-gray-12: #1c2024;
+}
+
+[data-gray-color='slate'][data-theme='dark'] {
+    --rs-gray-1: #111113;
+    --rs-gray-2: #18191b;
+    --rs-gray-3: #212225;
+    --rs-gray-4: #272a2d;
+    --rs-gray-5: #2e3135;
+    --rs-gray-6: #363a3f;
+    --rs-gray-7: #43484e;
+    --rs-gray-8: #5a6169;
+    --rs-gray-9: #696e77;
+    --rs-gray-10: #777b84;
+    --rs-gray-11: #b0b4ba;
+    --rs-gray-12: #edeef0;
+}
+
+[data-gray-color='sage'] {
+    --rs-gray-1: #fbfdfc;
+    --rs-gray-2: #f7f9f8;
+    --rs-gray-3: #eef1f0;
+    --rs-gray-4: #e6e9e8;
+    --rs-gray-5: #dfe2e0;
+    --rs-gray-6: #d7dad9;
+    --rs-gray-7: #cbcfcd;
+    --rs-gray-8: #b8bcba;
+    --rs-gray-9: #868e8b;
+    --rs-gray-10: #7c8481;
+    --rs-gray-11: #5f6563;
+    --rs-gray-12: #1a211e;
+}
+
+[data-gray-color='sage'][data-theme='dark'] {
+    --rs-gray-1: #101211;
+    --rs-gray-2: #171918;
+    --rs-gray-3: #202221;
+    --rs-gray-4: #272a29;
+    --rs-gray-5: #2e3130;
+    --rs-gray-6: #373b39;
+    --rs-gray-7: #444947;
+    --rs-gray-8: #5b625f;
+    --rs-gray-9: #63706b;
+    --rs-gray-10: #717d79;
+    --rs-gray-11: #adb5b2;
+    --rs-gray-12: #eceeed;
+}

@@ -94,6 +94,9 @@ const AvatarFallback = forwardRef<
 
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName;
 
+/**
+ * @deprecated Use Avatar from '@raystack/apsara/v1' instead.
+ */
 export const Avatar = Object.assign(AvatarRoot, {
   Image: AvatarImage,
   Fallback: AvatarFallback,

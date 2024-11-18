@@ -7,7 +7,7 @@ import { Flex, ScrollArea, Sidebar } from "@raystack/apsara";
 import { Assets } from "./assets";
 import { navigationList } from "./data";
 
-import "@raystack/apsara/index.css";
+import "@raystack/apsara/style.css";
 
 export const Shield = () => {
   return (

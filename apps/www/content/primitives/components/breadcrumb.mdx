@@ -1,0 +1,245 @@
+---
+title: Breadcrumb
+description: A navigation component for displaying a route trail.
+---
+
+## Preview
+
+<Preview scope={{ Breadcrumb }}>
+  <Breadcrumb
+    items={[
+      { label: "Home", href: "/" },
+      { label: "Category", href: "/category" },
+      { label: "Subcategory", href: "/category/subcategory" },
+      { label: "Current Page", href: "/category/subcategory/current" },
+    ]}
+    maxVisibleItems={3}
+    size="medium"
+  />
+</Preview>
+
+## Usage
+
+The Breadcrumb component is used to display a trail of links representing the current page's location within a navigational hierarchy. It supports dropdowns for subcategories and can be customized with different sizes and separators.
+
+## Installation
+
+Install the Apsara library from the terminal.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
+</LiveProvider>
+
+Import and usage.
+
+<LiveProvider>
+  <LiveEditor
+    code={`<Breadcrumb
+    size="small"
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Category', href: '/category' },
+      { label: 'Subcategory', href: '/category/subcategory' },
+      { label: 'Current Page', href: '/category/subcategory/current' }
+    ]}
+  />`}
+    border
+  />
+</LiveProvider>
+
+
+## Props
+
+The `Breadcrumb` component accepts the following props:
+
+- `items`: Array of breadcrumb items with the following structure:
+  - `label`: Text to display for the item (string)
+  - `href`: URL for the item link (string)
+  - `icon`: Optional icon element to display (ReactNode)
+  - `dropdownItems`: Optional array of dropdown items, each with `label` and `href`
+- `size`: Size variant of the breadcrumb (`"small"` | `"medium"`, default: "medium")
+- `maxVisibleItems`: Maximum number of items to display before showing ellipsis (number)
+- `separator`: Custom separator between items (ReactNode, default: "/")
+- `onItemClick`: Callback function when an item is clicked (Function)
+- `className`: Custom CSS class names
+
+
+
+## Size
+
+The Breadcrumb component supports different sizes to fit various design requirements. You can specify the size using the `size` prop.
+
+<Playground
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "small",
+      code: `<Breadcrumb
+  size="small"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+    },
+    {
+      name: "medium",
+      code: `
+<Breadcrumb
+  size="medium"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+    },
+  ]}
+/>
+
+## Separator
+
+You can customize the separator between breadcrumb items using the `separator` prop.
+
+<Playground
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "Default Separator",
+      code: `
+<Breadcrumb
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+    },
+    {
+      name: "Custom Separator",
+      code: `
+<Breadcrumb
+  separator=">"
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { label: 'Subcategory', href: '/category/subcategory' },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+    },
+  ]}
+/>
+
+## Dropdowns
+
+Breadcrumb items can include dropdowns for additional navigation options.
+
+<Playground
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "With Dropdown",
+      code: `
+<Breadcrumb
+  items={[
+    { label: 'Home', href: '/' },
+    { label: 'Category', href: '/category' },
+    { 
+      label: 'Subcategory', 
+      href: '/category/subcategory',
+      dropdownItems: [
+        { label: 'Option 1', href: '/category/subcategory/option1' },
+        { label: 'Option 2', href: '/category/subcategory/option2' }
+      ]
+    },
+    { label: 'Current Page', href: '/category/subcategory/current' }
+  ]}
+/>`,
+    },
+  ]}
+/>
+
+## Icons
+
+Breadcrumb items can include icons either alongside text or as standalone elements.
+
+<Playground
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "Text with Icon",
+      code: `
+      <Breadcrumb
+        items={[
+          { 
+            label: 'Home', 
+            href: '/',
+            icon: <>O</>
+          },
+          { 
+            label: 'Documents', 
+            href: '/documents',
+            icon: <>O</>
+          },
+          { 
+            label: 'Settings', 
+            href: '/settings',
+            icon: <>O</>
+          }
+        ]}
+      />`,
+    },
+    {
+      name: "Only Icon",
+      code: `
+      <Breadcrumb
+        items={[
+          { 
+            label: '', 
+            href: '/',
+            icon: <>O</>
+          },
+          { 
+            label: '', 
+            href: '/documents',
+            icon: <>O</>
+          },
+          { 
+            label: '', 
+            href: '/settings',
+            icon: <>O</>
+          }
+        ]}
+      />`,
+    },
+  ]}
+/>
+
+## Ellipsis
+
+Control the visibility of breadcrumb items using the `maxVisibleItems` prop. By default, all items are visible when `maxVisibleItems` is not specified.
+
+<Playground
+  scope={{ Breadcrumb }}
+  tabs={[
+    {
+      name: "With Ellipsis",
+      code: `
+        <Breadcrumb
+          maxVisibleItems={3}
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Category', href: '/category' },
+            { label: 'Subcategory', href: '/category/subcategory' },
+            { label: 'Products', href: '/category/subcategory/products' },
+            { label: 'Current Page', href: '/category/subcategory/products/current' }
+          ]}
+        />`,
+    }
+  ]}
+/>

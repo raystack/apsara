@@ -1,114 +1,169 @@
 ---
 name: button
 title: Button
-description: Buttons play a vital role in user interfaces, serving as interactive elements that initiate actions or facilitate navigation within an application. They provide users with clickable elements to interact with the system and perform various tasks.
+description: Triggers a click action usually performed by the user to trigger an event such as submitting a form or closing a dialog.
 ---
 
 <Preview>
-    <Button variant="primary">Primary button</Button>
+  <Button variant="primary">Primary button</Button>
 </Preview>
 
 ## Usages
-Button component is utilized for clear and concise communication. 
-It is used for primary actions, such as submitting forms, confirming decisions, or initiating important processes. 
+
+Button component is used for primary actions, such as submitting forms, confirming decisions, or initiating important processes.
 
 ## Installation
+
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
 </LiveProvider>
-
-
-
 
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Button } from '@raystack/apsara'
+import { Button } from '@raystack/apsara/v1'
 
-<Button variant="primary">primary button</Button>`} border />
+<Button variant="primary">Click here!</Button>`} border />
 </LiveProvider>
 
 
+## Props
+
+The `Button` component accepts the following props:
+
+- `variant`: Visual style variant (`"primary"` | `"secondary"` | `"outline"` | `"ghost"` | `"danger"` | `"text"`, default: "primary")
+- `size`: Size of the button (`"small"` | `"normal"`, default: "normal")
+- `disabled`: Whether the button is disabled (boolean, default: false)
+- `loading`: Shows a loading spinner inside the button (boolean)
+- `loaderText`: Optional text to display next to the loading spinner (ReactNode)
+- `leadingIcon`: Icon element to display before button text (ReactNode)
+- `trailingIcon`: Icon element to display after button text (ReactNode)
+- `width`: Custom width for the button (string | number)
+- `asChild`: Boolean to merge props onto child element
+- `className`: Additional CSS class names
+- All other ButtonHTMLAttributes from React
+
+
 ## Variant
-The Button component provides various variants to enhance the visual appearance of buttons. you can create buttons with different variants such as:
 
-- Primary
-- Outline
-- Secondary
-- Ghost
-- Danger
-
-These variants allow you to customize the button's style, making it visually distinctive and suitable for different purposes within your user interface.
+Variants allow you to customize the button's style, making it visually distinctive and suitable for different purposes. Default is `Primary`.
 
 <Playground
-    scope={{ Button }}
-    tabs={[
-        {
-            name: "Primary",
-            code: `<Button variant="primary">Primary button</Button>`,
-        },
-        {
-            name: "Outline",
-            code: `<Button variant="outline">Outline button</Button>`,
-        },
-        {
-            name: "Secondary",
-            code: `<Button variant="secondary">Secondary button</Button>`,
-        },
-        {
-            name: "Ghost",
-            code: `<Button variant="ghost">Ghost button</Button>`,
-        },
-        {
-            name: "Danger",
-            code: `<Button variant="danger">Danger button</Button>`,
-        },
-    ]}
+  scope={{ Button }}
+  tabs={[
+    {
+      name: "Primary",
+      code: `<Button variant="primary">Primary button</Button>`,
+    },
+    {
+      name: "Secondary",
+      code: `<Button variant="secondary">Secondary button</Button>`,
+    },
+    {
+      name: "Outline",
+      code: `<Button variant="outline">Outline button</Button>`,
+    },
+    {
+      name: "Ghost",
+      code: `<Button variant="ghost">Ghost button</Button>`,
+    },
+    {
+      name: "Danger",
+      code: `<Button variant="danger">Danger button</Button>`,
+    },
+    {
+      name: "Text",
+      code: `<Button variant="text">Text button</Button>`,
+    },
+  ]}
 />
+
 
 ## Scale
-The Button component offers different size options to accommodate various design requirements. By selecting the "large" size, you can create buttons that are visually larger, making them more prominent and noticeable within the user interface. Additionally, the Button component also supports the following size options:
-- Small
-- Medium
-- Large
 
-These different size options allow you to customize the appearance of buttons to suit your specific design needs.
-
+The Button component offers two size options to accommodate various design requirements. By selecting the `normal` size, you can create buttons that are visually larger, making it more prominent and noticeable within the user interface. Default size is `normal`.
 
 <Playground
-    scope={{ Button }}
-    tabs={[
-        
-        {
-            name: "Small",
-            code: `<Button variant="primary" size="small">primary button</Button>`,
-        },
-        {
-            name: "Medium",
-            code: `<Button variant="primary" size="medium">primary button</Button>`,
-        },
-        {
-            name: "Large",
-            code: `<Button variant="primary" size="large">primary button</Button>`,
-        },
-    ]}
+  scope={{ Button }}
+  tabs={[
+    {
+      name: "Small",
+      code: `<Button variant="primary" size="small">primary button</Button>`,
+    },
+    {
+      name: "Normal",
+      code: `<Button variant="primary" size="normal">primary button</Button>`,
+    },
+  ]}
 />
 
-
 ## Disabled
-The Button component provides a "disabled" state, which prevents the button from responding to any user actions. When a button is disabled, it becomes unclickable and does not trigger any associated actions or events. This feature is useful when you want to indicate that a button is temporarily inactive or unavailable for interaction.
 
-<Playground scope={{ Button }} code={`
+The Button component provides a "disabled" state, which prevents the button from responding to any user actions. When a button is disabled, it becomes unclickable and does not trigger any associated actions or events.
+
+This feature is useful when you want to indicate that a button is temporarily inactive or unavailable for interaction. Default is `false`.
+
+<Playground
+  scope={{ Button }}
+  tabs={[
+    {
+      name: "Primary",
+      code: `<Button disabled variant="primary">Primary button</Button>`,
+    },
+    {
+      name: "Secondary",
+      code: `<Button disabled variant="secondary">Secondary button</Button>`,
+    },
+    {
+      name: "Outline",
+      code: `<Button disabled variant="outline">Outline button</Button>`,
+    },
+    {
+      name: "Ghost",
+      code: `<Button disabled variant="ghost">Ghost button</Button>`,
+    },
+    {
+      name: "Danger",
+      code: `<Button disabled variant="danger">Danger button</Button>`,
+    },
+    {
+      name: "Text",
+      code: `<Button disabled variant="text">Text button</Button>`,
+    },
+  ]}
+/>
+
+## Loading
+
+The Button component offers inbuilt loading states. Loading state is used to signify an ongoing process after the user has clicked on the button. Loading is an optional prop.
+
+Note: A loading as `true` only disables the button click and displays a spinner within the button. `loading` does not changes the button appearance as disabled. For changing the appearance to disabled state, a `disabled` prop as `true` has to passed.
+
+<Playground
+  scope={{ Button }}
+  code={`
 <div style={{display:'flex', gap: '8px'}}>
-    <Button variant="primary" disabled>secondary button</Button>
-    <Button variant="outline" disabled>secondary button</Button>
-    <Button variant="secondary" disabled>secondary button</Button>
-    <Button variant="ghost" disabled>secondary button</Button>
-    <Button variant="danger" disabled>secondary button</Button>
+    <Button variant="primary" loading>Click here</Button>
+    <Button variant="primary" loading loaderText="Custom Loading...">Click here</Button>
+    <Button variant="primary" loading loaderText="Loading..." disabled>Click here</Button>
 </div>
-`} />
+`}
+/>
 
+## With leading and trailing icons
 
+The button component accepts optional leading and/or trailing icons. A `ReactNode` can be passed as a prop.
+
+<Playground
+  scope={{ Button }}
+  code={`
+<div style={{display:'flex', gap: '8px'}}>
+    <Button variant="primary" leadingIcon={<>I</>}>With leading icon</Button>
+    <Button variant="primary" trailingIcon={<>O</>}>With trailing icon</Button>
+    <Button variant="primary" leadingIcon={<>I</>} trailingIcon={<>O</>}>With both icons</Button>
+</div>
+`}
+/>
