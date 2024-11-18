@@ -70,6 +70,7 @@
   color: var(--rs-foreground-base-primary);
   background-color: var(--rs-background-base-primary);
   border: 1px solid var(--rs-border-base-secondary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
 }
 
 .button-secondary:hover,
@@ -109,9 +110,9 @@
 }
 
 .button-outline {
-  background-color: transparent;
+  background-color: var(--rs-background-base-primary);
   color: var(--rs-foreground-accent-primary);
-  border: 1px solid var(--rs-border-accent-primary);
+  border: 1px solid var(--rs-border-accent-emphasis);
 }
 
 .button-outline:hover {
