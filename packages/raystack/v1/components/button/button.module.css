@@ -69,7 +69,7 @@
 .button-secondary {
   color: var(--rs-foreground-base-primary);
   background-color: var(--rs-background-base-primary);
-  border: 1px solid var(--rs-border-base-primary);
+  border: 1px solid var(--rs-border-base-secondary);
 }
 
 .button-secondary:hover,
