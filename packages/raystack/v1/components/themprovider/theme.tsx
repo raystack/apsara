@@ -123,11 +123,10 @@ const Theme: React.FC<ThemeProviderProps> = ({
   useEffect(() => {
     const media = window.matchMedia(MEDIA);
 
-    // Intentionally use deprecated listener methods to support iOS & old browsers
-    media.addListener(handleMediaQuery);
+    media.addEventListener('change', handleMediaQuery);
     handleMediaQuery(media);
 
-    return () => media.removeListener(handleMediaQuery);
+    return () => media.removeEventListener('change', handleMediaQuery);
   }, [handleMediaQuery]);
 
   // localStorage event handling
