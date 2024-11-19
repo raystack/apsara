@@ -1,6 +1,9 @@
 ---
 title: Avatar
 description: An image element with a fallback for representing the user.
+radix:
+  link: https://www.radix-ui.com/docs/primitives/components/avatar
+  api: https://www.radix-ui.com/docs/primitives/components/avatar#api-reference
 ---
 
 ## Preview
@@ -52,11 +55,12 @@ description: An image element with a fallback for representing the user.
       radius="full"
       size={5}
     />
+
   </Flex>
 </Preview>
 
-
 ## Usage
+
 The Avatar component displays a user's profile picture with support for fallback content when the image fails to load. It can be customized with different sizes, variants, and colors.
 
 ## Installation
@@ -64,12 +68,11 @@ The Avatar component displays a user's profile picture with support for fallback
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border language="shell"/>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
 </LiveProvider>
 
 <LiveProvider>
     <LiveEditor code={`import { Avatar, AvatarGroup } from '@raystack/apsara/v1'
-
 
   <Avatar
     alt="John Smith"
@@ -79,7 +82,6 @@ Install the component from your command line.
   />
 `} border/>
 </LiveProvider>
-
 
 ## Avatar Props
 
@@ -96,7 +98,6 @@ The `Avatar` component accepts the following props:
   - Extended colors: `"sky"` | `"lime"` | `"grass"` | `"cyan"` | `"iris"` | `"purple"` | `"pink"` | `"crimson"` | `"gold"`
 - `asChild`: Boolean to merge props onto child element
 - `className`: Additional CSS class names
-
 
 ## AvatarGroup Props
 
@@ -118,7 +119,7 @@ The Avatar component supports 13 different sizes to accommodate various layout r
       code: `<Avatar size={1} fallback="S" />`,
     },
     {
-      name: "Size 2", 
+      name: "Size 2",
       code: `<Avatar size={2} fallback="M" />`,
     },
     {
@@ -126,7 +127,7 @@ The Avatar component supports 13 different sizes to accommodate various layout r
       code: `<Avatar size={3} fallback="S" />`,
     },
     {
-      name: "Size 4", 
+      name: "Size 4",
       code: `<Avatar size={4} fallback="M" />`,
     },
     {
@@ -134,7 +135,7 @@ The Avatar component supports 13 different sizes to accommodate various layout r
       code: `<Avatar size={5} fallback="S" />`,
     },
     {
-      name: "Size 6", 
+      name: "Size 6",
       code: `<Avatar size={6} fallback="M" />`,
     },
     {
@@ -142,7 +143,7 @@ The Avatar component supports 13 different sizes to accommodate various layout r
       code: `<Avatar size={7} fallback="S" />`,
     },
     {
-      name: "Size 8", 
+      name: "Size 8",
       code: `<Avatar size={8} fallback="M" />`,
     },
     {
@@ -150,7 +151,7 @@ The Avatar component supports 13 different sizes to accommodate various layout r
       code: `<Avatar size={9} fallback="L" />`,
     },
     {
-      name: "Size 10", 
+      name: "Size 10",
       code: `<Avatar size={10} fallback="M" />`,
     },
     {
@@ -158,13 +159,13 @@ The Avatar component supports 13 different sizes to accommodate various layout r
       code: `<Avatar size={11} fallback="S" />`,
     },
     {
-      name: "Size 12", 
+      name: "Size 12",
       code: `<Avatar size={12} fallback="M" />`,
     },
     {
       name: "Size 13",
       code: `<Avatar size={13} fallback="L" />`,
-    }
+    },
   ]}
 />
 
@@ -196,10 +197,10 @@ Avatar comes with a range of predefined colors including both base and extended 
           <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Neutral</span>
         </div>
       </div>`,
-          },
-          {
-            name: "Extended Colors",
-            code: `
+    },
+    {
+      name: "Extended Colors",
+      code: `
       <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
           <Avatar color="sky" fallback="S" size={5} />
@@ -238,10 +239,9 @@ Avatar comes with a range of predefined colors including both base and extended 
           <span style={{ fontSize: '10px', color: 'var(--foreground-muted)' }}>Gold</span>
         </div>
       </div>`,
-    }
+    },
   ]}
 />
-
 
 ## Variants
 
@@ -317,7 +317,7 @@ Choose between small and full border radius styles to match your design preferen
           <Avatar radius="small" fallback="S" size={5} color="mint" />
           <Avatar radius="small" fallback="S" size={5} color="neutral" />
         </div>`,
-    }
+    },
   ]}
 />
 
@@ -347,6 +347,6 @@ Avatar can display user images with graceful fallback to initials when images fa
           fallback="GS"
           size={5}
         />`,
-    }
+    },
   ]}
 />
