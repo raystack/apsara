@@ -29,7 +29,7 @@ const createPlugins = (isV1 = false) => [
 
 const sharedWarningHandler = (warning, warn) => {
   // Ignore circular dependency warnings
-  if (warning.code === 'CIRCULAR_DEPENDENCY') return;
+  // if (warning.code === 'CIRCULAR_DEPENDENCY') return;
   
   // This ignores the warnings generated during build from
   // CSS module imports which is not standard JS module syntax.
