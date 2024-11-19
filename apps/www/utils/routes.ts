@@ -39,7 +39,11 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/dropdownmenu",
         newBadge: true,
       },
-      { title: "Empty State", slug: "docs/primitives/components/emptystate" },
+      {
+        title: "Empty State",
+        slug: "docs/primitives/components/emptystate",
+        newBadge: true,
+      },
       { title: "ErrorState", slug: "docs/primitives/components/errorstate" },
       {
         title: "Flex",
