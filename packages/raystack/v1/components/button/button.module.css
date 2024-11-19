@@ -97,7 +97,7 @@
 .button-secondary.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
   color: var(--rs-foreground-base-primary);
   background-color: var(--rs-background-base-primary);
-  border-color: var(--rs-border-base-primary);
+  border-color: var(--rs-border-base-secondary);
 }
 
 .button-secondary.button-loading:hover,
@@ -142,7 +142,7 @@
 .button-outline.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: transparent;
   color: var(--rs-foreground-accent-primary);
-  border-color: var(--rs-border-accent-primary);
+  border-color: var(--rs-border-accent-emphasis);
 }
 
 .button-outline.button-loading:hover,
