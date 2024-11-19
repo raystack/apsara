@@ -40,7 +40,7 @@
 }
 
 .button-primary {
-  color: var(--rs-foreground-accent-emphasis);
+  color: var(--rs-color-text-accent-emphasis);
   background-color: var(--rs-background-accent-emphasis);
 }
 
@@ -55,7 +55,7 @@
 .button-primary.button-disabled:active,
 .button-primary[data-radix-popover-trigger][data-state="open"],
 .button-primary[data-radix-dropdown-menu-trigger][data-state="open"] {
-  color: var(--rs-foreground-accent-emphasis);
+  color: var(--rs-color-text-accent-emphasis);
   background-color: var(--rs-background-accent-emphasis);
 }
 
@@ -67,10 +67,10 @@
 }
 
 .button-secondary {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
   background-color: var(--rs-background-base-primary);
   border: 1px solid var(--rs-border-base-secondary);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .button-secondary:hover,
@@ -95,7 +95,7 @@
 .button-secondary.button-disabled[data-radix-popover-trigger][data-state="open"],
 .button-secondary:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
 .button-secondary.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
   background-color: var(--rs-background-base-primary);
   border-color: var(--rs-border-base-secondary);
 }
@@ -111,7 +111,7 @@
 
 .button-outline {
   background-color: var(--rs-background-base-primary);
-  color: var(--rs-foreground-accent-primary);
+  color: var(--rs-color-text-accent-primary);
   border: 1px solid var(--rs-border-accent-emphasis);
 }
 
@@ -122,7 +122,7 @@
 
 .button-outline:active {
   background-color: var(--rs-background-accent-emphasis);
-  color: var(--rs-foreground-accent-emphasis);
+  color: var(--rs-color-text-accent-emphasis);
   border-color: var(--rs-border-accent-emphasis);
 }
 
@@ -142,7 +142,7 @@
 .button-outline:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
 .button-outline.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: transparent;
-  color: var(--rs-foreground-accent-primary);
+  color: var(--rs-color-text-accent-primary);
   border-color: var(--rs-border-accent-emphasis);
 }
 
@@ -151,13 +151,13 @@
 .button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
 .button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: transparent;
-  color: var(--rs-foreground-accent-primary);
+  color: var(--rs-color-text-accent-primary);
   border-color: var(--rs-border-accent-primary);
   cursor: not-allowed;
 }
 
 .button-ghost {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
   background-color: transparent;
   border: 1px dashed var(--rs-border-base-primary);
 }
@@ -184,7 +184,7 @@
 .button-ghost.button-disabled[data-radix-popover-trigger][data-state="open"],
 .button-ghost:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
 .button-ghost.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
   background-color: transparent;
   border-color: var(--rs-border-base-primary);
 }
@@ -199,7 +199,7 @@
 }
 
 .button-danger {
-  color: var(--rs-foreground-danger-emphasis);
+  color: var(--rs-color-text-danger-emphasis);
   background-color: var(--rs-background-danger-emphasis);
 }
 
@@ -232,12 +232,12 @@
 .button-danger.button-disabled[data-radix-popover-trigger][data-state="open"],
 .button-danger:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
 .button-danger.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
-  color: var(--rs-foreground-danger-emphasis);
+  color: var(--rs-color-text-danger-emphasis);
   background-color: var(--rs-background-danger-emphasis);
 }
 
 .button-text {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
   background-color: transparent;
 }
 
@@ -270,7 +270,7 @@
 .button-text.button-disabled[data-radix-popover-trigger][data-state="open"],
 .button-text:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
 .button-text.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
   background-color: transparent;
 }
 
@@ -319,5 +319,5 @@
 }
 
 .icon-trailing {
-  margin-left: var(--rs-space-3);  
+  margin-left: var(--rs-space-3);
 }

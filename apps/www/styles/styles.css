@@ -14,7 +14,7 @@ body {
   line-height: 1.5;
 
   background-color: var(--rs-background-base-primary);
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
 }
 
 svg {

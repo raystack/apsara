@@ -28,17 +28,17 @@
 .breadcrumb-link {
   display: flex;
   align-items: center;
-  color: var(--rs-foreground-base-tertiary);
+  color: var(--rs-color-text-base-tertiary);
   text-decoration: none;
   margin-right: var(--rs-space-1);
 }
 
 .breadcrumb-link:hover {
-  color: var(--rs-foreground-base-secondary);
+  color: var(--rs-color-text-base-secondary);
 }
 
 .breadcrumb-link-active {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
   font-weight: 600;
   pointer-events: none;
 }
@@ -50,27 +50,27 @@
 }
 
 .breadcrumb-separator {
-  color: var(--rs-foreground-base-tertiary);
+  color: var(--rs-color-text-base-tertiary);
   margin: 0 var(--rs-space-2);
 }
 
 .breadcrumb-ellipsis {
   display: flex;
   align-items: center;
-  color: var(--rs-foreground-base-secondary);
+  color: var(--rs-color-text-base-secondary);
   margin: 0 var(--rs-space-3) 0 var(--rs-space-2);
 }
 
 .breadcrumb-ellipsis svg {
   width: var(--rs-space-4);
   height: var(--rs-space-4);
-  color: var(--rs-foreground-base-secondary);
+  color: var(--rs-color-text-base-secondary);
 }
 
 .breadcrumb-dropdown-trigger {
   display: flex;
   align-items: center;
-  color: var(--rs-foreground-base-secondary);
+  color: var(--rs-color-text-base-secondary);
   background: none;
   border: none;
   cursor: pointer;
@@ -98,7 +98,7 @@
 
 .breadcrumb-dropdown-item {
   cursor: pointer;
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
 }
 
 .breadcrumb-dropdown-item:hover {
