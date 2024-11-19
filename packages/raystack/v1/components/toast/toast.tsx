@@ -21,7 +21,7 @@ const ToastContainer = (props: ToastContainerProps) => {
 const toast: typeof sonnerToast = Object.assign(
   (message: string | ReactNode, options?: ToasterProps) => {
     sonnerToast(
-      <div style={{ marginRight: 8 }}>
+      <div className={styles["toast-wrapper"]}>
         {message}
       </div>,
       options

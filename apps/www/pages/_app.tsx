@@ -4,6 +4,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import { Navbar } from "~/components/Navbar";
 import "react-loading-skeleton/dist/skeleton.css";
 import "@raystack/apsara/style.css";
+import "~/styles/styles.css";
 
 const inter = Inter({
   style: ["normal"],

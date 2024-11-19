@@ -129,7 +129,7 @@ export const Assets = () => {
 };
 
 const AssetsHeader = () => {
-  const { filteredColumns, table } = useTable();
+  const { filteredColumns } = useTable();
   const isFiltered = filteredColumns.length > 0;
   return (
     <Flex align="center" justify="between" style={{ width: "100%" }}>

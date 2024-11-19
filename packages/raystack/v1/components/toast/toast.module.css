@@ -3,3 +3,7 @@
   color: var(--rs-foreground-base-primary);
   border: 1px solid var(--rs-border-base-primary);
 }
+
+.toast-wrapper {
+  margin-right: var(--rs-space-3);
+}
