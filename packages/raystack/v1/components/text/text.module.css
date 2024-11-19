@@ -2,7 +2,7 @@
   display: block;
   line-height: 1;
   margin: 0;
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
 }
 
 .text-1 {
@@ -107,33 +107,33 @@
 }
 
 .text-primary {
-  color: var(--rs-foreground-base-primary);
+  color: var(--rs-color-text-base-primary);
 }
 
 .text-secondary {
-  color: var(--rs-foreground-base-secondary);
+  color: var(--rs-color-text-base-secondary);
 }
 
 .text-tertiary {
-  color: var(--rs-foreground-base-tertiary);
+  color: var(--rs-color-text-base-tertiary);
 }
 
 .text-emphasis {
-  color: var(--rs-foreground-base-emphasis);
+  color: var(--rs-color-text-base-emphasis);
 }
 
 .text-accent {
-  color: var(--rs-foreground-accent-primary);
+  color: var(--rs-color-text-accent-primary);
 }
 
 .text-attention {
-  color: var(--rs-foreground-attention-primary);
+  color: var(--rs-color-text-attention-primary);
 }
 
 .text-danger {
-  color: var(--rs-foreground-danger-primary);
+  color: var(--rs-color-text-danger-primary);
 }
 
 .text-success {
-  color: var(--rs-foreground-success-primary);
+  color: var(--rs-color-text-success-primary);
 }
