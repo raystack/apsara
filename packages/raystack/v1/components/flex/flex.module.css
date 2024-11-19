@@ -68,21 +68,21 @@
 }
 
 .gap-xs {
-  gap: 4px;
+  gap: var(--rs-space-2);
 }
 
 .gap-sm {
-  gap: 8px;
+  gap: var(--rs-space-3);
 }
 
 .gap-md {
-  gap: 16px;
+  gap: var(--rs-space-5);
 }
 
 .gap-lg {
-  gap: 32px;
+  gap: var(--rs-space-9);
 }
 
 .gap-xl {
-  gap: 48px;
+  gap: var(--rs-space-11);
 }

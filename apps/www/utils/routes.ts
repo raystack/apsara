@@ -41,6 +41,11 @@ export const primitivesRoutes = [
       },
       { title: "Empty State", slug: "docs/primitives/components/emptystate" },
       { title: "ErrorState", slug: "docs/primitives/components/errorstate" },
+      {
+        title: "Flex",
+        slug: "docs/primitives/components/flex",
+        newBadge: true,
+      },
       { title: "Headline", slug: "docs/primitives/components/headline" },
       { title: "Image", slug: "docs/primitives/components/image" },
       { title: "Label", slug: "docs/primitives/components/label" },
