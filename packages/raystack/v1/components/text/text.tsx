@@ -4,6 +4,16 @@ import styles from "./text.module.css";
 
 const text = cva(styles.text, {
   variants: {
+    variant: {
+      primary: styles["text-primary"],
+      secondary: styles["text-secondary"],
+      tertiary: styles["text-tertiary"],
+      emphasis: styles["text-emphasis"],
+      accent: styles["text-accent"],
+      attention: styles["text-attention"],
+      danger: styles["text-danger"],
+      success: styles["text-success"],
+    },
     size: {
       1: styles["text-1"],
       2: styles["text-2"],
@@ -33,6 +43,7 @@ const text = cva(styles.text, {
     },
   },
   defaultVariants: {
+    variant: "primary",
     size: 2,
     weight: 400,
   },
@@ -41,18 +52,16 @@ const text = cva(styles.text, {
 export type TextProps = PropsWithChildren<VariantProps<typeof text>> &
   HTMLAttributes<HTMLSpanElement>;
 
-/**
- * @deprecated Use Text from '@raystack/apsara/v1' instead.
- */
 export function Text({
   children,
   className,
   size,
+  variant,
   weight,
   ...props
 }: TextProps) {
   return (
-    <span className={text({ size, className, weight })} {...props}>
+    <span className={text({ size, className, weight, variant })} {...props}>
       {children}
     </span>
   );

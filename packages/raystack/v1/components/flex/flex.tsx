@@ -47,9 +47,6 @@ const flex = cva(styles.flex, {
 type BoxProps = PropsWithChildren<VariantProps<typeof flex>> &
   HTMLAttributes<HTMLDivElement>;
 
-/**
- * @deprecated Use Flex from '@raystack/apsara/v1' instead.
- */
 export const Flex = forwardRef<HTMLDivElement, BoxProps>(
   (
     { children, direction, align, justify, wrap, gap, className, ...props },

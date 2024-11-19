@@ -1,0 +1,56 @@
+---
+title: Flex
+description:
+---
+
+## Preview
+
+<Preview>
+  <Flex gap="large">
+    <Flex gap="small" direction="column">
+      <Button variant="primary">Primary button</Button>
+      <Button variant="primary">Primary button</Button>
+      <Button variant="primary">Primary button</Button>
+    </Flex>
+    <Flex gap="small" direction="column">
+      <Button variant="primary">Primary button</Button>
+      <Button variant="primary">Primary button</Button>
+      <Button variant="primary">Primary button</Button>
+    </Flex>
+  </Flex>
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
+</LiveProvider>
+
+## Props
+
+The `Flex` component accepts the following props:
+
+- `gap`: sets the gutter space between row and columns
+- `wrap`: sets whether flex items are forced onto one line or can wrap onto multiple lines.
+- `justify`: defines how the browser distributes space between and around content items along the main axis of a flex container.
+- `align`: it controls the alignment of items on the cross axis.
+- `direction`: sets how flex items are placed in the flex container defining the main axis and the direction (normal or reversed).
+- `className`: Custom CSS class names
+
+## Anatomy
+
+Import all parts and piece them together.
+
+<LiveProvider>
+    <LiveEditor code={`
+import { Flex } from '@raystack/apsara/v1'
+
+<Flex direction="column" justify="center">
+  <Flex direction="row" gap="medium"></Flex>
+  <Flex direction="row" align="center"></Flex>
+</Flex>
+`} border />
+
+</LiveProvider>
