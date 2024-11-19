@@ -40,19 +40,19 @@
   --rs-color-text-success-primary-hover: var(--rs-success-11);
 
   /* Border Colors */
-  --rs-border-base-tertiary: var(--rs-neutral-1);
-  --rs-border-base-focus: var(--rs-neutral-8);
-  --rs-border-base-primary: var(--rs-neutral-4);
-  --rs-border-accent-primary: var(--rs-accent-7);
-  --rs-border-accent-emphasis: var(--rs-accent-9);
-  --rs-border-accent-emphasis-hover: var(--rs-accent-10);
-  --rs-border-attention-primary: var(--rs-attention-7);
-  --rs-border-attention-emphasis: var(--rs-attention-9);
-  --rs-border-danger-primary: var(--rs-danger-7);
-  --rs-border-danger-emphasis: var(--rs-danger-9);
-  --rs-border-danger-emphasis-hover: var(--rs-danger-10);
-  --rs-border-success-primary: var(--rs-success-7);
-  --rs-border-success-emphasis: var(--rs-success-9);
+  --rs-color-border-base-tertiary: var(--rs-neutral-1);
+  --rs-color-border-base-focus: var(--rs-neutral-8);
+  --rs-color-border-base-primary: var(--rs-neutral-4);
+  --rs-color-border-accent-primary: var(--rs-accent-7);
+  --rs-color-border-accent-emphasis: var(--rs-accent-9);
+  --rs-color-border-accent-emphasis-hover: var(--rs-accent-10);
+  --rs-color-border-attention-primary: var(--rs-attention-7);
+  --rs-color-border-attention-emphasis: var(--rs-attention-9);
+  --rs-color-border-danger-primary: var(--rs-danger-7);
+  --rs-color-border-danger-emphasis: var(--rs-danger-9);
+  --rs-color-border-danger-emphasis-hover: var(--rs-danger-10);
+  --rs-color-border-success-primary: var(--rs-success-7);
+  --rs-color-border-success-emphasis: var(--rs-success-9);
 
   /* Overlay Colors */
   /* Black Overlay */
@@ -90,9 +90,9 @@
   --rs-color-background-success-emphasis-hover: var(--rs-success-10);
 
   /* Additional Border Colors */
-  --rs-border-base-secondary: var(--rs-neutral-6);
-  --rs-border-attention-emphasis-hover: var(--rs-attention-10);
-  --rs-border-success-emphasis-hover: var(--rs-success-10);
+  --rs-color-border-base-secondary: var(--rs-neutral-6);
+  --rs-color-border-attention-emphasis-hover: var(--rs-attention-10);
+  --rs-color-border-success-emphasis-hover: var(--rs-success-10);
 
   /* Emphasis Foreground Colors */
   --rs-color-text-accent-emphasis: var(--rs-accent-contrast);
@@ -186,6 +186,6 @@
   --rs-visualization-gold-gold-6: var(--rs-viz-gold-6);
 
   /* Additional Base Colors */
-  --rs-border-base-emphasis: var(--rs-neutral-12);
+  --rs-color-border-base-emphasis: var(--rs-neutral-12);
   --rs-color-background-neutral-emphasis: var(--rs-neutral-12);
 }
