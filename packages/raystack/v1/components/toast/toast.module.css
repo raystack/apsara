@@ -1,5 +1,5 @@
 .raystack-toast [data-sonner-toast] {
-  background: var(--rs-background-base-primary);
+  background: var(--rs-color-background-base-primary);
   color: var(--rs-color-text-base-primary);
   border: 1px solid var(--rs-border-base-primary);
 }

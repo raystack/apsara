@@ -6,7 +6,7 @@
   position: relative;
   border: none;
   border-radius: var(--rs-radius-full);
-  background-color: var(--rs-background-neutral-secondary);
+  background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-text-base-primary);
   width: var(--rs-space-9, 32px);
   height: var(--rs-space-9, 32px);
@@ -31,22 +31,22 @@
 }
 
 .avatar-color-indigo {
-  --avatar-hue: var(--rs-background-accent-emphasis);
+  --avatar-hue: var(--rs-color-background-accent-emphasis);
   --avatar-color: var(--rs-color-text-accent-emphasis);
 }
 
 .avatar-color-orange {
-  --avatar-hue: var(--rs-background-attention-emphasis);
+  --avatar-hue: var(--rs-color-background-attention-emphasis);
   --avatar-color: var(--rs-color-text-attention-emphasis);
 }
 
 .avatar-color-mint {
-  --avatar-hue: var(--rs-background-success-emphasis);
+  --avatar-hue: var(--rs-color-background-success-emphasis);
   --avatar-color: var(--rs-color-text-success-emphasis);
 }
 
 .avatar-color-neutral {
-  --avatar-hue: var(--rs-background-neutral-emphasis);
+  --avatar-hue: var(--rs-color-background-neutral-emphasis);
   --avatar-color: var(--rs-color-text-base-emphasis);
 }
 
@@ -114,22 +114,22 @@
 
 /* Soft Variants */
 .avatar-soft-indigo {
-  background-color: var(--rs-background-accent-primary);
+  background-color: var(--rs-color-background-accent-primary);
   color: var(--rs-color-text-accent-primary);
 }
 
 .avatar-soft-orange {
-  background-color: var(--rs-background-attention-primary);
+  background-color: var(--rs-color-background-attention-primary);
   color: var(--rs-color-text-attention-primary);
 }
 
 .avatar-soft-mint {
-  background-color: var(--rs-background-success-primary);
+  background-color: var(--rs-color-background-success-primary);
   color: var(--rs-color-text-success-primary);
 }
 
 .avatar-soft-neutral {
-  background-color: var(--rs-background-neutral-secondary);
+  background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-text-base-secondary);
 }
 
@@ -319,7 +319,7 @@
 }
 
 .avatarGroup .avatar {
-  border: 1px solid var(--rs-background-base-primary);
+  border: 1px solid var(--rs-color-background-base-primary);
   box-sizing: content-box;
 }
 

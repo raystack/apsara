@@ -88,7 +88,7 @@
 }
 
 .breadcrumb-dropdown-content {
-  background-color: var(--rs-background-base-primary);
+  background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   min-width: 100px;
@@ -102,5 +102,5 @@
 }
 
 .breadcrumb-dropdown-item:hover {
-  background-color: var(--rs-background-base-primary-hover);
+  background-color: var(--rs-color-background-base-primary-hover);
 }

@@ -12,26 +12,26 @@
   --rs-color-text-success-primary: var(--rs-success-9);
 
   /* Base Background Colors */
-  --rs-background-base-primary: var(--rs-neutral-1);
-  --rs-background-neutral-secondary: var(--rs-neutral-4);
-  --rs-background-base-secondary: var(--rs-neutral-2);
-  --rs-background-neutral-tertiary: var(--rs-neutral-9);
+  --rs-color-background-base-primary: var(--rs-neutral-1);
+  --rs-color-background-neutral-secondary: var(--rs-neutral-4);
+  --rs-color-background-base-secondary: var(--rs-neutral-2);
+  --rs-color-background-neutral-tertiary: var(--rs-neutral-9);
 
   /* Semantic Background Colors */
-  --rs-background-accent-primary: var(--rs-accent-4);
-  --rs-background-attention-primary: var(--rs-attention-4);
-  --rs-background-danger-primary: var(--rs-danger-4);
-  --rs-background-success-primary: var(--rs-success-4);
+  --rs-color-background-accent-primary: var(--rs-accent-4);
+  --rs-color-background-attention-primary: var(--rs-attention-4);
+  --rs-color-background-danger-primary: var(--rs-danger-4);
+  --rs-color-background-success-primary: var(--rs-success-4);
 
   /* Hover and Emphasis Background Colors */
-  --rs-background-base-primary-hover: var(--rs-neutral-3);
-  --rs-background-neutral-secondary-hover: var(--rs-neutral-5);
-  --rs-background-accent-emphasis: var(--rs-accent-9);
-  --rs-background-accent-emphasis-hover: var(--rs-accent-10);
-  --rs-background-attention-emphasis: var(--rs-attention-9);
-  --rs-background-danger-emphasis: var(--rs-danger-9);
-  --rs-background-danger-emphasis-hover: var(--rs-danger-10);
-  --rs-background-success-emphasis: var(--rs-success-9);
+  --rs-color-background-base-primary-hover: var(--rs-neutral-3);
+  --rs-color-background-neutral-secondary-hover: var(--rs-neutral-5);
+  --rs-color-background-accent-emphasis: var(--rs-accent-9);
+  --rs-color-background-accent-emphasis-hover: var(--rs-accent-10);
+  --rs-color-background-attention-emphasis: var(--rs-attention-9);
+  --rs-color-background-danger-emphasis: var(--rs-danger-9);
+  --rs-color-background-danger-emphasis-hover: var(--rs-danger-10);
+  --rs-color-background-success-emphasis: var(--rs-success-9);
 
   /* Foreground Hover Colors */
   --rs-color-text-accent-primary-hover: var(--rs-accent-11);
@@ -84,10 +84,10 @@
   --rs-overlay-white-white-a12: #ffffff;
 
   /* Additional Background Colors */
-  --rs-background-neutral-primary: var(--rs-neutral-3);
-  --rs-background-neutral-tertiary-hover: var(--rs-neutral-10);
-  --rs-background-attention-emphasis-hover: var(--rs-attention-10);
-  --rs-background-success-emphasis-hover: var(--rs-success-10);
+  --rs-color-background-neutral-primary: var(--rs-neutral-3);
+  --rs-color-background-neutral-tertiary-hover: var(--rs-neutral-10);
+  --rs-color-background-attention-emphasis-hover: var(--rs-attention-10);
+  --rs-color-background-success-emphasis-hover: var(--rs-success-10);
 
   /* Additional Border Colors */
   --rs-border-base-secondary: var(--rs-neutral-6);
@@ -187,5 +187,5 @@
 
   /* Additional Base Colors */
   --rs-border-base-emphasis: var(--rs-neutral-12);
-  --rs-background-neutral-emphasis: var(--rs-neutral-12);
+  --rs-color-background-neutral-emphasis: var(--rs-neutral-12);
 }
