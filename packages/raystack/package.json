@@ -9,11 +9,13 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
     },
     "./v1": {
       "import": "./dist/v1/index.js",
-      "require": "./dist/v1/index.cjs"
+      "require": "./dist/v1/index.cjs",
+      "types": "./dist/v1/index.d.ts"
     },
     "./style.css": "./dist/style.css"
   },
@@ -33,8 +35,12 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./dist/*"],
-      "v1": ["./dist/v1/index.d.ts"]
+      "*": [
+        "./dist/*"
+      ],
+      "v1": [
+        "./dist/v1/index.d.ts"
+      ]
     }
   },
   "keywords": [],
