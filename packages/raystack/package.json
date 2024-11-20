@@ -22,14 +22,14 @@
     "README.md"
   ],
   "scripts": {
+    "prebuild": "npm run clean",
     "build": "rollup --config",
     "dev": "rollup --config --watch",
     "lint": "eslint \"**/*.ts*\"",
     "release": "release-it",
     "release:ci": "release-it --ci --no-increment --npm.ignoreVersion",
     "bump-version": "node scripts/bump-version.js",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist && rm -rf react/dist",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "clean": "rm -rf .turbo && rm -rf dist"
   },
   "typesVersions": {
     "*": {
