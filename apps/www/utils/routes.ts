@@ -30,7 +30,7 @@ export const primitivesRoutes = [
       },
       { title: "Calendar", slug: "docs/primitives/components/calendar" },
       { title: "Command", slug: "docs/primitives/components/command" },
-      { title: "Checkbox", slug: "docs/primitives/components/checkbox" },
+      { title: "Checkbox", slug: "docs/primitives/components/checkbox", newBadge: true },
       { title: "Container", slug: "docs/primitives/components/container" },
       { title: "Datatable", slug: "docs/primitives/components/datatable" },
       { title: "Dialog", slug: "docs/primitives/components/dialog" },
