@@ -9,6 +9,7 @@ export { DropdownMenu } from "./components/dropdownMenu";
 export { Text } from "./components/text";
 export { Flex } from "./components/flex";
 export { EmptyState } from "./components/emptystate";
+export { Checkbox } from "./components/checkbox";
 
 export {
   ThemeProvider,
