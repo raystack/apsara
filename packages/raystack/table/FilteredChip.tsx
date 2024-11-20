@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { Column } from "@tanstack/table-core";
 import { Box } from "~/box";
@@ -5,9 +6,8 @@ import { Flex } from "~/flex";
 import { Select } from "~/select";
 import { Text } from "~/text";
 import { TextField } from "~/textfield";
-import { TableColumnMetadata } from "~/typing";
+import { TableColumnMetadata } from "~/typings";
 import { DatePicker, RangePicker } from "~/calendar";
-import styles from "./datatable.module.css";
 import {
   ApsaraColumnDef,
   FilterValue,
@@ -18,8 +18,8 @@ import {
   updateColumnFilter,
 } from "./datatables.types";
 import { useTable } from "./hooks/useTable";
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { FilterOperation, operationsOptions } from "./filterFns";
+import styles from "./datatable.module.css";
 
 type FilteredChipProps = {
   column: Column<any, unknown>;
