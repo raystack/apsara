@@ -66,7 +66,7 @@ export const Checkbox = forwardRef<
       defaultChecked={defaultChecked === true}
       onCheckedChange={(value) => {
         if (onCheckedChange) {
-          // If it's currently indeterminate, next state should be unchecked
+          // If it's currently indeterminate, next state will be unchecked
           if (checked === 'indeterminate') {
             onCheckedChange(false);
           } else {
