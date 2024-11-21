@@ -219,7 +219,7 @@ const AssetsHeader = () => {
           />
         </div>
         <Button variant="outline">Click here</Button>
-        <Breadcrumb items={items} />
+        <Breadcrumb items={items} size="small" />
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
             <Button variant="secondary" size="small">Actions</Button>
