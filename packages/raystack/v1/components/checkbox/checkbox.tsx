@@ -63,11 +63,10 @@ export const Checkbox = forwardRef<
   return (
     <CheckboxPrimitive.Root
       className={checkbox({ 
-        className: clsx(
-          className,
-          disabled && styles["checkbox-disabled"],
-          isIndeterminate && styles["checkbox-indeterminate"]
-        )
+        className: clsx(className, {
+          [styles["checkbox-disabled"]]: disabled,
+          [styles["checkbox-indeterminate"]]: isIndeterminate
+        })
       })}
       checked={isIndeterminate || (checked === true)}
       defaultChecked={defaultChecked === true}
