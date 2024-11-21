@@ -1,6 +1,6 @@
 ---
 title: Checkbox
-description: Checkbox is a user interface control that enables users to toggle between a checked and unchecked state
+description: Checkbox is a user interface control that enables users to toggle between checked, unchecked, and indeterminate states
 radix:
   link: https://www.radix-ui.com/docs/primitives/components/checkbox
   api: https://www.radix-ui.com/docs/primitives/components/checkbox#api-reference
@@ -10,14 +10,14 @@ radix:
 
 <Preview>
   <Flex
-    style={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "8px",
-    }}
+    direction="row"
+    align="center"
+    gap="extra-large"
   >
-   <Checkbox />
-   <Checkbox size="medium" />
+    <Checkbox />
+    <Checkbox checked={true} />
+    <Checkbox checked="indeterminate" />
+    <Checkbox disabled />
   </Flex>
 </Preview>
 
@@ -29,40 +29,92 @@ Install the component from your command line.
     <LiveEditor code={`npm install @raystack/apsara`} border/>
 </LiveProvider>
 
+## Usage
+
+### Controlled Component
+You can control the checkbox state using the `checked` and `onCheckedChange` props:
+
+<LiveProvider>
+    <LiveEditor code={`
+const [checked, setChecked] = useState(false);
+
+<Checkbox 
+  checked={checked}
+  onCheckedChange={(value) => setChecked(value)}
+/>
+`} border />
+</LiveProvider>
+
+### Indeterminate State
+The indeterminate state is useful for representing partial selection, commonly used in parent checkboxes:
+
+<LiveProvider>
+    <LiveEditor code={`
+const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
+
+<Checkbox 
+  checked={checked}
+  onCheckedChange={(value) => setChecked(value)}
+/>
+`} border />
+</LiveProvider>
+
+## Props
+
+The `Checkbox` component accepts the following props:
+
+- `checked`: The controlled state of the checkbox (`boolean | "indeterminate"`)
+- `defaultChecked`: The default state when initially rendered (`boolean | "indeterminate"`)
+- `onCheckedChange`: Event handler called when the state changes (`(checked: boolean | "indeterminate") => void`)
+- `disabled`: When true, prevents the user from interacting with the checkbox (`boolean`)
 
 ## Anatomy
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Checkbox } from '@raystack/apsara'
+import { Checkbox } from '@raystack/apsara/v1'
 
+// Basic usage
 <Checkbox />
-<Checkbox size="medium" />
+
+// Checked state
+<Checkbox checked={true} />
+
+// Indeterminate state
+<Checkbox checked="indeterminate" />
+
+// Disabled state
+<Checkbox disabled />
 `} border />
 </LiveProvider>
 
+## States
+The Checkbox component supports multiple states to represent different selection conditions:
 
-## Scale
-The Checkbox component offers different size options to suit various design needs. By selecting the "Medium" size, you can create a larger Checkbox that provides enhanced visibility and ease of interaction within the user interface. Additionally, the Checkbox component also supports the following size options:
-
-- Small
-- Medium
-
-These different size options allow you to customize the appearance of the Checkbox to match your specific design preferences and ensure a seamless user experience.
+- Unchecked: Default state
+- Checked: Selected state
+- Indeterminate: Partial selection state
+- Disabled: Disabled state
 
 <Playground
     scope={{ Checkbox }}
     tabs={[
-        
         {
-            name: "Small",
-            code: `<Checkbox size="small" />`,
+            name: "Unchecked",
+            code: `<Checkbox />`,
         },
         {
-            name: "Medium",
-            code: `<Checkbox size="medium" />`,
+            name: "Checked",
+            code: `<Checkbox checked={true} />`,
         },
-       
+        {
+            name: "Indeterminate",
+            code: `<Checkbox checked="indeterminate" />`,
+        },
+        {
+            name: "Disabled",
+            code: `<Checkbox disabled />`,
+        },
     ]}
 />

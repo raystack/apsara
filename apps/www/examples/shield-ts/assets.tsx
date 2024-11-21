@@ -2,15 +2,12 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { PlusIcon, BlendingModeIcon, HomeIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import {
-  Checkbox,
   DataTable,
-  Flex,
-  Text,
   Title,
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox} from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -181,6 +178,12 @@ export const Assets = () => {
 
 const AssetsHeader = () => {
   const { filteredColumns } = useTable();
+  const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
+  const handleCheckedChange = (newChecked: boolean | 'indeterminate') => {
+    if (newChecked !== 'indeterminate') {
+      setChecked(newChecked);
+    }
+  };
   const isFiltered = filteredColumns.length > 0;
   const items = [
     { label: 'Home', href: '/', icon: <HomeIcon /> },
@@ -206,6 +209,15 @@ const AssetsHeader = () => {
       <Flex gap="extra-large" align="center">
         <Text style={{ fontWeight: 500 }}>Assets</Text>
         <Spinner size={3} />
+        <div>
+        <Checkbox 
+            checked={checked}
+            onCheckedChange={(value) => {
+              setChecked(value);
+              console.log('New value:', value);
+            }} 
+          />
+        </div>
         <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} />
         <DropdownMenu>
