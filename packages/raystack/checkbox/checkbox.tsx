@@ -23,6 +23,9 @@ export interface CheckboxProps
     VariantProps<typeof checkbox>,
     CheckboxPrimitive.CheckboxProps {}
 
+/**
+ * @deprecated Use Checkbox from '@raystack/apsara/v1' instead.
+ */
 export const Checkbox = forwardRef<
   ElementRef<typeof CheckboxPrimitive.Root>,
   CheckboxProps
