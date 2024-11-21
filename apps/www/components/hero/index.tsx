@@ -18,7 +18,7 @@ export const Hero = () => {
                     margin: "0 var(--mr-4)",
                   }}
                 />
-                Apsara v1 is out, find out what&apos;s new 🎉
+                A major upgrade to Apsara is out, find out what&apos;s new 🎉
               </Flex>
             </Link>
           </Badge>

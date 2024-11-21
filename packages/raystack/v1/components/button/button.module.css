@@ -11,6 +11,7 @@
   width: fit-content;
   padding: var(--rs-space-3) var(--rs-space-4);
   border-radius: var(--br-4);
+  text-wrap: nowrap;
 }
 
 .button:before,

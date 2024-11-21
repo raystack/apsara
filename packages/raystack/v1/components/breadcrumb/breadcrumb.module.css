@@ -23,6 +23,7 @@
   display: flex;
   align-items: center;
   margin-right: var(--rs-space-2);
+  text-wrap: nowrap;
 }
 
 .breadcrumb-link {
@@ -31,6 +32,7 @@
   color: var(--rs-color-text-base-tertiary);
   text-decoration: none;
   margin-right: var(--rs-space-1);
+  text-wrap: nowrap;
 }
 
 .breadcrumb-link:hover {
