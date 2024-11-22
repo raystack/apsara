@@ -42,7 +42,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
   nonce,
   style = "modern",
   accentColor = "indigo",
-  grayColor = "slate",
+  grayColor = "gray",
 }) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)
