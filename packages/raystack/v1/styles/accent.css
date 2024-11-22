@@ -77,7 +77,7 @@
     --rs-accent-10: #7de0cb;
     --rs-accent-11: #027864;
     --rs-accent-12: #16433c;
-    --rs-accent-contrast: #000000;
+    --rs-accent-contrast: #ffffff;
 }
 
 [data-accent-color='mint'][data-theme='dark'] {
@@ -93,5 +93,5 @@
     --rs-accent-10: #a8f5e5;
     --rs-accent-11: #58d5ba;
     --rs-accent-12: #c4f5e1;
-    --rs-accent-contrast: #000000;
+    --rs-accent-contrast: #ffffff;
 }

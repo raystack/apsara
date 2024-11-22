@@ -2,6 +2,9 @@ interface ValueObject {
   [themeName: string]: string;
 }
 
+/**
+ * @deprecated Use UseThemeProps from '@raystack/apsara/v1' instead.
+ */
 export interface UseThemeProps {
   /** List of all available theme names */
   themes: string[];
@@ -17,6 +20,9 @@ export interface UseThemeProps {
   systemTheme?: "dark" | "light";
 }
 
+/**
+ * @deprecated Use ThemeProviderProps from '@raystack/apsara/v1' instead.
+ */
 export interface ThemeProviderProps {
   /** List of all available theme names */
   themes?: string[];
