@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { PlusIcon, BlendingModeIcon, HomeIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import { HomeIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
@@ -163,7 +163,7 @@ export const Assets = () => {
           <AssetsHeader />
           <DataTable.FilterChips />
           <Flex gap="small">
-            <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast</Button>
+            <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
             <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button>
           </Flex>
         </DataTable.Toolbar>
