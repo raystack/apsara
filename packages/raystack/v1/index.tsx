@@ -11,6 +11,7 @@ export { Flex } from "./components/flex";
 export { EmptyState } from "./components/emptyState";
 export { Checkbox } from "./components/checkbox";
 export { Box } from "./components/box"
+export { InputField } from "./components/inputField"
 
 export {
   ThemeProvider,
