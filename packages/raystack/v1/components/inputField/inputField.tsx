@@ -58,7 +58,7 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
         {label && (
           <label className={clsx(styles.label, disabled && styles["label-disabled"])}>
             {label}
-            {optional && <span className={styles.optional}> (Optional)</span>}
+            {optional && <span className={styles.optional}>(optional)</span>}
           </label>
         )}
         <div className={styles.inputWrapper}>
@@ -72,6 +72,8 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
             }}
             className={clsx(
               styles.inputField,
+              leadingIcon && styles.hasLeadingIcon,
+              trailingIcon && styles.hasTrailingIcon,
               error && styles["input-error"],
               disabled && styles["input-disabled"],
               className

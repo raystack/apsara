@@ -104,17 +104,21 @@
   align-items: center;
   color: var(--rs-color-text-base-secondary);
   pointer-events: none;
+  width: 12px;
+  height: 12px;
 }
 
 .trailingIcon {
   position: absolute;
-  right: calc(var(--rs-space-3) + var(--rs-space-4) + var(--rs-space-2));
+  right: var(--rs-space-3);
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   color: var(--rs-color-text-base-secondary);
   pointer-events: none;
+  width: 12px;
+  height: 12px;
 }
 
 .prefix, .suffix {
@@ -141,4 +145,19 @@
 
 .input-error:focus {
   border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.hasLeadingIcon {
+  padding-left: calc(var(--rs-space-3) + 12px + var(--rs-space-2));
+}
+
+.hasTrailingIcon {
+  padding-right: calc(var(--rs-space-3) + 12px + var(--rs-space-2));
+}
+
+.optional {
+  color: var(--rs-color-text-base-tertiary);
+  font-size: 10px;
+  font-weight: 400;
+  margin-left: var(--rs-space-1);
 }
