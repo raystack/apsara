@@ -1,6 +1,4 @@
-import { cva } from "class-variance-authority";
-import styles from "./emptystate.module.css";
-const emptystate = cva(styles.emptystate);
+import styles from "./emptyState.module.css";
 import { Flex } from "../flex";
 import { Text } from "../text";
 import clsx from "clsx";
