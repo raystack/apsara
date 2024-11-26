@@ -3,6 +3,7 @@ module.exports = {
   rules: {
     "@next/next/no-html-link-for-pages": "off",
     "react/display-name": "off",
+    "import/order": "warn"
   },
   parserOptions: {
     babelOptions: {
