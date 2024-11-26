@@ -1,6 +1,6 @@
 import React, {
-  Fragment,
   createContext,
+  Fragment,
   memo,
   useCallback,
   useContext,
@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+
 import type { ThemeProviderProps, UseThemeProps } from "./types";
 
 const colorSchemes = ["light", "dark"];
