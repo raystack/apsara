@@ -5,8 +5,9 @@ module.exports = {
   rules: {
     "@next/next/no-html-link-for-pages": "off",
     "react/display-name": "off",
-    "simple-import-sort/imports": "error",
-    "simple-import-sort/exports": "error"
+    "simple-import-sort/imports": "warn",
+    "simple-import-sort/exports": "warn",
+    "import/order": "warn"
   },
   parserOptions: {
     babelOptions: {
