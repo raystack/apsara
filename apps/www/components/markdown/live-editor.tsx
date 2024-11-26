@@ -2,8 +2,10 @@ import { cva } from "class-variance-authority";
 import { themes } from "prism-react-renderer";
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-live";
-import styles from "./editor.module.css";
+
 import { useTheme } from "@raystack/apsara/v1";
+
+import styles from "./editor.module.css";
 
 interface Props {
   code: string;
