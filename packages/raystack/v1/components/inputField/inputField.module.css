@@ -1,3 +1,8 @@
+:root {
+  --leading-icon-size: 12px;
+  --trailing-icon-size: 12px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -104,8 +109,8 @@
   align-items: center;
   color: var(--rs-color-text-base-secondary);
   pointer-events: none;
-  width: 12px;
-  height: 12px;
+  width: var(--leading-icon-size);
+  height: var(--leading-icon-size);
 }
 
 .trailingIcon {
@@ -117,8 +122,8 @@
   align-items: center;
   color: var(--rs-color-text-base-secondary);
   pointer-events: none;
-  width: 12px;
-  height: 12px;
+  width: var(--trailing-icon-size);
+  height: var(--trailing-icon-size);
 }
 
 .prefix, .suffix {
@@ -148,11 +153,11 @@
 }
 
 .hasLeadingIcon {
-  padding-left: calc(var(--rs-space-3) + 12px + var(--rs-space-2));
+  padding-left: calc(var(--rs-space-4) + var(--leading-icon-size));
 }
 
 .hasTrailingIcon {
-  padding-right: calc(var(--rs-space-3) + 12px + var(--rs-space-2));
+  padding-right: calc(var(--rs-space-4) + var(--trailing-icon-size));
 }
 
 .optional {
