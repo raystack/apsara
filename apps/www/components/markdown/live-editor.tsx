@@ -3,7 +3,7 @@ import { themes } from "prism-react-renderer";
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-live";
 import styles from "./editor.module.css";
-import { useTable, useTheme } from "@raystack/apsara";
+import { useTheme } from "@raystack/apsara/v1";
 
 interface Props {
   code: string;
