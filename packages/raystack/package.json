@@ -28,6 +28,7 @@
     "build": "rollup --config",
     "dev": "rollup --config --watch",
     "lint": "eslint \"**/*.ts*\"",
+    "lint:fix": "eslint \"v1/**/*.ts*\" --fix",
     "release": "release-it",
     "release:ci": "release-it --ci --no-increment --npm.ignoreVersion",
     "bump-version": "node scripts/bump-version.js",
@@ -36,7 +37,7 @@
   "typesVersions": {
     "*": {
       "*": [
-        "./dist/*"
+        "./dist/index.d.ts"
       ],
       "v1": [
         "./dist/v1/index.d.ts"

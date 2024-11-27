@@ -1,5 +1,6 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes, PropsWithChildren } from "react";
+
 import styles from "./box.module.css";
 
 // Note: This is the old component just copied in v1 folder as it is used in v1. 

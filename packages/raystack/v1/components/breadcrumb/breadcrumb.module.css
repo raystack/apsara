@@ -51,7 +51,7 @@
 
 .breadcrumb-separator {
   color: var(--rs-color-text-base-tertiary);
-  margin: 0 var(--rs-space-5);
+  margin: 0 var(--rs-space-3);
 }
 
 .breadcrumb-ellipsis {

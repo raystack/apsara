@@ -1,6 +1,7 @@
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useTheme } from "./theme";
+
 import { Box } from "../box";
+import { useTheme } from "./theme";
 
 enum Theme {
   DARK = "dark",
