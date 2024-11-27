@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { Toaster, type ToasterProps, toast as sonnerToast } from "sonner";
+import { toast as sonnerToast,Toaster, type ToasterProps } from "sonner";
+
 import { useTheme } from "../themeProvider";
 import { UseThemeProps } from "../themeProvider/types";
 import styles from "./toast.module.css";
@@ -34,4 +35,4 @@ const toast: typeof sonnerToast = Object.assign(
 
 ToastContainer.displayName = "ToastContainer";
 
-export { ToastContainer, toast };
+export { toast,ToastContainer };

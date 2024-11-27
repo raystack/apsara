@@ -1,6 +1,6 @@
 import React, {
-  Fragment,
   createContext,
+  Fragment,
   memo,
   useCallback,
   useContext,
@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+
 import type { ThemeProviderProps, UseThemeProps } from "./types";
 
 const colorSchemes = ["light", "dark"];
@@ -42,7 +43,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
   nonce,
   style = "modern",
   accentColor = "indigo",
-  grayColor = "slate",
+  grayColor = "gray",
 }) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)

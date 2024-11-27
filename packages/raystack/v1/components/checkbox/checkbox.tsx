@@ -1,7 +1,8 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import clsx from 'clsx';
 import { cva, VariantProps } from "class-variance-authority";
+import clsx from 'clsx';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+
 import styles from "./checkbox.module.css";
 
 
