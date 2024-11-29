@@ -1,0 +1,82 @@
+.textfield {
+  appearance: none;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  height: auto;
+  width: 100%;
+  background-color: var(--background-base);
+  outline: 0.5px solid var(--border-base);
+  border: none;
+  box-shadow: var(--shadow-xs);
+  border-radius: var(--br-4);
+  color: var(--foreground-base);
+  padding: var(--pd-4);
+  letter-spacing: 0.4px;
+  line-height: 16px;
+}
+
+.textfield:-webkit-autofill {
+  box-shadow: var(--shadow-xs);
+}
+
+.textfield:focus {
+  outline: 1px solid var(--background-accent-inverted);
+}
+
+.textfield::placeholder {
+  color: var(--foreground-subtle);
+  font-size: 12px;
+}
+
+.textfield:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.textfield:read-only {
+  background-color: var(--background-base);
+}
+
+.textfield-sm {
+  border-radius: var(--br-4);
+  font-size: 12px;
+  padding: var(--pd-4) var(--pd-8);
+}
+
+.textfield-md {
+  border-radius: var(--br-4);
+  font-size: 12px;
+  padding: var(--pd-8);
+}
+
+.textfield-invalid {
+  outline: 1px solid var(--border-danger);
+}
+.textfield-invalid:focus {
+  outline: 1px solid var(--border-danger);
+}
+
+.textfield-valid {
+  outline: 1px solid var(--border-success);
+}
+
+.textfield-valid:focus {
+  outline: 1px solid var(--border-success);
+}
+
+.textfield-leading {
+  padding-left: 32px;
+}
+
+.textfield-trailing {
+  padding-right: 32px;
+}
+
+.leadingIcon,
+.trailingIcon {
+  position: absolute;
+  pointer-events: none;
+}

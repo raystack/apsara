@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox, InputField } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox, Calendar, DatePicker, RangePicker } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -217,16 +217,10 @@ const AssetsHeader = () => {
               console.log('New value:', value);
             }} 
           />
-        </div> */}
-        <InputField
-          label="Label"
-          helperText="Helper Text"
-          placeholder="Place holder"
-          prefix="USD"
-        />
+        </div>
         {/* <Button variant="outline">Click here</Button>
-        <Breadcrumb items={items} size="small" />
-        <DropdownMenu>
+        <Breadcrumb items={items} size="small" /> */}
+        {/* <DropdownMenu>
           <DropdownMenu.Trigger asChild>
             <Button variant="secondary" size="small">Actions</Button>
           </DropdownMenu.Trigger>
@@ -261,6 +255,44 @@ const AssetsHeader = () => {
             fallback={<>RK</>}
           />
         </AvatarGroup> */}
+
+        <Calendar 
+          mode="single"
+          selected={new Date()}
+          onSelect={(date) => console.log('Selected date:', date)}
+        />
+
+        <DatePicker
+          dateFormat="DD/MM/YYYY"
+          placeholder="Select date"
+          onSelect={(date) => console.log('Picked date:', date)}
+          calendarProps={{
+            mode: "single",
+            required: true,
+            selected: new Date(),
+            startMonth: new Date(2024, 0, 1),
+            endMonth: new Date(2024, 11, 31),
+          }}
+        />
+
+        <RangePicker
+          dateFormat="DD/MM/YYYY"
+          onSelect={(range) => console.log('Date range:', range)}
+          value={{
+            from: new Date(2024, 0, 1),
+            to: new Date(2024, 0, 15)
+          }}
+          calendarProps={{
+            mode: "range",
+            required: true,
+            selected: {
+              from: new Date(2024, 0, 1),
+              to: new Date(2024, 0, 15)
+            },
+            fromMonth: new Date(2024, 0, 1),
+            toMonth: new Date(2024, 11, 31),
+          }}
+        />
 
       </Flex>
       <Flex gap="small">

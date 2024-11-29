@@ -12,12 +12,12 @@ import {
   ChevronDownIcon,
 } from '@radix-ui/react-icons';
 import styles from './calendar.module.css';
-import { Select } from '~/select';
+import { Select } from '../select';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Flex } from '~/flex'
-import { Tooltip } from '~/tooltip';
+import { Flex } from '../flex'
+import { Tooltip } from '../tooltip';
 import Skeleton from 'react-loading-skeleton';
-import { DatePicker } from './date-picker';
+import { DatePicker } from './datePicker';
 
 interface OnDropdownOpen {
   onDropdownOpen?: VoidFunction;
