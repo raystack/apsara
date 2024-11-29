@@ -1,0 +1,168 @@
+:root {
+  --leading-icon-size: 12px;
+  --trailing-icon-size: 12px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-1);
+  width: 100%;
+}
+
+.label {
+  color: var(--rs-color-text-base-secondary);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.icon {
+  position: absolute;
+  right: var(--rs-space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  color: var(--rs-color-text-base-secondary);
+  pointer-events: none;
+}
+
+.inputField {
+  width: 100%;
+  height: 32px;
+  padding: 0 var(--rs-space-3);
+  border-radius: var(--rs-radius-2);
+  border: 1px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+  min-width: 200px;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.inputField:hover {
+  border-color: var(--rs-color-border-base-focus);
+  /* background: var(--rs-color-background-base-primary-hover); */
+  background: var(--rs-color-background-base-primary);
+}
+
+.inputField:focus {
+  border-color: var(--rs-color-border-accent-emphasis);
+  background: var(--rs-color-background-base-primary);
+}
+
+.input-default {
+  color: var(--rs-color-text-base-primary);
+}
+
+.input-error {
+  border-color: var(--rs-color-border-danger-emphasis);
+  color: var(--rs-color-text-danger-primary);
+}
+
+.input-error:hover {
+  border-color: var(--rs-color-border-danger-emphasis-hover);
+}
+
+.input-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--rs-color-background-base-secondary);
+}
+
+.input-disabled:hover {
+  border-color: var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-secondary);
+}
+
+.label-disabled {
+  opacity: 0.5;
+}
+
+.helperText {
+  color: var(--rs-color-text-base-secondary);
+  font-size: 11px;
+}
+
+.helperText-disabled {
+  opacity: 0.5;
+}
+
+.helperText-error {
+  color: var(--rs-color-text-danger-primary);
+}
+
+.leadingIcon {
+  position: absolute;
+  left: var(--rs-space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-text-base-secondary);
+  pointer-events: none;
+  width: var(--leading-icon-size);
+  height: var(--leading-icon-size);
+}
+
+.trailingIcon {
+  position: absolute;
+  right: var(--rs-space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-text-base-secondary);
+  pointer-events: none;
+  width: var(--trailing-icon-size);
+  height: var(--trailing-icon-size);
+}
+
+.prefix, .suffix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rs-color-text-base-secondary);
+  font-size: 12px;
+  pointer-events: none;
+  background: var(--rs-color-background-neutral-secondary);
+  padding: 2px var(--rs-space-2);
+  border-radius: var(--rs-radius-2);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.prefix {
+  left: var(--rs-space-2);
+}
+
+.suffix {
+  right: var(--rs-space-2);
+}
+
+.input-error:focus {
+  border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.hasLeadingIcon {
+  padding-left: calc(var(--rs-space-4) + var(--leading-icon-size));
+}
+
+.hasTrailingIcon {
+  padding-right: calc(var(--rs-space-4) + var(--trailing-icon-size));
+}
+
+.optional {
+  color: var(--rs-color-text-base-tertiary);
+  font-size: 10px;
+  font-weight: 400;
+  margin-left: var(--rs-space-1);
+}

@@ -1,5 +1,5 @@
-import { cva, VariantProps } from "class-variance-authority";
 import { InputHTMLAttributes, PropsWithChildren } from "react";
+import { cva, VariantProps } from "class-variance-authority";
 import { Flex } from "../flex";
 import { Label } from "../label";
 import styles from "./inputfield.module.css";

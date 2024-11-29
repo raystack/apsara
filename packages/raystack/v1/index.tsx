@@ -8,6 +8,7 @@ export { Checkbox } from "./components/checkbox";
 export { DropdownMenu } from "./components/dropdownMenu";
 export { EmptyState } from "./components/emptyState";
 export { Flex } from "./components/flex";
+export { InputField } from "./components/inputField";
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
 export {

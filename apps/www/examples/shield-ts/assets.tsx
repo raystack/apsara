@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox} from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox, InputField } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -207,8 +207,8 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px" }}
     >
       <Flex gap="extra-large" align="center">
-        <Text style={{ fontWeight: 500 }}>Assets</Text>
-        <Spinner size={3} />
+        {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
+        {/* <Spinner size={3} />
         <div>
         <Checkbox 
             checked={checked}
@@ -217,8 +217,14 @@ const AssetsHeader = () => {
               console.log('New value:', value);
             }} 
           />
-        </div>
-        <Button variant="outline">Click here</Button>
+        </div> */}
+        <InputField
+          label="Label"
+          helperText="Helper Text"
+          placeholder="Place holder"
+          prefix="USD"
+        />
+        {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
@@ -231,8 +237,8 @@ const AssetsHeader = () => {
               <Button>Action Button</Button>
             </DropdownMenu.EmptyState>
           </DropdownMenu.Content>
-        </DropdownMenu>
-        <AvatarGroup max={3}>
+        </DropdownMenu> */}
+        {/* <AvatarGroup max={3}>
           <Avatar
             radius="full"
             variant="solid"
@@ -254,7 +260,7 @@ const AssetsHeader = () => {
             color="orange"
             fallback={<>RK</>}
           />
-        </AvatarGroup>
+        </AvatarGroup> */}
 
       </Flex>
       <Flex gap="small">

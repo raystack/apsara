@@ -1,5 +1,5 @@
 import { SunIcon } from "@radix-ui/react-icons";
-import { Button, useTheme } from "@raystack/apsara";
+import { Button, useTheme } from "@raystack/apsara/v1";
 export const NavbarAcitons = () => {
   const { setTheme, theme } = useTheme();
 

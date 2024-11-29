@@ -1,4 +1,5 @@
-import { Flex, Link, ThemeSwitcher } from "@raystack/apsara";
+import { Flex, ThemeSwitcher } from "@raystack/apsara/v1";
+import { Link } from "@raystack/apsara";
 
 export const NavbarLinks = () => {
   return (
