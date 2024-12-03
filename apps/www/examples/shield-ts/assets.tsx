@@ -4,7 +4,9 @@ import { HomeIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
-  useTable
+  useTable,
+  RangePicker,
+  DatePicker
 } from "@raystack/apsara";
 
 import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox, InputField } from "@raystack/apsara/v1";
@@ -218,12 +220,12 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        />
+        /> */}
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -261,6 +263,39 @@ const AssetsHeader = () => {
             fallback={<>RK</>}
           />
         </AvatarGroup> */}
+
+        <RangePicker
+          dateFormat="DD/MM/YYYY"
+          onSelect={(range) => console.log('Date range:', range)}
+          value={{
+            from: new Date(2024, 0, 1),
+            to: new Date(2024, 0, 15)
+          }}
+          calendarProps={{
+            mode: "range",
+            required: true,
+            selected: {
+              from: new Date(2024, 0, 1),
+              to: new Date(2024, 0, 15)
+            },
+            fromMonth: new Date(2024, 0, 1),
+            toMonth: new Date(2024, 11, 31),
+          }}
+        >
+          {({ startDate, endDate }) => (
+            <Button size="normal" variant="secondary">
+              {startDate} - {endDate}
+            </Button>
+          )}
+        </RangePicker>
+
+        <DatePicker>
+          {({ selectedDate }) => (
+            <Button size="normal" variant="secondary">
+              Selected: {selectedDate}
+            </Button>
+          )}
+        </DatePicker>
 
       </Flex>
       <Flex gap="small">

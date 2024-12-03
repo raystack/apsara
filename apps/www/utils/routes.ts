@@ -28,7 +28,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/button",
         newBadge: true,
       },
-      { title: "Calendar", slug: "docs/primitives/components/calendar" },
+      { title: "Calendar", slug: "docs/primitives/components/calendar", newBadge: true },
       { title: "Command", slug: "docs/primitives/components/command" },
       { title: "Checkbox", slug: "docs/primitives/components/checkbox", newBadge: true },
       { title: "Container", slug: "docs/primitives/components/container" },

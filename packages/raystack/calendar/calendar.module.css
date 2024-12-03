@@ -1,20 +1,21 @@
 .calendarRoot {
-  padding: var(--pd-16);
-  border-radius: var(--br-8);
-  border: 1px solid var(--border-base);
-  background: var(--background-base);
+  padding: var(--rs-space-5);
+  border-radius: var(--rs-radius-4);
+  border: 1px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
 }
 
 .caption_label,
 .dropdowns > span,
 .dropdown_trigger .dropdown_item_text {
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.25px;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
   font-weight: 500;
-  color: var(--foreground-base);
+  color: var(--rs-color-text-base-primary);
   user-select: none;
-  font-family: var(--ff-inter);
+  font-family: var(--rs-font-body);
+  font-style: normal;
 }
 
 .caption_label[aria-hidden="true"] {
@@ -25,15 +26,15 @@
   position: absolute;
   top: 0;
   border: 0px;
-  color: var(--foreground-base);
-  background: var(--background-base);
+  color: var(--rs-color-text-base-primary);
+  background: var(--rs-color-background-base-primary);
   cursor: pointer;
   height: 20px;
 }
 
 .nav_button:disabled {
   opacity: 0.5;
-  color: var(--foreground-subtle);
+  color: var(--rs-color-text-base-tertiary);
 }
 
 .nav_button_previous {
@@ -46,7 +47,7 @@
 
 .months {
   display: flex;
-  gap: var(--pd-8);
+  gap: var(--rs-space-3);
   position: relative;
 }
 
@@ -61,40 +62,52 @@
   align-items: center;
   position: relative;
   width: fit-content;
-  margin: 0 auto var(--mr-12) auto;
+  margin: 0 auto var(--rs-space-4) auto;
 }
 
 .day {
-  width: 36px;
-  height: 36px;
-  background-color: var(--background-base);
-  border-radius: var(--br-4);
-  color: var(--foreground-base);
-  font-size: 13px;
+  width: var(--rs-space-10, 40px);
+  height: var(--rs-space-10, 40px);
+  background-color: var(--rs-color-background-base-primary);
+  border-radius: var(--rs-radius-2);
+  color: var(--rs-color-text-base-primary);
+  text-align: center;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
   line-height: 16px;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid transparent;
 }
 
 .day:hover:not(.disabled):not(.outside):not(.selected) {
-  background-color: var(--background-base-hover);
+  width: var(--rs-space-10, 40px);
+  height: var(--rs-space-10, 40px);
+  flex-shrink: 0;
+  border-radius: var(--rs-radius-5);
+  border: 1px solid var(--rs-color-border-accent-emphasis-hover);
+  background-color: transparent;
 }
 
 .selected:not(.range_middle) {
-  background-color: var(--background-highlight);
+  width: var(--rs-space-10, 40px);
+  height: var(--rs-space-10, 40px);
+  border-radius: var(--rs-radius-5);
+  background: var(--rs-color-background-accent-emphasis);
 
   button {
-    color: var(--foreground-inverted);
+    color: var(--rs-color-text-base-emphasis);
   }
 }
 
 .range_middle {
   border-radius: 0;
-  background-color: var(--background-base-hover);
+  background-color: var(--rs-color-background-base-primary-hover);
   button {
-    color: var(--foreground-base);
+    color: var(--rs-color-text-base-primary);
   }
 }
 
@@ -116,6 +129,7 @@
   cursor: pointer;
   border: none;
   width: 100%;
+  font-size: 12px;
   height: 100%;
   padding: unset;
   display: grid;
@@ -124,30 +138,31 @@
   color: inherit;
   font-weight: inherit;
   border-radius: inherit;
+  position: relative;
 }
 
 .outside {
-  color: var(--foreground-subtle);
+  color: var(--rs-color-text-base-tertiary);
 }
 
-.today {
-  font-weight: 600;
-}
 
 .range_start,
 .range_end {
-  color: var(--foreground-inverted);
+  color: var(--rs-color-text-base-emphasis);
 }
 
 .weekday {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 36px;
-  height: 36px;
-  color: var(--foreground-base);
-  font-size: 12px;
-  line-height: 16px;
+  width: var(--rs-space-10, 40px);
+  height: var(--rs-space-10, 40px);
+  color: var(--rs-color-text-base-secondary);
+  text-align: center;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 12px;
   letter-spacing: 0.4px;
 }
 
@@ -164,7 +179,7 @@
 .dropdowns {
   display: flex;
   align-items: center;
-  gap: var(--pd-4);
+  gap: var(--rs-space-2);
 }
 
 .dropdown_trigger,
@@ -172,23 +187,55 @@
   border: none;
   outline: none;
   box-shadow: none;
-  padding: var(--pd-2);
+  padding: var(--rs-space-1);
 }
 
 .dropdown_trigger:hover {
-  background-color: var(--background-base-hover);
+  background-color: var(--rs-color-background-base-primary-hover);
 }
 
 .dropdown_icon {
-  margin-left: var(--mr-4);
+  margin-left: var(--rs-space-2);
 }
 
 .dropdown_content {
   max-height: 400px;
-  border: 1px solid var(--border-base);
+  border: 1px solid var(--rs-color-border-base-primary);
 }
 
 .disabled {
-  color: var(--foreground-subtle);
+  color: var(--rs-color-text-base-tertiary);
   opacity: 0.8;
+}
+
+.day.today button::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--rs-color-background-accent-emphasis);
+}
+
+.selected.day.today button::after {
+  background-color: white;
+}
+
+.day_button {
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  font-size: 12px;
+  height: 100%;
+  padding: unset;
+  display: grid;
+  place-content: center;
+  background: inherit;
+  color: inherit;
+  font-weight: inherit;
+  border-radius: inherit;
+  position: relative;
 }
