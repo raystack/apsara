@@ -1,54 +1,53 @@
 import { ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-import styles from "./badge.module.css";
+import styles from "./chip.module.css";
 
-const badge = cva(styles['badge'], {
+const chip = cva(styles['chip'], {
   variants: {
     variant: {
-      accent: styles["badge-accent"],
-      warning: styles["badge-warning"],
-      danger: styles["badge-danger"],
-      success: styles["badge-success"],
-      neutral: styles["badge-neutral"],
-      gradient: styles["badge-gradient"]
+      outline: styles["chip-variant-outline"],
+      filled: styles["chip-variant-filled"],
     },
     size: {
-      micro: styles["badge-micro"],
-      small: styles["badge-small"],
-      regular: styles["badge-regular"],
+      large: styles["chip-size-large"],
+      small: styles["chip-size-small"],
+    },
+    style: {
+      neutral: styles["chip-style-neutral"],
+      accent: styles["chip-style-accent"],
     },
     defaultVariants: {
       variant: "accent",
-      size: "small"
+      size: "small",
+      style: "neutral"
     }
   },
 });
 
-type BadgeProps = VariantProps<typeof badge> & {
-  icon?: ReactNode;
+type ChipProps = VariantProps<typeof chip> & {
+  trailingIcon?: ReactNode;
+  leadingIcon?: ReactNode;
+  dismiss?: boolean;
   children: ReactNode;
   className?: string;
-  screenReaderText?: string;
 }
 
-export const Badge = ({ 
-  variant = 'accent',
-  size = 'regular',
-  icon,
+export const Chip = ({ 
+  variant,
+  size,
+  trailingIcon,
+  leadingIcon,
   children,
-  className,
-  screenReaderText
-}: BadgeProps) => {
+  className
+}: ChipProps) => {
   return (
-    <span className={badge({ variant, size, className })}>
-      {icon && <span className={styles['icon']}>{icon}</span>}
-      {screenReaderText && (
-        <span className={styles['sr-only']}>{screenReaderText}</span>
-      )}
+    <span className={chip({ variant, size, className })}>
+      {leadingIcon && <span className={styles['leading-icon']}>{leadingIcon}</span>}
       {children}
+      {trailingIcon && <span className={styles['trailing-icon']}>{trailingIcon}</span>}
     </span>
   );
 };
 
-Badge.displayName = "Badge";
+Chip.displayName = "Chip";

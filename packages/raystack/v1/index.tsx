@@ -11,6 +11,7 @@ export { Flex } from "./components/flex";
 export { InputField } from "./components/inputField";
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
+export { Chip } from './components/chip'
 export {
   ThemeProvider,
   ThemeProviderProps,
