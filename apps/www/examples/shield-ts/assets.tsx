@@ -224,7 +224,7 @@ const AssetsHeader = () => {
           placeholder="Place holder"
           prefix="USD"
         />
-        <Badge size="small" variant="gradient" icon={<HomeIcon />} screenReaderText="Project status is currently">
+        <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
         </Badge>
         {/* <Button variant="outline">Click here</Button>
