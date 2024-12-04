@@ -20,7 +20,7 @@ const badge = cva(styles['badge'], {
     },
     defaultVariants: {
       variant: "accent",
-      size: "regular"
+      size: "small"
     }
   },
 });
