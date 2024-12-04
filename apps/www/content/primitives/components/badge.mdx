@@ -1,35 +1,189 @@
 ---
 name: badge
 title: Badge
-description: The Badge component is designed to display a visually distinct element resembling a badge.
+description: Badge component to display concise information.
 ---
+
 ## Preview
 
 <Preview>
-  <Badge>Badge</Badge>
+  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
+    <Badge variant="accent">Accent</Badge>
+    <Badge variant="warning">Warning</Badge>
+    <Badge variant="danger">Danger</Badge>
+    <Badge variant="success">Success</Badge>
+    <Badge variant="neutral">Neutral</Badge>
+    <Badge variant="gradient">Gradient</Badge>
+  </Flex>
 </Preview>
 
 ## Usage
-The Badge component renders its children as its text content. 
-It is advised to avoid placing complex content directly within the Badge and instead use it in conjunction with other components to compose the desired visual representation.
-The Badge is primarily intended for highlighting information, indicating status, or drawing attention to specific elements within a user interface.
+
+The Badge component is used to highlight information or indicate status in a concise manner.
 
 ## Installation
 
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
 </LiveProvider>
-
-
-## Anatomy
-Import all parts and piece them together.
 
 <LiveProvider>
-    <LiveEditor code={`
-import { Badge } from '@raystack/apsara'
-    
-<Badge>Badge</Badge>
-`} border />
+    <LiveEditor code={`import { Badge } from '@raystack/apsara/v1'
+
+<Badge variant="accent" size="micro">Badge Text</Badge>
+`} border/>
 </LiveProvider>
+
+## Badge Props
+
+The `Badge` component accepts the following props:
+
+- `variant`: Visual style variant (`"accent"` | `"warning"` | `"danger"` | `"success"` | `"neutral"` | `"gradient"`, default: "accent")
+- `size`: Size of the badge (`"micro"` | `"small"` | `"regular"`, default: "regular")
+- `icon`: Optional ReactNode to display an icon before the text
+- `screenReaderText`: Additional text content only announced to screen readers
+- `children`: Text content of the badge
+- `className`: Additional CSS class names
+
+## Variants
+
+Choose between different variants to convey different meanings or importance levels.
+
+<Playground
+  scope={{ Badge }}
+  tabs={[
+    {
+      name: "Accent",
+      code: `<Badge variant="accent">Accent Badge</Badge>`,
+    },
+    {
+      name: "Warning",
+      code: `<Badge variant="warning">Warning Badge</Badge>`,
+    },
+    {
+      name: "Danger",
+      code: `<Badge variant="danger">Danger Badge</Badge>`,
+    },
+    {
+      name: "Success",
+      code: `<Badge variant="success">Success Badge</Badge>`,
+    },
+    {
+      name: "Neutral",
+      code: `<Badge variant="neutral">Neutral Badge</Badge>`,
+    },
+    {
+      name: "Gradient",
+      code: `<Badge variant="gradient">Gradient Badge</Badge>`,
+    },
+  ]}
+/>
+
+## Sizes
+
+The Badge component supports three sizes to accommodate various layout requirements.
+
+<Playground
+  scope={{ Badge }}
+  tabs={[
+    {
+      name: "Micro",
+      code: `<Badge size="micro">Micro Badge</Badge>`,
+    },
+    {
+      name: "Small",
+      code: `<Badge size="small">Small Badge</Badge>`,
+    },
+    {
+      name: "Regular",
+      code: `<Badge size="regular">Regular Badge</Badge>`,
+    },
+  ]}
+/>
+
+## With Icon
+
+Badges can include an icon to provide additional visual context.
+
+<Playground
+  scope={{ Badge }}
+  tabs={[
+    {
+      name: "With Icon",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Badge icon={'O'}>Home</Badge>
+        <Badge variant="success" icon={'O'}>Home</Badge>
+        <Badge variant="danger" icon={'O'}>Home</Badge>
+      </div>`,
+    },
+    {
+      name: "Different Sizes",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Badge size="micro" icon={'O'}>Home</Badge>
+        <Badge size="small" icon={'O'}>Home</Badge>
+        <Badge size="regular" icon={'O'}>Home</Badge>
+      </div>`,
+    },
+  ]}
+/>
+
+
+## Accessibility
+
+The Badge component includes screen reader support through the `screenReaderText` prop, only be announced to screen readers.
+
+<Playground
+  scope={{ Badge }}
+  tabs={[
+    {
+      name: "With Screen Reader Text",
+      code: `
+      <Badge 
+        variant="success" 
+        screenReaderText="Project status is currently"
+      >
+        Active
+      </Badge>`,
+    }
+  ]}
+/>
+
+## Examples
+
+Here are some common use cases for the Badge component:
+
+<Playground
+  scope={{ Badge }}
+  tabs={[
+    {
+      name: "Status Indicator",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Badge variant="success">Active</Badge>
+        <Badge variant="danger">Inactive</Badge>
+        <Badge variant="warning">Pending</Badge>
+      </div>`,
+    },
+    {
+      name: "With Icons",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Badge variant="accent" icon={'O'}>Home</Badge>
+        <Badge variant="gradient" icon={'O'}>Dashboard</Badge>
+      </div>`,
+    },
+    {
+      name: "Different Sizes",
+      code: `
+      <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <Badge size="micro">Micro</Badge>
+        <Badge size="small">Small</Badge>
+        <Badge size="regular">Regular</Badge>
+      </div>`,
+    },
+  ]}
+/>
