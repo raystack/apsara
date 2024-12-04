@@ -1,5 +1,14 @@
 .chip {
-
+    display: inline-flex;
+    padding: var(--rs-space-2) var(--rs-space-3);
+    justify-content: center;
+    align-items: center;
+    gap: var(--rs-space-2);
+    font-family: var(--rs-font-body);
+    font-style: normal;
+    font-weight: 400;
+    border-radius: var(--rs-radius-1);
+    white-space: nowrap;
 }
 
 /* Variants */
@@ -26,5 +35,5 @@
 }
 
 .chip-style-accent {
-    
+
 }
