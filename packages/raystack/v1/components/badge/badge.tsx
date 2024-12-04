@@ -34,7 +34,7 @@ type BadgeProps = VariantProps<typeof badge> & {
 
 export const Badge = ({ 
   variant = 'accent',
-  size = 'regular',
+  size = 'small',
   icon,
   children,
   className,
