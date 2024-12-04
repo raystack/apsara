@@ -7,7 +7,7 @@ description: Badge component to display concise information.
 ## Preview
 
 <Preview>
-  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
+  <Flex style={{ gap: "24px", flexWrap: "wrap" }}>
     <Badge variant="accent">Accent</Badge>
     <Badge variant="warning">Warning</Badge>
     <Badge variant="danger">Danger</Badge>
@@ -49,7 +49,7 @@ The `Badge` component accepts the following props:
 
 ## Variants
 
-Choose between different variants to convey different meanings or importance levels.
+Choose between different variants to convey different meanings or importance levels. Default variant is `accent`.
 
 <Playground
   scope={{ Badge }}
@@ -83,7 +83,7 @@ Choose between different variants to convey different meanings or importance lev
 
 ## Sizes
 
-The Badge component supports three sizes to accommodate various layout requirements.
+The Badge component supports three sizes to accommodate various layout requirements. Default size is `small`.
 
 <Playground
   scope={{ Badge }}
@@ -105,7 +105,7 @@ The Badge component supports three sizes to accommodate various layout requireme
 
 ## With Icon
 
-Badges can include an icon to provide additional visual context.
+Badges can include an icon to provide additional visual context. By default there is no icon.
 
 <Playground
   scope={{ Badge }}
@@ -131,10 +131,9 @@ Badges can include an icon to provide additional visual context.
   ]}
 />
 
-
 ## Accessibility
 
-The Badge component includes screen reader support through the `screenReaderText` prop, only be announced to screen readers.
+The Badge component includes screen reader support through the `screenReaderText` prop, only be announced to screen readers. By default no text is passed to `screenReaderText` prop.
 
 <Playground
   scope={{ Badge }}
@@ -148,7 +147,7 @@ The Badge component includes screen reader support through the `screenReaderText
       >
         Active
       </Badge>`,
-    }
+    },
   ]}
 />
 
