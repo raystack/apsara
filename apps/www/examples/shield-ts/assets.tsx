@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon } from "@radix-ui/react-icons";
+import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox, InputField } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -261,6 +261,48 @@ const AssetsHeader = () => {
             fallback={<>RK</>}
           />
         </AvatarGroup> */}
+
+        {/* Add Chip examples */}
+        <Flex gap="small" align="center">
+          {/* Basic small neutral outline chip */}
+          <Chip>Default</Chip>
+
+          {/* Large accent filled chip with leading icon */}
+          <Chip 
+            variant="filled" 
+            size="large" 
+            style="accent"
+            leadingIcon={<PlusIcon />}
+          >
+            Large Accent
+          </Chip>
+
+          {/* Small neutral filled chip with trailing icon */}
+          <Chip 
+            variant="filled"
+            trailingIcon={<CheckIcon />}
+          >
+            With Icon
+          </Chip>
+
+          {/* Dismissible outline chip */}
+          <Chip 
+            variant="outline"
+            isDismissible
+            onDismiss={() => console.log('dismissed')}
+          >
+            Dismissible
+          </Chip>
+
+          {/* Accent outline chip with both icons */}
+          <Chip 
+            style="accent"
+            leadingIcon={<CheckIcon />}
+            trailingIcon={<Cross1Icon />}
+          >
+            Both Icons
+          </Chip>
+        </Flex>
 
       </Flex>
       <Flex gap="small">
