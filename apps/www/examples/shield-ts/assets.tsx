@@ -264,11 +264,9 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          {/* Basic small neutral outline chip */}
-          <Chip>Default</Chip>
+          <Chip variant="filled" size="large" style="neutral">Default</Chip>
 
-          {/* Large accent filled chip with leading icon */}
-          <Chip 
+          {/* <Chip 
             variant="filled" 
             size="large" 
             style="accent"
@@ -277,7 +275,6 @@ const AssetsHeader = () => {
             Large Accent
           </Chip>
 
-          {/* Small neutral filled chip with trailing icon */}
           <Chip 
             variant="filled"
             trailingIcon={<CheckIcon />}
@@ -285,7 +282,6 @@ const AssetsHeader = () => {
             With Icon
           </Chip>
 
-          {/* Dismissible outline chip */}
           <Chip 
             variant="outline"
             isDismissible
@@ -294,23 +290,22 @@ const AssetsHeader = () => {
             Dismissible
           </Chip>
 
-          {/* Accent outline chip with both icons */}
           <Chip 
             style="accent"
             leadingIcon={<CheckIcon />}
             trailingIcon={<Cross1Icon />}
           >
             Both Icons
-          </Chip>
+          </Chip> */}
         </Flex>
 
       </Flex>
-      <Flex gap="small">
+      {/* <Flex gap="small">
         <AssetsFooter />
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
         <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 };

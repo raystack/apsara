@@ -1,45 +1,60 @@
 .chip {
     display: inline-flex;
-    padding: var(--rs-space-2) var(--rs-space-3);
     justify-content: center;
     align-items: center;
     gap: var(--rs-space-2);
-    font-family: var(--rs-font-body);
+    font-size: 11px;
     font-style: normal;
     font-weight: 400;
-    border-radius: var(--rs-radius-1);
+    border-radius: var(--rs-radius-2);
     white-space: nowrap;
+    cursor: default;
+    transition: 0.2s ease;
 }
 
 /* Variants */
 .chip-variant-outline {
-    border: 1px solid var(--rs-color-border-base-primary);
     background: transparent;
 }
 
 .chip-variant-filled {
-    border: none;
-    background: var(--rs-color-background-base-secondary);
+    background: var(--rs-color-background-base-primary);
 }
 
 /* Sizes */
 .chip-size-large {
-    padding: var(--rs-space-3) var(--rs-space-4);
-    font-size: 14px;
+    padding: var(--rs-space-2) var(--rs-space-3);
 }
 
 .chip-size-small {
-    padding: var(--rs-space-2) var(--rs-space-3);
-    font-size: 12px;
+    padding: var(--rs-space-1) var(--rs-space-2);
 }
 
 /* Styles */
 .chip-style-neutral {
+    border: 0.5px solid var(--rs-color-border-base-primary);
+    color: var(--rs-color-text-base-secondary);
+}
+
+.chip-style-neutral:hover {
     color: var(--rs-color-text-base-primary);
 }
 
+.chip-style-neutral:active {
+    border: 1px solid var(--rs-color-border-base-emphasis);
+}
+
 .chip-style-accent {
+    border: 0.5px solid var(--rs-color-border-accent-primary);
     color: var(--rs-color-text-accent-primary);
+}
+
+.chip-style-accent:hover {
+    border: 0.5px solid var(--rs-color-border-accent-emphasis);
+}
+
+.chip-style-accent:active {
+    border: 1px solid var(--rs-color-border-accent-emphasis);
 }
 
 /* Icons */
