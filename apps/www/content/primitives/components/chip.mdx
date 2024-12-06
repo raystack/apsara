@@ -6,28 +6,21 @@ description: A compact element for representing an input, attribute, or action.
 ## Preview
 
 <Preview>
-  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
-    <Chip variant="outline" size="small">Default</Chip>
-    
+  <Flex direction="row" gap="medium">
+    <Chip variant="outline">Default</Chip>
+
     <Chip variant="filled" size="small" style="accent">Accent</Chip>
-    
-    <Chip 
-      variant="outline" 
-      size="large"
-      leadingIcon={<PlusIcon />}
-    >
-      With Icon
-    </Chip>
-    
-    <Chip 
-      variant="filled" 
-      size="large" 
+
+    <Chip variant="outline" size="small" leadingIcon={"O"}>With Icon</Chip>
+
+    <Chip
+      variant="filled"
+      size="small"
       style="accent"
       isDismissible
-      onDismiss={() => {}}
-    >
-      Dismissible
-    </Chip>
+      onDismiss={() => alert("Dismiss clicked")}
+    >Dismissible</Chip>
+
   </Flex>
 </Preview>
 
@@ -76,7 +69,7 @@ Choose between outline and filled variants to match your design needs.
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip variant="outline">Default</Chip>
         <Chip variant="outline" style="accent">Accent</Chip>
-        <Chip variant="outline" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip variant="outline" leadingIcon={'O'}>With Icon</Chip>
         <Chip variant="outline" isDismissible>Dismissible</Chip>
       </div>`,
     },
@@ -86,7 +79,7 @@ Choose between outline and filled variants to match your design needs.
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip variant="filled">Default</Chip>
         <Chip variant="filled" style="accent">Accent</Chip>
-        <Chip variant="filled" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip variant="filled" leadingIcon={'O'}>With Icon</Chip>
         <Chip variant="filled" isDismissible>Dismissible</Chip>
       </div>`,
     },
@@ -106,7 +99,7 @@ The Chip component comes in two sizes to accommodate different use cases.
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip size="small">Small Chip</Chip>
         <Chip size="small" variant="filled">Small Filled</Chip>
-        <Chip size="small" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip size="small" leadingIcon={'O'}>With Icon</Chip>
         <Chip size="small" isDismissible>Dismissible</Chip>
       </div>`,
     },
@@ -116,7 +109,7 @@ The Chip component comes in two sizes to accommodate different use cases.
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip size="large">Large Chip</Chip>
         <Chip size="large" variant="filled">Large Filled</Chip>
-        <Chip size="large" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip size="large" leadingIcon={'O'}>With Icon</Chip>
         <Chip size="large" isDismissible>Dismissible</Chip>
       </div>`,
     },
@@ -136,7 +129,7 @@ Choose between neutral and accent styles to control the visual emphasis.
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip style="neutral" variant="outline">Outline</Chip>
         <Chip style="neutral" variant="filled">Filled</Chip>
-        <Chip style="neutral" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip style="neutral" leadingIcon={'O'}>With Icon</Chip>
         <Chip style="neutral" isDismissible>Dismissible</Chip>
       </div>`,
     },
@@ -146,7 +139,7 @@ Choose between neutral and accent styles to control the visual emphasis.
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip style="accent" variant="outline">Outline</Chip>
         <Chip style="accent" variant="filled">Filled</Chip>
-        <Chip style="accent" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip style="accent" leadingIcon={'O'}>With Icon</Chip>
         <Chip style="accent" isDismissible>Dismissible</Chip>
       </div>`,
     },
@@ -164,24 +157,24 @@ Chips can include leading and trailing icons to provide additional context or ac
       name: "Leading Icon",
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
-        <Chip leadingIcon={<PlusIcon />}>Add Item</Chip>
-        <Chip variant="filled" leadingIcon={<CheckIcon />}>Selected</Chip>
+        <Chip leadingIcon={'O'}>Add Item</Chip>
+        <Chip variant="filled" leadingIcon={'O'}>Selected</Chip>
       </div>`,
     },
     {
       name: "Trailing Icon",
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
-        <Chip trailingIcon={<ArrowRightIcon />}>Next</Chip>
-        <Chip variant="filled" trailingIcon={<ExternalLinkIcon />}>Open</Chip>
+        <Chip trailingIcon={'O'}>Next</Chip>
+        <Chip variant="filled" trailingIcon={'O'}>Open</Chip>
       </div>`,
     },
     {
       name: "Both Icons",
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
-        <Chip leadingIcon={<FileIcon />} trailingIcon={<DownloadIcon />}>Download</Chip>
-        <Chip variant="filled" leadingIcon={<PersonIcon />} trailingIcon={<PencilIcon />}>Edit Profile</Chip>
+        <Chip leadingIcon={'O'} trailingIcon={'O'}>Download</Chip>
+        <Chip variant="filled" leadingIcon={'O'} trailingIcon={'O'}>Edit Profile</Chip>
       </div>`,
     },
   ]}

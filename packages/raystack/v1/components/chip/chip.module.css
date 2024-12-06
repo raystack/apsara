@@ -10,6 +10,9 @@
     white-space: nowrap;
     cursor: default;
     transition: 0.2s ease;
+    box-sizing: border-box;
+    height: fit-content;
+    width: fit-content;
 }
 
 /* Variants */
@@ -62,6 +65,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 12px;
+    height: 12px;
 }
 
 .dismiss-button {
