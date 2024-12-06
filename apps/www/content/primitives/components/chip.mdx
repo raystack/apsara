@@ -1,0 +1,230 @@
+---
+title: Chip
+description: A compact element for representing an input, attribute, or action.
+---
+
+## Preview
+
+<Preview>
+  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
+    <Chip variant="outline" size="small">Default</Chip>
+    
+    <Chip variant="filled" size="small" style="accent">Accent</Chip>
+    
+    <Chip 
+      variant="outline" 
+      size="large"
+      leadingIcon={<PlusIcon />}
+    >
+      With Icon
+    </Chip>
+    
+    <Chip 
+      variant="filled" 
+      size="large" 
+      style="accent"
+      isDismissible
+      onDismiss={() => {}}
+    >
+      Dismissible
+    </Chip>
+  </Flex>
+</Preview>
+
+## Usage
+
+The Chip component is used to represent attributes, tags, or actions in a compact form. It supports various styles, sizes, and can include leading/trailing icons or a dismiss button.
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
+</LiveProvider>
+
+<LiveProvider>
+  <LiveEditor code={`import { Chip } from '@raystack/apsara/v1'
+
+<Chip variant="outline" size="small">Label</Chip>`} border/>
+</LiveProvider>
+
+## Chip Props
+
+The `Chip` component accepts the following props:
+
+- `variant`: Visual style variant (`"outline"` | `"filled"`, default: "outline")
+- `size`: Size of the chip (`"small"` | `"large"`, default: "small")
+- `style`: Color style (`"neutral"` | `"accent"`, default: "neutral")
+- `leadingIcon`: ReactNode to display as an icon before the label
+- `trailingIcon`: ReactNode to display as an icon after the label
+- `isDismissible`: Boolean to show a dismiss button (replaces trailingIcon)
+- `onDismiss`: Callback function when dismiss button is clicked
+- `children`: Content to display inside the chip
+- `className`: Additional CSS class names
+
+## Variants
+
+Choose between outline and filled variants to match your design needs.
+
+<Playground
+  scope={{ Chip }}
+  tabs={[
+    {
+      name: "Outline",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip variant="outline">Default</Chip>
+        <Chip variant="outline" style="accent">Accent</Chip>
+        <Chip variant="outline" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip variant="outline" isDismissible>Dismissible</Chip>
+      </div>`,
+    },
+    {
+      name: "Filled",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip variant="filled">Default</Chip>
+        <Chip variant="filled" style="accent">Accent</Chip>
+        <Chip variant="filled" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip variant="filled" isDismissible>Dismissible</Chip>
+      </div>`,
+    },
+  ]}
+/>
+
+## Sizes
+
+The Chip component comes in two sizes to accommodate different use cases.
+
+<Playground
+  scope={{ Chip }}
+  tabs={[
+    {
+      name: "Small",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip size="small">Small Chip</Chip>
+        <Chip size="small" variant="filled">Small Filled</Chip>
+        <Chip size="small" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip size="small" isDismissible>Dismissible</Chip>
+      </div>`,
+    },
+    {
+      name: "Large",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip size="large">Large Chip</Chip>
+        <Chip size="large" variant="filled">Large Filled</Chip>
+        <Chip size="large" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip size="large" isDismissible>Dismissible</Chip>
+      </div>`,
+    },
+  ]}
+/>
+
+## Styles
+
+Choose between neutral and accent styles to control the visual emphasis.
+
+<Playground
+  scope={{ Chip }}
+  tabs={[
+    {
+      name: "Neutral",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip style="neutral" variant="outline">Outline</Chip>
+        <Chip style="neutral" variant="filled">Filled</Chip>
+        <Chip style="neutral" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip style="neutral" isDismissible>Dismissible</Chip>
+      </div>`,
+    },
+    {
+      name: "Accent",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip style="accent" variant="outline">Outline</Chip>
+        <Chip style="accent" variant="filled">Filled</Chip>
+        <Chip style="accent" leadingIcon={<PlusIcon />}>With Icon</Chip>
+        <Chip style="accent" isDismissible>Dismissible</Chip>
+      </div>`,
+    },
+  ]}
+/>
+
+## With Icons
+
+Chips can include leading and trailing icons to provide additional context or actions.
+
+<Playground
+  scope={{ Chip }}
+  tabs={[
+    {
+      name: "Leading Icon",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip leadingIcon={<PlusIcon />}>Add Item</Chip>
+        <Chip variant="filled" leadingIcon={<CheckIcon />}>Selected</Chip>
+      </div>`,
+    },
+    {
+      name: "Trailing Icon",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip trailingIcon={<ArrowRightIcon />}>Next</Chip>
+        <Chip variant="filled" trailingIcon={<ExternalLinkIcon />}>Open</Chip>
+      </div>`,
+    },
+    {
+      name: "Both Icons",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip leadingIcon={<FileIcon />} trailingIcon={<DownloadIcon />}>Download</Chip>
+        <Chip variant="filled" leadingIcon={<PersonIcon />} trailingIcon={<PencilIcon />}>Edit Profile</Chip>
+      </div>`,
+    },
+  ]}
+/>
+
+## Dismissible
+
+Chips can be made dismissible by adding the isDismissible prop and an onDismiss handler.
+
+<Playground
+  scope={{ Chip }}
+  tabs={[
+    {
+      name: "Basic",
+      code: `
+      <Chip 
+        isDismissible 
+        onDismiss={() => console.log('dismissed')}
+      >
+        Click to Dismiss
+      </Chip>`,
+    },
+    {
+      name: "With Styles",
+      code: `
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Chip 
+          variant="outline" 
+          style="accent" 
+          isDismissible 
+          onDismiss={() => console.log('dismissed')}
+        >
+          Accent Outline
+        </Chip>
+        <Chip 
+          variant="filled" 
+          style="accent" 
+          isDismissible 
+          onDismiss={() => console.log('dismissed')}
+        >
+          Accent Filled
+        </Chip>
+      </div>`,
+    },
+  ]}
+/>
