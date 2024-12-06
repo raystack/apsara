@@ -13,27 +13,49 @@
 
 /* Variants */
 .chip-variant-outline {
-
+    border: 1px solid var(--rs-color-border-base-primary);
+    background: transparent;
 }
 
 .chip-variant-filled {
-
+    border: none;
+    background: var(--rs-color-background-base-secondary);
 }
 
 /* Sizes */
 .chip-size-large {
-
+    padding: var(--rs-space-3) var(--rs-space-4);
+    font-size: 14px;
 }
 
 .chip-size-small {
-
+    padding: var(--rs-space-2) var(--rs-space-3);
+    font-size: 12px;
 }
 
 /* Styles */
 .chip-style-neutral {
-
+    color: var(--rs-color-text-base-primary);
 }
 
 .chip-style-accent {
+    color: var(--rs-color-text-accent-primary);
+}
 
+/* Icons */
+.leading-icon, .trailing-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dismiss-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
