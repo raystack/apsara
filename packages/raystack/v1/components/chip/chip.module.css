@@ -1,0 +1,116 @@
+.chip {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--rs-space-2);
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    border-radius: var(--rs-radius-2);
+    white-space: nowrap;
+    cursor: default;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    height: fit-content;
+    width: fit-content;
+}
+
+/* Variants */
+.chip-variant-outline {
+    background: transparent;
+}
+
+.chip-variant-filled {
+    background: var(--rs-color-background-base-primary);
+}
+
+/* Sizes */
+.chip-size-large {
+    padding: var(--rs-space-2) var(--rs-space-3);
+}
+
+.chip-size-small {
+    padding: var(--rs-space-1) var(--rs-space-2);
+}
+
+/* Styles - Neutral */
+.chip-style-neutral.chip-variant-outline {
+    border: 0.5px solid var(--rs-color-border-base-secondary);
+    color: var(--rs-color-text-base-secondary);
+}
+
+.chip-style-neutral.chip-variant-outline:hover {
+    color: var(--rs-color-text-base-primary);
+}
+
+.chip-style-neutral.chip-variant-outline:active {
+    border: 1px solid var(--rs-color-border-base-emphasis);
+    color: var(--rs-color-text-base-primary);
+}
+
+.chip-style-neutral.chip-variant-filled {
+    background: var(--rs-color-background-base-primary);
+    border: 0.5px solid var(--rs-color-border-base-secondary);
+    color: var(--rs-color-text-base-secondary);
+}
+
+.chip-style-neutral.chip-variant-filled:hover {
+    border-color: var(--rs-color-text-base-primary);
+    color: var(--rs-color-text-base-primary);
+}
+
+.chip-style-neutral.chip-variant-filled:active {
+    background: var(--rs-color-background-neutral-emphasis);
+    color: var(--rs-color-text-base-emphasis);
+}
+
+/* Styles - Accent */
+.chip-style-accent.chip-variant-outline {
+    border: 0.5px solid var(--rs-color-border-accent-primary);
+    color: var(--rs-color-text-accent-primary);
+}
+
+.chip-style-accent.chip-variant-outline:hover {
+    border-color: var(--rs-color-border-accent-emphasis);
+    color: var(--rs-color-text-accent-primary-hover);
+}
+
+.chip-style-accent.chip-variant-outline:active {
+    border: 1px solid var(--rs-color-border-accent-emphasis);
+    color: var(--rs-color-text-accent-primary);
+}
+
+.chip-style-accent.chip-variant-filled {
+    background: var(--rs-color-background-base-primary);
+    border: 0.5px solid var(--rs-color-border-accent-primary);
+    color: var(--rs-color-text-accent-primary);
+}
+
+.chip-style-accent.chip-variant-filled:hover {
+    border-color: var(--rs-color-border-accent-emphasis);
+}
+
+.chip-style-accent.chip-variant-filled:active {
+    background: var(--rs-color-background-accent-emphasis);
+    color: var(--rs-color-text-base-emphasis);
+}
+
+/* Icons */
+.leading-icon, .trailing-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+}
+
+.dismiss-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
