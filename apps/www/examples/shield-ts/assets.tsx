@@ -264,7 +264,7 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          <Chip variant="filled" size="large" style="neutral" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
+          <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
 
           {/* <Chip 
             variant="filled" 
