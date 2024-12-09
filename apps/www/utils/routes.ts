@@ -17,7 +17,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/avatar",
         newBadge: true,
       },
-      { title: "Badge", slug: "docs/primitives/components/badge" },
+      { title: "Badge", slug: "docs/primitives/components/badge", newBadge: true },
       {
         title: "Breadcrumb",
         slug: "docs/primitives/components/breadcrumb",
