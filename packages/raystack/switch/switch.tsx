@@ -11,6 +11,9 @@ export interface SwitchProps
     VariantProps<typeof switchVariants>,
     SwitchPrimitive.SwitchProps {}
 
+/**
+ * @deprecated Use Switch from '@raystack/apsara/v1' instead.
+ */
 export const Switch = forwardRef<
   ElementRef<typeof SwitchPrimitive.Root>,
   SwitchProps
