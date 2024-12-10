@@ -27,6 +27,10 @@ type InputFieldProps = PropsWithChildren<VariantProps<typeof inputfield>> &
     children?: React.ReactNode;
   };
 
+
+/**
+ * @deprecated Use InputField from '@raystack/apsara/v1' instead.
+ */
 export const InputField = ({ label, children, ...props }: InputFieldProps) => {
   return (
     <Flex direction="column" gap="extra-small" {...props}>
