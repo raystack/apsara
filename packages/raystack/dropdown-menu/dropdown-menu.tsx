@@ -80,6 +80,10 @@ DropdownMenuGroup.displayName = DropdownMenuPrimitive.Group.displayName;
 type DropdownMenuProps = React.ComponentProps<
   typeof DropdownMenuPrimitive.Root
 >;
+
+/**
+ * @deprecated Use RootDropdownMenu from '@raystack/apsara/v1' instead.
+ */
 export function RootDropdownMenu({ children, ...props }: DropdownMenuProps) {
   return (
     <DropdownMenuPrimitive.Root {...props}>

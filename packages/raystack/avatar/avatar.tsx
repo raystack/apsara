@@ -26,6 +26,10 @@ const avatar = cva(styles.avatar, {
 });
 
 const image = cva(styles.image);
+
+/**
+ * @deprecated Use AvatarProps from '@raystack/apsara/v1' instead.
+ */
 export interface AvatarProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
     VariantProps<typeof avatar> {}
@@ -59,6 +63,9 @@ const AvatarRoot = forwardRef<
 
 AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
 
+/**
+ * @deprecated Use AvatarImageProps from '@raystack/apsara/v1' instead.
+ */
 export interface AvatarImageProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>,
     VariantProps<typeof image> {}
@@ -77,6 +84,9 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const fallback = cva(styles.fallback);
 
+/**
+ * @deprecated Use FallbackProps from '@raystack/apsara/v1' instead.
+ */
 export interface FallbackProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback>,
     VariantProps<typeof fallback> {}

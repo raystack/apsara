@@ -1,6 +1,7 @@
 import "./styles/index.css";
 
 export { Avatar, AvatarGroup } from "./components/avatar";
+export { Badge } from "./components/badge";
 export { Box } from "./components/box"
 export { Breadcrumb } from "./components/breadcrumb";
 export { Button } from "./components/button";
@@ -14,6 +15,7 @@ export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
 export { Badge } from "./components/badge";
 export { Switch } from "./components/switch";
+
 export {
   ThemeProvider,
   ThemeProviderProps,
