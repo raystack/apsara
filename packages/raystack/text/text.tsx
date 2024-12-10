@@ -38,6 +38,9 @@ const text = cva(styles.text, {
   },
 });
 
+/**
+ * @deprecated Use TextProps from '@raystack/apsara/v1' instead.
+ */
 export type TextProps = PropsWithChildren<VariantProps<typeof text>> &
   HTMLAttributes<HTMLSpanElement>;
 

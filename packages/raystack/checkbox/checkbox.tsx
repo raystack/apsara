@@ -18,6 +18,9 @@ const checkbox = cva(styles.checkbox, {
   },
 });
 
+/**
+ * @deprecated Use CheckboxProps from '@raystack/apsara/v1' instead.
+ */
 export interface CheckboxProps
   extends ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
     VariantProps<typeof checkbox>,
@@ -45,6 +48,10 @@ export const Checkbox = forwardRef<
 ));
 
 const indicator = cva(styles.indicator);
+
+/**
+ * @deprecated Use IndicatorProps from '@raystack/apsara/v1' instead.
+ */
 export interface IndicatorProps
   extends ComponentPropsWithoutRef<typeof CheckboxPrimitive.Indicator>,
     VariantProps<typeof indicator> {}
