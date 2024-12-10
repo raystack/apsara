@@ -9,21 +9,17 @@ radix:
 ## Preview
 
 <Preview>
-  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
+  <Flex style={{ gap: "24px", flexWrap: "wrap" }}>
     <Switch />
-    <Switch label="Notifications" />
     <Switch disabled />
-    <Switch label="Disabled with label" disabled />
-    <Switch 
-      label="With description" 
-      description="Get notified when someone mentions you"
-    />
+    <Switch checked />
+    <Switch checked disabled />
   </Flex>
 </Preview>
 
 ## Usage
 
-The Switch component provides a toggleable control with support for labels, descriptions, and disabled states.
+The Switch component provides a toggleable control with support for controlled and disabled states.
 
 ## Installation
 
@@ -36,14 +32,7 @@ Install the component from your command line.
 <LiveProvider>
     <LiveEditor code={`import { Switch } from '@raystack/apsara/v1'
 
-// Basic usage
-<Switch />
-
-// With label and description
-<Switch 
-  label="Email notifications"
-  description="Receive updates about your account"
-/>`} border/>
+<Switch checked={true} />`} border/>
 </LiveProvider>
 
 ## Switch Props
@@ -55,8 +44,6 @@ The Switch component accepts the following props:
 - `onCheckedChange`: Event handler called when the checked state changes (function)
 - `disabled`: When true, prevents the user from interacting with the switch (boolean)
 - `required`: When true, indicates that the user must check the switch (boolean)
-- `label`: The label that describes the switch (string)
-- `description`: Additional description text to help users understand the switch (string)
 - `id`: A unique identifier for the switch (string)
 
 ## States
@@ -84,7 +71,7 @@ The Switch component supports various states to handle different interaction sce
     {
       name: "Required",
       code: `<Switch label="Required field" required />`,
-    }
+    },
   ]}
 />
 
@@ -105,7 +92,7 @@ Add labels to provide context for your switches.
   label="Email notifications" 
   description="Receive updates about your account"
 />`,
-    }
+    },
   ]}
 />
 
