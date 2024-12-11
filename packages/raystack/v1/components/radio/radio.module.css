@@ -1,60 +1,70 @@
 .radio {
   display: flex;
+  gap: var(--rs-space-3);
 }
 
 .radioitem {
   all: unset;
-  box-sizing: border-box;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+  min-width: var(--rs-space-5);
+  min-height: var(--rs-space-5);
+  border-radius: var(--rs-radius-full);
+  border: 1px solid var(--rs-color-border-base-tertiary);
+  background: var(--rs-color-background-base-primary);
   display: inline-flex;
   align-items: center;
-  justify-content: center; 
-  outline: 0;
-  position: relative;
-  text-decoration: none;
-  background: none;
-  
-  width: 20px;
-  height: 20px;
-  overflow: hidden;
-
-  border-radius: var(--br-round);
-  border: 1px solid var(--border-base);
+  justify-content: center;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
 .radioitem:hover {
-  background: var(--background-base-hover);
-  border: 1px solid var(--border-base-hover);
+  border-color: var(--rs-color-border-base-tertiary-hover);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .radioitem[data-state="checked"] {
-  border: none;
-  outline: none;
-  background: var(--background-accent-inverted)
+  border: 1px solid var(--rs-color-background-accent-emphasis);
+  background: var(--rs-color-background-accent-emphasis);
 }
 
-.radioitem-small {
-  width: 16px;
-  height: 16px;
+.radioitem[data-state="checked"]:hover {
+  border-color: var(--rs-color-background-accent-emphasis-hover);
+  background: var(--rs-color-background-accent-emphasis-hover);
 }
-.radioitem-medium {
-  width: 20px;
-  height: 20px;
+
+.radioitem[data-disabled],
+.radioitem[data-disabled]:hover {
+  background: var(--rs-color-background-neutral-secondary);
+  border-color: var(--rs-color-border-base-secondary);
+  cursor: not-allowed;
+}
+
+.radioitem[data-disabled][data-state="checked"],
+.radioitem[data-disabled][data-state="checked"]:hover {
+  background: var(--rs-color-background-accent-primary);
+  border-color: var(--rs-color-background-accent-primary);
 }
 
 .indicator {
   display: flex;
   align-items: center;
-  justify-content: center; 
-  height: 100%;
+  justify-content: center;
   width: 100%;
+  height: 100%;
   position: relative;
 }
 
 .indicator::after {
   content: '';
   display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: var(--br-round);
-  background: var(--foreground-inverted)
+  width: var(--rs-radius-3);
+  height: var(--rs-radius-3);
+  border-radius: var(--rs-radius-full);
+  background: var(--rs-color-text-base-emphasis);
+}
+
+.radioitem[data-disabled] .indicator::after {
+  background: var(--rs-color-text-base-emphasis);
 }
