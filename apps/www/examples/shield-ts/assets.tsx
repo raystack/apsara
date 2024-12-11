@@ -268,11 +268,15 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
-          <Radio defaultValue="1">
-            <Radio.Item value="1" size="small"/>
-            <Radio.Item value="2" size="small"/>
-          </Radio>
+          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
+          <Radio.Root defaultValue="1" aria-label="View options">
+            <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
+              <Radio.Item value="1" id="r1" />
+              <label htmlFor="r1">Option 1</label>
+              <Radio.Item value="2" id="r2" />
+              <label htmlFor="r2">Option 2</label>
+            </Flex>
+          </Radio.Root>
           {/* <Chip 
             variant="filled" 
             size="large" 
