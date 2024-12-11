@@ -3,6 +3,9 @@ import { cva, VariantProps } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import styles from "./radio.module.css";
 
+/**
+ * @deprecated Use RadioRootProps from '@raystack/apsara/v1' instead.
+ */
 const RedioRoot = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Root>,
   ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
@@ -22,10 +25,16 @@ const radioItem = cva(styles.radioitem, {
   },
 });
 
+/**
+ * @deprecated Use RadioItemProps from '@raystack/apsara/v1' instead.
+ */
 export interface RadioItemProps
   extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>,
     VariantProps<typeof radioItem> {}
 
+/**
+ * @deprecated Use RadioItem from '@raystack/apsara/v1' instead.
+ */
 export const RadioItem = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Item>,
   RadioItemProps
@@ -40,6 +49,10 @@ export const RadioItem = forwardRef<
 ));
 
 const indicator = cva(styles.indicator);
+
+/**
+ * @deprecated Use thumbProps from '@raystack/apsara/v1' instead.
+ */
 export interface thumbProps
   extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Indicator>,
     VariantProps<typeof indicator> {}
@@ -57,6 +70,9 @@ const Indicator = forwardRef<
 
 Indicator.displayName = RadioGroupPrimitive.Indicator.displayName;
 
+/**
+ * @deprecated Use Radio from '@raystack/apsara/v1' instead.
+ */
 export const Radio = Object.assign(RedioRoot, {
   Indicator: Indicator,
   Item: RadioItem,
