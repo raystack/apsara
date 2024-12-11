@@ -93,6 +93,7 @@
   --rs-color-border-base-secondary: var(--rs-neutral-6);
   --rs-color-border-attention-emphasis-hover: var(--rs-attention-10);
   --rs-color-border-success-emphasis-hover: var(--rs-success-10);
+  --rs-color-border-base-tertiary-hover: var(--rs-neutral-5);
 
   /* Emphasis Foreground Colors */
   --rs-color-text-accent-emphasis: var(--rs-accent-contrast);

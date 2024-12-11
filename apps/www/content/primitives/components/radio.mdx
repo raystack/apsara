@@ -1,17 +1,30 @@
 ---
 title: Radio
-description: 
+description: A radio group component for selecting a single option from a list of options.
 radix:
   link: https://www.radix-ui.com/docs/primitives/components/radio-group
   api: https://www.radix-ui.com/docs/primitives/components/radio-group#api-reference
 ---
+
 ## Preview
 
 <Preview>
-  <Radio defaultValue="1">
-  <Radio.Item value="1" size="small"/>
-  <Radio.Item value="2" size="medium"/>
-</Radio>
+  <Flex style={{ gap: '24px' }}>
+    <Radio.Root defaultValue="1" aria-label="Sizes">
+      <Flex gap="small" align="center">
+        <Radio.Item value="1" />
+        <Radio.Item value="2" />
+      </Flex>
+    </Radio.Root>
+
+    <Radio.Root defaultValue="1" aria-label="States">
+      <Flex gap="small" align="center">
+        <Radio.Item value="1" />
+        <Radio.Item value="2" disabled />
+      </Flex>
+    </Radio.Root>
+
+  </Flex>
 </Preview>
 
 ## Installation
@@ -19,20 +32,127 @@ radix:
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
 </LiveProvider>
 
-
-## Anatomy
-Import all parts and piece them together.
+## Usage
 
 <LiveProvider>
-    <LiveEditor code={`
-import { Radio } from '@raystack/apsara'
+    <LiveEditor code={`import { Radio } from '@raystack/apsara/v1'
 
-<Radio defaultValue="1">
-  <Radio.Item value="1" size="small"/>
-  <Radio.Item value="2" size="medium"/>
-</Radio>
-`} border />
+<Radio.Root defaultValue="1" aria-label="Options">
+  <Flex gap="small" align="center">
+    <Radio.Item value="1" id="r1" />
+    <label htmlFor="r1" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Option 1</label>
+    <Radio.Item value="2" id="r2" />
+    <label htmlFor="r2" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Option 2</label>
+  </Flex>
+</Radio.Root>
+`} border/>
 </LiveProvider>
+
+## Radio Props
+
+### Radio.Root Props
+
+- `defaultValue`: The value of the radio item that should be checked by default
+- `value`: The controlled value of the radio item that is checked
+- `onValueChange`: Event handler called when the value changes
+- `disabled`: When true, prevents user interaction with the radio group
+- `name`: The name of the radio group when submitted as a form field
+- `required`: When true, indicates that a value must be selected before the form can be submitted
+- `orientation`: The orientation of the radio group ("horizontal" | "vertical")
+- `dir`: The reading direction of the radio group
+- `aria-label`: A label for the radio group that is announced by screen readers
+
+### Radio.Item Props
+
+- `value`: The unique value of the radio item
+- `disabled`: When true, prevents user interaction with this radio item
+- `required`: When true, indicates that this radio item must be checked
+- `id`: The unique identifier for the radio item
+
+## States
+
+Radio buttons support different states to indicate interactivity and selection.
+
+<Playground
+  scope={{ Radio, Flex }}
+  tabs={[
+    {
+      name: "Default",
+      code: `
+<Radio.Root defaultValue="1">
+  <Flex gap="small" align="center">
+    <Radio.Item value="1" id="d1" />
+    <label htmlFor="d1" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Default Option</label>
+  </Flex>
+</Radio.Root>`,
+    },
+    {
+      name: "Disabled",
+      code: `
+<Radio.Root defaultValue="1">
+  <Flex gap="small" align="center">
+    <Radio.Item value="1" disabled id="dis1" />
+    <label htmlFor="dis1" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Disabled Option</label>
+  </Flex>
+</Radio.Root>`,
+    },
+  ]}
+/>
+
+## With Labels
+
+Radio buttons should always be accompanied by labels for accessibility and usability.
+
+<Playground
+  scope={{ Radio, Flex }}
+  code={`
+<Radio.Root defaultValue="1">
+  <Flex direction="column" gap="small">
+    <Flex gap="small" align="center">
+      <Radio.Item value="1" id="l1" />
+      <label htmlFor="l1" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Option One</label>
+    </Flex>
+    <Flex gap="small" align="center">
+      <Radio.Item value="2" id="l2" />
+      <label htmlFor="l2" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Option Two</label>
+    </Flex>
+    <Flex gap="small" align="center">
+      <Radio.Item value="3" id="l3" />
+      <label htmlFor="l3" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Option Three</label>
+    </Flex>
+  </Flex>
+</Radio.Root>
+`}
+/>
+
+## Form Example
+
+Radio buttons can be used in forms with proper validation and submission handling.
+
+<Playground
+  scope={{ Radio, Flex }}
+  code={`
+<form onSubmit={(e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  console.log(Object.fromEntries(formData));
+}}>
+  <Radio.Root name="plan" defaultValue="monthly" required>
+    <Flex direction="column" gap="small">
+      <Flex gap="small" align="center">
+        <Radio.Item value="monthly" id="mp" />
+        <label htmlFor="mp" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Monthly Plan</label>
+      </Flex>
+      <Flex gap="small" align="center">
+        <Radio.Item value="yearly" id="yp" />
+        <label htmlFor="yp" style={{ fontSize: '14px', color: 'var(--rs-color-text-base-secondary)' }}>Yearly Plan</label>
+      </Flex>
+    </Flex>
+  </Radio.Root>
+  <button type="submit" style={{ marginTop: '16px' }}>Submit</button>
+</form>
+`}
+/>
