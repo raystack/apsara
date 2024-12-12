@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon } from "@radix-ui/react-icons";
+import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
+  Textarea,
   Title,
-  useTable,
-  Textarea
+  useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, TextArea } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -271,7 +271,7 @@ const AssetsHeader = () => {
         <Flex gap="small" align="center">
           <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
 
-          <Textarea size="medium" state="invalid" />
+          <TextArea size="medium" state="invalid" />
 
           {/* <Chip 
             variant="filled" 
@@ -304,6 +304,42 @@ const AssetsHeader = () => {
           >
             Both Icons
           </Chip> */}
+        </Flex>
+
+        <Flex direction="column" gap="large">
+          {/* Basic textarea with label */}
+          <TextArea 
+            label="Label" 
+            placeholder="Place holder"
+          />
+
+          {/* Optional textarea with helper text */}
+          <TextArea 
+            label="Label"
+            required={false}
+            helperText="Helper text"
+            placeholder="Place holder"
+          />
+
+          {/* Textarea with help icon */}
+          <TextArea 
+            label="Label"
+            helpIcon={<InfoCircledIcon />}
+            placeholder="Place holder"
+          />
+
+          {/* Invalid state textarea */}
+          <TextArea 
+            label="Label"
+            state="invalid"
+            placeholder="Place holder"
+          />
+
+          {/* Filled textarea */}
+          <TextArea 
+            label="Label"
+            defaultValue="Filled"
+          />
         </Flex>
 
       </Flex>
