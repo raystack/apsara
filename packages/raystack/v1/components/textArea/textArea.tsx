@@ -1,6 +1,7 @@
 import * as React from "react";
-import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
+import { HTMLAttributes, PropsWithChildren } from "react";
 import { VariantProps, cva, cx } from "class-variance-authority";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 
 import styles from "./textarea.module.css";
 
@@ -15,8 +16,8 @@ const textArea = cva(styles.textarea, {
 export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof textArea>>, 
   HTMLAttributes<HTMLTextAreaElement> {
   label?: string;
-  required?: boolean;
-  helpIcon?: ReactNode;
+  isOptional?: boolean;
+  // tooltip?: string;
   helperText?: string;
   error?: boolean;
   width?: string | number;
@@ -25,7 +26,7 @@ export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof tex
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, style, label, required, helpIcon, helperText, error, width = "200px", value, onChange, ...props }, ref) => {
+  ({ className, style, label, isOptional, helperText, error, width = "200px", value, onChange, ...props }, ref) => {
     return (
       <div className={styles.container} style={{ width }}>
         {label && (
@@ -33,8 +34,8 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
             <label className={styles.label}>
               {label}
             </label>
-            {!required && <span className={styles.optional}>(optional)</span>}
-            {helpIcon && <span className={styles.helpIcon}>{helpIcon}</span>}
+            {isOptional && <span className={styles.optional}>(optional)</span>}
+            {/* {tooltip && <span className={styles.helpIcon}><InfoCircledIcon /></span>} */}
           </div>
         )}
         <textarea
