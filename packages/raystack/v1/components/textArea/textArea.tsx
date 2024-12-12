@@ -1,10 +1,10 @@
 import * as React from "react";
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
 import { VariantProps, cva, cx } from "class-variance-authority";
 
-import styles from "./textarea.module.css";
+import styles from "./textArea.module.css";
 
-const textarea = cva(styles.textarea, {
+const textArea = cva(styles.textArea, {
   variants: {
     size: {
       small: styles["textfield-sm"],
@@ -24,20 +24,38 @@ const textarea = cva(styles.textarea, {
     size: "small",
   },
 });
-export type TextareaProps = PropsWithChildren<VariantProps<typeof textarea>> &
-  HTMLAttributes<HTMLTextAreaElement>;
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, size, state, style, leading, ...props }, ref) => {
+export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof textArea>>, 
+  HTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+  required?: boolean;
+  helpIcon?: ReactNode;
+  helperText?: string;
+}
+
+const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
+  ({ className, size, state, style, leading, label, required, helpIcon, helperText, ...props }, ref) => {
     return (
-      <textarea
-        className={cx(textarea({ size, state, className, leading }))}
-        ref={ref}
-        {...props}
-      />
+      <div className={styles.container}>
+        {label && (
+          <div className={styles.labelContainer}>
+            <label className={styles.label}>
+              {label}
+              {helpIcon && <span className={styles.helpIcon}>{helpIcon}</span>}
+            </label>
+            {!required && <span className={styles.optional}>(optional)</span>}
+          </div>
+        )}
+        <textarea
+          className={cx(textArea({ size, state, className, leading }))}
+          ref={ref}
+          {...props}
+        />
+        {helperText && <span className={styles.helperText}>{helperText}</span>}
+      </div>
     );
   }
 );
-Textarea.displayName = "Textarea";
+TextArea.displayName = "TextArea";
 
-export { Textarea };
+export { TextArea };
