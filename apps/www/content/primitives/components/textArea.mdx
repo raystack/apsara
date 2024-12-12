@@ -1,0 +1,152 @@
+---
+title: TextArea
+description: A multi-line text input field with support for labels and helper text.
+---
+
+## Preview
+
+<Preview>
+  <Flex direction="row" style={{ gap: '24px' }}>
+    {/* Basic textarea */}
+    <TextArea 
+      label="Label" 
+      placeholder="Place holder"
+    />
+
+    {/* Optional textarea with helper text */}
+    <TextArea
+      label="Label"
+      isOptional
+      helperText="Helper text"
+      placeholder="Place holder"
+    />
+
+    {/* Error state textarea */}
+    <TextArea
+      label="Label"
+      error={true}
+      placeholder="Place holder"
+    />
+
+  </Flex>
+</Preview>
+
+## Usage
+
+The TextArea component provides a multi-line text input with support for labels, helper text, and error states. It can be used in both controlled and uncontrolled modes.
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
+</LiveProvider>
+
+<LiveProvider>
+  <LiveEditor code={`import { TextArea } from '@raystack/apsara/v1'
+
+<TextArea
+  label="Label"
+  placeholder="Enter your text here"
+  helperText="Optional helper text"
+/>`} border/>
+</LiveProvider>
+
+## TextArea Props
+
+The `TextArea` component accepts the following props:
+
+- `label`: Text label displayed above the textarea
+- `isOptional`: Boolean indicating if the field is optional (default: false)
+- `helperText`: Helper text displayed below the textarea
+- `error`: Boolean to show error state
+- `width`: Custom width for the textarea container (string | number, default: "200px")
+- `value`: Controlled value for the textarea
+- `onChange`: Change handler for controlled usage
+- `className`: Additional CSS class names
+- All standard HTML textarea attributes
+
+## Basic Usage
+
+The most basic usage of TextArea with just a label and placeholder.
+
+<Playground
+  scope={{ TextArea }}
+  code={`
+<TextArea
+  label="Basic TextArea"
+  placeholder="Enter your text here"
+/>
+  `}
+/>
+
+## Optional Field
+
+TextArea with optional indicator and helper text.
+
+<Playground
+  scope={{ TextArea }}
+  code={`
+<TextArea
+  label="Optional TextArea"
+  isOptional
+  helperText="This field is optional"
+  placeholder="Enter your text here"
+/>
+  `}
+/>
+
+## Error State
+
+TextArea in error state with custom styling.
+
+<Playground
+  scope={{ TextArea }}
+  code={`
+<TextArea
+  label="Error TextArea"
+  error={true}
+  helperText="This field has an error"
+  placeholder="Enter your text here"
+/>
+  `}
+/>
+
+## Controlled Usage
+
+Example of TextArea in controlled mode.
+
+<Playground
+  scope={{ TextArea }}
+  code={`
+function ControlledExample() {
+  const [value, setValue] = React.useState('');
+  
+  return (
+    <TextArea
+      label="Controlled TextArea"
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      helperText={\`Current value: \${value.length} characters\`}
+      placeholder="Type something..."
+    />
+  );
+}
+  `}
+/>
+
+## Custom Width
+
+TextArea with custom width specification.
+
+<Playground
+  scope={{ TextArea }}
+  code={`
+<TextArea
+  label="Custom Width"
+  width="300px"
+  placeholder="This textarea is 300px wide"
+/>
+  `}
+/>
