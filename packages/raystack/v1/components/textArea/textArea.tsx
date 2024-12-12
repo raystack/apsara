@@ -22,9 +22,9 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           <div className={styles.labelContainer}>
             <label className={styles.label}>
               {label}
-              {helpIcon && <span className={styles.helpIcon}>{helpIcon}</span>}
             </label>
             {!required && <span className={styles.optional}>(optional)</span>}
+            {helpIcon && <span className={styles.helpIcon}>{helpIcon}</span>}
           </div>
         )}
         <textarea
