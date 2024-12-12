@@ -219,7 +219,7 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
@@ -227,7 +227,7 @@ const AssetsHeader = () => {
         />
         <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
-        </Badge>
+        </Badge> */}
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -268,7 +268,7 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
+          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
 
           {/* <Chip 
             variant="filled" 
@@ -328,7 +328,6 @@ const AssetsHeader = () => {
           {/* Invalid state textarea */}
           <TextArea 
             label="Label"
-            state="invalid"
             placeholder="Place holder"
           />
 
