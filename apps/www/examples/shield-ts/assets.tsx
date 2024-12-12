@@ -305,15 +305,16 @@ const AssetsHeader = () => {
 
         <Flex direction="column" gap="large">
           {/* Basic textarea with label */}
-          <TextArea 
-            label="Label" 
+          <TextArea
+            label="Label"
             placeholder="Place holder"
+            error
           />
 
           {/* Optional textarea with helper text */}
           <TextArea 
             label="Label"
-            required={false}
+            required
             helperText="Helper text"
             placeholder="Place holder"
           />
@@ -323,6 +324,7 @@ const AssetsHeader = () => {
             label="Label"
             helpIcon={<InfoCircledIcon />}
             placeholder="Place holder"
+            error
           />
 
           {/* Invalid state textarea */}
