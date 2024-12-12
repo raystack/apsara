@@ -4,9 +4,9 @@ import { VariantProps, cva, cx } from "class-variance-authority";
 
 import styles from "./textarea.module.css";
 
-const textarea = cva(styles.textarea);
+const textArea = cva(styles.textarea);
 
-export interface TextareaProps extends PropsWithChildren<VariantProps<typeof textarea>>, 
+export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof textArea>>, 
   HTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   required?: boolean;
@@ -14,7 +14,7 @@ export interface TextareaProps extends PropsWithChildren<VariantProps<typeof tex
   helperText?: string;
 }
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ({ className, style, label, required, helpIcon, helperText, ...props }, ref) => {
     return (
       <div className={styles.container}>
@@ -28,7 +28,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           </div>
         )}
         <textarea
-          className={cx(textarea(), className)}
+          className={cx(textArea(), className)}
           ref={ref}
           {...props}
         />
@@ -38,6 +38,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   }
 );
 
-Textarea.displayName = "Textarea";
+TextArea.displayName = "TextArea";
 
-export { Textarea };
+export { TextArea };

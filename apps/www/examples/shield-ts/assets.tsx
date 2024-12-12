@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
-  Textarea,
   Title,
   useTable
 } from "@raystack/apsara";
