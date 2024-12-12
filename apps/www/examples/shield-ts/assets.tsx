@@ -314,7 +314,7 @@ const AssetsHeader = () => {
           {/* Optional textarea with helper text */}
           <TextArea 
             label="Label"
-            required
+            isOptional
             helperText="Helper text"
             placeholder="Place holder"
           />
@@ -322,7 +322,7 @@ const AssetsHeader = () => {
           {/* Textarea with help icon */}
           <TextArea 
             label="Label"
-            helpIcon={<InfoCircledIcon />}
+            tooltip="This is a helpful tooltip message"
             placeholder="Place holder"
             error
           />
