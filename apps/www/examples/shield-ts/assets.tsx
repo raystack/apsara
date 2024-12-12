@@ -4,7 +4,8 @@ import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon } from "@radix-ui/react-icons
 import {
   DataTable,
   Title,
-  useTable
+  useTable,
+  Textarea
 } from "@raystack/apsara";
 
 import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
@@ -269,6 +270,8 @@ const AssetsHeader = () => {
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
           <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
+
+          <Textarea size="medium" state="invalid" />
 
           {/* <Chip 
             variant="filled" 
