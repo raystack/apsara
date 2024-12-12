@@ -271,8 +271,6 @@ const AssetsHeader = () => {
         <Flex gap="small" align="center">
           <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
 
-          <TextArea size="medium" state="invalid" />
-
           {/* <Chip 
             variant="filled" 
             size="large" 
