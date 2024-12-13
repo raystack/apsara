@@ -35,11 +35,7 @@
   width: var(--rs-space-4);
   height: var(--rs-space-4);
 }
-.iconButton-size-1 > div {
-  width: 8px;
-  height: 8px;
-}
-.iconButton-size-1 > div svg {
+.iconButton-size-1 > div, .iconButton-size-1 > div > * {
   width: 8px;
   height: 8px;
 }
@@ -48,11 +44,7 @@
   width: var(--rs-space-5);
   height: var(--rs-space-5);
 }
-.iconButton-size-2 > div {
-  width: 12px;
-  height: 12px;
-}
-.iconButton-size-2 > div svg {
+.iconButton-size-2 > div, .iconButton-size-2 > div > * {
   width: 12px;
   height: 12px;
 }
@@ -61,11 +53,7 @@
   width: var(--rs-space-6);
   height: var(--rs-space-6);
 }
-.iconButton-size-3 > div {
-  width: 16px;
-  height: 16px;
-}
-.iconButton-size-3 > div svg {
+.iconButton-size-3 > div, .iconButton-size-3 > div > * {
   width: 16px;
   height: 16px;
 }
@@ -74,11 +62,7 @@
   width: var(--rs-space-7);
   height: var(--rs-space-7);
 }
-.iconButton-size-4 > div {
-  width: 20px;
-  height: 20px;
-}
-.iconButton-size-4 > div svg {
+.iconButton-size-4 > div, .iconButton-size-4 > div > * {
   width: 20px;
   height: 20px;
 }
