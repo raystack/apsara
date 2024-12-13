@@ -1,6 +1,7 @@
-import { VariantProps, cva, cx } from "class-variance-authority";
 import * as React from "react";
 import { HTMLAttributes, PropsWithChildren } from "react";
+import { VariantProps, cva, cx } from "class-variance-authority";
+
 import styles from "./textarea.module.css";
 
 const textarea = cva(styles.textarea, {
@@ -9,7 +10,7 @@ const textarea = cva(styles.textarea, {
       small: styles["textfield-sm"],
       medium: styles["textfield-md"],
     },
-
+    
     state: {
       invalid: styles["textfield-invalid"],
       valid: styles["textfield-valid"],
@@ -23,6 +24,10 @@ const textarea = cva(styles.textarea, {
     size: "small",
   },
 });
+
+/**
+ * @deprecated Use TextAreaProps from @raystack/apsara/v1 instead.
+ */
 export type TextareaProps = PropsWithChildren<VariantProps<typeof textarea>> &
   HTMLAttributes<HTMLTextAreaElement>;
 
@@ -39,4 +44,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 );
 Textarea.displayName = "Textarea";
 
+/**
+ * @deprecated Use TextArea from @raystack/apsara/v1 instead.
+ */
 export { Textarea };

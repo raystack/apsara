@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon } from "@radix-ui/react-icons";
+import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, TextArea } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -219,7 +219,7 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
@@ -227,7 +227,7 @@ const AssetsHeader = () => {
         />
         <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
-        </Badge>
+        </Badge> */}
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -268,7 +268,7 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
+          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
 
           {/* <Chip 
             variant="filled" 
@@ -301,6 +301,43 @@ const AssetsHeader = () => {
           >
             Both Icons
           </Chip> */}
+        </Flex>
+
+        <Flex direction="column" gap="large">
+          {/* Basic textarea with label */}
+          <TextArea
+            label="Label"
+            placeholder="Place holder"
+            error
+          />
+
+          {/* Optional textarea with helper text */}
+          <TextArea 
+            label="Label"
+            isOptional
+            helperText="Helper text"
+            placeholder="Place holder"
+          />
+
+          {/* Textarea with help icon */}
+          <TextArea 
+            label="Label"
+            tooltip="This is a helpful tooltip message"
+            placeholder="Place holder"
+            error
+          />
+
+          {/* Invalid state textarea */}
+          <TextArea 
+            label="Label"
+            placeholder="Place holder"
+          />
+
+          {/* Filled textarea */}
+          <TextArea 
+            label="Label"
+            defaultValue="Filled"
+          />
         </Flex>
 
       </Flex>
