@@ -52,6 +52,7 @@ export const primitivesRoutes = [
         newBadge: true,
       },
       { title: "Headline", slug: "docs/primitives/components/headline" },
+      { title: "IconButton", slug: "docs/primitives/components/iconButton", newBadge: true },
       { title: "Image", slug: "docs/primitives/components/image" },
       {
         title: "Input Field",
