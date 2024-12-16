@@ -1,0 +1,30 @@
+.announcement-bar {
+  width: 100%;
+  min-height: 40px;
+  padding: var(--rs-space-3) var(--rs-space-7);
+}
+
+.announcement-bar-gradient {
+  background: radial-gradient(
+    405.48% 36.63% at 50% 50%,
+    #eeaeca 0%,
+    #df94e9 100%
+  );
+}
+
+.announcement-bar-normal {
+  background: var(--rs-color-text-base-primary);
+}
+
+.announcement-bar-error {
+  background: var(--rs-color-background-danger-emphasis);
+}
+
+.announcement-bar-normal > .text,
+.announcement-bar-error > .text {
+  color: var(--rs-color-text-base-emphasis);
+}
+
+.announcement-bar-gradient > .text {
+  color: var(--rs-color-text-base-primary);
+}
