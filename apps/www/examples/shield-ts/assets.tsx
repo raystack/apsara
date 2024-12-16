@@ -306,18 +306,17 @@ const AssetsHeader = () => {
         {/* Add IconButton examples */}
         <Flex gap="small" align="center">
           <IconButton size={1}>
-            <PlusIcon />
+            O
           </IconButton>
           <IconButton size={2}>
-            <PlusIcon />
+            O
           </IconButton>
-          <IconButton size={3} >
-            <PlusIcon />
+          <IconButton size={3}>
+            O
           </IconButton>
           <IconButton size={4}>
-            <PlusIcon />
+            O
           </IconButton>
-
         </Flex>
 
       </Flex>
