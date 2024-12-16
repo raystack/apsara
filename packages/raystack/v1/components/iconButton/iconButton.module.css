@@ -38,6 +38,7 @@
 .iconButton-size-1 > div, .iconButton-size-1 > div > * {
   width: 8px;
   height: 8px;
+  font-size: 8px;
 }
 
 .iconButton-size-2 {
@@ -47,6 +48,7 @@
 .iconButton-size-2 > div, .iconButton-size-2 > div > * {
   width: 12px;
   height: 12px;
+  font-size: 10px;
 }
 
 .iconButton-size-3 {
@@ -56,6 +58,7 @@
 .iconButton-size-3 > div, .iconButton-size-3 > div > * {
   width: 16px;
   height: 16px;
+  font-size: 12px;
 }
 
 .iconButton-size-4 {
@@ -65,4 +68,5 @@
 .iconButton-size-4 > div, .iconButton-size-4 > div > * {
   width: 20px;
   height: 20px;
+  font-size: 14px;
 }
