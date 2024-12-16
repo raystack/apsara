@@ -305,7 +305,7 @@ const AssetsHeader = () => {
 
         {/* Add IconButton examples */}
         <Flex gap="small" align="center">
-          <IconButton size={1}>
+          <IconButton size={1} onClick={() => alert('works')} disabled>
             O
           </IconButton>
           <IconButton size={2}>
