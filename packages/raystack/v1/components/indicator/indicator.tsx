@@ -1,48 +1,38 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode } from "react";
 
 import styles from './indicator.module.css';
 
 const indicator = cva(styles.indicator, {
   variants: {
-    size: {
-      1: styles["indicator-size-1"],
-      2: styles["indicator-size-2"],
-      3: styles["indicator-size-3"],
-      4: styles["indicator-size-4"],
-      5: styles["indicator-size-5"],
-      6: styles["indicator-size-6"],
-    },
-    color: {
-      default: styles["indicator-color-default"],
-      inverted: styles["indicator-color-inverted"],
+    variant: {
+      accent: styles["indicator-variant-accent"],
+      warning: styles["indicator-variant-warning"],
+      danger: styles["indicator-variant-danger"],
+      success: styles["indicator-variant-success"],
+      neutral: styles["indicator-variant-neutral"],
     }
   },
   defaultVariants: {
-    size: 1,
-    color: "default",
+    variant: "accent",
   },
 });
 
 export interface IndicatorProps
   extends ComponentPropsWithoutRef<"div">,
     VariantProps<typeof indicator> {
-  size?: 1 | 2 | 3 | 4 | 5 | 6;
-  color?: "default" | "inverted";
+  variant?: "accent" | "warning" | "danger" | "success" | "neutral";
+  label?: string;
+  children?: ReactNode;
 }
 
 export const Indicator = forwardRef<ElementRef<"div">, IndicatorProps>(
-  ({ className, size, color, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={indicator({ size, color, className })}
-      role="status"
-      aria-hidden="true"
-      {...props}
-    >
-      {[...Array(8)].map((_, index) => (
-        <div key={index} className={styles.pole} />
-      ))}
+  ({ className, variant, label, children, ...props }, ref) => (
+    <div className={styles.wrapper} ref={ref} {...props}>
+      {children}
+      <div className={indicator({ variant, className })}>
+        {label ? <span className={styles.label}>{label}</span> : <span className={styles.dot} />}
+      </div>
     </div>
   )
 );
