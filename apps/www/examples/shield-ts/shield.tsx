@@ -5,12 +5,12 @@ import {
   RocketIcon,
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { Flex, ScrollArea, Sidebar } from "@raystack/apsara";
+import { ScrollArea, Sidebar } from "@raystack/apsara";
 import { Assets } from "./assets";
 import { navigationList } from "./data";
 
 import "@raystack/apsara/style.css";
-import { AnnouncementBar } from "@raystack/apsara/v1";
+import { AnnouncementBar, Flex } from "@raystack/apsara/v1";
 
 export const Shield = () => {
   const router = useRouter();
