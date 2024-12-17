@@ -4,6 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { ReactNode } from "react";
 import { Flex } from "../flex";
 import { Text } from "../text";
+import { Button } from "../button";
 
 const announementBar = cva(styles["announcement-bar"], {
   variants: {
@@ -22,6 +23,9 @@ type AnnouncementBarProps = VariantProps<typeof announementBar> & {
   leadingIcon?: ReactNode;
   className?: string;
   text: string;
+  actionLabel?: string;
+  actionIcon?: ReactNode;
+  onActionClick?: () => void;
 };
 
 export const AnnouncementBar = ({
@@ -29,6 +33,9 @@ export const AnnouncementBar = ({
   variant,
   text,
   leadingIcon,
+  actionLabel,
+  actionIcon,
+  onActionClick = () => {},
   ...props
 }: AnnouncementBarProps) => {
   return (
@@ -43,6 +50,17 @@ export const AnnouncementBar = ({
       <Text className={styles.text} size={2} weight={500}>
         {text}
       </Text>
+      {actionLabel || actionIcon ? (
+        <Text
+          className={styles["action-btn"]}
+          size={2}
+          weight={500}
+          onClick={onActionClick}
+        >
+          {actionLabel}
+          {actionIcon}
+        </Text>
+      ) : null}
     </Flex>
   );
 };

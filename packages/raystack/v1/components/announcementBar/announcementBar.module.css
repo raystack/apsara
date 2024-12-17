@@ -21,9 +21,11 @@
 }
 
 .announcement-bar-normal > .text,
-.announcement-bar-normal > .icon,
 .announcement-bar-error > .text,
-.announcement-bar-error > .icon {
+.announcement-bar-normal > .icon,
+.announcement-bar-error > .icon,
+.announcement-bar-normal > .action-btn,
+.announcement-bar-error > .action-btn {
   color: var(--rs-color-text-base-emphasis);
 }
 
@@ -36,4 +38,14 @@
 .icon > svg {
   min-height: 16px;
   min-width: 16px;
+}
+
+.action-btn {
+  display: flex;
+  gap: var(--rs-space-1);
+  cursor: pointer;
+}
+
+.action-btn:hover {
+  font-weight: 700;
 }
