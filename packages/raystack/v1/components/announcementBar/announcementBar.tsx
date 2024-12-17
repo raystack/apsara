@@ -4,7 +4,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { ReactNode } from "react";
 import { Flex } from "../flex";
 import { Text } from "../text";
-import { Button } from "../button";
 
 const announementBar = cva(styles["announcement-bar"], {
   variants: {
