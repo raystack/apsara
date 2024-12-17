@@ -21,7 +21,6 @@ const indicator = cva(styles.indicator, {
 export interface IndicatorProps
   extends ComponentPropsWithoutRef<"div">,
     VariantProps<typeof indicator> {
-  variant?: "accent" | "warning" | "danger" | "success" | "neutral";
   label?: string;
   children?: ReactNode;
 }
