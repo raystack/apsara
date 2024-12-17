@@ -7,9 +7,8 @@
   position: absolute;
   top: calc(-1 * var(--rs-space-2));
   right: calc(-1 * var(--rs-space-2));
-  z-index: 1;
+  z-index: 99999;
   border-radius: var(--rs-radius-full);
-  font-family: var(--rs-font-body);
   font-size: 11px;
   line-height: 1;
   white-space: nowrap;
