@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode } from "react";
+import { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import styles from './indicator.module.css';
 
@@ -23,13 +23,27 @@ export interface IndicatorProps
     VariantProps<typeof indicator> {
   label?: string;
   children?: ReactNode;
+  "aria-label"?: string;
 }
 
-export const Indicator = forwardRef<ElementRef<"div">, IndicatorProps>(
-  ({ className, variant, label, children, ...props }) => (
+export const Indicator = ({ 
+  className, 
+  variant, 
+  label, 
+  children, 
+  "aria-label": ariaLabel,
+  ...props 
+}: IndicatorProps) => {
+  const accessibilityLabel = ariaLabel || label || `${variant} indicator`;
+
+  return (
     <div className={styles.wrapper} {...props}>
       {children}
-      <div className={indicator({ variant, className })}>
+      <div 
+        className={indicator({ variant, className })}
+        role="status"
+        aria-label={accessibilityLabel}
+      >
         {label ? (
           <span 
             className={styles.label} 
@@ -38,11 +52,14 @@ export const Indicator = forwardRef<ElementRef<"div">, IndicatorProps>(
             {label}
           </span>
         ) : (
-          <span className={styles.dot} />
+          <span 
+            className={styles.dot} 
+            aria-hidden="true" 
+          />
         )}
       </div>
     </div>
-  )
-);
+  );
+};
 
 Indicator.displayName = 'Indicator';
