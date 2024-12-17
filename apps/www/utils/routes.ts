@@ -53,6 +53,7 @@ export const primitivesRoutes = [
       },
       { title: "Headline", slug: "docs/primitives/components/headline" },
       { title: "Image", slug: "docs/primitives/components/image" },
+      { title: "Indicator", slug: "docs/primitives/components/indicator" },
       {
         title: "Input Field",
         slug: "docs/primitives/components/inputField",
