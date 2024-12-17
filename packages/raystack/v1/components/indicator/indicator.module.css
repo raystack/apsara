@@ -21,7 +21,7 @@
 
 .indicator:has(.label) {
   top: calc(-1 * var(--rs-space-4));
-  right: calc(-1 * var(--rs-space-7));
+  right: calc(-1 * var(--rs-space-6));
 }
 
 /* This adjusts the right side spacing if the label is 1 or 2 characters */
