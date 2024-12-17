@@ -26,8 +26,8 @@ export interface IndicatorProps
 }
 
 export const Indicator = forwardRef<ElementRef<"div">, IndicatorProps>(
-  ({ className, variant, label, children, ...props }, ref) => (
-    <div className={styles.wrapper} ref={ref} {...props}>
+  ({ className, variant, label, children, ...props }) => (
+    <div className={styles.wrapper} {...props}>
       {children}
       <div className={indicator({ variant, className })}>
         {label ? <span className={styles.label}>{label}</span> : <span className={styles.dot} />}
