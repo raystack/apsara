@@ -225,7 +225,7 @@ const AssetsHeader = () => {
           placeholder="Place holder"
           prefix="USD"
         />
-        <Indicator variant="danger" label="1000+">
+        <Indicator variant="danger" >
           <Badge size="small" variant="gradient" icon={<HomeIcon />}>
             Custom Badge
           </Badge>
