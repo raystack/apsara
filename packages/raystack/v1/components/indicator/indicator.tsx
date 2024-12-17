@@ -30,7 +30,16 @@ export const Indicator = forwardRef<ElementRef<"div">, IndicatorProps>(
     <div className={styles.wrapper} {...props}>
       {children}
       <div className={indicator({ variant, className })}>
-        {label ? <span className={styles.label}>{label}</span> : <span className={styles.dot} />}
+        {label ? (
+          <span 
+            className={styles.label} 
+            data-length={label.length.toString()}
+          >
+            {label}
+          </span>
+        ) : (
+          <span className={styles.dot} />
+        )}
       </div>
     </div>
   )
