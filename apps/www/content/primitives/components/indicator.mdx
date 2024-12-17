@@ -1,19 +1,22 @@
 ---
-title: Spinner
-description: A visual indicator of a loading or processing state.
+title: Indicator
+description: A small dot indicator with small information that can be positioned on top of other components.
 ---
 
 ## Preview
 
 <Preview>
-  <Flex
-    style={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "8px",
-    }}
-  >
-    <Spinner size={3} />
+  <Flex gap="large">
+    <Indicator variant="accent" label="New">
+      <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+        Content
+      </div>
+    </Indicator>
+    <Indicator variant="danger">
+      <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+        Content with dot
+      </div>
+    </Indicator>
   </Flex>
 </Preview>
 
@@ -29,84 +32,128 @@ Import and usage.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Spinner } from '@raystack/apsara/v1'
+import { Indicator } from '@raystack/apsara/v1'
 
-<Spinner size={3} />
+<Indicator variant="accent" label="New">
+  <div>Content</div>
+</Indicator>
 `} border />
 </LiveProvider>
 
-
 ## Props
 
-The `Spinner` component accepts the following props:
+The `Indicator` component accepts the following props:
 
-- `size`: Size of the spinner (`1` | `2` | `3` | `4` | `5` | `6`, default: 1)
-- `color`: Color variant of the spinner (`"default"` | `"inverted"`, default: "default")
+- `variant`: Visual style variant (`"accent"` | `"warning"` | `"danger"` | `"success"` | `"neutral"`, default: "accent")
+- `label`: Optional text label to display (if omitted, shows a dot)
+- `aria-label`: Optional custom description for screen readers
+- `children`: The content to show the indicator on
 - `className`: Additional CSS class names
 - All other HTMLDivElement attributes from React
 
+## Variants
 
-## Size
-
-The Spinner component offers different size options. You can customize the size of the spinner using the `size` prop. The available size options are:
+The Indicator component supports different variants to convey different states or meanings:
 
 <Playground
-  scope={{ Spinner }}
+  scope={{ Indicator }}
   tabs={[
     {
-      name: "Size 1",
-      code: `<Spinner size={1} />`,
+      name: "Accent",
+      code: `
+<Indicator variant="accent" label="New">
+  <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+  Content
+  </div>
+</Indicator>`,
     },
     {
-      name: "Size 2",
-      code: `<Spinner size={2} />`,
+      name: "Warning",
+      code: `
+<Indicator variant="warning" label="Warning">
+  <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+  Content
+  </div>
+</Indicator>`,
     },
     {
-      name: "Size 3",
-      code: `<Spinner size={3} />`,
+      name: "Danger",
+      code: `
+<Indicator variant="danger" label="Error">
+  <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+  Content
+  </div>
+</Indicator>`,
     },
     {
-      name: "Size 4",
-      code: `<Spinner size={4} />`,
+      name: "Success",
+      code: `
+<Indicator variant="success" label="Done">
+  <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+  Content
+  </div>
+</Indicator>`,
     },
     {
-      name: "Size 5",
-      code: `<Spinner size={5} />`,
-    },
-    {
-      name: "Size 6",
-      code: `<Spinner size={6} />`,
+      name: "Neutral",
+      code: `
+<Indicator variant="neutral" label="Info">
+  <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+  Content
+  </div>
+</Indicator>`,
     },
   ]}
 />
 
-## Color
+## Dot Indicator
 
-The Spinner component offers two color options. This is mainly helpful if we want to render the Spinner inside another component with lighter or darker background color. Spinner uses a `color` prop.
+When no label is provided, the Indicator will show as a dot:
 
 <Playground
-  scope={{ Spinner }}
-  style={{ backgroundColor: "black" }}
+  scope={{ Indicator }}
   tabs={[
     {
-      name: "default",
-      code: `<Spinner size={4} color="default" />`,
-    },
-    {
-      name: "inverted",
-      code: `<div style={{ backgroundColor: 'black', width: 500, height: 250, borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner size={4} color="inverted" /></div>`,
-    },
+      name: "Dot",
+      code: `
+<Indicator variant="danger">
+  <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+  Content with dot indicator
+  </div>
+</Indicator>`,
+    }
   ]}
 />
-
-## Other props
-
-The Spinner component also supports custom `className` prop.
 
 ## Accessibility
 
-The Spinner component includes appropriate ARIA attributes for accessibility:
+The Indicator component includes several accessibility features:
 
-- `role="status"`: Indicates that the element is a status indicator.
-- `aria-hidden="true"`: Hides the spinner from screen readers, as it's a visual indicator only.
+- Uses `role="status"` to indicate its purpose to screen readers
+- Provides appropriate `aria-label` based on the content:
+  - Uses custom `ariaLabel` prop if provided
+  - Falls back to the label text if available
+  - Uses a default "indicator" if neither is provided
+- Hides decorative dot from screen readers when no label is present
+
+Example with custom aria label:
+
+<Playground
+  scope={{ Indicator }}
+  tabs={[
+    {
+      name: "Custom Aria Label",
+      code: `
+<Indicator 
+  variant="danger" 
+  label="3" 
+  aria-label="3 unread messages"
+>
+  <div style={{ padding: '0px 12px', fontSize: '14px', border: '1px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-2)' }}>
+  Content with custom aria label
+  </div>
+</Indicator>`,
+    }
+  ]}
+/>
 
