@@ -19,7 +19,7 @@ const announementBar = cva(styles["announcement-bar"], {
 });
 
 type AnnouncementBarProps = VariantProps<typeof announementBar> & {
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
   className?: string;
   text: string;
 };
@@ -28,6 +28,7 @@ export const AnnouncementBar = ({
   className,
   variant,
   text,
+  leadingIcon,
   ...props
 }: AnnouncementBarProps) => {
   return (
@@ -35,9 +36,13 @@ export const AnnouncementBar = ({
       className={announementBar({ className, variant })}
       justify={"center"}
       align={"center"}
+      gap={"small"}
       {...props}
     >
-      <Text className={styles.text}>{text}</Text>
+      {leadingIcon && <span className={styles["icon"]}>{leadingIcon}</span>}
+      <Text className={styles.text} size={2} weight={500}>
+        {text}
+      </Text>
     </Flex>
   );
 };

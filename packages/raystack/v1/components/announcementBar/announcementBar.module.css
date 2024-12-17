@@ -21,10 +21,19 @@
 }
 
 .announcement-bar-normal > .text,
-.announcement-bar-error > .text {
+.announcement-bar-normal > .icon,
+.announcement-bar-error > .text,
+.announcement-bar-error > .icon {
   color: var(--rs-color-text-base-emphasis);
 }
 
-.announcement-bar-gradient > .text {
+.announcement-bar-gradient > .text,
+.announcement-bar-gradient > .icon {
   color: var(--rs-color-text-base-primary);
+}
+
+.icon,
+.icon > svg {
+  min-height: 16px;
+  min-width: 16px;
 }
