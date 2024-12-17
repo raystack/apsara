@@ -6,7 +6,7 @@
 
 .announcement-bar-gradient {
   background: radial-gradient(
-    405.48% 36.63% at 50% 50%,
+    36.63% 405.48% at 50% 50%,
     #eeaeca 0%,
     #df94e9 100%
   );
@@ -44,8 +44,4 @@
   display: flex;
   gap: var(--rs-space-1);
   cursor: pointer;
-}
-
-.action-btn:hover {
-  font-weight: 700;
 }
