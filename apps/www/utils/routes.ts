@@ -13,11 +13,20 @@ export const primitivesRoutes = [
     label: "Components",
     pages: [
       {
+        title: "AnnoucementBar",
+        slug: "docs/primitives/components/announcementbar",
+        newBadge: true,
+      },
+      {
         title: "Avatar",
         slug: "docs/primitives/components/avatar",
         newBadge: true,
       },
-      { title: "Badge", slug: "docs/primitives/components/badge", newBadge: true },
+      {
+        title: "Badge",
+        slug: "docs/primitives/components/badge",
+        newBadge: true,
+      },
       {
         title: "Breadcrumb",
         slug: "docs/primitives/components/breadcrumb",
@@ -30,8 +39,16 @@ export const primitivesRoutes = [
       },
       { title: "Calendar", slug: "docs/primitives/components/calendar" },
       { title: "Command", slug: "docs/primitives/components/command" },
-      { title: "Checkbox", slug: "docs/primitives/components/checkbox", newBadge: true },
-      { title: "Chip", slug: "docs/primitives/components/chip", newBadge: true },
+      {
+        title: "Checkbox",
+        slug: "docs/primitives/components/checkbox",
+        newBadge: true,
+      },
+      {
+        title: "Chip",
+        slug: "docs/primitives/components/chip",
+        newBadge: true,
+      },
       { title: "Container", slug: "docs/primitives/components/container" },
       { title: "Datatable", slug: "docs/primitives/components/datatable" },
       { title: "Dialog", slug: "docs/primitives/components/dialog" },
@@ -52,6 +69,7 @@ export const primitivesRoutes = [
         newBadge: true,
       },
       { title: "Headline", slug: "docs/primitives/components/headline" },
+      { title: "IconButton", slug: "docs/primitives/components/iconButton", newBadge: true },
       { title: "Image", slug: "docs/primitives/components/image" },
       {
         title: "Input Field",
@@ -61,7 +79,7 @@ export const primitivesRoutes = [
       { title: "Label", slug: "docs/primitives/components/label" },
       { title: "Link", slug: "docs/primitives/components/link" },
       { title: "Popover", slug: "docs/primitives/components/popover" },
-      { title: "Radio", slug: "docs/primitives/components/radio" },
+      { title: "Radio", slug: "docs/primitives/components/radio", newBadge: true },
       { title: "Select", slug: "docs/primitives/components/select" },
       { title: "Separator", slug: "docs/primitives/components/separator" },
       { title: "Sheet", slug: "docs/primitives/components/sheet" },

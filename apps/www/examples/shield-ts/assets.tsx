@@ -9,6 +9,7 @@ import {
 
 import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Tooltip } from "@raystack/apsara/v1";
 
+
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -271,7 +272,6 @@ const AssetsHeader = () => {
           <Tooltip message="tooltip">
             <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
           </Tooltip>
-
           {/* <Chip 
             variant="filled" 
             size="large" 
@@ -303,6 +303,23 @@ const AssetsHeader = () => {
           >
             Both Icons
           </Chip> */}
+        </Flex>
+
+        {/* Add IconButton examples */}
+        <Flex gap="small" align="center">
+          <IconButton size={1}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={2}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={3}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={4}>
+            <PlusIcon />
+          </IconButton>
+
         </Flex>
 
       </Flex>
