@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Slider } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -207,7 +207,7 @@ const AssetsHeader = () => {
       justify="between"
       style={{ width: "100%", padding: "4px" }}
     >
-      <Flex gap="extra-large" align="center">
+      <Flex gap="extra-large" align="center" style={{ width: "100%", marginTop: 20 }}>
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
         <div>
@@ -219,15 +219,34 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        />
-        <Badge size="small" variant="gradient" icon={<HomeIcon />}>
+        /> */}
+        {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
-        </Badge>
+        </Badge> */}
+        <Slider 
+          variant="single" 
+          label="Label" 
+          defaultValue={50}
+          onChange={(value) => console.log(value)}
+        />
+
+        {/* <Slider 
+            variant="range" 
+            defaultValue={[20, 80]}
+          onChange={(value) => console.log(value)}
+        />
+
+        <Slider
+          variant="range" 
+          label="Range" 
+          defaultValue={[30, 70]}
+          onChange={(value) => console.log(value)}
+        /> */}
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -268,7 +287,7 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
+          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
 
           {/* <Chip 
             variant="filled" 

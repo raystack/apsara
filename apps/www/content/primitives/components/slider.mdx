@@ -1,0 +1,193 @@
+---
+title: Slider
+description: A control that allows users to select a value or range from a given range.
+---
+
+## Preview
+
+<Preview>
+  <Flex direction="column" gap="large">
+    <Slider variant="single" label="50" defaultValue={50} />
+    <Slider variant="range" defaultValue={[20, 80]} />
+  </Flex>
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
+</LiveProvider>
+
+## Usage
+
+Import and usage.
+
+<LiveProvider>
+  <LiveEditor code={`
+import { Slider } from '@raystack/apsara/v1'
+
+// Single value slider
+<Slider 
+  variant="single" 
+  label="50" 
+  defaultValue={50} 
+  onChange={(value) => console.log(value)} 
+/>
+
+// Range slider
+<Slider 
+  variant="range" 
+  defaultValue={[20, 80]} 
+  onChange={(value) => console.log(value)} 
+/>
+`} border />
+</LiveProvider>
+
+## Props
+
+The `Slider` component accepts the following props:
+
+- `variant`: The type of slider (`"single"` | `"range"`, default: "single")
+- `min`: Minimum value (default: 0)
+- `max`: Maximum value (default: 100)
+- `step`: Step increment (default: 1)
+- `defaultValue`: Initial value(s) - number for single, [number, number] for range
+- `value`: Controlled value(s) - number for single, [number, number] for range
+- `label`: Optional label text to display above thumb(s)
+- `onChange`: Callback when value changes
+- `aria-label`: Accessibility label
+- All other HTMLDivElement attributes from React
+
+## Variants
+
+### Single Value Slider
+
+A basic slider that allows selecting a single value.
+
+<Playground
+  scope={{ Slider }}
+  tabs={[
+    {
+      name: "Single",
+      code: `
+<Slider 
+  variant="single" 
+  label="50" 
+  defaultValue={50}
+  onChange={(value) => console.log(value)}
+/>`,
+    }
+  ]}
+/>
+
+### Range Slider
+
+A slider that allows selecting a range between two values.
+
+<Playground
+  scope={{ Slider }}
+  tabs={[
+    {
+      name: "Range",
+      code: `
+<Slider 
+  variant="range" 
+  defaultValue={[20, 80]}
+  onChange={(value) => console.log(value)}
+/>`,
+    }
+  ]}
+/>
+
+## Accessibility
+
+The Slider component implements the following accessibility features:
+
+- Uses `role="slider"` for proper semantic meaning
+- Provides appropriate `aria-label` based on variant and labels
+- Supports keyboard navigation
+- Shows focus indicators for keyboard users
+- Reports current values via `aria-valuenow`
+- Sets proper min/max ranges with `aria-valuemin` and `aria-valuemax`
+
+Example with custom aria labels:
+
+<Playground
+  scope={{ Slider }}
+  tabs={[
+    {
+      name: "Accessibility",
+      code: `
+<Slider 
+  variant="single" 
+  label="Volume" 
+  aria-label="Volume control"
+  defaultValue={75}
+/>`,
+    }
+  ]}
+/>
+
+## Examples
+
+### With Labels
+
+<Playground
+  scope={{ Slider }}
+  tabs={[
+    {
+      name: "Labels",
+      code: `
+<Flex direction="column" gap="large">
+  <Slider variant="single" label="Single" defaultValue={40} />
+  <Slider variant="range" label="Range" defaultValue={[20, 60]} />
+</Flex>`,
+    }
+  ]}
+/>
+
+### Custom Range
+
+<Playground
+  scope={{ Slider }}
+  tabs={[
+    {
+      name: "Custom Range",
+      code: `
+<Slider 
+  variant="single" 
+  min={-50} 
+  max={50} 
+  step={5}
+  defaultValue={0}
+  label="0"
+/>`,
+    }
+  ]}
+/>
+
+### Controlled Component
+
+<Playground
+  scope={{ Slider }}
+  tabs={[
+    {
+      name: "Controlled",
+      code: `
+function ControlledSlider() {
+  const [value, setValue] = React.useState(50);
+  
+  return (
+    <Slider 
+      variant="single" 
+      value={value} 
+      label={value.toString()}
+      onChange={(newValue) => setValue(newValue as number)}
+    />
+  );
+}`,
+    }
+  ]}
+/>
