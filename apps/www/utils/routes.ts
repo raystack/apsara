@@ -62,7 +62,7 @@ export const primitivesRoutes = [
       { title: "Label", slug: "docs/primitives/components/label" },
       { title: "Link", slug: "docs/primitives/components/link" },
       { title: "Popover", slug: "docs/primitives/components/popover" },
-      { title: "Radio", slug: "docs/primitives/components/radio" },
+      { title: "Radio", slug: "docs/primitives/components/radio", newBadge: true },
       { title: "Select", slug: "docs/primitives/components/select" },
       { title: "Separator", slug: "docs/primitives/components/separator" },
       { title: "Sheet", slug: "docs/primitives/components/sheet" },
