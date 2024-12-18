@@ -11,6 +11,7 @@ export { Flex } from "./components/flex";
 export { InputField } from "./components/inputField";
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
+export { Calendar, DatePicker, RangePicker } from "./components/calendar";
 export {
   ThemeProvider,
   ThemeProviderProps,
