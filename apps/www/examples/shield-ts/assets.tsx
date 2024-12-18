@@ -7,8 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
-
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Chip, Text, Checkbox, InputField, Badge, RangePicker, DatePicker } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -219,15 +218,12 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        />
-        <Badge size="small" variant="gradient" icon={<HomeIcon />}>
-          Custom Badge
-        </Badge>
+        /> */}
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -266,6 +262,38 @@ const AssetsHeader = () => {
           />
         </AvatarGroup> */}
 
+        <RangePicker
+          dateFormat="DD/MM/YYYY"
+          onSelect={(range) => console.log('Date range:', range)}
+          value={{
+            from: new Date(2024, 0, 1),
+            to: new Date(2024, 0, 15)
+          }}
+          calendarProps={{
+            mode: "range",
+            required: true,
+            selected: {
+              from: new Date(2024, 0, 1),
+              to: new Date(2024, 0, 15)
+            },
+            fromMonth: new Date(2024, 0, 1),
+            toMonth: new Date(2024, 11, 31),
+          }}
+        >
+          {({ startDate, endDate }) => (
+            <Button size="normal" variant="secondary">
+              {startDate} - {endDate}
+            </Button>
+          )}
+        </RangePicker>
+
+        <DatePicker>
+          {({ selectedDate }) => (
+            <Button size="normal" variant="secondary">
+              Selected: {selectedDate}
+            </Button>
+          )}
+        </DatePicker>
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
           <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
