@@ -270,11 +270,10 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          
-
           <Indicator variant="danger" label="100+">
             <CaretLeftIcon />
           </Indicator>
+
           {/* <Chip 
             variant="filled" 
             size="large" 
@@ -306,6 +305,23 @@ const AssetsHeader = () => {
           >
             Both Icons
           </Chip> */}
+        </Flex>
+
+        {/* Add IconButton examples */}
+        <Flex gap="small" align="center">
+          <IconButton size={1}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={2}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={3}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={4}>
+            <PlusIcon />
+          </IconButton>
+
         </Flex>
 
       </Flex>
