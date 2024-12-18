@@ -8,7 +8,7 @@ import { Text } from "../text";
 const announementBar = cva(styles["announcement-bar"], {
   variants: {
     variant: {
-      gradient: [styles["announcement-bar-gradient"]],
+      gradient: styles["announcement-bar-gradient"],
       normal: styles["announcement-bar-normal"],
       error: styles["announcement-bar-error"],
     },
