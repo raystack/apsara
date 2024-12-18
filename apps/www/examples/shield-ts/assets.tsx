@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, IconButton } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -301,6 +301,23 @@ const AssetsHeader = () => {
           >
             Both Icons
           </Chip> */}
+        </Flex>
+
+        {/* Add IconButton examples */}
+        <Flex gap="small" align="center">
+          <IconButton size={1}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={2}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={3}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={4}>
+            <PlusIcon />
+          </IconButton>
+
         </Flex>
 
       </Flex>
