@@ -1,0 +1,18 @@
+.trigger {
+    width: fit-content;
+    display: flex;
+  }
+  
+  .content {
+    z-index: 100;
+    background: var(--rs-color-background-base-primary);
+    border: 1px solid var(--rs-color-border-base-tertiary);
+    padding: var(--rs-space-2) var(--rs-space-2);
+    border-radius: var(--rs-radius-2);
+    max-width: 280px;
+    color: var(--rs-color-text-base-primary);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 16px;
+  }
+  
