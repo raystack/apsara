@@ -22,4 +22,7 @@ const Badge: ForwardRefRenderFunction<unknown, BadgeProps> = (props, ref) => {
   return <span className={badge({ color, className })}>{children}</span>;
 };
 
+/**
+ * @deprecated Use Badge from '@raystack/apsara/v1' instead.
+ */
 export default React.forwardRef<unknown, BadgeProps>(Badge);

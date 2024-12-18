@@ -1,0 +1,101 @@
+.badge {
+  display: inline-flex;
+  padding: var(--rs-space-1) var(--rs-space-2);
+  justify-content: center;
+  align-items: center;
+  gap: var(--rs-space-2);
+  font-family: var(--rs-font-body);
+  font-style: normal;
+  font-weight: 400;
+  border-radius: var(--rs-radius-1);
+  white-space: nowrap;
+}
+
+/* Sizes */
+.badge-micro {
+  font-size: 10px;
+  line-height: 12px;
+  letter-spacing: 0.4px;
+}
+
+.badge-small {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.badge-regular {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
+
+/* Variants */
+.badge-neutral {
+  background: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-text-base-primary);
+}
+
+.badge-accent {
+  background: var(--rs-color-background-accent-primary);
+  color: var(--rs-color-text-base-primary);
+}
+
+.badge-warning {
+  background: var(--rs-color-background-attention-primary);
+  color: var(--rs-color-text-base-primary);
+}
+
+.badge-danger {
+  background: var(--rs-color-background-danger-primary);
+  color: var(--rs-color-text-base-primary);
+}
+
+.badge-success {
+  background: var(--rs-color-background-success-primary);
+  color: var(--rs-color-text-base-primary);
+}
+
+.badge-gradient {
+  background: linear-gradient(
+    to right,
+    #AD00E933 0%,
+    #EF040433 100%
+  );
+  color: var(--rs-color-text-base-primary);
+}
+
+/* Icon */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rs-color-text-base-primary);
+}
+
+.badge-micro .icon {
+  width: 10px;
+  height: 10px;
+}
+
+.badge-small .icon {
+  width: 12px;
+  height: 12px;
+}
+
+.badge-regular .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

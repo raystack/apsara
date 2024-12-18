@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon } from "@radix-ui/react-icons";
+import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Text, Checkbox, InputField, RangePicker, DatePicker } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb,  Flex, Chip, Text, Checkbox, InputField, Badge, RangePicker, DatePicker } from "@raystack/apsara/v1";
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
@@ -294,14 +294,50 @@ const AssetsHeader = () => {
             </Button>
           )}
         </DatePicker>
+        {/* Add Chip examples */}
+        <Flex gap="small" align="center">
+          <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
+
+          {/* <Chip 
+            variant="filled" 
+            size="large" 
+            style="accent"
+            leadingIcon={<PlusIcon />}
+          >
+            Large Accent
+          </Chip>
+
+          <Chip 
+            variant="filled"
+            trailingIcon={<CheckIcon />}
+          >
+            With Icon
+          </Chip>
+
+          <Chip 
+            variant="outline"
+            isDismissible
+            onDismiss={() => console.log('dismissed')}
+          >
+            Dismissible
+          </Chip>
+
+          <Chip 
+            style="accent"
+            leadingIcon={<CheckIcon />}
+            trailingIcon={<Cross1Icon />}
+          >
+            Both Icons
+          </Chip> */}
+        </Flex>
 
       </Flex>
-      <Flex gap="small">
+      {/* <Flex gap="small">
         <AssetsFooter />
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
         <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 };
