@@ -15,7 +15,6 @@ export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
 export { Badge } from "./components/badge";
 export { Switch } from "./components/switch";
-
 export {
   ThemeProvider,
   ThemeProviderProps,
