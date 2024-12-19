@@ -269,7 +269,7 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          <Tooltip message="Some tooltip message" side="top-left">
+          <Tooltip message="Some tooltip message" side="bottom-left">
             <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
           </Tooltip>
           {/* <Chip 

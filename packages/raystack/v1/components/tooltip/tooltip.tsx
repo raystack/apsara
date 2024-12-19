@@ -62,6 +62,7 @@ export const Tooltip = ({
             ) : (
               message
             )}
+            <TooltipPrimitive.Arrow className={styles.arrow} />
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>
