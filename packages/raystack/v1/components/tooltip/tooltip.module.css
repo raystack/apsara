@@ -5,10 +5,7 @@
   
   .content {
     z-index: 100;
-    display: flex;
     padding: var(--rs-space-2) var(--rs-space-3);
-    justify-content: center;
-    align-items: center;
     border-radius: var(--rs-radius-2);
     background: var(--rs-color-background-base-primary);
     border: 1px solid var(--rs-color-border-base-primary);
@@ -20,11 +17,8 @@
     line-height: 16px;
     max-width: 280px;
     animation-duration: 400ms;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity;
   }
   
-  /* Basic sides with center alignment */
   .content[data-side='top'][data-align='center'] {
     animation-name: slideDownAndFade;
   }
@@ -58,7 +52,6 @@
     animation-name: slideUpLeftAndFade;
   }
   
-  /* Animations remain the same */
   @keyframes slideUpAndFade {
     from {
       opacity: 0;

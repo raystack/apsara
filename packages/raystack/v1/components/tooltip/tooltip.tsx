@@ -52,13 +52,13 @@ export const Tooltip = ({
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
-            side={side.split('-')[0] as TooltipPrimitive.TooltipContentProps['side']}
-            align={side.includes('-') ? side.split('-')[1] : undefined}
+            side={side?.split('-')[0] as TooltipPrimitive.TooltipContentProps['side'] || 'top'}
+            align={(side?.includes('-') ? (side.split('-')[1] === 'left' ? 'start' : 'end') : 'center') satisfies 'start' | 'end' | 'center'}
             sideOffset={4}
             className={tooltip({ side, className })}
           >
             {typeof message === "string" ? (
-              <Text size="small">{message}</Text>
+              <Text size={2}>{message}</Text>
             ) : (
               message
             )}
