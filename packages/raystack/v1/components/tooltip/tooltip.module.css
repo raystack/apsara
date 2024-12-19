@@ -24,37 +24,37 @@
     will-change: transform, opacity;
   }
   
-  /* Basic sides */
-  .side-top {
+  /* Basic sides with center alignment */
+  .content[data-side='top'][data-align='center'] {
     animation-name: slideDownAndFade;
   }
   
-  .side-right {
+  .content[data-side='right'][data-align='center'] {
     animation-name: slideLeftAndFade;
   }
   
-  .side-bottom {
+  .content[data-side='bottom'][data-align='center'] {
     animation-name: slideUpAndFade;
   }
   
-  .side-left {
+  .content[data-side='left'][data-align='center'] {
     animation-name: slideRightAndFade;
   }
   
   /* Corner positions */
-  .side-top-left {
+  .content[data-side='top'][data-align='start'] {
     animation-name: slideDownRightAndFade;
   }
   
-  .side-top-right {
+  .content[data-side='top'][data-align='end'] {
     animation-name: slideDownLeftAndFade;
   }
   
-  .side-bottom-left {
+  .content[data-side='bottom'][data-align='start'] {
     animation-name: slideUpRightAndFade;
   }
   
-  .side-bottom-right {
+  .content[data-side='bottom'][data-align='end'] {
     animation-name: slideUpLeftAndFade;
   }
   
