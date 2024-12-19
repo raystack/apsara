@@ -206,7 +206,7 @@ const AssetsHeader = () => {
     <Flex
       align="center"
       justify="between"
-      style={{ width: "100%", padding: "4px" }}
+      style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center">
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}

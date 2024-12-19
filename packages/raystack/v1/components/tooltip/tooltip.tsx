@@ -8,29 +8,33 @@ type classes = {
   content?: string;
   trigger?: string;
 };
+
 interface TooltipProps {
   disabled?: boolean;
   children: React.ReactNode;
   message: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
   classes?: classes;
+  delayDuration?: number;
+  skipDelayDuration?: number;
 }
-
 
 export const Tooltip = ({
   children,
   message,
   disabled,
-  side = "right",
+  side = "top",
   classes,
+  delayDuration = 200,
+  skipDelayDuration = 200,
 }: TooltipProps) => {
   return disabled ? (
     children
   ) : (
-    <TooltipPrimitive.Provider delayDuration={200} skipDelayDuration={200}>
-      <TooltipPrimitive.Root disableHoverableContent={true}>
+    <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
+      <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger asChild>
-          <div className={clsx(styles.trigger, classes?.trigger ?? "")}>
+          <div className={clsx(styles.trigger, classes?.trigger)}>
             {children}
           </div>
         </TooltipPrimitive.Trigger>
@@ -38,9 +42,13 @@ export const Tooltip = ({
           <TooltipPrimitive.Content
             side={side}
             sideOffset={5}
-            className={clsx(styles.content, classes?.content ?? "")}
+            className={clsx(styles.content, classes?.content)}
           >
-            {typeof message === "string" ? <Text>{message}</Text> : message}
+            {typeof message === "string" ? (
+              <Text size={2}>{message}</Text>
+            ) : (
+              message
+            )}
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>
