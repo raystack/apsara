@@ -7,7 +7,8 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, IconButton, Radio } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Tooltip } from "@raystack/apsara/v1";
+
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -205,7 +206,7 @@ const AssetsHeader = () => {
     <Flex
       align="center"
       justify="between"
-      style={{ width: "100%", padding: "4px" }}
+      style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center">
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
@@ -268,15 +269,9 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
-          <Radio.Root defaultValue="1" aria-label="View options">
-            <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
-              <Radio.Item value="1" id="r1" />
-              <label htmlFor="r1">Option 1</label>
-              <Radio.Item value="2" id="r2" />
-              <label htmlFor="r2">Option 2</label>
-            </Flex>
-          </Radio.Root>
+          <Tooltip message="Some tooltip message" side="bottom-left">
+            <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip>
+          </Tooltip>
           {/* <Chip 
             variant="filled" 
             size="large" 
@@ -312,7 +307,7 @@ const AssetsHeader = () => {
 
         {/* Add IconButton examples */}
         <Flex gap="small" align="center">
-          <IconButton size={1}>
+          {/* <IconButton size={1}>
             <PlusIcon />
           </IconButton>
           <IconButton size={2}>
@@ -323,7 +318,7 @@ const AssetsHeader = () => {
           </IconButton>
           <IconButton size={4}>
             <PlusIcon />
-          </IconButton>
+          </IconButton> */}
 
         </Flex>
 

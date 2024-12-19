@@ -1,15 +1,22 @@
 ---
-name: tooltip
 title: Tooltip
-description:
+description: A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it.
 ---
 
 ## Preview
 
 <Preview>
-  <Tooltip message="tooltip">
-    <Button variant="primary">primary button</Button>
-  </Tooltip>
+  <Flex
+    style={{
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "8px",
+    }}
+  >
+    <Tooltip message="This is a tooltip">
+      <Button>Hover me</Button>
+    </Tooltip>
+  </Flex>
 </Preview>
 
 ## Installation
@@ -20,14 +27,124 @@ Install the component from your command line.
   <LiveEditor code={`npm install @raystack/apsara`} border />
 </LiveProvider>
 
-Import all parts and piece them together.
+Import and usage.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Button, Tooltip } from '@raystack/apsara'
+import { Tooltip } from '@raystack/apsara/v1'
 
-<Tooltip message="tooltip">
-  <Button variant="primary">primary button</Button>
+<Tooltip message="This is a tooltip">
+  <Button>Hover me</Button>
 </Tooltip>
 `} border />
 </LiveProvider>
+
+## Props
+
+The `Tooltip` component accepts the following props:
+
+- `message`: Content to display in the tooltip (string | ReactNode)
+- `children`: Element that triggers the tooltip (ReactNode)
+- `side`: Position of the tooltip (`"top"` | `"right"` | `"bottom"` | `"left"` | `"top-left"` | `"top-right"` | `"bottom-left"` | `"bottom-right"`, default: "top")
+- `disabled`: Whether the tooltip is disabled (boolean, default: false)
+- `delayDuration`: Delay before showing the tooltip (number, default: 200)
+- `skipDelayDuration`: Delay before showing the tooltip when moving between tooltips (number, default: 200)
+- `className`: Additional CSS class names
+
+## Positioning
+
+The Tooltip component can be positioned in different directions using the `side` prop:
+
+<Playground
+  scope={{ Tooltip, Button }}
+  tabs={[
+    {
+      name: "Top",
+      code: `<Tooltip message="Top tooltip" side="top">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+    {
+      name: "Right",
+      code: `<Tooltip message="Right tooltip" side="right">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+    {
+      name: "Bottom",
+      code: `<Tooltip message="Bottom tooltip" side="bottom">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+    {
+      name: "Left",
+      code: `<Tooltip message="Left tooltip" side="left">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+  ]}
+/>
+
+## Corner Positions
+
+Tooltips can also be positioned at corners:
+
+<Playground
+  scope={{ Tooltip, Button }}
+  tabs={[
+    {
+      name: "Top Left",
+      code: `<Tooltip message="Top left tooltip with a long message" side="top-left">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+    {
+      name: "Top Right",
+      code: `<Tooltip message="Top right tooltip with a long message" side="top-right">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+    {
+      name: "Bottom Left",
+      code: `<Tooltip message="Bottom left tooltip with a long message" side="bottom-left">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+    {
+      name: "Bottom Right",
+      code: `<Tooltip message="Bottom right tooltip with a long message" side="bottom-right">
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+  ]}
+/>
+
+## Custom Content
+
+Tooltips can contain custom content using ReactNode:
+
+<Playground
+  scope={{ Tooltip, Button }}
+  tabs={[
+    {
+      name: "Custom Content",
+      code: `<Tooltip message={
+  <div>
+    <span style={{ fontWeight: "medium" }}>Custom Tooltip</span>
+  </div>
+}>
+  <Button>Hover me</Button>
+</Tooltip>`,
+    },
+  ]}
+/>
+
+## Accessibility
+
+The Tooltip component follows WAI-ARIA guidelines for tooltips:
+
+- Uses `role="tooltip"` for proper semantic meaning
+- Automatically manages focus and hover interactions
+- Supports keyboard navigation
+- Provides appropriate ARIA attributes for accessibility
+- Manages enter/exit animations for smooth user experience

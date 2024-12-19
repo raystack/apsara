@@ -16,6 +16,9 @@ interface TooltipProps {
   classes?: classes;
 }
 
+/**
+ * @deprecated Use Tooltip from '@raystack/apsara/v1' instead.
+ */
 export const Tooltip = ({
   children,
   message,
