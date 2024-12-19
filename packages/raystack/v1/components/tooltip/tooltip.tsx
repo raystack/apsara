@@ -1,6 +1,6 @@
 import React from "react";
-import { cva, VariantProps } from "class-variance-authority";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import { cva, VariantProps } from "class-variance-authority";
 import { Text } from "../text";
 import styles from "./tooltip.module.css";
 
@@ -29,6 +29,8 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   className?: string;
   delayDuration?: number;
   skipDelayDuration?: number;
+  'aria-label'?: string;
+  asChild?: boolean;
 }
 
 export const Tooltip = ({
@@ -39,33 +41,43 @@ export const Tooltip = ({
   className,
   delayDuration = 200,
   skipDelayDuration = 200,
+  'aria-label': ariaLabel,
+  asChild = true,
 }: TooltipProps) => {
   return disabled ? (
     children
   ) : (
     <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
       <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger asChild>
-          <div className={styles.trigger}>
+        <TooltipPrimitive.Trigger asChild={asChild}>
+          <div 
+            className={styles.trigger}
+            aria-describedby="tooltip"
+          >
             {children}
           </div>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
+            id="tooltip"
+            role="tooltip"
+            aria-label={ariaLabel || (typeof message === 'string' ? message : undefined)}
             side={side?.split('-')[0] as TooltipPrimitive.TooltipContentProps['side'] || 'top'}
             align={(side?.includes('-') ? (side.split('-')[1] === 'left' ? 'start' : 'end') : 'center') satisfies 'start' | 'end' | 'center'}
             sideOffset={4}
             className={tooltip({ side, className })}
           >
             {typeof message === "string" ? (
-              <Text size={2}>{message}</Text>
+              <Text size="small">{message}</Text>
             ) : (
               message
             )}
-            <TooltipPrimitive.Arrow className={styles.arrow} />
+            <TooltipPrimitive.Arrow className={styles.arrow} width={12} height={6} />
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>
     </TooltipPrimitive.Provider>
   );
 };
+
+Tooltip.displayName = 'Tooltip';
