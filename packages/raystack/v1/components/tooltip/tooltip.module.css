@@ -24,22 +24,41 @@
     will-change: transform, opacity;
   }
   
-  .content[data-side='top'] {
+  /* Basic sides */
+  .side-top {
     animation-name: slideDownAndFade;
   }
   
-  .content[data-side='right'] {
+  .side-right {
     animation-name: slideLeftAndFade;
   }
   
-  .content[data-side='bottom'] {
+  .side-bottom {
     animation-name: slideUpAndFade;
   }
   
-  .content[data-side='left'] {
+  .side-left {
     animation-name: slideRightAndFade;
   }
   
+  /* Corner positions */
+  .side-top-left {
+    animation-name: slideDownRightAndFade;
+  }
+  
+  .side-top-right {
+    animation-name: slideDownLeftAndFade;
+  }
+  
+  .side-bottom-left {
+    animation-name: slideUpRightAndFade;
+  }
+  
+  .side-bottom-right {
+    animation-name: slideUpLeftAndFade;
+  }
+  
+  /* Animations remain the same */
   @keyframes slideUpAndFade {
     from {
       opacity: 0;
@@ -81,6 +100,50 @@
     to {
       opacity: 1;
       transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideDownRightAndFade {
+    from {
+      opacity: 0;
+      transform: translate(-2px, -2px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+  
+  @keyframes slideDownLeftAndFade {
+    from {
+      opacity: 0;
+      transform: translate(2px, -2px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+  
+  @keyframes slideUpRightAndFade {
+    from {
+      opacity: 0;
+      transform: translate(-2px, 2px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+  }
+  
+  @keyframes slideUpLeftAndFade {
+    from {
+      opacity: 0;
+      transform: translate(2px, 2px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0);
     }
   }
   

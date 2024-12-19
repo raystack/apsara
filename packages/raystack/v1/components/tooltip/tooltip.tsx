@@ -1,20 +1,32 @@
 import React from "react";
-import clsx from "clsx";
+import { cva, VariantProps } from "class-variance-authority";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { Text } from "../text";
 import styles from "./tooltip.module.css";
 
-type classes = {
-  content?: string;
-  trigger?: string;
-};
+const tooltip = cva(styles.content, {
+  variants: {
+    side: {
+      top: styles["side-top"],
+      right: styles["side-right"],
+      bottom: styles["side-bottom"],
+      left: styles["side-left"],
+      "top-left": styles["side-top-left"],
+      "top-right": styles["side-top-right"],
+      "bottom-left": styles["side-bottom-left"],
+      "bottom-right": styles["side-bottom-right"],
+    }
+  },
+  defaultVariants: {
+    side: "top"
+  }
+});
 
-interface TooltipProps {
+interface TooltipProps extends VariantProps<typeof tooltip> {
   disabled?: boolean;
   children: React.ReactNode;
   message: React.ReactNode;
-  side?: "top" | "right" | "bottom" | "left";
-  classes?: classes;
+  className?: string;
   delayDuration?: number;
   skipDelayDuration?: number;
 }
@@ -24,7 +36,7 @@ export const Tooltip = ({
   message,
   disabled,
   side = "top",
-  classes,
+  className,
   delayDuration = 200,
   skipDelayDuration = 200,
 }: TooltipProps) => {
@@ -34,18 +46,19 @@ export const Tooltip = ({
     <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger asChild>
-          <div className={clsx(styles.trigger, classes?.trigger)}>
+          <div className={styles.trigger}>
             {children}
           </div>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
-            side={side}
-            sideOffset={5}
-            className={clsx(styles.content, classes?.content)}
+            side={side.split('-')[0] as TooltipPrimitive.TooltipContentProps['side']}
+            align={side.includes('-') ? side.split('-')[1] : undefined}
+            sideOffset={4}
+            className={tooltip({ side, className })}
           >
             {typeof message === "string" ? (
-              <Text size={2}>{message}</Text>
+              <Text size="small">{message}</Text>
             ) : (
               message
             )}
