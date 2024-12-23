@@ -3,6 +3,7 @@ import { type ComponentPropsWithoutRef } from 'react';
 import * as RadixSlider from '@radix-ui/react-slider';
 import { cva, type VariantProps } from 'class-variance-authority';
 import styles from './slider.module.css';
+import { ThumbIcon } from './thumb';
 
 const slider = cva(styles.slider, {
   variants: {
@@ -52,8 +53,11 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
           <RadixSlider.Range className={styles.range} />
         </RadixSlider.Track>
         {defaultVal.map((_, i) => (
-          <RadixSlider.Thumb key={i} className={styles.thumb}>
-            {label && <div className={styles.label}>{label}</div>}
+          <RadixSlider.Thumb key={i} className={styles.thumb} asChild>
+            <div>
+              <ThumbIcon />
+              {label && <div className={styles.label}>{label}</div>}
+            </div>
           </RadixSlider.Thumb>
         ))}
       </RadixSlider.Root>
