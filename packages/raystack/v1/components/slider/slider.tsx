@@ -27,10 +27,25 @@ export interface SliderProps
   step?: number;
   label?: string | [string, string];
   onChange?: (value: number | [number, number]) => void;
+  'aria-label'?: string;
+  'aria-valuetext'?: string;
 }
 
 export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>, SliderProps>(
-  ({ className, variant = 'single', value, defaultValue, min = 0, max = 100, step = 1, label, onChange, ...props }, ref) => {
+  ({ 
+    className, 
+    variant = 'single', 
+    value, 
+    defaultValue, 
+    min = 0, 
+    max = 100, 
+    step = 1, 
+    label, 
+    onChange,
+    'aria-label': ariaLabel,
+    'aria-valuetext': ariaValueText,
+    ...props 
+  }, ref) => {
     const isRange = variant === 'range';
     const defaultVal = isRange 
       ? (defaultValue as [number, number]) || [min, max] 
@@ -43,6 +58,12 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
       return label[index];
     };
 
+    const getAriaValueText = (value: number, index: number) => {
+      if (ariaValueText) return ariaValueText;
+      const labelText = getLabel(index);
+      return labelText ? `${labelText}: ${value}` : `${value}`;
+    };
+
     return (
       <RadixSlider.Root
         ref={ref}
@@ -53,13 +74,20 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
         max={max}
         step={step}
         onValueChange={(val) => onChange?.(isRange ? (val as [number, number]) : val[0])}
+        aria-label={ariaLabel || (isRange ? 'Range slider' : 'Slider')}
         {...props}
       >
         <RadixSlider.Track className={styles.track}>
           <RadixSlider.Range className={styles.range} />
         </RadixSlider.Track>
         {defaultVal.map((_, i) => (
-          <RadixSlider.Thumb key={i} className={styles.thumb} asChild>
+          <RadixSlider.Thumb 
+            key={i} 
+            className={styles.thumb} 
+            asChild
+            aria-label={getLabel(i) || `Thumb ${i + 1}`}
+            aria-valuetext={getAriaValueText(currentValue[i], i)}
+          >
             <div>
               <ThumbIcon />
               {getLabel(i) && <div className={styles.label}>{getLabel(i)}</div>}
