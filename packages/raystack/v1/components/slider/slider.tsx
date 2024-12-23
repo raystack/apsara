@@ -50,7 +50,7 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
     const defaultVal = isRange 
       ? (defaultValue as [number, number]) || [min, max] 
       : [defaultValue as number || min];
-    const currentValue = isRange ? value as [number, number] : [value as number];
+    const currentValue = value ? (isRange ? value as [number, number] : [value as number]) : defaultVal;
 
     const getLabel = (index: number) => {
       if (!label) return undefined;
@@ -58,10 +58,11 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
       return label[index];
     };
 
-    const getAriaValueText = (value: number, index: number) => {
+    const getAriaValueText = (index: number) => {
       if (ariaValueText) return ariaValueText;
       const labelText = getLabel(index);
-      return labelText ? `${labelText}: ${value}` : `${value}`;
+      const val = currentValue[index];
+      return labelText ? `${labelText}: ${val}` : `${val}`;
     };
 
     return (
@@ -73,7 +74,7 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
         min={min}
         max={max}
         step={step}
-        onValueChange={(val) => onChange?.(isRange ? (val as [number, number]) : val[0])}
+        onValueChange={(val) => onChange?.(isRange ? val as [number, number] : val[0])}
         aria-label={ariaLabel || (isRange ? 'Range slider' : 'Slider')}
         {...props}
       >
@@ -86,7 +87,7 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
             className={styles.thumb} 
             asChild
             aria-label={getLabel(i) || `Thumb ${i + 1}`}
-            aria-valuetext={getAriaValueText(currentValue[i], i)}
+            aria-valuetext={getAriaValueText(i)}
           >
             <div>
               <ThumbIcon />
