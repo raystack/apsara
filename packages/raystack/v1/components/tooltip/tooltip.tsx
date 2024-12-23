@@ -33,7 +33,7 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   asChild?: boolean;
 }
 
-export const Tooltip = ({
+export const Tooltip: React.FC<TooltipProps> = ({
   children,
   message,
   disabled,
@@ -43,7 +43,7 @@ export const Tooltip = ({
   skipDelayDuration = 200,
   'aria-label': ariaLabel,
   asChild = true,
-}: TooltipProps) => {
+}) => {
   return disabled ? (
     children
   ) : (
@@ -68,7 +68,7 @@ export const Tooltip = ({
             className={tooltip({ side, className })}
           >
             {typeof message === "string" ? (
-              <Text size="small">{message}</Text>
+              <Text>{message}</Text>
             ) : (
               message
             )}
