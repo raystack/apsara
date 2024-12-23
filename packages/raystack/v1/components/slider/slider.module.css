@@ -15,6 +15,7 @@
   height: var(--rs-space-1);
   background-color: var(--rs-color-background-neutral-secondary);
   border-radius: var(--rs-radius-full);
+  margin: 0 12px;
 }
 
 .range {
@@ -25,12 +26,14 @@
 }
 
 .thumb {
-  position: relative;
+  position: absolute;
   cursor: grab;
   display: flex;
   align-items: center;
   justify-content: center;
   outline: none;
+  transform: translate(-50%, -50%);
+  top: 50%;
 }
 
 .thumb:active {
