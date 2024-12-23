@@ -1,19 +1,20 @@
 .slider {
   position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
   min-width: 80px;
   height: var(--rs-space-8);
-  padding: var(--rs-space-4) 0;
   touch-action: none;
+  user-select: none;
 }
 
 .track {
   position: relative;
+  flex-grow: 1;
   height: var(--rs-space-1);
-  width: 100%;
   background-color: var(--rs-color-background-neutral-secondary);
   border-radius: var(--rs-radius-full);
-  cursor: pointer;
 }
 
 .range {
@@ -24,16 +25,14 @@
 }
 
 .thumb {
-  position: absolute;
-  top: 50%;
+  display: block;
+  position: relative;
   width: var(--rs-space-4);
   height: var(--rs-space-4);
   background-color: var(--rs-color-background-base-primary);
   border: 2px solid var(--rs-color-border-accent-emphasis);
   border-radius: var(--rs-radius-full);
-  transform: translate(-50%, -50%);
-  cursor: grab;
-  transition: border-color 0.2s;
+  cursor: pointer;
 }
 
 .thumb:hover {
@@ -45,20 +44,20 @@
   box-shadow: 0 0 0 2px var(--rs-color-border-base-focus);
 }
 
-.thumb:active {
-  cursor: grabbing;
-}
-
 .label {
   position: absolute;
   top: calc(-1 * var(--rs-space-6));
   left: 50%;
   padding: var(--rs-space-1) var(--rs-space-2);
-  color: var(--rs-color-text-base-emphasis);
+  color: var(--rs-color-text-accent-emphasis);
   background-color: var(--rs-color-background-accent-emphasis);
   border-radius: var(--rs-radius-1);
   font-size: 11px;
   font-family: var(--rs-font-body);
   transform: translateX(-50%);
   white-space: nowrap;
+}
+
+.slider-variant-single .range {
+  left: 0;
 }

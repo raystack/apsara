@@ -22,21 +22,23 @@ Install the component from your command line.
 
 ## Usage
 
-Import and usage.
+Import and usage examples:
 
 <LiveProvider>
   <LiveEditor code={`
 import { Slider } from '@raystack/apsara/v1'
 
 // Single value slider
-<Slider 
-  variant="single" 
-  label="50" 
-  defaultValue={50} 
-  onChange={(value) => console.log(value)} 
+
+<Slider
+  variant="single"
+  label="50"
+  defaultValue={50}
+  onChange={(value) => console.log(value)}
 />
 
 // Range slider
+
 <Slider 
   variant="range" 
   defaultValue={[20, 80]} 
@@ -47,24 +49,22 @@ import { Slider } from '@raystack/apsara/v1'
 
 ## Props
 
-The `Slider` component accepts the following props:
+The Slider component accepts the following props:
 
-- `variant`: The type of slider (`"single"` | `"range"`, default: "single")
+- `variant`: The type of slider (`"single"` | `"range"`, default: `"single"`)
+- `value`: Controlled value - number for single, [number, number] for range
+- `defaultValue`: Initial value - number for single, [number, number] for range
 - `min`: Minimum value (default: 0)
 - `max`: Maximum value (default: 100)
 - `step`: Step increment (default: 1)
-- `defaultValue`: Initial value(s) - number for single, [number, number] for range
-- `value`: Controlled value(s) - number for single, [number, number] for range
 - `label`: Optional label text to display above thumb(s)
-- `onChange`: Callback when value changes
-- `aria-label`: Accessibility label
-- All other HTMLDivElement attributes from React
+- `onChange`: Callback when value changes - `(value: number | [number, number]) => void`
+- `className`: Additional CSS class name
+- All other valid HTML div attributes
 
-## Variants
+## Examples
 
 ### Single Value Slider
-
-A basic slider that allows selecting a single value.
 
 <Playground
   scope={{ Slider }}
@@ -78,13 +78,11 @@ A basic slider that allows selecting a single value.
   defaultValue={50}
   onChange={(value) => console.log(value)}
 />`,
-    }
+    },
   ]}
 />
 
 ### Range Slider
-
-A slider that allows selecting a range between two values.
 
 <Playground
   scope={{ Slider }}
@@ -97,58 +95,11 @@ A slider that allows selecting a range between two values.
   defaultValue={[20, 80]}
   onChange={(value) => console.log(value)}
 />`,
-    }
+    },
   ]}
 />
 
-## Accessibility
-
-The Slider component implements the following accessibility features:
-
-- Uses `role="slider"` for proper semantic meaning
-- Provides appropriate `aria-label` based on variant and labels
-- Supports keyboard navigation
-- Shows focus indicators for keyboard users
-- Reports current values via `aria-valuenow`
-- Sets proper min/max ranges with `aria-valuemin` and `aria-valuemax`
-
-Example with custom aria labels:
-
-<Playground
-  scope={{ Slider }}
-  tabs={[
-    {
-      name: "Accessibility",
-      code: `
-<Slider 
-  variant="single" 
-  label="Volume" 
-  aria-label="Volume control"
-  defaultValue={75}
-/>`,
-    }
-  ]}
-/>
-
-## Examples
-
-### With Labels
-
-<Playground
-  scope={{ Slider }}
-  tabs={[
-    {
-      name: "Labels",
-      code: `
-<Flex direction="column" gap="large">
-  <Slider variant="single" label="Single" defaultValue={40} />
-  <Slider variant="range" label="Range" defaultValue={[20, 60]} />
-</Flex>`,
-    }
-  ]}
-/>
-
-### Custom Range
+### With Custom Range
 
 <Playground
   scope={{ Slider }}
@@ -164,7 +115,7 @@ Example with custom aria labels:
   defaultValue={0}
   label="0"
 />`,
-    }
+    },
   ]}
 />
 
@@ -188,6 +139,6 @@ function ControlledSlider() {
     />
   );
 }`,
-    }
+    },
   ]}
 />
