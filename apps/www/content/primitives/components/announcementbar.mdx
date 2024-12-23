@@ -1,0 +1,71 @@
+---
+name: AnnouncementBar
+title: AnnouncementBar
+description: AnnouncementBar component to display message;
+---
+
+## Preview
+
+<Preview>
+
+<Flex direction="column" gap="medium">
+  <AnnouncementBar
+    text="We have introduced a new feature to generate automated reports on your analysis."
+    leadingIcon={<InfoCircledIcon />}
+    actionLabel="Read More"
+    actionIcon={<InfoCircledIcon />}
+/>
+
+  <AnnouncementBar
+    variant="error"
+    text="We have introduced a new feature to generate automated reports on your analysis."
+    leadingIcon={<InfoCircledIcon />}
+    actionLabel="Read More"
+    actionIcon={<InfoCircledIcon />}
+  />
+  <AnnouncementBar
+    variant="gradient"
+    text="We have introduced a new feature to generate automated reports on your analysis."
+    leadingIcon={<InfoCircledIcon />}
+    actionLabel="Read More"
+    actionIcon={<InfoCircledIcon />}
+  />
+</Flex>
+
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
+</LiveProvider>
+
+Import and usage.
+
+<LiveProvider>
+  <LiveEditor code={`
+import { AnnouncementBar } from '@raystack/apsara/v1'
+
+<AnnouncementBar
+  variant="gradient"
+  text="We have introduced a new feature to generate automated reports on your analysis."
+  leadingIcon={<InfoCircledIcon />}
+  actionLabel="Read More"
+  actionIcon={<InfoCircledIcon />}
+/>
+`} border />
+</LiveProvider>
+
+## Props
+
+The `AnnouncementBar` component accepts the following props:
+
+- `variant`: Visual style variant (`"normal"` | `"error"` | `"gradient"`, default: "normal")
+- `text`: Color variant of the spinner (`"default"` | `"inverted"`, default: "default")
+- `leadingIcon`: Optional ReactNode to display an icon before the text
+- `actionLabel`: Text of the onClick action. It will be display after the text.
+- `actionIcon`: Icon of the onClick action.
+- `className`: Additional CSS class names
+- All other HTMLDivElement attributes from React

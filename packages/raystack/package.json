@@ -101,7 +101,7 @@
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.9.2",
     "@tanstack/table-core": "^8.9.2",
-    "class-variance-authority": "^0.6.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^0.2.0",
     "dayjs": "^1.11.11",

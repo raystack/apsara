@@ -214,7 +214,6 @@ const AssetsHeader = () => {
           defaultValue={50}
           onChange={(value) => console.log('Single value:', value)}
         />
-
         <Slider 
           variant="range" 
           label={["Start", "End"]} 
