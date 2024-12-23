@@ -6,9 +6,9 @@ description: A control that allows users to select a value or range from a given
 ## Preview
 
 <Preview>
-  <Flex direction="column" gap="large">
-    <Slider variant="single" label="50" defaultValue={50} />
-    <Slider variant="range" defaultValue={[20, 80]} />
+  <Flex direction="column" gap="large" style={{ width: "400px" }}>
+    <Slider variant="single" label="Single Value" defaultValue={50} />
+    <Slider variant="range" label={["Start", "End"]} defaultValue={[20, 80]} />
   </Flex>
 </Preview>
 
@@ -30,20 +30,25 @@ import { Slider } from '@raystack/apsara/v1'
 
 // Single value slider
 
-<Slider
-  variant="single"
-  label="50"
-  defaultValue={50}
-  onChange={(value) => console.log(value)}
-/>
+<div style={{ width: "400px" }}>
+  <Slider
+    variant="single"
+    label="Single Value"
+    defaultValue={50}
+    onChange={(value) => console.log(value)}
+  />
+</div>
 
-// Range slider
+// Range slider with individual labels
 
-<Slider 
-  variant="range" 
-  defaultValue={[20, 80]} 
-  onChange={(value) => console.log(value)} 
-/>
+<div style={{ width: "400px" }}>
+  <Slider 
+    variant="range" 
+    label={["Start", "End"]}
+    defaultValue={[20, 80]} 
+    onChange={(value) => console.log(value)} 
+  />
+</div>
 `} border />
 </LiveProvider>
 
@@ -57,7 +62,7 @@ The Slider component accepts the following props:
 - `min`: Minimum value (default: 0)
 - `max`: Maximum value (default: 100)
 - `step`: Step increment (default: 1)
-- `label`: Optional label text to display above thumb(s)
+- `label`: Label text to display above thumb(s). For range slider, can be a string or [string, string] for individual thumb labels
 - `onChange`: Callback when value changes - `(value: number | [number, number]) => void`
 - `className`: Additional CSS class name
 - All other valid HTML div attributes
@@ -72,17 +77,19 @@ The Slider component accepts the following props:
     {
       name: "Single",
       code: `
-<Slider 
-  variant="single" 
-  label="50" 
-  defaultValue={50}
-  onChange={(value) => console.log(value)}
-/>`,
+<div style={{ width: "400px" }}>
+  <Slider 
+    variant="single" 
+    label="Value" 
+    defaultValue={50}
+    onChange={(value) => console.log(value)}
+  />
+</div>`,
     },
   ]}
 />
 
-### Range Slider
+### Range Slider with Individual Labels
 
 <Playground
   scope={{ Slider }}
@@ -90,11 +97,14 @@ The Slider component accepts the following props:
     {
       name: "Range",
       code: `
-<Slider 
-  variant="range" 
-  defaultValue={[20, 80]}
-  onChange={(value) => console.log(value)}
-/>`,
+<div style={{ width: "400px" }}>
+  <Slider 
+    variant="range" 
+    label={["Min", "Max"]}
+    defaultValue={[20, 80]}
+    onChange={(value) => console.log(value)}
+  />
+</div>`,
     },
   ]}
 />
@@ -107,36 +117,66 @@ The Slider component accepts the following props:
     {
       name: "Custom Range",
       code: `
-<Slider 
-  variant="single" 
-  min={-50} 
-  max={50} 
-  step={5}
-  defaultValue={0}
-  label="0"
-/>`,
+<div style={{ width: "400px" }}>
+  <Slider 
+    variant="single" 
+    min={-50} 
+    max={50} 
+    step={5}
+    defaultValue={0}
+    label="Temperature"
+  />
+</div>`,
     },
   ]}
 />
 
-### Controlled Component
+### Controlled Range Component
 
 <Playground
   scope={{ Slider }}
   tabs={[
     {
-      name: "Controlled",
+      name: "Controlled Range",
+      code: `
+function ControlledRangeSlider() {
+  const [value, setValue] = React.useState([25, 75]);
+  
+  return (
+    <div style={{ width: "400px" }}>
+      <Slider 
+        variant="range" 
+        value={value} 
+        label={["Lower", "Upper"]}
+        onChange={(newValue) => setValue(newValue as [number, number])}
+      />
+    </div>
+  );
+}`,
+    },
+  ]}
+/>
+
+### Controlled Single Value
+
+<Playground
+  scope={{ Slider }}
+  tabs={[
+    {
+      name: "Controlled Single",
       code: `
 function ControlledSlider() {
   const [value, setValue] = React.useState(50);
   
   return (
-    <Slider 
-      variant="single" 
-      value={value} 
-      label={value.toString()}
-      onChange={(newValue) => setValue(newValue as number)}
-    />
+    <div style={{ width: "400px" }}>
+      <Slider 
+        variant="single" 
+        value={value} 
+        label="Current"
+        onChange={(newValue) => setValue(newValue as number)}
+      />
+    </div>
   );
 }`,
     },
