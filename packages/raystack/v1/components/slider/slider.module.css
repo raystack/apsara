@@ -49,6 +49,11 @@
 .thumb svg {
   width: 24px;
   height: 24px;
+  fill: var(--rs-color-background-base-primary);
+}
+
+.thumb:hover svg {
+  fill: var(--rs-color-background-base-secondary);
 }
 
 .thumb:hover {
