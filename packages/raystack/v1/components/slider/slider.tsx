@@ -25,7 +25,7 @@ export interface SliderProps
   min?: number;
   max?: number;
   step?: number;
-  label?: string;
+  label?: string | [string, string];
   onChange?: (value: number | [number, number]) => void;
 }
 
@@ -36,6 +36,12 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
       ? (defaultValue as [number, number]) || [min, max] 
       : [defaultValue as number || min];
     const currentValue = isRange ? value as [number, number] : [value as number];
+
+    const getLabel = (index: number) => {
+      if (!label) return undefined;
+      if (typeof label === 'string') return label;
+      return label[index];
+    };
 
     return (
       <RadixSlider.Root
@@ -56,7 +62,7 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
           <RadixSlider.Thumb key={i} className={styles.thumb} asChild>
             <div>
               <ThumbIcon />
-              {label && <div className={styles.label}>{label}</div>}
+              {getLabel(i) && <div className={styles.label}>{getLabel(i)}</div>}
             </div>
           </RadixSlider.Thumb>
         ))}

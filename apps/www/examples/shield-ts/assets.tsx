@@ -208,127 +208,30 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%", marginTop: 20 }}>
-        {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
-        {/* <Spinner size={3} />
-        <div>
-        <Checkbox 
-            checked={checked}
-            onCheckedChange={(value) => {
-              setChecked(value);
-              console.log('New value:', value);
-            }} 
-          />
-        </div> */}
-        {/* <InputField
-          label="Label"
-          helperText="Helper Text"
-          placeholder="Place holder"
-          prefix="USD"
-        /> */}
-        {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
-          Custom Badge
-        </Badge> */}
         <Slider 
           variant="single" 
-          label="Label" 
+          label="Single Value" 
           defaultValue={50}
-          onChange={(value) => console.log(value)}
+          onChange={(value) => console.log('Single value:', value)}
         />
 
-        {/* <Slider 
-            variant="range" 
-            defaultValue={[20, 80]}
-          onChange={(value) => console.log(value)}
+        <Slider 
+          variant="range" 
+          label={["Start", "End"]} 
+          defaultValue={[20, 80]}
+          onChange={(value) => console.log('Range values:', value)}
         />
 
         <Slider
           variant="range" 
-          label="Range" 
+          label={["Min", "Max"]} 
           defaultValue={[30, 70]}
-          onChange={(value) => console.log(value)}
-        /> */}
-        {/* <Button variant="outline">Click here</Button>
-        <Breadcrumb items={items} size="small" />
-        <DropdownMenu>
-          <DropdownMenu.Trigger asChild>
-            <Button variant="secondary" size="small">Actions</Button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start">
-            <DropdownMenu.EmptyState>
-              <Title>No insights yet</Title>
-              <Text>You need to run a model to generate insights</Text>
-              <Button>Action Button</Button>
-            </DropdownMenu.EmptyState>
-          </DropdownMenu.Content>
-        </DropdownMenu> */}
-        {/* <AvatarGroup max={3}>
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="iris"
-            fallback={<>GS</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="mint"
-            fallback={<>RK</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="orange"
-            fallback={<>RK</>}
-          />
-        </AvatarGroup> */}
-
-        {/* Add Chip examples */}
-        <Flex gap="small" align="center">
-          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
-
-          {/* <Chip 
-            variant="filled" 
-            size="large" 
-            style="accent"
-            leadingIcon={<PlusIcon />}
-          >
-            Large Accent
-          </Chip>
-
-          <Chip 
-            variant="filled"
-            trailingIcon={<CheckIcon />}
-          >
-            With Icon
-          </Chip>
-
-          <Chip 
-            variant="outline"
-            isDismissible
-            onDismiss={() => console.log('dismissed')}
-          >
-            Dismissible
-          </Chip>
-
-          <Chip 
-            style="accent"
-            leadingIcon={<CheckIcon />}
-            trailingIcon={<Cross1Icon />}
-          >
-            Both Icons
-          </Chip> */}
-        </Flex>
-
+          min={0}
+          max={1000}
+          step={10}
+          onChange={(value) => console.log('Custom range:', value)}
+        />
       </Flex>
-      {/* <Flex gap="small">
-        <AssetsFooter />
-        {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
-        <DataTable.ViewOptions />
-        <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex> */}
     </Flex>
   );
 };
