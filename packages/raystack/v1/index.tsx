@@ -16,6 +16,7 @@ export { Text } from "./components/text";
 export { Switch } from "./components/switch";
 export { Radio } from "./components/radio";
 export { IconButton } from "./components/iconButton";
+export { Slider } from "./components/slider";
 export {
   ThemeProvider,
   ThemeProviderProps,
