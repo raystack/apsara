@@ -11,15 +11,15 @@
     "ci:release": "turbo release --filter=@raystack/apsara -- --ci --no-increment"
   },
   "devDependencies": {
-    "@parcel/packager-ts": "2.9.2",
-    "@parcel/transformer-typescript-types": "2.9.2",
-    "@turbo/gen": "^1.9.7",
-    "eslint": "^7.32.0",
+    "@parcel/packager-ts": "2.13.3",
+    "@parcel/transformer-typescript-types": "2.13.3",
+    "@turbo/gen": "^2.3.3",
+    "eslint": "^9.17.0",
     "eslint-config-custom": "workspace:*",
-    "prettier": "^2.5.1",
+    "prettier": "^3.4.2",
     "process": "^0.11.10",
-    "turbo": "2.3.1",
-    "typescript": "4.7"
+    "turbo": "2.3.3",
+    "typescript": "5.7"
   },
   "packageManager": "pnpm@9.15.1",
   "name": "apsara"
