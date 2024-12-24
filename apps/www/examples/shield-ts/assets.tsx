@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Indicator } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -225,11 +225,6 @@ const AssetsHeader = () => {
           placeholder="Place holder"
           prefix="USD"
         />
-        <Indicator variant="danger" aria-label="100+">
-          <Badge size="small" variant="gradient" icon={<HomeIcon />}>
-            Custom Badge
-          </Badge>
-        </Indicator>
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -270,9 +265,6 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          <Indicator variant="danger" label="100+">
-            <CaretLeftIcon />
-          </Indicator>
 
           {/* <Chip 
             variant="filled" 

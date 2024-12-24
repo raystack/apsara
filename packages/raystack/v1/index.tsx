@@ -17,6 +17,8 @@ export { InputField } from "./components/inputField";
 export { Radio } from './components/radio'
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
+export { Switch } from "./components/switch";
+export { Slider } from "./components/slider";
 export {
   ThemeProvider,
   ThemeProviderProps,
