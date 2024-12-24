@@ -28,3 +28,18 @@ h1, h2, h3, h4, h5, h6 {
 body, p, div, span {
   font-family: var(--rs-font-body);
 }
+
+/* CSS for the type cursor */
+input, textarea {
+  caret-color: var(--rs-color-border-accent-emphasis);
+  animation: dissolve-hide 100ms ease-out 500ms infinite;
+}
+
+@keyframes dissolve-hide {
+  0%, 50% {
+      opacity: 1;
+  }
+  100% {
+      opacity: 0;
+  }
+}

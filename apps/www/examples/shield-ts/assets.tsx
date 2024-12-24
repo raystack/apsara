@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, TextArea } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, TextArea, IconButton } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -269,7 +269,6 @@ const AssetsHeader = () => {
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
-
           {/* <Chip 
             variant="filled" 
             size="large" 
@@ -303,42 +302,22 @@ const AssetsHeader = () => {
           </Chip> */}
         </Flex>
 
-        <Flex direction="column" gap="large">
-          {/* Basic textarea with label */}
-          <TextArea
-            label="Label"
-            placeholder="Place holder"
-            error
-          />
+        {/* Add IconButton examples */}
+        {/* <Flex gap="small" align="center">
+          <IconButton size={1}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={2}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={3}>
+            <PlusIcon />
+          </IconButton>
+          <IconButton size={4}>
+            <PlusIcon />
+          </IconButton> */}
 
-          {/* Optional textarea with helper text */}
-          <TextArea 
-            label="Label"
-            isOptional
-            helperText="Helper text"
-            placeholder="Place holder"
-          />
-
-          {/* Textarea with help icon */}
-          <TextArea 
-            label="Label"
-            tooltip="This is a helpful tooltip message"
-            placeholder="Place holder"
-            error
-          />
-
-          {/* Invalid state textarea */}
-          <TextArea 
-            label="Label"
-            placeholder="Place holder"
-          />
-
-          {/* Filled textarea */}
-          <TextArea 
-            label="Label"
-            defaultValue="Filled"
-          />
-        </Flex>
+        {/* </Flex> */}
 
       </Flex>
       {/* <Flex gap="small">
