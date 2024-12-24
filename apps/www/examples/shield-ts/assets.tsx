@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, IconButton, Radio } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Slider } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -207,133 +207,30 @@ const AssetsHeader = () => {
       justify="between"
       style={{ width: "100%", padding: "4px" }}
     >
-      <Flex gap="extra-large" align="center">
-        {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
-        {/* <Spinner size={3} />
-        <div>
-        <Checkbox 
-            checked={checked}
-            onCheckedChange={(value) => {
-              setChecked(value);
-              console.log('New value:', value);
-            }} 
-          />
-        </div> */}
-        <InputField
-          label="Label"
-          helperText="Helper Text"
-          placeholder="Place holder"
-          prefix="USD"
+      <Flex gap="extra-large" align="center" style={{ width: "100%", marginTop: 20 }}>
+        <Slider 
+          variant="single" 
+          label="Single Value" 
+          defaultValue={50}
+          onChange={(value) => console.log('Single value:', value)}
         />
-        <Badge size="small" variant="gradient" icon={<HomeIcon />}>
-          Custom Badge
-        </Badge>
-        {/* <Button variant="outline">Click here</Button>
-        <Breadcrumb items={items} size="small" />
-        <DropdownMenu>
-          <DropdownMenu.Trigger asChild>
-            <Button variant="secondary" size="small">Actions</Button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start">
-            <DropdownMenu.EmptyState>
-              <Title>No insights yet</Title>
-              <Text>You need to run a model to generate insights</Text>
-              <Button>Action Button</Button>
-            </DropdownMenu.EmptyState>
-          </DropdownMenu.Content>
-        </DropdownMenu> */}
-        {/* <AvatarGroup max={3}>
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="iris"
-            fallback={<>GS</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="mint"
-            fallback={<>RK</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="orange"
-            fallback={<>RK</>}
-          />
-        </AvatarGroup> */}
+        <Slider 
+          variant="range" 
+          label={["Start", "End"]} 
+          defaultValue={[20, 80]}
+          onChange={(value) => console.log('Range values:', value)}
+        />
 
-        {/* Add Chip examples */}
-        <Flex gap="small" align="center">
-          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
-          <Radio.Root defaultValue="1" aria-label="View options">
-            <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
-              <Radio.Item value="1" id="r1" />
-              <label htmlFor="r1">Option 1</label>
-              <Radio.Item value="2" id="r2" />
-              <label htmlFor="r2">Option 2</label>
-            </Flex>
-          </Radio.Root>
-          {/* <Chip 
-            variant="filled" 
-            size="large" 
-            style="accent"
-            leadingIcon={<PlusIcon />}
-          >
-            Large Accent
-          </Chip>
-
-          <Chip 
-            variant="filled"
-            trailingIcon={<CheckIcon />}
-          >
-            With Icon
-          </Chip>
-
-          <Chip 
-            variant="outline"
-            isDismissible
-            onDismiss={() => console.log('dismissed')}
-          >
-            Dismissible
-          </Chip>
-
-          <Chip 
-            style="accent"
-            leadingIcon={<CheckIcon />}
-            trailingIcon={<Cross1Icon />}
-          >
-            Both Icons
-          </Chip> */}
-        </Flex>
-
-        {/* Add IconButton examples */}
-        <Flex gap="small" align="center">
-          <IconButton size={1}>
-            <PlusIcon />
-          </IconButton>
-          <IconButton size={2}>
-            <PlusIcon />
-          </IconButton>
-          <IconButton size={3}>
-            <PlusIcon />
-          </IconButton>
-          <IconButton size={4}>
-            <PlusIcon />
-          </IconButton>
-
-        </Flex>
-
+        <Slider
+          variant="range" 
+          label={["Min", "Max"]} 
+          defaultValue={[30, 70]}
+          min={0}
+          max={1000}
+          step={10}
+          onChange={(value) => console.log('Custom range:', value)}
+        />
       </Flex>
-      {/* <Flex gap="small">
-        <AssetsFooter />
-        {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
-        <DataTable.ViewOptions />
-        <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex> */}
     </Flex>
   );
 };
