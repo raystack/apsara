@@ -14,6 +14,7 @@ export { InputField } from "./components/inputField";
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
 export { Radio } from './components/radio'
+export { Callout } from './components/callout'
 export {
   ThemeProvider,
   ThemeProviderProps,
