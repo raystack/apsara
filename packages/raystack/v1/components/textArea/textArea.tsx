@@ -16,7 +16,7 @@ const textArea = cva(styles.textarea, {
 export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof textArea>>, 
   HTMLAttributes<HTMLTextAreaElement> {
   label?: string;
-  isOptional?: boolean;
+  required?: boolean;
   // tooltip?: string;
   helperText?: string;
   error?: boolean;
@@ -26,7 +26,7 @@ export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof tex
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, style, label, isOptional, helperText, error, width = "200px", value, onChange, ...props }, ref) => {
+  ({ className, style, label, required, helperText, error, width = "200px", value, onChange, ...props }, ref) => {
     return (
       <div className={styles.container} style={{ width }}>
         {label && (
@@ -34,7 +34,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
             <label className={styles.label}>
               {label}
             </label>
-            {isOptional && <span className={styles.optional}>(optional)</span>}
+            {!required && <span className={styles.optional}>(optional)</span>}
             {/* {tooltip && <span className={styles.helpIcon}><InfoCircledIcon /></span>} */}
           </div>
         )}
@@ -43,6 +43,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           ref={ref}
           value={value}
           onChange={onChange}
+          required={required}
           {...props}
         />
         {helperText && <span className={styles.helperText}>{helperText}</span>}
