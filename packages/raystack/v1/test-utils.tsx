@@ -1,5 +1,5 @@
-import { ReactElement } from 'react';
 import { render as rtlRender, RenderOptions, RenderResult } from '@testing-library/react';
+import { ReactElement } from 'react';
 
 function render(ui: ReactElement, options: RenderOptions = {}): RenderResult {
   return rtlRender(ui, {
