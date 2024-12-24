@@ -88,7 +88,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/spinner",
         newBadge: true,
       },
-      { title: "Switch", slug: "docs/primitives/components/switch" },
+      { title: "Switch", slug: "docs/primitives/components/switch", newBadge: true },
       { title: "Slider", slug: "docs/primitives/components/slider", newBadge: true },
       { title: "Tabs", slug: "docs/primitives/components/tabs" },
       { title: "Table", slug: "docs/primitives/components/table" },

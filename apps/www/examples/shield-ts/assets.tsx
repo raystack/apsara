@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Slider } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -207,30 +207,7 @@ const AssetsHeader = () => {
       justify="between"
       style={{ width: "100%", padding: "4px" }}
     >
-      <Flex gap="extra-large" align="center" style={{ width: "100%", marginTop: 20 }}>
-        <Slider 
-          variant="single" 
-          label="Single Value" 
-          defaultValue={50}
-          onChange={(value) => console.log('Single value:', value)}
-        />
-        <Slider 
-          variant="range" 
-          label={["Start", "End"]} 
-          defaultValue={[20, 80]}
-          onChange={(value) => console.log('Range values:', value)}
-        />
-
-        <Slider
-          variant="range" 
-          label={["Min", "Max"]} 
-          defaultValue={[30, 70]}
-          min={0}
-          max={1000}
-          step={10}
-          onChange={(value) => console.log('Custom range:', value)}
-        />
-      </Flex>
+     
     </Flex>
   );
 };

@@ -13,9 +13,10 @@ export { Flex } from "./components/flex";
 export { InputField } from "./components/inputField";
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
-export { Slider } from "./components/slider";
-export { IconButton } from "./components/iconButton";
+export { Switch } from "./components/switch";
 export { Radio } from "./components/radio";
+export { IconButton } from "./components/iconButton";
+export { Slider } from "./components/slider";
 export {
   ThemeProvider,
   ThemeProviderProps,
