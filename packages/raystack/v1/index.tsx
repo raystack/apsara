@@ -13,7 +13,6 @@ export { Flex } from "./components/flex";
 export { InputField } from "./components/inputField";
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
-export { Badge } from "./components/badge";
 export { Switch } from "./components/switch";
 export {
   ThemeProvider,

@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, IconButton, Radio, Switch } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Switch } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -272,14 +272,14 @@ const AssetsHeader = () => {
 
           <Switch checked />
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
-          <Radio.Root defaultValue="1" aria-label="View options">
+          {/* <Radio.Root defaultValue="1" aria-label="View options">
             <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
               <Radio.Item value="1" id="r1" />
               <label htmlFor="r1">Option 1</label>
               <Radio.Item value="2" id="r2" />
               <label htmlFor="r2">Option 2</label>
             </Flex>
-          </Radio.Root>
+          </Radio.Root> */}
           {/* <Chip 
             variant="filled" 
             size="large" 
@@ -315,7 +315,7 @@ const AssetsHeader = () => {
 
         {/* Add IconButton examples */}
         <Flex gap="small" align="center">
-          <IconButton size={1}>
+          {/* <IconButton size={1}>
             <PlusIcon />
           </IconButton>
           <IconButton size={2}>
@@ -326,7 +326,7 @@ const AssetsHeader = () => {
           </IconButton>
           <IconButton size={4}>
             <PlusIcon />
-          </IconButton>
+          </IconButton> */}
 
         </Flex>
 
