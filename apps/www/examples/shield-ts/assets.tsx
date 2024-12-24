@@ -219,7 +219,7 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
@@ -265,7 +265,6 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-
           {/* <Chip 
             variant="filled" 
             size="large" 
