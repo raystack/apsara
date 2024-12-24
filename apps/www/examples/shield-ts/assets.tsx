@@ -219,15 +219,12 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        />
-        <Badge size="small" variant="gradient" icon={<HomeIcon />}>
-          Custom Badge
-        </Badge>
+        /> */}
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -266,6 +263,7 @@ const AssetsHeader = () => {
           />
         </AvatarGroup> */}
 
+        
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
