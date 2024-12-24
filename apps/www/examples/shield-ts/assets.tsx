@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, CaretLeftIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, TextArea } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -225,9 +225,6 @@ const AssetsHeader = () => {
           placeholder="Place holder"
           prefix="USD"
         />
-        <Badge size="small" variant="gradient" icon={<HomeIcon />}>
-          Custom Badge
-        </Badge> */}
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -268,7 +265,6 @@ const AssetsHeader = () => {
 
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
           {/* <Chip 
             variant="filled" 
             size="large" 
@@ -303,8 +299,8 @@ const AssetsHeader = () => {
         </Flex>
 
         {/* Add IconButton examples */}
-        {/* <Flex gap="small" align="center">
-          <IconButton size={1}>
+        <Flex gap="small" align="center">
+          {/* <IconButton size={1}>
             <PlusIcon />
           </IconButton>
           <IconButton size={2}>
@@ -317,7 +313,7 @@ const AssetsHeader = () => {
             <PlusIcon />
           </IconButton> */}
 
-        {/* </Flex> */}
+        </Flex>
 
       </Flex>
       {/* <Flex gap="small">
