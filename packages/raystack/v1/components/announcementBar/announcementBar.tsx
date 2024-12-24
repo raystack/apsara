@@ -1,9 +1,9 @@
-import styles from "./announcementBar.module.css";
-
 import { cva, type VariantProps } from "class-variance-authority";
 import { ReactNode } from "react";
+
 import { Flex } from "../flex";
 import { Text } from "../text";
+import styles from "./announcementBar.module.css";
 
 const announementBar = cva(styles["announcement-bar"], {
   variants: {
