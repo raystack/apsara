@@ -4,6 +4,7 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode, useEffect,
 import styles from "./inputField.module.css";
 
 // Todo: Add a dropdown and chip support
+// Todo: Add small sizer variant. Updated in Figma
 
 export interface InputFieldProps
   extends Omit<ComponentPropsWithoutRef<"input">, "error"> {
