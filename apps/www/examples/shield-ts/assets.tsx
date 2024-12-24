@@ -1,13 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon } from "@radix-ui/react-icons";
+import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, IconButton, Radio } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Callout } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -219,15 +219,24 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        />
-        <Badge size="small" variant="gradient" icon={<HomeIcon />}>
+        /> */}
+        {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
-        </Badge>
+        </Badge> */}
+        <Callout 
+          type="alert" 
+          dismissible
+          onDismiss={() => console.log('dismissed')}
+          action={<Button size="small" variant="secondary">Action</Button>}
+          width={400}
+        >
+          This is a success message with all features enabled.
+        </Callout>
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -269,14 +278,14 @@ const AssetsHeader = () => {
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
-          <Radio.Root defaultValue="1" aria-label="View options">
+          {/* <Radio.Root defaultValue="1" aria-label="View options">
             <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
               <Radio.Item value="1" id="r1" />
               <label htmlFor="r1">Option 1</label>
               <Radio.Item value="2" id="r2" />
               <label htmlFor="r2">Option 2</label>
             </Flex>
-          </Radio.Root>
+          </Radio.Root> */}
           {/* <Chip 
             variant="filled" 
             size="large" 
@@ -311,7 +320,7 @@ const AssetsHeader = () => {
         </Flex>
 
         {/* Add IconButton examples */}
-        <Flex gap="small" align="center">
+        {/* <Flex gap="small" align="center">
           <IconButton size={1}>
             <PlusIcon />
           </IconButton>
@@ -325,7 +334,7 @@ const AssetsHeader = () => {
             <PlusIcon />
           </IconButton>
 
-        </Flex>
+        </Flex> */}
 
       </Flex>
       {/* <Flex gap="small">
