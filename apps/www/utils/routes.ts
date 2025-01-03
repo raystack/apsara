@@ -100,6 +100,7 @@ export const primitivesRoutes = [
       },
       { title: "Text Field", slug: "docs/primitives/components/textfield" },
       { title: "Tooltip", slug: "docs/primitives/components/tooltip", newBadge: true },
+      { title: "Text Area", slug: "docs/primitives/components/textArea", newBadge: true },
       { title: "Toggle Group", slug: "docs/primitives/components/togglegroup" },
       {
         title: "Toast",

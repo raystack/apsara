@@ -1,0 +1,99 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+  width: 200px;
+}
+
+.labelContainer {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-text-base-secondary);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+}
+
+.helpIcon {
+  color: var(--rs-color-text-base-secondary);
+  display: flex;
+  align-items: center;
+  margin-left: var(--rs-space-2);
+  width: 12px;
+  height: 12px;
+}
+
+.optional {
+  color: var(--rs-color-text-base-tertiary);
+  font-size: 11px;
+}
+
+.helperText {
+  color: var(--rs-color-text-base-secondary);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+}
+
+.textarea {
+  appearance: none;
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  height: auto;
+  width: 100%;
+  min-height: 64px;
+  background-color: var(--rs-color-background-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
+  border-radius: var(--rs-radius-2);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rs-color-text-base-primary);
+  padding: var(--rs-space-3);
+  box-shadow: 0px 1px 2px #1018280F;
+  font-family: inherit;
+  box-shadow: inset 0 0 0 0.5px transparent;
+}
+
+.textarea:focus {
+  border: 0.5px solid var(--rs-color-border-accent-emphasis);
+  box-shadow: inset 0 0 0 0.5px var(--rs-color-border-accent-emphasis), 0px 1px 2px #1018280F;
+}
+
+.textarea:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.textarea::placeholder {
+  color: var(--rs-color-text-base-tertiary);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  font-family: inherit;
+}
+
+.textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none;
+  background-color: var(--rs-color-background-base-secondary);
+}
+
+.textarea:read-only {
+  background-color: var(--rs-color-background-base-secondary);
+}
+
+.error {
+  border: 0.5px solid var(--rs-color-border-danger-emphasis);
+  box-shadow: inset 0 0 0 0.5px var(--rs-color-border-danger-emphasis), 0px 1px 2px #1018280F;
+}
+  
