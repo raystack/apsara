@@ -1,0 +1,63 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.indicator {
+  position: absolute;
+  top: calc(-1 * var(--rs-space-2));
+  right: calc(-1 * var(--rs-space-2));
+  z-index: 99999;
+  border-radius: var(--rs-radius-full);
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.label {
+  display: inline-block;
+  padding: var(--rs-space-1) var(--rs-space-2);
+}
+
+.indicator:has(.label) {
+  top: calc(-1 * var(--rs-space-4));
+  right: calc(-1 * var(--rs-space-6));
+}
+
+/* This adjusts the right side spacing if the label is 1 or 2 characters */
+.indicator:has(.label[data-length="1"]),
+.indicator:has(.label[data-length="2"]) {
+  right: calc(-1 * var(--rs-space-3));
+}
+
+.dot {
+  display: block;
+  width: var(--rs-space-3);
+  height: var(--rs-space-3);
+  border-radius: var(--rs-radius-full);
+}
+
+.indicator-variant-accent {
+  background-color: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-text-accent-emphasis);
+}
+
+.indicator-variant-warning {
+  background-color: var(--rs-attention-9);
+  color: var(--rs-color-text-attention-emphasis);
+}
+
+.indicator-variant-danger {
+  background-color: var(--rs-color-background-danger-emphasis);
+  color: var(--rs-color-text-danger-emphasis);
+}
+
+.indicator-variant-success {
+  background-color: var(--rs-color-background-success-emphasis);
+  color: var(--rs-color-text-success-emphasis);
+}
+
+.indicator-variant-neutral {
+  background-color: var(--rs-color-background-neutral-emphasis);
+  color: var(--rs-color-text-base-emphasis);
+}
