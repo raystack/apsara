@@ -6,6 +6,7 @@ export { Badge } from "./components/badge";
 export { Box } from "./components/box";
 export { Breadcrumb } from "./components/breadcrumb";
 export { Button } from "./components/button";
+export { Callout } from "./components/callout";
 export { Checkbox } from "./components/checkbox";
 export { Chip } from "./components/chip";
 export { DropdownMenu } from "./components/dropdownMenu";
@@ -15,13 +16,11 @@ export { IconButton } from "./components/iconButton";
 export { Indicator } from "./components/indicator";
 export { InputField } from "./components/inputField";
 export { Radio } from "./components/radio";
-export { Spinner } from "./components/spinner";
-export { Text } from "./components/text";
-export { Callout } from "./components/callout";
-export { Tooltip } from "./components/tooltip";
-export { TextArea } from "./components/textArea";
-export { Switch } from "./components/switch";
 export { Slider } from "./components/slider";
+export { Spinner } from "./components/spinner";
+export { Switch } from "./components/switch";
+export { Text } from "./components/text";
+export { TextArea } from "./components/textArea";
 export {
   ThemeProvider,
   ThemeProviderProps,
@@ -29,3 +28,4 @@ export {
   useTheme,
 } from "./components/themeProvider";
 export { toast, ToastContainer } from "./components/toast";
+export { Tooltip } from "./components/tooltip";

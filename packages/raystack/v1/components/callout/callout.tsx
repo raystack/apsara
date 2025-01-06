@@ -1,7 +1,8 @@
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { type ComponentPropsWithoutRef } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+
 import styles from './callout.module.css';
 
 const callout = cva(styles.callout, {

@@ -1,6 +1,7 @@
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { cva } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+
 import styles from "./switch.module.css";
 
 const switchVariants = cva(styles.switch);
