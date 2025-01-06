@@ -32,7 +32,7 @@ body, p, div, span {
 /* CSS for the type cursor */
 input, textarea {
   caret-color: var(--rs-color-border-accent-emphasis);
-  animation: dissolve-hide 100ms ease-out 500ms infinite;
+  /* animation: dissolve-hide 100ms ease-out 500ms infinite; */
 }
 
 @keyframes dissolve-hide {
