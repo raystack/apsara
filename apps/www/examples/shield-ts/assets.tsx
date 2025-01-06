@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Callout } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -228,15 +228,7 @@ const AssetsHeader = () => {
         {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
         </Badge> */}
-        <Callout 
-          type="alert" 
-          dismissible
-          onDismiss={() => console.log('dismissed')}
-          action={<Button size="small" variant="secondary">Action</Button>}
-          width={400}
-        >
-          This is a success message with all features enabled.
-        </Callout>
+        
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
