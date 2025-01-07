@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode, useEffect, useRef, useState } from "react";
 
-import styles from "./inputField.module.css";
+import styles from "./input-field.module.css";
 
 // Todo: Add a dropdown and chip support
 // Todo: Add small sizer variant. Updated in Figma

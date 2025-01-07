@@ -1,7 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 
-import styles from './iconButton.module.css';
+import styles from './icon-button.module.css';
 
 const iconButton = cva(styles.iconButton, {
   variants: {

@@ -3,7 +3,7 @@ import { HTMLAttributes, PropsWithChildren } from "react";
 import { VariantProps, cva, cx } from "class-variance-authority";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 
-import styles from "./textarea.module.css";
+import styles from "./text-area.module.css";
 
 const textArea = cva(styles.textarea, {
   variants: {

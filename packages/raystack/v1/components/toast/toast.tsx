@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { toast as sonnerToast,Toaster, type ToasterProps } from "sonner";
 
-import { useTheme } from "../themeProvider";
-import { UseThemeProps } from "../themeProvider/types";
+import { useTheme } from "../theme-provider";
+import { UseThemeProps } from "../theme-provider/types";
 import styles from "./toast.module.css";
 
 interface ToastContainerProps extends ToasterProps {}

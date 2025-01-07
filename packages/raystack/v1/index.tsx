@@ -1,6 +1,6 @@
 import "./styles/index.css";
 
-export { AnnouncementBar } from "./components/announcementBar";
+export { AnnouncementBar } from "./components/announcement-bar";
 export { Avatar, AvatarGroup } from "./components/avatar";
 export { Badge } from "./components/badge";
 export { Box } from "./components/box";
@@ -8,18 +8,18 @@ export { Breadcrumb } from "./components/breadcrumb";
 export { Button } from "./components/button";
 export { Checkbox } from "./components/checkbox";
 export { Chip } from "./components/chip";
-export { DropdownMenu } from "./components/dropdownMenu";
-export { EmptyState } from "./components/emptyState";
+export { DropdownMenu } from "./components/dropdown-menu";
+export { EmptyState } from "./components/empty-state";
 export { Flex } from "./components/flex";
-export { IconButton } from "./components/iconButton";
+export { IconButton } from "./components/icon-button";
 export { Indicator } from "./components/indicator";
-export { InputField } from "./components/inputField";
+export { InputField } from "./components/input-field";
 export { Radio } from "./components/radio";
 export { Spinner } from "./components/spinner";
 export { Text } from "./components/text";
 export { Callout } from "./components/callout";
 export { Tooltip } from "./components/tooltip";
-export { TextArea } from "./components/textArea";
+export { TextArea } from "./components/text-area";
 export { Switch } from "./components/switch";
 export { Slider } from "./components/slider";
 export {
@@ -27,5 +27,5 @@ export {
   ThemeProviderProps,
   ThemeSwitcher,
   useTheme,
-} from "./components/themeProvider";
+} from "./components/theme-provider";
 export { toast, ToastContainer } from "./components/toast";
