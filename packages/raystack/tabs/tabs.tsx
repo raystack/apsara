@@ -13,6 +13,9 @@ export interface TabsRootProps
     VariantProps<typeof root> {}
 
 
+/**
+ * @deprecated Use TabsRoot from '@raystack/apsara/v1' instead.
+ */
 const TabsRoot = ({ className, ...props }: TabsRootProps) => (
   <TabsPrimitive.Root className={root({ className })} {...props} />
 );
