@@ -219,12 +219,12 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        {/* <InputField
+        <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        /> */}
+        />
         {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
         </Badge> */}
