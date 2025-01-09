@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 import { Flex } from "../flex";
 import { Text } from "../text";
-import styles from "./announcementBar.module.css";
+import styles from "./announcement-bar.module.css";
 
 const announementBar = cva(styles["announcement-bar"], {
   variants: {

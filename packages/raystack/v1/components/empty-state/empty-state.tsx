@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 import { Flex } from "../flex";
 import { Text } from "../text";
-import styles from "./emptyState.module.css";
+import styles from "./empty-state.module.css";
 
 type classNameKeys =
   | "container"
