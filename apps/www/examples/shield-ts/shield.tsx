@@ -17,7 +17,7 @@ export const Shield = () => {
 
   return (
     <>
-      <AnnouncementBar
+      {/* <AnnouncementBar
         variant="gradient"
         text="We have released new components with better theme support"
         leadingIcon={<RocketIcon />}
@@ -26,7 +26,7 @@ export const Shield = () => {
         onActionClick={() =>
           router.push("/docs/primitives/overview/introduction")
         }
-      />
+      /> */}
       <Flex style={{ height: "100%" }}>
         <Sidebar>
           <Flex direction="column">

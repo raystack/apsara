@@ -37,6 +37,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/button",
         newBadge: true,
       },
+      { title: "Callout", slug: "docs/primitives/components/callout", newBadge: true },
       { title: "Calendar", slug: "docs/primitives/components/calendar", newBadge: true },
       { title: "Command", slug: "docs/primitives/components/command" },
       {
@@ -71,6 +72,7 @@ export const primitivesRoutes = [
       { title: "Headline", slug: "docs/primitives/components/headline" },
       { title: "IconButton", slug: "docs/primitives/components/iconButton", newBadge: true },
       { title: "Image", slug: "docs/primitives/components/image" },
+      { title: "Indicator", slug: "docs/primitives/components/indicator", newBadge: true },
       {
         title: "Input Field",
         slug: "docs/primitives/components/inputField",
@@ -88,7 +90,8 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/spinner",
         newBadge: true,
       },
-      { title: "Switch", slug: "docs/primitives/components/switch" },
+      { title: "Switch", slug: "docs/primitives/components/switch", newBadge: true },
+      { title: "Slider", slug: "docs/primitives/components/slider", newBadge: true },
       { title: "Tabs", slug: "docs/primitives/components/tabs" },
       { title: "Table", slug: "docs/primitives/components/table" },
       {
@@ -97,7 +100,8 @@ export const primitivesRoutes = [
         newBadge: true,
       },
       { title: "Text Field", slug: "docs/primitives/components/textfield" },
-      { title: "Tooltip", slug: "docs/primitives/components/tooltip" },
+      { title: "Tooltip", slug: "docs/primitives/components/tooltip", newBadge: true },
+      { title: "Text Area", slug: "docs/primitives/components/textArea", newBadge: true },
       { title: "Toggle Group", slug: "docs/primitives/components/togglegroup" },
       {
         title: "Toast",
