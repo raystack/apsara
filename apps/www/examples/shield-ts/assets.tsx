@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Tabs } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -207,7 +207,42 @@ const AssetsHeader = () => {
       justify="between"
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
-      <Flex gap="extra-large" align="center">
+      <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
+        <Tabs.Root defaultValue="general">
+          <Tabs.List>
+            <Tabs.Trigger value="general" icon={<HomeIcon />}>
+              General
+            </Tabs.Trigger>
+            <Tabs.Trigger value="hosting">
+              Hosting
+            </Tabs.Trigger>
+            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />}>
+              Editor
+            </Tabs.Trigger>
+            <Tabs.Trigger value="billing">
+              Billing
+            </Tabs.Trigger>
+            <Tabs.Trigger value="seo" disabled>
+              SEO
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="general">
+            <Text>General settings content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="hosting">
+            <Text>Hosting configuration content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="editor">
+            <Text>Editor preferences content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="billing">
+            <Text>Billing information content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="seo">
+            <Text>SEO settings content</Text>
+          </Tabs.Content>
+        </Tabs.Root>
+
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
         <div>
