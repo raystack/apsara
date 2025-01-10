@@ -9,16 +9,12 @@ radix:
 ## Preview
 
 <Preview>
-  <Flex direction="column" gap="large">
+  <Flex direction="row" gap="large" style={{ width: "100%", fontSize: "12px" }}>
     <Tabs.Root defaultValue="tab-one">
       <Tabs.List>
-        <Tabs.Trigger value="tab-one" icon={<InfoCircledIcon />}>
-          General
-        </Tabs.Trigger>
+        <Tabs.Trigger value="tab-one" icon={<InfoCircledIcon />}>Hoisting</Tabs.Trigger>
         <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
-        <Tabs.Trigger value="tab-three" icon={<InfoCircledIcon />}>
-          Editor
-        </Tabs.Trigger>
+        <Tabs.Trigger value="tab-three" icon={<InfoCircledIcon />}>Editor</Tabs.Trigger>
         <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
         <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
       </Tabs.List>
@@ -125,14 +121,16 @@ The Tabs component is composed of several parts, each with their own props:
     {
       name: "With Icons",
       code: `
-<Tabs.Root defaultValue="tab1">
-  <Tabs.List>
-    <Tabs.Trigger value="tab1" icon={<InfoCircledIcon />}>Home</Tabs.Trigger>
-    <Tabs.Trigger value="tab2" icon={<InfoCircledIcon />} />
-  </Tabs.List>
-  <Tabs.Content value="tab1">Home content</Tabs.Content>
-  <Tabs.Content value="tab2">Info content</Tabs.Content>
-</Tabs.Root>`,
+<div style={{ width: "100px" }}>
+  <Tabs.Root defaultValue="tab1">
+    <Tabs.List>
+      <Tabs.Trigger value="tab1">Home</Tabs.Trigger>
+      <Tabs.Trigger value="tab2" icon={<InfoCircledIcon />} />
+    </Tabs.List>
+    <Tabs.Content value="tab1">Home</Tabs.Content>
+    <Tabs.Content value="tab2">Info</Tabs.Content>
+  </Tabs.Root>
+  </div>`,
     },
   ]}
 />

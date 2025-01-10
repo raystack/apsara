@@ -216,7 +216,7 @@ const AssetsHeader = () => {
             <Tabs.Trigger value="hosting" disabled>
               Hosting
             </Tabs.Trigger>
-            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />} />
+            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />} disabled />
             <Tabs.Trigger value="billing">
               Billing
             </Tabs.Trigger>

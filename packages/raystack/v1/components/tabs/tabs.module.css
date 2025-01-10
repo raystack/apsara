@@ -17,7 +17,7 @@
 
 .trigger {
   all: unset;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--rs-space-2);
@@ -34,16 +34,21 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  height: 28px;
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 .trigger:hover:not([data-disabled]) {
   color: var(--rs-color-text-base-primary);
 }
 
-.trigger[data-state='active']:not([data-disabled]) {
+.trigger[data-state='active'] {
   background-color: var(--rs-color-background-base-primary);
   color: var(--rs-color-text-base-primary);
   box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.06), 0px 4px 4px -1px rgba(0, 0, 0, 0.02);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .trigger[data-disabled] {
@@ -58,11 +63,13 @@
   width: 16px;
   height: 16px;
   color: currentColor;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .content {
   outline: none;
-  padding: var(--rs-space-4);
 }
 
 .content[data-state='inactive'] {
