@@ -52,6 +52,7 @@ const TabsTrigger = forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={trigger({ className })}
+    disabled={disabled}
     aria-disabled={disabled}
     {...props}
   >

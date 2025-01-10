@@ -12,7 +12,7 @@ radix:
   <Flex direction="column" gap="large">
     <Tabs.Root defaultValue="tab-one">
       <Tabs.List>
-        <Tabs.Trigger value="tab-one" icon="O">
+        <Tabs.Trigger value="tab-one" icon={<InfoCircledIcon />}>
           General
         </Tabs.Trigger>
         <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
@@ -20,9 +20,7 @@ radix:
           Editor
         </Tabs.Trigger>
         <Tabs.Trigger value="tab-four">Billing</Tabs.Trigger>
-        <Tabs.Trigger value="tab-five" disabled>
-          SEO
-        </Tabs.Trigger>
+        <Tabs.Trigger value="tab-five">SEO</Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="tab-one">
         <Text>General settings content</Text>
@@ -74,10 +72,10 @@ The Tabs component is composed of several parts, each with their own props:
 
 ### Root Props
 
-- `defaultValue`: The initial active tab value
-- `value`: Controlled active tab value
-- `onValueChange`: Callback when active tab changes
-- `className`: Additional CSS class names
+- `defaultValue`: The initial active tab value. If not passed, no tab will be selected by default.
+- `value`: Controlled active tab value.
+- `onValueChange`: Callback when active tab changes.
+- `className`: Additional CSS class names.
 
 ### List Props
 
@@ -129,8 +127,8 @@ The Tabs component is composed of several parts, each with their own props:
       code: `
 <Tabs.Root defaultValue="tab1">
   <Tabs.List>
-    <Tabs.Trigger value="tab1" icon="O">Home</Tabs.Trigger>
-    <Tabs.Trigger value="tab2" icon={<InfoCircledIcon />}>Info</Tabs.Trigger>
+    <Tabs.Trigger value="tab1" icon={<InfoCircledIcon />}>Home</Tabs.Trigger>
+    <Tabs.Trigger value="tab2" icon={<InfoCircledIcon />} />
   </Tabs.List>
   <Tabs.Content value="tab1">Home content</Tabs.Content>
   <Tabs.Content value="tab2">Info content</Tabs.Content>

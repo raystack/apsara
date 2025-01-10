@@ -210,15 +210,17 @@ const AssetsHeader = () => {
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
         <Tabs.Root defaultValue="general">
           <Tabs.List>
-            <Tabs.Trigger value="general" icon={<HomeIcon />} />
-            <Tabs.Trigger value="hosting">
+            <Tabs.Trigger value="general" icon={<HomeIcon />}>
+              Home
+            </Tabs.Trigger>
+            <Tabs.Trigger value="hosting" disabled>
               Hosting
             </Tabs.Trigger>
             <Tabs.Trigger value="editor" icon={<InfoCircledIcon />} />
             <Tabs.Trigger value="billing">
               Billing
             </Tabs.Trigger>
-            <Tabs.Trigger value="seo" disabled>
+            <Tabs.Trigger value="seo">
               SEO
             </Tabs.Trigger>
           </Tabs.List>
