@@ -154,25 +154,6 @@ export const Assets = () => {
 
   return (
     <>
-      <Sidepanel.Root open={sidebarOpen} onOpenChange={setSidebarOpen} position="left">
-        <Sidepanel.Header 
-          logo={<HomeIcon width={24} height={24} />} 
-          title="The North Face" 
-        />
-        <Sidepanel.Main>
-          <Sidepanel.Item href="#" icon={<HomeIcon />} active>Explore</Sidepanel.Item>
-          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>AOIs</Sidepanel.Item>
-          <Sidepanel.Item href="#" icon={<PlusIcon />}>Workflows</Sidepanel.Item>
-          <Sidepanel.Item href="#" icon={<CheckIcon />}>Marketplace</Sidepanel.Item>
-          <Sidepanel.Item href="#" icon={<Cross1Icon />}>Activity</Sidepanel.Item>
-        </Sidepanel.Main>
-        <Sidepanel.Footer>
-          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Feedback</Sidepanel.Item>
-          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Support</Sidepanel.Item>
-          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidepanel.Item>
-        </Sidepanel.Footer>
-      </Sidepanel.Root>
-
       <DataTable
         columns={columns}
         data={data}
