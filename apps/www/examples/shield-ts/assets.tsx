@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Sidepanel } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -95,6 +95,7 @@ export const Assets = () => {
   const [page, setPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
@@ -153,6 +154,25 @@ export const Assets = () => {
 
   return (
     <>
+      <Sidepanel.Root open={sidebarOpen} onOpenChange={setSidebarOpen} position="left">
+        <Sidepanel.Header 
+          logo={<HomeIcon width={24} height={24} />} 
+          title="The North Face" 
+        />
+        <Sidepanel.Main>
+          <Sidepanel.Item href="#" icon={<HomeIcon />} active>Explore</Sidepanel.Item>
+          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>AOIs</Sidepanel.Item>
+          <Sidepanel.Item href="#" icon={<PlusIcon />}>Workflows</Sidepanel.Item>
+          <Sidepanel.Item href="#" icon={<CheckIcon />}>Marketplace</Sidepanel.Item>
+          <Sidepanel.Item href="#" icon={<Cross1Icon />}>Activity</Sidepanel.Item>
+        </Sidepanel.Main>
+        <Sidepanel.Footer>
+          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Feedback</Sidepanel.Item>
+          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Support</Sidepanel.Item>
+          <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidepanel.Item>
+        </Sidepanel.Footer>
+      </Sidepanel.Root>
+
       <DataTable
         columns={columns}
         data={data}
@@ -208,6 +228,7 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center">
+    {/* More footer items */}
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
         <div>
