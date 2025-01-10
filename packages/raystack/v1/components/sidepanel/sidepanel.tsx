@@ -31,9 +31,6 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
       {...props}
     >
       {children}
-      <Collapsible.Trigger className={styles.toggle} aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}>
-        O
-      </Collapsible.Trigger>
     </Collapsible.Root>
   )
 );
