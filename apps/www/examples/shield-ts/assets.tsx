@@ -207,20 +207,16 @@ const AssetsHeader = () => {
       justify="between"
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
-      <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
+      <Flex gap="extra-large" align="center" style={{ width: "40%" }}>
         <Tabs.Root defaultValue="general">
           <Tabs.List>
-            <Tabs.Trigger value="general" icon={<HomeIcon />}>
-              General
-            </Tabs.Trigger>
+            <Tabs.Trigger value="general" icon={<HomeIcon />} />
             <Tabs.Trigger value="hosting">
               Hosting
             </Tabs.Trigger>
-            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />}>
-              Editor
-            </Tabs.Trigger>
+            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />} />
             <Tabs.Trigger value="billing">
-              Billing
+              Billing Billing billing
             </Tabs.Trigger>
             <Tabs.Trigger value="seo" disabled>
               SEO
