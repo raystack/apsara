@@ -22,6 +22,7 @@ export { Tooltip } from "./components/tooltip";
 export { TextArea } from "./components/textArea";
 export { Switch } from "./components/switch";
 export { Slider } from "./components/slider";
+export { Calendar, DatePicker, RangePicker } from "./components/calendar";
 export {
   ThemeProvider,
   ThemeProviderProps,
