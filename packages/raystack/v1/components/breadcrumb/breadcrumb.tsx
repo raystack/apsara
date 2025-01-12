@@ -2,7 +2,7 @@ import { ChevronDownIcon,DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cva, type VariantProps } from "class-variance-authority";
 import React, { forwardRef, PropsWithChildren } from "react";
 
-import { DropdownMenu } from "../dropdownMenu";
+import { DropdownMenu } from "../dropdown-menu";
 import styles from "./breadcrumb.module.css";
 
 interface BreadcrumbItem {
