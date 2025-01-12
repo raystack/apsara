@@ -7,7 +7,8 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Calendar, RangePicker } from "@raystack/apsara/v1";
+
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Tabs } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -168,38 +169,7 @@ export const Assets = () => {
         <DataTable.Toolbar>
           <AssetsHeader />
           <DataTable.FilterChips />
-          <Flex direction="column" gap="medium" style={{ padding: "16px" }}>
-            {/* Calendar example */}
-            <Flex direction="column" gap="small">
-              <Text>Single Date Picker:</Text>
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                showOutsideDays={false}
-              />
-            </Flex>
-
-            {/* Range Picker example */}
-            <Flex direction="column" gap="small">
-              <Text>Date Range Picker:</Text>
-              <RangePicker
-                value={dateRange}
-                onSelect={(range) => setDateRange({ 
-                  from: range.from || new Date(), 
-                  to: range.to || new Date() 
-                })}
-                dateFormat="MM/DD/YYYY"
-                side="bottom"
-                calendarProps={{
-                  showOutsideDays: false,
-                  mode: "range",
-                  required: true,
-                  selected: dateRange
-                }}
-              />
-            </Flex>
-          </Flex>
+          
           <Flex gap="small">
             <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
             <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button>
@@ -244,7 +214,40 @@ const AssetsHeader = () => {
       justify="between"
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
-      <Flex gap="extra-large" align="center">
+      <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
+        <Tabs.Root defaultValue="general">
+          <Tabs.List>
+            <Tabs.Trigger value="general" icon={<HomeIcon />}>
+              Home
+            </Tabs.Trigger>
+            <Tabs.Trigger value="hosting" disabled>
+              Hosting
+            </Tabs.Trigger>
+            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />} disabled />
+            <Tabs.Trigger value="billing">
+              Billing
+            </Tabs.Trigger>
+            <Tabs.Trigger value="seo">
+              SEO
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="general">
+            <Text>General settings content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="hosting">
+            <Text>Hosting configuration content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="editor">
+            <Text>Editor preferences content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="billing">
+            <Text>Billing information content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="seo">
+            <Text>SEO settings content</Text>
+          </Tabs.Content>
+        </Tabs.Root>
+
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
         <div>
