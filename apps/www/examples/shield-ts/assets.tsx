@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Calendar, RangePicker } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -95,6 +95,11 @@ export const Assets = () => {
   const [page, setPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [dateRange, setDateRange] = useState({
+    from: new Date(),
+    to: new Date(),
+  });
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
@@ -163,6 +168,38 @@ export const Assets = () => {
         <DataTable.Toolbar>
           <AssetsHeader />
           <DataTable.FilterChips />
+          <Flex direction="column" gap="medium" style={{ padding: "16px" }}>
+            {/* Calendar example */}
+            <Flex direction="column" gap="small">
+              <Text>Single Date Picker:</Text>
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                showOutsideDays={false}
+              />
+            </Flex>
+
+            {/* Range Picker example */}
+            <Flex direction="column" gap="small">
+              <Text>Date Range Picker:</Text>
+              <RangePicker
+                value={dateRange}
+                onSelect={(range) => setDateRange({ 
+                  from: range.from || new Date(), 
+                  to: range.to || new Date() 
+                })}
+                dateFormat="MM/DD/YYYY"
+                side="bottom"
+                calendarProps={{
+                  showOutsideDays: false,
+                  mode: "range",
+                  required: true,
+                  selected: dateRange
+                }}
+              />
+            </Flex>
+          </Flex>
           <Flex gap="small">
             <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
             <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button>
