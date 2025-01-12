@@ -175,6 +175,8 @@
   padding: 0;
   border: none;
   min-width: max-content;
+  width: fit-content;
+  max-width: none !important;
 }
 
 .dropdowns {
