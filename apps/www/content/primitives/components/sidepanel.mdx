@@ -12,20 +12,12 @@ description: A collapsible side navigation panel component.
       title="Company Name"
     />
     <Sidepanel.Main>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
-        Dashboard
-      </Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-        Analytics
-      </Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-        Settings
-      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Analytics</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
     </Sidepanel.Main>
     <Sidepanel.Footer>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-        Help
-      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Help</Sidepanel.Item>
     </Sidepanel.Footer>
   </Sidepanel.Root>
 </Preview>
@@ -48,10 +40,7 @@ The Sidepanel component provides a collapsible navigation panel with header, mai
 export default function App() {
   return (
     <Sidepanel.Root open={true}>
-      <Sidepanel.Header 
-        logo={<InfoCircledIcon />} 
-        title="Company Name" 
-      />
+      <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
       <Sidepanel.Main>
         <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
           Dashboard
