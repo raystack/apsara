@@ -1,9 +1,14 @@
 .root {
   display: flex;
-  flex-direction: column;
+  width: 220px;
   height: 100vh;
-  background-color: var(--rs-color-background-base-primary);
+  padding-left: var(--rs-space-3);
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-shrink: 0;
   border-right: 1px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
   transition: width 0.2s ease;
 }
 
@@ -31,22 +36,25 @@
   align-self: stretch;
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
-  border-bottom: 1px solid var(--rs-color-border-base-primary);
   height: 56px;
 }
 
 .logo {
-  width: 32px;
-  height: 32px;
+  width: var(--rs-space-7);
+  height: var(--rs-space-7);
+  border-radius: var(--rs-radius-2);
   flex-shrink: 0;
 }
 
 .title {
-  font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-sm);
-  color: var(--rs-color-text-base-primary);
-  white-space: nowrap;
+  flex: 1 0 0;
   overflow: hidden;
+  color: var(--rs-color-text-base-primary);
+  text-overflow: ellipsis;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
 }
 
 .main {
@@ -66,9 +74,10 @@
 
 .nav-item {
   display: flex;
+  padding: var(--rs-space-3);
   align-items: center;
   gap: var(--rs-space-3);
-  padding: var(--rs-space-2) var(--rs-space-3);
+  align-self: stretch;
   border-radius: var(--rs-radius-2);
   color: var(--rs-color-text-base-secondary);
   cursor: pointer;
