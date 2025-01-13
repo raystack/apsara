@@ -20,13 +20,13 @@ Discover why users choose Apsara as the design system for their projects
 ```sh
 $ yarn add @odpf/apsara
 # or
-$ npm install --save @odpf/apsara
+$ npm install --save @raystack/apsara/v1
 ```
 
 Use Apsara components inside your react project
 
 ```js
-import { Button } from "@odpf/apsara";
+import { Button } from "@raystack/apsara/v1";
 
 <Button type="primary">
   I am using 🧚‍♀️ Apsara!
