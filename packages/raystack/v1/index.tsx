@@ -23,6 +23,7 @@ export { TextArea } from "./components/text-area";
 export { Switch } from "./components/switch";
 export { Slider } from "./components/slider";
 export { Sidepanel } from "./components/sidepanel";
+export { Tabs } from "./components/tabs";
 export {
   ThemeProvider,
   ThemeProviderProps,
