@@ -128,3 +128,23 @@
   opacity: 0;
   display: none;
 }
+
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  transition: background-color 0.2s ease;
+}
+
+.resizeHandle:hover {
+  background-color: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.root[data-position='right'] .resizeHandle {
+  left: 0;
+  right: auto;
+  cursor: col-resize;
+}

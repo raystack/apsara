@@ -30,6 +30,10 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
       onOpenChange={onOpenChange}
       {...props}
     >
+      <div 
+        className={styles.resizeHandle}
+        onClick={() => onOpenChange?.(!open)}
+      />
       {children}
     </Collapsible.Root>
   )
