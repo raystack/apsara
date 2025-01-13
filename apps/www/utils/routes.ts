@@ -13,7 +13,7 @@ export const primitivesRoutes = [
     label: "Components",
     pages: [
       {
-        title: "AnnoucementBar",
+        title: "Annoucement Bar",
         slug: "docs/primitives/components/announcementbar",
         newBadge: true,
       },
