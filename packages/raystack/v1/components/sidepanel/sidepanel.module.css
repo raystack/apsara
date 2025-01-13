@@ -26,7 +26,7 @@
 }
 
 .root[data-state='collapsed'] {
-  width: 72px;
+  width: 48px;
 }
 
 .header {
@@ -56,6 +56,7 @@
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.5px;
+  transition: opacity 0.2s ease;
 }
 
 .main {
@@ -69,8 +70,7 @@
 .footer {
   display: flex;
   flex-direction: column;
-  padding: var(--rs-space-2);
-  border-top: 1px solid var(--rs-color-border-base-primary);
+  width: 100%;
 }
 
 .nav-item {
@@ -118,4 +118,13 @@
   line-height: 16px;
   letter-spacing: 0.5px;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: opacity 0.2s ease;
+}
+
+.root[data-state='collapsed'] .nav-text,
+.root[data-state='collapsed'] .title {
+  opacity: 0;
+  display: none;
 }
