@@ -20,7 +20,7 @@ Discover why users choose Apsara as the design system for their projects
 ```sh
 $ yarn add @raystack/apsara
 # or
-$ npm install --save @raystack/apsara/v1
+$ npm install --save @raystack/apsara
 ```
 
 Use Apsara components inside your react project
