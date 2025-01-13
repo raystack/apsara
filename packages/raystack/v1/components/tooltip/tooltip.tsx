@@ -2,6 +2,7 @@ import React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cva, VariantProps } from "class-variance-authority";
 import { Text } from "../text";
+
 import styles from "./tooltip.module.css";
 
 const tooltip = cva(styles.content, {
