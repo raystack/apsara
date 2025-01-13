@@ -2,6 +2,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import { cva } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode } from "react";
 import styles from "./sidepanel.module.css";
+import { Tooltip, TooltipProvider } from "../tooltip";
 
 const root = cva(styles.root);
 
@@ -21,21 +22,28 @@ interface SidepanelItemProps extends ComponentPropsWithoutRef<"a"> {
 
 const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelProps>(
   ({ className, position = 'left', open, onOpenChange, children, ...props }, ref) => (
-    <Collapsible.Root
-      ref={ref}
-      className={root({ className })}
-      data-position={position}
-      data-state={open ? 'expanded' : 'collapsed'}
-      open={open}
-      onOpenChange={onOpenChange}
-      {...props}
-    >
-      <div 
-        className={styles.resizeHandle}
-        onClick={() => onOpenChange?.(!open)}
-      />
-      {children}
-    </Collapsible.Root>
+    <TooltipProvider>
+      <Collapsible.Root
+        ref={ref}
+        className={root({ className })}
+        data-position={position}
+        data-state={open ? 'expanded' : 'collapsed'}
+        open={open}
+        onOpenChange={onOpenChange}
+        {...props}
+      >
+        <Tooltip 
+          message={open ? "Click to collapse" : "Click to expand"}
+          side={position === 'left' ? 'right' : 'left'}
+        >
+          <div 
+            className={styles.resizeHandle}
+            onClick={() => onOpenChange?.(!open)}
+          />
+        </Tooltip>
+        {children}
+      </Collapsible.Root>
+    </TooltipProvider>
   )
 );
 

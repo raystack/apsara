@@ -49,13 +49,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
   ) : (
     <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
       <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger asChild={asChild}>
-          <div 
-            className={styles.trigger}
-            aria-describedby="tooltip"
-          >
-            {children}
-          </div>
+        <TooltipPrimitive.Trigger aria-describedby="tooltip" asChild={asChild}>
+          {children}
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
@@ -81,3 +76,5 @@ export const Tooltip: React.FC<TooltipProps> = ({
 };
 
 Tooltip.displayName = 'Tooltip';
+
+export const TooltipProvider = TooltipPrimitive.Provider;
