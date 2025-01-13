@@ -27,9 +27,12 @@
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);
-  padding: var(--rs-space-4);
-  height: 56px;
+  padding: var(--rs-space-2);
+  align-self: stretch;
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-primary);
   border-bottom: 1px solid var(--rs-color-border-base-primary);
+  height: 56px;
 }
 
 .logo {
