@@ -102,8 +102,10 @@
 }
 
 .nav-text {
-  font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-sm);
-  white-space: nowrap;
+  color: var(--rs-color-text-base-primary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
   overflow: hidden;
 }
