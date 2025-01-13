@@ -164,10 +164,10 @@ export const Assets = () => {
         <DataTable.Toolbar>
           <AssetsHeader />
           <DataTable.FilterChips />
-          <Flex gap="small">
-            <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
-            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button>
-          </Flex>
+          {/* <Flex gap="small"> */}
+            {/* <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
+            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button> */}
+          {/* </Flex> */}
         </DataTable.Toolbar>
         <DataTable.Footer>
           <></>
@@ -221,12 +221,12 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        />
+        /> */}
         {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
         </Badge> */}
