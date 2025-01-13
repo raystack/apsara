@@ -58,7 +58,7 @@ export const Shield = () => {
               zIndex: 1
             }}
           >
-            O
+             
           </button>
         </div>
 
