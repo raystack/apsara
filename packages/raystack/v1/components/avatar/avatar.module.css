@@ -24,12 +24,10 @@
 
 .avatar-solid {
   --avatar-opacity: 1;
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft {
   --avatar-opacity: 0.2;
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-color-indigo {
