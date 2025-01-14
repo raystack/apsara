@@ -21,7 +21,9 @@
     "next": "14.2.5",
     "react-live": "^4.1.6",
     "react-loading-skeleton": "^3.4.0",
-    "tslib": "^2.5.0"
+    "tslib": "^2.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -29,8 +31,8 @@
     "@radix-ui/react-scroll-area": "^1.0.3",
     "@types/mapbox__rehype-prism": "^0.8.0",
     "@types/node": "^18.15.11",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "class-variance-authority": "^0.6.0",
     "compare-versions": "^6.0.0-rc.1",
     "eslint-config-custom": "workspace:*",
@@ -39,8 +41,6 @@
     "mdx-bundler": "^9.2.1",
     "next-compose-plugins": "^2.2.1",
     "prism-react-renderer": "^2.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "reading-time": "^1.5.0",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.1.0",
