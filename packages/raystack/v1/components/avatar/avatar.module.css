@@ -28,6 +28,7 @@
 
 .avatar-soft {
   --avatar-opacity: 0.2;
+  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-color-indigo {
@@ -163,67 +164,54 @@
 /* Soft Variants */
 .avatar-soft-indigo {
   background-color: var(--rs-color-background-accent-primary);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-orange {
   background-color: var(--rs-color-background-attention-primary);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-mint {
   background-color: var(--rs-color-background-success-primary);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-neutral {
   background-color: var(--rs-color-background-neutral-secondary);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-sky {
   background-color: var(--rs-visualization-sky-sky-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-lime {
   background-color: var(--rs-visualization-lime-lime-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-grass {
   background-color: var(--rs-visualization-grass-grass-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-cyan {
   background-color: var(--rs-visualization-cyan-cyan-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-iris {
   background-color: var(--rs-visualization-iris-iris-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-purple {
   background-color: var(--rs-visualization-purple-purple-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-pink {
   background-color: var(--rs-visualization-pink-pink-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-crimson {
   background-color: var(--rs-visualization-crimson-crimson-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .avatar-soft-gold {
   background-color: var(--rs-visualization-gold-gold-6);
-  color: var(--rs-color-text-base-primary);
 }
 
 .imageWrapper {
