@@ -1,6 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ButtonHTMLAttributes, forwardRef, PropsWithChildren, ReactNode } from "react";
+import { ButtonHTMLAttributes, forwardRef, PropsWithChildren, ReactNode, ComponentPropsWithoutRef, ComponentRef } from "react";
 
 import { Spinner } from "../spinner";
 import styles from "./button.module.css";
@@ -41,7 +41,10 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     width?: string | number
   };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<
+  ComponentRef<typeof Slot>,
+  ButtonProps
+>(
   ({ className, variant = 'primary', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, width, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const isLoaderOnly = loading && !loaderText;
