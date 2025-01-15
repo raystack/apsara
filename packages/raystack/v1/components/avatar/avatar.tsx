@@ -3,7 +3,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import { clsx } from 'clsx';
 import {
   ComponentPropsWithoutRef,
-  ElementRef,
+  ComponentRef,
   forwardRef,
   ReactNode,
 } from "react";
@@ -106,13 +106,13 @@ export interface AvatarProps
 }
 
 const AvatarRoot = forwardRef<
-  ElementRef<typeof AvatarPrimitive.Root>,
+  ComponentRef<typeof AvatarPrimitive.Root>,
   AvatarProps
->(
-  (
-    { className, alt, src, fallback, size, radius, variant, color, style, asChild, ...props },
-    ref
-  ) => (
+>(function AvatarRoot(
+  { className, alt, src, fallback, size, radius, variant, color, style, asChild, ...props },
+  ref
+) {
+  return (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
@@ -130,8 +130,8 @@ const AvatarRoot = forwardRef<
         </AvatarPrimitive.Fallback>
       </AvatarPrimitive.Root>
     </Box>
-  )
-);
+  );
+});
 
 AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
 
@@ -143,7 +143,7 @@ export interface AvatarGroupProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
-  ({ children, max, className, ...props }, ref) => {
+  function AvatarGroup({ children, max, className, ...props }, ref) {
     const avatars = max ? children.slice(0, max) : children;
     const count = max && children.length > max ? children.length - max : 0;
 
