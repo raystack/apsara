@@ -33,14 +33,9 @@ export type PlaygroundProps = {
   };
 };
 
-const defaultProps = {
-  code: "",
-  tabs: [] as Tab[],
-  scope: {},
-};
 
 const Playground: React.FC<PlaygroundProps> = React.memo(
-  ({ code, tabs, scope }: PlaygroundProps & typeof defaultProps) => {
+  ({ code, tabs, scope }: PlaygroundProps) => {
     const [visible, setVisible] = useState(false);
 
     if (code) {
@@ -98,6 +93,5 @@ const Playground: React.FC<PlaygroundProps> = React.memo(
   }
 );
 
-Playground.defaultProps = defaultProps;
 Playground.displayName = "Playground";
 export default Playground;
