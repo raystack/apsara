@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
 
 import styles from './spinner.module.css';
 
@@ -31,7 +31,7 @@ export interface SpinnerProps
   color?: "default" | "inverted";
 }
 
-export const Spinner = forwardRef<ElementRef<"div">, SpinnerProps>(
+export const Spinner = forwardRef<ComponentRef<"div">, SpinnerProps>(
   ({ className, size, color, ...props }, ref) => (
     <div
       ref={ref}

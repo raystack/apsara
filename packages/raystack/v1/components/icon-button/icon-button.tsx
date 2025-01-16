@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
 
 import styles from './icon-button.module.css';
 
@@ -24,7 +24,7 @@ export interface IconButtonProps
   'aria-label'?: string;
 }
 
-export const IconButton = forwardRef<ElementRef<"button">, IconButtonProps>(
+export const IconButton = forwardRef<ComponentRef<"button">, IconButtonProps>(
   ({ className, size, disabled, children, 'aria-label': ariaLabel, ...props }, ref) => (
     <button
       ref={ref}

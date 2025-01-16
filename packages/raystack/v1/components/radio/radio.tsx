@@ -1,11 +1,11 @@
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
 
 import styles from "./radio.module.css";
 
 const RadioRoot = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Root>,
+  ComponentRef<typeof RadioGroupPrimitive.Root>,
   ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
 >(({ className, ...props }, ref) => (
   <RadioGroupPrimitive.Root ref={ref} className={styles.radio} {...props} />
@@ -17,7 +17,7 @@ export interface RadioItemProps
   extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {}
 
 export const RadioItem = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Item>,
+  ComponentRef<typeof RadioGroupPrimitive.Item>,
   RadioItemProps
 >(({ className, ...props }, forwardedRef) => (
   <RadioGroupPrimitive.Item
@@ -35,7 +35,7 @@ export interface thumbProps
     VariantProps<typeof indicator> {}
 
 const Indicator = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Indicator>,
+  ComponentRef<typeof RadioGroupPrimitive.Indicator>,
   thumbProps
 >(({ className, ...props }, ref) => (
   <RadioGroupPrimitive.Indicator

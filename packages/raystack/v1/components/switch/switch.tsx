@@ -1,6 +1,6 @@
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { cva } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
 import styles from "./switch.module.css";
 
 const switchVariants = cva(styles.switch);
@@ -12,7 +12,7 @@ export interface SwitchProps
 }
 
 export const Switch = forwardRef<
-  ElementRef<typeof SwitchPrimitive.Root>,
+  ComponentRef<typeof SwitchPrimitive.Root>,
   SwitchProps
 >(({ className, disabled, required, ...props }, forwardedRef) => (
   <SwitchPrimitive.Root
@@ -33,7 +33,7 @@ interface ThumbProps
   extends ComponentPropsWithoutRef<typeof SwitchPrimitive.Thumb> {}
 
 const SwitchThumb = forwardRef<
-  ElementRef<typeof SwitchPrimitive.Thumb>,
+  ComponentRef<typeof SwitchPrimitive.Thumb>,
   ThumbProps
 >(({ className, ...props }, ref) => (
   <SwitchPrimitive.Thumb

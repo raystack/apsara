@@ -1,6 +1,6 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, forwardRef, ReactNode } from "react";
 
 import styles from "./tabs.module.css";
 
@@ -22,7 +22,7 @@ interface TabsTriggerProps
   disabled?: boolean;
 }
 
-const TabsRoot = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsRootProps>(
+const TabsRoot = forwardRef<ComponentRef<typeof TabsPrimitive.Root>, TabsRootProps>(
   ({ className, 'aria-label': ariaLabel, ...props }, ref) => (
     <TabsPrimitive.Root
       ref={ref}
@@ -34,7 +34,7 @@ const TabsRoot = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsRootProps
 );
 
 const TabsList = forwardRef<
-  ElementRef<typeof TabsPrimitive.List>,
+  ComponentRef<typeof TabsPrimitive.List>,
   ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
@@ -46,7 +46,7 @@ const TabsList = forwardRef<
 ));
 
 const TabsTrigger = forwardRef<
-  ElementRef<typeof TabsPrimitive.Trigger>,
+  ComponentRef<typeof TabsPrimitive.Trigger>,
   TabsTriggerProps
 >(({ className, icon, children, disabled, ...props }, ref) => (
   <TabsPrimitive.Trigger
@@ -62,7 +62,7 @@ const TabsTrigger = forwardRef<
 ));
 
 const TabsContent = forwardRef<
-  ElementRef<typeof TabsPrimitive.Content>,
+  ComponentRef<typeof TabsPrimitive.Content>,
   ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
