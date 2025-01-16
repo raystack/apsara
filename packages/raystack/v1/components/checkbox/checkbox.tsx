@@ -1,7 +1,7 @@
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { cva, VariantProps } from "class-variance-authority";
 import clsx from 'clsx';
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef } from "react";
 
 import styles from "./checkbox.module.css";
 
@@ -55,10 +55,15 @@ export interface CheckboxProps
   onCheckedChange?: (checked: CheckedState) => void;
 }
 
-export const Checkbox = forwardRef<
-  ElementRef<typeof CheckboxPrimitive.Root>,
-  CheckboxProps
->(({ className, disabled, checked, defaultChecked, onCheckedChange, ...props }, forwardedRef) => {
+export const Checkbox = ({ 
+  className, 
+  disabled, 
+  checked, 
+  defaultChecked, 
+  onCheckedChange, 
+  ref, 
+  ...props 
+}: CheckboxProps & { ref?: React.Ref<ComponentRef<typeof CheckboxPrimitive.Root>> }) => {
   const isIndeterminate = checked === 'indeterminate' || defaultChecked === 'indeterminate';
   
   return (
@@ -82,7 +87,7 @@ export const Checkbox = forwardRef<
         }
       }}
       disabled={disabled}
-      ref={forwardedRef}
+      ref={ref}
       {...props}
     >
       <CheckboxPrimitive.Indicator className={styles.indicator}>
@@ -90,6 +95,6 @@ export const Checkbox = forwardRef<
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
-});
+};
 
 Checkbox.displayName = "Checkbox";
