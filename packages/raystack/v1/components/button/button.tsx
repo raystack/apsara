@@ -1,6 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ButtonHTMLAttributes, forwardRef, PropsWithChildren, ReactNode, ComponentPropsWithoutRef, ComponentRef } from "react";
+import { ButtonHTMLAttributes, PropsWithChildren, ReactNode } from "react";
 
 import { Spinner } from "../spinner";
 import styles from "./button.module.css";

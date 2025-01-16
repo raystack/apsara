@@ -31,7 +31,7 @@ export interface SliderProps
   'aria-valuetext'?: string;
 }
 
-export const Slider = ({ 
+export const Slider = React.forwardRef<ComponentRef<typeof RadixSlider.Root>, SliderProps>(({ 
   className, 
   variant = 'single', 
   value, 
@@ -97,6 +97,6 @@ export const Slider = ({
       ))}
     </RadixSlider.Root>
   );
-};
+});
 
 Slider.displayName = 'Slider';

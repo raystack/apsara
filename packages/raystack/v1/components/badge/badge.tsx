@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { ReactNode, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 
 import styles from "./badge.module.css";
 
@@ -21,34 +21,34 @@ const badge = cva(styles['badge'], {
   },
   defaultVariants: {
     variant: "accent",
-    size: "small"
-  }
+    size: "small",
+  },
 });
 
-type BadgeProps = VariantProps<typeof badge> & {
+export interface BadgeProps
+  extends ComponentPropsWithoutRef<"span">,
+    VariantProps<typeof badge> {
   icon?: ReactNode;
-  children: ReactNode;
-  className?: string;
   screenReaderText?: string;
 }
 
-export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ 
+export const Badge = ({ 
   variant = 'accent',
   size = 'small',
   icon,
   children,
   className,
-  screenReaderText
-}, ref) => {
-  return (
-    <span ref={ref} className={badge({ variant, size, className })}>
-      {icon && <span className={styles['icon']}>{icon}</span>}
-      {screenReaderText && (
-        <span className={styles['sr-only']}>{screenReaderText}</span>
-      )}
-      {children}
-    </span>
-  );
-});
+  screenReaderText,
+  ref,
+  ...props 
+}: BadgeProps & { ref?: React.Ref<ComponentRef<"span">> }) => (
+  <span ref={ref} className={badge({ variant, size, className })} {...props}>
+    {icon && <span className={styles['icon']}>{icon}</span>}
+    {screenReaderText && (
+      <span className={styles['sr-only']}>{screenReaderText}</span>
+    )}
+    {children}
+  </span>
+);
 
 Badge.displayName = 'Badge';

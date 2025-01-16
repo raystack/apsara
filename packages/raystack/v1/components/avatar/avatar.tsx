@@ -1,12 +1,7 @@
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cva, VariantProps } from "class-variance-authority";
 import { clsx } from 'clsx';
-import {
-  ComponentPropsWithoutRef,
-  ComponentRef,
-  forwardRef,
-  ReactNode,
-} from "react";
+import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 
 import { Box } from "../box";
 import styles from "./avatar.module.css";
@@ -105,10 +100,20 @@ export interface AvatarProps
   className?: string;
 }
 
-const AvatarRoot = forwardRef<
-  ComponentRef<typeof AvatarPrimitive.Root>,
-  AvatarProps
->(({ className, alt, src, fallback, size, radius, variant, color, style, asChild, ...props }, ref) => {
+export const Avatar = ({ 
+  className, 
+  alt, 
+  src, 
+  fallback, 
+  size, 
+  radius, 
+  variant, 
+  color, 
+  style, 
+  asChild,
+  ref,
+  ...props 
+}: AvatarProps & { ref?: React.Ref<ComponentRef<typeof AvatarPrimitive.Root>> }) => {
   return (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
@@ -128,47 +133,48 @@ const AvatarRoot = forwardRef<
       </AvatarPrimitive.Root>
     </Box>
   );
-});
-
-AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
-
-export const Avatar = AvatarRoot;
+};
 
 export interface AvatarGroupProps extends ComponentPropsWithoutRef<'div'> {
   children: React.ReactElement<AvatarProps>[];
   max?: number;
 }
 
-export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
-  ({ children, max, className, ...props }, ref) => {
-    const avatars = max ? children.slice(0, max) : children;
-    const count = max && children.length > max ? children.length - max : 0;
+export const AvatarGroup = ({ 
+  children, 
+  max, 
+  className,
+  ref,
+  ...props 
+}: AvatarGroupProps & { ref?: React.Ref<ComponentRef<"div">> }) => {
+  const avatars = max ? children.slice(0, max) : children;
+  const count = max && children.length > max ? children.length - max : 0;
 
-    return (
-      <div
-        ref={ref}
-        className={clsx(styles.avatarGroup, className)}
-        {...props}
-      >
-        {avatars.map((avatar, index) => (
-          <div key={index} className={styles.avatarWrapper}>
-            {avatar}
-          </div>
-        ))}
-        {count > 0 && (
-          <div className={styles.avatarWrapper}>
-            <Avatar
-              size={avatars[0].props.size}
-              radius={avatars[0].props.radius}
-              variant={avatars[0].props.variant}
-              color='neutral'
-              fallback={<span>+{count}</span>}
-            />
-          </div>
-        )}
-      </div>
-    );
-  }
-);
+  return (
+    <div
+      ref={ref}
+      className={clsx(styles.avatarGroup, className)}
+      {...props}
+    >
+      {avatars.map((avatar, index) => (
+        <div key={index} className={styles.avatarWrapper}>
+          {avatar}
+        </div>
+      ))}
+      {count > 0 && (
+        <div className={styles.avatarWrapper}>
+          <Avatar
+            size={avatars[0].props.size}
+            radius={avatars[0].props.radius}
+            variant={avatars[0].props.variant}
+            color='neutral'
+            fallback={<span>+{count}</span>}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
+Avatar.displayName = 'Avatar';
 AvatarGroup.displayName = 'AvatarGroup';

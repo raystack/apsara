@@ -1,6 +1,6 @@
 import { ChevronDownIcon,DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { cva, type VariantProps } from "class-variance-authority";
-import React, { forwardRef, PropsWithChildren } from "react";
+import React, { PropsWithChildren, ComponentRef } from "react";
 
 import { DropdownMenu } from "../dropdown-menu";
 import styles from "./breadcrumb.module.css";
@@ -31,18 +31,19 @@ type BreadcrumbProps = PropsWithChildren<Omit<VariantProps<typeof breadcrumb>, '
   onItemClick?: (item: BreadcrumbItem) => void;
   className?: string;
   size?: 'small' | 'medium';
+  ref?: React.Ref<ComponentRef<'div'>>;
 };
 
-export const Breadcrumb = forwardRef<HTMLDivElement, BreadcrumbProps>(
-  ({ 
-    className, 
-    size = 'medium', 
-    items, 
-    maxVisibleItems, 
-    separator = '/', 
-    onItemClick,
-    ...props 
-  }, ref) => {
+export const Breadcrumb = ({ 
+  className, 
+  size = 'medium', 
+  items, 
+  maxVisibleItems, 
+  separator = '/', 
+  onItemClick,
+  ref,
+  ...props 
+}: BreadcrumbProps) => {
     const visibleItems = maxVisibleItems && items.length > maxVisibleItems
       ? [
           ...items.slice(0, 1),

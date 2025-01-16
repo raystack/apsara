@@ -19,7 +19,6 @@ interface TabsRootProps
 interface TabsTriggerProps
   extends ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
   icon?: ReactNode;
-  disabled?: boolean;
 }
 
 const TabsRoot = ({ 
