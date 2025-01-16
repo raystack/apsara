@@ -32,25 +32,23 @@ type BadgeProps = VariantProps<typeof badge> & {
   screenReaderText?: string;
 }
 
-export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  function Badge({ 
-    variant = 'accent',
-    size = 'small',
-    icon,
-    children,
-    className,
-    screenReaderText
-  }, ref) {
-    return (
-      <span ref={ref} className={badge({ variant, size, className })}>
-        {icon && <span className={styles['icon']}>{icon}</span>}
-        {screenReaderText && (
-          <span className={styles['sr-only']}>{screenReaderText}</span>
-        )}
-        {children}
-      </span>
-    );
-  }
-);
+export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(({ 
+  variant = 'accent',
+  size = 'small',
+  icon,
+  children,
+  className,
+  screenReaderText
+}, ref) => {
+  return (
+    <span ref={ref} className={badge({ variant, size, className })}>
+      {icon && <span className={styles['icon']}>{icon}</span>}
+      {screenReaderText && (
+        <span className={styles['sr-only']}>{screenReaderText}</span>
+      )}
+      {children}
+    </span>
+  );
+});
 
 Badge.displayName = 'Badge';

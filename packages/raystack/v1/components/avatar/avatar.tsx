@@ -108,10 +108,7 @@ export interface AvatarProps
 const AvatarRoot = forwardRef<
   ComponentRef<typeof AvatarPrimitive.Root>,
   AvatarProps
->(function AvatarRoot(
-  { className, alt, src, fallback, size, radius, variant, color, style, asChild, ...props },
-  ref
-) {
+>(({ className, alt, src, fallback, size, radius, variant, color, style, asChild, ...props }, ref) => {
   return (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
@@ -143,7 +140,7 @@ export interface AvatarGroupProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
-  function AvatarGroup({ children, max, className, ...props }, ref) {
+  ({ children, max, className, ...props }, ref) => {
     const avatars = max ? children.slice(0, max) : children;
     const count = max && children.length > max ? children.length - max : 0;
 
