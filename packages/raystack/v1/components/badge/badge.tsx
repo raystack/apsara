@@ -32,7 +32,7 @@ export interface BadgeProps
   screenReaderText?: string;
 }
 
-export const Badge = ({ variant = 'accent', size = 'small', icon, children, className, screenReaderText, ref, ...props }: BadgeProps & { ref?: React.Ref<ComponentRef<"span">> }) => (
+export const Badge = ({ className, icon, children, variant, size, screenReaderText, ref, ...props }: BadgeProps & { ref?: React.Ref<ComponentRef<"span">> }) => (
   <span ref={ref} className={badge({ variant, size, className })} {...props}>
     {icon && <span className={styles['icon']}>{icon}</span>}
     {screenReaderText && <span className={styles['sr-only']}>{screenReaderText}</span>}
