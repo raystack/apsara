@@ -41,39 +41,48 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     width?: string | number
   };
 
-export const Button = forwardRef<
-  ComponentRef<typeof Slot>,
-  ButtonProps
->(
-  ({ className, variant = 'primary', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, width, children, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-    const isLoaderOnly = loading && !loaderText;
-    const widthStyle = width ? { width } : {};
+export const Button = ({ 
+  className, 
+  variant = 'primary', 
+  size = 'normal', 
+  asChild = false, 
+  disabled, 
+  loading, 
+  loaderText, 
+  leadingIcon, 
+  trailingIcon, 
+  width, 
+  children,
+  ref,
+  ...props 
+}: ButtonProps & { ref?: React.Ref<HTMLButtonElement> }) => {
+  const Comp = asChild ? Slot : "button";
+  const isLoaderOnly = loading && !loaderText;
+  const widthStyle = width ? { width } : {};
 
-    const spinnerColor = variant === 'primary' || variant === 'danger' ? 'inverted' : 'default';
+  const spinnerColor = variant === 'primary' || variant === 'danger' ? 'inverted' : 'default';
 
-    return (
-      <Comp
-        className={`${button({ variant, size, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
-        ref={ref}
-        disabled={disabled}
-        style={ widthStyle }
-        {...props}
-      >
-        {loading ? (
-          <>
-            <Spinner size={1} color={spinnerColor} />
-            {loaderText && <span className={styles['loader-text']}>{loaderText}</span>}
-          </>
-        ) : (
-          <>
-            {leadingIcon && <span className={`${styles['icon']} ${styles['icon-leading']}`}>{leadingIcon}</span>}
-            {children}
-            {trailingIcon && <span className={`${styles['icon']} ${styles['icon-trailing']}`}>{trailingIcon}</span>}
-          </>
-        )}
-      </Comp>
-    );
-  }
-);
+  return (
+    <Comp
+      className={`${button({ variant, size, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
+      ref={ref}
+      disabled={disabled}
+      style={ widthStyle }
+      {...props}
+    >
+      {loading ? (
+        <>
+          <Spinner size={1} color={spinnerColor} />
+          {loaderText && <span className={styles['loader-text']}>{loaderText}</span>}
+        </>
+      ) : (
+        <>
+          {leadingIcon && <span className={`${styles['icon']} ${styles['icon-leading']}`}>{leadingIcon}</span>}
+          {children}
+          {trailingIcon && <span className={`${styles['icon']} ${styles['icon-trailing']}`}>{trailingIcon}</span>}
+        </>
+      )}
+    </Comp>
+  );
+};
 Button.displayName = "Button";

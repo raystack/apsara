@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef } from "react";
 
 import styles from './icon-button.module.css';
 
@@ -24,22 +24,28 @@ export interface IconButtonProps
   'aria-label'?: string;
 }
 
-export const IconButton = forwardRef<ComponentRef<"button">, IconButtonProps>(
-  ({ className, size, disabled, children, 'aria-label': ariaLabel, ...props }, ref) => (
-    <button
-      ref={ref}
-      className={iconButton({ size, className })}
-      disabled={disabled}
-      type="button"
-      aria-label={ariaLabel}
-      aria-disabled={disabled}
-      {...props}
-    >
-      <div aria-hidden="true">
-        {children}
-      </div>
-    </button>
-  )
+export const IconButton = ({ 
+  className, 
+  size, 
+  disabled, 
+  children, 
+  'aria-label': ariaLabel,
+  ref,
+  ...props 
+}: IconButtonProps & { ref?: React.Ref<ComponentRef<"button">> }) => (
+  <button
+    ref={ref}
+    className={iconButton({ size, className })}
+    disabled={disabled}
+    type="button"
+    aria-label={ariaLabel}
+    aria-disabled={disabled}
+    {...props}
+  >
+    <div aria-hidden="true">
+      {children}
+    </div>
+  </button>
 );
 
 IconButton.displayName = 'IconButton';

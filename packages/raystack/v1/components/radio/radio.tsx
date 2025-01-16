@@ -1,49 +1,55 @@
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
 import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ComponentRef } from "react";
 
 import styles from "./radio.module.css";
 
-const RadioRoot = forwardRef<
-  ComponentRef<typeof RadioGroupPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
->(({ className, ...props }, ref) => (
+const RadioRoot = ({ 
+  className,
+  ref,
+  ...props 
+}: ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root> & 
+   { ref?: React.Ref<ComponentRef<typeof RadioGroupPrimitive.Root>> }) => (
   <RadioGroupPrimitive.Root ref={ref} className={styles.radio} {...props} />
-));
+);
 
 const radioItem = cva(styles.radioitem);
 
 export interface RadioItemProps
   extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {}
 
-export const RadioItem = forwardRef<
-  ComponentRef<typeof RadioGroupPrimitive.Item>,
-  RadioItemProps
->(({ className, ...props }, forwardedRef) => (
+export const RadioItem = ({ 
+  className,
+  ref,
+  ...props 
+}: RadioItemProps & 
+   { ref?: React.Ref<ComponentRef<typeof RadioGroupPrimitive.Item>> }) => (
   <RadioGroupPrimitive.Item
     {...props}
-    ref={forwardedRef}
+    ref={ref}
     className={radioItem({ className })}
   >
     <Indicator />
   </RadioGroupPrimitive.Item>
-));
+);
 
 const indicator = cva(styles.indicator);
 export interface thumbProps
   extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Indicator>,
     VariantProps<typeof indicator> {}
 
-const Indicator = forwardRef<
-  ComponentRef<typeof RadioGroupPrimitive.Indicator>,
-  thumbProps
->(({ className, ...props }, ref) => (
+const Indicator = ({ 
+  className,
+  ref,
+  ...props 
+}: thumbProps & 
+   { ref?: React.Ref<ComponentRef<typeof RadioGroupPrimitive.Indicator>> }) => (
   <RadioGroupPrimitive.Indicator
     ref={ref}
     className={indicator({ className })}
     {...props}
   />
-));
+);
 
 Indicator.displayName = RadioGroupPrimitive.Indicator.displayName;
 

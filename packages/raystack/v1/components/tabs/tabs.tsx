@@ -1,6 +1,6 @@
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef, ReactNode } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 
 import styles from "./tabs.module.css";
 
@@ -22,33 +22,42 @@ interface TabsTriggerProps
   disabled?: boolean;
 }
 
-const TabsRoot = forwardRef<ComponentRef<typeof TabsPrimitive.Root>, TabsRootProps>(
-  ({ className, 'aria-label': ariaLabel, ...props }, ref) => (
-    <TabsPrimitive.Root
-      ref={ref}
-      className={root({ className })}
-      aria-label={ariaLabel || "Tabs"}
-      {...props}
-    />
-  )
+const TabsRoot = ({ 
+  className,
+  'aria-label': ariaLabel,
+  ref,
+  ...props 
+}: TabsRootProps & { ref?: React.Ref<ComponentRef<typeof TabsPrimitive.Root>> }) => (
+  <TabsPrimitive.Root
+    ref={ref}
+    className={root({ className })}
+    aria-label={ariaLabel || "Tabs"}
+    {...props}
+  />
 );
 
-const TabsList = forwardRef<
-  ComponentRef<typeof TabsPrimitive.List>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
+const TabsList = ({ 
+  className,
+  ref,
+  ...props 
+}: ComponentPropsWithoutRef<typeof TabsPrimitive.List> & 
+   { ref?: React.Ref<ComponentRef<typeof TabsPrimitive.List>> }) => (
   <TabsPrimitive.List
     ref={ref}
     role="tablist"
     className={list({ className })}
     {...props}
   />
-));
+);
 
-const TabsTrigger = forwardRef<
-  ComponentRef<typeof TabsPrimitive.Trigger>,
-  TabsTriggerProps
->(({ className, icon, children, disabled, ...props }, ref) => (
+const TabsTrigger = ({ 
+  className,
+  icon,
+  children,
+  disabled,
+  ref,
+  ...props 
+}: TabsTriggerProps & { ref?: React.Ref<ComponentRef<typeof TabsPrimitive.Trigger>> }) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={trigger({ className })}
@@ -59,19 +68,21 @@ const TabsTrigger = forwardRef<
     {icon && <span className={styles["trigger-icon"]}>{icon}</span>}
     {children}
   </TabsPrimitive.Trigger>
-));
+);
 
-const TabsContent = forwardRef<
-  ComponentRef<typeof TabsPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
+const TabsContent = ({ 
+  className,
+  ref,
+  ...props 
+}: ComponentPropsWithoutRef<typeof TabsPrimitive.Content> & 
+   { ref?: React.Ref<ComponentRef<typeof TabsPrimitive.Content>> }) => (
   <TabsPrimitive.Content
     ref={ref}
     role="tabpanel"
     className={content({ className })}
     {...props}
   />
-));
+);
 
 TabsRoot.displayName = TabsPrimitive.Root.displayName;
 TabsList.displayName = TabsPrimitive.List.displayName;
