@@ -100,20 +100,7 @@ export interface AvatarProps
   className?: string;
 }
 
-export const Avatar = ({ 
-  className, 
-  alt, 
-  src, 
-  fallback, 
-  size, 
-  radius, 
-  variant, 
-  color, 
-  style, 
-  asChild,
-  ref,
-  ...props 
-}: AvatarProps & { ref?: React.Ref<ComponentRef<typeof AvatarPrimitive.Root>> }) => {
+export const Avatar = ({ className, alt, src, fallback, size, radius, variant, color, style, asChild, ref, ...props }: AvatarProps & { ref?: React.Ref<ComponentRef<typeof AvatarPrimitive.Root>> }) => {
   return (
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
@@ -140,13 +127,7 @@ export interface AvatarGroupProps extends ComponentPropsWithoutRef<'div'> {
   max?: number;
 }
 
-export const AvatarGroup = ({ 
-  children, 
-  max, 
-  className,
-  ref,
-  ...props 
-}: AvatarGroupProps & { ref?: React.Ref<ComponentRef<"div">> }) => {
+export const AvatarGroup = ({ children, max, className, ref, ...props }: AvatarGroupProps & { ref?: React.Ref<ComponentRef<"div">> }) => {
   const avatars = max ? children.slice(0, max) : children;
   const count = max && children.length > max ? children.length - max : 0;
 

@@ -11,15 +11,7 @@ export interface CheckboxProps extends ComponentPropsWithoutRef<typeof CheckboxP
   disabled?: boolean;
 }
 
-export const Checkbox = ({ 
-  className, 
-  label, 
-  error, 
-  helperText, 
-  disabled,
-  ref,
-  ...props 
-}: CheckboxProps & { ref?: React.Ref<ComponentRef<typeof CheckboxPrimitive.Root>> }) => {
+export const Checkbox = ({ className, label, error, helperText, disabled, ref, ...props }: CheckboxProps & { ref?: React.Ref<ComponentRef<typeof CheckboxPrimitive.Root>> }) => {
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ComponentRef } from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cva, VariantProps } from "class-variance-authority";
 import { Text } from "../text";
@@ -33,17 +33,7 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   asChild?: boolean;
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({
-  children,
-  message,
-  disabled,
-  side = "top",
-  className,
-  delayDuration = 200,
-  skipDelayDuration = 200,
-  'aria-label': ariaLabel,
-  asChild = true,
-}) => {
+export const Tooltip = ({ children, message, delayDuration = 700, skipDelayDuration, disabled, asChild, 'aria-label': ariaLabel, side, className, ref, ...props }: TooltipProps & { ref?: React.Ref<ComponentRef<typeof TooltipPrimitive.Root>> }) => {
   return disabled ? (
     children
   ) : (

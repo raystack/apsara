@@ -31,21 +31,7 @@ export interface SliderProps
   'aria-valuetext'?: string;
 }
 
-export const Slider = React.forwardRef<ComponentRef<typeof RadixSlider.Root>, SliderProps>(({ 
-  className, 
-  variant = 'single', 
-  value, 
-  defaultValue, 
-  min = 0, 
-  max = 100, 
-  step = 1, 
-  label, 
-  onChange,
-  'aria-label': ariaLabel,
-  'aria-valuetext': ariaValueText,
-  ref,
-  ...props 
-}: SliderProps & { ref?: React.Ref<ComponentRef<typeof RadixSlider.Root>> }) => {
+export const Slider = ({ className, variant = 'single', value, defaultValue, min = 0, max = 100, step = 1, label, onChange, 'aria-label': ariaLabel, 'aria-valuetext': ariaValueText, ref, ...props }: SliderProps & { ref?: React.Ref<ComponentRef<typeof RadixSlider.Root>> }) => {
   const isRange = variant === 'range';
   const defaultVal = isRange 
     ? (defaultValue as [number, number]) || [min, max] 
@@ -97,6 +83,6 @@ export const Slider = React.forwardRef<ComponentRef<typeof RadixSlider.Root>, Sl
       ))}
     </RadixSlider.Root>
   );
-});
+};
 
 Slider.displayName = 'Slider';

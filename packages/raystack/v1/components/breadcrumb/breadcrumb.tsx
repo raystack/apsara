@@ -31,7 +31,7 @@ type BreadcrumbProps = PropsWithChildren<Omit<VariantProps<typeof breadcrumb>, '
   onItemClick?: (item: BreadcrumbItem) => void;
   className?: string;
   size?: 'small' | 'medium';
-  ref?: React.Ref<ComponentRef<'div'>>;
+  ref?: React.Ref<ComponentRef<"div">>;
 };
 
 export const Breadcrumb = ({ 
