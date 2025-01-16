@@ -93,16 +93,19 @@ const DropdownMenuGroup = ({
 );
 
 const emptystate = cva(styles.empty);
-const DropdownMenuEmptyState = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    children: React.ReactNode;
-  }
->(({ className, children, ...props }, ref) => (
+const DropdownMenuEmptyState = ({ 
+  className, 
+  children, 
+  ref,
+  ...props 
+}: React.HTMLAttributes<HTMLDivElement> & {
+  children: React.ReactNode;
+  ref?: React.Ref<ComponentRef<"div">>;
+}) => (
   <div ref={ref} className={emptystate({ className })} {...props}>
     {children}
   </div>
-));
+);
 DropdownMenuEmptyState.displayName = "DropdownMenuEmptyState";
 
 type DropdownMenuProps = React.ComponentProps<
