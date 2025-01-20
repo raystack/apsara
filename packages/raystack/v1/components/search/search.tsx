@@ -12,22 +12,29 @@ export interface SearchProps extends Omit<ComponentPropsWithoutRef<"input">, "si
 export const Search = forwardRef<ElementRef<"input">, SearchProps>(
   ({ className, disabled, placeholder = "Search", size = "large", showClearButton, onClear, value, ...props }, ref) => {
     return (
-      <div className={styles.container}>
-        <div className={styles.inputWrapper}>
-          <span className={styles.leadingIcon}>
+      <div 
+        className={styles.container}
+        role="search"
+      >
+        <div className={clsx(styles.inputWrapper, disabled && styles.disabled)}>
+          <span 
+            className={styles.leadingIcon}
+            aria-hidden="true"
+          >
             <MagnifyingGlassIcon />
           </span>
           <input
             ref={ref}
+            type="search"
             className={clsx(
               styles.searchField,
               styles[`search-${size}`],
-              disabled && styles["search-disabled"],
               className
             )}
             placeholder={placeholder}
             disabled={disabled}
             value={value}
+            aria-label={placeholder}
             {...props}
           />
           {showClearButton && value && (
@@ -37,6 +44,7 @@ export const Search = forwardRef<ElementRef<"input">, SearchProps>(
               disabled={disabled}
               type="button"
               aria-label="Clear search"
+              tabIndex={0}
             >
               <CrossCircledIcon />
             </button>
