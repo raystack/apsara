@@ -18,15 +18,15 @@ Discover why users choose Apsara as the design system for their projects
 
 
 ```sh
-$ yarn add @odpf/apsara
+$ yarn add @raystack/apsara
 # or
-$ npm install --save @odpf/apsara
+$ npm install --save @raystack/apsara
 ```
 
 Use Apsara components inside your react project
 
 ```js
-import { Button } from "@odpf/apsara";
+import { Button } from "@raystack/apsara/v1";
 
 <Button type="primary">
   I am using 🧚‍♀️ Apsara!
@@ -42,10 +42,10 @@ Read our contributing guide to learn about our development process, how to propo
 bugfixes and improvements, and how to build and test your changes to Apsara.
 
 To help you get your feet wet and get you familiar with our contribution process, we have a list of
-[good first issues](https://github.com/odpf/apsara/labels/good%20first%20issue) that contain bugs which have a relatively
+[good first issues](https://github.com/raystack/apsara/labels/good%20first%20issue) that contain bugs which have a relatively
 limited scope. This is a great place to get started.
 
-This project exists thanks to all the [contributors](https://github.com/odpf/apsara/graphs/contributors).
+This project exists thanks to all the [contributors](https://github.com/raystack/apsara/graphs/contributors).
 
 ## License
 

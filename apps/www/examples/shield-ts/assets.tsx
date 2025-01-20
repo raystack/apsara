@@ -169,11 +169,10 @@ export const Assets = () => {
         <DataTable.Toolbar>
           <AssetsHeader />
           <DataTable.FilterChips />
-          
-          <Flex gap="small">
-            <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
-            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button>
-          </Flex>
+          {/* <Flex gap="small"> */}
+            {/* <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
+            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button> */}
+          {/* </Flex> */}
         </DataTable.Toolbar>
         <DataTable.Footer>
           <></>
@@ -215,7 +214,7 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
-        <Tabs.Root defaultValue="general">
+        {/* <Tabs.Root defaultValue="general">
           <Tabs.List>
             <Tabs.Trigger value="general" icon={<HomeIcon />}>
               Home
@@ -246,7 +245,7 @@ const AssetsHeader = () => {
           <Tabs.Content value="seo">
             <Text>SEO settings content</Text>
           </Tabs.Content>
-        </Tabs.Root>
+        </Tabs.Root> */}
 
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
@@ -259,12 +258,12 @@ const AssetsHeader = () => {
             }} 
           />
         </div> */}
-        <InputField
+        {/* <InputField
           label="Label"
           helperText="Helper Text"
           placeholder="Place holder"
           prefix="USD"
-        />
+        /> */}
         {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
         </Badge> */}
