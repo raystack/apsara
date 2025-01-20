@@ -1,0 +1,125 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  align-self: stretch;
+  border-radius: var(--rs-radius-2);
+  border: 1px solid var(--rs-color-border-base-tertiary);
+  background: var(--rs-color-background-base-primary);
+}
+
+.inputWrapper:hover:not(.disabled) {
+  border: 1px solid var(--rs-color-border-base-tertiary-hover);
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.inputWrapper:focus-within {
+  border: 1px solid var(--rs-color-border-accent-emphasis);
+  background: var(--rs-color-background-base-primary);
+}
+
+.inputWrapper:focus-within:hover {
+  border: 1px solid var(--rs-color-border-accent-emphasis);
+  background: var(--rs-color-background-base-primary);
+}
+
+.searchField {
+  width: 100%;
+  border-radius: var(--rs-radius-2);
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  color: var(--rs-color-text-base-primary);
+  padding-left: calc(var(--rs-space-4) + var(--rs-space-5));
+  padding-right: var(--rs-space-3);
+}
+
+.searchField::placeholder {
+  color: var(--rs-color-text-base-tertiary);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.searchField:hover {
+  background: transparent;
+}
+
+.searchField:focus {
+  border-color: var(--rs-color-border-accent-emphasis);
+  background: var(--rs-color-background-base-primary);
+}
+
+.search-small {
+  height: 24px;
+  font-size: 12px;
+}
+
+.search-large {
+  height: 32px;
+  font-size: 12px;
+}
+
+.search-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--rs-color-background-base-secondary);
+}
+
+.search-disabled:hover {
+  border-color: var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-secondary);
+}
+
+.leadingIcon {
+  position: absolute;
+  left: var(--rs-space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-text-base-secondary);
+  pointer-events: none;
+}
+
+.leadingIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.clearButton {
+  position: absolute;
+  right: var(--rs-space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rs-color-text-base-secondary);
+  background: none;
+  border: none;
+  padding: var(--rs-space-1);
+  cursor: pointer;
+}
+
+.clearButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.clearButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+} 

@@ -16,8 +16,6 @@ export const ToggleGroupRoot = ({ className, ...props }: ToggleGroupProps) => {
   );
 };
 
-ToggleGroupRoot.defaultProps = { type: "single" };
-
 const item = cva(styles.item);
 
 export interface ToggleGroupItemProps
