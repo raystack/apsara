@@ -145,6 +145,9 @@ const SidebarFooter = ({ children, action }: SidebarFooterProps) => {
   );
 };
 
+/**
+ * @deprecated Use Sidebar from '@raystack/apsara/v1' instead.
+ */
 export const Sidebar = Object.assign(SidebarRoot, {
   Logo: SidebarLogo,
   Navigations: SidebarNavigations,
