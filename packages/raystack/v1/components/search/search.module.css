@@ -15,7 +15,7 @@
   background: var(--rs-color-background-base-primary);
 }
 
-.inputWrapper:hover:not(.disabled) {
+.inputWrapper:hover {
   border: 1px solid var(--rs-color-border-base-tertiary-hover);
   background: var(--rs-color-background-base-primary-hover);
 }
@@ -28,6 +28,14 @@
 .inputWrapper:focus-within:hover {
   border: 1px solid var(--rs-color-border-accent-emphasis);
   background: var(--rs-color-background-base-primary);
+}
+
+.inputWrapper.disabled,
+.inputWrapper.disabled:hover {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-base-tertiary);
 }
 
 .searchField {

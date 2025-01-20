@@ -214,7 +214,6 @@ const AssetsHeader = () => {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           showClearButton
-          disabled
           onClear={() => setSearchValue("")}
         />
         {/* <Tabs.Root defaultValue="general">
