@@ -128,3 +128,39 @@ The Search component can include a clear button that appears when there is input
     },
   ]}
 />
+
+## Accessibility
+
+The Search component is built with accessibility in mind, following ARIA best practices:
+
+- Container has `role="search"` to identify it as a search landmark
+- Input has `type="search"` for semantic HTML
+- Search icon is marked as decorative with `aria-hidden="true"`
+- Clear button has appropriate `aria-label` for screen readers
+- Keyboard navigation support for the clear button
+- Input inherits `aria-label` from placeholder text
+
+Example with accessibility features:
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "Default",
+      code: `
+        <Search 
+          placeholder="Search items..."
+          showClearButton
+          value="Searchable text"
+          aria-label="Search items"
+        />
+      `,
+    },
+  ]}
+/>
+
+The component supports keyboard navigation:
+
+- Tab to focus on the search input
+- Tab again to focus on the clear button (when visible)
+- Enter or Space to trigger the clear button
