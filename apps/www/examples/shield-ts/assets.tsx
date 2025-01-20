@@ -7,6 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
+
 import { toast, ToastContainer, Button, Flex, Text, Checkbox } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
@@ -96,6 +97,11 @@ export const Assets = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [dateRange, setDateRange] = useState({
+    from: new Date(),
+    to: new Date(),
+  });
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
@@ -269,6 +275,7 @@ const AssetsHeader = () => {
           />
         </AvatarGroup> */}
 
+        
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}

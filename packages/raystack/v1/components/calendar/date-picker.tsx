@@ -1,17 +1,16 @@
-import { Popover } from "~/popover";
-import { TextField } from "~/textfield";
+import { Popover } from "../popover";
+import { TextField } from "../textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
-import { TextfieldProps } from "~/textfield/textfield";
+import { TextfieldProps } from "../textfield/textfield";
 import { PropsBase, PropsSingleRequired } from "react-day-picker";
 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
-
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
@@ -21,6 +20,7 @@ interface DatePickerProps {
   onSelect?: (date: Date) => void;
   placeholder?: string;
   value?: Date;
+  children?: React.ReactNode | ((props: { selectedDate: string }) => React.ReactNode);
 }
 
 export function DatePicker({
@@ -31,22 +31,23 @@ export function DatePicker({
   calendarProps,
   value = new Date(),
   onSelect = () => {},
+  children,
 }: DatePickerProps) {
-  const defaultDate = dayjs(value).format(dateFormat);
-
   const [showCalendar, setShowCalendar] = useState(false);
-  const [calendarVal, setCalendarVal] = useState(value);
+  const [selectedDate, setSelectedDate] = useState(value);
   const [inputState, setInputState] = useState<Partial<React.ComponentProps<typeof TextField>['state']>>();
+
+  const formattedDate = dayjs(selectedDate).format(dateFormat);
 
   const isDropdownOpenRef = useRef(false);
   const textFieldRef = useRef<HTMLInputElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const isInputFieldFocused = useRef(false);
-	const calendarValRef = useRef(value);
+  const selectedDateRef = useRef(selectedDate);
 
-	useEffect(() => {
-		calendarValRef.current = calendarVal;
-	}, [calendarVal]);
+  useEffect(() => {
+    selectedDateRef.current = selectedDate;
+  }, [selectedDate]);
 
   function isElementOutside(el: HTMLElement) {
     return !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
@@ -68,7 +69,7 @@ export function DatePicker({
     isInputFieldFocused.current = false;
     setShowCalendar(false);
 
-    const updatedVal = dayjs(calendarValRef.current).format(dateFormat);
+    const updatedVal = dayjs(selectedDateRef.current).format(dateFormat);
 
     if  (textFieldRef.current) textFieldRef.current.value = updatedVal;
     if (inputState === undefined) onSelect(dayjs(updatedVal).toDate());
@@ -77,9 +78,8 @@ export function DatePicker({
   }
 
   const handleSelect = (day: Date) => {
+    setSelectedDate(day);
     onSelect(day);
-    setCalendarVal(day);
-		calendarValRef.current = day;
     setInputState(undefined);
     removeEventListeners();
   };
@@ -134,27 +134,37 @@ export function DatePicker({
     const isValid = isValidDate && isAfter && isBefore && dayjs(date).isSameOrBefore(dayjs());
 
     if (isValid) {
-        setCalendarVal(date.toDate());
+        setSelectedDate(date.toDate());
         if (inputState === 'invalid') setInputState(undefined);
     } else {
         setInputState('invalid');
     }
   }
 
+  const defaultTrigger = (
+    <TextField
+      ref={textFieldRef}
+      defaultValue={formattedDate}
+      trailing={<CalendarIcon />}
+      onChange={handleInputChange}
+      onFocus={handleInputFocus}
+      onBlur={handleInputBlur}
+      state={inputState}
+      placeholder={placeholder}
+      onKeyUp={handleKeyUp}
+      {...textFieldProps}
+    />
+  );
+
+  const trigger = typeof children === 'function'
+    ? children({ selectedDate: formattedDate })
+    : children || defaultTrigger;
+
   return (
     <Popover open={showCalendar} onOpenChange={onOpenChange}>
-      <TextField
-          ref={textFieldRef}
-          defaultValue={defaultDate}
-          trailing={<Popover.Trigger asChild><CalendarIcon /></Popover.Trigger>}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
-          state={inputState}
-          placeholder={placeholder}
-          onKeyUp={handleKeyUp}
-          {...textFieldProps}
-      />
+      <Popover.Trigger asChild>
+        {trigger}
+      </Popover.Trigger>
 
       <Popover.Content side={side} className={styles.calendarPopover} ref={contentRef}>
         <Calendar
@@ -162,10 +172,10 @@ export function DatePicker({
           {...calendarProps}
           onDropdownOpen={onDropdownOpen}
           mode="single"
-          selected={calendarVal}
-          month={calendarVal}
+          selected={selectedDate}
+          month={selectedDate}
           onSelect={handleSelect}
-          onMonthChange={setCalendarVal}
+          onMonthChange={setSelectedDate}
         />
       </Popover.Content>
     </Popover>
