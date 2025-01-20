@@ -4,19 +4,8 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 import styles from "./search.module.css";
 
 export interface SearchProps extends Omit<ComponentPropsWithoutRef<"input">, "size"> {
-  /**
-   * The size of the search input
-   * @default "large"
-   */
   size?: "small" | "large";
-  /**
-   * Show clear button in trailing position
-   * @default false
-   */
   showClearButton?: boolean;
-  /**
-   * Callback when clear button is clicked
-   */
   onClear?: () => void;
 }
 
