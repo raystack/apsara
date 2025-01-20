@@ -12,12 +12,20 @@ description: A collapsible side navigation panel component.
       title="Company Name"
     />
     <Sidepanel.Main>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Analytics</Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
+        Dashboard
+      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
+        Analytics
+      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
+        Settings
+      </Sidepanel.Item>
     </Sidepanel.Main>
     <Sidepanel.Footer>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Help</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
+        Help
+      </Sidepanel.Item>
     </Sidepanel.Footer>
   </Sidepanel.Root>
 </Preview>
@@ -65,6 +73,10 @@ The Sidepanel component consists of several parts, each with their own props:
 - `open`: Controls the expanded/collapsed state (boolean)
 - `onOpenChange`: Callback when expanded/collapsed state changes (function)
 - `position`: Position of the sidepanel ("left" | "right", default: "left")
+- `account`: Optional account information object with:
+  - `icon`: Icon element to display (ReactNode)
+  - `label`: Text to display (string)
+  - `href`: Optional URL the account links to (string)
 
 ### Header
 

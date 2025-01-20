@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import {
-  ArrowRightIcon,
   DotsVerticalIcon,
-  RocketIcon,
   HomeIcon,
   InfoCircledIcon,
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { Flex } from "@raystack/apsara/v1";
-import { Sidepanel } from "@raystack/apsara/v1";
+import { Flex, Sidepanel } from "@raystack/apsara/v1";
 import { Assets } from "./assets";
 
 import "@raystack/apsara/style.css";
@@ -22,7 +19,7 @@ export const Shield = () => {
       <Flex style={{ height: "100vh" }}>
         <div style={{ position: 'relative' }}>
           <Sidepanel.Root open={sidebarOpen} onOpenChange={setSidebarOpen} position="left">
-            <Sidepanel.Header 
+            <Sidepanel.Header
               logo={<HomeIcon width={24} height={24} />} 
               title="The North Face" 
             />

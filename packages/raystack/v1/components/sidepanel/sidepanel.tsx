@@ -9,6 +9,11 @@ const root = cva(styles.root);
 
 interface SidepanelProps extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
+  account?: {
+    icon: ReactNode;
+    label: string;
+    href?: string;
+  };
 }
 
 interface SidepanelHeaderProps extends ComponentPropsWithoutRef<"div"> {
@@ -22,7 +27,7 @@ interface SidepanelItemProps extends ComponentPropsWithoutRef<"a"> {
 }
 
 const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelProps>(
-  ({ className, position = 'left', open, onOpenChange, children, ...props }, ref) => (
+  ({ className, position = 'left', open, onOpenChange, children, account, ...props }, ref) => (
     <TooltipProvider>
       <Collapsible.Root
         ref={ref}
@@ -43,6 +48,12 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
           />
         </Tooltip>
         {children}
+        {account && (
+          <a href={account.href} className={styles.account}>
+            <span className={styles['nav-icon']}>{account.icon}</span>
+            <span className={styles['nav-text']}>{account.label}</span>
+          </a>
+        )}
       </Collapsible.Root>
     </TooltipProvider>
   )

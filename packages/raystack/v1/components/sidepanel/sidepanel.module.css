@@ -148,3 +148,27 @@
   right: auto;
   cursor: col-resize;
 }
+
+.account {
+  display: flex;
+  padding: var(--rs-space-3);
+  margin-top: auto;
+  align-items: center;
+  gap: var(--rs-space-3);
+  align-self: stretch;
+  border-radius: var(--rs-radius-2);
+  color: var(--rs-color-text-base-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.account:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-text-base-primary);
+}
+
+.root[data-state='collapsed'] .account .nav-text {
+  opacity: 0;
+  display: none;
+}
