@@ -120,18 +120,7 @@ The Search component can include a clear button that appears when there is input
   tabs={[
     {
       name: "With Clear Button",
-      code: `
-      const [value, setValue] = React.useState('Clearable text');
-      
-      return (
-        <Search 
-          placeholder="Type to search..."
-          showClearButton
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onClear={() => setValue('')}
-        />
-      )`,
+      code: `<Search placeholder="Type to search..." value="Searchable text" showClearButton />`,
     },
     {
       name: "Without Clear Button",
