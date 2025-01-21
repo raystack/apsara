@@ -12,6 +12,7 @@ export { Chip } from "./components/chip";
 export { DropdownMenu } from "./components/dropdown-menu";
 export { EmptyState } from "./components/empty-state";
 export { Flex } from "./components/flex";
+export { FilterChip } from "./components/filter-chip";
 export { IconButton } from "./components/icon-button";
 export { Indicator } from "./components/indicator";
 export { InputField } from "./components/input-field";
