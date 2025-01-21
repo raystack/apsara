@@ -7,25 +7,14 @@ description: A collapsible side navigation panel component.
 
 <Preview>
   <Sidepanel.Root open={true}>
-    <Sidepanel.Header
-      logo={<InfoCircledIcon width={24} height={24} />}
-      title="Company Name"
-    />
+    <Sidepanel.Header logo={<InfoCircledIcon width={24} height={24} />} title="Company Name" />
     <Sidepanel.Main>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
-        Dashboard
-      </Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-        Analytics
-      </Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-        Settings
-      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Analytics</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
     </Sidepanel.Main>
     <Sidepanel.Footer>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-        Help
-      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Help</Sidepanel.Item>
     </Sidepanel.Footer>
   </Sidepanel.Root>
 </Preview>
@@ -50,14 +39,10 @@ export default function App() {
     <Sidepanel.Root open={true}>
       <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
       <Sidepanel.Main>
-        <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
-          Dashboard
-        </Sidepanel.Item>
+        <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
       </Sidepanel.Main>
       <Sidepanel.Footer>
-        <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-          Help
-        </Sidepanel.Item>
+        <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Help</Sidepanel.Item>
       </Sidepanel.Footer>
     </Sidepanel.Root>
   )
@@ -100,14 +85,9 @@ The Sidepanel can be positioned on either the left or right side of the screen.
       name: "Left",
       code: `
         <Sidepanel.Root open={true} position="left">
-          <Sidepanel.Header 
-            logo={<InfoCircledIcon />} 
-            title="Company Name" 
-          />
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidepanel.Main>
-            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
-              Dashboard
-            </Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
           </Sidepanel.Main>
         </Sidepanel.Root>
       `,
@@ -116,14 +96,9 @@ The Sidepanel can be positioned on either the left or right side of the screen.
       name: "Right",
       code: `
         <Sidepanel.Root open={true} position="right">
-          <Sidepanel.Header 
-            logo={<InfoCircledIcon />} 
-            title="Company Name" 
-          />
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidepanel.Main>
-            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-              Dashboard
-            </Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Dashboard</Sidepanel.Item>
           </Sidepanel.Main>
         </Sidepanel.Root>
       `,
@@ -142,17 +117,10 @@ The Sidepanel supports expanded and collapsed states with smooth transitions.
       name: "Expanded",
       code: `
         <Sidepanel.Root open={true}>
-          <Sidepanel.Header 
-            logo={<InfoCircledIcon />} 
-            title="Company Name" 
-          />
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidepanel.Main>
-            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
-              Dashboard
-            </Sidepanel.Item>
-            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-              Settings
-            </Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
           </Sidepanel.Main>
         </Sidepanel.Root>
       `,
@@ -161,20 +129,33 @@ The Sidepanel supports expanded and collapsed states with smooth transitions.
       name: "Collapsed",
       code: `
         <Sidepanel.Root open={false}>
-          <Sidepanel.Header 
-            logo={<InfoCircledIcon />} 
-            title="Company Name" 
-          />
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidepanel.Main>
-            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
-              Dashboard
-            </Sidepanel.Item>
-            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
-              Settings
-            </Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
           </Sidepanel.Main>
         </Sidepanel.Root>
       `,
     },
   ]}
 />
+
+## Accessibility
+
+The Sidepanel implements the following accessibility features:
+
+- Proper ARIA roles and attributes
+  - `role="navigation"` for the main sidebar
+  - `role="banner"` for the header
+  - `role="menuitem"` for navigation items
+  - `aria-expanded` to indicate sidebar state
+  - `aria-current="page"` for active items
+
+- Keyboard navigation support
+  - Enter/Space to toggle sidebar expansion
+  - Tab navigation through interactive elements
+
+- Screen reader support
+  - Meaningful labels for all interactive elements
+  - Hidden decorative elements
+  - Clear state indicators
