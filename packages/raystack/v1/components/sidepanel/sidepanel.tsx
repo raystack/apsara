@@ -13,12 +13,14 @@ interface SidepanelProps extends ComponentPropsWithoutRef<typeof Collapsible.Roo
     icon: ReactNode;
     label: string;
     href?: string;
+    onIconClick?: () => void;
   };
 }
 
 interface SidepanelHeaderProps extends ComponentPropsWithoutRef<"div"> {
   logo: ReactNode;
   title: string;
+  onLogoClick?: () => void;
 }
 
 interface SidepanelItemProps extends ComponentPropsWithoutRef<"a"> {
@@ -66,8 +68,20 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
             className={styles.account}
             role="button"
             aria-label={`Profile: ${profile.label}`}
+            onClick={(e) => {
+              if (profile.onIconClick) {
+                e.preventDefault();
+                profile.onIconClick();
+              }
+            }}
           >
-            <span className={styles['nav-icon']} aria-hidden="true">{profile.icon}</span>
+            <span 
+              className={styles['nav-icon']} 
+              aria-hidden="true"
+              style={{ cursor: profile.onIconClick ? 'pointer' : undefined }}
+            >
+              {profile.icon}
+            </span>
             <span className={styles['nav-text']}>{profile.label}</span>
           </a>
         )}
@@ -77,14 +91,29 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
 );
 
 const SidepanelHeader = forwardRef<ElementRef<"div">, SidepanelHeaderProps>(
-  ({ className, logo, title, ...props }, ref) => (
+  ({ className, logo, title, onLogoClick, ...props }, ref) => (
     <div 
       ref={ref} 
       className={styles.header} 
       role="banner"
       {...props}
     >
-      <div className={styles.logo} aria-hidden="true">{logo}</div>
+      <div 
+        className={styles.logo} 
+        aria-hidden="true"
+        onClick={onLogoClick}
+        role={onLogoClick ? "button" : undefined}
+        tabIndex={onLogoClick ? 0 : undefined}
+        onKeyDown={(e) => {
+          if (onLogoClick && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onLogoClick();
+          }
+        }}
+        style={{ cursor: onLogoClick ? 'pointer' : undefined }}
+      >
+        {logo}
+      </div>
       <div className={styles.title} role="heading" aria-level={1}>{title}</div>
     </div>
   )
