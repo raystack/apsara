@@ -180,7 +180,7 @@ const SidebarFooter = ({ children, action }: SidebarFooterProps) => {
 };
 
 /**
- * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar from '@raystack/apsara/v1' instead.
  */
 export const Sidebar = Object.assign(SidebarRoot, {
   Logo: SidebarLogo,
