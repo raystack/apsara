@@ -4,9 +4,17 @@ import { Flex } from "~/flex";
 import { Text } from "~/text";
 
 import styles from "./sidebar.module.css";
+
+/**
+ * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ */
 type SidebarRootProps = PropsWithChildren<VariantProps<typeof Flex>> & {
   children?: ReactNode;
 };
+
+/**
+ * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ */
 const SidebarRoot = ({ children, ...props }: SidebarRootProps) => {
   return (
     <Flex
@@ -20,6 +28,9 @@ const SidebarRoot = ({ children, ...props }: SidebarRootProps) => {
   );
 };
 
+/**
+ * @deprecated Use Sidepanel.Header component from @raystack/apsara/v1 instead.
+ */
 type SidebarLogoProps = {
   img?: ReactNode;
   name?: string;
@@ -27,6 +38,9 @@ type SidebarLogoProps = {
   onClick?: () => void;
 };
 
+/**
+ * @deprecated Use Sidepanel.Header component from @raystack/apsara/v1 instead.
+ */
 const SidebarLogo = ({
   name = "Apsara",
   logo,
@@ -49,7 +63,14 @@ const SidebarLogo = ({
   );
 };
 
+/**
+ * @deprecated Use Sidepanel.Main component from @raystack/apsara/v1 instead.
+ */
 type SidebarNavigationsProps = PropsWithChildren<VariantProps<typeof Flex>>;
+
+/**
+ * @deprecated Use Sidepanel.Main component from @raystack/apsara/v1 instead.
+ */
 const SidebarNavigations = ({
   children,
   ...props
@@ -61,9 +82,16 @@ const SidebarNavigations = ({
   );
 };
 
+/**
+ * @deprecated Use Sidepanel.Item component from @raystack/apsara/v1 instead.
+ */
 type SidebarNavigationsGroupProps = PropsWithChildren<
   VariantProps<typeof Flex> & { icon?: React.ReactNode; name: string }
 >;
+
+/**
+ * @deprecated Use Sidepanel.Item component from @raystack/apsara/v1 instead.
+ */
 const SidebarNavigationsGroup = ({
   icon,
   name,
@@ -105,6 +133,9 @@ type SidebarNavigationCellProps = PropsWithChildren<VariantProps<typeof cell>> &
     href?: string;
   };
 
+/**
+ * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ */
 const SidebarNavigationCell = ({
   leadingIcon,
   trailingIcon,
@@ -136,6 +167,9 @@ type SidebarFooterProps = {
   action?: ReactNode;
 };
 
+/**
+ * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ */
 const SidebarFooter = ({ children, action }: SidebarFooterProps) => {
   return (
     <Flex className={styles.footer} gap="small" justify="between">
@@ -145,6 +179,9 @@ const SidebarFooter = ({ children, action }: SidebarFooterProps) => {
   );
 };
 
+/**
+ * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ */
 export const Sidebar = Object.assign(SidebarRoot, {
   Logo: SidebarLogo,
   Navigations: SidebarNavigations,
