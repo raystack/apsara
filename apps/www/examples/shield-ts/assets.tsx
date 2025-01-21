@@ -1,14 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, CaretLeftIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { HomeIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
   useTable
 } from "@raystack/apsara";
 
-
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Tabs } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Tabs, FilterChip } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -102,6 +101,27 @@ export const Assets = () => {
     to: new Date(),
   });
 
+  const activeFilters = [
+    { 
+      label: "Status", 
+      value: "Active", 
+      operation: "equals",
+      variant: "success" 
+    },
+    { 
+      label: "Type", 
+      value: "Document", 
+      operation: "contains",
+      variant: "accent" 
+    },
+    { 
+      label: "Priority", 
+      value: "High", 
+      operation: "equals",
+      variant: "attention" 
+    }
+  ];
+
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
       setIsLoading(true);
@@ -158,28 +178,49 @@ export const Assets = () => {
   }, []);
 
   return (
-    <>
-      <DataTable
-        columns={columns}
-        data={data}
-        initialState={{ sorting: [{ id: "amount", desc: true }] }}
-        isLoading={isLoading}
-        onLoadMore={loadMoreData}
-      >
-        <DataTable.Toolbar>
-          <AssetsHeader />
-          <DataTable.FilterChips />
-          {/* <Flex gap="small"> */}
-            {/* <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
-            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button> */}
-          {/* </Flex> */}
-        </DataTable.Toolbar>
-        <DataTable.Footer>
-          <></>
-        </DataTable.Footer>
-      </DataTable>
+    <div style={{ padding: "var(--rs-space-5)" }}>
+      <Flex direction="column" gap="large">
+        <Flex direction="column" gap="medium">
+          <Flex justify="between" align="center">
+            <Title>Assets</Title>
+            <Button>Create Asset</Button>
+          </Flex>
+
+          {/* Add Filter Chips */}
+          <Flex gap="small" align="center">
+            {activeFilters.map((filter, index) => (
+              <FilterChip
+                key={index}
+                label={filter.label}
+                value={filter.value}
+                operation={filter.operation}
+                variant={filter.variant as "success" | "accent" | "attention"}
+                onRemove={() => console.log(`Removing ${filter.label} filter`)}
+                onOperationChange={(op) => console.log(`Operation changed to ${op}`)}
+                onValueChange={(val) => console.log(`Value changed to ${val}`)}
+              />
+            ))}
+          </Flex>
+
+          <DataTable
+            columns={columns}
+            data={data}
+            initialState={{ sorting: [{ id: "amount", desc: true }] }}
+            isLoading={isLoading}
+            onLoadMore={loadMoreData}
+          >
+            <DataTable.Toolbar>
+              <AssetsHeader />
+              <DataTable.FilterChips />
+            </DataTable.Toolbar>
+            <DataTable.Footer>
+              <></>
+            </DataTable.Footer>
+          </DataTable>
+        </Flex>
+      </Flex>
       <ToastContainer />
-    </>
+    </div>
   );
 };
 

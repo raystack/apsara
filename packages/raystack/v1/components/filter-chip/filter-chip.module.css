@@ -1,0 +1,69 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-2) var(--rs-space-3);
+  background: var(--rs-color-background-base-secondary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-2);
+  max-width: 100%;
+  height: 32px;
+}
+
+.filterText {
+  color: var(--rs-color-text-base-primary);
+  font-weight: var(--rs-font-weight-medium);
+  white-space: nowrap;
+}
+
+.operation {
+  color: var(--rs-color-text-base-secondary);
+  font-size: var(--rs-font-size-2);
+  padding: 0 var(--rs-space-1);
+  border-radius: var(--rs-radius-1);
+  background: var(--rs-color-background-base-tertiary);
+}
+
+.value {
+  color: var(--rs-color-text-base-primary);
+  font-size: var(--rs-font-size-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--rs-color-text-base-tertiary);
+  transition: color 0.2s ease;
+}
+
+.removeButton:hover {
+  color: var(--rs-color-text-base-primary);
+}
+
+/* Variant styles */
+.chip[data-variant="accent"] {
+  background: var(--rs-color-background-accent-secondary);
+  border-color: var(--rs-color-border-accent-primary);
+}
+
+.chip[data-variant="attention"] {
+  background: var(--rs-color-background-attention-secondary);
+  border-color: var(--rs-color-border-attention-primary);
+}
+
+.chip[data-variant="success"] {
+  background: var(--rs-color-background-success-secondary);
+  border-color: var(--rs-color-border-success-primary);
+}
+
+.chip[data-variant="danger"] {
+  background: var(--rs-color-background-danger-secondary);
+  border-color: var(--rs-color-border-danger-primary);
+}
