@@ -186,7 +186,6 @@ export const Assets = () => {
             <Button>Create Asset</Button>
           </Flex>
 
-          {/* Add Filter Chips */}
           <Flex gap="small" align="center">
             {activeFilters.map((filter, index) => (
               <FilterChip
