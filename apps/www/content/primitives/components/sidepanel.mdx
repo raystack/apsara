@@ -7,14 +7,25 @@ description: A collapsible side navigation panel component.
 
 <Preview>
   <Sidepanel.Root open={true}>
-    <Sidepanel.Header logo={<InfoCircledIcon width={24} height={24} />} title="Company Name" />
+    <Sidepanel.Header
+      logo={<InfoCircledIcon width={24} height={24} />}
+      title="Company Name"
+    />
     <Sidepanel.Main>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Analytics</Sidepanel.Item>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>
+        Dashboard
+      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
+        Analytics
+      </Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
+        Settings
+      </Sidepanel.Item>
     </Sidepanel.Main>
     <Sidepanel.Footer>
-      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Help</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>
+        Help
+      </Sidepanel.Item>
     </Sidepanel.Footer>
   </Sidepanel.Root>
 </Preview>
@@ -48,6 +59,32 @@ export default function App() {
   )
 }`} border/>
 </LiveProvider>
+
+## API Reference
+
+### Root Props
+
+- `open`: Controls the expanded/collapsed state (boolean)
+- `onOpenChange`: Callback when expanded/collapsed state changes (function)
+- `position`: Position of the sidepanel (`"left"` | `"right"`, default: "left")
+- `profile`: Optional profile information object
+  - `icon`: ReactNode
+  - `label`: string
+  - `href`: string (optional)
+  - `onIconClick`: Optional callback for icon click
+
+### Header Props
+
+- `logo`: ReactNode for the header icon/logo
+- `title`: string for the header text
+- `onLogoClick`: Optional callback for logo click
+
+### Item Props
+
+- `icon`: ReactNode for the item's icon
+- `href`: string for the link destination
+- `active`: boolean to indicate current selection
+- `children`: ReactNode for the item's label
 
 ## Sidepanel Props
 
@@ -145,6 +182,7 @@ The Sidepanel supports expanded and collapsed states with smooth transitions.
 The Sidepanel implements the following accessibility features:
 
 - Proper ARIA roles and attributes
+
   - `role="navigation"` for the main sidebar
   - `role="banner"` for the header
   - `role="menuitem"` for navigation items
@@ -152,6 +190,7 @@ The Sidepanel implements the following accessibility features:
   - `aria-current="page"` for active items
 
 - Keyboard navigation support
+
   - Enter/Space to toggle sidebar expansion
   - Tab navigation through interactive elements
 
