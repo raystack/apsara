@@ -9,7 +9,7 @@ const root = cva(styles.root);
 
 interface SidepanelProps extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
-  account?: {
+  profile?: {
     icon: ReactNode;
     label: string;
     href?: string;
@@ -27,7 +27,7 @@ interface SidepanelItemProps extends ComponentPropsWithoutRef<"a"> {
 }
 
 const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelProps>(
-  ({ className, position = 'left', open, onOpenChange, children, account, ...props }, ref) => (
+  ({ className, position = 'left', open, onOpenChange, children, profile, ...props }, ref) => (
     <TooltipProvider>
       <Collapsible.Root
         ref={ref}
@@ -36,6 +36,9 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
         data-state={open ? 'expanded' : 'collapsed'}
         open={open}
         onOpenChange={onOpenChange}
+        aria-label="Navigation Sidebar"
+        aria-expanded={open}
+        role="navigation"
         {...props}
       >
         <Tooltip 
@@ -45,13 +48,27 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
           <div 
             className={styles.resizeHandle}
             onClick={() => onOpenChange?.(!open)}
+            role="button"
+            tabIndex={0}
+            aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onOpenChange?.(!open);
+              }
+            }}
           />
         </Tooltip>
         {children}
-        {account && (
-          <a href={account.href} className={styles.account}>
-            <span className={styles['nav-icon']}>{account.icon}</span>
-            <span className={styles['nav-text']}>{account.label}</span>
+        {profile && (
+          <a 
+            href={profile.href} 
+            className={styles.account}
+            role="button"
+            aria-label={`Profile: ${profile.label}`}
+          >
+            <span className={styles['nav-icon']} aria-hidden="true">{profile.icon}</span>
+            <span className={styles['nav-text']}>{profile.label}</span>
           </a>
         )}
       </Collapsible.Root>
@@ -61,16 +78,27 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
 
 const SidepanelHeader = forwardRef<ElementRef<"div">, SidepanelHeaderProps>(
   ({ className, logo, title, ...props }, ref) => (
-    <div ref={ref} className={styles.header} {...props}>
-      <div className={styles.logo}>{logo}</div>
-      <div className={styles.title}>{title}</div>
+    <div 
+      ref={ref} 
+      className={styles.header} 
+      role="banner"
+      {...props}
+    >
+      <div className={styles.logo} aria-hidden="true">{logo}</div>
+      <div className={styles.title} role="heading" aria-level={1}>{title}</div>
     </div>
   )
 );
 
 const SidepanelMain = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
   ({ className, children, ...props }, ref) => (
-    <div ref={ref} className={styles.main} {...props}>
+    <div 
+      ref={ref} 
+      className={styles.main}
+      role="group"
+      aria-label="Main navigation"
+      {...props}
+    >
       {children}
     </div>
   )
@@ -78,7 +106,13 @@ const SidepanelMain = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"di
 
 const SidepanelFooter = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
   ({ className, children, ...props }, ref) => (
-    <div ref={ref} className={styles.footer} {...props}>
+    <div 
+      ref={ref} 
+      className={styles.footer}
+      role="group"
+      aria-label="Footer navigation"
+      {...props}
+    >
       {children}
     </div>
   )
@@ -86,8 +120,15 @@ const SidepanelFooter = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"
 
 const SidepanelItem = forwardRef<ElementRef<"a">, SidepanelItemProps>(
   ({ className, icon, children, active, ...props }, ref) => (
-    <a ref={ref} className={styles['nav-item']} data-active={active} {...props}>
-      <span className={styles['nav-icon']}>{icon}</span>
+    <a 
+      ref={ref} 
+      className={styles['nav-item']} 
+      data-active={active}
+      role="menuitem"
+      aria-current={active ? "page" : undefined}
+      {...props}
+    >
+      <span className={styles['nav-icon']} aria-hidden="true">{icon}</span>
       <span className={styles['nav-text']}>{children}</span>
     </a>
   )

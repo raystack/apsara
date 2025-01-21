@@ -18,7 +18,16 @@ export const Shield = () => {
     <>
       <Flex style={{ height: "100vh" }}>
         <div style={{ position: 'relative' }}>
-          <Sidepanel.Root open={sidebarOpen} onOpenChange={setSidebarOpen} position="left">
+          <Sidepanel.Root 
+            open={sidebarOpen} 
+            onOpenChange={setSidebarOpen} 
+            position="left"
+            profile={{
+              icon: <DotsVerticalIcon />,
+              label: "john.doe@apsara.com",
+              href: "#"
+            }}
+          >
             <Sidepanel.Header
               logo={<HomeIcon width={24} height={24} />} 
               title="The North Face" 
@@ -34,9 +43,6 @@ export const Shield = () => {
               <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Feedback</Sidepanel.Item>
               <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Support</Sidepanel.Item>
               <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidepanel.Item>
-              <Sidepanel.Item href="#" icon={<DotsVerticalIcon />}>
-                john.doe@apsara.com
-              </Sidepanel.Item>
             </Sidepanel.Footer>
           </Sidepanel.Root>
           
