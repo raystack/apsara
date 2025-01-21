@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, forwardRef, ReactNode } from "react";
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { cva } from "class-variance-authority";
 import { Tooltip, TooltipProvider } from "../tooltip";
@@ -28,7 +28,7 @@ interface SidepanelItemProps extends ComponentPropsWithoutRef<"a"> {
   active?: boolean;
 }
 
-const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelProps>(
+const SidepanelRoot = forwardRef<ComponentRef<typeof Collapsible.Root>, SidepanelProps>(
   ({ className, position = 'left', open, onOpenChange, children, profile, ...props }, ref) => (
     <TooltipProvider>
       <Collapsible.Root
@@ -90,7 +90,7 @@ const SidepanelRoot = forwardRef<ElementRef<typeof Collapsible.Root>, SidepanelP
   )
 );
 
-const SidepanelHeader = forwardRef<ElementRef<"div">, SidepanelHeaderProps>(
+const SidepanelHeader = forwardRef<ComponentRef<"div">, SidepanelHeaderProps>(
   ({ className, logo, title, onLogoClick, ...props }, ref) => (
     <div 
       ref={ref} 
@@ -119,7 +119,7 @@ const SidepanelHeader = forwardRef<ElementRef<"div">, SidepanelHeaderProps>(
   )
 );
 
-const SidepanelMain = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
+const SidepanelMain = forwardRef<ComponentRef<"div">, ComponentPropsWithoutRef<"div">>(
   ({ className, children, ...props }, ref) => (
     <div 
       ref={ref} 
@@ -133,7 +133,7 @@ const SidepanelMain = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"di
   )
 );
 
-const SidepanelFooter = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"div">>(
+const SidepanelFooter = forwardRef<ComponentRef<"div">, ComponentPropsWithoutRef<"div">>(
   ({ className, children, ...props }, ref) => (
     <div 
       ref={ref} 
@@ -147,7 +147,7 @@ const SidepanelFooter = forwardRef<ElementRef<"div">, ComponentPropsWithoutRef<"
   )
 );
 
-const SidepanelItem = forwardRef<ElementRef<"a">, SidepanelItemProps>(
+const SidepanelItem = forwardRef<ComponentRef<"a">, SidepanelItemProps>(
   ({ className, icon, children, active, ...props }, ref) => (
     <a 
       ref={ref} 
