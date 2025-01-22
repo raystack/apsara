@@ -178,15 +178,11 @@ export const Assets = () => {
   }, []);
 
   return (
-    <div style={{ padding: "var(--rs-space-5)" }}>
-      <Flex direction="column" gap="large">
-        <Flex direction="column" gap="medium">
-          <Flex justify="between" align="center">
-            <Title>Assets</Title>
-            <Button>Create Asset</Button>
-          </Flex>
+    <div style={{ width: "100%" }}>
+      <Flex direction="column" style={{ width: "100%" }}>
+        <Flex direction="column" style={{ width: "100%" }}>
 
-          <Flex gap="small" align="center">
+          <Flex gap="small" align="center" wrap="wrap" style={{ padding: "var(--rs-space-5)" }}>
             {activeFilters.map((filter, index) => (
               <FilterChip
                 key={index}
@@ -201,21 +197,23 @@ export const Assets = () => {
             ))}
           </Flex>
 
-          <DataTable
-            columns={columns}
-            data={data}
-            initialState={{ sorting: [{ id: "amount", desc: true }] }}
-            isLoading={isLoading}
-            onLoadMore={loadMoreData}
-          >
-            <DataTable.Toolbar>
-              <AssetsHeader />
-              <DataTable.FilterChips />
-            </DataTable.Toolbar>
-            <DataTable.Footer>
-              <></>
-            </DataTable.Footer>
-          </DataTable>
+          <div style={{ width: "100%" }}>
+            <DataTable
+              columns={columns}
+              data={data}
+              initialState={{ sorting: [{ id: "amount", desc: true }] }}
+              isLoading={isLoading}
+              onLoadMore={loadMoreData}
+            >
+              <DataTable.Toolbar>
+                <AssetsHeader />
+                <DataTable.FilterChips />
+              </DataTable.Toolbar>
+              <DataTable.Footer>
+                <></>
+              </DataTable.Footer>
+            </DataTable>
+          </div>
         </Flex>
       </Flex>
       <ToastContainer />
