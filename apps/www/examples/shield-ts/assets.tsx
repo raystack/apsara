@@ -102,6 +102,24 @@ export const Assets = () => {
     to: new Date(),
   });
 
+  const [recipients, setRecipients] = useState([
+    { label: "A", onRemove: () => handleRemoveRecipient("A") },
+    { label: "B", onRemove: () => handleRemoveRecipient("B") }
+  ]);
+
+  const handleRemoveRecipient = (label: string) => {
+    setRecipients(prev => prev.filter(recipient => recipient.label !== label));
+  };
+
+  const handleAddRecipient = (value: string) => {
+    if (value && !recipients.find(r => r.label === value)) {
+      setRecipients(prev => [...prev, { 
+        label: value, 
+        onRemove: () => handleRemoveRecipient(value) 
+      }]);
+    }
+  };
+
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
       setIsLoading(true);
@@ -158,28 +176,53 @@ export const Assets = () => {
   }, []);
 
   return (
-    <>
-      <DataTable
-        columns={columns}
-        data={data}
-        initialState={{ sorting: [{ id: "amount", desc: true }] }}
-        isLoading={isLoading}
-        onLoadMore={loadMoreData}
-      >
-        <DataTable.Toolbar>
-          <AssetsHeader />
-          <DataTable.FilterChips />
-          {/* <Flex gap="small"> */}
-            {/* <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
-            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button> */}
-          {/* </Flex> */}
-        </DataTable.Toolbar>
-        <DataTable.Footer>
-          <></>
-        </DataTable.Footer>
-      </DataTable>
-      <ToastContainer />
-    </>
+    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
+      <Flex direction="column" gap="large" style={{ width: "100%" }}>
+        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
+          <Flex justify="between" align="center">
+            <Title>Assets</Title>
+            <Button>Create Asset</Button>
+          </Flex>
+
+          <InputField
+            label="Label"
+            placeholder="Type and press Enter..."
+            chips={recipients}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddRecipient((e.target as HTMLInputElement).value);
+                (e.target as HTMLInputElement).value = '';
+              }
+            }}
+          />
+
+          {/* Filter Chips Container */}
+          <Flex gap="small" align="center" wrap="wrap">
+            {/* ... existing filter chips ... */}
+          </Flex>
+
+          {/* DataTable with full width */}
+          <div style={{ width: "100%" }}>
+            <DataTable
+              columns={columns}
+              data={data}
+              initialState={{ sorting: [{ id: "amount", desc: true }] }}
+              isLoading={isLoading}
+              onLoadMore={loadMoreData}
+            >
+              <DataTable.Toolbar>
+                <AssetsHeader />
+                <DataTable.FilterChips />
+              </DataTable.Toolbar>
+              <DataTable.Footer>
+                <></>
+              </DataTable.Footer>
+            </DataTable>
+          </div>
+        </Flex>
+      </Flex>
+    </div>
   );
 };
 
