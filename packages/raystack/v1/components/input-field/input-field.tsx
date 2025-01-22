@@ -1,3 +1,4 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode, useEffect, useRef, useState } from "react";
 import { Chip } from "../chip";
@@ -5,8 +6,21 @@ import styles from "./input-field.module.css";
 
 // Todo: Add a dropdown and chip support
 
+const inputWrapper = cva(styles.inputWrapper, {
+  variants: {
+    size: {
+      small: styles["size-small"],
+      large: styles["size-large"],
+    }
+  },
+  defaultVariants: {
+    size: "large",
+  }
+});
+
 export interface InputFieldProps
-  extends Omit<ComponentPropsWithoutRef<"input">, "error"> {
+  extends Omit<ComponentPropsWithoutRef<"input">, "error" | "size">,
+    VariantProps<typeof inputWrapper> {
   label?: string;
   helperText?: string;
   error?: string;
@@ -18,6 +32,7 @@ export interface InputFieldProps
   suffix?: string;
   width?: string | number;
   chips?: Array<{ label: string; onRemove?: () => void }>;
+  maxVisible?: number;
 }
 
 export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
@@ -35,6 +50,8 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
     suffix,
     width,
     chips,
+    size,
+    maxVisible = Infinity,
     ...props
   }, ref) => {
     const prefixRef = useRef<HTMLSpanElement>(null);
@@ -64,7 +81,12 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
             {optional && <span className={styles.optional}>(optional)</span>}
           </label>
         )}
-        <div className={clsx(styles.inputWrapper, chips?.length && styles.hasChips)}>
+        <div 
+          className={clsx(
+            inputWrapper({ size, className }),
+            chips?.length && styles.hasChips
+          )}
+        >
           {leadingIcon && <span className={styles.leadingIcon}>{leadingIcon}</span>}
           {prefix && <span ref={prefixRef} className={styles.prefix}>{prefix}</span>}
           <div className={styles.chipInputContainer}>

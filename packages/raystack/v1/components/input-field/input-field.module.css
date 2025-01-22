@@ -34,7 +34,6 @@
 
 .inputField {
   width: 100%;
-  height: 32px;
   padding: 0 var(--rs-space-3);
   border-radius: var(--rs-radius-2);
   border: 1px solid var(--rs-color-border-base-primary);
@@ -210,4 +209,29 @@
 
 .chip {
   max-width: 200px;
+}
+
+/* Size variants */
+.size-large {
+  min-height: 32px;
+}
+
+.size-large .inputField {
+  height: 32px;
+}
+
+.size-small {
+  min-height: 24px;
+}
+
+.size-small .inputField {
+  height: 24px;
+}
+
+.size-small .chipInputContainer {
+  min-height: 24px;
+}
+
+.size-large .chipInputContainer {
+  min-height: 32px;
 }
