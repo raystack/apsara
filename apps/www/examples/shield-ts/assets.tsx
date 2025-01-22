@@ -175,7 +175,7 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-          <Flex align="center" wrap="wrap">
+          <Flex align="center" wrap="wrap" gap="medium">
             {activeFilters.map((filter, index) => (
               <FilterChip
                 key={`filter-${index}`}

@@ -20,15 +20,15 @@ export const FilterChip = forwardRef<HTMLDivElement, FilterChipProps>(
         {...props}
       >
         <Flex gap="small" align="center">
-          <Text size="2" weight="medium">
+          <Text size={2} weight="normal">
             {label}
           </Text>
           {value && (
             <>
-              <Text size="2" color="secondary">
+              <Text size={2} color="secondary">
                 is
               </Text>
-              <Text size="2" weight="medium">
+              <Text size={2} weight="normal">
                 {value}
               </Text>
             </>
