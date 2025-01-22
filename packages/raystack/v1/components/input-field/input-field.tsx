@@ -1,10 +1,9 @@
 import clsx from "clsx";
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode, useEffect, useRef, useState } from "react";
-
+import { Chip } from "../chip";
 import styles from "./input-field.module.css";
 
 // Todo: Add a dropdown and chip support
-// Todo: Add small sizer variant. Updated in Figma
 
 export interface InputFieldProps
   extends Omit<ComponentPropsWithoutRef<"input">, "error"> {
@@ -18,6 +17,7 @@ export interface InputFieldProps
   prefix?: string;
   suffix?: string;
   width?: string | number;
+  chips?: Array<{ label: string; onRemove?: () => void }>;
 }
 
 export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
@@ -34,6 +34,7 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
     prefix,
     suffix,
     width,
+    chips,
     ...props
   }, ref) => {
     const prefixRef = useRef<HTMLSpanElement>(null);
@@ -63,28 +64,41 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
             {optional && <span className={styles.optional}>(optional)</span>}
           </label>
         )}
-        <div className={styles.inputWrapper}>
+        <div className={clsx(styles.inputWrapper, chips?.length && styles.hasChips)}>
           {leadingIcon && <span className={styles.leadingIcon}>{leadingIcon}</span>}
           {prefix && <span ref={prefixRef} className={styles.prefix}>{prefix}</span>}
-          <input
-            ref={ref}
-            style={{
-              paddingLeft: prefix ? `calc(${prefixWidth}px + var(--rs-space-3))` : undefined,
-              paddingRight: suffix ? `calc(${suffixWidth}px + var(--rs-space-3))` : undefined,
-            }}
-            className={clsx(
-              styles.inputField,
-              leadingIcon && styles.hasLeadingIcon,
-              trailingIcon && styles.hasTrailingIcon,
-              error && styles["input-error"],
-              disabled && styles["input-disabled"],
-              className
-            )}
-            aria-invalid={!!error}
-            placeholder={placeholder}
-            disabled={disabled}
-            {...props}
-          />
+          <div className={styles.chipInputContainer}>
+            {chips?.map((chip, index) => (
+              <Chip
+                key={index}
+                variant="outline"
+                isDismissible={!!chip.onRemove}
+                onDismiss={chip.onRemove}
+                className={styles.chip}
+              >
+                {chip.label}
+              </Chip>
+            ))}
+            <input
+              ref={ref}
+              style={{
+                paddingLeft: prefix ? `calc(${prefixWidth}px + var(--rs-space-3))` : undefined,
+                paddingRight: suffix ? `calc(${suffixWidth}px + var(--rs-space-3))` : undefined,
+              }}
+              className={clsx(
+                styles.inputField,
+                leadingIcon && styles.hasLeadingIcon,
+                trailingIcon && styles.hasTrailingIcon,
+                error && styles["input-error"],
+                disabled && styles["input-disabled"],
+                className
+              )}
+              aria-invalid={!!error}
+              placeholder={placeholder}
+              disabled={disabled}
+              {...props}
+            />
+          </div>
           {suffix && <span ref={suffixRef} className={styles.suffix}>{suffix}</span>}
           {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
         </div>

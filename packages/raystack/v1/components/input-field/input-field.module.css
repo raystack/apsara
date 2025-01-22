@@ -166,3 +166,48 @@
   font-weight: 400;
   margin-left: var(--rs-space-1);
 }
+
+.chipInputContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rs-space-2);
+  align-items: center;
+  width: 100%;
+  min-height: 32px;
+  padding: 0 var(--rs-space-2);
+}
+
+.hasChips .inputField {
+  padding: 0;
+  min-width: 80px;
+  width: auto;
+  flex: 1;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.hasChips .inputField:focus {
+  border: none;
+  outline: none;
+}
+
+.hasChips {
+  background: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  transition: all 0.2s ease;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.hasChips:hover {
+  border-color: var(--rs-color-border-base-focus);
+}
+
+.hasChips:focus-within {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+.chip {
+  max-width: 200px;
+}
