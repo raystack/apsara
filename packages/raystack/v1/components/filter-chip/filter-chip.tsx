@@ -9,50 +9,40 @@ export interface FilterChipProps extends ComponentPropsWithoutRef<"div"> {
   label: string;
   value?: string;
   onRemove?: () => void;
-  variant?: "default" | "accent" | "attention" | "success" | "danger";
-  operation?: string;
-  onOperationChange?: (operation: string) => void;
-  onValueChange?: (value: string) => void;
 }
 
 export const FilterChip = forwardRef<HTMLDivElement, FilterChipProps>(
-  ({
-    label,
-    value,
-    operation,
-    onRemove,
-    onOperationChange,
-    onValueChange,
-    variant = "default",
-    className,
-    ...props 
-  }, ref) => {
+  ({ label, value, onRemove, className, ...props }, ref) => {
     return (
-      <Box ref={ref} className={styles.chip} data-variant={variant} {...props}>
-        <Text className={styles.filterText}>{label}</Text>
-        
-        {operation && (
-          <div className={styles.operation}>
-            {operation}
-          </div>
-        )}
-
-        {value && (
-          <div className={styles.value}>
-            {value}
-          </div>
-        )}
-
-        {onRemove && (
-          <Flex className={styles.removeButton}>
+      <Box
+        ref={ref}
+        className={[styles.chip, className].filter(Boolean).join(" ")}
+        {...props}
+      >
+        <Flex gap="small" align="center">
+          <Text size="2" weight="medium">
+            {label}
+          </Text>
+          {value && (
+            <>
+              <Text size="2" color="secondary">
+                is
+              </Text>
+              <Text size="2" weight="medium">
+                {value}
+              </Text>
+            </>
+          )}
+          {onRemove && (
             <Cross1Icon 
+              className={styles.removeIcon}
               height="12" 
               width="12" 
               onClick={onRemove}
               aria-label="Remove filter"
             />
-          </Flex>
-        )}
+          )}
+        </Flex>
       </Box>
     );
   }

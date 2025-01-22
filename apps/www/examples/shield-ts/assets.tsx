@@ -103,22 +103,16 @@ export const Assets = () => {
 
   const activeFilters = [
     { 
-      label: "Status", 
-      value: "Active", 
-      operation: "equals",
-      variant: "success" 
+      label: "Category", 
+      value: "Workflow"
     },
     { 
-      label: "Type", 
-      value: "Document", 
-      operation: "contains",
-      variant: "accent" 
+      label: "Status", 
+      value: "Active"
     },
     { 
       label: "Priority", 
-      value: "High", 
-      operation: "equals",
-      variant: "attention" 
+      value: "High"
     }
   ];
 
@@ -181,18 +175,13 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-
-          <Flex gap="small" align="center" wrap="wrap" style={{ padding: "var(--rs-space-5)" }}>
+          <Flex align="center" wrap="wrap">
             {activeFilters.map((filter, index) => (
               <FilterChip
-                key={index}
+                key={`filter-${index}`}
                 label={filter.label}
                 value={filter.value}
-                operation={filter.operation}
-                variant={filter.variant as "success" | "accent" | "attention"}
                 onRemove={() => console.log(`Removing ${filter.label} filter`)}
-                onOperationChange={(op) => console.log(`Operation changed to ${op}`)}
-                onValueChange={(val) => console.log(`Value changed to ${val}`)}
               />
             ))}
           </Flex>

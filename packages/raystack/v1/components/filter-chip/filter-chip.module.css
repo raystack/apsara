@@ -1,15 +1,19 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--rs-space-2);
-  padding: var(--rs-space-2) var(--rs-space-3);
-  background: var(--rs-color-background-base-secondary);
+  padding: var(--rs-space-1) var(--rs-space-2);
+  background: var(--rs-color-background-base-primary);
   border: 1px solid var(--rs-color-border-base-primary);
   border-radius: var(--rs-radius-2);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-2);
-  max-width: 100%;
-  height: 32px;
+  height: 24px;
+  transition: all 0.2s ease-in-out;
+}
+
+.chip:hover {
+  background: var(--rs-color-background-base-primary-hover);
+  border-color: var(--rs-color-border-base-secondary);
 }
 
 .filterText {
@@ -47,23 +51,34 @@
   color: var(--rs-color-text-base-primary);
 }
 
+.removeIcon {
+  cursor: pointer;
+  color: var(--rs-color-text-base-tertiary);
+  transition: color 0.2s ease-in-out;
+  margin-left: var(--rs-space-1);
+}
+
+.removeIcon:hover {
+  color: var(--rs-color-text-base-primary);
+}
+
 /* Variant styles */
 .chip[data-variant="accent"] {
-  background: var(--rs-color-background-accent-secondary);
+  background: var(--rs-color-background-accent-primary);
   border-color: var(--rs-color-border-accent-primary);
 }
 
 .chip[data-variant="attention"] {
-  background: var(--rs-color-background-attention-secondary);
+  background: var(--rs-color-background-attention-primary);
   border-color: var(--rs-color-border-attention-primary);
 }
 
 .chip[data-variant="success"] {
-  background: var(--rs-color-background-success-secondary);
+  background: var(--rs-color-background-success-primary);
   border-color: var(--rs-color-border-success-primary);
 }
 
 .chip[data-variant="danger"] {
-  background: var(--rs-color-background-danger-secondary);
+  background: var(--rs-color-background-danger-primary);
   border-color: var(--rs-color-border-danger-primary);
 }
