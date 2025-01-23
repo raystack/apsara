@@ -51,7 +51,7 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
     width,
     chips,
     size,
-    maxChipsVisible = Infinity,
+    maxChipsVisible = 2,
     ...props
   }, ref) => {
     const prefixRef = useRef<HTMLSpanElement>(null);
