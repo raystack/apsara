@@ -1,13 +1,25 @@
 import { MagnifyingGlassIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { ReactNode } from "react";
 import styles from "./search.module.css";
 
-export interface SearchProps {
+const searchField = cva(styles.searchField, {
+  variants: {
+    size: {
+      small: styles["search-small"],
+      large: styles["search-large"],
+    }
+  },
+  defaultVariants: {
+    size: "large",
+  }
+});
+
+export interface SearchProps extends VariantProps<typeof searchField> {
   className?: string;
   disabled?: boolean;
   placeholder?: string;
-  size?: "small" | "large";
   showClearButton?: boolean;
   onClear?: () => void;
   value?: string;
@@ -23,7 +35,7 @@ export const Search = ({
   className, 
   disabled, 
   placeholder = "Search", 
-  size = "large", 
+  size, 
   showClearButton, 
   onClear, 
   value,
@@ -40,10 +52,8 @@ export const Search = ({
           ref={ref}
           type="text"
           className={clsx(
-            styles.searchField,
-            styles[`search-${size}`],
-            disabled && styles["search-disabled"],
-            className
+            searchField({ size, className }),
+            disabled && styles["search-disabled"]
           )}
           placeholder={placeholder}
           disabled={disabled}
