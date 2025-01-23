@@ -48,7 +48,7 @@
   transition: all 0.2s ease;
   box-sizing: border-box;
   color: var(--rs-color-text-base-primary);
-  padding-left: calc(var(--rs-space-4) + var(--rs-space-5));
+  padding-left: var(--rs-space-8);
   padding-right: var(--rs-space-3);
 }
 
