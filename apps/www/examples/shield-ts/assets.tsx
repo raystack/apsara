@@ -104,7 +104,10 @@ export const Assets = () => {
 
   const [recipients, setRecipients] = useState([
     { label: "A", onRemove: () => handleRemoveRecipient("A") },
-    { label: "B", onRemove: () => handleRemoveRecipient("B") }
+    { label: "B", onRemove: () => handleRemoveRecipient("B") },
+    { label: "C", onRemove: () => handleRemoveRecipient("C") },
+    { label: "D", onRemove: () => handleRemoveRecipient("D") },
+    { label: "E", onRemove: () => handleRemoveRecipient("E") }
   ]);
 
   const handleRemoveRecipient = (label: string) => {
@@ -188,6 +191,8 @@ export const Assets = () => {
             label="Label"
             placeholder="Type and press Enter..."
             chips={recipients}
+            maxChipsVisible={2}
+            size="small"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();

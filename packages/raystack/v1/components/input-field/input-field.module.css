@@ -235,3 +235,11 @@
 .size-large .chipInputContainer {
   min-height: 32px;
 }
+
+.chipOverflow {
+  color: var(--rs-color-text-base-primary);
+  font-size: 12px;
+  padding: var(--rs-space-1) var(--rs-space-1);
+  background: var(--rs-color-background-base-secondary);
+  border-radius: var(--rs-radius-2);
+}

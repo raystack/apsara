@@ -32,7 +32,7 @@ export interface InputFieldProps
   suffix?: string;
   width?: string | number;
   chips?: Array<{ label: string; onRemove?: () => void }>;
-  maxVisible?: number;
+  maxChipsVisible?: number;
 }
 
 export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
@@ -51,7 +51,7 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
     width,
     chips,
     size,
-    maxVisible = Infinity,
+    maxChipsVisible = Infinity,
     ...props
   }, ref) => {
     const prefixRef = useRef<HTMLSpanElement>(null);
@@ -90,7 +90,7 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
           {leadingIcon && <span className={styles.leadingIcon}>{leadingIcon}</span>}
           {prefix && <span ref={prefixRef} className={styles.prefix}>{prefix}</span>}
           <div className={styles.chipInputContainer}>
-            {chips?.map((chip, index) => (
+            {chips?.slice(0, maxChipsVisible).map((chip, index) => (
               <Chip
                 key={index}
                 variant="outline"
@@ -101,6 +101,11 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
                 {chip.label}
               </Chip>
             ))}
+            {chips && chips.length > maxChipsVisible && (
+              <span className={styles.chipOverflow}>
+                +{chips.length - maxChipsVisible}
+              </span>
+            )}
             <input
               ref={ref}
               style={{
