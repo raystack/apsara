@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode, useEffect, useRef, useState } from "react";
+import { ComponentPropsWithoutRef, ComponentRef, forwardRef, ReactNode, useEffect, useRef, useState } from "react";
 import { Chip } from "../chip";
 import styles from "./input-field.module.css";
 
@@ -35,7 +35,7 @@ export interface InputFieldProps
   maxChipsVisible?: number;
 }
 
-export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
+export const InputField = forwardRef<ComponentRef<"input">, InputFieldProps>(
   ({
     className,
     disabled,
