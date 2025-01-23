@@ -202,3 +202,11 @@
   background: var(--rs-color-background-base-secondary);
   border-radius: var(--rs-radius-2);
 }
+
+.has-prefix {
+  padding-left: calc(var(--rs-space-3) + 24px);
+}
+
+.has-suffix {
+  padding-right: calc(var(--rs-space-3) + 24px);
+}
