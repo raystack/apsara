@@ -202,12 +202,6 @@ export const Assets = () => {
             }}
           />
 
-          {/* Filter Chips Container */}
-          <Flex gap="small" align="center" wrap="wrap">
-            {/* ... existing filter chips ... */}
-          </Flex>
-
-          {/* DataTable with full width */}
           <div style={{ width: "100%" }}>
             <DataTable
               columns={columns}
