@@ -84,12 +84,12 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
         <div 
           className={clsx(
             inputWrapper({ size, className }),
-            chips?.length && styles.hasChips
+            chips?.length && styles['has-chips']
           )}
         >
-          {leadingIcon && <span className={styles.leadingIcon}>{leadingIcon}</span>}
+          {leadingIcon && <span className={styles['leading-icon']}>{leadingIcon}</span>}
           {prefix && <span ref={prefixRef} className={styles.prefix}>{prefix}</span>}
-          <div className={styles.chipInputContainer}>
+          <div className={styles['chip-input-container']}>
             {chips?.slice(0, maxChipsVisible).map((chip, index) => (
               <Chip
                 key={index}
@@ -113,11 +113,11 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
                 paddingRight: suffix ? `calc(${suffixWidth}px + var(--rs-space-3))` : undefined,
               }}
               className={clsx(
-                styles.inputField,
-                leadingIcon && styles.hasLeadingIcon,
-                trailingIcon && styles.hasTrailingIcon,
-                error && styles["input-error"],
-                disabled && styles["input-disabled"],
+                styles['input-field'],
+                leadingIcon && styles['has-leading-icon'],
+                trailingIcon && styles['has-trailing-icon'],
+                error && styles['input-error'],
+                disabled && styles['input-disabled'],
                 className
               )}
               aria-invalid={!!error}
@@ -127,7 +127,7 @@ export const InputField = forwardRef<ElementRef<"input">, InputFieldProps>(
             />
           </div>
           {suffix && <span ref={suffixRef} className={styles.suffix}>{suffix}</span>}
-          {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
+          {trailingIcon && <span className={styles['trailing-icon']}>{trailingIcon}</span>}
         </div>
         {(error || helperText) && (
           <span 
