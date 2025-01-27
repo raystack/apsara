@@ -202,25 +202,23 @@ export const Assets = () => {
             }}
           /> */}
 
-          <List.Root>
+          <List.Root maxWidth="600px">
             <List.Header>User Information</List.Header>
-            <List.Item align="center">
-              <List.Label minWidth="88px">Status</List.Label>
+            <List.Item>
+              <List.Label minWidth="120px">Status</List.Label>
               <List.Value>
-                <Badge variant="accent">Active</Badge>
+                <Badge variant="soft" color="mint">Active</Badge>
               </List.Value>
             </List.Item>
-            <List.Item align="center">
-              <List.Label minWidth="88px">Type</List.Label>
+            <List.Item>
+              <List.Label minWidth="120px">Type</List.Label>
               <List.Value>Premium Account</List.Value>
             </List.Item>
-            <List.Item align="center">
-              <List.Label minWidth="88px">Created</List.Label>
-              <List.Value>April 24, 2024</List.Value>
-            </List.Item>
-            <List.Item align="center">
-              <List.Label minWidth="88px">Updated</List.Label>
-              <List.Value>2 hours ago</List.Value>
+            <List.Item>
+              <List.Label minWidth="120px">Description</List.Label>
+              <List.Value>
+                This is a description that demonstrates the content.
+              </List.Value>
             </List.Item>
           </List.Root>
 

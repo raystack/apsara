@@ -34,17 +34,6 @@
   color: var(--rs-color-text-base-primary);
 }
 
-.list-item-start {
-  align-items: flex-start;
-}
-
-.list-item-center {
-  align-items: center;
-}
-
-.list-item-end {
-  align-items: flex-end;
-}
 
 .label {
   font-size: 12px;

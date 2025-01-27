@@ -3,22 +3,9 @@ import { ComponentPropsWithoutRef, ReactNode } from "react";
 import styles from "./list.module.css";
 
 const list = cva(styles.list);
-const listItem = cva(styles["list-item"], {
-  variants: {
-    align: {
-      start: styles["list-item-start"],
-      center: styles["list-item-center"],
-      end: styles["list-item-end"],
-    },
-  },
-  defaultVariants: {
-    align: "start",
-  },
-});
-
+const listItem = cva(styles["list-item"]);
 const label = cva(styles.label);
 const value = cva(styles.value);
-
 const header = cva(styles.header);
 const headerText = cva(styles["header-text"]);
 
@@ -28,7 +15,6 @@ interface ListRootProps extends ComponentPropsWithoutRef<"ul">, VariantProps<typ
 }
 
 interface ListItemProps extends ComponentPropsWithoutRef<"li"> {
-  align?: "start" | "center" | "end";
   children: ReactNode;
 }
 
@@ -59,10 +45,10 @@ const ListRoot = ({ children, className, maxWidth, style, ...props }: ListRootPr
   );
 };
 
-const ListItem = ({ children, align, className, ...props }: ListItemProps) => {
+const ListItem = ({ children, className, ...props }: ListItemProps) => {
   return (
     <li 
-      className={listItem({ align, className })} 
+      className={listItem({ className })} 
       role="listitem"
       {...props}
     >
