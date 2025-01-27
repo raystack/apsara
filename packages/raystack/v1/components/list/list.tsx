@@ -115,5 +115,8 @@ export const List = {
   Value: ListValue,
 };
 
-List.displayName = "List";
-ListItem.displayName = "ListItem"; 
+ListRoot.displayName = "List";
+ListHeader.displayName = "ListHeader";
+ListItem.displayName = "ListItem";
+ListLabel.displayName = "ListLabel";
+ListValue.displayName = "ListValue";
