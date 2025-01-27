@@ -187,7 +187,7 @@ export const Assets = () => {
             <Button>Create Asset</Button>
           </Flex>
 
-          <InputField
+          {/* <InputField
             label="Label"
             placeholder="Type and press Enter..."
             chips={recipients}
@@ -200,7 +200,7 @@ export const Assets = () => {
                 (e.target as HTMLInputElement).value = '';
               }
             }}
-          />
+          /> */}
 
           <List.Root>
             <List.Header>User Information</List.Header>
