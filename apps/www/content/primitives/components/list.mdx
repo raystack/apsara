@@ -1,0 +1,85 @@
+---
+title: List
+description: A component for displaying information in a key-value pair list format.
+---
+
+## Preview
+
+<Preview>
+  <List.Root>
+    <List.Header>User Information</List.Header>
+    <List.Item align="center">
+      <List.Label minWidth="88px">Status</List.Label>
+      <List.Value>Active</List.Value>
+    </List.Item>
+    <List.Item align="center">
+      <List.Label minWidth="88px">Type</List.Label>
+      <List.Value>Premium Account</List.Value>
+    </List.Item>
+    <List.Item align="center">
+      <List.Label minWidth="88px">Created</List.Label>
+      <List.Value>April 24, 2024</List.Value>
+    </List.Item>
+  </List.Root>
+</Preview>
+
+## Usage
+
+The List component is designed to display information in a structured format with labels and values. It supports headers and different alignment options.
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
+</LiveProvider>
+
+<LiveProvider>
+  <LiveEditor code={`import { List } from '@raystack/apsara/v1'
+
+<List.Root maxWidth="600px">
+  <List.Header>User Information</List.Header>
+  <List.Item align="center">
+    <List.Label minWidth="88px">Status</List.Label>
+    <List.Value>Active</List.Value>
+  </List.Item>
+</List.Root>`} border/>
+</LiveProvider>
+
+## List Props
+
+### List.Root Props
+
+- `maxWidth`: Maximum width of the list container (string | number)
+- `className`: Additional CSS class names
+
+### List.Header Props
+
+- `children`: Content to be displayed in the header
+- `className`: Additional CSS class names
+
+### List.Item Props
+
+- `align`: Alignment of the item content (`"start"` | `"center"` | `"end"`, default: "start")
+- `children`: Content to be displayed in the item
+- `className`: Additional CSS class names
+
+### List.Label Props
+
+- `minWidth`: Minimum width of the label (string)
+- `children`: Content to be displayed in the label
+- `className`: Additional CSS class names
+
+### List.Value Props
+
+- `children`: Content to be displayed in the value
+- `className`: Additional CSS class names
+
+## Accessibility
+
+The List component implements proper ARIA attributes for accessibility:
+
+- List.Root has `role="list"` and `aria-label`
+- List.Item has `role="listitem"`
+- List.Header has `role="heading"` and `aria-level={3}`
