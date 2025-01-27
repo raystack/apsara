@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, List, ListItem } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -201,6 +201,27 @@ export const Assets = () => {
               }
             }}
           />
+
+          <List.Root>
+            <List.Item align="center">
+              <List.Label minWidth="88px">Status</List.Label>
+              <List.Value>
+                <Badge variant="accent">Active</Badge>
+              </List.Value>
+            </List.Item>
+            <List.Item align="center">
+              <List.Label minWidth="88px">Type</List.Label>
+              <List.Value>Premium Account</List.Value>
+            </List.Item>
+            <List.Item align="center">
+              <List.Label minWidth="88px">Created</List.Label>
+              <List.Value>April 24, 2024</List.Value>
+            </List.Item>
+            <List.Item align="center">
+              <List.Label minWidth="88px">Updated</List.Label>
+              <List.Value>2 hours ago</List.Value>
+            </List.Item>
+          </List.Root>
 
           <div style={{ width: "100%" }}>
             <DataTable

@@ -25,6 +25,7 @@ export { TextArea } from "./components/text-area";
 export { Switch } from "./components/switch";
 export { Slider } from "./components/slider";
 export { Search } from "./components/search";
+export { List } from "./components/list";
 export {
   ThemeProvider,
   ThemeProviderProps,
