@@ -47,20 +47,25 @@ interface ListHeaderProps extends ComponentPropsWithoutRef<"div"> {
 
 const ListRoot = ({ children, className, maxWidth, style, ...props }: ListRootProps) => {
   return (
-    <ul className={list({ className })} style={{ maxWidth, ...style }} {...props}>
+    <ul 
+      className={list({ className })} 
+      style={{ maxWidth, ...style }} 
+      role="list"
+      aria-label={props['aria-label'] || "List"}
+      {...props}
+    >
       {children}
     </ul>
   );
 };
 
-const ListItem = ({ 
-  children, 
-  align, 
-  className,
-  ...props 
-}: ListItemProps) => {
+const ListItem = ({ children, align, className, ...props }: ListItemProps) => {
   return (
-    <li className={listItem({ align, className })} {...props}>
+    <li 
+      className={listItem({ align, className })} 
+      role="listitem"
+      {...props}
+    >
       {children}
     </li>
   );
@@ -96,13 +101,14 @@ const ListValue = ({
   );
 };
 
-const ListHeader = ({ 
-  children,
-  className,
-  ...props 
-}: ListHeaderProps) => {
+const ListHeader = ({ children, className, ...props }: ListHeaderProps) => {
   return (
-    <div className={header({ className })} {...props}>
+    <div 
+      className={header({ className })} 
+      role="heading"
+      aria-level={3}
+      {...props}
+    >
       <span className={headerText()}>{children}</span>
     </div>
   );
