@@ -24,6 +24,7 @@ export { Tooltip } from "./components/tooltip";
 export { TextArea } from "./components/text-area";
 export { Switch } from "./components/switch";
 export { Slider } from "./components/slider";
+export { Search } from "./components/search";
 export {
   ThemeProvider,
   ThemeProviderProps,

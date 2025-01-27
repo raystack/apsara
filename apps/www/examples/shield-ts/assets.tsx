@@ -1,14 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon, Cross1Icon, PlusIcon, CheckIcon, CaretLeftIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { HomeIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
   useTable
 } from "@raystack/apsara";
 
-
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Tabs } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -228,6 +227,7 @@ export const Assets = () => {
 const AssetsHeader = () => {
   const { filteredColumns } = useTable();
   const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
+  const [searchValue, setSearchValue] = useState("");
   const handleCheckedChange = (newChecked: boolean | 'indeterminate') => {
     if (newChecked !== 'indeterminate') {
       setChecked(newChecked);
@@ -256,6 +256,13 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
+      <Search 
+          placeholder="Search assets..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          showClearButton
+          onClear={() => setSearchValue("")}
+        />
         {/* <Tabs.Root defaultValue="general">
           <Tabs.List>
             <Tabs.Trigger value="general" icon={<HomeIcon />}>
@@ -351,6 +358,7 @@ const AssetsHeader = () => {
         
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
+        
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
           {/* <Radio.Root defaultValue="1" aria-label="View options">
             <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
@@ -411,12 +419,12 @@ const AssetsHeader = () => {
         </Flex>*/}
 
       </Flex>
-      {/* <Flex gap="small">
+      <Flex gap="small">
         <AssetsFooter />
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
-        <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex> */}
+        
+      </Flex>
     </Flex>
   );
 };
