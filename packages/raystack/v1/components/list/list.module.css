@@ -8,6 +8,23 @@
   width: 100%;
 }
 
+.header {
+  display: flex;
+  padding: var(--rs-space-3) 0;
+  gap: var(--rs-space-3);
+  /* border-bottom: 1px solid var(--rs-color-border-base-primary); */
+  background: var(--rs-color-background-base-primary);
+}
+
+.header-text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  text-align: left;
+  color: var(--rs-color-text-base-tertiary);
+}
+
 .list-item {
   display: flex;
   gap: var(--rs-space-4);

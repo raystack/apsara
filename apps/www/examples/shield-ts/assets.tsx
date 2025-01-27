@@ -203,6 +203,7 @@ export const Assets = () => {
           />
 
           <List.Root>
+            <List.Header>User Information</List.Header>
             <List.Item align="center">
               <List.Label minWidth="88px">Status</List.Label>
               <List.Value>

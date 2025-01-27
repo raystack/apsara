@@ -19,6 +19,9 @@ const listItem = cva(styles["list-item"], {
 const label = cva(styles.label);
 const value = cva(styles.value);
 
+const header = cva(styles.header);
+const headerText = cva(styles["header-text"]);
+
 interface ListRootProps extends ComponentPropsWithoutRef<"ul">, VariantProps<typeof list> {
   children: ReactNode;
 }
@@ -34,6 +37,10 @@ interface ListLabelProps extends ComponentPropsWithoutRef<"span"> {
 }
 
 interface ListValueProps extends ComponentPropsWithoutRef<"span"> {
+  children: ReactNode;
+}
+
+interface ListHeaderProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
 }
 
@@ -88,8 +95,21 @@ const ListValue = ({
   );
 };
 
+const ListHeader = ({ 
+  children,
+  className,
+  ...props 
+}: ListHeaderProps) => {
+  return (
+    <div className={header({ className })} {...props}>
+      <span className={headerText()}>{children}</span>
+    </div>
+  );
+};
+
 export const List = {
   Root: ListRoot,
+  Header: ListHeader,
   Item: ListItem,
   Label: ListLabel,
   Value: ListValue,
