@@ -1,7 +1,7 @@
 import * as React from "react";
 import { HTMLAttributes, PropsWithChildren } from "react";
-import { VariantProps, cva, cx } from "class-variance-authority";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { cva, cx,VariantProps } from "class-variance-authority";
 
 import styles from "./text-area.module.css";
 

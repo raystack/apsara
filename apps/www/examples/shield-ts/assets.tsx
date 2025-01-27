@@ -95,6 +95,7 @@ export const Assets = () => {
   const [page, setPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [dateRange, setDateRange] = useState({
     from: new Date(),
@@ -295,7 +296,6 @@ const AssetsHeader = () => {
             <Text>SEO settings content</Text>
           </Tabs.Content>
         </Tabs.Root> */}
-
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
         <div>
