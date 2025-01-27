@@ -24,6 +24,7 @@ const headerText = cva(styles["header-text"]);
 
 interface ListRootProps extends ComponentPropsWithoutRef<"ul">, VariantProps<typeof list> {
   children: ReactNode;
+  maxWidth?: string | number;
 }
 
 interface ListItemProps extends ComponentPropsWithoutRef<"li"> {
@@ -44,9 +45,9 @@ interface ListHeaderProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
 }
 
-const ListRoot = ({ children, className, ...props }: ListRootProps) => {
+const ListRoot = ({ children, className, maxWidth, style, ...props }: ListRootProps) => {
   return (
-    <ul className={list({ className })} {...props}>
+    <ul className={list({ className })} style={{ maxWidth, ...style }} {...props}>
       {children}
     </ul>
   );
