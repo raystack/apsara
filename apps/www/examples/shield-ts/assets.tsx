@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Link, Separator } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -264,6 +264,7 @@ const AssetsHeader = () => {
           showClearButton
           onClear={() => setSearchValue("")}
         />
+        <Separator orientation="horizontal" size="full" />
         {/* <Tabs.Root defaultValue="general">
           <Tabs.List>
             <Tabs.Trigger value="general" icon={<HomeIcon />}>

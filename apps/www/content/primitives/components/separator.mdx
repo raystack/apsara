@@ -1,43 +1,158 @@
 ---
 title: Separator
-description: Visually or semantically separates content.
+description: A visual divider that separates content with support for vertical and horizontal orientations.
 radix:
   link: https://www.radix-ui.com/docs/primitives/components/separator
   api: https://www.radix-ui.com/docs/primitives/components/separator#api-reference
 ---
+
 ## Preview
 
 <Preview>
-  <Flex
-    style={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "16px",
-      width: '100%'
-    }}
-  >
-    <Separator size="half"/>
-    <Separator size="full"/>
+  <Flex style={{ gap: "24px", flexDirection: "column", width: "100%" }}>
+    <Separator size="small" />
+    <Separator size="half" />
+    <Separator size="full" />
+    <Flex style={{ height: "50px", alignItems: "center", gap: "16px" }}>
+      Text
+      <Separator orientation="vertical" size="small" />
+      Text
+    </Flex>
   </Flex>
 </Preview>
+
+## Usage
+
+The Separator component creates a visual or semantic separation between content sections.
 
 ## Installation
 
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
 </LiveProvider>
-
-
-## Anatomy
-Import all parts and piece them together.
 
 <LiveProvider>
-    <LiveEditor code={`
-import { Separator } from '@raystack/apsara'
+  <LiveEditor code={`import { Separator } from '@raystack/apsara/v1'
 
-<Separator size="half"/>
-<Separator size="full"/>
-`} border />
+// Basic usage
+
+<Separator />
+
+// With custom size
+
+<Separator size="half" />
+
+// Vertical orientation
+
+<Separator orientation="vertical" size="small" />`} border/>
 </LiveProvider>
+
+## Props
+
+The Separator component accepts the following props:
+
+- `size`: Defines the length of the separator (`"small"` | `"half"` | `"full"`, default: "full")
+- `orientation`: Sets the direction of the separator (`"horizontal"` | `"vertical"`, default: "horizontal")
+- `className`: Additional CSS class names
+- `decorative`: Boolean indicating if separator is purely visual (default: true)
+
+## Sizes
+
+The Separator component comes in three sizes to accommodate different layout needs.
+
+<Playground
+  scope={{ Separator }}
+  tabs={[
+    {
+      name: "Small",
+      code: `<Separator size="small" />`,
+    },
+    {
+      name: "Half",
+      code: `<Separator size="half" />`,
+    },
+    {
+      name: "Full",
+      code: `<Separator size="full" />`,
+    },
+  ]}
+/>
+
+## Orientation
+
+Separator can be rendered in both horizontal and vertical orientations.
+
+<Playground
+  scope={{ Separator, Flex }}
+  tabs={[
+    {
+      name: "Horizontal",
+      code: `<Separator orientation="horizontal" size="full" />`,
+    },
+    {
+      name: "Vertical",
+      code: `
+<Flex style={{ height: '50px', alignItems: 'center', gap: '16px' }}>
+  Content
+  <Separator orientation="vertical" size="small" />
+  Content
+</Flex>`,
+    },
+  ]}
+/>
+
+## Examples
+
+### Basic Separator
+
+<Playground
+  scope={{ Separator }}
+  code={`
+<Flex style={{ gap: '16px', flexDirection: 'column' }}>
+  <div>Above content</div>
+  <Separator />
+  <div>Below content</div>
+</Flex>
+  `}
+/>
+
+### Content Groups
+
+<Playground
+  scope={{ Separator, Flex }}
+  code={`
+<Flex style={{ gap: '16px', alignItems: 'center' }}>
+  <span>Group 1</span>
+  <Separator orientation="vertical" size="small" />
+  <span>Group 2</span>
+  <Separator orientation="vertical" size="small" />
+  <span>Group 3</span>
+</Flex>
+  `}
+/>
+
+### Custom Spacing
+
+<Playground
+  scope={{ Separator, Flex }}
+  code={`
+<Flex style={{ gap: '24px', flexDirection: 'column' }}>
+  <div>Section 1</div>
+  <Separator size="half" />
+  <div>Section 2</div>
+  <Separator size="half" />
+  <div>Section 3</div>
+</Flex>
+  `}
+/>
+
+## Accessibility
+
+The Separator component follows accessibility best practices:
+
+- Uses `role="separator"` by default
+- Can be marked as `decorative` when used purely for visual separation
+- Maintains proper color contrast
+- Supports proper semantic structure in both orientations
