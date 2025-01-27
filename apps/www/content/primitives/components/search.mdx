@@ -1,0 +1,166 @@
+---
+title: Search
+description: A search input component with built-in search icon and optional clear button.
+---
+
+## Preview
+
+<Preview>
+  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
+    <Search 
+      placeholder="Default search..."
+    />
+
+    <Search
+      placeholder="With clear button..."
+      showClearButton
+      value="Searchable text"
+    />
+
+    <Search
+      placeholder="Small size..."
+      size="small"
+    />
+
+    <Search
+      disabled
+      placeholder="Disabled state"
+    />
+
+  </Flex>
+</Preview>
+
+## Usage
+
+The Search component provides a consistent search input experience with a built-in search icon and optional clear button functionality.
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
+</LiveProvider>
+
+<LiveProvider>
+  <LiveEditor code={`import { Search } from '@raystack/apsara/v1'
+
+<Search 
+  placeholder="Search items..."
+  showClearButton
+  value={searchValue}
+  onChange={(e) => setSearchValue(e.target.value)}
+  onClear={() => setSearchValue("")}
+/>`} border/>
+</LiveProvider>
+
+## Search Props
+
+The `Search` component accepts the following props:
+
+- `size`: Size variant of the search input (`"small"` | `"large"`, default: "large")
+- `placeholder`: Placeholder text for the input
+- `disabled`: Whether the search input is disabled
+- `showClearButton`: Shows a clear button when the input has a value
+- `value`: The controlled value of the input
+- `onChange`: Callback when input value changes
+- `onClear`: Callback when clear button is clicked
+- `className`: Additional CSS class names
+
+## Size
+
+The Search component comes in two sizes to fit different design contexts.
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "Large",
+      code: `<Search placeholder="Large size search..." />`,
+    },
+    {
+      name: "Small",
+      code: `<Search size="small" placeholder="Small size search..." />`,
+    },
+  ]}
+/>
+
+## States
+
+The Search component supports various states to provide visual feedback.
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "Default",
+      code: `<Search placeholder="Default state..." />`,
+    },
+    {
+      name: "Hover",
+      code: `<Search placeholder="Hover state..." />`,
+    },
+    {
+      name: "Focus",
+      code: `<Search placeholder="Focus state..." />`,
+    },
+    {
+      name: "Disabled",
+      code: `<Search disabled placeholder="Disabled state..." />`,
+    },
+  ]}
+/>
+
+## Clear Button
+
+The Search component can include a clear button that appears when there is input value.
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "With Clear Button",
+      code: `<Search placeholder="Type to search..." value="Searchable text" showClearButton />`,
+    },
+    {
+      name: "Without Clear Button",
+      code: `<Search placeholder="Basic search..." />`,
+    },
+  ]}
+/>
+
+## Accessibility
+
+The Search component is built with accessibility in mind, following ARIA best practices:
+
+- Container has `role="search"` to identify it as a search landmark
+- Input has `type="search"` for semantic HTML
+- Search icon is marked as decorative with `aria-hidden="true"`
+- Clear button has appropriate `aria-label` for screen readers
+- Keyboard navigation support for the clear button
+- Input inherits `aria-label` from placeholder text
+
+Example with accessibility features:
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "Default",
+      code: `
+        <Search 
+          placeholder="Search items..."
+          showClearButton
+          value="Searchable text"
+          aria-label="Search items"
+        />
+      `,
+    },
+  ]}
+/>
+
+The component supports keyboard navigation:
+
+- Tab to focus on the search input
+- Tab again to focus on the clear button (when visible)
+- Enter or Space to trigger the clear button

@@ -7,8 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-
-import { toast, ToastContainer, Button, Flex, Text, Checkbox } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -103,6 +102,27 @@ export const Assets = () => {
     to: new Date(),
   });
 
+  const [recipients, setRecipients] = useState([
+    { label: "A", onRemove: () => handleRemoveRecipient("A") },
+    { label: "B", onRemove: () => handleRemoveRecipient("B") },
+    { label: "C", onRemove: () => handleRemoveRecipient("C") },
+    { label: "D", onRemove: () => handleRemoveRecipient("D") },
+    { label: "E", onRemove: () => handleRemoveRecipient("E") }
+  ]);
+
+  const handleRemoveRecipient = (label: string) => {
+    setRecipients(prev => prev.filter(recipient => recipient.label !== label));
+  };
+
+  const handleAddRecipient = (value: string) => {
+    if (value && !recipients.find(r => r.label === value)) {
+      setRecipients(prev => [...prev, { 
+        label: value, 
+        onRemove: () => handleRemoveRecipient(value) 
+      }]);
+    }
+  };
+
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
       setIsLoading(true);
@@ -159,34 +179,56 @@ export const Assets = () => {
   }, []);
 
   return (
-    <>
-      <DataTable
-        columns={columns}
-        data={data}
-        initialState={{ sorting: [{ id: "amount", desc: true }] }}
-        isLoading={isLoading}
-        onLoadMore={loadMoreData}
-      >
-        <DataTable.Toolbar>
-          <AssetsHeader />
-          <DataTable.FilterChips />
-          {/* <Flex gap="small"> */}
-            {/* <Button size="small" variant="primary" onClick={() => showToast("success")}>Show Success Toast!</Button>
-            <Button size="small" variant="danger" onClick={() => showToast("error")}>Show Error Toast with custom icon</Button> */}
-          {/* </Flex> */}
-        </DataTable.Toolbar>
-        <DataTable.Footer>
-          <></>
-        </DataTable.Footer>
-      </DataTable>
-      <ToastContainer />
-    </>
+    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
+      <Flex direction="column" gap="large" style={{ width: "100%" }}>
+        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
+          <Flex justify="between" align="center">
+            <Title>Assets</Title>
+            <Button>Create Asset</Button>
+          </Flex>
+
+          <InputField
+            label="Label"
+            placeholder="Type and press Enter..."
+            chips={recipients}
+            maxChipsVisible={2}
+            size="small"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleAddRecipient((e.target as HTMLInputElement).value);
+                (e.target as HTMLInputElement).value = '';
+              }
+            }}
+          />
+
+          <div style={{ width: "100%" }}>
+            <DataTable
+              columns={columns}
+              data={data}
+              initialState={{ sorting: [{ id: "amount", desc: true }] }}
+              isLoading={isLoading}
+              onLoadMore={loadMoreData}
+            >
+              <DataTable.Toolbar>
+                <AssetsHeader />
+                <DataTable.FilterChips />
+              </DataTable.Toolbar>
+              <DataTable.Footer>
+                <></>
+              </DataTable.Footer>
+            </DataTable>
+          </div>
+        </Flex>
+      </Flex>
+    </div>
   );
 };
 
 const AssetsHeader = () => {
   const { filteredColumns } = useTable();
   const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
+  const [searchValue, setSearchValue] = useState("");
   const handleCheckedChange = (newChecked: boolean | 'indeterminate') => {
     if (newChecked !== 'indeterminate') {
       setChecked(newChecked);
@@ -214,8 +256,46 @@ const AssetsHeader = () => {
       justify="between"
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
-      <Flex gap="extra-large" align="center">
-    {/* More footer items */}
+      <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
+      <Search 
+          placeholder="Search assets..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          showClearButton
+          onClear={() => setSearchValue("")}
+        />
+        {/* <Tabs.Root defaultValue="general">
+          <Tabs.List>
+            <Tabs.Trigger value="general" icon={<HomeIcon />}>
+              Home
+            </Tabs.Trigger>
+            <Tabs.Trigger value="hosting" disabled>
+              Hosting
+            </Tabs.Trigger>
+            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />} disabled />
+            <Tabs.Trigger value="billing">
+              Billing
+            </Tabs.Trigger>
+            <Tabs.Trigger value="seo">
+              SEO
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="general">
+            <Text>General settings content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="hosting">
+            <Text>Hosting configuration content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="editor">
+            <Text>Editor preferences content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="billing">
+            <Text>Billing information content</Text>
+          </Tabs.Content>
+          <Tabs.Content value="seo">
+            <Text>SEO settings content</Text>
+          </Tabs.Content>
+        </Tabs.Root> */}
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
         <div>
@@ -278,6 +358,7 @@ const AssetsHeader = () => {
         
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
+        
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
           {/* <Radio.Root defaultValue="1" aria-label="View options">
             <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
@@ -338,12 +419,12 @@ const AssetsHeader = () => {
         </Flex>*/}
 
       </Flex>
-      {/* <Flex gap="small">
+      <Flex gap="small">
         <AssetsFooter />
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
-        <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex> */}
+        
+      </Flex>
     </Flex>
   );
 };
