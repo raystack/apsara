@@ -207,7 +207,7 @@ export const Assets = () => {
             <List.Item>
               <List.Label minWidth="120px">Status</List.Label>
               <List.Value>
-                <Badge variant="soft" color="mint">Active</Badge>
+                Active
               </List.Value>
             </List.Item>
             <List.Item>
