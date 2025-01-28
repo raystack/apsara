@@ -211,7 +211,7 @@ export const Assets = () => {
 };
 
 const AssetsHeader = () => {
-  const { filteredColumns } = useTable();
+  const { filteredColumns, table } = useTable();
   const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
   const handleCheckedChange = (newChecked: boolean | 'indeterminate') => {
     if (newChecked !== 'indeterminate') {
@@ -396,12 +396,12 @@ const AssetsHeader = () => {
         </Flex>*/}
 
       </Flex>
-      {/* <Flex gap="small">
+      <Flex gap="small">
         <AssetsFooter />
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
         <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex> */}
+      </Flex>
     </Flex>
   );
 };
