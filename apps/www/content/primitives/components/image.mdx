@@ -2,28 +2,191 @@
 title: Image
 description: Displays a img component
 ---
+
 ## Preview
 
 <Preview>
-  <Image src="https://images.unsplash.com/photo-1447690709975-318628b14c57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=250&q=80" />
+  <Flex style={{ gap: "24px", flexDirection: "column" }}>
+    <Image
+      src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+      alt="Nature landscape"
+      width={300}
+      height={200}
+      fit="cover"
+      radius="medium"
+    />
+    <Flex style={{ gap: "16px" }}>
+      <Image
+        src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+        alt="Nature"
+        width={100}
+        height={100}
+        fit="cover"
+        radius="full"
+      />
+      <Image
+        src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+        alt="Nature"
+        width={100}
+        height={100}
+        fit="contain"
+        radius="small"
+      />
+    </Flex>
+  </Flex>
 </Preview>
+
+## Usage
+
+The Image component is used to display responsive images with various fitting options and border radius styles.
 
 ## Installation
 
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
 </LiveProvider>
-
-
-## Anatomy
-Import all parts and piece them together.
 
 <LiveProvider>
-    <LiveEditor code={`
-import { Image } from '@raystack/apsara'
+  <LiveEditor code={`import { Image } from '@raystack/apsara/v1'
 
-<Image src="https://images.unsplash.com/photo-1447690709975-318628b14c57?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2550&q=80" />
-`} border />
+// Basic usage
+
+<Image src="/path/to/image.jpg" alt="Description" width={300} height={200} />
+
+// With fallback
+
+<Image 
+  src="/path/to/image.jpg"
+  fallback="/path/to/fallback.jpg"
+  fit="cover"
+  radius="medium"
+/>`} border/>
 </LiveProvider>
+
+## Props
+
+The Image component accepts the following props:
+
+- `fit`: Object-fit property (`"contain"` | `"cover"` | `"fill"`, default: "cover")
+- `radius`: Border radius style (`"none"` | `"small"` | `"medium"` | `"full"`, default: "none")
+- `fallback`: URL of fallback image to show on error
+- `alt`: Alternative text description (required)
+- `className`: Additional CSS class names
+- All standard HTML img attributes
+
+## Object Fit
+
+Choose between different object-fit modes to control how the image fills its container.
+
+<Playground
+  scope={{ Image }}
+  tabs={[
+    {
+      name: "Cover",
+      code: `
+<Image 
+  src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+  alt="Nature landscape"
+  width={200}
+  height={150}
+  fit="cover"
+/>`,
+    },
+    {
+      name: "Contain",
+      code: `
+<Image 
+  src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+  alt="Nature landscape"
+  width={200}
+  height={150}
+  fit="contain"
+/>`,
+    },
+    {
+      name: "Fill",
+      code: `
+<Image 
+  src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+  alt="Nature landscape"
+  width={200}
+  height={150}
+  fit="fill"
+/>`,
+    },
+  ]}
+/>
+
+## Border Radius
+
+The Image component supports different border radius styles.
+
+<Playground
+  scope={{ Image, Flex }}
+  code={`
+<Flex style={{ gap: '16px' }}>
+  <Image 
+    src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+    alt="Nature"
+    width={100}
+    height={100}
+    fit="cover"
+    radius="none"
+  />
+  <Image 
+    src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+    alt="Nature"
+    width={100}
+    height={100}
+    fit="cover"
+    radius="small"
+  />
+  <Image 
+    src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+    alt="Nature"
+    width={100}
+    height={100}
+    fit="cover"
+    radius="medium"
+  />
+  <Image 
+    src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+    alt="Nature"
+    width={100}
+    height={100}
+    fit="cover"
+    radius="full"
+  />
+</Flex>
+  `}
+/>
+
+## Fallback
+
+Images can have a fallback source that displays when the primary image fails to load.
+
+<Playground
+  scope={{ Image }}
+  code={`
+<Image 
+  src="invalid-image-url.jpg"
+  fallback="https://images.unsplash.com/photo-1447690709975-318628b14c57"
+  alt="With fallback"
+  width={200}
+  height={150}
+  fit="cover"
+  radius="medium"
+/>
+  `}
+/>
+
+## Accessibility
+
+The Image component follows accessibility best practices:
+
+- Requires alt text for screen readers
+- Maintains proper aspect ratios
+- Supports keyboard navigation when used in interactive contexts
+- Provides fallback for failed image loads
