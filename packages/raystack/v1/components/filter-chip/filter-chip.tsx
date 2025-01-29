@@ -67,7 +67,9 @@ export const FilterChip = ({
             onValueChange={setFilterValue}
           >
             <Select.Trigger variant="filter">
-              <Select.Value placeholder="Select value" />
+              <div className={styles.selectValue}>
+                <Select.Value placeholder="Select value" />
+              </div>
             </Select.Trigger>
             <Select.Content data-variant="filter">
               {options.map((opt) => (
@@ -121,7 +123,7 @@ export const FilterChip = ({
         </Flex>
         <Select defaultValue={operation} onValueChange={setOperation}>
           <Select.Trigger className={styles.operation} variant="filter">
-            <Select.Value />
+            <span className={styles.operationText}>{operation}</span>
           </Select.Trigger>
           <Select.Content>
             {operationOptions.map((opt) => (

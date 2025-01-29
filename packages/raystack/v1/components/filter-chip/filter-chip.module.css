@@ -31,13 +31,12 @@
   margin-right: var(--rs-space-2);
 }
 
-.operation [data-radix-select-trigger] {
+.operationText {
   color: var(--rs-color-text-base-secondary);
 }
 
-.operation [data-radix-select-trigger] span {
-  color: var(--rs-color-text-base-secondary);
-}
+
+
 
 /* Target any input fields within the chip */
 .chip input {
@@ -65,10 +64,6 @@
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.4px;
-}
-
-.chip [data-trigger]:hover {
-  background: var(--rs-color-background-base-hover) !important;
 }
 
 .value {
@@ -124,4 +119,3 @@
   max-width: 12px;
   max-height: 12px;
 }
-
