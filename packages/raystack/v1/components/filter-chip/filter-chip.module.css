@@ -149,7 +149,7 @@
 
 .textFieldWrapper {
   padding: 0 var(--rs-space-2);
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .textField {
@@ -163,7 +163,7 @@
 
 .dateFieldWrapper {
   padding: 0 var(--rs-space-2);
-  min-width: 120px;
+  min-width: 80px;
 }
 
 .dateField {
