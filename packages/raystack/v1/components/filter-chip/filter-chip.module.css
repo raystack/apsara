@@ -23,11 +23,10 @@
 .operation {
   font-size: 12px;
   background: transparent;
-  margin-left: var(--rs-space-2);
-  margin-right: var(--rs-space-2);
   height: calc(100% - 2px);
   display: flex;
   align-items: center;
+  margin-left: var(--rs-space-2);
 }
 
 .operation:hover {
@@ -110,6 +109,23 @@
   color: var(--rs-color-text-base-primary) !important;
 }
 
+.selectValue {
+  color: var(--rs-color-text-base-primary);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  padding: var(--rs-space-1) var(--rs-space-2);
+  height: calc(100% - 2px);
+  display: flex;
+  align-items: center;
+  margin-left: 0;
+}
+
+.selectValue:hover {
+  color: var(--rs-color-text-base-primary);
+  background: var(--rs-color-background-base-primary-hover);
+  height: calc(100% - 2px);
+}
 
 .leadingIcon {
   display: flex;
