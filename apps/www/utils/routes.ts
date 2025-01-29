@@ -69,6 +69,11 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/flex",
         newBadge: true,
       },
+      {
+        title: "Filter Chip",
+        slug: "docs/primitives/components/filter-chip",
+        newBadge: true,
+      },
       { title: "Headline", slug: "docs/primitives/components/headline" },
       { title: "IconButton", slug: "docs/primitives/components/iconButton", newBadge: true },
       { title: "Image", slug: "docs/primitives/components/image" },
