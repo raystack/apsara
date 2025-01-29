@@ -20,23 +20,36 @@
   padding-right: var(--rs-space-3);
 }
 
-.chip:hover {
-  border-color: var(--rs-color-border-base-secondary);
-}
-
 .operation {
   font-size: 12px;
   background: transparent;
   margin-left: var(--rs-space-2);
   margin-right: var(--rs-space-2);
+  height: calc(100% - 2px);
+  display: flex;
+  align-items: center;
+}
+
+.operation:hover {
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .operationText {
   color: var(--rs-color-text-base-secondary);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  padding: var(--rs-space-1) var(--rs-space-3);
+  height: calc(100% - 2px);
+  display: flex;
+  align-items: center;
 }
 
-
-
+.operationText:hover {
+  color: var(--rs-color-text-base-primary);
+  background: var(--rs-color-background-base-primary-hover);
+  height: calc(100% - 2px);
+}
 
 /* Target any input fields within the chip */
 .chip input {
@@ -74,19 +87,6 @@
   text-overflow: ellipsis;
   line-height: 16px;
   letter-spacing: 0.4px;
-}
-
-.removeButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: var(--rs-color-text-base-tertiary);
-  transition: color 0.2s ease;
-}
-
-.removeButton:hover {
-  color: var(--rs-color-text-base-primary);
 }
 
 .removeIcon {

@@ -110,7 +110,7 @@ export const FilterChip = ({
       className={[styles.chip, className].filter(Boolean).join(" ")}
       {...props}
     >
-      <Flex gap="small" align="center">
+      <Flex align="center">
         <Flex align="center" style={{ gap: 'var(--rs-space-2)' }}>
           {leadingIcon && (
             <span className={styles.leadingIcon}>
