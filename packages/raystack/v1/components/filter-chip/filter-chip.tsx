@@ -118,12 +118,14 @@ export const FilterChip = ({
     <Box
       ref={ref}
       className={[styles.chip, className].filter(Boolean).join(" ")}
+      role="group"
+      aria-label={`Filter by ${label}`}
       {...props}
     >
       <Flex align="center">
         <Flex align="center" style={{ gap: 'var(--rs-space-2)' }}>
           {leadingIcon && (
-            <span className={styles.leadingIcon}>
+            <span className={styles.leadingIcon} aria-hidden="true">
               {leadingIcon}
             </span>
           )}
@@ -131,13 +133,13 @@ export const FilterChip = ({
             {label}
           </Text>
         </Flex>
-        <Select defaultValue={operation} onValueChange={setOperation}>
-          <Select.Trigger className={styles.operation} variant="filter">
+        <Select defaultValue={operation} onValueChange={setOperation} aria-labelledby={`${label}-label`}>
+          <Select.Trigger className={styles.operation} variant="filter" aria-label={`${label} filter operation`}>
             <span className={styles.operationText}>{operation}</span>
           </Select.Trigger>
           <Select.Content data-variant="filter">
             {operationOptions.map((opt) => (
-              <Select.Item key={opt.value} value={opt.value}>
+              <Select.Item key={opt.value} value={opt.value} aria-label={`Filter ${label} ${opt.label}`}>
                 {opt.label}
               </Select.Item>
             ))}
@@ -145,11 +147,14 @@ export const FilterChip = ({
         </Select>
         {renderValueInput()}
         {onRemove && (
-          <div className={styles.removeIconContainer}>
+          <div className={styles.removeIconContainer} 
+            role="button"
+            tabIndex={0}
+            aria-label={`Remove ${label} filter`}
+          >
             <Cross1Icon 
               className={styles.removeIcon}
               onClick={onRemove}
-              aria-label="Remove filter"
             />
           </div>
         )}
