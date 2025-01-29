@@ -109,16 +109,14 @@ export const FilterChip = ({
       {...props}
     >
       <Flex gap="small" align="center">
-        <Flex gap="small" align="center">
-          {leadingIcon && (
-            <span className={styles.leadingIcon}>
-              {leadingIcon}
-            </span>
-          )}
-          <Text size={2} weight="normal">
-            {label}
-          </Text>
-        </Flex>
+        {leadingIcon && (
+          <span className={styles.leadingIcon}>
+            {leadingIcon}
+          </span>
+        )}
+        <Text size={2} weight="normal">
+          {label}
+        </Text>
         <Select defaultValue={operation} onValueChange={setOperation}>
           <Select.Trigger className={styles.operation} variant="filter">
             <Select.Value />
