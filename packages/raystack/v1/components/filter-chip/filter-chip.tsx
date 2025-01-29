@@ -27,7 +27,7 @@ export interface FilterChipProps {
 export const FilterChip = ({
   label,
   value,
-  onRemove,
+  onRemove = () => null,
   className,
   ref,
   columnType = 'text',
@@ -146,7 +146,6 @@ export const FilterChip = ({
           </Select.Content>
         </Select>
         {renderValueInput()}
-        {onRemove && (
           <div className={styles.removeIconContainer} 
             role="button"
             tabIndex={0}
@@ -157,7 +156,6 @@ export const FilterChip = ({
               onClick={onRemove}
             />
           </div>
-        )}
       </Flex>
     </Box>
   );
