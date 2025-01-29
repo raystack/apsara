@@ -135,11 +135,13 @@ export const FilterChip = ({
         </Select>
         {renderValueInput()}
         {onRemove && (
-          <Cross1Icon 
-            className={styles.removeIcon}
-            onClick={onRemove}
-            aria-label="Remove filter"
-          />
+          <div className={styles.removeIconContainer}>
+            <Cross1Icon 
+              className={styles.removeIcon}
+              onClick={onRemove}
+              aria-label="Remove filter"
+            />
+          </div>
         )}
       </Flex>
     </Box>

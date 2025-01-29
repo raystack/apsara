@@ -1,6 +1,6 @@
 .chip {
   display: inline-flex;
-  align-items: center;
+  align-items: stretch;
   gap: 0;
   font-size: 12px;
   height: 24px;
@@ -17,7 +17,7 @@
 
 .chip > * {
   padding-left: var(--rs-space-3);
-  padding-right: var(--rs-space-3);
+  /* padding-right: var(--rs-space-1); */
 }
 
 .operation {
@@ -88,16 +88,24 @@
   letter-spacing: 0.4px;
 }
 
+.removeIconContainer {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: var(--rs-space-1) var(--rs-space-3);
+  margin: 0;
+}
+
+.removeIconContainer:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
 .removeIcon {
   cursor: pointer;
   color: var(--rs-color-text-base-primary);
   transition: color 0.2s ease-in-out;
-  border: none !important;
-  background: transparent !important;
   width: 12px !important;
   height: 12px !important;
-  min-width: 12px !important;
-  min-height: 12px !important;
 }
 
 .removeIcon:hover {
