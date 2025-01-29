@@ -1,5 +1,5 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, ReactElement } from "react";
 import { Box } from "../box";
 import { Flex } from "../flex";
 import { Select } from "../select";
@@ -21,6 +21,7 @@ export interface FilterChipProps {
   options?: Array<{ label: string; value: string }>;
   onValueChange?: (value: any) => void;
   onOperationChange?: (operation: string) => void;
+  leadingIcon?: ReactElement;
 }
 
 export const FilterChip = ({
@@ -33,6 +34,7 @@ export const FilterChip = ({
   options = [],
   onValueChange,
   onOperationChange,
+  leadingIcon,
   ...props
 }: FilterChipProps) => {
   const [operation, setOperation] = useState('is');
@@ -107,9 +109,16 @@ export const FilterChip = ({
       {...props}
     >
       <Flex gap="small" align="center">
-        <Text size={2} weight="normal">
-          {label}
-        </Text>
+        <Flex gap="small" align="center">
+          {leadingIcon && (
+            <span className={styles.leadingIcon}>
+              {leadingIcon}
+            </span>
+          )}
+          <Text size={2} weight="normal">
+            {label}
+          </Text>
+        </Flex>
         <Select defaultValue={operation} onValueChange={setOperation}>
           <Select.Trigger className={styles.operation} variant="filter">
             <Select.Value />

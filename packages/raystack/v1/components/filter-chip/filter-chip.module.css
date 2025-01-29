@@ -12,6 +12,7 @@
   font-weight: 400;
   line-height: 16px;
   letter-spacing: 0.4px;
+  width: fit-content;
 }
 
 .chip > * {
@@ -118,3 +119,9 @@
 /* .operation [data-value] {
   color: var(--rs-color-text-base-tertiary) !important;
 } */
+
+.leadingIcon {
+  display: flex;
+  align-items: center;
+}
+
