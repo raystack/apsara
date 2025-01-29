@@ -21,6 +21,7 @@ interface DatePickerProps {
   placeholder?: string;
   value?: Date;
   children?: React.ReactNode | ((props: { selectedDate: string }) => React.ReactNode);
+  showCalendarIcon?: boolean;
 }
 
 export function DatePicker({
@@ -32,6 +33,7 @@ export function DatePicker({
   value = new Date(),
   onSelect = () => {},
   children,
+  showCalendarIcon = true,
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
@@ -145,7 +147,7 @@ export function DatePicker({
     <TextField
       ref={textFieldRef}
       defaultValue={formattedDate}
-      trailing={<CalendarIcon />}
+      trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
       onChange={handleInputChange}
       onFocus={handleInputFocus}
       onBlur={handleInputBlur}
