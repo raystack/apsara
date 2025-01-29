@@ -149,6 +149,7 @@
 
 .textFieldWrapper {
   padding: 0 var(--rs-space-2);
+  min-width: 80px;
 }
 
 .textField {
@@ -158,4 +159,27 @@
 .textFieldWrapper input {
   padding-left: var(--rs-space-2) !important;
   padding-right: var(--rs-space-2) !important;
+}
+
+.dateFieldWrapper {
+  padding: 0 var(--rs-space-3);
+  min-width: 120px;
+}
+
+.dateField {
+  border-radius: var(--rs-radius-1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.dateField input {
+  text-align: left;
+  padding-left: var(--rs-space-2) !important;
+  padding-right: var(--rs-space-2) !important;
+}
+
+.dateField [data-trailing] {
+  margin-left: auto;
 }
