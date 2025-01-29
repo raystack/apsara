@@ -169,12 +169,10 @@ export const Assets = () => {
 
   const handleFilterChange = (filter: any) => {
     console.log('Filter changed:', filter);
-    // Add your filter logic here
   };
 
   const handleOperationChange = (operation: string) => {
     console.log('Operation changed:', operation);
-    // Add your operation logic here
   };
 
   useEffect(() => {
