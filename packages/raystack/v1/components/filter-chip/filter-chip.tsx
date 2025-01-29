@@ -135,7 +135,7 @@ export const FilterChip = ({
           <Select.Trigger className={styles.operation} variant="filter">
             <span className={styles.operationText}>{operation}</span>
           </Select.Trigger>
-          <Select.Content>
+          <Select.Content data-variant="filter">
             {operationOptions.map((opt) => (
               <Select.Item key={opt.value} value={opt.value}>
                 {opt.label}
