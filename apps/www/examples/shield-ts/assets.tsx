@@ -6,8 +6,8 @@ import {
   Title,
   useTable
 } from "@raystack/apsara";
-
 import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Tabs, FilterChip } from "@raystack/apsara/v1";
+
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -95,6 +95,7 @@ export const Assets = () => {
   const [page, setPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [dateRange, setDateRange] = useState({
     from: new Date(),
@@ -115,6 +116,27 @@ export const Assets = () => {
       value: "High"
     }
   ];
+  const [recipients, setRecipients] = useState([
+    { label: "A", onRemove: () => handleRemoveRecipient("A") },
+    { label: "B", onRemove: () => handleRemoveRecipient("B") },
+    { label: "C", onRemove: () => handleRemoveRecipient("C") },
+    { label: "D", onRemove: () => handleRemoveRecipient("D") },
+    { label: "E", onRemove: () => handleRemoveRecipient("E") }
+  ]);
+
+  const handleRemoveRecipient = (label: string) => {
+    setRecipients(prev => prev.filter(recipient => recipient.label !== label));
+  };
+
+  const handleAddRecipient = (value: string) => {
+    if (value && !recipients.find(r => r.label === value)) {
+      setRecipients(prev => [...prev, { 
+        label: value, 
+        onRemove: () => handleRemoveRecipient(value) 
+      }]);
+    }
+  };
+
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
@@ -256,6 +278,7 @@ export const Assets = () => {
 const AssetsHeader = () => {
   const { filteredColumns, table } = useTable();
   const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
+  const [searchValue, setSearchValue] = useState("");
   const handleCheckedChange = (newChecked: boolean | 'indeterminate') => {
     if (newChecked !== 'indeterminate') {
       setChecked(newChecked);
@@ -284,6 +307,13 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
+      <Search 
+          placeholder="Search assets..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          showClearButton
+          onClear={() => setSearchValue("")}
+        />
         {/* <Tabs.Root defaultValue="general">
           <Tabs.List>
             <Tabs.Trigger value="general" icon={<HomeIcon />}>
@@ -316,7 +346,6 @@ const AssetsHeader = () => {
             <Text>SEO settings content</Text>
           </Tabs.Content>
         </Tabs.Root> */}
-
         {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
         {/* <Spinner size={3} />
         <div>
@@ -379,6 +408,7 @@ const AssetsHeader = () => {
         
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
+        
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
           {/* <Radio.Root defaultValue="1" aria-label="View options">
             <Flex gap="small" align="center" style={{ minWidth: '200px' }}>

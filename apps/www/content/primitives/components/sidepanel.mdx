@@ -1,0 +1,189 @@
+---
+title: Sidepanel
+description: A collapsible side navigation panel component.
+---
+
+## Preview
+
+<Preview>
+  <Sidepanel.Root open={true}>
+    <Sidepanel.Header logo={<InfoCircledIcon width={24} height={24} />} title="Company Name" />
+    <Sidepanel.Main>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Analytics</Sidepanel.Item>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
+    </Sidepanel.Main>
+    <Sidepanel.Footer>
+      <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Help</Sidepanel.Item>
+    </Sidepanel.Footer>
+  </Sidepanel.Root>
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
+</LiveProvider>
+
+## Usage
+
+The Sidepanel component provides a collapsible navigation panel with header, main content, and footer sections.
+
+<LiveProvider>
+  <LiveEditor code={`import { Sidepanel } from '@raystack/apsara/v1'
+
+export default function App() {
+  return (
+    <Sidepanel.Root open={true}>
+      <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
+      <Sidepanel.Main>
+        <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+      </Sidepanel.Main>
+      <Sidepanel.Footer>
+        <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Help</Sidepanel.Item>
+      </Sidepanel.Footer>
+    </Sidepanel.Root>
+  )
+}`} border/>
+</LiveProvider>
+
+## API Reference
+
+### Root Props
+
+- `open`: Controls the expanded/collapsed state (boolean)
+- `onOpenChange`: Callback when expanded/collapsed state changes (function)
+- `position`: Position of the sidepanel (`"left"` | `"right"`, default: "left")
+- `profile`: Optional profile information object
+  - `icon`: ReactNode
+  - `label`: string
+  - `href`: string (optional)
+  - `onIconClick`: Optional callback for icon click
+
+### Header Props
+
+- `logo`: ReactNode for the header icon/logo
+- `title`: string for the header text
+- `onLogoClick`: Optional callback for logo click
+
+### Item Props
+
+- `icon`: ReactNode for the item's icon
+- `href`: string for the link destination
+- `active`: boolean to indicate current selection
+- `children`: ReactNode for the item's label
+
+## Sidepanel Props
+
+The Sidepanel component consists of several parts, each with their own props:
+
+### Root
+
+- `open`: Controls the expanded/collapsed state (boolean)
+- `onOpenChange`: Callback when expanded/collapsed state changes (function)
+- `position`: Position of the sidepanel ("left" | "right", default: "left")
+- `account`: Optional account information object with:
+  - `icon`: Icon element to display (ReactNode)
+  - `label`: Text to display (string)
+  - `href`: Optional URL the account links to (string)
+
+### Header
+
+- `logo`: Logo element to display (ReactNode)
+- `title`: Title text to display (string)
+
+### Item
+
+- `icon`: Icon element to display (ReactNode)
+- `active`: Whether the item is currently active (boolean)
+- `href`: URL the item links to (string)
+
+## Position
+
+The Sidepanel can be positioned on either the left or right side of the screen.
+
+<Playground
+  scope={{ Sidepanel, InfoCircledIcon }}
+  tabs={[
+    {
+      name: "Left",
+      code: `
+        <Sidepanel.Root open={true} position="left">
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidepanel.Main>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+          </Sidepanel.Main>
+        </Sidepanel.Root>
+      `,
+    },
+    {
+      name: "Right",
+      code: `
+        <Sidepanel.Root open={true} position="right">
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidepanel.Main>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Dashboard</Sidepanel.Item>
+          </Sidepanel.Main>
+        </Sidepanel.Root>
+      `,
+    },
+  ]}
+/>
+
+## State
+
+The Sidepanel supports expanded and collapsed states with smooth transitions.
+
+<Playground
+  scope={{ Sidepanel, InfoCircledIcon }}
+  tabs={[
+    {
+      name: "Expanded",
+      code: `
+        <Sidepanel.Root open={true}>
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidepanel.Main>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
+          </Sidepanel.Main>
+        </Sidepanel.Root>
+      `,
+    },
+    {
+      name: "Collapsed",
+      code: `
+        <Sidepanel.Root open={false}>
+          <Sidepanel.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidepanel.Main>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidepanel.Item>
+            <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidepanel.Item>
+          </Sidepanel.Main>
+        </Sidepanel.Root>
+      `,
+    },
+  ]}
+/>
+
+## Accessibility
+
+The Sidepanel implements the following accessibility features:
+
+- Proper ARIA roles and attributes
+
+  - `role="navigation"` for the main sidebar
+  - `role="banner"` for the header
+  - `role="menuitem"` for navigation items
+  - `aria-expanded` to indicate sidebar state
+  - `aria-current="page"` for active items
+
+- Keyboard navigation support
+
+  - Enter/Space to toggle sidebar expansion
+  - Tab navigation through interactive elements
+
+- Screen reader support
+  - Meaningful labels for all interactive elements
+  - Hidden decorative elements
+  - Clear state indicators

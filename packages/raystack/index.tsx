@@ -1,4 +1,4 @@
-import "./style.css"; // Old styles file. To be removed after Apsara v1 release
+import "./style.css"; // Old styles file. To be removed after Apsara v1 migration is complete.
 import "./v1/styles/index.css";
 export { Accordion } from "./accordion";
 export { Avatar } from "./avatar";

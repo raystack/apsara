@@ -2,8 +2,10 @@ import * as React from 'react';
 import { type ComponentPropsWithoutRef } from 'react';
 import * as RadixSlider from '@radix-ui/react-slider';
 import { cva, type VariantProps } from 'class-variance-authority';
-import styles from './slider.module.css';
+
 import { ThumbIcon } from './thumb';
+
+import styles from './slider.module.css';
 
 const slider = cva(styles.slider, {
   variants: {

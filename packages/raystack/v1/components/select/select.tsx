@@ -4,7 +4,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { Text } from "../text";
 import styles from "./select.module.css";
-import { TextProps } from "~/text/text";
+import { TextProps } from "../text/text";
 
 export interface IconProps extends React.SVGAttributes<SVGElement> {
   children?: never;

@@ -42,7 +42,9 @@ The `InputField` component accepts the following props:
 - `prefix`: Text or symbol to show before input value (string)
 - `suffix`: Text or symbol to show after input value (string)
 - `width`: Custom width for the input field (string | number)
+- `chips`: Array of chip objects with label and onRemove function
 - `className`: Additional CSS class names
+- `size`: Size variant of the input field ('small' | 'large', default: 'large')
 - All other InputHTMLAttributes from React
 
 ## Variants
@@ -160,4 +162,70 @@ Input field with custom width.
   placeholder="Enter text"
   width="300px"
 />`}
+/>
+
+### With Chips
+
+Input field that can display and manage chips/tags.
+
+<Playground
+  scope={{ InputField }}
+  code={`
+<InputField 
+  label="With Chips"
+  placeholder="Type and press Enter..."
+  chips={[
+    { label: "A", onRemove: () => console.log("Remove A") },
+    { label: "B", onRemove: () => console.log("Remove B") }
+  ]}
+/>
+`}
+/>
+
+### Size Variants
+
+InputField comes in two sizes: small (24px) and large (32px).
+
+<Playground
+  scope={{ InputField }}
+  code={`
+<div direction="column" gap="medium">
+  <InputField 
+    label="Large Input (Default)"
+    placeholder="32px height"
+  />
+  <InputField 
+    label="Small Input"
+    placeholder="24px height"
+    size="small"
+  />
+</div>
+`}
+/>
+
+### With Chips (Different Sizes)
+
+<Playground
+  scope={{ InputField }}
+  code={`
+<div direction="column" gap="medium">
+  <InputField 
+    label="Large Input with Chips"
+    placeholder="Type and press Enter..."
+    chips={[
+      { label: "A", onRemove: () => console.log("Remove A") },
+      { label: "B", onRemove: () => console.log("Remove B") }
+    ]}
+  />
+  <InputField 
+    label="Small Input with Chips"
+    placeholder="Type and press Enter..."
+    size="small"
+    chips={[
+      { label: "A", onRemove: () => console.log("Remove A") },
+      { label: "B", onRemove: () => console.log("Remove B") }
+    ]}
+  />
+</div>
+`}
 />
