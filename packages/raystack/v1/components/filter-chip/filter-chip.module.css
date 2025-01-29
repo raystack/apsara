@@ -146,3 +146,16 @@
   max-width: 12px;
   max-height: 12px;
 }
+
+.textFieldWrapper {
+  padding: 0 var(--rs-space-2);
+}
+
+.textField {
+  border-radius: var(--rs-radius-1);
+}
+
+.textFieldWrapper input {
+  padding-left: var(--rs-space-2) !important;
+  padding-right: var(--rs-space-2) !important;
+}

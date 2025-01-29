@@ -96,10 +96,13 @@ export const FilterChip = ({
         );
       default:
         return (
-          <TextField
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
-          />
+          <div className={styles.textFieldWrapper}>
+            <TextField
+              className={styles.textField}
+              value={filterValue}
+              onChange={(e) => setFilterValue(e.target.value)}
+            />
+          </div>
         );
     }
   };
