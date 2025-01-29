@@ -96,7 +96,7 @@
 
 .removeIcon {
   cursor: pointer;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-text-base-primary);
   transition: color 0.2s ease-in-out;
   border: none !important;
   background: transparent !important;
@@ -115,13 +115,13 @@
   color: var(--rs-color-text-base-primary) !important;
 }
 
-/* Style for operation select value */
-/* .operation [data-value] {
-  color: var(--rs-color-text-base-tertiary) !important;
-} */
 
 .leadingIcon {
   display: flex;
   align-items: center;
+  width: 12px;
+  height: 12px;
+  max-width: 12px;
+  max-height: 12px;
 }
 
