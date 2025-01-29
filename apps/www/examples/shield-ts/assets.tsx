@@ -212,6 +212,7 @@ export const Assets = () => {
               { label: "Pending", value: "pending" },
               { label: "Success", value: "success" }
             ]}
+            onRemove={() => console.log('Removing filter')}
             onValueChange={(value) => console.log(value)}
             onOperationChange={(operation) => console.log(operation)}
           />
@@ -220,6 +221,7 @@ export const Assets = () => {
             label="Priority"
             leadingIcon={<CheckIcon />}
             columnType="select"
+            onRemove={() => console.log('Removing filter')}
             options={[
               { label: "High", value: "high" },
               { label: "Medium", value: "medium" },
