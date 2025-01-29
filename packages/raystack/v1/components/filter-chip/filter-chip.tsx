@@ -85,16 +85,21 @@ export const FilterChip = ({
           <div className={styles.dateFieldWrapper}>
             <DatePicker 
               onSelect={(date) => setFilterValue(date)}
+              showCalendarIcon={false}
               textFieldProps={{ className: styles.dateField }}
             />
           </div>
         );
       case 'range':
         return (
-          <RangePicker
-            onSelect={(range) => setFilterValue(range)}
-            value={filterValue}
-          />
+          <div className={styles.dateFieldWrapper}>
+            <RangePicker
+              textFieldProps={{ className: styles.dateField }}
+              onSelect={(range) => setFilterValue(range)}
+              showCalendarIcon={false}
+              value={filterValue}
+            />
+          </div>
         );
       default:
         return (
