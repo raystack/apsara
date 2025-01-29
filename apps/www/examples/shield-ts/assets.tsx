@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon } from "@radix-ui/react-icons";
+import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import {
   DataTable,
   Title,
@@ -202,6 +202,32 @@ export const Assets = () => {
               />
             ))}
           </Flex> */}
+
+
+          <FilterChip
+            label="Status"
+            leadingIcon={<HomeIcon />}
+            columnType="select"
+            options={[
+              { label: "Pending", value: "pending" },
+              { label: "Success", value: "success" }
+            ]}
+            onValueChange={(value) => console.log(value)}
+            onOperationChange={(operation) => console.log(operation)}
+          />
+
+          <FilterChip
+            label="Priority"
+            leadingIcon={<CheckIcon />}
+            columnType="select"
+            options={[
+              { label: "High", value: "high" },
+              { label: "Medium", value: "medium" },
+              { label: "Low", value: "low" }
+            ]}
+            onValueChange={(value) => console.log(value)}
+            onOperationChange={(operation) => console.log(operation)}
+          />
 
           <div style={{ width: "100%" }}>
             <DataTable
