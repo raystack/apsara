@@ -17,9 +17,14 @@ const trigger = cva(styles.trigger, {
       small: styles["trigger-sm"],
       medium: styles["trigger-md"],
     },
+    variant: {
+      default: "",
+      filter: styles["trigger-filter"],
+    }
   },
   defaultVariants: {
     size: "medium",
+    variant: "default",
   },
 });
 
@@ -29,17 +34,19 @@ const SelectTrigger = React.forwardRef<
     React.PropsWithChildren<VariantProps<typeof trigger>> & {
       iconProps?: IconProps;
     }
->(({ size, className, children, iconProps = {}, ...props }, ref) => (
+>(({ size, variant, className, children, iconProps = {}, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
-    className={trigger({ size, className })}
+    className={trigger({ size, variant, className })}
     {...props}
   >
     {children}
 
-    <SelectPrimitive.Icon asChild>
-      <ChevronDownIcon className={styles.triggerIcon} {...iconProps} />
-    </SelectPrimitive.Icon>
+    {variant !== 'filter' && (
+      <SelectPrimitive.Icon asChild>
+        <ChevronDownIcon className={styles.triggerIcon} {...iconProps} />
+      </SelectPrimitive.Icon>
+    )}
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;

@@ -16,7 +16,7 @@ const TOTAL_PAGES = 100;
 export const columns: ApsaraColumnDef<Payment>[] = [
   {
     id: "select",
-    header: ({ table }) => (
+    header: ({ table }) => ( 
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -167,6 +167,16 @@ export const Assets = () => {
     }
   };
 
+  const handleFilterChange = (filter: any) => {
+    console.log('Filter changed:', filter);
+    // Add your filter logic here
+  };
+
+  const handleOperationChange = (operation: string) => {
+    console.log('Operation changed:', operation);
+    // Add your operation logic here
+  };
+
   useEffect(() => {
     loadMoreData();
   }, []);
@@ -175,16 +185,23 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-          <Flex align="center" wrap="wrap" gap="medium">
+          {/* <Flex align="center" wrap="wrap" gap="medium">
             {activeFilters.map((filter, index) => (
               <FilterChip
                 key={`filter-${index}`}
                 label={filter.label}
                 value={filter.value}
+                columnType="select"
+                options={[
+                  { label: "Option 1", value: "option1" },
+                  { label: "Option 2", value: "option2" }
+                ]}
+                onValueChange={(value) => handleFilterChange({ ...filter, value })}
+                onOperationChange={handleOperationChange}
                 onRemove={() => console.log(`Removing ${filter.label} filter`)}
               />
             ))}
-          </Flex>
+          </Flex> */}
 
           <div style={{ width: "100%" }}>
             <DataTable
