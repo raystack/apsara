@@ -40,6 +40,8 @@ export function Image({
   width,
   height,
   style,
+  loading = "lazy",
+  decoding = "async",
   ...props 
 }: ImageProps) {
   const handleError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -61,7 +63,11 @@ export function Image({
       className={image({ fit, radius, className })}
       onError={handleError}
       style={imageStyle}
+      loading={loading}
+      decoding={decoding}
       {...props}
+      role="img"
+      aria-label={alt}
     />
   );
 }
