@@ -1,12 +1,12 @@
 ---
 title: Image
-description: Displays a img component
+description: A responsive image component with fallback support and various fitting options.
 ---
 
 ## Preview
 
 <Preview>
-  <Flex style={{ gap: "24px", flexDirection: "column" }}>
+  <Flex direction="column" gap="medium">
     <Image
       src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
       alt="Nature landscape"
@@ -15,7 +15,7 @@ description: Displays a img component
       fit="cover"
       radius="medium"
     />
-    <Flex style={{ gap: "16px" }}>
+    <Flex gap="small">
       <Image
         src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
         alt="Nature"
@@ -38,7 +38,7 @@ description: Displays a img component
 
 ## Usage
 
-The Image component is used to display responsive images with various fitting options and border radius styles.
+The Image component displays responsive images with support for object-fit modes, border radius styles, and fallback handling.
 
 ## Installation
 
@@ -51,17 +51,12 @@ Install the component from your command line.
 <LiveProvider>
   <LiveEditor code={`import { Image } from '@raystack/apsara/v1'
 
-// Basic usage
-
-<Image src="/path/to/image.jpg" alt="Description" width={300} height={200} />
-
-// With fallback
-
 <Image 
   src="/path/to/image.jpg"
-  fallback="/path/to/fallback.jpg"
+  alt="Description"
+  width={300}
+  height={200}
   fit="cover"
-  radius="medium"
 />`} border/>
 </LiveProvider>
 
@@ -69,24 +64,26 @@ Install the component from your command line.
 
 The Image component accepts the following props:
 
+- `src`: The URL of the image to display
+- `alt`: Alternative text description (required)
 - `fit`: Object-fit property (`"contain"` | `"cover"` | `"fill"`, default: "cover")
 - `radius`: Border radius style (`"none"` | `"small"` | `"medium"` | `"full"`, default: "none")
 - `fallback`: URL of fallback image to show on error
-- `alt`: Alternative text description (required)
+- `width`: Width of the image (string | number)
+- `height`: Height of the image (string | number)
 - `className`: Additional CSS class names
 - All standard HTML img attributes
 
 ## Object Fit
 
-Choose between different object-fit modes to control how the image fills its container.
+Control how the image fills its container with different object-fit modes.
 
 <Playground
   scope={{ Image }}
   tabs={[
     {
       name: "Cover",
-      code: `
-<Image 
+      code: `<Image 
   src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
   alt="Nature landscape"
   width={200}
@@ -96,8 +93,7 @@ Choose between different object-fit modes to control how the image fills its con
     },
     {
       name: "Contain",
-      code: `
-<Image 
+      code: `<Image 
   src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
   alt="Nature landscape"
   width={200}
@@ -107,8 +103,7 @@ Choose between different object-fit modes to control how the image fills its con
     },
     {
       name: "Fill",
-      code: `
-<Image 
+      code: `<Image 
   src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
   alt="Nature landscape"
   width={200}
@@ -121,12 +116,12 @@ Choose between different object-fit modes to control how the image fills its con
 
 ## Border Radius
 
-The Image component supports different border radius styles.
+Choose from different border radius styles to match your design.
 
 <Playground
   scope={{ Image, Flex }}
   code={`
-<Flex style={{ gap: '16px' }}>
+<Flex gap="small">
   <Image 
     src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
     alt="Nature"
@@ -159,18 +154,16 @@ The Image component supports different border radius styles.
     fit="cover"
     radius="full"
   />
-</Flex>
-  `}
+</Flex>`}
 />
 
 ## Fallback
 
-Images can have a fallback source that displays when the primary image fails to load.
+Handle image loading failures gracefully with fallback images.
 
 <Playground
   scope={{ Image }}
-  code={`
-<Image 
+  code={`<Image 
   src="invalid-image-url.jpg"
   fallback="https://images.unsplash.com/photo-1447690709975-318628b14c57"
   alt="With fallback"
@@ -178,15 +171,21 @@ Images can have a fallback source that displays when the primary image fails to 
   height={150}
   fit="cover"
   radius="medium"
-/>
-  `}
+/>`}
 />
 
 ## Accessibility
 
 The Image component follows accessibility best practices:
 
-- Requires alt text for screen readers
-- Maintains proper aspect ratios
-- Supports keyboard navigation when used in interactive contexts
-- Provides fallback for failed image loads
+### ARIA Attributes
+
+- `role="img"`: Explicitly defines the image role for assistive technologies
+- `aria-label`: Provides description matching alt text for screen readers
+- `alt`: Required alternative text description for screen readers
+
+### Performance
+
+- `loading="lazy"`: Default lazy loading for better performance
+- `decoding="async"`: Asynchronous image decoding to prevent blocking
+- Fallback support for failed image loads
