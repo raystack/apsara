@@ -1,13 +1,27 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
+import { DataTable, Title, useTable } from "@raystack/apsara";
 import {
-  DataTable,
-  Title,
-  useTable
-} from "@raystack/apsara";
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Tabs, FilterChip } from "@raystack/apsara/v1";
-
+  toast,
+  ToastContainer,
+  Avatar,
+  AvatarGroup,
+  Button,
+  Spinner,
+  DropdownMenu,
+  Breadcrumb,
+  Chip,
+  Flex,
+  Text,
+  Checkbox,
+  InputField,
+  Badge,
+  Radio,
+  Tabs,
+  FilterChip,
+  Search,
+} from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -16,7 +30,7 @@ const TOTAL_PAGES = 100;
 export const columns: ApsaraColumnDef<Payment>[] = [
   {
     id: "select",
-    header: ({ table }) => ( 
+    header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
@@ -103,40 +117,44 @@ export const Assets = () => {
   });
 
   const activeFilters = [
-    { 
-      label: "Category", 
-      value: "Workflow"
+    {
+      label: "Category",
+      value: "Workflow",
     },
-    { 
-      label: "Status", 
-      value: "Active"
+    {
+      label: "Status",
+      value: "Active",
     },
-    { 
-      label: "Priority", 
-      value: "High"
-    }
+    {
+      label: "Priority",
+      value: "High",
+    },
   ];
   const [recipients, setRecipients] = useState([
     { label: "A", onRemove: () => handleRemoveRecipient("A") },
     { label: "B", onRemove: () => handleRemoveRecipient("B") },
     { label: "C", onRemove: () => handleRemoveRecipient("C") },
     { label: "D", onRemove: () => handleRemoveRecipient("D") },
-    { label: "E", onRemove: () => handleRemoveRecipient("E") }
+    { label: "E", onRemove: () => handleRemoveRecipient("E") },
   ]);
 
   const handleRemoveRecipient = (label: string) => {
-    setRecipients(prev => prev.filter(recipient => recipient.label !== label));
+    setRecipients((prev) =>
+      prev.filter((recipient) => recipient.label !== label)
+    );
   };
 
   const handleAddRecipient = (value: string) => {
-    if (value && !recipients.find(r => r.label === value)) {
-      setRecipients(prev => [...prev, { 
-        label: value, 
-        onRemove: () => handleRemoveRecipient(value) 
-      }]);
+    if (value && !recipients.find((r) => r.label === value)) {
+      setRecipients((prev) => [
+        ...prev,
+        {
+          label: value,
+          onRemove: () => handleRemoveRecipient(value),
+        },
+      ]);
     }
   };
-
 
   const loadMoreData = useCallback(() => {
     if (!isLoading && hasMoreData) {
@@ -157,24 +175,26 @@ export const Assets = () => {
   const showToast = (variant: string) => {
     switch (variant) {
       case "success":
-        const successToastId = toast.success('Data loaded successfully.',
-        { 
+        const successToastId = toast.success("Data loaded successfully.", {
           duration: Infinity,
           dismissible: true,
-          action: <Button size="small" onClick={() => toast.dismiss(successToastId)}>
-            Click Me
-          </Button>
-        }
-        );
-        break;  
+          action: (
+            <Button size="small" onClick={() => toast.dismiss(successToastId)}>
+              Click Me
+            </Button>
+          ),
+        });
+        break;
       case "error":
-        const errorToastId = toast.info('Error loading data!',
-        { 
+        const errorToastId = toast.info("Error loading data!", {
           duration: Infinity,
           dismissible: true,
-          action: <Button size="small" onClick={() => toast.dismiss(errorToastId)}>Retry</Button>
-        }
-        );
+          action: (
+            <Button size="small" onClick={() => toast.dismiss(errorToastId)}>
+              Retry
+            </Button>
+          ),
+        });
         break;
       default:
         const defaultToastId = toast(
@@ -190,11 +210,11 @@ export const Assets = () => {
   };
 
   const handleFilterChange = (filter: any) => {
-    console.log('Filter changed:', filter);
+    console.log("Filter changed:", filter);
   };
 
   const handleOperationChange = (operation: string) => {
-    console.log('Operation changed:', operation);
+    console.log("Operation changed:", operation);
   };
 
   useEffect(() => {
@@ -223,16 +243,15 @@ export const Assets = () => {
             ))}
           </Flex> */}
 
-
           <FilterChip
             label="Status"
             leadingIcon={<HomeIcon />}
             columnType="select"
             options={[
               { label: "Pending", value: "pending" },
-              { label: "Success", value: "success" }
+              { label: "Success", value: "success" },
             ]}
-            onRemove={() => console.log('Removing filter')}
+            onRemove={() => console.log("Removing filter")}
             onValueChange={(value) => console.log(value)}
             onOperationChange={(operation) => console.log(operation)}
           />
@@ -241,11 +260,11 @@ export const Assets = () => {
             label="Priority"
             leadingIcon={<CheckIcon />}
             columnType="select"
-            onRemove={() => console.log('Removing filter')}
+            onRemove={() => console.log("Removing filter")}
             options={[
               { label: "High", value: "high" },
               { label: "Medium", value: "medium" },
-              { label: "Low", value: "low" }
+              { label: "Low", value: "low" },
             ]}
             onValueChange={(value) => console.log(value)}
             onOperationChange={(operation) => console.log(operation)}
@@ -277,27 +296,29 @@ export const Assets = () => {
 
 const AssetsHeader = () => {
   const { filteredColumns, table } = useTable();
-  const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
+  const [checked, setChecked] = useState<boolean | "indeterminate">(
+    "indeterminate"
+  );
   const [searchValue, setSearchValue] = useState("");
-  const handleCheckedChange = (newChecked: boolean | 'indeterminate') => {
-    if (newChecked !== 'indeterminate') {
+  const handleCheckedChange = (newChecked: boolean | "indeterminate") => {
+    if (newChecked !== "indeterminate") {
       setChecked(newChecked);
     }
   };
   const isFiltered = filteredColumns.length > 0;
   const items = [
-    { label: 'Home', href: '/', icon: <HomeIcon /> },
-    { label: 'Category', href: '/category' },
-    { 
-      label: 'Subcategory', 
-      href: '/category/subcategory',
+    { label: "Home", href: "/", icon: <HomeIcon /> },
+    { label: "Category", href: "/category" },
+    {
+      label: "Subcategory",
+      href: "/category/subcategory",
       dropdownItems: [
-        { label: 'Option 1', href: '/category/subcategory/option1' },
-        { label: 'Option 2', href: '/category/subcategory/option2' },
-        { label: 'Option 3', href: '/category/subcategory/option3' },
-      ]
+        { label: "Option 1", href: "/category/subcategory/option1" },
+        { label: "Option 2", href: "/category/subcategory/option2" },
+        { label: "Option 3", href: "/category/subcategory/option3" },
+      ],
     },
-    { label: 'Current Page', href: '/category/subcategory/current' },
+    { label: "Current Page", href: "/category/subcategory/current" },
   ];
 
   return (
@@ -307,7 +328,7 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
-      <Search 
+        <Search
           placeholder="Search assets..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
@@ -366,7 +387,7 @@ const AssetsHeader = () => {
         {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
           Custom Badge
         </Badge> */}
-        
+
         {/* <Button variant="outline">Click here</Button>
         <Breadcrumb items={items} size="small" />
         <DropdownMenu>
@@ -405,10 +426,8 @@ const AssetsHeader = () => {
           />
         </AvatarGroup> */}
 
-        
         {/* Add Chip examples */}
         <Flex gap="small" align="center">
-        
           {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
           {/* <Radio.Root defaultValue="1" aria-label="View options">
             <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
@@ -467,7 +486,6 @@ const AssetsHeader = () => {
           </IconButton> 
 
         </Flex>*/}
-
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
