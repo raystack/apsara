@@ -26,6 +26,8 @@ interface ImageProps
   extends ImgHTMLAttributes<HTMLImageElement>,
     VariantProps<typeof image> {
   fallback?: string;
+  width?: string | number;
+  height?: string | number;
 }
 
 export function Image({ 
@@ -35,6 +37,9 @@ export function Image({
   radius,
   fallback,
   onError,
+  width,
+  height,
+  style,
   ...props 
 }: ImageProps) {
   const handleError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -44,11 +49,18 @@ export function Image({
     onError?.(event);
   };
 
+  const imageStyle = {
+    width: width,
+    height: height,
+    ...style
+  };
+
   return (
     <img 
       alt={alt}
       className={image({ fit, radius, className })}
       onError={handleError}
+      style={imageStyle}
       {...props}
     />
   );
