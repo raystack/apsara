@@ -182,9 +182,45 @@ export const Assets = () => {
     <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
       <Flex direction="column" gap="large" style={{ width: "100%" }}>
         <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-          <Flex justify="between" align="center">
-            <Title>Assets</Title>
-            <Button>Create Asset</Button>
+          {/* Add new section showing all variants */}
+          <Flex direction="column" gap="medium">
+            <Title>Solid Buttons</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="solid" color="accent">solid-accent</Button>
+              <Button variant="solid" color="danger">solid-danger</Button>
+              <Button variant="solid" color="neutral">solid-neutral</Button>
+              <Button variant="solid" color="success">solid-success</Button>
+            </Flex>
+
+            <Title>Outline Buttons</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="outline" color="accent">outline-accent</Button>
+              <Button variant="outline" color="danger">outline-danger</Button>
+              <Button variant="outline" color="neutral">outline-neutral</Button>
+              <Button variant="outline" color="success">outline-success</Button>
+            </Flex>
+
+            <Title>Ghost & Text Buttons</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="ghost">ghost</Button>
+              <Button variant="text">text</Button>
+            </Flex>
+
+            <Title>Loading State</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="solid" color="accent" loading>Loading</Button>
+              <Button variant="outline" color="accent" loading>Loading</Button>
+              <Button variant="ghost" loading>Loading</Button>
+              <Button variant="text" loading>Loading</Button>
+            </Flex>
+
+            <Title>Disabled State</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="solid" color="accent" disabled>Disabled</Button>
+              <Button variant="outline" color="accent" disabled>Disabled</Button>
+              <Button variant="ghost" disabled>Disabled</Button>
+              <Button variant="text" disabled>Disabled</Button>
+            </Flex>
           </Flex>
 
           <InputField
@@ -257,7 +293,7 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
-      <Search 
+        <Search 
           placeholder="Search assets..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
