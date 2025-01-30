@@ -8,11 +8,9 @@ import styles from "./button.module.css";
 const button = cva(styles['button'], {
   variants: {
     variant: {
-      primary: styles["button-primary"],
-      secondary: styles["button-secondary"],
+      solid: styles["button-solid"],
       outline: styles["button-outline"],
       ghost: styles["button-ghost"],
-      danger: styles["button-danger"],
       text: styles["button-text"]
     },
     size: {
@@ -42,12 +40,12 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
   };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, maxWidth, children, ...props }, ref) => {
+  ({ className, variant = 'solid', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, maxWidth, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const isLoaderOnly = loading && !loaderText;
     const widthStyle = maxWidth ? { maxWidth } : {};
 
-    const spinnerColor = variant === 'primary' || variant === 'danger' ? 'inverted' : 'default';
+    const spinnerColor = variant === 'solid' ? 'inverted' : 'default';
 
     return (
       <Comp
