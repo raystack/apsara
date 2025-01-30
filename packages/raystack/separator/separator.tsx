@@ -19,6 +19,9 @@ const separator = cva(styles.separator, {
 type SeparatorProps = PropsWithChildren<VariantProps<typeof separator>> &
   ComponentProps<typeof SeparatorPrimitive.Root>;
 
+/**
+ * @deprecated Use the new Separator from packages/raystack/v1 instead.
+ */
 export function Separator({
   children,
   size,
