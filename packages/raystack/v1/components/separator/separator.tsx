@@ -24,6 +24,7 @@ export function Separator({
   className,
   orientation = "horizontal",
   size,
+  "aria-label": ariaLabel,
   ...props
 }: SeparatorProps) {
   return (
@@ -31,6 +32,9 @@ export function Separator({
       decorative
       orientation={orientation}
       className={separator({ size, className })}
+      aria-orientation={orientation}
+      aria-label={ariaLabel || `${orientation} separator`}
+      role="separator"
       {...props}
     />
   );
