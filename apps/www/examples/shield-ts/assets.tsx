@@ -182,7 +182,6 @@ export const Assets = () => {
     <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
       <Flex direction="column" gap="large" style={{ width: "100%" }}>
         <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-          {/* Add new section showing all variants */}
           <Flex direction="column" gap="medium">
             <Title>Solid Buttons</Title>
             <Flex gap="small" wrap="wrap">
