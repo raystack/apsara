@@ -58,13 +58,16 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     leadingIcon?: ReactNode;
     trailingIcon?: ReactNode;
     maxWidth?: string | number;
+    width?: string | number;
+    style?: React.CSSProperties;
   };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'solid', color = 'accent', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, maxWidth, children, ...props }, ref) => {
+  ({ className, variant = 'solid', color = 'accent', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, maxWidth, width, style = {}, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const isLoaderOnly = loading && !loaderText;
-    const widthStyle = maxWidth ? { maxWidth } : {};
+    const widthStyle = { maxWidth, width };
+    const buttonStyle = { ...widthStyle, ...style };
 
     const spinnerColor = variant === 'solid' ? 'inverted' : 'default';
 
@@ -73,7 +76,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={`${button({ variant, size, color, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
         ref={ref}
         disabled={disabled}
-        style={widthStyle}
+        style={buttonStyle}
         {...props}
       >
         {loading ? (
