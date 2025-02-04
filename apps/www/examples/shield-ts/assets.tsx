@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Link } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -182,6 +182,36 @@ export const Assets = () => {
     <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
       <Flex direction="column" gap="large" style={{ width: "100%" }}>
         <Flex direction="column" gap="medium" style={{ width: "100%" }}>
+          {/* Links Section */}
+          <Flex direction="column" gap="medium">
+            <Title>Links</Title>
+            
+            <Flex gap="small" wrap="wrap">
+              <Link href="#" color="accent" underline>Accent Link</Link>
+              <Link href="#" color="foreground-primary">Primary Link</Link>
+              <Link href="#" color="foreground-secondary">Secondary Link</Link>
+              <Link href="#" color="foreground-tertiary">Tertiary Link</Link>
+              <Link href="#" color="foreground-emphasis" weight="medium">Emphasis Link</Link>
+            </Flex>
+
+            <Flex gap="small" wrap="wrap">
+              <Link href="#" size={1}>Size 1</Link>
+              <Link href="#" size={2}>Size 2</Link>
+              <Link href="#" size={3}>Size 3</Link>
+              <Link href="#" size={4}>Size 4</Link>
+              <Link href="#" size={5}>Size 5</Link>
+              <Link href="#" size={6}>Size 6</Link>
+            </Flex>
+
+            <Flex gap="small" wrap="wrap">
+              <Link href="#" weight="regular">Regular</Link>
+              <Link href="#" weight="medium">Medium</Link>
+              <Link href="#" weight="semibold">Semibold</Link>
+              <Link href="#" weight="bold">Bold</Link>
+            </Flex>
+          </Flex>
+
+          {/* Existing Buttons Section */}
           <Flex direction="column" gap="medium">
             <Title>Solid Buttons</Title>
             <Flex gap="small" wrap="wrap">

@@ -17,6 +17,7 @@ export { Image } from "./components/image";
 export { IconButton } from "./components/icon-button";
 export { Indicator } from "./components/indicator";
 export { InputField } from "./components/input-field";
+export { Link } from "./components/link";
 export { Radio } from "./components/radio";
 export { Search } from "./components/search";
 export { Sidepanel } from "./components/sidepanel";
