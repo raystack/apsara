@@ -54,8 +54,31 @@ Install the component from your command line.
 The Separator component accepts the following props:
 
 - `size`: Defines the length of the separator (`"small"` | `"half"` | `"full"`, default: "full")
+- `color`: Sets the color of the separator (`"primary"` | `"secondary"` | `"tertiary"`, default: "primary")
 - `orientation`: Sets the direction of the separator (`"horizontal"` | `"vertical"`, default: "horizontal")
 - `className`: Additional CSS class names
+
+## Colors
+
+The Separator component comes in three colors to match different design contexts.
+
+<Playground
+  scope={{ Separator }}
+  tabs={[
+    {
+      name: "Primary",
+      code: `<Separator color="primary" />`,
+    },
+    {
+      name: "Secondary",
+      code: `<Separator color="secondary" />`,
+    },
+    {
+      name: "Tertiary",
+      code: `<Separator color="tertiary" />`,
+    },
+  ]}
+/>
 
 ## Sizes
 
@@ -142,6 +165,21 @@ Separator can be rendered in both horizontal and vertical orientations.
   <Separator size="half" />
   <div>Section 2</div>
   <Separator size="half" />
+  <div>Section 3</div>
+</Flex>
+  `}
+/>
+
+### Custom Styling
+
+<Playground
+  scope={{ Separator, Flex }}
+  code={`
+<Flex style={{ gap: '24px', flexDirection: 'column' }}>
+  <div>Section 1</div>
+  <Separator size="half" color="secondary" />
+  <div>Section 2</div>
+  <Separator size="half" color="tertiary" />
   <div>Section 3</div>
 </Flex>
   `}

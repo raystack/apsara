@@ -292,21 +292,17 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
-        <Search 
+        {/* <Search 
           placeholder="Search assets..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           showClearButton
           onClear={() => setSearchValue("")}
-        />
+        /> */}
         <Separator 
-          orientation="vertical" 
-          size="small"
-          color="secondary"
-          aria-label="Search and actions separator"
+          color="primary"
         />
         <Flex gap="small" align="center">
-          {/* Your existing Flex content */}
         </Flex>
       </Flex>
       <Flex gap="small">
