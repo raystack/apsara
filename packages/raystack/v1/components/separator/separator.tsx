@@ -22,9 +22,13 @@ const separator = cva(styles.separator, {
   },
 });
 
-interface SeparatorProps 
-  extends Omit<ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>, 'color'>,
-    VariantProps<typeof separator> {}
+interface SeparatorProps {
+  className?: string;
+  orientation?: 'horizontal' | 'vertical';
+  size?: 'small' | 'half' | 'full';
+  color?: 'primary' | 'secondary' | 'tertiary';
+  'aria-label'?: string;
+}
 
 export function Separator({
   className,
