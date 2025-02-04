@@ -1,7 +1,8 @@
-import { MagnifyingGlassIcon, CrossCircledIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon,MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { ReactNode } from "react";
+
 import styles from "./search.module.css";
 
 const searchField = cva(styles.searchField, {
