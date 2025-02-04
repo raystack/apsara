@@ -60,6 +60,9 @@ export interface LinkProps
     VariantProps<typeof link> {
   href: string;
   external?: boolean;
+  download?: boolean | string;
+  rel?: string;
+  hrefLang?: string;
 }
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
@@ -73,6 +76,10 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       variant,
       underline,
       external,
+      download,
+      rel,
+      hrefLang,
+      "aria-label": ariaLabel,
       ...props
     },
     ref
@@ -80,7 +87,12 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     const externalProps = external ? {
       target: "_blank",
       rel: "noopener noreferrer",
-      "aria-label": `${children} (opens in new tab)`
+      "aria-label": ariaLabel || `${children} (opens in new tab)`
+    } : {};
+
+    const downloadProps = download ? {
+      download: typeof download === "string" ? download : true,
+      "aria-label": ariaLabel || `${children} (download)`
     } : {};
 
     return (
@@ -88,7 +100,11 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
         ref={ref}
         className={link({ size, weight, variant, underline, className })}
         href={href}
+        hrefLang={hrefLang}
+        rel={rel}
+        role="link"
         {...externalProps}
+        {...downloadProps}
         {...props}
       >
         {children}
