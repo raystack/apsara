@@ -59,6 +59,7 @@ export interface LinkProps
   extends AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof link> {
   href: string;
+  external?: boolean;
 }
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
@@ -71,15 +72,23 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
       weight,
       variant,
       underline,
+      external,
       ...props
     },
     ref
   ) => {
+    const externalProps = external ? {
+      target: "_blank",
+      rel: "noopener noreferrer",
+      "aria-label": `${children} (opens in new tab)`
+    } : {};
+
     return (
       <a
         ref={ref}
         className={link({ size, weight, variant, underline, className })}
         href={href}
+        {...externalProps}
         {...props}
       >
         {children}
