@@ -13,11 +13,6 @@ radix:
     <Separator size="small" />
     <Separator size="half" />
     <Separator size="full" />
-    <Flex style={{ height: "50px", alignItems: "center", gap: "16px" }}>
-      Text
-      <Separator orientation="vertical" size="small" />
-      Text
-    </Flex>
   </Flex>
 </Preview>
 
@@ -63,19 +58,25 @@ The Separator component accepts the following props:
 The Separator component comes in three colors to match different design contexts.
 
 <Playground
-  scope={{ Separator }}
+  scope={{ Separator, Flex }}
   tabs={[
     {
       name: "Primary",
-      code: `<Separator color="primary" />`,
+      code: `<Flex style={{ padding: '16px' }}>
+  <Separator color="primary" />
+</Flex>`,
     },
     {
       name: "Secondary",
-      code: `<Separator color="secondary" />`,
+      code: `<Flex style={{ padding: '16px' }}>
+  <Separator color="primary" />
+</Flex>`,
     },
     {
       name: "Tertiary",
-      code: `<Separator color="tertiary" />`,
+      code: `<Flex style={{ padding: '16px' }}>
+  <Separator color="primary" />
+</Flex>`,
     },
   ]}
 />
@@ -85,19 +86,25 @@ The Separator component comes in three colors to match different design contexts
 The Separator component comes in three sizes to accommodate different layout needs.
 
 <Playground
-  scope={{ Separator }}
+  scope={{ Separator, Flex }}
   tabs={[
     {
       name: "Small",
-      code: `<Separator size="small" />`,
+      code: `<Flex style={{ padding: '16px', width: '100%' }}>
+  <Separator size="small" />
+</Flex>`,
     },
     {
       name: "Half",
-      code: `<Separator size="half" />`,
+      code: `<Flex style={{ padding: '16px', width: '100%' }}>
+  <Separator size="half" />
+</Flex>`,
     },
     {
       name: "Full",
-      code: `<Separator size="full" />`,
+      code: `<Flex style={{ padding: '16px', width: '100%' }}>
+  <Separator size="full" />
+</Flex>`,
     },
   ]}
 />
