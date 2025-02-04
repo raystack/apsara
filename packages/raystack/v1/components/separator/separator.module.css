@@ -2,8 +2,19 @@
   flex-shrink: 0;
   border: 0;
   margin: 0;
-  background-color: var(--rs-color-border-base-primary);
   cursor: default;
+}
+
+.separator-primary {
+  background-color: var(--rs-color-border-base-primary);
+}
+
+.separator-secondary {
+  background-color: var(--rs-color-border-base-secondary);
+}
+
+.separator-tertiary {
+  background-color: var(--rs-color-border-base-tertiary);
 }
 
 .separator-small[data-orientation="horizontal"] {

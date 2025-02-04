@@ -10,9 +10,15 @@ const separator = cva(styles.separator, {
       half: styles["separator-half"],
       full: styles["separator-full"],
     },
+    color: {
+      primary: styles["separator-primary"],
+      secondary: styles["separator-secondary"],
+      tertiary: styles["separator-tertiary"],
+    }
   },
   defaultVariants: {
     size: "full",
+    color: "primary",
   },
 });
 
@@ -24,6 +30,7 @@ export function Separator({
   className,
   orientation = "horizontal",
   size,
+  color,
   "aria-label": ariaLabel,
   ...props
 }: SeparatorProps) {
@@ -31,7 +38,7 @@ export function Separator({
     <SeparatorPrimitive.Root
       decorative
       orientation={orientation}
-      className={separator({ size, className })}
+      className={separator({ size, color, className })}
       aria-orientation={orientation}
       aria-label={ariaLabel || `${orientation} separator`}
       role="separator"
