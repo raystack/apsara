@@ -23,7 +23,7 @@ const separator = cva(styles.separator, {
 });
 
 interface SeparatorProps 
-  extends ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>,
+  extends Omit<ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>, 'color'>,
     VariantProps<typeof separator> {}
 
 export function Separator({
