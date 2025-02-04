@@ -6,8 +6,8 @@ export { Badge } from "./components/badge";
 export { Box } from "./components/box";
 export { Breadcrumb } from "./components/breadcrumb";
 export { Button } from "./components/button";
-export { Callout } from "./components/callout";
 export { Calendar, DatePicker, RangePicker } from "./components/calendar";
+export { Callout } from "./components/callout";
 export { Checkbox } from "./components/checkbox";
 export { Chip } from "./components/chip";
 export { DropdownMenu } from "./components/dropdown-menu";
@@ -17,14 +17,14 @@ export { IconButton } from "./components/icon-button";
 export { Indicator } from "./components/indicator";
 export { InputField } from "./components/input-field";
 export { Radio } from "./components/radio";
+export { Search } from "./components/search";
 export { Sidepanel } from "./components/sidepanel";
+export { Slider } from "./components/slider";
 export { Spinner } from "./components/spinner";
+export { Switch } from "./components/switch";
 export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
 export { TextArea } from "./components/text-area";
-export { Switch } from "./components/switch";
-export { Slider } from "./components/slider";
-export { Search } from "./components/search";
 export {
   ThemeProvider,
   ThemeProviderProps,
