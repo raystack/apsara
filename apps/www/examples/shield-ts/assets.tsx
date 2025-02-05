@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Separator } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Separator, List } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -222,7 +222,7 @@ export const Assets = () => {
             </Flex>
           </Flex>
 
-          <InputField
+          {/* <InputField
             label="Label"
             placeholder="Type and press Enter..."
             chips={recipients}
@@ -235,7 +235,27 @@ export const Assets = () => {
                 (e.target as HTMLInputElement).value = '';
               }
             }}
-          />
+          /> */}
+
+          <List.Root maxWidth="600px">
+            <List.Header>User Information</List.Header>
+            <List.Item>
+              <List.Label minWidth="120px">Status</List.Label>
+              <List.Value>
+                Active
+              </List.Value>
+            </List.Item>
+            <List.Item>
+              <List.Label minWidth="120px">Type</List.Label>
+              <List.Value>Premium Account</List.Value>
+            </List.Item>
+            <List.Item>
+              <List.Label minWidth="120px">Description</List.Label>
+              <List.Value>
+                This is a description that demonstrates the content.
+              </List.Value>
+            </List.Item>
+          </List.Root>
 
           <div style={{ width: "100%" }}>
             <DataTable

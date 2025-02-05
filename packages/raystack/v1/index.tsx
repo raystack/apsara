@@ -27,6 +27,7 @@ export { Switch } from "./components/switch";
 export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
 export { TextArea } from "./components/text-area";
+export { List } from "./components/list";
 export {
   ThemeProvider,
   ThemeProviderProps,
