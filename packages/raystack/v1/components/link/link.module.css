@@ -3,7 +3,8 @@
   line-height: 1;
   cursor: pointer;
   margin: 0;
-  display: block;
+  display: inline-flex;
+  align-items: center;
   transition: opacity 0.2s ease;
 }
 

@@ -186,11 +186,14 @@ export const Assets = () => {
           <Flex direction="column" gap="medium">
             
             <Flex gap="small" wrap="wrap">
-              <Link href="#" color="accent" underline>Accent Link</Link>
-              <Link href="#" color="foreground-primary">Primary Link</Link>
-              <Link href="#" color="foreground-secondary">Secondary Link</Link>
-              <Link href="#" color="foreground-tertiary">Tertiary Link</Link>
-              <Link href="#" color="foreground-emphasis" weight="bold">Emphasis Link</Link>
+              <Link href="#" variant="primary">primary</Link>
+              <Link href="#" variant="secondary">secondary</Link>
+              <Link href="#" variant="tertiary">tertiary</Link>
+              <Link href="#" variant="emphasis">emphasis</Link>
+              <Link href="#" variant="attention">attention</Link>
+              <Link href="#" variant="danger">danger</Link>
+              <Link href="#" variant="success">Success Link</Link>  
+              <Link href="#" variant="accent" underline>accent</Link>
             </Flex>
 
             <Flex gap="small" wrap="wrap">

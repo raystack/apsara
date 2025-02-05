@@ -48,7 +48,7 @@ const link = cva([styles.link], {
     },
   },
   defaultVariants: {
-    variant: "primary",
+    variant: "accent",
     size: 2,
     weight: 400,
     underline: false,

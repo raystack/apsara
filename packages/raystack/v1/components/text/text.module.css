@@ -1,5 +1,6 @@
 .text {
-  display: block;
+  display: inline-flex;
+  align-items: center;
   line-height: 1;
   margin: 0;
   color: var(--rs-color-text-base-primary);
