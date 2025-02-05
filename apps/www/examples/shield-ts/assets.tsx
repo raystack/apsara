@@ -184,14 +184,13 @@ export const Assets = () => {
         <Flex direction="column" gap="medium" style={{ width: "100%" }}>
           {/* Links Section */}
           <Flex direction="column" gap="medium">
-            <Title>Links</Title>
             
             <Flex gap="small" wrap="wrap">
               <Link href="#" color="accent" underline>Accent Link</Link>
               <Link href="#" color="foreground-primary">Primary Link</Link>
               <Link href="#" color="foreground-secondary">Secondary Link</Link>
               <Link href="#" color="foreground-tertiary">Tertiary Link</Link>
-              <Link href="#" color="foreground-emphasis" weight="medium">Emphasis Link</Link>
+              <Link href="#" color="foreground-emphasis" weight="bold">Emphasis Link</Link>
             </Flex>
 
             <Flex gap="small" wrap="wrap">
@@ -201,18 +200,20 @@ export const Assets = () => {
               <Link href="#" size={4}>Size 4</Link>
               <Link href="#" size={5}>Size 5</Link>
               <Link href="#" size={6}>Size 6</Link>
+              <Link href="#" size={7}>Size 7</Link>
+              <Link href="#" size={8}>Size 8</Link>
+              <Link href="#" size={9}>Size 9</Link>
+              <Link href="#" size={10}>Size 10</Link>
             </Flex>
 
             <Flex gap="small" wrap="wrap">
-              <Link href="#" weight="regular">Regular</Link>
-              <Link href="#" weight="medium">Medium</Link>
-              <Link href="#" weight="semibold">Semibold</Link>
+              <Link href="#" weight="normal">Normal</Link>
               <Link href="#" weight="bold">Bold</Link>
+              <Link href="#" weight="bolder">Bolder</Link>
             </Flex>
           </Flex>
 
-          {/* Existing Buttons Section */}
-          <Flex direction="column" gap="medium">
+          {/* <Flex direction="column" gap="medium">
             <Title>Solid Buttons</Title>
             <Flex gap="small" wrap="wrap">
               <Button variant="solid" color="accent">solid-accent</Button>
@@ -265,7 +266,7 @@ export const Assets = () => {
                 (e.target as HTMLInputElement).value = '';
               }
             }}
-          />
+          /> */}
 
           <div style={{ width: "100%" }}>
             <DataTable
