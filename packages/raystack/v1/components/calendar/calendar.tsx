@@ -1,23 +1,23 @@
 import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+} from '@radix-ui/react-icons';
+import { cva } from 'class-variance-authority';
+import { ChangeEvent, useEffect, useState } from 'react';
+import {
   dateLib,
   DayPicker,
   DayPickerProps,
   DropdownProps,
 } from 'react-day-picker';
-import { cva } from 'class-variance-authority';
-import {
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-} from '@radix-ui/react-icons';
-import styles from './calendar.module.css';
-import { Select } from '../select';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { Flex } from '../flex/flex';
-import { Tooltip } from '../tooltip';
-
 import Skeleton from 'react-loading-skeleton';
+
+import { Flex } from '../flex/flex';
+import { Select } from '../select';
+import { Tooltip } from '../tooltip';
+import styles from './calendar.module.css';
 
 interface OnDropdownOpen {
   onDropdownOpen?: VoidFunction;

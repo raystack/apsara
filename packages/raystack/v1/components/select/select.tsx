@@ -2,9 +2,10 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
+
 import { Text } from "../text";
-import styles from "./select.module.css";
 import { TextProps } from "../text/text";
+import styles from "./select.module.css";
 
 export interface IconProps extends React.SVGAttributes<SVGElement> {
   children?: never;
