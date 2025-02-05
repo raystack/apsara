@@ -182,7 +182,7 @@
 .dropdowns {
   display: flex;
   align-items: center;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
 }
 
 .dropdown_trigger,
@@ -190,7 +190,7 @@
   border: none;
   outline: none;
   box-shadow: none;
-  padding: var(--rs-space-1);
+  padding: var(--rs-space-1) var(--rs-space-3);
 }
 
 .dropdown_trigger:hover {
