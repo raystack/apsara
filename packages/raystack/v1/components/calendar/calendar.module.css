@@ -15,7 +15,6 @@
   font-weight: 500;
   color: var(--rs-color-text-base-primary);
   user-select: none;
-  font-family: var(--rs-font-body);
   font-style: normal;
 }
 
@@ -109,6 +108,10 @@
   background-color: var(--rs-color-background-base-primary-hover);
   button {
     color: var(--rs-color-text-base-primary);
+  }
+  /* keep the today's date marker in accent color even when it's in the selected range */
+  button[data-today]::after {
+    background-color: var(--rs-color-background-accent-emphasis) !important;
   }
 }
 
