@@ -30,7 +30,7 @@
   font-weight: 400;
   line-height: 16px;
   letter-spacing: 0.5px;
-  color: var(--rs-color-text-error);
+  color: var(--rs-color-text-danger-primary);
 }
 
 /* For custom required text (not the star) */

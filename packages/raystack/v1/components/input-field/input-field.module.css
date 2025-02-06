@@ -103,7 +103,7 @@
 }
 
 .helper-text-error {
-  color: var(--rs-color-text-error);
+  color: var(--rs-color-text-danger-primary);
 }
 
 .helper-text-disabled {
