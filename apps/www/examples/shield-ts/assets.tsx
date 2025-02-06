@@ -7,7 +7,7 @@ import {
   useTable
 } from "@raystack/apsara";
 
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Separator, List } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Separator, List, Label } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -182,6 +182,21 @@ export const Assets = () => {
     <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
       <Flex direction="column" gap="large" style={{ width: "100%" }}>
         <Flex direction="column" gap="medium" style={{ width: "100%" }}>
+          <Title>Label Example</Title>
+          <Flex direction="column" gap="medium">
+            <Label size="small" htmlFor="name">Small Label</Label>
+            <Label size="medium" htmlFor="email" required>Required Medium Label</Label>
+            <Label 
+              size="large" 
+              htmlFor="description" 
+              required 
+              requiredIndicator=" (Required)"
+            >
+              Custom Required Large Label
+            </Label>
+          </Flex>
+
+          <Title>Toggle Group Example</Title>
           <Flex direction="column" gap="medium">
             <Title>Solid Buttons</Title>
             <Flex gap="small" wrap="wrap">

@@ -28,6 +28,7 @@ export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
 export { TextArea } from "./components/text-area";
 export { List } from "./components/list";
+export { Label } from "./components/label";
 export {
   ThemeProvider,
   ThemeProviderProps,
