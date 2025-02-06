@@ -21,18 +21,8 @@ const label = cva(styles.label, {
 
 interface LabelProps extends PropsWithChildren<VariantProps<typeof label>>, 
   Omit<HTMLAttributes<HTMLLabelElement>, 'required'> {
-  /**
-   * When true, shows a required indicator
-   */
   required?: boolean;
-  /**
-   * Custom required indicator text
-   * @default "*"
-   */
   requiredIndicator?: string;
-  /**
-   * ID of the form control this label is bound to
-   */
   htmlFor?: string;
 }
 
