@@ -1,0 +1,17 @@
+.link {
+  text-decoration: none;
+  line-height: 1;
+  cursor: pointer;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
+}
+
+.link:hover {
+  opacity: 0.8;
+}
+
+.link-underline {
+  text-decoration: underline;
+}
