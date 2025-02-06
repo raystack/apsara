@@ -21,6 +21,7 @@ import {
   Tabs,
   FilterChip,
   Search,
+  RangePicker,
 } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
@@ -243,6 +244,39 @@ export const Assets = () => {
             ))}
           </Flex> */}
 
+          <Title>Range Picker Example</Title>
+          <Flex direction="column" gap="medium" style={{ maxWidth: "320px" }}>
+            <div>
+              <RangePicker
+                dateFormat="DD/MM/YYYY"
+              />
+            </div>
+            
+            <div>
+              <RangePicker
+                side="bottom"
+                dateFormat="DD/MM/YYYY"
+              />
+            </div>
+
+            <div>
+              <RangePicker
+                value={{
+                  from: new Date(),
+                  to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+                }}
+                dateFormat="DD/MM/YYYY"
+              />
+            </div>
+
+            <div>
+              <RangePicker
+                dateFormat="DD/MM/YYYY"
+                showCalendarIcon={false}
+              />
+            </div>
+          </Flex>
+
           <FilterChip
             label="Status"
             leadingIcon={<HomeIcon />}
@@ -335,7 +369,6 @@ const AssetsHeader = () => {
           showClearButton
           onClear={() => setSearchValue("")}
         /> */}
-        <Separator color="tertiary" />
         <Flex gap="small" align="center">
         </Flex>
       </Flex>
