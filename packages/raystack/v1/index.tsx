@@ -18,6 +18,7 @@ export { IconButton } from "./components/icon-button";
 export { Indicator } from "./components/indicator";
 export { InputField } from "./components/input-field";
 export { Radio } from "./components/radio";
+export { Separator } from "./components/separator";
 export { Search } from "./components/search";
 export { Sidepanel } from "./components/sidepanel";
 export { Slider } from "./components/slider";
