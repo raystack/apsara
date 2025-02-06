@@ -49,3 +49,31 @@ The Label component accepts the following props:
 - `requiredIndicator`: `string` - Customizes the required field indicator (default: "\*")
 - `htmlFor`: `string` - Associates the label with a form control using its ID
 - `className`: `string` - Additional CSS class names
+
+## Required
+
+Labels can indicate required fields with either a default asterisk or custom text.
+
+<Playground
+  scope={{ Label }}
+  tabs={[
+    {
+      name: "Default Required",
+      code: `
+<Label size="medium" required>
+  Required Field
+</Label>`,
+    },
+    {
+      name: "Custom Required",
+      code: `
+<Label 
+  size="medium" 
+  required 
+  requiredIndicator=" (Required)"
+>
+  Custom Required Field
+</Label>`,
+    },
+  ]}
+/>
