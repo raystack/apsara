@@ -109,10 +109,6 @@
   button {
     color: var(--rs-color-text-base-primary);
   }
-  /* keep the today's date marker in accent color even when it's in the selected range */
-  button[data-today]::after {
-    background-color: var(--rs-color-background-accent-emphasis) !important;
-  }
 }
 
 .range_middle:first-of-type {
