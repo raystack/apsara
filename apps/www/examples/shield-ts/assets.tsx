@@ -21,7 +21,6 @@ import {
   Tabs,
   FilterChip,
   Search,
-  RangePicker,
 } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
