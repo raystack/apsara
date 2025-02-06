@@ -8,11 +8,9 @@ import styles from "./button.module.css";
 const button = cva(styles['button'], {
   variants: {
     variant: {
-      primary: styles["button-primary"],
-      secondary: styles["button-secondary"],
+      solid: styles["button-solid"],
       outline: styles["button-outline"],
       ghost: styles["button-ghost"],
-      danger: styles["button-danger"],
       text: styles["button-text"]
     },
     size: {
@@ -24,8 +22,29 @@ const button = cva(styles['button'], {
     },
     loading: {
       true: styles["button-loading"],
+    },
+    color: {
+      accent: styles["button-color-accent"],
+      danger: styles["button-color-danger"],
+      neutral: styles["button-color-neutral"],
+      success: styles["button-color-success"],
     }
   },
+  compoundVariants: [
+    { variant: 'solid', color: 'accent', className: styles['button-solid-accent'] },
+    { variant: 'solid', color: 'danger', className: styles['button-solid-danger'] },
+    { variant: 'solid', color: 'neutral', className: styles['button-solid-neutral'] },
+    { variant: 'solid', color: 'success', className: styles['button-solid-success'] },
+    { variant: 'outline', color: 'accent', className: styles['button-outline-accent'] },
+    { variant: 'outline', color: 'danger', className: styles['button-outline-danger'] },
+    { variant: 'outline', color: 'neutral', className: styles['button-outline-neutral'] },
+    { variant: 'outline', color: 'success', className: styles['button-outline-success'] },
+  ],
+  defaultVariants: {
+    variant: 'solid',
+    size: 'normal',
+    color: 'accent'
+  }
 });
 
 const getLoaderOnlyClass = (size: 'small' | 'normal' | null) => 
@@ -38,23 +57,26 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     loaderText?: ReactNode;
     leadingIcon?: ReactNode;
     trailingIcon?: ReactNode;
-    width?: string | number
+    maxWidth?: string | number;
+    width?: string | number;
+    style?: React.CSSProperties;
   };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, width, children, ...props }, ref) => {
+  ({ className, variant = 'solid', color = 'accent', size = 'normal', asChild = false, disabled, loading, loaderText, leadingIcon, trailingIcon, maxWidth, width, style = {}, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
     const isLoaderOnly = loading && !loaderText;
-    const widthStyle = width ? { width } : {};
+    const widthStyle = { maxWidth, width };
+    const buttonStyle = { ...widthStyle, ...style };
 
-    const spinnerColor = variant === 'primary' || variant === 'danger' ? 'inverted' : 'default';
+    const spinnerColor = variant === 'solid' ? 'inverted' : 'default';
 
     return (
       <Comp
-        className={`${button({ variant, size, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
+        className={`${button({ variant, size, color, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
         ref={ref}
         disabled={disabled}
-        style={ widthStyle }
+        style={buttonStyle}
         {...props}
       >
         {loading ? (

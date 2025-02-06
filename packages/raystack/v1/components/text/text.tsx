@@ -1,6 +1,7 @@
 import { cva, VariantProps } from "class-variance-authority";
 import { HTMLAttributes, PropsWithChildren } from "react";
 
+// Also used by link.tsx
 import styles from "./text.module.css";
 
 const text = cva(styles.text, {

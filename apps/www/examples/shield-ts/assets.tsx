@@ -269,7 +269,6 @@ export const Assets = () => {
             onValueChange={(value) => console.log(value)}
             onOperationChange={(operation) => console.log(operation)}
           />
-
           <div style={{ width: "100%" }}>
             <DataTable
               columns={columns}
@@ -328,164 +327,17 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
-        <Search
+
+        {/* <Search 
           placeholder="Search assets..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           showClearButton
           onClear={() => setSearchValue("")}
-        />
-        {/* <Tabs.Root defaultValue="general">
-          <Tabs.List>
-            <Tabs.Trigger value="general" icon={<HomeIcon />}>
-              Home
-            </Tabs.Trigger>
-            <Tabs.Trigger value="hosting" disabled>
-              Hosting
-            </Tabs.Trigger>
-            <Tabs.Trigger value="editor" icon={<InfoCircledIcon />} disabled />
-            <Tabs.Trigger value="billing">
-              Billing
-            </Tabs.Trigger>
-            <Tabs.Trigger value="seo">
-              SEO
-            </Tabs.Trigger>
-          </Tabs.List>
-          <Tabs.Content value="general">
-            <Text>General settings content</Text>
-          </Tabs.Content>
-          <Tabs.Content value="hosting">
-            <Text>Hosting configuration content</Text>
-          </Tabs.Content>
-          <Tabs.Content value="editor">
-            <Text>Editor preferences content</Text>
-          </Tabs.Content>
-          <Tabs.Content value="billing">
-            <Text>Billing information content</Text>
-          </Tabs.Content>
-          <Tabs.Content value="seo">
-            <Text>SEO settings content</Text>
-          </Tabs.Content>
-        </Tabs.Root> */}
-        {/* <Text style={{ fontWeight: 500 }}>Assets</Text> */}
-        {/* <Spinner size={3} />
-        <div>
-        <Checkbox 
-            checked={checked}
-            onCheckedChange={(value) => {
-              setChecked(value);
-              console.log('New value:', value);
-            }} 
-          />
-        </div> */}
-        {/* <InputField
-          label="Label"
-          helperText="Helper Text"
-          placeholder="Place holder"
-          prefix="USD"
         /> */}
-        {/* <Badge size="small" variant="gradient" icon={<HomeIcon />}>
-          Custom Badge
-        </Badge> */}
-
-        {/* <Button variant="outline">Click here</Button>
-        <Breadcrumb items={items} size="small" />
-        <DropdownMenu>
-          <DropdownMenu.Trigger asChild>
-            <Button variant="secondary" size="small">Actions</Button>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="start">
-            <DropdownMenu.EmptyState>
-              <Title>No insights yet</Title>
-              <Text>You need to run a model to generate insights</Text>
-              <Button>Action Button</Button>
-            </DropdownMenu.EmptyState>
-          </DropdownMenu.Content>
-        </DropdownMenu> */}
-        {/* <AvatarGroup max={3}>
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="iris"
-            fallback={<>GS</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="mint"
-            fallback={<>RK</>}
-          />
-          <Avatar
-            radius="full"
-            variant="solid"
-            size={6}
-            color="orange"
-            fallback={<>RK</>}
-          />
-        </AvatarGroup> */}
-
-        {/* Add Chip examples */}
+        <Separator color="tertiary" />
         <Flex gap="small" align="center">
-          {/* <Chip isDismissible variant="filled" size="small" style="accent" leadingIcon={<HomeIcon />} trailingIcon={<CheckIcon />}>Default</Chip> */}
-          {/* <Radio.Root defaultValue="1" aria-label="View options">
-            <Flex gap="small" align="center" style={{ minWidth: '200px' }}>
-              <Radio.Item value="1" id="r1" />
-              <label htmlFor="r1">Option 1</label>
-              <Radio.Item value="2" id="r2" />
-              <label htmlFor="r2">Option 2</label>
-            </Flex>
-          </Radio.Root> */}
-          {/* <Chip 
-            variant="filled" 
-            size="large" 
-            style="accent"
-            leadingIcon={<PlusIcon />}
-          >
-            Large Accent
-          </Chip>
-
-          <Chip 
-            variant="filled"
-            trailingIcon={<CheckIcon />}
-          >
-            With Icon
-          </Chip>
-
-          <Chip 
-            variant="outline"
-            isDismissible
-            onDismiss={() => console.log('dismissed')}
-          >
-            Dismissible
-          </Chip>
-
-          <Chip 
-            style="accent"
-            leadingIcon={<CheckIcon />}
-            trailingIcon={<Cross1Icon />}
-          >
-            Both Icons
-          </Chip> */}
         </Flex>
-
-        {/* Add IconButton examples */}
-        {/* <Flex gap="small" align="center">
-          <IconButton size={1}>
-            <PlusIcon />
-          </IconButton>
-          <IconButton size={2}>
-            <PlusIcon />
-          </IconButton>
-          <IconButton size={3}>
-            <PlusIcon />
-          </IconButton>
-          <IconButton size={4}>
-            <PlusIcon />
-          </IconButton> 
-
-        </Flex>*/}
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

@@ -76,7 +76,7 @@ export const primitivesRoutes = [
       },
       { title: "Headline", slug: "docs/primitives/components/headline" },
       { title: "IconButton", slug: "docs/primitives/components/iconButton", newBadge: true },
-      { title: "Image", slug: "docs/primitives/components/image" },
+      { title: "Image", slug: "docs/primitives/components/image", newBadge: true },
       { title: "Indicator", slug: "docs/primitives/components/indicator", newBadge: true },
       {
         title: "Input Field",
@@ -85,11 +85,12 @@ export const primitivesRoutes = [
       },
       { title: "Label", slug: "docs/primitives/components/label" },
       { title: "Link", slug: "docs/primitives/components/link" },
+      { title: "List", slug: "docs/primitives/components/list", newBadge: true },
       { title: "Popover", slug: "docs/primitives/components/popover" },
       { title: "Radio", slug: "docs/primitives/components/radio", newBadge: true },
       { title: "Select", slug: "docs/primitives/components/select" },
       { title: "Search", slug: "docs/primitives/components/search", newBadge: true },
-      { title: "Separator", slug: "docs/primitives/components/separator" },
+      { title: "Separator", slug: "docs/primitives/components/separator", newBadge: true },
       { title: "Sheet", slug: "docs/primitives/components/sheet" },
       {
         title: "Spinner",

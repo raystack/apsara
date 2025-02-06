@@ -1,8 +1,8 @@
-import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 import * as Collapsible from '@radix-ui/react-collapsible';
 import { cva } from "class-variance-authority";
-import { Tooltip, TooltipProvider } from "../tooltip";
+import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 
+import { Tooltip, TooltipProvider } from "../tooltip";
 import styles from "./sidepanel.module.css";
 
 const root = cva(styles.root);
