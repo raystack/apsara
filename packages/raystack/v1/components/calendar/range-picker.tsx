@@ -19,6 +19,7 @@ interface RangePickerProps {
   pickerGroupClassName?: string;
   value?: DateRange;
   children?: React.ReactNode | ((props: { startDate: string; endDate: string }) => React.ReactNode);
+  showCalendarIcon?: boolean;
 }
 
 type RangeFields = keyof DateRange;
@@ -35,6 +36,7 @@ export function RangePicker({
   },
   pickerGroupClassName,
   children,
+  showCalendarIcon = true,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] = useState<RangeFields>("from");
@@ -72,14 +74,14 @@ export function RangePicker({
     <Flex gap={"medium"} className={pickerGroupClassName}>
       <TextField
         value={startDate}
-        trailing={<CalendarIcon />}
+        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
         {...textFieldProps}
       />
       <TextField
         value={endDate}
-        trailing={<CalendarIcon />}
+        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
         {...textFieldProps}

@@ -1,13 +1,27 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
-import { HomeIcon } from "@radix-ui/react-icons";
+import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
+import { DataTable, Title, useTable } from "@raystack/apsara";
 import {
-  DataTable,
-  Title,
-  useTable
-} from "@raystack/apsara";
-
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Separator, Link, List } from "@raystack/apsara/v1";
+  toast,
+  ToastContainer,
+  Avatar,
+  AvatarGroup,
+  Button,
+  Spinner,
+  DropdownMenu,
+  Breadcrumb,
+  Chip,
+  Flex,
+  Text,
+  Checkbox,
+  InputField,
+  Badge,
+  Radio,
+  Tabs,
+  FilterChip,
+  Search,
+} from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
@@ -102,24 +116,43 @@ export const Assets = () => {
     to: new Date(),
   });
 
+  const activeFilters = [
+    {
+      label: "Category",
+      value: "Workflow",
+    },
+    {
+      label: "Status",
+      value: "Active",
+    },
+    {
+      label: "Priority",
+      value: "High",
+    },
+  ];
   const [recipients, setRecipients] = useState([
     { label: "A", onRemove: () => handleRemoveRecipient("A") },
     { label: "B", onRemove: () => handleRemoveRecipient("B") },
     { label: "C", onRemove: () => handleRemoveRecipient("C") },
     { label: "D", onRemove: () => handleRemoveRecipient("D") },
-    { label: "E", onRemove: () => handleRemoveRecipient("E") }
+    { label: "E", onRemove: () => handleRemoveRecipient("E") },
   ]);
 
   const handleRemoveRecipient = (label: string) => {
-    setRecipients(prev => prev.filter(recipient => recipient.label !== label));
+    setRecipients((prev) =>
+      prev.filter((recipient) => recipient.label !== label)
+    );
   };
 
   const handleAddRecipient = (value: string) => {
-    if (value && !recipients.find(r => r.label === value)) {
-      setRecipients(prev => [...prev, { 
-        label: value, 
-        onRemove: () => handleRemoveRecipient(value) 
-      }]);
+    if (value && !recipients.find((r) => r.label === value)) {
+      setRecipients((prev) => [
+        ...prev,
+        {
+          label: value,
+          onRemove: () => handleRemoveRecipient(value),
+        },
+      ]);
     }
   };
 
@@ -142,24 +175,26 @@ export const Assets = () => {
   const showToast = (variant: string) => {
     switch (variant) {
       case "success":
-        const successToastId = toast.success('Data loaded successfully.',
-        { 
+        const successToastId = toast.success("Data loaded successfully.", {
           duration: Infinity,
           dismissible: true,
-          action: <Button size="small" onClick={() => toast.dismiss(successToastId)}>
-            Click Me
-          </Button>
-        }
-        );
-        break;  
+          action: (
+            <Button size="small" onClick={() => toast.dismiss(successToastId)}>
+              Click Me
+            </Button>
+          ),
+        });
+        break;
       case "error":
-        const errorToastId = toast.info('Error loading data!',
-        { 
+        const errorToastId = toast.info("Error loading data!", {
           duration: Infinity,
           dismissible: true,
-          action: <Button size="small" onClick={() => toast.dismiss(errorToastId)}>Retry</Button>
-        }
-        );
+          action: (
+            <Button size="small" onClick={() => toast.dismiss(errorToastId)}>
+              Retry
+            </Button>
+          ),
+        });
         break;
       default:
         const defaultToastId = toast(
@@ -174,123 +209,66 @@ export const Assets = () => {
     }
   };
 
+  const handleFilterChange = (filter: any) => {
+    console.log("Filter changed:", filter);
+  };
+
+  const handleOperationChange = (operation: string) => {
+    console.log("Operation changed:", operation);
+  };
+
   useEffect(() => {
     loadMoreData();
   }, []);
 
   return (
-    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
-      <Flex direction="column" gap="large" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-          {/* Links Section */}
-          <Flex direction="column" gap="medium">
-            
-            <Flex gap="small" wrap="wrap">
-              <Link href="#" variant="primary">primary</Link>
-              <Link href="#" variant="secondary">secondary</Link>
-              <Link href="#" variant="tertiary">tertiary</Link>
-              <Link href="#" variant="emphasis">emphasis</Link>
-              <Link href="#" variant="attention">attention</Link>
-              <Link href="#" variant="danger">danger</Link>
-              <Link href="#" variant="success">Success Link</Link>  
-              <Link href="#" variant="accent" underline>accent</Link>
-            </Flex>
+    <div style={{ width: "100%" }}>
+      <Flex direction="column" style={{ width: "100%" }}>
+        <Flex direction="column" style={{ width: "100%" }}>
+          {/* <Flex align="center" wrap="wrap" gap="medium">
+            {activeFilters.map((filter, index) => (
+              <FilterChip
+                key={`filter-${index}`}
+                label={filter.label}
+                value={filter.value}
+                columnType="select"
+                options={[
+                  { label: "Option 1", value: "option1" },
+                  { label: "Option 2", value: "option2" }
+                ]}
+                onValueChange={(value) => handleFilterChange({ ...filter, value })}
+                onOperationChange={handleOperationChange}
+                onRemove={() => console.log(`Removing ${filter.label} filter`)}
+              />
+            ))}
+          </Flex> */}
 
-            <Flex gap="small" wrap="wrap">
-              <Link href="#" size={1}>Size 1</Link>
-              <Link href="#" size={2}>Size 2</Link>
-              <Link href="#" size={3}>Size 3</Link>
-              <Link href="#" size={4}>Size 4</Link>
-              <Link href="#" size={5}>Size 5</Link>
-              <Link href="#" size={6}>Size 6</Link>
-              <Link href="#" size={7}>Size 7</Link>
-              <Link href="#" size={8}>Size 8</Link>
-              <Link href="#" size={9}>Size 9</Link>
-              <Link href="#" size={10}>Size 10</Link>
-            </Flex>
+          <FilterChip
+            label="Status"
+            leadingIcon={<HomeIcon />}
+            columnType="select"
+            options={[
+              { label: "Pending", value: "pending" },
+              { label: "Success", value: "success" },
+            ]}
+            onRemove={() => console.log("Removing filter")}
+            onValueChange={(value) => console.log(value)}
+            onOperationChange={(operation) => console.log(operation)}
+          />
 
-            <Flex gap="small" wrap="wrap">
-              <Link href="#" weight="normal">Normal</Link>
-              <Link href="#" weight="bold">Bold</Link>
-              <Link href="#" weight="bolder">Bolder</Link>
-            </Flex>
-          </Flex>
-
-          {/* <Flex direction="column" gap="medium">
-            <Title>Solid Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent">solid-accent</Button>
-              <Button variant="solid" color="danger">solid-danger</Button>
-              <Button variant="solid" color="neutral">solid-neutral</Button>
-              <Button variant="solid" color="success">solid-success</Button>
-            </Flex>
-
-            <Title>Outline Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="outline" color="accent">outline-accent</Button>
-              <Button variant="outline" color="danger">outline-danger</Button>
-              <Button variant="outline" color="neutral">outline-neutral</Button>
-              <Button variant="outline" color="success">outline-success</Button>
-            </Flex>
-
-            <Title>Ghost & Text Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="ghost">ghost</Button>
-              <Button variant="text">text</Button>
-            </Flex>
-
-            <Title>Loading State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" loading>Loading</Button>
-              <Button variant="outline" color="accent" loading>Loading</Button>
-              <Button variant="ghost" loading>Loading</Button>
-              <Button variant="text" loading>Loading</Button>
-            </Flex>
-
-            <Title>Disabled State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" disabled>Disabled</Button>
-              <Button variant="outline" color="accent" disabled>Disabled</Button>
-              <Button variant="ghost" disabled>Disabled</Button>
-              <Button variant="text" disabled>Disabled</Button>
-            </Flex>
-          </Flex>
-
-          {/* <InputField
-            label="Label"
-            placeholder="Type and press Enter..."
-            chips={recipients}
-            maxChipsVisible={2}
-            size="small"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                handleAddRecipient((e.target as HTMLInputElement).value);
-                (e.target as HTMLInputElement).value = '';
-              }
-            }}
-          /> */}
-
-          <List.Root maxWidth="600px">
-            <List.Header>User Information</List.Header>
-            <List.Item>
-              <List.Label minWidth="120px">Status</List.Label>
-              <List.Value>
-                Active
-              </List.Value>
-            </List.Item>
-            <List.Item>
-              <List.Label minWidth="120px">Type</List.Label>
-              <List.Value>Premium Account</List.Value>
-            </List.Item>
-            <List.Item>
-              <List.Label minWidth="120px">Description</List.Label>
-              <List.Value>
-                This is a description that demonstrates the content.
-              </List.Value>
-            </List.Item>
-          </List.Root>
-
+          <FilterChip
+            label="Priority"
+            leadingIcon={<CheckIcon />}
+            columnType="select"
+            onRemove={() => console.log("Removing filter")}
+            options={[
+              { label: "High", value: "high" },
+              { label: "Medium", value: "medium" },
+              { label: "Low", value: "low" },
+            ]}
+            onValueChange={(value) => console.log(value)}
+            onOperationChange={(operation) => console.log(operation)}
+          />
           <div style={{ width: "100%" }}>
             <DataTable
               columns={columns}
@@ -310,33 +288,36 @@ export const Assets = () => {
           </div>
         </Flex>
       </Flex>
+      <ToastContainer />
     </div>
   );
 };
 
 const AssetsHeader = () => {
-  const { filteredColumns } = useTable();
-  const [checked, setChecked] = useState<boolean | 'indeterminate'>('indeterminate');
+  const { filteredColumns, table } = useTable();
+  const [checked, setChecked] = useState<boolean | "indeterminate">(
+    "indeterminate"
+  );
   const [searchValue, setSearchValue] = useState("");
-  const handleCheckedChange = (newChecked: boolean | 'indeterminate') => {
-    if (newChecked !== 'indeterminate') {
+  const handleCheckedChange = (newChecked: boolean | "indeterminate") => {
+    if (newChecked !== "indeterminate") {
       setChecked(newChecked);
     }
   };
   const isFiltered = filteredColumns.length > 0;
   const items = [
-    { label: 'Home', href: '/', icon: <HomeIcon /> },
-    { label: 'Category', href: '/category' },
-    { 
-      label: 'Subcategory', 
-      href: '/category/subcategory',
+    { label: "Home", href: "/", icon: <HomeIcon /> },
+    { label: "Category", href: "/category" },
+    {
+      label: "Subcategory",
+      href: "/category/subcategory",
       dropdownItems: [
-        { label: 'Option 1', href: '/category/subcategory/option1' },
-        { label: 'Option 2', href: '/category/subcategory/option2' },
-        { label: 'Option 3', href: '/category/subcategory/option3' },
-      ]
+        { label: "Option 1", href: "/category/subcategory/option1" },
+        { label: "Option 2", href: "/category/subcategory/option2" },
+        { label: "Option 3", href: "/category/subcategory/option3" },
+      ],
     },
-    { label: 'Current Page', href: '/category/subcategory/current' },
+    { label: "Current Page", href: "/category/subcategory/current" },
   ];
 
   return (
@@ -346,6 +327,7 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
+
         {/* <Search 
           placeholder="Search assets..."
           value={searchValue}
@@ -361,7 +343,7 @@ const AssetsHeader = () => {
         <AssetsFooter />
         {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
         <DataTable.ViewOptions />
-        
+        <DataTable.GloabalSearch placeholder="Search assets..." />
       </Flex>
     </Flex>
   );
