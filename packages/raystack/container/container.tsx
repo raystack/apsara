@@ -19,6 +19,9 @@ const container = cva(styles.container, {
 type ContainerProps = PropsWithChildren<VariantProps<typeof container>> &
   HTMLAttributes<HTMLElement>;
 
+/**
+ * @deprecated Use Container from '@raystack/apsara/v1' instead.
+ */
 export function Container({
   children,
   size,
