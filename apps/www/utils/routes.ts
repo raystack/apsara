@@ -50,7 +50,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/chip",
         newBadge: true,
       },
-      { title: "Container", slug: "docs/primitives/components/container" },
+      { title: "Container", slug: "docs/primitives/components/container", newBadge: true },
       { title: "Datatable", slug: "docs/primitives/components/datatable" },
       { title: "Dialog", slug: "docs/primitives/components/dialog" },
       {
