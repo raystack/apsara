@@ -69,3 +69,14 @@ The Container component accepts the following props:
   - large: 1145px
   - none: no max-width
 - `className`: `string` - Additional CSS class names
+- `aria-label`: `string` - Accessible label for the container region
+- `aria-labelledby`: `string` - ID of element that labels this container region
+
+## Accessibility
+
+The Container component is designed with accessibility in mind:
+
+- Uses `role="region"` to mark it as a landmark for screen readers
+- Supports labeling via `aria-label` or `aria-labelledby`
+- Helps organize content into meaningful sections
+
