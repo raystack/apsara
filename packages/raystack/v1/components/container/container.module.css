@@ -1,8 +1,6 @@
 .container {
   box-sizing: border-box;
   flex-shrink: 0;
-  margin-left: auto;
-  margin-right: auto;
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);
   width: 100%;
@@ -28,6 +26,23 @@
   max-width: 1145px;
 }
 
+/* Alignment variants */
+.container-align-left {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.container-align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.container-align-right {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Responsive max-width adjustments */
 @media (max-width: 480px) {
   .container-small {
     max-width: 100%;
@@ -48,19 +63,4 @@
 
 .container-none {
   max-width: none;
-}
-
-.container-align-left {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-.container-align-center {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.container-align-right {
-  margin-left: auto;
-  margin-right: 0;
 } 
