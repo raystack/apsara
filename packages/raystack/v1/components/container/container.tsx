@@ -10,9 +10,15 @@ const container = cva(styles.container, {
       large: styles["container-large"],
       none: styles["container-none"],
     },
+    align: {
+      left: styles["container-align-left"],
+      center: styles["container-align-center"],
+      right: styles["container-align-right"],
+    }
   },
   defaultVariants: {
     size: "none",
+    align: "center",
   },
 });
 
@@ -25,13 +31,14 @@ type ContainerProps = PropsWithChildren<VariantProps<typeof container>> &
 export function Container({
   children,
   size,
+  align,
   className,
   role = "region",
   ...props
 }: ContainerProps) {
   return (
     <div 
-      className={container({ size, className })} 
+      className={container({ size, align, className })} 
       role={role}
       {...props}
     >
