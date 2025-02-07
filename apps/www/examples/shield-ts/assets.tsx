@@ -335,7 +335,6 @@ const AssetsHeader = () => {
           showClearButton
           onClear={() => setSearchValue("")}
         /> */}
-        <Separator color="tertiary" />
         <Flex gap="small" align="center">
         </Flex>
       </Flex>

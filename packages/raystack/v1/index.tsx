@@ -8,6 +8,7 @@ export { Breadcrumb } from "./components/breadcrumb";
 export { Button } from "./components/button";
 export { Calendar, DatePicker, RangePicker } from "./components/calendar";
 export { Callout } from "./components/callout";
+export { Container } from "./components/container";
 export { Checkbox } from "./components/checkbox";
 export { Chip } from "./components/chip";
 export { DropdownMenu } from "./components/dropdown-menu";
