@@ -17,16 +17,24 @@ const container = cva(styles.container, {
 });
 
 type ContainerProps = PropsWithChildren<VariantProps<typeof container>> &
-  HTMLAttributes<HTMLElement>;
+  HTMLAttributes<HTMLElement> & {
+    "aria-label"?: string;
+    "aria-labelledby"?: string;
+  };
 
 export function Container({
   children,
   size,
   className,
+  role = "region",
   ...props
 }: ContainerProps) {
   return (
-    <div className={container({ size, className })} {...props}>
+    <div 
+      className={container({ size, className })} 
+      role={role}
+      {...props}
+    >
       {children}
     </div>
   );
