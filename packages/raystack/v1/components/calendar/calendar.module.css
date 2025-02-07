@@ -15,7 +15,6 @@
   font-weight: 500;
   color: var(--rs-color-text-base-primary);
   user-select: none;
-  font-family: var(--rs-font-body);
   font-style: normal;
 }
 
@@ -112,6 +111,16 @@
   }
 }
 
+.range_middle:first-of-type {
+  border-top-left-radius: var(--rs-radius-5);
+  border-bottom-left-radius: var(--rs-radius-5);
+}
+
+.range_middle:last-of-type {
+  border-top-right-radius: var(--rs-radius-5);
+  border-bottom-right-radius: var(--rs-radius-5);
+}
+
 .range_start:not(.range_end) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -172,8 +181,8 @@
 }
 
 .calendarPopover {
-  padding: 0;
-  border: none;
+  padding: 0 !important;
+  border: none !important;
   min-width: max-content;
   width: fit-content;
   max-width: none !important;
