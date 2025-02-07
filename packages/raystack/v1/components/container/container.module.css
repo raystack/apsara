@@ -6,7 +6,6 @@
   width: 100%;
 }
 
-/* Adjust padding for larger screens */
 @media (min-width: 640px) {
   .container {
     padding-left: var(--rs-space-5);
@@ -42,7 +41,6 @@
   margin-right: 0;
 }
 
-/* Responsive max-width adjustments */
 @media (max-width: 480px) {
   .container-small {
     max-width: 100%;
