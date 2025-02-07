@@ -3,8 +3,17 @@
   flex-shrink: 0;
   margin-left: auto;
   margin-right: auto;
-  padding-left: var(--rs-space-5);
-  padding-right: var(--rs-space-5);
+  padding-left: var(--rs-space-3);
+  padding-right: var(--rs-space-3);
+  width: 100%;
+}
+
+/* Adjust padding for larger screens */
+@media (min-width: 640px) {
+  .container {
+    padding-left: var(--rs-space-5);
+    padding-right: var(--rs-space-5);
+  }
 }
 
 .container-small {
@@ -17,6 +26,24 @@
 
 .container-large {
   max-width: 1145px;
+}
+
+@media (max-width: 480px) {
+  .container-small {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container-medium {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container-large {
+    max-width: 100%;
+  }
 }
 
 .container-none {
