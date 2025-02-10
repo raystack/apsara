@@ -5,6 +5,7 @@
     font-weight: 400;
     font-family: var(--rs-font-title);
     color: var(--rs-color-text-base-primary);
+    width: 100%;
 }
 
 .headline-small {
@@ -35,8 +36,10 @@
 }
 
 .headline-truncate {
+    display: block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 100%;
     max-width: 100%;
 }
