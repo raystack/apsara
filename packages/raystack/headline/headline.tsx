@@ -18,6 +18,9 @@ const headline = cva(styles.headline, {
 type HeadlineProps = PropsWithChildren<VariantProps<typeof headline>> &
   HTMLAttributes<HTMLSpanElement>;
 
+/**
+ * @deprecated Use Headline from '@raystack/apsara/v1' instead.
+ */
 export function Headline({
   children,
   className,
