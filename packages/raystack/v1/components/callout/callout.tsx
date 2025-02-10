@@ -35,6 +35,7 @@ export interface CalloutProps extends ComponentPropsWithoutRef<'div'>, VariantPr
   onDismiss?: () => void;
   width?: string | number;
   style?: React.CSSProperties;
+  icon?: React.ReactNode;
 }
 
 export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
@@ -49,6 +50,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
     onDismiss,
     width,
     style,
+    icon,
     ...props
   }, ref) => {
     const combinedStyle = {
@@ -78,10 +80,16 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
       >
         <div className={styles.container}>
           <div className={styles.messageContainer}>
-            <InfoCircledIcon 
-              className={styles.icon} 
-              aria-hidden="true"
-            />
+            {icon !== undefined ? (
+              <div className={styles.icon} aria-hidden="true">
+                {icon}
+              </div>
+            ) : (
+              <InfoCircledIcon 
+                className={styles.icon} 
+                aria-hidden="true"
+              />
+            )}
             <div className={styles.message}>{children}</div>
           </div>
           
