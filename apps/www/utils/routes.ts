@@ -74,7 +74,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/filter-chip",
         newBadge: true,
       },
-      { title: "Headline", slug: "docs/primitives/components/headline" },
+      { title: "Headline", slug: "docs/primitives/components/headline", newBadge: true },
       { title: "IconButton", slug: "docs/primitives/components/iconButton", newBadge: true },
       { title: "Image", slug: "docs/primitives/components/image", newBadge: true },
       { title: "Indicator", slug: "docs/primitives/components/indicator", newBadge: true },
