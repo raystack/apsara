@@ -20,7 +20,7 @@ const headline = cva(styles.headline, {
     }
   },
   defaultVariants: {
-    size: "medium",
+    size: "small",
     align: "left",
     truncate: false,
   },
