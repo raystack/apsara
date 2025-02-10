@@ -251,3 +251,7 @@
   border-radius: inherit;
   position: relative;
 }
+
+.datePickerInput {
+  text-align: left;
+}

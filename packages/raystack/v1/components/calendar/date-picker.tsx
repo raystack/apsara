@@ -154,6 +154,7 @@ export function DatePicker({
       state={inputState}
       placeholder={placeholder}
       onKeyUp={handleKeyUp}
+      className={styles.datePickerInput}
       {...textFieldProps}
     />
   );
