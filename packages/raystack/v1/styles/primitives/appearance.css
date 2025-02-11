@@ -124,7 +124,7 @@
     --rs-success-contrast: #ffffff;
 
     /* Overlay color */
-    --rs-overlay-1: #0000004D;
+    --rs-overlay-1: #0000004D; /* 30% opacity */
 }
 
 /* Dark Theme Colors */
@@ -249,5 +249,5 @@ html[data-theme="dark"] {
     --rs-success-contrast: #ffffff;
 
     /* Overlay color */
-    --rs-overlay-1: #ffffff4D;
+    --rs-overlay-1: #ffffff4D; /* 30% opacity */
 }
