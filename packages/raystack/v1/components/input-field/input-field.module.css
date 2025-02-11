@@ -102,11 +102,11 @@
   font-size: 11px;
 }
 
-.helper-foreground-error {
+.helper-text-error {
   color: var(--rs-color-foreground-error);
 }
 
-.helper-foreground-disabled {
+.helper-text-disabled {
   color: var(--rs-color-foreground-disabled);
 }
 

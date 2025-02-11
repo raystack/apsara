@@ -114,8 +114,8 @@ export const InputField = ({
         <span 
           className={clsx(
             styles['helper-text'], 
-            error && styles['helper-foreground-error'],
-            disabled && styles['helper-foreground-disabled']
+            error && styles['helper-text-error'],
+            disabled && styles['helper-text-disabled']
           )}
         >
           {error || helperText}
