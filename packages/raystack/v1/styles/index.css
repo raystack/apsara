@@ -1,7 +1,8 @@
-@import './gray.css';
-@import './accent.css';
-@import './appearance.css';
+@import './primitives/gray.css';
+@import './primitives/accent.css';
+@import './primitives/appearance.css';
 @import './colors.css';
 @import './radius.css';
 @import './spacing.css';
 @import './typography.css';
+

@@ -34,7 +34,7 @@
 }
 
 .operationText {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.4px;
@@ -45,7 +45,7 @@
 }
 
 .operationText:hover {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary-hover);
   height: calc(100% - 2px);
 }
@@ -72,14 +72,14 @@
   background: transparent !important;
   min-height: unset !important;
   border-radius: var(--rs-radius-1);
-  color: var(--rs-color-text-base-primary) !important;
+  color: var(--rs-color-foreground-base-primary) !important;
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.4px;
 }
 
 .value {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
@@ -105,23 +105,23 @@
 
 .removeIcon {
   cursor: pointer;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   transition: color 0.2s ease-in-out;
   width: 12px !important;
   height: 12px !important;
 }
 
 .removeIcon:hover {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 /* Style for select value placeholder */
 .chip [data-placeholder] {
-  color: var(--rs-color-text-base-primary) !important;
+  color: var(--rs-color-foreground-base-primary) !important;
 }
 
 .selectValue {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.4px;
@@ -133,7 +133,7 @@
 }
 
 .selectValue:hover {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary-hover);
   height: calc(100% - 2px);
 }

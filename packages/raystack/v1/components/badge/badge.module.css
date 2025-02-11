@@ -33,27 +33,27 @@
 /* Variants */
 .badge-neutral {
   background: var(--rs-color-background-neutral-secondary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .badge-accent {
   background: var(--rs-color-background-accent-primary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .badge-warning {
   background: var(--rs-color-background-attention-primary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .badge-danger {
   background: var(--rs-color-background-danger-primary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .badge-success {
   background: var(--rs-color-background-success-primary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .badge-gradient {
@@ -62,7 +62,7 @@
     #AD00E933 0%,
     #EF040433 100%
   );
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 /* Icon */
@@ -70,7 +70,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .badge-micro .icon {
