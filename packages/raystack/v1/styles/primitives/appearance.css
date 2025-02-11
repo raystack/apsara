@@ -122,6 +122,9 @@
     --rs-danger-contrast: #ffffff;
     --rs-attention-contrast: #000000;
     --rs-success-contrast: #ffffff;
+
+    /* Overlay color */
+    --rs-overlay-1: #0000004D;
 }
 
 /* Dark Theme Colors */
@@ -244,4 +247,7 @@ html[data-theme="dark"] {
     --rs-danger-contrast: #ffffff;
     --rs-attention-contrast: #000000;
     --rs-success-contrast: #ffffff;
+
+    /* Overlay color */
+    --rs-overlay-1: #ffffff4D;
 }
