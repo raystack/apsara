@@ -28,7 +28,7 @@
 }
 
 .iconButton:active:not(:disabled) {
-  background-color: var(--rs-color-background-neutral-secondary); 
+  background-color: var(--rs-color-background-neutral-primary); 
 }
 
 .iconButton-size-1 {
