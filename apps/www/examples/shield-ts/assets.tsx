@@ -21,6 +21,7 @@ import {
   Tabs,
   FilterChip,
   Search,
+  Headline
 } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
@@ -225,6 +226,23 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
+        <Flex direction="column" gap="medium">
+          <Headline size="large" as="h1">
+            Large Headline (h1)
+          </Headline>
+
+          <Headline size="medium">
+            Medium Headline (h2 default)
+          </Headline>
+
+          <Headline size="small" as="h3">
+            Small Headline (h3)
+          </Headline>
+
+          <Headline size="medium" as="h4" style={{ color: "var(--rs-color-text-accent-primary)" }}>
+            Custom Styled Headline (h4)
+          </Headline>
+        </Flex>
           {/* <Flex align="center" wrap="wrap" gap="medium">
             {activeFilters.map((filter, index) => (
               <FilterChip
