@@ -40,7 +40,7 @@
   left: 0;
   width: 16px;
   height: 16px;
-  background: var(--rs-color-text-base-emphasis);
+  background: var(--rs-color-foreground-base-emphasis);
   border-radius: var(--rs-radius-full);
   transform: translateX(2px);
   transition: transform 200ms ease-in-out;

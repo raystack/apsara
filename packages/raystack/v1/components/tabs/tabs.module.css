@@ -25,7 +25,7 @@
   font-weight: 500;
   padding: var(--rs-space-2) var(--rs-space-3);
   font-family: var(--rs-font-body);
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   border-radius: var(--rs-radius-2);
   transition: all 0.2s ease;
@@ -40,12 +40,12 @@
 }
 
 .trigger:hover:not([data-disabled]) {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .trigger[data-state='active'] {
   background-color: var(--rs-color-background-base-primary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.06), 0px 4px 4px -1px rgba(0, 0, 0, 0.02);
   font-size: 12px;
   font-weight: 500;
@@ -54,7 +54,7 @@
 .trigger[data-disabled] {
   opacity: 0.5;
   cursor: not-allowed;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
 }
 

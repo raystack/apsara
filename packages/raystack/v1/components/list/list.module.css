@@ -22,7 +22,7 @@
   line-height: 16px;
   letter-spacing: 0.5px;
   text-align: left;
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
 .list-item {
@@ -31,7 +31,7 @@
   padding-top: var(--rs-space-4);
   padding-bottom: var(--rs-space-4);
   background-color: var(--rs-color-background-base-primary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 
@@ -43,7 +43,7 @@
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .value {
@@ -55,5 +55,5 @@
   text-align: left;
   text-underline-position: from-font;
   text-decoration-skip-ink: none;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }

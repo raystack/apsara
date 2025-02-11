@@ -11,13 +11,13 @@
 }
 
 .label {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   font-size: 11px;
   font-weight: 500;
 }
 
 .label-disabled {
-  color: var(--rs-color-text-disabled);
+  color: var(--rs-color-foreground-disabled);
 }
 
 .input-wrapper {
@@ -32,7 +32,7 @@
   transform: translateY(-50%);
   width: var(--rs-space-4);
   height: var(--rs-space-4);
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
 }
 
@@ -43,7 +43,7 @@
   transform: translateY(-50%);
   width: var(--rs-space-4);
   height: var(--rs-space-4);
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .input-default {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .input-error {
@@ -88,7 +88,7 @@
 .input-disabled {
   background: var(--rs-color-background-disabled);
   border-color: var(--rs-color-border-disabled);
-  color: var(--rs-color-text-disabled);
+  color: var(--rs-color-foreground-disabled);
   cursor: not-allowed;
 }
 
@@ -98,16 +98,16 @@
 }
 
 .helper-text {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   font-size: 11px;
 }
 
-.helper-text-error {
-  color: var(--rs-color-text-error);
+.helper-foreground-error {
+  color: var(--rs-color-foreground-error);
 }
 
-.helper-text-disabled {
-  color: var(--rs-color-text-disabled);
+.helper-foreground-disabled {
+  color: var(--rs-color-foreground-disabled);
 }
 
 .has-leading-icon {
@@ -119,7 +119,7 @@
 }
 
 .optional {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
   font-size: 10px;
   font-weight: 400;
   margin-left: var(--rs-space-1);
@@ -196,7 +196,7 @@
 }
 
 .chip-overflow {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   font-size: 12px;
   padding: var(--rs-space-1) var(--rs-space-2);
   background: var(--rs-color-background-base-secondary);

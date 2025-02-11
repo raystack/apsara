@@ -7,7 +7,7 @@
   border: none;
   border-radius: var(--rs-radius-full);
   background-color: var(--rs-color-background-neutral-secondary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   width: var(--rs-space-9, 32px);
   height: var(--rs-space-9, 32px);
   --fallback-font-size: calc(var(--rs-space-9, 32px)) * 0.4;
@@ -28,27 +28,27 @@
 
 .avatar-soft {
   --avatar-opacity: 0.2;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .avatar-color-indigo {
   --avatar-hue: var(--rs-color-background-accent-emphasis);
-  --avatar-color: var(--rs-color-text-accent-emphasis);
+  --avatar-color: var(--rs-color-foreground-accent-emphasis);
 }
 
 .avatar-color-orange {
   --avatar-hue: var(--rs-color-background-attention-emphasis);
-  --avatar-color: var(--rs-color-text-attention-emphasis);
+  --avatar-color: var(--rs-color-foreground-attention-emphasis);
 }
 
 .avatar-color-mint {
   --avatar-hue: var(--rs-color-background-success-emphasis);
-  --avatar-color: var(--rs-color-text-success-emphasis);
+  --avatar-color: var(--rs-color-foreground-success-emphasis);
 }
 
 .avatar-color-neutral {
   --avatar-hue: var(--rs-color-background-neutral-emphasis);
-  --avatar-color: var(--rs-color-text-base-emphasis);
+  --avatar-color: var(--rs-color-foreground-base-emphasis);
 }
 
 .avatar-color-sky {
@@ -98,22 +98,22 @@
 
 .avatar-solid-indigo {
   background-color: var(--rs-color-background-accent-emphasis);
-  color: var(--rs-color-text-accent-emphasis);
+  color: var(--rs-color-foreground-accent-emphasis);
 }
 
 .avatar-solid-orange {
   background-color: var(--rs-color-background-attention-emphasis);
-  color: var(--rs-color-text-attention-primary-hover);
+  color: var(--rs-color-foreground-attention-primary-hover);
 }
 
 .avatar-solid-mint {
   background-color: var(--rs-color-background-success-emphasis);
-  color: var(--rs-color-text-success-primary-hover);
+  color: var(--rs-color-foreground-success-primary-hover);
 }
 
 .avatar-solid-neutral {
   background-color: var(--rs-color-background-neutral-emphasis);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .avatar-solid-sky {
