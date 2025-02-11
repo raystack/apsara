@@ -38,4 +38,4 @@ export {
   useTheme,
 } from "./components/theme-provider";
 export { toast, ToastContainer } from "./components/toast";
-export { Tooltip } from "./components/tooltip";
+export { Tooltip, TooltipProvider } from "./components/tooltip";
