@@ -108,9 +108,6 @@
   --rs-color-foreground-attention-emphasis: var(--rs-attention-contrast);
   --rs-color-foreground-success-emphasis: var(--rs-success-contrast);
   
-  --rs-color-overlay-base-primary: var(--rs-overlay-1);
-  
-
   /* Visualization Colors */
   /* Sky */
   --rs-color-viz-sky-11: var(--rs-viz-sky-11);
