@@ -1,6 +1,6 @@
+import React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cva } from "class-variance-authority";
-import React from "react";
 
 import styles from "./popover.module.css";
 
