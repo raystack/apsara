@@ -16,4 +16,16 @@
   box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.06), 0px 4px 4px -1px rgba(0, 0, 0, 0.02);
   border: 1px solid var(--rs-color-border-base-primary);
   color: var(--rs-color-foreground-base-primary);
+  animation: slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

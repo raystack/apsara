@@ -13,18 +13,29 @@ interface PopoverContentProps extends React.ComponentPropsWithoutRef<typeof Popo
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
   PopoverContentProps
->(({ className, align = "center", sideOffset = 4, ariaLabel = "Popover content", ...props }, ref) => (
+>(({ 
+  className, 
+  align = "center", 
+  sideOffset = 4, 
+  ariaLabel = "Popover content",
+  collisionPadding = 8,
+  ...props 
+}, ref) => (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
       ref={ref}
       align={align}
       sideOffset={sideOffset}
+      collisionPadding={collisionPadding}
+      avoidCollisions
       className={popoverContent({ className })}
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
       {...props}
-    />
+    >
+      {props.children}
+    </PopoverPrimitive.Content>
   </PopoverPrimitive.Portal>
 ));
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
