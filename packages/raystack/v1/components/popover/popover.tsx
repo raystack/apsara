@@ -6,16 +6,23 @@ import styles from "./popover.module.css";
 
 const popoverContent = cva(styles.popover);
 
+interface PopoverContentProps extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> {
+  ariaLabel?: string;
+}
+
 const PopoverContent = React.forwardRef<
   React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
+  PopoverContentProps
+>(({ className, align = "center", sideOffset = 4, ariaLabel = "Popover content", ...props }, ref) => (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
       ref={ref}
       align={align}
       sideOffset={sideOffset}
       className={popoverContent({ className })}
+      role="dialog"
+      aria-modal="true"
+      aria-label={ariaLabel}
       {...props}
     />
   </PopoverPrimitive.Portal>
