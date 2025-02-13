@@ -18,7 +18,7 @@ const PopoverContent = React.forwardRef<
   align = "center", 
   sideOffset = 4, 
   ariaLabel = "Popover content",
-  collisionPadding = 8,
+  collisionPadding = 3,
   ...props 
 }, ref) => (
   <PopoverPrimitive.Portal>
