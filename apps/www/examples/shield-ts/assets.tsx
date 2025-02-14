@@ -21,7 +21,8 @@ import {
   Tabs,
   FilterChip,
   Search,
-  Headline
+  Headline,
+  Sheet
 } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
@@ -226,84 +227,105 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium">
-          <Headline size="large" as="h1">
-            Large Headline (h1)
-          </Headline>
+          <Sheet>
+            <Sheet.Trigger asChild>
+              <Button variant="outline">Open Sheet</Button>
+            </Sheet.Trigger>
+            <Sheet.Content side="right" close>
+              <Flex direction="column" gap="medium">
+                <Sheet.Title>
+                  <Headline size="medium">Sheet Title</Headline>
+                </Sheet.Title>
+                <Sheet.Description>
+                  <Text>This is a description of the sheet content.</Text>
+                </Sheet.Description>
+                <Flex direction="column" gap="small">
+                  <Text>Sheet Content</Text>
+                  <Text>You can add any content here.</Text>
+                </Flex>
+              </Flex>
+            </Sheet.Content>
+          </Sheet>
+          <Flex direction="column" style={{ width: "100%" }}>
+            <Flex direction="column" gap="medium">
+              <Headline size="large" as="h1">
+                Large Headline (h1)
+              </Headline>
 
-          <Headline size="medium">
-            Medium Headline (h2 default)
-          </Headline>
+              <Headline size="medium">
+                Medium Headline (h2 default)
+              </Headline>
 
-          <Headline size="small" as="h3">
-            Small Headline (h3)
-          </Headline>
+              <Headline size="small" as="h3">
+                Small Headline (h3)
+              </Headline>
 
-          <Headline size="medium" as="h4" style={{ color: "var(--rs-color-text-accent-primary)" }}>
-            Custom Styled Headline (h4)
-          </Headline>
-        </Flex>
-          {/* <Flex align="center" wrap="wrap" gap="medium">
-            {activeFilters.map((filter, index) => (
-              <FilterChip
-                key={`filter-${index}`}
-                label={filter.label}
-                value={filter.value}
-                columnType="select"
-                options={[
-                  { label: "Option 1", value: "option1" },
-                  { label: "Option 2", value: "option2" }
-                ]}
-                onValueChange={(value) => handleFilterChange({ ...filter, value })}
-                onOperationChange={handleOperationChange}
-                onRemove={() => console.log(`Removing ${filter.label} filter`)}
-              />
-            ))}
-          </Flex> */}
+              <Headline size="medium" as="h4" style={{ color: "var(--rs-color-text-accent-primary)" }}>
+                Custom Styled Headline (h4)
+              </Headline>
+            </Flex>
+            {/* <Flex align="center" wrap="wrap" gap="medium">
+              {activeFilters.map((filter, index) => (
+                <FilterChip
+                  key={`filter-${index}`}
+                  label={filter.label}
+                  value={filter.value}
+                  columnType="select"
+                  options={[
+                    { label: "Option 1", value: "option1" },
+                    { label: "Option 2", value: "option2" }
+                  ]}
+                  onValueChange={(value) => handleFilterChange({ ...filter, value })}
+                  onOperationChange={handleOperationChange}
+                  onRemove={() => console.log(`Removing ${filter.label} filter`)}
+                />
+              ))}
+            </Flex> */}
 
-          <FilterChip
-            label="Status"
-            leadingIcon={<HomeIcon />}
-            columnType="select"
-            options={[
-              { label: "Pending", value: "pending" },
-              { label: "Success", value: "success" },
-            ]}
-            onRemove={() => console.log("Removing filter")}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
+            <FilterChip
+              label="Status"
+              leadingIcon={<HomeIcon />}
+              columnType="select"
+              options={[
+                { label: "Pending", value: "pending" },
+                { label: "Success", value: "success" },
+              ]}
+              onRemove={() => console.log("Removing filter")}
+              onValueChange={(value) => console.log(value)}
+              onOperationChange={(operation) => console.log(operation)}
+            />
 
-          <FilterChip
-            label="Priority"
-            leadingIcon={<CheckIcon />}
-            columnType="select"
-            onRemove={() => console.log("Removing filter")}
-            options={[
-              { label: "High", value: "high" },
-              { label: "Medium", value: "medium" },
-              { label: "Low", value: "low" },
-            ]}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
-          <div style={{ width: "100%" }}>
-            <DataTable
-              columns={columns}
-              data={data}
-              initialState={{ sorting: [{ id: "amount", desc: true }] }}
-              isLoading={isLoading}
-              onLoadMore={loadMoreData}
-            >
-              <DataTable.Toolbar>
-                <AssetsHeader />
-                <DataTable.FilterChips />
-              </DataTable.Toolbar>
-              <DataTable.Footer>
-                <></>
-              </DataTable.Footer>
-            </DataTable>
-          </div>
+            <FilterChip
+              label="Priority"
+              leadingIcon={<CheckIcon />}
+              columnType="select"
+              onRemove={() => console.log("Removing filter")}
+              options={[
+                { label: "High", value: "high" },
+                { label: "Medium", value: "medium" },
+                { label: "Low", value: "low" },
+              ]}
+              onValueChange={(value) => console.log(value)}
+              onOperationChange={(operation) => console.log(operation)}
+            />
+            <div style={{ width: "100%" }}>
+              <DataTable
+                columns={columns}
+                data={data}
+                initialState={{ sorting: [{ id: "amount", desc: true }] }}
+                isLoading={isLoading}
+                onLoadMore={loadMoreData}
+              >
+                <DataTable.Toolbar>
+                  <AssetsHeader />
+                  <DataTable.FilterChips />
+                </DataTable.Toolbar>
+                <DataTable.Footer>
+                  <></>
+                </DataTable.Footer>
+              </DataTable>
+            </div>
+          </Flex>
         </Flex>
       </Flex>
       <ToastContainer />
