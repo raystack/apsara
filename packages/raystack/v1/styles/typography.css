@@ -18,27 +18,17 @@
 
   /* Body Font Sizes */
   --rs-font-size-micro: 10px;
-  --rs-font-size-micro-plus: 10px;
   --rs-font-size-mini: 11px;
-  --rs-font-size-mini-plus: 11px;
   --rs-font-size-small: 12px;
-  --rs-font-size-small-plus: 12px;
   --rs-font-size-regular: 14px;
-  --rs-font-size-regular-plus: 14px;
   --rs-font-size-large: 16px;
-  --rs-font-size-large-plus: 16px;
 
   /* Body Line Heights */
   --rs-line-height-micro: 12px;
-  --rs-line-height-micro-plus: 12px;
   --rs-line-height-mini: 16px;
-  --rs-line-height-mini-plus: 16px;
   --rs-line-height-small: 16px;
-  --rs-line-height-small-plus: 16px;
   --rs-line-height-regular: 20px;
-  --rs-line-height-regular-plus: 20px;
   --rs-line-height-large: 24px;
-  --rs-line-height-large-plus: 24px;
 
   /* Title Font Sizes */
   --rs-font-size-t1-plus: 20px;
