@@ -63,7 +63,6 @@
   --rs-font-body: var(--rs-font-josefin-sans);
 }
 
-/* Apply Typography */
 h1 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t4-plus); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t4-plus); }
 h2 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t3-plus); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t3-plus); }
 h3 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t2-plus); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t2-plus); }
