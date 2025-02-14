@@ -24,6 +24,7 @@ export { Link } from "./components/link";
 export { Radio } from "./components/radio";
 export { Separator } from "./components/separator";
 export { Search } from "./components/search";
+export { Sheet } from "./components/sheet";
 export { Sidepanel } from "./components/sidepanel";
 export { Slider } from "./components/slider";
 export { Spinner } from "./components/spinner";
