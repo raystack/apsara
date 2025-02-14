@@ -54,6 +54,10 @@ export const SheetContent = forwardRef<
 });
 
 const overlay = cva(styles.overlay);
+
+/**
+ * @deprecated Use Sheet props from @raystack/apsara/v1 instead.
+ */
 export interface OverlayProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
     VariantProps<typeof overlay> {}
@@ -73,6 +77,10 @@ Overlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const close = cva(styles.close);
 type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
+
+/**
+ * @deprecated Use Sheet component from @raystack/apsara/v1 instead.
+ */
 export function CloseButton({
   children,
   className,
@@ -86,10 +94,19 @@ export function CloseButton({
 }
 
 type SheetProps = ComponentProps<typeof DialogPrimitive.Root>;
+
+
+/**
+ * @deprecated Use Sheet from @raystack/apsara/v1 instead.
+ */
 export function RootSheet({ children, ...props }: SheetProps) {
   return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>;
 }
 
+
+/**
+ * @deprecated Use Sheet from @raystack/apsara/v1 instead.
+ */
 export const Sheet = Object.assign(RootSheet, {
   Trigger: DialogPrimitive.Trigger,
   Content: SheetContent,
