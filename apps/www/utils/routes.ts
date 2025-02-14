@@ -91,7 +91,7 @@ export const primitivesRoutes = [
       { title: "Select", slug: "docs/primitives/components/select" },
       { title: "Search", slug: "docs/primitives/components/search", newBadge: true },
       { title: "Separator", slug: "docs/primitives/components/separator", newBadge: true },
-      { title: "Sheet", slug: "docs/primitives/components/sheet" },
+      { title: "Sheet", slug: "docs/primitives/components/sheet", newBadge: true },
       {
         title: "Spinner",
         slug: "docs/primitives/components/spinner",
