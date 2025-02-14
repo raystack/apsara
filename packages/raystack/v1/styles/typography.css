@@ -31,16 +31,16 @@
   --rs-line-height-large: 24px;
 
   /* Title Font Sizes */
-  --rs-font-size-t1-plus: 20px;
-  --rs-font-size-t2-plus: 24px;
-  --rs-font-size-t3-plus: 28px;
-  --rs-font-size-t4-plus: 32px;
+  --rs-font-size-t1: 20px;
+  --rs-font-size-t2: 24px;
+  --rs-font-size-t3: 28px;
+  --rs-font-size-t4: 32px;
 
   /* Title Line Heights */
-  --rs-line-height-t1-plus: 24px;
-  --rs-line-height-t2-plus: 32px;
-  --rs-line-height-t3-plus: 36px;
-  --rs-line-height-t4-plus: 40px;
+  --rs-line-height-t1: 24px;
+  --rs-line-height-t2: 32px;
+  --rs-line-height-t3: 36px;
+  --rs-line-height-t4: 40px;
 }
 
 [data-style="modern"] {
@@ -53,10 +53,10 @@
   --rs-font-body: var(--rs-font-josefin-sans);
 }
 
-h1 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t4-plus); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t4-plus); }
-h2 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t3-plus); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t3-plus); }
-h3 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t2-plus); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t2-plus); }
-h4 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t1-plus); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1-plus); }
+h1 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t4); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t4); }
+h2 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t3); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t3); }
+h3 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t2); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t2); }
+h4 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t1); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
 
 body, p, div, span {
   font-family: var(--rs-font-body);
