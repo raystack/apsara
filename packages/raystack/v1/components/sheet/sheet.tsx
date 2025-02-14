@@ -26,12 +26,15 @@ const sheetContent = cva(styles.sheetContent, {
 
 export interface DialogContentProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
-    VariantProps<typeof sheetContent> {}
+    VariantProps<typeof sheetContent> {
+  ariaLabel?: string;
+  ariaDescription?: string;
+}
 
 export const SheetContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps & { close?: boolean; children?: React.ReactNode }
->(({ className, children, close, side, ...props }, forwardedRef) => {
+>(({ className, children, close, side, ariaLabel, ariaDescription, ...props }, forwardedRef) => {
   return (
     <DialogPrimitive.Portal>
       <Overlay>
@@ -39,12 +42,21 @@ export const SheetContent = forwardRef<
           {...props}
           ref={forwardedRef}
           className={sheetContent({ side, className })}
+          aria-label={ariaLabel || "Sheet Content"}
+          aria-describedby={ariaDescription ? "sheet-description" : undefined}
+          role="dialog"
+          tabIndex={-1}
         >
           {children}
           {close && (
-            <CloseButton>
-              <Cross1Icon />
+            <CloseButton aria-label="Close sheet">
+              <Cross1Icon aria-hidden="true" />
             </CloseButton>
+          )}
+          {ariaDescription && (
+            <div id="sheet-description" className="sr-only">
+              {ariaDescription}
+            </div>
           )}
         </DialogPrimitive.Content>
       </Overlay>
@@ -72,21 +84,35 @@ Overlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const close = cva(styles.close);
 type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
+
 export function CloseButton({
   children,
   className,
   ...props
 }: CloseButtonProps) {
   return (
-    <DialogPrimitive.Close className={close({ className })} {...props}>
+    <DialogPrimitive.Close 
+      className={close({ className })} 
+      {...props}
+      aria-label="Close"
+    >
       {children}
     </DialogPrimitive.Close>
   );
 }
 
-type SheetProps = ComponentProps<typeof DialogPrimitive.Root>;
-export function RootSheet({ children, ...props }: SheetProps) {
-  return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>;
+type SheetProps = ComponentProps<typeof DialogPrimitive.Root> & {
+  ariaLabel?: string;
+};
+
+export function RootSheet({ children, ariaLabel, ...props }: SheetProps) {
+  return (
+    <DialogPrimitive.Root {...props}>
+      <DialogPrimitive.Trigger asChild aria-label={ariaLabel || "Open sheet"}>
+        {children}
+      </DialogPrimitive.Trigger>
+    </DialogPrimitive.Root>
+  );
 }
 
 export const Sheet = Object.assign(RootSheet, {

@@ -9,90 +9,181 @@ radix:
 ## Preview
 
 <Preview>
-  <Flex
-    style={{
-      alignItems: "center",
-      gap: "12px",
-    }}
-  >
+  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
     <Sheet>
       <Sheet.Trigger asChild>
-        <Button variant="secondary" size="small">Open Sheet</Button>
+        <Button>Basic Sheet</Button>
       </Sheet.Trigger>
-      <Sheet.Content close></Sheet.Content>
+      <Sheet.Content close>
+        <Sheet.Title>Basic Sheet</Sheet.Title>
+        <Sheet.Description>A simple sheet with close button</Sheet.Description>
+      </Sheet.Content>
     </Sheet>
+
     <Sheet>
       <Sheet.Trigger asChild>
-        <Button variant="secondary" size="small">Top</Button>
+        <Button variant="outline">With Description</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="top" close></Sheet.Content>
+      <Sheet.Content
+        side="right"
+        close
+        ariaLabel="Settings panel"
+        ariaDescription="Configure your application settings"
+      >
+        <Sheet.Title>Settings</Sheet.Title>
+        <Sheet.Description>Manage your preferences and configurations</Sheet.Description>
+        <Text>Additional content goes here</Text>
+      </Sheet.Content>
     </Sheet>
+
     <Sheet>
       <Sheet.Trigger asChild>
-        <Button variant="secondary" size="small">Right</Button>
+        <Button variant="ghost">Custom Side</Button>
       </Sheet.Trigger>
-      <Sheet.Content side="right" close></Sheet.Content>
+      <Sheet.Content side="left" close>
+        <Sheet.Title>Left Sheet</Sheet.Title>
+        <Sheet.Description>This sheet slides in from the left</Sheet.Description>
+      </Sheet.Content>
     </Sheet>
-    <Sheet>
-      <Sheet.Trigger asChild>
-        <Button variant="secondary" size="small">Bottom</Button>
-      </Sheet.Trigger>
-      <Sheet.Content side="bottom" close></Sheet.Content>
-    </Sheet>
-    <Sheet>
-      <Sheet.Trigger asChild>
-        <Button variant="secondary" size="small">Left</Button>
-      </Sheet.Trigger>
-      <Sheet.Content side="left" close></Sheet.Content>
-    </Sheet>
+
   </Flex>
 </Preview>
+
+## Usage
+
+The Sheet component provides a way to show complementary content in a sliding panel. It supports different positions, accessibility features, and customizable content.
 
 ## Installation
 
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
 </LiveProvider>
 
+## Basic Example
 
-## Anatomy
-Import all parts and piece them together.
+<Playground
+  scope={{ Sheet, Button, Text }}
+  code={`
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button>Open Sheet</Button>
+  </Sheet.Trigger>
+  <Sheet.Content close>
+    <Sheet.Title>Sheet Title</Sheet.Title>
+    <Sheet.Description>Sheet description goes here</Sheet.Description>
+    <Text>Main content of the sheet</Text>
+  </Sheet.Content>
+</Sheet>
+  `}
+/>
 
-<LiveProvider>
-    <LiveEditor code={`
-import { Sheet } from '@raystack/apsara'
+## Positioning
 
+The Sheet can slide in from different sides of the screen.
+
+<Playground
+  scope={{ Sheet, Button }}
+  tabs={[
+    {
+      name: "Right",
+      code: `
 <Sheet>
   <Sheet.Trigger asChild>
-    <Button variant="secondary" size="small">Open Sheet</Button>
+    <Button>Right Sheet</Button>
   </Sheet.Trigger>
-  <Sheet.Content></Sheet.Content>
-</Sheet>
+  <Sheet.Content side="right" close>
+    <Sheet.Title>Right Sheet</Sheet.Title>
+    <Sheet.Description>Slides in from the right</Sheet.Description>
+  </Sheet.Content>
+</Sheet>`,
+    },
+    {
+      name: "Left",
+      code: `
 <Sheet>
   <Sheet.Trigger asChild>
-    <Button variant="secondary" size="small">Top</Button>
+    <Button>Left Sheet</Button>
   </Sheet.Trigger>
-  <Sheet.Content side="top"></Sheet.Content>
-</Sheet>
+  <Sheet.Content side="left" close>
+    <Sheet.Title>Left Sheet</Sheet.Title>
+    <Sheet.Description>Slides in from the left</Sheet.Description>
+  </Sheet.Content>
+</Sheet>`,
+    },
+    {
+      name: "Top",
+      code: `
 <Sheet>
   <Sheet.Trigger asChild>
-    <Button variant="secondary" size="small">Right</Button>
+    <Button>Top Sheet</Button>
   </Sheet.Trigger>
-  <Sheet.Content side="right"></Sheet.Content>
-</Sheet>
+  <Sheet.Content side="top" close>
+    <Sheet.Title>Top Sheet</Sheet.Title>
+    <Sheet.Description>Slides in from the top</Sheet.Description>
+  </Sheet.Content>
+</Sheet>`,
+    },
+    {
+      name: "Bottom",
+      code: `
 <Sheet>
   <Sheet.Trigger asChild>
-    <Button variant="secondary" size="small">Bottom</Button>
+    <Button>Bottom Sheet</Button>
   </Sheet.Trigger>
-  <Sheet.Content side="bottom"></Sheet.Content>
-</Sheet>
+  <Sheet.Content side="bottom" close>
+    <Sheet.Title>Bottom Sheet</Sheet.Title>
+    <Sheet.Description>Slides in from the bottom</Sheet.Description>
+  </Sheet.Content>
+</Sheet>`,
+    },
+  ]}
+/>
+
+## Accessibility
+
+Sheet components are built with proper accessibility attributes and keyboard navigation.
+
+<Playground
+  scope={{ Sheet, Button, Text }}
+  code={`
 <Sheet>
   <Sheet.Trigger asChild>
-    <Button variant="secondary" size="small">Left</Button>
+    <Button>Accessible Sheet</Button>
   </Sheet.Trigger>
-  <Sheet.Content side="left"></Sheet.Content>
+  <Sheet.Content 
+    close 
+    ariaLabel="Settings Panel"
+    ariaDescription="Configure application settings and preferences"
+  >
+    <Sheet.Title>Accessible Sheet</Sheet.Title>
+    <Sheet.Description>This sheet has proper ARIA labels and descriptions</Sheet.Description>
+    <Text>Content is properly announced to screen readers</Text>
+  </Sheet.Content>
 </Sheet>
-`} border />
-</LiveProvider>
+  `}
+/>
+
+## API Reference
+
+### Sheet Props
+
+- `children`: The content to be rendered
+- `ariaLabel`: Accessible label for the sheet trigger
+
+### Sheet.Content Props
+
+- `side`: The direction from which the sheet appears (`"top" | "right" | "bottom" | "left"`)
+- `close`: Whether to show the close button
+- `ariaLabel`: Accessible label for the sheet content
+- `ariaDescription`: Accessible description for the sheet content
+- `children`: The content to be rendered inside the sheet
+
+### Sheet.Title Props
+
+- Inherits all HTML heading element props
+
+### Sheet.Description Props
+
+- Inherits all HTML paragraph element props
