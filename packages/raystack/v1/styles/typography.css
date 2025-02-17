@@ -30,6 +30,13 @@
   --rs-line-height-regular: 20px;
   --rs-line-height-large: 24px;
 
+  /* Body Letter spacing */
+  --rs-letter-spacing-micro: 0.5px;
+  --rs-letter-spacing-mini: 0.5px;
+  --rs-letter-spacing-small: 0.4px;
+  --rs-letter-spacing-regular: 0.25px;
+  --rs-letter-spacing-large: 0.5px;
+
   /* Title Font Sizes */
   --rs-font-size-t1: 20px;
   --rs-font-size-t2: 24px;
@@ -41,6 +48,12 @@
   --rs-line-height-t2: 32px;
   --rs-line-height-t3: 36px;
   --rs-line-height-t4: 40px;
+
+  /* Title Letter Spacing */
+  --rs-letter-spacing-t1: 0;
+  --rs-letter-spacing-t2: 0;
+  --rs-letter-spacing-t3: 0;
+  --rs-letter-spacing-t4: 0;
 }
 
 [data-style="modern"] {
