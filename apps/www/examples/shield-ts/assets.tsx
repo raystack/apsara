@@ -117,6 +117,7 @@ export const Assets = () => {
     from: new Date(),
     to: new Date(),
   });
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -227,23 +228,22 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-          <Sheet>
-            <Sheet.Trigger asChild>
-              <Button variant="outline">Open Sheet</Button>
-            </Sheet.Trigger>
-            <Sheet.Content side="right" close>
-              <Flex direction="column" gap="medium">
+          <Button variant="outline" onClick={() => setSheetOpen(true)}>
+            View Details
+          </Button>
+
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <Sheet.Content 
+              side="bottom" 
+              close 
+            >
                 <Sheet.Title>
-                  <Headline size="medium">Sheet Title</Headline>
+                  <Headline size="medium">Asset Details</Headline>
                 </Sheet.Title>
+                
                 <Sheet.Description>
-                  <Text>This is a description of the sheet content.</Text>
+                  <Text color="secondary">View and manage asset information</Text>
                 </Sheet.Description>
-                <Flex direction="column" gap="small">
-                  <Text>Sheet Content</Text>
-                  <Text>You can add any content here.</Text>
-                </Flex>
-              </Flex>
             </Sheet.Content>
           </Sheet>
           <Flex direction="column" style={{ width: "100%" }}>

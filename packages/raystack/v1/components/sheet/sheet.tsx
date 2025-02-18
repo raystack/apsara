@@ -108,9 +108,7 @@ type SheetProps = ComponentProps<typeof DialogPrimitive.Root> & {
 export function RootSheet({ children, ariaLabel, ...props }: SheetProps) {
   return (
     <DialogPrimitive.Root {...props}>
-      <DialogPrimitive.Trigger asChild aria-label={ariaLabel || "Open sheet"}>
-        {children}
-      </DialogPrimitive.Trigger>
+      {children}
     </DialogPrimitive.Root>
   );
 }
