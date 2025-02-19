@@ -73,9 +73,9 @@ h4 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t1); font-
 
 body, p, div, span {
   font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-regular);
-  font-weight: var(--rs-font-weight-regular);
-  line-height: var(--rs-line-height-regular);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-small);
+  line-height: var(--rs-line-height-small);
 }
 
 /* CSS for the text cursor */
