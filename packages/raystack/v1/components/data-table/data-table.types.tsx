@@ -11,6 +11,11 @@ export const columnTypesMap = {
 
 export type columnTypes = keyof typeof columnTypesMap;
 
+export const SortOrders = {
+  ASC: "asc",
+  DESC: "desc",
+} as const;
+
 interface Filter {
   name: string;
   operator: string;
@@ -18,18 +23,21 @@ interface Filter {
   value: any;
 }
 
+type SortOrdersKeys = keyof typeof SortOrders;
+type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
+
 interface Sort {
   key: string;
-  order: string;
+  order: SortOrdersValues;
 }
 
-export interface TableState {
-  filters: Filter[];
-  sort: Sort[];
-  group_by: string[];
-  offset: number;
-  limit: number;
-  search: string;
+export interface DataTableState {
+  filters?: Filter[];
+  sort?: Sort[];
+  group_by?: string[];
+  offset?: number;
+  limit?: number;
+  search?: string;
 }
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
@@ -41,8 +49,8 @@ export interface DataTableProps<TData, TValue> {
   data: TData[];
   mode?: DataTableMode;
   isLoading?: boolean;
-  tableState?: TableState;
-  onTableStateChange?: (state: TableState) => void;
+  tableState?: DataTableState;
+  onTableStateChange?: (state: DataTableState) => void;
 }
 
 export type TableContextType<TData> = {
