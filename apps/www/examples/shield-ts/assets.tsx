@@ -3,13 +3,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
-import {
-  DataTable,
-  Title,
-  useTable
-} from "@raystack/apsara";
-
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Separator, List, Label, Tabs, FilterChip, Search, Headline } from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Separator, List, Label, Tabs, FilterChip, Search, Headline } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
@@ -271,9 +265,9 @@ export const Assets = () => {
               <Button variant="outline" color="accent" disabled>Disabled</Button>
               <Button variant="ghost" disabled>Disabled</Button>
               <Button variant="text" disabled>Disabled</Button>
-
             </Flex>
-          </div>
+          </Flex>
+          </Flex>
           <FilterChip
             label="Status"
             leadingIcon={<HomeIcon />}
@@ -317,7 +311,6 @@ export const Assets = () => {
               </DataTable.Footer>
             </DataTable>
           </div>
-        </Flex>
       </Flex>
       <ToastContainer />
     </div>
