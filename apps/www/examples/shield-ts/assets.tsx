@@ -21,7 +21,8 @@ import {
   Tabs,
   FilterChip,
   Search,
-  Headline
+  Headline,
+  Dialog
 } from "@raystack/apsara/v1";
 
 import { getData, Payment } from "./data";
@@ -116,6 +117,7 @@ export const Assets = () => {
     from: new Date(),
     to: new Date(),
   });
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -226,23 +228,50 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium">
-          <Headline size="large" as="h1">
-            Large Headline (h1)
-          </Headline>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog.Trigger asChild>
+              <Button variant="solid">Create User</Button>
+            </Dialog.Trigger>
+            <Dialog.Content 
+            >
+              <Flex direction="column">
+                <Dialog.Title>Create New User</Dialog.Title>
+                <Dialog.Description>
+                  Fill in the details below to create a new user.
+                </Dialog.Description>
+                <Flex gap="small" justify="end">
+                  <Dialog.Close />
+                  <Button 
+                    variant="solid"
+                    onClick={() => {
+                      toast.success("Asset created successfully");
+                      setDialogOpen(false);
+                    }}
+                  >
+                    Create
+                  </Button>
+                </Flex>
+              </Flex>
+              
+            </Dialog.Content>
+          </Dialog>
+          <Flex direction="column" gap="medium">
+            <Headline size="large" as="h1">
+              Large Headline (h1)
+            </Headline>
 
-          <Headline size="medium">
-            Medium Headline (h2 default)
-          </Headline>
+            <Headline size="medium">
+              Medium Headline (h2 default)
+            </Headline>
 
-          <Headline size="small" as="h3">
-            Small Headline (h3)
-          </Headline>
+            <Headline size="small" as="h3">
+              Small Headline (h3)
+            </Headline>
 
-          <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
-            Custom Styled Headline (h4)
-          </Headline>
-        </Flex>
+            <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
+              Custom Styled Headline (h4)
+            </Headline>
+          </Flex>
           {/* <Flex align="center" wrap="wrap" gap="medium">
             {activeFilters.map((filter, index) => (
               <FilterChip
