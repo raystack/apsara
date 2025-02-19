@@ -14,17 +14,27 @@ const dialogContent = cva(styles.dialogContent);
 
 export interface DialogContentProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
-    VariantProps<typeof dialogContent> {}
+    VariantProps<typeof dialogContent> {
+  ariaLabel?: string;
+  ariaDescription?: string;
+}
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, children, ...props }, ref) => (
+>(({ className, children, ariaLabel, ariaDescription, ...props }, ref) => (
   <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay className={styles.dialogOverlay} />
+    <DialogPrimitive.Overlay 
+      className={styles.dialogOverlay}
+      aria-hidden="true"
+    />
     <DialogPrimitive.Content
       ref={ref}
       className={dialogContent({ className })}
+      aria-label={ariaLabel}
+      aria-describedby={ariaDescription ? 'dialog-description' : undefined}
+      onOpenAutoFocus={(e) => e.preventDefault()}
+      onCloseAutoFocus={(e) => e.preventDefault()}
       {...props}
     >
       {children}
@@ -41,9 +51,41 @@ export function CloseButton({
   ...props
 }: CloseButtonProps) {
   return (
-    <DialogPrimitive.Close className={styles.close} {...props}>
+    <DialogPrimitive.Close 
+      className={styles.close} 
+      aria-label="Close dialog"
+      {...props}
+    >
       {children}
     </DialogPrimitive.Close>
+  );
+}
+
+interface DialogTitleProps extends ComponentProps<typeof DialogPrimitive.Title> {
+  children: React.ReactNode;
+}
+
+function DialogTitle({ children, ...props }: DialogTitleProps) {
+  return (
+    <DialogPrimitive.Title 
+      {...props}
+      role="heading"
+      aria-level={1}
+    >
+      {children}
+    </DialogPrimitive.Title>
+  );
+}
+
+function DialogDescription({ children, ...props }: { children: React.ReactNode }) {
+  return (
+    <DialogPrimitive.Description 
+      {...props}
+      id="dialog-description"
+      role="document"
+    >
+      {children}
+    </DialogPrimitive.Description>
   );
 }
 
@@ -51,6 +93,6 @@ export const Dialog = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
   Close: CloseButton,
-  Title: DialogPrimitive.Title,
-  Description: DialogPrimitive.Description,
+  Title: DialogTitle,
+  Description: DialogDescription,
 }); 
