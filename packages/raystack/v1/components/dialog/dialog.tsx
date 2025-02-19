@@ -33,8 +33,6 @@ const DialogContent = forwardRef<
       className={dialogContent({ className })}
       aria-label={ariaLabel}
       aria-describedby={ariaDescription ? 'dialog-description' : undefined}
-      onOpenAutoFocus={(e) => e.preventDefault()}
-      onCloseAutoFocus={(e) => e.preventDefault()}
       {...props}
     >
       {children}
