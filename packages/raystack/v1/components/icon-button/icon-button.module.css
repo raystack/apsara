@@ -5,7 +5,7 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-1);
   border: none;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   cursor: pointer;
   transition: all 0.2s ease;
   padding: var(--rs-space-1);
@@ -24,11 +24,11 @@
 .iconButton:disabled {
   cursor: not-allowed;
   opacity: 0.5;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .iconButton:active:not(:disabled) {
-  background-color: var(--rs-color-background-neutral-secondary); 
+  background-color: var(--rs-color-background-neutral-primary); 
 }
 
 .iconButton-size-1 {

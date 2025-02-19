@@ -32,9 +32,11 @@ Install the component from your command line.
   <LiveEditor code={`import { Calendar, RangePicker, DatePicker } from '@raystack/apsara'
 
 // Basic Calendar
+
 <Calendar numberOfMonths={2} />
 
 // Range Picker with custom trigger
+
 <RangePicker>
   {({ startDate, endDate }) => (
     <button>
@@ -44,6 +46,7 @@ Install the component from your command line.
 </RangePicker>
 
 // Date Picker with custom trigger
+
 <DatePicker>
   {({ selectedDate }) => (
     <button>
@@ -75,6 +78,7 @@ The `RangePicker` component accepts the following props:
 - `calendarProps`: Props for customizing the calendar
 - `textFieldProps`: Props for customizing the text field
 - `children`: Render prop for custom trigger
+- `showCalendarIcon`: Boolean to show/hide calendar icon (default: true)
 
 ## DatePicker Props
 
@@ -82,6 +86,7 @@ The `DatePicker` component accepts the following props:
 
 - `textFieldProps`: Props for customizing the text field
 - `children`: Render prop for custom trigger
+- `showCalendarIcon`: Boolean to show/hide calendar icon (default: true)
 
 ## Examples
 
@@ -97,7 +102,7 @@ The `DatePicker` component accepts the following props:
     {
       name: "With Loading",
       code: `<Calendar loadingData={true} numberOfMonths={2} />`,
-    }
+    },
   ]}
 />
 
@@ -109,6 +114,10 @@ The `DatePicker` component accepts the following props:
     {
       name: "Basic",
       code: `<RangePicker textFieldProps={{ size: "medium" }} />`,
+    },
+    {
+      name: "Without Calendar Icon",
+      code: `<RangePicker showCalendarIcon={false} textFieldProps={{ size: "medium" }} />`,
     },
     {
       name: "Custom Trigger",
@@ -137,7 +146,7 @@ The `DatePicker` component accepts the following props:
     </button>
   )}
 </RangePicker>`,
-    }
+    },
   ]}
 />
 
@@ -151,6 +160,10 @@ The `DatePicker` component accepts the following props:
       code: `<DatePicker textFieldProps={{ size: "medium" }} />`,
     },
     {
+      name: "Without Calendar Icon",
+      code: `<DatePicker showCalendarIcon={false} textFieldProps={{ size: "medium" }} />`,
+    },
+    {
       name: "Custom Trigger",
       code: `
 <DatePicker>
@@ -160,6 +173,6 @@ The `DatePicker` component accepts the following props:
     </button>
   )}
 </DatePicker>`,
-    }
+    },
   ]}
 />

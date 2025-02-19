@@ -18,6 +18,9 @@ const link = cva(styles.link, {
 type LinkProps = PropsWithChildren<VariantProps<typeof link>> &
   AnchorHTMLAttributes<HTMLAnchorElement>;
 
+/**
+ * @deprecated Use the Link from @raystack/apsara/v1 instead.
+ */
 export function Link({ children, className, size, ...props }: LinkProps) {
   return (
     <a className={link({ size, className })} {...props}>

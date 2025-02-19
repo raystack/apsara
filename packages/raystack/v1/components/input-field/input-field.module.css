@@ -11,7 +11,7 @@
 }
 
 .label {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   font-size: 11px;
   font-weight: 500;
 }
@@ -32,7 +32,7 @@
   transform: translateY(-50%);
   width: var(--rs-space-4);
   height: var(--rs-space-4);
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
 }
 
@@ -43,7 +43,7 @@
   transform: translateY(-50%);
   width: var(--rs-space-4);
   height: var(--rs-space-4);
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
 }
 
@@ -74,7 +74,7 @@
 }
 
 .input-default {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .input-error {
@@ -99,7 +99,7 @@
 }
 
 .helper-text {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   font-size: 11px;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .optional {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
   font-size: 10px;
   font-weight: 400;
   margin-left: var(--rs-space-1);
@@ -197,7 +197,7 @@
 }
 
 .chip-overflow {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   font-size: 12px;
   padding: var(--rs-space-1) var(--rs-space-2);
   background: var(--rs-color-background-neutral-secondary);

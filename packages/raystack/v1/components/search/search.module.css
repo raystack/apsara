@@ -47,13 +47,13 @@
   outline: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   padding-left: var(--rs-space-8);
   padding-right: var(--rs-space-3);
 }
 
 .searchField::placeholder {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -98,7 +98,7 @@
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
 }
 
@@ -115,7 +115,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   background: none;
   border: none;
   padding: var(--rs-space-1);

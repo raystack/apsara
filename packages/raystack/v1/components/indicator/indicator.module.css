@@ -39,25 +39,25 @@
 
 .indicator-variant-accent {
   background-color: var(--rs-color-background-accent-emphasis);
-  color: var(--rs-color-text-accent-emphasis);
+  color: var(--rs-color-foreground-accent-emphasis);
 }
 
 .indicator-variant-warning {
   background-color: var(--rs-attention-9);
-  color: var(--rs-color-text-attention-emphasis);
+  color: var(--rs-color-foreground-attention-emphasis);
 }
 
 .indicator-variant-danger {
   background-color: var(--rs-color-background-danger-emphasis);
-  color: var(--rs-color-text-danger-emphasis);
+  color: var(--rs-color-foreground-danger-emphasis);
 }
 
 .indicator-variant-success {
   background-color: var(--rs-color-background-success-emphasis);
-  color: var(--rs-color-text-success-emphasis);
+  color: var(--rs-color-foreground-success-emphasis);
 }
 
 .indicator-variant-neutral {
   background-color: var(--rs-color-background-neutral-emphasis);
-  color: var(--rs-color-text-base-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
 }

@@ -13,9 +13,8 @@
   line-height: 16px;
   letter-spacing: 0.5px;
   font-weight: 500;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   user-select: none;
-  font-family: var(--rs-font-body);
   font-style: normal;
 }
 
@@ -27,7 +26,7 @@
   position: absolute;
   top: 0;
   border: 0px;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary);
   cursor: pointer;
   height: 20px;
@@ -35,7 +34,7 @@
 
 .nav_button:disabled {
   opacity: 0.5;
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
 .nav_button_previous {
@@ -71,7 +70,7 @@
   height: var(--rs-space-10, 40px);
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
   text-align: center;
   font-size: 12px;
   font-style: normal;
@@ -100,7 +99,7 @@
   background: var(--rs-color-background-accent-emphasis);
 
   button {
-    color: var(--rs-color-text-base-emphasis);
+    color: var(--rs-color-foreground-base-emphasis);
   }
 }
 
@@ -108,8 +107,18 @@
   border-radius: 0;
   background-color: var(--rs-color-background-base-primary-hover);
   button {
-    color: var(--rs-color-text-base-primary);
+    color: var(--rs-color-foreground-base-primary);
   }
+}
+
+.range_middle:first-of-type {
+  border-top-left-radius: var(--rs-radius-5);
+  border-bottom-left-radius: var(--rs-radius-5);
+}
+
+.range_middle:last-of-type {
+  border-top-right-radius: var(--rs-radius-5);
+  border-bottom-right-radius: var(--rs-radius-5);
 }
 
 .range_start:not(.range_end) {
@@ -143,13 +152,13 @@
 }
 
 .outside {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
 
 .range_start,
 .range_end {
-  color: var(--rs-color-text-base-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
 }
 
 .weekday {
@@ -158,7 +167,7 @@
   align-items: center;
   width: var(--rs-space-10, 40px);
   height: var(--rs-space-10, 40px);
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   text-align: center;
   font-size: 10px;
   font-style: normal;
@@ -172,8 +181,8 @@
 }
 
 .calendarPopover {
-  padding: 0;
-  border: none;
+  padding: 0 !important;
+  border: none !important;
   min-width: max-content;
   width: fit-content;
   max-width: none !important;
@@ -182,7 +191,7 @@
 .dropdowns {
   display: flex;
   align-items: center;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
 }
 
 .dropdown_trigger,
@@ -190,7 +199,7 @@
   border: none;
   outline: none;
   box-shadow: none;
-  padding: var(--rs-space-1);
+  padding: var(--rs-space-1) var(--rs-space-3);
 }
 
 .dropdown_trigger:hover {
@@ -207,7 +216,7 @@
 }
 
 .disabled {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
   opacity: 0.8;
 }
 
@@ -241,4 +250,8 @@
   font-weight: inherit;
   border-radius: inherit;
   position: relative;
+}
+
+.datePickerInput {
+  text-align: left;
 }

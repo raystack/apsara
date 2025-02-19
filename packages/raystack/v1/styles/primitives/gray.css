@@ -1,3 +1,9 @@
+/* 
+ * Note: Do not use this file directly. 
+ * It is used for generating the final colors.css file. 
+ * All variables must be used from colors.css file only.
+ */
+
 
 [data-gray-color='gray'] {
     --rs-gray-1: #fcfcfc;

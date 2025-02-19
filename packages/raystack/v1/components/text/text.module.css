@@ -1,8 +1,9 @@
 .text {
-  display: block;
+  display: inline-flex;
+  align-items: center;
   line-height: 1;
   margin: 0;
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .text-1 {
@@ -107,33 +108,33 @@
 }
 
 .text-primary {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .text-secondary {
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .text-tertiary {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
 .text-emphasis {
-  color: var(--rs-color-text-base-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
 }
 
 .text-accent {
-  color: var(--rs-color-text-accent-primary);
+  color: var(--rs-color-foreground-accent-primary);
 }
 
 .text-attention {
-  color: var(--rs-color-text-attention-primary);
+  color: var(--rs-color-foreground-attention-primary);
 }
 
 .text-danger {
-  color: var(--rs-color-text-danger-primary);
+  color: var(--rs-color-foreground-danger-primary);
 }
 
 .text-success {
-  color: var(--rs-color-text-success-primary);
+  color: var(--rs-color-foreground-success-primary);
 }

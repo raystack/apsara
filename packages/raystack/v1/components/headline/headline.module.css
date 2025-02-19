@@ -1,0 +1,45 @@
+.headline {
+    display: block;
+    line-height: 1;
+    margin: 0;
+    font-weight: 400;
+    font-family: var(--rs-font-title);
+    color: var(--rs-color-foreground-base-primary);
+    width: 100%;
+}
+
+.headline-small {
+    font-size: 24px;
+    line-height: 32px;
+}
+
+.headline-medium {
+    font-size: 28px;
+    line-height: 36px;
+}
+
+.headline-large {
+    font-size: 32px;
+    line-height: 40px;
+}
+
+.headline-align-left {
+    text-align: left;
+}
+
+.headline-align-center {
+    text-align: center;
+}
+
+.headline-align-right {
+    text-align: right;
+}
+
+.headline-truncate {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    max-width: 100%;
+}

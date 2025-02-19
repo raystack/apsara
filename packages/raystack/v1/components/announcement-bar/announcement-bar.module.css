@@ -13,7 +13,7 @@
 }
 
 .announcement-bar-normal {
-  background: var(--rs-color-text-base-primary);
+  background: var(--rs-color-foreground-base-primary);
 }
 
 .announcement-bar-error {
@@ -26,12 +26,12 @@
 .announcement-bar-error > .icon,
 .announcement-bar-normal > .action-btn,
 .announcement-bar-error > .action-btn {
-  color: var(--rs-color-text-base-emphasis);
+  color: var(--rs-color-foreground-base-emphasis);
 }
 
 .announcement-bar-gradient > .text,
 .announcement-bar-gradient > .icon {
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .icon,

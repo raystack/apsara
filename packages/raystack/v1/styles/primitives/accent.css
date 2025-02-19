@@ -1,3 +1,9 @@
+/* 
+ * Note: Do not use this file directly. 
+ * It is used for generating the final colors file. 
+ * All variables must be used from colors.css file only.
+ */
+
 /* [data-accent-color='indigo']  { */
 :root {
     --rs-accent-1: #fdfdfe;

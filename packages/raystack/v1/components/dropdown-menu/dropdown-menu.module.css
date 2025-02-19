@@ -12,7 +12,7 @@
   border-radius: var(--rs-radius-2);
   box-shadow: var(--shadow-sm);
   outline: 1px solid var(--rs-color-border-base-primary);
-  color: var(--rs-color-text-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 
   min-width: var(--radix-dropdown-menu-trigger-width);
 }
@@ -62,12 +62,12 @@
 .leadingIcon {
   display: flex;
   align-items: center;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .trailingIcon {
   display: flex;
   align-items: center;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
   margin-left: auto;
 }

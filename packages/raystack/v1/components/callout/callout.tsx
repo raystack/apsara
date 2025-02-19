@@ -34,6 +34,8 @@ export interface CalloutProps extends ComponentPropsWithoutRef<'div'>, VariantPr
   dismissible?: boolean;
   onDismiss?: () => void;
   width?: string | number;
+  style?: React.CSSProperties;
+  icon?: React.ReactNode;
 }
 
 export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
@@ -47,9 +49,14 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
     dismissible,
     onDismiss,
     width,
+    style,
+    icon,
     ...props
   }, ref) => {
-    const style = width ? { width: typeof width === 'number' ? `${width}px` : width } : undefined;
+    const combinedStyle = {
+      ...style,
+      ...(width && { width: typeof width === 'number' ? `${width}px` : width }),
+    };
 
     const getRole = () => {
       switch (type) {
@@ -66,17 +73,23 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
       <div
         ref={ref}
         className={`${callout({ type, outline, highContrast })} ${className || ''}`}
-        style={style}
+        style={combinedStyle}
         role={getRole()}
         aria-live={type === 'alert' ? 'assertive' : 'polite'}
         {...props}
       >
         <div className={styles.container}>
           <div className={styles.messageContainer}>
-            <InfoCircledIcon 
-              className={styles.icon} 
-              aria-hidden="true"
-            />
+            {icon !== undefined ? (
+              <div className={styles.icon} aria-hidden="true">
+                {icon}
+              </div>
+            ) : (
+              <InfoCircledIcon 
+                className={styles.icon} 
+                aria-hidden="true"
+              />
+            )}
             <div className={styles.message}>{children}</div>
           </div>
           

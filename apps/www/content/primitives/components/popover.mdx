@@ -5,57 +5,193 @@ radix:
   link: https://www.radix-ui.com/docs/primitives/components/popover
   api: https://www.radix-ui.com/docs/primitives/components/popover#api-reference
 ---
+
 ## Preview
 
 <Preview>
-  <Flex
-    css={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "$3",
-    }}
-  >
-  <Popover>
-    <Popover.Trigger asChild>
-      <Button variant="ghost" size="small">Popover</Button>
-    </Popover.Trigger>
-    <Popover.Content css={{ padding: '$3' }} side="top">
-      <Text size="2" css={{ lineHeight: '18px' }}>
-        The other main improvement is with tables, which we'll probably use a lot. With
-        horizontal overflow on small devices and when zoomed in.
-      </Text>
-    </Popover.Content>
-  </Popover>
+  <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
+    <Popover>
+      <Popover.Trigger asChild>
+        <Button>Basic Popover</Button>
+      </Popover.Trigger>
+      <Popover.Content css={{ padding: '$3' }}>
+        <Text size="2">Basic popover content</Text>
+      </Popover.Content>
+    </Popover>
+
+    <Popover>
+      <Popover.Trigger asChild>
+        <Button variant="ghost">Custom Position</Button>
+      </Popover.Trigger>
+      <Popover.Content css={{ padding: '$3' }} side="right">
+        <Text size="2">Right-positioned popover</Text>
+      </Popover.Content>
+    </Popover>
+
   </Flex>
 </Preview>
+
+## Usage
+
+The Popover component provides a way to display rich content in a portal when triggered by a button. It supports accessibility features, positioning options, and customizable styling.
 
 ## Installation
 
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
 </LiveProvider>
 
-
-## Anatomy
-Import all parts and piece them together.
+## Basic Example
 
 <LiveProvider>
-    <LiveEditor code={`
-import { Popover } from '@raystack/apsara'
-
+    <LiveEditor code={`import { Popover, Button, Text } from '@raystack/apsara/v1'
 
 <Popover>
   <Popover.Trigger asChild>
-    <Button variant="secondary" outline>Popover</Button>
+    <Button>Open Popover</Button>
   </Popover.Trigger>
-  <Popover.Content css={{ padding: '$3' }} side="top">
-    <Text size="2" css={{ lineHeight: '18px' }}>
-      The other main improvement is with tables, which we'll probably use a lot. With
-      horizontal overflow on small devices and when zoomed in.
-    </Text>
+  <Popover.Content>
+    <Text size="2">This is the popover content</Text>
   </Popover.Content>
 </Popover>
-`} border />
+`} border/>
 </LiveProvider>
+
+## Popover Props
+
+The Popover component consists of several parts, each with their own props:
+
+### Popover.Root Props
+
+- `defaultOpen`: Boolean to control the default open state
+- `open`: Controlled open state
+- `onOpenChange`: Callback when open state changes
+- `modal`: Boolean to enable modal behavior
+
+### Popover.Content Props
+
+- `ariaLabel`: Accessible label for the popover content (default: "Popover content")
+- `side`: Preferred side of the trigger to render ("top" | "right" | "bottom" | "left")
+- `sideOffset`: Distance in pixels from the trigger
+- `align`: Alignment relative to trigger ("start" | "center" | "end")
+- `alignOffset`: Offset in pixels from alignment edge
+- `avoidCollisions`: Boolean to prevent collision with viewport edges
+- `collisionPadding`: Padding between content and viewport edges
+
+### Popover.Trigger Props
+
+- `asChild`: Boolean to merge props onto child element
+
+## Positioning
+
+Control the position and alignment of your popover relative to its trigger.
+
+<Playground
+  scope={{ Popover, Button, Text }}
+  tabs={[
+    {
+      name: "Top",
+      code: `
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>Top Popover</Button>
+  </Popover.Trigger>
+  <Popover.Content side="top">
+    <Text size="2">Content appears above the trigger</Text>
+  </Popover.Content>
+</Popover>`,
+    },
+    {
+      name: "Right",
+      code: `
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>Right Popover</Button>
+  </Popover.Trigger>
+  <Popover.Content side="right">
+    <Text size="2">Content appears to the right</Text>
+  </Popover.Content>
+</Popover>`,
+    },
+    {
+      name: "Bottom",
+      code: `
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>Bottom Popover</Button>
+  </Popover.Trigger>
+  <Popover.Content side="bottom">
+    <Text size="2">Content appears below the trigger</Text>
+  </Popover.Content>
+</Popover>`,
+    },
+    {
+      name: "Left",
+      code: `
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>Left Popover</Button>
+  </Popover.Trigger>
+  <Popover.Content side="left">
+    <Text size="2">Content appears to the left</Text>
+  </Popover.Content>
+</Popover>`,
+    },
+  ]}
+/>
+
+## Alignment
+
+Customize how the popover aligns with its trigger.
+
+<Playground
+  scope={{ Popover, Button, Text }}
+  tabs={[
+    {
+      name: "Center",
+      code: `
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>Center Aligned</Button>
+  </Popover.Trigger>
+  <Popover.Content align="center">
+    <Text size="2">Centered with the trigger</Text>
+  </Popover.Content>
+</Popover>`,
+    },
+    {
+      name: "Start",
+      code: `
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>Start Aligned</Button>
+  </Popover.Trigger>
+  <Popover.Content align="start">
+    <Text size="2">Aligned to the start</Text>
+  </Popover.Content>
+</Popover>`,
+    },
+    {
+      name: "End",
+      code: `
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>End Aligned</Button>
+  </Popover.Trigger>
+  <Popover.Content align="end">
+    <Text size="2">Aligned to the end</Text>
+  </Popover.Content>
+</Popover>`,
+    },
+  ]}
+/>
+
+
+## Accessibility
+
+The Callout component includes appropriate ARIA attributes for accessibility:
+
+- Uses semantic HTML elements for proper structure
+- Dismiss button includes `aria-label` for screen readers
