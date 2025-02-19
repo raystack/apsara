@@ -1,33 +1,33 @@
 .badge {
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-style: normal;
   display: inline-flex;
   padding: var(--rs-space-1) var(--rs-space-2);
   justify-content: center;
   align-items: center;
   gap: var(--rs-space-2);
-  font-family: var(--rs-font-body);
-  font-style: normal;
-  font-weight: 400;
   border-radius: var(--rs-radius-1);
   white-space: nowrap;
 }
 
 /* Sizes */
 .badge-micro {
-  font-size: 10px;
-  line-height: 12px;
-  letter-spacing: 0.4px;
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
 }
 
 .badge-small {
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .badge-regular {
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0.25px;
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
 }
 
 /* Variants */
