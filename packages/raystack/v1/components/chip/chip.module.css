@@ -3,9 +3,12 @@
     justify-content: center;
     align-items: center;
     gap: var(--rs-space-2);
-    font-size: 11px;
+    font-family: var(--rs-font-body);
+    font-weight: var(--rs-font-weight-regular);
+    font-size: var(--rs-font-size-mini);
+    line-height: var(--rs-line-height-mini);
+    letter-spacing: var(--rs-letter-spacing-mini);
     font-style: normal;
-    font-weight: 400;
     border-radius: var(--rs-radius-2);
     white-space: nowrap;
     cursor: default;
