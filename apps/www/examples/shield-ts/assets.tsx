@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
@@ -21,12 +22,18 @@ import {
   Tabs,
   FilterChip,
   Search,
-  Headline
+  Headline,
 } from "@raystack/apsara/v1";
+import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
+
+const ClientPopover = dynamic(
+  () => import('./components/ClientPopover').then(mod => mod.ClientPopover),
+  { ssr: false }
+);
 
 export const columns: ApsaraColumnDef<Payment>[] = [
   {
@@ -226,41 +233,16 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium">
-          <Headline size="large" as="h1">
-            Large Headline (h1)
-          </Headline>
-
-          <Headline size="medium">
-            Medium Headline (h2 default)
-          </Headline>
-
-          <Headline size="small" as="h3">
-            Small Headline (h3)
-          </Headline>
-
-          <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
-            Custom Styled Headline (h4)
-          </Headline>
-        </Flex>
-          {/* <Flex align="center" wrap="wrap" gap="medium">
-            {activeFilters.map((filter, index) => (
-              <FilterChip
-                key={`filter-${index}`}
-                label={filter.label}
-                value={filter.value}
-                columnType="select"
-                options={[
-                  { label: "Option 1", value: "option1" },
-                  { label: "Option 2", value: "option2" }
-                ]}
-                onValueChange={(value) => handleFilterChange({ ...filter, value })}
-                onOperationChange={handleOperationChange}
-                onRemove={() => console.log(`Removing ${filter.label} filter`)}
-              />
-            ))}
-          </Flex> */}
-
+          <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
+            <Flex direction="column" gap="large" style={{ width: "100%" }}>
+              <Flex direction="column" gap="medium" style={{ width: "100%" }}>
+                <Flex direction="column" gap="medium" style={{ width: "fit-content" }}>
+                  <ClientPopover />
+                </Flex>
+                <Title>ToggleGroup with Tooltip Example</Title>
+              </Flex>
+            </Flex>
+          </div>
           <FilterChip
             label="Status"
             leadingIcon={<HomeIcon />}
@@ -378,3 +360,5 @@ const AssetsFooter = () => {
     </Flex>
   );
 };
+
+

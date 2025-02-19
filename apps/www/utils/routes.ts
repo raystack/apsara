@@ -86,7 +86,7 @@ export const primitivesRoutes = [
       { title: "Label", slug: "docs/primitives/components/label" },
       { title: "Link", slug: "docs/primitives/components/link", newBadge: true },
       { title: "List", slug: "docs/primitives/components/list", newBadge: true },
-      { title: "Popover", slug: "docs/primitives/components/popover" },
+      { title: "Popover", slug: "docs/primitives/components/popover", newBadge: true },
       { title: "Radio", slug: "docs/primitives/components/radio", newBadge: true },
       { title: "Select", slug: "docs/primitives/components/select" },
       { title: "Search", slug: "docs/primitives/components/search", newBadge: true },
