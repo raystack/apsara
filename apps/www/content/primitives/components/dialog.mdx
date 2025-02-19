@@ -6,53 +6,30 @@ radix:
   api: https://www.radix-ui.com/docs/primitives/components/dialog#api-reference
 ---
 
+import React from "react";
+
 ## Preview
 
 <Preview>
-  <Flex
-    style={{
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '12px',
-    }}
-  >
+  <Flex direction="column" gap="medium">
     <Dialog>
       <Dialog.Trigger asChild>
-        <Button variant="ghost" size="small">
-          Dialog button
-        </Button>
+        <Button variant="primary">Basic Dialog</Button>
       </Dialog.Trigger>
-      <Dialog.Content close>
-        <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>
-          Dialog Heading
-        </Text>
-        <Text size="3" style={{ lineHeight: '25px' }}>
-          There are 5 variants to choose from. Use is for positive states. This
-          is a link Traditional business literature won’t help you solve it-
-          most of that stuff is focused on life after product/market fit, after
-          the Trough of Sorrow.
-        </Text>
+      <Dialog.Content 
+        ariaLabel="Basic Dialog"
+        ariaDescription="A simple dialog example"
+      >
+        <Dialog.Title>Welcome</Dialog.Title>
+        <Dialog.Description>
+          This is a basic dialog with title and description.
+        </Dialog.Description>
+        <Flex gap="small" justify="end">
+          <Dialog.Close />
+        </Flex>
       </Dialog.Content>
     </Dialog>
 
-    <Dialog>
-      <Dialog.Trigger asChild>
-        <Button variant="ghost" size="small">
-          Dialog with blur button
-        </Button>
-      </Dialog.Trigger>
-      <Dialog.Content overlayBlur={true} close>
-        <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>
-          Dialog Heading
-        </Text>
-        <Text size="3" style={{ lineHeight: '25px' }}>
-          There are 5 variants to choose from. Use is for positive states. This
-          is a link Traditional business literature won’t help you solve it-
-          most of that stuff is focused on life after product/market fit, after
-          the Trough of Sorrow.
-        </Text>
-      </Dialog.Content>
-    </Dialog>
   </Flex>
 </Preview>
 
@@ -61,49 +38,124 @@ radix:
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
 </LiveProvider>
 
+## Usage
 
-## Anatomy
-Import all parts and piece them together.
+The Dialog component provides a modal window that overlays the page content.
 
 <LiveProvider>
-    <LiveEditor code={`
-import { Dialog } from '@raystack/apsara'
+    <LiveEditor code={`import { Dialog } from '@raystack/apsara/v1'
 
 <Dialog>
   <Dialog.Trigger asChild>
-    <Button variant="ghost" size="small">Dialog button</Button>
+    <Button variant="primary">Open Dialog</Button>
   </Dialog.Trigger>
-  <Dialog.Content close>
-    <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>Dialog Heading</Text>
-    <Text size="3" style={{ lineHeight: '25px' }}>
-      There are 5 variants to choose from. Use is for positive states. This is a link
-      Traditional business literature won’t help you solve it- most of that stuff is
-      focused on life after product/market fit, after the Trough of Sorrow.
-    </Text>
+  <Dialog.Content 
+    ariaLabel="Example Dialog"
+    ariaDescription="Dialog description for screen readers"
+  >
+    <Dialog.Title>Dialog Title</Dialog.Title>
+    <Dialog.Description>
+      Dialog content goes here.
+    </Dialog.Description>
+    <Dialog.Close />
   </Dialog.Content>
-</Dialog>
-
-<Dialog>
-  <Dialog.Trigger asChild>
-    <Button variant="ghost" size="small">
-          Dialog with blur button
-    </Button>
-  </Dialog.Trigger>
-  <Dialog.Content overlayBlur={true} close>
-    <Text size="5" style={{ fontWeight: 500, marginBottom: '12px' }}>
-          Dialog Heading
-    </Text>
-    <Text size="3" style={{ lineHeight: '25px' }}>
-          There are 5 variants to choose from. Use is for positive states. This
-          is a link Traditional business literature won’t help you solve it-
-          most of that stuff is focused on life after product/market fit, after
-          the Trough of Sorrow.
-    </Text>
-  </Dialog.Content>
-</Dialog>
-
-`} border />
+</Dialog>`} border/>
 </LiveProvider>
+
+## Dialog Props
+
+The Dialog component consists of several parts:
+
+### Root Props
+
+- `open`: Controls the open state of the dialog
+- `onOpenChange`: Callback when open state changes
+- `modal`: Whether the dialog is modal (default: true)
+
+### Content Props
+
+- `ariaLabel`: Accessible label for the dialog
+- `ariaDescription`: Detailed description for screen readers
+- `overlayBlur`: Enables backdrop blur effect (boolean)
+- `close`: Shows close button in top-right corner (boolean)
+- `side`: Position of the dialog ("top" | "right" | "bottom" | "left")
+- `className`: Additional CSS class names
+
+### Trigger Props
+
+- `asChild`: Boolean to merge props onto child element
+- `className`: Additional CSS class names
+
+### Close Props
+
+- `asChild`: Boolean to merge props onto child element
+- `className`: Additional CSS class names
+
+## Examples
+
+### Basic Dialog
+
+A simple dialog with title and description.
+
+<Playground
+  scope={{ Dialog, Button, Flex }}
+  tabs={[
+    {
+      name: "Basic",
+      code: `
+<Dialog>
+  <Dialog.Trigger asChild>
+    <Button variant="primary">Open Dialog</Button>
+  </Dialog.Trigger>
+  <Dialog.Content>
+    <Dialog.Title>Welcome</Dialog.Title>
+    <Dialog.Description>
+      This is a basic dialog example.
+    </Dialog.Description>
+    <Dialog.Close />
+  </Dialog.Content>
+</Dialog>`,
+    },
+  ]}
+/>
+
+### Controlled Dialog
+
+Example of a controlled dialog with custom state management.
+
+<Playground
+  scope={{ Dialog, Button, useState: React.useState }}
+  tabs={[
+    {
+      name: "Controlled",
+      code: `
+function ControlledDialog() {
+  const [open, setOpen] = useState(false);
+  
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger asChild>
+        <Button variant="primary">Controlled Dialog</Button>
+      </Dialog.Trigger>
+      <Dialog.Content>
+        <Dialog.Title>Controlled State</Dialog.Title>
+        <Dialog.Description>
+          This dialog's state is controlled externally.
+        </Dialog.Description>
+        <Dialog.Close />
+      </Dialog.Content>
+    </Dialog>
+  );
+}`,
+    },
+  ]}
+/>
+
+### Accessibility
+
+- Dialog has `role="dialog"` and `aria-modal="true"`
+- Uses `aria-label` or `aria-labelledby` to identify the dialog
+- Uses `aria-describedby` to provide additional context
