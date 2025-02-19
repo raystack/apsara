@@ -4,15 +4,17 @@
   border: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   width: fit-content;
+  font-family: var(--rs-font-body);
 }
 
 .caption_label,
 .dropdowns > span,
 .dropdown_trigger .dropdown_item_text {
-  font-size: 11px;
-  line-height: 16px;
-  letter-spacing: 0.5px;
-  font-weight: 500;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
   color: var(--rs-color-foreground-base-primary);
   user-select: none;
   font-style: normal;
@@ -71,12 +73,13 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   color: var(--rs-color-foreground-base-primary);
-  text-align: center;
-  font-size: 12px;
   font-style: normal;
-  font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  text-align: center;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -169,11 +172,12 @@
   height: var(--rs-space-10, 40px);
   color: var(--rs-color-foreground-base-secondary);
   text-align: center;
-  font-size: 10px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 12px;
-  letter-spacing: 0.4px;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
 }
 
 .hidden {
@@ -240,14 +244,17 @@
   cursor: pointer;
   border: none;
   width: 100%;
-  font-size: 12px;
   height: 100%;
   padding: unset;
   display: grid;
   place-content: center;
   background: inherit;
   color: inherit;
-  font-weight: inherit;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   border-radius: inherit;
   position: relative;
 }

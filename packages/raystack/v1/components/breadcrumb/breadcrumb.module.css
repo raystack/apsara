@@ -1,14 +1,18 @@
 .breadcrumb {
   font-family: var(--rs-font-body);
-  font-weight: 500;
+  font-weight: var(--rs-font-weight-medium);
 }
 
 .breadcrumb-small {
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .breadcrumb-medium {
-  font-size: 14px;
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
 }
 
 .breadcrumb-list {

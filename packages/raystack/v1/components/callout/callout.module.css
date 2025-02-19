@@ -3,11 +3,12 @@
   width: 318px;
   padding: var(--rs-space-3);
   border-radius: var(--rs-radius-2);
-  font-size: 12px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .container {
