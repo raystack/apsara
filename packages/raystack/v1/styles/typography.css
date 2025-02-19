@@ -1,14 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap');
 
 :root {
+  /* Font Families */
   --rs-font-inter: 'Inter', sans-serif;
   --rs-font-lora: 'Lora', serif;
-  --rs-font-josephin-sans: 'Josefin Sans', sans-serif;
+  --rs-font-josefin-sans: 'Josefin Sans', sans-serif;
 
+  /* Default Style */
   --rs-font-title: var(--rs-font-inter);
   --rs-font-body: var(--rs-font-inter);
+
+  /* Font Weights */
+  --rs-font-weight-regular: 400;
+  --rs-font-weight-medium: 500;
+
+  /* Body Font Sizes */
+  --rs-font-size-micro: 10px;
+  --rs-font-size-mini: 11px;
+  --rs-font-size-small: 12px;
+  --rs-font-size-regular: 14px;
+  --rs-font-size-large: 16px;
+
+  /* Body Line Heights */
+  --rs-line-height-micro: 12px;
+  --rs-line-height-mini: 16px;
+  --rs-line-height-small: 16px;
+  --rs-line-height-regular: 20px;
+  --rs-line-height-large: 24px;
+
+  /* Body Letter spacing */
+  --rs-letter-spacing-micro: 0.5px;
+  --rs-letter-spacing-mini: 0.5px;
+  --rs-letter-spacing-small: 0.4px;
+  --rs-letter-spacing-regular: 0.25px;
+  --rs-letter-spacing-large: 0.5px;
+
+  /* Title Font Sizes */
+  --rs-font-size-t1: 20px;
+  --rs-font-size-t2: 24px;
+  --rs-font-size-t3: 28px;
+  --rs-font-size-t4: 32px;
+
+  /* Title Line Heights */
+  --rs-line-height-t1: 24px;
+  --rs-line-height-t2: 32px;
+  --rs-line-height-t3: 36px;
+  --rs-line-height-t4: 40px;
+
+  /* Title Letter Spacing */
+  --rs-letter-spacing-t1: 0;
+  --rs-letter-spacing-t2: 0;
+  --rs-letter-spacing-t3: 0;
+  --rs-letter-spacing-t4: 0;
 }
 
 [data-style="modern"] {
@@ -18,27 +63,28 @@
 
 [data-style="traditional"] {
   --rs-font-title: var(--rs-font-lora);
-  --rs-font-body: var(--rs-font-josephin-sans);
+  --rs-font-body: var(--rs-font-josefin-sans);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--rs-font-title);
-}
+h1 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t4); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t4); }
+h2 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t3); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t3); }
+h3 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t2); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t2); }
+h4 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t1); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
 
 body, p, div, span {
   font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-regular);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-regular);
 }
 
-/* CSS for the type cursor */
+/* CSS for the text cursor */
 input, textarea {
   caret-color: var(--rs-color-border-accent-emphasis);
 }
 
+/* Keyframe Animation */
 @keyframes dissolve-hide {
-  0%, 50% {
-      opacity: 1;
-  }
-  100% {
-      opacity: 0;
-  }
+  0%, 50% { opacity: 1; }
+  100% { opacity: 0; }
 }

@@ -239,7 +239,6 @@ export const Assets = () => {
                 <Flex direction="column" gap="medium" style={{ width: "fit-content" }}>
                   <ClientPopover />
                 </Flex>
-
                 <Title>ToggleGroup with Tooltip Example</Title>
               </Flex>
             </Flex>
