@@ -1,45 +1,89 @@
 ---
 title: Label
-description: Renders an accessible label associated with controls.
+description: A text label component that provides names for form controls.
 radix:
   link: https://www.radix-ui.com/docs/primitives/components/label
   api: https://www.radix-ui.com/docs/primitives/components/label#api-reference
 ---
+
 ## Preview
 
 <Preview>
-  <Flex
-    style={{
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "8px",
-    }}
-  >
-  <Label size="small">Label</Label>
-  <Label size="medium">Label</Label>
-  <Label size="large">Label</Label>
+  <Flex style={{ gap: "24px", flexDirection: "column" }}>
+    <Label size="small">Small Label</Label>
+    <Label size="medium">Medium Label</Label>
+    <Label size="large">Large Label</Label>
   </Flex>
 </Preview>
-
 
 ## Installation
 
 Install the component from your command line.
 
 <LiveProvider>
-    <LiveEditor code={`npm install @raystack/apsara`} border/>
+  <LiveEditor code={`npm install @raystack/apsara`} border />
 </LiveProvider>
 
-
 ## Anatomy
+
 Import all parts and piece them together.
 
 <LiveProvider>
     <LiveEditor code={`
-import { Label } from '@raystack/apsara'
+import { Label } from '@raystack/apsara/v1'
 
-<Label size="small">Label</Label>
-<Label size="medium">Label</Label>
-<Label size="large">Label</Label>
+<Label size="small">Small Label</Label>
+<Label size="medium" required>Required Label</Label>
+<Label size="large">Large Label</Label>
 `} border />
 </LiveProvider>
+
+## API Reference
+
+### Props
+
+The Label component accepts the following props:
+
+- `size`: `"small" | "medium" | "large"` - Controls the size of the label (default: "small")
+- `required`: `boolean` - When true, shows a required field indicator
+- `requiredIndicator`: `string` - Customizes the required field indicator (default: "\*")
+- `htmlFor`: `string` - Associates the label with a form control using its ID
+- `className`: `string` - Additional CSS class names
+
+## Required
+
+Labels can indicate required fields with either a default asterisk or custom text.
+
+<Playground
+  scope={{ Label }}
+  tabs={[
+    {
+      name: "Default Required",
+      code: `
+<Label size="medium" required>
+  Required Field
+</Label>`,
+    },
+    {
+      name: "Custom Required",
+      code: `
+<Label 
+  size="medium" 
+  required 
+  requiredIndicator=" (Required)"
+>
+  Custom Required Field
+</Label>`,
+    },
+  ]}
+/>
+
+## Accessibility
+
+The Label component is designed with accessibility in mind:
+
+- Uses semantic HTML `<label>` element
+- Supports programmatic association with form controls via `htmlFor`
+- Required indicators are properly hidden from screen readers
+- Maintains WCAG compliant color contrast ratios
+- Supports keyboard navigation when used with form controls

@@ -4,26 +4,12 @@ import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
 import {
-  toast,
-  ToastContainer,
-  Avatar,
-  AvatarGroup,
-  Button,
-  Spinner,
-  DropdownMenu,
-  Breadcrumb,
-  Chip,
-  Flex,
-  Text,
-  Checkbox,
-  InputField,
-  Badge,
-  Radio,
-  Tabs,
-  FilterChip,
-  Search,
-  Headline,
-} from "@raystack/apsara/v1";
+  DataTable,
+  Title,
+  useTable
+} from "@raystack/apsara";
+
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Search, Separator, List, Label, Tabs, FilterChip, Search, Headline } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
@@ -230,17 +216,62 @@ export const Assets = () => {
   }, []);
 
   return (
-    <div style={{ width: "100%" }}>
-      <Flex direction="column" style={{ width: "100%" }}>
-        <Flex direction="column" style={{ width: "100%" }}>
-          <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
-            <Flex direction="column" gap="large" style={{ width: "100%" }}>
-              <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-                <Flex direction="column" gap="medium" style={{ width: "fit-content" }}>
-                  <ClientPopover />
-                </Flex>
-                <Title>ToggleGroup with Tooltip Example</Title>
-              </Flex>
+    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
+      <Flex direction="column" gap="large" style={{ width: "100%" }}>
+        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
+          <Title>Label Example</Title>
+          <Flex direction="column" gap="medium">
+            <Label size="small" htmlFor="name">Small Label</Label>
+            <Label size="medium" htmlFor="email" required>Required Medium Label</Label>
+            <Label 
+              size="large" 
+              htmlFor="description" 
+              required 
+              requiredIndicator=" (Required)"
+            >
+              Custom Required Large Label
+            </Label>
+          </Flex>
+
+          <Title>Toggle Group Example</Title>
+          <Flex direction="column" gap="medium">
+            <Title>Solid Buttons</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="solid" color="accent">solid-accent</Button>
+              <Button variant="solid" color="danger">solid-danger</Button>
+              <Button variant="solid" color="neutral">solid-neutral</Button>
+              <Button variant="solid" color="success">solid-success</Button>
+            </Flex>
+
+            <Title>Outline Buttons</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="outline" color="accent">outline-accent</Button>
+              <Button variant="outline" color="danger">outline-danger</Button>
+              <Button variant="outline" color="neutral">outline-neutral</Button>
+              <Button variant="outline" color="success">outline-success</Button>
+            </Flex>
+
+            <Title>Ghost & Text Buttons</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="ghost">ghost</Button>
+              <Button variant="text">text</Button>
+            </Flex>
+
+            <Title>Loading State</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="solid" color="accent" loading>Loading</Button>
+              <Button variant="outline" color="accent" loading>Loading</Button>
+              <Button variant="ghost" loading>Loading</Button>
+              <Button variant="text" loading>Loading</Button>
+            </Flex>
+
+            <Title>Disabled State</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="solid" color="accent" disabled>Disabled</Button>
+              <Button variant="outline" color="accent" disabled>Disabled</Button>
+              <Button variant="ghost" disabled>Disabled</Button>
+              <Button variant="text" disabled>Disabled</Button>
+
             </Flex>
           </div>
           <FilterChip

@@ -18,6 +18,9 @@ const label = cva(styles.label, {
 type LabelProps = PropsWithChildren<VariantProps<typeof label>> &
   HTMLAttributes<HTMLLabelElement>;
 
+/**
+ * @deprecated Use Label from '@raystack/apsara/v1' instead.
+ */
 export function Label({ children, className, size, ...props }: LabelProps) {
   return (
     <label className={label({ size, className })} {...props}>
