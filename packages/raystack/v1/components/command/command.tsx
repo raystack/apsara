@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Command as CommandPrimitive } from "cmdk";
 
 import { cva } from "class-variance-authority";
-import { Dialog } from "~/dialog";
+import { Dialog } from "../dialog";
 import { Flex } from "../flex";
 
 import styles from "./command.module.css";
