@@ -59,14 +59,6 @@ const TableCell = React.forwardRef<
   return <td ref={ref} {...props} className={cell({ className })} />;
 });
 
-const caption = cva(styles["caption"]);
-const TableCaption = React.forwardRef<
-  HTMLTableCaptionElement,
-  React.HTMLAttributes<HTMLTableCaptionElement>
->(({ className, ...props }, ref) => (
-  <caption ref={ref} {...props} className={caption({ className })} />
-));
-
 export const Table = Object.assign(TableRoot, {
   Header: TableHeader,
   Body: TableBody,
@@ -74,5 +66,4 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Head: TableHead,
   Cell: TableCell,
-  Caption: TableCaption,
 });
