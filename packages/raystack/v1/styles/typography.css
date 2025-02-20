@@ -66,17 +66,10 @@
   --rs-font-body: var(--rs-font-josefin-sans);
 }
 
-h1 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t4); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t4); }
-h2 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t3); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t3); }
-h3 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t2); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t2); }
+h1 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t4); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
+h2 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t3); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
+h3 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t2); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
 h4 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t1); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
-
-body, p, div, span {
-  font-family: var(--rs-font-body);
-  font-size: var(--rs-font-size-regular);
-  font-weight: var(--rs-font-weight-regular);
-  line-height: var(--rs-line-height-regular);
-}
 
 /* CSS for the text cursor */
 input, textarea {
