@@ -1,32 +1,49 @@
 import React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import styles from "./table.module.css";
 
-const TableRoot = React.forwardRef<HTMLTableElement>(({}, ref) => {
-  return <table ref={ref}></table>;
+const table = cva(styles["table"]);
+const TableRoot = React.forwardRef<
+  HTMLTableElement,
+  React.HTMLAttributes<HTMLTableElement> &
+    React.PropsWithChildren<VariantProps<typeof table>>
+>(({ className, ...props }, ref) => {
+  return <table ref={ref} {...props} className={table({ className })} />;
 });
 
-const TableHeader = React.forwardRef<HTMLTableSectionElement>(({}, ref) => {
-  return <thead ref={ref}></thead>;
+const TableHeader = React.forwardRef<HTMLTableSectionElement>(
+  ({ ...props }, ref) => {
+    return <thead ref={ref} {...props} />;
+  }
+);
+
+const TableBody = React.forwardRef<HTMLTableSectionElement>(
+  ({ ...props }, ref) => {
+    return <tbody ref={ref} {...props} />;
+  }
+);
+
+const TableFooter = React.forwardRef<HTMLTableSectionElement>(
+  ({ ...props }, ref) => {
+    return <tfoot ref={ref} {...props} />;
+  }
+);
+
+const TableRow = React.forwardRef<HTMLTableRowElement>(({ ...props }, ref) => {
+  return <tr ref={ref} {...props} />;
 });
 
-const TableBody = React.forwardRef<HTMLTableSectionElement>(({}, ref) => {
-  return <tbody ref={ref}></tbody>;
-});
+const TableHead = React.forwardRef<HTMLTableCellElement>(
+  ({ ...props }, ref) => {
+    return <th ref={ref} {...props} />;
+  }
+);
 
-const TableFooter = React.forwardRef<HTMLTableSectionElement>(({}, ref) => {
-  return <tfoot ref={ref}></tfoot>;
-});
-
-const TableRow = React.forwardRef<HTMLTableRowElement>(({}, ref) => {
-  return <tr ref={ref}></tr>;
-});
-
-const TableHead = React.forwardRef<HTMLTableCellElement>(({}, ref) => {
-  return <th ref={ref}></th>;
-});
-
-const TableCell = React.forwardRef<HTMLTableCellElement>(({}, ref) => {
-  return <td ref={ref}></td>;
-});
+const TableCell = React.forwardRef<HTMLTableCellElement>(
+  ({ ...props }, ref) => {
+    return <td ref={ref} {...props} />;
+  }
+);
 
 export const Table = Object.assign(TableRoot, {
   Header: TableHeader,
