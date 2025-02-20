@@ -1,33 +1,19 @@
+"use client"
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
-import {
-  toast,
-  ToastContainer,
-  Avatar,
-  AvatarGroup,
-  Button,
-  Spinner,
-  DropdownMenu,
-  Breadcrumb,
-  Chip,
-  Flex,
-  Text,
-  Checkbox,
-  InputField,
-  Badge,
-  Radio,
-  Tabs,
-  FilterChip,
-  Search,
-  Headline,
-  Sheet
-} from "@raystack/apsara/v1";
+import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Separator, List, Label, Tabs, FilterChip, Search, Headline, Sheet } from "@raystack/apsara/v1";
+import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
+
+const ClientPopover = dynamic(
+  () => import('./components/ClientPopover').then(mod => mod.ClientPopover),
+  { ssr: false }
+);
 
 export const columns: ApsaraColumnDef<Payment>[] = [
   {
@@ -401,3 +387,5 @@ const AssetsFooter = () => {
     </Flex>
   );
 };
+
+

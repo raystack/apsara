@@ -21,6 +21,10 @@ const PopoverContent = React.forwardRef<
 ));
 PopoverContent.displayName = PopoverPrimitive.Content.displayName;
 
+
+/**
+ * @deprecated Use Popover from '@raystack/apsara/v1' instead.
+ */
 export const Popover = Object.assign(PopoverPrimitive.Root, {
   Trigger: PopoverPrimitive.Trigger,
   Close: PopoverPrimitive.Close,

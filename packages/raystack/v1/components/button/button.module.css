@@ -1,13 +1,15 @@
 .button {
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   cursor: pointer;
-  font-family: inherit;
-  font-size: var(--fs-200);
-  font-weight: 500;
   width: fit-content;
   padding: var(--rs-space-3) var(--rs-space-4);
   border-radius: var(--rs-radius-2);
@@ -32,12 +34,16 @@
 
 .button-small {
   padding: var(--rs-space-2) var(--rs-space-3);
-  font-size: var(--fs-100);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .button-normal {
   padding: var(--rs-space-3) var(--rs-space-4);
-  font-size: var(--fs-200);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .button-solid {

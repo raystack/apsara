@@ -1,0 +1,39 @@
+.label {
+  display: block;
+  line-height: 1;
+  margin: 0;
+  font-weight: 400;
+  color: var(--rs-color-text-base-secondary);
+}
+
+.label-small {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+}
+
+.label-medium {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+}
+
+.label-large {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+}
+
+.required-indicator {
+  margin-left: var(--rs-space-1);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.5px;
+  color: var(--rs-color-text-danger-primary);
+}
+
+/* For custom required text (not the star) */
+.required-indicator:not(:only-child) {
+  color: var(--rs-color-text-base-tertiary);
+}
