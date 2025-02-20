@@ -39,7 +39,7 @@ export const primitivesRoutes = [
       },
       { title: "Callout", slug: "docs/primitives/components/callout", newBadge: true },
       { title: "Calendar", slug: "docs/primitives/components/calendar", newBadge: true },
-      { title: "Command", slug: "docs/primitives/components/command" },
+      { title: "Command", slug: "docs/primitives/components/command", newBadge: true },
       {
         title: "Checkbox",
         slug: "docs/primitives/components/checkbox",
