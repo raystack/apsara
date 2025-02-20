@@ -6,3 +6,32 @@
   overflow: visible;
   color: var(--rs-color-foreground-base-primary);
 }
+
+.header {
+  top: 0px;
+  position: sticky;
+  background: var(--rs-color-background-base-primary);
+  margin: 0 0 0 0;
+}
+
+.header tr {
+  border-bottom: 1px solid var(--rs-color-foreground-base-secondary);
+}
+
+.head {
+  color: var(--rs-color-foreground-base-tertiary);
+  font-weight: 500;
+  text-align: left;
+  padding: 0.5rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--rs-color-border-base-primary);
+}
+
+.cell {
+  font-weight: 500;
+  padding: 14px 0.5rem;
+  border-bottom: 1px solid var(--rs-color-border-base-primary);
+}
+
+.caption {
+}

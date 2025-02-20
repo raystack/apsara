@@ -11,39 +11,61 @@ const TableRoot = React.forwardRef<
   return <table ref={ref} {...props} className={table({ className })} />;
 });
 
-const TableHeader = React.forwardRef<HTMLTableSectionElement>(
-  ({ ...props }, ref) => {
-    return <thead ref={ref} {...props} />;
-  }
-);
+const header = cva(styles["header"]);
+const TableHeader = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement> &
+    React.PropsWithChildren<VariantProps<typeof header>>
+>(({ className, ...props }, ref) => {
+  return <thead ref={ref} {...props} className={header({ className })} />;
+});
 
-const TableBody = React.forwardRef<HTMLTableSectionElement>(
-  ({ ...props }, ref) => {
-    return <tbody ref={ref} {...props} />;
-  }
-);
+const TableBody = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement> & React.PropsWithChildren
+>(({ ...props }, ref) => {
+  return <tbody ref={ref} {...props} />;
+});
 
-const TableFooter = React.forwardRef<HTMLTableSectionElement>(
-  ({ ...props }, ref) => {
-    return <tfoot ref={ref} {...props} />;
-  }
-);
+const TableFooter = React.forwardRef<
+  HTMLTableSectionElement,
+  React.HTMLAttributes<HTMLTableSectionElement> & React.PropsWithChildren
+>(({ ...props }, ref) => {
+  return <tfoot ref={ref} {...props} />;
+});
 
-const TableRow = React.forwardRef<HTMLTableRowElement>(({ ...props }, ref) => {
+const TableRow = React.forwardRef<
+  HTMLTableRowElement,
+  React.HTMLAttributes<HTMLTableRowElement> & React.PropsWithChildren
+>(({ ...props }, ref) => {
   return <tr ref={ref} {...props} />;
 });
 
-const TableHead = React.forwardRef<HTMLTableCellElement>(
-  ({ ...props }, ref) => {
-    return <th ref={ref} {...props} />;
-  }
-);
+const head = cva(styles["head"]);
+const TableHead = React.forwardRef<
+  HTMLTableCellElement,
+  React.HTMLAttributes<HTMLTableCellElement> &
+    React.PropsWithChildren<VariantProps<typeof head>>
+>(({ className, ...props }, ref) => {
+  return <th ref={ref} {...props} className={head({ className })} />;
+});
 
-const TableCell = React.forwardRef<HTMLTableCellElement>(
-  ({ ...props }, ref) => {
-    return <td ref={ref} {...props} />;
-  }
-);
+const cell = cva(styles["cell"]);
+const TableCell = React.forwardRef<
+  HTMLTableCellElement,
+  React.HTMLAttributes<HTMLTableCellElement> &
+    React.PropsWithChildren<VariantProps<typeof cell>>
+>(({ className, ...props }, ref) => {
+  return <td ref={ref} {...props} className={cell({ className })} />;
+});
+
+const caption = cva(styles["caption"]);
+const TableCaption = React.forwardRef<
+  HTMLTableCaptionElement,
+  React.HTMLAttributes<HTMLTableCaptionElement>
+>(({ className, ...props }, ref) => (
+  <caption ref={ref} {...props} className={caption({ className })} />
+));
 
 export const Table = Object.assign(TableRoot, {
   Header: TableHeader,
@@ -52,4 +74,5 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Head: TableHead,
   Cell: TableCell,
+  Caption: TableCaption,
 });
