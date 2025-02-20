@@ -220,7 +220,7 @@ export const Assets = () => {
 
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <Sheet.Content 
-              side="right" 
+              side="left" 
               close 
             >
                 <Sheet.Title>

@@ -42,8 +42,8 @@ export const SheetContent = forwardRef<
           {...props}
           ref={forwardedRef}
           className={sheetContent({ side, className })}
-          aria-label={ariaLabel || "Sheet Content"}
-          aria-describedby={ariaDescription ? "sheet-description" : undefined}
+          aria-label={ariaLabel || "Sheet with overlay"}
+          aria-describedby={ariaDescription ? "sheet with overlay" : undefined}
           role="dialog"
           tabIndex={-1}
         >
