@@ -27,13 +27,6 @@ const TableBody = React.forwardRef<
   return <tbody ref={ref} {...props} />;
 });
 
-const TableFooter = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement> & React.PropsWithChildren
->(({ ...props }, ref) => {
-  return <tfoot ref={ref} {...props} />;
-});
-
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
   React.HTMLAttributes<HTMLTableRowElement> & React.PropsWithChildren
@@ -80,7 +73,6 @@ const SectionHeader = React.forwardRef<
 export const Table = Object.assign(TableRoot, {
   Header: TableHeader,
   Body: TableBody,
-  Footer: TableFooter,
   Row: TableRow,
   Head: TableHead,
   Cell: TableCell,
