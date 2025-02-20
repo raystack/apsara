@@ -14,7 +14,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90vw;
-  max-width: 450px;
+  min-width: 200px;
+  min-height: 200px;
   max-height: 85vh;
   padding: var(--rs-space-5);
   z-index: 9999;
