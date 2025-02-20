@@ -2,7 +2,6 @@
   background-color: var(--rs-color-overlay-black-a7);
   position: fixed;
   inset: 0;
-  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 9998;
 }
 
@@ -18,7 +17,6 @@
   max-width: 450px;
   max-height: 85vh;
   padding: var(--rs-space-5);
-  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 9999;
 }
 
@@ -42,23 +40,3 @@
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
 }
-
-@keyframes overlayShow {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes contentShow {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-} 

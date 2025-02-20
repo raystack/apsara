@@ -235,7 +235,7 @@ export const Assets = () => {
             <Dialog.Content 
             >
               <Flex direction="column">
-                <Dialog.Title>Create New User</Dialog.Title>
+                Create New User
                 <Dialog.Description>
                   Fill in the details below to create a new user.
                 </Dialog.Description>
