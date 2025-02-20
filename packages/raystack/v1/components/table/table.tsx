@@ -59,6 +59,24 @@ const TableCell = React.forwardRef<
   return <td ref={ref} {...props} className={cell({ className })} />;
 });
 
+const sectionHeader = cva(styles["sectionHeader"]);
+type SectionHeaderClassNames = "row" | "cell";
+const SectionHeader = React.forwardRef<
+  HTMLTableRowElement,
+  React.PropsWithChildren & {
+    colSpan: number;
+    classNames?: Partial<Record<SectionHeaderClassNames, string>>;
+  }
+>(({ classNames, colSpan, children }, ref) => {
+  return (
+    <tr ref={ref} className={sectionHeader({ className: classNames?.row })}>
+      <th colSpan={colSpan} className={classNames?.cell}>
+        {children}
+      </th>
+    </tr>
+  );
+});
+
 export const Table = Object.assign(TableRoot, {
   Header: TableHeader,
   Body: TableBody,
@@ -66,4 +84,5 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Head: TableHead,
   Cell: TableCell,
+  SectionHeader: SectionHeader,
 });
