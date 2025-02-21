@@ -5,6 +5,7 @@ import { TableIcon } from "@radix-ui/react-icons";
 import { flexRender } from "@tanstack/react-table";
 import { useDataTable } from "./hooks/useDataTable";
 import { DataTableContentProps } from "./data-table.types";
+import Skeleton from "react-loading-skeleton";
 
 function Headers<TData>({
   headerGroups = [],
@@ -27,7 +28,13 @@ function Headers<TData>({
   );
 }
 
-function Rows<TData>({ rows = [] }: { rows: Row<TData>[] }) {
+function Rows<TData>({
+  rows = [],
+  isLoading,
+}: {
+  rows: Row<TData>[];
+  isLoading?: boolean;
+}) {
   return (
     <>
       {rows?.map((row) => {
@@ -38,7 +45,11 @@ function Rows<TData>({ rows = [] }: { rows: Row<TData>[] }) {
             {cells.map((cell) => {
               return (
                 <Table.Cell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  {isLoading ? (
+                    <Skeleton />
+                  ) : (
+                    flexRender(cell.column.columnDef.cell, cell.getContext())
+                  )}
                 </Table.Cell>
               );
             })}
@@ -54,7 +65,7 @@ const DefaultEmptyComponent = () => (
 );
 
 export function Content({ emptyState }: DataTableContentProps) {
-  const { table, columns } = useDataTable();
+  const { table, columns, isLoading } = useDataTable();
   const headerGroups = table?.getHeaderGroups();
   const { rows = [] } = table?.getRowModel();
 
@@ -63,7 +74,7 @@ export function Content({ emptyState }: DataTableContentProps) {
       <Headers headerGroups={headerGroups} />
       <Table.Body>
         {rows?.length ? (
-          <Rows rows={rows} />
+          <Rows rows={rows} isLoading={isLoading} />
         ) : (
           <Table.Row>
             <Table.Cell colSpan={columns.length}>

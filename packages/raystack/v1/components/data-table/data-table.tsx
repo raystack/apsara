@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { TableContext } from "./context";
 import {
   DataTableProps,
@@ -14,14 +14,26 @@ function DataTableRoot<TData, TValue>({
   columns,
   mode = "client",
   isLoading = false,
+  loadingRowCount = 3,
   children,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const [tableState, setTableState] = useState<DataTableState>({});
 
   const reactTableState = dataTableStateToReactTableState(tableState);
 
+  const loaderData = useMemo(
+    () =>
+      Array.from({ length: loadingRowCount }).map(
+        (_, i) =>
+          ({
+            id: "loading-row-" + i,
+          } as TData)
+      ),
+    [loadingRowCount]
+  );
+
   const table = useReactTable({
-    data,
+    data: isLoading ? loaderData : data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     manualSorting: mode === "server",

@@ -49,6 +49,7 @@ export interface DataTableProps<TData, TValue> {
   data: TData[];
   mode?: DataTableMode;
   isLoading?: boolean;
+  loadingRowCount?: number;
   tableState?: DataTableState;
   onTableStateChange?: (state: DataTableState) => void;
 }
