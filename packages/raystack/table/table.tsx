@@ -45,7 +45,7 @@ TableBody.displayName = "TableBody";
 
 const footer = cva(styles.footer);
 /**
- * @deprecated deprecated in `@raystack/apsara/v1`
+ * @deprecated TableFooter is removed and no longer supported in `@raystack/apsara/v1`
  */
 const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
@@ -97,7 +97,7 @@ TableCell.displayName = "TableCell";
 
 const caption = cva(styles.caption);
 /**
- * @deprecated deprecated in `@raystack/apsara/v1`
+ * @deprecated TableCaption is removed and no longer supported in `@raystack/apsara/v1`
  */
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
