@@ -1,0 +1,66 @@
+---
+title: Overlay
+description: A layer that covers the inert portion of the viewport when a dialog is open.
+radix:
+  link: https://www.radix-ui.com/docs/primitives/components/dialog
+  api: https://www.radix-ui.com/docs/primitives/components/dialog#overlay
+---
+
+## Preview
+
+<Preview>
+  <Overlay />
+</Preview>
+
+## Usage
+
+The Overlay component provides a semi-transparent layer that dims the background content when dialogs or modals are active.
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
+</LiveProvider>
+
+<LiveProvider>
+  <LiveEditor code={`import { Overlay, Dialog } from '@raystack/apsara/v1'
+
+<Dialog>
+  <Overlay />
+  <DialogContent>
+    {/* Dialog content */}
+  </DialogContent>
+</Dialog>`} border />
+</LiveProvider>
+
+## Overlay Props
+
+The `Overlay` component accepts the following props:
+
+- `className`: Additional CSS class name
+
+## Variants
+
+### Default Overlay
+
+Basic overlay with default styling.
+
+<Playground
+  scope={{ Dialog, Overlay }}
+  code={`
+<Dialog>
+  <Overlay />
+  <DialogContent>Dialog Content</DialogContent>
+</Dialog>
+`}
+/>
+
+## Accessibility
+
+The Overlay component follows WCAG guidelines:
+
+- Automatically manages focus when dialog opens
+- Includes proper ARIA attributes
+- Respects reduced motion preferences
