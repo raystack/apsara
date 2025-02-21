@@ -47,6 +47,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
 export interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
   data: TData[];
+  emptyState?: React.ReactNode;
   mode?: DataTableMode;
   isLoading?: boolean;
   tableState?: DataTableState;

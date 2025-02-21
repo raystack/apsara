@@ -37,7 +37,7 @@ const TableRow = React.forwardRef<
 const head = cva(styles["head"]);
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
-  React.HTMLAttributes<HTMLTableCellElement> &
+  React.ThHTMLAttributes<HTMLTableCellElement> &
     React.PropsWithChildren<VariantProps<typeof head>>
 >(({ className, ...props }, ref) => {
   return <th ref={ref} {...props} className={head({ className })} />;
@@ -46,7 +46,7 @@ const TableHead = React.forwardRef<
 const cell = cva(styles["cell"]);
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
-  React.HTMLAttributes<HTMLTableCellElement> &
+  React.TdHTMLAttributes<HTMLTableCellElement> &
     React.PropsWithChildren<VariantProps<typeof cell>>
 >(({ className, ...props }, ref) => {
   return <td ref={ref} {...props} className={cell({ className })} />;
