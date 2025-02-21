@@ -47,13 +47,18 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
 export interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
   data: TData[];
-  emptyState?: React.ReactNode;
   mode?: DataTableMode;
   isLoading?: boolean;
   tableState?: DataTableState;
   onTableStateChange?: (state: DataTableState) => void;
 }
 
-export type TableContextType<TData> = {
+export type DataTableContentProps = {
+  emptyState?: React.ReactNode;
+};
+
+export type TableContextType<TData, TValue> = {
   table: Table<TData>;
+  columns: DataTableColumnDef<TData, TValue>[];
+  isLoading?: boolean;
 };
