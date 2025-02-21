@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-table";
 import type { Row, HeaderGroup } from "@tanstack/react-table";
 import { dataTableStateToReactTableState } from "./utils";
-import { Table } from "~/table";
+import { Table } from "../table";
 
 function Headers<TData>({
   headerGroups = [],
@@ -58,7 +58,7 @@ function Rows<TData>({ rows = [] }: { rows: Row<TData>[] }) {
 }
 
 function DataTableRoot<TData, TValue>({
-  data,
+  data = [],
   columns,
   mode = "client",
   isLoading = false,
