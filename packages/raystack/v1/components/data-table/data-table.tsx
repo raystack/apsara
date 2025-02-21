@@ -8,9 +8,9 @@ import {
 import {
   flexRender,
   getCoreRowModel,
-  HeaderGroup,
   useReactTable,
 } from "@tanstack/react-table";
+import type { Row, HeaderGroup } from "@tanstack/react-table";
 import { dataTableStateToReactTableState } from "./utils";
 import { Table } from "~/table";
 
@@ -32,6 +32,28 @@ function Headers<TData>({
         </Table.Row>
       ))}
     </Table.Header>
+  );
+}
+
+function Rows<TData>({ rows = [] }: { rows: Row<TData>[] }) {
+  return (
+    <>
+      {rows?.map((row) => {
+        const isSelected = row.getIsSelected();
+        const cells = row.getVisibleCells() || [];
+        return (
+          <Table.Row key={row.id} data-state={isSelected && "selected"}>
+            {cells.map((cell) => {
+              return (
+                <Table.Cell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </Table.Cell>
+              );
+            })}
+          </Table.Row>
+        );
+      })}
+    </>
   );
 }
 
@@ -59,12 +81,16 @@ function DataTableRoot<TData, TValue>({
   };
 
   const headerGroups = table?.getHeaderGroups();
+  const { rows = [] } = table?.getRowModel();
 
   return (
     <div>
       <TableContext.Provider value={contextValue}>
         <Table>
           <Headers headerGroups={headerGroups} />
+          <Table.Body>
+            <Rows rows={rows} />
+          </Table.Body>
         </Table>
       </TableContext.Provider>
     </div>
