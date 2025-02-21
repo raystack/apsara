@@ -3,6 +3,9 @@ import * as React from "react";
 import styles from "./table.module.css";
 
 const table = cva(styles.table);
+/**
+ * @deprecated Use Table from '@raystack/apsara/v1' instead.
+ */
 const TableRoot = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement> &
@@ -15,6 +18,9 @@ const TableRoot = React.forwardRef<
 TableRoot.displayName = "Table";
 
 const header = cva(styles.header);
+/**
+ * @deprecated Use Table from '@raystack/apsara/v1' instead.
+ */
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement> &
@@ -25,6 +31,9 @@ const TableHeader = React.forwardRef<
 TableHeader.displayName = "TableHeader";
 
 const body = cva(styles.body);
+/**
+ * @deprecated Use Table from '@raystack/apsara/v1' instead.
+ */
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement> &
@@ -35,6 +44,9 @@ const TableBody = React.forwardRef<
 TableBody.displayName = "TableBody";
 
 const footer = cva(styles.footer);
+/**
+ * @deprecated TableFooter is removed and no longer supported in `@raystack/apsara/v1`
+ */
 const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement> &
@@ -45,6 +57,9 @@ const TableFooter = React.forwardRef<
 TableFooter.displayName = "TableFooter";
 
 const row = cva(styles.row);
+/**
+ * @deprecated Use Table from '@raystack/apsara/v1' instead.
+ */
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
   React.HTMLAttributes<HTMLTableRowElement> &
@@ -55,6 +70,9 @@ const TableRow = React.forwardRef<
 TableRow.displayName = "TableRow";
 
 const head = cva(styles.head);
+/**
+ * @deprecated Use Table from '@raystack/apsara/v1' instead.
+ */
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement> &
@@ -65,6 +83,9 @@ const TableHead = React.forwardRef<
 TableHead.displayName = "TableHead";
 
 const cell = cva(styles.cell);
+/**
+ * @deprecated Use Table from '@raystack/apsara/v1' instead.
+ */
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement> &
@@ -75,6 +96,9 @@ const TableCell = React.forwardRef<
 TableCell.displayName = "TableCell";
 
 const caption = cva(styles.caption);
+/**
+ * @deprecated TableCaption is removed and no longer supported in `@raystack/apsara/v1`
+ */
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
   React.HTMLAttributes<HTMLTableCaptionElement>
