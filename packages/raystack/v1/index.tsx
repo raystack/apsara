@@ -47,3 +47,4 @@ export {
 export { toast, ToastContainer } from "./components/toast";
 export { Tooltip, TooltipProvider } from "./components/tooltip";
 export { Table } from "./components/table";
+export { DataTable, DataTableColumnDef } from "./components/data-table";
