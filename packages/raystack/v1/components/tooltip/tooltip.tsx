@@ -28,6 +28,9 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   children: React.ReactNode;
   message: React.ReactNode;
   className?: string;
+  contentClassName?: string;
+  style?: React.CSSProperties;
+  contentStyle?: React.CSSProperties;
   delayDuration?: number;
   skipDelayDuration?: number;
   'aria-label'?: string;
@@ -40,6 +43,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
   disabled,
   side = "top",
   className,
+  contentClassName,
+  style,
+  contentStyle,
   delayDuration = 200,
   skipDelayDuration = 200,
   'aria-label': ariaLabel,
@@ -50,7 +56,12 @@ export const Tooltip: React.FC<TooltipProps> = ({
   ) : (
     <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
       <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger aria-describedby="tooltip" asChild={asChild}>
+        <TooltipPrimitive.Trigger 
+          aria-describedby="tooltip" 
+          asChild={asChild}
+          className={className}
+          style={style}
+        >
           {children}
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
@@ -61,7 +72,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
             side={side?.split('-')[0] as TooltipPrimitive.TooltipContentProps['side'] || 'top'}
             align={(side?.includes('-') ? (side.split('-')[1] === 'left' ? 'start' : 'end') : 'center') satisfies 'start' | 'end' | 'center'}
             sideOffset={4}
-            className={tooltip({ side, className })}
+            className={tooltip({ side, className: contentClassName })}
+            style={contentStyle}
           >
             {typeof message === "string" ? (
               <Text>{message}</Text>
