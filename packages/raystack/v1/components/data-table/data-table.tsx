@@ -13,6 +13,8 @@ import {
 import type { Row, HeaderGroup } from "@tanstack/react-table";
 import { dataTableStateToReactTableState } from "./utils";
 import { Table } from "../table";
+import { EmptyState } from "../empty-state";
+import { TableIcon } from "@radix-ui/react-icons";
 
 function Headers<TData>({
   headerGroups = [],
@@ -57,10 +59,15 @@ function Rows<TData>({ rows = [] }: { rows: Row<TData>[] }) {
   );
 }
 
+const DefaultEmptyComponent = () => (
+  <EmptyState icon={<TableIcon />} heading="No Data" />
+);
+
 function DataTableRoot<TData, TValue>({
   data = [],
   columns,
   mode = "client",
+  emptyState,
   isLoading = false,
 }: DataTableProps<TData, TValue>) {
   const [tableState, setTableState] = useState<DataTableState>({});
@@ -89,7 +96,15 @@ function DataTableRoot<TData, TValue>({
         <Table>
           <Headers headerGroups={headerGroups} />
           <Table.Body>
-            <Rows rows={rows} />
+            {rows?.length ? (
+              <Rows rows={rows} />
+            ) : (
+              <Table.Row>
+                <Table.Cell colSpan={columns.length}>
+                  {emptyState || <DefaultEmptyComponent />}
+                </Table.Cell>
+              </Table.Row>
+            )}
           </Table.Body>
         </Table>
       </TableContext.Provider>
