@@ -22,6 +22,7 @@ export { IconButton } from "./components/icon-button";
 export { Indicator } from "./components/indicator";
 export { InputField } from "./components/input-field";
 export { Link } from "./components/link";
+export { Popover } from "./components/popover";
 export { Radio } from "./components/radio";
 export { Separator } from "./components/separator";
 export { Search } from "./components/search";
@@ -33,6 +34,7 @@ export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
 export { TextArea } from "./components/text-area";
 export { List } from "./components/list";
+export { Label } from "./components/label";
 export {
   ThemeProvider,
   ThemeProviderProps,
@@ -41,3 +43,4 @@ export {
 } from "./components/theme-provider";
 export { toast, ToastContainer } from "./components/toast";
 export { Tooltip, TooltipProvider } from "./components/tooltip";
+export { Table } from "./components/table";

@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
@@ -24,10 +25,16 @@ import {
   Headline,
   Dialog
 } from "@raystack/apsara/v1";
+import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
 import { ApsaraColumnDef } from "@raystack/apsara/table/datatables.types";
 const TOTAL_PAGES = 100;
+
+const ClientPopover = dynamic(
+  () => import('./components/ClientPopover').then(mod => mod.ClientPopover),
+  { ssr: false }
+);
 
 export const columns: ApsaraColumnDef<Payment>[] = [
   {
@@ -290,6 +297,15 @@ export const Assets = () => {
             ))}
           </Flex> */}
 
+            <Title>Disabled State</Title>
+            <Flex gap="small" wrap="wrap">
+              <Button variant="solid" color="accent" disabled>Disabled</Button>
+              <Button variant="outline" color="accent" disabled>Disabled</Button>
+              <Button variant="ghost" disabled>Disabled</Button>
+              <Button variant="text" disabled>Disabled</Button>
+            </Flex>
+          </Flex>
+          </Flex>
           <FilterChip
             label="Status"
             leadingIcon={<HomeIcon />}
@@ -333,7 +349,6 @@ export const Assets = () => {
               </DataTable.Footer>
             </DataTable>
           </div>
-        </Flex>
       </Flex>
       <ToastContainer />
     </div>
@@ -407,3 +422,5 @@ const AssetsFooter = () => {
     </Flex>
   );
 };
+
+
