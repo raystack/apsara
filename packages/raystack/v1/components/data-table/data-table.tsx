@@ -8,6 +8,7 @@ import {
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { dataTableStateToReactTableState } from "./utils";
 import { Content } from "./content";
+import { Toolbar } from "./toolbar";
 
 function DataTableRoot<TData, TValue>({
   data = [],
@@ -55,4 +56,5 @@ function DataTableRoot<TData, TValue>({
 
 export const DataTable = Object.assign(DataTableRoot, {
   Content: Content,
+  Toolbar: Toolbar,
 });
