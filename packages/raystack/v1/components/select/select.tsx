@@ -14,6 +14,11 @@ interface AriaProps {
   'aria-invalid'?: boolean;
 }
 
+interface TriggerStyleProps {
+  style?: React.CSSProperties;
+  className?: string;
+}
+
 export interface IconProps extends React.SVGAttributes<SVGElement> {
   children?: never;
   color?: string;
@@ -42,13 +47,24 @@ const SelectTrigger = React.forwardRef<
     React.PropsWithChildren<VariantProps<typeof trigger>> & {
       iconProps?: IconProps;
     } &
-    AriaProps
->(({ size, variant, className, children, iconProps = {}, 'aria-label': ariaLabel, ...props }, ref) => (
+    AriaProps &
+    TriggerStyleProps
+>(({ 
+  size, 
+  variant, 
+  className, 
+  children, 
+  iconProps = {}, 
+  'aria-label': ariaLabel,
+  style,
+  ...props 
+}, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={trigger({ size, variant, className })}
     aria-label={ariaLabel || 'Select option'}
     role="combobox"
+    style={style}
     {...props}
   >
     {children}
