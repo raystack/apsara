@@ -1,0 +1,8 @@
+.toolbar {
+  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3)
+    var(--rs-space-5);
+  align-self: stretch;
+
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+}
