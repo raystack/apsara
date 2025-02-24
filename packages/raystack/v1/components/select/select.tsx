@@ -22,8 +22,8 @@ export interface IconProps extends React.SVGAttributes<SVGElement> {
 const trigger = cva(styles.trigger, {
   variants: {
     size: {
-      small: styles["trigger-sm"],
-      medium: styles["trigger-md"],
+      small: styles["trigger-small"],
+      medium: styles["trigger-medium"],
     },
     variant: {
       default: "",

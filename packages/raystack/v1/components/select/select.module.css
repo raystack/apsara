@@ -68,11 +68,11 @@
   user-select: none;
 }
 
-.trigger-sm {
+.trigger-small {
   padding: var(--rs-space-2);
 }
 
-.trigger-md {
+.trigger-medium {
   padding: var(--rs-space-3);
 }
 
