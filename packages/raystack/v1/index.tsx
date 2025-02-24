@@ -29,6 +29,7 @@ export { Sidepanel } from "./components/sidepanel";
 export { Slider } from "./components/slider";
 export { Spinner } from "./components/spinner";
 export { Switch } from "./components/switch";
+export { Select } from "./components/select";
 export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
 export { TextArea } from "./components/text-area";

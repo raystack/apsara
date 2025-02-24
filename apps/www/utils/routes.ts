@@ -136,7 +136,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/radio",
         newBadge: true,
       },
-      { title: "Select", slug: "docs/primitives/components/select" },
+      { title: "Select", slug: "docs/primitives/components/select", newBadge: true },
       {
         title: "Search",
         slug: "docs/primitives/components/search",

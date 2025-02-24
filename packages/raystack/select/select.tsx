@@ -6,6 +6,9 @@ import { Text } from "../text";
 import styles from "./select.module.css";
 import { TextProps } from "~/text/text";
 
+/*
+ * @deprecated Use Select from `@raystack/apsara/v1` instead.
+ */
 export interface IconProps extends React.SVGAttributes<SVGElement> {
   children?: never;
   color?: string;
@@ -95,6 +98,9 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
+/*
+ * @deprecated Use Select from `@raystack/apsara/v1` instead.
+ */
 export const Select = Object.assign(SelectPrimitive.Root, {
   Group: SelectPrimitive.Group,
   Value: SelectPrimitive.Value,
