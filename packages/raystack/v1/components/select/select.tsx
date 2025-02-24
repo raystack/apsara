@@ -7,6 +7,13 @@ import { Text } from "../text";
 import { TextProps } from "../text/text";
 import styles from "./select.module.css";
 
+interface AriaProps {
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  'aria-required'?: boolean;
+  'aria-invalid'?: boolean;
+}
+
 export interface IconProps extends React.SVGAttributes<SVGElement> {
   children?: never;
   color?: string;
@@ -34,18 +41,24 @@ const SelectTrigger = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
     React.PropsWithChildren<VariantProps<typeof trigger>> & {
       iconProps?: IconProps;
-    }
->(({ size, variant, className, children, iconProps = {}, ...props }, ref) => (
+    } &
+    AriaProps
+>(({ size, variant, className, children, iconProps = {}, 'aria-label': ariaLabel, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={trigger({ size, variant, className })}
+    aria-label={ariaLabel || 'Select option'}
+    role="combobox"
     {...props}
   >
     {children}
-
     {variant !== 'filter' && (
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className={styles.triggerIcon} {...iconProps} />
+        <ChevronDownIcon 
+          className={styles.triggerIcon} 
+          aria-hidden="true"
+          {...iconProps} 
+        />
       </SelectPrimitive.Icon>
     )}
   </SelectPrimitive.Trigger>
@@ -53,6 +66,7 @@ const SelectTrigger = React.forwardRef<
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const content = cva(styles.content);
+
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> &
@@ -63,6 +77,7 @@ const SelectContent = React.forwardRef<
       ref={ref}
       className={content({ className })}
       position={position}
+      role="listbox"
       {...props}
     >
       {children}
@@ -72,6 +87,7 @@ const SelectContent = React.forwardRef<
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const menuitem = cva(styles.menuitem);
+
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
@@ -81,6 +97,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={menuitem({ className })}
+    role="option"
     {...props}
   >
     <SelectPrimitive.ItemText>
