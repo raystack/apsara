@@ -135,7 +135,7 @@
   margin-top: var(--rs-space-2);
   padding: var(--rs-space-1);
   border: 1px solid var(--rs-color-border-base-primary);
-  /* box-shadow: var(--rs-shadow-1); */
+  box-shadow: var(--shadow-sm);
 }
 
 .content[data-variant="filter"] .menuitem {
