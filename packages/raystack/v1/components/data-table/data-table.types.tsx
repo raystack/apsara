@@ -41,6 +41,7 @@ export interface DataTableState {
 }
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+  header: string;
   columnType?: columnTypes;
 };
 
