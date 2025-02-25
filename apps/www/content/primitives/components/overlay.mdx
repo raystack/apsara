@@ -16,46 +16,11 @@ radix:
 
 The Overlay component provides a semi-transparent layer that dims the background content when dialogs or modals are active.
 
-## Installation
-
-Install the component from your command line.
-
-<LiveProvider>
-  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
-</LiveProvider>
-
-<LiveProvider>
-  <LiveEditor code={`import { Overlay, Dialog } from '@raystack/apsara/v1'
-
-<Dialog>
-  <Overlay />
-  <DialogContent>
-    Dialog content
-  </DialogContent>
-</Dialog>`} border />
-</LiveProvider>
-
 ## Overlay Props
 
 The `Overlay` component accepts the following props:
 
 - `className`: Additional CSS class name
-
-## Variants
-
-### Default Overlay
-
-Basic overlay with default styling.
-
-<Playground
-  scope={{ Dialog, Overlay }}
-  code={`
-<Dialog>
-  <Overlay />
-  <DialogContent>Dialog Content</DialogContent>
-</Dialog>
-`}
-/>
 
 ## Accessibility
 
