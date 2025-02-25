@@ -71,5 +71,5 @@ export type TableContextType<TData, TValue> = {
 export interface ColumnData {
   label: string;
   id: string;
-  isVisible: boolean;
+  isVisible?: boolean;
 }
