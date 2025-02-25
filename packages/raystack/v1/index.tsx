@@ -30,6 +30,7 @@ export { Sidepanel } from "./components/sidepanel";
 export { Slider } from "./components/slider";
 export { Spinner } from "./components/spinner";
 export { Switch } from "./components/switch";
+export { Select } from "./components/select";
 export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
 export { TextArea } from "./components/text-area";
@@ -43,3 +44,4 @@ export {
 } from "./components/theme-provider";
 export { toast, ToastContainer } from "./components/toast";
 export { Tooltip, TooltipProvider } from "./components/tooltip";
+export { Table } from "./components/table";
