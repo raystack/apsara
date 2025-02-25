@@ -68,3 +68,9 @@ export type TableContextType<TData, TValue> = {
   tableState: DataTableState;
   updateTableState: (fn: (state: DataTableState) => DataTableState) => void;
 };
+
+export interface ColumnData {
+  label: string;
+  id: string;
+  isVisible: boolean;
+}
