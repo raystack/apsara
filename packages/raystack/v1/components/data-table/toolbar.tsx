@@ -6,6 +6,7 @@ import { Popover } from "../popover";
 import { FilterIcon } from "../icons";
 import {
   MixerHorizontalIcon,
+  TextAlignTopIcon,
   TextAlignBottomIcon,
 } from "@radix-ui/react-icons";
 import { Text } from "../text";
@@ -13,6 +14,10 @@ import { Label } from "../label";
 import { Select } from "../select";
 import { Chip } from "../chip";
 import { useDataTable } from "./hooks/useDataTable";
+import { IconButton } from "../icon-button";
+import { useEffect, useState } from "react";
+import { Sort, SortOrders, SortOrdersValues } from "./data-table.types";
+import { defaultGroupOption } from "./utils";
 
 interface ColumnData {
   label: string;
@@ -20,16 +25,32 @@ interface ColumnData {
   isVisible: boolean;
 }
 
-function Ordering({ columnList }: { columnList: ColumnData[] }) {
+interface OrderingProps {
+  columnList: ColumnData[];
+  onChange: (columnId: string, order: SortOrdersValues) => void;
+  value: Sort;
+}
+
+function Ordering({ columnList, onChange, value }: OrderingProps) {
+  function handleColumnChange(columnId: string) {
+    onChange(columnId, value.order);
+  }
+
+  function handleOrderChange() {
+    const newOrder =
+      value.order === SortOrders.ASC ? SortOrders.DESC : SortOrders.ASC;
+    onChange(value.key, newOrder);
+  }
+
   return (
     <Flex justify="between" align="center">
       <Text size={2} weight={500} className={styles["flex-1"]}>
         Ordering
       </Text>
       <Flex gap={"extra-small"} className={styles["flex-1"]}>
-        <Select>
+        <Select onValueChange={handleColumnChange} value={value.key}>
           <Select.Trigger
-            variant="filter"
+            size={"small"}
             className={styles["display-popover-properties-select"]}
           >
             <Select.Value placeholder="Select value" />
@@ -42,27 +63,44 @@ function Ordering({ columnList }: { columnList: ColumnData[] }) {
             ))}
           </Select.Content>
         </Select>
-        <TextAlignBottomIcon className={styles["display-popover-sort-icon"]} />
+        <IconButton onClick={handleOrderChange} size={4}>
+          {value.order === SortOrders?.ASC ? (
+            <TextAlignBottomIcon
+              className={styles["display-popover-sort-icon"]}
+            />
+          ) : (
+            <TextAlignTopIcon className={styles["display-popover-sort-icon"]} />
+          )}
+        </IconButton>
       </Flex>
     </Flex>
   );
 }
 
-function Grouping({ columnList }: { columnList: ColumnData[] }) {
+interface GroupingProps {
+  columnList: ColumnData[];
+  onChange: (columnId: string) => void;
+  value: string;
+}
+
+function Grouping({ columnList, onChange, value }: GroupingProps) {
   return (
     <Flex justify="between" align="center">
       <Text size={2} weight={500} className={styles["flex-1"]}>
         Grouping
       </Text>
       <Flex className={styles["flex-1"]}>
-        <Select>
+        <Select onValueChange={onChange} value={value}>
           <Select.Trigger
-            variant="filter"
+            size={"small"}
             className={styles["display-popover-properties-select"]}
           >
             <Select.Value placeholder="Select value" />
           </Select.Trigger>
           <Select.Content data-variant="filter">
+            <Select.Item value={defaultGroupOption.id}>
+              {defaultGroupOption.label}
+            </Select.Item>
             {columnList.map((column) => (
               <Select.Item key={column.id} value={column.id}>
                 {column.label}
@@ -96,7 +134,7 @@ function DisplayProperties({ columnList }: { columnList: ColumnData[] }) {
 }
 
 function DisplaySettings() {
-  const { table } = useDataTable();
+  const { table, updateTableState, tableState, defaultSort } = useDataTable();
   const columns = table?.getAllColumns();
 
   const columnList = columns?.map((column) => {
@@ -107,6 +145,34 @@ function DisplaySettings() {
       isVisible: column.getIsVisible(),
     };
   });
+
+  function onSortChange(columnId: string, order: SortOrdersValues) {
+    updateTableState((state) => {
+      return {
+        ...state,
+        sort: [{ key: columnId, order }],
+      };
+    });
+  }
+
+  function onGroupChange(columnId: string) {
+    updateTableState((state) => {
+      return {
+        ...state,
+        group_by: [columnId],
+      };
+    });
+  }
+
+  function onReset() {
+    updateTableState((state) => {
+      return {
+        ...state,
+        sort: [defaultSort],
+        group_by: [defaultGroupOption.id],
+      };
+    });
+  }
 
   return (
     <Popover>
@@ -130,8 +196,16 @@ function DisplaySettings() {
             className={styles["display-popover-properties-container"]}
             gap={5}
           >
-            <Ordering columnList={columnList} />
-            <Grouping columnList={columnList} />
+            <Ordering
+              columnList={columnList}
+              onChange={onSortChange}
+              value={tableState.sort?.[0] || defaultSort}
+            />
+            <Grouping
+              columnList={columnList}
+              onChange={onGroupChange}
+              value={tableState.group_by?.[0] || defaultGroupOption.id}
+            />
           </Flex>
           <Flex className={styles["display-popover-properties-container"]}>
             <DisplayProperties columnList={columnList} />
@@ -140,7 +214,9 @@ function DisplaySettings() {
             justify={"end"}
             className={styles["display-popover-reset-container"]}
           >
-            <Button variant={"text"}>Reset to default</Button>
+            <Button variant={"text"} onClick={onReset}>
+              Reset to default
+            </Button>
           </Flex>
         </Flex>
       </Popover.Content>
