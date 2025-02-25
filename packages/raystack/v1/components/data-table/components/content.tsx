@@ -1,10 +1,10 @@
-import { Table } from "../table";
+import { Table } from "../../table";
 import type { Row, HeaderGroup } from "@tanstack/react-table";
-import { EmptyState } from "../empty-state";
+import { EmptyState } from "../../empty-state";
 import { TableIcon } from "@radix-ui/react-icons";
 import { flexRender } from "@tanstack/react-table";
-import { useDataTable } from "./hooks/useDataTable";
-import { DataTableContentProps } from "./data-table.types";
+import { useDataTable } from "../hooks/useDataTable";
+import { DataTableContentProps } from "../data-table.types";
 import Skeleton from "react-loading-skeleton";
 
 function Headers<TData>({
