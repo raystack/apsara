@@ -75,7 +75,7 @@ export const primitivesRoutes = [
         slug: "docs/primitives/components/emptystate",
         newBadge: true,
       },
-      { title: "ErrorState", slug: "docs/primitives/components/errorstate" },
+      { title: "ErrorState", slug: "docs/primitives/components/errorstate", toBeDeleted: true },
       {
         title: "Flex",
         slug: "docs/primitives/components/flex",
@@ -209,6 +209,7 @@ export type PageProps = {
   deprecated?: boolean;
   preview?: boolean;
   newBadge?: boolean;
+  toBeDeleted?: boolean;
 };
 
 export type RouteProps = {
