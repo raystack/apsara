@@ -1,11 +1,42 @@
 import clsx from "clsx";
 import { Flex } from "../../flex";
-import styles from "./data-table.module.css";
+import styles from "../data-table.module.css";
 import { Button } from "../../button";
 import { FilterIcon } from "../../icons";
-import { useEffect, useState } from "react";
-import { Sort, SortOrdersValues } from "../data-table.types";
 import { DisplaySettings } from "./display-settings";
+import { DropdownMenu } from "../../dropdown-menu";
+import { useDataTable } from "../hooks/useDataTable";
+
+function Filters() {
+  const { table } = useDataTable();
+  const columns = table?.getAllColumns();
+
+  const columnList = columns?.map((column) => {
+    const id = column.id;
+    return {
+      label: (column.columnDef.header as string) || id,
+      id: id,
+    };
+  });
+  return (
+    <Flex>
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
+          <Button variant={"text"} size={"small"} leadingIcon={<FilterIcon />}>
+            Filter
+          </Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          {columnList?.map((column) => (
+            <DropdownMenu.Item key={column.id}>
+              {column.label}
+            </DropdownMenu.Item>
+          ))}
+        </DropdownMenu.Content>
+      </DropdownMenu>
+    </Flex>
+  );
+}
 
 export function Toolbar({ className }: { className?: string }) {
   return (
@@ -14,11 +45,7 @@ export function Toolbar({ className }: { className?: string }) {
       justify={"between"}
       align={"center"}
     >
-      <Flex>
-        <Button variant={"text"} size={"small"} leadingIcon={<FilterIcon />}>
-          Filter
-        </Button>
-      </Flex>
+      <Filters />
       <DisplaySettings />
     </Flex>
   );
