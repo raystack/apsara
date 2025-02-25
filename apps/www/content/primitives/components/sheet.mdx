@@ -48,7 +48,7 @@ Install the component from your command line.
 ## Basic Example
 
 <Playground
-  scope={{ Sheet, Button, Text }}
+  scope={{ Sheet, Button }}
   code={`
 <Sheet>
   <Sheet.Trigger asChild>
@@ -57,11 +57,34 @@ Install the component from your command line.
   <Sheet.Content close>
     <Sheet.Title>Sheet Title</Sheet.Title>
     <Sheet.Description>Sheet description goes here</Sheet.Description>
-    <Text>Main content of the sheet</Text>
+    <span>Main content of the sheet</span>
   </Sheet.Content>
 </Sheet>
   `}
 />
+
+## API Reference
+
+### Sheet Props
+
+- `children`: The content to be rendered
+- `ariaLabel`: Accessible label for the sheet trigger
+
+### Sheet.Content Props
+
+- `side`: The direction from which the sheet appears (`"top" | "right" | "bottom" | "left"`)
+- `close`: Whether to show the close button
+- `ariaLabel`: Accessible label for the sheet content
+- `ariaDescription`: Accessible description for the sheet content
+- `children`: The content to be rendered inside the sheet
+
+### Sheet.Title Props
+
+- Inherits all HTML heading element props
+
+### Sheet.Description Props
+
+- Inherits all HTML paragraph element props
 
 ## Positioning
 
@@ -127,47 +150,8 @@ The Sheet can slide in from different sides of the screen.
 
 ## Accessibility
 
-Sheet components are built with proper accessibility attributes and keyboard navigation.
+Sheet components are built with proper accessibility features following WAI-ARIA guidelines:
 
-<Playground
-  scope={{ Sheet, Button, Text }}
-  code={`
-<Sheet>
-  <Sheet.Trigger asChild>
-    <Button>Accessible Sheet</Button>
-  </Sheet.Trigger>
-  <Sheet.Content 
-    close 
-    ariaLabel="Settings Panel"
-    ariaDescription="Configure application settings and preferences"
-  >
-    <Sheet.Title>Accessible Sheet</Sheet.Title>
-    <Sheet.Description>This sheet has proper ARIA labels and descriptions</Sheet.Description>
-    <Text>Content is properly announced to screen readers</Text>
-  </Sheet.Content>
-</Sheet>
-  `}
-/>
-
-## API Reference
-
-### Sheet Props
-
-- `children`: The content to be rendered
-- `ariaLabel`: Accessible label for the sheet trigger
-
-### Sheet.Content Props
-
-- `side`: The direction from which the sheet appears (`"top" | "right" | "bottom" | "left"`)
-- `close`: Whether to show the close button
-- `ariaLabel`: Accessible label for the sheet content
-- `ariaDescription`: Accessible description for the sheet content
-- `children`: The content to be rendered inside the sheet
-
-### Sheet.Title Props
-
-- Inherits all HTML heading element props
-
-### Sheet.Description Props
-
-- Inherits all HTML paragraph element props
+- Uses semantic HTML elements for proper structure
+- Dismiss button includes `aria-label` and `aria-description` for screen readers
+- Interactive elements are keyboard accessible
