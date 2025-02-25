@@ -1,5 +1,5 @@
 import { Flex } from "../../flex";
-import styles from "./data-table.module.css";
+import styles from "../data-table.module.css";
 import { Button } from "../../button";
 import { Popover } from "../../popover";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";

@@ -1,5 +1,5 @@
 import { Flex } from "../../flex";
-import styles from "./data-table.module.css";
+import styles from "../data-table.module.css";
 import { TextAlignTopIcon, TextAlignBottomIcon } from "@radix-ui/react-icons";
 import { Text } from "../../text";
 import { Select } from "../../select";
