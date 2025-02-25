@@ -1,23 +1,23 @@
 import clsx from "clsx";
-import { Flex } from "../flex";
+import { Flex } from "../../flex";
 import styles from "./data-table.module.css";
-import { Button } from "../button";
-import { Popover } from "../popover";
-import { FilterIcon } from "../icons";
+import { Button } from "../../button";
+import { Popover } from "../../popover";
+import { FilterIcon } from "../../icons";
 import {
   MixerHorizontalIcon,
   TextAlignTopIcon,
   TextAlignBottomIcon,
 } from "@radix-ui/react-icons";
-import { Text } from "../text";
-import { Label } from "../label";
-import { Select } from "../select";
-import { Chip } from "../chip";
-import { useDataTable } from "./hooks/useDataTable";
-import { IconButton } from "../icon-button";
+import { Text } from "../../text";
+import { Label } from "../../label";
+import { Select } from "../../select";
+import { Chip } from "../../chip";
+import { useDataTable } from "../hooks/useDataTable";
+import { IconButton } from "../../icon-button";
 import { useEffect, useState } from "react";
-import { Sort, SortOrders, SortOrdersValues } from "./data-table.types";
-import { defaultGroupOption } from "./utils";
+import { Sort, SortOrders, SortOrdersValues } from "../data-table.types";
+import { defaultGroupOption } from "../utils";
 
 interface ColumnData {
   label: string;
