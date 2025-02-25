@@ -7,14 +7,56 @@ import { DisplaySettings } from "./display-settings";
 import { DropdownMenu } from "../../dropdown-menu";
 import { useDataTable } from "../hooks/useDataTable";
 import { FilterChip } from "../../filter-chip";
-import { DataTableColumnDef } from "../data-table.types";
+import { ColumnData, DataTableColumnDef, Filter } from "../data-table.types";
 import { IconButton } from "../../icon-button";
+
+interface AddFilterProps {
+  columnList: ColumnData[];
+  appliedFiltersSet: Set<string>;
+  onAddFilter: (columnId: string) => void;
+}
+
+function AddFilter({
+  columnList = [],
+  appliedFiltersSet,
+  onAddFilter,
+}: AddFilterProps) {
+  const availableFilters = columnList?.filter(
+    (col) => !appliedFiltersSet.has(col.id)
+  );
+
+  return availableFilters.length > 0 ? (
+    <DropdownMenu>
+      <DropdownMenu.Trigger asChild>
+        {appliedFiltersSet.size > 0 ? (
+          <IconButton size={4}>
+            <FilterIcon />
+          </IconButton>
+        ) : (
+          <Button variant={"text"} size={"small"} leadingIcon={<FilterIcon />}>
+            Filter
+          </Button>
+        )}
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        {availableFilters?.map((column) => (
+          <DropdownMenu.Item
+            key={column.id}
+            onSelect={() => onAddFilter(column.id)}
+          >
+            {column.label}
+          </DropdownMenu.Item>
+        ))}
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  ) : null;
+}
 
 function Filters<TData, TValue>() {
   const { table, updateTableState, tableState } = useDataTable();
   const columns = table?.getAllColumns();
 
-  function handleFilter(columnId: string) {
+  function onAddFilter(columnId: string) {
     updateTableState((state) => {
       return {
         ...state,
@@ -58,10 +100,6 @@ function Filters<TData, TValue>() {
       };
     }) || [];
 
-  const availableFilters = columnList?.filter(
-    (col) => !appliedFiltersSet.has(col.id)
-  );
-
   return (
     <Flex gap={3}>
       <Flex gap={3}>
@@ -73,35 +111,11 @@ function Filters<TData, TValue>() {
           />
         ))}
       </Flex>
-      {availableFilters.length > 0 ? (
-        <DropdownMenu>
-          <DropdownMenu.Trigger asChild>
-            {appliedFiltersSet.size > 0 ? (
-              <IconButton size={4}>
-                <FilterIcon />
-              </IconButton>
-            ) : (
-              <Button
-                variant={"text"}
-                size={"small"}
-                leadingIcon={<FilterIcon />}
-              >
-                Filter
-              </Button>
-            )}
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            {availableFilters?.map((column) => (
-              <DropdownMenu.Item
-                key={column.id}
-                onSelect={() => handleFilter(column.id)}
-              >
-                {column.label}
-              </DropdownMenu.Item>
-            ))}
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      ) : null}
+      <AddFilter
+        columnList={columnList}
+        appliedFiltersSet={appliedFiltersSet}
+        onAddFilter={onAddFilter}
+      />
     </Flex>
   );
 }
