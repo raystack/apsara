@@ -19,7 +19,6 @@ export const SortOrders = {
 interface Filter {
   name: string;
   operator: string;
-  dataType: string;
   value: any;
 }
 
