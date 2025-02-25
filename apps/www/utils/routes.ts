@@ -1,5 +1,14 @@
 export const primitivesRoutes = [
-  { label: "Overview", pages: [{ title: "Introduction", slug: "docs/primitives/overview/introduction" }, { title: "Getting started", slug: "docs/primitives/overview/getting-started" }] },
+  {
+    label: "Overview",
+    pages: [
+      { title: "Introduction", slug: "docs/primitives/overview/introduction" },
+      {
+        title: "Getting started",
+        slug: "docs/primitives/overview/getting-started",
+      },
+    ],
+  },
   { label: "Components", pages: [
     { title: "Annoucement Bar", slug: "docs/primitives/components/announcementbar", newBadge: true },
     { title: "Avatar", slug: "docs/primitives/components/avatar", newBadge: true },
