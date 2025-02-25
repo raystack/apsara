@@ -18,11 +18,10 @@ const iconButton = cva(styles.iconButton, {
 });
 
 export interface IconButtonProps
-  extends ComponentPropsWithoutRef<"button">,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof iconButton> {
   size?: 1 | 2 | 3 | 4;
   'aria-label'?: string;
-  style?: React.CSSProperties;
 }
 
 export const IconButton = forwardRef<ElementRef<"button">, IconButtonProps>(
