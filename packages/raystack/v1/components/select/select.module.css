@@ -1,16 +1,17 @@
 .content {
   overflow: hidden;
   z-index: 50;
-  font-size: 12px;
-  line-height: 16px;
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
 
   box-sizing: border-box;
 
-  padding: var(--pd-4);
-  background-color: var(--background-base);
-  border-radius: var(--br-4);
+  padding: var(--rs-space-2);
+  background-color: var(--rs-color-background-base-primary);
+  border-radius: var(--rs-radius-2);
   box-shadow: var(--shadow-sm);
-  outline: 1px solid var(--border-subtle);
+  outline: 1px solid var(--rs-color-border-base-primary);
 
   min-width: var(--radix-select-trigger-width);
   margin-top: 4px;
@@ -20,9 +21,9 @@
   display: flex;
   align-items: center;
   position: relative;
-  gap: var(--pd-4);
-  padding: var(--pd-8);
-  color: var(--foreground-base);
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-3);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .menuitem:hover,
@@ -30,8 +31,8 @@
 .menuitem[data-highlighted] {
   outline: none;
   cursor: pointer;
-  border-radius: var(--br-4);
-  background: var(--background-base-hover);
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .menuitem[data-disabled] {
@@ -41,12 +42,12 @@
 
 .separator {
   height: 1px;
-  margin: var(--mr-4) calc(var(--mr-8) * -1);
+  margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);
   background: var(--background-inset);
 }
 
 .menugroup {
-  padding: var(--pd-8);
+  padding: var(--rs-space-3);
 }
 
 .trigger {
@@ -55,25 +56,24 @@
   align-items: center;
   border: none;
 
-  color: var(--foreground-base);
-  background-color: var(--background-base);
-  font-size: 12px;
-
-  line-height: 16px;
-  border-radius: var(--br-4);
-  outline: 0.5px solid var(--border-base);
+  color: var(--rs-color-foreground-base-primary);
+  background-color: var(--rs-color-background-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  border-radius: var(--rs-radius-2);
+  outline: 0.5px solid var(--rs-color-border-base-secondary);
   box-shadow: var(--shadow-xs);
-  color: var(--foreground-subtle);
-
+  color: var(--rs-color-foreground-base-tertiary);
   user-select: none;
 }
 
-.trigger-sm {
-  padding: var(--pd-4);
+.trigger-small {
+  padding: var(--rs-space-2);
 }
 
-.trigger-md {
-  padding: var(--pd-8);
+.trigger-medium {
+  padding: var(--rs-space-3);
 }
 
 .trigger:hover {
@@ -81,7 +81,7 @@
 }
 
 .trigger:focus {
-  outline: 1px solid var(--border-accent-inverted);
+  outline: 1px solid var(--rs-color-border-accent-emphasis);
 }
 
 .trigger:disabled {
@@ -90,15 +90,16 @@
 }
 
 .trigger::placeholder {
-  color: var(--foreground-subtle);
-  font-size: 12px;
-  line-height: 16px;
+  color: var(--rs-color-foreground-base-tertiary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
 }
 
 .triggerIcon {
   width: 12px;
   height: 12px;
-  margin-left: var(--mr-8);
+  margin-left: var(--rs-space-3);
 }
 
 .trigger-filter {
@@ -134,12 +135,12 @@
   margin-top: var(--rs-space-2);
   padding: var(--rs-space-1);
   border: 1px solid var(--rs-color-border-base-primary);
-  box-shadow: var(--rs-shadow-1);
+  box-shadow: var(--shadow-sm);
 }
 
 .content[data-variant="filter"] .menuitem {
   padding: var(--rs-space-1) var(--rs-space-2);
   min-height: 24px !important;
   height: 24px !important;
-  font-size: var(--rs-font-size-2);
+  font-size: var(--rs-font-size-small);
 }
