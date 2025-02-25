@@ -1,5 +1,5 @@
 import { TableState } from "@tanstack/table-core";
-import { DataTableState, SortOrders } from "./data-table.types";
+import { DataTableState, SortOrders } from "../data-table.types";
 
 export function dataTableStateToReactTableState(
   dts: DataTableState
@@ -16,5 +16,11 @@ export function dataTableStateToReactTableState(
   return {
     columnFilters: columnFilters,
     sorting: sorting,
+    grouping: dts.group_by,
   };
 }
+
+export const defaultGroupOption = {
+  id: "--",
+  label: "No grouping",
+};

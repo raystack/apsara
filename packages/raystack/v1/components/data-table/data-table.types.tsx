@@ -24,9 +24,9 @@ interface Filter {
 }
 
 type SortOrdersKeys = keyof typeof SortOrders;
-type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
+export type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
 
-interface Sort {
+export interface Sort {
   key: string;
   order: SortOrdersValues;
 }
@@ -53,6 +53,7 @@ export interface DataTableProps<TData, TValue> {
   loadingRowCount?: number;
   tableState?: DataTableState;
   onTableStateChange?: (state: DataTableState) => void;
+  defaultSort: Sort;
 }
 
 export type DataTableContentProps = {
@@ -63,4 +64,7 @@ export type TableContextType<TData, TValue> = {
   table: Table<TData>;
   columns: DataTableColumnDef<TData, TValue>[];
   isLoading?: boolean;
+  defaultSort: Sort;
+  tableState: DataTableState;
+  updateTableState: (fn: (state: DataTableState) => DataTableState) => void;
 };

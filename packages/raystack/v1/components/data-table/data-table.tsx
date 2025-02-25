@@ -6,7 +6,7 @@ import {
   TableContextType,
 } from "./data-table.types";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { dataTableStateToReactTableState } from "./utils";
+import { dataTableStateToReactTableState, defaultGroupOption } from "./utils";
 import { Content } from "./content";
 import { Toolbar } from "./toolbar";
 
@@ -16,9 +16,13 @@ function DataTableRoot<TData, TValue>({
   mode = "client",
   isLoading = false,
   loadingRowCount = 3,
+  defaultSort,
   children,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
-  const [tableState, setTableState] = useState<DataTableState>({});
+  const [tableState, setTableState] = useState<DataTableState>({
+    sort: [defaultSort],
+    group_by: [defaultGroupOption.id],
+  });
 
   const reactTableState = dataTableStateToReactTableState(tableState);
 
@@ -42,11 +46,19 @@ function DataTableRoot<TData, TValue>({
     state: reactTableState,
   });
 
+  function onTableStateChange(fn: (prev: DataTableState) => DataTableState) {
+    setTableState((prev) => fn(prev));
+  }
+
   const contextValue: TableContextType<TData, TValue> = {
     table,
     columns,
     isLoading,
+    tableState,
+    updateTableState: onTableStateChange,
+    defaultSort,
   };
+
   return (
     <TableContext.Provider value={contextValue}>
       {children}
