@@ -7,8 +7,8 @@ import {
 } from "./data-table.types";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { dataTableStateToReactTableState, defaultGroupOption } from "./utils";
-import { Content } from "./content";
-import { Toolbar } from "./toolbar";
+import { Content } from "./components/content";
+import { Toolbar } from "./components/toolbar";
 
 function DataTableRoot<TData, TValue>({
   data = [],
