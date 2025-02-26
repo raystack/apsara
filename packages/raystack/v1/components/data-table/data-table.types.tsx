@@ -1,15 +1,7 @@
 import { ColumnDef, Table } from "@tanstack/table-core";
+import { FilterTypes } from "~/v1/types/filters";
 
 export type DataTableMode = "client" | "server";
-
-export const columnTypesMap = {
-  select: "select",
-  number: "number",
-  text: "text",
-  date: "date",
-} as const;
-
-export type columnTypes = keyof typeof columnTypesMap;
 
 export const SortOrders = {
   ASC: "asc",
@@ -41,7 +33,7 @@ export interface DataTableState {
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   header: string;
-  columnType?: columnTypes;
+  columnType?: FilterTypes;
 };
 
 export interface DataTableProps<TData, TValue> {

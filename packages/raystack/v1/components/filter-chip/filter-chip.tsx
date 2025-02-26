@@ -158,7 +158,7 @@ export const FilterChip = ({
       {...props}
     >
       <Flex align="center">
-        <Flex align="center" style={{ gap: "var(--rs-space-2)" }}>
+        <Flex align="center" gap={2}>
           {leadingIcon && (
             <span className={styles.leadingIcon} aria-hidden="true">
               {leadingIcon}
