@@ -91,6 +91,34 @@ export function Filters<TData, TValue>() {
     });
   }
 
+  function handleFilterValueChange(columnId: string, value: any) {
+    updateTableState((state) => {
+      return {
+        ...state,
+        filters: state.filters?.map((filter) => {
+          if (filter.name === columnId) {
+            return { ...filter, value };
+          }
+          return filter;
+        }),
+      };
+    });
+  }
+
+  function handleFilterOperationChange(columnId: string, operator: string) {
+    updateTableState((state) => {
+      return {
+        ...state,
+        filters: state.filters?.map((filter) => {
+          if (filter.name === columnId) {
+            return { ...filter, operator };
+          }
+          return filter;
+        }),
+      };
+    });
+  }
+
   const columnList = columns?.filter(
     (column) => column.columnDef.enableColumnFilter
   );
@@ -121,6 +149,12 @@ export function Filters<TData, TValue>() {
             key={filter.name}
             label={filter.label}
             onRemove={() => handleRemoveFilter(filter.name)}
+            onValueChange={(value) =>
+              handleFilterValueChange(filter.name, value)
+            }
+            onOperationChange={(operator) =>
+              handleFilterOperationChange(filter.name, operator)
+            }
             columnType={filter.columnType}
           />
         ))}
