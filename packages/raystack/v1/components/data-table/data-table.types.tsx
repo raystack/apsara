@@ -1,5 +1,5 @@
 import type { Column, ColumnDef, Table } from "@tanstack/table-core";
-import type { FilterTypes } from "~/v1/types/filters";
+import type { FilterSelectOption, FilterTypes } from "~/v1/types/filters";
 
 export type DataTableMode = "client" | "server";
 
@@ -52,6 +52,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   enableSorting?: boolean;
   enableHiding?: boolean;
   defaultVisibility?: boolean;
+  filterOptions?: FilterSelectOption[];
 };
 
 export interface DataTableProps<TData, TValue> {

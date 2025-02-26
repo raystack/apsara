@@ -2,7 +2,7 @@ import { Container, DataTable, DataTableColumnDef } from "@raystack/apsara/v1";
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 
-export const columns: DataTableColumnDef<any, unknown>[] = [
+export const columns: DataTableColumnDef<any, any>[] = [
   {
     accessorKey: "status",
     header: "Status",
@@ -13,7 +13,12 @@ export const columns: DataTableColumnDef<any, unknown>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
     ),
-    columnType: "text",
+    columnType: "select",
+    filterOptions: [
+      { label: "Active", value: "active" },
+      { label: "Inactive", value: "inactive" },
+      { label: "Pending", value: "pending" },
+    ],
   },
   {
     accessorKey: "email",
