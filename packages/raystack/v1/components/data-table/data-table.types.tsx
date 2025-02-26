@@ -32,12 +32,13 @@ export interface DataTableState {
 }
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+  accessorKey: string;
   header: string;
   columnType?: FilterTypes;
   enableColumnFilter?: boolean;
   enableSorting?: boolean;
-  hidden?: boolean;
   enableHiding?: boolean;
+  defaultVisibility?: boolean;
 };
 
 export interface DataTableProps<TData, TValue> {

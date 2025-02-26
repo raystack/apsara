@@ -2,7 +2,6 @@ import { Column } from "@tanstack/table-core";
 import { Chip } from "../../chip";
 import { Flex } from "../../flex";
 import { Text } from "../../text";
-import { ColumnData } from "../data-table.types";
 
 export function DisplayProperties<TData, TValue>({
   columns,
