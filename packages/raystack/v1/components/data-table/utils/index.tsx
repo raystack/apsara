@@ -16,7 +16,6 @@ export function dataTableStateToReactTableState(
   return {
     columnFilters: columnFilters,
     sorting: sorting,
-    grouping: dts.group_by,
   };
 }
 

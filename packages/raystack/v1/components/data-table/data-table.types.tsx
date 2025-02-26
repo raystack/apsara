@@ -34,6 +34,8 @@ export interface DataTableState {
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   header: string;
   columnType?: FilterTypes;
+  enableColumnFilter?: boolean;
+  enableSorting?: boolean;
 };
 
 export interface DataTableProps<TData, TValue> {

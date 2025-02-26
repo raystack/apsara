@@ -74,13 +74,15 @@ export function Filters<TData, TValue>() {
     });
   }
 
-  const columnList = columns?.map((column) => {
-    const id = column.id;
-    return {
-      label: (column.columnDef.header as string) || id,
-      id: id,
-    };
-  });
+  const columnList = columns
+    ?.filter((column) => column.columnDef.enableColumnFilter)
+    .map((column) => {
+      const id = column.id;
+      return {
+        label: (column.columnDef.header as string) || id,
+        id: id,
+      };
+    });
 
   const appliedFiltersSet = new Set(
     tableState?.filters?.map((filter) => filter.name)

@@ -23,6 +23,16 @@ export function DisplaySettings() {
     };
   });
 
+  const sortableColumns = columns
+    ?.filter((col) => col.columnDef.enableSorting)
+    ?.map((column) => {
+      const id = column.id;
+      return {
+        label: (column.columnDef.header as string) || id,
+        id: id,
+      };
+    });
+
   function onSortChange(columnId: string, order: SortOrdersValues) {
     updateTableState((state) => {
       return {
@@ -74,7 +84,7 @@ export function DisplaySettings() {
             gap={5}
           >
             <Ordering
-              columnList={columnList}
+              columnList={sortableColumns}
               onChange={onSortChange}
               value={tableState.sort?.[0] || defaultSort}
             />
