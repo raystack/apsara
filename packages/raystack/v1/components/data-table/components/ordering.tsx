@@ -34,7 +34,11 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
         Ordering
       </Text>
       <Flex gap={"extra-small"} className={styles["flex-1"]}>
-        <Select onValueChange={handleColumnChange} value={value.key}>
+        <Select
+          onValueChange={handleColumnChange}
+          value={value.key}
+          disabled={columnList.length === 0}
+        >
           <Select.Trigger
             size={"small"}
             className={styles["display-popover-properties-select"]}
@@ -49,7 +53,11 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
             ))}
           </Select.Content>
         </Select>
-        <IconButton onClick={handleOrderChange} size={4}>
+        <IconButton
+          onClick={handleOrderChange}
+          size={4}
+          disabled={columnList.length === 0}
+        >
           {value.order === SortOrders?.ASC ? (
             <TextAlignBottomIcon
               className={styles["display-popover-sort-icon"]}
