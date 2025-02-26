@@ -14,8 +14,10 @@ export const FilterType = {
   select: "select",
 } as const;
 
+export type FilterValueType = string | number | boolean;
+
 export interface FilterValue {
-  value?: string | number | boolean;
+  value?: FilterValueType;
   // values?: Array<string | number>;
   date?: Date;
   // dateRange?: DateRange;
@@ -190,6 +192,6 @@ export type Filter = {
 };
 
 export interface FilterSelectOption {
-  value: any;
+  value: FilterValueType;
   label: string;
 }

@@ -1,4 +1,4 @@
-import { Column, FilterFn, TableState } from "@tanstack/table-core";
+import { TableState } from "@tanstack/table-core";
 import {
   DataTableState,
   SortOrders,

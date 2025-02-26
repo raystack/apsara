@@ -123,7 +123,10 @@ export const FilterChip = ({
             </Select.Trigger>
             <Select.Content data-variant="filter">
               {options.map((opt) => (
-                <Select.Item key={opt.value} value={opt.value}>
+                <Select.Item
+                  key={opt.value.toString()}
+                  value={opt.value.toString()}
+                >
                   {opt.label}
                 </Select.Item>
               ))}

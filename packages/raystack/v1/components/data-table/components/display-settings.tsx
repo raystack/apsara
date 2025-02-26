@@ -4,13 +4,13 @@ import { Button } from "../../button";
 import { Popover } from "../../popover";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 import { useDataTable } from "../hooks/useDataTable";
-import { SortOrdersValues } from "../data-table.types";
+import { DataTableColumn, SortOrdersValues } from "../data-table.types";
 import { defaultGroupOption } from "../utils";
 import { Ordering } from "./ordering";
 import { Grouping } from "./grouping";
 import { DisplayProperties } from "./display-properties";
 
-export function DisplaySettings() {
+export function DisplaySettings<TData, TValue>() {
   const {
     table,
     updateTableState,
@@ -18,7 +18,7 @@ export function DisplaySettings() {
     defaultSort,
     onDisplaySettingsReset,
   } = useDataTable();
-  const columns = table?.getAllColumns();
+  const columns = table?.getAllColumns() as DataTableColumn<TData, TValue>[];
 
   const columnList = columns?.map((column) => {
     const id = column.id;
