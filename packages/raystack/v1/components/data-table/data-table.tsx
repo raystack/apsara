@@ -5,7 +5,11 @@ import {
   DataTableState,
   TableContextType,
 } from "./data-table.types";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  VisibilityState,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { dataTableStateToReactTableState, defaultGroupOption } from "./utils";
 import { Content } from "./components/content";
 import { Toolbar } from "./components/toolbar";
@@ -19,6 +23,12 @@ function DataTableRoot<TData, TValue>({
   defaultSort,
   children,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    columns?.reduce((acc, col) => {
+      return { ...acc, [col.accessorKey]: col.defaultVisibility ?? true };
+    }, {})
+  );
+
   const [tableState, setTableState] = useState<DataTableState>({
     sort: [defaultSort],
     group_by: [defaultGroupOption.id],
@@ -43,7 +53,9 @@ function DataTableRoot<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     manualSorting: mode === "server",
     manualFiltering: mode === "server",
-    state: reactTableState,
+    onColumnVisibilityChange: setColumnVisibility,
+
+    state: { ...reactTableState, columnVisibility: columnVisibility },
   });
 
   function onTableStateChange(fn: (prev: DataTableState) => DataTableState) {
