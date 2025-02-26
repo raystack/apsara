@@ -243,13 +243,13 @@ export const Assets = () => {
               console.log('Selected date range:', range);
             }}
             value={{
-              from: new Date(new Date().setDate(new Date().getDate() - 7)), // Last 7 days
+              from: new Date(new Date().setDate(new Date().getDate() - 7)),
               to: new Date()
             }}
-            textFieldProps={{
-              placeholder: "Select date range",
-              size: "small"
-            }}
+            // textFieldProps={{
+            //   placeholder: "Select date range",
+            //   size: "small"
+            // }}
             side="bottom"
           />
         </Flex>
