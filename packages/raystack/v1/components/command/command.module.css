@@ -1,0 +1,75 @@
+.command {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  border-radius: var(--rs-radius-4);
+  background-color: var(--rs-color-background-base-primary);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);;
+  border: 1px solid var(--rs-color-border-base-secondary);
+}
+
+.inputWrapper { 
+  padding: 0 12px;
+  border-bottom: 1px solid var(--rs-color-border-base-secondary);
+}
+
+.inputIcon { 
+  opacity: 0.5;
+}
+
+.input {
+  display: flex;
+  padding: var(--rs-space-4) 0;
+  background-color: transparent;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-mini);
+  width: 100%;
+  border-radius: var(--rs-space-2);
+  outline: none;
+  border: none;
+  color: var(--rs-color-foreground-base-primary);
+  
+}
+
+.input:placeholder {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 300px;
+}
+
+.empty {
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-mini);
+  padding: 30px 0;
+  text-align: center;
+}
+
+.group {
+  padding: var(--rs-space-2);
+}
+.group [cmdk-group-heading] {
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-mini);
+  color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-2) var(--rs-space-3);
+}
+
+.item {
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-mini);
+  padding: var(--rs-space-2) var(--rs-space-3);
+}
+
+.item:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.separator {
+  border-bottom: 1px solid var(--rs-color-border-base-secondary);
+}
