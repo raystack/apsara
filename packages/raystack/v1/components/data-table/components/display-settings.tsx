@@ -19,7 +19,6 @@ export function DisplaySettings() {
     return {
       label: (column.columnDef.header as string) || id,
       id: id,
-      isVisible: column.getIsVisible(),
     };
   });
 
@@ -95,7 +94,7 @@ export function DisplaySettings() {
             />
           </Flex>
           <Flex className={styles["display-popover-properties-container"]}>
-            <DisplayProperties columnList={columnList} />
+            <DisplayProperties columns={columns} />
           </Flex>
           <Flex
             justify={"end"}
