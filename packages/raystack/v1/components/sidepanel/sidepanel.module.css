@@ -52,7 +52,7 @@
   overflow: hidden;
   color: var(--rs-color-foreground-base-primary);
   text-overflow: ellipsis;
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.5px;
@@ -113,7 +113,7 @@
 
 .nav-text {
   color: var(--rs-color-foreground-base-primary);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.5px;

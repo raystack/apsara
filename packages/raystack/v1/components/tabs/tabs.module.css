@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--rs-space-2);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   font-weight: 500;
   padding: var(--rs-space-2) var(--rs-space-3);
   font-family: var(--rs-font-body);
@@ -47,7 +47,7 @@
   background-color: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
   box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.06), 0px 4px 4px -1px rgba(0, 0, 0, 0.02);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   font-weight: 500;
 }
 

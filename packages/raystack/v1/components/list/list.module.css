@@ -17,7 +17,7 @@
 }
 
 .header-text {
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.5px;
@@ -36,7 +36,7 @@
 
 
 .label {
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.5px;
@@ -48,7 +48,7 @@
 
 .value {
   flex: 1;
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   font-weight: 500;
   line-height: 16px;
   letter-spacing: 0.5px;

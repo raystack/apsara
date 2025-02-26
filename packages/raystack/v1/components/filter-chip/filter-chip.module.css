@@ -89,7 +89,7 @@
 
 .value {
   color: var(--rs-color-foreground-base-primary);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

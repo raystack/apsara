@@ -27,7 +27,7 @@
 
 .textfield::placeholder {
   color: var(--foreground-subtle);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
 }
 
 .textfield:disabled {
@@ -42,13 +42,13 @@
 
 .textfield-sm {
   border-radius: var(--br-4);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   padding: var(--pd-4) var(--pd-8);
 }
 
 .textfield-md {
   border-radius: var(--br-4);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   padding: var(--pd-8);
 }
 

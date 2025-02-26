@@ -1,7 +1,7 @@
 .content {
   overflow: hidden;
   z-index: 50;
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   line-height: 16px;
 
   box-sizing: border-box;
@@ -57,7 +57,7 @@
 
   color: var(--foreground-base);
   background-color: var(--background-base);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
 
   line-height: 16px;
   border-radius: var(--br-4);
@@ -91,7 +91,7 @@
 
 .trigger::placeholder {
   color: var(--foreground-subtle);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   line-height: 16px;
 }
 
