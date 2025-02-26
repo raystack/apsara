@@ -3,7 +3,28 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Separator, List, Label, Tabs, FilterChip, Search, Headline } from "@raystack/apsara/v1";
+import {
+  toast,
+  ToastContainer,
+  Avatar,
+  AvatarGroup,
+  Button,
+  Spinner,
+  DropdownMenu,
+  Breadcrumb,
+  Chip,
+  Flex,
+  Text,
+  Checkbox,
+  InputField,
+  Badge,
+  Radio,
+  Tabs,
+  FilterChip,
+  Search,
+  Headline,
+  Dialog
+} from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
@@ -103,6 +124,7 @@ export const Assets = () => {
     from: new Date(),
     to: new Date(),
   });
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -210,54 +232,70 @@ export const Assets = () => {
   }, []);
 
   return (
-    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
-      <Flex direction="column" gap="large" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-          <Title>Label Example</Title>
-          <Flex direction="column" gap="medium">
-            <Label size="small" htmlFor="name">Small Label</Label>
-            <Label size="medium" htmlFor="email" required>Required Medium Label</Label>
-            <Label 
-              size="large" 
-              htmlFor="description" 
-              required 
-              requiredIndicator=" (Required)"
+    <div style={{ width: "100%" }}>
+      <Flex direction="column" style={{ width: "100%" }}>
+        <Flex direction="column" style={{ width: "100%" }}>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog.Trigger asChild>
+              <Button variant="solid">Create User</Button>
+            </Dialog.Trigger>
+            <Dialog.Content 
             >
-              Custom Required Large Label
-            </Label>
-          </Flex>
-
-          <Title>Toggle Group Example</Title>
+              <Flex direction="column">
+                Create New User
+                <Dialog.Description>
+                  Fill in the details below to create a new user.
+                </Dialog.Description>
+                <Flex gap="small" justify="end">
+                  <Dialog.Close />
+                  <Button 
+                    variant="solid"
+                    onClick={() => {
+                      toast.success("Asset created successfully");
+                      setDialogOpen(false);
+                    }}
+                  >
+                    Create
+                  </Button>
+                </Flex>
+              </Flex>
+              
+            </Dialog.Content>
+          </Dialog>
           <Flex direction="column" gap="medium">
-            <Title>Solid Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent">solid-accent</Button>
-              <Button variant="solid" color="danger">solid-danger</Button>
-              <Button variant="solid" color="neutral">solid-neutral</Button>
-              <Button variant="solid" color="success">solid-success</Button>
-            </Flex>
+            <Headline size="large" as="h1">
+              Large Headline (h1)
+            </Headline>
 
-            <Title>Outline Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="outline" color="accent">outline-accent</Button>
-              <Button variant="outline" color="danger">outline-danger</Button>
-              <Button variant="outline" color="neutral">outline-neutral</Button>
-              <Button variant="outline" color="success">outline-success</Button>
-            </Flex>
+            <Headline size="medium">
+              Medium Headline (h2 default)
+            </Headline>
 
-            <Title>Ghost & Text Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="ghost">ghost</Button>
-              <Button variant="text">text</Button>
-            </Flex>
+            <Headline size="small" as="h3">
+              Small Headline (h3)
+            </Headline>
 
-            <Title>Loading State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" loading>Loading</Button>
-              <Button variant="outline" color="accent" loading>Loading</Button>
-              <Button variant="ghost" loading>Loading</Button>
-              <Button variant="text" loading>Loading</Button>
-            </Flex>
+            <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
+              Custom Styled Headline (h4)
+            </Headline>
+          </Flex>
+          {/* <Flex align="center" wrap="wrap" gap="medium">
+            {activeFilters.map((filter, index) => (
+              <FilterChip
+                key={`filter-${index}`}
+                label={filter.label}
+                value={filter.value}
+                columnType="select"
+                options={[
+                  { label: "Option 1", value: "option1" },
+                  { label: "Option 2", value: "option2" }
+                ]}
+                onValueChange={(value) => handleFilterChange({ ...filter, value })}
+                onOperationChange={handleOperationChange}
+                onRemove={() => console.log(`Removing ${filter.label} filter`)}
+              />
+            ))}
+          </Flex> */}
 
             <Title>Disabled State</Title>
             <Flex gap="small" wrap="wrap">
@@ -311,7 +349,8 @@ export const Assets = () => {
               </DataTable.Footer>
             </DataTable>
           </div>
-      </Flex>
+        {/* </Flex> */}
+      {/* // </Flex> */}
       <ToastContainer />
     </div>
   );

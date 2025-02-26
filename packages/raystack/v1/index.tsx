@@ -12,6 +12,7 @@ export { Container } from "./components/container";
 export { Command } from "./components/command";
 export { Checkbox } from "./components/checkbox";
 export { Chip } from "./components/chip";
+export { Dialog } from "./components/dialog";
 export { DropdownMenu } from "./components/dropdown-menu";
 export { EmptyState } from "./components/empty-state";
 export { Flex } from "./components/flex";
