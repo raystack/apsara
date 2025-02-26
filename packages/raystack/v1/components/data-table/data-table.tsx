@@ -1,17 +1,24 @@
 import { useMemo, useState } from "react";
 import { TableContext } from "./context";
 import {
+  DataTableColumnDef,
   DataTableProps,
   DataTableState,
   TableContextType,
 } from "./data-table.types";
 import {
+  ColumnFiltersState,
   VisibilityState,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { dataTableStateToReactTableState, defaultGroupOption } from "./utils";
+import {
+  dataTableStateToReactTableState,
+  defaultGroupOption,
+  getColumnsWithFilterFn,
+} from "./utils";
 import { Content } from "./components/content";
 import { Toolbar } from "./components/toolbar";
 
@@ -61,11 +68,17 @@ function DataTableRoot<TData, TValue>({
     [loadingRowCount]
   );
 
+  const columnsWithFilters = useMemo(
+    () => getColumnsWithFilterFn<TData, TValue>(columns, tableState.filters),
+    [columns, tableState.filters]
+  );
+
   const table = useReactTable({
     data: isLoading ? loaderData : data,
-    columns,
+    columns: columnsWithFilters,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getSortedRowModel: mode === "server" ? undefined : getSortedRowModel(),
+    getFilteredRowModel: mode === "server" ? undefined : getFilteredRowModel(),
     manualSorting: mode === "server",
     manualFiltering: mode === "server",
     onColumnVisibilityChange: setColumnVisibility,

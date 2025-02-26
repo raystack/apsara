@@ -24,7 +24,7 @@ export interface FilterValue {
 export type FilterOperation = {
   value: string;
   label: string;
-  fn: FilterFn<FilterValue>;
+  fn: FilterFn<any>;
 };
 
 type FilterOperationsMap = {

@@ -8,7 +8,7 @@ export const SortOrders = {
   DESC: "desc",
 } as const;
 
-interface Filter {
+export interface DataTableFilter {
   name: string;
   operator: string;
   value: any;
@@ -23,13 +23,15 @@ export interface Sort {
 }
 
 export interface DataTableState {
-  filters?: Filter[];
+  filters?: DataTableFilter[];
   sort?: Sort[];
   group_by?: string[];
   offset?: number;
   limit?: number;
   search?: string;
 }
+
+// TODO: create DataTableColumn type
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string;
