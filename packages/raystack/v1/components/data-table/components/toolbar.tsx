@@ -7,7 +7,7 @@ import { DisplaySettings } from "./display-settings";
 import { DropdownMenu } from "../../dropdown-menu";
 import { useDataTable } from "../hooks/useDataTable";
 import { FilterChip } from "../../filter-chip";
-import { ColumnData, DataTableColumnDef, Filter } from "../data-table.types";
+import { ColumnData, DataTableColumnDef } from "../data-table.types";
 import { IconButton } from "../../icon-button";
 
 interface AddFilterProps {
@@ -108,6 +108,7 @@ function Filters<TData, TValue>() {
             key={filter.name}
             label={filter.label}
             onRemove={() => handleRemoveFilter(filter.name)}
+            columnType={filter.columnType}
           />
         ))}
       </Flex>
