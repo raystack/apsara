@@ -36,6 +36,8 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   columnType?: FilterTypes;
   enableColumnFilter?: boolean;
   enableSorting?: boolean;
+  hidden?: boolean;
+  enableHiding?: boolean;
 };
 
 export interface DataTableProps<TData, TValue> {
