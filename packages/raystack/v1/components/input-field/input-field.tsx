@@ -5,7 +5,7 @@ import { ComponentPropsWithoutRef, ReactNode } from "react";
 import { Chip } from "../chip";
 import styles from "./input-field.module.css";
 
-// Todo: Add a dropdown and chip support
+// Todo: Add a dropdown support
 
 const inputWrapper = cva(styles.inputWrapper, {
   variants: {

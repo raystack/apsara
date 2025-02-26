@@ -9,9 +9,12 @@
   right: calc(-1 * var(--rs-space-2));
   z-index: 99999;
   border-radius: var(--rs-radius-full);
-  font-size: 11px;
-  line-height: 1;
   white-space: nowrap;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-micro);
+  line-height: var(--rs-line-height-micro);
+  letter-spacing: var(--rs-letter-spacing-micro);
 }
 
 .label {
