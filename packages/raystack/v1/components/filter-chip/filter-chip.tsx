@@ -7,7 +7,13 @@ import { Text } from "../text";
 import { TextField } from "../textfield";
 import { DatePicker, RangePicker } from "../calendar";
 import styles from "./filter-chip.module.css";
-import { FilterType, FilterTypes } from "~/v1/types/filters";
+import {
+  FilterSelectOption,
+  FilterOperation,
+  FilterType,
+  FilterTypes,
+  filterOperationsMap,
+} from "~/v1/types/filters";
 
 export interface FilterChipProps {
   label: string;
@@ -17,11 +23,61 @@ export interface FilterChipProps {
   ref?: React.RefObject<HTMLDivElement>;
   children?: ReactNode;
   columnType?: FilterTypes;
-  options?: Array<{ label: string; value: string }>;
+  options?: FilterSelectOption[];
   onValueChange?: (value: any) => void;
   onOperationChange?: (operation: string) => void;
   leadingIcon?: ReactElement;
 }
+
+interface OperationProps {
+  label: string;
+  columnType: FilterTypes;
+  onOperationSelect: (op: FilterOperation) => void;
+}
+
+const Operation = ({
+  label,
+  columnType = FilterType.text,
+  onOperationSelect,
+}: OperationProps) => {
+  const options = filterOperationsMap[columnType] || [];
+  const [value, setValue] = useState(options?.[0]?.value);
+
+  useEffect(() => {
+    const selectedOption = options.find((o) => o.value === value);
+    if (selectedOption) {
+      onOperationSelect(selectedOption);
+    }
+  }, [value]);
+
+  return (
+    <Select
+      value={value}
+      onValueChange={setValue}
+      aria-labelledby={`${label}-label`}
+    >
+      <Select.Trigger
+        className={styles.operation}
+        aria-label={`${label} filter operation`}
+      >
+        <Select.Value placeholder="Select operation" />
+      </Select.Trigger>
+      <Select.Content data-variant="filter">
+        {options.map((opt) => {
+          return (
+            <Select.Item
+              key={opt.value}
+              value={opt.value}
+              aria-label={`Filter ${label} ${opt.label}`}
+            >
+              {opt.label}
+            </Select.Item>
+          );
+        })}
+      </Select.Content>
+    </Select>
+  );
+};
 
 export const FilterChip = ({
   label,
@@ -36,20 +92,14 @@ export const FilterChip = ({
   leadingIcon,
   ...props
 }: FilterChipProps) => {
-  const [operation, setOperation] = useState("is");
+  const [operation, setOperation] = useState<FilterOperation>();
   const [filterValue, setFilterValue] = useState<any>(value || "");
 
-  const operationOptions = [
-    { label: "is", value: "is" },
-    { label: "is not", value: "is not" },
-    { label: "contains", value: "contains" },
-  ];
-
   useEffect(() => {
-    if (onOperationChange) {
-      onOperationChange(operation);
+    if (onOperationChange && operation?.value) {
+      onOperationChange(operation?.value);
     }
-  }, [operation]);
+  }, [operation?.value]);
 
   useEffect(() => {
     if (onValueChange) {
@@ -118,30 +168,11 @@ export const FilterChip = ({
             {label}
           </Text>
         </Flex>
-        <Select
-          defaultValue={operation}
-          onValueChange={setOperation}
-          aria-labelledby={`${label}-label`}
-        >
-          <Select.Trigger
-            className={styles.operation}
-            variant="filter"
-            aria-label={`${label} filter operation`}
-          >
-            <span className={styles.operationText}>{operation}</span>
-          </Select.Trigger>
-          <Select.Content data-variant="filter">
-            {operationOptions.map((opt) => (
-              <Select.Item
-                key={opt.value}
-                value={opt.value}
-                aria-label={`Filter ${label} ${opt.label}`}
-              >
-                {opt.label}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select>
+        <Operation
+          columnType={columnType}
+          label={label}
+          onOperationSelect={setOperation}
+        />
         {renderValueInput()}
         <div
           className={styles.removeIconContainer}

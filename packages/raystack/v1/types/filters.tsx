@@ -5,7 +5,7 @@ export const FilterType = {
   select: "select",
 } as const;
 
-type FilterOperation = {
+export type FilterOperation = {
   value: string;
   label: string;
 };
@@ -19,9 +19,9 @@ export const filterOperationsMap: FilterOperationsMap = {
     { value: "eq", label: "is" },
     { value: "neq", label: "is Not" },
     { value: "lt", label: "Less Than" },
+    { value: "lte", label: "Less Than or Equal" },
     { value: "gt", label: "Greater Than" },
     { value: "gte", label: "Greater Than or Equal" },
-    { value: "lte", label: "Less Than or Equal" },
   ],
   text: [
     { value: "eq", label: "is" },
@@ -31,10 +31,10 @@ export const filterOperationsMap: FilterOperationsMap = {
   datetime: [
     { value: "eq", label: "is" },
     { value: "neq", label: "is Not" },
-    { value: "gt", label: "is After" },
-    { value: "gte", label: "is On or After" },
     { value: "lt", label: "is Before" },
     { value: "lte", label: "is On or Before" },
+    { value: "gt", label: "is After" },
+    { value: "gte", label: "is On or After" },
   ],
   select: [
     { value: "eq", label: "is" },
@@ -49,3 +49,8 @@ export type Filter = {
   filterOperation: string;
   value: string;
 };
+
+export interface FilterSelectOption {
+  value: any;
+  label: string;
+}
