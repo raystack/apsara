@@ -8,6 +8,7 @@ import {
 import {
   VisibilityState,
   getCoreRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import { dataTableStateToReactTableState, defaultGroupOption } from "./utils";
@@ -34,7 +35,10 @@ function DataTableRoot<TData, TValue>({
     group_by: [defaultGroupOption.id],
   });
 
-  const reactTableState = dataTableStateToReactTableState(tableState);
+  const reactTableState = useMemo(
+    () => dataTableStateToReactTableState(tableState),
+    [tableState]
+  );
 
   const loaderData = useMemo(
     () =>
@@ -51,10 +55,10 @@ function DataTableRoot<TData, TValue>({
     data: isLoading ? loaderData : data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     manualSorting: mode === "server",
     manualFiltering: mode === "server",
     onColumnVisibilityChange: setColumnVisibility,
-
     state: { ...reactTableState, columnVisibility: columnVisibility },
   });
 
