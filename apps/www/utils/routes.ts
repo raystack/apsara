@@ -64,7 +64,7 @@ export const primitivesRoutes = [
         newBadge: true,
       },
       { title: "Datatable", slug: "docs/primitives/components/datatable" },
-      { title: "Dialog", slug: "docs/primitives/components/dialog" },
+      { title: "Dialog", slug: "docs/primitives/components/dialog", newBadge: true },
       {
         title: "Dropdown Menu",
         slug: "docs/primitives/components/dropdownmenu",

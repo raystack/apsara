@@ -10,12 +10,21 @@ import {
 
 import styles from "./dialog.module.css";
 
+/*
+ *  @deprecated Use Dialog from @raystack/apsara/v1 instead.
+ */
 const dialogContent = cva(styles.dialogContent);
 
+/*
+ *  @deprecated Use Dialog from @raystack/apsara/v1 instead.
+ */
 export interface DialogContentProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof dialogContent> {}
 
+/*
+ *  @deprecated Use Dialog from @raystack/apsara/v1 instead.
+ */
 export const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps & {
@@ -57,6 +66,10 @@ const overlay = cva(styles.overlay, {
     },
   },
 });
+
+/*
+ *  @deprecated Use Dialog from @raystack/apsara/v1 instead.
+ */
 export interface OverlayProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
     VariantProps<typeof overlay> {}
@@ -76,6 +89,10 @@ Overlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const close = cva(styles.close);
 type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
+
+/*
+ *  @deprecated Use Dialog from @raystack/apsara/v1 instead.
+ */
 export function CloseButton({
   children,
   className,
@@ -88,6 +105,9 @@ export function CloseButton({
   );
 }
 
+/*
+ *  @deprecated Use Dialog from @raystack/apsara/v1 instead.
+ */
 export const Dialog = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
