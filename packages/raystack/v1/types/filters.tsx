@@ -1,3 +1,12 @@
+import type { FilterFn } from "@tanstack/table-core";
+
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+
 export const FilterType = {
   number: "number",
   text: "text",
@@ -5,9 +14,17 @@ export const FilterType = {
   select: "select",
 } as const;
 
+export interface FilterValue {
+  value?: string | number | boolean;
+  // values?: Array<string | number>;
+  date?: Date;
+  // dateRange?: DateRange;
+}
+
 export type FilterOperation = {
   value: string;
   label: string;
+  fn: FilterFn<FilterValue>;
 };
 
 type FilterOperationsMap = {
@@ -16,29 +33,151 @@ type FilterOperationsMap = {
 
 export const filterOperationsMap: FilterOperationsMap = {
   number: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is Not" },
-    { value: "lt", label: "Less Than" },
-    { value: "lte", label: "Less Than or Equal" },
-    { value: "gt", label: "Greater Than" },
-    { value: "gte", label: "Greater Than or Equal" },
+    {
+      value: "eq",
+      label: "is",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) === Number(filterValue.value);
+      },
+    },
+    {
+      value: "neq",
+      label: "is not",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) !== Number(filterValue.value);
+      },
+    },
+    {
+      value: "lt",
+      label: "less than",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) < Number(filterValue.value);
+      },
+    },
+    {
+      value: "lte",
+      label: "less than or equal",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) <= Number(filterValue.value);
+      },
+    },
+    {
+      value: "gt",
+      label: "greater than",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) > Number(filterValue.value);
+      },
+    },
+    {
+      value: "gte",
+      label: "greater than or equal",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return Number(row.getValue(columnId)) >= Number(filterValue.value);
+      },
+    },
   ],
   text: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is Not" },
-    { value: "like", label: "Contains" },
+    {
+      value: "eq",
+      label: "is",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return String(row.getValue(columnId)) === String(filterValue.value);
+      },
+    },
+    {
+      value: "neq",
+      label: "is not",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return String(row.getValue(columnId)) !== String(filterValue.value);
+      },
+    },
+    {
+      value: "like",
+      label: "contains",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        const columnValue = (row.getValue(columnId) as string).toLowerCase();
+        const filterStr = (filterValue.value as string).toLowerCase();
+        return columnValue.includes(filterStr);
+      },
+    },
   ],
   datetime: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is Not" },
-    { value: "lt", label: "is Before" },
-    { value: "lte", label: "is On or Before" },
-    { value: "gt", label: "is After" },
-    { value: "gte", label: "is On or After" },
+    {
+      value: "eq",
+      label: "is",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isSame(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      value: "neq",
+      label: "is not",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return !dayjs(row.getValue(columnId)).isSame(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      value: "lt",
+      label: "is before",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isBefore(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      value: "lte",
+      label: "is on or before",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isSameOrBefore(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      value: "gt",
+      label: "is after",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isAfter(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
+    {
+      value: "gte",
+      label: "is on or after",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return dayjs(row.getValue(columnId)).isSameOrAfter(
+          dayjs(filterValue.date),
+          "day"
+        );
+      },
+    },
   ],
   select: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is Not" },
+    {
+      value: "eq",
+      label: "is",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return row.getValue(columnId) === filterValue.value;
+      },
+    },
+    {
+      value: "neq",
+      label: "is not",
+      fn: (row, columnId, filterValue: FilterValue) => {
+        return row.getValue(columnId) !== filterValue.value;
+      },
+    },
   ],
 } as const;
 
