@@ -9,14 +9,14 @@ description: A compact element for representing an input, attribute, or action.
   <Flex direction="row" gap="medium">
     <Chip variant="outline">Default</Chip>
 
-    <Chip variant="filled" size="small" style="accent">Accent</Chip>
+    <Chip variant="filled" size="small" color="accent">Accent</Chip>
 
     <Chip variant="outline" size="small" leadingIcon={"O"}>With Icon</Chip>
 
     <Chip
       variant="filled"
       size="small"
-      style="accent"
+      color="accent"
       isDismissible
       onDismiss={() => alert("Dismiss clicked")}
     >Dismissible</Chip>
@@ -48,7 +48,7 @@ The `Chip` component accepts the following props:
 
 - `variant`: Visual style variant (`"outline"` | `"filled"`, default: "outline")
 - `size`: Size of the chip (`"small"` | `"large"`, default: "small")
-- `style`: Color style (`"neutral"` | `"accent"`, default: "neutral")
+- `color`: Color color (`"neutral"` | `"accent"`, default: "neutral")
 - `leadingIcon`: ReactNode to display as an icon before the label
 - `trailingIcon`: ReactNode to display as an icon after the label
 - `isDismissible`: Boolean to show a dismiss button (replaces trailingIcon)
@@ -57,7 +57,6 @@ The `Chip` component accepts the following props:
 - `className`: Additional CSS class names
 - `role`: ARIA role for the chip (default: "status")
 - `ariaLabel`: Custom accessibility label for the chip
-
 
 ## Variants
 
@@ -71,7 +70,7 @@ Choose between outline and filled variants to match your design needs.
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip variant="outline">Default</Chip>
-        <Chip variant="outline" style="accent">Accent</Chip>
+        <Chip variant="outline" color="accent">Accent</Chip>
         <Chip variant="outline" leadingIcon={'O'}>With Icon</Chip>
         <Chip variant="outline" isDismissible>Dismissible</Chip>
       </div>`,
@@ -81,7 +80,7 @@ Choose between outline and filled variants to match your design needs.
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip variant="filled">Default</Chip>
-        <Chip variant="filled" style="accent">Accent</Chip>
+        <Chip variant="filled" color="accent">Accent</Chip>
         <Chip variant="filled" leadingIcon={'O'}>With Icon</Chip>
         <Chip variant="filled" isDismissible>Dismissible</Chip>
       </div>`,
@@ -92,6 +91,7 @@ Choose between outline and filled variants to match your design needs.
 ## Sizes
 
 The Chip component comes in two sizes:
+
 - `small`: Compact size with less padding
 - `large`: More spacious with increased padding
 
@@ -132,20 +132,20 @@ Choose between neutral and accent styles to control the visual emphasis.
       name: "Neutral",
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
-        <Chip style="neutral" variant="outline">Outline</Chip>
-        <Chip style="neutral" variant="filled">Filled</Chip>
-        <Chip style="neutral" leadingIcon={'O'}>With Icon</Chip>
-        <Chip style="neutral" isDismissible>Dismissible</Chip>
+        <Chip color="neutral" variant="outline">Outline</Chip>
+        <Chip color="neutral" variant="filled">Filled</Chip>
+        <Chip color="neutral" leadingIcon={'O'}>With Icon</Chip>
+        <Chip color="neutral" isDismissible>Dismissible</Chip>
       </div>`,
     },
     {
       name: "Accent",
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
-        <Chip style="accent" variant="outline">Outline</Chip>
-        <Chip style="accent" variant="filled">Filled</Chip>
-        <Chip style="accent" leadingIcon={'O'}>With Icon</Chip>
-        <Chip style="accent" isDismissible>Dismissible</Chip>
+        <Chip color="accent" variant="outline">Outline</Chip>
+        <Chip color="accent" variant="filled">Filled</Chip>
+        <Chip color="accent" leadingIcon={'O'}>With Icon</Chip>
+        <Chip color="accent" isDismissible>Dismissible</Chip>
       </div>`,
     },
   ]}
@@ -209,7 +209,7 @@ Chips can be made dismissible by adding the isDismissible prop and an onDismiss 
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip 
           variant="outline" 
-          style="accent" 
+          color="accent" 
           isDismissible 
           onDismiss={() => console.log('dismissed')}
         >
@@ -217,7 +217,7 @@ Chips can be made dismissible by adding the isDismissible prop and an onDismiss 
         </Chip>
         <Chip 
           variant="filled" 
-          style="accent" 
+          color="accent" 
           isDismissible 
           onDismiss={() => console.log('dismissed')}
         >
@@ -227,7 +227,6 @@ Chips can be made dismissible by adding the isDismissible prop and an onDismiss 
     },
   ]}
 />
-
 
 ## Accessibility
 

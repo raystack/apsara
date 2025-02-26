@@ -1,5 +1,5 @@
-import { cva, type VariantProps } from "class-variance-authority";
 import { ReactNode } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 
 import styles from "./chip.module.css";
 
@@ -13,15 +13,15 @@ const chip = cva(styles.chip, {
       large: styles["chip-size-large"],
       small: styles["chip-size-small"],
     },
-    style: {
-      neutral: styles["chip-style-neutral"],
-      accent: styles["chip-style-accent"],
+    color: {
+      neutral: styles["chip-color-neutral"],
+      accent: styles["chip-color-accent"],
     },
   },
   defaultVariants: {
     variant: "outline",
     size: "small",
-    style: "neutral"
+    color: "neutral"
   },
 });
 
@@ -39,7 +39,7 @@ type ChipProps = VariantProps<typeof chip> & {
 export const Chip = ({ 
   variant,
   size,
-  style,
+  color,
   trailingIcon,
   leadingIcon,
   isDismissible,
@@ -56,7 +56,7 @@ export const Chip = ({
 
   return (
     <span 
-      className={chip({ variant, size, style, className })}
+      className={chip({ variant, size, color, className })}
       role={role}
       aria-label={ariaLabel || (typeof children === 'string' ? children : undefined)}
     >

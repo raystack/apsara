@@ -11,6 +11,7 @@ export { Callout } from "./components/callout";
 export { Container } from "./components/container";
 export { Checkbox } from "./components/checkbox";
 export { Chip } from "./components/chip";
+export { Dialog } from "./components/dialog";
 export { DropdownMenu } from "./components/dropdown-menu";
 export { EmptyState } from "./components/empty-state";
 export { Flex } from "./components/flex";

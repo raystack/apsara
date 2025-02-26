@@ -3,7 +3,30 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Separator, List, Label, Tabs, FilterChip, Search, Headline, Sheet } from "@raystack/apsara/v1";
+
+import {
+  toast,
+  ToastContainer,
+  Avatar,
+  AvatarGroup,
+  Button,
+  Spinner,
+  DropdownMenu,
+  Breadcrumb,
+  Chip,
+  Flex,
+  Text,
+  Checkbox,
+  InputField,
+  Badge,
+  Radio,
+  Tabs,
+  FilterChip,
+  Search,
+  Headline,
+  Dialog,
+  Sheet
+} from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
@@ -104,6 +127,7 @@ export const Assets = () => {
     to: new Date(),
   });
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -281,40 +305,38 @@ export const Assets = () => {
               onValueChange={(value) => console.log(value)}
               onOperationChange={(operation) => console.log(operation)}
             />
-
-            <FilterChip
-              label="Priority"
-              leadingIcon={<CheckIcon />}
-              columnType="select"
-              onRemove={() => console.log("Removing filter")}
-              options={[
-                { label: "High", value: "high" },
-                { label: "Medium", value: "medium" },
-                { label: "Low", value: "low" },
-              ]}
-              onValueChange={(value) => console.log(value)}
-              onOperationChange={(operation) => console.log(operation)}
-            />
-            <div style={{ width: "100%" }}>
-              <DataTable
-                columns={columns}
-                data={data}
-                initialState={{ sorting: [{ id: "amount", desc: true }] }}
-                isLoading={isLoading}
-                onLoadMore={loadMoreData}
-              >
-                <DataTable.Toolbar>
-                  <AssetsHeader />
-                  <DataTable.FilterChips />
-                </DataTable.Toolbar>
-                <DataTable.Footer>
-                  <></>
-                </DataTable.Footer>
-              </DataTable>
-            </div>
-          </Flex>
-        </Flex>
-      </Flex>
+          <FilterChip
+            label="Priority"
+            leadingIcon={<CheckIcon />}
+            columnType="select"
+            onRemove={() => console.log("Removing filter")}
+            options={[
+              { label: "High", value: "high" },
+              { label: "Medium", value: "medium" },
+              { label: "Low", value: "low" },
+            ]}
+            onValueChange={(value) => console.log(value)}
+            onOperationChange={(operation) => console.log(operation)}
+          />
+          <div style={{ width: "100%" }}>
+            <DataTable
+              columns={columns}
+              data={data}
+              initialState={{ sorting: [{ id: "amount", desc: true }] }}
+              isLoading={isLoading}
+              onLoadMore={loadMoreData}
+            >
+              <DataTable.Toolbar>
+                <AssetsHeader />
+                <DataTable.FilterChips />
+              </DataTable.Toolbar>
+              <DataTable.Footer>
+                <></>
+              </DataTable.Footer>
+            </DataTable>
+          </div>
+        {/* </Flex> */}
+      {/* // </Flex> */}
       <ToastContainer />
     </div>
   );
