@@ -24,11 +24,13 @@ function DataTableRoot<TData, TValue>({
   defaultSort,
   children,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    columns?.reduce((acc, col) => {
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const initialColumnVisibility = useMemo(() => {
+    return columns?.reduce((acc, col) => {
       return { ...acc, [col.accessorKey]: col.defaultVisibility ?? true };
-    }, {})
-  );
+    }, {});
+  }, [columns]);
 
   const [tableState, setTableState] = useState<DataTableState>({
     sort: [defaultSort],
@@ -59,6 +61,9 @@ function DataTableRoot<TData, TValue>({
     manualSorting: mode === "server",
     manualFiltering: mode === "server",
     onColumnVisibilityChange: setColumnVisibility,
+    initialState: {
+      columnVisibility: initialColumnVisibility,
+    },
     state: { ...reactTableState, columnVisibility: columnVisibility },
   });
 
