@@ -335,9 +335,10 @@ export const Assets = () => {
               </DataTable.Footer>
             </DataTable>
           </div>
-        {/* </Flex> */}
-      {/* // </Flex> */}
+        </Flex>
+      </Flex>
       <ToastContainer />
+      </Flex>
     </div>
   );
 };
