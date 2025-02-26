@@ -57,10 +57,14 @@ const Operation = ({
       aria-labelledby={`${label}-label`}
     >
       <Select.Trigger
+        variant="filter"
         className={styles.operation}
         aria-label={`${label} filter operation`}
       >
-        <Select.Value placeholder="Select operation" />
+        <Select.Value
+          placeholder="Select operation"
+          className={styles.operationText}
+        />
       </Select.Trigger>
       <Select.Content data-variant="filter">
         {options.map((opt) => {
