@@ -1,5 +1,5 @@
-import { ColumnDef, Table } from "@tanstack/table-core";
-import { FilterTypes } from "~/v1/types/filters";
+import type { Column, ColumnDef, Table } from "@tanstack/table-core";
+import type { FilterTypes } from "~/v1/types/filters";
 
 export type DataTableMode = "client" | "server";
 
@@ -7,6 +7,12 @@ export const SortOrders = {
   ASC: "asc",
   DESC: "desc",
 } as const;
+
+export interface RQLFilter {
+  name: string;
+  operator: string;
+  value: any;
+}
 
 export interface DataTableFilter {
   name: string;
@@ -23,7 +29,7 @@ export interface Sort {
 }
 
 export interface DataTableState {
-  filters?: DataTableFilter[];
+  filters?: RQLFilter[];
   sort?: Sort[];
   group_by?: string[];
   offset?: number;
@@ -31,7 +37,12 @@ export interface DataTableState {
   search?: string;
 }
 
-// TODO: create DataTableColumn type
+export type DataTableColumn<TData, TValue> = Omit<
+  Column<TData, TValue>,
+  "columnDef"
+> & {
+  columnDef: DataTableColumnDef<TData, TValue>;
+};
 
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string;

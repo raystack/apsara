@@ -1,12 +1,12 @@
-import { Column } from "@tanstack/table-core";
 import { Chip } from "../../chip";
 import { Flex } from "../../flex";
 import { Text } from "../../text";
+import { DataTableColumn } from "../data-table.types";
 
 export function DisplayProperties<TData, TValue>({
   columns,
 }: {
-  columns: Column<TData, TValue>[];
+  columns: DataTableColumn<TData, TValue>[];
 }) {
   const hidableColumns = columns?.filter((col) => col.columnDef.enableHiding);
 
