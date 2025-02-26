@@ -1,6 +1,7 @@
+import React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
+import clsx from "clsx";
 
 import { Text } from "../text";
 import styles from "./tooltip.module.css";
@@ -27,7 +28,13 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   disabled?: boolean;
   children: React.ReactNode;
   message: React.ReactNode;
-  className?: string;
+  classNames?: {
+    trigger?: string;
+    content?: string;
+    arrow?: string;
+  };
+  style?: React.CSSProperties;
+  contentStyle?: React.CSSProperties;
   delayDuration?: number;
   skipDelayDuration?: number;
   'aria-label'?: string;
@@ -39,7 +46,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
   message,
   disabled,
   side = "top",
-  className,
+  classNames,
+  style,
+  contentStyle,
   delayDuration = 200,
   skipDelayDuration = 200,
   'aria-label': ariaLabel,
@@ -50,7 +59,12 @@ export const Tooltip: React.FC<TooltipProps> = ({
   ) : (
     <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
       <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger aria-describedby="tooltip" asChild={asChild}>
+        <TooltipPrimitive.Trigger 
+          aria-describedby="tooltip" 
+          asChild={asChild}
+          className={classNames?.trigger}
+          style={style}
+        >
           {children}
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
@@ -61,14 +75,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
             side={side?.split('-')[0] as TooltipPrimitive.TooltipContentProps['side'] || 'top'}
             align={(side?.includes('-') ? (side.split('-')[1] === 'left' ? 'start' : 'end') : 'center') satisfies 'start' | 'end' | 'center'}
             sideOffset={4}
-            className={tooltip({ side, className })}
+            className={tooltip({ side, className: classNames?.content })}
+            style={contentStyle}
           >
             {typeof message === "string" ? (
               <Text>{message}</Text>
             ) : (
               message
             )}
-            <TooltipPrimitive.Arrow className={styles.arrow} width={12} height={6} />
+            <TooltipPrimitive.Arrow className={clsx(styles.arrow, classNames?.arrow)} width={12} height={6} />
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>

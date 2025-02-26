@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
+
 import {
   toast,
   ToastContainer,
@@ -24,7 +25,8 @@ import {
   Search,
   Headline,
   Dialog,
-  RangePicker
+  RangePicker,
+  Sheet
 } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
@@ -125,6 +127,7 @@ export const Assets = () => {
     from: new Date(),
     to: new Date(),
   });
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const activeFilters = [
@@ -258,85 +261,73 @@ export const Assets = () => {
               <Button variant="solid">Create User</Button>
             </Dialog.Trigger>
             <Dialog.Content 
+          <Button variant="outline" onClick={() => setSheetOpen(true)}>
+            View Details
+          </Button>
+
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <Sheet.Content 
+              side="left" 
+              close 
             >
-              <Flex direction="column">
-                Create New User
-                <Dialog.Description>
-                  Fill in the details below to create a new user.
-                </Dialog.Description>
-                <Flex gap="small" justify="end">
-                  <Dialog.Close />
-                  <Button 
-                    variant="solid"
-                    onClick={() => {
-                      toast.success("Asset created successfully");
-                      setDialogOpen(false);
-                    }}
-                  >
-                    Create
-                  </Button>
-                </Flex>
-              </Flex>
-              
-            </Dialog.Content>
-          </Dialog>
-          <Flex direction="column" gap="medium">
-            <Headline size="large" as="h1">
-              Large Headline (h1)
-            </Headline>
+                <Sheet.Title>
+                  <Headline size="medium">Asset Details</Headline>
+                </Sheet.Title>
+                
+                <Sheet.Description>
+                  <Text color="secondary">View and manage asset information</Text>
+                </Sheet.Description>
+            </Sheet.Content>
+          </Sheet>
+          <Flex direction="column" style={{ width: "100%" }}>
+            <Flex direction="column" gap="medium">
+              <Headline size="large" as="h1">
+                Large Headline (h1)
+              </Headline>
 
-            <Headline size="medium">
-              Medium Headline (h2 default)
-            </Headline>
+              <Headline size="medium">
+                Medium Headline (h2 default)
+              </Headline>
 
-            <Headline size="small" as="h3">
-              Small Headline (h3)
-            </Headline>
+              <Headline size="small" as="h3">
+                Small Headline (h3)
+              </Headline>
 
-            <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
-              Custom Styled Headline (h4)
-            </Headline>
-          </Flex>
-          {/* <Flex align="center" wrap="wrap" gap="medium">
-            {activeFilters.map((filter, index) => (
-              <FilterChip
-                key={`filter-${index}`}
-                label={filter.label}
-                value={filter.value}
-                columnType="select"
-                options={[
-                  { label: "Option 1", value: "option1" },
-                  { label: "Option 2", value: "option2" }
-                ]}
-                onValueChange={(value) => handleFilterChange({ ...filter, value })}
-                onOperationChange={handleOperationChange}
-                onRemove={() => console.log(`Removing ${filter.label} filter`)}
-              />
-            ))}
-          </Flex> */}
 
-            <Title>Disabled State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" disabled>Disabled</Button>
-              <Button variant="outline" color="accent" disabled>Disabled</Button>
-              <Button variant="ghost" disabled>Disabled</Button>
-              <Button variant="text" disabled>Disabled</Button>
+              <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
+                Custom Styled Headline (h4)
+              </Headline>
             </Flex>
-          </Flex>
-          </Flex>
-          <FilterChip
-            label="Status"
-            leadingIcon={<HomeIcon />}
-            columnType="select"
-            options={[
-              { label: "Pending", value: "pending" },
-              { label: "Success", value: "success" },
-            ]}
-            onRemove={() => console.log("Removing filter")}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
+            {/* <Flex align="center" wrap="wrap" gap="medium">
+              {activeFilters.map((filter, index) => (
+                <FilterChip
+                  key={`filter-${index}`}
+                  label={filter.label}
+                  value={filter.value}
+                  columnType="select"
+                  options={[
+                    { label: "Option 1", value: "option1" },
+                    { label: "Option 2", value: "option2" }
+                  ]}
+                  onValueChange={(value) => handleFilterChange({ ...filter, value })}
+                  onOperationChange={handleOperationChange}
+                  onRemove={() => console.log(`Removing ${filter.label} filter`)}
+                />
+              ))}
+            </Flex> */}
 
+            <FilterChip
+              label="Status"
+              leadingIcon={<HomeIcon />}
+              columnType="select"
+              options={[
+                { label: "Pending", value: "pending" },
+                { label: "Success", value: "success" },
+              ]}
+              onRemove={() => console.log("Removing filter")}
+              onValueChange={(value) => console.log(value)}
+              onOperationChange={(operation) => console.log(operation)}
+            />
           <FilterChip
             label="Priority"
             leadingIcon={<CheckIcon />}
@@ -367,9 +358,10 @@ export const Assets = () => {
               </DataTable.Footer>
             </DataTable>
           </div>
-        {/* </Flex> */}
-      {/* // </Flex> */}
+        </Flex>
+      </Flex>
       <ToastContainer />
+      </Flex>
     </div>
   );
 };

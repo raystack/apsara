@@ -10,6 +10,9 @@ export type ToggleGroupProps = ComponentPropsWithoutRef<
 > &
   VariantProps<typeof root>;
 
+/*
+ *  @deprecated Use Tabs from @raystack/apsara/v1 instead.
+ */
 export const ToggleGroupRoot = ({ className, ...props }: ToggleGroupProps) => {
   return (
     <ToggleGroupPrimitive.Root className={root({ className })} {...props} />
@@ -20,10 +23,16 @@ ToggleGroupRoot.defaultProps = { type: "single" };
 
 const item = cva(styles.item);
 
+/*
+ *  @deprecated Use Tabs from @raystack/apsara/v1 instead.
+ */
 export interface ToggleGroupItemProps
   extends ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item>,
     VariantProps<typeof item> {}
 
+/*
+ *  @deprecated Use Tabs from @raystack/apsara/v1 instead.
+ */
 export const ToggleGroupItem = ({
   className,
   ...props
@@ -33,6 +42,9 @@ export const ToggleGroupItem = ({
   );
 };
 
+/*
+ *  @deprecated Use Tabs from @raystack/apsara/v1 instead.
+ */
 export const ToggleGroup = Object.assign(ToggleGroupRoot, {
   Item: ToggleGroupItem,
 });

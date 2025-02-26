@@ -18,14 +18,22 @@ const iconButton = cva(styles.iconButton, {
 });
 
 export interface IconButtonProps
-  extends ComponentPropsWithoutRef<"button">,
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof iconButton> {
   size?: 1 | 2 | 3 | 4;
   'aria-label'?: string;
 }
 
 export const IconButton = forwardRef<ElementRef<"button">, IconButtonProps>(
-  ({ className, size, disabled, children, 'aria-label': ariaLabel, ...props }, ref) => (
+  ({ 
+    className, 
+    size, 
+    disabled, 
+    children, 
+    'aria-label': ariaLabel,
+    style,
+    ...props 
+  }, ref) => (
     <button
       ref={ref}
       className={iconButton({ size, className })}
@@ -33,6 +41,7 @@ export const IconButton = forwardRef<ElementRef<"button">, IconButtonProps>(
       type="button"
       aria-label={ariaLabel}
       aria-disabled={disabled}
+      style={style}
       {...props}
     >
       <div aria-hidden="true">

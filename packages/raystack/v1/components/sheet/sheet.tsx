@@ -19,7 +19,6 @@ const sheetContent = cva(styles.sheetContent, {
       right: styles["sheetContent-right"],
     },
   },
-
   defaultVariants: {
     side: "right",
   },
@@ -27,12 +26,15 @@ const sheetContent = cva(styles.sheetContent, {
 
 export interface DialogContentProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
-    VariantProps<typeof sheetContent> {}
+    VariantProps<typeof sheetContent> {
+  ariaLabel?: string;
+  ariaDescription?: string;
+}
 
 export const SheetContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps & { close?: boolean; children?: React.ReactNode }
->(({ className, children, close, side, ...props }, forwardedRef) => {
+>(({ className, children, close, side, ariaLabel, ariaDescription, ...props }, forwardedRef) => {
   return (
     <DialogPrimitive.Portal>
       <Overlay>
@@ -40,12 +42,21 @@ export const SheetContent = forwardRef<
           {...props}
           ref={forwardedRef}
           className={sheetContent({ side, className })}
+          aria-label={ariaLabel || "Sheet with overlay"}
+          aria-describedby={ariaDescription ? "sheet with overlay" : undefined}
+          role="dialog"
+          tabIndex={-1}
         >
           {children}
           {close && (
-            <CloseButton>
-              <Cross1Icon />
+            <CloseButton aria-label="Close sheet">
+              <Cross1Icon aria-hidden="true" />
             </CloseButton>
+          )}
+          {ariaDescription && (
+            <div id="sheet-description" className="sr-only">
+              {ariaDescription}
+            </div>
           )}
         </DialogPrimitive.Content>
       </Overlay>
@@ -54,10 +65,6 @@ export const SheetContent = forwardRef<
 });
 
 const overlay = cva(styles.overlay);
-
-/**
- * @deprecated Use Sheet props from @raystack/apsara/v1 instead.
- */
 export interface OverlayProps
   extends ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
     VariantProps<typeof overlay> {}
@@ -78,39 +85,38 @@ Overlay.displayName = DialogPrimitive.Overlay.displayName;
 const close = cva(styles.close);
 type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
 
-/**
- * @deprecated Use Sheet component from @raystack/apsara/v1 instead.
- */
 export function CloseButton({
   children,
   className,
   ...props
 }: CloseButtonProps) {
   return (
-    <DialogPrimitive.Close className={close({ className })} {...props}>
+    <DialogPrimitive.Close 
+      className={close({ className })} 
+      {...props}
+      aria-label="Close"
+    >
       {children}
     </DialogPrimitive.Close>
   );
 }
 
-type SheetProps = ComponentProps<typeof DialogPrimitive.Root>;
+type SheetProps = ComponentProps<typeof DialogPrimitive.Root> & {
+  ariaLabel?: string;
+};
 
-
-/**
- * @deprecated Use Sheet from @raystack/apsara/v1 instead.
- */
-export function RootSheet({ children, ...props }: SheetProps) {
-  return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>;
+export function RootSheet({ children, ariaLabel, ...props }: SheetProps) {
+  return (
+    <DialogPrimitive.Root {...props}>
+      {children}
+    </DialogPrimitive.Root>
+  );
 }
 
-
-/**
- * @deprecated Use Sheet from @raystack/apsara/v1 instead.
- */
 export const Sheet = Object.assign(RootSheet, {
   Trigger: DialogPrimitive.Trigger,
   Content: SheetContent,
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,
-});
+}); 
