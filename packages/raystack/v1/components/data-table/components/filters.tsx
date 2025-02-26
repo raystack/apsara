@@ -6,18 +6,20 @@ import { FilterIcon } from "../../icons";
 import { DropdownMenu } from "../../dropdown-menu";
 import { useDataTable } from "../hooks/useDataTable";
 import { Flex } from "../../flex";
+import { filterOperationsMap } from "~/v1/types/filters";
+import { Column } from "@tanstack/table-core";
 
-interface AddFilterProps {
-  columnList: ColumnData[];
+interface AddFilterProps<TData, TValue> {
+  columnList: Column<TData, unknown>[];
   appliedFiltersSet: Set<string>;
-  onAddFilter: (columnId: string) => void;
+  onAddFilter: (column: Column<TData, TValue>) => void;
 }
 
-function AddFilter({
+function AddFilter<TData, TValue>({
   columnList = [],
   appliedFiltersSet,
   onAddFilter,
-}: AddFilterProps) {
+}: AddFilterProps<TData, TValue>) {
   const availableFilters = columnList?.filter(
     (col) => !appliedFiltersSet.has(col.id)
   );
@@ -36,14 +38,21 @@ function AddFilter({
         )}
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        {availableFilters?.map((column) => (
-          <DropdownMenu.Item
-            key={column.id}
-            onSelect={() => onAddFilter(column.id)}
-          >
-            {column.label}
-          </DropdownMenu.Item>
-        ))}
+        {availableFilters?.map((column) => {
+          const columnDef = column.columnDef as DataTableColumnDef<
+            TData,
+            TValue
+          >;
+          const id = columnDef.accessorKey || column.id;
+          return (
+            <DropdownMenu.Item
+              key={id}
+              onSelect={() => onAddFilter(column as Column<TData, TValue>)}
+            >
+              {columnDef.header || id}
+            </DropdownMenu.Item>
+          );
+        })}
       </DropdownMenu.Content>
     </DropdownMenu>
   ) : null;
@@ -53,13 +62,21 @@ export function Filters<TData, TValue>() {
   const { table, updateTableState, tableState } = useDataTable();
   const columns = table?.getAllColumns();
 
-  function onAddFilter(columnId: string) {
+  function onAddFilter(column: Column<TData, TValue>) {
+    const columnDef = column.columnDef as DataTableColumnDef<TData, TValue>;
+    const id = columnDef.accessorKey || column.id;
+    const defaultFilter = filterOperationsMap[columnDef.columnType][0];
     updateTableState((state) => {
       return {
         ...state,
         filters: [
           ...(state.filters || []),
-          { name: columnId, value: "", operator: "contains" },
+          // TODO: Add default filter value in column definition
+          {
+            name: id,
+            value: "",
+            operator: defaultFilter.value,
+          },
         ],
       };
     });
@@ -74,15 +91,9 @@ export function Filters<TData, TValue>() {
     });
   }
 
-  const columnList = columns
-    ?.filter((column) => column.columnDef.enableColumnFilter)
-    .map((column) => {
-      const id = column.id;
-      return {
-        label: (column.columnDef.header as string) || id,
-        id: id,
-      };
-    });
+  const columnList = columns?.filter(
+    (column) => column.columnDef.enableColumnFilter
+  );
 
   const appliedFiltersSet = new Set(
     tableState?.filters?.map((filter) => filter.name)
@@ -90,8 +101,11 @@ export function Filters<TData, TValue>() {
 
   const appliedFilters =
     tableState?.filters?.map((filter) => {
-      const column = columns?.find((col) => col.id === filter.name);
-      const columnDef = column?.columnDef as DataTableColumnDef<TData, TValue>;
+      const columnDef = columns?.find((col) => {
+        const columnDef = col.columnDef as DataTableColumnDef<TData, TValue>;
+        const id = columnDef.accessorKey || col.id;
+        return id === filter.name;
+      })?.columnDef as DataTableColumnDef<TData, TValue>;
       return {
         columnType: columnDef.columnType || "text",
         label: columnDef.header as string,
