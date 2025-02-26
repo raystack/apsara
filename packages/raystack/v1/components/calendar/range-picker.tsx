@@ -77,6 +77,7 @@ export function RangePicker({
         trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
+        placeholder="Select start date"
         {...textFieldProps}
       />
       <TextField
@@ -84,6 +85,7 @@ export function RangePicker({
         trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
+        placeholder="Select end date"
         {...textFieldProps}
       />
     </Flex>
