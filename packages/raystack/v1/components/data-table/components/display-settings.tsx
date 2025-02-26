@@ -11,7 +11,13 @@ import { Grouping } from "./grouping";
 import { DisplayProperties } from "./display-properties";
 
 export function DisplaySettings() {
-  const { table, updateTableState, tableState, defaultSort } = useDataTable();
+  const {
+    table,
+    updateTableState,
+    tableState,
+    defaultSort,
+    onDisplaySettingsReset,
+  } = useDataTable();
   const columns = table?.getAllColumns();
 
   const columnList = columns?.map((column) => {
@@ -51,13 +57,7 @@ export function DisplaySettings() {
   }
 
   function onReset() {
-    updateTableState((state) => {
-      return {
-        ...state,
-        sort: [defaultSort],
-        group_by: [defaultGroupOption.id],
-      };
-    });
+    onDisplaySettingsReset();
   }
 
   return (

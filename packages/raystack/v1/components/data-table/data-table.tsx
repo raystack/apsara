@@ -24,6 +24,11 @@ function DataTableRoot<TData, TValue>({
   defaultSort,
   children,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
+  const defaultTableState = {
+    sort: [defaultSort],
+    group_by: [defaultGroupOption.id],
+  };
+
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const initialColumnVisibility = useMemo(() => {
@@ -32,15 +37,18 @@ function DataTableRoot<TData, TValue>({
     }, {});
   }, [columns]);
 
-  const [tableState, setTableState] = useState<DataTableState>({
-    sort: [defaultSort],
-    group_by: [defaultGroupOption.id],
-  });
+  const [tableState, setTableState] =
+    useState<DataTableState>(defaultTableState);
 
   const reactTableState = useMemo(
     () => dataTableStateToReactTableState(tableState),
     [tableState]
   );
+
+  function onDisplaySettingsReset() {
+    setTableState((prev) => ({ ...prev, ...defaultTableState }));
+    setColumnVisibility(initialColumnVisibility);
+  }
 
   const loaderData = useMemo(
     () =>
@@ -77,6 +85,7 @@ function DataTableRoot<TData, TValue>({
     isLoading,
     tableState,
     updateTableState: onTableStateChange,
+    onDisplaySettingsReset,
     defaultSort,
   };
 
