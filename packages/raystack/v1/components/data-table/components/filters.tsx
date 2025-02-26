@@ -131,6 +131,7 @@ export function Filters<TData, TValue>() {
       return {
         columnType: columnDef?.columnType || "text",
         label: (columnDef?.header as string) || "",
+        options: columnDef?.filterOptions || [],
         ...filter,
       };
     }) || [];
@@ -150,6 +151,7 @@ export function Filters<TData, TValue>() {
               handleFilterOperationChange(filter.name, operator)
             }
             columnType={filter.columnType}
+            options={filter.options}
           />
         ))}
       </Flex>
