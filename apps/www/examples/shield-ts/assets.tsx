@@ -25,6 +25,7 @@ import {
   Search,
   Headline,
   Dialog,
+  RangePicker,
   Sheet
 } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
@@ -238,6 +239,25 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
+        <Flex gap="small" align="center">
+          <RangePicker
+            dateFormat="DD/MM/YYYY"
+            onSelect={(range) => {
+              console.log('Selected date range:', range);
+            }}
+            value={{
+              from: new Date(new Date().setDate(new Date().getDate() - 7)),
+              to: new Date()
+            }}
+            placeholders={{ startDate: "Start Date", endDate: "End Date" }}
+            side="bottom"
+          />
+        </Flex>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog.Trigger asChild>
+              <Button variant="solid">Create User</Button>
+            </Dialog.Trigger>
+            <Dialog.Content 
           <Button variant="outline" onClick={() => setSheetOpen(true)}>
             View Details
           </Button>
@@ -385,8 +405,6 @@ const AssetsHeader = () => {
           showClearButton
           onClear={() => setSearchValue("")}
         /> */}
-        <Flex gap="small" align="center">
-        </Flex>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />
