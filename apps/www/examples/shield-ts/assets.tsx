@@ -253,14 +253,13 @@ export const Assets = () => {
             side="bottom"
           />
         </Flex>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <Dialog.Trigger asChild>
-              <Button variant="solid">Create User</Button>
-            </Dialog.Trigger>
-            <Dialog.Content 
-          <Button variant="outline" onClick={() => setSheetOpen(true)}>
-            View Details
-          </Button>
+          <Flex gap="small" align="center">
+            <Button variant="outline" size="normal" loading onClick={() => setSheetOpen(true)}>
+              View Details
+            </Button>
+
+            <Button variant="solid" color="accent" size="small" loading onClick={() => console.log("Worksssssss")}>Click</Button>
+          </Flex>
 
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <Sheet.Content 
