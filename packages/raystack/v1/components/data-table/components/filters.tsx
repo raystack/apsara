@@ -53,18 +53,18 @@ function AddFilter<TData, TValue>({
 }
 
 export function Filters<TData, TValue>() {
-  const { table, updateTableState, tableState } = useDataTable();
+  const { table, updateTableQuery, tableQuery } = useDataTable();
   const columns = table?.getAllColumns() as DataTableColumn<TData, TValue>[];
 
   function onAddFilter(column: DataTableColumn<TData, TValue>) {
     const columnDef = column.columnDef;
     const id = columnDef.accessorKey || column.id;
     const defaultFilter = filterOperationsMap[columnDef.columnType][0];
-    updateTableState((state) => {
+    updateTableQuery((query) => {
       return {
-        ...state,
+        ...query,
         filters: [
-          ...(state.filters || []),
+          ...(query.filters || []),
           // TODO: Add default filter value in column definition
           {
             name: id,
@@ -77,19 +77,19 @@ export function Filters<TData, TValue>() {
   }
 
   function handleRemoveFilter(columnId: string) {
-    updateTableState((state) => {
+    updateTableQuery((query) => {
       return {
-        ...state,
-        filters: state.filters?.filter((filter) => filter.name !== columnId),
+        ...query,
+        filters: query.filters?.filter((filter) => filter.name !== columnId),
       };
     });
   }
 
   function handleFilterValueChange(columnId: string, value: any) {
-    updateTableState((state) => {
+    updateTableQuery((query) => {
       return {
-        ...state,
-        filters: state.filters?.map((filter) => {
+        ...query,
+        filters: query.filters?.map((filter) => {
           if (filter.name === columnId) {
             return { ...filter, value };
           }
@@ -100,10 +100,10 @@ export function Filters<TData, TValue>() {
   }
 
   function handleFilterOperationChange(columnId: string, operator: string) {
-    updateTableState((state) => {
+    updateTableQuery((query) => {
       return {
-        ...state,
-        filters: state.filters?.map((filter) => {
+        ...query,
+        filters: query.filters?.map((filter) => {
           if (filter.name === columnId) {
             return { ...filter, operator };
           }
@@ -118,11 +118,11 @@ export function Filters<TData, TValue>() {
   );
 
   const appliedFiltersSet = new Set(
-    tableState?.filters?.map((filter) => filter.name)
+    tableQuery?.filters?.map((filter) => filter.name)
   );
 
   const appliedFilters =
-    tableState?.filters?.map((filter) => {
+    tableQuery?.filters?.map((filter) => {
       const columnDef = columns?.find((col) => {
         const columnDef = col.columnDef;
         const id = columnDef.accessorKey || col.id;

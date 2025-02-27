@@ -13,8 +13,8 @@ import { DisplayProperties } from "./display-properties";
 export function DisplaySettings<TData, TValue>() {
   const {
     table,
-    updateTableState,
-    tableState,
+    updateTableQuery,
+    tableQuery,
     defaultSort,
     onDisplaySettingsReset,
   } = useDataTable();
@@ -39,18 +39,18 @@ export function DisplaySettings<TData, TValue>() {
     });
 
   function onSortChange(columnId: string, order: SortOrdersValues) {
-    updateTableState((state) => {
+    updateTableQuery((query) => {
       return {
-        ...state,
+        ...query,
         sort: [{ key: columnId, order }],
       };
     });
   }
 
   function onGroupChange(columnId: string) {
-    updateTableState((state) => {
+    updateTableQuery((query) => {
       return {
-        ...state,
+        ...query,
         group_by: [columnId],
       };
     });
@@ -85,12 +85,12 @@ export function DisplaySettings<TData, TValue>() {
             <Ordering
               columnList={sortableColumns}
               onChange={onSortChange}
-              value={tableState.sort?.[0] || defaultSort}
+              value={tableQuery?.sort?.[0] || defaultSort}
             />
             <Grouping
               columnList={columnList}
               onChange={onGroupChange}
-              value={tableState.group_by?.[0] || defaultGroupOption.id}
+              value={tableQuery?.group_by?.[0] || defaultGroupOption.id}
             />
           </Flex>
           <Flex className={styles["display-popover-properties-container"]}>

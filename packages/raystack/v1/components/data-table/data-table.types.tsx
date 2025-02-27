@@ -28,7 +28,7 @@ export interface Sort {
   order: SortOrdersValues;
 }
 
-export interface DataTableState {
+export interface DataTableQuery {
   filters?: RQLFilter[];
   sort?: Sort[];
   group_by?: string[];
@@ -61,8 +61,8 @@ export interface DataTableProps<TData, TValue> {
   mode?: DataTableMode;
   isLoading?: boolean;
   loadingRowCount?: number;
-  tableState?: DataTableState;
-  onTableStateChange?: (state: DataTableState) => void;
+  tableQuery?: DataTableQuery;
+  onTableQueryChange?: (query: DataTableQuery) => void;
   defaultSort: Sort;
   onLoadMore?: () => Promise<void>;
 }
@@ -78,10 +78,10 @@ export type TableContextType<TData, TValue> = {
   loadMoreData: () => void;
   mode: DataTableMode;
   defaultSort: Sort;
-  tableState: DataTableState;
+  tableQuery?: DataTableQuery;
   loadingRowCount?: number;
   onDisplaySettingsReset: () => void;
-  updateTableState: (fn: (state: DataTableState) => DataTableState) => void;
+  updateTableQuery: (fn: (query: DataTableQuery) => DataTableQuery) => void;
 };
 
 export interface ColumnData {
