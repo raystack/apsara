@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { TableContext } from "./context";
 import {
   DataTableProps,
-  DataTableState,
+  DataTableQuery,
   GroupedData,
   TableContextType,
 } from "./data-table.types";
@@ -15,10 +15,11 @@ import {
   getExpandedRowModel,
 } from "@tanstack/react-table";
 import {
-  dataTableStateToReactTableState,
   defaultGroupOption,
   getColumnsWithFilterFn,
   groupData,
+  hasQueryChanged,
+  queryToTableState,
 } from "./utils";
 import { Content } from "./components/content";
 import { Toolbar } from "./components/toolbar";
@@ -32,17 +33,20 @@ function DataTableRoot<TData, TValue>({
   loadingRowCount = 3,
   defaultSort,
   children,
-  onTableStateChange,
+  onTableQueryChange,
   onLoadMore,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
-  const defaultTableState = {
+  const defaultTableQuery = {
     sort: [defaultSort],
     group_by: [defaultGroupOption.id],
   };
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [tableState, setTableState] =
-    useState<DataTableState>(defaultTableState);
+  const [tableQuery, setTableQuery] =
+    useState<DataTableQuery>(defaultTableQuery);
+
+  const oldQueryRef = useRef<DataTableQuery | null>(null);
+
   const initialColumnVisibility = useMemo(() => {
     return columns?.reduce((acc, col) => {
       return { ...acc, [col.accessorKey]: col.defaultVisibility ?? true };
@@ -50,20 +54,20 @@ function DataTableRoot<TData, TValue>({
   }, [columns]);
 
   const reactTableState = useMemo(
-    () => dataTableStateToReactTableState(tableState),
-    [tableState]
+    () => queryToTableState(tableQuery),
+    [tableQuery]
   );
 
   function onDisplaySettingsReset() {
-    setTableState((prev) => ({ ...prev, ...defaultTableState }));
+    setTableQuery((prev) => ({ ...prev, ...defaultTableQuery }));
     setColumnVisibility(initialColumnVisibility);
   }
 
-  const group_by = tableState.group_by?.[0];
+  const group_by = tableQuery.group_by?.[0];
 
   const columnsWithFilters = useMemo(
-    () => getColumnsWithFilterFn<TData, TValue>(columns, tableState.filters),
-    [columns, tableState.filters]
+    () => getColumnsWithFilterFn<TData, TValue>(columns, tableQuery.filters),
+    [columns, tableQuery.filters]
   );
 
   const groupedData = useMemo(
@@ -72,10 +76,15 @@ function DataTableRoot<TData, TValue>({
   );
 
   useEffect(() => {
-    if (tableState && onTableStateChange) {
-      onTableStateChange(tableState);
+    if (
+      tableQuery &&
+      onTableQueryChange &&
+      hasQueryChanged(oldQueryRef.current, tableQuery)
+    ) {
+      onTableQueryChange(tableQuery);
+      oldQueryRef.current = tableQuery;
     }
-  }, [tableState, onTableStateChange]);
+  }, [tableQuery, onTableQueryChange]);
 
   const table = useReactTable({
     data: groupedData as TData[],
@@ -101,8 +110,8 @@ function DataTableRoot<TData, TValue>({
     },
   });
 
-  function updateTableState(fn: (prev: DataTableState) => DataTableState) {
-    setTableState((prev) => fn(prev));
+  function updateTableQuery(fn: (prev: DataTableQuery) => DataTableQuery) {
+    setTableQuery((prev) => fn(prev));
   }
 
   function loadMoreData() {
@@ -117,8 +126,8 @@ function DataTableRoot<TData, TValue>({
     mode,
     isLoading,
     loadMoreData,
-    tableState,
-    updateTableState: updateTableState,
+    tableQuery,
+    updateTableQuery,
     onDisplaySettingsReset,
     defaultSort,
     loadingRowCount,
