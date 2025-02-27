@@ -3,6 +3,7 @@ import {
   DataTable,
   DataTableColumnDef,
   DataTableQuery,
+  Flex,
 } from "@raystack/apsara/v1";
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
@@ -39,7 +40,6 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     accessorKey: "org_name",
     header: "Organization Name",
     enableColumnFilter: true,
-    defaultVisibility: false,
     enableSorting: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
     columnType: "text",
@@ -98,13 +98,13 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     header: "Start Date",
     enableHiding: true,
     enableSorting: true,
-    defaultVisibility: false,
     cell: ({ getValue }) => <div>{getValue()}</div>,
   },
   {
     accessorKey: "plan_end_date",
     columnType: "date",
     header: "End Date",
+    defaultHidden: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
   },
 
@@ -113,7 +113,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     columnType: "date",
     header: "Created At",
     enableHiding: true,
-    defaultVisibility: false,
+    defaultHidden: true,
     enableColumnFilter: true,
     enableSorting: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
@@ -196,11 +196,13 @@ export default function DataTableExample() {
           columns={columns}
           mode="client"
           isLoading={isLoading}
-          defaultSort={{ key: "name", order: "asc" }}
+          defaultSort={{ key: "org_name", order: "asc" }}
           onTableQueryChange={onTableQueryChange}
           onLoadMore={onLoadMore}
         >
-          <DataTable.Search />
+          <Flex style={{ padding: "16px" }}>
+            <DataTable.Search />
+          </Flex>
           <DataTable.Toolbar />
           <DataTable.Content />
         </DataTable>
