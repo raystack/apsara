@@ -74,7 +74,6 @@ export function Content({ emptyState }: DataTableContentProps) {
   const headerGroups = table?.getHeaderGroups();
   const { rows = [] } = table?.getRowModel();
 
-  console.log(rows);
   return (
     <Table>
       <Headers headerGroups={headerGroups} />
