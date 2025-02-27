@@ -7,7 +7,6 @@ import {
   TableContextType,
 } from "./data-table.types";
 import {
-  ColumnFiltersState,
   VisibilityState,
   getCoreRowModel,
   getFilteredRowModel,
@@ -20,7 +19,6 @@ import {
   defaultGroupOption,
   getColumnsWithFilterFn,
   groupData,
-  getLoaderRows,
 } from "./utils";
 import { Content } from "./components/content";
 import { Toolbar } from "./components/toolbar";
@@ -63,11 +61,6 @@ function DataTableRoot<TData, TValue>({
 
   const group_by = tableState.group_by?.[0];
 
-  const loaderData = useMemo(
-    () => getLoaderRows<TData>(loadingRowCount),
-    [loadingRowCount]
-  );
-
   const columnsWithFilters = useMemo(
     () => getColumnsWithFilterFn<TData, TValue>(columns, tableState.filters),
     [columns, tableState.filters]
@@ -85,7 +78,7 @@ function DataTableRoot<TData, TValue>({
   }, [tableState, onTableStateChange]);
 
   const table = useReactTable({
-    data: isLoading ? loaderData : (groupedData as TData[]),
+    data: groupedData as TData[],
     columns: columnsWithFilters,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
@@ -128,6 +121,7 @@ function DataTableRoot<TData, TValue>({
     updateTableState: updateTableState,
     onDisplaySettingsReset,
     defaultSort,
+    loadingRowCount,
   };
 
   return (

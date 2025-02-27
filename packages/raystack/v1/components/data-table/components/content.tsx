@@ -30,11 +30,32 @@ function Headers<TData>({
 
 interface RowsProps<TData> {
   rows: Row<TData>[];
-  isLoading?: boolean;
   lastRowRef?: ForwardedRef<HTMLTableRowElement>;
 }
 
-function Rows<TData>({ rows = [], isLoading, lastRowRef }: RowsProps<TData>) {
+function LoaderRows({
+  rowCount,
+  columnCount,
+}: {
+  rowCount: number;
+  columnCount: number;
+}) {
+  const rows = Array.from({ length: rowCount });
+  return rows.map((_, rowIndex) => {
+    const columns = Array.from({ length: columnCount });
+    return (
+      <Table.Row key={"loading-row-" + rowIndex}>
+        {columns.map((_, colIndex) => (
+          <Table.Cell key={"loading-column-" + colIndex}>
+            <Skeleton />
+          </Table.Cell>
+        ))}
+      </Table.Row>
+    );
+  });
+}
+
+function Rows<TData>({ rows = [], lastRowRef }: RowsProps<TData>) {
   return (
     <>
       {rows?.map((row, index) => {
@@ -47,23 +68,21 @@ function Rows<TData>({ rows = [], isLoading, lastRowRef }: RowsProps<TData>) {
             {(row?.original as GroupedData<TData>)?.group_key}
           </Table.SectionHeader>
         ) : (
-          <Table.Row
-            key={row.id}
-            data-state={isSelected && "selected"}
-            ref={lastRowRef}
-          >
-            {cells.map((cell) => {
-              return (
-                <Table.Cell key={cell.id}>
-                  {isLoading ? (
-                    <Skeleton />
-                  ) : (
-                    flexRender(cell.column.columnDef.cell, cell.getContext())
-                  )}
-                </Table.Cell>
-              );
-            })}
-          </Table.Row>
+          <>
+            <Table.Row
+              key={row.id + "-" + index}
+              data-state={isSelected && "selected"}
+              ref={lastRow ? lastRowRef : undefined}
+            >
+              {cells.map((cell) => {
+                return (
+                  <Table.Cell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Table.Cell>
+                );
+              })}
+            </Table.Row>
+          </>
         );
       })}
     </>
@@ -75,7 +94,14 @@ const DefaultEmptyComponent = () => (
 );
 
 export function Content({ emptyState }: DataTableContentProps) {
-  const { table, columns, mode, isLoading, loadMoreData } = useDataTable();
+  const {
+    table,
+    columns,
+    mode,
+    isLoading,
+    loadMoreData,
+    loadingRowCount = 3,
+  } = useDataTable();
   const headerGroups = table?.getHeaderGroups();
   const { rows = [] } = table?.getRowModel();
 
@@ -112,8 +138,16 @@ export function Content({ emptyState }: DataTableContentProps) {
     <Table>
       <Headers headerGroups={headerGroups} />
       <Table.Body>
-        {rows?.length ? (
-          <Rows rows={rows} isLoading={isLoading} lastRowRef={lastRowRef} />
+        {rows?.length || isLoading ? (
+          <>
+            <Rows rows={rows} lastRowRef={lastRowRef} />
+            {isLoading ? (
+              <LoaderRows
+                rowCount={loadingRowCount}
+                columnCount={columns.length}
+              />
+            ) : null}
+          </>
         ) : (
           <Table.Row>
             <Table.Cell colSpan={columns.length}>
