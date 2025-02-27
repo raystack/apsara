@@ -249,10 +249,7 @@ export const Assets = () => {
               from: new Date(new Date().setDate(new Date().getDate() - 7)),
               to: new Date()
             }}
-            // textFieldProps={{
-            //   placeholder: "Select date range",
-            //   size: "small"
-            // }}
+            placeholders={{ startDate: "Start Date", endDate: "End Date" }}
             side="bottom"
           />
         </Flex>
