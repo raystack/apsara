@@ -24,7 +24,9 @@ export const columns: DataTableColumnDef<any, any>[] = [
     accessorKey: "email",
     header: "Email",
     enableHiding: true,
-    cell: ({ row, getValue }) => <div className="lowercase">Hello</div>,
+    cell: ({ row, getValue }) => (
+      <div className="lowercase">{row.getValue("email")}</div>
+    ),
     columnType: "text",
   },
   {

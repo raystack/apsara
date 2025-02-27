@@ -96,6 +96,7 @@ function DataTableRoot<TData, TValue>({
     initialState: {
       columnVisibility: initialColumnVisibility,
     },
+    filterFromLeafRows: true,
     state: {
       ...reactTableState,
       columnVisibility: columnVisibility,
