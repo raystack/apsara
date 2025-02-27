@@ -64,6 +64,7 @@ export interface DataTableProps<TData, TValue> {
   tableState?: DataTableState;
   onTableStateChange?: (state: DataTableState) => void;
   defaultSort: Sort;
+  onLoadMore?: () => Promise<void>;
 }
 
 export type DataTableContentProps = {
@@ -74,6 +75,8 @@ export type TableContextType<TData, TValue> = {
   table: Table<TData>;
   columns: DataTableColumnDef<TData, TValue>[];
   isLoading?: boolean;
+  loadMoreData: () => void;
+  mode: DataTableMode;
   defaultSort: Sort;
   tableState: DataTableState;
   onDisplaySettingsReset: () => void;

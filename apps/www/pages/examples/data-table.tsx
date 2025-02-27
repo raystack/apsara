@@ -49,21 +49,55 @@ export const columns: DataTableColumnDef<any, any>[] = [
   },
 ];
 
-export const getData = () =>
-  Array.from({ length: 500 }, () => ({
-    status: faker.helpers.arrayElement(["active", "inactive", "pending"]),
-    email: faker.internet.email(),
-    name: faker.person.fullName(),
-    age: faker.number.int({ min: 18, max: 67 }), // Random age between 18-67
-    created_at: faker.date.past({ years: 7 }).toISOString().split("T")[0], // Random date in past 7 years
-  }));
+interface PaginatedData {
+  status: string;
+  email: string;
+  name: string;
+  age: number;
+  created_at: string;
+}
+
+export const getData = async (): Promise<PaginatedData[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const paginatedData = Array.from({ length: 10 }, () => ({
+        status: faker.helpers.arrayElement(["active", "inactive", "pending"]),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        age: faker.number.int({ min: 18, max: 67 }), // Random age between 18-67
+        created_at: faker.date.past({ years: 7 }).toISOString().split("T")[0], // Random date in past 7 years
+      }));
+      resolve(paginatedData);
+    }, 1000); // Simulated 1-second delay
+  });
+};
 
 export default function DataTableExample() {
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function onLoadMore() {
+    if (isLoading) return;
+    try {
+      setIsLoading(true);
+      const newData = await getData();
+      setData((prev) => [...prev, ...newData]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  console.log(data.length);
 
   useEffect(() => {
-    setData(getData());
+    onLoadMore();
   }, []);
+
+  function onTableStateChange(tableState) {
+    // console.log("Table state changed", tableState);
+  }
 
   return (
     <>
@@ -78,8 +112,11 @@ export default function DataTableExample() {
         <DataTable
           data={data}
           columns={columns}
-          mode="client"
+          mode="server"
+          isLoading={isLoading}
           defaultSort={{ key: "name", order: "asc" }}
+          onTableStateChange={onTableStateChange}
+          onLoadMore={onLoadMore}
         >
           <DataTable.Search />
           <DataTable.Toolbar />

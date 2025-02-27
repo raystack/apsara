@@ -6,6 +6,7 @@ import { flexRender } from "@tanstack/react-table";
 import { useDataTable } from "../hooks/useDataTable";
 import { DataTableContentProps, GroupedData } from "../data-table.types";
 import Skeleton from "react-loading-skeleton";
+import { ForwardedRef, useEffect, useRef } from "react";
 
 function Headers<TData>({
   headerGroups = [],
@@ -27,26 +28,30 @@ function Headers<TData>({
   );
 }
 
-function Rows<TData>({
-  rows = [],
-  isLoading,
-}: {
+interface RowsProps<TData> {
   rows: Row<TData>[];
   isLoading?: boolean;
-}) {
+  lastRowRef?: ForwardedRef<HTMLTableRowElement>;
+}
+
+function Rows<TData>({ rows = [], isLoading, lastRowRef }: RowsProps<TData>) {
   return (
     <>
-      {rows?.map((row) => {
+      {rows?.map((row, index) => {
         const isSelected = row.getIsSelected();
         const cells = row.getVisibleCells() || [];
         const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
-
+        const lastRow = index === rows.length - 1;
         return isSectionHeadingRow ? (
           <Table.SectionHeader key={row.id} colSpan={cells.length}>
             {(row?.original as GroupedData<TData>)?.group_key}
           </Table.SectionHeader>
         ) : (
-          <Table.Row key={row.id} data-state={isSelected && "selected"}>
+          <Table.Row
+            key={row.id}
+            data-state={isSelected && "selected"}
+            ref={lastRowRef}
+          >
             {cells.map((cell) => {
               return (
                 <Table.Cell key={cell.id}>
@@ -70,16 +75,45 @@ const DefaultEmptyComponent = () => (
 );
 
 export function Content({ emptyState }: DataTableContentProps) {
-  const { table, columns, isLoading } = useDataTable();
+  const { table, columns, mode, isLoading, loadMoreData } = useDataTable();
   const headerGroups = table?.getHeaderGroups();
   const { rows = [] } = table?.getRowModel();
+
+  const lastRowRef = useRef<HTMLTableRowElement | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    if (mode !== "server") return;
+
+    if (!lastRowRef.current) return;
+
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            loadMoreData();
+          }
+        },
+        { threshold: 1 }
+      );
+    }
+
+    const lastRow = lastRowRef.current;
+    observerRef.current.observe(lastRow);
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.unobserve(lastRow);
+      }
+    };
+  }, [mode, rows.length]);
 
   return (
     <Table>
       <Headers headerGroups={headerGroups} />
       <Table.Body>
         {rows?.length ? (
-          <Rows rows={rows} isLoading={isLoading} />
+          <Rows rows={rows} isLoading={isLoading} lastRowRef={lastRowRef} />
         ) : (
           <Table.Row>
             <Table.Cell colSpan={columns.length}>

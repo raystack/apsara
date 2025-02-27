@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TableContext } from "./context";
 import {
   DataTableProps,
@@ -34,6 +34,8 @@ function DataTableRoot<TData, TValue>({
   loadingRowCount = 3,
   defaultSort,
   children,
+  onTableStateChange,
+  onLoadMore,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableState = {
     sort: [defaultSort],
@@ -41,15 +43,13 @@ function DataTableRoot<TData, TValue>({
   };
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
+  const [tableState, setTableState] =
+    useState<DataTableState>(defaultTableState);
   const initialColumnVisibility = useMemo(() => {
     return columns?.reduce((acc, col) => {
       return { ...acc, [col.accessorKey]: col.defaultVisibility ?? true };
     }, {});
   }, [columns]);
-
-  const [tableState, setTableState] =
-    useState<DataTableState>(defaultTableState);
 
   const reactTableState = useMemo(
     () => dataTableStateToReactTableState(tableState),
@@ -78,6 +78,12 @@ function DataTableRoot<TData, TValue>({
     [data, group_by]
   );
 
+  useEffect(() => {
+    if (tableState && onTableStateChange) {
+      onTableStateChange(tableState);
+    }
+  }, [tableState, onTableStateChange]);
+
   const table = useReactTable({
     data: isLoading ? loaderData : (groupedData as TData[]),
     columns: columnsWithFilters,
@@ -102,16 +108,24 @@ function DataTableRoot<TData, TValue>({
     },
   });
 
-  function onTableStateChange(fn: (prev: DataTableState) => DataTableState) {
+  function updateTableState(fn: (prev: DataTableState) => DataTableState) {
     setTableState((prev) => fn(prev));
+  }
+
+  function loadMoreData() {
+    if (mode === "server" && onLoadMore) {
+      onLoadMore();
+    }
   }
 
   const contextValue: TableContextType<TData, TValue> = {
     table,
     columns,
+    mode,
     isLoading,
+    loadMoreData,
     tableState,
-    updateTableState: onTableStateChange,
+    updateTableState: updateTableState,
     onDisplaySettingsReset,
     defaultSort,
   };
