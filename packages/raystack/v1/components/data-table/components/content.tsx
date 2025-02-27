@@ -4,7 +4,7 @@ import { EmptyState } from "../../empty-state";
 import { TableIcon } from "@radix-ui/react-icons";
 import { flexRender } from "@tanstack/react-table";
 import { useDataTable } from "../hooks/useDataTable";
-import { DataTableContentProps } from "../data-table.types";
+import { DataTableContentProps, GroupedData } from "../data-table.types";
 import Skeleton from "react-loading-skeleton";
 
 function Headers<TData>({
@@ -18,7 +18,6 @@ function Headers<TData>({
         <Table.Row key={headerGroup?.id}>
           {headerGroup?.headers?.map((header) => (
             <Table.Head key={header.id} colSpan={header.colSpan}>
-              {/* Handles all possible header column def scenarios for `header` */}
               {flexRender(header.column.columnDef.header, header.getContext())}
             </Table.Head>
           ))}
@@ -40,7 +39,13 @@ function Rows<TData>({
       {rows?.map((row) => {
         const isSelected = row.getIsSelected();
         const cells = row.getVisibleCells() || [];
-        return (
+        const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
+
+        return isSectionHeadingRow ? (
+          <Table.SectionHeader key={row.id} colSpan={cells.length}>
+            {(row?.original as GroupedData<TData>)?.group_key}
+          </Table.SectionHeader>
+        ) : (
           <Table.Row key={row.id} data-state={isSelected && "selected"}>
             {cells.map((cell) => {
               return (
@@ -69,6 +74,7 @@ export function Content({ emptyState }: DataTableContentProps) {
   const headerGroups = table?.getHeaderGroups();
   const { rows = [] } = table?.getRowModel();
 
+  console.log(rows);
   return (
     <Table>
       <Headers headerGroups={headerGroups} />
