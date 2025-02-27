@@ -75,12 +75,3 @@ export function groupData<TData>(
     subRows: value,
   }));
 }
-
-export function getLoaderRows<TData>(rowCount: number): TData[] {
-  return Array.from({ length: rowCount }).map(
-    (_, i) =>
-      ({
-        id: "loading-row-" + i,
-      } as TData)
-  );
-}

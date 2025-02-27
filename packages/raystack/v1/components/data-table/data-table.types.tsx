@@ -79,6 +79,7 @@ export type TableContextType<TData, TValue> = {
   mode: DataTableMode;
   defaultSort: Sort;
   tableState: DataTableState;
+  loadingRowCount?: number;
   onDisplaySettingsReset: () => void;
   updateTableState: (fn: (state: DataTableState) => DataTableState) => void;
 };
