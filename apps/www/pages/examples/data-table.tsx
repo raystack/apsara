@@ -1,4 +1,9 @@
-import { Container, DataTable, DataTableColumnDef } from "@raystack/apsara/v1";
+import {
+  Container,
+  DataTable,
+  DataTableColumnDef,
+  DataTableQuery,
+} from "@raystack/apsara/v1";
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 
@@ -89,14 +94,12 @@ export default function DataTableExample() {
     }
   }
 
-  console.log(data.length);
-
   useEffect(() => {
     onLoadMore();
   }, []);
 
-  function onTableStateChange(tableState) {
-    // console.log("Table state changed", tableState);
+  function onTableQueryChange(tableQuery: DataTableQuery) {
+    console.log("Table query changed", tableQuery);
   }
 
   return (
@@ -115,7 +118,7 @@ export default function DataTableExample() {
           mode="server"
           isLoading={isLoading}
           defaultSort={{ key: "name", order: "asc" }}
-          onTableStateChange={onTableStateChange}
+          onTableQueryChange={onTableQueryChange}
           onLoadMore={onLoadMore}
         >
           <DataTable.Search />
