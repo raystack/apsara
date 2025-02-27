@@ -149,3 +149,18 @@ export function getInitialColumnVisibility<TData, TValue>(
     };
   }, {});
 }
+
+export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
+  const { group_by, ...rest } = query;
+  const sanitizedGroupBy = group_by?.filter(
+    (key) => key !== defaultGroupOption.id
+  );
+  return { ...rest, group_by: sanitizedGroupBy };
+}
+
+export function getDefaultTableQuery(defaultSort: Sort): DataTableQuery {
+  return {
+    sort: [defaultSort],
+    group_by: [defaultGroupOption.id],
+  };
+}
