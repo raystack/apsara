@@ -7,71 +7,150 @@ import {
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
 
-export const columns: DataTableColumnDef<any, any>[] = [
+type PlanStatus = "active" | "cancelled" | "trialing";
+type PlanName = "standard" | "professional" | "enterprise";
+
+interface OrgBilling {
+  org_name: string;
+  billing_email: string;
+  country: string;
+  plan_name: PlanName;
+  plan_start_date: string;
+  plan_end_date: string;
+  plan_status: PlanStatus;
+  created_at: string;
+  is_kyc_verified: boolean;
+}
+
+const PlanStatusMap: Record<PlanStatus, string> = {
+  active: "Active",
+  cancelled: "Cancelled",
+  trialing: "Trialing",
+};
+
+const PlanNameMap: Record<PlanName, string> = {
+  standard: "Standard",
+  professional: "Professional",
+  enterprise: "Enterprise",
+};
+
+export const columns: DataTableColumnDef<OrgBilling, any>[] = [
   {
-    accessorKey: "status",
-    header: "Status",
-    enableHiding: true,
+    accessorKey: "org_name",
+    header: "Organization Name",
     enableColumnFilter: true,
     defaultVisibility: false,
     enableSorting: true,
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    cell: ({ getValue }) => <div>{getValue()}</div>,
+    columnType: "text",
+  },
+  {
+    accessorKey: "billing_email",
+    header: "Email",
+    enableHiding: true,
+    cell: ({ getValue }) => <div>{getValue()}</div>,
+    columnType: "text",
+  },
+  {
+    accessorKey: "plan_name",
+    header: "Plan Name",
+    cell: ({ getValue }) => <div>{PlanNameMap[getValue()]}</div>,
+    enableColumnFilter: true,
     columnType: "select",
+    filterOptions: Object.entries(PlanNameMap).map(([value, label]) => ({
+      value,
+      label,
+    })),
+  },
+  {
+    accessorKey: "plan_status",
+    columnType: "select",
+    header: "Plan Status",
+    enableColumnFilter: true,
+    cell: ({ getValue }) => <div>{PlanStatusMap[getValue()]}</div>,
+    filterOptions: Object.entries(PlanStatusMap).map(([value, label]) => ({
+      value,
+      label,
+    })),
+  },
+  {
+    accessorKey: "is_kyc_verified",
+    header: "KYC Verified",
+    cell: ({ getValue }) => <div>{getValue() ? "Yes" : "No"}</div>,
+    columnType: "select",
+    enableColumnFilter: true,
     filterOptions: [
-      { label: "Active", value: "active" },
-      { label: "Inactive", value: "inactive" },
-      { label: "Pending", value: "pending" },
+      { value: true, label: "Yes" },
+      { value: false, label: "No" },
     ],
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "country",
+    header: "Country",
+    cell: ({ getValue }) => <div>{getValue()}</div>,
+    columnType: "text",
+    enableColumnFilter: true,
     enableHiding: true,
-    cell: ({ row, getValue }) => (
-      <div className="lowercase">{row.getValue("email")}</div>
-    ),
-    columnType: "text",
   },
   {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-    columnType: "text",
+    accessorKey: "plan_start_date",
+    columnType: "date",
+    header: "Start Date",
+    enableHiding: true,
+    enableSorting: true,
+    defaultVisibility: false,
+    cell: ({ getValue }) => <div>{getValue()}</div>,
   },
   {
-    accessorKey: "age",
-    columnType: "number",
-    header: "Age",
-    cell: ({ row }) => <div>{row.getValue("age")}</div>,
+    accessorKey: "plan_end_date",
+    columnType: "date",
+    header: "End Date",
+    cell: ({ getValue }) => <div>{getValue()}</div>,
   },
+
   {
     accessorKey: "created_at",
-    columnType: "datetime",
+    columnType: "date",
     header: "Created At",
-    cell: ({ row }) => <div>{row.getValue("created_at")}</div>,
+    enableHiding: true,
+    defaultVisibility: false,
+    enableColumnFilter: true,
+    enableSorting: true,
+    cell: ({ getValue }) => <div>{getValue()}</div>,
   },
 ];
 
-interface PaginatedData {
-  status: string;
-  email: string;
-  name: string;
-  age: number;
-  created_at: string;
-}
-
-export const getData = async (): Promise<PaginatedData[]> => {
+export const getData = async (): Promise<OrgBilling[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const paginatedData = Array.from({ length: 10 }, () => ({
-        status: faker.helpers.arrayElement(["active", "inactive", "pending"]),
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        age: faker.number.int({ min: 18, max: 67 }), // Random age between 18-67
-        created_at: faker.date.past({ years: 7 }).toISOString().split("T")[0], // Random date in past 7 years
-      }));
+      const paginatedData = Array.from(
+        { length: 10 },
+        (): OrgBilling => ({
+          org_name: faker.company.name(),
+          billing_email: faker.internet.email(),
+          country: faker.location.country(),
+          plan_name: faker.helpers.arrayElement([
+            "standard",
+            "professional",
+            "enterprise",
+          ]),
+          plan_start_date: faker.date
+            .past({ years: 7 })
+            .toISOString()
+            .split("T")[0], // Random date in past 7 years
+          plan_end_date: faker.date
+            .future({ years: 2 })
+            .toISOString()
+            .split("T")[0], // Random date in future 2 years
+          plan_status: faker.helpers.arrayElement([
+            "active",
+            "cancelled",
+            "trialing",
+          ]),
+          created_at: faker.date.past({ years: 7 }).toISOString().split("T")[0],
+          is_kyc_verified: faker.datatype.boolean(),
+        })
+      );
       resolve(paginatedData);
     }, 1000); // Simulated 1-second delay
   });
@@ -115,7 +194,7 @@ export default function DataTableExample() {
         <DataTable
           data={data}
           columns={columns}
-          mode="server"
+          mode="client"
           isLoading={isLoading}
           defaultSort={{ key: "name", order: "asc" }}
           onTableQueryChange={onTableQueryChange}
