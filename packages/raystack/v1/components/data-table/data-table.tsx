@@ -20,9 +20,11 @@ import {
   defaultGroupOption,
   getColumnsWithFilterFn,
   groupData,
+  getLoaderRows,
 } from "./utils";
 import { Content } from "./components/content";
 import { Toolbar } from "./components/toolbar";
+import { TableSearch } from "./components/search";
 
 function DataTableRoot<TData, TValue>({
   data = [],
@@ -62,13 +64,7 @@ function DataTableRoot<TData, TValue>({
   const group_by = tableState.group_by?.[0];
 
   const loaderData = useMemo(
-    () =>
-      Array.from({ length: loadingRowCount }).map(
-        (_, i) =>
-          ({
-            id: "loading-row-" + i,
-          } as TData)
-      ),
+    () => getLoaderRows<TData>(loadingRowCount),
     [loadingRowCount]
   );
 
@@ -93,6 +89,7 @@ function DataTableRoot<TData, TValue>({
     manualSorting: mode === "server",
     manualFiltering: mode === "server",
     onColumnVisibilityChange: setColumnVisibility,
+    globalFilterFn: mode === "server" ? undefined : "auto",
     initialState: {
       columnVisibility: initialColumnVisibility,
     },
@@ -129,4 +126,5 @@ function DataTableRoot<TData, TValue>({
 export const DataTable = Object.assign(DataTableRoot, {
   Content: Content,
   Toolbar: Toolbar,
+  Search: TableSearch,
 });
