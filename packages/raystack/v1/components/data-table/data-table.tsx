@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { TableContext } from "./context";
 import {
-  DataTableColumnDef,
   DataTableProps,
   DataTableState,
+  GroupedData,
   TableContextType,
 } from "./data-table.types";
 import {
@@ -13,11 +13,13 @@ import {
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
+  getExpandedRowModel,
 } from "@tanstack/react-table";
 import {
   dataTableStateToReactTableState,
   defaultGroupOption,
   getColumnsWithFilterFn,
+  groupData,
 } from "./utils";
 import { Content } from "./components/content";
 import { Toolbar } from "./components/toolbar";
@@ -57,6 +59,8 @@ function DataTableRoot<TData, TValue>({
     setColumnVisibility(initialColumnVisibility);
   }
 
+  const group_by = tableState.group_by?.[0];
+
   const loaderData = useMemo(
     () =>
       Array.from({ length: loadingRowCount }).map(
@@ -73,10 +77,17 @@ function DataTableRoot<TData, TValue>({
     [columns, tableState.filters]
   );
 
+  const groupedData = useMemo(
+    () => groupData(data, group_by),
+    [data, group_by]
+  );
+
   const table = useReactTable({
-    data: isLoading ? loaderData : data,
+    data: isLoading ? loaderData : (groupedData as TData[]),
     columns: columnsWithFilters,
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
+    getSubRows: (row) => (row as GroupedData<TData>)?.subRows || [],
     getSortedRowModel: mode === "server" ? undefined : getSortedRowModel(),
     getFilteredRowModel: mode === "server" ? undefined : getFilteredRowModel(),
     manualSorting: mode === "server",
@@ -85,7 +96,12 @@ function DataTableRoot<TData, TValue>({
     initialState: {
       columnVisibility: initialColumnVisibility,
     },
-    state: { ...reactTableState, columnVisibility: columnVisibility },
+    state: {
+      ...reactTableState,
+      columnVisibility: columnVisibility,
+      expanded:
+        group_by && group_by !== defaultGroupOption.id ? true : undefined,
+    },
   });
 
   function onTableStateChange(fn: (prev: DataTableState) => DataTableState) {

@@ -4,6 +4,7 @@ import {
   SortOrders,
   DataTableFilter,
   DataTableColumnDef,
+  GroupedData,
 } from "../data-table.types";
 import { filterOperationsMap } from "~/v1/types/filters";
 
@@ -46,4 +47,29 @@ export function getColumnsWithFilterFn<TData, TValue>(
       filterFn,
     };
   });
+}
+
+type GroupedDataMap<T> = Record<string, T[]>;
+
+export function groupData<TData>(
+  data: TData[],
+  group_by?: string
+): GroupedData<TData>[] {
+  if (!data) return [];
+  if (!group_by || group_by === defaultGroupOption.id)
+    return data as GroupedData<TData>[];
+  const group_by_map = data.reduce(
+    (acc: GroupedDataMap<TData>, currentData: TData) => {
+      const item = currentData as Record<string, string>;
+      const keyValue = item[group_by];
+      acc[keyValue] = acc[keyValue] || [];
+      acc[keyValue].push(item as TData);
+      return acc;
+    },
+    {} as GroupedDataMap<TData>
+  );
+  return Object.entries(group_by_map).map(([key, value]) => ({
+    group_key: key,
+    subRows: value,
+  }));
 }

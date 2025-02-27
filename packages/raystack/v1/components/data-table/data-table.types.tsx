@@ -85,3 +85,10 @@ export interface ColumnData {
   id: string;
   isVisible?: boolean;
 }
+
+interface SubRows<T> {}
+
+export interface GroupedData<T> extends SubRows<T> {
+  group_key: string;
+  subRows: T[];
+}
