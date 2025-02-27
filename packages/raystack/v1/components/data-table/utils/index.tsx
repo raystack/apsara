@@ -11,10 +11,11 @@ import { filterOperationsMap } from "~/v1/types/filters";
 export function dataTableStateToReactTableState(
   dts: DataTableState
 ): Partial<TableState> {
-  const columnFilters = dts.filters?.map((data) => ({
-    value: { value: data.value },
-    id: data?.name,
-  }));
+  const columnFilters =
+    dts.filters?.map((data) => ({
+      value: { value: data.value },
+      id: data?.name,
+    })) || [];
 
   const sorting = dts.sort?.map((data) => ({
     id: data?.key,
@@ -23,6 +24,7 @@ export function dataTableStateToReactTableState(
   return {
     columnFilters: columnFilters,
     sorting: sorting,
+    globalFilter: dts.search,
   };
 }
 
@@ -72,4 +74,13 @@ export function groupData<TData>(
     group_key: key,
     subRows: value,
   }));
+}
+
+export function getLoaderRows<TData>(rowCount: number): TData[] {
+  return Array.from({ length: rowCount }).map(
+    (_, i) =>
+      ({
+        id: "loading-row-" + i,
+      } as TData)
+  );
 }

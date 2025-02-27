@@ -81,6 +81,7 @@ export default function DataTableExample() {
           mode="client"
           defaultSort={{ key: "name", order: "asc" }}
         >
+          <DataTable.Search />
           <DataTable.Toolbar />
           <DataTable.Content />
         </DataTable>
