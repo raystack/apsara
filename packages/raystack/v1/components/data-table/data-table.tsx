@@ -18,10 +18,12 @@ import {
 import {
   defaultGroupOption,
   getColumnsWithFilterFn,
+  getDefaultTableQuery,
   getInitialColumnVisibility,
   groupData,
   hasQueryChanged,
   queryToTableState,
+  sanitizeTableQuery,
 } from "./utils";
 import { Content } from "./components/content";
 import { Toolbar } from "./components/toolbar";
@@ -38,11 +40,7 @@ function DataTableRoot<TData, TValue>({
   onTableQueryChange,
   onLoadMore,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
-  const defaultTableQuery = {
-    sort: [defaultSort],
-    group_by: [defaultGroupOption.id],
-  };
-
+  const defaultTableQuery = getDefaultTableQuery(defaultSort);
   const initialColumnVisibility = getInitialColumnVisibility(columns);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -81,7 +79,7 @@ function DataTableRoot<TData, TValue>({
       onTableQueryChange &&
       hasQueryChanged(oldQueryRef.current, tableQuery)
     ) {
-      onTableQueryChange(tableQuery);
+      onTableQueryChange(sanitizeTableQuery(tableQuery));
       oldQueryRef.current = tableQuery;
     }
   }, [tableQuery, onTableQueryChange]);
