@@ -5,6 +5,7 @@ import {
   DataTableQuery,
   GroupedData,
   TableContextType,
+  TableQueryUpdateFn,
 } from "./data-table.types";
 import {
   VisibilityState,
@@ -17,6 +18,7 @@ import {
 import {
   defaultGroupOption,
   getColumnsWithFilterFn,
+  getInitialColumnVisibility,
   groupData,
   hasQueryChanged,
   queryToTableState,
@@ -41,17 +43,15 @@ function DataTableRoot<TData, TValue>({
     group_by: [defaultGroupOption.id],
   };
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const initialColumnVisibility = getInitialColumnVisibility(columns);
+
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    initialColumnVisibility
+  );
   const [tableQuery, setTableQuery] =
     useState<DataTableQuery>(defaultTableQuery);
 
   const oldQueryRef = useRef<DataTableQuery | null>(null);
-
-  const initialColumnVisibility = useMemo(() => {
-    return columns?.reduce((acc, col) => {
-      return { ...acc, [col.accessorKey]: col.defaultVisibility ?? true };
-    }, {});
-  }, [columns]);
 
   const reactTableState = useMemo(
     () => queryToTableState(tableQuery),
@@ -110,7 +110,7 @@ function DataTableRoot<TData, TValue>({
     },
   });
 
-  function updateTableQuery(fn: (prev: DataTableQuery) => DataTableQuery) {
+  function updateTableQuery(fn: TableQueryUpdateFn) {
     setTableQuery((prev) => fn(prev));
   }
 

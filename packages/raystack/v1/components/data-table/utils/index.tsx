@@ -138,3 +138,14 @@ export const hasQueryChanged = (
     isSearchChanged(oldQuery.search, newQuery.search)
   );
 };
+
+export function getInitialColumnVisibility<TData, TValue>(
+  columns: DataTableColumnDef<TData, TValue>[] = []
+): Record<string, boolean> | {} {
+  return columns.reduce((acc, col) => {
+    return {
+      ...acc,
+      [col.accessorKey]: col.defaultHidden ? false : true,
+    };
+  }, {});
+}

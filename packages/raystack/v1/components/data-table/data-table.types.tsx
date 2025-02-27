@@ -51,7 +51,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   enableColumnFilter?: boolean;
   enableSorting?: boolean;
   enableHiding?: boolean;
-  defaultVisibility?: boolean;
+  defaultHidden?: boolean;
   filterOptions?: FilterSelectOption[];
 };
 
@@ -71,6 +71,8 @@ export type DataTableContentProps = {
   emptyState?: React.ReactNode;
 };
 
+export type TableQueryUpdateFn = (query: DataTableQuery) => DataTableQuery;
+
 export type TableContextType<TData, TValue> = {
   table: Table<TData>;
   columns: DataTableColumnDef<TData, TValue>[];
@@ -81,7 +83,7 @@ export type TableContextType<TData, TValue> = {
   tableQuery?: DataTableQuery;
   loadingRowCount?: number;
   onDisplaySettingsReset: () => void;
-  updateTableQuery: (fn: (query: DataTableQuery) => DataTableQuery) => void;
+  updateTableQuery: (fn: TableQueryUpdateFn) => void;
 };
 
 export interface ColumnData {
