@@ -53,6 +53,20 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   enableHiding?: boolean;
   defaultHidden?: boolean;
   filterOptions?: FilterSelectOption[];
+  classNames?: {
+    cell?: string;
+    header?: string;
+  };
+  styles?: {
+    cell?: React.CSSProperties;
+    header?: React.CSSProperties;
+  };
+  enableGrouping?: boolean;
+  // TODO: implement these
+  icon?: React.ReactNode;
+  groupOrdering?: string[];
+  showGroupCount?: boolean;
+  groupCountMap?: Record<string, number>;
 };
 
 export interface DataTableProps<TData, TValue> {
