@@ -19,6 +19,13 @@
 
 .display-popover-properties-select {
   width: 100%;
+  max-width: 120px;
+}
+
+.display-popover-properties-select > span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .display-popover-reset-container {
