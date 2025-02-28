@@ -13,10 +13,12 @@ export function queryToTableState<TData, TValue>(
   query: DataTableQuery
 ): Partial<TableState> {
   const columnFilters =
-    query.filters?.map((data) => ({
-      value: { value: data.value },
-      id: data?.name,
-    })) || [];
+    query.filters
+      ?.filter((data) => data.value !== "")
+      ?.map((data) => ({
+        value: { value: data.value },
+        id: data?.name,
+      })) || [];
 
   const sorting = query.sort?.map((data) => ({
     id: data?.key,
@@ -155,7 +157,8 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
   const sanitizedGroupBy = group_by?.filter(
     (key) => key !== defaultGroupOption.id
   );
-  return { ...rest, group_by: sanitizedGroupBy };
+  const sanitizedFilters = query.filters?.filter((data) => data.value !== "");
+  return { ...rest, group_by: sanitizedGroupBy, filters: sanitizedFilters };
 }
 
 export function getDefaultTableQuery(defaultSort: Sort): DataTableQuery {
