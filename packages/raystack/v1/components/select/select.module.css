@@ -3,13 +3,16 @@
   z-index: 50;
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
-  line-height: 16px;
+  line-height: var(--rs-line-height-small);
+
   box-sizing: border-box;
-  padding: var(--pd-4);
-  background-color: var(--background-base);
-  border-radius: var(--br-4);
+
+  padding: var(--rs-space-2);
+  background-color: var(--rs-color-background-base-primary);
+  border-radius: var(--rs-radius-2);
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--rs-color-border-base-primary);
+
   min-width: var(--radix-select-trigger-width);
   margin-top: 4px;
 }
