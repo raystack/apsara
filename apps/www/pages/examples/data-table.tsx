@@ -4,9 +4,16 @@ import {
   DataTableColumnDef,
   DataTableQuery,
   Flex,
+  Separator,
 } from "@raystack/apsara/v1";
 import { faker } from "@faker-js/faker";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
 type PlanStatus = "active" | "cancelled" | "trialing";
 type PlanName = "standard" | "professional" | "enterprise";
@@ -83,6 +90,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
       { value: true, label: "Yes" },
       { value: false, label: "No" },
     ],
+    enableGrouping: true,
   },
   {
     accessorKey: "country",
@@ -119,11 +127,11 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     cell: ({ getValue }) => <div>{getValue()}</div>,
   },
 ];
-
-export const getData = async (): Promise<OrgBilling[]> => {
+faker.seed(1234);
+export const getData = async (query: DataTableQuery): Promise<OrgBilling[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const paginatedData = Array.from(
+      let data = Array.from(
         { length: 10 },
         (): OrgBilling => ({
           org_name: faker.company.name(),
@@ -134,25 +142,68 @@ export const getData = async (): Promise<OrgBilling[]> => {
             "professional",
             "enterprise",
           ]),
-          plan_start_date: faker.date
-            .past({ years: 7 })
-            .toISOString()
-            .split("T")[0], // Random date in past 7 years
-          plan_end_date: faker.date
-            .future({ years: 2 })
-            .toISOString()
-            .split("T")[0], // Random date in future 2 years
+          plan_start_date: dayjs(faker.date.past({ years: 7 })).format(
+            "YYYY-MM-DD"
+          ),
+          plan_end_date: dayjs(faker.date.future({ years: 2 })).format(
+            "YYYY-MM-DD"
+          ),
           plan_status: faker.helpers.arrayElement([
             "active",
             "cancelled",
             "trialing",
           ]),
-          created_at: faker.date.past({ years: 7 }).toISOString().split("T")[0],
+          created_at: dayjs(faker.date.past({ years: 7 })).format("YYYY-MM-DD"),
           is_kyc_verified: faker.datatype.boolean(),
         })
       );
-      resolve(paginatedData);
-    }, 1000); // Simulated 1-second delay
+
+      // Filtering
+      if (query.filters) {
+        query.filters.forEach(({ name, operator, value }) => {
+          data = data.filter((item) => {
+            switch (operator) {
+              case "eq":
+                return item[name] == value;
+              case "neq":
+                return item[name] != value;
+              case "lt":
+                return dayjs(item[name]).isBefore(dayjs(value));
+              case "lte":
+                return dayjs(item[name]).isSameOrBefore(dayjs(value));
+              case "gt":
+                return dayjs(item[name]).isAfter(dayjs(value));
+              case "gte":
+                return dayjs(item[name]).isSameOrAfter(dayjs(value));
+              case "like":
+                return item[name].toString().includes(value);
+              default:
+                return true;
+            }
+          });
+        });
+      }
+
+      // Sorting
+      if (query.sort) {
+        query.sort.forEach(({ key, order }) => {
+          data.sort((a, b) => {
+            const valA = a[key];
+            const valB = b[key];
+            return order === "asc"
+              ? valA.localeCompare(valB)
+              : valB.localeCompare(valA);
+          });
+        });
+      }
+
+      // Pagination
+      if (query.offset !== undefined && query.limit !== undefined) {
+        data = data.slice(query.offset, query.offset + query.limit);
+      }
+
+      resolve(data);
+    }, 1000);
   });
 };
 
@@ -160,12 +211,15 @@ export default function DataTableExample() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function onLoadMore() {
+  const [query, setQuery] = useState<DataTableQuery>({} as DataTableQuery);
+
+  async function onLoadMore(reset = false) {
     if (isLoading) return;
     try {
       setIsLoading(true);
-      const newData = await getData();
-      setData((prev) => [...prev, ...newData]);
+      console.log("Loading more data", query);
+      const newData = await getData(query);
+      setData((prev) => (reset ? newData : [...prev, ...newData]));
     } catch (err) {
       console.error(err);
     } finally {
@@ -175,10 +229,11 @@ export default function DataTableExample() {
 
   useEffect(() => {
     onLoadMore();
-  }, []);
+  }, [query]);
 
-  function onTableQueryChange(tableQuery: DataTableQuery) {
-    console.log("Table query changed", tableQuery);
+  async function onTableQueryChange(tableQuery: DataTableQuery) {
+    setQuery(tableQuery);
+    onLoadMore(true);
   }
 
   return (
@@ -194,7 +249,7 @@ export default function DataTableExample() {
         <DataTable
           data={data}
           columns={columns}
-          mode="client"
+          mode="server"
           isLoading={isLoading}
           defaultSort={{ key: "org_name", order: "asc" }}
           onTableQueryChange={onTableQueryChange}
@@ -203,6 +258,7 @@ export default function DataTableExample() {
           <Flex style={{ padding: "16px" }}>
             <DataTable.Search />
           </Flex>
+          <Separator />
           <DataTable.Toolbar />
           <DataTable.Content />
         </DataTable>
