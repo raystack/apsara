@@ -20,20 +20,12 @@ export function DisplaySettings<TData, TValue>() {
   } = useDataTable();
   const columns = table?.getAllColumns() as DataTableColumn<TData, TValue>[];
 
-  const columnList = columns?.map((column) => {
-    const id = column.id;
-    return {
-      label: (column.columnDef.header as string) || id,
-      id: id,
-    };
-  });
-
   const sortableColumns = columns
     ?.filter((col) => col.columnDef.enableSorting)
     ?.map((column) => {
       const id = column.id;
       return {
-        label: (column.columnDef.header as string) || id,
+        label: column.columnDef.header || id,
         id: id,
       };
     });
@@ -88,7 +80,7 @@ export function DisplaySettings<TData, TValue>() {
               value={tableQuery?.sort?.[0] || defaultSort}
             />
             <Grouping
-              columnList={columnList}
+              columns={columns}
               onChange={onGroupChange}
               value={tableQuery?.group_by?.[0] || defaultGroupOption.id}
             />
