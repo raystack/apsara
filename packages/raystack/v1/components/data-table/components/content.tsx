@@ -4,7 +4,11 @@ import { EmptyState } from "../../empty-state";
 import { TableIcon } from "@radix-ui/react-icons";
 import { flexRender } from "@tanstack/react-table";
 import { useDataTable } from "../hooks/useDataTable";
-import { DataTableContentProps, GroupedData } from "../data-table.types";
+import {
+  DataTableColumnDef,
+  DataTableContentProps,
+  GroupedData,
+} from "../data-table.types";
 import Skeleton from "react-loading-skeleton";
 import { ForwardedRef, useEffect, useRef } from "react";
 
@@ -17,11 +21,22 @@ function Headers<TData>({
     <Table.Header>
       {headerGroups?.map((headerGroup) => (
         <Table.Row key={headerGroup?.id}>
-          {headerGroup?.headers?.map((header) => (
-            <Table.Head key={header.id} colSpan={header.colSpan}>
-              {flexRender(header.column.columnDef.header, header.getContext())}
-            </Table.Head>
-          ))}
+          {headerGroup?.headers?.map((header) => {
+            const columnDef = header.column.columnDef as DataTableColumnDef<
+              TData,
+              unknown
+            >;
+            return (
+              <Table.Head
+                key={header.id}
+                colSpan={header.colSpan}
+                className={columnDef.classNames?.header}
+                style={columnDef.styles?.header}
+              >
+                {flexRender(columnDef.header, header.getContext())}
+              </Table.Head>
+            );
+          })}
         </Table.Row>
       ))}
     </Table.Header>
@@ -75,9 +90,17 @@ function Rows<TData>({ rows = [], lastRowRef }: RowsProps<TData>) {
               ref={lastRow ? lastRowRef : undefined}
             >
               {cells.map((cell) => {
+                const columnDef = cell.column.columnDef as DataTableColumnDef<
+                  TData,
+                  unknown
+                >;
                 return (
-                  <Table.Cell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <Table.Cell
+                    key={cell.id}
+                    className={columnDef.classNames?.cell}
+                    style={columnDef.styles?.cell}
+                  >
+                    {flexRender(columnDef.cell, cell.getContext())}
                   </Table.Cell>
                 );
               })}
