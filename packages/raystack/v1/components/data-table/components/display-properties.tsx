@@ -19,7 +19,7 @@ export function DisplayProperties<TData, TValue>({
             key={column.id}
             variant="outline"
             size="small"
-            style={column.getIsVisible() ? "accent" : "neutral"}
+            color={column.getIsVisible() ? "accent" : "neutral"}
             onClick={() => column.toggleVisibility()}
           >
             {(column.columnDef.header as string) || column.id}
