@@ -46,7 +46,7 @@ export const Shield = () => {
             </Sidepanel.Footer>
           </Sidepanel.Root>
           
-          <button 
+          {/* <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
             style={{ 
               position: 'absolute',
@@ -62,7 +62,7 @@ export const Shield = () => {
             }}
           >
              
-          </button>
+          </button> */}
         </div>
 
         <Flex style={{ flex: 1, width: "100%", overflow: "auto" }}>
