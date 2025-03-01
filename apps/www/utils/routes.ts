@@ -36,7 +36,6 @@ export const primitivesRoutes = [
     { title: "Label", slug: "docs/primitives/components/label", newBadge: true },
     { title: "Link", slug: "docs/primitives/components/link", newBadge: true },
     { title: "List", slug: "docs/primitives/components/list", newBadge: true },
-    { title: "Overlay", slug: "docs/primitives/components/overlay", newBadge: true },
     { title: "Popover", slug: "docs/primitives/components/popover", newBadge: true },
     { title: "Radio", slug: "docs/primitives/components/radio", newBadge: true },
     { title: "Select", slug: "docs/primitives/components/select" },
