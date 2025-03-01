@@ -17,7 +17,7 @@
 }
 
 .label-disabled {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
 .input-wrapper {
@@ -91,7 +91,7 @@
 .input-disabled {
   background: var(--rs-color-background-base-primary);
   border-color: var(--rs-color-border-base-tertiary);
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
   cursor: not-allowed;
   opacity: 0.3;
 }
@@ -102,16 +102,16 @@
 }
 
 .helper-text {
-  color: var(--rs-color-foreground-base-secondary);
+  color: var(--rs-color-foreground-base-tertiary);
   font-size: 11px;
 }
 
 .helper-text-error {
-  color: var(--rs-color-text-danger-primary);
+  color: var(--rs-color-foreground-danger-primary);
 }
 
 .helper-text-disabled {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
 .has-leading-icon {
@@ -211,7 +211,6 @@
 .chip-overflow {
   color: var(--rs-color-foreground-base-primary);
   font-size: 12px;
-  /* padding: 0 var(--rs-space-1); */
   border-radius: var(--rs-radius-2);
 }
 
