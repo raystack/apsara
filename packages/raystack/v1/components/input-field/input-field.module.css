@@ -50,12 +50,15 @@
 .input-field {
   width: 100%;
   padding: 0 var(--rs-space-3);
+  margin: 0;
+  margin-left: 0;
   border-radius: var(--rs-radius-2);
   border: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   min-width: 200px;
   font-family: inherit;
   font-size: 12px;
+  line-height: 32px;
   outline: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
@@ -153,17 +156,25 @@
   align-items: center;
   width: 100%;
   min-height: 32px;
+}
+
+.has-chips .chip-input-container {
   padding: 0 var(--rs-space-2);
 }
 
-.has-chips .input-field {
+.chip-input-container:empty {
   padding: 0;
+}
+
+.has-chips .input-field {
+  padding: 6px 0;
   min-width: 80px;
   width: auto;
   flex: 1;
   background: none;
   border: none;
   box-shadow: none;
+  line-height: normal;
 }
 
 .has-chips .input-field:focus {
@@ -186,6 +197,7 @@
 
 .size-small .input-field {
   height: 24px;
+  line-height: 24px;
 }
 
 .size-small .chip-input-container {
@@ -197,10 +209,9 @@
 }
 
 .chip-overflow {
-  color: var(--rs-color-foreground-base-secondary);
+  color: var(--rs-color-foreground-base-primary);
   font-size: 12px;
-  padding: var(--rs-space-1) var(--rs-space-2);
-  background: var(--rs-color-background-neutral-secondary);
+  /* padding: 0 var(--rs-space-1); */
   border-radius: var(--rs-radius-2);
 }
 
