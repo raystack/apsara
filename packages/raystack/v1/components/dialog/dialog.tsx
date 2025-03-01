@@ -27,6 +27,7 @@ const DialogContent = forwardRef<
     <DialogPrimitive.Overlay 
       className={styles.dialogOverlay}
       aria-hidden="true"
+      role="presentation"
     />
     <DialogPrimitive.Content
       ref={ref}

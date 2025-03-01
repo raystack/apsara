@@ -76,6 +76,8 @@ const Overlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={overlay({ className })}
+    aria-hidden="true"
+    role="presentation"
     {...props}
   />
 ));
