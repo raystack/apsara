@@ -78,34 +78,33 @@ function Rows<TData>({ rows = [], lastRowRef }: RowsProps<TData>) {
         const cells = row.getVisibleCells() || [];
         const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
         const lastRow = index === rows.length - 1;
+        const rowKey = row.id + "-" + index;
         return isSectionHeadingRow ? (
-          <Table.SectionHeader key={row.id} colSpan={cells.length}>
+          <Table.SectionHeader key={rowKey} colSpan={cells.length}>
             {(row?.original as GroupedData<TData>)?.group_key}
           </Table.SectionHeader>
         ) : (
-          <>
-            <Table.Row
-              key={row.id + "-" + index}
-              data-state={isSelected && "selected"}
-              ref={lastRow ? lastRowRef : undefined}
-            >
-              {cells.map((cell) => {
-                const columnDef = cell.column.columnDef as DataTableColumnDef<
-                  TData,
-                  unknown
-                >;
-                return (
-                  <Table.Cell
-                    key={cell.id}
-                    className={columnDef.classNames?.cell}
-                    style={columnDef.styles?.cell}
-                  >
-                    {flexRender(columnDef.cell, cell.getContext())}
-                  </Table.Cell>
-                );
-              })}
-            </Table.Row>
-          </>
+          <Table.Row
+            key={rowKey}
+            data-state={isSelected && "selected"}
+            ref={lastRow ? lastRowRef : undefined}
+          >
+            {cells.map((cell) => {
+              const columnDef = cell.column.columnDef as DataTableColumnDef<
+                TData,
+                unknown
+              >;
+              return (
+                <Table.Cell
+                  key={cell.id}
+                  className={columnDef.classNames?.cell}
+                  style={columnDef.styles?.cell}
+                >
+                  {flexRender(columnDef.cell, cell.getContext())}
+                </Table.Cell>
+              );
+            })}
+          </Table.Row>
         );
       })}
     </>
