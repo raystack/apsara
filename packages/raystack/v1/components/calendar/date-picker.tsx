@@ -1,6 +1,6 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PropsBase, PropsSingleRequired } from "react-day-picker";
 
@@ -20,7 +20,9 @@ interface DatePickerProps {
   onSelect?: (date: Date) => void;
   placeholder?: string;
   value?: Date;
-  children?: React.ReactNode | ((props: { selectedDate: string }) => React.ReactNode);
+  children?:
+    | React.ReactNode
+    | ((props: { selectedDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
 }
 
@@ -37,7 +39,8 @@ export function DatePicker({
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
-  const [inputState, setInputState] = useState<Partial<React.ComponentProps<typeof TextField>['state']>>();
+  const [inputState, setInputState] =
+    useState<Partial<React.ComponentProps<typeof TextField>["state"]>>();
 
   const formattedDate = dayjs(selectedDate).format(dateFormat);
 
@@ -52,38 +55,41 @@ export function DatePicker({
   }, [selectedDate]);
 
   function isElementOutside(el: HTMLElement) {
-    return !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
-           !textFieldRef.current?.contains(el) && // TextField
-           !contentRef.current?.contains(el);
+    return (
+      !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
+      !textFieldRef.current?.contains(el) && // TextField
+      !contentRef.current?.contains(el)
+    );
   }
 
   const handleMouseDown = useCallback((event: MouseEvent) => {
-      const el = (event.target) as HTMLElement | null;
-      if (el && isElementOutside(el)) removeEventListeners();
-  }, [])
+    const el = event.target as HTMLElement | null;
+    if (el && isElementOutside(el)) removeEventListeners();
+  }, []);
 
   function registerEventListeners() {
     isInputFieldFocused.current = true;
-    document.addEventListener('mouseup', handleMouseDown);
+    document.addEventListener("mouseup", handleMouseDown);
   }
 
-  function removeEventListeners() {
+  function removeEventListeners(skipUpdate = false) {
     isInputFieldFocused.current = false;
     setShowCalendar(false);
 
     const updatedVal = dayjs(selectedDateRef.current).format(dateFormat);
 
-    if  (textFieldRef.current) textFieldRef.current.value = updatedVal;
-    if (inputState === undefined) onSelect(dayjs(updatedVal).toDate());
+    if (textFieldRef.current) textFieldRef.current.value = updatedVal;
+    if (inputState === undefined && !skipUpdate)
+      onSelect(dayjs(updatedVal).toDate());
 
-    document.removeEventListener('mouseup', handleMouseDown);
+    document.removeEventListener("mouseup", handleMouseDown);
   }
 
   const handleSelect = (day: Date) => {
     setSelectedDate(day);
     onSelect(day);
     setInputState(undefined);
-    removeEventListeners();
+    removeEventListeners(true);
   };
 
   function onDropdownOpen() {
@@ -91,7 +97,10 @@ export function DatePicker({
   }
 
   function onOpenChange(open?: boolean) {
-    if (!isDropdownOpenRef.current && !(isInputFieldFocused.current && showCalendar)) {
+    if (
+      !isDropdownOpenRef.current &&
+      !(isInputFieldFocused.current && showCalendar)
+    ) {
       setShowCalendar(Boolean(open));
     }
 
@@ -105,41 +114,55 @@ export function DatePicker({
 
   function handleInputBlur(event: React.FocusEvent) {
     if (isInputFieldFocused.current) {
-        const el = event.relatedTarget as HTMLElement | null;
-        if (el && isElementOutside(el)) removeEventListeners();
+      const el = event.relatedTarget as HTMLElement | null;
+      if (el && isElementOutside(el)) removeEventListeners();
     } else {
-        registerEventListeners();
-        setTimeout(() => textFieldRef.current?.select());
+      registerEventListeners();
+      setTimeout(() => textFieldRef.current?.select());
     }
   }
 
   function handleKeyUp(event: React.KeyboardEvent) {
-    if (event.code === 'Enter' && textFieldRef.current) {
-        textFieldRef.current.blur();
-        removeEventListeners();
+    if (event.code === "Enter" && textFieldRef.current) {
+      textFieldRef.current.blur();
+      removeEventListeners();
     }
   }
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
 
-    const format = value.includes("/") ? "DD/MM/YYYY" : value.includes("-") ? "DD-MM-YYYY" : undefined;
-    const date = dayjs(value.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, (_, day, month, year) => {
-				return `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`; // Replaces [8/8/2024] to [08/08/2024]
-		}), format);
+    const format = value.includes("/")
+      ? "DD/MM/YYYY"
+      : value.includes("-")
+      ? "DD-MM-YYYY"
+      : undefined;
+    const date = dayjs(
+      value.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, (_, day, month, year) => {
+        return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`; // Replaces [8/8/2024] to [08/08/2024]
+      }),
+      format
+    );
 
     const isValidDate = date.isValid();
 
-    const isAfter = calendarProps?.startMonth !== undefined ? dayjs(date).isSameOrAfter(calendarProps.startMonth) : true;
-    const isBefore = calendarProps?.endMonth !== undefined ? dayjs(date).isSameOrBefore(calendarProps.endMonth) : true;
+    const isAfter =
+      calendarProps?.startMonth !== undefined
+        ? dayjs(date).isSameOrAfter(calendarProps.startMonth)
+        : true;
+    const isBefore =
+      calendarProps?.endMonth !== undefined
+        ? dayjs(date).isSameOrBefore(calendarProps.endMonth)
+        : true;
 
-    const isValid = isValidDate && isAfter && isBefore && dayjs(date).isSameOrBefore(dayjs());
+    const isValid =
+      isValidDate && isAfter && isBefore && dayjs(date).isSameOrBefore(dayjs());
 
     if (isValid) {
-        setSelectedDate(date.toDate());
-        if (inputState === 'invalid') setInputState(undefined);
+      setSelectedDate(date.toDate());
+      if (inputState === "invalid") setInputState(undefined);
     } else {
-        setInputState('invalid');
+      setInputState("invalid");
     }
   }
 
@@ -159,17 +182,20 @@ export function DatePicker({
     />
   );
 
-  const trigger = typeof children === 'function'
-    ? children({ selectedDate: formattedDate })
-    : children || defaultTrigger;
+  const trigger =
+    typeof children === "function"
+      ? children({ selectedDate: formattedDate })
+      : children || defaultTrigger;
 
   return (
     <Popover open={showCalendar} onOpenChange={onOpenChange}>
-      <Popover.Trigger asChild>
-        {trigger}
-      </Popover.Trigger>
+      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
 
-      <Popover.Content side={side} className={styles.calendarPopover} ref={contentRef}>
+      <Popover.Content
+        side={side}
+        className={styles.calendarPopover}
+        ref={contentRef}
+      >
         <Calendar
           required={true}
           {...calendarProps}
