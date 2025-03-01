@@ -9,6 +9,7 @@ export const SortOrders = {
 } as const;
 
 export interface RQLFilter {
+  _type: FilterTypes;
   name: string;
   operator: string;
   value: any;

@@ -6,8 +6,13 @@ import { FilterIcon } from "../../icons";
 import { DropdownMenu } from "../../dropdown-menu";
 import { useDataTable } from "../hooks/useDataTable";
 import { Flex } from "../../flex";
-import { filterOperationsMap } from "~/v1/types/filters";
-import { Column } from "@tanstack/table-core";
+import {
+  filterOperationsMap,
+  FilterType,
+  FilterTypes,
+} from "~/v1/types/filters";
+import dayjs from "dayjs";
+import { Day } from "react-day-picker";
 
 interface AddFilterProps<TData, TValue> {
   columnList: DataTableColumn<TData, TValue>[];
@@ -59,7 +64,9 @@ export function Filters<TData, TValue>() {
   function onAddFilter(column: DataTableColumn<TData, TValue>) {
     const columnDef = column.columnDef;
     const id = columnDef.accessorKey || column.id;
-    const defaultFilter = filterOperationsMap[columnDef.columnType][0];
+    const columnType = columnDef.columnType || "text";
+    const defaultFilter = filterOperationsMap[columnType][0];
+    const defaultValue = columnType === FilterType.datetime ? new Date() : "";
     updateTableQuery((query) => {
       return {
         ...query,
@@ -67,8 +74,9 @@ export function Filters<TData, TValue>() {
           ...(query.filters || []),
           // TODO: Add default filter value in column definition
           {
+            _type: columnType,
             name: id,
-            value: "",
+            value: defaultValue,
             operator: defaultFilter.value,
           },
         ],
@@ -143,6 +151,7 @@ export function Filters<TData, TValue>() {
           <FilterChip
             key={filter.name}
             label={filter.label}
+            value={filter.value}
             onRemove={() => handleRemoveFilter(filter.name)}
             onValueChange={(value) =>
               handleFilterValueChange(filter.name, value)

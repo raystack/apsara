@@ -7,18 +7,22 @@ import {
   Sort,
   DataTableQuery,
 } from "../data-table.types";
-import { filterOperationsMap } from "~/v1/types/filters";
+import { FilterType, filterOperationsMap } from "~/v1/types/filters";
 
-export function queryToTableState<TData, TValue>(
-  query: DataTableQuery
-): Partial<TableState> {
+export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   const columnFilters =
     query.filters
       ?.filter((data) => data.value !== "")
-      ?.map((data) => ({
-        value: { value: data.value },
-        id: data?.name,
-      })) || [];
+      ?.map((data) => {
+        const valueObject =
+          data._type === FilterType.datetime
+            ? { date: data.value }
+            : { value: data.value };
+        return {
+          value: valueObject,
+          id: data?.name,
+        };
+      }) || [];
 
   const sorting = query.sort?.map((data) => ({
     id: data?.key,
