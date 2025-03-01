@@ -8,6 +8,7 @@
   flex-direction: column;
   gap: var(--rs-space-1);
   width: 100%;
+  position: relative;
 }
 
 .label {
@@ -18,11 +19,6 @@
 
 .label-disabled {
   color: var(--rs-color-foreground-base-tertiary);
-}
-
-.input-wrapper {
-  position: relative;
-  width: 100%;
 }
 
 .leading-icon {
@@ -212,6 +208,42 @@
   color: var(--rs-color-foreground-base-primary);
   font-size: 12px;
   border-radius: var(--rs-radius-2);
+}
+
+.prefix, .suffix {
+  position: absolute;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: 12px;
+  pointer-events: none;
+  background: var(--rs-color-background-neutral-secondary);
+  padding: 1px var(--rs-space-2);
+  border-radius: var(--rs-radius-2);
+  white-space: nowrap;
+  z-index: 1;
+  height: auto;
+}
+
+.size-large .prefix,
+.size-large .suffix {
+  padding: 2px var(--rs-space-2);
+  top: 67%;
+}
+
+.size-small .prefix,
+.size-small .suffix {
+  padding: 0.5px var(--rs-space-2);
+  top: 60%;
+}
+
+.prefix {
+  left: var(--rs-space-2);
+}
+
+.suffix {
+  right: var(--rs-space-2);
 }
 
 .has-prefix {
