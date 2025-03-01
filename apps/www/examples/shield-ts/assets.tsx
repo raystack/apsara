@@ -3,7 +3,31 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Separator, List, Label, Tabs, FilterChip, Search, Headline } from "@raystack/apsara/v1";
+
+import {
+  toast,
+  ToastContainer,
+  Avatar,
+  AvatarGroup,
+  Button,
+  Spinner,
+  DropdownMenu,
+  Breadcrumb,
+  Chip,
+  Flex,
+  Text,
+  Checkbox,
+  InputField,
+  Badge,
+  Radio,
+  Tabs,
+  FilterChip,
+  Search,
+  Headline,
+  Dialog,
+  RangePicker,
+  Sheet
+} from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
@@ -103,6 +127,8 @@ export const Assets = () => {
     from: new Date(),
     to: new Date(),
   });
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -210,77 +236,94 @@ export const Assets = () => {
   }, []);
 
   return (
-    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
-      <Flex direction="column" gap="large" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-          <Title>Label Example</Title>
-          <Flex direction="column" gap="medium">
-            <Label size="small" htmlFor="name">Small Label</Label>
-            <Label size="medium" htmlFor="email" required>Required Medium Label</Label>
-            <Label 
-              size="large" 
-              htmlFor="description" 
-              required 
-              requiredIndicator=" (Required)"
-            >
-              Custom Required Large Label
-            </Label>
-          </Flex>
-
-          <Title>Toggle Group Example</Title>
-          <Flex direction="column" gap="medium">
-            <Title>Solid Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent">solid-accent</Button>
-              <Button variant="solid" color="danger">solid-danger</Button>
-              <Button variant="solid" color="neutral">solid-neutral</Button>
-              <Button variant="solid" color="success">solid-success</Button>
-            </Flex>
-
-            <Title>Outline Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="outline" color="accent">outline-accent</Button>
-              <Button variant="outline" color="danger">outline-danger</Button>
-              <Button variant="outline" color="neutral">outline-neutral</Button>
-              <Button variant="outline" color="success">outline-success</Button>
-            </Flex>
-
-            <Title>Ghost & Text Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="ghost">ghost</Button>
-              <Button variant="text">text</Button>
-            </Flex>
-
-            <Title>Loading State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" loading>Loading</Button>
-              <Button variant="outline" color="accent" loading>Loading</Button>
-              <Button variant="ghost" loading>Loading</Button>
-              <Button variant="text" loading>Loading</Button>
-            </Flex>
-
-            <Title>Disabled State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" disabled>Disabled</Button>
-              <Button variant="outline" color="accent" disabled>Disabled</Button>
-              <Button variant="ghost" disabled>Disabled</Button>
-              <Button variant="text" disabled>Disabled</Button>
-            </Flex>
-          </Flex>
-          </Flex>
-          <FilterChip
-            label="Status"
-            leadingIcon={<HomeIcon />}
-            columnType="select"
-            options={[
-              { label: "Pending", value: "pending" },
-              { label: "Success", value: "success" },
-            ]}
-            onRemove={() => console.log("Removing filter")}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
+    <div style={{ width: "100%" }}>
+      <Flex direction="column" style={{ width: "100%" }}>
+        <Flex direction="column" style={{ width: "100%" }}>
+        <Flex gap="small" align="center">
+          <RangePicker
+            dateFormat="DD/MM/YYYY"
+            onSelect={(range) => {
+              console.log('Selected date range:', range);
+            }}
+            value={{
+              from: new Date(new Date().setDate(new Date().getDate() - 7)),
+              to: new Date()
+            }}
+            placeholders={{ startDate: "Start Date", endDate: "End Date" }}
+            side="bottom"
           />
+        </Flex>
+          <Flex gap="small" align="center">
+            <Button variant="outline" size="normal" loading onClick={() => setSheetOpen(true)}>
+              View Details
+            </Button>
 
+            <Button variant="solid" color="accent" size="small" loading onClick={() => console.log("Worksssssss")}>Click</Button>
+          </Flex>
+
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <Sheet.Content 
+              side="left" 
+              close 
+            >
+                <Sheet.Title>
+                  <Headline size="medium">Asset Details</Headline>
+                </Sheet.Title>
+                
+                <Sheet.Description>
+                  <Text color="secondary">View and manage asset information</Text>
+                </Sheet.Description>
+            </Sheet.Content>
+          </Sheet>
+          <Flex direction="column" style={{ width: "100%" }}>
+            <Flex direction="column" gap="medium">
+              <Headline size="large" as="h1">
+                Large Headline (h1)
+              </Headline>
+
+              <Headline size="medium">
+                Medium Headline (h2 default)
+              </Headline>
+
+              <Headline size="small" as="h3">
+                Small Headline (h3)
+              </Headline>
+
+
+              <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
+                Custom Styled Headline (h4)
+              </Headline>
+            </Flex>
+            {/* <Flex align="center" wrap="wrap" gap="medium">
+              {activeFilters.map((filter, index) => (
+                <FilterChip
+                  key={`filter-${index}`}
+                  label={filter.label}
+                  value={filter.value}
+                  columnType="select"
+                  options={[
+                    { label: "Option 1", value: "option1" },
+                    { label: "Option 2", value: "option2" }
+                  ]}
+                  onValueChange={(value) => handleFilterChange({ ...filter, value })}
+                  onOperationChange={handleOperationChange}
+                  onRemove={() => console.log(`Removing ${filter.label} filter`)}
+                />
+              ))}
+            </Flex> */}
+
+            <FilterChip
+              label="Status"
+              leadingIcon={<HomeIcon />}
+              columnType="select"
+              options={[
+                { label: "Pending", value: "pending" },
+                { label: "Success", value: "success" },
+              ]}
+              onRemove={() => console.log("Removing filter")}
+              onValueChange={(value) => console.log(value)}
+              onOperationChange={(operation) => console.log(operation)}
+            />
           <FilterChip
             label="Priority"
             leadingIcon={<CheckIcon />}
@@ -311,8 +354,10 @@ export const Assets = () => {
               </DataTable.Footer>
             </DataTable>
           </div>
+        </Flex>
       </Flex>
       <ToastContainer />
+      </Flex>
     </div>
   );
 };
@@ -359,8 +404,6 @@ const AssetsHeader = () => {
           showClearButton
           onClear={() => setSearchValue("")}
         /> */}
-        <Flex gap="small" align="center">
-        </Flex>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

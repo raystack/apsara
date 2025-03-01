@@ -11,7 +11,7 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--shadow-sm);
-  outline: 1px solid var(--rs-color-border-base-primary);
+  border: 1px solid var(--rs-color-border-base-primary);
 
   min-width: var(--radix-select-trigger-width);
   margin-top: 4px;

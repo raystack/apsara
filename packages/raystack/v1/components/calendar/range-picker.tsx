@@ -14,6 +14,7 @@ interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
   textFieldProps?: TextfieldProps;
+  placeholders?: { startDate?: string; endDate?: string };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
@@ -28,6 +29,7 @@ export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
   textFieldProps,
+  placeholders,
   calendarProps,
   onSelect = () => {},
   value = {
@@ -78,6 +80,7 @@ export function RangePicker({
         className={styles.datePickerInput}
         readOnly
         {...textFieldProps}
+        placeholder={placeholders?.startDate || "Select start date"}
       />
       <TextField
         value={endDate}
@@ -85,6 +88,7 @@ export function RangePicker({
         className={styles.datePickerInput}
         readOnly
         {...textFieldProps}
+        placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
   );
