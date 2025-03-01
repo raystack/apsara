@@ -229,7 +229,7 @@
 .size-large .prefix,
 .size-large .suffix {
   padding: 2px var(--rs-space-2);
-  top: 67%;
+  top: 68%;
 }
 
 .size-small .prefix,
@@ -247,9 +247,9 @@
 }
 
 .has-prefix {
-  padding-left: calc(var(--rs-space-3) + 24px);
+  padding-left: calc(var(--rs-space-1) + 24px);
 }
 
 .has-suffix {
-  padding-right: calc(var(--rs-space-3) + 24px);
+  padding-right: calc(var(--rs-space-5) + 24px);
 }
