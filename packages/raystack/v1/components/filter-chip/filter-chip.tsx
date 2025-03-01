@@ -137,6 +137,7 @@ export const FilterChip = ({
         return (
           <div className={styles.dateFieldWrapper}>
             <DatePicker
+              value={filterValue}
               onSelect={(date) => setFilterValue(date)}
               showCalendarIcon={false}
               textFieldProps={{ className: styles.dateField }}
