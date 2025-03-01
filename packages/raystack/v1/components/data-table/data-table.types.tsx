@@ -73,6 +73,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
 export interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
   data: TData[];
+  query?: DataTableQuery;
   mode?: DataTableMode;
   isLoading?: boolean;
   loadingRowCount?: number;

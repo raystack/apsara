@@ -15,7 +15,7 @@ export function queryToTableState(query: DataTableQuery): Partial<TableState> {
       ?.filter((data) => data.value !== "")
       ?.map((data) => {
         const valueObject =
-          data._type === FilterType.datetime
+          data._type === FilterType.date
             ? { date: data.value }
             : { value: data.value };
         return {
@@ -87,7 +87,9 @@ const generateFilterMap = (
   filters: DataTableFilter[] = []
 ): Map<string, any> => {
   return new Map(
-    filters.map(({ name, operator, value }) => [`${name}-${operator}`, value])
+    filters
+      ?.filter((fil) => fil.value !== "")
+      .map(({ name, operator, value }) => [`${name}-${operator}`, value])
   );
 };
 
@@ -161,13 +163,18 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
   const sanitizedGroupBy = group_by?.filter(
     (key) => key !== defaultGroupOption.id
   );
-  const sanitizedFilters = query.filters?.filter((data) => data.value !== "");
+  const sanitizedFilters =
+    query.filters?.filter((data) => data.value !== "") || [];
   return { ...rest, group_by: sanitizedGroupBy, filters: sanitizedFilters };
 }
 
-export function getDefaultTableQuery(defaultSort: Sort): DataTableQuery {
+export function getDefaultTableQuery(
+  defaultSort: Sort,
+  oldQuery: DataTableQuery = {}
+): DataTableQuery {
   return {
     sort: [defaultSort],
     group_by: [defaultGroupOption.id],
+    ...oldQuery,
   };
 }

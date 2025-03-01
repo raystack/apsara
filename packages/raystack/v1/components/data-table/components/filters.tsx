@@ -11,8 +11,6 @@ import {
   FilterType,
   FilterTypes,
 } from "~/v1/types/filters";
-import dayjs from "dayjs";
-import { Day } from "react-day-picker";
 
 interface AddFilterProps<TData, TValue> {
   columnList: DataTableColumn<TData, TValue>[];
@@ -64,9 +62,16 @@ export function Filters<TData, TValue>() {
   function onAddFilter(column: DataTableColumn<TData, TValue>) {
     const columnDef = column.columnDef;
     const id = columnDef.accessorKey || column.id;
+    const options = columnDef.filterOptions || [];
     const columnType = columnDef.columnType || "text";
     const defaultFilter = filterOperationsMap[columnType][0];
-    const defaultValue = columnType === FilterType.datetime ? new Date() : "";
+    const defaultValue =
+      columnType === FilterType.date
+        ? new Date()
+        : columnType === FilterType.select
+        ? options[0].value
+        : "";
+
     updateTableQuery((query) => {
       return {
         ...query,
