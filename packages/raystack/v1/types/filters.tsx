@@ -10,7 +10,7 @@ dayjs.extend(isSameOrBefore);
 export const FilterType = {
   number: "number",
   text: "text",
-  datetime: "datetime",
+  date: "date",
   select: "select",
 } as const;
 
@@ -103,7 +103,7 @@ export const filterOperationsMap: FilterOperationsMap = {
       },
     },
   ],
-  datetime: [
+  date: [
     {
       value: "eq",
       label: "is",
@@ -170,14 +170,16 @@ export const filterOperationsMap: FilterOperationsMap = {
       value: "eq",
       label: "is",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) === filterValue.value;
+        // Select only supports string values
+        return String(row.getValue(columnId)) === String(filterValue.value);
       },
     },
     {
       value: "neq",
       label: "is not",
       fn: (row, columnId, filterValue: FilterValue) => {
-        return row.getValue(columnId) !== filterValue.value;
+        // Select only supports string values
+        return String(row.getValue(columnId)) !== String(filterValue.value);
       },
     },
   ],

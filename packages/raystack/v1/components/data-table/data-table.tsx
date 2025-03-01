@@ -32,6 +32,7 @@ import { TableSearch } from "./components/search";
 function DataTableRoot<TData, TValue>({
   data = [],
   columns,
+  query,
   mode = "client",
   isLoading = false,
   loadingRowCount = 3,
@@ -40,7 +41,7 @@ function DataTableRoot<TData, TValue>({
   onTableQueryChange,
   onLoadMore,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
-  const defaultTableQuery = getDefaultTableQuery(defaultSort);
+  const defaultTableQuery = getDefaultTableQuery(defaultSort, query);
   const initialColumnVisibility = getInitialColumnVisibility(columns);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -77,7 +78,8 @@ function DataTableRoot<TData, TValue>({
     if (
       tableQuery &&
       onTableQueryChange &&
-      hasQueryChanged(oldQueryRef.current, tableQuery)
+      hasQueryChanged(oldQueryRef.current, tableQuery) &&
+      mode === "server"
     ) {
       onTableQueryChange(sanitizeTableQuery(tableQuery));
       oldQueryRef.current = tableQuery;

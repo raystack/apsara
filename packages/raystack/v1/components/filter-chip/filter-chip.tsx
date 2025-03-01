@@ -115,7 +115,7 @@ export const FilterChip = ({
     switch (columnType) {
       case FilterType.select:
         return (
-          <Select value={filterValue} onValueChange={setFilterValue}>
+          <Select value={filterValue.toString()} onValueChange={setFilterValue}>
             <Select.Trigger variant="filter">
               <div className={styles.selectValue}>
                 <Select.Value placeholder="Select value" />
@@ -133,7 +133,7 @@ export const FilterChip = ({
             </Select.Content>
           </Select>
         );
-      case FilterType.datetime:
+      case FilterType.date:
         return (
           <div className={styles.dateFieldWrapper}>
             <DatePicker
