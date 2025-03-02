@@ -45,10 +45,16 @@ export const filterOperationsMap: FilterFunctionsMap = {
   },
   text: {
     eq: (row, columnId, filterValue: FilterValue) => {
-      return String(row.getValue(columnId)) === String(filterValue.value);
+      return (
+        String(row.getValue(columnId)).toLowerCase() ===
+        String(filterValue.value).toLowerCase()
+      );
     },
     neq: (row, columnId, filterValue: FilterValue) => {
-      return String(row.getValue(columnId)) !== String(filterValue.value);
+      return (
+        String(row.getValue(columnId)).toLowerCase() !==
+        String(filterValue.value).toLowerCase()
+      );
     },
     like: (row, columnId, filterValue: FilterValue) => {
       const columnValue = (row.getValue(columnId) as string).toLowerCase();

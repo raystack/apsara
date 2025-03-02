@@ -184,7 +184,15 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
     (key) => key !== defaultGroupOption.id
   );
   const sanitizedFilters =
-    query.filters?.filter((data) => data.value !== "") || [];
+    query.filters
+      ?.filter((data) => data.value !== "")
+      ?.map((data) => ({
+        ...data,
+        value:
+          data._type === FilterType.date
+            ? (data.value as Date).toISOString()
+            : data.value,
+      })) || [];
   return { ...rest, group_by: sanitizedGroupBy, filters: sanitizedFilters };
 }
 
