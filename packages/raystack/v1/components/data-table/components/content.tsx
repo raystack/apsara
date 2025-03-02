@@ -11,6 +11,8 @@ import {
 } from "../data-table.types";
 import Skeleton from "react-loading-skeleton";
 import { ForwardedRef, useEffect, useRef } from "react";
+import { Badge } from "../../badge";
+import { Flex } from "../../flex";
 
 function Headers<TData>({
   headerGroups = [],
@@ -72,6 +74,25 @@ function LoaderRows({
   });
 }
 
+function GroupHeader<TData>({
+  colSpan,
+  data,
+}: {
+  colSpan: number;
+  data: GroupedData<TData>;
+}) {
+  return (
+    <Table.SectionHeader colSpan={colSpan}>
+      <Flex gap={3} align="center">
+        {data?.group_key}
+        {data.showGroupCount ? (
+          <Badge variant="neutral">{data?.count}</Badge>
+        ) : null}
+      </Flex>
+    </Table.SectionHeader>
+  );
+}
+
 function Rows<TData>({ rows = [], lastRowRef }: RowsProps<TData>) {
   return (
     <>
@@ -82,9 +103,11 @@ function Rows<TData>({ rows = [], lastRowRef }: RowsProps<TData>) {
         const lastRow = index === rows.length - 1;
         const rowKey = row.id + "-" + index;
         return isSectionHeadingRow ? (
-          <Table.SectionHeader key={rowKey} colSpan={cells.length}>
-            {(row?.original as GroupedData<TData>)?.group_key}
-          </Table.SectionHeader>
+          <GroupHeader
+            key={rowKey}
+            colSpan={cells.length}
+            data={row.original as GroupedData<TData>}
+          />
         ) : (
           <Table.Row
             key={rowKey}

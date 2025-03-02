@@ -79,8 +79,9 @@ export function groupData<TData>(
     {} as GroupedDataMap<TData>
   );
 
-  const groupOrdering =
-    columns.find((col) => col.accessorKey === group_by)?.groupOrdering || [];
+  const columnDef = columns.find((col) => col.accessorKey === group_by);
+  const groupOrdering = columnDef?.groupOrdering || [];
+  const showGroupCount = columnDef?.showGroupCount || false;
 
   const groupOrderMap = groupOrdering.reduce(
     (acc: Record<string, number>, item: string, index: number) => {
@@ -94,6 +95,8 @@ export function groupData<TData>(
     .map(([key, value]) => ({
       group_key: key,
       subRows: value,
+      count: value.length,
+      showGroupCount,
     }))
     .sort((a, b) => groupOrderMap[a.group_key] - groupOrderMap[b.group_key]);
 }

@@ -64,9 +64,9 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   };
   enableGrouping?: boolean;
   groupOrdering?: string[];
+  showGroupCount?: boolean;
   // TODO: implement these
   icon?: React.ReactNode;
-  showGroupCount?: boolean;
   groupCountMap?: Record<string, number>;
 };
 
@@ -118,4 +118,6 @@ interface SubRows<T> {}
 export interface GroupedData<T> extends SubRows<T> {
   group_key: string;
   subRows: T[];
+  count?: number;
+  showGroupCount?: boolean;
 }
