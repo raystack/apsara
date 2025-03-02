@@ -42,6 +42,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           <Select.Trigger
             size={"small"}
             className={styles["display-popover-properties-select"]}
+            with-icon-button="true"
           >
             <Select.Value placeholder="Select value" />
           </Select.Trigger>

@@ -13,13 +13,17 @@
 }
 
 .display-popover-properties-container {
+  --select-width: 160px;
   padding: var(--rs-space-5);
   border-bottom: 1px solid var(--rs-color-border-base-primary);
 }
 
 .display-popover-properties-select {
-  width: 100%;
-  max-width: 120px;
+  width: var(--select-width);
+}
+.display-popover-properties-select[with-icon-button] {
+  /* Reduce Icon button with "--rs-space-7" and flex gap "--rs-space-2" */
+  width: calc(var(--select-width) - var(--rs-space-7) - var(--rs-space-2));
 }
 
 .display-popover-properties-select > span {
