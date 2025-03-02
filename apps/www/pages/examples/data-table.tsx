@@ -5,9 +5,11 @@ import {
   DataTableQuery,
   Flex,
   Separator,
+  Switch,
+  Text,
 } from "@raystack/apsara/v1";
 import { faker } from "@faker-js/faker";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
@@ -22,6 +24,7 @@ interface OrgBilling {
   org_name: string;
   billing_email: string;
   country: string;
+  user_count: number;
   plan_name: PlanName;
   plan_start_date: string;
   plan_end_date: string;
@@ -81,6 +84,14 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     })),
   },
   {
+    accessorKey: "user_count",
+    header: "User Count",
+    cell: ({ getValue }) => <div>{getValue()}</div>,
+    columnType: "number",
+    enableColumnFilter: true,
+    enableSorting: true,
+  },
+  {
     accessorKey: "is_kyc_verified",
     header: "KYC Verified",
     cell: ({ getValue }) => <div>{getValue() ? "Yes" : "No"}</div>,
@@ -91,6 +102,8 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
       { value: false, label: "No" },
     ],
     enableGrouping: true,
+    groupOrdering: ["false"],
+    showGroupCount: true,
   },
   {
     accessorKey: "country",
@@ -127,39 +140,42 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     cell: ({ getValue }) => <div>{getValue()}</div>,
   },
 ];
-faker.seed(1234);
-export const getData = async (query: DataTableQuery): Promise<OrgBilling[]> => {
+const mockData = Array.from(
+  { length: 100 },
+  (): OrgBilling => ({
+    org_name: faker.company.name(),
+    billing_email: faker.internet.email(),
+    country: faker.location.country(),
+    user_count: faker.number.int({ min: 10, max: 100 }),
+    plan_name: faker.helpers.arrayElement([
+      "standard",
+      "professional",
+      "enterprise",
+    ]),
+    plan_start_date: dayjs(faker.date.past({ years: 7 })).format("YYYY-MM-DD"),
+    plan_end_date: dayjs(faker.date.future({ years: 2 })).format("YYYY-MM-DD"),
+    plan_status: faker.helpers.arrayElement([
+      "active",
+      "cancelled",
+      "trialing",
+    ]),
+    created_at: dayjs(faker.date.past({ years: 7 })).format("YYYY-MM-DD"),
+    is_kyc_verified: faker.datatype.boolean(),
+  })
+);
+
+interface Resp {
+  data: OrgBilling[];
+  query: DataTableQuery;
+}
+
+export const getData = async (query: DataTableQuery): Promise<Resp> => {
+  console.log(query);
   return new Promise((resolve) => {
     setTimeout(() => {
-      let data = Array.from(
-        { length: 10 },
-        (): OrgBilling => ({
-          org_name: faker.company.name(),
-          billing_email: faker.internet.email(),
-          country: faker.location.country(),
-          plan_name: faker.helpers.arrayElement([
-            "standard",
-            "professional",
-            "enterprise",
-          ]),
-          plan_start_date: dayjs(faker.date.past({ years: 7 })).format(
-            "YYYY-MM-DD"
-          ),
-          plan_end_date: dayjs(faker.date.future({ years: 2 })).format(
-            "YYYY-MM-DD"
-          ),
-          plan_status: faker.helpers.arrayElement([
-            "active",
-            "cancelled",
-            "trialing",
-          ]),
-          created_at: dayjs(faker.date.past({ years: 7 })).format("YYYY-MM-DD"),
-          is_kyc_verified: faker.datatype.boolean(),
-        })
-      );
-
+      let data = mockData;
       // Filtering
-      if (query.filters) {
+      if (query.filters && query.filters.length) {
         query.filters.forEach(({ name, operator, value }) => {
           data = data.filter((item) => {
             switch (operator) {
@@ -172,6 +188,7 @@ export const getData = async (query: DataTableQuery): Promise<OrgBilling[]> => {
               case "lte":
                 return dayjs(item[name]).isSameOrBefore(dayjs(value));
               case "gt":
+                console.log(dayjs(value));
                 return dayjs(item[name]).isAfter(dayjs(value));
               case "gte":
                 return dayjs(item[name]).isSameOrAfter(dayjs(value));
@@ -185,55 +202,84 @@ export const getData = async (query: DataTableQuery): Promise<OrgBilling[]> => {
       }
 
       // Sorting
-      if (query.sort) {
+      if (query.sort && query.sort.length) {
         query.sort.forEach(({ key, order }) => {
           data.sort((a, b) => {
             const valA = a[key];
             const valB = b[key];
-            return order === "asc"
-              ? valA.localeCompare(valB)
-              : valB.localeCompare(valA);
+            const sortValue =
+              typeof valA === "string" ? valA.localeCompare(valB) : valA - valB;
+            return order === "asc" ? sortValue : -1 * sortValue;
           });
         });
       }
 
       // Pagination
       if (query.offset !== undefined && query.limit !== undefined) {
-        data = data.slice(query.offset, query.offset + query.limit);
+        if (query.offset * query.limit >= data.length) {
+          data = [];
+        } else {
+          data = data.slice(query.offset, query.offset + query.limit);
+        }
       }
 
-      resolve(data);
+      resolve({ data, query });
     }, 1000);
   });
 };
 
+const LIMIT = 20;
+
 export default function DataTableExample() {
   const [data, setData] = useState([]);
+  const [isSeverMode, setIsSeverMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
 
-  const [query, setQuery] = useState<DataTableQuery>({} as DataTableQuery);
+  const [query, setQuery] = useState<DataTableQuery>({
+    limit: LIMIT,
+  } as DataTableQuery);
 
-  async function onLoadMore(reset = false) {
-    if (isLoading) return;
-    try {
-      setIsLoading(true);
-      console.log("Loading more data", query);
-      const newData = await getData(query);
-      setData((prev) => (reset ? newData : [...prev, ...newData]));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const loadData = useCallback(
+    async (rqlQuery: DataTableQuery, reset = false) => {
+      if (isLoading || !hasMoreData) return;
+      try {
+        setIsLoading(true);
+        const resp = await getData(rqlQuery);
+        setData((prev) => (reset ? resp.data : [...prev, ...resp.data]));
+        setQuery(resp.query);
+        setHasMoreData(resp.data.length > 0);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading]
+  );
 
   useEffect(() => {
-    onLoadMore();
-  }, [query]);
+    setData([]);
+    const newQuery = isSeverMode ? { offset: 1, limit: LIMIT } : {};
+    loadData(newQuery, true);
+  }, [isSeverMode]);
 
   async function onTableQueryChange(tableQuery: DataTableQuery) {
+    setData([]);
     setQuery(tableQuery);
-    onLoadMore(true);
+    setHasMoreData(true);
+    console.log("Table query changed", tableQuery);
+    loadData(tableQuery, true);
+  }
+
+  async function onLoadMore() {
+    loadData(
+      {
+        ...query,
+        offset: query.offset + 1,
+      },
+      false
+    );
   }
 
   return (
@@ -249,14 +295,25 @@ export default function DataTableExample() {
         <DataTable
           data={data}
           columns={columns}
-          mode="server"
+          mode={isSeverMode ? "server" : "client"}
+          query={query}
           isLoading={isLoading}
           defaultSort={{ key: "org_name", order: "asc" }}
           onTableQueryChange={onTableQueryChange}
           onLoadMore={onLoadMore}
         >
           <Flex style={{ padding: "16px" }}>
-            <DataTable.Search />
+            <Flex style={{ flex: 1 }} gap={3} align="center">
+              <Text>Client</Text>
+              <Switch
+                checked={isSeverMode}
+                onCheckedChange={() => setIsSeverMode((prev) => !prev)}
+              />
+              <Text>Server</Text>
+            </Flex>
+            <Flex style={{ flex: 1 }}>
+              <DataTable.Search />
+            </Flex>
           </Flex>
           <Separator />
           <DataTable.Toolbar />

@@ -10,7 +10,13 @@ import {
   GroupedData,
 } from "../data-table.types";
 import Skeleton from "react-loading-skeleton";
-import { ForwardedRef, useEffect, useRef } from "react";
+import {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { Badge } from "../../badge";
 import { Flex } from "../../flex";
 
@@ -93,48 +99,51 @@ function GroupHeader<TData>({
   );
 }
 
-function Rows<TData>({ rows = [], lastRowRef }: RowsProps<TData>) {
-  return (
-    <>
-      {rows?.map((row, index) => {
-        const isSelected = row.getIsSelected();
-        const cells = row.getVisibleCells() || [];
-        const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
-        const lastRow = index === rows.length - 1;
-        const rowKey = row.id + "-" + index;
-        return isSectionHeadingRow ? (
-          <GroupHeader
-            key={rowKey}
-            colSpan={cells.length}
-            data={row.original as GroupedData<TData>}
-          />
-        ) : (
-          <Table.Row
-            key={rowKey}
-            data-state={isSelected && "selected"}
-            ref={lastRow ? lastRowRef : undefined}
-          >
-            {cells.map((cell) => {
-              const columnDef = cell.column.columnDef as DataTableColumnDef<
-                TData,
-                unknown
-              >;
-              return (
-                <Table.Cell
-                  key={cell.id}
-                  className={columnDef.classNames?.cell}
-                  style={columnDef.styles?.cell}
-                >
-                  {flexRender(columnDef.cell, cell.getContext())}
-                </Table.Cell>
-              );
-            })}
-          </Table.Row>
-        );
-      })}
-    </>
-  );
-}
+const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
+  (props, lastRowRef) => {
+    const { rows = [] } = props;
+    return (
+      <>
+        {rows?.map((row, index) => {
+          const isSelected = row.getIsSelected();
+          const cells = row.getVisibleCells() || [];
+          const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
+          const isLastRow = index === rows.length - 1;
+          const rowKey = row.id + "-" + index;
+          return isSectionHeadingRow ? (
+            <GroupHeader
+              key={rowKey}
+              colSpan={cells.length}
+              data={row.original as GroupedData<unknown>}
+            />
+          ) : (
+            <Table.Row
+              key={rowKey}
+              data-state={isSelected && "selected"}
+              ref={isLastRow ? lastRowRef : undefined}
+            >
+              {cells.map((cell) => {
+                const columnDef = cell.column.columnDef as DataTableColumnDef<
+                  unknown,
+                  unknown
+                >;
+                return (
+                  <Table.Cell
+                    key={cell.id}
+                    className={columnDef.classNames?.cell}
+                    style={columnDef.styles?.cell}
+                  >
+                    {flexRender(columnDef.cell, cell.getContext())}
+                  </Table.Cell>
+                );
+              })}
+            </Table.Row>
+          );
+        })}
+      </>
+    );
+  }
+);
 
 const DefaultEmptyComponent = () => (
   <EmptyState icon={<TableIcon />} heading="No Data" />
@@ -158,31 +167,38 @@ export function Content({
   const lastRowRef = useRef<HTMLTableRowElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const target = entries[0];
+      if (target.isIntersecting && !isLoading) {
+        loadMoreData();
+      }
+    },
+    [loadMoreData, isLoading]
+  );
+
   useEffect(() => {
     if (mode !== "server") return;
 
-    if (!lastRowRef.current) return;
-
-    if (!observerRef.current) {
-      observerRef.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            loadMoreData();
-          }
-        },
-        { threshold: 1 }
-      );
+    if (observerRef.current) {
+      observerRef.current.disconnect();
     }
 
+    observerRef.current = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+    });
     const lastRow = lastRowRef.current;
-    observerRef.current.observe(lastRow);
+    if (lastRow) {
+      observerRef.current.observe(lastRow);
+    }
 
     return () => {
-      if (observerRef.current) {
+      if (observerRef.current && lastRow) {
         observerRef.current.unobserve(lastRow);
+        observerRef.current.disconnect();
       }
     };
-  }, [mode, rows.length]);
+  }, [mode, rows.length, handleObserver]);
 
   return (
     <Table className={classNames.table}>
@@ -190,7 +206,7 @@ export function Content({
       <Table.Body className={classNames.body}>
         {rows?.length || isLoading ? (
           <>
-            <Rows rows={rows} lastRowRef={lastRowRef} />
+            <Rows rows={rows} ref={lastRowRef} />
             {isLoading ? (
               <LoaderRows
                 rowCount={loadingRowCount}
