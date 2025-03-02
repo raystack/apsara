@@ -5,14 +5,14 @@ import { Flex } from "../flex";
 import { Select } from "../select";
 import { Text } from "../text";
 import { TextField } from "../textfield";
-import { DatePicker, RangePicker } from "../calendar";
+import { DatePicker } from "../calendar";
 import styles from "./filter-chip.module.css";
 import {
   FilterSelectOption,
   FilterOperation,
   FilterType,
   FilterTypes,
-  filterOperationsMap,
+  filterOperators,
 } from "~/v1/types/filters";
 
 export interface FilterChipProps {
@@ -40,11 +40,12 @@ const Operation = ({
   columnType = FilterType.text,
   onOperationSelect,
 }: OperationProps) => {
-  const options = filterOperationsMap[columnType] || [];
-  const [value, setValue] = useState(options?.[0]?.value);
+  const filterOptions = filterOperators[columnType] || [];
+  // FilterOperatorTypes gives error as Select returns string
+  const [value, setValue] = useState<string>(filterOptions?.[0]?.value);
 
   useEffect(() => {
-    const selectedOption = options.find((o) => o.value === value);
+    const selectedOption = filterOptions.find((o) => o.value === value);
     if (selectedOption) {
       onOperationSelect(selectedOption);
     }
@@ -67,7 +68,7 @@ const Operation = ({
         />
       </Select.Trigger>
       <Select.Content data-variant="filter">
-        {options.map((opt) => {
+        {filterOptions.map((opt) => {
           return (
             <Select.Item
               key={opt.value}

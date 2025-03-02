@@ -1,5 +1,9 @@
 import type { Column, ColumnDef, Table } from "@tanstack/table-core";
-import type { FilterSelectOption, FilterTypes } from "~/v1/types/filters";
+import type {
+  FilterOperatorTypes,
+  FilterSelectOption,
+  FilterTypes,
+} from "~/v1/types/filters";
 
 export type DataTableMode = "client" | "server";
 
@@ -11,13 +15,13 @@ export const SortOrders = {
 export interface RQLFilter {
   _type: FilterTypes;
   name: string;
-  operator: string;
+  operator: FilterOperatorTypes;
   value: any;
 }
 
 export interface DataTableFilter {
   name: string;
-  operator: string;
+  operator: FilterOperatorTypes;
   value: any;
 }
 

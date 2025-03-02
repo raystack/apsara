@@ -7,7 +7,8 @@ import {
   Sort,
   DataTableQuery,
 } from "../data-table.types";
-import { FilterType, filterOperationsMap } from "~/v1/types/filters";
+import { FilterType } from "~/v1/types/filters";
+import { getFilterFn } from "./filter-operations";
 
 export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   const columnFilters =
@@ -48,9 +49,10 @@ export function getColumnsWithFilterFn<TData, TValue>(
     const colFilter = filters?.find(
       (filter) => filter.name === column.accessorKey
     );
-    const filterFn = filterOperationsMap[column.columnType]?.find(
-      (operation) => operation.value === colFilter?.operator
-    )?.fn;
+    const filterFn = colFilter?.operator
+      ? getFilterFn(column.columnType, colFilter.operator)
+      : undefined;
+
     return {
       ...column,
       filterFn,

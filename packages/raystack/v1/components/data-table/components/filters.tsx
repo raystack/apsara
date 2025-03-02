@@ -7,9 +7,9 @@ import { DropdownMenu } from "../../dropdown-menu";
 import { useDataTable } from "../hooks/useDataTable";
 import { Flex } from "../../flex";
 import {
-  filterOperationsMap,
+  FilterOperatorTypes,
   FilterType,
-  FilterTypes,
+  filterOperators,
 } from "~/v1/types/filters";
 
 interface AddFilterProps<TData, TValue> {
@@ -64,7 +64,7 @@ export function Filters<TData, TValue>() {
     const id = columnDef.accessorKey || column.id;
     const options = columnDef.filterOptions || [];
     const columnType = columnDef.columnType || "text";
-    const defaultFilter = filterOperationsMap[columnType][0];
+    const defaultFilter = filterOperators[columnType][0];
     const defaultValue =
       columnType === FilterType.date
         ? new Date()
@@ -112,7 +112,10 @@ export function Filters<TData, TValue>() {
     });
   }
 
-  function handleFilterOperationChange(columnId: string, operator: string) {
+  function handleFilterOperationChange(
+    columnId: string,
+    operator: FilterOperatorTypes
+  ) {
     updateTableQuery((query) => {
       return {
         ...query,
@@ -162,7 +165,10 @@ export function Filters<TData, TValue>() {
               handleFilterValueChange(filter.name, value)
             }
             onOperationChange={(operator) =>
-              handleFilterOperationChange(filter.name, operator)
+              handleFilterOperationChange(
+                filter.name,
+                operator as FilterOperatorTypes
+              )
             }
             columnType={filter.columnType}
             options={filter.options}
