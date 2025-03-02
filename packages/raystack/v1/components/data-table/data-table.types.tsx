@@ -85,6 +85,11 @@ export interface DataTableProps<TData, TValue> {
 
 export type DataTableContentProps = {
   emptyState?: React.ReactNode;
+  classNames?: {
+    table?: string;
+    header?: string;
+    body?: string;
+  };
 };
 
 export type TableQueryUpdateFn = (query: DataTableQuery) => DataTableQuery;

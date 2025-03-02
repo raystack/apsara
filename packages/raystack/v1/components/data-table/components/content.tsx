@@ -14,11 +14,13 @@ import { ForwardedRef, useEffect, useRef } from "react";
 
 function Headers<TData>({
   headerGroups = [],
+  className = "",
 }: {
   headerGroups: HeaderGroup<TData>[];
+  className?: string;
 }) {
   return (
-    <Table.Header>
+    <Table.Header className={className}>
       {headerGroups?.map((headerGroup) => (
         <Table.Row key={headerGroup?.id}>
           {headerGroup?.headers?.map((header) => {
@@ -115,7 +117,10 @@ const DefaultEmptyComponent = () => (
   <EmptyState icon={<TableIcon />} heading="No Data" />
 );
 
-export function Content({ emptyState }: DataTableContentProps) {
+export function Content({
+  emptyState,
+  classNames = {},
+}: DataTableContentProps) {
   const {
     table,
     columns,
@@ -157,9 +162,9 @@ export function Content({ emptyState }: DataTableContentProps) {
   }, [mode, rows.length]);
 
   return (
-    <Table>
-      <Headers headerGroups={headerGroups} />
-      <Table.Body>
+    <Table className={classNames.table}>
+      <Headers headerGroups={headerGroups} className={classNames.header} />
+      <Table.Body className={classNames.body}>
         {rows?.length || isLoading ? (
           <>
             <Rows rows={rows} lastRowRef={lastRowRef} />
