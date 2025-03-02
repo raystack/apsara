@@ -230,7 +230,7 @@ export const getData = async (query: DataTableQuery): Promise<Resp> => {
 const LIMIT = 20;
 
 export default function DataTableExample() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<OrgBilling[]>([]);
   const [isSeverMode, setIsSeverMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
