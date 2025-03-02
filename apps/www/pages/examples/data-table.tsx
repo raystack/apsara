@@ -170,7 +170,6 @@ interface Resp {
 }
 
 export const getData = async (query: DataTableQuery): Promise<Resp> => {
-  console.log(query);
   return new Promise((resolve) => {
     setTimeout(() => {
       let data = mockData;
@@ -255,7 +254,7 @@ export default function DataTableExample() {
         setIsLoading(false);
       }
     },
-    [isLoading]
+    [isLoading, hasMoreData]
   );
 
   useEffect(() => {
@@ -273,10 +272,11 @@ export default function DataTableExample() {
   }
 
   async function onLoadMore() {
+    const newOffset = query.offset || !isNaN(query.offset) ? query.offset : 0;
     loadData(
       {
         ...query,
-        offset: query.offset + 1,
+        offset: newOffset + 1,
       },
       false
     );

@@ -117,10 +117,8 @@ export const FilterChip = ({
       case FilterType.select:
         return (
           <Select value={filterValue.toString()} onValueChange={setFilterValue}>
-            <Select.Trigger variant="filter">
-              <div className={styles.selectValue}>
-                <Select.Value placeholder="Select value" />
-              </div>
+            <Select.Trigger variant="filter" className={styles.selectValue}>
+              <Select.Value placeholder="Select value" />
             </Select.Trigger>
             <Select.Content data-variant="filter">
               {options.map((opt) => (

@@ -37,7 +37,7 @@ function AddFilter<TData, TValue>({
           </Button>
         )}
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+      <DropdownMenu.Content align="start">
         {availableFilters?.map((column) => {
           const columnDef = column.columnDef;
           const id = columnDef.accessorKey || column.id;
