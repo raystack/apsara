@@ -95,7 +95,7 @@ export function groupData<TData>(
     .map(([key, value]) => ({
       group_key: key,
       subRows: value,
-      count: value.length,
+      count: columnDef?.groupCountMap?.[key] ?? value.length,
       showGroupCount,
     }))
     .sort((a, b) => groupOrderMap[a.group_key] - groupOrderMap[b.group_key]);
