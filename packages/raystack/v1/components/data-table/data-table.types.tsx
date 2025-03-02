@@ -63,9 +63,9 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     header?: React.CSSProperties;
   };
   enableGrouping?: boolean;
+  groupOrdering?: string[];
   // TODO: implement these
   icon?: React.ReactNode;
-  groupOrdering?: string[];
   showGroupCount?: boolean;
   groupCountMap?: Record<string, number>;
 };

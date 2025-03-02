@@ -62,7 +62,8 @@ type GroupedDataMap<T> = Record<string, T[]>;
 
 export function groupData<TData>(
   data: TData[],
-  group_by?: string
+  group_by?: string,
+  columns: DataTableColumnDef<TData, any>[] = []
 ): GroupedData<TData>[] {
   if (!data) return [];
   if (!group_by || group_by === defaultGroupOption.id)
@@ -77,10 +78,24 @@ export function groupData<TData>(
     },
     {} as GroupedDataMap<TData>
   );
-  return Object.entries(group_by_map).map(([key, value]) => ({
-    group_key: key,
-    subRows: value,
-  }));
+
+  const groupOrdering =
+    columns.find((col) => col.accessorKey === group_by)?.groupOrdering || [];
+
+  const groupOrderMap = groupOrdering.reduce(
+    (acc: Record<string, number>, item: string, index: number) => {
+      acc[item] = index || 0;
+      return acc;
+    },
+    {}
+  );
+
+  return Object.entries(group_by_map)
+    .map(([key, value]) => ({
+      group_key: key,
+      subRows: value,
+    }))
+    .sort((a, b) => groupOrderMap[a.group_key] - groupOrderMap[b.group_key]);
 }
 
 const generateFilterMap = (

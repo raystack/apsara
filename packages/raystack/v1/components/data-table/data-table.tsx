@@ -70,8 +70,8 @@ function DataTableRoot<TData, TValue>({
   );
 
   const groupedData = useMemo(
-    () => groupData(data, group_by),
-    [data, group_by]
+    () => groupData(data, group_by, columns),
+    [data, group_by, columns]
   );
 
   useEffect(() => {
