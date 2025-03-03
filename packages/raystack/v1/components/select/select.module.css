@@ -7,23 +7,23 @@
 
   box-sizing: border-box;
 
-  padding: var(--pd-4);
+  padding: var(--rs-space-2);
   background-color: var(--background-base);
-  border-radius: var(--br-4);
+  border-radius: var(--rs-space-2);
   box-shadow: var(--shadow-sm);
   outline: 1px solid var(--border-subtle);
 
   min-width: var(--radix-select-trigger-width);
-  margin-top: 4px;
+  margin-top: var(--rs-space-2);
 }
 
 .menuitem {
   display: flex;
   align-items: center;
   position: relative;
-  gap: var(--pd-4);
-  padding: var(--pd-8);
-  color: var(--foreground-base);
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-3);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .menuitem:hover,
@@ -31,7 +31,7 @@
 .menuitem[data-highlighted] {
   outline: none;
   cursor: pointer;
-  border-radius: var(--br-4);
+  border-radius: var(--rs-space-2);
   background: var(--background-base-hover);
 }
 
@@ -42,12 +42,12 @@
 
 .separator {
   height: 1px;
-  margin: var(--mr-4) calc(var(--mr-8) * -1);
+  margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);
   background: var(--background-inset);
 }
 
 .menugroup {
-  padding: var(--pd-8);
+  padding: var(--rs-space-3);
 }
 
 .trigger {
@@ -62,8 +62,8 @@
   font-family: var(--rs-font-body);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  border-radius: var(--br-4);
-  outline: 0.5px solid var(--border-base);
+  border-radius: var(--rs-space-2);
+  border: 0.5px solid var(--border-base);
   box-shadow: var(--shadow-xs);
   color: var(--foreground-subtle);
 
@@ -71,11 +71,11 @@
 }
 
 .trigger-sm {
-  padding: var(--pd-4);
+  padding: var(--rs-space-2);
 }
 
 .trigger-md {
-  padding: var(--pd-8);
+  padding: var(--rs-space-3);
 }
 
 .trigger:hover {
@@ -101,7 +101,7 @@
 .triggerIcon {
   width: 12px;
   height: 12px;
-  margin-left: var(--mr-8);
+  margin-left: var(--rs-space-3);
 }
 
 .trigger-filter {

@@ -141,7 +141,7 @@ export const Calendar = function ({
               count={6}
               height={'12px'}
               width={'252px'}
-              style={{ marginBottom: 'var(--space-5)' }}
+              style={{ marginBottom: 'var(--rs-space-5)' }}
               highlightColor="var(--background-base)"
               baseColor="var(--background-base-hover)"
             />
