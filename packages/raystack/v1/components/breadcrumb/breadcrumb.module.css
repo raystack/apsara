@@ -43,7 +43,7 @@
 
 .breadcrumb-link-active {
   color: var(--rs-color-foreground-base-primary);
-  font-weight: 600;
+  font-weight: var(--rs-font-weight-medium);
   pointer-events: none;
 }
 

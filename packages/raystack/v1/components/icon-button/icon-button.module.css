@@ -38,7 +38,7 @@
 .iconButton-size-1 > div, .iconButton-size-1 > div > * {
   width: 8px;
   height: 8px;
-  font-size: 8px; /* Required to adjust the size if letter is passed */
+  font-size: var(--rs-font-size-micro);
 }
 
 .iconButton-size-2 {

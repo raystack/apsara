@@ -13,8 +13,9 @@
   border-radius: var(--br-4);
   color: var(--foreground-base);
   padding: var(--pd-4);
-  letter-spacing: 0.4px;
-  line-height: 16px;
+  letter-spacing: var(--rs-letter-spacing-small);
+  line-height: var(--rs-line-height-small);
+  font-family: var(--rs-font-body);
 }
 
 .textfield:-webkit-autofill {
