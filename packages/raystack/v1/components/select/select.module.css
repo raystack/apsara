@@ -8,10 +8,10 @@
   box-sizing: border-box;
 
   padding: var(--rs-space-2);
-  background-color: var(--background-base);
+  background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-space-2);
   box-shadow: var(--shadow-sm);
-  outline: 1px solid var(--border-subtle);
+  outline: 1px solid var(--rs-color-border-base-primary);
 
   min-width: var(--radix-select-trigger-width);
   margin-top: var(--rs-space-2);
@@ -32,7 +32,7 @@
   outline: none;
   cursor: pointer;
   border-radius: var(--rs-space-2);
-  background: var(--background-base-hover);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .menuitem[data-disabled] {
@@ -43,7 +43,7 @@
 .separator {
   height: 1px;
   margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);
-  background: var(--background-inset);
+  background: var(--rs-color-background-neutral-secondary);
 }
 
 .menugroup {
@@ -56,16 +56,16 @@
   align-items: center;
   border: none;
 
-  color: var(--foreground-base);
-  background-color: var(--background-base);
+  color: var(--rs-color-foreground-base-primary);
+  background-color: var(--rs-color-background-base-primary);
   font-size: var(--rs-font-size-small);
   font-family: var(--rs-font-body);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   border-radius: var(--rs-space-2);
-  border: 0.5px solid var(--border-base);
+  border: 0.5px solid var(--rs-color-border-base-primary);
   box-shadow: var(--shadow-xs);
-  color: var(--foreground-subtle);
+  color: var(--rs-color-foreground-base-tertiary);
 
   user-select: none;
 }
@@ -83,7 +83,7 @@
 }
 
 .trigger:focus {
-  outline: 1px solid var(--border-accent-inverted);
+  outline: 1px solid var(--rs-color-border-accent-emphasis);
 }
 
 .trigger:disabled {
@@ -92,7 +92,7 @@
 }
 
 .trigger::placeholder {
-  color: var(--foreground-subtle);
+  color: var(--rs-color-foreground-base-tertiary);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);

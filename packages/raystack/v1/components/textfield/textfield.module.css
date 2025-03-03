@@ -6,12 +6,12 @@
   padding: 0;
   height: auto;
   width: 100%;
-  background-color: var(--background-base);
-  outline: 0.5px solid var(--border-base);
+  background-color: var(--rs-color-background-base-primary);
+  outline: 0.5px solid var(--rs-color-border-base-secondary);
   border: none;
   box-shadow: var(--shadow-xs);
   border-radius: var(--rs-space-2);
-  color: var(--foreground-base);
+  color: var(--rs-color-foreground-base-primary);
   padding: var(--rs-space-2);
   letter-spacing: var(--rs-letter-spacing-small);
   line-height: var(--rs-line-height-small);
@@ -23,11 +23,11 @@
 }
 
 .textfield:focus {
-  outline: 1px solid var(--background-accent-inverted);
+  outline: 1px solid var(--rs-color-background-accent-emphasis);
 }
 
 .textfield::placeholder {
-  color: var(--foreground-subtle);
+  color: var(--rs-color-foreground-base-tertiary);
   font-size: var(--rs-font-size-small);
 }
 
@@ -38,7 +38,7 @@
 }
 
 .textfield:read-only {
-  background-color: var(--background-base);
+  background-color: var(--rs-color-background-base-primary);
 }
 
 .textfield-sm {
@@ -54,18 +54,18 @@
 }
 
 .textfield-invalid {
-  outline: 1px solid var(--border-danger);
+  outline: 1px solid var(--rs-color-border-danger-primary);
 }
 .textfield-invalid:focus {
-  outline: 1px solid var(--border-danger);
+  outline: 1px solid var(--rs-color-border-danger-primary);
 }
 
 .textfield-valid {
-  outline: 1px solid var(--border-success);
+  outline: 1px solid var(--rs-color-border-success-primary);
 }
 
 .textfield-valid:focus {
-  outline: 1px solid var(--border-success);
+  outline: 1px solid var(--rs-color-border-success-primary);
 }
 
 .textfield-leading {

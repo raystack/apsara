@@ -142,8 +142,8 @@ export const Calendar = function ({
               height={'12px'}
               width={'252px'}
               style={{ marginBottom: 'var(--rs-space-5)' }}
-              highlightColor="var(--background-base)"
-              baseColor="var(--background-base-hover)"
+              highlightColor="var(--rs-color-background-base-primary)"
+              baseColor="var(--rs-color-background-base-primary-hover)"
             />
           ) : (
             <table {...props} />
