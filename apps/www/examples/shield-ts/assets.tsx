@@ -3,7 +3,31 @@ import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
 import { DataTable, Title, useTable } from "@raystack/apsara";
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Separator, List, Label, Tabs, FilterChip, Search, Headline } from "@raystack/apsara/v1";
+
+import {
+  toast,
+  ToastContainer,
+  Avatar,
+  AvatarGroup,
+  Button,
+  Spinner,
+  DropdownMenu,
+  Breadcrumb,
+  Chip,
+  Flex,
+  Text,
+  Checkbox,
+  InputField,
+  Badge,
+  Radio,
+  Tabs,
+  FilterChip,
+  Search,
+  Headline,
+  Dialog,
+  RangePicker,
+  Sheet
+} from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
@@ -103,6 +127,8 @@ export const Assets = () => {
     from: new Date(),
     to: new Date(),
   });
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -210,107 +236,197 @@ export const Assets = () => {
   }, []);
 
   return (
-    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
-      <Flex direction="column" gap="large" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-          <Title>Label Example</Title>
-          <Flex direction="column" gap="medium">
-            <Label size="small" htmlFor="name">Small Label</Label>
-            <Label size="medium" htmlFor="email" required>Required Medium Label</Label>
-            <Label 
-              size="large" 
-              htmlFor="description" 
-              required 
-              requiredIndicator=" (Required)"
-            >
-              Custom Required Large Label
-            </Label>
+    <div style={{ width: "100%" }}>
+      <Flex direction="column" style={{ width: "100%" }}>
+        <Flex direction="column" style={{ width: "100%" }}>
+          <Flex direction="column" gap="large" style={{ width: "100%" }}>
+            <Flex gap="large" wrap="wrap">
+              {/* Basic Input - Small */}
+              <InputField
+                label="Asset Name (Small)"
+                placeholder="Enter asset name"
+                helperText="Enter the name of your asset"
+                size="small"
+                width={300}
+              />
+
+              {/* Basic Input - Large */}
+              <InputField
+                label="Asset Name (Large)"
+                placeholder="Enter asset name"
+                helperText="Enter the name of your asset"
+                size="large"
+                width={300}
+              />
+
+              {/* With Icons - Small */}
+              <InputField
+                label="Search Assets (Small)"
+                placeholder="Search..."
+                leadingIcon={<HomeIcon />}
+                trailingIcon={<CheckIcon />}
+                size="small"
+                width={300}
+              />
+
+              {/* With Icons - Large */}
+              <InputField
+                label="Search Assets (Large)"
+                placeholder="Search..."
+                leadingIcon={<HomeIcon />}
+                trailingIcon={<HomeIcon />}
+                size="large"
+                width={300}
+              />
+
+              {/* With Error State - Small */}
+              <InputField
+                label="Asset ID (Small)"
+                placeholder="Enter ID"
+                error="Invalid asset ID"
+                size="small"
+                width={300}
+              />
+
+              {/* With Error State - Large */}
+              <InputField
+                label="Asset ID (Large)"
+                placeholder="Enter ID"
+                error="Invalid asset ID"
+                size="large"
+                width={300}
+              />
+
+              {/* With Prefix/Suffix - Small */}
+              <InputField
+                label="Asset Value (Small)"
+                placeholder="0.00"
+                prefix="$"
+                suffix="USD"
+                size="small"
+                width={300}
+              />
+
+              {/* With Prefix/Suffix - Large */}
+              <InputField
+                label="Asset Value (Large)"
+                placeholder="0.00"
+                prefix="$"
+                suffix="USD"
+                size="large"
+                width={300}
+              />
+
+              {/* Optional Field - Small */}
+              <InputField
+                label="Description (Small)"
+                placeholder="Optional description"
+                optional
+                size="small"
+                width={300}
+              />
+
+              {/* Optional Field - Large */}
+              <InputField
+                label="Description (Large)"
+                placeholder="Optional description"
+                optional
+                size="large"
+                width={300}
+              />
+
+              {/* With Chips - Small */}
+              <InputField
+                label="Asset Tags (Small)"
+                placeholder="Add tags..."
+                chips={recipients}
+                maxChipsVisible={3}
+                size="small"
+                width={300}
+                onChange={(e) => {
+                  if (e.target.value.endsWith(',')) {
+                    handleAddRecipient(e.target.value.slice(0, -1));
+                    e.target.value = '';
+                  }
+                }}
+              />
+
+              {/* With Chips - Large */}
+              <InputField
+                label="Asset Tags (Large)"
+                placeholder="Add tags..."
+                chips={recipients}
+                maxChipsVisible={3}
+                size="large"
+                width={300}
+                onChange={(e) => {
+                  if (e.target.value.endsWith(',')) {
+                    handleAddRecipient(e.target.value.slice(0, -1));
+                    e.target.value = '';
+                  }
+                }}
+              />
+
+              {/* Disabled State - Small */}
+              <InputField
+                label="Locked Field (Small)"
+                placeholder="Cannot edit"
+                disabled
+                value="Readonly value"
+                size="small"
+                width={300}
+              />
+
+              {/* Disabled State - Large */}
+              <InputField
+                label="Locked Field (Large)"
+                placeholder="Cannot edit"
+                disabled
+                value="Readonly value"
+                size="large"
+                width={300}
+              />
+
+              {/* With Helper Text - Small */}
+              <InputField
+                label="Asset Category (Small)"
+                placeholder="Select category"
+                helperText="Choose from available categories"
+                size="small"
+                width={300}
+              />
+
+              {/* With Helper Text - Large */}
+              <InputField
+                label="Asset Category (Large)"
+                placeholder="Select category"
+                helperText="Choose from available categories"
+                size="large"
+                width={300}
+              />
+            </Flex>
+            
+            <Flex direction="column" style={{ width: "100%" }}>
+            <div style={{ width: "100%" }}>
+              <DataTable
+                columns={columns}
+                data={data}
+                initialState={{ sorting: [{ id: "amount", desc: true }] }}
+                isLoading={isLoading}
+                onLoadMore={loadMoreData}
+              >
+                <DataTable.Toolbar>
+                  <AssetsHeader />
+                  <DataTable.FilterChips />
+                </DataTable.Toolbar>
+                <DataTable.Footer>
+                  <></>
+                </DataTable.Footer>
+              </DataTable>
+            </div>
           </Flex>
-
-          <Title>Toggle Group Example</Title>
-          <Flex direction="column" gap="medium">
-            <Title>Solid Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent">solid-accent</Button>
-              <Button variant="solid" color="danger">solid-danger</Button>
-              <Button variant="solid" color="neutral">solid-neutral</Button>
-              <Button variant="solid" color="success">solid-success</Button>
-            </Flex>
-
-            <Title>Outline Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="outline" color="accent">outline-accent</Button>
-              <Button variant="outline" color="danger">outline-danger</Button>
-              <Button variant="outline" color="neutral">outline-neutral</Button>
-              <Button variant="outline" color="success">outline-success</Button>
-            </Flex>
-
-            <Title>Ghost & Text Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="ghost">ghost</Button>
-              <Button variant="text">text</Button>
-            </Flex>
-
-            <Title>Loading State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" loading>Loading</Button>
-              <Button variant="outline" color="accent" loading>Loading</Button>
-              <Button variant="ghost" loading>Loading</Button>
-              <Button variant="text" loading>Loading</Button>
-            </Flex>
-
-            <Title>Disabled State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" disabled>Disabled</Button>
-              <Button variant="outline" color="accent" disabled>Disabled</Button>
-              <Button variant="ghost" disabled>Disabled</Button>
-              <Button variant="text" disabled>Disabled</Button>
-            </Flex>
-          </Flex>
-          </Flex>
-          <FilterChip
-            label="Status"
-            leadingIcon={<HomeIcon />}
-            columnType="select"
-            options={[
-              { label: "Pending", value: "pending" },
-              { label: "Success", value: "success" },
-            ]}
-            onRemove={() => console.log("Removing filter")}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
-
-          <FilterChip
-            label="Priority"
-            leadingIcon={<CheckIcon />}
-            columnType="select"
-            onRemove={() => console.log("Removing filter")}
-            options={[
-              { label: "High", value: "high" },
-              { label: "Medium", value: "medium" },
-              { label: "Low", value: "low" },
-            ]}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
-          <div style={{ width: "100%" }}>
-            <DataTable
-              columns={columns}
-              data={data}
-              initialState={{ sorting: [{ id: "amount", desc: true }] }}
-              isLoading={isLoading}
-              onLoadMore={loadMoreData}
-            >
-              <DataTable.Toolbar>
-                <AssetsHeader />
-                <DataTable.FilterChips />
-              </DataTable.Toolbar>
-              <DataTable.Footer>
-                <></>
-              </DataTable.Footer>
-            </DataTable>
-          </div>
+        </Flex>
+      </Flex>
       </Flex>
       <ToastContainer />
     </div>
@@ -359,8 +475,6 @@ const AssetsHeader = () => {
           showClearButton
           onClear={() => setSearchValue("")}
         /> */}
-        <Flex gap="small" align="center">
-        </Flex>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

@@ -1,12 +1,13 @@
+import React from "react";
 import { DialogProps } from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { Command as CommandPrimitive } from "cmdk";
-import React from "react";
-import styles from "./command.module.css";
 
 import { cva } from "class-variance-authority";
-import { Dialog } from "~/dialog";
-import { Flex } from "~/flex";
+import { Dialog } from "../dialog";
+import { Flex } from "../flex";
+
+import styles from "./command.module.css";
 
 const command = cva(styles.command);
 const CommandRoot = React.forwardRef<
@@ -116,9 +117,6 @@ const CommandShortcut = ({
 };
 CommandShortcut.displayName = "CommandShortcut";
 
-/*
- *  @deprecated Use Command from @raystack/apsara/v1 instead.
- */
 export const Command: any = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
   Input: CommandInput,
