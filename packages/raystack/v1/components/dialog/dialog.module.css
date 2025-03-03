@@ -1,5 +1,5 @@
 .dialogOverlay {
-  background-color: var(--rs-color-overlay-black-a7);
+  background-color: var(--rs-color-overlay-base-primary);
   position: fixed;
   inset: 0;
   z-index: 9998;
@@ -40,4 +40,19 @@
 .close:hover {
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
+}
+
+
+.dialogOverlay[data-state="open"] {
+  animation: fadeIn 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dialogOverlay[data-state="close"] {
+  animation: fadeOut 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+    transition: none;
+  }
 }
