@@ -3,7 +3,7 @@
   line-height: 1;
   margin: 0;
   font-weight: 400;
-  color: var(--rs-color-text-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .label-small {
@@ -30,10 +30,10 @@
   font-weight: 400;
   line-height: 16px;
   letter-spacing: 0.5px;
-  color: var(--rs-color-text-danger-primary);
+  color: var(--rs-color-foreground-danger-primary);
 }
 
 /* For custom required text (not the star) */
 .required-indicator:not(:only-child) {
-  color: var(--rs-color-text-base-tertiary);
+  color: var(--rs-color-foreground-base-tertiary);
 }

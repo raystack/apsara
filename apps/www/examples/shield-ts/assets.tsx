@@ -239,125 +239,196 @@ export const Assets = () => {
     <div style={{ width: "100%" }}>
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
-        <Flex gap="small" align="center">
-          <RangePicker
-            dateFormat="DD/MM/YYYY"
-            onSelect={(range) => {
-              console.log('Selected date range:', range);
-            }}
-            value={{
-              from: new Date(new Date().setDate(new Date().getDate() - 7)),
-              to: new Date()
-            }}
-            placeholders={{ startDate: "Start Date", endDate: "End Date" }}
-            side="bottom"
-          />
-        </Flex>
-          <Flex gap="small" align="center">
-            <Button variant="outline" size="normal" loading onClick={() => setSheetOpen(true)}>
-              View Details
-            </Button>
+          <Flex direction="column" gap="large" style={{ width: "100%" }}>
+            <Flex gap="large" wrap="wrap">
+              {/* Basic Input - Small */}
+              <InputField
+                label="Asset Name (Small)"
+                placeholder="Enter asset name"
+                helperText="Enter the name of your asset"
+                size="small"
+                width={300}
+              />
 
-            <Button variant="solid" color="accent" size="small" loading onClick={() => console.log("Worksssssss")}>Click</Button>
-          </Flex>
+              {/* Basic Input - Large */}
+              <InputField
+                label="Asset Name (Large)"
+                placeholder="Enter asset name"
+                helperText="Enter the name of your asset"
+                size="large"
+                width={300}
+              />
 
-          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-            <Sheet.Content 
-              side="left" 
-              close 
-            >
-                <Sheet.Title>
-                  <Headline size="medium">Asset Details</Headline>
-                </Sheet.Title>
-                
-                <Sheet.Description>
-                  <Text color="secondary">View and manage asset information</Text>
-                </Sheet.Description>
-            </Sheet.Content>
-          </Sheet>
-          <Flex direction="column" style={{ width: "100%" }}>
-            <Flex direction="column" gap="medium">
-              <Headline size="large" as="h1">
-                Large Headline (h1)
-              </Headline>
+              {/* With Icons - Small */}
+              <InputField
+                label="Search Assets (Small)"
+                placeholder="Search..."
+                leadingIcon={<HomeIcon />}
+                trailingIcon={<CheckIcon />}
+                size="small"
+                width={300}
+              />
 
-              <Headline size="medium">
-                Medium Headline (h2 default)
-              </Headline>
+              {/* With Icons - Large */}
+              <InputField
+                label="Search Assets (Large)"
+                placeholder="Search..."
+                leadingIcon={<HomeIcon />}
+                trailingIcon={<HomeIcon />}
+                size="large"
+                width={300}
+              />
 
-              <Headline size="small" as="h3">
-                Small Headline (h3)
-              </Headline>
+              {/* With Error State - Small */}
+              <InputField
+                label="Asset ID (Small)"
+                placeholder="Enter ID"
+                error="Invalid asset ID"
+                size="small"
+                width={300}
+              />
 
+              {/* With Error State - Large */}
+              <InputField
+                label="Asset ID (Large)"
+                placeholder="Enter ID"
+                error="Invalid asset ID"
+                size="large"
+                width={300}
+              />
 
-              <Headline size="medium" as="h4" style={{ color: "var(--rs-color-foreground-accent-primary)" }}>
-                Custom Styled Headline (h4)
-              </Headline>
+              {/* With Prefix/Suffix - Small */}
+              <InputField
+                label="Asset Value (Small)"
+                placeholder="0.00"
+                prefix="$"
+                suffix="USD"
+                size="small"
+                width={300}
+              />
+
+              {/* With Prefix/Suffix - Large */}
+              <InputField
+                label="Asset Value (Large)"
+                placeholder="0.00"
+                prefix="$"
+                suffix="USD"
+                size="large"
+                width={300}
+              />
+
+              {/* Optional Field - Small */}
+              <InputField
+                label="Description (Small)"
+                placeholder="Optional description"
+                optional
+                size="small"
+                width={300}
+              />
+
+              {/* Optional Field - Large */}
+              <InputField
+                label="Description (Large)"
+                placeholder="Optional description"
+                optional
+                size="large"
+                width={300}
+              />
+
+              {/* With Chips - Small */}
+              <InputField
+                label="Asset Tags (Small)"
+                placeholder="Add tags..."
+                chips={recipients}
+                maxChipsVisible={3}
+                size="small"
+                width={300}
+                onChange={(e) => {
+                  if (e.target.value.endsWith(',')) {
+                    handleAddRecipient(e.target.value.slice(0, -1));
+                    e.target.value = '';
+                  }
+                }}
+              />
+
+              {/* With Chips - Large */}
+              <InputField
+                label="Asset Tags (Large)"
+                placeholder="Add tags..."
+                chips={recipients}
+                maxChipsVisible={3}
+                size="large"
+                width={300}
+                onChange={(e) => {
+                  if (e.target.value.endsWith(',')) {
+                    handleAddRecipient(e.target.value.slice(0, -1));
+                    e.target.value = '';
+                  }
+                }}
+              />
+
+              {/* Disabled State - Small */}
+              <InputField
+                label="Locked Field (Small)"
+                placeholder="Cannot edit"
+                disabled
+                value="Readonly value"
+                size="small"
+                width={300}
+              />
+
+              {/* Disabled State - Large */}
+              <InputField
+                label="Locked Field (Large)"
+                placeholder="Cannot edit"
+                disabled
+                value="Readonly value"
+                size="large"
+                width={300}
+              />
+
+              {/* With Helper Text - Small */}
+              <InputField
+                label="Asset Category (Small)"
+                placeholder="Select category"
+                helperText="Choose from available categories"
+                size="small"
+                width={300}
+              />
+
+              {/* With Helper Text - Large */}
+              <InputField
+                label="Asset Category (Large)"
+                placeholder="Select category"
+                helperText="Choose from available categories"
+                size="large"
+                width={300}
+              />
             </Flex>
-            {/* <Flex align="center" wrap="wrap" gap="medium">
-              {activeFilters.map((filter, index) => (
-                <FilterChip
-                  key={`filter-${index}`}
-                  label={filter.label}
-                  value={filter.value}
-                  columnType="select"
-                  options={[
-                    { label: "Option 1", value: "option1" },
-                    { label: "Option 2", value: "option2" }
-                  ]}
-                  onValueChange={(value) => handleFilterChange({ ...filter, value })}
-                  onOperationChange={handleOperationChange}
-                  onRemove={() => console.log(`Removing ${filter.label} filter`)}
-                />
-              ))}
-            </Flex> */}
-
-            <FilterChip
-              label="Status"
-              leadingIcon={<HomeIcon />}
-              columnType="select"
-              options={[
-                { label: "Pending", value: "pending" },
-                { label: "Success", value: "success" },
-              ]}
-              onRemove={() => console.log("Removing filter")}
-              onValueChange={(value) => console.log(value)}
-              onOperationChange={(operation) => console.log(operation)}
-            />
-          <FilterChip
-            label="Priority"
-            leadingIcon={<CheckIcon />}
-            columnType="select"
-            onRemove={() => console.log("Removing filter")}
-            options={[
-              { label: "High", value: "high" },
-              { label: "Medium", value: "medium" },
-              { label: "Low", value: "low" },
-            ]}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
-          <div style={{ width: "100%" }}>
-            <DataTable
-              columns={columns}
-              data={data}
-              initialState={{ sorting: [{ id: "amount", desc: true }] }}
-              isLoading={isLoading}
-              onLoadMore={loadMoreData}
-            >
-              <DataTable.Toolbar>
-                <AssetsHeader />
-                <DataTable.FilterChips />
-              </DataTable.Toolbar>
-              <DataTable.Footer>
-                <></>
-              </DataTable.Footer>
-            </DataTable>
-          </div>
+            
+            <Flex direction="column" style={{ width: "100%" }}>
+            <div style={{ width: "100%" }}>
+              <DataTable
+                columns={columns}
+                data={data}
+                initialState={{ sorting: [{ id: "amount", desc: true }] }}
+                isLoading={isLoading}
+                onLoadMore={loadMoreData}
+              >
+                <DataTable.Toolbar>
+                  <AssetsHeader />
+                  <DataTable.FilterChips />
+                </DataTable.Toolbar>
+                <DataTable.Footer>
+                  <></>
+                </DataTable.Footer>
+              </DataTable>
+            </div>
+          </Flex>
         </Flex>
+      </Flex>
       </Flex>
       <ToastContainer />
-      </Flex>
     </div>
   );
 };
