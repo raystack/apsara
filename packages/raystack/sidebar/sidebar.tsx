@@ -6,14 +6,14 @@ import { Text } from "~/text";
 import styles from "./sidebar.module.css";
 
 /**
- * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar component from @raystack/apsara/v1 instead.
  */
 type SidebarRootProps = PropsWithChildren<VariantProps<typeof Flex>> & {
   children?: ReactNode;
 };
 
 /**
- * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar component from @raystack/apsara/v1 instead.
  */
 const SidebarRoot = ({ children, ...props }: SidebarRootProps) => {
   return (
@@ -29,7 +29,7 @@ const SidebarRoot = ({ children, ...props }: SidebarRootProps) => {
 };
 
 /**
- * @deprecated Use Sidepanel.Header component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar.Header component from @raystack/apsara/v1 instead.
  */
 type SidebarLogoProps = {
   img?: ReactNode;
@@ -39,7 +39,7 @@ type SidebarLogoProps = {
 };
 
 /**
- * @deprecated Use Sidepanel.Header component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar.Header component from @raystack/apsara/v1 instead.
  */
 const SidebarLogo = ({
   name = "Apsara",
@@ -64,12 +64,12 @@ const SidebarLogo = ({
 };
 
 /**
- * @deprecated Use Sidepanel.Main component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar.Main component from @raystack/apsara/v1 instead.
  */
 type SidebarNavigationsProps = PropsWithChildren<VariantProps<typeof Flex>>;
 
 /**
- * @deprecated Use Sidepanel.Main component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar.Main component from @raystack/apsara/v1 instead.
  */
 const SidebarNavigations = ({
   children,
@@ -83,14 +83,14 @@ const SidebarNavigations = ({
 };
 
 /**
- * @deprecated Use Sidepanel.Item component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar.Item component from @raystack/apsara/v1 instead.
  */
 type SidebarNavigationsGroupProps = PropsWithChildren<
   VariantProps<typeof Flex> & { icon?: React.ReactNode; name: string }
 >;
 
 /**
- * @deprecated Use Sidepanel.Item component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar.Item component from @raystack/apsara/v1 instead.
  */
 const SidebarNavigationsGroup = ({
   icon,
@@ -134,7 +134,7 @@ type SidebarNavigationCellProps = PropsWithChildren<VariantProps<typeof cell>> &
   };
 
 /**
- * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar component from @raystack/apsara/v1 instead.
  */
 const SidebarNavigationCell = ({
   leadingIcon,
@@ -168,7 +168,7 @@ type SidebarFooterProps = {
 };
 
 /**
- * @deprecated Use Sidepanel component from @raystack/apsara/v1 instead.
+ * @deprecated Use Sidebar component from @raystack/apsara/v1 instead.
  */
 const SidebarFooter = ({ children, action }: SidebarFooterProps) => {
   return (

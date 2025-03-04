@@ -45,7 +45,7 @@ export const primitivesRoutes = [
     { title: "Spinner", slug: "docs/primitives/components/spinner", newBadge: true },
     { title: "Switch", slug: "docs/primitives/components/switch", newBadge: true },
     { title: "Slider", slug: "docs/primitives/components/slider", newBadge: true },
-    { title: "Side panel", slug: "docs/primitives/components/sidepanel", newBadge: true },
+    { title: "Sidebar", slug: "docs/primitives/components/sidebar", newBadge: true },
     { title: "Tabs", slug: "docs/primitives/components/tabs", newBadge: true },
     { title: "Table", slug: "docs/primitives/components/table", newBadge: true },
     { title: "Text", slug: "docs/primitives/components/text", newBadge: true },

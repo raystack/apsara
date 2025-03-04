@@ -3,11 +3,11 @@ import { cva } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 
 import { Tooltip, TooltipProvider } from "../tooltip";
-import styles from "./sidepanel.module.css";
+import styles from "./sidebar.module.css";
 
 const root = cva(styles.root);
 
-interface SidepanelProps extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
+interface SidebarProps extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
   profile?: {
     icon: ReactNode;
@@ -18,20 +18,20 @@ interface SidepanelProps extends ComponentPropsWithoutRef<typeof Collapsible.Roo
   ref?: ComponentRef<typeof Collapsible.Root>;
 }
 
-interface SidepanelHeaderProps extends ComponentPropsWithoutRef<"div"> {
+interface SidebarHeaderProps extends ComponentPropsWithoutRef<"div"> {
   logo: ReactNode;
   title: string;
   onLogoClick?: () => void;
   ref?: ComponentRef<"div">;
 }
 
-interface SidepanelItemProps extends ComponentPropsWithoutRef<"a"> {
+interface SidebarItemProps extends ComponentPropsWithoutRef<"a"> {
   icon: ReactNode;
   active?: boolean;
   ref?: ComponentRef<"a">;
 }
 
-const SidepanelRoot = ({ 
+const SidebarRoot = ({ 
   className, 
   position = 'left', 
   open, 
@@ -40,10 +40,10 @@ const SidepanelRoot = ({
   profile, 
   ref,
   ...props 
-}: SidepanelProps) => (
+}: SidebarProps) => (
   <TooltipProvider>
     <Collapsible.Root
-      ref={ref}
+      ref={ref as unknown as React.RefObject<HTMLDivElement>}
       className={root({ className })}
       data-position={position}
       data-state={open ? 'expanded' : 'collapsed'}
@@ -100,16 +100,16 @@ const SidepanelRoot = ({
   </TooltipProvider>
 );
 
-const SidepanelHeader = ({
+const SidebarHeader = ({
   className,
   logo,
   title,
   onLogoClick,
   ref,
   ...props
-}: SidepanelHeaderProps) => (
+}: SidebarHeaderProps) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.header} 
     role="banner"
     {...props}
@@ -134,14 +134,14 @@ const SidepanelHeader = ({
   </div>
 );
 
-const SidepanelMain = ({
+const SidebarMain = ({
   className,
   children,
   ref,
   ...props
 }: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.main}
     role="group"
     aria-label="Main navigation"
@@ -151,14 +151,14 @@ const SidepanelMain = ({
   </div>
 );
 
-const SidepanelFooter = ({
+const SidebarFooter = ({
   className,
   children,
   ref,
   ...props
 }: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.footer}
     role="group"
     aria-label="Footer navigation"
@@ -168,16 +168,16 @@ const SidepanelFooter = ({
   </div>
 );
 
-const SidepanelItem = ({
+const SidebarItem = ({
   className,
   icon,
   children,
   active,
   ref,
   ...props
-}: SidepanelItemProps) => (
+}: SidebarItemProps) => (
   <a 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLAnchorElement>} 
     className={styles['nav-item']} 
     data-active={active}
     role="menuitem"
@@ -189,16 +189,16 @@ const SidepanelItem = ({
   </a>
 );
 
-SidepanelRoot.displayName = "Sidepanel.Root";
-SidepanelHeader.displayName = "Sidepanel.Header";
-SidepanelMain.displayName = "Sidepanel.Main";
-SidepanelFooter.displayName = "Sidepanel.Footer";
-SidepanelItem.displayName = "Sidepanel.Item";
+SidebarRoot.displayName = "Sidebar.Root";
+SidebarHeader.displayName = "Sidebar.Header";
+SidebarMain.displayName = "Sidebar.Main";
+SidebarFooter.displayName = "Sidebar.Footer";
+SidebarItem.displayName = "Sidebar.Item";
 
-export const Sidepanel = {
-  Root: SidepanelRoot,
-  Header: SidepanelHeader,
-  Main: SidepanelMain,
-  Footer: SidepanelFooter,
-  Item: SidepanelItem,
+export const Sidebar = {
+  Root: SidebarRoot,
+  Header: SidebarHeader,
+  Main: SidebarMain,
+  Footer: SidebarFooter,
+  Item: SidebarItem,
 };
