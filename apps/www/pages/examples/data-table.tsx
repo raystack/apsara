@@ -202,10 +202,10 @@ export const getData = async (query: DataTableQuery): Promise<Resp> => {
 
       // Sorting
       if (query.sort && query.sort.length) {
-        query.sort.forEach(({ key, order }) => {
+        query.sort.forEach(({ name, order }) => {
           data.sort((a, b) => {
-            const valA = a[key];
-            const valB = b[key];
+            const valA = a[name];
+            const valB = b[name];
             const sortValue =
               typeof valA === "string" ? valA.localeCompare(valB) : valA - valB;
             return order === "asc" ? sortValue : -1 * sortValue;
@@ -298,7 +298,7 @@ export default function DataTableExample() {
           mode={isSeverMode ? "server" : "client"}
           query={query}
           isLoading={isLoading}
-          defaultSort={{ key: "org_name", order: "asc" }}
+          defaultSort={{ name: "org_name", order: "asc" }}
           onTableQueryChange={onTableQueryChange}
           onLoadMore={onLoadMore}
         >

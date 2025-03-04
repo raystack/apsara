@@ -29,7 +29,7 @@ type SortOrdersKeys = keyof typeof SortOrders;
 export type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
 
 export interface Sort {
-  key: string;
+  name: string;
   order: SortOrdersValues;
 }
 

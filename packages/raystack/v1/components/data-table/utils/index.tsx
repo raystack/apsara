@@ -26,7 +26,7 @@ export function queryToTableState(query: DataTableQuery): Partial<TableState> {
       }) || [];
 
   const sorting = query.sort?.map((data) => ({
-    id: data?.key,
+    id: data?.name,
     desc: data?.order === SortOrders.DESC,
   }));
   return {
@@ -114,7 +114,7 @@ const generateFilterMap = (
 };
 
 const generateSortMap = (sort: Sort[] = []): Map<string, string> => {
-  return new Map(sort.map(({ key, order }) => [key, order]));
+  return new Map(sort.map(({ name, order }) => [name, order]));
 };
 
 const isFilterChanged = (

@@ -25,7 +25,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
   function handleOrderChange() {
     const newOrder =
       value.order === SortOrders.ASC ? SortOrders.DESC : SortOrders.ASC;
-    onChange(value.key, newOrder);
+    onChange(value.name, newOrder);
   }
 
   return (
@@ -36,7 +36,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
       <Flex gap={"extra-small"} className={styles["flex-1"]}>
         <Select
           onValueChange={handleColumnChange}
-          value={value.key}
+          value={value.name}
           disabled={columnList.length === 0}
         >
           <Select.Trigger

@@ -108,7 +108,7 @@ export const Assets = () => {
         data={data}
         mode="client"
         columns={columns}
-        defaultSort={{ key: "email", order: "asc" }}
+        defaultSort={{ name: "email", order: "asc" }}
       >
         <DataTable.Toolbar />
         <DataTable.Content />

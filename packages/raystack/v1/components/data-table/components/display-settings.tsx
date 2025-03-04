@@ -34,7 +34,7 @@ export function DisplaySettings<TData, TValue>() {
     updateTableQuery((query) => {
       return {
         ...query,
-        sort: [{ key: columnId, order }],
+        sort: [{ name: columnId, order }],
       };
     });
   }
