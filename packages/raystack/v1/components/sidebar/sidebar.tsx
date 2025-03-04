@@ -57,6 +57,7 @@ const SidebarRoot = ({
       <Tooltip 
         message={open ? "Click to collapse" : "Click to expand"}
         side={position === 'left' ? 'right' : 'left'}
+        asChild
       >
         <div 
           className={styles.resizeHandle}
@@ -116,7 +117,6 @@ const SidebarHeader = ({
   >
     <div 
       className={styles.logo} 
-      aria-hidden="true"
       onClick={onLogoClick}
       role={onLogoClick ? "button" : undefined}
       tabIndex={onLogoClick ? 0 : undefined}

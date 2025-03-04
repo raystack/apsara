@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import {
+  BellIcon,
+  BookmarkFilledIcon,
   DotsVerticalIcon,
+  GitHubLogoIcon,
+  GlobeIcon,
   HomeIcon,
+  ImageIcon,
   InfoCircledIcon,
+  LapTimerIcon,
+  LinkedInLogoIcon,
+  MaskOnIcon,
+  TimerIcon,
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { Flex, Sidebar } from "@raystack/apsara/v1";
+import { Flex, Image, Sidebar } from "@raystack/apsara/v1";
 import { Assets } from "./assets";
 
 import "@raystack/apsara/style.css";
@@ -29,19 +38,20 @@ export const Shield = () => {
             }}
           >
             <Sidebar.Header
-              logo={<HomeIcon width={24} height={24} />} 
-              title="The North Face" 
+              logo={<Image radius="small" src="/thenorthface-logo.svg" width={24} height={24} />} 
+              title="THE NORTH FACE"
+              onLogoClick={() => console.log("Logo clicked")}
             />
             <Sidebar.Main>
-              <Sidebar.Item href="#" icon={<HomeIcon />} active>Explore</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>AOIs</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Workflows</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Marketplace</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Activity</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<GitHubLogoIcon />} active>Explore</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<ImageIcon />}>AOIs</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<BookmarkFilledIcon />}>Workflows</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<MaskOnIcon />}>Marketplace</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<LinkedInLogoIcon />}>Activity</Sidebar.Item>
             </Sidebar.Main>
             <Sidebar.Footer>
-              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Feedback</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Support</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<GlobeIcon />}>Feedback</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<LapTimerIcon />}>Support</Sidebar.Item>
               <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidebar.Item>
             </Sidebar.Footer>
           </Sidebar.Root>
