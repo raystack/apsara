@@ -52,10 +52,10 @@
   overflow: hidden;
   color: var(--rs-color-foreground-base-primary);
   text-overflow: ellipsis;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   transition: opacity 0.2s ease;
 }
 
@@ -113,10 +113,10 @@
 
 .nav-text {
   color: var(--rs-color-foreground-base-primary);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  letter-spacing: 0.5px;
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

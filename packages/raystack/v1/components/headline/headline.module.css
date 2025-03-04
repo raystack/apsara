@@ -2,8 +2,8 @@
     display: block;
     line-height: 1;
     margin: 0;
-    font-weight: 400;
     font-family: var(--rs-font-title);
+    font-weight: var(--rs-font-weight-regular);
     color: var(--rs-color-foreground-base-primary);
     width: 100%;
 }

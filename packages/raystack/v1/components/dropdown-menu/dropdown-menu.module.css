@@ -51,15 +51,15 @@
 }
 
 .label {
-  padding: var(--pd-6) var(--pd-8);
+  padding: 6px var(--rs-space-3);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
 }
 
 .separator {
   height: 1px;
-  margin: var(--mr-4) calc(var(--mr-8) * -1);
-  background: var(--rs-color-background-base-secondary);
+  margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);
+  background: var(--rs-color-border-base-primary);
 }
 
 .empty {

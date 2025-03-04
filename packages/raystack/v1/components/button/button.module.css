@@ -224,8 +224,8 @@
 }
 
 .loader {
-  border: 2px solid var(--background-base);
-  border-top: 2px solid var(--foreground-base);
+  border: 2px solid var(--rs-color-background-base-primary);
+  border-top: 2px solid var(--rs-color-foreground-base-primary);
   border-radius: 50%;
   width: 10px;
   height: 10px;

@@ -2,16 +2,17 @@
   display: inline-flex;
   align-items: stretch;
   gap: 0;
-  font-size: 12px;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   height: 24px;
   background: var(--rs-color-background-base-primary);
   border: 1px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-1);
   text-wrap: nowrap;
-  font-weight: 400;
-  line-height: 16px;
-  letter-spacing: 0.4px;
   width: fit-content;
 }
 
@@ -21,7 +22,11 @@
 }
 
 .operation {
-  font-size: 12px;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   background: transparent;
   height: calc(100% - 2px);
   display: flex;
@@ -35,9 +40,11 @@
 
 .operationText {
   color: var(--rs-color-foreground-base-secondary);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   padding: var(--rs-space-1) var(--rs-space-3);
   height: calc(100% - 2px);
   display: flex;
@@ -73,14 +80,16 @@
   min-height: unset !important;
   border-radius: var(--rs-radius-1);
   color: var(--rs-color-foreground-base-primary) !important;
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .value {
   color: var(--rs-color-foreground-base-primary);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -123,9 +132,11 @@
 .selectValue {
   margin-left: var(--rs-space-2);
   color: var(--rs-color-foreground-base-primary);
-  font-size: 12px;
-  line-height: 16px;
-  letter-spacing: 0.4px;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   padding: var(--rs-space-1) var(--rs-space-2);
   height: calc(100% - 2px);
   display: flex;

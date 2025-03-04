@@ -2,8 +2,9 @@
   z-index: 50;
   outline: 0;
   overflow: hidden;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
   font-family: var(--rs-font-body);
 
   box-sizing: border-box;

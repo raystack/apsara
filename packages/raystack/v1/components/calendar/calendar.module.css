@@ -142,7 +142,7 @@
   cursor: pointer;
   border: none;
   width: 100%;
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   height: 100%;
   padding: unset;
   display: grid;
