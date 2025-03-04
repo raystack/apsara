@@ -52,7 +52,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   delayDuration = 200,
   skipDelayDuration = 200,
   'aria-label': ariaLabel,
-  asChild = false,
+  asChild = true,
 }) => {
   return disabled ? (
     children
