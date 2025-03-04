@@ -33,11 +33,10 @@
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);
-  padding: var(--rs-space-2);
+  padding: var(--rs-space-6) var(--rs-space-2);
   align-self: stretch;
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
-  height: 56px;
 }
 
 .logo {
