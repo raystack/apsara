@@ -4,10 +4,12 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import postcss from "rollup-plugin-postcss";
 import postcssImport from 'postcss-import';
+import svgr from '@svgr/rollup'
 
 const createPlugins = (isV1 = false) => [
   nodeResolve(),
   commonjs(),
+  svgr(),
   postcss({
     plugins: [
       postcssImport(),
@@ -30,7 +32,7 @@ const createPlugins = (isV1 = false) => [
 const sharedWarningHandler = (warning, warn) => {
   // Ignore circular dependency warnings
   // if (warning.code === 'CIRCULAR_DEPENDENCY') return;
-  
+
   // This ignores the warnings generated during build from
   // CSS module imports which is not standard JS module syntax.
   if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;

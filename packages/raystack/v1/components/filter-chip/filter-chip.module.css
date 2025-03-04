@@ -121,6 +121,7 @@
 }
 
 .selectValue {
+  margin-left: var(--rs-space-2);
   color: var(--rs-color-foreground-base-primary);
   font-size: 12px;
   line-height: 16px;
@@ -129,7 +130,6 @@
   height: calc(100% - 2px);
   display: flex;
   align-items: center;
-  margin-left: 0;
 }
 
 .selectValue:hover {
