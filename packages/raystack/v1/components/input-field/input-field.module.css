@@ -96,6 +96,10 @@
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
+.input-error:focus {
+  border-color: var(--rs-color-border-danger-emphasis-hover);
+}
+
 .input-disabled {
   background: var(--rs-color-background-base-primary);
   border-color: var(--rs-color-border-base-tertiary);
