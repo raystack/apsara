@@ -43,7 +43,7 @@ const SidepanelRoot = ({
 }: SidepanelProps) => (
   <TooltipProvider>
     <Collapsible.Root
-      ref={ref}
+      ref={ref as unknown as React.RefObject<HTMLDivElement>}
       className={root({ className })}
       data-position={position}
       data-state={open ? 'expanded' : 'collapsed'}
@@ -109,7 +109,7 @@ const SidepanelHeader = ({
   ...props
 }: SidepanelHeaderProps) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.header} 
     role="banner"
     {...props}
@@ -141,7 +141,7 @@ const SidepanelMain = ({
   ...props
 }: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.main}
     role="group"
     aria-label="Main navigation"
@@ -158,7 +158,7 @@ const SidepanelFooter = ({
   ...props
 }: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.footer}
     role="group"
     aria-label="Footer navigation"
@@ -177,7 +177,7 @@ const SidepanelItem = ({
   ...props
 }: SidepanelItemProps) => (
   <a 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLAnchorElement>} 
     className={styles['nav-item']} 
     data-active={active}
     role="menuitem"
