@@ -114,10 +114,10 @@ const isFilterChanged = (
   oldFilters: RQLFilter[] = [],
   newFilters: RQLFilter[] = []
 ): boolean => {
-  if (oldFilters.length !== newFilters.length) return true;
-
   const oldFilterMap = generateFilterMap(oldFilters);
   const newFilterMap = generateFilterMap(newFilters);
+
+  if (oldFilterMap.size !== newFilterMap.size) return true;
 
   return [...newFilterMap].some(
     ([key, value]) => oldFilterMap.get(key) !== value
