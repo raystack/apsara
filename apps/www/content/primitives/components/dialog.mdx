@@ -17,6 +17,7 @@ import React from "react";
         <Button variant="primary">Basic Dialog</Button>
       </Dialog.Trigger>
       <Dialog.Content 
+        width={600}
         ariaLabel="Basic Dialog"
         ariaDescription="A simple dialog example"
       >
@@ -53,6 +54,7 @@ The Dialog component provides a modal window that overlays the page content.
     <Button variant="primary">Open Dialog</Button>
   </Dialog.Trigger>
   <Dialog.Content 
+    width={600}
     ariaLabel="Example Dialog"
     ariaDescription="Dialog description for screen readers"
   >
@@ -79,10 +81,17 @@ The Dialog component consists of several parts:
 
 - `ariaLabel`: Accessible label for the dialog
 - `ariaDescription`: Detailed description for screen readers
+- `width`: Controls dialog width (string | number)
 - `overlayBlur`: Enables backdrop blur effect (boolean)
-- `close`: Shows close button in top-right corner (boolean)
-- `side`: Position of the dialog ("top" | "right" | "bottom" | "left")
+- `overlayClassName`: Custom class for overlay styling
+- `overlayStyle`: Custom styles for overlay
+- `close`: Controls visibility of close button (boolean). Note: Make sure to conditionally render `<Dialog.Close>` as well if passing custom Icon for close in it.
 - `className`: Additional CSS class names
+- `side`: Position of the dialog ("top" | "right" | "bottom" | "left")
+
+### Description Props
+
+- `className`: Additional CSS class names for description
 
 ### Trigger Props
 
@@ -93,6 +102,7 @@ The Dialog component consists of several parts:
 
 - `asChild`: Boolean to merge props onto child element
 - `className`: Additional CSS class names
+- `children`: Custom Close icon. Note: If this is passed, the `close` prop value is not respected. The close icon will always be visible.
 
 ## Examples
 
@@ -110,7 +120,7 @@ A simple dialog with title and description.
   <Dialog.Trigger asChild>
     <Button variant="primary">Open Dialog</Button>
   </Dialog.Trigger>
-  <Dialog.Content>
+  <Dialog.Content width={600}>
     <Dialog.Title>Welcome</Dialog.Title>
     <Dialog.Description>
       This is a basic dialog example.
@@ -140,7 +150,7 @@ function ControlledDialog() {
       <Dialog.Trigger asChild>
         <Button variant="primary">Controlled Dialog</Button>
       </Dialog.Trigger>
-      <Dialog.Content>
+      <Dialog.Content width={600}>
         <Dialog.Title>Controlled State</Dialog.Title>
         <Dialog.Description>
           This dialog's state is controlled externally.
@@ -150,6 +160,62 @@ function ControlledDialog() {
     </Dialog>
   );
 }`,
+    },
+  ]}
+/>
+
+### Custom Width and Overlay
+
+Example with custom width and overlay styling.
+
+<Playground
+  scope={{ Dialog, Button, Flex }}
+  tabs={[
+    {
+      name: "Custom Styling",
+      code: `
+<Dialog>
+  <Dialog.Trigger asChild>
+    <Button variant="primary">Styled Dialog</Button>
+  </Dialog.Trigger>
+  <Dialog.Content
+    width="400px"
+    overlayBlur
+    overlayClassName="custom-overlay"
+    overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+  >
+    <Dialog.Title>Custom Styled Dialog</Dialog.Title>
+    <Dialog.Description className="custom-description">
+      This dialog has custom width and overlay styling.
+    </Dialog.Description>
+    <Dialog.Close />
+  </Dialog.Content>
+</Dialog>`,
+    },
+  ]}
+/>
+
+### Without Close Button
+
+Example of dialog without the close button.
+
+<Playground
+  scope={{ Dialog, Button }}
+  tabs={[
+    {
+      name: "No Close",
+      code: `
+<Dialog>
+  <Dialog.Trigger asChild>
+    <Button variant="primary">Open Dialog</Button>
+  </Dialog.Trigger>
+  <Dialog.Content width={600} close={false}>
+    <Dialog.Title>No Close Button</Dialog.Title>
+    <Dialog.Description>
+      This dialog doesn't show the close button.
+    </Dialog.Description>
+  </Dialog.Content>
+</Dialog>`,
     },
   ]}
 />
