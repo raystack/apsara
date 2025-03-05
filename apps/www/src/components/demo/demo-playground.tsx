@@ -59,7 +59,7 @@ export default function DemoPlayground({
     setComponentProps({ ...componentProps, [prop]: value });
 
     Object.entries(updatedComponentProps).forEach(([key, val]) => {
-      const { defaultValue, initialValue = "", type } = controls[key];
+      const { defaultValue, initialValue, type } = controls[key];
 
       if (val !== defaultValue && val !== initialValue) {
         params.set(key, String(val));

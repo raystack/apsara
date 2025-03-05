@@ -3,6 +3,7 @@ export const getPropsString = (
   hasLeadingWhiteSpace: boolean = true,
 ) => {
   const str = Object.entries(props)
+    .filter(([key, value]) => value !== "")
     .map(([key, value]) => {
       if (
         typeof value === "string" &&
