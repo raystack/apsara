@@ -85,7 +85,7 @@ The Dialog component consists of several parts:
 - `overlayBlur`: Enables backdrop blur effect (boolean)
 - `overlayClassName`: Custom class for overlay styling
 - `overlayStyle`: Custom styles for overlay
-- `close`: Controls visibility of close button (boolean)
+- `close`: Controls visibility of close button (boolean). Note: Make sure to conditionally render `<Dialog.Close>` as well if passing custom Icon for close in it.
 - `className`: Additional CSS class names
 - `side`: Position of the dialog ("top" | "right" | "bottom" | "left")
 
@@ -102,6 +102,7 @@ The Dialog component consists of several parts:
 
 - `asChild`: Boolean to merge props onto child element
 - `className`: Additional CSS class names
+- `children`: Custom Close icon. Note: If this is passed, the `close` prop value is not respected. The close icon will always be visible.
 
 ## Examples
 
