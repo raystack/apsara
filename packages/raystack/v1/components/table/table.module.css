@@ -35,7 +35,7 @@
 
 .cell {
   overflow: hidden;
-  color: var(--rs-color-foreground-base-primary);
+  color: var(--rs-color-foreground-base-secondary);
   text-overflow: ellipsis;
   white-space: nowrap;
 
