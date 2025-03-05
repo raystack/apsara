@@ -11,13 +11,18 @@ import styles from "./styles.module.css";
 import DemoControls from "./demo-controls";
 import Preview from "../preview";
 import Editor from "../editor";
-import { ControlsType, DemoPlaygroundProps } from "./types";
+import {
+  ComponentPropsType,
+  ControlsType,
+  DemoPlaygroundProps,
+  PropChangeHandlerType,
+} from "./types";
 
 const getInitialProps = (
   controls: ControlsType,
   searchParams: ReadonlyURLSearchParams,
 ) => {
-  const initialProps: Record<string, any> = {};
+  const initialProps: ComponentPropsType = {};
 
   Object.keys(controls).forEach(key => {
     const value = searchParams.get(key);
@@ -52,7 +57,7 @@ export default function DemoPlayground({
 
   const code = getCode(updatedProps, componentProps);
 
-  const handlePropChange = (prop: string, value: string | boolean | number) => {
+  const handlePropChange: PropChangeHandlerType = (prop, value) => {
     const updatedComponentProps = { ...componentProps, [prop]: value };
     const params = new URLSearchParams();
 

@@ -30,6 +30,13 @@ export type ControlType = {
 
 export type ControlsType = Record<string, ControlType>;
 
+export type PropChangeHandlerType = (
+  prop: string,
+  value: string | boolean | number,
+) => void;
+
+export type ComponentPropsType = Record<string, any>;
+
 export type GetCodeType = (
   updatedProps: Record<string, any>,
   props: Record<string, any>,

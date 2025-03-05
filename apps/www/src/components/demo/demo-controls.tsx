@@ -1,12 +1,16 @@
 "use client";
 
 import styles from "./styles.module.css";
-import { ControlsType } from "./types";
+import {
+  ComponentPropsType,
+  ControlsType,
+  PropChangeHandlerType,
+} from "./types";
 
 type PropControlsProps = {
   controls: ControlsType;
-  componentProps: Record<string, any>;
-  onPropChange: (prop: string, value: string | boolean | number) => void;
+  componentProps: ComponentPropsType;
+  onPropChange: PropChangeHandlerType;
 };
 
 export default function DemoControls({
