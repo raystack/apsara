@@ -2,12 +2,16 @@ import { Flex } from "../../flex";
 import styles from "../data-table.module.css";
 import { Text } from "../../text";
 import { Select } from "../../select";
-import { DataTableColumn } from "../data-table.types";
+import {
+  DataTableColumn,
+  SortOrders,
+  SortOrdersValues,
+} from "../data-table.types";
 import { defaultGroupOption } from "../utils";
 
 interface GroupingProps<TData, TValue> {
   columns: DataTableColumn<TData, TValue>[];
-  onChange: (columnId: string) => void;
+  onChange: (columnId: string, order: SortOrdersValues) => void;
   value: string;
 }
 
@@ -25,13 +29,21 @@ export function Grouping<TData, TValue>({
         id: id,
       };
     });
+
+  const handleGroupChange = (columnId: string) => {
+    const column = columns.find((col) => col.id === columnId);
+    if (column) {
+      onChange(column.id, column.columnDef.groupSortOrder || SortOrders.ASC);
+    }
+  };
+
   return (
     <Flex justify="between" align="center">
       <Text size={2} weight={500} className={styles["flex-1"]}>
         Grouping
       </Text>
       <Flex className={styles["flex-1"]}>
-        <Select onValueChange={onChange} value={value}>
+        <Select onValueChange={handleGroupChange} value={value}>
           <Select.Trigger
             size={"small"}
             className={styles["display-popover-properties-select"]}

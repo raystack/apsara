@@ -102,7 +102,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
       { value: false, label: "No" },
     ],
     enableGrouping: true,
-    groupOrdering: ["false"],
+    groupSortOrder: "desc",
     showGroupCount: true,
   },
   {

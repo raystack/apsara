@@ -19,12 +19,6 @@ export interface RQLFilter {
   value: any;
 }
 
-export interface DataTableFilter {
-  name: string;
-  operator: FilterOperatorTypes;
-  value: any;
-}
-
 type SortOrdersKeys = keyof typeof SortOrders;
 export type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
 
@@ -40,6 +34,7 @@ export interface DataTableQuery {
   offset?: number;
   limit?: number;
   search?: string;
+  __group_by_sort?: SortOrdersValues;
 }
 
 export type DataTableColumn<TData, TValue> = Omit<
@@ -67,11 +62,11 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     header?: React.CSSProperties;
   };
   enableGrouping?: boolean;
-  groupOrdering?: string[];
+  groupSortOrder?: SortOrdersValues;
   showGroupCount?: boolean;
+  groupCountMap?: Record<string, number>;
   // TODO: implement these
   icon?: React.ReactNode;
-  groupCountMap?: Record<string, number>;
 };
 
 export interface DataTableProps<TData, TValue> {

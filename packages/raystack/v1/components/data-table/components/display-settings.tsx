@@ -39,11 +39,12 @@ export function DisplaySettings<TData, TValue>() {
     });
   }
 
-  function onGroupChange(columnId: string) {
+  function onGroupChange(columnId: string, order: SortOrdersValues) {
     updateTableQuery((query) => {
       return {
         ...query,
         group_by: [columnId],
+        __group_by_sort: order,
       };
     });
   }
