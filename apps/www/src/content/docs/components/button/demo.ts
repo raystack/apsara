@@ -25,6 +25,8 @@ export const playground = {
       options: ["small", "normal"],
       defaultValue: "normal",
     },
+    leadingIcon: { type: "icon", defaultValue: "" },
+    trailingIcon: { type: "icon", defaultValue: "" },
     disabled: { type: "checkbox", defaultValue: false },
     loading: { type: "checkbox", defaultValue: false },
     children: { type: "text", initialValue: "Click me" },

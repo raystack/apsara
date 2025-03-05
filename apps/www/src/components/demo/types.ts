@@ -20,7 +20,7 @@ export type DemoProps = {
 };
 
 export type ControlType = {
-  type: "select" | "text" | "checkbox" | "number";
+  type: "select" | "text" | "checkbox" | "number" | "icon";
   options?: string[];
   defaultValue?: string | boolean;
   initialValue?: string | boolean;
