@@ -53,6 +53,14 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     enableSorting: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
     columnType: "text",
+    styles: {
+      cell: {
+        paddingLeft: "16px",
+      },
+      header: {
+        paddingLeft: "16px",
+      },
+    },
   },
   {
     accessorKey: "billing_email",
