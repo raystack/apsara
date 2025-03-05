@@ -20,6 +20,7 @@ export interface DialogContentProps
   ariaDescription?: string;
   overlayBlur?: boolean;
   overlayClassName?: string;
+  overlayStyle?: React.CSSProperties;
   width?: string | number;
   close?: boolean;
 }
@@ -34,6 +35,7 @@ const DialogContent = forwardRef<
   ariaDescription, 
   overlayBlur = false, 
   overlayClassName,
+  overlayStyle,
   width,
   close,
   ...props 
@@ -41,6 +43,7 @@ const DialogContent = forwardRef<
   <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay 
       className={clsx(styles.dialogOverlay, overlayClassName, overlayBlur && styles.overlayBlur )}
+      style={overlayStyle}
       aria-hidden="true"
       role="presentation"
     />
