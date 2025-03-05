@@ -1,0 +1,8 @@
+.preview {
+  padding: 40px 20px;
+  flex: 3;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

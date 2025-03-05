@@ -2,8 +2,9 @@ import { RootProvider } from "fumadocs-ui/provider";
 import "fumadocs-ui/style.css";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
-import { ThemeProvider } from "@/components/apsara";
+import { ThemeProvider } from "@/components/theme";
 import "@raystack/apsara/style.css";
+import "@/styles.css";
 
 const inter = Inter({
   subsets: ["latin"],
