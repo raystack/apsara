@@ -21,6 +21,7 @@ export interface DialogContentProps
   overlayBlur?: boolean;
   overlayClassName?: string;
   width?: string | number;
+  close?: boolean;
 }
 
 const DialogContent = forwardRef<
@@ -34,11 +35,12 @@ const DialogContent = forwardRef<
   overlayBlur = false, 
   overlayClassName,
   width,
+  close,
   ...props 
 }, ref) => (
   <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay 
-      className={clsx(styles.dialogOverlay, overlayBlur && styles.overlayBlur, overlayClassName)}
+      className={clsx(styles.dialogOverlay, overlayClassName, overlayBlur && styles.overlayBlur )}
       aria-hidden="true"
       role="presentation"
     />
@@ -51,7 +53,7 @@ const DialogContent = forwardRef<
       {...props}
     >
       {children}
-      <CloseButton />
+      {close && <CloseButton />}
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>
 ));
