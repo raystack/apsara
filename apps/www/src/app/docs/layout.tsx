@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { docs } from "@/lib/source";
 import Logo from "@/components/logo";
-import ThemeSwitcher from "@/components/playground/theme-switcher";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -15,9 +14,6 @@ export default function Layout({ children }: { children: ReactNode }) {
             Apsara
           </>
         ),
-      }}
-      sidebar={{
-        footer: <ThemeSwitcher />,
       }}
       // disableThemeSwitch={true}
     >

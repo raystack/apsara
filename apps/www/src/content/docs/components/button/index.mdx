@@ -3,65 +3,16 @@ title: Button
 description: Your first document
 ---
 
-import { Accordion } from "fumadocs-ui/components/accordion";
+import { playground, variantsDemo, sizesDemo } from "./demo.ts";
 
-<Playground />
-
+<Demo data={playground} />
+## Examples
+<br />
+### Variants
+<Demo data={variantsDemo} />
+<br />
+### Sizes
+<Demo data={sizesDemo} />
 ## Button Props
 
-<TypeTable
-  type={{
-    variant: {
-      description: "Visual style variant",
-      type: '"solid" | "outline" | "ghost" | "text"',
-      default: "solid",
-    },
-    color: {
-      description: "Color theme",
-      type: '"accent" | "danger" | "neutral" | "success"',
-      default: "accent",
-    },
-    size: {
-      description: "Size of the button",
-      type: '"small" | "normal"',
-      default: "normal",
-    },
-    disabled: {
-      description: "Whether the button is disabled",
-      type: "boolean",
-      default: "false",
-    },
-    loading: {
-      description: "Shows a loading spinner inside the button",
-      type: "boolean",
-    },
-    loaderText: {
-      description: "Optional text to display next to the loading spinner",
-      type: "ReactNode",
-    },
-    leadingIcon: {
-      description: "Icon element to display before button text",
-      type: "ReactNode",
-    },
-    trailingIcon: {
-      description: "Icon element to display after button text",
-      type: "ReactNode",
-    },
-    maxWidth: {
-      description: "Custom maximum width for the button",
-      type: "string | number",
-    },
-    width: {
-      description: "Custom width for the button",
-      type: "string | number",
-    },
-    asChild: {
-      description: "Boolean to merge props onto child element",
-      type: "boolean",
-    },
-    className: {
-      description: "Additional CSS class names",
-      type: "string",
-    },
-  }}
-/>
+<auto-type-table path="./props.ts" name="ButtonProps" />
