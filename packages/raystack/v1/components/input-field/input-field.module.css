@@ -61,7 +61,6 @@
   border-radius: var(--rs-radius-2);
   border: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
-  min-width: 200px;
   font-family: inherit;
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
