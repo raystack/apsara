@@ -101,7 +101,7 @@ export function groupData<TData>(
 const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
   return new Map(
     filters
-      ?.filter((fil) => fil.value !== "" && fil._type !== FilterType.select)
+      ?.filter((data) => data._type === FilterType.select || data.value !== "")
       .map(({ name, operator, value }) => [`${name}-${operator}`, value])
   );
 };
@@ -185,7 +185,7 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
 
   const sanitizedFilters =
     filters
-      ?.filter((data) => data.value !== "" && data._type !== FilterType.select)
+      ?.filter((data) => data._type === FilterType.select || data.value !== "")
       ?.map((data) => ({
         ...data,
         value:
