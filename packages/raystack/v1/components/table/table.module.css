@@ -51,11 +51,6 @@
   background: var(--rs-color-background-base-primary);
 }
 
-.cell:first-child,
-.head:first-child {
-  padding-left: var(--rs-space-7);
-}
-
 .sectionHeader {
   background: var(--rs-color-background-neutral-primary);
   text-align: left;
