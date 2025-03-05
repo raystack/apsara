@@ -38,7 +38,7 @@ const DialogContent = forwardRef<
 }, ref) => (
   <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay 
-      className={clsx(styles.dialogOverlay, overlayClassName, overlayBlur && styles.overlayBlur )}
+      className={clsx(styles.dialogOverlay, overlayBlur && styles.overlayBlur, overlayClassName)}
       aria-hidden="true"
       role="presentation"
     />
@@ -51,6 +51,7 @@ const DialogContent = forwardRef<
       {...props}
     >
       {children}
+      <CloseButton />
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>
 ));
