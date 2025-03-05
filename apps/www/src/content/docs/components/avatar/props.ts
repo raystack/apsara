@@ -1,4 +1,4 @@
-export interface Props {
+export interface AvatarProps {
   /**
    * Specifies the size of the avatar (1-13)
    * @defaultValue 3
@@ -46,6 +46,19 @@ export interface Props {
 
   /** Boolean to merge props onto child element */
   asChild?: boolean;
+
+  /** Additional CSS class names */
+  className?: string;
+}
+
+export interface AvatarGroupProps {
+  /**
+   * Array of Avatar components to display
+   */
+  children: React.ReactNode;
+
+  /** Maximum number of avatars to show before displaying a count */
+  max?: number;
 
   /** Additional CSS class names */
   className?: string;
