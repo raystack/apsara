@@ -4,6 +4,7 @@ import * as Apsara from "@raystack/apsara/v1";
 import DemoPreview from "./demo-preview";
 import { DemoProps } from "./types";
 import DemoPlayground from "./demo-playground";
+import { Suspense } from "react";
 
 export default function Demo(props: DemoProps) {
   const { data, scope = Apsara } = props;
@@ -12,5 +13,9 @@ export default function Demo(props: DemoProps) {
     return <DemoPreview scope={scope} {...data} />;
   }
 
-  return <DemoPlayground scope={scope} {...data} />;
+  return (
+    <Suspense>
+      <DemoPlayground scope={scope} {...data} />
+    </Suspense>
+  );
 }

@@ -25,14 +25,10 @@ const getInitialProps = (
   const initialProps: ComponentPropsType = {};
 
   Object.keys(controls).forEach(key => {
-    const value = searchParams.get(key);
     const { type, initialValue, defaultValue } = controls[key];
+    const value = searchParams.get(key) ?? initialValue ?? defaultValue;
 
-    if (value !== null) {
-      initialProps[key] = type === "checkbox" ? value === "true" : value;
-    } else {
-      initialProps[key] = initialValue ?? defaultValue;
-    }
+    initialProps[key] = type === "checkbox" ? value === "true" : value;
   });
   return initialProps;
 };
