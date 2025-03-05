@@ -21,6 +21,10 @@
   z-index: 9999;
 }
 
+.dialogContent:focus {
+  outline: none;
+}
+
 .close {
   position: absolute;
   top: var(--rs-space-3);
@@ -42,6 +46,9 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
+.overlayBlur {
+  backdrop-filter: blur(2px);
+}
 
 .dialogOverlay[data-state="open"] {
   animation: fadeIn 150ms cubic-bezier(0.22, 1, 0.36, 1);

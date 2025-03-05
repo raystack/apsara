@@ -38,7 +38,7 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
-  min-height: 24px;
+  height: 24px;
 }
 
 .button-normal {
@@ -46,7 +46,7 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  min-height: 32px;
+  height: 32px;
 }
 
 .button-solid {

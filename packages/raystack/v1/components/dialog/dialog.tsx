@@ -7,6 +7,7 @@ import {
   ElementRef,
   forwardRef,
 } from "react";
+import { clsx } from "clsx";
 
 import styles from "./dialog.module.css";
 
@@ -17,21 +18,34 @@ export interface DialogContentProps
     VariantProps<typeof dialogContent> {
   ariaLabel?: string;
   ariaDescription?: string;
+  overlayBlur?: boolean;
+  overlayClassName?: string;
+  width?: string | number;
 }
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ className, children, ariaLabel, ariaDescription, ...props }, ref) => (
+>(({ 
+  className, 
+  children, 
+  ariaLabel, 
+  ariaDescription, 
+  overlayBlur = false, 
+  overlayClassName,
+  width,
+  ...props 
+}, ref) => (
   <DialogPrimitive.Portal>
     <DialogPrimitive.Overlay 
-      className={styles.dialogOverlay}
+      className={clsx(styles.dialogOverlay, overlayClassName, overlayBlur && styles.overlayBlur )}
       aria-hidden="true"
       role="presentation"
     />
     <DialogPrimitive.Content
       ref={ref}
       className={dialogContent({ className })}
+      style={{ width, ...props.style }}
       aria-label={ariaLabel}
       aria-describedby={ariaDescription ? 'dialog-description' : undefined}
       {...props}
@@ -76,10 +90,16 @@ function DialogTitle({ children, ...props }: DialogTitleProps) {
   );
 }
 
-function DialogDescription({ children, ...props }: { children: React.ReactNode }) {
+interface DialogDescriptionProps extends ComponentProps<typeof DialogPrimitive.Description> {
+  children: React.ReactNode;
+  className?: string;
+}
+
+function DialogDescription({ children, className, ...props }: DialogDescriptionProps) {
   return (
     <DialogPrimitive.Description 
       {...props}
+      className={className}
       id="dialog-description"
       role="document"
     >
