@@ -51,7 +51,7 @@ export default function DemoPlayground({
     ),
   );
 
-  const code = getCode(updatedProps, componentProps);
+  const code = getCode(updatedProps, componentProps).trim();
 
   const handlePropChange: PropChangeHandlerType = (prop, value) => {
     const updatedComponentProps = { ...componentProps, [prop]: value };
