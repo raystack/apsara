@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import {
+  BellIcon,
+  BookmarkFilledIcon,
   DotsVerticalIcon,
+  GitHubLogoIcon,
+  GlobeIcon,
   HomeIcon,
+  ImageIcon,
   InfoCircledIcon,
+  LapTimerIcon,
+  LinkedInLogoIcon,
+  MaskOnIcon,
+  TimerIcon,
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { Flex, Sidepanel } from "@raystack/apsara/v1";
+import { Flex, Image, Sidebar } from "@raystack/apsara/v1";
 import { Assets } from "./assets";
 
 import "@raystack/apsara/style.css";
@@ -18,7 +27,7 @@ export const Shield = () => {
     <>
       <Flex style={{ height: "100vh" }}>
         <div style={{ position: 'relative' }}>
-          <Sidepanel.Root 
+          <Sidebar.Root 
             open={sidebarOpen} 
             onOpenChange={setSidebarOpen} 
             position="left"
@@ -28,23 +37,24 @@ export const Shield = () => {
               href: "#"
             }}
           >
-            <Sidepanel.Header
-              logo={<HomeIcon width={24} height={24} />} 
-              title="The North Face" 
+            <Sidebar.Header
+              logo={<Image radius="small" src="/thenorthface-logo.svg" width={24} height={24} />} 
+              title="THE NORTH FACE"
+              onLogoClick={() => console.log("Logo clicked")}
             />
-            <Sidepanel.Main>
-              <Sidepanel.Item href="#" icon={<HomeIcon />} active>Explore</Sidepanel.Item>
-              <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>AOIs</Sidepanel.Item>
-              <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Workflows</Sidepanel.Item>
-              <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Marketplace</Sidepanel.Item>
-              <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Activity</Sidepanel.Item>
-            </Sidepanel.Main>
-            <Sidepanel.Footer>
-              <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Feedback</Sidepanel.Item>
-              <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Support</Sidepanel.Item>
-              <Sidepanel.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidepanel.Item>
-            </Sidepanel.Footer>
-          </Sidepanel.Root>
+            <Sidebar.Main>
+              <Sidebar.Item href="#" icon={<GitHubLogoIcon />} active>Explore</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<ImageIcon />}>AOIs</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<BookmarkFilledIcon />}>Workflows</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<MaskOnIcon />}>Marketplace</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<LinkedInLogoIcon />}>Activity</Sidebar.Item>
+            </Sidebar.Main>
+            <Sidebar.Footer>
+              <Sidebar.Item href="#" icon={<GlobeIcon />}>Feedback</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<LapTimerIcon />}>Support</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidebar.Item>
+            </Sidebar.Footer>
+          </Sidebar.Root>
           
           {/* <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}

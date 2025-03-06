@@ -3,11 +3,11 @@ import { cva } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 
 import { Tooltip, TooltipProvider } from "../tooltip";
-import styles from "./sidepanel.module.css";
+import styles from "./sidebar.module.css";
 
 const root = cva(styles.root);
 
-interface SidepanelProps extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
+interface SidebarProps extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
   profile?: {
     icon: ReactNode;
@@ -18,20 +18,31 @@ interface SidepanelProps extends ComponentPropsWithoutRef<typeof Collapsible.Roo
   ref?: ComponentRef<typeof Collapsible.Root>;
 }
 
-interface SidepanelHeaderProps extends ComponentPropsWithoutRef<"div"> {
+interface SidebarHeaderProps extends ComponentPropsWithoutRef<"div"> {
   logo: ReactNode;
   title: string;
   onLogoClick?: () => void;
   ref?: ComponentRef<"div">;
 }
 
-interface SidepanelItemProps extends ComponentPropsWithoutRef<"a"> {
+interface SidebarItemProps extends ComponentPropsWithoutRef<"a"> {
   icon: ReactNode;
   active?: boolean;
+  disabled?: boolean;
   ref?: ComponentRef<"a">;
 }
 
-const SidepanelRoot = ({ 
+interface SidebarFooterProps extends ComponentPropsWithoutRef<"div"> {
+  ref?: ComponentRef<"div">;
+}
+
+interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<"div"> {
+  name: string;
+  icon?: ReactNode;
+  ref?: ComponentRef<"div">;
+}
+
+const SidebarRoot = ({ 
   className, 
   position = 'left', 
   open, 
@@ -40,10 +51,10 @@ const SidepanelRoot = ({
   profile, 
   ref,
   ...props 
-}: SidepanelProps) => (
+}: SidebarProps) => (
   <TooltipProvider>
     <Collapsible.Root
-      ref={ref}
+      ref={ref as unknown as React.RefObject<HTMLDivElement>}
       className={root({ className })}
       data-position={position}
       data-state={open ? 'expanded' : 'collapsed'}
@@ -57,6 +68,7 @@ const SidepanelRoot = ({
       <Tooltip 
         message={open ? "Click to collapse" : "Click to expand"}
         side={position === 'left' ? 'right' : 'left'}
+        asChild
       >
         <div 
           className={styles.resizeHandle}
@@ -100,23 +112,22 @@ const SidepanelRoot = ({
   </TooltipProvider>
 );
 
-const SidepanelHeader = ({
+const SidebarHeader = ({
   className,
   logo,
   title,
   onLogoClick,
   ref,
   ...props
-}: SidepanelHeaderProps) => (
+}: SidebarHeaderProps) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.header} 
     role="banner"
     {...props}
   >
     <div 
       className={styles.logo} 
-      aria-hidden="true"
       onClick={onLogoClick}
       role={onLogoClick ? "button" : undefined}
       tabIndex={onLogoClick ? 0 : undefined}
@@ -134,14 +145,14 @@ const SidepanelHeader = ({
   </div>
 );
 
-const SidepanelMain = ({
+const SidebarMain = ({
   className,
   children,
   ref,
   ...props
 }: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.main}
     role="group"
     aria-label="Main navigation"
@@ -151,14 +162,14 @@ const SidepanelMain = ({
   </div>
 );
 
-const SidepanelFooter = ({
+const SidebarFooter = ({
   className,
   children,
   ref,
   ...props
-}: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
+}: SidebarFooterProps) => (
   <div 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.footer}
     role="group"
     aria-label="Footer navigation"
@@ -168,20 +179,23 @@ const SidepanelFooter = ({
   </div>
 );
 
-const SidepanelItem = ({
+const SidebarItem = ({
   className,
   icon,
   children,
   active,
+  disabled,
   ref,
   ...props
-}: SidepanelItemProps) => (
+}: SidebarItemProps) => (
   <a 
-    ref={ref} 
+    ref={ref as unknown as React.RefObject<HTMLAnchorElement>} 
     className={styles['nav-item']} 
     data-active={active}
+    data-disabled={disabled}
     role="menuitem"
     aria-current={active ? "page" : undefined}
+    aria-disabled={disabled}
     {...props}
   >
     <span className={styles['nav-icon']} aria-hidden="true">{icon}</span>
@@ -189,16 +203,42 @@ const SidepanelItem = ({
   </a>
 );
 
-SidepanelRoot.displayName = "Sidepanel.Root";
-SidepanelHeader.displayName = "Sidepanel.Header";
-SidepanelMain.displayName = "Sidepanel.Main";
-SidepanelFooter.displayName = "Sidepanel.Footer";
-SidepanelItem.displayName = "Sidepanel.Item";
+const SidebarNavigationGroup = ({
+  className,
+  name,
+  icon,
+  children,
+  ref,
+  ...props
+}: SidebarNavigationGroupProps) => (
+  <div 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>}
+    role="group"
+    aria-label={name}
+    {...props}
+  >
+    <div className={styles['nav-group-header']}>
+      {icon && <span className={styles['nav-icon']}>{icon}</span>}
+      <span className={styles['nav-group-name']}>{name}</span>
+    </div>
+    <div className={styles['nav-group-items']}>
+      {children}
+    </div>
+  </div>
+);
 
-export const Sidepanel = {
-  Root: SidepanelRoot,
-  Header: SidepanelHeader,
-  Main: SidepanelMain,
-  Footer: SidepanelFooter,
-  Item: SidepanelItem,
+SidebarRoot.displayName = "Sidebar.Root";
+SidebarHeader.displayName = "Sidebar.Header";
+SidebarMain.displayName = "Sidebar.Main";
+SidebarFooter.displayName = "Sidebar.Footer";
+SidebarItem.displayName = "Sidebar.Item";
+SidebarNavigationGroup.displayName = "Sidebar.Group";
+
+export const Sidebar = {
+  Root: SidebarRoot,
+  Header: SidebarHeader,
+  Main: SidebarMain,
+  Footer: SidebarFooter,
+  Item: SidebarItem,
+  Group: SidebarNavigationGroup,
 };

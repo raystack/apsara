@@ -33,11 +33,11 @@
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);
-  padding: var(--rs-space-2);
+  padding: var(--rs-space-6) var(--rs-space-2);
   align-self: stretch;
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
-  height: 56px;
+  overflow: hidden;
 }
 
 .logo {
@@ -52,11 +52,14 @@
   overflow: hidden;
   color: var(--rs-color-foreground-base-primary);
   text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
+  font-style: normal;
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .main {
@@ -65,12 +68,14 @@
   flex-direction: column;
   overflow-y: auto;
   width: 100%;
+  gap: var(--rs-space-2);
 }
 
 .footer {
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: var(--rs-space-2);
 }
 
 .nav-item {
@@ -99,6 +104,13 @@
   width: 100%;
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.nav-item[data-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .nav-icon {
@@ -113,7 +125,9 @@
 
 .nav-text {
   color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
+  font-style: normal;
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
@@ -125,6 +139,7 @@
 
 .root[data-state='collapsed'] .nav-text,
 .root[data-state='collapsed'] .title {
+  width: 0;
   opacity: 0;
   display: none;
 }
@@ -169,6 +184,39 @@
 }
 
 .root[data-state='collapsed'] .account .nav-text {
+  opacity: 0;
+  display: none;
+}
+
+.nav-group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-3) var(--rs-space-3);
+  color: var(--rs-color-foreground-base-tertiary);
+  margin-top: var(--rs-space-4);
+}
+
+.nav-group-header:first-child {
+  margin-top: 0;
+}
+
+.nav-group-name {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.nav-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+}
+
+.root[data-state='collapsed'] .nav-group-name {
+  width: 0;
   opacity: 0;
   display: none;
 }
