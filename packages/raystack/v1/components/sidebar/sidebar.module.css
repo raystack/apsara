@@ -90,7 +90,7 @@
 }
 
 .nav-item:hover {
-  background-color: var(--rs-color-background-base-primary-hover);
+  background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
 }
 
