@@ -214,7 +214,7 @@ const SidebarNavigationGroup = ({
   ref,
   ...props
 }: SidebarNavigationGroupProps) => (
-  <nav 
+  <section 
     ref={ref as unknown as React.RefObject<HTMLElement>}
     className={className}
     aria-label={name}
@@ -224,10 +224,10 @@ const SidebarNavigationGroup = ({
       {icon && <span className={styles['nav-icon']}>{icon}</span>}
       <span className={styles['nav-group-name']}>{name}</span>
     </div>
-    <div className={styles['nav-group-items']}>
+    <div className={styles['nav-group-items']} role="list">
       {children}
     </div>
-  </nav>
+  </section>
 );
 
 SidebarRoot.displayName = "Sidebar.Root";
