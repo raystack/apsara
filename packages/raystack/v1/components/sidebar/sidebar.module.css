@@ -11,6 +11,7 @@
   border-right: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   transition: width 0.2s ease;
+  padding-bottom: var(--rs-space-5);
 }
 
 .root[data-position='left'] {
