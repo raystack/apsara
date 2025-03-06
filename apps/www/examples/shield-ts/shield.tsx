@@ -27,7 +27,7 @@ export const Shield = () => {
     <>
       <Flex style={{ height: "100vh" }}>
         <div style={{ position: 'relative' }}>
-          <Sidebar.Root 
+          <Sidebar
             open={sidebarOpen} 
             onOpenChange={setSidebarOpen} 
             position="left"
@@ -54,7 +54,7 @@ export const Shield = () => {
               <Sidebar.Item href="#" icon={<LapTimerIcon />}>Support</Sidebar.Item>
               <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidebar.Item>
             </Sidebar.Footer>
-          </Sidebar.Root>
+          </Sidebar>
           
           {/* <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}

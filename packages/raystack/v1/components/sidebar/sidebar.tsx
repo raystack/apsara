@@ -234,11 +234,10 @@ SidebarFooter.displayName = "Sidebar.Footer";
 SidebarItem.displayName = "Sidebar.Item";
 SidebarNavigationGroup.displayName = "Sidebar.Group";
 
-export const Sidebar = {
-  Root: SidebarRoot,
+export const Sidebar = Object.assign(SidebarRoot, {
   Header: SidebarHeader,
   Main: SidebarMain,
   Footer: SidebarFooter,
   Item: SidebarItem,
   Group: SidebarNavigationGroup,
-};
+});
