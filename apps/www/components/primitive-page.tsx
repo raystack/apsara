@@ -151,6 +151,7 @@ const LeftSideBar = () => {
               <NavItemTitle active={currentPageSlug === page.slug}>
                 {page.title}
                 {page.newBadge && <span className={styles.badge}>New</span>}
+                {page.toBeDeleted && <span className={styles['to-be-deleted']}>To be deleted</span>}
               </NavItemTitle>
             </NavItem>
           ))}
@@ -166,6 +167,7 @@ const LeftSideBar = () => {
               <NavItemTitle active={currentPageSlug === page.slug}>
                 {page.title}
                 {page.newBadge && <span className={styles.badge}>New</span>}
+                {page.toBeDeleted && <span className={styles['to-be-deleted']}>To be deleted</span>}
               </NavItemTitle>
             </NavItem>
           ))}
