@@ -1,7 +1,7 @@
 .root {
   display: flex;
   width: 220px;
-  height: 100vh;
+  height: 100%;
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);
   flex-direction: column;
