@@ -23,7 +23,7 @@ Apsara 🧚‍♀️ is an open-source React UI component library built on Radix
 ```sh
 npm install @raystack/apsara
 # or
-yarn add @raystack/apsara
+pnpm add @raystack/apsara
 ```
 
 ## Usage
