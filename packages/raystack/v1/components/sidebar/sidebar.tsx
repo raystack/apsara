@@ -36,6 +36,12 @@ interface SidebarFooterProps extends ComponentPropsWithoutRef<"div"> {
   ref?: ComponentRef<"div">;
 }
 
+interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<"div"> {
+  name: string;
+  icon?: ReactNode;
+  ref?: ComponentRef<"div">;
+}
+
 const SidebarRoot = ({ 
   className, 
   position = 'left', 
@@ -197,11 +203,36 @@ const SidebarItem = ({
   </a>
 );
 
+const SidebarNavigationGroup = ({
+  className,
+  name,
+  icon,
+  children,
+  ref,
+  ...props
+}: SidebarNavigationGroupProps) => (
+  <div 
+    ref={ref as unknown as React.RefObject<HTMLDivElement>}
+    role="group"
+    aria-label={name}
+    {...props}
+  >
+    <div className={styles['nav-group-header']}>
+      {icon && <span className={styles['nav-icon']}>{icon}</span>}
+      <span className={styles['nav-group-name']}>{name}</span>
+    </div>
+    <div className={styles['nav-group-items']}>
+      {children}
+    </div>
+  </div>
+);
+
 SidebarRoot.displayName = "Sidebar.Root";
 SidebarHeader.displayName = "Sidebar.Header";
 SidebarMain.displayName = "Sidebar.Main";
 SidebarFooter.displayName = "Sidebar.Footer";
 SidebarItem.displayName = "Sidebar.Item";
+SidebarNavigationGroup.displayName = "Sidebar.Group";
 
 export const Sidebar = {
   Root: SidebarRoot,
@@ -209,4 +240,5 @@ export const Sidebar = {
   Main: SidebarMain,
   Footer: SidebarFooter,
   Item: SidebarItem,
+  Group: SidebarNavigationGroup,
 };

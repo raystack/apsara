@@ -187,3 +187,36 @@
   opacity: 0;
   display: none;
 }
+
+.nav-group-header {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-3) var(--rs-space-3);
+  color: var(--rs-color-foreground-base-tertiary);
+  margin-top: var(--rs-space-4);
+}
+
+.nav-group-header:first-child {
+  margin-top: 0;
+}
+
+.nav-group-name {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.nav-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+}
+
+.root[data-state='collapsed'] .nav-group-name {
+  width: 0;
+  opacity: 0;
+  display: none;
+}
