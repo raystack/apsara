@@ -2,8 +2,7 @@
   display: flex;
   width: 220px;
   height: 100%;
-  padding-left: var(--rs-space-3);
-  padding-right: var(--rs-space-3);
+  padding: var(--rs-space-1) var(--rs-space-3) var(--rs-space-5) var(--rs-space-3);;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
@@ -11,7 +10,6 @@
   border-right: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   transition: width 0.2s ease;
-  padding-bottom: var(--rs-space-5);
 }
 
 .root[data-position='left'] {
