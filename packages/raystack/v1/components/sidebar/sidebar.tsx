@@ -28,7 +28,12 @@ interface SidebarHeaderProps extends ComponentPropsWithoutRef<"div"> {
 interface SidebarItemProps extends ComponentPropsWithoutRef<"a"> {
   icon: ReactNode;
   active?: boolean;
+  disabled?: boolean;
   ref?: ComponentRef<"a">;
+}
+
+interface SidebarFooterProps extends ComponentPropsWithoutRef<"div"> {
+  ref?: ComponentRef<"div">;
 }
 
 const SidebarRoot = ({ 
@@ -156,7 +161,7 @@ const SidebarFooter = ({
   children,
   ref,
   ...props
-}: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
+}: SidebarFooterProps) => (
   <div 
     ref={ref as unknown as React.RefObject<HTMLDivElement>} 
     className={styles.footer}
@@ -173,6 +178,7 @@ const SidebarItem = ({
   icon,
   children,
   active,
+  disabled,
   ref,
   ...props
 }: SidebarItemProps) => (
@@ -180,8 +186,10 @@ const SidebarItem = ({
     ref={ref as unknown as React.RefObject<HTMLAnchorElement>} 
     className={styles['nav-item']} 
     data-active={active}
+    data-disabled={disabled}
     role="menuitem"
     aria-current={active ? "page" : undefined}
+    aria-disabled={disabled}
     {...props}
   >
     <span className={styles['nav-icon']} aria-hidden="true">{icon}</span>

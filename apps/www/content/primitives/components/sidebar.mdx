@@ -18,7 +18,7 @@ description: A collapsible side navigation panel component.
       <Sidebar.Item href="#" icon={<InfoCircledIcon />}>
         Analytics
       </Sidebar.Item>
-      <Sidebar.Item href="#" icon={<InfoCircledIcon />}>
+      <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>
         Settings
       </Sidebar.Item>
     </Sidebar.Main>
@@ -51,6 +51,7 @@ export default function App() {
       <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
       <Sidebar.Main>
         <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+        <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
       </Sidebar.Main>
       <Sidebar.Footer>
         <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
@@ -84,6 +85,7 @@ export default function App() {
 - `icon`: ReactNode for the item's icon
 - `href`: string for the link destination
 - `active`: boolean to indicate current selection
+- `disabled`: boolean to disable the item
 - `children`: ReactNode for the item's label
 
 ## Sidebar Props
@@ -125,6 +127,7 @@ The Sidebar can be positioned on either the left or right side of the screen.
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar.Root>
       `,
@@ -136,6 +139,7 @@ The Sidebar can be positioned on either the left or right side of the screen.
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar.Root>
       `,
@@ -157,7 +161,7 @@ The Sidebar supports expanded and collapsed states with smooth transitions.
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar.Root>
       `,
@@ -169,7 +173,7 @@ The Sidebar supports expanded and collapsed states with smooth transitions.
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar.Root>
       `,
@@ -188,6 +192,7 @@ The Sidebar implements the following accessibility features:
   - `role="menuitem"` for navigation items
   - `aria-expanded` to indicate sidebar state
   - `aria-current="page"` for active items
+  - `aria-disabled="true"` for disabled items
 
 - Keyboard navigation support
 
