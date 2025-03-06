@@ -1,51 +1,124 @@
 # Apsara
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](LICENSE)
 
+Apsara 🧚‍♀️ is an open-source React UI component library built on Radix UI primitives and vanilla CSS. It provides enterprise-grade, accessible components designed for building complex data interfaces.
 
-Apsara 🧚‍♀️ is an open-source re-usable UI components build using Radix UI and Stitches CSS-in-JS to power the projects for Open Data Platform.
-Open Data Platform has a large number of enterprise-level products. With complex scenarios, designers and developers often need to respond fast due to frequent changes in product demands and concurrent R & D workflow. Many similar contents exist in the process. Through abstraction, we could obtain some stable and highly reusable components and pages on top of Radix UI.
-  
-<p align="center"><img  width=80% src="./apps/www/public/banner.png" /></p>
+<p align="center"><img width=80% src="./apps/www/public/banner.png" /></p>
 
 ## Key Features
-Discover why users choose Apsara as the design system for their projects
 
-* **Flexible** Apsara components are built on top of a Radix UI Primitive and Stitches CSS-in-JS for endless composability.
-* **Enterprise-grade** Apsara features a UI design language for enterprise-grade web applications.
-* **Abstraction** Apsara provides abstracted components for bulding complex data interfaces.
+- **Accessible Components**: Built on Radix UI primitives ensuring ARIA compliance and keyboard navigation
+- **Flexible Styling**: Uses vanilla CSS with HTML data-attributes for powerful theming and style customization
+- **Enterprise Ready**: Designed for complex data-driven applications with components like:
+  - Data Tables
+  - Navigation Systems
+  - Form Controls
+  - Feedback Components
+- **Type Safe**: Written in TypeScript with comprehensive type definitions
+- **Modern Stack**: Support for React 18+ and modern development practices
+
+## Installation
+
+```sh
+npm install @raystack/apsara
+# or
+yarn add @raystack/apsara
+```
 
 ## Usage
 
+```jsx
+// Add Style import in the root of the project.
+import "@raystack/apsara/style.css";
+
+// Import components
+import { Button, Flex } from "@raystack/apsara/v1";
+
+function App() {
+  return (
+    <Flex>
+      <Button type="primary">I am using 🧚‍♀️ Apsara!</Button>
+    </Flex>
+  );
+}
+```
+
+## Component Categories
+
+### Layout
+
+- `Box` - Basic layout container
+- `Flex` - Flexbox container
+- `Container` - Responsive wrapper
+- `Sidebar` - Collapsible navigation panel
+
+### Navigation
+
+- `Breadcrumb` - Navigation breadcrumbs
+- `Tabs` - Tabbed interface
+- `Command` - Command palette interface
+
+### Data Display
+
+- `Table` - Data table component
+- `Avatar` - User avatar display
+- `Badge` - Status indicators
+- `EmptyState` - Empty state messaging
+
+### Forms
+
+- `Select` - Dropdown selection
+- `Radio` - Radio button groups
+- `IconButton` - Icon-only buttons
+
+### Feedback
+
+- `Tooltip` - Contextual tooltips
+- `Callout` - Informational callouts
+- `Indicator` - Status indicators
+
+### Overlay
+
+- `Popover` - Contextual overlays
+- `Sheet` - Slide-out panels
+- `Dialog` - Modal dialogs
+
+## Documentation
+
+Visit our [documentation site](https://apsara.raystack.org) for:
+
+- Interactive examples
+- API references
+- Theme customization
+- Accessibility guidelines
+- Migration guides
+
+## Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Setup
 
 ```sh
-$ yarn add @raystack/apsara
-# or
-$ npm install --save @raystack/apsara
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+
+# Run tests
+pnpm test
+
+# Build library
+pnpm build
 ```
-
-Use Apsara components inside your react project
-
-```js
-import { Button } from "@raystack/apsara/v1";
-
-<Button type="primary">
-  I am using 🧚‍♀️ Apsara!
-</Button>
-```
-
-## Contribute
-
-Development of Apsara happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and
-improvements. Read below to learn how you can take part in improving Apsara.
-
-Read our contributing guide to learn about our development process, how to propose
-bugfixes and improvements, and how to build and test your changes to Apsara.
-
-To help you get your feet wet and get you familiar with our contribution process, we have a list of
-[good first issues](https://github.com/raystack/apsara/labels/good%20first%20issue) that contain bugs which have a relatively
-limited scope. This is a great place to get started.
-
-This project exists thanks to all the [contributors](https://github.com/raystack/apsara/graphs/contributors).
 
 ## License
 
