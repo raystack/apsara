@@ -25,7 +25,7 @@ export const primitivesRoutes = [
     { title: "Dialog", slug: "docs/primitives/components/dialog", newBadge: true },
     { title: "Dropdown Menu", slug: "docs/primitives/components/dropdownmenu", newBadge: true },
     { title: "Empty State", slug: "docs/primitives/components/emptystate", newBadge: true },
-    { title: "ErrorState", slug: "docs/primitives/components/errorstate" },
+    { title: "ErrorState", slug: "docs/primitives/components/errorstate", toBeDeleted: true },
     { title: "Flex", slug: "docs/primitives/components/flex", newBadge: true },
     { title: "Filter Chip", slug: "docs/primitives/components/filter-chip", newBadge: true },
     { title: "Headline", slug: "docs/primitives/components/headline", newBadge: true },
@@ -49,7 +49,7 @@ export const primitivesRoutes = [
     { title: "Tabs", slug: "docs/primitives/components/tabs", newBadge: true },
     { title: "Table", slug: "docs/primitives/components/table", newBadge: true },
     { title: "Text", slug: "docs/primitives/components/text", newBadge: true },
-    { title: "Text Field", slug: "docs/primitives/components/textfield" },
+    { title: "Text Field", slug: "docs/primitives/components/textfield", toBeDeleted: true },
     { title: "Tooltip", slug: "docs/primitives/components/tooltip", newBadge: true },
     { title: "Text Area", slug: "docs/primitives/components/textArea", newBadge: true },
     { title: "Toast", slug: "docs/primitives/components/toast", newBadge: true }
@@ -62,6 +62,7 @@ export type PageProps = {
   deprecated?: boolean;
   preview?: boolean;
   newBadge?: boolean;
+  toBeDeleted?: boolean;
 };
 
 export type RouteProps = {
