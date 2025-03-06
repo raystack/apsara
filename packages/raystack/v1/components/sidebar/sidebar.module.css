@@ -37,6 +37,7 @@
   align-self: stretch;
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
+  overflow: hidden;
 }
 
 .logo {
@@ -51,13 +52,14 @@
   overflow: hidden;
   color: var(--rs-color-foreground-base-primary);
   text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .main {
@@ -131,6 +133,7 @@
 
 .root[data-state='collapsed'] .nav-text,
 .root[data-state='collapsed'] .title {
+  width: 0;
   opacity: 0;
   display: none;
 }
