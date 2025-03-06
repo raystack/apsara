@@ -40,7 +40,7 @@ Install the component from your command line.
 
 ## Usage
 
-The Sidebar component provides a collapsible navigation panel with header, main content, and footer sections.
+The Sidebar component provides a collapsible navigation panel with header, main content, groups, and footer sections.
 
 <LiveProvider>
   <LiveEditor code={`import { Sidebar } from '@raystack/apsara/v1'
@@ -50,8 +50,13 @@ export default function App() {
     <Sidebar.Root open={true}>
       <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
       <Sidebar.Main>
-        <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
-        <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+        <Sidebar.Group name="Main">
+          <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+        </Sidebar.Group>
+        <Sidebar.Group name="Support">
+          <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
+        </Sidebar.Group>
       </Sidebar.Main>
       <Sidebar.Footer>
         <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
@@ -79,6 +84,12 @@ export default function App() {
 - `logo`: ReactNode for the header icon/logo
 - `title`: string for the header text
 - `onLogoClick`: Optional callback for logo click
+
+### Group Props
+
+- `name`: string for the group title
+- `icon`: Optional ReactNode for group icon
+- `children`: ReactNode for the group content
 
 ### Item Props
 
