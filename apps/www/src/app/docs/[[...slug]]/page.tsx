@@ -7,14 +7,9 @@ import {
 } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 import defaultMdxComponents from "fumadocs-ui/mdx";
-import { Button } from "@raystack/apsara/v1";
-import { createTypeTable } from "fumadocs-typescript/ui";
 import { TypeTable } from "fumadocs-ui/components/type-table";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-import { Avatar } from "@/components/apsara";
-import Playground from "@/components/playground";
-
-const { AutoTypeTable } = createTypeTable();
+import Demo from "@/components/demo";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -38,13 +33,10 @@ export default async function Page(props: {
         <MDX
           components={{
             ...defaultMdxComponents,
-            Button,
-            AutoTypeTable,
             TypeTable,
             Tab,
             Tabs,
-            Avatar,
-            Playground,
+            Demo,
           }}
         />
       </DocsBody>

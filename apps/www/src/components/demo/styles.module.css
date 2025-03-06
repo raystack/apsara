@@ -7,20 +7,11 @@
   border: 1px solid rgb(231, 230, 230);
 }
 
-.editor {
+.preview {
+  min-height: 160px;
   display: flex;
   width: 100%;
-  aspect-ratio: 2 / 1;
   border-bottom: 1px solid rgb(231, 230, 230);
-}
-
-.preview {
-  padding: 20px;
-  flex: 3;
-  background-color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .form {
@@ -60,4 +51,29 @@
 .select:focus {
   border-color: #007bff;
   outline: none;
+}
+.tabs {
+  display: flex;
+  border-bottom: 1px solid rgb(231, 230, 230);
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
+  border-bottom: 1px solid transparent;
+}
+
+.tab:hover {
+  color: #333;
+}
+
+.activeTab {
+  color: #000;
+  border-bottom: 1px solid #007bff;
 }
