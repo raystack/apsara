@@ -90,6 +90,10 @@
   transition: all 0.2s ease;
 }
 
+.root[data-state='collapsed'] .nav-item {
+  justify-content: center;
+}
+
 .nav-item:hover {
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
