@@ -93,11 +93,9 @@ export const colorsDemo = {
 
 export const sizesDemo = {
   type: "code",
-  code: `<Flex gap="large">
-    <Button variant="solid">Solid</Button>
-    <Button variant="outline">Outline</Button>
-    <Button variant="ghost">Ghost</Button>
-    <Button variant="text">Text</Button>
+  code: `<Flex gap="large" align="center">
+    <Button size="small">Small</Button>
+    <Button size="normal">Normal</Button>
   </Flex>`,
 };
 export const disabledDemo = {

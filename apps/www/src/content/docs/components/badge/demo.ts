@@ -57,7 +57,7 @@ export const variantDemo = {
 export const sizesDemo = {
   type: "code",
   code: `
-  <Flex gap="medium">
+  <Flex gap="medium" align="center">
     <Badge size="micro">Micro</Badge>
     <Badge size="small">Small</Badge>
     <Badge size="regular">Regular</Badge>
