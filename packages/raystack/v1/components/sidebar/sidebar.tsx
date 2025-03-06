@@ -216,8 +216,8 @@ const SidebarNavigationGroup = ({
 }: SidebarNavigationGroupProps) => (
   <nav 
     ref={ref as unknown as React.RefObject<HTMLElement>}
+    className={className}
     aria-label={name}
-    role="group"
     {...props}
   >
     <div className={styles['nav-group-header']}>
