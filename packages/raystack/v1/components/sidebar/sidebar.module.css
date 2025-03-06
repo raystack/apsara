@@ -192,7 +192,7 @@
   align-items: center;
   gap: var(--rs-space-3);
   padding: var(--rs-space-3) var(--rs-space-3);
-  color: var(--rs-color-foreground-base-tertiary);
+  color: var(--rs-color-foreground-base-secondary);
   margin-top: var(--rs-space-4);
 }
 
