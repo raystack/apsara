@@ -21,20 +21,21 @@
   z-index: 9999;
 }
 
+.dialogContent:focus {
+  outline: none;
+}
+
 .close {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--rs-radius-2);
+  padding: var(--rs-space-2);
+  font-weight: var(--rs-font-weight-medium);
   position: absolute;
   top: var(--rs-space-3);
   right: var(--rs-space-3);
-  width: var(--rs-space-7);
-  height: var(--rs-space-7);
-  border-radius: var(--rs-radius-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
-  border: none;
-  background: transparent;
 }
 
 .close:hover {
@@ -42,6 +43,9 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
+.overlayBlur {
+  backdrop-filter: blur(2px);
+}
 
 .dialogOverlay[data-state="open"] {
   animation: fadeIn 150ms cubic-bezier(0.22, 1, 0.36, 1);

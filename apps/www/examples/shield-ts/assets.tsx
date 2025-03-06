@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
-import { DataTable, Title, useTable } from "@raystack/apsara";
+import { DataTable, Title, useTable, Dialog as DialogLegacy } from "@raystack/apsara";
 
 import {
   toast,
@@ -129,6 +129,7 @@ export const Assets = () => {
   });
   const [sheetOpen, setSheetOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [legacyDialogOpen, setLegacyDialogOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -241,6 +242,9 @@ export const Assets = () => {
         <Flex direction="column" style={{ width: "100%" }}>
           <Flex direction="column" gap="large" style={{ width: "100%" }}>
             <Flex gap="large" wrap="wrap">
+              <Button size="small" onClick={() => setDialogOpen(true)}>Open V1 Dialog</Button>
+              <Button size="small" onClick={() => setLegacyDialogOpen(true)}>Open Legacy Dialog</Button>
+
               {/* Basic Input - Small */}
               <InputField
                 label="Asset Name (Small)"
@@ -428,6 +432,46 @@ export const Assets = () => {
         </Flex>
       </Flex>
       </Flex>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog.Content overlayBlur={false} width="800px">
+          <Dialog.Title>Sample Dialog Title</Dialog.Title>
+          <Dialog.Description>
+            This is an example of the new V1 Dialog component.
+          </Dialog.Description>
+          <Flex direction="column" gap="large" style={{ marginTop: '20px' }}>
+            <InputField
+              label="Sample Input"
+              placeholder="Enter some text"
+            />
+            <Flex justify="end" gap="small">
+              <Button variant="solid" onClick={() => setDialogOpen(false)}>Cancel</Button>
+              <Button onClick={() => setDialogOpen(false)}>Save</Button>
+            </Flex>
+          </Flex>
+          <Dialog.Close />
+        </Dialog.Content>
+      </Dialog>
+
+      <DialogLegacy open={legacyDialogOpen} onOpenChange={setLegacyDialogOpen}>
+        <DialogLegacy.Content close overlayBlur={false}>
+          <DialogLegacy.Title>Legacy Dialog Title</DialogLegacy.Title>
+          <DialogLegacy.Description>
+            This is an example of the legacy Dialog component.
+          </DialogLegacy.Description>
+          <Flex direction="column" gap="large" style={{ marginTop: '20px' }}>
+            <InputField
+              label="Sample Input"
+              placeholder="Enter some text"
+            />
+            <Flex justify="end" gap="small">
+              <Button variant="solid" onClick={() => setLegacyDialogOpen(false)}>Cancel</Button>
+              <Button onClick={() => setLegacyDialogOpen(false)}>Save</Button>
+            </Flex>
+          </Flex>
+        </DialogLegacy.Content>
+      </DialogLegacy>
+
       <ToastContainer />
     </div>
   );

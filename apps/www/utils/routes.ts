@@ -10,7 +10,7 @@ export const primitivesRoutes = [
     ],
   },
   { label: "Components", pages: [
-    { title: "Annoucement Bar", slug: "docs/primitives/components/announcementbar", newBadge: true },
+    { title: "Announcement Bar", slug: "docs/primitives/components/announcementbar", newBadge: true },
     { title: "Avatar", slug: "docs/primitives/components/avatar", newBadge: true },
     { title: "Badge", slug: "docs/primitives/components/badge", newBadge: true },
     { title: "Breadcrumb", slug: "docs/primitives/components/breadcrumb", newBadge: true },

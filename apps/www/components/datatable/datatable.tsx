@@ -1,11 +1,9 @@
 import {
-  ApsaraColumnDef,
+  DataTableColumnDef,
   Checkbox,
   DataTable,
   Flex,
-  Text,
-  useTable,
-} from "@raystack/apsara";
+} from "@raystack/apsara/v1";
 
 const data: Payment[] = [
   {
@@ -47,16 +45,10 @@ export type Payment = {
   email: string;
 };
 
-export const columns: ApsaraColumnDef<Payment>[] = [
+export const columns: DataTableColumnDef<Payment, unknown>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
+    accessorKey: "select",
+    header: "",
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
@@ -66,6 +58,7 @@ export const columns: ApsaraColumnDef<Payment>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
+    columnType: "text",
   },
   {
     accessorKey: "status",
@@ -73,32 +66,27 @@ export const columns: ApsaraColumnDef<Payment>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
     ),
-    meta: {
-      data: [
-        {
-          label: "Pending",
-          value: "pending",
-        },
-        {
-          label: "Success",
-          value: "success",
-        },
-      ],
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
+    filterOptions: [
+      {
+        label: "Pending",
+        value: "pending",
+      },
+      {
+        label: "Success",
+        value: "success",
+      },
+    ],
+    columnType: "select",
   },
   {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-    // @ts-ignore
-    filterVariant: "text",
+    columnType: "text",
   },
   {
     accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    header: "Amount",
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
       // Format the amount as a dollar amount
@@ -109,49 +97,22 @@ export const columns: ApsaraColumnDef<Payment>[] = [
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
-    // @ts-ignore
-    filterVariant: "text",
+    columnType: "text",
   },
 ];
 
 export const Assets = () => {
   return (
-    <DataTable columns={columns} data={data}>
-      <DataTable.Toolbar>
-        <AssetsHeader />
-        <DataTable.FilterChips />
-      </DataTable.Toolbar>
-      <DataTable.Footer>
-        <AssetsFooter />
-      </DataTable.Footer>
-    </DataTable>
-  );
-};
-
-const AssetsHeader = () => {
-  const { filteredColumns } = useTable();
-  const isFiltered = filteredColumns.length > 0;
-  return (
-    <Flex align="center" justify="between" style={{ width: "100%" }}>
-      <Text style={{ fontWeight: 500 }}>Assets</Text>
-      <Flex gap="small">
-        {isFiltered ? <DataTable.ClearFilter /> : <DataTable.FilterOptions />}
-        <DataTable.ViewOptions />
-        <DataTable.GloabalSearch placeholder="Search assets..." />
-      </Flex>
-    </Flex>
-  );
-};
-
-const AssetsFooter = () => {
-  const { table } = useTable();
-
-  return (
-    <Flex align="center" justify="between" style={{ width: "100%" }}>
-      <Text>
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </Text>
+    <Flex direction="column">
+      <DataTable
+        data={data}
+        mode="client"
+        columns={columns}
+        defaultSort={{ name: "email", order: "asc" }}
+      >
+        <DataTable.Toolbar />
+        <DataTable.Content />
+      </DataTable>
     </Flex>
   );
 };
