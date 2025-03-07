@@ -200,6 +200,8 @@ export function Content({
     };
   }, [mode, rows.length, handleObserver]);
 
+  const visibleColumnsLength = table.getVisibleLeafColumns().length;
+
   return (
     <Table className={classNames.table}>
       <Headers headerGroups={headerGroups} className={classNames.header} />
@@ -210,13 +212,13 @@ export function Content({
             {isLoading ? (
               <LoaderRows
                 rowCount={loadingRowCount}
-                columnCount={columns.length}
+                columnCount={visibleColumnsLength}
               />
             ) : null}
           </>
         ) : (
           <Table.Row>
-            <Table.Cell colSpan={columns.length}>
+            <Table.Cell colSpan={visibleColumnsLength}>
               {emptyState || <DefaultEmptyComponent />}
             </Table.Cell>
           </Table.Row>

@@ -13,7 +13,7 @@ export function DisplayProperties<TData, TValue>({
   return (
     <Flex direction={"column"} gap={3}>
       <Text>Display Properties</Text>
-      <Flex gap={3}>
+      <Flex gap={3} wrap={"wrap"}>
         {hidableColumns.map((column) => (
           <Chip
             key={column.id}
