@@ -64,50 +64,53 @@ const SidebarRoot = ({
       aria-expanded={open}
       role="navigation"
       {...props}
+      asChild
     >
-      <Tooltip 
-        message={open ? "Click to collapse" : "Click to expand"}
-        side={position === 'left' ? 'right' : 'left'}
-        asChild
-      >
-        <div 
-          className={styles.resizeHandle}
-          onClick={() => onOpenChange?.(!open)}
-          role="button"
-          tabIndex={0}
-          aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              onOpenChange?.(!open);
-            }
-          }}
-        />
-      </Tooltip>
-      {children}
-      {profile && (
-        <a 
-          href={profile.href} 
-          className={styles.account}
-          role="button"
-          aria-label={`Profile: ${profile.label}`}
-          onClick={(e) => {
-            if (profile.onIconClick) {
-              e.preventDefault();
-              profile.onIconClick();
-            }
-          }}
+      <aside>
+        <Tooltip 
+          message={open ? "Click to collapse" : "Click to expand"}
+          side={position === 'left' ? 'right' : 'left'}
+          asChild
         >
-          <span 
-            className={styles['nav-icon']} 
-            aria-hidden="true"
-            style={{ cursor: profile.onIconClick ? 'pointer' : undefined }}
+          <div 
+            className={styles.resizeHandle}
+            onClick={() => onOpenChange?.(!open)}
+            role="button"
+            tabIndex={0}
+            aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onOpenChange?.(!open);
+              }
+            }}
+          />
+        </Tooltip>
+        {children}
+        {profile && (
+          <a 
+            href={profile.href} 
+            className={styles.account}
+            role="button"
+            aria-label={`Profile: ${profile.label}`}
+            onClick={(e) => {
+              if (profile.onIconClick) {
+                e.preventDefault();
+                profile.onIconClick();
+              }
+            }}
           >
-            {profile.icon}
-          </span>
-          <span className={styles['nav-text']}>{profile.label}</span>
-        </a>
-      )}
+            <span 
+              className={styles['nav-icon']} 
+              aria-hidden="true"
+              style={{ cursor: profile.onIconClick ? 'pointer' : undefined }}
+            >
+              {profile.icon}
+            </span>
+            <span className={styles['nav-text']}>{profile.label}</span>
+          </a>
+        )}
+      </aside>
     </Collapsible.Root>
   </TooltipProvider>
 );
@@ -211,9 +214,9 @@ const SidebarNavigationGroup = ({
   ref,
   ...props
 }: SidebarNavigationGroupProps) => (
-  <div 
-    ref={ref as unknown as React.RefObject<HTMLDivElement>}
-    role="group"
+  <section 
+    ref={ref as unknown as React.RefObject<HTMLElement>}
+    className={className}
     aria-label={name}
     {...props}
   >
@@ -221,10 +224,10 @@ const SidebarNavigationGroup = ({
       {icon && <span className={styles['nav-icon']}>{icon}</span>}
       <span className={styles['nav-group-name']}>{name}</span>
     </div>
-    <div className={styles['nav-group-items']}>
+    <div className={styles['nav-group-items']} role="list">
       {children}
     </div>
-  </div>
+  </section>
 );
 
 SidebarRoot.displayName = "Sidebar.Root";
@@ -234,11 +237,10 @@ SidebarFooter.displayName = "Sidebar.Footer";
 SidebarItem.displayName = "Sidebar.Item";
 SidebarNavigationGroup.displayName = "Sidebar.Group";
 
-export const Sidebar = {
-  Root: SidebarRoot,
+export const Sidebar = Object.assign(SidebarRoot, {
   Header: SidebarHeader,
   Main: SidebarMain,
   Footer: SidebarFooter,
   Item: SidebarItem,
   Group: SidebarNavigationGroup,
-};
+});

@@ -6,7 +6,7 @@ description: A collapsible side navigation panel component.
 ## Preview
 
 <Preview>
-  <Sidebar.Root open={true}>
+  <Sidebar open={true}>
     <Sidebar.Header
       logo={<InfoCircledIcon width={24} height={24} />}
       title="Company Name"
@@ -19,7 +19,7 @@ description: A collapsible side navigation panel component.
     <Sidebar.Footer>
       <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
     </Sidebar.Footer>
-  </Sidebar.Root>
+  </Sidebar>
 </Preview>
 
 ## Installation
@@ -39,7 +39,7 @@ The Sidebar component provides a collapsible navigation panel with header, main 
 
 export default function App() {
   return (
-    <Sidebar.Root open={true}>
+    <Sidebar open={true}>
       <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
       <Sidebar.Main>
         <Sidebar.Group name="Main">
@@ -53,7 +53,7 @@ export default function App() {
       <Sidebar.Footer>
         <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
       </Sidebar.Footer>
-    </Sidebar.Root>
+    </Sidebar>
   )
 }`} border/>
 </LiveProvider>
@@ -126,25 +126,25 @@ The Sidebar can be positioned on either the left or right side of the screen.
     {
       name: "Left",
       code: `
-        <Sidebar.Root open={true} position="left">
+        <Sidebar open={true} position="left">
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar.Root>
+        </Sidebar>
       `,
     },
     {
       name: "Right",
       code: `
-        <Sidebar.Root open={true} position="right">
+        <Sidebar open={true} position="right">
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Dashboard</Sidebar.Item>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar.Root>
+        </Sidebar>
       `,
     },
   ]}
@@ -160,25 +160,25 @@ The Sidebar supports expanded and collapsed states with smooth transitions.
     {
       name: "Expanded",
       code: `
-        <Sidebar.Root open={true}>
+        <Sidebar open={true}>
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar.Root>
+        </Sidebar>
       `,
     },
     {
       name: "Collapsed",
       code: `
-        <Sidebar.Root open={false}>
+        <Sidebar open={false}>
           <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
           <Sidebar.Main>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
             <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar.Root>
+        </Sidebar>
       `,
     },
   ]}

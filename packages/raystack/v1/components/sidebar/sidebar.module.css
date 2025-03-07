@@ -2,8 +2,7 @@
   display: flex;
   width: 220px;
   height: 100%;
-  padding-left: var(--rs-space-3);
-  padding-right: var(--rs-space-3);
+  padding: var(--rs-space-1) var(--rs-space-3) var(--rs-space-5) var(--rs-space-3);;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
@@ -89,6 +88,10 @@
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s ease;
+}
+
+.root[data-state='collapsed'] .nav-item {
+  justify-content: center;
 }
 
 .nav-item:hover {
@@ -193,7 +196,7 @@
   align-items: center;
   gap: var(--rs-space-3);
   padding: var(--rs-space-3) var(--rs-space-3);
-  color: var(--rs-color-foreground-base-tertiary);
+  color: var(--rs-color-foreground-base-secondary);
   margin-top: var(--rs-space-4);
 }
 

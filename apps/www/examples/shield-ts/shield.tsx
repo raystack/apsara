@@ -27,7 +27,7 @@ export const Shield = () => {
     <>
       <Flex style={{ height: "100vh" }}>
         <div style={{ position: 'relative' }}>
-          <Sidebar.Root 
+          <Sidebar
             open={sidebarOpen} 
             onOpenChange={setSidebarOpen} 
             position="left"
@@ -43,18 +43,22 @@ export const Shield = () => {
               onLogoClick={() => console.log("Logo clicked")}
             />
             <Sidebar.Main>
-              <Sidebar.Item href="#" icon={<GitHubLogoIcon />} active>Explore</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<ImageIcon />}>AOIs</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<BookmarkFilledIcon />}>Workflows</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<MaskOnIcon />}>Marketplace</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<LinkedInLogoIcon />}>Activity</Sidebar.Item>
+              <Sidebar.Group name="Navigation" className="">
+                <Sidebar.Item href="#" icon={<GitHubLogoIcon />} active>Explore</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<ImageIcon />}>AOIs</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<BookmarkFilledIcon />}>Workflows</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<MaskOnIcon />}>Marketplace</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<LinkedInLogoIcon />}>Activity</Sidebar.Item>
+              </Sidebar.Group>
             </Sidebar.Main>
             <Sidebar.Footer>
-              <Sidebar.Item href="#" icon={<GlobeIcon />}>Feedback</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<LapTimerIcon />}>Support</Sidebar.Item>
-              <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidebar.Item>
+              <Sidebar.Group name="Help & Support">
+                <Sidebar.Item href="#" icon={<GlobeIcon />}>Feedback</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<LapTimerIcon />}>Support</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidebar.Item>
+              </Sidebar.Group>
             </Sidebar.Footer>
-          </Sidebar.Root>
+          </Sidebar>
           
           {/* <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
