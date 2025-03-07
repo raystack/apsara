@@ -62,10 +62,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
         <TooltipPrimitive.Trigger 
           aria-describedby="tooltip" 
           asChild={asChild}
-          className={classNames?.trigger}
           style={style}
         >
-          {children}
+          <div className={clsx(styles.trigger, classNames?.trigger ?? "")}>
+            {children}
+          </div>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
