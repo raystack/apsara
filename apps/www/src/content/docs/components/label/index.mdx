@@ -1,0 +1,46 @@
+---
+title: Label
+description: A text label component that provides names for form controls.
+---
+
+import { playground, requiredDemo, sizeDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Label } from '@raystack/apsara/v1'
+
+<Label size="small">Small Label</Label>
+<Label size="medium" required>Required Label</Label>
+<Label size="large">Large Label</Label>
+```
+
+## Label Props
+
+<auto-type-table path="./props.ts" name="LabelProps" />
+
+## Examples
+
+### Size
+
+Labels have 3 different sizes.
+
+<Demo data={sizeDemo} />
+
+### Required
+
+Labels can indicate required fields with either a default asterisk or custom text.
+
+<Demo data={requiredDemo} />
+
+## Accessibility
+
+The Label component is designed with accessibility in mind:
+
+- Uses semantic HTML `<label>` element
+- Supports programmatic association with form controls via `htmlFor`
+- Required indicators are properly hidden from screen readers
+- Maintains WCAG compliant color contrast ratios
+- Supports keyboard navigation when used with form controls

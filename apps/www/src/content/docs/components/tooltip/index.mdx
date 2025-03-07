@@ -1,0 +1,46 @@
+---
+title: Tooltip
+description: A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it.
+---
+
+import { playground, sideDemo, customDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Tooltip } from "@raystack/apsara/v1";
+
+<Tooltip message="This is a tooltip">
+  <Button>Hover me</Button>
+</Tooltip>;
+```
+
+## Tooltip Props
+
+<auto-type-table path="./props.ts" name="TooltipProps" />
+
+## Examples
+
+### Side
+
+The Tooltip component can be positioned in different directions using the `side` prop:
+
+<Demo data={sideDemo} />
+
+### Custom Content
+
+Tooltips can contain custom content using ReactNode:
+
+<Demo data={customDemo} />
+
+## Accessibility
+
+The Tooltip component follows WAI-ARIA guidelines for tooltips:
+
+- Uses `role="tooltip"` for proper semantic meaning
+- Automatically manages focus and hover interactions
+- Supports keyboard navigation
+- Provides appropriate ARIA attributes for accessibility
+- Manages enter/exit animations for smooth user experience

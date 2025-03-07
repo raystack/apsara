@@ -1,0 +1,75 @@
+---
+title: Dropdown Menu
+description: Displays a menu to the user — such as a set of actions or functions — triggered by a button.
+---
+
+import { playground, iconsDemo, customDemo, basicDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Dropdown Props
+
+Customize the dropdown menu's behavior and appearance with these configuration options.
+The DropdownMenu component is composed of several parts, each with their own props
+
+### DropdownMenu.Trigger
+
+The button that opens the dropdown menu.
+
+<auto-type-table path="./props.ts" name="DropdownMenuTriggerProps" />
+
+### DropdownMenu.Content
+
+The container that holds the dropdown menu items.
+
+<auto-type-table path="./props.ts" name="DropdownMenuContentProps" />
+
+### DropdownMenu.Item
+
+Individual clickable options within the dropdown menu.
+
+<auto-type-table path="./props.ts" name="DropdownMenuItemProps" />
+
+### DropdownMenu.Group
+
+A way to group related menu items together.
+
+<auto-type-table path="./props.ts" name="DropdownMenuGroupProps" />
+
+### DropdownMenu.Label
+
+Text labels to describe groups of menu items.
+
+<auto-type-table path="./props.ts" name="DropdownMenuLabelProps" />
+
+### DropdownMenu.Separator
+
+Visual divider between menu items or groups.
+
+<auto-type-table path="./props.ts" name="DropdownMenuSeparatorProps" />
+
+### DropdownMenu.EmptyState
+
+Placeholder content when there are no menu items to display.
+
+<auto-type-table path="./props.ts" name="DropdownMenuEmptyStateProps" />
+
+## Examples
+
+### Basic Usage
+
+A simple dropdown menu with basic functionality.
+
+<Demo data={basicDemo} />
+
+### With Icons
+
+You can add icons to the dropdown items. Supports both leading and trailing icons.
+
+<Demo data={iconsDemo} />
+
+### With Groups and Labels
+
+Organize related menu items into sections with descriptive headers.
+
+<Demo data={customDemo} />

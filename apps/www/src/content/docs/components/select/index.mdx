@@ -1,0 +1,73 @@
+---
+title: Select
+description: Displays a list of options for the user to pick from—triggered by a button.
+---
+
+import {
+  playground,
+  sizeDemo,
+  basicDemo,
+  variantDemo,
+  separatorDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+The Popover component provides a way to display rich content in a portal when triggered by a button. It supports accessibility features, positioning options, and customizable styling.
+
+```tsx
+import { Select } from "@raystack/apsara/v1";
+
+<Select>
+  <Select.Trigger aria-label="Fruit selection">
+    <Select.Value placeholder="Select a fruit" />
+  </Select.Trigger>
+  <Select.Content>
+    <Select.Item value="apple">Apple</Select.Item>
+    <Select.Item value="banana">Banana</Select.Item>
+  </Select.Content>
+</Select>;
+```
+
+## Select Props
+
+### Select.Trigger Props
+
+<auto-type-table path="./props.ts" name="SelectTriggerProps" />
+
+### Select.Content Props
+
+<auto-type-table path="./props.ts" name="SelectContentProps" />
+
+### Select.Item Props
+
+<auto-type-table path="./props.ts" name="SelectItemProps" />
+
+## Examples
+
+### Basic Select
+
+<Demo data={basicDemo} />
+
+### Size
+
+<Demo data={sizeDemo} />
+
+### Variant
+
+<Demo data={variantDemo} />
+
+### With Separator
+
+<Demo data={separatorDemo} />
+
+## Accessibility
+
+The Select component follows WAI-ARIA guidelines:
+
+- Trigger has role `combobox`
+- Content has role `listbox`
+- Items have role `option`
+- ARIA labels and descriptions

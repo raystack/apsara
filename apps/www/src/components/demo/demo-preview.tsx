@@ -10,7 +10,7 @@ import { cx } from "class-variance-authority";
 
 export default function DemoPreview({ code, tabs, scope }: DemoPreviewProps) {
   const [activeTab, setActiveTab] = useState(0);
-  const activeCode = tabs ? tabs[activeTab].code : code || "";
+  const activeCode = ((tabs ? tabs[activeTab].code : code) ?? "").trim();
   return (
     <LiveProvider code={activeCode} scope={scope} disabled>
       <div className={styles.container}>

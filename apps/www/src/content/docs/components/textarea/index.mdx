@@ -1,0 +1,56 @@
+---
+title: TextArea
+description: A multi-line text input field with support for labels and helper text.
+---
+
+import {
+  playground,
+  basicDemo,
+  controlledDemo,
+  widthDemo,
+  errorDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { TextArea } from "@raystack/apsara/v1";
+
+<TextArea
+  label="Label"
+  placeholder="Enter your text here"
+  helperText="Optional helper text"
+/>;
+```
+
+## TextArea Props
+
+<auto-type-table path="./props.ts" name="TextAreaProps" />
+
+## Examples
+
+### Basic Usage
+
+The most basic usage of TextArea with just a label and placeholder.
+
+<Demo data={basicDemo} />
+
+### Error State
+
+TextArea in error state with custom styling.
+
+<Demo data={errorDemo} />
+
+### Controlled Usage
+
+Example of TextArea in controlled mode.
+
+<Demo data={controlledDemo} />
+
+### Custom Width
+
+TextArea with custom width specification.
+
+<Demo data={widthDemo} />

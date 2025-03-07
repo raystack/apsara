@@ -1,0 +1,54 @@
+---
+title: Dialog
+description: A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.
+---
+
+import { playground, closeDemo, customDemo, controlledDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Dialog Props
+
+<auto-type-table path="./props.ts" name="DialogProps" />
+
+### Dialog.Content Props
+
+<auto-type-table path="./props.ts" name="DialogContentProps" />
+
+### Dialog.Description Props
+
+<auto-type-table path="./props.ts" name="DialogDescriptionProps" />
+
+### Dialog.Trigger Props
+
+<auto-type-table path="./props.ts" name="DialogTriggerProps" />
+
+### Dialog.Close Props
+
+<auto-type-table path="./props.ts" name="DialogCloseProps" />
+
+## Examples
+
+### Controlled Dialog
+
+Example of a controlled dialog with custom state management.
+
+<Demo data={controlledDemo} />
+
+### Custom Width and Overlay
+
+Example with custom width and overlay styling.
+
+<Demo data={customDemo} />
+
+### Without Close Button
+
+Example of dialog without the close button.
+
+<Demo data={closeDemo} />
+
+### Accessibility
+
+- Dialog has `role="dialog"` and `aria-modal="true"`
+- Uses `aria-label` or `aria-labelledby` to identify the dialog
+- Uses `aria-describedby` to provide additional context

@@ -1,0 +1,66 @@
+---
+title: Link
+description: Display a hyperlink component
+---
+
+import {
+  playground,
+  sizeDemo,
+  variantDemo,
+  styleDemo,
+  weightDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+The Link component provides a way to navigate between pages or sections.
+
+```tsx
+import { Link } from "@raystack/apsara/v1";
+
+<Link href="#" variant="accent">
+  Accent Link
+</Link>;
+```
+
+## Link Props
+
+<auto-type-table path="./props.ts" name="LinkProps" />
+
+## Examples
+
+### Variant
+
+Choose from different variants.
+
+<Demo data={variantDemo} />
+
+### Size
+
+The Link component supports 10 different sizes.
+
+<Demo data={sizeDemo} />
+
+### Weight
+
+Control the visual emphasis of links with different font weights.
+
+<Demo data={weightDemo} />
+
+### Styles
+
+Additional style variations including underlined and external links.
+
+<Demo data={styleDemo} />
+
+## Accessibility
+
+The Link component follows accessibility best practices:
+
+- Uses native `<a>` elements with proper `role="link"`
+- External links include `target="_blank"` and `rel="noopener noreferrer"`
+- External links have aria-labels indicating they open in new tabs
+- Download links include appropriate aria-labels
+- Maintains color contrast ratios for all variants

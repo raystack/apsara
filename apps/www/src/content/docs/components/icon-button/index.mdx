@@ -1,0 +1,60 @@
+---
+title: IconButton
+description: A button component designed specifically for icons with various sizes and states.
+---
+
+import { playground, stateDemo, sizeDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { IconButton } from "@raystack/apsara/v1";
+
+<IconButton size={2}>
+  <InfoCircledIcon />
+</IconButton>;
+```
+
+## IconButton Props
+
+<auto-type-table path="./props.ts" name="IconButtonProps" />
+
+## Examples
+
+## Size
+
+The IconButton component offers different size options. You can customize the size using the `size` prop. The available size options are:
+
+<Demo data={sizeDemo} />
+
+### State
+
+The IconButton component has different states: default, hover, and disabled.
+
+<Demo data={stateDemo} />
+
+## Styling
+
+The IconButton uses CSS variables for consistent styling across themes:
+
+- Background color uses `--rs-color-background-base-primary`
+- Border color uses `--rs-color-border-base-primary`
+- Text color uses `--rs-color-foreground-base-primary`
+- Hover state uses `--rs-color-background-base-primary-hover`
+- Disabled state uses reduced opacity and different background/border colors
+
+## Accessibility
+
+The IconButton component inherits all the accessibility features of the native HTML button element:
+
+- Keyboard navigation support
+- Proper disabled state handling
+- Can be focused and activated using keyboard
+- Supports all standard button ARIA attributes
+
+For better accessibility, make sure to:
+
+- Provide meaningful aria-label when the button's purpose isn't clear from the icon alone
+- Consider adding tooltips for icon-only buttons
