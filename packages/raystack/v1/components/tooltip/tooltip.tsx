@@ -33,7 +33,7 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
     content?: string;
     arrow?: string;
   };
-  style?: React.CSSProperties;
+  triggerStyle?: React.CSSProperties;
   contentStyle?: React.CSSProperties;
   delayDuration?: number;
   skipDelayDuration?: number;
@@ -47,7 +47,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   disabled,
   side = "top",
   classNames,
-  style,
+  triggerStyle,
   contentStyle,
   delayDuration = 200,
   skipDelayDuration = 200,
@@ -62,9 +62,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
         <TooltipPrimitive.Trigger 
           aria-describedby="tooltip" 
           asChild={asChild}
-          style={style}
         >
-          <div className={clsx(styles.trigger, classNames?.trigger ?? "")}>
+          <div className={clsx(styles.trigger, classNames?.trigger ?? "")} style={triggerStyle}>
             {children}
           </div>
         </TooltipPrimitive.Trigger>
