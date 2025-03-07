@@ -3,7 +3,8 @@ import { SearchProps } from "../../search/search";
 import { useDataTable } from "../hooks/useDataTable";
 
 export function TableSearch({ ...props }: SearchProps) {
-  const { updateTableQuery } = useDataTable();
+  const { updateTableQuery, tableQuery } = useDataTable();
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     updateTableQuery((query) => {
@@ -14,5 +15,21 @@ export function TableSearch({ ...props }: SearchProps) {
     });
   };
 
-  return <Search {...props} onChange={handleSearch} />;
+  const handleClear = () => {
+    updateTableQuery((query) => {
+      return {
+        ...query,
+        search: "",
+      };
+    });
+  };
+
+  return (
+    <Search
+      {...props}
+      onChange={handleSearch}
+      value={tableQuery?.search}
+      onClear={handleClear}
+    />
+  );
 }
