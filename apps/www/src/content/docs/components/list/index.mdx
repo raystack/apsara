@@ -9,14 +9,18 @@ import { preview } from "./demo.ts";
 
 ## Usage
 
-The Link component provides a way to navigate between pages or sections.
+The List component display information in a structured format with labels and values.
 
 ```tsx
-import { Link } from "@raystack/apsara/v1";
+import { List } from "@raystack/apsara/v1";
 
-<Link href="#" variant="accent">
-  Accent Link
-</Link>;
+<List.Root maxWidth="600px">
+  <List.Header>User Information</List.Header>
+  <List.Item align="center">
+    <List.Label minWidth="88px">Status</List.Label>
+    <List.Value>Active</List.Value>
+  </List.Item>
+</List.Root>;
 ```
 
 ## List Props
