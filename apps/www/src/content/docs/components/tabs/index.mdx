@@ -1,0 +1,63 @@
+---
+title: Tabs
+description: A set of layered sections of content that display one panel at a time.
+---
+
+import { preview, basicDemo, iconsDemo, disabledDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+The Tabs component provides a way to organize content into multiple sections, displaying one section at a time.
+
+```tsx
+import { Tabs } from "@raystack/apsara/v1";
+
+<Tabs.Root defaultValue="tab1">
+  <Tabs.List>
+    <Tabs.Trigger value="tab1">Tab One</Tabs.Trigger>
+    <Tabs.Trigger value="tab2">Tab Two</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="tab1">Tab one content</Tabs.Content>
+  <Tabs.Content value="tab2">Tab two content</Tabs.Content>
+</Tabs.Root>;
+```
+
+## Tabs Props
+
+<auto-type-table path="./props.ts" name="TabsRootProps" />
+
+### Tabs.List Props
+
+<auto-type-table path="./props.ts" name="TabsListProps" />
+
+### Tabs.Trigger Props
+
+<auto-type-table path="./props.ts" name="TabsTriggerProps" />
+
+### Tabs.Content Props
+
+<auto-type-table path="./props.ts" name="TabsContentProps" />
+
+## Examples
+
+### Basic Tabs
+
+<Demo data={basicDemo} />
+
+### With Icons
+
+<Demo data={iconsDemo} />
+
+### Disabled Tab
+
+<Demo data={disabledDemo} />
+
+## Accessibility
+
+Tabs follow the [WAI-ARIA Tabs Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/). They include the following accessibility features:
+
+- Keyboard navigation between tabs using arrow keys
+- Proper ARIA roles, states, and properties
+- Focus management for tab panels
