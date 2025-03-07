@@ -22,14 +22,14 @@ export interface RQLFilter {
 type SortOrdersKeys = keyof typeof SortOrders;
 export type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
 
-export interface Sort {
+export interface DataTableSort {
   name: string;
   order: SortOrdersValues;
 }
 
 export interface DataTableQuery {
   filters?: RQLFilter[];
-  sort?: Sort[];
+  sort?: DataTableSort[];
   group_by?: string[];
   offset?: number;
   limit?: number;
@@ -78,7 +78,7 @@ export interface DataTableProps<TData, TValue> {
   loadingRowCount?: number;
   tableQuery?: DataTableQuery;
   onTableQueryChange?: (query: DataTableQuery) => void;
-  defaultSort: Sort;
+  defaultSort: DataTableSort;
   onLoadMore?: () => Promise<void>;
 }
 
@@ -99,7 +99,7 @@ export type TableContextType<TData, TValue> = {
   isLoading?: boolean;
   loadMoreData: () => void;
   mode: DataTableMode;
-  defaultSort: Sort;
+  defaultSort: DataTableSort;
   tableQuery?: DataTableQuery;
   loadingRowCount?: number;
   onDisplaySettingsReset: () => void;

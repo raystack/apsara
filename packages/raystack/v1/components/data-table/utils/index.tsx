@@ -3,7 +3,7 @@ import {
   SortOrders,
   DataTableColumnDef,
   GroupedData,
-  Sort,
+  DataTableSort,
   DataTableQuery,
   RQLFilter,
 } from "../data-table.types";
@@ -106,7 +106,7 @@ const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
   );
 };
 
-const generateSortMap = (sort: Sort[] = []): Map<string, string> => {
+const generateSortMap = (sort: DataTableSort[] = []): Map<string, string> => {
   return new Map(sort.map(({ name, order }) => [name, order]));
 };
 
@@ -124,7 +124,10 @@ const isFilterChanged = (
   );
 };
 
-const isSortChanged = (oldSort: Sort[] = [], newSort: Sort[] = []): boolean => {
+const isSortChanged = (
+  oldSort: DataTableSort[] = [],
+  newSort: DataTableSort[] = []
+): boolean => {
   if (oldSort.length !== newSort.length) return true;
 
   const oldSortMap = generateSortMap(oldSort);
@@ -206,7 +209,7 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
 }
 
 export function getDefaultTableQuery(
-  defaultSort: Sort,
+  defaultSort: DataTableSort,
   oldQuery: DataTableQuery = {}
 ): DataTableQuery {
   return {
