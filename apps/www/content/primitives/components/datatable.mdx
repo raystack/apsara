@@ -75,7 +75,8 @@ Columns can be configured with various options:
 interface DataTableColumnDef<TData, TValue> {
   accessorKey: string; // Key to access data
   header: string; // Column header text
-  filterType?: "text" | "number" | "date" | "select"; // Data type
+  filterType?: "string" | "number" | "date" | "select"; // It will show filter chip as per this type
+  dataType?: "string" | "number" | "boolean"; // It will be used to add values in filter when type is `select`
   enableSorting?: boolean; // Enable sorting
   enableColumnFilter?: boolean; // Enable filtering
   enableHiding?: boolean; // Enable column visibility toggle
@@ -94,7 +95,7 @@ The DataTable supports multiple filter types:
 
 Filter types:
 
-- Text: equals, not equals, contains,
+- String: equals, not equals, contains,
 - Number: equals, not equals, less than, less than or equal, greater than, greater than or equal
 - Date: equals, not equals, before, on or before, after, on or after
 - Select: equals, not equals
