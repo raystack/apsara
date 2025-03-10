@@ -3,6 +3,12 @@
 import { getPropsString } from "@/lib/utils";
 
 export const getCode = (props: any) => {
+  const { color } = props;
+  if (color === "inverted")
+    return `
+  <Flex style={{ backgroundColor: 'black', padding:"20px" }}>
+    <Spinner${getPropsString(props)}/>
+  </Flex>`;
   return `<Spinner${getPropsString(props)}/>`;
 };
 
