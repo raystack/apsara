@@ -44,39 +44,40 @@ export const Search = ({
   ...props 
 }: SearchProps) => {
   return (
-    <div className={styles.container} role="search">
-      <div className={styles.inputWrapper}>
-        <span className={styles.leadingIcon} aria-hidden="true">
-          <MagnifyingGlassIcon />
-        </span>
-        <input
-          ref={ref}
-          type="text"
-          className={clsx(
-            searchField({ size, className }),
-            disabled && styles["search-disabled"]
-          )}
-          placeholder={placeholder}
-          disabled={disabled}
-          value={value}
-          aria-label={placeholder}
-          {...props}
-        />
-        {showClearButton && value && (
-          <button 
-            className={styles.clearButton}
-            onClick={onClear}
-            disabled={disabled}
-            type="button"
-            aria-label="Clear search"
-            tabIndex={0}
-          >
-            <CrossCircledIcon />
-          </button>
+    <div 
+      className={clsx(styles.container, disabled && styles.disabled)} 
+      role="search"
+    >
+      <span className={styles.leadingIcon} aria-hidden="true">
+        <MagnifyingGlassIcon />
+      </span>
+      <input
+        ref={ref}
+        type="text"
+        className={clsx(
+          searchField({ size, className }),
+          disabled && styles["search-disabled"]
         )}
-      </div>
+        placeholder={placeholder}
+        disabled={disabled}
+        value={value}
+        aria-label={placeholder}
+        {...props}
+      />
+      {showClearButton && value && !disabled && (
+        <button 
+          className={styles.clearButton}
+          onClick={onClear}
+          disabled={disabled}
+          type="button"
+          aria-label="Clear search"
+          tabIndex={0}
+        >
+          <CrossCircledIcon height={16} width={16}/>
+        </button>
+      )}
     </div>
   );
 };
 
-Search.displayName = "Search"; 
+Search.displayName = "Search";
