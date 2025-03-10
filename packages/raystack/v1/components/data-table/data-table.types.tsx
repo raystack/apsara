@@ -89,6 +89,7 @@ export interface DataTableProps<TData, TValue> {
   onTableQueryChange?: (query: DataTableQuery) => void;
   defaultSort: DataTableSort;
   onLoadMore?: () => Promise<void>;
+  onRowClick?: (row: TData) => void;
 }
 
 export type DataTableContentProps = {
@@ -97,6 +98,7 @@ export type DataTableContentProps = {
     table?: string;
     header?: string;
     body?: string;
+    row?: string;
   };
 };
 
@@ -113,6 +115,7 @@ export type TableContextType<TData, TValue> = {
   loadingRowCount?: number;
   onDisplaySettingsReset: () => void;
   updateTableQuery: (fn: TableQueryUpdateFn) => void;
+  onRowClick?: (row: TData) => void;
 };
 
 export interface ColumnData {

@@ -44,3 +44,19 @@
 .flex-1 {
   flex: 1;
 }
+
+.row {
+  background: var(--rs-color-background-base-primary);
+}
+
+.row:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.cell {
+  background: inherit;
+}
