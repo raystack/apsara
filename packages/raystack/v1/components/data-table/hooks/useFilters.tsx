@@ -5,6 +5,7 @@ import {
   filterOperators,
 } from "~/v1/types/filters";
 import { DataTableColumn } from "../data-table.types";
+import { getDataType } from "../utils/filter-operations";
 
 export function useFilters<TData, TValue>() {
   const { updateTableQuery } = useDataTable();
@@ -13,12 +14,13 @@ export function useFilters<TData, TValue>() {
     const columnDef = column.columnDef;
     const id = columnDef.accessorKey || column.id;
     const options = columnDef.filterOptions || [];
-    const columnType = columnDef.columnType || "text";
-    const defaultFilter = filterOperators[columnType][0];
+    const filterType = columnDef.filterType || FilterType.string;
+    const dataType = getDataType({ filterType, dataType: columnDef.dataType });
+    const defaultFilter = filterOperators[filterType][0];
     const defaultValue =
-      columnType === FilterType.date
+      filterType === FilterType.date
         ? new Date()
-        : columnType === FilterType.select
+        : filterType === FilterType.select
         ? options[0].value
         : "";
 
@@ -29,7 +31,8 @@ export function useFilters<TData, TValue>() {
           ...(query.filters || []),
           // TODO: Add default filter value in column definition
           {
-            _type: columnType,
+            _dataType: dataType,
+            _type: filterType,
             name: id,
             value: defaultValue,
             operator: defaultFilter.value,

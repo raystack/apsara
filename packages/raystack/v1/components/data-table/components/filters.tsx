@@ -6,7 +6,7 @@ import { FilterIcon } from "../../icons";
 import { DropdownMenu } from "../../dropdown-menu";
 import { useDataTable } from "../hooks/useDataTable";
 import { Flex } from "../../flex";
-import { FilterOperatorTypes } from "~/v1/types/filters";
+import { FilterOperatorTypes, FilterType } from "~/v1/types/filters";
 import { useFilters } from "../hooks/useFilters";
 
 interface AddFilterProps<TData, TValue> {
@@ -79,7 +79,7 @@ export function Filters<TData, TValue>() {
         return id === filter.name;
       })?.columnDef;
       return {
-        columnType: columnDef?.columnType || "text",
+        filterType: columnDef?.filterType || FilterType.string,
         label: (columnDef?.header as string) || "",
         options: columnDef?.filterOptions || [],
         ...filter,
@@ -104,7 +104,7 @@ export function Filters<TData, TValue>() {
                 operator as FilterOperatorTypes
               )
             }
-            columnType={filter.columnType}
+            columnType={filter.filterType}
             options={filter.options}
           />
         ))}

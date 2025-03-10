@@ -6,6 +6,7 @@ import {
   GroupedData,
   TableContextType,
   TableQueryUpdateFn,
+  defaultGroupOption,
 } from "./data-table.types";
 import {
   VisibilityState,
@@ -16,7 +17,6 @@ import {
   getExpandedRowModel,
 } from "@tanstack/react-table";
 import {
-  defaultGroupOption,
   getColumnsWithFilterFn,
   getDefaultTableQuery,
   getInitialColumnVisibility,
@@ -40,6 +40,7 @@ function DataTableRoot<TData, TValue>({
   children,
   onTableQueryChange,
   onLoadMore,
+  onRowClick,
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableQuery = getDefaultTableQuery(defaultSort, query);
   const initialColumnVisibility = getInitialColumnVisibility(columns);
@@ -131,6 +132,7 @@ function DataTableRoot<TData, TValue>({
     onDisplaySettingsReset,
     defaultSort,
     loadingRowCount,
+    onRowClick,
   };
 
   return (

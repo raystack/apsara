@@ -51,4 +51,7 @@ export {
   DataTable,
   DataTableColumnDef,
   DataTableQuery,
+  DataTableSort,
+  useDataTable,
+  EmptyFilterValue,
 } from "./components/data-table";

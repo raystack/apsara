@@ -3,12 +3,13 @@ import {
   SortOrders,
   DataTableColumnDef,
   GroupedData,
-  Sort,
+  DataTableSort,
   DataTableQuery,
   RQLFilter,
+  defaultGroupOption,
 } from "../data-table.types";
 import { FilterType } from "~/v1/types/filters";
-import { getFilterFn } from "./filter-operations";
+import { getFilterFn, getFilterValue } from "./filter-operations";
 
 export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   const columnFilters =
@@ -36,11 +37,6 @@ export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   };
 }
 
-export const defaultGroupOption = {
-  id: "--",
-  label: "No grouping",
-};
-
 export function getColumnsWithFilterFn<TData, TValue>(
   columns: DataTableColumnDef<TData, TValue>[] = [],
   filters: RQLFilter[] = []
@@ -50,7 +46,7 @@ export function getColumnsWithFilterFn<TData, TValue>(
       (filter) => filter.name === column.accessorKey
     );
     const filterFn = colFilter?.operator
-      ? getFilterFn(column.columnType, colFilter.operator)
+      ? getFilterFn(column.filterType || FilterType.string, colFilter.operator)
       : undefined;
 
     return {
@@ -106,7 +102,7 @@ const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
   );
 };
 
-const generateSortMap = (sort: Sort[] = []): Map<string, string> => {
+const generateSortMap = (sort: DataTableSort[] = []): Map<string, string> => {
   return new Map(sort.map(({ name, order }) => [name, order]));
 };
 
@@ -124,7 +120,10 @@ const isFilterChanged = (
   );
 };
 
-const isSortChanged = (oldSort: Sort[] = [], newSort: Sort[] = []): boolean => {
+const isSortChanged = (
+  oldSort: DataTableSort[] = [],
+  newSort: DataTableSort[] = []
+): boolean => {
   if (oldSort.length !== newSort.length) return true;
 
   const oldSortMap = generateSortMap(oldSort);
@@ -187,11 +186,13 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
     filters
       ?.filter((data) => data._type === FilterType.select || data.value !== "")
       ?.map((data) => ({
-        ...data,
-        value:
-          data._type === FilterType.date
-            ? (data.value as Date).toISOString()
-            : data.value,
+        name: data.name,
+        operator: data.operator,
+        ...getFilterValue({
+          value: data.value,
+          filterType: data._type,
+          dataType: data._dataType,
+        }),
       })) || [];
 
   const sortWithGroupBy = sanitizedGroupBy?.[0]
@@ -206,7 +207,7 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
 }
 
 export function getDefaultTableQuery(
-  defaultSort: Sort,
+  defaultSort: DataTableSort,
   oldQuery: DataTableQuery = {}
 ): DataTableQuery {
   return {

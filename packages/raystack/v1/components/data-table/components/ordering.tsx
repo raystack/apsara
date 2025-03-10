@@ -6,7 +6,7 @@ import { Select } from "../../select";
 import { IconButton } from "../../icon-button";
 import {
   ColumnData,
-  Sort,
+  DataTableSort,
   SortOrders,
   SortOrdersValues,
 } from "../data-table.types";
@@ -14,7 +14,7 @@ import {
 export interface OrderingProps {
   columnList: ColumnData[];
   onChange: (columnId: string, order: SortOrdersValues) => void;
-  value: Sort;
+  value: DataTableSort;
 }
 
 export function Ordering({ columnList, onChange, value }: OrderingProps) {

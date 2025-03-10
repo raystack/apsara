@@ -3,6 +3,7 @@ import type {
   FilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
+  FilterValueType,
 } from "~/v1/types/filters";
 
 export type DataTableMode = "client" | "server";
@@ -12,24 +13,31 @@ export const SortOrders = {
   DESC: "desc",
 } as const;
 
-export interface RQLFilter {
-  _type: FilterTypes;
+export interface RQLFilterValues {
+  value: any;
+  // Only one of these value fields should be present at a time
+  boolValue?: boolean;
+  stringValue?: string;
+  numberValue?: number;
+}
+export interface RQLFilter extends RQLFilterValues {
+  _type?: FilterTypes;
+  _dataType?: FilterValueType;
   name: string;
   operator: FilterOperatorTypes;
-  value: any;
 }
 
 type SortOrdersKeys = keyof typeof SortOrders;
 export type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
 
-export interface Sort {
+export interface DataTableSort {
   name: string;
   order: SortOrdersValues;
 }
 
 export interface DataTableQuery {
   filters?: RQLFilter[];
-  sort?: Sort[];
+  sort?: DataTableSort[];
   group_by?: string[];
   offset?: number;
   limit?: number;
@@ -47,7 +55,8 @@ export type DataTableColumn<TData, TValue> = Omit<
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string;
   header: string;
-  columnType: FilterTypes;
+  filterType?: FilterTypes;
+  dataType?: FilterValueType;
   enableColumnFilter?: boolean;
   enableSorting?: boolean;
   enableHiding?: boolean;
@@ -78,8 +87,9 @@ export interface DataTableProps<TData, TValue> {
   loadingRowCount?: number;
   tableQuery?: DataTableQuery;
   onTableQueryChange?: (query: DataTableQuery) => void;
-  defaultSort: Sort;
+  defaultSort: DataTableSort;
   onLoadMore?: () => Promise<void>;
+  onRowClick?: (row: TData) => void;
 }
 
 export type DataTableContentProps = {
@@ -88,6 +98,7 @@ export type DataTableContentProps = {
     table?: string;
     header?: string;
     body?: string;
+    row?: string;
   };
 };
 
@@ -99,11 +110,12 @@ export type TableContextType<TData, TValue> = {
   isLoading?: boolean;
   loadMoreData: () => void;
   mode: DataTableMode;
-  defaultSort: Sort;
+  defaultSort: DataTableSort;
   tableQuery?: DataTableQuery;
   loadingRowCount?: number;
   onDisplaySettingsReset: () => void;
   updateTableQuery: (fn: TableQueryUpdateFn) => void;
+  onRowClick?: (row: TData) => void;
 };
 
 export interface ColumnData {
@@ -120,3 +132,10 @@ export interface GroupedData<T> extends SubRows<T> {
   count?: number;
   showGroupCount?: boolean;
 }
+
+export const defaultGroupOption = {
+  id: "--",
+  label: "No grouping",
+};
+
+export const EmptyFilterValue = "--empty--";
