@@ -58,7 +58,7 @@ const SelectTrigger = React.forwardRef<
   iconProps = {}, 
   'aria-label': ariaLabel,
   style,
-  stopPropagation = false, // Default to false
+  stopPropagation = false,
   ...props 
 }, ref) => (
   <SelectPrimitive.Trigger
