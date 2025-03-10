@@ -1,12 +1,11 @@
-import React from "react";
 import { DialogProps } from "@radix-ui/react-dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Command as CommandPrimitive } from "cmdk";
-
 import { cva } from "class-variance-authority";
+import { Command as CommandPrimitive } from "cmdk";
+import React from "react";
+
 import { Dialog } from "../dialog";
 import { Flex } from "../flex";
-
 import styles from "./command.module.css";
 
 const command = cva(styles.command);

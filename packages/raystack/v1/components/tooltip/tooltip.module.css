@@ -16,7 +16,7 @@
     font-weight: var(--rs-font-weight-medium);
     line-height: var(--rs-line-height-mini);
     letter-spacing: var(--rs-letter-spacing-mini);
-    max-width: 280px;
+    max-width: fit-content;
     animation-duration: 400ms;
   }
   

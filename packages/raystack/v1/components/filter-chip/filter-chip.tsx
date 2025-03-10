@@ -1,18 +1,20 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { ReactNode, useEffect, useState, ReactElement } from "react";
+import { ReactElement,ReactNode, useEffect, useState } from "react";
+
+
 import { Box } from "../box";
+import { DatePicker } from "../calendar";
 import { Flex } from "../flex";
 import { Select } from "../select";
 import { Text } from "../text";
 import { TextField } from "../textfield";
-import { DatePicker } from "../calendar";
 import styles from "./filter-chip.module.css";
 import {
-  FilterSelectOption,
   FilterOperation,
+  filterOperators,
+  FilterSelectOption,
   FilterType,
   FilterTypes,
-  filterOperators,
 } from "~/v1/types/filters";
 
 export interface FilterChipProps {

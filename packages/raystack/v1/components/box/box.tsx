@@ -1,5 +1,5 @@
 import { cva, VariantProps } from "class-variance-authority";
-import { HTMLAttributes, PropsWithChildren, forwardRef } from "react";
+import { HTMLAttributes, PropsWithChildren } from "react";
 
 import styles from "./box.module.css";
 

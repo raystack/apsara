@@ -1,13 +1,13 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { cva, VariantProps } from "class-variance-authority";
+import { clsx } from "clsx";
 import {
   ComponentProps,
   ComponentPropsWithoutRef,
   ElementRef,
   forwardRef,
 } from "react";
-import { clsx } from "clsx";
 
 import styles from "./dialog.module.css";
 

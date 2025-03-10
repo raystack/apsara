@@ -1,9 +1,10 @@
+import { TextAlignBottomIcon,TextAlignTopIcon } from "@radix-ui/react-icons";
+
 import { Flex } from "../../flex";
-import styles from "../data-table.module.css";
-import { TextAlignTopIcon, TextAlignBottomIcon } from "@radix-ui/react-icons";
-import { Text } from "../../text";
-import { Select } from "../../select";
 import { IconButton } from "../../icon-button";
+import { Select } from "../../select";
+import { Text } from "../../text";
+import styles from "../data-table.module.css";
 import {
   ColumnData,
   DataTableSort,

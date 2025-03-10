@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ReactNode } from "react";
+
 import styles from "./list.module.css";
 
 const list = cva(styles.list);
