@@ -3,6 +3,7 @@ import {
   DataTable,
   DataTableColumnDef,
   DataTableQuery,
+  EmptyFilterValue,
   Flex,
   Separator,
   Switch,
@@ -18,7 +19,7 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 type PlanStatus = "active" | "cancelled" | "trialing";
-type PlanName = "standard" | "professional" | "enterprise";
+type PlanName = "" | "professional" | "enterprise";
 
 interface OrgBilling {
   org_name: string;
@@ -40,7 +41,7 @@ const PlanStatusMap: Record<PlanStatus, string> = {
 };
 
 const PlanNameMap: Record<PlanName, string> = {
-  standard: "Standard",
+  "": "Standard",
   professional: "Professional",
   enterprise: "Enterprise",
 };
@@ -74,7 +75,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     enableColumnFilter: true,
     filterType: "select",
     filterOptions: Object.entries(PlanNameMap).map(([value, label]) => ({
-      value,
+      value: value === "" ? EmptyFilterValue : value,
       label,
     })),
   },
@@ -152,11 +153,7 @@ const mockData = Array.from(
     billing_email: faker.internet.email(),
     country: faker.location.country(),
     user_count: faker.number.int({ min: 10, max: 100 }),
-    plan_name: faker.helpers.arrayElement([
-      "standard",
-      "professional",
-      "enterprise",
-    ]),
+    plan_name: faker.helpers.arrayElement(["", "professional", "enterprise"]),
     plan_start_date: dayjs(faker.date.past({ years: 7 })).format("YYYY-MM-DD"),
     plan_end_date: dayjs(faker.date.future({ years: 2 })).format("YYYY-MM-DD"),
     plan_status: faker.helpers.arrayElement([

@@ -14,7 +14,7 @@ import {
   FilterValueType,
   FilterType,
 } from "~/v1/types/filters";
-import { RQLFilterValues } from "../data-table.types";
+import { EmptyFilterValue, RQLFilterValues } from "../data-table.types";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -106,10 +106,16 @@ export const filterOperationsMap: FilterFunctionsMap = {
   },
   select: {
     eq: (row, columnId, filterValue: FilterValue) => {
+      if (String(filterValue.value) === EmptyFilterValue) {
+        return row.getValue(columnId) === "";
+      }
       // Select only supports string values
       return String(row.getValue(columnId)) === String(filterValue.value);
     },
     neq: (row, columnId, filterValue: FilterValue) => {
+      if (String(filterValue.value) === EmptyFilterValue) {
+        return row.getValue(columnId) !== "";
+      }
       // Select only supports string values
       return String(row.getValue(columnId)) !== String(filterValue.value);
     },
@@ -124,6 +130,29 @@ export function getFilterFn<T extends keyof FilterFunctionsMap>(
   return filterOperationsMap[type][operator];
 }
 
+const handleStringBasedTypes = (
+  filterType: FilterTypes,
+  value: any
+): RQLFilterValues => {
+  switch (filterType) {
+    case FilterType.date:
+      return {
+        value,
+        stringValue: (value as Date).toISOString(),
+      };
+    case FilterType.select:
+      return {
+        stringValue: value === EmptyFilterValue ? "" : value,
+        value,
+      };
+    default:
+      return {
+        stringValue: value,
+        value,
+      };
+  }
+};
+
 export const getFilterValue = ({
   value,
   dataType = "string",
@@ -133,20 +162,15 @@ export const getFilterValue = ({
   dataType?: FilterValueType;
   filterType?: FilterTypes;
 }): RQLFilterValues => {
-  switch (dataType) {
-    case "boolean":
-      return { boolValue: value, value: value };
-    case "number":
-      return { numberValue: value, value: value };
-    default:
-      return {
-        stringValue:
-          filterType === FilterType.date
-            ? (value as Date).toISOString()
-            : value,
-        value: value,
-      };
+  if (dataType === "boolean") {
+    return { boolValue: value, value };
   }
+  if (dataType === "number") {
+    return { numberValue: value, value };
+  }
+
+  // Handle string-based types
+  return handleStringBasedTypes(filterType, value);
 };
 
 export const getDataType = ({
