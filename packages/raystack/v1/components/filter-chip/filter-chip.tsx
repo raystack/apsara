@@ -39,7 +39,7 @@ interface OperationProps {
 
 const Operation = ({
   label,
-  columnType = FilterType.text,
+  columnType = FilterType.string,
   onOperationSelect,
 }: OperationProps) => {
   const filterOptions = filterOperators[columnType] || [];
@@ -92,7 +92,7 @@ export const FilterChip = ({
   onRemove = () => null,
   className,
   ref,
-  columnType = "text",
+  columnType = FilterType.string,
   options = [],
   onValueChange,
   onOperationChange,

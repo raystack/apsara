@@ -7,7 +7,7 @@ import { Text } from "../../text";
 import styles from "../data-table.module.css";
 import {
   ColumnData,
-  Sort,
+  DataTableSort,
   SortOrders,
   SortOrdersValues,
 } from "../data-table.types";
@@ -15,7 +15,7 @@ import {
 export interface OrderingProps {
   columnList: ColumnData[];
   onChange: (columnId: string, order: SortOrdersValues) => void;
-  value: Sort;
+  value: DataTableSort;
 }
 
 export function Ordering({ columnList, onChange, value }: OrderingProps) {

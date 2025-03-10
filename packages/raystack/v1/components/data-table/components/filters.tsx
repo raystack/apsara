@@ -11,8 +11,8 @@ import { IconButton } from "../../icon-button";
 import { FilterIcon } from "../../icons";
 import { DataTableColumn } from "../data-table.types";
 import { useDataTable } from "../hooks/useDataTable";
+import { FilterOperatorTypes, FilterType } from "~/v1/types/filters";
 import { useFilters } from "../hooks/useFilters";
-import { FilterOperatorTypes } from "~/v1/types/filters";
 
 interface AddFilterProps<TData, TValue> {
   columnList: DataTableColumn<TData, TValue>[];
@@ -84,7 +84,7 @@ export function Filters<TData, TValue>() {
         return id === filter.name;
       })?.columnDef;
       return {
-        columnType: columnDef?.columnType || "text",
+        filterType: columnDef?.filterType || FilterType.string,
         label: (columnDef?.header as string) || "",
         options: columnDef?.filterOptions || [],
         ...filter,
@@ -109,7 +109,7 @@ export function Filters<TData, TValue>() {
                 operator as FilterOperatorTypes
               )
             }
-            columnType={filter.columnType}
+            columnType={filter.filterType}
             options={filter.options}
           />
         ))}

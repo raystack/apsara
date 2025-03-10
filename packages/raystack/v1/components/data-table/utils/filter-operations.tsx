@@ -8,16 +8,20 @@ import {
   FilterOperatorTypes,
   FilterValue,
   NumberFilterOperatorType,
+  StringFilterOperatorType,
   SelectFilterOperatorType,
-  TextFilterOperatorType,
+  FilterTypes,
+  FilterValueType,
+  FilterType,
 } from "~/v1/types/filters";
+import { EmptyFilterValue, RQLFilterValues } from "../data-table.types";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 export type FilterFunctionsMap = {
   number: Record<NumberFilterOperatorType, FilterFn<any>>;
-  text: Record<TextFilterOperatorType, FilterFn<any>>;
+  string: Record<StringFilterOperatorType, FilterFn<any>>;
   date: Record<DateFilterOperatorType, FilterFn<any>>;
   select: Record<SelectFilterOperatorType, FilterFn<any>>;
 };
@@ -43,7 +47,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
       return Number(row.getValue(columnId)) >= Number(filterValue.value);
     },
   },
-  text: {
+  string: {
     eq: (row, columnId, filterValue: FilterValue) => {
       return (
         String(row.getValue(columnId)).toLowerCase() ===
@@ -102,10 +106,16 @@ export const filterOperationsMap: FilterFunctionsMap = {
   },
   select: {
     eq: (row, columnId, filterValue: FilterValue) => {
+      if (String(filterValue.value) === EmptyFilterValue) {
+        return row.getValue(columnId) === "";
+      }
       // Select only supports string values
       return String(row.getValue(columnId)) === String(filterValue.value);
     },
     neq: (row, columnId, filterValue: FilterValue) => {
+      if (String(filterValue.value) === EmptyFilterValue) {
+        return row.getValue(columnId) !== "";
+      }
       // Select only supports string values
       return String(row.getValue(columnId)) !== String(filterValue.value);
     },
@@ -119,3 +129,63 @@ export function getFilterFn<T extends keyof FilterFunctionsMap>(
   // @ts-expect-error FilterOperatorTypes is union of all possible operators
   return filterOperationsMap[type][operator];
 }
+
+const handleStringBasedTypes = (
+  filterType: FilterTypes,
+  value: any
+): RQLFilterValues => {
+  switch (filterType) {
+    case FilterType.date:
+      return {
+        value,
+        stringValue: (value as Date).toISOString(),
+      };
+    case FilterType.select:
+      return {
+        stringValue: value === EmptyFilterValue ? "" : value,
+        value,
+      };
+    default:
+      return {
+        stringValue: value,
+        value,
+      };
+  }
+};
+
+export const getFilterValue = ({
+  value,
+  dataType = "string",
+  filterType = FilterType.string,
+}: {
+  value: any;
+  dataType?: FilterValueType;
+  filterType?: FilterTypes;
+}): RQLFilterValues => {
+  if (dataType === "boolean") {
+    return { boolValue: value, value };
+  }
+  if (dataType === "number") {
+    return { numberValue: value, value };
+  }
+
+  // Handle string-based types
+  return handleStringBasedTypes(filterType, value);
+};
+
+export const getDataType = ({
+  filterType = FilterType.string,
+  dataType = "string",
+}: {
+  dataType?: FilterValueType;
+  filterType?: FilterTypes;
+}): FilterValueType => {
+  switch (filterType) {
+    case FilterType.select:
+      return dataType;
+    case FilterType.date:
+      return "string";
+    default:
+      return filterType;
+  }
+};

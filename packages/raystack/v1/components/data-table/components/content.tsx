@@ -1,5 +1,6 @@
 import { TableIcon } from "@radix-ui/react-icons";
 import type { HeaderGroup,Row } from "@tanstack/react-table";
+import clsx from "clsx";
 import { flexRender } from "@tanstack/react-table";
 import {
   ForwardedRef,
@@ -20,6 +21,7 @@ import {
   GroupedData,
 } from "../data-table.types";
 import { useDataTable } from "../hooks/useDataTable";
+import styles from "../data-table.module.css";
 
 function Headers<TData>({
   headerGroups = [],
@@ -57,6 +59,10 @@ function Headers<TData>({
 interface RowsProps<TData> {
   rows: Row<TData>[];
   lastRowRef?: ForwardedRef<HTMLTableRowElement>;
+  onRowClick?: (row: TData) => void;
+  classNames?: {
+    row?: string;
+  };
 }
 
 function LoaderRows({
@@ -102,7 +108,7 @@ function GroupHeader<TData>({
 
 const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
   (props, lastRowRef) => {
-    const { rows = [] } = props;
+    const { rows = [], onRowClick, classNames } = props;
     return (
       <>
         {rows?.map((row, index) => {
@@ -120,8 +126,14 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
           ) : (
             <Table.Row
               key={rowKey}
+              className={clsx(
+                styles["row"],
+                onRowClick ? styles["clickable"] : "",
+                classNames?.row
+              )}
               data-state={isSelected && "selected"}
               ref={isLastRow ? lastRowRef : undefined}
+              onClick={() => onRowClick?.(row.original)}
             >
               {cells.map((cell) => {
                 const columnDef = cell.column.columnDef as DataTableColumnDef<
@@ -131,7 +143,7 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
                 return (
                   <Table.Cell
                     key={cell.id}
-                    className={columnDef.classNames?.cell}
+                    className={clsx(styles["cell"], columnDef.classNames?.cell)}
                     style={columnDef.styles?.cell}
                   >
                     {flexRender(columnDef.cell, cell.getContext())}
@@ -155,8 +167,8 @@ export function Content({
   classNames = {},
 }: DataTableContentProps) {
   const {
+    onRowClick,
     table,
-    columns,
     mode,
     isLoading,
     loadMoreData,
@@ -201,23 +213,32 @@ export function Content({
     };
   }, [mode, rows.length, handleObserver]);
 
+  const visibleColumnsLength = table.getVisibleLeafColumns().length;
+
   return (
     <Table className={classNames.table}>
       <Headers headerGroups={headerGroups} className={classNames.header} />
       <Table.Body className={classNames.body}>
         {rows?.length || isLoading ? (
           <>
-            <Rows rows={rows} ref={lastRowRef} />
+            <Rows
+              rows={rows}
+              ref={lastRowRef}
+              onRowClick={onRowClick}
+              classNames={{
+                row: classNames.row,
+              }}
+            />
             {isLoading ? (
               <LoaderRows
                 rowCount={loadingRowCount}
-                columnCount={columns.length}
+                columnCount={visibleColumnsLength}
               />
             ) : null}
           </>
         ) : (
           <Table.Row>
-            <Table.Cell colSpan={columns.length}>
+            <Table.Cell colSpan={visibleColumnsLength}>
               {emptyState || <DefaultEmptyComponent />}
             </Table.Cell>
           </Table.Row>

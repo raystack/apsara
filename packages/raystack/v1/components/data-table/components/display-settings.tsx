@@ -4,12 +4,15 @@ import { Button } from "../../button";
 import { Flex } from "../../flex";
 import { Popover } from "../../popover";
 import styles from "../data-table.module.css";
-import { DataTableColumn, SortOrdersValues } from "../data-table.types";
 import { useDataTable } from "../hooks/useDataTable";
-import { defaultGroupOption } from "../utils";
-import { DisplayProperties } from "./display-properties";
-import { Grouping } from "./grouping";
+import {
+  DataTableColumn,
+  SortOrdersValues,
+  defaultGroupOption,
+} from "../data-table.types";
 import { Ordering } from "./ordering";
+import { Grouping } from "./grouping";
+import { DisplayProperties } from "./display-properties";
 
 export function DisplaySettings<TData, TValue>() {
   const {

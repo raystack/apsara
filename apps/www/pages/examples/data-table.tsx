@@ -3,6 +3,7 @@ import {
   DataTable,
   DataTableColumnDef,
   DataTableQuery,
+  EmptyFilterValue,
   Flex,
   Separator,
   Switch,
@@ -18,7 +19,7 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter);
 
 type PlanStatus = "active" | "cancelled" | "trialing";
-type PlanName = "standard" | "professional" | "enterprise";
+type PlanName = "" | "professional" | "enterprise";
 
 interface OrgBilling {
   org_name: string;
@@ -40,7 +41,7 @@ const PlanStatusMap: Record<PlanStatus, string> = {
 };
 
 const PlanNameMap: Record<PlanName, string> = {
-  standard: "Standard",
+  "": "Standard",
   professional: "Professional",
   enterprise: "Enterprise",
 };
@@ -52,7 +53,6 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     enableColumnFilter: true,
     enableSorting: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "text",
     styles: {
       cell: {
         paddingLeft: "16px",
@@ -67,22 +67,21 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     header: "Email",
     enableHiding: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "text",
   },
   {
     accessorKey: "plan_name",
     header: "Plan Name",
     cell: ({ getValue }) => <div>{PlanNameMap[getValue()]}</div>,
     enableColumnFilter: true,
-    columnType: "select",
+    filterType: "select",
     filterOptions: Object.entries(PlanNameMap).map(([value, label]) => ({
-      value,
+      value: value === "" ? EmptyFilterValue : value,
       label,
     })),
   },
   {
     accessorKey: "plan_status",
-    columnType: "select",
+    filterType: "select",
     header: "Plan Status",
     enableColumnFilter: true,
     cell: ({ getValue }) => <div>{PlanStatusMap[getValue()]}</div>,
@@ -95,7 +94,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     accessorKey: "user_count",
     header: "User Count",
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "number",
+    filterType: "number",
     enableColumnFilter: true,
     enableSorting: true,
   },
@@ -103,7 +102,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     accessorKey: "is_kyc_verified",
     header: "KYC Verified",
     cell: ({ getValue }) => <div>{getValue() ? "Yes" : "No"}</div>,
-    columnType: "select",
+    filterType: "select",
     enableColumnFilter: true,
     filterOptions: [
       { value: true, label: "Yes" },
@@ -117,13 +116,12 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     accessorKey: "country",
     header: "Country",
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "text",
     enableColumnFilter: true,
     enableHiding: true,
   },
   {
     accessorKey: "plan_start_date",
-    columnType: "date",
+    filterType: "date",
     header: "Start Date",
     enableHiding: true,
     enableSorting: true,
@@ -131,7 +129,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
   },
   {
     accessorKey: "plan_end_date",
-    columnType: "date",
+    filterType: "date",
     header: "End Date",
     defaultHidden: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
@@ -139,7 +137,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
 
   {
     accessorKey: "created_at",
-    columnType: "date",
+    filterType: "date",
     header: "Created At",
     enableHiding: true,
     defaultHidden: true,
@@ -155,11 +153,7 @@ const mockData = Array.from(
     billing_email: faker.internet.email(),
     country: faker.location.country(),
     user_count: faker.number.int({ min: 10, max: 100 }),
-    plan_name: faker.helpers.arrayElement([
-      "standard",
-      "professional",
-      "enterprise",
-    ]),
+    plan_name: faker.helpers.arrayElement(["", "professional", "enterprise"]),
     plan_start_date: dayjs(faker.date.past({ years: 7 })).format("YYYY-MM-DD"),
     plan_end_date: dayjs(faker.date.future({ years: 2 })).format("YYYY-MM-DD"),
     plan_status: faker.helpers.arrayElement([

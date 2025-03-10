@@ -65,6 +65,7 @@ function DropDown({
         iconProps={{
           className: styles.dropdown_icon,
         }}
+        stopPropagation={true}
       >
         <Select.Value />
       </Select.Trigger>
@@ -139,9 +140,9 @@ export const Calendar = function ({
           loadingData ? (
             <Skeleton
               count={6}
-              height={'12px'}
-              width={'252px'}
-              style={{ marginBottom: 'var(--rs-space-5)' }}
+              height="12px"
+              width="252px"
+              style={{ marginBottom: "var(--rs-space-5)" }}
               highlightColor="var(--rs-color-background-base-primary)"
               baseColor="var(--rs-color-background-base-primary-hover)"
             />

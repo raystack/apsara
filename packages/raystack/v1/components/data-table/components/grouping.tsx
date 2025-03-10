@@ -6,8 +6,8 @@ import {
   DataTableColumn,
   SortOrders,
   SortOrdersValues,
+  defaultGroupOption,
 } from "../data-table.types";
-import { defaultGroupOption } from "../utils";
 
 interface GroupingProps<TData, TValue> {
   columns: DataTableColumn<TData, TValue>[];
