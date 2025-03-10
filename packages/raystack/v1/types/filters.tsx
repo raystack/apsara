@@ -1,11 +1,11 @@
 export const FilterType = {
   number: "number",
-  text: "text",
+  string: "string",
   date: "date",
   select: "select",
 } as const;
 
-export type FilterValueType = string | number | boolean;
+export type FilterValueType = "string" | "number" | "boolean";
 
 export interface FilterValue {
   value?: FilterValueType;
@@ -26,13 +26,13 @@ export type NumberFilterOperatorType =
   | "lte"
   | "gt"
   | "gte";
-export type TextFilterOperatorType = "eq" | "neq" | "like";
+export type StringFilterOperatorType = "eq" | "neq" | "like";
 export type DateFilterOperatorType = "eq" | "neq" | "lt" | "lte" | "gt" | "gte";
 export type SelectFilterOperatorType = "eq" | "neq";
 
 export type FilterOperatorTypes =
   | NumberFilterOperatorType
-  | TextFilterOperatorType
+  | StringFilterOperatorType
   | DateFilterOperatorType
   | SelectFilterOperatorType;
 
@@ -43,7 +43,7 @@ export type FilterOperator<T> = {
 
 export type FilterOperatorsMap = {
   number: FilterOperator<NumberFilterOperatorType>[];
-  text: FilterOperator<TextFilterOperatorType>[];
+  string: FilterOperator<StringFilterOperatorType>[];
   date: FilterOperator<DateFilterOperatorType>[];
   select: FilterOperator<SelectFilterOperatorType>[];
 };
@@ -59,7 +59,7 @@ export const filterOperators: FilterOperatorsMap = {
     { value: "gt", label: "greater than" },
     { value: "gte", label: "greater than or equal" },
   ],
-  text: [
+  string: [
     { value: "eq", label: "is" },
     { value: "neq", label: "is not" },
     { value: "like", label: "contains" },

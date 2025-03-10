@@ -8,7 +8,7 @@ import {
   RQLFilter,
 } from "../data-table.types";
 import { FilterType } from "~/v1/types/filters";
-import { getFilterFn } from "./filter-operations";
+import { getFilterFn, getFilterValue } from "./filter-operations";
 
 export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   const columnFilters =
@@ -50,7 +50,7 @@ export function getColumnsWithFilterFn<TData, TValue>(
       (filter) => filter.name === column.accessorKey
     );
     const filterFn = colFilter?.operator
-      ? getFilterFn(column.filterType || FilterType.text, colFilter.operator)
+      ? getFilterFn(column.filterType || FilterType.string, colFilter.operator)
       : undefined;
 
     return {
@@ -190,11 +190,13 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
     filters
       ?.filter((data) => data._type === FilterType.select || data.value !== "")
       ?.map((data) => ({
-        ...data,
-        value:
-          data._type === FilterType.date
-            ? (data.value as Date).toISOString()
-            : data.value,
+        name: data.name,
+        operator: data.operator,
+        ...getFilterValue({
+          value: data.value,
+          filterType: data._type,
+          dataType: data._dataType,
+        }),
       })) || [];
 
   const sortWithGroupBy = sanitizedGroupBy?.[0]

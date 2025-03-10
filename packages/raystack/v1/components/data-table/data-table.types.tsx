@@ -13,11 +13,18 @@ export const SortOrders = {
   DESC: "desc",
 } as const;
 
-export interface RQLFilter {
-  _type: FilterTypes;
+export interface RQLFilterValues {
+  value: any;
+  // Only one of these value fields should be present at a time
+  boolValue?: boolean;
+  stringValue?: string;
+  numberValue?: number;
+}
+export interface RQLFilter extends RQLFilterValues {
+  _type?: FilterTypes;
+  _dataType?: FilterValueType;
   name: string;
   operator: FilterOperatorTypes;
-  value: any;
 }
 
 type SortOrdersKeys = keyof typeof SortOrders;
