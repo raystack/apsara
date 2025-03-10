@@ -3,6 +3,9 @@ import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { docs } from "@/lib/source";
 import Logo from "@/components/logo";
 
+function Footer() {
+  return <div>asd</div>;
+}
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <DocsLayout
@@ -15,8 +18,11 @@ export default function Layout({ children }: { children: ReactNode }) {
           </>
         ),
       }}
-      // disableThemeSwitch={true}
-    >
+      sidebar={{
+        collapsible: false,
+        footer: <Footer />,
+      }}
+      disableThemeSwitch={true}>
       {children}
     </DocsLayout>
   );
