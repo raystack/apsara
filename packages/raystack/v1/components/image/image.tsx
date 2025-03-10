@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { ImgHTMLAttributes } from "react";
+
 import styles from "./image.module.css";
 
 const image = cva(styles.image, {

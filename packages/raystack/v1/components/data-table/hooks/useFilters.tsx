@@ -1,10 +1,15 @@
+
+
+
+
+
+import { DataTableColumn } from "../data-table.types";
 import { useDataTable } from "./useDataTable";
 import {
+  filterOperators,
   FilterOperatorTypes,
   FilterType,
-  filterOperators,
 } from "~/v1/types/filters";
-import { DataTableColumn } from "../data-table.types";
 
 export function useFilters<TData, TValue>() {
   const { updateTableQuery } = useDataTable();

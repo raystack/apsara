@@ -1,15 +1,6 @@
-import { Table } from "../../table";
-import type { Row, HeaderGroup } from "@tanstack/react-table";
-import { EmptyState } from "../../empty-state";
 import { TableIcon } from "@radix-ui/react-icons";
+import type { HeaderGroup,Row } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
-import { useDataTable } from "../hooks/useDataTable";
-import {
-  DataTableColumnDef,
-  DataTableContentProps,
-  GroupedData,
-} from "../data-table.types";
-import Skeleton from "react-loading-skeleton";
 import {
   ForwardedRef,
   forwardRef,
@@ -17,8 +8,18 @@ import {
   useEffect,
   useRef,
 } from "react";
+import Skeleton from "react-loading-skeleton";
+
 import { Badge } from "../../badge";
+import { EmptyState } from "../../empty-state";
 import { Flex } from "../../flex";
+import { Table } from "../../table";
+import {
+  DataTableColumnDef,
+  DataTableContentProps,
+  GroupedData,
+} from "../data-table.types";
+import { useDataTable } from "../hooks/useDataTable";
 
 function Headers<TData>({
   headerGroups = [],

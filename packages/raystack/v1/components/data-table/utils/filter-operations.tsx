@@ -1,15 +1,15 @@
+import type { FilterFn } from "@tanstack/table-core";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
-import type { FilterFn } from "@tanstack/table-core";
 import {
+  DateFilterOperatorType,
+  FilterOperatorTypes,
   FilterValue,
   NumberFilterOperatorType,
-  TextFilterOperatorType,
-  DateFilterOperatorType,
   SelectFilterOperatorType,
-  FilterOperatorTypes,
+  TextFilterOperatorType,
 } from "~/v1/types/filters";
 
 dayjs.extend(isSameOrAfter);

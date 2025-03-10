@@ -1,5 +1,6 @@
 import * as SeparatorPrimitive from "@radix-ui/react-separator";
 import { cva } from "class-variance-authority";
+
 import styles from "./separator.module.css";
 
 const separator = cva(styles.separator, {

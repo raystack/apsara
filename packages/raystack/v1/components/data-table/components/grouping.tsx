@@ -1,7 +1,7 @@
 import { Flex } from "../../flex";
-import styles from "../data-table.module.css";
-import { Text } from "../../text";
 import { Select } from "../../select";
+import { Text } from "../../text";
+import styles from "../data-table.module.css";
 import {
   DataTableColumn,
   SortOrders,

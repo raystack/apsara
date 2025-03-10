@@ -1,14 +1,15 @@
-import { Flex } from "../../flex";
-import styles from "../data-table.module.css";
-import { Button } from "../../button";
-import { Popover } from "../../popover";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { useDataTable } from "../hooks/useDataTable";
+
+import { Button } from "../../button";
+import { Flex } from "../../flex";
+import { Popover } from "../../popover";
+import styles from "../data-table.module.css";
 import { DataTableColumn, SortOrdersValues } from "../data-table.types";
+import { useDataTable } from "../hooks/useDataTable";
 import { defaultGroupOption } from "../utils";
-import { Ordering } from "./ordering";
-import { Grouping } from "./grouping";
 import { DisplayProperties } from "./display-properties";
+import { Grouping } from "./grouping";
+import { Ordering } from "./ordering";
 
 export function DisplaySettings<TData, TValue>() {
   const {

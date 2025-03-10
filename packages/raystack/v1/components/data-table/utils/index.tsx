@@ -1,14 +1,16 @@
 import { TableState } from "@tanstack/table-core";
+
+
 import {
-  SortOrders,
   DataTableColumnDef,
-  GroupedData,
-  Sort,
   DataTableQuery,
+  GroupedData,
   RQLFilter,
+  Sort,
+  SortOrders,
 } from "../data-table.types";
-import { FilterType } from "~/v1/types/filters";
 import { getFilterFn } from "./filter-operations";
+import { FilterType } from "~/v1/types/filters";
 
 export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   const columnFilters =
