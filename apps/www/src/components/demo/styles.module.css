@@ -27,7 +27,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   column-gap: 40px;
   row-gap: 16px;
   font-size: 14px;

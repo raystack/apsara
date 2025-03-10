@@ -17,6 +17,9 @@ const config = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  experimental: {
+    optimizePackageImports: ["shiki"],
+  },
 };
 
 export default withMDX(config);
