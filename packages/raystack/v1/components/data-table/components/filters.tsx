@@ -79,7 +79,7 @@ export function Filters<TData, TValue>() {
         return id === filter.name;
       })?.columnDef;
       return {
-        filterType: columnDef?.filterType || FilterType.text,
+        filterType: columnDef?.filterType || FilterType.string,
         label: (columnDef?.header as string) || "",
         options: columnDef?.filterOptions || [],
         ...filter,

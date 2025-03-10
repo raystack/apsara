@@ -6,6 +6,7 @@ import {
   GroupedData,
   TableContextType,
   TableQueryUpdateFn,
+  defaultGroupOption,
 } from "./data-table.types";
 import {
   VisibilityState,
@@ -16,7 +17,6 @@ import {
   getExpandedRowModel,
 } from "@tanstack/react-table";
 import {
-  defaultGroupOption,
   getColumnsWithFilterFn,
   getDefaultTableQuery,
   getInitialColumnVisibility,

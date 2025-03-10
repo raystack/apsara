@@ -132,3 +132,10 @@ export interface GroupedData<T> extends SubRows<T> {
   count?: number;
   showGroupCount?: boolean;
 }
+
+export const defaultGroupOption = {
+  id: "--",
+  label: "No grouping",
+};
+
+export const EmptyFilterValue = "--empty--";
