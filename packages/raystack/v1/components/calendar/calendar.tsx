@@ -65,7 +65,7 @@ function DropDown({
         iconProps={{
           className: styles.dropdown_icon,
         }}
-        stopPropagation={true} // Add this prop
+        stopPropagation={true}
       >
         <Select.Value />
       </Select.Trigger>
