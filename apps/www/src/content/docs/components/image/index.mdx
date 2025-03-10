@@ -1,0 +1,86 @@
+---
+title: Image
+description: A responsive image component with fallback support and various fitting options.
+---
+
+import { playground, radiusDemo, fitDemo, fallbackDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Image } from "@raystack/apsara/v1";
+
+<Image
+  src="/path/to/image.jpg"
+  alt="Description"
+  width={300}
+  height={200}
+  fit="cover"
+/>;
+```
+
+## Image Props
+
+<auto-type-table path="./props.ts" name="ImageProps" />
+
+## Examples
+
+### Object Fit
+
+Control how the image fills its container with different object-fit modes.
+
+<Demo data={fitDemo} />
+
+### Border Radius
+
+Choose from different border radius styles to match your design.
+
+<Demo data={radiusDemo} />
+
+### Fallback
+
+Handle image loading failures gracefully with fallback images.
+
+<Demo data={fallbackDemo} />
+
+## Styling
+
+The IconButton uses CSS variables for consistent styling across themes:
+
+- Background color uses `--rs-color-background-base-primary`
+- Border color uses `--rs-color-border-base-primary`
+- Text color uses `--rs-color-foreground-base-primary`
+- Hover state uses `--rs-color-background-base-primary-hover`
+- Disabled state uses reduced opacity and different background/border colors
+
+## Accessibility
+
+The IconButton component inherits all the accessibility features of the native HTML button element:
+
+- Keyboard navigation support
+- Proper disabled state handling
+- Can be focused and activated using keyboard
+- Supports all standard button ARIA attributes
+
+For better accessibility, make sure to:
+
+- Provide meaningful aria-label when the button's purpose isn't clear from the icon alone
+- Consider adding tooltips for icon-only buttons
+
+## Accessibility
+
+The Image component follows accessibility best practices:
+
+### ARIA Attributes
+
+- `role="img"`: Explicitly defines the image role for assistive technologies
+- `aria-label`: Provides description matching alt text for screen readers
+- `alt`: Required alternative text description for screen readers
+
+### Performance
+
+- `loading="lazy"`: Default lazy loading for better performance
+- `decoding="async"`: Asynchronous image decoding to prevent blocking
+- Fallback support for failed image loads
