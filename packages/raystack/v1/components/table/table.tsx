@@ -14,7 +14,7 @@ const TableRoot = React.forwardRef<
 const header = cva(styles["header"]);
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement> &
+  React.TableHTMLAttributes<HTMLTableSectionElement> &
     React.PropsWithChildren<VariantProps<typeof header>>
 >(({ className, ...props }, ref) => {
   return <thead ref={ref} {...props} className={header({ className })} />;
