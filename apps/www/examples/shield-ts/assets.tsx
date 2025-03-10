@@ -7,26 +7,13 @@ import { DataTable, Title, useTable, Dialog as DialogLegacy } from "@raystack/ap
 import {
   toast,
   ToastContainer,
-  Avatar,
-  AvatarGroup,
   Button,
-  Spinner,
-  DropdownMenu,
-  Breadcrumb,
-  Chip,
   Flex,
   Text,
   Checkbox,
   InputField,
-  Badge,
-  Radio,
-  Tabs,
-  FilterChip,
   Search,
-  Headline,
-  Dialog,
-  RangePicker,
-  Sheet
+  Dialog
 } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
@@ -119,7 +106,7 @@ export const columns: ApsaraColumnDef<Payment>[] = [
 export const Assets = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [searchValue, setSearchValue] = useState("jhjhjhhj");
+  const [searchValue, setSearchValue] = useState("");
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
