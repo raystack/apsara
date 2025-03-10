@@ -58,7 +58,6 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-    columnType: "text",
   },
   {
     accessorKey: "status",
@@ -76,13 +75,12 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
         value: "success",
       },
     ],
-    columnType: "select",
+    filterType: "select",
   },
   {
     accessorKey: "email",
     header: "Email",
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-    columnType: "text",
   },
   {
     accessorKey: "amount",
@@ -97,7 +95,6 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
-    columnType: "text",
   },
 ];
 

@@ -52,7 +52,6 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     enableColumnFilter: true,
     enableSorting: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "text",
     styles: {
       cell: {
         paddingLeft: "16px",
@@ -67,14 +66,13 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     header: "Email",
     enableHiding: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "text",
   },
   {
     accessorKey: "plan_name",
     header: "Plan Name",
     cell: ({ getValue }) => <div>{PlanNameMap[getValue()]}</div>,
     enableColumnFilter: true,
-    columnType: "select",
+    filterType: "select",
     filterOptions: Object.entries(PlanNameMap).map(([value, label]) => ({
       value,
       label,
@@ -82,7 +80,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
   },
   {
     accessorKey: "plan_status",
-    columnType: "select",
+    filterType: "select",
     header: "Plan Status",
     enableColumnFilter: true,
     cell: ({ getValue }) => <div>{PlanStatusMap[getValue()]}</div>,
@@ -95,7 +93,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     accessorKey: "user_count",
     header: "User Count",
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "number",
+    filterType: "number",
     enableColumnFilter: true,
     enableSorting: true,
   },
@@ -103,7 +101,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     accessorKey: "is_kyc_verified",
     header: "KYC Verified",
     cell: ({ getValue }) => <div>{getValue() ? "Yes" : "No"}</div>,
-    columnType: "select",
+    filterType: "select",
     enableColumnFilter: true,
     filterOptions: [
       { value: true, label: "Yes" },
@@ -117,13 +115,12 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
     accessorKey: "country",
     header: "Country",
     cell: ({ getValue }) => <div>{getValue()}</div>,
-    columnType: "text",
     enableColumnFilter: true,
     enableHiding: true,
   },
   {
     accessorKey: "plan_start_date",
-    columnType: "date",
+    filterType: "date",
     header: "Start Date",
     enableHiding: true,
     enableSorting: true,
@@ -131,7 +128,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
   },
   {
     accessorKey: "plan_end_date",
-    columnType: "date",
+    filterType: "date",
     header: "End Date",
     defaultHidden: true,
     cell: ({ getValue }) => <div>{getValue()}</div>,
@@ -139,7 +136,7 @@ export const columns: DataTableColumnDef<OrgBilling, any>[] = [
 
   {
     accessorKey: "created_at",
-    columnType: "date",
+    filterType: "date",
     header: "Created At",
     enableHiding: true,
     defaultHidden: true,

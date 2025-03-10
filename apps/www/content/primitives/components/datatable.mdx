@@ -36,13 +36,12 @@ const columns = [
   {
     accessorKey: 'name',
     header: 'Name',
-    columnType: 'text',
     enableSorting: true,
   },
   {
     accessorKey: 'age',
     header: 'Age',
-    columnType: 'number',
+    filterType: 'number',
     enableSorting: true,
   },
 ];
@@ -76,7 +75,7 @@ Columns can be configured with various options:
 interface DataTableColumnDef<TData, TValue> {
   accessorKey: string; // Key to access data
   header: string; // Column header text
-  columnType: "text" | "number" | "date" | "select"; // Data type
+  filterType?: "text" | "number" | "date" | "select"; // Data type
   enableSorting?: boolean; // Enable sorting
   enableColumnFilter?: boolean; // Enable filtering
   enableHiding?: boolean; // Enable column visibility toggle

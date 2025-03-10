@@ -13,12 +13,12 @@ export function useFilters<TData, TValue>() {
     const columnDef = column.columnDef;
     const id = columnDef.accessorKey || column.id;
     const options = columnDef.filterOptions || [];
-    const columnType = columnDef.columnType || "text";
-    const defaultFilter = filterOperators[columnType][0];
+    const filterType = columnDef.filterType || FilterType.text;
+    const defaultFilter = filterOperators[filterType][0];
     const defaultValue =
-      columnType === FilterType.date
+      filterType === FilterType.date
         ? new Date()
-        : columnType === FilterType.select
+        : filterType === FilterType.select
         ? options[0].value
         : "";
 
@@ -29,7 +29,7 @@ export function useFilters<TData, TValue>() {
           ...(query.filters || []),
           // TODO: Add default filter value in column definition
           {
-            _type: columnType,
+            _type: filterType,
             name: id,
             value: defaultValue,
             operator: defaultFilter.value,

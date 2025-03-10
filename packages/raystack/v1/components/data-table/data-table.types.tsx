@@ -3,6 +3,7 @@ import type {
   FilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
+  FilterValueType,
 } from "~/v1/types/filters";
 
 export type DataTableMode = "client" | "server";
@@ -47,7 +48,8 @@ export type DataTableColumn<TData, TValue> = Omit<
 export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   accessorKey: string;
   header: string;
-  columnType: FilterTypes;
+  filterType?: FilterTypes;
+  dataType?: FilterValueType;
   enableColumnFilter?: boolean;
   enableSorting?: boolean;
   enableHiding?: boolean;

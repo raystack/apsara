@@ -50,7 +50,7 @@ export function getColumnsWithFilterFn<TData, TValue>(
       (filter) => filter.name === column.accessorKey
     );
     const filterFn = colFilter?.operator
-      ? getFilterFn(column.columnType, colFilter.operator)
+      ? getFilterFn(column.filterType || FilterType.text, colFilter.operator)
       : undefined;
 
     return {
