@@ -17,6 +17,7 @@ interface AriaProps {
 interface TriggerStyleProps {
   style?: React.CSSProperties;
   className?: string;
+  stopPropagation?: boolean;
 }
 
 export interface IconProps extends React.SVGAttributes<SVGElement> {
@@ -57,6 +58,7 @@ const SelectTrigger = React.forwardRef<
   iconProps = {}, 
   'aria-label': ariaLabel,
   style,
+  stopPropagation = false,
   ...props 
 }, ref) => (
   <SelectPrimitive.Trigger
@@ -65,6 +67,11 @@ const SelectTrigger = React.forwardRef<
     aria-label={ariaLabel || 'Select option'}
     role="combobox"
     style={style}
+    onPointerDown={(e) => {
+      if (stopPropagation) {
+        e.stopPropagation();
+      }
+    }}
     {...props}
   >
     {children}
@@ -94,6 +101,9 @@ const SelectContent = React.forwardRef<
       className={content({ className })}
       position={position}
       role="listbox"
+      onPointerDownOutside={(e) => {
+        e.stopPropagation();
+      }}
       {...props}
     >
       {children}
