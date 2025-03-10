@@ -17,7 +17,7 @@ interface AriaProps {
 interface TriggerStyleProps {
   style?: React.CSSProperties;
   className?: string;
-  stopPropagation?: boolean; // Add this prop
+  stopPropagation?: boolean;
 }
 
 export interface IconProps extends React.SVGAttributes<SVGElement> {
