@@ -128,7 +128,7 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
               className={clsx(
                 styles["row"],
                 onRowClick ? styles["clickable"] : "",
-                classNames
+                classNames?.row
               )}
               data-state={isSelected && "selected"}
               ref={isLastRow ? lastRowRef : undefined}

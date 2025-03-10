@@ -5,7 +5,7 @@ import styles from "./table.module.css";
 const table = cva(styles["table"]);
 const TableRoot = React.forwardRef<
   HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement> &
+  React.TableHTMLAttributes<HTMLTableElement> &
     React.PropsWithChildren<VariantProps<typeof table>>
 >(({ className, ...props }, ref) => {
   return <table ref={ref} {...props} className={table({ className })} />;
@@ -14,7 +14,7 @@ const TableRoot = React.forwardRef<
 const header = cva(styles["header"]);
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
-  React.TableHTMLAttributes<HTMLTableSectionElement> &
+  React.HTMLAttributes<HTMLTableSectionElement> &
     React.PropsWithChildren<VariantProps<typeof header>>
 >(({ className, ...props }, ref) => {
   return <thead ref={ref} {...props} className={header({ className })} />;
