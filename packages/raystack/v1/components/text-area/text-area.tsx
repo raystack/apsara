@@ -1,4 +1,3 @@
-import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { cva, cx,VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { HTMLAttributes, PropsWithChildren } from "react";
