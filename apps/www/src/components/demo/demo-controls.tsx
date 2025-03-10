@@ -1,5 +1,3 @@
-"use client";
-
 import { Info, Home, Laugh, X, Ban } from "lucide-react";
 import styles from "./styles.module.css";
 import {
@@ -85,6 +83,7 @@ export default function DemoControls({
             )}
             {control.type === "checkbox" && (
               <input
+                className={styles.input}
                 type="checkbox"
                 checked={!!componentProps[prop]}
                 onChange={e => onPropChange(prop, e.target.checked)}

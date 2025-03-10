@@ -17,16 +17,19 @@ import {
   DemoPlaygroundProps,
   PropChangeHandlerType,
 } from "./types";
+import { RefreshCw } from "lucide-react";
+import { buttonVariants } from "fumadocs-ui/components/api";
 
 const getInitialProps = (
   controls: ControlsType,
-  searchParams: ReadonlyURLSearchParams,
+  searchParams?: ReadonlyURLSearchParams,
 ) => {
   const initialProps: ComponentPropsType = {};
 
   Object.keys(controls).forEach(key => {
     const { type, initialValue, defaultValue } = controls[key];
-    const value = searchParams.get(key) ?? initialValue ?? defaultValue;
+    const value =
+      (searchParams && searchParams.get(key)) ?? initialValue ?? defaultValue;
 
     initialProps[key] = type === "checkbox" ? value === "true" : value;
   });
@@ -68,18 +71,33 @@ export default function DemoPlayground({
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
+  const resetProps = () => {
+    router.push(`?`, { scroll: false });
+    setComponentProps(getInitialProps(controls));
+  };
+
   return (
     <LiveProvider code={code} scope={scope} disabled>
       <div className={styles.container}>
-        <div className={styles.preview}>
-          <Preview />
+        <div className={styles.previewContainer}>
+          <div className={styles.preview}>
+            <Preview />
+            <button
+              className={buttonVariants({
+                color: "ghost",
+                className: styles.previewReset,
+              })}
+              onClick={resetProps}>
+              <RefreshCw size={16} />
+            </button>
+          </div>
           <DemoControls
             controls={controls}
             componentProps={componentProps}
             onPropChange={handlePropChange}
           />
         </div>
-        <Editor />
+        <Editor code={code} />
       </div>
     </LiveProvider>
   );

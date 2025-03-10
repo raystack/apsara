@@ -14,7 +14,7 @@ export const playground = {
   controls: {
     heading: { type: "text", initialValue: "No Data Available" },
     subHeading: { type: "text", initialValue: "Try adjusting your filters." },
-    icon: { type: "icon", initialValue: "info" },
+    icon: { type: "icon", initialValue: "<X size={16} />" },
   },
   getCode,
 };

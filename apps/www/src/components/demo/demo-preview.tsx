@@ -32,7 +32,7 @@ export default function DemoPreview({ code, tabs, scope }: DemoPreviewProps) {
         <div className={styles.preview}>
           <Preview />
         </div>
-        <Editor />
+        <Editor code={activeCode} />
       </div>
     </LiveProvider>
   );
