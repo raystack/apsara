@@ -1,4 +1,3 @@
-"use client";
 import { LivePreview } from "react-live";
 import styles from "./preview.module.css";
 

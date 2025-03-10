@@ -1,9 +1,14 @@
-"use client";
-
-import { LiveEditor } from "react-live";
-import { themes } from "prism-react-renderer";
+import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
 import styles from "./editor.module.css";
 
-export default function Editor() {
-  return <LiveEditor theme={themes.vsLight} className={styles.editor} />;
+type props = {
+  code?: string;
+};
+
+export default function Editor({ code = "" }: props) {
+  return (
+    <div className={styles.editor} suppressHydrationWarning>
+      <DynamicCodeBlock lang="tsx" code={code} />
+    </div>
+  );
 }
