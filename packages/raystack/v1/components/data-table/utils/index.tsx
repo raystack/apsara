@@ -56,8 +56,6 @@ export function getColumnsWithFilterFn<TData, TValue>(
   });
 }
 
-type GroupedDataMap<T> = Record<string, T[]>;
-
 export function groupData<TData>(
   data: TData[],
   group_by?: string,
@@ -78,15 +76,19 @@ export function groupData<TData>(
   });
 
   const columnDef = columns.find((col) => col.accessorKey === group_by);
-  const sortOrder = columnDef?.groupSortOrder || SortOrders.ASC;
   const showGroupCount = columnDef?.showGroupCount || false;
+  const groupedData: GroupedData<TData>[] = [];
 
-  return Object.entries(groupMap).map(([key, value]) => ({
-    group_key: key,
-    subRows: value,
-    count: columnDef?.groupCountMap?.[key] ?? value.length,
-    showGroupCount,
-  }));
+  groupMap.forEach((value, key) => {
+    groupedData.push({
+      group_key: key,
+      subRows: value,
+      count: columnDef?.groupCountMap?.[key] ?? value.length,
+      showGroupCount,
+    });
+  });
+
+  return groupedData;
 }
 
 const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
@@ -166,13 +168,7 @@ export function getInitialColumnVisibility<TData, TValue>(
 }
 
 export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
-  const {
-    group_by = [],
-    filters = [],
-    sort = [],
-    __group_by_sort = SortOrders.ASC,
-    ...rest
-  } = query;
+  const { group_by = [], filters = [], sort = [], ...rest } = query;
   const sanitizedGroupBy = group_by?.filter(
     (key) => key !== defaultGroupOption.id
   );
@@ -190,12 +186,9 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
         }),
       })) || [];
 
-  const sortWithGroupBy = sanitizedGroupBy?.[0]
-    ? [{ name: group_by[0], order: __group_by_sort }, ...sort]
-    : sort;
   return {
     ...rest,
-    sort: sortWithGroupBy,
+    sort: sort,
     group_by: sanitizedGroupBy,
     filters: sanitizedFilters,
   };
