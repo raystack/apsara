@@ -42,7 +42,6 @@ export interface DataTableQuery {
   offset?: number;
   limit?: number;
   search?: string;
-  __group_by_sort?: SortOrdersValues;
 }
 
 export type DataTableColumn<TData, TValue> = Omit<
@@ -71,9 +70,9 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     header?: React.CSSProperties;
   };
   enableGrouping?: boolean;
-  groupSortOrder?: SortOrdersValues;
   showGroupCount?: boolean;
   groupCountMap?: Record<string, number>;
+  groupLabelsMap?: Record<string, string>;
   // TODO: implement these
   icon?: React.ReactNode;
 };
@@ -127,6 +126,7 @@ export interface ColumnData {
 interface SubRows<T> {}
 
 export interface GroupedData<T> extends SubRows<T> {
+  label: string;
   group_key: string;
   subRows: T[];
   count?: number;

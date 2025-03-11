@@ -96,7 +96,7 @@ function GroupHeader<TData>({
   return (
     <Table.SectionHeader colSpan={colSpan}>
       <Flex gap={3} align="center">
-        {data?.group_key}
+        {data?.label}
         {data.showGroupCount ? (
           <Badge variant="neutral">{data?.count}</Badge>
         ) : null}

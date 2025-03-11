@@ -153,6 +153,20 @@ const handleStringBasedTypes = (
   }
 };
 
+export const getFilterOperator = ({
+  value,
+  filterType,
+  operator,
+}: {
+  value: any;
+  filterType?: FilterTypes;
+  operator: FilterOperatorTypes;
+}): FilterOperatorTypes => {
+  return value === EmptyFilterValue && filterType === FilterType.select
+    ? "empty"
+    : operator;
+};
+
 export const getFilterValue = ({
   value,
   dataType = "string",
