@@ -72,6 +72,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   enableGrouping?: boolean;
   showGroupCount?: boolean;
   groupCountMap?: Record<string, number>;
+  groupLabelsMap?: Record<string, string>;
   // TODO: implement these
   icon?: React.ReactNode;
 };
@@ -125,6 +126,7 @@ export interface ColumnData {
 interface SubRows<T> {}
 
 export interface GroupedData<T> extends SubRows<T> {
+  label: string;
   group_key: string;
   subRows: T[];
   count?: number;

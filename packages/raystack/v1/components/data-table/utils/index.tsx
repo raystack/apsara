@@ -77,13 +77,16 @@ export function groupData<TData>(
 
   const columnDef = columns.find((col) => col.accessorKey === group_by);
   const showGroupCount = columnDef?.showGroupCount || false;
+  const groupLablesMap = columnDef?.groupLabelsMap || {};
+  const groupCountMap = columnDef?.groupCountMap || {};
   const groupedData: GroupedData<TData>[] = [];
 
   groupMap.forEach((value, key) => {
     groupedData.push({
+      label: groupLablesMap[key] || key,
       group_key: key,
       subRows: value,
-      count: columnDef?.groupCountMap?.[key] ?? value.length,
+      count: groupCountMap[key] ?? value.length,
       showGroupCount,
     });
   });
