@@ -51,6 +51,15 @@ export function DisplaySettings<TData, TValue>() {
     });
   }
 
+  function onGroupRemove() {
+    updateTableQuery((query) => {
+      return {
+        ...query,
+        group_by: [],
+      };
+    });
+  }
+
   function onReset() {
     onDisplaySettingsReset();
   }
@@ -84,6 +93,7 @@ export function DisplaySettings<TData, TValue>() {
             />
             <Grouping
               columns={columns}
+              onRemove={onGroupRemove}
               onChange={onGroupChange}
               value={tableQuery?.group_by?.[0] || defaultGroupOption.id}
             />

@@ -2,22 +2,19 @@ import { Flex } from "../../flex";
 import styles from "../data-table.module.css";
 import { Text } from "../../text";
 import { Select } from "../../select";
-import {
-  DataTableColumn,
-  SortOrders,
-  SortOrdersValues,
-  defaultGroupOption,
-} from "../data-table.types";
+import { DataTableColumn, defaultGroupOption } from "../data-table.types";
 
 interface GroupingProps<TData, TValue> {
   columns: DataTableColumn<TData, TValue>[];
   onChange: (columnId: string) => void;
+  onRemove: () => void;
   value: string;
 }
 
 export function Grouping<TData, TValue>({
   columns = [],
   onChange,
+  onRemove,
   value,
 }: GroupingProps<TData, TValue>) {
   const columnList = columns
@@ -31,6 +28,10 @@ export function Grouping<TData, TValue>({
     });
 
   const handleGroupChange = (columnId: string) => {
+    if (columnId === defaultGroupOption.id) {
+      onRemove();
+      return;
+    }
     const column = columns.find((col) => col.id === columnId);
     if (column) {
       onChange(column.id);
