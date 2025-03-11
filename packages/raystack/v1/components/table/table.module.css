@@ -53,6 +53,7 @@
 
 .sectionHeader {
   background: var(--rs-color-background-neutral-primary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
   text-align: left;
 }
 
