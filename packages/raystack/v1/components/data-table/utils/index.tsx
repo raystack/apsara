@@ -9,7 +9,11 @@ import {
   defaultGroupOption,
 } from "../data-table.types";
 import { FilterType } from "~/v1/types/filters";
-import { getFilterFn, getFilterValue } from "./filter-operations";
+import {
+  getFilterFn,
+  getFilterOperator,
+  getFilterValue,
+} from "./filter-operations";
 
 export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   const columnFilters =
@@ -181,7 +185,11 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
       ?.filter((data) => data._type === FilterType.select || data.value !== "")
       ?.map((data) => ({
         name: data.name,
-        operator: data.operator,
+        operator: getFilterOperator({
+          operator: data.operator,
+          value: data.value,
+          filterType: data._type,
+        }),
         ...getFilterValue({
           value: data.value,
           filterType: data._type,

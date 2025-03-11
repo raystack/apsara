@@ -34,7 +34,8 @@ export type FilterOperatorTypes =
   | NumberFilterOperatorType
   | StringFilterOperatorType
   | DateFilterOperatorType
-  | SelectFilterOperatorType;
+  | SelectFilterOperatorType
+  | "empty";
 
 export type FilterOperator<T> = {
   value: T;
