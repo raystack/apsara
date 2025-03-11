@@ -83,6 +83,9 @@ interface DataTableColumnDef<TData, TValue> {
   enableGrouping?: boolean; // Enable grouping
   filterOptions?: FilterSelectOption[]; // Options for select filter
   defaultHidden?: boolean; // Hide column by default
+  showGroupCount?: boolean; // Show group count when grouping
+  groupCountMap?: Record<string, number>; // pass group count map, otherwise item count will be used
+  groupLabelsMap?: Record<string, string>; // change group label to some other value other than key value
 }
 `}
     border
