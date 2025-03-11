@@ -66,32 +66,27 @@ export function groupData<TData>(
   if (!data) return [];
   if (!group_by || group_by === defaultGroupOption.id)
     return data as GroupedData<TData>[];
-  const group_by_map = data.reduce(
-    (acc: GroupedDataMap<TData>, currentData: TData) => {
-      const item = currentData as Record<string, string>;
-      const keyValue = item[group_by];
-      acc[keyValue] = acc[keyValue] || [];
-      acc[keyValue].push(item as TData);
-      return acc;
-    },
-    {} as GroupedDataMap<TData>
-  );
+
+  const groupMap = new Map<string, TData[]>();
+  data.forEach((currentData: TData) => {
+    const item = currentData as Record<string, string>;
+    const keyValue = item[group_by];
+    if (!groupMap.has(keyValue)) {
+      groupMap.set(keyValue, []);
+    }
+    groupMap.get(keyValue)?.push(item as TData);
+  });
 
   const columnDef = columns.find((col) => col.accessorKey === group_by);
   const sortOrder = columnDef?.groupSortOrder || SortOrders.ASC;
   const showGroupCount = columnDef?.showGroupCount || false;
 
-  return Object.entries(group_by_map)
-    .map(([key, value]) => ({
-      group_key: key,
-      subRows: value,
-      count: columnDef?.groupCountMap?.[key] ?? value.length,
-      showGroupCount,
-    }))
-    .sort((a, b) => {
-      const sortValue = sortOrder === SortOrders.ASC ? 1 : -1;
-      return a.group_key.localeCompare(b.group_key) * sortValue;
-    });
+  return Object.entries(groupMap).map(([key, value]) => ({
+    group_key: key,
+    subRows: value,
+    count: columnDef?.groupCountMap?.[key] ?? value.length,
+    showGroupCount,
+  }));
 }
 
 const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
