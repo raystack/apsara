@@ -4,7 +4,7 @@ import {
   DocsBody,
   DocsDescription,
   DocsTitle,
-} from "fumadocs-ui/page";
+} from "@/components/page";
 import { notFound } from "next/navigation";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { TypeTable } from "fumadocs-ui/components/type-table";
@@ -29,7 +29,7 @@ export default async function Page(props: {
       }}>
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
+      <div>
         <MDX
           components={{
             ...defaultMdxComponents,
@@ -39,7 +39,7 @@ export default async function Page(props: {
             Demo,
           }}
         />
-      </DocsBody>
+      </div>
     </DocsPage>
   );
 }

@@ -41,7 +41,7 @@ export default function Sidebar({ tree }: Props) {
         title="Apsara"
         className={styles.heading}
       />
-      <LargeSearchToggle hideIfDisabled className="rounded-lg max-md:hidden" />
+      <LargeSearchToggle className="rounded-lg max-md:hidden" />
       <ApsaraSidebar.Main>
         <Fragment key={tree.$id}>
           {renderSidebarTree(tree.children, 1)}

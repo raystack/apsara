@@ -107,7 +107,7 @@ export function DocsLayout({
           ...props.containerProps?.style,
         }}>
         <Sidebar tree={props.tree} />
-        <StylesProvider {...pageStyles}>{children}</StylesProvider>
+        <div style={{ display: "flex", flex: 1 }}>{children}</div>
       </main>
       {/* </NavProvider> */}
     </TreeContextProvider>

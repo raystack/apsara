@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/components/theme";
 import "@raystack/apsara/style.css";
-import "@/styles.css";
+// import "@/styles.css";
 
 const inter = Inter({
   subsets: ["latin"],
