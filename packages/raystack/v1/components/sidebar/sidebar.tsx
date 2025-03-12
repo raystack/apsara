@@ -1,4 +1,4 @@
-import * as Collapsible from '@radix-ui/react-collapsible';
+import * as Collapsible from "@radix-ui/react-collapsible";
 import { cva } from "class-variance-authority";
 import { ComponentPropsWithoutRef, ComponentRef, ReactNode } from "react";
 
@@ -7,14 +7,9 @@ import styles from "./sidebar.module.css";
 
 const root = cva(styles.root);
 
-interface SidebarProps extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
-  position?: 'left' | 'right';
-  profile?: {
-    icon: ReactNode;
-    label: string;
-    href?: string;
-    onIconClick?: () => void;
-  };
+interface SidebarProps
+  extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
+  position?: "left" | "right";
   ref?: ComponentRef<typeof Collapsible.Root>;
 }
 
@@ -42,22 +37,21 @@ interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<"div"> {
   ref?: ComponentRef<"div">;
 }
 
-const SidebarRoot = ({ 
-  className, 
-  position = 'left', 
-  open, 
-  onOpenChange, 
-  children, 
-  profile, 
+const SidebarRoot = ({
+  className,
+  position = "left",
+  open,
+  onOpenChange,
+  children,
   ref,
-  ...props 
+  ...props
 }: SidebarProps) => (
   <TooltipProvider>
     <Collapsible.Root
       ref={ref as unknown as React.RefObject<HTMLDivElement>}
       className={root({ className })}
       data-position={position}
-      data-state={open ? 'expanded' : 'collapsed'}
+      data-state={open ? "expanded" : "collapsed"}
       open={open}
       onOpenChange={onOpenChange}
       aria-label="Navigation Sidebar"
@@ -67,19 +61,19 @@ const SidebarRoot = ({
       asChild
     >
       <aside>
-        <Tooltip 
+        <Tooltip
           message={open ? "Click to collapse" : "Click to expand"}
-          side={position === 'left' ? 'right' : 'left'}
+          side={position === "left" ? "right" : "left"}
           asChild
         >
-          <div 
+          <div
             className={styles.resizeHandle}
             onClick={() => onOpenChange?.(!open)}
             role="button"
             tabIndex={0}
             aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 onOpenChange?.(!open);
               }
@@ -87,29 +81,6 @@ const SidebarRoot = ({
           />
         </Tooltip>
         {children}
-        {profile && (
-          <a 
-            href={profile.href} 
-            className={styles.account}
-            role="button"
-            aria-label={`Profile: ${profile.label}`}
-            onClick={(e) => {
-              if (profile.onIconClick) {
-                e.preventDefault();
-                profile.onIconClick();
-              }
-            }}
-          >
-            <span 
-              className={styles['nav-icon']} 
-              aria-hidden="true"
-              style={{ cursor: profile.onIconClick ? 'pointer' : undefined }}
-            >
-              {profile.icon}
-            </span>
-            <span className={styles['nav-text']}>{profile.label}</span>
-          </a>
-        )}
       </aside>
     </Collapsible.Root>
   </TooltipProvider>
@@ -123,28 +94,30 @@ const SidebarHeader = ({
   ref,
   ...props
 }: SidebarHeaderProps) => (
-  <div 
-    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
-    className={styles.header} 
+  <div
+    ref={ref as unknown as React.RefObject<HTMLDivElement>}
+    className={styles.header}
     role="banner"
     {...props}
   >
-    <div 
-      className={styles.logo} 
+    <div
+      className={styles.logo}
       onClick={onLogoClick}
       role={onLogoClick ? "button" : undefined}
       tabIndex={onLogoClick ? 0 : undefined}
       onKeyDown={(e) => {
-        if (onLogoClick && (e.key === 'Enter' || e.key === ' ')) {
+        if (onLogoClick && (e.key === "Enter" || e.key === " ")) {
           e.preventDefault();
           onLogoClick();
         }
       }}
-      style={{ cursor: onLogoClick ? 'pointer' : undefined }}
+      style={{ cursor: onLogoClick ? "pointer" : undefined }}
     >
       {logo}
     </div>
-    <div className={styles.title} role="heading" aria-level={1}>{title}</div>
+    <div className={styles.title} role="heading" aria-level={1}>
+      {title}
+    </div>
   </div>
 );
 
@@ -154,8 +127,8 @@ const SidebarMain = ({
   ref,
   ...props
 }: ComponentPropsWithoutRef<"div"> & { ref?: ComponentRef<"div"> }) => (
-  <div 
-    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
+  <div
+    ref={ref as unknown as React.RefObject<HTMLDivElement>}
     className={styles.main}
     role="group"
     aria-label="Main navigation"
@@ -171,8 +144,8 @@ const SidebarFooter = ({
   ref,
   ...props
 }: SidebarFooterProps) => (
-  <div 
-    ref={ref as unknown as React.RefObject<HTMLDivElement>} 
+  <div
+    ref={ref as unknown as React.RefObject<HTMLDivElement>}
     className={styles.footer}
     role="group"
     aria-label="Footer navigation"
@@ -191,9 +164,9 @@ const SidebarItem = ({
   ref,
   ...props
 }: SidebarItemProps) => (
-  <a 
-    ref={ref as unknown as React.RefObject<HTMLAnchorElement>} 
-    className={styles['nav-item']} 
+  <a
+    ref={ref as unknown as React.RefObject<HTMLAnchorElement>}
+    className={styles["nav-item"]}
     data-active={active}
     data-disabled={disabled}
     role="menuitem"
@@ -201,8 +174,10 @@ const SidebarItem = ({
     aria-disabled={disabled}
     {...props}
   >
-    <span className={styles['nav-icon']} aria-hidden="true">{icon}</span>
-    <span className={styles['nav-text']}>{children}</span>
+    <span className={styles["nav-icon"]} aria-hidden="true">
+      {icon}
+    </span>
+    <span className={styles["nav-text"]}>{children}</span>
   </a>
 );
 
@@ -214,17 +189,17 @@ const SidebarNavigationGroup = ({
   ref,
   ...props
 }: SidebarNavigationGroupProps) => (
-  <section 
+  <section
     ref={ref as unknown as React.RefObject<HTMLElement>}
     className={className}
     aria-label={name}
     {...props}
   >
-    <div className={styles['nav-group-header']}>
-      {icon && <span className={styles['nav-icon']}>{icon}</span>}
-      <span className={styles['nav-group-name']}>{name}</span>
+    <div className={styles["nav-group-header"]}>
+      {icon && <span className={styles["nav-icon"]}>{icon}</span>}
+      <span className={styles["nav-group-name"]}>{name}</span>
     </div>
-    <div className={styles['nav-group-items']} role="list">
+    <div className={styles["nav-group-items"]} role="list">
       {children}
     </div>
   </section>
