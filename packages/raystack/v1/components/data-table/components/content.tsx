@@ -78,7 +78,10 @@ function LoaderRows({
       <Table.Row key={"loading-row-" + rowIndex}>
         {columns.map((_, colIndex) => (
           <Table.Cell key={"loading-column-" + colIndex}>
-            <Skeleton />
+            <Skeleton
+              highlightColor="var(--rs-color-background-base-primary)"
+              baseColor="var(--rs-color-background-base-primary-hover)"
+            />
           </Table.Cell>
         ))}
       </Table.Row>
