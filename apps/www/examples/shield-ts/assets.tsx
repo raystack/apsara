@@ -245,6 +245,22 @@ export const Assets = () => {
               <Button size="small" onClick={() => setDialogOpen(true)}>Open V1 Dialog</Button>
               <Button size="small" onClick={() => setLegacyDialogOpen(true)}>Open Legacy Dialog</Button>
 
+              {/* Spinner sizes */}
+              <Flex direction="column" gap="small" align="start">
+                <Flex gap="large" align="center">
+                  <Spinner size={1} />
+                  <Spinner size={2} />
+                  <Spinner size={3} />
+                  <Spinner size={4} />
+                  <Spinner size={5} />
+                  <Spinner size={6} />
+                </Flex>
+              </Flex>
+
+              <Button size="small" loading loaderText="Loading...">
+                Button
+              </Button>
+
               {/* Basic Input - Small */}
               <InputField
                 label="Asset Name (Small)"
