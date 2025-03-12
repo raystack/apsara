@@ -245,7 +245,6 @@ export const Assets = () => {
               <Button size="small" onClick={() => setDialogOpen(true)}>Open V1 Dialog</Button>
               <Button size="small" onClick={() => setLegacyDialogOpen(true)}>Open Legacy Dialog</Button>
 
-              {/* Spinner sizes */}
               <Flex direction="column" gap="small" align="start">
                 <Flex gap="large" align="center">
                   <Spinner size={1} />
