@@ -1,15 +1,11 @@
 import { docs } from "@/lib/source";
-import {
-  DocsPage,
-  DocsBody,
-  DocsDescription,
-  DocsTitle,
-} from "fumadocs-ui/page";
+import { DocsPage, DocsDescription, DocsTitle } from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { TypeTable } from "fumadocs-ui/components/type-table";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import Demo from "@/components/demo";
+import { DocsBody } from "@/components/docs";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
