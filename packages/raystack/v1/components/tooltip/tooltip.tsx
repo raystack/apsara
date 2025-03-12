@@ -39,6 +39,7 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   skipDelayDuration?: number;
   'aria-label'?: string;
   asChild?: boolean;
+  showArrow?: boolean;
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
@@ -53,6 +54,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   skipDelayDuration = 200,
   'aria-label': ariaLabel,
   asChild = true,
+  showArrow = true,
 }) => {
   return disabled ? (
     children
@@ -83,7 +85,13 @@ export const Tooltip: React.FC<TooltipProps> = ({
             ) : (
               message
             )}
-            <TooltipPrimitive.Arrow className={clsx(styles.arrow, classNames?.arrow)} width={12} height={6} />
+            {showArrow && (
+              <TooltipPrimitive.Arrow 
+                className={clsx(styles.arrow, classNames?.arrow)} 
+                width={12} 
+                height={6} 
+              />
+            )}
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>
