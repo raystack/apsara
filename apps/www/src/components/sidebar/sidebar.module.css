@@ -1,0 +1,32 @@
+.root {
+  height: 100dvh;
+  position: sticky;
+  top: 0;
+}
+.group {
+  margin-top: 20px;
+}
+.group * {
+  font-size: 12px;
+  font-weight: 600;
+}
+.footer {
+  padding-top: 16px;
+  padding-bottom: 4px;
+  border-top: 1px solid var(--rs-color-border-base-primary);
+}
+.heading {
+  outline: 1px solid red;
+}
+@media (max-width: 600px) {
+  .root {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+  }
+  .heading {
+    display: none;
+  }
+}

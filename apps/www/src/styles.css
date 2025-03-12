@@ -6,3 +6,6 @@ td {
   white-space: normal;
   word-break: break-word;
 }
+* {
+  overscroll-behavior: none;
+}

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { DocsLayout } from "@/components/docs";
 import { docs } from "@/lib/source";
 import Logo from "@/components/logo";
 

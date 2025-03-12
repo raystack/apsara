@@ -1,0 +1,31 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  padding: 0.25rem;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.item[data-state="active"] {
+  background-color: var(--accent-bg);
+  color: var(--accent-foreground);
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.label {
+  font-size: 0.875rem;
+}
