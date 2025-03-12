@@ -14,7 +14,7 @@ import {
   TimerIcon,
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { Flex, Image, Sidebar } from "@raystack/apsara/v1";
+import { Avatar, Flex, Image, Sidebar } from "@raystack/apsara/v1";
 import { Assets } from "./assets";
 
 import "@raystack/apsara/style.css";
@@ -26,40 +26,58 @@ export const Shield = () => {
   return (
     <>
       <Flex style={{ height: "100vh" }}>
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: "relative" }}>
           <Sidebar
-            open={sidebarOpen} 
-            onOpenChange={setSidebarOpen} 
+            open={sidebarOpen}
+            onOpenChange={setSidebarOpen}
             position="left"
-            profile={{
-              icon: <DotsVerticalIcon />,
-              label: "john.doe@apsara.com",
-              href: "#"
-            }}
           >
             <Sidebar.Header
-              logo={<Image radius="small" src="/thenorthface-logo.svg" width={24} height={24} />} 
+              logo={
+                <Image
+                  radius="small"
+                  src="/thenorthface-logo.svg"
+                  width={24}
+                  height={24}
+                />
+              }
               title="THE NORTH FACE"
               onLogoClick={() => console.log("Logo clicked")}
             />
             <Sidebar.Main>
               <Sidebar.Group name="Navigation" className="">
-                <Sidebar.Item href="#" icon={<GitHubLogoIcon />} active>Explore</Sidebar.Item>
-                <Sidebar.Item href="#" icon={<ImageIcon />}>AOIs</Sidebar.Item>
-                <Sidebar.Item href="#" icon={<BookmarkFilledIcon />}>Workflows</Sidebar.Item>
-                <Sidebar.Item href="#" icon={<MaskOnIcon />}>Marketplace</Sidebar.Item>
-                <Sidebar.Item href="#" icon={<LinkedInLogoIcon />}>Activity</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<Avatar fallback="RM" size={3} />}>
+                  Explore
+                </Sidebar.Item>
+                <Sidebar.Item href="#" icon={<ImageIcon />}>
+                  AOIs
+                </Sidebar.Item>
+                <Sidebar.Item href="#" icon={<BookmarkFilledIcon />}>
+                  Workflows
+                </Sidebar.Item>
+                <Sidebar.Item href="#" icon={<MaskOnIcon />}>
+                  Marketplace
+                </Sidebar.Item>
+                <Sidebar.Item href="#" icon={<LinkedInLogoIcon />}>
+                  Activity
+                </Sidebar.Item>
               </Sidebar.Group>
             </Sidebar.Main>
             <Sidebar.Footer>
               <Sidebar.Group name="Help & Support">
-                <Sidebar.Item href="#" icon={<GlobeIcon />}>Feedback</Sidebar.Item>
-                <Sidebar.Item href="#" icon={<LapTimerIcon />}>Support</Sidebar.Item>
-                <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Documentation</Sidebar.Item>
+                <Sidebar.Item href="#" icon={<GlobeIcon />}>
+                  Feedback
+                </Sidebar.Item>
+                <Sidebar.Item href="#" icon={<LapTimerIcon />}>
+                  Support
+                </Sidebar.Item>
+                <Sidebar.Item href="#" icon={<InfoCircledIcon />}>
+                  Documentation
+                </Sidebar.Item>
               </Sidebar.Group>
             </Sidebar.Footer>
           </Sidebar>
-          
+
           {/* <button 
             onClick={() => setSidebarOpen(!sidebarOpen)}
             style={{ 
