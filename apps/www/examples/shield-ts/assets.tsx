@@ -26,7 +26,8 @@ import {
   Headline,
   Dialog,
   RangePicker,
-  Sheet
+  Sheet,
+  Tooltip
 } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
@@ -244,6 +245,46 @@ export const Assets = () => {
             <Flex gap="large" wrap="wrap">
               <Button size="small" onClick={() => setDialogOpen(true)}>Open V1 Dialog</Button>
               <Button size="small" onClick={() => setLegacyDialogOpen(true)}>Open Legacy Dialog</Button>
+
+              {/* Basic Tooltip */}
+              <Tooltip message="This is a basic tooltip" showArrow={false}>
+                <Button size="small">Hover me</Button>
+              </Tooltip>
+
+              {/* Different Positions */}
+              <Tooltip message="Tooltip on top" side="top">
+                <Button size="small">Top</Button>
+              </Tooltip>
+
+              <Tooltip message="Tooltip on right" side="right">
+                <Button size="small">Right</Button>
+              </Tooltip>
+
+              <Tooltip message="Tooltip on bottom" side="bottom">
+                <Button size="small">Bottom</Button>
+              </Tooltip>
+
+              <Tooltip message="Tooltip on left" side="left">
+                <Button size="small">Left</Button>
+              </Tooltip>
+
+              {/* Custom Content */}
+              <Tooltip
+                showArrow={false}
+                message={
+                  <Flex direction="column" gap="small" style={{ padding: "4px" }}>
+                    <Text>Custom Tooltip Content</Text>
+                    <Text variant="accent">With multiple lines</Text>
+                  </Flex>
+                }
+              >
+                <Button size="small">Custom Content</Button>
+              </Tooltip>
+
+              {/* Disabled Tooltip */}
+              <Tooltip message="This tooltip won't show" disabled>
+                <Button size="small">Disabled Tooltip</Button>
+              </Tooltip>
 
               {/* Basic Input - Small */}
               <InputField
