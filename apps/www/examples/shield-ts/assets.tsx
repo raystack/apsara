@@ -246,45 +246,20 @@ export const Assets = () => {
               <Button size="small" onClick={() => setDialogOpen(true)}>Open V1 Dialog</Button>
               <Button size="small" onClick={() => setLegacyDialogOpen(true)}>Open Legacy Dialog</Button>
 
-              {/* Basic Tooltip */}
-              <Tooltip message="This is a basic tooltip" showArrow={false}>
-                <Button size="small">Hover me</Button>
-              </Tooltip>
+              <Flex direction="column" gap="small" align="start">
+                <Flex gap="large" align="center">
+                  <Spinner size={1} />
+                  <Spinner size={2} />
+                  <Spinner size={3} />
+                  <Spinner size={4} />
+                  <Spinner size={5} />
+                  <Spinner size={6} />
+                </Flex>
+              </Flex>
 
-              {/* Different Positions */}
-              <Tooltip message="Tooltip on top" side="top">
-                <Button size="small">Top</Button>
-              </Tooltip>
-
-              <Tooltip message="Tooltip on right" side="right">
-                <Button size="small">Right</Button>
-              </Tooltip>
-
-              <Tooltip message="Tooltip on bottom" side="bottom">
-                <Button size="small">Bottom</Button>
-              </Tooltip>
-
-              <Tooltip message="Tooltip on left" side="left">
-                <Button size="small">Left</Button>
-              </Tooltip>
-
-              {/* Custom Content */}
-              <Tooltip
-                showArrow={false}
-                message={
-                  <Flex direction="column" gap="small" style={{ padding: "4px" }}>
-                    <Text>Custom Tooltip Content</Text>
-                    <Text variant="accent">With multiple lines</Text>
-                  </Flex>
-                }
-              >
-                <Button size="small">Custom Content</Button>
-              </Tooltip>
-
-              {/* Disabled Tooltip */}
-              <Tooltip message="This tooltip won't show" disabled>
-                <Button size="small">Disabled Tooltip</Button>
-              </Tooltip>
+              <Button size="small" loading loaderText="Loading...">
+                Button
+              </Button>
 
               {/* Basic Input - Small */}
               <InputField
