@@ -9,6 +9,7 @@ import {
 
 import { Tooltip, TooltipProvider } from "../tooltip";
 import styles from "./sidebar.module.css";
+import clsx from "clsx";
 
 const root = cva(styles.root);
 
@@ -27,6 +28,11 @@ interface SidebarItemProps extends ComponentPropsWithoutRef<"a"> {
   icon: ReactNode;
   active?: boolean;
   disabled?: boolean;
+  classNames?: {
+    root?: string;
+    icon?: string;
+    text?: string;
+  };
 }
 
 interface SidebarFooterProps extends ComponentPropsWithoutRef<"div"> {}
@@ -139,10 +145,10 @@ const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
 );
 
 const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
-  ({ className, icon, children, active, disabled, ...props }, ref) => (
+  ({ classNames, icon, children, active, disabled, ...props }, ref) => (
     <a
       ref={ref}
-      className={styles["nav-item"]}
+      className={clsx(styles["nav-item"], classNames?.root)}
       data-active={active}
       data-disabled={disabled}
       role="menuitem"
@@ -150,7 +156,10 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
       aria-disabled={disabled}
       {...props}
     >
-      <span className={styles["nav-icon"]} aria-hidden="true">
+      <span
+        className={clsx(styles["nav-icon"], classNames?.icon)}
+        aria-hidden="true"
+      >
         {icon}
       </span>
       <span className={styles["nav-text"]}>{children}</span>

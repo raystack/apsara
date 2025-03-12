@@ -2,7 +2,8 @@
   display: flex;
   width: 220px;
   height: 100%;
-  padding: var(--rs-space-1) var(--rs-space-3) var(--rs-space-5) var(--rs-space-3);;
+  padding: var(--rs-space-1) var(--rs-space-3) var(--rs-space-5)
+    var(--rs-space-3);
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
@@ -12,19 +13,19 @@
   transition: width 0.2s ease;
 }
 
-.root[data-position='left'] {
+.root[data-position="left"] {
   border-right: 1px solid var(--rs-color-border-base-primary);
 }
 
-.root[data-position='right'] {
+.root[data-position="right"] {
   border-left: 1px solid var(--rs-color-border-base-primary);
 }
 
-.root[data-state='expanded'] {
+.root[data-state="expanded"] {
   width: 240px;
 }
 
-.root[data-state='collapsed'] {
+.root[data-state="collapsed"] {
   width: 48px;
 }
 
@@ -90,7 +91,7 @@
   transition: all 0.2s ease;
 }
 
-.root[data-state='collapsed'] .nav-item {
+.root[data-state="collapsed"] .nav-item {
   justify-content: center;
 }
 
@@ -99,7 +100,7 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.nav-item[data-active='true'] {
+.nav-item[data-active="true"] {
   display: flex;
   padding: var(--rs-space-3);
   align-items: center;
@@ -110,7 +111,7 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.nav-item[data-disabled='true'] {
+.nav-item[data-disabled="true"] {
   opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
@@ -121,8 +122,8 @@
   align-items: center;
   gap: var(--rs-space-3);
   align-self: stretch;
-  width: 16px;
-  height: 16px;
+  width: fit-content;
+  height: auto;
   flex-shrink: 0;
 }
 
@@ -140,8 +141,8 @@
   transition: opacity 0.2s ease;
 }
 
-.root[data-state='collapsed'] .nav-text,
-.root[data-state='collapsed'] .title {
+.root[data-state="collapsed"] .nav-text,
+.root[data-state="collapsed"] .title {
   width: 0;
   opacity: 0;
   display: none;
@@ -161,7 +162,7 @@
   background-color: 0.5px solid var(--rs-color-border-base-primary);
 }
 
-.root[data-position='right'] .resizeHandle {
+.root[data-position="right"] .resizeHandle {
   left: 0;
   right: auto;
   cursor: col-resize;
@@ -186,7 +187,7 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.root[data-state='collapsed'] .account .nav-text {
+.root[data-state="collapsed"] .account .nav-text {
   opacity: 0;
   display: none;
 }
@@ -218,7 +219,7 @@
   gap: var(--rs-space-2);
 }
 
-.root[data-state='collapsed'] .nav-group-name {
+.root[data-state="collapsed"] .nav-group-name {
   width: 0;
   opacity: 0;
   display: none;
