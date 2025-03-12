@@ -27,6 +27,7 @@ import {
   Dialog,
   RangePicker,
   Sheet,
+  TextArea,
   Tooltip
 } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
@@ -425,76 +426,53 @@ export const Assets = () => {
                 width={300}
               />
 
-              {/* Shadow Examples */}
-              <div
-                style={{
-                  width: 200,
-                  height: 100,
-                  padding: 16,
-                  borderRadius: 8,
-                  backgroundColor: 'var(--rs-color-background-base-primary)',
-                  boxShadow: 'var(--rs-shadow-feather)',
-                  color: 'var(--rs-color-text-base-primary)',
-                }}
-              >
-                Feather Shadow (sm)
-              </div>
+              {/* Basic TextArea */}
+              <TextArea
+                label="Description"
+                placeholder="Enter description"
+                width={300}
+                infoTooltip="This is a tooltip"
+              />
 
-              <div
-                style={{
-                  width: 200,
-                  height: 100,
-                  padding: 16,
-                  borderRadius: 8,
-                  backgroundColor: 'var(--rs-color-background-base-primary)',
-                  boxShadow: 'var(--rs-shadow-soft)',
-                  color: 'var(--rs-color-text-base-primary)',
-                }}
-              >
-                Soft Shadow (md)
-              </div>
+              {/* Required TextArea */}
+              <TextArea
+                label="Comments"
+                placeholder="Enter comments"
+                required
+                width={300}
+              />
 
-              <div
-                style={{
-                  width: 200,
-                  height: 100,
-                  padding: 16,
-                  borderRadius: 8,
-                  backgroundColor: 'var(--rs-color-background-base-primary)',
-                  boxShadow: 'var(--rs-shadow-lifted)',
-                  color: 'var(--rs-color-text-base-primary)',
-                }}
-              >
-                Lifted Shadow (lg)
-              </div>
+              {/* With Helper Text */}
+              <TextArea
+                label="Feedback"
+                placeholder="Enter your feedback"
+                helperText="Your feedback helps us improve"
+                width={300}
+              />
 
-              <div
-                style={{
-                  width: 200,
-                  height: 100,
-                  padding: 16,
-                  borderRadius: 8,
-                  backgroundColor: 'var(--rs-color-background-base-primary)',
-                  boxShadow: 'var(--rs-shadow-floating)',
-                  color: 'var(--rs-color-text-base-primary)',
-                }}
-              >
-                Floating Shadow (xl)
-              </div>
+              {/* With Error State */}
+              <TextArea
+                label="Notes"
+                placeholder="Enter notes"
+                error
+                helperText="This field cannot be empty"
+                width={300}
+              />
 
-              <div
-                style={{
-                  width: 200,
-                  height: 100,
-                  padding: 16,
-                  borderRadius: 8,
-                  backgroundColor: 'var(--rs-color-background-base-primary)',
-                  boxShadow: 'var(--rs-shadow-inset)',
-                  color: 'var(--rs-color-text-base-primary)',
-                }}
-              >
-                Inset Shadow
-              </div>
+              {/* Optional TextArea */}
+              <TextArea
+                label="Additional Information"
+                placeholder="Add any additional details"
+                required={false}
+                width={300}
+              />
+
+              {/* Disabled TextArea */}
+              <TextArea
+                label="Read-only Content"
+                value="This content cannot be edited"
+                width={300}
+              />
             </Flex>
             
             <Flex direction="column" style={{ width: "100%" }}>
