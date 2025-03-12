@@ -39,7 +39,7 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   skipDelayDuration?: number;
   'aria-label'?: string;
   asChild?: boolean;
-  showArrow?: boolean; // Add this prop
+  showArrow?: boolean;
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
@@ -54,7 +54,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   skipDelayDuration = 200,
   'aria-label': ariaLabel,
   asChild = true,
-  showArrow = true, // Add default value
+  showArrow = true,
 }) => {
   return disabled ? (
     children
