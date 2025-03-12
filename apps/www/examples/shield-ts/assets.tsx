@@ -408,6 +408,77 @@ export const Assets = () => {
                 size="large"
                 width={300}
               />
+
+              {/* Shadow Examples */}
+              <div
+                style={{
+                  width: 200,
+                  height: 100,
+                  padding: 16,
+                  borderRadius: 8,
+                  backgroundColor: 'var(--rs-color-background-base-primary)',
+                  boxShadow: 'var(--rs-shadow-feather)',
+                  color: 'var(--rs-color-text-base-primary)',
+                }}
+              >
+                Feather Shadow (sm)
+              </div>
+
+              <div
+                style={{
+                  width: 200,
+                  height: 100,
+                  padding: 16,
+                  borderRadius: 8,
+                  backgroundColor: 'var(--rs-color-background-base-primary)',
+                  boxShadow: 'var(--rs-shadow-soft)',
+                  color: 'var(--rs-color-text-base-primary)',
+                }}
+              >
+                Soft Shadow (md)
+              </div>
+
+              <div
+                style={{
+                  width: 200,
+                  height: 100,
+                  padding: 16,
+                  borderRadius: 8,
+                  backgroundColor: 'var(--rs-color-background-base-primary)',
+                  boxShadow: 'var(--rs-shadow-lifted)',
+                  color: 'var(--rs-color-text-base-primary)',
+                }}
+              >
+                Lifted Shadow (lg)
+              </div>
+
+              <div
+                style={{
+                  width: 200,
+                  height: 100,
+                  padding: 16,
+                  borderRadius: 8,
+                  backgroundColor: 'var(--rs-color-background-base-primary)',
+                  boxShadow: 'var(--rs-shadow-floating)',
+                  color: 'var(--rs-color-text-base-primary)',
+                }}
+              >
+                Floating Shadow (xl)
+              </div>
+
+              <div
+                style={{
+                  width: 200,
+                  height: 100,
+                  padding: 16,
+                  borderRadius: 8,
+                  backgroundColor: 'var(--rs-color-background-base-primary)',
+                  boxShadow: 'var(--rs-shadow-inset)',
+                  color: 'var(--rs-color-text-base-primary)',
+                }}
+              >
+                Inset Shadow
+              </div>
             </Flex>
             
             <Flex direction="column" style={{ width: "100%" }}>
