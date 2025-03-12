@@ -1,5 +1,6 @@
 import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { cva, cx,VariantProps } from "class-variance-authority";
+import { Tooltip } from "../tooltip";
+import { cva, cx, VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { HTMLAttributes, PropsWithChildren } from "react";
 
@@ -17,7 +18,7 @@ export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof tex
   HTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   required?: boolean;
-  // tooltip?: string;
+  infoTooltip?: string;
   helperText?: string;
   error?: boolean;
   width?: string | number;
@@ -26,7 +27,7 @@ export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof tex
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, style, label, required, helperText, error, width = "200px", value, onChange, ...props }, ref) => {
+  ({ className, style, label, required, infoTooltip, helperText, error, width = "200px", value, onChange, ...props }, ref) => {
     return (
       <div className={styles.container} style={{ width }}>
         {label && (
@@ -35,7 +36,13 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
               {label}
             </label>
             {!required && <span className={styles.optional}>(optional)</span>}
-            {/* {tooltip && <span className={styles.helpIcon}><InfoCircledIcon /></span>} */}
+            {infoTooltip && (
+              <Tooltip message={infoTooltip} side="right">
+                <span className={styles.helpIcon}>
+                  <InfoCircledIcon />
+                </span>
+              </Tooltip>
+            )}
           </div>
         )}
         <textarea
