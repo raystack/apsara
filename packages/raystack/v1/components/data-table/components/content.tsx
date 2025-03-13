@@ -218,34 +218,36 @@ export function Content({
   const visibleColumnsLength = table.getVisibleLeafColumns().length;
 
   return (
-    <Table className={classNames.table}>
-      <Headers headerGroups={headerGroups} className={classNames.header} />
-      <Table.Body className={classNames.body}>
-        {rows?.length || isLoading ? (
-          <>
-            <Rows
-              rows={rows}
-              ref={lastRowRef}
-              onRowClick={onRowClick}
-              classNames={{
-                row: classNames.row,
-              }}
-            />
-            {isLoading ? (
-              <LoaderRows
-                rowCount={loadingRowCount}
-                columnCount={visibleColumnsLength}
+    <div className={classNames.root}>
+      <Table className={classNames.table}>
+        <Headers headerGroups={headerGroups} className={classNames.header} />
+        <Table.Body className={classNames.body}>
+          {rows?.length || isLoading ? (
+            <>
+              <Rows
+                rows={rows}
+                ref={lastRowRef}
+                onRowClick={onRowClick}
+                classNames={{
+                  row: classNames.row,
+                }}
               />
-            ) : null}
-          </>
-        ) : (
-          <Table.Row>
-            <Table.Cell colSpan={visibleColumnsLength}>
-              {emptyState || <DefaultEmptyComponent />}
-            </Table.Cell>
-          </Table.Row>
-        )}
-      </Table.Body>
-    </Table>
+              {isLoading ? (
+                <LoaderRows
+                  rowCount={loadingRowCount}
+                  columnCount={visibleColumnsLength}
+                />
+              ) : null}
+            </>
+          ) : (
+            <Table.Row>
+              <Table.Cell colSpan={visibleColumnsLength}>
+                {emptyState || <DefaultEmptyComponent />}
+              </Table.Cell>
+            </Table.Row>
+          )}
+        </Table.Body>
+      </Table>
+    </div>
   );
 }
