@@ -5,10 +5,7 @@ export const preview = {
   tabs: [
     {
       name: "Calendar",
-      code: `
-      <Flex style={{height:400}}>
-        <Calendar numberOfMonths={2} />
-      </Flex>`,
+      code: `<Calendar numberOfMonths={2} />`,
     },
     {
       name: "Range Picker",
@@ -18,7 +15,7 @@ export const preview = {
     {
       name: "Date Picker",
       code: `
-      <Flex style={{height:400}}>
+      <Flex style={{height:200}}>
         <DatePicker textFieldProps={{ size: "medium" }} />
       </Flex>`,
     },
