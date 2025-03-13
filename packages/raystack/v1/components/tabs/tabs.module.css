@@ -70,8 +70,10 @@
 
 .content {
   outline: none;
+	flex: 1;
 }
 
 .content[data-state='inactive'] {
   display: none;
-} 
+	flex: 0;
+}
