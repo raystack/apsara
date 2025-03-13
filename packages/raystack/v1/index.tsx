@@ -55,3 +55,11 @@ export {
   useDataTable,
   EmptyFilterValue,
 } from "./components/data-table";
+
+export {
+  FilterIcon,
+  CheckCircleFilledIcon,
+  CrossCircleFilledIcon,
+  SidebarIcon,
+  OrganizationIcon,
+} from "./components/icons";

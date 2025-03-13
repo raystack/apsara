@@ -1,1 +1,7 @@
-export { FilterIcon } from "./icons";
+export {
+  FilterIcon,
+  CheckCircleFilledIcon,
+  CrossCircleFilledIcon,
+  SidebarIcon,
+  OrganizationIcon,
+} from "./icons";
