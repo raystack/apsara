@@ -44,7 +44,7 @@
 }
 
 .overlayBlur {
-  backdrop-filter: blur(2px);
+  backdrop-filter: var(--rs-blur-lg);
 }
 
 .dialogOverlay[data-state="open"] {
