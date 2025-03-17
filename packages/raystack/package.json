@@ -82,6 +82,7 @@
     "release-it": "^16.2.1",
     "rollup": "^3.25.1",
     "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-tsconfig-paths": "^1.5.2",
     "semver": "^7.6.0",
     "ts-jest": "^29.2.5",
     "tsconfig": "workspace:*",

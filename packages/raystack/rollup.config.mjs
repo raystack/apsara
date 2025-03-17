@@ -2,6 +2,7 @@ import commonjs from "@rollup/plugin-commonjs";
 import image from "@rollup/plugin-image";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
+import tsconfigPaths from "rollup-plugin-tsconfig-paths";
 import postcss from "rollup-plugin-postcss";
 import postcssImport from "postcss-import";
 import svgr from "@svgr/rollup";
@@ -18,6 +19,7 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     modules: true,
     namedExports: true, // Enable named exports for CSS modules
   }),
+  tsconfigPaths(),
   typescript({
     tsconfig: "tsconfig.json",
     declaration: true,
