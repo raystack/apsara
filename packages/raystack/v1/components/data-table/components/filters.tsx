@@ -3,7 +3,7 @@ import { DropdownMenu } from "../../dropdown-menu";
 import { FilterChip } from "../../filter-chip";
 import { Flex } from "../../flex";
 import { IconButton } from "../../icon-button";
-import { FilterIcon } from "../../icons";
+import { FilterIcon } from "~/icons";
 import { DataTableColumn } from "../data-table.types";
 import { useDataTable } from "../hooks/useDataTable";
 import { FilterOperatorTypes, FilterType } from "~/v1/types/filters";
