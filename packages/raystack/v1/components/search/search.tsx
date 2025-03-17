@@ -1,6 +1,7 @@
 import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { InputField } from "../input-field";
 import { InputFieldProps } from "../input-field/input-field";
+import { IconButton } from "../icon-button";
 
 import styles from "./search.module.css";
 
@@ -21,20 +22,30 @@ export const Search = ({
   width = "100%",
   ...props 
 }: SearchProps) => {
+  const trailingIconWithClear = showClearButton && value ? (
+    <div className={styles.clearButtonWrapper}>
+      <IconButton
+        size={size === 'small' ? 2 : 3}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!disabled && onClear) {
+            onClear();
+          }
+        }}
+        disabled={disabled}
+        aria-label="Clear search"
+        className={styles.clearButton}
+      >
+        <CrossCircledIcon />
+      </IconButton>
+    </div>
+  ) : undefined;
+
   return (
     <div className={styles.container} role="search" style={{ width }}>
       <InputField
         leadingIcon={<MagnifyingGlassIcon />}
-        trailingIcon={showClearButton && value ? (
-          <div 
-            className={styles.clearButton}
-            role="button"
-            aria-label="Clear search"
-            tabIndex={0}
-          >
-            <CrossCircledIcon onClick={disabled ? undefined : onClear} />
-          </div>
-        ) : undefined}
+        trailingIcon={trailingIconWithClear}
         placeholder={placeholder}
         disabled={disabled}
         value={value}
