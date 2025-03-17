@@ -193,6 +193,11 @@ export const primitivesRoutes = [
         newBadge: true,
       },
       {
+        title: "SidePanel",
+        slug: "docs/primitives/components/side-panel",
+        experimental: true,
+      },
+      {
         title: "Tabs",
         slug: "docs/primitives/components/tabs",
         newBadge: true,
@@ -238,6 +243,7 @@ export type PageProps = {
   preview?: boolean;
   newBadge?: boolean;
   toBeDeleted?: boolean;
+  experimental?: boolean;
 };
 
 export type RouteProps = {

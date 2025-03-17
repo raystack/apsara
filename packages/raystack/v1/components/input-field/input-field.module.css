@@ -102,6 +102,17 @@
   box-sizing: border-box;
 }
 
+.input-field:hover {
+  border-color: var(--rs-color-border-base-focus);
+  /* background: var(--rs-color-background-base-primary-hover); */
+  background: var(--rs-color-background-base-primary);
+}
+
+.input-field:focus {
+  border-color: var(--rs-color-border-accent-emphasis);
+  background: var(--rs-color-background-base-primary);
+}
+
 .input-default {
   color: var(--rs-color-foreground-base-primary);
 }
@@ -153,6 +164,14 @@
 .has-chips {
   background: var(--rs-color-background-base-primary);
   transition: all 0.2s ease;
+}
+
+.has-chips:hover {
+  border-color: var(--rs-color-border-base-focus);
+}
+
+.has-chips:focus-within {
+  border-color: var(--rs-color-border-accent-emphasis);
 }
 
 .chip {

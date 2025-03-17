@@ -55,3 +55,4 @@ export {
   useDataTable,
   EmptyFilterValue,
 } from "./components/data-table";
+export { SidePanel } from "./components/side-panel";

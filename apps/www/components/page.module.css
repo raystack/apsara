@@ -10,26 +10,37 @@
 }
 
 .badge {
-  background-color: var(--rs-accent-9); 
-  color: var(--rs-accent-contrast);
+  background-color: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-accent-emphasis);
   padding: 0 var(--rs-space-2);
   margin-left: var(--rs-space-2);
   border-radius: var(--rs-radius-2);
-  font-size: 0.55em;
-  font-weight: bold;
+  font-size: 8px;
+  font-weight: var(--rs-font-weight-medium);
   display: inline-block;
   vertical-align: middle;
 }
 
-
 .to-be-deleted {
-  background-color: var(--rs-color-background-danger-emphasis); 
-  color: var(--rs-accent-contrast);
+  background-color: var(--rs-color-background-danger-emphasis);
+  color: var(--rs-color-foreground-accent-emphasis);
   padding: 0 var(--rs-space-2);
   margin-left: var(--rs-space-2);
   border-radius: var(--rs-radius-2);
-  font-size: 0.55em;
-  font-weight: bold;
+  font-size: 8px;
+  font-weight: var(--rs-font-weight-medium);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.experimental {
+  background-color: var(--rs-color-background-attention-emphasis);
+  color: var(--rs-color-foreground-accent-emphasis);
+  padding: 0 var(--rs-space-2);
+  margin-left: var(--rs-space-2);
+  border-radius: var(--rs-radius-2);
+  font-size: 8px;
+  font-weight: var(--rs-font-weight-medium);
   display: inline-block;
   vertical-align: middle;
 }

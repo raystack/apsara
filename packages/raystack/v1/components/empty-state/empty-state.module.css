@@ -20,8 +20,7 @@
   background-color: var(--rs-color-background-base-secondary);
   border-radius: var(--rs-radius-4);
   color: var(--rs-color-foreground-base-secondary);
-  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.08),
-    0px -3px 0px 0px rgba(0, 0, 0, 0.03) inset;
+  box-shadow: var(--rs-shadow-soft);
 }
 
 .icon > svg {
@@ -42,7 +41,7 @@
   background-color: inherit;
   z-index: -10;
   transform: rotate(-42deg);
-  box-shadow: 0px -1.5px 0px 0px rgba(0, 0, 0, 0.02) inset;
+  box-shadow: var(--rs-shadow-inset);
 }
 
 .headerText {
