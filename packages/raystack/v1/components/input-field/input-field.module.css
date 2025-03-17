@@ -69,7 +69,6 @@
   outline: none;
   transition: all 0.2s ease;
   box-sizing: border-box;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .input-field:hover {
@@ -152,7 +151,6 @@
   border: 1px solid var(--rs-color-border-base-primary);
   border-radius: var(--rs-radius-2);
   transition: all 0.2s ease;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .has-chips:hover {
