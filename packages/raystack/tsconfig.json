@@ -6,10 +6,11 @@
     "isolatedModules": false,
     "paths": {
       "~/*": ["./*"],
-      "~/v1/*": ["./v1/*"]
+      "~/v1/*": ["./v1/*"],
+      "~/icons/*": ["./icons/*"]
     },
     "types": ["jest", "@testing-library/jest-dom"]
   },
-  "include": [".", "v1"],
+  "include": [".", "v1", "icons"],
   "exclude": ["dist", "build", "node_modules"]
 }

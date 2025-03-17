@@ -22,7 +22,7 @@ async function createIcons() {
     const icons = await fs.readdir(ICON_ASSETS);
     const indexContent = icons.reduce((acc, icon) => {
       const iconName = getIconName(icon);
-      return `${acc}\nexport { ReactComponent as ${iconName} } from "./${icon}";`;
+      return `${acc}\nexport { ReactComponent as ${iconName} } from "./assets/${icon}";`;
     }, FILE_INITIAL_CONTENT);
     await fs.writeFile(path.join(ICON_FOLDER, "index.tsx"), indexContent);
   } catch (error) {
