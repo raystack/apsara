@@ -45,6 +45,8 @@ The `InputField` component accepts the following props:
 - `chips`: Array of chip objects with label and onRemove function
 - `className`: Additional CSS class names
 - `size`: Size variant of the input field ('small' | 'large', default: 'large')
+- `variant`: Visual style variant ('default' | 'borderless', default: 'default')
+- `infoTooltip`: Tooltip text to show next to the label (string)
 - All other InputHTMLAttributes from React
 
 ## Variants
@@ -90,7 +92,6 @@ Input field displaying an error state with error message.
 />`}
 />
 
-
 ### With Prefix/Suffix
 
 Input field with prefix and suffix text.
@@ -105,7 +106,6 @@ Input field with prefix and suffix text.
   suffix="USD"
 />`}
 />
-
 
 ### With Icons
 
@@ -200,6 +200,43 @@ InputField comes in two sizes: small (24px) and large (32px).
     size="small"
   />
 </div>
+`}
+/>
+
+### Style Variants
+
+InputField comes in two style variants: default (with border) and borderless (with shadow).
+
+<Playground
+  scope={{ InputField }}
+  code={`
+<div direction="column" gap="medium">
+  <InputField 
+    label="Default Variant"
+    placeholder="With border"
+    variant="default"
+  />
+  <InputField 
+    label="Borderless Variant"
+    placeholder="With shadow instead of border"
+    variant="borderless"
+  />
+</div>
+`}
+/>
+
+### With Tooltip
+
+InputField with an information tooltip next to the label.
+
+<Playground
+  scope={{ InputField }}
+  code={`
+<InputField 
+  label="With Tooltip"
+  placeholder="Hover over the info icon"
+  infoTooltip="This is additional information about the field"
+/>
 `}
 />
 

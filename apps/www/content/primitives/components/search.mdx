@@ -65,7 +65,11 @@ The `Search` component accepts the following props:
 - `value`: The controlled value of the input
 - `onChange`: Callback when input value changes
 - `onClear`: Callback when clear button is clicked
+- `variant`: Visual style variant ('default' | 'borderless', default: 'default')
 - `className`: Additional CSS class names
+- `label`: Optional label for the search input
+- `helperText`: Optional helper text below the search input
+- `width`: Custom width for the search component
 
 ## Size
 
@@ -81,6 +85,24 @@ The Search component comes in two sizes to fit different design contexts.
     {
       name: "Small",
       code: `<Search size="small" placeholder="Small size search..." />`,
+    },
+  ]}
+/>
+
+## Style Variants
+
+The Search component comes in two style variants: default (with border) and borderless (with shadow).
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "Default",
+      code: `<Search placeholder="Default variant..." variant="default" />`,
+    },
+    {
+      name: "Borderless",
+      code: `<Search placeholder="Borderless variant..." variant="borderless" />`,
     },
   ]}
 />
@@ -125,6 +147,38 @@ The Search component can include a clear button that appears when there is input
     {
       name: "Without Clear Button",
       code: `<Search placeholder="Basic search..." />`,
+    },
+  ]}
+/>
+
+## With Label and Helper Text
+
+The Search component can include a label and helper text.
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "With Label",
+      code: `<Search label="Search" placeholder="Type to search..." />`,
+    },
+    {
+      name: "With Helper Text",
+      code: `<Search label="Search" placeholder="Type to search..." helperText="Enter keywords to search" />`,
+    },
+  ]}
+/>
+
+## Borderless with Clear Button
+
+The borderless variant can also include a clear button.
+
+<Playground
+  scope={{ Search }}
+  tabs={[
+    {
+      name: "Borderless with Clear",
+      code: `<Search placeholder="Borderless search..." variant="borderless" value="Searchable text" showClearButton />`,
     },
   ]}
 />
