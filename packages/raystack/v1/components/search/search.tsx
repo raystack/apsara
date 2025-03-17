@@ -1,21 +1,8 @@
 import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { cva, type VariantProps } from "class-variance-authority";
 import { InputField } from "../input-field";
-
-import styles from "./search.module.css";
 import { InputFieldProps } from "../input-field/input-field";
 
-const searchField = cva(styles.searchField, {
-  variants: {
-    size: {
-      small: styles["search-small"],
-      large: styles["search-large"],
-    }
-  },
-  defaultVariants: {
-    size: "large",
-  }
-});
+import styles from "./search.module.css";
 
 export interface SearchProps extends Omit<InputFieldProps, 'leadingIcon'> {
   showClearButton?: boolean;
@@ -26,9 +13,9 @@ export const Search = ({
   className, 
   disabled, 
   placeholder = "Search", 
-  size = "large", 
+  size, 
   showClearButton, 
-  onClear = () => null, 
+  onClear, 
   value,
   onChange,
   width = "100%",
