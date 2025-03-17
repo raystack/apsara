@@ -53,6 +53,7 @@
 
 .input-error-wrapper:focus-within {
   border-color: var(--rs-color-border-danger-emphasis-hover);
+  box-shadow: 0 0 0 2px rgba(var(--rs-color-border-danger-primary), 0.2);
 }
 
 .input-disabled-wrapper {
@@ -84,7 +85,6 @@
   margin-right: var(--rs-space-3);
 }
 
-/* Make the actual input transparent */
 .input-field {
   width: 100%;
   padding: 0 var(--rs-space-3);
@@ -116,10 +116,6 @@
 
 .input-default {
   color: var(--rs-color-foreground-base-primary);
-}
-
-.input-error {
-  color: var(--rs-color-foreground-danger-primary);
 }
 
 .input-disabled {
@@ -186,6 +182,8 @@
   align-items: center;
   width: 100%;
   min-height: 32px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .has-chips .chip-input-container {
@@ -224,6 +222,8 @@
 
 .size-small .chip-input-container {
   min-height: 24px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .size-large .chip-input-container {
@@ -241,17 +241,28 @@
   align-items: center;
   color: var(--rs-color-foreground-base-secondary);
   font-family: var(--rs-font-body);
-  font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-regular);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  padding: 1px var(--rs-space-2);
+  padding: 0 var(--rs-space-2);
   pointer-events: none;
   background: var(--rs-color-background-neutral-secondary);
   border-radius: var(--rs-radius-2);
   white-space: nowrap;
   height: auto;
 }
+
+.size-large .prefix, 
+.size-large .suffix {
+  height: 22px; 
+}
+
+/* .size-small .prefix,
+.size-small .suffix {
+  height: 18px;
+} */
 
 .prefix {
   margin-left: var(--rs-space-2);
