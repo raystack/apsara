@@ -7,10 +7,11 @@
     "paths": {
       "~/*": ["./*"],
       "~/v1/*": ["./v1/*"],
-      "~/icons/*": ["./icons/*"]
+      "~/icons/*": ["./icons/*"],
+      "~/hooks/*": ["./hooks/*"]
     },
     "types": ["jest", "@testing-library/jest-dom"]
   },
-  "include": [".", "v1", "icons"],
+  "include": [".", "v1", "icons", "hooks"],
   "exclude": ["dist", "build", "node_modules"]
 }
