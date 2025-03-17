@@ -43,6 +43,7 @@ export { Sidebar } from "./components/sidebar";
 export { Slider } from "./components/slider";
 export { Spinner } from "./components/spinner";
 export { Switch } from "./components/switch";
+export { SidePanel } from "./components/side-panel";
 export { Table } from "./components/table";
 export { Tabs } from "./components/tabs";
 export { Text } from "./components/text";
@@ -55,13 +56,3 @@ export {
 } from "./components/theme-provider";
 export { toast, ToastContainer } from "./components/toast";
 export { Tooltip, TooltipProvider } from "./components/tooltip";
-export { Table } from "./components/table";
-export {
-  DataTable,
-  DataTableColumnDef,
-  DataTableQuery,
-  DataTableSort,
-  useDataTable,
-  EmptyFilterValue,
-} from "./components/data-table";
-export { SidePanel } from "./components/side-panel";
