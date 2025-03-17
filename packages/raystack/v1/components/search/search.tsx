@@ -8,6 +8,7 @@ import styles from "./search.module.css";
 export interface SearchProps extends Omit<InputFieldProps, 'leadingIcon'> {
   showClearButton?: boolean;
   onClear?: () => void;
+  variant?: 'default' | 'borderless';
 }
 
 export const Search = ({ 
@@ -20,6 +21,7 @@ export const Search = ({
   value,
   onChange,
   width = "100%",
+  variant = "default",
   ...props 
 }: SearchProps) => {
   const trailingIconWithClear = showClearButton && value ? (
@@ -53,6 +55,7 @@ export const Search = ({
         size={size}
         className={className}
         aria-label={placeholder}
+        variant={variant}
         {...props}
       />
     </div>

@@ -277,6 +277,7 @@ export const Assets = () => {
                     showClearButton
                     onClear={() => setSearchValue2("")}
                     size="large"
+                    variant="borderless"
                   />
                 </Flex>
                 

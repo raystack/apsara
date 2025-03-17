@@ -4,20 +4,20 @@
   width: 100%;
 }
 
-.clearButton {
+.clearButtonWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--rs-color-foreground-base-tertiary);
-  background: none;
-  border: none;
-  padding: var(--rs-space-1);
-  cursor: pointer;
-  outline: none;
+  z-index: 100;
+}
+
+.clearButton {
+  color: var(--rs-color-foreground-base-tertiary) !important;
+  z-index: 100;
 }
 
 .clearButton:hover {
-  color: var(--rs-color-foreground-base-secondary);
+  color: var(--rs-color-foreground-base-secondary) !important;
 }
 
 .clearButton:disabled {
