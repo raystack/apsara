@@ -428,6 +428,7 @@ export const Assets = () => {
 
               {/* Basic TextArea */}
               <TextArea
+              disabled
                 label="Description"
                 placeholder="Enter description"
                 width={300}
