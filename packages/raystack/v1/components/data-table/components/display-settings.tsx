@@ -43,12 +43,20 @@ export function DisplaySettings<TData, TValue>() {
     });
   }
 
-  function onGroupChange(columnId: string, order: SortOrdersValues) {
+  function onGroupChange(columnId: string) {
     updateTableQuery((query) => {
       return {
         ...query,
         group_by: [columnId],
-        __group_by_sort: order,
+      };
+    });
+  }
+
+  function onGroupRemove() {
+    updateTableQuery((query) => {
+      return {
+        ...query,
+        group_by: [],
       };
     });
   }
@@ -86,6 +94,7 @@ export function DisplaySettings<TData, TValue>() {
             />
             <Grouping
               columns={columns}
+              onRemove={onGroupRemove}
               onChange={onGroupChange}
               value={tableQuery?.group_by?.[0] || defaultGroupOption.id}
             />

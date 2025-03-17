@@ -11,7 +11,11 @@ import {
   defaultGroupOption
 } from "../data-table.types";
 import { FilterType } from "~/v1/types/filters";
-import { getFilterFn, getFilterValue } from "./filter-operations";
+import {
+  getFilterFn,
+  getFilterOperator,
+  getFilterValue,
+} from "./filter-operations";
 
 export function queryToTableState(query: DataTableQuery): Partial<TableState> {
   const columnFilters =
@@ -58,8 +62,6 @@ export function getColumnsWithFilterFn<TData, TValue>(
   });
 }
 
-type GroupedDataMap<T> = Record<string, T[]>;
-
 export function groupData<TData>(
   data: TData[],
   group_by?: string,
@@ -68,32 +70,34 @@ export function groupData<TData>(
   if (!data) return [];
   if (!group_by || group_by === defaultGroupOption.id)
     return data as GroupedData<TData>[];
-  const group_by_map = data.reduce(
-    (acc: GroupedDataMap<TData>, currentData: TData) => {
-      const item = currentData as Record<string, string>;
-      const keyValue = item[group_by];
-      acc[keyValue] = acc[keyValue] || [];
-      acc[keyValue].push(item as TData);
-      return acc;
-    },
-    {} as GroupedDataMap<TData>
-  );
+
+  const groupMap = new Map<string, TData[]>();
+  data.forEach((currentData: TData) => {
+    const item = currentData as Record<string, string>;
+    const keyValue = item[group_by];
+    if (!groupMap.has(keyValue)) {
+      groupMap.set(keyValue, []);
+    }
+    groupMap.get(keyValue)?.push(item as TData);
+  });
 
   const columnDef = columns.find((col) => col.accessorKey === group_by);
-  const sortOrder = columnDef?.groupSortOrder || SortOrders.ASC;
   const showGroupCount = columnDef?.showGroupCount || false;
+  const groupLablesMap = columnDef?.groupLabelsMap || {};
+  const groupCountMap = columnDef?.groupCountMap || {};
+  const groupedData: GroupedData<TData>[] = [];
 
-  return Object.entries(group_by_map)
-    .map(([key, value]) => ({
+  groupMap.forEach((value, key) => {
+    groupedData.push({
+      label: groupLablesMap[key] || key,
       group_key: key,
       subRows: value,
-      count: columnDef?.groupCountMap?.[key] ?? value.length,
+      count: groupCountMap[key] ?? value.length,
       showGroupCount,
-    }))
-    .sort((a, b) => {
-      const sortValue = sortOrder === SortOrders.ASC ? 1 : -1;
-      return a.group_key.localeCompare(b.group_key) * sortValue;
     });
+  });
+
+  return groupedData;
 }
 
 const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
@@ -173,13 +177,7 @@ export function getInitialColumnVisibility<TData, TValue>(
 }
 
 export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
-  const {
-    group_by = [],
-    filters = [],
-    sort = [],
-    __group_by_sort = SortOrders.ASC,
-    ...rest
-  } = query;
+  const { group_by = [], filters = [], sort = [], ...rest } = query;
   const sanitizedGroupBy = group_by?.filter(
     (key) => key !== defaultGroupOption.id
   );
@@ -189,7 +187,11 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
       ?.filter((data) => data._type === FilterType.select || data.value !== "")
       ?.map((data) => ({
         name: data.name,
-        operator: data.operator,
+        operator: getFilterOperator({
+          operator: data.operator,
+          value: data.value,
+          filterType: data._type,
+        }),
         ...getFilterValue({
           value: data.value,
           filterType: data._type,
@@ -197,12 +199,9 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
         }),
       })) || [];
 
-  const sortWithGroupBy = sanitizedGroupBy?.[0]
-    ? [{ name: group_by[0], order: __group_by_sort }, ...sort]
-    : sort;
   return {
     ...rest,
-    sort: sortWithGroupBy,
+    sort: sort,
     group_by: sanitizedGroupBy,
     filters: sanitizedFilters,
   };

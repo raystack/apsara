@@ -79,7 +79,10 @@ function LoaderRows({
       <Table.Row key={"loading-row-" + rowIndex}>
         {columns.map((_, colIndex) => (
           <Table.Cell key={"loading-column-" + colIndex}>
-            <Skeleton />
+            <Skeleton
+              highlightColor="var(--rs-color-background-base-primary)"
+              baseColor="var(--rs-color-background-base-primary-hover)"
+            />
           </Table.Cell>
         ))}
       </Table.Row>
@@ -97,7 +100,7 @@ function GroupHeader<TData>({
   return (
     <Table.SectionHeader colSpan={colSpan}>
       <Flex gap={3} align="center">
-        {data?.group_key}
+        {data?.label}
         {data.showGroupCount ? (
           <Badge variant="neutral">{data?.count}</Badge>
         ) : null}
@@ -216,34 +219,36 @@ export function Content({
   const visibleColumnsLength = table.getVisibleLeafColumns().length;
 
   return (
-    <Table className={classNames.table}>
-      <Headers headerGroups={headerGroups} className={classNames.header} />
-      <Table.Body className={classNames.body}>
-        {rows?.length || isLoading ? (
-          <>
-            <Rows
-              rows={rows}
-              ref={lastRowRef}
-              onRowClick={onRowClick}
-              classNames={{
-                row: classNames.row,
-              }}
-            />
-            {isLoading ? (
-              <LoaderRows
-                rowCount={loadingRowCount}
-                columnCount={visibleColumnsLength}
+    <div className={classNames.root}>
+      <Table className={classNames.table}>
+        <Headers headerGroups={headerGroups} className={classNames.header} />
+        <Table.Body className={classNames.body}>
+          {rows?.length || isLoading ? (
+            <>
+              <Rows
+                rows={rows}
+                ref={lastRowRef}
+                onRowClick={onRowClick}
+                classNames={{
+                  row: classNames.row,
+                }}
               />
-            ) : null}
-          </>
-        ) : (
-          <Table.Row>
-            <Table.Cell colSpan={visibleColumnsLength}>
-              {emptyState || <DefaultEmptyComponent />}
-            </Table.Cell>
-          </Table.Row>
-        )}
-      </Table.Body>
-    </Table>
+              {isLoading ? (
+                <LoaderRows
+                  rowCount={loadingRowCount}
+                  columnCount={visibleColumnsLength}
+                />
+              ) : null}
+            </>
+          ) : (
+            <Table.Row>
+              <Table.Cell colSpan={visibleColumnsLength}>
+                {emptyState || <DefaultEmptyComponent />}
+              </Table.Cell>
+            </Table.Row>
+          )}
+        </Table.Body>
+      </Table>
+    </div>
   );
 }

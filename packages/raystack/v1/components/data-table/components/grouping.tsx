@@ -11,13 +11,15 @@ import {
 
 interface GroupingProps<TData, TValue> {
   columns: DataTableColumn<TData, TValue>[];
-  onChange: (columnId: string, order: SortOrdersValues) => void;
+  onChange: (columnId: string) => void;
+  onRemove: () => void;
   value: string;
 }
 
 export function Grouping<TData, TValue>({
   columns = [],
   onChange,
+  onRemove,
   value,
 }: GroupingProps<TData, TValue>) {
   const columnList = columns
@@ -31,9 +33,13 @@ export function Grouping<TData, TValue>({
     });
 
   const handleGroupChange = (columnId: string) => {
+    if (columnId === defaultGroupOption.id) {
+      onRemove();
+      return;
+    }
     const column = columns.find((col) => col.id === columnId);
     if (column) {
-      onChange(column.id, column.columnDef.groupSortOrder || SortOrders.ASC);
+      onChange(column.id);
     }
   };
 

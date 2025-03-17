@@ -13,7 +13,12 @@ import {
   Checkbox,
   InputField,
   Search,
-  Dialog
+  Headline,
+  Dialog,
+  RangePicker,
+  Sheet,
+  TextArea,
+  Tooltip
 } from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
@@ -238,6 +243,54 @@ export const Assets = () => {
                 disabled
                 onClear={() => setSearchValue("")}
                 size="large"
+              />
+
+              {/* Basic TextArea */}
+              <TextArea
+                label="Description"
+                placeholder="Enter description"
+                width={300}
+                infoTooltip="This is a tooltip"
+              />
+
+              {/* Required TextArea */}
+              <TextArea
+                label="Comments"
+                placeholder="Enter comments"
+                required
+                width={300}
+              />
+
+              {/* With Helper Text */}
+              <TextArea
+                label="Feedback"
+                placeholder="Enter your feedback"
+                helperText="Your feedback helps us improve"
+                width={300}
+              />
+
+              {/* With Error State */}
+              <TextArea
+                label="Notes"
+                placeholder="Enter notes"
+                error
+                helperText="This field cannot be empty"
+                width={300}
+              />
+
+              {/* Optional TextArea */}
+              <TextArea
+                label="Additional Information"
+                placeholder="Add any additional details"
+                required={false}
+                width={300}
+              />
+
+              {/* Disabled TextArea */}
+              <TextArea
+                label="Read-only Content"
+                value="This content cannot be edited"
+                width={300}
               />
             </Flex>
             

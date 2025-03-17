@@ -11,7 +11,7 @@
   background: var(--rs-color-background-base-primary);
   border: 1px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-2);
-  box-shadow: var(--rs-shadow-1);
+  box-shadow: var(--rs-shadow-feather);
   text-wrap: nowrap;
   width: fit-content;
 }

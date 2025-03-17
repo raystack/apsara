@@ -55,3 +55,13 @@ export {
 } from "./components/theme-provider";
 export { toast, ToastContainer } from "./components/toast";
 export { Tooltip, TooltipProvider } from "./components/tooltip";
+export { Table } from "./components/table";
+export {
+  DataTable,
+  DataTableColumnDef,
+  DataTableQuery,
+  DataTableSort,
+  useDataTable,
+  EmptyFilterValue,
+} from "./components/data-table";
+export { SidePanel } from "./components/side-panel";
