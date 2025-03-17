@@ -22,6 +22,11 @@
       "require": "./dist/icons/index.cjs",
       "types": "./dist/icons/index.d.ts"
     },
+    "./hooks": {
+      "import": "./dist/hooks/index.js",
+      "require": "./dist/hooks/index.cjs",
+      "types": "./dist/hooks/index.d.ts"
+    },
     "./style.css": "./dist/style.css"
   },
   "files": [

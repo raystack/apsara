@@ -53,6 +53,10 @@ const configs = [
     inputPath: "icons",
     outputPath: "dist/icons",
   },
+  {
+    inputPath: "hooks",
+    outputPath: "dist/hooks",
+  },
 ];
 
 const rollupConfig = configs.map((conf) => {
