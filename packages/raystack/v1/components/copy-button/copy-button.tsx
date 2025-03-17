@@ -1,4 +1,4 @@
-import { useCopyToClipboard } from "~/hooks";
+import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
 import { CopyIcon } from "@radix-ui/react-icons";
 import { CheckCircleFilledIcon } from "~/icons";
 import { useState } from "react";
