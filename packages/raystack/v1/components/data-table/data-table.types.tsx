@@ -94,6 +94,7 @@ export interface DataTableProps<TData, TValue> {
 export type DataTableContentProps = {
   emptyState?: React.ReactNode;
   classNames?: {
+    root?: string;
     table?: string;
     header?: string;
     body?: string;
