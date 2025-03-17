@@ -424,11 +424,11 @@ export const Assets = () => {
                 helperText="Choose from available categories"
                 size="large"
                 width={300}
+                infoTooltip="This is sparta"
               />
 
               {/* Basic TextArea */}
               <TextArea
-              disabled
                 label="Description"
                 placeholder="Enter description"
                 width={300}
