@@ -68,6 +68,11 @@ export const primitivesRoutes = [
         newBadge: true,
       },
       {
+        title: "Copy Button",
+        slug: "docs/primitives/components/copy-button",
+        newBadge: true,
+      },
+      {
         title: "Datatable",
         slug: "docs/primitives/components/datatable",
         newBadge: true,
