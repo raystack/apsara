@@ -1,8 +1,8 @@
 import { RootProvider } from "fumadocs-ui/provider";
-import "fumadocs-ui/style.css";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@/components/theme";
+import "fumadocs-ui/style.css";
 import "@raystack/apsara/style.css";
 import "@/styles.css";
 
@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           minHeight: "100vh",
         }}>
         <RootProvider>
-          <ThemeProvider accentColor="indigo">{children}</ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </RootProvider>
       </body>
     </html>
