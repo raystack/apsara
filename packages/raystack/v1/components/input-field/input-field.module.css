@@ -1,4 +1,3 @@
-
 .container {
   display: flex;
   flex-direction: column;
@@ -20,67 +19,87 @@
   color: var(--rs-color-foreground-base-tertiary);
 }
 
-.leading-icon {
-  position: absolute;
-  left: var(--rs-space-3);
-  top: 50%;
-  transform: translateY(-50%);
-  width: var(--rs-space-4);
-  height: var(--rs-space-4);
-  color: var(--rs-color-foreground-base-secondary);
-  pointer-events: none;
-}
-
-.trailing-icon {
-  position: absolute;
-  right: var(--rs-space-3);
-  top: 50%;
-  transform: translateY(-50%);
-  width: var(--rs-space-4);
-  height: var(--rs-space-4);
-  color: var(--rs-color-foreground-base-secondary);
-  pointer-events: none;
-}
-
-.size-small .leading-icon,
-.size-small .trailing-icon {
-  top: 43%;
-}
-
-.size-large .leading-icon,
-.size-large .trailing-icon {
-  top: 48%;
-  right: 3%
-}
-
-.input-field {
+/* Style the inputWrapper to look like an input field */
+.inputWrapper {
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 0 var(--rs-space-3);
-  margin: 0;
-  margin-left: 0;
+  position: relative;
   border-radius: var(--rs-radius-2);
   border: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.inputWrapper:hover {
+  border-color: var(--rs-color-border-base-focus);
+}
+
+.inputWrapper:focus-within {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+/* Error state for the wrapper */
+.input-error-wrapper {
+  border-color: var(--rs-color-border-danger-primary);
+}
+
+.input-error-wrapper:hover {
+  border-color: var(--rs-color-border-danger-emphasis-hover);
+}
+
+.input-error-wrapper:focus-within {
+  border-color: var(--rs-color-border-danger-emphasis-hover);
+}
+
+/* Disabled state for the wrapper */
+.input-disabled-wrapper {
+  background: var(--rs-color-background-base-primary);
+  border-color: var(--rs-color-border-base-tertiary);
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.leading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  color: var(--rs-color-foreground-base-secondary);
+  pointer-events: none;
+  margin-left: var(--rs-space-3);
+}
+
+.trailing-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  color: var(--rs-color-foreground-base-secondary);
+  pointer-events: none;
+  margin-right: var(--rs-space-3);
+}
+
+/* Make the actual input transparent */
+.input-field {
+  width: 100%;
+  padding: 0 var(--rs-space-3);
+  padding-left: var(--rs-space-2);
+  padding-right: var(--rs-space-2);
+  margin: 0;
+  border: none;
+  background: transparent;
   font-family: inherit;
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: 32px;
   letter-spacing: var(--rs-letter-spacing-small);
   outline: none;
-  transition: all 0.2s ease;
   box-sizing: border-box;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.input-field:hover {
-  border-color: var(--rs-color-border-base-focus);
-  /* background: var(--rs-color-background-base-primary-hover); */
-  background: var(--rs-color-background-base-primary);
-}
-
-.input-field:focus {
-  border-color: var(--rs-color-border-accent-emphasis);
-  background: var(--rs-color-background-base-primary);
 }
 
 .input-default {
@@ -88,28 +107,12 @@
 }
 
 .input-error {
-  border-color: var(--rs-color-border-danger-primary);
-}
-
-.input-error:hover {
-  border-color: var(--rs-color-border-danger-emphasis-hover);
-}
-
-.input-error:focus {
-  border-color: var(--rs-color-border-danger-emphasis-hover);
+  color: var(--rs-color-foreground-danger-primary);
 }
 
 .input-disabled {
-  background: var(--rs-color-background-base-primary);
-  border-color: var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-tertiary);
   cursor: not-allowed;
-  opacity: 0.3;
-}
-
-.input-disabled:hover {
-  border-color: var(--rs-color-border-base-tertiary);
-  background: var(--rs-color-background-base-primary);
 }
 
 .helper-text {
@@ -130,11 +133,11 @@
 }
 
 .has-leading-icon {
-  padding-left: var(--rs-space-8);
+  padding-left: var(--rs-space-2);
 }
 
 .has-trailing-icon {
-  padding-right: calc(var(--rs-space-4) + var(--rs-space-3));
+  padding-right: var(--rs-space-2);
 }
 
 .optional {
@@ -149,18 +152,7 @@
 
 .has-chips {
   background: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-primary);
-  border-radius: var(--rs-radius-2);
   transition: all 0.2s ease;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.has-chips:hover {
-  border-color: var(--rs-color-border-base-focus);
-}
-
-.has-chips:focus-within {
-  border-color: var(--rs-color-border-accent-emphasis);
 }
 
 .chip {
@@ -189,15 +181,7 @@
   min-width: 80px;
   width: auto;
   flex: 1;
-  background: none;
-  border: none;
-  box-shadow: none;
   line-height: normal;
-}
-
-.has-chips .input-field:focus {
-  border: none;
-  outline: none;
 }
 
 /* Size variants */
@@ -233,9 +217,7 @@
 }
 
 .prefix, .suffix {
-  position: absolute;
-  transform: translateY(-50%);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   color: var(--rs-color-foreground-base-secondary);
   font-family: var(--rs-font-body);
@@ -243,40 +225,28 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  padding: var(--rs-space-1) var(--rs-space-2);
+  padding: 1px var(--rs-space-2);
   pointer-events: none;
   background: var(--rs-color-background-neutral-secondary);
-  padding: 1px var(--rs-space-2);
   border-radius: var(--rs-radius-2);
   white-space: nowrap;
-  z-index: 1;
   height: auto;
 }
 
-.size-large .prefix,
-.size-large .suffix {
-  padding: 2px var(--rs-space-2);
-  top: 68%;
-}
-
-.size-small .prefix,
-.size-small .suffix {
-  padding: 0.5px var(--rs-space-2);
-  top: 60%;
-}
-
 .prefix {
-  left: var(--rs-space-2);
+  margin-left: var(--rs-space-2);
+  margin-right: var(--rs-space-1);
 }
 
 .suffix {
-  right: var(--rs-space-2);
+  margin-right: var(--rs-space-2);
+  margin-left: var(--rs-space-1);
 }
 
 .has-prefix {
-  padding-left: calc(var(--rs-space-1) + 24px);
+  padding-left: var(--rs-space-2);
 }
 
 .has-suffix {
-  padding-right: calc(var(--rs-space-5) + 24px);
+  padding-right: var(--rs-space-2);
 }

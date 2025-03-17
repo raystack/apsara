@@ -322,7 +322,7 @@ export const Assets = () => {
               <InputField
                 label="Asset Value (Small)"
                 placeholder="0.00"
-                prefix="$"
+                prefix="$ hahah "
                 suffix="USD"
                 size="small"
                 width={300}
