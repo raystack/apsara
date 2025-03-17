@@ -206,11 +206,14 @@
 }
 
 .nav-group-name {
+  color: var(--rs-color-foreground-base-secondary);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
+  font-style: normal;
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
+  padding-left: var(--rs-space-3);
 }
 
 .nav-group-items {

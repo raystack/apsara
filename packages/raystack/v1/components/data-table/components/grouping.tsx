@@ -1,8 +1,13 @@
 import { Flex } from "../../flex";
-import styles from "../data-table.module.css";
-import { Text } from "../../text";
 import { Select } from "../../select";
-import { DataTableColumn, defaultGroupOption } from "../data-table.types";
+import { Text } from "../../text";
+import styles from "../data-table.module.css";
+import {
+  DataTableColumn,
+  SortOrders,
+  SortOrdersValues,
+  defaultGroupOption,
+} from "../data-table.types";
 
 interface GroupingProps<TData, TValue> {
   columns: DataTableColumn<TData, TValue>[];

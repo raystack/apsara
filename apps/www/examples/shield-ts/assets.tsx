@@ -7,21 +7,11 @@ import { DataTable, Title, useTable, Dialog as DialogLegacy } from "@raystack/ap
 import {
   toast,
   ToastContainer,
-  Avatar,
-  AvatarGroup,
   Button,
-  Spinner,
-  DropdownMenu,
-  Breadcrumb,
-  Chip,
   Flex,
   Text,
   Checkbox,
   InputField,
-  Badge,
-  Radio,
-  Tabs,
-  FilterChip,
   Search,
   Headline,
   Dialog,
@@ -121,6 +111,7 @@ export const columns: ApsaraColumnDef<Payment>[] = [
 export const Assets = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -243,187 +234,15 @@ export const Assets = () => {
       <Flex direction="column" style={{ width: "100%" }}>
         <Flex direction="column" style={{ width: "100%" }}>
           <Flex direction="column" gap="large" style={{ width: "100%" }}>
-            <Flex gap="large" wrap="wrap">
-              <Button size="small" onClick={() => setDialogOpen(true)}>Open V1 Dialog</Button>
-              <Button size="small" onClick={() => setLegacyDialogOpen(true)}>Open Legacy Dialog</Button>
-
-              <Flex direction="column" gap="small" align="start">
-                <Flex gap="large" align="center">
-                  <Spinner size={1} />
-                  <Spinner size={2} />
-                  <Spinner size={3} />
-                  <Spinner size={4} />
-                  <Spinner size={5} />
-                  <Spinner size={6} />
-                </Flex>
-              </Flex>
-
-              <Button size="small" loading loaderText="Loading...">
-                Button
-              </Button>
-
-              {/* Basic Input - Small */}
-              <InputField
-                label="Asset Name (Small)"
-                placeholder="Enter asset name"
-                helperText="Enter the name of your asset"
-                size="small"
-                width={300}
-              />
-
-              {/* Basic Input - Large */}
-              <InputField
-                label="Asset Name (Large)"
-                placeholder="Enter asset name"
-                helperText="Enter the name of your asset"
-                size="large"
-                width={300}
-              />
-
-              {/* With Icons - Small */}
-              <InputField
-                label="Search Assets (Small)"
-                placeholder="Search..."
-                leadingIcon={<HomeIcon />}
-                trailingIcon={<CheckIcon />}
-                size="small"
-                width={300}
-              />
-
-              {/* With Icons - Large */}
-              <InputField
-                label="Search Assets (Large)"
-                placeholder="Search..."
-                leadingIcon={<HomeIcon />}
-                trailingIcon={<HomeIcon />}
-                size="large"
-                width={300}
-              />
-
-              {/* With Error State - Small */}
-              <InputField
-                label="Asset ID (Small)"
-                placeholder="Enter ID"
-                error="Invalid asset ID"
-                size="small"
-                width={300}
-              />
-
-              {/* With Error State - Large */}
-              <InputField
-                label="Asset ID (Large)"
-                placeholder="Enter ID"
-                error="Invalid asset ID"
-                size="large"
-                width={300}
-              />
-
-              {/* With Prefix/Suffix - Small */}
-              <InputField
-                label="Asset Value (Small)"
-                placeholder="0.00"
-                prefix="$"
-                suffix="USD"
-                size="small"
-                width={300}
-              />
-
-              {/* With Prefix/Suffix - Large */}
-              <InputField
-                label="Asset Value (Large)"
-                placeholder="0.00"
-                prefix="$"
-                suffix="USD"
-                size="large"
-                width={300}
-              />
-
-              {/* Optional Field - Small */}
-              <InputField
-                label="Description (Small)"
-                placeholder="Optional description"
-                optional
-                size="small"
-                width={300}
-              />
-
-              {/* Optional Field - Large */}
-              <InputField
-                label="Description (Large)"
-                placeholder="Optional description"
-                optional
-                size="large"
-                width={300}
-              />
-
-              {/* With Chips - Small */}
-              <InputField
-                label="Asset Tags (Small)"
-                placeholder="Add tags..."
-                chips={recipients}
-                maxChipsVisible={3}
-                size="small"
-                width={300}
-                onChange={(e) => {
-                  if (e.target.value.endsWith(',')) {
-                    handleAddRecipient(e.target.value.slice(0, -1));
-                    e.target.value = '';
-                  }
-                }}
-              />
-
-              {/* With Chips - Large */}
-              <InputField
-                label="Asset Tags (Large)"
-                placeholder="Add tags..."
-                chips={recipients}
-                maxChipsVisible={3}
-                size="large"
-                width={300}
-                onChange={(e) => {
-                  if (e.target.value.endsWith(',')) {
-                    handleAddRecipient(e.target.value.slice(0, -1));
-                    e.target.value = '';
-                  }
-                }}
-              />
-
-              {/* Disabled State - Small */}
-              <InputField
-                label="Locked Field (Small)"
-                placeholder="Cannot edit"
+            <Flex gap="large" wrap="wrap" style={{ width: "50%" }}>
+              <Search 
+                placeholder="Search assets..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                showClearButton
                 disabled
-                value="Readonly value"
-                size="small"
-                width={300}
-              />
-
-              {/* Disabled State - Large */}
-              <InputField
-                label="Locked Field (Large)"
-                placeholder="Cannot edit"
-                disabled
-                value="Readonly value"
+                onClear={() => setSearchValue("")}
                 size="large"
-                width={300}
-              />
-
-              {/* With Helper Text - Small */}
-              <InputField
-                label="Asset Category (Small)"
-                placeholder="Select category"
-                helperText="Choose from available categories"
-                size="small"
-                width={300}
-              />
-
-              {/* With Helper Text - Large */}
-              <InputField
-                label="Asset Category (Large)"
-                placeholder="Select category"
-                helperText="Choose from available categories"
-                size="large"
-                width={300}
               />
 
               {/* Basic TextArea */}

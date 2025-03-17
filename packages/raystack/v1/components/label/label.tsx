@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { HTMLAttributes, PropsWithChildren } from "react";
+
 import styles from "./label.module.css";
 
 const label = cva(styles.label, {

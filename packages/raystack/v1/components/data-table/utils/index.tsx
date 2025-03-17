@@ -1,12 +1,14 @@
 import { TableState } from "@tanstack/table-core";
+
+
 import {
-  SortOrders,
   DataTableColumnDef,
-  GroupedData,
   DataTableSort,
   DataTableQuery,
+  GroupedData,
   RQLFilter,
-  defaultGroupOption,
+  SortOrders,
+  defaultGroupOption
 } from "../data-table.types";
 import { FilterType } from "~/v1/types/filters";
 import {
