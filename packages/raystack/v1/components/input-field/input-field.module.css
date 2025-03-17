@@ -88,7 +88,7 @@
 .input-field {
   width: 100%;
   padding: 0 var(--rs-space-3);
-  padding-left: var(--rs-space-2);
+  padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-2);
   margin: 0;
   border: none;
