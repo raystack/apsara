@@ -57,7 +57,7 @@
   width: 100%;
   min-height: 64px;
   background-color: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-primary);
+  border: 1px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-2);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);

@@ -132,6 +132,9 @@ export const Assets = () => {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [legacyDialogOpen, setLegacyDialogOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchValue2, setSearchValue2] = useState("");
+  const [searchValue3, setSearchValue3] = useState("");
 
   const activeFilters = [
     {
@@ -246,6 +249,58 @@ export const Assets = () => {
             <Flex gap="large" wrap="wrap">
               <Button size="small" onClick={() => setDialogOpen(true)}>Open V1 Dialog</Button>
               <Button size="small" onClick={() => setLegacyDialogOpen(true)}>Open Legacy Dialog</Button>
+
+              {/* Add Search Component Examples */}
+              <Flex direction="column" gap="large" style={{ width: "100%" }}>
+                <Text weight="normal">Search Component Examples</Text>
+                
+                {/* Basic Search - Large */}
+                <Flex direction="column" gap="small" style={{ width: "300px" }}>
+                  <Text>Basic Search (Large)</Text>
+                  <Search 
+                    placeholder="Search assets...fgfg"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    size="small"
+                    showClearButton
+                    onClear={() => alert("hi")}
+                  />
+                </Flex>
+                
+                {/* Search with Clear Button - Large */}
+                <Flex direction="column" gap="small" style={{ width: "300px" }}>
+                  <Text>Search with Clear Button (Large)</Text>
+                  <Search 
+                    placeholder="Search with clear button..."
+                    value={searchValue2}
+                    onChange={(e) => setSearchValue2(e.target.value)}
+                    showClearButton
+                    onClear={() => setSearchValue2("")}
+                    size="large"
+                  />
+                </Flex>
+                
+                {/* Basic Search - Small */}
+                <Flex direction="column" gap="small" style={{ width: "300px" }}>
+                  <Text>Basic Search (Small)</Text>
+                  <Search 
+                    placeholder="Search assets..."
+                    value={searchValue3}
+                    onChange={(e) => setSearchValue3(e.target.value)}
+                    size="small"
+                  />
+                </Flex>
+                
+                {/* Disabled Search */}
+                <Flex direction="column" gap="small" style={{ width: "300px" }}>
+                  <Text>Disabled Search</Text>
+                  <Search 
+                    placeholder="Disabled search..."
+                    disabled
+                    size="large"
+                  />
+                </Flex>
+              </Flex>
 
               <Flex direction="column" gap="small" align="start">
                 <Flex gap="large" align="center">
@@ -577,14 +632,14 @@ const AssetsHeader = () => {
       style={{ width: "100%", padding: "4px", paddingTop: "48px" }}
     >
       <Flex gap="extra-large" align="center" style={{ width: "100%" }}>
-
-        {/* <Search 
-          placeholder="Search assets..."
+        <Search 
+          placeholder="Search assets...hhh"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           showClearButton
           onClear={() => setSearchValue("")}
-        /> */}
+          size="small"
+        />
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

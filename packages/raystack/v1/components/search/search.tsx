@@ -1,9 +1,9 @@
-import { CrossCircledIcon,MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
-import { ReactNode } from "react";
+import { InputField } from "../input-field";
 
 import styles from "./search.module.css";
+import { InputFieldProps } from "../input-field/input-field";
 
 const searchField = cva(styles.searchField, {
   variants: {
@@ -17,64 +17,46 @@ const searchField = cva(styles.searchField, {
   }
 });
 
-export interface SearchProps extends VariantProps<typeof searchField> {
-  className?: string;
-  disabled?: boolean;
-  placeholder?: string;
+export interface SearchProps extends Omit<InputFieldProps, 'leadingIcon'> {
   showClearButton?: boolean;
   onClear?: () => void;
-  value?: string;
-  ref?: React.RefObject<HTMLInputElement>;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  type?: string;
-  name?: string;
-  id?: string;
 }
 
 export const Search = ({ 
   className, 
   disabled, 
   placeholder = "Search", 
-  size, 
+  size = "large", 
   showClearButton, 
-  onClear, 
+  onClear = () => null, 
   value,
-  ref,
+  onChange,
+  width = "100%",
   ...props 
 }: SearchProps) => {
   return (
-    <div className={styles.container} role="search">
-      <div className={styles.inputWrapper}>
-        <span className={styles.leadingIcon} aria-hidden="true">
-          <MagnifyingGlassIcon />
-        </span>
-        <input
-          ref={ref}
-          type="text"
-          className={clsx(
-            searchField({ size, className }),
-            disabled && styles["search-disabled"]
-          )}
-          placeholder={placeholder}
-          disabled={disabled}
-          value={value}
-          aria-label={placeholder}
-          {...props}
-        />
-        {showClearButton && value && (
-          <button 
+    <div className={styles.container} role="search" style={{ width }}>
+      <InputField
+        leadingIcon={<MagnifyingGlassIcon />}
+        trailingIcon={showClearButton && value ? (
+          <div 
             className={styles.clearButton}
-            onClick={onClear}
-            disabled={disabled}
-            type="button"
+            role="button"
             aria-label="Clear search"
             tabIndex={0}
           >
-            <CrossCircledIcon />
-          </button>
-        )}
-      </div>
+            <CrossCircledIcon onClick={disabled ? undefined : onClear} />
+          </div>
+        ) : undefined}
+        placeholder={placeholder}
+        disabled={disabled}
+        value={value}
+        onChange={onChange}
+        size={size}
+        className={className}
+        aria-label={placeholder}
+        {...props}
+      />
     </div>
   );
 };
