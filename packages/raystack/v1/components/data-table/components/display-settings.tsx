@@ -1,8 +1,9 @@
-import { Flex } from "../../flex";
-import styles from "../data-table.module.css";
-import { Button } from "../../button";
-import { Popover } from "../../popover";
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+
+import { Button } from "../../button";
+import { Flex } from "../../flex";
+import { Popover } from "../../popover";
+import styles from "../data-table.module.css";
 import { useDataTable } from "../hooks/useDataTable";
 import {
   DataTableColumn,

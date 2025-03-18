@@ -17,6 +17,7 @@
     height: fit-content;
     width: fit-content;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 /* Variants */

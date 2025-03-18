@@ -211,7 +211,7 @@ function DataTableRoot<TData, TValue>({
     ...(table.getRowModel().rows?.length
       ? { width: "100%" }
       : { width: "100%", height: "100%" }),
-    ...{ "border-collapse": "collapse" },
+    ...{ borderCollapse: "collapse" },
   };
 
   return (

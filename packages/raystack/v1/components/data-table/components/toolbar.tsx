@@ -1,7 +1,7 @@
 import clsx from "clsx";
+
 import { Flex } from "../../flex";
 import styles from "../data-table.module.css";
-
 import { DisplaySettings } from "./display-settings";
 import { Filters } from "./filters";
 
