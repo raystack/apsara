@@ -1,0 +1,19 @@
+.container {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+}
+.aside {
+  position: sticky;
+  top: var(--fd-nav-height);
+  padding: 28px;
+  height: fit-content;
+}
+.main {
+  flex: 1;
+  padding: 28px;
+  display: flex;
+  gap: 40px;
+  flex-direction: column;
+  align-items: flex-start;
+}

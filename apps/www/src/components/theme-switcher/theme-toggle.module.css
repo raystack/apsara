@@ -3,6 +3,7 @@
   align-items: center;
   border-radius: 9999px;
   border: 1px solid hsl(var(--fd-border) / 1);
+  padding: 3px;
 }
 .icon {
   width: 28px;

@@ -1,37 +1,42 @@
-import Link from "next/link";
-import { Button } from "@raystack/apsara/v1";
 import Logo from "@/components/logo";
+import { Card } from "fumadocs-ui/components/card";
+import { Notebook, Paintbrush } from "lucide-react";
+import styles from "./page.module.css";
 
 export const metadata = {
-  title: "My App",
+  title: "Apsara",
 };
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 20,
-        width: "100%",
-        height: "100vh",
-      }}>
-      <Logo variant="large" />
-      <h1
-        style={{
-          fontSize: "2rem",
-          fontWeight: "bold",
-          marginBottom: "1rem",
-        }}>
-        Apsara
-      </h1>
-      <Link href="/docs">
-        <Button>Checkout Docs</Button>
-      </Link>
+    <main className={styles.main}>
+      <div className={styles.info}>
+        <Logo variant="large" />
+        <h1>
+          The design system <br />
+          for the next big thing
+        </h1>
+        <h3>
+          Apsara is an elegant and beautiful re-usable React component library
+          built using Radix UI.
+        </h3>
+      </div>
+      <div className={styles.links}>
+        <Card
+          title="Documentation"
+          description="API docs, and examples for Apsara components."
+          icon={<Notebook />}
+          href="/docs"
+          className={styles.card}
+        />
+        <Card
+          title="Playground"
+          description="Try out Apsara components and see them in action."
+          icon={<Paintbrush />}
+          href="/playground"
+          className={styles.card}
+        />
+      </div>
     </main>
   );
 }

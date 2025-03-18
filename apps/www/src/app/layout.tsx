@@ -1,10 +1,11 @@
 import { RootProvider } from "fumadocs-ui/provider";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
-import { ThemeProvider } from "@/components/theme";
+import Navbar from "@/components/navbar";
 import "fumadocs-ui/style.css";
 import "@raystack/apsara/style.css";
 import "@/styles.css";
+import { ThemeProvider } from "@/components/theme";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,7 +21,10 @@ export default function Layout({ children }: { children: ReactNode }) {
           minHeight: "100vh",
         }}>
         <RootProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <Navbar />
+            {children}
+          </ThemeProvider>
         </RootProvider>
       </body>
     </html>
