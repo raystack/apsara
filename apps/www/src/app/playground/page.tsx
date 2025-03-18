@@ -1,6 +1,10 @@
 import * as Playground from "@/components/playground";
 import styles from "./page.module.css";
 
+export const metadata = {
+  title: "Apsara Playground",
+};
+
 export default function Page() {
   return (
     <div className={styles.container}>
