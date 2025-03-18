@@ -1,4 +1,5 @@
 "use client";
+
 import { createContext, useContext, ReactNode, useState } from "react";
 import { ThemeProvider as ApsaraThemeProvider } from "@raystack/apsara/v1";
 import { useTheme as useNextTheme } from "next-themes";
@@ -23,7 +24,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const { resolvedTheme, setTheme } = useNextTheme();
   const theme = (resolvedTheme ?? "light") as Theme;
   const [accentColor, setAccentColor] = useState<AccentColor>("indigo");
-
   return (
     <ThemeContext.Provider
       value={{ theme, accentColor, setTheme, setAccentColor }}>
