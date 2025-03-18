@@ -243,8 +243,6 @@ export const Assets = () => {
                 disabled
                 onClear={() => setSearchValue("")}
                 size="large"
-                width={300}
-                infoTooltip="This is sparta"
               />
 
               {/* Basic TextArea */}
