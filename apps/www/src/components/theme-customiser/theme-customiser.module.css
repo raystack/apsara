@@ -1,8 +1,8 @@
 .container {
   width: 280px;
-  background: white;
+  background: hsl(var(--fd-popover) / 1);
   border-radius: 12px;
-  border: 1px solid var(--gray-200);
+  border: 1px solid hsl(var(--fd-border) / 1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
 }

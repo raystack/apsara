@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import "fumadocs-ui/style.css";
 import "@raystack/apsara/style.css";
 import "@/styles.css";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,7 +19,10 @@ export default function Layout({ children }: { children: ReactNode }) {
           flexDirection: "column",
           minHeight: "100vh",
         }}>
-        <RootProvider>{children}</RootProvider>
+        <RootProvider>
+          <Navbar />
+          {children}
+        </RootProvider>
       </body>
     </html>
   );

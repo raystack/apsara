@@ -3,8 +3,6 @@
 import { useState, type ReactNode } from "react";
 import { ThemeProvider } from "@raystack/apsara/v1";
 import styles from "./layout.module.css";
-import Logo from "@/components/logo";
-import Link from "next/link";
 import ThemeCustomizer, { ThemeOptions } from "@/components/theme-customiser";
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -21,14 +19,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <div className={styles.navbar}>
-          <Link href="/">
-            <Logo variant="small" />
-          </Link>
-          <Link href="/docs">
-            <p className={styles.link}>Documentation</p>
-          </Link>
-        </div>
         <ThemeProvider
           key={JSON.stringify(theme)}
           accentColor={theme.accentColor}
