@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Button } from "@raystack/apsara/v1";
+import { Button, Flex } from "@raystack/apsara/v1";
 import Logo from "@/components/logo";
+import { ThemeProvider } from "@/components/theme";
 
 export const metadata = {
   title: "My App",
@@ -8,30 +9,29 @@ export const metadata = {
 
 export default function HomePage() {
   return (
-    <main
-      style={{
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 20,
-        width: "100%",
-        height: "100vh",
-      }}>
-      <Logo variant="large" />
-      <h1
+    <ThemeProvider>
+      <main
         style={{
-          fontSize: "2rem",
-          fontWeight: "bold",
-          marginBottom: "1rem",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 32,
+          width: "100%",
+          height: "100vh",
         }}>
-        Apsara
-      </h1>
-      <Link href="/docs">
-        <Button>Checkout Docs</Button>
-      </Link>
-    </main>
+        <Logo variant="large" />
+        <Flex gap="medium">
+          <Link href="/docs">
+            <Button>Checkout Docs</Button>
+          </Link>
+          <Link href="/playground">
+            <Button>Playground</Button>
+          </Link>
+        </Flex>
+      </main>
+    </ThemeProvider>
   );
 }

@@ -23,7 +23,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const { resolvedTheme, setTheme } = useNextTheme();
   const theme = (resolvedTheme ?? "light") as Theme;
   const [accentColor, setAccentColor] = useState<AccentColor>("indigo");
-  console.log({ theme, accentColor });
+
   return (
     <ThemeContext.Provider
       value={{ theme, accentColor, setTheme, setAccentColor }}>

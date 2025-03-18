@@ -1,0 +1,46 @@
+.container {
+  width: 280px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--gray-200);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}
+.container button > span[data-state="checked"] {
+  display: none !important;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+.heading {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radioLabel {
+  font-size: 14px;
+  color: var(--gray-700);
+}

@@ -1,0 +1,28 @@
+.container {
+  position: relative;
+  display: flex;
+  min-height: 100vh;
+}
+.aside {
+  position: sticky;
+  top: 0;
+  padding: 28px;
+  height: fit-content;
+}
+.main {
+  flex: 1;
+  padding: 28px;
+  display: flex;
+  gap: 40px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.navbar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.link {
+  font-size: 14px;
+  color: hsl(var(--fd-muted-foreground) / 1);
+}
