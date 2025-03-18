@@ -2,8 +2,24 @@
 import React, { useState, useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { HomeIcon, CheckIcon } from "@radix-ui/react-icons";
-import { DataTable, Title, useTable } from "@raystack/apsara";
-import { toast, ToastContainer, Avatar, AvatarGroup, Button, Spinner, DropdownMenu, Breadcrumb, Chip, Flex, Text, Checkbox, InputField, Badge, Radio, Separator, List, Label, Tabs, FilterChip, Search, Headline } from "@raystack/apsara/v1";
+import { DataTable, Title, useTable, Dialog as DialogLegacy } from "@raystack/apsara";
+
+import {
+  toast,
+  ToastContainer,
+  Button,
+  Flex,
+  Text,
+  Checkbox,
+  InputField,
+  Search,
+  Headline,
+  Dialog,
+  RangePicker,
+  Sheet,
+  TextArea,
+  Tooltip
+} from "@raystack/apsara/v1";
 import dynamic from 'next/dynamic';
 
 import { getData, Payment } from "./data";
@@ -95,6 +111,7 @@ export const columns: ApsaraColumnDef<Payment>[] = [
 export const Assets = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [searchValue, setSearchValue] = useState("");
   const [hasMoreData, setHasMoreData] = useState(true);
   const [data, setData] = useState<Payment[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -103,6 +120,9 @@ export const Assets = () => {
     from: new Date(),
     to: new Date(),
   });
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [legacyDialogOpen, setLegacyDialogOpen] = useState(false);
 
   const activeFilters = [
     {
@@ -210,108 +230,132 @@ export const Assets = () => {
   }, []);
 
   return (
-    <div style={{ padding: "var(--rs-space-5)", width: "100%" }}>
-      <Flex direction="column" gap="large" style={{ width: "100%" }}>
-        <Flex direction="column" gap="medium" style={{ width: "100%" }}>
-          <Title>Label Example</Title>
-          <Flex direction="column" gap="medium">
-            <Label size="small" htmlFor="name">Small Label</Label>
-            <Label size="medium" htmlFor="email" required>Required Medium Label</Label>
-            <Label 
-              size="large" 
-              htmlFor="description" 
-              required 
-              requiredIndicator=" (Required)"
-            >
-              Custom Required Large Label
-            </Label>
+    <div style={{ width: "100%" }}>
+      <Flex direction="column" style={{ width: "100%" }}>
+        <Flex direction="column" style={{ width: "100%" }}>
+          <Flex direction="column" gap="large" style={{ width: "100%" }}>
+            <Flex gap="large" wrap="wrap" style={{ width: "50%" }}>
+              <Search 
+                placeholder="Search assets..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                showClearButton
+                disabled
+                onClear={() => setSearchValue("")}
+                size="large"
+              />
+
+              {/* Basic TextArea */}
+              <TextArea
+                label="Description"
+                placeholder="Enter description"
+                width={300}
+                infoTooltip="This is a tooltip"
+              />
+
+              {/* Required TextArea */}
+              <TextArea
+                label="Comments"
+                placeholder="Enter comments"
+                required
+                width={300}
+              />
+
+              {/* With Helper Text */}
+              <TextArea
+                label="Feedback"
+                placeholder="Enter your feedback"
+                helperText="Your feedback helps us improve"
+                width={300}
+              />
+
+              {/* With Error State */}
+              <TextArea
+                label="Notes"
+                placeholder="Enter notes"
+                error
+                helperText="This field cannot be empty"
+                width={300}
+              />
+
+              {/* Optional TextArea */}
+              <TextArea
+                label="Additional Information"
+                placeholder="Add any additional details"
+                required={false}
+                width={300}
+              />
+
+              {/* Disabled TextArea */}
+              <TextArea
+                label="Read-only Content"
+                value="This content cannot be edited"
+                width={300}
+              />
+            </Flex>
+            
+            <Flex direction="column" style={{ width: "100%" }}>
+            <div style={{ width: "100%" }}>
+              <DataTable
+                columns={columns}
+                data={data}
+                initialState={{ sorting: [{ id: "amount", desc: true }] }}
+                isLoading={isLoading}
+                onLoadMore={loadMoreData}
+              >
+                <DataTable.Toolbar>
+                  <AssetsHeader />
+                  <DataTable.FilterChips />
+                </DataTable.Toolbar>
+                <DataTable.Footer>
+                  <></>
+                </DataTable.Footer>
+              </DataTable>
+            </div>
           </Flex>
-
-          <Title>Toggle Group Example</Title>
-          <Flex direction="column" gap="medium">
-            <Title>Solid Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent">solid-accent</Button>
-              <Button variant="solid" color="danger">solid-danger</Button>
-              <Button variant="solid" color="neutral">solid-neutral</Button>
-              <Button variant="solid" color="success">solid-success</Button>
-            </Flex>
-
-            <Title>Outline Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="outline" color="accent">outline-accent</Button>
-              <Button variant="outline" color="danger">outline-danger</Button>
-              <Button variant="outline" color="neutral">outline-neutral</Button>
-              <Button variant="outline" color="success">outline-success</Button>
-            </Flex>
-
-            <Title>Ghost & Text Buttons</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="ghost">ghost</Button>
-              <Button variant="text">text</Button>
-            </Flex>
-
-            <Title>Loading State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" loading>Loading</Button>
-              <Button variant="outline" color="accent" loading>Loading</Button>
-              <Button variant="ghost" loading>Loading</Button>
-              <Button variant="text" loading>Loading</Button>
-            </Flex>
-
-            <Title>Disabled State</Title>
-            <Flex gap="small" wrap="wrap">
-              <Button variant="solid" color="accent" disabled>Disabled</Button>
-              <Button variant="outline" color="accent" disabled>Disabled</Button>
-              <Button variant="ghost" disabled>Disabled</Button>
-              <Button variant="text" disabled>Disabled</Button>
-            </Flex>
-          </Flex>
-          </Flex>
-          <FilterChip
-            label="Status"
-            leadingIcon={<HomeIcon />}
-            columnType="select"
-            options={[
-              { label: "Pending", value: "pending" },
-              { label: "Success", value: "success" },
-            ]}
-            onRemove={() => console.log("Removing filter")}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
-
-          <FilterChip
-            label="Priority"
-            leadingIcon={<CheckIcon />}
-            columnType="select"
-            onRemove={() => console.log("Removing filter")}
-            options={[
-              { label: "High", value: "high" },
-              { label: "Medium", value: "medium" },
-              { label: "Low", value: "low" },
-            ]}
-            onValueChange={(value) => console.log(value)}
-            onOperationChange={(operation) => console.log(operation)}
-          />
-          <div style={{ width: "100%" }}>
-            <DataTable
-              columns={columns}
-              data={data}
-              initialState={{ sorting: [{ id: "amount", desc: true }] }}
-              isLoading={isLoading}
-              onLoadMore={loadMoreData}
-            >
-              <DataTable.Toolbar>
-                <AssetsHeader />
-                <DataTable.FilterChips />
-              </DataTable.Toolbar>
-              <DataTable.Footer>
-                <></>
-              </DataTable.Footer>
-            </DataTable>
-          </div>
+        </Flex>
       </Flex>
+      </Flex>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog.Content overlayBlur={false} width="800px">
+          <Dialog.Title>Sample Dialog Title</Dialog.Title>
+          <Dialog.Description>
+            This is an example of the new V1 Dialog component.
+          </Dialog.Description>
+          <Flex direction="column" gap="large" style={{ marginTop: '20px' }}>
+            <InputField
+              label="Sample Input"
+              placeholder="Enter some text"
+            />
+            <Flex justify="end" gap="small">
+              <Button variant="solid" onClick={() => setDialogOpen(false)}>Cancel</Button>
+              <Button onClick={() => setDialogOpen(false)}>Save</Button>
+            </Flex>
+          </Flex>
+          <Dialog.Close />
+        </Dialog.Content>
+      </Dialog>
+
+      <DialogLegacy open={legacyDialogOpen} onOpenChange={setLegacyDialogOpen}>
+        <DialogLegacy.Content close overlayBlur={false}>
+          <DialogLegacy.Title>Legacy Dialog Title</DialogLegacy.Title>
+          <DialogLegacy.Description>
+            This is an example of the legacy Dialog component.
+          </DialogLegacy.Description>
+          <Flex direction="column" gap="large" style={{ marginTop: '20px' }}>
+            <InputField
+              label="Sample Input"
+              placeholder="Enter some text"
+            />
+            <Flex justify="end" gap="small">
+              <Button variant="solid" onClick={() => setLegacyDialogOpen(false)}>Cancel</Button>
+              <Button onClick={() => setLegacyDialogOpen(false)}>Save</Button>
+            </Flex>
+          </Flex>
+        </DialogLegacy.Content>
+      </DialogLegacy>
+
       <ToastContainer />
     </div>
   );
@@ -359,8 +403,6 @@ const AssetsHeader = () => {
           showClearButton
           onClear={() => setSearchValue("")}
         /> */}
-        <Flex gap="small" align="center">
-        </Flex>
       </Flex>
       <Flex gap="small">
         <AssetsFooter />

@@ -116,6 +116,9 @@ const CommandShortcut = ({
 };
 CommandShortcut.displayName = "CommandShortcut";
 
+/*
+ *  @deprecated Use Command from @raystack/apsara/v1 instead.
+ */
 export const Command: any = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
   Input: CommandInput,

@@ -17,6 +17,7 @@
   letter-spacing: var(--rs-letter-spacing-mini);
   color: var(--rs-color-foreground-base-primary);
   user-select: none;
+  -webkit-user-select: none;
   font-style: normal;
 }
 
@@ -142,7 +143,7 @@
   cursor: pointer;
   border: none;
   width: 100%;
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   height: 100%;
   padding: unset;
   display: grid;

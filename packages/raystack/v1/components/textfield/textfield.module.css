@@ -6,28 +6,29 @@
   padding: 0;
   height: auto;
   width: 100%;
-  background-color: var(--background-base);
-  outline: 0.5px solid var(--border-base);
+  background-color: var(--rs-color-background-base-primary);
+  outline: 0.5px solid var(--rs-color-border-base-secondary);
   border: none;
-  box-shadow: var(--shadow-xs);
-  border-radius: var(--br-4);
-  color: var(--foreground-base);
-  padding: var(--pd-4);
-  letter-spacing: 0.4px;
-  line-height: 16px;
+  box-shadow: var(--rs-shadow-feather);
+  border-radius: var(--rs-radius-2);
+  color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-2);
+  letter-spacing: var(--rs-letter-spacing-small);
+  line-height: var(--rs-line-height-small);
+  font-family: var(--rs-font-body);
 }
 
 .textfield:-webkit-autofill {
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--rs-shadow-feather);
 }
 
 .textfield:focus {
-  outline: 1px solid var(--background-accent-inverted);
+  outline: 1px solid var(--rs-color-background-accent-emphasis);
 }
 
 .textfield::placeholder {
-  color: var(--foreground-subtle);
-  font-size: 12px;
+  color: var(--rs-color-foreground-base-tertiary);
+  font-size: var(--rs-font-size-small);
 }
 
 .textfield:disabled {
@@ -37,34 +38,34 @@
 }
 
 .textfield:read-only {
-  background-color: var(--background-base);
+  background-color: var(--rs-color-background-base-primary);
 }
 
 .textfield-sm {
-  border-radius: var(--br-4);
-  font-size: 12px;
-  padding: var(--pd-4) var(--pd-8);
+  border-radius: var(--rs-radius-2);
+  font-size: var(--rs-font-size-small);
+  padding: var(--rs-space-2) var(--rs-space-3);
 }
 
 .textfield-md {
-  border-radius: var(--br-4);
-  font-size: 12px;
-  padding: var(--pd-8);
+  border-radius: var(--rs-radius-2);
+  font-size: var(--rs-font-size-small);
+  padding: var(--rs-space-3);
 }
 
 .textfield-invalid {
-  outline: 1px solid var(--border-danger);
+  outline: 1px solid var(--rs-color-border-danger-primary);
 }
 .textfield-invalid:focus {
-  outline: 1px solid var(--border-danger);
+  outline: 1px solid var(--rs-color-border-danger-primary);
 }
 
 .textfield-valid {
-  outline: 1px solid var(--border-success);
+  outline: 1px solid var(--rs-color-border-success-primary);
 }
 
 .textfield-valid:focus {
-  outline: 1px solid var(--border-success);
+  outline: 1px solid var(--rs-color-border-success-primary);
 }
 
 .textfield-leading {

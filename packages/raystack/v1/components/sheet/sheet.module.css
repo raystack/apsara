@@ -1,0 +1,189 @@
+.sheetContent {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  padding: var(--rs-space-3);
+  z-index: 50;
+  will-change: transform;
+
+  background-color: var(--rs-color-background-base-primary);
+  /* border: 1px solid var(--rs-color-border-base-primary); */
+  font-family: var(--rs-font-body);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.sheetContent:focus {
+  outline: none;
+}
+
+.sheetContent[data-state="open"] {
+  animation: slideIn 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent[data-state="closed"] {
+  animation: slideOut 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-top {
+  width: 100%;
+  height: 300px;
+  bottom: auto;
+}
+
+.sheetContent-top[data-state="open"] {
+  animation: slideInTop 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-top[data-state="closed"] {
+  animation: slideOutTop 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-bottom {
+  width: 100%;
+  height: 300px;
+  bottom: 0;
+  top: auto;
+}
+
+.sheetContent-bottom[data-state="open"] {
+  animation: slideInBottom 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-bottom[data-state="closed"] {
+  animation: slideOutBottom 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-right {
+  right: 0;
+}
+
+.sheetContent-right[data-state="open"] {
+  animation: slideInRight 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-right[data-state="closed"] {
+  animation: slideOutRight 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-left {
+  left: 0;
+}
+
+.sheetContent-left[data-state="open"] {
+  animation: slideInLeft 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sheetContent-left[data-state="closed"] {
+  animation: slideOutLeft 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background-color: var(--rs-color-overlay-base-primary);
+}
+
+.close {
+  all: unset;
+  position: absolute;
+  top: var(--rs-space-3);
+  right: var(--rs-space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--rs-radius-2);
+  color: var(--rs-color-foreground-base-secondary);
+  padding: var(--rs-space-2);
+  cursor: pointer;
+}
+
+.close:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--rs-color-border-base-focus);
+  outline-offset: -1px;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideInTop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutTop {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutBottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheetContent,
+  .overlay {
+    animation: none;
+  }
+} 

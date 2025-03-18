@@ -1,0 +1,62 @@
+.toolbar {
+  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3)
+    var(--rs-space-5);
+  align-self: stretch;
+
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+}
+
+.display-popover-content {
+  padding: 0px;
+  min-width: 300px;
+}
+
+.display-popover-properties-container {
+  --select-width: 160px;
+  padding: var(--rs-space-5);
+  border-bottom: 1px solid var(--rs-color-border-base-primary);
+}
+
+.display-popover-properties-select {
+  width: var(--select-width);
+}
+.display-popover-properties-select[with-icon-button] {
+  /* Reduce Icon button with "--rs-space-7" and flex gap "--rs-space-2" */
+  width: calc(var(--select-width) - var(--rs-space-7) - var(--rs-space-2));
+}
+
+.display-popover-properties-select > span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.display-popover-reset-container {
+  padding: var(--rs-space-3) var(--rs-space-5);
+}
+
+.display-popover-sort-icon {
+  height: 20px;
+  width: 20px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.row {
+  background: var(--rs-color-background-base-primary);
+}
+
+.row:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.cell {
+  background: inherit;
+}

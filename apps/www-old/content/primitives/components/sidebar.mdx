@@ -1,0 +1,208 @@
+---
+title: Sidebar
+description: A collapsible side navigation panel component.
+---
+
+## Preview
+
+<Preview>
+  <Sidebar open={true}>
+    <Sidebar.Header
+      logo={<InfoCircledIcon width={24} height={24} />}
+      title="Company Name"
+    />
+    <Sidebar.Main>
+      <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+      <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Analytics</Sidebar.Item>
+      <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+    </Sidebar.Main>
+    <Sidebar.Footer>
+      <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
+    </Sidebar.Footer>
+  </Sidebar>
+</Preview>
+
+## Installation
+
+Install the component from your command line.
+
+<LiveProvider>
+  <LiveEditor code={`npm install @raystack/apsara`} border language="shell" />
+</LiveProvider>
+
+## Usage
+
+The Sidebar component provides a collapsible navigation panel with header, main content, groups, and footer sections.
+
+<LiveProvider>
+  <LiveEditor code={`import { Sidebar } from '@raystack/apsara/v1'
+
+export default function App() {
+  return (
+    <Sidebar open={true}>
+      <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
+      <Sidebar.Main>
+        <Sidebar.Group name="Main">
+          <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+        </Sidebar.Group>
+        <Sidebar.Group name="Support">
+          <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
+        </Sidebar.Group>
+      </Sidebar.Main>
+      <Sidebar.Footer>
+        <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Help</Sidebar.Item>
+      </Sidebar.Footer>
+    </Sidebar>
+  )
+}`} border/>
+</LiveProvider>
+
+## API Reference
+
+### Root Props
+
+- `open`: Controls the expanded/collapsed state (boolean)
+- `onOpenChange`: Callback when expanded/collapsed state changes (function)
+- `position`: Position of the Sidebar (`"left"` | `"right"`, default: "left")
+- `profile`: Optional profile information object
+  - `icon`: ReactNode
+  - `label`: string
+  - `href`: string (optional)
+  - `onIconClick`: Optional callback for icon click
+
+### Header Props
+
+- `logo`: ReactNode for the header icon/logo
+- `title`: string for the header text
+- `onLogoClick`: Optional callback for logo click
+
+### Group Props
+
+- `name`: string for the group title
+- `icon`: Optional ReactNode for group icon
+- `children`: ReactNode for the group content
+
+### Item Props
+
+- `icon`: ReactNode for the item's icon
+- `href`: string for the link destination
+- `active`: boolean to indicate current selection
+- `disabled`: boolean to disable the item
+- `children`: ReactNode for the item's label
+
+## Sidebar Props
+
+The Sidebar component consists of several parts, each with their own props:
+
+### Root
+
+- `open`: Controls the expanded/collapsed state (boolean)
+- `onOpenChange`: Callback when expanded/collapsed state changes (function)
+- `position`: Position of the Sidebar ("left" | "right", default: "left")
+- `account`: Optional account information object with:
+  - `icon`: Icon element to display (ReactNode)
+  - `label`: Text to display (string)
+  - `href`: Optional URL the account links to (string)
+
+### Header
+
+- `logo`: Logo element to display (ReactNode)
+- `title`: Title text to display (string)
+
+### Item
+
+- `icon`: Icon element to display (ReactNode)
+- `active`: Whether the item is currently active (boolean)
+- `href`: URL the item links to (string)
+
+## Position
+
+The Sidebar can be positioned on either the left or right side of the screen.
+
+<Playground
+  scope={{ Sidebar, InfoCircledIcon }}
+  tabs={[
+    {
+      name: "Left",
+      code: `
+        <Sidebar open={true} position="left">
+          <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidebar.Main>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>
+      `,
+    },
+    {
+      name: "Right",
+      code: `
+        <Sidebar open={true} position="right">
+          <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidebar.Main>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />}>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>
+      `,
+    },
+  ]}
+/>
+
+## State
+
+The Sidebar supports expanded and collapsed states with smooth transitions.
+
+<Playground
+  scope={{ Sidebar, InfoCircledIcon }}
+  tabs={[
+    {
+      name: "Expanded",
+      code: `
+        <Sidebar open={true}>
+          <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidebar.Main>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>
+      `,
+    },
+    {
+      name: "Collapsed",
+      code: `
+        <Sidebar open={false}>
+          <Sidebar.Header logo={<InfoCircledIcon />} title="Company Name" />
+          <Sidebar.Main>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<InfoCircledIcon />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>
+      `,
+    },
+  ]}
+/>
+
+## Accessibility
+
+The Sidebar implements the following accessibility features:
+
+- Proper ARIA roles and attributes
+
+  - `role="navigation"` for the main sidebar
+  - `role="banner"` for the header
+  - `role="menuitem"` for navigation items
+  - `aria-expanded` to indicate sidebar state
+  - `aria-current="page"` for active items
+  - `aria-disabled="true"` for disabled items
+
+- Keyboard navigation support
+
+  - Enter/Space to toggle sidebar expansion
+  - Tab navigation through interactive elements
+
+- Screen reader support
+  - Meaningful labels for all interactive elements
+  - Hidden decorative elements
+  - Clear state indicators

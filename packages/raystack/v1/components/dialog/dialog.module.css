@@ -1,0 +1,62 @@
+.dialogOverlay {
+  background-color: var(--rs-color-overlay-base-primary);
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+}
+
+.dialogContent {
+  background-color: var(--rs-color-background-base-primary);
+  border-radius: var(--rs-radius-4);
+  box-shadow: var(--rs-shadow-floating);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  min-width: 200px;
+  min-height: 200px;
+  max-height: 85vh;
+  padding: var(--rs-space-5);
+  z-index: 9999;
+}
+
+.dialogContent:focus {
+  outline: none;
+}
+
+.close {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--rs-radius-2);
+  padding: var(--rs-space-2);
+  font-weight: var(--rs-font-weight-medium);
+  position: absolute;
+  top: var(--rs-space-3);
+  right: var(--rs-space-3);
+  cursor: pointer;
+}
+
+.close:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.overlayBlur {
+  backdrop-filter: var(--rs-blur-lg);
+}
+
+.dialogOverlay[data-state="open"] {
+  animation: fadeIn 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.dialogOverlay[data-state="close"] {
+  animation: fadeOut 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+    transition: none;
+  }
+}

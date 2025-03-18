@@ -17,6 +17,16 @@
       "require": "./dist/v1/index.cjs",
       "types": "./dist/v1/index.d.ts"
     },
+    "./icons": {
+      "import": "./dist/v1/icons/index.js",
+      "require": "./dist/v1/icons/index.cjs",
+      "types": "./dist/v1/icons/index.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/v1/hooks/index.js",
+      "require": "./dist/v1/hooks/index.cjs",
+      "types": "./dist/v1/hooks/index.d.ts"
+    },
     "./style.css": "./dist/style.css"
   },
   "files": [
@@ -35,7 +45,8 @@
     "clean": "rm -rf .turbo && rm -rf dist",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "build:icons": "node scripts/create-icons.js"
   },
   "typesVersions": {
     "*": {
@@ -55,6 +66,7 @@
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rollup/plugin-typescript": "^11.1.1",
+    "@svgr/rollup": "^8.1.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
@@ -65,6 +77,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "lodash": "^4.17.21",
     "np": "^8.0.4",
     "npm": "^9.7.1",
     "parcel": "^2.9.2",
@@ -74,6 +87,7 @@
     "release-it": "^16.2.1",
     "rollup": "^3.25.1",
     "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-tsconfig-paths": "^1.5.2",
     "semver": "^7.6.0",
     "ts-jest": "^29.2.5",
     "tsconfig": "workspace:*",

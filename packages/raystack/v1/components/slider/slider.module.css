@@ -7,6 +7,7 @@
   height: var(--rs-space-8);
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
   padding: 0;
 }
 
@@ -69,10 +70,10 @@
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-primary);
   border-radius: var(--rs-radius-2);
-  font-size: 11px;
+  font-size: var(--rs-font-size-mini);
   transform: translateX(-50%);
   white-space: nowrap;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--rs-shadow-soft);
 }
 
 .slider-variant-single .range {

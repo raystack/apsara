@@ -16,18 +16,21 @@
   font-size: var(--rs-font-size-micro);
   line-height: var(--rs-line-height-micro);
   letter-spacing: var(--rs-letter-spacing-micro);
+  height: 18px;
 }
 
 .badge-small {
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
+  height: 22px;
 }
 
 .badge-regular {
   font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
+  height: 28px;
 }
 
 /* Variants */
