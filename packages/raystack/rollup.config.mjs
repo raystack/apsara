@@ -10,7 +10,20 @@ import svgr from "@svgr/rollup";
 const createPlugins = ({ rootDir, declarationDir }) => [
   nodeResolve(),
   commonjs(),
-  svgr(),
+  svgr({
+    svgoConfig: {
+      plugins: [
+        {
+          name: 'preset-default',
+          params: {
+            overrides: {
+              removeViewBox: false,
+            },
+          },
+        },
+      ]
+    }
+  }),
   postcss({
     plugins: [postcssImport()],
     extract: "style.css",
