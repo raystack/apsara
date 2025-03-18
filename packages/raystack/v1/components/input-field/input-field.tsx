@@ -1,6 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { ComponentPropsWithoutRef, ReactNode } from "react";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
+import { Tooltip } from "../tooltip";
 
 import { Chip } from "../chip";
 import styles from "./input-field.module.css";
@@ -35,6 +37,7 @@ export interface InputFieldProps
   chips?: Array<{ label: string; onRemove?: () => void }>;
   maxChipsVisible?: number;
   ref?: React.RefObject<HTMLInputElement>;
+  infoTooltip?: string;
 }
 
 export const InputField = ({ 
@@ -54,24 +57,37 @@ export const InputField = ({
   maxChipsVisible = 2,
   ref,
   size,
+  infoTooltip,
   ...props 
 }: InputFieldProps) => {
   return (
     <div className={styles.container} style={{ width: width || '100%' }}>
       {label && (
-        <label className={clsx(styles.label, disabled && styles["label-disabled"])}>
-          {label}
-          {optional && <span className={styles.optional}>(optional)</span>}
-        </label>
+        <div className={styles.labelContainer}>
+          <label className={clsx(styles.label, disabled && styles["label-disabled"])}>
+            {label}
+            {optional && <span className={styles.optional}>(optional)</span>}
+          </label>
+          {infoTooltip && (
+            <Tooltip message={infoTooltip} side="right">
+              <span className={styles.helpIcon}>
+                <InfoCircledIcon />
+              </span>
+            </Tooltip>
+          )}
+        </div>
       )}
       <div 
         className={clsx(
           inputWrapper({ size, className }),
+          error && styles['input-error-wrapper'],
+          disabled && styles['input-disabled-wrapper'],
           chips?.length && styles['has-chips']
         )}
       >
-        {leadingIcon && <span className={styles['leading-icon']}>{leadingIcon}</span>}
-        {prefix && <span className={styles.prefix}>{prefix}</span>}
+        {leadingIcon && <div className={styles['leading-icon']}>{leadingIcon}</div>}
+        {prefix && <div className={styles.prefix}>{prefix}</div>}
+        
         <div className={styles['chip-input-container']}>
           {chips?.slice(0, maxChipsVisible).map((chip, index) => (
             <Chip
@@ -107,8 +123,9 @@ export const InputField = ({
             {...props}
           />
         </div>
-        {suffix && <span className={styles.suffix}>{suffix}</span>}
-        {trailingIcon && <span className={styles['trailing-icon']}>{trailingIcon}</span>}
+        
+        {suffix && <div className={styles.suffix}>{suffix}</div>}
+        {trailingIcon && <div className={styles['trailing-icon']}>{trailingIcon}</div>}
       </div>
       {(error || helperText) && (
         <span 
