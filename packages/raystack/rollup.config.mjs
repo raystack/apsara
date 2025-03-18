@@ -50,8 +50,12 @@ const configs = [
     outputPath: "dist/v1",
   },
   {
-    inputPath: "icons",
-    outputPath: "dist/icons",
+    inputPath: "v1/icons",
+    outputPath: "dist/v1/icons",
+  },
+  {
+    inputPath: "v1/hooks",
+    outputPath: "dist/v1/hooks",
   },
 ];
 

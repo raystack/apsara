@@ -18,9 +18,14 @@
       "types": "./dist/v1/index.d.ts"
     },
     "./icons": {
-      "import": "./dist/icons/index.js",
-      "require": "./dist/icons/index.cjs",
-      "types": "./dist/icons/index.d.ts"
+      "import": "./dist/v1/icons/index.js",
+      "require": "./dist/v1/icons/index.cjs",
+      "types": "./dist/v1/icons/index.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/v1/hooks/index.js",
+      "require": "./dist/v1/hooks/index.cjs",
+      "types": "./dist/v1/hooks/index.d.ts"
     },
     "./style.css": "./dist/style.css"
   },
