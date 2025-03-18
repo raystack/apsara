@@ -54,6 +54,15 @@
   --rs-letter-spacing-t2: 0;
   --rs-letter-spacing-t3: 0;
   --rs-letter-spacing-t4: 0;
+  
+  /* Font Smoothing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body, p, h1, h2, h3, h4, h5, h6, span, div, label {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 [data-style="modern"] {
