@@ -1,17 +1,30 @@
 "use client";
 
-import { createContext, useContext, ReactNode, useState } from "react";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useCallback,
+} from "react";
 import { ThemeProvider as ApsaraThemeProvider } from "@raystack/apsara/v1";
 import { useTheme as useNextTheme } from "next-themes";
 
 type Theme = "light" | "dark";
-type AccentColor = "indigo" | "mint" | "orange";
 
-interface ThemeContextType {
-  theme: Theme;
-  accentColor: AccentColor;
-  setTheme: (theme: Theme) => void;
-  setAccentColor: (color: AccentColor) => void;
+export interface ThemeOptions {
+  /** Style variant of the theme, either 'modern' or 'traditional' */
+  style?: "modern" | "traditional";
+  /** Accent color for the theme */
+  accentColor?: "indigo" | "orange" | "mint";
+  /** Gray color variant for the theme */
+  grayColor?: "gray" | "mauve" | "slate";
+  /** Theme value for light or dark  */
+  theme?: Theme;
+}
+
+interface ThemeContextType extends ThemeOptions {
+  setTheme: (options: ThemeOptions) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -23,14 +36,28 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const { resolvedTheme, setTheme } = useNextTheme();
   const theme = (resolvedTheme ?? "light") as Theme;
-  const [accentColor, setAccentColor] = useState<AccentColor>("indigo");
+
+  const [options, setOptions] = useState<ThemeOptions>({
+    style: "modern",
+    accentColor: "indigo",
+    grayColor: "gray",
+  });
+
+  const updateOptions = useCallback((options: ThemeOptions) => {
+    if ("theme" in options && options.theme) setTheme(options.theme);
+    setOptions(_options => ({ ..._options, ...options }));
+  }, []);
+
+  const key = `${options?.accentColor}-${options?.grayColor}-${options?.style}`;
   return (
     <ThemeContext.Provider
-      value={{ theme, accentColor, setTheme, setAccentColor }}>
+      value={{ ...options, theme, setTheme: updateOptions }}>
       <ApsaraThemeProvider
-        accentColor={accentColor}
+        key={key}
         forcedTheme={theme}
-        key={accentColor}>
+        accentColor={options.accentColor}
+        grayColor={options.grayColor}
+        style={options.style}>
         {children}
       </ApsaraThemeProvider>
     </ThemeContext.Provider>

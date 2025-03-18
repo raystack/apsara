@@ -11,7 +11,7 @@ export default function AccentToggle({
   className,
   ...props
 }: HTMLAttributes<HTMLElement>) {
-  const { accentColor, setAccentColor } = useTheme();
+  const { accentColor, setTheme } = useTheme();
 
   return (
     <div
@@ -28,7 +28,7 @@ export default function AccentToggle({
             accentColor === color && styles.active,
           )}
           onClick={() => {
-            setAccentColor(color);
+            setTheme({ accentColor: color });
           }}
         />
       ))}

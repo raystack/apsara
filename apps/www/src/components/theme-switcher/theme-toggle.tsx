@@ -23,7 +23,7 @@ export default function ThemeToggle(props: HTMLAttributes<HTMLElement>) {
     <button
       className={styles.container}
       aria-label={`Toggle Theme`}
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+      onClick={() => setTheme({ theme: theme === "light" ? "dark" : "light" })}
       data-theme-toggle=""
       {...props}>
       {THEME_MAP.map(([key, Icon]) => {
