@@ -31,5 +31,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": ["biome format --write", "biome lint"]
   }
 }
