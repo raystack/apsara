@@ -5,15 +5,7 @@ import ThemeCustomizer from "@/components/theme-customiser";
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className={styles.container}>
-      <main className={styles.main}>
-        {/* <ThemeProvider
-          key={JSON.stringify(theme)}
-          accentColor={theme.accentColor}
-          grayColor={theme.grayColor}
-          style={theme.style}> */}
-        {children}
-        {/* </ThemeProvider> */}
-      </main>
+      <main className={styles.main}>{children}</main>
       <aside className={styles.aside}>
         <ThemeCustomizer />
       </aside>
