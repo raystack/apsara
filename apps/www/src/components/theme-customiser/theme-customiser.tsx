@@ -2,20 +2,7 @@
 import { Tabs, Radio, Button } from "@raystack/apsara/v1";
 import styles from "./theme-customiser.module.css";
 import { getPropsString } from "@/lib/utils";
-
-export interface ThemeOptions {
-  /** Style variant of the theme, either 'modern' or 'traditional' */
-  style?: "modern" | "traditional";
-  /** Accent color for the theme */
-  accentColor?: "indigo" | "orange" | "mint";
-  /** Gray color variant for the theme */
-  grayColor?: "gray" | "mauve" | "slate";
-}
-
-interface ThemeCustomizerProps {
-  theme: ThemeOptions;
-  onThemeChange?: (theme: ThemeOptions) => void;
-}
+import { useTheme, ThemeOptions } from "../theme";
 
 const DEFAULT_OPTIONS: ThemeOptions = {
   style: "modern",
@@ -23,23 +10,20 @@ const DEFAULT_OPTIONS: ThemeOptions = {
   grayColor: "gray",
 };
 
-export default function ThemeCustomizer({
-  theme,
-  onThemeChange,
-}: ThemeCustomizerProps) {
+export default function ThemeCustomizer() {
   const {
     style = DEFAULT_OPTIONS.style,
     accentColor = DEFAULT_OPTIONS.accentColor,
     grayColor = DEFAULT_OPTIONS.grayColor,
-  } = theme;
+    theme,
+    setTheme,
+  } = useTheme();
 
-  const handleChange = (value: Partial<ThemeOptions>) => {
-    onThemeChange?.(value);
-  };
+  const options = { style, accentColor, grayColor };
 
   const handleCopyTheme = () => {
     const props = Object.fromEntries(
-      Object.entries(theme).filter(
+      Object.entries(options).filter(
         ([key, value]) => DEFAULT_OPTIONS[key as keyof ThemeOptions] !== value,
       ),
     );
@@ -56,7 +40,7 @@ export default function ThemeCustomizer({
         <Tabs.Root
           value={style}
           onValueChange={value =>
-            handleChange({ style: value as ThemeOptions["style"] })
+            setTheme({ style: value as ThemeOptions["style"] })
           }>
           <Tabs.List>
             <Tabs.Trigger value="modern">Modern</Tabs.Trigger>
@@ -65,11 +49,24 @@ export default function ThemeCustomizer({
         </Tabs.Root>
       </div>
       <div className={styles.section}>
+        <h3 className={styles.sectionTitle}>Appearance</h3>
+        <Tabs.Root
+          value={theme}
+          onValueChange={value =>
+            setTheme({ theme: value as ThemeOptions["theme"] })
+          }>
+          <Tabs.List>
+            <Tabs.Trigger value="light">Light</Tabs.Trigger>
+            <Tabs.Trigger value="dark">Dark</Tabs.Trigger>
+          </Tabs.List>
+        </Tabs.Root>
+      </div>
+      <div className={styles.section}>
         <h3 className={styles.sectionTitle}>Accent Color</h3>
         <Radio.Root
           value={accentColor}
           onValueChange={value =>
-            handleChange({
+            setTheme({
               accentColor: value as ThemeOptions["accentColor"],
             })
           }>
@@ -100,7 +97,7 @@ export default function ThemeCustomizer({
         <Radio.Root
           value={grayColor}
           onValueChange={value =>
-            handleChange({ grayColor: value as ThemeOptions["grayColor"] })
+            setTheme({ grayColor: value as ThemeOptions["grayColor"] })
           }>
           <div className={styles.radioGroup}>
             <div className={styles.radioOption}>
