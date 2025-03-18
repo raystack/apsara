@@ -44,6 +44,18 @@ function App() {
 }
 ```
 
+## Code Formatting
+
+This project uses [Biome](https://biomejs.dev/) for code formatting and linting instead of Prettier and ESLint.
+
+### VS Code Setup
+
+1. Install the [Biome VS Code extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome)
+2. Disable Prettier for this project (or uninstall the Prettier plugin):
+   - Open VS Code settings (File > Preferences > Settings)
+   - Search for "prettier enable"
+   - Uncheck "Prettier: Enable" or add this project to the exclusion list
+
 ## Component Categories
 
 ### Layout

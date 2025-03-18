@@ -1,3 +1,48 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+
+  // Disable Prettier for this project
+  "prettier.enable": false,
+  "prettier.requireConfig": true,
+
+  // Additional Biome settings
+  "biome.lspBin": "node_modules/@biomejs/biome/bin/biome",
+  "biome.enabled": true,
+
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll.biome": "explicit"
+  },
+
+  // Disable other formatters/linters to avoid conflicts
+  "eslint.enable": false,
+
+  "workbench.colorCustomizations": {
+    // This project uses Biome for formatting and linting
+  }
 }
