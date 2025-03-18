@@ -27,6 +27,19 @@ import {
   PopoverExamples,
   RadioExamples,
   SearchExamples,
+  SelectExamples,
+  SeparatorExamples,
+  SheetExamples,
+  SidebarExamples,
+  SliderExamples,
+  SpinnerExamples,
+  SwitchExamples,
+  TableExamples,
+  TabsExamples,
+  TextExamples,
+  TextAreaExamples,
+  ToastExamples,
+  TooltipExamples,
 } from "@/components/playground";
 import styles from "./page.module.css";
 
@@ -61,6 +74,19 @@ export default function Playground() {
       <PopoverExamples />
       <RadioExamples />
       <SearchExamples />
+      <SelectExamples />
+      <SeparatorExamples />
+      <SheetExamples />
+      <SidebarExamples />
+      <SliderExamples />
+      <SpinnerExamples />
+      <SwitchExamples />
+      <TableExamples />
+      <TabsExamples />
+      <TextExamples />
+      <TextAreaExamples />
+      <ToastExamples />
+      <TooltipExamples />
     </div>
   );
 }
