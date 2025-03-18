@@ -6,7 +6,7 @@ import Logo from "../logo";
 import styles from "./navbar.module.css";
 import { LargeSearchToggle } from "fumadocs-ui/components/layout/search-toggle";
 import { cx } from "class-variance-authority";
-import { Github, GithubIcon } from "lucide-react";
+import { ThemeToggle } from "../theme-switcher";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -36,8 +36,9 @@ export default function Navbar() {
           </p>
         </Link>
       </div>
-      <div className={styles.links}>
+      <div className={styles.actions}>
         <LargeSearchToggle style={{ width: 200 }} />
+        <ThemeToggle />
         <Link href="https://github.com/raystack/apsara" target="_blank">
           <svg
             className={styles.link}

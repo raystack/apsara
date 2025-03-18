@@ -16,6 +16,11 @@
   gap: 20px;
   align-items: center;
 }
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
 .link {
   font-size: 14px;
   color: hsl(var(--fd-muted-foreground) / 1);
