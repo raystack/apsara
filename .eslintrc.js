@@ -1,10 +1,7 @@
 module.exports = {
+  // This project uses Biome instead of ESLint
+  // Keep this file for backwards compatibility only
   root: true,
-  // This tells ESLint to load the config from the package `eslint-config-custom`
-  extends: ["custom"],
-  settings: {
-    next: {
-      rootDir: ["apps/*/"],
-    },
-  },
+  extends: [],
+  rules: {},
 };

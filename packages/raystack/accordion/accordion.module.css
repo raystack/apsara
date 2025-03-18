@@ -1,6 +1,6 @@
 .item {
   flex: 1;
-  border-bottom: 1px solidvar(--border-base);
+  border-bottom: 1px solid var(--border-base);
   font-size: 12px;
   letter-spacing: 0.4px;
   margin-left: 24px;
@@ -12,8 +12,6 @@
   display: flex;
   font-size: 12px;
   line-height: 16px;
-  
-
 }
 
 .trigger {
@@ -37,13 +35,13 @@
   transition: color 250ms ease-out;
 }
 
-.trigger[data-state='open'] {
+.trigger[data-state="open"] {
   font-weight: 700;
   color: #1e1f36;
   padding-bottom: 12px;
 }
 
-.trigger[data-state='open'] > .svg {
+.trigger[data-state="open"] > .svg {
   transform: rotate(-90deg);
 }
 
@@ -59,17 +57,15 @@
   padding: var(--pd-4) 0;
 }
 
-.content[data-state='open'] {
+.content[data-state="open"] {
   animation: slideDown 350ms ease-out;
   margin: 16px 0;
   letter-spacing: 0.4px;
 }
 
-.content[data-state='closed'] {
+.content[data-state="closed"] {
   animation: slideUp 350ms ease-out;
 }
-
-
 
 @keyframes slideDown {
   from {
