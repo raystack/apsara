@@ -14,6 +14,9 @@ const inter = Inter({
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/assets/logo.svg" sizes="any" />
+      </head>
       <body
         style={{
           display: "flex",

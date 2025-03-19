@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cx } from "class-variance-authority";
 import styles from "./logo.module.css";
 
@@ -13,11 +14,7 @@ export default function Logo({
   const size = variant === "small" ? 24 : 48;
   return (
     <div className={cx(styles.container, styles[variant])}>
-      <img
-        src="https://apsara.raystack.org/logo.svg"
-        width={size}
-        height={size}
-      />
+      <Image src={`/assets/logo.svg`} alt="" width={size} height={size} />
       {!onlyWordmark && <p>Apsara</p>}
     </div>
   );
