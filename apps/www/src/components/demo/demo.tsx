@@ -5,6 +5,7 @@ import * as Apsara from "@raystack/apsara";
 import DemoPreview from "./demo-preview";
 import { DemoProps } from "./types";
 import DemoPlayground from "./demo-playground";
+import { Suspense } from "react";
 import { Info, X, Home, Laugh } from "lucide-react";
 import DataTableDemo from "../datatable-demo";
 
@@ -18,5 +19,9 @@ export default function Demo(props: DemoProps) {
     return <DemoPreview scope={scope} {...data} />;
   }
 
-  return <DemoPlayground scope={scope} {...data} />;
+  return (
+    <Suspense>
+      <DemoPlayground scope={scope} {...data} />
+    </Suspense>
+  );
 }
