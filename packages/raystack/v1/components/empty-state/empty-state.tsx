@@ -18,6 +18,7 @@ interface EmptystateProps {
   primaryAction?: React.ReactNode;
   secondaryAction?: React.ReactNode;
   classNames?: Partial<Record<classNameKeys, string>>;
+  variant?: "empty1" | "empty2";
 }
 
 export const EmptyState = ({
@@ -27,7 +28,44 @@ export const EmptyState = ({
   primaryAction,
   secondaryAction,
   classNames,
+  variant = "empty1",
 }: EmptystateProps) => {
+  if (variant === "empty2") {
+    return (
+      <Flex
+        direction="column"
+        align="center"
+        gap="small"
+        className={clsx(styles.emptyStateSimple, classNames?.container)}
+      >
+        <div className={clsx(styles.iconSimple, classNames?.icon)}>{icon}</div>
+        
+        {heading && (
+          <Text
+            size={4}
+            weight={500}
+            className={clsx(styles.headerTextSimple, classNames?.heading)}
+          >
+            {heading}
+          </Text>
+        )}
+
+        {subHeading && (
+          <Text
+            size={3}
+            weight={400}
+            className={clsx(styles.subHeaderTextSimple, classNames?.subHeading)}
+          >
+            {subHeading}
+          </Text>
+        )}
+
+        {primaryAction}
+        {secondaryAction}
+      </Flex>
+    );
+  }
+
   return (
     <Flex
       direction="column"

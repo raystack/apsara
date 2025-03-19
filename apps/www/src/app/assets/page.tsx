@@ -1,7 +1,7 @@
 "use client"
-import { Button, Flex, Sidebar, Text, IconButton } from '@raystack/apsara/v1'
+import { Button, Flex, Sidebar, Text, IconButton, EmptyState } from '@raystack/apsara/v1'
 import React, { useState } from 'react'
-import { BellIcon, BellSlashIcon, CheckCircleFilledIcon, CoinColoredIcon, CoinIcon, CrossCircleFilledIcon, FilterIcon, OrganizationIcon, SidebarIcon } from '@raystack/apsara/icons'
+import { BellIcon, FilterIcon, OrganizationIcon, SidebarIcon } from '@raystack/apsara/icons'
 
 const Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -105,11 +105,33 @@ const Page = () => {
         ><FilterIcon /></IconButton>
       
         <Text size="large" weight="medium" style={{ marginBottom: '24px' }}>
-          Main 
+          Empty States
         </Text>
         
-        <Flex justify="center" style={{ marginTop: 40}}>
-          <Button type='submit'>Submit button</Button>
+        <Flex direction="column" gap="large">
+          {/* empty1 */}
+          <EmptyState
+            icon={<BellIcon />}
+            heading="No notifications yet"
+            subHeading="When you have notifications, they will appear here"
+            primaryAction={
+              <Button>Enable notifications</Button>
+            }
+            secondaryAction={
+              <Button variant="ghost">Learn more</Button>
+            }
+          />
+
+          {/* empty2 */}
+          <EmptyState
+            variant="empty2"
+            icon={<FilterIcon />}
+            heading="No filters applied"
+            subHeading="Add filters to refine your search results"
+            primaryAction={
+              <Button size="small">Add filter</Button>
+            }
+          />
         </Flex>
       </Flex>
     </Flex>

@@ -23,8 +23,8 @@
   box-shadow: var(--rs-shadow-soft);
 }
 
-.icon > svg {
-  fill: currentColor;
+.icon>svg {
+  border-color: currentColor;
   height: 100%;
   width: 100%;
 }
@@ -41,7 +41,7 @@
   background-color: inherit;
   z-index: -10;
   transform: rotate(-42deg);
-  box-shadow: var(--rs-shadow-inset);
+  /* box-shadow: var(--rs-shadow-inset); */
 }
 
 .headerText {
