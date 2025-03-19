@@ -94,12 +94,13 @@ const Page = () => {
         }}
       >
         <IconButton
+          size={4}
           aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           variant="ghost"
           style={{ marginBottom: "16px" }}
         >
-          <FilterIcon />
+          <SidebarIcon />
         </IconButton>
 
         <Text size="large" weight="medium" style={{ marginBottom: "24px" }}>
