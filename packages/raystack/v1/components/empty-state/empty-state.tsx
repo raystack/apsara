@@ -33,38 +33,50 @@ export const EmptyState = ({
   if (variant === "empty2") {
     return (
       <Flex
-        direction="column"
         align="center"
-        gap="small"
-        className={clsx(styles.emptyStateSimple, classNames?.container)}
+        justify="center"
+        className={styles.emptyStatePage}
       >
-        <div className={clsx(styles.iconSimple, classNames?.icon)}>{icon}</div>
-        
-        {heading && (
-          <Text
-            size={4}
-            weight={500}
-            className={clsx(styles.headerTextSimple, classNames?.heading)}
-          >
-            {heading}
-          </Text>
-        )}
+        <Flex
+          direction="column"
+          align="start"
+          gap="medium"
+          className={clsx(styles.emptyStateContent, classNames?.container)}
+        >
+          <div className={clsx(styles.iconContainer, classNames?.iconContainer)}>
+            <div className={clsx(styles.icon, styles.iconLarge, classNames?.icon)}>{icon}</div>
+          </div>
+          
+          {heading && (
+            <Text
+              size={5}
+              weight={500}
+              className={clsx(styles.headerText, classNames?.heading)}
+            >
+              {heading}
+            </Text>
+          )}
 
-        {subHeading && (
-          <Text
-            size={3}
-            weight={400}
-            className={clsx(styles.subHeaderTextSimple, classNames?.subHeading)}
-          >
-            {subHeading}
-          </Text>
-        )}
+          {subHeading && (
+            <Text
+              size={4}
+              weight={400}
+              className={clsx(styles.subHeaderText, classNames?.subHeading)}
+            >
+              {subHeading}
+            </Text>
+          )}
 
-        {primaryAction}
-        {secondaryAction}
+          <Flex gap="medium">
+            {primaryAction}
+            {secondaryAction}
+          </Flex>
+        </Flex>
       </Flex>
     );
   }
+
+
 
   return (
     <Flex
