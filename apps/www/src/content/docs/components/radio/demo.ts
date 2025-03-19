@@ -89,7 +89,7 @@ export const formDemo = {
         </Flex>
       </Flex>
     </Radio.Root>
-    <Button type="submit" width="100%">Submit</button>
+    <Button type="submit" width="100%">Submit</Button>
   </Flex>
 </form>`,
 };
