@@ -1,0 +1,46 @@
+---
+title: Switch
+description: A control that allows the user to toggle between checked and not checked.
+---
+
+import { playground, stateDemo, controlDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+The Switch component provides a toggleable control with support for controlled and disabled states.
+
+```tsx
+import { Switch } from "@raystack/apsara/v1";
+
+<Switch checked={true} />;
+```
+
+## Switch Props
+
+<auto-type-table path="./props.ts" name="SwitchProps" />
+
+## Examples
+
+### State
+
+The Switch component supports various states to handle different interaction scenarios.
+
+<Demo data={stateDemo} />
+
+### Controlled Usage
+
+Use the Switch component in a controlled manner to manage its state externally.
+
+<Demo data={controlDemo} />
+
+## Accessibility
+
+The Switch component follows WAI-ARIA guidelines for toggle buttons:
+
+- Uses proper ARIA attributes (`aria-checked`, `aria-required`, `aria-label`)
+- Supports keyboard navigation (Space and Enter to toggle)
+- Includes proper labeling and description support
+- Changes cursor to 'not-allowed' when disabled
+- Associates labels with the switch using htmlFor

@@ -62,4 +62,4 @@ export const Search = ({
   );
 };
 
-Search.displayName = "Search"; 
+Search.displayName = "Search";

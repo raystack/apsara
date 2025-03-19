@@ -1,11 +1,11 @@
-import { FilterChip } from "../../filter-chip";
-import { DataTableColumn } from "../data-table.types";
-import { IconButton } from "../../icon-button";
 import { Button } from "../../button";
-import { FilterIcon } from "../../icons";
 import { DropdownMenu } from "../../dropdown-menu";
-import { useDataTable } from "../hooks/useDataTable";
+import { FilterChip } from "../../filter-chip";
 import { Flex } from "../../flex";
+import { IconButton } from "../../icon-button";
+import { FilterIcon } from "~/icons";
+import { DataTableColumn } from "../data-table.types";
+import { useDataTable } from "../hooks/useDataTable";
 import { FilterOperatorTypes, FilterType } from "~/v1/types/filters";
 import { useFilters } from "../hooks/useFilters";
 
