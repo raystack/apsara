@@ -1,0 +1,63 @@
+---
+title: Sheet
+description: Extends the Dialog component to display content that complements the main content of the screen.
+---
+
+import { playground, basicDemo, positionDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+The Sheet component provides a way to show complementary content in a sliding panel. It supports different positions, accessibility features, and customizable content.
+
+```tsx
+import { Sheet } from "@raystack/apsara/v1";
+
+<Sheet>
+  <Sheet.Trigger asChild>
+    <Button>Open Sheet</Button>
+  </Sheet.Trigger>
+  <Sheet.Content close>
+    <Sheet.Title>Sheet Title</Sheet.Title>
+    <Sheet.Description>Sheet description goes here</Sheet.Description>
+    <span>Main content of the sheet</span>
+  </Sheet.Content>
+</Sheet>;
+```
+
+## Sheet Props
+
+<auto-type-table path="./props.ts" name="SheetProps" />
+
+### Sheet.Content Props
+
+<auto-type-table path="./props.ts" name="SheetContentProps" />
+
+### Sheet.Title Props
+
+- Inherits all HTML heading element props
+
+### Sheet.Description Props
+
+- Inherits all HTML paragraph element props
+
+## Examples
+
+### Basic
+
+<Demo data={basicDemo} />
+
+### Positioning
+
+The Sheet can slide in from different sides of the screen.
+
+<Demo data={positionDemo} />
+
+## Accessibility
+
+Sheet components are built with proper accessibility features following WAI-ARIA guidelines:
+
+- Uses semantic HTML elements for proper structure
+- Dismiss button includes `aria-label` and `aria-description` for screen readers
+- Interactive elements are keyboard accessible

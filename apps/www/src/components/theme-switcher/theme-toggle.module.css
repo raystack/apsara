@@ -1,0 +1,18 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid hsl(var(--fd-border) / 1);
+  padding: 3px;
+}
+.icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  padding: 6px;
+  color: hsl(var(--fd-muted-foreground) / 1);
+}
+.active {
+  color: hsl(var(--fd-accent-foreground) / 1);
+  background-color: hsl(var(--fd-accent) / 1);
+}

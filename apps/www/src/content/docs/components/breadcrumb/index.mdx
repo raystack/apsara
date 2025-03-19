@@ -1,0 +1,51 @@
+---
+title: Breadcrumb
+description: A navigation component for displaying a route trail.
+---
+
+import {
+  playground,
+  sizeDemo,
+  separatorDemo,
+  maxVisibleItemsDemo,
+  iconsDemo,
+  dropdownDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Breadcrumb Props
+
+<auto-type-table path="./props.ts" name="BreadcrumbProps" />
+
+## Examples
+
+### Size
+
+The Breadcrumb component supports different sizes to fit various design requirements. You can specify the size using the `size` prop.
+
+<Demo data={sizeDemo} />
+
+### Separator
+
+You can customize the separator between breadcrumb items using the `separator` prop.
+
+<Demo data={separatorDemo} />
+
+### Dropdowns
+
+Breadcrumb items can include dropdowns for additional navigation options.
+
+<Demo data={dropdownDemo} />
+
+### Icons
+
+Breadcrumb items can include icons either alongside text or as standalone elements.
+
+<Demo data={iconsDemo} />
+
+### Max Visible Items
+
+Control the visibility of breadcrumb items using the `maxVisibleItems` prop. By default, all items are visible when `maxVisibleItems` is not specified.
+
+<Demo data={maxVisibleItemsDemo} />

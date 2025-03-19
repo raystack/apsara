@@ -1,0 +1,55 @@
+---
+title: Avatar
+description: An image element with a fallback for representing the user.
+---
+
+import {
+  playground,
+  sizesDemo,
+  variantDemo,
+  colorsDemo,
+  radiusDemo,
+  imageDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Avatar Props
+
+<auto-type-table path="./props.ts" name="AvatarProps" />
+
+## Avatar Group Props
+
+<auto-type-table path="./props.ts" name="AvatarGroupProps" />
+
+## Examples
+
+### Variant
+
+Choose between soft and solid variants to control the visual weight and emphasis of the avatar in your interface.
+
+<Demo data={variantDemo} />
+
+### Size
+
+The Avatar component supports 13 different sizes to accommodate various layout requirements and design needs.
+
+<Demo data={sizesDemo} />
+
+### Color
+
+Avatar comes with a range of predefined colors including both base and extended color options to match your design system.
+
+<Demo data={colorsDemo} />
+
+### Radius
+
+Choose between small and full border radius styles to match your design preferences.
+
+<Demo data={radiusDemo} />
+
+### With Image
+
+Avatar can display user images with graceful fallback to initials when images fail to load or aren't available.
+
+<Demo data={imageDemo} />
