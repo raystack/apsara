@@ -14,7 +14,7 @@ export default function Logo({
   const size = variant === "small" ? 24 : 48;
   return (
     <div className={cx(styles.container, styles[variant])}>
-      <Image src={`/assets/logo.png`} alt="" width={size} height={size} />
+      <Image src={`/assets/logo.svg`} alt="" width={size} height={size} />
       {!onlyWordmark && <p>Apsara</p>}
     </div>
   );
