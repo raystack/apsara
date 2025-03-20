@@ -25,9 +25,6 @@ export interface DialogContentProps {
   /** Custom styles for overlay */
   overlayStyle?: React.CSSProperties;
 
-  /** Controls visibility of close button */
-  close?: boolean;
-
   /** Additional CSS class names */
   className?: string;
 
@@ -39,6 +36,27 @@ export interface DialogContentProps {
 
   /** Detailed description for screen readers */
   ariaDescription?: string;
+}
+
+export interface DialogHeaderProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  children?: React.ReactNode;
+}
+
+export interface DialogBodyProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  children?: React.ReactNode;
+}
+
+export interface DialogTitleProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  children?: React.ReactNode;
 }
 
 export interface DialogDescriptionProps {
@@ -54,13 +72,17 @@ export interface DialogTriggerProps {
   className?: string;
 }
 
-export interface DialogCloseProps {
+export interface DialogCloseButtonProps {
   /** Boolean to merge props onto child element */
   asChild?: boolean;
 
   /** Additional CSS class names */
   className?: string;
+}
 
-  /** Custom Close icon */
+export interface DialogFooterProps {
+  /** Additional CSS class names */
+  className?: string;
+
   children?: React.ReactNode;
 }

@@ -10,4 +10,5 @@ export { ReactComponent as CoinIcon } from "./assets/coin.svg";
 export { ReactComponent as CrossCircleFilledIcon } from "./assets/cross-circle-filled.svg";
 export { ReactComponent as FilterIcon } from "./assets/filter.svg";
 export { ReactComponent as OrganizationIcon } from "./assets/organization.svg";
+export { ReactComponent as ShoppingBagFilledIcon } from "./assets/shopping-bag-filled.svg";
 export { ReactComponent as SidebarIcon } from "./assets/sidebar.svg";
