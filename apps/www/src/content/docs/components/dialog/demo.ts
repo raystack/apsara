@@ -14,7 +14,7 @@ export const getCode = (props: any) => {
       >
         <Dialog.Header>
           <Dialog.Title>${title}</Dialog.Title>
-          <Dialog.Close />
+          <Dialog.CloseButton />
         </Dialog.Header>
         <Dialog.Body>
           <Dialog.Description>
@@ -23,7 +23,7 @@ export const getCode = (props: any) => {
         </Dialog.Body>
         <Dialog.Footer>
           <Button>OK</Button>
-          <Button>Cancel</Button>
+          <Dialog.Close asChild><Button color="neutral">Cancel</Button></Dialog.Close>
         </Dialog.Footer>
       </Dialog.Content>
     </Dialog>`;
@@ -103,7 +103,7 @@ export const onlyHeaderDemo = {
     >
       <Dialog.Header>
         <Dialog.Title>Title</Dialog.Title>
-        <Dialog.Close />
+        <Dialog.CloseButton />
       </Dialog.Header>
       <Dialog.Body>
         <Dialog.Description className="custom-description">
@@ -134,7 +134,7 @@ export const onlyFooterDemo = {
         </Dialog.Description>
       </Dialog.Body>
       <Dialog.Footer>
-        <Button color="neutral">Close</Button>
+        <Dialog.Close asChild><Button color="neutral">Close</Button></Dialog.Close>
         <Button color="danger">Cancel</Button>
       </Dialog.Footer>
     </Dialog.Content>

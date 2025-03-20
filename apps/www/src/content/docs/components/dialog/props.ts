@@ -42,7 +42,6 @@ export interface DialogHeaderProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Custom Close icon */
   children?: React.ReactNode;
 }
 
@@ -50,7 +49,6 @@ export interface DialogBodyProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Custom Close icon */
   children?: React.ReactNode;
 }
 
@@ -58,7 +56,6 @@ export interface DialogTitleProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Custom Close icon */
   children?: React.ReactNode;
 }
 
@@ -75,21 +72,17 @@ export interface DialogTriggerProps {
   className?: string;
 }
 
-export interface DialogCloseProps {
+export interface DialogCloseButtonProps {
   /** Boolean to merge props onto child element */
   asChild?: boolean;
 
   /** Additional CSS class names */
   className?: string;
-
-  /** Custom Close icon */
-  children?: React.ReactNode;
 }
 
 export interface DialogFooterProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Custom Close icon */
   children?: React.ReactNode;
 }
