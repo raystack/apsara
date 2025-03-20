@@ -87,3 +87,56 @@ export const customDemo = {
     </Dialog.Content>
   </Dialog>`,
 };
+
+export const onlyHeaderDemo = {
+  type: "code",
+  code: `
+  <Dialog>
+    <Dialog.Trigger asChild>
+      <Button>Only Header and Body</Button>
+    </Dialog.Trigger>
+    <Dialog.Content
+      width="400px"
+      overlayBlur
+      overlayClassName="custom-overlay"
+      overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+    >
+      <Dialog.Header>
+        <Dialog.Title>Title</Dialog.Title>
+        <Dialog.Close />
+      </Dialog.Header>
+      <Dialog.Body>
+        <Dialog.Description className="custom-description">
+          This dialog has custom width and overlay styling.
+        </Dialog.Description>
+      </Dialog.Body>
+    </Dialog.Content>
+  </Dialog>`,
+};
+
+export const onlyFooterDemo = {
+  type: "code",
+  code: `
+  <Dialog>
+    <Dialog.Trigger asChild>
+      <Button>Only Footer and Body</Button>
+    </Dialog.Trigger>
+    <Dialog.Content
+      width="400px"
+      overlayBlur
+      overlayClassName="custom-overlay"
+      overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+    >
+      <Dialog.Body>
+        <Dialog.Title>Title</Dialog.Title>
+        <Dialog.Description className="custom-description">
+          This dialog has custom width and overlay styling.
+        </Dialog.Description>
+      </Dialog.Body>
+      <Dialog.Footer>
+        <Button color="neutral">Close</Button>
+        <Button color="danger">Cancel</Button>
+      </Dialog.Footer>
+    </Dialog.Content>
+  </Dialog>`,
+};

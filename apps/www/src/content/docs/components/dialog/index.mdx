@@ -3,7 +3,7 @@ title: Dialog
 description: A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.
 ---
 
-import { playground, closeDemo, customDemo, controlledDemo } from "./demo.ts";
+import { playground, closeDemo, customDemo, controlledDemo, onlyHeaderDemo, onlyFooterDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -58,6 +58,19 @@ Example of a controlled dialog with custom state management.
 Example with custom width and overlay styling.
 
 <Demo data={customDemo} />
+
+
+### With Header and Body
+
+Example with header and body.
+
+<Demo data={onlyHeaderDemo} />
+
+### With Body and Footer
+
+Example with header and body.
+
+<Demo data={onlyFooterDemo} />
 
 
 ### Accessibility
