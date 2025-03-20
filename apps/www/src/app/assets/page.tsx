@@ -1,7 +1,7 @@
 "use client"
 import { Button, Flex, Sidebar, Text, IconButton, EmptyState } from '@raystack/apsara/v1'
 import React, { useState } from 'react'
-import { BellIcon, BuildingsIcon, FilterIcon, OrganizationIcon, SidebarIcon } from '@raystack/apsara/icons'
+import { BellIcon, BuildingsFilledIcon, FilterIcon, OrganizationIcon, SidebarIcon } from '@raystack/apsara/icons'
 
 const Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -125,7 +125,7 @@ const Page = () => {
           {/* empty2 */}
           <EmptyState
             variant="empty2"
-            icon={<BuildingsIcon />}
+            icon={<BuildingsFilledIcon />}
             heading="Organization"
             subHeading="An organization in Aurora is a shared workspace where teams manage projects, AOIs, and image orders. It streamlines collaboration, analysis, and decision-making across industries."
             primaryAction={
