@@ -174,7 +174,8 @@ export const Dialog = Object.assign(DialogPrimitive.Root, {
   Header: DialogHeader,
   Footer: DialogFooter,
   Body: DialogBody,
-  Close: CloseButton,
+  Close: DialogPrimitive.Close,
+  CloseButton: CloseButton,
   Title: DialogTitle,
   Description: DialogDescription,
 });
