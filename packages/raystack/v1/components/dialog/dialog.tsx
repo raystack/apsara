@@ -111,18 +111,14 @@ const DialogBody = ({
 );
 
 type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
-export function CloseButton({
-  children = <Cross1Icon />,
-  className,
-  ...props
-}: CloseButtonProps) {
+export function CloseButton({ className, ...props }: CloseButtonProps) {
   return (
     <DialogPrimitive.Close
       className={clsx(styles.close, className)}
       aria-label="Close dialog"
       {...props}
     >
-      {children}
+      <Cross1Icon />,
     </DialogPrimitive.Close>
   );
 }
