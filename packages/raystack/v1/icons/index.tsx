@@ -3,6 +3,7 @@
 
 export { ReactComponent as BellSlashIcon } from "./assets/bell-slash.svg";
 export { ReactComponent as BellIcon } from "./assets/bell.svg";
+export { ReactComponent as BuildingsIcon } from "./assets/buildings.svg";
 export { ReactComponent as CheckCircleFilledIcon } from "./assets/check-circle-filled.svg";
 export { ReactComponent as CoinColoredIcon } from "./assets/coin-colored.svg";
 export { ReactComponent as CoinIcon } from "./assets/coin.svg";

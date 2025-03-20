@@ -11,7 +11,7 @@ type classNameKeys =
   | "heading"
   | "subHeading";
 
-interface EmptystateProps {
+interface EmptyStateProps {
   icon: React.ReactNode;
   heading?: React.ReactNode;
   subHeading?: React.ReactNode;
@@ -29,7 +29,7 @@ export const EmptyState = ({
   secondaryAction,
   classNames,
   variant = "empty1",
-}: EmptystateProps) => {
+}: EmptyStateProps) => {
   if (variant === "empty2") {
     return (
       <Flex
