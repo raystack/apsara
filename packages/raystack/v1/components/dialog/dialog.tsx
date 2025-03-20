@@ -76,7 +76,15 @@ const DialogHeader = ({
 }: {
   children: React.ReactNode;
   className?: string;
-}) => <Flex className={clsx(styles.header, className)}>{children}</Flex>;
+}) => (
+  <Flex
+    justify={"between"}
+    align={"center"}
+    className={clsx(styles.header, className)}
+  >
+    {children}
+  </Flex>
+);
 
 const DialogFooter = ({
   children,

@@ -79,7 +79,7 @@
   padding: var(--rs-space-7);
 }
 
-.body + .footer {
+.body:has(+ .footer) {
   border-bottom: 1px solid var(--rs-color-border-base-primary);
 }
 
