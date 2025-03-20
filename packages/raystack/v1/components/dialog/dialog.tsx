@@ -8,6 +8,7 @@ import {
   ElementRef,
   forwardRef,
 } from "react";
+import { Flex } from "../flex";
 
 import styles from "./dialog.module.css";
 
@@ -22,46 +23,92 @@ export interface DialogContentProps
   overlayClassName?: string;
   overlayStyle?: React.CSSProperties;
   width?: string | number;
-  close?: boolean;
 }
 
 const DialogContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
->(({ 
-  className, 
-  children, 
-  ariaLabel, 
-  ariaDescription, 
-  overlayBlur = false, 
-  overlayClassName,
-  overlayStyle,
-  width,
-  close,
-  ...props 
-}, ref) => (
-  <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay 
-      className={clsx(styles.dialogOverlay, overlayClassName, overlayBlur && styles.overlayBlur )}
-      style={overlayStyle}
-      aria-hidden="true"
-      role="presentation"
-    />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={dialogContent({ className })}
-      style={{ width, ...props.style }}
-      aria-label={ariaLabel}
-      aria-describedby={ariaDescription ? 'dialog-description' : undefined}
-      {...props}
-    >
-      {children}
-      {close && <CloseButton />}
-    </DialogPrimitive.Content>
-  </DialogPrimitive.Portal>
-));
+>(
+  (
+    {
+      className,
+      children,
+      ariaLabel,
+      ariaDescription,
+      overlayBlur = false,
+      overlayClassName,
+      overlayStyle,
+      width,
+      ...props
+    },
+    ref
+  ) => (
+    <DialogPrimitive.Portal>
+      <DialogPrimitive.Overlay
+        className={clsx(
+          styles.dialogOverlay,
+          overlayClassName,
+          overlayBlur && styles.overlayBlur
+        )}
+        style={overlayStyle}
+        aria-hidden="true"
+        role="presentation"
+      />
+      <DialogPrimitive.Content
+        ref={ref}
+        className={dialogContent({ className })}
+        style={{ width, ...props.style }}
+        aria-label={ariaLabel}
+        aria-describedby={ariaDescription ? "dialog-description" : undefined}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Content>
+    </DialogPrimitive.Portal>
+  )
+);
 
 DialogContent.displayName = DialogPrimitive.Content.displayName;
+
+const DialogHeader = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <Flex
+    justify={"between"}
+    align={"center"}
+    className={clsx(styles.header, className)}
+  >
+    {children}
+  </Flex>
+);
+
+const DialogFooter = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <Flex gap={5} justify="end" className={clsx(styles.footer, className)}>
+    {children}
+  </Flex>
+);
+
+const DialogBody = ({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <Flex direction="column" gap={3} className={clsx(styles.body, className)}>
+    {children}
+  </Flex>
+);
 
 type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
 export function CloseButton({
@@ -70,8 +117,8 @@ export function CloseButton({
   ...props
 }: CloseButtonProps) {
   return (
-    <DialogPrimitive.Close 
-      className={styles.close} 
+    <DialogPrimitive.Close
+      className={clsx(styles.close, className)}
       aria-label="Close dialog"
       {...props}
     >
@@ -80,32 +127,39 @@ export function CloseButton({
   );
 }
 
-interface DialogTitleProps extends ComponentProps<typeof DialogPrimitive.Title> {
+interface DialogTitleProps
+  extends ComponentProps<typeof DialogPrimitive.Title> {
   children: React.ReactNode;
 }
 
-function DialogTitle({ children, ...props }: DialogTitleProps) {
+function DialogTitle({ children, className, ...props }: DialogTitleProps) {
   return (
-    <DialogPrimitive.Title 
+    <DialogPrimitive.Title
       {...props}
       role="heading"
       aria-level={1}
+      className={clsx(styles.title, className)}
     >
       {children}
     </DialogPrimitive.Title>
   );
 }
 
-interface DialogDescriptionProps extends ComponentProps<typeof DialogPrimitive.Description> {
+interface DialogDescriptionProps
+  extends ComponentProps<typeof DialogPrimitive.Description> {
   children: React.ReactNode;
   className?: string;
 }
 
-function DialogDescription({ children, className, ...props }: DialogDescriptionProps) {
+function DialogDescription({
+  children,
+  className,
+  ...props
+}: DialogDescriptionProps) {
   return (
-    <DialogPrimitive.Description 
+    <DialogPrimitive.Description
       {...props}
-      className={className}
+      className={clsx(styles.description, className)}
       id="dialog-description"
       role="document"
     >
@@ -117,7 +171,10 @@ function DialogDescription({ children, className, ...props }: DialogDescriptionP
 export const Dialog = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogPrimitive.Trigger,
   Content: DialogContent,
+  Header: DialogHeader,
+  Footer: DialogFooter,
+  Body: DialogBody,
   Close: CloseButton,
   Title: DialogTitle,
   Description: DialogDescription,
-}); 
+});
