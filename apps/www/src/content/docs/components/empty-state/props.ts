@@ -14,6 +14,11 @@ export interface EmptyStateProps {
   /** Secondary action to show in empty state like button or link */
   secondaryAction?: React.ReactNode;
 
+  /** Visual style variant of the empty state 
+   * @default "empty1"
+   */
+  variant?: 'empty1' | 'empty2';
+
   /** Map of classNames for internal components */
   classNames?: {
     /** Class for the container */
