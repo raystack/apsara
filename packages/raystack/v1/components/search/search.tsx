@@ -1,34 +1,14 @@
-import { CrossCircledIcon,MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
+import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { InputField } from "../input-field";
+import { InputFieldProps } from "../input-field/input-field";
+import { IconButton } from "../icon-button";
 
 import styles from "./search.module.css";
 
-const searchField = cva(styles.searchField, {
-  variants: {
-    size: {
-      small: styles["search-small"],
-      large: styles["search-large"],
-    }
-  },
-  defaultVariants: {
-    size: "large",
-  }
-});
-
-export interface SearchProps extends VariantProps<typeof searchField> {
-  className?: string;
-  disabled?: boolean;
-  placeholder?: string;
+export interface SearchProps extends Omit<InputFieldProps, 'leadingIcon'> {
   showClearButton?: boolean;
   onClear?: () => void;
-  value?: string;
-  ref?: React.RefObject<HTMLInputElement>;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  type?: string;
-  name?: string;
-  id?: string;
+  variant?: 'default' | 'borderless';
 }
 
 export const Search = ({ 
@@ -39,42 +19,45 @@ export const Search = ({
   showClearButton, 
   onClear, 
   value,
-  ref,
+  onChange,
+  width = "100%",
+  variant = "default",
   ...props 
 }: SearchProps) => {
+  const trailingIconWithClear = showClearButton && value ? (
+    <div className={styles.clearButtonWrapper}>
+      <IconButton
+        size={size === 'small' ? 2 : 3}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!disabled && onClear) {
+            onClear();
+          }
+        }}
+        disabled={disabled}
+        aria-label="Clear search"
+        className={styles.clearButton}
+      >
+        <CrossCircledIcon />
+      </IconButton>
+    </div>
+  ) : undefined;
+
   return (
-    <div 
-      className={clsx(styles.container, disabled && styles.disabled)} 
-      role="search"
-    >
-      <span className={styles.leadingIcon} aria-hidden="true">
-        <MagnifyingGlassIcon />
-      </span>
-      <input
-        ref={ref}
-        type="text"
-        className={clsx(
-          searchField({ size, className }),
-          disabled && styles["search-disabled"]
-        )}
+    <div className={styles.container} role="search" style={{ width }}>
+      <InputField
+        leadingIcon={<MagnifyingGlassIcon />}
+        trailingIcon={trailingIconWithClear}
         placeholder={placeholder}
         disabled={disabled}
         value={value}
+        onChange={onChange}
+        size={size}
+        className={className}
         aria-label={placeholder}
+        variant={variant}
         {...props}
       />
-      {showClearButton && value && !disabled && (
-        <button 
-          className={styles.clearButton}
-          onClick={onClear}
-          disabled={disabled}
-          type="button"
-          aria-label="Clear search"
-          tabIndex={0}
-        >
-          <CrossCircledIcon height={16} width={16}/>
-        </button>
-      )}
     </div>
   );
 };

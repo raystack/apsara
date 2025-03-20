@@ -14,10 +14,15 @@ const inputWrapper = cva(styles.inputWrapper, {
     size: {
       small: styles["size-small"],
       large: styles["size-large"],
+    },
+    variant: {
+      default: styles["variant-default"],
+      borderless: styles["variant-borderless"],
     }
   },
   defaultVariants: {
     size: "large",
+    variant: "default",
   }
 });
 
@@ -38,6 +43,7 @@ export interface InputFieldProps
   maxChipsVisible?: number;
   ref?: React.RefObject<HTMLInputElement>;
   infoTooltip?: string;
+  variant?: "default" | "borderless";
 }
 
 export const InputField = ({ 
@@ -58,6 +64,7 @@ export const InputField = ({
   ref,
   size,
   infoTooltip,
+  variant = "default",
   ...props 
 }: InputFieldProps) => {
   return (
@@ -79,7 +86,7 @@ export const InputField = ({
       )}
       <div 
         className={clsx(
-          inputWrapper({ size, className }),
+          inputWrapper({ size, variant, className }),
           error && styles['input-error-wrapper'],
           disabled && styles['input-disabled-wrapper'],
           chips?.length && styles['has-chips']
