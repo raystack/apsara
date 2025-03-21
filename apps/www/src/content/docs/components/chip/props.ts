@@ -45,10 +45,4 @@ export interface ChipProps {
 
   /** Custom accessibility label for the chip */
   ariaLabel?: string;
-
-  /**
-   * Represents the current state of the chip for styling or accessibility purposes.
-   * Common values might include "active", "disabled", or other states as needed.
-   */
-  "data-state"?: string;
 }
