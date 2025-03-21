@@ -6,6 +6,7 @@ import {
   Text,
   IconButton,
   Search,
+  Select,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -21,6 +22,7 @@ const Page = () => {
   const [search2, setSearch2] = useState("");
   const [search3, setSearch3] = useState("");
   const [search4, setSearch4] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
 
   return (
     <Flex
@@ -151,6 +153,18 @@ const Page = () => {
             }
             onClear={() => setSearch4("")}
           />
+
+          <Select value={selectedValue} onValueChange={setSelectedValue}>
+            <Select.Trigger aria-label="Options selection">
+              <Select.Value placeholder="Choose an option" leadingIcon={<BellIcon />} />
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value="option1" leadingIcon={<BellIcon />}>Option 1</Select.Item>
+              <Select.Item value="option2" leadingIcon={<BellIcon />}>Option 2</Select.Item>
+              <Select.Item value="option3" leadingIcon={<BellIcon />}>Option 3</Select.Item>
+            </Select.Content>
+          </Select>
+
         </Flex>
 
         <Flex justify="center" style={{ marginTop: 40 }}>

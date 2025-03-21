@@ -25,6 +25,15 @@ export interface IconProps extends React.SVGAttributes<SVGElement> {
   color?: string;
 }
 
+interface SelectValueProps extends SelectPrimitive.SelectValueProps {
+  leadingIcon?: React.ReactNode;
+}
+
+interface SelectItemProps extends SelectPrimitive.SelectItemProps {
+  leadingIcon?: React.ReactNode;
+  textProps?: TextProps;
+}
+
 const trigger = cva(styles.trigger, {
   variants: {
     size: {
@@ -75,7 +84,7 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    {variant !== 'filter' && (
+    {variant !== "filter" && (
       <SelectPrimitive.Icon asChild>
         <ChevronDownIcon 
           className={styles.triggerIcon} 
@@ -114,18 +123,35 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const menuitem = cva(styles.menuitem);
 
+const SelectValue = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Value>,
+  SelectValueProps
+>(({ leadingIcon, children, ...props }, ref) => (
+  <SelectPrimitive.Value ref={ref} {...props}>
+    {leadingIcon && (
+      <span className={styles.leadingIcon}>
+        {leadingIcon}
+      </span>
+    )}
+    {children}
+  </SelectPrimitive.Value>
+));
+
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
-    textProps?: TextProps;
-  }
->(({ className, textProps = {}, children, ...props }, ref) => (
+  SelectItemProps
+>(({ className, textProps = {}, leadingIcon, children, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={menuitem({ className })}
     role="option"
     {...props}
   >
+    {leadingIcon && (
+      <span className={styles['menuitem-icon']}>
+        {leadingIcon}
+      </span>
+    )}
     <SelectPrimitive.ItemText>
       <Text {...textProps}>{children}</Text>
     </SelectPrimitive.ItemText>
@@ -148,7 +174,7 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
 export const Select = Object.assign(SelectPrimitive.Root, {
   Group: SelectPrimitive.Group,
-  Value: SelectPrimitive.Value,
+  Value: SelectValue,
   ScrollUpButton: SelectPrimitive.ScrollDownButton,
   ScrollDownButton: SelectPrimitive.ScrollDownButton,
   Viewport: SelectPrimitive.Viewport,
