@@ -20,3 +20,14 @@ export const getPropsString = (
   if (hasLeadingWhiteSpace && str.length) return " " + str;
   return str;
 };
+
+export function isActiveUrl(
+  url: string,
+  pathname: string,
+  nested = true,
+): boolean {
+  if (url.endsWith("/")) url = url.slice(0, -1);
+  if (pathname.endsWith("/")) pathname = pathname.slice(0, -1);
+
+  return url === pathname || (nested && pathname.startsWith(`${url}/`));
+}
