@@ -1,11 +1,15 @@
 import { docs } from "@/lib/source";
-import { DocsPage, DocsDescription, DocsTitle } from "fumadocs-ui/page";
+import {
+  DocsPage,
+  DocsDescription,
+  DocsTitle,
+  DocsBody,
+} from "fumadocs-ui/page";
 import { notFound } from "next/navigation";
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import { TypeTable } from "fumadocs-ui/components/type-table";
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import Demo from "@/components/demo";
-import { DocsBody } from "@/components/docs";
 import styles from "./page.module.css";
 import Tag from "@/components/tag";
 
