@@ -1,0 +1,33 @@
+---
+title: Sidepanel
+description: A flexible side panel component to place content on either side of the page.
+---
+
+import { preview } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+The SidePanel component provides a way to show data in the side of the page.
+
+```tsx
+import { SidePanel } from "@raystack/apsara/v1";
+
+<SidePanel side="right">
+  <SidePanel.Header title="Right Side Panel" />
+  <SidePanel.Section>{/* Your content here */}</SidePanel.Section>
+</SidePanel>;
+```
+
+## SidePanel Props
+
+Customize the SidePanel appearance with these configuration options.
+
+The `SidePanel` component is composed of several parts, each with their own props
+
+<auto-type-table path="./props.ts" name="SidePanelProps" />
+
+### SidePanel.Header
+
+<auto-type-table path="./props.ts" name="SidePanelHeaderProps" />
