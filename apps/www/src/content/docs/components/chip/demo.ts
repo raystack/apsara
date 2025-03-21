@@ -30,6 +30,11 @@ export const playground = {
       type: "checkbox",
       defaultValue: false,
     },
+    "data-state": {
+      type: "select",
+      options: ["active", ""],
+      defaultValue: "",
+    },
     children: {
       type: "text",
       initialValue: "My Chip",
