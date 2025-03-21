@@ -28,6 +28,7 @@ export interface IconProps extends React.SVGAttributes<SVGElement> {
 interface SelectValueProps extends SelectPrimitive.SelectValueProps {
   leadingIcon?: React.ReactNode;
   placeholder?: string;
+  selectedIcon?: React.ReactNode;
 }
 
 interface SelectItemProps extends SelectPrimitive.SelectItemProps {
@@ -124,44 +125,87 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const menuitem = cva(styles.menuitem);
 
-const SelectValue = React.forwardRef<
-  React.ElementRef<typeof SelectPrimitive.Value>,
-  SelectValueProps
->(({ leadingIcon, children, placeholder, ...props }, ref) => (
-  <SelectPrimitive.Value ref={ref} placeholder={placeholder} {...props}>
-    <span className={styles.valueContent} data-placeholder={!children}>
-      {leadingIcon && (
-        <span className={styles.leadingIcon}>
-          {leadingIcon}
-        </span>
-      )}
-      {children || placeholder}
-    </span>
-  </SelectPrimitive.Value>
-));
-SelectValue.displayName = SelectPrimitive.Value.displayName;
+// We need to make sure our context properly tracks the selected value and icon
+const SelectIconContext = React.createContext<{
+  icons: Record<string, React.ReactNode>;
+  registerIcon: (value: string, icon: React.ReactNode) => void;
+}>({
+  icons: {},
+  registerIcon: () => {}
+});
 
+// Updated Root component that manages the icon mapping
+const SelectRoot = ({ children, ...props }: SelectPrimitive.SelectProps) => {
+  const [icons, setIcons] = React.useState<Record<string, React.ReactNode>>({});
+  
+  const registerIcon = React.useCallback((value: string, icon: React.ReactNode) => {
+    setIcons(prev => ({ ...prev, [value]: icon }));
+  }, []);
+  
+  return (
+    <SelectIconContext.Provider value={{ icons, registerIcon }}>
+      <SelectPrimitive.Root {...props}>
+        {children}
+      </SelectPrimitive.Root>
+    </SelectIconContext.Provider>
+  );
+};
+
+// Updated Item component that registers its icon on mount
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   SelectItemProps
->(({ className, textProps = {}, leadingIcon, children, ...props }, ref) => (
-  <SelectPrimitive.Item
-    ref={ref}
-    className={menuitem({ className })}
-    role="option"
-    {...props}
-  >
-    {leadingIcon && (
-      <span className={styles['menuitem-icon']}>
-        {leadingIcon}
+>(({ className, textProps = {}, leadingIcon, children, value, ...props }, ref) => {
+  const { registerIcon } = React.useContext(SelectIconContext);
+  
+  // Register this item's icon when the component mounts
+  React.useEffect(() => {
+    if (leadingIcon && value) {
+      registerIcon(value, leadingIcon);
+    }
+  }, [leadingIcon, value, registerIcon]);
+  
+  return (
+    <SelectPrimitive.Item
+      ref={ref}
+      className={menuitem({ className })}
+      role="option"
+      value={value}
+      {...props}
+    >
+      {leadingIcon && (
+        <span className={styles['menuitem-icon']}>
+          {leadingIcon}
+        </span>
+      )}
+      <SelectPrimitive.ItemText>
+        <Text {...textProps}>{children}</Text>
+      </SelectPrimitive.ItemText>
+    </SelectPrimitive.Item>
+  );
+});
+
+const SelectValue = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Value>,
+  SelectValueProps
+>(({ leadingIcon, children, placeholder, ...props }, ref) => {
+  const { icons } = React.useContext(SelectIconContext);
+  const currentValue = String(children || '');
+  const selectedIcon = currentValue ? icons[currentValue] : null;
+  
+  return (
+    <SelectPrimitive.Value ref={ref} placeholder={placeholder} {...props}>
+      <span className={styles.valueContent} data-placeholder={!children}>
+        {selectedIcon && (
+          <span className={styles.leadingIcon}>
+            {selectedIcon}
+          </span>
+        )}
+        {children || placeholder}
       </span>
-    )}
-    <SelectPrimitive.ItemText>
-      <Text {...textProps}>{children}</Text>
-    </SelectPrimitive.ItemText>
-  </SelectPrimitive.Item>
-));
-SelectItem.displayName = SelectPrimitive.Item.displayName;
+    </SelectPrimitive.Value>
+  );
+});
 
 const separator = cva(styles.separator);
 const SelectSeparator = React.forwardRef<
@@ -176,7 +220,8 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-export const Select = Object.assign(SelectPrimitive.Root, {
+// Export the component with updated subcomponents
+export const Select = Object.assign(SelectRoot, {
   Group: SelectPrimitive.Group,
   Value: SelectValue,
   ScrollUpButton: SelectPrimitive.ScrollDownButton,

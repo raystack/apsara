@@ -158,14 +158,17 @@ const Page = () => {
 
           <Select value={selectedValue1} onValueChange={setSelectedValue1}>
             <Select.Trigger aria-label="Options selection">
-              <Select.Value placeholder="Choose an option" leadingIcon={<BellIcon />}>
+              <Select.Value 
+                placeholder="Choose an option" 
+                leadingIcon={<BellIcon />}
+              >
                 {selectedValue1}
               </Select.Value>
             </Select.Trigger>
             <Select.Content>
               <Select.Item value="Option 1" leadingIcon={<BellIcon />}>Option 1</Select.Item>
-              <Select.Item value="Option 2" leadingIcon={<BellIcon />}>Option 2</Select.Item>
-              <Select.Item value="Option 3" leadingIcon={<BellIcon />}>Option 3</Select.Item>
+              <Select.Item value="Option 2" leadingIcon={<FilterIcon />}>Option 2</Select.Item>
+              <Select.Item value="Option 3" leadingIcon={<OrganizationIcon />}>Option 3</Select.Item>
             </Select.Content>
           </Select>
 
