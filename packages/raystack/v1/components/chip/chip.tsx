@@ -35,6 +35,7 @@ type ChipProps = VariantProps<typeof chip> & {
   onClick?: () => void;
   role?: string;
   ariaLabel?: string;
+  "data-state"?: string;
 };
 
 export const Chip = ({
@@ -50,6 +51,7 @@ export const Chip = ({
   onClick,
   role = "status",
   ariaLabel,
+  "data-state": dataState,
 }: ChipProps) => {
   const handleDismiss = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -64,6 +66,7 @@ export const Chip = ({
         ariaLabel || (typeof children === "string" ? children : undefined)
       }
       onClick={onClick}
+      data-state={dataState}
     >
       {leadingIcon && (
         <span
