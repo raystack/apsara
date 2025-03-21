@@ -128,21 +128,15 @@ const SelectValue = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Value>,
   SelectValueProps
 >(({ leadingIcon, children, placeholder, ...props }, ref) => (
-  <SelectPrimitive.Value ref={ref} {...props}>
-    {children ? (
-      <span className={styles.valueContent}>
-        {leadingIcon && (
-          <span className={styles.leadingIcon}>
-            {leadingIcon}
-          </span>
-        )}
-        {children}
-      </span>
-    ) : (
-      <span className={styles.valueContent} data-placeholder>
-        {placeholder}
-      </span>
-    )}
+  <SelectPrimitive.Value ref={ref} placeholder={placeholder} {...props}>
+    <span className={styles.valueContent} data-placeholder={!children}>
+      {leadingIcon && (
+        <span className={styles.leadingIcon}>
+          {leadingIcon}
+        </span>
+      )}
+      {children || placeholder}
+    </span>
   </SelectPrimitive.Value>
 ));
 SelectValue.displayName = SelectPrimitive.Value.displayName;
