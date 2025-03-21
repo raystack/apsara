@@ -1,0 +1,27 @@
+.valueContent {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.valueContent[data-placeholder] {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.leadingIcon {
+  display: flex;
+  align-items: center;
+}
+
+.trigger-medium .leadingIcon {
+  width: 16px;
+  height: 16px;
+  margin: 0 var(--rs-space-3);
+}
+
+.trigger-small .leadingIcon {
+  width: 12px;
+  height: 12px;
+  margin: 0 var(--rs-space-2);
+} 

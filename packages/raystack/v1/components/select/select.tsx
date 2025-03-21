@@ -27,6 +27,7 @@ export interface IconProps extends React.SVGAttributes<SVGElement> {
 
 interface SelectValueProps extends SelectPrimitive.SelectValueProps {
   leadingIcon?: React.ReactNode;
+  placeholder?: string;
 }
 
 interface SelectItemProps extends SelectPrimitive.SelectItemProps {
@@ -126,16 +127,25 @@ const menuitem = cva(styles.menuitem);
 const SelectValue = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Value>,
   SelectValueProps
->(({ leadingIcon, children, ...props }, ref) => (
+>(({ leadingIcon, children, placeholder, ...props }, ref) => (
   <SelectPrimitive.Value ref={ref} {...props}>
-    {leadingIcon && (
-      <span className={styles.leadingIcon}>
-        {leadingIcon}
+    {children ? (
+      <span className={styles.valueContent}>
+        {leadingIcon && (
+          <span className={styles.leadingIcon}>
+            {leadingIcon}
+          </span>
+        )}
+        {children}
+      </span>
+    ) : (
+      <span className={styles.valueContent} data-placeholder>
+        {placeholder}
       </span>
     )}
-    {children}
   </SelectPrimitive.Value>
 ));
+SelectValue.displayName = SelectPrimitive.Value.displayName;
 
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,

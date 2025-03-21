@@ -15,6 +15,7 @@ import {
   OrganizationIcon,
   SidebarIcon,
 } from "@raystack/apsara/icons";
+import styles from "@/styles/Select.module.css";
 
 const Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,7 +23,8 @@ const Page = () => {
   const [search2, setSearch2] = useState("");
   const [search3, setSearch3] = useState("");
   const [search4, setSearch4] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue1, setSelectedValue1] = useState("");
+  const [selectedValue2, setSelectedValue2] = useState("");
 
   return (
     <Flex
@@ -154,14 +156,34 @@ const Page = () => {
             onClear={() => setSearch4("")}
           />
 
-          <Select value={selectedValue} onValueChange={setSelectedValue}>
+          <Select value={selectedValue1} onValueChange={setSelectedValue1}>
             <Select.Trigger aria-label="Options selection">
-              <Select.Value placeholder="Choose an option" leadingIcon={<BellIcon />} />
+              <Select.Value placeholder="Choose an option" leadingIcon={<BellIcon />}>
+                {selectedValue1 === 'option1' ? 'Option 1' : selectedValue1 === 'option2' ? 'Option 2' : 'Option 3'}
+              </Select.Value>
             </Select.Trigger>
             <Select.Content>
               <Select.Item value="option1" leadingIcon={<BellIcon />}>Option 1</Select.Item>
               <Select.Item value="option2" leadingIcon={<BellIcon />}>Option 2</Select.Item>
               <Select.Item value="option3" leadingIcon={<BellIcon />}>Option 3</Select.Item>
+            </Select.Content>
+          </Select>
+
+          <Select value={selectedValue2} onValueChange={setSelectedValue2}>
+            <Select.Trigger size="small" aria-label="Small options selection">
+              <Select.Value placeholder="Small select">
+                {selectedValue2 && (
+                  <span className={styles.valueContent}>
+                    <BellIcon className={styles.leadingIcon} />
+                    {selectedValue2 === 'small1' ? 'Small Option 1' : selectedValue2 === 'small2' ? 'Small Option 2' : 'Small Option 3'}
+                  </span>
+                )}
+              </Select.Value>
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Item value="small1" leadingIcon={<BellIcon />}>Small Option 1</Select.Item>
+              <Select.Item value="small2" leadingIcon={<BellIcon />}>Small Option 2</Select.Item>
+              <Select.Item value="small3" leadingIcon={<BellIcon />}>Small Option 3</Select.Item>
             </Select.Content>
           </Select>
 
