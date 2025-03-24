@@ -136,6 +136,7 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
+  padding-top: var(--rs-space-2);
 }
 
 .helper-text-error {
@@ -291,6 +292,7 @@
 .labelContainer {
   display: flex;
   align-items: center;
+  padding-bottom: var(--rs-space-2);
 }
 
 .helpIcon {

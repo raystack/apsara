@@ -28,7 +28,7 @@ export interface TextAreaProps extends PropsWithChildren<HTMLAttributes<HTMLText
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, style, label, required, infoTooltip, helperText, error, disabled, width = "100%", value, onChange, ...props }, ref) => {
+  ({ className, style, label, required, infoTooltip, helperText, error, disabled, width = "100%", value, onChange, placeholder, ...props }, ref) => {
     return (
       <div className={styles.container} style={{ width }}>
         {label && (
@@ -57,6 +57,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           onChange={onChange}
           required={required}
           disabled={disabled}
+          placeholder={placeholder}
           {...props}
         />
         {helperText && (

@@ -6,6 +6,7 @@ import {
   Text,
   IconButton,
   Search,
+  TextArea,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -21,6 +22,8 @@ const Page = () => {
   const [search2, setSearch2] = useState("");
   const [search3, setSearch3] = useState("");
   const [search4, setSearch4] = useState("");
+  const [textArea1, setTextArea1] = useState("");
+  const [textArea2, setTextArea2] = useState("");
 
   return (
     <Flex
@@ -112,6 +115,8 @@ const Page = () => {
             placeholder="Default large search"
             showClearButton
             value={search1}
+            label="Search"
+            helperText="This is a helper text"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setSearch1(e.target.value)
             }
@@ -134,6 +139,7 @@ const Page = () => {
             variant="borderless"
             showClearButton
             value={search3}
+            label="Search"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setSearch3(e.target.value)
             }
@@ -150,6 +156,41 @@ const Page = () => {
               setSearch4(e.target.value)
             }
             onClear={() => setSearch4("")}
+          />
+
+          <Text size="large" weight="medium" style={{ marginTop: "24px", marginBottom: "16px" }}>
+            Text Areas
+          </Text>
+
+          <TextArea
+            label="Description"
+            placeholder="Enter text here"
+            value={textArea1}
+            onChange={(e) => setTextArea1(e.target.value)}
+            helperText="This is a helper text"
+          />
+
+          <TextArea
+            label="Read Only"
+            value="This is a read only text area"
+          />
+
+          <TextArea
+            label="Error State"
+            value={textArea2}
+            onChange={(e) => setTextArea2(e.target.value)}
+            placeholder="Enter text here"
+          />
+
+          <TextArea
+            label="Optional field"
+            placeholder="Optional input"
+          />
+
+          <TextArea
+            label="Disabled"
+            value="This is disabled"
+            disabled
           />
         </Flex>
 

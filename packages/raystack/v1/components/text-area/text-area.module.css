@@ -9,6 +9,7 @@
 .labelContainer {
   display: flex;
   align-items: center;
+  padding-bottom: var(--rs-space-2);
 }
 
 .label {
@@ -46,6 +47,7 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
+  padding-top: var(--rs-space-2);
 }
 
 .textarea {
@@ -121,4 +123,3 @@
 .helperTextDisabled {
   color: var(--rs-color-foreground-base-tertiary);
 }
-  
