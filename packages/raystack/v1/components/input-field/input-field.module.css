@@ -37,6 +37,7 @@
 
 .inputWrapper:hover {
   border-color: var(--rs-color-border-base-focus);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .inputWrapper:focus-within {
@@ -111,8 +112,6 @@
 
 .input-field:hover {
   border-color: var(--rs-color-border-base-focus);
-  /* background: var(--rs-color-background-base-primary-hover); */
-  background: var(--rs-color-background-base-primary);
 }
 
 .input-field:focus {
@@ -265,11 +264,6 @@
 .size-large .suffix {
   height: 22px; 
 }
-
-/* .size-small .prefix,
-.size-small .suffix {
-  height: 18px;
-} */
 
 .prefix {
   margin-left: var(--rs-space-2);

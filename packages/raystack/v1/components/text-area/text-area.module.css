@@ -73,7 +73,7 @@
 
 .textarea:hover {
   border-color: var(--rs-color-border-base-focus);
-  background: var(--rs-color-background-base-primary);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .textarea:focus {
