@@ -118,7 +118,7 @@ export function CloseButton({ className, ...props }: CloseButtonProps) {
       aria-label="Close dialog"
       {...props}
     >
-      <Cross1Icon />,
+      <Cross1Icon />
     </DialogPrimitive.Close>
   );
 }
