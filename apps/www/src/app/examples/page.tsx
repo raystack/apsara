@@ -23,8 +23,22 @@ const Page = () => {
   const [search2, setSearch2] = useState("");
   const [search3, setSearch3] = useState("");
   const [search4, setSearch4] = useState("");
-  const [selectedValue1, setSelectedValue1] = useState("");
-  const [selectedValue2, setSelectedValue2] = useState("");
+  const [selectValue1, setSelectValue1] = useState("");
+  const [selectValue2, setSelectValue2] = useState("");
+
+  // Sample options data with icons
+  const selectOptions = [
+    { value: "dashboard", label: "Dashboard", icon: <BellIcon /> },
+    { value: "analytics", label: "Analytics", icon: <FilterIcon /> },
+    { value: "settings", label: "Settings", icon: <OrganizationIcon /> },
+    { value: "profile", label: "Profile", icon: <SidebarIcon /> },
+  ];
+
+  // Get the icon for the selected value
+  const getSelectedIcon = (value: any) => {
+    const option = selectOptions.find(opt => opt.value === value);
+    return option ? option.icon : null;
+  };
 
   return (
     <Flex
@@ -156,13 +170,13 @@ const Page = () => {
             onClear={() => setSearch4("")}
           />
 
-          <Select value={selectedValue1} onValueChange={setSelectedValue1}>
+          <Select value={selectValue1} onValueChange={setSelectValue1}>
             <Select.Trigger aria-label="Options selection">
               <Select.Value 
                 placeholder="Choose an option" 
                 leadingIcon={<BellIcon />}
               >
-                {selectedValue1}
+                {selectValue1}
               </Select.Value>
             </Select.Trigger>
             <Select.Content>
@@ -172,6 +186,55 @@ const Page = () => {
             </Select.Content>
           </Select>
 
+        </Flex>
+
+        {/* Select component examples */}
+        <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
+          Select Examples
+        </Text>
+
+        <Flex direction="column" gap="4" style={{ maxWidth: "400px" }}>
+          {/* Normal size select with icons */}
+          <Flex direction="column" gap="2">
+            <Text size="small">Normal size select with icons:</Text>
+            <Select value={selectValue1} onValueChange={setSelectValue1}>
+              <Select.Trigger selectedIcon={getSelectedIcon(selectValue1)}>
+                {selectValue1 ? selectOptions.find(opt => opt.value === selectValue1)?.label : "Select an option"}
+              </Select.Trigger>
+              <Select.Content>
+                {selectOptions.map((option) => (
+                  <Select.Item 
+                    key={option.value} 
+                    value={option.value} 
+                    icon={option.icon}
+                  >
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </Flex>
+
+          {/* Small size select with icons */}
+          <Flex direction="column" gap="2">
+            <Text size="small">Small size select with icons:</Text>
+            <Select value={selectValue2} onValueChange={setSelectValue2}>
+              <Select.Trigger size="small" selectedIcon={getSelectedIcon(selectValue2)}>
+                {selectValue2 ? selectOptions.find(opt => opt.value === selectValue2)?.label : "Select an option"}
+              </Select.Trigger>
+              <Select.Content>
+                {selectOptions.map((option) => (
+                  <Select.Item 
+                    key={option.value} 
+                    value={option.value} 
+                    icon={option.icon}
+                  >
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </Flex>
         </Flex>
 
         <Flex justify="center" style={{ marginTop: 40 }}>
