@@ -37,6 +37,7 @@
 
 .inputWrapper:hover {
   border-color: var(--rs-color-border-base-focus);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
 .inputWrapper:focus-within {
@@ -111,8 +112,6 @@
 
 .input-field:hover {
   border-color: var(--rs-color-border-base-focus);
-  /* background: var(--rs-color-background-base-primary-hover); */
-  background: var(--rs-color-background-base-primary);
 }
 
 .input-field:focus {
@@ -136,6 +135,7 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
+  padding-top: var(--rs-space-2);
 }
 
 .helper-text-error {
@@ -265,11 +265,6 @@
   height: 22px; 
 }
 
-/* .size-small .prefix,
-.size-small .suffix {
-  height: 18px;
-} */
-
 .prefix {
   margin-left: var(--rs-space-2);
   margin-right: var(--rs-space-1);
@@ -291,6 +286,7 @@
 .labelContainer {
   display: flex;
   align-items: center;
+  padding-bottom: var(--rs-space-2);
 }
 
 .helpIcon {
