@@ -11,6 +11,9 @@ import {
 import React, { useState } from "react";
 import {
   BellIcon,
+  BellSlashIcon,
+  CoinColoredIcon,
+  CoinIcon,
   FilterIcon,
   OrganizationIcon,
   SidebarIcon,
@@ -42,7 +45,7 @@ const Page = () => {
         }}
       >
         <Sidebar.Header
-          logo={<BellIcon width={24} height={24} />}
+          logo={<SidebarIcon width={24} height={24} />}
           title="Raystack"
           onLogoClick={() => console.log("Logo clicked")}
         />

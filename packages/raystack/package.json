@@ -46,7 +46,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "build:icons": "node scripts/create-icons.js"
+    "build:icons": "node v1/icons/create-icons.js"
   },
   "typesVersions": {
     "*": {
