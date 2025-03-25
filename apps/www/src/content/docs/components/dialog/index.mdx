@@ -3,7 +3,7 @@ title: Dialog
 description: A window overlaid on either the primary window or another dialog window, rendering the content underneath inert.
 ---
 
-import { playground, closeDemo, customDemo, controlledDemo } from "./demo.ts";
+import { playground, closeDemo, customDemo, controlledDemo, onlyHeaderDemo, onlyFooterDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -15,6 +15,19 @@ import { playground, closeDemo, customDemo, controlledDemo } from "./demo.ts";
 
 <auto-type-table path="./props.ts" name="DialogContentProps" />
 
+
+### Dialog.Header Props
+
+<auto-type-table path="./props.ts" name="DialogHeaderProps" />
+
+### Dialog.Title Props
+
+<auto-type-table path="./props.ts" name="DialogTitleProps" />
+
+### Dialog.Body Props
+
+<auto-type-table path="./props.ts" name="DialogBodyProps" />
+
 ### Dialog.Description Props
 
 <auto-type-table path="./props.ts" name="DialogDescriptionProps" />
@@ -23,9 +36,14 @@ import { playground, closeDemo, customDemo, controlledDemo } from "./demo.ts";
 
 <auto-type-table path="./props.ts" name="DialogTriggerProps" />
 
-### Dialog.Close Props
+### Dialog.CloseButton Props
 
-<auto-type-table path="./props.ts" name="DialogCloseProps" />
+<auto-type-table path="./props.ts" name="DialogCloseButtonProps" />
+
+
+### Dialog.Footer Props
+
+<auto-type-table path="./props.ts" name="DialogFooterProps" />
 
 ## Examples
 
@@ -41,11 +59,19 @@ Example with custom width and overlay styling.
 
 <Demo data={customDemo} />
 
-### Without Close Button
 
-Example of dialog without the close button.
+### With Header and Body
 
-<Demo data={closeDemo} />
+Example with header and body.
+
+<Demo data={onlyHeaderDemo} />
+
+### With Body and Footer
+
+Example with header and body.
+
+<Demo data={onlyFooterDemo} />
+
 
 ### Accessibility
 
