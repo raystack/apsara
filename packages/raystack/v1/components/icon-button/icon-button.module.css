@@ -2,7 +2,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-1);
   border: none;
   color: var(--rs-color-foreground-base-primary);
@@ -11,7 +10,7 @@
   padding: var(--rs-space-1);
 }
 
-.iconButton > div {
+.iconButton>div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,14 +27,16 @@
 }
 
 .iconButton:active:not(:disabled) {
-  background-color: var(--rs-color-background-neutral-primary); 
+  background-color: var(--rs-color-background-neutral-primary);
 }
 
 .iconButton-size-1 {
   width: var(--rs-space-4);
   height: var(--rs-space-4);
 }
-.iconButton-size-1 > div, .iconButton-size-1 > div > * {
+
+.iconButton-size-1>div,
+.iconButton-size-1>div>* {
   width: 8px;
   height: 8px;
   font-size: var(--rs-font-size-micro);
@@ -45,7 +46,9 @@
   width: var(--rs-space-5);
   height: var(--rs-space-5);
 }
-.iconButton-size-2 > div, .iconButton-size-2 > div > * {
+
+.iconButton-size-2>div,
+.iconButton-size-2>div>* {
   width: 12px;
   height: 12px;
   font-size: var(--rs-font-size-micro);
@@ -55,7 +58,9 @@
   width: var(--rs-space-6);
   height: var(--rs-space-6);
 }
-.iconButton-size-3 > div, .iconButton-size-3 > div > * {
+
+.iconButton-size-3>div,
+.iconButton-size-3>div>* {
   width: 16px;
   height: 16px;
   font-size: var(--rs-font-size-small);
@@ -65,7 +70,9 @@
   width: var(--rs-space-7);
   height: var(--rs-space-7);
 }
-.iconButton-size-4 > div, .iconButton-size-4 > div > * {
+
+.iconButton-size-4>div,
+.iconButton-size-4>div>* {
   width: 20px;
   height: 20px;
   font-size: var(--rs-font-size-regular);
