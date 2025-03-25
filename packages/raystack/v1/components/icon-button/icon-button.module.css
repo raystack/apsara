@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  background-color: transparent;
   border-radius: var(--rs-radius-1);
   border: none;
   color: var(--rs-color-foreground-base-primary);
