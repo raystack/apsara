@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "target": "esnext",
     "isolatedModules": false,
+    "moduleResolution": "bundler",
     "paths": {
       "~/*": ["./*"],
       "~/v1/*": ["./v1/*"],
