@@ -32,7 +32,7 @@ export default function Navbar() {
           <Logo variant="small" />
         </Link>
         {LINKS.map(link => (
-          <Link href={link.url}>
+          <Link href={link.url} key={link.name}>
             <p
               className={cx(
                 styles.link,
