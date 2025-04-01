@@ -42,9 +42,27 @@ export interface RangePickerProps {
    * @defaultValue true
    */
   showCalendarIcon?: boolean;
+
+  /**
+   * Timezone string (e.g., "America/New_York", "Asia/Tokyo")
+   * If not provided, dates will be displayed in the local timezone
+   */
+  timezone?: string;
 }
 
 export interface DatePickerProps {
+  /** Format for displaying the date (e.g., "DD/MM/YYYY") */
+  dateFormat?: string;
+
+  /** Callback function when date is selected */
+  onSelect?: (date: Date) => void;
+
+  /** Initial date value */
+  value?: Date;
+
+  /** Props for customizing the calendar */
+  calendarProps?: CalendarProps;
+
   /** Props for customizing the text field */
   textFieldProps?: Record<string, unknown>;
 
@@ -56,4 +74,10 @@ export interface DatePickerProps {
    * @defaultValue true
    */
   showCalendarIcon?: boolean;
+
+  /**
+   * Timezone string (e.g., "America/New_York", "Asia/Tokyo")
+   * If not provided, dates will be displayed in the local timezone
+   */
+  timezone?: string;
 }

@@ -126,10 +126,61 @@ const Page = () => {
             onClear={() => setSearch1("")}
           />
           
-          <RangePicker
-               />
+          <Text size="large" weight="medium" style={{ marginTop: "24px", marginBottom: "16px" }}>
+            Date Pickers with Timezone
+          </Text>
 
-          <DatePicker />
+          <Text weight="medium">Default (Local Timezone)</Text>
+          <DatePicker onSelect={(date) => console.log('Default DatePicker - Selected:', date)} />
+
+          <Text weight="medium" style={{ marginTop: "16px" }}>Tokyo Timezone</Text>
+          <DatePicker 
+            timezone="Asia/Tokyo" 
+            onSelect={(date) => console.log('Tokyo DatePicker - Selected:', date)}
+          />
+
+          <Text weight="medium" style={{ marginTop: "16px" }}>New York Timezone</Text>
+          <DatePicker 
+            timezone="America/New_York" 
+            onSelect={(date) => console.log('NY DatePicker - Selected:', date)}
+          />
+
+          <Text weight="medium" style={{ marginTop: "24px" }}>Range Picker Examples</Text>
+
+          <Text weight="medium">Default (Local Timezone)</Text>
+          <RangePicker 
+            onSelect={(range) => console.log('Default RangePicker - Selected:', range)}
+          />
+
+          <Text weight="medium" style={{ marginTop: "16px" }}>Berlin Timezone</Text>
+          <RangePicker
+            timezone="Europe/Berlin"
+            placeholders={{
+              startDate: "Start (Berlin time)",
+              endDate: "End (Berlin time)"
+            }}
+            onSelect={(range) => console.log('Berlin RangePicker - Selected:', range)}
+          />
+
+          <Text weight="medium" style={{ marginTop: "16px" }}>New York Timezone</Text>
+          <RangePicker 
+            timezone="America/New_York"
+            placeholders={{
+              startDate: "Start (NY time)",
+              endDate: "End (NY time)"
+            }}
+            onSelect={(range) => console.log('NY RangePicker - Selected:', range)}
+          />
+
+          <Text weight="medium" style={{ marginTop: "16px" }}>Singapore Timezone</Text>
+          <RangePicker 
+            timezone="Asia/Singapore"
+            placeholders={{
+              startDate: "Start (Singapore time)",
+              endDate: "End (Singapore time)"
+            }}
+            onSelect={(range) => console.log('Singapore RangePicker - Selected:', range)}
+          />
 
           <Search
             placeholder="Default small search"
