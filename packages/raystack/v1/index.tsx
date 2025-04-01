@@ -47,7 +47,7 @@ export { Switch } from "./components/switch";
 export { SidePanel } from "./components/side-panel";
 export { Table } from "./components/table";
 export { Tabs } from "./components/tabs";
-export { Text } from "./components/text";
+export * from "./components/text";
 export { TextArea } from "./components/text-area";
 export {
   ThemeProvider,

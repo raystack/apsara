@@ -1,5 +1,5 @@
-import { cva, VariantProps } from "class-variance-authority";
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { HTMLAttributes } from "react";
 
 // Also used by link.tsx
 import styles from "./text.module.css";
@@ -17,54 +17,65 @@ const text = cva(styles.text, {
       success: styles["text-success"],
     },
     size: {
-      1: styles["text-1"],
-      2: styles["text-2"],
-      3: styles["text-3"],
-      4: styles["text-4"],
-      5: styles["text-5"],
-      6: styles["text-6"],
-      7: styles["text-7"],
-      8: styles["text-8"],
-      9: styles["text-9"],
-      10: styles["text-10"],
+      micro: styles["text-micro"],
+      mini: styles["text-mini"],
+      small: styles["text-small"],
+      regular: styles["text-regular"],
+      large: styles["text-large"],
     },
     weight: {
-      bold: styles["text-weight-bold"],
-      bolder: styles["text-weight-bolder"],
-      normal: styles["text-weight-normal"],
-      lighter: styles["text-weight-lighter"],
-      100: styles["text-weight-100"],
-      200: styles["text-weight-200"],
-      300: styles["text-weight-300"],
-      400: styles["text-weight-400"],
-      500: styles["text-weight-500"],
-      600: styles["text-weight-600"],
-      700: styles["text-weight-700"],
-      800: styles["text-weight-800"],
-      900: styles["text-weight-900"],
+      regular: styles["text-weight-regular"],
+      medium: styles["text-weight-medium"],
+    },
+    transform: {
+      capitalize: styles["text-transform-capitalize"],
+      uppercase: styles["text-transform-uppercase"],
+      lowercase: styles["text-transform-lowercase"],
+    },
+    align: {
+      center: styles["text-align-center"],
+      start: styles["text-align-start"],
+      end: styles["text-align-end"],
+      justify: styles["text-align-justify"],
     },
   },
   defaultVariants: {
     variant: "primary",
-    size: 2,
-    weight: 400,
+    size: "regular",
+    weight: "regular",
   },
 });
 
-export type TextProps = PropsWithChildren<VariantProps<typeof text>> &
-  HTMLAttributes<HTMLSpanElement>;
+export type TextProps = VariantProps<typeof text> & {
+  as?: "span" | "p" | "div" | "label";
+};
 
-export function Text({
-  children,
+type TextComponentProps = TextProps &
+  HTMLAttributes<
+    HTMLParagraphElement | HTMLSpanElement | HTMLDivElement | HTMLLabelElement
+  >;
+
+export const Text = ({
   className,
   size,
   variant,
   weight,
-  ...props
-}: TextProps) {
-  return (
-    <span className={text({ size, className, weight, variant })} {...props}>
-      {children}
-    </span>
-  );
-}
+  transform,
+  align,
+  as: Component = "span",
+  ...rest
+}: TextComponentProps) => (
+  <Component
+    className={text({
+      size,
+      className,
+      weight,
+      variant,
+      transform,
+      align,
+    })}
+    {...rest}
+  />
+);
+
+Text.displayName = "Text";
