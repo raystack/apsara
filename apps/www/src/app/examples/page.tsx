@@ -126,7 +126,9 @@ const Page = () => {
             onClear={() => setSearch1("")}
           />
           
-          <RangePicker
+          <RangePicker footer={<Callout type="accent" outline onDismiss={() => alert("Dismissed")}>
+  A short message
+</Callout>}
                />
 
           <DatePicker />
