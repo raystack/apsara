@@ -1,10 +1,11 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { HTMLAttributes } from "react";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 
 // Also used by link.tsx
 import styles from "./text.module.css";
+import * as Slot from "@radix-ui/react-slot";
 
-const text = cva(styles.text, {
+const textVariants = cva(styles.text, {
   variants: {
     variant: {
       primary: styles["text-primary"],
@@ -38,44 +39,90 @@ const text = cva(styles.text, {
       end: styles["text-align-end"],
       justify: styles["text-align-justify"],
     },
+    lineClamp: {
+      1: [styles["text-line-clamp"], styles["text-line-clamp-1"]],
+      2: [styles["text-line-clamp"], styles["text-line-clamp-2"]],
+      3: [styles["text-line-clamp"], styles["text-line-clamp-3"]],
+      4: [styles["text-line-clamp"], styles["text-line-clamp-4"]],
+      5: [styles["text-line-clamp"], styles["text-line-clamp-5"]],
+    },
+    underline: {
+      true: styles["text-underline"],
+    },
+    strikeThrough: {
+      true: styles["text-strike-through"],
+    },
+    italic: {
+      true: styles["text-italic"],
+    },
   },
   defaultVariants: {
     variant: "primary",
     size: "regular",
     weight: "regular",
   },
+  compoundVariants: [
+    {
+      strikeThrough: true,
+      underline: true,
+      className: styles["text-italic-strike-through"],
+    },
+  ],
 });
 
-export type TextProps = VariantProps<typeof text> & {
+export type TextProps = VariantProps<typeof textVariants> & {
   as?: "span" | "p" | "div" | "label";
 };
 
+type TextSpanProps = { as?: "span" } & ComponentPropsWithoutRef<"span">;
+type TextDivProps = { as: "div" } & ComponentPropsWithoutRef<"div">;
+type TextLabelProps = { as: "label" } & ComponentPropsWithoutRef<"label">;
+type TextPProps = { as: "p" } & ComponentPropsWithoutRef<"p">;
 type TextComponentProps = TextProps &
-  HTMLAttributes<
-    HTMLParagraphElement | HTMLSpanElement | HTMLDivElement | HTMLLabelElement
-  >;
+  (TextSpanProps | TextDivProps | TextLabelProps | TextPProps);
+type TextRef =
+  | HTMLSpanElement
+  | HTMLParagraphElement
+  | HTMLDivElement
+  | HTMLLabelElement;
 
-export const Text = ({
-  className,
-  size,
-  variant,
-  weight,
-  transform,
-  align,
-  as: Component = "span",
-  ...rest
-}: TextComponentProps) => (
-  <Component
-    className={text({
-      size,
+export const Text = forwardRef<TextRef, TextComponentProps>(
+  (
+    {
       className,
-      weight,
+      size,
       variant,
+      weight,
       transform,
       align,
-    })}
-    {...rest}
-  />
+      lineClamp,
+      underline,
+      strikeThrough,
+      italic,
+      as: Component = "span",
+      children,
+      ...rest
+    },
+    ref,
+  ) => (
+    <Slot.Root
+      ref={ref}
+      className={textVariants({
+        size,
+        className,
+        weight,
+        variant,
+        transform,
+        align,
+        lineClamp,
+        underline,
+        strikeThrough,
+        italic,
+      })}
+      {...rest}>
+      <Component>{children}</Component>
+    </Slot.Root>
+  ),
 );
 
 Text.displayName = "Text";

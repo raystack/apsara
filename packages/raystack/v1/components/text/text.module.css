@@ -101,3 +101,49 @@
 .text-align-justify {
   text-align: justify;
 }
+
+/* Text Line Clamp */
+.text-line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-line-clamp-1 {
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+}
+.text-line-clamp-2 {
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+}
+.text-line-clamp-3 {
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+}
+.text-line-clamp-4 {
+  line-clamp: 4;
+  -webkit-line-clamp: 4;
+}
+.text-line-clamp-5 {
+  line-clamp: 5;
+  -webkit-line-clamp: 5;
+}
+
+/* Text Decoration */
+.text-underline {
+  text-decoration-line: underline;
+}
+
+.text-strike-through {
+  text-decoration-line: line-through;
+}
+
+.text-italic-strike-through {
+  text-decoration-line: underline line-through;
+}
+
+/* Text Style */
+.text-italic {
+  font-style: italic;
+}
