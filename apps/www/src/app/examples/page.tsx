@@ -7,6 +7,9 @@ import {
   IconButton,
   Search,
   TextArea,
+  RangePicker,
+  Callout,
+  DatePicker,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -122,6 +125,11 @@ const Page = () => {
             }
             onClear={() => setSearch1("")}
           />
+          
+          <RangePicker
+               />
+
+          <DatePicker />
 
           <Search
             placeholder="Default small search"
