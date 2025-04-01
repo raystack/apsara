@@ -69,10 +69,12 @@ Choose between different variants to convey different meanings or importance lev
 The Range Picker component allows selecting a date range with the following behaviors:
 
 1. When selecting two different dates:
-   - The start date (`from`) will be the first selected date
-   - The end date (`to`) will be one day after the second selected date
+   - The UI will show the exact selected dates
+   - The callback will return the start date as selected and end date as one day after
    ```tsx
    // Example: If user selects April 1st and April 10th, 2025
+   // UI will show: April 1st, 2025 - April 10th, 2025
+   // Callback will return:
    {
      "from": "2025-04-01T18:30:00.000Z",
      "to": "2025-04-11T18:30:00.000Z"  // One day after selected end date
@@ -80,13 +82,15 @@ The Range Picker component allows selecting a date range with the following beha
    ```
 
 2. When clicking the same date twice:
-   - The start date (`from`) will be the selected date
-   - The end date (`to`) will be one day after the selected date
+   - The UI will show the same date for both start and end
+   - The callback will return the start date as selected and end date as one day after
    ```tsx
    // Example: If user clicks April 1st, 2025 twice
+   // UI will show: April 1st, 2025 - April 1st, 2025
+   // Callback will return:
    {
      "from": "2025-04-01T18:30:00.000Z",
-     "to": "2025-04-02T18:30:00.000Z"  // One day after selected end date
+     "to": "2025-04-02T18:30:00.000Z"  // One day after selected date
    }
    ```
 
