@@ -56,14 +56,17 @@ export function RangePicker({
     
     if (currentRangeField === "to") {
       if (dayjs(selectedDay).isSame(dayjs(from), 'day')) {
-        // If same date is clicked twice, set end date to the same date
+        // If same date is clicked twice, set end date to next day
         newRange = {
           from,
-          to: selectedDay
+          to: dayjs(selectedDay).add(1, 'day').toDate()
         };
       } else if (dayjs(selectedDay).isAfter(dayjs(from))) {
-        // If different date is selected and it's after start date
-        newRange = { from, to: selectedDay };
+        // If different date is selected and it's after start date, add one day to end date
+        newRange = { 
+          from, 
+          to: dayjs(selectedDay).add(1, 'day').toDate() 
+        };
       } else {
         // If selected date is before start date, reset and select start day
         newRange = { from: selectedDay };

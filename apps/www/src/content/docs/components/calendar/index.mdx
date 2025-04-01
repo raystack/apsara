@@ -66,7 +66,29 @@ Choose between different variants to convey different meanings or importance lev
 
 ### Range Picker
 
-The Badge component supports three sizes to accommodate various layout requirements. Default size is `small`.
+The Range Picker component allows selecting a date range with the following behaviors:
+
+1. When selecting two different dates:
+   - The start date (`from`) will be the first selected date
+   - The end date (`to`) will be one day after the second selected date
+   ```tsx
+   // Example: If user selects April 1st and April 10th, 2025
+   {
+     "from": "2025-04-01T18:30:00.000Z",
+     "to": "2025-04-11T18:30:00.000Z"  // One day after selected end date
+   }
+   ```
+
+2. When clicking the same date twice:
+   - The start date (`from`) will be the selected date
+   - The end date (`to`) will be one day after the selected date
+   ```tsx
+   // Example: If user clicks April 1st, 2025 twice
+   {
+     "from": "2025-04-01T18:30:00.000Z",
+     "to": "2025-04-02T18:30:00.000Z"  // One day after selected end date
+   }
+   ```
 
 <Demo data={rangePickerDemo} />
 
