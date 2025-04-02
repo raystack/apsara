@@ -82,8 +82,8 @@
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
+  gap: var(--rs-space-2);
 }
-
 
 .trigger-medium {
   padding: var(--rs-space-3);
@@ -99,6 +99,7 @@
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
+  gap: var(--rs-space-3);
 }
 
 .trigger:hover {
@@ -176,7 +177,7 @@
 .triggerContent {
   display: flex;
   align-items: center;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
 }
 
 .selectedIcon-small {
@@ -212,8 +213,8 @@
 }
 
 .trigger-small .leadingIcon {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
 }
 
 .trigger-medium .menuitem-icon {
@@ -222,12 +223,16 @@
 }
 
 .trigger-small .menuitem-icon {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
 }
 
 .valueContent {
   display: flex;
   align-items: center;
+  gap: var(--rs-space-3);
+}
+
+.trigger-small .valueContent {
   gap: var(--rs-space-2);
 }
