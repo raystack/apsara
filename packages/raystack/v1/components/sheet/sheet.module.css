@@ -4,7 +4,7 @@
   bottom: 0;
   width: 250px;
   padding: var(--rs-space-3);
-  z-index: 50;
+  z-index: var(--rs-z-index-sheet);
   will-change: transform;
 
   background-color: var(--rs-color-background-base-primary);
@@ -81,7 +81,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: var(--rs-z-index-sheet-overlay);
   background-color: var(--rs-color-overlay-base-primary);
 }
 

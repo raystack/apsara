@@ -1,5 +1,5 @@
 .popover {
-  z-index: 80;
+  z-index: var(--rs-z-index-popover);
   outline: 0;
   overflow: hidden;
   font-size: var(--rs-font-size-small);
