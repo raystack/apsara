@@ -133,6 +133,8 @@ const Page = () => {
 
           <DatePicker />
 
+          <RangePicker />
+
           <Search
             placeholder="Default small search"
             size="small"

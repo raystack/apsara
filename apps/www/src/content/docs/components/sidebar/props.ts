@@ -10,6 +10,11 @@ export interface SidebarRootProps {
    */
   position?: "left" | "right";
 
+  /** Hide tooltips on sidebar items when sidebar is collapsed.
+   * @default false
+   */
+  hideCollapsedItemTooltip?: boolean;
+
   /** Optional profile information. */
   profile?: {
     /** Icon element to display. */
