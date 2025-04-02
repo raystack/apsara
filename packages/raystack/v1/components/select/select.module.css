@@ -14,6 +14,7 @@
   min-width: var(--radix-select-trigger-width);
   margin-top: var(--rs-space-2);
   transition: all 0.2s ease;
+  max-width: 300px;
 }
 
 .menuitem {
@@ -23,6 +24,8 @@
   gap: var(--rs-space-2);
   padding: var(--rs-space-3);
   color: var(--rs-color-foreground-base-primary);
+  white-space: normal;
+  word-break: break-word;
 }
 
 .menuitem:hover,
@@ -72,6 +75,8 @@
   padding: var(--rs-space-2);
   height: 24px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .trigger-small .triggerContent {
@@ -89,6 +94,8 @@
   padding: var(--rs-space-3);
   height: 32px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .trigger-medium .triggerContent {
@@ -99,7 +106,7 @@
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  gap: var(--rs-space-3);
+  gap: var(--rs-space-2);
 }
 
 .trigger:hover {
@@ -129,6 +136,7 @@
   width: 12px;
   height: 12px;
   margin-left: var(--rs-space-3);
+  flex-shrink: 0;
 }
 
 .trigger-filter {
@@ -178,6 +186,11 @@
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);
+  height: 100%;
+  max-width: calc(100% - 20px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .selectedIcon-small {
@@ -231,6 +244,11 @@
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .trigger-small .valueContent {

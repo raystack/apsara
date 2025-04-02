@@ -79,7 +79,11 @@ const SelectTrigger = React.forwardRef<
     className={trigger({ size, variant, className })}
     aria-label={ariaLabel || 'Select option'}
     role="combobox"
-    style={style}
+    style={{
+      ...style,
+      display: 'flex',
+      justifyContent: 'space-between'
+    }}
     onPointerDown={(e) => {
       if (stopPropagation) {
         e.stopPropagation();
@@ -199,7 +203,7 @@ const SelectValue = React.forwardRef<
   SelectValueProps
 >(({ leadingIcon, children, ...props }, ref) => (
   <SelectPrimitive.Value ref={ref} {...props}>
-    <div className={styles.valueContent}>
+    <div className={styles.valueContent} title={typeof children === 'string' ? children : undefined}>
       {leadingIcon && <div className={styles.leadingIcon}>{leadingIcon}</div>}
       {children}
     </div>
