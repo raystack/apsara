@@ -194,9 +194,16 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 const SelectValue = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Value>,
   SelectValueProps
->(({ leadingIcon, children, ...props }, ref) => (
-  <SelectPrimitive.Value ref={ref} {...props}>
-    <div className={styles.valueContent} title={typeof children === 'string' ? children : undefined}>
+>(({ leadingIcon, children, placeholder, ...props }, ref) => (
+  <SelectPrimitive.Value 
+    ref={ref} 
+    placeholder={placeholder}
+    {...props}
+  >
+    <div 
+      className={styles.valueContent}
+      title={typeof children === 'string' ? children : undefined}
+    >
       {leadingIcon && <div className={styles.leadingIcon}>{leadingIcon}</div>}
       {children}
     </div>

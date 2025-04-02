@@ -274,3 +274,11 @@
   margin-left: var(--rs-space-2);
   flex-shrink: 0;
 }
+
+.placeholder, [data-placeholder], .valueContent[data-state="placeholder"] {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.placeholder:hover, [data-placeholder]:hover, .valueContent[data-state="placeholder"]:hover {
+  color: var(--rs-color-foreground-base-tertiary);
+}

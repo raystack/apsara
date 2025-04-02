@@ -184,7 +184,7 @@ const Page = () => {
             <Select value={selectValue} onValueChange={setSelectValue}>
               <Select.Trigger>
                 <Select.Value 
-                  placeholder="Choose an option" 
+                  placeholder="Choose an options" 
                 >
                   {selectValue}
                 </Select.Value>
