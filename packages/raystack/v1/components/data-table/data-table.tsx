@@ -88,11 +88,11 @@ function DataTableRoot<TData, TValue>({
   }, [tableQuery, onTableQueryChange]);
 
   const table = useReactTable({
-    data: groupedData as TData[],
+    data: groupedData as unknown as TData[],
     columns: columnsWithFilters,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getSubRows: (row) => (row as GroupedData<TData>)?.subRows || [],
+    getSubRows: (row) => (row as unknown as GroupedData<TData>)?.subRows || [],
     getSortedRowModel: mode === "server" ? undefined : getSortedRowModel(),
     getFilteredRowModel: mode === "server" ? undefined : getFilteredRowModel(),
     manualSorting: mode === "server",
@@ -120,6 +120,16 @@ function DataTableRoot<TData, TValue>({
       onLoadMore();
     }
   }
+
+  const searchQuery = query?.search;
+  useEffect(() => {
+    if (searchQuery) {
+      updateTableQuery((prev) => ({
+        ...prev,
+        search: searchQuery,
+      }));
+    }
+  }, [searchQuery]);
 
   const contextValue: TableContextType<TData, TValue> = {
     table,
