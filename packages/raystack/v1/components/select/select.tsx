@@ -38,7 +38,7 @@ const trigger = cva(styles.trigger, {
       medium: styles["trigger-medium"],
     },
     variant: {
-      default: "",
+      default: styles["trigger-default"],
       filter: styles["trigger-filter"],
     }
   },
@@ -94,15 +94,13 @@ const SelectTrigger = React.forwardRef<
       )}
       {children}
     </div>
-    {variant !== 'filter' && (
-      <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon 
-          className={styles.triggerIcon} 
-          aria-hidden="true"
-          {...iconProps} 
-        />
-      </SelectPrimitive.Icon>
-    )}
+    <SelectPrimitive.Icon asChild>
+      <ChevronDownIcon 
+        className={styles.triggerIcon} 
+        aria-hidden="true"
+        {...iconProps} 
+      />
+    </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
