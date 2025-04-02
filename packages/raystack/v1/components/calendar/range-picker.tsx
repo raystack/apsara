@@ -116,9 +116,9 @@ export function RangePicker({
           onSelect={handleSelect}
         />
         {footer && (
-          <div className={styles.calendarFooter}>
+          <Flex align="center" justify="center" className={styles.calendarFooter}>
             {footer}
-          </div>
+          </Flex>
         )}
       </Popover.Content>
     </Popover>

@@ -267,9 +267,6 @@
 }
 
 .calendarFooter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: var(--rs-space-3);
   margin-top: var(--rs-space-2);
 }
