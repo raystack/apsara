@@ -254,3 +254,16 @@
 .trigger-small .valueContent {
   gap: var(--rs-space-2);
 }
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--rs-space-2);
+  flex-shrink: 0;
+}
+
+.itemIcon svg {
+  width: 16px;
+  height: 16px;
+}

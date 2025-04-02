@@ -29,7 +29,7 @@ const Page = () => {
 
   // Sample options data with icons
   const selectOptions = [
-    { value: "dashboard dashboard dashboard dashboard dashboard", label: "Dashboard dashboard dashboard dashboard dashboard", icon: <BellIcon /> },
+    { value: "dashboard", label: "Dashboard", icon: <BellIcon /> },
     { value: "analytics", label: "Analytics", icon: <FilterIcon /> },
     { value: "settings", label: "Settings", icon: <OrganizationIcon /> },
     { value: "profile", label: "Profile", icon: <SidebarIcon /> },
@@ -190,7 +190,7 @@ const Page = () => {
                 </Select.Value>
               </Select.Trigger>
               <Select.Content>
-                <Select.Item value="Option 1" leadingIcon={<BellIcon />}>Option 1 Option 1 Option 1 Option 1 Option 1 Option 1</Select.Item>
+                <Select.Item value="Option 1" leadingIcon={<BellIcon />}>Option 1</Select.Item>
                 <Select.Item value="Option 2" leadingIcon={<FilterIcon />}>Option 2</Select.Item>
                 <Select.Item value="Option 3" leadingIcon={<OrganizationIcon />}>Option 3</Select.Item>
               </Select.Content>
