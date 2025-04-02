@@ -23,6 +23,7 @@ const Page = () => {
   const [search2, setSearch2] = useState("");
   const [search3, setSearch3] = useState("");
   const [search4, setSearch4] = useState("");
+  const [selectValue, setSelectValue] = useState("");
   const [selectValue1, setSelectValue1] = useState("");
   const [selectValue2, setSelectValue2] = useState("");
 
@@ -125,7 +126,7 @@ const Page = () => {
           Main
         </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "400px" }}>
+        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
           <Search
             placeholder="Default large search"
             showClearButton
@@ -170,22 +171,6 @@ const Page = () => {
             onClear={() => setSearch4("")}
           />
 
-          <Select value={selectValue1} onValueChange={setSelectValue1}>
-            <Select.Trigger aria-label="Options selection">
-              <Select.Value 
-                placeholder="Choose an option" 
-                leadingIcon={<BellIcon />}
-              >
-                {selectValue1}
-              </Select.Value>
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Item value="Option 1" leadingIcon={<BellIcon />}>Option 1</Select.Item>
-              <Select.Item value="Option 2" leadingIcon={<FilterIcon />}>Option 2</Select.Item>
-              <Select.Item value="Option 3" leadingIcon={<OrganizationIcon />}>Option 3</Select.Item>
-            </Select.Content>
-          </Select>
-
         </Flex>
 
         {/* Select component examples */}
@@ -193,10 +178,24 @@ const Page = () => {
           Select Examples
         </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "400px" }}>
+        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
           {/* Normal size select with icons */}
           <Flex direction="column" gap="2">
-            <Text size="small">Normal size select with icons:</Text>
+            <Select value={selectValue} onValueChange={setSelectValue}>
+              <Select.Trigger aria-label="Options selection">
+                <Select.Value 
+                  placeholder="Choose an option" 
+                >
+                  {selectValue}
+                </Select.Value>
+              </Select.Trigger>
+              <Select.Content>
+                <Select.Item value="Option 1" leadingIcon={<BellIcon />}>Option 1</Select.Item>
+                <Select.Item value="Option 2" leadingIcon={<FilterIcon />}>Option 2</Select.Item>
+                <Select.Item value="Option 3" leadingIcon={<OrganizationIcon />}>Option 3</Select.Item>
+              </Select.Content>
+            </Select>
+            <Text size="small">Normal size:</Text>
             <Select value={selectValue1} onValueChange={setSelectValue1}>
               <Select.Trigger selectedIcon={getSelectedIcon(selectValue1)}>
                 {selectValue1 ? selectOptions.find(opt => opt.value === selectValue1)?.label : "Select an option"}
@@ -217,7 +216,7 @@ const Page = () => {
 
           {/* Small size select with icons */}
           <Flex direction="column" gap="2">
-            <Text size="small">Small size select with icons:</Text>
+            <Text size="small">Small size:</Text>
             <Select value={selectValue2} onValueChange={setSelectValue2}>
               <Select.Trigger size="small" selectedIcon={getSelectedIcon(selectValue2)}>
                 {selectValue2 ? selectOptions.find(opt => opt.value === selectValue2)?.label : "Select an option"}

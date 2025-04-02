@@ -194,10 +194,23 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
+const SelectValue = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Value>,
+  SelectValueProps
+>(({ leadingIcon, children, ...props }, ref) => (
+  <SelectPrimitive.Value ref={ref} {...props}>
+    <div className={styles.valueContent}>
+      {leadingIcon && <div className={styles.leadingIcon}>{leadingIcon}</div>}
+      {children}
+    </div>
+  </SelectPrimitive.Value>
+));
+SelectValue.displayName = SelectPrimitive.Value.displayName;
+
 // Export the component with updated subcomponents
 export const Select = Object.assign(SelectRoot, {
   Group: SelectPrimitive.Group,
-  Value: SelectPrimitive.Value,
+  Value: SelectValue,
   ScrollUpButton: SelectPrimitive.ScrollDownButton,
   ScrollDownButton: SelectPrimitive.ScrollDownButton,
   Viewport: SelectPrimitive.Viewport,
