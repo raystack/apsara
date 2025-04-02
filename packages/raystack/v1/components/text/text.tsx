@@ -5,7 +5,7 @@ import { ComponentPropsWithoutRef, forwardRef } from "react";
 import styles from "./text.module.css";
 import * as Slot from "@radix-ui/react-slot";
 
-const textVariants = cva(styles.text, {
+export const textVariants = cva(styles.text, {
   variants: {
     variant: {
       primary: styles["text-primary"],
@@ -70,23 +70,23 @@ const textVariants = cva(styles.text, {
   ],
 });
 
-export type TextProps = VariantProps<typeof textVariants> & {
-  as?: "span" | "p" | "div" | "label";
-};
+export type TextBaseProps = VariantProps<typeof textVariants>;
 
 type TextSpanProps = { as?: "span" } & ComponentPropsWithoutRef<"span">;
 type TextDivProps = { as: "div" } & ComponentPropsWithoutRef<"div">;
 type TextLabelProps = { as: "label" } & ComponentPropsWithoutRef<"label">;
 type TextPProps = { as: "p" } & ComponentPropsWithoutRef<"p">;
-type TextComponentProps = TextProps &
-  (TextSpanProps | TextDivProps | TextLabelProps | TextPProps);
+type TextAProps = { as: "a" } & ComponentPropsWithoutRef<"a">;
+type TextProps = TextBaseProps &
+  (TextSpanProps | TextDivProps | TextLabelProps | TextPProps | TextAProps);
 type TextRef =
   | HTMLSpanElement
   | HTMLParagraphElement
   | HTMLDivElement
-  | HTMLLabelElement;
+  | HTMLLabelElement
+  | HTMLAnchorElement;
 
-export const Text = forwardRef<TextRef, TextComponentProps>(
+export const Text = forwardRef<TextRef, TextProps>(
   (
     {
       className,
