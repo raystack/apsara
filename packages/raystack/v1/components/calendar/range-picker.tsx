@@ -21,6 +21,7 @@ interface RangePickerProps {
   value?: DateRange;
   children?: React.ReactNode | ((props: { startDate: string; endDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
+  footer?: React.ReactNode;
 }
 
 type RangeFields = keyof DateRange;
@@ -39,6 +40,7 @@ export function RangePicker({
   pickerGroupClassName,
   children,
   showCalendarIcon = true,
+  footer,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] = useState<RangeFields>("from");
@@ -130,6 +132,11 @@ export function RangePicker({
           selected={selectedRange}
           onSelect={handleSelect}
         />
+        {footer && (
+          <Flex align="center" justify="center" className={styles.calendarFooter}>
+            {footer}
+          </Flex>
+        )}
       </Popover.Content>
     </Popover>
   );

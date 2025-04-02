@@ -8,6 +8,8 @@ import {
   Search,
   TextArea,
   RangePicker,
+  Callout,
+  DatePicker,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -123,6 +125,13 @@ const Page = () => {
             }
             onClear={() => setSearch1("")}
           />
+          
+          <RangePicker footer={<Callout type="accent" width="100%" outline onDismiss={() => alert("Dismissed")}>
+            A short message
+          </Callout>}
+          />
+
+          <DatePicker />
 
           <Search
             placeholder="Default small search"
