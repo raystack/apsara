@@ -8,6 +8,8 @@ import {
   Search,
   TextArea,
   RangePicker,
+  Callout,
+  DatePicker,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -123,6 +125,13 @@ const Page = () => {
             }
             onClear={() => setSearch1("")}
           />
+          
+          <RangePicker footer={<Callout type="accent" width="100%" outline onDismiss={() => alert("Dismissed")}>
+            A short message
+          </Callout>}
+          />
+
+          <DatePicker />
 
           <RangePicker />
 
@@ -194,6 +203,17 @@ const Page = () => {
             label="Disabled"
             value="This is disabled"
             disabled
+          />
+
+          <Text size="large" weight="medium" style={{ marginTop: "24px", marginBottom: "16px" }}>
+            Date Range Picker
+          </Text>
+
+          <RangePicker
+            onSelect={(range) => console.log('Selected date range:', range)}
+            textFieldProps={{
+              label: "Select Date Range"
+            }}
           />
         </Flex>
 
