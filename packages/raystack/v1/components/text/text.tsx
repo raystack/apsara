@@ -1,9 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
-
-// Also used by link.tsx
-import styles from "./text.module.css";
 import * as Slot from "@radix-ui/react-slot";
+import styles from "./text.module.css";
 
 export const textVariants = cva(styles.text, {
   variants: {

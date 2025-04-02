@@ -25,7 +25,7 @@ export const playground = {
     },
     as: {
       type: "select",
-      options: ["span", "p", "div", "label"],
+      options: ["span", "p", "div", "label", "a"],
       defaultValue: "span",
     },
     size: {

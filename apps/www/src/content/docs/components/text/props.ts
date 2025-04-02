@@ -3,7 +3,7 @@ export interface TextProps {
    * Text element to render as.
    * @default "span"
    */
-  as?: "span" | "p" | "div" | "label";
+  as?: "span" | "p" | "div" | "label" | "a";
 
   /**
    * The visual style variant.
