@@ -7,6 +7,7 @@ import {
   IconButton,
   Search,
   TextArea,
+  RangePicker,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -191,6 +192,17 @@ const Page = () => {
             label="Disabled"
             value="This is disabled"
             disabled
+          />
+
+          <Text size="large" weight="medium" style={{ marginTop: "24px", marginBottom: "16px" }}>
+            Date Range Picker
+          </Text>
+
+          <RangePicker
+            onSelect={(range) => console.log('Selected date range:', range)}
+            textFieldProps={{
+              label: "Select Date Range"
+            }}
           />
         </Flex>
 
