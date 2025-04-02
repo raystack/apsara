@@ -94,7 +94,7 @@
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-1);
 }
 
 .trigger-medium {
@@ -163,65 +163,16 @@
 .triggerContent {
   display: flex;
   align-items: center;
-  gap: var(--rs-space-3);
-  height: 100%;
-  max-width: calc(100% - 20px);
+  gap: var(--rs-space-2);
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.selectedIcon-small {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.selectedIcon-small svg {
-  width: 12px;
-  height: 12px;
-}
-
-.selectedIcon-medium {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.selectedIcon-medium svg {
-  width: 16px;
-  height: 16px;
-}
-
-.menuitem-icon-small {
-  width: 12px;
-  height: 12px;
-}
-
-.trigger-medium .leadingIcon {
-  width: 16px;
-  height: 16px;
-}
-
-.trigger-small .leadingIcon {
-  width: 16px;
-  height: 16px;
-}
-
-.trigger-medium .menuitem-icon {
-  width: 16px;
-  height: 16px;
-}
-
-.trigger-small .menuitem-icon {
-  width: 16px;
-  height: 16px;
+  white-space: nowrap;
 }
 
 .valueContent {
   display: flex;
   align-items: center;
-  gap: var(--rs-space-3);
+  gap: var(--rs-space-1);
   height: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -230,7 +181,7 @@
 }
 
 .trigger-small .valueContent {
-  gap: var(--rs-space-2);
+  gap: 0;
 }
 
 .itemIcon {
@@ -263,4 +214,12 @@
 [data-placeholder]:hover,
 .valueContent[data-state="placeholder"]:hover {
   color: var(--rs-color-foreground-base-tertiary);
+}
+
+.leadingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--rs-space-2);
+  flex-shrink: 0;
 }

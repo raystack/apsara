@@ -35,6 +35,13 @@ const Page = () => {
     { value: "profile", label: "Profile", icon: <SidebarIcon /> },
   ];
 
+  // First, define your options at the top with other constants
+  const filterOptions = [
+    { value: "Option 1", label: "Option 1", icon: <BellIcon /> },
+    { value: "Option 2", label: "Option 2", icon: <FilterIcon /> },
+    { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> }
+  ];
+
   // Get the icon for the selected value
   const getSelectedIcon = (value: any) => {
     const option = selectOptions.find(opt => opt.value === value);
@@ -184,21 +191,31 @@ const Page = () => {
             <Select value={selectValue} onValueChange={setSelectValue}>
               <Select.Trigger size="small" variant="filter">
                 <Select.Value 
-                  placeholder="Choose an options" 
+                  placeholder="Choose an options"
+                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
                 >
                   {selectValue}
                 </Select.Value>
               </Select.Trigger>
               <Select.Content>
-                <Select.Item value="Option 1" leadingIcon={<BellIcon />}>Option 1</Select.Item>
-                <Select.Item value="Option 2" leadingIcon={<FilterIcon />}>Option 2</Select.Item>
-                <Select.Item value="Option 3" leadingIcon={<OrganizationIcon />}>Option 3</Select.Item>
+                {filterOptions.map((option) => (
+                  <Select.Item 
+                    key={option.value} 
+                    value={option.value} 
+                    leadingIcon={option.icon}
+                  >
+                    {option.label}
+                  </Select.Item>
+                ))}
               </Select.Content>
             </Select>
             <Text size="small">Normal size:</Text>
             <Select value={selectValue1} onValueChange={setSelectValue1}>
-              <Select.Trigger selectedIcon={getSelectedIcon(selectValue1)}>
-                <Select.Value placeholder="Choose an options">
+              <Select.Trigger>
+                <Select.Value 
+                  placeholder="Choose an options"
+                  leadingIcon={selectOptions.find(opt => opt.value === selectValue1)?.icon}
+                >
                   {selectValue1}
                 </Select.Value>
               </Select.Trigger>
@@ -220,8 +237,11 @@ const Page = () => {
           <Flex direction="column" gap="2">
             <Text size="small">Small size:</Text>
             <Select value={selectValue2} onValueChange={setSelectValue2}>
-              <Select.Trigger size="small" selectedIcon={getSelectedIcon(selectValue2)}>
-                <Select.Value placeholder="Choose an options">
+              <Select.Trigger size="small">
+                <Select.Value 
+                  placeholder="Choose an options"
+                  leadingIcon={selectOptions.find(opt => opt.value === selectValue2)?.icon}
+                >
                   {selectValue2}
                 </Select.Value>
               </Select.Trigger>

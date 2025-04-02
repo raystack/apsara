@@ -28,7 +28,6 @@ export interface IconProps extends React.SVGAttributes<SVGElement> {
 interface SelectValueProps extends SelectPrimitive.SelectValueProps {
   leadingIcon?: React.ReactNode;
   placeholder?: string;
-  selectedIcon?: React.ReactNode;
 }
 
 const trigger = cva(styles.trigger, {
@@ -53,7 +52,6 @@ const SelectTrigger = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
     React.PropsWithChildren<VariantProps<typeof trigger>> & {
       iconProps?: IconProps;
-      selectedIcon?: React.ReactNode;
     } &
     AriaProps &
     TriggerStyleProps
@@ -63,7 +61,6 @@ const SelectTrigger = React.forwardRef<
   className, 
   children, 
   iconProps = {}, 
-  selectedIcon,
   'aria-label': ariaLabel,
   style,
   stopPropagation = false,
@@ -87,11 +84,6 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     <div className={styles.triggerContent}>
-      {selectedIcon && (
-        <div className={styles[`selectedIcon-${size || 'medium'}`]}>
-          {selectedIcon}
-        </div>
-      )}
       {children}
     </div>
     <SelectPrimitive.Icon asChild>
