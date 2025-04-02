@@ -42,6 +42,7 @@
 
 .inputWrapper:focus-within {
   border-color: var(--rs-color-border-accent-emphasis);
+  background-color: var(--rs-color-background-base-primary);
   outline: none;
   box-shadow: 0 0 0 2px rgba(var(--rs-color-border-accent-emphasis), 0.2);
 }
