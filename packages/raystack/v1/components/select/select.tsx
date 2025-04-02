@@ -38,13 +38,13 @@ const trigger = cva(styles.trigger, {
       medium: styles["trigger-medium"],
     },
     variant: {
-      default: styles["trigger-default"],
-      filter: styles["trigger-filter"],
+      outline: styles["trigger-outline"],
+      text: styles["trigger-text"],
     }
   },
   defaultVariants: {
     size: "medium",
-    variant: "default",
+    variant: "outline",
   },
 });
 

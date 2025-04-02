@@ -68,12 +68,12 @@
   transition: all 0.2s ease;
 }
 
-.trigger-default {
+.trigger-outline {
   border: 0.5px solid var(--rs-color-border-base-secondary);
   box-shadow: var(--rs-shadow-feather);
 }
 
-.trigger-filter {
+.trigger-text {
   border: none;
   box-shadow: none;
 }
@@ -146,15 +146,14 @@
   flex-shrink: 0;
 }
 
-/* Adjust content styles for filter variant */
-.content[data-variant="filter"] {
+.content[data-variant="text"] {
   margin-top: var(--rs-space-2);
   padding: var(--rs-space-1);
   border: 1px solid var(--rs-color-border-base-primary);
   box-shadow: var(--rs-shadow-soft);
 }
 
-.content[data-variant="filter"] .menuitem {
+.content[data-variant="text"] .menuitem {
   padding: var(--rs-space-1) var(--rs-space-2);
   min-height: 24px !important;
   height: 24px !important;

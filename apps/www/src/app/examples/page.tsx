@@ -182,7 +182,7 @@ const Page = () => {
           {/* Normal size select with icons */}
           <Flex direction="column" gap="2">
             <Select value={selectValue} onValueChange={setSelectValue}>
-              <Select.Trigger variant="filter">
+              <Select.Trigger size="small" variant="filter">
                 <Select.Value 
                   placeholder="Choose an options" 
                 >
