@@ -75,7 +75,7 @@
   color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
   margin-left: var(--rs-space-3);
-  z-index: 100;
+  z-index: 30;
   pointer-events: auto;
 }
 
@@ -88,7 +88,7 @@
   color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
   margin-right: var(--rs-space-3);
-  z-index: 100;
+  z-index: 30;
   pointer-events: auto;
 }
 
@@ -242,7 +242,8 @@
   border-radius: var(--rs-radius-2);
 }
 
-.prefix, .suffix {
+.prefix,
+.suffix {
   display: flex;
   align-items: center;
   color: var(--rs-color-foreground-base-secondary);
@@ -260,9 +261,9 @@
   height: auto;
 }
 
-.size-large .prefix, 
+.size-large .prefix,
 .size-large .suffix {
-  height: 22px; 
+  height: 22px;
 }
 
 .prefix {

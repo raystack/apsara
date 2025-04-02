@@ -353,7 +353,7 @@
 }
 
 .avatarWrapper:last-child {
-  z-index: 1;
+  z-index: 20;
 }
 
 .avatarGroup .avatar {

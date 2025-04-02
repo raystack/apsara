@@ -4,7 +4,7 @@
   }
   
   .content {
-    z-index: 100;
+    z-index: 90;
     padding: var(--rs-space-2) var(--rs-space-3);
     border-radius: var(--rs-radius-2);
     background: var(--rs-color-background-base-primary);

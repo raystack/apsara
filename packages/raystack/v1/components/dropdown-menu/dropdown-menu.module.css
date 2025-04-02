@@ -1,6 +1,6 @@
 .content {
   overflow: hidden;
-  z-index: 50;
+  z-index: 80;
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);

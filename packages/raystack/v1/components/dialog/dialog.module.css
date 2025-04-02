@@ -2,7 +2,7 @@
   background-color: var(--rs-color-overlay-base-primary);
   position: fixed;
   inset: 0;
-  z-index: 9998;
+  z-index: 60;
 }
 
 .dialogContent {
@@ -18,7 +18,7 @@
   min-height: 100px;
   max-height: 85vh;
   padding: 0;
-  z-index: 9999;
+  z-index: 70;
 }
 
 .dialogContent:focus {

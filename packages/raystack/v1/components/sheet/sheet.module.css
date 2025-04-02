@@ -81,7 +81,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 49;
+  z-index: 40;
   background-color: var(--rs-color-overlay-base-primary);
 }
 
@@ -186,4 +186,4 @@
   .overlay {
     animation: none;
   }
-} 
+}
