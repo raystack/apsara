@@ -198,7 +198,9 @@ const Page = () => {
             <Text size="small">Normal size:</Text>
             <Select value={selectValue1} onValueChange={setSelectValue1}>
               <Select.Trigger selectedIcon={getSelectedIcon(selectValue1)}>
-                {selectValue1 ? selectOptions.find(opt => opt.value === selectValue1)?.label : "Select an option"}
+                <Select.Value placeholder="Choose an options">
+                  {selectValue1}
+                </Select.Value>
               </Select.Trigger>
               <Select.Content>
                 {selectOptions.map((option) => (
@@ -219,7 +221,9 @@ const Page = () => {
             <Text size="small">Small size:</Text>
             <Select value={selectValue2} onValueChange={setSelectValue2}>
               <Select.Trigger size="small" selectedIcon={getSelectedIcon(selectValue2)}>
-                {selectValue2 ? selectOptions.find(opt => opt.value === selectValue2)?.label : "Select an option"}
+                <Select.Value placeholder="Choose an options">
+                  {selectValue2}
+                </Select.Value>
               </Select.Trigger>
               <Select.Content>
                 {selectOptions.map((option) => (
