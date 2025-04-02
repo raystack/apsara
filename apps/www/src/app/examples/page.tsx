@@ -7,6 +7,7 @@ import {
   IconButton,
   Search,
   Select,
+  InputField,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -26,6 +27,7 @@ const Page = () => {
   const [selectValue, setSelectValue] = useState("");
   const [selectValue1, setSelectValue1] = useState("");
   const [selectValue2, setSelectValue2] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   // Sample options data with icons
   const selectOptions = [
@@ -188,7 +190,34 @@ const Page = () => {
         <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
           {/* Normal size select with icons */}
           <Flex direction="column" gap="2">
-            <Select value={selectValue} onValueChange={setSelectValue}>
+            <Select value={selectValue} onValueChange={setSelectValue} disabled>
+              <Select.Trigger size="small" variant="filter">
+                <Select.Value 
+                  placeholder="Choose an options"
+                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
+                >
+                  {selectValue}
+                </Select.Value>
+              </Select.Trigger>
+              <Select.Content>
+                {filterOptions.map((option) => (
+                  <Select.Item 
+                    key={option.value} 
+                    value={option.value} 
+                    leadingIcon={option.icon}
+                  >
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </Flex>
+        </Flex>
+
+        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
+          {/* Normal size select with icons */}
+          <Flex direction="column" gap="2">
+            <Select value={selectValue} onValueChange={setSelectValue} disabled>
               <Select.Trigger size="small" variant="filter">
                 <Select.Value 
                   placeholder="Choose an options"
@@ -210,7 +239,7 @@ const Page = () => {
               </Select.Content>
             </Select>
             <Text size="small">Normal size:</Text>
-            <Select value={selectValue1} onValueChange={setSelectValue1}>
+            <Select value={selectValue1} onValueChange={setSelectValue1} disabled>
               <Select.Trigger>
                 <Select.Value 
                   placeholder="Choose an options"
@@ -243,6 +272,63 @@ const Page = () => {
                   leadingIcon={selectOptions.find(opt => opt.value === selectValue2)?.icon}
                 >
                   {selectValue2}
+                </Select.Value>
+              </Select.Trigger>
+              <Select.Content>
+                {selectOptions.map((option) => (
+                  <Select.Item 
+                    key={option.value} 
+                    value={option.value} 
+                    leadingIcon={option.icon}
+                  >
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </Flex>
+        </Flex>
+
+        <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
+          Form Component Examples
+        </Text>
+
+        <Flex direction="column" gap="4" style={{ maxWidth: "300px" }}>
+          {/* Select Examples */}
+          <Flex direction="column" gap="2">
+            <Text size="small">Disabled Select:</Text>
+            <Select value={selectValue} onValueChange={setSelectValue} disabled>
+              <Select.Trigger size="small" variant="filter">
+                <Select.Value 
+                  placeholder="Choose an option"
+                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
+                >
+                  {selectValue}
+                </Select.Value>
+              </Select.Trigger>
+              <Select.Content>
+                {filterOptions.map((option) => (
+                  <Select.Item 
+                    key={option.value} 
+                    value={option.value} 
+                    leadingIcon={option.icon}
+                  >
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </Flex>
+
+          <Flex direction="column" gap="2">
+            <Text size="small">Normal size:</Text>
+            <Select value={selectValue1} onValueChange={setSelectValue1} disabled>
+              <Select.Trigger>
+                <Select.Value 
+                  placeholder="Choose an option"
+                  leadingIcon={selectOptions.find(opt => opt.value === selectValue1)?.icon}
+                >
+                  {selectValue1}
                 </Select.Value>
               </Select.Trigger>
               <Select.Content>

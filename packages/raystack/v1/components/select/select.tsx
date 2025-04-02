@@ -131,7 +131,11 @@ const SelectIconContext = React.createContext<{
   registerIcon: () => {}
 });
 
-const SelectRoot = ({ children, ...props }: SelectPrimitive.SelectProps) => {
+interface SelectRootProps extends SelectPrimitive.SelectProps {
+  disabled?: boolean;
+}
+
+const SelectRoot = ({ children, disabled, ...props }: SelectRootProps) => {
   const [icons, setIcons] = React.useState<Record<string, React.ReactNode>>({});
   
   const registerIcon = React.useCallback((value: string, icon: React.ReactNode) => {
@@ -140,7 +144,7 @@ const SelectRoot = ({ children, ...props }: SelectPrimitive.SelectProps) => {
   
   return (
     <SelectIconContext.Provider value={{ icons, registerIcon }}>
-      <SelectPrimitive.Root {...props}>
+      <SelectPrimitive.Root disabled={disabled} {...props}>
         {children}
       </SelectPrimitive.Root>
     </SelectIconContext.Provider>
