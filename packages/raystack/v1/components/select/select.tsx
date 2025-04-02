@@ -31,11 +31,6 @@ interface SelectValueProps extends SelectPrimitive.SelectValueProps {
   selectedIcon?: React.ReactNode;
 }
 
-interface SelectItemProps extends SelectPrimitive.SelectItemProps {
-  leadingIcon?: React.ReactNode;
-  textProps?: TextProps;
-}
-
 const trigger = cva(styles.trigger, {
   variants: {
     size: {
@@ -138,7 +133,6 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const menuitem = cva(styles.menuitem);
 
-// We need to make sure our context properly tracks the selected value and icon
 const SelectIconContext = React.createContext<{
   icons: Record<string, React.ReactNode>;
   registerIcon: (value: string, icon: React.ReactNode) => void;
@@ -147,7 +141,6 @@ const SelectIconContext = React.createContext<{
   registerIcon: () => {}
 });
 
-// Updated Root component that manages the icon mapping
 const SelectRoot = ({ children, ...props }: SelectPrimitive.SelectProps) => {
   const [icons, setIcons] = React.useState<Record<string, React.ReactNode>>({});
   
@@ -211,7 +204,6 @@ const SelectValue = React.forwardRef<
 ));
 SelectValue.displayName = SelectPrimitive.Value.displayName;
 
-// Export the component with updated subcomponents
 export const Select = Object.assign(SelectRoot, {
   Group: SelectPrimitive.Group,
   Value: SelectValue,
