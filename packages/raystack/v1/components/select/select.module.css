@@ -133,8 +133,8 @@
 }
 
 .triggerIcon {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   margin-left: var(--rs-space-3);
   flex-shrink: 0;
 }
@@ -162,8 +162,8 @@
 }
 
 .trigger-filter .triggerIcon {
-  width: 10px !important;
-  height: 10px !important;
+  width: 14px !important;
+  height: 14px !important;
   margin-left: var(--rs-space-1) !important;
 }
 
@@ -266,4 +266,11 @@
 .itemIcon svg {
   width: 16px;
   height: 16px;
+}
+
+.trigger-small .triggerIcon {
+  width: 12px;
+  height: 12px;
+  margin-left: var(--rs-space-2);
+  flex-shrink: 0;
 }
