@@ -12,8 +12,8 @@ export const playground = {
   controls: {
     size: {
       type: "select",
-      options: ["small", "medium", "large"],
-      defaultValue: "small",
+      options: ["t1", "t2", "t3", "t4"],
+      defaultValue: "t1",
     },
     as: {
       type: "select",
