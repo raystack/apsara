@@ -72,6 +72,10 @@
   padding: var(--rs-space-2);
   height: 24px;
   overflow: hidden;
+}
+
+.trigger-small .triggerContent {
+  overflow: hidden;
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-mini);
   font-style: normal;
@@ -80,9 +84,14 @@
   letter-spacing: var(--rs-letter-spacing-mini);
 }
 
+
 .trigger-medium {
   padding: var(--rs-space-3);
   height: 32px;
+  overflow: hidden;
+}
+
+.trigger-medium .triggerContent {
   overflow: hidden;
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
@@ -215,4 +224,10 @@
 .trigger-small .menuitem-icon {
   width: 12px;
   height: 12px;
+}
+
+.valueContent {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
 }
