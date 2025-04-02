@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TableContext } from "./context";
 import {
   DataTableProps,
@@ -58,10 +58,10 @@ function DataTableRoot<TData, TValue>({
     [tableQuery]
   );
 
-  function onDisplaySettingsReset() {
+  const onDisplaySettingsReset = useCallback(() => {
     setTableQuery((prev) => ({ ...prev, ...defaultTableQuery }));
     setColumnVisibility(initialColumnVisibility);
-  }
+  }, [defaultTableQuery, initialColumnVisibility]);
 
   const group_by = tableQuery.group_by?.[0];
 
@@ -115,11 +115,11 @@ function DataTableRoot<TData, TValue>({
     setTableQuery((prev) => fn(prev));
   }
 
-  function loadMoreData() {
+  const loadMoreData = useCallback(() => {
     if (mode === "server" && onLoadMore) {
       onLoadMore();
     }
-  }
+  }, [mode, onLoadMore]);
 
   const searchQuery = query?.search;
   useEffect(() => {
@@ -131,7 +131,21 @@ function DataTableRoot<TData, TValue>({
     }
   }, [searchQuery]);
 
-  const contextValue: TableContextType<TData, TValue> = {
+  const contextValue: TableContextType<TData, TValue> = useMemo(() => {
+    return {
+      table,
+      columns,
+      mode,
+      isLoading,
+      loadMoreData,
+      tableQuery,
+      updateTableQuery,
+      onDisplaySettingsReset,
+      defaultSort,
+      loadingRowCount,
+      onRowClick,
+    };
+  }, [
     table,
     columns,
     mode,
@@ -143,7 +157,7 @@ function DataTableRoot<TData, TValue>({
     defaultSort,
     loadingRowCount,
     onRowClick,
-  };
+  ]);
 
   return (
     <TableContext.Provider value={contextValue}>
