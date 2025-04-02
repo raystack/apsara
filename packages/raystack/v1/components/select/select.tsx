@@ -164,16 +164,16 @@ const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
     textProps?: TextProps;
-    icon?: React.ReactNode;
+    leadingIcon?: React.ReactNode;
   }
->(({ className, textProps = {}, children, icon, ...props }, ref) => (
+>(({ className, textProps = {}, children, leadingIcon, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={menuitem({ className })}
     role="option"
     {...props}
   >
-    {icon && <div className={styles.itemIcon}>{icon}</div>}
+    {leadingIcon && <div className={styles.itemIcon}>{leadingIcon}</div>}
     <SelectPrimitive.ItemText>
       <Text {...textProps}>{children}</Text>
     </SelectPrimitive.ItemText>

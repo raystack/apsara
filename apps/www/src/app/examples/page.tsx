@@ -205,7 +205,7 @@ const Page = () => {
                   <Select.Item 
                     key={option.value} 
                     value={option.value} 
-                    icon={option.icon}
+                    leadingIcon={option.icon}
                   >
                     {option.label}
                   </Select.Item>
@@ -226,7 +226,7 @@ const Page = () => {
                   <Select.Item 
                     key={option.value} 
                     value={option.value} 
-                    icon={option.icon}
+                    leadingIcon={option.icon}
                   >
                     {option.label}
                   </Select.Item>
