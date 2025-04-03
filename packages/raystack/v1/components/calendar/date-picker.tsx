@@ -1,6 +1,8 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PropsBase, PropsSingleRequired } from "react-day-picker";
 
@@ -11,6 +13,8 @@ import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
 
 dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
@@ -24,6 +28,7 @@ interface DatePickerProps {
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
+  timezone?: string;
 }
 
 export function DatePicker({
@@ -36,13 +41,14 @@ export function DatePicker({
   onSelect = () => {},
   children,
   showCalendarIcon = true,
+  timezone = dayjs.tz.guess(),
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
   const [inputState, setInputState] =
     useState<Partial<React.ComponentProps<typeof TextField>["state"]>>();
 
-  const formattedDate = dayjs(selectedDate).format(dateFormat);
+  const formattedDate = dayjs(selectedDate).tz(timezone).format(dateFormat);
 
   const isDropdownOpenRef = useRef(false);
   const textFieldRef = useRef<HTMLInputElement | null>(null);
@@ -76,7 +82,7 @@ export function DatePicker({
     isInputFieldFocused.current = false;
     setShowCalendar(false);
 
-    const updatedVal = dayjs(selectedDateRef.current).format(dateFormat);
+    const updatedVal = dayjs(selectedDateRef.current).tz(timezone).format(dateFormat);
 
     if (textFieldRef.current) textFieldRef.current.value = updatedVal;
     if (inputState === undefined && !skipUpdate)
@@ -142,7 +148,7 @@ export function DatePicker({
         return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`; // Replaces [8/8/2024] to [08/08/2024]
       }),
       format
-    );
+    ).tz(timezone);
 
     const isValidDate = date.isValid();
 

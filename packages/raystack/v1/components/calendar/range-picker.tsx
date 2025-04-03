@@ -1,5 +1,7 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { useState } from "react";
 import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
@@ -9,6 +11,9 @@ import { TextField } from "../textfield";
 import { TextfieldProps } from "../textfield/textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
@@ -22,6 +27,7 @@ interface RangePickerProps {
   children?: React.ReactNode | ((props: { startDate: string; endDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
   footer?: React.ReactNode;
+  timezone?: string;
 }
 
 type RangeFields = keyof DateRange;
@@ -41,13 +47,18 @@ export function RangePicker({
   children,
   showCalendarIcon = true,
   footer,
+  timezone = dayjs.tz.guess(),
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] = useState<RangeFields>("from");
   const [selectedRange, setSelectedRange] = useState(value);
 
-  const startDate = selectedRange.from ? dayjs(selectedRange.from).format(dateFormat) : '';
-  const endDate = selectedRange.to ? dayjs(selectedRange.to).format(dateFormat) : '';
+  const startDate = selectedRange.from 
+    ? dayjs(selectedRange.from).tz(timezone).format(dateFormat)
+    : '';
+  const endDate = selectedRange.to 
+    ? dayjs(selectedRange.to).tz(timezone).format(dateFormat)
+    : '';
 
   // 1st click will select the start date.
   // 2nd click will select the end date.
