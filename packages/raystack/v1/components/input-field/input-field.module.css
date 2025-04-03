@@ -76,7 +76,7 @@
   color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
   margin-left: var(--rs-space-3);
-  z-index: 1;
+  z-index: var(--rs-z-index-icons);
   pointer-events: auto;
 }
 
@@ -89,7 +89,7 @@
   color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
   margin-right: var(--rs-space-3);
-  z-index: 1;
+  z-index: var(--rs-z-index-icons);
   pointer-events: auto;
 }
 

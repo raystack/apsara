@@ -1,0 +1,31 @@
+/* 
+ * The suggested organization:
+ * Base layers (0 and below): For fundamental positioning
+ * UI Elements (10-30): For basic UI components
+ * Overlays & Backgrounds (40-60): For overlay elements and backdrop layers
+ * Interactive Components (70-90): For interactive elements that float above other content
+ */
+
+:root {
+    /* Base layers */
+    --rs-z-index-base: 0;
+    --rs-z-index-above: 1;
+    --rs-z-index-below: -1;
+
+    /* UI Elements (10-30) */
+    --rs-z-index-avatar: 10;
+    --rs-z-index-icons: 30;
+
+    /* Overlays & Backgrounds (40-60) */
+    --rs-z-index-sheet-overlay: 40;
+    --rs-z-index-sheet: 50;
+    --rs-z-index-drawer: 50;
+    --rs-z-index-dialog-overlay: 60;
+
+    /* Interactive Components (70-90) */
+    --rs-z-index-dialog: 70;
+    --rs-z-index-dropdown: 80;
+    --rs-z-index-select: 80;
+    --rs-z-index-popover: 80;
+    --rs-z-index-tooltip: 90;
+}
