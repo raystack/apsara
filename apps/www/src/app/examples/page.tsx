@@ -94,7 +94,7 @@ const Page = () => {
       <Flex
         direction="column"
         style={{
-          padding: "32px",
+          padding: "32px",  
           flex: 1,
           overflow: "auto",
         }}
@@ -103,7 +103,6 @@ const Page = () => {
           size={4}
           aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          variant="ghost"
           style={{ marginBottom: "16px" }}
         >
           <SidebarIcon />
@@ -113,7 +112,7 @@ const Page = () => {
           Main
         </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "400px" }}>
+        <Flex direction="column" style={{ maxWidth: "400px" }}>
           <Search
             placeholder="Default large search"
             showClearButton
@@ -131,9 +130,46 @@ const Page = () => {
           </Callout>}
           />
 
-          <DatePicker />
+          <Text size="large" weight="medium" style={{ marginTop: "24px", marginBottom: "16px" }}>
+            Date Pickers with Timezone Support
+          </Text>
 
-          <RangePicker />
+          <Flex direction="column" gap="medium">
+            <Text>Local Timezone DatePicker:</Text>
+            <DatePicker 
+              timezone="local"
+              onSelect={({ local, utc }) => {
+                console.log('Local date:', local);
+                console.log('UTC date:', utc);
+              }}
+            />
+
+            <Text>UTC Timezone DatePicker:</Text>
+            <DatePicker 
+              timezone="utc"
+              onSelect={({ local, utc }) => {
+                console.log('Local date:', local);
+                console.log('UTC date:', utc);
+              }}
+            />
+
+            <Text>-- Local Timezone RangePicker:</Text>
+            <RangePicker
+              onSelect={({ local, utc }) => {
+                console.log('--- Local range:', local);
+                console.log('--- UTC range:', utc);
+              }}
+            />
+
+            <Text>UTC Timezone RangePicker:</Text>
+            <RangePicker
+              timezone="utc"
+              onSelect={({ local, utc }) => {
+                console.log('Local range:', local);
+                console.log('UTC range:', utc);
+              }}
+            />
+          </Flex>
 
           <Search
             placeholder="Default small search"
@@ -211,9 +247,6 @@ const Page = () => {
 
           <RangePicker
             onSelect={(range) => console.log('Selected date range:', range)}
-            textFieldProps={{
-              label: "Select Date Range"
-            }}
           />
         </Flex>
 

@@ -1,6 +1,7 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import utc from "dayjs/plugin/utc";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PropsBase, PropsSingleRequired } from "react-day-picker";
 
@@ -11,19 +12,23 @@ import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
 
 dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+
+export type TimeZone = "local" | "utc";
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
   textFieldProps?: TextfieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
-  onSelect?: (date: Date) => void;
+  onSelect?: (date: { local: Date; utc: string }) => void;
   placeholder?: string;
   value?: Date;
   children?:
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
+  timezone?: TimeZone;
 }
 
 export function DatePicker({
@@ -36,13 +41,16 @@ export function DatePicker({
   onSelect = () => {},
   children,
   showCalendarIcon = true,
+  timezone = "local",
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
   const [inputState, setInputState] =
     useState<Partial<React.ComponentProps<typeof TextField>["state"]>>();
 
-  const formattedDate = dayjs(selectedDate).format(dateFormat);
+  const formattedDate = timezone === "utc" 
+    ? dayjs(selectedDate).utc().format(dateFormat)
+    : dayjs(selectedDate).format(dateFormat);
 
   const isDropdownOpenRef = useRef(false);
   const textFieldRef = useRef<HTMLInputElement | null>(null);
@@ -56,8 +64,8 @@ export function DatePicker({
 
   function isElementOutside(el: HTMLElement) {
     return (
-      !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
-      !textFieldRef.current?.contains(el) && // TextField
+      !isDropdownOpenRef.current &&
+      !textFieldRef.current?.contains(el) &&
       !contentRef.current?.contains(el)
     );
   }
@@ -76,18 +84,29 @@ export function DatePicker({
     isInputFieldFocused.current = false;
     setShowCalendar(false);
 
-    const updatedVal = dayjs(selectedDateRef.current).format(dateFormat);
+    const updatedVal = timezone === "utc"
+      ? dayjs(selectedDateRef.current).utc().format(dateFormat)
+      : dayjs(selectedDateRef.current).format(dateFormat);
 
     if (textFieldRef.current) textFieldRef.current.value = updatedVal;
-    if (inputState === undefined && !skipUpdate)
-      onSelect(dayjs(updatedVal).toDate());
+    if (inputState === undefined && !skipUpdate) {
+      const selectedDateTime = dayjs(selectedDateRef.current).startOf('day');
+      onSelect({
+        local: selectedDateTime.toDate(),
+        utc: selectedDateTime.utc().toISOString()
+      });
+    }
 
     document.removeEventListener("mouseup", handleMouseDown);
   }
 
   const handleSelect = (day: Date) => {
-    setSelectedDate(day);
-    onSelect(day);
+    const selectedDateTime = dayjs(day).startOf('day');
+    setSelectedDate(selectedDateTime.toDate());
+    onSelect({
+      local: selectedDateTime.toDate(),
+      utc: selectedDateTime.utc().toISOString()
+    });
     setInputState(undefined);
     removeEventListeners(true);
   };

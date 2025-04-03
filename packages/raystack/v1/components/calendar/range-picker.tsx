@@ -1,5 +1,6 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useState } from "react";
 import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
@@ -9,6 +10,9 @@ import { TextField } from "../textfield";
 import { TextfieldProps } from "../textfield/textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
+import { TimeZone } from "./date-picker";
+
+dayjs.extend(utc);
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
@@ -16,12 +20,13 @@ interface RangePickerProps {
   textFieldProps?: TextfieldProps;
   placeholders?: { startDate?: string; endDate?: string };
   calendarProps?: PropsRangeRequired & PropsBase;
-  onSelect?: (date: DateRange) => void;
+  onSelect?: (date: { local: DateRange; utc: { from?: string; to?: string } }) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
   children?: React.ReactNode | ((props: { startDate: string; endDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
   footer?: React.ReactNode;
+  timezone?: TimeZone;
 }
 
 type RangeFields = keyof DateRange;
@@ -41,13 +46,21 @@ export function RangePicker({
   children,
   showCalendarIcon = true,
   footer,
+  timezone = "local",
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] = useState<RangeFields>("from");
   const [selectedRange, setSelectedRange] = useState(value);
 
-  const startDate = selectedRange.from ? dayjs(selectedRange.from).format(dateFormat) : '';
-  const endDate = selectedRange.to ? dayjs(selectedRange.to).format(dateFormat) : '';
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return '';
+    return timezone === "utc" 
+      ? dayjs(date).utc().format(dateFormat)
+      : dayjs(date).format(dateFormat);
+  };
+
+  const startDate = formatDate(selectedRange.from);
+  const endDate = formatDate(selectedRange.to);
 
   // 1st click will select the start date.
   // 2nd click will select the end date.
@@ -80,11 +93,17 @@ export function RangePicker({
     setSelectedRange(newRange);
     
     // Return the range with +1 day for the end date in the callback
-    const callbackRange = {
-      from: newRange.from,
-      to: newRange.to ? dayjs(newRange.to).add(1, 'day').toDate() : undefined
+    const localRange = {
+      from: newRange.from ? dayjs(newRange.from).startOf('day').toDate() : undefined,
+      to: newRange.to ? dayjs(newRange.to).startOf('day').add(1, 'day').toDate() : undefined
     };
-    onSelect(callbackRange);
+
+    const utcRange = {
+      from: newRange.from ? dayjs(newRange.from).startOf('day').utc().toISOString() : undefined,
+      to: newRange.to ? dayjs(newRange.to).startOf('day').add(1, 'day').utc().toISOString() : undefined
+    };
+
+    onSelect({ local: localRange, utc: utcRange });
   };
 
   function onOpenChange(open?: boolean) {
