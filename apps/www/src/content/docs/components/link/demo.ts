@@ -25,16 +25,20 @@ export const playground = {
       ],
       defaultValue: "accent",
     },
-    size: { type: "number", min: 1, max: 10, defaultValue: 2 },
+    size: {
+      type: "select",
+      options: ["micro", "mini", "small", "regular", "large"],
+      defaultValue: "small",
+    },
     weight: {
       type: "select",
-      options: [100, 200, 300, 400, 500, 600, 700, 800, 900],
-      defaultValue: 400,
+      options: ["regular", "medium"],
+      defaultValue: "regular",
     },
     underline: { type: "checkbox", defaultValue: false },
     external: { type: "checkbox", defaultValue: false },
     download: { type: "checkbox", defaultValue: false },
-    children: { type: "text", initialValue: "Link" },
+    children: { type: "text", initialValue: "My Link" },
   },
   getCode,
 };
@@ -55,26 +59,20 @@ export const variantDemo = {
 export const sizeDemo = {
   type: "code",
   code: `
-  <Flex gap="medium" align="end">
-    <Link href="#" size={1}>Size 1</Link>
-    <Link href="#" size={2}>Size 2</Link>
-    <Link href="#" size={3}>Size 3</Link>
-    <Link href="#" size={4}>Size 4</Link>
-    <Link href="#" size={5}>Size 5</Link>
-    <Link href="#" size={6}>Size 6</Link>
-    <Link href="#" size={7}>Size 7</Link>
-    <Link href="#" size={8}>Size 8</Link>
-    <Link href="#" size={9}>Size 9</Link>
-    <Link href="#" size={10}>Size 10</Link>
+  <Flex gap="large" align="center">
+     <Link href="#" size="micro">This is a text</Link> 
+    <Link href="#" size="mini">This is a text</Link> 
+    <Link href="#" size="small">This is a text</Link> 
+    <Link href="#" size="regular">This is a text</Link> 
+    <Link href="#" size="large">This is a text</Link> 
   </Flex>`,
 };
 export const weightDemo = {
   type: "code",
   code: `
-  <Flex gap="medium" align="end">
-    <Link href="#" weight="normal">Normal Weight</Link>
-    <Link href="#" weight="bold">Bold Weight</Link>
-    <Link href="#" weight={500}>Weight 500</Link>
+  <Flex gap="large" align="center">
+    <Link href="#" weight="regular">This is a text</Link>
+    <Link href="#" weight="medium">This is a text</Link>
   </Flex>`,
 };
 export const styleDemo = {
@@ -83,6 +81,6 @@ export const styleDemo = {
   <Flex gap="medium" align="end">
     <Link href="#" variant="primary" underline>Underlined Link</Link>
     <Link href="https://example.com" external>External Link</Link>
-    <Link href="/file.pdf" download>Download File</Link>
+    <Link href="/assets/logo.svg" download>Download File</Link>
   </Flex>`,
 };
