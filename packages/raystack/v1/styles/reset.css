@@ -1,0 +1,11 @@
+/* Resets for button */
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+	appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
