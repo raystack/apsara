@@ -1,5 +1,11 @@
 export interface TextProps {
   /**
+   * Text element to render as.
+   * @default "span"
+   */
+  as?: "span" | "p" | "div" | "label" | "a";
+
+  /**
    * The visual style variant.
    * @default "primary"
    */
@@ -15,28 +21,45 @@ export interface TextProps {
 
   /**
    * The text size.
-   * @default 2
+   * @default "regular"
    */
-  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  size?: "micro" | "mini" | "small" | "regular" | "large";
 
   /**
-   * The font weight.
-   * @default 400
+   * The text weight.
+   * @default "regular"
    */
-  weight?:
-    | "bold"
-    | "bolder"
-    | "normal"
-    | "lighter"
-    | 100
-    | 200
-    | 300
-    | 400
-    | 500
-    | 600
-    | 700
-    | 800
-    | 900;
+  weight?: "regular" | "medium";
+
+  /**
+   * Text transform property
+   */
+  transform?: "capitalize" | "uppercase" | "lowercase";
+
+  /**
+   * Text align.
+   */
+  align?: "center" | "start" | "end" | "justify";
+
+  /**
+   * Should clamp line.
+   */
+  lineClamp?: 1 | 2 | 3 | 4 | 5;
+
+  /**
+   * Show underlined text.
+   */
+  underline?: boolean;
+
+  /**
+   * Show strikethrough text.
+   */
+  strikeThrough?: boolean;
+
+  /**
+   * Show italic text.
+   */
+  italic?: boolean;
 
   /** Additional CSS class names. */
   className?: string;
