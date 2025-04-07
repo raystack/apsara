@@ -191,7 +191,7 @@ const Page = () => {
           {/* Normal size select with icons */}
           <Flex direction="column" gap="2">
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
-              <Select.Trigger size="small" variant="filter">
+              <Select.Trigger size="small" variant="outline">
                 <Select.Value 
                   placeholder="Choose an options"
                   leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
