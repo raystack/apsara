@@ -298,7 +298,7 @@ const Page = () => {
           <Flex direction="column" gap="2">
             <Text size="small">Disabled Select:</Text>
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
-              <Select.Trigger size="small" variant="filter">
+              <Select.Trigger size="small" variant="outline">
                 <Select.Value 
                   placeholder="Choose an option"
                   leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
