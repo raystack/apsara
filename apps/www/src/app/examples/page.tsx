@@ -37,14 +37,12 @@ const Page = () => {
     { value: "profile", label: "Profile", icon: <SidebarIcon /> },
   ];
 
-  // First, define your options at the top with other constants
   const filterOptions = [
     { value: "Option 1", label: "Option 1", icon: <BellIcon /> },
     { value: "Option 2", label: "Option 2", icon: <FilterIcon /> },
     { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> }
   ];
 
-  // Get the icon for the selected value
   const getSelectedIcon = (value: any) => {
     const option = selectOptions.find(opt => opt.value === value);
     return option ? option.icon : null;
@@ -211,6 +209,28 @@ const Page = () => {
                 ))}
               </Select.Content>
             </Select>
+
+            <Select value={selectValue} onValueChange={setSelectValue}>
+              <Select.Trigger size="small" variant="filter">
+                <Select.Value 
+                  placeholder="Choose an options option option"
+                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
+                >
+                  {selectValue}
+                </Select.Value>
+              </Select.Trigger>
+              <Select.Content>
+                {filterOptions.map((option) => (
+                  <Select.Item 
+                    key={option.value} 
+                    value={option.value} 
+                    leadingIcon={option.icon}
+                  >
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
           </Flex>
         </Flex>
 
@@ -239,7 +259,7 @@ const Page = () => {
               </Select.Content>
             </Select>
             <Text size="small">Normal size:</Text>
-            <Select value={selectValue1} onValueChange={setSelectValue1} disabled>
+            <Select value={selectValue1} onValueChange={setSelectValue1}>
               <Select.Trigger>
                 <Select.Value 
                   placeholder="Choose an options"
@@ -322,7 +342,7 @@ const Page = () => {
 
           <Flex direction="column" gap="2">
             <Text size="small">Normal size:</Text>
-            <Select value={selectValue1} onValueChange={setSelectValue1} disabled>
+            <Select value={selectValue1} onValueChange={setSelectValue1}>
               <Select.Trigger>
                 <Select.Value 
                   placeholder="Choose an option"
