@@ -1,9 +1,9 @@
 export interface HeadlineProps {
   /**
    * Controls the size of the headline.
-   * @default "small"
+   * @default "t1"
    */
-  size?: "small" | "medium" | "large";
+  size?: "t1" | "t2" | "t3" | "t4";
 
   /**
    * HTML heading element to render.
@@ -22,9 +22,6 @@ export interface HeadlineProps {
    * @default false
    */
   truncate?: boolean;
-
-  /** Accessible label for the headline */
-  ariaLabel?: string;
 
   /** Additional CSS class names */
   className?: string;

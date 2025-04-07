@@ -8,6 +8,20 @@ import { LargeSearchToggle } from "fumadocs-ui/components/layout/search-toggle";
 import { cx } from "class-variance-authority";
 import { ThemeToggle } from "../theme-switcher";
 
+const LINKS = [
+  {
+    name: "Documentation",
+    url: "/docs",
+  },
+  {
+    name: "Playground",
+    url: "/playground",
+  },
+  {
+    name: "Icons",
+    url: "/icons",
+  },
+];
 export default function Navbar() {
   const pathname = usePathname();
 
@@ -17,24 +31,17 @@ export default function Navbar() {
         <Link href="/">
           <Logo variant="small" />
         </Link>
-        <Link href="/docs">
-          <p
-            className={cx(
-              styles.link,
-              pathname.startsWith("/docs") && styles.active,
-            )}>
-            Documentation
-          </p>
-        </Link>
-        <Link href="/playground">
-          <p
-            className={cx(
-              styles.link,
-              pathname === "/playground" && styles.active,
-            )}>
-            Playground
-          </p>
-        </Link>
+        {LINKS.map(link => (
+          <Link href={link.url} key={link.name}>
+            <p
+              className={cx(
+                styles.link,
+                pathname.startsWith(link.url) && styles.active,
+              )}>
+              {link.name}
+            </p>
+          </Link>
+        ))}
       </div>
       <div className={styles.actions}>
         <LargeSearchToggle style={{ width: 200 }} />

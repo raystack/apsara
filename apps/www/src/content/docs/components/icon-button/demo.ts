@@ -4,7 +4,7 @@ import { getPropsString } from "@/lib/utils";
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
-  return `<IconButton${getPropsString(rest)}>${children}</Headline>`;
+  return `<IconButton${getPropsString(rest)}>${children}</IconButton>`;
 };
 
 export const playground = {

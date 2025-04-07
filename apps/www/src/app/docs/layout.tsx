@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { docs } from "@/lib/source";
 import ThemeSwitcher from "@/components/theme-switcher";
+import { SidebarItem } from "@/components/docs/sidebar-item";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -13,6 +14,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         collapsible: false,
         footer: <ThemeSwitcher />,
         hideSearch: true,
+        components: {
+          Item: SidebarItem,
+        },
       }}>
       {children}
     </DocsLayout>

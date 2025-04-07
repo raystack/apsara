@@ -7,7 +7,10 @@ import {
   IconButton,
   Search,
   Select,
-  InputField,
+  TextArea,
+  RangePicker,
+  Callout,
+  DatePicker,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -47,6 +50,8 @@ const Page = () => {
     const option = selectOptions.find(opt => opt.value === value);
     return option ? option.icon : null;
   };
+  const [textArea1, setTextArea1] = useState("");
+  const [textArea2, setTextArea2] = useState("");
 
   return (
     <Flex
@@ -138,11 +143,19 @@ const Page = () => {
             placeholder="Default large search"
             showClearButton
             value={search1}
+            label="Search"
+            helperText="This is a helper text"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setSearch1(e.target.value)
             }
             onClear={() => setSearch1("")}
           />
+          
+          <RangePicker />
+
+          <DatePicker />
+
+          <RangePicker />
 
           <Search
             placeholder="Default small search"
@@ -160,6 +173,7 @@ const Page = () => {
             variant="borderless"
             showClearButton
             value={search3}
+            label="Search"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setSearch3(e.target.value)
             }
