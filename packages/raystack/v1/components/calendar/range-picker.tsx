@@ -20,7 +20,7 @@ interface RangePickerProps {
   textFieldProps?: TextfieldProps;
   placeholders?: { startDate?: string; endDate?: string };
   calendarProps?: PropsRangeRequired & PropsBase;
-  onSelect?: (date: { local: DateRange; utc: { from?: string; to?: string } }) => void;
+  onSelect?: (range: DateRange, utc?: { from?: string; to?: string }) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
   children?: React.ReactNode | ((props: { startDate: string; endDate: string }) => React.ReactNode);
@@ -103,7 +103,7 @@ export function RangePicker({
       to: newRange.to ? dayjs(newRange.to).startOf('day').add(1, 'day').utc().toISOString() : undefined
     };
 
-    onSelect({ local: localRange, utc: utcRange });
+    onSelect(localRange, utcRange);
   };
 
   function onOpenChange(open?: boolean) {

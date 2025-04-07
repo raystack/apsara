@@ -21,7 +21,7 @@ interface DatePickerProps {
   dateFormat?: string;
   textFieldProps?: TextfieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
-  onSelect?: (date: { local: Date; utc: string }) => void;
+  onSelect?: (date: Date, utc?: string) => void;
   placeholder?: string;
   value?: Date;
   children?:
@@ -91,10 +91,10 @@ export function DatePicker({
     if (textFieldRef.current) textFieldRef.current.value = updatedVal;
     if (inputState === undefined && !skipUpdate) {
       const selectedDateTime = dayjs(selectedDateRef.current).startOf('day');
-      onSelect({
-        local: selectedDateTime.toDate(),
-        utc: selectedDateTime.utc().toISOString()
-      });
+      onSelect(
+        selectedDateTime.toDate(),
+        selectedDateTime.utc().toISOString()
+      );
     }
 
     document.removeEventListener("mouseup", handleMouseDown);
@@ -103,10 +103,10 @@ export function DatePicker({
   const handleSelect = (day: Date) => {
     const selectedDateTime = dayjs(day).startOf('day');
     setSelectedDate(selectedDateTime.toDate());
-    onSelect({
-      local: selectedDateTime.toDate(),
-      utc: selectedDateTime.utc().toISOString()
-    });
+    onSelect(
+      selectedDateTime.toDate(),
+      selectedDateTime.utc().toISOString()
+    );
     setInputState(undefined);
     removeEventListeners(true);
   };
