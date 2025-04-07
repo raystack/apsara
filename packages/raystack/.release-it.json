@@ -1,17 +1,17 @@
 {
-	"git": {
-		"requireBranch": false,
-		"getLatestTagFromAllRefs": true,
-		"push": false,
-		"commit": false,
-		"tag": true,
-		"requireCleanWorkingDir": false
-	},
-	"github": {
-		"tag": true,
-		"release": true
-	},
-	"npm": {
-		"ignoreVersion": true
-	}
+  "git": {
+    "requireBranch": false,
+    "getLatestTagFromAllRefs": true,
+    "push": false,
+    "commit": false,
+    "tag": false,
+    "requireCleanWorkingDir": false
+  },
+  "github": {
+    "tag": false,
+    "release": false
+  },
+  "npm": {
+    "ignoreVersion": true
+  }
 }
