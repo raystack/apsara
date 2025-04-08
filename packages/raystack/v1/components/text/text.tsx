@@ -93,7 +93,7 @@ export const textVariants = cva(styles.text, {
 
 export type TextBaseProps = VariantProps<typeof textVariants> & {
   /**
-   * @remarks Use "micro", "mini", "small", "regular", "large"
+   * @remarks Use "micro" | "mini" | "small" | "regular" | "large"
    */
   size?:
     | 1
@@ -112,7 +112,7 @@ export type TextBaseProps = VariantProps<typeof textVariants> & {
     | "regular"
     | "large";
   /**
-   * @remarks Use "regular", "medium"
+   * @remarks Use "regular" | "medium"
    */
   weight?:
     | "regular"
