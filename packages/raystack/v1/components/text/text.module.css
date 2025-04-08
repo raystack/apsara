@@ -95,51 +95,39 @@
 .text-weight-bold {
   font-weight: bold;
 }
-
 .text-weight-bolder {
   font-weight: bolder;
 }
-
 .text-weight-normal {
   font-weight: normal;
 }
-
 .text-weight-lighter {
   font-weight: lighter;
 }
-
 .text-weight-100 {
   font-weight: 100;
 }
-
 .text-weight-200 {
   font-weight: 200;
 }
-
 .text-weight-300 {
   font-weight: 300;
 }
-
 .text-weight-400 {
   font-weight: var(--rs-font-weight-regular);
 }
-
 .text-weight-500 {
   font-weight: var(--rs-font-weight-medium);
 }
-
 .text-weight-600 {
   font-weight: 600;
 }
-
 .text-weight-700 {
   font-weight: 700;
 }
-
 .text-weight-800 {
   font-weight: 800;
 }
-
 .text-weight-900 {
   font-weight: 900;
 }
