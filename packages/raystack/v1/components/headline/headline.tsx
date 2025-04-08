@@ -10,6 +10,9 @@ const headline = cva(styles.headline, {
       t2: styles["headline-t2"],
       t3: styles["headline-t3"],
       t4: styles["headline-t4"],
+      small: styles["headline-small"],
+      medium: styles["headline-medium"],
+      large: styles["headline-large"],
     },
     align: {
       left: styles["headline-align-left"],
@@ -21,13 +24,18 @@ const headline = cva(styles.headline, {
     },
   },
   defaultVariants: {
-    size: "t1",
+    size: "t2",
     align: "left",
     truncate: false,
   },
 });
 
-export type HeadlineBaseProps = VariantProps<typeof headline>;
+export type HeadlineBaseProps = VariantProps<typeof headline> & {
+  /**
+   * @remarks Use "t1" | "t2" | "t3" | "t4"
+   */
+  size?: "t1" | "t2" | "t3" | "t4" | "small" | "medium" | "large";
+};
 
 type HeadlineProps = HeadlineBaseProps &
   HTMLAttributes<HTMLHeadingElement> & {
