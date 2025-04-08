@@ -31,12 +31,117 @@
   letter-spacing: var(--rs-letter-spacing-large);
 }
 
+/* @deprecated Text Size */
+.text-1 {
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+.text-2 {
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+.text-3 {
+  font-size: 13px;
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+.text-4 {
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+}
+.text-5 {
+  font-size: var(--rs-font-size-large);
+  line-height: var(--rs-line-height-large);
+  letter-spacing: var(--rs-letter-spacing-large);
+}
+.text-6 {
+  font-size: 18px;
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+}
+.text-7 {
+  font-size: 20px;
+  line-height: var(--rs-line-height-large);
+  letter-spacing: var(--rs-letter-spacing-large);
+}
+.text-8 {
+  font-size: 22px;
+  line-height: 28px;
+  letter-spacing: var(--rs-letter-spacing-large);
+}
+.text-9 {
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: var(--rs-letter-spacing-large);
+}
+.text-10 {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: var(--rs-letter-spacing-large);
+}
+
 /* Text Weight */
 .text-weight-regular {
   font-weight: var(--rs-font-weight-regular);
 }
 .text-weight-medium {
   font-weight: var(--rs-font-weight-medium);
+}
+
+/* @deprecated Text Weight */
+.text-weight-bold {
+  font-weight: bold;
+}
+
+.text-weight-bolder {
+  font-weight: bolder;
+}
+
+.text-weight-normal {
+  font-weight: normal;
+}
+
+.text-weight-lighter {
+  font-weight: lighter;
+}
+
+.text-weight-100 {
+  font-weight: 100;
+}
+
+.text-weight-200 {
+  font-weight: 200;
+}
+
+.text-weight-300 {
+  font-weight: 300;
+}
+
+.text-weight-400 {
+  font-weight: var(--rs-font-weight-regular);
+}
+
+.text-weight-500 {
+  font-weight: var(--rs-font-weight-medium);
+}
+
+.text-weight-600 {
+  font-weight: 600;
+}
+
+.text-weight-700 {
+  font-weight: 700;
+}
+
+.text-weight-800 {
+  font-weight: 800;
+}
+
+.text-weight-900 {
+  font-weight: 900;
 }
 
 /* Text Variant */
