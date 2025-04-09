@@ -13,7 +13,8 @@
 
 .cell:hover,
 .cell:focus,
-.cell[data-highlighted] {
+.cell[data-highlighted]:not(.comboboxcell),
+.cell.comboboxcell[data-active-item] {
   outline: none;
   cursor: pointer;
   font-family: var(--rs-font-body);
