@@ -25,6 +25,11 @@ export interface IconProps extends React.SVGAttributes<SVGElement> {
   color?: string;
 }
 
+interface SelectValueProps extends SelectPrimitive.SelectValueProps {
+  leadingIcon?: React.ReactNode;
+  placeholder?: string;
+}
+
 const trigger = cva(styles.trigger, {
   variants: {
     size: {
@@ -32,13 +37,13 @@ const trigger = cva(styles.trigger, {
       medium: styles["trigger-medium"],
     },
     variant: {
-      default: "",
-      filter: styles["trigger-filter"],
+      outline: styles["trigger-outline"],
+      text: styles["trigger-text"],
     }
   },
   defaultVariants: {
     size: "medium",
-    variant: "default",
+    variant: "outline",
   },
 });
 
@@ -66,7 +71,11 @@ const SelectTrigger = React.forwardRef<
     className={trigger({ size, variant, className })}
     aria-label={ariaLabel || 'Select option'}
     role="combobox"
-    style={style}
+    style={{
+      ...style,
+      display: 'flex',
+      justifyContent: 'space-between'
+    }}
     onPointerDown={(e) => {
       if (stopPropagation) {
         e.stopPropagation();
@@ -74,16 +83,16 @@ const SelectTrigger = React.forwardRef<
     }}
     {...props}
   >
-    {children}
-    {variant !== 'filter' && (
-      <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon 
-          className={styles.triggerIcon} 
-          aria-hidden="true"
-          {...iconProps} 
-        />
-      </SelectPrimitive.Icon>
-    )}
+    <div className={styles.triggerContent}>
+      {children}
+    </div>
+    <SelectPrimitive.Icon asChild>
+      <ChevronDownIcon 
+        className={styles.triggerIcon} 
+        aria-hidden="true"
+        {...iconProps} 
+      />
+    </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
@@ -114,18 +123,48 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const menuitem = cva(styles.menuitem);
 
+const SelectIconContext = React.createContext<{
+  icons: Record<string, React.ReactNode>;
+  registerIcon: (value: string, icon: React.ReactNode) => void;
+}>({
+  icons: {},
+  registerIcon: () => {}
+});
+
+interface SelectRootProps extends SelectPrimitive.SelectProps {
+  disabled?: boolean;
+}
+
+const SelectRoot = ({ children, disabled, ...props }: SelectRootProps) => {
+  const [icons, setIcons] = React.useState<Record<string, React.ReactNode>>({});
+  
+  const registerIcon = React.useCallback((value: string, icon: React.ReactNode) => {
+    setIcons(prev => ({ ...prev, [value]: icon }));
+  }, []);
+  
+  return (
+    <SelectIconContext.Provider value={{ icons, registerIcon }}>
+      <SelectPrimitive.Root disabled={disabled} {...props}>
+        {children}
+      </SelectPrimitive.Root>
+    </SelectIconContext.Provider>
+  );
+};
+
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
     textProps?: TextProps;
+    leadingIcon?: React.ReactNode;
   }
->(({ className, textProps = {}, children, ...props }, ref) => (
+>(({ className, textProps = {}, children, leadingIcon, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={menuitem({ className })}
     role="option"
     {...props}
   >
+    {leadingIcon && <div className={styles.itemIcon}>{leadingIcon}</div>}
     <SelectPrimitive.ItemText>
       <Text {...textProps}>{children}</Text>
     </SelectPrimitive.ItemText>
@@ -146,9 +185,29 @@ const SelectSeparator = React.forwardRef<
 ));
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName;
 
-export const Select = Object.assign(SelectPrimitive.Root, {
+const SelectValue = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Value>,
+  SelectValueProps
+>(({ leadingIcon, children, placeholder, ...props }, ref) => (
+  <SelectPrimitive.Value 
+    ref={ref} 
+    placeholder={placeholder}
+    {...props}
+  >
+    <div 
+      className={styles.valueContent}
+      title={typeof children === 'string' ? children : undefined}
+    >
+      {leadingIcon && <div className={styles.leadingIcon}>{leadingIcon}</div>}
+      {children}
+    </div>
+  </SelectPrimitive.Value>
+));
+SelectValue.displayName = SelectPrimitive.Value.displayName;
+
+export const Select = Object.assign(SelectRoot, {
   Group: SelectPrimitive.Group,
-  Value: SelectPrimitive.Value,
+  Value: SelectValue,
   ScrollUpButton: SelectPrimitive.ScrollDownButton,
   ScrollDownButton: SelectPrimitive.ScrollDownButton,
   Viewport: SelectPrimitive.Viewport,

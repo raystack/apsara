@@ -6,6 +6,7 @@ import {
   Text,
   IconButton,
   Search,
+  Select,
   TextArea,
   RangePicker,
   Callout,
@@ -19,6 +20,7 @@ import {
   OrganizationIcon,
   SidebarIcon,
 } from "@raystack/apsara/icons";
+import styles from "@/styles/Select.module.css";
 
 const Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -26,6 +28,29 @@ const Page = () => {
   const [search2, setSearch2] = useState("");
   const [search3, setSearch3] = useState("");
   const [search4, setSearch4] = useState("");
+  const [selectValue, setSelectValue] = useState("");
+  const [selectValue1, setSelectValue1] = useState("");
+  const [selectValue2, setSelectValue2] = useState("");
+  const [inputValue, setInputValue] = useState("");
+
+  // Sample options data with icons
+  const selectOptions = [
+    { value: "dashboard", label: "Dashboard", icon: <BellIcon /> },
+    { value: "analytics", label: "Analytics", icon: <FilterIcon /> },
+    { value: "settings", label: "Settings", icon: <OrganizationIcon /> },
+    { value: "profile", label: "Profile", icon: <SidebarIcon /> },
+  ];
+
+  const filterOptions = [
+    { value: "Option 1", label: "Option 1", icon: <BellIcon /> },
+    { value: "Option 2", label: "Option 2", icon: <FilterIcon /> },
+    { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> },
+  ];
+
+  const getSelectedIcon = (value: any) => {
+    const option = selectOptions.find(opt => opt.value === value);
+    return option ? option.icon : null;
+  };
   const [textArea1, setTextArea1] = useState("");
   const [textArea2, setTextArea2] = useState("");
 
@@ -110,7 +135,7 @@ const Page = () => {
           Main
         </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "400px" }}>
+        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
           <Search
             placeholder="Default large search"
             showClearButton
