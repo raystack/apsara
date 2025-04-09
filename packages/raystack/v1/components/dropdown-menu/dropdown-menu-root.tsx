@@ -14,7 +14,7 @@ interface DropdownContextValue {
 }
 /*
 Root context to manage the Dropdown control
-@remarks Only for interanl usage.
+@remarks Only for internal usage.
 */
 export const DropdownContext = createContext<DropdownContextValue | undefined>(
   undefined,
@@ -32,7 +32,7 @@ export const useDropdownContext = () => {
 
 /*
 Context to determine the level of Menu
-@remarks Only for interanl usage.
+@remarks Only for internal usage.
 */
 export const MenuLevelContext = createContext(1);
 
