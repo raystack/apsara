@@ -8,29 +8,44 @@ import {
 import { cx } from "class-variance-authority";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import styles from "./dropdown-menu.module.css";
+import { useDropdownContext, useMenuLevel } from "./dropdown-menu-root";
 
 export const DropdownMenuLabel = forwardRef<
   ElementRef<typeof DropdownMenuPrimitive.Label>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
->(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Label
-    ref={ref}
-    className={cx(styles.label, className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const { autocomplete, searchValue } = useDropdownContext();
+  const menuLevel = useMenuLevel();
+
+  if (autocomplete && menuLevel === 1 && searchValue?.length) return null;
+
+  return (
+    <DropdownMenuPrimitive.Label
+      ref={ref}
+      className={cx(styles.label, className)}
+      {...props}
+    />
+  );
+});
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 
 export const DropdownMenuSeparator = forwardRef<
   ElementRef<typeof DropdownMenuPrimitive.Separator>,
   ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
->(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Separator
-    ref={ref}
-    className={cx(styles.separator, className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const { autocomplete, searchValue } = useDropdownContext();
+  const menuLevel = useMenuLevel();
+
+  if (autocomplete && menuLevel === 1 && searchValue?.length) return null;
+
+  return (
+    <DropdownMenuPrimitive.Separator
+      ref={ref}
+      className={cx(styles.separator, className)}
+      {...props}
+    />
+  );
+});
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
 export const DropdownMenuGroup = forwardRef<

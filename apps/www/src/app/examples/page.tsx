@@ -10,6 +10,7 @@ import {
   RangePicker,
   Callout,
   DatePicker,
+  DropdownMenu,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -33,17 +34,15 @@ const Page = () => {
       style={{
         height: "calc(100vh - 60px)",
         backgroundColor: "var(--rs-color-background-base-primary)",
-      }}
-    >
+      }}>
       <Sidebar
         open={sidebarOpen}
         onOpenChange={setSidebarOpen}
-        onClick={(e) => {
+        onClick={e => {
           if (e.target === e.currentTarget) {
             setSidebarOpen(!sidebarOpen);
           }
-        }}
-      >
+        }}>
         <Sidebar.Header
           logo={<BellIcon width={24} height={24} />}
           title="Raystack"
@@ -97,15 +96,13 @@ const Page = () => {
           padding: "32px",
           flex: 1,
           overflow: "auto",
-        }}
-      >
+        }}>
         <IconButton
           size={4}
           aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           variant="ghost"
-          style={{ marginBottom: "16px" }}
-        >
+          style={{ marginBottom: "16px" }}>
           <SidebarIcon />
         </IconButton>
 
@@ -125,11 +122,70 @@ const Page = () => {
             }
             onClear={() => setSearch1("")}
           />
-          
-          <RangePicker footer={<Callout type="accent" width="100%" outline onDismiss={() => alert("Dismissed")}>
-            A short message
-          </Callout>}
+
+          <RangePicker
+            footer={
+              <Callout
+                type="accent"
+                width="100%"
+                outline
+                onDismiss={() => alert("Dismissed")}>
+                A short message
+              </Callout>
+            }
           />
+
+          <DropdownMenu autocomplete>
+            <DropdownMenu.Trigger asChild>
+              <Button color="neutral">Dropdown button</Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+              <DropdownMenu.Group>
+                <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
+                <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
+                <DropdownMenu.Item>Rename...</DropdownMenu.Item>
+              </DropdownMenu.Group>
+              <DropdownMenu.Separator />
+              <DropdownMenu.Label>Actions</DropdownMenu.Label>
+              <DropdownMenu.SubMenu>
+                <DropdownMenu.SubMenuTrigger>
+                  Export
+                </DropdownMenu.SubMenuTrigger>
+                <DropdownMenu.SubMenuContent>
+                  <DropdownMenu.SubMenu>
+                    <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
+                    <DropdownMenu.SubMenuTrigger>
+                      CSV
+                    </DropdownMenu.SubMenuTrigger>
+                    <DropdownMenu.SubMenuContent>
+                      <DropdownMenu.Item>All</DropdownMenu.Item>
+                      <DropdownMenu.Item>3 Months</DropdownMenu.Item>
+                      <DropdownMenu.Item>6 Months</DropdownMenu.Item>
+                    </DropdownMenu.SubMenuContent>
+                  </DropdownMenu.SubMenu>
+                  <DropdownMenu.SubMenu>
+                    <DropdownMenu.SubMenuTrigger>
+                      PDF
+                    </DropdownMenu.SubMenuTrigger>
+                    <DropdownMenu.SubMenuContent>
+                      <DropdownMenu.Item>All</DropdownMenu.Item>
+                      <DropdownMenu.Item>3 Months</DropdownMenu.Item>
+                      <DropdownMenu.Item>6 Months</DropdownMenu.Item>
+                    </DropdownMenu.SubMenuContent>
+                  </DropdownMenu.SubMenu>
+                </DropdownMenu.SubMenuContent>
+              </DropdownMenu.SubMenu>
+              <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
+              <DropdownMenu.Item
+                trailingIcon={
+                  <Text size="micro" variant="secondary">
+                    ⌘⇧D
+                  </Text>
+                }>
+                Delete...
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu>
 
           <DatePicker />
 
@@ -170,7 +226,10 @@ const Page = () => {
             onClear={() => setSearch4("")}
           />
 
-          <Text size="large" weight="medium" style={{ marginTop: "24px", marginBottom: "16px" }}>
+          <Text
+            size="large"
+            weight="medium"
+            style={{ marginTop: "24px", marginBottom: "16px" }}>
             Text Areas
           </Text>
 
@@ -178,41 +237,34 @@ const Page = () => {
             label="Description"
             placeholder="Enter text here"
             value={textArea1}
-            onChange={(e) => setTextArea1(e.target.value)}
+            onChange={e => setTextArea1(e.target.value)}
             helperText="This is a helper text"
           />
 
-          <TextArea
-            label="Read Only"
-            value="This is a read only text area"
-          />
+          <TextArea label="Read Only" value="This is a read only text area" />
 
           <TextArea
             label="Error State"
             value={textArea2}
-            onChange={(e) => setTextArea2(e.target.value)}
+            onChange={e => setTextArea2(e.target.value)}
             placeholder="Enter text here"
           />
 
-          <TextArea
-            label="Optional field"
-            placeholder="Optional input"
-          />
+          <TextArea label="Optional field" placeholder="Optional input" />
 
-          <TextArea
-            label="Disabled"
-            value="This is disabled"
-            disabled
-          />
+          <TextArea label="Disabled" value="This is disabled" disabled />
 
-          <Text size="large" weight="medium" style={{ marginTop: "24px", marginBottom: "16px" }}>
+          <Text
+            size="large"
+            weight="medium"
+            style={{ marginTop: "24px", marginBottom: "16px" }}>
             Date Range Picker
           </Text>
 
           <RangePicker
-            onSelect={(range) => console.log('Selected date range:', range)}
+            onSelect={range => console.log("Selected date range:", range)}
             textFieldProps={{
-              label: "Select Date Range"
+              label: "Select Date Range",
             }}
           />
         </Flex>
