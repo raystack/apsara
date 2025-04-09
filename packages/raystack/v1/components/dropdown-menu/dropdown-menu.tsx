@@ -1,96 +1,105 @@
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { cva, VariantProps } from "class-variance-authority";
 import * as React from "react";
-
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { cx } from "class-variance-authority";
 import styles from "./dropdown-menu.module.css";
+import { Cell, CellBaseProps } from "./cell";
+import { TriangleRightIcon } from "~/v1/icons";
 
-const content = cva(styles.content);
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content> &
-    React.PropsWithChildren<VariantProps<typeof content>>
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
 >(({ className, sideOffset = 4, ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
-      className={content({ className })}
+      className={cx(styles.content, className)}
       {...props}
     />
   </DropdownMenuPrimitive.Portal>
 ));
 DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
 
-const menuitem = cva(styles.menuitem);
+const DropdownMenuSubMenuContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Portal>
+    <DropdownMenuPrimitive.SubContent
+      ref={ref}
+      className={cx(styles.content, className)}
+      {...props}
+    />
+  </DropdownMenuPrimitive.Portal>
+));
+DropdownMenuSubMenuContent.displayName =
+  DropdownMenuPrimitive.SubContent.displayName;
+
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
-    leadingIcon?: React.ReactNode;
-    trailingIcon?: React.ReactNode;
-  } & React.PropsWithChildren<VariantProps<typeof menuitem>>
->(({ className, children, leadingIcon, trailingIcon, ...props }, ref) => (
-  <DropdownMenuPrimitive.Item
-    ref={ref}
-    className={menuitem({ className })}
-    {...props}
-  >
-    {leadingIcon && <span className={styles.leadingIcon}>{leadingIcon}</span>}
-    {children}
-    {trailingIcon && <span className={styles.trailingIcon}>{trailingIcon}</span>}
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> &
+    Omit<CellBaseProps, "type">
+>(({ children, ...props }, ref) => (
+  <DropdownMenuPrimitive.Item ref={ref} {...props} asChild>
+    <Cell>{children}</Cell>
   </DropdownMenuPrimitive.Item>
 ));
-DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
 
-const label = cva(styles.label);
+const DropdownMenuSubMenuTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> &
+    Omit<CellBaseProps, "type">
+>(({ children, trailingIcon = <TriangleRightIcon />, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubTrigger ref={ref} {...props} asChild>
+    <Cell trailingIcon={trailingIcon}>{children}</Cell>
+  </DropdownMenuPrimitive.SubTrigger>
+));
+DropdownMenuSubMenuTrigger.displayName =
+  DropdownMenuPrimitive.SubTrigger.displayName;
+
 const DropdownMenuLabel = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Label>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> &
-    React.PropsWithChildren<VariantProps<typeof label>>
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Label
     ref={ref}
-    className={label({ className })}
+    className={cx(styles.label, className)}
     {...props}
   />
 ));
 DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
 
-const separator = cva(styles.separator);
 const DropdownMenuSeparator = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator> &
-    React.PropsWithChildren<VariantProps<typeof separator>>
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={separator({ className })}
+    className={cx(styles.separator, className)}
     {...props}
   />
 ));
 DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
-const menugroup = cva(styles.menugroup);
 const DropdownMenuGroup = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Group>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Group> &
-    React.PropsWithChildren<VariantProps<typeof menugroup>>
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Group>
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Group
     ref={ref}
-    className={menugroup({ className })}
+    className={cx(styles.menugroup, className)}
     {...props}
   />
 ));
 DropdownMenuGroup.displayName = DropdownMenuPrimitive.Group.displayName;
 
-const emptystate = cva(styles.empty);
 const DropdownMenuEmptyState = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & {
     children: React.ReactNode;
   }
 >(({ className, children, ...props }, ref) => (
-  <div ref={ref} className={emptystate({ className })} {...props}>
+  <div ref={ref} className={cx(styles.empty, className)} {...props}>
     {children}
   </div>
 ));
@@ -114,5 +123,8 @@ export const DropdownMenu = Object.assign(DropdownMenuPrimitive.Root, {
   Group: DropdownMenuGroup,
   Label: DropdownMenuLabel,
   Separator: DropdownMenuSeparator,
-  EmptyState: DropdownMenuEmptyState
+  EmptyState: DropdownMenuEmptyState,
+  SubMenu: DropdownMenuPrimitive.Sub,
+  SubMenuContent: DropdownMenuSubMenuContent,
+  SubMenuTrigger: DropdownMenuSubMenuTrigger,
 });

@@ -18,38 +18,6 @@
   min-width: var(--radix-dropdown-menu-trigger-width);
 }
 
-.menuitem {
-  position: relative;
-  padding: var(--rs-space-3);
-  display: flex;
-  align-items: center;
-  gap: var(--rs-space-2);
-  font-family: var(--rs-font-body);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-small);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
-}
-
-.menuitem:hover,
-.menuitem:focus,
-.menuitem[data-highlighted] {
-  outline: none;
-  cursor: pointer;
-  font-family: var(--rs-font-body);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-small);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
-  border-radius: var(--rs-radius-2);
-  background: var(--rs-color-background-base-primary-hover);
-}
-
-.menuitem[data-disabled] {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
 .label {
   padding: 6px var(--rs-space-3);
   font-weight: var(--rs-font-weight-medium);

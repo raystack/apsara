@@ -12,3 +12,4 @@ export { ReactComponent as FilterIcon } from "./assets/filter.svg";
 export { ReactComponent as OrganizationIcon } from "./assets/organization.svg";
 export { ReactComponent as ShoppingBagFilledIcon } from "./assets/shopping-bag-filled.svg";
 export { ReactComponent as SidebarIcon } from "./assets/sidebar.svg";
+export { ReactComponent as TriangleRightIcon } from "./assets/triangle-right.svg";
