@@ -10,6 +10,7 @@ import {
   colorsDemo,
   radiusDemo,
   imageDemo,
+  generatedColorDemo
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -53,3 +54,9 @@ Choose between small and full border radius styles to match your design preferen
 Avatar can display user images with graceful fallback to initials when images fail to load or aren't available.
 
 <Demo data={imageDemo} />
+
+### With Generated Colors
+
+use `getAvatarColor` utility to generate colors based on a string.
+
+<Demo data={generatedColorDemo} />
