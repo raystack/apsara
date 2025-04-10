@@ -2,8 +2,10 @@
 @import './primitives/gray.css';
 @import './primitives/accent.css';
 @import './primitives/appearance.css';
+@import './primitives/z-index.css';
 @import './colors.css';
 @import './radius.css';
 @import './spacing.css';
 @import './effects.css';
 @import './typography.css';
+
