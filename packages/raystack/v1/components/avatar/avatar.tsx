@@ -10,6 +10,7 @@ import {
 
 import { Box } from "../box";
 import styles from "./avatar.module.css";
+import {AVATAR_COLORS} from './utils'
 
 const avatar = cva(styles.avatar, {
   variants: {
@@ -99,8 +100,7 @@ export interface AvatarProps
   alt?: string;
   fallback?: ReactNode;
   variant?: "solid" | "soft";
-  color?: "indigo" | "orange" | "mint" | "neutral" | 
-         "sky" | "lime" | "grass" | "cyan" | "iris" | "purple" | "pink" | "crimson" | "gold";
+  color?: AVATAR_COLORS;
   asChild?: boolean;
   className?: string;
 }
