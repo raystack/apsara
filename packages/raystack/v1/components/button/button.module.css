@@ -319,6 +319,10 @@
   background-color: var(--rs-color-background-success-emphasis-hover);
 }
 
+.button-solid-success.button-loading:hover {
+  background-color: var(--rs-color-background-success-emphasis);
+}
+
 /* Outline variant colors */
 .button-outline-accent {
   border-color: var(--rs-color-border-accent-emphasis);
@@ -348,6 +352,11 @@
   background-color: var(--rs-color-background-danger-emphasis);
   color: var(--rs-color-foreground-danger-emphasis);
   border-color: transparent;
+}
+
+.button-outline-danger.button-loading:hover {
+  border-color: var(--rs-color-border-danger-emphasis);
+  background-color: transparent;
 }
 
 .button-outline-neutral {
@@ -381,6 +390,11 @@
   background-color: var(--rs-color-background-success-emphasis);
   color: var(--rs-color-foreground-success-emphasis);
   border-color: transparent;
+}
+
+.button-outline-success.button-loading:hover {
+  border-color: var(--rs-color-border-success-emphasis);
+  background-color: transparent;
 }
 
 .button-solid,
