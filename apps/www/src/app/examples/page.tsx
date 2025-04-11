@@ -166,7 +166,6 @@ const Page = () => {
               <Spinner size={3} color="default" />
               <Spinner size={3} color="inverted" />
               <Spinner size={3} color="accent" />
-              <Spinner size={3} color="neutral" />
               <Spinner size={3} color="danger" />
               <Spinner size={3} color="success" />
               <Spinner size={3} color="attention" />
@@ -185,9 +184,6 @@ const Page = () => {
                 <Button variant="solid" color="accent" loading>
                   Loading
                 </Button>
-                <Button variant="solid" color="neutral" loading>
-                  Loading
-                </Button>
                 <Button variant="solid" color="danger" loading>
                   Loading
                 </Button>
@@ -204,9 +200,6 @@ const Page = () => {
                 <Button variant="outline" color="accent" loading>
                   Loading
                 </Button>
-                <Button variant="outline" color="neutral" loading>
-                  Loading
-                </Button>
                 <Button variant="outline" color="danger" loading>
                   Loading
                 </Button>
@@ -218,12 +211,9 @@ const Page = () => {
 
             {/* Ghost Variant */}
             <Flex direction="column" gap={3}>
-              <Text weight="medium">Ghost Variant (Matching Color Spinner for colored, Default for neutral)</Text>
+              <Text weight="medium">Ghost Variant (Matching Color Spinner for colored)</Text>
               <Flex gap={4} align="center">
                 <Button variant="ghost" color="accent" loading>
-                  Loading
-                </Button>
-                <Button variant="ghost" color="neutral" loading>
                   Loading
                 </Button>
                 <Button variant="ghost" color="danger" loading>
@@ -237,12 +227,9 @@ const Page = () => {
 
             {/* Text Variant */}
             <Flex direction="column" gap={3}>
-              <Text weight="medium">Text Variant (Matching Color Spinner for colored, Default for neutral)</Text>
+              <Text weight="medium">Text Variant (Matching Color Spinner for colored)</Text>
               <Flex gap={4} align="center">
                 <Button variant="text" color="accent" loading>
-                  Loading
-                </Button>
-                <Button variant="text" color="neutral" loading>
                   Loading
                 </Button>
                 <Button variant="text" color="danger" loading>
