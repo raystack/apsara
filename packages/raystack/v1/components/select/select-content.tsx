@@ -16,7 +16,7 @@ export const SelectContent = forwardRef<
         e.stopPropagation();
       }}
       {...props}>
-      {children}
+      <SelectPrimitive.Viewport>{children}</SelectPrimitive.Viewport>
     </SelectPrimitive.Content>
   </SelectPrimitive.Portal>
 ));
