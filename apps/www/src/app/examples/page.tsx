@@ -164,7 +164,7 @@ const Page = () => {
           <Flex direction="column" gap={4}>
             <Flex gap={4} align="center">
               <Spinner size={3} color="default" />
-              <Spinner size={3} color="inverted" />
+              <Spinner size={3} color="neutral" />
               <Spinner size={3} color="accent" />
               <Spinner size={3} color="danger" />
               <Spinner size={3} color="success" />
@@ -230,6 +230,9 @@ const Page = () => {
               <Text weight="medium">Text Variant (Matching Color Spinner for colored)</Text>
               <Flex gap={4} align="center">
                 <Button variant="text" color="accent" loading>
+                  Loading
+                </Button>
+                <Button variant="text" color="neutral" loading>
                   Loading
                 </Button>
                 <Button variant="text" color="danger" loading>
