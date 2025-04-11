@@ -354,6 +354,11 @@
   border-color: transparent;
 }
 
+.button-outline-danger.button-loading:hover {
+  border-color: var(--rs-color-border-danger-emphasis);
+  background-color: transparent;
+}
+
 .button-outline-neutral {
   background-color: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
@@ -385,6 +390,11 @@
   background-color: var(--rs-color-background-success-emphasis);
   color: var(--rs-color-foreground-success-emphasis);
   border-color: transparent;
+}
+
+.button-outline-success.button-loading:hover {
+  border-color: var(--rs-color-border-success-emphasis);
+  background-color: transparent;
 }
 
 .button-solid,
