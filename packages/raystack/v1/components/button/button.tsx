@@ -69,7 +69,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const widthStyle = { maxWidth, width };
     const buttonStyle = { ...widthStyle, ...style };
 
-    const spinnerColor = variant === 'solid' ? 'inverted' : 'default';
+    const getSpinnerColor = () => {
+      if (variant === 'solid') return 'inverted';
+      if (variant === 'text' || variant === 'ghost') return color === 'neutral' ? 'default' : color;
+      return color;
+    };
+
+    const spinnerColor = getSpinnerColor();
 
     return (
       <Comp

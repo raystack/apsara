@@ -11,6 +11,7 @@ import {
   RangePicker,
   Callout,
   DatePicker,
+  Spinner,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -128,7 +129,6 @@ const Page = () => {
           size={4}
           aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          variant="ghost"
           style={{ marginBottom: "16px" }}
         >
           <SidebarIcon />
@@ -138,7 +138,7 @@ const Page = () => {
           Main
         </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
+        <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
           <Search
             placeholder="Default large search"
             showClearButton
@@ -156,6 +156,161 @@ const Page = () => {
           <DatePicker />
 
           <RangePicker />
+
+          <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
+            Spinner Examples
+          </Text>
+
+          <Flex direction="column" gap={4}>
+            <Flex gap={4} align="center">
+              <Spinner size={3} color="default" />
+              <Spinner size={3} color="inverted" />
+              <Spinner size={3} color="accent" />
+              <Spinner size={3} color="neutral" />
+              <Spinner size={3} color="danger" />
+              <Spinner size={3} color="success" />
+              <Spinner size={3} color="attention" />
+            </Flex>
+          </Flex>
+
+          <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
+            Button Loading States Examples
+          </Text>
+
+          <Flex direction="column" gap={6}>
+            {/* Solid Variant */}
+            <Flex direction="column" gap={3}>
+              <Text weight="medium">Solid Variant (Inverted Spinner)</Text>
+              <Flex gap={4} align="center">
+                <Button variant="solid" color="accent" loading>
+                  Loading
+                </Button>
+                <Button variant="solid" color="neutral" loading>
+                  Loading
+                </Button>
+                <Button variant="solid" color="danger" loading>
+                  Loading
+                </Button>
+                <Button variant="solid" color="success" loading>
+                  Loading
+                </Button>
+              </Flex>
+            </Flex>
+
+            {/* Outline Variant */}
+            <Flex direction="column" gap={3}>
+              <Text weight="medium">Outline Variant (Matching Color Spinner)</Text>
+              <Flex gap={4} align="center">
+                <Button variant="outline" color="accent" loading>
+                  Loading
+                </Button>
+                <Button variant="outline" color="neutral" loading>
+                  Loading
+                </Button>
+                <Button variant="outline" color="danger" loading>
+                  Loading
+                </Button>
+                <Button variant="outline" color="success" loading>
+                  Loading
+                </Button>
+              </Flex>
+            </Flex>
+
+            {/* Ghost Variant */}
+            <Flex direction="column" gap={3}>
+              <Text weight="medium">Ghost Variant (Matching Color Spinner for colored, Default for neutral)</Text>
+              <Flex gap={4} align="center">
+                <Button variant="ghost" color="accent" loading>
+                  Loading
+                </Button>
+                <Button variant="ghost" color="neutral" loading>
+                  Loading
+                </Button>
+                <Button variant="ghost" color="danger" loading>
+                  Loading
+                </Button>
+                <Button variant="ghost" color="success" loading>
+                  Loading
+                </Button>
+              </Flex>
+            </Flex>
+
+            {/* Text Variant */}
+            <Flex direction="column" gap={3}>
+              <Text weight="medium">Text Variant (Matching Color Spinner for colored, Default for neutral)</Text>
+              <Flex gap={4} align="center">
+                <Button variant="text" color="accent" loading>
+                  Loading
+                </Button>
+                <Button variant="text" color="neutral" loading>
+                  Loading
+                </Button>
+                <Button variant="text" color="danger" loading>
+                  Loading
+                </Button>
+                <Button variant="text" color="success" loading>
+                  Loading
+                </Button>
+              </Flex>
+            </Flex>
+
+            {/* Size Variants */}
+            <Flex direction="column" gap={3}>
+              <Text weight="medium">Size Variants</Text>
+              <Flex gap={4} align="center">
+                <Button variant="solid" color="accent" size="small" loading>
+                  Small
+                </Button>
+                <Button variant="solid" color="accent" size="normal" loading>
+                  Normal
+                </Button>
+                <Button variant="outline" color="accent" size="small" loading>
+                  Small
+                </Button>
+                <Button variant="outline" color="accent" size="normal" loading>
+                  Normal
+                </Button>
+              </Flex>
+            </Flex>
+
+            {/* Loading with and without text */}
+            <Flex direction="column" gap={3}>
+              <Text weight="medium">Loading With/Without Text</Text>
+              <Flex gap={4} align="center">
+                <Button variant="solid" color="accent" loading>
+                  Loading
+                </Button>
+                <Button variant="solid" color="accent" loading loaderText="Processing...">
+                  Button
+                </Button>
+                <Button variant="outline" color="accent" loading>
+                  Loading
+                </Button>
+                <Button variant="outline" color="accent" loading loaderText="Processing...">
+                  Button
+                </Button>
+              </Flex>
+            </Flex>
+
+            {/* Disabled Loading State */}
+            <Flex direction="column" gap={3}>
+              <Text weight="medium">Disabled Loading State</Text>
+              <Flex gap={4} align="center">
+                <Button variant="solid" color="accent" loading disabled>
+                  Loading
+                </Button>
+                <Button variant="outline" color="accent" loading disabled>
+                  Loading
+                </Button>
+                <Button variant="ghost" color="accent" loading disabled>
+                  Loading
+                </Button>
+                <Button variant="text" color="accent" loading disabled>
+                  Loading
+                </Button>
+              </Flex>
+            </Flex>
+          </Flex>
 
           <Search
             placeholder="Default small search"
@@ -199,9 +354,9 @@ const Page = () => {
           Select Examples
         </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
+        <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
           {/* Normal size select with icons */}
-          <Flex direction="column" gap="2">
+          <Flex direction="column" gap={2}>
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
               <Select.Trigger size="small" variant="outline">
                 <Select.Value 
@@ -225,7 +380,7 @@ const Page = () => {
             </Select>
 
             <Select value={selectValue} onValueChange={setSelectValue}>
-              <Select.Trigger size="small" variant="filter">
+              <Select.Trigger size="small" variant="outline">
                 <Select.Value 
                   placeholder="Choose an options option option"
                   leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
@@ -248,9 +403,9 @@ const Page = () => {
           </Flex>
         </Flex>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
+        <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
           {/* Normal size select with icons */}
-          <Flex direction="column" gap="2">
+          <Flex direction="column" gap={2}>
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
               <Select.Trigger size="small" variant="outline">
                 <Select.Value 
@@ -297,7 +452,7 @@ const Page = () => {
           </Flex>
 
           {/* Small size select with icons */}
-          <Flex direction="column" gap="2">
+          <Flex direction="column" gap={2}>
             <Text size="small">Small size:</Text>
             <Select value={selectValue2} onValueChange={setSelectValue2}>
               <Select.Trigger size="small">
@@ -327,9 +482,9 @@ const Page = () => {
           Form Component Examples
         </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "300px" }}>
+        <Flex direction="column" gap={4} style={{ maxWidth: "300px" }}>
           {/* Select Examples */}
-          <Flex direction="column" gap="2">
+          <Flex direction="column" gap={2}>
             <Text size="small">Disabled Select:</Text>
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
               <Select.Trigger size="small" variant="outline">
@@ -354,7 +509,7 @@ const Page = () => {
             </Select>
           </Flex>
 
-          <Flex direction="column" gap="2">
+          <Flex direction="column" gap={2}>
             <Text size="small">Normal size:</Text>
             <Select value={selectValue1} onValueChange={setSelectValue1}>
               <Select.Trigger>

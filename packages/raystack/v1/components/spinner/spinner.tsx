@@ -16,6 +16,11 @@ const spinner = cva(styles.spinner, {
     color: {
       default: styles["spinner-color-default"],
       inverted: styles["spinner-color-inverted"],
+      accent: styles["spinner-color-accent"],
+      neutral: styles["spinner-color-neutral"],
+      danger: styles["spinner-color-danger"],
+      success: styles["spinner-color-success"],
+      attention: styles["spinner-color-attention"],
     }
   },
   defaultVariants: {
@@ -28,7 +33,7 @@ export interface SpinnerProps
   extends ComponentPropsWithoutRef<"div">,
     VariantProps<typeof spinner> {
   size?: 1 | 2 | 3 | 4 | 5 | 6;
-  color?: "default" | "inverted";
+  color?: "default" | "inverted" | "accent" | "neutral" | "danger" | "success" | "attention";
 }
 
 export const Spinner = forwardRef<ElementRef<"div">, SpinnerProps>(
