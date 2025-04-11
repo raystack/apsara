@@ -319,6 +319,10 @@
   background-color: var(--rs-color-background-success-emphasis-hover);
 }
 
+.button-solid-success.button-loading:hover {
+  background-color: var(--rs-color-background-success-emphasis);
+}
+
 /* Outline variant colors */
 .button-outline-accent {
   border-color: var(--rs-color-border-accent-emphasis);
