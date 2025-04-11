@@ -1,0 +1,95 @@
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  forwardRef,
+  PropsWithChildren,
+} from "react";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { cva, VariantProps } from "class-variance-authority";
+import styles from "./select.module.css";
+
+export interface AriaProps {
+  "aria-label"?: string;
+  "aria-describedby"?: string;
+  "aria-required"?: boolean;
+  "aria-invalid"?: boolean;
+}
+
+export interface TriggerStyleProps {
+  style?: React.CSSProperties;
+  className?: string;
+  stopPropagation?: boolean;
+}
+
+export interface IconProps extends React.SVGAttributes<SVGElement> {
+  children?: never;
+  color?: string;
+}
+
+const trigger = cva(styles.trigger, {
+  variants: {
+    size: {
+      small: styles["trigger-small"],
+      medium: styles["trigger-medium"],
+    },
+    variant: {
+      outline: styles["trigger-outline"],
+      text: styles["trigger-text"],
+    },
+  },
+  defaultVariants: {
+    size: "medium",
+    variant: "outline",
+  },
+});
+
+export const SelectTrigger = forwardRef<
+  ElementRef<typeof SelectPrimitive.Trigger>,
+  ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
+    PropsWithChildren<VariantProps<typeof trigger>> & {
+      iconProps?: IconProps;
+    } & AriaProps &
+    TriggerStyleProps
+>(
+  (
+    {
+      size,
+      variant,
+      className,
+      children,
+      iconProps = {},
+      "aria-label": ariaLabel,
+      style,
+      stopPropagation = false,
+      ...props
+    },
+    ref,
+  ) => (
+    <SelectPrimitive.Trigger
+      ref={ref}
+      className={trigger({ size, variant, className })}
+      aria-label={ariaLabel || "Select option"}
+      style={{
+        ...style,
+        display: "flex",
+        justifyContent: "space-between",
+      }}
+      onPointerDown={e => {
+        if (stopPropagation) {
+          e.stopPropagation();
+        }
+      }}
+      {...props}>
+      <div className={styles.triggerContent}>{children}</div>
+      <SelectPrimitive.Icon asChild>
+        <ChevronDownIcon
+          className={styles.triggerIcon}
+          aria-hidden="true"
+          {...iconProps}
+        />
+      </SelectPrimitive.Icon>
+    </SelectPrimitive.Trigger>
+  ),
+);
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;

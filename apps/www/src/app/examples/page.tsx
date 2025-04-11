@@ -43,7 +43,7 @@ const Page = () => {
   const filterOptions = [
     { value: "Option 1", label: "Option 1", icon: <BellIcon /> },
     { value: "Option 2", label: "Option 2", icon: <FilterIcon /> },
-    { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> }
+    { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> },
   ];
 
   const getSelectedIcon = (value: any) => {
@@ -58,17 +58,15 @@ const Page = () => {
       style={{
         height: "calc(100vh - 60px)",
         backgroundColor: "var(--rs-color-background-base-primary)",
-      }}
-    >
+      }}>
       <Sidebar
         open={sidebarOpen}
         onOpenChange={setSidebarOpen}
-        onClick={(e) => {
+        onClick={e => {
           if (e.target === e.currentTarget) {
             setSidebarOpen(!sidebarOpen);
           }
-        }}
-      >
+        }}>
         <Sidebar.Header
           logo={<BellIcon width={24} height={24} />}
           title="Raystack"
@@ -122,15 +120,13 @@ const Page = () => {
           padding: "32px",
           flex: 1,
           overflow: "auto",
-        }}
-      >
+        }}>
         <IconButton
           size={4}
           aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           variant="ghost"
-          style={{ marginBottom: "16px" }}
-        >
+          style={{ marginBottom: "16px" }}>
           <SidebarIcon />
         </IconButton>
 
@@ -150,7 +146,7 @@ const Page = () => {
             }
             onClear={() => setSearch1("")}
           />
-          
+
           <RangePicker />
 
           <DatePicker />
@@ -191,11 +187,13 @@ const Page = () => {
             }
             onClear={() => setSearch4("")}
           />
-
         </Flex>
 
         {/* Select component examples */}
-        <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
+        <Text
+          size="large"
+          weight="medium"
+          style={{ marginTop: "32px", marginBottom: "16px" }}>
           Select Examples
         </Text>
 
@@ -204,20 +202,14 @@ const Page = () => {
           <Flex direction="column" gap="2">
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
               <Select.Trigger size="small" variant="outline">
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
+                <Select.Value placeholder="Choose an options" />
               </Select.Trigger>
               <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
+                {filterOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
                     {option.label}
                   </Select.Item>
                 ))}
@@ -226,20 +218,14 @@ const Page = () => {
 
             <Select value={selectValue} onValueChange={setSelectValue}>
               <Select.Trigger size="small" variant="filter">
-                <Select.Value 
-                  placeholder="Choose an options option option"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
+                <Select.Value placeholder="Choose an options option option" />
               </Select.Trigger>
               <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
+                {filterOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
                     {option.label}
                   </Select.Item>
                 ))}
@@ -253,20 +239,14 @@ const Page = () => {
           <Flex direction="column" gap="2">
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
               <Select.Trigger size="small" variant="outline">
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
+                <Select.Value placeholder="Choose an options" />
               </Select.Trigger>
               <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
+                {filterOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
                     {option.label}
                   </Select.Item>
                 ))}
@@ -275,20 +255,14 @@ const Page = () => {
             <Text size="small">Normal size:</Text>
             <Select value={selectValue1} onValueChange={setSelectValue1}>
               <Select.Trigger>
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={selectOptions.find(opt => opt.value === selectValue1)?.icon}
-                >
-                  {selectValue1}
-                </Select.Value>
+                <Select.Value placeholder="Choose an options" />
               </Select.Trigger>
               <Select.Content>
-                {selectOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
                     {option.label}
                   </Select.Item>
                 ))}
@@ -301,20 +275,14 @@ const Page = () => {
             <Text size="small">Small size:</Text>
             <Select value={selectValue2} onValueChange={setSelectValue2}>
               <Select.Trigger size="small">
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={selectOptions.find(opt => opt.value === selectValue2)?.icon}
-                >
-                  {selectValue2}
-                </Select.Value>
+                <Select.Value placeholder="Choose an options" />
               </Select.Trigger>
               <Select.Content>
-                {selectOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
                     {option.label}
                   </Select.Item>
                 ))}
@@ -323,7 +291,10 @@ const Page = () => {
           </Flex>
         </Flex>
 
-        <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
+        <Text
+          size="large"
+          weight="medium"
+          style={{ marginTop: "32px", marginBottom: "16px" }}>
           Form Component Examples
         </Text>
 
@@ -333,20 +304,14 @@ const Page = () => {
             <Text size="small">Disabled Select:</Text>
             <Select value={selectValue} onValueChange={setSelectValue} disabled>
               <Select.Trigger size="small" variant="outline">
-                <Select.Value 
-                  placeholder="Choose an option"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
+                <Select.Value placeholder="Choose an option" />
               </Select.Trigger>
               <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
+                {filterOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
                     {option.label}
                   </Select.Item>
                 ))}
@@ -355,22 +320,57 @@ const Page = () => {
           </Flex>
 
           <Flex direction="column" gap="2">
-            <Text size="small">Normal size:</Text>
-            <Select value={selectValue1} onValueChange={setSelectValue1}>
+            <Text size="small">Test Normal size:</Text>
+            <Select
+              value={selectValue}
+              onValueChange={value => {
+                console.log(value);
+                setSelectValue(value);
+              }}>
               <Select.Trigger>
-                <Select.Value 
-                  placeholder="Choose an option"
-                  leadingIcon={selectOptions.find(opt => opt.value === selectValue1)?.icon}
-                >
-                  {selectValue1}
-                </Select.Value>
+                <Select.Value placeholder="Choose an option" />
               </Select.Trigger>
               <Select.Content>
-                {selectOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+            {/* <Select
+              value={selectValue}
+              onValueChange={value => {
+                console.log(value);
+                setSelectValue(value);
+              }}>
+              <Select.Trigger size="small" variant="outline">
+                <Select.Value placeholder="Choose an option" />
+              </Select.Trigger>
+              <Select.Content>
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select> */}
+            <Select value={selectValue} onValueChange={setSelectValue}>
+              <Select.Trigger size="small">
+                <Select.Value placeholder="Choose an options" />
+              </Select.Trigger>
+              <Select.Content>
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    // leadingIcon={option.icon}
                   >
                     {option.label}
                   </Select.Item>
