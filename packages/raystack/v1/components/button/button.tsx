@@ -69,14 +69,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const widthStyle = { maxWidth, width };
     const buttonStyle = { ...widthStyle, ...style };
 
-    const getSpinnerColor = () => {
-      if (variant === 'solid') return 'inverted';
-      if (variant === 'text' || variant === 'ghost') return color === 'neutral' ? 'default' : color;
-      return color;
-    };
-
-    const spinnerColor = getSpinnerColor();
-
     return (
       <Comp
         className={`${button({ variant, size, color, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
@@ -87,7 +79,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading ? (
           <>
-            <Spinner size={1} color={spinnerColor} />
+            <Spinner size={1} color="default" />
             {loaderText && <span className={styles['loader-text']}>{loaderText}</span>}
           </>
         ) : (

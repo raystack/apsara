@@ -9,7 +9,7 @@
   position: absolute;
   width: 12%;
   height: 30%;
-  background-color: var(--rs-color-foreground-base-primary);
+  background-color: currentColor;
   border-radius: var(--rs-radius-full);
   animation: spin 1.2s linear infinite;
   transform-origin: center 150%;
@@ -107,10 +107,10 @@
 }
 
 .spinner-color-default .pole {
-  background-color: var(--rs-color-foreground-base-primary);
+  background-color: currentColor;
 }
 
-.spinner-color-inverted .pole {
+.spinner-color-neutral .pole {
   background-color: var(--rs-color-foreground-accent-emphasis);
 }
 
