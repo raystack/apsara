@@ -11,6 +11,7 @@ import {
   RangePicker,
   Callout,
   DatePicker,
+  DropdownMenu,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -43,7 +44,7 @@ const Page = () => {
   const filterOptions = [
     { value: "Option 1", label: "Option 1", icon: <BellIcon /> },
     { value: "Option 2", label: "Option 2", icon: <FilterIcon /> },
-    { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> }
+    { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> },
   ];
 
   const getSelectedIcon = (value: any) => {
@@ -58,17 +59,15 @@ const Page = () => {
       style={{
         height: "calc(100vh - 60px)",
         backgroundColor: "var(--rs-color-background-base-primary)",
-      }}
-    >
+      }}>
       <Sidebar
         open={sidebarOpen}
         onOpenChange={setSidebarOpen}
-        onClick={(e) => {
+        onClick={e => {
           if (e.target === e.currentTarget) {
             setSidebarOpen(!sidebarOpen);
           }
-        }}
-      >
+        }}>
         <Sidebar.Header
           logo={<BellIcon width={24} height={24} />}
           title="Raystack"
@@ -122,15 +121,13 @@ const Page = () => {
           padding: "32px",
           flex: 1,
           overflow: "auto",
-        }}
-      >
+        }}>
         <IconButton
           size={4}
           aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           variant="ghost"
-          style={{ marginBottom: "16px" }}
-        >
+          style={{ marginBottom: "16px" }}>
           <SidebarIcon />
         </IconButton>
 
@@ -150,8 +147,70 @@ const Page = () => {
             }
             onClear={() => setSearch1("")}
           />
-          
-          <RangePicker />
+
+          <RangePicker
+            footer={
+              <Callout
+                type="accent"
+                width="100%"
+                outline
+                onDismiss={() => alert("Dismissed")}>
+                A short message
+              </Callout>
+            }
+          />
+
+          <DropdownMenu autocomplete>
+            <DropdownMenu.Trigger asChild>
+              <Button color="neutral">Dropdown button</Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content>
+              <DropdownMenu.Group>
+                <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
+                <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
+                <DropdownMenu.Item>Rename...</DropdownMenu.Item>
+              </DropdownMenu.Group>
+              <DropdownMenu.Separator />
+              <DropdownMenu.Label>Actions</DropdownMenu.Label>
+              <DropdownMenu.SubMenu>
+                <DropdownMenu.SubMenuTrigger>
+                  Export
+                </DropdownMenu.SubMenuTrigger>
+                <DropdownMenu.SubMenuContent>
+                  <DropdownMenu.SubMenu>
+                    <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
+                    <DropdownMenu.SubMenuTrigger>
+                      CSV
+                    </DropdownMenu.SubMenuTrigger>
+                    <DropdownMenu.SubMenuContent>
+                      <DropdownMenu.Item>All</DropdownMenu.Item>
+                      <DropdownMenu.Item>3 Months</DropdownMenu.Item>
+                      <DropdownMenu.Item>6 Months</DropdownMenu.Item>
+                    </DropdownMenu.SubMenuContent>
+                  </DropdownMenu.SubMenu>
+                  <DropdownMenu.SubMenu>
+                    <DropdownMenu.SubMenuTrigger>
+                      PDF
+                    </DropdownMenu.SubMenuTrigger>
+                    <DropdownMenu.SubMenuContent>
+                      <DropdownMenu.Item>All</DropdownMenu.Item>
+                      <DropdownMenu.Item>3 Months</DropdownMenu.Item>
+                      <DropdownMenu.Item>6 Months</DropdownMenu.Item>
+                    </DropdownMenu.SubMenuContent>
+                  </DropdownMenu.SubMenu>
+                </DropdownMenu.SubMenuContent>
+              </DropdownMenu.SubMenu>
+              <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
+              <DropdownMenu.Item
+                trailingIcon={
+                  <Text size="micro" variant="secondary">
+                    ⌘⇧D
+                  </Text>
+                }>
+                Delete...
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu>
 
           <DatePicker />
 
@@ -192,192 +251,47 @@ const Page = () => {
             onClear={() => setSearch4("")}
           />
 
-        </Flex>
+          <Text
+            size="large"
+            weight="medium"
+            style={{ marginTop: "24px", marginBottom: "16px" }}>
+            Text Areas
+          </Text>
 
-        {/* Select component examples */}
-        <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
-          Select Examples
-        </Text>
+          <TextArea
+            label="Description"
+            placeholder="Enter text here"
+            value={textArea1}
+            onChange={e => setTextArea1(e.target.value)}
+            helperText="This is a helper text"
+          />
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
-          {/* Normal size select with icons */}
-          <Flex direction="column" gap="2">
-            <Select value={selectValue} onValueChange={setSelectValue} disabled>
-              <Select.Trigger size="small" variant="outline">
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
+          <TextArea label="Read Only" value="This is a read only text area" />
 
-            <Select value={selectValue} onValueChange={setSelectValue}>
-              <Select.Trigger size="small" variant="filter">
-                <Select.Value 
-                  placeholder="Choose an options option option"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Flex>
-        </Flex>
+          <TextArea
+            label="Error State"
+            value={textArea2}
+            onChange={e => setTextArea2(e.target.value)}
+            placeholder="Enter text here"
+          />
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "150px" }}>
-          {/* Normal size select with icons */}
-          <Flex direction="column" gap="2">
-            <Select value={selectValue} onValueChange={setSelectValue} disabled>
-              <Select.Trigger size="small" variant="outline">
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-            <Text size="small">Normal size:</Text>
-            <Select value={selectValue1} onValueChange={setSelectValue1}>
-              <Select.Trigger>
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={selectOptions.find(opt => opt.value === selectValue1)?.icon}
-                >
-                  {selectValue1}
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
-                {selectOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Flex>
+          <TextArea label="Optional field" placeholder="Optional input" />
 
-          {/* Small size select with icons */}
-          <Flex direction="column" gap="2">
-            <Text size="small">Small size:</Text>
-            <Select value={selectValue2} onValueChange={setSelectValue2}>
-              <Select.Trigger size="small">
-                <Select.Value 
-                  placeholder="Choose an options"
-                  leadingIcon={selectOptions.find(opt => opt.value === selectValue2)?.icon}
-                >
-                  {selectValue2}
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
-                {selectOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Flex>
-        </Flex>
+          <TextArea label="Disabled" value="This is disabled" disabled />
 
-        <Text size="large" weight="medium" style={{ marginTop: "32px", marginBottom: "16px" }}>
-          Form Component Examples
-        </Text>
+          <Text
+            size="large"
+            weight="medium"
+            style={{ marginTop: "24px", marginBottom: "16px" }}>
+            Date Range Picker
+          </Text>
 
-        <Flex direction="column" gap="4" style={{ maxWidth: "300px" }}>
-          {/* Select Examples */}
-          <Flex direction="column" gap="2">
-            <Text size="small">Disabled Select:</Text>
-            <Select value={selectValue} onValueChange={setSelectValue} disabled>
-              <Select.Trigger size="small" variant="outline">
-                <Select.Value 
-                  placeholder="Choose an option"
-                  leadingIcon={filterOptions.find(opt => opt.value === selectValue)?.icon}
-                >
-                  {selectValue}
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
-                {filterOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Flex>
-
-          <Flex direction="column" gap="2">
-            <Text size="small">Normal size:</Text>
-            <Select value={selectValue1} onValueChange={setSelectValue1}>
-              <Select.Trigger>
-                <Select.Value 
-                  placeholder="Choose an option"
-                  leadingIcon={selectOptions.find(opt => opt.value === selectValue1)?.icon}
-                >
-                  {selectValue1}
-                </Select.Value>
-              </Select.Trigger>
-              <Select.Content>
-                {selectOptions.map((option) => (
-                  <Select.Item 
-                    key={option.value} 
-                    value={option.value} 
-                    leadingIcon={option.icon}
-                  >
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
-          </Flex>
+          <RangePicker
+            onSelect={range => console.log("Selected date range:", range)}
+            textFieldProps={{
+              label: "Select Date Range",
+            }}
+          />
         </Flex>
 
         <Flex justify="center" style={{ marginTop: 40 }}>
