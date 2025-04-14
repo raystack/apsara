@@ -3,15 +3,19 @@
 import { getPropsString } from "@/lib/utils";
 
 export const getCode = (props: any) => {
+  const { onRemove, ...rest } = props;
+  const onRemoveProp = onRemove ? `onRemove={() => alert("Removed")}` : "";
+
   if (props.columnType === "select")
     return `
-    <FilterChip${getPropsString(props)}
+    <FilterChip${getPropsString(rest)}
       options={[
         { label: "Active", value: "active" },
         { label: "Inactive", value: "inactive" }
       ]}
+        ${onRemoveProp}
     />`;
-  return `<FilterChip${getPropsString(props)}/>`;
+  return `<FilterChip${getPropsString(rest)}${onRemoveProp}/>`;
 };
 
 export const playground = {
@@ -32,6 +36,10 @@ export const playground = {
       initialValue: "Status",
     },
     leadingIcon: { type: "icon" },
+    onRemove: {
+      type: "checkbox",
+      defaultValue: false,
+    },
   },
   getCode,
 };

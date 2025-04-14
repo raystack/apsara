@@ -98,7 +98,7 @@ const Operation = ({
 export const FilterChip = ({
   label,
   value,
-  onRemove = () => null,
+  onRemove,
   className,
   ref,
   columnType = FilterType.string,
@@ -111,6 +111,8 @@ export const FilterChip = ({
 }: FilterChipProps) => {
   const [operation, setOperation] = useState<FilterOperation>();
   const [filterValue, setFilterValue] = useState<any>(value || "");
+
+  const showOnRemove = typeof onRemove === "function";
 
   useEffect(() => {
     if (onOperationChange && operation?.value) {
@@ -191,13 +193,14 @@ export const FilterChip = ({
           onOperationSelect={setOperation}
         />
         {renderValueInput()}
-        <div
-          className={styles.removeIconContainer}
-          role="button"
-          tabIndex={0}
-          aria-label={`Remove ${label} filter`}>
-          <Cross1Icon className={styles.removeIcon} onClick={onRemove} />
-        </div>
+        {showOnRemove && (
+          <button
+            className={styles.removeIconContainer}
+            aria-label={`Remove ${label} filter`}
+            onClick={onRemove}>
+            <Cross1Icon className={styles.removeIcon} />
+          </button>
+        )}
       </Flex>
     </Box>
   );
