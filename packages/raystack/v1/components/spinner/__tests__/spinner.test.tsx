@@ -20,8 +20,8 @@ describe('Spinner', () => {
     expect(spinner).toHaveClass(`spinner-size-${size}`);
   });
 
-  it('renders with inverted color', () => {
-    render(<Spinner color="inverted" />);
+  it('renders with neutral color', () => {
+    render(<Spinner color="neutral" />);
     const spinner = screen.getByRole('status', { hidden: true });
     expect(spinner).toHaveClass('spinner-color-inverted');
   });
