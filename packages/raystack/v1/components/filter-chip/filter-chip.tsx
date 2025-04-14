@@ -15,8 +15,21 @@ import {
   FilterType,
   FilterTypes,
 } from "~/v1/types/filters";
+import { cva, VariantProps } from "class-variance-authority";
 
-export interface FilterChipProps {
+const chip = cva(styles.chip, {
+  variants: {
+    variant: {
+      default: styles["chip-default"],
+      text: null,
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
+
+export interface FilterChipProps extends VariantProps<typeof chip> {
   label: string;
   value?: string;
   onRemove?: () => void;
@@ -93,6 +106,7 @@ export const FilterChip = ({
   onValueChange,
   onOperationChange,
   leadingIcon,
+  variant,
   ...props
 }: FilterChipProps) => {
   const [operation, setOperation] = useState<FilterOperation>();
@@ -156,7 +170,7 @@ export const FilterChip = ({
   return (
     <Box
       ref={ref}
-      className={[styles.chip, className].filter(Boolean).join(" ")}
+      className={chip({ variant, className })}
       role="group"
       aria-label={`Filter by ${label}`}
       {...props}>

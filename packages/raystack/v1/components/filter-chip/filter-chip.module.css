@@ -9,11 +9,14 @@
   letter-spacing: var(--rs-letter-spacing-small);
   height: 24px;
   background: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-2);
-  box-shadow: var(--rs-shadow-feather);
   text-wrap: nowrap;
   width: fit-content;
+}
+
+.chip-default {
+  border: 1px solid var(--rs-color-border-base-tertiary);
+  box-shadow: var(--rs-shadow-feather);
 }
 
 .chip > * {
