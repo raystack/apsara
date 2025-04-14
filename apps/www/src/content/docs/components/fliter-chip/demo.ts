@@ -1,29 +1,39 @@
 "use client";
 
-export const preview = {
-  type: "code",
-  code: `
-  <Flex direction="column" gap="large" align="center">
-    <FilterChip
-      label="Status"
-      leadingIcon={<Info />}
-      columnType="select"
+import { getPropsString } from "@/lib/utils";
+
+export const getCode = (props: any) => {
+  if (props.columnType === "select")
+    return `
+    <FilterChip${getPropsString(props)}
       options={[
         { label: "Active", value: "active" },
         { label: "Inactive", value: "inactive" }
       ]}
-    />
-    <FilterChip
-      label="Date"
-      leadingIcon={<Info />}
-      columnType="date"
-    />
-    <FilterChip
-      label="Search"
-      leadingIcon={<Info />}
-      columnType="text"
-    />
-  </Flex>`,
+    />`;
+  return `<FilterChip${getPropsString(props)}/>`;
+};
+
+export const playground = {
+  type: "playground",
+  controls: {
+    columnType: {
+      type: "select",
+      options: ["select", "date", "string", "number"],
+      defaultValue: "string",
+    },
+    variant: {
+      type: "select",
+      options: ["default", "text"],
+      defaultValue: "default",
+    },
+    label: {
+      type: "text",
+      initialValue: "Status",
+    },
+    leadingIcon: { type: "icon" },
+  },
+  getCode,
 };
 
 export const inputDemo = {
@@ -52,12 +62,21 @@ export const inputDemo = {
 />`,
     },
     {
-      name: "Text",
+      name: "String",
       code: `
 <FilterChip
   label="Search"
   leadingIcon={<Info />}
-  columnType="text"
+  columnType="string"
+/>`,
+    },
+    {
+      name: "Number",
+      code: `
+<FilterChip
+  label="Search"
+  leadingIcon={<Info />}
+  columnType="number"
 />`,
     },
   ],
