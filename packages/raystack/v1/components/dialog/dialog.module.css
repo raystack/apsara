@@ -2,7 +2,7 @@
   background-color: var(--rs-color-overlay-base-primary);
   position: fixed;
   inset: 0;
-  z-index: var(--rs-z-index-dialog-overlay);
+  z-index: var(--rs-z-index-overlay);
 }
 
 .dialogContent {

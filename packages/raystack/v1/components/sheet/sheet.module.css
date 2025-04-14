@@ -81,7 +81,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: var(--rs-z-index-sheet-overlay);
+  z-index: var(--rs-z-index-overlay);
   background-color: var(--rs-color-overlay-base-primary);
 }
 
