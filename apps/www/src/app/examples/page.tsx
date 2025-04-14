@@ -56,11 +56,14 @@ const Page = () => {
   const [textArea2, setTextArea2] = useState("");
 
   return (
+    <>
     <Flex
       style={{
         height: "calc(100vh - 60px)",
         backgroundColor: "var(--rs-color-background-base-primary)",
-      }}>
+      }}
+    >
+    </Flex>
       <Sidebar
         open={sidebarOpen}
         onOpenChange={setSidebarOpen}
@@ -598,6 +601,7 @@ const Page = () => {
         </Flex>
       </Flex>
     </Flex>
+    </>
   );
 };
 
