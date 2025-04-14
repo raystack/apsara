@@ -8,12 +8,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: var(--rs-z-index-icons);
 }
 
 .clearButton {
   color: var(--rs-color-foreground-base-tertiary) !important;
-  z-index: var(--rs-z-index-icons);
 }
 
 .clearButton:hover {
