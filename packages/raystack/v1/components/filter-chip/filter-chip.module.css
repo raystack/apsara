@@ -68,12 +68,6 @@
   min-height: unset !important;
   padding: 0 !important;
 }
-.chip input:focus-visible {
-  outline: 1px solid var(--rs-color-border-accent-emphasis);
-}
-.chip input:focus {
-  outline: 1px solid var(--rs-color-border-base-focus);
-}
 
 /* Control height of Select items */
 .chip [role="option"] {
