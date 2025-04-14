@@ -1,6 +1,5 @@
 import { Cross1Icon } from "@radix-ui/react-icons";
-import { ReactElement,ReactNode, useEffect, useState } from "react";
-
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 
 import { Box } from "../box";
 import { DatePicker } from "../calendar";
@@ -47,7 +46,7 @@ const Operation = ({
   const [value, setValue] = useState<string>(filterOptions?.[0]?.value);
 
   useEffect(() => {
-    const selectedOption = filterOptions.find((o) => o.value === value);
+    const selectedOption = filterOptions.find(o => o.value === value);
     if (selectedOption) {
       onOperationSelect(selectedOption);
     }
@@ -57,26 +56,23 @@ const Operation = ({
     <Select
       value={value}
       onValueChange={setValue}
-      aria-labelledby={`${label}-label`}
-    >
+      aria-labelledby={`${label}-label`}>
       <Select.Trigger
-        variant="filter"
+        variant="text"
         className={styles.operation}
-        aria-label={`${label} filter operation`}
-      >
+        aria-label={`${label} filter operation`}>
         <Select.Value
           placeholder="Select operation"
           className={styles.operationText}
         />
       </Select.Trigger>
       <Select.Content data-variant="filter">
-        {filterOptions.map((opt) => {
+        {filterOptions.map(opt => {
           return (
             <Select.Item
               key={opt.value}
               value={opt.value}
-              aria-label={`Filter ${label} ${opt.label}`}
-            >
+              aria-label={`Filter ${label} ${opt.label}`}>
               {opt.label}
             </Select.Item>
           );
@@ -119,15 +115,14 @@ export const FilterChip = ({
       case FilterType.select:
         return (
           <Select value={filterValue.toString()} onValueChange={setFilterValue}>
-            <Select.Trigger variant="filter" className={styles.selectValue}>
+            <Select.Trigger variant="text" className={styles.selectValue}>
               <Select.Value placeholder="Select value" />
             </Select.Trigger>
             <Select.Content data-variant="filter">
-              {options.map((opt) => (
+              {options.map(opt => (
                 <Select.Item
                   key={opt.value.toString()}
-                  value={opt.value.toString()}
-                >
+                  value={opt.value.toString()}>
                   {opt.label}
                 </Select.Item>
               ))}
@@ -139,7 +134,7 @@ export const FilterChip = ({
           <div className={styles.dateFieldWrapper}>
             <DatePicker
               value={filterValue}
-              onSelect={(date) => setFilterValue(date)}
+              onSelect={date => setFilterValue(date)}
               showCalendarIcon={false}
               textFieldProps={{ className: styles.dateField }}
             />
@@ -151,7 +146,7 @@ export const FilterChip = ({
             <TextField
               className={styles.textField}
               value={filterValue}
-              onChange={(e) => setFilterValue(e.target.value)}
+              onChange={e => setFilterValue(e.target.value)}
             />
           </div>
         );
@@ -164,8 +159,7 @@ export const FilterChip = ({
       className={[styles.chip, className].filter(Boolean).join(" ")}
       role="group"
       aria-label={`Filter by ${label}`}
-      {...props}
-    >
+      {...props}>
       <Flex align="center">
         <Flex align="center" gap={2}>
           {leadingIcon && (
@@ -187,8 +181,7 @@ export const FilterChip = ({
           className={styles.removeIconContainer}
           role="button"
           tabIndex={0}
-          aria-label={`Remove ${label} filter`}
-        >
+          aria-label={`Remove ${label} filter`}>
           <Cross1Icon className={styles.removeIcon} onClick={onRemove} />
         </div>
       </Flex>
