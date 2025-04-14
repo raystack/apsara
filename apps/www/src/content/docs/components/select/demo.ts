@@ -37,6 +37,21 @@ export const playground = {
   getCode,
 };
 
+export const iconDemo = {
+  type: "code",
+  code: `
+  <Select>
+  <Select.Trigger aria-label="Fruit selection">
+    <Select.Value placeholder="Select a fruit" />
+  </Select.Trigger>
+  <Select.Content>
+    <Select.Item value="apple" leadingIcon={<Info size={16} />}>Apple</Select.Item>
+    <Select.Item value="banana" leadingIcon={<X size={16} />}>Banana</Select.Item>
+    <Select.Item value="grape" leadingIcon={<Home size={16} />}>Grape</Select.Item>
+    <Select.Item value="Orange" leadingIcon={<Laugh size={16} />}>Orange</Select.Item>
+  </Select.Content>
+</Select>`,
+};
 export const basicDemo = {
   type: "code",
   code: `
