@@ -4,30 +4,65 @@ import { getPropsString } from "@/lib/utils";
 
 export const getCode = (props: any) => {
   return `
-  <DropdownMenu>
+  <DropdownMenu${getPropsString(props)}>
     <DropdownMenu.Trigger asChild>
       <Button color="neutral">Dropdown button</Button>
     </DropdownMenu.Trigger>
-    <DropdownMenu.Content${getPropsString(props)}>
-      <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-      <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-      <DropdownMenu.Item>Item 3</DropdownMenu.Item>
+    <DropdownMenu.Content>
+      <DropdownMenu.Group>
+        <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
+        <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
+        <DropdownMenu.Item>Rename...</DropdownMenu.Item>
+      </DropdownMenu.Group>
+      <DropdownMenu.Separator />
+      <DropdownMenu.Label>Actions</DropdownMenu.Label>
+      <DropdownMenu.SubMenu>
+        <DropdownMenu.SubMenuTrigger>
+          Export
+        </DropdownMenu.SubMenuTrigger>
+        <DropdownMenu.SubMenuContent>
+          <DropdownMenu.SubMenu>
+            <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
+            <DropdownMenu.SubMenuTrigger>
+              CSV
+            </DropdownMenu.SubMenuTrigger>
+            <DropdownMenu.SubMenuContent>
+              <DropdownMenu.Item>All</DropdownMenu.Item>
+              <DropdownMenu.Item>3 Months</DropdownMenu.Item>
+              <DropdownMenu.Item>6 Months</DropdownMenu.Item>
+            </DropdownMenu.SubMenuContent>
+          </DropdownMenu.SubMenu>
+          <DropdownMenu.SubMenu>
+            <DropdownMenu.SubMenuTrigger>
+              PDF
+            </DropdownMenu.SubMenuTrigger>
+            <DropdownMenu.SubMenuContent>
+              <DropdownMenu.Item>All</DropdownMenu.Item>
+              <DropdownMenu.Item>3 Months</DropdownMenu.Item>
+              <DropdownMenu.Item>6 Months</DropdownMenu.Item>
+            </DropdownMenu.SubMenuContent>
+          </DropdownMenu.SubMenu>
+        </DropdownMenu.SubMenuContent>
+      </DropdownMenu.SubMenu>
+      <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
+      <DropdownMenu.Item
+        trailingIcon={
+          <Text size="micro" variant="secondary">
+            ⌘⇧D
+          </Text>
+        }>
+        Delete...
+      </DropdownMenu.Item>
     </DropdownMenu.Content>
-  </DropdownMenu>`;
+    </DropdownMenu>`;
 };
 
 export const playground = {
   type: "playground",
   controls: {
-    align: {
-      type: "select",
-      options: ["start", "center", "end"],
-      defaultValue: "solid",
-    },
-    sideOffset: {
-      type: "number",
-      min: 0,
-      defaultValue: 4,
+    autocomplete: {
+      type: "checkbox",
+      defaultValue: false,
     },
   },
   getCode,
