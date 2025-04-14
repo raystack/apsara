@@ -41,7 +41,6 @@ export interface InputFieldProps
   width?: string | number;
   chips?: Array<{ label: string; onRemove?: () => void }>;
   maxChipsVisible?: number;
-  ref?: React.RefObject<HTMLInputElement>;
   infoTooltip?: string;
   variant?: "default" | "borderless";
 }

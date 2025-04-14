@@ -128,3 +128,11 @@ export const imageDemo = {
     <Avatar size={8} radius="small" fallback="RC" src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80" />
   </Flex>`,
 };
+
+export const generatedColorDemo = {
+  type: "code",
+  code: `
+  <Flex gap="medium" align="end">
+    <Avatar size={6} color={getAvatarColor("abcde")} fallback="RC" />
+  </Flex>`,
+};

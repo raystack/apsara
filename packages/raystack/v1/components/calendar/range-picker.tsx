@@ -13,7 +13,7 @@ import styles from "./calendar.module.css";
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
-  textFieldProps?: TextfieldProps;
+  textFieldsProps?: { startDate?: TextfieldProps, endDate?: TextfieldProps };
   placeholders?: { startDate?: string; endDate?: string };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
@@ -29,7 +29,7 @@ type RangeFields = keyof DateRange;
 export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
-  textFieldProps,
+  textFieldsProps = {},
   placeholders,
   calendarProps,
   onSelect = () => {},
@@ -55,7 +55,6 @@ export function RangePicker({
   const handleSelect = (range: DateRange, selectedDay: Date) => {
     const from = selectedRange?.from || range?.from;
     let newRange: DateRange;
-    
     if (currentRangeField === "to") {
       if (dayjs(selectedDay).isSame(dayjs(from), 'day')) {
         // If same date is clicked twice, set end date to the same date for UI
@@ -76,9 +75,7 @@ export function RangePicker({
       newRange = { from: selectedDay };
       setCurrentRangeField("to");
     }
-    
     setSelectedRange(newRange);
-    
     // Return the range with +1 day for the end date in the callback
     const callbackRange = {
       from: newRange.from,
@@ -98,7 +95,7 @@ export function RangePicker({
         trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
-        {...textFieldProps}
+        {...(textFieldsProps.startDate ?? {})}
         placeholder={placeholders?.startDate || "Select start date"}
       />
       <TextField
@@ -106,14 +103,14 @@ export function RangePicker({
         trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
-        {...textFieldProps}
+        {...(textFieldsProps.endDate ?? {})}
         placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
   );
 
-  const trigger = typeof children === 'function' 
-    ? children({ startDate, endDate }) 
+  const trigger = typeof children === 'function'
+    ? children({ startDate, endDate })
     : children || defaultTrigger;
 
   return (
