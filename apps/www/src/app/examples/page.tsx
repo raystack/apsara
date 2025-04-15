@@ -20,6 +20,7 @@ import {
   InputField,
   Popover,
   Indicator,
+  Sheet,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -34,6 +35,7 @@ const Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [nestedDialogOpen, setNestedDialogOpen] = useState(false);
+  const [dialogSheetOpen, setDialogSheetOpen] = useState(false);
   const [search1, setSearch1] = useState("");
   const [search2, setSearch2] = useState("");
   const [search3, setSearch3] = useState("");
@@ -586,6 +588,9 @@ const Page = () => {
                         <Button variant="outline" onClick={() => setNestedDialogOpen(true)}>
                           Open Nested Dialog
                         </Button>
+                        <Button variant="outline" onClick={() => setDialogSheetOpen(true)}>
+                          Open Sheet
+                        </Button>
                         <DropdownMenu>
                           <DropdownMenu.Trigger asChild>
                             <Button variant="outline">Open Menu</Button>
@@ -625,6 +630,129 @@ const Page = () => {
                 </Dialog.Footer>
               </Dialog.Content>
             </Dialog>
+
+            <Sheet open={dialogSheetOpen} onOpenChange={setDialogSheetOpen}>
+              <Sheet.Content side="right" close>
+                <Sheet.Title>Sheet Title</Sheet.Title>
+                <Text>This is the sheet content. </Text>
+                <Flex direction="column" gap={4} style={{ marginTop: "16px" }}>
+                  <Text size="small">Team Members:</Text>
+                  <AvatarGroup>
+                    <Avatar
+                      size={5}
+                      color="indigo"
+                      fallback="JD"
+                    />
+                    <Avatar
+                      size={5}
+                      color="mint"
+                      fallback="AS"
+                    />
+                    <Avatar
+                      size={5}
+                      color="sky"
+                      fallback="RK"
+                    />
+                    <Avatar
+                      size={5}
+                      color="purple"
+                      fallback="+2"
+                    />
+                  </AvatarGroup>
+
+                  <Flex direction="column" gap={2}>
+                    <Text size="small">Quick Actions:</Text>
+                    <Tooltip message="Click to send a message to all team members" side="top">
+                      <Button variant="solid" color="accent">
+                        Show hover tooltip
+                      </Button>
+                    </Tooltip>
+                  </Flex>
+                </Flex>
+
+                <Flex direction="column" gap={4} style={{ marginTop: "32px" }}>
+                  <Flex direction="column" gap={2}>
+                    <Text size="small">Team Role:</Text>
+                    <Select value={selectValue} onValueChange={setSelectValue}>
+                      <Select.Trigger>
+                        <Select.Value placeholder="Select a role" />
+                      </Select.Trigger>
+                      <Select.Content>
+                        <Select.Item value="admin">Administrator</Select.Item>
+                        <Select.Item value="editor">Editor</Select.Item>
+                        <Select.Item value="viewer">Viewer</Select.Item>
+                        <Select.Item value="member">Member</Select.Item>
+                      </Select.Content>
+                    </Select>
+                  </Flex>
+
+                  <Flex direction="column" gap={2}>
+                    <Popover>
+                      <Popover.Trigger>
+                        <Button variant="ghost" size="small">
+                          <FilterIcon />
+                          <Text size="small">Filter Help</Text>
+                        </Button>
+                      </Popover.Trigger>
+                      <Popover.Content>
+                        <Flex direction="column" gap={2} style={{ padding: "8px" }}>
+                          <Text size="small" weight="medium">Filter Team Members</Text>
+                          <Text size="small">You can filter team members by:</Text>
+                          <ul style={{ margin: 0, paddingLeft: "16px" }}>
+                            <li><Text size="small">Name</Text></li>
+                            <li><Text size="small">Role</Text></li>
+                            <li><Text size="small">Department</Text></li>
+                          </ul>
+                        </Flex>
+                      </Popover.Content>
+                    </Popover>
+                    <InputField
+                      label="Filter Team Members"
+                      placeholder="Type to filter..."
+                      leadingIcon={<FilterIcon />}
+                      width="100%"
+                    />
+                  </Flex>
+
+                  <Flex direction="column" gap={2}>
+                    <Text size="small">Actions:</Text>
+                    <Flex gap={2}>
+                      <Button variant="outline">
+                        Active Members
+                        <Indicator variant="success" label="5" />
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenu.Trigger asChild>
+                          <Button variant="outline">Open Menu</Button>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content>
+                          <DropdownMenu.Label>Team Actions</DropdownMenu.Label>
+                          <Tooltip message="Add a new member to your team" side="right">
+                            <DropdownMenu.Item>Add Member</DropdownMenu.Item>
+                          </Tooltip>
+                          <DropdownMenu.Item>Edit Team</DropdownMenu.Item>
+                          <DropdownMenu.Separator />
+                          <DropdownMenu.Group>
+                            <DropdownMenu.Label>Settings</DropdownMenu.Label>
+                            <DropdownMenu.Item>Permissions</DropdownMenu.Item>
+                            <DropdownMenu.Item>Notifications</DropdownMenu.Item>
+                          </DropdownMenu.Group>
+                          <DropdownMenu.Separator />
+                          <DropdownMenu.Item color="danger">Delete Team</DropdownMenu.Item>
+                        </DropdownMenu.Content>
+                      </DropdownMenu>
+                    </Flex>
+                  </Flex>
+                </Flex>
+
+                <TextArea
+                  label="Example Text Area"
+                  placeholder="Type something..."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                />
+              </Sheet.Content>
+            </Sheet>
 
             <Dialog open={nestedDialogOpen} onOpenChange={setNestedDialogOpen}>
               <Dialog.Content width="500px">
