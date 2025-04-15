@@ -1,6 +1,6 @@
 .content {
   overflow: hidden;
-  z-index: var(--rs-z-index-dropdown);
+  z-index: var(--rs-z-index-portal);
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);

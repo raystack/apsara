@@ -580,11 +580,12 @@ const Page = () => {
 
                     <Flex direction="column" gap={2}>
                       <Text size="small">Actions:</Text>
-                      <Flex gap={2}>
-                        <Button variant="outline">
-                          Active Members
-                          <Indicator variant="success" label="5" />
-                        </Button>
+                      <Flex gap={2}>                        
+                          <Indicator variant="success" label="5">
+                            <Button variant="outline">
+                              Active Members
+                            </Button>
+                          </Indicator>
                         <Button variant="outline" onClick={() => setNestedDialogOpen(true)}>
                           Open Nested Dialog
                         </Button>
@@ -717,10 +718,11 @@ const Page = () => {
                   <Flex direction="column" gap={2}>
                     <Text size="small">Actions:</Text>
                     <Flex gap={2}>
+                      <Indicator variant="success" label="5">
                       <Button variant="outline">
                         Active Members
-                        <Indicator variant="success" label="5" />
                       </Button>
+                      </Indicator>
                       <DropdownMenu>
                         <DropdownMenu.Trigger asChild>
                           <Button variant="outline">Open Menu</Button>
@@ -840,10 +842,11 @@ const Page = () => {
                     <Flex direction="column" gap={2}>
                       <Text size="small">Actions:</Text>
                       <Flex gap={2}>
+                      <Indicator variant="success" label="5">
                         <Button variant="outline">
                           Active Members
-                          <Indicator variant="success" label="5" />
                         </Button>
+                      </Indicator>
                         <DropdownMenu>
                           <DropdownMenu.Trigger asChild>
                             <Button variant="outline">Open Menu</Button>
