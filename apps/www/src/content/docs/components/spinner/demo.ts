@@ -3,12 +3,6 @@
 import { getPropsString } from "@/lib/utils";
 
 export const getCode = (props: any) => {
-  const { color } = props;
-  if (color === "inverted")
-    return `
-  <Flex style={{ backgroundColor: 'black', padding:"20px" }}>
-    <Spinner${getPropsString(props)}/>
-  </Flex>`;
   return `<Spinner${getPropsString(props)}/>`;
 };
 
@@ -25,7 +19,7 @@ export const playground = {
     },
     color: {
       type: "select",
-      options: ["default", "inverted"],
+      options: ["default", "neutral", "accent", "danger", "success", "attention"],
       defaultValue: "default",
     },
   },
@@ -48,9 +42,11 @@ export const colorDemo = {
   type: "code",
   code: `
   <Flex gap="large" align="center">
-    <Spinner size={4}/>
-    <Flex style={{ backgroundColor: 'black', padding:"20px" }}>
-    <Spinner size={4} color="inverted" />
-    </Flex>
+    <Spinner size={4} color="default" />
+    <Spinner size={4} color="neutral" />
+    <Spinner size={4} color="accent" />
+    <Spinner size={4} color="danger" />
+    <Spinner size={4} color="success" />
+    <Spinner size={4} color="attention" />
   </Flex>`,
 };

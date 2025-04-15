@@ -21,6 +21,7 @@ import {
   Popover,
   Indicator,
   Sheet,
+  EmptyState,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -378,6 +379,14 @@ const Page = () => {
             style={{ marginTop: "32px", marginBottom: "16px" }}>
             Select Examples
           </Text>
+
+          <EmptyState
+            icon={<FilterIcon />}
+            heading="KYC required for image orders"
+            subHeading="Please contact your organization owner to complete the KYC process for the image orders. You can also contact support@raystack.io for assistance."
+            primaryAction={<Button variant="outline" color="neutral">Add Data</Button>}
+            variant="empty1"
+          />
 
           <TextArea label="Read Only" value="This is a read only text area" />
 
