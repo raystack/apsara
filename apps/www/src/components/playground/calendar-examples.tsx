@@ -8,7 +8,7 @@ export function CalendarExamples() {
     <PlaygroundLayout title="Calendar">
       <Flex gap="medium" direction="column">
         <Calendar numberOfMonths={2} />
-        <RangePicker textFieldProps={{ size: "medium" }} />
+        <RangePicker inputFieldsProps={{ startDate: { size: "small" } }} />
         <DatePicker textFieldProps={{ size: "medium" }} />
       </Flex>
     </PlaygroundLayout>

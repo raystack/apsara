@@ -261,11 +261,6 @@
   position: relative;
 }
 
-.datePickerInput {
-  text-align: left;
-  outline: 0.5px solid var(--rs-color-border-base-tertiary) !important;
-}
-
 .calendarFooter {
   padding: var(--rs-space-3);
   margin-top: var(--rs-space-2);
