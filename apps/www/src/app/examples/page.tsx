@@ -13,6 +13,15 @@ import {
   DatePicker,
   Spinner,
   DropdownMenu,
+  Dialog,
+  Avatar,
+  AvatarGroup,
+  Tooltip,
+  InputField,
+  Popover,
+  Indicator,
+  Sheet,
+  EmptyState,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -128,7 +137,6 @@ const Page = () => {
             size={4}
             aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            variant="ghost"
             style={{ marginBottom: "16px" }}>
             <SidebarIcon />
           </IconButton>
@@ -369,6 +377,14 @@ const Page = () => {
             Select Examples
           </Text>
 
+          <EmptyState
+            icon={<FilterIcon />}
+            heading="KYC required for image orders"
+            subHeading="Please contact your organization owner to complete the KYC process for the image orders. You can also contact support@raystack.io for assistance."
+            primaryAction={<Button variant="outline" color="neutral">Add Data</Button>}
+            variant="empty1"
+          />
+
           <TextArea label="Read Only" value="This is a read only text area" />
 
           <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
@@ -394,7 +410,7 @@ const Page = () => {
               </Select>
 
               <Select value={selectValue} onValueChange={setSelectValue}>
-                <Select.Trigger size="small" variant="filter">
+                <Select.Trigger size="small" variant="text">
                   <Select.Value placeholder="Choose an options option option" />
                 </Select.Trigger>
                 <Select.Content>
@@ -502,7 +518,7 @@ const Page = () => {
               </Select>
             </Flex>
 
-            <Flex direction="column" gap="2">
+            <Flex direction="column" gap={2}>
               <Text size="small">Test Normal size:</Text>
               <Select
                 value={selectValue}

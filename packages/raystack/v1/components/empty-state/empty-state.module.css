@@ -53,6 +53,8 @@
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-large);
   letter-spacing: var(--rs-letter-spacing-large);
+  text-wrap: wrap;
+  max-width: 360px;
 }
 
 .subHeaderText {
@@ -63,16 +65,9 @@
   font-weight: var(--rs-font-weight-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
-}
-
-.headerText {
+  text-wrap: wrap;
   max-width: 360px;
 }
-
-.subHeaderText {
-  max-width: 288px;
-}
-
 
 /* Empty2 */
 
@@ -88,8 +83,6 @@
 .emptyStateContent .subHeaderText {
   max-width: 366px;
 }
-
-
 
 .emptyStateLeft {
   padding: var(--rs-space-9) var(--rs-space-5);
