@@ -379,8 +379,8 @@ const Page = () => {
 
           <EmptyState
             icon={<FilterIcon />}
-            heading="KYC required for image orders KYC required for image orders KYC required for image orders"
-            subHeading="Please contact your organization owner to complete the KYC process for the image orders. You can also contact support@raystack.io for assistance. Please contact your organization owner to complete the KYC process for the image orders."
+            heading="KYC required for image orders"
+            subHeading="Please contact your organization owner to complete the KYC process for the image orders. You can also contact support@raystack.io for assistance."
             primaryAction={<Button variant="outline" color="neutral">Add Data</Button>}
             variant="empty1"
           />
