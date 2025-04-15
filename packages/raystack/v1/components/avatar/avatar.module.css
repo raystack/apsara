@@ -352,10 +352,6 @@
   position: relative;
 }
 
-.avatarWrapper:last-child {
-  z-index: 1;
-}
-
 .avatarGroup .avatar {
   border: 1px solid var(--rs-color-background-base-primary);
   box-sizing: content-box;
