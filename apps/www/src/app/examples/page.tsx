@@ -148,7 +148,7 @@ const Page = () => {
             Main
           </Text>
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "450px" }}>
             <Search
               placeholder="Default large search"
               showClearButton
