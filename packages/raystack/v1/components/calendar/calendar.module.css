@@ -238,8 +238,12 @@
   background-color: var(--rs-color-background-accent-emphasis);
 }
 
-.selected.day.today button::after {
-  background-color: white;
+.selected.day.today:not(.range_middle) button::after {
+  background-color: var(--rs-color-foreground-base-emphasis);
+}
+
+.range_middle.day.today button::after {
+  background-color: var(--rs-color-background-accent-emphasis);
 }
 
 .day_button {
