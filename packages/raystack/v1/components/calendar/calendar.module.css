@@ -265,3 +265,7 @@
   padding: var(--rs-space-3);
   margin-top: var(--rs-space-2);
 }
+
+.datePickerInput {
+  text-align: left;
+}
