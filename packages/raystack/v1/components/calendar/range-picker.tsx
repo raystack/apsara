@@ -53,6 +53,7 @@ export function RangePicker({
   // 2nd click will select the end date.
   // 3rd click will select the start date again.
   const handleSelect = (range: DateRange, selectedDay: Date) => {
+    // TODO: Remove custom logic and reuse the default logic from react-day-picker
     let newRange: DateRange;
 
     if (currentRangeField === "from") {
