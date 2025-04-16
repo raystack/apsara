@@ -24,7 +24,7 @@ const spinner = cva(styles.spinner, {
   },
   defaultVariants: {
     size: 1,
-    color: "default",
+    color: "neutral",
   },
 });
 
