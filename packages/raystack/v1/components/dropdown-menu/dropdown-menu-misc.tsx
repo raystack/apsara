@@ -17,13 +17,22 @@ export const DropdownMenuLabel = forwardRef<
   const { autocomplete, searchValue } = useDropdownContext();
   const menuLevel = useMenuLevel();
 
-  if (autocomplete && menuLevel === 1 && searchValue?.length) return null;
+  if (autocomplete && searchValue?.length) return null;
 
   return (
     <DropdownMenuPrimitive.Label
       ref={ref}
       className={cx(styles.label, className)}
       {...props}
+      onPointerEnter={e => {
+        e.preventDefault();
+      }}
+      onPointerMove={e => {
+        e.preventDefault();
+      }}
+      onPointerLeave={e => {
+        e.preventDefault();
+      }}
     />
   );
 });
@@ -43,6 +52,15 @@ export const DropdownMenuSeparator = forwardRef<
       ref={ref}
       className={cx(styles.separator, className)}
       {...props}
+      onPointerEnter={e => {
+        e.preventDefault();
+      }}
+      onPointerMove={e => {
+        e.preventDefault();
+      }}
+      onPointerLeave={e => {
+        e.preventDefault();
+      }}
     />
   );
 });
@@ -56,6 +74,15 @@ export const DropdownMenuGroup = forwardRef<
     ref={ref}
     className={cx(styles.menugroup, className)}
     {...props}
+    onPointerEnter={e => {
+      e.preventDefault();
+    }}
+    onPointerMove={e => {
+      e.preventDefault();
+    }}
+    onPointerLeave={e => {
+      e.preventDefault();
+    }}
   />
 ));
 DropdownMenuGroup.displayName = DropdownMenuPrimitive.Group.displayName;

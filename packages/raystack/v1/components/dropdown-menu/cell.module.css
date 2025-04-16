@@ -13,6 +13,7 @@
 
 .cell:hover,
 .cell:focus,
+.cell[data-state="open"],
 .cell[data-highlighted]:not(.comboboxcell),
 .cell.comboboxcell[data-active-item] {
   outline: none;

@@ -1,4 +1,9 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  forwardRef,
+  useRef,
+} from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { ComboboxItem } from "@ariakit/react";
 import { useDropdownContext, useMenuLevel } from "./dropdown-menu-root";
@@ -19,23 +24,37 @@ export const DropdownMenuSubMenuTrigger = forwardRef<
     { children, value, trailingIcon = <TriangleRightIcon />, ...props },
     ref,
   ) => {
-    const { autocomplete, searchValue } = useDropdownContext();
+    const {
+      autocomplete,
+      searchValue,
+      parentHasAutocomplete,
+      parentSearchValue,
+    } = useDropdownContext();
+    const movedMouse = useRef(false);
     const menuLevel = useMenuLevel();
-
+    console.log({
+      children,
+      autocomplete,
+      parentHasAutocomplete,
+      menuLevel,
+      searchValue,
+    });
     const item = (
       <DropdownMenuPrimitive.SubTrigger ref={ref} {...props} asChild>
-        <Cell trailingIcon={trailingIcon} isComboboxCell={autocomplete}>
+        <Cell
+          trailingIcon={trailingIcon}
+          isComboboxCell={parentHasAutocomplete}>
           {children}
         </Cell>
       </DropdownMenuPrimitive.SubTrigger>
     );
-    if ((autocomplete && menuLevel >= 3) || (!autocomplete && menuLevel >= 2))
-      return item;
 
     const computedValue = getValue(value, children);
 
-    if (autocomplete && !getMatch(computedValue, searchValue)) return null;
-    if (autocomplete) return <ComboboxItem value={value} render={item} />;
+    if (parentHasAutocomplete && !getMatch(computedValue, parentSearchValue))
+      return null;
+    if (parentHasAutocomplete)
+      return <ComboboxItem value={value} render={item} />;
     return item;
   },
 );
