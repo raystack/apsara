@@ -121,9 +121,12 @@
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
 }
+.trigger:focus-visible {
+  outline: 1px solid var(--rs-color-border-accent-emphasis);
+}
 
 .trigger:focus {
-  outline: 1px solid var(--rs-color-border-accent-emphasis);
+  outline: none;
 }
 
 .trigger:disabled {
