@@ -5,16 +5,15 @@ import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
 import { Flex } from "../flex";
 import { Popover } from "../popover";
-import { TextField } from "../textfield";
-import { TextfieldProps } from "../textfield/textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
+import { InputField } from "../input-field";
+import { InputFieldProps } from "../input-field/input-field";
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
-  textFieldsProps?: { startDate?: TextfieldProps, endDate?: TextfieldProps };
-  placeholders?: { startDate?: string; endDate?: string };
+  inputFieldsProps?: { startDate?: InputFieldProps, endDate?: InputFieldProps };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
@@ -29,8 +28,7 @@ type RangeFields = keyof DateRange;
 export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
-  textFieldsProps = {},
-  placeholders,
+  inputFieldsProps = {},
   calendarProps,
   onSelect = () => {},
   value = {
@@ -90,21 +88,20 @@ export function RangePicker({
 
   const defaultTrigger = (
     <Flex gap={"medium"} className={pickerGroupClassName}>
-      <TextField
+      <InputField
+				size='small'
+        {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
-        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
-        className={styles.datePickerInput}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         readOnly
-        {...(textFieldsProps.startDate ?? {})}
-        placeholder={placeholders?.startDate || "Select start date"}
       />
-      <TextField
+
+      <InputField
+				size='small'
+        {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
-        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
-        className={styles.datePickerInput}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         readOnly
-        {...(textFieldsProps.endDate ?? {})}
-        placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
   );
