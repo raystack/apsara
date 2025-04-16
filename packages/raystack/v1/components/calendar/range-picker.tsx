@@ -79,8 +79,6 @@ export function RangePicker({
       setCurrentRangeField("to");
     }
     setSelectedRange(newRange);
-    // Return the range
-
     onSelect(newRange);
   };
 
@@ -97,7 +95,6 @@ export function RangePicker({
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
-        {...(inputFieldsProps.startDate ?? {})}
         placeholder={placeholders?.startDate || "Select start date"}
       />
 
@@ -108,7 +105,6 @@ export function RangePicker({
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
-        {...(inputFieldsProps.endDate ?? {})}
         placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
