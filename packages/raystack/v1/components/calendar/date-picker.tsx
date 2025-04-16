@@ -8,13 +8,14 @@ import { Popover } from "../popover";
 import { TextField } from "../textfield";
 import { TextfieldProps } from "../textfield/textfield";
 import { Calendar } from "./calendar";
+import { DayjsDateFormat } from "./utils";
 import styles from "./calendar.module.css";
 
 dayjs.extend(customParseFormat);
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
-  dateFormat?: string;
+  dateFormat?: DayjsDateFormat;
   textFieldProps?: TextfieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
   onSelect?: (date: Date) => void;
@@ -24,6 +25,7 @@ interface DatePickerProps {
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
+  timeZone?: string;
 }
 
 export function DatePicker({
@@ -36,6 +38,7 @@ export function DatePicker({
   onSelect = () => {},
   children,
   showCalendarIcon = true,
+  timeZone,
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
@@ -137,12 +140,7 @@ export function DatePicker({
       : value.includes("-")
       ? "DD-MM-YYYY"
       : undefined;
-    const date = dayjs(
-      value.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, (_, day, month, year) => {
-        return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`; // Replaces [8/8/2024] to [08/08/2024]
-      }),
-      format
-    );
+    const date = dayjs(value, format);
 
     const isValidDate = date.isValid();
 
@@ -199,6 +197,7 @@ export function DatePicker({
         <Calendar
           required={true}
           {...calendarProps}
+          timeZone={timeZone}
           onDropdownOpen={onDropdownOpen}
           mode="single"
           selected={selectedDate}

@@ -148,7 +148,7 @@ const Page = () => {
             Main
           </Text>
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             <Search
               placeholder="Default large search"
               showClearButton
@@ -161,11 +161,22 @@ const Page = () => {
               onClear={() => setSearch1("")}
             />
 
-            <RangePicker />
+            <Text>Here we are testing the Range Picker</Text>
+            <RangePicker
+              timeZone="UTC"
+              dateFormat="DD-MM-YYYY"
+              onSelect={(dateRange) => {
+                console.log(dateRange);
+              }}
+            />
 
-            <DatePicker />
-
-            <RangePicker />
+            <DatePicker
+              timeZone="UTC"
+              dateFormat="DD-MM-YYYY"
+              onSelect={(date) => {
+                console.log(date);
+              }}
+            />
 
             <Text
               size="large"
@@ -390,7 +401,7 @@ const Page = () => {
 
           <TextArea label="Read Only" value="This is a read only text area" />
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             {/* Normal size select with icons */}
             <Flex direction="column" gap={2}>
               <Select
@@ -430,7 +441,7 @@ const Page = () => {
             </Flex>
           </Flex>
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             {/* Normal size select with icons */}
             <Flex direction="column" gap={2}>
               <Select

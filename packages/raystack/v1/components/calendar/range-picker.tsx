@@ -6,14 +6,16 @@ import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 import { Flex } from "../flex";
 import { Popover } from "../popover";
 import { Calendar } from "./calendar";
+import { DayjsDateFormat } from "./utils";
 import styles from "./calendar.module.css";
 import { InputField } from "../input-field";
 import { InputFieldProps } from "../input-field/input-field";
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
-  dateFormat?: string;
+  dateFormat?: DayjsDateFormat;
   inputFieldsProps?: { startDate?: InputFieldProps, endDate?: InputFieldProps };
+  placeholders?: { startDate?: string; endDate?: string };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
@@ -21,6 +23,7 @@ interface RangePickerProps {
   children?: React.ReactNode | ((props: { startDate: string; endDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
   footer?: React.ReactNode;
+  timeZone?: string;
 }
 
 type RangeFields = keyof DateRange;
@@ -29,6 +32,7 @@ export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
   inputFieldsProps = {},
+  placeholders,
   calendarProps,
   onSelect = () => {},
   value = {
@@ -39,6 +43,7 @@ export function RangePicker({
   children,
   showCalendarIcon = true,
   footer,
+  timeZone,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] = useState<RangeFields>("from");
@@ -74,12 +79,9 @@ export function RangePicker({
       setCurrentRangeField("to");
     }
     setSelectedRange(newRange);
-    // Return the range with +1 day for the end date in the callback
-    const callbackRange = {
-      from: newRange.from,
-      to: newRange.to ? dayjs(newRange.to).add(1, 'day').toDate() : undefined
-    };
-    onSelect(callbackRange);
+    // Return the range
+
+    onSelect(newRange);
   };
 
   function onOpenChange(open?: boolean) {
@@ -93,7 +95,10 @@ export function RangePicker({
         {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        className={styles.datePickerInput}
         readOnly
+        {...(inputFieldsProps.startDate ?? {})}
+        placeholder={placeholders?.startDate || "Select start date"}
       />
 
       <InputField
@@ -101,7 +106,10 @@ export function RangePicker({
         {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        className={styles.datePickerInput}
         readOnly
+        {...(inputFieldsProps.endDate ?? {})}
+        placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
   );
@@ -122,6 +130,7 @@ export function RangePicker({
           defaultMonth={selectedRange.from}
           required={true}
           {...calendarProps}
+          timeZone={timeZone}
           mode="range"
           selected={selectedRange}
           onSelect={handleSelect}
