@@ -1,0 +1,16 @@
+export type DayjsDateFormat = 
+| "DD/MM/YYYY" 
+| "MM/DD/YYYY" 
+| "YYYY/MM/DD" 
+| "DD-MM-YYYY" 
+| "MM-DD-YYYY" 
+| "YYYY-MM-DD"
+| "DD.MM.YYYY"
+| "MM.DD.YYYY"
+| "YYYY.MM.DD"
+| "DD MMM YYYY"
+| "MMM DD YYYY"
+| "YYYY MMM DD"
+| "DD MMMM YYYY"
+| "MMMM DD YYYY"
+| "YYYY MMMM DD";

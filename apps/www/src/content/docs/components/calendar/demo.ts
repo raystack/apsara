@@ -10,13 +10,13 @@ export const preview = {
     {
       name: "Range Picker",
       code: `
-        <RangePicker inputFieldsProps={{ startDate: { size: "large" } }} />`,
+        <RangePicker inputFieldsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />`,
     },
     {
       name: "Date Picker",
       code: `
       <Flex style={{height:200}}>
-        <DatePicker inputFieldsProps={{ startDate: { size: "large" } }}}} />
+        <DatePicker inputFieldsProps={{ startDate: { size: "large" } }} />
       </Flex>`,
     },
   ],
