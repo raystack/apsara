@@ -80,7 +80,7 @@
 
 .trigger-small {
   padding: var(--rs-space-2);
-  height: 24px;
+  min-height: 24px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -99,7 +99,7 @@
 
 .trigger-medium {
   padding: var(--rs-space-3);
-  height: 32px;
+  min-height: 32px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -121,9 +121,12 @@
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
 }
+.trigger:focus-visible {
+  outline: 1px solid var(--rs-color-border-accent-emphasis);
+}
 
 .trigger:focus {
-  outline: 1px solid var(--rs-color-border-accent-emphasis);
+  outline: none;
 }
 
 .trigger:disabled {
@@ -156,7 +159,6 @@
 .content[data-variant="text"] .menuitem {
   padding: var(--rs-space-1) var(--rs-space-2);
   min-height: 24px !important;
-  height: 24px !important;
   font-size: var(--rs-font-size-small);
 }
 
