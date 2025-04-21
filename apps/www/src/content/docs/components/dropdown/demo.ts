@@ -16,34 +16,34 @@ export const getCode = (props: any) => {
       </DropdownMenu.Group>
       <DropdownMenu.Separator />
       <DropdownMenu.Label>Actions</DropdownMenu.Label>
-      <DropdownMenu.SubMenu>
-        <DropdownMenu.SubMenuTrigger>
+      <DropdownMenu>
+        <DropdownMenu.TriggerItem>
           Export
-        </DropdownMenu.SubMenuTrigger>
-        <DropdownMenu.SubMenuContent>
-          <DropdownMenu.SubMenu>
+        </DropdownMenu.TriggerItem>
+        <DropdownMenu.Content>
+          <DropdownMenu>
             <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
-            <DropdownMenu.SubMenuTrigger>
+            <DropdownMenu.TriggerItem>
               CSV
-            </DropdownMenu.SubMenuTrigger>
-            <DropdownMenu.SubMenuContent>
+            </DropdownMenu.TriggerItem>
+            <DropdownMenu.Content>
               <DropdownMenu.Item>All</DropdownMenu.Item>
               <DropdownMenu.Item>3 Months</DropdownMenu.Item>
               <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-            </DropdownMenu.SubMenuContent>
-          </DropdownMenu.SubMenu>
-          <DropdownMenu.SubMenu>
-            <DropdownMenu.SubMenuTrigger>
+            </DropdownMenu.Content>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenu.TriggerItem>
               PDF
-            </DropdownMenu.SubMenuTrigger>
-            <DropdownMenu.SubMenuContent>
+            </DropdownMenu.TriggerItem>
+            <DropdownMenu.Content>
               <DropdownMenu.Item>All</DropdownMenu.Item>
               <DropdownMenu.Item>3 Months</DropdownMenu.Item>
               <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-            </DropdownMenu.SubMenuContent>
-          </DropdownMenu.SubMenu>
-        </DropdownMenu.SubMenuContent>
-      </DropdownMenu.SubMenu>
+            </DropdownMenu.Content>
+          </DropdownMenu>
+        </DropdownMenu.Content>
+      </DropdownMenu>
       <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
       <DropdownMenu.Item
         trailingIcon={
