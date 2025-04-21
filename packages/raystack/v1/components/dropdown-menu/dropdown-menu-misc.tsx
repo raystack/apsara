@@ -1,91 +1,58 @@
+import { ElementRef, forwardRef, HTMLAttributes, ReactNode } from "react";
 import {
-  ComponentPropsWithoutRef,
-  ElementRef,
-  forwardRef,
-  HTMLAttributes,
-  ReactNode,
-} from "react";
+  MenuGroup,
+  MenuGroupLabel,
+  MenuGroupLabelProps,
+  MenuGroupProps,
+  MenuSeparator,
+  MenuSeparatorProps,
+} from "@ariakit/react";
+import { Slot } from "@radix-ui/react-slot";
 import { cx } from "class-variance-authority";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { WithAsChild } from "./types";
 import styles from "./dropdown-menu.module.css";
-import { useDropdownContext, useMenuLevel } from "./dropdown-menu-root";
-
-export const DropdownMenuLabel = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Label>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
->(({ className, ...props }, ref) => {
-  const { autocomplete, searchValue } = useDropdownContext();
-  const menuLevel = useMenuLevel();
-
-  if (autocomplete && searchValue?.length) return null;
-
-  return (
-    <DropdownMenuPrimitive.Label
-      ref={ref}
-      className={cx(styles.label, className)}
-      {...props}
-      onPointerEnter={e => {
-        e.preventDefault();
-      }}
-      onPointerMove={e => {
-        e.preventDefault();
-      }}
-      onPointerLeave={e => {
-        e.preventDefault();
-      }}
-    />
-  );
-});
-DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
-
-export const DropdownMenuSeparator = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Separator>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
->(({ className, ...props }, ref) => {
-  const { autocomplete, searchValue } = useDropdownContext();
-  const menuLevel = useMenuLevel();
-
-  if (autocomplete && menuLevel === 1 && searchValue?.length) return null;
-
-  return (
-    <DropdownMenuPrimitive.Separator
-      ref={ref}
-      className={cx(styles.separator, className)}
-      {...props}
-      onPointerEnter={e => {
-        e.preventDefault();
-      }}
-      onPointerMove={e => {
-        e.preventDefault();
-      }}
-      onPointerLeave={e => {
-        e.preventDefault();
-      }}
-    />
-  );
-});
-DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
 
 export const DropdownMenuGroup = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Group>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Group>
->(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Group
-    ref={ref}
-    className={cx(styles.menugroup, className)}
-    {...props}
-    onPointerEnter={e => {
-      e.preventDefault();
-    }}
-    onPointerMove={e => {
-      e.preventDefault();
-    }}
-    onPointerLeave={e => {
-      e.preventDefault();
-    }}
-  />
-));
-DropdownMenuGroup.displayName = DropdownMenuPrimitive.Group.displayName;
+  ElementRef<typeof MenuGroup>,
+  WithAsChild<MenuGroupProps>
+>(({ className, asChild, ...props }, ref) => {
+  return (
+    <MenuGroup
+      ref={ref}
+      className={cx(styles.menugroup, className)}
+      render={asChild ? <Slot /> : undefined}
+      {...props}
+    />
+  );
+});
+
+export const DropdownMenuLabel = forwardRef<
+  ElementRef<typeof MenuGroupLabel>,
+  WithAsChild<MenuGroupLabelProps>
+>(({ className, asChild, ...props }, ref) => {
+  return (
+    <MenuGroupLabel
+      ref={ref}
+      className={cx(styles.label, className)}
+      render={asChild ? <Slot /> : undefined}
+      {...props}
+    />
+  );
+});
+
+export const DropdownMenuSeparator = forwardRef<
+  ElementRef<typeof MenuSeparator>,
+  WithAsChild<MenuSeparatorProps>
+>(({ className, asChild, ...props }, ref) => {
+  return (
+    <MenuSeparator
+      ref={ref}
+      className={cx(styles.separator, className)}
+      render={asChild ? <Slot /> : undefined}
+      {...props}
+    />
+  );
+});
 
 export const DropdownMenuEmptyState = forwardRef<
   HTMLDivElement,
@@ -97,4 +64,3 @@ export const DropdownMenuEmptyState = forwardRef<
     {children}
   </div>
 ));
-DropdownMenuEmptyState.displayName = "DropdownMenuEmptyState";

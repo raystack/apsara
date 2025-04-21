@@ -4,12 +4,14 @@ import styles from "./cell.module.css";
 import { Checkbox } from "../checkbox";
 
 export type CellBaseProps = {
-  type?: "select" | "item";
   isComboboxCell?: boolean;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
 };
-export type CellProps = HTMLAttributes<HTMLDivElement> & CellBaseProps;
+export type CellProps = HTMLAttributes<HTMLDivElement> &
+  CellBaseProps & {
+    type?: "select" | "item";
+  };
 
 export const Cell = forwardRef<HTMLDivElement, CellProps>(
   (
