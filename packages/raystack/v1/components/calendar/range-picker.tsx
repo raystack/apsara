@@ -15,7 +15,6 @@ interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: DayjsDateFormat;
   inputFieldsProps?: { startDate?: InputFieldProps, endDate?: InputFieldProps };
-  placeholders?: { startDate?: string; endDate?: string };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
@@ -32,7 +31,6 @@ export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
   inputFieldsProps = {},
-  placeholders,
   calendarProps,
   onSelect = () => {},
   value = {
@@ -87,25 +85,25 @@ export function RangePicker({
   }
 
   const defaultTrigger = (
-    <Flex gap={"medium"} className={pickerGroupClassName}>
+    <Flex gap="medium" className={pickerGroupClassName}>
       <InputField
-				size='small'
+        size='small'
+        placeholder="Select start date"
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
-        placeholder={placeholders?.startDate || "Select start date"}
       />
 
       <InputField
-				size='small'
+        size='small'
+        placeholder="Select end date"
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         readOnly
-        placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
   );

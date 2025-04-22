@@ -53,12 +53,6 @@ export interface RangePickerProps {
     endDate?: InputFieldProps 
   };
 
-  /** Custom placeholders for the input fields */
-  placeholders?: { 
-    startDate?: string; 
-    endDate?: string 
-  };
-
   /** Render prop for custom trigger */
   children?: React.ReactNode;
 
@@ -92,9 +86,6 @@ export interface DatePickerProps {
 
   /** Props for customizing the input field */
   inputFieldProps?: InputFieldProps;
-
-  /** Placeholder text for the input field */
-  placeholder?: string;
 
   /** Initial date value */
   value?: Date;

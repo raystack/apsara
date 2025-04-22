@@ -161,7 +161,7 @@ const Page = () => {
               onClear={() => setSearch1("")}
             />
 
-            <Text size={9}>Here we are testing the Range Picker with UTC timezone</Text>
+            <Text size={9}>Range Picker</Text>
             <RangePicker
               timeZone="UTC"
               dateFormat="DD MMM YYYY"
@@ -178,6 +178,18 @@ const Page = () => {
               }}
             />
 
+            <DatePicker
+              timeZone="UTC"
+              dateFormat="DD MMM YYYY"
+              onSelect={(date) => {
+                console.log(date);
+              }}
+            >
+              <InputField defaultValue="test" size="small" readOnly />
+            </DatePicker>
+
+            <InputField defaultValue="test" size="small" readOnly />
+            
             <Text
               size="large"
               weight="medium"
