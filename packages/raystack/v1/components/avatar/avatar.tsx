@@ -2,14 +2,13 @@ import {
   ComponentPropsWithoutRef,
   ElementRef,
   forwardRef,
-  ReactNode,
-  isValidElement
+  ReactNode
 } from "react";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { cva, VariantProps } from "class-variance-authority";
 import { clsx } from 'clsx';
 
-import {AVATAR_COLORS} from './utils'
+import {AVATAR_COLORS, getAvatarProps} from './utils'
 import { Box } from "../box";
 import styles from "./avatar.module.css";
 
@@ -148,20 +147,6 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
     const avatars = max ? children.slice(0, max) : children;
     const count = max && children.length > max ? children.length - max : 0;
 
-    // This function is used to recursively get the avatar props even if it's wrapped in another component like Tooltip, Flex, etc.
-    const getAvatarProps = (element: React.ReactElement): AvatarProps => {
-      if (element.type === Avatar) {
-        return element.props;
-      }
-      
-      if (element.props.children) {
-        if (isValidElement(element.props.children)) {
-          return getAvatarProps(element.props.children);
-        }
-      }
-      return {};
-    };
-
     // Overflow avatar matches the first avatar styling
     const firstAvatarProps = getAvatarProps(avatars[0]);
 
@@ -183,7 +168,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
               radius={firstAvatarProps.radius}
               variant={firstAvatarProps.variant}
               color='neutral'
-              fallback={<span>+{count}</span>}
+              fallback={`+${count}`}
             />
           </div>
         )}
