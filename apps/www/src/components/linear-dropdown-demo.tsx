@@ -1,7 +1,6 @@
-"use client";
-import { Button, DropdownMenu, Flex, Text } from "@raystack/apsara/v1";
-import React, { Fragment, ReactNode, useState } from "react";
+import { Avatar, Button, DropdownMenu, Flex, Text } from "@raystack/apsara/v1";
 import { Calendar, ChevronRight, Download } from "lucide-react";
+import { Fragment, ReactNode, useState } from "react";
 
 type DropdownMenuItem =
   | {
@@ -24,9 +23,63 @@ type DropdownMenuItem =
 const dropdownMenuData: DropdownMenuItem[] = [
   {
     type: "group",
-    label: "Heading",
+    label: "Actions",
     items: [
-      { type: "item", label: "Assign member..." },
+      {
+        type: "submenu",
+        label: "Assign member...",
+        items: [
+          {
+            type: "item",
+            label: "Rohan",
+            leadingIcon: (
+              <Avatar size={2} radius="full" fallback="R" color="cyan" />
+            ),
+          },
+          {
+            type: "item",
+            label: "Rohil",
+            leadingIcon: (
+              <Avatar size={2} radius="full" fallback="R" color="orange" />
+            ),
+          },
+          {
+            type: "item",
+            label: "Gaurav",
+            leadingIcon: (
+              <Avatar size={2} radius="full" fallback="G" color="sky" />
+            ),
+          },
+          {
+            type: "item",
+            label: "Abhishek",
+            leadingIcon: (
+              <Avatar size={2} radius="full" fallback="A" color="iris" />
+            ),
+          },
+          {
+            type: "item",
+            label: "Aman",
+            leadingIcon: (
+              <Avatar size={2} radius="full" fallback="A" color="purple" />
+            ),
+          },
+          {
+            type: "item",
+            label: "Risabh",
+            leadingIcon: (
+              <Avatar size={2} radius="full" fallback="R" color="gold" />
+            ),
+          },
+          {
+            type: "item",
+            label: "Ajinkya",
+            leadingIcon: (
+              <Avatar size={2} radius="full" fallback="A" color="crimson" />
+            ),
+          },
+        ],
+      },
       { type: "item", label: "Subscribe..." },
       { type: "item", label: "Rename..." },
     ],
@@ -34,7 +87,7 @@ const dropdownMenuData: DropdownMenuItem[] = [
   { type: "separator" },
   {
     type: "group",
-    label: "Actions",
+    label: "More",
     items: [
       {
         type: "submenu",
@@ -124,9 +177,8 @@ function filterDropdownMenuItems(
       if (flatLabel.includes(normalizedQuery)) {
         results.push({
           ...item,
-          // Overwrite `label` to be a string array
           label: fullPath,
-        } as DropdownMenuItem); // Type casting to keep TypeScript happy
+        } as DropdownMenuItem);
       }
     }
 
@@ -154,23 +206,18 @@ function filterDropdownMenuItems(
   return results;
 }
 
-const items = [
-  "Assign member...",
-  "Subscribe...",
-  "Rename...",
-  "Copy",
-  "Delete...",
-];
-
-const Page = () => {
+export default function LinearDropdownDemo() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [simpleSearchQuery, setSimpleSearchQuery] = useState("");
 
   const renderDropdownMenu = (items: DropdownMenuItem[], query: string) => {
     const filteredItems = filterDropdownMenuItems(items, query);
 
     if (searchQuery && filteredItems.length === 0) {
-      return <div className="no-results">No results</div>;
+      return (
+        <div>
+          <Text>No results</Text>
+        </div>
+      );
     }
 
     return filteredItems.map((item, index) => {
@@ -221,88 +268,13 @@ const Page = () => {
   };
 
   return (
-    <Flex
-      justify="center"
-      align="start"
-      style={{ height: "100vh", paddingTop: 80 }}
-      gap="large"
-      wrap="wrap">
-      <DropdownMenu>
-        <DropdownMenu.Trigger asChild>
-          <Button color="neutral">Dropdown Menu</Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content searchPlaceholder="Search">
-          {renderDropdownMenu(dropdownMenuData, "")}
-        </DropdownMenu.Content>
-      </DropdownMenu>
-      <DropdownMenu
-        autocomplete
-        autocompleteMode="manual"
-        onSearch={value => setSimpleSearchQuery(value)}>
-        <DropdownMenu.Trigger asChild>
-          <Button color="neutral">Autcomplete Dropdown Menu</Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content searchPlaceholder="Search">
-          {items
-            .filter(item => item.toLowerCase().includes(simpleSearchQuery))
-            .map((item, index) => (
-              <DropdownMenu.Item key={index}>{item}</DropdownMenu.Item>
-            ))}
-        </DropdownMenu.Content>
-      </DropdownMenu>
-      <DropdownMenu autocomplete>
-        <DropdownMenu.Trigger asChild>
-          <Button color="neutral">Autcomplete Dropdown Menu</Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content searchPlaceholder="Search">
-          <DropdownMenu.Group>
-            <DropdownMenu.Label>Heading</DropdownMenu.Label>
-            <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
-            <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
-            <DropdownMenu.Item>Rename...</DropdownMenu.Item>
-          </DropdownMenu.Group>
-          <DropdownMenu.Separator />
-          <DropdownMenu.Label>Actions</DropdownMenu.Label>
-          <DropdownMenu autocomplete>
-            <DropdownMenu.TriggerItem>Export</DropdownMenu.TriggerItem>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
-              <DropdownMenu>
-                <DropdownMenu.TriggerItem>CSV</DropdownMenu.TriggerItem>
-                <DropdownMenu.Content>
-                  <DropdownMenu.Item>All</DropdownMenu.Item>
-                  <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-                  <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenu.TriggerItem>PDF</DropdownMenu.TriggerItem>
-                <DropdownMenu.Content>
-                  <DropdownMenu.Item>All</DropdownMenu.Item>
-                  <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-                  <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu>
-            </DropdownMenu.Content>
-          </DropdownMenu>
-          <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
-          <DropdownMenu.Item
-            value="remove"
-            trailingIcon={
-              <Text size="micro" variant="secondary">
-                ⌘⇧D
-              </Text>
-            }>
-            Delete...
-          </DropdownMenu.Item>
-        </DropdownMenu.Content>
-      </DropdownMenu>
+    <Flex style={{ padding: 50 }}>
       <DropdownMenu
         autocomplete
         autocompleteMode="manual"
         onSearch={(value: string) => setSearchQuery(value)}>
         <DropdownMenu.Trigger asChild>
-          <Button color="neutral">Manual Autocomplete Dropdown</Button>
+          <Button>Actions</Button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content searchPlaceholder="Search">
           {renderDropdownMenu(dropdownMenuData, searchQuery)}
@@ -310,6 +282,4 @@ const Page = () => {
       </DropdownMenu>
     </Flex>
   );
-};
-
-export default Page;
+}

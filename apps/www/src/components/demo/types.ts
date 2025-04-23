@@ -1,10 +1,15 @@
 export type ScopeType = Record<string, unknown>;
 
+type TabProps = {
+  label: string;
+  code: string;
+};
 export type DemoPreviewProps = {
   type: "code";
   code?: string;
   tabs?: { name: string; code: string }[];
   scope?: ScopeType;
+  codePreview?: string | TabProps[];
 };
 
 export type DemoPlaygroundProps = {

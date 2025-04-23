@@ -4,7 +4,14 @@ description: Displays a menu to the user, such as a set of actions or functions,
 tag: update
 ---
 
-import { playground, iconsDemo, customDemo, basicDemo } from "./demo.ts";
+import {
+  playground,
+  iconsDemo,
+  customDemo,
+  basicDemo,
+  autocompleteDemo,
+  linearDemo,
+} from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -36,7 +43,9 @@ The container that holds the dropdown menu items. Built on top of [Ariakit Menu]
 
 ### DropdownMenu.Item
 
-Individual clickable options within the dropdown menu. Built on top of [Ariakit MenuItem](https://ariakit.org/reference/menu-item). Renders as [Ariakit ComboboxItem](https://ariakit.org/reference/combobox-item) when Dropdown is autocomplete
+Individual clickable options within the dropdown menu. Built on top of [Ariakit MenuItem](https://ariakit.org/reference/menu-item).
+
+Renders as an [Ariakit ComboboxItem](https://ariakit.org/reference/combobox-item) when used in an autocomplete dropdown. By default, the item's `children` is used for matching and selection, which can be overriden by passing a `value` prop.
 
 <auto-type-table path="./props.ts" name="DropdownMenuItemProps" />
 
@@ -83,3 +92,17 @@ You can add icons to the dropdown items. Supports both leading and trailing icon
 Organize related menu items into sections with descriptive headers.
 
 <Demo data={customDemo} />
+
+### Autocomplete
+
+To enable autocomplete, pass the `autocomplete` prop to the Dropdown root element. Each menu instance will manage its own autocomplete behavior.
+
+By default, only the top-level menu items are filtered. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
+
+<Demo data={autocompleteDemo} />
+
+### Linear inspired Dropdown
+
+This is a Linear-inspired dropdown component that supports custom filtering and displays nested options. Users can search through all nested items using a single input field.
+
+<Demo data={linearDemo} />

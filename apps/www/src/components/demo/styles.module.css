@@ -99,6 +99,21 @@
 .iconButton.active {
   border-color: var(--rs-color-background-accent-emphasis);
 }
+
+.codeTabGroup {
+  border-radius: 0;
+  margin: 0;
+  border-bottom: none;
+  border-right: none;
+  border-left: none;
+  padding: 0;
+}
+
+.codeTab {
+  border-radius: 0;
+  padding: 0;
+}
+
 @media (max-width: 920px) {
   .previewContainer {
     flex-direction: column;
