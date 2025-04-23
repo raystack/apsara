@@ -17,6 +17,13 @@
   transition: all 0.2s ease-in-out;
 }
 
+.button:focus-visible {
+  outline: 1px solid var(--rs-color-border-accent-emphasis);
+}
+.button:focus {
+  outline: none;
+}
+
 .button:before,
 .button:after {
   box-sizing: border-box;

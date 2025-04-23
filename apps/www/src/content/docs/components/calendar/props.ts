@@ -1,3 +1,5 @@
+import { InputFieldProps } from "../input-field/props";
+
 export interface CalendarProps {
   /** Number of months to display */
   numberOfMonths?: number;
@@ -32,7 +34,7 @@ export interface RangePickerProps {
   calendarProps?: CalendarProps;
 
   /** Props for customizing the text field */
-  textFieldProps?: Record<string, unknown>;
+  inputFieldsProps?: InputFieldProps;
 
   /** Render prop for custom trigger */
   children?: React.ReactNode;

@@ -5,16 +5,15 @@ import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
 import { Flex } from "../flex";
 import { Popover } from "../popover";
-import { TextField } from "../textfield";
-import { TextfieldProps } from "../textfield/textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
+import { InputField } from "../input-field";
+import { InputFieldProps } from "../input-field/input-field";
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
-  textFieldsProps?: { startDate?: TextfieldProps, endDate?: TextfieldProps };
-  placeholders?: { startDate?: string; endDate?: string };
+  inputFieldsProps?: { startDate?: InputFieldProps, endDate?: InputFieldProps };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
@@ -29,8 +28,7 @@ type RangeFields = keyof DateRange;
 export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
-  textFieldsProps = {},
-  placeholders,
+  inputFieldsProps = {},
   calendarProps,
   onSelect = () => {},
   value = {
@@ -53,28 +51,28 @@ export function RangePicker({
   // 2nd click will select the end date.
   // 3rd click will select the start date again.
   const handleSelect = (range: DateRange, selectedDay: Date) => {
-    const from = selectedRange?.from || range?.from;
+    // TODO: Remove custom logic and reuse the default logic from react-day-picker
     let newRange: DateRange;
-    if (currentRangeField === "to") {
-      if (dayjs(selectedDay).isSame(dayjs(from), 'day')) {
-        // If same date is clicked twice, set end date to the same date for UI
-        newRange = {
-          from,
-          to: selectedDay
-        };
-      } else if (dayjs(selectedDay).isAfter(dayjs(from))) {
-        // If different date is selected and it's after start date
-        newRange = { from, to: selectedDay };
-      } else {
-        // If selected date is before start date, reset and select start day
-        newRange = { from: selectedDay };
-      }
-      setCurrentRangeField("from");
-    } else {
-      // Reset the range and select start day
+
+    if (currentRangeField === "from") {
+      // First click - set from date and prepare for to date selection
       newRange = { from: selectedDay };
       setCurrentRangeField("to");
+    } else {
+      // Second click - setting to date
+      const from = selectedRange.from;
+      
+      if (dayjs(selectedDay).isBefore(dayjs(from))) {
+        // If selected date is before current from date, start new range
+        newRange = { from: selectedDay };
+        setCurrentRangeField("to");
+      } else {
+        // Set the to date
+        newRange = { from, to: selectedDay };
+        setCurrentRangeField("from");
+      }
     }
+
     setSelectedRange(newRange);
     // Return the range with +1 day for the end date in the callback
     const callbackRange = {
@@ -90,21 +88,20 @@ export function RangePicker({
 
   const defaultTrigger = (
     <Flex gap={"medium"} className={pickerGroupClassName}>
-      <TextField
+      <InputField
+				size='small'
+        {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
-        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
-        className={styles.datePickerInput}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         readOnly
-        {...(textFieldsProps.startDate ?? {})}
-        placeholder={placeholders?.startDate || "Select start date"}
       />
-      <TextField
+
+      <InputField
+				size='small'
+        {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
-        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
-        className={styles.datePickerInput}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         readOnly
-        {...(textFieldsProps.endDate ?? {})}
-        placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
   );

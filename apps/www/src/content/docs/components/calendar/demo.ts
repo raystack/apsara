@@ -10,13 +10,13 @@ export const preview = {
     {
       name: "Range Picker",
       code: `
-        <RangePicker textFieldProps={{ size: "medium" }} />`,
+        <RangePicker inputFieldsProps={{ startDate: { size: "large" } }} />`,
     },
     {
       name: "Date Picker",
       code: `
       <Flex style={{height:200}}>
-        <DatePicker textFieldProps={{ size: "medium" }} />
+        <DatePicker inputFieldsProps={{ startDate: { size: "large" } }}}} />
       </Flex>`,
     },
   ],
@@ -40,11 +40,11 @@ export const rangePickerDemo = {
   tabs: [
     {
       name: "Basic",
-      code: `<RangePicker textFieldProps={{ size: "medium" }} />`,
+      code: `<RangePicker inputFieldsProps={{ startDate: { size: "large" } }} />`,
     },
     {
       name: "Without Calendar Icon",
-      code: `<RangePicker showCalendarIcon={false} textFieldProps={{ size: "medium" }} />`,
+      code: `<RangePicker showCalendarIcon={false} inputFieldsProps={{ startDate: { size: "large" } }} />`,
     },
     {
       name: "Custom Trigger",

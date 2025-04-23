@@ -5,8 +5,15 @@ export interface FilterChipProps {
   /** Current value of the filter */
   value?: string;
 
-  /** Type of input for the filter (default: "text") */
-  columnType?: "select" | "date" | "text";
+  /** Type of input for the filter
+   * @default "string"
+   */
+  columnType?: "select" | "date" | "string" | "number";
+
+  /** Filterchip variant
+   * @default "default"
+   */
+  variant?: "default" | "text";
 
   /** Array of options for the select type input */
   options?: { label: string; value: string }[];
