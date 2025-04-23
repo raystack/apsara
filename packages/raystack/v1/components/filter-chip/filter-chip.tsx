@@ -72,7 +72,7 @@ const Operation = ({
       aria-labelledby={`${label}-label`}>
       <Select.Trigger
         variant="text"
-        className={cx(styles.selectValue)}
+        className={styles.selectValue}
         aria-label={`${label} filter operation`}>
         <Select.Value
           placeholder="Select operation"
