@@ -336,7 +336,7 @@ export const linearDemo = {
     }
   }
 
-  return results;
+  return results.slice(0, 8);
 }`,
     },
     {

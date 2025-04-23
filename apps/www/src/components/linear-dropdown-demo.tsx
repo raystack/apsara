@@ -203,7 +203,7 @@ function filterDropdownMenuItems(
     }
   }
 
-  return results;
+  return results.slice(0, 8);
 }
 
 export default function LinearDropdownDemo() {
