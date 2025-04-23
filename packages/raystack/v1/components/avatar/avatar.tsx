@@ -1,16 +1,17 @@
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import { cva, VariantProps } from "class-variance-authority";
-import { clsx } from 'clsx';
 import {
   ComponentPropsWithoutRef,
   ElementRef,
   forwardRef,
   ReactNode,
+  isValidElement
 } from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { cva, VariantProps } from "class-variance-authority";
+import { clsx } from 'clsx';
 
+import {AVATAR_COLORS} from './utils'
 import { Box } from "../box";
 import styles from "./avatar.module.css";
-import {AVATAR_COLORS} from './utils'
 
 const avatar = cva(styles.avatar, {
   variants: {
@@ -147,6 +148,23 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
     const avatars = max ? children.slice(0, max) : children;
     const count = max && children.length > max ? children.length - max : 0;
 
+    // This function is used to recursively get the avatar props even if it's wrapped in another component like Tooltip, Flex, etc.
+    const getAvatarProps = (element: React.ReactElement): AvatarProps => {
+      if (element.type === Avatar) {
+        return element.props;
+      }
+      
+      if (element.props.children) {
+        if (isValidElement(element.props.children)) {
+          return getAvatarProps(element.props.children);
+        }
+      }
+      return {};
+    };
+
+    // Overflow avatar matches the first avatar styling
+    const firstAvatarProps = getAvatarProps(avatars[0]);
+
     return (
       <div
         ref={ref}
@@ -161,9 +179,9 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
         {count > 0 && (
           <div className={styles.avatarWrapper}>
             <Avatar
-              size={avatars[0].props.size}
-              radius={avatars[0].props.radius}
-              variant={avatars[0].props.variant}
+              size={firstAvatarProps.size}
+              radius={firstAvatarProps.radius}
+              variant={firstAvatarProps.variant}
               color='neutral'
               fallback={<span>+{count}</span>}
             />
