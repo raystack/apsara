@@ -1,4 +1,4 @@
-import { isValidElement } from "react";
+import { isValidElement, ReactElement } from "react";
 import { Avatar } from "./avatar";
 
 import { AvatarProps } from "./avatar";
@@ -31,7 +31,7 @@ export function getAvatarColor(str: string): AVATAR_COLORS {
  * @desc Recursively get the avatar props even if it's
  * wrapped in another component like Tooltip, Flex, etc.
  */ 
-export const getAvatarProps = (element: React.ReactElement): AvatarProps => {
+export const getAvatarProps = (element: ReactElement): AvatarProps => {
   if (element.type === Avatar) {
     return element.props;
   }
