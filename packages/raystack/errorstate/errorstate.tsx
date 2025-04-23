@@ -72,6 +72,9 @@ type ErrorStateProps = PropsWithChildren<VariantProps<typeof errorstate>> &
     message?: string;
   };
 
+/**
+ * @deprecated Use EmptyState from '@raystack/apsara/v1' instead.
+ */
 export function ErrorState({
   children,
   className,
