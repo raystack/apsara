@@ -15,7 +15,7 @@ import {
   FilterType,
   FilterTypes,
 } from "~/v1/types/filters";
-import { cva, VariantProps } from "class-variance-authority";
+import { cva, cx, VariantProps } from "class-variance-authority";
 
 const chip = cva(styles.chip, {
   variants: {
@@ -72,7 +72,7 @@ const Operation = ({
       aria-labelledby={`${label}-label`}>
       <Select.Trigger
         variant="text"
-        className={styles.operation}
+        className={cx(styles.selectValue)}
         aria-label={`${label} filter operation`}>
         <Select.Value
           placeholder="Select operation"
@@ -131,7 +131,9 @@ export const FilterChip = ({
       case FilterType.select:
         return (
           <Select value={filterValue.toString()} onValueChange={setFilterValue}>
-            <Select.Trigger variant="text" className={styles.selectValue}>
+            <Select.Trigger
+              variant="text"
+              className={cx(styles.selectValue, styles.selectColumn)}>
               <Select.Value placeholder="Select value" />
             </Select.Trigger>
             <Select.Content data-variant="filter">

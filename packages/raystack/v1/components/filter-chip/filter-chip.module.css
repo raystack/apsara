@@ -24,23 +24,6 @@
   /* padding-right: var(--rs-space-1); */
 }
 
-.operation {
-  font-family: var(--rs-font-body);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-small);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
-  background: transparent;
-  height: calc(100% - 2px);
-  display: flex;
-  align-items: center;
-  margin-left: var(--rs-space-2);
-}
-
-.operation:hover {
-  background: var(--rs-color-background-base-primary-hover);
-}
-
 .operationText {
   color: var(--rs-color-foreground-base-secondary);
   font-family: var(--rs-font-body);
@@ -48,8 +31,6 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  padding: var(--rs-space-1) var(--rs-space-3);
-  height: calc(100% - 2px);
   display: flex;
   align-items: center;
 }
@@ -57,7 +38,6 @@
 .operationText:hover {
   color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary-hover);
-  height: calc(100% - 2px);
 }
 
 /* Target any input fields within the chip */
@@ -140,16 +120,23 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  padding: var(--rs-space-1) var(--rs-space-2);
-  height: calc(100% - 2px);
   display: flex;
   align-items: center;
+  background: transparent;
+  height: 100%;
+  min-height: auto;
+  padding: var(--rs-space-2) var(--rs-space-3);
+  border-radius: 0;
+}
+.selectColumn {
+  border-top-right-radius: var(--rs-radius-2);
+  border-bottom-right-radius: var(--rs-radius-2);
 }
 
-.selectValue:hover {
+.selectValue:hover,
+.selectValue:focus-visible {
   color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary-hover);
-  height: calc(100% - 2px);
 }
 
 .leadingIcon {
