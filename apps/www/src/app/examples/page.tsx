@@ -1,102 +1,276 @@
 "use client";
-import {
-  Button,
-  Flex,
-  Sidebar,
-  Text,
-  IconButton,
-  Search,
-  Select,
-  TextArea,
-  RangePicker,
-  Callout,
-  DatePicker,
-  Spinner,
-  DropdownMenu,
-} from "@raystack/apsara/v1";
-import React, { useState } from "react";
-import {
-  BellIcon,
-  FilterIcon,
-  OrganizationIcon,
-  SidebarIcon,
-} from "@raystack/apsara/icons";
-import styles from "@/styles/Select.module.css";
+import { Button, DropdownMenu, Flex, Text } from "@raystack/apsara/v1";
+import React, { Fragment, ReactNode, useState } from "react";
+import { Calendar, ChevronRight, Download } from "lucide-react";
+
+type DropdownMenuItem =
+  | {
+      type: "item";
+      label: string | string[];
+      disabled?: boolean;
+      trailingIcon?: ReactNode;
+      leadingIcon?: ReactNode;
+    }
+  | { type: "separator" }
+  | { type: "group"; label: string; items: DropdownMenuItem[] }
+  | {
+      type: "submenu";
+      label: string;
+      items: DropdownMenuItem[];
+      trailingIcon?: ReactNode;
+      leadingIcon?: ReactNode;
+    };
+
+const dropdownMenuData: DropdownMenuItem[] = [
+  {
+    type: "group",
+    label: "Heading",
+    items: [
+      { type: "item", label: "Assign member..." },
+      { type: "item", label: "Subscribe..." },
+      { type: "item", label: "Rename..." },
+    ],
+  },
+  { type: "separator" },
+  {
+    type: "group",
+    label: "Actions",
+    items: [
+      {
+        type: "submenu",
+        label: "Export",
+        items: [
+          {
+            type: "item",
+            label: "All (.zip)",
+            leadingIcon: <Download size={16} />,
+          },
+          {
+            type: "submenu",
+            label: "CSV",
+            leadingIcon: <Download size={16} />,
+            items: [
+              {
+                type: "item",
+                label: "All",
+                leadingIcon: <Calendar size={16} />,
+              },
+              {
+                type: "item",
+                label: "3 Months",
+                leadingIcon: <Calendar size={16} />,
+              },
+              {
+                type: "item",
+                label: "6 Months",
+                leadingIcon: <Calendar size={16} />,
+              },
+            ],
+          },
+          {
+            type: "submenu",
+            label: "PDF",
+            leadingIcon: <Download size={16} />,
+            items: [
+              {
+                type: "item",
+                label: "All",
+                leadingIcon: <Calendar size={16} />,
+              },
+              {
+                type: "item",
+                label: "3 Months",
+                leadingIcon: <Calendar size={16} />,
+              },
+              {
+                type: "item",
+                label: "6 Months",
+                leadingIcon: <Calendar size={16} />,
+              },
+            ],
+          },
+        ],
+      },
+      { type: "item", label: "Copy", disabled: true },
+      {
+        type: "item",
+        label: "Delete...",
+        trailingIcon: (
+          <Text size="micro" variant="secondary">
+            ⌘⇧D
+          </Text>
+        ),
+      },
+    ],
+  },
+];
+
+type FilteredDropdownItem = Omit<
+  Extract<DropdownMenuItem, { type: "item" }>,
+  "label"
+> & {
+  label: string[]; // path as array
+};
+
+function filterDropdownMenuItems(
+  items: DropdownMenuItem[],
+  query: string,
+  path: string[] = [],
+  isInsideSubmenu = false,
+): DropdownMenuItem[] {
+  if (!query?.length) return items;
+  const normalizedQuery = query.trim().toLowerCase();
+  const results: DropdownMenuItem[] = [];
+
+  for (const item of items) {
+    if (item.type === "separator") continue;
+
+    if (item.type === "item") {
+      const fullPath = isInsideSubmenu ? [...path, item.label] : [item.label];
+      const flatLabel = fullPath.join(" ").toLowerCase();
+      if (flatLabel.includes(normalizedQuery)) {
+        results.push({
+          ...item,
+          // Overwrite `label` to be a string array
+          label: fullPath,
+        } as DropdownMenuItem); // Type casting to keep TypeScript happy
+      }
+    }
+
+    if (item.type === "submenu") {
+      const nested = filterDropdownMenuItems(
+        item.items,
+        query,
+        [...path, item.label],
+        true,
+      );
+      results.push(...nested);
+    }
+
+    if (item.type === "group") {
+      const nested = filterDropdownMenuItems(
+        item.items,
+        query,
+        path,
+        isInsideSubmenu,
+      );
+      results.push(...nested);
+    }
+  }
+
+  return results;
+}
 
 const Page = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [search1, setSearch1] = useState("");
-  const [search2, setSearch2] = useState("");
-  const [search3, setSearch3] = useState("");
-  const [search4, setSearch4] = useState("");
-  const [selectValue, setSelectValue] = useState("");
-  const [selectValue1, setSelectValue1] = useState("");
-  const [selectValue2, setSelectValue2] = useState("");
-  const [inputValue, setInputValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Sample options data with icons
-  const selectOptions = [
-    { value: "dashboard", label: "Dashboard", icon: <BellIcon /> },
-    { value: "analytics", label: "Analytics", icon: <FilterIcon /> },
-    { value: "settings", label: "Settings", icon: <OrganizationIcon /> },
-    { value: "profile", label: "Profile", icon: <SidebarIcon /> },
-  ];
+  const renderDropdownMenu = (items: DropdownMenuItem[], query: string) => {
+    const filteredItems = filterDropdownMenuItems(items, query);
 
-  const filterOptions = [
-    { value: "Option 1", label: "Option 1", icon: <BellIcon /> },
-    { value: "Option 2", label: "Option 2", icon: <FilterIcon /> },
-    { value: "Option 3", label: "Option 3", icon: <OrganizationIcon /> },
-  ];
+    if (searchQuery && filteredItems.length === 0) {
+      return <div className="no-results">No results</div>;
+    }
 
-  const getSelectedIcon = (value: any) => {
-    const option = selectOptions.find(opt => opt.value === value);
-    return option ? option.icon : null;
+    return filteredItems.map((item, index) => {
+      switch (item.type) {
+        case "group":
+          return (
+            <DropdownMenu.Group key={index}>
+              <DropdownMenu.Label>{item.label}</DropdownMenu.Label>
+              {item.items && renderDropdownMenu(item.items, query)}
+            </DropdownMenu.Group>
+          );
+        case "separator":
+          return <DropdownMenu.Separator key={index} />;
+        case "submenu":
+          return (
+            <DropdownMenu key={index}>
+              <DropdownMenu.TriggerItem
+                trailingIcon={item.trailingIcon}
+                leadingIcon={item.leadingIcon}>
+                {item.label}
+              </DropdownMenu.TriggerItem>
+              <DropdownMenu.Content>
+                {item.items && renderDropdownMenu(item.items, query)}
+              </DropdownMenu.Content>
+            </DropdownMenu>
+          );
+        case "item":
+          return (
+            <DropdownMenu.Item
+              key={index}
+              disabled={item.disabled}
+              trailingIcon={item.trailingIcon}
+              leadingIcon={item.leadingIcon}>
+              {Array.isArray(item.label)
+                ? item.label.map((part, i) => (
+                    <Fragment key={i}>
+                      {i > 0 && <ChevronRight size={12} />}
+                      {part}
+                    </Fragment>
+                  ))
+                : item.label}
+            </DropdownMenu.Item>
+          );
+        default:
+          return null;
+      }
+    });
   };
-  const [textArea1, setTextArea1] = useState("");
-  const [textArea2, setTextArea2] = useState("");
 
   return (
     <Flex
       justify="center"
       align="start"
       style={{ height: "100vh", paddingTop: 80 }}
-      gap="large">
+      gap="large"
+      wrap="wrap">
+      <DropdownMenu>
+        <DropdownMenu.Trigger asChild>
+          <Button color="neutral">Dropdown Menu</Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content searchPlaceholder="Search">
+          {renderDropdownMenu(dropdownMenuData, "")}
+        </DropdownMenu.Content>
+      </DropdownMenu>
       <DropdownMenu autocomplete>
         <DropdownMenu.Trigger asChild>
-          <Button color="neutral">Dropdown button</Button>
+          <Button color="neutral">Autcomplete Dropdown Menu</Button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          {/* <DropdownMenu.Group> */}
-          <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
-          <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
-          <DropdownMenu.Item>Rename...</DropdownMenu.Item>
-          {/* </DropdownMenu.Group> */}
+        <DropdownMenu.Content searchPlaceholder="Search">
+          <DropdownMenu.Group>
+            <DropdownMenu.Label>Heading</DropdownMenu.Label>
+            <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
+            <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
+            <DropdownMenu.Item>Rename...</DropdownMenu.Item>
+          </DropdownMenu.Group>
           <DropdownMenu.Separator />
           <DropdownMenu.Label>Actions</DropdownMenu.Label>
-          <DropdownMenu.SubMenu autocomplete>
-            <DropdownMenu.SubMenuTrigger>Export</DropdownMenu.SubMenuTrigger>
-            <DropdownMenu.SubMenuContent>
+          <DropdownMenu autocomplete>
+            <DropdownMenu.TriggerItem>Export</DropdownMenu.TriggerItem>
+            <DropdownMenu.Content>
               <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
-              <DropdownMenu.SubMenu autocomplete>
-                <DropdownMenu.SubMenuTrigger>CSV</DropdownMenu.SubMenuTrigger>
-                <DropdownMenu.SubMenuContent>
+              <DropdownMenu>
+                <DropdownMenu.TriggerItem>CSV</DropdownMenu.TriggerItem>
+                <DropdownMenu.Content>
                   <DropdownMenu.Item>All</DropdownMenu.Item>
                   <DropdownMenu.Item>3 Months</DropdownMenu.Item>
                   <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-                </DropdownMenu.SubMenuContent>
-              </DropdownMenu.SubMenu>
-              <DropdownMenu.SubMenu>
-                <DropdownMenu.SubMenuTrigger>PDF</DropdownMenu.SubMenuTrigger>
-                <DropdownMenu.SubMenuContent>
+                </DropdownMenu.Content>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenu.TriggerItem>PDF</DropdownMenu.TriggerItem>
+                <DropdownMenu.Content>
                   <DropdownMenu.Item>All</DropdownMenu.Item>
                   <DropdownMenu.Item>3 Months</DropdownMenu.Item>
                   <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-                </DropdownMenu.SubMenuContent>
-              </DropdownMenu.SubMenu>
-            </DropdownMenu.SubMenuContent>
-          </DropdownMenu.SubMenu>
+                </DropdownMenu.Content>
+              </DropdownMenu>
+            </DropdownMenu.Content>
+          </DropdownMenu>
           <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
           <DropdownMenu.Item
+            value="remove"
             trailingIcon={
               <Text size="micro" variant="secondary">
                 ⌘⇧D
@@ -106,49 +280,15 @@ const Page = () => {
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu>
-      <DropdownMenu>
+      <DropdownMenu
+        autocomplete
+        autocompleteMode="manual"
+        onSearch={(value: string) => setSearchQuery(value)}>
         <DropdownMenu.Trigger asChild>
-          <Button color="neutral">Dropdown button</Button>
+          <Button color="neutral">Manual Autocomplete Dropdown</Button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          {/* <DropdownMenu.Group> */}
-          <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
-          <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
-          <DropdownMenu.Item>Rename...</DropdownMenu.Item>
-          {/* </DropdownMenu.Group> */}
-          <DropdownMenu.Separator />
-          <DropdownMenu.Label>Actions</DropdownMenu.Label>
-          <DropdownMenu.SubMenu autocomplete>
-            <DropdownMenu.SubMenuTrigger>Export</DropdownMenu.SubMenuTrigger>
-            <DropdownMenu.SubMenuContent>
-              <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
-              <DropdownMenu.SubMenu autocomplete>
-                <DropdownMenu.SubMenuTrigger>CSV</DropdownMenu.SubMenuTrigger>
-                <DropdownMenu.SubMenuContent>
-                  <DropdownMenu.Item>All</DropdownMenu.Item>
-                  <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-                  <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-                </DropdownMenu.SubMenuContent>
-              </DropdownMenu.SubMenu>
-              <DropdownMenu.SubMenu>
-                <DropdownMenu.SubMenuTrigger>PDF</DropdownMenu.SubMenuTrigger>
-                <DropdownMenu.SubMenuContent>
-                  <DropdownMenu.Item>All</DropdownMenu.Item>
-                  <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-                  <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-                </DropdownMenu.SubMenuContent>
-              </DropdownMenu.SubMenu>
-            </DropdownMenu.SubMenuContent>
-          </DropdownMenu.SubMenu>
-          <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
-          <DropdownMenu.Item
-            trailingIcon={
-              <Text size="micro" variant="secondary">
-                ⌘⇧D
-              </Text>
-            }>
-            Delete...
-          </DropdownMenu.Item>
+        <DropdownMenu.Content searchPlaceholder="Search">
+          {renderDropdownMenu(dropdownMenuData, searchQuery)}
         </DropdownMenu.Content>
       </DropdownMenu>
     </Flex>
