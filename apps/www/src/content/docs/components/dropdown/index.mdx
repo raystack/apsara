@@ -1,6 +1,6 @@
 ---
 title: Dropdown Menu
-description: Displays a menu to the user — such as a set of actions or functions — triggered by a button.
+description: Displays a menu to the user, such as a set of actions or functions, triggered by a button.
 tag: update
 ---
 
@@ -10,42 +10,51 @@ import { playground, iconsDemo, customDemo, basicDemo } from "./demo.ts";
 
 ## Dropdown Props
 
-Customize the dropdown menu's behavior and appearance with these configuration options.
-The DropdownMenu component is composed of several parts, each with their own props
+The DropdownMenu component is composed of several parts, each with their own props.
+
+The root element is the parent component that holds the dropdown menu. Using the `autocomplete` prop, you can enable autocomplete functionality. Built on top of [Ariakit MenuProvider](https://ariakit.org/reference/menu-provider)
+
+<auto-type-table path="./props.ts" name="DropdownMenuRootProps" />
 
 ### DropdownMenu.Trigger
 
-The button that opens the dropdown menu.
+The button that triggers the dropdown menu. Built on top of [Ariakit MenuButton](https://ariakit.org/reference/menu-button)
 
 <auto-type-table path="./props.ts" name="DropdownMenuTriggerProps" />
 
+### DropdownMenu.TriggerItem
+
+`TriggerItem` is a helper component that renders a `DropdownMenu.Trigger` as a `DropdownMenu.MenuItem`.
+
+Accepts all `DropdownMenu.Item` props. The component is helpful to match styles for sub menu trigger. Use DropdownMenu.Trigger if you want more control.
+
 ### DropdownMenu.Content
 
-The container that holds the dropdown menu items.
+The container that holds the dropdown menu items. Built on top of [Ariakit Menu](https://ariakit.org/reference/menu)
 
 <auto-type-table path="./props.ts" name="DropdownMenuContentProps" />
 
 ### DropdownMenu.Item
 
-Individual clickable options within the dropdown menu.
+Individual clickable options within the dropdown menu. Built on top of [Ariakit MenuItem](https://ariakit.org/reference/menu-item). Renders as [Ariakit ComboboxItem](https://ariakit.org/reference/combobox-item) when Dropdown is autocomplete
 
 <auto-type-table path="./props.ts" name="DropdownMenuItemProps" />
 
 ### DropdownMenu.Group
 
-A way to group related menu items together.
+A way to group related menu items together. Built on top of [Ariakit MenuGroup](https://ariakit.org/reference/menu-group)
 
 <auto-type-table path="./props.ts" name="DropdownMenuGroupProps" />
 
 ### DropdownMenu.Label
 
-Text labels to describe groups of menu items.
+Renders a label in a menu group. This component should be wrapped with DropdownMenu.Group so the `aria-labelledby` is correctly set on the group element. Built on top of [Ariakit MenuGroupLabel](https://ariakit.org/reference/menu-group-label)
 
 <auto-type-table path="./props.ts" name="DropdownMenuLabelProps" />
 
 ### DropdownMenu.Separator
 
-Visual divider between menu items or groups.
+Visual divider between menu items or groups. Built on top of [Ariakit MenuSeparator](https://ariakit.org/reference/menu-separator)
 
 <auto-type-table path="./props.ts" name="DropdownMenuSeparatorProps" />
 
