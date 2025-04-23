@@ -28,8 +28,8 @@ export function getAvatarColor(str: string): AVATAR_COLORS {
 }
 
 /*
- * @desc This function is used to recursively get the avatar props 
- * even if it's wrapped in another component like Tooltip, Flex, etc.
+ * @desc Recursively get the avatar props even if it's
+ * wrapped in another component like Tooltip, Flex, etc.
  */ 
 export const getAvatarProps = (element: React.ReactElement): AvatarProps => {
   if (element.type === Avatar) {
