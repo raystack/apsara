@@ -1,4 +1,10 @@
-import { ElementRef, forwardRef, HTMLAttributes, ReactNode } from "react";
+import {
+  ElementRef,
+  forwardRef,
+  Fragment,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 import {
   MenuGroup,
   MenuGroupLabel,
@@ -11,16 +17,19 @@ import { Slot } from "@radix-ui/react-slot";
 import { cx } from "class-variance-authority";
 import { WithAsChild } from "./types";
 import styles from "./dropdown-menu.module.css";
+import { useDropdownContext } from "./dropdown-menu-root";
 
 export const DropdownMenuGroup = forwardRef<
   ElementRef<typeof MenuGroup>,
   WithAsChild<MenuGroupProps>
 >(({ className, asChild, ...props }, ref) => {
+  const { shouldFilter } = useDropdownContext();
+
   return (
     <MenuGroup
       ref={ref}
       className={cx(styles.menugroup, className)}
-      render={asChild ? <Slot /> : undefined}
+      render={shouldFilter ? <Fragment /> : asChild ? <Slot /> : undefined}
       {...props}
     />
   );
@@ -30,6 +39,12 @@ export const DropdownMenuLabel = forwardRef<
   ElementRef<typeof MenuGroupLabel>,
   WithAsChild<MenuGroupLabelProps>
 >(({ className, asChild, ...props }, ref) => {
+  const { shouldFilter } = useDropdownContext();
+
+  if (shouldFilter) {
+    return null;
+  }
+
   return (
     <MenuGroupLabel
       ref={ref}
@@ -44,6 +59,12 @@ export const DropdownMenuSeparator = forwardRef<
   ElementRef<typeof MenuSeparator>,
   WithAsChild<MenuSeparatorProps>
 >(({ className, asChild, ...props }, ref) => {
+  const { shouldFilter } = useDropdownContext();
+
+  if (shouldFilter) {
+    return null;
+  }
+
   return (
     <MenuSeparator
       ref={ref}

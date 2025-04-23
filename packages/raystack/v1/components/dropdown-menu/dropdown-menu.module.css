@@ -30,6 +30,10 @@
   padding: var(--rs-space-2);
 }
 
+.comboboxContent:empty {
+  padding: 0;
+}
+
 .comboboxInput {
   width: 100%;
   background: transparent;
@@ -41,6 +45,10 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.comboboxContainer:has(.comboboxContent:empty) .comboboxInput {
+  border-bottom: none;
 }
 
 .comboboxInput:focus {

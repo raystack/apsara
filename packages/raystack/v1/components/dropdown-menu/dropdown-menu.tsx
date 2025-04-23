@@ -20,9 +20,6 @@ export const DropdownMenu = Object.assign(DropdownMenuRoot, {
   TriggerItem: DropdownMenuTriggerItem,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,
-  /**
-   * Renders a group for `MenuItem` elements. Optionally, a `MenuLabel` can be rendered as a child to provide a label for the group.
-   */
   Group: DropdownMenuGroup,
   Label: DropdownMenuLabel,
   Separator: DropdownMenuSeparator,
