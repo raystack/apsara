@@ -5,22 +5,22 @@ import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
 import { Flex } from "../flex";
 import { Popover } from "../popover";
-import { TextField } from "../textfield";
-import { TextfieldProps } from "../textfield/textfield";
 import { Calendar } from "./calendar";
 import styles from "./calendar.module.css";
+import { InputField } from "../input-field";
+import { InputFieldProps } from "../input-field/input-field";
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
   dateFormat?: string;
-  textFieldProps?: TextfieldProps;
-  placeholders?: { startDate?: string; endDate?: string };
+  inputFieldsProps?: { startDate?: InputFieldProps, endDate?: InputFieldProps };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
   children?: React.ReactNode | ((props: { startDate: string; endDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
+  footer?: React.ReactNode;
 }
 
 type RangeFields = keyof DateRange;
@@ -28,8 +28,7 @@ type RangeFields = keyof DateRange;
 export function RangePicker({
   side = "top",
   dateFormat = "DD/MM/YYYY",
-  textFieldProps,
-  placeholders,
+  inputFieldsProps = {},
   calendarProps,
   onSelect = () => {},
   value = {
@@ -39,6 +38,7 @@ export function RangePicker({
   pickerGroupClassName,
   children,
   showCalendarIcon = true,
+  footer,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] = useState<RangeFields>("from");
@@ -51,21 +51,35 @@ export function RangePicker({
   // 2nd click will select the end date.
   // 3rd click will select the start date again.
   const handleSelect = (range: DateRange, selectedDay: Date) => {
-    const from = selectedRange?.from || range?.from;
+    // TODO: Remove custom logic and reuse the default logic from react-day-picker
     let newRange: DateRange;
-    
-    if (currentRangeField === "to" && dayjs(selectedDay).isAfter(dayjs(from))) {
-      // update the end date
-      newRange = { from, to: selectedDay };
-      setCurrentRangeField("from");
-    } else {
-      // reset the range and select start day
+
+    if (currentRangeField === "from") {
+      // First click - set from date and prepare for to date selection
       newRange = { from: selectedDay };
       setCurrentRangeField("to");
+    } else {
+      // Second click - setting to date
+      const from = selectedRange.from;
+      
+      if (dayjs(selectedDay).isBefore(dayjs(from))) {
+        // If selected date is before current from date, start new range
+        newRange = { from: selectedDay };
+        setCurrentRangeField("to");
+      } else {
+        // Set the to date
+        newRange = { from, to: selectedDay };
+        setCurrentRangeField("from");
+      }
     }
-    
+
     setSelectedRange(newRange);
-    onSelect(newRange);
+    // Return the range with +1 day for the end date in the callback
+    const callbackRange = {
+      from: newRange.from,
+      to: newRange.to ? dayjs(newRange.to).add(1, 'day').toDate() : undefined
+    };
+    onSelect(callbackRange);
   };
 
   function onOpenChange(open?: boolean) {
@@ -74,27 +88,26 @@ export function RangePicker({
 
   const defaultTrigger = (
     <Flex gap={"medium"} className={pickerGroupClassName}>
-      <TextField
+      <InputField
+				size='small'
+        {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
-        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
-        className={styles.datePickerInput}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         readOnly
-        {...textFieldProps}
-        placeholder={placeholders?.startDate || "Select start date"}
       />
-      <TextField
+
+      <InputField
+				size='small'
+        {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
-        trailing={showCalendarIcon ? <CalendarIcon /> : undefined}
-        className={styles.datePickerInput}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         readOnly
-        {...textFieldProps}
-        placeholder={placeholders?.endDate || "Select end date"}
       />
     </Flex>
   );
 
-  const trigger = typeof children === 'function' 
-    ? children({ startDate, endDate }) 
+  const trigger = typeof children === 'function'
+    ? children({ startDate, endDate })
     : children || defaultTrigger;
 
   return (
@@ -113,6 +126,11 @@ export function RangePicker({
           selected={selectedRange}
           onSelect={handleSelect}
         />
+        {footer && (
+          <Flex align="center" justify="center" className={styles.calendarFooter}>
+            {footer}
+          </Flex>
+        )}
       </Popover.Content>
     </Popover>
   );

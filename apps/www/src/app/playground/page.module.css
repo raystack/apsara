@@ -1,0 +1,7 @@
+.container {
+  display: flex;
+  width: 100%;
+  gap: 100px;
+  flex-direction: column;
+  padding-bottom: 100px;
+}

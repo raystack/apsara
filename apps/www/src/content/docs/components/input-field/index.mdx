@@ -1,0 +1,96 @@
+---
+title: Input Field
+description: A text input component with support for labels, helper text, and various states.
+---
+
+import {
+  playground,
+  basicDemo,
+  helperTextDemo,
+  errorDemo,
+  prefixDemo,
+  iconDemo,
+  optionalDemo,
+  disabledDemo,
+  widthDemo,
+  sizeDemo,
+  sizeChipDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Indicator } from "@raystack/apsara/v1";
+
+<Indicator variant="accent" label="New">
+  <div>Content</div>
+</Indicator>;
+```
+
+## InputField Props
+
+<auto-type-table path="./props.ts" name="InputFieldProps" />
+
+## Examples
+
+### Basic Input
+
+A basic input field with a label and placeholder.
+
+<Demo data={basicDemo} />
+
+### With Helper Text
+
+Input field with additional helper text below.
+
+<Demo data={helperTextDemo} />
+
+### With Error
+
+Input field displaying an error state with error message.
+
+<Demo data={errorDemo} />
+
+### With Prefix/Suffix
+
+Input field with prefix and suffix text.
+
+<Demo data={prefixDemo} />
+
+### With Icons
+
+Input field with leading and trailing icons.
+
+<Demo data={iconDemo} />
+
+### Optional Field
+
+Input field marked as optional.
+
+<Demo data={optionalDemo} />
+
+### Disabled State
+
+Input field in disabled state.
+
+<Demo data={disabledDemo} />
+
+### Custom Width
+
+Input field with custom width.
+
+<Demo data={widthDemo} />
+
+### Size Variants
+
+InputField comes in two sizes: small (24px) and large (32px).
+
+<Demo data={sizeDemo} />
+
+### With Chips
+
+Input field that can display and manage chips/tags.
+
+<Demo data={sizeChipDemo} />

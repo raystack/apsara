@@ -1,8 +1,9 @@
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { Tooltip } from "../tooltip";
-import { cva, cx, VariantProps } from "class-variance-authority";
+import { cva, cx } from "class-variance-authority";
 import * as React from "react";
 import { HTMLAttributes, PropsWithChildren } from "react";
+import clsx from "clsx";
 
 import styles from "./text-area.module.css";
 
@@ -14,28 +15,28 @@ const textArea = cva(styles.textarea, {
   }
 });
 
-export interface TextAreaProps extends PropsWithChildren<VariantProps<typeof textArea>>, 
-  HTMLAttributes<HTMLTextAreaElement> {
+export interface TextAreaProps extends PropsWithChildren<HTMLAttributes<HTMLTextAreaElement>> {
   label?: string;
   required?: boolean;
   infoTooltip?: string;
   helperText?: string;
   error?: boolean;
+  disabled?: boolean;
   width?: string | number;
   value?: string;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, style, label, required, infoTooltip, helperText, error, width = "200px", value, onChange, ...props }, ref) => {
+  ({ className, style, label, required, infoTooltip, helperText, error, disabled, width = "100%", value, onChange, placeholder, ...props }, ref) => {
     return (
       <div className={styles.container} style={{ width }}>
         {label && (
           <div className={styles.labelContainer}>
-            <label className={styles.label}>
+            <label className={clsx(styles.label, disabled && styles.labelDisabled)}>
               {label}
+              {!required && <span className={styles.optional}>(optional)</span>}
             </label>
-            {!required && <span className={styles.optional}>(optional)</span>}
             {infoTooltip && (
               <Tooltip message={infoTooltip} side="right">
                 <span className={styles.helpIcon}>
@@ -46,14 +47,30 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           </div>
         )}
         <textarea
-          className={cx(textArea({ error }), className)}
+          className={cx(
+            textArea({ error }),
+            disabled && styles.disabled,
+            className
+          )}
           ref={ref}
           value={value}
           onChange={onChange}
           required={required}
+          disabled={disabled}
+          placeholder={placeholder}
           {...props}
         />
-        {helperText && <span className={styles.helperText}>{helperText}</span>}
+        {helperText && (
+          <span 
+            className={clsx(
+              styles.helperText, 
+              error && styles.helperTextError,
+              disabled && styles.helperTextDisabled
+            )}
+          >
+            {helperText}
+          </span>
+        )}
       </div>
     );
   }

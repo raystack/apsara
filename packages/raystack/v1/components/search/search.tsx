@@ -1,82 +1,73 @@
-import { CrossCircledIcon,MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { cva, type VariantProps } from "class-variance-authority";
-import clsx from "clsx";
+import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { InputField } from "../input-field";
+import { InputFieldProps } from "../input-field/input-field";
+import { IconButton } from "../icon-button";
 
 import styles from "./search.module.css";
+import { forwardRef } from "react";
 
-const searchField = cva(styles.searchField, {
-  variants: {
-    size: {
-      small: styles["search-small"],
-      large: styles["search-large"],
-    }
-  },
-  defaultVariants: {
-    size: "large",
-  }
-});
-
-export interface SearchProps extends VariantProps<typeof searchField> {
-  className?: string;
-  disabled?: boolean;
-  placeholder?: string;
+export interface SearchProps extends Omit<InputFieldProps, "leadingIcon"> {
   showClearButton?: boolean;
   onClear?: () => void;
-  value?: string;
-  ref?: React.RefObject<HTMLInputElement>;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  type?: string;
-  name?: string;
-  id?: string;
+  variant?: "default" | "borderless";
 }
 
-export const Search = ({ 
-  className, 
-  disabled, 
-  placeholder = "Search", 
-  size, 
-  showClearButton, 
-  onClear, 
-  value,
-  ref,
-  ...props 
-}: SearchProps) => {
-  return (
-    <div 
-      className={clsx(styles.container, disabled && styles.disabled)} 
-      role="search"
-    >
-      <span className={styles.leadingIcon} aria-hidden="true">
-        <MagnifyingGlassIcon />
-      </span>
-      <input
-        ref={ref}
-        type="text"
-        className={clsx(
-          searchField({ size, className }),
-          disabled && styles["search-disabled"]
-        )}
-        placeholder={placeholder}
-        disabled={disabled}
-        value={value}
-        aria-label={placeholder}
-        {...props}
-      />
-      {showClearButton && value && !disabled && (
-        <button 
-          className={styles.clearButton}
-          onClick={onClear}
+export const Search = forwardRef<HTMLInputElement, SearchProps>(
+  (
+    {
+      className,
+      disabled,
+      placeholder = "Search",
+      size,
+      showClearButton,
+      onClear,
+      value,
+      onChange,
+      width = "100%",
+      variant = "default",
+      ...props
+    }: SearchProps,
+    ref
+  ) => {
+    const trailingIconWithClear =
+      showClearButton && value ? (
+        <div className={styles.clearButtonWrapper}>
+          <IconButton
+            size={size === "small" ? 2 : 3}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!disabled && onClear) {
+                onClear();
+              }
+            }}
+            disabled={disabled}
+            aria-label="Clear search"
+            className={styles.clearButton}
+          >
+            <CrossCircledIcon />
+          </IconButton>
+        </div>
+      ) : undefined;
+
+    return (
+      <div className={styles.container} role="search" style={{ width }}>
+        <InputField
+          leadingIcon={<MagnifyingGlassIcon />}
+          trailingIcon={trailingIconWithClear}
+          placeholder={placeholder}
           disabled={disabled}
-          type="button"
-          aria-label="Clear search"
-          tabIndex={0}
-        >
-          <CrossCircledIcon height={16} width={16}/>
-        </button>
-      )}
-    </div>
-  );
-};
+          value={value}
+          onChange={onChange}
+          size={size}
+          className={className}
+          aria-label={placeholder}
+          variant={variant}
+          ref={ref}
+          {...props}
+        />
+      </div>
+    );
+  }
+);
 
 Search.displayName = "Search";

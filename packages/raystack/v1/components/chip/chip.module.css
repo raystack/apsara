@@ -1,121 +1,128 @@
 .chip {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: var(--rs-space-2);
-    font-family: var(--rs-font-body);
-    font-weight: var(--rs-font-weight-regular);
-    font-size: var(--rs-font-size-mini);
-    line-height: var(--rs-line-height-mini);
-    letter-spacing: var(--rs-letter-spacing-mini);
-    font-style: normal;
-    border-radius: var(--rs-radius-2);
-    white-space: nowrap;
-    cursor: default;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-    height: fit-content;
-    width: fit-content;
-    user-select: none;
-    -webkit-user-select: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--rs-space-2);
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  font-style: normal;
+  border-radius: var(--rs-radius-2);
+  white-space: nowrap;
+  cursor: default;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  height: fit-content;
+  width: fit-content;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Variants */
 .chip-variant-outline {
-    background: transparent;
+  background: transparent;
 }
 
 .chip-variant-filled {
-    background: var(--rs-color-background-base-primary);
+  background: var(--rs-color-background-base-primary);
 }
 
 /* Sizes */
 .chip-size-large {
-    padding: var(--rs-space-2) var(--rs-space-3);
+  padding: var(--rs-space-2) var(--rs-space-3);
 }
 
 .chip-size-small {
-    padding: var(--rs-space-1) var(--rs-space-2);
+  padding: var(--rs-space-1) var(--rs-space-2);
 }
 
 /* colors - Neutral */
 .chip-color-neutral.chip-variant-outline {
-    border: 0.5px solid var(--rs-color-border-base-secondary);
-    color: var(--rs-color-foreground-base-secondary);
+  border: 0.5px solid var(--rs-color-border-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .chip-color-neutral.chip-variant-outline:hover {
-    color: var(--rs-color-foreground-base-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
-.chip-color-neutral.chip-variant-outline:active {
-    border: 1px solid var(--rs-color-border-base-emphasis);
-    color: var(--rs-color-foreground-base-primary);
+.chip-color-neutral.chip-variant-outline:active,
+.chip-color-neutral.chip-variant-outline[data-state="active"] {
+  border: 1px solid var(--rs-color-border-base-emphasis);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .chip-color-neutral.chip-variant-filled {
-    background: var(--rs-color-background-base-primary);
-    border: 0.5px solid var(--rs-color-border-base-secondary);
-    color: var(--rs-color-foreground-base-secondary);
+  background: var(--rs-color-background-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-secondary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .chip-color-neutral.chip-variant-filled:hover {
-    border-color: var(--rs-color-foreground-base-primary);
-    color: var(--rs-color-foreground-base-primary);
+  border-color: var(--rs-color-foreground-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
-.chip-color-neutral.chip-variant-filled:active {
-    background: var(--rs-color-background-neutral-emphasis);
-    color: var(--rs-color-foreground-base-emphasis);
+.chip-color-neutral.chip-variant-filled:active,
+.chip-color-neutral.chip-variant-filled[data-state="active"] {
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 /* colors - Accent */
 .chip-color-accent.chip-variant-outline {
-    border: 0.5px solid var(--rs-color-border-accent-primary);
-    color: var(--rs-color-foreground-accent-primary);
+  border: 0.5px solid var(--rs-color-border-accent-primary);
+  color: var(--rs-color-foreground-accent-primary);
 }
 
 .chip-color-accent.chip-variant-outline:hover {
-    border-color: var(--rs-color-border-accent-emphasis);
-    color: var(--rs-color-foreground-accent-primary-hover);
+  border-color: var(--rs-color-border-accent-emphasis);
+  color: var(--rs-color-foreground-accent-primary-hover);
 }
 
-.chip-color-accent.chip-variant-outline:active {
-    border: 1px solid var(--rs-color-border-accent-emphasis);
-    color: var(--rs-color-foreground-accent-primary);
+.chip-color-accent.chip-variant-outline:active,
+.chip-color-accent.chip-variant-outline[data-state="active"] {
+  border: 1px solid var(--rs-color-border-accent-emphasis);
+  color: var(--rs-color-foreground-accent-primary);
 }
 
 .chip-color-accent.chip-variant-filled {
-    background: var(--rs-color-background-base-primary);
-    border: 0.5px solid var(--rs-color-border-accent-primary);
-    color: var(--rs-color-foreground-accent-primary);
+  background: var(--rs-color-background-base-primary);
+  border: 0.5px solid var(--rs-color-border-accent-primary);
+  color: var(--rs-color-foreground-accent-primary);
 }
 
 .chip-color-accent.chip-variant-filled:hover {
-    border-color: var(--rs-color-border-accent-emphasis);
+  border-color: var(--rs-color-border-accent-emphasis);
+  background: var(--rs-color-background-base-primary-hover);
 }
 
-.chip-color-accent.chip-variant-filled:active {
-    background: var(--rs-color-background-accent-emphasis);
-    color: var(--rs-color-foreground-base-emphasis);
+.chip-color-accent.chip-variant-filled:active,
+.chip-color-accent.chip-variant-filled[data-state="active"] {
+  background: var(--rs-color-background-accent-primary);
+  color: var(--rs-color-foreground-accent-primary);
 }
 
 /* Icons */
-.leading-icon, .trailing-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 12px;
-    height: 12px;
+.leading-icon,
+.trailing-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
 }
 
 .dismiss-button {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: inherit;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

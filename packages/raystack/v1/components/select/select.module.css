@@ -1,6 +1,6 @@
 .content {
   overflow: hidden;
-  z-index: 50;
+  z-index: var(--rs-z-index-portal);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -11,9 +11,10 @@
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-soft);
   border: 1px solid var(--rs-color-border-base-primary);
-
   min-width: var(--radix-select-trigger-width);
   margin-top: var(--rs-space-2);
+  transition: all 0.2s ease;
+  max-width: 300px;
 }
 
 .menuitem {
@@ -23,6 +24,8 @@
   gap: var(--rs-space-2);
   padding: var(--rs-space-3);
   color: var(--rs-color-foreground-base-primary);
+  white-space: normal;
+  word-break: break-word;
 }
 
 .menuitem:hover,
@@ -53,36 +56,77 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: none;
-
   color: var(--rs-color-foreground-base-primary);
   background-color: var(--rs-color-background-base-primary);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   border-radius: var(--rs-radius-2);
-  border: 0.5px solid var(--rs-color-border-base-secondary);
   letter-spacing: var(--rs-letter-spacing-small);
-  box-shadow: var(--rs-shadow-feather);
-  color: var(--rs-color-foreground-base-tertiary);
   user-select: none;
   -webkit-user-select: none;
+  transition: all 0.2s ease;
+}
+
+.trigger-outline {
+  border: 0.5px solid var(--rs-color-border-base-secondary);
+  box-shadow: var(--rs-shadow-feather);
+}
+
+.trigger-text {
+  border: none;
+  box-shadow: none;
 }
 
 .trigger-small {
   padding: var(--rs-space-2);
+  min-height: 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.trigger-small .triggerContent {
+  overflow: hidden;
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  gap: var(--rs-space-1);
 }
 
 .trigger-medium {
   padding: var(--rs-space-3);
+  min-height: 32px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.trigger-medium .triggerContent {
+  overflow: hidden;
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  gap: var(--rs-space-2);
 }
 
 .trigger:hover {
   cursor: pointer;
+  background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
+}
+.trigger:focus-visible {
+  outline: 1px solid var(--rs-color-border-accent-emphasis);
 }
 
 .trigger:focus {
-  outline: 1px solid var(--rs-color-border-accent-emphasis);
+  outline: none;
 }
 
 .trigger:disabled {
@@ -99,50 +143,122 @@
 }
 
 .triggerIcon {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   margin-left: var(--rs-space-3);
+  flex-shrink: 0;
 }
 
-.trigger-filter {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  min-height: unset !important;
-  height: 24px !important;
-  padding: 0 !important;
-  outline: none !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-
-.trigger-filter:focus {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.trigger-filter:hover {
-  background: transparent !important;
-}
-
-.trigger-filter .triggerIcon {
-  width: 10px !important;
-  height: 10px !important;
-  margin-left: var(--rs-space-1) !important;
-}
-
-/* Adjust content styles for filter variant */
-.content[data-variant="filter"] {
+.content[data-variant="text"] {
   margin-top: var(--rs-space-2);
   padding: var(--rs-space-1);
   border: 1px solid var(--rs-color-border-base-primary);
   box-shadow: var(--rs-shadow-soft);
 }
 
-.content[data-variant="filter"] .menuitem {
+.content[data-variant="text"] .menuitem {
   padding: var(--rs-space-1) var(--rs-space-2);
   min-height: 24px !important;
-  height: 24px !important;
   font-size: var(--rs-font-size-small);
+}
+
+.triggerContent {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueContent {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-1);
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.trigger-small .valueContent {
+  gap: 0;
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--rs-space-2);
+  flex-shrink: 0;
+}
+
+.itemIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.trigger-small .triggerIcon {
+  width: 12px;
+  height: 12px;
+  margin-left: var(--rs-space-2);
+  flex-shrink: 0;
+}
+
+.placeholder,
+[data-placeholder],
+.valueContent[data-state="placeholder"] {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.placeholder:hover,
+[data-placeholder]:hover,
+.valueContent[data-state="placeholder"]:hover {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.leadingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--rs-space-2);
+  flex-shrink: 0;
+}
+
+.trigger[data-disabled] {
+  background: var(--rs-color-background-base-primary);
+  border-color: var(--rs-color-border-base-tertiary);
+  opacity: 0.4;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+.trigger[data-disabled]:hover {
+  background: var(--rs-color-background-base-primary);
+  border-color: var(--rs-color-border-base-tertiary);
+  cursor: not-allowed !important;
+}
+
+.trigger[data-disabled] .triggerContent {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.trigger[data-disabled] .triggerIcon {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.trigger[data-disabled] .placeholder,
+.trigger[data-disabled] [data-placeholder],
+.trigger[data-disabled] .valueContent[data-state="placeholder"] {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.trigger[data-disabled] .leadingIcon {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+[data-disabled=""] {
+  cursor: not-allowed;
+  pointer-events: none;
 }

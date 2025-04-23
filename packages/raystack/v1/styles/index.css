@@ -1,6 +1,8 @@
+@import './reset.css';
 @import './primitives/gray.css';
 @import './primitives/accent.css';
 @import './primitives/appearance.css';
+@import './primitives/z-index.css';
 @import './colors.css';
 @import './radius.css';
 @import './spacing.css';

@@ -3,8 +3,11 @@ import { type VariantProps, cva } from "class-variance-authority"
 import { clsx } from "clsx"
 import { type ComponentPropsWithoutRef, type ElementRef, type ReactNode, forwardRef } from "react"
 
-import { Box } from "../box"
-import styles from "./avatar.module.css"
+
+import { Box } from "../box";
+import {AVATAR_COLORS} from './utils'
+
+import styles from "./avatar.module.css";
 
 const avatar = cva(styles.avatar, {
   variants: {
@@ -89,27 +92,14 @@ const image = cva(styles.image)
 export interface AvatarProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
     VariantProps<typeof avatar> {
-  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
-  src?: string
-  alt?: string
-  fallback?: ReactNode
-  variant?: "solid" | "soft"
-  color?:
-    | "indigo"
-    | "orange"
-    | "mint"
-    | "neutral"
-    | "sky"
-    | "lime"
-    | "grass"
-    | "cyan"
-    | "iris"
-    | "purple"
-    | "pink"
-    | "crimson"
-    | "gold"
-  asChild?: boolean
-  className?: string
+  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+  src?: string;
+  alt?: string;
+  fallback?: ReactNode;
+  variant?: "solid" | "soft";
+  color?: AVATAR_COLORS;
+  asChild?: boolean;
+  className?: string;
 }
 
 const AvatarRoot = forwardRef<ElementRef<typeof AvatarPrimitive.Root>, AvatarProps>(

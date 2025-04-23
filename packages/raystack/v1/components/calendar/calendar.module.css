@@ -1,14 +1,13 @@
 .calendarRoot {
-  padding: var(--rs-space-5);
+  padding: var(--rs-space-3);
   border-radius: var(--rs-radius-4);
-  border: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   width: fit-content;
   font-family: var(--rs-font-body);
 }
 
 .caption_label,
-.dropdowns > span,
+.dropdowns>span,
 .dropdown_trigger .dropdown_item_text {
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
@@ -50,7 +49,7 @@
 
 .months {
   display: flex;
-  gap: var(--rs-space-3);
+  gap: var(--rs-space-4);
   position: relative;
 }
 
@@ -110,6 +109,7 @@
 .range_middle {
   border-radius: 0;
   background-color: var(--rs-color-background-base-primary-hover);
+
   button {
     color: var(--rs-color-foreground-base-primary);
   }
@@ -186,8 +186,9 @@
 }
 
 .calendarPopover {
-  padding: 0 !important;
-  border: none !important;
+  padding: var(--rs-space-3) !important;
+  /* border: none !important; */
+  border: 1px solid var(--rs-color-border-base-primary) !important;
   min-width: max-content;
   width: fit-content;
   max-width: none !important;
@@ -217,7 +218,7 @@
 
 .dropdown_content {
   max-height: 400px;
-  border: 1px solid var(--rs-color-border-base-primary);
+  /* border: 1px solid var(--rs-color-border-base-primary); */
 }
 
 .disabled {
@@ -237,8 +238,12 @@
   background-color: var(--rs-color-background-accent-emphasis);
 }
 
-.selected.day.today button::after {
-  background-color: white;
+.selected.day.today:not(.range_middle) button::after {
+  background-color: var(--rs-color-foreground-base-emphasis);
+}
+
+.range_middle.day.today button::after {
+  background-color: var(--rs-color-background-accent-emphasis);
 }
 
 .day_button {
@@ -260,6 +265,7 @@
   position: relative;
 }
 
-.datePickerInput {
-  text-align: left;
+.calendarFooter {
+  padding: var(--rs-space-3);
+  margin-top: var(--rs-space-2);
 }
