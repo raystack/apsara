@@ -28,7 +28,7 @@ const textfield = cva(styles.textfield, {
 });
 
 /**
- * @deprecated Use TextFieldProps from '@raystack/apsara/v1' instead.
+ * @deprecated Use InputFieldProps from '@raystack/apsara/v1' instead.
  */
 export type TextfieldProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
