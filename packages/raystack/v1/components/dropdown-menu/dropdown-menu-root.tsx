@@ -82,6 +82,7 @@ export const DropdownMenuRoot = ({
   autocompleteMode = "auto",
   searchValue: providedSearchValue,
   onSearch,
+  focusLoop = true,
   defaultSearchValue = "",
   ...props
 }: DropdownMenuRootProps) => {
@@ -96,7 +97,7 @@ export const DropdownMenuRoot = ({
     onSearch?.(value);
   };
 
-  const element = <MenuProvider {...props} />;
+  const element = <MenuProvider focusLoop={focusLoop} {...props} />;
 
   return (
     <DropdownContext.Provider
@@ -109,6 +110,7 @@ export const DropdownMenuRoot = ({
       {autocomplete ? (
         <ComboboxProvider
           resetValueOnHide
+          focusLoop={focusLoop}
           includesBaseElement={false}
           value={searchValue}
           setValue={setValue}>
