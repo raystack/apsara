@@ -4,7 +4,6 @@ import styles from "./cell.module.css";
 import { Checkbox } from "../checkbox";
 
 export type CellBaseProps = {
-  isComboboxCell?: boolean;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
 };
