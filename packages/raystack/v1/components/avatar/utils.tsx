@@ -32,13 +32,15 @@ export function getAvatarColor(str: string): AVATAR_COLORS {
  * wrapped in another component like Tooltip, Flex, etc.
  */ 
 export const getAvatarProps = (element: ReactElement): AvatarProps => {
+  const { props } = element;
+
   if (element.type === Avatar) {
-    return element.props;
+    return props;
   }
   
-  if (element.props.children) {
-    if (isValidElement(element.props.children)) {
-      return getAvatarProps(element.props.children);
+  if (props.children) {
+    if (isValidElement(props.children)) {
+      return getAvatarProps(props.children);
     }
   }
   return {};
