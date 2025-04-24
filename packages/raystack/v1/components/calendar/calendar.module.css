@@ -31,7 +31,7 @@
   color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary);
   cursor: pointer;
-  height: 24px;
+  height: var(--rs-space-7);
 }
 
 .nav_button:disabled {
@@ -65,7 +65,7 @@
   position: relative;
   width: fit-content;
   margin: 0 auto var(--rs-space-4) auto;
-  height: 24px;
+  height: var(--rs-space-7);
 }
 
 .day {
@@ -221,11 +221,11 @@
 .day.today button::after {
   content: '';
   position: absolute;
-  bottom: 4px;
+  bottom: var(--rs-space-2);
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+  width: var(--rs-space-2);
+  height: var(--rs-space-2);
   border-radius: 50%;
   background-color: var(--rs-color-background-accent-emphasis);
 }
