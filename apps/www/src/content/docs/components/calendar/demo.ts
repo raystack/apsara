@@ -5,7 +5,7 @@ export const preview = {
   tabs: [
     {
       name: "Calendar",
-      code: `<Calendar numberOfMonths={2} />`,
+      code: `<Calendar />`,
     },
     {
       name: "Range Picker",
