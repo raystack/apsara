@@ -6,14 +6,13 @@ import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 import { Flex } from "../flex";
 import { Popover } from "../popover";
 import { Calendar } from "./calendar";
-import { DayjsDateFormat } from "./utils";
 import styles from "./calendar.module.css";
 import { InputField } from "../input-field";
 import { InputFieldProps } from "../input-field/input-field";
 
 interface RangePickerProps {
   side?: "top" | "right" | "bottom" | "left";
-  dateFormat?: DayjsDateFormat;
+  dateFormat?: string;
   inputFieldsProps?: { startDate?: InputFieldProps, endDate?: InputFieldProps };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;

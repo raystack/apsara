@@ -8,14 +8,13 @@ import { Popover } from "../popover";
 import { InputField } from "../input-field";
 import { InputFieldProps } from "../input-field/input-field";
 import { Calendar } from "./calendar";
-import { DayjsDateFormat } from "./utils";
 import styles from "./calendar.module.css";
 
 dayjs.extend(customParseFormat);
 
 interface DatePickerProps {
   side?: "top" | "right" | "bottom" | "left";
-  dateFormat?: DayjsDateFormat;
+  dateFormat?: string;
   inputFieldProps?: InputFieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
   onSelect?: (date: Date) => void;
