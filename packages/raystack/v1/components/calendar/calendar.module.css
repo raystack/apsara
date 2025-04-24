@@ -31,7 +31,7 @@
   color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary);
   cursor: pointer;
-  height: 20px;
+  height: 24px;
 }
 
 .nav_button:disabled {
@@ -65,6 +65,7 @@
   position: relative;
   width: fit-content;
   margin: 0 auto var(--rs-space-4) auto;
+  height: 24px;
 }
 
 .day {
