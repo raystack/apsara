@@ -34,6 +34,7 @@ export interface RangePickerProps {
    * - With dots: "DD.MM.YYYY", "MM.DD.YYYY", "YYYY.MM.DD"
    * - With spaces: "DD MMM YYYY", "MMM DD YYYY", "YYYY MMM DD"
    * - With full month: "DD MMMM YYYY", "MMMM DD YYYY", "YYYY MMMM DD"
+   * - For more supported formats, refer to https://day.js.org/docs/en/display/format
    * @defaultValue "DD/MM/YYYY"
    */
   dateFormat?: string;
