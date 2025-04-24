@@ -174,7 +174,7 @@ const Page = () => {
               }}
             />
 
-            <RangePicker />
+            <DatePicker />
 
             <Text
               size="large"
