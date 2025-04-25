@@ -27,6 +27,9 @@ const textfield = cva(styles.textfield, {
   },
 });
 
+/**
+ * @deprecated Use InputFieldProps from '@raystack/apsara/v1' instead.
+ */
 export type TextfieldProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "size"
@@ -37,6 +40,9 @@ export type TextfieldProps = Omit<
     iconClass?: { leadingIcon?: string; trailingIcon?: string };
   };
 
+/**
+ * @deprecated Use InputField from '@raystack/apsara/v1' instead.
+ */
 export const TextField = forwardRef<HTMLInputElement, TextfieldProps>(
   (
     {

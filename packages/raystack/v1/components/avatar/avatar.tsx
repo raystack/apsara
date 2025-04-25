@@ -1,16 +1,16 @@
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import { cva, VariantProps } from "class-variance-authority";
-import { clsx } from 'clsx';
 import {
   ComponentPropsWithoutRef,
   ElementRef,
   forwardRef,
-  ReactNode,
+  ReactNode
 } from "react";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { cva, VariantProps } from "class-variance-authority";
+import { clsx } from 'clsx';
 
+import {AVATAR_COLORS, getAvatarProps} from './utils'
 import { Box } from "../box";
 import styles from "./avatar.module.css";
-import {AVATAR_COLORS} from './utils'
 
 const avatar = cva(styles.avatar, {
   variants: {
@@ -147,6 +147,9 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
     const avatars = max ? children.slice(0, max) : children;
     const count = max && children.length > max ? children.length - max : 0;
 
+    // Overflow avatar matches the first avatar styling
+    const firstAvatarProps = getAvatarProps(avatars[0]);
+
     return (
       <div
         ref={ref}
@@ -161,11 +164,11 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
         {count > 0 && (
           <div className={styles.avatarWrapper}>
             <Avatar
-              size={avatars[0].props.size}
-              radius={avatars[0].props.radius}
-              variant={avatars[0].props.variant}
+              size={firstAvatarProps.size}
+              radius={firstAvatarProps.radius}
+              variant={firstAvatarProps.variant}
               color='neutral'
-              fallback={<span>+{count}</span>}
+              fallback={`+${count}`}
             />
           </div>
         )}

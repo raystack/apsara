@@ -170,6 +170,7 @@ const Page = () => {
               }}
             />
 
+
             <DatePicker
               timeZone="UTC"
               dateFormat="DD MMM YYYY"
@@ -190,6 +191,7 @@ const Page = () => {
 
             <InputField defaultValue="test" size="small" readOnly />
             
+
             <Text
               size="large"
               weight="medium"
@@ -998,6 +1000,36 @@ const Page = () => {
               </Select>
             </Flex>
           </Flex>
+
+          <Text
+            size="large"
+            weight="medium"
+            style={{ marginTop: "32px", marginBottom: "16px" }}>
+            Avatar Examples
+          </Text>
+
+          <Flex direction="column" gap={6}>
+            <Flex direction="column" gap={3}>
+                <AvatarGroup max={4}>
+                    <Tooltip message="JD">
+                      <Avatar radius="small" size={7} fallback="JD" color="indigo" />
+                    </Tooltip>
+                    <Tooltip message="AS">
+                      <Avatar radius="small" size={7} fallback="AS" color="mint" />
+                    </Tooltip>
+                    <Tooltip message="RK">
+                      <Avatar radius="small" size={7} fallback="RK" color="sky" />
+                    </Tooltip>
+                    <Tooltip message="PL">
+                      <Avatar radius="small" size={7} fallback="PL" color="purple" />
+                    </Tooltip>
+                    <Tooltip message="MN">
+                      <Avatar radius="small" size={7} fallback="MN" color="pink" />
+                    </Tooltip>
+                </AvatarGroup>
+              </Flex>
+            </Flex>
+
 
           <Flex justify="center" style={{ marginTop: 40 }}>
             <Button type="submit">Submit button</Button>

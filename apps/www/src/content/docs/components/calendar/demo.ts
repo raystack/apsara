@@ -5,7 +5,7 @@ export const preview = {
   tabs: [
     {
       name: "Calendar",
-      code: `<Calendar numberOfMonths={2} />`,
+      code: `<Calendar />`,
     },
     {
       name: "Range Picker",
@@ -16,7 +16,7 @@ export const preview = {
       name: "Date Picker",
       code: `
       <Flex style={{height:200}}>
-        <DatePicker inputFieldsProps={{ startDate: { size: "large" } }} />
+        <DatePicker />
       </Flex>`,
     },
   ],
@@ -40,11 +40,11 @@ export const rangePickerDemo = {
   tabs: [
     {
       name: "Basic",
-      code: `<RangePicker inputFieldsProps={{ startDate: { size: "large" } }} />`,
+      code: `<RangePicker />`,
     },
     {
       name: "Without Calendar Icon",
-      code: `<RangePicker showCalendarIcon={false} inputFieldsProps={{ startDate: { size: "large" } }} />`,
+      code: `<RangePicker showCalendarIcon={false} />`,
     },
     {
       name: "Custom Trigger",

@@ -67,6 +67,8 @@ function DropDown({
           className: styles.dropdown_icon,
         }}
         stopPropagation={true}
+        size="small"
+        variant="text"
       >
         <Select.Value />
       </Select.Trigger>
