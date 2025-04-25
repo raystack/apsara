@@ -1,6 +1,6 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
 import { Flex } from "../flex";
