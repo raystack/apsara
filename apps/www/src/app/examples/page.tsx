@@ -161,11 +161,11 @@ const Page = () => {
               onClear={() => setSearch1("")}
             />
 
+            <RangePicker footer={<Callout width="100%" type="success">Some important message in the footer</Callout>} />
+
             <RangePicker />
 
             <DatePicker />
-
-            <RangePicker />
 
             <Text
               size="large"
