@@ -40,11 +40,11 @@ export const rangePickerDemo = {
   tabs: [
     {
       name: "Basic",
-      code: `<RangePicker inputFieldsProps={{ startDate: { size: "large" } }} />`,
+      code: `<RangePicker />`,
     },
     {
       name: "Without Calendar Icon",
-      code: `<RangePicker showCalendarIcon={false} inputFieldsProps={{ startDate: { size: "large" } }} />`,
+      code: `<RangePicker showCalendarIcon={false} />`,
     },
     {
       name: "Custom Trigger",

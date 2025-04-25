@@ -161,7 +161,8 @@ const Page = () => {
               onClear={() => setSearch1("")}
             />
 
-            <RangePicker footer={<Callout width="100%" type="success">Some important message in the footer</Callout>}/>
+
+            <RangePicker footer={<Callout width="100%" type="success">Some important message in the footer</Callout>} />
 
             <RangePicker />
 
@@ -175,7 +176,6 @@ const Page = () => {
             />
 
             <DatePicker />
-
             <Text
               size="large"
               weight="medium"

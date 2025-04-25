@@ -4,6 +4,7 @@
   background: var(--rs-color-background-base-primary);
   width: fit-content;
   font-family: var(--rs-font-body);
+  min-height: 324px;
 }
 
 .caption_label,
