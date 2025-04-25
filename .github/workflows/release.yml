@@ -3,7 +3,8 @@ name: Release
 on:
   push:
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
+      - 'v*.*.*-rc.*'
 
 jobs:
   release:
@@ -15,7 +16,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: main
 
       - name: Setup pnpm 9
         uses: pnpm/action-setup@v4
@@ -28,30 +28,37 @@ jobs:
           node-version: 18.x
 
       - name: Install Dependencies 🔧
-        run: pnpm i
+        run: pnpm install
 
       - name: Build Step 🔧
         env:
           CI: ""
-        run: npm run ci:build
+        run: pnpm run ci:build
 
       - name: Create .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Bump Package Version
-        run: npm run bump-version
+        run: pnpm run bump-version
         working-directory: ./packages/raystack
         env:
           GIT_REFNAME: ${{ github.ref_name }}
 
       - name: Run Release 🚀
-        run: npm run release:ci
+        run: pnpm run release:ci
         working-directory: ./packages/raystack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Generate GitHub Release Notes 📓
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --generate-notes \
+            --verify-tag
