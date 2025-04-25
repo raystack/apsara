@@ -27,7 +27,8 @@
       "require": "./dist/v1/hooks/index.cjs",
       "types": "./dist/v1/hooks/index.d.ts"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/style.css",
+    "./normalize.css": "./dist/normalize.css"
   },
   "files": [
     "dist",
