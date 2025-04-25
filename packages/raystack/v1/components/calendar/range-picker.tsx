@@ -56,19 +56,6 @@ export function RangePicker({
     ? dayjs(selectedRange.to).format(dateFormat)
     : "";
 
-  useEffect(() => {
-    // Reset selected range if calendar is closed and start or end date is empty
-    if (!showCalendar && (!startDate.length || !endDate.length)) {
-      setSelectedRange(prevSelectedRangeRef.current);
-      onSelect(prevSelectedRangeRef.current);
-    }
-
-    // Update previous selected range reference when both start and end dates are selected
-    if (!showCalendar && startDate.length && endDate.length) {
-      prevSelectedRangeRef.current = selectedRange;
-    }
-  }, [showCalendar, startDate, endDate]);
-
   // 1st click will select the start date.
   // 2nd click will select the end date.
   // 3rd click will select the start date again.
@@ -105,7 +92,20 @@ export function RangePicker({
   };
 
   function onOpenChange(open?: boolean) {
-    setShowCalendar(Boolean(open));
+    const currOpen = Boolean(open);
+
+    setShowCalendar(currOpen);
+
+    // Reset selected range if calendar is closed and start or end date is empty
+    if (!currOpen && (!startDate.length || !endDate.length)) {
+      setSelectedRange(prevSelectedRangeRef.current);
+      onSelect(prevSelectedRangeRef.current);
+    }
+
+    // Update previous selected range reference when both start and end dates are selected
+    if (!currOpen && startDate.length && endDate.length) {
+      prevSelectedRangeRef.current = selectedRange;
+    }
   }
 
   const defaultTrigger = (
