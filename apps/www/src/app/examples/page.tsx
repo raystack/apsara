@@ -161,12 +161,21 @@ const Page = () => {
               onClear={() => setSearch1("")}
             />
 
+
             <RangePicker footer={<Callout width="100%" type="success">Some important message in the footer</Callout>} />
 
             <RangePicker />
 
-            <DatePicker />
+            <DatePicker
+              calendarProps={{
+                captionLayout: 'dropdown',
+                mode: 'single',
+                required: true,
+                selected: undefined
+              }}
+            />
 
+            <DatePicker />
             <Text
               size="large"
               weight="medium"
