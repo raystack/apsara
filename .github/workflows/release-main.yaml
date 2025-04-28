@@ -12,6 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Check Branch
+        run: |
+          BRANCH=$(git branch -r --contains ${{ github.ref }})
+          if [[ ! $BRANCH =~ (origin/main|origin/develop)$ ]]; then
+            echo "Error: Tags can only be pushed from main or develop branches"
+            exit 1
+          fi
+
       - name: Checkout 🛎️
         uses: actions/checkout@v3
         with:
