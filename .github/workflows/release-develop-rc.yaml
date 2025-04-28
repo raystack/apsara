@@ -45,13 +45,21 @@ jobs:
       - name: Bump RC Package Version
         run: pnpm run bump-version-rc
         working-directory: ./packages/raystack
-        env:
-          GIT_REFNAME: develop
 
-      - name: Publish to NPM with RC tag 🚀
-        run: |
-          pnpm publish --tag rc --access public
+      - name: Run RC Release 🚀
+        run: pnpm run release:rc
         working-directory: ./packages/raystack
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Generate GitHub Release Notes 📓
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --generate-notes \
+            --verify-tag
+        
 

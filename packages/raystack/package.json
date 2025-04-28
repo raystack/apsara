@@ -41,6 +41,7 @@
     "lint:fix": "eslint \"v1/**/*.ts*\" --fix",
     "release": "release-it",
     "release:ci": "release-it --ci --no-increment --npm.ignoreVersion",
+    "release:rc": "release-it --ci --no-increment --npm.ignoreVersion --npm.tag=rc",
     "bump-version": "node scripts/bump-version.js",
     "bump-version-rc": "node scripts/bump-version-rc.js",
     "clean": "rm -rf .turbo && rm -rf dist",
