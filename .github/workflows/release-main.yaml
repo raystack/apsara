@@ -1,4 +1,4 @@
-name: Release main to NPM when a tag is pushed
+name: Release to NPM when a tag is pushed
 
 on:
   push:
