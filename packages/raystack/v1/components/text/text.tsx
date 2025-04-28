@@ -92,6 +92,7 @@ export const textVariants = cva(styles.text, {
 });
 
 export type TextBaseProps = VariantProps<typeof textVariants> & {
+  className?: string;
   /**
    * @remarks Use "micro" | "mini" | "small" | "regular" | "large"
    */

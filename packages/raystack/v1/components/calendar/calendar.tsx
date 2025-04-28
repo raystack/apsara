@@ -83,7 +83,9 @@ function DropDown({
               value={opt.value.toString()}
               key={opt.value}
               disabled={opt.disabled}
-              className={styles.dropdown_item_text}
+              textProps={{
+                className: styles.dropdown_item_text,
+              }}
             >
               {opt.label}
             </Select.Item>
