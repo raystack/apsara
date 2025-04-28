@@ -171,7 +171,7 @@ const Page = () => {
                 captionLayout: 'dropdown',
                 mode: 'single',
                 required: true,
-                selected: undefined
+                selected: new Date()
               }}
             />
 

@@ -37,8 +37,13 @@ export function DatePicker({
   children,
   showCalendarIcon = true,
 }: DatePickerProps) {
+  // This is to handle the case where the 'value' is after the 'endMonth' in the calendarProps
+  const initialDate = calendarProps?.endMonth && dayjs(value).isAfter(calendarProps.endMonth) 
+    ? calendarProps.endMonth 
+    : value;
+
   const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(value);
+  const [selectedDate, setSelectedDate] = useState(initialDate);
   const [inputState, setInputState] =
     useState<Partial<React.ComponentProps<typeof TextField>["state"]>>();
 
@@ -197,14 +202,14 @@ export function DatePicker({
         ref={contentRef}
       >
         <Calendar
-          required={true}
-          {...calendarProps}
-          onDropdownOpen={onDropdownOpen}
           mode="single"
           selected={selectedDate}
           month={selectedDate}
+          required={true}
           onSelect={handleSelect}
           onMonthChange={setSelectedDate}
+          onDropdownOpen={onDropdownOpen}
+          {...calendarProps}
         />
       </Popover.Content>
     </Popover>
