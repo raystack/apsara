@@ -92,7 +92,6 @@ export const textVariants = cva(styles.text, {
 });
 
 export type TextBaseProps = VariantProps<typeof textVariants> & {
-  className?: string;
   /**
    * @remarks Use "micro" | "mini" | "small" | "regular" | "large"
    */
@@ -138,7 +137,7 @@ type TextDivProps = { as: "div" } & ComponentPropsWithoutRef<"div">;
 type TextLabelProps = { as: "label" } & ComponentPropsWithoutRef<"label">;
 type TextPProps = { as: "p" } & ComponentPropsWithoutRef<"p">;
 type TextAProps = { as: "a" } & ComponentPropsWithoutRef<"a">;
-type TextProps = TextBaseProps &
+export type TextProps = TextBaseProps &
   (TextSpanProps | TextDivProps | TextLabelProps | TextPProps | TextAProps);
 type TextRef =
   | HTMLSpanElement
