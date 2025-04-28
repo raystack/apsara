@@ -42,6 +42,7 @@
     "release": "release-it",
     "release:ci": "release-it --ci --no-increment --npm.ignoreVersion",
     "bump-version": "node scripts/bump-version.js",
+    "bump-version-rc": "node scripts/bump-version-rc.js",
     "clean": "rm -rf .turbo && rm -rf dist",
     "test": "jest",
     "test:watch": "jest --watch",

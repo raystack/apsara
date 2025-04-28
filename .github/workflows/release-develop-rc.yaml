@@ -1,14 +1,13 @@
-name: Release
+name: Release rc tag to NPM when a branch is merged to develop
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
-      - 'v*.*.*-rc.*'
+    branches:
+      - develop
 
 jobs:
-  release:
-    name: Release
+  release-rc:
+    name: Release RC
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -43,24 +42,16 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Bump Package Version
-        run: pnpm run bump-version
+      - name: Bump RC Package Version
+        run: pnpm run bump-version-rc
         working-directory: ./packages/raystack
         env:
-          GIT_REFNAME: ${{ github.ref_name }}
+          GIT_REFNAME: develop
 
-      - name: Run Release 🚀
-        run: pnpm run release:ci
+      - name: Publish to NPM with RC tag 🚀
+        run: |
+          pnpm publish --tag rc --access public
         working-directory: ./packages/raystack
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Generate GitHub Release Notes 📓
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "$GITHUB_REF_NAME" \
-            --repo "$GITHUB_REPOSITORY" \
-            --generate-notes \
-            --verify-tag
