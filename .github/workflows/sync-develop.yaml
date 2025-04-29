@@ -5,7 +5,7 @@ on:
     # Runs at 5:00 AM UTC every day
     - cron: '0 5 * * *'
   
-  # Optional: Allow manual triggering
+  # Enable "Run Workflow" button to trigger the workflow manually
   workflow_dispatch:
 
 jobs:
