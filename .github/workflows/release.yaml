@@ -16,7 +16,7 @@ jobs:
         run: |
           BRANCH=$(git branch -r --contains ${{ github.ref }})
           if [[ ! $BRANCH =~ (origin/main|origin/develop)$ ]]; then
-            echo "Error: Tags can only be pushed from main or develop branches"
+            echo "[SKIPPED] Tags can only be pushed from main or develop branches"
             exit 1
           fi
 

@@ -1,0 +1,50 @@
+name: Sync develop with main
+
+on:
+  schedule:
+    # Runs at 5:00 AM UTC every day
+    - cron: '0 5 * * *'
+  
+  # Optional: Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  sync-develop:
+    name: Sync develop branch with main
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          # Check out the develop branch
+          ref: develop
+      
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions-bot@users.noreply.github.com"
+      
+      - name: Fetch latest from remote
+        run: |
+          git fetch --prune
+      
+      - name: Merge main into develop
+        run: |
+          # Check if main has any changes compared to develop
+          if git merge-base --is-ancestor origin/main origin/develop; then
+            echo "[SKIPPED] develop is already up to date with main."
+            exit 0
+          fi
+          
+          # Try to merge main into develop
+          if git merge origin/main -m "Auto-merge main into develop"; then
+            echo "[SUCCESS] Successfully merged main into develop"
+            git push origin develop
+          else
+            echo "[MERGE CONFLICT] Manually resolve the merge conflict and push to develop."
+            git merge --abort
+            exit 1
+          fi
