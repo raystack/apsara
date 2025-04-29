@@ -19,7 +19,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          # Check out the develop branch
           ref: develop
       
       - name: Configure Git
