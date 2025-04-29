@@ -1,6 +1,6 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
 import { Flex } from "../flex";
@@ -46,6 +46,7 @@ export function RangePicker({
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>("from");
   const [selectedRange, setSelectedRange] = useState(value);
+  const [currentMonth, setCurrentMonth] = useState(selectedRange?.from ?? new Date());
 
   const prevSelectedRangeRef = useRef(selectedRange);
 
@@ -55,6 +56,20 @@ export function RangePicker({
   const endDate = selectedRange.to
     ? dayjs(selectedRange.to).format(dateFormat)
     : "";
+
+  const computedDefaultMonth = useMemo(() => {
+    let month = currentMonth;
+    if (calendarProps && calendarProps.numberOfMonths === 2 && calendarProps.endMonth) {
+      const endMonth = dayjs(calendarProps.endMonth);
+      const fromMonth = dayjs(currentMonth);
+      // If the current month is the last allowed month, show the previous month as left calendar
+      // This is needed to prevent showing only one month in the range-picker when endMonth is same as first month of the range.
+      if (fromMonth.isSame(endMonth, 'month')) {
+        month = endMonth.subtract(1, 'month').toDate();
+      }
+    }
+    return month;
+  }, [currentMonth, calendarProps?.numberOfMonths, calendarProps?.endMonth]);
 
   // 1st click will select the start date.
   // 2nd click will select the end date.
@@ -140,12 +155,13 @@ export function RangePicker({
         <Calendar
           showOutsideDays={false}
           numberOfMonths={2}
-          defaultMonth={selectedRange.from}
+          month={computedDefaultMonth}
           required={true}
           {...calendarProps}
           mode="range"
           selected={selectedRange}
           onSelect={handleSelect}
+          onMonthChange={setCurrentMonth}
         />
         {footer && (
           <Flex
