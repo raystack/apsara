@@ -4,7 +4,7 @@
   background: var(--rs-color-background-base-primary);
   width: fit-content;
   font-family: var(--rs-font-body);
-  min-height: 324px;
+  min-height: 346px;
 }
 
 .caption_label,
@@ -86,6 +86,7 @@
   justify-content: center;
   align-items: center;
   border: 1px solid transparent;
+  margin-bottom: var(--rs-space-1);
 }
 
 .day:hover:not(.disabled):not(.outside):not(.selected) {
@@ -111,6 +112,7 @@
 .range_middle {
   border-radius: 0;
   background-color: var(--rs-color-background-base-primary-hover);
+  margin-bottom: var(--rs-space-1);
 
   button {
     color: var(--rs-color-foreground-base-primary);

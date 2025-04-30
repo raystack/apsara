@@ -14,15 +14,15 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     svgoConfig: {
       plugins: [
         {
-          name: 'preset-default',
+          name: "preset-default",
           params: {
             overrides: {
               removeViewBox: false,
             },
           },
         },
-      ]
-    }
+      ],
+    },
   }),
   postcss({
     plugins: [postcssImport()],
@@ -31,6 +31,14 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     autoModules: true, // Auto process files ending with .module.css
     modules: true,
     namedExports: true, // Enable named exports for CSS modules
+    exclude: ["normalize.css"],
+  }),
+  postcss({
+    plugins: [postcssImport()],
+    extract: "normalize.css",
+    minimize: true,
+    include: ["normalize.css"],
+    exclude: ["**/*.module.css", "style.css"],
   }),
   tsconfigPaths(),
   typescript({
@@ -72,7 +80,7 @@ const configs = [
   },
 ];
 
-const rollupConfig = configs.map((conf) => {
+const rollupConfig = configs.map(conf => {
   return {
     input: conf.inputPath + "/index.tsx",
     output: [
