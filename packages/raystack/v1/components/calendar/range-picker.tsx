@@ -57,9 +57,8 @@ export function RangePicker({
     ? dayjs(selectedRange.to).format(dateFormat)
     : "";
 
-  // The main purpose of this is to ensure that when the calendar is at its last allowed month (specified by endMonth), 
-  // it still shows two months properly. Without this adjustment, if the current month was the same as the end month, 
-  // only one month is visible in the range picker, which would be a poor user experience.
+  // Ensures two months are visible even when 
+  // current month is the last allowed month (endMonth).
   const computedDefaultMonth = useMemo(() => {
     let month = currentMonth;
     if (calendarProps?.endMonth) {
