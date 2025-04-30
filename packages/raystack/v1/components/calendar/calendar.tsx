@@ -27,6 +27,7 @@ interface CalendarPropsExtended {
   showTooltip?: boolean;
   tooltipMessages?: { [key: string]: any };
   loadingData?: boolean;
+  timeZone?: string;
 }
 
 export type CalendarProps = DayPickerProps &
@@ -109,11 +110,13 @@ export const Calendar = function ({
   showTooltip = false,
   tooltipMessages = {},
   loadingData = false,
+  timeZone,
   ...props
 }: CalendarProps) {
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
+      timeZone={timeZone}
       components={{
         Chevron: (props) => {
           if (props.orientation === 'left') {

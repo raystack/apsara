@@ -23,6 +23,7 @@ interface RangePickerProps {
     | ((props: { startDate: string; endDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
   footer?: React.ReactNode;
+  timeZone?: string;
 }
 
 type RangeFields = keyof DateRange;
@@ -41,6 +42,7 @@ export function RangePicker({
   children,
   showCalendarIcon = true,
   footer,
+  timeZone,
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] =
@@ -83,12 +85,7 @@ export function RangePicker({
     }
 
     setSelectedRange(newRange);
-    // Return the range with +1 day for the end date in the callback
-    const callbackRange = {
-      from: newRange.from,
-      to: newRange.to ? dayjs(newRange.to).add(1, "day").toDate() : undefined,
-    };
-    onSelect(callbackRange);
+    onSelect(newRange);
   };
 
   function onOpenChange(open?: boolean) {
@@ -109,20 +106,24 @@ export function RangePicker({
   }
 
   const defaultTrigger = (
-    <Flex gap={"medium"} className={pickerGroupClassName}>
+    <Flex gap="medium" className={pickerGroupClassName}>
       <InputField
-        size="small"
+        size='small'
+        placeholder="Select start date"
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        className={styles.datePickerInput}
         readOnly
       />
 
       <InputField
-        size="small"
+        size='small'
+        placeholder="Select end date"
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        className={styles.datePickerInput}
         readOnly
       />
     </Flex>
@@ -143,6 +144,7 @@ export function RangePicker({
           defaultMonth={selectedRange.from}
           required={true}
           {...calendarProps}
+          timeZone={timeZone}
           mode="range"
           selected={selectedRange}
           onSelect={handleSelect}

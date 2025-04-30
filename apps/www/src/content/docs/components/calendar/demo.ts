@@ -10,7 +10,7 @@ export const preview = {
     {
       name: "Range Picker",
       code: `
-        <RangePicker side="bottom" />`,
+        <RangePicker inputFieldsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />`,
     },
     {
       name: "Date Picker",

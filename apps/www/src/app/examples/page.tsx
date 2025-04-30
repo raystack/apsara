@@ -148,7 +148,7 @@ const Page = () => {
             Main
           </Text>
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "450px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             <Search
               placeholder="Default large search"
               showClearButton
@@ -179,6 +179,7 @@ const Page = () => {
                 size: 'medium',
               }}
             />
+
 
             <RangePicker
               side='bottom'
@@ -221,7 +222,19 @@ const Page = () => {
               }}
             />
 
-            <DatePicker />
+            <DatePicker
+              timeZone="UTC"
+              dateFormat="DD MMM YYYY"
+              onSelect={(date) => {
+                console.log(date);
+              }}
+            >
+              <InputField defaultValue="test" size="small" readOnly />
+            </DatePicker>
+
+            <InputField defaultValue="test" size="small" readOnly />
+            
+
             <Text
               size="large"
               weight="medium"
@@ -445,7 +458,7 @@ const Page = () => {
 
           <TextArea label="Read Only" value="This is a read only text area" />
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             {/* Normal size select with icons */}
             <Flex direction="column" gap={2}>
               <Select
@@ -485,7 +498,7 @@ const Page = () => {
             </Flex>
           </Flex>
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             {/* Normal size select with icons */}
             <Flex direction="column" gap={2}>
               <Select
