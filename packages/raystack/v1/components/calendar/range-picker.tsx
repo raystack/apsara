@@ -46,7 +46,7 @@ export function RangePicker({
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>("from");
   const [selectedRange, setSelectedRange] = useState(value);
-  const [currentMonth, setCurrentMonth] = useState(selectedRange?.from ?? new Date());
+  const [currentMonth, setCurrentMonth] = useState(selectedRange?.from);
 
   const prevSelectedRangeRef = useRef(selectedRange);
 
@@ -57,19 +57,22 @@ export function RangePicker({
     ? dayjs(selectedRange.to).format(dateFormat)
     : "";
 
+  // The main purpose of this logic is to ensure that when the calendar is at its last allowed month (specified by endMonth), 
+  // it still shows two months properly. Without this adjustment, if the current month was the same as the end month, you might 
+  // only see one month in the range picker, which would be a poor user experience.
   const computedDefaultMonth = useMemo(() => {
     let month = currentMonth;
-    if (calendarProps && calendarProps.numberOfMonths === 2 && calendarProps.endMonth) {
+    if (calendarProps?.endMonth) {
       const endMonth = dayjs(calendarProps.endMonth);
       const fromMonth = dayjs(currentMonth);
-      // If the current month is the last allowed month, show the previous month as left calendar
-      // This is needed to prevent showing only one month in the range-picker when endMonth is same as first month of the range.
+      
+
       if (fromMonth.isSame(endMonth, 'month')) {
         month = endMonth.subtract(1, 'month').toDate();
       }
     }
     return month;
-  }, [currentMonth, calendarProps?.numberOfMonths, calendarProps?.endMonth]);
+  }, [currentMonth, calendarProps?.endMonth]);
 
   // 1st click will select the start date.
   // 2nd click will select the end date.
