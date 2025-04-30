@@ -66,7 +66,6 @@ export function RangePicker({
       const endMonth = dayjs(calendarProps.endMonth);
       const fromMonth = dayjs(currentMonth);
       
-
       if (fromMonth.isSame(endMonth, 'month')) {
         month = endMonth.subtract(1, 'month').toDate();
       }
