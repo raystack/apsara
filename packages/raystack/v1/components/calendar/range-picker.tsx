@@ -156,8 +156,8 @@ export function RangePicker({
         <Calendar
           showOutsideDays={false}
           numberOfMonths={2}
-          required={true}
           defaultMonth={selectedRange.from}
+          required={true}
           {...calendarProps}
           mode="range"
           month={computedDefaultMonth}
