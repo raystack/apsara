@@ -22,6 +22,7 @@ import {
   Indicator,
   Sheet,
   EmptyState,
+  Skeleton,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -221,18 +222,7 @@ const Page = () => {
               }}
             />
 
-            <DatePicker
-              timeZone="UTC"
-              dateFormat="DD MMM YYYY"
-              onSelect={(date) => {
-                console.log(date);
-              }}
-            >
-              <InputField defaultValue="test" size="small" readOnly />
-            </DatePicker>
-
-            <InputField defaultValue="test" size="small" readOnly />
-            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>This is sparta<Skeleton width="100px" /></div>
 
             <Text
               size="large"

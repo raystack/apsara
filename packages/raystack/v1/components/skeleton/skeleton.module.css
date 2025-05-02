@@ -6,7 +6,8 @@
   background-color: var(--skeleton-base-color);
   overflow: hidden;
   position: relative;
-  margin-bottom: var(--rs-space-4);
+  display: block;
+  margin-bottom: var(--rs-space-3);
 }
 
 .animate::after {

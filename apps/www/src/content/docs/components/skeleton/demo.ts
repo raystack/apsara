@@ -15,23 +15,23 @@ export const playground = {
     },
     height: {
       type: "text",
-      initialValue: "20px",
+      initialValue: "15px",
     },
     count: {
       type: "number",
-      defaultValue: 3,
+      initialValue: 3,
     },
     enableAnimation: {
       type: "checkbox",
-      defaultValue: true,
+      initialValue: true,
     },
     duration: {
       type: "number",
-      defaultValue: 1.5,
+      initialValue: 1.5,
     },
     inline: {
       type: "checkbox",
-      defaultValue: false,
+      initialValue: false,
     }
   },
   getCode,
