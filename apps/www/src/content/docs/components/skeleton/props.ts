@@ -11,7 +11,7 @@ export interface SkeletonProps {
 
   /**
    * Base color of the skeleton
-   * @defaultValue "var(--rs-color-background-neutral-secondary)"
+   * @defaultValue "var(--rs-color-background-base-primary-hover)"
    */
   baseColor?: string;
 
