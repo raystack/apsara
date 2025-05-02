@@ -42,7 +42,7 @@ export const Skeleton = ({
 
   const Container = inline ? 'span' : 'div';
 
-  const defaultWidth = inline ? '100px' : '100%';
+  const defaultWidth = inline ? '50px' : '100%';
 
   return (
     <Container

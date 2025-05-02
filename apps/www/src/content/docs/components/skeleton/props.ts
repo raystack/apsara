@@ -1,7 +1,7 @@
 export interface SkeletonProps {
   /**
    * Width of the skeleton
-   * @defaultValue "100% for block and 100px for inline"
+   * @defaultValue "100% for block and 50px for inline"
    */
   width?: string | number;
 
