@@ -7,7 +7,11 @@
   overflow: hidden;
   position: relative;
   display: block;
-  margin-bottom: var(--rs-space-3);
+}
+
+.inline {
+  vertical-align: baseline;
+  display: inline-block;
 }
 
 .animate::after {

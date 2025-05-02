@@ -222,7 +222,7 @@ const Page = () => {
               }}
             />
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>This is sparta<Skeleton width="100px" /></div>
+            <div>This is sparta<Skeleton count={1} width="100px" /></div>
 
             <Text
               size="large"

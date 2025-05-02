@@ -1,7 +1,6 @@
 import { CSSProperties } from 'react';
 import { clsx } from 'clsx';
 import styles from './skeleton.module.css';
-import { Flex } from '../flex';
 
 export interface SkeletonStyleProps {
   baseColor?: string;
@@ -36,14 +35,16 @@ export const Skeleton = ({
 }: SkeletonStyleProps) => {
   const skeletonClassName = clsx(
     styles.skeleton,
+    inline && styles.inline,
     enableAnimation && styles.animate,
     className
   );
 
+  const Container = inline ? 'span' : 'div';
+
   return (
-    <Flex
-      align="center"
-      className={containerClassName} 
+    <Container
+      className={containerClassName}
       style={{
         display: inline ? 'inline-block' : 'block',
         ...containerStyle
@@ -57,6 +58,7 @@ export const Skeleton = ({
             width,
             height,
             borderRadius,
+            marginBottom: i !== count - 1 && !inline ? 'var(--rs-space-3)' : undefined,
             '--skeleton-base-color': baseColor,
             '--skeleton-highlight-color': highlightColor,
             '--skeleton-duration': `${duration}s`,
@@ -64,6 +66,6 @@ export const Skeleton = ({
           } as CSSProperties}
         />
       ))}
-    </Flex>
+    </Container>
   );
 }; 
