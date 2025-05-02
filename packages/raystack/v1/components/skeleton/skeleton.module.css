@@ -1,0 +1,29 @@
+.skeleton {
+  background-color: var(--rs-color-background-neutral-secondary);
+  overflow: hidden;
+  position: relative;
+}
+
+.animate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--rs-color-background-base-primary),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+[dir='rtl'] .skeleton::after {
+  animation-direction: reverse;
+}
