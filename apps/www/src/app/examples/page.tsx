@@ -222,7 +222,9 @@ const Page = () => {
               }}
             />
 
-            <div>This is sparta<Skeleton count={1} width="100px" /></div>
+            <div>This is sparta<Skeleton inline /></div>
+
+            <Skeleton />
 
             <Text
               size="large"
