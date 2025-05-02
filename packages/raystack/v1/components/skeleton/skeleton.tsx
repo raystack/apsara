@@ -19,8 +19,8 @@ export interface SkeletonStyleProps {
 export const Skeleton = ({
   baseColor,
   highlightColor,
-  width,
-  height,
+  width = "100%",
+  height = 'var(--rs-space-2)',
   borderRadius = 'var(--rs-radius-2)',
   inline = false,
   duration = 1.5,

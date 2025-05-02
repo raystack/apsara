@@ -1,0 +1,70 @@
+---
+title: Skeleton
+description: A placeholder loading state that mimics the layout of content while it's being loaded.
+---
+
+import {
+  playground,
+  basicDemo,
+  multipleDemo,
+  customStylesDemo,
+  animationDemo,
+  cardDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+The Skeleton component is used to create placeholder loading states that represent the layout of content while it's being loaded. It provides a visual indication that content is loading and helps maintain layout stability.
+
+```tsx
+import { Skeleton } from "@raystack/apsara/v1";
+
+<Skeleton width={200} height={20} />;
+```
+
+## Skeleton Props
+
+<auto-type-table path="./props.ts" name="SkeletonProps" />
+
+## Examples
+
+### Basic Usage
+
+A simple skeleton loader with fixed dimensions.
+
+<Demo data={basicDemo} />
+
+### Multiple Lines
+
+Create multiple skeleton lines using the count prop.
+
+<Demo data={multipleDemo} />
+
+### Custom Styles
+
+Customize the appearance using baseColor and highlightColor.
+
+<Demo data={customStylesDemo} />
+
+### Animation Control
+
+Control the animation duration or disable it entirely.
+
+<Demo data={animationDemo} />
+
+### Complex Layout
+
+Create a card-like loading state by combining multiple skeletons.
+
+<Demo data={cardDemo} />
+
+## Accessibility
+
+The Skeleton component follows accessibility best practices:
+
+- Uses semantic HTML elements
+- Provides appropriate ARIA attributes
+- Maintains sufficient color contrast
+- Animation can be disabled for users who prefer reduced motion 

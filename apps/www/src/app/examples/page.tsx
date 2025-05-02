@@ -174,9 +174,8 @@ const Page = () => {
                 required: true,
                 selected: new Date()
               }}
-              textFieldProps={{
-                state: "valid",
-                size: 'medium',
+              inputFieldProps={{
+                size: 'small',
               }}
             />
 
