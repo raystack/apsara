@@ -1,11 +1,13 @@
 export interface SkeletonProps {
   /**
    * Width of the skeleton
+   * @defaultValue "100%"
    */
   width?: string | number;
 
   /**
    * Height of the skeleton
+   * @defaultValue "var(--rs-space-4)"
    */
   height?: string | number;
 
@@ -20,6 +22,12 @@ export interface SkeletonProps {
    * @defaultValue "var(--rs-color-background-base-primary)"
    */
   highlightColor?: string;
+
+  /**
+   * Border radius of the skeleton
+   * @defaultValue "var(--rs-radius-2)"
+   */
+  borderRadius?: string | number;
 
   /**
    * Whether to display as inline-block
@@ -46,12 +54,22 @@ export interface SkeletonProps {
   count?: number;
 
   /**
-   * Additional CSS class names
+   * Additional CSS class names for the skeleton element
    */
   className?: string;
 
   /**
-   * Additional inline styles
+   * Additional inline styles for the skeleton element
    */
   style?: React.CSSProperties;
+
+  /**
+   * Additional CSS class names for the container element (div for block and span for inline)
+   */
+  containerClassName?: string;
+
+  /**
+   * Additional inline styles for the container element (div for block and span for inline)
+   */
+  containerStyle?: React.CSSProperties;
 } 
