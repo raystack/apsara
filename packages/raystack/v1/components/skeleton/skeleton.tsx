@@ -21,7 +21,7 @@ export interface SkeletonStyleProps {
 export const Skeleton = ({
   baseColor,
   highlightColor,
-  width = "100%",
+  width,
   height = 'var(--rs-space-4)',
   borderRadius = 'var(--rs-radius-2)',
   inline = false,
@@ -42,6 +42,8 @@ export const Skeleton = ({
 
   const Container = inline ? 'span' : 'div';
 
+  const defaultWidth = inline ? '100px' : '100%';
+
   return (
     <Container
       className={containerClassName}
@@ -55,7 +57,7 @@ export const Skeleton = ({
           key={i}
           className={skeletonClassName}
           style={{
-            width,
+            width: width ?? defaultWidth,
             height,
             borderRadius,
             marginBottom: i !== count - 1 && !inline ? 'var(--rs-space-3)' : undefined,
