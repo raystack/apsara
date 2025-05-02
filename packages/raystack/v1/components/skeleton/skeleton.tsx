@@ -1,4 +1,5 @@
 import { CSSProperties } from 'react';
+import { clsx } from 'clsx';
 import styles from './skeleton.module.css';
 
 export interface SkeletonStyleProps {
@@ -9,7 +10,6 @@ export interface SkeletonStyleProps {
   borderRadius?: string | number;
   inline?: boolean;
   duration?: number;
-  direction?: 'ltr' | 'rtl';
   enableAnimation?: boolean;
   count?: number;
   style?: CSSProperties;
@@ -17,20 +17,23 @@ export interface SkeletonStyleProps {
 }
 
 export const Skeleton = ({
+  baseColor,
+  highlightColor,
   width,
   height,
-  borderRadius = 'var(--rs-radius-1)',
+  borderRadius = 'var(--rs-radius-2)',
   inline = false,
+  duration = 1.5,
   count = 1,
   enableAnimation = true,
   style,
   className,
 }: SkeletonStyleProps) => {
-  const skeletonClassName = [
+  const skeletonClassName = clsx(
     styles.skeleton,
     enableAnimation && styles.animate,
     className
-  ].filter(Boolean).join(' ');
+  );
 
   return (
     <>
@@ -43,8 +46,11 @@ export const Skeleton = ({
             height,
             borderRadius,
             display: inline ? 'inline-block' : 'block',
+            '--skeleton-base-color': baseColor,
+            '--skeleton-highlight-color': highlightColor,
+            '--skeleton-duration': `${duration}s`,
             ...style
-          }}
+          } as CSSProperties}
         />
       ))}
     </>

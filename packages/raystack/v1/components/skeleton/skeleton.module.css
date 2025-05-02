@@ -1,7 +1,12 @@
 .skeleton {
-  background-color: var(--rs-color-background-neutral-secondary);
+  --skeleton-base-color: var(--rs-color-background-base-primary-hover);
+  --skeleton-highlight-color: var(--rs-color-background-base-primary);
+  --skeleton-duration: 1.5s;
+
+  background-color: var(--skeleton-base-color);
   overflow: hidden;
   position: relative;
+  margin-bottom: var(--rs-space-4);
 }
 
 .animate::after {
@@ -11,19 +16,18 @@
   background: linear-gradient(
     90deg,
     transparent,
-    var(--rs-color-background-base-primary),
+    var(--skeleton-highlight-color),
     transparent
   );
-  transform: translateX(-100%);
-  animation: shimmer 1.5s infinite;
+  animation: shimmer var(--skeleton-duration) infinite;
 }
 
 @keyframes shimmer {
-  100% {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
     transform: translateX(100%);
   }
 }
 
-[dir='rtl'] .skeleton::after {
-  animation-direction: reverse;
-}
