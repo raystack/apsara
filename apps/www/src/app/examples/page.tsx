@@ -30,7 +30,7 @@ import {
   OrganizationIcon,
   SidebarIcon,
 } from "@raystack/apsara/icons";
-import styles from "@/styles/Select.module.css";
+import dayjs from "dayjs";
 
 const Page = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -148,7 +148,7 @@ const Page = () => {
             Main
           </Text>
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "450px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             <Search
               placeholder="Default large search"
               showClearButton
@@ -160,12 +160,80 @@ const Page = () => {
               }
               onClear={() => setSearch1("")}
             />
+            <DatePicker
+              side='bottom'
+              dateFormat='D MMM YYYY'
+              value={dayjs().add(16, 'year').toDate()}
+              onSelect={(value: Date) => console.log(value)}
+              calendarProps={{
+                captionLayout: 'dropdown',
+                startMonth: dayjs().add(3, 'month').toDate(),
+                endMonth: dayjs().add(4, 'year').toDate(),
+                disabled: { before: dayjs().add(3, 'month').toDate(), after: dayjs().add(3, 'year').toDate() },
+                mode: 'single',
+                required: true,
+                selected: new Date()
+              }}
+              textFieldProps={{
+                state: "valid",
+                size: 'medium',
+              }}
+            />
 
-            <RangePicker />
 
-            <DatePicker />
+            <RangePicker
+              side='bottom'
+              dateFormat='D MMM YYYY'
+              value={{
+                from: dayjs().add(3, 'month').toDate(),
+                to: dayjs().add(16, 'year').toDate()
+              }}
+              onSelect={(range) => console.log(range)}
+              calendarProps={{
+                captionLayout: 'dropdown',
+                startMonth: dayjs().add(3, 'month').toDate(),
+                endMonth: dayjs().add(4, 'year').toDate(),
+                disabled: { before: dayjs().add(3, 'month').toDate(), after: dayjs().add(3, 'year').toDate() },
+                mode: 'range',
+                required: true,
+                selected: {
+                  from: dayjs().add(3, 'month').toDate(),
+                  to: dayjs().add(4, 'year').toDate()
+                }
+              }}
+              inputFieldsProps={{
+                startDate: {
+                  size: 'small'
+                },
+                endDate: {
+                  size: 'small'
+                }
+              }}
+            />
 
-            <RangePicker />
+            <RangePicker footer={<Callout width="100%" type="success">Some important message in the footer</Callout>} />
+
+            <DatePicker
+              calendarProps={{
+                captionLayout: 'dropdown',
+                mode: 'single',
+                required: true,
+                selected: new Date()
+              }}
+            />
+
+            <DatePicker
+              timeZone="UTC"
+              dateFormat="DD MMM YYYY"
+              onSelect={(date) => {
+                console.log(date);
+              }}
+            >
+              <InputField defaultValue="test" size="small" readOnly />
+            </DatePicker>
+
+            <InputField defaultValue="test" size="small" readOnly />
+            
 
             <Text
               size="large"
@@ -390,7 +458,7 @@ const Page = () => {
 
           <TextArea label="Read Only" value="This is a read only text area" />
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             {/* Normal size select with icons */}
             <Flex direction="column" gap={2}>
               <Select
@@ -430,7 +498,7 @@ const Page = () => {
             </Flex>
           </Flex>
 
-          <Flex direction="column" gap={4} style={{ maxWidth: "150px" }}>
+          <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             {/* Normal size select with icons */}
             <Flex direction="column" gap={2}>
               <Select
@@ -975,6 +1043,36 @@ const Page = () => {
               </Select>
             </Flex>
           </Flex>
+
+          <Text
+            size="large"
+            weight="medium"
+            style={{ marginTop: "32px", marginBottom: "16px" }}>
+            Avatar Examples
+          </Text>
+
+          <Flex direction="column" gap={6}>
+            <Flex direction="column" gap={3}>
+                <AvatarGroup max={4}>
+                    <Tooltip message="JD">
+                      <Avatar radius="small" size={7} fallback="JD" color="indigo" />
+                    </Tooltip>
+                    <Tooltip message="AS">
+                      <Avatar radius="small" size={7} fallback="AS" color="mint" />
+                    </Tooltip>
+                    <Tooltip message="RK">
+                      <Avatar radius="small" size={7} fallback="RK" color="sky" />
+                    </Tooltip>
+                    <Tooltip message="PL">
+                      <Avatar radius="small" size={7} fallback="PL" color="purple" />
+                    </Tooltip>
+                    <Tooltip message="MN">
+                      <Avatar radius="small" size={7} fallback="MN" color="pink" />
+                    </Tooltip>
+                </AvatarGroup>
+              </Flex>
+            </Flex>
+
 
           <Flex justify="center" style={{ marginTop: 40 }}>
             <Button type="submit">Submit button</Button>
