@@ -1,11 +1,14 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
 
+  "biome.enabled": true,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
+
+  "eslint.enable": false,
 
   "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
