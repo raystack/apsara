@@ -12,10 +12,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check Branch
+      - name: Check Branch and Tag
         run: |
           BRANCH=$(git branch -r --contains ${{ github.ref }})
-          if [[ ! $BRANCH =~ (origin/main|origin/develop)$ ]]; then
+          TAG=${{ github.ref_name }}
+          
+          if [[ $BRANCH =~ origin/main$ ]]; then
+            if [[ $TAG =~ -rc\. ]]; then
+              echo "[SKIPPED] Release candidate tags (v*.*.*-rc.*) are only allowed on develop branch"
+              exit 0
+            fi
+          elif [[ $BRANCH =~ origin/develop$ ]]; then
+            if [[ ! $TAG =~ -rc\. ]]; then
+              echo "[SKIPPED] Release tags (v*.*.*) are only allowed on main branch. Use release candidate tags (v*.*.*-rc.*)"
+              exit 1
+            fi
+          else
             echo "[SKIPPED] Tags can only be pushed from main or develop branches"
             exit 1
           fi
