@@ -7,13 +7,13 @@ import {
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cx } from "class-variance-authority";
 import styles from "./select.module.css";
-import { Text, TextBaseProps } from "../text";
+import { Text, TextProps } from "../text";
 import { useSelectContext } from "./select-root";
 
 export const SelectItem = forwardRef<
   ElementRef<typeof SelectPrimitive.Item>,
   ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
-    textProps?: TextBaseProps;
+    textProps?: TextProps;
     leadingIcon?: React.ReactNode;
   }
 >(
