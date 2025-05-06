@@ -1,4 +1,5 @@
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
+import { VariantProps, cva } from 'class-variance-authority';
 import {
   ComponentPropsWithoutRef,
   ElementRef,
@@ -8,7 +9,6 @@ import {
 import { Box } from '../box';
 import styles from './avatar.module.css';
 
-import { VariantProps, cva } from 'class-variance-authority';
 import { clsx } from 'clsx';
 
 import { AVATAR_COLORS, getAvatarProps } from './utils';
