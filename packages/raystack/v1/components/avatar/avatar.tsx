@@ -11,120 +11,152 @@ import { Box } from '../box';
 import styles from './avatar.module.css';
 import { AVATAR_COLORS, getAvatarProps } from './utils';
 
-const avatar = cva(styles.avatar, {
-  variants: {
-    radius: {
-      small: styles['avatar-small'],
-      full: styles['avatar-full']
-    },
-    size: {
-      1: styles['avatar-size-1'],
-      2: styles['avatar-size-2'],
-      3: styles['avatar-size-3'],
-      4: styles['avatar-size-4'],
-      5: styles['avatar-size-5'],
-      6: styles['avatar-size-6'],
-      7: styles['avatar-size-7'],
-      8: styles['avatar-size-8'],
-      9: styles['avatar-size-9'],
-      10: styles['avatar-size-10'],
-      11: styles['avatar-size-11'],
-      12: styles['avatar-size-12'],
-      13: styles['avatar-size-13']
-    },
-    variant: {
-      solid: styles['avatar-solid'],
-      soft: styles['avatar-soft']
-    },
-    disabled: {
-      true: styles['avatar-disabled']
-    },
-    color: {
-      indigo: styles['avatar-color-indigo'],
-      orange: styles['avatar-color-orange'],
-      mint: styles['avatar-color-mint'],
-      neutral: styles['avatar-color-neutral'],
-      sky: styles['avatar-color-sky'],
-      lime: styles['avatar-color-lime'],
-      grass: styles['avatar-color-grass'],
-      cyan: styles['avatar-color-cyan'],
-      iris: styles['avatar-color-iris'],
-      purple: styles['avatar-color-purple'],
-      pink: styles['avatar-color-pink'],
-      crimson: styles['avatar-color-crimson'],
-      gold: styles['avatar-color-gold']
-    }
-  },
-  compoundVariants: [
-    {
-      variant: 'solid',
-      color: 'indigo',
-      className: styles['avatar-solid-indigo']
-    },
-    {
-      variant: 'solid',
-      color: 'orange',
-      className: styles['avatar-solid-orange']
-    },
-    { variant: 'solid', color: 'mint', className: styles['avatar-solid-mint'] },
-    { variant: 'solid', color: 'sky', className: styles['avatar-solid-sky'] },
-    { variant: 'solid', color: 'lime', className: styles['avatar-solid-lime'] },
-    {
-      variant: 'solid',
-      color: 'grass',
-      className: styles['avatar-solid-grass']
-    },
-    { variant: 'solid', color: 'cyan', className: styles['avatar-solid-cyan'] },
-    { variant: 'solid', color: 'iris', className: styles['avatar-solid-iris'] },
-    {
-      variant: 'solid',
-      color: 'purple',
-      className: styles['avatar-solid-purple']
-    },
-    { variant: 'solid', color: 'pink', className: styles['avatar-solid-pink'] },
-    {
-      variant: 'solid',
-      color: 'crimson',
-      className: styles['avatar-solid-crimson']
-    },
-    { variant: 'solid', color: 'gold', className: styles['avatar-solid-gold'] },
-    {
-      variant: 'soft',
-      color: 'indigo',
-      className: styles['avatar-soft-indigo']
-    },
+const avatar = cva(
+  styles.avatar,
 
-    {
-      variant: 'soft',
-      color: 'orange',
-      className: styles['avatar-soft-orange']
+  {
+    variants: {
+      radius: {
+        small: styles['avatar-small'],
+        full: styles['avatar-full']
+      },
+      size: {
+        1: styles['avatar-size-1'],
+        2: styles['avatar-size-2'],
+        3: styles['avatar-size-3'],
+        4: styles['avatar-size-4'],
+        5: styles['avatar-size-5'],
+        6: styles['avatar-size-6'],
+        7: styles['avatar-size-7'],
+        8: styles['avatar-size-8'],
+        9: styles['avatar-size-9'],
+        10: styles['avatar-size-10'],
+        11: styles['avatar-size-11'],
+        12: styles['avatar-size-12'],
+        13: styles['avatar-size-13']
+      },
+      variant: {
+        solid: styles['avatar-solid'],
+        soft: styles['avatar-soft']
+      },
+      disabled: {
+        true: styles['avatar-disabled']
+      },
+      color: {
+        indigo: styles['avatar-color-indigo'],
+        orange: styles['avatar-color-orange'],
+        mint: styles['avatar-color-mint'],
+        neutral: styles['avatar-color-neutral'],
+        sky: styles['avatar-color-sky'],
+        lime: styles['avatar-color-lime'],
+        grass: styles['avatar-color-grass'],
+        cyan: styles['avatar-color-cyan'],
+        iris: styles['avatar-color-iris'],
+        purple: styles['avatar-color-purple'],
+        pink: styles['avatar-color-pink'],
+        crimson: styles['avatar-color-crimson'],
+        gold: styles['avatar-color-gold']
+      }
     },
-    { variant: 'soft', color: 'mint', className: styles['avatar-soft-mint'] },
-    { variant: 'soft', color: 'sky', className: styles['avatar-soft-sky'] },
-    { variant: 'soft', color: 'lime', className: styles['avatar-soft-lime'] },
-    { variant: 'soft', color: 'grass', className: styles['avatar-soft-grass'] },
-    { variant: 'soft', color: 'cyan', className: styles['avatar-soft-cyan'] },
-    { variant: 'soft', color: 'iris', className: styles['avatar-soft-iris'] },
-    {
+    compoundVariants: [
+      {
+        variant: 'solid',
+        color: 'indigo',
+        className: styles['avatar-solid-indigo']
+      },
+      {
+        variant: 'solid',
+        color: 'orange',
+        className: styles['avatar-solid-orange']
+      },
+      {
+        variant: 'solid',
+        color: 'mint',
+        className: styles['avatar-solid-mint']
+      },
+      { variant: 'solid', color: 'sky', className: styles['avatar-solid-sky'] },
+      {
+        variant: 'solid',
+        color: 'lime',
+        className: styles['avatar-solid-lime']
+      },
+      {
+        variant: 'solid',
+        color: 'grass',
+        className: styles['avatar-solid-grass']
+      },
+      {
+        variant: 'solid',
+        color: 'cyan',
+        className: styles['avatar-solid-cyan']
+      },
+      {
+        variant: 'solid',
+        color: 'iris',
+        className: styles['avatar-solid-iris']
+      },
+      {
+        variant: 'solid',
+        color: 'purple',
+        className: styles['avatar-solid-purple']
+      },
+      {
+        variant: 'solid',
+        color: 'pink',
+        className: styles['avatar-solid-pink']
+      },
+      {
+        variant: 'solid',
+        color: 'crimson',
+        className: styles['avatar-solid-crimson']
+      },
+      {
+        variant: 'solid',
+        color: 'gold',
+        className: styles['avatar-solid-gold']
+      },
+      {
+        variant: 'soft',
+        color: 'indigo',
+        className: styles['avatar-soft-indigo']
+      },
+
+      {
+        variant: 'soft',
+        color: 'orange',
+        className: styles['avatar-soft-orange']
+      },
+      { variant: 'soft', color: 'mint', className: styles['avatar-soft-mint'] },
+      { variant: 'soft', color: 'sky', className: styles['avatar-soft-sky'] },
+      { variant: 'soft', color: 'lime', className: styles['avatar-soft-lime'] },
+      {
+        variant: 'soft',
+        color: 'grass',
+        className: styles['avatar-soft-grass']
+      },
+      { variant: 'soft', color: 'cyan', className: styles['avatar-soft-cyan'] },
+      { variant: 'soft', color: 'iris', className: styles['avatar-soft-iris'] },
+      {
+        variant: 'soft',
+        color: 'purple',
+        className: styles['avatar-soft-purple']
+      },
+      { variant: 'soft', color: 'pink', className: styles['avatar-soft-pink'] },
+      {
+        variant: 'soft',
+        color: 'crimson',
+        className: styles['avatar-soft-crimson']
+      },
+      { variant: 'soft', color: 'gold', className: styles['avatar-soft-gold'] }
+    ],
+    defaultVariants: {
+      size: 3,
+      radius: 'small',
       variant: 'soft',
-      color: 'purple',
-      className: styles['avatar-soft-purple']
-    },
-    { variant: 'soft', color: 'pink', className: styles['avatar-soft-pink'] },
-    {
-      variant: 'soft',
-      color: 'crimson',
-      className: styles['avatar-soft-crimson']
-    },
-    { variant: 'soft', color: 'gold', className: styles['avatar-soft-gold'] }
-  ],
-  defaultVariants: {
-    size: 3,
-    radius: 'small',
-    variant: 'soft',
-    color: 'indigo'
+      color: 'indigo'
+    }
   }
-});
+);
 
 const image = cva(styles.image);
 
