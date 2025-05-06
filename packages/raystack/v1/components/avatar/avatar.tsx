@@ -94,6 +94,7 @@ const avatar = cva(styles.avatar, {
       color: 'indigo',
       className: styles['avatar-soft-indigo']
     },
+
     {
       variant: 'soft',
       color: 'orange',
