@@ -1,0 +1,86 @@
+name: Release to NPM when a tag is pushed
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*-rc.*'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check Branch and Tag
+        run: |
+          BRANCH=$(git branch -r --contains ${{ github.ref }})
+          TAG=${{ github.ref_name }}
+          
+          if [[ $BRANCH =~ origin/main$ ]]; then
+            if [[ $TAG =~ -rc\. ]]; then
+              echo "[SKIPPED] Release candidate tags (v*.*.*-rc.*) are only allowed on develop branch"
+              exit 0
+            fi
+          elif [[ $BRANCH =~ origin/develop$ ]]; then
+            if [[ ! $TAG =~ -rc\. ]]; then
+              echo "[SKIPPED] Release tags (v*.*.*) are only allowed on main branch. Use release candidate tags (v*.*.*-rc.*)"
+              exit 1
+            fi
+          else
+            echo "[SKIPPED] Tags can only be pushed from main or develop branches"
+            exit 1
+          fi
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm 9
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.3.0
+
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.x
+
+      - name: Install Dependencies 🔧
+        run: pnpm install
+
+      - name: Build Step 🔧
+        env:
+          CI: ""
+        run: pnpm run ci:build
+
+      - name: Create .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Bump Package Version
+        run: pnpm run bump-version
+        working-directory: ./packages/raystack
+        env:
+          GIT_REFNAME: ${{ github.ref_name }}
+
+      - name: Run Release 🚀
+        run: pnpm run release:ci
+        working-directory: ./packages/raystack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Generate GitHub Release Notes 📓
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --generate-notes \
+            --verify-tag
