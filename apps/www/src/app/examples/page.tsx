@@ -22,6 +22,7 @@ import {
   Indicator,
   Sheet,
   EmptyState,
+  Skeleton,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -174,9 +175,8 @@ const Page = () => {
                 required: true,
                 selected: new Date()
               }}
-              textFieldProps={{
-                state: "valid",
-                size: 'medium',
+              inputFieldProps={{
+                size: 'small',
               }}
             />
 
@@ -225,18 +225,12 @@ const Page = () => {
               }}
             />
 
-            <DatePicker
-              timeZone="UTC"
-              dateFormat="DD MMM YYYY"
-              onSelect={(date) => {
-                console.log(date);
-              }}
-            >
-              <InputField defaultValue="test" size="small" readOnly />
-            </DatePicker>
-
-            <InputField defaultValue="test" size="small" readOnly />
-            
+            <Text
+              size="large"
+              weight="medium"
+              style={{ marginTop: "32px", marginBottom: "16px" }}>
+              Skeleton Examples
+            </Text>
 
             <Text
               size="large"

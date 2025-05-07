@@ -40,6 +40,7 @@ export default function Page() {
       <Playground.SeparatorExamples />
       <Playground.SheetExamples />
       <Playground.SidebarExamples />
+      <Playground.SkeletonExamples />
       <Playground.SliderExamples />
       <Playground.SpinnerExamples />
       <Playground.SwitchExamples />
