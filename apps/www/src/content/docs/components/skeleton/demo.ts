@@ -83,4 +83,25 @@ export const cardDemo = {
     <Skeleton height={20} width="80%" /> {/* Title placeholder */}
     <Skeleton height={15} count={3} /> {/* Text lines placeholder */}
   </Flex>`,
+};
+
+export const providerDemo = {
+  code: `
+<Skeleton.Provider
+  baseColor="var(--rs-color-background-base-secondary)"
+  height="24px"
+  duration={2}
+>
+  <Skeleton />
+  <Skeleton width="75%" />
+  <Flex gap={4}>
+    <Skeleton width="48px" height="48px" borderRadius="50%" />
+    <Flex direction="column" gap={2} style={{ flex: 1 }}>
+      <Skeleton width="200px" />
+      <Skeleton width="150px" />
+    </Flex>
+  </Flex>
+</Skeleton.Provider>
+`,
+  center: true,
 }; 
