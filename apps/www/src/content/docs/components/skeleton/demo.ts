@@ -85,3 +85,22 @@ export const cardDemo = {
   </Flex>`,
 };
 
+export const providerDemo = {
+  type: "code",
+  code: `
+  <Flex direction="column" gap="medium">
+    <Skeleton.Provider
+      height="24px"
+      duration={2}
+    >
+      <Flex gap={4}>
+        <Skeleton width="48px" height="48px" borderRadius="50%" />
+        <Flex direction="column" gap={2} style={{ flex: 1 }}>
+          <Skeleton width="200px" />
+          <Skeleton width="150px" />
+        </Flex>
+      </Flex>
+    </Skeleton.Provider>
+  </Flex>`,
+};
+
