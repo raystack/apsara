@@ -38,13 +38,17 @@ export type CalendarProps = DayPickerProps &
 
 const root = cva(styles.calendarRoot);
 
+interface DropDownComponentProps extends DropdownProps, OnDropdownOpen {
+  disabled?: boolean;
+}
+
 function DropDown({
   options = [],
   value,
   onChange,
   onDropdownOpen,
   disabled,
-}: DropdownProps & OnDropdownOpen & { disabled?: boolean }) {
+}: DropDownComponentProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
