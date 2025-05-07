@@ -1,5 +1,4 @@
 .content {
-  overflow: hidden;
   z-index: var(--rs-z-index-portal);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
@@ -14,6 +13,8 @@
   min-width: var(--radix-select-trigger-width);
   margin-top: var(--rs-space-2);
   transition: all 0.2s ease;
+  overflow-y: auto;
+  max-height: 320px;
   max-width: 300px;
 }
 
