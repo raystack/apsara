@@ -1,46 +1,62 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { forwardRef } from "react";
+import { MenuItem, MenuItemProps, useMenuContext } from "@ariakit/react";
+import { ComboboxItem, ComboboxItemProps } from "@ariakit/react";
 import { Cell, CellBaseProps } from "./cell";
-import { useDropdownContext, useMenuLevel } from "./dropdown-menu-root";
-import { ComboboxItem } from "@ariakit/react";
-import { getMatch, getValue } from "./utils";
+import { WithAsChild } from "./types";
+import { Slot } from "@radix-ui/react-slot";
+import { useDropdownContext } from "./dropdown-menu-root";
+import { getMatch } from "./utils";
+
+export interface DropdownMenuItemProps
+  extends WithAsChild<MenuItemProps>,
+    CellBaseProps {
+  forceRender?: "combobox" | "auto";
+  value?: string;
+}
 
 export const DropdownMenuItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.Item>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> &
-    Omit<CellBaseProps, "type"> & {
-      value?: string;
-    }
->(({ children, value, ...props }, ref) => {
-  const { autocomplete, searchValue } = useDropdownContext();
-  const menuLevel = useMenuLevel();
+  HTMLDivElement,
+  DropdownMenuItemProps
+>(({ children, asChild, forceRender, value, ...props }, ref) => {
+  const { autocomplete, searchValue, shouldFilter } = useDropdownContext();
+  const menu = useMenuContext();
 
-  const item = (
-    <DropdownMenuPrimitive.Item ref={ref} {...props} asChild>
-      <Cell isComboboxCell={autocomplete}>{children}</Cell>
-    </DropdownMenuPrimitive.Item>
-  );
+  const defaultProps: MenuItemProps = {
+    ref,
+    focusOnHover: true,
+    blurOnHoverEnd: false,
+    render: asChild ? <Slot /> : <Cell />,
+    ...props,
+  };
 
-  if (menuLevel >= 2) return item;
+  // In auto mode, hide items that don't match the search value
+  if (!forceRender && shouldFilter && !getMatch(value, children, searchValue)) {
+    return null;
+  }
 
-  const computedValue = getValue(value, children);
+  if (forceRender === "combobox" || autocomplete) {
+    const comboboxProps = defaultProps as ComboboxItemProps;
+    return (
+      <ComboboxItem
+        {...comboboxProps}
+        value={value}
+        setValueOnClick={false}
+        selectValueOnClick={false}
+        hideOnClick={event => {
+          // Make sure that clicking on a combobox item that opens a nested
+          // menu/dialog does not close the menu.
+          const expandable = event.currentTarget.hasAttribute("aria-expanded");
+          if (expandable) return false;
+          // By default, clicking on a ComboboxItem only closes its own popover.
+          // However, since we're in a menu context, we also close all parent
+          // menus.
+          menu?.hideAll();
+          return true;
+        }}>
+        {children}
+      </ComboboxItem>
+    );
+  }
 
-  if (autocomplete && !getMatch(computedValue, searchValue)) return null;
-
-  if (autocomplete) return <ComboboxItem render={item} value={value} />;
-
-  return item;
+  return <MenuItem {...defaultProps}>{children}</MenuItem>;
 });
-
-export const DropdownMenuRadioItem = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem> &
-    Omit<CellBaseProps, "type">
->(({ children, ...props }, ref) => (
-  <DropdownMenuPrimitive.RadioItem ref={ref} {...props} asChild>
-    <Cell type="select">{children}</Cell>
-  </DropdownMenuPrimitive.RadioItem>
-));
-DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName;
-
-export const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;

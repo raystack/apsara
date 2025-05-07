@@ -8,11 +8,21 @@ import DemoPlayground from "./demo-playground";
 import { Suspense } from "react";
 import { Info, X, Home, Laugh } from "lucide-react";
 import DataTableDemo from "../datatable-demo";
+import LinearDropdownDemo from "../linear-dropdown-demo";
 
 export default function Demo(props: DemoProps) {
   const {
     data,
-    scope = { ...Apsara, ...ApsaraV1, DataTableDemo, Info, X, Home, Laugh },
+    scope = {
+      ...Apsara,
+      ...ApsaraV1,
+      DataTableDemo,
+      LinearDropdownDemo,
+      Info,
+      X,
+      Home,
+      Laugh,
+    },
   } = props;
 
   if (data.type === "code") {
