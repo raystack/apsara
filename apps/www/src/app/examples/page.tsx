@@ -222,9 +222,12 @@ const Page = () => {
               }}
             />
 
-            <div>This is sparta<Skeleton inline /></div>
-
-            <Skeleton />
+            <Text
+              size="large"
+              weight="medium"
+              style={{ marginTop: "32px", marginBottom: "16px" }}>
+              Skeleton Examples
+            </Text>
 
             <Text
               size="large"
