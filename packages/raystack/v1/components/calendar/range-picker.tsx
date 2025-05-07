@@ -1,6 +1,6 @@
 import { CalendarIcon } from "@radix-ui/react-icons";
 import dayjs from "dayjs";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
 
 import { Flex } from "../flex";
@@ -48,6 +48,7 @@ export function RangePicker({
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>("from");
   const [selectedRange, setSelectedRange] = useState(value);
+  const [currentMonth, setCurrentMonth] = useState(selectedRange?.from);
 
   const prevSelectedRangeRef = useRef(selectedRange);
 
@@ -57,6 +58,21 @@ export function RangePicker({
   const endDate = selectedRange.to
     ? dayjs(selectedRange.to).format(dateFormat)
     : "";
+
+  // Ensures two months are visible even when 
+  // current month is the last allowed month (endMonth).
+  const computedDefaultMonth = useMemo(() => {
+    let month = currentMonth;
+    if (calendarProps?.endMonth) {
+      const endMonth = dayjs(calendarProps.endMonth);
+      const fromMonth = dayjs(currentMonth);
+      
+      if (fromMonth.isSame(endMonth, 'month')) {
+        month = endMonth.subtract(1, 'month').toDate();
+      }
+    }
+    return month;
+  }, [currentMonth, calendarProps?.endMonth]);
 
   // 1st click will select the start date.
   // 2nd click will select the end date.
@@ -146,8 +162,10 @@ export function RangePicker({
           {...calendarProps}
           timeZone={timeZone}
           mode="range"
+          month={computedDefaultMonth}
           selected={selectedRange}
           onSelect={handleSelect}
+          onMonthChange={setCurrentMonth}
         />
         {footer && (
           <Flex
