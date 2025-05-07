@@ -1,101 +1,124 @@
 import {
-  ComponentProps,
-  createContext,
-  forwardRef,
-  useContext,
-  useState,
-} from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ComboboxProvider } from "@ariakit/react";
+  ComboboxProvider,
+  MenuProvider,
+  MenuProviderProps,
+} from "@ariakit/react";
+import { createContext, useContext, useState } from "react";
 
-interface DropdownContextValue {
+interface CommonProps {
   autocomplete?: boolean;
+  autocompleteMode?: "auto" | "manual";
   searchValue?: string;
 }
-/*
-Root context to manage the Dropdown control
-@remarks Only for internal usage.
-*/
+
+interface DropdownContextValue extends CommonProps {
+  parent?: CommonProps;
+}
+
+interface UseDropdownContext extends DropdownContextValue {
+  shouldFilter?: boolean;
+  parent?: CommonProps & {
+    shouldFilter?: boolean;
+  };
+}
+
+/**
+ Root context to manage the Dropdown control
+ @remarks Only for internal usage.
+ */
+
 export const DropdownContext = createContext<DropdownContextValue | undefined>(
   undefined,
 );
 
-export const useDropdownContext = () => {
+export const useDropdownContext = (): UseDropdownContext => {
   const context = useContext(DropdownContext);
-  if (!context) {
-    throw new Error(
-      "useDropdownContext must be used within a DropdownMenuProvider",
-    );
-  }
-  return context;
-};
+  if (!context) return {};
 
-/*
-Context to determine the level of Menu
-@remarks Only for internal usage.
-*/
-export const MenuLevelContext = createContext(1);
-
-export const useMenuLevel = () => useContext(MenuLevelContext);
-
-type DropdownMenuProps = ComponentProps<typeof DropdownMenuPrimitive.Root> & {
-  autocomplete?: boolean;
-};
-
-export function DropdownMenuRoot({
-  children,
-  autocomplete = false,
-  defaultOpen = false,
-  open,
-  onOpenChange,
-  ...props
-}: DropdownMenuProps) {
-  const [searchValue, setSearchValue] = useState("");
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-
-  const computedOpen = open ?? internalOpen;
-
-  const setOpen = (value: boolean) => {
-    if (typeof onOpenChange === "function") onOpenChange(value);
-    else setInternalOpen(value);
-  };
-
-  return (
-    <DropdownContext.Provider value={{ autocomplete, searchValue }}>
-      <DropdownMenuPrimitive.Root
-        {...props}
-        open={computedOpen}
-        onOpenChange={setOpen}>
-        <MenuLevelContext.Provider value={1}>
-          {autocomplete ? (
-            <ComboboxProvider
-              open={computedOpen}
-              setOpen={setOpen}
-              resetValueOnHide
-              includesBaseElement={false}
-              setValue={setSearchValue}>
-              {children}
-            </ComboboxProvider>
-          ) : (
-            children
-          )}
-        </MenuLevelContext.Provider>
-      </DropdownMenuPrimitive.Root>
-    </DropdownContext.Provider>
+  const shouldFilter = !!(
+    context?.autocomplete &&
+    context?.autocompleteMode === "auto" &&
+    context?.searchValue?.length
   );
+
+  const shouldFilterParent = !!(
+    context?.parent?.autocomplete &&
+    context?.parent?.autocompleteMode === "auto" &&
+    context?.parent?.searchValue?.length
+  );
+
+  return {
+    ...context,
+    shouldFilter,
+    parent: context?.parent && {
+      ...context.parent,
+      shouldFilter: shouldFilterParent,
+    },
+  };
+};
+
+export interface NormalDropdownMenuRootProps extends MenuProviderProps {
+  autocomplete?: false;
+  autocompleteMode?: never;
+  searchValue?: never;
+  onSearch?: never;
+  defaultSearchValue?: never;
 }
 
-export const DropdownMenuSubMenu = forwardRef<
-  React.ElementRef<typeof DropdownMenuPrimitive.Sub>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Sub>
->(({ children, ...props }, ref) => {
-  const menuLevel = useMenuLevel();
+export interface AutocompleteDropdownMenuRootProps
+  extends MenuProviderProps,
+    CommonProps {
+  autocomplete: true;
+  onSearch?: (value: string) => void;
+  defaultSearchValue?: string;
+}
+
+export type DropdownMenuRootProps =
+  | NormalDropdownMenuRootProps
+  | AutocompleteDropdownMenuRootProps;
+
+export const DropdownMenuRoot = ({
+  autocomplete,
+  autocompleteMode = "auto",
+  searchValue: providedSearchValue,
+  onSearch,
+  focusLoop = true,
+  defaultSearchValue = "",
+  ...props
+}: DropdownMenuRootProps) => {
+  const [internalSearchValue, setInternalSearchValue] =
+    useState(defaultSearchValue);
+  const dropdownContext = useDropdownContext();
+
+  const searchValue = providedSearchValue ?? internalSearchValue;
+
+  const setValue = (value: string) => {
+    setInternalSearchValue(value);
+    onSearch?.(value);
+  };
+
+  const element = <MenuProvider focusLoop={focusLoop} {...props} />;
+
   return (
-    <DropdownMenuPrimitive.Sub {...props}>
-      <MenuLevelContext.Provider value={menuLevel + 1}>
-        {children}
-      </MenuLevelContext.Provider>
-    </DropdownMenuPrimitive.Sub>
+    <DropdownContext.Provider
+      value={{
+        autocomplete,
+        parent: dropdownContext,
+        autocompleteMode,
+        searchValue,
+      }}>
+      {autocomplete ? (
+        <ComboboxProvider
+          resetValueOnHide
+          focusLoop={focusLoop}
+          includesBaseElement={false}
+          value={searchValue}
+          setValue={setValue}>
+          {element}
+        </ComboboxProvider>
+      ) : (
+        element
+      )}
+    </DropdownContext.Provider>
   );
-});
-DropdownMenuSubMenu.displayName = DropdownMenuPrimitive.Sub.displayName;
+};

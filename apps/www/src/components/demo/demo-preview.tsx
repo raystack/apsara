@@ -2,15 +2,24 @@
 
 import { useState } from "react";
 import { LiveProvider } from "react-live";
+import { cx } from "class-variance-authority";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 import Preview from "../preview";
 import Editor from "../editor";
 import styles from "./styles.module.css";
 import { DemoPreviewProps } from "./types";
-import { cx } from "class-variance-authority";
 
-export default function DemoPreview({ code, tabs, scope }: DemoPreviewProps) {
+export default function DemoPreview({
+  code,
+  tabs,
+  scope,
+  codePreview,
+}: DemoPreviewProps) {
   const [activeTab, setActiveTab] = useState(0);
   const activeCode = ((tabs ? tabs[activeTab].code : code) ?? "").trim();
+
+  const previewCode =
+    typeof codePreview === "string" ? codePreview : activeCode;
   return (
     <LiveProvider code={activeCode} scope={scope} disabled>
       <div className={styles.container}>
@@ -32,7 +41,19 @@ export default function DemoPreview({ code, tabs, scope }: DemoPreviewProps) {
         <div className={styles.preview}>
           <Preview />
         </div>
-        <Editor code={activeCode} />
+        {Array.isArray(codePreview) ? (
+          <Tabs
+            items={codePreview.map(tab => tab.label)}
+            className={styles.codeTabGroup}>
+            {codePreview.map(tab => (
+              <Tab className={styles.codeTab} value={tab.label}>
+                <Editor code={tab.code} />
+              </Tab>
+            ))}
+          </Tabs>
+        ) : (
+          <Editor code={previewCode} />
+        )}
       </div>
     </LiveProvider>
   );
