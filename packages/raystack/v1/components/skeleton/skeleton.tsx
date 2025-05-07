@@ -20,7 +20,7 @@ export interface SkeletonProps {
 
 const SkeletonContext = createContext<SkeletonProps | null>(null);
 
-interface SkeletonGroupProps extends SkeletonProps {
+interface SkeletonProviderProps extends SkeletonProps {
   children: React.ReactNode;
 }
 
@@ -51,14 +51,15 @@ const SkeletonBase = (props: SkeletonProps) => {
   );
 
   const Container = inline ? 'span' : 'div';
-
   const defaultWidth = inline ? '50px' : '100%';
 
   return (
     <Container
       className={containerClassName}
       style={{
-        display: inline ? 'inline-block' : 'block',
+        display: inline ? 'inline-block' : 'flex',
+        flexDirection: !inline ? 'column' : undefined,
+        gap: !inline && count > 1 ? 'var(--rs-space-3)' : undefined,
         ...containerStyle
       }}
     >
@@ -70,7 +71,6 @@ const SkeletonBase = (props: SkeletonProps) => {
             width: width ?? defaultWidth,
             height,
             borderRadius,
-            marginBottom: i !== count - 1 && !inline ? 'var(--rs-space-3)' : undefined,
             '--skeleton-base-color': baseColor,
             '--skeleton-highlight-color': highlightColor,
             '--skeleton-duration': `${duration}s`,
@@ -82,10 +82,10 @@ const SkeletonBase = (props: SkeletonProps) => {
   );
 };
 
-const Group = ({ 
+const Provider = ({ 
   children,
   ...props
-}: SkeletonGroupProps) => {
+}: SkeletonProviderProps) => {
   return (
     <SkeletonContext.Provider value={props}>
       {children}
@@ -93,7 +93,4 @@ const Group = ({
   );
 };
 
-export const Skeleton = Object.assign(SkeletonBase, { 
-  Group,
-  Item: SkeletonBase
-}); 
+export const Skeleton = Object.assign(SkeletonBase, { Provider }); 
