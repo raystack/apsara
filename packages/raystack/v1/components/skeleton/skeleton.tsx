@@ -1,8 +1,8 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, createContext, useContext } from 'react';
 import { clsx } from 'clsx';
 import styles from './skeleton.module.css';
 
-export interface SkeletonStyleProps {
+export interface SkeletonProps {
   baseColor?: string;
   highlightColor?: string;
   width?: string | number;
@@ -18,21 +18,31 @@ export interface SkeletonStyleProps {
   containerClassName?: string;
 }
 
-export const Skeleton = ({
-  baseColor,
-  highlightColor,
-  width,
-  height = 'var(--rs-space-4)',
-  borderRadius = 'var(--rs-radius-2)',
-  inline = false,
-  duration = 1.5,
-  count = 1,
-  enableAnimation = true,
-  style,
-  className,
-  containerStyle,
-  containerClassName,
-}: SkeletonStyleProps) => {
+const SkeletonContext = createContext<SkeletonProps | null>(null);
+
+interface SkeletonGroupProps extends SkeletonProps {
+  children: React.ReactNode;
+}
+
+const SkeletonBase = (props: SkeletonProps) => {
+  const contextProps = useContext(SkeletonContext);
+  
+  const {
+    baseColor,
+    highlightColor,
+    width,
+    height = 'var(--rs-space-4)',
+    borderRadius = 'var(--rs-radius-2)',
+    inline = false,
+    duration = 1.5,
+    count = 1,
+    enableAnimation = true,
+    style,
+    className,
+    containerStyle,
+    containerClassName,
+  } = { ...contextProps, ...props };
+
   const skeletonClassName = clsx(
     styles.skeleton,
     inline && styles.inline,
@@ -70,4 +80,20 @@ export const Skeleton = ({
       ))}
     </Container>
   );
-}; 
+};
+
+const Group = ({ 
+  children,
+  ...props
+}: SkeletonGroupProps) => {
+  return (
+    <SkeletonContext.Provider value={props}>
+      {children}
+    </SkeletonContext.Provider>
+  );
+};
+
+export const Skeleton = Object.assign(SkeletonBase, { 
+  Group,
+  Item: SkeletonBase
+}); 
