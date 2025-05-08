@@ -1,10 +1,9 @@
-name: Release to NPM when a tag is pushed
+name: Release
 
 on:
   push:
     tags:
-      - 'v*.*.*'
-      - 'v*.*.*-rc.*'
+      - "v*.*.*"
 
 jobs:
   release:
@@ -16,26 +15,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Check Branch and Tag
-        run: |
-          BRANCH=$(git branch -r --contains ${{ github.ref }})
-          TAG=${{ github.ref_name }}
-          
-          if [[ $BRANCH =~ origin/main$ ]]; then
-            if [[ $TAG =~ -rc\. ]]; then
-              echo "[SKIPPED] Release candidate tags (v*.*.*-rc.*) are only allowed on develop branch"
-              exit 0
-            fi
-          elif [[ $BRANCH =~ origin/develop$ ]]; then
-            if [[ ! $TAG =~ -rc\. ]]; then
-              echo "[SKIPPED] Release tags (v*.*.*) are only allowed on main branch. Use release candidate tags (v*.*.*-rc.*)"
-              exit 1
-            fi
-          else
-            echo "[SKIPPED] Tags can only be pushed from main or develop branches"
-            exit 1
-          fi
+          ref: main
 
       - name: Setup pnpm 9
         uses: pnpm/action-setup@v4
@@ -48,12 +28,12 @@ jobs:
           node-version: 18.x
 
       - name: Install Dependencies 🔧
-        run: pnpm install
+        run: pnpm i
 
       - name: Build Step 🔧
         env:
           CI: ""
-        run: pnpm run ci:build
+        run: npm run ci:build
 
       - name: Create .npmrc
         run: |
@@ -64,23 +44,14 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Bump Package Version
-        run: pnpm run bump-version
+        run: npm run bump-version
         working-directory: ./packages/raystack
         env:
           GIT_REFNAME: ${{ github.ref_name }}
 
       - name: Run Release 🚀
-        run: pnpm run release:ci
+        run: npm run release:ci
         working-directory: ./packages/raystack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Generate GitHub Release Notes 📓
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "$GITHUB_REF_NAME" \
-            --repo "$GITHUB_REPOSITORY" \
-            --generate-notes \
-            --verify-tag
