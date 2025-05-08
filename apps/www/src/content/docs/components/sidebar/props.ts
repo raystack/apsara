@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 export interface SidebarRootProps {
   /** Controls the expanded/collapsed state. */
   open?: boolean;
@@ -68,4 +70,13 @@ export interface SidebarItemProps {
 
   /** ReactNode for the item's label. */
   children?: React.ReactNode;
+
+  /**
+   * Custom element used to render the SidebarItem.
+   *
+   * All props are forwarded to the specified element.
+   *
+   * @default "<a />"
+   */
+  as?: ReactElement;
 }

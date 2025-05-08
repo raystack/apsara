@@ -6,7 +6,9 @@ import {
   forwardRef,
   ReactNode,
   createContext,
-  useContext
+  useContext,
+  ReactElement,
+  cloneElement,
 } from "react";
 
 import { Tooltip, TooltipProvider } from "../tooltip";
@@ -18,7 +20,9 @@ interface SidebarContextValue {
   hideCollapsedItemTooltip?: boolean;
 }
 
-const SidebarContext = createContext<SidebarContextValue>({ isCollapsed: false });
+const SidebarContext = createContext<SidebarContextValue>({
+  isCollapsed: false,
+});
 
 const root = cva(styles.root);
 
@@ -38,6 +42,7 @@ interface SidebarItemProps extends ComponentPropsWithoutRef<"a"> {
   icon: ReactNode;
   active?: boolean;
   disabled?: boolean;
+  as?: ReactElement;
   classNames?: {
     root?: string;
     icon?: string;
@@ -57,10 +62,19 @@ const SidebarRoot = forwardRef<
   SidebarProps
 >(
   (
-    { className, position = "left", open, onOpenChange, hideCollapsedItemTooltip, children, ...props },
-    ref
+    {
+      className,
+      position = "left",
+      open,
+      onOpenChange,
+      hideCollapsedItemTooltip,
+      children,
+      ...props
+    },
+    ref,
   ) => (
-    <SidebarContext.Provider value={{ isCollapsed: !open, hideCollapsedItemTooltip }}>
+    <SidebarContext.Provider
+      value={{ isCollapsed: !open, hideCollapsedItemTooltip }}>
       <TooltipProvider>
         <Collapsible.Root
           ref={ref}
@@ -73,21 +87,19 @@ const SidebarRoot = forwardRef<
           aria-expanded={open}
           role="navigation"
           {...props}
-          asChild
-        >
+          asChild>
           <aside>
             <Tooltip
               message={open ? "Click to collapse" : "Click to expand"}
               side={position === "left" ? "right" : "left"}
-              asChild
-            >
+              asChild>
               <div
                 className={styles.resizeHandle}
                 onClick={() => onOpenChange?.(!open)}
                 role="button"
                 tabIndex={0}
                 aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
-                onKeyDown={(e) => {
+                onKeyDown={e => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     onOpenChange?.(!open);
@@ -100,7 +112,7 @@ const SidebarRoot = forwardRef<
         </Collapsible.Root>
       </TooltipProvider>
     </SidebarContext.Provider>
-  )
+  ),
 );
 
 const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
@@ -111,21 +123,20 @@ const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
         onClick={onLogoClick}
         role={onLogoClick ? "button" : undefined}
         tabIndex={onLogoClick ? 0 : undefined}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (onLogoClick && (e.key === "Enter" || e.key === " ")) {
             e.preventDefault();
             onLogoClick();
           }
         }}
-        style={{ cursor: onLogoClick ? "pointer" : undefined }}
-      >
+        style={{ cursor: onLogoClick ? "pointer" : undefined }}>
         {logo}
       </div>
       <div className={styles.title} role="heading" aria-level={1}>
         {title}
       </div>
     </div>
-  )
+  ),
 );
 
 const SidebarMain = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
@@ -135,11 +146,10 @@ const SidebarMain = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
       className={styles.main}
       role="group"
       aria-label="Main navigation"
-      {...props}
-    >
+      {...props}>
       {children}
     </div>
-  )
+  ),
 );
 
 const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
@@ -149,44 +159,52 @@ const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
       className={styles.footer}
       role="group"
       aria-label="Footer navigation"
-      {...props}
-    >
+      {...props}>
       {children}
     </div>
-  )
+  ),
 );
 
 const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
-  ({ classNames, icon, children, active, disabled, ...props }, ref) => {
-    const { isCollapsed, hideCollapsedItemTooltip } = useContext(SidebarContext);// To prevent prop drillng
-    
-    const itemContent = (
-      <a
-        ref={ref}
-        className={clsx(styles["nav-item"], classNames?.root)}
-        data-active={active}
-        data-disabled={disabled}
-        role="menuitem"
-        aria-current={active ? "page" : undefined}
-        aria-disabled={disabled}
-        {...props}
-      >
+  (
+    { classNames, icon, children, active, disabled, as = <a />, ...props },
+    ref,
+  ) => {
+    const { isCollapsed, hideCollapsedItemTooltip } =
+      useContext(SidebarContext); // To prevent prop drillng
+
+    const content = cloneElement(
+      as,
+      {
+        ref,
+        className: clsx(styles["nav-item"], classNames?.root),
+        "data-active": active,
+        "data-disabled": disabled,
+        role: "menuitem",
+        "aria-current": active ? "page" : undefined,
+        "aria-disabled": disabled,
+        ...props,
+      },
+      <>
         <span
           className={clsx(styles["nav-icon"], classNames?.icon)}
-          aria-hidden="true"
-        >
+          aria-hidden="true">
           {icon}
         </span>
-        <span className={styles["nav-text"]}>{children}</span>
-      </a>
+        {!isCollapsed && <span className={styles["nav-text"]}>{children}</span>}
+      </>,
     );
 
-    return (isCollapsed && !hideCollapsedItemTooltip) ? (
-      <Tooltip message={children} side="right">
-        {itemContent}
-      </Tooltip>
-    ) : itemContent;
-  }
+    if (isCollapsed && !hideCollapsedItemTooltip) {
+      return (
+        <Tooltip message={children} side="right">
+          {content}
+        </Tooltip>
+      );
+    }
+
+    return content;
+  },
 );
 
 const SidebarNavigationGroup = forwardRef<
