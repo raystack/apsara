@@ -58,3 +58,4 @@ export {
 } from "./components/theme-provider";
 export { toast, ToastContainer } from "./components/toast";
 export { Tooltip, TooltipProvider } from "./components/tooltip";
+export { Grid } from "./components/grid";
