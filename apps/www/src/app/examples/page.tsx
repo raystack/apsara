@@ -22,6 +22,7 @@ import {
   Indicator,
   Sheet,
   EmptyState,
+  Skeleton,
 } from "@raystack/apsara/v1";
 import React, { useState } from "react";
 import {
@@ -174,9 +175,8 @@ const Page = () => {
                 required: true,
                 selected: new Date()
               }}
-              textFieldProps={{
-                state: "valid",
-                size: 'medium',
+              inputFieldProps={{
+                size: 'small',
               }}
             />
 
@@ -185,21 +185,24 @@ const Page = () => {
               side='bottom'
               dateFormat='D MMM YYYY'
               value={{
-                from: dayjs().add(3, 'month').toDate(),
-                to: dayjs().add(16, 'year').toDate()
+                from: dayjs('2027-11-15').toDate(),
+                to: dayjs('2027-12-10').toDate()
               }}
               onSelect={(range) => console.log(range)}
               calendarProps={{
                 captionLayout: 'dropdown',
-                startMonth: dayjs().add(3, 'month').toDate(),
-                endMonth: dayjs().add(4, 'year').toDate(),
-                disabled: { before: dayjs().add(3, 'month').toDate(), after: dayjs().add(3, 'year').toDate() },
                 mode: 'range',
                 required: true,
                 selected: {
-                  from: dayjs().add(3, 'month').toDate(),
-                  to: dayjs().add(4, 'year').toDate()
-                }
+                  from: dayjs('2027-11-15').toDate(),
+                  to: dayjs('2027-12-10').toDate()
+                },
+                numberOfMonths: 2,
+                fromYear: 2024,
+                toYear: 2027,
+                startMonth: dayjs('2024-01-01').toDate(),
+                endMonth: dayjs('2027-12-01').toDate(),
+                defaultMonth: dayjs('2027-11-01').toDate()
               }}
               inputFieldsProps={{
                 startDate: {
@@ -222,18 +225,12 @@ const Page = () => {
               }}
             />
 
-            <DatePicker
-              timeZone="UTC"
-              dateFormat="DD MMM YYYY"
-              onSelect={(date) => {
-                console.log(date);
-              }}
-            >
-              <InputField defaultValue="test" size="small" readOnly />
-            </DatePicker>
-
-            <InputField defaultValue="test" size="small" readOnly />
-            
+            <Text
+              size="large"
+              weight="medium"
+              style={{ marginTop: "32px", marginBottom: "16px" }}>
+              Skeleton Examples
+            </Text>
 
             <Text
               size="large"
@@ -456,7 +453,7 @@ const Page = () => {
             variant="empty1"
           />
 
-          <TextArea label="Read Only" value="This is a read only text area" />
+          <TextArea />
 
           <Flex direction="column" gap={4} style={{ maxWidth: "550px" }}>
             {/* Normal size select with icons */}

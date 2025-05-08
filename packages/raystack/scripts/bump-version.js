@@ -10,11 +10,11 @@ async function updatePackageVersion() {
     const gitTag = semver.valid(gitRef);
     if (gitTag && semver.compare(gitTag, pkg.version) > 0) {
       pkg.version = gitTag;
-      console.log('Updating Version version to', gitTag)
+      console.log('Bumped version to', gitTag)
       await fs.writeFile(path.join(process.cwd(), 'package.json'), JSON.stringify(pkg, null, 2))
     }
   } catch (err) {
-    console.error("Update Package Version", err)
+    console.error("Update Package Version error: ", err)
   }
 }
 
