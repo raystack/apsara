@@ -22,7 +22,7 @@ jobs:
         run: |
           BRANCH=$(git branch -r --contains ${{ github.ref }})
           TAG=${{ github.ref_name }}
-          
+
           if [[ $BRANCH =~ origin/main$ ]]; then
             if [[ $TAG =~ -rc\. ]]; then
               echo "[SKIPPED] Release candidate tags (v*.*.*-rc.*) are only allowed on develop branch"
