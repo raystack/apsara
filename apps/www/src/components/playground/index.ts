@@ -39,3 +39,4 @@ export * from "./text-examples";
 export * from "./text-area-examples";
 export * from "./toast-examples";
 export * from "./tooltip-examples";
+export * from './skeleton-examples';

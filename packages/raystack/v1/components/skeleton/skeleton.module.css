@@ -1,0 +1,38 @@
+.skeleton {
+  --skeleton-base-color: var(--rs-color-background-base-primary-hover);
+  --skeleton-highlight-color: var(--rs-color-background-base-primary);
+  --skeleton-duration: 1.5s;
+
+  background-color: var(--skeleton-base-color);
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.inline {
+  vertical-align: baseline;
+  display: inline-block;
+}
+
+.animate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--skeleton-highlight-color),
+    transparent
+  );
+  animation: shimmer var(--skeleton-duration) infinite;
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+

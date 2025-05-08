@@ -41,6 +41,7 @@ export { Select } from "./components/select";
 export { Separator } from "./components/separator";
 export { Sheet } from "./components/sheet";
 export { Sidebar } from "./components/sidebar";
+export { Skeleton } from "./components/skeleton";
 export { Slider } from "./components/slider";
 export { Spinner } from "./components/spinner";
 export { Switch } from "./components/switch";
