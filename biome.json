@@ -96,6 +96,9 @@
         "useGetterReturn": "error",
         "useNamespaceKeyword": "error",
         "useValidTypeof": "error"
+      },
+      "nursery": {
+        "useConsistentCurlyBraces": "error"
       }
     }
   },
