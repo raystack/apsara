@@ -1135,9 +1135,27 @@ const Page = () => {
           <Flex style={{ maxWidth: 400, padding: 80 }}>
             <Select autocomplete>
               <Select.Trigger>
-                <Select.Value placeholder="Choose an options" />
+                <Select.Value placeholder="Choose an option" />
               </Select.Trigger>
               <Select.Content>
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+            <Select
+              autocomplete
+              value={selectValue}
+              onValueChange={setSelectValue}>
+              <Select.Trigger>
+                <Select.Value placeholder="Choose an option" />
+              </Select.Trigger>
+              <Select.Content searchPlaceholder="asdsa">
                 {selectOptions.map(option => (
                   <Select.Item
                     key={option.value}

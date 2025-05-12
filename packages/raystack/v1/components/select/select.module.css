@@ -275,8 +275,19 @@
   padding: var(--rs-space-2);
 }
 
-.comboboxContent:empty {
+/* 
+  Empty state matches:
+   1. Completely empty container
+   2. Container where all .item children have data-hidden="true"
+*/
+.comboboxContent:empty,
+.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))) {
   padding: 0;
+}
+.comboboxContainer:has(.comboboxContent:empty) .comboboxInput,
+.comboboxContainer:has(.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))))
+  .comboboxInput {
+  border-bottom: none;
 }
 
 .comboboxInput {
@@ -293,10 +304,6 @@
   top: 0;
   z-index: 2;
   background-color: var(--rs-color-background-base-primary);
-}
-
-.comboboxContainer:has(.comboboxContent:empty) .comboboxInput {
-  border-bottom: none;
 }
 
 .comboboxInput:focus {

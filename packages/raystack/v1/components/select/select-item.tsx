@@ -15,7 +15,15 @@ export const SelectItem = forwardRef<
   }
 >(
   (
-    { className, textProps = {}, children, value, leadingIcon, ...props },
+    {
+      className,
+      textProps = {},
+      children,
+      value,
+      leadingIcon,
+      disabled,
+      ...props
+    },
     ref,
   ) => {
     const {
@@ -42,11 +50,12 @@ export const SelectItem = forwardRef<
       searchValue?.length
     );
 
-    if (
-      shouldFilter &&
-      !getMatch(value, children, searchValue) &&
-      value !== selectValue.value
-    ) {
+    const isSelected = value === selectValue.value;
+    const isMatched = getMatch(value, children, searchValue);
+    const isHidden = shouldFilter && isSelected && !isMatched;
+
+    if (shouldFilter && !isMatched && !isSelected) {
+      // Not selected and doesn't match search, so don't render at all
       return null;
     }
 
@@ -63,13 +72,11 @@ export const SelectItem = forwardRef<
       <SelectPrimitive.Item
         ref={ref}
         value={value}
-        className={cx(
-          styles.menuitem,
-          className,
-          shouldFilter && value === selectValue.value && styles.hidden,
-        )}
-        {...props}
-        asChild={autocomplete}>
+        className={cx(styles.menuitem, className, isHidden && styles.hidden)}
+        data-hidden={isHidden}
+        disabled={disabled || isHidden}
+        asChild={autocomplete}
+        {...props}>
         {autocomplete ? (
           <ComboboxItem
             onBlurCapture={event => {

@@ -1,9 +1,4 @@
-import {
-  ComponentPropsWithoutRef,
-  ElementRef,
-  forwardRef,
-  PropsWithChildren,
-} from "react";
+import { ElementRef, forwardRef, SVGAttributes } from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cva, VariantProps } from "class-variance-authority";
@@ -22,7 +17,7 @@ export interface TriggerStyleProps {
   stopPropagation?: boolean;
 }
 
-export interface IconProps extends React.SVGAttributes<SVGElement> {
+export interface IconProps extends SVGAttributes<SVGElement> {
   children?: never;
   color?: string;
 }
@@ -44,13 +39,15 @@ const trigger = cva(styles.trigger, {
   },
 });
 
+type SelectTriggerProps = SelectPrimitive.SelectTriggerProps &
+  VariantProps<typeof trigger> & {
+    iconProps?: IconProps;
+  } & AriaProps &
+  TriggerStyleProps;
+
 export const SelectTrigger = forwardRef<
   ElementRef<typeof SelectPrimitive.Trigger>,
-  ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
-    PropsWithChildren<VariantProps<typeof trigger>> & {
-      iconProps?: IconProps;
-    } & AriaProps &
-    TriggerStyleProps
+  SelectTriggerProps
 >(
   (
     {
