@@ -57,9 +57,13 @@ export interface AutocompleteSelectRootProps
   autocomplete: true;
 }
 
-export type SelectRootProps =
+export type BaseSelectRootProps =
   | NormalSelectRootProps
   | AutocompleteSelectRootProps;
+
+export type SelectRootProps = Omit<BaseSelectRootProps, "autoComplete"> & {
+  htmlAutoComplete?: string;
+};
 
 export const SelectRoot = ({
   children,
@@ -74,6 +78,7 @@ export const SelectRoot = ({
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
+  htmlAutoComplete,
   ...props
 }: SelectRootProps) => {
   const [internalValue, setInternalValue] = useState<string | undefined>(
@@ -151,6 +156,7 @@ export const SelectRoot = ({
         searchValue,
       }}>
       <SelectPrimitive.Root
+        autoComplete={htmlAutoComplete}
         value={computedValue}
         onValueChange={setValue}
         open={open}
