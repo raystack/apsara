@@ -59,14 +59,14 @@ export function RangePicker({
     ? dayjs(selectedRange.to).format(dateFormat)
     : "";
 
-  // Ensures two months are visible even when 
+  // Ensures two months are visible even when
   // current month is the last allowed month (endMonth).
   const computedDefaultMonth = useMemo(() => {
     let month = currentMonth;
     if (calendarProps?.endMonth) {
       const endMonth = dayjs(calendarProps.endMonth);
       const fromMonth = dayjs(currentMonth);
-      
+
       if (fromMonth.isSame(endMonth, 'month')) {
         month = endMonth.subtract(1, 'month').toDate();
       }
@@ -127,9 +127,9 @@ export function RangePicker({
         size='small'
         placeholder="Select start date"
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        className={styles.datePickerInput}
         {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
-        className={styles.datePickerInput}
         readOnly
       />
 
@@ -137,9 +137,9 @@ export function RangePicker({
         size='small'
         placeholder="Select end date"
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        className={styles.datePickerInput}
         {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
-        className={styles.datePickerInput}
         readOnly
       />
     </Flex>
