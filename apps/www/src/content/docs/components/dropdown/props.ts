@@ -1,20 +1,71 @@
+export interface DropdownMenuRootProps {
+  /** Enables search functionality within the dropdown menu */
+  autocomplete?: boolean;
+
+  /** Controls the autocomplete behavior mode
+   * - "auto": Automatically filters items as user types
+   * - "manual": Requires explicit filtering through onSearch callback
+   * @default "auto"
+   */
+  autocompleteMode?: "auto" | "manual";
+
+  /** Current search value for autocomplete */
+  searchValue?: string;
+
+  /** Initial search value for autocomplete */
+  defaultSearchValue?: string;
+
+  /** Callback fired when the search value changes */
+  onSearch?: (value: string) => void;
+
+  /** Placement of the dropdown relative to the trigger
+   * @default "bottom-start""
+   */
+  placement?:
+    | "top"
+    | "top-start"
+    | "top-end"
+    | "bottom"
+    | "bottom-start"
+    | "bottom-end"
+    | "left"
+    | "left-start"
+    | "left-end"
+    | "right"
+    | "right-start"
+    | "right-end";
+
+  /** Whether the dropdown should loop focus when navigating with keyboard
+   * @default true
+   */
+  focusLoop?: boolean;
+}
+
 export interface DropdownMenuTriggerProps {
   /** Boolean to merge props onto child element */
   asChild?: boolean;
 }
 
 export interface DropdownMenuContentProps {
-  /** Alignment of the dropdown */
-  align?: "start" | "center" | "end";
+  /** Placeholder text for the autocomplete search input
+   * @default "Search..."
+   */
+  searchPlaceholder?: string;
 
   /**
-   * Offset from the trigger
+   * The distance between the popover and the anchor element.
    * @default 4
    */
-  sideOffset?: number;
+  gutter?: number;
 
-  /** Additional CSS class names */
-  className?: string;
+  /**
+   * The skidding of the popover along the anchor element. Can be set to negative values to make the popover shift to the opposite side.
+   * @default 0
+   */
+  shift?: number;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
 }
 
 export interface DropdownMenuItemProps {
@@ -27,23 +78,38 @@ export interface DropdownMenuItemProps {
   /** Whether the item is disabled */
   disabled?: boolean;
 
+  /** Value of the item to be used for autocomplete */
+  value?: string;
+
   /** Additional CSS class names */
   className?: string;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
 }
 
 export interface DropdownMenuGroupProps {
   /** Additional CSS class names */
   className?: string;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
 }
 
 export interface DropdownMenuLabelProps {
   /** Additional CSS class names */
   className?: string;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
 }
 
 export interface DropdownMenuSeparatorProps {
   /** Additional CSS class names */
   className?: string;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
 }
 
 export interface DropdownMenuEmptyStateProps {

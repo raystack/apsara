@@ -1,43 +1,61 @@
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { ComboboxItem } from "@ariakit/react";
-import { useDropdownContext, useMenuLevel } from "./dropdown-menu-root";
-import { TriangleRightIcon } from "~/v1/icons";
-import { Cell, CellBaseProps } from "./cell";
-import { getMatch, getValue } from "./utils";
+import { forwardRef } from "react";
+import { MenuButton, MenuButtonProps } from "@ariakit/react";
+import { Slot } from "@radix-ui/react-slot";
+import { DropdownMenuItem, DropdownMenuItemProps } from "./dropdown-menu-item";
+import { WithAsChild } from "./types";
+import { TriangleRightIcon } from "@raystack/apsara/icons";
+import { useDropdownContext } from "./dropdown-menu-root";
+import { getMatch } from "./utils";
 
-export const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
+export interface DropdownMenuTriggerProps
+  extends WithAsChild<MenuButtonProps> {}
 
-export const DropdownMenuSubMenuTrigger = forwardRef<
-  ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
-  ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> &
-    Omit<CellBaseProps, "type"> & {
-      value?: string;
-    }
+export const DropdownMenuTrigger = forwardRef<
+  HTMLButtonElement,
+  DropdownMenuTriggerProps
+>(({ children, asChild, ...props }, ref) => {
+  return (
+    <MenuButton ref={ref} render={asChild ? <Slot /> : undefined} {...props}>
+      {children}
+    </MenuButton>
+  );
+});
+
+export interface DropdownMenuTriggerItemProps extends DropdownMenuItemProps {}
+
+/**
+ * `TriggerItem` is a helper component that renders a `Trigger` as a `MenuItem`.
+ */
+export const DropdownMenuTriggerItem = forwardRef<
+  HTMLButtonElement,
+  DropdownMenuTriggerItemProps
 >(
   (
     { children, value, trailingIcon = <TriangleRightIcon />, ...props },
     ref,
   ) => {
-    const { autocomplete, searchValue } = useDropdownContext();
-    const menuLevel = useMenuLevel();
+    const { parent } = useDropdownContext();
 
-    const item = (
-      <DropdownMenuPrimitive.SubTrigger ref={ref} {...props} asChild>
-        <Cell trailingIcon={trailingIcon} isComboboxCell={autocomplete}>
-          {children}
-        </Cell>
-      </DropdownMenuPrimitive.SubTrigger>
+    if (
+      parent?.shouldFilter &&
+      !getMatch(value, children, parent?.searchValue)
+    ) {
+      return null;
+    }
+
+    return (
+      <MenuButton
+        ref={ref}
+        render={
+          <DropdownMenuItem
+            value={value}
+            trailingIcon={trailingIcon}
+            {...props}
+            forceRender={parent?.autocomplete ? "combobox" : "auto"}
+          />
+        }>
+        {children}
+      </MenuButton>
     );
-    if ((autocomplete && menuLevel >= 3) || (!autocomplete && menuLevel >= 2))
-      return item;
-
-    const computedValue = getValue(value, children);
-
-    if (autocomplete && !getMatch(computedValue, searchValue)) return null;
-    if (autocomplete) return <ComboboxItem value={value} render={item} />;
-    return item;
   },
 );
-DropdownMenuSubMenuTrigger.displayName =
-  DropdownMenuPrimitive.SubTrigger.displayName;
