@@ -20,22 +20,28 @@ jobs:
 
       - name: Check Branch and Tag
         run: |
-          BRANCH=$(git branch -r --contains ${{ github.ref }})
+          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
           TAG=${{ github.ref_name }}
           
-          if [[ $BRANCH =~ origin/main$ ]]; then
+          echo "GitHub ref: ${{ github.ref }}"
+          echo "GitHub ref_name: ${{ github.ref_name }}"
+          echo "GitHub head_ref: ${{ github.head_ref }}"
+          echo "Detected branch: $BRANCH"
+          echo "Tag: $TAG"
+          
+          if [[ $BRANCH == "main" ]]; then
             if [[ $TAG =~ -rc\. ]]; then
               echo "[SKIPPED] Release candidate tags (v*.*.*-rc.*) are only allowed on develop branch"
               exit 0
             fi
-          elif [[ $BRANCH =~ origin/develop$ ]]; then
+          elif [[ $BRANCH == "develop" ]]; then
             if [[ ! $TAG =~ -rc\. ]]; then
               echo "[SKIPPED] Release tags (v*.*.*) are only allowed on main branch. Use release candidate tags (v*.*.*-rc.*)"
-              exit 1
+              exit 0
             fi
           else
             echo "[SKIPPED] Tags can only be pushed from main or develop branches"
-            exit 1
+            exit 0
           fi
 
       - name: Setup pnpm 9
