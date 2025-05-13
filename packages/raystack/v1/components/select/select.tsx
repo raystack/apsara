@@ -4,9 +4,10 @@ import { SelectContent } from "./select-content";
 import { SelectItem } from "./select-item";
 import { SelectValue } from "./select-value";
 import { SelectRoot } from "./select-root";
+import { SelectGroup, SelectLabel, SelectSeparator } from "./select-misc";
 
 export const Select = Object.assign(SelectRoot, {
-  Group: SelectPrimitive.Group,
+  Group: SelectGroup,
   Value: SelectValue,
   ScrollUpButton: SelectPrimitive.ScrollDownButton,
   ScrollDownButton: SelectPrimitive.ScrollDownButton,
@@ -14,5 +15,6 @@ export const Select = Object.assign(SelectRoot, {
   Trigger: SelectTrigger,
   Content: SelectContent,
   Item: SelectItem,
-  Separator: SelectPrimitive.Separator,
+  Separator: SelectSeparator,
+  Label: SelectLabel,
 });

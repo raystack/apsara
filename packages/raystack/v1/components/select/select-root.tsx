@@ -29,18 +29,30 @@ interface SelectContextValue extends CommonProps {
   unregisterIcon: (value: string) => void;
 }
 
+interface UseSelectContext extends SelectContextValue {
+  shouldFilter?: boolean;
+}
+
 /*
 Root context to manage the Select control
 @remarks Only for internal usage.
 */
 const SelectContext = createContext<SelectContextValue | undefined>(undefined);
 
-export const useSelectContext = () => {
+export const useSelectContext = (): UseSelectContext => {
   const context = useContext(SelectContext);
   if (!context) {
     throw new Error("useSelectContext must be used within a SelectProvider");
   }
-  return context;
+  const shouldFilter = !!(
+    context?.autocomplete &&
+    context?.autocompleteMode === "auto" &&
+    context?.searchValue?.length
+  );
+  return {
+    ...context,
+    shouldFilter,
+  };
 };
 
 export interface NormalSelectRootProps extends SelectPrimitive.SelectProps {
@@ -57,11 +69,10 @@ export interface AutocompleteSelectRootProps
   autocomplete: true;
 }
 
-export type BaseSelectRootProps =
-  | NormalSelectRootProps
-  | AutocompleteSelectRootProps;
-
-export type SelectRootProps = Omit<BaseSelectRootProps, "autoComplete"> & {
+export type SelectRootProps = Omit<
+  NormalSelectRootProps | AutocompleteSelectRootProps,
+  "autoComplete"
+> & {
   htmlAutoComplete?: string;
 };
 
