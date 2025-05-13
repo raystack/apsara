@@ -165,7 +165,6 @@ export function DatePicker({
       size="small"
       placeholder="Select date"
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
-      {...inputFieldProps}
       defaultValue={formattedDate}
       onChange={handleInputChange}
       onFocus={handleInputFocus}
@@ -173,6 +172,7 @@ export function DatePicker({
       error={error}
       onKeyUp={handleKeyUp}
       className={styles.datePickerInput}
+      {...inputFieldProps}
     />
   );
 
