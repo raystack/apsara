@@ -19,6 +19,7 @@ export const SelectContent = forwardRef<
       children,
       position = "popper",
       searchPlaceholder = "Search...",
+      sideOffset = 4,
       ...props
     },
     ref,
@@ -30,14 +31,15 @@ export const SelectContent = forwardRef<
         <SelectPrimitive.Content
           role={autocomplete ? "dialog" : undefined}
           ref={ref}
-          className={cx(
-            styles.content,
-            autocomplete && styles.comboboxContainer,
-            className,
-          )}
           position={position}
+          sideOffset={sideOffset}
+          className={cx(styles.content, className)}
           {...props}>
-          <SelectPrimitive.Viewport>
+          <SelectPrimitive.Viewport
+            className={cx(
+              styles.viewport,
+              autocomplete && styles.comboboxViewport,
+            )}>
             {autocomplete ? (
               <>
                 <Combobox

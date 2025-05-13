@@ -30,9 +30,9 @@ export const SelectItem = forwardRef<
       registerIcon,
       unregisterIcon,
       autocomplete,
-      autocompleteMode,
       searchValue,
       value: selectValue,
+      shouldFilter,
     } = useSelectContext();
 
     useEffect(() => {
@@ -43,12 +43,6 @@ export const SelectItem = forwardRef<
         unregisterIcon(value);
       };
     }, [value, leadingIcon]);
-
-    const shouldFilter = !!(
-      autocomplete &&
-      autocompleteMode === "auto" &&
-      searchValue?.length
-    );
 
     const isSelected = value === selectValue.value;
     const isMatched = getMatch(value, children, searchValue);
