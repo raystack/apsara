@@ -52,6 +52,12 @@ const Page = () => {
     { value: "analytics", label: "Analytics", icon: <FilterIcon /> },
     { value: "settings", label: "Settings", icon: <OrganizationIcon /> },
     { value: "profile", label: "Profile", icon: <SidebarIcon /> },
+    { value: "reports", label: "Reports", icon: <FilterIcon /> },
+    { value: "activities", label: "Activities", icon: <OrganizationIcon /> },
+    { value: "help", label: "Help", icon: <FilterIcon /> },
+    { value: "preferences", label: "Preferences", icon: <SidebarIcon /> },
+    { value: "notifications", label: "Notifications", icon: <BellIcon /> },
+    { value: "logout", label: "Logout", icon: <SidebarIcon /> },
   ];
 
   const filterOptions = [
@@ -161,82 +167,88 @@ const Page = () => {
               onClear={() => setSearch1("")}
             />
             <DatePicker
-              side='bottom'
-              dateFormat='D MMM YYYY'
-              value={dayjs().add(16, 'year').toDate()}
+              side="bottom"
+              dateFormat="D MMM YYYY"
+              value={dayjs().add(16, "year").toDate()}
               onSelect={(value: Date) => console.log(value)}
               calendarProps={{
-                captionLayout: 'dropdown',
-                startMonth: dayjs().add(3, 'month').toDate(),
-                endMonth: dayjs().add(4, 'year').toDate(),
-                disabled: { before: dayjs().add(3, 'month').toDate(), after: dayjs().add(3, 'year').toDate() },
-                mode: 'single',
+                captionLayout: "dropdown",
+                startMonth: dayjs().add(3, "month").toDate(),
+                endMonth: dayjs().add(4, "year").toDate(),
+                disabled: {
+                  before: dayjs().add(3, "month").toDate(),
+                  after: dayjs().add(3, "year").toDate(),
+                },
+                mode: "single",
                 required: true,
-                selected: new Date()
+                selected: new Date(),
               }}
               textFieldProps={{
                 state: "valid",
-                size: 'medium',
+                size: "medium",
               }}
             />
 
-
             <RangePicker
-              side='bottom'
-              dateFormat='D MMM YYYY'
+              side="bottom"
+              dateFormat="D MMM YYYY"
               value={{
-                from: dayjs('2027-11-15').toDate(),
-                to: dayjs('2027-12-10').toDate()
+                from: dayjs("2027-11-15").toDate(),
+                to: dayjs("2027-12-10").toDate(),
               }}
-              onSelect={(range) => console.log(range)}
+              onSelect={range => console.log(range)}
               calendarProps={{
-                captionLayout: 'dropdown',
-                mode: 'range',
+                captionLayout: "dropdown",
+                mode: "range",
                 required: true,
                 selected: {
-                  from: dayjs('2027-11-15').toDate(),
-                  to: dayjs('2027-12-10').toDate()
+                  from: dayjs("2027-11-15").toDate(),
+                  to: dayjs("2027-12-10").toDate(),
                 },
                 numberOfMonths: 2,
                 fromYear: 2024,
                 toYear: 2027,
-                startMonth: dayjs('2024-01-01').toDate(),
-                endMonth: dayjs('2027-12-01').toDate(),
-                defaultMonth: dayjs('2027-11-01').toDate()
+                startMonth: dayjs("2024-01-01").toDate(),
+                endMonth: dayjs("2027-12-01").toDate(),
+                defaultMonth: dayjs("2027-11-01").toDate(),
               }}
               inputFieldsProps={{
                 startDate: {
-                  size: 'small'
+                  size: "small",
                 },
                 endDate: {
-                  size: 'small'
-                }
+                  size: "small",
+                },
               }}
             />
 
-            <RangePicker footer={<Callout width="100%" type="success">Some important message in the footer</Callout>} />
+            <RangePicker
+              footer={
+                <Callout width="100%" type="success">
+                  Some important message in the footer
+                </Callout>
+              }
+            />
 
             <DatePicker
               calendarProps={{
-                captionLayout: 'dropdown',
-                mode: 'single',
+                captionLayout: "dropdown",
+                mode: "single",
                 required: true,
-                selected: new Date()
+                selected: new Date(),
               }}
             />
 
             <DatePicker
               timeZone="UTC"
               dateFormat="DD MMM YYYY"
-              onSelect={(date) => {
+              onSelect={date => {
                 console.log(date);
-              }}
-            >
+              }}>
               <InputField defaultValue="test" size="small" readOnly />
             </DatePicker>
 
             <InputField defaultValue="test" size="small" readOnly />
-            
 
             <Text
               size="large"
@@ -455,7 +467,11 @@ const Page = () => {
             icon={<FilterIcon />}
             heading="KYC required for image orders"
             subHeading="Please contact your organization owner to complete the KYC process for the image orders. You can also contact support@raystack.io for assistance."
-            primaryAction={<Button variant="outline" color="neutral">Add Data</Button>}
+            primaryAction={
+              <Button variant="outline" color="neutral">
+                Add Data
+              </Button>
+            }
             variant="empty1"
           />
 
@@ -579,34 +595,23 @@ const Page = () => {
                 </Dialog.Header>
                 <Dialog.Body>
                   <Text>This is the dialog content. </Text>
-                  <Flex direction="column" gap={4} style={{ marginTop: "16px" }}>
+                  <Flex
+                    direction="column"
+                    gap={4}
+                    style={{ marginTop: "16px" }}>
                     <Text size="small">Team Members:</Text>
                     <AvatarGroup>
-                      <Avatar
-                        size={5}
-                        color="indigo"
-                        fallback="JD"
-                      />
-                      <Avatar
-                        size={5}
-                        color="mint"
-                        fallback="AS"
-                      />
-                      <Avatar
-                        size={5}
-                        color="sky"
-                        fallback="RK"
-                      />
-                      <Avatar
-                        size={5}
-                        color="purple"
-                        fallback="+2"
-                      />
+                      <Avatar size={5} color="indigo" fallback="JD" />
+                      <Avatar size={5} color="mint" fallback="AS" />
+                      <Avatar size={5} color="sky" fallback="RK" />
+                      <Avatar size={5} color="purple" fallback="+2" />
                     </AvatarGroup>
 
                     <Flex direction="column" gap={2}>
                       <Text size="small">Quick Actions:</Text>
-                      <Tooltip message="Click to send a message to all team members" side="top">
+                      <Tooltip
+                        message="Click to send a message to all team members"
+                        side="top">
                         <Button variant="solid" color="accent">
                           Show hover tooltip
                         </Button>
@@ -614,10 +619,15 @@ const Page = () => {
                     </Flex>
                   </Flex>
 
-                  <Flex direction="column" gap={4} style={{ marginTop: "32px" }}>
+                  <Flex
+                    direction="column"
+                    gap={4}
+                    style={{ marginTop: "32px" }}>
                     <Flex direction="column" gap={2}>
                       <Text size="small">Team Role:</Text>
-                      <Select value={selectValue} onValueChange={setSelectValue}>
+                      <Select
+                        value={selectValue}
+                        onValueChange={setSelectValue}>
                         <Select.Trigger>
                           <Select.Value placeholder="Select a role" />
                         </Select.Trigger>
@@ -639,13 +649,26 @@ const Page = () => {
                           </Button>
                         </Popover.Trigger>
                         <Popover.Content>
-                          <Flex direction="column" gap={2} style={{ padding: "8px" }}>
-                            <Text size="small" weight="medium">Filter Team Members</Text>
-                            <Text size="small">You can filter team members by:</Text>
+                          <Flex
+                            direction="column"
+                            gap={2}
+                            style={{ padding: "8px" }}>
+                            <Text size="small" weight="medium">
+                              Filter Team Members
+                            </Text>
+                            <Text size="small">
+                              You can filter team members by:
+                            </Text>
                             <ul style={{ margin: 0, paddingLeft: "16px" }}>
-                              <li><Text size="small">Name</Text></li>
-                              <li><Text size="small">Role</Text></li>
-                              <li><Text size="small">Department</Text></li>
+                              <li>
+                                <Text size="small">Name</Text>
+                              </li>
+                              <li>
+                                <Text size="small">Role</Text>
+                              </li>
+                              <li>
+                                <Text size="small">Department</Text>
+                              </li>
                             </ul>
                           </Flex>
                         </Popover.Content>
@@ -660,16 +683,18 @@ const Page = () => {
 
                     <Flex direction="column" gap={2}>
                       <Text size="small">Actions:</Text>
-                      <Flex gap={2}>                        
-                          <Indicator variant="success" label="5">
-                            <Button variant="outline">
-                              Active Members
-                            </Button>
-                          </Indicator>
-                        <Button variant="outline" onClick={() => setNestedDialogOpen(true)}>
+                      <Flex gap={2}>
+                        <Indicator variant="success" label="5">
+                          <Button variant="outline">Active Members</Button>
+                        </Indicator>
+                        <Button
+                          variant="outline"
+                          onClick={() => setNestedDialogOpen(true)}>
                           Open Nested Dialog
                         </Button>
-                        <Button variant="outline" onClick={() => setDialogSheetOpen(true)}>
+                        <Button
+                          variant="outline"
+                          onClick={() => setDialogSheetOpen(true)}>
                           Open Sheet
                         </Button>
                         <DropdownMenu>
@@ -677,8 +702,12 @@ const Page = () => {
                             <Button variant="outline">Open Menu</Button>
                           </DropdownMenu.Trigger>
                           <DropdownMenu.Content>
-                            <DropdownMenu.Label>Team Actions</DropdownMenu.Label>
-                            <Tooltip message="Add a new member to your team" side="right">
+                            <DropdownMenu.Label>
+                              Team Actions
+                            </DropdownMenu.Label>
+                            <Tooltip
+                              message="Add a new member to your team"
+                              side="right">
                               <DropdownMenu.Item>Add Member</DropdownMenu.Item>
                             </Tooltip>
                             <DropdownMenu.Item>Edit Team</DropdownMenu.Item>
@@ -686,10 +715,14 @@ const Page = () => {
                             <DropdownMenu.Group>
                               <DropdownMenu.Label>Settings</DropdownMenu.Label>
                               <DropdownMenu.Item>Permissions</DropdownMenu.Item>
-                              <DropdownMenu.Item>Notifications</DropdownMenu.Item>
+                              <DropdownMenu.Item>
+                                Notifications
+                              </DropdownMenu.Item>
                             </DropdownMenu.Group>
                             <DropdownMenu.Separator />
-                            <DropdownMenu.Item color="danger">Delete Team</DropdownMenu.Item>
+                            <DropdownMenu.Item color="danger">
+                              Delete Team
+                            </DropdownMenu.Item>
                           </DropdownMenu.Content>
                         </DropdownMenu>
                       </Flex>
@@ -700,7 +733,7 @@ const Page = () => {
                     label="Example Text Area"
                     placeholder="Type something..."
                     value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={e => setInputValue(e.target.value)}
                   />
                 </Dialog.Body>
                 <Dialog.Footer>
@@ -719,31 +752,17 @@ const Page = () => {
                 <Flex direction="column" gap={4} style={{ marginTop: "16px" }}>
                   <Text size="small">Team Members:</Text>
                   <AvatarGroup>
-                    <Avatar
-                      size={5}
-                      color="indigo"
-                      fallback="JD"
-                    />
-                    <Avatar
-                      size={5}
-                      color="mint"
-                      fallback="AS"
-                    />
-                    <Avatar
-                      size={5}
-                      color="sky"
-                      fallback="RK"
-                    />
-                    <Avatar
-                      size={5}
-                      color="purple"
-                      fallback="+2"
-                    />
+                    <Avatar size={5} color="indigo" fallback="JD" />
+                    <Avatar size={5} color="mint" fallback="AS" />
+                    <Avatar size={5} color="sky" fallback="RK" />
+                    <Avatar size={5} color="purple" fallback="+2" />
                   </AvatarGroup>
 
                   <Flex direction="column" gap={2}>
                     <Text size="small">Quick Actions:</Text>
-                    <Tooltip message="Click to send a message to all team members" side="top">
+                    <Tooltip
+                      message="Click to send a message to all team members"
+                      side="top">
                       <Button variant="solid" color="accent">
                         Show hover tooltip
                       </Button>
@@ -776,13 +795,26 @@ const Page = () => {
                         </Button>
                       </Popover.Trigger>
                       <Popover.Content>
-                        <Flex direction="column" gap={2} style={{ padding: "8px" }}>
-                          <Text size="small" weight="medium">Filter Team Members</Text>
-                          <Text size="small">You can filter team members by:</Text>
+                        <Flex
+                          direction="column"
+                          gap={2}
+                          style={{ padding: "8px" }}>
+                          <Text size="small" weight="medium">
+                            Filter Team Members
+                          </Text>
+                          <Text size="small">
+                            You can filter team members by:
+                          </Text>
                           <ul style={{ margin: 0, paddingLeft: "16px" }}>
-                            <li><Text size="small">Name</Text></li>
-                            <li><Text size="small">Role</Text></li>
-                            <li><Text size="small">Department</Text></li>
+                            <li>
+                              <Text size="small">Name</Text>
+                            </li>
+                            <li>
+                              <Text size="small">Role</Text>
+                            </li>
+                            <li>
+                              <Text size="small">Department</Text>
+                            </li>
                           </ul>
                         </Flex>
                       </Popover.Content>
@@ -799,9 +831,7 @@ const Page = () => {
                     <Text size="small">Actions:</Text>
                     <Flex gap={2}>
                       <Indicator variant="success" label="5">
-                      <Button variant="outline">
-                        Active Members
-                      </Button>
+                        <Button variant="outline">Active Members</Button>
                       </Indicator>
                       <DropdownMenu>
                         <DropdownMenu.Trigger asChild>
@@ -809,7 +839,9 @@ const Page = () => {
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Content>
                           <DropdownMenu.Label>Team Actions</DropdownMenu.Label>
-                          <Tooltip message="Add a new member to your team" side="right">
+                          <Tooltip
+                            message="Add a new member to your team"
+                            side="right">
                             <DropdownMenu.Item>Add Member</DropdownMenu.Item>
                           </Tooltip>
                           <DropdownMenu.Item>Edit Team</DropdownMenu.Item>
@@ -820,7 +852,9 @@ const Page = () => {
                             <DropdownMenu.Item>Notifications</DropdownMenu.Item>
                           </DropdownMenu.Group>
                           <DropdownMenu.Separator />
-                          <DropdownMenu.Item color="danger">Delete Team</DropdownMenu.Item>
+                          <DropdownMenu.Item color="danger">
+                            Delete Team
+                          </DropdownMenu.Item>
                         </DropdownMenu.Content>
                       </DropdownMenu>
                     </Flex>
@@ -831,7 +865,7 @@ const Page = () => {
                   label="Example Text Area"
                   placeholder="Type something..."
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={e => setInputValue(e.target.value)}
                 />
               </Sheet.Content>
             </Sheet>
@@ -840,34 +874,23 @@ const Page = () => {
               <Dialog.Content width="500px">
                 <Dialog.Body>
                   <Text>This is the nested dialog content. </Text>
-                  <Flex direction="column" gap={4} style={{ marginTop: "16px" }}>
+                  <Flex
+                    direction="column"
+                    gap={4}
+                    style={{ marginTop: "16px" }}>
                     <Text size="small">Team Members:</Text>
                     <AvatarGroup>
-                      <Avatar
-                        size={5}
-                        color="indigo"
-                        fallback="JD"
-                      />
-                      <Avatar
-                        size={5}
-                        color="mint"
-                        fallback="AS"
-                      />
-                      <Avatar
-                        size={5}
-                        color="sky"
-                        fallback="RK"
-                      />
-                      <Avatar
-                        size={5}
-                        color="purple"
-                        fallback="+2"
-                      />
+                      <Avatar size={5} color="indigo" fallback="JD" />
+                      <Avatar size={5} color="mint" fallback="AS" />
+                      <Avatar size={5} color="sky" fallback="RK" />
+                      <Avatar size={5} color="purple" fallback="+2" />
                     </AvatarGroup>
 
                     <Flex direction="column" gap={2}>
                       <Text size="small">Quick Actions:</Text>
-                      <Tooltip message="Click to send a message to all team members" side="top">
+                      <Tooltip
+                        message="Click to send a message to all team members"
+                        side="top">
                         <Button variant="solid" color="accent">
                           Show hover tooltip
                         </Button>
@@ -875,10 +898,15 @@ const Page = () => {
                     </Flex>
                   </Flex>
 
-                  <Flex direction="column" gap={4} style={{ marginTop: "32px" }}>
+                  <Flex
+                    direction="column"
+                    gap={4}
+                    style={{ marginTop: "32px" }}>
                     <Flex direction="column" gap={2}>
                       <Text size="small">Team Role:</Text>
-                      <Select value={selectValue} onValueChange={setSelectValue}>
+                      <Select
+                        value={selectValue}
+                        onValueChange={setSelectValue}>
                         <Select.Trigger>
                           <Select.Value placeholder="Select a role" />
                         </Select.Trigger>
@@ -900,13 +928,26 @@ const Page = () => {
                           </Button>
                         </Popover.Trigger>
                         <Popover.Content>
-                          <Flex direction="column" gap={2} style={{ padding: "8px" }}>
-                            <Text size="small" weight="medium">Filter Team Members</Text>
-                            <Text size="small">You can filter team members by:</Text>
+                          <Flex
+                            direction="column"
+                            gap={2}
+                            style={{ padding: "8px" }}>
+                            <Text size="small" weight="medium">
+                              Filter Team Members
+                            </Text>
+                            <Text size="small">
+                              You can filter team members by:
+                            </Text>
                             <ul style={{ margin: 0, paddingLeft: "16px" }}>
-                              <li><Text size="small">Name</Text></li>
-                              <li><Text size="small">Role</Text></li>
-                              <li><Text size="small">Department</Text></li>
+                              <li>
+                                <Text size="small">Name</Text>
+                              </li>
+                              <li>
+                                <Text size="small">Role</Text>
+                              </li>
+                              <li>
+                                <Text size="small">Department</Text>
+                              </li>
                             </ul>
                           </Flex>
                         </Popover.Content>
@@ -922,18 +963,20 @@ const Page = () => {
                     <Flex direction="column" gap={2}>
                       <Text size="small">Actions:</Text>
                       <Flex gap={2}>
-                      <Indicator variant="success" label="5">
-                        <Button variant="outline">
-                          Active Members
-                        </Button>
-                      </Indicator>
+                        <Indicator variant="success" label="5">
+                          <Button variant="outline">Active Members</Button>
+                        </Indicator>
                         <DropdownMenu>
                           <DropdownMenu.Trigger asChild>
                             <Button variant="outline">Open Menu</Button>
                           </DropdownMenu.Trigger>
                           <DropdownMenu.Content>
-                            <DropdownMenu.Label>Team Actions</DropdownMenu.Label>
-                            <Tooltip message="Add a new member to your team" side="right">
+                            <DropdownMenu.Label>
+                              Team Actions
+                            </DropdownMenu.Label>
+                            <Tooltip
+                              message="Add a new member to your team"
+                              side="right">
                               <DropdownMenu.Item>Add Member</DropdownMenu.Item>
                             </Tooltip>
                             <DropdownMenu.Item>Edit Team</DropdownMenu.Item>
@@ -941,10 +984,14 @@ const Page = () => {
                             <DropdownMenu.Group>
                               <DropdownMenu.Label>Settings</DropdownMenu.Label>
                               <DropdownMenu.Item>Permissions</DropdownMenu.Item>
-                              <DropdownMenu.Item>Notifications</DropdownMenu.Item>
+                              <DropdownMenu.Item>
+                                Notifications
+                              </DropdownMenu.Item>
                             </DropdownMenu.Group>
                             <DropdownMenu.Separator />
-                            <DropdownMenu.Item color="danger">Delete Team</DropdownMenu.Item>
+                            <DropdownMenu.Item color="danger">
+                              Delete Team
+                            </DropdownMenu.Item>
                           </DropdownMenu.Content>
                         </DropdownMenu>
                       </Flex>
@@ -1056,26 +1103,70 @@ const Page = () => {
 
           <Flex direction="column" gap={6}>
             <Flex direction="column" gap={3}>
-                <AvatarGroup max={4}>
-                    <Tooltip message="JD">
-                      <Avatar radius="small" size={7} fallback="JD" color="indigo" />
-                    </Tooltip>
-                    <Tooltip message="AS">
-                      <Avatar radius="small" size={7} fallback="AS" color="mint" />
-                    </Tooltip>
-                    <Tooltip message="RK">
-                      <Avatar radius="small" size={7} fallback="RK" color="sky" />
-                    </Tooltip>
-                    <Tooltip message="PL">
-                      <Avatar radius="small" size={7} fallback="PL" color="purple" />
-                    </Tooltip>
-                    <Tooltip message="MN">
-                      <Avatar radius="small" size={7} fallback="MN" color="pink" />
-                    </Tooltip>
-                </AvatarGroup>
-              </Flex>
+              <AvatarGroup max={4}>
+                <Tooltip message="JD">
+                  <Avatar
+                    radius="small"
+                    size={7}
+                    fallback="JD"
+                    color="indigo"
+                  />
+                </Tooltip>
+                <Tooltip message="AS">
+                  <Avatar radius="small" size={7} fallback="AS" color="mint" />
+                </Tooltip>
+                <Tooltip message="RK">
+                  <Avatar radius="small" size={7} fallback="RK" color="sky" />
+                </Tooltip>
+                <Tooltip message="PL">
+                  <Avatar
+                    radius="small"
+                    size={7}
+                    fallback="PL"
+                    color="purple"
+                  />
+                </Tooltip>
+                <Tooltip message="MN">
+                  <Avatar radius="small" size={7} fallback="MN" color="pink" />
+                </Tooltip>
+              </AvatarGroup>
             </Flex>
-
+          </Flex>
+          <Flex style={{ maxWidth: 400, padding: 80 }}>
+            <Select autocomplete>
+              <Select.Trigger>
+                <Select.Value placeholder="Choose an option" />
+              </Select.Trigger>
+              <Select.Content>
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+            <Select
+              autocomplete
+              value={selectValue}
+              onValueChange={setSelectValue}>
+              <Select.Trigger>
+                <Select.Value placeholder="Choose an option" />
+              </Select.Trigger>
+              <Select.Content searchPlaceholder="asdsa">
+                {selectOptions.map(option => (
+                  <Select.Item
+                    key={option.value}
+                    value={option.value}
+                    leadingIcon={option.icon}>
+                    {option.label}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select>
+          </Flex>
 
           <Flex justify="center" style={{ marginTop: 40 }}>
             <Button type="submit">Submit button</Button>
