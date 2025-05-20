@@ -1,21 +1,19 @@
 .content {
+  --apsara-select-padding: var(--rs-space-2);
   z-index: var(--rs-z-index-portal);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   box-sizing: border-box;
-  padding: var(--rs-space-2);
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-soft);
   border: 1px solid var(--rs-color-border-base-primary);
   min-width: var(--radix-select-trigger-width);
-  margin-top: var(--rs-space-2);
   transition: all 0.2s ease;
-  overflow-y: auto;
   max-height: 320px;
-  max-width: 300px;
+  position: relative;
 }
 
 .menuitem {
@@ -45,14 +43,16 @@
   pointer-events: none;
 }
 
+.label {
+  padding: var(--rs-space-2) var(--rs-space-3);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+}
+
 .separator {
   height: 1px;
   margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);
-  background: var(--rs-color-background-neutral-secondary);
-}
-
-.menugroup {
-  padding: var(--rs-space-3);
+  background: var(--rs-color-border-base-primary);
 }
 
 .trigger {
@@ -266,13 +266,13 @@
   pointer-events: none;
 }
 
-.comboboxContainer {
-  padding: 0;
-  position: relative;
+.comboboxContent,
+.viewport {
+  padding: var(--apsara-select-padding);
 }
 
-.comboboxContent {
-  padding: var(--rs-space-2);
+.comboboxViewport {
+  padding: 0;
 }
 
 /* 
@@ -304,6 +304,8 @@
   top: 0;
   z-index: 2;
   background-color: var(--rs-color-background-base-primary);
+  border-top-left-radius: var(--rs-radius-2);
+  border-top-right-radius: var(--rs-radius-2);
 }
 
 .comboboxInput:focus {

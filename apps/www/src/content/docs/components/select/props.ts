@@ -68,3 +68,27 @@ export interface SelectItemProps {
   /** Additional CSS class names. */
   className?: string;
 }
+
+export interface SelectGroupProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
+}
+
+export interface SelectLabelProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
+}
+
+export interface SelectSeparatorProps {
+  /** Additional CSS class names */
+  className?: string;
+
+  /** Boolean to merge props onto child element */
+  asChild?: boolean;
+}
