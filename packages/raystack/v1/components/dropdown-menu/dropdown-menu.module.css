@@ -56,7 +56,7 @@
 }
 
 .label {
-  padding: 6px var(--rs-space-3);
+  padding: var(--rs-space-2) var(--rs-space-3);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
 }
