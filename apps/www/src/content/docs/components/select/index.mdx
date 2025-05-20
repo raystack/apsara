@@ -1,6 +1,7 @@
 ---
 title: Select
 description: Displays a list of options for the user to pick from—triggered by a button.
+tag: update
 ---
 
 import {
@@ -10,6 +11,7 @@ import {
   variantDemo,
   separatorDemo,
   iconDemo,
+  autocompleteDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -33,6 +35,12 @@ import { Select } from "@raystack/apsara/v1";
 ```
 
 ## Select Props
+
+The Select component is composed of several parts, each with their own props.
+
+The root element is the parent component that holds the select. Using the `autocomplete` prop, you can enable autocomplete functionality. Autcomplet is built using [Ariakit ComboboxProvider](https://ariakit.org/reference/combobox-provider)
+
+<auto-type-table path="./props.ts" name="SelectRootProps" />
 
 ### Select.Trigger Props
 
@@ -69,6 +77,14 @@ You can pass `leadingIcon` prop to Select.Item to include items
 ### With Separator
 
 <Demo data={separatorDemo} />
+
+### Autocomplete
+
+To enable autocomplete, pass the `autocomplete` prop to the Select root element.
+
+By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
+
+<Demo data={autocompleteDemo} />
 
 ## Accessibility
 

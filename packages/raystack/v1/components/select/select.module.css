@@ -27,15 +27,17 @@
   color: var(--rs-color-foreground-base-primary);
   white-space: normal;
   word-break: break-word;
+  border-radius: var(--rs-radius-2);
 }
 
-.menuitem:hover,
-.menuitem:focus,
-.menuitem[data-highlighted] {
+.menuitem[data-highlighted],
+.menuitem[data-active-item="true"] {
   outline: none;
   cursor: pointer;
-  border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary-hover);
+}
+.menuitem[data-state="checked"] {
+  background: var(--rs-color-background-neutral-secondary);
 }
 
 .menuitem[data-disabled] {
@@ -262,4 +264,52 @@
 [data-disabled=""] {
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.comboboxContainer {
+  padding: 0;
+  position: relative;
+}
+
+.comboboxContent {
+  padding: var(--rs-space-2);
+}
+
+/* 
+  Empty state matches:
+   1. Completely empty container
+   2. Container where all .item children have data-hidden="true"
+*/
+.comboboxContent:empty,
+.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))) {
+  padding: 0;
+}
+.comboboxContainer:has(.comboboxContent:empty) .comboboxInput,
+.comboboxContainer:has(.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))))
+  .comboboxInput {
+  border-bottom: none;
+}
+
+.comboboxInput {
+  width: 100%;
+  color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-3) var(--rs-space-4);
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--rs-color-background-base-primary);
+}
+
+.comboboxInput:focus {
+  outline: none;
+}
+
+.hidden {
+  display: none;
 }
