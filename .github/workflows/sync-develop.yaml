@@ -1,16 +1,22 @@
 name: Sync develop with main
 
 on:
-  schedule:
-    # Runs at 5:00 AM UTC every day
-    - cron: '0 5 * * *'
-  
-  # Enable "Run Workflow" button to trigger the workflow manually
-  workflow_dispatch:
+  # Trigger when a PR is merged to main
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   sync-develop:
-    name: Sync develop branch with main
+    # Only run if PR was merged (not just closed) and it was merged to main
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    name: Create PR to sync develop with main
     runs-on: ubuntu-latest
     timeout-minutes: 5
     
@@ -30,20 +36,39 @@ jobs:
         run: |
           git fetch --prune
       
-      - name: Merge main into develop
+      - name: Check if sync needed
+        id: check
         run: |
-          # Check if main has any changes compared to develop
           if git merge-base --is-ancestor origin/main origin/develop; then
+            echo "sync_needed=false" >> $GITHUB_OUTPUT
             echo "[SKIPPED] develop is already up to date with main."
-            exit 0
-          fi
-          
-          # Try to merge main into develop
-          if git merge origin/main -m "Auto-merge main into develop"; then
-            echo "[SUCCESS] Successfully merged main into develop"
-            git push origin develop
           else
-            echo "[MERGE CONFLICT] Manually resolve the merge conflict and push to develop."
+            echo "sync_needed=true" >> $GITHUB_OUTPUT
+            echo "[NEEDED] develop needs to be synced with main"
+          fi
+
+      - name: Create sync branch and PR
+        if: steps.check.outputs.sync_needed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Create a new branch for the sync
+          SYNC_BRANCH="chore/sync-develop-with-main-${GITHUB_SHA::8}"
+          git checkout -b $SYNC_BRANCH
+          
+          # Try to merge main into the sync branch
+          if git merge origin/main -m "chore: sync develop with main after #${{ github.event.pull_request.number }}"; then
+            git push origin $SYNC_BRANCH
+            
+            # Create PR using GitHub CLI
+            gh pr create \
+              --base develop \
+              --head $SYNC_BRANCH \
+              --title "[BOT] chore: sync develop with main (after #${{ github.event.pull_request.number }})" \
+              --body "Automated PR to sync develop with main branch after PR #${{ github.event.pull_request.number }} was merged to main." \
+              --label "automated"
+          else
+            echo "[MERGE CONFLICT] Manual intervention needed"
             git merge --abort
             exit 1
           fi
