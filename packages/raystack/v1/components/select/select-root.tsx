@@ -76,6 +76,28 @@ export type SelectRootProps = Omit<
   htmlAutoComplete?: string;
 };
 
+export interface NormalSelectRootProps extends SelectPrimitive.SelectProps {
+  autocomplete?: false;
+  autocompleteMode?: never;
+  searchValue?: never;
+  onSearch?: never;
+  defaultSearchValue?: never;
+}
+
+export interface AutocompleteSelectRootProps
+  extends SelectPrimitive.SelectProps,
+    CommonProps {
+  autocomplete: true;
+}
+
+export type BaseSelectRootProps =
+  | NormalSelectRootProps
+  | AutocompleteSelectRootProps;
+
+export type SelectRootProps = Omit<BaseSelectRootProps, "autoComplete"> & {
+  htmlAutoComplete?: string;
+};
+
 export const SelectRoot = ({
   children,
   value,
