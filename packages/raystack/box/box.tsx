@@ -8,7 +8,7 @@ type BoxProps = PropsWithChildren<VariantProps<typeof box>> &
   HTMLAttributes<HTMLDivElement>;
 
 /**
- * @deprecated Use Box from 'apsara/packages/raystack/v1' instead.
+ * @deprecated Use Box from '@raystack/apsara/v1' instead.
  */
 export function Box({ children, className, ...props }: BoxProps) {
   return (
