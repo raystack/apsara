@@ -161,18 +161,18 @@ export function DatePicker({
 
   const defaultTrigger = (
     <InputField
-      ref={inputFieldRef}
       size="small"
       placeholder="Select date"
+      error={error}
+      className={styles.datePickerInput}
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
       {...inputFieldProps}
+      ref={inputFieldRef}
       defaultValue={formattedDate}
       onChange={handleInputChange}
       onFocus={handleInputFocus}
       onBlur={handleInputBlur}
-      error={error}
       onKeyUp={handleKeyUp}
-      className={styles.datePickerInput}
     />
   );
 

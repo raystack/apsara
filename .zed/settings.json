@@ -1,0 +1,37 @@
+{
+  "formatter": {
+    "language_server": {
+      "name": "biome"
+    }
+  },
+  "code_actions_on_format": {
+    "source.fixAll.biome": true,
+    "source.organizeImports.biome": true
+  },
+  "languages": {
+    "JavaScript": {
+      "formatter": { "name": "biome" }
+    },
+    "JSX": {
+      "formatter": { "name": "biome" }
+    },
+    "TypeScript": {
+      "formatter": { "name": "biome" }
+    },
+    "TSX": {
+      "formatter": { "name": "biome" }
+    },
+    "JSON": {
+      "formatter": { "name": "biome" }
+    },
+    "JSON with Comments": {
+      "formatter": { "name": "biome" }
+    },
+    "CSS": {
+      "formatter": { "name": "biome" }
+    },
+    "Markdown": {
+      "formatter": { "name": "biome" }
+    }
+  }
+}
