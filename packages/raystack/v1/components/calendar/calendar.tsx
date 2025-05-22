@@ -12,12 +12,14 @@ import {
   DayPickerProps,
   DropdownProps,
 } from 'react-day-picker';
-import Skeleton from 'react-loading-skeleton';
+import { clsx } from 'clsx';
 
 import { Flex } from '../flex/flex';
 import { Select } from '../select';
 import { Tooltip } from '../tooltip';
+import { Skeleton } from '../skeleton';
 import styles from './calendar.module.css';
+import { IconButton } from '../icon-button';
 
 interface OnDropdownOpen {
   onDropdownOpen?: VoidFunction;
@@ -36,12 +38,17 @@ export type CalendarProps = DayPickerProps &
 
 const root = cva(styles.calendarRoot);
 
+interface DropDownComponentProps extends DropdownProps, OnDropdownOpen {
+  disabled?: boolean;
+}
+
 function DropDown({
   options = [],
   value,
   onChange,
   onDropdownOpen,
-}: DropdownProps & OnDropdownOpen) {
+  disabled,
+}: DropDownComponentProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -69,6 +76,7 @@ function DropDown({
         stopPropagation={true}
         size="small"
         variant="text"
+        disabled={disabled}
       >
         <Select.Value />
       </Select.Trigger>
@@ -119,13 +127,30 @@ export const Calendar = function ({
       timeZone={timeZone}
       components={{
         Chevron: (props) => {
-          if (props.orientation === 'left') {
-            return <ChevronLeftIcon {...props} />;
-          }
-          return <ChevronRightIcon {...props} />;
+          const icon = props.orientation === 'left' ? (
+            <ChevronLeftIcon />
+          ) : (
+            <ChevronRightIcon />
+          );
+
+          return (
+            <IconButton 
+              {...props} 
+              disabled={loadingData}
+              className={clsx(props.className, loadingData && styles.disabled)}
+              size={3}
+              aria-label={props.orientation === 'left' ? 'Previous month' : 'Next month'}
+            >
+              {icon}
+            </IconButton>
+          );
         },
         Dropdown: (props: DropdownProps) => (
-          <DropDown {...props} onDropdownOpen={onDropdownOpen} />
+          <DropDown 
+            {...props} 
+            onDropdownOpen={onDropdownOpen}
+            disabled={loadingData}
+          />
         ),
         DayButton: (props) => {
           const { day, ...buttonProps } = props;
@@ -144,12 +169,10 @@ export const Calendar = function ({
         MonthGrid: (props) =>
           loadingData ? (
             <Skeleton
-              count={6}
-              height="12px"
+              count={5}
+              height="18px"
               width="252px"
-              style={{ marginBottom: "var(--rs-space-5)" }}
-              highlightColor="var(--rs-color-background-base-primary)"
-              baseColor="var(--rs-color-background-base-primary-hover)"
+              style={{ marginBottom: "var(--rs-space-6)" }}
             />
           ) : (
             <table {...props} />

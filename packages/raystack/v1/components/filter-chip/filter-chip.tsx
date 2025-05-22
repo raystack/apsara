@@ -154,7 +154,7 @@ export const FilterChip = ({
               value={filterValue}
               onSelect={date => setFilterValue(date)}
               showCalendarIcon={false}
-              textFieldProps={{ className: styles.dateField }}
+              inputFieldProps={{ className: styles.dateField }}
             />
           </div>
         );
