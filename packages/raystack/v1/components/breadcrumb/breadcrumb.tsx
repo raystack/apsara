@@ -1,9 +1,9 @@
-import { ChevronDownIcon,DotsHorizontalIcon } from "@radix-ui/react-icons";
-import { cva, type VariantProps } from "class-variance-authority";
-import React, { forwardRef, PropsWithChildren } from "react";
+import { ChevronDownIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { type VariantProps, cva } from 'class-variance-authority';
+import React, { forwardRef, PropsWithChildren } from 'react';
 
-import { DropdownMenu } from "../dropdown-menu";
-import styles from "./breadcrumb.module.css";
+import { DropdownMenu } from '../dropdown-menu';
+import styles from './breadcrumb.module.css';
 
 interface BreadcrumbItem {
   label: string;
@@ -15,16 +15,18 @@ interface BreadcrumbItem {
 const breadcrumb = cva(styles['breadcrumb'], {
   variants: {
     size: {
-      small: styles["breadcrumb-small"],
-      medium: styles["breadcrumb-medium"],
-    },
+      small: styles['breadcrumb-small'],
+      medium: styles['breadcrumb-medium']
+    }
   },
   defaultVariants: {
-    size: "medium",
-  },
+    size: 'medium'
+  }
 });
 
-type BreadcrumbProps = PropsWithChildren<Omit<VariantProps<typeof breadcrumb>, 'size'>> & {
+type BreadcrumbProps = PropsWithChildren<
+  Omit<VariantProps<typeof breadcrumb>, 'size'>
+> & {
   items: BreadcrumbItem[];
   maxVisibleItems?: number;
   separator?: React.ReactNode;
@@ -34,24 +36,32 @@ type BreadcrumbProps = PropsWithChildren<Omit<VariantProps<typeof breadcrumb>, '
 };
 
 export const Breadcrumb = forwardRef<HTMLDivElement, BreadcrumbProps>(
-  ({ 
-    className, 
-    size = 'medium', 
-    items, 
-    maxVisibleItems, 
-    separator = '/', 
-    onItemClick,
-    ...props 
-  }, ref) => {
-    const visibleItems = maxVisibleItems && items.length > maxVisibleItems
-      ? [
-          ...items.slice(0, 1),
-          { label: 'ellipsis', href: '#' },
-          ...items.slice(-Math.min(maxVisibleItems - 1, items.length - 1))
-        ]
-      : items;
+  (
+    {
+      className,
+      size = 'medium',
+      items,
+      maxVisibleItems,
+      separator = '/',
+      onItemClick,
+      ...props
+    },
+    ref
+  ) => {
+    const visibleItems =
+      maxVisibleItems && items.length > maxVisibleItems
+        ? [
+            ...items.slice(0, 1),
+            { label: 'ellipsis', href: '#' },
+            ...items.slice(-Math.min(maxVisibleItems - 1, items.length - 1))
+          ]
+        : items;
 
-    const renderItem = (item: BreadcrumbItem, index: number, isLast: boolean) => (
+    const renderItem = (
+      item: BreadcrumbItem,
+      index: number,
+      isLast: boolean
+    ) => (
       <li key={index} className={styles['breadcrumb-item']}>
         {item.label === 'ellipsis' ? (
           <span className={styles['breadcrumb-ellipsis']}>
@@ -59,20 +69,29 @@ export const Breadcrumb = forwardRef<HTMLDivElement, BreadcrumbProps>(
           </span>
         ) : item?.dropdownItems ? (
           <DropdownMenu>
-            <DropdownMenu.Trigger className={styles['breadcrumb-dropdown-trigger']}>
-              {item.icon && <span className={styles['breadcrumb-icon']}>{item.icon}</span>}
+            <DropdownMenu.Trigger
+              className={styles['breadcrumb-dropdown-trigger']}
+            >
+              {item.icon && (
+                <span className={styles['breadcrumb-icon']}>{item.icon}</span>
+              )}
               <span>{item.label}</span>
               <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
             </DropdownMenu.Trigger>
-            <DropdownMenu.Content className={styles['breadcrumb-dropdown-content']}>
+            <DropdownMenu.Content
+              className={styles['breadcrumb-dropdown-content']}
+            >
               {item.dropdownItems.map((dropdownItem, dropdownIndex) => (
-                <DropdownMenu.Item 
+                <DropdownMenu.Item
                   key={dropdownIndex}
                   className={styles['breadcrumb-dropdown-item']}
-                  onSelect={() => onItemClick && onItemClick({ 
-                    label: dropdownItem.label, 
-                    href: dropdownItem.href 
-                  })}
+                  onClick={() =>
+                    onItemClick &&
+                    onItemClick({
+                      label: dropdownItem.label,
+                      href: dropdownItem.href
+                    })
+                  }
                 >
                   {dropdownItem.label}
                 </DropdownMenu.Item>
@@ -80,36 +99,42 @@ export const Breadcrumb = forwardRef<HTMLDivElement, BreadcrumbProps>(
             </DropdownMenu.Content>
           </DropdownMenu>
         ) : (
-          <a 
+          <a
             href={item.href}
             className={`${styles['breadcrumb-link']} ${isLast ? styles['breadcrumb-link-active'] : ''}`}
-            onClick={(e) => {
+            onClick={e => {
               if (onItemClick && item.href !== '#') {
                 e.preventDefault();
                 onItemClick(item);
               }
             }}
           >
-            {item.icon && <span className={styles['breadcrumb-icon']}>{item.icon}</span>}
+            {item.icon && (
+              <span className={styles['breadcrumb-icon']}>{item.icon}</span>
+            )}
             <span>{item.label}</span>
           </a>
         )}
-        {!isLast && <span className={styles['breadcrumb-separator']}>{separator}</span>}
+        {!isLast && (
+          <span className={styles['breadcrumb-separator']}>{separator}</span>
+        )}
       </li>
     );
 
     return (
-      <nav 
+      <nav
         className={breadcrumb({ size: size as 'small' | 'medium', className })}
         ref={ref}
         {...props}
       >
         <ol className={styles['breadcrumb-list']}>
-          {visibleItems.map((item, index) => renderItem(item, index, index === visibleItems.length - 1))}
+          {visibleItems.map((item, index) =>
+            renderItem(item, index, index === visibleItems.length - 1)
+          )}
         </ol>
       </nav>
     );
   }
 );
 
-Breadcrumb.displayName = "Breadcrumb";
+Breadcrumb.displayName = 'Breadcrumb';
