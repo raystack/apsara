@@ -10,11 +10,13 @@ import {
 import { DropdownMenu } from '../dropdown-menu';
 import styles from './breadcrumb.module.css';
 
-interface BreadcrumbItem {
+interface BreadcrumbItemBase {
   label: string;
-  href: string;
+  href?: string;
+}
+interface BreadcrumbItem extends BreadcrumbItemBase {
   icon?: React.ReactNode;
-  dropdownItems?: Array<{ label: string; href: string }>;
+  dropdownItems?: BreadcrumbItemBase[];
   as?: ReactElement;
 }
 
@@ -72,7 +74,8 @@ const BreadcrumbItem = ({
           onItemClick(props);
         }
       },
-      href
+      href,
+      ...as.props
     },
     <>
       {icon && <span className={styles['breadcrumb-icon']}>{icon}</span>}
