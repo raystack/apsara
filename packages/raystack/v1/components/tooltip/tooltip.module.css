@@ -1,154 +1,154 @@
 .trigger {
-    width: fit-content;
-    display: flex;
+  width: fit-content;
+  display: flex;
+}
+
+.content {
+  position: relative;
+  box-sizing: border-box;
+  z-index: var(--rs-z-index-portal);
+  padding: var(--rs-space-2) var(--rs-space-3);
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  box-shadow: var(--rs-shadow-soft);
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  max-width: fit-content;
+  animation-duration: 400ms;
+}
+
+.content[data-state="delayed-open"][data-side="top"] {
+  animation-name: slideDownAndFade;
+}
+
+.content[data-state="delayed-open"][data-side="right"] {
+  animation-name: slideLeftAndFade;
+}
+
+.content[data-state="delayed-open"][data-side="bottom"] {
+  animation-name: slideUpAndFade;
+}
+
+.content[data-state="delayed-open"][data-side="left"] {
+  animation-name: slideRightAndFade;
+}
+
+.arrow {
+  fill: var(--rs-color-background-base-primary);
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 1px 0 var(--rs-color-border-base-primary))
+    drop-shadow(0 1px 1px var(--rs-color-border-base-primary));
+  transform: translateX(-1px);
+  margin-top: -1px;
+}
+
+/* Corner positions */
+.content[data-side="top"][data-align="start"] {
+  animation-name: slideDownRightAndFade;
+}
+
+.content[data-side="top"][data-align="end"] {
+  animation-name: slideDownLeftAndFade;
+}
+
+.content[data-side="bottom"][data-align="start"] {
+  animation-name: slideUpRightAndFade;
+}
+
+.content[data-side="bottom"][data-align="end"] {
+  animation-name: slideUpLeftAndFade;
+}
+
+@keyframes slideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
   }
-  
-  .content {
-    z-index: var(--rs-z-index-portal);
-    padding: var(--rs-space-2) var(--rs-space-3);
-    border-radius: var(--rs-radius-2);
-    background: var(--rs-color-background-base-primary);
-    border: 1px solid var(--rs-color-border-base-primary);
-    box-shadow: var(--rs-shadow-soft);
-    color: var(--rs-color-foreground-base-primary);
-    font-family: var(--rs-font-body);
-    font-size: var(--rs-font-size-mini);
-    font-weight: var(--rs-font-weight-medium);
-    line-height: var(--rs-line-height-mini);
-    letter-spacing: var(--rs-letter-spacing-mini);
-    max-width: fit-content;
-    animation-duration: 400ms;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .content[data-state='delayed-open'][data-side='top'] {
-    animation-name: slideDownAndFade;
+}
+
+@keyframes slideRightAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(-2px);
   }
-  
-  .content[data-state='delayed-open'][data-side='right'] {
-    animation-name: slideLeftAndFade;
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  
-  .content[data-state='delayed-open'][data-side='bottom'] {
-    animation-name: slideUpAndFade;
+}
+
+@keyframes slideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
   }
-  
-  .content[data-state='delayed-open'][data-side='left'] {
-    animation-name: slideRightAndFade;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .arrow {
-    fill: var(--rs-color-background-base-primary);
-    stroke: var(--rs-color-border-base-primary);
-    stroke-width: 1px;
-    width: 12px;
-    height: 6px;
-    margin-top: -1px;
-    margin-bottom: -1px;
-    transform: translateY(0.5px);
+}
+
+@keyframes slideLeftAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(2px);
   }
-  
-  /* Corner positions */
-  .content[data-side='top'][data-align='start'] {
-    animation-name: slideDownRightAndFade;
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
-  
-  .content[data-side='top'][data-align='end'] {
-    animation-name: slideDownLeftAndFade;
+}
+
+@keyframes slideDownRightAndFade {
+  from {
+    opacity: 0;
+    transform: translate(-2px, -2px);
   }
-  
-  .content[data-side='bottom'][data-align='start'] {
-    animation-name: slideUpRightAndFade;
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
   }
-  
-  .content[data-side='bottom'][data-align='end'] {
-    animation-name: slideUpLeftAndFade;
+}
+
+@keyframes slideDownLeftAndFade {
+  from {
+    opacity: 0;
+    transform: translate(2px, -2px);
   }
-  
-  @keyframes slideUpAndFade {
-    from {
-      opacity: 0;
-      transform: translateY(2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
   }
-  
-  @keyframes slideRightAndFade {
-    from {
-      opacity: 0;
-      transform: translateX(-2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+}
+
+@keyframes slideUpRightAndFade {
+  from {
+    opacity: 0;
+    transform: translate(-2px, 2px);
   }
-  
-  @keyframes slideDownAndFade {
-    from {
-      opacity: 0;
-      transform: translateY(-2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
   }
-  
-  @keyframes slideLeftAndFade {
-    from {
-      opacity: 0;
-      transform: translateX(2px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+}
+
+@keyframes slideUpLeftAndFade {
+  from {
+    opacity: 0;
+    transform: translate(2px, 2px);
   }
-  
-  @keyframes slideDownRightAndFade {
-    from {
-      opacity: 0;
-      transform: translate(-2px, -2px);
-    }
-    to {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
   }
-  
-  @keyframes slideDownLeftAndFade {
-    from {
-      opacity: 0;
-      transform: translate(2px, -2px);
-    }
-    to {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-  }
-  
-  @keyframes slideUpRightAndFade {
-    from {
-      opacity: 0;
-      transform: translate(-2px, 2px);
-    }
-    to {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-  }
-  
-  @keyframes slideUpLeftAndFade {
-    from {
-      opacity: 0;
-      transform: translate(2px, 2px);
-    }
-    to {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-  }
-  
+}

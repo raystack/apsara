@@ -14,14 +14,14 @@ export interface TooltipProps {
    * @default "top"
    */
   side?:
-    | "top"
-    | "right"
-    | "bottom"
-    | "left"
-    | "top-left"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-right";
+    | 'top'
+    | 'right'
+    | 'bottom'
+    | 'left'
+    | 'top-left'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-right';
 
   /**
    * Whether the tooltip is disabled.
@@ -40,6 +40,11 @@ export interface TooltipProps {
    * @default 200
    */
   skipDelayDuration?: number;
+
+  /**
+   * Additional ID for Tooltip Content
+   */
+  id?: string;
 
   /**
    * Additional CSS class names.
