@@ -12,7 +12,8 @@
   top: 0px;
   position: sticky;
   background: var(--rs-color-background-base-primary);
-  margin: 0 0 0 0;
+  margin: 0;
+  z-index: 1;
 }
 
 .head {
