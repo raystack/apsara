@@ -89,6 +89,7 @@
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .root[data-state="collapsed"] .nav-item {
@@ -213,7 +214,6 @@
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  padding-left: var(--rs-space-3);
 }
 
 .nav-group-items {
