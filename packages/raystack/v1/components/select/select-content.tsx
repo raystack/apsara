@@ -1,9 +1,10 @@
-import { ElementRef, forwardRef } from "react";
-import * as SelectPrimitive from "@radix-ui/react-select";
-import { Combobox, ComboboxList } from "@ariakit/react";
-import { cx } from "class-variance-authority";
-import styles from "./select.module.css";
-import { useSelectContext } from "./select-root";
+import { Combobox, ComboboxList } from '@ariakit/react';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { Slot } from '@radix-ui/react-slot';
+import { cx } from 'class-variance-authority';
+import { ElementRef, forwardRef } from 'react';
+import { useSelectContext } from './select-root';
+import styles from './select.module.css';
 
 export interface SelectContentProps extends SelectPrimitive.SelectContentProps {
   searchPlaceholder?: string;
@@ -17,29 +18,33 @@ export const SelectContent = forwardRef<
     {
       className,
       children,
-      position = "popper",
-      searchPlaceholder = "Search...",
+      position = 'popper',
+      searchPlaceholder = 'Search...',
       sideOffset = 4,
+      asChild,
       ...props
     },
-    ref,
+    ref
   ) => {
     const { autocomplete } = useSelectContext();
 
     return (
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
-          role={autocomplete ? "dialog" : undefined}
+          role={autocomplete ? 'dialog' : undefined}
           ref={ref}
           position={position}
           sideOffset={sideOffset}
           className={cx(styles.content, className)}
-          {...props}>
+          {...props}
+        >
           <SelectPrimitive.Viewport
             className={cx(
               styles.viewport,
-              autocomplete && styles.comboboxViewport,
-            )}>
+              autocomplete && styles.comboboxViewport
+            )}
+            asChild={!autocomplete ? asChild : undefined}
+          >
             {autocomplete ? (
               <>
                 <Combobox
@@ -51,7 +56,10 @@ export const SelectContent = forwardRef<
                     event.stopPropagation();
                   }}
                 />
-                <ComboboxList className={styles.comboboxContent}>
+                <ComboboxList
+                  className={styles.comboboxContent}
+                  render={asChild ? <Slot /> : undefined}
+                >
                   {children}
                 </ComboboxList>
               </>
@@ -62,6 +70,6 @@ export const SelectContent = forwardRef<
         </SelectPrimitive.Content>
       </SelectPrimitive.Portal>
     );
-  },
+  }
 );
 SelectContent.displayName = SelectPrimitive.Content.displayName;

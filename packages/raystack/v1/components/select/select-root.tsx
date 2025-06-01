@@ -1,23 +1,25 @@
+import { ComboboxProvider } from '@ariakit/react';
+import * as SelectPrimitive from '@radix-ui/react-select';
 import {
-  createContext,
   ReactNode,
+  createContext,
   useCallback,
   useContext,
   useRef,
-  useState,
-} from "react";
-import { ComboboxProvider } from "@ariakit/react";
-import * as SelectPrimitive from "@radix-ui/react-select";
+  useState
+} from 'react';
 
-type IconType = Record<string, ReactNode>;
+// type IconType = Record<string, { icon: ReactNode; children: ReactNode }>;
+type ItemType = { leadingIcon?: ReactNode; children: ReactNode; value: string };
+
 type ValueType = {
   value?: string;
-  icon?: ReactNode;
+  item?: ItemType;
 };
 
 interface CommonProps {
   autocomplete?: boolean;
-  autocompleteMode?: "auto" | "manual";
+  autocompleteMode?: 'auto' | 'manual';
   searchValue?: string;
   onSearch?: (value: string) => void;
   defaultSearchValue?: string;
@@ -25,8 +27,10 @@ interface CommonProps {
 
 interface SelectContextValue extends CommonProps {
   value: ValueType;
-  registerIcon: (value: string, icon: ReactNode) => void;
-  unregisterIcon: (value: string) => void;
+  // registerIcon: (value: string, icon: ReactNode, children: ReactNode) => void;
+  registerItem: (item: ItemType) => void;
+  unregisterItem: (value: string) => void;
+  // unregisterIcon: (value: string) => void;
 }
 
 interface UseSelectContext extends SelectContextValue {
@@ -42,38 +46,17 @@ const SelectContext = createContext<SelectContextValue | undefined>(undefined);
 export const useSelectContext = (): UseSelectContext => {
   const context = useContext(SelectContext);
   if (!context) {
-    throw new Error("useSelectContext must be used within a SelectProvider");
+    throw new Error('useSelectContext must be used within a SelectProvider');
   }
   const shouldFilter = !!(
     context?.autocomplete &&
-    context?.autocompleteMode === "auto" &&
+    context?.autocompleteMode === 'auto' &&
     context?.searchValue?.length
   );
   return {
     ...context,
-    shouldFilter,
+    shouldFilter
   };
-};
-
-export interface NormalSelectRootProps extends SelectPrimitive.SelectProps {
-  autocomplete?: false;
-  autocompleteMode?: never;
-  searchValue?: never;
-  onSearch?: never;
-  defaultSearchValue?: never;
-}
-
-export interface AutocompleteSelectRootProps
-  extends SelectPrimitive.SelectProps,
-    CommonProps {
-  autocomplete: true;
-}
-
-export type SelectRootProps = Omit<
-  NormalSelectRootProps | AutocompleteSelectRootProps,
-  "autoComplete"
-> & {
-  htmlAutoComplete?: string;
 };
 
 export interface NormalSelectRootProps extends SelectPrimitive.SelectProps {
@@ -94,7 +77,7 @@ export type BaseSelectRootProps =
   | NormalSelectRootProps
   | AutocompleteSelectRootProps;
 
-export type SelectRootProps = Omit<BaseSelectRootProps, "autoComplete"> & {
+export type SelectRootProps = Omit<BaseSelectRootProps, 'autoComplete'> & {
   htmlAutoComplete?: string;
 };
 
@@ -104,10 +87,10 @@ export const SelectRoot = ({
   onValueChange,
   defaultValue,
   autocomplete,
-  autocompleteMode = "auto",
+  autocompleteMode = 'auto',
   searchValue: providedSearchValue,
   onSearch,
-  defaultSearchValue = "",
+  defaultSearchValue = '',
   open: controlledOpen,
   defaultOpen = false,
   onOpenChange,
@@ -115,24 +98,31 @@ export const SelectRoot = ({
   ...props
 }: SelectRootProps) => {
   const [internalValue, setInternalValue] = useState<string | undefined>(
-    defaultValue,
+    defaultValue
   );
   const [internalSearchValue, setInternalSearchValue] =
     useState(defaultSearchValue);
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const icons = useRef<IconType>({});
+  // const [items, setItems] = useState<Record<string, ItemType>>({});
+  /*
+   * icons ref needs to be reactive for inital render when value or defaultValue is set
+   */
+  // const icons = useRef<IconType>({});
+  const items = useRef<Record<string, ItemType>>({});
 
   const computedValue = value ?? internalValue;
-  const icon = computedValue && icons.current?.[computedValue];
+  // const icon = computedValue ? icons.current?.[computedValue] : undefined;
   const searchValue = providedSearchValue ?? internalSearchValue;
   const open = controlledOpen ?? internalOpen;
+
+  const itemValue = computedValue ? items.current[computedValue] : undefined;
 
   const setValue = useCallback(
     (_value: string) => {
       onValueChange?.(_value);
       setInternalValue(_value);
     },
-    [onValueChange],
+    [onValueChange]
   );
 
   const setSearchValue = useCallback(
@@ -140,7 +130,7 @@ export const SelectRoot = ({
       setInternalSearchValue(value);
       onSearch?.(value);
     },
-    [onSearch],
+    [onSearch]
   );
 
   const handleOpenChange = useCallback(
@@ -148,21 +138,31 @@ export const SelectRoot = ({
       setInternalOpen(value);
       onOpenChange?.(value);
     },
-    [onOpenChange],
+    [onOpenChange]
   );
 
-  const registerIcon = useCallback<SelectContextValue["registerIcon"]>(
-    (value, icon) => {
-      icons.current = { ...icons.current, [value]: icon };
-    },
-    [],
-  );
-  const unregisterIcon = useCallback<SelectContextValue["unregisterIcon"]>(
+  // const registerIcon = useCallback<SelectContextValue['registerIcon']>(
+  //   (value, icon, children) => {
+  //     icons.current = { ...icons.current, [value]: { icon, children } };
+  //   },
+  //   []
+  // );
+  // const unregisterIcon = useCallback<SelectContextValue['unregisterIcon']>(
+  //   value => {
+  //     const { [value]: _, ...rest } = icons.current;
+  //     icons.current = rest;
+  //   },
+  //   []
+  // );
+  const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
+    items.current = { ...items.current, [item.value]: item };
+  }, []);
+  const unregisterItem = useCallback<SelectContextValue['unregisterItem']>(
     value => {
-      const { [value]: _, ...rest } = icons.current;
-      icons.current = rest;
+      const { [value]: _, ...rest } = items.current;
+      items.current = rest;
     },
-    [],
+    []
   );
 
   const element = (
@@ -173,7 +173,8 @@ export const SelectRoot = ({
       value={searchValue}
       setValue={setSearchValue}
       open={open}
-      setOpen={handleOpenChange}>
+      setOpen={handleOpenChange}
+    >
       {children}
     </ComboboxProvider>
   );
@@ -181,20 +182,25 @@ export const SelectRoot = ({
   return (
     <SelectContext.Provider
       value={{
-        registerIcon,
-        unregisterIcon,
-        value: { value: computedValue, icon },
+        // registerIcon,
+        // unregisterIcon,
+        // value: { value: computedValue, icon },
+        value: { value: computedValue, item: itemValue },
+        registerItem,
+        unregisterItem,
         autocomplete,
         autocompleteMode,
-        searchValue,
-      }}>
+        searchValue
+      }}
+    >
       <SelectPrimitive.Root
         autoComplete={htmlAutoComplete}
         value={computedValue}
         onValueChange={setValue}
         open={open}
         onOpenChange={handleOpenChange}
-        {...props}>
+        {...props}
+      >
         {autocomplete ? element : children}
       </SelectPrimitive.Root>
     </SelectContext.Provider>

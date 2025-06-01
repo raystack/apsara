@@ -1,15 +1,15 @@
-import { ElementRef, forwardRef, useEffect } from "react";
-import * as SelectPrimitive from "@radix-ui/react-select";
-import { ComboboxItem } from "@ariakit/react";
-import { cx } from "class-variance-authority";
-import styles from "./select.module.css";
-import { Text, TextProps } from "../text";
-import { useSelectContext } from "./select-root";
-import { getMatch } from "../dropdown-menu/utils";
+import { ComboboxItem } from '@ariakit/react';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { cx } from 'class-variance-authority';
+import { ElementRef, forwardRef, useLayoutEffect } from 'react';
+import { getMatch } from '../dropdown-menu/utils';
+import { Text, TextProps } from '../text';
+import { useSelectContext } from './select-root';
+import styles from './select.module.css';
 
 export const SelectItem = forwardRef<
   ElementRef<typeof SelectPrimitive.Item>,
-  Omit<SelectPrimitive.SelectItemProps, "asChild"> & {
+  Omit<SelectPrimitive.SelectItemProps, 'asChild'> & {
     textProps?: TextProps;
     leadingIcon?: React.ReactNode;
   }
@@ -24,43 +24,46 @@ export const SelectItem = forwardRef<
       disabled,
       ...props
     },
-    ref,
+    ref
   ) => {
     const {
-      registerIcon,
-      unregisterIcon,
+      // registerIcon,
+      // unregisterIcon,
+      registerItem,
+      unregisterItem,
       autocomplete,
       searchValue,
       value: selectValue,
-      shouldFilter,
+      shouldFilter
     } = useSelectContext();
-
-    useEffect(() => {
-      if (!leadingIcon) return;
-
-      registerIcon(value, leadingIcon);
-      return () => {
-        unregisterIcon(value);
-      };
-    }, [value, leadingIcon]);
 
     const isSelected = value === selectValue.value;
     const isMatched = getMatch(value, children, searchValue);
     const isHidden = shouldFilter && isSelected && !isMatched;
 
+    const element = (
+      <>
+        {leadingIcon && <div className={styles.itemIcon}>{leadingIcon}</div>}
+        <Text {...textProps}>{children}</Text>
+      </>
+    );
+
+    useLayoutEffect(() => {
+      registerItem({ leadingIcon, children: element, value });
+      return () => {
+        unregisterItem(value);
+      };
+      // console.log('item use effect', element);
+      // registerIcon(value, leadingIcon, element);
+      // return () => {
+      //   unregisterIcon(value);
+      // };
+    }, [value, leadingIcon, element, registerItem, unregisterItem]);
+
     if (shouldFilter && !isMatched && !isSelected) {
       // Not selected and doesn't match search, so don't render at all
       return null;
     }
-
-    const element = (
-      <>
-        {leadingIcon && <div className={styles.itemIcon}>{leadingIcon}</div>}
-        <SelectPrimitive.ItemText>
-          <Text {...textProps}>{children}</Text>
-        </SelectPrimitive.ItemText>
-      </>
-    );
 
     return (
       <SelectPrimitive.Item
@@ -70,12 +73,14 @@ export const SelectItem = forwardRef<
         data-hidden={isHidden}
         disabled={disabled || isHidden}
         asChild={autocomplete}
-        {...props}>
+        {...props}
+      >
         {autocomplete ? (
           <ComboboxItem
             onBlurCapture={event => {
               event.preventDefault();
-            }}>
+            }}
+          >
             {element}
           </ComboboxItem>
         ) : (
@@ -83,6 +88,6 @@ export const SelectItem = forwardRef<
         )}
       </SelectPrimitive.Item>
     );
-  },
+  }
 );
 SelectItem.displayName = SelectPrimitive.Item.displayName;

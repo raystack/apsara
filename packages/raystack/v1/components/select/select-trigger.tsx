@@ -1,14 +1,14 @@
-import { ElementRef, forwardRef, SVGAttributes } from "react";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import * as SelectPrimitive from "@radix-ui/react-select";
-import { cva, VariantProps } from "class-variance-authority";
-import styles from "./select.module.css";
+import { ChevronDownIcon } from '@radix-ui/react-icons';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { VariantProps, cva } from 'class-variance-authority';
+import { ElementRef, SVGAttributes, forwardRef } from 'react';
+import styles from './select.module.css';
 
 export interface AriaProps {
-  "aria-label"?: string;
-  "aria-describedby"?: string;
-  "aria-required"?: boolean;
-  "aria-invalid"?: boolean;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+  'aria-required'?: boolean;
+  'aria-invalid'?: boolean;
 }
 
 export interface TriggerStyleProps {
@@ -25,18 +25,18 @@ export interface IconProps extends SVGAttributes<SVGElement> {
 const trigger = cva(styles.trigger, {
   variants: {
     size: {
-      small: styles["trigger-small"],
-      medium: styles["trigger-medium"],
+      small: styles['trigger-small'],
+      medium: styles['trigger-medium']
     },
     variant: {
-      outline: styles["trigger-outline"],
-      text: styles["trigger-text"],
-    },
+      outline: styles['trigger-outline'],
+      text: styles['trigger-text']
+    }
   },
   defaultVariants: {
-    size: "medium",
-    variant: "outline",
-  },
+    size: 'medium',
+    variant: 'outline'
+  }
 });
 
 type SelectTriggerProps = SelectPrimitive.SelectTriggerProps &
@@ -56,37 +56,42 @@ export const SelectTrigger = forwardRef<
       className,
       children,
       iconProps = {},
-      "aria-label": ariaLabel,
+      'aria-label': ariaLabel,
       style,
       stopPropagation = false,
       ...props
     },
-    ref,
-  ) => (
-    <SelectPrimitive.Trigger
-      ref={ref}
-      className={trigger({ size, variant, className })}
-      aria-label={ariaLabel || "Select option"}
-      style={{
-        ...style,
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-      onPointerDown={e => {
-        if (stopPropagation) {
-          e.stopPropagation();
-        }
-      }}
-      {...props}>
-      <div className={styles.triggerContent}>{children}</div>
-      <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon
-          className={styles.triggerIcon}
-          aria-hidden="true"
-          {...iconProps}
-        />
-      </SelectPrimitive.Icon>
-    </SelectPrimitive.Trigger>
-  ),
+    ref
+  ) => {
+    // const { value } = useSelectContext();
+    // console.log('trigger', value);
+    return (
+      <SelectPrimitive.Trigger
+        ref={ref}
+        className={trigger({ size, variant, className })}
+        aria-label={ariaLabel || 'Select option'}
+        style={{
+          ...style,
+          display: 'flex',
+          justifyContent: 'space-between'
+        }}
+        onPointerDown={e => {
+          if (stopPropagation) {
+            e.stopPropagation();
+          }
+        }}
+        {...props}
+      >
+        <div className={styles.triggerContent}>{children}</div>
+        <SelectPrimitive.Icon asChild>
+          <ChevronDownIcon
+            className={styles.triggerIcon}
+            aria-hidden='true'
+            {...iconProps}
+          />
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+    );
+  }
 );
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
