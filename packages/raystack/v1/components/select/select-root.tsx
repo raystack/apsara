@@ -5,17 +5,12 @@ import {
   createContext,
   useCallback,
   useContext,
-  useRef,
+  useId,
   useState
 } from 'react';
 
 // type IconType = Record<string, { icon: ReactNode; children: ReactNode }>;
 type ItemType = { leadingIcon?: ReactNode; children: ReactNode; value: string };
-
-type ValueType = {
-  value?: string;
-  item?: ItemType;
-};
 
 interface CommonProps {
   autocomplete?: boolean;
@@ -26,11 +21,11 @@ interface CommonProps {
 }
 
 interface SelectContextValue extends CommonProps {
-  value: ValueType;
-  // registerIcon: (value: string, icon: ReactNode, children: ReactNode) => void;
+  value?: string | string[];
   registerItem: (item: ItemType) => void;
   unregisterItem: (value: string) => void;
-  // unregisterIcon: (value: string) => void;
+  multiple: boolean;
+  items: Record<string, ItemType>;
 }
 
 interface UseSelectContext extends SelectContextValue {
@@ -73,56 +68,86 @@ export interface AutocompleteSelectRootProps
   autocomplete: true;
 }
 
-export type BaseSelectRootProps =
-  | NormalSelectRootProps
-  | AutocompleteSelectRootProps;
-
-export type SelectRootProps = Omit<BaseSelectRootProps, 'autoComplete'> & {
+export type BaseSelectProps = Omit<
+  NormalSelectRootProps | AutocompleteSelectRootProps,
+  'autoComplete' | 'value' | 'onValueChange' | 'defaultValue'
+> & {
   htmlAutoComplete?: string;
 };
 
-export const SelectRoot = ({
-  children,
-  value,
-  onValueChange,
-  defaultValue,
-  autocomplete,
-  autocompleteMode = 'auto',
-  searchValue: providedSearchValue,
-  onSearch,
-  defaultSearchValue = '',
-  open: controlledOpen,
-  defaultOpen = false,
-  onOpenChange,
-  htmlAutoComplete,
-  ...props
-}: SelectRootProps) => {
-  const [internalValue, setInternalValue] = useState<string | undefined>(
-    defaultValue
-  );
+interface SingleSelectProps extends BaseSelectProps {
+  multiple?: false;
+  value?: string;
+  onValueChange?: (value: string) => void;
+  defaultValue?: string;
+}
+
+interface MultipleSelectProps extends BaseSelectProps {
+  multiple: true;
+  value?: string[];
+  onValueChange?: (value: string[]) => void;
+  defaultValue?: string[];
+}
+
+export type SelectRootProps = SingleSelectProps | MultipleSelectProps;
+
+const SELECT_INTERNAL_VALUE = 'SELECT_INTERNAL_VALUE';
+
+export const SelectRoot = (props: SelectRootProps) => {
+  const {
+    children,
+    value: providedValue,
+    onValueChange,
+    defaultValue,
+    autocomplete,
+    autocompleteMode = 'auto',
+    searchValue: providedSearchValue,
+    onSearch,
+    defaultSearchValue = '',
+    open: providedOpen,
+    defaultOpen = false,
+    onOpenChange,
+    htmlAutoComplete,
+    multiple = false,
+    ...rest
+  } = props;
+
+  const [internalValue, setInternalValue] = useState<
+    string | string[] | undefined
+  >(defaultValue);
   const [internalSearchValue, setInternalSearchValue] =
     useState(defaultSearchValue);
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  // const [items, setItems] = useState<Record<string, ItemType>>({});
-  /*
-   * icons ref needs to be reactive for inital render when value or defaultValue is set
-   */
-  // const icons = useRef<IconType>({});
-  const items = useRef<Record<string, ItemType>>({});
+  const [items, setItems] = useState<SelectContextValue['items']>({});
+  const id = useId();
 
-  const computedValue = value ?? internalValue;
-  // const icon = computedValue ? icons.current?.[computedValue] : undefined;
+  const computedValue = providedValue ?? internalValue;
   const searchValue = providedSearchValue ?? internalSearchValue;
-  const open = controlledOpen ?? internalOpen;
-
-  const itemValue = computedValue ? items.current[computedValue] : undefined;
+  const open = providedOpen ?? internalOpen;
 
   const setValue = useCallback(
-    (_value: string) => {
-      onValueChange?.(_value);
-      setInternalValue(_value);
+    (value: string) => {
+      console.log('setValue', value);
+      if (multiple) {
+        const set = new Set<string>(
+          Array.isArray(computedValue)
+            ? computedValue
+            : [computedValue ?? ''].filter(Boolean)
+        );
+
+        if (set.has(value)) set.delete(value);
+        else set.add(value);
+
+        const newValue = Array.from(set);
+
+        setInternalValue(newValue);
+        (onValueChange as MultipleSelectProps['onValueChange'])?.(newValue);
+      } else {
+        setInternalValue(value);
+        (onValueChange as SingleSelectProps['onValueChange'])?.(value);
+      }
     },
-    [onValueChange]
+    [multiple, onValueChange, computedValue]
   );
 
   const setSearchValue = useCallback(
@@ -141,26 +166,16 @@ export const SelectRoot = ({
     [onOpenChange]
   );
 
-  // const registerIcon = useCallback<SelectContextValue['registerIcon']>(
-  //   (value, icon, children) => {
-  //     icons.current = { ...icons.current, [value]: { icon, children } };
-  //   },
-  //   []
-  // );
-  // const unregisterIcon = useCallback<SelectContextValue['unregisterIcon']>(
-  //   value => {
-  //     const { [value]: _, ...rest } = icons.current;
-  //     icons.current = rest;
-  //   },
-  //   []
-  // );
   const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
-    items.current = { ...items.current, [item.value]: item };
+    setItems(prev => ({ ...prev, [item.value]: item }));
   }, []);
+
   const unregisterItem = useCallback<SelectContextValue['unregisterItem']>(
     value => {
-      const { [value]: _, ...rest } = items.current;
-      items.current = rest;
+      setItems(prev => {
+        const { [value]: _, ...rest } = prev;
+        return rest;
+      });
     },
     []
   );
@@ -182,24 +197,23 @@ export const SelectRoot = ({
   return (
     <SelectContext.Provider
       value={{
-        // registerIcon,
-        // unregisterIcon,
-        // value: { value: computedValue, icon },
-        value: { value: computedValue, item: itemValue },
+        value: computedValue,
         registerItem,
         unregisterItem,
         autocomplete,
         autocompleteMode,
-        searchValue
+        searchValue,
+        multiple,
+        items
       }}
     >
       <SelectPrimitive.Root
         autoComplete={htmlAutoComplete}
-        value={computedValue}
+        value={computedValue ? `${SELECT_INTERNAL_VALUE}-${id}` : ''}
         onValueChange={setValue}
         open={open}
         onOpenChange={handleOpenChange}
-        {...props}
+        {...rest}
       >
         {autocomplete ? element : children}
       </SelectPrimitive.Root>

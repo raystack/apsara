@@ -1,23 +1,23 @@
 import { ComboboxItem } from '@ariakit/react';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { cx } from 'class-variance-authority';
-import { ElementRef, forwardRef, useLayoutEffect } from 'react';
+import { ElementRef, forwardRef, useLayoutEffect, useMemo } from 'react';
 import { getMatch } from '../dropdown-menu/utils';
-import { Text, TextProps } from '../text';
+import { Text } from '../text';
 import { useSelectContext } from './select-root';
 import styles from './select.module.css';
 
 export const SelectItem = forwardRef<
   ElementRef<typeof SelectPrimitive.Item>,
   Omit<SelectPrimitive.SelectItemProps, 'asChild'> & {
-    textProps?: TextProps;
+    // textProps?: TextProps;
     leadingIcon?: React.ReactNode;
   }
 >(
   (
     {
       className,
-      textProps = {},
+      // textProps = {},
       children,
       value,
       leadingIcon,
@@ -34,19 +34,29 @@ export const SelectItem = forwardRef<
       autocomplete,
       searchValue,
       value: selectValue,
-      shouldFilter
+      shouldFilter,
+      multiple
     } = useSelectContext();
 
-    const isSelected = value === selectValue.value;
+    const isSelected = multiple
+      ? selectValue?.includes(value)
+      : value === selectValue;
     const isMatched = getMatch(value, children, searchValue);
     const isHidden = shouldFilter && isSelected && !isMatched;
 
-    const element = (
-      <>
-        {leadingIcon && <div className={styles.itemIcon}>{leadingIcon}</div>}
-        <Text {...textProps}>{children}</Text>
-      </>
-    );
+    const element = useMemo(() => {
+      if (typeof children === 'string') {
+        return (
+          <>
+            {leadingIcon && (
+              <div className={styles.itemIcon}>{leadingIcon}</div>
+            )}
+            <Text>{children}</Text>
+          </>
+        );
+      }
+      return children;
+    }, [leadingIcon, children]);
 
     useLayoutEffect(() => {
       registerItem({ leadingIcon, children: element, value });
@@ -58,7 +68,7 @@ export const SelectItem = forwardRef<
       // return () => {
       //   unregisterIcon(value);
       // };
-    }, [value, leadingIcon, element, registerItem, unregisterItem]);
+    }, [value, element, registerItem, unregisterItem, leadingIcon]);
 
     if (shouldFilter && !isMatched && !isSelected) {
       // Not selected and doesn't match search, so don't render at all
@@ -73,6 +83,7 @@ export const SelectItem = forwardRef<
         data-hidden={isHidden}
         disabled={disabled || isHidden}
         asChild={autocomplete}
+        aria-selected={isSelected}
         {...props}
       >
         {autocomplete ? (

@@ -17,17 +17,18 @@ export const SelectValue = forwardRef<
   //   </SelectPrimitive.Value>
   // );
 
-  if (value.item?.children) {
-    return value.item.children;
-  }
+  // if (value?.item?.children) {
+  //   return value.item.children;
+  // }
 
   return (
     <div className={cx(styles.valueContent)}>
-      {value.item?.leadingIcon && (
+      {/* {value.item?.leadingIcon && (
         <div className={styles.leadingIcon}>{value.item.leadingIcon}</div>
-      )}
+      )} */}
       <SelectPrimitive.Value ref={ref} {...props}>
-        {children}
+        {JSON.stringify(value) ?? children}
+        {/* {value ?? children} */}
       </SelectPrimitive.Value>
     </div>
   );
