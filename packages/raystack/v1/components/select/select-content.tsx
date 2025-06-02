@@ -54,7 +54,6 @@ export const SelectContent = forwardRef<
     return (
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
-          role={autocomplete ? 'dialog' : undefined}
           ref={ref}
           position={position}
           sideOffset={sideOffset}
@@ -63,6 +62,9 @@ export const SelectContent = forwardRef<
           onPointerDownOutside={
             multiple ? onPointerDownOutside : providedOnPointerDownOutside
           }
+          role={autocomplete ? 'dialog' : 'listbox'}
+          aria-multiselectable={multiple ? true : undefined}
+          data-multiselectable={multiple ? true : undefined}
           {...props}
         >
           <SelectPrimitive.Viewport

@@ -61,6 +61,7 @@ export const SelectItem = forwardRef<
       disabled={disabled || isHidden}
       asChild={autocomplete}
       aria-selected={isSelected}
+      data-checked={isSelected}
       {...props}
     >
       {autocomplete ? (

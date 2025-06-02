@@ -49,13 +49,14 @@ export const SelectTrigger = forwardRef<
     },
     ref
   ) => {
-    const { multiple } = useSelectContext();
+    const { multiple, autocomplete } = useSelectContext();
     return (
       <SelectPrimitive.Trigger
-        data-multiple={multiple}
+        data-multiselectable={multiple ? true : undefined}
         ref={ref}
         className={trigger({ size, variant, className })}
         aria-label={ariaLabel || 'Select option'}
+        aria-haspopup={autocomplete ? 'dialog' : 'listbox'}
         {...props}
       >
         <div className={styles.triggerContent}>{children}</div>

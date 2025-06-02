@@ -34,7 +34,7 @@
   cursor: pointer;
   background: var(--rs-color-background-base-primary-hover);
 }
-.menuitem[data-state="checked"] {
+.content:not([data-multiselectable="true"]) .menuitem[data-state="checked"] {
   background: var(--rs-color-background-neutral-secondary);
 }
 
@@ -118,7 +118,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
   gap: var(--rs-space-2);
 }
-.trigger[data-multiple="true"] {
+.trigger[data-multiselectable="true"] {
   padding-top: 0px;
   padding-bottom: 0px;
 }
