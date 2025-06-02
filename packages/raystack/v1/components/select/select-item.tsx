@@ -65,6 +65,8 @@ export const SelectItem = forwardRef<
     >
       {autocomplete ? (
         <ComboboxItem
+          clickOnEnter={false}
+          clickOnSpace={false}
           onBlurCapture={event => {
             event.preventDefault();
           }}
