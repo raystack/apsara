@@ -63,7 +63,7 @@ export const SelectContent = forwardRef<
             multiple ? onPointerDownOutside : providedOnPointerDownOutside
           }
           role={autocomplete ? 'dialog' : 'listbox'}
-          aria-multiselectable={multiple ? true : undefined}
+          aria-multiselectable={!autocomplete && multiple ? true : undefined}
           data-multiselectable={multiple ? true : undefined}
           {...props}
         >
@@ -87,6 +87,7 @@ export const SelectContent = forwardRef<
                 />
                 <ComboboxList
                   className={styles.comboboxContent}
+                  aria-multiselectable={multiple ? true : undefined}
                   render={asChild ? <Slot /> : undefined}
                 >
                   {children}
