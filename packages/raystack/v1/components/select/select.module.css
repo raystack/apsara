@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
   padding: var(--rs-space-3);
   color: var(--rs-color-foreground-base-primary);
   white-space: normal;
@@ -177,7 +177,7 @@
 .valueContent {
   display: flex;
   align-items: center;
-  gap: var(--rs-space-1);
+  gap: var(--rs-space-3);
   height: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -186,20 +186,24 @@
 }
 
 .trigger-small .valueContent {
-  gap: 0;
+  gap: var(--rs-space-2);
 }
 
 .itemIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--rs-space-2);
   flex-shrink: 0;
 }
 
 .itemIcon svg {
   width: 16px;
   height: 16px;
+}
+
+.trigger-small .valueContent .itemIcon svg {
+  width: 12px;
+  height: 12px;
 }
 
 .trigger-small .triggerIcon {
@@ -219,14 +223,6 @@
 [data-placeholder]:hover,
 .valueContent[data-state="placeholder"]:hover {
   color: var(--rs-color-foreground-base-tertiary);
-}
-
-.leadingIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: var(--rs-space-2);
-  flex-shrink: 0;
 }
 
 .trigger[data-disabled] {
@@ -257,10 +253,6 @@
   color: var(--rs-color-foreground-base-tertiary);
 }
 
-.trigger[data-disabled] .leadingIcon {
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
 [data-disabled=""] {
   cursor: not-allowed;
   pointer-events: none;
@@ -275,7 +267,7 @@
   padding: 0;
 }
 
-/* 
+/*
   Empty state matches:
    1. Completely empty container
    2. Container where all .item children have data-hidden="true"
@@ -285,7 +277,9 @@
   padding: 0;
 }
 .comboboxContainer:has(.comboboxContent:empty) .comboboxInput,
-.comboboxContainer:has(.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))))
+.comboboxContainer:has(
+    .comboboxContent:not(:has(.menuitem:not([data-hidden="true"])))
+  )
   .comboboxInput {
   border-bottom: none;
 }
