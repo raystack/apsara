@@ -9,29 +9,13 @@ import {
   useRef,
   useState
 } from 'react';
-import { ItemType } from './types';
-
-interface CommonProps {
-  autocomplete?: boolean;
-  autocompleteMode?: 'auto' | 'manual';
-  searchValue?: string;
-  onSearch?: (value: string) => void;
-  defaultSearchValue?: string;
-}
-
-interface SelectContextValue extends CommonProps {
-  value?: string | string[];
-  registerItem: (item: ItemType) => void;
-  unregisterItem: (value: string) => void;
-  multiple: boolean;
-  items: Record<string, ItemType>;
-  updateSelectionInProgress: (value: boolean) => void;
-  setValue: (value: string) => void;
-}
-
-interface UseSelectContext extends SelectContextValue {
-  shouldFilter?: boolean;
-}
+import {
+  MultipleSelectProps,
+  SelectContextValue,
+  SelectRootProps,
+  SingleSelectProps,
+  UseSelectContext
+} from './types';
 
 /*
 Root context to manage the Select control
@@ -54,43 +38,6 @@ export const useSelectContext = (): UseSelectContext => {
     shouldFilter
   };
 };
-
-interface NormalSelectRootProps extends SelectPrimitive.SelectProps {
-  autocomplete?: false;
-  autocompleteMode?: never;
-  searchValue?: never;
-  onSearch?: never;
-  defaultSearchValue?: never;
-}
-
-interface AutocompleteSelectRootProps
-  extends SelectPrimitive.SelectProps,
-    CommonProps {
-  autocomplete: true;
-}
-
-type BaseSelectProps = Omit<
-  NormalSelectRootProps | AutocompleteSelectRootProps,
-  'autoComplete' | 'value' | 'onValueChange' | 'defaultValue'
-> & {
-  htmlAutoComplete?: string;
-};
-
-interface SingleSelectProps extends BaseSelectProps {
-  multiple?: false;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  defaultValue?: string;
-}
-
-interface MultipleSelectProps extends BaseSelectProps {
-  multiple: true;
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
-  defaultValue?: string[];
-}
-
-export type SelectRootProps = SingleSelectProps | MultipleSelectProps;
 
 const SELECT_INTERNAL_VALUE = 'SELECT_INTERNAL_VALUE';
 
