@@ -118,6 +118,10 @@
   letter-spacing: var(--rs-letter-spacing-small);
   gap: var(--rs-space-2);
 }
+.trigger[data-multiple="true"] {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
 
 .trigger:hover {
   cursor: pointer;
@@ -166,6 +170,7 @@
 }
 
 .triggerContent {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: var(--rs-space-2);
@@ -175,6 +180,7 @@
 }
 
 .valueContent {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);

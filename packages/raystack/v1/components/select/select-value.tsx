@@ -30,11 +30,7 @@ export const SelectValue = forwardRef<
   }
 
   if (Array.isArray(item))
-    return (
-      <SelectPrimitive.Value ref={ref} {...props}>
-        <SelectMultipleValue data={item} />
-      </SelectPrimitive.Value>
-    );
+    return <SelectMultipleValue data={item} ref={ref} {...props} />;
 
   return (
     <div className={cx(styles.valueContent)}>

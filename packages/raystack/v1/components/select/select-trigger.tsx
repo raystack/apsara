@@ -2,20 +2,8 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { VariantProps, cva } from 'class-variance-authority';
 import { ElementRef, SVGAttributes, forwardRef } from 'react';
+import { useSelectContext } from './select-root';
 import styles from './select.module.css';
-
-export interface AriaProps {
-  'aria-label'?: string;
-  'aria-describedby'?: string;
-  'aria-required'?: boolean;
-  'aria-invalid'?: boolean;
-}
-
-export interface TriggerStyleProps {
-  style?: React.CSSProperties;
-  className?: string;
-  stopPropagation?: boolean;
-}
 
 export interface IconProps extends SVGAttributes<SVGElement> {
   children?: never;
@@ -39,11 +27,11 @@ const trigger = cva(styles.trigger, {
   }
 });
 
-type SelectTriggerProps = SelectPrimitive.SelectTriggerProps &
-  VariantProps<typeof trigger> & {
-    iconProps?: IconProps;
-  } & AriaProps &
-  TriggerStyleProps;
+export interface SelectTriggerProps
+  extends SelectPrimitive.SelectTriggerProps,
+    VariantProps<typeof trigger> {
+  iconProps?: IconProps;
+}
 
 export const SelectTrigger = forwardRef<
   ElementRef<typeof SelectPrimitive.Trigger>,
@@ -57,27 +45,17 @@ export const SelectTrigger = forwardRef<
       children,
       iconProps = {},
       'aria-label': ariaLabel,
-      style,
-      stopPropagation = false,
       ...props
     },
     ref
   ) => {
+    const { multiple } = useSelectContext();
     return (
       <SelectPrimitive.Trigger
+        data-multiple={multiple}
         ref={ref}
         className={trigger({ size, variant, className })}
         aria-label={ariaLabel || 'Select option'}
-        style={{
-          ...style,
-          display: 'flex',
-          justifyContent: 'space-between'
-        }}
-        onPointerDown={e => {
-          if (stopPropagation) {
-            e.stopPropagation();
-          }
-        }}
         {...props}
       >
         <div className={styles.triggerContent}>{children}</div>
