@@ -63,8 +63,6 @@ export const SelectTrigger = forwardRef<
     },
     ref
   ) => {
-    // const { value } = useSelectContext();
-    // console.log('trigger', value);
     return (
       <SelectPrimitive.Trigger
         ref={ref}

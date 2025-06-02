@@ -133,7 +133,6 @@ export const SelectRoot = (props: SelectRootProps) => {
 
   const setValue = useCallback(
     (value: string) => {
-      console.log('setValue', value);
       if (multiple) {
         updateSelectionInProgress(true);
         const set = new Set<string>(

@@ -19,7 +19,6 @@ export const SelectMultipleValue = ({
           leadingIcon={item.leadingIcon}
           isDismissible
           onDismiss={() => {
-            console.log('dismissed', item.value);
             setValue(item.value);
           }}
         >
