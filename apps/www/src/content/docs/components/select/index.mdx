@@ -12,6 +12,7 @@ import {
   separatorDemo,
   iconDemo,
   autocompleteDemo,
+  multipleDemo
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -101,6 +102,14 @@ You can pass `leadingIcon` prop to Select.Item to include items
 ### With Separator
 
 <Demo data={separatorDemo} />
+
+### Multiple Selection
+
+To enable multiple selection, pass the `multiple` prop to the Select root element.
+
+When multiple selection is enabled, the value, onValueChange, and defaultValue will be an array of strings.
+
+<Demo data={multipleDemo} />
 
 ### Autocomplete
 

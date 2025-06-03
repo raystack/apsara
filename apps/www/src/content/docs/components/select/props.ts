@@ -1,5 +1,13 @@
 export interface SelectRootProps {
-  /** Enables search functionality within the select */
+  /** Enables multiple selection.
+   * When enabled, value, onValueChange, and defaultValue will be an array of strings.
+   * @default false
+   */
+  multiple?: boolean;
+
+  /** Enables search functionality within the select.
+   * @default false
+   */
   autocomplete?: boolean;
 
   /** Controls the autocomplete behavior mode
@@ -7,7 +15,7 @@ export interface SelectRootProps {
    * - "manual": Requires explicit filtering through onSearch callback
    * @default "auto"
    */
-  autocompleteMode?: "auto" | "manual";
+  autocompleteMode?: 'auto' | 'manual';
 
   /** Current search value for autocomplete */
   searchValue?: string;
@@ -21,10 +29,10 @@ export interface SelectRootProps {
 
 export interface SelectTriggerProps {
   /** Defines the size of the trigger. */
-  size?: "small" | "medium";
+  size?: 'small' | 'medium';
 
   /** Visual style variant. */
-  variant?: "default" | "filter";
+  variant?: 'default' | 'filter';
 
   /** Props for the chevron icon. */
   iconProps?: Record<string, any>;
@@ -52,7 +60,7 @@ export interface SelectContentProps {
    * Position of the content
    * @default "popper"
    */
-  position?: "item-aligned" | "popper";
+  position?: 'item-aligned' | 'popper';
 
   /** Additional CSS class names. */
   className?: string;
@@ -61,9 +69,6 @@ export interface SelectContentProps {
 export interface SelectItemProps {
   /** The value of the item. */
   value: string;
-
-  /** Props passed to the Text component. */
-  textProps?: Record<string, any>;
 
   /** Additional CSS class names. */
   className?: string;
