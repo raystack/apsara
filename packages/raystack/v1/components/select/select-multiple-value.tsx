@@ -38,7 +38,7 @@ export const SelectMultipleValue = forwardRef<
 
     const resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
-        setContainerWidth(entry.contentRect.width - 60);
+        setContainerWidth(entry.contentRect.width - 70);
       }
     });
 

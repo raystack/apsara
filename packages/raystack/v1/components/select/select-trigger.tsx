@@ -1,7 +1,9 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as SelectPrimitive from '@radix-ui/react-select';
+import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
 import { ElementRef, SVGAttributes, forwardRef } from 'react';
+import { Flex } from '../flex';
 import { useSelectContext } from './select-root';
 import styles from './select.module.css';
 
@@ -44,6 +46,7 @@ export const SelectTrigger = forwardRef<
       className,
       children,
       iconProps = {},
+      asChild,
       'aria-label': ariaLabel,
       ...props
     },
@@ -59,7 +62,9 @@ export const SelectTrigger = forwardRef<
         aria-haspopup={autocomplete ? 'dialog' : 'listbox'}
         {...props}
       >
-        <div className={styles.triggerContent}>{children}</div>
+        <Flex className={styles.triggerContent} align='center' gap={2}>
+          {asChild ? <Slot>{children}</Slot> : children}
+        </Flex>
         <SelectPrimitive.Icon asChild>
           <ChevronDownIcon
             className={styles.triggerIcon}
