@@ -1,14 +1,13 @@
-import { ElementRef, forwardRef, useRef } from "react";
-import { Menu, MenuProps, useMenuContext } from "@ariakit/react";
-import { Combobox, ComboboxList } from "@ariakit/react";
-import { cx } from "class-variance-authority";
-import styles from "./dropdown-menu.module.css";
-import { WithAsChild } from "./types";
-import { Slot } from "@radix-ui/react-slot";
-import { useDropdownContext } from "./dropdown-menu-root";
+import { Menu, MenuProps, useMenuContext } from '@ariakit/react';
+import { Combobox, ComboboxList } from '@ariakit/react';
+import { Slot } from '@radix-ui/react-slot';
+import { cx } from 'class-variance-authority';
+import { ElementRef, forwardRef, useRef } from 'react';
+import { useDropdownContext } from './dropdown-menu-root';
+import styles from './dropdown-menu.module.css';
+import { WithAsChild } from './types';
 
-export interface MenuContentProps
-  extends Omit<WithAsChild<MenuProps>, "portal"> {
+export interface MenuContentProps extends WithAsChild<MenuProps> {
   searchPlaceholder?: string;
 }
 
@@ -17,8 +16,8 @@ export const DropdownMenuContent = forwardRef<
   MenuContentProps
 >(
   (
-    { className, children, asChild, searchPlaceholder = "Search...", ...props },
-    ref,
+    { className, children, asChild, searchPlaceholder = 'Search...', ...props },
+    ref
   ) => {
     const menu = useMenuContext();
     const { autocomplete } = useDropdownContext();
@@ -31,17 +30,18 @@ export const DropdownMenuContent = forwardRef<
         modal
         portal
         portalElement={
-          typeof window === "undefined" ? null : window?.document?.body
+          typeof window === 'undefined' ? null : window?.document?.body
         }
         unmountOnHide
         gutter={isSubMenu ? 2 : 4}
         className={cx(
           styles.content,
           autocomplete && styles.comboboxContainer,
-          className,
+          className
         )}
         render={asChild ? <Slot /> : undefined}
-        {...props}>
+        {...props}
+      >
         {autocomplete ? (
           <>
             <Combobox
@@ -63,5 +63,5 @@ export const DropdownMenuContent = forwardRef<
         )}
       </Menu>
     );
-  },
+  }
 );
