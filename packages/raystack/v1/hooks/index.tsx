@@ -1,1 +1,2 @@
-export { useCopyToClipboard } from "./useCopyToClipboard";
+export { useCopyToClipboard } from './useCopyToClipboard';
+export { useMouse } from './useMouse';
