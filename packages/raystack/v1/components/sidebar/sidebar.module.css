@@ -156,7 +156,7 @@
   right: 0;
   width: 4px;
   height: 100%;
-  cursor: col-resize;
+  cursor: ew-resize;
   transition: background-color 0.2s ease;
   transform: translateX(50%);
 }
@@ -168,7 +168,7 @@
 .root[data-position="right"] .resizeHandle {
   left: 0;
   right: auto;
-  cursor: col-resize;
+  cursor: ew-resize;
 }
 
 .account {
