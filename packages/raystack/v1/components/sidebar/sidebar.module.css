@@ -11,6 +11,7 @@
   border-right: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   transition: width 0.2s ease;
+  position: relative;
 }
 
 .root[data-position="left"] {
@@ -157,14 +158,15 @@
   height: 100%;
   cursor: col-resize;
   transition: background-color 0.2s ease;
+  transform: translateX(50%);
 }
 
 .resizeHandle:hover {
-  background-color: 0.5px solid var(--rs-color-border-base-primary);
+  background-color: var(--rs-color-border-base-primary);
 }
 
 .root[data-position="right"] .resizeHandle {
-  left: 0;
+  left: -2px;
   right: auto;
   cursor: col-resize;
 }

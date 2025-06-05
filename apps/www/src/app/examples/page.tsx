@@ -16,7 +16,6 @@ import {
   DropdownMenu,
   EmptyState,
   Flex,
-  IconButton,
   Indicator,
   InputField,
   Popover,
@@ -76,15 +75,7 @@ const Page = () => {
           backgroundColor: 'var(--rs-color-background-base-primary)'
         }}
       >
-        <Sidebar
-          open={sidebarOpen}
-          onOpenChange={setSidebarOpen}
-          onClick={e => {
-            if (e.target === e.currentTarget) {
-              setSidebarOpen(!sidebarOpen);
-            }
-          }}
-        >
+        <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen}>
           <Sidebar.Header
             logo={<BellIcon width={24} height={24} />}
             title='Raystack'
@@ -140,15 +131,6 @@ const Page = () => {
             overflow: 'auto'
           }}
         >
-          <IconButton
-            size={4}
-            aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{ marginBottom: '16px' }}
-          >
-            <SidebarIcon />
-          </IconButton>
-
           <Text size='large' weight='medium' style={{ marginBottom: '24px' }}>
             Main
           </Text>
