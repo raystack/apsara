@@ -166,7 +166,7 @@
 }
 
 .root[data-position="right"] .resizeHandle {
-  left: -2px;
+  left: 0;
   right: auto;
   cursor: col-resize;
 }
