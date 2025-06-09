@@ -11,12 +11,6 @@
   padding: var(--rs-space-1);
 }
 
-.iconButton>div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .iconButton:hover:not(:disabled) {
   background-color: var(--rs-color-background-base-primary-hover);
 }
@@ -36,23 +30,9 @@
   height: var(--rs-space-4);
 }
 
-.iconButton-size-1>div,
-.iconButton-size-1>div>* {
-  width: 8px;
-  height: 8px;
-  font-size: var(--rs-font-size-micro);
-}
-
 .iconButton-size-2 {
   width: var(--rs-space-5);
   height: var(--rs-space-5);
-}
-
-.iconButton-size-2>div,
-.iconButton-size-2>div>* {
-  width: 12px;
-  height: 12px;
-  font-size: var(--rs-font-size-micro);
 }
 
 .iconButton-size-3 {
@@ -60,21 +40,13 @@
   height: var(--rs-space-6);
 }
 
-.iconButton-size-3>div,
-.iconButton-size-3>div>* {
-  width: 16px;
-  height: 16px;
-  font-size: var(--rs-font-size-small);
-}
-
 .iconButton-size-4 {
   width: var(--rs-space-7);
   height: var(--rs-space-7);
 }
 
-.iconButton-size-4>div,
-.iconButton-size-4>div>* {
-  width: 20px;
-  height: 20px;
-  font-size: var(--rs-font-size-regular);
+.iconButton > div,
+.iconButton > div > * {
+  width: 100%;
+  height: 100%;
 }

@@ -1,8 +1,10 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { VariantProps, cva, cx } from 'class-variance-authority';
-import React, { useId } from 'react';
+import { CSSProperties, ReactNode, useId, useMemo } from 'react';
+import { useMouse } from '~/v1/hooks';
 import { Text } from '../text';
 import styles from './tooltip.module.css';
+import { getTransformForPlacement } from './utils';
 
 const tooltip = cva(styles.content, {
   variants: {
@@ -24,24 +26,30 @@ const tooltip = cva(styles.content, {
 
 interface TooltipProps extends VariantProps<typeof tooltip> {
   disabled?: boolean;
-  children: React.ReactNode;
-  message: React.ReactNode;
+  children: ReactNode;
+  message: ReactNode;
   classNames?: {
     trigger?: string;
     content?: string;
     arrow?: string;
   };
-  triggerStyle?: React.CSSProperties;
-  contentStyle?: React.CSSProperties;
+  triggerStyle?: CSSProperties;
+  contentStyle?: CSSProperties;
   delayDuration?: number;
   skipDelayDuration?: number;
   'aria-label'?: string;
   asChild?: boolean;
   id?: string;
   showArrow?: boolean;
+  followCursor?: boolean;
+  sideOffset?: number;
+  alignOffset?: number;
+  id?: string;
 }
+type TooltipSide = NonNullable<TooltipPrimitive.TooltipContentProps['side']>;
+type TooltipAlign = NonNullable<TooltipPrimitive.TooltipContentProps['align']>;
 
-export const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip = ({
   children,
   message,
   disabled,
@@ -54,10 +62,35 @@ export const Tooltip: React.FC<TooltipProps> = ({
   'aria-label': ariaLabel,
   asChild = true,
   showArrow = true,
-  id
-}) => {
+  id,
+  followCursor = false,
+  sideOffset = 4,
+  alignOffset = 0
+}: TooltipProps) => {
   const generatedId = useId();
   const tooltipId = id ?? generatedId;
+  const {
+    ref,
+    value: mouseValue,
+    reset
+  } = useMouse<HTMLDivElement>({
+    resetOnExit: false,
+    enabled: followCursor
+  });
+
+  const computedSide = useMemo(
+    () => (side?.split('-')[0] || 'top') as TooltipSide,
+    [side]
+  );
+  const computedAlign = useMemo(
+    () =>
+      (side?.includes('-')
+        ? side.split('-')[1] === 'left'
+          ? 'start'
+          : 'end'
+        : 'center') as TooltipAlign,
+    [side]
+  );
 
   if (disabled) return children;
 
@@ -70,8 +103,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
         <TooltipPrimitive.Trigger
           aria-describedby={tooltipId}
           asChild={asChild}
+          onFocus={followCursor ? reset : undefined}
         >
           <div
+            ref={ref}
             className={cx(styles.trigger, classNames?.trigger)}
             style={triggerStyle}
           >
@@ -85,21 +120,24 @@ export const Tooltip: React.FC<TooltipProps> = ({
             aria-label={
               ariaLabel || (typeof message === 'string' ? message : undefined)
             }
-            side={
-              (side?.split(
-                '-'
-              )[0] as TooltipPrimitive.TooltipContentProps['side']) || 'top'
-            }
-            align={
-              (side?.includes('-')
-                ? side.split('-')[1] === 'left'
-                  ? 'start'
-                  : 'end'
-                : 'center') satisfies 'start' | 'end' | 'center'
-            }
-            sideOffset={4}
+            side={computedSide}
+            align={computedAlign}
+            alignOffset={alignOffset}
+            sideOffset={sideOffset}
             className={tooltip({ side, className: classNames?.content })}
-            style={contentStyle}
+            data-follow-cursor={followCursor}
+            style={{
+              ...contentStyle,
+              pointerEvents: followCursor ? 'none' : undefined,
+              transform:
+                followCursor && mouseValue
+                  ? getTransformForPlacement(
+                      computedSide,
+                      computedAlign,
+                      mouseValue
+                    )
+                  : undefined
+            }}
           >
             {typeof message === 'string' ? <Text>{message}</Text> : message}
             {showArrow && (

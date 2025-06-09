@@ -3,7 +3,7 @@ title: Tooltip
 description: A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it.
 ---
 
-import { playground, sideDemo, customDemo } from "./demo.ts";
+import { playground, sideDemo, customDemo,followCursorDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -34,6 +34,12 @@ The Tooltip component can be positioned in different directions using the `side`
 Tooltips can contain custom content using ReactNode:
 
 <Demo data={customDemo} />
+
+### Follow Cursor
+
+When `followCursor` is true, the tooltip will follow the cursor and will be positioned relative to the cursor.
+
+<Demo data={followCursorDemo} />
 
 ## Accessibility
 
