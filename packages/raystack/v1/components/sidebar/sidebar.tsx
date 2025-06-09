@@ -1,19 +1,19 @@
-import * as Collapsible from "@radix-ui/react-collapsible";
-import { cva } from "class-variance-authority";
+import * as Collapsible from '@radix-ui/react-collapsible';
+import { cva } from 'class-variance-authority';
 import {
   ComponentPropsWithoutRef,
   ComponentRef,
-  forwardRef,
-  ReactNode,
-  createContext,
-  useContext,
   ReactElement,
+  ReactNode,
   cloneElement,
-} from "react";
+  createContext,
+  forwardRef,
+  useContext
+} from 'react';
 
-import { Tooltip, TooltipProvider } from "../tooltip";
-import styles from "./sidebar.module.css";
-import clsx from "clsx";
+import clsx from 'clsx';
+import { Tooltip, TooltipProvider } from '../tooltip';
+import styles from './sidebar.module.css';
 
 interface SidebarContextValue {
   isCollapsed: boolean;
@@ -21,25 +21,25 @@ interface SidebarContextValue {
 }
 
 const SidebarContext = createContext<SidebarContextValue>({
-  isCollapsed: false,
+  isCollapsed: false
 });
 
 const root = cva(styles.root);
 
 interface SidebarProps
   extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
-  position?: "left" | "right";
+  position?: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
 }
 
-interface SidebarHeaderProps extends ComponentPropsWithoutRef<"div"> {
+interface SidebarHeaderProps extends ComponentPropsWithoutRef<'div'> {
   logo: ReactNode;
   title: string;
   onLogoClick?: () => void;
 }
 
-interface SidebarItemProps extends ComponentPropsWithoutRef<"a"> {
-  icon: ReactNode;
+interface SidebarItemProps extends ComponentPropsWithoutRef<'a'> {
+  icon?: ReactNode;
   active?: boolean;
   disabled?: boolean;
   as?: ReactElement;
@@ -50,9 +50,9 @@ interface SidebarItemProps extends ComponentPropsWithoutRef<"a"> {
   };
 }
 
-interface SidebarFooterProps extends ComponentPropsWithoutRef<"div"> {}
+interface SidebarFooterProps extends ComponentPropsWithoutRef<'div'> {}
 
-interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<"div"> {
+interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<'div'> {
   name: string;
   icon?: ReactNode;
 }
@@ -64,43 +64,47 @@ const SidebarRoot = forwardRef<
   (
     {
       className,
-      position = "left",
+      position = 'left',
       open,
       onOpenChange,
       hideCollapsedItemTooltip,
       children,
       ...props
     },
-    ref,
+    ref
   ) => (
     <SidebarContext.Provider
-      value={{ isCollapsed: !open, hideCollapsedItemTooltip }}>
+      value={{ isCollapsed: !open, hideCollapsedItemTooltip }}
+    >
       <TooltipProvider>
         <Collapsible.Root
           ref={ref}
           className={root({ className })}
           data-position={position}
-          data-state={open ? "expanded" : "collapsed"}
+          data-state={open ? 'expanded' : 'collapsed'}
           open={open}
           onOpenChange={onOpenChange}
-          aria-label="Navigation Sidebar"
+          aria-label='Navigation Sidebar'
           aria-expanded={open}
-          role="navigation"
+          role='navigation'
           {...props}
-          asChild>
+          asChild
+        >
           <aside>
             <Tooltip
-              message={open ? "Click to collapse" : "Click to expand"}
-              side={position === "left" ? "right" : "left"}
-              asChild>
+              message={open ? 'Click to collapse' : 'Click to expand'}
+              side={position === 'left' ? 'right' : 'left'}
+              asChild
+              followCursor
+            >
               <div
                 className={styles.resizeHandle}
                 onClick={() => onOpenChange?.(!open)}
-                role="button"
+                role='button'
                 tabIndex={0}
-                aria-label={open ? "Collapse sidebar" : "Expand sidebar"}
+                aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
                 onKeyDown={e => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     onOpenChange?.(!open);
                   }
@@ -112,44 +116,46 @@ const SidebarRoot = forwardRef<
         </Collapsible.Root>
       </TooltipProvider>
     </SidebarContext.Provider>
-  ),
+  )
 );
 
 const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
   ({ className, logo, title, onLogoClick, ...props }, ref) => (
-    <div ref={ref} className={styles.header} role="banner" {...props}>
+    <div ref={ref} className={styles.header} role='banner' {...props}>
       <div
         className={styles.logo}
         onClick={onLogoClick}
-        role={onLogoClick ? "button" : undefined}
+        role={onLogoClick ? 'button' : undefined}
         tabIndex={onLogoClick ? 0 : undefined}
         onKeyDown={e => {
-          if (onLogoClick && (e.key === "Enter" || e.key === " ")) {
+          if (onLogoClick && (e.key === 'Enter' || e.key === ' ')) {
             e.preventDefault();
             onLogoClick();
           }
         }}
-        style={{ cursor: onLogoClick ? "pointer" : undefined }}>
+        style={{ cursor: onLogoClick ? 'pointer' : undefined }}
+      >
         {logo}
       </div>
-      <div className={styles.title} role="heading" aria-level={1}>
+      <div className={styles.title} role='heading' aria-level={1}>
         {title}
       </div>
     </div>
-  ),
+  )
 );
 
-const SidebarMain = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
+const SidebarMain = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
       className={styles.main}
-      role="group"
-      aria-label="Main navigation"
-      {...props}>
+      role='group'
+      aria-label='Main navigation'
+      {...props}
+    >
       {children}
     </div>
-  ),
+  )
 );
 
 const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
@@ -157,18 +163,19 @@ const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
     <div
       ref={ref}
       className={styles.footer}
-      role="group"
-      aria-label="Footer navigation"
-      {...props}>
+      role='group'
+      aria-label='Footer navigation'
+      {...props}
+    >
       {children}
     </div>
-  ),
+  )
 );
 
 const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
   (
     { classNames, icon, children, active, disabled, as = <a />, ...props },
-    ref,
+    ref
   ) => {
     const { isCollapsed, hideCollapsedItemTooltip } =
       useContext(SidebarContext); // To prevent prop drillng
@@ -177,34 +184,35 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
       as,
       {
         ref,
-        className: clsx(styles["nav-item"], classNames?.root),
-        "data-active": active,
-        "data-disabled": disabled,
-        role: "menuitem",
-        "aria-current": active ? "page" : undefined,
-        "aria-disabled": disabled,
-        ...props,
+        className: clsx(styles['nav-item'], classNames?.root),
+        'data-active': active,
+        'data-disabled': disabled,
+        role: 'menuitem',
+        'aria-current': active ? 'page' : undefined,
+        'aria-disabled': disabled,
+        ...props
       },
       <>
         <span
-          className={clsx(styles["nav-icon"], classNames?.icon)}
-          aria-hidden="true">
+          className={clsx(styles['nav-icon'], classNames?.icon)}
+          aria-hidden='true'
+        >
           {icon}
         </span>
-        {!isCollapsed && <span className={styles["nav-text"]}>{children}</span>}
-      </>,
+        {!isCollapsed && <span className={styles['nav-text']}>{children}</span>}
+      </>
     );
 
     if (isCollapsed && !hideCollapsedItemTooltip) {
       return (
-        <Tooltip message={children} side="right">
+        <Tooltip message={children} side='right'>
           {content}
         </Tooltip>
       );
     }
 
     return content;
-  },
+  }
 );
 
 const SidebarNavigationGroup = forwardRef<
@@ -212,27 +220,27 @@ const SidebarNavigationGroup = forwardRef<
   SidebarNavigationGroupProps
 >(({ className, name, icon, children, ...props }, ref) => (
   <section ref={ref} className={className} aria-label={name} {...props}>
-    <div className={styles["nav-group-header"]}>
-      {icon && <span className={styles["nav-icon"]}>{icon}</span>}
-      <span className={styles["nav-group-name"]}>{name}</span>
+    <div className={styles['nav-group-header']}>
+      {icon && <span className={styles['nav-icon']}>{icon}</span>}
+      <span className={styles['nav-group-name']}>{name}</span>
     </div>
-    <div className={styles["nav-group-items"]} role="list">
+    <div className={styles['nav-group-items']} role='list'>
       {children}
     </div>
   </section>
 ));
 
-SidebarRoot.displayName = "Sidebar.Root";
-SidebarHeader.displayName = "Sidebar.Header";
-SidebarMain.displayName = "Sidebar.Main";
-SidebarFooter.displayName = "Sidebar.Footer";
-SidebarItem.displayName = "Sidebar.Item";
-SidebarNavigationGroup.displayName = "Sidebar.Group";
+SidebarRoot.displayName = 'Sidebar.Root';
+SidebarHeader.displayName = 'Sidebar.Header';
+SidebarMain.displayName = 'Sidebar.Main';
+SidebarFooter.displayName = 'Sidebar.Footer';
+SidebarItem.displayName = 'Sidebar.Item';
+SidebarNavigationGroup.displayName = 'Sidebar.Group';
 
 export const Sidebar = Object.assign(SidebarRoot, {
   Header: SidebarHeader,
   Main: SidebarMain,
   Footer: SidebarFooter,
   Item: SidebarItem,
-  Group: SidebarNavigationGroup,
+  Group: SidebarNavigationGroup
 });

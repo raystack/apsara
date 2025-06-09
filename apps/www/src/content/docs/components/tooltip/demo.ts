@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `
@@ -10,46 +10,50 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     message: {
-      type: "text",
-      initialValue: "Tooltip message",
+      type: 'text',
+      initialValue: 'Tooltip message'
     },
     side: {
-      type: "select",
+      type: 'select',
       options: [
-        "top",
-        "right",
-        "bottom",
-        "left",
-        "top-left",
-        "top-right",
-        "bottom-left",
-        "bottom-right",
+        'top',
+        'right',
+        'bottom',
+        'left',
+        'top-left',
+        'top-right',
+        'bottom-left',
+        'bottom-right'
       ],
-      defaultValue: "top",
+      defaultValue: 'top'
     },
     disabled: {
-      type: "checkbox",
-      defaultValue: false,
+      type: 'checkbox',
+      defaultValue: false
     },
     delayDuration: {
-      type: "number",
+      type: 'number',
       defaultValue: 200,
-      min: 0,
+      min: 0
     },
     skipDelayDuration: {
-      type: "number",
+      type: 'number',
       defaultValue: 200,
-      min: 0,
+      min: 0
     },
+    followCursor: {
+      type: 'checkbox',
+      defaultValue: false
+    }
   },
-  getCode,
+  getCode
 };
 
 export const sideDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="center">
     <Tooltip message="Top tooltip" side="top">
@@ -76,10 +80,18 @@ export const sideDemo = {
     <Tooltip message="Bottom Right tooltip" side="bottom-right">
       <Button>Bottom Right</Button>
     </Tooltip>
-  </Flex>`,
+  </Flex>`
+};
+export const followCursorDemo = {
+  type: 'code',
+  code: `
+  <Tooltip message="Tooltip message" followCursor>
+    <Button>Hover me</Button>
+  </Tooltip>
+  `
 };
 export const customDemo = {
-  type: "code",
+  type: 'code',
   code: `
  <Tooltip message={
   <div>
@@ -87,5 +99,5 @@ export const customDemo = {
   </div>
 }>
   <Button>Hover me</Button>
-</Tooltip>`,
+</Tooltip>`
 };

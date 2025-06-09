@@ -24,6 +24,12 @@ export interface TooltipProps {
     | 'bottom-right';
 
   /**
+   * Whether the tooltip should follow the cursor.
+   * @default false
+   */
+  followCursor?: boolean;
+
+  /**
    * Whether the tooltip is disabled.
    * @default false
    */

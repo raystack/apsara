@@ -22,19 +22,27 @@
   animation-duration: 400ms;
 }
 
-.content[data-state="delayed-open"][data-side="top"] {
+.content[data-state="delayed-open"][data-side="top"]:not(
+    [data-follow-cursor="true"]
+  ) {
   animation-name: slideDownAndFade;
 }
 
-.content[data-state="delayed-open"][data-side="right"] {
+.content[data-state="delayed-open"][data-side="right"]:not(
+    [data-follow-cursor="true"]
+  ) {
   animation-name: slideLeftAndFade;
 }
 
-.content[data-state="delayed-open"][data-side="bottom"] {
+.content[data-state="delayed-open"][data-side="bottom"]:not(
+    [data-follow-cursor="true"]
+  ) {
   animation-name: slideUpAndFade;
 }
 
-.content[data-state="delayed-open"][data-side="left"] {
+.content[data-state="delayed-open"][data-side="left"]:not(
+    [data-follow-cursor="true"]
+  ) {
   animation-name: slideRightAndFade;
 }
 
@@ -49,33 +57,43 @@
 }
 
 /* Corner positions */
-.content[data-side="top"][data-align="start"] {
+.content[data-side="top"][data-align="start"]:not([data-follow-cursor="true"]) {
   animation-name: slideDownRightAndFade;
 }
 
-.content[data-side="top"][data-align="end"] {
+.content[data-side="top"][data-align="end"]:not([data-follow-cursor="true"]) {
   animation-name: slideDownLeftAndFade;
 }
 
-.content[data-side="bottom"][data-align="start"] {
+.content[data-side="bottom"][data-align="start"]:not(
+    [data-follow-cursor="true"]
+  ) {
   animation-name: slideUpRightAndFade;
 }
 
-.content[data-side="bottom"][data-align="end"] {
+.content[data-side="bottom"][data-align="end"]:not(
+    [data-follow-cursor="true"]
+  ) {
   animation-name: slideUpLeftAndFade;
 }
+.content[data-follow-cursor="true"] {
+  animation-name: fade;
+}
 
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 @keyframes slideUpAndFade {
   from {
     opacity: 0;
     transform: translateY(2px);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
-
 @keyframes slideRightAndFade {
   from {
     opacity: 0;
