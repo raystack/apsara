@@ -4,6 +4,7 @@ import { CSSProperties, ReactNode, useId, useMemo } from 'react';
 import { useMouse } from '~/v1/hooks';
 import { Text } from '../text';
 import styles from './tooltip.module.css';
+import { getTransformForPlacement } from './utils';
 
 const tooltip = cva(styles.content, {
   variants: {
@@ -44,47 +45,8 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   alignOffset?: number;
   id?: string;
 }
-
-type MousePosition = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
 type TooltipSide = NonNullable<TooltipPrimitive.TooltipContentProps['side']>;
 type TooltipAlign = NonNullable<TooltipPrimitive.TooltipContentProps['align']>;
-
-const getTransformForPlacement = (
-  side: TooltipSide,
-  align: TooltipAlign,
-  { x, y, width, height }: MousePosition
-): string => {
-  const transforms = {
-    top: {
-      start: `translate(${x}px, ${y}px)`,
-      center: `translate(${x - width / 2}px, ${y}px)`,
-      end: `translate(${x - width}px, ${y}px)`
-    },
-    bottom: {
-      start: `translate(${x}px, ${y - height}px)`,
-      center: `translate(${x - width / 2}px, ${y - height}px)`,
-      end: `translate(${x - width}px, ${y - height}px)`
-    },
-    left: {
-      start: `translate(${x}px, ${y}px)`,
-      center: `translate(${x}px, ${y - height / 2}px)`,
-      end: `translate(${x}px, ${y - height}px)`
-    },
-    right: {
-      start: `translate(${x - width}px, ${y}px)`,
-      center: `translate(${x - width}px, ${y - height / 2}px)`,
-      end: `translate(${x - width}px, ${y - height}px)`
-    }
-  };
-
-  return transforms[side][align];
-};
 
 export const Tooltip = ({
   children,
@@ -116,7 +78,7 @@ export const Tooltip = ({
   });
 
   const computedSide = useMemo(
-    () => (side?.split('-')[0] as TooltipSide) || 'top',
+    () => (side?.split('-')[0] || 'top') as TooltipSide,
     [side]
   );
   const computedAlign = useMemo(
@@ -125,7 +87,7 @@ export const Tooltip = ({
         ? side.split('-')[1] === 'left'
           ? 'start'
           : 'end'
-        : 'center') satisfies 'start' | 'end' | 'center',
+        : 'center') as TooltipAlign,
     [side]
   );
 
