@@ -1,5 +1,5 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
 import { cx } from 'class-variance-authority';
+import { Select as SelectPrimitive } from 'radix-ui';
 import {
   ElementRef,
   forwardRef,

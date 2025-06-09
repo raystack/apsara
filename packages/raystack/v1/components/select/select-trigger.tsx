@@ -1,7 +1,6 @@
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import * as SelectPrimitive from '@radix-ui/react-select';
-import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
+import { Select as SelectPrimitive, Slot } from 'radix-ui';
 import { ElementRef, SVGAttributes, forwardRef } from 'react';
 import { Flex } from '../flex';
 import { useSelectContext } from './select-root';
@@ -63,7 +62,7 @@ export const SelectTrigger = forwardRef<
         {...props}
       >
         <Flex className={styles.triggerContent} align='center' gap={2}>
-          {asChild ? <Slot>{children}</Slot> : children}
+          {asChild ? <Slot.Root>{children}</Slot.Root> : children}
         </Flex>
         <SelectPrimitive.Icon asChild>
           <ChevronDownIcon

@@ -1,25 +1,25 @@
-import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import { cva } from "class-variance-authority";
+import { cva } from 'class-variance-authority';
+import { Separator as SeparatorPrimitive } from 'radix-ui';
 
-import styles from "./separator.module.css";
+import styles from './separator.module.css';
 
 const separator = cva(styles.separator, {
   variants: {
     size: {
-      small: styles["separator-small"],
-      half: styles["separator-half"],
-      full: styles["separator-full"],
+      small: styles['separator-small'],
+      half: styles['separator-half'],
+      full: styles['separator-full']
     },
     color: {
-      primary: styles["separator-primary"],
-      secondary: styles["separator-secondary"],
-      tertiary: styles["separator-tertiary"],
+      primary: styles['separator-primary'],
+      secondary: styles['separator-secondary'],
+      tertiary: styles['separator-tertiary']
     }
   },
   defaultVariants: {
-    size: "full",
-    color: "primary",
-  },
+    size: 'full',
+    color: 'primary'
+  }
 });
 
 interface SeparatorProps {
@@ -32,10 +32,10 @@ interface SeparatorProps {
 
 export function Separator({
   className,
-  orientation = "horizontal",
+  orientation = 'horizontal',
   size,
   color,
-  "aria-label": ariaLabel,
+  'aria-label': ariaLabel,
   ...props
 }: SeparatorProps) {
   return (
@@ -45,10 +45,10 @@ export function Separator({
       className={separator({ size, color, className })}
       aria-orientation={orientation}
       aria-label={ariaLabel || `${orientation} separator`}
-      role="separator"
+      role='separator'
       {...props}
     />
   );
 }
 
-Separator.displayName = "Separator"; 
+Separator.displayName = 'Separator';

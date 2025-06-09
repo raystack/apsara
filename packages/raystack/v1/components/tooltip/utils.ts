@@ -1,4 +1,4 @@
-import { TooltipContentProps } from '@radix-ui/react-tooltip';
+import { Tooltip as TooltipPrimitive } from 'radix-ui';
 
 type MousePosition = {
   x: number;
@@ -8,8 +8,8 @@ type MousePosition = {
 };
 
 export const getTransformForPlacement = (
-  side: NonNullable<TooltipContentProps['side']>,
-  align: NonNullable<TooltipContentProps['align']>,
+  side: NonNullable<TooltipPrimitive.TooltipContentProps['side']>,
+  align: NonNullable<TooltipPrimitive.TooltipContentProps['align']>,
   { x, y, width, height }: MousePosition
 ): string => {
   const transforms = {

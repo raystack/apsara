@@ -1,11 +1,11 @@
-import { forwardRef } from "react";
-import { MenuButton, MenuButtonProps } from "@ariakit/react";
-import { Slot } from "@radix-ui/react-slot";
-import { DropdownMenuItem, DropdownMenuItemProps } from "./dropdown-menu-item";
-import { WithAsChild } from "./types";
-import { TriangleRightIcon } from "@raystack/apsara/icons";
-import { useDropdownContext } from "./dropdown-menu-root";
-import { getMatch } from "./utils";
+import { MenuButton, MenuButtonProps } from '@ariakit/react';
+import { TriangleRightIcon } from '@raystack/apsara/icons';
+import { Slot } from 'radix-ui';
+import { forwardRef } from 'react';
+import { DropdownMenuItem, DropdownMenuItemProps } from './dropdown-menu-item';
+import { useDropdownContext } from './dropdown-menu-root';
+import { WithAsChild } from './types';
+import { getMatch } from './utils';
 
 export interface DropdownMenuTriggerProps
   extends WithAsChild<MenuButtonProps> {}
@@ -15,7 +15,11 @@ export const DropdownMenuTrigger = forwardRef<
   DropdownMenuTriggerProps
 >(({ children, asChild, ...props }, ref) => {
   return (
-    <MenuButton ref={ref} render={asChild ? <Slot /> : undefined} {...props}>
+    <MenuButton
+      ref={ref}
+      render={asChild ? <Slot.Root /> : undefined}
+      {...props}
+    >
       {children}
     </MenuButton>
   );
@@ -32,7 +36,7 @@ export const DropdownMenuTriggerItem = forwardRef<
 >(
   (
     { children, value, trailingIcon = <TriangleRightIcon />, ...props },
-    ref,
+    ref
   ) => {
     const { parent } = useDropdownContext();
 
@@ -51,11 +55,12 @@ export const DropdownMenuTriggerItem = forwardRef<
             value={value}
             trailingIcon={trailingIcon}
             {...props}
-            forceRender={parent?.autocomplete ? "combobox" : "auto"}
+            forceRender={parent?.autocomplete ? 'combobox' : 'auto'}
           />
-        }>
+        }
+      >
         {children}
       </MenuButton>
     );
-  },
+  }
 );
