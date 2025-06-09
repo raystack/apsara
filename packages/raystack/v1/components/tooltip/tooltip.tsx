@@ -142,8 +142,8 @@ export const Tooltip = ({
             {showArrow && (
               <TooltipPrimitive.Arrow
                 className={cx(styles.arrow, classNames?.arrow)}
-                width={12}
-                height={6}
+                width={7}
+                height={7}
               />
             )}
           </TooltipPrimitive.Content>
