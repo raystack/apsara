@@ -44,7 +44,6 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   followCursor?: boolean;
   sideOffset?: number;
   alignOffset?: number;
-  id?: string;
 }
 type TooltipSide = NonNullable<TooltipPrimitive.TooltipContentProps['side']>;
 type TooltipAlign = NonNullable<TooltipPrimitive.TooltipContentProps['align']>;
