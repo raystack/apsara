@@ -1,41 +1,41 @@
 .content {
+  --apsara-select-padding: var(--rs-space-2);
   z-index: var(--rs-z-index-portal);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   box-sizing: border-box;
-  padding: var(--rs-space-2);
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-soft);
   border: 1px solid var(--rs-color-border-base-primary);
   min-width: var(--radix-select-trigger-width);
-  margin-top: var(--rs-space-2);
   transition: all 0.2s ease;
-  overflow-y: auto;
   max-height: 320px;
-  max-width: 300px;
+  position: relative;
 }
 
 .menuitem {
   display: flex;
   align-items: center;
   position: relative;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
   padding: var(--rs-space-3);
   color: var(--rs-color-foreground-base-primary);
   white-space: normal;
   word-break: break-word;
+  border-radius: var(--rs-radius-2);
 }
 
-.menuitem:hover,
-.menuitem:focus,
-.menuitem[data-highlighted] {
+.menuitem[data-highlighted],
+.menuitem[data-active-item="true"] {
   outline: none;
   cursor: pointer;
-  border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary-hover);
+}
+.content:not([data-multiselectable="true"]) .menuitem[data-state="checked"] {
+  background: var(--rs-color-background-neutral-secondary);
 }
 
 .menuitem[data-disabled] {
@@ -43,14 +43,16 @@
   pointer-events: none;
 }
 
+.label {
+  padding: var(--rs-space-2) var(--rs-space-3);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+}
+
 .separator {
   height: 1px;
   margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);
-  background: var(--rs-color-background-neutral-secondary);
-}
-
-.menugroup {
-  padding: var(--rs-space-3);
+  background: var(--rs-color-border-base-primary);
 }
 
 .trigger {
@@ -116,6 +118,10 @@
   letter-spacing: var(--rs-letter-spacing-small);
   gap: var(--rs-space-2);
 }
+.trigger[data-multiselectable="true"] {
+  padding-top: var(--rs-space-2);
+  padding-bottom: var(--rs-space-2);
+}
 
 .trigger:hover {
   cursor: pointer;
@@ -148,6 +154,7 @@
   height: 16px;
   margin-left: var(--rs-space-3);
   flex-shrink: 0;
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .content[data-variant="text"] {
@@ -164,18 +171,17 @@
 }
 
 .triggerContent {
-  display: flex;
-  align-items: center;
-  gap: var(--rs-space-2);
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .valueContent {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: var(--rs-space-1);
+  gap: var(--rs-space-3);
   height: 100%;
   max-width: 100%;
   overflow: hidden;
@@ -184,20 +190,24 @@
 }
 
 .trigger-small .valueContent {
-  gap: 0;
+  gap: var(--rs-space-2);
 }
 
 .itemIcon {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: var(--rs-space-2);
   flex-shrink: 0;
 }
 
 .itemIcon svg {
   width: 16px;
   height: 16px;
+}
+
+.trigger-small .valueContent .itemIcon svg {
+  width: 12px;
+  height: 12px;
 }
 
 .trigger-small .triggerIcon {
@@ -217,14 +227,6 @@
 [data-placeholder]:hover,
 .valueContent[data-state="placeholder"]:hover {
   color: var(--rs-color-foreground-base-tertiary);
-}
-
-.leadingIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: var(--rs-space-2);
-  flex-shrink: 0;
 }
 
 .trigger[data-disabled] {
@@ -255,11 +257,59 @@
   color: var(--rs-color-foreground-base-tertiary);
 }
 
-.trigger[data-disabled] .leadingIcon {
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
 [data-disabled=""] {
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.comboboxContent,
+.viewport {
+  padding: var(--apsara-select-padding);
+}
+
+.comboboxViewport {
+  padding: 0;
+}
+
+/*
+  Empty state matches:
+   1. Completely empty container
+   2. Container where all .item children have data-hidden="true"
+*/
+.comboboxContent:empty,
+.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))) {
+  padding: 0;
+}
+.comboboxContainer:has(.comboboxContent:empty) .comboboxInput,
+.comboboxContainer:has(
+    .comboboxContent:not(:has(.menuitem:not([data-hidden="true"])))
+  )
+  .comboboxInput {
+  border-bottom: none;
+}
+
+.comboboxInput {
+  width: 100%;
+  color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-3) var(--rs-space-4);
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--rs-color-background-base-primary);
+  border-top-left-radius: var(--rs-radius-2);
+  border-top-right-radius: var(--rs-radius-2);
+}
+
+.comboboxInput:focus {
+  outline: none;
+}
+
+.hidden {
+  display: none;
 }

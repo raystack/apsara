@@ -4,12 +4,14 @@ import { clsx } from 'clsx';
 import {
   ComponentPropsWithoutRef,
   ElementRef,
+  ReactElement,
   ReactNode,
-  forwardRef
+  forwardRef,
+  isValidElement
 } from 'react';
 import { Box } from '../box';
 import styles from './avatar.module.css';
-import { AVATAR_COLORS, getAvatarProps } from './utils';
+import { AVATAR_COLORS } from './utils';
 
 const avatar = cva(styles.avatar, {
   variants: {
@@ -127,6 +129,25 @@ const avatar = cva(styles.avatar, {
 });
 
 const image = cva(styles.image);
+
+/*
+ * @desc Recursively get the avatar props even if it's
+ * wrapped in another component like Tooltip, Flex, etc.
+ */
+export const getAvatarProps = (element: ReactElement): AvatarProps => {
+  const { props } = element;
+
+  if (element.type === Avatar) {
+    return props;
+  }
+
+  if (props.children) {
+    if (isValidElement(props.children)) {
+      return getAvatarProps(props.children);
+    }
+  }
+  return {};
+};
 
 export interface AvatarProps
   extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,

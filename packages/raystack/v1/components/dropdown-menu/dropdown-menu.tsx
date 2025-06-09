@@ -1,17 +1,10 @@
-import { DropdownMenuRoot, DropdownMenuSubMenu } from "./dropdown-menu-root";
+import { DropdownMenuRoot } from "./dropdown-menu-root";
+import { DropdownMenuContent } from "./dropdown-menu-content";
+import { DropdownMenuItem } from "./dropdown-menu-item";
 import {
-  DropdownMenuContent,
-  DropdownMenuSubMenuContent,
-} from "./dropdown-menu-content";
-import {
-  DropdownMenuSubMenuTrigger,
   DropdownMenuTrigger,
+  DropdownMenuTriggerItem,
 } from "./dropdown-menu-trigger";
-import {
-  DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-} from "./dropdown-menu-item";
 import {
   DropdownMenuEmptyState,
   DropdownMenuGroup,
@@ -21,15 +14,14 @@ import {
 
 export const DropdownMenu = Object.assign(DropdownMenuRoot, {
   Trigger: DropdownMenuTrigger,
+  /**
+   * `TriggerItem` is a helper component that renders a `Trigger` as a `MenuItem`.
+   */
+  TriggerItem: DropdownMenuTriggerItem,
   Content: DropdownMenuContent,
   Item: DropdownMenuItem,
   Group: DropdownMenuGroup,
   Label: DropdownMenuLabel,
   Separator: DropdownMenuSeparator,
   EmptyState: DropdownMenuEmptyState,
-  SubMenu: DropdownMenuSubMenu,
-  SubMenuContent: DropdownMenuSubMenuContent,
-  SubMenuTrigger: DropdownMenuSubMenuTrigger,
-  RadioItem: DropdownMenuRadioItem,
-  RadioGroup: DropdownMenuRadioGroup,
 });

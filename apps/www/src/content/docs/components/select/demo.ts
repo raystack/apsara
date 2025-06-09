@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
+  const { autocomplete, multiple, ...rest } = props;
   return `
-  <Select>
-    <Select.Trigger width={200}${getPropsString(props)}>
+  <Select${getPropsString({ ...(autocomplete ? { autocomplete } : {}), ...(multiple ? { multiple } : {}) })}>
+    <Select.Trigger width={200}${getPropsString(rest)}>
       <Select.Value placeholder="Select a fruit" />
     </Select.Trigger>
     <Select.Content>
@@ -21,24 +22,32 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     size: {
-      type: "select",
-      options: ["small", "medium"],
-      defaultValue: "medium",
+      type: 'select',
+      options: ['small', 'medium'],
+      defaultValue: 'medium'
     },
     variant: {
-      type: "select",
-      options: ["default", "filter"],
-      defaultValue: "default",
+      type: 'select',
+      options: ['default', 'filter'],
+      defaultValue: 'default'
     },
+    autocomplete: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    multiple: {
+      type: 'checkbox',
+      defaultValue: false
+    }
   },
-  getCode,
+  getCode
 };
 
 export const iconDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Select>
   <Select.Trigger aria-label="Fruit selection">
@@ -50,10 +59,10 @@ export const iconDemo = {
     <Select.Item value="grape" leadingIcon={<Home size={16} />}>Grape</Select.Item>
     <Select.Item value="Orange" leadingIcon={<Laugh size={16} />}>Orange</Select.Item>
   </Select.Content>
-</Select>`,
+</Select>`
 };
 export const basicDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Select>
   <Select.Trigger aria-label="Fruit selection">
@@ -63,11 +72,11 @@ export const basicDemo = {
     <Select.Item value="apple">Apple</Select.Item>
     <Select.Item value="banana">Banana</Select.Item>
   </Select.Content>
-</Select>`,
+</Select>`
 };
 
 export const sizeDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex align="center" gap="large">
   <Select>
@@ -88,14 +97,14 @@ export const sizeDemo = {
     <Select.Item value="2">Option 2</Select.Item>
   </Select.Content>
 </Select>
-</Flex>`,
+</Flex>`
 };
 
 export const variantDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Default",
+      name: 'Default',
       code: `
   <Select>
   <Select.Trigger>
@@ -106,10 +115,10 @@ export const variantDemo = {
     <Select.Item value="active">Active</Select.Item>
     <Select.Item value="inactive">Inactive</Select.Item>
   </Select.Content>
-</Select>`,
+</Select>`
     },
     {
-      name: "Filter",
+      name: 'Filter',
       code: `
   <Select>
   <Select.Trigger variant="filter">
@@ -120,12 +129,12 @@ export const variantDemo = {
     <Select.Item value="active">Active</Select.Item>
     <Select.Item value="inactive">Inactive</Select.Item>
   </Select.Content>
-</Select>`,
-    },
-  ],
+</Select>`
+    }
+  ]
 };
 export const separatorDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Select>
   <Select.Trigger>
@@ -142,5 +151,78 @@ export const separatorDemo = {
       <Select.Item value="4">Option 4</Select.Item>
     </Select.Group>
   </Select.Content>
-</Select>`,
+</Select>`
+};
+export const multipleDemo = {
+  type: 'code',
+  code: `
+  <Select multiple>
+  <Select.Trigger>
+    <Select.Value placeholder="Select..." />
+  </Select.Trigger>
+  <Select.Content>
+      <Select.Item value="1">Option 1</Select.Item>
+      <Select.Item value="2">Option 2</Select.Item>
+      <Select.Item value="3">Option 3</Select.Item>
+      <Select.Item value="4">Option 4</Select.Item>
+      <Select.Item value="5">Option 5</Select.Item>
+      <Select.Item value="6">Option 6</Select.Item>
+      <Select.Item value="7">Option 7</Select.Item>
+      <Select.Item value="8">Option 8</Select.Item>
+      <Select.Item value="9">Option 9</Select.Item>
+      <Select.Item value="10">Option 10</Select.Item>
+  </Select.Content>
+</Select>`
+};
+
+export const autocompleteDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Default Autocomplete',
+      code: `
+      <Select autocomplete>
+  <Select.Trigger>
+    <Select.Value placeholder="Select..." />
+  </Select.Trigger>
+  <Select.Content>
+    <Select.Group>
+      <Select.Item value="1">Option 1</Select.Item>
+      <Select.Item value="2">Option 2</Select.Item>
+    </Select.Group>
+    <Select.Separator />
+    <Select.Group>
+      <Select.Item value="3">Option 3</Select.Item>
+      <Select.Item value="4">Option 4</Select.Item>
+    </Select.Group>
+  </Select.Content>
+</Select>`
+    },
+    {
+      name: 'Manual Autocomplete',
+      code: `
+      function ManualDemo(){
+        const items = [
+          "Apple",
+          "Banana",
+          "Grape",
+          "Orange",
+          "Pineapple",
+        ];
+
+        const [simpleSearchQuery, setSimpleSearchQuery] = React.useState("");
+        return <Select autocomplete autocompleteMode="manual" onSearch={value => setSimpleSearchQuery(value)}>
+  <Select.Trigger>
+    <Select.Value placeholder="Select..." />
+  </Select.Trigger>
+  <Select.Content>
+      {items.filter(item => item.toLowerCase().startsWith(simpleSearchQuery.toLowerCase()))
+      .map((item, index) => (
+      <Select.Item key={index} value={item}>{item}</Select.Item>
+      ))}
+  </Select.Content>
+</Select>
+  }`
+    }
+  ]
 };

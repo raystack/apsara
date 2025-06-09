@@ -3,7 +3,7 @@
   padding: var(--rs-space-3);
   display: flex;
   align-items: center;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
@@ -11,10 +11,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
-.cell:hover,
-.cell:focus,
-.cell[data-highlighted]:not(.comboboxcell),
-.cell.comboboxcell[data-active-item] {
+.cell[data-active-item] {
   outline: none;
   cursor: pointer;
   font-family: var(--rs-font-body);
@@ -25,7 +22,8 @@
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary-hover);
 }
-.cell[data-disabled] {
+
+.cell[aria-disabled] {
   opacity: 0.6;
   pointer-events: none;
 }

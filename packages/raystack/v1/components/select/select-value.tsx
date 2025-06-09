@@ -1,23 +1,53 @@
-import { ElementRef, forwardRef } from "react";
-import * as SelectPrimitive from "@radix-ui/react-select";
-import styles from "./select.module.css";
-import { useSelectContext } from "./select-root";
-import { cx } from "class-variance-authority";
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { cx } from 'class-variance-authority';
+import { ElementRef, ReactNode, forwardRef, useMemo } from 'react';
+import { SelectMultipleValue } from './select-multiple-value';
+import { useSelectContext } from './select-root';
+import styles from './select.module.css';
+import { ItemType } from './types';
+
+type ValueType = Omit<ItemType, 'children'>;
+
+type SelectValueProps = Omit<SelectPrimitive.SelectValueProps, 'children'> & {
+  children?: ((value?: ValueType | ValueType[]) => ReactNode) | ReactNode;
+};
 
 export const SelectValue = forwardRef<
   ElementRef<typeof SelectPrimitive.Value>,
-  SelectPrimitive.SelectValueProps
+  SelectValueProps
 >(({ children, ...props }, ref) => {
-  const { value } = useSelectContext();
-  const leadingIcon = value?.icon;
+  const { value, items, multiple } = useSelectContext();
+
+  const item = useMemo(() => {
+    if (!value) return undefined;
+    if (multiple && Array.isArray(value)) {
+      const itemValues = value.map(v => items[v]);
+      if (itemValues.length === 1) return itemValues[0];
+      return itemValues;
+    }
+    return items[value as string];
+  }, [value, items, multiple]);
+
+  if (children) {
+    return (
+      <SelectPrimitive.Value ref={ref} {...props}>
+        {typeof children === 'function' ? children(item) : children}
+      </SelectPrimitive.Value>
+    );
+  }
+
+  if (Array.isArray(item))
+    return <SelectMultipleValue data={item} ref={ref} {...props} />;
 
   return (
-    <div className={cx(styles.valueContent)}>
-      {leadingIcon && <div className={styles.leadingIcon}>{leadingIcon}</div>}
-      <SelectPrimitive.Value ref={ref} {...props}>
-        {children}
-      </SelectPrimitive.Value>
-    </div>
+    <SelectPrimitive.Value ref={ref} {...props}>
+      <div className={cx(styles.valueContent)}>
+        {typeof item?.children === 'string' && item?.leadingIcon && (
+          <div className={styles.itemIcon}>{item.leadingIcon}</div>
+        )}
+        {item?.children ?? value}
+      </div>
+    </SelectPrimitive.Value>
   );
 });
 SelectValue.displayName = SelectPrimitive.Value.displayName;

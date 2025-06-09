@@ -48,6 +48,11 @@ export interface TooltipProps {
   skipDelayDuration?: number;
 
   /**
+   * Additional ID for Tooltip Content
+   */
+  id?: string;
+
+  /**
    * Additional CSS class names.
    */
   className?: string;

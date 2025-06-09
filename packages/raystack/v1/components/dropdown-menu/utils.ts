@@ -1,9 +1,23 @@
 import { ReactNode } from "react";
 
-export const getMatch = (value: string, search?: string) => {
+export const getMatch = (
+  value?: string,
+  children?: ReactNode,
+  search?: string,
+) => {
   if (!search?.length) return true;
-  return value.toLowerCase().includes(search.toLowerCase());
+  const childrenValue = getChildrenValue(children)?.toLowerCase();
+
+  return (
+    value?.toLowerCase().includes(search.toLowerCase()) ||
+    childrenValue?.includes(search.toLowerCase())
+  );
 };
 
-export const getValue = (value?: string, children?: ReactNode) =>
-  String(value ?? typeof children === "string" ? children : "") ?? "";
+export const getChildrenValue = (children?: ReactNode) => {
+  if (typeof children === "string") return children;
+  if (typeof children === "object" && children !== null) {
+    return children.toString();
+  }
+  return null;
+};

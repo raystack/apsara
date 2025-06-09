@@ -39,11 +39,11 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   skipDelayDuration?: number;
   'aria-label'?: string;
   asChild?: boolean;
+  id?: string;
   showArrow?: boolean;
   followCursor?: boolean;
   sideOffset?: number;
   alignOffset?: number;
-  id?: string;
 }
 type TooltipSide = NonNullable<TooltipPrimitive.TooltipContentProps['side']>;
 type TooltipAlign = NonNullable<TooltipPrimitive.TooltipContentProps['align']>;
@@ -100,7 +100,7 @@ export const Tooltip = ({
     >
       <TooltipPrimitive.Root>
         <TooltipPrimitive.Trigger
-          aria-describedby='tooltip'
+          aria-describedby={tooltipId}
           asChild={asChild}
           onFocus={followCursor ? reset : undefined}
         >

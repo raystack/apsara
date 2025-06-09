@@ -1,6 +1,7 @@
 ---
 title: Select
 description: Displays a list of options for the user to pick from—triggered by a button.
+tag: update
 ---
 
 import {
@@ -10,6 +11,8 @@ import {
   variantDemo,
   separatorDemo,
   iconDemo,
+  autocompleteDemo,
+  multipleDemo
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -34,17 +37,47 @@ import { Select } from "@raystack/apsara/v1";
 
 ## Select Props
 
+The Select component is composed of several parts, each with their own props.
+
+The root element is the parent component that holds the select. Using the `autocomplete` prop, you can enable autocomplete functionality. Autcomplet is built using [Ariakit ComboboxProvider](https://ariakit.org/reference/combobox-provider)
+
+<auto-type-table path="./props.ts" name="SelectRootProps" />
+
 ### Select.Trigger Props
+
+The button that triggers the Select.
 
 <auto-type-table path="./props.ts" name="SelectTriggerProps" />
 
 ### Select.Content Props
 
+The container that holds the Select items.
+
 <auto-type-table path="./props.ts" name="SelectContentProps" />
 
 ### Select.Item Props
 
+Individual clickable options within the Select.
+
 <auto-type-table path="./props.ts" name="SelectItemProps" />
+
+### Select.Group
+
+A way to group related Select items together.
+
+<auto-type-table path="./props.ts" name="SelectGroupProps" />
+
+### Select.Label
+
+Renders a label in a Select group. This component can only be used inside Select.Group
+
+<auto-type-table path="./props.ts" name="SelectLabelProps" />
+
+### Select.Separator
+
+Visual divider between Select items or groups.
+
+<auto-type-table path="./props.ts" name="SelectSeparatorProps" />
 
 ## Examples
 
@@ -69,6 +102,22 @@ You can pass `leadingIcon` prop to Select.Item to include items
 ### With Separator
 
 <Demo data={separatorDemo} />
+
+### Multiple Selection
+
+To enable multiple selection, pass the `multiple` prop to the Select root element.
+
+When multiple selection is enabled, the value, onValueChange, and defaultValue will be an array of strings.
+
+<Demo data={multipleDemo} />
+
+### Autocomplete
+
+To enable autocomplete, pass the `autocomplete` prop to the Select root element.
+
+By default, only select items are filtered using a simple match. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
+
+<Demo data={autocompleteDemo} />
 
 ## Accessibility
 
