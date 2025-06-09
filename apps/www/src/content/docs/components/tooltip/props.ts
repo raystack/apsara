@@ -14,14 +14,20 @@ export interface TooltipProps {
    * @default "top"
    */
   side?:
-    | "top"
-    | "right"
-    | "bottom"
-    | "left"
-    | "top-left"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-right";
+    | 'top'
+    | 'right'
+    | 'bottom'
+    | 'left'
+    | 'top-left'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-right';
+
+  /**
+   * Whether the tooltip should follow the cursor.
+   * @default false
+   */
+  followCursor?: boolean;
 
   /**
    * Whether the tooltip is disabled.

@@ -95,6 +95,7 @@ const SidebarRoot = forwardRef<
               message={open ? 'Click to collapse' : 'Click to expand'}
               side={position === 'left' ? 'right' : 'left'}
               asChild
+              followCursor
             >
               <div
                 className={styles.resizeHandle}

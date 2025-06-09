@@ -1,52 +1,58 @@
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import { cva, VariantProps } from "class-variance-authority";
-import clsx from "clsx";
-import React from "react";
-
-import { Text } from "../text";
-import styles from "./tooltip.module.css";
+import * as TooltipPrimitive from '@radix-ui/react-tooltip';
+import { VariantProps, cva, cx } from 'class-variance-authority';
+import { CSSProperties, ReactNode, useId, useMemo } from 'react';
+import { useMouse } from '~/v1/hooks';
+import { Text } from '../text';
+import styles from './tooltip.module.css';
+import { getTransformForPlacement } from './utils';
 
 const tooltip = cva(styles.content, {
   variants: {
     side: {
-      top: styles["side-top"],
-      right: styles["side-right"],
-      bottom: styles["side-bottom"],
-      left: styles["side-left"],
-      "top-left": styles["side-top-left"],
-      "top-right": styles["side-top-right"],
-      "bottom-left": styles["side-bottom-left"],
-      "bottom-right": styles["side-bottom-right"],
+      top: styles['side-top'],
+      right: styles['side-right'],
+      bottom: styles['side-bottom'],
+      left: styles['side-left'],
+      'top-left': styles['side-top-left'],
+      'top-right': styles['side-top-right'],
+      'bottom-left': styles['side-bottom-left'],
+      'bottom-right': styles['side-bottom-right']
     }
   },
   defaultVariants: {
-    side: "top"
+    side: 'top'
   }
 });
 
 interface TooltipProps extends VariantProps<typeof tooltip> {
   disabled?: boolean;
-  children: React.ReactNode;
-  message: React.ReactNode;
+  children: ReactNode;
+  message: ReactNode;
   classNames?: {
     trigger?: string;
     content?: string;
     arrow?: string;
   };
-  triggerStyle?: React.CSSProperties;
-  contentStyle?: React.CSSProperties;
+  triggerStyle?: CSSProperties;
+  contentStyle?: CSSProperties;
   delayDuration?: number;
   skipDelayDuration?: number;
   'aria-label'?: string;
   asChild?: boolean;
   showArrow?: boolean;
+  followCursor?: boolean;
+  sideOffset?: number;
+  alignOffset?: number;
+  id?: string;
 }
+type TooltipSide = NonNullable<TooltipPrimitive.TooltipContentProps['side']>;
+type TooltipAlign = NonNullable<TooltipPrimitive.TooltipContentProps['align']>;
 
-export const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip = ({
   children,
   message,
   disabled,
-  side = "top",
+  side = 'top',
   classNames,
   triggerStyle,
   contentStyle,
@@ -55,41 +61,89 @@ export const Tooltip: React.FC<TooltipProps> = ({
   'aria-label': ariaLabel,
   asChild = true,
   showArrow = true,
-}) => {
-  return disabled ? (
-    children
-  ) : (
-    <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration}>
+  id,
+  followCursor = false,
+  sideOffset = 4,
+  alignOffset = 0
+}: TooltipProps) => {
+  const generatedId = useId();
+  const tooltipId = id ?? generatedId;
+  const {
+    ref,
+    value: mouseValue,
+    reset
+  } = useMouse<HTMLDivElement>({
+    resetOnExit: false,
+    enabled: followCursor
+  });
+
+  const computedSide = useMemo(
+    () => (side?.split('-')[0] || 'top') as TooltipSide,
+    [side]
+  );
+  const computedAlign = useMemo(
+    () =>
+      (side?.includes('-')
+        ? side.split('-')[1] === 'left'
+          ? 'start'
+          : 'end'
+        : 'center') as TooltipAlign,
+    [side]
+  );
+
+  if (disabled) return children;
+
+  return (
+    <TooltipPrimitive.Provider
+      delayDuration={delayDuration}
+      skipDelayDuration={skipDelayDuration}
+    >
       <TooltipPrimitive.Root>
-        <TooltipPrimitive.Trigger 
-          aria-describedby="tooltip" 
+        <TooltipPrimitive.Trigger
+          aria-describedby='tooltip'
           asChild={asChild}
+          onFocus={followCursor ? reset : undefined}
         >
-          <div className={clsx(styles.trigger, classNames?.trigger ?? "")} style={triggerStyle}>
+          <div
+            ref={ref}
+            className={cx(styles.trigger, classNames?.trigger)}
+            style={triggerStyle}
+          >
             {children}
           </div>
         </TooltipPrimitive.Trigger>
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
-            id="tooltip"
-            role="tooltip"
-            aria-label={ariaLabel || (typeof message === 'string' ? message : undefined)}
-            side={side?.split('-')[0] as TooltipPrimitive.TooltipContentProps['side'] || 'top'}
-            align={(side?.includes('-') ? (side.split('-')[1] === 'left' ? 'start' : 'end') : 'center') satisfies 'start' | 'end' | 'center'}
-            sideOffset={4}
+            id={tooltipId}
+            role='tooltip'
+            aria-label={
+              ariaLabel || (typeof message === 'string' ? message : undefined)
+            }
+            side={computedSide}
+            align={computedAlign}
+            alignOffset={alignOffset}
+            sideOffset={sideOffset}
             className={tooltip({ side, className: classNames?.content })}
-            style={contentStyle}
+            data-follow-cursor={followCursor}
+            style={{
+              ...contentStyle,
+              pointerEvents: followCursor ? 'none' : undefined,
+              transform:
+                followCursor && mouseValue
+                  ? getTransformForPlacement(
+                      computedSide,
+                      computedAlign,
+                      mouseValue
+                    )
+                  : undefined
+            }}
           >
-            {typeof message === "string" ? (
-              <Text>{message}</Text>
-            ) : (
-              message
-            )}
+            {typeof message === 'string' ? <Text>{message}</Text> : message}
             {showArrow && (
-              <TooltipPrimitive.Arrow 
-                className={clsx(styles.arrow, classNames?.arrow)} 
-                width={12} 
-                height={6} 
+              <TooltipPrimitive.Arrow
+                className={cx(styles.arrow, classNames?.arrow)}
+                width={7}
+                height={7}
               />
             )}
           </TooltipPrimitive.Content>
