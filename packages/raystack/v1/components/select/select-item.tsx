@@ -1,6 +1,6 @@
 import { ComboboxItem } from '@ariakit/react';
-import * as SelectPrimitive from '@radix-ui/react-select';
 import { cx } from 'class-variance-authority';
+import { Select as SelectPrimitive } from 'radix-ui';
 import { ElementRef, forwardRef, useLayoutEffect } from 'react';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../dropdown-menu/utils';

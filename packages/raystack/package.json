@@ -30,10 +30,7 @@
     "./style.css": "./dist/style.css",
     "./normalize.css": "./dist/normalize.css"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "scripts": {
     "prebuild": "npm run clean",
     "build": "rollup --config",
@@ -51,12 +48,8 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/index.d.ts"
-      ],
-      "v1": [
-        "./dist/v1/index.d.ts"
-      ]
+      "*": ["./dist/index.d.ts"],
+      "v1": ["./dist/v1/index.d.ts"]
     }
   },
   "keywords": [],
@@ -120,6 +113,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^0.2.0",
     "dayjs": "^1.11.11",
+    "radix-ui": "^1.4.2",
     "react": "^18.2.0",
     "react-day-picker": "^9.6.7",
     "react-loading-skeleton": "^3.4.0",

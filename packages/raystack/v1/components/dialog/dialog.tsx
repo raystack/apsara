@@ -1,16 +1,16 @@
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Cross1Icon } from "@radix-ui/react-icons";
-import { cva, VariantProps } from "class-variance-authority";
-import { clsx } from "clsx";
+import { Cross1Icon } from '@radix-ui/react-icons';
+import { VariantProps, cva } from 'class-variance-authority';
+import { clsx } from 'clsx';
+import { Dialog as DialogPrimitive } from 'radix-ui';
 import {
   ComponentProps,
   ComponentPropsWithoutRef,
   ElementRef,
-  forwardRef,
-} from "react";
-import { Flex } from "../flex";
+  forwardRef
+} from 'react';
+import { Flex } from '../flex';
 
-import styles from "./dialog.module.css";
+import styles from './dialog.module.css';
 
 const dialogContent = cva(styles.dialogContent);
 
@@ -51,15 +51,15 @@ const DialogContent = forwardRef<
           overlayBlur && styles.overlayBlur
         )}
         style={overlayStyle}
-        aria-hidden="true"
-        role="presentation"
+        aria-hidden='true'
+        role='presentation'
       />
       <DialogPrimitive.Content
         ref={ref}
         className={dialogContent({ className })}
         style={{ width, ...props.style }}
         aria-label={ariaLabel}
-        aria-describedby={ariaDescription ? "dialog-description" : undefined}
+        aria-describedby={ariaDescription ? 'dialog-description' : undefined}
         {...props}
       >
         {children}
@@ -72,14 +72,14 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
   children,
-  className,
+  className
 }: {
   children: React.ReactNode;
   className?: string;
 }) => (
   <Flex
-    justify={"between"}
-    align={"center"}
+    justify='between'
+    align='center'
     className={clsx(styles.header, className)}
   >
     {children}
@@ -88,24 +88,24 @@ const DialogHeader = ({
 
 const DialogFooter = ({
   children,
-  className,
+  className
 }: {
   children: React.ReactNode;
   className?: string;
 }) => (
-  <Flex gap={5} justify="end" className={clsx(styles.footer, className)}>
+  <Flex gap={5} justify='end' className={clsx(styles.footer, className)}>
     {children}
   </Flex>
 );
 
 const DialogBody = ({
   children,
-  className,
+  className
 }: {
   children: React.ReactNode;
   className?: string;
 }) => (
-  <Flex direction="column" gap={3} className={clsx(styles.body, className)}>
+  <Flex direction='column' gap={3} className={clsx(styles.body, className)}>
     {children}
   </Flex>
 );
@@ -115,7 +115,7 @@ export function CloseButton({ className, ...props }: CloseButtonProps) {
   return (
     <DialogPrimitive.Close
       className={clsx(styles.close, className)}
-      aria-label="Close dialog"
+      aria-label='Close dialog'
       {...props}
     >
       <Cross1Icon />
@@ -132,7 +132,7 @@ function DialogTitle({ children, className, ...props }: DialogTitleProps) {
   return (
     <DialogPrimitive.Title
       {...props}
-      role="heading"
+      role='heading'
       aria-level={1}
       className={clsx(styles.title, className)}
     >
@@ -156,8 +156,8 @@ function DialogDescription({
     <DialogPrimitive.Description
       {...props}
       className={clsx(styles.description, className)}
-      id="dialog-description"
-      role="document"
+      id='dialog-description'
+      role='document'
     >
       {children}
     </DialogPrimitive.Description>
@@ -173,5 +173,5 @@ export const Dialog = Object.assign(DialogPrimitive.Root, {
   Close: DialogPrimitive.Close,
   CloseButton: CloseButton,
   Title: DialogTitle,
-  Description: DialogDescription,
+  Description: DialogDescription
 });

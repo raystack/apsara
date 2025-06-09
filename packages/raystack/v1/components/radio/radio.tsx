@@ -1,8 +1,8 @@
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { cva, VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
+import { VariantProps, cva } from 'class-variance-authority';
+import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
-import styles from "./radio.module.css";
+import styles from './radio.module.css';
 
 const RadioRoot = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Root>,
@@ -50,5 +50,5 @@ Indicator.displayName = RadioGroupPrimitive.Indicator.displayName;
 export const Radio = Object.assign(RadioRoot, {
   Root: RadioRoot,
   Indicator: Indicator,
-  Item: RadioItem,
+  Item: RadioItem
 });

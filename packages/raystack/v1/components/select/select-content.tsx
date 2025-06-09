@@ -1,7 +1,6 @@
 import { Combobox, ComboboxList } from '@ariakit/react';
-import * as SelectPrimitive from '@radix-ui/react-select';
-import { Slot } from '@radix-ui/react-slot';
 import { cx } from 'class-variance-authority';
+import { Select as SelectPrimitive, Slot } from 'radix-ui';
 import { ElementRef, forwardRef, useCallback } from 'react';
 import { useSelectContext } from './select-root';
 import styles from './select.module.css';
@@ -88,7 +87,7 @@ export const SelectContent = forwardRef<
                 <ComboboxList
                   className={styles.comboboxContent}
                   aria-multiselectable={multiple ? true : undefined}
-                  render={asChild ? <Slot /> : undefined}
+                  render={asChild ? <Slot.Root /> : undefined}
                 >
                   {children}
                 </ComboboxList>

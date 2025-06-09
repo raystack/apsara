@@ -1,13 +1,13 @@
-import { forwardRef, HTMLAttributes, useMemo } from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { AlignExtendedType, AlignType } from "./types";
+import { Slot } from 'radix-ui';
+import { HTMLAttributes, forwardRef, useMemo } from 'react';
+import { AlignExtendedType, AlignType } from './types';
 
 const GAPS = {
-  "extra-small": "var(--rs-space-2)",
-  small: "var(--rs-space-3)",
-  medium: "var(--rs-space-5)",
-  large: "var(--rs-space-9)",
-  "extra-large": "var(--rs-space-11)",
+  'extra-small': 'var(--rs-space-2)',
+  small: 'var(--rs-space-3)',
+  medium: 'var(--rs-space-5)',
+  large: 'var(--rs-space-9)',
+  'extra-large': 'var(--rs-space-11)'
 } as const;
 
 type GapType = keyof typeof GAPS;
@@ -21,7 +21,7 @@ type GridProps = HTMLAttributes<HTMLDivElement> & {
    * <Grid templateAreas={["header header header", "sidebar main main", "footer footer footer"]} />
    */
   templateAreas?: string | string[];
-  autoFlow?: "row" | "column" | "dense" | "row dense" | "column dense";
+  autoFlow?: 'row' | 'column' | 'dense' | 'row dense' | 'column dense';
   autoColumns?: string;
   autoRows?: string;
 
@@ -78,30 +78,30 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
       asChild,
       ...props
     },
-    ref,
+    ref
   ) => {
     const gridTemplateColumns =
-      typeof columns === "number" ? `repeat(${columns}, 1fr)` : columns;
+      typeof columns === 'number' ? `repeat(${columns}, 1fr)` : columns;
     const gridTemplateRows =
-      typeof rows === "number" ? `repeat(${rows}, 1fr)` : rows;
+      typeof rows === 'number' ? `repeat(${rows}, 1fr)` : rows;
 
     const gridTemplateAreas = useMemo(() => {
       if (Array.isArray(templateAreas)) {
         return templateAreas
           .map(area => `"${area}"`)
-          .join(" ")
+          .join(' ')
           .trim();
       }
       return templateAreas;
     }, [templateAreas]);
 
-    const Comp = asChild ? Slot : "div";
+    const Comp = asChild ? Slot.Root : 'div';
 
     return (
       <Comp
         ref={ref}
         style={{
-          display: inline ? "inline-grid" : "grid",
+          display: inline ? 'inline-grid' : 'grid',
           gridTemplateAreas,
           gridAutoFlow: autoFlow,
           gridAutoColumns: autoColumns,
@@ -115,12 +115,12 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
           alignItems,
           justifyContent,
           alignContent,
-          ...style,
+          ...style
         }}
         {...props}
       />
     );
-  },
+  }
 );
 
-Grid.displayName = "Grid";
+Grid.displayName = 'Grid';

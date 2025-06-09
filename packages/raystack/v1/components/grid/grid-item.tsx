@@ -1,6 +1,6 @@
-import { forwardRef, HTMLAttributes } from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { AlignType } from "./types";
+import { Slot } from 'radix-ui';
+import { HTMLAttributes, forwardRef } from 'react';
+import { AlignType } from './types';
 
 type GridItemProps = HTMLAttributes<HTMLDivElement> & {
   area?: string;
@@ -31,9 +31,9 @@ export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
       asChild,
       ...props
     },
-    ref,
+    ref
   ) => {
-    const Comp = asChild ? Slot : "div";
+    const Comp = asChild ? Slot.Root : 'div';
 
     return (
       <Comp
@@ -48,12 +48,12 @@ export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
           gridRow: rowSpan ? `span ${rowSpan}` : undefined,
           justifySelf,
           alignSelf,
-          ...style,
+          ...style
         }}
         {...props}
       />
     );
-  },
+  }
 );
 
-GridItem.displayName = "GridItem";
+GridItem.displayName = 'GridItem';

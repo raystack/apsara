@@ -1,7 +1,7 @@
 import { Menu, MenuProps, useMenuContext } from '@ariakit/react';
 import { Combobox, ComboboxList } from '@ariakit/react';
-import { Slot } from '@radix-ui/react-slot';
 import { cx } from 'class-variance-authority';
+import { Slot } from 'radix-ui';
 import { ElementRef, forwardRef, useRef } from 'react';
 import { useDropdownContext } from './dropdown-menu-root';
 import styles from './dropdown-menu.module.css';
@@ -39,7 +39,7 @@ export const DropdownMenuContent = forwardRef<
           autocomplete && styles.comboboxContainer,
           className
         )}
-        render={asChild ? <Slot /> : undefined}
+        render={asChild ? <Slot.Root /> : undefined}
         {...props}
       >
         {autocomplete ? (

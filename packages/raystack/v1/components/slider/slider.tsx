@@ -1,8 +1,7 @@
-import * as RadixSlider from '@radix-ui/react-slider';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
+import { Slider as SliderPrimitive } from 'radix-ui';
 import * as React from 'react';
 import { type ComponentPropsWithoutRef } from 'react';
-
 import styles from './slider.module.css';
 import { ThumbIcon } from './thumb';
 
@@ -10,16 +9,19 @@ const slider = cva(styles.slider, {
   variants: {
     variant: {
       single: styles['slider-variant-single'],
-      range: styles['slider-variant-range'],
-    },
+      range: styles['slider-variant-range']
+    }
   },
   defaultVariants: {
-    variant: 'single',
-  },
+    variant: 'single'
+  }
 });
 
 export interface SliderProps
-  extends Omit<ComponentPropsWithoutRef<typeof RadixSlider.Root>, 'value' | 'defaultValue' | 'onChange'>,
+  extends Omit<
+      ComponentPropsWithoutRef<typeof SliderPrimitive.Root>,
+      'value' | 'defaultValue' | 'onChange'
+    >,
     VariantProps<typeof slider> {
   value?: number | [number, number];
   defaultValue?: number | [number, number];
@@ -32,26 +34,36 @@ export interface SliderProps
   'aria-valuetext'?: string;
 }
 
-export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>, SliderProps>(
-  ({ 
-    className, 
-    variant = 'single', 
-    value, 
-    defaultValue, 
-    min = 0, 
-    max = 100, 
-    step = 1, 
-    label, 
-    onChange,
-    'aria-label': ariaLabel,
-    'aria-valuetext': ariaValueText,
-    ...props 
-  }, ref) => {
+export const Slider = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  SliderProps
+>(
+  (
+    {
+      className,
+      variant = 'single',
+      value,
+      defaultValue,
+      min = 0,
+      max = 100,
+      step = 1,
+      label,
+      onChange,
+      'aria-label': ariaLabel,
+      'aria-valuetext': ariaValueText,
+      ...props
+    },
+    ref
+  ) => {
     const isRange = variant === 'range';
-    const defaultVal = isRange 
-      ? (defaultValue as [number, number]) || [min, max] 
-      : [defaultValue as number || min];
-    const currentValue = value ? (isRange ? value as [number, number] : [value as number]) : defaultVal;
+    const defaultVal = isRange
+      ? (defaultValue as [number, number]) || [min, max]
+      : [(defaultValue as number) || min];
+    const currentValue = value
+      ? isRange
+        ? (value as [number, number])
+        : [value as number]
+      : defaultVal;
 
     const getLabel = (index: number) => {
       if (!label) return undefined;
@@ -67,7 +79,7 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
     };
 
     return (
-      <RadixSlider.Root
+      <SliderPrimitive.Root
         ref={ref}
         className={`${slider({ variant })} ${className || ''}`}
         value={value ? currentValue : undefined}
@@ -75,17 +87,19 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
         min={min}
         max={max}
         step={step}
-        onValueChange={(val) => onChange?.(isRange ? val as [number, number] : val[0])}
+        onValueChange={val =>
+          onChange?.(isRange ? (val as [number, number]) : val[0])
+        }
         aria-label={ariaLabel || (isRange ? 'Range slider' : 'Slider')}
         {...props}
       >
-        <RadixSlider.Track className={styles.track}>
-          <RadixSlider.Range className={styles.range} />
-        </RadixSlider.Track>
+        <SliderPrimitive.Track className={styles.track}>
+          <SliderPrimitive.Range className={styles.range} />
+        </SliderPrimitive.Track>
         {defaultVal.map((_, i) => (
-          <RadixSlider.Thumb 
-            key={i} 
-            className={styles.thumb} 
+          <SliderPrimitive.Thumb
+            key={i}
+            className={styles.thumb}
             asChild
             aria-label={getLabel(i) || `Thumb ${i + 1}`}
             aria-valuetext={getAriaValueText(i)}
@@ -94,9 +108,9 @@ export const Slider = React.forwardRef<React.ElementRef<typeof RadixSlider.Root>
               <ThumbIcon />
               {getLabel(i) && <div className={styles.label}>{getLabel(i)}</div>}
             </div>
-          </RadixSlider.Thumb>
+          </SliderPrimitive.Thumb>
         ))}
-      </RadixSlider.Root>
+      </SliderPrimitive.Root>
     );
   }
 );

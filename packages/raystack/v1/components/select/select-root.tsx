@@ -1,5 +1,5 @@
 import { ComboboxProvider } from '@ariakit/react';
-import * as SelectPrimitive from '@radix-ui/react-select';
+import { Select as SelectPrimitive } from 'radix-ui';
 import {
   createContext,
   useCallback,
