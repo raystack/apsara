@@ -1,6 +1,6 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { VariantProps, cva, cx } from 'class-variance-authority';
-import React, { useId } from 'react';
+import { CSSProperties, ReactNode, useId, useMemo } from 'react';
 import { useMouse } from '~/v1/hooks';
 import { Text } from '../text';
 import styles from './tooltip.module.css';
@@ -25,15 +25,15 @@ const tooltip = cva(styles.content, {
 
 interface TooltipProps extends VariantProps<typeof tooltip> {
   disabled?: boolean;
-  children: React.ReactNode;
-  message: React.ReactNode;
+  children: ReactNode;
+  message: ReactNode;
   classNames?: {
     trigger?: string;
     content?: string;
     arrow?: string;
   };
-  triggerStyle?: React.CSSProperties;
-  contentStyle?: React.CSSProperties;
+  triggerStyle?: CSSProperties;
+  contentStyle?: CSSProperties;
   delayDuration?: number;
   skipDelayDuration?: number;
   'aria-label'?: string;
@@ -45,24 +45,22 @@ interface TooltipProps extends VariantProps<typeof tooltip> {
   id?: string;
 }
 
-interface MousePosition {
+type MousePosition = {
   x: number;
   y: number;
   width: number;
   height: number;
-}
+};
 
 type TooltipSide = NonNullable<TooltipPrimitive.TooltipContentProps['side']>;
 type TooltipAlign = NonNullable<TooltipPrimitive.TooltipContentProps['align']>;
-type Placement = `${TooltipSide}-${TooltipAlign}`;
 
 const getTransformForPlacement = (
-  placement: Placement,
+  side: TooltipSide,
+  align: TooltipAlign,
   { x, y, width, height }: MousePosition
 ): string => {
-  const [side, align] = placement.split('-') as [TooltipSide, TooltipAlign];
-
-  const transforms: Record<TooltipSide, Record<TooltipAlign, string>> = {
+  const transforms = {
     top: {
       start: `translate(${x}px, ${y}px)`,
       center: `translate(${x - width / 2}px, ${y}px)`,
@@ -88,7 +86,7 @@ const getTransformForPlacement = (
   return transforms[side][align];
 };
 
-export const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip = ({
   children,
   message,
   disabled,
@@ -103,27 +101,35 @@ export const Tooltip: React.FC<TooltipProps> = ({
   showArrow = true,
   id,
   followCursor = false,
-  sideOffset = 0,
+  sideOffset = 4,
   alignOffset = 0
-}) => {
+}: TooltipProps) => {
   const generatedId = useId();
   const tooltipId = id ?? generatedId;
-  const { ref, value, reset } = useMouse<HTMLDivElement>({
-    resetOnExit: false
+  const {
+    ref,
+    value: mouseValue,
+    reset
+  } = useMouse<HTMLDivElement>({
+    resetOnExit: false,
+    enabled: followCursor
   });
 
+  const computedSide = useMemo(
+    () => (side?.split('-')[0] as TooltipSide) || 'top',
+    [side]
+  );
+  const computedAlign = useMemo(
+    () =>
+      (side?.includes('-')
+        ? side.split('-')[1] === 'left'
+          ? 'start'
+          : 'end'
+        : 'center') satisfies 'start' | 'end' | 'center',
+    [side]
+  );
+
   if (disabled) return children;
-
-  const computedSide = (side?.split('-')[0] as TooltipSide) || 'top';
-  const computedAlign = (
-    side?.includes('-')
-      ? side.split('-')[1] === 'left'
-        ? 'start'
-        : 'end'
-      : 'center'
-  ) satisfies 'start' | 'end' | 'center';
-
-  const placement = `${computedSide}-${computedAlign}` as Placement;
 
   return (
     <TooltipPrimitive.Provider
@@ -161,8 +167,12 @@ export const Tooltip: React.FC<TooltipProps> = ({
               ...contentStyle,
               pointerEvents: followCursor ? 'none' : undefined,
               transform:
-                followCursor && value
-                  ? getTransformForPlacement(placement, value)
+                followCursor && mouseValue
+                  ? getTransformForPlacement(
+                      computedSide,
+                      computedAlign,
+                      mouseValue
+                    )
                   : undefined
             }}
           >
