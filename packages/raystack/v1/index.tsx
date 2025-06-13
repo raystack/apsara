@@ -1,7 +1,7 @@
 import './styles/index.css';
 
 export { AnnouncementBar } from './components/announcement-bar';
-export * from './components/amount';
+export { Amount, type AmountProps } from './components/amount';
 export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
 export { Badge } from './components/badge';
 export { Box } from './components/box';

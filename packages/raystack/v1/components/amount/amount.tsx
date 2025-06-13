@@ -43,6 +43,7 @@ export interface AmountProps {
   /**
    * Currency display format
    * @default 'symbol'
+   * @example 'symbol' - $12.99, 'code' - USD 12.99, 'name' - 12.99 US Dollars
    */
   currencyDisplay?: 'symbol' | 'code' | 'name';
 
@@ -105,7 +106,7 @@ function getCurrencyDecimals(currency: string): number {
  *
  * // Without decimals
  * <Text>
- *   Price: <Amount value={1299} hideDecimals />  // Shows as "$13"
+ *   Price: <Amount value={1299} hideDecimals />  // Shows as "$12"
  * </Text>
  *
  * // With currency code
@@ -116,6 +117,11 @@ function getCurrencyDecimals(currency: string): number {
  * // With value in major units
  * <Text>
  *   Amount: <Amount value={12.99} valueInMinorUnits={false} />  // Shows as "$12.99"
+ * </Text>
+ *
+ * // With useGrouping (default is true)
+ * <Text>
+ *   Amount: <Amount value={129999999} useGrouping />  // Shows as "$129,999,999.99"
  * </Text>
  * ```
  */
