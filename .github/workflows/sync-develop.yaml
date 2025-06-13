@@ -21,14 +21,12 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
 
       - name: Create Pull Request if there are changes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Fetch the latest main and develop
-          git fetch origin develop
           git fetch origin main
 
           # Get the latest commit message and hash
@@ -37,13 +35,12 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%B)
 
           # Check if there are any differences between main and develop
-          if git diff --quiet main develop; then
+          if git diff --quiet main origin/develop; then
             echo "[SKIPPED] No changes to sync - develop is already up to date with main"
             exit 0
           fi
           
           # Create a new branch from main
-          
           SYNC_BRANCH="sync/main-to-develop-${COMMIT_HASH:0:7}"
           git checkout -b $SYNC_BRANCH
           git push origin $SYNC_BRANCH
@@ -54,6 +51,8 @@ jobs:
             --head $SYNC_BRANCH \
             --title "chore: sync main into develop (${COMMIT_HASH:0:7})" \
             --body "This PR is automatically created to sync changes from main into develop.
+
+            **Note:** This PR must be merged using 'Create a merge commit' option only.
 
             **Changes included:**
             ${COMMIT_MSG}
