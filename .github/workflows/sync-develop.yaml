@@ -1,16 +1,13 @@
-name: Sync develop with main
+name: Sync PR from main into develop
 
 on:
-  schedule:
-    # Runs at 5:00 AM UTC every day
-    - cron: '0 5 * * *'
-  
-  # Enable "Run Workflow" button to trigger the workflow manually
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   sync-develop:
-    name: Sync develop branch with main
+    name: Create PR from main into develop
     runs-on: ubuntu-latest
     timeout-minutes: 5
     
@@ -19,31 +16,47 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          ref: develop
-      
-      - name: Configure Git
+          
+      - name: Setup git
         run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "github-actions-bot@users.noreply.github.com"
-      
-      - name: Fetch latest from remote
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create Pull Request if there are changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git fetch --prune
-      
-      - name: Merge main into develop
-        run: |
-          # Check if main has any changes compared to develop
-          if git merge-base --is-ancestor origin/main origin/develop; then
-            echo "[SKIPPED] develop is already up to date with main."
+          # Fetch the latest main and develop
+          git fetch origin main
+
+          # Get the latest commit message and hash
+          git checkout main
+          COMMIT_HASH=$(git rev-parse HEAD)
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+
+          # Check if there are any differences between main and develop
+          if git diff --quiet main origin/develop; then
+            echo "[SKIPPED] No changes to sync - develop is already up to date with main"
             exit 0
           fi
           
-          # Try to merge main into develop
-          if git merge origin/main -m "Auto-merge main into develop"; then
-            echo "[SUCCESS] Successfully merged main into develop"
-            git push origin develop
-          else
-            echo "[MERGE CONFLICT] Manually resolve the merge conflict and push to develop."
-            git merge --abort
-            exit 1
-          fi
+          # Create a new branch from main
+          SYNC_BRANCH="sync/main-to-develop-${COMMIT_HASH:0:7}"
+          git checkout -b $SYNC_BRANCH
+          git push origin $SYNC_BRANCH
+          
+          # Create PR from main into develop
+          gh pr create \
+            --base develop \
+            --head $SYNC_BRANCH \
+            --title "chore: sync main into develop (${COMMIT_HASH:0:7})" \
+            --body "This PR is automatically created to sync changes from main into develop.
+
+            **Note:** This PR must be merged using 'Create a merge commit' option only.
+
+            **Changes included:**
+            ${COMMIT_MSG}
+            
+            This PR was triggered by commit: ${COMMIT_HASH}" \
+            --label "automated-sync" \
+            --assignee "paanSinghCoder" || echo "PR creation failed, likely because PR already exists"
