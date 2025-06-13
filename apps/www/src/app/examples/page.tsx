@@ -8,7 +8,6 @@ import {
 } from '@raystack/apsara/icons';
 import {
   Amount,
-  AmountOld,
   Avatar,
   AvatarGroup,
   Button,
@@ -61,13 +60,6 @@ const Page = () => {
     { value: 'Option 2', label: 'Option 2', icon: <FilterIcon /> },
     { value: 'Option 3', label: 'Option 3', icon: <OrganizationIcon /> }
   ];
-
-  const getSelectedIcon = (value: any) => {
-    const option = selectOptions.find(opt => opt.value === value);
-    return option ? option.icon : null;
-  };
-  const [textArea1, setTextArea1] = useState('');
-  const [textArea2, setTextArea2] = useState('');
 
   return (
     <>
@@ -1127,14 +1119,6 @@ const Page = () => {
           </Text>
 
           <Text
-            size={10}
-            weight='medium'
-            style={{ marginTop: '32px', marginBottom: '16px' }}
-          >
-            <AmountOld value={129} currency='INR' hideDecimals />
-          </Text>
-
-          <Text
             size='large'
             weight='medium'
             style={{ marginTop: '32px', marginBottom: '16px' }}
@@ -1164,7 +1148,7 @@ const Page = () => {
               <Text size='small'>Major Units (valueInMinorUnits=false):</Text>
               <Flex gap={4}>
                 <Text>
-                  USD:{' '}
+                  USD:
                   <Amount
                     value={9999.9}
                     valueInMinorUnits={false}
@@ -1172,7 +1156,7 @@ const Page = () => {
                   />
                 </Text>
                 <Text>
-                  JPY:{' '}
+                  JPY:
                   <Amount
                     value={9999}
                     valueInMinorUnits={false}
@@ -1180,7 +1164,7 @@ const Page = () => {
                   />
                 </Text>
                 <Text>
-                  BHD:{' '}
+                  BHD:
                   <Amount
                     value={99.999}
                     valueInMinorUnits={false}
@@ -1195,7 +1179,7 @@ const Page = () => {
               <Text size='small'>Currency Display Formats:</Text>
               <Flex gap={4}>
                 <Text>
-                  Symbol:{' '}
+                  Symbol:
                   <Amount
                     value={129900}
                     currency='EUR'
@@ -1203,7 +1187,7 @@ const Page = () => {
                   />
                 </Text>
                 <Text>
-                  Code:{' '}
+                  Code:
                   <Amount
                     value={129900}
                     currency='EUR'
@@ -1211,7 +1195,7 @@ const Page = () => {
                   />
                 </Text>
                 <Text>
-                  Name:{' '}
+                  Name:
                   <Amount
                     value={129900}
                     currency='EUR'
@@ -1242,11 +1226,11 @@ const Page = () => {
               <Text size='small'>Decimal Control:</Text>
               <Flex gap={4}>
                 <Text>
-                  No Decimals:{' '}
+                  No Decimals:
                   <Amount value={129900} currency='USD' hideDecimals />
                 </Text>
                 <Text>
-                  Min 2:{' '}
+                  Min 2:
                   <Amount
                     value={129900}
                     currency='USD'
@@ -1254,7 +1238,7 @@ const Page = () => {
                   />
                 </Text>
                 <Text>
-                  Max 1:{' '}
+                  Max 1:
                   <Amount
                     value={129900}
                     currency='USD'
@@ -1272,7 +1256,7 @@ const Page = () => {
                   With Grouping: <Amount value={9999999} currency='USD' />
                 </Text>
                 <Text>
-                  No Grouping:{' '}
+                  No Grouping:
                   <Amount value={9999999} currency='USD' useGrouping={false} />
                 </Text>
               </Flex>
