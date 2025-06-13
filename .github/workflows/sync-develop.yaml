@@ -27,14 +27,15 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get the latest commit message and hash
-          COMMIT_HASH=$(git rev-parse HEAD)
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-
           # Fetch the latest main and develop
           git fetch origin develop
           git fetch origin main
-          
+
+          # Get the latest commit message and hash
+          git checkout main
+          COMMIT_HASH=$(git rev-parse HEAD)
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+
           # Check if there are any differences between main and develop
           if git diff --quiet main develop; then
             echo "[SKIPPED] No changes to sync - develop is already up to date with main"
@@ -42,7 +43,7 @@ jobs:
           fi
           
           # Create a new branch from main
-          git checkout main
+          
           SYNC_BRANCH="sync/main-to-develop-${COMMIT_HASH:0:7}"
           git checkout -b $SYNC_BRANCH
           git push origin $SYNC_BRANCH
