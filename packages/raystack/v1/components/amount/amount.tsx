@@ -78,8 +78,8 @@ function getCurrencyDecimals(currency: string): number {
     });
 
     // Format a number and count the decimal places
-    const formatted = formatter.format(1);
-    const match = formatted.match(/\.([\d]+)/);
+    const formatted = formatter.format(1); // Get string representation of 1 unit with currency symbol
+    const match = formatted.match(/\.([\d]+)/); // Extract the decimal part
     return match ? match[1].length : 0;
   } catch {
     // Default to 2 decimal places if currency is invalid
