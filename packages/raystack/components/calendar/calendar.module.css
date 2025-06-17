@@ -9,7 +9,7 @@
 
 .caption_label,
 .dropdowns>span,
-.dropdown_trigger .dropdown_item_text {
+.dropdown_trigger{
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);

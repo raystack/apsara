@@ -73,7 +73,6 @@ function DropDown({
         iconProps={{
           className: styles.dropdown_icon,
         }}
-        // stopPropagation={true}
         size="small"
         variant="text"
         disabled={disabled}
@@ -92,9 +91,6 @@ function DropDown({
               value={opt.value.toString()}
               key={opt.value}
               disabled={opt.disabled}
-              // textProps={{
-              //   className: styles.dropdown_item_text,
-              // }}
             >
               {opt.label}
             </Select.Item>
