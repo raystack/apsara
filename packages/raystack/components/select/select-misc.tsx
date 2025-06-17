@@ -1,8 +1,8 @@
-import { ElementRef, forwardRef, Fragment } from "react";
-import * as SelectPrimitive from "@radix-ui/react-select";
-import { cx } from "class-variance-authority";
-import { useSelectContext } from "./select-root";
-import styles from "./select.module.css";
+import { cx } from 'class-variance-authority';
+import { Select as SelectPrimitive } from 'radix-ui';
+import { ElementRef, Fragment, forwardRef } from 'react';
+import { useSelectContext } from './select-root';
+import styles from './select.module.css';
 
 export const SelectGroup = forwardRef<
   ElementRef<typeof SelectPrimitive.Group>,
@@ -16,7 +16,8 @@ export const SelectGroup = forwardRef<
     <SelectPrimitive.Group
       ref={ref}
       className={cx(styles.menugroup, className)}
-      {...props}>
+      {...props}
+    >
       {children}
     </SelectPrimitive.Group>
   );

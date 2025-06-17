@@ -1,5 +1,5 @@
-import * as Collapsible from '@radix-ui/react-collapsible';
 import { cva } from 'class-variance-authority';
+import { Collapsible } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
   ComponentRef,

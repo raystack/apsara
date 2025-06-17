@@ -1,8 +1,13 @@
-import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { cva, type VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ElementRef, forwardRef, ReactNode } from "react";
+import { type VariantProps, cva } from 'class-variance-authority';
+import { Tabs as TabsPrimitive } from 'radix-ui';
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  ReactNode,
+  forwardRef
+} from 'react';
 
-import styles from "./tabs.module.css";
+import styles from './tabs.module.css';
 
 const root = cva(styles.root);
 const list = cva(styles.list);
@@ -22,16 +27,17 @@ interface TabsTriggerProps
   disabled?: boolean;
 }
 
-const TabsRoot = forwardRef<ElementRef<typeof TabsPrimitive.Root>, TabsRootProps>(
-  ({ className, 'aria-label': ariaLabel, ...props }, ref) => (
-    <TabsPrimitive.Root
-      ref={ref}
-      className={root({ className })}
-      aria-label={ariaLabel || "Tabs"}
-      {...props}
-    />
-  )
-);
+const TabsRoot = forwardRef<
+  ElementRef<typeof TabsPrimitive.Root>,
+  TabsRootProps
+>(({ className, 'aria-label': ariaLabel, ...props }, ref) => (
+  <TabsPrimitive.Root
+    ref={ref}
+    className={root({ className })}
+    aria-label={ariaLabel || 'Tabs'}
+    {...props}
+  />
+));
 
 const TabsList = forwardRef<
   ElementRef<typeof TabsPrimitive.List>,
@@ -39,7 +45,7 @@ const TabsList = forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    role="tablist"
+    role='tablist'
     className={list({ className })}
     {...props}
   />
@@ -56,7 +62,7 @@ const TabsTrigger = forwardRef<
     aria-disabled={disabled}
     {...props}
   >
-    {icon && <span className={styles["trigger-icon"]}>{icon}</span>}
+    {icon && <span className={styles['trigger-icon']}>{icon}</span>}
     {children}
   </TabsPrimitive.Trigger>
 ));
@@ -67,7 +73,7 @@ const TabsContent = forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     ref={ref}
-    role="tabpanel"
+    role='tabpanel'
     className={content({ className })}
     {...props}
   />
@@ -82,5 +88,5 @@ export const Tabs = {
   Root: TabsRoot,
   List: TabsList,
   Trigger: TabsTrigger,
-  Content: TabsContent,
-}; 
+  Content: TabsContent
+};

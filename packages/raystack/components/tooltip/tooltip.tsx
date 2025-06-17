@@ -1,5 +1,5 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { VariantProps, cva, cx } from 'class-variance-authority';
+import { Tooltip as TooltipPrimitive } from 'radix-ui';
 import { CSSProperties, ReactNode, useId, useMemo } from 'react';
 import { useMouse } from '~/hooks';
 import { Text } from '../text';
