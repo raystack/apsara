@@ -2,7 +2,7 @@ const semver = require("semver")
 const fs = require("fs/promises")
 const path = require("path")
 
-const pkg = require("../package.json")
+const pkg = require("../../package.json")
 
 async function updatePackageVersion() {
   try {
@@ -10,7 +10,7 @@ async function updatePackageVersion() {
     const gitTag = semver.valid(gitRef);
     if (gitTag && semver.compare(gitTag, pkg.version) > 0) {
       pkg.version = gitTag;
-      console.log('Bumped version to', gitTag)
+      console.log('Bumped version to ', gitTag)
       await fs.writeFile(path.join(process.cwd(), 'package.json'), JSON.stringify(pkg, null, 2))
     }
   } catch (err) {

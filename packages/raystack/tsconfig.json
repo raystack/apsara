@@ -4,15 +4,14 @@
     "baseUrl": ".",
     "target": "esnext",
     "isolatedModules": false,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "paths": {
       "~/*": ["./*"],
-      "~/v1/*": ["./v1/*"],
-      "~/icons": ["./v1/icons"],
-      "~/hooks/*": ["./v1/hooks/*"]
+      "~/icons/*": ["icons/*"],
+      "~/hooks/*": ["hooks/*"]
     },
     "types": ["jest", "@testing-library/jest-dom"]
   },
-  "include": [".", "v1", "v1/icons", "v1/hooks"],
+  "include": [".", "icons", "hooks", "global.d.ts"],
   "exclude": ["dist", "build", "node_modules"]
 }
