@@ -143,21 +143,6 @@
   display: flex;
 }
 
-.day_button {
-  cursor: pointer;
-  border: none;
-  width: 100%;
-  font-size: var(--rs-font-size-small);
-  height: 100%;
-  padding: unset;
-  display: grid;
-  place-content: center;
-  background: inherit;
-  color: inherit;
-  font-weight: inherit;
-  border-radius: inherit;
-  position: relative;
-}
 
 .outside {
   color: var(--rs-color-foreground-base-tertiary);
