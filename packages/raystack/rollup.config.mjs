@@ -66,17 +66,17 @@ const configs = [
     inputPath: ".",
     outputPath: "dist",
   },
+  // {
+  //   inputPath: "v1",
+  //   outputPath: "dist/v1",
+  // },
   {
-    inputPath: "v1",
-    outputPath: "dist/v1",
+    inputPath: "./icons",
+    outputPath: "dist/icons",
   },
   {
-    inputPath: "v1/icons",
-    outputPath: "dist/v1/icons",
-  },
-  {
-    inputPath: "v1/hooks",
-    outputPath: "dist/v1/hooks",
+    inputPath: "./hooks",
+    outputPath: "dist/hooks",
   },
 ];
 

@@ -1,8 +1,3 @@
-declare module "*.module.css" {
-  const classes: { [key: string]: string };
-  export default classes;
-}
-
 declare module "*.svg" {
   const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
   export default content;
@@ -10,7 +5,7 @@ declare module "*.svg" {
 
 export declare module "@tanstack/table-core" {
   export interface ColumnMeta<TData extends RowData, TValue> {
-    style?: Record<string, string>;
+      style?: Record<string, string>;
   }
 }
 
@@ -19,4 +14,4 @@ export type TableColumnMetadata = {
   key: string;
   value: string;
   label?: string;
-};
+}
