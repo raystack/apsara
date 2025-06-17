@@ -60,13 +60,6 @@ const Page = () => {
     { value: 'Option 3', label: 'Option 3', icon: <OrganizationIcon /> }
   ];
 
-  const getSelectedIcon = (value: any) => {
-    const option = selectOptions.find(opt => opt.value === value);
-    return option ? option.icon : null;
-  };
-  const [textArea1, setTextArea1] = useState('');
-  const [textArea2, setTextArea2] = useState('');
-
   return (
     <>
       <Flex
