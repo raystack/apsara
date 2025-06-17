@@ -1,8 +1,8 @@
-import * as Playground from "@/components/playground";
-import styles from "./page.module.css";
+import * as Playground from '@/components/playground';
+import styles from './page.module.css';
 
 export const metadata = {
-  title: "Apsara Playground",
+  title: 'Apsara Playground'
 };
 
 export default function Page() {
@@ -50,6 +50,7 @@ export default function Page() {
       <Playground.TextAreaExamples />
       <Playground.ToastExamples />
       <Playground.TooltipExamples />
+      <Playground.AmountExamples />
     </div>
   );
 }

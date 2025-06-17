@@ -1,0 +1,66 @@
+---
+title: Amount
+description: Component for displaying monetary values
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  currencyDemo,
+  valueInMinorUnitsDemo,
+  localeDemo,
+  hideDecimalsDemo,
+  currencyDisplayDemo,
+  useGroupingDemo,
+  withTextDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Amount } from '@raystack/apsara/v1'
+
+<Amount value={1299} />
+<Amount value={1299} currency="EUR" locale="fr-FR" />
+```
+
+## Amount Props
+
+<auto-type-table path="./props.ts" name="AmountProps" />
+
+## Examples
+
+### Basic
+
+<Demo data={basicDemo} />
+
+### Currency Variants
+
+<Demo data={currencyDemo} />
+
+### valueInMinorUnits
+
+<Demo data={valueInMinorUnitsDemo} />
+
+### locale
+
+<Demo data={localeDemo} />
+
+### hideDecimals
+
+<Demo data={hideDecimalsDemo} />
+
+### currencyDisplay
+
+<Demo data={currencyDisplayDemo} />
+
+### useGrouping
+
+<Demo data={useGroupingDemo} />
+
+### With Text
+
+<Demo data={withTextDemo} /> 
