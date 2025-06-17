@@ -1,23 +1,23 @@
 import {
-  ElementRef,
-  forwardRef,
-  Fragment,
-  HTMLAttributes,
-  ReactNode,
-} from "react";
-import {
   MenuGroup,
   MenuGroupLabel,
   MenuGroupLabelProps,
   MenuGroupProps,
   MenuSeparator,
-  MenuSeparatorProps,
-} from "@ariakit/react";
-import { Slot } from "@radix-ui/react-slot";
-import { cx } from "class-variance-authority";
-import { WithAsChild } from "./types";
-import styles from "./dropdown-menu.module.css";
-import { useDropdownContext } from "./dropdown-menu-root";
+  MenuSeparatorProps
+} from '@ariakit/react';
+import { cx } from 'class-variance-authority';
+import { Slot } from 'radix-ui';
+import {
+  ElementRef,
+  Fragment,
+  HTMLAttributes,
+  ReactNode,
+  forwardRef
+} from 'react';
+import { useDropdownContext } from './dropdown-menu-root';
+import styles from './dropdown-menu.module.css';
+import { WithAsChild } from './types';
 
 export const DropdownMenuGroup = forwardRef<
   ElementRef<typeof MenuGroup>,
@@ -29,7 +29,7 @@ export const DropdownMenuGroup = forwardRef<
     <MenuGroup
       ref={ref}
       className={cx(styles.menugroup, className)}
-      render={shouldFilter ? <Fragment /> : asChild ? <Slot /> : undefined}
+      render={shouldFilter ? <Fragment /> : asChild ? <Slot.Root /> : undefined}
       {...props}
     />
   );
@@ -49,7 +49,7 @@ export const DropdownMenuLabel = forwardRef<
     <MenuGroupLabel
       ref={ref}
       className={cx(styles.label, className)}
-      render={asChild ? <Slot /> : undefined}
+      render={asChild ? <Slot.Root /> : undefined}
       {...props}
     />
   );
@@ -69,7 +69,7 @@ export const DropdownMenuSeparator = forwardRef<
     <MenuSeparator
       ref={ref}
       className={cx(styles.separator, className)}
-      render={asChild ? <Slot /> : undefined}
+      render={asChild ? <Slot.Root /> : undefined}
       {...props}
     />
   );

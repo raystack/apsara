@@ -1,27 +1,27 @@
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Cross1Icon } from "@radix-ui/react-icons";
-import { cva, VariantProps } from "class-variance-authority";
+import { Cross1Icon } from '@radix-ui/react-icons';
+import { VariantProps, cva } from 'class-variance-authority';
+import { Dialog as DialogPrimitive } from 'radix-ui';
 import {
   ComponentProps,
   ComponentPropsWithoutRef,
   ElementRef,
-  forwardRef,
-} from "react";
+  forwardRef
+} from 'react';
 
-import styles from "./sheet.module.css";
+import styles from './sheet.module.css';
 
 const sheetContent = cva(styles.sheetContent, {
   variants: {
     side: {
-      top: styles["sheetContent-top"],
-      bottom: styles["sheetContent-bottom"],
-      left: styles["sheetContent-left"],
-      right: styles["sheetContent-right"],
-    },
+      top: styles['sheetContent-top'],
+      bottom: styles['sheetContent-bottom'],
+      left: styles['sheetContent-left'],
+      right: styles['sheetContent-right']
+    }
   },
   defaultVariants: {
-    side: "right",
-  },
+    side: 'right'
+  }
 });
 
 export interface DialogContentProps
@@ -34,35 +34,42 @@ export interface DialogContentProps
 export const SheetContent = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps & { close?: boolean; children?: React.ReactNode }
->(({ className, children, close, side, ariaLabel, ariaDescription, ...props }, forwardedRef) => {
-  return (
-    <DialogPrimitive.Portal>
-      <Overlay>
-        <DialogPrimitive.Content
-          {...props}
-          ref={forwardedRef}
-          className={sheetContent({ side, className })}
-          aria-label={ariaLabel || "Sheet with overlay"}
-          aria-describedby={ariaDescription ? "sheet with overlay" : undefined}
-          role="dialog"
-          tabIndex={-1}
-        >
-          {children}
-          {close && (
-            <CloseButton aria-label="Close sheet">
-              <Cross1Icon aria-hidden="true" />
-            </CloseButton>
-          )}
-          {ariaDescription && (
-            <div id="sheet-description" className="sr-only">
-              {ariaDescription}
-            </div>
-          )}
-        </DialogPrimitive.Content>
-      </Overlay>
-    </DialogPrimitive.Portal>
-  );
-});
+>(
+  (
+    { className, children, close, side, ariaLabel, ariaDescription, ...props },
+    forwardedRef
+  ) => {
+    return (
+      <DialogPrimitive.Portal>
+        <Overlay>
+          <DialogPrimitive.Content
+            {...props}
+            ref={forwardedRef}
+            className={sheetContent({ side, className })}
+            aria-label={ariaLabel || 'Sheet with overlay'}
+            aria-describedby={
+              ariaDescription ? 'sheet with overlay' : undefined
+            }
+            role='dialog'
+            tabIndex={-1}
+          >
+            {children}
+            {close && (
+              <CloseButton aria-label='Close sheet'>
+                <Cross1Icon aria-hidden='true' />
+              </CloseButton>
+            )}
+            {ariaDescription && (
+              <div id='sheet-description' className='sr-only'>
+                {ariaDescription}
+              </div>
+            )}
+          </DialogPrimitive.Content>
+        </Overlay>
+      </DialogPrimitive.Portal>
+    );
+  }
+);
 
 const overlay = cva(styles.overlay);
 export interface OverlayProps
@@ -76,8 +83,8 @@ const Overlay = forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={overlay({ className })}
-    aria-hidden="true"
-    role="presentation"
+    aria-hidden='true'
+    role='presentation'
     {...props}
   />
 ));
@@ -93,10 +100,10 @@ export function CloseButton({
   ...props
 }: CloseButtonProps) {
   return (
-    <DialogPrimitive.Close 
-      className={close({ className })} 
+    <DialogPrimitive.Close
+      className={close({ className })}
       {...props}
-      aria-label="Close"
+      aria-label='Close'
     >
       {children}
     </DialogPrimitive.Close>
@@ -108,11 +115,7 @@ type SheetProps = ComponentProps<typeof DialogPrimitive.Root> & {
 };
 
 export function RootSheet({ children, ariaLabel, ...props }: SheetProps) {
-  return (
-    <DialogPrimitive.Root {...props}>
-      {children}
-    </DialogPrimitive.Root>
-  );
+  return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>;
 }
 
 export const Sheet = Object.assign(RootSheet, {
@@ -120,5 +123,5 @@ export const Sheet = Object.assign(RootSheet, {
   Content: SheetContent,
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
-  Description: DialogPrimitive.Description,
-}); 
+  Description: DialogPrimitive.Description
+});

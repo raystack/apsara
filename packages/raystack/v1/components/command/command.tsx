@@ -1,12 +1,12 @@
-import { DialogProps } from "@radix-ui/react-dialog";
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { cva } from "class-variance-authority";
-import { Command as CommandPrimitive } from "cmdk";
-import React from "react";
+import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { cva } from 'class-variance-authority';
+import { Command as CommandPrimitive } from 'cmdk';
+import { Dialog as DialogPrimitive } from 'radix-ui';
+import React from 'react';
 
-import { Dialog } from "../dialog";
-import { Flex } from "../flex";
-import styles from "./command.module.css";
+import { Dialog } from '../dialog';
+import { Flex } from '../flex';
+import styles from './command.module.css';
 
 const command = cva(styles.command);
 const CommandRoot = React.forwardRef<
@@ -17,12 +17,12 @@ const CommandRoot = React.forwardRef<
 ));
 CommandRoot.displayName = CommandPrimitive.displayName;
 
-interface CommandDialogProps extends DialogProps {}
+interface CommandDialogProps extends DialogPrimitive.DialogProps {}
 
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
-      <Dialog.Content style={{ overflow: "hidden", padding: "0" }}>
+      <Dialog.Content style={{ overflow: 'hidden', padding: '0' }}>
         <Command className={styles.dialogcommand}>{children}</Command>
       </Dialog.Content>
     </Dialog>
@@ -35,9 +35,9 @@ const CommandInput = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
 >(({ className, ...props }, ref) => (
   <Flex
-    align="center"
-    gap="small"
-    cmdk-input-wrapper=""
+    align='center'
+    gap='small'
+    cmdk-input-wrapper=''
     className={styles.inputWrapper}
   >
     <MagnifyingGlassIcon className={styles.inputIcon} width={16} height={16} />
@@ -114,7 +114,7 @@ const CommandShortcut = ({
 }: React.HTMLAttributes<HTMLSpanElement>) => {
   return <span className={shortcut({ className })} {...props} />;
 };
-CommandShortcut.displayName = "CommandShortcut";
+CommandShortcut.displayName = 'CommandShortcut';
 
 export const Command: any = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
@@ -124,5 +124,5 @@ export const Command: any = Object.assign(CommandRoot, {
   Group: CommandGroup,
   Item: CommandItem,
   Shortcut: CommandShortcut,
-  Separator: CommandSeparator,
+  Separator: CommandSeparator
 });
