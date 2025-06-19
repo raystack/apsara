@@ -227,6 +227,621 @@ const Page = () => {
               Skeleton Examples
             </Text>
 
+            {/* Button Examples */}
+            <Text size='large' weight='medium' style={{ marginBottom: '16px' }}>
+              Button Examples - All Combinations
+            </Text>
+
+            {/* Solid Variant */}
+            <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
+              <Text weight='medium'>Solid Variant</Text>
+
+              {/* Normal Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Normal Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='solid' color='accent'>
+                    Accent
+                  </Button>
+                  <Button variant='solid' color='danger'>
+                    Danger
+                  </Button>
+                  <Button variant='solid' color='neutral'>
+                    Neutral
+                  </Button>
+                  <Button variant='solid' color='success'>
+                    Success
+                  </Button>
+
+                  <Button variant='solid' color='accent' disabled>
+                    Accent Disabled
+                  </Button>
+                  <Button variant='solid' color='danger' disabled>
+                    Danger Disabled
+                  </Button>
+                  <Button variant='solid' color='neutral' disabled>
+                    Neutral Disabled
+                  </Button>
+                  <Button variant='solid' color='success' disabled>
+                    Success Disabled
+                  </Button>
+
+                  <Button variant='solid' color='accent' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='solid' color='danger' loading>
+                    Danger Loading
+                  </Button>
+                  <Button variant='solid' color='neutral' loading>
+                    Neutral Loading
+                  </Button>
+                  <Button variant='solid' color='success' loading>
+                    Success Loading
+                  </Button>
+
+                  <Button variant='solid' color='accent' loading disabled>
+                    Accent Loading Disabled
+                  </Button>
+                  <Button variant='solid' color='danger' loading disabled>
+                    Danger Loading Disabled
+                  </Button>
+                  <Button variant='solid' color='neutral' loading disabled>
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button variant='solid' color='success' loading disabled>
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+
+              {/* Small Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Small Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='solid' color='accent' size='small'>
+                    Accent
+                  </Button>
+                  <Button variant='solid' color='danger' size='small'>
+                    Danger
+                  </Button>
+                  <Button variant='solid' color='neutral' size='small'>
+                    Neutral
+                  </Button>
+                  <Button variant='solid' color='success' size='small'>
+                    Success
+                  </Button>
+
+                  <Button variant='solid' color='accent' size='small' disabled>
+                    Accent Disabled
+                  </Button>
+                  <Button variant='solid' color='danger' size='small' disabled>
+                    Danger Disabled
+                  </Button>
+                  <Button variant='solid' color='neutral' size='small' disabled>
+                    Neutral Disabled
+                  </Button>
+                  <Button variant='solid' color='success' size='small' disabled>
+                    Success Disabled
+                  </Button>
+
+                  <Button variant='solid' color='accent' size='small' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='solid' color='danger' size='small' loading>
+                    Danger Loading
+                  </Button>
+                  <Button variant='solid' color='neutral' size='small' loading>
+                    Neutral Loading
+                  </Button>
+                  <Button variant='solid' color='success' size='small' loading>
+                    Success Loading
+                  </Button>
+
+                  <Button
+                    variant='solid'
+                    color='accent'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Accent Loading Disabled
+                  </Button>
+                  <Button
+                    variant='solid'
+                    color='danger'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Danger Loading Disabled
+                  </Button>
+                  <Button
+                    variant='solid'
+                    color='neutral'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button
+                    variant='solid'
+                    color='success'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
+
+            {/* Outline Variant */}
+            <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
+              <Text weight='medium'>Outline Variant</Text>
+
+              {/* Normal Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Normal Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='outline' color='accent'>
+                    Accent
+                  </Button>
+                  <Button variant='outline' color='danger'>
+                    Danger
+                  </Button>
+                  <Button variant='outline' color='neutral'>
+                    Neutral
+                  </Button>
+                  <Button variant='outline' color='success'>
+                    Success
+                  </Button>
+
+                  <Button variant='outline' color='accent' disabled>
+                    Accent Disabled
+                  </Button>
+                  <Button variant='outline' color='danger' disabled>
+                    Danger Disabled (issue)
+                  </Button>
+                  <Button variant='outline' color='neutral' disabled>
+                    Neutral Disabled (issue)
+                  </Button>
+                  <Button variant='outline' color='success' disabled>
+                    Success Disabled (issue)
+                  </Button>
+
+                  <Button variant='outline' color='accent' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='outline' color='danger' loading>
+                    Danger Loading
+                  </Button>
+                  <Button variant='outline' color='neutral' loading>
+                    Neutral Loading
+                  </Button>
+                  <Button variant='outline' color='success' loading>
+                    Success Loading
+                  </Button>
+
+                  <Button variant='outline' color='accent' loading disabled>
+                    Accent Loading Disabled
+                  </Button>
+                  <Button variant='outline' color='danger' loading disabled>
+                    Danger Loading Disabled
+                  </Button>
+                  <Button variant='outline' color='neutral' loading disabled>
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button variant='outline' color='success' loading disabled>
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+
+              {/* Small Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Small Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='outline' color='accent' size='small'>
+                    Accent
+                  </Button>
+                  <Button variant='outline' color='danger' size='small'>
+                    Danger
+                  </Button>
+                  <Button variant='outline' color='neutral' size='small'>
+                    Neutral
+                  </Button>
+                  <Button variant='outline' color='success' size='small'>
+                    Success
+                  </Button>
+
+                  <Button
+                    variant='outline'
+                    color='accent'
+                    size='small'
+                    disabled
+                  >
+                    Accent Disabled
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='danger'
+                    size='small'
+                    disabled
+                  >
+                    Danger Disabled
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='neutral'
+                    size='small'
+                    disabled
+                  >
+                    Neutral Disabled
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='success'
+                    size='small'
+                    disabled
+                  >
+                    Success Disabled
+                  </Button>
+
+                  <Button variant='outline' color='accent' size='small' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='outline' color='danger' size='small' loading>
+                    Danger Loading
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='neutral'
+                    size='small'
+                    loading
+                  >
+                    Neutral Loading
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='success'
+                    size='small'
+                    loading
+                  >
+                    Success Loading
+                  </Button>
+
+                  <Button
+                    variant='outline'
+                    color='accent'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Accent Loading Disabled
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='danger'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Danger Loading Disabled
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='neutral'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button
+                    variant='outline'
+                    color='success'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
+
+            {/* Ghost Variant */}
+            <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
+              <Text weight='medium'>Ghost Variant</Text>
+
+              {/* Normal Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Normal Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='ghost' color='accent'>
+                    Accent
+                  </Button>
+                  <Button variant='ghost' color='danger'>
+                    Danger
+                  </Button>
+                  <Button variant='ghost' color='neutral'>
+                    Neutral
+                  </Button>
+                  <Button variant='ghost' color='success'>
+                    Success
+                  </Button>
+
+                  <Button variant='ghost' color='accent' disabled>
+                    Accent Disabled
+                  </Button>
+                  <Button variant='ghost' color='danger' disabled>
+                    Danger Disabled
+                  </Button>
+                  <Button variant='ghost' color='neutral' disabled>
+                    Neutral Disabled
+                  </Button>
+                  <Button variant='ghost' color='success' disabled>
+                    Success Disabled
+                  </Button>
+
+                  <Button variant='ghost' color='accent' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='ghost' color='danger' loading>
+                    Danger Loading
+                  </Button>
+                  <Button variant='ghost' color='neutral' loading>
+                    Neutral Loading
+                  </Button>
+                  <Button variant='ghost' color='success' loading>
+                    Success Loading
+                  </Button>
+
+                  <Button variant='ghost' color='accent' loading disabled>
+                    Accent Loading Disabled
+                  </Button>
+                  <Button variant='ghost' color='danger' loading disabled>
+                    Danger Loading Disabled
+                  </Button>
+                  <Button variant='ghost' color='neutral' loading disabled>
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button variant='ghost' color='success' loading disabled>
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+
+              {/* Small Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Small Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='ghost' color='accent' size='small'>
+                    Accent
+                  </Button>
+                  <Button variant='ghost' color='danger' size='small'>
+                    Danger
+                  </Button>
+                  <Button variant='ghost' color='neutral' size='small'>
+                    Neutral
+                  </Button>
+                  <Button variant='ghost' color='success' size='small'>
+                    Success
+                  </Button>
+
+                  <Button variant='ghost' color='accent' size='small' disabled>
+                    Accent Disabled
+                  </Button>
+                  <Button variant='ghost' color='danger' size='small' disabled>
+                    Danger Disabled
+                  </Button>
+                  <Button variant='ghost' color='neutral' size='small' disabled>
+                    Neutral Disabled
+                  </Button>
+                  <Button variant='ghost' color='success' size='small' disabled>
+                    Success Disabled
+                  </Button>
+
+                  <Button variant='ghost' color='accent' size='small' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='ghost' color='danger' size='small' loading>
+                    Danger Loading
+                  </Button>
+                  <Button variant='ghost' color='neutral' size='small' loading>
+                    Neutral Loading
+                  </Button>
+                  <Button variant='ghost' color='success' size='small' loading>
+                    Success Loading
+                  </Button>
+
+                  <Button
+                    variant='ghost'
+                    color='accent'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Accent Loading Disabled
+                  </Button>
+                  <Button
+                    variant='ghost'
+                    color='danger'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Danger Loading Disabled
+                  </Button>
+                  <Button
+                    variant='ghost'
+                    color='neutral'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button
+                    variant='ghost'
+                    color='success'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
+
+            {/* Text Variant */}
+            <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
+              <Text weight='medium'>Text Variant</Text>
+
+              {/* Normal Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Normal Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='text' color='accent'>
+                    Accent
+                  </Button>
+                  <Button variant='text' color='danger'>
+                    Danger
+                  </Button>
+                  <Button variant='text' color='neutral'>
+                    Neutral
+                  </Button>
+                  <Button variant='text' color='success'>
+                    Success
+                  </Button>
+
+                  <Button variant='text' color='accent' disabled>
+                    Accent Disabled
+                  </Button>
+                  <Button variant='text' color='danger' disabled>
+                    Danger Disabled
+                  </Button>
+                  <Button variant='text' color='neutral' disabled>
+                    Neutral Disabled
+                  </Button>
+                  <Button variant='text' color='success' disabled>
+                    Success Disabled
+                  </Button>
+
+                  <Button variant='text' color='accent' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='text' color='danger' loading>
+                    Danger Loading
+                  </Button>
+                  <Button variant='text' color='neutral' loading>
+                    Neutral Loading
+                  </Button>
+                  <Button variant='text' color='success' loading>
+                    Success Loading
+                  </Button>
+
+                  <Button variant='text' color='accent' loading disabled>
+                    Accent Loading Disabled
+                  </Button>
+                  <Button variant='text' color='danger' loading disabled>
+                    Danger Loading Disabled
+                  </Button>
+                  <Button variant='text' color='neutral' loading disabled>
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button variant='text' color='success' loading disabled>
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+
+              {/* Small Size */}
+              <Flex direction='column' gap={2}>
+                <Text size='small'>Small Size:</Text>
+                <Flex gap={2} wrap='wrap'>
+                  <Button variant='text' color='accent' size='small'>
+                    Accent
+                  </Button>
+                  <Button variant='text' color='danger' size='small'>
+                    Danger
+                  </Button>
+                  <Button variant='text' color='neutral' size='small'>
+                    Neutral
+                  </Button>
+                  <Button variant='text' color='success' size='small'>
+                    Success
+                  </Button>
+
+                  <Button variant='text' color='accent' size='small' disabled>
+                    Accent Disabled
+                  </Button>
+                  <Button variant='text' color='danger' size='small' disabled>
+                    Danger Disabled
+                  </Button>
+                  <Button variant='text' color='neutral' size='small' disabled>
+                    Neutral Disabled
+                  </Button>
+                  <Button variant='text' color='success' size='small' disabled>
+                    Success Disabled
+                  </Button>
+
+                  <Button variant='text' color='accent' size='small' loading>
+                    Accent Loading
+                  </Button>
+                  <Button variant='text' color='danger' size='small' loading>
+                    Danger Loading
+                  </Button>
+                  <Button variant='text' color='neutral' size='small' loading>
+                    Neutral Loading
+                  </Button>
+                  <Button variant='text' color='success' size='small' loading>
+                    Success Loading
+                  </Button>
+
+                  <Button
+                    variant='text'
+                    color='accent'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Accent Loading Disabled
+                  </Button>
+                  <Button
+                    variant='text'
+                    color='danger'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Danger Loading Disabled
+                  </Button>
+                  <Button
+                    variant='text'
+                    color='neutral'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Neutral Loading Disabled
+                  </Button>
+                  <Button
+                    variant='text'
+                    color='success'
+                    size='small'
+                    loading
+                    disabled
+                  >
+                    Success Loading Disabled
+                  </Button>
+                </Flex>
+              </Flex>
+            </Flex>
+
             <Text
               size='large'
               weight='medium'

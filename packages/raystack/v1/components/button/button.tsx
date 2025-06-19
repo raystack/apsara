@@ -75,6 +75,46 @@ const button = cva(styles['button'], {
       variant: 'outline',
       color: 'success',
       className: styles['button-outline-success']
+    },
+    {
+      variant: 'ghost',
+      color: 'accent',
+      className: styles['button-ghost-accent']
+    },
+    {
+      variant: 'ghost',
+      color: 'danger',
+      className: styles['button-ghost-danger']
+    },
+    {
+      variant: 'ghost',
+      color: 'neutral',
+      className: styles['button-ghost-neutral']
+    },
+    {
+      variant: 'ghost',
+      color: 'success',
+      className: styles['button-ghost-success']
+    },
+    {
+      variant: 'text',
+      color: 'accent',
+      className: styles['button-text-accent']
+    },
+    {
+      variant: 'text',
+      color: 'danger',
+      className: styles['button-text-danger']
+    },
+    {
+      variant: 'text',
+      color: 'neutral',
+      className: styles['button-text-neutral']
+    },
+    {
+      variant: 'text',
+      color: 'success',
+      className: styles['button-text-success']
     }
   ],
   defaultVariants: {
