@@ -100,6 +100,7 @@ const SidebarRoot = forwardRef<
                 side={position === 'left' ? 'right' : 'left'}
                 asChild
                 followCursor
+                sideOffset={10}
               >
                 <div
                   className={styles.resizeHandle}
