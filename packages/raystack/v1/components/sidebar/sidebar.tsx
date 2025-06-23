@@ -84,9 +84,9 @@ const SidebarRoot = forwardRef<
           className={root({ className })}
           data-position={position}
           data-state={open ? 'expanded' : 'collapsed'}
-          data-collapse-disabled={collapsible}
+          data-collapse-disabled={!collapsible}
           open={open}
-          onOpenChange={collapsible ? undefined : onOpenChange}
+          onOpenChange={collapsible ? onOpenChange : undefined}
           aria-label='Navigation Sidebar'
           aria-expanded={open}
           role='navigation'
@@ -94,7 +94,7 @@ const SidebarRoot = forwardRef<
           asChild
         >
           <aside>
-            {!collapsible && (
+            {collapsible && (
               <Tooltip
                 message={open ? 'Click to collapse' : 'Click to expand'}
                 side={position === 'left' ? 'right' : 'left'}
