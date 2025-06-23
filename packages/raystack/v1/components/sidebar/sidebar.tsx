@@ -69,7 +69,7 @@ const SidebarRoot = forwardRef<
       open,
       onOpenChange,
       hideCollapsedItemTooltip,
-      collapsible,
+      collapsible = true,
       children,
       ...props
     },
