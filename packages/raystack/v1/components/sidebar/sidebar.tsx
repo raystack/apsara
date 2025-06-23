@@ -30,7 +30,7 @@ interface SidebarProps
   extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
-  disableResize?: boolean;
+  collapsible?: boolean;
 }
 
 interface SidebarHeaderProps extends ComponentPropsWithoutRef<'div'> {
@@ -69,7 +69,7 @@ const SidebarRoot = forwardRef<
       open,
       onOpenChange,
       hideCollapsedItemTooltip,
-      disableResize,
+      collapsible,
       children,
       ...props
     },
@@ -84,9 +84,9 @@ const SidebarRoot = forwardRef<
           className={root({ className })}
           data-position={position}
           data-state={open ? 'expanded' : 'collapsed'}
-          data-collapse-disabled={disableResize}
+          data-collapse-disabled={collapsible}
           open={open}
-          onOpenChange={disableResize ? undefined : onOpenChange}
+          onOpenChange={collapsible ? undefined : onOpenChange}
           aria-label='Navigation Sidebar'
           aria-expanded={open}
           role='navigation'
@@ -94,7 +94,7 @@ const SidebarRoot = forwardRef<
           asChild
         >
           <aside>
-            {!disableResize && (
+            {!collapsible && (
               <Tooltip
                 message={open ? 'Click to collapse' : 'Click to expand'}
                 side={position === 'left' ? 'right' : 'left'}

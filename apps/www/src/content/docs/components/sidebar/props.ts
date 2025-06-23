@@ -10,7 +10,7 @@ export interface SidebarRootProps {
   /** Disable the click to collapse/expand the Sidebar.
    * @default undefined
    */
-  disableResize?: boolean;
+  collapsible?: boolean;
 
   /** Position of the Sidebar.
    * @default "left"
