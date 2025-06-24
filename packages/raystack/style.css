@@ -1,0 +1,161 @@
+:root {
+  --foreground-base: #3c4347;
+  --foreground-muted: #687076;
+  --foreground-subtle: #7e868c;
+  --foreground-inverted: #fbfcfd;
+  --foreground-accent: #3e63dd;
+  --foreground-attention: #ffb224;
+  --foreground-danger: #e5484d;
+  --foreground-success: #30a46c;
+
+  --background-base: #fbfcfd;
+  --background-base-hover: #f1f3f5;
+  --background-inset: #f1f3f5;
+  --background-inset-hover: #e6e8eb;
+  --background-subtle: #f8f9fa;
+  --background-highlight: #889096;
+  --background-inverted: #3c4347;
+  --background-accent: #e6edfe;
+  --background-accent-inverted: #3e63dd;
+  --background-accent-inverted-hover: #3a5ccc;
+  --background-attention: #ffecbc;
+  --background-attention-inverted: #ffb224;
+  --background-danger: #ffe5e5;
+  --background-danger-inverted: #e5484d;
+  --background-danger-inverted-hover: #dc3d43;
+  --background-success: #ddf3e4;
+  --background-success-inverted: #30a46c;
+
+  --border-base: #d7dbdf;
+  --border-base-hover: #c1c8cd;
+  --border-muted: #dfe3e6;
+  --border-subtle: #eceef0;
+  --border-accent: #aec0f5;
+  --border-accent-inverted: #3e63dd;
+  --border-accent-inverted-hover: #3a5ccc;
+  --border-attention: #f3ba63;
+  --border-attention-inverted: #ffb224;
+  --border-danger: #f3aeaf;
+  --border-danger-inverted: #e5484d;
+  --border-danger-inverted-hover: #dc3d43;
+  --border-success: #92ceac;
+  --border-success-inverted: #30a46c;
+
+  --ascent-contrast: #fff;
+
+  --ff-inter: "Inter", -apple-system, system-ui, sans-serif;
+  --ff-mono: Söhne Mono, menlo, monospace;
+
+  --fs-100: 0.688rem;
+  --fs-200: 0.75rem;
+  --fs-300: 0.813rem;
+  --fs-400: 0.875rem;
+  --fs-500: 0.938rem;
+  --fs-600: 1rem;
+
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 20px;
+  --space-7: 24px;
+  --space-8: 28px;
+  --space-9: 32px;
+  --space-10: 40px;
+  --space-11: 48px;
+  --space-12: 56px;
+  --space-13: 64px;
+  --space-14: 72px;
+  --space-15: 80px;
+  --space-16: 96px;
+  --space-17: 120px;
+
+  --radius-1: 2px;
+  --radius-2: 4px;
+  --radius-3: 6px;
+  --radius-4: 8px;
+  --radius-5: 12px;
+  --radius-6: 16px;
+  --radius-full: 800px;
+    
+  --pd-2: 2px;
+  --pd-4: 4px;
+  --pd-6: 6px;
+  --pd-8: 8px;
+  --pd-12: 12px;
+  --pd-16: 16px;
+  --pd-32: 32px;
+
+  --mr-2: 2px;
+  --mr-4: 4px;
+  --mr-6: 6px;
+  --mr-8: 8px;
+  --mr-12: 12px;
+  --mr-16: 16px;
+  --mr-32: 32px;
+
+  --br-2: 2px;
+  --br-4: 4px;
+  --br-8: 8px;
+  --br-12: 12px;
+  --br-16: 16px;
+  --br-32: 32px;
+  --br-round: 50%;
+  --br-pill: 999px;
+
+  --shadow-xs: 0px 1px 2px 0px rgba(16, 24, 40, 0.06);
+  --shadow-sm: 0px 1px 4px 0px rgba(0, 0, 0, 0.09);
+  --shadow-md: 0px 12px 16px -4px rgba(16, 24, 40, 0.08),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.03);
+  --shadow-lg: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+  --shadow-xl: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+    0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+}
+
+html[data-theme="dark"] {
+  --foreground-base: #ecedee;
+  --foreground-muted: #9ba1a6;
+  --foreground-subtle: #787f85;
+  --foreground-inverted: #151718;
+  --foreground-accent: #3e63dd;
+  --foreground-attention: #ffb224;
+  --foreground-danger: #e5484d;
+  --foreground-success: #46a758;
+
+  --background-base: #151718;
+  --background-base-hover: #202425;
+  --background-inset: #202425;
+  --background-inset-hover: #2b2f31;
+  --background-subtle: #1a1d1e;
+  --background-highlight: #697177;
+  --background-inverted: #ecedee;
+  --background-accent: #1c274f;
+  --background-accent-inverted: #3e63dd;
+  --background-accent-inverted-hover: #5373e7;
+  --background-attention: #3f2200;
+  --background-attention-inverted: #ffb224;
+  --background-danger: #481a1d;
+  --background-danger-inverted: #e5484d;
+  --background-danger-inverted-hover: #f2555a;
+  --background-success: #16301d;
+  --background-success-inverted: #46a758;
+
+  --ascent-contrast: #fff;
+
+  --border-base: #3a3f42;
+  --border-base-hover: #4c5155;
+  --border-muted: #313538;
+  --border-subtle: #26292b;
+  --border-accent: #273e89;
+  --border-accent-inverted: #3e63dd;
+  --border-accent-inverted-hover: #5373e7;
+  --border-attention: #693f05;
+  --border-attention-inverted: #ffb224;
+  --border-danger: #822025;
+  --border-danger-inverted: #e5484d;
+  --border-danger-inverted-hover: #f2555a;
+  --border-success: #245530;
+  --border-success-inverted: #46a758;
+}
