@@ -1,12 +1,6 @@
 'use client';
 import { IconButtonExamples } from '@/components/playground';
 import {
-  BellIcon,
-  FilterIcon,
-  OrganizationIcon,
-  SidebarIcon
-} from '@raystack/apsara/icons';
-import {
   Avatar,
   AvatarGroup,
   Button,
@@ -29,6 +23,12 @@ import {
   TextArea,
   Tooltip
 } from '@raystack/apsara';
+import {
+  BellIcon,
+  FilterIcon,
+  OrganizationIcon,
+  SidebarIcon
+} from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
@@ -219,6 +219,14 @@ const Page = () => {
             >
               Skeleton Examples
             </Text>
+
+            <Flex gap={2}>
+              <Search size='small' />
+              <Button variant='outline' color='accent' size='small' loading>
+                Search
+              </Button>
+              <InputField size='small' />
+            </Flex>
 
             {/* Button Examples */}
             <Text size='large' weight='medium' style={{ marginBottom: '16px' }}>
