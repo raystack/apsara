@@ -1,7 +1,7 @@
 import { MenuButton, MenuButtonProps } from '@ariakit/react';
-import { TriangleRightIcon } from '@raystack/apsara/icons';
 import { Slot } from 'radix-ui';
 import { forwardRef } from 'react';
+import { TriangleRightIcon } from '~/icons';
 import { DropdownMenuItem, DropdownMenuItemProps } from './dropdown-menu-item';
 import { useDropdownContext } from './dropdown-menu-root';
 import { WithAsChild } from './types';
