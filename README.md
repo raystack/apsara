@@ -33,7 +33,7 @@ pnpm add @raystack/apsara
 import "@raystack/apsara/style.css";
 
 // Import components
-import { Button, Flex } from "@raystack/apsara/v1";
+import { Button, Flex } from "@raystack/apsara";
 
 function App() {
   return (
