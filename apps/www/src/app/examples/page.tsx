@@ -227,6 +227,14 @@ const Page = () => {
               Skeleton Examples
             </Text>
 
+            <Flex gap={2}>
+              <Search size='small' />
+              <Button variant='outline' color='accent' size='small' loading>
+                Search
+              </Button>
+              <InputField size='small' />
+            </Flex>
+
             {/* Button Examples */}
             <Text size='large' weight='medium' style={{ marginBottom: '16px' }}>
               Button Examples - All Combinations
