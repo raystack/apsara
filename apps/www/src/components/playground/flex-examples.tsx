@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Button } from "@raystack/apsara/v1";
+import { Flex, Button } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function FlexExamples() {

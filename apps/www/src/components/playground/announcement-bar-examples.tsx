@@ -1,5 +1,5 @@
 "use client";
-import { AnnouncementBar, Flex } from "@raystack/apsara/v1";
+import { AnnouncementBar, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function AnnouncementBarExamples() {

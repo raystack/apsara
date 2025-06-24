@@ -28,7 +28,7 @@ import {
   Text,
   TextArea,
   Tooltip
-} from '@raystack/apsara/v1';
+} from '@raystack/apsara';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 

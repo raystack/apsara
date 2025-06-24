@@ -1,6 +1,6 @@
 "use client";
 
-import { Indicator, Flex, Button } from "@raystack/apsara/v1";
+import { Indicator, Flex, Button } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function IndicatorExamples() {

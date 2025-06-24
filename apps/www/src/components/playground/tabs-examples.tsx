@@ -1,6 +1,6 @@
 "use client";
 
-import { Tabs, Flex } from "@raystack/apsara/v1";
+import { Tabs, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 import { Info } from "lucide-react";
 

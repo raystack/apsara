@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, Flex } from "@raystack/apsara/v1";
+import { Link, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function LinkExamples() {

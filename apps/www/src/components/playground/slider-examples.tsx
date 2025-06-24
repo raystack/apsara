@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider, Flex, Text } from "@raystack/apsara/v1";
+import { Slider, Flex, Text } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function SliderExamples() {

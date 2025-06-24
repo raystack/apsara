@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Sidebar } from "@raystack/apsara/v1";
+import { Flex, Sidebar } from "@raystack/apsara";
 import { Home, Info } from "lucide-react";
 import PlaygroundLayout from "./playground-layout";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Radio, Flex } from "@raystack/apsara/v1";
+import { Radio, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function RadioExamples() {

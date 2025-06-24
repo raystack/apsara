@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner, Flex } from "@raystack/apsara/v1";
+import { Spinner, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function SpinnerExamples() {

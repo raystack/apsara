@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton, Flex } from "@raystack/apsara/v1";
+import { Skeleton, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function SkeletonExamples() {

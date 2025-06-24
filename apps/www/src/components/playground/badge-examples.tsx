@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Flex } from "@raystack/apsara/v1";
+import { Badge, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 import { Home, Laugh } from "lucide-react";
 
