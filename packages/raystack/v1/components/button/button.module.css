@@ -45,7 +45,6 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
-  height: 24px;
 }
 
 .button-normal {
@@ -53,7 +52,6 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  height: 32px;
 }
 
 .button-solid {
@@ -130,11 +128,28 @@
   cursor: not-allowed;
 }
 
-.button-outline-accent.button-loading:hover,
-.button-outline-accent.button-loading:active {
+.button-outline-accent.button-loading:hover {
   background-color: transparent;
-  color: var(--rs-color-foreground-accent-primary);
   border-color: var(--rs-color-border-accent-emphasis);
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.button-outline-danger.button-loading:hover {
+  background-color: transparent;
+  border-color: var(--rs-color-border-danger-emphasis);
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.button-outline-neutral.button-loading:hover {
+  background-color: var(--rs-color-background-base-primary);
+  border-color: var(--rs-color-border-base-tertiary);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.button-outline-success.button-loading:hover {
+  background-color: transparent;
+  border-color: var(--rs-color-border-success-emphasis);
+  color: var(--rs-color-foreground-success-primary);
 }
 
 .button-ghost {
@@ -148,7 +163,6 @@
 .button-ghost[data-radix-popover-trigger][data-state="open"],
 .button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: var(--rs-color-background-base-primary-hover);
-  border-color: var(--rs-color-border-base-focus);
 }
 
 .button-ghost:disabled,
@@ -296,6 +310,11 @@
   background-color: var(--rs-color-background-danger-emphasis);
 }
 
+.button-solid-danger.button-disabled:hover,
+.button-solid-danger:disabled:hover {
+  background-color: var(--rs-color-background-danger-emphasis);
+}
+
 .button-solid-neutral {
   background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
@@ -313,6 +332,14 @@
   background-color: var(--rs-color-background-neutral-secondary);
 }
 
+.button-solid-neutral.button-disabled:hover,
+.button-solid-neutral:disabled:hover,
+.button-solid-neutral.button-disabled,
+.button-solid-neutral:disabled {
+  background-color: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
+}
+
 .button-solid-success {
   background-color: var(--rs-color-background-success-emphasis);
   color: var(--rs-color-foreground-success-emphasis);
@@ -327,6 +354,11 @@
 }
 
 .button-solid-success.button-loading:hover {
+  background-color: var(--rs-color-background-success-emphasis);
+}
+
+.button-solid-success.button-disabled:hover,
+.button-solid-success:disabled:hover {
   background-color: var(--rs-color-background-success-emphasis);
 }
 
@@ -366,6 +398,13 @@
   background-color: transparent;
 }
 
+.button-outline-danger.button-disabled:hover,
+.button-outline-danger:disabled:hover {
+  background-color: transparent;
+  border-color: var(--rs-color-border-danger-emphasis);
+  color: var(--rs-color-foreground-danger-primary);
+}
+
 .button-outline-neutral {
   background-color: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
@@ -381,6 +420,13 @@
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
   border-color: transparent;
+}
+
+.button-outline-neutral.button-disabled:hover,
+.button-outline-neutral:disabled:hover {
+  background-color: var(--rs-color-background-base-primary);
+  border-color: var(--rs-color-border-base-tertiary);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .button-outline-success {
@@ -404,7 +450,151 @@
   background-color: transparent;
 }
 
+.button-outline-success.button-disabled:hover,
+.button-outline-success:disabled:hover {
+  background-color: transparent;
+  border-color: var(--rs-color-border-success-emphasis);
+  color: var(--rs-color-foreground-success-primary);
+}
+
 .button-solid,
 .button-outline {
   box-shadow: var(--rs-shadow-feather);
+}
+
+/* Ghost variant colors */
+.button-ghost-accent {
+  color: var(--rs-color-foreground-accent-primary);
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+.button-ghost-accent:hover {
+  background-color: var(--rs-color-background-accent-primary);
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+.button-ghost-danger {
+  color: var(--rs-color-foreground-danger-primary);
+  border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.button-ghost-danger:hover {
+  background-color: var(--rs-color-background-danger-primary);
+  border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.button-ghost-neutral {
+  color: var(--rs-color-foreground-base-primary);
+  border-color: var(--rs-color-border-base-primary);
+}
+
+.button-ghost-neutral:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+  border-color: var(--rs-color-border-base-primary);
+}
+
+.button-ghost-success {
+  color: var(--rs-color-foreground-success-primary);
+  border-color: var(--rs-color-border-success-emphasis);
+}
+
+.button-ghost-success:hover {
+  background-color: var(--rs-color-background-success-primary);
+  border-color: var(--rs-color-border-success-emphasis);
+}
+
+/* Text variant colors */
+.button-text-accent {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.button-text-accent:hover {
+  background-color: var(--rs-color-background-accent-primary);
+}
+
+.button-text-danger {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.button-text-danger:hover {
+  background-color: var(--rs-color-background-danger-primary);
+}
+
+.button-text-neutral {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.button-text-neutral:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.button-text-success {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.button-text-success:hover {
+  background-color: var(--rs-color-background-success-primary);
+}
+
+/* Add disabled and loading states for ghost and text variants */
+.button-ghost.button-disabled:hover,
+.button-ghost:disabled:hover {
+  background-color: transparent;
+}
+
+.button-ghost-accent.button-disabled:hover,
+.button-ghost-accent:disabled:hover,
+.button-ghost-accent.button-loading:hover {
+  color: var(--rs-color-foreground-accent-primary);
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+.button-ghost-danger.button-disabled:hover,
+.button-ghost-danger:disabled:hover,
+.button-ghost-danger.button-loading:hover {
+  color: var(--rs-color-foreground-danger-primary);
+  border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.button-ghost-neutral.button-disabled:hover,
+.button-ghost-neutral:disabled:hover,
+.button-ghost-neutral.button-loading:hover {
+  color: var(--rs-color-foreground-base-primary);
+  border-color: var(--rs-color-border-base-primary);
+}
+
+.button-ghost-success.button-disabled:hover,
+.button-ghost-success:disabled:hover,
+.button-ghost-success.button-loading:hover {
+  color: var(--rs-color-foreground-success-primary);
+  border-color: var(--rs-color-border-success-emphasis);
+}
+
+.button-text.button-disabled:hover,
+.button-text:disabled:hover {
+  background-color: transparent;
+}
+
+.button-text-accent.button-disabled:hover,
+.button-text-accent:disabled:hover,
+.button-text-accent.button-loading:hover {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.button-text-danger.button-disabled:hover,
+.button-text-danger:disabled:hover,
+.button-text-danger.button-loading:hover {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.button-text-neutral.button-disabled:hover,
+.button-text-neutral:disabled:hover,
+.button-text-neutral.button-loading:hover {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.button-text-success.button-disabled:hover,
+.button-text-success:disabled:hover,
+.button-text-success.button-loading:hover {
+  color: var(--rs-color-foreground-success-primary);
 }
