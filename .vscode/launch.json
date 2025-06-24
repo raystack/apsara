@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Apsara for VSCode",
+      "runtimeExecutable": "${execPath}/packages/plugin-vscode",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceRoot}/packages/plugin-vscode"
+      ],
+      "outFiles": ["${workspaceRoot}/packages/plugin-vscode/dist/**/*.js"],
+      "autoAttachChildProcesses": true,
+      "preLaunchTask": "plugin-vscode: start-dev",
+      "postDebugTask": "plugin-vscode: stop-dev"
+    }
+  ]
+}
