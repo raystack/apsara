@@ -227,6 +227,12 @@ const Page = () => {
               Skeleton Examples
             </Text>
 
+            <Tooltip message='Hello this is a long dummy text that spans multiple lines and is quite lengthy. It is used to demonstrate the functionality of the tooltip component in various scenarios. Hello this is a long dummy text that spans multiple lines and is quite lengthy. It is used to demonstrate the functionality of the tooltip component in various scenarios.'>
+              <Button variant='solid' color='accent'>
+                Hello
+              </Button>
+            </Tooltip>
+
             <Flex gap={2}>
               <Search size='small' />
               <Button variant='outline' color='accent' size='small' loading>
