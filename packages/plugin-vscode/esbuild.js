@@ -13,13 +13,7 @@ async function main() {
     sourcesContent: false,
     platform: 'node',
     outdir: 'dist',
-    external: [
-      'vscode',
-      'vscode-languageclient/node',
-      'vscode-languageserver/node',
-      'vscode-languageserver-textdocument',
-      'color'
-    ],
+    external: ['vscode'],
     logLevel: 'warning',
     plugins: [esbuildProblemMatcherPlugin]
   });

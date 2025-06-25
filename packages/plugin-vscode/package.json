@@ -1,7 +1,7 @@
 {
   "name": "apsara-for-vscode",
   "displayName": "Apsara for VSCode",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "VS Code extension for @raystack/apsara",
   "engines": {
@@ -30,7 +30,7 @@
     "build": "pnpm clean && node esbuild.js --production",
     "dev": "pnpm clean && node esbuild.js --watch",
     "clean": "rimraf dist",
-    "package": "vsce package"
+    "package": "pnpm build && vsce package --no-dependencies --allow-missing-repository"
   },
   "dependencies": {
     "@raystack/apsara": "^0.46.0",
