@@ -4,12 +4,22 @@
   "version": "0.1.0",
   "private": true,
   "description": "VS Code extension for @raystack/apsara",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "icon": "assets/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raystack/apsara.git"
+  },
+  "homepage": "https://github.com/raystack/apsara/blob/main/packages/plugin-vscode/README.md",
+  "bugs": {
+    "url": "https://github.com/raystack/apsara/issues"
+  },
   "engines": {
     "vscode": "^1.70.0",
     "node": ">=20"
   },
   "keywords": ["apsara", "raystack"],
-  "categories": ["Other"],
+  "categories": ["Programming Languages", "Snippets", "Other"],
   "activationEvents": ["onLanguage:css", "onLanguage:scss"],
   "main": "./dist/client.js",
   "contributes": {
