@@ -18,7 +18,7 @@ async function main() {
       'vscode-languageclient/node',
       'vscode-languageserver/node',
       'vscode-languageserver-textdocument',
-      '@shopify/polaris-tokens'
+      'color'
     ],
     logLevel: 'warning',
     plugins: [esbuildProblemMatcherPlugin]

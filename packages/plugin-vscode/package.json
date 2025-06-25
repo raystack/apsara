@@ -26,14 +26,14 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "node esbuild.js --production",
-    "build": "pnpm clean && node esbuild.js",
+    "vscode:prepublish": "pnpm build",
+    "build": "pnpm clean && node esbuild.js --production",
     "dev": "pnpm clean && node esbuild.js --watch",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "package": "vsce package"
   },
   "dependencies": {
     "@raystack/apsara": "^0.46.0",
-    "@shopify/polaris-tokens": "^9.4.2",
     "color": "^5.0.0",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
@@ -43,6 +43,7 @@
     "@types/color": "^4.2.0",
     "@types/node": "20.x",
     "@types/vscode": "^1.70.0",
+    "@vscode/vsce": "^3.5.0",
     "esbuild": "^0.25.5",
     "rimraf": "^6.0.1"
   }
