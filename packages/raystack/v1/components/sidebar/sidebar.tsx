@@ -30,6 +30,7 @@ interface SidebarProps
   extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
+  collapsible?: boolean;
 }
 
 interface SidebarHeaderProps extends ComponentPropsWithoutRef<'div'> {
@@ -68,6 +69,7 @@ const SidebarRoot = forwardRef<
       open,
       onOpenChange,
       hideCollapsedItemTooltip,
+      collapsible = true,
       children,
       ...props
     },
@@ -82,8 +84,9 @@ const SidebarRoot = forwardRef<
           className={root({ className })}
           data-position={position}
           data-state={open ? 'expanded' : 'collapsed'}
+          data-collapse-disabled={!collapsible}
           open={open}
-          onOpenChange={onOpenChange}
+          onOpenChange={collapsible ? onOpenChange : undefined}
           aria-label='Navigation Sidebar'
           aria-expanded={open}
           role='navigation'
@@ -91,26 +94,29 @@ const SidebarRoot = forwardRef<
           asChild
         >
           <aside>
-            <Tooltip
-              message={open ? 'Click to collapse' : 'Click to expand'}
-              side={position === 'left' ? 'right' : 'left'}
-              asChild
-              followCursor
-            >
-              <div
-                className={styles.resizeHandle}
-                onClick={() => onOpenChange?.(!open)}
-                role='button'
-                tabIndex={0}
-                aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onOpenChange?.(!open);
-                  }
-                }}
-              />
-            </Tooltip>
+            {collapsible && (
+              <Tooltip
+                message={open ? 'Click to collapse' : 'Click to expand'}
+                side={position === 'left' ? 'right' : 'left'}
+                asChild
+                followCursor
+                sideOffset={10}
+              >
+                <div
+                  className={styles.resizeHandle}
+                  onClick={() => onOpenChange?.(!open)}
+                  role='button'
+                  tabIndex={0}
+                  aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onOpenChange?.(!open);
+                    }
+                  }}
+                />
+              </Tooltip>
+            )}
             {children}
           </aside>
         </Collapsible.Root>

@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement } from 'react';
 
 export interface SidebarRootProps {
   /** Controls the expanded/collapsed state. */
@@ -7,10 +7,15 @@ export interface SidebarRootProps {
   /** Callback when expanded/collapsed state changes. */
   onOpenChange?: (open: boolean) => void;
 
+  /** Disable the click to collapse/expand the Sidebar.
+   * @default undefined
+   */
+  collapsible?: boolean;
+
   /** Position of the Sidebar.
    * @default "left"
    */
-  position?: "left" | "right";
+  position?: 'left' | 'right';
 
   /** Hide tooltips on sidebar items when sidebar is collapsed.
    * @default false
