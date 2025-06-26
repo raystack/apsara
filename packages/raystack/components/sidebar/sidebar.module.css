@@ -5,7 +5,7 @@
   padding: var(--rs-space-1) var(--rs-space-3) var(--rs-space-5)
     var(--rs-space-3);
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
   flex-shrink: 0;
   border-right: 1px solid var(--rs-color-border-base-primary);
@@ -159,6 +159,10 @@
   cursor: ew-resize;
   transition: background-color 0.2s ease;
   transform: translateX(50%);
+}
+
+.root[data-collapse-disabled="true"] .resizeHandle {
+  display: none;
 }
 
 .resizeHandle:hover {
