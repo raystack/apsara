@@ -52,7 +52,18 @@
       "v1": ["./dist/v1/index.d.ts"]
     }
   },
-  "keywords": [],
+  "keywords": [
+    "react",
+    "components",
+    "react-components",
+    "ui",
+    "design-system",
+    "radix",
+    "typescript",
+    "raystack",
+    "apsara",
+    "component-library"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
