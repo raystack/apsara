@@ -92,6 +92,7 @@
 }
 
 .input-field {
+  font-family: var(--rs-font-body);
   width: 100%;
   padding: 0 var(--rs-space-3);
   padding-left: var(--rs-space-3);
@@ -99,7 +100,6 @@
   margin: 0;
   border: none;
   background: transparent;
-  font-family: inherit;
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: 32px;
