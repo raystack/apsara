@@ -71,7 +71,6 @@ export interface AmountProps {
  */
 function getCurrencyDecimals(currency: string): number {
   try {
-    // Create a formatter for the currency
     const formatter = new Intl.NumberFormat('en', {
       style: 'currency',
       currency: currency.toUpperCase()
@@ -82,8 +81,23 @@ function getCurrencyDecimals(currency: string): number {
     const match = formatted.match(/\.([\d]+)/); // Extract the decimal part
     return match ? match[1].length : 0;
   } catch {
-    // Default to 2 decimal places if currency is invalid
+    // Default to 2 decimal places
     return 2;
+  }
+}
+
+/**
+ * Check if a currency is valid
+ */
+function isValidCurrency(currency: string): boolean {
+  try {
+    new Intl.NumberFormat('en', {
+      style: 'currency',
+      currency: currency.toUpperCase()
+    });
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -140,49 +154,37 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
     },
     ref
   ) => {
-    try {
-      // Convert from minor units if needed
-      let baseValue = valueInMinorUnits
-        ? value / Math.pow(10, getCurrencyDecimals(currency))
-        : value;
-
-      // Manually truncate decimals if hideDecimals is true
-      if (hideDecimals) {
-        baseValue = Math.trunc(baseValue);
-      }
-
-      const formattedValue = new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: currency.toUpperCase(),
-        currencyDisplay,
-        minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
-        maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
-        useGrouping
-      }).format(baseValue);
-
-      return <span ref={ref}>{formattedValue}</span>;
-    } catch (error) {
-      // Fallback to USD if currency code is invalid
+    const validCurrency = isValidCurrency(currency) ? currency : 'USD';
+    if (validCurrency !== currency) {
       console.warn(`Invalid currency code: ${currency}. Falling back to USD.`);
-
-      let baseValue = valueInMinorUnits ? value / 100 : value;
-
-      // Manually truncate decimals if hideDecimals is true
-      if (hideDecimals) {
-        baseValue = Math.trunc(baseValue);
-      }
-
-      const fallbackValue = new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: 'USD',
-        currencyDisplay,
-        minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
-        maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
-        useGrouping
-      }).format(baseValue);
-
-      return <span ref={ref}>{fallbackValue}</span>;
     }
+
+    const getBaseValue = (currencyCode: string) => {
+      const decimals = getCurrencyDecimals(currencyCode);
+      const baseValue = valueInMinorUnits
+        ? value / Math.pow(10, decimals)
+        : value;
+      return hideDecimals ? Math.trunc(baseValue) : baseValue;
+    };
+
+    const getFormatterConfig = (
+      currencyCode: string
+    ): Intl.NumberFormatOptions => ({
+      style: 'currency' as const,
+      currency: currencyCode,
+      currencyDisplay,
+      minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
+      maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
+      useGrouping
+    });
+
+    const baseValue = getBaseValue(validCurrency);
+    const formattedValue = new Intl.NumberFormat(
+      locale,
+      getFormatterConfig(validCurrency.toUpperCase())
+    ).format(baseValue);
+
+    return <span ref={ref}>{formattedValue}</span>;
   }
 );
 
