@@ -32,7 +32,12 @@ function AddFilter<TData, TValue>({
             <FilterIcon />
           </IconButton>
         ) : (
-          <Button variant={'text'} size={'small'} leadingIcon={<FilterIcon />}>
+          <Button
+            variant='text'
+            size='small'
+            leadingIcon={<FilterIcon />}
+            color='neutral'
+          >
             Filter
           </Button>
         )}
