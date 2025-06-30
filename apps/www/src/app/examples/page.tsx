@@ -7,6 +7,7 @@ import {
   SidebarIcon
 } from '@raystack/apsara/icons';
 import {
+  Amount,
   Avatar,
   AvatarGroup,
   Button,
@@ -59,13 +60,6 @@ const Page = () => {
     { value: 'Option 2', label: 'Option 2', icon: <FilterIcon /> },
     { value: 'Option 3', label: 'Option 3', icon: <OrganizationIcon /> }
   ];
-
-  const getSelectedIcon = (value: any) => {
-    const option = selectOptions.find(opt => opt.value === value);
-    return option ? option.icon : null;
-  };
-  const [textArea1, setTextArea1] = useState('');
-  const [textArea2, setTextArea2] = useState('');
 
   return (
     <>
@@ -1735,6 +1729,176 @@ const Page = () => {
                   ))}
                 </Select.Content>
               </Select>
+            </Flex>
+          </Flex>
+
+          <Text
+            size={10}
+            weight='medium'
+            style={{ marginTop: '32px', marginBottom: '16px' }}
+          >
+            <Amount
+              value={1296367367}
+              locale='en-US'
+              currency='USD'
+              maximumFractionDigits={1}
+              currencyDisplay='symbol'
+              groupDigits={true}
+            />
+          </Text>
+
+          <Text
+            size='large'
+            weight='medium'
+            style={{ marginTop: '32px', marginBottom: '16px' }}
+          >
+            Amount Examples
+          </Text>
+
+          <Flex direction='column' gap={6}>
+            {/* Basic Amount Examples */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Basic Amount (Minor Units):</Text>
+              <Flex gap={4}>
+                <Text>
+                  USD: <Amount value={999990000} currency='USD' />
+                </Text>
+                <Text>
+                  INR: <Amount value={129900} currency='INR' />
+                </Text>
+                <Text>
+                  EUR: <Amount value={150000} currency='EUR' />
+                </Text>
+              </Flex>
+            </Flex>
+
+            {/* Major Units Example */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Major Units (valueInMinorUnits=false):</Text>
+              <Flex gap={4}>
+                <Text>
+                  USD:
+                  <Amount
+                    value={9999.9}
+                    valueInMinorUnits={false}
+                    currency='USD'
+                  />
+                </Text>
+                <Text>
+                  JPY:
+                  <Amount
+                    value={9999}
+                    valueInMinorUnits={false}
+                    currency='JPY'
+                  />
+                </Text>
+                <Text>
+                  BHD:
+                  <Amount
+                    value={99.999}
+                    valueInMinorUnits={false}
+                    currency='BHD'
+                  />
+                </Text>
+              </Flex>
+            </Flex>
+
+            {/* Currency Display Formats */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Currency Display Formats:</Text>
+              <Flex gap={4}>
+                <Text>
+                  Symbol:
+                  <Amount
+                    value={129900}
+                    currency='EUR'
+                    currencyDisplay='symbol'
+                  />
+                </Text>
+                <Text>
+                  Code:
+                  <Amount
+                    value={129900}
+                    currency='EUR'
+                    currencyDisplay='code'
+                  />
+                </Text>
+                <Text>
+                  Name:
+                  <Amount
+                    value={129900}
+                    currency='EUR'
+                    currencyDisplay='name'
+                  />
+                </Text>
+              </Flex>
+            </Flex>
+
+            {/* Localization Example */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Different Locales:</Text>
+              <Flex gap={4}>
+                <Text>
+                  US: <Amount value={129900} currency='EUR' locale='en-US' />
+                </Text>
+                <Text>
+                  DE: <Amount value={129900} currency='EUR' locale='de-DE' />
+                </Text>
+                <Text>
+                  JP: <Amount value={129900} currency='EUR' locale='ja-JP' />
+                </Text>
+              </Flex>
+            </Flex>
+
+            {/* Decimal Control */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Decimal Control:</Text>
+              <Flex gap={4}>
+                <Text>
+                  No Decimals:
+                  <Amount value={129900} currency='USD' hideDecimals />
+                </Text>
+                <Text>
+                  Min 2:
+                  <Amount
+                    value={129900}
+                    currency='USD'
+                    minimumFractionDigits={2}
+                  />
+                </Text>
+                <Text>
+                  Max 1:
+                  <Amount
+                    value={129900}
+                    currency='USD'
+                    maximumFractionDigits={1}
+                  />
+                </Text>
+              </Flex>
+            </Flex>
+
+            {/* Grouping Control */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Grouping Control:</Text>
+              <Flex gap={4}>
+                <Text>
+                  With Grouping: <Amount value={9999999} currency='USD' />
+                </Text>
+                <Text>
+                  No Grouping:
+                  <Amount value={9999999} currency='USD' groupDigits={false} />
+                </Text>
+              </Flex>
+            </Flex>
+
+            {/* Error Handling */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Error Handling (Invalid Currency):</Text>
+              <Flex gap={4}>
+                <Text>
+                  Fallback to USD: <Amount value={129900} currency='INVALID' />
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
 
