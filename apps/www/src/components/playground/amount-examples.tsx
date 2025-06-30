@@ -24,7 +24,7 @@ export function AmountExamples() {
             Major units: <Amount value={12.99} valueInMinorUnits={false} />
           </Text>
           <Text>
-            Grouping: <Amount value={129999999} useGrouping />
+            Grouping: <Amount value={129999999} groupDigits />
           </Text>
         </Flex>
         <Flex gap='medium' align='center' direction='column'>

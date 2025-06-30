@@ -63,7 +63,7 @@ export interface AmountProps {
    * Group digits (e.g., thousand separators)
    * @default true
    */
-  useGrouping?: boolean;
+  groupDigits?: boolean;
 }
 
 /**
@@ -133,9 +133,9 @@ function isValidCurrency(currency: string): boolean {
  *   Amount: <Amount value={12.99} valueInMinorUnits={false} />  // Shows as "$12.99"
  * </Text>
  *
- * // With useGrouping (default is true)
+ * // With groupDigits (default is true)
  * <Text>
- *   Amount: <Amount value={129999999} useGrouping />  // Shows as "$129,999,999.99"
+ *   Amount: <Amount value={129999999} groupDigits />  // Shows as "$129,999,999.99"
  * </Text>
  * ```
  */
@@ -149,7 +149,7 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
       currencyDisplay = 'symbol',
       minimumFractionDigits,
       maximumFractionDigits,
-      useGrouping = true,
+      groupDigits = true,
       valueInMinorUnits = true
     },
     ref
@@ -175,7 +175,7 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
       currencyDisplay,
       minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
       maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
-      useGrouping
+      groupDigits
     });
 
     const baseValue = getBaseValue(validCurrency);

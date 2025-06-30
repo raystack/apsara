@@ -43,7 +43,7 @@ export const playground = {
       type: 'number',
       defaultValue: undefined
     },
-    useGrouping: {
+    groupDigits: {
       type: 'checkbox',
       defaultValue: true
     }
@@ -60,7 +60,7 @@ export const basicDemo = {
     <Amount value={1299} hideDecimals />
     <Amount value={1299} currencyDisplay="code" />
     <Amount value={12.99} valueInMinorUnits={false} />
-    <Amount value={129999999} useGrouping />
+    <Amount value={129999999} groupDigits />
   </Flex>
   `
 };
@@ -123,8 +123,8 @@ export const useGroupingDemo = {
   type: 'code',
   code: `
   <Flex gap={4}>
-    <Amount value={123456789} useGrouping /> {/* $1,234,567.89 */}
-    <Amount value={123456789} useGrouping={false} /> {/* $1234567.89 */}
+    <Amount value={123456789} groupDigits /> {/* $1,234,567.89 */}
+    <Amount value={123456789} groupDigits={false} /> {/* $1234567.89 */}
   </Flex>
   `
 };

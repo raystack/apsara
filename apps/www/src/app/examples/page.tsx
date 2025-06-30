@@ -1114,7 +1114,7 @@ const Page = () => {
               currency='USD'
               maximumFractionDigits={1}
               currencyDisplay='symbol'
-              useGrouping={true}
+              groupDigits={true}
             />
           </Text>
 
@@ -1257,7 +1257,7 @@ const Page = () => {
                 </Text>
                 <Text>
                   No Grouping:
-                  <Amount value={9999999} currency='USD' useGrouping={false} />
+                  <Amount value={9999999} currency='USD' groupDigits={false} />
                 </Text>
               </Flex>
             </Flex>

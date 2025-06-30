@@ -61,5 +61,5 @@ export interface AmountProps {
    * Group digits (e.g., thousand separators)
    * @default true
    */
-  useGrouping?: boolean;
+  groupDigits?: boolean;
 }
