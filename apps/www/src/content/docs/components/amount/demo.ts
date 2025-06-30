@@ -119,7 +119,7 @@ export const currencyDisplayDemo = {
   `
 };
 
-export const useGroupingDemo = {
+export const groupDigitsDemo = {
   type: 'code',
   code: `
   <Flex gap={4}>

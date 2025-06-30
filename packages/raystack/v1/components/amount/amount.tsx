@@ -159,30 +159,20 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
       console.warn(`Invalid currency code: ${currency}. Falling back to USD.`);
     }
 
-    const getBaseValue = (currencyCode: string) => {
-      const decimals = getCurrencyDecimals(currencyCode);
-      const baseValue = valueInMinorUnits
-        ? value / Math.pow(10, decimals)
-        : value;
-      return hideDecimals ? Math.trunc(baseValue) : baseValue;
-    };
+    const decimals = getCurrencyDecimals(validCurrency);
+    const baseValue = valueInMinorUnits
+      ? value / Math.pow(10, decimals)
+      : value;
+    const finalBaseValue = hideDecimals ? Math.trunc(baseValue) : baseValue;
 
-    const getFormatterConfig = (
-      currencyCode: string
-    ): Intl.NumberFormatOptions => ({
+    const formattedValue = new Intl.NumberFormat(locale, {
       style: 'currency' as const,
-      currency: currencyCode,
+      currency: validCurrency.toUpperCase(),
       currencyDisplay,
       minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
       maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
-      groupDigits
-    });
-
-    const baseValue = getBaseValue(validCurrency);
-    const formattedValue = new Intl.NumberFormat(
-      locale,
-      getFormatterConfig(validCurrency.toUpperCase())
-    ).format(baseValue);
+      useGrouping: groupDigits
+    }).format(finalBaseValue);
 
     return <span ref={ref}>{formattedValue}</span>;
   }
