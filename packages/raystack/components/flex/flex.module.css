@@ -114,3 +114,7 @@
 .gap-9 {
   gap: var(--rs-space-9);
 }
+
+.width-full {
+  width: 100%;
+}

@@ -1,40 +1,40 @@
-import { TableIcon } from "@radix-ui/react-icons";
-import type { HeaderGroup,Row } from "@tanstack/react-table";
-import clsx from "clsx";
-import { flexRender } from "@tanstack/react-table";
+import { TableIcon } from '@radix-ui/react-icons';
+import type { HeaderGroup, Row } from '@tanstack/react-table';
+import { flexRender } from '@tanstack/react-table';
+import clsx from 'clsx';
 import {
   ForwardedRef,
   forwardRef,
   useCallback,
   useEffect,
-  useRef,
-} from "react";
-import Skeleton from "react-loading-skeleton";
+  useRef
+} from 'react';
 
-import { Badge } from "../../badge";
-import { EmptyState } from "../../empty-state";
-import { Flex } from "../../flex";
-import { Table } from "../../table";
+import { Badge } from '../../badge';
+import { EmptyState } from '../../empty-state';
+import { Flex } from '../../flex';
+import { Skeleton } from '../../skeleton';
+import { Table } from '../../table';
+import styles from '../data-table.module.css';
 import {
   DataTableColumnDef,
   DataTableContentProps,
-  GroupedData,
-} from "../data-table.types";
-import { useDataTable } from "../hooks/useDataTable";
-import styles from "../data-table.module.css";
+  GroupedData
+} from '../data-table.types';
+import { useDataTable } from '../hooks/useDataTable';
 
 function Headers<TData>({
   headerGroups = [],
-  className = "",
+  className = ''
 }: {
   headerGroups: HeaderGroup<TData>[];
   className?: string;
 }) {
   return (
     <Table.Header className={className}>
-      {headerGroups?.map((headerGroup) => (
+      {headerGroups?.map(headerGroup => (
         <Table.Row key={headerGroup?.id}>
-          {headerGroup?.headers?.map((header) => {
+          {headerGroup?.headers?.map(header => {
             const columnDef = header.column.columnDef as DataTableColumnDef<
               TData,
               unknown
@@ -67,7 +67,7 @@ interface RowsProps<TData> {
 
 function LoaderRows({
   rowCount,
-  columnCount,
+  columnCount
 }: {
   rowCount: number;
   columnCount: number;
@@ -76,13 +76,10 @@ function LoaderRows({
   return rows.map((_, rowIndex) => {
     const columns = Array.from({ length: columnCount });
     return (
-      <Table.Row key={"loading-row-" + rowIndex}>
+      <Table.Row key={'loading-row-' + rowIndex}>
         {columns.map((_, colIndex) => (
-          <Table.Cell key={"loading-column-" + colIndex}>
-            <Skeleton
-              highlightColor="var(--rs-color-background-base-primary)"
-              baseColor="var(--rs-color-background-base-primary-hover)"
-            />
+          <Table.Cell key={'loading-column-' + colIndex}>
+            <Skeleton />
           </Table.Cell>
         ))}
       </Table.Row>
@@ -92,17 +89,17 @@ function LoaderRows({
 
 function GroupHeader<TData>({
   colSpan,
-  data,
+  data
 }: {
   colSpan: number;
   data: GroupedData<TData>;
 }) {
   return (
     <Table.SectionHeader colSpan={colSpan}>
-      <Flex gap={3} align="center">
+      <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
-          <Badge variant="neutral">{data?.count}</Badge>
+          <Badge variant='neutral'>{data?.count}</Badge>
         ) : null}
       </Flex>
     </Table.SectionHeader>
@@ -119,7 +116,7 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
           const cells = row.getVisibleCells() || [];
           const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
           const isLastRow = index === rows.length - 1;
-          const rowKey = row.id + "-" + index;
+          const rowKey = row.id + '-' + index;
           return isSectionHeadingRow ? (
             <GroupHeader
               key={rowKey}
@@ -130,15 +127,15 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
             <Table.Row
               key={rowKey}
               className={clsx(
-                styles["row"],
-                onRowClick ? styles["clickable"] : "",
+                styles['row'],
+                onRowClick ? styles['clickable'] : '',
                 classNames?.row
               )}
-              data-state={isSelected && "selected"}
+              data-state={isSelected && 'selected'}
               ref={isLastRow ? lastRowRef : undefined}
               onClick={() => onRowClick?.(row.original)}
             >
-              {cells.map((cell) => {
+              {cells.map(cell => {
                 const columnDef = cell.column.columnDef as DataTableColumnDef<
                   unknown,
                   unknown
@@ -146,7 +143,7 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
                 return (
                   <Table.Cell
                     key={cell.id}
-                    className={clsx(styles["cell"], columnDef.classNames?.cell)}
+                    className={clsx(styles['cell'], columnDef.classNames?.cell)}
                     style={columnDef.styles?.cell}
                   >
                     {flexRender(columnDef.cell, cell.getContext())}
@@ -162,12 +159,12 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
 );
 
 const DefaultEmptyComponent = () => (
-  <EmptyState icon={<TableIcon />} heading="No Data" />
+  <EmptyState icon={<TableIcon />} heading='No Data' />
 );
 
 export function Content({
   emptyState,
-  classNames = {},
+  classNames = {}
 }: DataTableContentProps) {
   const {
     onRowClick,
@@ -175,10 +172,11 @@ export function Content({
     mode,
     isLoading,
     loadMoreData,
-    loadingRowCount = 3,
+    loadingRowCount = 3
   } = useDataTable();
   const headerGroups = table?.getHeaderGroups();
-  const { rows = [] } = table?.getRowModel();
+  const rowModel = table?.getRowModel();
+  const { rows = [] } = rowModel || {};
 
   const lastRowRef = useRef<HTMLTableRowElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -194,14 +192,14 @@ export function Content({
   );
 
   useEffect(() => {
-    if (mode !== "server") return;
+    if (mode !== 'server') return;
 
     if (observerRef.current) {
       observerRef.current.disconnect();
     }
 
     observerRef.current = new IntersectionObserver(handleObserver, {
-      threshold: 0.1,
+      threshold: 0.1
     });
     const lastRow = lastRowRef.current;
     if (lastRow) {
@@ -230,7 +228,7 @@ export function Content({
                 ref={lastRowRef}
                 onRowClick={onRowClick}
                 classNames={{
-                  row: classNames.row,
+                  row: classNames.row
                 }}
               />
               {isLoading ? (
