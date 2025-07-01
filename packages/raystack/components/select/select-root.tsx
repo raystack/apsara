@@ -133,6 +133,12 @@ export const SelectRoot = (props: SelectRootProps) => {
 
   const setValue = useCallback(
     (value: string) => {
+      /*
+       * If the select is placed inside a form, onChange is called with an empty value
+       * WORKAROUND FOR ISSUE https://github.com/radix-ui/primitives/issues/3135
+       */
+      if (value === '') return;
+
       if (multiple) {
         updateSelectionInProgress(true);
         const set = new Set<string>(
