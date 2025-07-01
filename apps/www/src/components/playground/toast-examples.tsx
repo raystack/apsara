@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Flex, toast, ToastContainer } from "@raystack/apsara/v1";
+import { Button, Flex, toast, ToastContainer } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function ToastExamples() {

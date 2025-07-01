@@ -1,6 +1,6 @@
 "use client";
 
-import { Headline, Flex } from "@raystack/apsara/v1";
+import { Headline, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function HeadlineExamples() {

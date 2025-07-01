@@ -1,6 +1,5 @@
 "use client";
 
-import * as ApsaraV1 from "@raystack/apsara/v1";
 import * as Apsara from "@raystack/apsara";
 import DemoPreview from "./demo-preview";
 import { DemoProps } from "./types";
@@ -15,7 +14,6 @@ export default function Demo(props: DemoProps) {
     data,
     scope = {
       ...Apsara,
-      ...ApsaraV1,
       DataTableDemo,
       LinearDropdownDemo,
       Info,

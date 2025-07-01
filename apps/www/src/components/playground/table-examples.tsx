@@ -1,6 +1,6 @@
 "use client";
 
-import { Table } from "@raystack/apsara/v1";
+import { Table } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function TableExamples() {

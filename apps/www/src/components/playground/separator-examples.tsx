@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator, Flex, Text } from "@raystack/apsara/v1";
+import { Separator, Flex, Text } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function SeparatorExamples() {

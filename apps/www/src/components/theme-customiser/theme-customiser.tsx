@@ -1,5 +1,5 @@
 "use client";
-import { Tabs, Radio, Button } from "@raystack/apsara/v1";
+import { Tabs, Radio, Button } from "@raystack/apsara";
 import styles from "./theme-customiser.module.css";
 import { getPropsString } from "@/lib/utils";
 import { useTheme, ThemeOptions } from "../theme";

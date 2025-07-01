@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@raystack/apsara/v1";
+import { Badge } from "@raystack/apsara";
 import { TagType } from "@/lib/types";
 import styles from "./tag.module.css";
 import { cx } from "class-variance-authority";

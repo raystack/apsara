@@ -1,58 +1,63 @@
-import "./style.css"; // Old styles file. To be removed after Apsara v1 migration is complete.
-import "./v1/styles/index.css";
-import "./normalize.css";
+import './styles/index.css';
+import './normalize.css';
 
-export { Accordion } from "./accordion";
-export { Avatar } from "./avatar";
-export { Badge } from "./badge";
-export { Body } from "./body";
-export { Box } from "./box";
-export { Button } from "./button";
-export { Checkbox } from "./checkbox";
-export { Command } from "./command";
-export { Container } from "./container";
-export { Dialog } from "./dialog";
-export { Display } from "./display";
-export { DropdownMenu } from "./dropdown-menu";
-export { EmptyState } from "./emptystate";
-export { ErrorState } from "./errorstate";
-export { Flex } from "./flex";
-export { Grid } from "./grid";
-export { Headline } from "./headline";
-export { Image } from "./image";
-export { InputField } from "./inputfield";
-export { Label } from "./label";
-export { Link } from "./link";
-export { Popover } from "./popover";
-export { Radio } from "./radio";
-export { RSelect } from "./rselect";
-export { ScrollArea } from "./scroll-area";
-export { Select } from "./select";
-export { Separator } from "./separator";
-export { Sheet } from "./sheet";
-export { Sidebar } from "./sidebar";
-export { Switch } from "./switch";
-export { Tooltip } from "./tooltip";
-export { ToggleGroup } from "./toggle-group";
-export { Calendar, DatePicker, RangePicker } from "./calendar";
-
+export { Amount } from './components/amount';
+export { AnnouncementBar } from './components/announcement-bar';
+export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
+export { Badge } from './components/badge';
+export { Box } from './components/box';
+export { Breadcrumb } from './components/breadcrumb';
+export { Button } from './components/button';
+export { Calendar, DatePicker, RangePicker } from './components/calendar';
+export { Callout } from './components/callout';
+export { Checkbox } from './components/checkbox';
+export { Chip } from './components/chip';
+export { Command } from './components/command';
+export { Container } from './components/container';
+export { CopyButton } from './components/copy-button';
 export {
-  ApsaraAggregationFn,
-  ApsaraAggregationOption,
-  ApsaraColumnDef,
-  ApsaraFilterFn,
-  ApsaraFilterOption,
   DataTable,
-  Table,
-  useTable,
-} from "./table";
-export { Tabs } from "./tabs";
-export { Text } from "./text";
-export { Textarea } from "./textarea";
-export { TextField } from "./textfield";
-export { ThemeProvider, ThemeSwitcher, useTheme } from "./themprovider";
-export { Title } from "./title";
-export { ToastContainer, toast } from "./toast";
-
-// v1 exports
-export * as v1 from "./v1";
+  DataTableColumnDef,
+  DataTableQuery,
+  DataTableSort,
+  useDataTable,
+  EmptyFilterValue
+} from './components/data-table';
+export { Dialog } from './components/dialog';
+export { DropdownMenu } from './components/dropdown-menu';
+export { EmptyState } from './components/empty-state';
+export { FilterChip } from './components/filter-chip';
+export { Flex } from './components/flex';
+export { Headline } from './components/headline';
+export { IconButton } from './components/icon-button';
+export { Image } from './components/image';
+export { Indicator } from './components/indicator';
+export { InputField } from './components/input-field';
+export { Label } from './components/label';
+export { Link } from './components/link';
+export { List } from './components/list';
+export { Popover } from './components/popover';
+export { Radio } from './components/radio';
+export { Search } from './components/search';
+export { Select } from './components/select';
+export { Separator } from './components/separator';
+export { Sheet } from './components/sheet';
+export { Sidebar } from './components/sidebar';
+export { Skeleton } from './components/skeleton';
+export { Slider } from './components/slider';
+export { Spinner } from './components/spinner';
+export { Switch } from './components/switch';
+export { SidePanel } from './components/side-panel';
+export { Table } from './components/table';
+export { Tabs } from './components/tabs';
+export { Text } from './components/text';
+export { TextArea } from './components/text-area';
+export {
+  ThemeProvider,
+  ThemeProviderProps,
+  ThemeSwitcher,
+  useTheme
+} from './components/theme-provider';
+export { toast, ToastContainer } from './components/toast';
+export { Tooltip, TooltipProvider } from './components/tooltip';
+export { Grid } from './components/grid';

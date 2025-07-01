@@ -1,6 +1,6 @@
 "use client";
 
-import { IconButton, Flex } from "@raystack/apsara/v1";
+import { IconButton, Flex } from "@raystack/apsara";
 import { Info } from "lucide-react";
 import PlaygroundLayout from "./playground-layout";
 

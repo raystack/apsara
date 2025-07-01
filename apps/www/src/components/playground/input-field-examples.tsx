@@ -1,6 +1,6 @@
 "use client";
 
-import { InputField, Flex } from "@raystack/apsara/v1";
+import { InputField, Flex } from "@raystack/apsara";
 import { Home, Info } from "lucide-react";
 import PlaygroundLayout from "./playground-layout";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Tooltip, Button, Flex } from "@raystack/apsara/v1";
+import { Tooltip, Button, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function TooltipExamples() {

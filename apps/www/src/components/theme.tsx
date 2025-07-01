@@ -7,7 +7,7 @@ import {
   useState,
   useCallback,
 } from "react";
-import { ThemeProvider as ApsaraThemeProvider } from "@raystack/apsara/v1";
+import { ThemeProvider as ApsaraThemeProvider } from "@raystack/apsara";
 import { useTheme as useNextTheme } from "next-themes";
 
 type Theme = "light" | "dark";

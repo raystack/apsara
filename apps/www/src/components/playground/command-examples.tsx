@@ -1,6 +1,6 @@
 "use client";
 
-import { Command, Flex } from "@raystack/apsara/v1";
+import { Command, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function CommandExamples() {

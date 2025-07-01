@@ -1,6 +1,6 @@
 "use client";
 
-import { TextArea, Flex } from "@raystack/apsara/v1";
+import { TextArea, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function TextAreaExamples() {

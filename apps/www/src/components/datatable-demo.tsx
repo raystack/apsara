@@ -3,7 +3,7 @@ import {
   Checkbox,
   DataTable,
   Flex,
-} from "@raystack/apsara/v1";
+} from "@raystack/apsara";
 
 const data: Payment[] = [
   {

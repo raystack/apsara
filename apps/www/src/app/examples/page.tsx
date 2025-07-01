@@ -1,12 +1,6 @@
 'use client';
 import { IconButtonExamples } from '@/components/playground';
 import {
-  BellIcon,
-  FilterIcon,
-  OrganizationIcon,
-  SidebarIcon
-} from '@raystack/apsara/icons';
-import {
   Amount,
   Avatar,
   AvatarGroup,
@@ -29,7 +23,13 @@ import {
   Text,
   TextArea,
   Tooltip
-} from '@raystack/apsara/v1';
+} from '@raystack/apsara';
+import {
+  BellIcon,
+  FilterIcon,
+  OrganizationIcon,
+  SidebarIcon
+} from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
