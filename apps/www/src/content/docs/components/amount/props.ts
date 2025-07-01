@@ -1,6 +1,7 @@
 export interface AmountProps {
   /**
    * The monetary value to display
+   * @default 0
    * @example
    * valueInMinorUnits=true: 1299 => "$12.99"
    * valueInMinorUnits=false: 12.99 => "$12.99"
