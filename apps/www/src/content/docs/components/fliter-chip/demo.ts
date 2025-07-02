@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { onRemove, ...rest } = props;
-  const onRemoveProp = onRemove ? `onRemove={() => alert("Removed")}` : "";
+  const onRemoveProp = onRemove ? `onRemove={() => alert("Removed")}` : '';
 
-  if (props.columnType === "select")
+  if (props.columnType === 'select')
     return `
     <FilterChip${getPropsString(rest)}
       options={[
@@ -19,36 +19,36 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     columnType: {
-      type: "select",
-      options: ["select", "date", "string", "number"],
-      defaultValue: "string",
+      type: 'select',
+      options: ['select', 'date', 'string', 'number'],
+      defaultValue: 'string'
     },
     variant: {
-      type: "select",
-      options: ["default", "text"],
-      defaultValue: "default",
+      type: 'select',
+      options: ['default', 'text'],
+      defaultValue: 'default'
     },
     label: {
-      type: "text",
-      initialValue: "Status",
+      type: 'text',
+      initialValue: 'Status'
     },
-    leadingIcon: { type: "icon" },
+    leadingIcon: { type: 'icon' },
     onRemove: {
-      type: "checkbox",
-      defaultValue: false,
-    },
+      type: 'checkbox',
+      defaultValue: false
+    }
   },
-  getCode,
+  getCode
 };
 
 export const inputDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Select",
+      name: 'Select',
       code: `
 <FilterChip
   label="Status"
@@ -58,40 +58,40 @@ export const inputDemo = {
     { label: "Active", value: "active" },
     { label: "Inactive", value: "inactive" }
   ]}
-/>`,
+/>`
     },
     {
-      name: "Date",
+      name: 'Date',
       code: `
 <FilterChip
   label="Created"
   leadingIcon={<Info />}
   columnType="date"
-/>`,
+/>`
     },
     {
-      name: "String",
+      name: 'String',
       code: `
 <FilterChip
   label="Search"
   leadingIcon={<Info />}
   columnType="string"
-/>`,
+/>`
     },
     {
-      name: "Number",
+      name: 'Number',
       code: `
 <FilterChip
   label="Search"
   leadingIcon={<Info />}
   columnType="number"
-/>`,
-    },
-  ],
+/>`
+    }
+  ]
 };
 
 export const iconDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <FilterChip
   label="Status"
@@ -101,10 +101,10 @@ export const iconDemo = {
     { label: "Active", value: "active" },
     { label: "Inactive", value: "inactive" }
   ]}
-/>`,
+/>`
 };
 export const actionDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <FilterChip
   label="Status"
@@ -115,5 +115,36 @@ export const actionDemo = {
     { label: "Inactive", value: "inactive" }
   ]}
   onRemove={() => alert('Removed')}
-/>`,
+/>`
+};
+export const operationsDemo = {
+  type: 'code',
+  code: `
+  <Flex direction="column" gap={8} justify="center" align="center">
+  <FilterChip
+  label="Status"
+  leadingIcon={<Info />}
+  columnType="select"
+  options={[
+    { label: "Active", value: "active" },
+    { label: "Inactive", value: "inactive" }
+  ]}
+  operations={[
+    { label: "is", value: "is" },
+    { label: "is not", value: "is not" }
+  ]}
+/>
+<FilterChip
+  label="Status"
+  leadingIcon={<Info />}
+  columnType="select"
+  options={[
+    { label: "Active", value: "active" },
+    { label: "Inactive", value: "inactive" }
+  ]}
+  operations={[
+    { label: "is", value: "is" },
+  ]}
+/>
+</Flex>`
 };

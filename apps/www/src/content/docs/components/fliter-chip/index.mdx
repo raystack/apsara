@@ -4,7 +4,7 @@ description: A compact, interactive element for filtering data with various inpu
 tag: update
 ---
 
-import { playground, inputDemo, iconDemo, actionDemo } from "./demo.ts";
+import { playground, inputDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -50,3 +50,12 @@ FilterChip can display an icon before the label to provide visual context.
 FilterChip can include a remove action to allow users to dismiss the filter.
 
 <Demo data={actionDemo} />
+
+### Custom Operations
+
+FilterChip supports custom operations to allow users to filter data with custom operations.
+By default, FilterChip provides sensible operations based on the column type.
+
+If a single operation is provided, it will be displayed as a text instead of a select.
+
+<Demo data={operationsDemo} />
