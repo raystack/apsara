@@ -63,7 +63,7 @@ export const FilterChip = ({
     ? operations
     : filterOperators[columnType];
 
-  const [operation, setOperation] = useState<FilterOperation>(
+  const [operation, setOperation] = useState<FilterOperation | undefined>(
     computedOperations?.[0]
   );
   const [filterValue, setFilterValue] = useState<any>(value || '');
@@ -73,7 +73,7 @@ export const FilterChip = ({
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
       setOperation(operation);
-      onOperationChange?.(operation.value);
+      if (operation?.value) onOperationChange?.(operation.value);
     },
     [onOperationChange]
   );
@@ -81,9 +81,9 @@ export const FilterChip = ({
   const handleFilterValueChange = useCallback(
     (value: any) => {
       setFilterValue(value);
-      onValueChange?.(value, operation.value);
+      onValueChange?.(value, operation?.value ?? '');
     },
-    [operation.value, onValueChange]
+    [operation, onValueChange]
   );
 
   const renderValueInput = () => {

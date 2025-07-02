@@ -6,7 +6,7 @@ import styles from './filter-chip.module.css';
 
 interface OperationProps {
   label: string;
-  value: FilterOperation;
+  value?: FilterOperation;
   onChange: (operation: FilterOperation) => void;
   operations: FilterOperator<string>[];
 }
@@ -17,7 +17,7 @@ export const Operation = ({
   onChange,
   operations
 }: OperationProps) => {
-  const operationValue = value.value;
+  const operationValue = value?.value ?? '';
 
   const handleValueChange = useCallback(
     (newValue: string) => {
