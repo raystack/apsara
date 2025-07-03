@@ -69,6 +69,7 @@ export const FilterChip = ({
   const [filterValue, setFilterValue] = useState<any>(value || '');
 
   const showOnRemove = typeof onRemove === 'function';
+  const isMultiSelectColumn = columnType === FilterType.multiselect;
 
   const handleOperationChange = useCallback(
     (operation: FilterOperation) => {
@@ -87,31 +88,28 @@ export const FilterChip = ({
   );
 
   const renderValueInput = () => {
-    const isMultiSelect = columnType === FilterType.multiselect;
     switch (columnType) {
       case FilterType.multiselect:
       case FilterType.select:
         return (
           <Select
-            value={isMultiSelect ? filterValue : filterValue.toString()}
+            value={isMultiSelectColumn ? filterValue : filterValue.toString()}
             onValueChange={handleFilterValueChange}
-            multiple={isMultiSelect}
+            multiple={isMultiSelectColumn}
           >
             <Select.Trigger
-              iconProps={
-                isMultiSelect
-                  ? {
-                      style: {
-                        display: 'none'
-                      }
-                    }
-                  : undefined
-              }
+              iconProps={{
+                style: {
+                  display: 'none'
+                }
+              }}
               variant='text'
               className={cx(styles.selectValue, styles.selectColumn)}
             >
               <Select.Value placeholder='Select value'>
-                {isMultiSelect ? `${filterValue.length} selected` : undefined}
+                {isMultiSelectColumn && filterValue.length > 1
+                  ? `${filterValue.length} selected`
+                  : undefined}
               </Select.Value>
             </Select.Trigger>
             <Select.Content data-variant='filter'>
@@ -174,6 +172,7 @@ export const FilterChip = ({
         label={label}
         value={operation}
         onChange={handleOperationChange}
+        showAlternateLabel={isMultiSelectColumn && filterValue.length <= 1}
       />
       {renderValueInput()}
       {showOnRemove && (

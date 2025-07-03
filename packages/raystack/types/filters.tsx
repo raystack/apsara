@@ -41,8 +41,18 @@ export type FilterOperatorTypes =
   | 'empty';
 
 export type FilterOperator<T> = {
+  /**
+   * @description Value of the filter operator
+   */
   value: T;
+  /**
+   * @description Label to be shown in the filter chip operation
+   */
   label: string;
+  /**
+   * @description Used to show alternate operation label when single value is selected in multiselect column
+   */
+  alternateLabel?: string;
 };
 
 export type FilterOperatorsMap = {
@@ -82,8 +92,8 @@ export const filterOperators: FilterOperatorsMap = {
     { value: 'neq', label: 'is not' }
   ],
   multiselect: [
-    { value: 'in', label: 'is any of' },
-    { value: 'notin', label: 'is none of' }
+    { value: 'in', label: 'is any of', alternateLabel: 'is' },
+    { value: 'notin', label: 'is none of', alternateLabel: 'is not' }
   ]
 } as const;
 
