@@ -102,11 +102,6 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-/* Style for select value placeholder */
-.chip [data-placeholder] {
-  color: var(--rs-color-foreground-base-primary) !important;
-}
-
 .selectValue {
   color: var(--rs-color-foreground-base-primary);
   font-family: var(--rs-font-body);
@@ -122,6 +117,15 @@
   padding: var(--rs-space-2) var(--rs-space-3);
   border-radius: 0;
 }
+
+.selectValue * {
+  font-weight: var(--rs-font-weight-regular) !important;
+}
+
+.operationValue {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
 .selectColumn {
   border-top-right-radius: var(--rs-radius-2);
   border-bottom-right-radius: var(--rs-radius-2);

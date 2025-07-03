@@ -1,3 +1,4 @@
+import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
 import { FilterOperation, FilterOperator } from '~/types/filters';
 import { Select } from '../select';
@@ -9,13 +10,15 @@ interface OperationProps {
   value?: FilterOperation;
   onChange: (operation: FilterOperation) => void;
   operations: FilterOperator<string>[];
+  showAlternateLabel?: boolean;
 }
 
 export const Operation = ({
   label,
   value,
   onChange,
-  operations
+  operations,
+  showAlternateLabel = false
 }: OperationProps) => {
   const operationValue = value?.value ?? '';
 
@@ -29,7 +32,10 @@ export const Operation = ({
 
   if (operations.length === 1)
     return (
-      <Text variant='secondary' className={styles.selectValue}>
+      <Text
+        variant='secondary'
+        className={cx(styles.selectValue, styles.operationValue)}
+      >
         {operations[0].label}
       </Text>
     );
@@ -42,8 +48,13 @@ export const Operation = ({
     >
       <Select.Trigger
         variant='text'
-        className={styles.selectValue}
+        className={cx(styles.selectValue, styles.operationValue)}
         aria-label={`${label} filter operation`}
+        iconProps={{
+          style: {
+            display: 'none'
+          }
+        }}
       >
         <Select.Value
           placeholder='Select operation'
@@ -58,7 +69,9 @@ export const Operation = ({
               value={operation.value}
               aria-label={`Filter ${label} ${operation.label}`}
             >
-              {operation.label}
+              {showAlternateLabel && operation?.alternateLabel
+                ? operation.alternateLabel
+                : operation.label}
             </Select.Item>
           );
         })}

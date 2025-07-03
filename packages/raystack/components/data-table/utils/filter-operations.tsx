@@ -1,20 +1,21 @@
-import type { FilterFn } from "@tanstack/table-core";
-import dayjs from "dayjs";
-import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import type { FilterFn } from '@tanstack/table-core';
+import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
 import {
   DateFilterOperatorType,
   FilterOperatorTypes,
-  FilterValue,
-  NumberFilterOperatorType,
-  StringFilterOperatorType,
-  SelectFilterOperatorType,
-  FilterTypes,
-  FilterValueType,
   FilterType,
-} from "~/types/filters";
-import { EmptyFilterValue, RQLFilterValues } from "../data-table.types";
+  FilterTypes,
+  FilterValue,
+  FilterValueType,
+  MultiSelectFilterOperatorType,
+  NumberFilterOperatorType,
+  SelectFilterOperatorType,
+  StringFilterOperatorType
+} from '~/types/filters';
+import { EmptyFilterValue, RQLFilterValues } from '../data-table.types';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -24,6 +25,7 @@ export type FilterFunctionsMap = {
   string: Record<StringFilterOperatorType, FilterFn<any>>;
   date: Record<DateFilterOperatorType, FilterFn<any>>;
   select: Record<SelectFilterOperatorType, FilterFn<any>>;
+  multiselect: Record<MultiSelectFilterOperatorType, FilterFn<any>>;
 };
 
 export const filterOperationsMap: FilterFunctionsMap = {
@@ -45,7 +47,7 @@ export const filterOperationsMap: FilterFunctionsMap = {
     },
     gte: (row, columnId, filterValue: FilterValue) => {
       return Number(row.getValue(columnId)) >= Number(filterValue.value);
-    },
+    }
   },
   string: {
     eq: (row, columnId, filterValue: FilterValue) => {
@@ -64,62 +66,78 @@ export const filterOperationsMap: FilterFunctionsMap = {
       const columnValue = (row.getValue(columnId) as string).toLowerCase();
       const filterStr = (filterValue.value as string).toLowerCase();
       return columnValue.includes(filterStr);
-    },
+    }
   },
   date: {
     eq: (row, columnId, filterValue: FilterValue) => {
       return dayjs(row.getValue(columnId)).isSame(
         dayjs(filterValue.date),
-        "day"
+        'day'
       );
     },
     neq: (row, columnId, filterValue: FilterValue) => {
       return !dayjs(row.getValue(columnId)).isSame(
         dayjs(filterValue.date),
-        "day"
+        'day'
       );
     },
     lt: (row, columnId, filterValue: FilterValue) => {
       return dayjs(row.getValue(columnId)).isBefore(
         dayjs(filterValue.date),
-        "day"
+        'day'
       );
     },
     lte: (row, columnId, filterValue: FilterValue) => {
       return dayjs(row.getValue(columnId)).isSameOrBefore(
         dayjs(filterValue.date),
-        "day"
+        'day'
       );
     },
     gt: (row, columnId, filterValue: FilterValue) => {
       return dayjs(row.getValue(columnId)).isAfter(
         dayjs(filterValue.date),
-        "day"
+        'day'
       );
     },
     gte: (row, columnId, filterValue: FilterValue) => {
       return dayjs(row.getValue(columnId)).isSameOrAfter(
         dayjs(filterValue.date),
-        "day"
+        'day'
       );
-    },
+    }
   },
   select: {
     eq: (row, columnId, filterValue: FilterValue) => {
       if (String(filterValue.value) === EmptyFilterValue) {
-        return row.getValue(columnId) === "";
+        return row.getValue(columnId) === '';
       }
       // Select only supports string values
       return String(row.getValue(columnId)) === String(filterValue.value);
     },
     neq: (row, columnId, filterValue: FilterValue) => {
       if (String(filterValue.value) === EmptyFilterValue) {
-        return row.getValue(columnId) !== "";
+        return row.getValue(columnId) !== '';
       }
       // Select only supports string values
       return String(row.getValue(columnId)) !== String(filterValue.value);
-    },
+    }
   },
+  multiselect: {
+    in: (row, columnId, filterValue: FilterValue) => {
+      if (!Array.isArray(filterValue.value)) return false;
+
+      return filterValue.value
+        .map(value => (value === EmptyFilterValue ? '' : String(value)))
+        .includes(String(row.getValue(columnId)));
+    },
+    notin: (row, columnId, filterValue: FilterValue) => {
+      if (!Array.isArray(filterValue.value)) return false;
+
+      return !filterValue.value
+        .map(value => (value === EmptyFilterValue ? '' : String(value)))
+        .includes(String(row.getValue(columnId)));
+    }
+  }
 } as const;
 
 export function getFilterFn<T extends keyof FilterFunctionsMap>(
@@ -138,17 +156,26 @@ const handleStringBasedTypes = (
     case FilterType.date:
       return {
         value,
-        stringValue: (value as Date).toISOString(),
+        stringValue: (value as Date).toISOString()
       };
     case FilterType.select:
       return {
-        stringValue: value === EmptyFilterValue ? "" : value,
+        stringValue: value === EmptyFilterValue ? '' : value,
+        value
+      };
+    case FilterType.multiselect:
+      return {
         value,
+        stringValue: value
+          .map((value: any) =>
+            value === EmptyFilterValue ? '' : String(value)
+          )
+          .join()
       };
     default:
       return {
         stringValue: value,
-        value,
+        value
       };
   }
 };
@@ -156,30 +183,30 @@ const handleStringBasedTypes = (
 export const getFilterOperator = ({
   value,
   filterType,
-  operator,
+  operator
 }: {
   value: any;
   filterType?: FilterTypes;
   operator: FilterOperatorTypes;
 }): FilterOperatorTypes => {
   return value === EmptyFilterValue && filterType === FilterType.select
-    ? "empty"
+    ? 'empty'
     : operator;
 };
 
 export const getFilterValue = ({
   value,
-  dataType = "string",
-  filterType = FilterType.string,
+  dataType = 'string',
+  filterType = FilterType.string
 }: {
   value: any;
   dataType?: FilterValueType;
   filterType?: FilterTypes;
 }): RQLFilterValues => {
-  if (dataType === "boolean") {
+  if (dataType === 'boolean') {
     return { boolValue: value, value };
   }
-  if (dataType === "number") {
+  if (dataType === 'number') {
     return { numberValue: value, value };
   }
 
@@ -189,16 +216,17 @@ export const getFilterValue = ({
 
 export const getDataType = ({
   filterType = FilterType.string,
-  dataType = "string",
+  dataType = 'string'
 }: {
   dataType?: FilterValueType;
   filterType?: FilterTypes;
 }): FilterValueType => {
   switch (filterType) {
+    case FilterType.multiselect:
     case FilterType.select:
       return dataType;
     case FilterType.date:
-      return "string";
+      return 'string';
     default:
       return filterType;
   }
