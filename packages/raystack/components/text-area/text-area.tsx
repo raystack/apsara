@@ -1,11 +1,10 @@
-import { InfoCircledIcon } from "@radix-ui/react-icons";
-import { Tooltip } from "../tooltip";
-import { cva, cx } from "class-variance-authority";
-import * as React from "react";
-import { HTMLAttributes, PropsWithChildren } from "react";
-import clsx from "clsx";
+import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { cva, cx } from 'class-variance-authority';
+import * as React from 'react';
+import { HTMLAttributes, PropsWithChildren } from 'react';
+import { Tooltip } from '../tooltip';
 
-import styles from "./text-area.module.css";
+import styles from './text-area.module.css';
 
 const textArea = cva(styles.textarea, {
   variants: {
@@ -15,7 +14,8 @@ const textArea = cva(styles.textarea, {
   }
 });
 
-export interface TextAreaProps extends PropsWithChildren<HTMLAttributes<HTMLTextAreaElement>> {
+export interface TextAreaProps
+  extends PropsWithChildren<HTMLAttributes<HTMLTextAreaElement>> {
   label?: string;
   required?: boolean;
   infoTooltip?: string;
@@ -28,17 +28,36 @@ export interface TextAreaProps extends PropsWithChildren<HTMLAttributes<HTMLText
 }
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ className, style, label, required, infoTooltip, helperText, error, disabled, width = "100%", value, onChange, placeholder, ...props }, ref) => {
+  (
+    {
+      className,
+      style,
+      label,
+      required,
+      infoTooltip,
+      helperText,
+      error,
+      disabled,
+      width = '100%',
+      value,
+      onChange,
+      placeholder,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <div className={styles.container} style={{ width }}>
         {label && (
           <div className={styles.labelContainer}>
-            <label className={clsx(styles.label, disabled && styles.labelDisabled)}>
+            <label
+              className={cx(styles.label, disabled && styles.labelDisabled)}
+            >
               {label}
               {!required && <span className={styles.optional}>(optional)</span>}
             </label>
             {infoTooltip && (
-              <Tooltip message={infoTooltip} side="right">
+              <Tooltip message={infoTooltip} side='right'>
                 <span className={styles.helpIcon}>
                   <InfoCircledIcon />
                 </span>
@@ -61,9 +80,9 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           {...props}
         />
         {helperText && (
-          <span 
-            className={clsx(
-              styles.helperText, 
+          <span
+            className={cx(
+              styles.helperText,
               error && styles.helperTextError,
               disabled && styles.helperTextDisabled
             )}
@@ -76,6 +95,6 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
   }
 );
 
-TextArea.displayName = "TextArea";
+TextArea.displayName = 'TextArea';
 
 export { TextArea };

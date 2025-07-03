@@ -1,6 +1,5 @@
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { VariantProps, cva } from 'class-variance-authority';
-import { clsx } from 'clsx';
+import { VariantProps, cva, cx } from 'class-variance-authority';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 import {
   ComponentProps,
@@ -9,7 +8,6 @@ import {
   forwardRef
 } from 'react';
 import { Flex } from '../flex';
-
 import styles from './dialog.module.css';
 
 const dialogContent = cva(styles.dialogContent);
@@ -45,7 +43,7 @@ const DialogContent = forwardRef<
   ) => (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Overlay
-        className={clsx(
+        className={cx(
           styles.dialogOverlay,
           overlayClassName,
           overlayBlur && styles.overlayBlur
@@ -80,7 +78,7 @@ const DialogHeader = ({
   <Flex
     justify='between'
     align='center'
-    className={clsx(styles.header, className)}
+    className={cx(styles.header, className)}
   >
     {children}
   </Flex>
@@ -93,7 +91,7 @@ const DialogFooter = ({
   children: React.ReactNode;
   className?: string;
 }) => (
-  <Flex gap={5} justify='end' className={clsx(styles.footer, className)}>
+  <Flex gap={5} justify='end' className={cx(styles.footer, className)}>
     {children}
   </Flex>
 );
@@ -105,7 +103,7 @@ const DialogBody = ({
   children: React.ReactNode;
   className?: string;
 }) => (
-  <Flex direction='column' gap={3} className={clsx(styles.body, className)}>
+  <Flex direction='column' gap={3} className={cx(styles.body, className)}>
     {children}
   </Flex>
 );
@@ -114,7 +112,7 @@ type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
 export function CloseButton({ className, ...props }: CloseButtonProps) {
   return (
     <DialogPrimitive.Close
-      className={clsx(styles.close, className)}
+      className={cx(styles.close, className)}
       aria-label='Close dialog'
       {...props}
     >
@@ -134,7 +132,7 @@ function DialogTitle({ children, className, ...props }: DialogTitleProps) {
       {...props}
       role='heading'
       aria-level={1}
-      className={clsx(styles.title, className)}
+      className={cx(styles.title, className)}
     >
       {children}
     </DialogPrimitive.Title>
@@ -155,7 +153,7 @@ function DialogDescription({
   return (
     <DialogPrimitive.Description
       {...props}
-      className={clsx(styles.description, className)}
+      className={cx(styles.description, className)}
       id='dialog-description'
       role='document'
     >

@@ -2,24 +2,23 @@ import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ChevronUpIcon,
+  ChevronUpIcon
 } from '@radix-ui/react-icons';
-import { cva } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
-  dateLib,
   DayPicker,
   DayPickerProps,
   DropdownProps,
+  dateLib
 } from 'react-day-picker';
-import { clsx } from 'clsx';
 
 import { Flex } from '../flex/flex';
-import { Select } from '../select';
-import { Tooltip } from '../tooltip';
-import { Skeleton } from '../skeleton';
-import styles from './calendar.module.css';
 import { IconButton } from '../icon-button';
+import { Select } from '../select';
+import { Skeleton } from '../skeleton';
+import { Tooltip } from '../tooltip';
+import styles from './calendar.module.css';
 
 interface OnDropdownOpen {
   onDropdownOpen?: VoidFunction;
@@ -47,7 +46,7 @@ function DropDown({
   value,
   onChange,
   onDropdownOpen,
-  disabled,
+  disabled
 }: DropDownComponentProps) {
   const [open, setOpen] = useState(false);
 
@@ -71,22 +70,22 @@ function DropDown({
       <Select.Trigger
         className={styles.dropdown_trigger}
         iconProps={{
-          className: styles.dropdown_icon,
+          className: styles.dropdown_icon
         }}
-        size="small"
-        variant="text"
+        size='small'
+        variant='text'
         disabled={disabled}
       >
         <Select.Value />
       </Select.Trigger>
       <Select.Content className={styles.dropdown_content}>
         <Select.ScrollUpButton asChild>
-          <Flex justify={'center'}>
+          <Flex justify='center'>
             <ChevronUpIcon />
           </Flex>
         </Select.ScrollUpButton>
         <Select.Viewport>
-          {options.map((opt) => (
+          {options.map(opt => (
             <Select.Item
               value={opt.value.toString()}
               key={opt.value}
@@ -97,7 +96,7 @@ function DropDown({
           ))}
         </Select.Viewport>
         <Select.ScrollDownButton asChild>
-          <Flex justify={'center'}>
+          <Flex justify='center'>
             <ChevronDownIcon />
           </Flex>
         </Select.ScrollDownButton>
@@ -122,39 +121,42 @@ export const Calendar = function ({
       showOutsideDays={showOutsideDays}
       timeZone={timeZone}
       components={{
-        Chevron: (props) => {
-          const icon = props.orientation === 'left' ? (
-            <ChevronLeftIcon />
-          ) : (
-            <ChevronRightIcon />
-          );
+        Chevron: props => {
+          const icon =
+            props.orientation === 'left' ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            );
 
           return (
-            <IconButton 
-              {...props} 
+            <IconButton
+              {...props}
               disabled={loadingData}
-              className={clsx(props.className, loadingData && styles.disabled)}
+              className={cx(props.className, loadingData && styles.disabled)}
               size={3}
-              aria-label={props.orientation === 'left' ? 'Previous month' : 'Next month'}
+              aria-label={
+                props.orientation === 'left' ? 'Previous month' : 'Next month'
+              }
             >
               {icon}
             </IconButton>
           );
         },
         Dropdown: (props: DropdownProps) => (
-          <DropDown 
-            {...props} 
+          <DropDown
+            {...props}
             onDropdownOpen={onDropdownOpen}
             disabled={loadingData}
           />
         ),
-        DayButton: (props) => {
+        DayButton: props => {
           const { day, ...buttonProps } = props;
           const message =
             tooltipMessages[dateLib.format(day.date, 'dd-MM-yyyy')];
           return (
             <Tooltip
-              side="top"
+              side='top'
               disabled={loadingData || !showTooltip || !message}
               message={message}
             >
@@ -162,17 +164,17 @@ export const Calendar = function ({
             </Tooltip>
           );
         },
-        MonthGrid: (props) =>
+        MonthGrid: props =>
           loadingData ? (
             <Skeleton
               count={5}
-              height="18px"
-              width="252px"
-              style={{ marginBottom: "var(--rs-space-6)" }}
+              height='18px'
+              width='252px'
+              style={{ marginBottom: 'var(--rs-space-6)' }}
             />
           ) : (
             <table {...props} />
-          ),
+          )
       }}
       classNames={{
         caption_label: styles.caption_label,
@@ -195,10 +197,10 @@ export const Calendar = function ({
         range_start: styles.range_start,
         hidden: styles.hidden,
         dropdowns: styles.dropdowns,
-        ...classNames,
+        ...classNames
       }}
       className={root({ className })}
-      mode="single"
+      mode='single'
       {...props}
     />
   );

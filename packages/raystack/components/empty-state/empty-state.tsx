@@ -1,15 +1,14 @@
-import clsx from "clsx";
-
-import { Flex } from "../flex";
-import { Text } from "../text";
-import styles from "./empty-state.module.css";
+import { cx } from 'class-variance-authority';
+import { Flex } from '../flex';
+import { Text } from '../text';
+import styles from './empty-state.module.css';
 
 type classNameKeys =
-  | "container"
-  | "iconContainer"
-  | "icon"
-  | "heading"
-  | "subHeading";
+  | 'container'
+  | 'iconContainer'
+  | 'icon'
+  | 'heading'
+  | 'subHeading';
 
 interface EmptyStateProps {
   icon: React.ReactNode;
@@ -18,7 +17,7 @@ interface EmptyStateProps {
   primaryAction?: React.ReactNode;
   secondaryAction?: React.ReactNode;
   classNames?: Partial<Record<classNameKeys, string>>;
-  variant?: "empty1" | "empty2";
+  variant?: 'empty1' | 'empty2';
 }
 
 export const EmptyState = ({
@@ -28,30 +27,30 @@ export const EmptyState = ({
   primaryAction,
   secondaryAction,
   classNames,
-  variant = "empty1",
+  variant = 'empty1'
 }: EmptyStateProps) => {
-  if (variant === "empty2") {
+  if (variant === 'empty2') {
     return (
-      <Flex
-        align="center"
-        justify="center"
-        className={styles.emptyStatePage}
-      >
+      <Flex align='center' justify='center' className={styles.emptyStatePage}>
         <Flex
-          direction="column"
-          align="start"
-          gap="medium"
-          className={clsx(styles.emptyStateContent, classNames?.container)}
+          direction='column'
+          align='start'
+          gap='medium'
+          className={cx(styles.emptyStateContent, classNames?.container)}
         >
-          <div className={clsx(styles.iconContainer, classNames?.iconContainer)}>
-            <div className={clsx(styles.icon, styles.iconLarge, classNames?.icon)}>{icon}</div>
+          <div className={cx(styles.iconContainer, classNames?.iconContainer)}>
+            <div
+              className={cx(styles.icon, styles.iconLarge, classNames?.icon)}
+            >
+              {icon}
+            </div>
           </div>
-          
+
           {heading && (
             <Text
               size={5}
               weight={500}
-              className={clsx(styles.headerText, classNames?.heading)}
+              className={cx(styles.headerText, classNames?.heading)}
             >
               {heading}
             </Text>
@@ -61,13 +60,13 @@ export const EmptyState = ({
             <Text
               size={4}
               weight={400}
-              className={clsx(styles.subHeaderText, classNames?.subHeading)}
+              className={cx(styles.subHeaderText, classNames?.subHeading)}
             >
               {subHeading}
             </Text>
           )}
 
-          <Flex gap="medium">
+          <Flex gap='medium'>
             {primaryAction}
             {secondaryAction}
           </Flex>
@@ -76,25 +75,23 @@ export const EmptyState = ({
     );
   }
 
-
-
   return (
     <Flex
-      direction="column"
-      align="center"
-      gap="medium"
-      className={clsx(styles.emptyState, classNames?.container)}
+      direction='column'
+      align='center'
+      gap='medium'
+      className={cx(styles.emptyState, classNames?.container)}
     >
-      <div className={clsx(styles.iconContainer, classNames?.iconContainer)}>
-        <div className={clsx(styles.icon, classNames?.icon)}>{icon}</div>
+      <div className={cx(styles.iconContainer, classNames?.iconContainer)}>
+        <div className={cx(styles.icon, classNames?.icon)}>{icon}</div>
       </div>
 
-      <Flex direction="column" gap="small" align="center">
+      <Flex direction='column' gap='small' align='center'>
         {heading && (
           <Text
             size={5}
             weight={500}
-            className={clsx(styles.headerText, classNames?.heading)}
+            className={cx(styles.headerText, classNames?.heading)}
           >
             {heading}
           </Text>
@@ -104,7 +101,7 @@ export const EmptyState = ({
           <Text
             size={4}
             weight={400}
-            className={clsx(styles.subHeaderText, classNames?.subHeading)}
+            className={cx(styles.subHeaderText, classNames?.subHeading)}
           >
             {subHeading}
           </Text>
