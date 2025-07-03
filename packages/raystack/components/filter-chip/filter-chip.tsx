@@ -87,18 +87,32 @@ export const FilterChip = ({
   );
 
   const renderValueInput = () => {
+    const isMultiSelect = columnType === FilterType.multiselect;
     switch (columnType) {
+      case FilterType.multiselect:
       case FilterType.select:
         return (
           <Select
-            value={filterValue.toString()}
+            value={isMultiSelect ? filterValue : filterValue.toString()}
             onValueChange={handleFilterValueChange}
+            multiple={isMultiSelect}
           >
             <Select.Trigger
+              iconProps={
+                isMultiSelect
+                  ? {
+                      style: {
+                        display: 'none'
+                      }
+                    }
+                  : undefined
+              }
               variant='text'
               className={cx(styles.selectValue, styles.selectColumn)}
             >
-              <Select.Value placeholder='Select value' />
+              <Select.Value placeholder='Select value'>
+                {isMultiSelect ? `${filterValue.length} selected` : undefined}
+              </Select.Value>
             </Select.Trigger>
             <Select.Content data-variant='filter'>
               {options.map(opt => (

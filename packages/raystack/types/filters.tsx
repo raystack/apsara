@@ -1,11 +1,12 @@
 export const FilterType = {
-  number: "number",
-  string: "string",
-  date: "date",
-  select: "select",
+  number: 'number',
+  string: 'string',
+  date: 'date',
+  select: 'select',
+  multiselect: 'multiselect'
 } as const;
 
-export type FilterValueType = "string" | "number" | "boolean";
+export type FilterValueType = 'string' | 'number' | 'boolean';
 
 export interface FilterValue {
   value?: FilterValueType;
@@ -20,22 +21,24 @@ export type FilterOperation = {
 };
 
 export type NumberFilterOperatorType =
-  | "eq"
-  | "neq"
-  | "lt"
-  | "lte"
-  | "gt"
-  | "gte";
-export type StringFilterOperatorType = "eq" | "neq" | "like";
-export type DateFilterOperatorType = "eq" | "neq" | "lt" | "lte" | "gt" | "gte";
-export type SelectFilterOperatorType = "eq" | "neq";
+  | 'eq'
+  | 'neq'
+  | 'lt'
+  | 'lte'
+  | 'gt'
+  | 'gte';
+export type StringFilterOperatorType = 'eq' | 'neq' | 'like';
+export type DateFilterOperatorType = 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte';
+export type SelectFilterOperatorType = 'eq' | 'neq';
+export type MultiselectFilterOperatorType = 'in' | 'notin';
 
 export type FilterOperatorTypes =
   | NumberFilterOperatorType
   | StringFilterOperatorType
   | DateFilterOperatorType
   | SelectFilterOperatorType
-  | "empty";
+  | MultiselectFilterOperatorType
+  | 'empty';
 
 export type FilterOperator<T> = {
   value: T;
@@ -47,36 +50,41 @@ export type FilterOperatorsMap = {
   string: FilterOperator<StringFilterOperatorType>[];
   date: FilterOperator<DateFilterOperatorType>[];
   select: FilterOperator<SelectFilterOperatorType>[];
+  multiselect: FilterOperator<MultiselectFilterOperatorType>[];
 };
 
 export type FilterTypes = keyof typeof FilterType;
 
 export const filterOperators: FilterOperatorsMap = {
   number: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is not" },
-    { value: "lt", label: "less than" },
-    { value: "lte", label: "less than or equal" },
-    { value: "gt", label: "greater than" },
-    { value: "gte", label: "greater than or equal" },
+    { value: 'eq', label: 'is' },
+    { value: 'neq', label: 'is not' },
+    { value: 'lt', label: 'less than' },
+    { value: 'lte', label: 'less than or equal' },
+    { value: 'gt', label: 'greater than' },
+    { value: 'gte', label: 'greater than or equal' }
   ],
   string: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is not" },
-    { value: "like", label: "contains" },
+    { value: 'eq', label: 'is' },
+    { value: 'neq', label: 'is not' },
+    { value: 'like', label: 'contains' }
   ],
   date: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is not" },
-    { value: "lt", label: "is before" },
-    { value: "lte", label: "is on or before" },
-    { value: "gt", label: "is after" },
-    { value: "gte", label: "is on or after" },
+    { value: 'eq', label: 'is' },
+    { value: 'neq', label: 'is not' },
+    { value: 'lt', label: 'is before' },
+    { value: 'lte', label: 'is on or before' },
+    { value: 'gt', label: 'is after' },
+    { value: 'gte', label: 'is on or after' }
   ],
   select: [
-    { value: "eq", label: "is" },
-    { value: "neq", label: "is not" },
+    { value: 'eq', label: 'is' },
+    { value: 'neq', label: 'is not' }
   ],
+  multiselect: [
+    { value: 'in', label: 'is any of' },
+    { value: 'notin', label: 'is none of' }
+  ]
 } as const;
 
 export type Filter = {
