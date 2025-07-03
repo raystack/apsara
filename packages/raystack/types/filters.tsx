@@ -30,14 +30,14 @@ export type NumberFilterOperatorType =
 export type StringFilterOperatorType = 'eq' | 'neq' | 'like';
 export type DateFilterOperatorType = 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte';
 export type SelectFilterOperatorType = 'eq' | 'neq';
-export type MultiselectFilterOperatorType = 'in' | 'notin';
+export type MultiSelectFilterOperatorType = 'in' | 'notin';
 
 export type FilterOperatorTypes =
   | NumberFilterOperatorType
   | StringFilterOperatorType
   | DateFilterOperatorType
   | SelectFilterOperatorType
-  | MultiselectFilterOperatorType
+  | MultiSelectFilterOperatorType
   | 'empty';
 
 export type FilterOperator<T> = {
@@ -60,7 +60,7 @@ export type FilterOperatorsMap = {
   string: FilterOperator<StringFilterOperatorType>[];
   date: FilterOperator<DateFilterOperatorType>[];
   select: FilterOperator<SelectFilterOperatorType>[];
-  multiselect: FilterOperator<MultiselectFilterOperatorType>[];
+  multiselect: FilterOperator<MultiSelectFilterOperatorType>[];
 };
 
 export type FilterTypes = keyof typeof FilterType;
