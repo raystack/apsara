@@ -1,24 +1,25 @@
-"use client";
+'use client';
 
-import { FilterChip, Flex } from "@raystack/apsara";
-import PlaygroundLayout from "./playground-layout";
-import { Info } from "lucide-react";
+import { FilterChip, Flex } from '@raystack/apsara';
+import { Info } from 'lucide-react';
+import PlaygroundLayout from './playground-layout';
 
 export function FilterChipExamples() {
   return (
-    <PlaygroundLayout title="FilterChip">
-      <Flex gap="large" wrap="wrap">
+    <PlaygroundLayout title='FilterChip'>
+      <Flex gap='large' wrap='wrap'>
         <FilterChip
-          label="Status"
+          label='Status'
           leadingIcon={<Info />}
-          columnType="select"
+          columnType='select'
           options={[
-            { label: "Active", value: "active" },
-            { label: "Inactive", value: "inactive" },
+            { label: 'Active', value: 'active' },
+            { label: 'Inactive', value: 'inactive' }
           ]}
         />
-        <FilterChip label="Date" leadingIcon={<Info />} columnType="date" />
-        <FilterChip label="Search" leadingIcon={<Info />} columnType="text" />
+        <FilterChip label='Date' leadingIcon={<Info />} columnType='date' />
+        <FilterChip label='Date' leadingIcon={<Info />} columnType='string' />
+        <FilterChip label='Date' leadingIcon={<Info />} columnType='number' />
       </Flex>
     </PlaygroundLayout>
   );

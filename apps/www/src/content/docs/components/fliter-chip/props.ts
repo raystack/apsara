@@ -8,15 +8,18 @@ export interface FilterChipProps {
   /** Type of input for the filter
    * @default "string"
    */
-  columnType?: "select" | "date" | "string" | "number";
+  columnType?: 'select' | 'date' | 'string' | 'number';
 
   /** Filterchip variant
    * @default "default"
    */
-  variant?: "default" | "text";
+  variant?: 'default' | 'text';
 
   /** Array of options for the select type input */
   options?: { label: string; value: string }[];
+
+  /** Optional array of operations for the type of filter oepration */
+  operations?: { label: string; value: string }[];
 
   /** Callback when the filter value changes */
   onValueChange?: (value: string) => void;
