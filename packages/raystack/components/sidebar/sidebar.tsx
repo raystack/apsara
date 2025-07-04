@@ -1,4 +1,4 @@
-import { cva } from 'class-variance-authority';
+import { cva, cx } from 'class-variance-authority';
 import { Collapsible } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
@@ -10,8 +10,6 @@ import {
   forwardRef,
   useContext
 } from 'react';
-
-import clsx from 'clsx';
 import { Tooltip, TooltipProvider } from '../tooltip';
 import styles from './sidebar.module.css';
 
@@ -190,7 +188,7 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
       as,
       {
         ref,
-        className: clsx(styles['nav-item'], classNames?.root),
+        className: cx(styles['nav-item'], classNames?.root),
         'data-active': active,
         'data-disabled': disabled,
         role: 'menuitem',
@@ -200,7 +198,7 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
       },
       <>
         <span
-          className={clsx(styles['nav-icon'], classNames?.icon)}
+          className={cx(styles['nav-icon'], classNames?.icon)}
           aria-hidden='true'
         >
           {icon}
