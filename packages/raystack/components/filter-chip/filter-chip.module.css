@@ -1,7 +1,4 @@
 .chip {
-  display: inline-flex;
-  align-items: stretch;
-  gap: 0;
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
@@ -19,11 +16,9 @@
   box-shadow: var(--rs-shadow-feather);
 }
 
-.chip > * {
-  padding-left: var(--rs-space-3);
-  /* padding-right: var(--rs-space-1); */
+.chip-label {
+  padding: 0 var(--rs-space-3);
 }
-
 .operationText {
   color: var(--rs-color-foreground-base-secondary);
   font-family: var(--rs-font-body);
@@ -113,7 +108,6 @@
 }
 
 .selectValue {
-  margin-left: var(--rs-space-2);
   color: var(--rs-color-foreground-base-primary);
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
@@ -133,8 +127,7 @@
   border-bottom-right-radius: var(--rs-radius-2);
 }
 
-.selectValue:hover,
-.selectValue:focus-visible {
+button.selectValue:hover {
   color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary-hover);
 }
