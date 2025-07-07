@@ -1,13 +1,14 @@
-"use client";
+'use client';
 
-import * as Apsara from "@raystack/apsara";
-import DemoPreview from "./demo-preview";
-import { DemoProps } from "./types";
-import DemoPlayground from "./demo-playground";
-import { Suspense } from "react";
-import { Info, X, Home, Laugh } from "lucide-react";
-import DataTableDemo from "../datatable-demo";
-import LinearDropdownDemo from "../linear-dropdown-demo";
+import * as Apsara from '@raystack/apsara';
+import { Home, Info, Laugh, X } from 'lucide-react';
+import NextLink from 'next/link';
+import { Suspense } from 'react';
+import DataTableDemo from '../datatable-demo';
+import LinearDropdownDemo from '../linear-dropdown-demo';
+import DemoPlayground from './demo-playground';
+import DemoPreview from './demo-preview';
+import { DemoProps } from './types';
 
 export default function Demo(props: DemoProps) {
   const {
@@ -20,10 +21,11 @@ export default function Demo(props: DemoProps) {
       X,
       Home,
       Laugh,
-    },
+      NextLink
+    }
   } = props;
 
-  if (data.type === "code") {
+  if (data.type === 'code') {
     return <DemoPreview scope={scope} {...data} />;
   }
 

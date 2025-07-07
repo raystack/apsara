@@ -1,137 +1,135 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
-  return `<Breadcrumb
-    items={[
-      { label: 'Home', href: '/' },
-      { label: 'Category', href: '/category' },
-      { label: 'Subcategory', href: '/category/subcategory' },
-      { label: 'Current Page', href: '/category/subcategory/current' }
-    ]}
-    ${getPropsString(props)}/>`;
+  return `<Breadcrumb${getPropsString(props)}>
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+      </Breadcrumb>`;
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     size: {
-      type: "select",
-      options: ["small", "medium"],
-      defaultValue: "medium",
-    },
-    maxVisibleItems: {
-      type: "number",
-      defaultValue: 5,
-      min: 1,
-    },
-    separator: {
-      type: "text",
-      initialValue: "/",
-    },
+      type: 'select',
+      options: ['small', 'medium'],
+      defaultValue: 'medium'
+    }
   },
-  getCode,
+  getCode
 };
 
 export const sizeDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" direction="column">
-    <Breadcrumb size="small" items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "Shoes", href: "/products/shoes" }]} />
-    <Breadcrumb size="medium" items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "Shoes", href: "/products/shoes" }]} />
-  </Flex>`,
+     <Breadcrumb size="small">
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+      </Breadcrumb>
+     <Breadcrumb size="medium">
+        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+      </Breadcrumb>
+  </Flex>`
 };
 
 export const separatorDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" direction="column">
-    <Breadcrumb separator=">" items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "Shoes", href: "/products/shoes" }]} />
-    <Breadcrumb separator="|" items={[{ label: "Home", href: "/" }, { label: "Products", href: "/products" }, { label: "Shoes", href: "/products/shoes" }]} />
-  </Flex>`,
+    <Breadcrumb>
+      <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+      <Breadcrumb.Separator>|</Breadcrumb.Separator>
+      <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+      <Breadcrumb.Separator>|</Breadcrumb.Separator>
+      <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+    </Breadcrumb>
+    <Breadcrumb>
+      <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+      <Breadcrumb.Separator>-</Breadcrumb.Separator>
+      <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+      <Breadcrumb.Separator>-</Breadcrumb.Separator>
+      <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+    </Breadcrumb>
+  </Flex>`
 };
 
-export const maxVisibleItemsDemo = {
-  type: "code",
+export const ellipsisDemo = {
+  type: 'code',
   code: `
-  <Breadcrumb maxVisibleItems={3} items={[
-    { label: "Home", href: "/" },
-    { label: "Category", href: "/category" },
-    { label: "Subcategory", href: "/subcategory" },
-    { label: "Product", href: "/product" },
-    { label: "Details", href: "/details" }
-  ]} />`,
+  <Breadcrumb>
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Ellipsis/>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+  </Breadcrumb>`
 };
 
 export const dropdownDemo = {
-  type: "code",
+  type: 'code',
   code: `
-  <Breadcrumb
-  items={[
-    { label: 'Home', href: '/' },
-    { label: 'Category', href: '/category' },
-    { 
-      label: 'Subcategory', 
-      href: '/category/subcategory',
-      dropdownItems: [
-        { label: 'Option 1', href: '/category/subcategory/option1' },
-        { label: 'Option 2', href: '/category/subcategory/option2' }
-      ]
-    },
-    { label: 'Current Page', href: '/category/subcategory/current' }
-  ]}
-/>`,
+  <Breadcrumb>
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/category">Category</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item dropdownItems={[
+        { label: 'Option 1', onClick: () => {console.log('Option 1')}},
+        { label: 'Option 2', onClick: () => {console.log('Option 2')}}
+      ]}>Subcategory</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/category/subcategory/current">Current Page</Breadcrumb.Item>
+  </Breadcrumb>`
+};
+export const asDemo = {
+  type: 'code',
+  code: `
+  <Breadcrumb>
+    <Breadcrumb.Item href="/home" as={<NextLink href="/" />}>Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/playground" as={<NextLink />}>Playground</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/docs" isActive>Docs</Breadcrumb.Item>
+  </Breadcrumb>`
 };
 
 export const iconsDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Text with Icon",
+      name: 'Text with Icon',
       code: `
-      <Breadcrumb
-        items={[
-          { 
-            label: 'Home', 
-            href: '/',
-            icon: <>O</>
-          },
-          { 
-            label: 'Documents', 
-            href: '/documents',
-            icon: <>O</>
-          },
-          { 
-            label: 'Settings', 
-            href: '/settings',
-            icon: <>O</>
-          }
-        ]}
-      />`,
+      <Breadcrumb>
+        <Breadcrumb.Item href="/" leadingIcon={<>H</>}>Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/documents" leadingIcon={<>D</>}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/settings" leadingIcon={<>S</>}>Settings</Breadcrumb.Item>
+      </Breadcrumb>`
     },
     {
-      name: "Only Icon",
+      name: 'Only Icon',
       code: `
-      <Breadcrumb
-        items={[
-          { 
-            label: '', 
-            href: '/',
-            icon: <>O</>
-          },
-          { 
-            label: '', 
-            href: '/documents',
-            icon: <>O</>
-          },
-          { 
-            label: '', 
-            href: '/settings',
-            icon: <>O</>
-          }
-        ]}
-      />`,
-    },
-  ],
+      <Breadcrumb>
+        <Breadcrumb.Item href="/" leadingIcon={<>H</>}/>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/documents" leadingIcon={<>D</>}/>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/settings" leadingIcon={<>S</>}/>
+      </Breadcrumb>`
+    }
+  ]
 };
