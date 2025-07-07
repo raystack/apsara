@@ -8,7 +8,7 @@ export const getCode = (props: any) => {
         <Breadcrumb.Separator/>
         <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+        <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
       </Breadcrumb>`;
 };
 
@@ -33,14 +33,14 @@ export const sizeDemo = {
         <Breadcrumb.Separator/>
         <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+        <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
       </Breadcrumb>
      <Breadcrumb size="medium">
         <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
         <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+        <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
       </Breadcrumb>
   </Flex>`
 };
@@ -54,14 +54,14 @@ export const separatorDemo = {
       <Breadcrumb.Separator>|</Breadcrumb.Separator>
       <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
       <Breadcrumb.Separator>|</Breadcrumb.Separator>
-      <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+      <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
     </Breadcrumb>
     <Breadcrumb>
       <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
       <Breadcrumb.Separator>-</Breadcrumb.Separator>
       <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
       <Breadcrumb.Separator>-</Breadcrumb.Separator>
-      <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+      <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
     </Breadcrumb>
   </Flex>`
 };
@@ -74,7 +74,7 @@ export const ellipsisDemo = {
     <Breadcrumb.Separator/>
     <Breadcrumb.Ellipsis/>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/products/shoes" isActive>Shoes</Breadcrumb.Item>
+    <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
   </Breadcrumb>`
 };
 
@@ -102,7 +102,7 @@ export const asDemo = {
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="/playground" as={<NextLink />}>Playground</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/docs" isActive>Docs</Breadcrumb.Item>
+    <Breadcrumb.Item href="/docs" current>Docs</Breadcrumb.Item>
   </Breadcrumb>`
 };
 

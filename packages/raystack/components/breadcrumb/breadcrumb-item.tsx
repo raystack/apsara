@@ -18,7 +18,7 @@ export interface BreadcrumbDropdownItem {
 
 export interface BreadcrumbItemProps extends HTMLAttributes<HTMLAnchorElement> {
   leadingIcon?: ReactNode;
-  isActive?: boolean;
+  current?: boolean;
   dropdownItems?: BreadcrumbDropdownItem[];
   href?: string;
   as?: ReactElement;
@@ -34,7 +34,7 @@ export const BreadcrumbItem = forwardRef<
       children,
       className,
       leadingIcon,
-      isActive,
+      current,
       href,
       dropdownItems,
       ...props
@@ -83,7 +83,7 @@ export const BreadcrumbItem = forwardRef<
           {
             className: cx(
               styles['breadcrumb-link'],
-              isActive && styles['breadcrumb-link-active']
+              current && styles['breadcrumb-link-active']
             ),
             href,
             ...props,

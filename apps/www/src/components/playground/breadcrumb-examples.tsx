@@ -29,7 +29,7 @@ export function BreadcrumbExamples() {
             Products
           </Breadcrumb.Item>
           <Breadcrumb.Separator />
-          <Breadcrumb.Item href='/products/shoes' as={<a />}>
+          <Breadcrumb.Item href='/products/shoes' as={<a />} current>
             Shoes
           </Breadcrumb.Item>
         </Breadcrumb>

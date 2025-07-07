@@ -3,10 +3,19 @@ import { ReactElement, ReactEventHandler, ReactNode } from 'react';
 export interface BreadcrumbItem {
   /** Text to display for the item */
   label: string;
+
   /** URL for the item link */
   href?: string;
+
   /** Optional icon element to display */
   leadingIcon?: ReactNode;
+
+  /**
+   * Whether the item is the current page
+   * @defaultValue false
+   */
+  current?: boolean;
+
   /**
    * Optional array of dropdown items
    *
@@ -18,6 +27,7 @@ export interface BreadcrumbItem {
     /** Callback function when a dropdown item is clicked */
     onClick?: ReactEventHandler<HTMLDivElement>;
   }[];
+
   /**
    * Custom element used to render the Item.
    *
