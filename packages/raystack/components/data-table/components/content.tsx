@@ -1,7 +1,7 @@
 import { TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
-import clsx from 'clsx';
+import { cx } from 'class-variance-authority';
 import {
   ForwardedRef,
   forwardRef,
@@ -126,7 +126,7 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
           ) : (
             <Table.Row
               key={rowKey}
-              className={clsx(
+              className={cx(
                 styles['row'],
                 onRowClick ? styles['clickable'] : '',
                 classNames?.row
@@ -143,7 +143,7 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
                 return (
                   <Table.Cell
                     key={cell.id}
-                    className={clsx(styles['cell'], columnDef.classNames?.cell)}
+                    className={cx(styles['cell'], columnDef.classNames?.cell)}
                     style={columnDef.styles?.cell}
                   >
                     {flexRender(columnDef.cell, cell.getContext())}

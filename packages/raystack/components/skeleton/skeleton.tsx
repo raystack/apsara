@@ -1,5 +1,5 @@
+import { cx } from 'class-variance-authority';
 import { CSSProperties, createContext, useContext } from 'react';
-import { clsx } from 'clsx';
 import styles from './skeleton.module.css';
 
 export interface SkeletonProps {
@@ -26,7 +26,7 @@ interface SkeletonProviderProps extends SkeletonProps {
 
 const SkeletonBase = (props: SkeletonProps) => {
   const contextProps = useContext(SkeletonContext);
-  
+
   const {
     baseColor,
     highlightColor,
@@ -40,10 +40,10 @@ const SkeletonBase = (props: SkeletonProps) => {
     style,
     className,
     containerStyle,
-    containerClassName,
+    containerClassName
   } = { ...contextProps, ...props };
 
-  const skeletonClassName = clsx(
+  const skeletonClassName = cx(
     styles.skeleton,
     inline && styles.inline,
     enableAnimation && styles.animate,
@@ -67,25 +67,24 @@ const SkeletonBase = (props: SkeletonProps) => {
         <span
           key={i}
           className={skeletonClassName}
-          style={{
-            width: width ?? defaultWidth,
-            height,
-            borderRadius,
-            '--skeleton-base-color': baseColor,
-            '--skeleton-highlight-color': highlightColor,
-            '--skeleton-duration': `${duration}s`,
-            ...style
-          } as CSSProperties}
+          style={
+            {
+              width: width ?? defaultWidth,
+              height,
+              borderRadius,
+              '--skeleton-base-color': baseColor,
+              '--skeleton-highlight-color': highlightColor,
+              '--skeleton-duration': `${duration}s`,
+              ...style
+            } as CSSProperties
+          }
         />
       ))}
     </Container>
   );
 };
 
-const Provider = ({ 
-  children,
-  ...props
-}: SkeletonProviderProps) => {
+const Provider = ({ children, ...props }: SkeletonProviderProps) => {
   return (
     <SkeletonContext.Provider value={props}>
       {children}
@@ -93,4 +92,4 @@ const Provider = ({
   );
 };
 
-export const Skeleton = Object.assign(SkeletonBase, { Provider }); 
+export const Skeleton = Object.assign(SkeletonBase, { Provider });

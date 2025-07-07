@@ -1,5 +1,4 @@
-import { VariantProps, cva } from 'class-variance-authority';
-import clsx from 'clsx';
+import { VariantProps, cva, cx } from 'class-variance-authority';
 import { Checkbox as CheckboxPrimitive } from 'radix-ui';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
@@ -71,7 +70,7 @@ export const Checkbox = forwardRef<
     return (
       <CheckboxPrimitive.Root
         className={checkbox({
-          className: clsx(className, {
+          className: cx(className, {
             [styles['checkbox-disabled']]: disabled,
             [styles['checkbox-indeterminate']]: isIndeterminate
           })

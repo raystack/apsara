@@ -1,5 +1,4 @@
-import { VariantProps, cva } from 'class-variance-authority';
-import { clsx } from 'clsx';
+import { VariantProps, cva, cx } from 'class-variance-authority';
 import { Avatar as AvatarPrimitive } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
@@ -185,7 +184,7 @@ const AvatarRoot = forwardRef<
     <Box className={styles.imageWrapper} style={style}>
       <AvatarPrimitive.Root
         ref={ref}
-        className={clsx(avatar({ size, radius, variant, color }), className)}
+        className={cx(avatar({ size, radius, variant, color }), className)}
         asChild={asChild}
         {...props}
       >
@@ -216,7 +215,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
     const firstAvatarProps = getAvatarProps(avatars[0]);
 
     return (
-      <div ref={ref} className={clsx(styles.avatarGroup, className)} {...props}>
+      <div ref={ref} className={cx(styles.avatarGroup, className)} {...props}>
         {avatars.map((avatar, index) => (
           <div key={index} className={styles.avatarWrapper}>
             {avatar}
