@@ -200,8 +200,9 @@ export const SelectRoot = (props: SelectRootProps) => {
   const radixValue = useMemo(() => {
     if (!computedValue) return '';
     if (typeof computedValue === 'string') return computedValue;
-    if (computedValue.length) return `${SELECT_INTERNAL_VALUE}-${id}`;
-    return '';
+    if (Array.isArray(computedValue) && computedValue.length)
+      return `${SELECT_INTERNAL_VALUE}-${id}`;
+    return String(computedValue) ?? '';
   }, [computedValue, id]);
 
   const element = (
