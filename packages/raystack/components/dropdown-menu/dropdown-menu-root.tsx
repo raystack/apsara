@@ -1,13 +1,13 @@
 import {
   ComboboxProvider,
   MenuProvider,
-  MenuProviderProps,
-} from "@ariakit/react";
-import { createContext, useContext, useState } from "react";
+  MenuProviderProps
+} from '@ariakit/react';
+import { createContext, useCallback, useContext, useState } from 'react';
 
 interface CommonProps {
   autocomplete?: boolean;
-  autocompleteMode?: "auto" | "manual";
+  autocompleteMode?: 'auto' | 'manual';
   searchValue?: string;
 }
 
@@ -28,7 +28,7 @@ interface UseDropdownContext extends DropdownContextValue {
  */
 
 export const DropdownContext = createContext<DropdownContextValue | undefined>(
-  undefined,
+  undefined
 );
 
 export const useDropdownContext = (): UseDropdownContext => {
@@ -37,13 +37,13 @@ export const useDropdownContext = (): UseDropdownContext => {
 
   const shouldFilter = !!(
     context?.autocomplete &&
-    context?.autocompleteMode === "auto" &&
+    context?.autocompleteMode === 'auto' &&
     context?.searchValue?.length
   );
 
   const shouldFilterParent = !!(
     context?.parent?.autocomplete &&
-    context?.parent?.autocompleteMode === "auto" &&
+    context?.parent?.autocompleteMode === 'auto' &&
     context?.parent?.searchValue?.length
   );
 
@@ -52,12 +52,17 @@ export const useDropdownContext = (): UseDropdownContext => {
     shouldFilter,
     parent: context?.parent && {
       ...context.parent,
-      shouldFilter: shouldFilterParent,
-    },
+      shouldFilter: shouldFilterParent
+    }
   };
 };
 
-export interface NormalDropdownMenuRootProps extends MenuProviderProps {
+export interface BaseMenuProviderProps
+  extends Omit<MenuProviderProps, 'setOpen'> {
+  onOpenChange?: MenuProviderProps['setOpen'];
+}
+
+export interface NormalDropdownMenuRootProps extends BaseMenuProviderProps {
   autocomplete?: false;
   autocompleteMode?: never;
   searchValue?: never;
@@ -66,7 +71,7 @@ export interface NormalDropdownMenuRootProps extends MenuProviderProps {
 }
 
 export interface AutocompleteDropdownMenuRootProps
-  extends MenuProviderProps,
+  extends BaseMenuProviderProps,
     CommonProps {
   autocomplete: true;
   onSearch?: (value: string) => void;
@@ -79,11 +84,12 @@ export type DropdownMenuRootProps =
 
 export const DropdownMenuRoot = ({
   autocomplete,
-  autocompleteMode = "auto",
+  autocompleteMode = 'auto',
   searchValue: providedSearchValue,
   onSearch,
   focusLoop = true,
-  defaultSearchValue = "",
+  defaultSearchValue = '',
+  onOpenChange,
   ...props
 }: DropdownMenuRootProps) => {
   const [internalSearchValue, setInternalSearchValue] =
@@ -92,12 +98,17 @@ export const DropdownMenuRoot = ({
 
   const searchValue = providedSearchValue ?? internalSearchValue;
 
-  const setValue = (value: string) => {
-    setInternalSearchValue(value);
-    onSearch?.(value);
-  };
+  const setValue = useCallback(
+    (value: string) => {
+      setInternalSearchValue(value);
+      onSearch?.(value);
+    },
+    [onSearch]
+  );
 
-  const element = <MenuProvider focusLoop={focusLoop} {...props} />;
+  const element = (
+    <MenuProvider focusLoop={focusLoop} setOpen={onOpenChange} {...props} />
+  );
 
   return (
     <DropdownContext.Provider
@@ -105,15 +116,18 @@ export const DropdownMenuRoot = ({
         autocomplete,
         parent: dropdownContext,
         autocompleteMode,
-        searchValue,
-      }}>
+        searchValue
+      }}
+    >
       {autocomplete ? (
         <ComboboxProvider
           resetValueOnHide
           focusLoop={focusLoop}
           includesBaseElement={false}
           value={searchValue}
-          setValue={setValue}>
+          setOpen={onOpenChange}
+          setValue={setValue}
+        >
           {element}
         </ComboboxProvider>
       ) : (

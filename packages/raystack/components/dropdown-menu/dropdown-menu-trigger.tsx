@@ -1,23 +1,30 @@
 import { MenuButton, MenuButtonProps } from '@ariakit/react';
 import { Slot } from 'radix-ui';
-import { forwardRef } from 'react';
+import { PointerEvent, forwardRef } from 'react';
 import { TriangleRightIcon } from '~/icons';
 import { DropdownMenuItem, DropdownMenuItemProps } from './dropdown-menu-item';
 import { useDropdownContext } from './dropdown-menu-root';
 import { WithAsChild } from './types';
 import { getMatch } from './utils';
 
-export interface DropdownMenuTriggerProps
-  extends WithAsChild<MenuButtonProps> {}
+export interface DropdownMenuTriggerProps extends WithAsChild<MenuButtonProps> {
+  stopPropagation?: boolean;
+}
 
 export const DropdownMenuTrigger = forwardRef<
   HTMLButtonElement,
   DropdownMenuTriggerProps
->(({ children, asChild, ...props }, ref) => {
+>(({ children, asChild, stopPropagation = true, onClick, ...props }, ref) => {
   return (
     <MenuButton
       ref={ref}
       render={asChild ? <Slot.Root /> : undefined}
+      onClick={(
+        e: PointerEvent<HTMLButtonElement> & PointerEvent<HTMLDivElement>
+      ) => {
+        if (stopPropagation) e.stopPropagation();
+        onClick?.(e);
+      }}
       {...props}
     >
       {children}
