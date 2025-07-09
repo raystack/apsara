@@ -69,7 +69,7 @@ export const DropdownMenuSeparator = forwardRef<
     <MenuSeparator
       ref={ref}
       className={cx(styles.separator, className)}
-      render={asChild ? <Slot.Root /> : undefined}
+      render={asChild ? <Slot.Root /> : <div />}
       {...props}
     />
   );
