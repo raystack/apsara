@@ -166,26 +166,13 @@ const AvatarRoot = forwardRef<
   AvatarProps
 >(
   (
-    {
-      className,
-      alt,
-      src,
-      fallback,
-      size,
-      radius,
-      variant,
-      color,
-      style,
-      asChild,
-      ...props
-    },
+    { className, alt, src, fallback, size, radius, variant, color, ...props },
     ref
   ) => (
-    <Box className={styles.imageWrapper} style={style}>
+    <Box className={styles.imageWrapper}>
       <AvatarPrimitive.Root
         ref={ref}
         className={cx(avatar({ size, radius, variant, color }), className)}
-        asChild={asChild}
         {...props}
       >
         <AvatarPrimitive.Image className={image()} src={src} alt={alt} />
