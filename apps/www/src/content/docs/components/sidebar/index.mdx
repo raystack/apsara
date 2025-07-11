@@ -17,24 +17,29 @@ import { Sidebar } from "@raystack/apsara";
 export default function App() {
   return (
     <Sidebar open={true}>
-      <Sidebar.Header logo={<Home />} title="Company Name" />
+      <Sidebar.Header>
+        <Sidebar.HeaderIcon onClick={() => console.log('Icon clicked')}>
+          <Home />
+        </Sidebar.HeaderIcon>
+        <Sidebar.Title>Company Name</Sidebar.Title>
+      </Sidebar.Header>
       <Sidebar.Main>
         <Sidebar.Group name="Main">
-          <Sidebar.Item href="#" icon={<Info />} active>
+          <Sidebar.Item href="#" leadingIcon={<Info />} active>
             Dashboard
           </Sidebar.Item>
-          <Sidebar.Item href="#" icon={<Info />} disabled>
+          <Sidebar.Item href="#" leadingIcon={<Info />} disabled>
             Settings
           </Sidebar.Item>
         </Sidebar.Group>
         <Sidebar.Group name="Support">
-          <Sidebar.Item href="#" icon={<Info />}>
+          <Sidebar.Item href="#" leadingIcon={<Info />}>
             Help
           </Sidebar.Item>
         </Sidebar.Group>
       </Sidebar.Main>
       <Sidebar.Footer>
-        <Sidebar.Item href="#" icon={<Info />}>
+        <Sidebar.Item href="#" leadingIcon={<Info />}>
           Help
         </Sidebar.Item>
       </Sidebar.Footer>
@@ -47,9 +52,17 @@ export default function App() {
 
 <auto-type-table path="./props.ts" name="SidebarRootProps" />
 
-### Sidebar.Header Props
+### Sidebar.Header Components
 
-<auto-type-table path="./props.ts" name="SidebarHeaderProps" />
+The header section uses a composite pattern with the following components:
+
+#### Sidebar.HeaderIcon Props
+
+<auto-type-table path="./props.ts" name="SidebarHeaderIconProps" />
+
+#### Sidebar.Title Props
+
+<auto-type-table path="./props.ts" name="SidebarTitleProps" />
 
 ### Sidebar.Group Props
 

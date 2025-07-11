@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 export interface SidebarRootProps {
   /** Controls the expanded/collapsed state. */
@@ -21,32 +21,29 @@ export interface SidebarRootProps {
    * @default false
    */
   hideCollapsedItemTooltip?: boolean;
-
-  /** Optional profile information. */
-  profile?: {
-    /** Icon element to display. */
-    icon?: React.ReactNode;
-
-    /** Text to display. */
-    label?: string;
-
-    /** Optional URL the profile links to. */
-    href?: string;
-
-    /** Optional callback for icon click. */
-    onIconClick?: () => void;
-  };
 }
 
-export interface SidebarHeaderProps {
-  /** ReactNode for the header icon/logo. */
-  logo?: React.ReactNode;
+export interface SidebarHeaderIconProps {
+  /** Click handler for the icon. */
+  onClick?: () => void;
 
-  /** String for the header text. */
-  title?: string;
+  /** Icon element to display. */
+  children: ReactNode;
 
-  /** Optional callback for logo click. */
-  onLogoClick?: () => void;
+  /** Use a custom element as the root node.
+   * @default false
+   */
+  asChild?: boolean;
+}
+
+export interface SidebarTitleProps {
+  /** Title text or element. */
+  children: ReactNode;
+
+  /** Use a custom element as the root node.
+   * @default false
+   */
+  asChild?: boolean;
 }
 
 export interface SidebarGroupProps {
@@ -54,15 +51,15 @@ export interface SidebarGroupProps {
   name: string;
 
   /** Optional ReactNode for group icon. */
-  icon?: React.ReactNode;
+  leadingIcon?: ReactNode;
 
   /** ReactNode for the group content. */
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 export interface SidebarItemProps {
   /** ReactNode for the item's icon. */
-  icon?: React.ReactNode;
+  leadingIcon?: ReactNode;
 
   /** String for the link destination. */
   href?: string;
@@ -74,7 +71,7 @@ export interface SidebarItemProps {
   disabled?: boolean;
 
   /** ReactNode for the item's label. */
-  children?: React.ReactNode;
+  children?: ReactNode;
 
   /**
    * Custom element used to render the SidebarItem.
@@ -84,4 +81,14 @@ export interface SidebarItemProps {
    * @default "<a />"
    */
   as?: ReactElement;
+
+  /** Optional class names for customizing parts of the item. */
+  classNames?: {
+    /** Class name for the root element. */
+    root?: string;
+    /** Class name for the leading icon container. */
+    leadingIcon?: string;
+    /** Class name for the text element. */
+    text?: string;
+  };
 }
