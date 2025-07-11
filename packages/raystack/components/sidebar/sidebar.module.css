@@ -2,8 +2,8 @@
   display: flex;
   width: 220px;
   height: 100%;
-  padding: var(--rs-space-1) var(--rs-space-3) var(--rs-space-5)
-    var(--rs-space-3);
+  padding: var(--rs-space-1) var(--rs-space-4) var(--rs-space-5)
+    var(--rs-space-4);
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
@@ -27,12 +27,10 @@
 }
 
 .root[data-state="collapsed"] {
-  width: 48px;
+  width: 56px;
 }
 
 .header {
-  display: flex;
-  align-items: center;
   gap: var(--rs-space-3);
   padding: var(--rs-space-6) var(--rs-space-2);
   align-self: stretch;
@@ -65,16 +63,17 @@
 
 .main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
   overflow-y: auto;
   width: 100%;
   gap: var(--rs-space-2);
+  align-items: flex-start;
+}
+
+.root[data-state="collapsed"] .main {
+  align-items: center;
 }
 
 .footer {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   gap: var(--rs-space-2);
 }
@@ -119,7 +118,7 @@
   pointer-events: none;
 }
 
-.nav-icon {
+.nav-leading-icon {
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);
@@ -199,6 +198,17 @@
   display: none;
 }
 
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.root[data-state="collapsed"] .nav-group {
+  align-items: center;
+}
+
 .nav-group-header {
   display: flex;
   align-items: center;
@@ -226,6 +236,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--rs-space-2);
+  width: 100%;
 }
 
 .root[data-state="collapsed"] .nav-group-name {
