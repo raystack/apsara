@@ -1,5 +1,5 @@
 import { cva, cx } from 'class-variance-authority';
-import { Collapsible } from 'radix-ui';
+import { Collapsible, Slot } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
   ComponentRef,
@@ -61,10 +61,12 @@ interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<'div'> {
 interface SidebarHeaderIconProps extends ComponentPropsWithoutRef<'div'> {
   onClick?: () => void;
   children: ReactNode;
+  asChild?: boolean;
 }
 
 interface SidebarTitleProps extends ComponentPropsWithoutRef<'div'> {
   children: ReactNode;
+  asChild?: boolean;
 }
 
 const SidebarRoot = forwardRef<
@@ -150,39 +152,45 @@ const SidebarHeader = forwardRef<
 ));
 
 const SidebarHeaderIcon = forwardRef<HTMLDivElement, SidebarHeaderIconProps>(
-  ({ className, onClick, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cx(styles.leadingIcon, className)}
-      onClick={onClick}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={e => {
-        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault();
-          onClick();
-        }
-      }}
-      style={{ cursor: onClick ? 'pointer' : undefined }}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+  ({ className, onClick, children, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot.Root : 'div';
+    return (
+      <Comp
+        ref={ref}
+        className={cx(styles.leadingIcon, className)}
+        onClick={onClick}
+        role={onClick ? 'button' : undefined}
+        tabIndex={onClick ? 0 : undefined}
+        onKeyDown={e => {
+          if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        style={{ cursor: onClick ? 'pointer' : undefined }}
+        {...props}
+      >
+        {children}
+      </Comp>
+    );
+  }
 );
 
 const SidebarTitle = forwardRef<HTMLDivElement, SidebarTitleProps>(
-  ({ className, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cx(styles.title, className)}
-      role='heading'
-      aria-level={1}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+  ({ className, children, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot.Root : 'div';
+    return (
+      <Comp
+        ref={ref}
+        className={cx(styles.title, className)}
+        role='heading'
+        aria-level={1}
+        {...props}
+      >
+        {children}
+      </Comp>
+    );
+  }
 );
 
 const SidebarMain = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
@@ -244,7 +252,9 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         ...props
       },
       <>
-        <span
+        <Flex
+          align='center'
+          gap={3}
           className={cx(styles['nav-leading-icon'], classNames?.leadingIcon)}
           aria-hidden='true'
         >
@@ -258,7 +268,7 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
                 style={{ cursor: 'pointer' }}
               />
             ) : null)}
-        </span>
+        </Flex>
         {!isCollapsed && <span className={styles['nav-text']}>{children}</span>}
       </>
     );
@@ -285,15 +295,15 @@ const SidebarNavigationGroup = forwardRef<
     aria-label={name}
     {...props}
   >
-    <div className={styles['nav-group-header']}>
+    <Flex align='center' gap={3} className={styles['nav-group-header']}>
       {leadingIcon && (
         <span className={styles['nav-leading-icon']}>{leadingIcon}</span>
       )}
       <span className={styles['nav-group-name']}>{name}</span>
-    </div>
-    <div className={styles['nav-group-items']} role='list'>
+    </Flex>
+    <Flex direction='column' className={styles['nav-group-items']} role='list'>
       {children}
-    </div>
+    </Flex>
   </section>
 ));
 
