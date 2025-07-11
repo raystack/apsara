@@ -10,7 +10,7 @@ import {
   forwardRef,
   useContext
 } from 'react';
-import { Tooltip, TooltipProvider } from '../tooltip';
+import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 
 interface SidebarContextValue {
@@ -76,7 +76,7 @@ const SidebarRoot = forwardRef<
     <SidebarContext.Provider
       value={{ isCollapsed: !open, hideCollapsedItemTooltip }}
     >
-      <TooltipProvider>
+      <Tooltip.Provider>
         <Collapsible.Root
           ref={ref}
           className={root({ className })}
@@ -118,7 +118,7 @@ const SidebarRoot = forwardRef<
             {children}
           </aside>
         </Collapsible.Root>
-      </TooltipProvider>
+      </Tooltip.Provider>
     </SidebarContext.Provider>
   )
 );

@@ -36,6 +36,47 @@ export interface TooltipProps {
   disabled?: boolean;
 
   /**
+   * The controlled open state of the tooltip.
+   */
+  open?: boolean;
+
+  /**
+   * The initial open state of the tooltip.
+   */
+  defaultOpen?: boolean;
+
+  /**
+   * Event handler called when the open state of the tooltip changes.
+   * @default false
+   */
+  onOpenChange?: (open: boolean) => void;
+
+  /**
+   * Delay before showing the tooltip, in milliseconds.
+   * Overrides the prop of TooltipProvider.
+   * @default 200
+   */
+  delayDuration?: number;
+
+  /**
+   * Prevents Tooltip from remaining open when hovering. Disabling this has accessibility consequences.
+   * Overrides the prop of TooltipProvider.
+   */
+  disableHoverableContent?: boolean;
+
+  /**
+   * Additional ID for Tooltip Content
+   */
+  id?: string;
+
+  /**
+   * Additional CSS class names.
+   */
+  className?: string;
+}
+
+export interface TooltipProviderProps {
+  /**
    * Delay before showing the tooltip, in milliseconds.
    * @default 200
    */
@@ -48,12 +89,7 @@ export interface TooltipProps {
   skipDelayDuration?: number;
 
   /**
-   * Additional ID for Tooltip Content
+   * Prevents Tooltip from remaining open when hovering. Disabling this has accessibility consequences.
    */
-  id?: string;
-
-  /**
-   * Additional CSS class names.
-   */
-  className?: string;
+  disableHoverableContent?: boolean;
 }
