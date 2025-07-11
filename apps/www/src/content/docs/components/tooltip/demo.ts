@@ -101,3 +101,47 @@ export const customDemo = {
   <Button>Hover me</Button>
 </Tooltip>`
 };
+
+export const providerDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'With Provider',
+      code: `
+      <Flex gap="medium" align="center">
+        <Tooltip.Provider>
+          <Tooltip message='Top Left tooltip' side='top-left'>
+            <Button>Top Left</Button>
+          </Tooltip>
+          <Tooltip message='Top Right tooltip' side='top-right'>
+            <Button>Top Right</Button>
+          </Tooltip>
+          <Tooltip message='Bottom Left tooltip' side='bottom-left'>
+            <Button>Bottom Left</Button>
+          </Tooltip>
+          <Tooltip message='Bottom Right tooltip' side='bottom-left'>
+            <Button>Bottom Right</Button>
+          </Tooltip>
+        </Tooltip.Provider>
+      </Flex>`
+    },
+    {
+      name: 'Without Provider',
+      code: `
+      <Flex gap="medium" align="center">
+        <Tooltip message='Top Left tooltip' side='top-left'>
+          <Button>Top Left</Button>
+        </Tooltip>
+        <Tooltip message='Top Right tooltip' side='top-right'>
+          <Button>Top Right</Button>
+        </Tooltip>
+        <Tooltip message='Bottom Left tooltip' side='bottom-left'>
+          <Button>Bottom Left</Button>
+        </Tooltip>
+        <Tooltip message='Bottom Right tooltip' side='bottom-left'>
+          <Button>Bottom Right</Button>
+        </Tooltip>
+      </Flex>`
+    }
+  ]
+};
