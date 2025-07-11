@@ -34,7 +34,7 @@ interface SidebarProps
 }
 
 interface SidebarHeaderProps extends ComponentPropsWithoutRef<'div'> {
-  logo: ReactNode;
+  leadingIcon?: ReactNode;
   title: string;
   onLogoClick?: () => void;
 }
@@ -126,7 +126,7 @@ const SidebarRoot = forwardRef<
 );
 
 const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
-  ({ className, logo, title, onLogoClick, ...props }, ref) => (
+  ({ className, leadingIcon, title, onLogoClick, ...props }, ref) => (
     <Flex
       align='center'
       ref={ref}
@@ -135,7 +135,7 @@ const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
       {...props}
     >
       <div
-        className={styles.logo}
+        className={styles.leadingIcon}
         onClick={onLogoClick}
         role={onLogoClick ? 'button' : undefined}
         tabIndex={onLogoClick ? 0 : undefined}
@@ -147,7 +147,7 @@ const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
         }}
         style={{ cursor: onLogoClick ? 'pointer' : undefined }}
       >
-        {logo}
+        {leadingIcon}
       </div>
       <div className={styles.title} role='heading' aria-level={1}>
         {title}
