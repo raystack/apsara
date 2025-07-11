@@ -27,7 +27,22 @@
       "label": "plugin-vscode: stop-dev",
       "command": "echo ${input:terminate}",
       "type": "shell",
-      "problemMatcher": []
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "bash",
+          "args": ["-c"]
+        }
+      },
+      "presentation": {
+        "echo": false,
+        "reveal": "never",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": false,
+        "clear": false,
+        "close": true
+      }
     }
   ],
   "inputs": [
@@ -35,7 +50,7 @@
       "id": "terminate",
       "type": "command",
       "command": "workbench.action.tasks.terminate",
-      "args": "terminateAll"
+      "args": "plugin-vscode: start-dev"
     }
   ]
 }

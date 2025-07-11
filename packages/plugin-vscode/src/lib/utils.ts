@@ -88,3 +88,25 @@ export const VSCodeColorToColor = (color: VSCodeColorType): string => {
     .alpha(color.alpha)
     .hex();
 };
+
+// Function to get the pattern match and the range around the cursor
+export const getPatternMatch = (
+  pattern: RegExp,
+  text: string,
+  cursorPosition: number
+) => {
+  let match: RegExpExecArray | null;
+
+  while ((match = pattern.exec(text)) !== null) {
+    const start = match.index;
+    const end = start + match[0].length;
+
+    // Check if cursor is within this match
+    if (cursorPosition >= start && cursorPosition <= end) {
+      return { start, end, match: match[0] };
+    }
+  }
+
+  // Fallback: return the cursor position
+  return { start: cursorPosition, end: cursorPosition, match: null };
+};

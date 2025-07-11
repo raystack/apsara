@@ -15,6 +15,7 @@ import {
 import {
   VSCodeColorToColor,
   colorToVSCodeColor,
+  getPatternMatch,
   getTokenName,
   getTokenValueFromName
 } from './lib/utils';
@@ -52,7 +53,6 @@ const groupedCompletionItems = Object.fromEntries(
       const generatedTokenName = getTokenName(tokenGroupName, tokenName);
       return {
         label: generatedTokenName,
-        insertText: `var(${generatedTokenName})`,
         detail: tokenValue,
         filterText: generatedTokenName,
         kind:
@@ -105,33 +105,42 @@ connection.onCompletion(
     let matchedCompletionItems: CompletionItem[] = [];
 
     // if the doc can't be found, return nothing
-    if (!doc) {
-      return [];
-    }
+    if (!doc) return [];
 
     const currentText = doc.getText({
       start: { line: textDocumentPosition.position.line, character: 0 },
       end: { line: textDocumentPosition.position.line, character: 1000 }
     });
 
-    // if the current text is empty or doesn't include a colon, return nothing
-    if (currentText.trim().length === 0 || !currentText.includes(':')) {
+    // if the current text is empty or doesn't include a colon or =, return nothing
+    if (
+      currentText.trim().length === 0 ||
+      !(currentText.includes(':') || currentText.includes('='))
+    )
       return [];
-    }
 
-    // Find if the cursor is inside a var(...) wrapper
     const cursor = textDocumentPosition.position.character;
-    let hasVarWrapper = false;
-    const varRegex = /var\s*\(([^)]*)\)/g;
-    let match;
-    while ((match = varRegex.exec(currentText)) !== null) {
-      const start = match.index;
-      const end = match.index + match[0].length;
-      if (cursor >= start && cursor <= end) {
-        hasVarWrapper = true;
-        break;
-      }
-    }
+
+    // Look for complete var(...) wrappers
+    const completeVarMatch = getPatternMatch(
+      /var\s*\(([^)]*)\)/g,
+      currentText,
+      cursor
+    );
+
+    // Look for incomplete var(... wrappers
+    const incompleteVarMatch = getPatternMatch(
+      /var\s*\(([^)]*)/g,
+      currentText,
+      cursor
+    );
+
+    // Look for token patterns: -- followed by word characters, or just --
+    const tokenMatch = getPatternMatch(
+      /--[a-zA-Z0-9-_]*/g,
+      currentText,
+      cursor
+    );
 
     for (const [tokenGroupName, pattern] of Object.entries(
       tokenGroupPatterns
@@ -141,27 +150,35 @@ connection.onCompletion(
       const currentCompletionItems =
         groupedCompletionItems[tokenGroupName as TokenGroupType];
 
-      // Create new completion items with adjusted insertText based on whether var() already exists at the cursor
-      const adjustedCompletionItems = currentCompletionItems.map(item => ({
-        ...item,
-        insertText: hasVarWrapper ? item.label : item.insertText
-      }));
-
       matchedCompletionItems = matchedCompletionItems.concat(
-        adjustedCompletionItems
+        currentCompletionItems
       );
     }
 
-    // if there were matches above, send them
-    if (matchedCompletionItems.length) return matchedCompletionItems;
+    const completionItems = matchedCompletionItems.length
+      ? matchedCompletionItems
+      : allCompletionItems;
 
-    // if there were no matches, send everything with adjusted insertText
-    const adjustedAllItems = allCompletionItems.map(item => ({
+    return completionItems.map(item => ({
       ...item,
-      insertText: hasVarWrapper ? item.label : item.insertText
+      textEdit: {
+        range: {
+          start: {
+            line: textDocumentPosition.position.line,
+            character: tokenMatch.start
+          },
+          end: {
+            line: textDocumentPosition.position.line,
+            character: tokenMatch.end
+          }
+        },
+        newText: completeVarMatch.match
+          ? item.label
+          : incompleteVarMatch.match
+            ? `${item.label})`
+            : `var(${item.label})`
+      }
     }));
-
-    return adjustedAllItems;
   }
 );
 
@@ -180,28 +197,21 @@ connection.onHover(
       end: { line: textDocumentPosition.position.line, character: 1000 }
     });
 
-    const cursorChar = textDocumentPosition.position.character;
+    const cursorPosition = textDocumentPosition.position.character;
 
-    // Match a token at the cursor like --rs-space-11
-    const tokenRegex = /--[a-zA-Z0-9-_]+/g;
-    let match: RegExpExecArray | null;
-    let matchedToken: string | undefined;
+    // Look for token match at the cursor position
+    const tokenMatch = getPatternMatch(
+      /--[a-zA-Z0-9-_]*/g,
+      currentText,
+      cursorPosition
+    );
 
-    while ((match = tokenRegex.exec(currentText)) !== null) {
-      const start = match.index;
-      const end = start + match[0].length;
-      if (cursorChar >= start && cursorChar <= end) {
-        matchedToken = match[0];
-        break;
-      }
-    }
-
-    if (!matchedToken) {
+    if (!tokenMatch.match) {
       return { contents: [] };
     }
 
     const result = allCompletionItems.find(
-      token => token.label === matchedToken
+      token => token.label === tokenMatch.match
     );
 
     if (result === undefined) {

@@ -35,10 +35,14 @@ Instantly see the exact values of Apsara Design Tokens with rich visual previews
 5. Browse through the intelligent suggestions
 6. Select a token to insert it with proper `var()` syntax
 
-### Supported File Types
+### Supported Languages
 
-- CSS (`.css`)
-- SCSS (`.scss`)
+- css (`.css`)
+- scss (`.scss`)
+- javascript (`.js`)
+- typescript (`.ts`)
+- javascriptreact (`.jsx`)
+- typescriptreact (`.tsx`)
 
 ## Configuration
 
