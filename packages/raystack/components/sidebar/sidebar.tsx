@@ -58,6 +58,15 @@ interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<'div'> {
   leadingIcon?: ReactNode;
 }
 
+interface SidebarHeaderIconProps extends ComponentPropsWithoutRef<'div'> {
+  onClick?: () => void;
+  children: ReactNode;
+}
+
+interface SidebarTitleProps extends ComponentPropsWithoutRef<'div'> {
+  children: ReactNode;
+}
+
 const SidebarRoot = forwardRef<
   ComponentRef<typeof Collapsible.Root>,
   SidebarProps
@@ -125,34 +134,54 @@ const SidebarRoot = forwardRef<
   )
 );
 
-const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
-  ({ className, leadingIcon, title, onLogoClick, ...props }, ref) => (
-    <Flex
-      align='center'
+const SidebarHeader = forwardRef<
+  HTMLDivElement,
+  ComponentPropsWithoutRef<'div'>
+>(({ className, children, ...props }, ref) => (
+  <Flex
+    align='center'
+    ref={ref}
+    className={styles.header}
+    role='banner'
+    {...props}
+  >
+    {children}
+  </Flex>
+));
+
+const SidebarHeaderIcon = forwardRef<HTMLDivElement, SidebarHeaderIconProps>(
+  ({ className, onClick, children, ...props }, ref) => (
+    <div
       ref={ref}
-      className={styles.header}
-      role='banner'
+      className={cx(styles.leadingIcon, className)}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={e => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      style={{ cursor: onClick ? 'pointer' : undefined }}
       {...props}
     >
-      <div
-        className={styles.leadingIcon}
-        onClick={onLogoClick}
-        role={onLogoClick ? 'button' : undefined}
-        tabIndex={onLogoClick ? 0 : undefined}
-        onKeyDown={e => {
-          if (onLogoClick && (e.key === 'Enter' || e.key === ' ')) {
-            e.preventDefault();
-            onLogoClick();
-          }
-        }}
-        style={{ cursor: onLogoClick ? 'pointer' : undefined }}
-      >
-        {leadingIcon}
-      </div>
-      <div className={styles.title} role='heading' aria-level={1}>
-        {title}
-      </div>
-    </Flex>
+      {children}
+    </div>
+  )
+);
+
+const SidebarTitle = forwardRef<HTMLDivElement, SidebarTitleProps>(
+  ({ className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cx(styles.title, className)}
+      role='heading'
+      aria-level={1}
+      {...props}
+    >
+      {children}
+    </div>
   )
 );
 
@@ -277,6 +306,8 @@ SidebarNavigationGroup.displayName = 'Sidebar.Group';
 
 export const Sidebar = Object.assign(SidebarRoot, {
   Header: SidebarHeader,
+  HeaderIcon: SidebarHeaderIcon,
+  Title: SidebarTitle,
   Main: SidebarMain,
   Footer: SidebarFooter,
   Item: SidebarItem,
