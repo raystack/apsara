@@ -5,13 +5,15 @@ export const preview = {
   code: `
   <Sidebar open={true}>
     <Sidebar.Header>
-      <Sidebar.HeaderIcon>
-        <Home />
-      </Sidebar.HeaderIcon>
-      <Sidebar.Title>Apasara</Sidebar.Title>
+      <Flex align="center" gap={3}>
+        <IconButton size={4} aria-label="Logo">
+          <Home />
+        </IconButton>
+        <Text size={4} weight="medium">Apsara</Text>
+      </Flex>
     </Sidebar.Header>
     <Sidebar.Main>
-      <Sidebar.Group name="Main">
+      <Sidebar.Group label="Main" leadingIcon={<Info />}>
         <Sidebar.Item href="#" leadingIcon={<Info />} active>
           Dashboard
         </Sidebar.Item>
@@ -19,7 +21,7 @@ export const preview = {
           Settings
         </Sidebar.Item>
       </Sidebar.Group>
-      <Sidebar.Group name="Support">
+      <Sidebar.Group label="Support">
         <Sidebar.Item href="#" leadingIcon={<Info />}>
           Help
         </Sidebar.Item>
@@ -41,10 +43,12 @@ export const positionDemo = {
       code: `
       <Sidebar open={true} position="left">
           <Sidebar.Header>
-            <Sidebar.HeaderIcon>
-              <Home />
-            </Sidebar.HeaderIcon>
-            <Sidebar.Title>Company Name</Sidebar.Title>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home />
+              </IconButton>
+              <Text size={4} weight="medium">Company Name</Text>
+            </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
             <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
@@ -57,10 +61,12 @@ export const positionDemo = {
       code: `
       <Sidebar open={true} position="right">
           <Sidebar.Header>
-            <Sidebar.HeaderIcon>
-              <Home />
-            </Sidebar.HeaderIcon>
-            <Sidebar.Title>Company Name</Sidebar.Title>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home />
+              </IconButton>
+              <Text size={4} weight="medium">Company Name</Text>
+            </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
             <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
@@ -78,10 +84,12 @@ export const stateDemo = {
       name: 'Expanded',
       code: `<Sidebar open={true}>
           <Sidebar.Header>
-            <Sidebar.HeaderIcon>
-              <Home />
-            </Sidebar.HeaderIcon>
-            <Sidebar.Title>Company Name</Sidebar.Title>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home />
+              </IconButton>
+              <Text size={4} weight="medium">Company Name</Text>
+            </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
             <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
@@ -93,10 +101,12 @@ export const stateDemo = {
       name: 'Collapsed',
       code: `<Sidebar open={false}>
           <Sidebar.Header>
-            <Sidebar.HeaderIcon>
-              <Home />
-            </Sidebar.HeaderIcon>
-            <Sidebar.Title>Company Name</Sidebar.Title>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home />
+              </IconButton>
+              <Text size={4} weight="medium">Company Name</Text>
+            </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
             <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>

@@ -12,19 +12,21 @@ import { preview, positionDemo, stateDemo } from "./demo.ts";
 The Sidebar component provides a collapsible navigation panel with header, main content, groups, and footer sections.
 
 ```tsx
-import { Sidebar } from "@raystack/apsara";
+import { Sidebar, Flex, Text, IconButton } from "@raystack/apsara";
 
 export default function App() {
   return (
     <Sidebar open={true}>
       <Sidebar.Header>
-        <Sidebar.HeaderIcon onClick={() => console.log('Icon clicked')}>
-          <Home />
-        </Sidebar.HeaderIcon>
-        <Sidebar.Title>Company Name</Sidebar.Title>
+        <Flex align="center" gap={3}>
+          <IconButton size={4} onClick={() => console.log('Icon clicked')} aria-label="Logo">
+            <Home />
+          </IconButton>
+          <Text size={4} weight="medium">Company Name</Text>
+        </Flex>
       </Sidebar.Header>
       <Sidebar.Main>
-        <Sidebar.Group name="Main">
+        <Sidebar.Group label="Main" leadingIcon={<Info />}>
           <Sidebar.Item href="#" leadingIcon={<Info />} active>
             Dashboard
           </Sidebar.Item>
@@ -32,7 +34,7 @@ export default function App() {
             Settings
           </Sidebar.Item>
         </Sidebar.Group>
-        <Sidebar.Group name="Support">
+        <Sidebar.Group label="Support">
           <Sidebar.Item href="#" leadingIcon={<Info />}>
             Help
           </Sidebar.Item>
@@ -52,17 +54,9 @@ export default function App() {
 
 <auto-type-table path="./props.ts" name="SidebarRootProps" />
 
-### Sidebar.Header Components
+### Sidebar.Header
 
-The header section uses a composite pattern with the following components:
-
-#### Sidebar.HeaderIcon Props
-
-<auto-type-table path="./props.ts" name="SidebarHeaderIconProps" />
-
-#### Sidebar.Title Props
-
-<auto-type-table path="./props.ts" name="SidebarTitleProps" />
+The header section is a container component that accepts any children. It's commonly used with Flex, IconButton, and Text components to create a header with an icon and title.
 
 ### Sidebar.Group Props
 

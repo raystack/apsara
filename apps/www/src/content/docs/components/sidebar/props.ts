@@ -23,32 +23,9 @@ export interface SidebarRootProps {
   hideCollapsedItemTooltip?: boolean;
 }
 
-export interface SidebarHeaderIconProps {
-  /** Click handler for the icon. */
-  onClick?: () => void;
-
-  /** Icon element to display. */
-  children: ReactNode;
-
-  /** Use a custom element as the root node.
-   * @default false
-   */
-  asChild?: boolean;
-}
-
-export interface SidebarTitleProps {
-  /** Title text or element. */
-  children: ReactNode;
-
-  /** Use a custom element as the root node.
-   * @default false
-   */
-  asChild?: boolean;
-}
-
 export interface SidebarGroupProps {
   /** String for the group title. */
-  name: string;
+  label: string;
 
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;
