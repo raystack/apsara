@@ -4,6 +4,9 @@ import {
   ColorPresentation,
   CompletionItem,
   CompletionItemKind,
+  Diagnostic,
+  DiagnosticSeverity,
+  DocumentDiagnosticReportKind,
   Hover,
   InitializeResult,
   ProposedFeatures,
@@ -32,17 +35,76 @@ type GroupedCompletionItemsType = {
 
 const tokenGroupPatterns: TokenGroupPatternsType = {
   color:
-    /color|background|shadow|border[^-radius]|column-rule|filter|opacity|outline|text-decoration/,
-  space: /margin|padding|gap|top|left|right|bottom/,
+    /color|background|shadow|border[^-radius]|column-rule|filter|opacity|outline|text-decoration|caret-color|accent-color|border-(top|right|bottom|left)-color|background-color|border-color|outline-color|text-decoration-color|column-rule-color/,
+  space:
+    /margin|padding|gap|top|left|right|bottom|inset|margin-(top|right|bottom|left|block|inline)|margin-(block|inline)-(start|end)|padding-(top|right|bottom|left|block|inline)|padding-(block|inline)-(start|end)|row-gap|column-gap|inset-(block|inline)|inset-(block|inline)-(start|end)/,
   'font-size': /font-size|font(?!-)/,
   'font-weight': /font-weight|font(?!-)/,
   'line-height': /line-height|font(?!-)/,
   'letter-spacing': /letter-spacing|font(?!-)/,
-  font: /font-family|font(?!-)/,
-  radius: /border-radius/,
-  shadow: /shadow|filter/,
-  blur: /blur|filter/
+  font: /font-family|font-style|font-variant|font-stretch|font(?!-)/,
+  radius:
+    /border-radius|border-(top|bottom)-(left|right)-radius|border-(start|end)-(start|end)-radius/,
+  shadow: /shadow|box-shadow|text-shadow|drop-shadow|filter/,
+  blur: /blur|backdrop-filter|filter/
 };
+const settings = { maxNumberOfProblems: 1000 };
+
+async function validateDocument(
+  textDocument: TextDocument
+): Promise<Diagnostic[]> {
+  const text = textDocument.getText();
+  const diagnostics: Diagnostic[] = [];
+  let problems = 0;
+
+  // Regex to match CSS property-value pairs
+  const cssPropertyRegex = /([a-zA-Z-]+)\s*:\s*([^;}\n]+)/g;
+  let match: RegExpExecArray | null;
+
+  while (
+    (match = cssPropertyRegex.exec(text)) &&
+    problems < settings.maxNumberOfProblems
+  ) {
+    const [fullMatch, property, value] = match;
+    const trimmedValue = value.trim();
+
+    // Check if this property matches any of our token group patterns
+    let matchedTokenGroup: string | null = null;
+    for (const [tokenGroupName, tokenGroupPattern] of Object.entries(
+      tokenGroupPatterns
+    )) {
+      if (tokenGroupPattern.test(property)) {
+        matchedTokenGroup = tokenGroupName;
+        break;
+      }
+    }
+
+    // If property matches a token group and value is not using var(--rs-*) pattern
+    if (matchedTokenGroup && !trimmedValue.includes('var(--rs-')) {
+      problems++;
+
+      // Find the actual position of the value in the text
+      const colonIndex = fullMatch.indexOf(':');
+      const valueStartInMatch = fullMatch
+        .substring(colonIndex + 1)
+        .search(/\S/); // First non-whitespace after colon
+      const actualValueStart = match.index + colonIndex + 1 + valueStartInMatch;
+
+      const diagnostic: Diagnostic = {
+        severity: DiagnosticSeverity.Warning,
+        range: {
+          start: textDocument.positionAt(actualValueStart),
+          end: textDocument.positionAt(actualValueStart + trimmedValue.length)
+        },
+        message: `Consider using Apsara ${matchedTokenGroup} tokens instead of '${trimmedValue}'. Use var(--rs-${matchedTokenGroup}-*) pattern.`,
+        source: 'apsara-tokens'
+      };
+      diagnostics.push(diagnostic);
+    }
+  }
+
+  return diagnostics;
+}
 
 // Grouped VS Code `CompletionItem`s for Apsara tokens
 const groupedCompletionItems = Object.fromEntries(
@@ -92,7 +154,12 @@ connection.onInitialize(params => {
       // Tell the client that this server supports hover.
       hoverProvider: true,
       // Tell the client that this server supports color information.
-      colorProvider: true
+      colorProvider: true,
+      // Tell the client that this server supports diagnostics.
+      diagnosticProvider: {
+        interFileDependencies: false,
+        workspaceDiagnostics: false
+      }
     }
   };
   return result;
@@ -282,6 +349,37 @@ connection.onColorPresentation((params): ColorPresentation[] => {
   });
 
   return presentations;
+});
+
+connection.languages.diagnostics.on(async params => {
+  const document = documents.get(params.textDocument.uri);
+
+  //Don't validate if the document is not found
+  return {
+    kind: DocumentDiagnosticReportKind.Full,
+    items: document ? await validateDocument(document) : []
+  };
+});
+
+// Listen for document changes to trigger diagnostics
+documents.onDidChangeContent(async change => {
+  // Validate the document and send diagnostics
+  const diagnostics = await validateDocument(change.document);
+  console.log('onDidChangeContent diagnostics', diagnostics);
+  connection.sendDiagnostics({
+    uri: change.document.uri,
+    diagnostics
+  });
+});
+
+// Also validate when document is opened
+documents.onDidOpen(async change => {
+  const diagnostics = await validateDocument(change.document);
+  console.log('onDidOpen diagnostics', diagnostics);
+  connection.sendDiagnostics({
+    uri: change.document.uri,
+    diagnostics
+  });
 });
 
 // Make the text document manager listen on the connection for open, change and close text document events
