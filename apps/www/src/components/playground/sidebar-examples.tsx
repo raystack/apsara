@@ -1,6 +1,6 @@
 'use client';
 
-import { Flex, Sidebar } from '@raystack/apsara';
+import { Flex, IconButton, Sidebar, Text } from '@raystack/apsara';
 import { Home, Info } from 'lucide-react';
 import PlaygroundLayout from './playground-layout';
 
@@ -10,10 +10,14 @@ export function SidebarExamples() {
       <Flex gap='large' wrap='wrap'>
         <Sidebar open={false}>
           <Sidebar.Header>
-            <Sidebar.HeaderIcon>
-              <Home />
-            </Sidebar.HeaderIcon>
-            <Sidebar.Title>Company Name</Sidebar.Title>
+            <Flex align='center' gap={3}>
+              <IconButton size={4} aria-label='Home'>
+                <Home />
+              </IconButton>
+              <Text size={4} weight='medium'>
+                Company Name
+              </Text>
+            </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
             <Sidebar.Item href='#' leadingIcon={<Info />} active>
@@ -26,13 +30,17 @@ export function SidebarExamples() {
         </Sidebar>
         <Sidebar open={true}>
           <Sidebar.Header>
-            <Sidebar.HeaderIcon>
-              <Home />
-            </Sidebar.HeaderIcon>
-            <Sidebar.Title>Apasara</Sidebar.Title>
+            <Flex align='center' gap={3}>
+              <IconButton size={4} aria-label='Home'>
+                <Home />
+              </IconButton>
+              <Text size={4} weight='medium'>
+                Apsara
+              </Text>
+            </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Group name='Main'>
+            <Sidebar.Group label='Main' leadingIcon={<Info />}>
               <Sidebar.Item href='#' leadingIcon={<Info />} active>
                 Dashboard
               </Sidebar.Item>
@@ -40,7 +48,7 @@ export function SidebarExamples() {
                 Settings
               </Sidebar.Item>
             </Sidebar.Group>
-            <Sidebar.Group name='Support'>
+            <Sidebar.Group label='Support'>
               <Sidebar.Item href='#' leadingIcon={<Info />}>
                 Help
               </Sidebar.Item>
