@@ -169,7 +169,7 @@
   margin-top: 0;
 }
 
-.nav-group-name {
+.nav-group-label {
   color: var(--rs-color-foreground-base-secondary);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
@@ -184,7 +184,7 @@
   width: 100%;
 }
 
-.root[data-state="collapsed"] .nav-group-name {
+.root[data-state="collapsed"] .nav-group-label {
   width: 0;
   opacity: 0;
   display: none;

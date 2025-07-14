@@ -54,7 +54,7 @@ interface SidebarItemProps extends ComponentPropsWithoutRef<'a'> {
 interface SidebarFooterProps extends ComponentPropsWithoutRef<'div'> {}
 
 interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<'div'> {
-  name: string;
+  label: string;
   leadingIcon?: ReactNode;
 }
 
@@ -235,18 +235,18 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
 const SidebarNavigationGroup = forwardRef<
   HTMLElement,
   SidebarNavigationGroupProps
->(({ className, name, leadingIcon, children, ...props }, ref) => (
+>(({ className, label, leadingIcon, children, ...props }, ref) => (
   <section
     ref={ref}
     className={cx(styles['nav-group'], className)}
-    aria-label={name}
+    aria-label={label}
     {...props}
   >
     <Flex align='center' gap={3} className={styles['nav-group-header']}>
       {leadingIcon && (
         <span className={styles['nav-leading-icon']}>{leadingIcon}</span>
       )}
-      <span className={styles['nav-group-name']}>{name}</span>
+      <span className={styles['nav-group-label']}>{label}</span>
     </Flex>
     <Flex direction='column' className={styles['nav-group-items']} role='list'>
       {children}
