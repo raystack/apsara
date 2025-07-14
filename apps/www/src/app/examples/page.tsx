@@ -10,6 +10,7 @@ import {
   DropdownMenu,
   EmptyState,
   Flex,
+  IconButton,
   Indicator,
   InputField,
   Popover,
@@ -70,10 +71,18 @@ const Page = () => {
       >
         <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen}>
           <Sidebar.Header>
-            <Sidebar.HeaderIcon onClick={() => console.log('Logo clicked')}>
-              <BellIcon width={24} height={24} />
-            </Sidebar.HeaderIcon>
-            <Sidebar.Title>Raystack</Sidebar.Title>
+            <Flex align='center' gap={3}>
+              <IconButton
+                size={4}
+                onClick={() => console.log('Logo clicked')}
+                aria-label='Logo'
+              >
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight='medium'>
+                Raystack
+              </Text>
+            </Flex>
           </Sidebar.Header>
 
           <Sidebar.Main>

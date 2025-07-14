@@ -1,5 +1,5 @@
 import { cva, cx } from 'class-variance-authority';
-import { Collapsible, Slot } from 'radix-ui';
+import { Collapsible } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
   ComponentRef,
@@ -56,17 +56,6 @@ interface SidebarFooterProps extends ComponentPropsWithoutRef<'div'> {}
 interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<'div'> {
   name: string;
   leadingIcon?: ReactNode;
-}
-
-interface SidebarHeaderIconProps extends ComponentPropsWithoutRef<'div'> {
-  onClick?: () => void;
-  children: ReactNode;
-  asChild?: boolean;
-}
-
-interface SidebarTitleProps extends ComponentPropsWithoutRef<'div'> {
-  children: ReactNode;
-  asChild?: boolean;
 }
 
 const SidebarRoot = forwardRef<
@@ -150,48 +139,6 @@ const SidebarHeader = forwardRef<
     {children}
   </Flex>
 ));
-
-const SidebarHeaderIcon = forwardRef<HTMLDivElement, SidebarHeaderIconProps>(
-  ({ className, onClick, children, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot.Root : 'div';
-    return (
-      <Comp
-        ref={ref}
-        className={cx(styles.leadingIcon, className)}
-        onClick={onClick}
-        role={onClick ? 'button' : undefined}
-        tabIndex={onClick ? 0 : undefined}
-        onKeyDown={e => {
-          if (onClick && (e.key === 'Enter' || e.key === ' ')) {
-            e.preventDefault();
-            onClick();
-          }
-        }}
-        style={{ cursor: onClick ? 'pointer' : undefined }}
-        {...props}
-      >
-        {children}
-      </Comp>
-    );
-  }
-);
-
-const SidebarTitle = forwardRef<HTMLDivElement, SidebarTitleProps>(
-  ({ className, children, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot.Root : 'div';
-    return (
-      <Comp
-        ref={ref}
-        className={cx(styles.title, className)}
-        role='heading'
-        aria-level={1}
-        {...props}
-      >
-        {children}
-      </Comp>
-    );
-  }
-);
 
 const SidebarMain = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
   ({ className, children, ...props }, ref) => (
@@ -316,8 +263,6 @@ SidebarNavigationGroup.displayName = 'Sidebar.Group';
 
 export const Sidebar = Object.assign(SidebarRoot, {
   Header: SidebarHeader,
-  HeaderIcon: SidebarHeaderIcon,
-  Title: SidebarTitle,
   Main: SidebarMain,
   Footer: SidebarFooter,
   Item: SidebarItem,
