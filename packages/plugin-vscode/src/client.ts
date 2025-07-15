@@ -12,6 +12,16 @@ let client: LanguageClient;
 
 const settings = workspace.getConfiguration('apsaraForVSCode');
 
+const SUPPORTED_LANGUAGES = [
+  'css',
+  'scss',
+  'javascript',
+  'typescript',
+  'javascriptreact',
+  'typescriptreact'
+];
+const SUPPORTED_SCHEMES = ['file', 'untitled'];
+
 export function activate(context: ExtensionContext) {
   // The server is implemented in node
   const serverModule = context.asAbsolutePath(path.join('dist', 'server.js'));
@@ -32,11 +42,13 @@ export function activate(context: ExtensionContext) {
 
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
-    // Register the server for css and scss files
-    documentSelector: [
-      { scheme: 'file', language: 'css' },
-      { scheme: 'file', language: 'scss' }
-    ],
+    // Register the server for supported languages
+    documentSelector: SUPPORTED_LANGUAGES.reduce((acc, language) => {
+      SUPPORTED_SCHEMES.forEach(scheme => {
+        acc.push({ scheme, language });
+      });
+      return acc;
+    }, []),
     synchronize: {
       // Notify the server about file changes to '.clientrc files contained in the workspace
       fileEvents: workspace.createFileSystemWatcher('**/.clientrc')

@@ -2,7 +2,7 @@
   "name": "apsara-for-vscode",
   "displayName": "Apsara for VSCode",
   "publisher": "Raystack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "VS Code extension for @raystack/apsara",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -21,7 +21,14 @@
   },
   "keywords": ["apsara", "raystack"],
   "categories": ["Programming Languages", "Snippets", "Other"],
-  "activationEvents": ["onLanguage:css", "onLanguage:scss"],
+  "activationEvents": [
+    "onLanguage:css",
+    "onLanguage:scss",
+    "onLanguage:javascript",
+    "onLanguage:typescript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescriptreact"
+  ],
   "main": "./dist/client.js",
   "contributes": {
     "configuration": {
