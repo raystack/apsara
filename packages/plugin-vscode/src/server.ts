@@ -42,7 +42,7 @@ const tokenGroupPatterns: TokenGroupPatternsType = {
   'font-weight': /font-weight|font(?!-)/,
   'line-height': /line-height|font(?!-)/,
   'letter-spacing': /letter-spacing|font(?!-)/,
-  font: /font-family|font-style|font-variant|font-stretch|font(?!-)/,
+  font: /font-family|font(?!-)/,
   radius:
     /border-radius|border-(top|bottom)-(left|right)-radius|border-(start|end)-(start|end)-radius/,
   shadow: /shadow|box-shadow|text-shadow|drop-shadow|filter/,
@@ -97,7 +97,7 @@ async function validateDocument(
           end: textDocument.positionAt(actualValueStart + trimmedValue.length)
         },
         message: `Consider using Apsara ${matchedTokenGroup} tokens instead of '${trimmedValue}'. Use var(--rs-${matchedTokenGroup}-*) pattern.`,
-        source: 'apsara-tokens'
+        source: 'Apsara for VS Code'
       };
       diagnostics.push(diagnostic);
     }
