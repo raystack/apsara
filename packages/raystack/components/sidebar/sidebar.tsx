@@ -33,12 +33,6 @@ interface SidebarProps
   collapsible?: boolean;
 }
 
-interface SidebarHeaderProps extends ComponentPropsWithoutRef<'div'> {
-  leadingIcon?: ReactNode;
-  title: string;
-  onLogoClick?: () => void;
-}
-
 interface SidebarItemProps extends ComponentPropsWithoutRef<'a'> {
   leadingIcon?: ReactNode;
   active?: boolean;
