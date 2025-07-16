@@ -86,11 +86,13 @@ const Page = () => {
           </Sidebar.Header>
 
           <Sidebar.Main>
-            <Sidebar.Item href='#' active>
+            <Sidebar.Item href='#' active leadingIcon={<BellIcon />}>
               Dashboard
             </Sidebar.Item>
 
-            <Sidebar.Item href='#'>Analytics</Sidebar.Item>
+            <Sidebar.Item href='#' leadingIcon={0}>
+              Analytics
+            </Sidebar.Item>
 
             <Sidebar.Group label='Resources' leadingIcon={<FilterIcon />}>
               <Sidebar.Item href='#'>Reports</Sidebar.Item>
