@@ -45,7 +45,6 @@
 
 .sliderThumb:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-ring, #3b82f6); /* focus-visible:ring-1 focus-visible:ring-ring */
 }
 
 .sliderThumb:disabled {

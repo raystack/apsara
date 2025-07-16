@@ -1,5 +1,6 @@
 'use client';
 import { cx } from 'class-variance-authority';
+import Color from 'color';
 import {
   type HTMLAttributes,
   PointerEvent as ReactPointerEvent,
@@ -19,7 +20,9 @@ export const ColorPickerSelection = memo(
     const thumbRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
 
-    const { hue, setSaturation, setLightness } = useColorPicker();
+    const { hue, saturation, lightness, alpha, setSaturation, setLightness } =
+      useColorPicker();
+    const color = Color.hsl(hue, saturation, lightness, alpha / 100);
 
     const backgroundGradient = useMemo(() => {
       return `linear-gradient(0deg, rgba(0,0,0,1), rgba(0,0,0,0)),
@@ -81,7 +84,11 @@ export const ColorPickerSelection = memo(
         }}
         {...props}
       >
-        <div className={styles.selectionThumb} ref={thumbRef} />
+        <div
+          className={styles.selectionThumb}
+          ref={thumbRef}
+          style={{ background: color.hex().toString() }}
+        />
       </div>
     );
   }

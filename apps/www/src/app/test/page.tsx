@@ -18,6 +18,7 @@ const Page = (props: Props) => {
       justify='center'
     >
       <ColorPicker
+        defaultValue='#ffffff'
         style={{
           width: '240px',
           height: '320px',
