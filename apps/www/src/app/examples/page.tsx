@@ -1,5 +1,4 @@
 'use client';
-import { IconButtonExamples } from '@/components/playground';
 import {
   Amount,
   Avatar,
@@ -11,6 +10,7 @@ import {
   DropdownMenu,
   EmptyState,
   Flex,
+  IconButton,
   Indicator,
   InputField,
   Popover,
@@ -70,50 +70,45 @@ const Page = () => {
         }}
       >
         <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen}>
-          <Sidebar.Header
-            logo={<BellIcon width={24} height={24} />}
-            title='Raystack'
-            onLogoClick={() => console.log('Logo clicked')}
-          />
+          <Sidebar.Header>
+            <Flex align='center' gap={3}>
+              <IconButton
+                size={4}
+                onClick={() => console.log('Logo clicked')}
+                aria-label='Logo'
+              >
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight='medium'>
+                Raystack
+              </Text>
+            </Flex>
+          </Sidebar.Header>
 
           <Sidebar.Main>
-            <Sidebar.Item href='#' icon={<BellIcon />} active>
+            <Sidebar.Item href='#' active>
               Dashboard
             </Sidebar.Item>
 
-            <Sidebar.Item href='#' icon={<BellIcon />}>
-              Analytics
-            </Sidebar.Item>
+            <Sidebar.Item href='#'>Analytics</Sidebar.Item>
 
-            <Sidebar.Group name='Resources'>
-              <Sidebar.Item href='#' icon={<FilterIcon />}>
-                Reports
-              </Sidebar.Item>
+            <Sidebar.Group label='Resources' leadingIcon={<FilterIcon />}>
+              <Sidebar.Item href='#'>Reports</Sidebar.Item>
 
-              <Sidebar.Item href='#' icon={<FilterIcon />}>
-                Activities
-              </Sidebar.Item>
+              <Sidebar.Item href='#'>Activities</Sidebar.Item>
             </Sidebar.Group>
 
-            <Sidebar.Group name='Account'>
-              <Sidebar.Item href='#' icon={<FilterIcon />}>
-                Settings
-              </Sidebar.Item>
+            <Sidebar.Group label='Account'>
+              <Sidebar.Item href='#'>Settings</Sidebar.Item>
 
-              <Sidebar.Item href='#' icon={<BellIcon />}>
-                Notifications
-              </Sidebar.Item>
+              <Sidebar.Item href='#'>Notifications</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
 
           <Sidebar.Footer>
-            <Sidebar.Item href='#' icon={<OrganizationIcon />}>
-              Help & Support
-            </Sidebar.Item>
+            <Sidebar.Item href='#'>Help & Support</Sidebar.Item>
 
-            <Sidebar.Item href='#' icon={<SidebarIcon />}>
-              Preferences
-            </Sidebar.Item>
+            <Sidebar.Item href='#'>Preferences</Sidebar.Item>
           </Sidebar.Footer>
         </Sidebar>
 
@@ -1023,8 +1018,6 @@ const Page = () => {
                 </Flex>
               </Flex>
             </Flex>
-
-            <IconButtonExamples />
 
             <Search
               placeholder='Default small search'

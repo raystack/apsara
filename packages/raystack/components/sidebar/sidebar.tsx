@@ -10,7 +10,9 @@ import {
   forwardRef,
   useContext
 } from 'react';
-import { Tooltip, TooltipProvider } from '../tooltip';
+import { Avatar, getAvatarColor } from '../avatar';
+import { Flex } from '../flex';
+import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 
 interface SidebarContextValue {
@@ -31,20 +33,14 @@ interface SidebarProps
   collapsible?: boolean;
 }
 
-interface SidebarHeaderProps extends ComponentPropsWithoutRef<'div'> {
-  logo: ReactNode;
-  title: string;
-  onLogoClick?: () => void;
-}
-
 interface SidebarItemProps extends ComponentPropsWithoutRef<'a'> {
-  icon?: ReactNode;
+  leadingIcon?: ReactNode;
   active?: boolean;
   disabled?: boolean;
   as?: ReactElement;
   classNames?: {
     root?: string;
-    icon?: string;
+    leadingIcon?: string;
     text?: string;
   };
 }
@@ -52,8 +48,8 @@ interface SidebarItemProps extends ComponentPropsWithoutRef<'a'> {
 interface SidebarFooterProps extends ComponentPropsWithoutRef<'div'> {}
 
 interface SidebarNavigationGroupProps extends ComponentPropsWithoutRef<'div'> {
-  name: string;
-  icon?: ReactNode;
+  label: string;
+  leadingIcon?: ReactNode;
 }
 
 const SidebarRoot = forwardRef<
@@ -76,7 +72,7 @@ const SidebarRoot = forwardRef<
     <SidebarContext.Provider
       value={{ isCollapsed: !open, hideCollapsedItemTooltip }}
     >
-      <TooltipProvider>
+      <Tooltip.Provider>
         <Collapsible.Root
           ref={ref}
           className={root({ className })}
@@ -118,67 +114,67 @@ const SidebarRoot = forwardRef<
             {children}
           </aside>
         </Collapsible.Root>
-      </TooltipProvider>
+      </Tooltip.Provider>
     </SidebarContext.Provider>
   )
 );
 
-const SidebarHeader = forwardRef<HTMLDivElement, SidebarHeaderProps>(
-  ({ className, logo, title, onLogoClick, ...props }, ref) => (
-    <div ref={ref} className={styles.header} role='banner' {...props}>
-      <div
-        className={styles.logo}
-        onClick={onLogoClick}
-        role={onLogoClick ? 'button' : undefined}
-        tabIndex={onLogoClick ? 0 : undefined}
-        onKeyDown={e => {
-          if (onLogoClick && (e.key === 'Enter' || e.key === ' ')) {
-            e.preventDefault();
-            onLogoClick();
-          }
-        }}
-        style={{ cursor: onLogoClick ? 'pointer' : undefined }}
-      >
-        {logo}
-      </div>
-      <div className={styles.title} role='heading' aria-level={1}>
-        {title}
-      </div>
-    </div>
-  )
-);
+const SidebarHeader = forwardRef<
+  HTMLDivElement,
+  ComponentPropsWithoutRef<'div'>
+>(({ className, children, ...props }, ref) => (
+  <Flex
+    align='center'
+    ref={ref}
+    className={styles.header}
+    role='banner'
+    {...props}
+  >
+    {children}
+  </Flex>
+));
 
 const SidebarMain = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
   ({ className, children, ...props }, ref) => (
-    <div
+    <Flex
       ref={ref}
       className={styles.main}
+      direction='column'
       role='group'
       aria-label='Main navigation'
       {...props}
     >
       {children}
-    </div>
+    </Flex>
   )
 );
 
 const SidebarFooter = forwardRef<HTMLDivElement, SidebarFooterProps>(
   ({ className, children, ...props }, ref) => (
-    <div
+    <Flex
       ref={ref}
       className={styles.footer}
+      direction='column'
       role='group'
       aria-label='Footer navigation'
       {...props}
     >
       {children}
-    </div>
+    </Flex>
   )
 );
 
 const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
   (
-    { classNames, icon, children, active, disabled, as = <a />, ...props },
+    {
+      classNames,
+      leadingIcon,
+      children,
+      active,
+      disabled,
+      as = <a />,
+      ...props
+    },
     ref
   ) => {
     const { isCollapsed, hideCollapsedItemTooltip } =
@@ -197,12 +193,23 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         ...props
       },
       <>
-        <span
-          className={cx(styles['nav-icon'], classNames?.icon)}
+        <Flex
+          align='center'
+          gap={3}
+          className={cx(styles['nav-leading-icon'], classNames?.leadingIcon)}
           aria-hidden='true'
         >
-          {icon}
-        </span>
+          {leadingIcon ||
+            (typeof children === 'string' && children.length > 0 ? (
+              <Avatar
+                size={1}
+                variant='soft'
+                color={getAvatarColor(children)}
+                fallback={children[0].toUpperCase()}
+                style={{ cursor: 'pointer' }}
+              />
+            ) : null)}
+        </Flex>
         {!isCollapsed && <span className={styles['nav-text']}>{children}</span>}
       </>
     );
@@ -222,15 +229,22 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
 const SidebarNavigationGroup = forwardRef<
   HTMLElement,
   SidebarNavigationGroupProps
->(({ className, name, icon, children, ...props }, ref) => (
-  <section ref={ref} className={className} aria-label={name} {...props}>
-    <div className={styles['nav-group-header']}>
-      {icon && <span className={styles['nav-icon']}>{icon}</span>}
-      <span className={styles['nav-group-name']}>{name}</span>
-    </div>
-    <div className={styles['nav-group-items']} role='list'>
+>(({ className, label, leadingIcon, children, ...props }, ref) => (
+  <section
+    ref={ref}
+    className={cx(styles['nav-group'], className)}
+    aria-label={label}
+    {...props}
+  >
+    <Flex align='center' gap={3} className={styles['nav-group-header']}>
+      {leadingIcon && (
+        <span className={styles['nav-leading-icon']}>{leadingIcon}</span>
+      )}
+      <span className={styles['nav-group-label']}>{label}</span>
+    </Flex>
+    <Flex direction='column' className={styles['nav-group-items']} role='list'>
       {children}
-    </div>
+    </Flex>
   </section>
 ));
 
