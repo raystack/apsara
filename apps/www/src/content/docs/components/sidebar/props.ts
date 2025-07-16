@@ -35,7 +35,11 @@ export interface SidebarGroupProps {
 }
 
 export interface SidebarItemProps {
-  /** ReactNode for the item's icon. */
+  /**
+   * ReactNode for the item's icon.
+   *
+   * If not provided, the component will show a fallback avatar only in collapsed state.
+   */
   leadingIcon?: ReactNode;
 
   /** String for the link destination. */

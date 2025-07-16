@@ -10,7 +10,7 @@ import {
   forwardRef,
   useContext
 } from 'react';
-import { Avatar, getAvatarColor } from '../avatar';
+import { Avatar } from '../avatar';
 import { Flex } from '../flex';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
@@ -178,7 +178,13 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
     ref
   ) => {
     const { isCollapsed, hideCollapsedItemTooltip } =
-      useContext(SidebarContext); // To prevent prop drillng
+      useContext(SidebarContext);
+
+    const shouldShowFallback =
+      leadingIcon == undefined &&
+      isCollapsed &&
+      typeof children === 'string' &&
+      children.length > 0;
 
     const content = cloneElement(
       as,
@@ -199,16 +205,17 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
           className={cx(styles['nav-leading-icon'], classNames?.leadingIcon)}
           aria-hidden='true'
         >
-          {leadingIcon ||
-            (typeof children === 'string' && children.length > 0 ? (
-              <Avatar
-                size={1}
-                variant='soft'
-                color={getAvatarColor(children)}
-                fallback={children[0].toUpperCase()}
-                style={{ cursor: 'pointer' }}
-              />
-            ) : null)}
+          {shouldShowFallback ? (
+            <Avatar
+              size={1}
+              variant='soft'
+              color='neutral'
+              fallback={children[0].toUpperCase()}
+              style={{ cursor: 'pointer' }}
+            />
+          ) : (
+            leadingIcon
+          )}
         </Flex>
         {!isCollapsed && <span className={styles['nav-text']}>{children}</span>}
       </>
