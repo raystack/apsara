@@ -10,7 +10,7 @@ import {
   forwardRef,
   useContext
 } from 'react';
-import { Avatar, getAvatarColor } from '../avatar';
+import { Avatar } from '../avatar';
 import { Flex } from '../flex';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
@@ -209,7 +209,7 @@ const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
             <Avatar
               size={1}
               variant='soft'
-              color={getAvatarColor(children)}
+              color='neutral'
               fallback={children[0].toUpperCase()}
               style={{ cursor: 'pointer' }}
             />
