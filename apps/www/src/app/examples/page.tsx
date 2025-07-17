@@ -1738,12 +1738,9 @@ const Page = () => {
             style={{ marginTop: '32px', marginBottom: '16px' }}
           >
             <Amount
-              value={1296367367}
-              locale='en-US'
-              currency='USD'
-              maximumFractionDigits={1}
-              currencyDisplay='symbol'
-              groupDigits={true}
+              value='10000100091636935'
+              valueInMinorUnits={false}
+              hideDecimals
             />
           </Text>
 
