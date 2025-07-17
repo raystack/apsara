@@ -200,7 +200,7 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
         minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
         maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
         useGrouping: groupDigits
-        // @ts-ignore - Handling large numbers as string or numbers, so we need to pass the value as number or string.
+        // @ts-ignore - Handling large numbers as string or number, so we need to pass the value as string or number.
       }).format(finalBaseValue);
 
       return <span ref={ref}>{formattedValue}</span>;
