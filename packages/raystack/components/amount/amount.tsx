@@ -176,10 +176,10 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
 
       const decimals = getCurrencyDecimals(validCurrency);
       const baseValue = valueInMinorUnits
-        ? // @ts-ignore
+        ? // @ts-ignore - value can be string for large numbers (>2^53) to maintain precision during division
           value / Math.pow(10, decimals)
         : value;
-      // @ts-ignore
+      // @ts-ignore - baseValue can be string from previous operation, Math.trunc will coerce to number if needed
       const finalBaseValue = hideDecimals ? Math.trunc(baseValue) : baseValue;
 
       const formattedValue = new Intl.NumberFormat(locale, {
@@ -189,7 +189,7 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
         minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
         maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
         useGrouping: groupDigits
-        // @ts-ignore
+        // @ts-ignore - finalBaseValue can be string from previous operations, Intl.NumberFormat handles string conversion
       }).format(finalBaseValue);
 
       return <span ref={ref}>{formattedValue}</span>;
