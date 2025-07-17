@@ -145,16 +145,18 @@ button.selectValue:hover {
   max-height: 12px;
 }
 
-.textFieldWrapper {
+.inputFieldWrapper {
   padding: 0 var(--rs-space-2);
   min-width: 60px;
 }
 
-.textField {
+.inputField {
   border-radius: var(--rs-radius-1);
+  min-height: 18px;
+  height: 18px;
 }
 
-.textFieldWrapper input {
+.inputFieldWrapper input {
   padding-left: var(--rs-space-2) !important;
   padding-right: var(--rs-space-2) !important;
 }

@@ -11,9 +11,9 @@ import {
 } from '~/types/filters';
 import { DatePicker } from '../calendar';
 import { Flex } from '../flex';
+import { InputField } from '../input-field';
 import { Select } from '../select';
 import { Text } from '../text';
-import { TextField } from '../textfield';
 import { Operation } from './filter-chip-operation';
 import styles from './filter-chip.module.css';
 
@@ -137,9 +137,10 @@ export const FilterChip = ({
         );
       default:
         return (
-          <div className={styles.textFieldWrapper}>
-            <TextField
-              className={styles.textField}
+          <div className={styles.inputFieldWrapper}>
+            <InputField
+              variant={variant === 'text' ? 'borderless' : 'default'}
+              className={styles.inputField}
               value={filterValue}
               onChange={e => handleFilterValueChange(e.target.value)}
             />
