@@ -14,6 +14,7 @@ import {
   currencyDisplayDemo,
   groupDigitsDemo,
   withTextDemo,
+  largeNumbersDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -25,6 +26,7 @@ import { Amount } from '@raystack/apsara/v1'
 
 <Amount value={1299} />
 <Amount value={1299} currency="EUR" locale="fr-FR" />
+<Amount value="999999999999999" />
 ```
 
 ## Amount Props
@@ -60,6 +62,12 @@ import { Amount } from '@raystack/apsara/v1'
 ### groupDigits
 
 <Demo data={groupDigitsDemo} />
+
+### Large Numbers
+
+For numbers larger than JavaScript's safe integer limit (2^53 - 1), pass the value as a string to maintain precision.
+
+<Demo data={largeNumbersDemo} />
 
 ### With Text
 

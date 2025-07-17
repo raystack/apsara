@@ -1,12 +1,14 @@
 export interface AmountProps {
   /**
    * The monetary value to display
+   * For large numbers (> 2^53), pass the value as string to maintain precision
    * @default 0
    * @example
    * valueInMinorUnits=true: 1299 => "$12.99"
    * valueInMinorUnits=false: 12.99 => "$12.99"
+   * Large numbers: "999999999999999" => "$9,999,999,999,999.99"
    */
-  value: number;
+  value: number | string;
 
   /**
    * ISO 4217 currency code

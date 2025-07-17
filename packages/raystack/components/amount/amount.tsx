@@ -3,12 +3,13 @@ import { forwardRef } from 'react';
 export interface AmountProps {
   /**
    * The monetary value to display
+   * For large numbers (> 2^53), pass the value as string to maintain precision
    * @default 0
    * @example
    * valueInMinorUnits=true: 1299 => "$12.99"
    * valueInMinorUnits=false: 12.99 => "$12.99"
    */
-  value: number;
+  value: number | string;
 
   /**
    * ISO 4217 currency code
@@ -155,27 +156,58 @@ export const Amount = forwardRef<HTMLSpanElement, AmountProps>(
     },
     ref
   ) => {
-    const validCurrency = isValidCurrency(currency) ? currency : 'USD';
-    if (validCurrency !== currency) {
-      console.warn(`Invalid currency code: ${currency}. Falling back to USD.`);
+    try {
+      if (
+        typeof value === 'number' &&
+        Math.abs(value) > Number.MAX_SAFE_INTEGER
+      ) {
+        console.warn(
+          `Warning: The number ${value} exceeds JavaScript's safe integer limit (${Number.MAX_SAFE_INTEGER}). ` +
+            'For large numbers, pass the value as a string to maintain precision.'
+        );
+      }
+
+      const validCurrency = isValidCurrency(currency) ? currency : 'USD';
+      if (validCurrency !== currency) {
+        console.warn(
+          `Invalid currency code: ${currency}. Falling back to USD.`
+        );
+      }
+
+      const decimals = getCurrencyDecimals(validCurrency);
+
+      // Handle minor units - use string manipulation for strings and Math.pow for numbers
+      const baseValue =
+        valueInMinorUnits && decimals > 0
+          ? typeof value === 'string'
+            ? value.slice(0, -decimals) + '.' + value.slice(-decimals)
+            : value / Math.pow(10, decimals)
+          : value;
+
+      // Remove decimals if hideDecimals is true - handle string and number separately
+      // Note: Not all numbers passed is converted to string as methods like Math.trunc
+      // or toString cannot handle large numbers thus, we need to handle it separately (large numbers passed in value throws console warning).
+      const finalBaseValue = hideDecimals
+        ? typeof baseValue === 'string'
+          ? baseValue.split('.')[0]
+          : Math.trunc(baseValue)
+        : baseValue;
+
+      const formattedValue = new Intl.NumberFormat(locale, {
+        style: 'currency' as const,
+        currency: validCurrency.toUpperCase(),
+        currencyDisplay,
+        minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
+        maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
+        useGrouping: groupDigits
+        // @ts-ignore - Handling large numbers as string or number, so we need to pass the value as string or number.
+      }).format(finalBaseValue);
+
+      return <span ref={ref}>{formattedValue}</span>;
+    } catch (error) {
+      console.error('Error formatting amount:', error);
+      return <span ref={ref}>{value}</span>;
     }
-
-    const decimals = getCurrencyDecimals(validCurrency);
-    const baseValue = valueInMinorUnits
-      ? value / Math.pow(10, decimals)
-      : value;
-    const finalBaseValue = hideDecimals ? Math.trunc(baseValue) : baseValue;
-
-    const formattedValue = new Intl.NumberFormat(locale, {
-      style: 'currency' as const,
-      currency: validCurrency.toUpperCase(),
-      currencyDisplay,
-      minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
-      maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
-      useGrouping: groupDigits
-    }).format(finalBaseValue);
-
-    return <span ref={ref}>{formattedValue}</span>;
   }
 );
 

@@ -145,3 +145,17 @@ export const withTextDemo = {
   </Flex>
   `
 };
+
+export const largeNumbersDemo = {
+  type: 'code',
+  code: `
+  <Flex gap={4}>
+    {/* For large numbers, use string to maintain precision */}
+    <Amount value="999999999999999" /> {/* $9,999,999,999,999.99 */}
+    <Amount value="10000100091636935" valueInMinorUnits={false} hideDecimals /> {/* $10,000,100,091,636,935 */}
+    
+    {/* Numbers exceeding safe integer limit will show warning in console */}
+    <Amount value={999999999999999} /> {/* Will show warning */}
+  </Flex>
+  `
+};
