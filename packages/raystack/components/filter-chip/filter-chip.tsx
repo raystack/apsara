@@ -104,7 +104,7 @@ export const FilterChip = ({
                 }
               }}
               variant='text'
-              className={cx(styles.selectValue, styles.selectColumn)}
+              className={cx(styles.selectValue)}
             >
               <Select.Value placeholder='Select value'>
                 {isMultiSelectColumn && filterValue.length > 1
@@ -156,6 +156,7 @@ export const FilterChip = ({
       className={chip({ variant, className })}
       role='group'
       aria-label={`Filter by ${label}`}
+      data-variant={variant}
       {...props}
     >
       <Flex align='center' gap={2} className={styles['chip-label']}>
