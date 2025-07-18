@@ -61,3 +61,4 @@ export {
 export { toast, ToastContainer } from './components/toast';
 export { Tooltip } from './components/tooltip';
 export { Grid } from './components/grid';
+export * from './components/color-picker';

@@ -6,6 +6,7 @@ import NextLink from 'next/link';
 import { Suspense } from 'react';
 import DataTableDemo from '../datatable-demo';
 import LinearDropdownDemo from '../linear-dropdown-demo';
+import PopoverColorPicker from '../popover-color-picker';
 import DemoPlayground from './demo-playground';
 import DemoPreview from './demo-preview';
 import { DemoProps } from './types';
@@ -17,6 +18,7 @@ export default function Demo(props: DemoProps) {
       ...Apsara,
       DataTableDemo,
       LinearDropdownDemo,
+      PopoverColorPicker,
       Info,
       X,
       Home,
