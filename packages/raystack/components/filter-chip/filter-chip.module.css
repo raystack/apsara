@@ -126,6 +126,11 @@
   color: var(--rs-color-foreground-base-secondary);
 }
 
+.selectColumn {
+  border-top-right-radius: var(--rs-radius-2);
+  border-bottom-right-radius: var(--rs-radius-2);
+}
+
 button.selectValue:hover {
   color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary-hover);

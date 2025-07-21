@@ -104,7 +104,10 @@ export const FilterChip = ({
                 }
               }}
               variant='text'
-              className={cx(styles.selectValue)}
+              className={cx(
+                styles.selectValue,
+                !showOnRemove && styles.selectColumn
+              )}
             >
               <Select.Value placeholder='Select value'>
                 {isMultiSelectColumn && filterValue.length > 1
