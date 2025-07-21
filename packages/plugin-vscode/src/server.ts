@@ -53,57 +53,62 @@ const settings = { maxNumberOfProblems: 1000 };
 async function validateDocument(
   textDocument: TextDocument
 ): Promise<Diagnostic[]> {
-  const text = textDocument.getText();
-  const diagnostics: Diagnostic[] = [];
-  let problems = 0;
+  try {
+    const text = textDocument.getText();
+    const diagnostics: Diagnostic[] = [];
+    let problems = 0;
 
-  // Regex to match CSS property-value pairs
-  const cssPropertyRegex = /([a-zA-Z-]+)\s*:\s*([^;}\n]+)/g;
-  let match: RegExpExecArray | null;
+    // Regex to match CSS property-value pairs
+    const cssPropertyRegex = /([a-zA-Z-]+)\s*:\s*([^;}\n]+)/g;
+    let match: RegExpExecArray | null;
 
-  while (
-    (match = cssPropertyRegex.exec(text)) &&
-    problems < settings.maxNumberOfProblems
-  ) {
-    const [fullMatch, property, value] = match;
-    const trimmedValue = value.trim();
+    while (
+      (match = cssPropertyRegex.exec(text)) &&
+      problems < settings.maxNumberOfProblems
+    ) {
+      const [fullMatch, property, value] = match;
+      const trimmedValue = value.trim();
 
-    // Check if this property matches any of our token group patterns
-    let matchedTokenGroup: string | null = null;
-    for (const [tokenGroupName, tokenGroupPattern] of Object.entries(
-      tokenGroupPatterns
-    )) {
-      if (tokenGroupPattern.test(property)) {
-        matchedTokenGroup = tokenGroupName;
-        break;
+      // Check if this property matches any of our token group patterns
+      let matchedTokenGroup: string | null = null;
+      for (const [tokenGroupName, tokenGroupPattern] of Object.entries(
+        tokenGroupPatterns
+      )) {
+        if (tokenGroupPattern.test(property)) {
+          matchedTokenGroup = tokenGroupName;
+          break;
+        }
+      }
+
+      // If property matches a token group and value is not using var(--rs-*) pattern
+      if (matchedTokenGroup && !trimmedValue.includes('var(--rs-')) {
+        problems++;
+
+        // Find the actual position of the value in the text
+        const colonIndex = fullMatch.indexOf(':');
+        const valueStartInMatch = fullMatch
+          .substring(colonIndex + 1)
+          .search(/\S/); // First non-whitespace after colon
+        const actualValueStart =
+          match.index + colonIndex + 1 + valueStartInMatch;
+
+        const diagnostic: Diagnostic = {
+          severity: DiagnosticSeverity.Warning,
+          range: {
+            start: textDocument.positionAt(actualValueStart),
+            end: textDocument.positionAt(actualValueStart + trimmedValue.length)
+          },
+          message: `Consider using Apsara ${matchedTokenGroup} tokens instead of '${trimmedValue}'. Use var(--rs-${matchedTokenGroup}-*) pattern.`,
+          source: 'Apsara for VS Code'
+        };
+        diagnostics.push(diagnostic);
       }
     }
 
-    // If property matches a token group and value is not using var(--rs-*) pattern
-    if (matchedTokenGroup && !trimmedValue.includes('var(--rs-')) {
-      problems++;
-
-      // Find the actual position of the value in the text
-      const colonIndex = fullMatch.indexOf(':');
-      const valueStartInMatch = fullMatch
-        .substring(colonIndex + 1)
-        .search(/\S/); // First non-whitespace after colon
-      const actualValueStart = match.index + colonIndex + 1 + valueStartInMatch;
-
-      const diagnostic: Diagnostic = {
-        severity: DiagnosticSeverity.Warning,
-        range: {
-          start: textDocument.positionAt(actualValueStart),
-          end: textDocument.positionAt(actualValueStart + trimmedValue.length)
-        },
-        message: `Consider using Apsara ${matchedTokenGroup} tokens instead of '${trimmedValue}'. Use var(--rs-${matchedTokenGroup}-*) pattern.`,
-        source: 'Apsara for VS Code'
-      };
-      diagnostics.push(diagnostic);
-    }
+    return diagnostics;
+  } catch {
+    return [];
   }
-
-  return diagnostics;
 }
 
 // Grouped VS Code `CompletionItem`s for Apsara tokens
@@ -168,187 +173,203 @@ connection.onInitialize(params => {
 // This handler provides the list of token completion items.
 connection.onCompletion(
   (textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-    const doc = documents.get(textDocumentPosition.textDocument.uri);
-    let matchedCompletionItems: CompletionItem[] = [];
+    try {
+      const doc = documents.get(textDocumentPosition.textDocument.uri);
+      let matchedCompletionItems: CompletionItem[] = [];
 
-    // if the doc can't be found, return nothing
-    if (!doc) return [];
+      // if the doc can't be found, return nothing
+      if (!doc) return [];
 
-    const currentText = doc.getText({
-      start: { line: textDocumentPosition.position.line, character: 0 },
-      end: { line: textDocumentPosition.position.line, character: 1000 }
-    });
+      const currentText = doc.getText({
+        start: { line: textDocumentPosition.position.line, character: 0 },
+        end: { line: textDocumentPosition.position.line, character: 1000 }
+      });
 
-    // if the current text is empty or doesn't include a colon or =, return nothing
-    if (
-      currentText.trim().length === 0 ||
-      !(currentText.includes(':') || currentText.includes('='))
-    )
-      return [];
+      // if the current text is empty or doesn't include a colon or =, return nothing
+      if (
+        currentText.trim().length === 0 ||
+        !(currentText.includes(':') || currentText.includes('='))
+      )
+        return [];
 
-    const cursor = textDocumentPosition.position.character;
+      const cursor = textDocumentPosition.position.character;
 
-    // Look for complete var(...) wrappers
-    const completeVarMatch = getPatternMatch(
-      /var\s*\(([^)]*)\)/g,
-      currentText,
-      cursor
-    );
-
-    // Look for incomplete var(... wrappers
-    const incompleteVarMatch = getPatternMatch(
-      /var\s*\(([^)]*)/g,
-      currentText,
-      cursor
-    );
-
-    // Look for token patterns: -- followed by word characters, or just --
-    const tokenMatch = getPatternMatch(
-      /--[a-zA-Z0-9-_]*/g,
-      currentText,
-      cursor
-    );
-
-    for (const [tokenGroupName, pattern] of Object.entries(
-      tokenGroupPatterns
-    )) {
-      if (!pattern.test(currentText)) continue;
-
-      const currentCompletionItems =
-        groupedCompletionItems[tokenGroupName as TokenGroupType];
-
-      matchedCompletionItems = matchedCompletionItems.concat(
-        currentCompletionItems
+      // Look for complete var(...) wrappers
+      const completeVarMatch = getPatternMatch(
+        /var\s*\(([^)]*)\)/g,
+        currentText,
+        cursor
       );
-    }
 
-    const completionItems = matchedCompletionItems.length
-      ? matchedCompletionItems
-      : allCompletionItems;
+      // Look for incomplete var(... wrappers
+      const incompleteVarMatch = getPatternMatch(
+        /var\s*\(([^)]*)/g,
+        currentText,
+        cursor
+      );
 
-    return completionItems.map(item => ({
-      ...item,
-      textEdit: {
-        range: {
-          start: {
-            line: textDocumentPosition.position.line,
-            character: tokenMatch.start
-          },
-          end: {
-            line: textDocumentPosition.position.line,
-            character: tokenMatch.end
-          }
-        },
-        newText: completeVarMatch.match
-          ? item.label
-          : incompleteVarMatch.match
-            ? `${item.label})`
-            : `var(${item.label})`
+      // Look for token patterns: -- followed by word characters, or just --
+      const tokenMatch = getPatternMatch(
+        /--[a-zA-Z0-9-_]*/g,
+        currentText,
+        cursor
+      );
+
+      for (const [tokenGroupName, pattern] of Object.entries(
+        tokenGroupPatterns
+      )) {
+        if (!pattern.test(currentText)) continue;
+
+        const currentCompletionItems =
+          groupedCompletionItems[tokenGroupName as TokenGroupType];
+
+        matchedCompletionItems = matchedCompletionItems.concat(
+          currentCompletionItems
+        );
       }
-    }));
+
+      const completionItems = matchedCompletionItems.length
+        ? matchedCompletionItems
+        : allCompletionItems;
+
+      return completionItems.map(item => ({
+        ...item,
+        textEdit: {
+          range: {
+            start: {
+              line: textDocumentPosition.position.line,
+              character: tokenMatch.start
+            },
+            end: {
+              line: textDocumentPosition.position.line,
+              character: tokenMatch.end
+            }
+          },
+          newText: completeVarMatch.match
+            ? item.label
+            : incompleteVarMatch.match
+              ? `${item.label})`
+              : `var(${item.label})`
+        }
+      }));
+    } catch {
+      return [];
+    }
   }
 );
 
 // This handler provides the hover information for the token.
 connection.onHover(
   (textDocumentPosition: TextDocumentPositionParams): Hover => {
-    const doc = documents.get(textDocumentPosition.textDocument.uri);
+    try {
+      const doc = documents.get(textDocumentPosition.textDocument.uri);
 
-    // if the doc can't be found, return nothing
-    if (!doc) {
-      return { contents: [] };
-    }
+      // if the doc can't be found, return nothing
+      if (!doc) {
+        return { contents: [] };
+      }
 
-    const currentText = doc.getText({
-      start: { line: textDocumentPosition.position.line, character: 0 },
-      end: { line: textDocumentPosition.position.line, character: 1000 }
-    });
+      const currentText = doc.getText({
+        start: { line: textDocumentPosition.position.line, character: 0 },
+        end: { line: textDocumentPosition.position.line, character: 1000 }
+      });
 
-    const cursorPosition = textDocumentPosition.position.character;
+      const cursorPosition = textDocumentPosition.position.character;
 
-    // Look for token match at the cursor position
-    const tokenMatch = getPatternMatch(
-      /--[a-zA-Z0-9-_]*/g,
-      currentText,
-      cursorPosition
-    );
+      // Look for token match at the cursor position
+      const tokenMatch = getPatternMatch(
+        /--[a-zA-Z0-9-_]*/g,
+        currentText,
+        cursorPosition
+      );
 
-    if (!tokenMatch.match) {
-      return { contents: [] };
-    }
+      if (!tokenMatch.match) {
+        return { contents: [] };
+      }
 
-    const result = allCompletionItems.find(
-      token => token.label === tokenMatch.match
-    );
+      const result = allCompletionItems.find(
+        token => token.label === tokenMatch.match
+      );
 
-    if (result === undefined) {
+      if (result === undefined) {
+        return {
+          contents: []
+        };
+      }
+
       return {
-        contents: []
+        contents: [
+          {
+            language: 'css',
+            value: `${result.label}: ${result.detail}`
+          }
+        ]
       };
+    } catch {
+      return { contents: [] };
     }
-
-    return {
-      contents: [
-        {
-          language: 'css',
-          value: `${result.label}: ${result.detail}`
-        }
-      ]
-    };
   }
 );
 
 // This handler provides color information for the document.
 connection.onDocumentColor((params): ColorInformation[] => {
-  const doc = documents.get(params.textDocument.uri);
-  if (!doc) {
+  try {
+    const doc = documents.get(params.textDocument.uri);
+    if (!doc) {
+      return [];
+    }
+
+    const text = doc.getText();
+    const colorInformations: ColorInformation[] = [];
+
+    // Match var(--rs-color-*) patterns
+    const varRegex = /var\s*\(\s*(--rs-color-[a-zA-Z0-9-_]+)\s*\)/g;
+    let match;
+
+    while ((match = varRegex.exec(text)) !== null) {
+      const tokenName = match[1];
+      const colorHex = getTokenValueFromName(tokenName);
+      const colorValue = colorToVSCodeColor(colorHex);
+
+      if (colorValue) {
+        const startPos = doc.positionAt(match.index);
+        const endPos = doc.positionAt(match.index + match[0].length);
+
+        colorInformations.push({
+          range: { start: startPos, end: endPos },
+          color: colorValue
+        });
+      }
+    }
+
+    return colorInformations;
+  } catch {
     return [];
   }
-
-  const text = doc.getText();
-  const colorInformations: ColorInformation[] = [];
-
-  // Match var(--rs-color-*) patterns
-  const varRegex = /var\s*\(\s*(--rs-color-[a-zA-Z0-9-_]+)\s*\)/g;
-  let match;
-
-  while ((match = varRegex.exec(text)) !== null) {
-    const tokenName = match[1];
-    const colorHex = getTokenValueFromName(tokenName);
-    const colorValue = colorToVSCodeColor(colorHex);
-
-    if (colorValue) {
-      const startPos = doc.positionAt(match.index);
-      const endPos = doc.positionAt(match.index + match[0].length);
-
-      colorInformations.push({
-        range: { start: startPos, end: endPos },
-        color: colorValue
-      });
-    }
-  }
-
-  return colorInformations;
 });
 
 // This handler provides color presentations for the color picker.
 connection.onColorPresentation((params): ColorPresentation[] => {
-  const { color } = params;
+  try {
+    const { color } = params;
 
-  // Convert VS Code Color to hex format
-  const colorHex = VSCodeColorToColor(color);
+    // Convert VS Code Color to hex format
+    const colorHex = VSCodeColorToColor(color);
 
-  const presentations: ColorPresentation[] = [];
+    const presentations: ColorPresentation[] = [];
 
-  presentations.push({
-    label: colorHex,
-    textEdit: {
-      range: params.range,
-      newText: colorHex
-    }
-  });
+    presentations.push({
+      label: colorHex,
+      textEdit: {
+        range: params.range,
+        newText: colorHex
+      }
+    });
 
-  return presentations;
+    return presentations;
+  } catch {
+    return [];
+  }
 });
 
 connection.languages.diagnostics.on(async params => {
@@ -365,7 +386,6 @@ connection.languages.diagnostics.on(async params => {
 documents.onDidChangeContent(async change => {
   // Validate the document and send diagnostics
   const diagnostics = await validateDocument(change.document);
-  console.log('onDidChangeContent diagnostics', diagnostics);
   connection.sendDiagnostics({
     uri: change.document.uri,
     diagnostics
@@ -375,7 +395,6 @@ documents.onDidChangeContent(async change => {
 // Also validate when document is opened
 documents.onDidOpen(async change => {
   const diagnostics = await validateDocument(change.document);
-  console.log('onDidOpen diagnostics', diagnostics);
   connection.sendDiagnostics({
     uri: change.document.uri,
     diagnostics
