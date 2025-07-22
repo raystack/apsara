@@ -115,8 +115,8 @@ pnpm dev
 # Lint the Apsara library
 pnpm run lint
 
-# Clean build artifacts
-pnpm clean
+# Clean build artifacts (library-specific)
+cd packages/raystack && pnpm clean
 
 # Format code with Biome
 pnpm run format
