@@ -1,23 +1,24 @@
-import { CalendarIcon } from "@radix-ui/react-icons";
-import dayjs from "dayjs";
-import { useRef, useState, useMemo } from "react";
-import { DateRange, PropsBase, PropsRangeRequired } from "react-day-picker";
+import { CalendarIcon } from '@radix-ui/react-icons';
+import dayjs from 'dayjs';
+import { useMemo, useRef, useState } from 'react';
+import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
 
-import { Flex } from "../flex";
-import { Popover } from "../popover";
-import { Calendar } from "./calendar";
-import styles from "./calendar.module.css";
-import { InputField } from "../input-field";
-import { InputFieldProps } from "../input-field/input-field";
+import { Flex } from '../flex';
+import { InputField } from '../input-field';
+import { InputFieldProps } from '../input-field/input-field';
+import { Popover } from '../popover';
+import { Calendar } from './calendar';
+import styles from './calendar.module.css';
 
 interface RangePickerProps {
-  side?: "top" | "right" | "bottom" | "left";
+  side?: 'top' | 'right' | 'bottom' | 'left';
   dateFormat?: string;
   inputFieldsProps?: { startDate?: InputFieldProps; endDate?: InputFieldProps };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
+  defaultValue?: DateRange;
   children?:
     | React.ReactNode
     | ((props: { startDate: string; endDate: string }) => React.ReactNode);
@@ -29,35 +30,38 @@ interface RangePickerProps {
 type RangeFields = keyof DateRange;
 
 export function RangePicker({
-  side = "top",
-  dateFormat = "DD/MM/YYYY",
+  side = 'top',
+  dateFormat = 'DD/MM/YYYY',
   inputFieldsProps = {},
   calendarProps,
   onSelect = () => {},
-  value = {
+  value,
+  defaultValue = {
     to: new Date(),
-    from: new Date(),
+    from: new Date()
   },
   pickerGroupClassName,
   children,
   showCalendarIcon = true,
   footer,
-  timeZone,
+  timeZone
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] =
-    useState<RangeFields>("from");
-  const [selectedRange, setSelectedRange] = useState(value);
-  const [currentMonth, setCurrentMonth] = useState(selectedRange?.from);
+    useState<RangeFields>('from');
+  const [internalValue, setInternalValue] = useState(value ?? defaultValue);
+  const [currentMonth, setCurrentMonth] = useState(internalValue?.from);
+
+  const selectedRange = value ?? internalValue;
 
   const prevSelectedRangeRef = useRef(selectedRange);
 
   const startDate = selectedRange.from
     ? dayjs(selectedRange.from).format(dateFormat)
-    : "";
+    : '';
   const endDate = selectedRange.to
     ? dayjs(selectedRange.to).format(dateFormat)
-    : "";
+    : '';
 
   // Ensures two months are visible even when
   // current month is the last allowed month (endMonth).
@@ -81,10 +85,10 @@ export function RangePicker({
     // TODO: Remove custom logic and reuse the default logic from react-day-picker
     let newRange: DateRange;
 
-    if (currentRangeField === "from") {
+    if (currentRangeField === 'from') {
       // First click - set from date and prepare for to date selection
       newRange = { from: selectedDay };
-      setCurrentRangeField("to");
+      setCurrentRangeField('to');
     } else {
       // Second click - setting to date
       const from = selectedRange.from;
@@ -92,15 +96,15 @@ export function RangePicker({
       if (dayjs(selectedDay).isBefore(dayjs(from))) {
         // If selected date is before current from date, start new range
         newRange = { from: selectedDay };
-        setCurrentRangeField("to");
+        setCurrentRangeField('to');
       } else {
         // Set the to date
         newRange = { from, to: selectedDay };
-        setCurrentRangeField("from");
+        setCurrentRangeField('from');
       }
     }
 
-    setSelectedRange(newRange);
+    setInternalValue(newRange);
     onSelect(newRange);
   };
 
@@ -111,7 +115,7 @@ export function RangePicker({
 
     // Reset selected range if calendar is closed and start or end date is empty
     if (!currOpen && (!startDate.length || !endDate.length)) {
-      setSelectedRange(prevSelectedRangeRef.current);
+      setInternalValue(prevSelectedRangeRef.current);
       onSelect(prevSelectedRangeRef.current);
     }
 
@@ -122,10 +126,10 @@ export function RangePicker({
   }
 
   const defaultTrigger = (
-    <Flex gap="medium" className={pickerGroupClassName}>
+    <Flex gap='medium' className={pickerGroupClassName}>
       <InputField
         size='small'
-        placeholder="Select start date"
+        placeholder='Select start date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         {...(inputFieldsProps.startDate ?? {})}
@@ -135,7 +139,7 @@ export function RangePicker({
 
       <InputField
         size='small'
-        placeholder="Select end date"
+        placeholder='Select end date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
         {...(inputFieldsProps.endDate ?? {})}
@@ -146,7 +150,7 @@ export function RangePicker({
   );
 
   const trigger =
-    typeof children === "function"
+    typeof children === 'function'
       ? children({ startDate, endDate })
       : children || defaultTrigger;
 
@@ -161,7 +165,7 @@ export function RangePicker({
           required={true}
           {...calendarProps}
           timeZone={timeZone}
-          mode="range"
+          mode='range'
           month={computedDefaultMonth}
           selected={selectedRange}
           onSelect={handleSelect}
@@ -169,8 +173,8 @@ export function RangePicker({
         />
         {footer && (
           <Flex
-            align="center"
-            justify="center"
+            align='center'
+            justify='center'
             className={styles.calendarFooter}
           >
             {footer}
