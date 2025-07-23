@@ -46,6 +46,10 @@ const Page = () => {
   const [selectValue1, setSelectValue1] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
   const [inputValue, setInputValue] = useState('');
+  const [rangeValue, setRangeValue] = useState<any>({
+    from: dayjs('2027-11-15').toDate(),
+    to: dayjs('2027-12-10').toDate()
+  });
 
   // Sample options data with icons
   const selectOptions = [
@@ -163,11 +167,8 @@ const Page = () => {
             <RangePicker
               side='bottom'
               dateFormat='D MMM YYYY'
-              value={{
-                from: dayjs('2027-11-15').toDate(),
-                to: dayjs('2027-12-10').toDate()
-              }}
-              onSelect={range => console.log(range)}
+              value={rangeValue}
+              onSelect={range => setRangeValue(range)}
               calendarProps={{
                 captionLayout: 'dropdown',
                 mode: 'range',
