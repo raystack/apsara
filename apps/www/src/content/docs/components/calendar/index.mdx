@@ -14,45 +14,19 @@ import {
 
 ## Usage
 
-The Calendar components provide flexible date selection functionality with support for single dates, date ranges, and custom triggers.
-
 ```tsx
 import { Calendar, RangePicker, DatePicker } from '@raystack/apsara'
-
-// Basic Calendar
-
-<Calendar numberOfMonths={2} />
-
-// Range Picker with custom trigger
-
-<RangePicker>
-  {({ startDate, endDate }) => (
-    <button>
-      {startDate} - {endDate}
-    </button>
-  )}
-</RangePicker>
-
-// Date Picker with custom trigger
-
-<DatePicker>
-  {({ selectedDate }) => (
-    <button>
-      Selected: {selectedDate}
-    </button>
-  )}
-</DatePicker>
 ```
 
 ## Calendar Props
 
 <auto-type-table path="./props.ts" name="CalendarProps" />
 
-## Range Picker Props
+## RangePicker Props
 
 <auto-type-table path="./props.ts" name="RangePickerProps" />
 
-## Date Picker Props
+## DatePicker Props
 
 <auto-type-table path="./props.ts" name="DatePickerProps" />
 

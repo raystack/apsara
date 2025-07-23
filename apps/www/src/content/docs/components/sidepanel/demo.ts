@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 export const preview = {
-  type: "code",
+  type: 'code',
   code: `
 <Flex style={{ gap: '24px', flexWrap: 'wrap' }}>
     <SidePanel side="right">
@@ -41,5 +41,23 @@ export const preview = {
           </List.Root>
       </SidePanel.Section>
     </SidePanel>
-  </Flex>`,
+  </Flex>`
+};
+
+export const basicDemo = {
+  type: 'code',
+  code: `
+<SidePanel side="right">
+  <SidePanel.Header title="Right Side Panel" />
+  <SidePanel.Section>
+    <List.Root>
+      <List.Header>User Information</List.Header>
+      <List.Item align="center">
+        <List.Label minWidth="88px">Status</List.Label>
+        <List.Value>Active</List.Value>
+      </List.Item>
+    </List.Root>
+  </SidePanel.Section>
+</SidePanel>;
+  `
 };

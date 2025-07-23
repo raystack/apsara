@@ -3,7 +3,7 @@ title: Flex
 description: Component for flexbox
 ---
 
-import { playground, iconsDemo, customDemo, basicDemo } from "./demo.ts";
+import { playground, basicDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -11,13 +11,14 @@ import { playground, iconsDemo, customDemo, basicDemo } from "./demo.ts";
 
 ```tsx
 import { Flex } from "@raystack/apsara";
-
-<Flex direction="column" justify="center">
-  <Flex direction="row" gap="medium"></Flex>
-  <Flex direction="row" align="center"></Flex>
-</Flex>;
 ```
 
 ## Flex Props
 
 <auto-type-table path="./props.ts" name="FlexProps" />
+
+## Examples
+
+### Basic Usage
+
+<Demo data={basicDemo} />

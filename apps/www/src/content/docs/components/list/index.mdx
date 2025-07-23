@@ -3,24 +3,14 @@ title: List
 description: A component for displaying information in a key-value pair list format.
 ---
 
-import { preview } from "./demo.ts";
+import { basicDemo, preview } from "./demo.ts";
 
 <Demo data={preview} />
 
 ## Usage
 
-The List component display information in a structured format with labels and values.
-
 ```tsx
 import { List } from "@raystack/apsara";
-
-<List.Root maxWidth="600px">
-  <List.Header>User Information</List.Header>
-  <List.Item align="center">
-    <List.Label minWidth="88px">Status</List.Label>
-    <List.Value>Active</List.Value>
-  </List.Item>
-</List.Root>;
 ```
 
 ## List Props
@@ -44,6 +34,12 @@ import { List } from "@raystack/apsara";
 ### List.Value Props
 
 <auto-type-table path="./props.ts" name="ListValueProps" />
+
+## Examples
+
+### Basic Usage
+
+<Demo data={basicDemo} />
 
 ## Accessibility
 

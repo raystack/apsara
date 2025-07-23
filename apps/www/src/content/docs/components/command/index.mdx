@@ -3,32 +3,17 @@ title: Command
 description: Fast, composable, unstyled command menu for React.
 ---
 
-import { preview } from "./demo.ts";
+import { basicDemo, preview } from "./demo.ts";
 
 <Demo data={preview} />
 
 ## Usage
 
-Import all parts and piece them together.
-
 ```tsx
 import { Command } from "@raystack/apsara";
-
-<Command>
-  <Command.Input placeholder="Type a command or search..." />
-  <Command.List>
-    <Command.Empty>No results found.</Command.Empty>
-    <Command.Group heading="Suggestions">
-      <Command.Item>Calendar</Command.Item>
-      <Command.Item>Search Emoji</Command.Item>
-      <Command.Item>Calculator</Command.Item>
-    </Command.Group>
-    <Command.Separator />
-    <Command.Group heading="Settings">
-      <CommandItem>Profile</CommandItem>
-      <CommandItem>Billing</CommandItem>
-      <CommandItem>Settings</CommandItem>
-    </Command.Group>
-  </Command.List>
-</Command>;
 ```
+## Examples
+
+### Basic Usage
+
+<Demo data={basicDemo} />
