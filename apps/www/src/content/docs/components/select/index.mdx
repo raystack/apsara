@@ -1,7 +1,6 @@
 ---
 title: Select
 description: Displays a list of options for the user to pick from—triggered by a button.
-tag: update
 ---
 
 import {
@@ -19,20 +18,8 @@ import {
 
 ## Usage
 
-The Popover component provides a way to display rich content in a portal when triggered by a button. It supports accessibility features, positioning options, and customizable styling.
-
 ```tsx
 import { Select } from "@raystack/apsara";
-
-<Select>
-  <Select.Trigger aria-label="Fruit selection">
-    <Select.Value placeholder="Select a fruit" />
-  </Select.Trigger>
-  <Select.Content>
-    <Select.Item value="apple">Apple</Select.Item>
-    <Select.Item value="banana">Banana</Select.Item>
-  </Select.Content>
-</Select>;
 ```
 
 ## Select Props
@@ -61,19 +48,19 @@ Individual clickable options within the Select.
 
 <auto-type-table path="./props.ts" name="SelectItemProps" />
 
-### Select.Group
+### Select.Group Props
 
 A way to group related Select items together.
 
 <auto-type-table path="./props.ts" name="SelectGroupProps" />
 
-### Select.Label
+### Select.Label Props
 
 Renders a label in a Select group. This component can only be used inside Select.Group
 
 <auto-type-table path="./props.ts" name="SelectLabelProps" />
 
-### Select.Separator
+### Select.Separator Props
 
 Visual divider between Select items or groups.
 

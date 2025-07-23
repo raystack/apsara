@@ -12,34 +12,10 @@ import {
 
 <Demo data={preview} />
 
-## Overview
-
-The `ColorPicker` component offers a flexible and composable solution for selecting colors in various formats, including HEX, RGB, and HSL. It supports optional alpha channel (transparency) and is designed for easy integration and customization within your application.
-
-## Getting Started
-
-To use the `ColorPicker`, import it from `@raystack/apsara` and compose its subcomponents as needed. Below is a basic example:
+## Usage
 
 ```tsx
-import { ColorPicker } from "@raystack/apsara";
-
-<ColorPicker
-  defaultValue="#DA2929"
-  style={{
-    width: '240px',
-    height: '320px',
-    padding: 20,
-    background: 'white'
-  }}
->
-  <ColorPicker.Area />
-  <ColorPicker.Hue />
-  <ColorPicker.Alpha />
-  <Flex direction="row" gap={2}>
-    <ColorPicker.Mode />
-    <ColorPicker.Input />
-  </Flex>
-</ColorPicker>
+import { ColorPicker } from '@raystack/apsara'
 ```
 
 ## ColorPicker Props
@@ -48,25 +24,25 @@ The `ColorPicker` is composed of several subcomponents, each responsible for a s
 
 <auto-type-table path="./props.ts" name="ColorPickerProps" />
 
-### ColorPicker.Area
+### ColorPicker.Area Props
 
 Enables users to select a color from a palette. Typically used for choosing saturation and brightness.
 
-### ColorPicker.Hue
+### ColorPicker.Hue Props
 
 Provides a slider for selecting the hue value of the color.
 
-### ColorPicker.Alpha
+### ColorPicker.Alpha Props
 
 Provides a slider for selecting the alpha value of the color.
 
-### ColorPicker.Mode
+### ColorPicker.Mode Props
 
 Lets users switch between different color models (e.g., HEX, RGB, HSL) via a dropdown menu.
 
 <auto-type-table path="./props.ts" name="ColorPickerModeProps" />
 
-### ColorPicker.Input
+### ColorPicker.Input Props
 
 Displays the current color value in the selected color model and allows direct text input.
 

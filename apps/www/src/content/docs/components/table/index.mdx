@@ -3,41 +3,14 @@ title: Table
 description: A responsive table component to show structured data.
 ---
 
-import { preview, basicDemo, iconsDemo, disabledDemo } from "./demo.ts";
+import { preview, basicDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
 ## Usage
 
-The Tabs component provides a way to organize content into multiple sections, displaying one section at a time.
-
 ```tsx
-import { Table } from  @raystack/apsara;
-
-  <Table>
-    <Table.Header>
-      <Table.Row>
-        <Table.Head>Invoice</Table.Head>
-        <Table.Head>Status</Table.Head>
-        <Table.Head>Method</Table.Head>
-        <Table.Head>Amount</Table.Head>
-      </Table.Row>
-    </Table.Header>
-    <Table.Body>
-      <Table.Row>
-        <Table.Cell>INV001</Table.Cell>
-        <Table.Cell>Paid</Table.Cell>
-        <Table.Cell>$250.00</Table.Cell>
-        <Table.Cell>Credit Card</Table.Cell>
-      </Table.Row>
-      <Table.Row>
-        <Table.Cell>INV001</Table.Cell>
-        <Table.Cell>Paid</Table.Cell>
-        <Table.Cell>$250.00</Table.Cell>
-        <Table.Cell>Credit Card</Table.Cell>
-      </Table.Row>
-    </Table.Body>
-  </Table>
+import { Table } from "@raystack/apsara";
 ```
 
 ## Table Props
@@ -48,32 +21,38 @@ The `Table` component is composed of several parts, each with their own props
 
 <auto-type-table path="./props.ts" name="TableProps" />
 
-### Table.Header
+### Table.Header Props
 
 Defines the table’s header row.
 
 <auto-type-table path="./props.ts" name="TableHeaderProps" />
 
-### Table.Body
+### Table.Body Props
 
 Wraps the table rows inside the body section.
 
 <auto-type-table path="./props.ts" name="TableBodyProps" />
 
-### Table.Row
+### Table.Row Props
 
 Represents a single row in the table.
 
 <auto-type-table path="./props.ts" name="TableRowProps" />
 
-### Table.Cell
+### Table.Cell Props
 
 Represents a single cell in a row
 
 <auto-type-table path="./props.ts" name="TableCellProps" />
 
-### Table.SectionHeader
+### Table.SectionHeader Props
 
 Represents a section heading, grouping different rows of the table.
 
 <auto-type-table path="./props.ts" name="TableSectionHeaderProps" />
+
+## Examples
+
+### Basic Usage
+
+<Demo data={basicDemo} />

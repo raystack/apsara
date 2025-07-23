@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `
@@ -11,39 +11,39 @@ export const getCode = (props: any) => {
     </Flex>`;
 };
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     gap: {
-      type: "select",
-      options: ["extra-small", "small", "medium", "large", "extra-large"],
-      initialValue: "small",
+      type: 'select',
+      options: ['extra-small', 'small', 'medium', 'large', 'extra-large'],
+      initialValue: 'small'
     },
     wrap: {
-      type: "select",
-      options: ["nowrap", "wrap", "wrap-reverse"],
-      initialValue: "wrap",
+      type: 'select',
+      options: ['nowrap', 'wrap', 'wrap-reverse'],
+      initialValue: 'wrap'
     },
     justify: {
-      type: "select",
-      options: ["start", "end", "center", "between"],
-      initialValue: "center",
+      type: 'select',
+      options: ['start', 'end', 'center', 'between'],
+      initialValue: 'center'
     },
     align: {
-      type: "select",
-      options: ["start", "end", "center", "baseline", "stretch"],
-      initialValue: "center",
+      type: 'select',
+      options: ['start', 'end', 'center', 'baseline', 'stretch'],
+      initialValue: 'center'
     },
     direction: {
-      type: "select",
-      options: ["row", "rowReverse", "column", "columnReverse"],
-      initialValue: "row",
-    },
+      type: 'select',
+      options: ['row', 'rowReverse', 'column', 'columnReverse'],
+      initialValue: 'row'
+    }
   },
-  getCode,
+  getCode
 };
 
-export const preview = {
-  type: "code",
+export const basicDemo = {
+  type: 'code',
   code: `
   <Flex gap="large">
     <Flex gap="medium" direction="column">
@@ -56,5 +56,5 @@ export const preview = {
       <Button>Primary button</Button>
       <Button>Primary button</Button>
     </Flex>
-  </Flex>`,
+  </Flex>`
 };
