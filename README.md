@@ -96,15 +96,9 @@ Visit our [documentation site](https://apsara.raystack.org) for:
 
 ## Contributing
 
-We welcome contributions! Here's how you can help:
+We welcome contributions! For detailed information on how to contribute, please see our [Contributing Guide](./CONTRIBUTING.md).
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Setup
+### Quick Start
 
 ```sh
 # Install dependencies
@@ -119,6 +113,12 @@ pnpm test
 # Build library
 pnpm build
 ```
+
+### Documentation
+
+For detailed technical information, please refer to:
+- **[Contributing Guide](./CONTRIBUTING.md)** - Contribution guidelines, code style, and PR process
+- **[Development Guide](./DEVELOPMENT.md)** - Local development setup, project structure, and troubleshooting
 
 ## License
 
