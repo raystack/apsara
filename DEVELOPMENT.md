@@ -67,33 +67,9 @@ npm install -g pnpm@9.3.0
 
 ## Development Tools & IDE Setup
 
-### Recommended VS Code Extensions
-
-For the best development experience, install these VS Code extensions:
-
-- **Biome** (`biomejs.biome`) - Code formatting and linting
-- **TypeScript Importer** - Auto-import for TypeScript
-- **Bracket Pair Colorizer** - Better code readability
-- **GitLens** - Enhanced Git integration
-
 ### IDE Configuration
 
-The project includes preconfigured settings for VS Code in `.vscode/settings.json`:
-
-- **Biome** is configured as the default formatter
-- **Format on save** is enabled
-- **Auto-fix and organize imports** on save
-- **ESLint is disabled** in favor of Biome
-
-For other IDEs, ensure you have Biome plugin installed and configured for consistent code formatting.
-
-### Biome Configuration
-
-The project uses Biome for linting and formatting. Configuration is in `biome.json`. Biome provides:
-- Fast formatting and linting
-- TypeScript/JavaScript support
-- CSS formatting
-- JSON/Markdown formatting
+The project uses Biome for linting and formatting with preconfigured VS Code settings. Ensure you have Biome plugin installed for consistent code formatting.
 
 ## Project Structure
 
@@ -117,14 +93,47 @@ apsara/
 ### Key Directories
 
 - **`packages/raystack/`**: Contains the main Apsara component library
-  - `components/`: Latest React components (root level)
-  - `v1/components/`: All React components (legacy v1 structure)
-  - `v1/hooks/`: Custom React hooks
-  - `v1/icons/`: Icon components
+  - `accordion/`, `avatar/`, `badge/`, `button/`, etc.: React components (root level)
+  - `v1/`: Legacy structure for backward compatibility
+    - `v1/components/`: Legacy component structure
+    - `v1/hooks/`: Custom React hooks
+    - `v1/icons/`: Icon components
   - `style.css`: Main stylesheet
   - `dist/`: Built output (generated)
 
 - **`apps/www/`**: Documentation website built with Next.js and Fumadocs
+  - `src/content/docs/`: Contains all the `.mdx` documentation files
+  - `src/components/`: Shared documentation components
+  - `public/`: Static assets for the documentation site
+
+### Package Exports
+
+The Apsara library provides multiple export paths for flexibility:
+
+#### Import Paths
+```javascript
+// Main entry (latest components)
+import { Button, Flex } from '@raystack/apsara'
+
+// Backward compatibility - v1 path (alias to main entry)
+import { Button, Flex } from '@raystack/apsara/v1'
+
+// Specific feature imports
+import { ChevronDownIcon } from '@raystack/apsara/icons'
+import { useLocalStorage } from '@raystack/apsara/hooks'
+
+// Styles
+import '@raystack/apsara/style.css'
+```
+
+#### Available Exports
+- **Main entry**: `@raystack/apsara` (latest components)
+- **Components**: `@raystack/apsara/v1` (backward compatibility alias)
+- **Icons**: `@raystack/apsara/icons`
+- **Hooks**: `@raystack/apsara/hooks`
+- **Styles**: `@raystack/apsara/style.css`
+
+**Note**: The `/v1` import path is maintained for backward compatibility. All v1 components have been moved to the root level, and `/v1` now serves as an alias to prevent breaking changes.
 
 ## Available Scripts
 
@@ -362,35 +371,6 @@ npm install @raystack/apsara
 # or
 pnpm add @raystack/apsara
 ```
-
-## Package Exports
-
-The Apsara library provides multiple export paths for flexibility:
-
-### Import Paths
-```javascript
-// Main entry (latest components)
-import { Button, Flex } from '@raystack/apsara'
-
-// Backward compatibility - v1 path (alias to main entry)
-import { Button, Flex } from '@raystack/apsara/v1'
-
-// Specific feature imports
-import { ChevronDownIcon } from '@raystack/apsara/icons'
-import { useLocalStorage } from '@raystack/apsara/hooks'
-
-// Styles
-import '@raystack/apsara/style.css'
-```
-
-### Available Exports
-- **Main entry**: `@raystack/apsara` (latest components)
-- **Components**: `@raystack/apsara/v1` (backward compatibility alias)
-- **Icons**: `@raystack/apsara/icons`
-- **Hooks**: `@raystack/apsara/hooks`
-- **Styles**: `@raystack/apsara/style.css`
-
-**Note**: The `/v1` import path is maintained for backward compatibility. All v1 components have been moved to the root level, and `/v1` now serves as an alias to prevent breaking changes.
 
 ## Troubleshooting
 
