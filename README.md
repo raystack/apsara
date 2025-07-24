@@ -96,7 +96,7 @@ Visit our [documentation site](https://apsara.raystack.org) for:
 
 ## Contributing
 
-We welcome contributions! For detailed information on how to contribute, please see our [Development Guide](./DEVELOPMENT.md).
+We welcome contributions! For detailed information on how to contribute, please see our [Contributing Guide](./CONTRIBUTING.md).
 
 ### Quick Start
 
@@ -114,16 +114,11 @@ pnpm test
 pnpm build
 ```
 
-### Development Guide
+### Documentation
 
-For comprehensive development instructions, including:
-- Local development setup
-- Project structure overview
-- Testing guidelines
-- Release process
-- Troubleshooting
-
-Please refer to our **[Development Guide](./DEVELOPMENT.md)**.
+For detailed technical information, please refer to:
+- **[Contributing Guide](./CONTRIBUTING.md)** - Contribution guidelines, code style, and PR process
+- **[Development Guide](./DEVELOPMENT.md)** - Local development setup, project structure, and troubleshooting
 
 ## License
 
