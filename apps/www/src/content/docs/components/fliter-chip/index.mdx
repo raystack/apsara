@@ -1,7 +1,6 @@
 ---
 title: FilterChip
 description: A compact, interactive element for filtering data with various input types.
-tag: update
 ---
 
 import { playground, inputDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
@@ -10,21 +9,8 @@ import { playground, inputDemo, iconDemo, actionDemo, operationsDemo } from "./d
 
 ## Usage
 
-The FilterChip component provides a compact way to filter data with support for different input types like select, date, string and number.
-
 ```tsx
 import { FilterChip } from "@raystack/apsara";
-
-<FilterChip
-  label="Status"
-  leadingIcon={<InfoCircledIcon />}
-  columnType="select"
-  options={[
-    { label: "Active", value: "active" },
-    { label: "Inactive", value: "inactive" },
-  ]}
-  onValueChange={value => console.log(value)}
-/>;
 ```
 
 ## FilterChip Props

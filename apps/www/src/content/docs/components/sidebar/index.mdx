@@ -9,45 +9,8 @@ import { preview, positionDemo, stateDemo } from "./demo.ts";
 
 ## Usage
 
-The Sidebar component provides a collapsible navigation panel with header, main content, groups, and footer sections.
-
 ```tsx
-import { Sidebar, Flex, Text, IconButton } from "@raystack/apsara";
-
-export default function App() {
-  return (
-    <Sidebar open={true}>
-      <Sidebar.Header>
-        <Flex align="center" gap={3}>
-          <IconButton size={4} onClick={() => console.log('Icon clicked')} aria-label="Logo">
-            <Home />
-          </IconButton>
-          <Text size={4} weight="medium">Company Name</Text>
-        </Flex>
-      </Sidebar.Header>
-      <Sidebar.Main>
-        <Sidebar.Group label="Main" leadingIcon={<Info />}>
-          <Sidebar.Item href="#" leadingIcon={<Info />} active>
-            Dashboard
-          </Sidebar.Item>
-          <Sidebar.Item href="#" leadingIcon={<Info />} disabled>
-            Settings
-          </Sidebar.Item>
-        </Sidebar.Group>
-        <Sidebar.Group label="Support">
-          <Sidebar.Item href="#" leadingIcon={<Info />}>
-            Help
-          </Sidebar.Item>
-        </Sidebar.Group>
-      </Sidebar.Main>
-      <Sidebar.Footer>
-        <Sidebar.Item href="#" leadingIcon={<Info />}>
-          Help
-        </Sidebar.Item>
-      </Sidebar.Footer>
-    </Sidebar>
-  );
-}
+import { Sidebar } from "@raystack/apsara";
 ```
 
 ## Sidebar Props

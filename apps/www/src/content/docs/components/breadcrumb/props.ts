@@ -58,3 +58,13 @@ export interface BreadcrumbSeparatorProps {
   /** Custom CSS class names */
   className?: string;
 }
+
+export interface BreadcrumbEllipsisProps {
+  /**
+   * Custom ellipsis element
+   * @defaultValue <DotsHorizontalIcon />
+   */
+  children?: ReactNode;
+  /** Custom CSS class names */
+  className?: string;
+}
