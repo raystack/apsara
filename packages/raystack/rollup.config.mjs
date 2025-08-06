@@ -98,7 +98,14 @@ const rollupConfig = configs.map(conf => {
         preserveModulesRoot: conf.inputPath
       }
     ],
-    external: ['react', 'react-dom'],
+    external: id => {
+      return (
+        id === 'react' ||
+        id === 'react-dom' ||
+        id.startsWith('react/') || // e.g. react/jsx-runtime
+        id.includes('react/jsx-runtime') // explicitly avoid virtual chunking
+      );
+    },
     plugins: createPlugins({
       rootDir: conf.inputPath,
       declarationDir: conf.outputPath
