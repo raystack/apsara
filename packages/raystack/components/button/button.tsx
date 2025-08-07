@@ -1,12 +1,6 @@
 import { type VariantProps, cva } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
-import {
-  ButtonHTMLAttributes,
-  PropsWithChildren,
-  ReactNode,
-  forwardRef
-} from 'react';
-
+import { type ComponentProps, type ReactNode, forwardRef } from 'react';
 import { Spinner } from '../spinner';
 import styles from './button.module.css';
 
@@ -129,8 +123,8 @@ const getLoaderOnlyClass = (size: 'small' | 'normal' | null) =>
     ? styles['loader-only-button-small']
     : styles['loader-only-button-normal'];
 
-type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
-  ButtonHTMLAttributes<HTMLButtonElement> & {
+type ButtonProps = ComponentProps<'button'> &
+  VariantProps<typeof button> & {
     asChild?: boolean;
     loading?: boolean;
     loaderText?: ReactNode;
