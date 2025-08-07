@@ -98,7 +98,7 @@ const rollupConfig = configs.map(conf => {
         preserveModulesRoot: conf.inputPath
       }
     ],
-    external: ['react', 'react-dom'],
+    external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime'],
     plugins: createPlugins({
       rootDir: conf.inputPath,
       declarationDir: conf.outputPath
