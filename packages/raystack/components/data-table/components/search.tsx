@@ -1,7 +1,9 @@
-import { forwardRef } from "react";
-import { Search } from "../../search";
-import { SearchProps } from "../../search/search";
-import { useDataTable } from "../hooks/useDataTable";
+'use client';
+
+import { forwardRef } from 'react';
+import { Search } from '../../search';
+import { SearchProps } from '../../search/search';
+import { useDataTable } from '../hooks/useDataTable';
 
 export const TableSearch = forwardRef<HTMLInputElement, SearchProps>(
   ({ ...props }, ref) => {
@@ -9,19 +11,19 @@ export const TableSearch = forwardRef<HTMLInputElement, SearchProps>(
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
-      updateTableQuery((query) => {
+      updateTableQuery(query => {
         return {
           ...query,
-          search: value,
+          search: value
         };
       });
     };
 
     const handleClear = () => {
-      updateTableQuery((query) => {
+      updateTableQuery(query => {
         return {
           ...query,
-          search: "",
+          search: ''
         };
       });
     };

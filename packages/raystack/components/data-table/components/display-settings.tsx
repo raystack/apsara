@@ -1,3 +1,5 @@
+'use client';
+
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 
 import { Button } from '../../button';

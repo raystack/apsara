@@ -1,16 +1,18 @@
-import { TextAlignBottomIcon,TextAlignTopIcon } from "@radix-ui/react-icons";
+'use client';
 
-import { Flex } from "../../flex";
-import { IconButton } from "../../icon-button";
-import { Select } from "../../select";
-import { Text } from "../../text";
-import styles from "../data-table.module.css";
+import { TextAlignBottomIcon, TextAlignTopIcon } from '@radix-ui/react-icons';
+
+import { Flex } from '../../flex';
+import { IconButton } from '../../icon-button';
+import { Select } from '../../select';
+import { Text } from '../../text';
+import styles from '../data-table.module.css';
 import {
   ColumnData,
   DataTableSort,
   SortOrders,
-  SortOrdersValues,
-} from "../data-table.types";
+  SortOrdersValues
+} from '../data-table.types';
 
 export interface OrderingProps {
   columnList: ColumnData[];
@@ -30,25 +32,25 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
   }
 
   return (
-    <Flex justify="between" align="center">
-      <Text size={2} weight={500} className={styles["flex-1"]}>
+    <Flex justify='between' align='center'>
+      <Text size={2} weight={500} className={styles['flex-1']}>
         Ordering
       </Text>
-      <Flex gap={"extra-small"} className={styles["flex-1"]}>
+      <Flex gap='extra-small' className={styles['flex-1']}>
         <Select
           onValueChange={handleColumnChange}
           value={value.name}
           disabled={columnList.length === 0}
         >
           <Select.Trigger
-            size={"small"}
-            className={styles["display-popover-properties-select"]}
-            with-icon-button="true"
+            size='small'
+            className={styles['display-popover-properties-select']}
+            with-icon-button='true'
           >
-            <Select.Value placeholder="Select value" />
+            <Select.Value placeholder='Select value' />
           </Select.Trigger>
-          <Select.Content data-variant="filter">
-            {columnList.map((column) => (
+          <Select.Content data-variant='filter'>
+            {columnList.map(column => (
               <Select.Item key={column.id} value={column.id}>
                 {column.label}
               </Select.Item>
@@ -62,10 +64,10 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
         >
           {value.order === SortOrders?.ASC ? (
             <TextAlignBottomIcon
-              className={styles["display-popover-sort-icon"]}
+              className={styles['display-popover-sort-icon']}
             />
           ) : (
-            <TextAlignTopIcon className={styles["display-popover-sort-icon"]} />
+            <TextAlignTopIcon className={styles['display-popover-sort-icon']} />
           )}
         </IconButton>
       </Flex>
