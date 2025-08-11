@@ -1,8 +1,10 @@
-import { useCopyToClipboard } from "~/hooks/useCopyToClipboard";
-import { CopyIcon } from "@radix-ui/react-icons";
-import { CheckCircleFilledIcon } from "~/icons";
-import { useState } from "react";
-import { IconButtonProps, IconButton } from "../icon-button/icon-button";
+'use client';
+
+import { CopyIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
+import { useCopyToClipboard } from '~/hooks/useCopyToClipboard';
+import { CheckCircleFilledIcon } from '~/icons';
+import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 
 interface CopyButtonProps extends IconButtonProps {
   text: string;
@@ -32,11 +34,9 @@ export const CopyButton = ({
   }
 
   return (
-    <IconButton {...props} onClick={onCopy} data-test-id="copy-button">
+    <IconButton {...props} onClick={onCopy} data-test-id='copy-button'>
       {isCopied ? (
-        <CheckCircleFilledIcon
-          color={"var(--rs-color-foreground-success-primary)"}
-        />
+        <CheckCircleFilledIcon color='var(--rs-color-foreground-success-primary)' />
       ) : (
         <CopyIcon />
       )}

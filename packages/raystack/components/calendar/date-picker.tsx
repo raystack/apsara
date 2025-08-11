@@ -1,19 +1,21 @@
-import { CalendarIcon } from "@radix-ui/react-icons";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { PropsBase, PropsSingleRequired } from "react-day-picker";
+'use client';
 
-import { Popover } from "../popover";
-import { InputField } from "../input-field";
-import { InputFieldProps } from "../input-field/input-field";
-import { Calendar } from "./calendar";
-import styles from "./calendar.module.css";
+import { CalendarIcon } from '@radix-ui/react-icons';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { PropsBase, PropsSingleRequired } from 'react-day-picker';
+
+import { InputField } from '../input-field';
+import { InputFieldProps } from '../input-field/input-field';
+import { Popover } from '../popover';
+import { Calendar } from './calendar';
+import styles from './calendar.module.css';
 
 dayjs.extend(customParseFormat);
 
 interface DatePickerProps {
-  side?: "top" | "right" | "bottom" | "left";
+  side?: 'top' | 'right' | 'bottom' | 'left';
   dateFormat?: string;
   inputFieldProps?: InputFieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
@@ -27,15 +29,15 @@ interface DatePickerProps {
 }
 
 export function DatePicker({
-  side = "top",
-  dateFormat = "DD/MM/YYYY",
+  side = 'top',
+  dateFormat = 'DD/MM/YYYY',
   inputFieldProps,
   calendarProps,
   value = new Date(),
   onSelect = () => {},
   children,
   showCalendarIcon = true,
-  timeZone,
+  timeZone
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
@@ -68,7 +70,7 @@ export function DatePicker({
 
   function registerEventListeners() {
     isInputFieldFocused.current = true;
-    document.addEventListener("mouseup", handleMouseDown);
+    document.addEventListener('mouseup', handleMouseDown);
   }
 
   function removeEventListeners(skipUpdate = false) {
@@ -80,7 +82,7 @@ export function DatePicker({
     if (inputFieldRef.current) inputFieldRef.current.value = updatedVal;
     if (!error && !skipUpdate) onSelect(dayjs(updatedVal).toDate());
 
-    document.removeEventListener("mouseup", handleMouseDown);
+    document.removeEventListener('mouseup', handleMouseDown);
   }
 
   const handleSelect = (day: Date) => {
@@ -121,7 +123,7 @@ export function DatePicker({
   }
 
   function handleKeyUp(event: React.KeyboardEvent) {
-    if (event.code === "Enter" && inputFieldRef.current) {
+    if (event.code === 'Enter' && inputFieldRef.current) {
       inputFieldRef.current.blur();
       removeEventListeners();
     }
@@ -130,11 +132,11 @@ export function DatePicker({
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
 
-    const format = value.includes("/")
-      ? "DD/MM/YYYY"
-      : value.includes("-")
-      ? "DD-MM-YYYY"
-      : undefined;
+    const format = value.includes('/')
+      ? 'DD/MM/YYYY'
+      : value.includes('-')
+        ? 'DD-MM-YYYY'
+        : undefined;
     const date = dayjs(value, format);
 
     const isValidDate = date.isValid();
@@ -155,14 +157,14 @@ export function DatePicker({
       setSelectedDate(date.toDate());
       setError(undefined);
     } else {
-      setError("Invalid date");
+      setError('Invalid date');
     }
   }
 
   const defaultTrigger = (
     <InputField
-      size="small"
-      placeholder="Select date"
+      size='small'
+      placeholder='Select date'
       error={error}
       className={styles.datePickerInput}
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
@@ -177,9 +179,13 @@ export function DatePicker({
   );
 
   const trigger =
-    typeof children === "function"
-      ? children({ selectedDate: formattedDate })
-      : children ? <div>{children}</div> : defaultTrigger;
+    typeof children === 'function' ? (
+      children({ selectedDate: formattedDate })
+    ) : children ? (
+      <div>{children}</div>
+    ) : (
+      defaultTrigger
+    );
 
   return (
     <Popover open={showCalendar} onOpenChange={onOpenChange}>
@@ -195,7 +201,7 @@ export function DatePicker({
           {...calendarProps}
           timeZone={timeZone}
           onDropdownOpen={onDropdownOpen}
-          mode="single"
+          mode='single'
           selected={selectedDate}
           month={selectedDate}
           onSelect={handleSelect}

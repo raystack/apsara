@@ -1,3 +1,5 @@
+'use client';
+
 import Color from 'color';
 import { ComponentPropsWithoutRef } from 'react';
 import { InputField } from '../input-field';

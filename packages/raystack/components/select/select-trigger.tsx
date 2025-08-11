@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { VariantProps, cva } from 'class-variance-authority';
 import { Select as SelectPrimitive, Slot } from 'radix-ui';

@@ -1,3 +1,5 @@
+'use client';
+
 import { cx } from 'class-variance-authority';
 import { useCallback } from 'react';
 import { FilterOperation, FilterOperator } from '~/types/filters';

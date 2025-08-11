@@ -1,11 +1,13 @@
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
+'use client';
 
-import { Box } from "../box";
-import { useTheme } from "./theme";
+import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
+
+import { Box } from '../box';
+import { useTheme } from './theme';
 
 enum Theme {
-  DARK = "dark",
-  LIGHT = "light",
+  DARK = 'dark',
+  LIGHT = 'light'
 }
 
 type Props = { size?: number };

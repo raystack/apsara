@@ -1,3 +1,5 @@
+'use client';
+
 import { cx } from 'class-variance-authority';
 import { CSSProperties, createContext, useContext } from 'react';
 import styles from './skeleton.module.css';

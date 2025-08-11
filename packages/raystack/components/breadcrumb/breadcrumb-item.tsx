@@ -1,3 +1,5 @@
+'use client';
+
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import {

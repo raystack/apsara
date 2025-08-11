@@ -1,3 +1,5 @@
+'use client';
+
 import { MenuButton, MenuButtonProps } from '@ariakit/react';
 import { Slot } from 'radix-ui';
 import { PointerEvent, forwardRef } from 'react';
