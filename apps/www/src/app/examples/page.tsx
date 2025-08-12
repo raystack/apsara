@@ -34,7 +34,6 @@ import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
 const Page = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [nestedDialogOpen, setNestedDialogOpen] = useState(false);
   const [dialogSheetOpen, setDialogSheetOpen] = useState(false);
@@ -73,7 +72,7 @@ const Page = () => {
           backgroundColor: 'var(--rs-color-background-base-primary)'
         }}
       >
-        <Sidebar open={sidebarOpen} onOpenChange={setSidebarOpen}>
+        <Sidebar defaultOpen>
           <Sidebar.Header>
             <Flex align='center' gap={3}>
               <IconButton

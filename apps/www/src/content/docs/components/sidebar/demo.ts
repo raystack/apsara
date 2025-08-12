@@ -3,13 +3,13 @@
 export const preview = {
   type: 'code',
   code: `
-  <Sidebar open={true}>
+  <Sidebar defaultOpen>
     <Sidebar.Header>
       <Flex align="center" gap={3}>
         <IconButton size={4} aria-label="Logo">
           <Home />
         </IconButton>
-        <Text size={4} weight="medium">Apsara</Text>
+        <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
       </Flex>
     </Sidebar.Header>
     <Sidebar.Main>
@@ -45,9 +45,9 @@ export const positionDemo = {
           <Sidebar.Header>
             <Flex align="center" gap={3}>
               <IconButton size={4} aria-label="Logo">
-                <Home />
+                <Home width={24} height={24}/>
               </IconButton>
-              <Text size={4} weight="medium">Company Name</Text>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -63,9 +63,9 @@ export const positionDemo = {
           <Sidebar.Header>
             <Flex align="center" gap={3}>
               <IconButton size={4} aria-label="Logo">
-                <Home />
+                <Home width={24} height={24}/>
               </IconButton>
-              <Text size={4} weight="medium">Company Name</Text>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -86,9 +86,9 @@ export const stateDemo = {
           <Sidebar.Header>
             <Flex align="center" gap={3}>
               <IconButton size={4} aria-label="Logo">
-                <Home />
+                <Home width={24} height={24}/>
               </IconButton>
-              <Text size={4} weight="medium">Company Name</Text>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -103,9 +103,43 @@ export const stateDemo = {
           <Sidebar.Header>
             <Flex align="center" gap={3}>
               <IconButton size={4} aria-label="Logo">
-                <Home />
+                <Home width={24} height={24}/>
               </IconButton>
-              <Text size={4} weight="medium">Company Name</Text>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>`
+    },
+    {
+      name: 'Uncontrolled',
+      code: `<Sidebar>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>`
+    },
+    {
+      name: 'Uncontrolled (default open)',
+      code: `<Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>

@@ -51,6 +51,10 @@
   align-items: center;
 }
 
+.root[data-state="collapsed"] [data-collapse-hidden="true"] {
+  display: none;
+}
+
 .footer {
   width: 100%;
   gap: var(--rs-space-2);

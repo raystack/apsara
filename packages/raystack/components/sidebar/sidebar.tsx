@@ -10,7 +10,9 @@ import {
   cloneElement,
   createContext,
   forwardRef,
-  useContext
+  useCallback,
+  useContext,
+  useState
 } from 'react';
 import { Avatar } from '../avatar';
 import { Flex } from '../flex';
@@ -62,63 +64,78 @@ const SidebarRoot = forwardRef<
     {
       className,
       position = 'left',
-      open,
+      open: providedOpen,
       onOpenChange,
       hideCollapsedItemTooltip,
       collapsible = true,
+      defaultOpen,
       children,
       ...props
     },
     ref
-  ) => (
-    <SidebarContext.Provider
-      value={{ isCollapsed: !open, hideCollapsedItemTooltip }}
-    >
-      <Tooltip.Provider>
-        <Collapsible.Root
-          ref={ref}
-          className={root({ className })}
-          data-position={position}
-          data-state={open ? 'expanded' : 'collapsed'}
-          data-collapse-disabled={!collapsible}
-          open={open}
-          onOpenChange={collapsible ? onOpenChange : undefined}
-          aria-label='Navigation Sidebar'
-          aria-expanded={open}
-          role='navigation'
-          {...props}
-          asChild
-        >
-          <aside>
-            {collapsible && (
-              <Tooltip
-                message={open ? 'Click to collapse' : 'Click to expand'}
-                side={position === 'left' ? 'right' : 'left'}
-                asChild
-                followCursor
-                sideOffset={10}
-              >
-                <div
-                  className={styles.resizeHandle}
-                  onClick={() => onOpenChange?.(!open)}
-                  role='button'
-                  tabIndex={0}
-                  aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onOpenChange?.(!open);
-                    }
-                  }}
-                />
-              </Tooltip>
-            )}
-            {children}
-          </aside>
-        </Collapsible.Root>
-      </Tooltip.Provider>
-    </SidebarContext.Provider>
-  )
+  ) => {
+    const [internalOpen, setInternalOpen] = useState(defaultOpen);
+
+    const open = providedOpen ?? internalOpen;
+
+    const handleOpenChange = useCallback(
+      (value: boolean) => {
+        setInternalOpen(value);
+        onOpenChange?.(value);
+      },
+      [onOpenChange]
+    );
+
+    return (
+      <SidebarContext.Provider
+        value={{ isCollapsed: !open, hideCollapsedItemTooltip }}
+      >
+        <Tooltip.Provider>
+          <Collapsible.Root
+            ref={ref}
+            className={root({ className })}
+            data-position={position}
+            data-state={open ? 'expanded' : 'collapsed'}
+            data-collapse-disabled={!collapsible}
+            open={open}
+            onOpenChange={collapsible ? handleOpenChange : undefined}
+            aria-label='Navigation Sidebar'
+            aria-expanded={open}
+            role='navigation'
+            {...props}
+            asChild
+          >
+            <aside>
+              {collapsible && (
+                <Tooltip
+                  message={open ? 'Click to collapse' : 'Click to expand'}
+                  side={position === 'left' ? 'right' : 'left'}
+                  asChild
+                  followCursor
+                  sideOffset={10}
+                >
+                  <div
+                    className={styles.resizeHandle}
+                    onClick={() => handleOpenChange(!open)}
+                    role='button'
+                    tabIndex={0}
+                    aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleOpenChange(!open);
+                      }
+                    }}
+                  />
+                </Tooltip>
+              )}
+              {children}
+            </aside>
+          </Collapsible.Root>
+        </Tooltip.Provider>
+      </SidebarContext.Provider>
+    );
+  }
 );
 
 const SidebarHeader = forwardRef<
