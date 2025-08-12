@@ -14,8 +14,8 @@ export function SidebarExamples() {
               <IconButton size={4} aria-label='Home'>
                 <Home />
               </IconButton>
-              <Text size={4} weight='medium'>
-                Company Name
+              <Text size={4} weight='medium' data-collapse-hidden>
+                Apsara
               </Text>
             </Flex>
           </Sidebar.Header>
@@ -34,7 +34,7 @@ export function SidebarExamples() {
               <IconButton size={4} aria-label='Home'>
                 <Home />
               </IconButton>
-              <Text size={4} weight='medium'>
+              <Text size={4} weight='medium' data-collapse-hidden>
                 Apsara
               </Text>
             </Flex>
@@ -59,6 +59,26 @@ export function SidebarExamples() {
               Help
             </Sidebar.Item>
           </Sidebar.Footer>
+        </Sidebar>
+        <Sidebar>
+          <Sidebar.Header>
+            <Flex align='center' gap={3}>
+              <IconButton size={4} aria-label='Home'>
+                <Home width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight='medium' data-collapse-hidden>
+                Apsara
+              </Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href='#' leadingIcon={<Info />} active>
+              Dashboard
+            </Sidebar.Item>
+            <Sidebar.Item href='#' leadingIcon={<Info />}>
+              Settings
+            </Sidebar.Item>
+          </Sidebar.Main>
         </Sidebar>
       </Flex>
     </PlaygroundLayout>

@@ -7,6 +7,9 @@ export interface SidebarRootProps {
   /** Callback when expanded/collapsed state changes. */
   onOpenChange?: (open: boolean) => void;
 
+  /** Default expanded/collapsed state.*/
+  defaultOpen?: boolean;
+
   /** Disable the click to collapse/expand the Sidebar.
    * @default undefined
    */

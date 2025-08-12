@@ -6,6 +6,7 @@
     "isolatedModules": false,
     "moduleResolution": "bundler",
     "paths": {
+      "react": ["node_modules/@types/react"],
       "~/*": ["./*"],
       "~/icons/*": ["icons/*"],
       "~/hooks/*": ["hooks/*"]
