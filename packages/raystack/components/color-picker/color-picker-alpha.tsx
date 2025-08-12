@@ -1,3 +1,5 @@
+'use client';
+
 import { cx } from 'class-variance-authority';
 import { Slider } from 'radix-ui';
 import { type ComponentProps } from 'react';

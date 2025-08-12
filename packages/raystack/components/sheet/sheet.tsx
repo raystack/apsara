@@ -1,3 +1,5 @@
+'use client';
+
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { VariantProps, cva } from 'class-variance-authority';
 import { Dialog as DialogPrimitive } from 'radix-ui';

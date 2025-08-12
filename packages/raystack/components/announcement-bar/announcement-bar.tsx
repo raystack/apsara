@@ -1,21 +1,23 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { ReactNode } from "react";
+'use client';
 
-import { Flex } from "../flex";
-import { Text } from "../text";
-import styles from "./announcement-bar.module.css";
+import { type VariantProps, cva } from 'class-variance-authority';
+import { ReactNode } from 'react';
 
-const announementBar = cva(styles["announcement-bar"], {
+import { Flex } from '../flex';
+import { Text } from '../text';
+import styles from './announcement-bar.module.css';
+
+const announementBar = cva(styles['announcement-bar'], {
   variants: {
     variant: {
-      gradient: styles["announcement-bar-gradient"],
-      normal: styles["announcement-bar-normal"],
-      error: styles["announcement-bar-error"],
-    },
+      gradient: styles['announcement-bar-gradient'],
+      normal: styles['announcement-bar-normal'],
+      error: styles['announcement-bar-error']
+    }
   },
   defaultVariants: {
-    variant: "normal",
-  },
+    variant: 'normal'
+  }
 });
 
 type AnnouncementBarProps = VariantProps<typeof announementBar> & {
@@ -40,18 +42,18 @@ export const AnnouncementBar = ({
   return (
     <Flex
       className={announementBar({ className, variant })}
-      justify={"center"}
-      align={"center"}
-      gap={"small"}
+      justify='center'
+      align='center'
+      gap='small'
       {...props}
     >
-      {leadingIcon && <span className={styles["icon"]}>{leadingIcon}</span>}
+      {leadingIcon && <span className={styles['icon']}>{leadingIcon}</span>}
       <Text className={styles.text} size={2} weight={500}>
         {text}
       </Text>
       {actionLabel || actionIcon ? (
         <Text
-          className={styles["action-btn"]}
+          className={styles['action-btn']}
           size={2}
           weight={500}
           onClick={onActionClick}

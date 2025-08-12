@@ -1,3 +1,5 @@
+'use client';
+
 import { Combobox, ComboboxList } from '@ariakit/react';
 import { cx } from 'class-variance-authority';
 import { Select as SelectPrimitive, Slot } from 'radix-ui';

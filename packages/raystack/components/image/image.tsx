@@ -1,29 +1,31 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { ImgHTMLAttributes } from "react";
+'use client';
 
-import styles from "./image.module.css";
+import { type VariantProps, cva } from 'class-variance-authority';
+import { ImgHTMLAttributes } from 'react';
+
+import styles from './image.module.css';
 
 const image = cva(styles.image, {
   variants: {
     fit: {
-      contain: styles["image-contain"],
-      cover: styles["image-cover"],
-      fill: styles["image-fill"],
+      contain: styles['image-contain'],
+      cover: styles['image-cover'],
+      fill: styles['image-fill']
     },
     radius: {
-      none: styles["image-radius-none"],
-      small: styles["image-radius-small"],
-      medium: styles["image-radius-medium"],
-      full: styles["image-radius-full"],
+      none: styles['image-radius-none'],
+      small: styles['image-radius-small'],
+      medium: styles['image-radius-medium'],
+      full: styles['image-radius-full']
     }
   },
   defaultVariants: {
-    fit: "cover",
-    radius: "none"
+    fit: 'cover',
+    radius: 'none'
   }
 });
 
-interface ImageProps 
+interface ImageProps
   extends ImgHTMLAttributes<HTMLImageElement>,
     VariantProps<typeof image> {
   fallback?: string;
@@ -31,8 +33,8 @@ interface ImageProps
   height?: string | number;
 }
 
-export function Image({ 
-  alt = "",
+export function Image({
+  alt = '',
   className,
   fit,
   radius,
@@ -41,11 +43,13 @@ export function Image({
   width,
   height,
   style,
-  loading = "lazy",
-  decoding = "async",
-  ...props 
+  loading = 'lazy',
+  decoding = 'async',
+  ...props
 }: ImageProps) {
-  const handleError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const handleError = (
+    event: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
     if (fallback) {
       event.currentTarget.src = fallback;
     }
@@ -59,7 +63,7 @@ export function Image({
   };
 
   return (
-    <img 
+    <img
       alt={alt}
       className={image({ fit, radius, className })}
       onError={handleError}
@@ -67,10 +71,10 @@ export function Image({
       loading={loading}
       decoding={decoding}
       {...props}
-      role="img"
+      role='img'
       aria-label={alt}
     />
   );
 }
 
-Image.displayName = "Image"; 
+Image.displayName = 'Image';

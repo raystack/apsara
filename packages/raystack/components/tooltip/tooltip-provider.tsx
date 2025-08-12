@@ -1,3 +1,5 @@
+'use client';
+
 import { Tooltip as TooltipPrimitive } from 'radix-ui';
 import { createContext, useContext } from 'react';
 

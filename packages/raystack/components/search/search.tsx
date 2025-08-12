@@ -1,15 +1,17 @@
-import { CrossCircledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { InputField } from "../input-field";
-import { InputFieldProps } from "../input-field/input-field";
-import { IconButton } from "../icon-button";
+'use client';
 
-import styles from "./search.module.css";
-import { forwardRef } from "react";
+import { CrossCircledIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
+import { IconButton } from '../icon-button';
+import { InputField } from '../input-field';
+import { InputFieldProps } from '../input-field/input-field';
 
-export interface SearchProps extends Omit<InputFieldProps, "leadingIcon"> {
+import { forwardRef } from 'react';
+import styles from './search.module.css';
+
+export interface SearchProps extends Omit<InputFieldProps, 'leadingIcon'> {
   showClearButton?: boolean;
   onClear?: () => void;
-  variant?: "default" | "borderless";
+  variant?: 'default' | 'borderless';
 }
 
 export const Search = forwardRef<HTMLInputElement, SearchProps>(
@@ -17,14 +19,14 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
     {
       className,
       disabled,
-      placeholder = "Search",
+      placeholder = 'Search',
       size,
       showClearButton,
       onClear,
       value,
       onChange,
-      width = "100%",
-      variant = "default",
+      width = '100%',
+      variant = 'default',
       ...props
     }: SearchProps,
     ref
@@ -33,15 +35,15 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       showClearButton && value ? (
         <div className={styles.clearButtonWrapper}>
           <IconButton
-            size={size === "small" ? 2 : 3}
-            onClick={(e) => {
+            size={size === 'small' ? 2 : 3}
+            onClick={e => {
               e.stopPropagation();
               if (!disabled && onClear) {
                 onClear();
               }
             }}
             disabled={disabled}
-            aria-label="Clear search"
+            aria-label='Clear search'
             className={styles.clearButton}
           >
             <CrossCircledIcon />
@@ -50,7 +52,7 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
       ) : undefined;
 
     return (
-      <div className={styles.container} role="search" style={{ width }}>
+      <div className={styles.container} role='search' style={{ width }}>
         <InputField
           leadingIcon={<MagnifyingGlassIcon />}
           trailingIcon={trailingIconWithClear}
@@ -70,4 +72,4 @@ export const Search = forwardRef<HTMLInputElement, SearchProps>(
   }
 );
 
-Search.displayName = "Search";
+Search.displayName = 'Search';

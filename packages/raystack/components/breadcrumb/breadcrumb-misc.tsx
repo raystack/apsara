@@ -1,3 +1,5 @@
+'use client';
+
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { HTMLAttributes, forwardRef } from 'react';

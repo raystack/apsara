@@ -309,6 +309,9 @@ importers:
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.4.24)(ts-node@10.9.2(@swc/core@1.11.21)(@types/node@20.19.0)(typescript@5.4.3))
+      rollup-plugin-preserve-directives:
+        specifier: ^0.4.0
+        version: 0.4.0(rollup@3.25.1)
       rollup-plugin-tsconfig-paths:
         specifier: ^1.5.2
         version: 1.5.2(rollup@3.25.1)(typescript@5.4.3)
@@ -7618,6 +7621,9 @@ packages:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
     engines: {node: '>=12'}
 
+  magic-string@0.30.17:
+    resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
+
   make-dir@4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
@@ -9270,6 +9276,11 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       postcss: 8.x
+
+  rollup-plugin-preserve-directives@0.4.0:
+    resolution: {integrity: sha512-gx4nBxYm5BysmEQS+e2tAMrtFxrGvk+Pe5ppafRibQi0zlW7VYAbEGk6IKDw9sJGPdFWgVTE0o4BU4cdG0Fylg==}
+    peerDependencies:
+      rollup: 2.x || 3.x || 4.x
 
   rollup-plugin-tsconfig-paths@1.5.2:
     resolution: {integrity: sha512-tyS7u2Md0eXKwbDfTuDDa1izciwqhOZsHzX7zYc5gKC1L7q5ozdSt+q1jjtD1dDqWyjrt8lZoiLtOQGhMHh1OQ==}
@@ -20243,6 +20254,10 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
 
+  magic-string@0.30.17:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.0
+
   make-dir@4.0.0:
     dependencies:
       semver: 7.7.1
@@ -22412,6 +22427,12 @@ snapshots:
       style-inject: 0.3.0
     transitivePeerDependencies:
       - ts-node
+
+  rollup-plugin-preserve-directives@0.4.0(rollup@3.25.1):
+    dependencies:
+      '@rollup/pluginutils': 5.1.0(rollup@3.25.1)
+      magic-string: 0.30.17
+      rollup: 3.25.1
 
   rollup-plugin-tsconfig-paths@1.5.2(rollup@3.25.1)(typescript@5.4.3):
     dependencies:

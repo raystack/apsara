@@ -1,3 +1,5 @@
+'use client';
+
 import { cva } from 'class-variance-authority';
 import { Popover as PopoverPrimitive } from 'radix-ui';
 import React from 'react';

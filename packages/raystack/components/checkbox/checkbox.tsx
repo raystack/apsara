@@ -1,3 +1,5 @@
+'use client';
+
 import { VariantProps, cva, cx } from 'class-variance-authority';
 import { Checkbox as CheckboxPrimitive } from 'radix-ui';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';

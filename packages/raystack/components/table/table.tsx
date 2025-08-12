@@ -1,8 +1,8 @@
-import React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-import styles from "./table.module.css";
+import { type VariantProps, cva } from 'class-variance-authority';
+import React from 'react';
+import styles from './table.module.css';
 
-const table = cva(styles["table"]);
+const table = cva(styles['table']);
 const TableRoot = React.forwardRef<
   HTMLTableElement,
   React.TableHTMLAttributes<HTMLTableElement> &
@@ -11,7 +11,7 @@ const TableRoot = React.forwardRef<
   return <table ref={ref} {...props} className={table({ className })} />;
 });
 
-const header = cva(styles["header"]);
+const header = cva(styles['header']);
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement> &
@@ -34,7 +34,7 @@ const TableRow = React.forwardRef<
   return <tr ref={ref} {...props} />;
 });
 
-const head = cva(styles["head"]);
+const head = cva(styles['head']);
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement> &
@@ -43,7 +43,7 @@ const TableHead = React.forwardRef<
   return <th ref={ref} {...props} className={head({ className })} />;
 });
 
-const cell = cva(styles["cell"]);
+const cell = cva(styles['cell']);
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement> &
@@ -52,8 +52,8 @@ const TableCell = React.forwardRef<
   return <td ref={ref} {...props} className={cell({ className })} />;
 });
 
-const sectionHeader = cva(styles["sectionHeader"]);
-type SectionHeaderClassNames = "row" | "cell";
+const sectionHeader = cva(styles['sectionHeader']);
+type SectionHeaderClassNames = 'row' | 'cell';
 const SectionHeader = React.forwardRef<
   HTMLTableRowElement,
   React.PropsWithChildren & {
@@ -76,5 +76,5 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Head: TableHead,
   Cell: TableCell,
-  SectionHeader: SectionHeader,
+  SectionHeader: SectionHeader
 });
