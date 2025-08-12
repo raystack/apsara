@@ -1,3 +1,5 @@
+'use client';
+
 import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
 import { Select } from '../select';

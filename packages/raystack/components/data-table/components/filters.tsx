@@ -1,3 +1,5 @@
+'use client';
+
 import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';

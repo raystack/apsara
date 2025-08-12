@@ -1,3 +1,5 @@
+'use client';
+
 import { cva, cx } from 'class-variance-authority';
 import { Collapsible } from 'radix-ui';
 import {

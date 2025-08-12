@@ -1,3 +1,5 @@
+'use client';
+
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { VariantProps, cva, cx } from 'class-variance-authority';
 import { ReactElement, ReactNode, useCallback, useState } from 'react';

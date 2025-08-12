@@ -5,6 +5,7 @@ import typescript from '@rollup/plugin-typescript';
 import svgr from '@svgr/rollup';
 import postcssImport from 'postcss-import';
 import postcss from 'rollup-plugin-postcss';
+import preserveDirectives from 'rollup-plugin-preserve-directives';
 import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
 
 const createPlugins = ({ rootDir, declarationDir }) => [
@@ -47,7 +48,8 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     rootDir: rootDir,
     declarationDir: declarationDir
   }),
-  image()
+  image(),
+  preserveDirectives() //preserve `use client` directive
 ];
 
 const sharedWarningHandler = (warning, warn) => {

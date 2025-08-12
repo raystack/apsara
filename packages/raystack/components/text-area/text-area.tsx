@@ -1,3 +1,5 @@
+'use client';
+
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { cva, cx } from 'class-variance-authority';
 import * as React from 'react';

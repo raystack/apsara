@@ -1,3 +1,5 @@
+'use client';
+
 import { type VariantProps, cva } from 'class-variance-authority';
 import { HTMLAttributes, forwardRef } from 'react';
 import styles from './breadcrumb.module.css';

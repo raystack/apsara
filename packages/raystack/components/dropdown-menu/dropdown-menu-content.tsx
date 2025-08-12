@@ -1,3 +1,5 @@
+'use client';
+
 import { Menu, MenuProps, useMenuContext } from '@ariakit/react';
 import { Combobox, ComboboxList } from '@ariakit/react';
 import { cx } from 'class-variance-authority';

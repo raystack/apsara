@@ -1,3 +1,5 @@
+'use client';
+
 import { TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';

@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   createContext,
   Fragment,
@@ -6,20 +8,20 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useState,
-} from "react";
+  useState
+} from 'react';
 
-import type { ThemeProviderProps, UseThemeProps } from "./types";
+import type { ThemeProviderProps, UseThemeProps } from './types';
 
-const colorSchemes = ["light", "dark"];
-const MEDIA = "(prefers-color-scheme: dark)";
-const isServer = typeof window === "undefined";
+const colorSchemes = ['light', 'dark'];
+const MEDIA = '(prefers-color-scheme: dark)';
+const isServer = typeof window === 'undefined';
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
-const defaultContext: UseThemeProps = { setTheme: (_) => {}, themes: [] };
+const defaultContext: UseThemeProps = { setTheme: _ => {}, themes: [] };
 
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
+export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
   const context = useContext(ThemeContext);
 
   // Ignore nested context providers, just passthrough children
@@ -27,23 +29,23 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
   return <Theme {...props} />;
 };
 
-const defaultThemes = ["light", "dark"];
+const defaultThemes = ['light', 'dark'];
 
 const Theme: React.FC<ThemeProviderProps> = ({
   forcedTheme,
   disableTransitionOnChange = false,
   enableSystem = true,
   enableColorScheme = true,
-  storageKey = "theme",
+  storageKey = 'theme',
   themes = defaultThemes,
-  defaultTheme = enableSystem ? "system" : "light",
-  attribute = "data-theme",
+  defaultTheme = enableSystem ? 'system' : 'light',
+  attribute = 'data-theme',
   value,
   children,
   nonce,
-  style = "modern",
-  accentColor = "indigo",
-  grayColor = "gray",
+  style = 'modern',
+  accentColor = 'indigo',
+  grayColor = 'gray'
 }) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)
@@ -53,46 +55,61 @@ const Theme: React.FC<ThemeProviderProps> = ({
   );
   const attrs = !value ? themes : Object.values(value);
 
-  const applyTheme = useCallback((theme: string) => {
-    let resolved = theme;
-    if (!resolved) return;
+  const applyTheme = useCallback(
+    (theme: string) => {
+      let resolved = theme;
+      if (!resolved) return;
 
-    // If theme is system, resolve it before setting theme
-    if (theme === "system" && enableSystem) {
-      resolved = getSystemTheme();
-    }
-
-    const name = value ? value[resolved] : resolved;
-    const enable = disableTransitionOnChange ? disableAnimation() : null;
-    const d = document.documentElement;
-
-    if (attribute === "class") {
-      d.classList.remove(...attrs);
-
-      if (name) d.classList.add(name);
-    } else {
-      if (name) {
-        d.setAttribute(attribute, name);
-      } else {
-        d.removeAttribute(attribute);
+      // If theme is system, resolve it before setting theme
+      if (theme === 'system' && enableSystem) {
+        resolved = getSystemTheme();
       }
-    }
 
-    d.setAttribute('data-style', style);
-    d.setAttribute('data-accent-color', accentColor);
-    d.setAttribute('data-gray-color', grayColor);
+      const name = value ? value[resolved] : resolved;
+      const enable = disableTransitionOnChange ? disableAnimation() : null;
+      const d = document.documentElement;
 
-    if (enableColorScheme) {
-      const fallback = colorSchemes.includes(defaultTheme)
-        ? defaultTheme
-        : null;
-      const colorScheme = colorSchemes.includes(resolved) ? resolved : fallback;
-      // @ts-ignore
-      d.style.colorScheme = colorScheme;
-    }
+      if (attribute === 'class') {
+        d.classList.remove(...attrs);
 
-    enable?.();
-  }, [style, accentColor, grayColor, attribute, attrs, value, enableSystem, enableColorScheme, defaultTheme]);
+        if (name) d.classList.add(name);
+      } else {
+        if (name) {
+          d.setAttribute(attribute, name);
+        } else {
+          d.removeAttribute(attribute);
+        }
+      }
+
+      d.setAttribute('data-style', style);
+      d.setAttribute('data-accent-color', accentColor);
+      d.setAttribute('data-gray-color', grayColor);
+
+      if (enableColorScheme) {
+        const fallback = colorSchemes.includes(defaultTheme)
+          ? defaultTheme
+          : null;
+        const colorScheme = colorSchemes.includes(resolved)
+          ? resolved
+          : fallback;
+        // @ts-ignore
+        d.style.colorScheme = colorScheme;
+      }
+
+      enable?.();
+    },
+    [
+      style,
+      accentColor,
+      grayColor,
+      attribute,
+      attrs,
+      value,
+      enableSystem,
+      enableColorScheme,
+      defaultTheme
+    ]
+  );
 
   const setTheme = useCallback(
     (theme: string) => {
@@ -113,8 +130,8 @@ const Theme: React.FC<ThemeProviderProps> = ({
       const resolved = getSystemTheme(e);
       setResolvedTheme(resolved);
 
-      if (theme === "system" && enableSystem && !forcedTheme) {
-        applyTheme("system");
+      if (theme === 'system' && enableSystem && !forcedTheme) {
+        applyTheme('system');
       }
     },
     [theme, forcedTheme]
@@ -142,8 +159,8 @@ const Theme: React.FC<ThemeProviderProps> = ({
       setTheme(theme);
     };
 
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
   }, [setTheme]);
 
   // Whenever theme or forcedTheme changes, apply it
@@ -157,17 +174,27 @@ const Theme: React.FC<ThemeProviderProps> = ({
       theme,
       setTheme,
       forcedTheme,
-      resolvedTheme: theme === "system" ? resolvedTheme : theme,
-      themes: enableSystem ? [...themes, "system"] : themes,
+      resolvedTheme: theme === 'system' ? resolvedTheme : theme,
+      themes: enableSystem ? [...themes, 'system'] : themes,
       systemTheme: (enableSystem ? resolvedTheme : undefined) as
-        | "light"
-        | "dark"
+        | 'light'
+        | 'dark'
         | undefined,
       style,
       accentColor,
-      grayColor,
+      grayColor
     }),
-    [theme, setTheme, forcedTheme, resolvedTheme, enableSystem, themes, style, accentColor, grayColor]
+    [
+      theme,
+      setTheme,
+      forcedTheme,
+      resolvedTheme,
+      enableSystem,
+      themes,
+      style,
+      accentColor,
+      grayColor
+    ]
   );
 
   return (
@@ -188,7 +215,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
           nonce,
           style,
           accentColor,
-          grayColor,
+          grayColor
         }}
       />
       {children}
@@ -209,16 +236,16 @@ const ThemeScript = memo(
     nonce,
     style,
     accentColor,
-    grayColor,
+    grayColor
   }: ThemeProviderProps & { attrs: string[]; defaultTheme: string }) => {
-    const defaultSystem = defaultTheme === "system";
+    const defaultSystem = defaultTheme === 'system';
 
     // Code-golfing the amount of characters in the script
     const optimization = (() => {
-      if (attribute === "class") {
+      if (attribute === 'class') {
         const removeClasses = `c.remove(${attrs
           .map((t: string) => `'${t}'`)
-          .join(",")})`;
+          .join(',')})`;
 
         return `var d=document.documentElement,c=d.classList;${removeClasses};`;
       } else {
@@ -228,7 +255,7 @@ const ThemeScript = memo(
 
     const fallbackColorScheme = (() => {
       if (!enableColorScheme) {
-        return "";
+        return '';
       }
 
       const fallback = colorSchemes.includes(defaultTheme)
@@ -249,7 +276,7 @@ const ThemeScript = memo(
     ) => {
       const resolvedName = value ? value[name] : name;
       const val = literal ? name + `|| ''` : `'${resolvedName}'`;
-      let text = "";
+      let text = '';
 
       // MUCH faster to set colorScheme alongside HTML attribute/class
       // as it only incurs 1 style recalculation rather than 2
@@ -263,7 +290,7 @@ const ThemeScript = memo(
         text += `d.style.colorScheme = '${name}';`;
       }
 
-      if (attribute === "class") {
+      if (attribute === 'class') {
         if (literal || resolvedName) {
           text += `c.add(${val})`;
         } else {
@@ -285,19 +312,19 @@ const ThemeScript = memo(
 
       if (enableSystem) {
         return `!function(){try{${optimization}var e=localStorage.getItem('${storageKey}');if('system'===e||(!e&&${defaultSystem})){var t='${MEDIA}',m=window.matchMedia(t);if(m.media!==t||m.matches){${updateDOM(
-          "dark"
-        )}}else{${updateDOM("light")}}}else if(e){${
-          value ? `var x=${JSON.stringify(value)};` : ""
-        }${updateDOM(value ? `x[e]` : "e", true)}}${
+          'dark'
+        )}}else{${updateDOM('light')}}}else if(e){${
+          value ? `var x=${JSON.stringify(value)};` : ''
+        }${updateDOM(value ? `x[e]` : 'e', true)}}${
           !defaultSystem
-            ? `else{` + updateDOM(defaultTheme, false, false) + "}"
-            : ""
+            ? `else{` + updateDOM(defaultTheme, false, false) + '}'
+            : ''
         }${fallbackColorScheme};d.setAttribute('data-style','${style}');d.setAttribute('data-accent-color','${accentColor}');d.setAttribute('data-gray-color','${grayColor}');}catch(e){}}()`;
       }
 
       return `!function(){try{${optimization}var e=localStorage.getItem('${storageKey}');if(e){${
-        value ? `var x=${JSON.stringify(value)};` : ""
-      }${updateDOM(value ? `x[e]` : "e", true)}}else{${updateDOM(
+        value ? `var x=${JSON.stringify(value)};` : ''
+      }${updateDOM(value ? `x[e]` : 'e', true)}}else{${updateDOM(
         defaultTheme,
         false,
         false
@@ -325,7 +352,7 @@ const getTheme = (key: string, fallback?: string) => {
 };
 
 const disableAnimation = () => {
-  const css = document.createElement("style");
+  const css = document.createElement('style');
   css.appendChild(
     document.createTextNode(
       `*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}`
@@ -347,6 +374,6 @@ const disableAnimation = () => {
 const getSystemTheme = (e?: MediaQueryList | MediaQueryListEvent) => {
   if (!e) e = window.matchMedia(MEDIA);
   const isDark = e.matches;
-  const systemTheme = isDark ? "dark" : "light";
+  const systemTheme = isDark ? 'dark' : 'light';
   return systemTheme;
 };

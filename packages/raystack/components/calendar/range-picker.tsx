@@ -1,3 +1,5 @@
+'use client';
+
 import { CalendarIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
 import { useMemo, useRef, useState } from 'react';

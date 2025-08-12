@@ -1,3 +1,5 @@
+'use client';
+
 import { cx } from 'class-variance-authority';
 import { Flex } from '../../flex';
 import styles from '../data-table.module.css';

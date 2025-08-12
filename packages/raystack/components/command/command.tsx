@@ -1,3 +1,5 @@
+'use client';
+
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { cva } from 'class-variance-authority';
 import { Command as CommandPrimitive } from 'cmdk';
@@ -15,7 +17,7 @@ const CommandRoot = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitive ref={ref} className={command({ className })} {...props} />
 ));
-CommandRoot.displayName = CommandPrimitive.displayName;
+CommandRoot.displayName = CommandPrimitive?.displayName;
 
 interface CommandDialogProps extends DialogPrimitive.DialogProps {}
 
