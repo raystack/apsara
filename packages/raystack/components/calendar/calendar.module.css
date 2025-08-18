@@ -8,8 +8,8 @@
 }
 
 .caption_label,
-.dropdowns>span,
-.dropdown_trigger{
+.dropdowns > span,
+.dropdown_trigger {
   font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
@@ -143,11 +143,9 @@
   display: flex;
 }
 
-
 .outside {
   color: var(--rs-color-foreground-base-tertiary);
 }
-
 
 .range_start,
 .range_end {
@@ -207,7 +205,7 @@
 }
 
 .day.today button::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: var(--rs-space-2);
   left: 50%;

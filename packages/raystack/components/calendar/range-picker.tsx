@@ -2,7 +2,7 @@
 
 import { CalendarIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
 
 import { Flex } from '../flex';
@@ -80,31 +80,52 @@ export function RangePicker({
     return month;
   }, [currentMonth, calendarProps?.endMonth]);
 
-  // 1st click will select the start date.
-  // 2nd click will select the end date.
-  // 3rd click will select the start date again.
-  const handleSelect = (range: DateRange, selectedDay: Date) => {
-    // TODO: Remove custom logic and reuse the default logic from react-day-picker
-    let newRange: DateRange;
+  const onTriggerClick = useCallback(
+    (e: React.MouseEvent<HTMLInputElement>) => {
+      const field = e.currentTarget.dataset.rangeField;
+      if (field === 'start') {
+        setCurrentRangeField('from');
+      } else {
+        setCurrentRangeField('to');
+      }
+      if (showCalendar) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    [showCalendar]
+  );
+
+  // Handle date selection with custom logic
+  const handleSelect = (_: DateRange, selectedDay: Date) => {
+    let newRange = { ...selectedRange };
+    let newCurrentRangeField = currentRangeField;
 
     if (currentRangeField === 'from') {
-      // First click - set from date and prepare for to date selection
-      newRange = { from: selectedDay };
-      setCurrentRangeField('to');
-    } else {
-      // Second click - setting to date
-      const from = selectedRange.from;
-
-      if (dayjs(selectedDay).isBefore(dayjs(from))) {
-        // If selected date is before current from date, start new range
+      // If selecting start date and it's after the current end date
+      if (
+        selectedRange?.to &&
+        dayjs(selectedDay).isAfter(dayjs(selectedRange.to))
+      ) {
         newRange = { from: selectedDay };
-        setCurrentRangeField('to');
+        newCurrentRangeField = 'to';
       } else {
-        // Set the to date
-        newRange = { from, to: selectedDay };
-        setCurrentRangeField('from');
+        newRange.from = selectedDay;
+        if (!selectedRange?.to) newCurrentRangeField = 'to';
       }
+    } else {
+      // If selecting end date and it's before the current start date
+      if (
+        selectedRange?.from &&
+        dayjs(selectedDay).isBefore(dayjs(selectedRange.from))
+      ) {
+        newRange = { from: selectedDay };
+        newCurrentRangeField = 'to';
+      } else newRange.to = selectedDay;
     }
+
+    if (newCurrentRangeField !== currentRangeField)
+      setCurrentRangeField(newCurrentRangeField);
 
     setInternalValue(newRange);
     onSelect(newRange);
@@ -137,6 +158,9 @@ export function RangePicker({
         {...(inputFieldsProps.startDate ?? {})}
         value={startDate}
         readOnly
+        data-range-field='start'
+        data-active={showCalendar && currentRangeField === 'from'}
+        onClick={onTriggerClick}
       />
 
       <InputField
@@ -147,6 +171,9 @@ export function RangePicker({
         {...(inputFieldsProps.endDate ?? {})}
         value={endDate}
         readOnly
+        data-range-field='end'
+        data-active={showCalendar && currentRangeField === 'to'}
+        onClick={onTriggerClick}
       />
     </Flex>
   );
