@@ -2,9 +2,8 @@
 
 import { CalendarIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
-
 import { Flex } from '../flex';
 import { InputField } from '../input-field';
 import { InputFieldProps } from '../input-field/input-field';
@@ -55,8 +54,6 @@ export function RangePicker({
   const [currentMonth, setCurrentMonth] = useState(internalValue?.from);
 
   const selectedRange = value ?? internalValue;
-
-  const prevSelectedRangeRef = useRef(selectedRange);
 
   const startDate = selectedRange.from
     ? dayjs(selectedRange.from).format(dateFormat)
@@ -131,23 +128,6 @@ export function RangePicker({
     onSelect(newRange);
   };
 
-  function onOpenChange(open?: boolean) {
-    const currOpen = Boolean(open);
-
-    setShowCalendar(currOpen);
-
-    // Reset selected range if calendar is closed and start or end date is empty
-    if (!currOpen && (!startDate.length || !endDate.length)) {
-      setInternalValue(prevSelectedRangeRef.current);
-      onSelect(prevSelectedRangeRef.current);
-    }
-
-    // Update previous selected range reference when both start and end dates are selected
-    if (!currOpen && startDate.length && endDate.length) {
-      prevSelectedRangeRef.current = selectedRange;
-    }
-  }
-
   const defaultTrigger = (
     <Flex gap='medium' className={pickerGroupClassName}>
       <InputField
@@ -184,7 +164,7 @@ export function RangePicker({
       : children || defaultTrigger;
 
   return (
-    <Popover open={showCalendar} onOpenChange={onOpenChange}>
+    <Popover open={showCalendar} onOpenChange={setShowCalendar}>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Content side={side} className={styles.calendarPopover}>
         <Calendar
