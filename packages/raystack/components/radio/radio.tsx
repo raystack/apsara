@@ -48,7 +48,6 @@ const Indicator = forwardRef<
 Indicator.displayName = RadioGroupPrimitive.Indicator.displayName;
 
 export const Radio = Object.assign(RadioRoot, {
-  Root: RadioRoot,
   Indicator: Indicator,
   Item: RadioItem
 });

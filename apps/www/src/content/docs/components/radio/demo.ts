@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
 export const preview = {
-  type: "code",
+  type: 'code',
   code: `
-  <Radio.Root defaultValue="2">
+  <Radio defaultValue="2">
     <Flex direction="column" gap="small">
       <Flex gap="small" align="center">
         <Radio.Item value="1" id="P1" />
@@ -18,39 +18,39 @@ export const preview = {
         <label htmlFor="P3">Option Three</label>
       </Flex>
     </Flex>
-  </Radio.Root>`,
+  </Radio>`
 };
 
 export const stateDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Default",
+      name: 'Default',
       code: `
-<Radio.Root defaultValue="1">
+<Radio defaultValue="1">
   <Flex gap="small" align="center">
     <Radio.Item value="1" id="d1" />
     <label htmlFor="d1">Default Option</label>
   </Flex>
-</Radio.Root>`,
+</Radio>`
     },
     {
-      name: "Disabled",
+      name: 'Disabled',
       code: `
-<Radio.Root defaultValue="1">
+<Radio defaultValue="1">
   <Flex gap="small" align="center">
     <Radio.Item value="1" disabled id="dis1" />
     <label htmlFor="dis1">Disabled Option</label>
   </Flex>
-</Radio.Root>`,
-    },
-  ],
+</Radio>`
+    }
+  ]
 };
 
 export const labelDemo = {
-  type: "code",
+  type: 'code',
   code: `
-  <Radio.Root defaultValue="1">
+  <Radio defaultValue="1">
     <Flex direction="column" gap="small">
       <Flex gap="small" align="center">
         <Radio.Item value="1" id="L1" />
@@ -65,11 +65,11 @@ export const labelDemo = {
         <label htmlFor="L3">Option Three</label>
       </Flex>
     </Flex>
-  </Radio.Root>`,
+  </Radio>`
 };
 
 export const formDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <form onSubmit={(e) => {
   e.preventDefault();
@@ -77,7 +77,7 @@ export const formDemo = {
   alert(JSON.stringify(Object.fromEntries(formData)));
 }}>
   <Flex direction="column" gap="medium">
-    <Radio.Root name="plan" defaultValue="monthly" required>
+    <Radio name="plan" defaultValue="monthly" required>
       <Flex direction="column" gap="small">
         <Flex gap="small" align="center">
           <Radio.Item value="monthly" id="mp" />
@@ -88,8 +88,8 @@ export const formDemo = {
           <label htmlFor="yp">Yearly Plan</label>
         </Flex>
       </Flex>
-    </Radio.Root>
+    </Radio>
     <Button type="submit" width="100%">Submit</Button>
   </Flex>
-</form>`,
+</form>`
 };
