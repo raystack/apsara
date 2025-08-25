@@ -239,7 +239,8 @@ export function ViewOptions({
           className={cx(
             buttonVariants({
               color: 'secondary',
-              size: 'sm'
+              size: 'sm',
+              className: 'bg-fd-secondary'
             })
           )}
           style={{
