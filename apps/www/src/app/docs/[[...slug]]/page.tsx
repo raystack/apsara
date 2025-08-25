@@ -1,17 +1,18 @@
-import { docs } from "@/lib/source";
+import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions';
+import Demo from '@/components/demo';
+import Tag from '@/components/tag';
+import { docs } from '@/lib/source';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { TypeTable } from 'fumadocs-ui/components/type-table';
+import defaultMdxComponents from 'fumadocs-ui/mdx';
 import {
-  DocsPage,
-  DocsDescription,
-  DocsTitle,
   DocsBody,
-} from "fumadocs-ui/page";
-import { notFound } from "next/navigation";
-import defaultMdxComponents from "fumadocs-ui/mdx";
-import { TypeTable } from "fumadocs-ui/components/type-table";
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-import Demo from "@/components/demo";
-import styles from "./page.module.css";
-import Tag from "@/components/tag";
+  DocsDescription,
+  DocsPage,
+  DocsTitle
+} from 'fumadocs-ui/page';
+import { notFound } from 'next/navigation';
+import styles from './page.module.css';
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -27,12 +28,19 @@ export default async function Page(props: {
       toc={page.data.toc}
       full={page.data.full}
       tableOfContent={{
-        single: false,
-      }}>
+        single: false
+      }}
+    >
       <DocsTitle>
-        <div className={styles.title}>
-          {page.data.title}
-          <Tag value={page.data.tag} size="regular" />
+        <div className={styles.container}>
+          <div className={styles.title}>
+            {page.data.title}
+            <Tag value={page.data.tag} size='regular' />
+          </div>
+          <div className={styles.title}>
+            <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
+            <ViewOptions markdownUrl={`${page.url}.mdx`} />
+          </div>
         </div>
       </DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
@@ -43,7 +51,7 @@ export default async function Page(props: {
             TypeTable,
             Tab,
             Tabs,
-            Demo,
+            Demo
           }}
         />
       </DocsBody>
@@ -64,6 +72,6 @@ export async function generateMetadata(props: {
 
   return {
     title: page.data.title,
-    description: page.data.description,
+    description: page.data.description
   };
 }
