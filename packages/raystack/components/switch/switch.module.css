@@ -2,16 +2,23 @@
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
   outline: 0;
   border: none;
   position: relative;
   cursor: pointer;
-  
-  width: 34px;
-  height: 20px;
   background: var(--rs-color-background-neutral-secondary);
   border-radius: var(--rs-radius-full);
+}
+
+.switch.large {
+  width: 34px;
+  height: 20px;
+}
+
+.switch.small {
+  width: 26px;
+  height: 16px;
 }
 
 .switch:not([data-disabled="true"]):hover {
@@ -47,6 +54,17 @@
   will-change: transform;
 }
 
+/* Small switch thumb sizing */
+.switch.small .thumb {
+  width: 12px;
+  height: 12px;
+}
+
 .switch[data-state="checked"] .thumb {
   transform: translateX(16px);
+}
+
+/* Small switch thumb positioning */
+.switch.small[data-state="checked"] .thumb {
+  transform: translateX(12px);
 }
