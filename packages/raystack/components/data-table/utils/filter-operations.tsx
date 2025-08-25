@@ -21,85 +21,85 @@ dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 export type FilterFunctionsMap = {
-  number: Record<NumberFilterOperatorType, FilterFn<any>>;
-  string: Record<StringFilterOperatorType, FilterFn<any>>;
-  date: Record<DateFilterOperatorType, FilterFn<any>>;
-  select: Record<SelectFilterOperatorType, FilterFn<any>>;
-  multiselect: Record<MultiSelectFilterOperatorType, FilterFn<any>>;
+  number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
+  string: Record<StringFilterOperatorType, FilterFn<unknown>>;
+  date: Record<DateFilterOperatorType, FilterFn<unknown>>;
+  select: Record<SelectFilterOperatorType, FilterFn<unknown>>;
+  multiselect: Record<MultiSelectFilterOperatorType, FilterFn<unknown>>;
 };
 
 export const filterOperationsMap: FilterFunctionsMap = {
   number: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, addMeta) => {
       return Number(row.getValue(columnId)) === Number(filterValue.value);
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, addMeta) => {
       return Number(row.getValue(columnId)) !== Number(filterValue.value);
     },
-    lt: (row, columnId, filterValue: FilterValue) => {
+    lt: (row, columnId, filterValue: FilterValue, addMeta) => {
       return Number(row.getValue(columnId)) < Number(filterValue.value);
     },
-    lte: (row, columnId, filterValue: FilterValue) => {
+    lte: (row, columnId, filterValue: FilterValue, addMeta) => {
       return Number(row.getValue(columnId)) <= Number(filterValue.value);
     },
-    gt: (row, columnId, filterValue: FilterValue) => {
+    gt: (row, columnId, filterValue: FilterValue, addMeta) => {
       return Number(row.getValue(columnId)) > Number(filterValue.value);
     },
-    gte: (row, columnId, filterValue: FilterValue) => {
+    gte: (row, columnId, filterValue: FilterValue, addMeta) => {
       return Number(row.getValue(columnId)) >= Number(filterValue.value);
     }
   },
   string: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, addMeta) => {
       return (
         String(row.getValue(columnId)).toLowerCase() ===
         String(filterValue.value).toLowerCase()
       );
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, addMeta) => {
       return (
         String(row.getValue(columnId)).toLowerCase() !==
         String(filterValue.value).toLowerCase()
       );
     },
-    like: (row, columnId, filterValue: FilterValue) => {
+    like: (row, columnId, filterValue: FilterValue, addMeta) => {
       const columnValue = (row.getValue(columnId) as string).toLowerCase();
       const filterStr = (filterValue.value as string).toLowerCase();
       return columnValue.includes(filterStr);
     }
   },
   date: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, addMeta) => {
       return dayjs(row.getValue(columnId)).isSame(
         dayjs(filterValue.date),
         'day'
       );
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, addMeta) => {
       return !dayjs(row.getValue(columnId)).isSame(
         dayjs(filterValue.date),
         'day'
       );
     },
-    lt: (row, columnId, filterValue: FilterValue) => {
+    lt: (row, columnId, filterValue: FilterValue, addMeta) => {
       return dayjs(row.getValue(columnId)).isBefore(
         dayjs(filterValue.date),
         'day'
       );
     },
-    lte: (row, columnId, filterValue: FilterValue) => {
+    lte: (row, columnId, filterValue: FilterValue, addMeta) => {
       return dayjs(row.getValue(columnId)).isSameOrBefore(
         dayjs(filterValue.date),
         'day'
       );
     },
-    gt: (row, columnId, filterValue: FilterValue) => {
+    gt: (row, columnId, filterValue: FilterValue, addMeta) => {
       return dayjs(row.getValue(columnId)).isAfter(
         dayjs(filterValue.date),
         'day'
       );
     },
-    gte: (row, columnId, filterValue: FilterValue) => {
+    gte: (row, columnId, filterValue: FilterValue, addMeta) => {
       return dayjs(row.getValue(columnId)).isSameOrAfter(
         dayjs(filterValue.date),
         'day'
@@ -107,14 +107,14 @@ export const filterOperationsMap: FilterFunctionsMap = {
     }
   },
   select: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, addMeta) => {
       if (String(filterValue.value) === EmptyFilterValue) {
         return row.getValue(columnId) === '';
       }
       // Select only supports string values
       return String(row.getValue(columnId)) === String(filterValue.value);
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, addMeta) => {
       if (String(filterValue.value) === EmptyFilterValue) {
         return row.getValue(columnId) !== '';
       }
@@ -123,14 +123,14 @@ export const filterOperationsMap: FilterFunctionsMap = {
     }
   },
   multiselect: {
-    in: (row, columnId, filterValue: FilterValue) => {
+    in: (row, columnId, filterValue: FilterValue, addMeta) => {
       if (!Array.isArray(filterValue.value)) return false;
 
       return filterValue.value
         .map(value => (value === EmptyFilterValue ? '' : String(value)))
         .includes(String(row.getValue(columnId)));
     },
-    notin: (row, columnId, filterValue: FilterValue) => {
+    notin: (row, columnId, filterValue: FilterValue, addMeta) => {
       if (!Array.isArray(filterValue.value)) return false;
 
       return !filterValue.value
