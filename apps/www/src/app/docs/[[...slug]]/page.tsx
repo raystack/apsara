@@ -37,7 +37,7 @@ export default async function Page(props: {
             {page.data.title}
             <Tag value={page.data.tag} size='regular' />
           </div>
-          <div className={styles.title}>
+          <div className={styles.actions}>
             <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
             <ViewOptions markdownUrl={`${page.url}.mdx`} />
           </div>
