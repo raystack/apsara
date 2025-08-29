@@ -1,6 +1,6 @@
 import type { Column, ColumnDef, Table } from "@tanstack/table-core";
 import type {
-  FilterOperatorTypes,
+  RQLFilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
   FilterValueType,
@@ -24,7 +24,7 @@ export interface RQLFilter extends RQLFilterValues {
   _type?: FilterTypes;
   _dataType?: FilterValueType;
   name: string;
-  operator: FilterOperatorTypes;
+  operator: RQLFilterOperatorTypes;
 }
 
 type SortOrdersKeys = keyof typeof SortOrders;

@@ -7,6 +7,7 @@ import {
   DateFilterOperatorType,
   EmptyFilterValue,
   FilterOperatorTypes,
+  RQLFilterOperatorTypes,
   FilterType,
   FilterTypes,
   FilterValue,
@@ -189,10 +190,17 @@ export const getFilterOperator = ({
   value: any;
   filterType?: FilterTypes;
   operator: FilterOperatorTypes;
-}): FilterOperatorTypes => {
-  return value === EmptyFilterValue && filterType === FilterType.select
-    ? 'empty'
-    : operator;
+}): RQLFilterOperatorTypes => {
+  if (value === EmptyFilterValue && filterType === FilterType.select) {
+    return 'empty';
+  }
+  
+  // Map string filter operators to ilike for RQL
+  if (filterType === FilterType.string && operator === 'like') {
+    return 'ilike';
+  }
+  
+  return operator as RQLFilterOperatorTypes;
 };
 
 export const getFilterValue = ({
