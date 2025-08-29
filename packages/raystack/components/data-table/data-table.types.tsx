@@ -138,5 +138,3 @@ export const defaultGroupOption = {
   id: "--",
   label: "No grouping",
 };
-
-export const EmptyFilterValue = "--empty--";

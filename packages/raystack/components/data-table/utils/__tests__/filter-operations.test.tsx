@@ -7,8 +7,7 @@ import {
   getFilterValue,
   getDataType,
 } from '../filter-operations';
-import { FilterType } from '~/types/filters';
-import { EmptyFilterValue } from '../../data-table.types';
+import { FilterType, EmptyFilterValue } from '~/types/filters';
 
 describe('Filter Operations', () => {
   const addMeta = vi.fn();

@@ -6,6 +6,8 @@ export const FilterType = {
   multiselect: 'multiselect'
 } as const;
 
+export const EmptyFilterValue = "--empty--";
+
 export type FilterValueType = 'string' | 'number' | 'boolean';
 
 export interface FilterValue {
@@ -19,6 +21,9 @@ export type FilterOperation = {
   value: string;
   label: string;
 };
+
+
+export type StringFilterOperatorRQLType = 'eq' | 'neq' | 'ilike';
 
 export type NumberFilterOperatorType =
   | 'eq'
@@ -35,6 +40,14 @@ export type MultiSelectFilterOperatorType = 'in' | 'notin';
 export type FilterOperatorTypes =
   | NumberFilterOperatorType
   | StringFilterOperatorType
+  | DateFilterOperatorType
+  | SelectFilterOperatorType
+  | MultiSelectFilterOperatorType
+  | 'empty';
+
+export type RQLFilterOperatorTypes =
+  | NumberFilterOperatorType
+  | StringFilterOperatorRQLType
   | DateFilterOperatorType
   | SelectFilterOperatorType
   | MultiSelectFilterOperatorType

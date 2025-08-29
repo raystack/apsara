@@ -16,8 +16,8 @@ import {
   SortOrders,
   RQLFilter,
   defaultGroupOption,
-  EmptyFilterValue,
 } from '../../data-table.types';
+import { EmptyFilterValue } from '~/types/filters';
 
 // Mock data for tests
 const mockColumns: DataTableColumnDef<any, any>[] = [

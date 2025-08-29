@@ -5,6 +5,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
 import {
   DateFilterOperatorType,
+  EmptyFilterValue,
   FilterOperatorTypes,
   FilterType,
   FilterTypes,
@@ -15,7 +16,7 @@ import {
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
-import { EmptyFilterValue, RQLFilterValues } from '../data-table.types';
+import { RQLFilterValues } from '../data-table.types';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
