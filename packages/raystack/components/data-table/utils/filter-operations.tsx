@@ -64,10 +64,20 @@ export const filterOperationsMap: FilterFunctionsMap = {
         String(filterValue.value).toLowerCase()
       );
     },
-    like: (row, columnId, filterValue: FilterValue, addMeta) => {
+    contains: (row, columnId, filterValue: FilterValue, addMeta) => {
       const columnValue = (row.getValue(columnId) as string).toLowerCase();
       const filterStr = (filterValue.value as string).toLowerCase();
       return columnValue.includes(filterStr);
+    },
+    starts_with: (row, columnId, filterValue: FilterValue, addMeta) => {
+      const columnValue = (row.getValue(columnId) as string).toLowerCase();
+      const filterStr = (filterValue.value as string).toLowerCase();
+      return columnValue.startsWith(filterStr);
+    },
+    ends_with: (row, columnId, filterValue: FilterValue, addMeta) => {
+      const columnValue = (row.getValue(columnId) as string).toLowerCase();
+      const filterStr = (filterValue.value as string).toLowerCase();
+      return columnValue.endsWith(filterStr);
     }
   },
   date: {
@@ -152,7 +162,8 @@ export function getFilterFn<T extends keyof FilterFunctionsMap>(
 
 const handleStringBasedTypes = (
   filterType: FilterTypes,
-  value: any
+  value: any,
+  operator?: FilterOperatorTypes | RQLFilterOperatorTypes
 ): RQLFilterValues => {
   switch (filterType) {
     case FilterType.date:
@@ -173,6 +184,27 @@ const handleStringBasedTypes = (
             value === EmptyFilterValue ? '' : String(value)
           )
           .join()
+      };
+    case FilterType.string:
+      // Apply wildcards for ilike operations
+      let processedValue = value;
+      // Check if we need to apply wildcards (operator could be UI type or already converted to 'ilike')
+      if (operator === 'contains') {
+        processedValue = `%${value}%`;
+      } else if (operator === 'starts_with') {
+        processedValue = `${value}%`;
+      } else if (operator === 'ends_with') {
+        processedValue = `%${value}`;
+      } else if (operator === 'ilike') {
+        // If already converted to ilike, assume it needs contains-style wildcards
+        // unless the value already has wildcards
+        if (!value.includes('%')) {
+          processedValue = `%${value}%`;
+        }
+      }
+      return {
+        stringValue: processedValue,
+        value
       };
     default:
       return {
@@ -196,7 +228,8 @@ export const getFilterOperator = ({
   }
   
   // Map string filter operators to ilike for RQL
-  if (filterType === FilterType.string && operator === 'like') {
+  if (filterType === FilterType.string && 
+      (operator === 'contains' || operator === 'starts_with' || operator === 'ends_with')) {
     return 'ilike';
   }
   
@@ -206,11 +239,13 @@ export const getFilterOperator = ({
 export const getFilterValue = ({
   value,
   dataType = 'string',
-  filterType = FilterType.string
+  filterType = FilterType.string,
+  operator
 }: {
   value: any;
   dataType?: FilterValueType;
   filterType?: FilterTypes;
+  operator?: FilterOperatorTypes | RQLFilterOperatorTypes;
 }): RQLFilterValues => {
   if (dataType === 'boolean') {
     return { boolValue: value, value };
@@ -220,7 +255,7 @@ export const getFilterValue = ({
   }
 
   // Handle string-based types
-  return handleStringBasedTypes(filterType, value);
+  return handleStringBasedTypes(filterType, value, operator);
 };
 
 export const getDataType = ({

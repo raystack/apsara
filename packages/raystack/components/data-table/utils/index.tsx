@@ -4,20 +4,21 @@ import { TableState } from "@tanstack/table-core";
 import {
   DataTableColumnDef,
   DataTableSort,
+  InternalQuery,
   DataTableQuery,
   GroupedData,
-  RQLFilter,
+  InternalFilter,
   SortOrders,
   defaultGroupOption
 } from "../data-table.types";
-import { FilterType } from "~/types/filters";
+import { FilterType, FilterOperatorTypes } from "~/types/filters";
 import {
   getFilterFn,
   getFilterOperator,
   getFilterValue,
 } from "./filter-operations";
 
-export function queryToTableState(query: DataTableQuery): Partial<TableState> {
+export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
     query.filters
       ?.filter((data) => data.value !== "")
@@ -45,7 +46,7 @@ export function queryToTableState(query: DataTableQuery): Partial<TableState> {
 
 export function getColumnsWithFilterFn<TData, TValue>(
   columns: DataTableColumnDef<TData, TValue>[] = [],
-  filters: RQLFilter[] = []
+  filters: InternalFilter[] = []
 ): DataTableColumnDef<TData, TValue>[] {
   return columns.map((column) => {
     const colFilter = filters?.find(
@@ -100,7 +101,7 @@ export function groupData<TData>(
   return groupedData;
 }
 
-const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
+const generateFilterMap = (filters: InternalFilter[] = []): Map<string, any> => {
   return new Map(
     filters
       ?.filter((data) => data._type === FilterType.select || data.value !== "")
@@ -113,8 +114,8 @@ const generateSortMap = (sort: DataTableSort[] = []): Map<string, string> => {
 };
 
 const isFilterChanged = (
-  oldFilters: RQLFilter[] = [],
-  newFilters: RQLFilter[] = []
+  oldFilters: InternalFilter[] = [],
+  newFilters: InternalFilter[] = []
 ): boolean => {
   const oldFilterMap = generateFilterMap(oldFilters);
   const newFilterMap = generateFilterMap(newFilters);
@@ -153,8 +154,8 @@ const isSearchChanged = (oldSearch?: string, newSearch?: string): boolean => {
 };
 
 export const hasQueryChanged = (
-  oldQuery: DataTableQuery | null,
-  newQuery: DataTableQuery
+  oldQuery: InternalQuery | null,
+  newQuery: InternalQuery
 ): boolean => {
   if (!oldQuery) return true;
   return (
@@ -176,7 +177,7 @@ export function getInitialColumnVisibility<TData, TValue>(
   }, {});
 }
 
-export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
+export function transformToRQLQuery(query: InternalQuery): DataTableQuery {
   const { group_by = [], filters = [], sort = [], ...rest } = query;
   const sanitizedGroupBy = group_by?.filter(
     (key) => key !== defaultGroupOption.id
@@ -196,6 +197,7 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
           value: data.value,
           filterType: data._type,
           dataType: data._dataType,
+          operator: data.operator,
         }),
       })) || [];
 
@@ -207,13 +209,68 @@ export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
   };
 }
 
+// Transform DataTableQuery to InternalQuery
+// This reverses the transformation done by transformToRQLQuery
+export function dataTableQueryToInternal(query: DataTableQuery): InternalQuery {
+  const { filters, ...rest } = query;
+  
+  if (!filters) {
+    return rest;
+  }
+  
+  // Convert DataTableFilter[] to InternalFilter[]
+  const internalFilters: InternalFilter[] = filters.map(filter => {
+    const { operator, value, stringValue, ...filterRest } = filter;
+    
+    // Reverse the operator mapping and wildcard transformation
+    let internalOperator: FilterOperatorTypes = operator as FilterOperatorTypes;
+    let internalValue = value;
+    
+    // If operator is 'ilike', determine the original operator based on wildcards
+    if (operator === 'ilike' && stringValue) {
+      if (stringValue.startsWith('%') && stringValue.endsWith('%')) {
+        internalOperator = 'contains';
+        internalValue = stringValue.slice(1, -1); // Remove % from both ends
+      } else if (stringValue.endsWith('%')) {
+        internalOperator = 'starts_with';
+        internalValue = stringValue.slice(0, -1); // Remove % from end
+      } else if (stringValue.startsWith('%')) {
+        internalOperator = 'ends_with';
+        internalValue = stringValue.slice(1); // Remove % from start
+      } else {
+        // Default to contains if no wildcards (shouldn't happen normally)
+        internalOperator = 'contains';
+        internalValue = stringValue;
+      }
+    }
+    
+    return {
+      ...filterRest,
+      value: internalValue,
+      operator: internalOperator,
+      // We don't have type information, so leave it undefined
+      // The UI will need to infer or set these based on column definitions
+      _type: undefined,
+      _dataType: undefined
+    } as InternalFilter;
+  });
+  
+  return {
+    ...rest,
+    filters: internalFilters
+  };
+}
+
 export function getDefaultTableQuery(
   defaultSort: DataTableSort,
   oldQuery: DataTableQuery = {}
-): DataTableQuery {
+): InternalQuery {
+  // Convert DataTableQuery to InternalQuery
+  const internalQuery = dataTableQueryToInternal(oldQuery);
+  
   return {
     sort: [defaultSort],
     group_by: [defaultGroupOption.id],
-    ...oldQuery,
+    ...internalQuery,
   };
 }

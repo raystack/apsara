@@ -32,7 +32,7 @@ export type NumberFilterOperatorType =
   | 'lte'
   | 'gt'
   | 'gte';
-export type StringFilterOperatorType = 'eq' | 'neq' | 'like';
+export type StringFilterOperatorType = 'eq' | 'neq' | 'contains' | 'starts_with' | 'ends_with';
 export type DateFilterOperatorType = 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte';
 export type SelectFilterOperatorType = 'eq' | 'neq';
 export type MultiSelectFilterOperatorType = 'in' | 'notin';
@@ -90,7 +90,9 @@ export const filterOperators: FilterOperatorsMap = {
   string: [
     { value: 'eq', label: 'is' },
     { value: 'neq', label: 'is not' },
-    { value: 'like', label: 'contains' }
+    { value: 'contains', label: 'contains' },
+    { value: 'starts_with', label: 'starts with' },
+    { value: 'ends_with', label: 'ends with' }
   ],
   date: [
     { value: 'eq', label: 'is' },
