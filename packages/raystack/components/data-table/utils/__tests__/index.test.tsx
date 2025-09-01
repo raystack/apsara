@@ -6,15 +6,16 @@ import {
   groupData,
   hasQueryChanged,
   getInitialColumnVisibility,
-  sanitizeTableQuery,
+  transformToRQLQuery,
   getDefaultTableQuery,
 } from '../index';
 import {
   DataTableQuery,
+  InternalQuery,
   DataTableColumnDef,
   DataTableSort,
   SortOrders,
-  RQLFilter,
+  InternalFilter,
   defaultGroupOption,
 } from '../../data-table.types';
 import { EmptyFilterValue } from '~/types/filters';
@@ -64,10 +65,10 @@ const mockData = [
   { id: 4, name: 'David', age: 28, status: 'active', department: 'sales' },
 ];
 
-const mockFilters: RQLFilter[] = [
+const mockFilters: InternalFilter[] = [
   {
     name: 'name',
-    operator: 'like',
+    operator: 'contains',
     value: 'Alice',
     stringValue: 'Alice',
     _type: FilterType.string,
@@ -89,7 +90,7 @@ const mockSort: DataTableSort[] = [
 describe('Data Table Utils', () => {
   describe('queryToTableState', () => {
     it('should convert empty query to table state', () => {
-      const query: DataTableQuery = {};
+      const query: InternalQuery = {};
       const result = queryToTableState(query);
 
       expect(result).toEqual({
@@ -100,7 +101,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should convert query with filters to table state', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         filters: mockFilters,
       };
       const result = queryToTableState(query);
@@ -117,14 +118,14 @@ describe('Data Table Utils', () => {
     });
 
     it('should convert date filters correctly', () => {
-      const dateFilter: RQLFilter = {
+      const dateFilter: InternalFilter = {
         name: 'createdAt',
         operator: 'eq',
         value: '2023-12-01',
         _type: FilterType.date,
       };
-      
-      const query: DataTableQuery = {
+
+      const query: InternalQuery = {
         filters: [dateFilter],
       };
       const result = queryToTableState(query);
@@ -136,7 +137,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should filter out empty string values', () => {
-      const filtersWithEmpty: RQLFilter[] = [
+      const filtersWithEmpty: InternalFilter[] = [
         ...mockFilters,
         {
           name: 'status',
@@ -146,7 +147,7 @@ describe('Data Table Utils', () => {
         },
       ];
 
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         filters: filtersWithEmpty,
       };
       const result = queryToTableState(query);
@@ -155,7 +156,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should convert sort to table state', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         sort: mockSort,
       };
       const result = queryToTableState(query);
@@ -167,7 +168,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should include global filter', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         search: 'test search',
       };
       const result = queryToTableState(query);
@@ -176,7 +177,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should handle null/undefined filters', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         filters: null as any,
       };
       const result = queryToTableState(query);
@@ -185,7 +186,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should handle null/undefined sort', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         sort: null as any,
       };
       const result = queryToTableState(query);
@@ -223,7 +224,7 @@ describe('Data Table Utils', () => {
 
     it('should handle empty filters array', () => {
       const result = getColumnsWithFilterFn(mockColumns, []);
-      
+
       result.forEach(column => {
         expect(column.filterFn).toBeUndefined();
       });
@@ -236,14 +237,14 @@ describe('Data Table Utils', () => {
 
     it('should handle undefined filters', () => {
       const result = getColumnsWithFilterFn(mockColumns, undefined);
-      
+
       result.forEach(column => {
         expect(column.filterFn).toBeUndefined();
       });
     });
 
     it('should only add filter function when operator exists', () => {
-      const filtersWithoutOperator: RQLFilter[] = [
+      const filtersWithoutOperator: InternalFilter[] = [
         {
           name: 'name',
           operator: '' as any,
@@ -254,7 +255,7 @@ describe('Data Table Utils', () => {
 
       const result = getColumnsWithFilterFn(mockColumns, filtersWithoutOperator);
       const nameColumn = result.find(col => col.accessorKey === 'name');
-      
+
       expect(nameColumn?.filterFn).toBeUndefined();
     });
   });
@@ -274,7 +275,7 @@ describe('Data Table Utils', () => {
       const result = groupData(mockData, 'department', mockColumns);
 
       expect(result).toHaveLength(3);
-      
+
       const engineeringGroup = result.find(group => group.group_key === 'engineering');
       const marketingGroup = result.find(group => group.group_key === 'marketing');
       const salesGroup = result.find(group => group.group_key === 'sales');
@@ -286,7 +287,7 @@ describe('Data Table Utils', () => {
 
       expect(marketingGroup).toBeDefined();
       expect(marketingGroup!.subRows).toHaveLength(1);
-      
+
       expect(salesGroup).toBeDefined();
       expect(salesGroup!.subRows).toHaveLength(1);
     });
@@ -304,7 +305,7 @@ describe('Data Table Utils', () => {
       ];
 
       const result = groupData(mockData, 'department', columnsWithLabels);
-      
+
       const engineeringGroup = result.find(group => group.group_key === 'engineering');
       const marketingGroup = result.find(group => group.group_key === 'marketing');
       const salesGroup = result.find(group => group.group_key === 'sales');
@@ -327,7 +328,7 @@ describe('Data Table Utils', () => {
       ];
 
       const result = groupData(mockData, 'department', columnsWithCount);
-      
+
       const engineeringGroup = result.find(group => group.group_key === 'engineering');
       const marketingGroup = result.find(group => group.group_key === 'marketing');
       const salesGroup = result.find(group => group.group_key === 'sales');
@@ -347,7 +348,7 @@ describe('Data Table Utils', () => {
       ];
 
       const result = groupData(mockData, 'department', columnsWithShowCount);
-      
+
       result.forEach(group => {
         expect(group.showGroupCount).toBe(true);
       });
@@ -377,7 +378,7 @@ describe('Data Table Utils', () => {
   });
 
   describe('hasQueryChanged', () => {
-    const baseQuery: DataTableQuery = {
+    const baseQuery: InternalQuery = {
       filters: mockFilters,
       sort: mockSort,
       group_by: ['department'],
@@ -406,7 +407,7 @@ describe('Data Table Utils', () => {
           },
         ],
       };
-      
+
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
     });
 
@@ -423,7 +424,7 @@ describe('Data Table Utils', () => {
           },
         ],
       };
-      
+
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
     });
 
@@ -432,7 +433,7 @@ describe('Data Table Utils', () => {
         ...baseQuery,
         filters: [mockFilters[0]], // Only one filter instead of two
       };
-      
+
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
     });
 
@@ -441,7 +442,7 @@ describe('Data Table Utils', () => {
         ...baseQuery,
         sort: [{ name: 'age', order: SortOrders.ASC }],
       };
-      
+
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
     });
 
@@ -450,7 +451,7 @@ describe('Data Table Utils', () => {
         ...baseQuery,
         group_by: ['status'],
       };
-      
+
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
     });
 
@@ -459,14 +460,14 @@ describe('Data Table Utils', () => {
         ...baseQuery,
         search: 'different search',
       };
-      
+
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
     });
 
     it('should handle undefined filters', () => {
       const queryWithoutFilters = { ...baseQuery, filters: undefined };
       const newQuery = { ...baseQuery, filters: [] };
-      
+
       expect(hasQueryChanged(queryWithoutFilters, newQuery)).toBe(false);
     });
 
@@ -494,7 +495,7 @@ describe('Data Table Utils', () => {
           },
         ],
       };
-      
+
       expect(hasQueryChanged(queryWithSelectFilter, newQuery)).toBe(false);
     });
   });
@@ -502,7 +503,7 @@ describe('Data Table Utils', () => {
   describe('getInitialColumnVisibility', () => {
     it('should return visibility object for columns', () => {
       const result = getInitialColumnVisibility(mockColumns);
-      
+
       expect(result).toEqual({
         name: true,
         age: true,
@@ -551,18 +552,18 @@ describe('Data Table Utils', () => {
     });
   });
 
-  describe('sanitizeTableQuery', () => {
+  describe('transformToRQLQuery', () => {
     it('should remove default group option', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         group_by: [defaultGroupOption.id, 'department'],
       };
-      
-      const result = sanitizeTableQuery(query);
+
+      const result = transformToRQLQuery(query);
       expect(result.group_by).toEqual(['department']);
     });
 
     it('should filter out empty string filters', () => {
-      const filtersWithEmpty: RQLFilter[] = [
+      const filtersWithEmpty: InternalFilter[] = [
         {
           name: 'name',
           operator: 'eq',
@@ -577,34 +578,34 @@ describe('Data Table Utils', () => {
         },
       ];
 
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         filters: filtersWithEmpty,
       };
-      
-      const result = sanitizeTableQuery(query);
+
+      const result = transformToRQLQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0].name).toBe('name');
     });
 
     it('should keep select filters even with empty values', () => {
-      const selectFilter: RQLFilter = {
+      const selectFilter: InternalFilter = {
         name: 'status',
         operator: 'eq',
         value: EmptyFilterValue,
         _type: FilterType.select,
       };
 
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         filters: [selectFilter],
       };
-      
-      const result = sanitizeTableQuery(query);
+
+      const result = transformToRQLQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0].name).toBe('status');
     });
 
     it('should preserve other query properties', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         search: 'test search',
         limit: 50,
         offset: 10,
@@ -612,8 +613,8 @@ describe('Data Table Utils', () => {
         sort: mockSort,
         group_by: ['department'],
       };
-      
-      const result = sanitizeTableQuery(query);
+
+      const result = transformToRQLQuery(query);
       expect(result.search).toBe('test search');
       expect(result.limit).toBe(50);
       expect(result.offset).toBe(10);
@@ -622,9 +623,9 @@ describe('Data Table Utils', () => {
     });
 
     it('should handle empty query', () => {
-      const query: DataTableQuery = {};
-      
-      const result = sanitizeTableQuery(query);
+      const query: InternalQuery = {};
+
+      const result = transformToRQLQuery(query);
       expect(result).toEqual({
         group_by: [],
         filters: [],
@@ -633,7 +634,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should call getFilterOperator and getFilterValue for each filter', () => {
-      const query: DataTableQuery = {
+      const query: InternalQuery = {
         filters: [
           {
             name: 'age',
@@ -644,8 +645,8 @@ describe('Data Table Utils', () => {
           },
         ],
       };
-      
-      const result = sanitizeTableQuery(query);
+
+      const result = transformToRQLQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0]).toEqual({
         name: 'age',
@@ -664,7 +665,7 @@ describe('Data Table Utils', () => {
 
     it('should return query with default sort and group', () => {
       const result = getDefaultTableQuery(defaultSort);
-      
+
       expect(result).toEqual({
         sort: [defaultSort],
         group_by: [defaultGroupOption.id],
@@ -674,16 +675,34 @@ describe('Data Table Utils', () => {
     it('should merge with existing query', () => {
       const existingQuery: DataTableQuery = {
         search: 'existing search',
-        filters: mockFilters,
+        // DataTableQuery uses DataTableFilter which doesn't have internal fields
+        filters: [
+          {
+            name: 'name',
+            operator: 'ilike',
+            value: 'Alice',
+            stringValue: '%Alice%',
+          },
+        ],
       };
-      
+
       const result = getDefaultTableQuery(defaultSort, existingQuery);
-      
+
       expect(result).toEqual({
         sort: [defaultSort],
         group_by: [defaultGroupOption.id],
         search: 'existing search',
-        filters: mockFilters,
+        // After transformation, should have InternalFilter with UI operators
+        filters: [
+          {
+            name: 'name',
+            operator: 'contains',
+            value: 'Alice',
+            // stringValue is not preserved in InternalFilter after transformation
+            _type: undefined,
+            _dataType: undefined,
+          },
+        ],
       });
     });
 
@@ -693,9 +712,9 @@ describe('Data Table Utils', () => {
         group_by: ['department'],
         search: 'existing search',
       };
-      
+
       const result = getDefaultTableQuery(defaultSort, existingQuery);
-      
+
       // The function spreads oldQuery after defaults, so existing values override defaults
       expect(result.sort).toEqual([{ name: 'name', order: SortOrders.ASC }]);
       expect(result.group_by).toEqual(['department']);
@@ -704,7 +723,7 @@ describe('Data Table Utils', () => {
 
     it('should handle empty existing query', () => {
       const result = getDefaultTableQuery(defaultSort, {});
-      
+
       expect(result).toEqual({
         sort: [defaultSort],
         group_by: [defaultGroupOption.id],
