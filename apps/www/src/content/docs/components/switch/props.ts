@@ -14,6 +14,12 @@ export interface SwitchProps {
   /** When true, indicates that the user must check the switch. */
   required?: boolean;
 
+  /**
+   * The size of the switch.
+   * @default "large"
+   */
+  size?: 'large' | 'small';
+
   /** A unique identifier for the switch. */
   id?: string;
 }
