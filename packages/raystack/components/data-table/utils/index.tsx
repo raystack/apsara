@@ -220,34 +220,46 @@ export function dataTableQueryToInternal(query: DataTableQuery): InternalQuery {
   
   // Convert DataTableFilter[] to InternalFilter[]
   const internalFilters: InternalFilter[] = filters.map(filter => {
-    const { operator, value, stringValue, ...filterRest } = filter;
+    const { operator, value, stringValue, numberValue, boolValue, ...filterRest } = filter;
     
     // Reverse the operator mapping and wildcard transformation
-    let internalOperator: FilterOperatorTypes = operator as FilterOperatorTypes;
-    let internalValue = value;
+    let transformedFilter = {
+      operator: operator as FilterOperatorTypes,
+      value: value,
+      ...(stringValue !== undefined && { stringValue }),
+      ...(numberValue !== undefined && { numberValue }),
+      ...(boolValue !== undefined && { boolValue })
+    };
     
     // If operator is 'ilike', determine the original operator based on wildcards
     if (operator === 'ilike' && stringValue) {
       if (stringValue.startsWith('%') && stringValue.endsWith('%')) {
-        internalOperator = 'contains';
-        internalValue = stringValue.slice(1, -1); // Remove % from both ends
+        transformedFilter = {
+          operator: 'contains',
+          value: stringValue.slice(1, -1) // Remove % from both ends
+        };
       } else if (stringValue.endsWith('%')) {
-        internalOperator = 'starts_with';
-        internalValue = stringValue.slice(0, -1); // Remove % from end
+        transformedFilter = {
+          operator: 'starts_with',
+          value: stringValue.slice(0, -1) // Remove % from end
+        };
       } else if (stringValue.startsWith('%')) {
-        internalOperator = 'ends_with';
-        internalValue = stringValue.slice(1); // Remove % from start
+        transformedFilter = {
+          operator: 'ends_with',
+          value: stringValue.slice(1) // Remove % from start
+        };
       } else {
         // Default to contains if no wildcards (shouldn't happen normally)
-        internalOperator = 'contains';
-        internalValue = stringValue;
+        transformedFilter = {
+          operator: 'contains',
+          value: stringValue
+        };
       }
     }
     
     return {
       ...filterRest,
-      value: internalValue,
-      operator: internalOperator,
+      ...transformedFilter,
       // We don't have type information, so leave it undefined
       // The UI will need to infer or set these based on column definitions
       _type: undefined,

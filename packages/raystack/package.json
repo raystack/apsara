@@ -8,24 +8,24 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./v1": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./icons": {
+      "types": "./dist/icons/index.d.ts",
       "import": "./dist/icons/index.js",
-      "require": "./dist/icons/index.cjs",
-      "types": "./dist/icons/index.d.ts"
+      "require": "./dist/icons/index.cjs"
     },
     "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
       "import": "./dist/hooks/index.js",
-      "require": "./dist/hooks/index.cjs",
-      "types": "./dist/hooks/index.d.ts"
+      "require": "./dist/hooks/index.cjs"
     },
     "./style.css": "./dist/style.css",
     "./normalize.css": "./dist/normalize.css"
@@ -44,7 +44,7 @@
     "release:ci": "release-it --ci --no-increment --npm.ignoreVersion",
     "bump-version": "node scripts/bump-version.js",
     "clean": "rm -rf .turbo && rm -rf dist",
-    "test": "vitest",
+    "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui",

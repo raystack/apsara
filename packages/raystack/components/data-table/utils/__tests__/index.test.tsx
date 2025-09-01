@@ -8,6 +8,7 @@ import {
   getInitialColumnVisibility,
   transformToRQLQuery,
   getDefaultTableQuery,
+  dataTableQueryToInternal,
 } from '../index';
 import {
   DataTableQuery,
@@ -727,6 +728,364 @@ describe('Data Table Utils', () => {
       expect(result).toEqual({
         sort: [defaultSort],
         group_by: [defaultGroupOption.id],
+      });
+    });
+  });
+
+  describe('dataTableQueryToInternal', () => {
+    it('should transform ilike with %value% to contains operator', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'title',
+            operator: 'ilike',
+            value: 'test',
+            stringValue: '%test%',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'title',
+          operator: 'contains',
+          value: 'test',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should transform ilike with value% to starts_with operator', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'email',
+            operator: 'ilike',
+            value: 'john',
+            stringValue: 'john%',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'email',
+          operator: 'starts_with',
+          value: 'john',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should transform ilike with %value to ends_with operator', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'filename',
+            operator: 'ilike',
+            value: '.pdf',
+            stringValue: '%.pdf',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'filename',
+          operator: 'ends_with',
+          value: '.pdf',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should preserve non-ilike operators as-is', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'age',
+            operator: 'gte',
+            value: 25,
+            numberValue: 25,
+          },
+          {
+            name: 'status',
+            operator: 'eq',
+            value: 'active',
+            stringValue: 'active',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'age',
+          operator: 'gte',
+          value: 25,
+          numberValue: 25,
+          _type: undefined,
+          _dataType: undefined,
+        },
+        {
+          name: 'status',
+          operator: 'eq',
+          value: 'active',
+          stringValue: 'active',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should handle query without filters', () => {
+      const query: DataTableQuery = {
+        sort: [{ name: 'createdAt', order: SortOrders.DESC }],
+        search: 'test',
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result).toEqual({
+        sort: [{ name: 'createdAt', order: SortOrders.DESC }],
+        search: 'test',
+      });
+    });
+
+    it('should handle ilike without wildcards (edge case)', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'description',
+            operator: 'ilike',
+            value: 'plain',
+            stringValue: 'plain',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'description',
+          operator: 'contains', // defaults to contains when no wildcards
+          value: 'plain',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+  });
+
+  describe('transformToRQLQuery with new operators', () => {
+    it('should transform contains operator to ilike with %value%', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'title',
+            operator: 'contains',
+            value: 'test',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'title',
+          operator: 'ilike',
+          value: 'test',
+          stringValue: '%test%',
+        },
+      ]);
+    });
+
+    it('should transform starts_with operator to ilike with value%', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'email',
+            operator: 'starts_with',
+            value: 'john',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'email',
+          operator: 'ilike',
+          value: 'john',
+          stringValue: 'john%',
+        },
+      ]);
+    });
+
+    it('should transform ends_with operator to ilike with %value', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'filename',
+            operator: 'ends_with',
+            value: '.pdf',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'filename',
+          operator: 'ilike',
+          value: '.pdf',
+          stringValue: '%.pdf',
+        },
+      ]);
+    });
+
+    it('should handle mixed operators correctly', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'title',
+            operator: 'contains',
+            value: 'test',
+            _type: FilterType.string,
+          },
+          {
+            name: 'description',
+            operator: 'starts_with',
+            value: 'The',
+            _type: FilterType.string,
+          },
+          {
+            name: 'tags',
+            operator: 'ends_with',
+            value: 'ing',
+            _type: FilterType.string,
+          },
+          {
+            name: 'author',
+            operator: 'eq',
+            value: 'John Doe',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'title',
+          operator: 'ilike',
+          value: 'test',
+          stringValue: '%test%',
+        },
+        {
+          name: 'description',
+          operator: 'ilike',
+          value: 'The',
+          stringValue: 'The%',
+        },
+        {
+          name: 'tags',
+          operator: 'ilike',
+          value: 'ing',
+          stringValue: '%ing',
+        },
+        {
+          name: 'author',
+          operator: 'eq',
+          value: 'John Doe',
+          stringValue: 'John Doe',
+        },
+      ]);
+    });
+  });
+
+  describe('Bidirectional transformation', () => {
+    it('should correctly round-trip contains operator', () => {
+      const original: InternalQuery = {
+        filters: [
+          {
+            name: 'content',
+            operator: 'contains',
+            value: 'search term',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const toRQL = transformToRQLQuery(original);
+      const backToInternal = dataTableQueryToInternal(toRQL);
+
+      expect(backToInternal.filters![0]).toMatchObject({
+        name: 'content',
+        operator: 'contains',
+        value: 'search term',
+      });
+    });
+
+    it('should correctly round-trip starts_with operator', () => {
+      const original: InternalQuery = {
+        filters: [
+          {
+            name: 'url',
+            operator: 'starts_with',
+            value: 'https://',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const toRQL = transformToRQLQuery(original);
+      const backToInternal = dataTableQueryToInternal(toRQL);
+
+      expect(backToInternal.filters![0]).toMatchObject({
+        name: 'url',
+        operator: 'starts_with',
+        value: 'https://',
+      });
+    });
+
+    it('should correctly round-trip ends_with operator', () => {
+      const original: InternalQuery = {
+        filters: [
+          {
+            name: 'extension',
+            operator: 'ends_with',
+            value: '.tsx',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const toRQL = transformToRQLQuery(original);
+      const backToInternal = dataTableQueryToInternal(toRQL);
+
+      expect(backToInternal.filters![0]).toMatchObject({
+        name: 'extension',
+        operator: 'ends_with',
+        value: '.tsx',
       });
     });
   });

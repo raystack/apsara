@@ -103,15 +103,39 @@ describe('Filter Operations', () => {
       expect(result2).toBe(false);
     });
 
-    it('should handle like (contains) operation case-insensitively', () => {
+    it('should handle contains operation case-insensitively', () => {
       const mockRow = createMockRow('Alice Johnson');
-      const result = filterOperationsMap.string.like(mockRow, 'name', { value: 'alice' }, addMeta);
+      const result = filterOperationsMap.string.contains(mockRow, 'name', { value: 'alice' }, addMeta);
       expect(result).toBe(true);
 
-      const result2 = filterOperationsMap.string.like(mockRow, 'name', { value: 'johnson' }, addMeta);
+      const result2 = filterOperationsMap.string.contains(mockRow, 'name', { value: 'johnson' }, addMeta);
       expect(result2).toBe(true);
 
-      const result3 = filterOperationsMap.string.like(mockRow, 'name', { value: 'bob' }, addMeta);
+      const result3 = filterOperationsMap.string.contains(mockRow, 'name', { value: 'bob' }, addMeta);
+      expect(result3).toBe(false);
+    });
+
+    it('should handle starts_with operation case-insensitively', () => {
+      const mockRow = createMockRow('Alice Johnson');
+      const result = filterOperationsMap.string.starts_with(mockRow, 'name', { value: 'alice' }, addMeta);
+      expect(result).toBe(true);
+
+      const result2 = filterOperationsMap.string.starts_with(mockRow, 'name', { value: 'johnson' }, addMeta);
+      expect(result2).toBe(false);
+
+      const result3 = filterOperationsMap.string.starts_with(mockRow, 'name', { value: 'bob' }, addMeta);
+      expect(result3).toBe(false);
+    });
+
+    it('should handle ends_with operation case-insensitively', () => {
+      const mockRow = createMockRow('Alice Johnson');
+      const result = filterOperationsMap.string.ends_with(mockRow, 'name', { value: 'johnson' }, addMeta);
+      expect(result).toBe(true);
+
+      const result2 = filterOperationsMap.string.ends_with(mockRow, 'name', { value: 'alice' }, addMeta);
+      expect(result2).toBe(false);
+
+      const result3 = filterOperationsMap.string.ends_with(mockRow, 'name', { value: 'bob' }, addMeta);
       expect(result3).toBe(false);
     });
   });
