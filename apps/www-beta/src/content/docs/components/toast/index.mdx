@@ -1,0 +1,42 @@
+---
+title: Toast
+description: Toast wrapper and function. Toast internally uses Sonner
+---
+
+import { preview, basicDemo, iconsDemo, disabledDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+```tsx
+import { ToastContainer, toast } from '@raystack/apsara'
+```
+
+## Toast Props
+
+<auto-type-table path="./props.ts" name="ToastProps" />
+
+## Examples
+
+### Basic Usage
+
+```tsx
+import { ToastContainer, toast, Button } from '@raystack/apsara'
+
+<ToastContainer />
+<Button
+  variant="primary"
+  onClick={() =>
+    toast.success("Data loaded successfully.", {
+      dismissible: true,
+      action: (
+        <Button size="small" onClick={() => console.log("Toast appears")}>
+          Click Me
+        </Button>
+      ),
+    })
+  }>
+  Trigger toast
+</Button>
+```

@@ -1,0 +1,28 @@
+{
+  "name": "www-beta",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "postinstall": "fumadocs-mdx"
+  },
+  "dependencies": {
+    "@raystack/apsara": "workspace:*",
+    "fumadocs-core": "^14.7.7",
+    "fumadocs-mdx": "^11.5.6",
+    "fumadocs-ui": "^14.7.7",
+    "next": "15.5.2",
+    "next-themes": "^0.4.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/mdx": "^2.0.13",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  }
+}

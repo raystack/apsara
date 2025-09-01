@@ -1,0 +1,191 @@
+---
+title: DataTable
+description: An advanced React table that supports filtering, sorting, and pagination out of the box.
+---
+
+import { preview } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+```tsx
+import {
+  DataTable,
+  DataTableColumnDef,
+  DataTableQuery,
+  DataTableSort,
+  useDataTable,
+  EmptyFilterValue
+} from "@raystack/apsara";
+```
+
+## DataTable Props
+
+<auto-type-table path="./props.ts" name="DataTableProps" />
+
+## DataTableQuery Interface
+
+<auto-type-table path="./props.ts" name="DataTableQuery" />
+
+## DataTableColumn Interface
+
+<auto-type-table path="./props.ts" name="DataTableColumnDef" />
+
+## Examples
+
+### Basic Usage
+
+```tsx
+import { DataTable } from "@raystack/apsara";
+
+const columns = [
+  {
+    accessorKey: "name",
+    header: "Name",
+    columnType: "text",
+    enableSorting: true,
+  },
+  {
+    accessorKey: "age",
+    header: "Age",
+    columnType: "number",
+    enableSorting: true,
+  },
+];
+const data = [
+  { name: "John Doe", age: 30 },
+  { name: "Jane Smith", age: 25 },
+];
+function MyTable() {
+  return (
+    <DataTable
+      columns={columns}
+      data={data}
+      defaultSort={{ key: "name", order: "asc" }}>
+      <DataTable.Toolbar />
+      <DataTable.Content />
+    </DataTable>
+  );
+}
+```
+
+### Column Configuration
+
+Columns can be configured with various options:
+
+```ts
+interface DataTableColumnDef<TData, TValue> {
+  accessorKey: string; // Key to access data
+  header: string; // Column header text
+  columnType: "text" | "number" | "date" | "select"; // Data type
+  enableSorting?: boolean; // Enable sorting
+  enableColumnFilter?: boolean; // Enable filtering
+  enableHiding?: boolean; // Enable column visibility toggle
+  enableGrouping?: boolean; // Enable grouping
+  filterOptions?: FilterSelectOption[]; // Options for select filter
+  defaultHidden?: boolean; // Hide column by default
+}
+```
+
+### Filtering
+
+The DataTable supports multiple filter types:
+
+Filter types:
+
+- Text: equals, not equals, contains,
+- Number: equals, not equals, less than, less than or equal, greater than, greater than or equal
+- Date: equals, not equals, before, on or before, after, on or after
+- Select: equals, not equals
+
+### Sorting
+
+Enable column sorting:
+
+```tsx
+const columns = [
+  {
+    accessorKey: "name",
+    header: "Name",
+    enableSorting: true,
+  },
+];
+```
+
+### Grouping
+
+Group rows by same column data:
+
+```tsx
+const columns = [
+  {
+    accessorKey: "category",
+    header: "Category",
+    enableGrouping: true,
+    showGroupCount: true,
+  },
+];
+```
+
+### Server-side Integration
+
+```tsx
+function ServerTable() {
+  const [data, setData] = useState([]);
+  const [query, setQuery] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const handleQueryChange = async (query: DataTableQuery) => {
+    setIsLoading(true);
+    setQuery(query);
+    const response = await fetchData(query);
+    setData(response.data);
+    setIsLoading(false);
+  };
+  return (
+    <DataTable
+      data={data}
+      query={query}
+      columns={columns}
+      isLoading={isLoading}
+      mode="server"
+      onTableQueryChange={handleQueryChange}>
+      <DataTable.Toolbar />
+      <DataTable.Content />
+    </DataTable>
+  );
+}
+```
+
+### Custom Styling
+
+```tsx
+const columns = [
+  {
+    accessorKey: "name",
+    header: "Name",
+    classNames: {
+      cell: "custom-cell",
+      header: "custom-header",
+    },
+    styles: {
+      cell: { fontWeight: "bold" },
+      header: { backgroundColor: "#f5f5f5" },
+    },
+  },
+];
+```
+
+### Custom Cell Rendering
+
+```tsx
+const columns = [
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge status={row.original.status}>{row.original.status}</Badge>
+    ),
+  },
+];
+```

@@ -1,0 +1,51 @@
+---
+title: Popover
+description: Displays rich content in a portal, triggered by a button.
+---
+
+import { playground, alignDemo, positionDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Popover } from "@raystack/apsara";
+```
+
+## Popover Props
+
+The Popover component consists of several parts, each with their own props:
+
+### Popover.Root Props
+
+<auto-type-table path="./props.ts" name="PopoverRootProps" />
+
+### Popover.Content Props
+
+<auto-type-table path="./props.ts" name="PopoverContentProps" />
+
+### Popover.Trigger Props
+
+<auto-type-table path="./props.ts" name="PopoverTriggerProps" />
+
+## Examples
+
+### Positioning
+
+Control the position and alignment of your popover relative to its trigger.
+
+<Demo data={positionDemo} />
+
+### Alignment
+
+Customize how the popover aligns with its trigger.
+
+<Demo data={alignDemo} />
+
+## Accessibility
+
+The Callout component includes appropriate ARIA attributes for accessibility:
+
+- Uses semantic HTML elements for proper structure
+- Dismiss button includes `aria-label` for screen readers

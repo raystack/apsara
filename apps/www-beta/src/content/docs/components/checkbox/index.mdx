@@ -1,0 +1,31 @@
+---
+title: Checkbox
+description: Checkbox is a user interface control that enables users to toggle between checked, unchecked, and indeterminate states
+---
+
+import { playground, statesExamples } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Checkbox } from "@raystack/apsara";
+```
+
+## Checkbox Props
+
+<auto-type-table path="./props.ts" name="CheckboxProps" />
+
+## Examples
+
+### States
+
+The Checkbox component supports multiple states to represent different selection conditions:
+
+- Unchecked: Default state
+- Checked: Selected state
+- Indeterminate: Partial selection state
+- Disabled: Disabled state
+
+<Demo data={statesExamples} />

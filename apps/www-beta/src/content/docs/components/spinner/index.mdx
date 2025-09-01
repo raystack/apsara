@@ -1,0 +1,39 @@
+---
+title: Spinner
+description: A visual indicator of a loading or processing state.
+---
+
+import { playground, sizeDemo, colorDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Spinner } from "@raystack/apsara";
+```
+
+## Spinner Props
+
+<auto-type-table path="./props.ts" name="SpinnerProps" />
+
+## Examples
+
+### Size
+
+The Spinner component offers different size options. You can customize the size of the spinner using the `size` prop. The available size options are:
+
+<Demo data={sizeDemo} />
+
+### Color
+
+The Spinner component offers 6 color values. `default` prop sets the color to `currentColor` mainly helpful if we want to render the Spinner inside another component like Button. Spinner (with color="default") inherits the foreground color of button text.
+
+<Demo data={colorDemo} />
+
+## Accessibility
+
+The Spinner component includes appropriate ARIA attributes for accessibility:
+
+- `role="status"`: Indicates that the element is a status indicator.
+- `aria-hidden="true"`: Hides the spinner from screen readers, as it's a visual indicator only.
