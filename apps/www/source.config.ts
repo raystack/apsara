@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'node:path';
 import { fileURLToPath } from 'url';
 import { TagSchema } from '@/lib/types';
 import { remarkInstall } from 'fumadocs-docgen';
