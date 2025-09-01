@@ -17,7 +17,7 @@
   },
   "engines": {
     "vscode": "^1.70.0",
-    "node": ">=20"
+    "node": ">=22"
   },
   "keywords": ["apsara", "raystack"],
   "categories": ["Programming Languages", "Snippets", "Other"],
