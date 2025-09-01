@@ -15,6 +15,7 @@ import { Toolbar } from './components/toolbar';
 import { TableContext } from './context';
 import {
   DataTableProps,
+  InternalQuery,
   DataTableQuery,
   GroupedData,
   TableContextType,
@@ -28,7 +29,7 @@ import {
   groupData,
   hasQueryChanged,
   queryToTableState,
-  sanitizeTableQuery
+  transformToRQLQuery
 } from './utils';
 
 function DataTableRoot<TData, TValue>({
@@ -51,9 +52,9 @@ function DataTableRoot<TData, TValue>({
     initialColumnVisibility
   );
   const [tableQuery, setTableQuery] =
-    useState<DataTableQuery>(defaultTableQuery);
+    useState<InternalQuery>(defaultTableQuery);
 
-  const oldQueryRef = useRef<DataTableQuery | null>(null);
+  const oldQueryRef = useRef<InternalQuery | null>(null);
 
   const reactTableState = useMemo(
     () => queryToTableState(tableQuery),
@@ -84,7 +85,7 @@ function DataTableRoot<TData, TValue>({
       hasQueryChanged(oldQueryRef.current, tableQuery) &&
       mode === 'server'
     ) {
-      onTableQueryChange(sanitizeTableQuery(tableQuery));
+      onTableQueryChange(transformToRQLQuery(tableQuery));
       oldQueryRef.current = tableQuery;
     }
   }, [tableQuery, onTableQueryChange]);

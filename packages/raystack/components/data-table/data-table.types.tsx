@@ -1,5 +1,6 @@
 import type { Column, ColumnDef, Table } from "@tanstack/table-core";
 import type {
+  FilterOperatorTypes,
   RQLFilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
@@ -20,9 +21,16 @@ export interface RQLFilterValues {
   stringValue?: string;
   numberValue?: number;
 }
-export interface RQLFilter extends RQLFilterValues {
+// Internal filter with UI operators and metadata
+export interface InternalFilter extends RQLFilterValues {
   _type?: FilterTypes;
   _dataType?: FilterValueType;
+  name: string;
+  operator: FilterOperatorTypes;
+}
+
+// Data table filter for backend API (no internal fields)
+export interface DataTableFilter extends RQLFilterValues {
   name: string;
   operator: RQLFilterOperatorTypes;
 }
@@ -35,13 +43,19 @@ export interface DataTableSort {
   order: SortOrdersValues;
 }
 
-export interface DataTableQuery {
-  filters?: RQLFilter[];
+// Internal query with UI operators and metadata
+export interface InternalQuery {
+  filters?: InternalFilter[];
   sort?: DataTableSort[];
   group_by?: string[];
   offset?: number;
   limit?: number;
   search?: string;
+}
+
+// Data table query for backend API (clean, no internal fields)
+export interface DataTableQuery extends Omit<InternalQuery, 'filters'> {
+  filters?: DataTableFilter[];
 }
 
 export type DataTableColumn<TData, TValue> = Omit<
@@ -80,7 +94,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
 export interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
   data: TData[];
-  query?: DataTableQuery;
+  query?: DataTableQuery;  // Initial query (will be transformed to internal format)
   mode?: DataTableMode;
   isLoading?: boolean;
   loadingRowCount?: number;
@@ -102,7 +116,7 @@ export type DataTableContentProps = {
   };
 };
 
-export type TableQueryUpdateFn = (query: DataTableQuery) => DataTableQuery;
+export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
 
 export type TableContextType<TData, TValue> = {
   table: Table<TData>;
@@ -111,7 +125,7 @@ export type TableContextType<TData, TValue> = {
   loadMoreData: () => void;
   mode: DataTableMode;
   defaultSort: DataTableSort;
-  tableQuery?: DataTableQuery;
+  tableQuery?: InternalQuery;
   loadingRowCount?: number;
   onDisplaySettingsReset: () => void;
   updateTableQuery: (fn: TableQueryUpdateFn) => void;
