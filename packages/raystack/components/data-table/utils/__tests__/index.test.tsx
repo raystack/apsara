@@ -886,6 +886,111 @@ describe('Data Table Utils', () => {
         },
       ]);
     });
+
+    it('should handle empty stringValue for ilike operator', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'ilike',
+            value: 'test',
+            stringValue: '',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'name',
+          operator: 'ilike',
+          value: 'test',
+          stringValue: '',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should handle ilike operator without stringValue', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'ilike',
+            value: 'test',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'name',
+          operator: 'ilike',
+          value: 'test',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should handle mixed RQL value fields for non-ilike operators', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'mixed',
+            operator: 'eq',
+            value: 'test',
+            stringValue: 'test',
+            numberValue: 123,
+            boolValue: true,
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'mixed',
+          operator: 'eq',
+          value: 'test',
+          stringValue: 'test',
+          numberValue: 123,
+          boolValue: true,
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should handle wildcard patterns with special characters', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'special',
+            operator: 'ilike',
+            value: 'test@domain.com',
+            stringValue: '%test@domain.com%',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'special',
+          operator: 'contains',
+          value: 'test@domain.com',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
   });
 
   describe('transformToRQLQuery with new operators', () => {
@@ -1020,6 +1125,97 @@ describe('Data Table Utils', () => {
         },
       ]);
     });
+
+    it('should handle empty values for string operators', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'contains',
+            value: '',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+
+      expect(result.filters).toEqual([]);
+    });
+
+    it('should handle select filters with empty values', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'status',
+            operator: 'eq',
+            value: '',
+            _type: FilterType.select,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'status',
+          operator: 'eq',
+          value: '',
+          stringValue: '',
+        },
+      ]);
+    });
+
+    it('should handle filters without _type', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'contains',
+            value: 'test',
+          } as InternalFilter,
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+
+      // Without _type, the function still processes it as string type
+      expect(result.filters).toEqual([
+        {
+          name: 'name',
+          operator: 'contains',
+          value: 'test',
+          stringValue: '%test%',
+        },
+      ]);
+    });
+
+    it('should preserve other query properties', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'title',
+            operator: 'contains',
+            value: 'test',
+            _type: FilterType.string,
+          },
+        ],
+        sort: [{ name: 'createdAt', order: 'desc' as const }],
+        group_by: ['status'],
+        offset: 10,
+        limit: 25,
+        search: 'global search',
+      };
+
+      const result = transformToRQLQuery(query);
+
+      expect(result.sort).toEqual([{ name: 'createdAt', order: 'desc' }]);
+      expect(result.group_by).toEqual(['status']);
+      expect(result.offset).toBe(10);
+      expect(result.limit).toBe(25);
+      expect(result.search).toBe('global search');
+    });
   });
 
   describe('Bidirectional transformation', () => {
@@ -1086,6 +1282,371 @@ describe('Data Table Utils', () => {
         name: 'extension',
         operator: 'ends_with',
         value: '.tsx',
+      });
+    });
+  });
+
+  describe('Wildcard and special character handling', () => {
+    it('should handle malformed wildcard patterns', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'weird',
+            operator: 'ilike',
+            value: 'test',
+            stringValue: '%%test%%', // Double wildcards
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'weird',
+          operator: 'contains',
+          value: '%test%', // Should strip outer % only
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should handle single % wildcard', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'single',
+            operator: 'ilike',
+            value: 'test',
+            stringValue: '%',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      // Single '%' matches both startsWith('%') and endsWith('%'),
+      // so it's treated as 'contains' with empty value
+      expect(result.filters).toEqual([
+        {
+          name: 'single',
+          operator: 'contains',
+          value: '',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should handle only wildcards', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'wildcards',
+            operator: 'ilike',
+            value: '',
+            stringValue: '%%',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters).toEqual([
+        {
+          name: 'wildcards',
+          operator: 'contains',
+          value: '',
+          _type: undefined,
+          _dataType: undefined,
+        },
+      ]);
+    });
+
+    it('should handle very long string values', () => {
+      const longString = 'a'.repeat(1000);
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'long',
+            operator: 'contains',
+            value: longString,
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+      const backToInternal = dataTableQueryToInternal(result);
+
+      expect(backToInternal.filters![0].value).toBe(longString);
+    });
+
+    it('should handle special regex characters in filter values', () => {
+      const specialChars = '.*+?^${}()|[]\\';
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'special',
+            operator: 'contains',
+            value: specialChars,
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+      const backToInternal = dataTableQueryToInternal(result);
+
+      expect(backToInternal.filters![0].value).toBe(specialChars);
+    });
+
+    it('should handle unicode characters', () => {
+      const unicode = '测试 🚀 émojis ñáñá';
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'unicode',
+            operator: 'starts_with',
+            value: unicode,
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+      const backToInternal = dataTableQueryToInternal(result);
+
+      expect(backToInternal.filters![0].value).toBe(unicode);
+      expect(backToInternal.filters![0].operator).toBe('starts_with');
+    });
+  });
+
+  describe('Error boundary tests', () => {
+    it('should handle null and undefined values gracefully', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'nullValue',
+            operator: 'eq',
+            value: null,
+            _type: FilterType.string,
+          },
+          {
+            name: 'undefinedValue',
+            operator: 'contains',
+            value: undefined,
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      expect(() => transformToRQLQuery(query)).not.toThrow();
+    });
+
+    it('should handle circular references in filter values', () => {
+      const circularObj: any = { name: 'test' };
+      circularObj.self = circularObj;
+
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'circular',
+            operator: 'eq',
+            value: circularObj,
+            _type: FilterType.select,
+          },
+        ],
+      };
+
+      expect(() => transformToRQLQuery(query)).not.toThrow();
+    });
+  });
+
+  describe('Type coercion and conversion tests', () => {
+    it('should handle string numbers in numeric comparisons', () => {
+      const query: DataTableQuery = {
+        filters: [
+          {
+            name: 'age',
+            operator: 'gte',
+            value: '25',
+            stringValue: '25',
+          },
+        ],
+      };
+
+      const result = dataTableQueryToInternal(query);
+
+      expect(result.filters![0].value).toBe('25');
+      expect(result.filters![0].stringValue).toBe('25');
+    });
+
+    it('should handle boolean values as strings', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'isActive',
+            operator: 'eq',
+            value: 'true',
+            _type: FilterType.select,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+      const backToInternal = dataTableQueryToInternal(result);
+
+      expect(backToInternal.filters![0].value).toBe('true');
+    });
+  });
+
+  describe('Integration with hasQueryChanged', () => {
+    it('should detect changes in new string operators', () => {
+      const oldQuery: InternalQuery = {
+        filters: [
+          {
+            name: 'title',
+            operator: 'contains',
+            value: 'test',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const newQuery: InternalQuery = {
+        filters: [
+          {
+            name: 'title',
+            operator: 'starts_with',
+            value: 'test',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      expect(hasQueryChanged(oldQuery, newQuery)).toBe(true);
+    });
+
+    it('should not detect changes when operators are functionally equivalent', () => {
+      const query1: InternalQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'contains',
+            value: 'john',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const query2: InternalQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'contains',
+            value: 'john',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      expect(hasQueryChanged(query1, query2)).toBe(false);
+    });
+
+    it('should handle mixed old and new filter formats', () => {
+      const oldQuery: InternalQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'eq',
+            value: 'john',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const newQuery: InternalQuery = {
+        filters: [
+          {
+            name: 'name',
+            operator: 'contains',
+            value: 'john',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      expect(hasQueryChanged(oldQuery, newQuery)).toBe(true);
+    });
+  });
+
+  describe('Real-world scenarios', () => {
+    it('should handle email search patterns', () => {
+      const scenarios = [
+        { value: 'john@', operator: 'starts_with' as const, expected: 'john@%' },
+        { value: '@domain.com', operator: 'ends_with' as const, expected: '%@domain.com' },
+        { value: '@', operator: 'contains' as const, expected: '%@%' },
+      ];
+
+      scenarios.forEach(({ value, operator, expected }) => {
+        const query: InternalQuery = {
+          filters: [
+            {
+              name: 'email',
+              operator,
+              value,
+              _type: FilterType.string,
+            },
+          ],
+        };
+
+        const result = transformToRQLQuery(query);
+        expect(result.filters![0].stringValue).toBe(expected);
+      });
+    });
+
+    it('should handle file extension searches', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'filename',
+            operator: 'ends_with',
+            value: '.pdf',
+            _type: FilterType.string,
+          },
+        ],
+      };
+
+      const result = transformToRQLQuery(query);
+      const backToInternal = dataTableQueryToInternal(result);
+
+      expect(result.filters![0].stringValue).toBe('%.pdf');
+      expect(backToInternal.filters![0].operator).toBe('ends_with');
+      expect(backToInternal.filters![0].value).toBe('.pdf');
+    });
+
+    it('should handle user search with partial names', () => {
+      const searchTerms = ['John', 'john doe', 'J. Smith', 'O\'Connor'];
+      
+      searchTerms.forEach(term => {
+        const query: InternalQuery = {
+          filters: [
+            {
+              name: 'fullName',
+              operator: 'contains',
+              value: term,
+              _type: FilterType.string,
+            },
+          ],
+        };
+
+        const result = transformToRQLQuery(query);
+        const backToInternal = dataTableQueryToInternal(result);
+
+        expect(backToInternal.filters![0].value).toBe(term);
+        expect(result.filters![0].stringValue).toBe(`%${term}%`);
       });
     });
   });
