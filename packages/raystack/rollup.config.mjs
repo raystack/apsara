@@ -1,11 +1,12 @@
-import commonjs from "@rollup/plugin-commonjs";
-import image from "@rollup/plugin-image";
-import { nodeResolve } from "@rollup/plugin-node-resolve";
-import typescript from "@rollup/plugin-typescript";
-import tsconfigPaths from "rollup-plugin-tsconfig-paths";
-import postcss from "rollup-plugin-postcss";
-import postcssImport from "postcss-import";
-import svgr from "@svgr/rollup";
+import commonjs from '@rollup/plugin-commonjs';
+import image from '@rollup/plugin-image';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
+import svgr from '@svgr/rollup';
+import postcssImport from 'postcss-import';
+import postcss from 'rollup-plugin-postcss';
+import preserveDirectives from 'rollup-plugin-preserve-directives';
+import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
 
 const createPlugins = ({ rootDir, declarationDir }) => [
   nodeResolve(),
@@ -14,40 +15,41 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     svgoConfig: {
       plugins: [
         {
-          name: "preset-default",
+          name: 'preset-default',
           params: {
             overrides: {
-              removeViewBox: false,
-            },
-          },
-        },
-      ],
-    },
+              removeViewBox: false
+            }
+          }
+        }
+      ]
+    }
   }),
   postcss({
     plugins: [postcssImport()],
-    extract: "style.css",
+    extract: 'style.css',
     minimize: true,
     autoModules: true, // Auto process files ending with .module.css
     modules: true,
     namedExports: true, // Enable named exports for CSS modules
-    exclude: ["normalize.css"],
+    exclude: ['normalize.css']
   }),
   postcss({
     plugins: [postcssImport()],
-    extract: "normalize.css",
+    extract: 'normalize.css',
     minimize: true,
-    include: ["normalize.css"],
-    exclude: ["**/*.module.css", "style.css"],
+    include: ['normalize.css'],
+    exclude: ['**/*.module.css', 'style.css']
   }),
   tsconfigPaths(),
   typescript({
-    tsconfig: "tsconfig.json",
+    tsconfig: 'tsconfig.json',
     declaration: true,
     rootDir: rootDir,
-    declarationDir: declarationDir,
+    declarationDir: declarationDir
   }),
   image(),
+  preserveDirectives() //preserve `use client` directive
 ];
 
 const sharedWarningHandler = (warning, warn) => {
@@ -56,58 +58,54 @@ const sharedWarningHandler = (warning, warn) => {
 
   // This ignores the warnings generated during build from
   // CSS module imports which is not standard JS module syntax.
-  if (warning.code === "MODULE_LEVEL_DIRECTIVE") return;
+  if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
 
   warn(warning);
 };
 
 const configs = [
   {
-    inputPath: ".",
-    outputPath: "dist",
+    inputPath: '.',
+    outputPath: 'dist'
   },
   {
-    inputPath: "v1",
-    outputPath: "dist/v1",
+    inputPath: './icons',
+    outputPath: 'dist/icons'
   },
   {
-    inputPath: "v1/icons",
-    outputPath: "dist/v1/icons",
-  },
-  {
-    inputPath: "v1/hooks",
-    outputPath: "dist/v1/hooks",
-  },
+    inputPath: './hooks',
+    outputPath: 'dist/hooks'
+  }
 ];
 
 const rollupConfig = configs.map(conf => {
   return {
-    input: conf.inputPath + "/index.tsx",
+    input: conf.inputPath + '/index.tsx',
     output: [
       {
         dir: conf.outputPath,
-        format: "es",
+        format: 'es',
         sourcemap: true,
-        exports: "named",
+        exports: 'named',
         preserveModules: true,
-        preserveModulesRoot: conf.inputPath,
+        preserveModulesRoot: conf.inputPath
       },
       {
         dir: conf.outputPath,
-        format: "cjs",
+        format: 'cjs',
         sourcemap: true,
-        exports: "named",
-        entryFileNames: "[name].cjs",
+        exports: 'named',
+        entryFileNames: '[name].cjs',
         preserveModules: true,
-        preserveModulesRoot: conf.inputPath,
-      },
+        preserveModulesRoot: conf.inputPath
+      }
     ],
-    external: ["react", "react-dom"],
+    external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime'],
     plugins: createPlugins({
       rootDir: conf.inputPath,
-      declarationDir: conf.outputPath,
+      declarationDir: conf.outputPath
     }),
-    onwarn: sharedWarningHandler,
+    onwarn: sharedWarningHandler
   };
 });
 

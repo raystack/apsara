@@ -1,46 +1,62 @@
 ---
 title: Breadcrumb
 description: A navigation component for displaying a route trail.
+tag: update
 ---
 
 import {
   playground,
   sizeDemo,
   separatorDemo,
-  maxVisibleItemsDemo,
   iconsDemo,
+  ellipsisDemo,
   dropdownDemo,
+  asDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Breadcrumb } from '@raystack/apsara'
+```
 
 ## Breadcrumb Props
 
 <auto-type-table path="./props.ts" name="BreadcrumbProps" />
 
-### BreadcrumbItem Props
+### Breadcrumb.Item Props
 
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
+
+### Breadcrumb.Separator Props
+
+<auto-type-table path="./props.ts" name="BreadcrumbSeparatorProps" />
+
+### Breadcrumb.Ellipsis Props
+
+<auto-type-table path="./props.ts" name="BreadcrumbEllipsisProps" />
 
 ## Examples
 
 ### Size
 
-The Breadcrumb component supports different sizes to fit various design requirements. You can specify the size using the `size` prop.
+The Breadcrumb component supports different sizes to accommodate various design requirements. Specify the size using the `size` prop.
 
 <Demo data={sizeDemo} />
 
 ### Separator
 
-You can customize the separator between breadcrumb items using the `separator` prop.
+Customize the separator between breadcrumb items using the `separator` prop.
 
 <Demo data={separatorDemo} />
 
-### Dropdowns
+### Ellipsis
 
-Breadcrumb items can include dropdowns for additional navigation options.
+Use the `Breadcrumb.Ellipsis` component to truncate the breadcrumb trail when you need to display a large number of items in a limited space.
 
-<Demo data={dropdownDemo} />
+<Demo data={ellipsisDemo} />
 
 ### Icons
 
@@ -48,8 +64,18 @@ Breadcrumb items can include icons either alongside text or as standalone elemen
 
 <Demo data={iconsDemo} />
 
-### Max Visible Items
+### Dropdown
 
-Control the visibility of breadcrumb items using the `maxVisibleItems` prop. By default, all items are visible when `maxVisibleItems` is not specified.
+Breadcrumb items can include dropdown menus for additional navigation options. Specify the dropdown items using the `dropdownItems` prop.
 
-<Demo data={maxVisibleItemsDemo} />
+**Note:** When `dropdownItems` is provided, the `as` and `href` props are ignored.
+
+<Demo data={dropdownDemo} />
+
+### As
+
+Use the `as` prop to render the breadcrumb item as a custom component. By default, breadcrumb items are rendered as `a` tags.
+
+When a custom component is provided, the props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
+
+<Demo data={asDemo} />

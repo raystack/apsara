@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `
@@ -16,35 +16,51 @@ export const getCode = (props: any) => {
     </Grid>`;
 };
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     gap: {
-      type: "select",
-      options: ["extra-small", "small", "medium", "large", "extra-large"],
-      initialValue: "small",
+      type: 'select',
+      options: ['extra-small', 'small', 'medium', 'large', 'extra-large'],
+      initialValue: 'small'
     },
     rows: {
-      type: "number",
+      type: 'number',
       min: 1,
       max: 10,
-      initialValue: 4,
+      initialValue: 4
     },
     columns: {
-      type: "number",
+      type: 'number',
       min: 1,
       max: 10,
-      initialValue: 2,
+      initialValue: 2
     },
     justifyItems: {
-      type: "select",
-      options: ["start", "end", "center", "stretch"],
-      initialValue: "center",
+      type: 'select',
+      options: ['start', 'end', 'center', 'stretch'],
+      initialValue: 'center'
     },
     alignItems: {
-      type: "select",
-      options: ["start", "end", "center", "stretch"],
-      initialValue: "center",
-    },
+      type: 'select',
+      options: ['start', 'end', 'center', 'stretch'],
+      initialValue: 'center'
+    }
   },
-  getCode,
+  getCode
+};
+
+export const basicDemo = {
+  type: 'code',
+  code: `
+  <Grid
+  gap="small"
+  rows={2}
+  columns={2}>
+  <Button>Button 1</Button>
+  <Button>Button 2</Button>
+  <Button>Button 3</Button>
+  <Grid.Item>4</Grid.Item>
+  <Grid.Item>5</Grid.Item>
+  <Grid.Item>6</Grid.Item>
+</Grid>`
 };

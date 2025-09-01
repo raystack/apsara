@@ -1,6 +1,6 @@
 "use client";
 
-import { Image, Flex } from "@raystack/apsara/v1";
+import { Image, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function ImageExamples() {

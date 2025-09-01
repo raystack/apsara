@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, DropdownMenu, Flex } from "@raystack/apsara/v1";
+import { Button, DropdownMenu, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function DropdownMenuExamples() {

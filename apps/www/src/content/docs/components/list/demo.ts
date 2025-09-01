@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 export const preview = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex align="center" justify="center">
     <List.Root>
@@ -19,5 +19,18 @@ export const preview = {
         <List.Value>April 24, 2024</List.Value>
       </List.Item>
     </List.Root>
-  </Flex>`,
+  </Flex>`
+};
+
+export const basicDemo = {
+  type: 'code',
+  code: `
+  <List.Root maxWidth="600px">
+  <List.Header>User Information</List.Header>
+  <List.Item align="center">
+    <List.Label minWidth="88px">Status</List.Label>
+    <List.Value>Active</List.Value>
+  </List.Item>
+</List.Root>;
+  `
 };

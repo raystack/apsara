@@ -1,0 +1,398 @@
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  border: none;
+  border-radius: var(--rs-radius-full);
+  background-color: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
+  width: var(--rs-space-9, 32px);
+  height: var(--rs-space-9, 32px);
+  --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.4);
+}
+
+.avatar-full {
+  border-radius: var(--rs-radius-full) !important;
+}
+
+.avatar-disabled {
+  opacity: 0.5;
+}
+
+.avatar-solid {
+  --avatar-opacity: 1;
+}
+
+.avatar-soft {
+  --avatar-opacity: 0.2;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.avatar-color-indigo {
+  --avatar-hue: var(--rs-color-background-accent-emphasis);
+  --avatar-color: var(--rs-color-foreground-accent-emphasis);
+}
+
+.avatar-color-orange {
+  --avatar-hue: var(--rs-color-background-attention-emphasis);
+  --avatar-color: var(--rs-color-foreground-attention-emphasis);
+}
+
+.avatar-color-mint {
+  --avatar-hue: var(--rs-color-background-success-emphasis);
+  --avatar-color: var(--rs-color-foreground-success-emphasis);
+}
+
+.avatar-color-neutral {
+  --avatar-hue: var(--rs-color-background-neutral-emphasis);
+  --avatar-color: var(--rs-color-foreground-base-emphasis);
+}
+
+.avatar-color-sky {
+  --avatar-hue: var(--rs-color-viz-sky-9);
+  --avatar-color: var(--rs-color-viz-sky-11);
+}
+
+.avatar-color-lime {
+  --avatar-hue: var(--rs-color-viz-lime-9);
+  --avatar-color: var(--rs-color-viz-lime-11);
+}
+
+.avatar-color-grass {
+  --avatar-hue: var(--rs-color-viz-grass-9);
+  --avatar-color: var(--rs-color-viz-grass-11);
+}
+
+.avatar-color-cyan {
+  --avatar-hue: var(--rs-color-viz-cyan-9);
+  --avatar-color: var(--rs-color-viz-cyan-11);
+}
+
+.avatar-color-iris {
+  --avatar-hue: var(--rs-color-viz-iris-9);
+  --avatar-color: var(--rs-color-viz-iris-11);
+}
+
+.avatar-color-purple {
+  --avatar-hue: var(--rs-color-viz-purple-9);
+  --avatar-color: var(--rs-color-viz-purple-11);
+}
+
+.avatar-color-pink {
+  --avatar-hue: var(--rs-color-viz-pink-9);
+  --avatar-color: var(--rs-color-viz-pink-11);
+}
+
+.avatar-color-crimson {
+  --avatar-hue: var(--rs-color-viz-crimson-9);
+  --avatar-color: var(--rs-color-viz-crimson-11);
+}
+
+.avatar-color-gold {
+  --avatar-hue: var(--rs-color-viz-gold-9);
+  --avatar-color: var(--rs-color-viz-gold-11);
+}
+
+.avatar-solid-indigo {
+  background-color: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-accent-emphasis);
+}
+
+.avatar-solid-orange {
+  background-color: var(--rs-color-background-attention-emphasis);
+  color: var(--rs-color-foreground-attention-primary-hover);
+}
+
+.avatar-solid-mint {
+  background-color: var(--rs-color-background-success-emphasis);
+  color: var(--rs-color-foreground-success-primary-hover);
+}
+
+.avatar-solid-neutral {
+  background-color: var(--rs-color-background-neutral-emphasis);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.avatar-solid-sky {
+  background-color: var(--rs-color-viz-sky-9);
+  color: var(--rs-color-viz-sky-11);
+}
+
+.avatar-solid-lime {
+  background-color: var(--rs-color-viz-lime-9);
+  color: var(--rs-color-viz-lime-11);
+}
+
+.avatar-solid-grass {
+  background-color: var(--rs-color-viz-grass-8);
+  color: var(--rs-color-viz-grass-11);
+}
+
+.avatar-solid-cyan {
+  background-color: var(--rs-color-viz-cyan-8);
+  color: var(--rs-color-viz-cyan-11);
+}
+
+.avatar-solid-iris {
+  background-color: var(--rs-color-viz-iris-8);
+  color: var(--rs-color-viz-iris-11);
+}
+
+.avatar-solid-purple {
+  background-color: var(--rs-color-viz-purple-8);
+  color: var(--rs-color-viz-purple-11);
+}
+
+.avatar-solid-pink {
+  background-color: var(--rs-color-viz-pink-8);
+  color: var(--rs-color-viz-pink-11);
+}
+
+.avatar-solid-crimson {
+  background-color: var(--rs-color-viz-crimson-8);
+  color: var(--rs-color-viz-crimson-11);
+}
+
+.avatar-solid-gold {
+  background-color: var(--rs-color-viz-gold-8);
+  color: var(--rs-color-viz-gold-11);
+}
+
+/* Soft Variants */
+.avatar-soft-indigo {
+  background-color: var(--rs-color-background-accent-primary);
+}
+
+.avatar-soft-orange {
+  background-color: var(--rs-color-background-attention-primary);
+}
+
+.avatar-soft-mint {
+  background-color: var(--rs-color-background-success-primary);
+}
+
+.avatar-soft-neutral {
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
+.avatar-soft-sky {
+  background-color: var(--rs-color-viz-sky-6);
+}
+
+.avatar-soft-lime {
+  background-color: var(--rs-color-viz-lime-6);
+}
+
+.avatar-soft-grass {
+  background-color: var(--rs-color-viz-grass-6);
+}
+
+.avatar-soft-cyan {
+  background-color: var(--rs-color-viz-cyan-6);
+}
+
+.avatar-soft-iris {
+  background-color: var(--rs-color-viz-iris-6);
+}
+
+.avatar-soft-purple {
+  background-color: var(--rs-color-viz-purple-6);
+}
+
+.avatar-soft-pink {
+  background-color: var(--rs-color-viz-pink-6);
+}
+
+.avatar-soft-crimson {
+  background-color: var(--rs-color-viz-crimson-6);
+}
+
+.avatar-soft-gold {
+  background-color: var(--rs-color-viz-gold-6);
+}
+
+.imageWrapper {
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+}
+
+.image {
+  display: flex;
+  object-fit: cover;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fallback-font-size);
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-large);
+  letter-spacing: var(--rs-letter-spacing-large);
+}
+
+.avatar-size-1 {
+  width: var(--rs-space-5, 16px);
+  height: var(--rs-space-5, 16px);
+  --fallback-font-size: calc(var(--rs-space-5, 16px) * 0.4);
+  border-radius: var(--rs-radius-2);
+}
+
+.avatar-size-2 {
+  width: var(--rs-space-6, 20px);
+  height: var(--rs-space-6, 20px);
+  --fallback-font-size: calc(var(--rs-space-6, 20px) * 0.4);
+  border-radius: var(--rs-radius-2);
+}
+
+.avatar-size-3 {
+  width: var(--rs-space-7, 24px);
+  height: var(--rs-space-7, 24px);
+  --fallback-font-size: calc(var(--rs-space-7, 24px) * 0.4);
+  border-radius: var(--rs-radius-2);
+}
+
+.avatar-size-4 {
+  width: var(--rs-space-8, 28px);
+  height: var(--rs-space-8, 28px);
+  --fallback-font-size: calc(var(--rs-space-8, 28px) * 0.35);
+  border-radius: var(--rs-radius-2);
+}
+
+.avatar-size-5 {
+  width: var(--rs-space-9, 32px);
+  height: var(--rs-space-9, 32px);
+  --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.4);
+  border-radius: var(--rs-radius-2);
+}
+
+.avatar-size-6 {
+  width: var(--rs-space-10, 40px);
+  height: var(--rs-space-10, 40px);
+  --fallback-font-size: calc(var(--rs-space-10, 40px) * 0.35);
+  border-radius: var(--rs-radius-4);
+}
+
+.avatar-size-7 {
+  width: var(--rs-space-11, 48px);
+  height: var(--rs-space-11, 48px);
+  --fallback-font-size: calc(var(--rs-space-11, 48px) * 0.35);
+  border-radius: var(--rs-radius-4);
+}
+
+.avatar-size-8 {
+  width: var(--rs-space-12, 56px);
+  height: var(--rs-space-12, 56px);
+  --fallback-font-size: calc(var(--rs-space-12, 56px) * 0.3);
+  border-radius: var(--rs-radius-4);
+}
+
+.avatar-size-9 {
+  width: var(--rs-space-13, 64px);
+  height: var(--rs-space-13, 64px);
+  --fallback-font-size: calc(var(--rs-space-13, 64px) * 0.3);
+  border-radius: var(--rs-radius-4);
+}
+
+.avatar-size-10 {
+  width: var(--rs-space-14, 72px);
+  height: var(--rs-space-14, 72px);
+  --fallback-font-size: calc(var(--rs-space-14, 72px) * 0.3);
+  border-radius: var(--rs-radius-5);
+}
+
+.avatar-size-11 {
+  width: var(--rs-space-15, 80px);
+  height: var(--rs-space-15, 80px);
+  --fallback-font-size: calc(var(--rs-space-15, 80px) * 0.3);
+  border-radius: var(--rs-radius-5);
+}
+
+.avatar-size-12 {
+  width: var(--rs-space-16, 96px);
+  height: var(--rs-space-16, 96px);
+  --fallback-font-size: calc(var(--rs-space-16, 96px) * 0.3);
+  border-radius: var(--rs-radius-5);
+}
+
+.avatar-size-13 {
+  width: var(--rs-space-17, 120px);
+  height: var(--rs-space-17, 120px);
+  --fallback-font-size: calc(var(--rs-space-17, 120px) * 0.3);
+  border-radius: var(--rs-radius-5);
+}
+
+/* Avatar Group Styles */
+.avatarGroup {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.avatarWrapper {
+  margin-left: calc(-0.5 * var(--avatar-overlap, 1.2em));
+}
+
+.avatarWrapper:first-child {
+  margin-left: 0;
+}
+
+.avatarWrapper:not(:first-child) {
+  position: relative;
+}
+
+.avatarGroup .avatar {
+  border: 1px solid var(--rs-color-background-base-primary);
+  box-sizing: content-box;
+}
+
+/* Avatar Group Size Variants */
+.avatar-size-1 .avatarWrapper {
+  --avatar-overlap: 0.8em;
+}
+.avatar-size-2 .avatarWrapper {
+  --avatar-overlap: 0.9em;
+}
+.avatar-size-3 .avatarWrapper {
+  --avatar-overlap: 1em;
+}
+.avatar-size-4 .avatarWrapper {
+  --avatar-overlap: 1.1em;
+}
+.avatar-size-5 .avatarWrapper {
+  --avatar-overlap: 1.2em;
+}
+.avatar-size-6 .avatarWrapper {
+  --avatar-overlap: 1.3em;
+}
+.avatar-size-7 .avatarWrapper {
+  --avatar-overlap: 1.4em;
+}
+.avatar-size-8 .avatarWrapper {
+  --avatar-overlap: 1.5em;
+}
+.avatar-size-9 .avatarWrapper {
+  --avatar-overlap: 1.6em;
+}
+.avatar-size-10 .avatarWrapper {
+  --avatar-overlap: 1.7em;
+}
+.avatar-size-11 .avatarWrapper {
+  --avatar-overlap: 1.8em;
+}
+.avatar-size-12 .avatarWrapper {
+  --avatar-overlap: 1.9em;
+}
+.avatar-size-13 .avatarWrapper {
+  --avatar-overlap: 2em;
+}

@@ -1,23 +1,16 @@
 ---
 title: Grid
 description: A flexible and powerful component for grid layout
-tag: new
 ---
 
-import { playground, iconsDemo, customDemo, basicDemo } from "./demo.ts";
+import { playground,  basicDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
 ## Usage
 
 ```tsx
-import { Grid } from "@raystack/apsara/v1";
-
-<Grid columns={2} rows={2}>
-  <Grid.Item>1</Grid.Item>
-  <Grid.Item>2</Grid.Item>
-  <Grid.Item>3</Grid.Item>
-</Grid>;
+import { Grid } from "@raystack/apsara";
 ```
 
 ## Grid Props
@@ -29,3 +22,9 @@ import { Grid } from "@raystack/apsara/v1";
 Grid.Item is a wrapper component that must be a direct child of Grid. Use it when you need to customize the positioning or styling of individual grid items.
 
 <auto-type-table path="./props.ts" name="GridItemProps" />
+
+## Examples
+
+### Basic Usage
+
+<Demo data={basicDemo} />

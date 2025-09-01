@@ -6,13 +6,13 @@
     "isolatedModules": false,
     "moduleResolution": "bundler",
     "paths": {
+      "react": ["node_modules/@types/react"],
       "~/*": ["./*"],
-      "~/v1/*": ["./v1/*"],
-      "~/icons": ["./v1/icons"],
-      "~/hooks/*": ["./v1/hooks/*"]
+      "~/icons/*": ["icons/*"],
+      "~/hooks/*": ["hooks/*"]
     },
     "types": ["jest", "@testing-library/jest-dom"]
   },
-  "include": [".", "v1", "v1/icons", "v1/hooks"],
+  "include": [".", "icons", "hooks", "global.d.ts"],
   "exclude": ["dist", "build", "node_modules"]
 }

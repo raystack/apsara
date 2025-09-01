@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Flex, Text } from "@raystack/apsara/v1";
+import { Container, Flex, Text } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function ContainerExamples() {
@@ -10,7 +10,7 @@ export function ContainerExamples() {
         <Container size="small" align="left">
           <Text>
             Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
+            industry. Lorem Ipsum has been the industry standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
             and scrambled it to make a type specimen book.
           </Text>
@@ -18,7 +18,7 @@ export function ContainerExamples() {
         <Container size="medium" align="left">
           <Text>
             Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
+            industry. Lorem Ipsum has been the industry standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
             and scrambled it to make a type specimen book.
           </Text>
@@ -26,7 +26,7 @@ export function ContainerExamples() {
         <Container size="large" align="left">
           <Text>
             Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
+            industry. Lorem Ipsum has been the industry standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
             and scrambled it to make a type specimen book.
           </Text>

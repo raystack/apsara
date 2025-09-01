@@ -3,23 +3,27 @@ title: Tooltip
 description: A popup that displays information related to an element when it receives keyboard focus or the mouse hovers over it.
 ---
 
-import { playground, sideDemo, customDemo,followCursorDemo } from "./demo.ts";
+import { playground, sideDemo, customDemo,followCursorDemo, providerDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
 ## Usage
 
 ```tsx
-import { Tooltip } from "@raystack/apsara/v1";
-
-<Tooltip message="This is a tooltip">
-  <Button>Hover me</Button>
-</Tooltip>;
+import { Tooltip } from "@raystack/apsara";
 ```
 
 ## Tooltip Props
 
+The Tooltip component accepts various props to customize its behavior and appearance. You can use it either as a standalone component or nested within a TooltipProvider for enhanced functionality.
+
 <auto-type-table path="./props.ts" name="TooltipProps" />
+
+## Tooltip.Provider Props
+
+The TooltipProvider component serves as a context wrapper that provides global configuration and functionality to all tooltip instances within your application.
+
+<auto-type-table path="./props.ts" name="TooltipProviderProps" />
 
 ## Examples
 
@@ -34,6 +38,12 @@ The Tooltip component can be positioned in different directions using the `side`
 Tooltips can contain custom content using ReactNode:
 
 <Demo data={customDemo} />
+
+### With Provider
+
+The TooltipProvider component can be used to provide a global configuration for all tooltips in your application.
+
+<Demo data={providerDemo} />
 
 ### Follow Cursor
 

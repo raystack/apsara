@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Callout, Flex } from "@raystack/apsara/v1";
+import { Button, Callout, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function CalloutExamples() {

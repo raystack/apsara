@@ -9,10 +9,36 @@ import { preview } from "./demo.ts";
 
 ## Usage
 
-The DataTable component is a powerful, flexible table that provides advanced features like sorting, filtering, grouping, and server-side data handling.
+```tsx
+import {
+  DataTable,
+  DataTableColumnDef,
+  DataTableQuery,
+  DataTableSort,
+  useDataTable,
+  EmptyFilterValue
+} from "@raystack/apsara";
+```
+
+## DataTable Props
+
+<auto-type-table path="./props.ts" name="DataTableProps" />
+
+## DataTableQuery Interface
+
+<auto-type-table path="./props.ts" name="DataTableQuery" />
+
+## DataTableColumn Interface
+
+<auto-type-table path="./props.ts" name="DataTableColumnDef" />
+
+## Examples
+
+### Basic Usage
 
 ```tsx
-import { DataTable } from "@raystack/components/v1";
+import { DataTable } from "@raystack/apsara";
+
 const columns = [
   {
     accessorKey: "name",
@@ -43,22 +69,6 @@ function MyTable() {
   );
 }
 ```
-
-## DataTable Props
-
-<auto-type-table path="./props.ts" name="DataTableProps" />
-
-## DataTableQuery Interface
-
-<auto-type-table path="./props.ts" name="DataTableQuery" />
-
-## DataTableColumn Interface
-
-<auto-type-table path="./props.ts" name="DataTableColumnDef" />
-
-## Examples
-
-You can check live DataTable [here](https://apsara.raystack.org/examples/data-table).
 
 ### Column Configuration
 

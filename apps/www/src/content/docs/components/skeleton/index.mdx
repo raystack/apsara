@@ -1,7 +1,6 @@
 ---
 title: Skeleton
 description: A placeholder loading state that mimics the layout of content while it's being loaded.
-tag: new
 ---
 
 import {
@@ -18,12 +17,8 @@ import {
 
 ## Usage
 
-The Skeleton component is used to create placeholder loading states that represent the layout of content while it's being loaded. It provides a visual indication that content is loading and helps maintain layout stability.
-
 ```tsx
-import { Skeleton } from "@raystack/apsara/v1";
-
-<Skeleton width={200} height={20} />;
+import { Skeleton } from "@raystack/apsara";
 ```
 
 ## Skeleton Props
@@ -80,9 +75,9 @@ The Skeleton component supports a Provider pattern that allows you to share comm
 >
   <Skeleton /> {/* Inherits provider props */}
   <Skeleton width="75%" /> {/* Inherits provider props, overrides width */}
-  <Skeleton 
-    height="48px"  
-    borderRadius="50%" 
+  <Skeleton
+    height="48px"
+    borderRadius="50%"
   /> {/* Overrides specific props */}
 </Skeleton.Provider>
 ```

@@ -1,4 +1,4 @@
-import { createMDX } from "fumadocs-mdx/next";
+import { createMDX } from 'fumadocs-mdx/next';
 
 const withMDX = createMDX();
 
@@ -10,16 +10,28 @@ const config = {
     // Dangerously allow production builds to successfully complete even if
     // your project has type errors.
     // !! WARN !!
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true
   },
   experimental: {
-    optimizePackageImports: ["shiki"],
+    optimizePackageImports: ['shiki']
   },
+  async rewrites() {
+    return [
+      {
+        source: '/docs/:path*.mdx',
+        destination: '/llms.mdx/:path*'
+      },
+      {
+        source: '/docs/:path*.md',
+        destination: '/llms.mdx/:path*'
+      }
+    ];
+  }
 };
 
 export default withMDX(config);

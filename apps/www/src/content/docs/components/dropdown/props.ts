@@ -7,7 +7,7 @@ export interface DropdownMenuRootProps {
    * - "manual": Requires explicit filtering through onSearch callback
    * @default "auto"
    */
-  autocompleteMode?: "auto" | "manual";
+  autocompleteMode?: 'auto' | 'manual';
 
   /** Current search value for autocomplete */
   searchValue?: string;
@@ -22,28 +22,41 @@ export interface DropdownMenuRootProps {
    * @default "bottom-start""
    */
   placement?:
-    | "top"
-    | "top-start"
-    | "top-end"
-    | "bottom"
-    | "bottom-start"
-    | "bottom-end"
-    | "left"
-    | "left-start"
-    | "left-end"
-    | "right"
-    | "right-start"
-    | "right-end";
+    | 'top'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'left'
+    | 'left-start'
+    | 'left-end'
+    | 'right'
+    | 'right-start'
+    | 'right-end';
 
   /** Whether the dropdown should loop focus when navigating with keyboard
    * @default true
    */
   focusLoop?: boolean;
+
+  /** Control the open state of the dropdown
+   * @default false
+   */
+  open?: boolean;
+
+  /** Callback fired when the dropdown is opened or closed */
+  onOpenChange?: (open: boolean) => void;
 }
 
 export interface DropdownMenuTriggerProps {
   /** Boolean to merge props onto child element */
   asChild?: boolean;
+
+  /** Whether the dropdown should stop propagation of the click event
+   * @default true
+   */
+  stopPropagation?: boolean;
 }
 
 export interface DropdownMenuContentProps {

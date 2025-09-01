@@ -1,6 +1,6 @@
 "use client";
 
-import { Sheet, Button, Flex } from "@raystack/apsara/v1";
+import { Sheet, Button, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function SheetExamples() {

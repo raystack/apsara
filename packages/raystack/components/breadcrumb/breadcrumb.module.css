@@ -1,0 +1,98 @@
+.breadcrumb {
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-medium);
+}
+
+.breadcrumb-small {
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.breadcrumb-medium {
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  text-wrap: nowrap;
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-foreground-base-tertiary);
+  text-decoration: none;
+  text-wrap: nowrap;
+}
+
+.breadcrumb-link:hover {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.breadcrumb-link-active {
+  color: var(--rs-color-foreground-base-primary);
+  font-weight: var(--rs-font-weight-medium);
+  pointer-events: none;
+}
+
+.breadcrumb-icon {
+  display: flex;
+  align-items: center;
+  margin-right: var(--rs-space-2);
+}
+
+.breadcrumb-separator {
+  color: var(--rs-color-foreground-base-tertiary);
+  margin: 0 var(--rs-space-3);
+}
+
+.breadcrumb-ellipsis {
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.breadcrumb-ellipsis svg {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.breadcrumb-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-foreground-base-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  outline: none;
+  padding: 0;
+}
+
+.breadcrumb-dropdown-icon {
+  height: var(--rs-space-3);
+}
+
+.breadcrumb-dropdown-item {
+  cursor: pointer;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.breadcrumb-dropdown-item:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Popover, Button, Flex, Text } from "@raystack/apsara/v1";
+import { Popover, Button, Flex, Text } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function PopoverExamples() {

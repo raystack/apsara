@@ -1,0 +1,89 @@
+.sliderRoot {
+  position: relative;
+  display: flex;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  align-items: center;
+}
+.sliderRange {
+  position: absolute;
+  height: 100%;
+  border-radius: var(--rs-radius-full);
+  background: transparent;
+}
+.sliderTrack {
+  position: relative;
+  height: 12px;
+  width: 100%;
+  flex-grow: 1;
+  border-radius: var(--rs-radius-3);
+}
+.hueTrack {
+  background: linear-gradient(
+    90deg,
+    #ff0000,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #ff00ff,
+    #ff0000
+  );
+}
+
+.sliderThumb {
+  display: block;
+  height: 12px;
+  width: 12px;
+  border-radius: var(--rs-radius-full);
+  border: 3px solid var(--rs-color-foreground-base-emphasis);
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.02))
+    drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.06));
+}
+
+.sliderThumb:focus-visible {
+  outline: none;
+}
+
+.sliderThumb:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.alphaTrack {
+  --track-checker-size: 12px;
+  background-image: linear-gradient(45deg, #ddd 25%, transparent 25%),
+    linear-gradient(-45deg, #ddd 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ddd 75%),
+    linear-gradient(-45deg, transparent 75%, #ddd 75%);
+  background-size: var(--track-checker-size, 8px)
+    var(--track-checker-size, 12px);
+  background-position: 0 0, 0 calc(var(--track-checker-size, 12px) / 2),
+    calc(var(--track-checker-size, 12px) / 2)
+    calc(var(--track-checker-size, 12px) / -2),
+    calc(var(--track-checker-size, 12px) / -2) 0px;
+}
+.alphaTrackGradient {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--rs-radius-full);
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 1));
+}
+
+.selectTrigger {
+  min-width: min-content;
+}
+
+.selectionRoot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--rs-radius-1);
+}
+
+.selectionThumb {
+  position: absolute;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}

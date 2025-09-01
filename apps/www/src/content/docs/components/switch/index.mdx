@@ -3,18 +3,14 @@ title: Switch
 description: A control that allows the user to toggle between checked and not checked.
 ---
 
-import { playground, stateDemo, controlDemo } from "./demo.ts";
+import { playground, stateDemo, sizeDemo, controlDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
 ## Usage
 
-The Switch component provides a toggleable control with support for controlled and disabled states.
-
 ```tsx
-import { Switch } from "@raystack/apsara/v1";
-
-<Switch checked={true} />;
+import { Switch } from "@raystack/apsara";
 ```
 
 ## Switch Props
@@ -28,6 +24,12 @@ import { Switch } from "@raystack/apsara/v1";
 The Switch component supports various states to handle different interaction scenarios.
 
 <Demo data={stateDemo} />
+
+### Size Variants
+
+The Switch component comes in two sizes: large (default) and small.
+
+<Demo data={sizeDemo} />
 
 ### Controlled Usage
 

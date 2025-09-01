@@ -1,0 +1,195 @@
+.root {
+  display: flex;
+  width: 220px;
+  height: 100%;
+  padding: var(--rs-space-1) var(--rs-space-4) var(--rs-space-5)
+    var(--rs-space-4);
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-shrink: 0;
+  border-right: 1px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+  transition: width 0.2s ease;
+  position: relative;
+}
+
+.root[data-position="left"] {
+  border-right: 1px solid var(--rs-color-border-base-primary);
+}
+
+.root[data-position="right"] {
+  border-left: 1px solid var(--rs-color-border-base-primary);
+}
+
+.root[data-state="expanded"] {
+  width: 240px;
+}
+
+.root[data-state="collapsed"] {
+  width: 56px;
+}
+
+.header {
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-6) var(--rs-space-2);
+  align-self: stretch;
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-primary);
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
+  gap: var(--rs-space-2);
+  align-items: flex-start;
+}
+
+.root[data-state="collapsed"] .main {
+  align-items: center;
+}
+
+.root[data-state="collapsed"] [data-collapse-hidden="true"] {
+  display: none;
+}
+
+.footer {
+  width: 100%;
+  gap: var(--rs-space-2);
+}
+
+.nav-item {
+  display: flex;
+  padding: var(--rs-space-3);
+  align-items: center;
+  gap: var(--rs-space-3);
+  align-self: stretch;
+  border-radius: var(--rs-radius-2);
+  color: var(--rs-color-foreground-base-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.root[data-state="collapsed"] .nav-item {
+  justify-content: center;
+}
+
+.nav-item:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.nav-item[data-active="true"] {
+  display: flex;
+  padding: var(--rs-space-3);
+  align-items: center;
+  gap: var(--rs-space-3);
+  width: 100%;
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.nav-item[data-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.nav-leading-icon {
+  align-self: stretch;
+  width: fit-content;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: opacity 0.2s ease;
+}
+
+.root[data-state="collapsed"] .nav-text {
+  width: 0;
+  opacity: 0;
+  display: none;
+}
+
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  cursor: ew-resize;
+  transition: background-color 0.2s ease;
+  transform: translateX(50%);
+}
+
+.root[data-collapse-disabled="true"] .resizeHandle {
+  display: none;
+}
+
+.resizeHandle:hover {
+  background-color: var(--rs-color-border-base-primary);
+}
+
+.root[data-position="right"] .resizeHandle {
+  left: 0;
+  right: auto;
+  cursor: ew-resize;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.root[data-state="collapsed"] .nav-group {
+  align-items: center;
+}
+
+.nav-group-header {
+  padding: var(--rs-space-3) var(--rs-space-3);
+  color: var(--rs-color-foreground-base-secondary);
+  margin-top: var(--rs-space-4);
+}
+
+.nav-group-header:first-child {
+  margin-top: 0;
+}
+
+.nav-group-label {
+  color: var(--rs-color-foreground-base-secondary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.nav-group-items {
+  gap: var(--rs-space-2);
+  width: 100%;
+}
+
+.root[data-state="collapsed"] .nav-group-label {
+  width: 0;
+  opacity: 0;
+  display: none;
+}

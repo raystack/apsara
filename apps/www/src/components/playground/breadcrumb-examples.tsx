@@ -1,53 +1,38 @@
-"use client";
+'use client';
 
-import { Breadcrumb, Flex } from "@raystack/apsara/v1";
-import PlaygroundLayout from "./playground-layout";
+import { Breadcrumb, Flex } from '@raystack/apsara';
+import PlaygroundLayout from './playground-layout';
 
 export function BreadcrumbExamples() {
   return (
-    <PlaygroundLayout title="Breadcrumb">
-      <Flex gap="medium" direction="column">
-        <Breadcrumb
-          size="small"
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Products", href: "/products" },
-            { label: "Shoes", href: "/products/shoes" },
-          ]}
-        />
-        <Breadcrumb
-          size="medium"
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Products", href: "/products" },
-            { label: "Shoes", href: "/products/shoes" },
-          ]}
-        />
-        <Breadcrumb
-          maxVisibleItems={3}
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Category", href: "/category" },
-            { label: "Subcategory", href: "/subcategory" },
-            { label: "Product", href: "/product" },
-            { label: "Details", href: "/details" },
-          ]}
-        />
-        <Breadcrumb
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Category", href: "/category" },
-            {
-              label: "Subcategory",
-              href: "/category/subcategory",
-              dropdownItems: [
-                { label: "Option 1", href: "/category/subcategory/option1" },
-                { label: "Option 2", href: "/category/subcategory/option2" },
-              ],
-            },
-            { label: "Current Page", href: "/category/subcategory/current" },
-          ]}
-        />
+    <PlaygroundLayout title='Breadcrumb'>
+      <Flex gap='medium' direction='column'>
+        <Breadcrumb size='small'>
+          <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
+          <Breadcrumb.Separator />
+          <Breadcrumb.Item
+            dropdownItems={[
+              {
+                label: 'Clothes',
+                onClick: () => {
+                  console.log('Clothes');
+                }
+              },
+              {
+                label: 'Electronics',
+                onClick: () => {
+                  console.log('Electronics');
+                }
+              }
+            ]}
+          >
+            Products
+          </Breadcrumb.Item>
+          <Breadcrumb.Separator />
+          <Breadcrumb.Item href='/products/shoes' as={<a />} current>
+            Shoes
+          </Breadcrumb.Item>
+        </Breadcrumb>
       </Flex>
     </PlaygroundLayout>
   );

@@ -1,4 +1,4 @@
-import { InputFieldProps } from "../input-field/props";
+import { InputFieldProps } from '../input-field/props';
 
 export interface CalendarProps {
   /** Number of months to display */
@@ -19,7 +19,7 @@ export interface CalendarProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** 
+  /**
    * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").
    * If not provided, uses the local timezone.
    */
@@ -27,7 +27,7 @@ export interface CalendarProps {
 }
 
 export interface RangePickerProps {
-  /** 
+  /**
    * Format for displaying the date. Supports various formats:
    * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
    * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"
@@ -43,15 +43,18 @@ export interface RangePickerProps {
   onSelect?: (range: { from: Date; to: Date }) => void;
 
   /** Initial date range value */
+  defaultValue?: { from: Date; to: Date };
+
+  /** Controlled date range value */
   value?: { from: Date; to: Date };
 
   /** Props for customizing the calendar */
   calendarProps?: CalendarProps;
 
   /** Props for customizing the input fields */
-  inputFieldsProps?: { 
-    startDate?: InputFieldProps; 
-    endDate?: InputFieldProps 
+  inputFieldsProps?: {
+    startDate?: InputFieldProps;
+    endDate?: InputFieldProps;
   };
 
   /** Render prop for custom trigger */
@@ -66,7 +69,7 @@ export interface RangePickerProps {
   /** Optional footer content for the calendar popover */
   footer?: React.ReactNode;
 
-  /** 
+  /**
    * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").
    * If not provided, uses the local timezone.
    */
@@ -74,7 +77,7 @@ export interface RangePickerProps {
 }
 
 export interface DatePickerProps {
-  /** 
+  /**
    * Format for displaying the date. Supports various formats:
    * - With slashes: "DD/MM/YYYY", "MM/DD/YYYY", "YYYY/MM/DD"
    * - With dashes: "DD-MM-YYYY", "MM-DD-YYYY", "YYYY-MM-DD"
@@ -106,7 +109,7 @@ export interface DatePickerProps {
    */
   showCalendarIcon?: boolean;
 
-  /** 
+  /**
    * IANA timezone name (e.g., "America/New_York"), "UTC", or UTC offset (e.g., "+02:00").
    * If not provided, uses the local timezone.
    */

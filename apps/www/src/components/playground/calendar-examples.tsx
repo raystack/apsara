@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, DatePicker, Flex, RangePicker } from "@raystack/apsara/v1";
+import { Calendar, DatePicker, Flex, RangePicker } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function CalendarExamples() {
@@ -9,7 +9,7 @@ export function CalendarExamples() {
       <Flex gap="medium" direction="column">
         <Calendar numberOfMonths={2} />
         <RangePicker inputFieldsProps={{ startDate: { size: "small" } }} />
-        <DatePicker textFieldProps={{ size: "medium" }} />
+        <DatePicker inputFieldProps={{ size: "medium" }} />
       </Flex>
     </PlaygroundLayout>
   );

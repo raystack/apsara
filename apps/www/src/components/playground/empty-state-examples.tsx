@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, EmptyState } from "@raystack/apsara/v1";
+import { Button, EmptyState } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 import { X } from "lucide-react";
 

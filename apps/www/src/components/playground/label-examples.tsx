@@ -1,6 +1,6 @@
 "use client";
 
-import { Label, Flex } from "@raystack/apsara/v1";
+import { Label, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function LabelExamples() {

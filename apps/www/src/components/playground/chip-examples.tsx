@@ -1,6 +1,6 @@
 "use client";
 
-import { Chip, Flex } from "@raystack/apsara/v1";
+import { Chip, Flex } from "@raystack/apsara";
 import PlaygroundLayout from "./playground-layout";
 
 export function ChipExamples() {

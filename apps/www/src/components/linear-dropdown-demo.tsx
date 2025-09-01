@@ -1,4 +1,4 @@
-import { Avatar, Button, DropdownMenu, Flex, Text } from "@raystack/apsara/v1";
+import { Avatar, Button, DropdownMenu, Flex, Text } from "@raystack/apsara";
 import { Calendar, ChevronRight, Download } from "lucide-react";
 import { Fragment, ReactNode, useState } from "react";
 

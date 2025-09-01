@@ -1,83 +1,152 @@
-"use client";
+'use client';
 
 export const preview = {
-  type: "code",
+  type: 'code',
   code: `
-  <Sidebar open={true}>
-    <Sidebar.Header logo={<Home />} title="Apasara" />
+  <Sidebar defaultOpen>
+    <Sidebar.Header>
+      <Flex align="center" gap={3}>
+        <IconButton size={4} aria-label="Logo">
+          <Home />
+        </IconButton>
+        <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+      </Flex>
+    </Sidebar.Header>
     <Sidebar.Main>
-      <Sidebar.Group name="Main">
-        <Sidebar.Item href="#" icon={<Info />} active>
+      <Sidebar.Group label="Main" leadingIcon={<Info />}>
+        <Sidebar.Item href="#" leadingIcon={<Info />} active>
           Dashboard
         </Sidebar.Item>
-        <Sidebar.Item href="#" icon={<Info />} disabled>
+        <Sidebar.Item href="#" leadingIcon={<Info />} disabled>
           Settings
         </Sidebar.Item>
       </Sidebar.Group>
-      <Sidebar.Group name="Support">
-        <Sidebar.Item href="#" icon={<Info />}>
+      <Sidebar.Group label="Support">
+        <Sidebar.Item href="#" leadingIcon={<Info />}>
           Help
         </Sidebar.Item>
       </Sidebar.Group>
     </Sidebar.Main>
     <Sidebar.Footer>
-      <Sidebar.Item href="#" icon={<Info />}>
+      <Sidebar.Item href="#" leadingIcon={<Info />}>
         Help
       </Sidebar.Item>
     </Sidebar.Footer>
-  </Sidebar>`,
+  </Sidebar>`
 };
 
 export const positionDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Left",
+      name: 'Left',
       code: `
       <Sidebar open={true} position="left">
-          <Sidebar.Header logo={<Home />} title="Company Name" />
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" icon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" icon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar>`,
+        </Sidebar>`
     },
     {
-      name: "Right",
+      name: 'Right',
       code: `
       <Sidebar open={true} position="right">
-          <Sidebar.Header logo={<Home />} title="Company Name" />
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" icon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" icon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar>`,
-    },
-  ],
+        </Sidebar>`
+    }
+  ]
 };
 
 export const stateDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Expanded",
+      name: 'Expanded',
       code: `<Sidebar open={true}>
-          <Sidebar.Header logo={<Home />} title="Company Name" />
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" icon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" icon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar>`,
+        </Sidebar>`
     },
     {
-      name: "Collapsed",
+      name: 'Collapsed',
       code: `<Sidebar open={false}>
-          <Sidebar.Header logo={<Home />} title="Company Name" />
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" icon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" icon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar>`,
+        </Sidebar>`
     },
-  ],
+    {
+      name: 'Uncontrolled',
+      code: `<Sidebar>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>`
+    },
+    {
+      name: 'Uncontrolled (default open)',
+      code: `<Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>`
+    }
+  ]
 };

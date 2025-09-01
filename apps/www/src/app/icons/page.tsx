@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import * as Icons from "@raystack/apsara/icons";
-import { Search, Tabs } from "@raystack/apsara/v1";
+import { Search, Tabs } from "@raystack/apsara";
 import { cx } from "class-variance-authority";
 import IconDetails, { IconDetailsProps } from "@/components/icon-details";
 import IconEmpty from "@/components/icon-details/icon-empty";

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ReactSVGElement } from "react";
-import { Separator } from "@raystack/apsara/v1";
-import { cx } from "class-variance-authority";
-import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
-import styles from "./icon-details.module.css";
+import { Separator } from '@raystack/apsara';
+import { cx } from 'class-variance-authority';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ReactSVGElement } from 'react';
+import styles from './icon-details.module.css';
 
 export interface IconDetailsProps {
   name: string;
@@ -15,7 +15,7 @@ const SIZES = [12, 16, 24, 48, 64];
 
 export default function IconDetails({ name, icon: Icon }: IconDetailsProps) {
   return (
-    <div className={cx(styles.container, "prose")}>
+    <div className={cx(styles.container, 'prose')}>
       <h2 className={styles.heading}>{name}</h2>
       <div className={styles.demo}>
         {SIZES.map(size => (
@@ -27,11 +27,11 @@ export default function IconDetails({ name, icon: Icon }: IconDetailsProps) {
         <h3 className={styles.sectionTitle}>Usage</h3>
         <p>Import the icon</p>
         <DynamicCodeBlock
-          lang="tsx"
+          lang='tsx'
           code={`import { \n  ${name} \n} from "@raystack/apsara/icons"`}
         />
         <p>Then render it </p>
-        <DynamicCodeBlock lang="tsx" code={`<${name} />`} />
+        <DynamicCodeBlock lang='tsx' code={`<${name} />`} />
       </div>
     </div>
   );
