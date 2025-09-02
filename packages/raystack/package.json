@@ -4,7 +4,7 @@
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "engines": {
-    "node": ">=22"
+    "node": ">=20"
   },
   "exports": {
     ".": {
