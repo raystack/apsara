@@ -2,6 +2,9 @@
   "name": "www",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "prebuild": "cd ../.. && npm run build:apsara",
     "build": "next build",
