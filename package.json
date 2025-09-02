@@ -28,6 +28,6 @@
   "packageManager": "pnpm@9.3.0",
   "name": "apsara",
   "engines": {
-    "node": "22.x"
+    "node": ">=20"
   }
 }
