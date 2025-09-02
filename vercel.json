@@ -1,15 +1,4 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "pnpm run build",
-  "installCommand": "pnpm install",
-  "env": {
-    "VERCEL_FORCE_NO_BUILD_CACHE": "1",
-    "TURBO_FORCE": "true"
-  },
-  "build": {
-    "env": {
-      "VERCEL_FORCE_NO_BUILD_CACHE": "1",
-      "TURBO_FORCE": "true"
-    }
-  }
+  "installCommand": "pnpm install"
 }
