@@ -1,8 +1,9 @@
-// import Navbar from "@/components/navbar";
-// import 'fumadocs-ui/style.css';
+import Navbar from '@/components/navbar';
+import '@/styles.css';
+import '@raystack/apsara/normalize.css';
 import '@raystack/apsara/style.css';
-import { ThemeProvider } from '@/components/theme';
-import { RootProvider } from 'fumadocs-ui/provider';
+import { ThemeProvider } from '@raystack/apsara';
+import { NextProvider } from 'fumadocs-core/framework/next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 
@@ -23,12 +24,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           minHeight: '100vh'
         }}
       >
-        <RootProvider>
+        <NextProvider>
           <ThemeProvider>
-            {/* <Navbar /> */}
+            <Navbar />
             {children}
           </ThemeProvider>
-        </RootProvider>
+        </NextProvider>
       </body>
     </html>
   );

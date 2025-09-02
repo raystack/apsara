@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+.kbd {
+  padding: var(--rs-space-1);
+  border-radius: var(--rs-radius-1);
+  background: var(--rs-color-background-neutral-primary);
+}
