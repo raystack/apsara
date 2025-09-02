@@ -84,9 +84,8 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export const Tabs = {
-  Root: TabsRoot,
+export const Tabs = Object.assign(TabsRoot, {
   List: TabsList,
   Trigger: TabsTrigger,
   Content: TabsContent
-};
+});

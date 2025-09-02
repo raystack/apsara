@@ -1,44 +1,52 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { ComponentPropsWithoutRef, ReactNode } from "react";
+import { type VariantProps, cva } from 'class-variance-authority';
+import { ComponentPropsWithoutRef, ReactNode } from 'react';
 
-import styles from "./list.module.css";
+import styles from './list.module.css';
 
 const list = cva(styles.list);
-const listItem = cva(styles["list-item"]);
+const listItem = cva(styles['list-item']);
 const label = cva(styles.label);
 const value = cva(styles.value);
 const header = cva(styles.header);
-const headerText = cva(styles["header-text"]);
+const headerText = cva(styles['header-text']);
 
-interface ListRootProps extends ComponentPropsWithoutRef<"ul">, VariantProps<typeof list> {
+interface ListRootProps
+  extends ComponentPropsWithoutRef<'ul'>,
+    VariantProps<typeof list> {
   children: ReactNode;
   maxWidth?: string | number;
 }
 
-interface ListItemProps extends ComponentPropsWithoutRef<"li"> {
+interface ListItemProps extends ComponentPropsWithoutRef<'li'> {
   children: ReactNode;
 }
 
-interface ListLabelProps extends ComponentPropsWithoutRef<"span"> {
+interface ListLabelProps extends ComponentPropsWithoutRef<'span'> {
   minWidth?: string;
   children: ReactNode;
 }
 
-interface ListValueProps extends ComponentPropsWithoutRef<"span"> {
+interface ListValueProps extends ComponentPropsWithoutRef<'span'> {
   children: ReactNode;
 }
 
-interface ListHeaderProps extends ComponentPropsWithoutRef<"div"> {
+interface ListHeaderProps extends ComponentPropsWithoutRef<'div'> {
   children: ReactNode;
 }
 
-const ListRoot = ({ children, className, maxWidth, style, ...props }: ListRootProps) => {
+const ListRoot = ({
+  children,
+  className,
+  maxWidth,
+  style,
+  ...props
+}: ListRootProps) => {
   return (
-    <ul 
-      className={list({ className })} 
-      style={{ maxWidth, ...style }} 
-      role="list"
-      aria-label={props['aria-label'] || "List"}
+    <ul
+      className={list({ className })}
+      style={{ maxWidth, ...style }}
+      role='list'
+      aria-label={props['aria-label'] || 'List'}
       {...props}
     >
       {children}
@@ -48,26 +56,22 @@ const ListRoot = ({ children, className, maxWidth, style, ...props }: ListRootPr
 
 const ListItem = ({ children, className, ...props }: ListItemProps) => {
   return (
-    <li 
-      className={listItem({ className })} 
-      role="listitem"
-      {...props}
-    >
+    <li className={listItem({ className })} role='listitem' {...props}>
       {children}
     </li>
   );
 };
 
-const ListLabel = ({ 
-  children, 
+const ListLabel = ({
+  children,
   minWidth,
   className,
   style,
-  ...props 
+  ...props
 }: ListLabelProps) => {
   return (
-    <span 
-      className={label({ className })} 
+    <span
+      className={label({ className })}
       style={{ minWidth, ...style }}
       {...props}
     >
@@ -76,11 +80,7 @@ const ListLabel = ({
   );
 };
 
-const ListValue = ({ 
-  children,
-  className,
-  ...props 
-}: ListValueProps) => {
+const ListValue = ({ children, className, ...props }: ListValueProps) => {
   return (
     <span className={value({ className })} {...props}>
       {children}
@@ -90,9 +90,9 @@ const ListValue = ({
 
 const ListHeader = ({ children, className, ...props }: ListHeaderProps) => {
   return (
-    <div 
-      className={header({ className })} 
-      role="heading"
+    <div
+      className={header({ className })}
+      role='heading'
       aria-level={3}
       {...props}
     >
@@ -101,16 +101,15 @@ const ListHeader = ({ children, className, ...props }: ListHeaderProps) => {
   );
 };
 
-export const List = {
-  Root: ListRoot,
+ListRoot.displayName = 'List';
+ListHeader.displayName = 'ListHeader';
+ListItem.displayName = 'ListItem';
+ListLabel.displayName = 'ListLabel';
+ListValue.displayName = 'ListValue';
+
+export const List = Object.assign(ListRoot, {
   Header: ListHeader,
   Item: ListItem,
   Label: ListLabel,
-  Value: ListValue,
-};
-
-ListRoot.displayName = "List";
-ListHeader.displayName = "ListHeader";
-ListItem.displayName = "ListItem";
-ListLabel.displayName = "ListLabel";
-ListValue.displayName = "ListValue";
+  Value: ListValue
+});
