@@ -17,6 +17,6 @@
     "eslint-plugin-simple-import-sort": "^12.1.1"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   }
 }
