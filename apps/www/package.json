@@ -15,7 +15,7 @@
   "dependencies": {
     "@raystack/apsara": "workspace:*",
     "class-variance-authority": "^0.7.1",
-    "dayjs": "^1.11.11",
+    "dayjs": "^1.11.18",
     "fumadocs-core": "^14.7.7",
     "fumadocs-docgen": "^1.3.8",
     "fumadocs-mdx": "^11.5.6",
