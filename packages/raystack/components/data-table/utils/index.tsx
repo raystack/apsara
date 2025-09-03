@@ -1,55 +1,55 @@
-import { TableState } from "@tanstack/table-core";
+import { TableState } from '@tanstack/table-core';
 
-
+import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataTableColumnDef,
-  DataTableSort,
   DataTableQuery,
+  DataTableSort,
   GroupedData,
-  RQLFilter,
+  InternalFilter,
+  InternalQuery,
   SortOrders,
   defaultGroupOption
-} from "../data-table.types";
-import { FilterType } from "~/types/filters";
+} from '../data-table.types';
 import {
   getFilterFn,
   getFilterOperator,
-  getFilterValue,
-} from "./filter-operations";
+  getFilterValue
+} from './filter-operations';
 
-export function queryToTableState(query: DataTableQuery): Partial<TableState> {
+export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
     query.filters
-      ?.filter((data) => data.value !== "")
-      ?.map((data) => {
+      ?.filter(data => data.value !== '')
+      ?.map(data => {
         const valueObject =
           data._type === FilterType.date
             ? { date: data.value }
             : { value: data.value };
         return {
           value: valueObject,
-          id: data?.name,
+          id: data?.name
         };
       }) || [];
 
-  const sorting = query.sort?.map((data) => ({
+  const sorting = query.sort?.map(data => ({
     id: data?.name,
-    desc: data?.order === SortOrders.DESC,
+    desc: data?.order === SortOrders.DESC
   }));
   return {
     columnFilters: columnFilters,
     sorting: sorting,
-    globalFilter: query.search,
+    globalFilter: query.search
   };
 }
 
 export function getColumnsWithFilterFn<TData, TValue>(
   columns: DataTableColumnDef<TData, TValue>[] = [],
-  filters: RQLFilter[] = []
+  filters: InternalFilter[] = []
 ): DataTableColumnDef<TData, TValue>[] {
-  return columns.map((column) => {
+  return columns.map(column => {
     const colFilter = filters?.find(
-      (filter) => filter.name === column.accessorKey
+      filter => filter.name === column.accessorKey
     );
     const filterFn = colFilter?.operator
       ? getFilterFn(column.filterType || FilterType.string, colFilter.operator)
@@ -57,7 +57,7 @@ export function getColumnsWithFilterFn<TData, TValue>(
 
     return {
       ...column,
-      filterFn,
+      filterFn
     };
   });
 }
@@ -81,7 +81,7 @@ export function groupData<TData>(
     groupMap.get(keyValue)?.push(item as TData);
   });
 
-  const columnDef = columns.find((col) => col.accessorKey === group_by);
+  const columnDef = columns.find(col => col.accessorKey === group_by);
   const showGroupCount = columnDef?.showGroupCount || false;
   const groupLablesMap = columnDef?.groupLabelsMap || {};
   const groupCountMap = columnDef?.groupCountMap || {};
@@ -93,17 +93,19 @@ export function groupData<TData>(
       group_key: key,
       subRows: value,
       count: groupCountMap[key] ?? value.length,
-      showGroupCount,
+      showGroupCount
     });
   });
 
   return groupedData;
 }
 
-const generateFilterMap = (filters: RQLFilter[] = []): Map<string, any> => {
+const generateFilterMap = (
+  filters: InternalFilter[] = []
+): Map<string, any> => {
   return new Map(
     filters
-      ?.filter((data) => data._type === FilterType.select || data.value !== "")
+      ?.filter(data => data._type === FilterType.select || data.value !== '')
       .map(({ name, operator, value }) => [`${name}-${operator}`, value])
   );
 };
@@ -113,8 +115,8 @@ const generateSortMap = (sort: DataTableSort[] = []): Map<string, string> => {
 };
 
 const isFilterChanged = (
-  oldFilters: RQLFilter[] = [],
-  newFilters: RQLFilter[] = []
+  oldFilters: InternalFilter[] = [],
+  newFilters: InternalFilter[] = []
 ): boolean => {
   const oldFilterMap = generateFilterMap(oldFilters);
   const newFilterMap = generateFilterMap(newFilters);
@@ -145,7 +147,7 @@ const isGroupChanged = (
   if (oldGroupBy.length !== newGroupBy.length) return true;
 
   const oldGroupSet = new Set(oldGroupBy);
-  return newGroupBy.some((item) => !oldGroupSet.has(item));
+  return newGroupBy.some(item => !oldGroupSet.has(item));
 };
 
 const isSearchChanged = (oldSearch?: string, newSearch?: string): boolean => {
@@ -153,8 +155,8 @@ const isSearchChanged = (oldSearch?: string, newSearch?: string): boolean => {
 };
 
 export const hasQueryChanged = (
-  oldQuery: DataTableQuery | null,
-  newQuery: DataTableQuery
+  oldQuery: InternalQuery | null,
+  newQuery: InternalQuery
 ): boolean => {
   if (!oldQuery) return true;
   return (
@@ -171,49 +173,126 @@ export function getInitialColumnVisibility<TData, TValue>(
   return columns.reduce((acc, col) => {
     return {
       ...acc,
-      [col.accessorKey]: col.defaultHidden ? false : true,
+      [col.accessorKey]: col.defaultHidden ? false : true
     };
   }, {});
 }
 
-export function sanitizeTableQuery(query: DataTableQuery): DataTableQuery {
+export function transformToDataTableQuery(
+  query: InternalQuery
+): DataTableQuery {
   const { group_by = [], filters = [], sort = [], ...rest } = query;
   const sanitizedGroupBy = group_by?.filter(
-    (key) => key !== defaultGroupOption.id
+    key => key !== defaultGroupOption.id
   );
 
   const sanitizedFilters =
     filters
-      ?.filter((data) => data._type === FilterType.select || data.value !== "")
-      ?.map((data) => ({
+      ?.filter(data => data._type === FilterType.select || data.value !== '')
+      ?.map(data => ({
         name: data.name,
         operator: getFilterOperator({
           operator: data.operator,
           value: data.value,
-          filterType: data._type,
+          filterType: data._type
         }),
         ...getFilterValue({
           value: data.value,
           filterType: data._type,
           dataType: data._dataType,
-        }),
+          operator: data.operator
+        })
       })) || [];
 
   return {
     ...rest,
     sort: sort,
     group_by: sanitizedGroupBy,
-    filters: sanitizedFilters,
+    filters: sanitizedFilters
+  };
+}
+
+// Transform DataTableQuery to InternalQuery
+// This reverses the transformation done by transformToDataTableQuery
+export function dataTableQueryToInternal(query: DataTableQuery): InternalQuery {
+  const { filters, ...rest } = query;
+
+  if (!filters) {
+    return rest;
+  }
+
+  // Convert DataTableFilter[] to InternalFilter[]
+  const internalFilters: InternalFilter[] = filters.map(filter => {
+    const {
+      operator,
+      value,
+      stringValue,
+      numberValue,
+      boolValue,
+      ...filterRest
+    } = filter;
+
+    // Reverse the operator mapping and wildcard transformation
+    let transformedFilter = {
+      operator: operator as FilterOperatorTypes,
+      value: value,
+      ...(stringValue !== undefined && { stringValue }),
+      ...(numberValue !== undefined && { numberValue }),
+      ...(boolValue !== undefined && { boolValue })
+    };
+
+    // If operator is 'ilike', determine the original operator based on wildcards
+    if (operator === 'ilike' && stringValue) {
+      if (stringValue.startsWith('%') && stringValue.endsWith('%')) {
+        transformedFilter = {
+          operator: 'contains',
+          value: stringValue.slice(1, -1) // Remove % from both ends
+        };
+      } else if (stringValue.endsWith('%')) {
+        transformedFilter = {
+          operator: 'starts_with',
+          value: stringValue.slice(0, -1) // Remove % from end
+        };
+      } else if (stringValue.startsWith('%')) {
+        transformedFilter = {
+          operator: 'ends_with',
+          value: stringValue.slice(1) // Remove % from start
+        };
+      } else {
+        // Default to contains if no wildcards (shouldn't happen normally)
+        transformedFilter = {
+          operator: 'contains',
+          value: stringValue
+        };
+      }
+    }
+
+    return {
+      ...filterRest,
+      ...transformedFilter,
+      // We don't have type information, so leave it undefined
+      // The UI will need to infer or set these based on column definitions
+      _type: undefined,
+      _dataType: undefined
+    } as InternalFilter;
+  });
+
+  return {
+    ...rest,
+    filters: internalFilters
   };
 }
 
 export function getDefaultTableQuery(
   defaultSort: DataTableSort,
   oldQuery: DataTableQuery = {}
-): DataTableQuery {
+): InternalQuery {
+  // Convert DataTableQuery to InternalQuery
+  const internalQuery = dataTableQueryToInternal(oldQuery);
+
   return {
     sort: [defaultSort],
     group_by: [defaultGroupOption.id],
-    ...oldQuery,
+    ...internalQuery
   };
 }

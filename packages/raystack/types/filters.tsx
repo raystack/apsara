@@ -6,6 +6,8 @@ export const FilterType = {
   multiselect: 'multiselect'
 } as const;
 
+export const EmptyFilterValue = '--empty--';
+
 export type FilterValueType = 'string' | 'number' | 'boolean';
 
 export interface FilterValue {
@@ -20,6 +22,8 @@ export type FilterOperation = {
   label: string;
 };
 
+export type StringFilterOperatorDataTableFilterType = 'eq' | 'neq' | 'ilike';
+
 export type NumberFilterOperatorType =
   | 'eq'
   | 'neq'
@@ -27,7 +31,12 @@ export type NumberFilterOperatorType =
   | 'lte'
   | 'gt'
   | 'gte';
-export type StringFilterOperatorType = 'eq' | 'neq' | 'like';
+export type StringFilterOperatorType =
+  | 'eq'
+  | 'neq'
+  | 'contains'
+  | 'starts_with'
+  | 'ends_with';
 export type DateFilterOperatorType = 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte';
 export type SelectFilterOperatorType = 'eq' | 'neq';
 export type MultiSelectFilterOperatorType = 'in' | 'notin';
@@ -35,6 +44,14 @@ export type MultiSelectFilterOperatorType = 'in' | 'notin';
 export type FilterOperatorTypes =
   | NumberFilterOperatorType
   | StringFilterOperatorType
+  | DateFilterOperatorType
+  | SelectFilterOperatorType
+  | MultiSelectFilterOperatorType
+  | 'empty';
+
+export type DataTableFilterOperatorTypes =
+  | NumberFilterOperatorType
+  | StringFilterOperatorDataTableFilterType
   | DateFilterOperatorType
   | SelectFilterOperatorType
   | MultiSelectFilterOperatorType
@@ -77,7 +94,9 @@ export const filterOperators: FilterOperatorsMap = {
   string: [
     { value: 'eq', label: 'is' },
     { value: 'neq', label: 'is not' },
-    { value: 'like', label: 'contains' }
+    { value: 'contains', label: 'contains' },
+    { value: 'starts_with', label: 'starts with' },
+    { value: 'ends_with', label: 'ends with' }
   ],
   date: [
     { value: 'eq', label: 'is' },
