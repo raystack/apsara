@@ -1,20 +1,20 @@
-import type { Column, ColumnDef, Table } from "@tanstack/table-core";
+import type { Column, ColumnDef, Table } from '@tanstack/table-core';
 import type {
+  DataTableFilterOperatorTypes,
   FilterOperatorTypes,
-  RQLFilterOperatorTypes,
   FilterSelectOption,
   FilterTypes,
-  FilterValueType,
-} from "~/types/filters";
+  FilterValueType
+} from '~/types/filters';
 
-export type DataTableMode = "client" | "server";
+export type DataTableMode = 'client' | 'server';
 
 export const SortOrders = {
-  ASC: "asc",
-  DESC: "desc",
+  ASC: 'asc',
+  DESC: 'desc'
 } as const;
 
-export interface RQLFilterValues {
+export interface DataTableFilterValues {
   value: any;
   // Only one of these value fields should be present at a time
   boolValue?: boolean;
@@ -22,7 +22,7 @@ export interface RQLFilterValues {
   numberValue?: number;
 }
 // Internal filter with UI operators and metadata
-export interface InternalFilter extends RQLFilterValues {
+export interface InternalFilter extends DataTableFilterValues {
   _type?: FilterTypes;
   _dataType?: FilterValueType;
   name: string;
@@ -30,13 +30,13 @@ export interface InternalFilter extends RQLFilterValues {
 }
 
 // Data table filter for backend API (no internal fields)
-export interface DataTableFilter extends RQLFilterValues {
+export interface DataTableFilter extends DataTableFilterValues {
   name: string;
-  operator: RQLFilterOperatorTypes;
+  operator: DataTableFilterOperatorTypes;
 }
 
 type SortOrdersKeys = keyof typeof SortOrders;
-export type SortOrdersValues = typeof SortOrders[SortOrdersKeys];
+export type SortOrdersValues = (typeof SortOrders)[SortOrdersKeys];
 
 export interface DataTableSort {
   name: string;
@@ -60,7 +60,7 @@ export interface DataTableQuery extends Omit<InternalQuery, 'filters'> {
 
 export type DataTableColumn<TData, TValue> = Omit<
   Column<TData, TValue>,
-  "columnDef"
+  'columnDef'
 > & {
   columnDef: DataTableColumnDef<TData, TValue>;
 };
@@ -94,7 +94,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
 export interface DataTableProps<TData, TValue> {
   columns: DataTableColumnDef<TData, TValue>[];
   data: TData[];
-  query?: DataTableQuery;  // Initial query (will be transformed to internal format)
+  query?: DataTableQuery; // Initial query (will be transformed to internal format)
   mode?: DataTableMode;
   isLoading?: boolean;
   loadingRowCount?: number;
@@ -138,7 +138,7 @@ export interface ColumnData {
   isVisible?: boolean;
 }
 
-interface SubRows<T> {}
+interface SubRows<_T> {}
 
 export interface GroupedData<T> extends SubRows<T> {
   label: string;
@@ -149,6 +149,6 @@ export interface GroupedData<T> extends SubRows<T> {
 }
 
 export const defaultGroupOption = {
-  id: "--",
-  label: "No grouping",
+  id: '--',
+  label: 'No grouping'
 };

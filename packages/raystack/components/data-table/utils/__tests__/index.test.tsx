@@ -1,25 +1,25 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { FilterType } from '~/types/filters';
+import { EmptyFilterValue } from '~/types/filters';
 import {
-  queryToTableState,
+  DataTableColumnDef,
+  DataTableQuery,
+  DataTableSort,
+  InternalFilter,
+  InternalQuery,
+  SortOrders,
+  defaultGroupOption
+} from '../../data-table.types';
+import {
+  dataTableQueryToInternal,
   getColumnsWithFilterFn,
+  getDefaultTableQuery,
+  getInitialColumnVisibility,
   groupData,
   hasQueryChanged,
-  getInitialColumnVisibility,
-  transformToRQLQuery,
-  getDefaultTableQuery,
-  dataTableQueryToInternal,
+  queryToTableState,
+  transformToDataTableQuery
 } from '../index';
-import {
-  DataTableQuery,
-  InternalQuery,
-  DataTableColumnDef,
-  DataTableSort,
-  SortOrders,
-  InternalFilter,
-  defaultGroupOption,
-} from '../../data-table.types';
-import { EmptyFilterValue } from '~/types/filters';
 
 // Mock data for tests
 const mockColumns: DataTableColumnDef<any, any>[] = [
@@ -28,42 +28,54 @@ const mockColumns: DataTableColumnDef<any, any>[] = [
     header: 'Name',
     filterType: FilterType.string,
     enableColumnFilter: true,
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'age',
     header: 'Age',
     filterType: FilterType.number,
     enableColumnFilter: true,
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'status',
     header: 'Status',
     filterType: FilterType.select,
     enableColumnFilter: true,
-    enableSorting: false,
+    enableSorting: false
   },
   {
     accessorKey: 'createdAt',
     header: 'Created At',
     filterType: FilterType.date,
     enableColumnFilter: true,
-    enableSorting: true,
+    enableSorting: true
   },
   {
     accessorKey: 'hidden',
     header: 'Hidden Column',
     defaultHidden: true,
-    enableColumnFilter: false,
-  },
+    enableColumnFilter: false
+  }
 ];
 
 const mockData = [
-  { id: 1, name: 'Alice', age: 25, status: 'active', department: 'engineering' },
+  {
+    id: 1,
+    name: 'Alice',
+    age: 25,
+    status: 'active',
+    department: 'engineering'
+  },
   { id: 2, name: 'Bob', age: 30, status: 'inactive', department: 'marketing' },
-  { id: 3, name: 'Charlie', age: 35, status: 'active', department: 'engineering' },
-  { id: 4, name: 'David', age: 28, status: 'active', department: 'sales' },
+  {
+    id: 3,
+    name: 'Charlie',
+    age: 35,
+    status: 'active',
+    department: 'engineering'
+  },
+  { id: 4, name: 'David', age: 28, status: 'active', department: 'sales' }
 ];
 
 const mockFilters: InternalFilter[] = [
@@ -72,20 +84,20 @@ const mockFilters: InternalFilter[] = [
     operator: 'contains',
     value: 'Alice',
     stringValue: 'Alice',
-    _type: FilterType.string,
+    _type: FilterType.string
   },
   {
     name: 'age',
     operator: 'gte',
     value: 25,
     numberValue: 25,
-    _type: FilterType.number,
-  },
+    _type: FilterType.number
+  }
 ];
 
 const mockSort: DataTableSort[] = [
   { name: 'name', order: SortOrders.ASC },
-  { name: 'age', order: SortOrders.DESC },
+  { name: 'age', order: SortOrders.DESC }
 ];
 
 describe('Data Table Utils', () => {
@@ -97,24 +109,24 @@ describe('Data Table Utils', () => {
       expect(result).toEqual({
         columnFilters: [],
         sorting: undefined,
-        globalFilter: undefined,
+        globalFilter: undefined
       });
     });
 
     it('should convert query with filters to table state', () => {
       const query: InternalQuery = {
-        filters: mockFilters,
+        filters: mockFilters
       };
       const result = queryToTableState(query);
 
       expect(result.columnFilters).toHaveLength(2);
       expect(result.columnFilters![0]).toEqual({
         id: 'name',
-        value: { value: 'Alice' },
+        value: { value: 'Alice' }
       });
       expect(result.columnFilters![1]).toEqual({
         id: 'age',
-        value: { value: 25 },
+        value: { value: 25 }
       });
     });
 
@@ -123,17 +135,17 @@ describe('Data Table Utils', () => {
         name: 'createdAt',
         operator: 'eq',
         value: '2023-12-01',
-        _type: FilterType.date,
+        _type: FilterType.date
       };
 
       const query: InternalQuery = {
-        filters: [dateFilter],
+        filters: [dateFilter]
       };
       const result = queryToTableState(query);
 
       expect(result.columnFilters![0]).toEqual({
         id: 'createdAt',
-        value: { date: '2023-12-01' },
+        value: { date: '2023-12-01' }
       });
     });
 
@@ -144,12 +156,12 @@ describe('Data Table Utils', () => {
           name: 'status',
           operator: 'eq',
           value: '',
-          _type: FilterType.string,
-        },
+          _type: FilterType.string
+        }
       ];
 
       const query: InternalQuery = {
-        filters: filtersWithEmpty,
+        filters: filtersWithEmpty
       };
       const result = queryToTableState(query);
 
@@ -158,19 +170,19 @@ describe('Data Table Utils', () => {
 
     it('should convert sort to table state', () => {
       const query: InternalQuery = {
-        sort: mockSort,
+        sort: mockSort
       };
       const result = queryToTableState(query);
 
       expect(result.sorting).toEqual([
         { id: 'name', desc: false },
-        { id: 'age', desc: true },
+        { id: 'age', desc: true }
       ]);
     });
 
     it('should include global filter', () => {
       const query: InternalQuery = {
-        search: 'test search',
+        search: 'test search'
       };
       const result = queryToTableState(query);
 
@@ -179,7 +191,7 @@ describe('Data Table Utils', () => {
 
     it('should handle null/undefined filters', () => {
       const query: InternalQuery = {
-        filters: null as any,
+        filters: null as any
       };
       const result = queryToTableState(query);
 
@@ -188,7 +200,7 @@ describe('Data Table Utils', () => {
 
     it('should handle null/undefined sort', () => {
       const query: InternalQuery = {
-        sort: null as any,
+        sort: null as any
       };
       const result = queryToTableState(query);
 
@@ -250,11 +262,14 @@ describe('Data Table Utils', () => {
           name: 'name',
           operator: '' as any,
           value: 'Alice',
-          _type: FilterType.string,
-        },
+          _type: FilterType.string
+        }
       ];
 
-      const result = getColumnsWithFilterFn(mockColumns, filtersWithoutOperator);
+      const result = getColumnsWithFilterFn(
+        mockColumns,
+        filtersWithoutOperator
+      );
       const nameColumn = result.find(col => col.accessorKey === 'name');
 
       expect(nameColumn?.filterFn).toBeUndefined();
@@ -277,8 +292,12 @@ describe('Data Table Utils', () => {
 
       expect(result).toHaveLength(3);
 
-      const engineeringGroup = result.find(group => group.group_key === 'engineering');
-      const marketingGroup = result.find(group => group.group_key === 'marketing');
+      const engineeringGroup = result.find(
+        group => group.group_key === 'engineering'
+      );
+      const marketingGroup = result.find(
+        group => group.group_key === 'marketing'
+      );
       const salesGroup = result.find(group => group.group_key === 'sales');
 
       expect(engineeringGroup).toBeDefined();
@@ -299,16 +318,20 @@ describe('Data Table Utils', () => {
           accessorKey: 'department',
           header: 'Department',
           groupLabelsMap: {
-            'engineering': 'Engineering Team',
-            'marketing': 'Marketing Team',
-          },
-        },
+            engineering: 'Engineering Team',
+            marketing: 'Marketing Team'
+          }
+        }
       ];
 
       const result = groupData(mockData, 'department', columnsWithLabels);
 
-      const engineeringGroup = result.find(group => group.group_key === 'engineering');
-      const marketingGroup = result.find(group => group.group_key === 'marketing');
+      const engineeringGroup = result.find(
+        group => group.group_key === 'engineering'
+      );
+      const marketingGroup = result.find(
+        group => group.group_key === 'marketing'
+      );
       const salesGroup = result.find(group => group.group_key === 'sales');
 
       expect(engineeringGroup!.label).toBe('Engineering Team');
@@ -322,16 +345,20 @@ describe('Data Table Utils', () => {
           accessorKey: 'department',
           header: 'Department',
           groupCountMap: {
-            'engineering': 10,
-            'marketing': 5,
-          },
-        },
+            engineering: 10,
+            marketing: 5
+          }
+        }
       ];
 
       const result = groupData(mockData, 'department', columnsWithCount);
 
-      const engineeringGroup = result.find(group => group.group_key === 'engineering');
-      const marketingGroup = result.find(group => group.group_key === 'marketing');
+      const engineeringGroup = result.find(
+        group => group.group_key === 'engineering'
+      );
+      const marketingGroup = result.find(
+        group => group.group_key === 'marketing'
+      );
       const salesGroup = result.find(group => group.group_key === 'sales');
 
       expect(engineeringGroup!.count).toBe(10);
@@ -344,8 +371,8 @@ describe('Data Table Utils', () => {
         {
           accessorKey: 'department',
           header: 'Department',
-          showGroupCount: true,
-        },
+          showGroupCount: true
+        }
       ];
 
       const result = groupData(mockData, 'department', columnsWithShowCount);
@@ -368,10 +395,14 @@ describe('Data Table Utils', () => {
     it('should handle missing group field in data', () => {
       const dataWithoutGroupField = [
         { id: 1, name: 'Alice', age: 25 },
-        { id: 2, name: 'Bob', age: 30 },
+        { id: 2, name: 'Bob', age: 30 }
       ];
 
-      const result = groupData(dataWithoutGroupField, 'department', mockColumns);
+      const result = groupData(
+        dataWithoutGroupField,
+        'department',
+        mockColumns
+      );
       expect(result).toHaveLength(1);
       expect(result[0].group_key).toBe(undefined);
       expect(result[0].subRows).toHaveLength(2);
@@ -383,7 +414,7 @@ describe('Data Table Utils', () => {
       filters: mockFilters,
       sort: mockSort,
       group_by: ['department'],
-      search: 'test',
+      search: 'test'
     };
 
     it('should return true when old query is null', () => {
@@ -404,9 +435,9 @@ describe('Data Table Utils', () => {
             operator: 'eq' as const,
             value: 'Different',
             stringValue: 'Different',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
@@ -421,9 +452,9 @@ describe('Data Table Utils', () => {
             operator: 'eq' as const,
             value: 'Alice',
             stringValue: 'Alice',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
@@ -432,7 +463,7 @@ describe('Data Table Utils', () => {
     it('should detect filter changes - different count', () => {
       const newQuery = {
         ...baseQuery,
-        filters: [mockFilters[0]], // Only one filter instead of two
+        filters: [mockFilters[0]] // Only one filter instead of two
       };
 
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
@@ -441,7 +472,7 @@ describe('Data Table Utils', () => {
     it('should detect sort changes', () => {
       const newQuery = {
         ...baseQuery,
-        sort: [{ name: 'age', order: SortOrders.ASC }],
+        sort: [{ name: 'age', order: SortOrders.ASC }]
       };
 
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
@@ -450,7 +481,7 @@ describe('Data Table Utils', () => {
     it('should detect group_by changes', () => {
       const newQuery = {
         ...baseQuery,
-        group_by: ['status'],
+        group_by: ['status']
       };
 
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
@@ -459,7 +490,7 @@ describe('Data Table Utils', () => {
     it('should detect search changes', () => {
       const newQuery = {
         ...baseQuery,
-        search: 'different search',
+        search: 'different search'
       };
 
       expect(hasQueryChanged(baseQuery, newQuery)).toBe(true);
@@ -480,9 +511,9 @@ describe('Data Table Utils', () => {
             name: 'status',
             operator: 'eq' as const,
             value: EmptyFilterValue,
-            _type: FilterType.select,
-          },
-        ],
+            _type: FilterType.select
+          }
+        ]
       };
 
       const newQuery = {
@@ -492,9 +523,9 @@ describe('Data Table Utils', () => {
             name: 'status',
             operator: 'eq' as const,
             value: EmptyFilterValue,
-            _type: FilterType.select,
-          },
-        ],
+            _type: FilterType.select
+          }
+        ]
       };
 
       expect(hasQueryChanged(queryWithSelectFilter, newQuery)).toBe(false);
@@ -510,7 +541,7 @@ describe('Data Table Utils', () => {
         age: true,
         status: true,
         createdAt: true,
-        hidden: false, // defaultHidden: true
+        hidden: false // defaultHidden: true
       });
     });
 
@@ -527,14 +558,14 @@ describe('Data Table Utils', () => {
     it('should handle columns without accessorKey', () => {
       const columnsWithoutAccessor = [
         {
-          header: 'Actions',
+          header: 'Actions'
           // No accessorKey
-        } as any,
+        } as any
       ];
 
       const result = getInitialColumnVisibility(columnsWithoutAccessor);
       expect(result).toEqual({
-        undefined: true,
+        undefined: true
       });
     });
 
@@ -542,24 +573,24 @@ describe('Data Table Utils', () => {
       const columnsWithoutDefault = [
         {
           accessorKey: 'visible',
-          header: 'Visible Column',
-        },
+          header: 'Visible Column'
+        }
       ];
 
       const result = getInitialColumnVisibility(columnsWithoutDefault);
       expect(result).toEqual({
-        visible: true,
+        visible: true
       });
     });
   });
 
-  describe('transformToRQLQuery', () => {
+  describe('transformToDataTableQuery', () => {
     it('should remove default group option', () => {
       const query: InternalQuery = {
-        group_by: [defaultGroupOption.id, 'department'],
+        group_by: [defaultGroupOption.id, 'department']
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       expect(result.group_by).toEqual(['department']);
     });
 
@@ -569,21 +600,21 @@ describe('Data Table Utils', () => {
           name: 'name',
           operator: 'eq',
           value: 'Alice',
-          _type: FilterType.string,
+          _type: FilterType.string
         },
         {
           name: 'status',
           operator: 'eq',
           value: '',
-          _type: FilterType.string,
-        },
+          _type: FilterType.string
+        }
       ];
 
       const query: InternalQuery = {
-        filters: filtersWithEmpty,
+        filters: filtersWithEmpty
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0].name).toBe('name');
     });
@@ -593,14 +624,14 @@ describe('Data Table Utils', () => {
         name: 'status',
         operator: 'eq',
         value: EmptyFilterValue,
-        _type: FilterType.select,
+        _type: FilterType.select
       };
 
       const query: InternalQuery = {
-        filters: [selectFilter],
+        filters: [selectFilter]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0].name).toBe('status');
     });
@@ -612,10 +643,10 @@ describe('Data Table Utils', () => {
         offset: 10,
         filters: mockFilters,
         sort: mockSort,
-        group_by: ['department'],
+        group_by: ['department']
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       expect(result.search).toBe('test search');
       expect(result.limit).toBe(50);
       expect(result.offset).toBe(10);
@@ -626,11 +657,11 @@ describe('Data Table Utils', () => {
     it('should handle empty query', () => {
       const query: InternalQuery = {};
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       expect(result).toEqual({
         group_by: [],
         filters: [],
-        sort: [],
+        sort: []
       });
     });
 
@@ -642,18 +673,18 @@ describe('Data Table Utils', () => {
             operator: 'gt',
             value: 25,
             _type: FilterType.number,
-            _dataType: 'number',
-          },
-        ],
+            _dataType: 'number'
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0]).toEqual({
         name: 'age',
         operator: 'gt',
         numberValue: 25,
-        value: 25,
+        value: 25
       });
     });
   });
@@ -661,7 +692,7 @@ describe('Data Table Utils', () => {
   describe('getDefaultTableQuery', () => {
     const defaultSort: DataTableSort = {
       name: 'createdAt',
-      order: SortOrders.DESC,
+      order: SortOrders.DESC
     };
 
     it('should return query with default sort and group', () => {
@@ -669,7 +700,7 @@ describe('Data Table Utils', () => {
 
       expect(result).toEqual({
         sort: [defaultSort],
-        group_by: [defaultGroupOption.id],
+        group_by: [defaultGroupOption.id]
       });
     });
 
@@ -682,9 +713,9 @@ describe('Data Table Utils', () => {
             name: 'name',
             operator: 'ilike',
             value: 'Alice',
-            stringValue: '%Alice%',
-          },
-        ],
+            stringValue: '%Alice%'
+          }
+        ]
       };
 
       const result = getDefaultTableQuery(defaultSort, existingQuery);
@@ -701,9 +732,9 @@ describe('Data Table Utils', () => {
             value: 'Alice',
             // stringValue is not preserved in InternalFilter after transformation
             _type: undefined,
-            _dataType: undefined,
-          },
-        ],
+            _dataType: undefined
+          }
+        ]
       });
     });
 
@@ -711,7 +742,7 @@ describe('Data Table Utils', () => {
       const existingQuery: DataTableQuery = {
         sort: [{ name: 'name', order: SortOrders.ASC }],
         group_by: ['department'],
-        search: 'existing search',
+        search: 'existing search'
       };
 
       const result = getDefaultTableQuery(defaultSort, existingQuery);
@@ -727,7 +758,7 @@ describe('Data Table Utils', () => {
 
       expect(result).toEqual({
         sort: [defaultSort],
-        group_by: [defaultGroupOption.id],
+        group_by: [defaultGroupOption.id]
       });
     });
   });
@@ -740,9 +771,9 @@ describe('Data Table Utils', () => {
             name: 'title',
             operator: 'ilike',
             value: 'test',
-            stringValue: '%test%',
-          },
-        ],
+            stringValue: '%test%'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -753,8 +784,8 @@ describe('Data Table Utils', () => {
           operator: 'contains',
           value: 'test',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -765,9 +796,9 @@ describe('Data Table Utils', () => {
             name: 'email',
             operator: 'ilike',
             value: 'john',
-            stringValue: 'john%',
-          },
-        ],
+            stringValue: 'john%'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -778,8 +809,8 @@ describe('Data Table Utils', () => {
           operator: 'starts_with',
           value: 'john',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -790,9 +821,9 @@ describe('Data Table Utils', () => {
             name: 'filename',
             operator: 'ilike',
             value: '.pdf',
-            stringValue: '%.pdf',
-          },
-        ],
+            stringValue: '%.pdf'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -803,8 +834,8 @@ describe('Data Table Utils', () => {
           operator: 'ends_with',
           value: '.pdf',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -815,15 +846,15 @@ describe('Data Table Utils', () => {
             name: 'age',
             operator: 'gte',
             value: 25,
-            numberValue: 25,
+            numberValue: 25
           },
           {
             name: 'status',
             operator: 'eq',
             value: 'active',
-            stringValue: 'active',
-          },
-        ],
+            stringValue: 'active'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -835,7 +866,7 @@ describe('Data Table Utils', () => {
           value: 25,
           numberValue: 25,
           _type: undefined,
-          _dataType: undefined,
+          _dataType: undefined
         },
         {
           name: 'status',
@@ -843,22 +874,22 @@ describe('Data Table Utils', () => {
           value: 'active',
           stringValue: 'active',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
     it('should handle query without filters', () => {
       const query: DataTableQuery = {
         sort: [{ name: 'createdAt', order: SortOrders.DESC }],
-        search: 'test',
+        search: 'test'
       };
 
       const result = dataTableQueryToInternal(query);
 
       expect(result).toEqual({
         sort: [{ name: 'createdAt', order: SortOrders.DESC }],
-        search: 'test',
+        search: 'test'
       });
     });
 
@@ -869,9 +900,9 @@ describe('Data Table Utils', () => {
             name: 'description',
             operator: 'ilike',
             value: 'plain',
-            stringValue: 'plain',
-          },
-        ],
+            stringValue: 'plain'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -882,8 +913,8 @@ describe('Data Table Utils', () => {
           operator: 'contains', // defaults to contains when no wildcards
           value: 'plain',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -894,9 +925,9 @@ describe('Data Table Utils', () => {
             name: 'name',
             operator: 'ilike',
             value: 'test',
-            stringValue: '',
-          },
-        ],
+            stringValue: ''
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -908,8 +939,8 @@ describe('Data Table Utils', () => {
           value: 'test',
           stringValue: '',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -919,9 +950,9 @@ describe('Data Table Utils', () => {
           {
             name: 'name',
             operator: 'ilike',
-            value: 'test',
-          },
-        ],
+            value: 'test'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -932,12 +963,12 @@ describe('Data Table Utils', () => {
           operator: 'ilike',
           value: 'test',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
-    it('should handle mixed RQL value fields for non-ilike operators', () => {
+    it('should handle mixed DataTableFilter value fields for non-ilike operators', () => {
       const query: DataTableQuery = {
         filters: [
           {
@@ -946,9 +977,9 @@ describe('Data Table Utils', () => {
             value: 'test',
             stringValue: 'test',
             numberValue: 123,
-            boolValue: true,
-          },
-        ],
+            boolValue: true
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -962,8 +993,8 @@ describe('Data Table Utils', () => {
           numberValue: 123,
           boolValue: true,
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -974,9 +1005,9 @@ describe('Data Table Utils', () => {
             name: 'special',
             operator: 'ilike',
             value: 'test@domain.com',
-            stringValue: '%test@domain.com%',
-          },
-        ],
+            stringValue: '%test@domain.com%'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -987,13 +1018,13 @@ describe('Data Table Utils', () => {
           operator: 'contains',
           value: 'test@domain.com',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
   });
 
-  describe('transformToRQLQuery with new operators', () => {
+  describe('transformToDataTableQuery with new operators', () => {
     it('should transform contains operator to ilike with %value%', () => {
       const query: InternalQuery = {
         filters: [
@@ -1001,20 +1032,20 @@ describe('Data Table Utils', () => {
             name: 'title',
             operator: 'contains',
             value: 'test',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       expect(result.filters).toEqual([
         {
           name: 'title',
           operator: 'ilike',
           value: 'test',
-          stringValue: '%test%',
-        },
+          stringValue: '%test%'
+        }
       ]);
     });
 
@@ -1025,20 +1056,20 @@ describe('Data Table Utils', () => {
             name: 'email',
             operator: 'starts_with',
             value: 'john',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       expect(result.filters).toEqual([
         {
           name: 'email',
           operator: 'ilike',
           value: 'john',
-          stringValue: 'john%',
-        },
+          stringValue: 'john%'
+        }
       ]);
     });
 
@@ -1049,20 +1080,20 @@ describe('Data Table Utils', () => {
             name: 'filename',
             operator: 'ends_with',
             value: '.pdf',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       expect(result.filters).toEqual([
         {
           name: 'filename',
           operator: 'ilike',
           value: '.pdf',
-          stringValue: '%.pdf',
-        },
+          stringValue: '%.pdf'
+        }
       ]);
     });
 
@@ -1073,56 +1104,56 @@ describe('Data Table Utils', () => {
             name: 'title',
             operator: 'contains',
             value: 'test',
-            _type: FilterType.string,
+            _type: FilterType.string
           },
           {
             name: 'description',
             operator: 'starts_with',
             value: 'The',
-            _type: FilterType.string,
+            _type: FilterType.string
           },
           {
             name: 'tags',
             operator: 'ends_with',
             value: 'ing',
-            _type: FilterType.string,
+            _type: FilterType.string
           },
           {
             name: 'author',
             operator: 'eq',
             value: 'John Doe',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       expect(result.filters).toEqual([
         {
           name: 'title',
           operator: 'ilike',
           value: 'test',
-          stringValue: '%test%',
+          stringValue: '%test%'
         },
         {
           name: 'description',
           operator: 'ilike',
           value: 'The',
-          stringValue: 'The%',
+          stringValue: 'The%'
         },
         {
           name: 'tags',
           operator: 'ilike',
           value: 'ing',
-          stringValue: '%ing',
+          stringValue: '%ing'
         },
         {
           name: 'author',
           operator: 'eq',
           value: 'John Doe',
-          stringValue: 'John Doe',
-        },
+          stringValue: 'John Doe'
+        }
       ]);
     });
 
@@ -1133,12 +1164,12 @@ describe('Data Table Utils', () => {
             name: 'name',
             operator: 'contains',
             value: '',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       expect(result.filters).toEqual([]);
     });
@@ -1150,20 +1181,20 @@ describe('Data Table Utils', () => {
             name: 'status',
             operator: 'eq',
             value: '',
-            _type: FilterType.select,
-          },
-        ],
+            _type: FilterType.select
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       expect(result.filters).toEqual([
         {
           name: 'status',
           operator: 'eq',
           value: '',
-          stringValue: '',
-        },
+          stringValue: ''
+        }
       ]);
     });
 
@@ -1173,12 +1204,12 @@ describe('Data Table Utils', () => {
           {
             name: 'name',
             operator: 'contains',
-            value: 'test',
-          } as InternalFilter,
-        ],
+            value: 'test'
+          } as InternalFilter
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       // Without _type, the function still processes it as string type
       expect(result.filters).toEqual([
@@ -1186,8 +1217,8 @@ describe('Data Table Utils', () => {
           name: 'name',
           operator: 'contains',
           value: 'test',
-          stringValue: '%test%',
-        },
+          stringValue: '%test%'
+        }
       ]);
     });
 
@@ -1198,17 +1229,17 @@ describe('Data Table Utils', () => {
             name: 'title',
             operator: 'contains',
             value: 'test',
-            _type: FilterType.string,
-          },
+            _type: FilterType.string
+          }
         ],
         sort: [{ name: 'createdAt', order: 'desc' as const }],
         group_by: ['status'],
         offset: 10,
         limit: 25,
-        search: 'global search',
+        search: 'global search'
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
 
       expect(result.sort).toEqual([{ name: 'createdAt', order: 'desc' }]);
       expect(result.group_by).toEqual(['status']);
@@ -1226,18 +1257,18 @@ describe('Data Table Utils', () => {
             name: 'content',
             operator: 'contains',
             value: 'search term',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const toRQL = transformToRQLQuery(original);
-      const backToInternal = dataTableQueryToInternal(toRQL);
+      const toDataTableQuery = transformToDataTableQuery(original);
+      const backToInternal = dataTableQueryToInternal(toDataTableQuery);
 
       expect(backToInternal.filters![0]).toMatchObject({
         name: 'content',
         operator: 'contains',
-        value: 'search term',
+        value: 'search term'
       });
     });
 
@@ -1248,18 +1279,18 @@ describe('Data Table Utils', () => {
             name: 'url',
             operator: 'starts_with',
             value: 'https://',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const toRQL = transformToRQLQuery(original);
-      const backToInternal = dataTableQueryToInternal(toRQL);
+      const toDataTableQuery = transformToDataTableQuery(original);
+      const backToInternal = dataTableQueryToInternal(toDataTableQuery);
 
       expect(backToInternal.filters![0]).toMatchObject({
         name: 'url',
         operator: 'starts_with',
-        value: 'https://',
+        value: 'https://'
       });
     });
 
@@ -1270,18 +1301,18 @@ describe('Data Table Utils', () => {
             name: 'extension',
             operator: 'ends_with',
             value: '.tsx',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const toRQL = transformToRQLQuery(original);
-      const backToInternal = dataTableQueryToInternal(toRQL);
+      const toDataTableQuery = transformToDataTableQuery(original);
+      const backToInternal = dataTableQueryToInternal(toDataTableQuery);
 
       expect(backToInternal.filters![0]).toMatchObject({
         name: 'extension',
         operator: 'ends_with',
-        value: '.tsx',
+        value: '.tsx'
       });
     });
   });
@@ -1294,9 +1325,9 @@ describe('Data Table Utils', () => {
             name: 'weird',
             operator: 'ilike',
             value: 'test',
-            stringValue: '%%test%%', // Double wildcards
-          },
-        ],
+            stringValue: '%%test%%' // Double wildcards
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -1307,8 +1338,8 @@ describe('Data Table Utils', () => {
           operator: 'contains',
           value: '%test%', // Should strip outer % only
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -1319,9 +1350,9 @@ describe('Data Table Utils', () => {
             name: 'single',
             operator: 'ilike',
             value: 'test',
-            stringValue: '%',
-          },
-        ],
+            stringValue: '%'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -1334,8 +1365,8 @@ describe('Data Table Utils', () => {
           operator: 'contains',
           value: '',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -1346,9 +1377,9 @@ describe('Data Table Utils', () => {
             name: 'wildcards',
             operator: 'ilike',
             value: '',
-            stringValue: '%%',
-          },
-        ],
+            stringValue: '%%'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -1359,8 +1390,8 @@ describe('Data Table Utils', () => {
           operator: 'contains',
           value: '',
           _type: undefined,
-          _dataType: undefined,
-        },
+          _dataType: undefined
+        }
       ]);
     });
 
@@ -1372,12 +1403,12 @@ describe('Data Table Utils', () => {
             name: 'long',
             operator: 'contains',
             value: longString,
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       const backToInternal = dataTableQueryToInternal(result);
 
       expect(backToInternal.filters![0].value).toBe(longString);
@@ -1391,12 +1422,12 @@ describe('Data Table Utils', () => {
             name: 'special',
             operator: 'contains',
             value: specialChars,
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       const backToInternal = dataTableQueryToInternal(result);
 
       expect(backToInternal.filters![0].value).toBe(specialChars);
@@ -1410,12 +1441,12 @@ describe('Data Table Utils', () => {
             name: 'unicode',
             operator: 'starts_with',
             value: unicode,
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       const backToInternal = dataTableQueryToInternal(result);
 
       expect(backToInternal.filters![0].value).toBe(unicode);
@@ -1431,18 +1462,18 @@ describe('Data Table Utils', () => {
             name: 'nullValue',
             operator: 'eq',
             value: null,
-            _type: FilterType.string,
+            _type: FilterType.string
           },
           {
             name: 'undefinedValue',
             operator: 'contains',
             value: undefined,
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      expect(() => transformToRQLQuery(query)).not.toThrow();
+      expect(() => transformToDataTableQuery(query)).not.toThrow();
     });
 
     it('should handle circular references in filter values', () => {
@@ -1455,12 +1486,12 @@ describe('Data Table Utils', () => {
             name: 'circular',
             operator: 'eq',
             value: circularObj,
-            _type: FilterType.select,
-          },
-        ],
+            _type: FilterType.select
+          }
+        ]
       };
 
-      expect(() => transformToRQLQuery(query)).not.toThrow();
+      expect(() => transformToDataTableQuery(query)).not.toThrow();
     });
   });
 
@@ -1472,9 +1503,9 @@ describe('Data Table Utils', () => {
             name: 'age',
             operator: 'gte',
             value: '25',
-            stringValue: '25',
-          },
-        ],
+            stringValue: '25'
+          }
+        ]
       };
 
       const result = dataTableQueryToInternal(query);
@@ -1490,12 +1521,12 @@ describe('Data Table Utils', () => {
             name: 'isActive',
             operator: 'eq',
             value: 'true',
-            _type: FilterType.select,
-          },
-        ],
+            _type: FilterType.select
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       const backToInternal = dataTableQueryToInternal(result);
 
       expect(backToInternal.filters![0].value).toBe('true');
@@ -1510,9 +1541,9 @@ describe('Data Table Utils', () => {
             name: 'title',
             operator: 'contains',
             value: 'test',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       const newQuery: InternalQuery = {
@@ -1521,9 +1552,9 @@ describe('Data Table Utils', () => {
             name: 'title',
             operator: 'starts_with',
             value: 'test',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       expect(hasQueryChanged(oldQuery, newQuery)).toBe(true);
@@ -1536,9 +1567,9 @@ describe('Data Table Utils', () => {
             name: 'name',
             operator: 'contains',
             value: 'john',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       const query2: InternalQuery = {
@@ -1547,9 +1578,9 @@ describe('Data Table Utils', () => {
             name: 'name',
             operator: 'contains',
             value: 'john',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       expect(hasQueryChanged(query1, query2)).toBe(false);
@@ -1562,9 +1593,9 @@ describe('Data Table Utils', () => {
             name: 'name',
             operator: 'eq',
             value: 'john',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       const newQuery: InternalQuery = {
@@ -1573,9 +1604,9 @@ describe('Data Table Utils', () => {
             name: 'name',
             operator: 'contains',
             value: 'john',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
       expect(hasQueryChanged(oldQuery, newQuery)).toBe(true);
@@ -1585,9 +1616,17 @@ describe('Data Table Utils', () => {
   describe('Real-world scenarios', () => {
     it('should handle email search patterns', () => {
       const scenarios = [
-        { value: 'john@', operator: 'starts_with' as const, expected: 'john@%' },
-        { value: '@domain.com', operator: 'ends_with' as const, expected: '%@domain.com' },
-        { value: '@', operator: 'contains' as const, expected: '%@%' },
+        {
+          value: 'john@',
+          operator: 'starts_with' as const,
+          expected: 'john@%'
+        },
+        {
+          value: '@domain.com',
+          operator: 'ends_with' as const,
+          expected: '%@domain.com'
+        },
+        { value: '@', operator: 'contains' as const, expected: '%@%' }
       ];
 
       scenarios.forEach(({ value, operator, expected }) => {
@@ -1597,12 +1636,12 @@ describe('Data Table Utils', () => {
               name: 'email',
               operator,
               value,
-              _type: FilterType.string,
-            },
-          ],
+              _type: FilterType.string
+            }
+          ]
         };
 
-        const result = transformToRQLQuery(query);
+        const result = transformToDataTableQuery(query);
         expect(result.filters![0].stringValue).toBe(expected);
       });
     });
@@ -1614,12 +1653,12 @@ describe('Data Table Utils', () => {
             name: 'filename',
             operator: 'ends_with',
             value: '.pdf',
-            _type: FilterType.string,
-          },
-        ],
+            _type: FilterType.string
+          }
+        ]
       };
 
-      const result = transformToRQLQuery(query);
+      const result = transformToDataTableQuery(query);
       const backToInternal = dataTableQueryToInternal(result);
 
       expect(result.filters![0].stringValue).toBe('%.pdf');
@@ -1628,8 +1667,8 @@ describe('Data Table Utils', () => {
     });
 
     it('should handle user search with partial names', () => {
-      const searchTerms = ['John', 'john doe', 'J. Smith', 'O\'Connor'];
-      
+      const searchTerms = ['John', 'john doe', 'J. Smith', "O'Connor"];
+
       searchTerms.forEach(term => {
         const query: InternalQuery = {
           filters: [
@@ -1637,12 +1676,12 @@ describe('Data Table Utils', () => {
               name: 'fullName',
               operator: 'contains',
               value: term,
-              _type: FilterType.string,
-            },
-          ],
+              _type: FilterType.string
+            }
+          ]
         };
 
-        const result = transformToRQLQuery(query);
+        const result = transformToDataTableQuery(query);
         const backToInternal = dataTableQueryToInternal(result);
 
         expect(backToInternal.filters![0].value).toBe(term);

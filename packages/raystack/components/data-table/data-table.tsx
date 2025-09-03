@@ -15,9 +15,8 @@ import { Toolbar } from './components/toolbar';
 import { TableContext } from './context';
 import {
   DataTableProps,
-  InternalQuery,
-  DataTableQuery,
   GroupedData,
+  InternalQuery,
   TableContextType,
   TableQueryUpdateFn,
   defaultGroupOption
@@ -29,7 +28,7 @@ import {
   groupData,
   hasQueryChanged,
   queryToTableState,
-  transformToRQLQuery
+  transformToDataTableQuery
 } from './utils';
 
 function DataTableRoot<TData, TValue>({
@@ -85,7 +84,7 @@ function DataTableRoot<TData, TValue>({
       hasQueryChanged(oldQueryRef.current, tableQuery) &&
       mode === 'server'
     ) {
-      onTableQueryChange(transformToRQLQuery(tableQuery));
+      onTableQueryChange(transformToDataTableQuery(tableQuery));
       oldQueryRef.current = tableQuery;
     }
   }, [tableQuery, onTableQueryChange]);
