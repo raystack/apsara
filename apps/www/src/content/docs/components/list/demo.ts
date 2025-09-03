@@ -4,7 +4,7 @@ export const preview = {
   type: 'code',
   code: `
   <Flex align="center" justify="center">
-    <List.Root>
+    <List>
       <List.Header>User Information</List.Header>
       <List.Item align="center">
         <List.Label minWidth="88px">Status</List.Label>
@@ -18,19 +18,19 @@ export const preview = {
         <List.Label minWidth="88px">Created</List.Label>
         <List.Value>April 24, 2024</List.Value>
       </List.Item>
-    </List.Root>
+    </List>
   </Flex>`
 };
 
 export const basicDemo = {
   type: 'code',
   code: `
-  <List.Root maxWidth="600px">
+  <List maxWidth="600px">
   <List.Header>User Information</List.Header>
   <List.Item align="center">
     <List.Label minWidth="88px">Status</List.Label>
     <List.Value>Active</List.Value>
   </List.Item>
-</List.Root>;
+</List>;
   `
 };

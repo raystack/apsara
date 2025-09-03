@@ -7,7 +7,7 @@ export const preview = {
     <SidePanel side="right">
       <SidePanel.Header title="Right Side Panel" icon={<Avatar fallback="A" />} description="This is a description." actions={[<Button>Action</Button>]} />
       <SidePanel.Section>
-          <List.Root>
+          <List>
             <List.Header>User Information</List.Header>
             <List.Item align="center">
               <List.Label minWidth="88px">Status</List.Label>
@@ -21,10 +21,10 @@ export const preview = {
               <List.Label minWidth="88px">Created</List.Label>
               <List.Value>April 24, 2024</List.Value>
             </List.Item>
-          </List.Root>
+          </List>
       </SidePanel.Section>
       <SidePanel.Section>
-          <List.Root>
+          <List>
             <List.Header>User Information</List.Header>
             <List.Item align="center">
               <List.Label minWidth="88px">Status</List.Label>
@@ -38,7 +38,7 @@ export const preview = {
               <List.Label minWidth="88px">Created</List.Label>
               <List.Value>April 24, 2024</List.Value>
             </List.Item>
-          </List.Root>
+          </List>
       </SidePanel.Section>
     </SidePanel>
   </Flex>`
@@ -50,13 +50,13 @@ export const basicDemo = {
 <SidePanel side="right">
   <SidePanel.Header title="Right Side Panel" />
   <SidePanel.Section>
-    <List.Root>
+    <List>
       <List.Header>User Information</List.Header>
       <List.Item align="center">
         <List.Label minWidth="88px">Status</List.Label>
         <List.Value>Active</List.Value>
       </List.Item>
-    </List.Root>
+    </List>
   </SidePanel.Section>
 </SidePanel>;
   `
