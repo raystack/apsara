@@ -1,0 +1,81 @@
+---
+title: Breadcrumb
+description: A navigation component for displaying a route trail.
+tag: update
+---
+
+import {
+  playground,
+  sizeDemo,
+  separatorDemo,
+  iconsDemo,
+  ellipsisDemo,
+  dropdownDemo,
+  asDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Breadcrumb } from '@raystack/apsara'
+```
+
+## Breadcrumb Props
+
+<auto-type-table path="./props.ts" name="BreadcrumbProps" />
+
+### Breadcrumb.Item Props
+
+<auto-type-table path="./props.ts" name="BreadcrumbItem" />
+
+### Breadcrumb.Separator Props
+
+<auto-type-table path="./props.ts" name="BreadcrumbSeparatorProps" />
+
+### Breadcrumb.Ellipsis Props
+
+<auto-type-table path="./props.ts" name="BreadcrumbEllipsisProps" />
+
+## Examples
+
+### Size
+
+The Breadcrumb component supports different sizes to accommodate various design requirements. Specify the size using the `size` prop.
+
+<Demo data={sizeDemo} />
+
+### Separator
+
+Customize the separator between breadcrumb items using the `separator` prop.
+
+<Demo data={separatorDemo} />
+
+### Ellipsis
+
+Use the `Breadcrumb.Ellipsis` component to truncate the breadcrumb trail when you need to display a large number of items in a limited space.
+
+<Demo data={ellipsisDemo} />
+
+### Icons
+
+Breadcrumb items can include icons either alongside text or as standalone elements.
+
+<Demo data={iconsDemo} />
+
+### Dropdown
+
+Breadcrumb items can include dropdown menus for additional navigation options. Specify the dropdown items using the `dropdownItems` prop.
+
+**Note:** When `dropdownItems` is provided, the `as` and `href` props are ignored.
+
+<Demo data={dropdownDemo} />
+
+### As
+
+Use the `as` prop to render the breadcrumb item as a custom component. By default, breadcrumb items are rendered as `a` tags.
+
+When a custom component is provided, the props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
+
+<Demo data={asDemo} />

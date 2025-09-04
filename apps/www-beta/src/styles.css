@@ -1,0 +1,16 @@
+* {
+  overscroll-behavior: none;
+  box-sizing: border-box;
+}
+:root {
+  --fd-nav-height: 53px !important;
+}
+
+/*
+  This is to fix the issues where table cells are too wide and overflowing.
+  Selector is explicitly defined to avoid affecting other code blocks.
+*/
+div.prose > table td code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

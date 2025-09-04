@@ -1,0 +1,95 @@
+---
+title: Skeleton
+description: A placeholder loading state that mimics the layout of content while it's being loaded.
+---
+
+import {
+  playground,
+  basicDemo,
+  multipleDemo,
+  customStylesDemo,
+  animationDemo,
+  cardDemo,
+  providerDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Skeleton } from "@raystack/apsara";
+```
+
+## Skeleton Props
+
+<auto-type-table path="./props.ts" name="SkeletonProps" />
+
+## Examples
+
+### Basic Usage
+
+A simple skeleton loader with fixed dimensions.
+
+<Demo data={basicDemo} />
+
+### Multiple Lines
+
+Create multiple skeleton lines using the count prop.
+
+<Demo data={multipleDemo} />
+
+### Using Provider
+
+Group multiple skeletons and share common props using Skeleton.Provider.
+
+<Demo data={providerDemo} />
+
+### Custom Styles
+
+Customize the appearance using baseColor and highlightColor.
+
+<Demo data={customStylesDemo} />
+
+### Animation Control
+
+Control the animation duration or disable it entirely.
+
+<Demo data={animationDemo} />
+
+### Complex Layout
+
+Create a card-like loading state by combining multiple skeletons.
+
+<Demo data={cardDemo} />
+
+## Provider Pattern
+
+The Skeleton component supports a Provider pattern that allows you to share common props across multiple skeleton instances:
+
+```tsx
+<Skeleton.Provider
+  baseColor="var(--rs-color-background-base-secondary)"
+  height="24px"
+  duration={2}
+>
+  <Skeleton /> {/* Inherits provider props */}
+  <Skeleton width="75%" /> {/* Inherits provider props, overrides width */}
+  <Skeleton
+    height="48px"
+    borderRadius="50%"
+  /> {/* Overrides specific props */}
+</Skeleton.Provider>
+```
+
+All props available on the Skeleton component can be passed to the Provider and will be inherited by child Skeleton components. Individual Skeleton components can override any provider props with their own values.
+
+## Accessibility
+
+The Skeleton component follows accessibility best practices:
+
+- Uses semantic HTML elements
+- Provides appropriate ARIA attributes
+- Maintains sufficient color contrast
+- Animation can be disabled for users who prefer reduced motion
+- Supports both block and inline layouts

@@ -1,0 +1,59 @@
+---
+title: Color Picker
+description: A composable color picker component supporting multiple color models, alpha channel, and customizable UI.
+tag: new
+---
+
+import {
+  preview,
+  basicDemo,
+  popoverDemo,
+} from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+```tsx
+import { ColorPicker } from '@raystack/apsara'
+```
+
+## ColorPicker Props
+
+The `ColorPicker` is composed of several subcomponents, each responsible for a specific aspect of color selection. The root component acts as a data provider for its children.
+
+<auto-type-table path="./props.ts" name="ColorPickerProps" />
+
+### ColorPicker.Area Props
+
+Enables users to select a color from a palette. Typically used for choosing saturation and brightness.
+
+### ColorPicker.Hue Props
+
+Provides a slider for selecting the hue value of the color.
+
+### ColorPicker.Alpha Props
+
+Provides a slider for selecting the alpha value of the color.
+
+### ColorPicker.Mode Props
+
+Lets users switch between different color models (e.g., HEX, RGB, HSL) via a dropdown menu.
+
+<auto-type-table path="./props.ts" name="ColorPickerModeProps" />
+
+### ColorPicker.Input Props
+
+Displays the current color value in the selected color model and allows direct text input.
+
+## Examples
+
+### Basic Usage
+
+<Demo data={basicDemo} />
+
+### Popover Integration
+
+The `ColorPicker` can be embedded within a `Popover` component to create a more interactive and space-efficient color selection experience.
+
+<Demo data={popoverDemo} />

@@ -1,0 +1,72 @@
+---
+title: Callout
+description: A visual message component to attract user's attention.
+---
+
+import {
+  playground,
+  typeDemo,
+  outlineDemo,
+  highContrastDemo,
+  dismissibleDemo,
+  actionDemo,
+  widthDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Callout } from '@raystack/apsara'
+```
+
+## Callout Props
+
+<auto-type-table path="./props.ts" name="CalloutProps" />
+
+## Examples
+
+### Type
+
+The Callout component offers different type options. You can customize the visual style using the `type` prop:
+
+<Demo data={typeDemo} />
+
+### Outline
+
+The Callout component can be rendered with or without an outline border:
+
+<Demo data={outlineDemo} />
+
+### High Contrast
+
+The Callout component supports high contrast mode for better visibility:
+
+<Demo data={highContrastDemo} />
+
+### Dismissible
+
+The Callout component can be made dismissible:
+
+<Demo data={dismissibleDemo} />
+
+### With Action
+
+The Callout component can include an action button:
+
+<Demo data={actionDemo} />
+
+### Custom Width
+
+The Callout component supports custom width:
+
+<Demo data={widthDemo} />
+
+## Accessibility
+
+The Callout component includes appropriate ARIA attributes for accessibility:
+
+- Uses semantic HTML elements for proper structure
+- Dismiss button includes `aria-label` for screen readers
+- Interactive elements are keyboard accessible

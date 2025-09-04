@@ -1,0 +1,60 @@
+---
+title: Search
+description: A search input component with built-in search icon and optional clear button.
+---
+
+import { playground, sizeDemo, clearDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Search } from "@raystack/apsara";
+```
+
+## Search Props
+
+<auto-type-table path="./props.ts" name="SearchProps" />
+
+## Examples
+
+### Size
+
+The Search component comes in two sizes to fit different design contexts.
+
+<Demo data={sizeDemo} />
+
+### Clear Button
+
+The Search component can include a clear button that appears when there is input value.
+
+<Demo data={clearDemo} />
+
+## Accessibility
+
+The Search component is built with accessibility in mind, following ARIA best practices:
+
+- Container has `role="search"` to identify it as a search landmark
+- Input has `type="search"` for semantic HTML
+- Search icon is marked as decorative with `aria-hidden="true"`
+- Clear button has appropriate `aria-label` for screen readers
+- Keyboard navigation support for the clear button
+- Input inherits `aria-label` from placeholder text
+
+Example with accessibility features:
+
+```tsx
+<Search
+  placeholder="Search items..."
+  showClearButton
+  value="Searchable text"
+  aria-label="Search items"
+/>
+```
+
+The component supports keyboard navigation:
+
+- Tab to focus on the search input
+- Tab again to focus on the clear button (when visible)
+- Enter or Space to trigger the clear button

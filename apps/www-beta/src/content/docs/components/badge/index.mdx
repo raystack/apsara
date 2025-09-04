@@ -1,0 +1,50 @@
+---
+title: Badge
+description: Badge component to display concise information.
+---
+
+import {
+  playground,
+  sizesDemo,
+  variantDemo,
+  iconDemo,
+  screenReaderTextDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Badge } from '@raystack/apsara'
+```
+
+## Badge Props
+
+<auto-type-table path="./props.ts" name="BadgeProps" />
+
+## Examples
+
+### Variant
+
+Choose between different variants to convey different meanings or importance levels. Default variant is `accent`.
+
+<Demo data={variantDemo} />
+
+### Size
+
+The Badge component supports three sizes to accommodate various layout requirements. Default size is `small`.
+
+<Demo data={sizesDemo} />
+
+### With Icon
+
+Badges can include an icon to provide additional visual context. By default there is no icon.
+
+<Demo data={iconDemo} />
+
+### Accessibility
+
+The Badge component includes screen reader support through the `screenReaderText` prop, only be announced to screen readers. By default no text is passed to `screenReaderText` prop.
+
+<Demo data={screenReaderTextDemo} />
