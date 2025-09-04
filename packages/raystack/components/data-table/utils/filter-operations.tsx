@@ -4,7 +4,9 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 
 import {
+  DataTableFilterOperatorTypes,
   DateFilterOperatorType,
+  EmptyFilterValue,
   FilterOperatorTypes,
   FilterType,
   FilterTypes,
@@ -15,91 +17,101 @@ import {
   SelectFilterOperatorType,
   StringFilterOperatorType
 } from '~/types/filters';
-import { EmptyFilterValue, RQLFilterValues } from '../data-table.types';
+import { DataTableFilterValues } from '../data-table.types';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
 export type FilterFunctionsMap = {
-  number: Record<NumberFilterOperatorType, FilterFn<any>>;
-  string: Record<StringFilterOperatorType, FilterFn<any>>;
-  date: Record<DateFilterOperatorType, FilterFn<any>>;
-  select: Record<SelectFilterOperatorType, FilterFn<any>>;
-  multiselect: Record<MultiSelectFilterOperatorType, FilterFn<any>>;
+  number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
+  string: Record<StringFilterOperatorType, FilterFn<unknown>>;
+  date: Record<DateFilterOperatorType, FilterFn<unknown>>;
+  select: Record<SelectFilterOperatorType, FilterFn<unknown>>;
+  multiselect: Record<MultiSelectFilterOperatorType, FilterFn<unknown>>;
 };
 
 export const filterOperationsMap: FilterFunctionsMap = {
   number: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return Number(row.getValue(columnId)) === Number(filterValue.value);
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return Number(row.getValue(columnId)) !== Number(filterValue.value);
     },
-    lt: (row, columnId, filterValue: FilterValue) => {
+    lt: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return Number(row.getValue(columnId)) < Number(filterValue.value);
     },
-    lte: (row, columnId, filterValue: FilterValue) => {
+    lte: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return Number(row.getValue(columnId)) <= Number(filterValue.value);
     },
-    gt: (row, columnId, filterValue: FilterValue) => {
+    gt: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return Number(row.getValue(columnId)) > Number(filterValue.value);
     },
-    gte: (row, columnId, filterValue: FilterValue) => {
+    gte: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return Number(row.getValue(columnId)) >= Number(filterValue.value);
     }
   },
   string: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return (
         String(row.getValue(columnId)).toLowerCase() ===
         String(filterValue.value).toLowerCase()
       );
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return (
         String(row.getValue(columnId)).toLowerCase() !==
         String(filterValue.value).toLowerCase()
       );
     },
-    like: (row, columnId, filterValue: FilterValue) => {
+    contains: (row, columnId, filterValue: FilterValue, _addMeta) => {
       const columnValue = (row.getValue(columnId) as string).toLowerCase();
       const filterStr = (filterValue.value as string).toLowerCase();
       return columnValue.includes(filterStr);
+    },
+    starts_with: (row, columnId, filterValue: FilterValue, _addMeta) => {
+      const columnValue = (row.getValue(columnId) as string).toLowerCase();
+      const filterStr = (filterValue.value as string).toLowerCase();
+      return columnValue.startsWith(filterStr);
+    },
+    ends_with: (row, columnId, filterValue: FilterValue, _addMeta) => {
+      const columnValue = (row.getValue(columnId) as string).toLowerCase();
+      const filterStr = (filterValue.value as string).toLowerCase();
+      return columnValue.endsWith(filterStr);
     }
   },
   date: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return dayjs(row.getValue(columnId)).isSame(
         dayjs(filterValue.date),
         'day'
       );
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return !dayjs(row.getValue(columnId)).isSame(
         dayjs(filterValue.date),
         'day'
       );
     },
-    lt: (row, columnId, filterValue: FilterValue) => {
+    lt: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return dayjs(row.getValue(columnId)).isBefore(
         dayjs(filterValue.date),
         'day'
       );
     },
-    lte: (row, columnId, filterValue: FilterValue) => {
+    lte: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return dayjs(row.getValue(columnId)).isSameOrBefore(
         dayjs(filterValue.date),
         'day'
       );
     },
-    gt: (row, columnId, filterValue: FilterValue) => {
+    gt: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return dayjs(row.getValue(columnId)).isAfter(
         dayjs(filterValue.date),
         'day'
       );
     },
-    gte: (row, columnId, filterValue: FilterValue) => {
+    gte: (row, columnId, filterValue: FilterValue, _addMeta) => {
       return dayjs(row.getValue(columnId)).isSameOrAfter(
         dayjs(filterValue.date),
         'day'
@@ -107,14 +119,14 @@ export const filterOperationsMap: FilterFunctionsMap = {
     }
   },
   select: {
-    eq: (row, columnId, filterValue: FilterValue) => {
+    eq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       if (String(filterValue.value) === EmptyFilterValue) {
         return row.getValue(columnId) === '';
       }
       // Select only supports string values
       return String(row.getValue(columnId)) === String(filterValue.value);
     },
-    neq: (row, columnId, filterValue: FilterValue) => {
+    neq: (row, columnId, filterValue: FilterValue, _addMeta) => {
       if (String(filterValue.value) === EmptyFilterValue) {
         return row.getValue(columnId) !== '';
       }
@@ -123,14 +135,14 @@ export const filterOperationsMap: FilterFunctionsMap = {
     }
   },
   multiselect: {
-    in: (row, columnId, filterValue: FilterValue) => {
+    in: (row, columnId, filterValue: FilterValue, _addMeta) => {
       if (!Array.isArray(filterValue.value)) return false;
 
       return filterValue.value
         .map(value => (value === EmptyFilterValue ? '' : String(value)))
         .includes(String(row.getValue(columnId)));
     },
-    notin: (row, columnId, filterValue: FilterValue) => {
+    notin: (row, columnId, filterValue: FilterValue, _addMeta) => {
       if (!Array.isArray(filterValue.value)) return false;
 
       return !filterValue.value
@@ -150,8 +162,9 @@ export function getFilterFn<T extends keyof FilterFunctionsMap>(
 
 const handleStringBasedTypes = (
   filterType: FilterTypes,
-  value: any
-): RQLFilterValues => {
+  value: any,
+  operator?: FilterOperatorTypes | DataTableFilterOperatorTypes
+): DataTableFilterValues => {
   switch (filterType) {
     case FilterType.date:
       return {
@@ -172,6 +185,28 @@ const handleStringBasedTypes = (
           )
           .join()
       };
+    case FilterType.string: {
+      // Apply wildcards for ilike operations
+      let processedValue = value;
+      // Check if we need to apply wildcards (operator could be UI type or already converted to 'ilike')
+      if (operator === 'contains') {
+        processedValue = `%${value}%`;
+      } else if (operator === 'starts_with') {
+        processedValue = `${value}%`;
+      } else if (operator === 'ends_with') {
+        processedValue = `%${value}`;
+      } else if (operator === 'ilike') {
+        // If already converted to ilike, assume it needs contains-style wildcards
+        // unless the value already has wildcards
+        if (!value.includes('%')) {
+          processedValue = `%${value}%`;
+        }
+      }
+      return {
+        stringValue: processedValue,
+        value
+      };
+    }
     default:
       return {
         stringValue: value,
@@ -188,21 +223,35 @@ export const getFilterOperator = ({
   value: any;
   filterType?: FilterTypes;
   operator: FilterOperatorTypes;
-}): FilterOperatorTypes => {
-  return value === EmptyFilterValue && filterType === FilterType.select
-    ? 'empty'
-    : operator;
+}): DataTableFilterOperatorTypes => {
+  if (value === EmptyFilterValue && filterType === FilterType.select) {
+    return 'empty';
+  }
+
+  // Map string filter operators to ilike for DataTableFilter
+  if (
+    filterType === FilterType.string &&
+    (operator === 'contains' ||
+      operator === 'starts_with' ||
+      operator === 'ends_with')
+  ) {
+    return 'ilike';
+  }
+
+  return operator as DataTableFilterOperatorTypes;
 };
 
 export const getFilterValue = ({
   value,
   dataType = 'string',
-  filterType = FilterType.string
+  filterType = FilterType.string,
+  operator
 }: {
   value: any;
   dataType?: FilterValueType;
   filterType?: FilterTypes;
-}): RQLFilterValues => {
+  operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
+}): DataTableFilterValues => {
   if (dataType === 'boolean') {
     return { boolValue: value, value };
   }
@@ -211,7 +260,7 @@ export const getFilterValue = ({
   }
 
   // Handle string-based types
-  return handleStringBasedTypes(filterType, value);
+  return handleStringBasedTypes(filterType, value, operator);
 };
 
 export const getDataType = ({

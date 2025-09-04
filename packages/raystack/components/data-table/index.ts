@@ -1,8 +1,11 @@
-export { DataTable } from "./data-table";
+export { DataTable } from './data-table';
 export {
   DataTableColumnDef,
+  InternalQuery,
   DataTableQuery,
   DataTableSort,
-  EmptyFilterValue,
-} from "./data-table.types";
-export { useDataTable } from "./hooks/useDataTable";
+  InternalFilter,
+  DataTableFilter
+} from './data-table.types';
+export { EmptyFilterValue } from '~/types/filters';
+export { useDataTable } from './hooks/useDataTable';

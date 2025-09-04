@@ -2,8 +2,12 @@
 
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { type VariantProps, cva } from 'class-variance-authority';
-import { type ComponentPropsWithoutRef } from 'react';
-import * as React from 'react';
+import {
+  CSSProperties,
+  type HTMLAttributes,
+  ReactNode,
+  forwardRef
+} from 'react';
 
 import styles from './callout.module.css';
 
@@ -31,18 +35,18 @@ const callout = cva(styles.callout, {
 });
 
 export interface CalloutProps
-  extends ComponentPropsWithoutRef<'div'>,
+  extends HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof callout> {
-  children: React.ReactNode;
-  action?: React.ReactNode;
+  children: ReactNode;
+  action?: ReactNode;
   dismissible?: boolean;
   onDismiss?: () => void;
   width?: string | number;
-  style?: React.CSSProperties;
-  icon?: React.ReactNode;
+  style?: CSSProperties;
+  icon?: ReactNode;
 }
 
-export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
+export const Callout = forwardRef<HTMLDivElement, CalloutProps>(
   (
     {
       className,
@@ -55,7 +59,7 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
       onDismiss,
       width,
       style,
-      icon,
+      icon = <InfoCircledIcon />,
       ...props
     },
     ref
@@ -87,12 +91,10 @@ export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
       >
         <div className={styles.container}>
           <div className={styles.messageContainer}>
-            {icon !== undefined ? (
+            {icon && (
               <div className={styles.icon} aria-hidden='true'>
                 {icon}
               </div>
-            ) : (
-              <InfoCircledIcon className={styles.icon} aria-hidden='true' />
             )}
             <div className={styles.message}>{children}</div>
           </div>
