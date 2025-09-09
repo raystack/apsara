@@ -4,6 +4,7 @@
     "start": "concurrently \"cd packages/raystack && pnpm dev\" \"cd apps/www && pnpm dev\"",
     "build": "turbo build",
     "build:apsara": "turbo build --filter=@raystack/apsara",
+    "test:apsara": "pnpm --filter=@raystack/apsara test",
     "dev": "turbo dev --filter=@raystack/apsara",
     "lint": "turbo lint --filter=@raystack/apsara",
     "clean": "turbo clean --filter=@raystack/apsara",

@@ -1,17 +1,31 @@
 # Contributing to Apsara
 
-Thank you for your interest in contributing to Apsara! This guide will help you understand how to contribute effectively to the project.
+Thank you for your interest in contributing to Apsara! This guide will help you understand how to contribute effectively to this project.
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-- [Development Workflow](#development-workflow)
-- [Code Style Guidelines](#code-style-guidelines)
-- [Component Development](#component-development)
-- [Pull Request Process](#pull-request-process)
-- [Commit Convention](#commit-convention)
-- [Release Process](#release-process)
-- [Getting Help](#getting-help)
+- [Contributing to Apsara](#contributing-to-apsara)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+  - [Development Workflow](#development-workflow)
+  - [Code Style Guidelines](#code-style-guidelines)
+  - [Component Development](#component-development)
+  - [Documentation Development](#documentation-development)
+    - [Component Documentation Format](#component-documentation-format)
+    - [Working with Documentation](#working-with-documentation)
+  - [VS Code Extension Development](#vs-code-extension-development)
+    - [Working with the VS Code Extension](#working-with-the-vs-code-extension)
+  - [Pull Request Process](#pull-request-process)
+    - [Pull Request Guidelines](#pull-request-guidelines)
+  - [Commit Convention](#commit-convention)
+  - [Release Process](#release-process)
+    - [Release Types](#release-types)
+    - [Creating a Release](#creating-a-release)
+      - [For Maintainers](#for-maintainers)
+    - [Release Workflow Details](#release-workflow-details)
+    - [NPM Publishing](#npm-publishing)
+  - [Getting Help](#getting-help)
+  - [Code of Conduct](#code-of-conduct)
 
 ## Getting Started
 
@@ -34,23 +48,32 @@ pnpm dev
 
 2. **Start the development server**:
    ```bash
+   # Start both library development and documentation site
+   pnpm start
+   
+   # Or start just the library development server
    pnpm dev
    ```
 
-3. **Make your changes** in the appropriate component files under `packages/raystack/`
+3. **Make your changes** in the appropriate directories:
+   - **Components**: `packages/raystack/`
+   - **Documentation**: `apps/www/`
 
 4. **Test your changes**:
    ```bash
-   # Run tests
-   pnpm test
+   # Run tests with Vitest
+   pnpm test:apsara
+   
+   # Run tests in watch mode
+   cd packages/raystack && pnpm test:watch
    
    # Build to ensure no build errors
-   pnpm run build:apsara
+   pnpm build
    ```
 
 5. **Format your code**:
    ```bash
-   pnpm run format
+   pnpm format
    ```
 
 6. **Commit your changes** following conventional commit format:
@@ -63,7 +86,7 @@ pnpm dev
 
 - Use TypeScript for all new code
 - Follow existing component patterns
-- Use Biome for code formatting: `pnpm run format`
+- Use Biome for code formatting: `pnpm format`
 - Write tests for new components and features
 
 ## Component Development
@@ -72,15 +95,72 @@ pnpm dev
 2. Follow the existing component structure:
    ```
    component-name/
-   ├── index.tsx          # Export file
+   ├── index.ts         # Export barrel file
    ├── component-name.tsx # Main component
    ├── component-name.module.css # Styles
    └── __tests__/         # Tests
        └── component-name.test.tsx
    ```
 
-3. Export new components from `packages/raystack/index.tsx`
+3. Export new components from `packages/raystack/index.ts`
+4. Update the component documentation in `apps/www/content/docs`
 
+## Documentation Development
+
+The project includes a documentation website for the library `apps/www`:
+
+- Built with Next.js and Fumadocs
+- Uses MDX for component documentation
+
+### Component Documentation Format
+
+Each component folder in `apps/www/src/content/docs/` contains:
+
+```
+component-name/
+├── index.mdx    # Main documentation with examples and usage
+├── props.ts     # TypeScript definitions for component props
+└── demo.ts      # Code for interactive playground and examples
+```
+
+### Working with Documentation
+
+1. **Adding new component docs**:
+   - Create a new folder in `apps/www/src/content/docs/components/`
+   - Add `index.mdx` with component description and examples
+   - Add `props.ts` with TypeScript prop definitions
+   - Add `demo.ts` with interactive examples
+
+2. **Testing documentation changes**:
+   ```bash
+   # Start the docs site
+   cd apps/www && pnpm dev
+   ```
+
+## VS Code Extension Development
+
+The project includes a VS Code extension (`packages/plugin-vscode/`) that provides:
+
+- **Autocomplete**: IntelliSense for Apsara components and design tokens
+- **Hover information**: Component documentation and prop details
+- **Snippets**: Quick component insertion
+
+### Working with the VS Code Extension
+
+1. **Development**:  
+   Use VS Code Command Palette: **"Tasks: Run Task" → "plugin-vscode: start-dev"**  
+   This starts the extension in watch mode and opens the Extension Development Host.
+
+2. **Building**:
+   ```bash
+   pnpm build  # Build for production
+   ```
+
+3. **Packaging**:
+   ```bash
+   pnpm package  # Create .vsix file for distribution
+   ```
+   
 ## Pull Request Process
 
 1. Fork the repository
@@ -129,7 +209,7 @@ Apsara follows an automated release process using GitHub Actions and semantic ve
    - Triggered by pushing tags matching `v[0-9]+.[0-9]+.[0-9]+`
 
 2. **Release Candidates** (`v1.2.3-rc.1`):
-   - Released from the `develop` branch
+   - Released from the `main` or `release/*` branch
    - Published to NPM with `next` tag
    - Triggered by pushing tags matching `v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+`
 
@@ -164,16 +244,16 @@ Apsara follows an automated release process using GitHub Actions and semantic ve
    - Run tests (if configured)
    - Bump the package version
    - Publish to NPM
-   - Create a GitHub release with generated notes
+   - Create a GitHub release with auto-generated notes
 
 ### Release Workflow Details
 
 The release process includes these automated steps:
 
-1. **Checkout** the appropriate branch (`main` or `develop`)
-2. **Setup** Node.js 18.x and pnpm 9.3.0
+1. **Checkout** the appropriate branch (`main` or `release/*`)
+2. **Setup** Node.js 22.x and pnpm 9.3.0
 3. **Install** dependencies
-4. **Build** the library using `pnpm run ci:build`
+4. **Build** the library using `pnpm ci:build`
 5. **Bump version** in package.json based on the git tag
 6. **Publish** to NPM using `release-it`
 7. **Generate** GitHub release notes
