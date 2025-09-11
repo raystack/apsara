@@ -62,7 +62,7 @@ jobs:
           GIT_REFNAME: ${{ github.ref_name }}
 
       - name: Run Release 🚀
-        run: pnpm run release:ci --npm.tag=rc
+        run: pnpm run release:ci --npm.tag=next
         working-directory: ./packages/raystack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
