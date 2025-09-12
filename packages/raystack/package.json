@@ -30,18 +30,14 @@
     "./style.css": "./dist/style.css",
     "./normalize.css": "./dist/normalize.css"
   },
-  "files": [
-    "dist",
-    "README.md"
-  ],
+  "files": ["dist", "README.md"],
   "scripts": {
     "prebuild": "npm run clean",
     "build": "rollup --config",
     "dev": "rollup --config --watch",
     "lint": "eslint \"**/*.ts*\"",
     "lint:fix": "eslint \"v1/**/*.ts*\" --fix",
-    "release": "release-it",
-    "release:ci": "release-it --ci --no-increment --npm.ignoreVersion",
+    "release": "pnpm publish --access public --no-git-checks",
     "bump-version": "node scripts/bump-version.js",
     "clean": "rm -rf .turbo && rm -rf dist",
     "test": "vitest --run",
@@ -52,12 +48,8 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/index.d.ts"
-      ],
-      "v1": [
-        "./dist/index.d.ts"
-      ]
+      "*": ["./dist/index.d.ts"],
+      "v1": ["./dist/index.d.ts"]
     }
   },
   "keywords": [
@@ -97,7 +89,6 @@
     "postcss-modules": "^6.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "release-it": "^16.2.1",
     "rollup": "^3.25.1",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-preserve-directives": "^0.4.0",

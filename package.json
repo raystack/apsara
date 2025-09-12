@@ -10,7 +10,7 @@
     "clean": "turbo clean --filter=@raystack/apsara",
     "format": "pnpm exec biome check --staged --write .",
     "ci:build": "turbo build --filter=@raystack/apsara",
-    "ci:release": "turbo release --filter=@raystack/apsara -- --ci --no-increment"
+    "ci:release": "turbo release --filter=@raystack/apsara"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
