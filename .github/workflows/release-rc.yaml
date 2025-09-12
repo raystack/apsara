@@ -62,11 +62,11 @@ jobs:
           GIT_REFNAME: ${{ github.ref_name }}
 
       - name: Run Release 🚀
-        run: pnpm run release:ci --npm.tag=next
+        run: pnpm run release --tag next
         working-directory: ./packages/raystack
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Generate GitHub Pre-Release Notes 📓
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
