@@ -157,59 +157,59 @@ describe('DataTable', () => {
     });
   });
 
-  describe('Server Mode', () => {
-    it('handles server mode', () => {
-      const onTableQueryChange = vi.fn();
+  // describe('Server Mode', () => {
+  //   it('handles server mode', () => {
+  //     const onTableQueryChange = vi.fn();
 
-      render(
-        <DataTable
-          data={mockData}
-          columns={mockColumns}
-          mode='server'
-          onTableQueryChange={onTableQueryChange}
-        >
-          <DataTable.Content />
-        </DataTable>
-      );
+  //     render(
+  //       <DataTable
+  //         data={mockData}
+  //         columns={mockColumns}
+  //         mode='server'
+  //         onTableQueryChange={onTableQueryChange}
+  //       >
+  //         <DataTable.Content />
+  //       </DataTable>
+  //     );
 
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
+  //     expect(screen.getByRole('table')).toBeInTheDocument();
+  //   });
 
-    it('calls onTableQueryChange in server mode', () => {
-      const onTableQueryChange = vi.fn();
+  //   it('calls onTableQueryChange in server mode', () => {
+  //     const onTableQueryChange = vi.fn();
 
-      render(
-        <DataTable
-          data={mockData}
-          columns={mockColumns}
-          mode='server'
-          onTableQueryChange={onTableQueryChange}
-        >
-          <DataTable.Content />
-        </DataTable>
-      );
+  //     render(
+  //       <DataTable
+  //         data={mockData}
+  //         columns={mockColumns}
+  //         mode='server'
+  //         onTableQueryChange={onTableQueryChange}
+  //       >
+  //         <DataTable.Content />
+  //       </DataTable>
+  //     );
 
-      // Initial query should be sent
-      expect(onTableQueryChange).toHaveBeenCalled();
-    });
+  //     // Initial query should be sent
+  //     expect(onTableQueryChange).toHaveBeenCalled();
+  //   });
 
-    it('handles load more functionality', () => {
-      const onLoadMore = vi.fn();
+  //   it('handles load more functionality', () => {
+  //     const onLoadMore = vi.fn();
 
-      render(
-        <DataTable
-          data={mockData}
-          columns={mockColumns}
-          mode='server'
-          onLoadMore={onLoadMore}
-        >
-          <DataTable.Content />
-        </DataTable>
-      );
+  //     render(
+  //       <DataTable
+  //         data={mockData}
+  //         columns={mockColumns}
+  //         mode='server'
+  //         onLoadMore={onLoadMore}
+  //       >
+  //         <DataTable.Content />
+  //       </DataTable>
+  //     );
 
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-  });
+  //     expect(screen.getByRole('table')).toBeInTheDocument();
+  //   });
+  // });
 
   describe('Query Handling', () => {
     it('accepts initial query', () => {

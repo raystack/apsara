@@ -426,7 +426,7 @@ describe('Table', () => {
       );
 
       expect(screen.getByRole('table')).toBeInTheDocument();
-      expect(screen.getAllByRole('columnheader')).toHaveLength(3);
+      expect(screen.getAllByRole('columnheader')).toHaveLength(4); // 3 from header + 1 from section header
       expect(screen.getByText('Active Users')).toBeInTheDocument();
       expect(screen.getAllByRole('cell')).toHaveLength(6);
       expect(screen.getByText('John Doe')).toBeInTheDocument();

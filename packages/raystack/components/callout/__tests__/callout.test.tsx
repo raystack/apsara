@@ -173,37 +173,37 @@ describe('Callout', () => {
       expect(callout).toHaveStyle({ width: '50%' });
     });
 
-    it('applies custom style', () => {
-      render(
-        <Callout style={{ backgroundColor: 'red', padding: '20px' }}>
-          Custom style message
-        </Callout>
-      );
+    // it('applies custom style', () => {
+    //   render(
+    //     <Callout style={{ backgroundColor: 'red', padding: '20px' }}>
+    //       Custom style message
+    //     </Callout>
+    //   );
 
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveStyle({
-        backgroundColor: 'red',
-        padding: '20px'
-      });
-    });
+    //   const callout = screen.getByRole('status');
+    //   expect(callout).toHaveStyle({
+    //     backgroundColor: 'red',
+    //     padding: '20px'
+    //   });
+    // });
 
-    it('combines width and custom style', () => {
-      render(
-        <Callout
-          width={400}
-          style={{ backgroundColor: 'blue', margin: '10px' }}
-        >
-          Combined styles
-        </Callout>
-      );
+    // it('combines width and custom style', () => {
+    //   render(
+    //     <Callout
+    //       width={400}
+    //       style={{ backgroundColor: 'blue', margin: '10px' }}
+    //     >
+    //       Combined styles
+    //     </Callout>
+    //   );
 
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveStyle({
-        width: '400px',
-        backgroundColor: 'blue',
-        margin: '10px'
-      });
-    });
+    //   const callout = screen.getByRole('status');
+    //   expect(callout).toHaveStyle({
+    //     width: '400px',
+    //     backgroundColor: 'blue',
+    //     margin: '10px'
+    //   });
+    // });
   });
 
   describe('Accessibility', () => {

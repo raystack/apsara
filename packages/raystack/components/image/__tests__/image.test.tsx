@@ -85,7 +85,7 @@ describe('Image', () => {
     it('sets width as number', () => {
       render(<Image src='/test.jpg' alt='Test' width={300} />);
       const img = screen.getByRole('img');
-      expect(img).toHaveStyle({ width: '300' });
+      expect(img).toHaveStyle({ width: '300px' });
     });
 
     it('sets height as string', () => {
@@ -97,7 +97,7 @@ describe('Image', () => {
     it('sets height as number', () => {
       render(<Image src='/test.jpg' alt='Test' height={200} />);
       const img = screen.getByRole('img');
-      expect(img).toHaveStyle({ height: '200' });
+      expect(img).toHaveStyle({ height: '200px' });
     });
 
     it('sets both width and height', () => {

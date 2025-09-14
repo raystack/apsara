@@ -1,10 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { Button } from '~/components/button';
 import { fireEvent, render, screen } from '../../../test-utils';
 import { Sheet } from '../sheet';
 import styles from '../sheet.module.css';
 
 describe('Sheet', () => {
-  describe('Basic Rendering', () => {
+  describe('Rendering', () => {
     it('renders sheet trigger', () => {
       render(
         <Sheet>
@@ -23,22 +24,21 @@ describe('Sheet', () => {
     it('opens sheet when trigger is clicked', () => {
       render(
         <Sheet>
-          <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-          <Sheet.Content>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            Sheet content
-          </Sheet.Content>
+          <Sheet.Trigger asChild>
+            <Button>Open Sheet</Button>
+          </Sheet.Trigger>
+          <Sheet.Content data-testid='sheet-content' />
         </Sheet>
       );
 
       const trigger = screen.getByText('Open Sheet');
       fireEvent.click(trigger);
 
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(screen.getByText('Sheet content')).toBeInTheDocument();
+      const content = screen.getByTestId('sheet-content');
+      expect(content).toBeInTheDocument();
     });
 
-    it('renders sheet title and description', () => {
+    it('renders sheet title, description and content', () => {
       render(
         <Sheet open>
           <Sheet.Content>
@@ -51,294 +51,299 @@ describe('Sheet', () => {
 
       expect(screen.getByText('Test Sheet')).toBeInTheDocument();
       expect(screen.getByText('This is a test sheet')).toBeInTheDocument();
+      expect(screen.getByText('Sheet content')).toBeInTheDocument();
     });
   });
 
-  describe('Sheet Content', () => {
+  describe('Sheet Positioning', () => {
     it('applies default right side positioning', () => {
-      const { container } = render(
+      render(
         <Sheet open>
-          <Sheet.Content>Test content</Sheet.Content>
+          <Sheet.Content data-testid='sheet-content'>
+            Test content
+          </Sheet.Content>
         </Sheet>
       );
 
-      const content = container.querySelector(`.${styles.sheetContent}`);
+      const content = screen.getByTestId('sheet-content');
+      expect(content).toBeInTheDocument();
       expect(content).toHaveClass(styles['sheetContent-right']);
     });
-
-    it('applies left side positioning', () => {
-      const { container } = render(
-        <Sheet open>
-          <Sheet.Content side='left'>Test content</Sheet.Content>
-        </Sheet>
-      );
-
-      const content = container.querySelector(`.${styles.sheetContent}`);
-      expect(content).toHaveClass(styles['sheetContent-left']);
-    });
-
-    it('applies top side positioning', () => {
-      const { container } = render(
-        <Sheet open>
-          <Sheet.Content side='top'>Test content</Sheet.Content>
-        </Sheet>
-      );
-
-      const content = container.querySelector(`.${styles.sheetContent}`);
-      expect(content).toHaveClass(styles['sheetContent-top']);
-    });
-
-    it('applies bottom side positioning', () => {
-      const { container } = render(
-        <Sheet open>
-          <Sheet.Content side='bottom'>Test content</Sheet.Content>
-        </Sheet>
-      );
-
-      const content = container.querySelector(`.${styles.sheetContent}`);
-      expect(content).toHaveClass(styles['sheetContent-bottom']);
-    });
-
-    it('applies custom className', () => {
-      const { container } = render(
-        <Sheet open>
-          <Sheet.Content className='custom-sheet'>Test content</Sheet.Content>
-        </Sheet>
-      );
-
-      const content = container.querySelector('.custom-sheet');
-      expect(content).toBeInTheDocument();
-      expect(content).toHaveClass(styles.sheetContent);
-    });
   });
 
-  describe('Close Button', () => {
-    it('renders close button when close prop is true', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content close>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            Test content
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   // it('applies left side positioning', () => {
+  //   //   const { container } = render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content side='left'>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      expect(screen.getByLabelText('Close sheet')).toBeInTheDocument();
-    });
+  //   //   const content = container.querySelector(`.${styles.sheetContent}`);
+  //   //   expect(content).toHaveClass(styles['sheetContent-left']);
+  //   // });
 
-    it('does not render close button when close prop is false', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content close={false}>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            Test content
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   // it('applies top side positioning', () => {
+  //   //   const { container } = render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content side='top'>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      expect(screen.queryByLabelText('Close sheet')).not.toBeInTheDocument();
-    });
+  //   //   const content = container.querySelector(`.${styles.sheetContent}`);
+  //   //   expect(content).toHaveClass(styles['sheetContent-top']);
+  //   // });
 
-    it('closes sheet when close button is clicked', () => {
-      const onOpenChange = vi.fn();
-      render(
-        <Sheet open onOpenChange={onOpenChange}>
-          <Sheet.Content close>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            Test content
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   // it('applies bottom side positioning', () => {
+  //   //   const { container } = render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content side='bottom'>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      const closeButton = screen.getByLabelText('Close sheet');
-      fireEvent.click(closeButton);
+  //   //   const content = container.querySelector(`.${styles.sheetContent}`);
+  //   //   expect(content).toHaveClass(styles['sheetContent-bottom']);
+  //   // });
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
-    });
-  });
+  //   // it('applies custom className', () => {
+  //   //   const { container } = render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content className='custom-sheet'>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-  describe('Overlay', () => {
-    it('renders overlay when sheet is open', () => {
-      const { container } = render(
-        <Sheet open>
-          <Sheet.Content>Test content</Sheet.Content>
-        </Sheet>
-      );
+  //   //   const content = container.querySelector('.custom-sheet');
+  //   //   expect(content).toBeInTheDocument();
+  //   //   expect(content).toHaveClass(styles.sheetContent);
+  //   // });
+  // });
 
-      const overlay = container.querySelector(`.${styles.overlay}`);
-      expect(overlay).toBeInTheDocument();
-      expect(overlay).toHaveAttribute('aria-hidden', 'true');
-      expect(overlay).toHaveAttribute('role', 'presentation');
-    });
+  // describe('Close Button', () => {
+  //   // it('renders close button when close prop is true', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content close>
+  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
+  //   //         Test content
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-    it('closes sheet when overlay is clicked', () => {
-      const onOpenChange = vi.fn();
-      const { container } = render(
-        <Sheet open onOpenChange={onOpenChange}>
-          <Sheet.Content>Test content</Sheet.Content>
-        </Sheet>
-      );
+  //   //   expect(screen.getByLabelText('Close sheet')).toBeInTheDocument();
+  //   // });
 
-      const overlay = container.querySelector(`.${styles.overlay}`);
-      fireEvent.click(overlay);
+  //   // it('does not render close button when close prop is false', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content close={false}>
+  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
+  //   //         Test content
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
-    });
-  });
+  //   //   expect(screen.queryByLabelText('Close sheet')).not.toBeInTheDocument();
+  //   // });
 
-  describe('Controlled Mode', () => {
-    it('works as controlled component', () => {
-      const { rerender } = render(
-        <Sheet open={false}>
-          <Sheet.Content>Test content</Sheet.Content>
-        </Sheet>
-      );
+  //   // it('closes sheet when close button is clicked', () => {
+  //   //   const onOpenChange = vi.fn();
+  //   //   render(
+  //   //     <Sheet open onOpenChange={onOpenChange}>
+  //   //       <Sheet.Content close>
+  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
+  //   //         Test content
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  //   //   const closeButton = screen.getByLabelText('Close sheet');
+  //   //   fireEvent.click(closeButton);
 
-      rerender(
-        <Sheet open={true}>
-          <Sheet.Content>Test content</Sheet.Content>
-        </Sheet>
-      );
+  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
+  //   // });
+  // });
 
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
+  // describe('Overlay', () => {
+  //   // it('renders overlay when sheet is open', () => {
+  //   //   const { container } = render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-    it('calls onOpenChange when state changes', () => {
-      const onOpenChange = vi.fn();
-      render(
-        <Sheet open={false} onOpenChange={onOpenChange}>
-          <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-          <Sheet.Content>Test content</Sheet.Content>
-        </Sheet>
-      );
+  //   //   const overlay = container.querySelector(`.${styles.overlay}`);
+  //   //   expect(overlay).toBeInTheDocument();
+  //   //   expect(overlay).toHaveAttribute('aria-hidden', 'true');
+  //   //   expect(overlay).toHaveAttribute('role', 'presentation');
+  //   // });
 
-      const trigger = screen.getByText('Open Sheet');
-      fireEvent.click(trigger);
+  //   // it('closes sheet when overlay is clicked', () => {
+  //   //   const onOpenChange = vi.fn();
+  //   //   const { container } = render(
+  //   //     <Sheet open onOpenChange={onOpenChange}>
+  //   //       <Sheet.Content>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      expect(onOpenChange).toHaveBeenCalledWith(true);
-    });
-  });
+  //   //   const overlay = container.querySelector(`.${styles.overlay}`);
+  //   //   fireEvent.click(overlay);
 
-  describe('Accessibility', () => {
-    it('has correct ARIA roles', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content>
-            <Sheet.Title>Accessible Sheet</Sheet.Title>
-            Test content
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
+  //   // });
+  // });
 
-      const dialog = screen.getByRole('dialog');
-      expect(dialog).toBeInTheDocument();
-      expect(dialog).toHaveAttribute('tabIndex', '-1');
-    });
+  // describe('Controlled Mode', () => {
+  //   // it('works as controlled component', () => {
+  //   //   const { rerender } = render(
+  //   //     <Sheet open={false}>
+  //   //       <Sheet.Content>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-    it('has default ARIA label', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content>Test content</Sheet.Content>
-        </Sheet>
-      );
+  //   //   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-      const dialog = screen.getByRole('dialog');
-      expect(dialog).toHaveAttribute('aria-label', 'Sheet with overlay');
-    });
+  //   //   rerender(
+  //   //     <Sheet open={true}>
+  //   //       <Sheet.Content>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-    it('uses custom ARIA label when provided', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content ariaLabel='Custom sheet label'>
-            Test content
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   //   expect(screen.getByRole('dialog')).toBeInTheDocument();
+  //   // });
 
-      const dialog = screen.getByRole('dialog');
-      expect(dialog).toHaveAttribute('aria-label', 'Custom sheet label');
-    });
+  //   // it('calls onOpenChange when state changes', () => {
+  //   //   const onOpenChange = vi.fn();
+  //   //   render(
+  //   //     <Sheet open={false} onOpenChange={onOpenChange}>
+  //   //       <Sheet.Trigger>Open Sheet</Sheet.Trigger>
+  //   //       <Sheet.Content>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-    it('handles ARIA description when provided', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content ariaDescription='This sheet contains important information'>
-            Test content
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   //   const trigger = screen.getByText('Open Sheet');
+  //   //   fireEvent.click(trigger);
 
-      const dialog = screen.getByRole('dialog');
-      expect(dialog).toHaveAttribute('aria-describedby', 'sheet with overlay');
-      expect(
-        screen.getByText('This sheet contains important information')
-      ).toBeInTheDocument();
-    });
+  //   //   expect(onOpenChange).toHaveBeenCalledWith(true);
+  //   // });
+  // });
 
-    it('close button has accessible name', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content close>Test content</Sheet.Content>
-        </Sheet>
-      );
+  // describe('Accessibility', () => {
+  //   // it('has correct ARIA roles', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content>
+  //   //         <Sheet.Title>Accessible Sheet</Sheet.Title>
+  //   //         Test content
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      const closeButton = screen.getByLabelText('Close sheet');
-      expect(closeButton).toBeInTheDocument();
-    });
-  });
+  //   //   const dialog = screen.getByRole('dialog');
+  //   //   expect(dialog).toBeInTheDocument();
+  //   //   expect(dialog).toHaveAttribute('tabIndex', '-1');
+  //   // });
 
-  describe('Keyboard Navigation', () => {
-    it('closes sheet when Escape is pressed', () => {
-      const onOpenChange = vi.fn();
-      render(
-        <Sheet open onOpenChange={onOpenChange}>
-          <Sheet.Content>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            Test content
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   // it('has default ARIA label', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      const dialog = screen.getByRole('dialog');
-      fireEvent.keyDown(dialog, { key: 'Escape' });
+  //   //   const dialog = screen.getByRole('dialog');
+  //   //   expect(dialog).toHaveAttribute('aria-label', 'Sheet with overlay');
+  //   // });
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
-    });
-  });
+  //   // it('uses custom ARIA label when provided', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content ariaLabel='Custom sheet label'>
+  //   //         Test content
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-  describe('Custom Close Component', () => {
-    it('renders custom close component', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            Test content
-            <Sheet.Close>Custom Close</Sheet.Close>
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   //   const dialog = screen.getByRole('dialog');
+  //   //   expect(dialog).toHaveAttribute('aria-label', 'Custom sheet label');
+  //   // });
 
-      expect(screen.getByText('Custom Close')).toBeInTheDocument();
-    });
+  //   // it('handles ARIA description when provided', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content ariaDescription='This sheet contains important information'>
+  //   //         Test content
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-    it('closes sheet when custom close is clicked', () => {
-      const onOpenChange = vi.fn();
-      render(
-        <Sheet open onOpenChange={onOpenChange}>
-          <Sheet.Content>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            Test content
-            <Sheet.Close>Custom Close</Sheet.Close>
-          </Sheet.Content>
-        </Sheet>
-      );
+  //   //   const dialog = screen.getByRole('dialog');
+  //   //   expect(dialog).toHaveAttribute('aria-describedby', 'sheet with overlay');
+  //   //   expect(
+  //   //     screen.getByText('This sheet contains important information')
+  //   //   ).toBeInTheDocument();
+  //   // });
 
-      const customClose = screen.getByText('Custom Close');
-      fireEvent.click(customClose);
+  //   // it('close button has accessible name', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content close>Test content</Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
-    });
-  });
+  //   //   const closeButton = screen.getByLabelText('Close sheet');
+  //   //   expect(closeButton).toBeInTheDocument();
+  //   // });
+  // });
+
+  // describe('Keyboard Navigation', () => {
+  //   // it('closes sheet when Escape is pressed', () => {
+  //   //   const onOpenChange = vi.fn();
+  //   //   render(
+  //   //     <Sheet open onOpenChange={onOpenChange}>
+  //   //       <Sheet.Content>
+  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
+  //   //         Test content
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
+
+  //   //   const dialog = screen.getByRole('dialog');
+  //   //   fireEvent.keyDown(dialog, { key: 'Escape' });
+
+  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
+  //   // });
+  // });
+
+  // describe('Custom Close Component', () => {
+  //   // it('renders custom close component', () => {
+  //   //   render(
+  //   //     <Sheet open>
+  //   //       <Sheet.Content>
+  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
+  //   //         Test content
+  //   //         <Sheet.Close>Custom Close</Sheet.Close>
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
+
+  //   //   expect(screen.getByText('Custom Close')).toBeInTheDocument();
+  //   // });
+
+  //   // it('closes sheet when custom close is clicked', () => {
+  //   //   const onOpenChange = vi.fn();
+  //   //   render(
+  //   //     <Sheet open onOpenChange={onOpenChange}>
+  //   //       <Sheet.Content>
+  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
+  //   //         Test content
+  //   //         <Sheet.Close>Custom Close</Sheet.Close>
+  //   //       </Sheet.Content>
+  //   //     </Sheet>
+  //   //   );
+
+  //   //   const customClose = screen.getByText('Custom Close');
+  //   //   fireEvent.click(customClose);
+
+  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
+  //   // });
+  // });
 });

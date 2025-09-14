@@ -42,7 +42,7 @@ describe('List', () => {
     it('sets maxWidth as number', () => {
       render(<List maxWidth={400}>Content</List>);
       const list = screen.getByRole('list');
-      expect(list).toHaveStyle({ maxWidth: '400' });
+      expect(list).toHaveStyle({ maxWidth: '400px' });
     });
 
     it('has default aria-label', () => {
@@ -178,7 +178,10 @@ describe('List', () => {
         </List>
       );
       const label = screen.getByText('Label');
-      expect(label).toHaveStyle({ minWidth: '80px', color: 'gray' });
+      expect(label).toHaveStyle({
+        minWidth: '80px',
+        color: 'rgb(128, 128, 128)'
+      });
     });
   });
 
@@ -349,7 +352,7 @@ describe('List', () => {
       const label = screen.getByText('Status:');
       expect(label).toHaveStyle({ minWidth: '100px' });
       const value = screen.getByText('Active');
-      expect(value).toHaveStyle({ color: 'green' });
+      expect(value).toHaveStyle({ color: 'rgb(0, 128, 0)' });
     });
   });
 });

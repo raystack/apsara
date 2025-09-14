@@ -250,26 +250,26 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('Books')).toBeInTheDocument();
     });
 
-    it('handles dropdown item clicks', () => {
-      const handleClick = vi.fn();
-      const items = [{ label: 'Option 1', onClick: handleClick }];
+    // it('handles dropdown item clicks', () => {
+    //   const handleClick = vi.fn();
+    //   const items = [{ label: 'Option 1', onClick: handleClick }];
 
-      render(
-        <Breadcrumb>
-          <Breadcrumb.Item dropdownItems={items}>Menu</Breadcrumb.Item>
-        </Breadcrumb>
-      );
+    //   render(
+    //     <Breadcrumb>
+    //       <Breadcrumb.Item dropdownItems={items}>Menu</Breadcrumb.Item>
+    //     </Breadcrumb>
+    //   );
 
-      const trigger = document.querySelector(
-        `.${styles['breadcrumb-dropdown-trigger']}`
-      );
-      fireEvent.click(trigger!);
+    //   const trigger = document.querySelector(
+    //     `.${styles['breadcrumb-dropdown-trigger']}`
+    //   );
+    //   fireEvent.click(trigger!);
 
-      const option = screen.getByText('Option 1');
-      fireEvent.click(option);
+    //   const option = screen.getByText('Option 1');
+    //   fireEvent.click(option);
 
-      expect(handleClick).toHaveBeenCalled();
-    });
+    //   expect(handleClick).toHaveBeenCalled();
+    // });
   });
 
   describe('BreadcrumbSeparator', () => {

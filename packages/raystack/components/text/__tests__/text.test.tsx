@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '../../../test-utils';
+import { fireEvent, render, screen } from '../../../test-utils';
 import { Text } from '../text';
 import styles from '../text.module.css';
 
@@ -362,7 +362,7 @@ describe('Text', () => {
       );
 
       const label = screen.getByText('Label for input');
-      expect(label).toHaveAttribute('htmlFor', 'test-input');
+      expect(label).toHaveAttribute('for', 'test-input');
     });
   });
 
@@ -415,7 +415,7 @@ describe('Text', () => {
       );
 
       const text = container.firstChild;
-      expect(text).toHaveStyle({ color: 'red', fontSize: '18px' });
+      expect(text).toHaveStyle({ color: 'rgb(255, 0, 0)', fontSize: '18px' });
     });
 
     it('handles event handlers', () => {
@@ -430,10 +430,10 @@ describe('Text', () => {
 
       const text = screen.getByText('Interactive text');
 
-      text.click();
+      fireEvent.click(text);
       expect(handleClick).toHaveBeenCalledTimes(1);
 
-      text.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      fireEvent.mouseEnter(text);
       expect(handleMouseEnter).toHaveBeenCalledTimes(1);
     });
   });
@@ -587,7 +587,7 @@ describe('Text', () => {
       );
 
       const label = screen.getByText('Screen reader accessible label');
-      expect(label).toHaveAttribute('htmlFor', 'input-field');
+      expect(label).toHaveAttribute('for', 'input-field');
     });
   });
 });

@@ -68,7 +68,7 @@ describe('Skeleton', () => {
       const skeleton = container.querySelector(
         `.${styles.skeleton}`
       ) as HTMLElement;
-      expect(skeleton.style.width).toBe('150');
+      expect(skeleton.style.width).toBe('150px');
     });
 
     it('sets default height', () => {
@@ -92,7 +92,7 @@ describe('Skeleton', () => {
       const skeleton = container.querySelector(
         `.${styles.skeleton}`
       ) as HTMLElement;
-      expect(skeleton.style.height).toBe('30');
+      expect(skeleton.style.height).toBe('30px');
     });
   });
 
@@ -118,7 +118,7 @@ describe('Skeleton', () => {
       const skeleton = container.querySelector(
         `.${styles.skeleton}`
       ) as HTMLElement;
-      expect(skeleton.style.borderRadius).toBe('5');
+      expect(skeleton.style.borderRadius).toBe('5px');
     });
 
     it('applies custom styles', () => {
@@ -220,7 +220,7 @@ describe('Skeleton', () => {
     it('does not apply gap for inline skeletons', () => {
       const { container } = render(<Skeleton count={2} inline />);
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper.style.gap).toBeUndefined();
+      expect(wrapper.style.gap).toBe('');
     });
   });
 

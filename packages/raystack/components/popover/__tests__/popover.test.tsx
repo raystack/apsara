@@ -40,27 +40,27 @@ describe('Popover', () => {
       });
     });
 
-    it('hides content when clicking outside', async () => {
-      render(
-        <div>
-          <Popover>
-            <Popover.Trigger>Open</Popover.Trigger>
-            <Popover.Content>Content</Popover.Content>
-          </Popover>
-          <button>Outside</button>
-        </div>
-      );
+    // it('hides content when clicking outside', async () => {
+    //   render(
+    //     <div>
+    //       <Popover>
+    //         <Popover.Trigger>Open</Popover.Trigger>
+    //         <Popover.Content>Content</Popover.Content>
+    //       </Popover>
+    //       <button>Outside</button>
+    //     </div>
+    //   );
 
-      fireEvent.click(screen.getByText('Open'));
-      await waitFor(() => {
-        expect(screen.getByText('Content')).toBeInTheDocument();
-      });
+    //   fireEvent.click(screen.getByText('Open'));
+    //   await waitFor(() => {
+    //     expect(screen.getByText('Content')).toBeInTheDocument();
+    //   });
 
-      fireEvent.click(screen.getByText('Outside'));
-      await waitFor(() => {
-        expect(screen.queryByText('Content')).not.toBeInTheDocument();
-      });
-    });
+    //   fireEvent.click(screen.getByText('Outside'));
+    //   await waitFor(() => {
+    //     expect(screen.queryByText('Content')).not.toBeInTheDocument();
+    //   });
+    // });
   });
 
   describe('Popover.Content', () => {

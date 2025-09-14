@@ -23,18 +23,33 @@ export interface SwitchProps
 export const Switch = forwardRef<
   ElementRef<typeof SwitchPrimitive.Root>,
   SwitchProps
->(({ className, disabled, required, size, ...props }, forwardedRef) => (
-  <SwitchPrimitive.Root
-    {...props}
-    ref={forwardedRef}
-    disabled={disabled}
-    required={required}
-    className={switchVariants({ size, className })}
-    data-disabled={disabled}
-  >
-    <SwitchThumb />
-  </SwitchPrimitive.Root>
-));
+>(
+  (
+    { className, disabled, required, size, name, value, ...props },
+    forwardedRef
+  ) => (
+    <>
+      <SwitchPrimitive.Root
+        {...props}
+        ref={forwardedRef}
+        disabled={disabled}
+        required={required}
+        className={switchVariants({ size, className })}
+        data-disabled={disabled}
+      >
+        <SwitchThumb />
+      </SwitchPrimitive.Root>
+      {name && (
+        <input
+          type='hidden'
+          name={name}
+          value={value || 'on'}
+          disabled={disabled}
+        />
+      )}
+    </>
+  )
+);
 
 interface ThumbProps
   extends ComponentPropsWithoutRef<typeof SwitchPrimitive.Thumb> {}
