@@ -1,5 +1,5 @@
+import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { render } from '../../../test-utils';
 import { Skeleton } from '../skeleton';
 import styles from '../skeleton.module.css';
 

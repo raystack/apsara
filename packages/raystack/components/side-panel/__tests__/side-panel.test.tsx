@@ -1,5 +1,5 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '../../../test-utils';
 import { SidePanel } from '../side-panel';
 import styles from '../side-panel.module.css';
 

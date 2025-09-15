@@ -1,6 +1,6 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '~/components/button';
-import { fireEvent, render, screen } from '../../../test-utils';
 import { Sheet } from '../sheet';
 import styles from '../sheet.module.css';
 

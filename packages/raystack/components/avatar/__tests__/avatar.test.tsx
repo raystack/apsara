@@ -1,5 +1,5 @@
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen, waitFor } from '../../../test-utils';
 import { Avatar, AvatarGroup, getAvatarProps } from '../avatar';
 import styles from '../avatar.module.css';
 import { getAvatarColor } from '../utils';

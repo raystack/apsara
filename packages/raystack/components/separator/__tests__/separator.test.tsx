@@ -1,5 +1,5 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '../../../test-utils';
 import { Separator } from '../separator';
 import styles from '../separator.module.css';
 

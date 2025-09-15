@@ -1,5 +1,5 @@
+import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { render } from '../../../test-utils';
 import { Grid } from '../grid';
 
 describe('Grid', () => {

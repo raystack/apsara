@@ -1,5 +1,5 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '../../../test-utils';
 import { Box } from '../box';
 import styles from '../box.module.css';
 

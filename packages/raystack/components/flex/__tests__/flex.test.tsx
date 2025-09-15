@@ -1,5 +1,5 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '../../../test-utils';
 import { Flex } from '../flex';
 import styles from '../flex.module.css';
 

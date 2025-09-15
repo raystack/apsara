@@ -1,5 +1,5 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen } from '../../../test-utils';
 import { Select } from '../select';
 
 // Mock scrollIntoView for test environment
@@ -93,16 +93,4 @@ describe('Select', () => {
       expect(screen.getByText('Option 1')).toBeInTheDocument();
     });
   });
-
-  // TODO: Fix complex select tests - Radix UI Select behavior in test environment
-  // The following tests are commented out because they involve complex interactions
-  // and DOM manipulation that don't work reliably in test environments:
-  // - Autocomplete functionality
-  // - Groups and separators
-  // - Disabled state management
-  // - Open state control
-  // - Keyboard navigation
-  // - Accessibility features
-  // - Form integration
-  // - Complex event handling
 });

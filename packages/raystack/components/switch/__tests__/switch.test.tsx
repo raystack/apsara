@@ -1,6 +1,6 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '../../../test-utils';
 import { Switch } from '../switch';
 import styles from '../switch.module.css';
 

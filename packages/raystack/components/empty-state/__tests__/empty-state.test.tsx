@@ -1,5 +1,5 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '../../../test-utils';
 import { EmptyState } from '../empty-state';
 import styles from '../empty-state.module.css';
 

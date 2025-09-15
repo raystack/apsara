@@ -1,5 +1,5 @@
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '../../../test-utils';
 import { Indicator } from '../indicator';
 import styles from '../indicator.module.css';
 

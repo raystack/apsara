@@ -1,5 +1,5 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '../../../test-utils';
 import { AnnouncementBar } from '../announcement-bar';
 import styles from '../announcement-bar.module.css';
 

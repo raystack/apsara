@@ -1,5 +1,5 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { fireEvent, render, screen, waitFor } from '../../../test-utils';
 import { Popover } from '../popover';
 import styles from '../popover.module.css';
 

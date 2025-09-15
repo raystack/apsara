@@ -1,5 +1,5 @@
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '../../../test-utils';
 import { Calendar } from '../calendar';
 import styles from '../calendar.module.css';
 
