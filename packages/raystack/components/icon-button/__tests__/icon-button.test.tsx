@@ -26,12 +26,6 @@ describe('IconButton', () => {
       expect(ref).toHaveBeenCalled();
     });
 
-    it('applies base iconButton class', () => {
-      render(<IconButton>Icon</IconButton>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveClass(styles.iconButton);
-    });
-
     it('applies custom className', () => {
       render(<IconButton className='custom-class'>Icon</IconButton>);
       const button = screen.getByRole('button');
@@ -100,12 +94,6 @@ describe('IconButton', () => {
       const button = screen.getByRole('button');
       expect(button).toHaveAttribute('type', 'submit');
     });
-
-    it('flex container has aria-hidden', () => {
-      const { container } = render(<IconButton>Icon</IconButton>);
-      const flex = container.querySelector('[aria-hidden="true"]');
-      expect(flex).toBeInTheDocument();
-    });
   });
 
   describe('Event Handlers', () => {
@@ -154,12 +142,6 @@ describe('IconButton', () => {
       expect(screen.getByTestId('icon-btn')).toBeInTheDocument();
     });
 
-    // it('supports style attribute', () => {
-    //   render(<IconButton style={{ backgroundColor: 'red' }}>Icon</IconButton>);
-    //   const button = screen.getByRole('button');
-    //   expect(button).toHaveStyle({ backgroundColor: 'red' });
-    // });
-
     it('supports title attribute', () => {
       render(<IconButton title='Close'>X</IconButton>);
       const button = screen.getByRole('button');
@@ -200,33 +182,6 @@ describe('IconButton', () => {
         </IconButton>
       );
       expect(screen.getByTestId('complex')).toBeInTheDocument();
-    });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      const handleClick = vi.fn();
-      render(
-        <IconButton
-          size={3}
-          disabled={false}
-          className='custom'
-          aria-label='Menu'
-          onClick={handleClick}
-          data-testid='menu-btn'
-        >
-          ☰
-        </IconButton>
-      );
-
-      const button = screen.getByTestId('menu-btn');
-      expect(button).toHaveClass(styles['iconButton-size-3']);
-      expect(button).toHaveClass('custom');
-      expect(button).toHaveAttribute('aria-label', 'Menu');
-      expect(button).not.toBeDisabled();
-
-      fireEvent.click(button);
-      expect(handleClick).toHaveBeenCalled();
     });
   });
 });

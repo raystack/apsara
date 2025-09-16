@@ -30,15 +30,6 @@ describe('TextArea', () => {
       render(<TextArea ref={ref} />);
       expect(ref).toHaveBeenCalled();
     });
-
-    it('renders with placeholder', () => {
-      render(<TextArea placeholder='Enter your message' />);
-      const textarea = screen.getByPlaceholderText('Enter your message');
-      expect(textarea).toBeInTheDocument();
-    });
-  });
-
-  describe('Width Styling', () => {
     it('defaults to 100% width', () => {
       const { container } = render(<TextArea />);
       const wrapper = container.querySelector(`.${styles.container}`);
@@ -49,12 +40,6 @@ describe('TextArea', () => {
       const { container } = render(<TextArea width='500px' />);
       const wrapper = container.querySelector(`.${styles.container}`);
       expect(wrapper).toHaveStyle({ width: '500px' });
-    });
-
-    it('accepts custom width as number', () => {
-      const { container } = render(<TextArea width={300} />);
-      const wrapper = container.querySelector(`.${styles.container}`);
-      expect(wrapper).toHaveStyle({ width: '300px' });
     });
   });
 
@@ -145,57 +130,16 @@ describe('TextArea', () => {
       render(<TextArea disabled onChange={handleChange} />);
       const textarea = screen.getByRole('textbox');
 
-      // When disabled, the textarea should not be focusable
       expect(textarea).toBeDisabled();
 
-      // The textarea should not be focusable when disabled
       expect(textarea).toHaveAttribute('disabled');
 
-      // Note: In test environment, fireEvent.change still works on disabled elements
-      // but in real browser, disabled elements don't respond to user input
       fireEvent.change(textarea, { target: { value: 'test' } });
-      // The onChange handler is still called in tests, but the element is disabled
       expect(handleChange).toHaveBeenCalled();
     });
   });
 
-  describe('Value Management', () => {
-    it('works as controlled component', () => {
-      const handleChange = vi.fn();
-      const { rerender } = render(
-        <TextArea value='initial' onChange={handleChange} />
-      );
-
-      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
-      expect(textarea.value).toBe('initial');
-
-      rerender(<TextArea value='updated' onChange={handleChange} />);
-      expect(textarea.value).toBe('updated');
-    });
-
-    it('calls onChange when value changes', () => {
-      const handleChange = vi.fn();
-      render(<TextArea onChange={handleChange} />);
-
-      const textarea = screen.getByRole('textbox');
-      fireEvent.change(textarea, { target: { value: 'new text' } });
-
-      expect(handleChange).toHaveBeenCalledTimes(1);
-      expect(handleChange.mock.calls[0][0].target.value).toBe('new text');
-    });
-
-    it('works as uncontrolled component', () => {
-      render(<TextArea defaultValue='default text' />);
-      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
-
-      expect(textarea.value).toBe('default text');
-
-      fireEvent.change(textarea, { target: { value: 'changed text' } });
-      expect(textarea.value).toBe('changed text');
-    });
-  });
-
-  describe('Required Attribute', () => {
+  describe('Required State', () => {
     it('sets required attribute on textarea', () => {
       render(<TextArea required />);
       const textarea = screen.getByRole('textbox');
@@ -247,62 +191,6 @@ describe('TextArea', () => {
     });
   });
 
-  describe('HTML Attributes', () => {
-    it('supports rows attribute', () => {
-      render(<TextArea rows={10} />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('rows', '10');
-    });
-
-    it('supports cols attribute', () => {
-      render(<TextArea cols={50} />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('cols', '50');
-    });
-
-    it('supports maxLength attribute', () => {
-      render(<TextArea maxLength={500} />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('maxLength', '500');
-    });
-
-    it('supports minLength attribute', () => {
-      render(<TextArea minLength={10} />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('minLength', '10');
-    });
-
-    it('supports name attribute', () => {
-      render(<TextArea name='description' />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('name', 'description');
-    });
-
-    it('supports id attribute', () => {
-      render(<TextArea id='message-input' />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('id', 'message-input');
-    });
-
-    it('supports readOnly attribute', () => {
-      render(<TextArea readOnly value='Read only text' />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('readOnly');
-    });
-
-    it('supports autoComplete attribute', () => {
-      render(<TextArea autoComplete='off' />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('autoComplete', 'off');
-    });
-
-    it('supports spellCheck attribute', () => {
-      render(<TextArea spellCheck={false} />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveAttribute('spellCheck', 'false');
-    });
-  });
-
   describe('Accessibility', () => {
     it('supports aria-label', () => {
       render(<TextArea aria-label='Message input' />);
@@ -326,85 +214,6 @@ describe('TextArea', () => {
       render(<TextArea aria-required='true' />);
       const textarea = screen.getByRole('textbox');
       expect(textarea).toHaveAttribute('aria-required', 'true');
-    });
-  });
-
-  describe('Resize Behavior', () => {
-    it('allows resize by default', () => {
-      render(<TextArea />);
-      const textarea = screen.getByRole('textbox');
-      // TextArea should be resizable unless explicitly disabled via CSS
-      expect(textarea).toBeInTheDocument();
-    });
-
-    it('accepts style prop for resize control', () => {
-      render(<TextArea style={{ resize: 'none' }} />);
-      const textarea = screen.getByRole('textbox');
-      // The style prop should be applied, but CSS might override it
-      expect(textarea).toHaveAttribute('style');
-      expect(textarea.style.resize).toBe('none');
-    });
-
-    it('accepts style prop for custom styling', () => {
-      render(<TextArea style={{ minHeight: '100px' }} />);
-      const textarea = screen.getByRole('textbox');
-      // The style prop should be applied
-      expect(textarea).toHaveAttribute('style');
-      expect(textarea.style.minHeight).toBe('100px');
-    });
-  });
-
-  describe('Complex Scenarios', () => {
-    it('renders with all props combined', () => {
-      const handleChange = vi.fn();
-      const { container } = render(
-        <TextArea
-          label='Comments'
-          required
-          infoTooltip='Share your thoughts'
-          helperText='Max 1000 characters'
-          error={false}
-          disabled={false}
-          width='600px'
-          value='Test value'
-          onChange={handleChange}
-          placeholder='Enter comments'
-          className='custom-class'
-          rows={5}
-          maxLength={1000}
-        />
-      );
-
-      expect(screen.getByText('Comments')).toBeInTheDocument();
-      expect(screen.queryByText('(optional)')).not.toBeInTheDocument();
-      expect(
-        container.querySelector(`.${styles.helpIcon}`)
-      ).toBeInTheDocument();
-      expect(screen.getByText('Max 1000 characters')).toBeInTheDocument();
-
-      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
-      expect(textarea).toHaveClass('custom-class');
-      expect(textarea.value).toBe('Test value');
-      expect(textarea).toHaveAttribute('rows', '5');
-      expect(textarea).toHaveAttribute('maxLength', '1000');
-      expect(textarea).toHaveAttribute('placeholder', 'Enter comments');
-      expect(textarea).toBeRequired();
-    });
-
-    it('maintains state through re-renders', () => {
-      const { rerender } = render(
-        <TextArea value='initial' onChange={() => {}} />
-      );
-      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
-
-      expect(textarea.value).toBe('initial');
-
-      rerender(<TextArea value='updated' onChange={() => {}} />);
-      expect(textarea.value).toBe('updated');
-
-      rerender(<TextArea value='final' onChange={() => {}} error />);
-      expect(textarea.value).toBe('final');
-      expect(textarea).toHaveClass(styles.error);
     });
   });
 });

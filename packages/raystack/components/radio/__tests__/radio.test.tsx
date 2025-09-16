@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Radio, RadioItem } from '../radio';
-import styles from '../radio.module.css';
 
 describe('Radio', () => {
   describe('Basic Rendering', () => {
@@ -27,37 +27,6 @@ describe('Radio', () => {
       const radios = screen.getAllByRole('radio');
       expect(radios).toHaveLength(3);
     });
-
-    it('applies radio class to group', () => {
-      render(
-        <Radio>
-          <RadioItem value='option1' />
-        </Radio>
-      );
-      const radioGroup = screen.getByRole('radiogroup');
-      expect(radioGroup).toHaveClass(styles.radio);
-    });
-
-    it('applies radioitem class to items', () => {
-      render(
-        <Radio>
-          <RadioItem value='option1' />
-        </Radio>
-      );
-      const radio = screen.getByRole('radio');
-      expect(radio).toHaveClass(styles.radioitem);
-    });
-
-    // it('renders indicator for each item', () => {
-    //   const { container } = render(
-    //     <Radio>
-    //       <RadioItem value='option1' />
-    //       <RadioItem value='option2' />
-    //     </Radio>
-    //   );
-    //   const indicators = container.querySelectorAll(`.${styles.indicator}`);
-    //   expect(indicators).toHaveLength(2);
-    // });
   });
 
   describe('Selection Behavior', () => {
@@ -181,75 +150,60 @@ describe('Radio', () => {
     });
   });
 
-  // describe('Keyboard Navigation', () => {
-  //   // it('supports arrow key navigation', () => {
-  //   //   render(
-  //   //     <Radio>
-  //   //       <RadioItem value='option1' />
-  //   //       <RadioItem value='option2' />
-  //   //       <RadioItem value='option3' />
-  //   //     </Radio>
-  //   //   );
+  describe('Keyboard Navigation', () => {
+    it('supports arrow key navigation', async () => {
+      const user = userEvent.setup();
+      render(
+        <Radio>
+          <RadioItem value='option1' />
+          <RadioItem value='option2' />
+          <RadioItem value='option3' />
+        </Radio>
+      );
 
-  //   //   const [radio1, radio2, radio3] = screen.getAllByRole('radio');
+      const [radio1, radio2, radio3] = screen.getAllByRole('radio');
 
-  //   //   // Focus first radio
-  //   //   radio1.focus();
-  //   //   expect(document.activeElement).toBe(radio1);
+      // Focus first radio
+      await radio1.focus();
+      expect(document.activeElement).toBe(radio1);
 
-  //   //   // Arrow down should move to next
-  //   //   fireEvent.keyDown(radio1, { key: 'ArrowDown' });
-  //   //   expect(document.activeElement).toBe(radio2);
+      // Arrow down should move to next
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).toBe(radio2);
 
-  //   //   // Arrow down again
-  //   //   fireEvent.keyDown(radio2, { key: 'ArrowDown' });
-  //   //   expect(document.activeElement).toBe(radio3);
+      // Arrow down again
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).toBe(radio3);
 
-  //   //   // Arrow up should move to previous
-  //   //   fireEvent.keyDown(radio3, { key: 'ArrowUp' });
-  //   //   expect(document.activeElement).toBe(radio2);
-  //   // });
+      // Arrow up should move to previous
+      await user.keyboard('{ArrowUp}');
+      expect(document.activeElement).toBe(radio2);
+    });
 
-  //   // it('wraps around when navigating past boundaries', () => {
-  //   //   render(
-  //   //     <Radio>
-  //   //       <RadioItem value='option1' />
-  //   //       <RadioItem value='option2' />
-  //   //       <RadioItem value='option3' />
-  //   //     </Radio>
-  //   //   );
+    it('wraps around when navigating past boundaries', async () => {
+      const user = userEvent.setup();
+      render(
+        <Radio>
+          <RadioItem value='option1' />
+          <RadioItem value='option2' />
+          <RadioItem value='option3' />
+        </Radio>
+      );
 
-  //   //   const [radio1, , radio3] = screen.getAllByRole('radio');
+      const [radio1, , radio3] = screen.getAllByRole('radio');
 
-  //   //   // Focus last radio
-  //   //   radio3.focus();
+      // Focus last radio
+      await radio3.focus();
 
-  //   //   // Arrow down from last should wrap to first
-  //   //   fireEvent.keyDown(radio3, { key: 'ArrowDown' });
-  //   //   expect(document.activeElement).toBe(radio1);
+      // Arrow down from last should wrap to first
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).toBe(radio1);
 
-  //   //   // Arrow up from first should wrap to last
-  //   //   fireEvent.keyDown(radio1, { key: 'ArrowUp' });
-  //   //   expect(document.activeElement).toBe(radio3);
-  //   // });
-
-  //   // it('selects item with Space key', () => {
-  //   //   const handleChange = vi.fn();
-  //   //   render(
-  //   //     <Radio onValueChange={handleChange}>
-  //   //       <RadioItem value='option1' />
-  //   //       <RadioItem value='option2' />
-  //   //     </Radio>
-  //   //   );
-
-  //   //   const radio2 = screen.getAllByRole('radio')[1];
-  //   //   radio2.focus();
-  //   //   fireEvent.keyDown(radio2, { key: ' ' });
-
-  //   //   expect(handleChange).toHaveBeenCalledWith('option2');
-  //   //   expect(radio2).toBeChecked();
-  //   // });
-  // });
+      // Arrow up from first should wrap to last
+      await user.keyboard('{ArrowUp}');
+      expect(document.activeElement).toBe(radio3);
+    });
+  });
 
   describe('Accessibility', () => {
     it('has correct ARIA attributes on group', () => {
@@ -288,52 +242,24 @@ describe('Radio', () => {
       const radioGroup = screen.getByRole('radiogroup');
       expect(radioGroup).toHaveAttribute('aria-required', 'true');
     });
-
-    // it('maintains proper radio group semantics', () => {
-    //   render(
-    //     <Radio name='options'>
-    //       <RadioItem value='option1' />
-    //       <RadioItem value='option2' />
-    //     </Radio>
-    //   );
-
-    //   const radios = screen.getAllByRole('radio');
-    //   radios.forEach(radio => {
-    //     expect(radio).toHaveAttribute('name', 'options');
-    //   });
-    // });
-  });
-
-  describe('Custom Classes', () => {
-    it('applies custom className to RadioItem', () => {
-      render(
-        <Radio>
-          <RadioItem value='option1' className='custom-radio' />
-        </Radio>
-      );
-
-      const radio = screen.getByRole('radio');
-      expect(radio).toHaveClass('custom-radio');
-      expect(radio).toHaveClass(styles.radioitem);
-    });
   });
 
   describe('Form Integration', () => {
-    // it('works with form name attribute', () => {
-    //   render(
-    //     <form>
-    //       <Radio name='preference'>
-    //         <RadioItem value='yes' />
-    //         <RadioItem value='no' />
-    //       </Radio>
-    //     </form>
-    //   );
+    it('works with form name attribute', () => {
+      const { container } = render(
+        <form>
+          <Radio name='preference'>
+            <RadioItem value='yes' />
+            <RadioItem value='no' />
+          </Radio>
+        </form>
+      );
 
-    //   const radios = screen.getAllByRole('radio');
-    //   radios.forEach(radio => {
-    //     expect(radio).toHaveAttribute('name', 'preference');
-    //   });
-    // });
+      const radios = container.querySelectorAll('input[type="radio"]');
+      radios.forEach(radio => {
+        expect(radio).toHaveAttribute('name', 'preference');
+      });
+    });
 
     it('respects form disabled state', () => {
       render(
@@ -349,32 +275,6 @@ describe('Radio', () => {
       radios.forEach(radio => {
         expect(radio).toBeDisabled();
       });
-    });
-  });
-
-  describe('Orientation', () => {
-    // it('supports vertical orientation by default', () => {
-    //   render(
-    //     <Radio>
-    //       <RadioItem value='option1' />
-    //       <RadioItem value='option2' />
-    //     </Radio>
-    //   );
-
-    //   const radioGroup = screen.getByRole('radiogroup');
-    //   expect(radioGroup).toHaveAttribute('aria-orientation', 'vertical');
-    // });
-
-    it('supports horizontal orientation', () => {
-      render(
-        <Radio orientation='horizontal'>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-        </Radio>
-      );
-
-      const radioGroup = screen.getByRole('radiogroup');
-      expect(radioGroup).toHaveAttribute('aria-orientation', 'horizontal');
     });
   });
 

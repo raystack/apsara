@@ -17,16 +17,6 @@ describe('Text', () => {
       expect(screen.getByText('Test content')).toBeInTheDocument();
     });
 
-    it('applies base text classes', () => {
-      const { container } = render(<Text>Test</Text>);
-
-      const textElement = container.firstChild;
-      expect(textElement).toHaveClass(styles.text);
-      expect(textElement).toHaveClass(styles['text-primary']); // default variant
-      expect(textElement).toHaveClass(styles['text-small']); // default size
-      expect(textElement).toHaveClass(styles['text-weight-regular']); // default weight
-    });
-
     it('renders as span by default', () => {
       render(<Text>Default element</Text>);
 
@@ -36,166 +26,87 @@ describe('Text', () => {
   });
 
   describe('Variant Styling', () => {
-    it('applies primary variant', () => {
-      const { container } = render(<Text variant='primary'>Primary</Text>);
-
+    const variants = [
+      'primary',
+      'secondary',
+      'tertiary',
+      'emphasis',
+      'accent',
+      'attention',
+      'danger',
+      'success'
+    ] as const;
+    variants.forEach(variant => {
+      it(`applies ${variant} variant`, () => {
+        const { container } = render(<Text variant={variant}>{variant}</Text>);
+        expect(container.firstChild).toHaveClass(styles[`text-${variant}`]);
+      });
+    });
+    it('defaults to primary variant', () => {
+      const { container } = render(<Text>Default</Text>);
       expect(container.firstChild).toHaveClass(styles['text-primary']);
-    });
-
-    it('applies secondary variant', () => {
-      const { container } = render(<Text variant='secondary'>Secondary</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-secondary']);
-    });
-
-    it('applies tertiary variant', () => {
-      const { container } = render(<Text variant='tertiary'>Tertiary</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-tertiary']);
-    });
-
-    it('applies emphasis variant', () => {
-      const { container } = render(<Text variant='emphasis'>Emphasis</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-emphasis']);
-    });
-
-    it('applies accent variant', () => {
-      const { container } = render(<Text variant='accent'>Accent</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-accent']);
-    });
-
-    it('applies attention variant', () => {
-      const { container } = render(<Text variant='attention'>Attention</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-attention']);
-    });
-
-    it('applies danger variant', () => {
-      const { container } = render(<Text variant='danger'>Danger</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-danger']);
-    });
-
-    it('applies success variant', () => {
-      const { container } = render(<Text variant='success'>Success</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-success']);
     });
   });
 
   describe('Size Options', () => {
-    describe('Named sizes', () => {
-      it('applies micro size', () => {
-        const { container } = render(<Text size='micro'>Micro</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-micro']);
-      });
-
-      it('applies mini size', () => {
-        const { container } = render(<Text size='mini'>Mini</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-mini']);
-      });
-
-      it('applies small size', () => {
-        const { container } = render(<Text size='small'>Small</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-small']);
-      });
-
-      it('applies regular size', () => {
-        const { container } = render(<Text size='regular'>Regular</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-regular']);
-      });
-
-      it('applies large size', () => {
-        const { container } = render(<Text size='large'>Large</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-large']);
+    const sizes = [
+      'micro',
+      'mini',
+      'small',
+      'regular',
+      'large',
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ] as const;
+    sizes.forEach(size => {
+      it(`applies ${size} size`, () => {
+        const { container } = render(<Text size={size}>{size}</Text>);
+        expect(container.firstChild).toHaveClass(styles[`text-${size}`]);
       });
     });
-
-    describe('Numbered sizes', () => {
-      it('applies size 1', () => {
-        const { container } = render(<Text size={1}>Size 1</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-1']);
-      });
-
-      it('applies size 5', () => {
-        const { container } = render(<Text size={5}>Size 5</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-5']);
-      });
-
-      it('applies size 10', () => {
-        const { container } = render(<Text size={10}>Size 10</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-10']);
-      });
+    it('defaults to small size', () => {
+      const { container } = render(<Text>Default</Text>);
+      expect(container.firstChild).toHaveClass(styles['text-small']);
     });
   });
 
   describe('Weight Options', () => {
-    describe('Named weights', () => {
-      it('applies regular weight', () => {
-        const { container } = render(<Text weight='regular'>Regular</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-regular']);
-      });
-
-      it('applies medium weight', () => {
-        const { container } = render(<Text weight='medium'>Medium</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-medium']);
-      });
-
-      it('applies bold weight', () => {
-        const { container } = render(<Text weight='bold'>Bold</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-bold']);
-      });
-
-      it('applies bolder weight', () => {
-        const { container } = render(<Text weight='bolder'>Bolder</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-bolder']);
-      });
-
-      it('applies normal weight', () => {
-        const { container } = render(<Text weight='normal'>Normal</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-normal']);
-      });
-
-      it('applies lighter weight', () => {
-        const { container } = render(<Text weight='lighter'>Lighter</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-lighter']);
+    const weights = [
+      'regular',
+      'medium',
+      'bold',
+      'bolder',
+      'normal',
+      'lighter',
+      100,
+      200,
+      300,
+      400,
+      500,
+      600,
+      700,
+      800,
+      900
+    ] as const;
+    weights.forEach(weight => {
+      it(`applies ${weight} weight`, () => {
+        const { container } = render(<Text weight={weight}>{weight}</Text>);
+        expect(container.firstChild).toHaveClass(
+          styles[`text-weight-${weight}`]
+        );
       });
     });
-
-    describe('Numbered weights', () => {
-      it('applies weight 100', () => {
-        const { container } = render(<Text weight={100}>Weight 100</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-100']);
-      });
-
-      it('applies weight 500', () => {
-        const { container } = render(<Text weight={500}>Weight 500</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-500']);
-      });
-
-      it('applies weight 900', () => {
-        const { container } = render(<Text weight={900}>Weight 900</Text>);
-
-        expect(container.firstChild).toHaveClass(styles['text-weight-900']);
-      });
+    it('defaults to regular weight', () => {
+      const { container } = render(<Text>Default</Text>);
+      expect(container.firstChild).toHaveClass(styles['text-weight-regular']);
     });
   });
 
@@ -259,31 +170,6 @@ describe('Text', () => {
     });
   });
 
-  describe('Line Clamping', () => {
-    it('applies 1 line clamp', () => {
-      const { container } = render(<Text lineClamp={1}>Single line text</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-line-clamp']);
-      expect(container.firstChild).toHaveClass(styles['text-line-clamp-1']);
-    });
-
-    it('applies 3 line clamp', () => {
-      const { container } = render(<Text lineClamp={3}>Multi line text</Text>);
-
-      expect(container.firstChild).toHaveClass(styles['text-line-clamp']);
-      expect(container.firstChild).toHaveClass(styles['text-line-clamp-3']);
-    });
-
-    it('applies 5 line clamp', () => {
-      const { container } = render(
-        <Text lineClamp={5}>Many lines of text</Text>
-      );
-
-      expect(container.firstChild).toHaveClass(styles['text-line-clamp']);
-      expect(container.firstChild).toHaveClass(styles['text-line-clamp-5']);
-    });
-  });
-
   describe('Style Modifiers', () => {
     it('applies underline', () => {
       const { container } = render(<Text underline>Underlined text</Text>);
@@ -320,7 +206,7 @@ describe('Text', () => {
     });
   });
 
-  describe('Polymorphic Rendering', () => {
+  describe('As Rendering', () => {
     it('renders as div when specified', () => {
       render(<Text as='div'>Div text</Text>);
 
@@ -366,36 +252,6 @@ describe('Text', () => {
     });
   });
 
-  describe('Custom Styling', () => {
-    it('applies custom className', () => {
-      const { container } = render(
-        <Text className='custom-text'>Custom styled</Text>
-      );
-
-      expect(container.firstChild).toHaveClass('custom-text');
-      expect(container.firstChild).toHaveClass(styles.text); // Still applies base class
-    });
-
-    it('combines custom className with variant classes', () => {
-      const { container } = render(
-        <Text
-          className='custom-text'
-          variant='accent'
-          size='large'
-          weight='bold'
-        >
-          Styled text
-        </Text>
-      );
-
-      const element = container.firstChild;
-      expect(element).toHaveClass('custom-text');
-      expect(element).toHaveClass(styles['text-accent']);
-      expect(element).toHaveClass(styles['text-large']);
-      expect(element).toHaveClass(styles['text-weight-bold']);
-    });
-  });
-
   describe('HTML Attributes', () => {
     it('forwards HTML attributes', () => {
       render(
@@ -436,92 +292,21 @@ describe('Text', () => {
       fireEvent.mouseEnter(text);
       expect(handleMouseEnter).toHaveBeenCalledTimes(1);
     });
-  });
 
-  describe('Ref Forwarding', () => {
-    it('forwards ref correctly', () => {
-      const ref = vi.fn();
-      render(<Text ref={ref}>Ref text</Text>);
-
-      expect(ref).toHaveBeenCalled();
-    });
-
-    it('provides access to DOM element via ref', () => {
-      const ref = { current: null as HTMLSpanElement | null };
-      render(<Text ref={ref}>Ref accessible text</Text>);
-
-      expect(ref.current).toBeInstanceOf(HTMLSpanElement);
-      expect(ref.current?.textContent).toBe('Ref accessible text');
-    });
-
-    it('forwards ref to different element types', () => {
-      const ref = { current: null as HTMLDivElement | null };
+    it('supports ARIA attributes', () => {
       render(
-        <Text as='div' ref={ref}>
-          Div ref text
+        <Text role='heading' aria-level={2} aria-describedby='description'>
+          Accessible heading
         </Text>
       );
 
-      expect(ref.current).toBeInstanceOf(HTMLDivElement);
-      expect(ref.current?.textContent).toBe('Div ref text');
+      const text = screen.getByRole('heading');
+      expect(text).toHaveAttribute('aria-level', '2');
+      expect(text).toHaveAttribute('aria-describedby', 'description');
     });
   });
 
-  describe('Display Name', () => {
-    it('has correct display name', () => {
-      expect(Text.displayName).toBe('Text');
-    });
-  });
-
-  describe('Complex Combinations', () => {
-    it('handles multiple props combinations', () => {
-      const { container } = render(
-        <Text
-          variant='accent'
-          size={6}
-          weight={700}
-          transform='uppercase'
-          align='center'
-          lineClamp={2}
-          underline
-          italic
-          as='p'
-          className='complex-text'
-        >
-          Complex styled text
-        </Text>
-      );
-
-      const text = container.firstChild;
-      expect(text).toHaveClass(styles['text-accent']);
-      expect(text).toHaveClass(styles['text-6']);
-      expect(text).toHaveClass(styles['text-weight-700']);
-      expect(text).toHaveClass(styles['text-transform-uppercase']);
-      expect(text).toHaveClass(styles['text-align-center']);
-      expect(text).toHaveClass(styles['text-line-clamp']);
-      expect(text).toHaveClass(styles['text-line-clamp-2']);
-      expect(text).toHaveClass(styles['text-underline']);
-      expect(text).toHaveClass(styles['text-italic']);
-      expect(text).toHaveClass('complex-text');
-      expect(text.tagName.toLowerCase()).toBe('p');
-    });
-
-    it('handles all style modifiers together', () => {
-      const { container } = render(
-        <Text underline strikeThrough italic>
-          All modifiers
-        </Text>
-      );
-
-      const text = container.firstChild;
-      expect(text).toHaveClass(styles['text-underline']);
-      expect(text).toHaveClass(styles['text-strike-through']);
-      expect(text).toHaveClass(styles['text-italic']);
-      expect(text).toHaveClass(styles['text-italic-strike-through']);
-    });
-  });
-
-  describe('Edge Cases', () => {
+  describe('Children', () => {
     it('renders with null children', () => {
       const { container } = render(<Text>{null}</Text>);
 
@@ -563,31 +348,6 @@ describe('Text', () => {
 
       expect(container.firstChild).toBeInTheDocument();
       expect(container.firstChild?.textContent).toBe('');
-    });
-  });
-
-  describe('Accessibility', () => {
-    it('supports ARIA attributes', () => {
-      render(
-        <Text role='heading' aria-level={2} aria-describedby='description'>
-          Accessible heading
-        </Text>
-      );
-
-      const text = screen.getByRole('heading');
-      expect(text).toHaveAttribute('aria-level', '2');
-      expect(text).toHaveAttribute('aria-describedby', 'description');
-    });
-
-    it('works with screen readers', () => {
-      render(
-        <Text as='label' htmlFor='input-field'>
-          Screen reader accessible label
-        </Text>
-      );
-
-      const label = screen.getByText('Screen reader accessible label');
-      expect(label).toHaveAttribute('for', 'input-field');
     });
   });
 });

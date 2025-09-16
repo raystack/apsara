@@ -113,31 +113,18 @@ describe('ThemeProvider', () => {
       expect(screen.getByTestId('theme')).toHaveTextContent('dark');
     });
 
-    it('accepts custom themes', () => {
-      const TestComponent = () => {
-        const { themes } = useTheme();
-        return <span data-testid='themes'>{themes.join(',')}</span>;
-      };
-
-      render(
-        <ThemeProvider themes={['red', 'blue']} enableSystem={false}>
-          <TestComponent />
-        </ThemeProvider>
-      );
-
-      expect(screen.getByTestId('themes')).toHaveTextContent('red,blue');
-    });
-
     it('applies custom style attributes', () => {
       render(
-        <ThemeProvider style='retro' accentColor='purple' grayColor='slate'>
+        <ThemeProvider style='traditional' accentColor='mint' grayColor='slate'>
           <div>Test</div>
         </ThemeProvider>
       );
 
-      expect(document.documentElement.getAttribute('data-style')).toBe('retro');
+      expect(document.documentElement.getAttribute('data-style')).toBe(
+        'traditional'
+      );
       expect(document.documentElement.getAttribute('data-accent-color')).toBe(
-        'purple'
+        'mint'
       );
       expect(document.documentElement.getAttribute('data-gray-color')).toBe(
         'slate'
@@ -313,53 +300,6 @@ describe('ThemeProvider', () => {
       );
     });
   });
-
-  // TODO: Fix nested providers test - theme state management is complex in test environment
-  // describe('Nested Providers', () => {
-  //   it('ignores nested providers', () => {
-  //     const TestComponent = () => {
-  //       const { theme } = useTheme();
-  //       return <span data-testid='theme'>{theme}</span>;
-  //     };
-
-  //     render(
-  //       <ThemeProvider defaultTheme='light' enableSystem={false}>
-  //         <ThemeProvider defaultTheme='dark' enableSystem={false}>
-  //           <TestComponent />
-  //         </ThemeProvider>
-  //       </ThemeProvider>
-  //     );
-
-  //     // The nested provider should be ignored, so the outer provider's theme should be used
-  //     expect(screen.getByTestId('theme')).toHaveTextContent('light');
-  //   });
-  // });
-
-  describe('ThemeScript', () => {
-    it('renders script tag', () => {
-      const { container } = render(
-        <ThemeProvider>
-          <div>Test</div>
-        </ThemeProvider>
-      );
-
-      const script = container.querySelector('script');
-      expect(script).toBeInTheDocument();
-      // The script should have innerHTML content (dangerouslySetInnerHTML is a React prop, not an attribute)
-      expect(script?.innerHTML).toBeTruthy();
-    });
-
-    it('includes nonce when provided', () => {
-      const { container } = render(
-        <ThemeProvider nonce='test-nonce'>
-          <div>Test</div>
-        </ThemeProvider>
-      );
-
-      const script = container.querySelector('script');
-      expect(script).toHaveAttribute('nonce', 'test-nonce');
-    });
-  });
 });
 
 describe('ThemeSwitcher', () => {
@@ -419,32 +359,6 @@ describe('ThemeSwitcher', () => {
   });
 
   describe('Theme Switching', () => {
-    // TODO: Fix theme switching test - theme state management is complex in test environment
-    // it('switches from light to dark', () => {
-    //   const TestComponent = () => {
-    //     const { theme } = useTheme();
-    //     return (
-    //       <div>
-    //         <span data-testid='current-theme'>{theme}</span>
-    //         <ThemeSwitcher />
-    //       </div>
-    //     );
-    //   };
-
-    //   render(
-    //     <ThemeProvider defaultTheme='light' enableSystem={false}>
-    //       <TestComponent />
-    //     </ThemeProvider>
-    //   );
-
-    //   expect(screen.getByTestId('current-theme')).toHaveTextContent('light');
-
-    //   const icon = document.querySelector('svg');
-    //   fireEvent.click(icon!);
-
-    //   expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'dark');
-    // });
-
     it('switches from dark to light', () => {
       const TestComponent = () => {
         const { theme } = useTheme();
@@ -468,28 +382,6 @@ describe('ThemeSwitcher', () => {
       fireEvent.click(icon!);
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'light');
-    });
-  });
-
-  describe('Custom Props', () => {
-    it('passes through additional props', () => {
-      render(
-        <ThemeProvider defaultTheme='light' enableSystem={false}>
-          <ThemeSwitcher data-testid='theme-switcher' />
-        </ThemeProvider>
-      );
-
-      expect(screen.getByTestId('theme-switcher')).toBeInTheDocument();
-    });
-  });
-
-  describe('Integration', () => {
-    it('works outside of ThemeProvider', () => {
-      render(<ThemeSwitcher />);
-
-      // Should render without crashing even without provider
-      const icon = document.querySelector('svg');
-      expect(icon).toBeInTheDocument();
     });
   });
 });

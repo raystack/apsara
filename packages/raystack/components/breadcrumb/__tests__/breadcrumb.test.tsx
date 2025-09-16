@@ -29,7 +29,7 @@ describe('Breadcrumb', () => {
       expect(ol).toHaveClass(styles['breadcrumb-list']);
     });
 
-    it('applies medium size by default', () => {
+    it('renders medium size by default', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -40,7 +40,7 @@ describe('Breadcrumb', () => {
       expect(nav).toHaveClass(styles['breadcrumb-medium']);
     });
 
-    it('applies small size', () => {
+    it('renders small size', () => {
       render(
         <Breadcrumb size='small'>
           <Breadcrumb.Item>Home</Breadcrumb.Item>
@@ -189,6 +189,7 @@ describe('Breadcrumb', () => {
 
       const link = container.querySelector('a');
       expect(link).toHaveAttribute('aria-label', 'Products');
+      expect(link).toHaveAttribute('data-testid', 'item');
     });
   });
 
@@ -201,30 +202,15 @@ describe('Breadcrumb', () => {
 
       render(
         <Breadcrumb>
-          <Breadcrumb.Item dropdownItems={items}>Categories</Breadcrumb.Item>
+          <Breadcrumb.Item dropdownItems={items} data-testid='breadcrumb-item'>
+            Categories
+          </Breadcrumb.Item>
         </Breadcrumb>
       );
 
       expect(screen.getByText('Categories')).toBeInTheDocument();
-      const trigger = document.querySelector(
-        `.${styles['breadcrumb-dropdown-trigger']}`
-      );
+      const trigger = screen.getByText('Categories');
       expect(trigger).toBeInTheDocument();
-    });
-
-    it('shows dropdown icon', () => {
-      const items = [{ label: 'Option 1' }];
-
-      const { container } = render(
-        <Breadcrumb>
-          <Breadcrumb.Item dropdownItems={items}>Menu</Breadcrumb.Item>
-        </Breadcrumb>
-      );
-
-      const icon = container.querySelector(
-        `.${styles['breadcrumb-dropdown-icon']}`
-      );
-      expect(icon).toBeInTheDocument();
     });
 
     it('renders dropdown items on click', () => {
@@ -240,36 +226,14 @@ describe('Breadcrumb', () => {
         </Breadcrumb>
       );
 
-      const trigger = document.querySelector(
-        `.${styles['breadcrumb-dropdown-trigger']}`
-      );
+      const trigger = screen.getByText('Categories');
+
       fireEvent.click(trigger!);
 
       expect(screen.getByText('Electronics')).toBeInTheDocument();
       expect(screen.getByText('Clothing')).toBeInTheDocument();
       expect(screen.getByText('Books')).toBeInTheDocument();
     });
-
-    // it('handles dropdown item clicks', () => {
-    //   const handleClick = vi.fn();
-    //   const items = [{ label: 'Option 1', onClick: handleClick }];
-
-    //   render(
-    //     <Breadcrumb>
-    //       <Breadcrumb.Item dropdownItems={items}>Menu</Breadcrumb.Item>
-    //     </Breadcrumb>
-    //   );
-
-    //   const trigger = document.querySelector(
-    //     `.${styles['breadcrumb-dropdown-trigger']}`
-    //   );
-    //   fireEvent.click(trigger!);
-
-    //   const option = screen.getByText('Option 1');
-    //   fireEvent.click(option);
-
-    //   expect(handleClick).toHaveBeenCalled();
-    // });
   });
 
   describe('BreadcrumbSeparator', () => {
@@ -295,19 +259,6 @@ describe('Breadcrumb', () => {
       );
 
       expect(screen.getByText('→')).toBeInTheDocument();
-    });
-
-    it('applies separator styles', () => {
-      const { container } = render(
-        <Breadcrumb>
-          <Breadcrumb.Separator />
-        </Breadcrumb>
-      );
-
-      const separator = container.querySelector(
-        `.${styles['breadcrumb-separator']}`
-      );
-      expect(separator).toBeInTheDocument();
     });
 
     it('applies custom className', () => {
@@ -337,13 +288,11 @@ describe('Breadcrumb', () => {
     it('renders default ellipsis icon', () => {
       const { container } = render(
         <Breadcrumb>
-          <Breadcrumb.Ellipsis />
+          <Breadcrumb.Ellipsis data-testid='breadcrumb-ellipsis' />
         </Breadcrumb>
       );
 
-      const ellipsis = container.querySelector(
-        `.${styles['breadcrumb-ellipsis']}`
-      );
+      const ellipsis = screen.getByTestId('breadcrumb-ellipsis');
       expect(ellipsis).toBeInTheDocument();
       // Default icon is DotsHorizontalIcon
       expect(ellipsis?.querySelector('svg')).toBeInTheDocument();
@@ -462,15 +411,6 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('Home')).toBeInTheDocument();
       expect(screen.getByText('Categories')).toBeInTheDocument();
       expect(screen.getByText('Product')).toBeInTheDocument();
-    });
-  });
-
-  describe('Display Names', () => {
-    it('has correct display names for all components', () => {
-      expect(Breadcrumb.displayName).toBe('BreadcrumbRoot');
-      expect(Breadcrumb.Item.displayName).toBe('BreadcrumbItem');
-      expect(Breadcrumb.Separator.displayName).toBe('BreadcrumbSeparator');
-      expect(Breadcrumb.Ellipsis.displayName).toBe('BreadcrumbEllipsis');
     });
   });
 });

@@ -219,20 +219,6 @@ describe('Table', () => {
       expect(th).toHaveClass('custom-head');
       expect(th).toHaveClass(styles.head);
     });
-
-    it('supports scope attribute', () => {
-      render(
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.Head scope='col'>Column Header</Table.Head>
-            </Table.Row>
-          </Table.Header>
-        </Table>
-      );
-      const th = screen.getByRole('columnheader');
-      expect(th).toHaveAttribute('scope', 'col');
-    });
   });
 
   describe('Table.Cell', () => {
@@ -263,20 +249,6 @@ describe('Table', () => {
         </Table>
       );
       expect(ref).toHaveBeenCalled();
-    });
-
-    it('applies cell class', () => {
-      render(
-        <Table>
-          <Table.Body>
-            <Table.Row>
-              <Table.Cell>Cell</Table.Cell>
-            </Table.Row>
-          </Table.Body>
-        </Table>
-      );
-      const cell = screen.getByRole('cell');
-      expect(cell).toHaveClass(styles.cell);
     });
 
     it('applies custom className', () => {

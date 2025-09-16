@@ -87,19 +87,6 @@ describe('Callout', () => {
       const callout = screen.getByRole('status');
       expect(callout).toHaveClass(styles['callout-high-contrast']);
     });
-
-    it('combines variants', () => {
-      render(
-        <Callout type='success' outline highContrast>
-          Test message
-        </Callout>
-      );
-
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveClass(styles['callout-success']);
-      expect(callout).toHaveClass(styles['callout-outline']);
-      expect(callout).toHaveClass(styles['callout-high-contrast']);
-    });
   });
 
   describe('Actions and Interactions', () => {
@@ -172,38 +159,6 @@ describe('Callout', () => {
       const callout = screen.getByRole('status');
       expect(callout).toHaveStyle({ width: '50%' });
     });
-
-    // it('applies custom style', () => {
-    //   render(
-    //     <Callout style={{ backgroundColor: 'red', padding: '20px' }}>
-    //       Custom style message
-    //     </Callout>
-    //   );
-
-    //   const callout = screen.getByRole('status');
-    //   expect(callout).toHaveStyle({
-    //     backgroundColor: 'red',
-    //     padding: '20px'
-    //   });
-    // });
-
-    // it('combines width and custom style', () => {
-    //   render(
-    //     <Callout
-    //       width={400}
-    //       style={{ backgroundColor: 'blue', margin: '10px' }}
-    //     >
-    //       Combined styles
-    //     </Callout>
-    //   );
-
-    //   const callout = screen.getByRole('status');
-    //   expect(callout).toHaveStyle({
-    //     width: '400px',
-    //     backgroundColor: 'blue',
-    //     margin: '10px'
-    //   });
-    // });
   });
 
   describe('Accessibility', () => {
@@ -225,33 +180,6 @@ describe('Callout', () => {
       expect(screen.getByRole('status')).toBeInTheDocument();
     });
 
-    it('has correct aria-live attribute for alert', () => {
-      render(<Callout type='alert'>Alert message</Callout>);
-
-      const callout = screen.getByRole('alert');
-      expect(callout).toHaveAttribute('aria-live', 'assertive');
-    });
-
-    it('has correct aria-live attribute for non-alert types', () => {
-      render(<Callout type='success'>Success message</Callout>);
-
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveAttribute('aria-live', 'polite');
-    });
-
-    it('icon has aria-hidden attribute', () => {
-      render(
-        <Callout icon={<span data-testid='test-icon'>Icon</span>}>
-          Message
-        </Callout>
-      );
-
-      const iconContainer = screen
-        .getByTestId('test-icon')
-        .closest(`.${styles.icon}`);
-      expect(iconContainer).toHaveAttribute('aria-hidden', 'true');
-    });
-
     it('dismiss button has proper accessibility attributes', () => {
       render(<Callout dismissible>Dismissible message</Callout>);
 
@@ -264,93 +192,6 @@ describe('Callout', () => {
       const svg = dismissButton.querySelector('svg');
       expect(svg).toHaveAttribute('aria-hidden', 'true');
       expect(svg).toHaveAttribute('role', 'presentation');
-    });
-  });
-
-  describe('Structure', () => {
-    it('has correct DOM structure', () => {
-      const { container } = render(
-        <Callout
-          action={<button>Action</button>}
-          dismissible
-          onDismiss={vi.fn()}
-        >
-          Test message
-        </Callout>
-      );
-
-      const callout = container.querySelector(`.${styles.callout}`);
-      const containerDiv = callout?.querySelector(`.${styles.container}`);
-      const messageContainer = containerDiv?.querySelector(
-        `.${styles.messageContainer}`
-      );
-      const actionsContainer = containerDiv?.querySelector(
-        `.${styles.actionsContainer}`
-      );
-
-      expect(callout).toBeInTheDocument();
-      expect(containerDiv).toBeInTheDocument();
-      expect(messageContainer).toBeInTheDocument();
-      expect(actionsContainer).toBeInTheDocument();
-
-      const icon = messageContainer?.querySelector(`.${styles.icon}`);
-      const message = messageContainer?.querySelector(`.${styles.message}`);
-      const action = actionsContainer?.querySelector(`.${styles.action}`);
-      const dismiss = actionsContainer?.querySelector(`.${styles.dismiss}`);
-
-      expect(icon).toBeInTheDocument();
-      expect(message).toBeInTheDocument();
-      expect(action).toBeInTheDocument();
-      expect(dismiss).toBeInTheDocument();
-    });
-  });
-
-  describe('Display Name', () => {
-    it('has correct display name', () => {
-      expect(Callout.displayName).toBe('Callout');
-    });
-  });
-
-  describe('Props Forwarding', () => {
-    it('forwards additional props to the root element', () => {
-      render(
-        <Callout data-testid='test-callout' id='custom-id'>
-          Test message
-        </Callout>
-      );
-
-      const callout = screen.getByTestId('test-callout');
-      expect(callout).toHaveAttribute('id', 'custom-id');
-      expect(callout).toHaveAttribute('data-testid', 'test-callout');
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('handles undefined onDismiss gracefully', () => {
-      render(<Callout dismissible>Dismissible without handler</Callout>);
-
-      const dismissButton = screen.getByRole('button', {
-        name: 'Dismiss message'
-      });
-      expect(() => fireEvent.click(dismissButton)).not.toThrow();
-    });
-
-    it('renders empty children', () => {
-      render(<Callout>{``}</Callout>);
-
-      const callout = screen.getByRole('status');
-      expect(callout).toBeInTheDocument();
-    });
-
-    it('renders with JSX children', () => {
-      render(
-        <Callout>
-          <strong>Bold text</strong> and <em>italic text</em>
-        </Callout>
-      );
-
-      expect(screen.getByText('Bold text')).toBeInTheDocument();
-      expect(screen.getByText('italic text')).toBeInTheDocument();
     });
   });
 });

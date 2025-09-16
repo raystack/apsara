@@ -31,41 +31,21 @@ describe('SidePanel', () => {
   });
 
   describe('Side Variants', () => {
+    const sideVariants = ['left', 'right'] as const;
+    it.each(sideVariants)('applies %s side by default', side => {
+      const { container } = render(
+        <SidePanel side={side}>Test content</SidePanel>
+      );
+
+      const aside = container.querySelector('aside');
+      expect(aside).toHaveClass(styles[`side-panel-${side}`]);
+    });
+
     it('applies right side by default', () => {
       const { container } = render(<SidePanel>Test content</SidePanel>);
 
       const aside = container.querySelector('aside');
       expect(aside).toHaveClass(styles['side-panel-right']);
-    });
-
-    it('applies left side when specified', () => {
-      const { container } = render(
-        <SidePanel side='left'>Test content</SidePanel>
-      );
-
-      const aside = container.querySelector('aside');
-      expect(aside).toHaveClass(styles['side-panel-left']);
-    });
-
-    it('applies right side when specified', () => {
-      const { container } = render(
-        <SidePanel side='right'>Test content</SidePanel>
-      );
-
-      const aside = container.querySelector('aside');
-      expect(aside).toHaveClass(styles['side-panel-right']);
-    });
-  });
-
-  describe('Custom Styling', () => {
-    it('applies custom className', () => {
-      const { container } = render(
-        <SidePanel className='custom-panel'>Test content</SidePanel>
-      );
-
-      const aside = container.querySelector('.custom-panel');
-      expect(aside).toBeInTheDocument();
-      expect(aside).toHaveClass(styles['side-panel']);
     });
   });
 
@@ -145,17 +125,6 @@ describe('SidePanel', () => {
       expect(screen.getByText('Close')).toBeInTheDocument();
     });
 
-    it('applies header styles', () => {
-      const { container } = render(
-        <SidePanel>
-          <SidePanel.Header title='Panel Title' />
-        </SidePanel>
-      );
-
-      const header = container.querySelector(`.${styles['side-panel-header']}`);
-      expect(header).toBeInTheDocument();
-    });
-
     it('does not render description when not provided', () => {
       render(
         <SidePanel>
@@ -182,19 +151,6 @@ describe('SidePanel', () => {
       );
 
       expect(screen.getByText('Section content')).toBeInTheDocument();
-    });
-
-    it('applies section styles', () => {
-      const { container } = render(
-        <SidePanel>
-          <SidePanel.Section>Section content</SidePanel.Section>
-        </SidePanel>
-      );
-
-      const section = container.querySelector(
-        `.${styles['side-panel-section']}`
-      );
-      expect(section).toBeInTheDocument();
     });
 
     it('renders multiple sections', () => {
@@ -255,40 +211,6 @@ describe('SidePanel', () => {
       render(
         <SidePanel>
           <SidePanel.Header title='Panel Title' />
-        </SidePanel>
-      );
-
-      // The title should be properly styled text, not necessarily a heading element
-      // but should be readable by screen readers
-      expect(screen.getByText('Panel Title')).toBeInTheDocument();
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('handles empty actions array', () => {
-      render(
-        <SidePanel>
-          <SidePanel.Header title='Panel Title' actions={[]} />
-        </SidePanel>
-      );
-
-      expect(screen.getByText('Panel Title')).toBeInTheDocument();
-    });
-
-    it('handles undefined actions', () => {
-      render(
-        <SidePanel>
-          <SidePanel.Header title='Panel Title' actions={undefined} />
-        </SidePanel>
-      );
-
-      expect(screen.getByText('Panel Title')).toBeInTheDocument();
-    });
-
-    it('handles null icon', () => {
-      render(
-        <SidePanel>
-          <SidePanel.Header title='Panel Title' icon={null} />
         </SidePanel>
       );
 

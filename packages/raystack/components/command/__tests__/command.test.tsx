@@ -69,25 +69,6 @@ describe('Command', () => {
       // Search icon should be present (it's rendered by the Command.Input component)
       expect(screen.getByRole('combobox')).toBeInTheDocument();
     });
-
-    // TODO: Fix input change test - CMDK scrollIntoView behavior in test environment
-    // it('handles input changes', () => {
-    //   const handleValueChange = vi.fn();
-    //   render(
-    //     <Command onValueChange={handleValueChange}>
-    //       <Command.Input placeholder="Search..." />
-    //       <Command.List>
-    //         <Command.Item>Item 1</Command.Item>
-    //         <Command.Item>Item 2</Command.Item>
-    //       </Command.List>
-    //     </Command>
-    //   );
-
-    //   const input = screen.getByPlaceholderText('Search...');
-    //   fireEvent.change(input, { target: { value: 'test' } });
-
-    //   expect(handleValueChange).toHaveBeenCalledWith('test');
-    // });
   });
 
   describe('Command List and Items', () => {
@@ -105,23 +86,6 @@ describe('Command', () => {
       expect(screen.getByText('First Item')).toBeInTheDocument();
       expect(screen.getByText('Second Item')).toBeInTheDocument();
     });
-
-    // TODO: Fix item selection test - CMDK scrollIntoView behavior in test environment
-    // it('handles item selection', () => {
-    //   const handleSelect = vi.fn();
-    //   render(
-    //     <Command onSelect={handleSelect}>
-    //       <Command.Input placeholder="Search..." />
-    //       <Command.List>
-    //         <Command.Item value="item1">Item 1</Command.Item>
-    //         <Command.Item value="item2">Item 2</Command.Item>
-    //       </Command.List>
-    //     </Command>
-    //   );
-
-    //   fireEvent.click(screen.getByText('Item 1'));
-    //   expect(handleSelect).toHaveBeenCalledWith('item1');
-    // });
 
     it('applies item classes', () => {
       render(
@@ -166,31 +130,4 @@ describe('Command', () => {
       expect(empty).toHaveClass('custom-empty');
     });
   });
-
-  describe('Ref Forwarding', () => {
-    it('forwards ref correctly', () => {
-      const ref = vi.fn();
-      render(
-        <Command ref={ref}>
-          <Command.Input placeholder='Search...' />
-          <Command.List>
-            <Command.Item>Item 1</Command.Item>
-          </Command.List>
-        </Command>
-      );
-
-      expect(ref).toHaveBeenCalled();
-    });
-  });
-
-  // TODO: Fix complex command tests - CMDK behavior in test environment
-  // The following tests are commented out because they involve complex interactions
-  // and DOM manipulation that don't work reliably in test environments:
-  // - Command groups
-  // - Command separators
-  // - Command shortcuts
-  // - Command dialog
-  // - Keyboard navigation
-  // - Complex event handling
-  // - Accessibility features
 });

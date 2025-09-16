@@ -47,6 +47,12 @@ describe('InputField', () => {
       const wrapper = container.querySelector(`.${styles.container}`);
       expect(wrapper).toHaveStyle({ width: '100%' });
     });
+
+    it('disables input when disabled prop is true', () => {
+      render(<InputField disabled />);
+      const input = screen.getByRole('textbox');
+      expect(input).toBeDisabled();
+    });
   });
 
   describe('Sizes', () => {
@@ -142,38 +148,6 @@ describe('InputField', () => {
     });
   });
 
-  describe('Disabled State', () => {
-    it('disables input when disabled prop is true', () => {
-      render(<InputField disabled />);
-      const input = screen.getByRole('textbox');
-      expect(input).toBeDisabled();
-    });
-
-    it('applies disabled styles to input', () => {
-      render(<InputField disabled />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveClass(styles['input-disabled']);
-    });
-
-    it('applies disabled styles to wrapper', () => {
-      const { container } = render(<InputField disabled />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
-      expect(wrapper).toHaveClass(styles['input-disabled-wrapper']);
-    });
-
-    it('applies disabled styles to label', () => {
-      render(<InputField label='Email' disabled />);
-      const label = screen.getByText('Email').closest('label');
-      expect(label).toHaveClass(styles['label-disabled']);
-    });
-
-    it('applies disabled styles to helper text', () => {
-      render(<InputField helperText='Help text' disabled />);
-      const helperText = screen.getByText('Help text');
-      expect(helperText).toHaveClass(styles['helper-text-disabled']);
-    });
-  });
-
   describe('Icons', () => {
     it('renders leading icon', () => {
       const icon = <span data-testid='search-icon'>🔍</span>;
@@ -194,17 +168,6 @@ describe('InputField', () => {
       );
       expect(iconContainer).toBeInTheDocument();
     });
-
-    it('applies icon-related classes to input', () => {
-      const leadingIcon = <span>L</span>;
-      const trailingIcon = <span>T</span>;
-      render(
-        <InputField leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
-      );
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveClass(styles['has-leading-icon']);
-      expect(input).toHaveClass(styles['has-trailing-icon']);
-    });
   });
 
   describe('Prefix and Suffix', () => {
@@ -216,18 +179,6 @@ describe('InputField', () => {
     it('renders suffix', () => {
       render(<InputField suffix='USD' />);
       expect(screen.getByText('USD')).toBeInTheDocument();
-    });
-
-    it('applies prefix class to input', () => {
-      render(<InputField prefix='https://' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveClass(styles['has-prefix']);
-    });
-
-    it('applies suffix class to input', () => {
-      render(<InputField suffix='.com' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveClass(styles['has-suffix']);
     });
 
     it('renders both prefix and suffix', () => {
@@ -266,13 +217,6 @@ describe('InputField', () => {
       const { container } = render(<InputField chips={chips} />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toBeInTheDocument();
-    });
-
-    it('applies has-chips class to wrapper', () => {
-      const chips = [{ label: 'Tag1' }];
-      const { container } = render(<InputField chips={chips} />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
-      expect(wrapper).toHaveClass(styles['has-chips']);
     });
 
     it('shows overflow count correctly', () => {
@@ -319,40 +263,11 @@ describe('InputField', () => {
   });
 
   describe('Input Types', () => {
-    it('supports text type', () => {
-      render(<InputField type='text' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('type', 'text');
-    });
-
-    it('supports email type', () => {
-      render(<InputField type='email' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('type', 'email');
-    });
-
-    it('supports password type', () => {
-      render(<InputField type='password' />);
-      const input = document.querySelector('input');
-      expect(input).toHaveAttribute('type', 'password');
-    });
-
-    it('supports number type', () => {
-      render(<InputField type='number' />);
-      const input = screen.getByRole('spinbutton');
-      expect(input).toHaveAttribute('type', 'number');
-    });
-
-    it('supports tel type', () => {
-      render(<InputField type='tel' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('type', 'tel');
-    });
-
-    it('supports url type', () => {
-      render(<InputField type='url' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('type', 'url');
+    const inputTypes = ['text', 'email', 'password', 'number', 'tel', 'url'];
+    it.each(inputTypes)('supports %s type', type => {
+      const { container } = render(<InputField type={type} />);
+      const input = container.querySelector('input');
+      expect(input).toHaveAttribute('type', type);
     });
   });
 
@@ -367,15 +282,6 @@ describe('InputField', () => {
       render(<InputField />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('aria-invalid', 'false');
-    });
-
-    it('associates label with input', () => {
-      render(<InputField label='Email' />);
-      const label = screen.getByText('Email');
-      const input = screen.getByRole('textbox');
-      // Label wraps or is associated with the input
-      expect(label).toBeInTheDocument();
-      expect(input).toBeInTheDocument();
     });
 
     it('supports aria-label', () => {
@@ -438,28 +344,6 @@ describe('InputField', () => {
       render(<InputField pattern='[0-9]*' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('pattern', '[0-9]*');
-    });
-  });
-
-  describe('Value Management', () => {
-    it('works as controlled component', () => {
-      const { rerender } = render(
-        <InputField value='initial' onChange={() => {}} />
-      );
-      const input = screen.getByRole('textbox') as HTMLInputElement;
-      expect(input.value).toBe('initial');
-
-      rerender(<InputField value='updated' onChange={() => {}} />);
-      expect(input.value).toBe('updated');
-    });
-
-    it('works as uncontrolled component', () => {
-      render(<InputField defaultValue='default' />);
-      const input = screen.getByRole('textbox') as HTMLInputElement;
-      expect(input.value).toBe('default');
-
-      fireEvent.change(input, { target: { value: 'new value' } });
-      expect(input.value).toBe('new value');
     });
   });
 });

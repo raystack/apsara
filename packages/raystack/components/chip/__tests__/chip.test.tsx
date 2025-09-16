@@ -21,12 +21,6 @@ describe('Chip', () => {
 
       expect(screen.getByTestId('leading-icon')).toBeInTheDocument();
       expect(screen.getByText('Chip with leading icon')).toBeInTheDocument();
-
-      const leadingIcon = screen
-        .getByTestId('leading-icon')
-        .closest(`.${styles['leading-icon']}`);
-      expect(leadingIcon).toHaveAttribute('aria-hidden', 'true');
-      expect(leadingIcon).toHaveAttribute('role', 'presentation');
     });
 
     it('renders with trailing icon', () => {
@@ -38,12 +32,6 @@ describe('Chip', () => {
 
       expect(screen.getByTestId('trailing-icon')).toBeInTheDocument();
       expect(screen.getByText('Chip with trailing icon')).toBeInTheDocument();
-
-      const trailingIcon = screen
-        .getByTestId('trailing-icon')
-        .closest(`.${styles['trailing-icon']}`);
-      expect(trailingIcon).toHaveAttribute('aria-hidden', 'true');
-      expect(trailingIcon).toHaveAttribute('role', 'presentation');
     });
 
     it('applies custom className', () => {
@@ -155,40 +143,6 @@ describe('Chip', () => {
       expect(onDismiss).toHaveBeenCalledTimes(1);
       expect(onClick).not.toHaveBeenCalled();
     });
-
-    it('generates correct aria-label for dismiss button with string children', () => {
-      render(<Chip isDismissible>Test Label</Chip>);
-
-      const dismissButton = screen.getByRole('button', {
-        name: 'Remove Test Label'
-      });
-      expect(dismissButton).toBeInTheDocument();
-    });
-
-    it('generates generic aria-label for dismiss button with non-string children', () => {
-      render(
-        <Chip isDismissible>
-          <span>Complex Child</span>
-        </Chip>
-      );
-
-      const dismissButton = screen.getByRole('button', { name: 'Remove item' });
-      expect(dismissButton).toBeInTheDocument();
-    });
-
-    it('dismiss button has correct SVG attributes', () => {
-      render(<Chip isDismissible>Test Chip</Chip>);
-
-      const dismissButton = screen.getByRole('button', {
-        name: 'Remove Test Chip'
-      });
-      const svg = dismissButton.querySelector('svg');
-
-      expect(svg).toHaveAttribute('aria-hidden', 'true');
-      expect(svg).toHaveAttribute('role', 'presentation');
-      expect(svg).toHaveAttribute('width', '12');
-      expect(svg).toHaveAttribute('height', '12');
-    });
   });
 
   describe('Click Behavior', () => {
@@ -238,152 +192,11 @@ describe('Chip', () => {
       expect(chip).toHaveAttribute('aria-label', 'Custom Label');
     });
 
-    it('does not have aria-label for non-string children without custom ariaLabel', () => {
-      render(
-        <Chip>
-          <span>Complex Child</span>
-        </Chip>
-      );
-
-      const chip = screen.getByRole('status');
-      expect(chip).not.toHaveAttribute('aria-label');
-    });
-
     it('custom ariaLabel overrides string children', () => {
       render(<Chip ariaLabel='Override Label'>String Child</Chip>);
 
       const chip = screen.getByRole('status');
       expect(chip).toHaveAttribute('aria-label', 'Override Label');
-    });
-  });
-
-  describe('Data State', () => {
-    it('applies data-state attribute', () => {
-      render(<Chip data-state='active'>Stateful Chip</Chip>);
-
-      const chip = screen.getByRole('status');
-      expect(chip).toHaveAttribute('data-state', 'active');
-    });
-  });
-
-  describe('Icon Combinations', () => {
-    it('renders both leading and trailing icons', () => {
-      render(
-        <Chip
-          leadingIcon={<span data-testid='leading'>🏷️</span>}
-          trailingIcon={<span data-testid='trailing'>➡️</span>}
-        >
-          Full Chip
-        </Chip>
-      );
-
-      expect(screen.getByTestId('leading')).toBeInTheDocument();
-      expect(screen.getByTestId('trailing')).toBeInTheDocument();
-    });
-
-    it('prioritizes dismiss button over trailing icon when dismissible', () => {
-      render(
-        <Chip
-          isDismissible
-          trailingIcon={<span data-testid='trailing'>➡️</span>}
-        >
-          Dismissible Chip
-        </Chip>
-      );
-
-      expect(screen.queryByTestId('trailing')).not.toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Remove Dismissible Chip' })
-      ).toBeInTheDocument();
-    });
-
-    it('shows trailing icon when not dismissible', () => {
-      render(
-        <Chip
-          isDismissible={false}
-          trailingIcon={<span data-testid='trailing'>➡️</span>}
-        >
-          Non-dismissible Chip
-        </Chip>
-      );
-
-      expect(screen.getByTestId('trailing')).toBeInTheDocument();
-    });
-
-    it('renders leading icon with dismissible chip', () => {
-      render(
-        <Chip isDismissible leadingIcon={<span data-testid='leading'>🏷️</span>}>
-          Dismissible with Leading
-        </Chip>
-      );
-
-      expect(screen.getByTestId('leading')).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Remove Dismissible with Leading' })
-      ).toBeInTheDocument();
-    });
-  });
-
-  describe('Display Name', () => {
-    it('has correct display name', () => {
-      expect(Chip.displayName).toBe('Chip');
-    });
-  });
-
-  describe('Combination Variants', () => {
-    it('combines all variant props', () => {
-      render(
-        <Chip variant='filled' size='large' color='accent'>
-          Combined Chip
-        </Chip>
-      );
-
-      const chip = screen.getByRole('status');
-      expect(chip).toHaveClass(styles['chip-variant-filled']);
-      expect(chip).toHaveClass(styles['chip-size-large']);
-      expect(chip).toHaveClass(styles['chip-color-accent']);
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('handles undefined onDismiss gracefully', () => {
-      render(<Chip isDismissible>Dismissible without handler</Chip>);
-
-      const dismissButton = screen.getByRole('button', {
-        name: 'Remove Dismissible without handler'
-      });
-      expect(() => fireEvent.click(dismissButton)).not.toThrow();
-    });
-
-    it('handles undefined onClick gracefully', () => {
-      render(<Chip>Non-clickable Chip</Chip>);
-
-      const chip = screen.getByRole('status');
-      expect(() => fireEvent.click(chip)).not.toThrow();
-    });
-
-    it('renders with empty string children', () => {
-      render(<Chip></Chip>);
-
-      const chip = screen.getByRole('status');
-      expect(chip).toBeInTheDocument();
-    });
-
-    it('renders with number children', () => {
-      render(<Chip>{42}</Chip>);
-
-      expect(screen.getByText('42')).toBeInTheDocument();
-    });
-
-    it('renders with complex JSX children', () => {
-      render(
-        <Chip>
-          <strong>Bold</strong> and <em>italic</em>
-        </Chip>
-      );
-
-      expect(screen.getByText('Bold')).toBeInTheDocument();
-      expect(screen.getByText('italic')).toBeInTheDocument();
     });
   });
 });

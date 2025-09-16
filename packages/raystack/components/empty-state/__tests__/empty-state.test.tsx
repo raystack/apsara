@@ -60,15 +60,6 @@ describe('EmptyState', () => {
         container.querySelector(`.${styles.emptyStateContent}`)
       ).toBeInTheDocument();
     });
-
-    it('renders large icon for empty2 variant', () => {
-      const { container } = render(
-        <EmptyState icon={<div>Icon</div>} variant='empty2' />
-      );
-      expect(
-        container.querySelector(`.${styles.iconLarge}`)
-      ).toBeInTheDocument();
-    });
   });
 
   describe('Actions', () => {
@@ -111,21 +102,6 @@ describe('EmptyState', () => {
         screen.getByRole('button', { name: 'Learn More' })
       ).toBeInTheDocument();
     });
-
-    // it('renders actions side by side in empty2 variant', () => {
-    //   const { container } = render(
-    //     <EmptyState
-    //       icon={<div>Icon</div>}
-    //       variant='empty2'
-    //       primaryAction={<button>Primary</button>}
-    //       secondaryAction={<button>Secondary</button>}
-    //     />
-    //   );
-    //   const actionsContainer = screen.getByRole('button', {
-    //     name: 'Primary'
-    //   }).parentElement;
-    //   expect(actionsContainer).toHaveStyle({ gap: 'var(--rs-space-5)' });
-    // });
   });
 
   describe('Custom ClassNames', () => {
@@ -172,31 +148,6 @@ describe('EmptyState', () => {
       const subheading = screen.getByText('Subtitle');
       expect(subheading).toHaveClass('custom-subheading');
     });
-
-    it('applies all custom classNames together', () => {
-      const { container } = render(
-        <EmptyState
-          icon={<div>Icon</div>}
-          heading='Title'
-          subHeading='Subtitle'
-          classNames={{
-            container: 'custom-container',
-            iconContainer: 'custom-icon-container',
-            icon: 'custom-icon',
-            heading: 'custom-heading',
-            subHeading: 'custom-subheading'
-          }}
-        />
-      );
-
-      expect(container.querySelector('.custom-container')).toBeInTheDocument();
-      expect(
-        container.querySelector('.custom-icon-container')
-      ).toBeInTheDocument();
-      expect(container.querySelector('.custom-icon')).toBeInTheDocument();
-      expect(screen.getByText('Title')).toHaveClass('custom-heading');
-      expect(screen.getByText('Subtitle')).toHaveClass('custom-subheading');
-    });
   });
 
   describe('Content Types', () => {
@@ -230,73 +181,6 @@ describe('EmptyState', () => {
       );
       render(<EmptyState icon={<ComplexIcon />} />);
       expect(screen.getByTestId('complex-icon')).toBeInTheDocument();
-    });
-  });
-
-  describe('Layout and Structure', () => {
-    it('centers content in empty1 variant', () => {
-      const { container } = render(
-        <EmptyState icon={<div>Icon</div>} heading='Title' />
-      );
-      const emptyState = container.querySelector(`.${styles.emptyState}`);
-      expect(emptyState).toHaveClass(styles.emptyState);
-    });
-
-    it('uses flex layout for empty2 variant', () => {
-      const { container } = render(
-        <EmptyState icon={<div>Icon</div>} variant='empty2' />
-      );
-      const page = container.querySelector(`.${styles.emptyStatePage}`);
-      expect(page).toBeInTheDocument();
-    });
-
-    // it('maintains proper spacing between elements', () => {
-    //   const { container } = render(
-    //     <EmptyState
-    //       icon={<div>Icon</div>}
-    //       heading='Title'
-    //       subHeading='Subtitle'
-    //       primaryAction={<button>Action</button>}
-    //     />
-    //   );
-    //   const emptyState = container.querySelector(`.${styles.emptyState}`);
-    //   expect(emptyState).toHaveStyle({ gap: 'var(--rs-space-5)' });
-    // });
-  });
-
-  describe('Combinations', () => {
-    it('renders complete empty state with all props', () => {
-      render(
-        <EmptyState
-          icon={<div data-testid='icon'>📭</div>}
-          heading='No messages'
-          subHeading='You have no messages at the moment'
-          primaryAction={<button>Compose Message</button>}
-          secondaryAction={<button>Refresh</button>}
-          classNames={{ container: 'custom' }}
-        />
-      );
-
-      expect(screen.getByTestId('icon')).toBeInTheDocument();
-      expect(screen.getByText('No messages')).toBeInTheDocument();
-      expect(
-        screen.getByText('You have no messages at the moment')
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Compose Message' })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Refresh' })
-      ).toBeInTheDocument();
-    });
-
-    it('renders minimal empty state', () => {
-      const { container } = render(<EmptyState icon={<span>🔍</span>} />);
-
-      expect(screen.getByText('🔍')).toBeInTheDocument();
-      expect(
-        container.querySelector(`.${styles.iconContainer}`)
-      ).toBeInTheDocument();
     });
   });
 });

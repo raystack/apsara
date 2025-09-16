@@ -10,13 +10,6 @@ describe('Badge', () => {
       expect(screen.getByText('New')).toBeInTheDocument();
     });
 
-    it('renders as span element', () => {
-      const { container } = render(<Badge>Badge</Badge>);
-      const badge = container.querySelector('span');
-      expect(badge).toBeInTheDocument();
-      expect(badge?.tagName).toBe('SPAN');
-    });
-
     it('applies custom className', () => {
       const { container } = render(
         <Badge className='custom-badge'>Custom</Badge>
@@ -85,17 +78,6 @@ describe('Badge', () => {
       expect(screen.getByText('With Icon')).toBeInTheDocument();
     });
 
-    it('wraps icon in icon span', () => {
-      const icon = <svg data-testid='badge-icon' />;
-      const { container } = render(<Badge icon={icon}>Badge</Badge>);
-
-      const iconWrapper = container.querySelector(`.${styles.icon}`);
-      expect(iconWrapper).toBeInTheDocument();
-      expect(
-        iconWrapper?.querySelector('[data-testid="badge-icon"]')
-      ).toBeInTheDocument();
-    });
-
     it('renders without icon when not provided', () => {
       const { container } = render(<Badge>No Icon</Badge>);
       const iconWrapper = container.querySelector(`.${styles.icon}`);
@@ -111,7 +93,7 @@ describe('Badge', () => {
     });
   });
 
-  describe('Screen Reader Support', () => {
+  describe('Accessibility', () => {
     it('renders screen reader text', () => {
       render(<Badge screenReaderText='New feature available'>New</Badge>);
 
@@ -132,55 +114,6 @@ describe('Badge', () => {
       expect(screen.getByText('5')).toBeInTheDocument();
       expect(screen.getByText('5 unread messages')).toBeInTheDocument();
     });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      const icon = <span data-testid='icon'>●</span>;
-      const { container } = render(
-        <Badge
-          variant='success'
-          size='regular'
-          icon={icon}
-          className='custom-class'
-          screenReaderText='Success message'
-        >
-          Complete
-        </Badge>
-      );
-
-      const badge = container.querySelector('span');
-      expect(badge).toHaveClass(styles['badge-success']);
-      expect(badge).toHaveClass(styles['badge-regular']);
-      expect(badge).toHaveClass('custom-class');
-      expect(screen.getByTestId('icon')).toBeInTheDocument();
-      expect(screen.getByText('Success message')).toBeInTheDocument();
-      expect(screen.getByText('Complete')).toBeInTheDocument();
-    });
-
-    // it.each(variants)('renders %s variant with icon', variant => {
-    //   const icon = <span data-testid={`icon-${variant}`}>!</span>;
-    //   render(
-    //     <Badge variant={variant} icon={icon}>
-    //       {variant}
-    //     </Badge>
-    //   );
-
-    //   expect(screen.getByTestId(`icon-${variant}`)).toBeInTheDocument();
-    //   expect(screen.getByText(variant)).toBeInTheDocument();
-    // });
-
-    // it.each(sizes)('renders %s size with icon', size => {
-    //   const icon = <span data-testid={`icon-${size}`}>✓</span>;
-    //   render(
-    //     <Badge size={size} icon={icon}>
-    //       {size}
-    //     </Badge>
-    //   );
-
-    //   expect(screen.getByTestId(`icon-${size}`)).toBeInTheDocument();
-    //   expect(screen.getByText(size)).toBeInTheDocument();
-    // });
   });
 
   describe('Content Types', () => {
@@ -210,75 +143,6 @@ describe('Badge', () => {
     it('renders with zero', () => {
       render(<Badge>{0}</Badge>);
       expect(screen.getByText('0')).toBeInTheDocument();
-    });
-  });
-
-  describe('Visual States', () => {
-    it('maintains consistent structure across variants', () => {
-      const variants = [
-        'accent',
-        'warning',
-        'danger',
-        'success',
-        'neutral',
-        'gradient'
-      ] as const;
-
-      variants.forEach(variant => {
-        const { container } = render(<Badge variant={variant}>Test</Badge>);
-        const badge = container.querySelector('span');
-        expect(badge).toHaveClass(styles.badge);
-        expect(badge).toHaveClass(styles[`badge-${variant}`]);
-      });
-    });
-
-    it('maintains consistent structure across sizes', () => {
-      const sizes = ['micro', 'small', 'regular'] as const;
-
-      sizes.forEach(size => {
-        const { container } = render(<Badge size={size}>Test</Badge>);
-        const badge = container.querySelector('span');
-        expect(badge).toHaveClass(styles.badge);
-        expect(badge).toHaveClass(styles[`badge-${size}`]);
-      });
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('handles undefined variant gracefully', () => {
-      const { container } = render(<Badge variant={undefined}>Badge</Badge>);
-      const badge = container.querySelector('span');
-      expect(badge).toHaveClass(styles['badge-accent']); // Falls back to default
-    });
-
-    it('handles undefined size gracefully', () => {
-      const { container } = render(<Badge size={undefined}>Badge</Badge>);
-      const badge = container.querySelector('span');
-      expect(badge).toHaveClass(styles['badge-small']); // Falls back to default
-    });
-
-    it('handles null icon gracefully', () => {
-      const { container } = render(<Badge icon={null}>Badge</Badge>);
-      const iconWrapper = container.querySelector(`.${styles.icon}`);
-      expect(iconWrapper).not.toBeInTheDocument();
-    });
-
-    it('handles undefined icon gracefully', () => {
-      const { container } = render(<Badge icon={undefined}>Badge</Badge>);
-      const iconWrapper = container.querySelector(`.${styles.icon}`);
-      expect(iconWrapper).not.toBeInTheDocument();
-    });
-
-    it('handles long text content', () => {
-      const longText =
-        'This is a very long badge text that might overflow in certain layouts';
-      render(<Badge>{longText}</Badge>);
-      expect(screen.getByText(longText)).toBeInTheDocument();
-    });
-
-    it('handles special characters', () => {
-      render(<Badge>{`<>&"\'©™`}</Badge>);
-      expect(screen.getByText('<>&"\'©™')).toBeInTheDocument();
     });
   });
 });

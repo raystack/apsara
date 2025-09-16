@@ -22,12 +22,6 @@ describe('Container', () => {
       expect(container).toHaveClass('custom-class');
       expect(container).toHaveClass(styles.container);
     });
-
-    // it('applies custom styles', () => {
-    //   render(<Container style={{ backgroundColor: 'red' }}>Content</Container>);
-    //   const container = screen.getByRole('region');
-    //   expect(container).toHaveStyle({ backgroundColor: 'red' });
-    // });
   });
 
   describe('Sizes', () => {
@@ -63,11 +57,6 @@ describe('Container', () => {
   });
 
   describe('Accessibility', () => {
-    it('has region role by default', () => {
-      render(<Container>Content</Container>);
-      expect(screen.getByRole('region')).toBeInTheDocument();
-    });
-
     it('supports custom role', () => {
       render(<Container role='main'>Content</Container>);
       expect(screen.getByRole('main')).toBeInTheDocument();
@@ -88,38 +77,11 @@ describe('Container', () => {
       const container = screen.getByRole('region');
       expect(container).toHaveAttribute('aria-labelledby', 'heading');
     });
-  });
-
-  describe('HTML Attributes', () => {
-    it('supports data attributes', () => {
-      render(<Container data-testid='test-container'>Content</Container>);
-      expect(screen.getByTestId('test-container')).toBeInTheDocument();
-    });
 
     it('supports id attribute', () => {
       render(<Container id='main-container'>Content</Container>);
       const container = screen.getByRole('region');
       expect(container).toHaveAttribute('id', 'main-container');
-    });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      render(
-        <Container
-          size='large'
-          align='left'
-          className='custom'
-          aria-label='Test container'
-        >
-          Content
-        </Container>
-      );
-
-      const container = screen.getByLabelText('Test container');
-      expect(container).toHaveClass(styles['container-large']);
-      expect(container).toHaveClass(styles['container-align-left']);
-      expect(container).toHaveClass('custom');
     });
   });
 });

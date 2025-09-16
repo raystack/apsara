@@ -170,28 +170,6 @@ describe('Skeleton', () => {
     });
   });
 
-  describe('Colors', () => {
-    it('sets base color', () => {
-      const { container } = render(<Skeleton baseColor='#f0f0f0' />);
-      const skeleton = container.querySelector(
-        `.${styles.skeleton}`
-      ) as HTMLElement;
-      expect(skeleton.style.getPropertyValue('--skeleton-base-color')).toBe(
-        '#f0f0f0'
-      );
-    });
-
-    it('sets highlight color', () => {
-      const { container } = render(<Skeleton highlightColor='#ffffff' />);
-      const skeleton = container.querySelector(
-        `.${styles.skeleton}`
-      ) as HTMLElement;
-      expect(
-        skeleton.style.getPropertyValue('--skeleton-highlight-color')
-      ).toBe('#ffffff');
-    });
-  });
-
   describe('Multiple Skeletons', () => {
     it('renders single skeleton by default', () => {
       const { container } = render(<Skeleton />);

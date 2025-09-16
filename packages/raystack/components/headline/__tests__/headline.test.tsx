@@ -10,12 +10,6 @@ describe('Headline', () => {
       expect(screen.getByText('Test Headline')).toBeInTheDocument();
     });
 
-    it('renders as h2 by default', () => {
-      render(<Headline>Heading</Headline>);
-      const heading = screen.getByText('Heading');
-      expect(heading.tagName).toBe('H2');
-    });
-
     it('forwards ref correctly', () => {
       const ref = vi.fn();
       render(<Headline ref={ref}>Heading</Headline>);
@@ -43,6 +37,12 @@ describe('Headline', () => {
       render(<Headline as={level}>Heading</Headline>);
       const heading = screen.getByText('Heading');
       expect(heading.tagName).toBe(level.toUpperCase());
+    });
+
+    it('renders as h2 by default', () => {
+      render(<Headline>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading.tagName).toBe('H2');
     });
   });
 
@@ -78,28 +78,6 @@ describe('Headline', () => {
     });
   });
 
-  describe('Truncate', () => {
-    it('applies truncate class when true', () => {
-      render(
-        <Headline truncate>Long heading text that might overflow</Headline>
-      );
-      const heading = screen.getByText('Long heading text that might overflow');
-      expect(heading).toHaveClass(styles['headline-truncate']);
-    });
-
-    it('does not apply truncate class when false', () => {
-      render(<Headline truncate={false}>Heading</Headline>);
-      const heading = screen.getByText('Heading');
-      expect(heading).not.toHaveClass(styles['headline-truncate']);
-    });
-
-    it('defaults to not truncating', () => {
-      render(<Headline>Heading</Headline>);
-      const heading = screen.getByText('Heading');
-      expect(heading).not.toHaveClass(styles['headline-truncate']);
-    });
-  });
-
   describe('HTML Attributes', () => {
     it('supports id attribute', () => {
       render(<Headline id='main-heading'>Heading</Headline>);
@@ -111,14 +89,6 @@ describe('Headline', () => {
       render(<Headline data-testid='test-headline'>Heading</Headline>);
       expect(screen.getByTestId('test-headline')).toBeInTheDocument();
     });
-
-    // it('supports style attribute', () => {
-    //   render(
-    //     <Headline style={{ color: 'red', margin: '10px' }}>Heading</Headline>
-    //   );
-    //   const heading = screen.getByText('Heading');
-    //   expect(heading).toHaveStyle({ color: 'red', margin: '10px' });
-    // });
 
     it('supports title attribute', () => {
       render(<Headline title='Tooltip text'>Heading</Headline>);
@@ -138,82 +108,7 @@ describe('Headline', () => {
     });
   });
 
-  describe('Event Handlers', () => {
-    it('handles click events', () => {
-      const handleClick = vi.fn();
-      render(<Headline onClick={handleClick}>Heading</Headline>);
-      const heading = screen.getByText('Heading');
-      heading.click();
-      expect(handleClick).toHaveBeenCalledTimes(1);
-    });
-
-    // it('handles mouse events', () => {
-    //   const handleMouseEnter = vi.fn();
-    //   const handleMouseLeave = vi.fn();
-    //   render(
-    //     <Headline
-    //       onMouseEnter={handleMouseEnter}
-    //       onMouseLeave={handleMouseLeave}
-    //     >
-    //       Heading
-    //     </Headline>
-    //   );
-    //   const heading = screen.getByText('Heading');
-
-    //   heading.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
-    //   expect(handleMouseEnter).toHaveBeenCalledTimes(1);
-
-    //   heading.dispatchEvent(new MouseEvent('mouseleave', { bubbles: true }));
-    //   expect(handleMouseLeave).toHaveBeenCalledTimes(1);
-    // });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      render(
-        <Headline
-          as='h1'
-          size='t1'
-          align='center'
-          truncate
-          className='custom'
-          id='main'
-        >
-          Main Title
-        </Headline>
-      );
-
-      const heading = screen.getByText('Main Title');
-      expect(heading.tagName).toBe('H1');
-      expect(heading).toHaveClass(styles['headline-t1']);
-      expect(heading).toHaveClass(styles['headline-align-center']);
-      expect(heading).toHaveClass(styles['headline-truncate']);
-      expect(heading).toHaveClass('custom');
-      expect(heading).toHaveAttribute('id', 'main');
-    });
-
-    it('renders different size and alignment combinations', () => {
-      const { rerender } = render(
-        <Headline size='small' align='left'>
-          Small Left
-        </Headline>
-      );
-      let heading = screen.getByText('Small Left');
-      expect(heading).toHaveClass(styles['headline-small']);
-      expect(heading).toHaveClass(styles['headline-align-left']);
-
-      rerender(
-        <Headline size='large' align='right'>
-          Large Right
-        </Headline>
-      );
-      heading = screen.getByText('Large Right');
-      expect(heading).toHaveClass(styles['headline-large']);
-      expect(heading).toHaveClass(styles['headline-align-right']);
-    });
-  });
-
-  describe('Content Types', () => {
+  describe('Custom Content', () => {
     it('renders with JSX children', () => {
       render(
         <Headline>

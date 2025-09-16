@@ -1,141 +1,185 @@
-import { act, render } from '@testing-library/react';
-import React from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ThemeProvider } from '../../theme-provider';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { ToastContainer, toast } from '../toast';
-
-// Mock the theme provider hook
-vi.mock('../../theme-provider', () => ({
-  useTheme: () => ({
-    resolvedTheme: 'light'
-  }),
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => (
-    <div>{children}</div>
-  )
-}));
 
 describe('Toast', () => {
   beforeEach(() => {
-    // Clear any existing toasts before each test
-    document.body.innerHTML = '';
-  });
-
-  afterEach(() => {
-    // Clean up any remaining toasts
-    vi.clearAllTimers();
-    document.body.innerHTML = '';
+    render(<ToastContainer />);
   });
 
   describe('ToastContainer', () => {
     it('renders ToastContainer component', () => {
-      render(
-        <ThemeProvider>
-          <ToastContainer />
-        </ThemeProvider>
-      );
-
-      // ToastContainer renders the underlying Toaster component
-      // The Toaster component may not be immediately visible in test environment
-      expect(document.body).toBeInTheDocument();
+      expect(screen.getByLabelText('Notifications alt+T')).toBeInTheDocument();
     });
-
-    // TODO: Fix ToastContainer tests - Sonner Toaster component behavior in test environment
-    // The following tests are commented out because Sonner's Toaster component
-    // doesn't render its DOM elements immediately in test environments
   });
 
   describe('Toast Function', () => {
-    beforeEach(() => {
-      render(
-        <ThemeProvider>
-          <ToastContainer />
-        </ThemeProvider>
+    it('shows basic toast message', async () => {
+      toast('Hello World');
+      expect(await screen.findByText('Hello World')).toBeInTheDocument();
+    });
+
+    it('shows JSX content in toast', async () => {
+      const jsxContent = <div data-testid='jsx-content'>JSX Content</div>;
+      toast(jsxContent);
+      expect(await screen.findByTestId('jsx-content')).toBeInTheDocument();
+    });
+
+    const toastTypes = [
+      'success',
+      'error',
+      'warning',
+      'info',
+      'loading'
+    ] as const;
+    toastTypes.forEach(type => {
+      it(`supports ${type} toast`, async () => {
+        toast[type]('Success message');
+        expect(await screen.findByText('Success message')).toBeInTheDocument();
+      });
+    });
+
+    it('supports custom toast with options', async () => {
+      const customOptions = {
+        duration: 5000,
+        description: 'Custom description'
+      };
+
+      toast('Custom toast', customOptions);
+      expect(await screen.findByText('Custom toast')).toBeInTheDocument();
+    });
+
+    it('supports promise-based toast', async () => {
+      const promise = new Promise(resolve => {
+        setTimeout(() => resolve('Promise resolved'), 100);
+      });
+
+      toast.promise(promise, {
+        loading: 'Loading...',
+        success: 'Success!',
+        error: 'Error!'
+      });
+
+      expect(await screen.findByText('Loading...')).toBeInTheDocument();
+
+      await waitFor(
+        () => {
+          expect(screen.getByText('Success!')).toBeInTheDocument();
+        },
+        { timeout: 200 }
       );
     });
 
-    it('shows basic toast message', () => {
-      act(() => {
-        toast('Hello World');
-      });
+    it('supports dismiss functionality', async () => {
+      const toastId = toast('Dismissible toast');
+      expect(await screen.findByText('Dismissible toast')).toBeInTheDocument();
 
-      // Basic toast functionality - the toast may not be immediately visible in test environment
-      expect(document.body).toBeInTheDocument();
+      toast.dismiss(toastId);
+
+      await waitFor(() => {
+        expect(screen.queryByText('Dismissible toast')).not.toBeInTheDocument();
+      });
     });
 
-    it('applies toast wrapper styles', () => {
-      act(() => {
-        toast('Styled message');
-      });
+    it('supports dismissAll functionality', async () => {
+      toast('First toast');
+      toast('Second toast');
 
-      // Toast wrapper styles are applied
-      expect(document.body).toBeInTheDocument();
+      expect(await screen.findByText('First toast')).toBeInTheDocument();
+      expect(await screen.findByText('Second toast')).toBeInTheDocument();
+
+      // Dismiss all toasts by calling dismiss without ID
+      toast.dismiss();
+
+      await waitFor(() => {
+        expect(screen.queryByText('First toast')).not.toBeInTheDocument();
+        expect(screen.queryByText('Second toast')).not.toBeInTheDocument();
+      });
     });
 
-    it('shows JSX content', () => {
-      act(() => {
-        toast(<div>JSX Content</div>);
-      });
+    it('handles multiple toasts simultaneously', async () => {
+      toast('First toast');
+      toast('Second toast');
+      toast('Third toast');
 
-      // JSX content is supported
-      expect(document.body).toBeInTheDocument();
+      expect(await screen.findByText('First toast')).toBeInTheDocument();
+      expect(await screen.findByText('Second toast')).toBeInTheDocument();
+      expect(await screen.findByText('Third toast')).toBeInTheDocument();
     });
 
-    it('supports success toast', () => {
-      act(() => {
-        toast.success('Success message');
+    it('supports custom action buttons', async () => {
+      toast('Toast with action', {
+        action: {
+          label: 'Undo',
+          onClick: () => console.log('Undo clicked')
+        }
       });
 
-      // Success toast variant
-      expect(document.body).toBeInTheDocument();
+      expect(await screen.findByText('Toast with action')).toBeInTheDocument();
+      expect(await screen.findByText('Undo')).toBeInTheDocument();
     });
 
-    it('supports error toast', () => {
-      act(() => {
-        toast.error('Error message');
+    it('supports custom duration', async () => {
+      const shortDuration = 100;
+      toast('Short duration toast', { duration: shortDuration });
+
+      expect(
+        await screen.findByText('Short duration toast')
+      ).toBeInTheDocument();
+
+      await waitFor(
+        () => {
+          expect(
+            screen.queryByText('Short duration toast')
+          ).not.toBeInTheDocument();
+        },
+        { timeout: 500 }
+      );
+    });
+
+    it('supports custom className', async () => {
+      const customClass = 'custom-toast-class';
+      toast('Custom class toast', { className: customClass });
+
+      expect(await screen.findByText('Custom class toast')).toBeInTheDocument();
+    });
+
+    it('supports custom style', async () => {
+      const customStyle = { backgroundColor: 'red' };
+      toast('Custom style toast', { style: customStyle });
+
+      expect(await screen.findByText('Custom style toast')).toBeInTheDocument();
+    });
+
+    it('supports onDismiss callback', async () => {
+      const onDismiss = vi.fn();
+      toast('Callback toast', { onDismiss });
+
+      expect(await screen.findByText('Callback toast')).toBeInTheDocument();
+
+      // Dismiss the toast
+      toast.dismiss();
+
+      await waitFor(() => {
+        expect(onDismiss).toHaveBeenCalled();
+      });
+    });
+
+    it('supports onAutoClose callback', async () => {
+      const onAutoClose = vi.fn();
+      toast('Auto close toast', {
+        duration: 100,
+        onAutoClose
       });
 
-      // Error toast variant
-      expect(document.body).toBeInTheDocument();
+      expect(await screen.findByText('Auto close toast')).toBeInTheDocument();
+
+      await waitFor(
+        () => {
+          expect(onAutoClose).toHaveBeenCalled();
+        },
+        { timeout: 200 }
+      );
     });
-
-    it('supports warning toast', () => {
-      act(() => {
-        toast.warning('Warning message');
-      });
-
-      // Warning toast variant
-      expect(document.body).toBeInTheDocument();
-    });
-
-    it('supports info toast', () => {
-      act(() => {
-        toast.info('Info message');
-      });
-
-      // Info toast variant
-      expect(document.body).toBeInTheDocument();
-    });
-
-    it('supports loading toast', () => {
-      act(() => {
-        toast.loading('Loading message');
-      });
-
-      // Loading toast variant
-      expect(document.body).toBeInTheDocument();
-    });
-
-    // TODO: Fix complex async toast tests - Sonner toast behavior in test environment
-    // The following tests are commented out because they involve complex async operations
-    // and DOM manipulation that don't work reliably in test environments:
-    // - Duration options
-    // - Custom styling
-    // - Action buttons
-    // - Dismissal callbacks
-    // - State management
-    // - Multiple toasts
-    // - Accessibility features
-    // - Error handling
-    // - Performance tests
   });
 });

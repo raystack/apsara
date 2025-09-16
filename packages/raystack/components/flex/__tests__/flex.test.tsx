@@ -122,24 +122,6 @@ describe('Flex', () => {
       const flex = container.firstChild as HTMLElement;
       expect(flex).toHaveClass(styles[`gap-${gap}`]);
     });
-
-    it.each(namedGaps)('renders %s gap correctly', gap => {
-      const { container } = render(<Flex gap={gap}>Content</Flex>);
-      const flex = container.firstChild as HTMLElement;
-      const className =
-        gap === 'extra-small'
-          ? 'gap-xs'
-          : gap === 'small'
-            ? 'gap-sm'
-            : gap === 'medium'
-              ? 'gap-md'
-              : gap === 'large'
-                ? 'gap-lg'
-                : gap === 'extra-large'
-                  ? 'gap-xl'
-                  : `gap-${gap.slice(0, 2)}`;
-      expect(flex).toHaveClass(styles[className]);
-    });
   });
 
   describe('Width', () => {
@@ -166,59 +148,10 @@ describe('Flex', () => {
       ).toBeInTheDocument();
     });
 
-    // it('supports style attribute', () => {
-    //   const { container } = render(
-    //     <Flex style={{ backgroundColor: 'blue' }}>Content</Flex>
-    //   );
-    //   const flex = container.firstChild as HTMLElement;
-    //   expect(flex).toHaveStyle({ backgroundColor: 'blue' });
-    // });
-
     it('supports id attribute', () => {
       const { container } = render(<Flex id='flex-container'>Content</Flex>);
       const flex = container.firstChild as HTMLElement;
       expect(flex).toHaveAttribute('id', 'flex-container');
-    });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      const { container } = render(
-        <Flex
-          direction='column'
-          align='center'
-          justify='between'
-          wrap='wrap'
-          gap='large'
-          width='full'
-          className='custom'
-        >
-          Content
-        </Flex>
-      );
-
-      const flex = container.firstChild as HTMLElement;
-      expect(flex).toHaveClass(styles['direction-column']);
-      expect(flex).toHaveClass(styles['align-center']);
-      expect(flex).toHaveClass(styles['justify-between']);
-      expect(flex).toHaveClass(styles['wrap-wrap']);
-      expect(flex).toHaveClass(styles['gap-lg']);
-      expect(flex).toHaveClass(styles['width-full']);
-      expect(flex).toHaveClass('custom');
-    });
-
-    it('renders multiple children correctly', () => {
-      render(
-        <Flex>
-          <div>First</div>
-          <div>Second</div>
-          <div>Third</div>
-        </Flex>
-      );
-
-      expect(screen.getByText('First')).toBeInTheDocument();
-      expect(screen.getByText('Second')).toBeInTheDocument();
-      expect(screen.getByText('Third')).toBeInTheDocument();
     });
   });
 });

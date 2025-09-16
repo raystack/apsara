@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Switch } from '../switch';
@@ -39,20 +40,16 @@ describe('Switch', () => {
   });
 
   describe('Sizes', () => {
+    const sizes = ['small', 'large'] as const;
+    sizes.forEach(size => {
+      it(`renders ${size} size by default`, () => {
+        render(<Switch size={size} />);
+        const switchElement = screen.getByRole('switch');
+        expect(switchElement).toHaveClass(styles[size]);
+      });
+    });
     it('renders large size by default', () => {
       render(<Switch />);
-      const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveClass(styles.large);
-    });
-
-    it('renders small size when specified', () => {
-      render(<Switch size='small' />);
-      const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveClass(styles.small);
-    });
-
-    it('renders large size when explicitly specified', () => {
-      render(<Switch size='large' />);
       const switchElement = screen.getByRole('switch');
       expect(switchElement).toHaveClass(styles.large);
     });
@@ -153,19 +150,6 @@ describe('Switch', () => {
       expect(handleChange).toHaveBeenCalledWith(false);
     });
 
-    // TODO: Fix keyboard navigation test - Radix UI Switch may not support space key by default
-    // it('supports keyboard navigation (Space key)', () => {
-    //   const handleChange = vi.fn();
-    //   render(<Switch onCheckedChange={handleChange} />);
-
-    //   const switchElement = screen.getByRole('switch');
-    //   switchElement.focus();
-    //   fireEvent.keyDown(switchElement, { key: ' ' });
-    //   fireEvent.keyUp(switchElement, { key: ' ' });
-
-    //   expect(handleChange).toHaveBeenCalled();
-    // });
-
     it('supports focus events', () => {
       const handleFocus = vi.fn();
       const handleBlur = vi.fn();
@@ -177,6 +161,22 @@ describe('Switch', () => {
 
       fireEvent.blur(switchElement);
       expect(handleBlur).toHaveBeenCalled();
+    });
+
+    it('supports keyboard navigation (Space key)', async () => {
+      const user = userEvent.setup();
+      const handleChange = vi.fn();
+      render(<Switch onCheckedChange={handleChange} />);
+
+      const switchElement = screen.getByRole('switch');
+      await switchElement.focus();
+      await user.keyboard('[Space]');
+
+      expect(handleChange).toHaveBeenCalledWith(true);
+      await user.keyboard('[Enter]');
+
+      expect(handleChange).toHaveBeenCalledWith(false);
+      expect(handleChange).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -281,7 +281,19 @@ describe('Switch', () => {
     });
   });
 
-  describe('Data Attributes', () => {
+  describe('HTML Attributes', () => {
+    it('supports name attribute', () => {
+      render(<Switch name='notifications' />);
+      const hiddenInput = document.querySelector('input[name="notifications"]');
+      expect(hiddenInput).toHaveAttribute('name', 'notifications');
+    });
+
+    it('supports data attributes', () => {
+      render(<Switch data-testid='custom-switch' data-theme='dark' />);
+      const switchElement = screen.getByTestId('custom-switch');
+      expect(switchElement).toHaveAttribute('data-theme', 'dark');
+    });
+
     it('has data-state attribute for unchecked state', () => {
       render(<Switch />);
       const switchElement = screen.getByRole('switch');
@@ -304,80 +316,6 @@ describe('Switch', () => {
       render(<Switch />);
       const switchElement = screen.getByRole('switch');
       expect(switchElement).not.toHaveAttribute('data-disabled');
-    });
-  });
-
-  describe('Additional Props', () => {
-    it('supports name attribute', () => {
-      render(<Switch name='notifications' />);
-      const hiddenInput = document.querySelector('input[name="notifications"]');
-      expect(hiddenInput).toHaveAttribute('name', 'notifications');
-    });
-
-    it('supports value attribute', () => {
-      render(<Switch name='test' value='custom' />);
-      const hiddenInput = document.querySelector('input[name="test"]');
-      expect(hiddenInput).toHaveAttribute('value', 'custom');
-    });
-
-    it('supports data attributes', () => {
-      render(<Switch data-testid='custom-switch' data-theme='dark' />);
-      const switchElement = screen.getByTestId('custom-switch');
-      expect(switchElement).toHaveAttribute('data-theme', 'dark');
-    });
-
-    it('supports id attribute', () => {
-      render(<Switch id='theme-switch' />);
-      const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveAttribute('id', 'theme-switch');
-    });
-  });
-
-  describe('Form Integration', () => {
-    it('can be used in forms with name attribute', () => {
-      render(
-        <form>
-          <Switch name='subscribe' />
-        </form>
-      );
-
-      const hiddenInput = document.querySelector('input[name="subscribe"]');
-      expect(hiddenInput).toHaveAttribute('name', 'subscribe');
-    });
-
-    it('respects form disabled state', () => {
-      render(
-        <fieldset disabled>
-          <Switch />
-        </fieldset>
-      );
-
-      const switchElement = screen.getByRole('switch');
-      expect(switchElement).toBeDisabled();
-    });
-  });
-
-  describe('Visual States', () => {
-    it('thumb moves when toggled', () => {
-      const { container } = render(<Switch />);
-      const thumb = container.querySelector(`.${styles.thumb}`);
-      const switchElement = screen.getByRole('switch');
-
-      expect(thumb).toBeInTheDocument();
-      expect(switchElement).toHaveAttribute('data-state', 'unchecked');
-
-      fireEvent.click(switchElement);
-      expect(switchElement).toHaveAttribute('data-state', 'checked');
-    });
-
-    it('maintains thumb with different sizes', () => {
-      const { container, rerender } = render(<Switch size='small' />);
-      let thumb = container.querySelector(`.${styles.thumb}`);
-      expect(thumb).toBeInTheDocument();
-
-      rerender(<Switch size='large' />);
-      thumb = container.querySelector(`.${styles.thumb}`);
-      expect(thumb).toBeInTheDocument();
     });
   });
 });

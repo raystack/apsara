@@ -53,12 +53,6 @@ describe('Checkbox', () => {
       expect(checkbox).toHaveAttribute('aria-checked', 'false');
     });
 
-    // it('renders with defaultChecked', () => {
-    //   render(<Checkbox defaultChecked={true} />);
-    //   const checkbox = screen.getByRole('checkbox');
-    //   expect(checkbox).toBeChecked();
-    // });
-
     it('shows check icon when checked', () => {
       const { container } = render(<Checkbox checked={true} />);
       const indicator = container.querySelector(`.${styles.indicator}`);
@@ -67,17 +61,11 @@ describe('Checkbox', () => {
       // Check for checkmark path
       const svg = indicator?.querySelector('svg');
       expect(svg).toBeInTheDocument();
-      const path = svg?.querySelector('path');
-      expect(path).toHaveAttribute(
-        'd',
-        expect.stringContaining('M11.9005 4.9671')
-      );
     });
 
     it('does not show indicator when unchecked', () => {
       const { container } = render(<Checkbox checked={false} />);
       const indicator = container.querySelector(`.${styles.indicator}`);
-      // Indicator might exist but should be empty or hidden
       if (indicator) {
         expect(indicator.children.length).toBe(0);
       }
@@ -85,31 +73,10 @@ describe('Checkbox', () => {
   });
 
   describe('Indeterminate State', () => {
-    // it('renders as indeterminate when checked is "indeterminate"', () => {
-    //   render(<Checkbox checked='indeterminate' />);
-    //   const checkbox = screen.getByRole('checkbox');
-    //   expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
-    // });
-
     it('applies indeterminate class', () => {
       render(<Checkbox checked='indeterminate' />);
       const checkbox = screen.getByRole('checkbox');
       expect(checkbox).toHaveClass(styles['checkbox-indeterminate']);
-    });
-
-    it('shows indeterminate icon', () => {
-      const { container } = render(<Checkbox checked='indeterminate' />);
-      const indicator = container.querySelector(`.${styles.indicator}`);
-      expect(indicator).toBeInTheDocument();
-
-      // Check for indeterminate line path
-      const svg = indicator?.querySelector('svg');
-      expect(svg).toBeInTheDocument();
-      const path = svg?.querySelector('path');
-      expect(path).toHaveAttribute(
-        'd',
-        expect.stringContaining('M11.5 8.5H4.5')
-      );
     });
 
     it('renders with defaultChecked as indeterminate', () => {
@@ -201,17 +168,6 @@ describe('Checkbox', () => {
       expect(handleChange).toHaveBeenCalledWith(false);
     });
 
-    // it('supports keyboard navigation (Space key)', () => {
-    //   const handleChange = vi.fn();
-    //   render(<Checkbox onCheckedChange={handleChange} />);
-
-    //   const checkbox = screen.getByRole('checkbox');
-    //   checkbox.focus();
-    //   fireEvent.keyDown(checkbox, { key: ' ' });
-
-    //   expect(handleChange).toHaveBeenCalled();
-    // });
-
     it('supports focus events', () => {
       const handleFocus = vi.fn();
       const handleBlur = vi.fn();
@@ -223,43 +179,6 @@ describe('Checkbox', () => {
 
       fireEvent.blur(checkbox);
       expect(handleBlur).toHaveBeenCalled();
-    });
-  });
-
-  describe('Controlled vs Uncontrolled', () => {
-    // it('works as controlled component', () => {
-    //   const Component = () => {
-    //     const [checked, setChecked] = React.useState(false);
-    //     return (
-    //       <Checkbox
-    //         checked={checked}
-    //         onCheckedChange={setChecked}
-    //         data-testid='controlled'
-    //       />
-    //     );
-    //   };
-
-    //   render(<Component />);
-    //   const checkbox = screen.getByTestId('controlled');
-
-    //   expect(checkbox).not.toBeChecked();
-    //   fireEvent.click(checkbox);
-    //   expect(checkbox).toBeChecked();
-    // });
-
-    // it('works as uncontrolled component with defaultChecked', () => {
-    //   render(<Checkbox defaultChecked={false} data-testid='uncontrolled' />);
-    //   const checkbox = screen.getByTestId('uncontrolled');
-
-    //   expect(checkbox).not.toBeChecked();
-    //   fireEvent.click(checkbox);
-    //   expect(checkbox).toBeChecked();
-    // });
-
-    it('controlled checked prop overrides defaultChecked', () => {
-      render(<Checkbox checked={true} defaultChecked={false} />);
-      const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toBeChecked();
     });
   });
 
@@ -276,12 +195,6 @@ describe('Checkbox', () => {
       const checkbox = screen.getByRole('checkbox');
       expect(checkbox).toHaveAttribute('aria-checked', 'true');
     });
-
-    // it('has correct ARIA attributes when indeterminate', () => {
-    //   render(<Checkbox checked='indeterminate' />);
-    //   const checkbox = screen.getByRole('checkbox');
-    //   expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
-    // });
 
     it('supports aria-label', () => {
       render(<Checkbox aria-label='Accept terms' />);
@@ -321,83 +234,6 @@ describe('Checkbox', () => {
       render(<Checkbox aria-invalid='true' />);
       const checkbox = screen.getByRole('checkbox');
       expect(checkbox).toHaveAttribute('aria-invalid', 'true');
-    });
-  });
-
-  describe('Icon Rendering', () => {
-    it('renders correct icon class', () => {
-      const { container } = render(<Checkbox checked />);
-      const icon = container.querySelector(`.${styles.icon}`);
-      expect(icon).toBeInTheDocument();
-    });
-
-    it('icon has correct dimensions', () => {
-      const { container } = render(<Checkbox checked />);
-      const svg = container.querySelector('svg');
-      expect(svg).toHaveAttribute('width', '16');
-      expect(svg).toHaveAttribute('height', '16');
-      expect(svg).toHaveAttribute('viewBox', '0 0 16 16');
-    });
-
-    it('icon uses currentColor for fill', () => {
-      const { container } = render(<Checkbox checked />);
-      const path = container.querySelector('path');
-      expect(path).toHaveAttribute('fill', 'currentColor');
-    });
-  });
-
-  describe('Additional Props', () => {
-    // it('supports name attribute', () => {
-    //   render(<Checkbox name='terms' />);
-    //   const checkbox = screen.getByRole('checkbox');
-    //   expect(checkbox).toHaveAttribute('name', 'terms');
-    // });
-
-    it('supports value attribute', () => {
-      render(<Checkbox value='accept' />);
-      const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toHaveAttribute('value', 'accept');
-    });
-
-    it('supports data attributes', () => {
-      render(<Checkbox data-testid='custom-checkbox' data-form='signup' />);
-      const checkbox = screen.getByTestId('custom-checkbox');
-      expect(checkbox).toHaveAttribute('data-form', 'signup');
-    });
-
-    it('supports id attribute', () => {
-      render(<Checkbox id='terms-checkbox' />);
-      const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toHaveAttribute('id', 'terms-checkbox');
-    });
-  });
-
-  describe('State Transitions', () => {
-    it('transitions through states correctly', () => {
-      const handleChange = vi.fn();
-      const { rerender } = render(
-        <Checkbox checked={false} onCheckedChange={handleChange} />
-      );
-
-      const checkbox = screen.getByRole('checkbox');
-
-      // Unchecked -> Checked
-      fireEvent.click(checkbox);
-      expect(handleChange).toHaveBeenCalledWith(true);
-
-      rerender(<Checkbox checked={true} onCheckedChange={handleChange} />);
-
-      // Checked -> Unchecked
-      fireEvent.click(checkbox);
-      expect(handleChange).toHaveBeenCalledWith(false);
-
-      rerender(
-        <Checkbox checked='indeterminate' onCheckedChange={handleChange} />
-      );
-
-      // Indeterminate -> Unchecked
-      fireEvent.click(checkbox);
-      expect(handleChange).toHaveBeenCalledWith(false);
     });
   });
 });

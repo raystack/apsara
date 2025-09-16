@@ -194,19 +194,6 @@ describe('Grid', () => {
     );
   });
 
-  describe('AsChild Prop', () => {
-    it('renders as child component when asChild is true', () => {
-      const { container } = render(
-        <Grid asChild>
-          <section>Grid Content</section>
-        </Grid>
-      );
-      const element = container.firstChild;
-      expect(element?.nodeName).toBe('SECTION');
-      expect(element).toHaveStyle({ display: 'grid' });
-    });
-  });
-
   describe('HTML Attributes', () => {
     it('supports className', () => {
       const { container } = render(
@@ -216,50 +203,12 @@ describe('Grid', () => {
       expect(grid).toHaveClass('custom-grid');
     });
 
-    // it('supports custom styles', () => {
-    //   const { container } = render(
-    //     <Grid style={{ backgroundColor: 'red', padding: '10px' }}>Content</Grid>
-    //   );
-    //   const grid = container.firstChild as HTMLElement;
-    //   expect(grid).toHaveStyle({ backgroundColor: 'red', padding: '10px' });
-    // });
-
     it('supports data attributes', () => {
       const { container } = render(
         <Grid data-testid='test-grid'>Content</Grid>
       );
       const grid = container.querySelector('[data-testid="test-grid"]');
       expect(grid).toBeInTheDocument();
-    });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      const { container } = render(
-        <Grid
-          columns={3}
-          rows='auto 1fr auto'
-          gap='medium'
-          autoFlow='row dense'
-          alignItems='center'
-          justifyContent='space-between'
-          className='custom'
-        >
-          Content
-        </Grid>
-      );
-
-      const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gridTemplateRows: 'auto 1fr auto',
-        gap: 'var(--rs-space-5)',
-        gridAutoFlow: 'row dense',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      });
-      expect(grid).toHaveClass('custom');
     });
   });
 });

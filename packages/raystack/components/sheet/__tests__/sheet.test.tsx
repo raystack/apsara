@@ -1,349 +1,334 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { Button } from '~/components/button';
-import { Sheet } from '../sheet';
+import { Sheet, SheetProps } from '../sheet';
 import styles from '../sheet.module.css';
 
+const TRIGGER_TEXT = 'Open Sheet';
+const SHEET_TITLE = 'Test Sheet';
+const SHEET_CONTENT = 'This is test sheet content';
+const SHEET_DESCRIPTION = 'This is test sheet description';
+
+const BasicSheet = ({
+  canClose = false,
+  ...props
+}: SheetProps & { canClose?: boolean }) => (
+  <Sheet {...props}>
+    <Sheet.Trigger asChild>
+      <Button>{TRIGGER_TEXT}</Button>
+    </Sheet.Trigger>
+    <Sheet.Content close={canClose}>
+      <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+      <Sheet.Description>{SHEET_DESCRIPTION}</Sheet.Description>
+      {SHEET_CONTENT}
+    </Sheet.Content>
+  </Sheet>
+);
+
+async function renderAndOpenSheet(SheetElement: React.ReactElement) {
+  fireEvent.click(render(SheetElement).getByText(TRIGGER_TEXT));
+}
+
 describe('Sheet', () => {
-  describe('Rendering', () => {
-    it('renders sheet trigger', () => {
-      render(
-        <Sheet>
-          <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-          <Sheet.Content>
-            <Sheet.Title>Sheet Title</Sheet.Title>
-            <Sheet.Description>Sheet Description</Sheet.Description>
-            Content goes here
-          </Sheet.Content>
-        </Sheet>
-      );
-
-      expect(screen.getByText('Open Sheet')).toBeInTheDocument();
+  describe('Basic Rendering', () => {
+    it('renders trigger button', () => {
+      render(<BasicSheet />);
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      expect(trigger).toBeInTheDocument();
     });
 
-    it('opens sheet when trigger is clicked', () => {
-      render(
-        <Sheet>
-          <Sheet.Trigger asChild>
-            <Button>Open Sheet</Button>
-          </Sheet.Trigger>
-          <Sheet.Content data-testid='sheet-content' />
-        </Sheet>
-      );
-
-      const trigger = screen.getByText('Open Sheet');
-      fireEvent.click(trigger);
-
-      const content = screen.getByTestId('sheet-content');
-      expect(content).toBeInTheDocument();
+    it('does not show sheet content initially', () => {
+      render(<BasicSheet />);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_TITLE)).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_DESCRIPTION)).not.toBeInTheDocument();
     });
 
-    it('renders sheet title, description and content', () => {
-      render(
-        <Sheet open>
-          <Sheet.Content>
-            <Sheet.Title>Test Sheet</Sheet.Title>
-            <Sheet.Description>This is a test sheet</Sheet.Description>
-            Sheet content
-          </Sheet.Content>
-        </Sheet>
-      );
+    it('shows sheet when trigger is clicked', async () => {
+      await renderAndOpenSheet(<BasicSheet />);
 
-      expect(screen.getByText('Test Sheet')).toBeInTheDocument();
-      expect(screen.getByText('This is a test sheet')).toBeInTheDocument();
-      expect(screen.getByText('Sheet content')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          screen.getByRole('dialog', { hidden: true })
+        ).toBeInTheDocument();
+        expect(screen.getByText(SHEET_TITLE)).toBeInTheDocument();
+        expect(screen.getByText(SHEET_DESCRIPTION)).toBeInTheDocument();
+      });
+    });
+
+    it('renders in portal', async () => {
+      await renderAndOpenSheet(<BasicSheet />);
+
+      await waitFor(() => {
+        const sheet = screen.getByRole('dialog', { hidden: true });
+        expect(sheet.closest('body')).toBe(document.body);
+      });
+    });
+  });
+
+  describe('Overlay', () => {
+    it('renders overlay', async () => {
+      await renderAndOpenSheet(<BasicSheet />);
+
+      await waitFor(() => {
+        const overlay = document.querySelector(`.${styles.overlay}`);
+        expect(overlay).toBeInTheDocument();
+        expect(overlay).toHaveAttribute('aria-hidden', 'true');
+        expect(overlay).toHaveAttribute('role', 'presentation');
+      });
     });
   });
 
   describe('Sheet Positioning', () => {
-    it('applies default right side positioning', () => {
+    it('applies default right side positioning', async () => {
+      await renderAndOpenSheet(<BasicSheet />);
+
+      await waitFor(() => {
+        const content = screen.getByRole('dialog', { hidden: true });
+        expect(content).toHaveClass(styles['sheetContent-right']);
+      });
+    });
+
+    it('applies left side positioning', async () => {
+      const user = userEvent.setup();
       render(
-        <Sheet open>
-          <Sheet.Content data-testid='sheet-content'>
-            Test content
+        <Sheet>
+          <Sheet.Trigger asChild>
+            <Button>{TRIGGER_TEXT}</Button>
+          </Sheet.Trigger>
+          <Sheet.Content side='left'>
+            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            {SHEET_CONTENT}
           </Sheet.Content>
         </Sheet>
       );
 
-      const content = screen.getByTestId('sheet-content');
-      expect(content).toBeInTheDocument();
-      expect(content).toHaveClass(styles['sheetContent-right']);
+      await user.click(screen.getByText(TRIGGER_TEXT));
+
+      await waitFor(() => {
+        const content = screen.getByRole('dialog', { hidden: true });
+        expect(content).toHaveClass(styles['sheetContent-left']);
+      });
+    });
+
+    it('applies top side positioning', async () => {
+      const user = userEvent.setup();
+      render(
+        <Sheet>
+          <Sheet.Trigger asChild>
+            <Button>{TRIGGER_TEXT}</Button>
+          </Sheet.Trigger>
+          <Sheet.Content side='top'>
+            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            {SHEET_CONTENT}
+          </Sheet.Content>
+        </Sheet>
+      );
+
+      await user.click(screen.getByText(TRIGGER_TEXT));
+
+      await waitFor(() => {
+        const content = screen.getByRole('dialog', { hidden: true });
+        expect(content).toHaveClass(styles['sheetContent-top']);
+      });
+    });
+
+    it('applies bottom side positioning', async () => {
+      const user = userEvent.setup();
+      render(
+        <Sheet>
+          <Sheet.Trigger asChild>
+            <Button>{TRIGGER_TEXT}</Button>
+          </Sheet.Trigger>
+          <Sheet.Content side='bottom'>
+            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            {SHEET_CONTENT}
+          </Sheet.Content>
+        </Sheet>
+      );
+
+      await user.click(screen.getByText(TRIGGER_TEXT));
+
+      await waitFor(() => {
+        const content = screen.getByRole('dialog', { hidden: true });
+        expect(content).toHaveClass(styles['sheetContent-bottom']);
+      });
+    });
+
+    it('applies custom className', async () => {
+      const user = userEvent.setup();
+      render(
+        <Sheet>
+          <Sheet.Trigger asChild>
+            <Button>{TRIGGER_TEXT}</Button>
+          </Sheet.Trigger>
+          <Sheet.Content className='custom-sheet'>
+            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            {SHEET_CONTENT}
+          </Sheet.Content>
+        </Sheet>
+      );
+
+      await user.click(screen.getByText(TRIGGER_TEXT));
+
+      await waitFor(() => {
+        const content = screen.getByRole('dialog', { hidden: true });
+        expect(content).toHaveClass('custom-sheet');
+        expect(content).toHaveClass(styles.sheetContent);
+      });
     });
   });
 
-  //   // it('applies left side positioning', () => {
-  //   //   const { container } = render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content side='left'>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+  describe('Close Behavior', () => {
+    it('renders close button when close prop is true', async () => {
+      await renderAndOpenSheet(<BasicSheet canClose />);
 
-  //   //   const content = container.querySelector(`.${styles.sheetContent}`);
-  //   //   expect(content).toHaveClass(styles['sheetContent-left']);
-  //   // });
+      expect(screen.getByLabelText('Close')).toBeInTheDocument();
+    });
 
-  //   // it('applies top side positioning', () => {
-  //   //   const { container } = render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content side='top'>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+    it('does not render close button when close prop is false', async () => {
+      await renderAndOpenSheet(<BasicSheet canClose={false} />);
 
-  //   //   const content = container.querySelector(`.${styles.sheetContent}`);
-  //   //   expect(content).toHaveClass(styles['sheetContent-top']);
-  //   // });
+      await waitFor(() => {
+        expect(screen.queryByLabelText('Close')).not.toBeInTheDocument();
+      });
+    });
 
-  //   // it('applies bottom side positioning', () => {
-  //   //   const { container } = render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content side='bottom'>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+    it('closes sheet when close button is clicked', async () => {
+      const user = userEvent.setup();
 
-  //   //   const content = container.querySelector(`.${styles.sheetContent}`);
-  //   //   expect(content).toHaveClass(styles['sheetContent-bottom']);
-  //   // });
+      await renderAndOpenSheet(<BasicSheet canClose />);
 
-  //   // it('applies custom className', () => {
-  //   //   const { container } = render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content className='custom-sheet'>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      await user.click(screen.getByLabelText('Close'));
 
-  //   //   const content = container.querySelector('.custom-sheet');
-  //   //   expect(content).toBeInTheDocument();
-  //   //   expect(content).toHaveClass(styles.sheetContent);
-  //   // });
-  // });
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_TITLE)).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_DESCRIPTION)).not.toBeInTheDocument();
+    });
 
-  // describe('Close Button', () => {
-  //   // it('renders close button when close prop is true', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content close>
-  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
-  //   //         Test content
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+    it('closes on escape key', async () => {
+      const user = userEvent.setup();
+      await renderAndOpenSheet(<BasicSheet />);
 
-  //   //   expect(screen.getByLabelText('Close sheet')).toBeInTheDocument();
-  //   // });
+      await user.keyboard('{Escape}');
 
-  //   // it('does not render close button when close prop is false', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content close={false}>
-  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
-  //   //         Test content
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_TITLE)).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_DESCRIPTION)).not.toBeInTheDocument();
+    });
 
-  //   //   expect(screen.queryByLabelText('Close sheet')).not.toBeInTheDocument();
-  //   // });
+    it('closes when overlay is clicked', async () => {
+      const user = userEvent.setup();
+      await renderAndOpenSheet(<BasicSheet />);
 
-  //   // it('closes sheet when close button is clicked', () => {
-  //   //   const onOpenChange = vi.fn();
-  //   //   render(
-  //   //     <Sheet open onOpenChange={onOpenChange}>
-  //   //       <Sheet.Content close>
-  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
-  //   //         Test content
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      const overlay = document.querySelector(`.${styles.overlay}`);
+      await user.click(overlay!);
 
-  //   //   const closeButton = screen.getByLabelText('Close sheet');
-  //   //   fireEvent.click(closeButton);
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_TITLE)).not.toBeInTheDocument();
+      expect(screen.queryByText(SHEET_DESCRIPTION)).not.toBeInTheDocument();
+    });
+  });
 
-  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
-  //   // });
-  // });
+  describe('Controlled Mode', () => {
+    it('works as controlled component', () => {
+      const { rerender } = render(
+        <Sheet open={false}>
+          <Sheet.Content>{SHEET_CONTENT}</Sheet.Content>
+        </Sheet>
+      );
 
-  // describe('Overlay', () => {
-  //   // it('renders overlay when sheet is open', () => {
-  //   //   const { container } = render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
-  //   //   const overlay = container.querySelector(`.${styles.overlay}`);
-  //   //   expect(overlay).toBeInTheDocument();
-  //   //   expect(overlay).toHaveAttribute('aria-hidden', 'true');
-  //   //   expect(overlay).toHaveAttribute('role', 'presentation');
-  //   // });
+      rerender(
+        <Sheet open={true}>
+          <Sheet.Content>{SHEET_CONTENT}</Sheet.Content>
+        </Sheet>
+      );
 
-  //   // it('closes sheet when overlay is clicked', () => {
-  //   //   const onOpenChange = vi.fn();
-  //   //   const { container } = render(
-  //   //     <Sheet open onOpenChange={onOpenChange}>
-  //   //       <Sheet.Content>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      expect(screen.getByRole('dialog', { hidden: true })).toBeInTheDocument();
+    });
 
-  //   //   const overlay = container.querySelector(`.${styles.overlay}`);
-  //   //   fireEvent.click(overlay);
+    it('calls onOpenChange when state changes', async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      render(<BasicSheet open={false} onOpenChange={onOpenChange} />);
 
-  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
-  //   // });
-  // });
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      await user.click(trigger);
 
-  // describe('Controlled Mode', () => {
-  //   // it('works as controlled component', () => {
-  //   //   const { rerender } = render(
-  //   //     <Sheet open={false}>
-  //   //       <Sheet.Content>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      expect(onOpenChange).toHaveBeenCalledWith(true);
+    });
+  });
 
-  //   //   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  describe('Accessibility', () => {
+    // it('has correct ARIA roles', async () => {
+    //   await renderAndOpenSheet(<BasicSheet />);
 
-  //   //   rerender(
-  //   //     <Sheet open={true}>
-  //   //       <Sheet.Content>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+    //   await waitFor(() => {
+    //     const dialog = screen.getByRole('dialog');
+    //     expect(dialog).toBeInTheDocument();
+    //     expect(dialog).toHaveAttribute('tabIndex', '-1');
+    //   });
+    // });
 
-  //   //   expect(screen.getByRole('dialog')).toBeInTheDocument();
-  //   // });
+    // it('has default ARIA label', async () => {
+    //   await renderAndOpenSheet(<BasicSheet />);
 
-  //   // it('calls onOpenChange when state changes', () => {
-  //   //   const onOpenChange = vi.fn();
-  //   //   render(
-  //   //     <Sheet open={false} onOpenChange={onOpenChange}>
-  //   //       <Sheet.Trigger>Open Sheet</Sheet.Trigger>
-  //   //       <Sheet.Content>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+    //   await waitFor(() => {
+    //     const dialog = screen.getByRole('dialog', { hidden: true });
+    //     expect(dialog).toHaveAttribute('aria-label', 'Sheet with overlay');
+    //   });
+    // });
 
-  //   //   const trigger = screen.getByText('Open Sheet');
-  //   //   fireEvent.click(trigger);
+    it('uses custom ARIA label when provided', async () => {
+      const user = userEvent.setup();
+      render(
+        <Sheet>
+          <Sheet.Trigger asChild>
+            <Button>{TRIGGER_TEXT}</Button>
+          </Sheet.Trigger>
+          <Sheet.Content ariaLabel='Custom sheet label'>
+            {SHEET_CONTENT}
+          </Sheet.Content>
+        </Sheet>
+      );
 
-  //   //   expect(onOpenChange).toHaveBeenCalledWith(true);
-  //   // });
-  // });
+      await user.click(screen.getByText(TRIGGER_TEXT));
 
-  // describe('Accessibility', () => {
-  //   // it('has correct ARIA roles', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content>
-  //   //         <Sheet.Title>Accessible Sheet</Sheet.Title>
-  //   //         Test content
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      await waitFor(() => {
+        const dialog = screen.getByRole('dialog', { hidden: true });
+        expect(dialog).toHaveAttribute('aria-label', 'Custom sheet label');
+      });
+    });
 
-  //   //   const dialog = screen.getByRole('dialog');
-  //   //   expect(dialog).toBeInTheDocument();
-  //   //   expect(dialog).toHaveAttribute('tabIndex', '-1');
-  //   // });
+    it('handles ARIA description when provided', async () => {
+      const user = userEvent.setup();
+      render(
+        <Sheet>
+          <Sheet.Trigger asChild>
+            <Button>{TRIGGER_TEXT}</Button>
+          </Sheet.Trigger>
+          <Sheet.Content ariaDescription='This sheet contains important information'>
+            {SHEET_CONTENT}
+          </Sheet.Content>
+        </Sheet>
+      );
 
-  //   // it('has default ARIA label', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
+      await user.click(screen.getByText(TRIGGER_TEXT));
 
-  //   //   const dialog = screen.getByRole('dialog');
-  //   //   expect(dialog).toHaveAttribute('aria-label', 'Sheet with overlay');
-  //   // });
-
-  //   // it('uses custom ARIA label when provided', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content ariaLabel='Custom sheet label'>
-  //   //         Test content
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
-
-  //   //   const dialog = screen.getByRole('dialog');
-  //   //   expect(dialog).toHaveAttribute('aria-label', 'Custom sheet label');
-  //   // });
-
-  //   // it('handles ARIA description when provided', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content ariaDescription='This sheet contains important information'>
-  //   //         Test content
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
-
-  //   //   const dialog = screen.getByRole('dialog');
-  //   //   expect(dialog).toHaveAttribute('aria-describedby', 'sheet with overlay');
-  //   //   expect(
-  //   //     screen.getByText('This sheet contains important information')
-  //   //   ).toBeInTheDocument();
-  //   // });
-
-  //   // it('close button has accessible name', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content close>Test content</Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
-
-  //   //   const closeButton = screen.getByLabelText('Close sheet');
-  //   //   expect(closeButton).toBeInTheDocument();
-  //   // });
-  // });
-
-  // describe('Keyboard Navigation', () => {
-  //   // it('closes sheet when Escape is pressed', () => {
-  //   //   const onOpenChange = vi.fn();
-  //   //   render(
-  //   //     <Sheet open onOpenChange={onOpenChange}>
-  //   //       <Sheet.Content>
-  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
-  //   //         Test content
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
-
-  //   //   const dialog = screen.getByRole('dialog');
-  //   //   fireEvent.keyDown(dialog, { key: 'Escape' });
-
-  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
-  //   // });
-  // });
-
-  // describe('Custom Close Component', () => {
-  //   // it('renders custom close component', () => {
-  //   //   render(
-  //   //     <Sheet open>
-  //   //       <Sheet.Content>
-  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
-  //   //         Test content
-  //   //         <Sheet.Close>Custom Close</Sheet.Close>
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
-
-  //   //   expect(screen.getByText('Custom Close')).toBeInTheDocument();
-  //   // });
-
-  //   // it('closes sheet when custom close is clicked', () => {
-  //   //   const onOpenChange = vi.fn();
-  //   //   render(
-  //   //     <Sheet open onOpenChange={onOpenChange}>
-  //   //       <Sheet.Content>
-  //   //         <Sheet.Title>Sheet Title</Sheet.Title>
-  //   //         Test content
-  //   //         <Sheet.Close>Custom Close</Sheet.Close>
-  //   //       </Sheet.Content>
-  //   //     </Sheet>
-  //   //   );
-
-  //   //   const customClose = screen.getByText('Custom Close');
-  //   //   fireEvent.click(customClose);
-
-  //   //   expect(onOpenChange).toHaveBeenCalledWith(false);
-  //   // });
-  // });
+      await waitFor(() => {
+        const dialog = screen.getByRole('dialog', { hidden: true });
+        expect(dialog).toHaveAttribute(
+          'aria-describedby',
+          'sheet with overlay'
+        );
+        expect(
+          screen.getByText('This sheet contains important information')
+        ).toBeInTheDocument();
+      });
+    });
+  });
 });

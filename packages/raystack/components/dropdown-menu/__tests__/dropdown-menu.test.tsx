@@ -1,470 +1,249 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { Button } from '../../button/button';
 import { DropdownMenu } from '../dropdown-menu';
+import { DropdownMenuRootProps } from '../dropdown-menu-root';
+
+// Mock scrollIntoView for test environment
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  value: vi.fn(),
+  writable: true
+});
+
+// String constants
+const TRIGGER_TEXT = 'Open Menu';
+const MENU_ITEMS = [
+  { id: 'profile', label: 'Profile' },
+  { id: 'settings', label: 'Settings' },
+  { id: 'billing', label: 'Billing' },
+  { id: 'team', label: 'Team' },
+  { id: 'logout', label: 'Logout' }
+];
+
+const BasicDropdown = ({
+  onClick,
+  children,
+  ...props
+}: DropdownMenuRootProps & { onClick?: (value: string) => void }) => {
+  return (
+    <DropdownMenu {...props}>
+      <DropdownMenu.Trigger asChild>
+        <Button color='neutral'>{TRIGGER_TEXT}</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        {MENU_ITEMS.map(item => (
+          <DropdownMenu.Item key={item.id} onClick={() => onClick?.(item.id)}>
+            {item.label}
+          </DropdownMenu.Item>
+        ))}
+        {children}
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  );
+};
+
+const renderAndOpenDropdown = async (Dropdown: React.ReactElement) => {
+  await fireEvent.click(render(Dropdown).getByText(TRIGGER_TEXT));
+};
 
 describe('DropdownMenu', () => {
   describe('Basic Rendering', () => {
     it('renders dropdown trigger', () => {
+      render(<BasicDropdown />);
+      expect(screen.getByText(TRIGGER_TEXT)).toBeInTheDocument();
+    });
+
+    it('renders with custom className on trigger', () => {
       render(
         <DropdownMenu>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
+          <DropdownMenu.Trigger className='custom-trigger'>
+            Custom Trigger
+          </DropdownMenu.Trigger>
           <DropdownMenu.Content>
             <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu>
       );
 
-      expect(screen.getByText('Open Menu')).toBeInTheDocument();
+      const trigger = screen.getByText('Custom Trigger');
+      expect(trigger).toHaveClass('custom-trigger');
     });
 
     it('does not show content initially', () => {
-      render(
-        <DropdownMenu>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.queryByText('Menu Item')).not.toBeInTheDocument();
+      render(<BasicDropdown />);
+      MENU_ITEMS.forEach(item => {
+        expect(screen.queryByText(item.label)).not.toBeInTheDocument();
+      });
     });
 
-    it('shows content when opened', () => {
-      render(
-        <DropdownMenu open>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+    it('shows content when opened', async () => {
+      await renderAndOpenDropdown(<BasicDropdown />);
 
-      expect(screen.getByText('Menu Item')).toBeInTheDocument();
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+      MENU_ITEMS.forEach(item => {
+        expect(screen.getByText(item.label)).toBeInTheDocument();
+      });
+    });
+
+    it('renders in portal', async () => {
+      await renderAndOpenDropdown(<BasicDropdown />);
+
+      const content = screen.getByRole('menu');
+      expect(content.closest('body')).toBe(document.body);
     });
   });
 
   describe('Trigger Interaction', () => {
     it('opens menu when trigger is clicked', async () => {
-      render(
-        <DropdownMenu>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+      await renderAndOpenDropdown(<BasicDropdown />);
 
-      const trigger = screen.getByText('Open Menu');
-      fireEvent.click(trigger);
-
-      await waitFor(() => {
-        expect(screen.getByText('Menu Item')).toBeInTheDocument();
-      });
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+      expect(screen.getByText(MENU_ITEMS[0].label)).toBeInTheDocument();
     });
-
-    // it('closes menu when clicked outside', async () => {
-    //   render(
-    //     <div>
-    //       <DropdownMenu>
-    //         <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-    //         <DropdownMenu.Content>
-    //           <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-    //         </DropdownMenu.Content>
-    //       </DropdownMenu>
-    //       <div data-testid='outside'>Outside element</div>
-    //     </div>
-    //   );
-
-    //   const trigger = screen.getByText('Open Menu');
-    //   fireEvent.click(trigger);
-
-    //   await waitFor(() => {
-    //     expect(screen.getByText('Menu Item')).toBeInTheDocument();
-    //   });
-
-    //   const outside = screen.getByTestId('outside');
-    //   fireEvent.click(outside);
-
-    //   await waitFor(() => {
-    //     expect(screen.queryByText('Menu Item')).not.toBeInTheDocument();
-    //   });
-    // });
   });
 
   describe('Menu Items', () => {
-    it('renders multiple menu items', () => {
-      render(
-        <DropdownMenu open>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-            <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-            <DropdownMenu.Item>Item 3</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+    it('handles item clicks with onClick', async () => {
+      const onClick = vi.fn();
 
-      expect(screen.getByText('Item 1')).toBeInTheDocument();
-      expect(screen.getByText('Item 2')).toBeInTheDocument();
-      expect(screen.getByText('Item 3')).toBeInTheDocument();
+      await renderAndOpenDropdown(<BasicDropdown onClick={onClick} />);
+
+      const item = screen.getByText(MENU_ITEMS[0].label);
+      fireEvent.click(item);
+
+      expect(onClick).toHaveBeenCalled();
     });
 
-    // it('handles item clicks', async () => {
-    //   const onSelect = vi.fn();
-
-    //   render(
-    //     <DropdownMenu open>
-    //       <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-    //       <DropdownMenu.Content>
-    //         <DropdownMenu.Item onAction={onSelect}>
-    //           Clickable Item
-    //         </DropdownMenu.Item>
-    //       </DropdownMenu.Content>
-    //     </DropdownMenu>
-    //   );
-
-    //   const item = screen.getByText('Clickable Item');
-    //   fireEvent.click(item);
-
-    //   expect(onSelect).toHaveBeenCalled();
-    // });
-
     it('closes menu after item selection by default', async () => {
-      render(
-        <DropdownMenu>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Selectable Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+      await renderAndOpenDropdown(<BasicDropdown />);
 
-      const trigger = screen.getByText('Open Menu');
-      fireEvent.click(trigger);
-
-      await waitFor(() => {
-        expect(screen.getByText('Selectable Item')).toBeInTheDocument();
-      });
-
-      const item = screen.getByText('Selectable Item');
+      const item = screen.getByText(MENU_ITEMS[0].label);
       fireEvent.click(item);
 
       await waitFor(() => {
-        expect(screen.queryByText('Selectable Item')).not.toBeInTheDocument();
+        expect(screen.queryByRole('menu')).not.toBeInTheDocument();
       });
     });
-  });
 
-  describe('Menu Groups and Labels', () => {
-    it('renders menu groups with labels', () => {
-      render(
-        <DropdownMenu open>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Label>Group 1</DropdownMenu.Label>
-            <DropdownMenu.Group>
-              <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-              <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-            </DropdownMenu.Group>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Label>Group 2</DropdownMenu.Label>
-            <DropdownMenu.Group>
-              <DropdownMenu.Item>Item 3</DropdownMenu.Item>
-            </DropdownMenu.Group>
-          </DropdownMenu.Content>
-        </DropdownMenu>
+    it('supports disabled items', async () => {
+      const onClick = vi.fn();
+
+      await renderAndOpenDropdown(
+        <BasicDropdown>
+          <DropdownMenu.Item
+            disabled
+            onClick={onClick}
+            data-testid='disabled-item'
+          >
+            Disabled Item
+          </DropdownMenu.Item>
+        </BasicDropdown>
       );
 
-      expect(screen.getByText('Group 1')).toBeInTheDocument();
-      expect(screen.getByText('Group 2')).toBeInTheDocument();
-      expect(screen.getByText('Item 1')).toBeInTheDocument();
-      expect(screen.getByText('Item 2')).toBeInTheDocument();
-      expect(screen.getByText('Item 3')).toBeInTheDocument();
-    });
+      const disabledItem = screen.getByTestId('disabled-item');
+      expect(disabledItem).toHaveAttribute('aria-disabled', 'true');
 
-    it('renders separators', () => {
-      render(
-        <DropdownMenu open>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.getByText('Item 1')).toBeInTheDocument();
-      expect(screen.getByText('Item 2')).toBeInTheDocument();
-      // Separator would be tested through DOM structure
-    });
-  });
-
-  describe('Empty State', () => {
-    it('renders empty state when no items', () => {
-      render(
-        <DropdownMenu open>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.EmptyState>
-              No items available
-            </DropdownMenu.EmptyState>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.getByText('No items available')).toBeInTheDocument();
+      fireEvent.click(disabledItem);
+      expect(onClick).not.toHaveBeenCalled();
     });
   });
 
   describe('Controlled State', () => {
-    it('works as controlled component', () => {
-      const { rerender } = render(
-        <DropdownMenu open={false}>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.queryByText('Menu Item')).not.toBeInTheDocument();
-
-      rerender(
-        <DropdownMenu open={true}>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.getByText('Menu Item')).toBeInTheDocument();
-    });
-
     it('calls onOpenChange when state changes', async () => {
       const onOpenChange = vi.fn();
 
-      render(
-        <DropdownMenu onOpenChange={onOpenChange}>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+      await render(<BasicDropdown onOpenChange={onOpenChange} />);
 
-      const trigger = screen.getByText('Open Menu');
+      const trigger = screen.getByText(TRIGGER_TEXT);
       fireEvent.click(trigger);
 
-      await waitFor(() => {
-        expect(onOpenChange).toHaveBeenCalledWith(true);
-      });
+      expect(onOpenChange).toHaveBeenCalledWith(true);
     });
   });
 
   describe('Autocomplete Mode', () => {
-    it('supports autocomplete functionality', () => {
-      const onSearch = vi.fn();
+    it('renders search input in autocomplete mode', async () => {
+      await renderAndOpenDropdown(<BasicDropdown autocomplete />);
 
-      render(
-        <DropdownMenu autocomplete onSearch={onSearch}>
-          <DropdownMenu.Trigger>Search Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-            <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.getByText('Search Menu')).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      const searchInput = screen.getByRole('combobox');
+      expect(searchInput).toBeInTheDocument();
+      expect(searchInput).toHaveAttribute('placeholder', 'Search...');
     });
 
-    it('handles search value changes', () => {
-      const onSearch = vi.fn();
+    it('filters items based on search', async () => {
+      const user = userEvent.setup();
 
-      render(
-        <DropdownMenu autocomplete onSearch={onSearch} searchValue='test'>
-          <DropdownMenu.Trigger>Search Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+      await renderAndOpenDropdown(<BasicDropdown autocomplete />);
 
-      expect(screen.getByText('Search Menu')).toBeInTheDocument();
-    });
+      const searchInput = screen.getByPlaceholderText('Search...');
+      await user.type(searchInput, 'pro');
 
-    it('supports default search value', () => {
-      render(
-        <DropdownMenu autocomplete defaultSearchValue='default'>
-          <DropdownMenu.Trigger>Search Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.getByText('Search Menu')).toBeInTheDocument();
+      const menuItems = await screen.findAllByRole('option');
+      expect(menuItems.length).toBe(1);
+      expect(menuItems[0].textContent).toBe('Profile');
     });
   });
-
-  // describe('TriggerItem Component', () => {
-  //   // it('renders TriggerItem as menu item', () => {
-  //   //   render(
-  //   //     <DropdownMenu open>
-  //   //       <DropdownMenu.Trigger>Main Menu</DropdownMenu.Trigger>
-  //   //       <DropdownMenu.Content>
-  //   //         <DropdownMenu.TriggerItem>Submenu Trigger</DropdownMenu.TriggerItem>
-  //   //       </DropdownMenu.Content>
-  //   //     </DropdownMenu>
-  //   //   );
-
-  //   //   expect(screen.getByText('Submenu Trigger')).toBeInTheDocument();
-  //   // });
-  // });
 
   describe('Keyboard Navigation', () => {
-    it('supports arrow key navigation', async () => {
-      render(
-        <DropdownMenu>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-            <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-            <DropdownMenu.Item>Item 3</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+    it('opens with Enter key', async () => {
+      const user = userEvent.setup();
+      render(<BasicDropdown />);
 
-      const trigger = screen.getByText('Open Menu');
-      fireEvent.click(trigger);
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      trigger.focus();
+      await user.keyboard('{Enter}');
+
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+    });
+
+    it('opens with Space key', async () => {
+      const user = userEvent.setup();
+      render(<BasicDropdown />);
+
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      trigger.focus();
+      await user.keyboard('[Space]');
+
+      expect(screen.getByRole('menu')).toBeInTheDocument();
+    });
+
+    it('closes with Escape key', async () => {
+      const user = userEvent.setup();
+      await renderAndOpenDropdown(<BasicDropdown />);
+
+      await user.keyboard('{ArrowDown}{Escape}');
 
       await waitFor(() => {
-        expect(screen.getByText('Item 1')).toBeInTheDocument();
+        expect(screen.queryByRole('menu')).not.toBeInTheDocument();
       });
-
-      // Keyboard navigation would be tested through focus management
-      // This requires more complex event simulation
     });
 
-    // it('closes on Escape key', async () => {
-    //   render(
-    //     <DropdownMenu>
-    //       <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-    //       <DropdownMenu.Content>
-    //         <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-    //       </DropdownMenu.Content>
-    //     </DropdownMenu>
-    //   );
+    it('navigates items with arrow keys', async () => {
+      const user = userEvent.setup();
+      await renderAndOpenDropdown(<BasicDropdown />);
 
-    //   const trigger = screen.getByText('Open Menu');
-    //   fireEvent.click(trigger);
+      const items = await screen.findAllByRole('menuitem');
+      await user.hover(items[0]);
 
-    //   await waitFor(() => {
-    //     expect(screen.getByText('Menu Item')).toBeInTheDocument();
-    //   });
-
-    //   fireEvent.keyDown(document, { key: 'Escape' });
-
-    //   await waitFor(() => {
-    //     expect(screen.queryByText('Menu Item')).not.toBeInTheDocument();
-    //   });
-    // });
-  });
-
-  describe('Focus Management', () => {
-    it('manages focus correctly', async () => {
-      render(
-        <DropdownMenu focusLoop>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-            <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      const trigger = screen.getByText('Open Menu');
-      expect(trigger).toBeInTheDocument();
-
-      // Focus management testing would require more detailed DOM interaction
+      await user.keyboard('{ArrowDown}');
+      expect(items[1]).toHaveAttribute('data-active-item', 'true');
     });
 
-    it('handles focus loop disabled', async () => {
-      render(
-        <DropdownMenu focusLoop={false}>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Item 1</DropdownMenu.Item>
-            <DropdownMenu.Item>Item 2</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+    it('selects item with Enter key', async () => {
+      const user = userEvent.setup();
+      const onClick = vi.fn();
 
-      const trigger = screen.getByText('Open Menu');
-      expect(trigger).toBeInTheDocument();
-    });
-  });
+      await renderAndOpenDropdown(<BasicDropdown onClick={onClick} />);
+      const items = await screen.findAllByRole('menuitem');
+      await user.hover(items[0]);
 
-  describe('Accessibility', () => {
-    it('has proper ARIA attributes', () => {
-      render(
-        <DropdownMenu open>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
+      await user.keyboard('{ArrowDown}{Enter}');
 
-      const trigger = screen.getByText('Open Menu');
-      expect(trigger).toBeInTheDocument();
-
-      // ARIA attributes would be tested on the actual rendered elements
-      // This requires checking specific roles and properties
-    });
-
-    it('supports screen readers', () => {
-      render(
-        <DropdownMenu open>
-          <DropdownMenu.Trigger>Accessible Menu</DropdownMenu.Trigger>
-          <DropdownMenu.Content>
-            <DropdownMenu.Label>Menu Section</DropdownMenu.Label>
-            <DropdownMenu.Item>Accessible Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      expect(screen.getByText('Accessible Menu')).toBeInTheDocument();
-      expect(screen.getByText('Menu Section')).toBeInTheDocument();
-      expect(screen.getByText('Accessible Item')).toBeInTheDocument();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('handles missing trigger gracefully', () => {
-      render(
-        <DropdownMenu>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>Menu Item</DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-      );
-
-      // Should render without crashing
-      expect(document.body).toBeInTheDocument();
-    });
-
-    it('handles missing content gracefully', () => {
-      render(
-        <DropdownMenu>
-          <DropdownMenu.Trigger>Open Menu</DropdownMenu.Trigger>
-        </DropdownMenu>
-      );
-
-      expect(screen.getByText('Open Menu')).toBeInTheDocument();
+      expect(onClick).toHaveBeenCalledWith(MENU_ITEMS[1].id);
+      expect(onClick).toHaveBeenCalledTimes(1);
     });
   });
 });

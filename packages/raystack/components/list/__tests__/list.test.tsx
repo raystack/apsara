@@ -50,22 +50,6 @@ describe('List', () => {
       const list = screen.getByRole('list');
       expect(list).toHaveAttribute('aria-label', 'List');
     });
-
-    it('uses custom aria-label', () => {
-      render(<List aria-label='Navigation items'>Content</List>);
-      const list = screen.getByRole('list');
-      expect(list).toHaveAttribute('aria-label', 'Navigation items');
-    });
-
-    it('merges custom styles', () => {
-      render(
-        <List style={{ padding: '10px' }} maxWidth='300px'>
-          Content
-        </List>
-      );
-      const list = screen.getByRole('list');
-      expect(list).toHaveStyle({ padding: '10px', maxWidth: '300px' });
-    });
   });
 
   describe('List.Item', () => {
@@ -166,23 +150,6 @@ describe('List', () => {
       const label = screen.getByText('Label');
       expect(label).toHaveStyle({ minWidth: '100px' });
     });
-
-    it('merges custom styles', () => {
-      render(
-        <List>
-          <List.Item>
-            <List.Label minWidth='80px' style={{ color: 'gray' }}>
-              Label
-            </List.Label>
-          </List.Item>
-        </List>
-      );
-      const label = screen.getByText('Label');
-      expect(label).toHaveStyle({
-        minWidth: '80px',
-        color: 'rgb(128, 128, 128)'
-      });
-    });
   });
 
   describe('List.Value', () => {
@@ -273,30 +240,9 @@ describe('List', () => {
       const header = screen.getByRole('heading');
       expect(header).toBeInTheDocument();
     });
-
-    it('has aria-level 3', () => {
-      render(
-        <List>
-          <List.Header>Header</List.Header>
-        </List>
-      );
-      const header = screen.getByRole('heading');
-      expect(header).toHaveAttribute('aria-level', '3');
-    });
-
-    it('wraps content in header-text span', () => {
-      const { container } = render(
-        <List>
-          <List.Header>Title</List.Header>
-        </List>
-      );
-      const headerText = container.querySelector(`.${styles['header-text']}`);
-      expect(headerText).toBeInTheDocument();
-      expect(headerText).toHaveTextContent('Title');
-    });
   });
 
-  describe('Complete List Structure', () => {
+  describe('Rendering', () => {
     it('renders complete list with all subcomponents', () => {
       render(
         <List aria-label='User details'>

@@ -1,15 +1,20 @@
 import { render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ColorPicker } from '../color-picker';
 
-// Mock ResizeObserver for tests
-beforeEach(() => {
-  global.ResizeObserver = vi.fn().mockImplementation(() => ({
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn()
-  }));
-});
+// // Mock ResizeObserver for tests
+// const originalResizeObserver = global.ResizeObserver;
+// beforeAll(() => {
+//   global.ResizeObserver = vi.fn().mockImplementation(() => ({
+//     observe: vi.fn(),
+//     unobserve: vi.fn(),
+//     disconnect: vi.fn()
+//   }));
+// });
+
+// afterAll(() => {
+//   global.ResizeObserver = originalResizeObserver;
+// });
 
 describe('ColorPicker', () => {
   describe('ColorPicker Root', () => {
@@ -272,7 +277,7 @@ describe('ColorPicker', () => {
       expect(screen.getByTestId('mode')).toBeInTheDocument();
     });
 
-    it('works with different color values', () => {
+    it('works with controlled value', () => {
       render(
         <ColorPicker value='#00ff00'>
           <ColorPicker.Area data-testid='area' />
@@ -308,41 +313,6 @@ describe('ColorPicker', () => {
       expect(screen.getByTestId('alpha')).toBeInTheDocument();
       expect(screen.getByTestId('input')).toBeInTheDocument();
       expect(screen.getByTestId('mode')).toBeInTheDocument();
-    });
-  });
-
-  describe('Event Handling', () => {
-    it('renders components with event handlers', () => {
-      const onValueChange = vi.fn();
-      const onModeChange = vi.fn();
-
-      render(
-        <ColorPicker onValueChange={onValueChange} onModeChange={onModeChange}>
-          <ColorPicker.Hue data-testid='hue-slider' />
-          <ColorPicker.Mode data-testid='mode-selector' />
-        </ColorPicker>
-      );
-
-      const hueSlider = screen.getByTestId('hue-slider');
-      const modeSelector = screen.getByTestId('mode-selector');
-
-      expect(hueSlider).toBeInTheDocument();
-      expect(modeSelector).toBeInTheDocument();
-    });
-
-    it('renders components without event handlers', () => {
-      render(
-        <ColorPicker>
-          <ColorPicker.Hue data-testid='hue-slider' />
-          <ColorPicker.Mode data-testid='mode-selector' />
-        </ColorPicker>
-      );
-
-      const hueSlider = screen.getByTestId('hue-slider');
-      const modeSelector = screen.getByTestId('mode-selector');
-
-      expect(hueSlider).toBeInTheDocument();
-      expect(modeSelector).toBeInTheDocument();
     });
   });
 });

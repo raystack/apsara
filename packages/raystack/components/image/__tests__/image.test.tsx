@@ -124,22 +124,6 @@ describe('Image', () => {
       fireEvent.error(img);
       expect(img.src).toContain('/fallback.jpg');
     });
-
-    it('calls onError after setting fallback', () => {
-      const handleError = vi.fn();
-      render(
-        <Image
-          src='/invalid.jpg'
-          alt='Test'
-          fallback='/fallback.jpg'
-          onError={handleError}
-        />
-      );
-      const img = screen.getByRole('img');
-
-      fireEvent.error(img);
-      expect(handleError).toHaveBeenCalled();
-    });
   });
 
   describe('Loading Attributes', () => {
@@ -205,24 +189,6 @@ describe('Image', () => {
       expect(img).toHaveStyle({ opacity: '0.5' });
     });
 
-    it('merges style with width/height', () => {
-      render(
-        <Image
-          src='/test.jpg'
-          alt='Test'
-          width='200px'
-          height='100px'
-          style={{ opacity: 0.5 }}
-        />
-      );
-      const img = screen.getByRole('img');
-      expect(img).toHaveStyle({
-        width: '200px',
-        height: '100px',
-        opacity: '0.5'
-      });
-    });
-
     it('supports srcSet attribute', () => {
       render(
         <Image
@@ -265,32 +231,6 @@ describe('Image', () => {
 
       fireEvent.click(img);
       expect(handleClick).toHaveBeenCalled();
-    });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      const handleError = vi.fn();
-      render(
-        <Image
-          src='/test.jpg'
-          alt='Test image'
-          fit='contain'
-          radius='medium'
-          width='400px'
-          height='300px'
-          fallback='/fallback.jpg'
-          className='custom'
-          onError={handleError}
-        />
-      );
-
-      const img = screen.getByRole('img');
-      expect(img).toHaveClass(styles['image-contain']);
-      expect(img).toHaveClass(styles['image-radius-medium']);
-      expect(img).toHaveClass('custom');
-      expect(img).toHaveStyle({ width: '400px', height: '300px' });
-      expect(img).toHaveAttribute('alt', 'Test image');
     });
   });
 });

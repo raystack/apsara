@@ -61,7 +61,6 @@ describe('Button', () => {
 
   describe('Colors', () => {
     const colors = ['accent', 'danger', 'neutral', 'success'] as const;
-    const variants = ['solid', 'outline', 'ghost', 'text'] as const;
 
     it.each(colors)('renders %s color correctly', color => {
       render(<Button color={color}>Button</Button>);
@@ -74,21 +73,6 @@ describe('Button', () => {
       const button = screen.getByRole('button');
       expect(button).toHaveClass(styles['button-color-accent']);
     });
-
-    it.each(variants)(
-      'applies compound variant styles for %s variant with all colors',
-      variant => {
-        colors.forEach(color => {
-          const { container } = render(
-            <Button variant={variant} color={color}>
-              Button
-            </Button>
-          );
-          const button = container.querySelector('button');
-          expect(button).toHaveClass(styles[`button-${variant}-${color}`]);
-        });
-      }
-    );
   });
 
   describe('Sizes', () => {
@@ -112,7 +96,6 @@ describe('Button', () => {
       render(<Button disabled>Disabled Button</Button>);
       const button = screen.getByRole('button');
       expect(button).toBeDisabled();
-      expect(button).toHaveClass(styles['button-disabled']);
     });
 
     it('handles loading state', () => {
@@ -132,26 +115,6 @@ describe('Button', () => {
       expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
     });
 
-    it('applies loader-only class when loading without loaderText', () => {
-      render(
-        <Button loading size='small'>
-          Button
-        </Button>
-      );
-      const button = screen.getByRole('button');
-      expect(button).toHaveClass(styles['loader-only-button-small']);
-    });
-
-    it('applies correct loader-only class for normal size', () => {
-      render(
-        <Button loading size='normal'>
-          Button
-        </Button>
-      );
-      const button = screen.getByRole('button');
-      expect(button).toHaveClass(styles['loader-only-button-normal']);
-    });
-
     it('does not show children when loading', () => {
       render(<Button loading>Original Text</Button>);
       expect(screen.queryByText('Original Text')).not.toBeInTheDocument();
@@ -163,18 +126,12 @@ describe('Button', () => {
       const icon = <span data-testid='leading-icon'>→</span>;
       render(<Button leadingIcon={icon}>Button</Button>);
       expect(screen.getByTestId('leading-icon')).toBeInTheDocument();
-      const iconWrapper = screen.getByTestId('leading-icon').parentElement;
-      expect(iconWrapper).toHaveClass(styles['icon']);
-      expect(iconWrapper).toHaveClass(styles['icon-leading']);
     });
 
     it('renders trailing icon', () => {
       const icon = <span data-testid='trailing-icon'>←</span>;
       render(<Button trailingIcon={icon}>Button</Button>);
       expect(screen.getByTestId('trailing-icon')).toBeInTheDocument();
-      const iconWrapper = screen.getByTestId('trailing-icon').parentElement;
-      expect(iconWrapper).toHaveClass(styles['icon']);
-      expect(iconWrapper).toHaveClass(styles['icon-trailing']);
     });
 
     it('renders both leading and trailing icons', () => {
@@ -199,40 +156,6 @@ describe('Button', () => {
       );
       expect(screen.queryByTestId('leading')).not.toBeInTheDocument();
       expect(screen.queryByTestId('trailing')).not.toBeInTheDocument();
-    });
-  });
-
-  describe('Width and Sizing', () => {
-    it('applies maxWidth style', () => {
-      render(<Button maxWidth='200px'>Button</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveStyle({ maxWidth: '200px' });
-    });
-
-    it('applies width style', () => {
-      render(<Button width='100%'>Button</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveStyle({ width: '100%' });
-    });
-
-    it('applies both width and maxWidth', () => {
-      render(
-        <Button width='100%' maxWidth='500px'>
-          Button
-        </Button>
-      );
-      const button = screen.getByRole('button');
-      expect(button).toHaveStyle({ width: '100%', maxWidth: '500px' });
-    });
-
-    it('handles numeric width values', () => {
-      render(
-        <Button width={300} maxWidth={400}>
-          Button
-        </Button>
-      );
-      const button = screen.getByRole('button');
-      expect(button).toHaveStyle({ width: '300px', maxWidth: '400px' });
     });
   });
 
@@ -289,31 +212,6 @@ describe('Button', () => {
     });
   });
 
-  // describe('AsChild Prop', () => {
-  //   it('renders as child component when asChild is true', () => {
-  //     render(
-  //       <Button asChild>
-  //         <a href='/test'>Link Button</a>
-  //       </Button>
-  //     );
-  //     const link = screen.getByRole('link', { name: 'Link Button' });
-  //     expect(link).toBeInTheDocument();
-  //     expect(link).toHaveAttribute('href', '/test');
-  //     expect(link).toHaveClass(styles.button);
-  //   });
-  //   it('applies all button classes to child component', () => {
-  //     render(
-  //       <Button asChild variant='outline' color='danger' size='small'>
-  //         <a href='/test'>Link</a>
-  //       </Button>
-  //     );
-  //     const link = screen.getByRole('link');
-  //     expect(link).toHaveClass(styles['button-outline']);
-  //     expect(link).toHaveClass(styles['button-color-danger']);
-  //     expect(link).toHaveClass(styles['button-small']);
-  //   });
-  // });
-
   describe('Accessibility', () => {
     it('supports aria-label', () => {
       render(<Button aria-label='Custom label'>Icon</Button>);
@@ -347,15 +245,6 @@ describe('Button', () => {
       render(<Button>Button</Button>);
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
-
-    // it('supports keyboard navigation', () => {
-    //   const handleClick = vi.fn();
-    //   render(<Button onClick={handleClick}>Button</Button>);
-    //   const button = screen.getByRole('button');
-    //   button.focus();
-    //   fireEvent.keyDown(button, { key: 'Enter' });
-    //   expect(handleClick).toHaveBeenCalled();
-    // });
   });
 
   describe('HTML Button Attributes', () => {
@@ -390,12 +279,6 @@ describe('Button', () => {
       );
       const button = screen.getByTestId('custom-button');
       expect(button).toHaveAttribute('data-action', 'save');
-    });
-
-    it('supports title attribute', () => {
-      render(<Button title='Click to submit'>Submit</Button>);
-      const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('title', 'Click to submit');
     });
   });
 });

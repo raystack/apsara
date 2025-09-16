@@ -1,146 +1,113 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { Tooltip } from '../tooltip';
+import { TooltipProps } from '../tooltip-root';
 
+const TRIGGER_TEXT = 'Hover me';
+const MESSAGE_TEXT = 'Tooltip text';
+
+const BasicTooltip = ({
+  message = MESSAGE_TEXT,
+  children = TRIGGER_TEXT,
+  ...props
+}: Partial<TooltipProps>) => {
+  return (
+    <Tooltip message={message} delayDuration={0} {...props}>
+      <button>{children}</button>
+    </Tooltip>
+  );
+};
 describe('Tooltip', () => {
   describe('Basic Rendering', () => {
     it('renders trigger content', () => {
-      render(
-        <Tooltip message='Tooltip text'>
-          <button>Hover me</button>
-        </Tooltip>
-      );
-      expect(
-        screen.getByRole('button', { name: 'Hover me' })
-      ).toBeInTheDocument();
+      render(<BasicTooltip />);
+      expect(screen.getByText(TRIGGER_TEXT)).toBeInTheDocument();
     });
 
     it('does not show tooltip initially', () => {
-      render(
-        <Tooltip message='Tooltip text'>
-          <button>Hover me</button>
-        </Tooltip>
-      );
-      expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+      render(<BasicTooltip />);
+      expect(screen.queryByText(MESSAGE_TEXT)).not.toBeInTheDocument();
     });
 
-    // TODO: Fix tooltip hover tests - Radix UI Tooltip behavior in test environment
-    // The following tests are commented out because Radix UI Tooltip components
-    // don't reliably show tooltips on hover in test environments
-    // it('shows tooltip on hover', async () => {
-    //   render(
-    //     <Tooltip message='Tooltip text' delayDuration={0}>
-    //       <button>Hover me</button>
-    //     </Tooltip>
-    //   );
-
-    //   const trigger = screen.getByRole('button');
-    //   fireEvent.mouseEnter(trigger);
-
-    //   await waitFor(() => {
-    //     expect(screen.getByRole('tooltip')).toBeInTheDocument();
-    //     expect(screen.getByText('Tooltip text')).toBeInTheDocument();
-    //   });
-    // });
-
-    // it('hides tooltip on mouse leave', async () => {
-    //   render(
-    //     <Tooltip message='Tooltip text' delayDuration={0}>
-    //       <button>Hover me</button>
-    //     </Tooltip>
-    //   );
-
-    //   const trigger = screen.getByRole('button');
-    //   fireEvent.mouseEnter(trigger);
-
-    //   await waitFor(() => {
-    //     expect(screen.getByRole('tooltip')).toBeInTheDocument();
-    //   });
-
-    //   fireEvent.mouseLeave(trigger);
-
-    //   await waitFor(() => {
-    //     expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
-    //   });
-    // });
-  });
-
-  describe('Controlled Mode', () => {
     it('respects open prop', () => {
-      render(
-        <Tooltip message='Tooltip' open={true}>
-          <button>Button</button>
-        </Tooltip>
-      );
-
-      // When open is true, tooltip should be visible
-      // Note: In test environment, this may not work as expected
-      expect(document.body).toBeInTheDocument();
+      render(<BasicTooltip open={true} />);
+      expect(screen.queryAllByText(MESSAGE_TEXT)[0]).toBeInTheDocument();
     });
 
-    // TODO: Fix controlled mode tests - Radix UI Tooltip behavior in test environment
-    // it('calls onOpenChange when state changes', async () => {
-    //   const onOpenChange = vi.fn();
-    //   render(
-    //     <Tooltip message='Tooltip' onOpenChange={onOpenChange}>
-    //       <button>Hover</button>
-    //     </Tooltip>
-    //   );
+    it('shows tooltip on hover', async () => {
+      const user = userEvent.setup();
+      render(<BasicTooltip />);
 
-    //   const trigger = screen.getByRole('button');
-    //   fireEvent.mouseEnter(trigger);
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      await user.hover(trigger);
 
-    //   await waitFor(() => {
-    //     expect(onOpenChange).toHaveBeenCalledWith(true);
-    //   });
-    // });
+      expect(screen.getAllByText(MESSAGE_TEXT)[0]).toBeInTheDocument();
+    });
+    it('hides tooltip on mouse leave', async () => {
+      const user = userEvent.setup();
+      render(
+        <>
+          <BasicTooltip />
+          <BasicTooltip message='Tooltip2'>Trigger2</BasicTooltip>
+        </>
+      );
+
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      const trigger2 = screen.getByText('Trigger2');
+      await user.hover(trigger);
+      await user.hover(trigger2);
+
+      expect(screen.queryByText(MESSAGE_TEXT)).not.toBeInTheDocument();
+    });
+
+    it('shows tooltip on focus', async () => {
+      render(<BasicTooltip />);
+
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      await trigger.focus();
+
+      expect(screen.getAllByText(MESSAGE_TEXT)[0]).toBeInTheDocument();
+    });
+
+    it('hides tooltip on blur', async () => {
+      render(<BasicTooltip />);
+
+      const trigger = screen.getByText(TRIGGER_TEXT);
+      await trigger.focus();
+      await trigger.blur();
+
+      expect(screen.queryByText(MESSAGE_TEXT)).not.toBeInTheDocument();
+    });
+
+    it('calls onOpenChange when state changes', async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      render(<BasicTooltip onOpenChange={onOpenChange} />);
+      const trigger = screen.getByText(TRIGGER_TEXT);
+
+      await user.hover(trigger);
+      expect(onOpenChange).toHaveBeenCalled();
+    });
   });
 
   describe('Provider', () => {
     it('works with explicit provider', () => {
       render(
         <Tooltip.Provider>
-          <Tooltip message='Tooltip 1'>
-            <button>Button 1</button>
-          </Tooltip>
-          <Tooltip message='Tooltip 2'>
-            <button>Button 2</button>
-          </Tooltip>
+          <BasicTooltip message='Tooltip 1'>Trigger 1</BasicTooltip>
+          <BasicTooltip message='Tooltip 2'>Trigger 2</BasicTooltip>
         </Tooltip.Provider>
       );
 
-      expect(
-        screen.getByRole('button', { name: 'Button 1' })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Button 2' })
-      ).toBeInTheDocument();
+      expect(screen.getByText('Trigger 1')).toBeInTheDocument();
+      expect(screen.getByText('Trigger 2')).toBeInTheDocument();
     });
 
     it('works without explicit provider', () => {
-      render(
-        <Tooltip message='Tooltip text'>
-          <button>Hover</button>
-        </Tooltip>
-      );
+      render(<BasicTooltip />);
 
-      expect(screen.getByRole('button', { name: 'Hover' })).toBeInTheDocument();
+      expect(screen.getByText(TRIGGER_TEXT)).toBeInTheDocument();
     });
-
-    // TODO: Fix provider hover tests - Radix UI Tooltip behavior in test environment
-    // The following tests are commented out because tooltips don't reliably appear
-    // on hover in test environments
   });
-
-  // TODO: Fix remaining tooltip tests - Radix UI Tooltip behavior in test environment
-  // The following test categories are commented out because they involve complex
-  // interactions that don't work reliably in test environments:
-  // - Positioning tests (top, bottom, left, right)
-  // - Arrow tests
-  // - Custom className tests
-  // - Custom style tests
-  // - Accessibility tests
-  // - Delay duration tests
-  // - Keyboard navigation tests
-  // - Focus management tests
 });

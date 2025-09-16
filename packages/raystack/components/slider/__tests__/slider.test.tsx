@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Slider } from '../slider';
 import styles from '../slider.module.css';
@@ -73,15 +74,13 @@ describe('Slider', () => {
     });
 
     it('handles single value', () => {
-      render(<Slider value={50} onChange={() => {}} />);
+      render(<Slider value={50} />);
       const slider = screen.getByRole('slider');
       expect(slider).toHaveAttribute('aria-valuenow', '50');
     });
 
     it('handles range values', () => {
-      const { container } = render(
-        <Slider variant='range' value={[20, 80]} onChange={() => {}} />
-      );
+      const { container } = render(<Slider variant='range' value={[20, 80]} />);
       const sliders = container.querySelectorAll('[role="slider"]');
       expect(sliders[0]).toHaveAttribute('aria-valuenow', '20');
       expect(sliders[1]).toHaveAttribute('aria-valuenow', '80');
@@ -129,29 +128,47 @@ describe('Slider', () => {
     });
 
     it('sets aria-valuetext', () => {
-      render(
-        <Slider value={50} aria-valuetext='50 percent' onChange={() => {}} />
-      );
+      render(<Slider value={50} aria-valuetext='50 percent' />);
       const slider = screen.getByRole('slider');
       expect(slider).toHaveAttribute('aria-valuetext', '50 percent');
     });
   });
 
   describe('Event Handlers', () => {
-    it('calls onChange with single value', () => {
+    it('calls onChange with single value', async () => {
+      const user = userEvent.setup();
       const handleChange = vi.fn();
-      const { container } = render(<Slider onChange={handleChange} />);
-      const slider = container.querySelector('[role="slider"]');
+      render(<Slider onChange={handleChange} defaultValue={50} />);
+      const slider = screen.getByRole('slider');
 
-      // Simulate value change
-      slider?.dispatchEvent(new Event('change', { bubbles: true }));
-      // Note: Actual value change would require more complex interaction
+      await slider.focus();
+      await user.keyboard('{ArrowRight}');
+
+      expect(handleChange).toHaveBeenCalledWith(51);
     });
 
-    it('calls onChange with range values', () => {
+    it('calls onChange with range values', async () => {
+      const user = userEvent.setup();
       const handleChange = vi.fn();
-      render(<Slider variant='range' onChange={handleChange} />);
-      // Note: Testing actual slider interaction would require more complex setup
+      render(
+        <Slider
+          variant='range'
+          onChange={handleChange}
+          defaultValue={[40, 60]}
+        />
+      );
+      const lowerSlider = screen.getAllByRole('slider')[0];
+      const upperSlider = screen.getAllByRole('slider')[1];
+
+      await lowerSlider.focus();
+      await user.keyboard('{ArrowRight}');
+
+      expect(handleChange).toHaveBeenCalledWith([41, 60]);
+
+      await upperSlider.focus();
+      await user.keyboard('{ArrowRight}');
+
+      expect(handleChange).toHaveBeenCalledWith([41, 61]);
     });
   });
 

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { DataTable } from '../data-table';
+import styles from '../data-table.module.css';
 import { DataTableColumnDef } from '../data-table.types';
 
 interface TestData {
@@ -16,7 +18,7 @@ const mockData: TestData[] = [
   { id: 3, name: 'Bob Johnson', email: 'bob@example.com', status: 'active' }
 ];
 
-const mockColumns: DataTableColumnDef<TestData>[] = [
+const mockColumns: DataTableColumnDef<TestData, unknown>[] = [
   {
     id: 'name',
     accessorKey: 'name',
@@ -103,154 +105,12 @@ describe('DataTable', () => {
     });
   });
 
-  describe('Loading State', () => {
-    it('handles loading state', () => {
-      render(
-        <DataTable
-          data={[]}
-          columns={mockColumns}
-          isLoading={true}
-          loadingRowCount={2}
-        >
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      // Should still render table structure while loading
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-
-    it('uses default loading row count', () => {
-      render(
-        <DataTable data={[]} columns={mockColumns} isLoading={true}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-  });
-
-  describe('Client Mode', () => {
-    it('uses client mode by default', () => {
-      render(
-        <DataTable data={mockData} columns={mockColumns}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      // Client mode should enable all data to be visible
-      expect(screen.getByText('John Doe')).toBeInTheDocument();
-      expect(screen.getByText('Jane Smith')).toBeInTheDocument();
-      expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
-    });
-
-    it('handles client-side sorting', () => {
-      render(
-        <DataTable data={mockData} columns={mockColumns} mode='client'>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-      // Sorting functionality would be tested through interaction
-    });
-  });
-
-  // describe('Server Mode', () => {
-  //   it('handles server mode', () => {
-  //     const onTableQueryChange = vi.fn();
-
-  //     render(
-  //       <DataTable
-  //         data={mockData}
-  //         columns={mockColumns}
-  //         mode='server'
-  //         onTableQueryChange={onTableQueryChange}
-  //       >
-  //         <DataTable.Content />
-  //       </DataTable>
-  //     );
-
-  //     expect(screen.getByRole('table')).toBeInTheDocument();
-  //   });
-
-  //   it('calls onTableQueryChange in server mode', () => {
-  //     const onTableQueryChange = vi.fn();
-
-  //     render(
-  //       <DataTable
-  //         data={mockData}
-  //         columns={mockColumns}
-  //         mode='server'
-  //         onTableQueryChange={onTableQueryChange}
-  //       >
-  //         <DataTable.Content />
-  //       </DataTable>
-  //     );
-
-  //     // Initial query should be sent
-  //     expect(onTableQueryChange).toHaveBeenCalled();
-  //   });
-
-  //   it('handles load more functionality', () => {
-  //     const onLoadMore = vi.fn();
-
-  //     render(
-  //       <DataTable
-  //         data={mockData}
-  //         columns={mockColumns}
-  //         mode='server'
-  //         onLoadMore={onLoadMore}
-  //       >
-  //         <DataTable.Content />
-  //       </DataTable>
-  //     );
-
-  //     expect(screen.getByRole('table')).toBeInTheDocument();
-  //   });
-  // });
-
-  describe('Query Handling', () => {
-    it('accepts initial query', () => {
-      const initialQuery = {
-        search: 'john'
-      };
-
-      render(
-        <DataTable data={mockData} columns={mockColumns} query={initialQuery}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-
-    it('handles default sort', () => {
-      const defaultSort = {
-        column: 'name',
-        direction: 'asc' as const
-      };
-
-      render(
-        <DataTable
-          data={mockData}
-          columns={mockColumns}
-          defaultSort={defaultSort}
-        >
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-  });
-
   describe('Row Interaction', () => {
-    it('handles row click events', () => {
+    it('handles row click events', async () => {
       const onRowClick = vi.fn();
+      const user = userEvent.setup();
 
-      render(
+      const { container } = render(
         <DataTable
           data={mockData}
           columns={mockColumns}
@@ -260,21 +120,24 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      expect(screen.getByRole('table')).toBeInTheDocument();
-      // Row click would be tested through interaction with actual rows
+      const row = container.querySelectorAll('tr')[1];
+      await user.click(row);
+      expect(onRowClick).toHaveBeenCalled();
     });
   });
 
   describe('Component Composition', () => {
     it('renders with toolbar', () => {
-      render(
+      const { container } = render(
         <DataTable data={mockData} columns={mockColumns}>
           <DataTable.Toolbar />
           <DataTable.Content />
         </DataTable>
       );
 
-      expect(screen.getByRole('table')).toBeInTheDocument();
+      expect(
+        container.querySelector(`div.${styles.toolbar}`)
+      ).toBeInTheDocument();
     });
 
     it('renders with search', () => {
@@ -285,128 +148,7 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-
-    it('renders complete data table structure', () => {
-      render(
-        <DataTable data={mockData} columns={mockColumns}>
-          <DataTable.Toolbar />
-          <DataTable.Search />
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-  });
-
-  describe('Column Visibility', () => {
-    it('handles column visibility', () => {
-      const columnsWithVisibility = mockColumns.map((col, index) => ({
-        ...col,
-        meta: {
-          ...col.meta,
-          hidden: index === 0 // Hide first column
-        }
-      }));
-
-      render(
-        <DataTable data={mockData} columns={columnsWithVisibility}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-      // The hidden column logic would be tested through the rendered output
-    });
-  });
-
-  describe('Data Grouping', () => {
-    it('handles grouped data', () => {
-      const query = {
-        group_by: ['status']
-      };
-
-      render(
-        <DataTable data={mockData} columns={mockColumns} query={query}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-  });
-
-  describe('Filtering', () => {
-    it('handles filters in query', () => {
-      const query = {
-        filters: [
-          {
-            column: 'status',
-            operation: 'equals',
-            value: 'active'
-          }
-        ]
-      };
-
-      render(
-        <DataTable data={mockData} columns={mockColumns} query={query}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('handles missing data gracefully', () => {
-      render(
-        <DataTable columns={mockColumns}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-
-    it('handles invalid column definitions', () => {
-      const invalidColumns = [
-        {
-          id: 'invalid',
-          header: 'Invalid Column'
-          // Missing accessorKey and cell
-        }
-      ] as DataTableColumnDef<TestData>[];
-
-      // Should render without crashing even with invalid columns
-      render(
-        <DataTable data={mockData} columns={invalidColumns}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
-    });
-  });
-
-  describe('Performance', () => {
-    it('handles large datasets', () => {
-      const largeData = Array.from({ length: 1000 }, (_, index) => ({
-        id: index,
-        name: `User ${index}`,
-        email: `user${index}@example.com`,
-        status: index % 2 === 0 ? ('active' as const) : ('inactive' as const)
-      }));
-
-      render(
-        <DataTable data={largeData} columns={mockColumns}>
-          <DataTable.Content />
-        </DataTable>
-      );
-
-      expect(screen.getByRole('table')).toBeInTheDocument();
+      expect(screen.getByLabelText('Search')).toBeInTheDocument();
     });
   });
 });

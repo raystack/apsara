@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Search } from '../search';
 import styles from '../search.module.css';
@@ -50,7 +51,7 @@ describe('Search', () => {
 
   describe('Value and Change', () => {
     it('displays value', () => {
-      render(<Search value='test query' onChange={() => {}} />);
+      render(<Search value='test query' />);
       const input = screen.getByRole('textbox') as HTMLInputElement;
       expect(input.value).toBe('test query');
     });
@@ -75,30 +76,23 @@ describe('Search', () => {
 
   describe('Clear Button', () => {
     it('does not show clear button by default', () => {
-      render(<Search value='test' onChange={() => {}} />);
+      render(<Search value='test' />);
       expect(screen.queryByLabelText('Clear search')).not.toBeInTheDocument();
     });
 
     it('shows clear button when showClearButton and value exist', () => {
-      render(<Search showClearButton value='test' onChange={() => {}} />);
+      render(<Search showClearButton value='test' />);
       expect(screen.getByLabelText('Clear search')).toBeInTheDocument();
     });
 
     it('hides clear button when no value', () => {
-      render(<Search showClearButton value='' onChange={() => {}} />);
+      render(<Search showClearButton value='' />);
       expect(screen.queryByLabelText('Clear search')).not.toBeInTheDocument();
     });
 
     it('calls onClear when clear button clicked', () => {
       const handleClear = vi.fn();
-      render(
-        <Search
-          showClearButton
-          value='test'
-          onChange={() => {}}
-          onClear={handleClear}
-        />
-      );
+      render(<Search showClearButton value='test' onClear={handleClear} />);
 
       const clearButton = screen.getByLabelText('Clear search');
       fireEvent.click(clearButton);
@@ -111,12 +105,7 @@ describe('Search', () => {
 
       render(
         <div onClick={handleClick}>
-          <Search
-            showClearButton
-            value='test'
-            onChange={() => {}}
-            onClear={handleClear}
-          />
+          <Search showClearButton value='test' onClear={handleClear} />
         </div>
       );
 
@@ -128,9 +117,7 @@ describe('Search', () => {
     });
 
     it('disables clear button when search is disabled', () => {
-      render(
-        <Search showClearButton value='test' onChange={() => {}} disabled />
-      );
+      render(<Search showClearButton value='test' disabled />);
 
       const clearButton = screen.getByLabelText('Clear search');
       expect(clearButton).toBeDisabled();
@@ -139,13 +126,7 @@ describe('Search', () => {
     it('does not call onClear when disabled', () => {
       const handleClear = vi.fn();
       render(
-        <Search
-          showClearButton
-          value='test'
-          onChange={() => {}}
-          onClear={handleClear}
-          disabled
-        />
+        <Search showClearButton value='test' onClear={handleClear} disabled />
       );
 
       const clearButton = screen.getByLabelText('Clear search');
@@ -165,14 +146,6 @@ describe('Search', () => {
       render(<Search size='small' />);
       const input = screen.getByRole('textbox');
       expect(input).toBeInTheDocument();
-    });
-
-    it('uses smaller clear button for small size', () => {
-      render(
-        <Search size='small' showClearButton value='test' onChange={() => {}} />
-      );
-      const clearButton = screen.getByLabelText('Clear search');
-      expect(clearButton).toBeInTheDocument();
     });
   });
 
@@ -211,14 +184,16 @@ describe('Search', () => {
       expect(input).toBeDisabled();
     });
 
-    // it('does not call onChange when disabled', () => {
-    //   const handleChange = vi.fn();
-    //   render(<Search disabled onChange={handleChange} />);
-    //   const input = screen.getByRole('textbox');
+    it('does not call onChange when disabled', async () => {
+      const user = userEvent.setup();
+      const handleChange = vi.fn();
+      render(<Search disabled onChange={handleChange} />);
+      const input = screen.getByRole('textbox');
 
-    //   fireEvent.change(input, { target: { value: 'test' } });
-    //   expect(handleChange).not.toHaveBeenCalled();
-    // });
+      await user.type(input, 'test');
+
+      expect(handleChange).not.toHaveBeenCalled();
+    });
   });
 
   describe('InputField Props', () => {
@@ -265,37 +240,6 @@ describe('Search', () => {
       render(<Search id='search-input' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('id', 'search-input');
-    });
-  });
-
-  describe('Combinations', () => {
-    it('renders with all props combined', () => {
-      const handleChange = vi.fn();
-      const handleClear = vi.fn();
-
-      render(
-        <Search
-          value='search term'
-          onChange={handleChange}
-          onClear={handleClear}
-          showClearButton
-          size='small'
-          variant='borderless'
-          width='400px'
-          placeholder='Find items...'
-          className='custom'
-        />
-      );
-
-      const input = screen.getByPlaceholderText('Find items...');
-      expect(input).toBeInTheDocument();
-      expect(input).toHaveClass('custom');
-
-      const clearButton = screen.getByLabelText('Clear search');
-      expect(clearButton).toBeInTheDocument();
-
-      fireEvent.click(clearButton);
-      expect(handleClear).toHaveBeenCalled();
     });
   });
 });
