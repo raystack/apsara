@@ -1,6 +1,6 @@
 'use client';
 
-import { type VariantProps, cva } from 'class-variance-authority';
+import { type VariantProps, cva, cx } from 'class-variance-authority';
 import { Slider as SliderPrimitive } from 'radix-ui';
 import {
   type ComponentPropsWithoutRef,
@@ -38,6 +38,7 @@ export interface SliderProps
   onChange?: (value: number | [number, number]) => void;
   'aria-label'?: string;
   'aria-valuetext'?: string;
+  thumbSize?: 'small' | 'large';
 }
 
 export const Slider = forwardRef<
@@ -57,11 +58,13 @@ export const Slider = forwardRef<
       onChange,
       'aria-label': ariaLabel,
       'aria-valuetext': ariaValueText,
+      thumbSize = 'large',
       ...props
     },
     ref
   ) => {
     const isRange = variant === 'range';
+    const isThumbSmall = thumbSize === 'small';
     const defaultVal = isRange
       ? (defaultValue as [number, number]) || [min, max]
       : [(defaultValue as number) || min];
@@ -105,15 +108,24 @@ export const Slider = forwardRef<
         {defaultVal.map((_, i) => (
           <SliderPrimitive.Thumb
             key={i}
-            className={styles.thumb}
+            className={cx(styles.thumb)}
             asChild
             aria-label={getLabel(i) || `Thumb ${i + 1}`}
             aria-valuetext={getAriaValueText(i)}
+            data-size={thumbSize}
           >
             <div>
-              <ThumbIcon />
+              {isThumbSmall ? (
+                <div className={styles.thumbSmall} />
+              ) : (
+                <ThumbIcon />
+              )}
               {getLabel(i) && (
-                <Text className={styles.label} size='mini'>
+                <Text
+                  className={styles.label}
+                  size={isThumbSmall ? 'micro' : 'mini'}
+                  weight='medium'
+                >
                   {getLabel(i)}
                 </Text>
               )}
