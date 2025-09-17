@@ -2,8 +2,12 @@
 
 import { type VariantProps, cva } from 'class-variance-authority';
 import { Slider as SliderPrimitive } from 'radix-ui';
-import * as React from 'react';
-import { type ComponentPropsWithoutRef } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  type ElementRef,
+  forwardRef
+} from 'react';
+import { Text } from '../text';
 import styles from './slider.module.css';
 import { ThumbIcon } from './thumb';
 
@@ -36,8 +40,8 @@ export interface SliderProps
   'aria-valuetext'?: string;
 }
 
-export const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
+export const Slider = forwardRef<
+  ElementRef<typeof SliderPrimitive.Root>,
   SliderProps
 >(
   (
@@ -108,7 +112,11 @@ export const Slider = React.forwardRef<
           >
             <div>
               <ThumbIcon />
-              {getLabel(i) && <div className={styles.label}>{getLabel(i)}</div>}
+              {getLabel(i) && (
+                <Text className={styles.label} size='mini'>
+                  {getLabel(i)}
+                </Text>
+              )}
             </div>
           </SliderPrimitive.Thumb>
         ))}
