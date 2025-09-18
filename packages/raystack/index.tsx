@@ -1,6 +1,7 @@
 import './styles/index.css';
 import './normalize.css';
 
+export { Accordion } from './components/accordion';
 export { Amount } from './components/amount';
 export { AnnouncementBar } from './components/announcement-bar';
 export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
