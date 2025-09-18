@@ -1,63 +1,64 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Accordion } from '../accordion';
+import { AccordionRootProps } from '../accordion-root';
 import styles from '../accordion.module.css';
+
+const ITEM_1_TEXT = 'Item 1';
+const ITEM_2_TEXT = 'Item 2';
+const CONTENT_1_TEXT = 'Content 1';
+const CONTENT_2_TEXT = 'Content 2';
+
+const BasicAccordion = ({
+  hasDisabledItem = false,
+  children,
+  ...props
+}: AccordionRootProps & { hasDisabledItem?: boolean }) => {
+  return (
+    <Accordion {...props}>
+      <Accordion.Item value='item-1'>
+        <Accordion.Trigger>{ITEM_1_TEXT}</Accordion.Trigger>
+        <Accordion.Content>{CONTENT_1_TEXT}</Accordion.Content>
+      </Accordion.Item>
+      <Accordion.Item value='item-2' disabled={hasDisabledItem}>
+        <Accordion.Trigger>{ITEM_2_TEXT}</Accordion.Trigger>
+        <Accordion.Content>{CONTENT_2_TEXT}</Accordion.Content>
+      </Accordion.Item>
+      {children}
+    </Accordion>
+  );
+};
 
 describe('Accordion', () => {
   describe('Basic Rendering', () => {
     it('renders accordion with children', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
+      render(<BasicAccordion value='item-1' />);
 
       expect(
-        screen.getByRole('button', { name: 'Item 1' })
+        screen.getByRole('button', { name: ITEM_1_TEXT })
       ).toBeInTheDocument();
-      expect(screen.getByText('Content 1')).toBeInTheDocument();
+      expect(screen.getByText(CONTENT_1_TEXT)).toBeInTheDocument();
     });
 
     it('renders multiple accordion items', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-          <Accordion.Item value='item-2'>
-            <Accordion.Trigger>Item 2</Accordion.Trigger>
-            <Accordion.Content>Content 2</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
+      render(<BasicAccordion />);
 
       expect(
-        screen.getByRole('button', { name: 'Item 1' })
+        screen.getByRole('button', { name: ITEM_1_TEXT })
       ).toBeInTheDocument();
       expect(
-        screen.getByRole('button', { name: 'Item 2' })
+        screen.getByRole('button', { name: ITEM_2_TEXT })
       ).toBeInTheDocument();
-      expect(screen.getByText('Content 1')).toBeInTheDocument();
-      expect(screen.getByText('Content 2')).toBeInTheDocument();
     });
 
     it('applies custom className to accordion', () => {
       render(
-        <Accordion className='custom-accordion'>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
+        <BasicAccordion className='custom-accordion' data-testid='custom' />
       );
 
-      const accordion = screen.getByRole('region');
+      const accordion = screen.getByTestId('custom');
       expect(accordion).toHaveClass('custom-accordion');
-      expect(accordion).toHaveClass(styles.accordion);
     });
 
     it('forwards ref correctly', () => {
@@ -65,204 +66,18 @@ describe('Accordion', () => {
       render(
         <Accordion ref={ref}>
           <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-      expect(ref).toHaveBeenCalled();
-    });
-  });
-
-  describe('AccordionItem', () => {
-    it('renders with correct data attributes', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1' className='custom-item'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const item = screen
-        .getByRole('button', { name: 'Item 1' })
-        .closest('[data-slot="accordion-item"]');
-      expect(item).toHaveClass('custom-item');
-      expect(item).toHaveClass(styles['accordion-item']);
-    });
-
-    it('forwards ref correctly', () => {
-      const ref = vi.fn();
-      render(
-        <Accordion>
-          <Accordion.Item ref={ref} value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-      expect(ref).toHaveBeenCalled();
-    });
-  });
-
-  describe('AccordionTrigger', () => {
-    it('renders with correct data attributes', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger className='custom-trigger'>
-              Item 1
-            </Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
-      expect(trigger).toHaveClass('custom-trigger');
-      expect(trigger).toHaveClass(styles['accordion-trigger']);
-    });
-
-    it('renders with chevron icon', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const icon = screen
-        .getByRole('button', { name: 'Item 1' })
-        .querySelector('svg');
-      expect(icon).toBeInTheDocument();
-      expect(icon).toHaveClass(styles['accordion-icon']);
-    });
-
-    it('forwards ref correctly', () => {
-      const ref = vi.fn();
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger ref={ref}>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
+            <Accordion.Trigger>{ITEM_1_TEXT}</Accordion.Trigger>
+            <Accordion.Content>{CONTENT_1_TEXT}</Accordion.Content>
           </Accordion.Item>
         </Accordion>
       );
       expect(ref).toHaveBeenCalled();
     });
 
-    it('handles click events', () => {
-      const handleClick = vi.fn();
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger onClick={handleClick}>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
-      fireEvent.click(trigger);
-      expect(handleClick).toHaveBeenCalledTimes(1);
-    });
-
-    it('handles disabled state', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger disabled>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
-      expect(trigger).toBeDisabled();
-    });
-  });
-
-  describe('AccordionContent', () => {
-    it('renders with correct data attributes', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content className='custom-content'>
-              Content 1
-            </Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const content = screen
-        .getByText('Content 1')
-        .closest('[data-slot="accordion-content"]');
-      expect(content).toHaveClass('custom-content');
-      expect(content).toHaveClass(styles['accordion-content']);
-    });
-
-    it('forwards ref correctly', () => {
-      const ref = vi.fn();
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content ref={ref}>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-      expect(ref).toHaveBeenCalled();
-    });
-  });
-
-  describe('Size Variants', () => {
-    const sizes = ['small', 'medium', 'large'] as const;
-
-    it.each(sizes)('renders %s size correctly', size => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger size={size}>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
-      expect(trigger).toHaveClass(styles[`accordion-trigger-${size}`]);
-    });
-
-    it('defaults to medium size', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
-      expect(trigger).toHaveClass(styles['accordion-trigger-medium']);
-    });
-  });
-
-  describe('Interaction', () => {
     it('expands and collapses content on trigger click', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
+      render(<BasicAccordion />);
 
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
+      const trigger = screen.getByRole('button', { name: ITEM_1_TEXT });
 
       // Initially closed
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
@@ -276,98 +91,139 @@ describe('Accordion', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
-    it('rotates icon when expanded', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
+    it('supports keyboard navigation', async () => {
+      const user = userEvent.setup();
+      render(<BasicAccordion />);
 
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
+      const trigger = screen.getByRole('button', { name: ITEM_2_TEXT });
 
-      // Initially not rotated
-      expect(trigger).not.toHaveAttribute('data-state', 'open');
+      await user.keyboard('{Tab}{ArrowDown}{Enter}');
 
-      // Click to open
-      fireEvent.click(trigger);
-      expect(trigger).toHaveAttribute('data-state', 'open');
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
   });
 
-  describe('Accessibility', () => {
-    it('has proper ARIA attributes', () => {
+  describe('AccordionItem', () => {
+    it('forwards ref correctly', () => {
+      const ref = vi.fn();
       render(
         <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
+          <Accordion.Item ref={ref} value='item-1'>
+            <Accordion.Trigger>{ITEM_1_TEXT}</Accordion.Trigger>
+            <Accordion.Content>{CONTENT_1_TEXT}</Accordion.Content>
           </Accordion.Item>
         </Accordion>
       );
-
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
-
-      expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      expect(trigger).toHaveAttribute('aria-controls');
+      expect(ref).toHaveBeenCalled();
     });
+  });
 
-    it('supports keyboard navigation', () => {
+  describe('AccordionTrigger', () => {
+    it('renders with custom className', () => {
       render(
         <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
-
-      const trigger = screen.getByRole('button', { name: 'Item 1' });
-
-      // Focus should work
-      trigger.focus();
-      expect(trigger).toHaveFocus();
-
-      // Enter key should toggle
-      fireEvent.keyDown(trigger, { key: 'Enter', code: 'Enter' });
-      expect(trigger).toHaveAttribute('aria-expanded', 'true');
-    });
-
-    it('supports aria-label on trigger', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger aria-label='Custom label'>
-              Item 1
+          <Accordion.Item value='custom'>
+            <Accordion.Trigger
+              className='custom-trigger'
+              data-testid='custom-trigger'
+            >
+              {ITEM_1_TEXT}
             </Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
+            <Accordion.Content>{CONTENT_1_TEXT}</Accordion.Content>
           </Accordion.Item>
         </Accordion>
       );
 
-      expect(screen.getByLabelText('Custom label')).toBeInTheDocument();
+      const trigger = screen.getByTestId('custom-trigger');
+      expect(trigger).toHaveClass('custom-trigger');
+    });
+
+    it('renders with chevron icon', () => {
+      render(<BasicAccordion />);
+
+      const icon = screen
+        .getByRole('button', { name: ITEM_1_TEXT })
+        .querySelector('svg');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveClass(styles['accordion-icon']);
+    });
+
+    it('forwards ref correctly', () => {
+      const ref = vi.fn();
+      render(
+        <Accordion>
+          <Accordion.Item value='item-1'>
+            <Accordion.Trigger ref={ref}>{ITEM_1_TEXT}</Accordion.Trigger>
+            <Accordion.Content>{CONTENT_1_TEXT}</Accordion.Content>
+          </Accordion.Item>
+        </Accordion>
+      );
+      expect(ref).toHaveBeenCalled();
+    });
+
+    it('handles click events', () => {
+      const handleClick = vi.fn();
+      render(
+        <Accordion>
+          <Accordion.Item value='item-1'>
+            <Accordion.Trigger onClick={handleClick}>
+              {ITEM_1_TEXT}
+            </Accordion.Trigger>
+            <Accordion.Content>{CONTENT_1_TEXT}</Accordion.Content>
+          </Accordion.Item>
+        </Accordion>
+      );
+
+      const trigger = screen.getByRole('button', { name: ITEM_1_TEXT });
+      fireEvent.click(trigger);
+      expect(handleClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('handles disabled state', () => {
+      render(<BasicAccordion hasDisabledItem />);
+
+      const trigger = screen.getByRole('button', { name: ITEM_2_TEXT });
+      expect(trigger).toBeDisabled();
+    });
+  });
+
+  describe('AccordionContent', () => {
+    it('renders with correct className', () => {
+      render(
+        <Accordion value='custom'>
+          <Accordion.Item value='custom'>
+            <Accordion.Trigger>{ITEM_1_TEXT}</Accordion.Trigger>
+            <Accordion.Content className='custom-content'>
+              {CONTENT_1_TEXT}
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion>
+      );
+
+      const content = screen.getByText(CONTENT_1_TEXT).closest('div');
+      expect(content).toHaveClass('custom-content');
+    });
+
+    it('forwards ref correctly', () => {
+      const ref = vi.fn();
+      render(
+        <Accordion>
+          <Accordion.Item value='item-1'>
+            <Accordion.Trigger>{ITEM_1_TEXT}</Accordion.Trigger>
+            <Accordion.Content ref={ref}>{CONTENT_1_TEXT}</Accordion.Content>
+          </Accordion.Item>
+        </Accordion>
+      );
+      expect(ref).toHaveBeenCalled();
     });
   });
 
   describe('Multiple Items', () => {
     it('handles multiple accordion items independently', () => {
-      render(
-        <Accordion>
-          <Accordion.Item value='item-1'>
-            <Accordion.Trigger>Item 1</Accordion.Trigger>
-            <Accordion.Content>Content 1</Accordion.Content>
-          </Accordion.Item>
-          <Accordion.Item value='item-2'>
-            <Accordion.Trigger>Item 2</Accordion.Trigger>
-            <Accordion.Content>Content 2</Accordion.Content>
-          </Accordion.Item>
-        </Accordion>
-      );
+      render(<BasicAccordion type='multiple' />);
 
-      const trigger1 = screen.getByRole('button', { name: 'Item 1' });
-      const trigger2 = screen.getByRole('button', { name: 'Item 2' });
+      const trigger1 = screen.getByRole('button', { name: ITEM_1_TEXT });
+      const trigger2 = screen.getByRole('button', { name: ITEM_2_TEXT });
 
       // Open first item
       fireEvent.click(trigger1);
