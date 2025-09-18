@@ -128,6 +128,29 @@ const Page = () => {
           <Text size='large' weight='medium' style={{ marginBottom: '24px' }}>
             Main
           </Text>
+          <code
+            style={{
+              fontFamily: 'var(--rs-font-mono)',
+              fontSize: 'var(--rs-font-size-regular)',
+              lineHeight: 'var(--rs-line-height-regular)',
+              maxWidth: '550px',
+              padding: '16px'
+            }}
+          >{`const button = (x>=2 && y!=3)
+            const getLoaderOnlyClass = (size) =>
+              size === 'small'
+                ? styles['loader-only-button-small']
+                : styles['loader-only-button-normal'];
+
+            const test = 10 >= 8 : true : false;
+
+
+            <= < > >= == === !=  !==
+
+            => ==> && || !! ??
+            <-- -->  ***  ****
+            <!-- -->
+            /* comment */ /* ---------- __ */`}</code>
 
           <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>
             <Search
