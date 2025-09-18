@@ -1,5 +1,4 @@
 import { type VariantProps, cva } from 'class-variance-authority';
-import { Slot } from 'radix-ui';
 import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import styles from './text.module.css';
 
@@ -164,26 +163,26 @@ export const Text = forwardRef<TextRef, TextProps>(
       ...rest
     },
     ref
-  ) => (
-    <Slot.Root
-      ref={ref}
-      className={textVariants({
-        size,
-        className,
-        weight,
-        variant,
-        transform,
-        align,
-        lineClamp,
-        underline,
-        strikeThrough,
-        italic
-      })}
-      {...rest}
-    >
-      <Component>{children}</Component>
-    </Slot.Root>
-  )
+  ) => {
+    const textClassName = textVariants({
+      size,
+      className,
+      weight,
+      variant,
+      transform,
+      align,
+      lineClamp,
+      underline,
+      strikeThrough,
+      italic
+    });
+
+    return (
+      <Component ref={ref} className={textClassName} {...rest}>
+        {children}
+      </Component>
+    );
+  }
 );
 
 Text.displayName = 'Text';

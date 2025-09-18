@@ -14,7 +14,7 @@ const list = cva(styles.list);
 const trigger = cva(styles.trigger);
 const content = cva(styles.content);
 
-interface TabsRootProps
+export interface TabsRootProps
   extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root>,
     VariantProps<typeof root> {
   defaultValue?: string;

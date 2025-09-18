@@ -112,7 +112,7 @@ export function CloseButton({
   );
 }
 
-type SheetProps = ComponentProps<typeof DialogPrimitive.Root> & {
+export type SheetProps = ComponentProps<typeof DialogPrimitive.Root> & {
   ariaLabel?: string;
 };
 

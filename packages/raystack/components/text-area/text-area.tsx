@@ -79,6 +79,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           required={required}
           disabled={disabled}
           placeholder={placeholder}
+          style={style}
           {...props}
         />
         {helperText && (

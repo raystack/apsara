@@ -30,7 +30,7 @@ const SidebarContext = createContext<SidebarContextValue>({
 
 const root = cva(styles.root);
 
-interface SidebarProps
+export interface SidebarProps
   extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
