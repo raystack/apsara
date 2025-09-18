@@ -1,49 +1,24 @@
 'use client';
 
-import { type VariantProps, cva } from 'class-variance-authority';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
+import { cx } from 'class-variance-authority';
 import { Accordion as AccordionPrimitive } from 'radix-ui';
 import { ElementRef, ReactNode, forwardRef } from 'react';
-
-import { TriangleRightIcon } from '~/icons';
 import styles from './accordion.module.css';
 
-const root = cva(styles.accordion);
-const item = cva(styles['accordion-item']);
-const trigger = cva(styles['accordion-trigger'], {
-  variants: {
-    size: {
-      small: styles['accordion-trigger-small'],
-      medium: styles['accordion-trigger-medium'],
-      large: styles['accordion-trigger-large']
-    }
-  },
-  defaultVariants: {
-    size: 'medium'
-  }
-});
-const content = cva(styles['accordion-content']);
-
-interface CommonAccordionProps {
-  children: ReactNode;
-  className?: string;
-}
-
-interface SingleAccordionProps extends Omit<CommonAccordionProps, 'type'> {
-  type: 'single';
-  collapsible?: boolean;
-  defaultValue?: string;
-  value?: string;
-  onValueChange?: (value: string) => void;
-}
-
-interface MultipleAccordionProps extends Omit<CommonAccordionProps, 'type'> {
+type AccordionSingleProps = Omit<
+  AccordionPrimitive.AccordionSingleProps,
+  'type'
+> & {
+  type?: 'single';
+};
+type AccordionMultipleProps = Omit<
+  AccordionPrimitive.AccordionMultipleProps,
+  'type'
+> & {
   type: 'multiple';
-  defaultValue?: string[];
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
-}
-
-export type AccordionRootProps = SingleAccordionProps | MultipleAccordionProps;
+};
+export type AccordionRootProps = AccordionSingleProps | AccordionMultipleProps;
 
 export interface AccordionItemProps
   extends AccordionPrimitive.AccordionItemProps {
@@ -52,8 +27,7 @@ export interface AccordionItemProps
 }
 
 export interface AccordionTriggerProps
-  extends AccordionPrimitive.AccordionTriggerProps,
-    VariantProps<typeof trigger> {
+  extends AccordionPrimitive.AccordionTriggerProps {
   children: ReactNode;
   className?: string;
 }
@@ -64,22 +38,27 @@ export interface AccordionContentProps
   className?: string;
 }
 
-const AccordionRootWithRef = forwardRef<
+const AccordionRoot = forwardRef<
   ElementRef<typeof AccordionPrimitive.Root>,
   AccordionRootProps
->((props, ref) => {
-  const { className, children, type = 'single', ...restProps } = props;
+>(({ className, type = 'single', ...rest }, ref) => {
+  // this is a workaround to properly typecast the union type
+  const singleProps = {
+    type: 'single',
+    collapsible: true,
+    ...rest
+  } as AccordionPrimitive.AccordionSingleProps;
+  const multipleProps = {
+    type: 'multiple',
+    ...rest
+  } as AccordionPrimitive.AccordionMultipleProps;
 
   return (
     <AccordionPrimitive.Root
       ref={ref}
-      className={root({ className })}
-      data-slot='accordion'
-      type={type}
-      {...restProps}
-    >
-      {children}
-    </AccordionPrimitive.Root>
+      className={cx(styles.accordion, className)}
+      {...(type === 'multiple' ? multipleProps : singleProps)}
+    />
   );
 });
 
@@ -89,8 +68,7 @@ const AccordionItem = forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    className={item({ className })}
-    data-slot='accordion-item'
+    className={cx(styles['accordion-item'], className)}
     {...props}
   >
     {children}
@@ -100,16 +78,15 @@ const AccordionItem = forwardRef<
 const AccordionTrigger = forwardRef<
   ElementRef<typeof AccordionPrimitive.Trigger>,
   AccordionTriggerProps
->(({ className, children, size, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Header className={styles['accordion-header']}>
     <AccordionPrimitive.Trigger
       ref={ref}
-      className={trigger({ size, className })}
-      data-slot='accordion-trigger'
+      className={cx(styles['accordion-trigger'], className)}
       {...props}
     >
       {children}
-      <TriangleRightIcon className={styles['accordion-icon']} />
+      <ChevronDownIcon className={styles['accordion-icon']} />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));
@@ -120,20 +97,21 @@ const AccordionContent = forwardRef<
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Content
     ref={ref}
-    className={content({ className })}
-    data-slot='accordion-content'
+    className={styles['accordion-content']}
     {...props}
   >
-    <div className={styles['accordion-content-inner']}>{children}</div>
+    <div className={cx(styles['accordion-content-inner'], className)}>
+      {children}
+    </div>
   </AccordionPrimitive.Content>
 ));
 
-AccordionRootWithRef.displayName = AccordionPrimitive.Root.displayName;
+AccordionRoot.displayName = AccordionPrimitive.Root.displayName;
 AccordionItem.displayName = AccordionPrimitive.Item.displayName;
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;
 
-export const Accordion = Object.assign(AccordionRootWithRef, {
+export const Accordion = Object.assign(AccordionRoot, {
   Item: AccordionItem,
   Trigger: AccordionTrigger,
   Content: AccordionContent
