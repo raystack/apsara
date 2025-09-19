@@ -1,6 +1,6 @@
 export interface SliderProps {
   /** The type of slider. */
-  variant?: "single" | "range";
+  variant?: 'single' | 'range';
 
   /** Controlled value - number for single, [number, number] for range. */
   value?: number | [number, number];
@@ -31,6 +31,12 @@ export interface SliderProps {
    * For range slider, can be a string or [string, string] for individual thumb labels.
    */
   label?: string | [string, string];
+
+  /**
+   * Size of the slider thumb.
+   * @default "large"
+   */
+  thumbSize?: 'small' | 'large';
 
   /** Callback when value changes. */
   onChange?: (value: number | [number, number]) => void;
