@@ -16,7 +16,7 @@
   flex-grow: 1;
   height: var(--rs-space-2);
   background-color: var(--rs-color-background-neutral-secondary);
-  margin: 0 12px;
+  margin: 0 var(--rs-space-4);
 }
 
 .range {
