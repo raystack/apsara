@@ -1,6 +1,8 @@
 export interface AccordionRootProps {
   /**
-   * The type of accordion behavior
+   * Controls how many accordion items can be open at once.
+   * - "single": Only one item can be open at a time
+   * - "multiple": Multiple items can be open simultaneously
    * @defaultValue "single"
    */
   type?: 'single' | 'multiple';

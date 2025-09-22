@@ -68,6 +68,7 @@
   gap: var(--rs-space-5);
   align-self: stretch;
   padding: var(--rs-space-5) var(--rs-space-4);
+  border-top: 0px;
 }
 
 .accordion-content[data-state="closed"] {
