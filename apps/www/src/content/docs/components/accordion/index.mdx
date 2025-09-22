@@ -1,0 +1,83 @@
+---
+title: Accordion
+description: A vertically stacked set of interactive headings that each reveal a section of content.
+tag: new
+---
+
+import {
+  playground,
+  typeDemo,
+  controlledDemo,
+  disabledDemo,
+  customContentDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Accordion } from '@raystack/apsara'
+```
+
+## Accordion Props
+
+<auto-type-table path="./props.ts" name="AccordionRootProps" />
+
+### Accordion.Item Props
+
+<auto-type-table path="./props.ts" name="AccordionItemProps" />
+
+### Accordion.Trigger Props
+
+<auto-type-table path="./props.ts" name="AccordionTriggerProps" />
+
+### Accordion.Content Props
+
+<auto-type-table path="./props.ts" name="AccordionContentProps" />
+
+## Examples
+
+### Single vs Multiple
+
+The Accordion component supports two types of behavior:
+
+- **Single**: Only one item can be open at a time
+- **Multiple**: Multiple items can be open simultaneously
+
+<Demo data={typeDemo} />
+
+### Controlled
+
+You can control the accordion's state by providing `value` and `onValueChange` props.
+
+<Demo data={controlledDemo} />
+
+### Disabled Items
+
+Individual accordion items can be disabled using the `disabled` prop.
+
+<Demo data={disabledDemo} />
+
+### Custom Content
+
+The accordion content can contain any React elements, allowing for rich layouts and complex content.
+
+<Demo data={customContentDemo} />
+
+## Accessibility
+
+The Accordion component is built on top of [Radix UI's Accordion primitive](https://www.radix-ui.com/primitives/docs/components/accordion) and follows the WAI-ARIA design pattern for accordions. It includes:
+
+- Proper ARIA attributes for screen readers
+- Keyboard navigation support
+- Focus management
+- Semantic HTML structure
+
+## Keyboard Navigation
+
+- **Space** or **Enter**: Toggle the focused accordion item
+- **Arrow Down**: Move focus to the next accordion item
+- **Arrow Up**: Move focus to the previous accordion item
+- **Home**: Move focus to the first accordion item
+- **End**: Move focus to the last accordion item
