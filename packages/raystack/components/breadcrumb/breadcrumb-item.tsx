@@ -49,7 +49,7 @@ export const BreadcrumbItem = forwardRef<
         {leadingIcon && (
           <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
         )}
-        <span>{children}</span>
+        {children && <span>{children}</span>}
       </>
     );
 

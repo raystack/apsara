@@ -1,6 +1,6 @@
 'use client';
 
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { HTMLAttributes, forwardRef } from 'react';
 import styles from './breadcrumb.module.css';
@@ -11,17 +11,26 @@ export interface BreadcrumbEllipsisProps
 export const BreadcrumbEllipsis = forwardRef<
   HTMLSpanElement,
   BreadcrumbEllipsisProps
->(({ className, children = <DotsHorizontalIcon />, ...props }, ref) => {
-  return (
-    <span
-      className={cx(styles['breadcrumb-ellipsis'], className)}
-      ref={ref}
-      {...props}
-    >
-      {children}
-    </span>
-  );
-});
+>(
+  (
+    {
+      className,
+      children = <DotsHorizontalIcon width={20} height={20} />,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <span
+        className={cx(styles['breadcrumb-ellipsis'], className)}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </span>
+    );
+  }
+);
 
 BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis';
 
@@ -31,16 +40,25 @@ export interface BreadcrumbSeparatorProps
 export const BreadcrumbSeparator = forwardRef<
   HTMLSpanElement,
   BreadcrumbSeparatorProps
->(({ children = '/', className, ...props }, ref) => {
-  return (
-    <span
-      className={cx(styles['breadcrumb-separator'], className)}
-      ref={ref}
-      {...props}
-    >
-      {children}
-    </span>
-  );
-});
+>(
+  (
+    {
+      children = <ChevronRightIcon width={12} height={12} />,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <span
+        className={cx(styles['breadcrumb-separator'], className)}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </span>
+    );
+  }
+);
 
 BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';
