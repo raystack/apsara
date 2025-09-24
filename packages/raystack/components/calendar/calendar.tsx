@@ -54,7 +54,7 @@ function DropDown({
 
   useEffect(() => {
     if (open && onDropdownOpen) onDropdownOpen();
-  }, [open]);
+  }, [open, onDropdownOpen]);
 
   function handleChange(value: string) {
     if (onChange) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { CalendarIcon } from '@radix-ui/react-icons';
+import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import { useCallback, useMemo, useState } from 'react';
 import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
@@ -8,11 +9,11 @@ import { Flex } from '../flex';
 import { InputField } from '../input-field';
 import { InputFieldProps } from '../input-field/input-field';
 import { Popover } from '../popover';
+import { PopoverContentProps } from '../popover/popover';
 import { Calendar } from './calendar';
 import styles from './calendar.module.css';
 
 interface RangePickerProps {
-  side?: 'top' | 'right' | 'bottom' | 'left';
   dateFormat?: string;
   inputFieldsProps?: { startDate?: InputFieldProps; endDate?: InputFieldProps };
   calendarProps?: PropsRangeRequired & PropsBase;
@@ -26,12 +27,12 @@ interface RangePickerProps {
   showCalendarIcon?: boolean;
   footer?: React.ReactNode;
   timeZone?: string;
+  popoverProps?: PopoverContentProps;
 }
 
 type RangeFields = keyof DateRange;
 
 export function RangePicker({
-  side = 'top',
   dateFormat = 'DD/MM/YYYY',
   inputFieldsProps = {},
   calendarProps,
@@ -45,7 +46,8 @@ export function RangePicker({
   children,
   showCalendarIcon = true,
   footer,
-  timeZone
+  timeZone,
+  popoverProps
 }: RangePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] =
@@ -166,7 +168,11 @@ export function RangePicker({
   return (
     <Popover open={showCalendar} onOpenChange={setShowCalendar}>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
-      <Popover.Content side={side} className={styles.calendarPopover}>
+      <Popover.Content
+        {...popoverProps}
+        className={cx(styles.calendarPopover, popoverProps?.className)}
+        side={popoverProps?.side ?? 'top'}
+      >
         <Calendar
           showOutsideDays={false}
           numberOfMonths={2}

@@ -8,7 +8,7 @@ import styles from './popover.module.css';
 
 const popoverContent = cva(styles.popover);
 
-interface PopoverContentProps
+export interface PopoverContentProps
   extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> {
   ariaLabel?: string;
 }
