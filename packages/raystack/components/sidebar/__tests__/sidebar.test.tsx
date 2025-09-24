@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Sidebar, SidebarProps } from '../sidebar';
+import { Sidebar } from '../sidebar';
+import { SidebarRootProps } from '../sidebar-root';
 import styles from '../sidebar.module.css';
 
 const HEADER_TEXT = 'Apsara';
@@ -24,7 +25,7 @@ const BasicSidebar = ({
   position = 'left',
   children,
   ...props
-}: SidebarProps) => (
+}: SidebarRootProps) => (
   <Sidebar
     defaultOpen={defaultOpen}
     open={open}

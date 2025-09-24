@@ -5,6 +5,7 @@ import { Collapsible } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
   ComponentRef,
+  ReactNode,
   createContext,
   forwardRef,
   useCallback,
@@ -24,16 +25,17 @@ export const SidebarContext = createContext<SidebarContextValue>({
 
 const root = cva(styles.root);
 
-export interface SidebarProps
+export interface SidebarRootProps
   extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
   position?: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
   collapsible?: boolean;
+  tooltipMessage?: ReactNode;
 }
 
 export const SidebarRoot = forwardRef<
   ComponentRef<typeof Collapsible.Root>,
-  SidebarProps
+  SidebarRootProps
 >(
   (
     {
@@ -43,6 +45,7 @@ export const SidebarRoot = forwardRef<
       onOpenChange,
       hideCollapsedItemTooltip,
       collapsible = true,
+      tooltipMessage,
       defaultOpen,
       children,
       ...props
@@ -83,7 +86,10 @@ export const SidebarRoot = forwardRef<
             <aside>
               {collapsible && (
                 <Tooltip
-                  message={open ? 'Click to collapse' : 'Click to expand'}
+                  message={
+                    tooltipMessage ??
+                    (open ? 'Click to collapse' : 'Click to expand')
+                  }
                   side={position === 'left' ? 'right' : 'left'}
                   asChild
                   followCursor
