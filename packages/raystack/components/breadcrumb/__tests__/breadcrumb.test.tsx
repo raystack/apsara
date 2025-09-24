@@ -241,7 +241,7 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Separator />
+          <Breadcrumb.Separator>/</Breadcrumb.Separator>
           <Breadcrumb.Item>Products</Breadcrumb.Item>
         </Breadcrumb>
       );
@@ -349,13 +349,13 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
-          <Breadcrumb.Separator />
+          <Breadcrumb.Separator>/</Breadcrumb.Separator>
           <Breadcrumb.Item href='/products'>Products</Breadcrumb.Item>
-          <Breadcrumb.Separator />
+          <Breadcrumb.Separator>/</Breadcrumb.Separator>
           <Breadcrumb.Item href='/products/electronics'>
             Electronics
           </Breadcrumb.Item>
-          <Breadcrumb.Separator />
+          <Breadcrumb.Separator>/</Breadcrumb.Separator>
           <Breadcrumb.Item current>Laptop</Breadcrumb.Item>
         </Breadcrumb>
       );
