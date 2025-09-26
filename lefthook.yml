@@ -4,3 +4,6 @@ pre-commit:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: pnpm format
       stage_fixed: true
+    figma-validate-config:
+      glob: "packages/raystack/figma.config.json"
+      run: pnpm --filter @raystack/apsara figma:validate-config
