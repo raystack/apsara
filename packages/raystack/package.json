@@ -44,7 +44,10 @@
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui",
-    "build:icons": "node scripts/create-icons.js"
+    "build:icons": "node scripts/create-icons.js",
+    "figma:update-config": "node scripts/update-figma-config.js",
+    "figma:validate-config": "node scripts/validate-figma-config.js",
+    "figma:publish": "pnpm figma:update-config && figma connect publish"
   },
   "typesVersions": {
     "*": {
@@ -67,6 +70,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@figma/code-connect": "^1.3.5",
     "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -78,6 +82,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/ui": "^3.2.4",
+    "dotenv": "^17.2.2",
     "eslint-config-custom": "workspace:*",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
