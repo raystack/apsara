@@ -1,0 +1,165 @@
+---
+title: Code Block
+description: A composite component for displaying code with syntax highlighting, line numbers, and copy functionality using the composite pattern.
+---
+
+import {
+  playground,
+  basicDemo,
+  withoutHeaderDemo,
+  customLanguageDemo,
+  noLineNumbersDemo,
+  maxHeightDemo,
+  compositePatternDemo,
+  languageSwitcherDemo,
+} from "./demo.ts";
+
+{/* <Demo data={playground} /> */}
+
+## Usage
+
+```tsx
+import { CodeBlockComponent } from '@raystack/apsara'
+```
+
+## Component Props
+
+### CodeBlockComponent.Root Props
+
+<auto-type-table path="./props.ts" name="CodeBlockRootProps" />
+
+### CodeBlockComponent.Header Props
+
+<auto-type-table path="./props.ts" name="CodeBlockHeaderProps" />
+
+### CodeBlockComponent.Content Props
+
+<auto-type-table path="./props.ts" name="CodeBlockContentProps" />
+
+## Examples
+
+### Basic Usage
+
+<Demo data={basicDemo} />
+
+The most basic usage using `CodeBlockComponent.Root` for displaying code content.
+
+### Without Header
+
+<Demo data={withoutHeaderDemo} />
+
+Using `CodeBlockComponent.Root` displays only the code content with a floating copy button.
+
+### Custom Language
+
+<Demo data={customLanguageDemo} />
+
+Specify different programming languages for proper syntax highlighting. Supported languages include JavaScript, TypeScript, Python, Java, CSS, HTML, and more.
+
+### No Line Numbers
+
+<Demo data={noLineNumbersDemo} />
+
+Disable line numbers by setting `showLineNumbers={false}`.
+
+### Max Height with Scrolling
+
+<Demo data={maxHeightDemo} />
+
+Set a maximum height to create scrollable code blocks for long code snippets.
+
+### Composite Pattern
+
+<Demo data={compositePatternDemo} />
+
+The CodeBlock component follows a composite pattern, allowing you to use individual parts:
+
+- `CodeBlockComponent.Root` - Core code rendering with floating copy button
+- `CodeBlockComponent.Header` - Header with label, language switcher, and copy button
+- `CodeBlockComponent.Content` - Content-only version with optional copy button
+
+### Language Switcher
+
+<Demo data={languageSwitcherDemo} />
+
+Use the `CodeBlockComponent.Header` with `onLanguageChange` callback to implement dynamic language switching with custom language options.
+
+## Composite Pattern Usage
+
+The CodeBlock component is designed to be used exclusively through the composite pattern:
+
+```tsx
+import { CodeBlockComponent } from '@raystack/apsara';
+
+// Root component - displays code with floating copy button
+<CodeBlockComponent.Root language="javascript">
+  {code}
+</CodeBlockComponent.Root>
+
+// Header component - displays label, language switcher, and copy button
+<CodeBlockComponent.Header
+  label="My Code"
+  language="javascript"
+  codeContent={code}
+  onLanguageChange={handleLanguageChange}
+/>
+
+// Content component - displays code with optional copy button
+<CodeBlockComponent.Content
+  language="javascript"
+  showCopyButton={false}
+>
+  {code}
+</CodeBlockComponent.Content>
+```
+
+## Features
+
+### Syntax Highlighting
+
+The CodeBlock component uses Prism.js for syntax highlighting, supporting a wide range of programming languages with the VS Dark theme.
+
+### Copy Functionality
+
+- **Header Mode**: Copy button appears in the header toolbar (`CodeBlockComponent.Header`)
+- **Floating Mode**: Copy button appears as a floating overlay (`CodeBlockComponent.Root`)
+- **Content Mode**: Optional copy button (`CodeBlockComponent.Content`)
+- **Visual Feedback**: Button shows a checkmark icon when copy is successful
+- **Auto Reset**: Returns to copy icon after 1 second
+
+### Line Numbers
+
+Line numbers are displayed by default and can be toggled off. They help with code navigation and referencing specific lines.
+
+### Language Switcher
+
+The header includes a dropdown to switch between different programming languages, useful for displaying the same code in multiple languages.
+
+### Responsive Design
+
+The component is fully responsive and adapts to different screen sizes:
+- Header controls stack vertically on mobile
+- Copy button remains accessible
+- Code content scrolls horizontally when needed
+
+## Accessibility
+
+- **Keyboard Navigation**: All interactive elements are keyboard accessible
+- **Screen Reader Support**: Proper ARIA labels and roles
+- **Focus Management**: Clear focus indicators
+- **Color Contrast**: Meets WCAG guidelines for text contrast
+
+## Best Practices
+
+1. **Use Appropriate Languages**: Always specify the correct language for proper syntax highlighting
+2. **Consider Content Length**: Use `maxHeight` for very long code snippets
+3. **Provide Context**: Use meaningful `label` values in headers
+4. **Test Copy Functionality**: Ensure the code content is properly formatted for copying
+5. **Mobile Considerations**: Test on mobile devices to ensure readability
+6. **Composite Pattern**: Always use the composite pattern - no generic `CodeBlock` component exists
+
+## Related Components
+
+- [Copy Button](/docs/components/copy-button) - Standalone copy functionality
+- [Text](/docs/components/text) - For displaying regular text content
+- [Container](/docs/components/container) - For layout and spacing
