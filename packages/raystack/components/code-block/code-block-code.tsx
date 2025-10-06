@@ -4,7 +4,7 @@ import { cx } from 'class-variance-authority';
 import { Highlight } from 'prism-react-renderer';
 import { Language } from 'prism-react-renderer';
 import { HTMLAttributes, forwardRef, memo } from 'react';
-import { useIsomorphicLayoutEffect } from '~/hooks/useIsomorphicLayoutEffect';
+import { useIsomorphicLayoutEffect } from '~/hooks';
 import { useCodeBlockContext } from './code-block-root';
 import styles from './code-block.module.css';
 import code from './code.module.css';

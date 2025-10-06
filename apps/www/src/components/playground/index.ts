@@ -7,6 +7,7 @@ export * from './calendar-examples';
 export * from './callout-examples';
 export * from './checkbox-examples';
 export * from './chip-examples';
+export * from './code-block-examples';
 export * from './command-examples';
 export * from './container-examples';
 export * from './data-table-examples';
