@@ -2,238 +2,192 @@
 
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: Record<string, unknown>) => {
-  const { children, ...rest } = props;
-  return `<CodeBlockComponent.Root${getPropsString(rest)}>${children}</CodeBlockComponent.Root>`;
+const jsxCode = `{\`function add(a, b) {
+  return a + b;
+}\`}`;
+
+const tsxCode = `{\`function add(a: number, b: number): number {
+  return a + b;
+}\`}`;
+
+const longCode = `{\`<Dialog>
+  <Dialog.Trigger asChild>
+    <Button>Basic Dialog</Button>
+  </Dialog.Trigger>
+  <Dialog.Content
+    width={300}
+    ariaLabel="Basic Dialog"
+    ariaDescription="A simple dialog example"
+  >
+    <Dialog.Header>
+      <Dialog.Title>A simple dialog example</Dialog.Title>
+      <Dialog.CloseButton />
+    </Dialog.Header>
+    <Dialog.Body>
+      <Dialog.Description>
+        This is a basic dialog with title and description.
+      </Dialog.Description>
+    </Dialog.Body>
+    <Dialog.Footer>
+      <Button>OK</Button>
+      <Dialog.Close asChild>
+        <Button color="neutral">Cancel</Button>
+      </Dialog.Close>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog>\`}`;
+
+const getCode = (props: Record<string, unknown>) => {
+  const { children, maxLines, defaultValue = 'jsx', ...rest } = props;
+  return `<CodeBlock${getPropsString({ ...rest, ...(maxLines ? { maxLines: Number(maxLines) } : {}), defaultValue })}>
+  <CodeBlock.Header>
+          <CodeBlock.Label>Code</CodeBlock.Label>
+          <CodeBlock.LanguageSelect>
+            <CodeBlock.LanguageSelectTrigger />
+            <CodeBlock.LanguageSelectContent>
+              <CodeBlock.LanguageSelectItem value='jsx'>
+                JSX
+              </CodeBlock.LanguageSelectItem>
+              <CodeBlock.LanguageSelectItem value='tsx'>
+                TSX
+              </CodeBlock.LanguageSelectItem>
+            </CodeBlock.LanguageSelectContent>
+          </CodeBlock.LanguageSelect>
+          <CodeBlock.CopyButton />
+        </CodeBlock.Header>
+        <CodeBlock.Content>
+          <CodeBlock.Code language='jsx'>${longCode}</CodeBlock.Code>
+          <CodeBlock.Code language='tsx'>${tsxCode}</CodeBlock.Code>
+          <CodeBlock.CollapseTrigger />
+        </CodeBlock.Content>
+      </CodeBlock>`;
 };
 
 export const playground = {
   type: 'playground',
   controls: {
-    language: {
+    hideLineNumbers: {
+      type: 'checkbox',
+      defaultValue: false
+    },
+    maxLines: {
+      type: 'number',
+      defaultValue: 0,
+      initialValue: 10,
+      min: 0,
+      max: 20
+    },
+    defaultValue: {
       type: 'select',
-      options: [
-        'javascript',
-        'typescript',
-        'python',
-        'java',
-        'css',
-        'html',
-        'json'
-      ],
-      defaultValue: 'javascript'
-    },
-    showLineNumbers: {
-      type: 'checkbox',
-      defaultValue: true
-    },
-    showCopyButton: {
-      type: 'checkbox',
-      defaultValue: true
-    },
-    maxHeight: {
-      type: 'text',
-      defaultValue: ''
+      options: ['jsx', 'tsx'],
+      defaultValue: 'jsx'
     }
   },
-  code: `function greetUser(name) {
-  const message = \`Hello, \${name}!\`;
-  console.log(message);
-  return message;
-}
-
-const user = "World";
-const greeting = greetUser(user);`
+  getCode
 };
 
 export const basicDemo = {
   type: 'code',
-  code: `import { CodeBlockComponent } from '@raystack/apsara';
-
-function MyComponent() {
-  const code = \`function hello() {
-  console.log('Hello, world!');
-}\`;
-
-  return (
-    <CodeBlockComponent.Root language="javascript">
-      {code}
-    </CodeBlockComponent.Root>
-  );
-}`
+  code: `<CodeBlock>
+  <CodeBlock.Content>
+    <CodeBlock.Code language="jsx">
+      ${jsxCode}
+    </CodeBlock.Code>
+  </CodeBlock.Content>
+</CodeBlock>`
 };
 
-export const withoutHeaderDemo = {
+export const withHeaderDemo = {
   type: 'code',
-  code: `import { CodeBlockComponent } from '@raystack/apsara';
-
-function MyComponent() {
-  const code = \`function hello() {
-  console.log('Hello, world!');
-}\`;
-
-  return (
-    <CodeBlockComponent.Root language="javascript">
-      {code}
-    </CodeBlockComponent.Root>
-  );
-}`
-};
-
-export const customLanguageDemo = {
-  type: 'code',
-  code: `import { CodeBlockComponent } from '@raystack/apsara';
-
-function MyComponent() {
-  const pythonCode = \`def fibonacci(n):
-    if n <= 1:
-        return n
-    return fibonacci(n-1) + fibonacci(n-2)
-
-print(fibonacci(10))\`;
-
-  return (
-    <CodeBlockComponent.Root language="python">
-      {pythonCode}
-    </CodeBlockComponent.Root>
-  );
-}`
-};
-
-export const noLineNumbersDemo = {
-  type: 'code',
-  code: `import { CodeBlockComponent } from '@raystack/apsara';
-
-function MyComponent() {
-  const code = \`function hello() {
-  console.log('Hello, world!');
-}\`;
-
-  return (
-    <CodeBlockComponent.Root
-      language="javascript"
-      showLineNumbers={false}
-    >
-      {code}
-    </CodeBlockComponent.Root>
-  );
-}`
-};
-
-export const maxHeightDemo = {
-  type: 'code',
-  code: `import { CodeBlockComponent } from '@raystack/apsara';
-
-function MyComponent() {
-  const longCode = \`// This is a very long code example
-function processData(data) {
-  const result = [];
-
-  for (let i = 0; i < data.length; i++) {
-    const item = data[i];
-
-    if (item.type === 'user') {
-      result.push({
-        id: item.id,
-        name: item.name,
-        email: item.email,
-        createdAt: new Date(item.createdAt),
-        updatedAt: new Date(item.updatedAt)
-      });
-    } else if (item.type === 'admin') {
-      result.push({
-        id: item.id,
-        name: item.name,
-        role: item.role,
-        permissions: item.permissions,
-        createdAt: new Date(item.createdAt)
-      });
-    }
-  }
-
-  return result;
-}
-
-export default processData;\`;
-
-  return (
-    <CodeBlockComponent.Root
-      language="javascript"
-      maxHeight="200px"
-    >
-      {longCode}
-    </CodeBlockComponent.Root>
-  );
-}`
-};
-
-export const compositePatternDemo = {
-  type: 'code',
-  code: `import { CodeBlockComponent } from '@raystack/apsara';
-
-function MyComponent() {
-  const code = \`function hello() {
-  console.log('Hello, world!');
-}\`;
-
-  return (
-    <div>
-      {/* Using Root component */}
-      <CodeBlockComponent.Root language="javascript">
-        {code}
-      </CodeBlockComponent.Root>
-
-      {/* Using Content component */}
-      <CodeBlockComponent.Content language="typescript">
-        {code}
-      </CodeBlockComponent.Content>
-
-      {/* Using Header component */}
-      <CodeBlockComponent.Header
-        label="Custom Header"
-        language="javascript"
-        codeContent={code}
-      />
-    </div>
-  );
-}`
+  code: `<CodeBlock>
+      <CodeBlock.Header>
+        <CodeBlock.Label>Header Example</CodeBlock.Label>
+        <CodeBlock.CopyButton />
+      </CodeBlock.Header>
+      <CodeBlock.Content>
+        <CodeBlock.Code language="jsx">
+          ${jsxCode}
+        </CodeBlock.Code>
+      </CodeBlock.Content>
+    </CodeBlock>`
 };
 
 export const languageSwitcherDemo = {
   type: 'code',
-  code: `import { CodeBlockComponent } from '@raystack/apsara';
-import { useState } from 'react';
+  code: `<CodeBlock>
+        <CodeBlock.Header>
+          <CodeBlock.Label>Code</CodeBlock.Label>
+          <CodeBlock.LanguageSelect>
+            <CodeBlock.LanguageSelectTrigger />
+            <CodeBlock.LanguageSelectContent>
+              <CodeBlock.LanguageSelectItem value='jsx'>
+                JSX
+              </CodeBlock.LanguageSelectItem>
+              <CodeBlock.LanguageSelectItem value='tsx'>
+                TSX
+              </CodeBlock.LanguageSelectItem>
+            </CodeBlock.LanguageSelectContent>
+          </CodeBlock.LanguageSelect>
+        </CodeBlock.Header>
+        <CodeBlock.Content>
+          <CodeBlock.Code language='tsx'>${jsxCode}</CodeBlock.Code>
+          <CodeBlock.Code language='jsx'>${tsxCode}</CodeBlock.Code>
+        </CodeBlock.Content>
+      </CodeBlock>`
+};
 
-function MyComponent() {
-  const [currentLanguage, setCurrentLanguage] = useState('javascript');
+export const noLineNumbersDemo = {
+  type: 'code',
+  code: `<CodeBlock hideLineNumbers>
+  <CodeBlock.Content>
+      <CodeBlock.Code language="jsx">
+        ${jsxCode}
+      </CodeBlock.Code>
+    </CodeBlock.Content>
+    </CodeBlock>`
+};
 
-  const codeExamples = {
-    javascript: \`function greet(name) {
-  return \`Hello, \${name}!\`;
-}\`,
-    typescript: \`function greet(name: string): string {
-  return \`Hello, \${name}!\`;
-}\`,
-    python: \`def greet(name):
-    return f"Hello, {name}!"\`,
-    java: \`public String greet(String name) {
-    return "Hello, " + name + "!";
-}\`
-  };
+export const collapsibleDemo = {
+  type: 'code',
+  code: `<CodeBlock maxLines={10}>
+  <CodeBlock.Content>
+  <CodeBlock.Code language="jsx">
+    ${longCode}
+  </CodeBlock.Code>
+  <CodeBlock.CollapseTrigger />
+  </CodeBlock.Content>
+</CodeBlock>`
+};
 
-  return (
-    <div>
-      <CodeBlockComponent.Header
-        label="Language Switcher"
-        language={currentLanguage}
-        onLanguageChange={setCurrentLanguage}
-        availableLanguages={['javascript', 'typescript', 'python', 'java']}
-        codeContent={codeExamples[currentLanguage]}
-      />
-      <CodeBlockComponent.Root language={currentLanguage}>
-        {codeExamples[currentLanguage]}
-      </CodeBlockComponent.Root>
-    </div>
-  );
-}`
+export const copyButtonDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Floating',
+      code: `
+      <CodeBlock>
+      <CodeBlock.Content>
+      <CodeBlock.Code language="jsx">
+          ${jsxCode}
+        </CodeBlock.Code>
+        <CodeBlock.CopyButton variant="floating" />
+      </CodeBlock.Content>
+    </CodeBlock>`
+    },
+    {
+      name: 'In header',
+      code: `
+      <CodeBlock>
+      <CodeBlock.Header>
+        <CodeBlock.Label>Code</CodeBlock.Label>
+        <CodeBlock.CopyButton />
+      </CodeBlock.Header>
+      <CodeBlock.Content>
+      <CodeBlock.Code language="jsx">
+          ${jsxCode}
+        </CodeBlock.Code>
+      </CodeBlock.Content>
+    </CodeBlock>`
+    }
+  ]
 };

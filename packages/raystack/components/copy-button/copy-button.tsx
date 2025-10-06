@@ -1,23 +1,21 @@
 'use client';
 
 import { CopyIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import { ElementRef, forwardRef, useState } from 'react';
 import { useCopyToClipboard } from '~/hooks/useCopyToClipboard';
 import { CheckCircleFilledIcon } from '~/icons';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
 
-interface CopyButtonProps extends IconButtonProps {
+export interface CopyButtonProps extends IconButtonProps {
   text: string;
   resetTimeout?: number;
   resetIcon?: boolean;
 }
 
-export const CopyButton = ({
-  text,
-  resetTimeout = 1000,
-  resetIcon = true,
-  ...props
-}: CopyButtonProps) => {
+export const CopyButton = forwardRef<
+  ElementRef<typeof IconButton>,
+  CopyButtonProps
+>(({ text, resetTimeout = 1000, resetIcon = true, ...props }, ref) => {
   const { copy } = useCopyToClipboard();
   const [isCopied, setIsCopied] = useState(false);
 
@@ -34,7 +32,12 @@ export const CopyButton = ({
   }
 
   return (
-    <IconButton {...props} onClick={onCopy} data-test-id='copy-button'>
+    <IconButton
+      ref={ref}
+      {...props}
+      onClick={onCopy}
+      data-test-id='copy-button'
+    >
       {isCopied ? (
         <CheckCircleFilledIcon color='var(--rs-color-foreground-success-primary)' />
       ) : (
@@ -42,4 +45,6 @@ export const CopyButton = ({
       )}
     </IconButton>
   );
-};
+});
+
+CopyButton.displayName = 'CopyButton';

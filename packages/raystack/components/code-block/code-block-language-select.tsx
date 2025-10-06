@@ -1,47 +1,34 @@
-import React, { forwardRef } from 'react';
+'use client';
 
+import { cx } from 'class-variance-authority';
 import { Language } from 'prism-react-renderer';
+import { ComponentProps, ElementRef, forwardRef } from 'react';
 import { Select } from '../select';
+import { SingleSelectProps } from '../select/select-root';
 import { useCodeBlockContext } from './code-block-root';
 import styles from './code-block.module.css';
 
-export interface CodeBlockLanguageSelectProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export const CodeBlockLanguageSelect = forwardRef<
-  HTMLDivElement,
-  CodeBlockLanguageSelectProps
->(({ children, className, ...props }, ref) => {
-  const { selectedLanguage, setSelectedLanguage } = useCodeBlockContext();
+export const CodeBlockLanguageSelect = (props: SingleSelectProps) => {
+  const { value, setValue } = useCodeBlockContext();
 
   const handleValueChange = (value: string) => {
-    setSelectedLanguage(value as Language);
+    setValue(value as Language);
   };
-  return (
-    <Select onValueChange={handleValueChange} value={selectedLanguage}>
-      {children}
-    </Select>
-  );
-});
+  return <Select onValueChange={handleValueChange} value={value} {...props} />;
+};
 
 CodeBlockLanguageSelect.displayName = 'CodeBlockLanguageSelect';
 
-export interface CodeBlockLanguageSelectTriggerProps
-  extends React.HTMLAttributes<HTMLButtonElement> {
-  className?: string;
-}
-
 export const CodeBlockLanguageSelectTrigger = forwardRef<
-  HTMLButtonElement,
-  CodeBlockLanguageSelectTriggerProps
+  ElementRef<typeof Select.Trigger>,
+  ComponentProps<typeof Select.Trigger>
 >(({ className, ...props }, ref) => {
   return (
     <Select.Trigger
       ref={ref}
-      className={`${styles.languageSelectTrigger} ${className || ''}`}
+      className={cx(styles.languageSelectTrigger, className)}
+      size='small'
+      variant='text'
       {...props}
     >
       <Select.Value />
