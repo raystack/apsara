@@ -17,6 +17,7 @@ export default function Page() {
       <Playground.CalloutExamples />
       <Playground.CheckboxExamples />
       <Playground.ChipExamples />
+      <Playground.CodeBlockExamples />
       <Playground.CommandExamples />
       <Playground.ContainerExamples />
       <Playground.DataTableExamples />

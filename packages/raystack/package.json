@@ -113,6 +113,7 @@
     "cmdk": "^1.1.1",
     "color": "^5.0.0",
     "dayjs": "^1.11.11",
+    "prism-react-renderer": "^2.4.1",
     "radix-ui": "^1.4.2",
     "react-day-picker": "^9.6.7",
     "sonner": "^2.0.6"

@@ -115,6 +115,11 @@
       "bracketSpacing": true
     }
   },
+  "css": {
+    "parser": {
+      "cssModules": true
+    }
+  },
   "overrides": [
     { "include": [".eslintrc.{js,cjs}"] },
     {

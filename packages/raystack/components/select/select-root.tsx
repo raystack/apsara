@@ -78,14 +78,14 @@ type BaseSelectProps = Omit<
   htmlAutoComplete?: string;
 };
 
-interface SingleSelectProps extends BaseSelectProps {
+export interface SingleSelectProps extends BaseSelectProps {
   multiple?: false;
   value?: string;
   onValueChange?: (value: string) => void;
   defaultValue?: string;
 }
 
-interface MultipleSelectProps extends BaseSelectProps {
+export interface MultipleSelectProps extends BaseSelectProps {
   multiple: true;
   value?: string[];
   onValueChange?: (value: string[]) => void;

@@ -1,0 +1,129 @@
+---
+title: Code Block
+description: A flexible composite component for displaying code with syntax highlighting, line numbers, copy functionality, and multi-language support.
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  withHeaderDemo,
+  languageSwitcherDemo,
+  noLineNumbersDemo,
+  collapsibleDemo,
+  copyButtonDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { CodeBlock } from '@raystack/apsara'
+```
+
+## Component Structure
+
+The CodeBlock component uses a composite pattern, providing modular sub-components for flexible code display:
+
+- `CodeBlock` - Root container that manages state and context
+- `CodeBlock.Header` - Optional header section for labels and controls
+- `CodeBlock.Content` - Main content area containing code blocks
+- `CodeBlock.Label` - Text label displayed in the header
+- `CodeBlock.Code` - Individual code block with syntax highlighting
+- `CodeBlock.CopyButton` - Copy functionality (floating or inline variants)
+- `CodeBlock.LanguageSelect` - Language selection dropdown container
+- `CodeBlock.LanguageSelectTrigger` - Button to open language selection
+- `CodeBlock.LanguageSelectContent` - Language select content container
+- `CodeBlock.LanguageSelectItem` - Individual language option
+- `CodeBlock.CollapseTrigger` - Button to expand/collapse long code blocks
+
+## API Reference
+
+### CodeBlock Props
+
+<auto-type-table path="./props.ts" name="CodeBlockProps" />
+
+### CodeBlock.Header Props
+
+<auto-type-table path="./props.ts" name="CodeBlockHeaderProps" />
+
+### CodeBlock.Content Props
+
+<auto-type-table path="./props.ts" name="CodeBlockContentProps" />
+
+### CodeBlock.Label Props
+
+<auto-type-table path="./props.ts" name="CodeBlockLabelProps" />
+
+### CodeBlock.LanguageSelect Props
+
+<auto-type-table path="./props.ts" name="CodeBlockLanguageSelectProps" />
+
+### CodeBlock.LanguageSelectTrigger Props
+
+<auto-type-table path="./props.ts" name="CodeBlockLanguageSelectTriggerProps" />
+
+### CodeBlock.CopyButton Props
+
+<auto-type-table path="./props.ts" name="CodeBlockCopyButtonProps" />
+
+### CodeBlock.Code Props
+
+<auto-type-table path="./props.ts" name="CodeBlockCodeProps" />
+
+### CodeBlock.CollapseTrigger Props
+
+<auto-type-table path="./props.ts" name="CodeBlockCollapseTriggerProps" />
+
+## Examples
+
+### Basic Usage
+
+The most basic usage using `CodeBlock` with `CodeBlock.Code` for displaying code content with a floating copy button.
+
+<Demo data={basicDemo} />
+
+### With Header
+
+Add a structured header with labels and controls using `CodeBlock.Header`, `CodeBlock.Label`, and `CodeBlock.CopyButton` for better organization and user experience.
+
+<Demo data={withHeaderDemo} />
+
+### Language Switcher
+
+Support multiple programming languages by including multiple `CodeBlock.Code` components with different language values.
+Use `CodeBlock.LanguageSelect` to provide a dropdown for users to switch between languages. The component automatically displays the code block matching the selected language value, which can be controlled programmatically using the `value` and `onValueChange` props.
+
+<Demo data={languageSwitcherDemo} />
+
+### No Line Numbers
+
+Hide line numbers by setting the `hideLineNumbers` prop to `true` on the root `CodeBlock` component for a cleaner appearance.
+
+<Demo data={noLineNumbersDemo} />
+
+### Collapsible Code
+
+For long code snippets, use the `maxLines` prop to create collapsible code blocks. When the code exceeds the specified number of lines, a `CodeBlock.CollapseTrigger` button appears, allowing users to expand or collapse the content.
+
+<Demo data={collapsibleDemo} />
+
+
+### Copy Button Variants
+
+
+The `CodeBlock.CopyButton` component offers two placement options:
+- **Floating**: Overlays on the code block using `variant="floating"`
+- **Inline**: Positioned within the header alongside other controls
+
+<Demo data={copyButtonDemo} />
+
+## Accessibility
+
+The CodeBlock component is built with accessibility in mind:
+
+- **Keyboard Navigation**: All interactive elements support keyboard navigation
+- **Screen Reader Support**: Proper ARIA labels and semantic roles for screen readers
+- **Focus Management**: Clear visual focus indicators for keyboard users
+- **Color Contrast**: Meets WCAG guidelines for sufficient text contrast ratios
