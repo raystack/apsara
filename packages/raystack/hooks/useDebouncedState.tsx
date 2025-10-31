@@ -18,7 +18,7 @@ export type UseDebouncedStateReturnValue<T> = [
 /**
  * A hook that debounces the state update.
  * @param defaultValue - The default value of the state.
- * @param wait - The wait time in milliseconds.
+ * @param delay - The delay time in milliseconds.
  * @param options - The options for the hook.
  * @returns A tuple containing the current value and the debounced set value function.
  *
@@ -30,7 +30,7 @@ export type UseDebouncedStateReturnValue<T> = [
  */
 export function useDebouncedState<T = any>(
   defaultValue: T,
-  wait: number,
+  delay: number,
   options: UseDebouncedStateOptions = { leading: false }
 ): UseDebouncedStateReturnValue<T> {
   const [value, setValue] = useState(defaultValue);
@@ -52,11 +52,11 @@ export function useDebouncedState<T = any>(
         timeoutRef.current = window.setTimeout(() => {
           leadingRef.current = true;
           setValue(newValue);
-        }, wait);
+        }, delay);
       }
       leadingRef.current = false;
     },
-    [options.leading, clearTimeout, wait]
+    [options.leading, clearTimeout, delay]
   );
 
   return [value, debouncedSetValue] as const;
