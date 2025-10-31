@@ -7,6 +7,11 @@ import {
 } from 'react';
 
 export interface UseDebouncedStateOptions {
+  /**
+   * If `true`, the state will be updated immediately on the first call (leading edge).
+   * Subsequent calls within the delay period will be debounced.
+   * @default false
+   */
   leading?: boolean;
 }
 
