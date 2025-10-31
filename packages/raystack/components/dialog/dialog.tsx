@@ -21,6 +21,7 @@ export interface DialogContentProps
   overlayClassName?: string;
   overlayStyle?: React.CSSProperties;
   width?: string | number;
+  scrollableOverlay?: boolean;
 }
 
 const DialogContent = forwardRef<
@@ -37,21 +38,23 @@ const DialogContent = forwardRef<
       overlayClassName,
       overlayStyle,
       width,
+      scrollableOverlay = false,
       ...props
     },
     ref
-  ) => (
-    <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay
-        className={cx(
-          styles.dialogOverlay,
-          overlayClassName,
-          overlayBlur && styles.overlayBlur
-        )}
-        style={overlayStyle}
-        aria-hidden='true'
-        role='presentation'
-      />
+  ) => {
+    const overlayProps: DialogPrimitive.DialogOverlayProps = {
+      className: cx(
+        styles.dialogOverlay,
+        overlayClassName,
+        overlayBlur && styles.overlayBlur
+      ),
+      style: overlayStyle,
+      'aria-hidden': 'true',
+      role: 'presentation'
+    };
+
+    const content = (
       <DialogPrimitive.Content
         ref={ref}
         className={dialogContent({ className })}
@@ -62,8 +65,22 @@ const DialogContent = forwardRef<
       >
         {children}
       </DialogPrimitive.Content>
-    </DialogPrimitive.Portal>
-  )
+    );
+    return (
+      <DialogPrimitive.Portal>
+        {scrollableOverlay ? (
+          <DialogPrimitive.Overlay {...overlayProps}>
+            {content}
+          </DialogPrimitive.Overlay>
+        ) : (
+          <>
+            <DialogPrimitive.Overlay {...overlayProps} />
+            {content}
+          </>
+        )}
+      </DialogPrimitive.Portal>
+    );
+  }
 );
 
 DialogContent.displayName = DialogPrimitive.Content.displayName;
