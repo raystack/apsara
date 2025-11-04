@@ -150,3 +150,24 @@ export const stateDemo = {
     }
   ]
 };
+
+export const tooltipDemo = {
+  type: 'code',
+  code: `<Sidebar
+          defaultOpen
+          tooltipMessage="Toggle navigation"
+        >
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <Home width={24} height={24}/>
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+          </Sidebar.Main>
+        </Sidebar>`
+};

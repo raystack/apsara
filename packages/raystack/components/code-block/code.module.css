@@ -1,0 +1,188 @@
+.theme :global(.token) {
+  position: relative;
+}
+
+.theme :global(.token.prolog) {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.theme :global(.token.doctype) {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.theme :global(.token.cdata) {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.theme :global(.token.comment) {
+  color: var(--rs-color-foreground-base-secondary) !important;
+}
+
+.theme :global(.token.namespace) {
+  opacity: 0.7;
+}
+
+.theme :global(.token.string) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.attr-value) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.url) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.symbol) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.boolean) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.variable) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.constant) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.language-json .token.boolean) {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.theme :global(.token.keyword) {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.theme :global(.token.tag.attr-value) {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.theme :global(.token.tag) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.class-name) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.number) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.tag) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.language-autohotkey .token.tag) {
+  color: var(--rs-color-foreground-danger-primary-hover);
+}
+
+.theme :global(.token.selector) {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.theme :global(.language-autohotkey .token.keyword) {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.theme :global(.token.important) {
+  font-weight: 500;
+}
+
+.theme :global(.token.bold) {
+  font-weight: 500;
+}
+
+.theme :global(.token.italic) {
+  font-style: italic;
+}
+
+.theme :global(.token.deleted) {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.theme :global(.token.inserted) {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.theme :global(.language-json .token.property) {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.theme :global(.language-markdown .token.title) {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.theme :global(.language-markdown .token.code) {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.theme :global(.language-markdown .token.list) {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.theme :global(.language-markdown .token.hr) {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.theme :global(.language-markdown .token.url) {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.theme :global(.token.selector) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.property) {
+  color: var(--rs-color-foreground-danger-primary-hover);
+}
+
+.theme :global(.token.entity) {
+  color: var(--rs-color-foreground-danger-primary-hover);
+}
+
+.theme :global(.token.function) {
+  color: var(--rs-color-viz-purple-9);
+}
+
+.theme :global(.token.attr-name) {
+  color: var(--rs-color-viz-purple-9);
+}
+
+.theme :global(.token.regex) {
+  color: var(--rs-color-viz-purple-9);
+}
+
+.theme :global(.token.maybe-class-name) {
+  color: var(--rs-color-viz-purple-9);
+}
+
+.theme :global(.token.builtin) {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+.theme :global(.token.punctuation) {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.theme :global(.token.operator) {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.theme :global(.token.tag.script) {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.theme :global(.token.tag.script.string) {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.theme :global(.token.directive.tag .tag) {
+  background: var(--rs-color-foreground-danger-primary);
+  color: var(--rs-color-foreground-base-secondary);
+}

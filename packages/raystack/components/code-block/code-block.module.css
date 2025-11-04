@@ -1,0 +1,104 @@
+/* Code Block Container */
+.container {
+  border-radius: var(--rs-radius-2);
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Code Block Content */
+.content {
+  position: relative;
+  overflow: hidden;
+  border-bottom-left-radius: var(--rs-radius-2);
+  border-bottom-right-radius: var(--rs-radius-2);
+}
+
+/* Header */
+.header {
+  padding: var(--rs-space-3) var(--rs-space-5);
+  background: var(--rs-color-background-base-secondary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  min-height: var(--rs-space-10);
+}
+
+/* Label */
+.label {
+  margin-right: auto;
+}
+
+/* Language Selector */
+.languageSelectTrigger {
+  background-color: transparent;
+  padding: var(--rs-space-2) var(--rs-space-3);
+}
+.languageSelectTrigger:hover,
+.languageSelectTrigger:focus-visible {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+/* Collapse Trigger */
+.collapseTrigger {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  background-color: var(--rs-color-background-base-secondary);
+  border-top: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+/* Code Block Code */
+.codeContent {
+  padding: var(--rs-space-5);
+  background-color: var(--rs-color-background-base-primary);
+  overflow-x: auto;
+}
+
+.pre {
+  font-family: var(--rs-font-mono);
+  font-size: var(--rs-font-size-mono-small);
+  line-height: var(--rs-line-height-mono-small);
+  letter-spacing: var(--rs-letter-spacing-mono-small);
+}
+
+.lineNumber {
+  display: inline-block;
+  width: var(--rs-space-7);
+  margin-right: var(--rs-space-5);
+  text-align: right;
+  color: var(--rs-color-foreground-base-tertiary);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.lineContent {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Copy Button */
+.copyButton {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.floatingCopyButton {
+  opacity: 0;
+  position: absolute;
+  top: var(--rs-space-5);
+  right: var(--rs-space-5);
+  padding: var(--rs-space-2) var(--rs-space-3);
+  width: fit-content;
+  height: fit-content;
+  border-radius: var(--rs-radius-2);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
+  background: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-feather);
+}
+.floatingCopyButton svg {
+  width: var(--rs-space-4);
+  height: var(--rs-space-5);
+}
+
+.content:hover .floatingCopyButton {
+  opacity: 1;
+}

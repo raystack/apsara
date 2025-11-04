@@ -1,21 +1,21 @@
 'use client';
 
 import { CalendarIcon } from '@radix-ui/react-icons';
+import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { PropsBase, PropsSingleRequired } from 'react-day-picker';
-
 import { InputField } from '../input-field';
 import { InputFieldProps } from '../input-field/input-field';
 import { Popover } from '../popover';
+import { PopoverContentProps } from '../popover/popover';
 import { Calendar } from './calendar';
 import styles from './calendar.module.css';
 
 dayjs.extend(customParseFormat);
 
 interface DatePickerProps {
-  side?: 'top' | 'right' | 'bottom' | 'left';
   dateFormat?: string;
   inputFieldProps?: InputFieldProps;
   calendarProps?: PropsSingleRequired & PropsBase;
@@ -26,10 +26,10 @@ interface DatePickerProps {
     | ((props: { selectedDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
   timeZone?: string;
+  popoverProps?: PopoverContentProps;
 }
 
 export function DatePicker({
-  side = 'top',
   dateFormat = 'DD/MM/YYYY',
   inputFieldProps,
   calendarProps,
@@ -37,7 +37,8 @@ export function DatePicker({
   onSelect = () => {},
   children,
   showCalendarIcon = true,
-  timeZone
+  timeZone,
+  popoverProps
 }: DatePickerProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(value);
@@ -55,18 +56,21 @@ export function DatePicker({
     selectedDateRef.current = selectedDate;
   }, [selectedDate]);
 
-  function isElementOutside(el: HTMLElement) {
+  const isElementOutside = useCallback((el: HTMLElement) => {
     return (
       !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
       !inputFieldRef.current?.contains(el) && // InputField
       !contentRef.current?.contains(el)
     );
-  }
-
-  const handleMouseDown = useCallback((event: MouseEvent) => {
-    const el = event.target as HTMLElement | null;
-    if (el && isElementOutside(el)) removeEventListeners();
   }, []);
+
+  const handleMouseDown = useCallback(
+    (event: MouseEvent) => {
+      const el = event.target as HTMLElement | null;
+      if (el && isElementOutside(el)) removeEventListeners();
+    },
+    [isElementOutside]
+  );
 
   function registerEventListeners() {
     isInputFieldFocused.current = true;
@@ -170,7 +174,7 @@ export function DatePicker({
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
       {...inputFieldProps}
       ref={inputFieldRef}
-      defaultValue={formattedDate}
+      value={formattedDate}
       onChange={handleInputChange}
       onFocus={handleInputFocus}
       onBlur={handleInputBlur}
@@ -184,17 +188,17 @@ export function DatePicker({
     ) : children ? (
       <div>{children}</div>
     ) : (
-      defaultTrigger
+      <div>{defaultTrigger}</div>
     );
 
   return (
     <Popover open={showCalendar} onOpenChange={onOpenChange}>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
-
       <Popover.Content
-        side={side}
-        className={styles.calendarPopover}
         ref={contentRef}
+        {...popoverProps}
+        className={cx(styles.calendarPopover, popoverProps?.className)}
+        side={popoverProps?.side ?? 'top'}
       >
         <Calendar
           required={true}

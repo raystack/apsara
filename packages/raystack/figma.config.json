@@ -1,0 +1,10 @@
+{
+  "codeConnect": {
+    "include": ["components/**/*", "figma/**/*"],
+    "exclude": [],
+    "parser": "react",
+    "documentUrlSubstitutions": {
+      "<FIGMA_BUTTON>": "node-id=1-101"
+    }
+  }
+}

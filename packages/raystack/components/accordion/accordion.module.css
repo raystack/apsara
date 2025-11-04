@@ -1,0 +1,99 @@
+.accordion {
+  width: 100%;
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.accordion-header {
+  display: flex;
+}
+
+.accordion-trigger {
+  display: flex;
+  min-height: 36px;
+  padding: 0 var(--rs-space-4);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--rs-space-5);
+  flex-shrink: 0;
+  flex: 1;
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+}
+.accordion-item:not(:first-child) .accordion-trigger {
+  border-top: none;
+}
+
+.accordion-trigger:hover,
+.accordion-trigger:focus-visible {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.accordion-trigger:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.accordion-trigger[data-state="open"] .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-icon {
+  color: var(--rs-color-foreground-base-secondary);
+  pointer-events: none;
+  flex-shrink: 0;
+  transition: transform 150ms ease-in-out;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+}
+
+.accordion-content {
+  overflow: hidden;
+}
+
+.accordion-content-inner {
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-inset);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-5);
+  align-self: stretch;
+  padding: var(--rs-space-5) var(--rs-space-4);
+  border-top: 0px;
+}
+
+.accordion-content[data-state="closed"] {
+  animation: accordion-up 200ms ease-out;
+}
+
+.accordion-content[data-state="open"] {
+  animation: accordion-down 200ms ease-out;
+}
+
+/* Animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}

@@ -1,6 +1,7 @@
 import './styles/index.css';
 import './normalize.css';
 
+export { Accordion } from './components/accordion';
 export { Amount } from './components/amount';
 export { AnnouncementBar } from './components/announcement-bar';
 export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
@@ -12,6 +13,7 @@ export { Calendar, DatePicker, RangePicker } from './components/calendar';
 export { Callout } from './components/callout';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';
+export { CodeBlock } from './components/code-block';
 export { Command } from './components/command';
 export { Container } from './components/container';
 export { CopyButton } from './components/copy-button';

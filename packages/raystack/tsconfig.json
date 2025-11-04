@@ -11,7 +11,7 @@
       "~/icons/*": ["icons/*"],
       "~/hooks/*": ["hooks/*"]
     },
-    "types": ["jest", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": [".", "icons", "hooks", "global.d.ts"],
   "exclude": ["dist", "build", "node_modules"]

@@ -1,16 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital@0;1&display=swap");
 
 :root {
-  /* Font Families */
-  --rs-font-inter: 'Inter', sans-serif;
-  --rs-font-lora: 'Lora', serif;
-  --rs-font-josefin-sans: 'Josefin Sans', sans-serif;
+  /* Fonts */
+  --rs-font-inter: "Inter";
+  --rs-font-lora: "Lora";
+  --rs-font-josefin-sans: "Josefin Sans";
+  --rs-font-jetbrains-mono: "JetBrains Mono";
+  --rs-font-menlo: "Menlo";
 
-  /* Default Style */
-  --rs-font-title: var(--rs-font-inter);
-  --rs-font-body: var(--rs-font-inter);
+  /* Font Families */
+  --rs-font-title: var(--rs-font-inter), sans-serif;
+  --rs-font-body: var(--rs-font-inter), sans-serif;
+  --rs-font-mono: var(--rs-font-menlo), var(--rs-font-jetbrains-mono), monospace;
 
   /* Font Weights */
   --rs-font-weight-regular: 400;
@@ -54,39 +58,78 @@
   --rs-letter-spacing-t2: 0;
   --rs-letter-spacing-t3: 0;
   --rs-letter-spacing-t4: 0;
-  
+
+  /* Mono Font Sizes */
+  --rs-font-size-mono-mini: 11px;
+  --rs-font-size-mono-small: 12px;
+  --rs-font-size-mono-regular: 14px;
+  --rs-font-size-mono-large: 16px;
+
+  /* Mono Line Heights */
+  --rs-line-height-mono-mini: 16px;
+  --rs-line-height-mono-small: 16px;
+  --rs-line-height-mono-regular: 20px;
+  --rs-line-height-mono-large: 24px;
+
+  /* Mono Letter Spacing */
+  --rs-letter-spacing-mono-mini: 0px;
+  --rs-letter-spacing-mono-small: 0px;
+  --rs-letter-spacing-mono-regular: 0px;
+  --rs-letter-spacing-mono-large: 0px;
+}
+
+[data-style="traditional"] {
+  --rs-font-title: var(--rs-font-lora), serif;
+  --rs-font-body: var(--rs-font-josefin-sans), sans-serif;
+}
+
+body {
+  /* Default Font */
+  font-family: var(--rs-font-body);
+
   /* Font Smoothing */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body, p, h1, h2, h3, h4, h5, h6, span, div, label {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+h1 {
+  font-family: var(--rs-font-title);
+  font-size: var(--rs-font-size-t4);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-t1);
 }
-
-[data-style="modern"] {
-  --rs-font-title: var(--rs-font-inter);
-  --rs-font-body: var(--rs-font-inter);
+h2 {
+  font-family: var(--rs-font-title);
+  font-size: var(--rs-font-size-t3);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-t1);
 }
-
-[data-style="traditional"] {
-  --rs-font-title: var(--rs-font-lora);
-  --rs-font-body: var(--rs-font-josefin-sans);
+h3 {
+  font-family: var(--rs-font-title);
+  font-size: var(--rs-font-size-t2);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-t1);
 }
-
-h1 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t4); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
-h2 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t3); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
-h3 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t2); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
-h4 { font-family: var(--rs-font-title); font-size: var(--rs-font-size-t1); font-weight: var(--rs-font-weight-medium); line-height: var(--rs-line-height-t1); }
+h4 {
+  font-family: var(--rs-font-title);
+  font-size: var(--rs-font-size-t1);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-t1);
+}
 
 /* CSS for the text cursor */
-input, textarea {
+input,
+textarea {
   caret-color: var(--rs-color-border-accent-emphasis);
 }
 
 /* Keyframe Animation */
 @keyframes dissolve-hide {
-  0%, 50% { opacity: 1; }
-  100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
