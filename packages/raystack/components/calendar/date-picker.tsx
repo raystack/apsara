@@ -174,7 +174,7 @@ export function DatePicker({
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
       {...inputFieldProps}
       ref={inputFieldRef}
-      defaultValue={formattedDate}
+      value={formattedDate}
       onChange={handleInputChange}
       onFocus={handleInputFocus}
       onBlur={handleInputBlur}
