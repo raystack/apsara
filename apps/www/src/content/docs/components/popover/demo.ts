@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
@@ -16,31 +16,31 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     align: {
-      type: "select",
-      options: ["start", "center", "end"],
-      defaultValue: "center",
+      type: 'select',
+      options: ['start', 'center', 'end'],
+      defaultValue: 'center'
     },
-    alignOffset: { type: "number", min: 0, defaultValue: 2 },
+    alignOffset: { type: 'number', min: 0, defaultValue: 2 },
     side: {
-      type: "select",
-      options: ["top", "right", "bottom", "left"],
-      defaultValue: "bottom",
+      type: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+      defaultValue: 'bottom'
     },
-    sideOffset: { type: "number", min: 0, defaultValue: 2 },
-    collisionPadding: { type: "number", min: 0, defaultValue: 0 },
-    children: { type: "text", initialValue: "This is the popover content." },
+    sideOffset: { type: 'number', min: 0, defaultValue: 2 },
+    collisionPadding: { type: 'number', min: 0, defaultValue: 0 },
+    children: { type: 'text', initialValue: 'This is the popover content.' }
   },
-  getCode,
+  getCode
 };
 
 export const positionDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Top",
+      name: 'Top',
       code: `
       <Popover>
         <Popover.Trigger asChild>
@@ -49,10 +49,10 @@ export const positionDemo = {
         <Popover.Content side="top">
           <Text size="2">Content appears above the trigger</Text>
         </Popover.Content>
-      </Popover>`,
+      </Popover>`
     },
     {
-      name: "Right",
+      name: 'Right',
       code: `
       <Popover>
         <Popover.Trigger asChild>
@@ -61,10 +61,10 @@ export const positionDemo = {
         <Popover.Content side="right">
           <Text size="2">Content appears to the right</Text>
         </Popover.Content>
-      </Popover>`,
+      </Popover>`
     },
     {
-      name: "Bottom",
+      name: 'Bottom',
       code: `
       <Popover>
         <Popover.Trigger asChild>
@@ -73,10 +73,10 @@ export const positionDemo = {
         <Popover.Content side="bottom">
           <Text size="2">Content appears below the trigger</Text>
         </Popover.Content>
-      </Popover>`,
+      </Popover>`
     },
     {
-      name: "Left",
+      name: 'Left',
       code: `
       <Popover>
         <Popover.Trigger asChild>
@@ -85,15 +85,15 @@ export const positionDemo = {
         <Popover.Content side="left">
           <Text size="2">Content appears to the left</Text>
         </Popover.Content>
-      </Popover>`,
-    },
-  ],
+      </Popover>`
+    }
+  ]
 };
 export const alignDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Center",
+      name: 'Center',
       code: `
       <Popover>
         <Popover.Trigger asChild>
@@ -102,10 +102,10 @@ export const alignDemo = {
         <Popover.Content align="center">
           <Text size="2">Centered with the trigger</Text>
         </Popover.Content>
-      </Popover>`,
+      </Popover>`
     },
     {
-      name: "Start",
+      name: 'Start',
       code: `
       <Popover>
         <Popover.Trigger asChild>
@@ -114,10 +114,10 @@ export const alignDemo = {
         <Popover.Content align="start">
           <Text size="2">Aligned to the start</Text>
         </Popover.Content>
-      </Popover>`,
+      </Popover>`
     },
     {
-      name: "End",
+      name: 'End',
       code: `
       <Popover>
         <Popover.Trigger asChild>
@@ -126,7 +126,7 @@ export const alignDemo = {
         <Popover.Content align="end">
           <Text size="2">Aligned to the end</Text>
         </Popover.Content>
-      </Popover>`,
-    },
-  ],
+      </Popover>`
+    }
+  ]
 };

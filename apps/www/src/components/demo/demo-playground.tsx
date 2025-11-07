@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { buttonVariants } from 'fumadocs-ui/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 import {
-  useSearchParams,
-  useRouter,
   ReadonlyURLSearchParams,
-} from "next/navigation";
-import { LiveProvider } from "react-live";
-import styles from "./styles.module.css";
-import DemoControls from "./demo-controls";
-import Preview from "../preview";
-import Editor from "../editor";
+  useRouter,
+  useSearchParams
+} from 'next/navigation';
+import { useState } from 'react';
+import { LiveProvider } from 'react-live';
+import Editor from '../editor';
+import Preview from '../preview';
+import DemoControls from './demo-controls';
+import styles from './styles.module.css';
 import {
   ComponentPropsType,
   ControlsType,
   DemoPlaygroundProps,
-  PropChangeHandlerType,
-} from "./types";
-import { RefreshCw } from "lucide-react";
-import { buttonVariants } from "fumadocs-ui/components/api";
+  PropChangeHandlerType
+} from './types';
 
 const getInitialProps = (
   controls: ControlsType,
-  searchParams?: ReadonlyURLSearchParams,
+  searchParams?: ReadonlyURLSearchParams
 ) => {
   const initialProps: ComponentPropsType = {};
 
@@ -31,7 +31,7 @@ const getInitialProps = (
     const value =
       (searchParams && searchParams.get(key)) ?? initialValue ?? defaultValue;
 
-    initialProps[key] = type === "checkbox" ? value === "true" : value;
+    initialProps[key] = type === 'checkbox' ? value === 'true' : value;
   });
   return initialProps;
 };
@@ -39,19 +39,19 @@ const getInitialProps = (
 export default function DemoPlayground({
   scope,
   controls,
-  getCode,
+  getCode
 }: DemoPlaygroundProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const [componentProps, setComponentProps] = useState(() =>
-    getInitialProps(controls, searchParams),
+    getInitialProps(controls, searchParams)
   );
 
   const updatedProps = Object.fromEntries(
     Object.entries(componentProps).filter(
-      ([key, value]) => value !== controls[key]?.defaultValue,
-    ),
+      ([key, value]) => value !== controls[key]?.defaultValue
+    )
   );
   const code = getCode(updatedProps, componentProps).trim();
 
@@ -84,10 +84,11 @@ export default function DemoPlayground({
             <Preview />
             <button
               className={buttonVariants({
-                color: "ghost",
-                className: styles.previewReset,
+                color: 'ghost',
+                className: styles.previewReset
               })}
-              onClick={resetProps}>
+              onClick={resetProps}
+            >
               <RefreshCw size={16} />
             </button>
           </div>

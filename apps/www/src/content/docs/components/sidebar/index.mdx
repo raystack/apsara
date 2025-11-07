@@ -3,7 +3,7 @@ title: Sidebar
 description: A collapsible side navigation panel component.
 ---
 
-import { preview, positionDemo, stateDemo, tooltipDemo } from "./demo.ts";
+import { preview, positionDemo, stateDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -46,14 +46,6 @@ The Sidebar supports expanded and collapsed states with smooth transitions.
 The `data-collapse-hidden` attribute can be used to conditionally hide elements when the sidebar is collapsed.
 
 <Demo data={stateDemo} />
-
-### Custom Tooltip Message
-
-You can customize the tooltip message that appears when hovering over the collapse/expand handle using the `tooltipMessage` prop.
-
-You can use Sidebar as a controlled component to conditionally render different tooltip messages.
-
-<Demo data={tooltipDemo} />
 
 ## Accessibility
 

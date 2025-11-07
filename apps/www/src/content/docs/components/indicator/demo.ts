@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
@@ -8,24 +8,24 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     variant: {
-      type: "select",
-      options: ["accent", "warning", "danger", "success", "neutral"],
-      defaultValue: "accent",
+      type: 'select',
+      options: ['accent', 'warning', 'danger', 'success', 'neutral'],
+      defaultValue: 'accent'
     },
-    label: { type: "text", initialValue: "" },
+    label: { type: 'text', initialValue: '' },
     children: {
-      type: "text",
-      initialValue: "<Button color='neutral'>Notification</Button>",
-    },
+      type: 'text',
+      initialValue: "<Button color='neutral'>Notification</Button>"
+    }
   },
-  getCode,
+  getCode
 };
 
 export const variantDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large" align="center">
     <Indicator variant="accent">
@@ -43,10 +43,10 @@ export const variantDemo = {
     <Indicator variant="neutral">
       <Button color='neutral'>Notification</Button>
     </Indicator>
-  </Flex>`,
+  </Flex>`
 };
 export const labelDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <Indicator variant="accent" label="2 new">
@@ -55,5 +55,5 @@ export const labelDemo = {
     <Indicator variant="accent">
       <Button color='neutral'>Notification</Button>
     </Indicator>
-  </Flex>`,
+  </Flex>`
 };

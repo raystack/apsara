@@ -18,10 +18,10 @@ export interface RadioRootProps {
   required?: boolean;
 
   /** The orientation of the radio group. */
-  orientation?: "horizontal" | "vertical";
+  orientation?: 'horizontal' | 'vertical';
 
   /** The reading direction of the radio group. */
-  dir?: "ltr" | "rtl";
+  dir?: 'ltr' | 'rtl';
 
   /** A label for the radio group that is announced by screen readers. */
   ariaLabel?: string;

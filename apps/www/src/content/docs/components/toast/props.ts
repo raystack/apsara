@@ -15,12 +15,12 @@ export interface ToastProps {
    * @default "bottom-right"
    */
   position?:
-    | "top-left"
-    | "top-right"
-    | "bottom-left"
-    | "bottom-right"
-    | "top-center"
-    | "bottom-center";
+    | 'top-left'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-right'
+    | 'top-center'
+    | 'bottom-center';
 
   /**
    * Allow user to dismiss toast.

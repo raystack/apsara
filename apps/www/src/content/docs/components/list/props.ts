@@ -19,7 +19,7 @@ export interface ListItemProps {
    * Alignment of the item content.
    * @default "start"
    */
-  align?: "start" | "center" | "end";
+  align?: 'start' | 'center' | 'end';
 
   /** Content to be displayed in the item. */
   children?: React.ReactNode;

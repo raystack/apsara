@@ -7,13 +7,13 @@ export interface ContainerProps {
    * - "none": no max-width
    * @defaultValue "none"
    */
-  size?: "small" | "medium" | "large" | "none";
+  size?: 'small' | 'medium' | 'large' | 'none';
 
   /**
    * Controls the horizontal alignment of the container
    * @defaultValue "center"
    */
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
 
   /** Additional CSS class names */
   className?: string;

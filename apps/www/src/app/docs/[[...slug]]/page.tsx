@@ -1,22 +1,13 @@
-import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions';
 import Demo from '@/components/demo';
-import Tag from '@/components/tag';
 import { docs } from '@/lib/source';
+import { Flex, Headline, Text } from '@raystack/apsara';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { TypeTable } from 'fumadocs-ui/components/type-table';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
-import {
-  DocsBody,
-  DocsDescription,
-  DocsPage,
-  DocsTitle
-} from 'fumadocs-ui/page';
+import defaultMdxComponents, { createRelativeLink } from 'fumadocs-ui/mdx';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import styles from './page.module.css';
 
-export default async function Page(props: {
-  params: Promise<{ slug?: string[] }>;
-}) {
+export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
   const page = docs.getPage(params.slug);
   if (!page) notFound();
@@ -24,38 +15,23 @@ export default async function Page(props: {
   const MDX = page.data.body;
 
   return (
-    <DocsPage
-      toc={page.data.toc}
-      full={page.data.full}
-      tableOfContent={{
-        single: false
-      }}
-    >
-      <DocsTitle>
-        <div className={styles.container}>
-          <div className={styles.title}>
-            {page.data.title}
-            <Tag value={page.data.tag} size='regular' />
-          </div>
-          <div className={styles.actions}>
-            <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
-            <ViewOptions markdownUrl={`${page.url}.mdx`} />
-          </div>
-        </div>
-      </DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
+    <Flex direction='column' gap={2}>
+      <Headline>{page.data.title}</Headline>
+      <Text>{page.data.description}</Text>
+      <Flex direction='column' gap={2}>
         <MDX
           components={{
             ...defaultMdxComponents,
+            // this allows you to link to other pages with relative file paths
+            a: createRelativeLink(docs, page),
             TypeTable,
             Tab,
             Tabs,
             Demo
           }}
         />
-      </DocsBody>
-    </DocsPage>
+      </Flex>
+    </Flex>
   );
 }
 
@@ -63,9 +39,9 @@ export async function generateStaticParams() {
   return docs.generateParams();
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug?: string[] }>;
-}) {
+export async function generateMetadata(
+  props: PageProps<'/docs/[[...slug]]'>
+): Promise<Metadata> {
   const params = await props.params;
   const page = docs.getPage(params.slug);
   if (!page) notFound();

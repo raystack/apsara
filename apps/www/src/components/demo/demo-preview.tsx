@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { LiveProvider } from "react-live";
-import { cx } from "class-variance-authority";
-import { Tab, Tabs } from "fumadocs-ui/components/tabs";
-import Preview from "../preview";
-import Editor from "../editor";
-import styles from "./styles.module.css";
-import { DemoPreviewProps } from "./types";
+import { cx } from 'class-variance-authority';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { useState } from 'react';
+import { LiveProvider } from 'react-live';
+import Editor from '../editor';
+import Preview from '../preview';
+import styles from './styles.module.css';
+import { DemoPreviewProps } from './types';
 
 export default function DemoPreview({
   code,
   tabs,
   scope,
-  codePreview,
+  codePreview
 }: DemoPreviewProps) {
   const [activeTab, setActiveTab] = useState(0);
-  const activeCode = ((tabs ? tabs[activeTab].code : code) ?? "").trim();
+  const activeCode = ((tabs ? tabs[activeTab].code : code) ?? '').trim();
 
   const previewCode =
-    typeof codePreview === "string" ? codePreview : activeCode;
+    typeof codePreview === 'string' ? codePreview : activeCode;
   return (
     <LiveProvider code={activeCode} scope={scope} disabled>
       <div className={styles.container}>
@@ -30,9 +30,10 @@ export default function DemoPreview({
                 key={tab.name}
                 className={cx(
                   styles.tab,
-                  index === activeTab && styles.activeTab,
+                  index === activeTab && styles.activeTab
                 )}
-                onClick={() => setActiveTab(index)}>
+                onClick={() => setActiveTab(index)}
+              >
                 {tab.name}
               </button>
             ))}
@@ -44,9 +45,10 @@ export default function DemoPreview({
         {Array.isArray(codePreview) ? (
           <Tabs
             items={codePreview.map(tab => tab.label)}
-            className={styles.codeTabGroup}>
+            className={styles.codeTabGroup}
+          >
             {codePreview.map(tab => (
-              <Tab className={styles.codeTab} value={tab.label}>
+              <Tab className={styles.codeTab} value={tab.label} key={tab.label}>
                 <Editor code={tab.code} />
               </Tab>
             ))}

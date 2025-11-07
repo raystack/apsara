@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
@@ -9,97 +9,97 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     size: {
-      type: "select",
-      options: ["small", "medium", "large", "none"],
-      defaultValue: "none",
+      type: 'select',
+      options: ['small', 'medium', 'large', 'none'],
+      defaultValue: 'none'
     },
     align: {
-      type: "select",
-      options: ["left", "center", "right"],
-      defaultValue: "center",
+      type: 'select',
+      options: ['left', 'center', 'right'],
+      defaultValue: 'center'
     },
     children: {
-      type: "text",
+      type: 'text',
       initialValue:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
-    },
+        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    }
   },
-  getCode,
+  getCode
 };
 
 export const alignDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Left Aligned",
+      name: 'Left Aligned',
       code: `
       <Container size="small" align="left">
         <Text>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
         </Text>
-      </Container>`,
+      </Container>`
     },
     {
-      name: "Center Aligned",
+      name: 'Center Aligned',
       code: `
       <Container size="small" align="center">
         <Text>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
         </Text>
-      </Container>`,
+      </Container>`
     },
     {
-      name: "Right Aligned",
+      name: 'Right Aligned',
       code: `
       <Container size="small" align="right">
         <Text>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
         </Text>
-      </Container>`,
-    },
-  ],
+      </Container>`
+    }
+  ]
 };
 export const sizeDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "None",
+      name: 'None',
       code: `
         <Container size="none">
           <Text>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
           </Text>
-        </Container>`,
+        </Container>`
     },
     {
-      name: "Small",
+      name: 'Small',
       code: `
       <Container size="small">
           <Text>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
           </Text>
-        </Container>`,
+        </Container>`
     },
     {
-      name: "Medium",
+      name: 'Medium',
       code: `
       <Container size="medium">
           <Text>
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
           </Text>
-        </Container>`,
+        </Container>`
     },
     {
-      name: "Large",
+      name: 'Large',
       code: `
       <Container size="large">
         <Text>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
         </Text>
-      </Container>`,
-    },
-  ],
+      </Container>`
+    }
+  ]
 };

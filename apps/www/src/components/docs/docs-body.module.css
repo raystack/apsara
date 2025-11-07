@@ -190,7 +190,7 @@
   color: var(--tw-prose-quotes);
   border-inline-start-width: 0.25rem;
   border-inline-start-color: var(--tw-prose-quote-borders);
-  quotes: "\201C""\201D""\2018""\2019";
+  quotes: "\201C" "\201D" "\2018" "\2019";
 }
 
 .content blockquote p:first-of-type::before {
@@ -290,8 +290,8 @@
   font-weight: 500;
   font-family: inherit;
   color: var(--tw-prose-kbd);
-  box-shadow: 0 0 0 1px var(--tw-prose-kbd-shadows),
-    0 3px 0 var(--tw-prose-kbd-shadows);
+  box-shadow: 0 0 0 1px var(--tw-prose-kbd-shadows), 0 3px 0
+    var(--tw-prose-kbd-shadows);
 }
 
 /* .content code {

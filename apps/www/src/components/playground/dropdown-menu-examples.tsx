@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Button, DropdownMenu, Flex } from "@raystack/apsara";
-import PlaygroundLayout from "./playground-layout";
+import { Button, DropdownMenu, Flex } from '@raystack/apsara';
+import PlaygroundLayout from './playground-layout';
 
 export function DropdownMenuExamples() {
   return (
-    <PlaygroundLayout title="DropdownMenu">
-      <Flex gap="medium" wrap="wrap">
+    <PlaygroundLayout title='DropdownMenu'>
+      <Flex gap='medium' wrap='wrap'>
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
-            <Button color="neutral">Open Menu</Button>
+            <Button color='neutral'>Open Menu</Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
             <DropdownMenu.Item>Profile</DropdownMenu.Item>
@@ -20,7 +20,7 @@ export function DropdownMenuExamples() {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
-            <Button color="neutral">Actions</Button>
+            <Button color='neutral'>Actions</Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
             <DropdownMenu.Item leadingIcon={<>📝</>}>Edit</DropdownMenu.Item>
@@ -33,7 +33,7 @@ export function DropdownMenuExamples() {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenu.Trigger asChild>
-            <Button color="neutral">More</Button>
+            <Button color='neutral'>More</Button>
           </DropdownMenu.Trigger>
           <DropdownMenu.Content>
             <DropdownMenu.Label>Actions</DropdownMenu.Label>

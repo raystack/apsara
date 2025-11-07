@@ -3,7 +3,7 @@
 export const preview = {
   type: 'code',
   code: `
-  <Radio defaultValue="2">
+  <Radio.Root defaultValue="2">
     <Flex direction="column" gap="small">
       <Flex gap="small" align="center">
         <Radio.Item value="1" id="P1" />
@@ -18,7 +18,7 @@ export const preview = {
         <label htmlFor="P3">Option Three</label>
       </Flex>
     </Flex>
-  </Radio>`
+  </Radio.Root>`
 };
 
 export const stateDemo = {
@@ -27,22 +27,22 @@ export const stateDemo = {
     {
       name: 'Default',
       code: `
-<Radio defaultValue="1">
+<Radio.Root defaultValue="1">
   <Flex gap="small" align="center">
     <Radio.Item value="1" id="d1" />
     <label htmlFor="d1">Default Option</label>
   </Flex>
-</Radio>`
+</Radio.Root>`
     },
     {
       name: 'Disabled',
       code: `
-<Radio defaultValue="1">
+<Radio.Root defaultValue="1">
   <Flex gap="small" align="center">
     <Radio.Item value="1" disabled id="dis1" />
     <label htmlFor="dis1">Disabled Option</label>
   </Flex>
-</Radio>`
+</Radio.Root>`
     }
   ]
 };
@@ -50,7 +50,7 @@ export const stateDemo = {
 export const labelDemo = {
   type: 'code',
   code: `
-  <Radio defaultValue="1">
+  <Radio.Root defaultValue="1">
     <Flex direction="column" gap="small">
       <Flex gap="small" align="center">
         <Radio.Item value="1" id="L1" />
@@ -65,7 +65,7 @@ export const labelDemo = {
         <label htmlFor="L3">Option Three</label>
       </Flex>
     </Flex>
-  </Radio>`
+  </Radio.Root>`
 };
 
 export const formDemo = {
@@ -77,7 +77,7 @@ export const formDemo = {
   alert(JSON.stringify(Object.fromEntries(formData)));
 }}>
   <Flex direction="column" gap="medium">
-    <Radio name="plan" defaultValue="monthly" required>
+    <Radio.Root name="plan" defaultValue="monthly" required>
       <Flex direction="column" gap="small">
         <Flex gap="small" align="center">
           <Radio.Item value="monthly" id="mp" />
@@ -88,7 +88,7 @@ export const formDemo = {
           <label htmlFor="yp">Yearly Plan</label>
         </Flex>
       </Flex>
-    </Radio>
+    </Radio.Root>
     <Button type="submit" width="100%">Submit</Button>
   </Flex>
 </form>`

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
@@ -8,43 +8,43 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
-    href: { type: "text", initialValue: "https://apsara.raystack.org/" },
+    href: { type: 'text', initialValue: 'https://apsara.raystack.org/' },
     variant: {
-      type: "select",
+      type: 'select',
       options: [
-        "primary",
-        "secondary",
-        "tertiary",
-        "emphasis",
-        "accent",
-        "attention",
-        "danger",
-        "success",
+        'primary',
+        'secondary',
+        'tertiary',
+        'emphasis',
+        'accent',
+        'attention',
+        'danger',
+        'success'
       ],
-      defaultValue: "accent",
+      defaultValue: 'accent'
     },
     size: {
-      type: "select",
-      options: ["micro", "mini", "small", "regular", "large"],
-      defaultValue: "small",
+      type: 'select',
+      options: ['micro', 'mini', 'small', 'regular', 'large'],
+      defaultValue: 'small'
     },
     weight: {
-      type: "select",
-      options: ["regular", "medium"],
-      defaultValue: "regular",
+      type: 'select',
+      options: ['regular', 'medium'],
+      defaultValue: 'regular'
     },
-    underline: { type: "checkbox", defaultValue: false },
-    external: { type: "checkbox", defaultValue: false },
-    download: { type: "checkbox", defaultValue: false },
-    children: { type: "text", initialValue: "My Link" },
+    underline: { type: 'checkbox', defaultValue: false },
+    external: { type: 'checkbox', defaultValue: false },
+    download: { type: 'checkbox', defaultValue: false },
+    children: { type: 'text', initialValue: 'My Link' }
   },
-  getCode,
+  getCode
 };
 
 export const variantDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="center">
     <Link href="#" variant="primary">Primary Link</Link>
@@ -54,10 +54,10 @@ export const variantDemo = {
     <Link href="#" variant="attention">Attention Link</Link>
     <Link href="#" variant="danger">Danger Link</Link>
     <Link href="#" variant="success">Success Link</Link>
-  </Flex>`,
+  </Flex>`
 };
 export const sizeDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large" align="center">
      <Link href="#" size="micro">This is a text</Link> 
@@ -65,22 +65,22 @@ export const sizeDemo = {
     <Link href="#" size="small">This is a text</Link> 
     <Link href="#" size="regular">This is a text</Link> 
     <Link href="#" size="large">This is a text</Link> 
-  </Flex>`,
+  </Flex>`
 };
 export const weightDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large" align="center">
     <Link href="#" weight="regular">This is a text</Link>
     <Link href="#" weight="medium">This is a text</Link>
-  </Flex>`,
+  </Flex>`
 };
 export const styleDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="end">
     <Link href="#" variant="primary" underline>Underlined Link</Link>
     <Link href="https://example.com" external>External Link</Link>
     <Link href="/assets/logo.svg" download>Download File</Link>
-  </Flex>`,
+  </Flex>`
 };

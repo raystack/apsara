@@ -1,24 +1,15 @@
-import type { ReactNode } from "react";
-import { DocsLayout } from "fumadocs-ui/layouts/docs";
-import { docs } from "@/lib/source";
-import ThemeSwitcher from "@/components/theme-switcher";
-import { SidebarItem } from "@/components/docs/sidebar-item";
+import DocsSidebar from '@/components/docs/sidebar';
+import { docs } from '@/lib/source';
+import { Flex } from '@raystack/apsara';
+import type { ReactNode } from 'react';
+import styles from './layout.module.css';
 
 export default function Layout({ children }: { children: ReactNode }) {
+  console.log(docs.pageTree);
   return (
-    <DocsLayout
-      tree={docs.pageTree}
-      nav={{ component: <></> }}
-      disableThemeSwitch={true}
-      sidebar={{
-        collapsible: false,
-        footer: <ThemeSwitcher />,
-        hideSearch: true,
-        components: {
-          Item: SidebarItem,
-        },
-      }}>
+    <Flex className={styles.container}>
+      <DocsSidebar pageTree={docs.pageTree} />
       {children}
-    </DocsLayout>
+    </Flex>
   );
 }
