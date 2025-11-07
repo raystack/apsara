@@ -1,7 +1,9 @@
 'use client';
 
-import { ThemeProvider as ApsaraThemeProvider } from '@raystack/apsara';
-import { useTheme as useNextTheme } from 'next-themes';
+import {
+  ThemeProvider as ApsaraThemeProvider,
+  useTheme as useApsaraTheme
+} from '@raystack/apsara';
 import {
   ReactNode,
   createContext,
@@ -9,6 +11,7 @@ import {
   useContext,
   useState
 } from 'react';
+// import { useTheme as useNextTheme } from "next-themes";
 
 type Theme = 'light' | 'dark';
 
@@ -34,7 +37,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const { resolvedTheme, setTheme } = useNextTheme();
+  const { resolvedTheme, setTheme } = useApsaraTheme();
   const theme = (resolvedTheme ?? 'light') as Theme;
 
   const [options, setOptions] = useState<ThemeOptions>({

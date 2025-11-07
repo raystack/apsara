@@ -1,11 +1,10 @@
-import Navbar from '@/components/navbar';
-import '@/styles.css';
-import '@raystack/apsara/normalize.css';
-import '@raystack/apsara/style.css';
-import { ThemeProvider } from '@raystack/apsara';
+import { ThemeProvider } from '@/components/theme';
 import { NextProvider } from 'fumadocs-core/framework/next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+import '@/styles.css';
+import '@raystack/apsara/normalize.css';
+import '@raystack/apsara/style.css';
 
 const inter = Inter({
   subsets: ['latin']
@@ -26,7 +25,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         <NextProvider>
           <ThemeProvider>
-            <Navbar />
+            {/* <Navbar /> */}
             {children}
           </ThemeProvider>
         </NextProvider>

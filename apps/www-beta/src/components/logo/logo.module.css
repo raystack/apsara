@@ -3,12 +3,6 @@
   gap: 8px;
   justify-content: center;
   align-items: center;
-  font-weight: 700;
-  font-size: var(--rs-font-size-t2);
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  color: var(--rs-color-foreground-base-primary);
 }
 .container.large {
   gap: 16px;

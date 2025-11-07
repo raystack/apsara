@@ -1,9 +1,3 @@
 {
-  "pages": [
-    "---Overview---",
-    "index",
-    "...",
-    "---Components---",
-    "...components"
-  ]
+  "pages": ["(overview)", "components"]
 }

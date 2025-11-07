@@ -1,7 +1,7 @@
 import { createMDX } from 'fumadocs-mdx/next';
-import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const config = {
   reactStrictMode: true,
   typescript: {
     // !! WARN !!
@@ -9,11 +9,6 @@ const nextConfig: NextConfig = {
     // your project has type errors.
     // !! WARN !!
     ignoreBuildErrors: true
-  },
-  eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: true
   },
   experimental: {
     optimizePackageImports: ['shiki']
@@ -33,11 +28,5 @@ const nextConfig: NextConfig = {
 };
 
 const withMDX = createMDX();
-const mdxConfig = withMDX(nextConfig);
 
-if (mdxConfig.experimental?.turbo) {
-  mdxConfig.turbopack = mdxConfig.experimental.turbo;
-  delete mdxConfig.experimental.turbo;
-}
-
-export default mdxConfig;
+export default withMDX(config);
