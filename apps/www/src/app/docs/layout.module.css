@@ -1,10 +1,16 @@
 .container {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  position: relative;
 }
 
 .content {
   flex: 1;
   overflow: auto;
+}
+
+.sidebar {
+  height: 100vh;
+  position: sticky;
+  top: 0;
 }

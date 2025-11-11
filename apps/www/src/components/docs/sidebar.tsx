@@ -13,6 +13,7 @@ import { ThemeToggle } from '../theme-switcher';
 
 type Props = {
   pageTree: Root;
+  className?: string;
 };
 
 function renderNode(node: Node, pathname: string): ReactNode {
@@ -81,10 +82,10 @@ function renderNode(node: Node, pathname: string): ReactNode {
   return null;
 }
 
-export default function DocsSidebar({ pageTree }: Props) {
+export default function DocsSidebar({ pageTree, className }: Props) {
   const pathname = usePathname();
   return (
-    <Sidebar open collapsible={false}>
+    <Sidebar open collapsible={false} className={className}>
       <Sidebar.Header>
         <Flex align='center' gap={3} justify='between' width='full'>
           <Link href='/'>
