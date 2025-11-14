@@ -1,107 +1,107 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `<InputField${getPropsString(props)}/>`;
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
-    label: { type: "text", initialValue: "Your Name" },
-    helperText: { type: "text", initialValue: "Enter your full name" },
-    error: { type: "text", initialValue: "" },
-    disabled: { type: "boolean", initialValue: false },
-    leadingIcon: { type: "icon", initialValue: "" },
-    trailingIcon: { type: "icon", initialValue: "" },
-    optional: { type: "checkbox", defaultValue: false },
-    prefix: { type: "text", initialValue: "" },
-    suffix: { type: "text", initialValue: "" },
+    label: { type: 'text', initialValue: 'Your Name' },
+    helperText: { type: 'text', initialValue: 'Enter your full name' },
+    error: { type: 'text', initialValue: '' },
+    disabled: { type: 'boolean', initialValue: false },
+    leadingIcon: { type: 'icon', initialValue: '' },
+    trailingIcon: { type: 'icon', initialValue: '' },
+    optional: { type: 'checkbox', defaultValue: false },
+    prefix: { type: 'text', initialValue: '' },
+    suffix: { type: 'text', initialValue: '' },
     size: {
-      type: "select",
-      options: ["small", "large"],
-      initialValue: "large",
-    },
+      type: 'select',
+      options: ['small', 'large'],
+      initialValue: 'large'
+    }
   },
-  getCode,
+  getCode
 };
 
 export const basicDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <InputField 
   label="Default"
   placeholder="Enter text"
-/>`,
+/>`
 };
 export const helperTextDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <InputField 
   label="With label"
   placeholder="Enter text"
   helperText="This is a helper text"
-/>`,
+/>`
 };
 export const errorDemo = {
-  type: "code",
+  type: 'code',
   code: `
  <InputField 
   label="With Error"
   placeholder="Enter text"
   error="This field is required"
-/>`,
+/>`
 };
 export const prefixDemo = {
-  type: "code",
+  type: 'code',
   code: `
  <InputField 
   label="With Prefix/Suffix"
   placeholder="0.00"
   prefix="$"
   suffix="USD"
-/>`,
+/>`
 };
 export const iconDemo = {
-  type: "code",
+  type: 'code',
   code: `
  <InputField 
   label="With Icons"
   placeholder="Enter text"
   leadingIcon={<Home size={16}/>}
   trailingIcon={<Info  size={16}/>}
-/>`,
+/>`
 };
 export const optionalDemo = {
-  type: "code",
+  type: 'code',
   code: `
  <InputField 
   label="Optional Field"
   placeholder="Enter text"
   optional
-/>`,
+/>`
 };
 export const disabledDemo = {
-  type: "code",
+  type: 'code',
   code: `
 <InputField 
   label="Disabled"
   placeholder="Enter text"
   disabled
-/>`,
+/>`
 };
 export const widthDemo = {
-  type: "code",
+  type: 'code',
   code: `
 <InputField 
   label="Custom Width"
   placeholder="Enter text"
   width="300px"
-/>`,
+/>`
 };
 export const sizeDemo = {
-  type: "code",
+  type: 'code',
   code: `
 <Flex direction="column" gap="medium">
   <InputField 
@@ -113,10 +113,10 @@ export const sizeDemo = {
     placeholder="24px height"
     size="small"
   />
-</Flex>`,
+</Flex>`
 };
 export const sizeChipDemo = {
-  type: "code",
+  type: 'code',
   code: `
 <Flex direction="column" gap="medium">
   <InputField 
@@ -136,5 +136,5 @@ export const sizeChipDemo = {
       { label: "B", onRemove: () => console.log("Remove B") }
     ]}
   />
-</Flex>`,
+</Flex>`
 };

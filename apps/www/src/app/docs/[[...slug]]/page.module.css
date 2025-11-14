@@ -1,16 +1,8 @@
-.title {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.actions {
-  display: flex;
-  align-items: center;
+.content {
+  max-width: 806px;
+  padding: var(--rs-space-15) var(--rs-space-7);
 }
 
-.container {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
+.prose {
+  gap: var(--rs-space-12);
 }

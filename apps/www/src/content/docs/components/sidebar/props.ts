@@ -24,11 +24,6 @@ export interface SidebarRootProps {
    * @default false
    */
   hideCollapsedItemTooltip?: boolean;
-
-  /** Custom message for the collapsible tooltip.
-   *  By default, it shows "Click to collapse" when expanded, "Click to expand" when collapsed
-   */
-  tooltipMessage?: ReactNode;
 }
 
 export interface SidebarGroupProps {

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
@@ -8,31 +8,31 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     size: {
-      type: "select",
-      options: ["small", "medium", "large"],
-      defaultValue: "small",
+      type: 'select',
+      options: ['small', 'medium', 'large'],
+      defaultValue: 'small'
     },
-    required: { type: "checkbox", defaultValue: false },
-    requiredIndicator: { type: "text", defaultValue: "*" },
-    children: { type: "text", initialValue: "Label" },
+    required: { type: 'checkbox', defaultValue: false },
+    requiredIndicator: { type: 'text', defaultValue: '*' },
+    children: { type: 'text', initialValue: 'Label' }
   },
-  getCode,
+  getCode
 };
 
 export const sizeDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large" align="center">
     <Label size="small">Small Label</Label>
     <Label size="medium">Medium Label</Label>
     <Label size="large">Large Label</Label>
-  </Flex>`,
+  </Flex>`
 };
 export const requiredDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large" align="center">
     <Label size="medium" required>
@@ -41,5 +41,5 @@ export const requiredDemo = {
       <Label size="medium" required requiredIndicator=" (Required)">
       Required Field
     </Label>
-  </Flex>`,
+  </Flex>`
 };

@@ -20,13 +20,13 @@ export interface PopoverContentProps {
   ariaLabel?: string;
 
   /** Preferred side of the trigger to render. */
-  side?: "top" | "right" | "bottom" | "left";
+  side?: 'top' | 'right' | 'bottom' | 'left';
 
   /** Distance in pixels from the trigger. */
   sideOffset?: number;
 
   /** Alignment relative to trigger. */
-  align?: "start" | "center" | "end";
+  align?: 'start' | 'center' | 'end';
 
   /** Offset in pixels from alignment edge. */
   alignOffset?: number;

@@ -1,11 +1,11 @@
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
-import { TagSchema } from '@/lib/types';
 import { remarkInstall } from 'fumadocs-docgen';
 import {
   defineConfig,
   defineDocs,
-  frontmatterSchema
+  frontmatterSchema,
+  metaSchema
 } from 'fumadocs-mdx/config';
 import {
   GeneratorOptions,
@@ -27,9 +27,13 @@ const generator = createGenerator(tsconfig);
 export const docs = defineDocs({
   dir: 'src/content/docs',
   docs: {
-    schema: frontmatterSchema.extend({
-      tag: TagSchema
-    })
+    schema: frontmatterSchema,
+    postprocess: {
+      includeProcessedMarkdown: true
+    }
+  },
+  meta: {
+    schema: metaSchema
   }
 });
 

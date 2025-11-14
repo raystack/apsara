@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { type HTMLAttributes } from "react";
-import { cx } from "class-variance-authority";
-import styles from "./accent-toggle.module.css";
-import { useTheme } from "../theme";
+import { cx } from 'class-variance-authority';
+import { type HTMLAttributes } from 'react';
+import { useTheme } from '../theme';
+import styles from './accent-toggle.module.css';
 
-const accentColors = ["indigo", "mint", "orange"] as const;
+const accentColors = ['indigo', 'mint', 'orange'] as const;
 
 export default function AccentToggle({
   className,
@@ -15,9 +15,10 @@ export default function AccentToggle({
 
   return (
     <div
-      className={`${styles.container} ${className || ""}`}
-      data-accent-toggle=""
-      {...props}>
+      className={`${styles.container} ${className || ''}`}
+      data-accent-toggle=''
+      {...props}
+    >
       {accentColors.map(color => (
         <button
           key={color}
@@ -25,7 +26,7 @@ export default function AccentToggle({
           className={cx(
             styles.accentButton,
             styles[color],
-            accentColor === color && styles.active,
+            accentColor === color && styles.active
           )}
           onClick={() => {
             setTheme({ accentColor: color });

@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `<Image${getPropsString(props)}/>`;
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     src: {
-      type: "text",
+      type: 'text',
       initialValue:
-        "https://images.unsplash.com/photo-1447690709975-318628b14c57",
+        'https://images.unsplash.com/photo-1447690709975-318628b14c57'
     },
-    alt: { type: "text", initialValue: "Placeholder Image" },
+    alt: { type: 'text', initialValue: 'Placeholder Image' },
     fit: {
-      type: "select",
-      options: ["contain", "cover", "fill"],
-      defaultValue: "cover",
+      type: 'select',
+      options: ['contain', 'cover', 'fill'],
+      defaultValue: 'cover'
     },
     radius: {
-      type: "select",
-      options: ["none", "small", "medium", "full"],
-      defaultValue: "none",
+      type: 'select',
+      options: ['none', 'small', 'medium', 'full'],
+      defaultValue: 'none'
     },
-    width: { type: "text", initialValue: "200px" },
-    height: { type: "text", initialValue: "200px" },
+    width: { type: 'text', initialValue: '200px' },
+    height: { type: 'text', initialValue: '200px' }
   },
-  getCode,
+  getCode
 };
 
 export const fitDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large" align="center">
     <Image 
@@ -56,10 +56,10 @@ export const fitDemo = {
     height={150}
     fit="fill"
     />
-  </Flex>`,
+  </Flex>`
 };
 export const radiusDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <Image 
@@ -90,10 +90,10 @@ export const radiusDemo = {
     height={100}
     radius="full"
     />
-  </Flex>`,
+  </Flex>`
 };
 export const fallbackDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <Image 
@@ -105,5 +105,5 @@ export const fallbackDemo = {
     fit="cover"
     radius="medium"
     />
-  </Flex>`,
+  </Flex>`
 };

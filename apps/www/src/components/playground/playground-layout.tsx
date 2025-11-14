@@ -1,6 +1,6 @@
-import { HTMLAttributes, ReactNode } from "react";
-import styles from "./playground-layout.module.css";
-import { cx } from "class-variance-authority";
+import { cx } from 'class-variance-authority';
+import { HTMLAttributes } from 'react';
+import styles from './playground-layout.module.css';
 
 type Props = {
   title?: string;

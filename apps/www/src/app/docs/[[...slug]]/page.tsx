@@ -1,22 +1,16 @@
-import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions';
 import Demo from '@/components/demo';
-import Tag from '@/components/tag';
+import DocsNavbar from '@/components/docs/navbar';
+// import { TypeTable } from 'fumadocs-ui/components/type-table';
+import { TypeTable } from '@/components/typetable';
 import { docs } from '@/lib/source';
+import { Flex, Headline, Text } from '@raystack/apsara';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { TypeTable } from 'fumadocs-ui/components/type-table';
-import defaultMdxComponents from 'fumadocs-ui/mdx';
-import {
-  DocsBody,
-  DocsDescription,
-  DocsPage,
-  DocsTitle
-} from 'fumadocs-ui/page';
+import defaultMdxComponents, { createRelativeLink } from 'fumadocs-ui/mdx';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import styles from './page.module.css';
 
-export default async function Page(props: {
-  params: Promise<{ slug?: string[] }>;
-}) {
+export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
   const page = docs.getPage(params.slug);
   if (!page) notFound();
@@ -24,38 +18,31 @@ export default async function Page(props: {
   const MDX = page.data.body;
 
   return (
-    <DocsPage
-      toc={page.data.toc}
-      full={page.data.full}
-      tableOfContent={{
-        single: false
-      }}
+    <Flex
+      direction='column'
+      justify='center'
+      align='center'
+      className={styles.container}
     >
-      <DocsTitle>
-        <div className={styles.container}>
-          <div className={styles.title}>
-            {page.data.title}
-            <Tag value={page.data.tag} size='regular' />
-          </div>
-          <div className={styles.actions}>
-            <LLMCopyButton markdownUrl={`${page.url}.mdx`} />
-            <ViewOptions markdownUrl={`${page.url}.mdx`} />
-          </div>
-        </div>
-      </DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
-        <MDX
-          components={{
-            ...defaultMdxComponents,
-            TypeTable,
-            Tab,
-            Tabs,
-            Demo
-          }}
-        />
-      </DocsBody>
-    </DocsPage>
+      <DocsNavbar url={page.url} title={page.data.title} />
+      <Flex direction='column' gap={3} className={styles.content}>
+        <Headline>{page.data.title}</Headline>
+        <Text>{page.data.description}</Text>
+        <Flex direction='column' className={styles.prose}>
+          <MDX
+            components={{
+              ...defaultMdxComponents,
+              // this allows you to link to other pages with relative file paths
+              a: createRelativeLink(docs, page),
+              TypeTable,
+              Tab,
+              Tabs,
+              Demo
+            }}
+          />
+        </Flex>
+      </Flex>
+    </Flex>
   );
 }
 
@@ -63,9 +50,9 @@ export async function generateStaticParams() {
   return docs.generateParams();
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug?: string[] }>;
-}) {
+export async function generateMetadata(
+  props: PageProps<'/docs/[[...slug]]'>
+): Promise<Metadata> {
   const params = await props.params;
   const page = docs.getPage(params.slug);
   if (!page) notFound();

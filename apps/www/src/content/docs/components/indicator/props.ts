@@ -3,7 +3,7 @@ export interface IndicatorProps {
    * Visual style variant
    * @default "accent"
    */
-  variant?: "accent" | "warning" | "danger" | "success" | "neutral";
+  variant?: 'accent' | 'warning' | 'danger' | 'success' | 'neutral';
 
   /** Optional text label to display (if omitted, shows a dot) */
   label?: string;

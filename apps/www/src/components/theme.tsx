@@ -1,24 +1,27 @@
-"use client";
+'use client';
 
 import {
-  createContext,
-  useContext,
+  ThemeProvider as ApsaraThemeProvider,
+  useTheme as useApsaraTheme
+} from '@raystack/apsara';
+import {
   ReactNode,
-  useState,
+  createContext,
   useCallback,
-} from "react";
-import { ThemeProvider as ApsaraThemeProvider } from "@raystack/apsara";
-import { useTheme as useNextTheme } from "next-themes";
+  useContext,
+  useState
+} from 'react';
+// import { useTheme as useNextTheme } from "next-themes";
 
-type Theme = "light" | "dark";
+type Theme = 'light' | 'dark';
 
 export interface ThemeOptions {
   /** Style variant of the theme, either 'modern' or 'traditional' */
-  style?: "modern" | "traditional";
+  style?: 'modern' | 'traditional';
   /** Accent color for the theme */
-  accentColor?: "indigo" | "orange" | "mint";
+  accentColor?: 'indigo' | 'orange' | 'mint';
   /** Gray color variant for the theme */
-  grayColor?: "gray" | "mauve" | "slate";
+  grayColor?: 'gray' | 'mauve' | 'slate';
   /** Theme value for light or dark  */
   theme?: Theme;
 }
@@ -34,30 +37,35 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const { resolvedTheme, setTheme } = useNextTheme();
-  const theme = (resolvedTheme ?? "light") as Theme;
+  const { resolvedTheme, setTheme } = useApsaraTheme();
+  const theme = (resolvedTheme ?? 'light') as Theme;
 
   const [options, setOptions] = useState<ThemeOptions>({
-    style: "modern",
-    accentColor: "indigo",
-    grayColor: "gray",
+    style: 'modern',
+    accentColor: 'indigo',
+    grayColor: 'gray'
   });
 
-  const updateOptions = useCallback((options: ThemeOptions) => {
-    if ("theme" in options && options.theme) setTheme(options.theme);
-    setOptions(_options => ({ ..._options, ...options }));
-  }, []);
+  const updateOptions = useCallback(
+    (options: ThemeOptions) => {
+      if ('theme' in options && options.theme) setTheme(options.theme);
+      setOptions(_options => ({ ..._options, ...options }));
+    },
+    [setTheme]
+  );
 
   const key = `${options?.accentColor}-${options?.grayColor}-${options?.style}`;
   return (
     <ThemeContext.Provider
-      value={{ ...options, theme, setTheme: updateOptions }}>
+      value={{ ...options, theme, setTheme: updateOptions }}
+    >
       <ApsaraThemeProvider
         key={key}
         forcedTheme={theme}
         accentColor={options.accentColor}
         grayColor={options.grayColor}
-        style={options.style}>
+        style={options.style}
+      >
         {children}
       </ApsaraThemeProvider>
     </ThemeContext.Provider>
@@ -67,7 +75,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 }
