@@ -1,33 +1,34 @@
 import Demo from '@/components/demo';
 import DocsNavbar from '@/components/docs/navbar';
+// import { TypeTable } from 'fumadocs-ui/components/type-table';
+import { TypeTable } from '@/components/typetable';
 import { docs } from '@/lib/source';
 import { Flex, Headline, Text } from '@raystack/apsara';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-import { TypeTable } from 'fumadocs-ui/components/type-table';
 import defaultMdxComponents, { createRelativeLink } from 'fumadocs-ui/mdx';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import styles from './page.module.css';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   const params = await props.params;
   const page = docs.getPage(params.slug);
   if (!page) notFound();
 
-  console.log('page >> ', page);
-
   const MDX = page.data.body;
-  const pageFilePath =
-    'info' in page.data && 'fullPath' in page.data.info
-      ? (page.data.info.fullPath as string)
-      : undefined;
 
   return (
-    <Flex direction='column'>
-      <DocsNavbar pageTree={docs.pageTree} pageFilePath={pageFilePath} />
-      <Flex direction='column' gap={2} style={{ padding: 'var(--rs-space-6)' }}>
+    <Flex
+      direction='column'
+      justify='center'
+      align='center'
+      className={styles.container}
+    >
+      <DocsNavbar url={page.url} title={page.data.title} />
+      <Flex direction='column' gap={3} className={styles.content}>
         <Headline>{page.data.title}</Headline>
         <Text>{page.data.description}</Text>
-        <Flex direction='column' gap={2}>
+        <Flex direction='column' className={styles.prose}>
           <MDX
             components={{
               ...defaultMdxComponents,

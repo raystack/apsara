@@ -1,125 +1,53 @@
 'use client';
 
 import { Breadcrumb, Button } from '@raystack/apsara';
-import { Node, Root } from 'fumadocs-core/page-tree';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
 import styles from './navbar.module.css';
 
-type Props = {
-  pageTree: Root;
-  pageFilePath?: string;
-};
-
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-  current?: boolean;
+interface DocsNavbarProps {
+  url: string;
+  title: string;
 }
 
-function findPageInTree(
-  tree: Root,
-  pathname: string,
-  path: Node[] = []
-): Node[] | null {
-  for (const node of tree.children) {
-    const currentPath = [...path, node];
-
-    // Check if this node matches the pathname
-    if (node.type === 'page' && node.url === pathname) {
-      return currentPath;
-    }
-
-    // If it's a folder, check its children
-    if (node.type === 'folder' && node.children) {
-      const found = findPageInTree(
-        { children: node.children } as Root,
-        pathname,
-        currentPath
-      );
-      if (found) return found;
-    }
-
-    // Check if folder has an index that matches
-    if (node.type === 'folder' && node.index) {
-      if (node.index.url === pathname) {
-        return currentPath;
-      }
-    }
-  }
-
-  return null;
+/**
+ * Converts a slug string to a capitalized title string.
+ * Example: "test-slug" -> "Test Slug"
+ */
+function slugToTitle(slug: string): string {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
 
-function buildBreadcrumbs(
-  path: Node[] | null,
-  pathname: string
-): BreadcrumbItem[] {
-  if (!path || path.length === 0) {
-    // Fallback: build from pathname segments
-    const segments = pathname.replace('/docs', '').split('/').filter(Boolean);
-    if (segments.length === 0) return [];
+function buildBreadcrumbsFromUrl(url: string, pageTitle: string): string[] {
+  const slugs = url
+    .replace('/docs/', '')
+    .split('/')
+    .filter(Boolean)
+    .slice(0, -1)
+    .map(slug => slugToTitle(slug));
 
-    return segments.map((segment, index) => {
-      const href =
-        index === segments.length - 1
-          ? undefined
-          : `/docs/${segments.slice(0, index + 1).join('/')}`;
-      return {
-        label:
-          segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
-        href,
-        current: index === segments.length - 1
-      };
-    });
+  // If no slugs, assume it's overview
+  if (!slugs || slugs.length === 0) {
+    slugs.push('Overview');
   }
 
-  const items: BreadcrumbItem[] = [];
+  slugs.push(pageTitle);
 
-  for (let i = 0; i < path.length; i++) {
-    const node = path[i];
-    const isLast = i === path.length - 1;
-
-    if (node.type === 'folder') {
-      // For folders, use the folder name
-      // If folder has an index, use that URL, otherwise no link
-      const folderUrl = node.index?.url;
-      items.push({
-        label: (node.name as string) || 'Untitled',
-        href: isLast ? undefined : folderUrl,
-        current: isLast
-      });
-    } else if (node.type === 'page') {
-      // For pages, use the page name or title
-      items.push({
-        label: (node.name as string) || 'Untitled',
-        href: isLast ? undefined : node.url,
-        current: isLast
-      });
-    }
-  }
-
-  return items;
+  return slugs;
 }
 
-export default function DocsNavbar({ pageTree, pageFilePath }: Props) {
-  const pathname = usePathname();
-
-  const breadcrumbs = useMemo(() => {
-    const path = findPageInTree(pageTree, pathname);
-    return buildBreadcrumbs(path, pathname);
-  }, [pageTree, pathname]);
+export default function DocsNavbar({ url, title }: DocsNavbarProps) {
+  const breadcrumbs = useMemo(
+    () => buildBreadcrumbsFromUrl(url, title),
+    [url, title]
+  );
 
   const handleCopyMarkdown = async () => {
-    if (!pageFilePath) {
-      console.error('Page file path not available');
-      return;
-    }
-
     try {
       // Construct markdown URL - adjust based on your setup
-      const markdownUrl = `/api/markdown?path=${encodeURIComponent(pageFilePath)}`;
+      const markdownUrl = `/api/markdown?path=${encodeURIComponent(url)}`;
       const response = await fetch(markdownUrl);
       const text = await response.text();
       await navigator.clipboard.writeText(text);
@@ -130,14 +58,9 @@ export default function DocsNavbar({ pageTree, pageFilePath }: Props) {
   };
 
   const handleViewSource = () => {
-    if (!pageFilePath) {
-      console.error('Page file path not available');
-      return;
-    }
-
     // Construct GitHub URL or source viewer URL
     // Adjust based on your repository structure
-    const githubUrl = `https://github.com/raystack/apsara/blob/main/apps/www/src/content/docs/${pageFilePath}`;
+    const githubUrl = `https://github.com/raystack/apsara/blob/main/apps/www/src/content/docs/${url}`;
     window.open(githubUrl, '_blank');
   };
 
@@ -146,22 +69,21 @@ export default function DocsNavbar({ pageTree, pageFilePath }: Props) {
       <div className={styles.left}>
         {breadcrumbs.length > 0 && (
           <Breadcrumb size='small'>
-            {breadcrumbs.flatMap((item, index) => {
-              const elements = [];
-              if (index > 0) {
-                elements.push(<Breadcrumb.Separator key={`sep-${index}`} />);
-              }
-              elements.push(
-                <Breadcrumb.Item
-                  key={`item-${index}`}
-                  href={item.href}
-                  current={item.current}
-                  as={item.href ? <Link href={item.href} /> : undefined}
-                >
-                  {item.label}
-                </Breadcrumb.Item>
+            {breadcrumbs.map((item, index) => {
+              const isLast = index === breadcrumbs.length - 1;
+              return (
+                <>
+                  <Breadcrumb.Item key={`item-${index}`} current={isLast}>
+                    {item}
+                  </Breadcrumb.Item>
+                  {!isLast && (
+                    <Breadcrumb.Separator
+                      key={`sep-${index}`}
+                      className={styles['breadcrumb-separator']}
+                    />
+                  )}
+                </>
               );
-              return elements;
             })}
           </Breadcrumb>
         )}

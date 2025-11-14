@@ -1,0 +1,8 @@
+.content {
+  max-width: 806px;
+  padding: var(--rs-space-15) var(--rs-space-7);
+}
+
+.prose {
+  gap: var(--rs-space-12);
+}

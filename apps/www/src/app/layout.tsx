@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import '@/styles.css';
 import '@raystack/apsara/normalize.css';
 import '@raystack/apsara/style.css';
+import styles from './layout.module.css';
 
 const inter = Inter({
   subsets: ['latin']
@@ -16,13 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <head>
         <link rel='icon' href='/assets/logo.svg' sizes='any' />
       </head>
-      <body
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: '100vh'
-        }}
-      >
+      <body className={styles.body}>
         <NextProvider>
           <ThemeProvider>
             {/* <Navbar /> */}

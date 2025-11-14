@@ -30,3 +30,6 @@
     background: rgba(20, 20, 20, 0.9);
   }
 }
+.breadcrumb-separator {
+  height: var(--rs-space-4);
+}
