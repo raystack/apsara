@@ -62,6 +62,26 @@ describe('Headline', () => {
     });
   });
 
+  describe('Weight', () => {
+    it('renders regular weight correctly', () => {
+      render(<Headline weight='regular'>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading).toHaveClass(styles['headline-weight-regular']);
+    });
+
+    it('renders medium weight correctly', () => {
+      render(<Headline weight='medium'>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading).toHaveClass(styles['headline-weight-medium']);
+    });
+
+    it('defaults to medium weight', () => {
+      render(<Headline>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading).toHaveClass(styles['headline-weight-medium']);
+    });
+  });
+
   describe('Alignment', () => {
     const alignments = ['left', 'center', 'right'] as const;
 
