@@ -63,3 +63,12 @@
   width: 100%;
   max-width: 100%;
 }
+
+/* Headline Weight */
+.headline-weight-regular {
+  font-weight: var(--rs-font-weight-regular);
+}
+
+.headline-weight-medium {
+  font-weight: var(--rs-font-weight-medium);
+}
