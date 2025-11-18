@@ -1,5 +1,5 @@
 import { getFormattedCode } from '@/lib/prettier';
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { CodeBlock } from '@raystack/apsara';
 import { useMemo } from 'react';
 import styles from './editor.module.css';
 
@@ -12,7 +12,14 @@ export default function Editor({ code = '' }: props) {
 
   return (
     <div className={styles.editor} suppressHydrationWarning>
-      <DynamicCodeBlock lang='tsx' code={formattedCode} />
+      <CodeBlock>
+        <CodeBlock.Content>
+          <CodeBlock.Code language='tsx' className={styles.code}>
+            {formattedCode}
+          </CodeBlock.Code>
+          <CodeBlock.CopyButton variant='floating' />
+        </CodeBlock.Content>
+      </CodeBlock>
     </div>
   );
 }

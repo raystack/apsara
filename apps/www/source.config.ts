@@ -1,6 +1,13 @@
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
-import { remarkInstall } from 'fumadocs-docgen';
+import {
+  rehypeToc,
+  remarkGfm,
+  remarkHeading,
+  remarkImage,
+  remarkNpm,
+  remarkStructure
+} from 'fumadocs-core/mdx-plugins';
 import {
   defineConfig,
   defineDocs,
@@ -39,6 +46,18 @@ export const docs = defineDocs({
 
 export default defineConfig({
   mdxOptions: {
-    remarkPlugins: [remarkInstall, [remarkAutoTypeTable, { generator }]]
+    remarkPlugins: () => {
+      return [
+        remarkGfm,
+        [remarkHeading, { generateToc: false }],
+        [remarkImage, { useImport: undefined }],
+        // remarkCodeTab,
+        remarkNpm,
+        remarkStructure,
+        // remarkInstall,
+        [remarkAutoTypeTable, { generator }]
+      ];
+    },
+    rehypePlugins: () => [rehypeToc]
   }
 });

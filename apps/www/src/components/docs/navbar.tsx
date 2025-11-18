@@ -1,48 +1,21 @@
 'use client';
-
 import { Breadcrumb, Button } from '@raystack/apsara';
-import { useMemo } from 'react';
+import { useBreadcrumb } from 'fumadocs-core/breadcrumb';
+import { Root } from 'fumadocs-core/page-tree';
+import { usePathname } from 'next/navigation';
+import { Fragment } from 'react';
 import styles from './navbar.module.css';
 
 interface DocsNavbarProps {
   url: string;
   title: string;
+  pageTree: Root;
 }
 
-/**
- * Converts a slug string to a capitalized title string.
- * Example: "test-slug" -> "Test Slug"
- */
-function slugToTitle(slug: string): string {
-  return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
-function buildBreadcrumbsFromUrl(url: string, pageTitle: string): string[] {
-  const slugs = url
-    .replace('/docs/', '')
-    .split('/')
-    .filter(Boolean)
-    .slice(0, -1)
-    .map(slug => slugToTitle(slug));
-
-  // If no slugs, assume it's overview
-  if (!slugs || slugs.length === 0) {
-    slugs.push('Overview');
-  }
-
-  slugs.push(pageTitle);
-
-  return slugs;
-}
-
-export default function DocsNavbar({ url, title }: DocsNavbarProps) {
-  const breadcrumbs = useMemo(
-    () => buildBreadcrumbsFromUrl(url, title),
-    [url, title]
-  );
+export default function DocsNavbar({ url, title, pageTree }: DocsNavbarProps) {
+  const pathname = usePathname();
+  const items = useBreadcrumb(pathname, pageTree);
+  const breadcrumbItems = items.length > 0 ? items : [{ name: 'Overview' }];
 
   const handleCopyMarkdown = async () => {
     try {
@@ -67,24 +40,17 @@ export default function DocsNavbar({ url, title }: DocsNavbarProps) {
   return (
     <header className={styles.navbar}>
       <div className={styles.left}>
-        {breadcrumbs.length > 0 && (
+        {breadcrumbItems.length > 0 && (
           <Breadcrumb size='small'>
-            {breadcrumbs.map((item, index) => {
-              const isLast = index === breadcrumbs.length - 1;
-              return (
-                <>
-                  <Breadcrumb.Item key={`item-${index}`} current={isLast}>
-                    {item}
-                  </Breadcrumb.Item>
-                  {!isLast && (
-                    <Breadcrumb.Separator
-                      key={`sep-${index}`}
-                      className={styles['breadcrumb-separator']}
-                    />
-                  )}
-                </>
-              );
-            })}
+            {breadcrumbItems.map((item, index) => (
+              <Fragment key={`item-${index}`}>
+                <Breadcrumb.Item>{item.name}</Breadcrumb.Item>
+                <Breadcrumb.Separator
+                  className={styles['breadcrumb-separator']}
+                />
+              </Fragment>
+            ))}
+            <Breadcrumb.Item current>{title}</Breadcrumb.Item>
           </Breadcrumb>
         )}
       </div>

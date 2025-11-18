@@ -1,6 +1,6 @@
 'use client';
 
-import { buttonVariants } from 'fumadocs-ui/components/ui/button';
+import { IconButton } from '@raystack/apsara';
 import { RefreshCw } from 'lucide-react';
 import {
   ReadonlyURLSearchParams,
@@ -82,15 +82,14 @@ export default function DemoPlayground({
         <div className={styles.previewContainer}>
           <div className={styles.preview}>
             <Preview />
-            <button
-              className={buttonVariants({
-                color: 'ghost',
-                className: styles.previewReset
-              })}
+            <IconButton
+              size={1}
+              className={styles.previewReset}
               onClick={resetProps}
+              aria-label='Reset to default props'
             >
-              <RefreshCw size={16} />
-            </button>
+              <RefreshCw size={12} />
+            </IconButton>
           </div>
           <DemoControls
             controls={controls}

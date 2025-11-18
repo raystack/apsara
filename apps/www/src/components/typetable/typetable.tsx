@@ -1,6 +1,6 @@
 'use client';
 
-import { Accordion, Flex, Text } from '@raystack/apsara';
+import { Accordion, CodeBlock, Flex, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import Link from 'fumadocs-core/link';
 import { type ReactNode } from 'react';
@@ -86,13 +86,17 @@ function Item({
           {name}
           {!required && '?'}
         </code>
-        <span className={styles.typePreview}>
+        <span className={styles.fieldValue}>
           {typeDescriptionLink ? (
             <Link href={typeDescriptionLink} className={styles.typeLink}>
               {type}
             </Link>
           ) : (
-            type
+            <CodeBlock hideLineNumbers>
+              <CodeBlock.Code language='tsx' className={styles.fieldCode}>
+                {String(type)}
+              </CodeBlock.Code>
+            </CodeBlock>
           )}
         </span>
       </Accordion.Trigger>
@@ -118,16 +122,28 @@ function Item({
             <Text size='small' className={styles.fieldLabel}>
               Type
             </Text>
-            <code className={cx(styles.fieldValue, styles.fieldAccent)}>
-              {typeDescription ?? type}
-            </code>
+            <CodeBlock hideLineNumbers>
+              <CodeBlock.Code
+                language='tsx'
+                className={cx(styles.fieldCode, styles.fieldValue)}
+              >
+                {String(typeDescription ?? type)}
+              </CodeBlock.Code>
+            </CodeBlock>
           </Flex>
           {defaultValue && (
             <Flex gap={5}>
               <Text size='small' className={styles.fieldLabel}>
                 Default
               </Text>
-              <code className={styles.fieldValue}>{defaultValue}</code>
+              <CodeBlock hideLineNumbers>
+                <CodeBlock.Code
+                  language='tsx'
+                  className={cx(styles.fieldCode, styles.fieldValue)}
+                >
+                  {String(defaultValue)}
+                </CodeBlock.Code>
+              </CodeBlock>
             </Flex>
           )}
           {parameters.length > 0 && (

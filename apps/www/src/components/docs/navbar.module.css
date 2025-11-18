@@ -9,6 +9,18 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(252, 252, 252, 0.9);
+  backdrop-filter: blur(1px);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary, #e8e8e8);
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .left {
