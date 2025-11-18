@@ -3,19 +3,25 @@ export interface HeadlineProps {
    * Controls the size of the headline.
    * @default "t1"
    */
-  size?: "t1" | "t2" | "t3" | "t4";
+  size?: 't1' | 't2' | 't3' | 't4';
+
+  /**
+   * The headline weight.
+   * @default "medium"
+   */
+  weight?: 'regular' | 'medium';
 
   /**
    * HTML heading element to render.
    * @default "h2"
    */
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
   /**
    * Text alignment.
    * @default "left"
    */
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
 
   /**
    * Enable text truncation with ellipsis.
