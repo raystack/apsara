@@ -6,6 +6,12 @@ export interface HeadlineProps {
   size?: 't1' | 't2' | 't3' | 't4';
 
   /**
+   * The headline weight.
+   * @default "medium"
+   */
+  weight?: 'regular' | 'medium';
+
+  /**
    * HTML heading element to render.
    * @default "h2"
    */

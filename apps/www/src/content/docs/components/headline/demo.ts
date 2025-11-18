@@ -2,7 +2,7 @@
 
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: Record<string, unknown>) => {
   const { children, ...rest } = props;
   return `<Headline${getPropsString(rest)}>${children}</Headline>`;
 };
@@ -14,6 +14,11 @@ export const playground = {
       type: 'select',
       options: ['t1', 't2', 't3', 't4'],
       defaultValue: 't1'
+    },
+    weight: {
+      type: 'select',
+      options: ['regular', 'medium'],
+      defaultValue: 'medium'
     },
     as: {
       type: 'select',
@@ -48,5 +53,14 @@ export const truncateDemo = {
     <Headline size="small" truncate>
       This is a very long headline that will be truncated with an ellipsis
     </Headline>
+  </Flex>`
+};
+
+export const weightDemo = {
+  type: 'code',
+  code: `
+  <Flex direction="column" style={{width:"100%"}} gap="large">
+    <Headline size="t2" weight="regular">Regular Weight Headline</Headline>
+    <Headline size="t2" weight="medium">Medium Weight Headline</Headline>
   </Flex>`
 };
