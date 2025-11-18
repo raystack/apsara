@@ -1,21 +1,5 @@
-import { Headline, Tabs } from '@raystack/apsara';
-// import { Card, Cards } from '@/components/card';
-// import {
-//   Callout,
-//   CalloutContainer,
-//   CalloutDescription,
-//   CalloutTitle,
-// } from '@/components/callout';
-// import { Heading } from '@/components/heading';
-// import { cn } from '@/utils/cn';
-// import {
-//   CodeBlock,
-//   CodeBlockTab,
-//   CodeBlockTabs,
-//   CodeBlockTabsList,
-//   CodeBlockTabsTrigger,
-//   Pre,
-// } from '@/components/codeblock';
+import { Headline, Tabs, Text } from '@raystack/apsara';
+import { cx } from 'class-variance-authority';
 import { Image as FrameworkImage } from 'fumadocs-core/framework';
 import Link from 'fumadocs-core/link';
 import type {
@@ -26,7 +10,10 @@ import type {
   ImgHTMLAttributes,
   TableHTMLAttributes
 } from 'react';
+import Demo from '../demo';
+import { TypeTable } from '../typetable';
 import { Code } from './code';
+import styles from './mdx-components.module.css';
 import { PreContextProvider } from './pre-context';
 
 function Image(
@@ -52,7 +39,7 @@ function Table(props: TableHTMLAttributes<HTMLTableElement>) {
   );
 }
 
-const defaultMdxComponents = {
+const mdxComponents = {
   CodeBlockTabsTrigger: (
     props: ComponentPropsWithoutRef<typeof Tabs.Trigger>
   ) => <Tabs.Trigger {...props} />,
@@ -74,28 +61,63 @@ const defaultMdxComponents = {
   a: Link as FC<AnchorHTMLAttributes<HTMLAnchorElement>>,
   img: Image,
   h1: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline as='h1' size='t1' {...props} />
+    <Headline
+      as='h1'
+      size='t4'
+      {...props}
+      className={cx(styles['prose-h1'], props.className)}
+    />
   ),
   h2: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline as='h2' size='t3' {...props} />
+    <Headline
+      as='h2'
+      size='t3'
+      {...props}
+      className={cx(styles['prose-h2'], props.className)}
+    />
   ),
   h3: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline as='h3' size='t3' {...props} />
+    <Headline
+      as='h3'
+      size='t2'
+      {...props}
+      className={cx(styles['prose-h3'], props.className)}
+    />
   ),
   h4: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline as='h4' size='t3' {...props} />
+    <Headline
+      as='h4'
+      size='t1'
+      {...props}
+      className={cx(styles['prose-h4'], props.className)}
+    />
   ),
   h5: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline as='h5' size='t4' {...props} />
+    <Text
+      //@ts-expect-error - Text component type doesn't support h5 element
+      as='h5'
+      size='large'
+      {...props}
+      className={cx(styles['prose-h5'], props.className)}
+    />
   ),
   h6: (props: HTMLAttributes<HTMLHeadingElement>) => (
-    <Headline as='h6' size='t4' {...props} />
+    <Text
+      // @ts-expect-error - Text component type doesn't support h6 element
+      as='h6'
+      size='regular'
+      {...props}
+      className={cx(styles['prose-h6'], props.className)}
+    />
   ),
-  table: Table
-  // Callout,
-  // CalloutContainer,
-  // CalloutTitle,
-  // CalloutDescription,
+  table: Table,
+  TypeTable: (props: ComponentPropsWithoutRef<typeof TypeTable>) => (
+    <TypeTable
+      {...props}
+      className={cx(styles['prose-type-table'], props.className)}
+    />
+  ),
+  Demo
 };
 
 // export const createRelativeLink: typeof import('./mdx.server').createRelativeLink =
@@ -105,4 +127,4 @@ const defaultMdxComponents = {
 //     );
 //   };
 
-export { defaultMdxComponents };
+export { mdxComponents };

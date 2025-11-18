@@ -42,11 +42,14 @@ export interface TypeNode {
   returns?: ReactNode;
 }
 
-export function TypeTable({ type }: { type: Record<string, TypeNode> }) {
+export function TypeTable({
+  type,
+  className
+}: { type: Record<string, TypeNode>; className?: string }) {
   const entries = Object.entries(type);
 
   return (
-    <div className={styles.container}>
+    <div className={cx(styles.container, className)}>
       <div className={styles.header}>
         <p className={styles.propLabel}>Prop</p>
         <p className={styles.typeLabel}>Type</p>

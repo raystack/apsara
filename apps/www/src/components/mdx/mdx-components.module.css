@@ -19,3 +19,41 @@
   letter-spacing: var(--rs-letter-spacing-mono-small);
   line-height: var(--rs-line-height-mono-small);
 }
+
+.prose-h1,
+.prose-h2 {
+  margin-top: var(--rs-space-11);
+}
+.prose-h3 {
+  margin-top: var(--rs-space-9);
+}
+.prose-h4 {
+  margin-top: var(--rs-space-7);
+}
+.prose-h5 {
+  margin-top: var(--rs-space-5);
+}
+.prose-h6 {
+  margin-top: var(--rs-space-4);
+}
+
+.prose-code,
+.prose-type-table,
+:global(.prose) [data-demo] {
+  margin-top: var(--rs-space-4);
+}
+
+:global(.prose) ul,
+:global(.prose) ol {
+  padding-left: var(--rs-space-5);
+  margin: 0;
+}
+
+:global(.prose) ul li,
+:global(.prose) ol li {
+  margin-bottom: var(--rs-space-3);
+}
+:global(.prose) ul li:first-child,
+:global(.prose) ol li:first-child {
+  margin-top: var(--rs-space-3);
+}

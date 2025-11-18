@@ -4,8 +4,8 @@
   width: 100%;
 }
 
-.prose {
-  gap: var(--rs-space-12);
+:global(.prose) {
+  gap: var(--rs-space-3);
   color: var(--rs-color-foreground-base-secondary);
   font-size: var(--rs-font-size-regular);
   font-weight: var(--rs-font-weight-regular);

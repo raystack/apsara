@@ -1,1 +1,1 @@
-export * from './default-components';
+export * from './mdx-components';

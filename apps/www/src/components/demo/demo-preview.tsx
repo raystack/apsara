@@ -1,7 +1,6 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { useState } from 'react';
 import { LiveProvider } from 'react-live';
 import Editor from '../editor';
@@ -16,13 +15,14 @@ export default function DemoPreview({
   codePreview
 }: DemoPreviewProps) {
   const [activeTab, setActiveTab] = useState(0);
+  const [activeCodePreviewTab, setActiveCodePreviewTab] = useState(0);
   const activeCode = ((tabs ? tabs[activeTab].code : code) ?? '').trim();
 
   const previewCode =
     typeof codePreview === 'string' ? codePreview : activeCode;
   return (
     <LiveProvider code={activeCode} scope={scope} disabled>
-      <div className={styles.container}>
+      <div className={styles.container} data-demo>
         {tabs && (
           <div className={styles.tabs}>
             {tabs.map((tab, index) => (
@@ -42,17 +42,28 @@ export default function DemoPreview({
         <div className={styles.preview}>
           <Preview />
         </div>
+
         {Array.isArray(codePreview) ? (
-          <Tabs
-            items={codePreview.map(tab => tab.label)}
-            className={styles.codeTabGroup}
-          >
-            {codePreview.map(tab => (
-              <Tab className={styles.codeTab} value={tab.label} key={tab.label}>
-                <Editor code={tab.code} />
-              </Tab>
-            ))}
-          </Tabs>
+          <div className={styles.codeTabGroup}>
+            <div className={styles.tabs}>
+              {codePreview.map((tab, index) => (
+                <button
+                  key={tab.label}
+                  className={cx(
+                    styles.tab,
+                    index === activeCodePreviewTab && styles.activeTab
+                  )}
+                  onClick={() => setActiveCodePreviewTab(index)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <Editor
+              code={codePreview[activeCodePreviewTab].code}
+              key={activeCodePreviewTab}
+            />
+          </div>
         ) : (
           <Editor code={previewCode} />
         )}
@@ -60,3 +71,19 @@ export default function DemoPreview({
     </LiveProvider>
   );
 }
+{
+  /* // {Array.isArray(codePreview) ? ( */
+}
+//   <Tabs
+//     items={codePreview.map(tab => tab.label)}
+//     className={styles.codeTabGroup}
+//   >
+//     {codePreview.map(tab => (
+//       <Tab className={styles.codeTab} value={tab.label} key={tab.label}>
+//         <Editor code={tab.code} />
+//       </Tab>
+//     ))}
+//   </Tabs>
+// ) : (
+//   <Editor code={previewCode} />
+// )}

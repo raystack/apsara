@@ -12,12 +12,13 @@ export default function Editor({ code = '' }: props) {
 
   return (
     <div className={styles.editor} suppressHydrationWarning>
-      <CodeBlock>
+      <CodeBlock maxLines={25}>
         <CodeBlock.Content>
           <CodeBlock.Code language='tsx' className={styles.code}>
             {formattedCode}
           </CodeBlock.Code>
           <CodeBlock.CopyButton variant='floating' />
+          <CodeBlock.CollapseTrigger />
         </CodeBlock.Content>
       </CodeBlock>
     </div>

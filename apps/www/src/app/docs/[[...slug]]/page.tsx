@@ -1,13 +1,8 @@
-import Demo from '@/components/demo';
 import DocsNavbar from '@/components/docs/navbar';
-import { defaultMdxComponents } from '@/components/mdx';
-// import { TypeTable } from 'fumadocs-ui/components/type-table';
-import { TypeTable } from '@/components/typetable';
+import { mdxComponents } from '@/components/mdx';
 import { docs } from '@/lib/source';
 import { Flex, Headline, Text } from '@raystack/apsara';
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
-// import defaultMdxComponents, { createRelativeLink } from 'fumadocs-ui/mdx';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import styles from './page.module.css';
@@ -31,21 +26,19 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         title={page.data.title}
         pageTree={docs.pageTree}
       />
-      <Flex direction='column' gap={3} className={styles.content}>
-        <Headline size='t4'>{page.data.title}</Headline>
-        <Text size='regular' variant='secondary'>
-          {page.data.description}
-        </Text>
-        <Flex direction='column' className={styles.prose}>
+      <Flex direction='column' gap={6} className={styles.content}>
+        <Flex direction='column' gap={3}>
+          <Headline size='t4'>{page.data.title}</Headline>
+          <Text size='regular' variant='secondary'>
+            {page.data.description}
+          </Text>
+        </Flex>
+        <Flex direction='column' className='prose'>
           <MDX
             components={{
-              ...defaultMdxComponents,
+              ...mdxComponents,
               // this allows you to link to other pages with relative file paths
-              a: createRelativeLink(docs, page),
-              TypeTable,
-              Tab,
-              Tabs,
-              Demo
+              a: createRelativeLink(docs, page)
             }}
           />
         </Flex>

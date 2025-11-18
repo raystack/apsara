@@ -78,7 +78,7 @@ export default function DemoPlayground({
 
   return (
     <LiveProvider code={code} scope={scope} disabled>
-      <div className={styles.container}>
+      <div className={styles.container} data-demo>
         <div className={styles.previewContainer}>
           <div className={styles.preview}>
             <Preview />

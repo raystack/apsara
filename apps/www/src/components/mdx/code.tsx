@@ -3,7 +3,7 @@
 import { CodeBlock } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import { HTMLAttributes } from 'react';
-import styles from './default-components.module.css';
+import styles from './mdx-components.module.css';
 import { usePreContext } from './pre-context';
 
 export const Code = ({ children, className }: HTMLAttributes<HTMLElement>) => {
@@ -17,7 +17,7 @@ export const Code = ({ children, className }: HTMLAttributes<HTMLElement>) => {
   const codeLines = code.split('\n').length;
 
   return (
-    <CodeBlock>
+    <CodeBlock className={cx(styles['prose-code'])}>
       <CodeBlock.Content className={styles['code-block-content']}>
         <CodeBlock.Code
           language={language}
