@@ -28,7 +28,7 @@ interface OnDropdownOpen {
 
 interface CalendarPropsExtended {
   showTooltip?: boolean;
-  tooltipMessages?: { [key: string]: any };
+  tooltipMessages?: Record<string, ReactNode>;
   dateInfo?: Record<string, ReactNode>;
   loadingData?: boolean;
   timeZone?: string;
@@ -163,7 +163,7 @@ export const Calendar = function ({
 
           return (
             <Tooltip
-              position='top-center'
+              side='top'
               disabled={loadingData || !showTooltip || !message}
               message={message}
             >
