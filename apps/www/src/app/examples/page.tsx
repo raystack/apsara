@@ -4,6 +4,7 @@ import {
   Avatar,
   AvatarGroup,
   Button,
+  Calendar,
   Callout,
   DatePicker,
   Dialog,
@@ -45,7 +46,7 @@ const Page = () => {
   const [selectValue1, setSelectValue1] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
   const [inputValue, setInputValue] = useState('');
-  const [rangeValue, setRangeValue] = useState<any>({
+  const [rangeValue, setRangeValue] = useState({
     from: dayjs('2027-11-15').toDate(),
     to: dayjs('2027-12-10').toDate()
   });
@@ -165,7 +166,6 @@ const Page = () => {
               onClear={() => setSearch1('')}
             />
             <DatePicker
-              side='bottom'
               dateFormat='D MMM YYYY'
               value={dayjs().add(16, 'year').toDate()}
               onSelect={(value: Date) => console.log(value)}
@@ -187,10 +187,14 @@ const Page = () => {
             />
 
             <RangePicker
-              side='bottom'
               dateFormat='D MMM YYYY'
               value={rangeValue}
-              onSelect={range => setRangeValue(range)}
+              onSelect={range =>
+                setRangeValue({
+                  from: range.from ?? new Date(),
+                  to: range.to ?? new Date()
+                })
+              }
               calendarProps={{
                 captionLayout: 'dropdown',
                 mode: 'range',
@@ -230,6 +234,65 @@ const Page = () => {
                 mode: 'single',
                 required: true,
                 selected: new Date()
+              }}
+            />
+
+            <Text
+              size='large'
+              weight='medium'
+              style={{ marginTop: '32px', marginBottom: '16px' }}
+            >
+              Calendar with Date Info
+            </Text>
+
+            <Calendar
+              numberOfMonths={2}
+              dateInfo={{
+                [dayjs().format('DD-MM-YYYY')]: (
+                  <Flex
+                    align='center'
+                    gap={2}
+                    style={{
+                      fontSize: '8px',
+                      color: 'var(--rs-color-foreground-base-secondary)'
+                    }}
+                  >
+                    <BellIcon style={{ width: '8px', height: '8px' }} />
+                    <Text style={{ fontSize: '8px' }} color='secondary'>
+                      25%
+                    </Text>
+                  </Flex>
+                ),
+                [dayjs().add(5, 'day').format('DD-MM-YYYY')]: (
+                  <Flex
+                    align='center'
+                    gap={2}
+                    style={{
+                      fontSize: '8px',
+                      color: 'var(--rs-color-foreground-base-secondary)'
+                    }}
+                  >
+                    <BellIcon style={{ width: '8px', height: '8px' }} />
+                    <Text style={{ fontSize: '8px' }} color='secondary'>
+                      25%
+                    </Text>
+                  </Flex>
+                ),
+                [dayjs().add(10, 'day').format('DD-MM-YYYY')]: (
+                  <Flex
+                    align='center'
+                    gap={2}
+                    style={{
+                      fontSize: '8px',
+                      color: 'var(--rs-color-foreground-base-secondary)'
+                    }}
+                  >
+                    <BellIcon style={{ width: '8px', height: '8px' }} />
+                    <Text style={{ fontSize: '8px' }} color='secondary'>
+                      25%
+                    </Text>
+                  </Flex>
+                )
               }}
             />
 

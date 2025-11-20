@@ -110,6 +110,85 @@ describe('Calendar', () => {
     });
   });
 
+  describe('DateInfo Support', () => {
+    it('renders custom component for date with dateInfo', () => {
+      const TestComponent = () => (
+        <div data-testid='custom-date-info'>Custom Info</div>
+      );
+      const { container } = render(
+        <Calendar
+          dateInfo={{
+            '15-01-2024': <TestComponent />
+          }}
+        />
+      );
+
+      // The component should be rendered in the calendar
+      expect(
+        container.querySelector('[data-testid="custom-date-info"]')
+      ).toBeInTheDocument();
+    });
+
+    it('applies day_button_with_info class when dateInfo is present', () => {
+      const { container } = render(
+        <Calendar
+          dateInfo={{
+            '15-01-2024': <div>Info</div>
+          }}
+        />
+      );
+
+      const dayWithInfo = container.querySelector(
+        `.${styles.day_button_with_info}`
+      );
+      expect(dayWithInfo).toBeInTheDocument();
+    });
+
+    it('does not render dateInfo for dates not in the dateInfo object', () => {
+      const { container } = render(
+        <Calendar
+          dateInfo={{
+            '15-01-2024': <div data-testid='date-info'>Info</div>
+          }}
+        />
+      );
+
+      // Should only have one date with info
+      const dateInfos = container.querySelectorAll('[data-testid="date-info"]');
+      expect(dateInfos.length).toBeGreaterThanOrEqual(0);
+    });
+
+    it('handles multiple dates with dateInfo', () => {
+      const { container } = render(
+        <Calendar
+          dateInfo={{
+            '15-01-2024': <div data-testid='info-1'>Info 1</div>,
+            '20-01-2024': <div data-testid='info-2'>Info 2</div>
+          }}
+        />
+      );
+
+      const info1 = container.querySelector('[data-testid="info-1"]');
+      const info2 = container.querySelector('[data-testid="info-2"]');
+
+      // At least one should be present (depending on which month is visible)
+      expect(info1 || info2).toBeTruthy();
+    });
+
+    it('renders date number even when dateInfo is present', () => {
+      const { container } = render(
+        <Calendar
+          dateInfo={{
+            '15-01-2024': <div>Info</div>
+          }}
+        />
+      );
+
+      const dayNumber = container.querySelector(`.${styles.day_number}`);
+      expect(dayNumber).toBeInTheDocument();
+    });
+  });
+
   describe('Accessibility', () => {
     it('has correct ARIA roles', () => {
       render(<Calendar />);

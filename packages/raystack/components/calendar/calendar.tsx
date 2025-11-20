@@ -7,7 +7,7 @@ import {
   ChevronUpIcon
 } from '@radix-ui/react-icons';
 import { cva, cx } from 'class-variance-authority';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import {
   DayPicker,
   DayPickerProps,
@@ -29,6 +29,7 @@ interface OnDropdownOpen {
 interface CalendarPropsExtended {
   showTooltip?: boolean;
   tooltipMessages?: { [key: string]: any };
+  dateInfo?: Record<string, ReactNode>;
   loadingData?: boolean;
   timeZone?: string;
 }
@@ -114,6 +115,7 @@ export const Calendar = function ({
   onDropdownOpen,
   showTooltip = false,
   tooltipMessages = {},
+  dateInfo = {},
   loadingData = false,
   timeZone,
   ...props
@@ -154,15 +156,31 @@ export const Calendar = function ({
         ),
         DayButton: props => {
           const { day, ...buttonProps } = props;
-          const message =
-            tooltipMessages[dateLib.format(day.date, 'dd-MM-yyyy')];
+          const dateKey = dateLib.format(day.date, 'dd-MM-yyyy');
+          const message = tooltipMessages[dateKey];
+          const dateComponent = dateInfo[dateKey];
+          const hasDateInfo = Boolean(dateComponent);
+
           return (
             <Tooltip
-              side='top'
+              position='top-center'
               disabled={loadingData || !showTooltip || !message}
               message={message}
             >
-              <button {...buttonProps} />
+              <button
+                {...buttonProps}
+                className={cx(
+                  buttonProps.className,
+                  hasDateInfo && styles.day_button_with_info
+                )}
+              >
+                {hasDateInfo && (
+                  <div className={styles.day_info}>{dateComponent}</div>
+                )}
+                <span className={styles.day_number}>
+                  {buttonProps.children}
+                </span>
+              </button>
             </Tooltip>
           );
         },
