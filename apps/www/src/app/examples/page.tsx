@@ -251,7 +251,7 @@ const Page = () => {
                 [dayjs().format('DD-MM-YYYY')]: (
                   <Flex
                     align='center'
-                    gap={2}
+                    gap={1}
                     style={{
                       fontSize: '8px',
                       color: 'var(--rs-color-foreground-base-secondary)'
@@ -266,7 +266,7 @@ const Page = () => {
                 [dayjs().add(5, 'day').format('DD-MM-YYYY')]: (
                   <Flex
                     align='center'
-                    gap={2}
+                    gap={1}
                     style={{
                       fontSize: '8px',
                       color: 'var(--rs-color-foreground-base-secondary)'
@@ -281,7 +281,7 @@ const Page = () => {
                 [dayjs().add(10, 'day').format('DD-MM-YYYY')]: (
                   <Flex
                     align='center'
-                    gap={2}
+                    gap={1}
                     style={{
                       fontSize: '8px',
                       color: 'var(--rs-color-foreground-base-secondary)'
