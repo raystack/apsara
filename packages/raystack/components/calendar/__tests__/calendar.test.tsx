@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import dayjs from 'dayjs';
 import { describe, expect, it, vi } from 'vitest';
 import { Calendar } from '../calendar';
 import styles from '../calendar.module.css';
@@ -115,10 +116,11 @@ describe('Calendar', () => {
       const TestComponent = () => (
         <div data-testid='custom-date-info'>Custom Info</div>
       );
+      const today = dayjs().format('DD-MM-YYYY');
       const { container } = render(
         <Calendar
           dateInfo={{
-            '15-01-2024': <TestComponent />
+            [today]: <TestComponent />
           }}
         />
       );
@@ -130,10 +132,11 @@ describe('Calendar', () => {
     });
 
     it('applies day_button_with_info class when dateInfo is present', () => {
+      const today = dayjs().format('DD-MM-YYYY');
       const { container } = render(
         <Calendar
           dateInfo={{
-            '15-01-2024': <div>Info</div>
+            [today]: <div>Info</div>
           }}
         />
       );
@@ -145,10 +148,11 @@ describe('Calendar', () => {
     });
 
     it('does not render dateInfo for dates not in the dateInfo object', () => {
+      const today = dayjs().format('DD-MM-YYYY');
       const { container } = render(
         <Calendar
           dateInfo={{
-            '15-01-2024': <div data-testid='date-info'>Info</div>
+            [today]: <div data-testid='date-info'>Info</div>
           }}
         />
       );
@@ -159,11 +163,13 @@ describe('Calendar', () => {
     });
 
     it('handles multiple dates with dateInfo', () => {
+      const today = dayjs().format('DD-MM-YYYY');
+      const tomorrow = dayjs().add(1, 'day').format('DD-MM-YYYY');
       const { container } = render(
         <Calendar
           dateInfo={{
-            '15-01-2024': <div data-testid='info-1'>Info 1</div>,
-            '20-01-2024': <div data-testid='info-2'>Info 2</div>
+            [today]: <div data-testid='info-1'>Info 1</div>,
+            [tomorrow]: <div data-testid='info-2'>Info 2</div>
           }}
         />
       );
@@ -176,10 +182,11 @@ describe('Calendar', () => {
     });
 
     it('renders date number even when dateInfo is present', () => {
+      const today = dayjs().format('DD-MM-YYYY');
       const { container } = render(
         <Calendar
           dateInfo={{
-            '15-01-2024': <div>Info</div>
+            [today]: <div>Info</div>
           }}
         />
       );
