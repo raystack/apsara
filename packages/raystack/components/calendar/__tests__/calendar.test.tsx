@@ -142,7 +142,7 @@ describe('Calendar', () => {
       );
 
       const dayWithInfo = container.querySelector(
-        `.${styles.day_button_with_info}`
+        `.${styles.dayButtonWithInfo}`
       );
       expect(dayWithInfo).toBeInTheDocument();
     });
@@ -191,7 +191,7 @@ describe('Calendar', () => {
         />
       );
 
-      const dayNumber = container.querySelector(`.${styles.day_number}`);
+      const dayNumber = container.querySelector(`.${styles.dayNumber}`);
       expect(dayNumber).toBeInTheDocument();
     });
   });
