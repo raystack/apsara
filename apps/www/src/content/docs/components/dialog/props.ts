@@ -29,7 +29,7 @@ export interface DialogContentProps {
   className?: string;
 
   /** Position of the dialog */
-  side?: "top" | "right" | "bottom" | "left";
+  side?: 'top' | 'right' | 'bottom' | 'left';
 
   /** Accessible label for the dialog */
   ariaLabel?: string;

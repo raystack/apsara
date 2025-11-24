@@ -72,4 +72,4 @@ export interface SkeletonProps {
    * Additional inline styles for the container element (div for block and span for inline)
    */
   containerStyle?: React.CSSProperties;
-} 
+}

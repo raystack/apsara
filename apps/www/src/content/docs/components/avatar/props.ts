@@ -18,31 +18,31 @@ export interface AvatarProps {
    * Visual style variant
    * @defaultValue "soft"
    */
-  variant?: "solid" | "soft";
+  variant?: 'solid' | 'soft';
 
   /**
    * Border radius style
    * @defaultValue "small"
    */
-  radius?: "small" | "full";
+  radius?: 'small' | 'full';
 
   /**
    * Color theme for the avatar
    */
   color?:
-    | "indigo"
-    | "orange"
-    | "mint"
-    | "neutral"
-    | "sky"
-    | "lime"
-    | "grass"
-    | "cyan"
-    | "iris"
-    | "purple"
-    | "pink"
-    | "crimson"
-    | "gold";
+    | 'indigo'
+    | 'orange'
+    | 'mint'
+    | 'neutral'
+    | 'sky'
+    | 'lime'
+    | 'grass'
+    | 'cyan'
+    | 'iris'
+    | 'purple'
+    | 'pink'
+    | 'crimson'
+    | 'gold';
 
   /** Boolean to merge props onto child element */
   asChild?: boolean;

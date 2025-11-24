@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Table } from "@raystack/apsara";
-import PlaygroundLayout from "./playground-layout";
+import { Table } from '@raystack/apsara';
+import PlaygroundLayout from './playground-layout';
 
 export function TableExamples() {
   return (
-    <PlaygroundLayout title="Table">
+    <PlaygroundLayout title='Table'>
       <Table>
         <Table.Header>
           <Table.Row>

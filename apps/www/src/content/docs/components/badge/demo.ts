@@ -1,48 +1,48 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `<Badge${getPropsString(props)}/>`;
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     variant: {
-      type: "select",
+      type: 'select',
       options: [
-        "accent",
-        "warning",
-        "danger",
-        "success",
-        "neutral",
-        "gradient",
+        'accent',
+        'warning',
+        'danger',
+        'success',
+        'neutral',
+        'gradient'
       ],
-      defaultValue: "accent",
+      defaultValue: 'accent'
     },
     size: {
-      type: "select",
-      options: ["micro", "small", "regular"],
-      defaultValue: "small",
+      type: 'select',
+      options: ['micro', 'small', 'regular'],
+      defaultValue: 'small'
     },
     icon: {
-      type: "icon",
+      type: 'icon'
     },
     screenReaderText: {
-      type: "text",
-      initialValue: "Notification badge",
+      type: 'text',
+      initialValue: 'Notification badge'
     },
     children: {
-      type: "text",
-      initialValue: "New Badge",
-    },
+      type: 'text',
+      initialValue: 'New Badge'
+    }
   },
-  getCode,
+  getCode
 };
 
 export const variantDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium">
     <Badge variant="accent">Accent</Badge>
@@ -51,33 +51,33 @@ export const variantDemo = {
     <Badge variant="success">Success</Badge>
     <Badge variant="neutral">Neutral</Badge>
     <Badge variant="gradient">Gradient</Badge>
-  </Flex>`,
+  </Flex>`
 };
 
 export const sizesDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="center">
     <Badge size="micro">Micro</Badge>
     <Badge size="small">Small</Badge>
     <Badge size="regular">Regular</Badge>
-  </Flex>`,
+  </Flex>`
 };
 
 export const iconDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium">
     <Badge icon={<Home size="16"/>}>Badge</Badge>
     <Badge icon={<Laugh size="16"/>}>Badge</Badge>
     <Badge icon="🔥">Badge</Badge>
-  </Flex>`,
+  </Flex>`
 };
 
 export const screenReaderTextDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Badge screenReaderText="New updates available">
     Updates
-  </Badge>`,
+  </Badge>`
 };

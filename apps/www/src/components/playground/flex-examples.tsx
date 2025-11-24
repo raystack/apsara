@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import { Flex, Button } from "@raystack/apsara";
-import PlaygroundLayout from "./playground-layout";
+import { Button, Flex } from '@raystack/apsara';
+import PlaygroundLayout from './playground-layout';
 
 export function FlexExamples() {
   return (
-    <PlaygroundLayout title="Flex">
-      <Flex gap="large" direction="column">
-        <Flex gap="extra-small" align="center">
+    <PlaygroundLayout title='Flex'>
+      <Flex gap='large' direction='column'>
+        <Flex gap='extra-small' align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap="small" align="center">
+        <Flex gap='small' align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap="medium" align="center">
+        <Flex gap='medium' align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap="large" align="center">
+        <Flex gap='large' align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap="extra-large" align="center">
+        <Flex gap='extra-large' align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>

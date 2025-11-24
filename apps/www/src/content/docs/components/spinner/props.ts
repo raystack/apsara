@@ -9,7 +9,7 @@ export interface SpinnerProps {
    * Color variant of the spinner.
    * @default "default"
    *  */
-  color?: "default" | "neutral" | "accent" | "danger" | "success" | "attention";
+  color?: 'default' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
 
   /** Additional CSS class names. */
   className?: string;

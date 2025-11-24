@@ -1,6 +1,6 @@
-import { forwardRef, HTMLAttributes } from "react";
-import { cx } from "class-variance-authority";
-import styles from "./docs-body.module.css";
+import { cx } from 'class-variance-authority';
+import { HTMLAttributes, forwardRef } from 'react';
+import styles from './docs-body.module.css';
 
 export const DocsBody = forwardRef<
   HTMLDivElement,

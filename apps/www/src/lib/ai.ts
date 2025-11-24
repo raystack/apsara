@@ -110,7 +110,7 @@ function formatContent(content: string) {
 }
 
 export async function getLLMText(page: InferPageType<typeof docs>) {
-  const filePath = page.data._file.absolutePath;
+  const filePath = page.data.info.fullPath;
   const file = await fs.readFile(filePath, 'utf-8');
   const demoPath = path.join(path.dirname(filePath), 'demo.ts');
 

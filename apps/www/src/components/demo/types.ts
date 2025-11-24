@@ -5,7 +5,7 @@ type TabProps = {
   code: string;
 };
 export type DemoPreviewProps = {
-  type: "code";
+  type: 'code';
   code?: string;
   tabs?: { name: string; code: string }[];
   scope?: ScopeType;
@@ -13,7 +13,7 @@ export type DemoPreviewProps = {
 };
 
 export type DemoPlaygroundProps = {
-  type: "playground";
+  type: 'playground';
   controls: ControlsType;
   getCode: GetCodeType;
   scope?: ScopeType;
@@ -21,11 +21,11 @@ export type DemoPlaygroundProps = {
 
 export type DemoProps = {
   scope?: ScopeType;
-  data: Omit<DemoPreviewProps, "scope"> | Omit<DemoPlaygroundProps, "scope">;
+  data: Omit<DemoPreviewProps, 'scope'> | Omit<DemoPlaygroundProps, 'scope'>;
 };
 
 export type ControlType = {
-  type: "select" | "text" | "checkbox" | "number" | "icon";
+  type: 'select' | 'text' | 'checkbox' | 'number' | 'icon';
   options?: string[];
   defaultValue?: string | boolean;
   initialValue?: string | boolean;
@@ -37,12 +37,12 @@ export type ControlsType = Record<string, ControlType>;
 
 export type PropChangeHandlerType = (
   prop: string,
-  value: string | boolean | number,
+  value: string | boolean | number
 ) => void;
 
 export type ComponentPropsType = Record<string, any>;
 
 export type GetCodeType = (
   updatedProps: Record<string, any>,
-  props: Record<string, any>,
+  props: Record<string, any>
 ) => string;

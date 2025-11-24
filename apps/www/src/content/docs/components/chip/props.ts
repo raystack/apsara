@@ -3,19 +3,19 @@ export interface ChipProps {
    * Visual style variant
    * @defaultValue "outline"
    */
-  variant?: "outline" | "filled";
+  variant?: 'outline' | 'filled';
 
   /**
    * Size of the chip
    * @defaultValue "small"
    */
-  size?: "small" | "large";
+  size?: 'small' | 'large';
 
   /**
    * Color style
    * @defaultValue "neutral"
    */
-  color?: "neutral" | "accent";
+  color?: 'neutral' | 'accent';
 
   /** ReactNode to display as an icon before the label */
   leadingIcon?: React.ReactNode;

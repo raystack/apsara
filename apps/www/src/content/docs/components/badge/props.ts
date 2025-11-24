@@ -4,18 +4,18 @@ export interface BadgeProps {
    * @defaultValue "accent"
    */
   variant?:
-    | "accent"
-    | "warning"
-    | "danger"
-    | "success"
-    | "neutral"
-    | "gradient";
+    | 'accent'
+    | 'warning'
+    | 'danger'
+    | 'success'
+    | 'neutral'
+    | 'gradient';
 
   /**
    * Size of the badge
    * @defaultValue "small"
    */
-  size?: "micro" | "small" | "regular";
+  size?: 'micro' | 'small' | 'regular';
 
   /** Optional ReactNode to display an icon before the text */
   icon?: React.ReactNode;

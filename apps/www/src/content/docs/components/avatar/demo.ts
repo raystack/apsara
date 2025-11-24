@@ -1,65 +1,65 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `<Avatar${getPropsString(props)}/>`;
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     variant: {
-      type: "select",
-      options: ["solid", "soft"],
-      defaultValue: "soft",
+      type: 'select',
+      options: ['solid', 'soft'],
+      defaultValue: 'soft'
     },
     radius: {
-      type: "select",
-      options: ["small", "full"],
-      defaultValue: "small",
+      type: 'select',
+      options: ['small', 'full'],
+      defaultValue: 'small'
     },
     color: {
-      type: "select",
+      type: 'select',
       options: [
-        "indigo",
-        "orange",
-        "mint",
-        "neutral",
-        "sky",
-        "lime",
-        "grass",
-        "cyan",
-        "iris",
-        "purple",
-        "pink",
-        "crimson",
-        "gold",
+        'indigo',
+        'orange',
+        'mint',
+        'neutral',
+        'sky',
+        'lime',
+        'grass',
+        'cyan',
+        'iris',
+        'purple',
+        'pink',
+        'crimson',
+        'gold'
       ],
-      defaultValue: "indigo",
+      defaultValue: 'indigo'
     },
-    size: { type: "number", defaultValue: 3, min: 1, max: 13 },
+    size: { type: 'number', defaultValue: 3, min: 1, max: 13 },
     src: {
-      type: "text",
+      type: 'text',
       initialValue:
-        "https://images.unsplash.com/photo-1511485977113-f34c92461ad9",
+        'https://images.unsplash.com/photo-1511485977113-f34c92461ad9'
     },
-    fallback: { type: "text", initialValue: "RC" },
+    fallback: { type: 'text', initialValue: 'RC' }
   },
-  getCode,
+  getCode
 };
 
 export const variantDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="end">
     <Avatar size={6} variant="soft" fallback="RC" />
     <Avatar size={6} variant="solid" fallback="RC" />
-  </Flex>`,
+  </Flex>`
 };
 
 export const sizesDemo = {
-  type: "code",
+  type: 'code',
   code: `<Flex gap="large" direction="column">
   <Flex gap="small" align="end">
     <Avatar size={1} fallback="RC" />
@@ -78,24 +78,24 @@ export const sizesDemo = {
     <Avatar size={12} fallback="RC" />
     <Avatar size={13} fallback="RC" />
   </Flex>
-  </Flex>`,
+  </Flex>`
 };
 
 export const colorsDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Base",
+      name: 'Base',
       code: `
       <Flex gap="medium">
         <Avatar size={6} color="indigo" fallback="RC" />
         <Avatar size={6} color="orange" fallback="RC" />
         <Avatar size={6} color="mint" fallback="RC" />
         <Avatar size={6} color="neutral" fallback="RC" />
-      </Flex>`,
+      </Flex>`
     },
     {
-      name: "Extended",
+      name: 'Extended',
       code: `
       <Flex gap="medium">
         <Avatar size={6} color="sky" fallback="RC" />
@@ -107,32 +107,32 @@ export const colorsDemo = {
         <Avatar size={6} color="pink" fallback="RC" />
         <Avatar size={6} color="crimson" fallback="RC" />
         <Avatar size={6} color="gold" fallback="RC" />
-      </Flex>`,
-    },
-  ],
+      </Flex>`
+    }
+  ]
 };
 
 export const radiusDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="end">
     <Avatar size={6} radius="full" fallback="RC" />
     <Avatar size={6} radius="small" fallback="RC" />
-  </Flex>`,
+  </Flex>`
 };
 export const imageDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="end">
     <Avatar size={6} radius="full" fallback="RC" src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80" />
     <Avatar size={8} radius="small" fallback="RC" src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80" />
-  </Flex>`,
+  </Flex>`
 };
 
 export const generatedColorDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium" align="end">
     <Avatar size={6} color={getAvatarColor("abcde")} fallback="RC" />
-  </Flex>`,
+  </Flex>`
 };

@@ -1,19 +1,19 @@
-import { Avatar, Button, DropdownMenu, Flex, Text } from "@raystack/apsara";
-import { Calendar, ChevronRight, Download } from "lucide-react";
-import { Fragment, ReactNode, useState } from "react";
+import { Avatar, Button, DropdownMenu, Flex, Text } from '@raystack/apsara';
+import { Calendar, ChevronRight, Download } from 'lucide-react';
+import { Fragment, ReactNode, useState } from 'react';
 
 type DropdownMenuItem =
   | {
-      type: "item";
+      type: 'item';
       label: string | string[];
       disabled?: boolean;
       trailingIcon?: ReactNode;
       leadingIcon?: ReactNode;
     }
-  | { type: "separator" }
-  | { type: "group"; label: string; items: DropdownMenuItem[] }
+  | { type: 'separator' }
+  | { type: 'group'; label: string; items: DropdownMenuItem[] }
   | {
-      type: "submenu";
+      type: 'submenu';
       label: string;
       items: DropdownMenuItem[];
       trailingIcon?: ReactNode;
@@ -22,182 +22,182 @@ type DropdownMenuItem =
 
 const dropdownMenuData: DropdownMenuItem[] = [
   {
-    type: "group",
-    label: "Actions",
+    type: 'group',
+    label: 'Actions',
     items: [
       {
-        type: "submenu",
-        label: "Assign member...",
+        type: 'submenu',
+        label: 'Assign member...',
         items: [
           {
-            type: "item",
-            label: "Rohan",
+            type: 'item',
+            label: 'Rohan',
             leadingIcon: (
-              <Avatar size={2} radius="full" fallback="R" color="cyan" />
-            ),
+              <Avatar size={2} radius='full' fallback='R' color='cyan' />
+            )
           },
           {
-            type: "item",
-            label: "Rohil",
+            type: 'item',
+            label: 'Rohil',
             leadingIcon: (
-              <Avatar size={2} radius="full" fallback="R" color="orange" />
-            ),
+              <Avatar size={2} radius='full' fallback='R' color='orange' />
+            )
           },
           {
-            type: "item",
-            label: "Gaurav",
+            type: 'item',
+            label: 'Gaurav',
             leadingIcon: (
-              <Avatar size={2} radius="full" fallback="G" color="sky" />
-            ),
+              <Avatar size={2} radius='full' fallback='G' color='sky' />
+            )
           },
           {
-            type: "item",
-            label: "Abhishek",
+            type: 'item',
+            label: 'Abhishek',
             leadingIcon: (
-              <Avatar size={2} radius="full" fallback="A" color="iris" />
-            ),
+              <Avatar size={2} radius='full' fallback='A' color='iris' />
+            )
           },
           {
-            type: "item",
-            label: "Aman",
+            type: 'item',
+            label: 'Aman',
             leadingIcon: (
-              <Avatar size={2} radius="full" fallback="A" color="purple" />
-            ),
+              <Avatar size={2} radius='full' fallback='A' color='purple' />
+            )
           },
           {
-            type: "item",
-            label: "Risabh",
+            type: 'item',
+            label: 'Risabh',
             leadingIcon: (
-              <Avatar size={2} radius="full" fallback="R" color="gold" />
-            ),
+              <Avatar size={2} radius='full' fallback='R' color='gold' />
+            )
           },
           {
-            type: "item",
-            label: "Ajinkya",
+            type: 'item',
+            label: 'Ajinkya',
             leadingIcon: (
-              <Avatar size={2} radius="full" fallback="A" color="crimson" />
-            ),
-          },
-        ],
+              <Avatar size={2} radius='full' fallback='A' color='crimson' />
+            )
+          }
+        ]
       },
-      { type: "item", label: "Subscribe..." },
-      { type: "item", label: "Rename..." },
-    ],
+      { type: 'item', label: 'Subscribe...' },
+      { type: 'item', label: 'Rename...' }
+    ]
   },
-  { type: "separator" },
+  { type: 'separator' },
   {
-    type: "group",
-    label: "More",
+    type: 'group',
+    label: 'More',
     items: [
       {
-        type: "submenu",
-        label: "Export",
+        type: 'submenu',
+        label: 'Export',
         items: [
           {
-            type: "item",
-            label: "All (.zip)",
-            leadingIcon: <Download size={16} />,
+            type: 'item',
+            label: 'All (.zip)',
+            leadingIcon: <Download size={16} />
           },
           {
-            type: "submenu",
-            label: "CSV",
+            type: 'submenu',
+            label: 'CSV',
             leadingIcon: <Download size={16} />,
             items: [
               {
-                type: "item",
-                label: "All",
-                leadingIcon: <Calendar size={16} />,
+                type: 'item',
+                label: 'All',
+                leadingIcon: <Calendar size={16} />
               },
               {
-                type: "item",
-                label: "3 Months",
-                leadingIcon: <Calendar size={16} />,
+                type: 'item',
+                label: '3 Months',
+                leadingIcon: <Calendar size={16} />
               },
               {
-                type: "item",
-                label: "6 Months",
-                leadingIcon: <Calendar size={16} />,
-              },
-            ],
+                type: 'item',
+                label: '6 Months',
+                leadingIcon: <Calendar size={16} />
+              }
+            ]
           },
           {
-            type: "submenu",
-            label: "PDF",
+            type: 'submenu',
+            label: 'PDF',
             leadingIcon: <Download size={16} />,
             items: [
               {
-                type: "item",
-                label: "All",
-                leadingIcon: <Calendar size={16} />,
+                type: 'item',
+                label: 'All',
+                leadingIcon: <Calendar size={16} />
               },
               {
-                type: "item",
-                label: "3 Months",
-                leadingIcon: <Calendar size={16} />,
+                type: 'item',
+                label: '3 Months',
+                leadingIcon: <Calendar size={16} />
               },
               {
-                type: "item",
-                label: "6 Months",
-                leadingIcon: <Calendar size={16} />,
-              },
-            ],
-          },
-        ],
+                type: 'item',
+                label: '6 Months',
+                leadingIcon: <Calendar size={16} />
+              }
+            ]
+          }
+        ]
       },
-      { type: "item", label: "Copy", disabled: true },
+      { type: 'item', label: 'Copy', disabled: true },
       {
-        type: "item",
-        label: "Delete...",
+        type: 'item',
+        label: 'Delete...',
         trailingIcon: (
-          <Text size="micro" variant="secondary">
+          <Text size='micro' variant='secondary'>
             ⌘⇧D
           </Text>
-        ),
-      },
-    ],
-  },
+        )
+      }
+    ]
+  }
 ];
 
 function filterDropdownMenuItems(
   items: DropdownMenuItem[],
   query: string,
   path: string[] = [],
-  isInsideSubmenu = false,
+  isInsideSubmenu = false
 ): DropdownMenuItem[] {
   if (!query?.length) return items;
   const normalizedQuery = query.trim().toLowerCase();
   const results: DropdownMenuItem[] = [];
 
   for (const item of items) {
-    if (item.type === "separator") continue;
+    if (item.type === 'separator') continue;
 
-    if (item.type === "item") {
+    if (item.type === 'item') {
       const fullPath = isInsideSubmenu ? [...path, item.label] : [item.label];
-      const flatLabel = fullPath.join(" ").toLowerCase();
+      const flatLabel = fullPath.join(' ').toLowerCase();
       if (flatLabel.includes(normalizedQuery)) {
         results.push({
           ...item,
-          label: fullPath,
+          label: fullPath
         } as DropdownMenuItem);
       }
     }
 
-    if (item.type === "submenu") {
+    if (item.type === 'submenu') {
       const nested = filterDropdownMenuItems(
         item.items,
         query,
         [...path, item.label],
-        true,
+        true
       );
       results.push(...nested);
     }
 
-    if (item.type === "group") {
+    if (item.type === 'group') {
       const nested = filterDropdownMenuItems(
         item.items,
         query,
         path,
-        isInsideSubmenu,
+        isInsideSubmenu
       );
       results.push(...nested);
     }
@@ -207,7 +207,7 @@ function filterDropdownMenuItems(
 }
 
 export default function LinearDropdownDemo() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const renderDropdownMenu = (items: DropdownMenuItem[], query: string) => {
     const filteredItems = filterDropdownMenuItems(items, query);
@@ -222,21 +222,22 @@ export default function LinearDropdownDemo() {
 
     return filteredItems.map((item, index) => {
       switch (item.type) {
-        case "group":
+        case 'group':
           return (
             <DropdownMenu.Group key={index}>
               <DropdownMenu.Label>{item.label}</DropdownMenu.Label>
               {item.items && renderDropdownMenu(item.items, query)}
             </DropdownMenu.Group>
           );
-        case "separator":
+        case 'separator':
           return <DropdownMenu.Separator key={index} />;
-        case "submenu":
+        case 'submenu':
           return (
             <DropdownMenu key={index}>
               <DropdownMenu.TriggerItem
                 trailingIcon={item.trailingIcon}
-                leadingIcon={item.leadingIcon}>
+                leadingIcon={item.leadingIcon}
+              >
                 {item.label}
               </DropdownMenu.TriggerItem>
               <DropdownMenu.Content>
@@ -244,13 +245,14 @@ export default function LinearDropdownDemo() {
               </DropdownMenu.Content>
             </DropdownMenu>
           );
-        case "item":
+        case 'item':
           return (
             <DropdownMenu.Item
               key={index}
               disabled={item.disabled}
               trailingIcon={item.trailingIcon}
-              leadingIcon={item.leadingIcon}>
+              leadingIcon={item.leadingIcon}
+            >
               {Array.isArray(item.label)
                 ? item.label.map((part, i) => (
                     <Fragment key={i}>
@@ -271,12 +273,13 @@ export default function LinearDropdownDemo() {
     <Flex style={{ padding: 50 }}>
       <DropdownMenu
         autocomplete
-        autocompleteMode="manual"
-        onSearch={(value: string) => setSearchQuery(value)}>
+        autocompleteMode='manual'
+        onSearch={(value: string) => setSearchQuery(value)}
+      >
         <DropdownMenu.Trigger asChild>
           <Button>Actions</Button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content searchPlaceholder="Search">
+        <DropdownMenu.Content searchPlaceholder='Search'>
           {renderDropdownMenu(dropdownMenuData, searchQuery)}
         </DropdownMenu.Content>
       </DropdownMenu>

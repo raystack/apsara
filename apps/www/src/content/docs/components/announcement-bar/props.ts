@@ -3,7 +3,7 @@ export interface AnnouncementBarProps {
    * Visual style variant
    * @defaultValue "normal"
    */
-  variant?: "normal" | "error" | "gradient";
+  variant?: 'normal' | 'error' | 'gradient';
 
   /**
    * Text content for the component

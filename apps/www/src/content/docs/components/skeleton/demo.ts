@@ -1,60 +1,60 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `<Skeleton${getPropsString(props)} />`;
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     width: {
-      type: "text",
-      initialValue: "200px",
+      type: 'text',
+      initialValue: '200px'
     },
     height: {
-      type: "text",
-      initialValue: "15px",
+      type: 'text',
+      initialValue: '15px'
     },
     count: {
-      type: "number",
-      initialValue: 3,
+      type: 'number',
+      initialValue: 3
     },
     enableAnimation: {
-      type: "checkbox",
-      initialValue: true,
+      type: 'checkbox',
+      initialValue: true
     },
     duration: {
-      type: "number",
-      initialValue: 1.5,
+      type: 'number',
+      initialValue: 1.5
     },
     inline: {
-      type: "checkbox",
-      initialValue: false,
+      type: 'checkbox',
+      initialValue: false
     }
   },
-  getCode,
+  getCode
 };
 
 export const basicDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex direction="column" gap="medium">
     <Skeleton width={200} height={15} />
-  </Flex>`,
+  </Flex>`
 };
 
 export const multipleDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex direction="column" gap="medium">
     <Skeleton width={200} height={15} count={3} />
-  </Flex>`,
+  </Flex>`
 };
 
 export const customStylesDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex direction="column" gap="medium">
     <Skeleton 
@@ -63,30 +63,30 @@ export const customStylesDemo = {
       baseColor="var(--rs-color-background-accent-primary)"
       highlightColor="var(--rs-color-background-accent-emphasis)"
     />
-  </Flex>`,
+  </Flex>`
 };
 
 export const animationDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex direction="column" gap="medium">
     <Skeleton width={200} height={20} duration={2.5} />
     <Skeleton width={200} height={20} enableAnimation={false} />
-  </Flex>`,
+  </Flex>`
 };
 
 export const cardDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex direction="column" gap="medium" style={{ width: '300px' }}>
     <Skeleton height={200} /> {/* Image placeholder */}
     <Skeleton height={20} width="80%" /> {/* Title placeholder */}
     <Skeleton height={15} count={3} /> {/* Text lines placeholder */}
-  </Flex>`,
+  </Flex>`
 };
 
 export const providerDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex direction="column" gap="medium">
     <Skeleton.Provider
@@ -101,6 +101,5 @@ export const providerDemo = {
         </Flex>
       </Flex>
     </Skeleton.Provider>
-  </Flex>`,
+  </Flex>`
 };
-

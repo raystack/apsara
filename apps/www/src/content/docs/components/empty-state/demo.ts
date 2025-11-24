@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `<EmptyState
@@ -11,31 +11,31 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     variant: {
-      type: "select",
-      initialValue: "empty1",
-      options: ["empty1", "empty2"]
+      type: 'select',
+      initialValue: 'empty1',
+      options: ['empty1', 'empty2']
     },
     heading: {
-      type: "text",
-      initialValue: "No Data Available"
+      type: 'text',
+      initialValue: 'No Data Available'
     },
     subHeading: {
-      type: "text",
-      initialValue: "Try adjusting your filters."
+      type: 'text',
+      initialValue: 'Try adjusting your filters.'
     },
     icon: {
-      type: "icon",
-      initialValue: "<X size={16} />"
+      type: 'icon',
+      initialValue: '<X size={16} />'
     }
   },
-  getCode,
+  getCode
 };
 
 export const variantsDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <EmptyState
@@ -62,5 +62,5 @@ export const variantsDemo = {
         <Button variant="ghost">Learn more</Button>
       }
     />
-  </Flex>`,
-}
+  </Flex>`
+};
