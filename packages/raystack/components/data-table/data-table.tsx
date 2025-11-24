@@ -10,6 +10,7 @@ import {
 } from '@tanstack/react-table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Content } from './components/content';
+import { Filters } from './components/filters';
 import { TableSearch } from './components/search';
 import { Toolbar } from './components/toolbar';
 import { TableContext } from './context';
@@ -171,5 +172,6 @@ function DataTableRoot<TData, TValue>({
 export const DataTable = Object.assign(DataTableRoot, {
   Content: Content,
   Toolbar: Toolbar,
-  Search: TableSearch
+  Search: TableSearch,
+  Filters: Filters
 });
