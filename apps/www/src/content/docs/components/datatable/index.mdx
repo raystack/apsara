@@ -189,3 +189,18 @@ const columns = [
   },
 ];
 ```
+
+### Using DataTable Filter
+
+The `DataTable.Filters` component can be used separately to filter data for custom views.
+
+```tsx
+<DataTable
+data={data}
+query={query}
+columns={columns}
+mode="server"
+onTableQueryChange={handleQueryChange}>
+    <DataTable.Filters />
+</DataTable>
+```

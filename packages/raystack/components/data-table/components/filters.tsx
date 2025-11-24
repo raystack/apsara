@@ -59,7 +59,17 @@ function AddFilter<TData, TValue>({
   ) : null;
 }
 
-export function Filters<TData, TValue>() {
+export function Filters<TData, TValue>({
+  classNames,
+  className
+}: {
+  classNames?: {
+    container?: string;
+    filterChips?: string;
+    addFilter?: string;
+  };
+  className?: string;
+}) {
   const { table, tableQuery } = useDataTable();
   const columns = table?.getAllColumns() as DataTableColumn<TData, TValue>[];
 
@@ -94,8 +104,8 @@ export function Filters<TData, TValue>() {
     }) || [];
 
   return (
-    <Flex gap={3}>
-      <Flex gap={3}>
+    <Flex gap={3} className={className}>
+      <Flex gap={3} className={classNames?.container}>
         {appliedFilters.map(filter => (
           <FilterChip
             key={filter.name}
@@ -111,6 +121,7 @@ export function Filters<TData, TValue>() {
             }
             columnType={filter.filterType}
             options={filter.options}
+            className={classNames?.filterChips}
           />
         ))}
       </Flex>
