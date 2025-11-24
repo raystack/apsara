@@ -47,7 +47,6 @@
 
 .headerText {
   color: var(--rs-color-foreground-base-primary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-large);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
@@ -59,7 +58,6 @@
 
 .subHeaderText {
   color: var(--rs-color-foreground-base-primary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-regular);
   font-style: normal;
   font-weight: var(--rs-font-weight-regular);

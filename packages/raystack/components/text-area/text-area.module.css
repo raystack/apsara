@@ -14,7 +14,6 @@
 
 .label {
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -32,7 +31,6 @@
 
 .optional {
   color: var(--rs-color-foreground-base-tertiary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -42,7 +40,6 @@
 
 .helperText {
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);

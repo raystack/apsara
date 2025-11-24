@@ -66,7 +66,6 @@
 .title {
   color: var(--rs-color-foreground-base-primary);
   /* Body/Large Plus */
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-large);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
@@ -85,7 +84,6 @@
 
 .description {
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-regular);
