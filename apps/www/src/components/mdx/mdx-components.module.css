@@ -18,6 +18,7 @@
   font-size: var(--rs-font-size-mono-small);
   letter-spacing: var(--rs-letter-spacing-mono-small);
   line-height: var(--rs-line-height-mono-small);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .prose-h1,
