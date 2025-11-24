@@ -1,10 +1,13 @@
 'use client';
 import {
+  Button,
   DataTable,
   DataTableColumnDef,
   DataTableQuery,
-  Flex
+  Flex,
+  IconButton
 } from '@raystack/apsara';
+import { FilterIcon } from '@raystack/apsara/icons';
 import { useMemo, useState } from 'react';
 
 const data: Payment[] = [
@@ -144,7 +147,24 @@ const Page = () => {
           onTableQueryChange={setTableQuery}
           defaultSort={{ name: 'email', order: 'asc' }}
         >
-          <DataTable.Filters />
+          <DataTable.Filters
+            trigger={({ appliedFilters }) =>
+              appliedFilters.size > 0 ? (
+                <IconButton size={4}>
+                  <FilterIcon />
+                </IconButton>
+              ) : (
+                <Button
+                  variant='outline'
+                  size='small'
+                  leadingIcon={<FilterIcon />}
+                  color='neutral'
+                >
+                  Filter
+                </Button>
+              )
+            }
+          />
           {filteredData.map(item => (
             <div
               key={item.id}
