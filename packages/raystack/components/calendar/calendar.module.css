@@ -3,14 +3,12 @@
   border-radius: var(--rs-radius-4);
   background: var(--rs-color-background-base-primary);
   width: fit-content;
-  font-family: var(--rs-font-body);
   min-height: 346px;
 }
 
 .caption_label,
 .dropdowns > span,
 .dropdown_trigger {
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -77,7 +75,6 @@
   color: var(--rs-color-foreground-base-primary);
   font-style: normal;
   text-align: center;
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-micro);
   line-height: var(--rs-line-height-micro);
@@ -161,7 +158,6 @@
   color: var(--rs-color-foreground-base-secondary);
   text-align: center;
   font-style: normal;
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-micro);
   line-height: var(--rs-line-height-micro);
@@ -234,7 +230,6 @@
   place-content: center;
   background: inherit;
   color: inherit;
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);

@@ -235,7 +235,6 @@
   align-items: center;
   justify-content: center;
   font-size: var(--fallback-font-size);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-large);
   letter-spacing: var(--rs-letter-spacing-large);

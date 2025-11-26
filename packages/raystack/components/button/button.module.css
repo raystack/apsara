@@ -1,5 +1,4 @@
 .button {
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);

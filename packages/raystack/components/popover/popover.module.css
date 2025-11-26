@@ -5,7 +5,6 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  font-family: var(--rs-font-body);
 
   box-sizing: border-box;
   min-width: 120px;

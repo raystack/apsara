@@ -10,7 +10,6 @@
 
 .label {
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -93,7 +92,6 @@
 }
 
 .input-field {
-  font-family: var(--rs-font-body);
   width: 100%;
   padding: 0 var(--rs-space-3);
   padding-left: var(--rs-space-3);
@@ -130,7 +128,6 @@
 
 .helper-text {
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -156,7 +153,6 @@
 
 .optional {
   color: var(--rs-color-foreground-base-tertiary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -247,7 +243,6 @@
   display: flex;
   align-items: center;
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-regular);

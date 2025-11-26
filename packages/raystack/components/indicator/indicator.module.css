@@ -9,7 +9,6 @@
   right: calc(-1 * var(--rs-space-2));
   border-radius: var(--rs-radius-full);
   white-space: nowrap;
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-micro);
   line-height: var(--rs-line-height-micro);
