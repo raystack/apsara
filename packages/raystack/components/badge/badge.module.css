@@ -59,11 +59,7 @@
 }
 
 .badge-gradient {
-  background: linear-gradient(
-    to right,
-    #AD00E933 0%,
-    #EF040433 100%
-  );
+  background: linear-gradient(to right, #ad00e933 0%, #ef040433 100%);
   color: var(--rs-color-foreground-base-primary);
 }
 
