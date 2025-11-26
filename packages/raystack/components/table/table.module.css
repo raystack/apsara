@@ -18,7 +18,6 @@
 
 .head {
   color: var(--rs-color-foreground-base-tertiary);
-  font-family: var(--rs-font-body);
 
   /* Body/Small Plus */
   font-size: var(--rs-font-size-small);
@@ -41,7 +40,6 @@
   white-space: nowrap;
 
   /* Body/Regular */
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-regular);
   font-style: normal;
   font-weight: var(--rs-font-weight-regular);
@@ -62,7 +60,6 @@
   padding: var(--rs-space-3) var(--rs-space-7);
 
   /* Body/Small Plus */
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
