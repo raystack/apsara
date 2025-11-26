@@ -242,7 +242,7 @@ const Page = () => {
               weight='medium'
               style={{ marginTop: '32px', marginBottom: '16px' }}
             >
-              Calendar with Date Info
+              Calendar with Date Info (Object)
             </Text>
 
             <Calendar
@@ -293,6 +293,84 @@ const Page = () => {
                     </Text>
                   </Flex>
                 )
+              }}
+            />
+
+            <Text
+              size='large'
+              weight='medium'
+              style={{ marginTop: '32px', marginBottom: '16px' }}
+            >
+              Calendar with Date Info (Function)
+            </Text>
+
+            <Calendar
+              numberOfMonths={2}
+              dateInfo={date => {
+                const today = new Date();
+                const isToday =
+                  date.getDate() === today.getDate() &&
+                  date.getMonth() === today.getMonth() &&
+                  date.getFullYear() === today.getFullYear();
+
+                // Show info on Sundays
+                if (date.getDay() === 0) {
+                  return (
+                    <Flex
+                      align='center'
+                      gap={1}
+                      style={{
+                        fontSize: '8px',
+                        color: 'var(--rs-color-foreground-base-secondary)'
+                      }}
+                    >
+                      <BellIcon style={{ width: '8px', height: '8px' }} />
+                      <Text style={{ fontSize: '8px' }} color='secondary'>
+                        Sun
+                      </Text>
+                    </Flex>
+                  );
+                }
+
+                // Show info on 15th of any month
+                if (date.getDate() === 15) {
+                  return (
+                    <Flex
+                      align='center'
+                      gap={1}
+                      style={{
+                        fontSize: '8px',
+                        color: 'var(--rs-color-foreground-base-secondary)'
+                      }}
+                    >
+                      <BellIcon style={{ width: '8px', height: '8px' }} />
+                      <Text style={{ fontSize: '8px' }} color='secondary'>
+                        15th
+                      </Text>
+                    </Flex>
+                  );
+                }
+
+                // Show info for today
+                if (isToday) {
+                  return (
+                    <Flex
+                      align='center'
+                      gap={1}
+                      style={{
+                        fontSize: '8px',
+                        color: 'var(--rs-color-foreground-base-secondary)'
+                      }}
+                    >
+                      <BellIcon style={{ width: '8px', height: '8px' }} />
+                      <Text style={{ fontSize: '8px' }} color='secondary'>
+                        Today
+                      </Text>
+                    </Flex>
+                  );
+                }
+
+                return null;
               }}
             />
 

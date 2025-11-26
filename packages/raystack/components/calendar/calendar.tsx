@@ -29,7 +29,7 @@ interface OnDropdownOpen {
 interface CalendarPropsExtended {
   showTooltip?: boolean;
   tooltipMessages?: Record<string, ReactNode>;
-  dateInfo?: Record<string, ReactNode>;
+  dateInfo?: Record<string, ReactNode> | ((date: Date) => ReactNode | null);
   loadingData?: boolean;
   timeZone?: string;
 }
@@ -158,7 +158,12 @@ export const Calendar = function ({
           const { day, ...buttonProps } = props;
           const dateKey = dateLib.format(day.date, 'dd-MM-yyyy');
           const message = tooltipMessages[dateKey];
-          const dateComponent = dateInfo[dateKey];
+
+          // Support both object and function for dateInfo
+          const dateComponent =
+            typeof dateInfo === 'function'
+              ? dateInfo(day.date)
+              : dateInfo[dateKey];
           const hasDateInfo = Boolean(dateComponent);
 
           return (
