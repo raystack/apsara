@@ -60,3 +60,7 @@
 .cell {
   background: inherit;
 }
+
+.emptyStateCell {
+  border-bottom: none;
+}

@@ -246,7 +246,10 @@ export function Content({
             </>
           ) : (
             <Table.Row>
-              <Table.Cell colSpan={visibleColumnsLength}>
+              <Table.Cell
+                colSpan={visibleColumnsLength}
+                className={styles.emptyStateCell}
+              >
                 {emptyState || <DefaultEmptyComponent />}
               </Table.Cell>
             </Table.Row>
