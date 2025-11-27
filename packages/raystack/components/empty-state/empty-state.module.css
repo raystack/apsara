@@ -29,7 +29,6 @@
   width: 100%;
 }
 
-
 .icon::before {
   content: "";
   position: absolute;

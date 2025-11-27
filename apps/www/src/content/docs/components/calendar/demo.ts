@@ -1,53 +1,53 @@
-"use client";
+'use client';
 
 export const preview = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Calendar",
-      code: `<Calendar />`,
+      name: 'Calendar',
+      code: `<Calendar />`
     },
     {
-      name: "Range Picker",
+      name: 'Range Picker',
       code: `
-        <RangePicker inputFieldsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />`,
+        <RangePicker inputFieldsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />`
     },
     {
-      name: "Date Picker",
+      name: 'Date Picker',
       code: `
       <Flex style={{height:200}}>
         <DatePicker />
-      </Flex>`,
-    },
-  ],
+      </Flex>`
+    }
+  ]
 };
 
 export const calendarDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Basic",
-      code: `<Calendar numberOfMonths={2} />`,
+      name: 'Basic',
+      code: `<Calendar numberOfMonths={2} />`
     },
     {
-      name: "With Loading",
-      code: `<Calendar loadingData={true} numberOfMonths={2} />`,
-    },
-  ],
+      name: 'With Loading',
+      code: `<Calendar loadingData={true} numberOfMonths={2} />`
+    }
+  ]
 };
 export const rangePickerDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Basic",
-      code: `<RangePicker />`,
+      name: 'Basic',
+      code: `<RangePicker />`
     },
     {
-      name: "Without Calendar Icon",
-      code: `<RangePicker showCalendarIcon={false} />`,
+      name: 'Without Calendar Icon',
+      code: `<RangePicker showCalendarIcon={false} />`
     },
     {
-      name: "Custom Trigger",
+      name: 'Custom Trigger',
       code: `
       <RangePicker
         dateFormat="DD/MM/YYYY"
@@ -72,23 +72,23 @@ export const rangePickerDemo = {
             {startDate} - {endDate}
           </button>
         )}
-      </RangePicker>`,
-    },
-  ],
+      </RangePicker>`
+    }
+  ]
 };
 export const datePickerDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Basic",
-      code: `<DatePicker textFieldProps={{ size: "medium" }} />`,
+      name: 'Basic',
+      code: `<DatePicker textFieldProps={{ size: "medium" }} />`
     },
     {
-      name: "Without Calendar Icon",
-      code: `<DatePicker showCalendarIcon={false} textFieldProps={{ size: "medium" }} />`,
+      name: 'Without Calendar Icon',
+      code: `<DatePicker showCalendarIcon={false} textFieldProps={{ size: "medium" }} />`
     },
     {
-      name: "Custom Trigger",
+      name: 'Custom Trigger',
       code: `
       <DatePicker>
         {({ selectedDate }) => (
@@ -96,7 +96,32 @@ export const datePickerDemo = {
             Selected: {selectedDate}
           </button>
         )}
-      </DatePicker>`,
-    },
-  ],
+      </DatePicker>`
+    }
+  ]
+};
+
+export const dateInfoDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'With Date Info',
+      code: `
+<Calendar
+  numberOfMonths={2}
+  dateInfo={{
+    [dayjs().format('DD-MM-YYYY')]: (
+      <Flex
+        align='center'
+        gap={2}
+        style={{ fontSize: '8px', color: 'var(--rs-color-foreground-base-secondary)' }}
+      >
+        <BellIcon style={{ width: '8px', height: '8px' }} />
+        <Text style={{ fontSize: '8px' }} color='secondary'>25%</Text>
+      </Flex>
+    )
+  }}
+/>`
+    }
+  ]
 };
