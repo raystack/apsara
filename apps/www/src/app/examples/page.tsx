@@ -5,6 +5,7 @@ import {
   AvatarGroup,
   Button,
   Callout,
+  DataTable,
   DatePicker,
   Dialog,
   DropdownMenu,
@@ -1954,6 +1955,107 @@ const Page = () => {
                   <Avatar radius='small' size={7} fallback='MN' color='pink' />
                 </Tooltip>
               </AvatarGroup>
+            </Flex>
+          </Flex>
+
+          <Text
+            size='large'
+            weight='medium'
+            style={{ marginTop: '32px', marginBottom: '16px' }}
+          >
+            DataTable Examples
+          </Text>
+
+          <Flex direction='column' gap={6}>
+            <Flex direction='column' gap={3}>
+              <DataTable
+                data={[
+                  {
+                    id: '1',
+                    name: 'John Doe',
+                    email: 'john@example.com',
+                    role: 'Admin'
+                  },
+                  {
+                    id: '2',
+                    name: 'Jane Smith',
+                    email: 'jane@example.com',
+                    role: 'User'
+                  },
+                  {
+                    id: '3',
+                    name: 'Bob Johnson',
+                    email: 'bob@example.com',
+                    role: 'User'
+                  }
+                ]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Content
+                  emptyState={
+                    <EmptyState
+                      icon={<FilterIcon />}
+                      heading='No users found'
+                      subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
+
+            <Flex direction='column' gap={3}>
+              <DataTable
+                data={[]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Content
+                  emptyState={
+                    <EmptyState
+                      icon={<FilterIcon />}
+                      heading='No users found'
+                      subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
+                    />
+                  }
+                />
+              </DataTable>
             </Flex>
           </Flex>
 
