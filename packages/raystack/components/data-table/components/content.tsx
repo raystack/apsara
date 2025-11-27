@@ -218,12 +218,16 @@ export function Content({
 
   const visibleColumnsLength = table.getVisibleLeafColumns().length;
 
+  const hasData = rows?.length > 0 || isLoading;
+
   return (
     <div className={classNames.root}>
       <Table className={classNames.table}>
-        <Headers headerGroups={headerGroups} className={classNames.header} />
+        {hasData && (
+          <Headers headerGroups={headerGroups} className={classNames.header} />
+        )}
         <Table.Body className={classNames.body}>
-          {rows?.length || isLoading ? (
+          {hasData ? (
             <>
               <Rows
                 rows={rows}
@@ -242,7 +246,10 @@ export function Content({
             </>
           ) : (
             <Table.Row>
-              <Table.Cell colSpan={visibleColumnsLength}>
+              <Table.Cell
+                colSpan={visibleColumnsLength}
+                className={styles.emptyStateCell}
+              >
                 {emptyState || <DefaultEmptyComponent />}
               </Table.Cell>
             </Table.Row>
