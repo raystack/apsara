@@ -1,4 +1,5 @@
 'use client';
+import { SourceType } from '@/lib/types';
 import { Breadcrumb, Button } from '@raystack/apsara';
 import { useBreadcrumb } from 'fumadocs-core/breadcrumb';
 import { Root } from 'fumadocs-core/page-tree';
@@ -10,9 +11,15 @@ interface DocsNavbarProps {
   url: string;
   title: string;
   pageTree: Root;
+  source: SourceType;
 }
 
-export default function DocsNavbar({ url, title, pageTree }: DocsNavbarProps) {
+export default function DocsNavbar({
+  url,
+  title,
+  pageTree,
+  source
+}: DocsNavbarProps) {
   const pathname = usePathname();
   const items = useBreadcrumb(pathname, pageTree);
   const breadcrumbItems = items.length > 0 ? items : [{ name: 'Overview' }];
@@ -33,8 +40,7 @@ export default function DocsNavbar({ url, title, pageTree }: DocsNavbarProps) {
   const handleViewSource = () => {
     // Construct GitHub URL or source viewer URL
     // Adjust based on your repository structure
-    const githubUrl = `https://github.com/raystack/apsara/blob/main/apps/www/src/content/docs/${url}`;
-    window.open(githubUrl, '_blank');
+    if (source) window.open(source, '_blank');
   };
 
   return (
@@ -63,14 +69,16 @@ export default function DocsNavbar({ url, title, pageTree }: DocsNavbarProps) {
         >
           Copy markdown
         </Button>
-        <Button
-          variant='outline'
-          color='neutral'
-          size='small'
-          onClick={handleViewSource}
-        >
-          View source
-        </Button>
+        {source && (
+          <Button
+            variant='outline'
+            color='neutral'
+            size='small'
+            onClick={handleViewSource}
+          >
+            View source
+          </Button>
+        )}
       </div>
     </header>
   );

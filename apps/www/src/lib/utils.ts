@@ -31,3 +31,30 @@ export function isActiveUrl(
 
   return url === pathname || (nested && pathname.startsWith(`${url}/`));
 }
+
+/**
+ * Given a docs URL, extract the folder name.
+ * Format: /docs/folder-name/file-name or docs/folder-name/file-name
+ */
+export const getFolderFromUrl = (url: string): string => {
+  // Remove leading slash if present and split by "/"
+  const parts = url.replace(/^\//, '').split('/').filter(Boolean);
+
+  // Expected structure: ["docs", folderName?, fileName]
+  // If we have 3+ parts (docs / folder / file), return the folder (index 1)
+  if (parts.length >= 3) {
+    return parts[1];
+  }
+
+  // Otherwise it's a top-level doc (docs / file), default to "Overview"
+  return 'Overview';
+};
+
+/**
+ * Given a docs URL, extract the file name.
+ * Format: /docs/folder-name/file-name or docs/folder-name/file-name
+ */
+export const getFileFromUrl = (url: string): string => {
+  const parts = url.replace(/^\//, '').split('/').filter(Boolean);
+  return (parts.pop() ?? '').split('#')[0] ?? '';
+};

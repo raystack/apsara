@@ -29,6 +29,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         url={page.url}
         title={page.data.title}
         pageTree={docs.pageTree}
+        source={page.data.source}
       />
       <Flex width='full'>
         <Flex direction='column' align='center' justify='center' width='full'>

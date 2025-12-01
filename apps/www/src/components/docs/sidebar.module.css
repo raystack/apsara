@@ -1,0 +1,7 @@
+.sidebar {
+  padding: 0;
+}
+.header {
+  height: 50px;
+  padding: var(--rs-space-4) 0;
+}

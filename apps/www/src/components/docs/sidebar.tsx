@@ -1,15 +1,16 @@
 'use client';
 
 import { isActiveUrl } from '@/lib/utils';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
-import { Flex, IconButton } from '@raystack/apsara';
-import { Sidebar } from '@raystack/apsara';
+import { Flex, Sidebar } from '@raystack/apsara';
+import { cx } from 'class-variance-authority';
 import { Node, Root } from 'fumadocs-core/page-tree';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import Logo from '../logo';
 import { ThemeToggle } from '../theme-switcher';
+import DocsSearch from './search';
+import styles from './sidebar.module.css';
 
 type Props = {
   pageTree: Root;
@@ -85,16 +86,14 @@ function renderNode(node: Node, pathname: string): ReactNode {
 export default function DocsSidebar({ pageTree, className }: Props) {
   const pathname = usePathname();
   return (
-    <Sidebar open collapsible={false} className={className}>
-      <Sidebar.Header>
+    <Sidebar open collapsible={false} className={cx(className, styles.sidebar)}>
+      <Sidebar.Header className={styles.header}>
         <Flex align='center' gap={3} justify='between' width='full'>
           <Link href='/'>
             <Logo onlyWordmark />
           </Link>
           <Flex align='center' gap={3}>
-            <IconButton size={3} aria-label='Search'>
-              <MagnifyingGlassIcon />
-            </IconButton>
+            <DocsSearch pageTree={pageTree} />
             <ThemeToggle />
           </Flex>
         </Flex>

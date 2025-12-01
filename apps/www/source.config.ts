@@ -1,5 +1,6 @@
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
+import { SourceSchema, TagSchema } from '@/lib/types';
 import {
   rehypeToc,
   remarkGfm,
@@ -34,7 +35,10 @@ const generator = createGenerator(tsconfig);
 export const docs = defineDocs({
   dir: 'src/content/docs',
   docs: {
-    schema: frontmatterSchema,
+    schema: frontmatterSchema.extend({
+      source: SourceSchema,
+      tag: TagSchema
+    }),
     postprocess: {
       includeProcessedMarkdown: true
     }

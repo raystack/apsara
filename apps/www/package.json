@@ -1,5 +1,5 @@
 {
-  "name": "www-beta",
+  "name": "www",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -29,7 +29,8 @@
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.1",
     "remark-mdx": "^3.1.0",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/mdx": "^2.0.13",
