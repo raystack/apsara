@@ -12,7 +12,7 @@ export const SidebarHeader = forwardRef<
   <Flex
     align='center'
     ref={ref}
-    className={styles.header}
+    className={cx(styles.header, className)}
     role='banner'
     {...props}
   >
@@ -27,7 +27,7 @@ export const SidebarFooter = forwardRef<
 >(({ className, children, ...props }, ref) => (
   <Flex
     ref={ref}
-    className={styles.footer}
+    className={cx(styles.footer, className)}
     direction='column'
     role='group'
     aria-label='Footer navigation'
