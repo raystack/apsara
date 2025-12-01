@@ -109,7 +109,6 @@
 
 .nav-text {
   color: var(--rs-color-foreground-base-primary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
@@ -175,7 +174,6 @@
 
 .nav-group-label {
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);

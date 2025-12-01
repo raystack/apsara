@@ -1,5 +1,4 @@
 .chip {
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -21,7 +20,6 @@
 }
 .operationText {
   color: var(--rs-color-foreground-base-secondary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -58,7 +56,6 @@
   min-height: unset !important;
   border-radius: var(--rs-radius-1);
   color: var(--rs-color-foreground-base-primary) !important;
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -104,7 +101,6 @@
 
 .selectValue {
   color: var(--rs-color-foreground-base-primary);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -157,7 +153,7 @@ button.selectValue:hover {
 }
 
 /* Match height of InputField when FilterChip variant is text */
-.chip[data-variant='text'] .inputField {
+.chip[data-variant="text"] .inputField {
   border: none;
   box-shadow: none;
   height: 24px;
@@ -185,7 +181,7 @@ button.selectValue:hover {
 }
 
 /* Remove border and match height of the DatePicker when FilterChip variant is text */
-.chip[data-variant='text'] .dateField {
+.chip[data-variant="text"] .dateField {
   border: none;
   box-shadow: none;
   height: 24px;

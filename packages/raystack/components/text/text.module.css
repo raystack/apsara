@@ -1,7 +1,6 @@
 .text {
   margin: 0;
   color: var(--rs-color-foreground-base-primary);
-  font-family: var(--rs-font-body);
 }
 
 /* Text Size */

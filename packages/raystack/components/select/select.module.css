@@ -1,7 +1,6 @@
 .content {
   --apsara-select-padding: var(--rs-space-2);
   z-index: var(--rs-z-index-portal);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
@@ -61,7 +60,6 @@
   align-items: center;
   color: var(--rs-color-foreground-base-primary);
   background-color: var(--rs-color-background-base-primary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   border-radius: var(--rs-radius-2);
@@ -91,7 +89,6 @@
 
 .trigger-small .triggerContent {
   overflow: hidden;
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-mini);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
@@ -110,7 +107,6 @@
 
 .trigger-medium .triggerContent {
   overflow: hidden;
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
@@ -143,7 +139,6 @@
 
 .trigger::placeholder {
   color: var(--rs-color-foreground-base-tertiary);
-  font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
@@ -292,7 +287,6 @@
   width: 100%;
   color: var(--rs-color-foreground-base-primary);
   padding: var(--rs-space-3) var(--rs-space-4);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);

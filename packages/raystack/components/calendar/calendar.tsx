@@ -7,7 +7,7 @@ import {
   ChevronUpIcon
 } from '@radix-ui/react-icons';
 import { cva, cx } from 'class-variance-authority';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import {
   DayPicker,
   DayPickerProps,
@@ -28,7 +28,8 @@ interface OnDropdownOpen {
 
 interface CalendarPropsExtended {
   showTooltip?: boolean;
-  tooltipMessages?: { [key: string]: any };
+  tooltipMessages?: Record<string, ReactNode>;
+  dateInfo?: Record<string, ReactNode> | ((date: Date) => ReactNode | null);
   loadingData?: boolean;
   timeZone?: string;
 }
@@ -70,9 +71,9 @@ function DropDown({
       onOpenChange={setOpen}
     >
       <Select.Trigger
-        className={styles.dropdown_trigger}
+        className={styles.dropdownTrigger}
         iconProps={{
-          className: styles.dropdown_icon
+          className: styles.dropdownIcon
         }}
         size='small'
         variant='text'
@@ -80,7 +81,7 @@ function DropDown({
       >
         <Select.Value />
       </Select.Trigger>
-      <Select.Content className={styles.dropdown_content}>
+      <Select.Content className={styles.dropdownContent}>
         <Select.ScrollUpButton asChild>
           <Flex justify='center'>
             <ChevronUpIcon />
@@ -114,6 +115,7 @@ export const Calendar = function ({
   onDropdownOpen,
   showTooltip = false,
   tooltipMessages = {},
+  dateInfo = {},
   loadingData = false,
   timeZone,
   ...props
@@ -154,15 +156,34 @@ export const Calendar = function ({
         ),
         DayButton: props => {
           const { day, ...buttonProps } = props;
-          const message =
-            tooltipMessages[dateLib.format(day.date, 'dd-MM-yyyy')];
+          const dateKey = dateLib.format(day.date, 'dd-MM-yyyy');
+          const message = tooltipMessages[dateKey];
+
+          // Support both object and function for dateInfo
+          const dateComponent =
+            typeof dateInfo === 'function'
+              ? dateInfo(day.date)
+              : dateInfo[dateKey];
+          const hasDateInfo = Boolean(dateComponent);
+
           return (
             <Tooltip
               side='top'
               disabled={loadingData || !showTooltip || !message}
               message={message}
             >
-              <button {...buttonProps} />
+              <button
+                {...buttonProps}
+                className={cx(
+                  buttonProps.className,
+                  hasDateInfo && styles.dayButtonWithInfo
+                )}
+              >
+                {hasDateInfo && (
+                  <div className={styles.dayInfo}>{dateComponent}</div>
+                )}
+                <span className={styles.dayNumber}>{buttonProps.children}</span>
+              </button>
             </Tooltip>
           );
         },
@@ -179,10 +200,10 @@ export const Calendar = function ({
           )
       }}
       classNames={{
-        caption_label: styles.caption_label,
-        button_previous: `${styles.nav_button} ${styles.nav_button_previous}`,
-        button_next: `${styles.nav_button} ${styles.nav_button_next}`,
-        month_caption: styles.month_caption,
+        caption_label: styles.captionLabel,
+        button_previous: `${styles.navButton} ${styles.navButtonPrevious}`,
+        button_next: `${styles.navButton} ${styles.navButtonNext}`,
+        month_caption: styles.monthCaption,
         months: styles.months,
         nav: styles.nav,
         day: styles.day,
@@ -193,10 +214,10 @@ export const Calendar = function ({
         weekday: styles.weekday,
         disabled: styles.disabled,
         selected: styles.selected,
-        day_button: styles.day_button,
-        range_middle: styles.range_middle,
-        range_end: styles.range_end,
-        range_start: styles.range_start,
+        day_button: styles.dayButton,
+        range_middle: styles.rangeMiddle,
+        range_end: styles.rangeEnd,
+        range_start: styles.rangeStart,
         hidden: styles.hidden,
         dropdowns: styles.dropdowns,
         ...classNames

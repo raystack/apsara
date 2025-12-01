@@ -10,8 +10,24 @@ export interface CalendarProps {
   /** Boolean to show loading state */
   loadingData?: boolean;
 
-  /** Object containing date-specific information like icons and text */
-  dateInfo?: Record<string, unknown>;
+  /**
+   * Custom React components to render above each date.
+   * Can be either:
+   * - An object with date strings in "dd-MM-yyyy" format as keys
+   * - A function that receives a Date and returns a ReactNode or null
+   * The component will be rendered above the date number.
+   *
+   * @example
+   * // Object approach (static data)
+   * dateInfo={{ "15-01-2024": <div><Icon /> 17%</div> }}
+   *
+   * @example
+   * // Function approach (dynamic logic)
+   * dateInfo={(date) => date.getDay() === 0 ? <div>Sunday</div> : null}
+   */
+  dateInfo?:
+    | Record<string, React.ReactNode>
+    | ((date: Date) => React.ReactNode | null);
 
   /** Boolean to show days from previous/next months */
   showOutsideDays?: boolean;

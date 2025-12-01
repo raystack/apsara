@@ -24,7 +24,6 @@
   font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-medium);
   padding: var(--rs-space-2) var(--rs-space-3);
-  font-family: var(--rs-font-body);
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   border-radius: var(--rs-radius-2);
@@ -44,7 +43,7 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
-.trigger[data-state='active'] {
+.trigger[data-state="active"] {
   background-color: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
   box-shadow: var(--rs-shadow-feather);
@@ -73,6 +72,6 @@
   outline: none;
 }
 
-.content[data-state='inactive'] {
+.content[data-state="inactive"] {
   display: none;
-} 
+}

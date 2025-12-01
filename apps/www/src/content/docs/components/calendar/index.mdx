@@ -8,6 +8,7 @@ import {
   datePickerDemo,
   rangePickerDemo,
   calendarDemo,
+  dateInfoDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -37,6 +38,12 @@ import { Calendar, RangePicker, DatePicker } from '@raystack/apsara'
 Choose between different variants to convey different meanings or importance levels. Default variant is `accent`.
 
 <Demo data={calendarDemo} />
+
+#### Custom Date Information
+
+You can display custom components above each date using the `dateInfo` prop. The keys should be date strings in `"dd-MM-yyyy"` format, and the values are React components that will be rendered above the date number.
+
+<Demo data={dateInfoDemo} />
 
 ### Range Picker
 

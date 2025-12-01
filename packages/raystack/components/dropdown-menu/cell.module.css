@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   gap: var(--rs-space-3);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -14,7 +13,6 @@
 .cell[data-active-item] {
   outline: none;
   cursor: pointer;
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);

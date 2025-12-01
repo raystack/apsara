@@ -4,7 +4,6 @@
   padding: var(--rs-space-3);
   border-radius: var(--rs-radius-2);
   font-style: normal;
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -102,11 +101,7 @@
 }
 
 .callout-gradient {
-  background: radial-gradient(
-    circle,
-    #AD00E933 0%,
-    #EF040433 100%
-  );
+  background: radial-gradient(circle, #ad00e933 0%, #ef040433 100%);
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -200,21 +195,13 @@
 
 /* Gradient variants */
 .callout-gradient {
-  background: radial-gradient(
-    circle,
-    #AD00E933 0%,
-    #EF040433 100%
-  );
+  background: radial-gradient(circle, #ad00e933 0%, #ef040433 100%);
   color: var(--rs-color-foreground-base-primary);
 }
 
 .callout-outline.callout-gradient {
-  background: radial-gradient(
-    circle,
-    #AD00E933 0%,
-    #EF040433 100%
-  );
-  border: 1px solid #EF040444;
+  background: radial-gradient(circle, #ad00e933 0%, #ef040433 100%);
+  border: 1px solid #ef040444;
   color: var(--rs-color-foreground-base-primary);
 }
 

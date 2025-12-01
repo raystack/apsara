@@ -1,7 +1,6 @@
 .content {
   overflow: hidden;
   z-index: var(--rs-z-index-portal);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -39,7 +38,6 @@
   background: transparent;
   color: var(--rs-color-foreground-base-primary);
   padding: var(--rs-space-3) var(--rs-space-4);
-  font-family: var(--rs-font-body);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
