@@ -12,3 +12,6 @@
   padding: var(--rs-space-5);
   gap: var(--rs-space-5);
 }
+.main a {
+  transition: none;
+}

@@ -1,6 +1,5 @@
 'use client';
-import { useTheme } from '@/components/theme';
-import { IconButton } from '@raystack/apsara';
+import { IconButton, useTheme } from '@raystack/apsara';
 import { Moon, Sun } from 'lucide-react';
 import { type HTMLAttributes } from 'react';
 
