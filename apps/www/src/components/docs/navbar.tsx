@@ -4,8 +4,10 @@ import { Breadcrumb, Button } from '@raystack/apsara';
 import { useBreadcrumb } from 'fumadocs-core/breadcrumb';
 import { Root } from 'fumadocs-core/page-tree';
 import { usePathname } from 'next/navigation';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import styles from './navbar.module.css';
+
+const cache = new Map<string, string>();
 
 interface DocsNavbarProps {
   url: string;
@@ -24,16 +26,36 @@ export default function DocsNavbar({
   const items = useBreadcrumb(pathname, pageTree);
   const breadcrumbItems = items.length > 0 ? items : [{ name: 'Overview' }];
 
+  const [isLoading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const markdownUrl = `${url}.mdx`;
+
   const handleCopyMarkdown = async () => {
+    const cached = cache.get(markdownUrl);
+    if (cached) {
+      await navigator.clipboard.writeText(cached);
+      setChecked(true);
+      setTimeout(() => setChecked(false), 2000);
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      // Construct markdown URL - adjust based on your setup
-      const markdownUrl = `/api/markdown?path=${encodeURIComponent(url)}`;
-      const response = await fetch(markdownUrl);
-      const text = await response.text();
-      await navigator.clipboard.writeText(text);
-      // TODO: Add toast notification
-    } catch (error) {
-      console.error('Failed to copy markdown:', error);
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/plain': fetch(markdownUrl).then(async res => {
+            const content = await res.text();
+            cache.set(markdownUrl, content);
+            return content;
+          })
+        })
+      ]);
+
+      setChecked(true);
+      setTimeout(() => setChecked(false), 2000);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,6 +87,7 @@ export default function DocsNavbar({
           variant='outline'
           color='neutral'
           size='small'
+          disabled={isLoading}
           onClick={handleCopyMarkdown}
         >
           Copy markdown

@@ -98,7 +98,7 @@ export default function DocsSidebar({ pageTree, className }: Props) {
           </Flex>
         </Flex>
       </Sidebar.Header>
-      <Sidebar.Main>
+      <Sidebar.Main className={styles.main}>
         {pageTree.children.map(item => renderNode(item, pathname))}
       </Sidebar.Main>
     </Sidebar>

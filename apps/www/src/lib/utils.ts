@@ -58,3 +58,8 @@ export const getFileFromUrl = (url: string): string => {
   const parts = url.replace(/^\//, '').split('/').filter(Boolean);
   return (parts.pop() ?? '').split('#')[0] ?? '';
 };
+
+export function camelCaseToWords(input: string) {
+  const result = input.replace(/([A-Z])/g, ' $1');
+  return (result.charAt(0).toUpperCase() + result.slice(1)).trim();
+}

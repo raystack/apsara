@@ -1,13 +1,20 @@
+import { camelCaseToWords } from '@/lib/utils';
+import {
+  InfoCircledIcon,
+  Pencil2Icon,
+  PlusIcon,
+  TransformIcon,
+  UploadIcon
+} from '@radix-ui/react-icons';
 import {
   Flex,
   IconButton,
   InputField,
-  Label,
   Select,
-  Switch
+  Switch,
+  Text
 } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
-import { Ban, Home, Info, Laugh, X } from 'lucide-react';
 import styles from './styles.module.css';
 import {
   ComponentPropsType,
@@ -22,11 +29,11 @@ type PropControlsProps = {
 };
 
 const ICONS_MAP = {
-  none: { icon: <Ban size={16} />, value: '' },
-  info: { icon: <Info size={16} />, value: '<Info size={16} />' },
-  close: { icon: <X size={16} />, value: '<X size={16} />' },
-  home: { icon: <Home size={16} />, value: '<Home size={16} />' },
-  laugh: { icon: <Laugh size={16} />, value: '<Laugh size={16} />' }
+  plus: { icon: <PlusIcon />, value: '<PlusIcon />' },
+  transform: { icon: <TransformIcon />, value: '<TransformIcon />' },
+  pencil: { icon: <Pencil2Icon />, value: '<Pencil2Icon />' },
+  info: { icon: <InfoCircledIcon />, value: '<InfoCircledIcon />' },
+  upload: { icon: <UploadIcon />, value: '<UploadIcon />' }
 };
 
 export default function DemoControls({
@@ -37,6 +44,7 @@ export default function DemoControls({
   return (
     <div className={styles.form}>
       {Object.entries(controls).map(([prop, control]) => {
+        const propLabel = camelCaseToWords(prop);
         const propValue = componentProps?.[prop] ?? '';
         const isCheckbox = control.type === 'checkbox';
         const isIcon = control.type === 'icon';
@@ -50,23 +58,28 @@ export default function DemoControls({
                 justify='between'
                 className={styles.controlHeader}
               >
-                <Label size='small' className={styles.controlLabel}>
-                  {prop}
-                </Label>
-                {isCheckbox && (
-                  <Switch
-                    size='small'
-                    checked={!!componentProps[prop]}
-                    onCheckedChange={checked => onPropChange(prop, checked)}
-                  />
-                )}
+                <Text variant='secondary' size='small' weight='medium'>
+                  {propLabel}
+                </Text>
+                <Switch
+                  size='small'
+                  checked={!!componentProps[prop]}
+                  onCheckedChange={checked => {
+                    if (isCheckbox) onPropChange(prop, checked);
+                    else
+                      onPropChange(
+                        prop,
+                        checked ? String(ICONS_MAP.plus.value) : ''
+                      );
+                  }}
+                />
               </Flex>
               {isIcon && (
                 <Flex gap={2} align='center' className={styles.iconContainer}>
                   {Object.values(ICONS_MAP).map((icon, index) => (
                     <IconButton
                       key={index}
-                      size={1}
+                      size={3}
                       className={cx(
                         styles.iconButton,
                         propValue === icon.value && styles.active
@@ -95,9 +108,14 @@ export default function DemoControls({
               : undefined;
           return (
             <div key={prop} className={styles.controlField}>
-              <Label size='small' className={styles.selectLabel}>
-                {prop}
-              </Label>
+              <Text
+                variant='secondary'
+                size='mini'
+                weight='medium'
+                className={styles.selectLabel}
+              >
+                {propLabel}
+              </Text>
               <Select
                 value={selectValue}
                 onValueChange={value => onPropChange(prop, value)}
@@ -106,7 +124,7 @@ export default function DemoControls({
                   size='small'
                   className={cx(styles.selectTrigger, styles.noShadow)}
                 >
-                  <Select.Value placeholder={`Select ${prop}`} />
+                  <Select.Value placeholder={`Select ${propLabel}`} />
                 </Select.Trigger>
                 <Select.Content>
                   {control.options?.map(option => (
@@ -125,7 +143,7 @@ export default function DemoControls({
           <div key={prop} className={styles.controlField}>
             <InputField
               size='small'
-              label={prop}
+              label={propLabel}
               value={
                 control.type === 'number'
                   ? String(Number(propValue))
@@ -141,7 +159,7 @@ export default function DemoControls({
               type={control.type === 'number' ? 'number' : 'text'}
               min={control.min}
               max={control.max}
-              className={styles.noShadow}
+              className={cx(styles.noShadow, styles.inputLabel)}
             />
           </div>
         );

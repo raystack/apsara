@@ -31,7 +31,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
         pageTree={docs.pageTree}
         source={page.data.source}
       />
-      <Flex width='full'>
+      <Flex width='full' align='start'>
         <Flex direction='column' align='center' justify='center' width='full'>
           <Flex direction='column' gap={6} className={styles.content}>
             <Flex direction='column' gap={3}>
@@ -56,7 +56,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
             width: '300px',
             height: 'calc(100vh - 50px)',
             position: 'sticky',
-            top: '50.5px',
+            top: '50px',
             padding: '40px 0'
           }}
         >

@@ -24,6 +24,16 @@ const config = {
         destination: '/llms.mdx/:path*'
       }
     ];
+  },
+  async redirects() {
+    // TODO: remove this once we have a proper home page
+    return [
+      {
+        source: '/',
+        destination: '/docs',
+        permanent: true
+      }
+    ];
   }
 };
 
