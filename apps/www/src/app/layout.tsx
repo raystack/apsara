@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import '@/styles.css';
 import '@raystack/apsara/normalize.css';
 import '@raystack/apsara/style.css';
+import { ThemeProvider as NextThemeProvider } from 'next-themes';
 import styles from './layout.module.css';
 
 const inter = Inter({
@@ -19,7 +20,9 @@ export default function Layout({ children }: { children: ReactNode }) {
       </head>
       <body className={styles.body}>
         <NextProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <NextThemeProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </NextThemeProvider>
         </NextProvider>
       </body>
     </html>

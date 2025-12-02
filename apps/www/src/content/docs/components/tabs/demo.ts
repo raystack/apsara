@@ -4,7 +4,7 @@ export const preview = {
   type: 'code',
   code: `
   <Flex direction="row" gap="large" style={{ width: "100%", fontSize: "12px" }}>
-    <Tabs.Root defaultValue="tab-one">
+    <Tabs defaultValue="tab-one">
       <Tabs.List>
         <Tabs.Trigger value="tab-one" icon={<Info />}>Hoisting</Tabs.Trigger>
         <Tabs.Trigger value="tab-two">Hosting</Tabs.Trigger>
@@ -27,7 +27,7 @@ export const preview = {
       <Tabs.Content value="tab-five">
         <Text>SEO settings content</Text>
       </Tabs.Content>
-    </Tabs.Root>
+    </Tabs>
   </Flex>`
 };
 
@@ -35,7 +35,7 @@ export const basicDemo = {
   type: 'code',
   code: `
   <div style={{ width: "400px" }}>
-  <Tabs.Root defaultValue="tab1">
+  <Tabs defaultValue="tab1">
   <Tabs.List>
     <Tabs.Trigger value="tab1">Account</Tabs.Trigger>
     <Tabs.Trigger value="tab2">Password</Tabs.Trigger>
@@ -44,7 +44,7 @@ export const basicDemo = {
   <Tabs.Content value="tab1">Account settings</Tabs.Content>
   <Tabs.Content value="tab2">Password settings</Tabs.Content>
   <Tabs.Content value="tab3">Other settings</Tabs.Content>
-</Tabs.Root>
+</Tabs>
 </div>`
 };
 
@@ -52,14 +52,14 @@ export const iconsDemo = {
   type: 'code',
   code: `
   <div style={{ width: "400px" }}>
-  <Tabs.Root defaultValue="tab1">
+  <Tabs defaultValue="tab1">
     <Tabs.List>
       <Tabs.Trigger value="tab1">Home</Tabs.Trigger>
       <Tabs.Trigger value="tab2" icon={<Info />} />
     </Tabs.List>
     <Tabs.Content value="tab1">Home</Tabs.Content>
     <Tabs.Content value="tab2">Info</Tabs.Content>
-  </Tabs.Root>
+  </Tabs>
   </div>`
 };
 
@@ -67,13 +67,13 @@ export const disabledDemo = {
   type: 'code',
   code: `
   <div style={{ width: "400px" }}>
-  <Tabs.Root defaultValue="tab1">
+  <Tabs defaultValue="tab1">
   <Tabs.List>
     <Tabs.Trigger value="tab1">Active</Tabs.Trigger>
     <Tabs.Trigger value="tab2" disabled>Disabled</Tabs.Trigger>
   </Tabs.List>
   <Tabs.Content value="tab1">Active tab content</Tabs.Content>
   <Tabs.Content value="tab2">Disabled tab content</Tabs.Content>
-</Tabs.Root>
+</Tabs>
 </div>`
 };

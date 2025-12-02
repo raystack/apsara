@@ -1,4 +1,5 @@
 import { InputFieldProps } from '../input-field/props';
+import { PopoverContentProps } from '../popover/props';
 
 export interface CalendarProps {
   /** Number of months to display */
@@ -90,6 +91,9 @@ export interface RangePickerProps {
    * If not provided, uses the local timezone.
    */
   timeZone?: string;
+
+  /** Props for customizing the popover */
+  popoverProps?: PopoverContentProps;
 }
 
 export interface DatePickerProps {
@@ -130,4 +134,7 @@ export interface DatePickerProps {
    * If not provided, uses the local timezone.
    */
   timeZone?: string;
+
+  /** Props for customizing the popover */
+  popoverProps?: PopoverContentProps;
 }

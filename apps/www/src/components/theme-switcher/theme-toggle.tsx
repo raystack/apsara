@@ -13,7 +13,7 @@ export default function ThemeToggle(props: HTMLAttributes<HTMLElement>) {
   return (
     <IconButton
       aria-label='Toggle Theme'
-      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+      onClick={() => setTheme({ theme: theme === 'light' ? 'dark' : 'light' })}
       size={3}
       {...props}
     >

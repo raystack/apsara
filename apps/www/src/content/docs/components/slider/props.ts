@@ -32,6 +32,12 @@ export interface SliderProps {
    */
   label?: string | [string, string];
 
+  /**
+   * Size of the slider thumb.
+   * @default "large"
+   */
+  thumbSize?: 'small' | 'large';
+
   /** Callback when value changes. */
   onChange?: (value: number | [number, number]) => void;
 
