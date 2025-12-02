@@ -1,6 +1,6 @@
 'use client';
 
-import { cva } from 'class-variance-authority';
+import { cx } from 'class-variance-authority';
 import { Collapsible } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
@@ -22,8 +22,6 @@ export interface SidebarContextValue {
 export const SidebarContext = createContext<SidebarContextValue>({
   isCollapsed: false
 });
-
-const root = cva(styles.root);
 
 export interface SidebarRootProps
   extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
@@ -71,7 +69,7 @@ export const SidebarRoot = forwardRef<
         <Tooltip.Provider>
           <Collapsible.Root
             ref={ref}
-            className={root({ className })}
+            className={cx(styles.root, className)}
             data-position={position}
             data-state={open ? 'expanded' : 'collapsed'}
             data-collapse-disabled={!collapsible}
