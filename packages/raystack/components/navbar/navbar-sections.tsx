@@ -5,13 +5,7 @@ import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { Flex } from '../flex';
 import styles from './navbar.module.css';
 
-export interface NavbarStartProps extends ComponentPropsWithoutRef<'div'> {
-  /**
-   * Accessible label for the start section. Use this to describe the purpose
-   * of the content in the start section (e.g., "Brand and navigation links").
-   */
-  'aria-label'?: string;
-}
+export interface NavbarStartProps extends ComponentPropsWithoutRef<'div'> {}
 
 export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
   ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (
@@ -31,13 +25,7 @@ export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
 
 NavbarStart.displayName = 'Navbar.Start';
 
-export interface NavbarEndProps extends ComponentPropsWithoutRef<'div'> {
-  /**
-   * Accessible label for the end section. Use this to describe the purpose
-   * of the content in the end section (e.g., "User actions and settings").
-   */
-  'aria-label'?: string;
-}
+export interface NavbarEndProps extends ComponentPropsWithoutRef<'div'> {}
 
 export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
   ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (

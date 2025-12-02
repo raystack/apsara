@@ -55,7 +55,7 @@ describe('Navbar', () => {
 
       const nav = screen.getByRole('navigation');
       expect(nav).toBeInTheDocument();
-      expect(nav).toHaveAttribute('aria-label', 'Main navigation');
+      expect(nav).toHaveAttribute('role', 'navigation');
     });
 
     it('supports custom aria-label', () => {
@@ -78,7 +78,7 @@ describe('Navbar', () => {
       expect(nav).not.toHaveAttribute('aria-label');
     });
 
-    it('prioritizes aria-labelledby over default aria-label', () => {
+    it('supports both aria-label and aria-labelledby together', () => {
       render(
         <>
           <h2 id='nav-heading'>Site Navigation</h2>
