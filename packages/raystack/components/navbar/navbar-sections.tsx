@@ -5,36 +5,54 @@ import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { Flex } from '../flex';
 import styles from './navbar.module.css';
 
-export const NavbarStart = forwardRef<
-  HTMLDivElement,
-  ComponentPropsWithoutRef<'div'>
->(({ className, children, ...props }, ref) => (
-  <Flex
-    ref={ref}
-    align='center'
-    gap={3}
-    className={cx(styles.start, className)}
-    {...props}
-  >
-    {children}
-  </Flex>
-));
+export interface NavbarStartProps extends ComponentPropsWithoutRef<'div'> {
+  /**
+   * Accessible label for the start section. Use this to describe the purpose
+   * of the content in the start section (e.g., "Brand and navigation links").
+   */
+  'aria-label'?: string;
+}
+
+export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
+  ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (
+    <Flex
+      ref={ref}
+      align='center'
+      gap={3}
+      className={cx(styles.start, className)}
+      role={ariaLabel ? 'group' : undefined}
+      aria-label={ariaLabel}
+      {...props}
+    >
+      {children}
+    </Flex>
+  )
+);
 
 NavbarStart.displayName = 'Navbar.Start';
 
-export const NavbarEnd = forwardRef<
-  HTMLDivElement,
-  ComponentPropsWithoutRef<'div'>
->(({ className, children, ...props }, ref) => (
-  <Flex
-    ref={ref}
-    align='center'
-    gap={3}
-    className={cx(styles.end, className)}
-    {...props}
-  >
-    {children}
-  </Flex>
-));
+export interface NavbarEndProps extends ComponentPropsWithoutRef<'div'> {
+  /**
+   * Accessible label for the end section. Use this to describe the purpose
+   * of the content in the end section (e.g., "User actions and settings").
+   */
+  'aria-label'?: string;
+}
+
+export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
+  ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (
+    <Flex
+      ref={ref}
+      align='center'
+      gap={3}
+      className={cx(styles.end, className)}
+      role={ariaLabel ? 'group' : undefined}
+      aria-label={ariaLabel}
+      {...props}
+    >
+      {children}
+    </Flex>
+  )
+);
 
 NavbarEnd.displayName = 'Navbar.End';

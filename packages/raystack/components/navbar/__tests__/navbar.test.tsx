@@ -57,6 +57,42 @@ describe('Navbar', () => {
       expect(nav).toBeInTheDocument();
       expect(nav).toHaveAttribute('aria-label', 'Main navigation');
     });
+
+    it('supports custom aria-label', () => {
+      render(<BasicNavbar aria-label='Primary site navigation' />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('aria-label', 'Primary site navigation');
+    });
+
+    it('supports aria-labelledby', () => {
+      render(
+        <>
+          <h2 id='nav-heading'>Site Navigation</h2>
+          <BasicNavbar aria-labelledby='nav-heading' />
+        </>
+      );
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('aria-labelledby', 'nav-heading');
+      expect(nav).not.toHaveAttribute('aria-label');
+    });
+
+    it('prioritizes aria-labelledby over default aria-label', () => {
+      render(
+        <>
+          <h2 id='nav-heading'>Site Navigation</h2>
+          <BasicNavbar
+            aria-labelledby='nav-heading'
+            aria-label='Custom label'
+          />
+        </>
+      );
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('aria-labelledby', 'nav-heading');
+      expect(nav).toHaveAttribute('aria-label', 'Custom label');
+    });
   });
 
   describe('Sticky Functionality', () => {
@@ -93,6 +129,32 @@ describe('Navbar', () => {
       );
 
       expect(screen.getByText(START_TEXT)).toBeInTheDocument();
+    });
+
+    it('supports aria-label for start section', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.Start aria-label='Brand and navigation links'>
+            <span>{START_TEXT}</span>
+          </Navbar.Start>
+        </BasicNavbar>
+      );
+
+      const start = screen.getByRole('group', {
+        name: 'Brand and navigation links'
+      });
+      expect(start).toBeInTheDocument();
+    });
+
+    it('does not add role when aria-label is not provided', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.Start data-testid='start' />
+        </BasicNavbar>
+      );
+
+      const start = container.querySelector('[data-testid="start"]');
+      expect(start).not.toHaveAttribute('role');
     });
 
     it('applies start styles', () => {
@@ -153,6 +215,32 @@ describe('Navbar', () => {
       );
 
       expect(screen.getByText(END_BUTTON_TEXT)).toBeInTheDocument();
+    });
+
+    it('supports aria-label for end section', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.End aria-label='User actions and settings'>
+            <button>{END_BUTTON_TEXT}</button>
+          </Navbar.End>
+        </BasicNavbar>
+      );
+
+      const end = screen.getByRole('group', {
+        name: 'User actions and settings'
+      });
+      expect(end).toBeInTheDocument();
+    });
+
+    it('does not add role when aria-label is not provided', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.End data-testid='end' />
+        </BasicNavbar>
+      );
+
+      const end = container.querySelector('[data-testid="end"]');
+      expect(end).not.toHaveAttribute('role');
     });
 
     it('applies end styles', () => {
