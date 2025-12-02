@@ -97,7 +97,7 @@ export const accessibilityDemo = {
     {
       name: 'Custom aria-label',
       code: `
-      <Navbar aria-label="Primary site navigation">
+      <Navbar aria-label="Primary navigation">
         <Navbar.Start>
           <Text size="regular" weight="medium">Brand</Text>
         </Navbar.Start>
