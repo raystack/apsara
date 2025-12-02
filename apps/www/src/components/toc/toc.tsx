@@ -26,6 +26,7 @@ export default function TableOfContents({
   const [tocHeight, setTocHeight] = useState<number>(0);
   const [scrollPos, setScrollPos] = useState<number>(0);
   const [ready, setReady] = useState<boolean>(false);
+  const [isScrollable, setIsScrollable] = useState<boolean>(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   /** Recalculate heading positions within the article */
@@ -37,6 +38,10 @@ export default function TableOfContents({
     const articleBox = article.getBoundingClientRect();
     const containerBox = container.getBoundingClientRect();
     const articleTop = articleBox.top + window.scrollY;
+
+    // Check if content is scrollable (article height > viewport height)
+    const hasScroll = articleBox.height > window.innerHeight;
+    setIsScrollable(hasScroll);
 
     setTocHeight(containerBox.height);
 
@@ -135,6 +140,11 @@ export default function TableOfContents({
     { length: Math.floor(tocHeight / 10) },
     (_, i) => i * 10
   );
+
+  // Don't render TOC if content is not scrollable
+  if (!isScrollable || !ticks.length) {
+    return <div ref={containerRef} className={styles.container} />;
+  }
 
   return (
     <div ref={containerRef} className={styles.container}>
