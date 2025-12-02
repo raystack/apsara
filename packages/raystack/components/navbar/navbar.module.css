@@ -1,0 +1,31 @@
+.root {
+  display: flex;
+  width: 100%;
+  padding: var(--rs-space-4) var(--rs-space-6);
+  background: var(--rs-color-background-base-primary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.06), 0 4px 4px -1px rgba(0, 0, 0, 0.02);
+  box-sizing: border-box;
+  min-height: 48px;
+}
+
+.root[data-sticky='true'] {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  width: 100%;
+  align-items: center;
+}
+
+.start {
+  flex: 0 0 auto;
+}
+
+.end {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+

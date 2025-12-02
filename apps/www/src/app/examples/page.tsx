@@ -14,6 +14,7 @@ import {
   IconButton,
   Indicator,
   InputField,
+  Navbar,
   Popover,
   RangePicker,
   Search,
@@ -152,6 +153,76 @@ const Page = () => {
             <-- -->  ***  ****
             <!-- -->
             /* comment */ /* ---------- __ */`}</code>
+
+          {/* Navbar Examples */}
+          <Text
+            size='large'
+            weight='medium'
+            style={{ marginTop: '32px', marginBottom: '16px' }}
+          >
+            Navbar Examples
+          </Text>
+
+          <Flex direction='column' gap={4} style={{ maxWidth: '100%' }}>
+            <Flex direction='column' gap={2}>
+              <Text size='small'>Basic Navbar:</Text>
+              <Navbar>
+                <Navbar.Start>
+                  <Text size='regular' weight='medium'>
+                    Explore
+                  </Text>
+                </Navbar.Start>
+                <Navbar.End>
+                  <Search
+                    placeholder='Search an AOI'
+                    value={search1}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setSearch1(e.target.value)
+                    }
+                    onClear={() => setSearch1('')}
+                    size='small'
+                    style={{ width: '200px' }}
+                  />
+                  <Button
+                    variant='outline'
+                    size='small'
+                    leadingIcon={<FilterIcon />}
+                  >
+                    Draw AOI
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='small'
+                    leadingIcon={<OrganizationIcon />}
+                  >
+                    Upload AOI
+                  </Button>
+                </Navbar.End>
+              </Navbar>
+            </Flex>
+
+            <Flex direction='column' gap={2}>
+              <Text size='small'>Sticky Navbar:</Text>
+              <Navbar sticky>
+                <Navbar.Start>
+                  <Text size='regular' weight='medium'>
+                    Sticky Navigation
+                  </Text>
+                </Navbar.Start>
+                <Navbar.End>
+                  <Button variant='ghost' size='small'>
+                    Home
+                  </Button>
+                  <Button variant='ghost' size='small'>
+                    About
+                  </Button>
+                  <Button variant='ghost' size='small'>
+                    Contact
+                  </Button>
+                </Navbar.End>
+              </Navbar>
+            </Flex>
+          </Flex>
 
           <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>
             <Search
@@ -1439,17 +1510,6 @@ const Page = () => {
                             <Text size='small'>
                               You can filter team members by:
                             </Text>
-                            <ul style={{ margin: 0, paddingLeft: '16px' }}>
-                              <li>
-                                <Text size='small'>Name</Text>
-                              </li>
-                              <li>
-                                <Text size='small'>Role</Text>
-                              </li>
-                              <li>
-                                <Text size='small'>Department</Text>
-                              </li>
-                            </ul>
                           </Flex>
                         </Popover.Content>
                       </Popover>
