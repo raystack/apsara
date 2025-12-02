@@ -1,34 +1,29 @@
-import { RootProvider } from "fumadocs-ui/provider";
-import { Inter } from "next/font/google";
-import type { ReactNode } from "react";
-import Navbar from "@/components/navbar";
-import "fumadocs-ui/style.css";
-import "@raystack/apsara/style.css";
-import "@/styles.css";
-import { ThemeProvider } from "@/components/theme";
+import { ThemeProvider } from '@/components/theme';
+import { NextProvider } from 'fumadocs-core/framework/next';
+import { Inter } from 'next/font/google';
+import type { ReactNode } from 'react';
+import '@/styles.css';
+import '@raystack/apsara/normalize.css';
+import '@raystack/apsara/style.css';
+import { ThemeProvider as NextThemeProvider } from 'next-themes';
+import styles from './layout.module.css';
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ['latin']
 });
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html lang='en' className={inter.className} suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/assets/logo.svg" sizes="any" />
+        <link rel='icon' href='/assets/logo.svg' sizes='any' />
       </head>
-      <body
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-        }}>
-        <RootProvider>
-          <ThemeProvider>
-            <Navbar />
-            {children}
-          </ThemeProvider>
-        </RootProvider>
+      <body className={styles.body}>
+        <NextProvider>
+          <NextThemeProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </NextThemeProvider>
+        </NextProvider>
       </body>
     </html>
   );

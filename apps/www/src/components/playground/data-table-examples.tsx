@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import PlaygroundLayout from "./playground-layout";
-import DataTableDemo from "../datatable-demo";
+import DataTableDemo from '../datatable-demo';
+import PlaygroundLayout from './playground-layout';
 
 export function DataTableExamples() {
   return (
-    <PlaygroundLayout title="DataTable">
+    <PlaygroundLayout title='DataTable'>
       <DataTableDemo />
     </PlaygroundLayout>
   );

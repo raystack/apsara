@@ -12,3 +12,7 @@
 .editor [data-radix-scroll-area-viewport] {
   overscroll-behavior: auto;
 }
+.code {
+  padding-left: var(--rs-space-3);
+  padding-bottom: var(--rs-space-6);
+}

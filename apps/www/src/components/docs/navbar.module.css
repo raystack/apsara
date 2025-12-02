@@ -1,0 +1,41 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--rs-space-4) var(--rs-space-7);
+  backdrop-filter: blur(1px);
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(1px);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary, #e8e8e8);
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: var(--rs-z-index-portal);
+  height: 50px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  flex-shrink: 0;
+}
+.actions button {
+  transition: none;
+}
+.breadcrumb-separator {
+  height: var(--rs-space-4);
+}

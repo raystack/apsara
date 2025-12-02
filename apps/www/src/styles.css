@@ -1,5 +1,6 @@
 * {
   overscroll-behavior: none;
+  box-sizing: border-box;
 }
 :root {
   --fd-nav-height: 53px !important;

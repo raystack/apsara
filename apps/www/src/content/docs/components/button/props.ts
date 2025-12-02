@@ -3,19 +3,19 @@ export type ButtonProps = {
    * Visual style variant
    * @defaultValue "solid"
    */
-  variant?: "solid" | "outline" | "ghost" | "text";
+  variant?: 'solid' | 'outline' | 'ghost' | 'text';
 
   /**
    * Color theme
    * @defaultValue "accent"
    */
-  color?: "accent" | "danger" | "neutral" | "success";
+  color?: 'accent' | 'danger' | 'neutral' | 'success';
 
   /**
    * Size of the button
    * @defaultValue "normal"
    */
-  size?: "small" | "normal";
+  size?: 'small' | 'normal';
 
   /**
    * Whether the button is disabled

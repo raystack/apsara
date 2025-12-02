@@ -1,23 +1,24 @@
-"use client";
+'use client';
 
-import { Button, Dialog, Flex } from "@raystack/apsara";
-import PlaygroundLayout from "./playground-layout";
+import { Button, Dialog, Flex } from '@raystack/apsara';
+import PlaygroundLayout from './playground-layout';
 
 export function DialogExamples() {
   return (
-    <PlaygroundLayout title="Dialog">
-      <Flex gap="medium">
+    <PlaygroundLayout title='Dialog'>
+      <Flex gap='medium'>
         <Dialog>
           <Dialog.Trigger asChild>
             <Button> Dialog</Button>
           </Dialog.Trigger>
           <Dialog.Content
-            width="400px"
+            width='400px'
             overlayBlur
-            overlayClassName="custom-overlay"
-            overlayStyle={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+            overlayClassName='custom-overlay'
+            overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          >
             <Dialog.Title>Custom Styled Dialog</Dialog.Title>
-            <Dialog.Description className="custom-description">
+            <Dialog.Description className='custom-description'>
               This dialog has custom width and overlay styling.
             </Dialog.Description>
             <Dialog.Close />
@@ -25,7 +26,7 @@ export function DialogExamples() {
         </Dialog>
         <Dialog>
           <Dialog.Trigger asChild>
-            <Button variant="outline">Open Dialog</Button>
+            <Button variant='outline'>Open Dialog</Button>
           </Dialog.Trigger>
           <Dialog.Content width={600} close={false}>
             <Dialog.Title>No Close Button</Dialog.Title>

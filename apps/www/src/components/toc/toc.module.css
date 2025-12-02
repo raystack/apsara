@@ -1,0 +1,143 @@
+.container {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+}
+
+.inner {
+  position: absolute;
+  inset: 0;
+}
+
+.tickContainer {
+  position: absolute;
+  right: 1rem;
+  display: grid;
+  width: 6rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.tickLine {
+  height: 1px;
+  width: 0.5rem;
+  transition: all 100ms;
+}
+
+.tickLineBefore {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tickLineAfter {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.tickContainer:hover .tickLine {
+  width: 1rem;
+}
+
+.tickClickable {
+  position: absolute;
+  inset-inline: 0;
+  height: 0.5rem;
+  cursor: pointer;
+}
+
+.headingContainer {
+  transition: transform 150ms;
+}
+
+.headingContainer:hover {
+  transform: translateX(-0.125rem);
+}
+
+.headingLabel {
+  position: absolute;
+  display: flex;
+  height: 0.75rem;
+  align-items: center;
+  font-family: var(--rs-font-mono);
+  font-size: 0.75rem;
+  color: black;
+  text-transform: capitalize;
+  opacity: 0;
+  transition: opacity 300ms;
+}
+.headingLink {
+  color: var(--rs-color-foreground-accent-primary);
+  text-align: right;
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  text-decoration: none;
+}
+
+.container:hover .headingLabel {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .headingLabel {
+    opacity: 1;
+  }
+}
+
+.headingLink {
+  cursor: pointer;
+}
+
+.headingLink:hover {
+  color: var(--rs-color-cobalt-600, #0066cc);
+}
+
+.connectingLine {
+  position: absolute;
+  right: 1rem;
+  height: 1px;
+  background-color: black;
+}
+
+.scrollMarkerContainer {
+  position: absolute;
+  right: 1rem;
+  z-index: 20;
+  transition: opacity 300ms;
+}
+
+.scrollMarkerContainerReady {
+  opacity: 1;
+}
+
+.scrollMarkerContainerNotReady {
+  opacity: 0;
+}
+
+.scrollMarkerLine {
+  height: 1px;
+  width: 1rem;
+  background-color: var(--rs-color-cobalt-600, #0066cc);
+}
+
+.scrollMarkerText {
+  position: absolute;
+  top: 0;
+  left: -2.5rem;
+  transform: translateY(-50%);
+  font-family: var(--rs-font-mono);
+  font-size: 0.75rem;
+  color: var(--rs-color-cobalt-600, #0066cc);
+  transition: opacity 300ms;
+}
+
+.container:hover .scrollMarkerText {
+  opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .scrollMarkerText {
+    opacity: 0;
+  }
+}

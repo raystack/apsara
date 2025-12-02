@@ -18,6 +18,8 @@ dist
 .DS_Store
 *.pem
 
+www-old/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
