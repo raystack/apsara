@@ -38,6 +38,7 @@ export { InputField } from './components/input-field';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
+export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
 export { Radio } from './components/radio';
 export { Search } from './components/search';

@@ -1,0 +1,82 @@
+---
+title: Navbar
+description: A horizontal navigation bar component with flexible left and right sections for building site headers and navigation.
+---
+
+import {
+  preview,
+  stickyDemo,
+  sectionsDemo,
+  accessibilityDemo,
+} from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+```tsx
+import { Navbar } from "@raystack/apsara";
+```
+
+## Component Structure
+
+The Navbar component uses a composite pattern, providing modular sub-components for flexible navigation layouts:
+
+- `Navbar` - Root container that wraps the navigation bar
+- `Navbar.Start` - Left section container for brand, logo, or primary navigation
+- `Navbar.End` - Right section container for actions, search, or secondary navigation
+
+## Navbar Props
+
+<auto-type-table path="./props.ts" name="NavbarRootProps" />
+
+### Navbar.Start Props
+
+The start section is a container component that accepts all `div` props. It's commonly used for brand logos, primary navigation links, or page titles.
+
+<auto-type-table path="./props.ts" name="NavbarStartProps" />
+
+### Navbar.End Props
+
+The end section is a container component that accepts all `div` props. It's commonly used for search inputs, action buttons, user menus, or secondary navigation.
+
+<auto-type-table path="./props.ts" name="NavbarEndProps" />
+
+## Examples
+
+### Sticky Navigation
+
+The Navbar can be made sticky to remain visible at the top of the viewport when scrolling.
+
+<Demo data={stickyDemo} />
+
+### Section Layouts
+
+You can use either or both sections depending on your needs. The sections automatically position themselves with proper spacing.
+
+<Demo data={sectionsDemo} />
+
+### Accessibility
+
+The Navbar supports custom ARIA labels for better screen reader support. You can provide descriptive labels for the entire navbar or individual sections.
+
+<Demo data={accessibilityDemo} />
+
+## Accessibility
+
+The Navbar implements the following accessibility features:
+
+- Proper ARIA roles and attributes
+  - `role="navigation"` for the main navbar
+  - `role="group"` for Start and End sections when `aria-label` is provided
+  - Customizable `aria-label` and `aria-labelledby` support
+
+- Semantic HTML
+  - Uses `<nav>` element for proper navigation landmark
+  - Maintains proper heading hierarchy when using `aria-labelledby`
+
+- Screen reader support
+  - Meaningful labels for all sections
+  - Clear structure for assistive technologies
+  - Support for linking to visible headings via `aria-labelledby`
+
