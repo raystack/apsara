@@ -57,10 +57,21 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
             height: 'calc(100vh - 50px)',
             position: 'sticky',
             top: '50px',
-            padding: '40px 0'
+            padding: '40px 0',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
         >
-          <TableOfContents headings={page.data.toc} />
+          <div
+            style={{
+              width: '100%',
+              height: '70vh'
+            }}
+          >
+            <TableOfContents headings={page.data.toc} />
+          </div>
         </aside>
       </Flex>
     </Flex>
