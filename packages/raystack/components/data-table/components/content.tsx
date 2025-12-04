@@ -160,12 +160,23 @@ const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
   }
 );
 
-const DefaultEmptyComponent = () => (
-  <EmptyState icon={<TableIcon />} heading='No Data' />
+const DefaultEmptyComponent = ({
+  isZeroState = false,
+  isError = false
+}: {
+  isZeroState?: boolean;
+  isError?: boolean;
+}) => (
+  <EmptyState
+    icon={<TableIcon />}
+    heading={isError ? 'Something went wrong' : 'No Data'}
+    variant={isZeroState ? 'empty2' : 'empty1'}
+  />
 );
 
 export function Content({
   emptyState,
+  errorState,
   classNames = {}
 }: DataTableContentProps) {
   const {
@@ -174,11 +185,32 @@ export function Content({
     mode,
     isLoading,
     loadMoreData,
-    loadingRowCount = 3
+    loadingRowCount = 3,
+    data,
+    tableQuery,
+    error
   } = useDataTable();
   const headerGroups = table?.getHeaderGroups();
   const rowModel = table?.getRowModel();
   const { rows = [] } = rowModel || {};
+
+  // Check if we're in zero state: no data, not loading, no filters with values, no search
+  const hasFilters =
+    tableQuery?.filters &&
+    tableQuery.filters.length > 0 &&
+    tableQuery.filters.some(
+      filter => filter.value !== '' && filter.value != null
+    );
+  const hasSearch = tableQuery?.search && tableQuery.search.trim() !== '';
+  const isZeroState =
+    data.length === 0 && !isLoading && !hasFilters && !hasSearch && !error;
+
+  // Check if we're in empty state (after filter/search): has filters/search but no rows
+  const isEmptyState =
+    (hasFilters || hasSearch) && rows.length === 0 && !isLoading && !error;
+
+  // Check if we're in error state
+  const isErrorState = !!error;
 
   const lastRowRef = useRef<HTMLTableRowElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -218,12 +250,17 @@ export function Content({
 
   const visibleColumnsLength = table.getVisibleLeafColumns().length;
 
-  const hasData = rows?.length > 0 || isLoading;
+  // Show data if we have rows or are loading (but not in error state)
+  const hasData = (rows?.length > 0 || isLoading) && !isErrorState;
+
+  // Hide header in all three scenarios: zero state, empty state (after filter/search), and error state
+  const shouldShowHeader =
+    hasData && !isZeroState && !isEmptyState && !isErrorState;
 
   return (
     <div className={classNames.root}>
       <Table className={classNames.table}>
-        {hasData && (
+        {shouldShowHeader && (
           <Headers headerGroups={headerGroups} className={classNames.header} />
         )}
         <Table.Body className={classNames.body}>
@@ -250,7 +287,19 @@ export function Content({
                 colSpan={visibleColumnsLength}
                 className={styles.emptyStateCell}
               >
-                {emptyState || <DefaultEmptyComponent />}
+                {isErrorState
+                  ? errorState || (
+                      <DefaultEmptyComponent
+                        isZeroState={false}
+                        isError={true}
+                      />
+                    )
+                  : emptyState || (
+                      <DefaultEmptyComponent
+                        isZeroState={isZeroState}
+                        isError={false}
+                      />
+                    )}
               </Table.Cell>
             </Table.Row>
           )}

@@ -2108,7 +2108,11 @@ const Page = () => {
           </Text>
 
           <Flex direction='column' gap={6}>
+            {/* Example with data */}
             <Flex direction='column' gap={3}>
+              <Text size={4} weight='medium'>
+                DataTable with Data
+              </Text>
               <DataTable
                 data={[
                   {
@@ -2163,7 +2167,18 @@ const Page = () => {
               </DataTable>
             </Flex>
 
+            {/* Scenario 1: Zero State - No data fetched, no filters/search */}
             <Flex direction='column' gap={3}>
+              <Text size={4} weight='medium'>
+                Scenario 1: Zero State
+              </Text>
+              <Text
+                size='small'
+                style={{ color: 'var(--rs-color-foreground-base-secondary)' }}
+              >
+                No data fetched, filter bar hidden, empty state
+                variant=&apos;empty2&apos; (left-aligned)
+              </Text>
               <DataTable
                 data={[]}
                 columns={[
@@ -2191,8 +2206,141 @@ const Page = () => {
                   emptyState={
                     <EmptyState
                       icon={<FilterIcon />}
+                      heading='No data available'
+                      subHeading='Get started by adding your first item to see it appear here.'
+                      variant='empty2'
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
+
+            {/* Scenario 2: Empty State - Data present but no matches after filter/search */}
+            <Flex direction='column' gap={3}>
+              <Text size={4} weight='medium'>
+                Scenario 2: Empty State (After Filter/Search)
+              </Text>
+              <Text
+                size='small'
+                style={{ color: 'var(--rs-color-foreground-base-secondary)' }}
+              >
+                Initial data present but no matches after filter/search, filter
+                bar visible, empty state variant=&apos;empty1&apos;
+                (center-aligned)
+              </Text>
+              <Text
+                size='small'
+                style={{ color: 'var(--rs-color-foreground-base-secondary)' }}
+              >
+                Note: Apply a filter or search that returns no results to see
+                this state
+              </Text>
+              <DataTable
+                data={[
+                  {
+                    id: '1',
+                    name: 'John Doe',
+                    email: 'john@example.com',
+                    role: 'Admin'
+                  },
+                  {
+                    id: '2',
+                    name: 'Jane Smith',
+                    email: 'jane@example.com',
+                    role: 'User'
+                  },
+                  {
+                    id: '3',
+                    name: 'Bob Johnson',
+                    email: 'bob@example.com',
+                    role: 'User'
+                  }
+                ]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Content
+                  emptyState={
+                    <EmptyState
+                      icon={<FilterIcon />}
                       heading='No users found'
                       subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
+                      variant='empty1'
+                      primaryAction={
+                        <Button variant='solid' color='accent'>
+                          Retry
+                        </Button>
+                      }
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
+
+            {/* Scenario 3: Error State - API call fails */}
+            <Flex direction='column' gap={3}>
+              <Text size={4} weight='medium'>
+                Scenario 3: Error State
+              </Text>
+              <Text
+                size='small'
+                style={{ color: 'var(--rs-color-foreground-base-secondary)' }}
+              >
+                API call fails or error occurs, filter bar hidden, empty state
+                variant=&apos;empty1&apos; (center-aligned)
+              </Text>
+              <DataTable<
+                { id: string; name: string; email: string; role: string },
+                unknown
+              >
+                data={[]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+                error='Failed to load data. Please try again later.'
+              >
+                <DataTable.Toolbar />
+                <DataTable.Content
+                  errorState={
+                    <EmptyState
+                      icon={<FilterIcon />}
+                      heading='Something went wrong'
+                      subHeading='We encountered an error while loading the data. Please try again later or contact support if the problem persists.'
+                      variant='empty1'
                     />
                   }
                 />

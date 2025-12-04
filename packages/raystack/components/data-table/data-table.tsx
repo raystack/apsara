@@ -43,7 +43,8 @@ function DataTableRoot<TData, TValue>({
   children,
   onTableQueryChange,
   onLoadMore,
-  onRowClick
+  onRowClick,
+  error
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableQuery = getDefaultTableQuery(defaultSort, query);
   const initialColumnVisibility = getInitialColumnVisibility(columns);
@@ -146,7 +147,9 @@ function DataTableRoot<TData, TValue>({
       onDisplaySettingsReset,
       defaultSort,
       loadingRowCount,
-      onRowClick
+      onRowClick,
+      data,
+      error
     };
   }, [
     table,
@@ -159,7 +162,9 @@ function DataTableRoot<TData, TValue>({
     onDisplaySettingsReset,
     defaultSort,
     loadingRowCount,
-    onRowClick
+    onRowClick,
+    data,
+    error
   ]);
 
   return (

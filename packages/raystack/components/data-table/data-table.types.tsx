@@ -103,10 +103,12 @@ export interface DataTableProps<TData, TValue> {
   defaultSort: DataTableSort;
   onLoadMore?: () => Promise<void>;
   onRowClick?: (row: TData) => void;
+  error?: Error | string | null;
 }
 
 export type DataTableContentProps = {
   emptyState?: React.ReactNode;
+  errorState?: React.ReactNode;
   classNames?: {
     root?: string;
     table?: string;
@@ -130,6 +132,8 @@ export type TableContextType<TData, TValue> = {
   onDisplaySettingsReset: () => void;
   updateTableQuery: (fn: TableQueryUpdateFn) => void;
   onRowClick?: (row: TData) => void;
+  data: TData[];
+  error?: Error | string | null;
 };
 
 export interface ColumnData {
