@@ -2155,7 +2155,7 @@ const Page = () => {
                   emptyState={
                     <EmptyState
                       icon={<FilterIcon />}
-                      heading='No users foundss'
+                      heading='No users found'
                       subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
                     />
                   }
