@@ -2263,6 +2263,171 @@ const Page = () => {
                 />
               </DataTable>
             </Flex>
+
+            <Flex direction='column' gap={3}>
+              <Text size={3} weight='medium'>
+                Search Auto-Disable in Zero State (Default)
+              </Text>
+              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                Search is automatically disabled when no data and no
+                filters/search are applied
+              </Text>
+              <DataTable
+                data={[]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Search />
+                <DataTable.Content
+                  zeroState={
+                    <EmptyState
+                      icon={<OrganizationIcon />}
+                      heading='No users yet'
+                      subHeading='Search is disabled in zero state by default.'
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
+
+            <Flex direction='column' gap={3}>
+              <Text size={3} weight='medium'>
+                Search Override (Always Enabled)
+              </Text>
+              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                Override auto-disable behavior with autoDisableInZeroState prop.
+                Note: When you start typing, the filter bar will appear
+                (transitioning from zero state to empty state).
+              </Text>
+              <DataTable
+                data={[]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Search autoDisableInZeroState={false} />
+                <DataTable.Content
+                  zeroState={
+                    <EmptyState
+                      icon={<OrganizationIcon />}
+                      heading='No users yet'
+                      subHeading='Search is enabled even in zero state when override is set. Start typing to see the filter bar appear.'
+                    />
+                  }
+                  emptyState={
+                    <EmptyState
+                      icon={<FilterIcon />}
+                      heading='No users found'
+                      subHeading='Filter bar is now visible because search is applied (empty state).'
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
+
+            <Flex direction='column' gap={3}>
+              <Text size={3} weight='medium'>
+                Search Enabled with Data
+              </Text>
+              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                Search is automatically enabled when data exists
+              </Text>
+              <DataTable
+                data={[
+                  {
+                    id: '1',
+                    name: 'John Doe',
+                    email: 'john@example.com',
+                    role: 'Admin'
+                  },
+                  {
+                    id: '2',
+                    name: 'Jane Smith',
+                    email: 'jane@example.com',
+                    role: 'User'
+                  },
+                  {
+                    id: '3',
+                    name: 'Bob Johnson',
+                    email: 'bob@example.com',
+                    role: 'User'
+                  }
+                ]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Search />
+                <DataTable.Content
+                  zeroState={
+                    <EmptyState
+                      icon={<OrganizationIcon />}
+                      heading='No users yet'
+                      subHeading='Get started by creating your first user.'
+                    />
+                  }
+                  emptyState={
+                    <EmptyState
+                      icon={<FilterIcon />}
+                      heading='No users found'
+                      subHeading="We couldn't find any matches for that keyword or filter."
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
           </Flex>
 
           <Flex justify='center' style={{ marginTop: 40 }}>

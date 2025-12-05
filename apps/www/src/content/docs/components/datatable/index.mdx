@@ -209,6 +209,40 @@ onTableQueryChange={handleQueryChange}>
 </DataTable>
 ```
 
+### Using DataTable Search
+
+The `DataTable.Search` component provides search functionality that automatically integrates with the table query. By default, it is disabled in zero state (when no data and no filters/search applied).
+
+```tsx
+<DataTable
+  data={data}
+  columns={columns}
+  defaultSort={{ name: "name", order: "asc" }}>
+  <DataTable.Search />
+  <DataTable.Content />
+</DataTable>
+```
+
+#### Search Auto-Disable Behavior
+
+By default, `DataTable.Search` is automatically disabled in zero state to provide a better user experience. You can override this behavior:
+
+```tsx
+// Default: disabled in zero state
+<DataTable.Search />
+
+// Override: always enabled
+<DataTable.Search autoDisableInZeroState={false} />
+
+// Manual control: explicitly disable
+<DataTable.Search disabled={true} />
+```
+
+The search will be automatically enabled when:
+- Data exists in the table
+- Filters are applied
+- A search query is already present
+
 ### Empty States
 
 The DataTable supports two types of empty states to provide better user experience:

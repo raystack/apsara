@@ -5,9 +5,21 @@ import { Search } from '../../search';
 import { SearchProps } from '../../search/search';
 import { useDataTable } from '../hooks/useDataTable';
 
-export const TableSearch = forwardRef<HTMLInputElement, SearchProps>(
-  ({ ...props }, ref) => {
-    const { updateTableQuery, tableQuery } = useDataTable();
+export interface DataTableSearchProps extends SearchProps {
+  /**
+   * Automatically disable search in zero state (when no data and no filters/search applied).
+   * @defaultValue true
+   */
+  autoDisableInZeroState?: boolean;
+}
+
+export const TableSearch = forwardRef<HTMLInputElement, DataTableSearchProps>(
+  ({ autoDisableInZeroState = true, disabled, ...props }, ref) => {
+    const {
+      updateTableQuery,
+      tableQuery,
+      shouldShowFilters = true
+    } = useDataTable();
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
@@ -28,6 +40,10 @@ export const TableSearch = forwardRef<HTMLInputElement, SearchProps>(
       });
     };
 
+    // Auto-disable in zero state if enabled, but allow manual override
+    const isDisabled =
+      disabled ?? (autoDisableInZeroState && !shouldShowFilters);
+
     return (
       <Search
         {...props}
@@ -35,7 +51,10 @@ export const TableSearch = forwardRef<HTMLInputElement, SearchProps>(
         onChange={handleSearch}
         value={tableQuery?.search}
         onClear={handleClear}
+        disabled={isDisabled}
       />
     );
   }
 );
+
+TableSearch.displayName = 'TableSearch';
