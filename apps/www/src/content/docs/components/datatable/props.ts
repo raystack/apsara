@@ -9,7 +9,7 @@ export interface DataTableProps {
    * Data processing mode
    * @defaultValue "client"
    */
-  mode?: "client" | "server";
+  mode?: 'client' | 'server';
 
   /**
    * Loading state
@@ -38,7 +38,7 @@ export interface DataTableQuery {
   }>;
   sort?: Array<{
     key: string;
-    order: "asc" | "desc";
+    order: 'asc' | 'desc';
   }>;
   group_by?: string[];
   search?: string;
@@ -52,7 +52,7 @@ export interface DataTableColumnDef<TData, TValue> {
   header: string;
 
   /** Data type */
-  columnType: "text" | "number" | "date" | "select";
+  columnType: 'text' | 'number' | 'date' | 'select';
 
   /** Enable sorting */
   enableSorting?: boolean;
@@ -71,4 +71,27 @@ export interface DataTableColumnDef<TData, TValue> {
 
   /** Hide column by default */
   defaultHidden?: boolean;
+}
+
+export interface DataTableContentProps {
+  /**
+   * Custom empty state shown when initial data exists but no results match after filters/search.
+   * Filter bar remains visible in this state.
+   */
+  emptyState?: React.ReactNode;
+
+  /**
+   * Custom zero state shown when no data has been fetched initially (no filters/search applied).
+   * Filter bar is automatically hidden in this state.
+   */
+  zeroState?: React.ReactNode;
+
+  /** Custom class names for styling */
+  classNames?: {
+    root?: string;
+    table?: string;
+    header?: string;
+    body?: string;
+    row?: string;
+  };
 }
