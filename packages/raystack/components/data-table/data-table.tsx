@@ -134,6 +134,20 @@ function DataTableRoot<TData, TValue>({
     }
   }, [searchQuery]);
 
+  // Determine if filters should be visible
+  // Filters should be visible if there is data OR if filters/search are applied (empty state)
+  // Filters should NOT be visible if no data AND no filters/search (zero state)
+  const shouldShowFilters = useMemo(() => {
+    const hasFiltersOrSearch =
+      (tableQuery?.filters && tableQuery.filters.length > 0) ||
+      Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
+
+    const rowModel = table.getRowModel();
+    const hasData = (rowModel?.rows?.length ?? 0) > 0;
+
+    return hasData || hasFiltersOrSearch;
+  }, [table, tableQuery]);
+
   const contextValue: TableContextType<TData, TValue> = useMemo(() => {
     return {
       table,
@@ -146,7 +160,8 @@ function DataTableRoot<TData, TValue>({
       onDisplaySettingsReset,
       defaultSort,
       loadingRowCount,
-      onRowClick
+      onRowClick,
+      shouldShowFilters
     };
   }, [
     table,
@@ -159,7 +174,8 @@ function DataTableRoot<TData, TValue>({
     onDisplaySettingsReset,
     defaultSort,
     loadingRowCount,
-    onRowClick
+    onRowClick,
+    shouldShowFilters
   ]);
 
   return (

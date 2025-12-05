@@ -2198,6 +2198,71 @@ const Page = () => {
                 />
               </DataTable>
             </Flex>
+            <Flex direction='column' gap={3}>
+              <Text size={3} weight='medium'>
+                Zero State with Custom Content
+              </Text>
+              <DataTable
+                data={[]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Content
+                  zeroState={
+                    <Flex
+                      direction='column'
+                      gap={4}
+                      align='center'
+                      style={{ padding: '40px' }}
+                    >
+                      <OrganizationIcon
+                        width={48}
+                        height={48}
+                        style={{ opacity: 0.5 }}
+                      />
+                      <Flex direction='column' gap={2} align='center'>
+                        <Text size={4} weight='medium'>
+                          No data available
+                        </Text>
+                        <Text
+                          size={2}
+                          style={{ color: 'var(--rs-color-text-subtle)' }}
+                        >
+                          There are no users in the system. Create your first
+                          user to get started.
+                        </Text>
+                      </Flex>
+                      <Button size='small'>Create User</Button>
+                    </Flex>
+                  }
+                  emptyState={
+                    <EmptyState
+                      icon={<FilterIcon />}
+                      heading='No matches found'
+                      subHeading='Try adjusting your filters or search query.'
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
           </Flex>
 
           <Flex justify='center' style={{ marginTop: 40 }}>
