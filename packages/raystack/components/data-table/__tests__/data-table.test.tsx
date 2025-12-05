@@ -151,4 +151,264 @@ describe('DataTable', () => {
       expect(screen.getByLabelText('Search')).toBeInTheDocument();
     });
   });
+
+  describe('Zero State and Empty State', () => {
+    const columnsWithFilters: DataTableColumnDef<TestData, unknown>[] = [
+      {
+        id: 'name',
+        accessorKey: 'name',
+        header: 'Name',
+        cell: ({ getValue }) => getValue(),
+        enableColumnFilter: true
+      },
+      {
+        id: 'email',
+        accessorKey: 'email',
+        header: 'Email',
+        cell: ({ getValue }) => getValue(),
+        enableColumnFilter: true
+      },
+      {
+        id: 'status',
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ getValue }) => getValue(),
+        enableColumnFilter: true
+      }
+    ];
+
+    it('shows zero state when no data and no filters/search applied', () => {
+      const zeroStateText = 'No data available';
+      render(
+        <DataTable
+          data={[]}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content
+            zeroState={<div data-testid='zero-state'>{zeroStateText}</div>}
+            emptyState={<div data-testid='empty-state'>No results found</div>}
+          />
+        </DataTable>
+      );
+
+      expect(screen.getByTestId('zero-state')).toBeInTheDocument();
+      expect(screen.getByText(zeroStateText)).toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state')).not.toBeInTheDocument();
+    });
+
+    it('hides filter bar in zero state (no data, no filters/search)', () => {
+      const { container } = render(
+        <DataTable
+          data={[]}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content zeroState={<div>No data</div>} />
+        </DataTable>
+      );
+
+      // Toolbar should not be rendered when shouldShowFilters is false
+      expect(
+        container.querySelector(`div.${styles.toolbar}`)
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows empty state when filters are applied but no results', () => {
+      const emptyStateText = 'No results found';
+
+      // Apply a filter that will result in no matches using ilike operator
+      render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            filters: [
+              {
+                name: 'name',
+                operator: 'ilike',
+                value: 'NonExistentName',
+                stringValue: '%NonExistentName%'
+              }
+            ]
+          }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content
+            zeroState={<div data-testid='zero-state'>No data</div>}
+            emptyState={<div data-testid='empty-state'>{emptyStateText}</div>}
+          />
+        </DataTable>
+      );
+
+      // After applying filter with no matches, empty state should show
+      expect(screen.getByTestId('empty-state')).toBeInTheDocument();
+      expect(screen.getByText(emptyStateText)).toBeInTheDocument();
+      expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
+      // Data should not be visible
+      expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
+    });
+
+    it('shows filter bar when filters are applied (empty state scenario)', () => {
+      const { container } = render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            filters: [
+              {
+                name: 'name',
+                operator: 'ilike',
+                value: 'NonExistent',
+                stringValue: '%NonExistent%'
+              }
+            ]
+          }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content
+            zeroState={<div>No data</div>}
+            emptyState={<div>No results</div>}
+          />
+        </DataTable>
+      );
+
+      // Toolbar should be visible when filters are applied
+      expect(
+        container.querySelector(`div.${styles.toolbar}`)
+      ).toBeInTheDocument();
+    });
+
+    it('shows empty state when search is applied but no results', () => {
+      const emptyStateText = 'No search results';
+
+      render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            search: 'NonExistentSearchTerm'
+          }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content
+            zeroState={<div data-testid='zero-state'>No data</div>}
+            emptyState={<div data-testid='empty-state'>{emptyStateText}</div>}
+          />
+        </DataTable>
+      );
+
+      expect(screen.getByTestId('empty-state')).toBeInTheDocument();
+      expect(screen.getByText(emptyStateText)).toBeInTheDocument();
+      expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
+    });
+
+    it('shows filter bar when search is applied (empty state scenario)', () => {
+      const { container } = render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            search: 'test'
+          }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content
+            zeroState={<div>No data</div>}
+            emptyState={<div>No results</div>}
+          />
+        </DataTable>
+      );
+
+      // Toolbar should be visible when search is applied
+      expect(
+        container.querySelector(`div.${styles.toolbar}`)
+      ).toBeInTheDocument();
+    });
+
+    it('falls back to emptyState when zeroState is not provided', () => {
+      const emptyStateText = 'Fallback empty state';
+
+      render(
+        <DataTable
+          data={[]}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content
+            emptyState={<div data-testid='empty-state'>{emptyStateText}</div>}
+          />
+        </DataTable>
+      );
+
+      // Should show emptyState as fallback
+      expect(screen.getByTestId('empty-state')).toBeInTheDocument();
+      expect(screen.getByText(emptyStateText)).toBeInTheDocument();
+    });
+
+    it('falls back to default empty component when neither zeroState nor emptyState provided', () => {
+      render(
+        <DataTable
+          data={[]}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      // Should show default empty state
+      expect(screen.getByText('No Data')).toBeInTheDocument();
+    });
+
+    it('shows data normally when filters/search match results', () => {
+      render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            search: 'John'
+          }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content
+            zeroState={<div data-testid='zero-state'>No data</div>}
+            emptyState={<div data-testid='empty-state'>No results</div>}
+          />
+        </DataTable>
+      );
+
+      // Should show matching data, not empty state
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
+    });
+
+    it('shows filter bar when data exists', () => {
+      const { container } = render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      // Toolbar should be visible when data exists
+      expect(
+        container.querySelector(`div.${styles.toolbar}`)
+      ).toBeInTheDocument();
+    });
+  });
 });
