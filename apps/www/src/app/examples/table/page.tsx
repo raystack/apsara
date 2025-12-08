@@ -172,6 +172,18 @@ const Page = () => {
           ))}
         </DataTable>
       </Flex>
+      <Flex direction='column' gap={4}>
+        <DataTable
+          data={filteredData}
+          mode='server'
+          columns={columns}
+          query={tableQuery}
+          onTableQueryChange={setTableQuery}
+          defaultSort={{ name: 'email', order: 'asc' }}
+        >
+          <DataTable.DisplayControls />
+        </DataTable>
+      </Flex>
     </Flex>
   );
 };

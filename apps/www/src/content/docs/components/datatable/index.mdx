@@ -204,3 +204,18 @@ onTableQueryChange={handleQueryChange}>
     <DataTable.Filters />
 </DataTable>
 ```
+
+### Using DataTable Display Controls
+
+The `DataTable.DisplayControls` component can be used separately to display the display controls for custom views.
+
+```tsx
+<DataTable
+data={data}
+query={query}
+columns={columns}
+mode="server"
+onTableQueryChange={handleQueryChange}>
+  <DataTable.DisplayControls />
+</DataTable>
+```
