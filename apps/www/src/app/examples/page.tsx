@@ -2104,11 +2104,74 @@ const Page = () => {
             weight='medium'
             style={{ marginTop: '32px', marginBottom: '16px' }}
           >
-            DataTable Examples
+            DataTable - Zero State and Empty State Examples
           </Text>
 
           <Flex direction='column' gap={6}>
             <Flex direction='column' gap={3}>
+              <Text size={3} weight='medium'>
+                Zero State - No Data, No Filters/Search
+              </Text>
+              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                Filter bar is hidden, search is disabled. Shows zeroState when
+                no data is fetched initially.
+              </Text>
+              <DataTable
+                data={[]}
+                columns={[
+                  {
+                    accessorKey: 'name',
+                    header: 'Name',
+                    enableColumnFilter: true,
+                    filterType: 'string'
+                  },
+                  {
+                    accessorKey: 'email',
+                    header: 'Email',
+                    enableColumnFilter: true,
+                    filterType: 'string'
+                  },
+                  {
+                    accessorKey: 'role',
+                    header: 'Role',
+                    enableColumnFilter: true,
+                    filterType: 'string'
+                  }
+                ]}
+                mode='client'
+                defaultSort={{ name: 'name', order: 'asc' }}
+              >
+                <DataTable.Toolbar />
+                <DataTable.Search />
+                <DataTable.Content
+                  zeroState={
+                    <EmptyState
+                      icon={<OrganizationIcon />}
+                      heading='Zero state'
+                      variant='empty2'
+                      subHeading='Get started by creating your first user. Filter bar and search are hidden in zero state.'
+                    />
+                  }
+                  emptyState={
+                    <EmptyState
+                      icon={<FilterIcon />}
+                      heading='Empty state'
+                      variant='empty1'
+                      subHeading="We couldn't find any matches for that keyword or filter."
+                    />
+                  }
+                />
+              </DataTable>
+            </Flex>
+
+            <Flex direction='column' gap={3}>
+              <Text size={3} weight='medium'>
+                Empty State - Filters Applied, No Results
+              </Text>
+              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                Filter bar is visible, search is enabled. Shows emptyState when
+                filters are applied but no results match.
+              </Text>
               <DataTable
                 data={[
                   {
@@ -2134,29 +2197,47 @@ const Page = () => {
                   {
                     accessorKey: 'name',
                     header: 'Name',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'email',
                     header: 'Email',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'role',
                     header: 'Role',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'select',
+                    filterOptions: [
+                      { value: 'Admin', label: 'Admin' },
+                      { value: 'User', label: 'User' },
+                      { value: 'Manager', label: 'Manager' }
+                    ]
                   }
                 ]}
                 mode='client'
                 defaultSort={{ name: 'name', order: 'asc' }}
               >
                 <DataTable.Toolbar />
+                <DataTable.Search />
                 <DataTable.Content
+                  zeroState={
+                    <EmptyState
+                      icon={<OrganizationIcon />}
+                      heading='zero state'
+                      variant='empty2'
+                      subHeading='Get started by creating your first user.'
+                    />
+                  }
                   emptyState={
                     <EmptyState
                       icon={<FilterIcon />}
-                      heading='No users found'
-                      subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
+                      heading='empty state'
+                      variant='empty1'
+                      subHeading="We couldn't find any matches for that filter. Try adjusting your filters or search query. Filter bar remains visible so you can modify filters."
                     />
                   }
                 />
@@ -2164,43 +2245,87 @@ const Page = () => {
             </Flex>
 
             <Flex direction='column' gap={3}>
+              <Text size={3} weight='medium'>
+                Empty State - Search Applied, No Results (Filter Bar Hidden)
+              </Text>
+              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                Filter bar stays hidden when only search is applied (no
+                filters). Search is enabled. Shows emptyState.
+              </Text>
               <DataTable
-                data={[]}
+                data={[
+                  {
+                    id: '1',
+                    name: 'John Doe',
+                    email: 'john@example.com',
+                    role: 'Admin'
+                  },
+                  {
+                    id: '2',
+                    name: 'Jane Smith',
+                    email: 'jane@example.com',
+                    role: 'User'
+                  },
+                  {
+                    id: '3',
+                    name: 'Bob Johnson',
+                    email: 'bob@example.com',
+                    role: 'User'
+                  }
+                ]}
                 columns={[
                   {
                     accessorKey: 'name',
                     header: 'Name',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'email',
                     header: 'Email',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'role',
                     header: 'Role',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   }
                 ]}
                 mode='client'
                 defaultSort={{ name: 'name', order: 'asc' }}
               >
                 <DataTable.Toolbar />
+                <DataTable.Search />
                 <DataTable.Content
+                  zeroState={
+                    <EmptyState
+                      icon={<OrganizationIcon />}
+                      heading='zero state'
+                      variant='empty2'
+                      subHeading='Get started by creating your first user.'
+                    />
+                  }
                   emptyState={
                     <EmptyState
                       icon={<FilterIcon />}
-                      heading='No users found'
-                      subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
+                      heading='empty state'
+                      variant='empty1'
+                      subHeading="We couldn't find any matches for that search. Try a different search term. Filter bar stays hidden when only search is applied."
                     />
                   }
                 />
               </DataTable>
             </Flex>
+
             <Flex direction='column' gap={3}>
               <Text size={3} weight='medium'>
                 Zero State with Custom Content
+              </Text>
+              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                Custom zeroState with action button. Filter bar and search are
+                hidden.
               </Text>
               <DataTable
                 data={[]}
@@ -2208,23 +2333,27 @@ const Page = () => {
                   {
                     accessorKey: 'name',
                     header: 'Name',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'email',
                     header: 'Email',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'role',
                     header: 'Role',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   }
                 ]}
                 mode='client'
                 defaultSort={{ name: 'name', order: 'asc' }}
               >
                 <DataTable.Toolbar />
+                <DataTable.Search />
                 <DataTable.Content
                   zeroState={
                     <Flex
@@ -2256,7 +2385,8 @@ const Page = () => {
                   emptyState={
                     <EmptyState
                       icon={<FilterIcon />}
-                      heading='No matches found'
+                      heading='empty state'
+                      variant='empty1'
                       subHeading='Try adjusting your filters or search query.'
                     />
                   }
@@ -2266,11 +2396,11 @@ const Page = () => {
 
             <Flex direction='column' gap={3}>
               <Text size={3} weight='medium'>
-                Search Auto-Disable in Zero State (Default)
+                Search Override - Always Enabled in Zero State
               </Text>
               <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
-                Search is automatically disabled when no data and no
-                filters/search are applied
+                Override auto-disable with autoDisableInZeroState={false}.
+                Filter bar stays hidden when only search is applied.
               </Text>
               <DataTable
                 data={[]}
@@ -2278,62 +2408,20 @@ const Page = () => {
                   {
                     accessorKey: 'name',
                     header: 'Name',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'email',
                     header: 'Email',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'role',
                     header: 'Role',
-                    enableColumnFilter: true
-                  }
-                ]}
-                mode='client'
-                defaultSort={{ name: 'name', order: 'asc' }}
-              >
-                <DataTable.Toolbar />
-                <DataTable.Search />
-                <DataTable.Content
-                  zeroState={
-                    <EmptyState
-                      icon={<OrganizationIcon />}
-                      heading='No users yet'
-                      subHeading='Search is disabled in zero state by default.'
-                    />
-                  }
-                />
-              </DataTable>
-            </Flex>
-
-            <Flex direction='column' gap={3}>
-              <Text size={3} weight='medium'>
-                Search Override (Always Enabled)
-              </Text>
-              <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
-                Override auto-disable behavior with autoDisableInZeroState prop.
-                Note: When you start typing, the filter bar will appear
-                (transitioning from zero state to empty state).
-              </Text>
-              <DataTable
-                data={[]}
-                columns={[
-                  {
-                    accessorKey: 'name',
-                    header: 'Name',
-                    enableColumnFilter: true
-                  },
-                  {
-                    accessorKey: 'email',
-                    header: 'Email',
-                    enableColumnFilter: true
-                  },
-                  {
-                    accessorKey: 'role',
-                    header: 'Role',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   }
                 ]}
                 mode='client'
@@ -2345,15 +2433,17 @@ const Page = () => {
                   zeroState={
                     <EmptyState
                       icon={<OrganizationIcon />}
-                      heading='No users yet'
-                      subHeading='Search is enabled even in zero state when override is set. Start typing to see the filter bar appear.'
+                      heading='zero state'
+                      variant='empty2'
+                      subHeading='Search is enabled even in zero state. Start typing to see empty state. Filter bar will only appear when filters are applied.'
                     />
                   }
                   emptyState={
                     <EmptyState
                       icon={<FilterIcon />}
-                      heading='No users found'
-                      subHeading='Filter bar is now visible because search is applied (empty state).'
+                      heading='empty state'
+                      variant='empty1'
+                      subHeading='Search applied but no results. Filter bar stays hidden when only search is used.'
                     />
                   }
                 />
@@ -2362,10 +2452,10 @@ const Page = () => {
 
             <Flex direction='column' gap={3}>
               <Text size={3} weight='medium'>
-                Search Enabled with Data
+                Normal State - Data Present
               </Text>
               <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
-                Search is automatically enabled when data exists
+                Filter bar and search are enabled when data exists.
               </Text>
               <DataTable
                 data={[
@@ -2392,17 +2482,20 @@ const Page = () => {
                   {
                     accessorKey: 'name',
                     header: 'Name',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'email',
                     header: 'Email',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   },
                   {
                     accessorKey: 'role',
                     header: 'Role',
-                    enableColumnFilter: true
+                    enableColumnFilter: true,
+                    filterType: 'string'
                   }
                 ]}
                 mode='client'
@@ -2414,14 +2507,16 @@ const Page = () => {
                   zeroState={
                     <EmptyState
                       icon={<OrganizationIcon />}
-                      heading='No users yet'
+                      heading='zero state'
+                      variant='empty2'
                       subHeading='Get started by creating your first user.'
                     />
                   }
                   emptyState={
                     <EmptyState
                       icon={<FilterIcon />}
-                      heading='No users found'
+                      heading='empty state'
+                      variant='empty1'
                       subHeading="We couldn't find any matches for that keyword or filter."
                     />
                   }

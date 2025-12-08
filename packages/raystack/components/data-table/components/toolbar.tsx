@@ -8,7 +8,7 @@ import { DisplaySettings } from './display-settings';
 import { Filters } from './filters';
 
 export function Toolbar<TData, TValue>({ className }: { className?: string }) {
-  const { shouldShowFilters = true } = useDataTable();
+  const { shouldShowFilters = false } = useDataTable();
 
   if (!shouldShowFilters) {
     return null;

@@ -18,7 +18,7 @@ export const TableSearch = forwardRef<HTMLInputElement, DataTableSearchProps>(
     const {
       updateTableQuery,
       tableQuery,
-      shouldShowFilters = true
+      shouldShowFilters = false
     } = useDataTable();
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +41,12 @@ export const TableSearch = forwardRef<HTMLInputElement, DataTableSearchProps>(
     };
 
     // Auto-disable in zero state if enabled, but allow manual override
+    // Once search is applied, keep it enabled (even if shouldShowFilters is false)
+    const hasSearch = Boolean(
+      tableQuery?.search && tableQuery.search.trim() !== ''
+    );
     const isDisabled =
-      disabled ?? (autoDisableInZeroState && !shouldShowFilters);
+      disabled ?? (autoDisableInZeroState && !shouldShowFilters && !hasSearch);
 
     return (
       <Search
