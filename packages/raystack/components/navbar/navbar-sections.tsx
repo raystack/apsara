@@ -5,7 +5,8 @@ import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { Flex } from '../flex';
 import styles from './navbar.module.css';
 
-export interface NavbarStartProps extends ComponentPropsWithoutRef<'div'> {}
+export interface NavbarStartProps
+  extends ComponentPropsWithoutRef<typeof Flex> {}
 
 export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
   ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (
@@ -25,7 +26,7 @@ export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
 
 NavbarStart.displayName = 'Navbar.Start';
 
-export interface NavbarEndProps extends ComponentPropsWithoutRef<'div'> {}
+export interface NavbarEndProps extends ComponentPropsWithoutRef<typeof Flex> {}
 
 export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
   ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (
