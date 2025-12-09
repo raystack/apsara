@@ -270,7 +270,7 @@ export default function TableOfContents({
   );
 
   // Don't render TOC if content is not scrollable
-  if (!isScrollable || !ticks.length) {
+  if (!isScrollable || ticks.length < 2) {
     return <div ref={containerRef} className={styles.container} />;
   }
 
