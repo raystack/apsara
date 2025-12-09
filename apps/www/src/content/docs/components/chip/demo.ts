@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
@@ -9,102 +9,102 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     variant: {
-      type: "select",
-      options: ["outline", "filled"],
-      defaultValue: "outline",
+      type: 'select',
+      options: ['outline', 'filled'],
+      defaultValue: 'outline'
     },
     size: {
-      type: "select",
-      options: ["small", "large"],
-      defaultValue: "small",
+      type: 'select',
+      options: ['small', 'large'],
+      defaultValue: 'small'
     },
     color: {
-      type: "select",
-      options: ["neutral", "accent"],
-      defaultValue: "neutral",
+      type: 'select',
+      options: ['neutral', 'accent'],
+      defaultValue: 'neutral'
     },
     isDismissible: {
-      type: "checkbox",
-      defaultValue: false,
+      type: 'checkbox',
+      defaultValue: false
     },
     children: {
-      type: "text",
-      initialValue: "My Chip",
+      type: 'text',
+      initialValue: 'My Chip'
     },
-    leadingIcon: { type: "icon" },
-    trailingIcon: { type: "icon" },
+    leadingIcon: { type: 'icon' },
+    trailingIcon: { type: 'icon' }
   },
-  getCode,
+  getCode
 };
 
 export const variantsDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <Chip variant="outline">Outline</Chip>
     <Chip variant="filled">Filled</Chip>
-  </Flex>`,
+  </Flex>`
 };
 
 export const sizesDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <Chip size="small">Small</Chip>
     <Chip size="large">Large</Chip>
-  </Flex>`,
+  </Flex>`
 };
 
 export const colorDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <Chip color="neutral" variant="outline">Outline</Chip>
     <Chip color="neutral" variant="filled">Filled</Chip>
     <Chip color="accent" variant="outline">Outline</Chip>
     <Chip color="accent" variant="filled">Filled</Chip>
-  </Flex>`,
+  </Flex>`
 };
 
 export const dismissableDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <Chip isDismissible onDismiss={() => alert('dismissed')} ariaLabel="Dismissible chip">Dismissable Chip</Chip>
     <Chip variant="outline" color="accent" isDismissible onDismiss={() => alert('dismissed')} ariaLabel="Dismissible chip">Dismissable Chip</Chip>
     <Chip variant="filled" color="accent" isDismissible onDismiss={() => alert('dismissed')} ariaLabel="Dismissible chip">Dismissable Chip</Chip>
-  </Flex>`,
+  </Flex>`
 };
 
 export const iconsDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Leading Icon",
+      name: 'Leading Icon',
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip leadingIcon={'O'}>Add Item</Chip>
         <Chip variant="filled" leadingIcon={'O'}>Selected</Chip>
-      </div>`,
+      </div>`
     },
     {
-      name: "Trailing Icon",
+      name: 'Trailing Icon',
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip trailingIcon={'O'}>Next</Chip>
         <Chip variant="filled" trailingIcon={'O'}>Open</Chip>
-      </div>`,
+      </div>`
     },
     {
-      name: "Both Icons",
+      name: 'Both Icons',
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip leadingIcon={'O'} trailingIcon={'O'}>Download</Chip>
         <Chip variant="filled" leadingIcon={'O'} trailingIcon={'O'}>Edit Profile</Chip>
-      </div>`,
-    },
-  ],
+      </div>`
+    }
+  ]
 };

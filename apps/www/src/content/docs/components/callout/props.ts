@@ -4,13 +4,13 @@ export interface CalloutProps {
    * @defaultValue "grey"
    */
   type?:
-    | "grey"
-    | "success"
-    | "alert"
-    | "gradient"
-    | "accent"
-    | "attention"
-    | "normal";
+    | 'grey'
+    | 'success'
+    | 'alert'
+    | 'gradient'
+    | 'accent'
+    | 'attention'
+    | 'normal';
 
   /**
    * Whether to show an outline border

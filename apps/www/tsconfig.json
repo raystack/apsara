@@ -13,7 +13,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "paths": {
       "react": ["node_modules/@types/react"],
@@ -31,6 +31,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+    "next.config.mjs",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]

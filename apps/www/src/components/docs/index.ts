@@ -1,1 +1,1 @@
-export { default as DocsBody } from "./docs-body";
+export { default as DocsBody } from './docs-body';

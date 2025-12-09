@@ -1,23 +1,24 @@
-"use client";
+'use client';
 
-import { Badge } from "@raystack/apsara";
-import { TagType } from "@/lib/types";
-import styles from "./tag.module.css";
-import { cx } from "class-variance-authority";
+import { TagType } from '@/lib/types';
+import { Badge } from '@raystack/apsara';
+import { cx } from 'class-variance-authority';
+import styles from './tag.module.css';
 
 interface TagProps {
   value: TagType;
-  size?: "small" | "regular";
+  size?: 'small' | 'regular';
 }
 
-export default function Tag({ value, size = "small" }: TagProps) {
+export default function Tag({ value, size = 'small' }: TagProps) {
   if (!value.length) return;
   return (
     <Badge
       screenReaderText={value}
-      size={size === "regular" ? "regular" : "micro"}
-      variant={value === "beta" ? "neutral" : "gradient"}
-      className={cx(styles.tag, styles[size])}>
+      size={size === 'regular' ? 'regular' : 'micro'}
+      variant={value === 'beta' ? 'neutral' : 'gradient'}
+      className={cx(styles.tag, styles[size])}
+    >
       {value.toUpperCase()}
     </Badge>
   );

@@ -9,13 +9,13 @@ export interface ImageProps {
    * Object-fit property
    * @default cover
    */
-  fit?: "contain" | "cover" | "fill";
+  fit?: 'contain' | 'cover' | 'fill';
 
   /**
    * Border radius style
    * @deafult none
    */
-  radius?: "none" | "small" | "medium" | "full";
+  radius?: 'none' | 'small' | 'medium' | 'full';
 
   /** URL of fallback image to show on error */
   fallback?: string;

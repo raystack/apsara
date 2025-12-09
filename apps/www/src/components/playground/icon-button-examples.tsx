@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { IconButton, Flex } from "@raystack/apsara";
-import { Info } from "lucide-react";
-import PlaygroundLayout from "./playground-layout";
+import { Flex, IconButton } from '@raystack/apsara';
+import { Info } from 'lucide-react';
+import PlaygroundLayout from './playground-layout';
 
 export function IconButtonExamples() {
   return (
-    <PlaygroundLayout title="IconButton">
-      <Flex gap="large" align="center" wrap="wrap">
+    <PlaygroundLayout title='IconButton'>
+      <Flex gap='large' align='center' wrap='wrap'>
         <IconButton size={1}>
           <Info size={16} />
         </IconButton>

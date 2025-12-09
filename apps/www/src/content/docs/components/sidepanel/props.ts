@@ -3,7 +3,7 @@ export interface SidePanelProps {
    * The side to position the panel.
    * @default "left"
    */
-  side?: "left" | "right";
+  side?: 'left' | 'right';
 
   /**
    * Content to render inside the side panel.

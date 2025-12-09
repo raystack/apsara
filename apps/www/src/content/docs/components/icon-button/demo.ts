@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   const { children, ...rest } = props;
@@ -8,38 +8,38 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     size: {
-      type: "select",
+      type: 'select',
       options: [1, 2, 3, 4],
       defaultValue: 2,
-      initialValue: 4,
+      initialValue: 4
     },
-    disabled: { type: "checkbox", defaultValue: false },
+    disabled: { type: 'checkbox', defaultValue: false },
     children: {
-      type: "icon",
-      initialValue: "<Info size={16} />",
-    },
+      type: 'icon',
+      initialValue: '<Info size={16} />'
+    }
   },
-  getCode,
+  getCode
 };
 
 export const sizeDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large" align="center">
     <IconButton size={1}><Info size={16} /></IconButton>
     <IconButton size={2}><Info size={16} /></IconButton>
     <IconButton size={3}><Info size={16} /></IconButton>
     <IconButton size={4}><Info size={16} /></IconButton>
-  </Flex>`,
+  </Flex>`
 };
 export const stateDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="large">
     <IconButton size={4}><Info size={16} /></IconButton>
     <IconButton size={4} disabled><Info size={16} /></IconButton>
-  </Flex>`,
+  </Flex>`
 };

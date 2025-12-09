@@ -1,11 +1,19 @@
 import * as path from 'node:path';
 import { fileURLToPath } from 'url';
-import { TagSchema } from '@/lib/types';
-import { remarkInstall } from 'fumadocs-docgen';
+import { SourceSchema, TagSchema } from '@/lib/types';
+import {
+  rehypeToc,
+  remarkGfm,
+  remarkHeading,
+  remarkImage,
+  remarkNpm,
+  remarkStructure
+} from 'fumadocs-core/mdx-plugins';
 import {
   defineConfig,
   defineDocs,
-  frontmatterSchema
+  frontmatterSchema,
+  metaSchema
 } from 'fumadocs-mdx/config';
 import {
   GeneratorOptions,
@@ -28,13 +36,32 @@ export const docs = defineDocs({
   dir: 'src/content/docs',
   docs: {
     schema: frontmatterSchema.extend({
+      source: SourceSchema,
       tag: TagSchema
-    })
+    }),
+    postprocess: {
+      includeProcessedMarkdown: true
+    }
+  },
+  meta: {
+    schema: metaSchema
   }
 });
 
 export default defineConfig({
   mdxOptions: {
-    remarkPlugins: [remarkInstall, [remarkAutoTypeTable, { generator }]]
+    remarkPlugins: () => {
+      return [
+        remarkGfm,
+        [remarkHeading, { generateToc: false }],
+        [remarkImage, { useImport: undefined }],
+        // remarkCodeTab,
+        remarkNpm,
+        remarkStructure,
+        // remarkInstall,
+        [remarkAutoTypeTable, { generator }]
+      ];
+    },
+    rehypePlugins: () => [rehypeToc]
   }
 });

@@ -1,7 +1,5 @@
 import { createMDX } from 'fumadocs-mdx/next';
 
-const withMDX = createMDX();
-
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
@@ -11,11 +9,6 @@ const config = {
     // your project has type errors.
     // !! WARN !!
     ignoreBuildErrors: true
-  },
-  eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
-    ignoreDuringBuilds: true
   },
   experimental: {
     optimizePackageImports: ['shiki']
@@ -31,7 +24,19 @@ const config = {
         destination: '/llms.mdx/:path*'
       }
     ];
+  },
+  async redirects() {
+    // TODO: remove this once we have a proper home page
+    return [
+      {
+        source: '/',
+        destination: '/docs',
+        permanent: true
+      }
+    ];
   }
 };
+
+const withMDX = createMDX();
 
 export default withMDX(config);

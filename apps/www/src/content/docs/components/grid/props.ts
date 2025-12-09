@@ -10,7 +10,7 @@ export interface GridProps {
    * - "column": Items flow by column
    * - "dense": Attempts to fill in holes in the grid
    */
-  autoFlow?: "row" | "column" | "dense" | "row dense" | "column dense";
+  autoFlow?: 'row' | 'column' | 'dense' | 'row dense' | 'column dense';
 
   /**
    * Sets the size of auto-generated columns.
@@ -41,51 +41,51 @@ export interface GridProps {
   /**
    * Sets the gap between grid items.
    */
-  gap?: "extra-small" | "small" | "medium" | "large" | "extra-large";
+  gap?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
 
   /**
    * Sets the gap between grid columns.
    */
-  columnGap?: "extra-small" | "small" | "medium" | "large" | "extra-large";
+  columnGap?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
 
   /**
    * Sets the gap between grid rows.
    */
-  rowGap?: "extra-small" | "small" | "medium" | "large" | "extra-large";
+  rowGap?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
 
   /**
    * Aligns grid items along the inline (row) axis.
    */
-  justifyItems?: "start" | "end" | "center" | "stretch";
+  justifyItems?: 'start' | 'end' | 'center' | 'stretch';
 
   /**
    * Aligns grid items along the block (column) axis.
    */
-  alignItems?: "start" | "end" | "center" | "stretch";
+  alignItems?: 'start' | 'end' | 'center' | 'stretch';
 
   /**
    * Aligns the entire grid along the inline (row) axis.
    */
   justifyContent?:
-    | "start"
-    | "end"
-    | "center"
-    | "stretch"
-    | "space-around"
-    | "space-between"
-    | "space-evenly";
+    | 'start'
+    | 'end'
+    | 'center'
+    | 'stretch'
+    | 'space-around'
+    | 'space-between'
+    | 'space-evenly';
 
   /**
    * Aligns the entire grid along the block (column) axis.
    */
   alignContent?:
-    | "start"
-    | "end"
-    | "center"
-    | "stretch"
-    | "space-around"
-    | "space-between"
-    | "space-evenly";
+    | 'start'
+    | 'end'
+    | 'center'
+    | 'stretch'
+    | 'space-around'
+    | 'space-between'
+    | 'space-evenly';
 
   /**
    * Renders the grid as an inline element instead of a block element.
@@ -141,12 +141,12 @@ export interface GridItemProps {
   /**
    * Aligns the item along the inline (row) axis within its grid area.
    */
-  justifySelf?: "start" | "end" | "center" | "stretch";
+  justifySelf?: 'start' | 'end' | 'center' | 'stretch';
 
   /**
    * Aligns the item along the block (column) axis within its grid area.
    */
-  alignSelf?: "start" | "end" | "center" | "stretch";
+  alignSelf?: 'start' | 'end' | 'center' | 'stretch';
 
   /**
    * Merges the grid item's props with its child component.

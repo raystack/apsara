@@ -1,25 +1,25 @@
-"use client";
-import { AnnouncementBar, Flex } from "@raystack/apsara";
-import PlaygroundLayout from "./playground-layout";
+'use client';
+import { AnnouncementBar, Flex } from '@raystack/apsara';
+import PlaygroundLayout from './playground-layout';
 
 export function AnnouncementBarExamples() {
   return (
-    <PlaygroundLayout title="Announcement Bar">
-      <Flex gap="medium" direction="column">
+    <PlaygroundLayout title='Announcement Bar'>
+      <Flex gap='medium' direction='column'>
         <AnnouncementBar
-          variant="normal"
-          text="We have introduced a new feature"
-          actionLabel="Read More"
+          variant='normal'
+          text='We have introduced a new feature'
+          actionLabel='Read More'
         />
         <AnnouncementBar
-          variant="error"
-          text="We have introduced a new feature"
-          actionLabel="Read More"
+          variant='error'
+          text='We have introduced a new feature'
+          actionLabel='Read More'
         />
         <AnnouncementBar
-          variant="gradient"
-          text="We have introduced a new feature"
-          actionLabel="Read More"
+          variant='gradient'
+          text='We have introduced a new feature'
+          actionLabel='Read More'
         />
       </Flex>
     </PlaygroundLayout>

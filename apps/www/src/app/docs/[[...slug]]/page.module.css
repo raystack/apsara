@@ -1,16 +1,14 @@
-.title {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-.actions {
-  display: flex;
-  align-items: center;
+.content {
+  max-width: 806px;
+  padding: var(--rs-space-15) var(--rs-space-7);
+  width: 100%;
 }
 
-.container {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
+:global(.prose) {
+  gap: var(--rs-space-3);
+  color: var(--rs-color-foreground-base-secondary);
+  font-size: var(--rs-font-size-regular);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
 }

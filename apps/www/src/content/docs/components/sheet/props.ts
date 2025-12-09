@@ -8,7 +8,7 @@ export interface SheetProps {
 
 export interface SheetContentProps {
   /** The direction from which the sheet appears. */
-  side?: "top" | "right" | "bottom" | "left";
+  side?: 'top' | 'right' | 'bottom' | 'left';
 
   /** Whether to show the close button. */
   close?: boolean;

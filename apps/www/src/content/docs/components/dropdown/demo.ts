@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `
@@ -58,18 +58,18 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     autocomplete: {
-      type: "checkbox",
-      defaultValue: false,
-    },
+      type: 'checkbox',
+      defaultValue: false
+    }
   },
-  getCode,
+  getCode
 };
 
 export const basicDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <DropdownMenu>
     <DropdownMenu.Trigger asChild>
@@ -81,10 +81,10 @@ export const basicDemo = {
       <DropdownMenu.Separator />
       <DropdownMenu.Item>Logout</DropdownMenu.Item>
     </DropdownMenu.Content>
-  </DropdownMenu>`,
+  </DropdownMenu>`
 };
 export const iconsDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <DropdownMenu>
     <DropdownMenu.Trigger asChild>
@@ -96,11 +96,11 @@ export const iconsDemo = {
       <DropdownMenu.Separator />
       <DropdownMenu.Item leadingIcon={<>🗑️</>}>Delete</DropdownMenu.Item>
     </DropdownMenu.Content>
-  </DropdownMenu>`,
+  </DropdownMenu>`
 };
 
 export const customDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <DropdownMenu>
     <DropdownMenu.Trigger asChild>
@@ -119,14 +119,14 @@ export const customDemo = {
         <DropdownMenu.Item>Date</DropdownMenu.Item>
       </DropdownMenu.Group>
     </DropdownMenu.Content>
-  </DropdownMenu>`,
+  </DropdownMenu>`
 };
 
 export const autocompleteDemo = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Default Autocomplete",
+      name: 'Default Autocomplete',
       code: `
       <DropdownMenu autocomplete>
       <DropdownMenu.Trigger asChild>
@@ -174,10 +174,10 @@ export const autocompleteDemo = {
           Delete...
         </DropdownMenu.Item>
       </DropdownMenu.Content>
-    </DropdownMenu>`,
+    </DropdownMenu>`
     },
     {
-      name: "Manual Autocomplete",
+      name: 'Manual Autocomplete',
       code: `
       function ManualDemo(){
         const items = [
@@ -204,18 +204,18 @@ export const autocompleteDemo = {
                     ))}
                 </DropdownMenu.Content>
               </DropdownMenu>
-  }`,
-    },
-  ],
+  }`
+    }
+  ]
 };
 
 export const linearDemo = {
-  type: "code",
+  type: 'code',
   previewCode: false,
   code: `<LinearDropdownDemo />`,
   codePreview: [
     {
-      label: "index.tsx",
+      label: 'index.tsx',
       code: `function LinearDropdownDemo() {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -287,10 +287,10 @@ export const linearDemo = {
     </DropdownMenu>
   );
 }
-`,
+`
     },
     {
-      label: "utils.ts",
+      label: 'utils.ts',
       code: `function filterDropdownMenuItems(
   items: DropdownMenuItem[],
   query: string,
@@ -337,10 +337,10 @@ export const linearDemo = {
   }
 
   return results.slice(0, 8);
-}`,
+}`
     },
     {
-      label: "data.ts",
+      label: 'data.ts',
       code: `type DropdownMenuItem =
   | {
       type: "item";
@@ -441,7 +441,7 @@ const dropdownMenuData: DropdownMenuItem[] = [
       },
     ],
   },
-];`,
-    },
-  ],
+];`
+    }
+  ]
 };
