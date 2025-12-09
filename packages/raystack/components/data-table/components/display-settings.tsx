@@ -2,6 +2,7 @@
 
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 
+import { ReactNode } from 'react';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import { Popover } from '../../popover';
@@ -16,7 +17,22 @@ import { DisplayProperties } from './display-properties';
 import { Grouping } from './grouping';
 import { Ordering } from './ordering';
 
-export function DisplaySettings<TData, TValue>() {
+interface DisplaySettingsProps {
+  trigger?: ReactNode;
+}
+
+export function DisplaySettings<TData, TValue>({
+  trigger = (
+    <Button
+      variant='outline'
+      color='neutral'
+      size='small'
+      leadingIcon={<MixerHorizontalIcon />}
+    >
+      Display
+    </Button>
+  )
+}: DisplaySettingsProps) {
   const {
     table,
     updateTableQuery,
@@ -69,16 +85,7 @@ export function DisplaySettings<TData, TValue>() {
 
   return (
     <Popover>
-      <Popover.Trigger asChild>
-        <Button
-          variant='outline'
-          color='neutral'
-          size='small'
-          leadingIcon={<MixerHorizontalIcon />}
-        >
-          Display
-        </Button>
-      </Popover.Trigger>
+      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Content
         className={styles['display-popover-content']}
         align='end'

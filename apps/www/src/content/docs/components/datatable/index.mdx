@@ -24,6 +24,14 @@ import {
 
 <auto-type-table path="./props.ts" name="DataTableProps" />
 
+### DataTable.DisplayControls Props
+
+<auto-type-table path="./props.ts" name="DisplayControlsProps" />
+
+### DataTable.Filters Props
+
+<auto-type-table path="./props.ts" name="FiltersProps" />
+
 ## DataTableQuery Interface
 
 <auto-type-table path="./props.ts" name="DataTableQuery" />
@@ -31,6 +39,7 @@ import {
 ## DataTableColumn Interface
 
 <auto-type-table path="./props.ts" name="DataTableColumnDef" />
+
 
 ## Examples
 
@@ -202,5 +211,21 @@ columns={columns}
 mode="server"
 onTableQueryChange={handleQueryChange}>
     <DataTable.Filters />
+</DataTable>
+```
+
+### Using DataTable Display Controls
+
+The `DataTable.DisplayControls` component can be used separately to display the display controls for custom views.
+
+```tsx
+<DataTable
+data={data}
+query={query}
+columns={columns}
+mode="server"
+onTableQueryChange={handleQueryChange}
+onColumnVisibilityChange={handleColumnVisibilityChange}>
+  <DataTable.DisplayControls />
 </DataTable>
 ```
