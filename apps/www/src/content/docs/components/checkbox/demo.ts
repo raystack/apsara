@@ -1,48 +1,48 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
-  if (props.checked === "false") props.checked = false;
-  else if (props.checked === "true") props.checked = true;
+  if (props.checked === 'false') props.checked = false;
+  else if (props.checked === 'true') props.checked = true;
 
   return `<Checkbox${getPropsString(props)}/>`;
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     checked: {
-      type: "select",
-      options: ["true", "false", "indeterminate"],
-      initialValue: "true",
+      type: 'select',
+      options: ['true', 'false', 'indeterminate'],
+      initialValue: 'true'
     },
     disabled: {
-      type: "checkbox",
-      defaultValue: false,
-    },
+      type: 'checkbox',
+      defaultValue: false
+    }
   },
-  getCode,
+  getCode
 };
 
 export const statesExamples = {
-  type: "code",
+  type: 'code',
   tabs: [
     {
-      name: "Basic",
-      code: `<Checkbox />`,
+      name: 'Basic',
+      code: `<Checkbox />`
     },
     {
-      name: "Checked",
-      code: `<Checkbox checked={true} />`,
+      name: 'Checked',
+      code: `<Checkbox checked={true} />`
     },
     {
-      name: "Indeterminate",
-      code: `<Checkbox checked="indeterminate" />`,
+      name: 'Indeterminate',
+      code: `<Checkbox checked="indeterminate" />`
     },
     {
-      name: "Disabled",
-      code: `<Checkbox disabled />`,
-    },
-  ],
+      name: 'Disabled',
+      code: `<Checkbox disabled />`
+    }
+  ]
 };

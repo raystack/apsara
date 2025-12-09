@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 export const getCode = (props: any) => {
   const { title, description, ...rest } = props;
@@ -30,19 +30,19 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
-    title: { type: "text", initialValue: "A simple dialog example" },
+    title: { type: 'text', initialValue: 'A simple dialog example' },
     description: {
-      type: "text",
-      initialValue: "This is a basic dialog with title and description.",
-    },
+      type: 'text',
+      initialValue: 'This is a basic dialog with title and description.'
+    }
   },
-  getCode,
+  getCode
 };
 
 export const controlledDemo = {
-  type: "code",
+  type: 'code',
   code: `
   function ControlledDialog() {
     const [open, setOpen] = React.useState(false);
@@ -62,11 +62,11 @@ export const controlledDemo = {
         </Dialog.Content>
       </Dialog>
     );
-  }`,
+  }`
 };
 
 export const customDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Dialog>
     <Dialog.Trigger asChild>
@@ -85,11 +85,11 @@ export const customDemo = {
         </Dialog.Description>
       </Dialog.Body>
     </Dialog.Content>
-  </Dialog>`,
+  </Dialog>`
 };
 
 export const onlyHeaderDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Dialog>
     <Dialog.Trigger asChild>
@@ -111,11 +111,11 @@ export const onlyHeaderDemo = {
         </Dialog.Description>
       </Dialog.Body>
     </Dialog.Content>
-  </Dialog>`,
+  </Dialog>`
 };
 
 export const onlyFooterDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Dialog>
     <Dialog.Trigger asChild>
@@ -138,5 +138,5 @@ export const onlyFooterDemo = {
         <Button color="danger">Cancel</Button>
       </Dialog.Footer>
     </Dialog.Content>
-  </Dialog>`,
+  </Dialog>`
 };

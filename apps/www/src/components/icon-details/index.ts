@@ -1,3 +1,3 @@
-export { default } from "./icon-details";
-export * from "./icon-details";
-export * from "./icon-empty";
+export { default } from './icon-details';
+export * from './icon-details';
+export * from './icon-empty';

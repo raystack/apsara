@@ -3,7 +3,7 @@ export interface SearchProps {
    * Size variant of the search input.
    * @default large
    */
-  size?: "small" | "large";
+  size?: 'small' | 'large';
 
   /** Placeholder text for the input. */
   placeholder?: string;

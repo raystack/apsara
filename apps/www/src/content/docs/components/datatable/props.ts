@@ -9,7 +9,7 @@ export interface DataTableProps {
    * Data processing mode
    * @defaultValue "client"
    */
-  mode?: "client" | "server";
+  mode?: 'client' | 'server';
 
   /**
    * Loading state
@@ -38,7 +38,7 @@ export interface DataTableQuery {
   }>;
   sort?: Array<{
     key: string;
-    order: "asc" | "desc";
+    order: 'asc' | 'desc';
   }>;
   group_by?: string[];
   search?: string;
@@ -52,7 +52,7 @@ export interface DataTableColumnDef<TData, TValue> {
   header: string;
 
   /** Data type */
-  columnType: "text" | "number" | "date" | "select";
+  columnType: 'text' | 'number' | 'date' | 'select';
 
   /** Enable sorting */
   enableSorting?: boolean;

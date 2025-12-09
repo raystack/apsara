@@ -4,7 +4,7 @@
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--rs-z-index-portal);
   height: var(--fd-nav-height);
   padding: 8px 16px;
   background: hsl(var(--fd-popover) / 1);

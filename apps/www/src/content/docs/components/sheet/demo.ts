@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { getPropsString } from "@/lib/utils";
+import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `
@@ -16,23 +16,23 @@ export const getCode = (props: any) => {
 };
 
 export const playground = {
-  type: "playground",
+  type: 'playground',
   controls: {
     side: {
-      type: "select",
-      options: ["top", "right", "bottom", "left"],
-      defaultValue: "right",
+      type: 'select',
+      options: ['top', 'right', 'bottom', 'left'],
+      defaultValue: 'right'
     },
     close: {
-      type: "checkbox",
-      defaultValue: false,
-    },
+      type: 'checkbox',
+      defaultValue: false
+    }
   },
-  getCode,
+  getCode
 };
 
 export const basicDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Sheet>
   <Sheet.Trigger asChild>
@@ -43,11 +43,11 @@ export const basicDemo = {
     <Sheet.Description>Sheet description goes here</Sheet.Description>
     <span>Main content of the sheet</span>
   </Sheet.Content>
-</Sheet>`,
+</Sheet>`
 };
 
 export const positionDemo = {
-  type: "code",
+  type: 'code',
   code: `
   <Flex gap="medium">
     <Sheet>
@@ -86,5 +86,5 @@ export const positionDemo = {
       <Sheet.Description>Slides in from the Bottom</Sheet.Description>
     </Sheet.Content>
   </Sheet>
-  </Flex>`,
+  </Flex>`
 };

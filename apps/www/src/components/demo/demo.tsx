@@ -1,5 +1,12 @@
 'use client';
 
+import {
+  InfoCircledIcon,
+  Pencil2Icon,
+  PlusIcon,
+  TransformIcon,
+  UploadIcon
+} from '@radix-ui/react-icons';
 import * as Apsara from '@raystack/apsara';
 import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
@@ -23,7 +30,12 @@ export default function Demo(props: DemoProps) {
       X,
       Home,
       Laugh,
-      NextLink
+      NextLink,
+      PlusIcon,
+      TransformIcon,
+      Pencil2Icon,
+      InfoCircledIcon,
+      UploadIcon
     }
   } = props;
 

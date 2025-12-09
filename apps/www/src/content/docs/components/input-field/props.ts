@@ -3,7 +3,7 @@ export interface InputFieldProps {
    * Size variant of the input field
    * @default "large"
    */
-  size?: "small" | "large";
+  size?: 'small' | 'large';
 
   /** Text label above the input */
   label?: string;

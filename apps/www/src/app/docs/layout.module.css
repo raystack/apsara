@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+.sidebar {
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+.content {
+  flex: 1;
+}

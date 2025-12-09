@@ -1,0 +1,17 @@
+.sidebar {
+  padding: 0;
+  border-right-width: 0.5px !important;
+}
+.header {
+  height: 50px;
+  padding: 0 var(--rs-space-5);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: 0;
+}
+.main {
+  padding: var(--rs-space-5);
+  gap: var(--rs-space-5);
+}
+.main a {
+  transition: none;
+}

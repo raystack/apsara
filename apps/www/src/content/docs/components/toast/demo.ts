@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 export const preview = {
-  type: "code",
+  type: 'code',
   code: `
   function ToastTest(){
   return <div>
@@ -11,5 +11,5 @@ export const preview = {
       Trigger toast
     </Button>
     </div>
-}`,
+}`
 };
