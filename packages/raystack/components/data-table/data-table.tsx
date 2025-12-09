@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  Updater,
   VisibilityState,
   getCoreRowModel,
   getExpandedRowModel,
@@ -44,7 +45,8 @@ function DataTableRoot<TData, TValue>({
   children,
   onTableQueryChange,
   onLoadMore,
-  onRowClick
+  onRowClick,
+  onColumnVisibilityChange
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableQuery = getDefaultTableQuery(defaultSort, query);
   const initialColumnVisibility = getInitialColumnVisibility(columns);
@@ -52,6 +54,17 @@ function DataTableRoot<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
     initialColumnVisibility
   );
+  const handleColumnVisibilityChange = useCallback(
+    (value: Updater<VisibilityState>) => {
+      setColumnVisibility(prev => {
+        const newValue = typeof value === 'function' ? value(prev) : value;
+        onColumnVisibilityChange?.(newValue);
+        return newValue;
+      });
+    },
+    [onColumnVisibilityChange]
+  );
+
   const [tableQuery, setTableQuery] =
     useState<InternalQuery>(defaultTableQuery);
 
@@ -64,8 +77,12 @@ function DataTableRoot<TData, TValue>({
 
   const onDisplaySettingsReset = useCallback(() => {
     setTableQuery(prev => ({ ...prev, ...defaultTableQuery }));
-    setColumnVisibility(initialColumnVisibility);
-  }, [defaultTableQuery, initialColumnVisibility]);
+    handleColumnVisibilityChange(initialColumnVisibility);
+  }, [
+    defaultTableQuery,
+    initialColumnVisibility,
+    handleColumnVisibilityChange
+  ]);
 
   const group_by = tableQuery.group_by?.[0];
 
@@ -101,7 +118,7 @@ function DataTableRoot<TData, TValue>({
     getFilteredRowModel: mode === 'server' ? undefined : getFilteredRowModel(),
     manualSorting: mode === 'server',
     manualFiltering: mode === 'server',
-    onColumnVisibilityChange: setColumnVisibility,
+    onColumnVisibilityChange: handleColumnVisibilityChange,
     globalFilterFn: mode === 'server' ? undefined : 'auto',
     initialState: {
       columnVisibility: initialColumnVisibility

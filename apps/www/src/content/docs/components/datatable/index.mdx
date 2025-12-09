@@ -24,6 +24,14 @@ import {
 
 <auto-type-table path="./props.ts" name="DataTableProps" />
 
+### DataTable.DisplayControls Props
+
+<auto-type-table path="./props.ts" name="DisplayControlsProps" />
+
+### DataTable.Filters Props
+
+<auto-type-table path="./props.ts" name="FiltersProps" />
+
 ## DataTableQuery Interface
 
 <auto-type-table path="./props.ts" name="DataTableQuery" />
@@ -31,6 +39,7 @@ import {
 ## DataTableColumn Interface
 
 <auto-type-table path="./props.ts" name="DataTableColumnDef" />
+
 
 ## Examples
 
@@ -215,7 +224,8 @@ data={data}
 query={query}
 columns={columns}
 mode="server"
-onTableQueryChange={handleQueryChange}>
+onTableQueryChange={handleQueryChange}
+onColumnVisibilityChange={handleColumnVisibilityChange}>
   <DataTable.DisplayControls />
 </DataTable>
 ```

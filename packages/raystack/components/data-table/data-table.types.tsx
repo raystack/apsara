@@ -1,4 +1,9 @@
-import type { Column, ColumnDef, Table } from '@tanstack/table-core';
+import type {
+  Column,
+  ColumnDef,
+  Table,
+  VisibilityState
+} from '@tanstack/table-core';
 import type {
   DataTableFilterOperatorTypes,
   FilterOperatorTypes,
@@ -103,6 +108,7 @@ export interface DataTableProps<TData, TValue> {
   defaultSort: DataTableSort;
   onLoadMore?: () => Promise<void>;
   onRowClick?: (row: TData) => void;
+  onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
 }
 
 export type DataTableContentProps = {
