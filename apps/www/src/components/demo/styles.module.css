@@ -22,6 +22,7 @@
   align-items: center;
   justify-content: center;
   min-height: 368px;
+  min-width: 0;
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
 
