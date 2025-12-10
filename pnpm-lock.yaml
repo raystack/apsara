@@ -145,6 +145,9 @@ importers:
         specifier: ^1.0.12
         version: 1.0.12
     devDependencies:
+      '@raystack/tools-configs':
+        specifier: workspace:*
+        version: link:../tools-configs
       '@types/color':
         specifier: ^4.2.0
         version: 4.2.0
