@@ -107,7 +107,6 @@
     "rollup-plugin-tsconfig-paths": "^1.5.2",
     "@raystack/tools-configs": "workspace:*",
     "semver": "^7.6.0",
-    "tsconfig": "workspace:*",
     "typescript": "~5.4.3",
     "vitest": "^3.2.4"
   },
