@@ -7,7 +7,9 @@
   "exports": {
     "./biome": "./biome.json"
   },
-  "files": ["biome.json"],
+  "files": [
+    "biome.json"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -15,9 +17,11 @@
     "node": ">=22"
   },
   "peerDependencies": {
-    "@biomejs/biome": ">=1.9.0"
+    "@biomejs/biome": ">=2.0.0"
   },
   "peerDependenciesMeta": {
-    "@biomejs/biome": { "optional": true }
+    "@biomejs/biome": {
+      "optional": true
+    }
   }
 }
