@@ -1,0 +1,23 @@
+{
+  "name": "@raystack/tools-configs",
+  "version": "0.0.1",
+  "description": "Shared dev tool configurations (biome, tsconfig, rollup, vitest)",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./biome": "./biome.json"
+  },
+  "files": ["biome.json"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@biomejs/biome": ">=1.9.0"
+  },
+  "peerDependenciesMeta": {
+    "@biomejs/biome": { "optional": true }
+  }
+}
