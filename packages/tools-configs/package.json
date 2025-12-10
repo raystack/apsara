@@ -2,7 +2,7 @@
   "name": "@raystack/tools-configs",
   "version": "0.0.1",
   "description": "Shared dev tool configurations (biome, tsconfig, rollup, vitest)",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     "./biome": "./biome.json",
