@@ -5,10 +5,13 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    "./biome": "./biome.json"
+    "./biome": "./biome.json",
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/react": "./tsconfig/react.json"
   },
   "files": [
-    "biome.json"
+    "biome.json",
+    "tsconfig"
   ],
   "publishConfig": {
     "access": "public"
