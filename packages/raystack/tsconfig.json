@@ -1,5 +1,5 @@
 {
-  "extends": "tsconfig/react-library.json",
+  "extends": "@raystack/tools-configs/tsconfig/react",
   "compilerOptions": {
     "baseUrl": ".",
     "target": "esnext",

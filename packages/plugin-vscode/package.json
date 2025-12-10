@@ -19,8 +19,15 @@
     "vscode": "^1.70.0",
     "node": ">=20"
   },
-  "keywords": ["apsara", "raystack"],
-  "categories": ["Programming Languages", "Snippets", "Other"],
+  "keywords": [
+    "apsara",
+    "raystack"
+  ],
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
   "activationEvents": [
     "onLanguage:css",
     "onLanguage:scss",
@@ -48,7 +55,10 @@
     "build": "pnpm clean && node esbuild.js --production",
     "dev": "pnpm clean && node esbuild.js --watch",
     "clean": "rimraf dist",
-    "package": "pnpm build && vsce package --no-dependencies --baseImagesUrl 'https://raw.githubusercontent.com/raystack/apsara/refs/heads/main/packages/plugin-vscode'"
+    "package": "pnpm build && vsce package --no-dependencies --baseImagesUrl 'https://raw.githubusercontent.com/raystack/apsara/refs/heads/main/packages/plugin-vscode'",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@raystack/apsara": "^0.46.0",
@@ -58,6 +68,7 @@
     "vscode-languageserver-textdocument": "^1.0.12"
   },
   "devDependencies": {
+    "@raystack/tools-configs": "workspace:*",
     "@types/color": "^4.2.0",
     "@types/node": "20.x",
     "@types/vscode": "^1.70.0",
