@@ -30,11 +30,17 @@
     "./style.css": "./dist/style.css",
     "./normalize.css": "./dist/normalize.css"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "prebuild": "npm run clean",
     "build": "rollup --config",
     "dev": "rollup --config --watch",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "release": "pnpm publish --access public --no-git-checks",
     "bump-version": "node scripts/bump-version.js",
     "clean": "rm -rf .turbo && rm -rf dist",
@@ -49,8 +55,12 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./dist/index.d.ts"],
-      "v1": ["./dist/index.d.ts"]
+      "*": [
+        "./dist/index.d.ts"
+      ],
+      "v1": [
+        "./dist/index.d.ts"
+      ]
     }
   },
   "keywords": [
@@ -95,6 +105,7 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
+    "@raystack/tools-configs": "workspace:*",
     "semver": "^7.6.0",
     "tsconfig": "workspace:*",
     "typescript": "~5.4.3",
