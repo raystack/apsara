@@ -4,7 +4,7 @@
     "exclude": [],
     "parser": "react",
     "documentUrlSubstitutions": {
-      "<FIGMA_BUTTON>": "node-id=1-101"
+      "<FIGMA_LINK>": "FIGMA_FILE_URL"
     }
   }
 }
