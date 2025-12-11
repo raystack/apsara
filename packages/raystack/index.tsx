@@ -42,6 +42,7 @@ export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
 export { Radio } from './components/radio';
 export { Search } from './components/search';
+export { ScrollArea } from './components/scroll-area';
 export { Select } from './components/select';
 export { Separator } from './components/separator';
 export { Sheet } from './components/sheet';
