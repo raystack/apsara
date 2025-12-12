@@ -3,11 +3,12 @@ const path = require('path');
 
 // Load environment variables from .env file
 require('dotenv').config();
+const FIGMA_FILE_URL = 'FIGMA_FILE_URL';
 
 const CONFIG_FILE = path.join(__dirname, '..', 'figma.config.json');
 
 // Read Figma URL from environment
-const figmaUrl = process.env.FIGMA_FILE_URL;
+const figmaUrl = process.env[FIGMA_FILE_URL];
 
 if (!figmaUrl) {
   console.error('Error: FIGMA_FILE_URL environment variable is not set');
@@ -21,8 +22,11 @@ const config = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
 for (const [key, value] of Object.entries(
   config.codeConnect.documentUrlSubstitutions
 )) {
-  if (value.startsWith('node-id='))
-    config.codeConnect.documentUrlSubstitutions[key] = `${figmaUrl}?${value}`;
+  if (value.startsWith(FIGMA_FILE_URL))
+    config.codeConnect.documentUrlSubstitutions[key] = value.replace(
+      FIGMA_FILE_URL,
+      figmaUrl
+    );
 }
 
 // Write updated config
