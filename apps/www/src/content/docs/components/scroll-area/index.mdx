@@ -1,0 +1,97 @@
+---
+title: ScrollArea
+description: A customizable scrollable container component with smooth scrolling, hover effects, and automatic corner handling for both vertical and horizontal scrollbars.
+---
+
+import {
+  preview,
+  verticalDemo,
+  horizontalDemo,
+  bothScrollbarsDemo,
+  typeDemo,
+} from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+```tsx
+import { ScrollArea } from "@raystack/apsara";
+```
+
+## Component Structure
+
+The ScrollArea component uses a composite pattern, providing modular sub-components for flexible scrollable containers:
+
+- `ScrollArea` - Root container that manages scrolling state
+- `ScrollArea.Viewport` - The scrollable content area
+- `ScrollArea.Scrollbar` - The scrollbar track and thumb (vertical or horizontal)
+- `ScrollArea.Corner` - The corner element (automatically added when both scrollbars are present)
+
+## ScrollArea Props
+
+The ScrollArea root component extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
+
+<auto-type-table path="./props.ts" name="ScrollAreaRootProps" />
+
+### ScrollArea.Viewport Props
+
+The viewport is the scrollable content container. It extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
+
+<auto-type-table path="./props.ts" name="ScrollAreaViewportProps" />
+
+### ScrollArea.Scrollbar Props
+
+The scrollbar component renders the scrollbar track and thumb. When both vertical and horizontal scrollbars are present, the Corner component is automatically added. It extends standard HTML div attributes, so you can use props like `style`, `id`, and other standard HTML attributes.
+
+<auto-type-table path="./props.ts" name="ScrollAreaScrollbarProps" />
+
+### ScrollArea.Corner Props
+
+The corner component fills the space where vertical and horizontal scrollbars meet. It's automatically added when both scrollbars are present, but you can also add it manually if needed. It extends standard HTML div attributes, so you can use props like `style`, `id`, and other standard HTML attributes.
+
+<auto-type-table path="./props.ts" name="ScrollAreaCornerProps" />
+
+## Examples
+
+### Vertical Scrolling
+
+A basic vertical scroll area with a list of items.
+
+<Demo data={verticalDemo} />
+
+### Horizontal Scrolling
+
+A horizontal scroll area for wide content like tables or card grids.
+
+<Demo data={horizontalDemo} />
+
+### Both Scrollbars
+
+When both vertical and horizontal scrollbars are present, the Corner component is automatically added to fill the intersection.
+
+<Demo data={bothScrollbarsDemo} />
+
+### Scrollbar Type
+
+Control when the scrollbar appears using the `type` prop.
+
+<Demo data={typeDemo} />
+
+## Features
+
+- **Smooth Scrolling**: Custom scrollbar with smooth transitions
+- **Hover Effects**: Scrollbar expands from 4px to 6px on hover
+- **Auto Corner**: Automatically adds corner element when both scrollbars are present
+- **Scroll Chaining**: Scroll continues to parent page when reaching container boundaries
+- **Customizable**: Full control over scrollbar visibility and behavior
+
+## Accessibility
+
+The ScrollArea component is built on Radix UI primitives and provides:
+
+- Keyboard navigation support
+- Screen reader compatibility
+- Proper ARIA attributes
+- Focus management
+
