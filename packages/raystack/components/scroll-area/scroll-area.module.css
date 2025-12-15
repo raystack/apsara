@@ -1,3 +1,8 @@
+:root {
+  --rs-scrollbar-size-default: 4px;
+  --rs-scrollbar-size-hover: 6px;
+}
+
 .root {
   position: relative;
   overflow: hidden;
@@ -9,6 +14,7 @@
   width: 100%;
   height: 100%;
   border-radius: inherit;
+  overscroll-behavior: auto;
 }
 
 .scrollbar {
@@ -23,20 +29,20 @@
 }
 
 .scrollbar[data-orientation="vertical"] {
-  width: 4px;
+  width: var(--rs-scrollbar-size-default);
 }
 
 .scrollbar[data-orientation="vertical"]:hover {
-  width: 6px;
+  width: var(--rs-scrollbar-size-hover);
 }
 
 .scrollbar[data-orientation="horizontal"] {
   flex-direction: column;
-  height: 4px;
+  height: var(--rs-scrollbar-size-default);
 }
 
 .scrollbar[data-orientation="horizontal"]:hover {
-  height: 6px;
+  height: var(--rs-scrollbar-size-hover);
 }
 
 .thumb {
