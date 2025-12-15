@@ -19,7 +19,7 @@
   background: transparent;
   pointer-events: auto;
   position: relative;
-  transition: width 300ms ease-out, height 300ms ease-out;
+  transition: width 150ms ease-out, height 150ms ease-out;
 }
 
 .scrollbar[data-orientation="vertical"] {
@@ -43,7 +43,7 @@
   flex: 1;
   background: var(--rs-color-overlay-black-a2);
   border-radius: var(--rs-radius-2);
-  transition: opacity 300ms ease-out;
+  transition: opacity 150ms ease-out;
   opacity: 1;
   pointer-events: auto;
   touch-action: none;
