@@ -44,14 +44,9 @@
   background: var(--rs-color-overlay-black-a2);
   border-radius: var(--rs-radius-2);
   transition: opacity 300ms ease-out;
-  opacity: 0;
-  pointer-events: none;
-  touch-action: none;
-}
-
-.scrollbar:hover .thumb {
   opacity: 1;
   pointer-events: auto;
+  touch-action: none;
 }
 
 .corner {
