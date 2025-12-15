@@ -54,16 +54,6 @@
   pointer-events: auto;
 }
 
-.thumb-always-visible .thumb {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.thumb-hidden .thumb {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .corner {
   background: transparent;
 }

@@ -2283,10 +2283,7 @@ const Page = () => {
                     ))}
                   </Flex>
                 </ScrollArea.Viewport>
-                <ScrollArea.Scrollbar
-                  orientation='vertical'
-                  thumbVisibility='always'
-                />
+                <ScrollArea.Scrollbar orientation='vertical' />
               </ScrollArea>
             </Flex>
 
