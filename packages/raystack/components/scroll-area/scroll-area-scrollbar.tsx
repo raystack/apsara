@@ -9,6 +9,7 @@ export interface ScrollAreaScrollbarProps
   extends ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Scrollbar> {
   orientation?: 'vertical' | 'horizontal';
   thumbVisibility?: 'always' | 'hover' | 'hidden';
+  className?: string;
 }
 
 export const ScrollAreaScrollbar = forwardRef<

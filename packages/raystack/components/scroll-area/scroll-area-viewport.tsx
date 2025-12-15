@@ -6,7 +6,9 @@ import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from 'react';
 import styles from './scroll-area.module.css';
 
 export interface ScrollAreaViewportProps
-  extends ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Viewport> {}
+  extends ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Viewport> {
+  className?: string;
+}
 
 export const ScrollAreaViewport = forwardRef<
   ComponentRef<typeof ScrollAreaPrimitive.Viewport>,

@@ -6,7 +6,7 @@ import {
   Children,
   ComponentPropsWithoutRef,
   ComponentRef,
-  PropsWithChildren,
+  ReactNode,
   forwardRef,
   isValidElement
 } from 'react';
@@ -15,10 +15,10 @@ import { ScrollAreaScrollbar } from './scroll-area-scrollbar';
 import styles from './scroll-area.module.css';
 
 export interface ScrollAreaRootProps
-  extends PropsWithChildren<
-    ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
-  > {
+  extends ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
   type?: 'auto' | 'always' | 'scroll' | 'hover';
+  className?: string;
+  children?: ReactNode;
 }
 
 export const ScrollAreaRoot = forwardRef<

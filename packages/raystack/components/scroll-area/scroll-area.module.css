@@ -43,7 +43,7 @@
   flex: 1;
   background: var(--rs-color-overlay-black-a2);
   border-radius: var(--rs-radius-2);
-  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 300ms ease-out;
   opacity: 0;
   pointer-events: none;
   touch-action: none;
