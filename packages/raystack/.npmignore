@@ -6,7 +6,7 @@ dist/**/__tests__/**
 # Exclude dev files
 dist/vitest.setup.*
 dist/figma/**
-# Exclude bundled dependencies (shouldn't exist after externalizing)
+# Exclude bundled dependencies
 dist/node_modules/**
 dist/_virtual/**
 
