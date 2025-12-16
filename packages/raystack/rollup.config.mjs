@@ -78,6 +78,31 @@ const configs = [
   }
 ];
 
+// Externalize all dependencies and peer dependencies
+// This prevents bundling dependencies and reduces package size significantly
+const external = [
+  'react',
+  'react-dom',
+  'react-dom/client',
+  'react/jsx-runtime',
+  // Add new external dependencies from package.json here as well
+  '@ariakit/react',
+  '@radix-ui/react-icons',
+  '@tanstack/match-sorter-utils',
+  '@tanstack/react-table',
+  '@tanstack/table-core',
+  'class-variance-authority',
+  'cmdk',
+  'color',
+  'dayjs',
+  'prism-react-renderer',
+  'radix-ui',
+  'react-day-picker',
+  'sonner',
+  /^dayjs\/plugin\/.*/,
+  /^@radix-ui\/.*/
+];
+
 const rollupConfig = configs.map(conf => {
   return {
     input: conf.inputPath + '/index.tsx',
@@ -85,7 +110,7 @@ const rollupConfig = configs.map(conf => {
       {
         dir: conf.outputPath,
         format: 'es',
-        sourcemap: true,
+        sourcemap: false,
         exports: 'named',
         preserveModules: true,
         preserveModulesRoot: conf.inputPath
@@ -93,14 +118,14 @@ const rollupConfig = configs.map(conf => {
       {
         dir: conf.outputPath,
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: false,
         exports: 'named',
         entryFileNames: '[name].cjs',
         preserveModules: true,
         preserveModulesRoot: conf.inputPath
       }
     ],
-    external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime'],
+    external,
     plugins: createPlugins({
       rootDir: conf.inputPath,
       declarationDir: conf.outputPath
