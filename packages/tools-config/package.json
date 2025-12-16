@@ -1,5 +1,5 @@
 {
-  "name": "@raystack/tools-configs",
+  "name": "@raystack/tools-config",
   "version": "0.0.1",
   "description": "Shared dev tool configurations (biome, tsconfig)",
   "license": "Apache-2.0",
@@ -7,9 +7,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/raystack/apsara.git",
-    "directory": "packages/tools-configs"
+    "directory": "packages/tools-config"
   },
-  "homepage": "https://github.com/raystack/apsara/tree/main/packages/tools-configs",
+  "homepage": "https://github.com/raystack/apsara/tree/main/packages/tools-config",
   "bugs": {
     "url": "https://github.com/raystack/apsara/issues"
   },

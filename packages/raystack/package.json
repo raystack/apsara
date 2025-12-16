@@ -105,7 +105,7 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
-    "@raystack/tools-configs": "workspace:*",
+    "@raystack/tools-config": "workspace:*",
     "semver": "^7.6.0",
     "typescript": "~5.4.3",
     "vitest": "^3.2.4"

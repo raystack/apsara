@@ -1,11 +1,11 @@
-# @raystack/tools-configs
+# @raystack/tools-config
 
 Shared dev tool configurations for Raystack frontend projects.
 
 ## Installation
 
 ```bash
-pnpm add -D @raystack/tools-configs
+pnpm add -D @raystack/tools-config
 ```
 
 ## Configs
@@ -15,7 +15,7 @@ pnpm add -D @raystack/tools-configs
 ```json
 // biome.json
 {
-  "extends": ["@raystack/tools-configs/biome"]
+  "extends": ["@raystack/tools-config/biome"]
 }
 ```
 
@@ -25,7 +25,7 @@ Base config:
 ```json
 // tsconfig.json
 {
-  "extends": "@raystack/tools-configs/tsconfig/base"
+  "extends": "@raystack/tools-config/tsconfig/base"
 }
 ```
 
@@ -33,7 +33,7 @@ React config (extends base):
 ```json
 // tsconfig.json
 {
-  "extends": "@raystack/tools-configs/tsconfig/react"
+  "extends": "@raystack/tools-config/tsconfig/react"
 }
 ```
 

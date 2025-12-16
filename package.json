@@ -17,7 +17,7 @@
     "semver": "^7.6.0",
     "@parcel/packager-ts": "2.9.2",
     "@parcel/transformer-typescript-types": "2.9.2",
-    "@raystack/tools-configs": "workspace:*",
+    "@raystack/tools-config": "workspace:*",
     "@turbo/gen": "^1.9.7",
     "concurrently": "^9.1.2",
     "lefthook": "^1.11.12",

@@ -68,7 +68,7 @@
     "vscode-languageserver-textdocument": "^1.0.12"
   },
   "devDependencies": {
-    "@raystack/tools-configs": "workspace:*",
+    "@raystack/tools-config": "workspace:*",
     "@types/color": "^4.2.0",
     "@types/node": "20.x",
     "@types/vscode": "^1.70.0",

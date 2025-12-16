@@ -17,9 +17,9 @@ importers:
       '@parcel/transformer-typescript-types':
         specifier: 2.9.2
         version: 2.9.2(@parcel/core@2.12.0)(typescript@4.7.2)
-      '@raystack/tools-configs':
+      '@raystack/tools-config':
         specifier: workspace:*
-        version: link:packages/tools-configs
+        version: link:packages/tools-config
       '@turbo/gen':
         specifier: ^1.9.7
         version: 1.9.7(@swc/core@1.11.21)(@types/node@24.10.0)(typescript@4.7.2)
@@ -111,9 +111,9 @@ importers:
         specifier: ^3.24.2
         version: 3.25.58
     devDependencies:
-      '@raystack/tools-configs':
+      '@raystack/tools-config':
         specifier: workspace:*
-        version: link:../../packages/tools-configs
+        version: link:../../packages/tools-config
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
@@ -148,9 +148,9 @@ importers:
         specifier: ^1.0.12
         version: 1.0.12
     devDependencies:
-      '@raystack/tools-configs':
+      '@raystack/tools-config':
         specifier: workspace:*
-        version: link:../tools-configs
+        version: link:../tools-config
       '@types/color':
         specifier: ^4.2.0
         version: 4.2.0
@@ -215,9 +215,9 @@ importers:
       '@figma/code-connect':
         specifier: ^1.3.5
         version: 1.3.5
-      '@raystack/tools-configs':
+      '@raystack/tools-config':
         specifier: workspace:*
-        version: link:../tools-configs
+        version: link:../tools-config
       '@rollup/plugin-commonjs':
         specifier: ^25.0.2
         version: 25.0.2(rollup@3.25.1)
@@ -306,7 +306,7 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.0)(@vitest/ui@3.2.4)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(terser@5.39.0)
 
-  packages/tools-configs:
+  packages/tools-config:
     dependencies:
       '@biomejs/biome':
         specifier: '>=2.0.0'

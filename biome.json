@@ -1,5 +1,5 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
-  "extends": ["@raystack/tools-configs/biome"],
+  "extends": ["@raystack/tools-config/biome"],
   "root": true
 }
