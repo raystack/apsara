@@ -1,5 +1,8 @@
 {
+  "root": false,
   "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
   "extends": ["@raystack/tools-config/biome"],
-  "root": true
+  "vcs": {
+    "useIgnoreFile": false
+  }
 }

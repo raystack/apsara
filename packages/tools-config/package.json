@@ -1,0 +1,46 @@
+{
+  "name": "@raystack/tools-config",
+  "version": "0.0.1",
+  "description": "Shared dev tool configurations (biome, tsconfig)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raystack/apsara.git",
+    "directory": "packages/tools-config"
+  },
+  "homepage": "https://github.com/raystack/apsara/tree/main/packages/tools-config",
+  "bugs": {
+    "url": "https://github.com/raystack/apsara/issues"
+  },
+  "keywords": [
+    "biome",
+    "tsconfig",
+    "config",
+    "raystack"
+  ],
+  "author": "Raystack",
+  "exports": {
+    "./biome": "./biome.json",
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/react": "./tsconfig/react.json"
+  },
+  "files": [
+    "biome.json",
+    "tsconfig"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@biomejs/biome": ">=2.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@biomejs/biome": {
+      "optional": true
+    }
+  }
+}

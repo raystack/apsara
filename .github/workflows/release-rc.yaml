@@ -56,14 +56,19 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Bump Package Version
-        run: pnpm run bump-version
-        working-directory: ./packages/raystack
+        run: node scripts/bump-version.js packages/raystack packages/tools-config
         env:
           GIT_REFNAME: ${{ github.ref_name }}
 
-      - name: Run Release 🚀
+      - name: Run Release (apsara) 🚀
         run: pnpm run release --tag next
         working-directory: ./packages/raystack
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Run Release (tools-config) 🚀
+        run: pnpm run release --tag next
+        working-directory: ./packages/tools-config
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
