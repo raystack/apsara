@@ -1,6 +1,3 @@
-# Exclude source maps
-dist/**/*.map
-dist/**/*.d.ts.map
 # Exclude test files
 dist/**/__tests__/**
 # Exclude dev files
