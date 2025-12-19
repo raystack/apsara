@@ -40,6 +40,9 @@ import {
 
 <auto-type-table path="./props.ts" name="DataTableColumnDef" />
 
+## DataTable.Content Props
+
+<auto-type-table path="./props.ts" name="DataTableContentProps" />
 
 ## Examples
 
@@ -228,4 +231,138 @@ onTableQueryChange={handleQueryChange}
 onColumnVisibilityChange={handleColumnVisibilityChange}>
   <DataTable.DisplayControls />
 </DataTable>
+```
+### Using DataTable Search
+
+The `DataTable.Search` component provides search functionality that automatically integrates with the table query. By default, it is disabled in zero state (when no data and no filters/search applied).
+
+```tsx
+<DataTable
+  data={data}
+  columns={columns}
+  defaultSort={{ name: "name", order: "asc" }}>
+  <DataTable.Search />
+  <DataTable.Content />
+</DataTable>
+```
+
+#### Search Auto-Disable Behavior
+
+By default, `DataTable.Search` is automatically disabled in zero state to provide a better user experience. You can override this behavior:
+
+```tsx
+// Default: disabled in zero state
+<DataTable.Search />
+
+// Override: always enabled
+<DataTable.Search autoDisableInZeroState={false} />
+
+// Manual control: explicitly disable
+<DataTable.Search disabled={true} />
+```
+
+The search will be automatically enabled when:
+- Data exists in the table
+- Filters are applied
+- A search query is already present
+
+### Empty States
+
+The DataTable supports two types of empty states to provide better user experience:
+
+#### Zero State
+
+Zero state is shown when no data has been fetched initially (no filters or search applied). In this state, the filter bar is automatically hidden.
+
+```tsx
+import { DataTable, EmptyState } from "@raystack/apsara";
+import { OrganizationIcon } from "@raystack/apsara/icons";
+
+<DataTable
+  data={[]}
+  columns={columns}
+  defaultSort={{ name: "name", order: "asc" }}>
+  <DataTable.Toolbar />
+  <DataTable.Content
+    zeroState={
+      <EmptyState
+        icon={<OrganizationIcon />}
+        heading="No users yet"
+        subHeading="Get started by creating your first user."
+      />
+    }
+  />
+</DataTable>
+```
+
+#### Empty State
+
+Empty state is shown when initial data exists but no results match after applying filters or search. In this state, the filter bar remains visible so users can adjust their filters.
+
+```tsx
+import { DataTable, EmptyState } from "@raystack/apsara";
+import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
+
+<DataTable
+  data={initialData}
+  columns={columns}
+  defaultSort={{ name: "name", order: "asc" }}>
+  <DataTable.Toolbar />
+  <DataTable.Search />
+  <DataTable.Content
+    zeroState={
+      <EmptyState
+        icon={<OrganizationIcon />}
+        heading="No users yet"
+        subHeading="Get started by creating your first user."
+      />
+    }
+    emptyState={
+      <EmptyState
+        icon={<FilterIcon />}
+        heading="No users found"
+        subHeading="We couldn't find any matches for that keyword or filter. Try alternative terms or check for typos."
+      />
+    }
+  />
+</DataTable>
+```
+
+#### Fallback Behavior
+
+- If `zeroState` is not provided, it falls back to `emptyState`
+- If neither `zeroState` nor `emptyState` is provided, a default empty state is shown
+- The filter bar visibility is automatically controlled based on the state
+
+#### Custom Empty State Content
+
+You can provide custom React components for both states:
+
+```tsx
+import { DataTable, EmptyState, Flex, Text, Button } from "@raystack/apsara";
+import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
+
+<DataTable.Content
+  zeroState={
+    <Flex direction="column" gap={4} align="center" style={{ padding: "40px" }}>
+      <OrganizationIcon width={48} height={48} style={{ opacity: 0.5 }} />
+      <Flex direction="column" gap={2} align="center">
+        <Text size={4} weight="medium">
+          No data available
+        </Text>
+        <Text size={2} style={{ color: "var(--rs-color-text-subtle)" }}>
+          There are no users in the system. Create your first user to get started.
+        </Text>
+      </Flex>
+      <Button size="small">Create User</Button>
+    </Flex>
+  }
+  emptyState={
+    <EmptyState
+      icon={<FilterIcon />}
+      heading="No matches found"
+      subHeading="Try adjusting your filters or search query."
+    />
+  }
+/>
 ```

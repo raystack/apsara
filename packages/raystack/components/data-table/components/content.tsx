@@ -166,6 +166,7 @@ const DefaultEmptyComponent = () => (
 
 export function Content({
   emptyState,
+  zeroState,
   classNames = {}
 }: DataTableContentProps) {
   const {
@@ -174,7 +175,8 @@ export function Content({
     mode,
     isLoading,
     loadMoreData,
-    loadingRowCount = 3
+    loadingRowCount = 3,
+    tableQuery
   } = useDataTable();
   const headerGroups = table?.getHeaderGroups();
   const rowModel = table?.getRowModel();
@@ -220,6 +222,21 @@ export function Content({
 
   const hasData = rows?.length > 0 || isLoading;
 
+  // Determine if we're in zero state (no filters/search applied) or empty state (filters/search applied)
+  const hasFiltersOrSearch =
+    (tableQuery?.filters && tableQuery.filters.length > 0) ||
+    Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
+
+  const isZeroState = !hasData && !hasFiltersOrSearch;
+  const isEmptyState = !hasData && hasFiltersOrSearch;
+
+  // Show zeroState when no data and no filters/search, otherwise show emptyState
+  const stateToShow: React.ReactNode = isZeroState
+    ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)
+    : isEmptyState
+      ? (emptyState ?? <DefaultEmptyComponent />)
+      : null;
+
   return (
     <div className={classNames.root}>
       <Table className={classNames.table}>
@@ -250,7 +267,7 @@ export function Content({
                 colSpan={visibleColumnsLength}
                 className={styles.emptyStateCell}
               >
-                {emptyState || <DefaultEmptyComponent />}
+                {stateToShow}
               </Table.Cell>
             </Table.Row>
           )}

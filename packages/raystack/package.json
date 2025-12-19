@@ -30,13 +30,17 @@
     "./style.css": "./dist/style.css",
     "./normalize.css": "./dist/normalize.css"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "prebuild": "npm run clean",
     "build": "rollup --config",
     "dev": "rollup --config --watch",
-    "lint": "eslint \"**/*.ts*\"",
-    "lint:fix": "eslint \"v1/**/*.ts*\" --fix",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "release": "pnpm publish --access public --no-git-checks",
     "bump-version": "node scripts/bump-version.js",
     "clean": "rm -rf .turbo && rm -rf dist",
@@ -47,12 +51,17 @@
     "build:icons": "node scripts/create-icons.js",
     "figma:update-config": "node scripts/update-figma-config.js",
     "figma:validate-config": "node scripts/validate-figma-config.js",
-    "figma:publish": "pnpm figma:update-config && figma connect publish"
+    "figma:generate-icons": "node scripts/generate-icons-code-connect.js",
+    "figma:publish": "pnpm figma:generate-icons && pnpm figma:update-config && figma connect publish"
   },
   "typesVersions": {
     "*": {
-      "*": ["./dist/index.d.ts"],
-      "v1": ["./dist/index.d.ts"]
+      "*": [
+        "./dist/index.d.ts"
+      ],
+      "v1": [
+        "./dist/index.d.ts"
+      ]
     }
   },
   "keywords": [
@@ -83,7 +92,6 @@
     "@types/react-dom": "^19.0.0",
     "@vitest/ui": "^3.2.4",
     "dotenv": "^17.2.2",
-    "eslint-config-custom": "workspace:*",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
     "np": "^8.0.4",
@@ -98,8 +106,8 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
+    "@raystack/tools-config": "workspace:*",
     "semver": "^7.6.0",
-    "tsconfig": "workspace:*",
     "typescript": "~5.4.3",
     "vitest": "^3.2.4"
   },

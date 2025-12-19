@@ -96,4 +96,25 @@ export interface FiltersProps {
         availableFilters: DataTableColumn<TData, TValue>[];
         appliedFilters: Set<string>;
       }) => ReactNode);
+export interface DataTableContentProps {
+  /**
+   * Custom empty state shown when initial data exists but no results match after filters/search.
+   * Filter bar remains visible in this state.
+   */
+  emptyState?: React.ReactNode;
+
+  /**
+   * Custom zero state shown when no data has been fetched initially (no filters/search applied).
+   * Filter bar is automatically hidden in this state.
+   */
+  zeroState?: React.ReactNode;
+
+  /** Custom class names for styling */
+  classNames?: {
+    root?: string;
+    table?: string;
+    header?: string;
+    body?: string;
+    row?: string;
+  };
 }
