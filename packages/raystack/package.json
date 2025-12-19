@@ -51,7 +51,8 @@
     "build:icons": "node scripts/create-icons.js",
     "figma:update-config": "node scripts/update-figma-config.js",
     "figma:validate-config": "node scripts/validate-figma-config.js",
-    "figma:publish": "pnpm figma:update-config && figma connect publish"
+    "figma:generate-icons": "node scripts/generate-icons-code-connect.js",
+    "figma:publish": "pnpm figma:generate-icons && pnpm figma:update-config && figma connect publish"
   },
   "typesVersions": {
     "*": {
