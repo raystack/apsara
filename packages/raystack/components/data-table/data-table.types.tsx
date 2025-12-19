@@ -107,6 +107,7 @@ export interface DataTableProps<TData, TValue> {
 
 export type DataTableContentProps = {
   emptyState?: React.ReactNode;
+  zeroState?: React.ReactNode;
   classNames?: {
     root?: string;
     table?: string;
@@ -130,6 +131,7 @@ export type TableContextType<TData, TValue> = {
   onDisplaySettingsReset: () => void;
   updateTableQuery: (fn: TableQueryUpdateFn) => void;
   onRowClick?: (row: TData) => void;
+  shouldShowFilters?: boolean;
 };
 
 export interface ColumnData {
