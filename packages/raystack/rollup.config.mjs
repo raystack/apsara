@@ -110,7 +110,7 @@ const rollupConfig = configs.map(conf => {
       {
         dir: conf.outputPath,
         format: 'es',
-        sourcemap: false,
+        sourcemap: true,
         exports: 'named',
         preserveModules: true,
         preserveModulesRoot: conf.inputPath
@@ -118,7 +118,7 @@ const rollupConfig = configs.map(conf => {
       {
         dir: conf.outputPath,
         format: 'cjs',
-        sourcemap: false,
+        sourcemap: true,
         exports: 'named',
         entryFileNames: '[name].cjs',
         preserveModules: true,
