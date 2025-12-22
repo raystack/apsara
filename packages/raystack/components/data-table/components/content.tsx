@@ -3,7 +3,6 @@
 import { TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
-import type { Virtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
 import { useCallback, useEffect, useRef } from 'react';
 
@@ -55,7 +54,6 @@ function Headers<TData>({
 
 interface RowsProps<TData> {
   rows: Row<TData>[];
-  virtualizer?: Virtualizer<HTMLDivElement, Element>;
   onRowClick?: (row: TData) => void;
   classNames?: {
     row?: string;
@@ -87,17 +85,13 @@ function LoaderRows({
 
 function GroupHeader<TData>({
   colSpan,
-  data,
-  style,
-  className
+  data
 }: {
   colSpan: number;
   data: GroupedData<TData>;
-  style?: React.CSSProperties;
-  className?: string;
 }) {
   return (
-    <Table.SectionHeader colSpan={colSpan} style={style} className={className}>
+    <Table.SectionHeader colSpan={colSpan}>
       <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
@@ -110,58 +104,36 @@ function GroupHeader<TData>({
 
 function Rows<TData>({
   rows = [],
-  virtualizer,
   onRowClick,
   classNames,
   lastRowRef
 }: RowsProps<TData>) {
-  const items = virtualizer
-    ? virtualizer.getVirtualItems()
-    : rows.map((_, i) => ({ index: i, start: 0, size: 0 }));
-
   return (
     <>
-      {items.map((item, idx) => {
-        const row = rows[item.index];
-        if (!row) return null;
-
+      {rows.map((row, idx) => {
         const isSelected = row.getIsSelected();
         const cells = row.getVisibleCells() || [];
         const isGroupHeader = row.subRows && row.subRows.length > 0;
-        const isLastRow = !virtualizer && idx === items.length - 1;
-        const rowKey = row.id + '-' + item.index;
-
-        const positionStyle: React.CSSProperties | undefined = virtualizer
-          ? {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              transform: `translateY(${item.start}px)`,
-              height: item.size
-            }
-          : undefined;
+        const isLastRow = idx === rows.length - 1;
 
         if (isGroupHeader) {
           return (
             <GroupHeader
-              key={rowKey}
+              key={row.id}
               colSpan={cells.length}
               data={row.original as GroupedData<unknown>}
-              style={positionStyle}
             />
           );
         }
 
         return (
           <Table.Row
-            key={rowKey}
+            key={row.id}
             className={cx(
               styles['row'],
               onRowClick ? styles['clickable'] : '',
               classNames?.row
             )}
-            style={positionStyle}
             data-state={isSelected && 'selected'}
             ref={isLastRow ? lastRowRef : undefined}
             onClick={() => onRowClick?.(row.original)}
@@ -206,6 +178,7 @@ export function Content({
     loadingRowCount = 3,
     tableQuery
   } = useDataTable();
+
   const headerGroups = table?.getHeaderGroups();
   const rowModel = table?.getRowModel();
   const { rows = [] } = rowModel || {};
@@ -250,7 +223,6 @@ export function Content({
 
   const hasData = rows?.length > 0 || isLoading;
 
-  // Determine if we're in zero state (no filters/search applied) or empty state (filters/search applied)
   const hasFiltersOrSearch =
     (tableQuery?.filters && tableQuery.filters.length > 0) ||
     Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
@@ -258,7 +230,6 @@ export function Content({
   const isZeroState = !hasData && !hasFiltersOrSearch;
   const isEmptyState = !hasData && hasFiltersOrSearch;
 
-  // Show zeroState when no data and no filters/search, otherwise show emptyState
   const stateToShow: React.ReactNode = isZeroState
     ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)
     : isEmptyState
