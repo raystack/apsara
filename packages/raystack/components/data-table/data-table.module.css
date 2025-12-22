@@ -81,31 +81,48 @@
 
 /* Virtual table (div-based) styles */
 .virtualTable {
-  display: table;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  border-collapse: collapse;
+}
+
+.virtualHeaderGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.virtualHeaderRow {
+  display: flex;
+}
+
+.virtualBodyGroup {
+  position: relative;
 }
 
 .virtualRow {
-  display: table-row;
+  display: flex;
+  position: absolute;
+  width: 100%;
+  left: 0;
 }
 
 .virtualHead {
-  display: table-cell;
-  padding: var(--rs-space-3) var(--rs-space-4);
-  text-align: left;
-  font-weight: 500;
-  border-bottom: 1px solid var(--rs-color-border-base-primary);
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .virtualCell {
-  display: table-cell;
-  padding: var(--rs-space-3) var(--rs-space-4);
-  border-bottom: 1px solid var(--rs-color-border-base-primary);
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .virtualSectionHeader {
-  display: table-row;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  display: flex;
+  align-items: center;
   background: var(--rs-color-background-base-secondary);
   font-weight: 500;
+  padding: var(--rs-space-3) var(--rs-space-4);
 }

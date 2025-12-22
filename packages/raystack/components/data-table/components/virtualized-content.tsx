@@ -6,7 +6,7 @@ import { flexRender } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
 import { useCallback, useRef } from 'react';
-
+import tableStyles from '~/components/table/table.module.css';
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
 import { Flex } from '../../flex';
@@ -26,9 +26,13 @@ function VirtualHeaders<TData>({
   className?: string;
 }) {
   return (
-    <div role='rowgroup' className={className}>
+    <div role='rowgroup' className={cx(styles.virtualHeaderGroup, className)}>
       {headerGroups?.map(headerGroup => (
-        <div role='row' key={headerGroup?.id} className={styles.virtualRow}>
+        <div
+          role='row'
+          key={headerGroup?.id}
+          className={styles.virtualHeaderRow}
+        >
           {headerGroup?.headers?.map(header => {
             const columnDef = header.column.columnDef as DataTableColumnDef<
               TData,
@@ -38,7 +42,11 @@ function VirtualHeaders<TData>({
               <div
                 role='columnheader'
                 key={header.id}
-                className={cx(styles.virtualHead, columnDef.classNames?.header)}
+                className={cx(
+                  tableStyles.head,
+                  styles.virtualHead,
+                  columnDef.classNames?.header
+                )}
                 style={columnDef.styles?.header}
               >
                 {flexRender(columnDef.header, header.getContext())}
@@ -96,7 +104,7 @@ function VirtualRows<TData>({
 
         const positionStyle: React.CSSProperties = {
           height: item.size,
-          transform: `translateY(${item.start - idx * item.size}px)`
+          top: item.start
         };
 
         if (isGroupHeader) {
@@ -132,7 +140,11 @@ function VirtualRows<TData>({
                 <div
                   role='cell'
                   key={cell.id}
-                  className={cx(styles.virtualCell, columnDef.classNames?.cell)}
+                  className={cx(
+                    tableStyles.cell,
+                    styles.virtualCell,
+                    columnDef.classNames?.cell
+                  )}
                   style={columnDef.styles?.cell}
                 >
                   {flexRender(columnDef.cell, cell.getContext())}
@@ -221,7 +233,7 @@ export function VirtualizedContent({
         />
         <div
           role='rowgroup'
-          className={classNames.body}
+          className={cx(styles.virtualBodyGroup, classNames.body)}
           style={{ height: virtualizer.getTotalSize() }}
         >
           <VirtualRows
