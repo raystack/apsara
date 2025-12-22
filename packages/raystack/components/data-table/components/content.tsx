@@ -91,13 +91,17 @@ function LoaderRows({
 
 function GroupHeader<TData>({
   colSpan,
-  data
+  data,
+  style,
+  className
 }: {
   colSpan: number;
   data: GroupedData<TData>;
+  style?: React.CSSProperties;
+  className?: string;
 }) {
   return (
-    <Table.SectionHeader colSpan={colSpan}>
+    <Table.SectionHeader colSpan={colSpan} style={style} className={className}>
       <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
