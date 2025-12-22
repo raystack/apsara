@@ -3,14 +3,9 @@
 import { TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
+import type { Virtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
-import {
-  ForwardedRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef
-} from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
@@ -60,11 +55,12 @@ function Headers<TData>({
 
 interface RowsProps<TData> {
   rows: Row<TData>[];
-  lastRowRef?: ForwardedRef<HTMLTableRowElement>;
+  virtualizer?: Virtualizer<HTMLDivElement, Element>;
   onRowClick?: (row: TData) => void;
   classNames?: {
     row?: string;
   };
+  lastRowRef?: React.RefObject<HTMLTableRowElement | null>;
 }
 
 function LoaderRows({
@@ -112,57 +108,85 @@ function GroupHeader<TData>({
   );
 }
 
-const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
-  (props, lastRowRef) => {
-    const { rows = [], onRowClick, classNames } = props;
-    return (
-      <>
-        {rows?.map((row, index) => {
-          const isSelected = row.getIsSelected();
-          const cells = row.getVisibleCells() || [];
-          const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
-          const isLastRow = index === rows.length - 1;
-          const rowKey = row.id + '-' + index;
-          return isSectionHeadingRow ? (
+function Rows<TData>({
+  rows = [],
+  virtualizer,
+  onRowClick,
+  classNames,
+  lastRowRef
+}: RowsProps<TData>) {
+  const items = virtualizer
+    ? virtualizer.getVirtualItems()
+    : rows.map((_, i) => ({ index: i, start: 0, size: 0 }));
+
+  return (
+    <>
+      {items.map((item, idx) => {
+        const row = rows[item.index];
+        if (!row) return null;
+
+        const isSelected = row.getIsSelected();
+        const cells = row.getVisibleCells() || [];
+        const isGroupHeader = row.subRows && row.subRows.length > 0;
+        const isLastRow = !virtualizer && idx === items.length - 1;
+        const rowKey = row.id + '-' + item.index;
+
+        const positionStyle: React.CSSProperties | undefined = virtualizer
+          ? {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              transform: `translateY(${item.start}px)`,
+              height: item.size
+            }
+          : undefined;
+
+        if (isGroupHeader) {
+          return (
             <GroupHeader
               key={rowKey}
               colSpan={cells.length}
               data={row.original as GroupedData<unknown>}
+              style={positionStyle}
             />
-          ) : (
-            <Table.Row
-              key={rowKey}
-              className={cx(
-                styles['row'],
-                onRowClick ? styles['clickable'] : '',
-                classNames?.row
-              )}
-              data-state={isSelected && 'selected'}
-              ref={isLastRow ? lastRowRef : undefined}
-              onClick={() => onRowClick?.(row.original)}
-            >
-              {cells.map(cell => {
-                const columnDef = cell.column.columnDef as DataTableColumnDef<
-                  unknown,
-                  unknown
-                >;
-                return (
-                  <Table.Cell
-                    key={cell.id}
-                    className={cx(styles['cell'], columnDef.classNames?.cell)}
-                    style={columnDef.styles?.cell}
-                  >
-                    {flexRender(columnDef.cell, cell.getContext())}
-                  </Table.Cell>
-                );
-              })}
-            </Table.Row>
           );
-        })}
-      </>
-    );
-  }
-);
+        }
+
+        return (
+          <Table.Row
+            key={rowKey}
+            className={cx(
+              styles['row'],
+              onRowClick ? styles['clickable'] : '',
+              classNames?.row
+            )}
+            style={positionStyle}
+            data-state={isSelected && 'selected'}
+            ref={isLastRow ? lastRowRef : undefined}
+            onClick={() => onRowClick?.(row.original)}
+          >
+            {cells.map(cell => {
+              const columnDef = cell.column.columnDef as DataTableColumnDef<
+                unknown,
+                unknown
+              >;
+              return (
+                <Table.Cell
+                  key={cell.id}
+                  className={cx(styles['cell'], columnDef.classNames?.cell)}
+                  style={columnDef.styles?.cell}
+                >
+                  {flexRender(columnDef.cell, cell.getContext())}
+                </Table.Cell>
+              );
+            })}
+          </Table.Row>
+        );
+      })}
+    </>
+  );
+}
 
 const DefaultEmptyComponent = () => (
   <EmptyState icon={<TableIcon />} heading='No Data' />
@@ -252,7 +276,7 @@ export function Content({
             <>
               <Rows
                 rows={rows}
-                ref={lastRowRef}
+                lastRowRef={lastRowRef}
                 onRowClick={onRowClick}
                 classNames={{
                   row: classNames.row
