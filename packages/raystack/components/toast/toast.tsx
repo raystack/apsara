@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { Toaster, type ToasterProps, toast as sonnerToast } from 'sonner';
+import { toast as sonnerToast, Toaster, type ToasterProps } from 'sonner';
 
 import { useTheme } from '../theme-provider';
 import { UseThemeProps } from '../theme-provider/types';
@@ -16,6 +16,15 @@ const ToastContainer = (props: ToastContainerProps) => {
     <Toaster
       theme={resolvedTheme as UseThemeProps['systemTheme']}
       className={styles['raystack-toast']}
+      toastOptions={{
+        style: {
+          background: 'var(--rs-color-background-base-primary)',
+          color: 'var(--rs-color-foreground-base-primary)',
+          border: '0.5px solid var(--rs-color-border-base-primary)',
+          padding: 'var(--rs-space-3)',
+          borderRadius: 'var(--rs-radius-2)'
+        }
+      }}
       {...props}
     />
   );

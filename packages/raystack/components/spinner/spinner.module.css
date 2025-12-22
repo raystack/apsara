@@ -112,13 +112,13 @@
 }
 
 .spinner-size-5 {
-  width: var(--rs-space-8);
-  height: var(--rs-space-8);
+  width: var(--rs-space-9);
+  height: var(--rs-space-9);
 }
 
 .spinner-size-6 {
-  width: var(--rs-space-9);
-  height: var(--rs-space-9);
+  width: var(--rs-space-10);
+  height: var(--rs-space-10);
 }
 
 .spinner-color-default {
