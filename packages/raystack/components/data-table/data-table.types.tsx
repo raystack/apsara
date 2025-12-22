@@ -172,13 +172,6 @@ export interface GroupedData<T> extends SubRows<T> {
   showGroupCount?: boolean;
 }
 
-export type VirtualizedConfig = {
-  rowHeight?: number;
-  groupHeaderHeight?: number;
-  overscan?: number;
-  height?: number | string;
-};
-
 export const defaultGroupOption = {
   id: '--',
   label: 'No grouping'
