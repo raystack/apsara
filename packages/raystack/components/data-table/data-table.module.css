@@ -64,3 +64,48 @@
 .emptyStateCell {
   border-bottom: none;
 }
+
+/* Virtualization styles */
+.scrollContainer {
+  overflow-y: auto;
+  overflow-x: auto;
+  position: relative;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--rs-color-background-base-primary);
+}
+
+/* Virtual table (div-based) styles */
+.virtualTable {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.virtualRow {
+  display: table-row;
+}
+
+.virtualHead {
+  display: table-cell;
+  padding: var(--rs-space-3) var(--rs-space-4);
+  text-align: left;
+  font-weight: 500;
+  border-bottom: 1px solid var(--rs-color-border-base-primary);
+}
+
+.virtualCell {
+  display: table-cell;
+  padding: var(--rs-space-3) var(--rs-space-4);
+  border-bottom: 1px solid var(--rs-color-border-base-primary);
+}
+
+.virtualSectionHeader {
+  display: table-row;
+  background: var(--rs-color-background-base-secondary);
+  font-weight: 500;
+}

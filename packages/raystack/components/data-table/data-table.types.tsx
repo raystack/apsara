@@ -111,32 +111,27 @@ export interface DataTableProps<TData, TValue> {
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
 }
 
-export type DataTableContentProps = {
-  emptyState?: React.ReactNode;
-  zeroState?: React.ReactNode;
-  classNames?: {
-    root?: string;
-    table?: string;
-    header?: string;
-    body?: string;
-    row?: string;
-  };
+export type DataTableContentClassNames = {
+  root?: string;
+  table?: string;
+  header?: string;
+  body?: string;
+  row?: string;
 };
 
-export type VirtualizedContentProps = {
+export type DataTableContentBaseProps = {
+  emptyState?: React.ReactNode;
+  zeroState?: React.ReactNode;
+  classNames?: DataTableContentClassNames;
+};
+
+export type DataTableContentProps = DataTableContentBaseProps;
+
+export type VirtualizedContentProps = DataTableContentBaseProps & {
   height: number | string;
   rowHeight?: number;
   groupHeaderHeight?: number;
   overscan?: number;
-  emptyState?: React.ReactNode;
-  zeroState?: React.ReactNode;
-  classNames?: {
-    root?: string;
-    table?: string;
-    header?: string;
-    body?: string;
-    row?: string;
-  };
 };
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
