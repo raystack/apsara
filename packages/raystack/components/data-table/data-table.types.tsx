@@ -120,7 +120,10 @@ export type DataTableContentProps = {
     header?: string;
     body?: string;
     row?: string;
+    scrollContainer?: string;
   };
+  virtualized?: boolean;
+  virtualizedConfig?: VirtualizedConfig;
 };
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
@@ -155,6 +158,13 @@ export interface GroupedData<T> extends SubRows<T> {
   count?: number;
   showGroupCount?: boolean;
 }
+
+export type VirtualizedConfig = {
+  rowHeight?: number;
+  groupHeaderHeight?: number;
+  overscan?: number;
+  height?: number | string;
+};
 
 export const defaultGroupOption = {
   id: '--',
