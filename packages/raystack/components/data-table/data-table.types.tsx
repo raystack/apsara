@@ -120,10 +120,23 @@ export type DataTableContentProps = {
     header?: string;
     body?: string;
     row?: string;
-    scrollContainer?: string;
   };
-  virtualized?: boolean;
-  virtualizedConfig?: VirtualizedConfig;
+};
+
+export type VirtualizedContentProps = {
+  height: number | string;
+  rowHeight?: number;
+  groupHeaderHeight?: number;
+  overscan?: number;
+  emptyState?: React.ReactNode;
+  zeroState?: React.ReactNode;
+  classNames?: {
+    root?: string;
+    table?: string;
+    header?: string;
+    body?: string;
+    row?: string;
+  };
 };
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
