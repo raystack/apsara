@@ -54,6 +54,9 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={value => row.toggleSelected(!!value)}
         aria-label='Select row'
+        style={{
+          display: 'block'
+        }}
       />
     ),
     enableSorting: false,

@@ -9,10 +9,10 @@ export const preview = {
     </Navbar.Start>
     <Navbar.End>
       <Search placeholder="Search an AOI" size="small" style={{ width: '200px' }} />
-      <Button variant="outline" size="small" color="neutral" leadingIcon={<FilterIcon />}>
+      <Button variant="outline" size="small" color="neutral" leadingIcon={<PlusIcon />}>
         Draw AOI
       </Button>
-      <Button variant="outline" size="small" color="neutral" leadingIcon={<OrganizationIcon />}>
+      <Button variant="outline" size="small" color="neutral" leadingIcon={<UploadIcon />}>
         Upload AOI
       </Button>
     </Navbar.End>

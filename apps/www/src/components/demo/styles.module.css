@@ -11,8 +11,6 @@
   min-height: 368px;
   display: flex;
   width: 100%;
-  /* border-bottom: 0.5px solid var(--rs-color-border-base-primary); */
-  max-height: 340px;
 }
 
 .preview {
@@ -48,6 +46,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   flex-shrink: 0;
+  max-height: 400px;
 }
 .noShadow {
   box-shadow: none;
