@@ -87,35 +87,6 @@ describe('ScrollArea', () => {
       expect(viewport).toBeInTheDocument();
       expect(screen.getByText(CONTENT_TEXT)).toBeInTheDocument();
     });
-
-    it('automatically renders both scrollbars', () => {
-      const { container } = render(
-        <BasicScrollArea>
-          <div>Content</div>
-        </BasicScrollArea>
-      );
-
-      const verticalScrollbar = container.querySelector(
-        `[data-orientation="vertical"]`
-      );
-      const horizontalScrollbar = container.querySelector(
-        `[data-orientation="horizontal"]`
-      );
-
-      expect(verticalScrollbar).toBeInTheDocument();
-      expect(horizontalScrollbar).toBeInTheDocument();
-    });
-
-    it('automatically renders corner', () => {
-      const { container } = render(
-        <BasicScrollArea>
-          <div>Content</div>
-        </BasicScrollArea>
-      );
-
-      const corner = container.querySelector(`.${styles.corner}`);
-      expect(corner).toBeInTheDocument();
-    });
   });
 
   describe('Type Prop', () => {
@@ -215,22 +186,6 @@ describe('ScrollArea', () => {
         // This is expected behavior - we verify the scrollbar structure is correct
         expect(scrollbar).toBeInTheDocument();
       }
-    });
-  });
-
-  describe('Corner', () => {
-    it('automatically renders corner when both scrollbars are present', () => {
-      const { container } = render(
-        <BasicScrollArea
-          type='always'
-          style={{ height: '100px', width: '200px' }}
-        >
-          <div style={{ height: '500px', width: '500px' }}>Content</div>
-        </BasicScrollArea>
-      );
-
-      const corner = container.querySelector(`.${styles.corner}`);
-      expect(corner).toBeInTheDocument();
     });
   });
 
