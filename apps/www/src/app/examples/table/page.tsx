@@ -1,13 +1,10 @@
 'use client';
 import {
-  Button,
   DataTable,
   DataTableColumnDef,
   DataTableQuery,
-  Flex,
-  IconButton
+  Flex
 } from '@raystack/apsara';
-import { FilterIcon } from '@raystack/apsara/icons';
 import { useMemo, useState } from 'react';
 
 const data: Payment[] = [
@@ -76,13 +73,16 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
       }
     ],
     filterType: 'multiselect',
-    enableColumnFilter: true
+    enableColumnFilter: true,
+    enableHiding: true
   },
   {
     accessorKey: 'email',
     header: 'Email',
     cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
-    enableColumnFilter: true
+    enableColumnFilter: true,
+    enableGrouping: true,
+    enableSorting: true
   },
   {
     accessorKey: 'amount',
@@ -98,7 +98,8 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
       return <div className='text-right font-medium'>{formatted}</div>;
     },
     enableColumnFilter: true,
-    filterType: 'number'
+    filterType: 'number',
+    enableSorting: true
   }
 ];
 
@@ -137,8 +138,10 @@ const Page = () => {
         backgroundColor: 'var(--rs-color-background-base-primary)',
         padding: '32px'
       }}
+      direction='column'
+      gap={8}
     >
-      <Flex direction='column' gap={4}>
+      {/* <Flex direction='column' gap={4}>
         <DataTable
           data={filteredData}
           mode='server'
@@ -170,6 +173,21 @@ const Page = () => {
               key={item.id}
             >{`${item.email} - ${item.amount} - ${item.status}`}</div>
           ))}
+        </DataTable>
+      </Flex> */}
+      <Flex direction='row' gap={4}>
+        <DataTable
+          data={filteredData}
+          mode='server'
+          columns={columns}
+          query={tableQuery}
+          onColumnVisibilityChange={value =>
+            console.log('column visibility change>> ', value)
+          }
+          onTableQueryChange={setTableQuery}
+          defaultSort={{ name: 'email', order: 'asc' }}
+        >
+          <DataTable.DisplayControls />
         </DataTable>
       </Flex>
     </Flex>

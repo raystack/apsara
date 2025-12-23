@@ -24,6 +24,14 @@ import {
 
 <auto-type-table path="./props.ts" name="DataTableProps" />
 
+### DataTable.DisplayControls Props
+
+<auto-type-table path="./props.ts" name="DisplayControlsProps" />
+
+### DataTable.Filters Props
+
+<auto-type-table path="./props.ts" name="FiltersProps" />
+
 ## DataTableQuery Interface
 
 <auto-type-table path="./props.ts" name="DataTableQuery" />
@@ -209,6 +217,21 @@ onTableQueryChange={handleQueryChange}>
 </DataTable>
 ```
 
+### Using DataTable Display Controls
+
+The `DataTable.DisplayControls` component can be used separately to display the display controls for custom views.
+
+```tsx
+<DataTable
+data={data}
+query={query}
+columns={columns}
+mode="server"
+onTableQueryChange={handleQueryChange}
+onColumnVisibilityChange={handleColumnVisibilityChange}>
+  <DataTable.DisplayControls />
+</DataTable>
+```
 ### Using DataTable Search
 
 The `DataTable.Search` component provides search functionality that automatically integrates with the table query. By default, it is disabled in zero state (when no data and no filters/search applied).
