@@ -18,6 +18,7 @@ import {
   Navbar,
   Popover,
   RangePicker,
+  ScrollArea,
   Search,
   Select,
   Sheet,
@@ -1575,7 +1576,6 @@ const Page = () => {
 
                   <TextArea
                     label='Example Text Area'
-                    placeholder='Type something...'
                     value={inputValue}
                     onChange={e => setInputValue(e.target.value)}
                   />
@@ -1710,7 +1710,6 @@ const Page = () => {
 
                 <TextArea
                   label='Example Text Area'
-                  placeholder='Type something...'
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
                 />
@@ -2582,6 +2581,106 @@ const Page = () => {
                   }
                 />
               </DataTable>
+            </Flex>
+          </Flex>
+
+          <Text
+            size='large'
+            weight='medium'
+            style={{ marginTop: '32px', marginBottom: '16px' }}
+          >
+            ScrollArea Examples
+          </Text>
+
+          <Flex direction='column' gap={6}>
+            {/* Basic Vertical ScrollArea */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Basic Vertical ScrollArea:</Text>
+              <ScrollArea
+                type='scroll'
+                style={{ height: '200px', width: '300px' }}
+              >
+                <Flex direction='column' gap={2}>
+                  {Array.from({ length: 20 }, (_, i) => (
+                    <Text key={i} size='small'>
+                      Item {i + 1}
+                    </Text>
+                  ))}
+                </Flex>
+              </ScrollArea>
+            </Flex>
+
+            {/* Basic Horizontal ScrollArea */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Basic Horizontal ScrollArea:</Text>
+              <ScrollArea style={{ height: '150px', width: '300px' }}>
+                <Flex direction='row' gap={4} style={{ width: '600px' }}>
+                  {Array.from({ length: 10 }, (_, i) => (
+                    <Flex
+                      key={i}
+                      direction='column'
+                      gap={2}
+                      style={{ minWidth: '150px' }}
+                    >
+                      <Text weight='medium' size='small'>
+                        Column {i + 1}
+                      </Text>
+                      <Text size='small' variant='secondary'>
+                        Content here
+                      </Text>
+                    </Flex>
+                  ))}
+                </Flex>
+              </ScrollArea>
+            </Flex>
+
+            {/* Both Vertical and Horizontal Scrollbars */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>
+                Both Vertical and Horizontal Scrollbars (Corner auto-added):
+              </Text>
+              <ScrollArea style={{ height: '200px', width: '300px' }}>
+                <Flex direction='row' gap={4} style={{ width: '800px' }}>
+                  {Array.from({ length: 15 }, (_, i) => (
+                    <Flex
+                      key={i}
+                      direction='column'
+                      gap={2}
+                      style={{ minWidth: '180px' }}
+                    >
+                      <Text weight='medium' size='small'>
+                        Column {i + 1}
+                      </Text>
+                      {Array.from({ length: 20 }, (_, j) => (
+                        <Text key={j} size='small' variant='secondary'>
+                          Row {j + 1}
+                        </Text>
+                      ))}
+                    </Flex>
+                  ))}
+                </Flex>
+              </ScrollArea>
+            </Flex>
+
+            {/* Auto Scroll (default) */}
+            <Flex direction='column' gap={3}>
+              <Text size='small'>Auto Scroll (default):</Text>
+              <ScrollArea style={{ height: '250px', width: '400px' }}>
+                <Flex direction='column' gap={4}>
+                  {Array.from({ length: 50 }, (_, i) => (
+                    <Flex key={i} direction='column' gap={2}>
+                      <Text weight='medium' size='small'>
+                        Section {i + 1}
+                      </Text>
+                      <Text size='small' variant='secondary'>
+                        This is some content for section {i + 1}. The scrollbar
+                        will appear on hover and overlay the content without
+                        affecting the layout.
+                      </Text>
+                    </Flex>
+                  ))}
+                </Flex>
+              </ScrollArea>
             </Flex>
           </Flex>
 
