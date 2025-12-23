@@ -20,46 +20,9 @@ export interface ScrollAreaRootProps {
    * Inline styles for the root element.
    */
   style?: React.CSSProperties;
-}
-
-export interface ScrollAreaViewportProps {
-  /**
-   * Custom className for the viewport element.
-   */
-  className?: string;
 
   /**
-   * Inline styles for the viewport element.
+   * The content to be scrolled. Both vertical and horizontal scrollbars are automatically rendered and shown when content overflows.
    */
-  style?: React.CSSProperties;
-}
-
-export interface ScrollAreaScrollbarProps {
-  /**
-   * Orientation of the scrollbar.
-   * @default 'vertical'
-   */
-  orientation?: 'vertical' | 'horizontal';
-
-  /**
-   * Custom className for the scrollbar element.
-   */
-  className?: string;
-
-  /**
-   * Inline styles for the scrollbar element.
-   */
-  style?: React.CSSProperties;
-}
-
-export interface ScrollAreaCornerProps {
-  /**
-   * Custom className for the corner element.
-   */
-  className?: string;
-
-  /**
-   * Inline styles for the corner element.
-   */
-  style?: React.CSSProperties;
+  children?: React.ReactNode;
 }

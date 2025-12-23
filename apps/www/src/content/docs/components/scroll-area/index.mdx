@@ -1,6 +1,6 @@
 ---
 title: ScrollArea
-description: A customizable scrollable container component with smooth scrolling, hover effects, and automatic corner handling for both vertical and horizontal scrollbars.
+description: A customizable scrollable container component with smooth scrolling, hover effects, and automatic scrollbar handling. Both vertical and horizontal scrollbars are automatically rendered and shown based on content overflow.
 ---
 
 import {
@@ -19,56 +19,29 @@ import {
 import { ScrollArea } from "@raystack/apsara";
 ```
 
-## Component Structure
-
-The ScrollArea component uses a composite pattern, providing modular sub-components for flexible scrollable containers:
-
-- `ScrollArea` - Root container that manages scrolling state
-- `ScrollArea.Viewport` - The scrollable content area
-- `ScrollArea.Scrollbar` - The scrollbar track and thumb (vertical or horizontal)
-- `ScrollArea.Corner` - The corner element (automatically added when both scrollbars are present)
-
 ## ScrollArea Props
 
-The ScrollArea root component extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
+The ScrollArea component extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
 
 <auto-type-table path="./props.ts" name="ScrollAreaRootProps" />
-
-### ScrollArea.Viewport Props
-
-The viewport is the scrollable content container. It extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
-
-<auto-type-table path="./props.ts" name="ScrollAreaViewportProps" />
-
-### ScrollArea.Scrollbar Props
-
-The scrollbar component renders the scrollbar track and thumb. When both vertical and horizontal scrollbars are present, the Corner component is automatically added. It extends standard HTML div attributes, so you can use props like `style`, `id`, and other standard HTML attributes.
-
-<auto-type-table path="./props.ts" name="ScrollAreaScrollbarProps" />
-
-### ScrollArea.Corner Props
-
-The corner component fills the space where vertical and horizontal scrollbars meet. It's automatically added when both scrollbars are present, but you can also add it manually if needed. It extends standard HTML div attributes, so you can use props like `style`, `id`, and other standard HTML attributes.
-
-<auto-type-table path="./props.ts" name="ScrollAreaCornerProps" />
 
 ## Examples
 
 ### Vertical Scrolling
 
-A basic vertical scroll area with a list of items.
+A basic vertical scroll area with a list of items. The scrollbar automatically appears when content overflows vertically.
 
 <Demo data={verticalDemo} />
 
 ### Horizontal Scrolling
 
-A horizontal scroll area for wide content like tables or card grids.
+A horizontal scroll area for wide content like tables or card grids. The scrollbar automatically appears when content overflows horizontally.
 
 <Demo data={horizontalDemo} />
 
 ### Both Scrollbars
 
-When both vertical and horizontal scrollbars are present, the Corner component is automatically added to fill the intersection.
+When content overflows both vertically and horizontally, both scrollbars appear automatically along with the corner element.
 
 <Demo data={bothScrollbarsDemo} />
 
@@ -80,11 +53,12 @@ Control when the scrollbar appears using the `type` prop.
 
 ## Features
 
+- **Automatic Scrollbars**: Both vertical and horizontal scrollbars are always rendered and automatically shown when content overflows
 - **Smooth Scrolling**: Custom scrollbar with smooth transitions
 - **Hover Effects**: Scrollbar expands from 4px to 6px on hover
-- **Auto Corner**: Automatically adds corner element when both scrollbars are present
+- **Auto Corner**: Corner element is automatically added when both scrollbars are visible
 - **Scroll Chaining**: Scroll continues to parent page when reaching container boundaries
-- **Customizable**: Full control over scrollbar visibility and behavior
+- **Customizable Visibility**: Control when scrollbars appear using the `type` prop
 
 ## Accessibility
 
