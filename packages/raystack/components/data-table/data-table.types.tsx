@@ -128,7 +128,7 @@ export type DataTableContentBaseProps = {
 export type DataTableContentProps = DataTableContentBaseProps;
 
 export type VirtualizedContentProps = DataTableContentBaseProps & {
-  height: number | string;
+  height?: number | string;
   rowHeight?: number;
   groupHeaderHeight?: number;
   overscan?: number;

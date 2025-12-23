@@ -163,7 +163,7 @@ const DefaultEmptyComponent = () => (
 );
 
 export function VirtualizedContent({
-  height,
+  height = '100%',
   rowHeight = 40,
   groupHeaderHeight,
   overscan = 5,

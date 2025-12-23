@@ -237,7 +237,7 @@ export function Content({
       : null;
 
   return (
-    <div className={classNames.root}>
+    <div className={cx(styles.contentRoot, classNames.root)}>
       <Table className={classNames.table}>
         {hasData && (
           <Headers headerGroups={headerGroups} className={classNames.header} />
