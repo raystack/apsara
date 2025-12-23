@@ -48,7 +48,7 @@
 .thumb {
   flex: 1;
   background: var(--rs-color-border-base-primary);
-  /* TODO: Change to apt var after the correct var is introduced */
+  /* TODO: Change to appropriate background var after the correct var is introduced */
   border-radius: var(--rs-radius-2);
   transition: opacity 150ms ease-out;
   opacity: 1;
