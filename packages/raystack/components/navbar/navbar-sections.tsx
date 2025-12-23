@@ -13,7 +13,7 @@ export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
     <Flex
       ref={ref}
       align='center'
-      gap={3}
+      gap={5}
       className={cx(styles.start, className)}
       role={ariaLabel ? 'group' : undefined}
       aria-label={ariaLabel}
@@ -33,7 +33,7 @@ export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
     <Flex
       ref={ref}
       align='center'
-      gap={3}
+      gap={5}
       className={cx(styles.end, className)}
       role={ariaLabel ? 'group' : undefined}
       aria-label={ariaLabel}

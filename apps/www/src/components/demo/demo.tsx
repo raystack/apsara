@@ -8,6 +8,7 @@ import {
   UploadIcon
 } from '@radix-ui/react-icons';
 import * as Apsara from '@raystack/apsara';
+import dayjs from 'dayjs';
 import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { Suspense } from 'react';
@@ -35,7 +36,8 @@ export default function Demo(props: DemoProps) {
       TransformIcon,
       Pencil2Icon,
       InfoCircledIcon,
-      UploadIcon
+      UploadIcon,
+      dayjs
     }
   } = props;
 

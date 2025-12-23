@@ -1,7 +1,7 @@
 .root {
   display: flex;
   width: 100%;
-  padding: var(--rs-space-4) var(--rs-space-6);
+  padding: var(--rs-space-4) var(--rs-space-7);
   background: var(--rs-color-background-base-primary);
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
   box-shadow: var(--rs-shadow-feather);

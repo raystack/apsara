@@ -8,6 +8,7 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
+  border: 0.5px solid transparent;
 }
 
 .container {
@@ -112,7 +113,7 @@
 
 .callout-outline.callout-grey {
   background: var(--rs-color-background-neutral-primary);
-  border: 1px solid var(--rs-color-border-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
 }
 
 .callout-outline.callout-success {
@@ -122,17 +123,17 @@
 
 .callout-outline.callout-alert {
   background: var(--rs-color-background-danger-primary);
-  border: 1px solid var(--rs-color-border-danger-primary);
+  border: 0.5px solid var(--rs-color-border-danger-primary);
 }
 
 .callout-outline.callout-accent {
   background: var(--rs-color-background-accent-primary);
-  border: 1px solid var(--rs-color-border-accent-primary);
+  border: 0.5px solid var(--rs-color-border-accent-primary);
 }
 
 .callout-outline.callout-attention {
   background: var(--rs-color-background-attention-primary);
-  border: 1px solid var(--rs-color-border-attention-primary);
+  border: 0.5px solid var(--rs-color-border-attention-primary);
   color: var(--rs-color-foreground-base-secondary);
 }
 
@@ -171,25 +172,25 @@
 
 .callout-outline.callout-high-contrast.callout-grey {
   background: var(--rs-color-background-neutral-primary);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-primary);
 }
 
 .callout-outline.callout-high-contrast.callout-alert {
   background: var(--rs-color-background-danger-primary);
-  border: 1px solid var(--rs-color-border-danger-primary);
+  border: 0.5px solid var(--rs-color-border-danger-primary);
   color: var(--rs-color-foreground-base-primary);
 }
 
 .callout-outline.callout-high-contrast.callout-accent {
   background: var(--rs-color-background-accent-primary);
-  border: 1px solid var(--rs-color-border-accent-primary);
+  border: 0.5px solid var(--rs-color-border-accent-primary);
   color: var(--rs-color-foreground-base-primary);
 }
 
 .callout-outline.callout-high-contrast.callout-attention {
   background: var(--rs-color-background-attention-primary);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -201,7 +202,7 @@
 
 .callout-outline.callout-gradient {
   background: radial-gradient(circle, #ad00e933 0%, #ef040433 100%);
-  border: 1px solid #ef040444;
+  border: 0.5px solid #ef040444;
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -213,7 +214,7 @@
 
 .callout-outline.callout-high-contrast.callout-gradient {
   background: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -225,7 +226,7 @@
 
 .callout-outline.callout-normal {
   background: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -236,6 +237,6 @@
 
 .callout-outline.callout-high-contrast.callout-normal {
   background: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-primary);
 }

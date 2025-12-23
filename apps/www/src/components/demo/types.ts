@@ -31,6 +31,7 @@ export type ControlType = {
   initialValue?: string | boolean;
   min?: number;
   max?: number;
+  isIconOptional?: boolean;
 };
 
 export type ControlsType = Record<string, ControlType>;

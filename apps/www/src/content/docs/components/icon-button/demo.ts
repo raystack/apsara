@@ -19,7 +19,8 @@ export const playground = {
     disabled: { type: 'checkbox', defaultValue: false },
     children: {
       type: 'icon',
-      initialValue: '<Info size={16} />'
+      initialValue: '<Info size={16} />',
+      isIconOptional: false
     }
   },
   getCode

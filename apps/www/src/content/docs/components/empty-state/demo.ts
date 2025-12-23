@@ -3,11 +3,17 @@
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
-  return `<EmptyState
-  ${getPropsString(props)}
-      primaryAction={<Button>Primary Action</Button>}
-      secondaryAction={<Button variant="text">Secondary Action</Button>}
-    />`;
+  const { primaryAction, secondaryAction, ...rest } = props;
+  const primaryActionCode = primaryAction
+    ? `<Button>Primary Action</Button>`
+    : undefined;
+  const secondaryActionCode = secondaryAction
+    ? `<Button variant="text">Secondary Action</Button>`
+    : undefined;
+  return `<EmptyState${getPropsString(rest)}
+  ${primaryAction ? `primaryAction={${primaryActionCode}}` : ''}
+  ${secondaryAction ? `secondaryAction={${secondaryActionCode}}` : ''}
+  />`;
 };
 
 export const playground = {
@@ -28,7 +34,18 @@ export const playground = {
     },
     icon: {
       type: 'icon',
-      initialValue: '<X size={16} />'
+      initialValue: '<X size={16} />',
+      isIconOptional: false
+    },
+    primaryAction: {
+      type: 'checkbox',
+      initialValue: true,
+      defaultValue: false
+    },
+    secondaryAction: {
+      type: 'checkbox',
+      initialValue: true,
+      defaultValue: false
     }
   },
   getCode

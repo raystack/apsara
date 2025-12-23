@@ -12,7 +12,7 @@ export const playground = {
     label: { type: 'text', initialValue: 'Your Name' },
     helperText: { type: 'text', initialValue: 'Enter your full name' },
     error: { type: 'text', initialValue: '' },
-    disabled: { type: 'boolean', initialValue: false },
+    disabled: { type: 'checkbox', initialValue: false, defaultValue: false },
     leadingIcon: { type: 'icon', initialValue: '' },
     trailingIcon: { type: 'icon', initialValue: '' },
     optional: { type: 'checkbox', defaultValue: false },
@@ -30,7 +30,7 @@ export const playground = {
 export const basicDemo = {
   type: 'code',
   code: `
-  <InputField 
+  <InputField
   label="Default"
   placeholder="Enter text"
 />`
@@ -38,7 +38,7 @@ export const basicDemo = {
 export const helperTextDemo = {
   type: 'code',
   code: `
-  <InputField 
+  <InputField
   label="With label"
   placeholder="Enter text"
   helperText="This is a helper text"
@@ -47,7 +47,7 @@ export const helperTextDemo = {
 export const errorDemo = {
   type: 'code',
   code: `
- <InputField 
+ <InputField
   label="With Error"
   placeholder="Enter text"
   error="This field is required"
@@ -56,7 +56,7 @@ export const errorDemo = {
 export const prefixDemo = {
   type: 'code',
   code: `
- <InputField 
+ <InputField
   label="With Prefix/Suffix"
   placeholder="0.00"
   prefix="$"
@@ -66,7 +66,7 @@ export const prefixDemo = {
 export const iconDemo = {
   type: 'code',
   code: `
- <InputField 
+ <InputField
   label="With Icons"
   placeholder="Enter text"
   leadingIcon={<Home size={16}/>}
@@ -76,7 +76,7 @@ export const iconDemo = {
 export const optionalDemo = {
   type: 'code',
   code: `
- <InputField 
+ <InputField
   label="Optional Field"
   placeholder="Enter text"
   optional
@@ -85,7 +85,7 @@ export const optionalDemo = {
 export const disabledDemo = {
   type: 'code',
   code: `
-<InputField 
+<InputField
   label="Disabled"
   placeholder="Enter text"
   disabled
@@ -94,7 +94,7 @@ export const disabledDemo = {
 export const widthDemo = {
   type: 'code',
   code: `
-<InputField 
+<InputField
   label="Custom Width"
   placeholder="Enter text"
   width="300px"
@@ -104,11 +104,11 @@ export const sizeDemo = {
   type: 'code',
   code: `
 <Flex direction="column" gap="medium">
-  <InputField 
+  <InputField
     label="Large Input (Default)"
     placeholder="32px height"
   />
-  <InputField 
+  <InputField
     label="Small Input"
     placeholder="24px height"
     size="small"
@@ -119,7 +119,7 @@ export const sizeChipDemo = {
   type: 'code',
   code: `
 <Flex direction="column" gap="medium">
-  <InputField 
+  <InputField
     label="Large Input with Chips"
     placeholder="Type and press Enter..."
     chips={[
@@ -127,7 +127,7 @@ export const sizeChipDemo = {
       { label: "B", onRemove: () => console.log("Remove B") }
     ]}
   />
-  <InputField 
+  <InputField
     label="Small Input with Chips"
     placeholder="Type and press Enter..."
     size="small"

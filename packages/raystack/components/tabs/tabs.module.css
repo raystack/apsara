@@ -10,7 +10,7 @@
   gap: var(--rs-space-2);
   background-color: var(--rs-color-background-neutral-secondary);
   padding: var(--rs-space-1);
-  border-radius: var(--rs-radius-3);
+  border-radius: var(--rs-radius-2);
   width: 100%;
   box-shadow: var(--rs-shadow-inset);
 }
