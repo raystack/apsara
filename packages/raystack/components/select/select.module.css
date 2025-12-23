@@ -8,7 +8,7 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-soft);
-  border: 1px solid var(--rs-color-border-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
   min-width: var(--radix-select-trigger-width);
   transition: all 0.2s ease;
   max-height: 320px;
@@ -71,7 +71,6 @@
 
 .trigger-outline {
   border: 0.5px solid var(--rs-color-border-base-secondary);
-  box-shadow: var(--rs-shadow-feather);
 }
 
 .trigger-text {
@@ -155,7 +154,7 @@
 .content[data-variant="text"] {
   margin-top: var(--rs-space-2);
   padding: var(--rs-space-1);
-  border: 1px solid var(--rs-color-border-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
   box-shadow: var(--rs-shadow-soft);
 }
 
