@@ -57,6 +57,12 @@
   cursor: pointer;
 }
 
+.head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .cell {
   background: inherit;
 }
@@ -109,11 +115,16 @@
 .virtualHead {
   flex: 1 1 0;
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .virtualCell {
   flex: 1 1 0;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 .virtualSectionHeader {

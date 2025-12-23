@@ -39,7 +39,7 @@ function Headers<TData>({
               <Table.Head
                 key={header.id}
                 colSpan={header.colSpan}
-                className={columnDef.classNames?.header}
+                className={cx(styles.head, columnDef.classNames?.header)}
                 style={columnDef.styles?.header}
               >
                 {flexRender(columnDef.header, header.getContext())}
