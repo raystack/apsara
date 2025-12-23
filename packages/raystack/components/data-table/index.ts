@@ -1,12 +1,14 @@
+export { EmptyFilterValue } from '~/types/filters';
+export type { DataTableSearchProps } from './components/search';
 export { DataTable } from './data-table';
 export {
   DataTableColumnDef,
-  InternalQuery,
+  DataTableContentProps,
+  DataTableFilter,
   DataTableQuery,
   DataTableSort,
   InternalFilter,
-  DataTableFilter
+  InternalQuery,
+  VirtualizedContentProps
 } from './data-table.types';
-export { EmptyFilterValue } from '~/types/filters';
-export type { DataTableSearchProps } from './components/search';
 export { useDataTable } from './hooks/useDataTable';
