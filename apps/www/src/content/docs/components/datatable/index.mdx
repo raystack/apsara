@@ -45,6 +45,48 @@ import {
 
 <auto-type-table path="./props.ts" name="DataTableContentProps" />
 
+## DataTable.VirtualizedContent Props
+
+<auto-type-table path="./props.ts" name="VirtualizedContentProps" />
+
+### Virtualized Content
+
+For large datasets, use `DataTable.VirtualizedContent` for better performance. Parent container must have a fixed height.
+
+```tsx
+<div style={{ height: 400 }}>
+  <DataTable
+    data={data}
+    columns={columns}
+    defaultSort={{ name: "name", order: "asc" }}>
+    <DataTable.Toolbar />
+    <DataTable.VirtualizedContent rowHeight={44} />
+  </DataTable>
+</div>
+```
+
+#### Fixed Width Columns
+
+By default, columns share equal width. For fixed width columns, use `flex: 'none'` with `width`:
+
+```tsx
+const columns = [
+  {
+    accessorKey: "select",
+    header: "",
+    styles: {
+      header: { width: 50, flex: "none" },
+      cell: { width: 50, flex: "none" }
+    }
+  },
+  {
+    accessorKey: "name",
+    header: "Name"
+    // Uses flex: 1 1 0 by default (equal width)
+  }
+];
+```
+
 ## Examples
 
 ### Basic Usage
