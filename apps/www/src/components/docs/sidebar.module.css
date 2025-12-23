@@ -15,3 +15,18 @@
 .main a {
   transition: none;
 }
+.items {
+  gap: 0;
+}
+.label {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+.itemText {
+  overflow: visible;
+}
+.indicator {
+  width: 5px;
+  height: 5px;
+  background-color: var(--rs-color-background-accent-emphasis);
+  border-radius: var(--rs-radius-full);
+}

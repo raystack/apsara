@@ -2,6 +2,8 @@
   max-width: 806px;
   padding: var(--rs-space-15) var(--rs-space-7);
   width: 100%;
+  gap: var(--rs-space-12);
+  min-height: calc(100vh - 50px);
 }
 
 :global(.prose) {

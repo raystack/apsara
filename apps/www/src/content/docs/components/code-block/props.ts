@@ -150,9 +150,9 @@ export interface CodeBlockCopyButtonProps {
 export interface CodeBlockCollapseTriggerProps {
   /**
    * The text to display on the collapse trigger
-   * @defaultValue "Show Code"
+   * @defaultValue (collapsed) => collapsed ? "Show Code" : "Hide Code"
    */
-  children?: ReactNode;
+  children?: ReactNode | ((collapsed: boolean) => ReactNode);
 
   /**
    * Additional CSS class name
