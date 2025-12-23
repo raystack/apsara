@@ -1,0 +1,9 @@
+# Exclude test files
+dist/**/__tests__/**
+# Exclude dev files
+dist/vitest.setup.*
+dist/figma/**
+# Exclude bundled dependencies
+dist/node_modules/**
+dist/_virtual/**
+
