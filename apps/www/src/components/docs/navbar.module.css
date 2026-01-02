@@ -18,9 +18,12 @@
   top: 0;
   z-index: var(--rs-z-index-portal);
   height: 50px;
-  background: rgba(252, 252, 252, 0.9);
+  background: #fcfcfce6;
 }
 
+[data-theme="dark"] .navbar {
+  background: #111111e6;
+}
 .left {
   display: flex;
   align-items: center;
