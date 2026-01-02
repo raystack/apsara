@@ -2,13 +2,11 @@
   display: flex;
   width: 220px;
   height: 100%;
-  padding: var(--rs-space-1) var(--rs-space-4) var(--rs-space-5)
-    var(--rs-space-4);
+  padding: var(--rs-space-5) var(--rs-space-4);
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   flex-shrink: 0;
-  border-right: 1px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-primary);
   transition: width 0.2s ease;
   position: relative;
@@ -27,16 +25,17 @@
 }
 
 .root[data-state="collapsed"] {
-  width: 56px;
+  width: 57px;
 }
 
 .header {
   gap: var(--rs-space-3);
-  padding: var(--rs-space-6) var(--rs-space-2);
+  padding: var(--rs-space-2);
   align-self: stretch;
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
   overflow: hidden;
+  margin-bottom: var(--rs-space-6);
 }
 
 .main {
@@ -149,6 +148,7 @@
   left: 0;
   right: auto;
   cursor: ew-resize;
+  transform: translateX(-50%);
 }
 
 .nav-group {
