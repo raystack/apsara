@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface DataTableProps {
   /** Column definitions (Required) */
   columns: DataTableColumnDef[];
@@ -28,6 +30,11 @@ export interface DataTableProps {
 
   /** Infinite scroll callback */
   onLoadMore?: () => Promise<void>;
+
+  /** Column visibility change callback */
+  onColumnVisibilityChange?: (
+    columnVisibility: Record<string, boolean>
+  ) => void;
 }
 
 export interface DataTableQuery {
@@ -73,6 +80,22 @@ export interface DataTableColumnDef<TData, TValue> {
   defaultHidden?: boolean;
 }
 
+export interface DisplayControlsProps {
+  /** Trigger element */
+  trigger?: ReactNode;
+}
+
+export interface FiltersProps {
+  /** Trigger element */
+  trigger?:
+    | ReactNode
+    | (({
+        availableFilters,
+        appliedFilters
+      }: {
+        availableFilters: DataTableColumn<TData, TValue>[];
+        appliedFilters: Set<string>;
+      }) => ReactNode);
 export interface DataTableContentProps {
   /**
    * Custom empty state shown when initial data exists but no results match after filters/search.
