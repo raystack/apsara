@@ -1,13 +1,12 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { Highlight } from 'prism-react-renderer';
-import { Language } from 'prism-react-renderer';
-import { HTMLAttributes, forwardRef, memo } from 'react';
+import { Highlight, Language } from 'prism-react-renderer';
+import { forwardRef, HTMLAttributes, memo } from 'react';
 import { useIsomorphicLayoutEffect } from '~/hooks';
-import { useCodeBlockContext } from './code-block-root';
-import styles from './code-block.module.css';
 import code from './code.module.css';
+import styles from './code-block.module.css';
+import { useCodeBlockContext } from './code-block-root';
 
 export interface CodeBlockCodeProps extends HTMLAttributes<HTMLDivElement> {
   children: string;

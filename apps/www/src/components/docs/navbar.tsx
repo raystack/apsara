@@ -1,13 +1,16 @@
 'use client';
-import { SourceType } from '@/lib/types';
+import { CopyIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
 import { Breadcrumb, Button } from '@raystack/apsara';
 import { useBreadcrumb } from 'fumadocs-core/breadcrumb';
 import { Root } from 'fumadocs-core/page-tree';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
+import { SourceType } from '@/lib/types';
 import styles from './navbar.module.css';
 
 const cache = new Map<string, string>();
+const GITHUB_BASE_URL = 'https://github.com/raystack/apsara/blob/main';
 
 interface DocsNavbarProps {
   url: string;
@@ -59,12 +62,6 @@ export default function DocsNavbar({
     }
   };
 
-  const handleViewSource = () => {
-    // Construct GitHub URL or source viewer URL
-    // Adjust based on your repository structure
-    if (source) window.open(source, '_blank');
-  };
-
   return (
     <header className={styles.navbar}>
       <div className={styles.left}>
@@ -89,18 +86,21 @@ export default function DocsNavbar({
           size='small'
           disabled={isLoading}
           onClick={handleCopyMarkdown}
+          leadingIcon={<CopyIcon height={12} width={12} />}
         >
           Copy markdown
         </Button>
         {source && (
-          <Button
-            variant='outline'
-            color='neutral'
-            size='small'
-            onClick={handleViewSource}
-          >
-            View source
-          </Button>
+          <Link href={`${GITHUB_BASE_URL}/${source}`} target='_blank'>
+            <Button
+              variant='outline'
+              color='neutral'
+              size='small'
+              leadingIcon={<GitHubLogoIcon height={12} width={12} />}
+            >
+              View source
+            </Button>
+          </Link>
         )}
       </div>
     </header>

@@ -18,6 +18,7 @@
   top: 0;
   z-index: var(--rs-z-index-portal);
   height: 50px;
+  background: rgba(252, 252, 252, 0.9);
 }
 
 .left {

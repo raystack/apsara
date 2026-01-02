@@ -84,7 +84,9 @@ function resolveOverlaps(headings: Heading[], maxPosition: number): Heading[] {
  */
 export default function TableOfContents({
   headings: tocHeadings
-}: { headings: TOCItemType[] }) {
+}: {
+  headings: TOCItemType[];
+}) {
   const [headings, setHeadings] = useState<Heading[]>([]);
   const [containerHeight, setContainerHeight] = useState<number>(0);
   const [ready, setReady] = useState<boolean>(false);
@@ -305,7 +307,8 @@ export default function TableOfContents({
                 // Center label vertically on tick (label height ~12px, so offset by half)
                 top: `${h.yPosition - 6}px`,
                 // Indent based on heading level (h2 furthest right, h4 closest to bar)
-                right: `${(3 - h.level) * 4 + 32}px`,
+                // right: `${(3 - h.level) * 4 + 28}px`,
+                right: '24px',
                 zIndex: 10 * (h.level < 4 ? 1 : 0),
                 transitionDelay: `${50 * i}ms`
               }}

@@ -38,13 +38,15 @@
 
 /* Collapse Trigger */
 .collapseTrigger {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
   background-color: var(--rs-color-background-base-secondary);
   border-top: 0.5px solid var(--rs-color-border-base-primary);
+}
+.collapseTrigger.collapsed {
+  position: absolute;
+  bottom: 0;
 }
 
 /* Code Block Code */

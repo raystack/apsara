@@ -1,6 +1,4 @@
 import * as path from 'node:path';
-import { fileURLToPath } from 'url';
-import { SourceSchema, TagSchema } from '@/lib/types';
 import {
   rehypeToc,
   remarkGfm,
@@ -16,10 +14,12 @@ import {
   metaSchema
 } from 'fumadocs-mdx/config';
 import {
-  GeneratorOptions,
   createGenerator,
+  GeneratorOptions,
   remarkAutoTypeTable
 } from 'fumadocs-typescript';
+import { fileURLToPath } from 'url';
+import { SourceSchema, TagSchema } from '@/lib/types';
 
 const relative = (s: string): string =>
   path.resolve(fileURLToPath(new URL(s, import.meta.url)));

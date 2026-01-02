@@ -1,11 +1,11 @@
-import { useDataTable } from "./useDataTable";
 import {
-  filterOperators,
   FilterOperatorTypes,
   FilterType,
-} from "~/types/filters";
-import { DataTableColumn } from "../data-table.types";
-import { getDataType } from "../utils/filter-operations";
+  filterOperators
+} from '~/types/filters';
+import { DataTableColumn } from '../data-table.types';
+import { getDataType } from '../utils/filter-operations';
+import { useDataTable } from './useDataTable';
 
 export function useFilters<TData, TValue>() {
   const { updateTableQuery } = useDataTable();
@@ -21,10 +21,10 @@ export function useFilters<TData, TValue>() {
       filterType === FilterType.date
         ? new Date()
         : filterType === FilterType.select
-        ? options[0].value
-        : "";
+          ? options[0].value
+          : '';
 
-    updateTableQuery((query) => {
+    updateTableQuery(query => {
       return {
         ...query,
         filters: [
@@ -35,32 +35,32 @@ export function useFilters<TData, TValue>() {
             _type: filterType,
             name: id,
             value: defaultValue,
-            operator: defaultFilter.value,
-          },
-        ],
+            operator: defaultFilter.value
+          }
+        ]
       };
     });
   }
 
   function handleRemoveFilter(columnId: string) {
-    updateTableQuery((query) => {
+    updateTableQuery(query => {
       return {
         ...query,
-        filters: query.filters?.filter((filter) => filter.name !== columnId),
+        filters: query.filters?.filter(filter => filter.name !== columnId)
       };
     });
   }
 
   function handleFilterValueChange(columnId: string, value: any) {
-    updateTableQuery((query) => {
+    updateTableQuery(query => {
       return {
         ...query,
-        filters: query.filters?.map((filter) => {
+        filters: query.filters?.map(filter => {
           if (filter.name === columnId) {
             return { ...filter, value };
           }
           return filter;
-        }),
+        })
       };
     });
   }
@@ -69,15 +69,15 @@ export function useFilters<TData, TValue>() {
     columnId: string,
     operator: FilterOperatorTypes
   ) {
-    updateTableQuery((query) => {
+    updateTableQuery(query => {
       return {
         ...query,
-        filters: query.filters?.map((filter) => {
+        filters: query.filters?.map(filter => {
           if (filter.name === columnId) {
             return { ...filter, operator };
           }
           return filter;
-        }),
+        })
       };
     });
   }
@@ -86,6 +86,6 @@ export function useFilters<TData, TValue>() {
     onAddFilter,
     handleRemoveFilter,
     handleFilterValueChange,
-    handleFilterOperationChange,
+    handleFilterOperationChange
   };
 }
