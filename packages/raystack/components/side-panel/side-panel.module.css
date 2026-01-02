@@ -13,10 +13,6 @@
 }
 
 .side-panel-header {
-  border-right: 0.5px solid var(--rs-color-border-base-primary);
-}
-
-.side-panel-header {
   padding: var(--rs-space-5);
   display: flex;
   flex-direction: column;
