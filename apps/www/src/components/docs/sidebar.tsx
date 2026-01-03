@@ -1,12 +1,11 @@
 'use client';
 
-import { Flex, Indicator, Sidebar } from '@raystack/apsara';
+import { Flex, Sidebar } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import { Item, Node, Root } from 'fumadocs-core/page-tree';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { type ReactNode, useMemo } from 'react';
-import { docs } from '@/lib/source';
+import { type ReactNode } from 'react';
 import { isActiveUrl } from '@/lib/utils';
 import Logo from '../logo';
 import { ThemeToggle } from '../theme-switcher';
