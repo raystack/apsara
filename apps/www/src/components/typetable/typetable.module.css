@@ -21,7 +21,7 @@
   font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
-  color: #000000;
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .propLabel {

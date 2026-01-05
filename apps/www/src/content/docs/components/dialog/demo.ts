@@ -22,7 +22,7 @@ export const getCode = (props: any) => {
           </Dialog.Description>
         </Dialog.Body>
         <Dialog.Footer>
-        <Dialog.Close asChild><Button variant="outline">Cancel</Button></Dialog.Close>
+        <Dialog.Close asChild><Button variant="outline" color="neutral">Cancel</Button></Dialog.Close>
         <Button>OK</Button>
         </Dialog.Footer>
       </Dialog.Content>

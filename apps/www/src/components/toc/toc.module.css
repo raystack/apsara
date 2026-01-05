@@ -25,11 +25,11 @@
 }
 
 .tickLineBefore {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--rs-color-background-neutral-tertiary);
 }
 
 .tickLineAfter {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--rs-color-background-neutral-tertiary);
 }
 
 .tickContainer:hover .tickLine {
@@ -58,7 +58,7 @@
   align-items: center;
   font-family: var(--rs-font-mono);
   font-size: 0.75rem;
-  color: black;
+  color: var(--rs-color-foreground-base-primary);
   text-transform: capitalize;
   opacity: 0;
   transition: opacity 300ms;
@@ -97,7 +97,7 @@
   position: absolute;
   right: 0;
   height: 1px;
-  background-color: black;
+  background-color: var(--rs-color-background-neutral-emphasis);
 }
 
 .scrollMarkerContainer {

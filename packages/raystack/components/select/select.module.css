@@ -67,6 +67,7 @@
   user-select: none;
   -webkit-user-select: none;
   transition: all 0.2s ease;
+  box-shadow: var(--rs-shadow-feather);
 }
 
 .trigger-outline {
