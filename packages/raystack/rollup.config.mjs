@@ -4,7 +4,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import svgr from '@svgr/rollup';
 import postcssImport from 'postcss-import';
-import { nodeExternals } from 'rollup-plugin-node-externals';
+import nodeExternals from 'rollup-plugin-node-externals';
 import postcss from 'rollup-plugin-postcss';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
 import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
@@ -17,7 +17,8 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     devDeps: false,
     peerDeps: true,
     optDeps: true,
-    // Include React subpaths and regex patterns that need to be externalized
+    // Note: Include deps with subpaths that need to be externalized in include array.
+    // https://github.com/Septh/rollup-plugin-node-externals?tab=readme-ov-file#1-this-plugin-is-smart
     include: [
       'react/jsx-runtime',
       'react-dom/client',
