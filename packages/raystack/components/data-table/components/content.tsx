@@ -108,56 +108,52 @@ function Rows<TData>({
   classNames,
   lastRowRef
 }: RowsProps<TData>) {
-  return (
-    <>
-      {rows.map((row, idx) => {
-        const isSelected = row.getIsSelected();
-        const cells = row.getVisibleCells() || [];
-        const isGroupHeader = row.subRows && row.subRows.length > 0;
-        const isLastRow = idx === rows.length - 1;
+  return rows.map((row, idx) => {
+    const isSelected = row.getIsSelected();
+    const cells = row.getVisibleCells() || [];
+    const isGroupHeader = row.subRows && row.subRows.length > 0;
+    const isLastRow = idx === rows.length - 1;
 
-        if (isGroupHeader) {
+    if (isGroupHeader) {
+      return (
+        <GroupHeader
+          key={row.id}
+          colSpan={cells.length}
+          data={row.original as GroupedData<unknown>}
+        />
+      );
+    }
+
+    return (
+      <Table.Row
+        key={row.id}
+        className={cx(
+          styles['row'],
+          onRowClick ? styles['clickable'] : '',
+          classNames?.row
+        )}
+        data-state={isSelected && 'selected'}
+        ref={isLastRow ? lastRowRef : undefined}
+        onClick={() => onRowClick?.(row.original)}
+      >
+        {cells.map(cell => {
+          const columnDef = cell.column.columnDef as DataTableColumnDef<
+            unknown,
+            unknown
+          >;
           return (
-            <GroupHeader
-              key={row.id}
-              colSpan={cells.length}
-              data={row.original as GroupedData<unknown>}
-            />
+            <Table.Cell
+              key={cell.id}
+              className={cx(styles['cell'], columnDef.classNames?.cell)}
+              style={columnDef.styles?.cell}
+            >
+              {flexRender(columnDef.cell, cell.getContext())}
+            </Table.Cell>
           );
-        }
-
-        return (
-          <Table.Row
-            key={row.id}
-            className={cx(
-              styles['row'],
-              onRowClick ? styles['clickable'] : '',
-              classNames?.row
-            )}
-            data-state={isSelected && 'selected'}
-            ref={isLastRow ? lastRowRef : undefined}
-            onClick={() => onRowClick?.(row.original)}
-          >
-            {cells.map(cell => {
-              const columnDef = cell.column.columnDef as DataTableColumnDef<
-                unknown,
-                unknown
-              >;
-              return (
-                <Table.Cell
-                  key={cell.id}
-                  className={cx(styles['cell'], columnDef.classNames?.cell)}
-                  style={columnDef.styles?.cell}
-                >
-                  {flexRender(columnDef.cell, cell.getContext())}
-                </Table.Cell>
-              );
-            })}
-          </Table.Row>
-        );
-      })}
-    </>
-  );
+        })}
+      </Table.Row>
+    );
+  });
 }
 
 const DefaultEmptyComponent = () => (

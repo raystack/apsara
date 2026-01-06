@@ -91,71 +91,67 @@ function VirtualRows<TData>({
 }) {
   const items = virtualizer.getVirtualItems();
 
-  return (
-    <>
-      {items.map((item, idx) => {
-        const row = rows[item.index];
-        if (!row) return null;
+  return items.map((item, idx) => {
+    const row = rows[item.index];
+    if (!row) return null;
 
-        const isSelected = row.getIsSelected();
-        const cells = row.getVisibleCells() || [];
-        const isGroupHeader = row.subRows && row.subRows.length > 0;
-        const rowKey = row.id + '-' + item.index;
+    const isSelected = row.getIsSelected();
+    const cells = row.getVisibleCells() || [];
+    const isGroupHeader = row.subRows && row.subRows.length > 0;
+    const rowKey = row.id + '-' + item.index;
 
-        const positionStyle: React.CSSProperties = {
-          height: item.size,
-          top: item.start
-        };
+    const positionStyle: React.CSSProperties = {
+      height: item.size,
+      top: item.start
+    };
 
-        if (isGroupHeader) {
+    if (isGroupHeader) {
+      return (
+        <VirtualGroupHeader
+          key={rowKey}
+          data={row.original as GroupedData<unknown>}
+          style={positionStyle}
+        />
+      );
+    }
+
+    return (
+      <div
+        role='row'
+        key={rowKey}
+        className={cx(
+          styles.virtualRow,
+          styles['row'],
+          onRowClick ? styles['clickable'] : '',
+          classNames?.row
+        )}
+        style={positionStyle}
+        data-state={isSelected && 'selected'}
+        onClick={() => onRowClick?.(row.original)}
+      >
+        {cells.map(cell => {
+          const columnDef = cell.column.columnDef as DataTableColumnDef<
+            unknown,
+            unknown
+          >;
           return (
-            <VirtualGroupHeader
-              key={rowKey}
-              data={row.original as GroupedData<unknown>}
-              style={positionStyle}
-            />
+            <div
+              role='cell'
+              key={cell.id}
+              className={cx(
+                tableStyles.cell,
+                styles.virtualCell,
+                columnDef.classNames?.cell
+              )}
+              style={columnDef.styles?.cell}
+            >
+              {flexRender(columnDef.cell, cell.getContext())}
+            </div>
           );
-        }
-
-        return (
-          <div
-            role='row'
-            key={rowKey}
-            className={cx(
-              styles.virtualRow,
-              styles['row'],
-              onRowClick ? styles['clickable'] : '',
-              classNames?.row
-            )}
-            style={positionStyle}
-            data-state={isSelected && 'selected'}
-            onClick={() => onRowClick?.(row.original)}
-          >
-            {cells.map(cell => {
-              const columnDef = cell.column.columnDef as DataTableColumnDef<
-                unknown,
-                unknown
-              >;
-              return (
-                <div
-                  role='cell'
-                  key={cell.id}
-                  className={cx(
-                    tableStyles.cell,
-                    styles.virtualCell,
-                    columnDef.classNames?.cell
-                  )}
-                  style={columnDef.styles?.cell}
-                >
-                  {flexRender(columnDef.cell, cell.getContext())}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </>
-  );
+        })}
+      </div>
+    );
+  });
 }
 
 const DefaultEmptyComponent = () => (
