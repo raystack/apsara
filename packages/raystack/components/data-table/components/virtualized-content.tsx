@@ -163,6 +163,7 @@ export function VirtualizedContent({
   rowHeight = 40,
   groupHeaderHeight,
   overscan = 5,
+  loadMoreOffset = 100,
   emptyState,
   zeroState,
   classNames = {}
@@ -191,10 +192,10 @@ export function VirtualizedContent({
     if (!scrollContainerRef.current || isLoading) return;
     const { scrollTop, scrollHeight, clientHeight } =
       scrollContainerRef.current;
-    if (scrollHeight - scrollTop - clientHeight < 100) {
+    if (scrollHeight - scrollTop - clientHeight < loadMoreOffset) {
       loadMoreData();
     }
-  }, [isLoading, loadMoreData]);
+  }, [isLoading, loadMoreData, loadMoreOffset]);
 
   const hasData = rows?.length > 0 || isLoading;
 

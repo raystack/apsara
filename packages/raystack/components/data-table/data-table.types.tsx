@@ -128,10 +128,16 @@ export type DataTableContentBaseProps = {
 export type DataTableContentProps = DataTableContentBaseProps;
 
 export type VirtualizedContentProps = DataTableContentBaseProps & {
+  /** Height of the scroll container. */
   height?: number | string;
+  /** Height of each row in pixels. */
   rowHeight?: number;
+  /** Height of group header rows in pixels. Falls back to rowHeight if not set. */
   groupHeaderHeight?: number;
+  /** Number of rows to render outside visible area. */
   overscan?: number;
+  /** Distance in pixels from bottom to trigger load more. */
+  loadMoreOffset?: number;
 };
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
