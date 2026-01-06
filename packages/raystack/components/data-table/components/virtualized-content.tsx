@@ -159,7 +159,6 @@ const DefaultEmptyComponent = () => (
 );
 
 export function VirtualizedContent({
-  height = '100%',
   rowHeight = 40,
   groupHeaderHeight,
   overscan = 5,
@@ -220,7 +219,6 @@ export function VirtualizedContent({
     <div
       ref={scrollContainerRef}
       className={cx(classNames.root, styles.scrollContainer)}
-      style={{ height }}
       onScroll={handleVirtualScroll}
     >
       <div role='table' className={cx(styles.virtualTable, classNames.table)}>

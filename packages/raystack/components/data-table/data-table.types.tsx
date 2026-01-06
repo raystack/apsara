@@ -128,8 +128,6 @@ export type DataTableContentBaseProps = {
 export type DataTableContentProps = DataTableContentBaseProps;
 
 export type VirtualizedContentProps = DataTableContentBaseProps & {
-  /** Height of the scroll container. */
-  height?: number | string;
   /** Height of each row in pixels. */
   rowHeight?: number;
   /** Height of group header rows in pixels. Falls back to rowHeight if not set. */
