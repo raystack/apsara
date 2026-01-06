@@ -303,6 +303,9 @@ importers:
       rollup:
         specifier: ^3.25.1
         version: 3.25.1
+      rollup-plugin-node-externals:
+        specifier: ^5.1.0
+        version: 5.1.3(rollup@3.25.1)
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.4.24)(ts-node@10.9.2(@swc/core@1.11.21)(@types/node@24.10.0)(typescript@5.4.3))
@@ -8617,6 +8620,12 @@ packages:
     engines: {node: 20 || >=22}
     hasBin: true
 
+  rollup-plugin-node-externals@5.1.3:
+    resolution: {integrity: sha512-Q3VMjsn39r0/mjKrX++rFlC7kwL7YZdScdyU7BEo+PrEremal3mnol/1X+wQUU++7NeqC1ZNAeRYnHGtsTu9GQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.60.0 || ^3.0.0
+
   rollup-plugin-postcss@4.0.2:
     resolution: {integrity: sha512-05EaY6zvZdmvPUDi3uCcAQoESDcYnv8ogJJQRp6V5kZ6J6P7uAVJlrTZcaaA20wTH527YTnKfkAoPxWI/jPp4w==}
     engines: {node: '>=10'}
@@ -11593,6 +11602,8 @@ snapshots:
       '@parcel/logger': 2.12.0
       '@parcel/utils': 2.12.0
       lmdb: 2.8.5
+    transitivePeerDependencies:
+      - '@swc/helpers'
 
   '@parcel/cache@2.9.2(@parcel/core@2.12.0)':
     dependencies:
@@ -20533,6 +20544,10 @@ snapshots:
     dependencies:
       glob: 11.0.3
       package-json-from-dist: 1.0.0
+
+  rollup-plugin-node-externals@5.1.3(rollup@3.25.1):
+    dependencies:
+      rollup: 3.25.1
 
   rollup-plugin-postcss@4.0.2(postcss@8.4.24)(ts-node@10.9.2(@swc/core@1.11.21)(@types/node@24.10.0)(typescript@5.4.3)):
     dependencies:

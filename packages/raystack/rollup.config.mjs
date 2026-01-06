@@ -4,11 +4,27 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import svgr from '@svgr/rollup';
 import postcssImport from 'postcss-import';
+import { nodeExternals } from 'rollup-plugin-node-externals';
 import postcss from 'rollup-plugin-postcss';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
 import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
 
 const createPlugins = ({ rootDir, declarationDir }) => [
+  // Externalize all dependencies and peer dependencies
+  // This must be placed before nodeResolve() to work correctly
+  nodeExternals({
+    deps: true, // Externalize all dependencies
+    devDeps: false, // Don't externalize devDependencies
+    peerDeps: true, // Externalize peerDependencies (React, React-DOM)
+    optDeps: true, // Externalize optionalDependencies
+    // Include React subpaths and regex patterns that need to be externalized
+    include: [
+      'react/jsx-runtime',
+      'react-dom/client',
+      /^dayjs\/plugin\/.*/,
+      /^@radix-ui\/.*/
+    ]
+  }),
   nodeResolve(),
   commonjs(),
   svgr({
@@ -78,31 +94,6 @@ const configs = [
   }
 ];
 
-// Externalize all dependencies and peer dependencies
-// This prevents bundling dependencies and reduces package size significantly
-const external = [
-  'react',
-  'react-dom',
-  'react-dom/client',
-  'react/jsx-runtime',
-  // Add new external dependencies from package.json here as well
-  '@ariakit/react',
-  '@radix-ui/react-icons',
-  '@tanstack/match-sorter-utils',
-  '@tanstack/react-table',
-  '@tanstack/table-core',
-  'class-variance-authority',
-  'cmdk',
-  'color',
-  'dayjs',
-  'prism-react-renderer',
-  'radix-ui',
-  'react-day-picker',
-  'sonner',
-  /^dayjs\/plugin\/.*/,
-  /^@radix-ui\/.*/
-];
-
 const rollupConfig = configs.map(conf => {
   return {
     input: conf.inputPath + '/index.tsx',
@@ -125,7 +116,6 @@ const rollupConfig = configs.map(conf => {
         preserveModulesRoot: conf.inputPath
       }
     ],
-    external,
     plugins: createPlugins({
       rootDir: conf.inputPath,
       declarationDir: conf.outputPath

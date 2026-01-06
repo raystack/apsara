@@ -95,6 +95,7 @@
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "rollup": "^3.25.1",
+    "rollup-plugin-node-externals": "^5.1.0",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
