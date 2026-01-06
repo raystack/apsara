@@ -13,10 +13,10 @@ const createPlugins = ({ rootDir, declarationDir }) => [
   // Externalize all dependencies and peer dependencies
   // This must be placed before nodeResolve() to work correctly
   nodeExternals({
-    deps: true, // Externalize all dependencies
-    devDeps: false, // Don't externalize devDependencies
-    peerDeps: true, // Externalize peerDependencies (React, React-DOM)
-    optDeps: true, // Externalize optionalDependencies
+    deps: true,
+    devDeps: false,
+    peerDeps: true,
+    optDeps: true,
     // Include React subpaths and regex patterns that need to be externalized
     include: [
       'react/jsx-runtime',
