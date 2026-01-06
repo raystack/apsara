@@ -1,5 +1,33 @@
 'use client';
 
+import { getPropsString } from '@/lib/utils';
+
+export const getCode = (props: any) => {
+  const content = `<Flex direction="column" gap={2}>
+    {Array.from({ length: 20 }, (_, i) => (
+      <Text key={i} size="small">
+        Item {i + 1}
+      </Text>
+    ))}
+  </Flex>`;
+
+  return `<ScrollArea${getPropsString(props)} style={{ height: '200px', width: '300px' }}>
+  ${content}
+</ScrollArea>`;
+};
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    type: {
+      type: 'select',
+      options: ['auto', 'always', 'scroll', 'hover'],
+      defaultValue: 'auto'
+    }
+  },
+  getCode
+};
+
 export const preview = {
   type: 'code',
   code: `
