@@ -1,5 +1,5 @@
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { VariantProps, cva, cx } from 'class-variance-authority';
+import { cva, cx, VariantProps } from 'class-variance-authority';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 import {
   ComponentProps,
@@ -143,7 +143,11 @@ interface DialogTitleProps
   children: React.ReactNode;
 }
 
-function DialogTitle({ children, className, ...props }: DialogTitleProps) {
+export function DialogTitle({
+  children,
+  className,
+  ...props
+}: DialogTitleProps) {
   return (
     <DialogPrimitive.Title
       {...props}
@@ -162,7 +166,7 @@ interface DialogDescriptionProps
   className?: string;
 }
 
-function DialogDescription({
+export function DialogDescription({
   children,
   className,
   ...props

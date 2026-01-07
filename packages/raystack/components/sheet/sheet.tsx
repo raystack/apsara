@@ -1,7 +1,7 @@
 'use client';
 
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { VariantProps, cva } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 import {
   ComponentProps,
@@ -9,7 +9,7 @@ import {
   ElementRef,
   forwardRef
 } from 'react';
-
+import { DialogDescription, DialogTitle } from '../dialog/dialog';
 import styles from './sheet.module.css';
 
 const sheetContent = cva(styles.sheetContent, {
@@ -124,6 +124,6 @@ export const Sheet = Object.assign(RootSheet, {
   Trigger: DialogPrimitive.Trigger,
   Content: SheetContent,
   Close: DialogPrimitive.Close,
-  Title: DialogPrimitive.Title,
-  Description: DialogPrimitive.Description
+  Title: DialogTitle,
+  Description: DialogDescription
 });

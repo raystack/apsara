@@ -1,5 +1,4 @@
 .editor {
-  border-top: 1px solid hsl(var(--fd-border) / 1);
 }
 .editor pre {
   overflow: auto !important;
