@@ -1,9 +1,13 @@
 # Exclude test files
-dist/**/__tests__/**
-# Exclude dev files
-dist/vitest.setup.*
-dist/figma/**
+**/__tests__/
+**/__tests__/**
+# Exclude dev files  
+vitest.setup.*
+figma/
+figma/**
 # Exclude bundled dependencies
-dist/node_modules/**
-dist/_virtual/**
+node_modules/
+node_modules/**
+_virtual/
+_virtual/**
 
