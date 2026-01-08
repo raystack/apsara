@@ -1,4 +1,3 @@
-import { camelCaseToWords } from '@/lib/utils';
 import {
   InfoCircledIcon,
   Pencil2Icon,
@@ -15,6 +14,7 @@ import {
   Text
 } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
+import { camelCaseToWords } from '@/lib/utils';
 import styles from './styles.module.css';
 import {
   ComponentPropsType,
@@ -48,6 +48,7 @@ export default function DemoControls({
         const propValue = componentProps?.[prop] ?? '';
         const isCheckbox = control.type === 'checkbox';
         const isIcon = control.type === 'icon';
+        const isIconOptional = control.isIconOptional ?? true;
 
         // For checkbox and icon types, render in a special container
         if (isCheckbox || isIcon) {
@@ -61,18 +62,20 @@ export default function DemoControls({
                 <Text variant='secondary' size='small' weight='medium'>
                   {propLabel}
                 </Text>
-                <Switch
-                  size='small'
-                  checked={!!componentProps[prop]}
-                  onCheckedChange={checked => {
-                    if (isCheckbox) onPropChange(prop, checked);
-                    else
-                      onPropChange(
-                        prop,
-                        checked ? String(ICONS_MAP.plus.value) : ''
-                      );
-                  }}
-                />
+                {isIconOptional && (
+                  <Switch
+                    size='small'
+                    checked={!!componentProps[prop]}
+                    onCheckedChange={checked => {
+                      if (isCheckbox) onPropChange(prop, checked);
+                      else
+                        onPropChange(
+                          prop,
+                          checked ? String(ICONS_MAP.plus.value) : ''
+                        );
+                    }}
+                  />
+                )}
               </Flex>
               {isIcon && (
                 <Flex gap={2} align='center' className={styles.iconContainer}>
@@ -90,6 +93,12 @@ export default function DemoControls({
                         e.stopPropagation();
                       }}
                       aria-label={`Select ${icon.value || 'none'} icon`}
+                      style={{
+                        color:
+                          propValue === icon.value
+                            ? 'var(--rs-color-background-accent-emphasis)'
+                            : undefined
+                      }}
                     >
                       {icon.icon}
                     </IconButton>

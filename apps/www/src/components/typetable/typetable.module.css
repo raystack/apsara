@@ -21,7 +21,7 @@
   font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
-  color: #000000;
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .propLabel {
@@ -48,6 +48,7 @@
   line-height: var(--rs-line-height-mono-small);
   letter-spacing: var(--rs-letter-spacing-mono-small);
   color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-3) var(--rs-space-4);
 }
 
 .propName {
@@ -73,6 +74,10 @@
 .fieldCode {
   background: transparent;
   padding: 0;
+}
+.fieldCode :global(.token-line) > span {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .fieldLabel {

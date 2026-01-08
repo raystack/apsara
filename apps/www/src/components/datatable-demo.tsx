@@ -47,23 +47,28 @@ export type Payment = {
 
 export const columns: DataTableColumnDef<Payment, unknown>[] = [
   {
-    accessorKey: 'select',
-    header: '',
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={value => row.toggleSelected(!!value)}
-        aria-label='Select row'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
-  {
     accessorKey: 'status',
     header: 'Status',
+    styles: {
+      cell: {
+        paddingLeft: 'var(--rs-space-7)'
+      },
+      header: {
+        paddingLeft: 'var(--rs-space-7)'
+      }
+    },
     cell: ({ row }) => (
-      <div className='capitalize'>{row.getValue('status')}</div>
+      <Flex gap={3} align='center'>
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={value => row.toggleSelected(!!value)}
+          aria-label='Select row'
+          style={{
+            display: 'block'
+          }}
+        />
+        <div className='capitalize'>{row.getValue('status')}</div>
+      </Flex>
     ),
     filterOptions: [
       {

@@ -5,8 +5,8 @@ import { Language } from 'prism-react-renderer';
 import { ComponentProps, ElementRef, forwardRef } from 'react';
 import { Select } from '../select';
 import { SingleSelectProps } from '../select/select-root';
-import { useCodeBlockContext } from './code-block-root';
 import styles from './code-block.module.css';
+import { useCodeBlockContext } from './code-block-root';
 
 export const CodeBlockLanguageSelect = (props: SingleSelectProps) => {
   const { value, setValue } = useCodeBlockContext();

@@ -1,7 +1,7 @@
 'use client';
 
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { VariantProps, cva, cx } from 'class-variance-authority';
+import { cva, cx, VariantProps } from 'class-variance-authority';
 import { ReactElement, ReactNode, useCallback, useState } from 'react';
 import {
   FilterOperation,
@@ -16,8 +16,8 @@ import { Flex } from '../flex';
 import { InputField } from '../input-field';
 import { Select } from '../select';
 import { Text } from '../text';
-import { Operation } from './filter-chip-operation';
 import styles from './filter-chip.module.css';
+import { Operation } from './filter-chip-operation';
 
 const chip = cva(styles.chip, {
   variants: {

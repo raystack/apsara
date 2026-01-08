@@ -3,17 +3,17 @@
 import { cx } from 'class-variance-authority';
 import {
   ComponentPropsWithoutRef,
-  ReactElement,
-  ReactNode,
   cloneElement,
   forwardRef,
+  ReactElement,
+  ReactNode,
   useContext
 } from 'react';
 import { Avatar } from '../avatar';
 import { Flex } from '../flex';
 import { Tooltip } from '../tooltip';
-import { SidebarContext } from './sidebar-root';
 import styles from './sidebar.module.css';
+import { SidebarContext } from './sidebar-root';
 
 export interface SidebarItemProps extends ComponentPropsWithoutRef<'a'> {
   leadingIcon?: ReactNode;
@@ -49,6 +49,13 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
       typeof children === 'string' &&
       children.length > 0;
 
+    const iconProps = {
+      align: 'center',
+      gap: 3,
+      className: cx(styles['nav-leading-icon'], classNames?.leadingIcon),
+      ariaHidden: true
+    } as const;
+
     const content = cloneElement(
       as,
       {
@@ -62,13 +69,8 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         ...props
       },
       <>
-        <Flex
-          align='center'
-          gap={3}
-          className={cx(styles['nav-leading-icon'], classNames?.leadingIcon)}
-          aria-hidden='true'
-        >
-          {shouldShowFallback ? (
+        {shouldShowFallback ? (
+          <Flex {...iconProps}>
             <Avatar
               size={1}
               variant='soft'
@@ -76,10 +78,11 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
               fallback={children[0].toUpperCase()}
               style={{ cursor: 'pointer' }}
             />
-          ) : (
-            leadingIcon
-          )}
-        </Flex>
+          </Flex>
+        ) : null}
+        {!shouldShowFallback && leadingIcon ? (
+          <Flex {...iconProps}>{leadingIcon}</Flex>
+        ) : null}
         {!isCollapsed && (
           <span className={cx(styles['nav-text'], classNames?.text)}>
             {children}

@@ -87,7 +87,7 @@ export const iconsDemo = {
       code: `
       <div style={{ display: 'flex', gap: '10px' }}>
         <Chip leadingIcon={'O'}>Add Item</Chip>
-        <Chip variant="filled" leadingIcon={'O'}>Selected</Chip>
+        <Chip variant="filled" leadingIcon={'O'} data-state="active">Selected</Chip>
       </div>`
     },
     {

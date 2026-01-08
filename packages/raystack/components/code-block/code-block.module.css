@@ -38,13 +38,15 @@
 
 /* Collapse Trigger */
 .collapseTrigger {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
   background-color: var(--rs-color-background-base-secondary);
   border-top: 0.5px solid var(--rs-color-border-base-primary);
+}
+.collapseTrigger.collapsed {
+  position: absolute;
+  bottom: 0;
 }
 
 /* Code Block Code */
@@ -88,7 +90,7 @@
   right: var(--rs-space-5);
   padding: var(--rs-space-2) var(--rs-space-3);
   width: fit-content;
-  height: fit-content;
+  height: auto;
   border-radius: var(--rs-radius-2);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   background: var(--rs-color-background-base-primary);

@@ -61,3 +61,43 @@ export const basicDemo = {
 </SidePanel>;
   `
 };
+
+export const positionDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Right',
+      code: `
+  <SidePanel side="right">
+    <SidePanel.Header title="Right Side Panel" />
+    <SidePanel.Section>
+      <List>
+        <List.Header>User Information</List.Header>
+        <List.Item align="center">
+          <List.Label minWidth="88px">Status</List.Label>
+          <List.Value>Active</List.Value>
+        </List.Item>
+      </List>
+    </SidePanel.Section>
+  </SidePanel>
+  `
+    },
+    {
+      name: 'Left',
+      code: `
+      <SidePanel side="left">
+        <SidePanel.Header title="Left Side Panel" />
+         <SidePanel.Section>
+      <List>
+        <List.Header>User Information</List.Header>
+        <List.Item align="center">
+          <List.Label minWidth="88px">Status</List.Label>
+          <List.Value>Active</List.Value>
+        </List.Item>
+      </List>
+    </SidePanel.Section>
+      </SidePanel>
+    `
+    }
+  ]
+};

@@ -83,7 +83,7 @@
 .button-outline {
   background-color: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-accent-primary);
-  border: 1px solid var(--rs-color-border-accent-emphasis);
+  border: 0.5px solid var(--rs-color-border-accent-emphasis);
 }
 
 .button-outline:hover {
@@ -407,7 +407,7 @@
 .button-outline-neutral {
   background-color: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border-color: var(--rs-color-border-base-tertiary);
 }
 
 .button-outline-neutral:hover {

@@ -150,12 +150,12 @@ button.selectValue:hover {
   border-radius: var(--rs-radius-1);
   min-height: 18px;
   height: 18px;
+  border: none;
+  box-shadow: none;
 }
 
 /* Match height of InputField when FilterChip variant is text */
 .chip[data-variant="text"] .inputField {
-  border: none;
-  box-shadow: none;
   height: 24px;
   min-height: 24px;
 }
@@ -178,12 +178,12 @@ button.selectValue:hover {
   width: 100%;
   height: 18px;
   min-height: 18px;
-}
-
-/* Remove border and match height of the DatePicker when FilterChip variant is text */
-.chip[data-variant="text"] .dateField {
   border: none;
   box-shadow: none;
+}
+
+/* match height of the DatePicker when FilterChip variant is text */
+.chip[data-variant="text"] .dateField {
   height: 24px;
   min-height: 24px;
 }
