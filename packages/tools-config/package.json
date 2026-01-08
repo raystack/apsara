@@ -25,6 +25,9 @@
     "./tsconfig/base": "./tsconfig/base.json",
     "./tsconfig/react": "./tsconfig/react.json"
   },
+  "scripts": {
+    "release": "pnpm publish --access public --no-git-checks"
+  },
   "files": [
     "biome.json",
     "tsconfig"
