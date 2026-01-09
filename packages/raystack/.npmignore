@@ -1,0 +1,13 @@
+# Exclude test files
+**/__tests__/
+**/__tests__/**
+# Exclude dev files  
+vitest.setup.*
+figma/
+figma/**
+# Exclude bundled dependencies
+node_modules/
+node_modules/**
+_virtual/
+_virtual/**
+

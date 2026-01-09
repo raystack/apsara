@@ -4,11 +4,28 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import svgr from '@svgr/rollup';
 import postcssImport from 'postcss-import';
+import nodeExternals from 'rollup-plugin-node-externals';
 import postcss from 'rollup-plugin-postcss';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
 import tsconfigPaths from 'rollup-plugin-tsconfig-paths';
 
 const createPlugins = ({ rootDir, declarationDir }) => [
+  // Externalize all dependencies and peer dependencies
+  // This must be placed before nodeResolve() to work correctly
+  nodeExternals({
+    deps: true,
+    devDeps: false,
+    peerDeps: true,
+    optDeps: true,
+    // Note: Include deps with subpaths that need to be externalized in include array.
+    // https://github.com/Septh/rollup-plugin-node-externals?tab=readme-ov-file#1-this-plugin-is-smart
+    include: [
+      'react/jsx-runtime',
+      'react-dom/client',
+      /^dayjs\/plugin\/.*/,
+      /^@radix-ui\/.*/
+    ]
+  }),
   nodeResolve(),
   commonjs(),
   svgr({
@@ -100,7 +117,6 @@ const rollupConfig = configs.map(conf => {
         preserveModulesRoot: conf.inputPath
       }
     ],
-    external: ['react', 'react-dom', 'react-dom/client', 'react/jsx-runtime'],
     plugins: createPlugins({
       rootDir: conf.inputPath,
       declarationDir: conf.outputPath
