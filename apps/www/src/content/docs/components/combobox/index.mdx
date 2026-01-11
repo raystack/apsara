@@ -1,0 +1,113 @@
+---
+title: Combobox
+description: An input field with an attached dropdown that allows users to search and select from a list of options.
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  sizeDemo,
+  iconDemo,
+  multipleDemo,
+  groupDemo,
+  controlledDemo
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { Combobox } from "@raystack/apsara";
+```
+
+## Combobox Props
+
+The Combobox component is composed of several parts, each with their own props.
+
+The root element is the parent component that manages the combobox state including open/close, input value, and selection. It is built using [Ariakit ComboboxProvider](https://ariakit.org/reference/combobox-provider) and [Radix Popover](https://www.radix-ui.com/primitives/docs/components/popover).
+
+<auto-type-table path="./props.ts" name="ComboboxRootProps" />
+
+### Combobox.Input Props
+
+The input field that triggers the combobox dropdown and allows users to type and filter options.
+
+<auto-type-table path="./props.ts" name="ComboboxInputProps" />
+
+### Combobox.Content Props
+
+The dropdown container that holds the combobox items.
+
+<auto-type-table path="./props.ts" name="ComboboxContentProps" />
+
+### Combobox.Item Props
+
+Individual selectable options within the combobox.
+
+<auto-type-table path="./props.ts" name="ComboboxItemProps" />
+
+### Combobox.Group Props
+
+A way to group related combobox items together.
+
+<auto-type-table path="./props.ts" name="ComboboxGroupProps" />
+
+### Combobox.Label Props
+
+Renders a label in a combobox group. This component should be used inside Combobox.Group.
+
+<auto-type-table path="./props.ts" name="ComboboxLabelProps" />
+
+### Combobox.Separator Props
+
+Visual divider between combobox items or groups.
+
+<auto-type-table path="./props.ts" name="ComboboxSeparatorProps" />
+
+## Examples
+
+### Basic Combobox
+
+A simple combobox with search functionality.
+
+<Demo data={basicDemo} />
+
+### Size
+
+The combobox input supports different sizes.
+
+<Demo data={sizeDemo} />
+
+### Multiple Selection
+
+To enable multiple selection, pass the `multiple` prop to the Combobox root element.
+
+When multiple selection is enabled, the value, onValueChange, and defaultValue will be an array of strings. Selected items are displayed as chips in the input field.
+
+<Demo data={multipleDemo} />
+
+### Groups and Separators
+
+Use Combobox.Group, Combobox.Label, and Combobox.Separator to organize items into logical groups.
+
+<Demo data={groupDemo} />
+
+### Controlled
+
+You can control the combobox value and input value using the `value`, `onValueChange`, `inputValue`, and `onInputValueChange` props.
+
+<Demo data={controlledDemo} />
+
+## Accessibility
+
+The Combobox component follows WAI-ARIA guidelines:
+
+- Input has role `combobox`
+- Content has role `listbox`
+- Items have role `option`
+- Supports keyboard navigation (Arrow keys, Enter, Escape)
+- ARIA labels and descriptions for screen readers
+- Focus management between input and listbox
+

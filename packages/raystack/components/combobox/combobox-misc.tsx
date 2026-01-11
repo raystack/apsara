@@ -32,7 +32,7 @@ export const ComboboxGroup = forwardRef<
   ComponentPropsWithoutRef<typeof AriakitComboboxGroup>
 >(({ className, children, ...props }, ref) => {
   const { inputValue } = useComboboxContext();
-  if (inputValue?.length) return null;
+  if (inputValue?.length) return children;
 
   return (
     <AriakitComboboxGroup

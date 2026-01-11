@@ -16,9 +16,7 @@ export interface ComboboxContentProps
   extends Omit<
     ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>,
     'asChild'
-  > {
-  width?: 'trigger' | 'auto' | number;
-}
+  > {}
 
 export const ComboboxContent = forwardRef<
   ElementRef<typeof PopoverPrimitive.Content>,
@@ -29,7 +27,6 @@ export const ComboboxContent = forwardRef<
       className,
       children,
       sideOffset = 4,
-      width = 'trigger',
       align = 'start',
       onOpenAutoFocus,
       onInteractOutside,
