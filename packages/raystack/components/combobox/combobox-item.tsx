@@ -2,12 +2,9 @@
 
 import { ComboboxItem as AriakitComboboxItem } from '@ariakit/react';
 import { cx } from 'class-variance-authority';
-import {
-  ComponentPropsWithoutRef,
-  ElementRef,
-  forwardRef,
-  useLayoutEffect
-} from 'react';
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import { Checkbox } from '../checkbox';
+import { getMatch } from '../dropdown-menu/utils';
 import { Text } from '../text';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
@@ -32,22 +29,17 @@ export const ComboboxItem = forwardRef<
     },
     ref
   ) => {
-    const value = String(providedValue);
-    const {
-      registerItem,
-      unregisterItem,
-      value: selectedValue,
-      onValueChange,
-      setOpen
-    } = useComboboxContext();
+    const value = providedValue
+      ? String(providedValue)
+      : typeof children === 'string'
+        ? children
+        : undefined;
+    const { multiple, value: comboboxValue, inputValue } = useComboboxContext();
 
-    const isSelected = value === selectedValue;
-
-    const handleClick = () => {
-      if (disabled) return;
-      onValueChange?.(value);
-      setOpen(false);
-    };
+    const isSelected = multiple
+      ? comboboxValue?.includes(value ?? '')
+      : value === comboboxValue;
+    const isMatched = getMatch(value, children, inputValue);
 
     const element =
       typeof children === 'string' ? (
@@ -59,25 +51,23 @@ export const ComboboxItem = forwardRef<
         children
       );
 
-    useLayoutEffect(() => {
-      registerItem({ leadingIcon, children, value });
-      return () => {
-        unregisterItem(value);
-      };
-    }, [value, children, registerItem, unregisterItem, leadingIcon]);
+    if (inputValue?.length && !isMatched) {
+      // Doesn't match search, so don't render at all
+      return null;
+    }
 
     return (
       <AriakitComboboxItem
         ref={ref}
         value={value}
-        className={cx(styles.item, className)}
-        disabled={disabled}
+        className={cx(styles.menuitem, className)}
+        focusOnHover
         aria-selected={isSelected}
         data-selected={isSelected}
-        focusOnHover
-        onClick={handleClick}
+        resetValueOnSelect={multiple}
         {...props}
       >
+        {multiple && <Checkbox checked={isSelected} />}
         {element}
       </AriakitComboboxItem>
     );

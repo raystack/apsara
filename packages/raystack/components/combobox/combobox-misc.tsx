@@ -8,11 +8,15 @@ import {
 import { cx } from 'class-variance-authority';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 import styles from './combobox.module.css';
+import { useComboboxContext } from './combobox-root';
 
 export const ComboboxLabel = forwardRef<
   ElementRef<typeof AriakitComboboxGroupLabel>,
   ComponentPropsWithoutRef<typeof AriakitComboboxGroupLabel>
 >(({ className, ...props }, ref) => {
+  const { inputValue } = useComboboxContext();
+  if (inputValue?.length) return null;
+
   return (
     <AriakitComboboxGroupLabel
       ref={ref}
@@ -27,6 +31,9 @@ export const ComboboxGroup = forwardRef<
   ElementRef<typeof AriakitComboboxGroup>,
   ComponentPropsWithoutRef<typeof AriakitComboboxGroup>
 >(({ className, children, ...props }, ref) => {
+  const { inputValue } = useComboboxContext();
+  if (inputValue?.length) return null;
+
   return (
     <AriakitComboboxGroup
       ref={ref}
@@ -43,6 +50,9 @@ export const ComboboxSeparator = forwardRef<
   ElementRef<typeof AriakitComboboxSeparator>,
   ComponentPropsWithoutRef<typeof AriakitComboboxSeparator>
 >(({ className, ...props }, ref) => {
+  const { inputValue } = useComboboxContext();
+  if (inputValue?.length) return null;
+
   return (
     <AriakitComboboxSeparator
       ref={ref}

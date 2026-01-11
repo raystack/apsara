@@ -3,8 +3,8 @@
 import { cx } from 'class-variance-authority';
 import { Select as SelectPrimitive } from 'radix-ui';
 import { ElementRef, Fragment, forwardRef } from 'react';
-import { useSelectContext } from './select-root';
 import styles from './select.module.css';
+import { useSelectContext } from './select-root';
 
 export const SelectGroup = forwardRef<
   ElementRef<typeof SelectPrimitive.Group>,
