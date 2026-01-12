@@ -2,41 +2,21 @@ import {
   Checkbox,
   DataTable,
   DataTableColumnDef,
-  Flex
+  Flex,
+  Switch,
+  Text
 } from '@raystack/apsara';
+import { useMemo, useState } from 'react';
 
-const data: Payment[] = [
-  {
-    id: 'm5gr84i9',
-    amount: 316,
-    status: 'success',
-    email: 'ken99@yahoo.com'
-  },
-  {
-    id: '3u1reuv4',
-    amount: 242,
-    status: 'success',
-    email: 'Abe45@gmail.com'
-  },
-  {
-    id: 'derv1ws0',
-    amount: 837,
-    status: 'processing',
-    email: 'Monserrat44@gmail.com'
-  },
-  {
-    id: '5kma53ae',
-    amount: 874,
-    status: 'success',
-    email: 'Silas22@gmail.com'
-  },
-  {
-    id: 'bhqecj4p',
-    amount: 721,
-    status: 'failed',
-    email: 'carmella@hotmail.com'
-  }
-];
+const statuses = ['pending', 'processing', 'success', 'failed'] as const;
+
+const generateData = (count: number): Payment[] =>
+  Array.from({ length: count }, (_, i) => ({
+    id: `row-${i}`,
+    amount: Math.floor(Math.random() * 1000),
+    status: statuses[i % 4],
+    email: `user${i}@example.com`
+  }));
 
 export type Payment = {
   id: string;
@@ -51,9 +31,13 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
     header: 'Status',
     styles: {
       cell: {
+        width: 120,
+        flex: 'none',
         paddingLeft: 'var(--rs-space-7)'
       },
       header: {
+        width: 120,
+        flex: 'none',
         paddingLeft: 'var(--rs-space-7)'
       }
     },
@@ -89,7 +73,9 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
       }
     ],
     filterType: 'multiselect',
-    enableColumnFilter: true
+    enableColumnFilter: true,
+    enableHiding: true,
+
   },
   {
     accessorKey: 'email',
@@ -108,22 +94,41 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
       }).format(amount);
 
       return <div className='text-right font-medium'>{formatted}</div>;
+    },
+    enableHiding: true,
+    styles: {
+      header: { width: 100, flex: 'none' },
+      cell: { width: 100, flex: 'none' }
     }
   }
 ];
 
 const DataTableDemo = () => {
+  const [virtualized, setVirtualized] = useState(true);
+
+  const data = useMemo(() => generateData(100), []);
+
   return (
-    <Flex direction='column'>
-      <DataTable
-        data={data}
-        mode='client'
-        columns={columns}
-        defaultSort={{ name: 'email', order: 'asc' }}
-      >
-        <DataTable.Toolbar />
-        <DataTable.Content />
-      </DataTable>
+    <Flex direction='column' gap='4' width='full'>
+      <Flex align='center' gap='2'>
+        <Switch checked={virtualized} onCheckedChange={setVirtualized} />
+        <Text>Virtualized (100 rows)</Text>
+      </Flex>
+      <div style={{ height: 400 }}>
+        <DataTable
+          data={data}
+          mode='client'
+          columns={columns}
+          defaultSort={{ name: 'email', order: 'asc' }}
+        >
+          <DataTable.Toolbar />
+          {virtualized ? (
+            <DataTable.VirtualizedContent rowHeight={44.5} />
+          ) : (
+            <DataTable.Content />
+          )}
+        </DataTable>
+      </div>
     </Flex>
   );
 };

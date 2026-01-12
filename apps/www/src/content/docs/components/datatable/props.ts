@@ -118,3 +118,49 @@ export interface DataTableContentProps {
     row?: string;
   };
 }
+
+export interface VirtualizedContentProps {
+  /**
+   * Height of the virtualized container.
+   * Parent must have a fixed height for percentage values to work.
+   * @defaultValue "100%"
+   */
+  height?: number | string;
+
+  /**
+   * Height of each row in pixels.
+   * @defaultValue 40
+   */
+  rowHeight?: number;
+
+  /**
+   * Height of group header rows in pixels.
+   * Falls back to rowHeight if not specified.
+   */
+  groupHeaderHeight?: number;
+
+  /**
+   * Number of rows to render outside the visible area.
+   * @defaultValue 5
+   */
+  overscan?: number;
+
+  /**
+   * Custom empty state shown when no results match after filters/search.
+   */
+  emptyState?: React.ReactNode;
+
+  /**
+   * Custom zero state shown when no data exists initially.
+   */
+  zeroState?: React.ReactNode;
+
+  /** Custom class names for styling */
+  classNames?: {
+    root?: string;
+    table?: string;
+    header?: string;
+    body?: string;
+    row?: string;
+  };
+}
