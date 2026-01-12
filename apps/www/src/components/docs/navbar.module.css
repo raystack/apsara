@@ -43,3 +43,6 @@
 .breadcrumb-separator {
   height: var(--rs-space-4);
 }
+.icon {
+  color: var(--rs-color-foreground-base-secondary);
+}

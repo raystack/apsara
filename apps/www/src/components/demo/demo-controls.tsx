@@ -26,6 +26,7 @@ type PropControlsProps = {
   controls: ControlsType;
   componentProps: ComponentPropsType;
   onPropChange: PropChangeHandlerType;
+  className?: string;
 };
 
 const ICONS_MAP = {
@@ -39,10 +40,11 @@ const ICONS_MAP = {
 export default function DemoControls({
   controls,
   componentProps,
-  onPropChange
+  onPropChange,
+  className
 }: PropControlsProps) {
   return (
-    <div className={styles.form}>
+    <div className={cx(styles.form, className)}>
       {Object.entries(controls).map(([prop, control]) => {
         const propLabel = camelCaseToWords(prop);
         const propValue = componentProps?.[prop] ?? '';

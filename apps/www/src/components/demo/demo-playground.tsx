@@ -1,17 +1,21 @@
 'use client';
 
-import { IconButton } from '@raystack/apsara';
-import { RefreshCw } from 'lucide-react';
+import { Cross2Icon, ResetIcon } from '@radix-ui/react-icons';
+import { Dialog, Flex, IconButton } from '@raystack/apsara';
+import { cx } from 'class-variance-authority';
 import {
   ReadonlyURLSearchParams,
   useRouter,
   useSearchParams
 } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LiveProvider } from 'react-live';
 import Editor from '../editor';
 import Preview from '../preview';
+import { useDemoContext } from './demo-context';
 import DemoControls from './demo-controls';
+import DemoPreview from './demo-preview';
+import DemoTitle from './demo-title';
 import styles from './styles.module.css';
 import {
   ComponentPropsType,
@@ -36,6 +40,16 @@ const getInitialProps = (
   return initialProps;
 };
 
+const getUpdatedProps = (
+  componentProps: ComponentPropsType,
+  controls: ControlsType
+) => {
+  return Object.fromEntries(
+    Object.entries(componentProps).filter(
+      ([key, value]) => value !== controls[key]?.defaultValue
+    )
+  );
+};
 export default function DemoPlayground({
   scope,
   controls,
@@ -48,12 +62,16 @@ export default function DemoPlayground({
     getInitialProps(controls, searchParams)
   );
 
-  const updatedProps = Object.fromEntries(
-    Object.entries(componentProps).filter(
-      ([key, value]) => value !== controls[key]?.defaultValue
-    )
-  );
-  const code = getCode(updatedProps, componentProps).trim();
+  const code = useMemo(() => {
+    const updatedProps = getUpdatedProps(componentProps, controls);
+    return getCode(updatedProps, componentProps).trim();
+  }, [componentProps, controls, getCode]);
+
+  const previewCode = useMemo(() => {
+    const props = getInitialProps(controls);
+    const updatedProps = getUpdatedProps(props, controls);
+    return getCode(updatedProps, props).trim();
+  }, []);
 
   const handlePropChange: PropChangeHandlerType = (prop, value) => {
     const updatedComponentProps = { ...componentProps, [prop]: value };
@@ -75,30 +93,58 @@ export default function DemoPlayground({
     router.push(`?`, { scroll: false });
     setComponentProps(getInitialProps(controls));
   };
+  const { openPlayground, setOpenPlayground } = useDemoContext();
 
   return (
-    <LiveProvider code={code} scope={scope} disabled>
-      <div className={styles.container} data-demo>
-        <div className={styles.previewContainer}>
-          <div className={styles.preview}>
-            <Preview />
-            <IconButton
-              size={1}
-              className={styles.previewReset}
-              onClick={resetProps}
-              aria-label='Reset to default props'
+    <>
+      <DemoPreview type='code' code={previewCode} scope={scope} />
+      <Dialog open={openPlayground} onOpenChange={setOpenPlayground}>
+        <Dialog.Content className={styles.playgroundDialog}>
+          <Dialog.Header className={styles.playgroundHeader}>
+            <DemoTitle className={styles.playgroundTitle} />
+            <Flex gap={3} align='center'>
+              <IconButton
+                size={2}
+                onClick={resetProps}
+                aria-label='Reset to default props'
+              >
+                <ResetIcon />
+              </IconButton>
+              <IconButton
+                size={2}
+                onClick={() => setOpenPlayground(false)}
+                aria-label='Close playground'
+              >
+                <Cross2Icon />
+              </IconButton>
+            </Flex>
+          </Dialog.Header>
+          <LiveProvider code={code} scope={scope} disabled>
+            <div
+              className={cx(styles.container, styles.playgroundContent)}
+              data-demo
             >
-              <RefreshCw size={12} />
-            </IconButton>
-          </div>
-          <DemoControls
-            controls={controls}
-            componentProps={componentProps}
-            onPropChange={handlePropChange}
-          />
-        </div>
-        <Editor code={code} />
-      </div>
-    </LiveProvider>
+              <div
+                className={cx(
+                  styles.previewContainer,
+                  styles.playgroundPreviewContainer
+                )}
+              >
+                <div className={cx(styles.preview, styles.playgroundPreview)}>
+                  <Preview />
+                </div>
+                <DemoControls
+                  controls={controls}
+                  componentProps={componentProps}
+                  onPropChange={handlePropChange}
+                  className={styles.playgroundControls}
+                />
+              </div>
+              <Editor code={code} className={styles.playgroundEditor} />
+            </div>
+          </LiveProvider>
+        </Dialog.Content>
+      </Dialog>
+    </>
   );
 }

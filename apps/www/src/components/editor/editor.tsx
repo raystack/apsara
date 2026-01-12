@@ -1,18 +1,24 @@
 import { CodeBlock } from '@raystack/apsara';
-import { useMemo } from 'react';
+import { cx } from 'class-variance-authority';
+import { ComponentPropsWithoutRef, useMemo } from 'react';
 import { getFormattedCode } from '@/lib/prettier';
 import styles from './editor.module.css';
 
-type props = {
+interface EditorProps extends ComponentPropsWithoutRef<typeof CodeBlock> {
   code?: string;
-};
+  className?: string;
+}
 
-export default function Editor({ code = '' }: props) {
+export default function Editor({
+  code = '',
+  className,
+  ...props
+}: EditorProps) {
   const formattedCode = useMemo(() => getFormattedCode(code), [code]);
 
   return (
-    <div className={styles.editor} suppressHydrationWarning>
-      <CodeBlock maxLines={14}>
+    <div className={cx(styles.editor, className)} suppressHydrationWarning>
+      <CodeBlock maxLines={14} {...props}>
         <CodeBlock.Content>
           <CodeBlock.Code language='tsx' className={styles.code}>
             {formattedCode}
