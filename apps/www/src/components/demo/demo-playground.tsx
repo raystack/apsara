@@ -1,7 +1,8 @@
 'use client';
 
-import { Cross2Icon, ResetIcon } from '@radix-ui/react-icons';
+import { Cross2Icon } from '@radix-ui/react-icons';
 import { Dialog, Flex, IconButton } from '@raystack/apsara';
+import { ResetIcon } from '@raystack/apsara/icons';
 import { cx } from 'class-variance-authority';
 import {
   ReadonlyURLSearchParams,
@@ -131,7 +132,7 @@ export default function DemoPlayground({
                 )}
               >
                 <div className={cx(styles.preview, styles.playgroundPreview)}>
-                  <Preview />
+                  <Preview className={styles.playgroundPreviewContent} />
                 </div>
                 <DemoControls
                   controls={controls}
@@ -140,7 +141,11 @@ export default function DemoPlayground({
                   className={styles.playgroundControls}
                 />
               </div>
-              <Editor code={code} className={styles.playgroundEditor} />
+              <Editor
+                code={code}
+                className={styles.playgroundEditor}
+                maxLines={undefined}
+              />
             </div>
           </LiveProvider>
         </Dialog.Content>

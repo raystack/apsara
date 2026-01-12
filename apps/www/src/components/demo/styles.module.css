@@ -187,6 +187,7 @@
 }
 .playgroundPreview {
   border-bottom: none;
+  padding-bottom: 1px;
 }
 .playgroundControls {
   border-bottom: none;
@@ -195,4 +196,9 @@
 .playgroundEditor {
   flex: 1;
   border-top: 0.5px solid var(--rs-color-border-base-primary);
+  overflow: auto;
+}
+.playgroundPreviewContent {
+  padding: var(--rs-space-12);
+  align-items: safe center;
 }
