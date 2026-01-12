@@ -45,6 +45,11 @@
   flex: 1;
 }
 
+.contentRoot {
+  height: 100%;
+  overflow: auto;
+}
+
 .row {
   background: var(--rs-color-background-base-primary);
 }
@@ -57,10 +62,84 @@
   cursor: pointer;
 }
 
+.head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .cell {
   background: inherit;
 }
 
 .emptyStateCell {
   border-bottom: none;
+}
+
+/* Virtualization styles */
+.scrollContainer {
+  overflow-y: auto;
+  overflow-x: auto;
+  position: relative;
+  height: 100%;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--rs-color-background-base-primary);
+}
+
+/* Virtual table (div-based) styles */
+.virtualTable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.virtualHeaderGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.virtualHeaderRow {
+  display: flex;
+}
+
+.virtualBodyGroup {
+  position: relative;
+}
+
+.virtualRow {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  left: 0;
+}
+
+.virtualHead {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.virtualCell {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.virtualSectionHeader {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  background: var(--rs-color-background-base-secondary);
+  font-weight: 500;
+  padding: var(--rs-space-3) var(--rs-space-4);
 }

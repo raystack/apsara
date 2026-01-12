@@ -4,13 +4,7 @@ import { TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
-import {
-  ForwardedRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef
-} from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
@@ -45,7 +39,7 @@ function Headers<TData>({
               <Table.Head
                 key={header.id}
                 colSpan={header.colSpan}
-                className={columnDef.classNames?.header}
+                className={cx(styles.head, columnDef.classNames?.header)}
                 style={columnDef.styles?.header}
               >
                 {flexRender(columnDef.header, header.getContext())}
@@ -60,11 +54,11 @@ function Headers<TData>({
 
 interface RowsProps<TData> {
   rows: Row<TData>[];
-  lastRowRef?: ForwardedRef<HTMLTableRowElement>;
   onRowClick?: (row: TData) => void;
   classNames?: {
     row?: string;
   };
+  lastRowRef?: React.RefObject<HTMLTableRowElement | null>;
 }
 
 function LoaderRows({
@@ -108,57 +102,59 @@ function GroupHeader<TData>({
   );
 }
 
-const Rows = forwardRef<HTMLTableRowElement, RowsProps<unknown>>(
-  (props, lastRowRef) => {
-    const { rows = [], onRowClick, classNames } = props;
+function Rows<TData>({
+  rows = [],
+  onRowClick,
+  classNames,
+  lastRowRef
+}: RowsProps<TData>) {
+  return rows.map((row, idx) => {
+    const isSelected = row.getIsSelected();
+    const cells = row.getVisibleCells() || [];
+    const isGroupHeader = row.subRows && row.subRows.length > 0;
+    const isLastRow = idx === rows.length - 1;
+
+    if (isGroupHeader) {
+      return (
+        <GroupHeader
+          key={row.id}
+          colSpan={cells.length}
+          data={row.original as GroupedData<unknown>}
+        />
+      );
+    }
+
     return (
-      <>
-        {rows?.map((row, index) => {
-          const isSelected = row.getIsSelected();
-          const cells = row.getVisibleCells() || [];
-          const isSectionHeadingRow = row.depth === 0 && row.getIsExpanded();
-          const isLastRow = index === rows.length - 1;
-          const rowKey = row.id + '-' + index;
-          return isSectionHeadingRow ? (
-            <GroupHeader
-              key={rowKey}
-              colSpan={cells.length}
-              data={row.original as GroupedData<unknown>}
-            />
-          ) : (
-            <Table.Row
-              key={rowKey}
-              className={cx(
-                styles['row'],
-                onRowClick ? styles['clickable'] : '',
-                classNames?.row
-              )}
-              data-state={isSelected && 'selected'}
-              ref={isLastRow ? lastRowRef : undefined}
-              onClick={() => onRowClick?.(row.original)}
+      <Table.Row
+        key={row.id}
+        className={cx(
+          styles['row'],
+          onRowClick ? styles['clickable'] : '',
+          classNames?.row
+        )}
+        data-state={isSelected && 'selected'}
+        ref={isLastRow ? lastRowRef : undefined}
+        onClick={() => onRowClick?.(row.original)}
+      >
+        {cells.map(cell => {
+          const columnDef = cell.column.columnDef as DataTableColumnDef<
+            unknown,
+            unknown
+          >;
+          return (
+            <Table.Cell
+              key={cell.id}
+              className={cx(styles['cell'], columnDef.classNames?.cell)}
+              style={columnDef.styles?.cell}
             >
-              {cells.map(cell => {
-                const columnDef = cell.column.columnDef as DataTableColumnDef<
-                  unknown,
-                  unknown
-                >;
-                return (
-                  <Table.Cell
-                    key={cell.id}
-                    className={cx(styles['cell'], columnDef.classNames?.cell)}
-                    style={columnDef.styles?.cell}
-                  >
-                    {flexRender(columnDef.cell, cell.getContext())}
-                  </Table.Cell>
-                );
-              })}
-            </Table.Row>
+              {flexRender(columnDef.cell, cell.getContext())}
+            </Table.Cell>
           );
         })}
-      </>
+      </Table.Row>
     );
-  }
-);
+  });
+}
 
 const DefaultEmptyComponent = () => (
   <EmptyState icon={<TableIcon />} heading='No Data' />
@@ -178,6 +174,7 @@ export function Content({
     loadingRowCount = 3,
     tableQuery
   } = useDataTable();
+
   const headerGroups = table?.getHeaderGroups();
   const rowModel = table?.getRowModel();
   const { rows = [] } = rowModel || {};
@@ -222,7 +219,6 @@ export function Content({
 
   const hasData = rows?.length > 0 || isLoading;
 
-  // Determine if we're in zero state (no filters/search applied) or empty state (filters/search applied)
   const hasFiltersOrSearch =
     (tableQuery?.filters && tableQuery.filters.length > 0) ||
     Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
@@ -230,7 +226,6 @@ export function Content({
   const isZeroState = !hasData && !hasFiltersOrSearch;
   const isEmptyState = !hasData && hasFiltersOrSearch;
 
-  // Show zeroState when no data and no filters/search, otherwise show emptyState
   const stateToShow: React.ReactNode = isZeroState
     ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)
     : isEmptyState
@@ -238,7 +233,7 @@ export function Content({
       : null;
 
   return (
-    <div className={classNames.root}>
+    <div className={cx(styles.contentRoot, classNames.root)}>
       <Table className={classNames.table}>
         {hasData && (
           <Headers headerGroups={headerGroups} className={classNames.header} />
@@ -248,7 +243,7 @@ export function Content({
             <>
               <Rows
                 rows={rows}
-                ref={lastRowRef}
+                lastRowRef={lastRowRef}
                 onRowClick={onRowClick}
                 classNames={{
                   row: classNames.row

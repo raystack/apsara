@@ -184,6 +184,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.9.2
         version: 8.9.2(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      '@tanstack/react-virtual':
+        specifier: ^3.13.13
+        version: 3.13.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@tanstack/table-core':
         specifier: ^8.9.2
         version: 8.9.2
@@ -287,6 +290,9 @@ importers:
       rollup:
         specifier: ^3.25.1
         version: 3.25.1
+      rollup-plugin-node-externals:
+        specifier: ^5.1.0
+        version: 5.1.3(rollup@3.25.1)
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.4.24)(ts-node@10.9.2(@swc/core@1.11.21)(@types/node@24.10.0)(typescript@5.4.3))
@@ -3783,9 +3789,18 @@ packages:
       react: '>=16'
       react-dom: '>=16'
 
+  '@tanstack/react-virtual@3.13.13':
+    resolution: {integrity: sha512-4o6oPMDvQv+9gMi8rE6gWmsOjtUZUYIJHv7EB+GblyYdi8U6OqLl8rhHWIUZSL1dUU2dPwTdTgybCKf9EjIrQg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   '@tanstack/table-core@8.9.2':
     resolution: {integrity: sha512-ajc0OF+karBAdaSz7OK09rCoAHB1XI1+wEhu+tDNMPc+XcO+dTlXXN/Vc0a8vym4kElvEjXEDd9c8Zfgt4bekA==}
     engines: {node: '>=12'}
+
+  '@tanstack/virtual-core@3.13.13':
+    resolution: {integrity: sha512-uQFoSdKKf5S8k51W5t7b2qpfkyIbdHMzAn+AMQvHPxKUPeo1SsGaA4JRISQT87jm28b7z8OEqPcg1IOZagQHcA==}
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -8031,6 +8046,12 @@ packages:
     resolution: {integrity: sha512-9dkvaxAsk/xNXSJzMgFqqMCuFgt2+KsOFek3TMLfo8NCPfWpBmqwyNn5Y+NX56QUYfCtsyhF3ayiboEoUmJk/A==}
     engines: {node: 20 || >=22}
     hasBin: true
+
+  rollup-plugin-node-externals@5.1.3:
+    resolution: {integrity: sha512-Q3VMjsn39r0/mjKrX++rFlC7kwL7YZdScdyU7BEo+PrEremal3mnol/1X+wQUU++7NeqC1ZNAeRYnHGtsTu9GQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.60.0 || ^3.0.0
 
   rollup-plugin-postcss@4.0.2:
     resolution: {integrity: sha512-05EaY6zvZdmvPUDi3uCcAQoESDcYnv8ogJJQRp6V5kZ6J6P7uAVJlrTZcaaA20wTH527YTnKfkAoPxWI/jPp4w==}
@@ -13978,7 +13999,15 @@ snapshots:
       react: 19.2.1
       react-dom: 19.2.1(react@19.2.1)
 
+  '@tanstack/react-virtual@3.13.13(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+    dependencies:
+      '@tanstack/virtual-core': 3.13.13
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+
   '@tanstack/table-core@8.9.2': {}
+
+  '@tanstack/virtual-core@3.13.13': {}
 
   '@testing-library/dom@10.4.0':
     dependencies:
@@ -18998,6 +19027,10 @@ snapshots:
     dependencies:
       glob: 11.0.3
       package-json-from-dist: 1.0.0
+
+  rollup-plugin-node-externals@5.1.3(rollup@3.25.1):
+    dependencies:
+      rollup: 3.25.1
 
   rollup-plugin-postcss@4.0.2(postcss@8.4.24)(ts-node@10.9.2(@swc/core@1.11.21)(@types/node@24.10.0)(typescript@5.4.3)):
     dependencies:
