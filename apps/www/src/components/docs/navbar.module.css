@@ -18,8 +18,12 @@
   top: 0;
   z-index: var(--rs-z-index-portal);
   height: 50px;
+  background: #fcfcfce6;
 }
 
+[data-theme="dark"] .navbar {
+  background: #111111e6;
+}
 .left {
   display: flex;
   align-items: center;

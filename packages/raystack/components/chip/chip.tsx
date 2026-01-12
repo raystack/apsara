@@ -1,6 +1,6 @@
 'use client';
 
-import { type VariantProps, cva } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 
 import styles from './chip.module.css';

@@ -1,11 +1,12 @@
-import DocsNavbar from '@/components/docs/navbar';
-import { mdxComponents } from '@/components/mdx';
-import TableOfContents from '@/components/toc/toc';
-import { docs } from '@/lib/source';
 import { Flex, Headline, Text } from '@raystack/apsara';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import DocsFooter from '@/components/docs/footer';
+import DocsNavbar from '@/components/docs/navbar';
+import { mdxComponents } from '@/components/mdx';
+import TableOfContents from '@/components/toc/toc';
+import { docs } from '@/lib/source';
 import styles from './page.module.css';
 
 export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
@@ -14,8 +15,6 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
   if (!page) notFound();
 
   const MDX = page.data.body;
-
-  console.log('page', page);
 
   return (
     <Flex
@@ -33,22 +32,25 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
       />
       <Flex width='full' align='start'>
         <Flex direction='column' align='center' justify='center' width='full'>
-          <Flex direction='column' gap={6} className={styles.content}>
-            <Flex direction='column' gap={3}>
-              <Headline size='t4'>{page.data.title}</Headline>
-              <Text size='regular' variant='secondary'>
-                {page.data.description}
-              </Text>
+          <Flex direction='column' className={styles.content} justify='between'>
+            <Flex direction='column' gap={6}>
+              <Flex direction='column' gap={3}>
+                <Headline size='t4'>{page.data.title}</Headline>
+                <Text size='regular' variant='secondary'>
+                  {page.data.description}
+                </Text>
+              </Flex>
+              <Flex direction='column' className='prose'>
+                <MDX
+                  components={{
+                    ...mdxComponents,
+                    // this allows you to link to other pages with relative file paths
+                    a: createRelativeLink(docs, page)
+                  }}
+                />
+              </Flex>
             </Flex>
-            <Flex direction='column' className='prose'>
-              <MDX
-                components={{
-                  ...mdxComponents,
-                  // this allows you to link to other pages with relative file paths
-                  a: createRelativeLink(docs, page)
-                }}
-              />
-            </Flex>
+            <DocsFooter url={page.url} />
           </Flex>
         </Flex>
         <aside
@@ -58,6 +60,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
             position: 'sticky',
             top: '50px',
             padding: '40px 0',
+            paddingRight: 'var(--rs-space-7)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

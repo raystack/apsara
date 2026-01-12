@@ -103,7 +103,6 @@ export interface DataTableProps<TData, TValue> {
   mode?: DataTableMode;
   isLoading?: boolean;
   loadingRowCount?: number;
-  tableQuery?: DataTableQuery;
   onTableQueryChange?: (query: DataTableQuery) => void;
   defaultSort: DataTableSort;
   onLoadMore?: () => Promise<void>;
@@ -111,16 +110,31 @@ export interface DataTableProps<TData, TValue> {
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
 }
 
-export type DataTableContentProps = {
+export type DataTableContentClassNames = {
+  root?: string;
+  table?: string;
+  header?: string;
+  body?: string;
+  row?: string;
+};
+
+export type DataTableContentBaseProps = {
   emptyState?: React.ReactNode;
   zeroState?: React.ReactNode;
-  classNames?: {
-    root?: string;
-    table?: string;
-    header?: string;
-    body?: string;
-    row?: string;
-  };
+  classNames?: DataTableContentClassNames;
+};
+
+export type DataTableContentProps = DataTableContentBaseProps;
+
+export type VirtualizedContentProps = DataTableContentBaseProps & {
+  /** Height of each row in pixels. */
+  rowHeight?: number;
+  /** Height of group header rows in pixels. Falls back to rowHeight if not set. */
+  groupHeaderHeight?: number;
+  /** Number of rows to render outside visible area. */
+  overscan?: number;
+  /** Distance in pixels from bottom to trigger load more. */
+  loadMoreOffset?: number;
 };
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;

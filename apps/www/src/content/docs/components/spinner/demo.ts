@@ -10,12 +10,10 @@ export const playground = {
   type: 'playground',
   controls: {
     size: {
-      type: 'number',
-      options: [1, 2, 3, 4, 5, 6],
-      defaultValue: 1,
-      initialValue: 4,
-      min: 1,
-      max: 6
+      type: 'select',
+      options: ['1', '2', '3', '4', '5', '6'],
+      defaultValue: '1',
+      initialValue: '4'
     },
     color: {
       type: 'select',

@@ -13,22 +13,22 @@ export const preview = {
       </Flex>
     </Sidebar.Header>
     <Sidebar.Main>
-      <Sidebar.Group label="Main" leadingIcon={<Info />}>
-        <Sidebar.Item href="#" leadingIcon={<Info />} active>
+      <Sidebar.Group label="Main" leadingIcon={<Info size={16} />}>
+        <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>
           Dashboard
         </Sidebar.Item>
-        <Sidebar.Item href="#" leadingIcon={<Info />} disabled>
+        <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>
           Settings
         </Sidebar.Item>
       </Sidebar.Group>
       <Sidebar.Group label="Support">
-        <Sidebar.Item href="#" leadingIcon={<Info />}>
+        <Sidebar.Item href="#" leadingIcon={<Info size={16} />}>
           Help
         </Sidebar.Item>
       </Sidebar.Group>
     </Sidebar.Main>
     <Sidebar.Footer>
-      <Sidebar.Item href="#" leadingIcon={<Info />}>
+      <Sidebar.Item href="#" leadingIcon={<Info size={16} />}>
         Help
       </Sidebar.Item>
     </Sidebar.Footer>
@@ -51,8 +51,8 @@ export const positionDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar>`
     },
@@ -69,8 +69,8 @@ export const positionDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar>`
     }
@@ -92,8 +92,8 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar>`
     },
@@ -109,8 +109,8 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar>`
     },
@@ -126,8 +126,8 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar>`
     },
@@ -143,8 +143,8 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar>`
     }
@@ -166,8 +166,8 @@ export const tooltipDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
-            <Sidebar.Item href="#" leadingIcon={<Info />} active>Dashboard</Sidebar.Item>
-            <Sidebar.Item href="#" leadingIcon={<Info />} disabled>Settings</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} active>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<Info size={16} />} disabled>Settings</Sidebar.Item>
           </Sidebar.Main>
         </Sidebar>`
 };

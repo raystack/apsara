@@ -14,10 +14,7 @@ export const preview = {
     },
     {
       name: 'Date Picker',
-      code: `
-      <Flex style={{height:200}}>
-        <DatePicker />
-      </Flex>`
+      code: `<DatePicker />`
     }
   ]
 };
@@ -116,7 +113,7 @@ export const dateInfoDemo = {
         gap={2}
         style={{ fontSize: '8px', color: 'var(--rs-color-foreground-base-secondary)' }}
       >
-        <BellIcon style={{ width: '8px', height: '8px' }} />
+        <Info style={{ width: '8px', height: '8px' }} />
         <Text style={{ fontSize: '8px' }} color='secondary'>25%</Text>
       </Flex>
     )

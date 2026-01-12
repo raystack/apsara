@@ -7,7 +7,7 @@
 
 .dialogContent {
   background-color: var(--rs-color-background-base-primary);
-  border-radius: var(--rs-radius-4);
+  border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-floating);
   position: fixed;
   top: 50%;

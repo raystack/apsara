@@ -171,7 +171,7 @@
 .calendarPopover {
   padding: var(--rs-space-3) !important;
   /* border: none !important; */
-  border: 1px solid var(--rs-color-border-base-primary) !important;
+  border: 0.5px solid var(--rs-color-border-base-primary) !important;
   min-width: max-content;
   width: fit-content;
   max-width: none !important;

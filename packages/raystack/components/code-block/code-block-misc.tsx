@@ -1,13 +1,19 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ElementRef, HTMLAttributes, forwardRef } from 'react';
+import {
+  ComponentProps,
+  ElementRef,
+  forwardRef,
+  HTMLAttributes,
+  ReactNode
+} from 'react';
 import { Button } from '../button';
 import { CopyButton } from '../copy-button';
 import { Flex } from '../flex';
 import { Text } from '../text';
-import { useCodeBlockContext } from './code-block-root';
 import styles from './code-block.module.css';
+import { useCodeBlockContext } from './code-block-root';
 
 export const CodeBlockContent = forwardRef<
   HTMLDivElement,
@@ -54,32 +60,51 @@ export const CodeBlockLabel = forwardRef<
 
 CodeBlockLabel.displayName = 'CodeBlockLabel';
 
+export interface CodeBlockCollapseTriggerProps
+  extends Omit<ComponentProps<typeof Button>, 'children'> {
+  children?: ReactNode | ((collapsed: boolean) => ReactNode);
+}
 export const CodeBlockCollapseTrigger = forwardRef<
   HTMLButtonElement,
-  ComponentProps<typeof Button>
->(({ className, children = 'Show Code', onClick, ...props }, ref) => {
-  const { maxLines, collapsed, toggleCollapsed, code } = useCodeBlockContext();
-  const canCollapse = maxLines && maxLines > 0;
-  const lineCount = code?.split('\n').length ?? 0;
+  CodeBlockCollapseTriggerProps
+>(
+  (
+    {
+      className,
+      children = collapsed => (collapsed ? 'Show Code' : 'Hide Code'),
+      onClick,
+      ...props
+    },
+    ref
+  ) => {
+    const { maxLines, collapsed, toggleCollapsed, code } =
+      useCodeBlockContext();
+    const canCollapse = maxLines && maxLines > 0;
+    const lineCount = code?.split('\n').length ?? 0;
 
-  if (!canCollapse || !collapsed || lineCount < maxLines) return null;
+    if (!canCollapse || lineCount < maxLines) return null;
 
-  return (
-    <Button
-      ref={ref}
-      onClick={e => {
-        toggleCollapsed();
-        onClick?.(e);
-      }}
-      variant='text'
-      color='neutral'
-      className={cx(styles.collapseTrigger, className)}
-      {...props}
-    >
-      {children}
-    </Button>
-  );
-});
+    return (
+      <Button
+        ref={ref}
+        onClick={e => {
+          toggleCollapsed();
+          onClick?.(e);
+        }}
+        variant='text'
+        color='neutral'
+        className={cx(
+          styles.collapseTrigger,
+          collapsed && styles.collapsed,
+          className
+        )}
+        {...props}
+      >
+        {typeof children === 'function' ? children(!!collapsed) : children}
+      </Button>
+    );
+  }
+);
 
 CodeBlockCollapseTrigger.displayName = 'CodeBlockCollapseTrigger';
 

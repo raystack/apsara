@@ -1,12 +1,12 @@
 'use client';
 
-import { isActiveUrl } from '@/lib/utils';
 import { Flex, Sidebar } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
-import { Node, Root } from 'fumadocs-core/page-tree';
+import { Item, Node, Root } from 'fumadocs-core/page-tree';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { type ReactNode } from 'react';
+import { isActiveUrl } from '@/lib/utils';
 import Logo from '../logo';
 import { ThemeToggle } from '../theme-switcher';
 import DocsSearch from './search';
@@ -30,6 +30,10 @@ function renderNode(node: Node, pathname: string): ReactNode {
         label={node.name as string}
         key={node?.$id}
         leadingIcon={node?.icon}
+        classNames={{
+          items: styles.items,
+          label: styles.label
+        }}
       >
         {/* Render index item first */}
         {renderNode(node.index, pathname)}
@@ -55,6 +59,10 @@ function renderNode(node: Node, pathname: string): ReactNode {
         label={node.name as string}
         key={node?.$id}
         leadingIcon={node?.icon}
+        classNames={{
+          items: styles.items,
+          label: styles.label
+        }}
       >
         {node.children.map(child => renderNode(child, pathname))}
       </Sidebar.Group>
@@ -63,16 +71,7 @@ function renderNode(node: Node, pathname: string): ReactNode {
 
   // Handle page items
   if (node.type === 'page') {
-    return (
-      <Sidebar.Item
-        key={node?.$id}
-        leadingIcon={node?.icon}
-        as={<Link href={node.url} />}
-        active={isActiveUrl(node.url, pathname, false)}
-      >
-        {node.name as string}
-      </Sidebar.Item>
-    );
+    return <SidebarItem item={node} pathname={pathname} />;
   }
 
   // Handle separators (if needed)
@@ -81,6 +80,25 @@ function renderNode(node: Node, pathname: string): ReactNode {
   }
 
   return null;
+}
+
+function SidebarItem({ item, pathname }: { item: Item; pathname: string }) {
+  return (
+    <Sidebar.Item
+      key={item?.$id}
+      leadingIcon={item?.icon}
+      as={<Link href={item.url} />}
+      active={isActiveUrl(item.url, pathname, false)}
+      classNames={{
+        text: styles.itemText
+      }}
+    >
+      <Flex align='center' gap={3}>
+        {item.name as string}
+        {item?.tag ? <span className={styles.indicator} /> : null}
+      </Flex>
+    </Sidebar.Item>
+  );
 }
 
 export default function DocsSidebar({ pageTree, className }: Props) {

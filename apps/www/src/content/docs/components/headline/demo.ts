@@ -13,7 +13,7 @@ export const playground = {
     size: {
       type: 'select',
       options: ['t1', 't2', 't3', 't4'],
-      defaultValue: 't1'
+      defaultValue: 't2'
     },
     weight: {
       type: 'select',

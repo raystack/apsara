@@ -3,6 +3,9 @@
   flex-direction: column;
   width: 100%;
 }
+.container input {
+  padding: 0 var(--rs-space-3);
+}
 
 .clearButtonWrapper {
   display: flex;

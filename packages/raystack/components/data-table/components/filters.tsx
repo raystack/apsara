@@ -128,26 +128,30 @@ export function Filters<TData, TValue>({
 
   return (
     <Flex gap={3} className={className}>
-      <Flex gap={3} className={classNames?.container}>
-        {appliedFilters.map(filter => (
-          <FilterChip
-            key={filter.name}
-            label={filter.label}
-            value={filter.value}
-            onRemove={() => handleRemoveFilter(filter.name)}
-            onValueChange={value => handleFilterValueChange(filter.name, value)}
-            onOperationChange={operator =>
-              handleFilterOperationChange(
-                filter.name,
-                operator as FilterOperatorTypes
-              )
-            }
-            columnType={filter.filterType}
-            options={filter.options}
-            className={classNames?.filterChips}
-          />
-        ))}
-      </Flex>
+      {appliedFilters.length > 0 && (
+        <Flex gap={3} className={classNames?.container}>
+          {appliedFilters.map(filter => (
+            <FilterChip
+              key={filter.name}
+              label={filter.label}
+              value={filter.value}
+              onRemove={() => handleRemoveFilter(filter.name)}
+              onValueChange={value =>
+                handleFilterValueChange(filter.name, value)
+              }
+              onOperationChange={operator =>
+                handleFilterOperationChange(
+                  filter.name,
+                  operator as FilterOperatorTypes
+                )
+              }
+              columnType={filter.filterType}
+              options={filter.options}
+              className={classNames?.filterChips}
+            />
+          ))}
+        </Flex>
+      )}
       <AddFilter
         columnList={columnList}
         appliedFiltersSet={appliedFiltersSet}

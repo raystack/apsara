@@ -44,17 +44,17 @@
   margin-top: var(--rs-space-4);
 }
 
-:global(.prose) ul,
-:global(.prose) ol {
+:global(.prose) ul:not([data-demo] ul),
+:global(.prose) ol:not([data-demo] ol) {
   padding-left: var(--rs-space-5);
   margin: 0;
 }
 
-:global(.prose) ul li,
-:global(.prose) ol li {
+:global(.prose) ul:not([data-demo] ul) li,
+:global(.prose) ol:not([data-demo] ol) li {
   margin-bottom: var(--rs-space-3);
 }
-:global(.prose) ul li:first-child,
-:global(.prose) ol li:first-child {
+:global(.prose) ul:not([data-demo] ul) li:first-child,
+:global(.prose) ol:not([data-demo] ol) li:first-child {
   margin-top: var(--rs-space-3);
 }

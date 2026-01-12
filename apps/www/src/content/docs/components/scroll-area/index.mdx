@@ -1,0 +1,73 @@
+---
+title: Scroll Area
+description: A customizable scrollable container component with smooth scrolling, hover effects, and automatic scrollbar handling. Both vertical and horizontal scrollbars are automatically rendered and shown based on content overflow.
+tag: new
+---
+
+import {
+  playground,
+  preview,
+  verticalDemo,
+  horizontalDemo,
+  bothScrollbarsDemo,
+  typeDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { ScrollArea } from "@raystack/apsara";
+```
+
+## Scroll Area Props
+
+The Scroll Area component extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
+
+<auto-type-table path="./props.ts" name="ScrollAreaRootProps" />
+
+## Examples
+
+### Vertical Scrolling
+
+A basic vertical scroll area with a list of items. The scrollbar automatically appears when content overflows vertically.
+
+<Demo data={verticalDemo} />
+
+### Horizontal Scrolling
+
+A horizontal scroll area for wide content like tables or card grids. The scrollbar automatically appears when content overflows horizontally.
+
+<Demo data={horizontalDemo} />
+
+### Both Scrollbars
+
+When content overflows both vertically and horizontally, both scrollbars appear automatically along with the corner element.
+
+<Demo data={bothScrollbarsDemo} />
+
+### Scrollbar Type
+
+Control when the scrollbar appears using the `type` prop.
+
+<Demo data={typeDemo} />
+
+## Features
+
+- **Automatic Scrollbars**: Both vertical and horizontal scrollbars are always rendered and automatically shown when content overflows
+- **Smooth Scrolling**: Custom scrollbar with smooth transitions
+- **Hover Effects**: Scrollbar expands from 4px to 6px on hover
+- **Auto Corner**: Corner element is automatically added when both scrollbars are visible
+- **Scroll Chaining**: Scroll continues to parent page when reaching container boundaries
+- **Customizable Visibility**: Control when scrollbars appear using the `type` prop
+
+## Accessibility
+
+The Scroll Area component is built on Radix UI primitives and provides:
+
+- Keyboard navigation support
+- Screen reader compatibility
+- Proper ARIA attributes
+- Focus management
+

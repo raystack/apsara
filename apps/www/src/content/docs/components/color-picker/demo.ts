@@ -7,7 +7,7 @@ defaultValue='#DA2929'
 style={{
   width: '240px',
   height: '320px',
-  padding: 20,
+  padding: 12,
   background: 'white'
 }}
 >
@@ -27,7 +27,7 @@ export const basicDemo = {
 <ColorPicker defaultValue="#00bcd4" style={{
   width: '240px',
   height: '220px',
-  padding: 20,
+  padding: 12,
   background: 'white'
 }}>
   <ColorPicker.Area/>
