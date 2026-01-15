@@ -1,5 +1,9 @@
 'use client';
-import { CopyIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
+import {
+  ComponentBooleanIcon,
+  CopyIcon,
+  GitHubLogoIcon
+} from '@radix-ui/react-icons';
 import { Breadcrumb, Button } from '@raystack/apsara';
 import { useBreadcrumb } from 'fumadocs-core/breadcrumb';
 import { Root } from 'fumadocs-core/page-tree';
@@ -7,6 +11,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Fragment, useState } from 'react';
 import { SourceType } from '@/lib/types';
+import { useDemoContext } from '../demo/demo-context';
 import styles from './navbar.module.css';
 
 const cache = new Map<string, string>();
@@ -32,6 +37,7 @@ export default function DocsNavbar({
   const [isLoading, setLoading] = useState(false);
   const [checked, setChecked] = useState(false);
   const markdownUrl = `${url}.mdx`;
+  const { setOpenPlayground, hasPlayground } = useDemoContext();
 
   const handleCopyMarkdown = async () => {
     const cached = cache.get(markdownUrl);
@@ -80,13 +86,33 @@ export default function DocsNavbar({
         )}
       </div>
       <div className={styles.actions}>
+        {hasPlayground && (
+          <Button
+            variant='outline'
+            color='neutral'
+            size='small'
+            disabled={isLoading}
+            onClick={() => setOpenPlayground(true)}
+            leadingIcon={
+              <ComponentBooleanIcon
+                height={12}
+                width={12}
+                className={styles.icon}
+              />
+            }
+          >
+            Playground
+          </Button>
+        )}
         <Button
           variant='outline'
           color='neutral'
           size='small'
           disabled={isLoading}
           onClick={handleCopyMarkdown}
-          leadingIcon={<CopyIcon height={12} width={12} />}
+          leadingIcon={
+            <CopyIcon height={12} width={12} className={styles.icon} />
+          }
         >
           Copy markdown
         </Button>
@@ -96,7 +122,13 @@ export default function DocsNavbar({
               variant='outline'
               color='neutral'
               size='small'
-              leadingIcon={<GitHubLogoIcon height={12} width={12} />}
+              leadingIcon={
+                <GitHubLogoIcon
+                  height={12}
+                  width={12}
+                  className={styles.icon}
+                />
+              }
             >
               View source
             </Button>
