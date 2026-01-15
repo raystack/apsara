@@ -1,11 +1,10 @@
 'use client';
 
 import { InfoCircledIcon } from '@radix-ui/react-icons';
-import { type VariantProps, cva, cx } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, ReactNode, forwardRef } from 'react';
-import { Tooltip } from '../tooltip';
-
+import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react';
 import { Chip } from '../chip';
+import { Tooltip } from '../tooltip';
 import styles from './input-field.module.css';
 
 // Todo: Add a dropdown support

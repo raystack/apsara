@@ -7,8 +7,8 @@ import { ElementRef, forwardRef, useLayoutEffect } from 'react';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../dropdown-menu/utils';
 import { Text } from '../text';
-import { useSelectContext } from './select-root';
 import styles from './select.module.css';
+import { useSelectContext } from './select-root';
 
 export const SelectItem = forwardRef<
   ElementRef<typeof SelectPrimitive.Item>,

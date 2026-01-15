@@ -1,12 +1,12 @@
 'use client';
 
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { VariantProps, cva } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 import { Select as SelectPrimitive, Slot } from 'radix-ui';
-import { ElementRef, SVGAttributes, forwardRef } from 'react';
+import { ElementRef, forwardRef, SVGAttributes } from 'react';
 import { Flex } from '../flex';
-import { useSelectContext } from './select-root';
 import styles from './select.module.css';
+import { useSelectContext } from './select-root';
 
 export interface IconProps extends SVGAttributes<SVGElement> {
   children?: never;
