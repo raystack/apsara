@@ -73,28 +73,25 @@ describe('Checkbox', () => {
   });
 
   describe('Indeterminate State', () => {
-    it('applies indeterminate class', () => {
-      render(<Checkbox checked='indeterminate' />);
+    it('has data-indeterminate attribute when indeterminate', () => {
+      render(<Checkbox indeterminate />);
       const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toHaveClass(styles['checkbox-indeterminate']);
+      expect(checkbox).toHaveAttribute('data-indeterminate');
     });
 
-    it('renders with defaultChecked as indeterminate', () => {
-      render(<Checkbox defaultChecked='indeterminate' />);
+    it('can be both checked and indeterminate', () => {
+      render(<Checkbox checked indeterminate />);
       const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toHaveClass(styles['checkbox-indeterminate']);
+      expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+      expect(checkbox).toHaveAttribute('data-indeterminate');
     });
 
-    it('transitions from indeterminate to unchecked on click', () => {
-      const handleChange = vi.fn();
-      render(
-        <Checkbox checked='indeterminate' onCheckedChange={handleChange} />
-      );
-
-      const checkbox = screen.getByRole('checkbox');
-      fireEvent.click(checkbox);
-
-      expect(handleChange).toHaveBeenCalledWith(false);
+    it('shows indeterminate icon when indeterminate', () => {
+      const { container } = render(<Checkbox indeterminate />);
+      const indicator = container.querySelector(`.${styles.indicator}`);
+      expect(indicator).toBeInTheDocument();
+      const svg = indicator?.querySelector('svg');
+      expect(svg).toBeInTheDocument();
     });
   });
 
@@ -102,13 +99,13 @@ describe('Checkbox', () => {
     it('renders as disabled when disabled prop is true', () => {
       render(<Checkbox disabled />);
       const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toBeDisabled();
+      expect(checkbox).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('applies disabled class', () => {
+    it('has data-disabled attribute when disabled', () => {
       render(<Checkbox disabled />);
       const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toHaveClass(styles['checkbox-disabled']);
+      expect(checkbox).toHaveAttribute('data-disabled');
     });
 
     it('does not trigger onCheckedChange when disabled', () => {
@@ -124,15 +121,15 @@ describe('Checkbox', () => {
     it('can be disabled while checked', () => {
       render(<Checkbox disabled checked />);
       const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toBeDisabled();
+      expect(checkbox).toHaveAttribute('aria-disabled', 'true');
       expect(checkbox).toBeChecked();
     });
 
     it('can be disabled while indeterminate', () => {
-      render(<Checkbox disabled checked='indeterminate' />);
+      render(<Checkbox disabled indeterminate />);
       const checkbox = screen.getByRole('checkbox');
-      expect(checkbox).toBeDisabled();
-      expect(checkbox).toHaveClass(styles['checkbox-indeterminate']);
+      expect(checkbox).toHaveAttribute('aria-disabled', 'true');
+      expect(checkbox).toHaveAttribute('data-indeterminate');
     });
   });
 
@@ -145,7 +142,7 @@ describe('Checkbox', () => {
       fireEvent.click(checkbox);
 
       expect(handleChange).toHaveBeenCalledTimes(1);
-      expect(handleChange).toHaveBeenCalledWith(true);
+      expect(handleChange).toHaveBeenCalledWith(true, expect.anything());
     });
 
     it('toggles from unchecked to checked', () => {
@@ -155,7 +152,7 @@ describe('Checkbox', () => {
       const checkbox = screen.getByRole('checkbox');
       fireEvent.click(checkbox);
 
-      expect(handleChange).toHaveBeenCalledWith(true);
+      expect(handleChange).toHaveBeenCalledWith(true, expect.anything());
     });
 
     it('toggles from checked to unchecked', () => {
@@ -165,7 +162,7 @@ describe('Checkbox', () => {
       const checkbox = screen.getByRole('checkbox');
       fireEvent.click(checkbox);
 
-      expect(handleChange).toHaveBeenCalledWith(false);
+      expect(handleChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
     it('supports focus events', () => {

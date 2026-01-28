@@ -80,6 +80,7 @@
   "license": "ISC",
   "devDependencies": {
     "@figma/code-connect": "^1.3.5",
+    "@raystack/tools-config": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -107,13 +108,13 @@
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-preserve-directives": "^0.4.0",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
-    "@raystack/tools-config": "workspace:*",
     "semver": "^7.6.0",
     "typescript": "~5.4.3",
     "vitest": "^3.2.4"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.16",
+    "@base-ui/react": "^1.1.0",
     "@radix-ui/react-icons": "^1.3.2",
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.9.2",
