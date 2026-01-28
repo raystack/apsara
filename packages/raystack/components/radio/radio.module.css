@@ -24,12 +24,12 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-.radioitem[data-state="checked"] {
+.radioitem[data-checked] {
   border: 1px solid var(--rs-color-background-accent-emphasis);
   background: var(--rs-color-background-accent-emphasis);
 }
 
-.radioitem[data-state="checked"]:hover {
+.radioitem[data-checked]:hover {
   border-color: var(--rs-color-background-accent-emphasis-hover);
   background: var(--rs-color-background-accent-emphasis-hover);
 }
@@ -41,8 +41,8 @@
   cursor: not-allowed;
 }
 
-.radioitem[data-disabled][data-state="checked"],
-.radioitem[data-disabled][data-state="checked"]:hover {
+.radioitem[data-disabled][data-checked],
+.radioitem[data-disabled][data-checked]:hover {
   background: var(--rs-color-background-accent-primary);
   border-color: var(--rs-color-background-accent-primary);
 }
@@ -57,7 +57,7 @@
 }
 
 .indicator::after {
-  content: '';
+  content: "";
   display: block;
   width: var(--rs-radius-3);
   height: var(--rs-radius-3);

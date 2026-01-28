@@ -1,12 +1,12 @@
-export interface RadioRootProps {
+export interface RadioGroupProps {
   /** The value of the radio item that should be checked by default. */
-  defaultValue?: string;
+  defaultValue?: any;
 
   /** The controlled value of the radio item that is checked. */
-  value?: string;
+  value?: any;
 
   /** Event handler called when the value changes. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: any, event: Event) => void;
 
   /** When true, prevents user interaction with the radio group. */
   disabled?: boolean;
@@ -14,29 +14,43 @@ export interface RadioRootProps {
   /** The name of the radio group when submitted as a form field. */
   name?: string;
 
-  /** When true, indicates that a value must be selected before the form can be submitted. */
-  required?: boolean;
+  /** Additional CSS class name. */
+  className?: string;
 
-  /** The orientation of the radio group. */
-  orientation?: 'horizontal' | 'vertical';
-
-  /** The reading direction of the radio group. */
-  dir?: 'ltr' | 'rtl';
-
-  /** A label for the radio group that is announced by screen readers. */
-  ariaLabel?: string;
+  /**
+   * Allows you to replace the component's HTML element with a different tag, or compose it with another component.
+   * Accepts a `ReactElement` or a function that returns the element to render.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((props: React.HTMLAttributes<HTMLElement>) => React.ReactElement);
 }
 
-export interface RadioItemProps {
+export interface RadioProps {
   /** The unique value of the radio item. */
-  value: string;
+  value: any;
 
   /** When true, prevents user interaction with this radio item. */
   disabled?: boolean;
 
-  /** When true, indicates that this radio item must be checked. */
-  required?: boolean;
-
   /** The unique identifier for the radio item. */
   id?: string;
+
+  /** Additional CSS class name. */
+  className?: string;
+
+  /**
+   * Allows you to replace the component's HTML element with a different tag, or compose it with another component.
+   * Accepts a `ReactElement` or a function that returns the element to render.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((
+        props: React.HTMLAttributes<HTMLElement>,
+        state: { checked: boolean }
+      ) => React.ReactElement);
 }

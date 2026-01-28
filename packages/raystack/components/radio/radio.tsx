@@ -1,53 +1,36 @@
-import { VariantProps, cva } from 'class-variance-authority';
-import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import { Radio as RadioPrimitive } from '@base-ui/react/radio';
+import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
+import { cx } from 'class-variance-authority';
+import { forwardRef } from 'react';
 
 import styles from './radio.module.css';
 
-const RadioRoot = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Root>,
-  ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <RadioGroupPrimitive.Root ref={ref} className={styles.radio} {...props} />
-));
+const RadioGroup = forwardRef<HTMLDivElement, RadioGroupPrimitive.Props>(
+  ({ className, ...props }, ref) => (
+    <RadioGroupPrimitive
+      ref={ref}
+      className={cx(styles.radio, className)}
+      {...props}
+    />
+  )
+);
 
-const radioItem = cva(styles.radioitem);
+RadioGroup.displayName = 'Radio.Group';
 
-export interface RadioItemProps
-  extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> {}
+const RadioItem = forwardRef<HTMLButtonElement, RadioPrimitive.Root.Props>(
+  ({ className, ...props }, forwardedRef) => (
+    <RadioPrimitive.Root
+      {...props}
+      ref={forwardedRef}
+      className={cx(styles.radioitem, className)}
+    >
+      <RadioPrimitive.Indicator className={styles.indicator} />
+    </RadioPrimitive.Root>
+  )
+);
 
-export const RadioItem = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Item>,
-  RadioItemProps
->(({ className, ...props }, forwardedRef) => (
-  <RadioGroupPrimitive.Item
-    {...props}
-    ref={forwardedRef}
-    className={radioItem({ className })}
-  >
-    <Indicator />
-  </RadioGroupPrimitive.Item>
-));
+RadioItem.displayName = 'Radio';
 
-const indicator = cva(styles.indicator);
-export interface thumbProps
-  extends ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Indicator>,
-    VariantProps<typeof indicator> {}
-
-const Indicator = forwardRef<
-  ElementRef<typeof RadioGroupPrimitive.Indicator>,
-  thumbProps
->(({ className, ...props }, ref) => (
-  <RadioGroupPrimitive.Indicator
-    ref={ref}
-    className={indicator({ className })}
-    {...props}
-  />
-));
-
-Indicator.displayName = RadioGroupPrimitive.Indicator.displayName;
-
-export const Radio = Object.assign(RadioRoot, {
-  Indicator: Indicator,
-  Item: RadioItem
+export const Radio = Object.assign(RadioItem, {
+  Group: RadioGroup
 });
