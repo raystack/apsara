@@ -1,14 +1,12 @@
-import { VariantProps, cva, cx } from 'class-variance-authority';
-import { Avatar as AvatarPrimitive } from 'radix-ui';
+import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
+import { cva, cx, VariantProps } from 'class-variance-authority';
 import {
   ComponentPropsWithoutRef,
-  ElementRef,
-  ReactElement,
-  ReactNode,
   forwardRef,
-  isValidElement
+  isValidElement,
+  ReactElement,
+  ReactNode
 } from 'react';
-import { Box } from '../box';
 import styles from './avatar.module.css';
 import { AVATAR_COLORS } from './utils';
 
@@ -133,15 +131,17 @@ const image = cva(styles.image);
  * @desc Recursively get the avatar props even if it's
  * wrapped in another component like Tooltip, Flex, etc.
  */
-export const getAvatarProps = (element: ReactElement): AvatarProps => {
-  const { props } = element;
+export const getAvatarProps = (
+  element: ReactElement<AvatarProps>
+): AvatarProps => {
+  const props = element.props as AvatarProps & { children?: ReactNode };
 
   if (element.type === Avatar) {
     return props;
   }
 
   if (props.children) {
-    if (isValidElement(props.children)) {
+    if (isValidElement<AvatarProps>(props.children)) {
       return getAvatarProps(props.children);
     }
   }
@@ -149,7 +149,7 @@ export const getAvatarProps = (element: ReactElement): AvatarProps => {
 };
 
 export interface AvatarProps
-  extends ComponentPropsWithoutRef<typeof AvatarPrimitive.Root>,
+  extends AvatarPrimitive.Root.Props,
     VariantProps<typeof avatar> {
   size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
   src?: string;
@@ -157,30 +157,28 @@ export interface AvatarProps
   fallback?: ReactNode;
   variant?: 'solid' | 'soft';
   color?: AVATAR_COLORS;
-  asChild?: boolean;
   className?: string;
 }
 
-const AvatarRoot = forwardRef<
-  ElementRef<typeof AvatarPrimitive.Root>,
-  AvatarProps
->(
+const AvatarRoot = forwardRef<HTMLSpanElement, AvatarProps>(
   (
     { className, alt, src, fallback, size, radius, variant, color, ...props },
     ref
   ) => (
-    <Box className={styles.imageWrapper}>
-      <AvatarPrimitive.Root
-        ref={ref}
-        className={cx(avatar({ size, radius, variant, color }), className)}
-        {...props}
-      >
-        <AvatarPrimitive.Image className={image()} src={src} alt={alt} />
-        <AvatarPrimitive.Fallback className={styles.fallback}>
-          {fallback}
-        </AvatarPrimitive.Fallback>
-      </AvatarPrimitive.Root>
-    </Box>
+    <AvatarPrimitive.Root
+      ref={ref}
+      className={cx(
+        styles.imageWrapper,
+        avatar({ size, radius, variant, color }),
+        className
+      )}
+      {...props}
+    >
+      <AvatarPrimitive.Image className={image()} src={src} alt={alt} />
+      <AvatarPrimitive.Fallback className={styles.fallback}>
+        {fallback}
+      </AvatarPrimitive.Fallback>
+    </AvatarPrimitive.Root>
   )
 );
 
