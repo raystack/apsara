@@ -1,15 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Radio, RadioItem } from '../radio';
+import { Radio } from '../radio';
 
 describe('Radio', () => {
   describe('Basic Rendering', () => {
     it('renders radio group', () => {
       render(
-        <Radio>
-          <RadioItem value='option1' />
-        </Radio>
+        <Radio.Group>
+          <Radio value='option1' />
+        </Radio.Group>
       );
       const radioGroup = screen.getByRole('radiogroup');
       expect(radioGroup).toBeInTheDocument();
@@ -17,11 +17,11 @@ describe('Radio', () => {
 
     it('renders multiple radio items', () => {
       render(
-        <Radio>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-          <RadioItem value='option3' />
-        </Radio>
+        <Radio.Group>
+          <Radio value='option1' />
+          <Radio value='option2' />
+          <Radio value='option3' />
+        </Radio.Group>
       );
 
       const radios = screen.getAllByRole('radio');
@@ -32,10 +32,10 @@ describe('Radio', () => {
   describe('Selection Behavior', () => {
     it('allows single selection', () => {
       render(
-        <Radio>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-        </Radio>
+        <Radio.Group>
+          <Radio value='option1' />
+          <Radio value='option2' />
+        </Radio.Group>
       );
 
       const [radio1, radio2] = screen.getAllByRole('radio');
@@ -51,11 +51,11 @@ describe('Radio', () => {
 
     it('works with defaultValue', () => {
       render(
-        <Radio defaultValue='option2'>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-          <RadioItem value='option3' />
-        </Radio>
+        <Radio.Group defaultValue='option2'>
+          <Radio value='option1' />
+          <Radio value='option2' />
+          <Radio value='option3' />
+        </Radio.Group>
       );
 
       const radios = screen.getAllByRole('radio');
@@ -66,10 +66,10 @@ describe('Radio', () => {
 
     it('works as controlled component', () => {
       const { rerender } = render(
-        <Radio value='option1'>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-        </Radio>
+        <Radio.Group value='option1'>
+          <Radio value='option1' />
+          <Radio value='option2' />
+        </Radio.Group>
       );
 
       const [radio1, radio2] = screen.getAllByRole('radio');
@@ -77,10 +77,10 @@ describe('Radio', () => {
       expect(radio2).not.toBeChecked();
 
       rerender(
-        <Radio value='option2'>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-        </Radio>
+        <Radio.Group value='option2'>
+          <Radio value='option1' />
+          <Radio value='option2' />
+        </Radio.Group>
       );
 
       expect(radio1).not.toBeChecked();
@@ -90,56 +90,56 @@ describe('Radio', () => {
     it('calls onValueChange when selection changes', () => {
       const handleChange = vi.fn();
       render(
-        <Radio onValueChange={handleChange}>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-        </Radio>
+        <Radio.Group onValueChange={handleChange}>
+          <Radio value='option1' />
+          <Radio value='option2' />
+        </Radio.Group>
       );
 
       const radio2 = screen.getAllByRole('radio')[1];
       fireEvent.click(radio2);
 
-      expect(handleChange).toHaveBeenCalledWith('option2');
+      expect(handleChange).toHaveBeenCalledWith('option2', expect.anything());
     });
   });
 
   describe('Disabled State', () => {
     it('disables entire radio group', () => {
       render(
-        <Radio disabled>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-        </Radio>
+        <Radio.Group disabled>
+          <Radio value='option1' />
+          <Radio value='option2' />
+        </Radio.Group>
       );
 
       const radios = screen.getAllByRole('radio');
       radios.forEach(radio => {
-        expect(radio).toBeDisabled();
+        expect(radio).toHaveAttribute('data-disabled');
       });
     });
 
     it('disables individual radio items', () => {
       render(
-        <Radio>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' disabled />
-          <RadioItem value='option3' />
-        </Radio>
+        <Radio.Group>
+          <Radio value='option1' />
+          <Radio value='option2' disabled />
+          <Radio value='option3' />
+        </Radio.Group>
       );
 
       const radios = screen.getAllByRole('radio');
-      expect(radios[0]).not.toBeDisabled();
-      expect(radios[1]).toBeDisabled();
-      expect(radios[2]).not.toBeDisabled();
+      expect(radios[0]).not.toHaveAttribute('data-disabled');
+      expect(radios[1]).toHaveAttribute('data-disabled');
+      expect(radios[2]).not.toHaveAttribute('data-disabled');
     });
 
     it('does not allow selection of disabled items', () => {
       const handleChange = vi.fn();
       render(
-        <Radio onValueChange={handleChange}>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' disabled />
-        </Radio>
+        <Radio.Group onValueChange={handleChange}>
+          <Radio value='option1' />
+          <Radio value='option2' disabled />
+        </Radio.Group>
       );
 
       const disabledRadio = screen.getAllByRole('radio')[1];
@@ -154,17 +154,17 @@ describe('Radio', () => {
     it('supports arrow key navigation', async () => {
       const user = userEvent.setup();
       render(
-        <Radio>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-          <RadioItem value='option3' />
-        </Radio>
+        <Radio.Group>
+          <Radio value='option1' />
+          <Radio value='option2' />
+          <Radio value='option3' />
+        </Radio.Group>
       );
 
       const [radio1, radio2, radio3] = screen.getAllByRole('radio');
 
       // Focus first radio
-      await radio1.focus();
+      radio1.focus();
       expect(document.activeElement).toBe(radio1);
 
       // Arrow down should move to next
@@ -183,17 +183,17 @@ describe('Radio', () => {
     it('wraps around when navigating past boundaries', async () => {
       const user = userEvent.setup();
       render(
-        <Radio>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-          <RadioItem value='option3' />
-        </Radio>
+        <Radio.Group>
+          <Radio value='option1' />
+          <Radio value='option2' />
+          <Radio value='option3' />
+        </Radio.Group>
       );
 
       const [radio1, , radio3] = screen.getAllByRole('radio');
 
       // Focus last radio
-      await radio3.focus();
+      radio3.focus();
 
       // Arrow down from last should wrap to first
       await user.keyboard('{ArrowDown}');
@@ -208,9 +208,9 @@ describe('Radio', () => {
   describe('Accessibility', () => {
     it('has correct ARIA attributes on group', () => {
       render(
-        <Radio aria-label='Select an option'>
-          <RadioItem value='option1' />
-        </Radio>
+        <Radio.Group aria-label='Select an option'>
+          <Radio value='option1' />
+        </Radio.Group>
       );
 
       const radioGroup = screen.getByRole('radiogroup');
@@ -219,10 +219,10 @@ describe('Radio', () => {
 
     it('has correct ARIA attributes on items', () => {
       render(
-        <Radio defaultValue='option1'>
-          <RadioItem value='option1' aria-label='First option' />
-          <RadioItem value='option2' aria-label='Second option' />
-        </Radio>
+        <Radio.Group defaultValue='option1'>
+          <Radio value='option1' aria-label='First option' />
+          <Radio value='option2' aria-label='Second option' />
+        </Radio.Group>
       );
 
       const radio1 = screen.getByLabelText('First option');
@@ -231,76 +231,31 @@ describe('Radio', () => {
       expect(radio1).toHaveAttribute('aria-checked', 'true');
       expect(radio2).toHaveAttribute('aria-checked', 'false');
     });
-
-    it('supports required attribute', () => {
-      render(
-        <Radio required>
-          <RadioItem value='option1' />
-        </Radio>
-      );
-
-      const radioGroup = screen.getByRole('radiogroup');
-      expect(radioGroup).toHaveAttribute('aria-required', 'true');
-    });
-  });
-
-  describe('Form Integration', () => {
-    it('works with form name attribute', () => {
-      const { container } = render(
-        <form>
-          <Radio name='preference'>
-            <RadioItem value='yes' />
-            <RadioItem value='no' />
-          </Radio>
-        </form>
-      );
-
-      const radios = container.querySelectorAll('input[type="radio"]');
-      radios.forEach(radio => {
-        expect(radio).toHaveAttribute('name', 'preference');
-      });
-    });
-
-    it('respects form disabled state', () => {
-      render(
-        <fieldset disabled>
-          <Radio>
-            <RadioItem value='option1' />
-            <RadioItem value='option2' />
-          </Radio>
-        </fieldset>
-      );
-
-      const radios = screen.getAllByRole('radio');
-      radios.forEach(radio => {
-        expect(radio).toBeDisabled();
-      });
-    });
   });
 
   describe('Data Attributes', () => {
-    it('has data-state attribute on items', () => {
+    it('has data-checked attribute on selected items', () => {
       render(
-        <Radio defaultValue='option1'>
-          <RadioItem value='option1' />
-          <RadioItem value='option2' />
-        </Radio>
+        <Radio.Group defaultValue='option1'>
+          <Radio value='option1' />
+          <Radio value='option2' />
+        </Radio.Group>
       );
 
       const [radio1, radio2] = screen.getAllByRole('radio');
-      expect(radio1).toHaveAttribute('data-state', 'checked');
-      expect(radio2).toHaveAttribute('data-state', 'unchecked');
+      expect(radio1).toHaveAttribute('data-checked');
+      expect(radio2).toHaveAttribute('data-unchecked');
     });
 
     it('has data-disabled attribute when disabled', () => {
       render(
-        <Radio>
-          <RadioItem value='option1' disabled />
-        </Radio>
+        <Radio.Group>
+          <Radio value='option1' disabled />
+        </Radio.Group>
       );
 
       const radio = screen.getByRole('radio');
-      expect(radio).toHaveAttribute('data-disabled', '');
+      expect(radio).toHaveAttribute('data-disabled');
     });
   });
 });

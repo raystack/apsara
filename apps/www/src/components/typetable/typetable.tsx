@@ -45,7 +45,10 @@ export interface TypeNode {
 export function TypeTable({
   type,
   className
-}: { type: Record<string, TypeNode>; className?: string }) {
+}: {
+  type: Record<string, TypeNode>;
+  className?: string;
+}) {
   const entries = Object.entries(type);
 
   return (
@@ -87,7 +90,7 @@ function Item({
           className={deprecated ? styles.propNameDeprecated : styles.propName}
         >
           {name}
-          {!required && '?'}
+          {required ? <span className={styles.required}>*</span> : ''}
         </code>
         <span className={styles.fieldValue}>
           {typeDescriptionLink ? (
@@ -130,7 +133,10 @@ function Item({
                 language='tsx'
                 className={cx(styles.fieldCode, styles.fieldValue)}
               >
-                {String(typeDescription ?? type)}
+                {String(type) +
+                  (!required && !String(type).includes('undefined')
+                    ? ' | undefined'
+                    : '')}
               </CodeBlock.Code>
             </CodeBlock>
           </Flex>

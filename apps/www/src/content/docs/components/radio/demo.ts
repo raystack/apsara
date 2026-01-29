@@ -3,22 +3,22 @@
 export const preview = {
   type: 'code',
   code: `
-  <Radio defaultValue="2">
-    <Flex direction="column" gap="small">
+  <Radio.Group defaultValue="2">
+  <Flex direction="column" gap="small">
       <Flex gap="small" align="center">
-        <Radio.Item value="1" id="P1" />
-        <label htmlFor="P1">Option One</label>
-      </Flex>
-      <Flex gap="small" align="center">
-        <Radio.Item value="2" id="P2" />
-        <label htmlFor="P2">Option Two</label>
-      </Flex>
-      <Flex gap="small" align="center">
-        <Radio.Item value="3" id="P3" disabled/>
-        <label htmlFor="P3">Option Three</label>
+          <Radio value="1" id="P1" />
+          <label htmlFor="P1">Option One</label>
+        </Flex>
+        <Flex gap="small" align="center">
+          <Radio value="2" id="P2" />
+          <label htmlFor="P2">Option Two</label>
+        </Flex>
+        <Flex gap="small" align="center">
+          <Radio value="3" id="P3" disabled/>
+          <label htmlFor="P3">Option Three</label>
       </Flex>
     </Flex>
-  </Radio>`
+  </Radio.Group>`
 };
 
 export const stateDemo = {
@@ -27,22 +27,22 @@ export const stateDemo = {
     {
       name: 'Default',
       code: `
-<Radio defaultValue="1">
+<Radio.Group defaultValue="1">
   <Flex gap="small" align="center">
-    <Radio.Item value="1" id="d1" />
+    <Radio value="1" id="d1" />
     <label htmlFor="d1">Default Option</label>
   </Flex>
-</Radio>`
+</Radio.Group>`
     },
     {
       name: 'Disabled',
       code: `
-<Radio defaultValue="1">
+<Radio.Group defaultValue="1">
   <Flex gap="small" align="center">
-    <Radio.Item value="1" disabled id="dis1" />
+    <Radio value="1" disabled id="dis1" />
     <label htmlFor="dis1">Disabled Option</label>
   </Flex>
-</Radio>`
+</Radio.Group>`
     }
   ]
 };
@@ -50,22 +50,20 @@ export const stateDemo = {
 export const labelDemo = {
   type: 'code',
   code: `
-  <Radio defaultValue="1">
-    <Flex direction="column" gap="small">
+  <Radio.Group defaultValue="1">
       <Flex gap="small" align="center">
-        <Radio.Item value="1" id="L1" />
+        <Radio value="1" id="L1" />
         <label htmlFor="L1">Option One</label>
       </Flex>
       <Flex gap="small" align="center">
-        <Radio.Item value="2" id="L2" />
+        <Radio value="2" id="L2" />
         <label htmlFor="L2">Option Two</label>
       </Flex>
       <Flex gap="small" align="center">
-        <Radio.Item value="3" id="L3" />
+        <Radio value="3" id="L3" />
         <label htmlFor="L3">Option Three</label>
       </Flex>
-    </Flex>
-  </Radio>`
+  </Radio.Group>`
 };
 
 export const formDemo = {
@@ -77,18 +75,18 @@ export const formDemo = {
   alert(JSON.stringify(Object.fromEntries(formData)));
 }}>
   <Flex direction="column" gap="medium">
-    <Radio name="plan" defaultValue="monthly" required>
+    <Radio.Group name="plan" defaultValue="monthly">
       <Flex direction="column" gap="small">
         <Flex gap="small" align="center">
-          <Radio.Item value="monthly" id="mp" />
+          <Radio value="monthly" id="mp" />
           <label htmlFor="mp">Monthly Plan</label>
         </Flex>
         <Flex gap="small" align="center">
-          <Radio.Item value="yearly" id="yp" />
+          <Radio value="yearly" id="yp" />
           <label htmlFor="yp">Yearly Plan</label>
         </Flex>
       </Flex>
-    </Radio>
+    </Radio.Group>
     <Button type="submit" width="100%">Submit</Button>
   </Flex>
 </form>`

@@ -99,3 +99,8 @@
   flex-wrap: wrap;
   gap: var(--rs-space-1);
 }
+.required {
+  color: var(--rs-color-foreground-danger-primary);
+  position: relative;
+  top: -4px;
+}
