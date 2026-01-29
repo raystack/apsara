@@ -1,25 +1,25 @@
 'use client';
 
+import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
 import { cx } from 'class-variance-authority';
-import { ScrollArea as ScrollAreaPrimitive } from 'radix-ui';
-import { ComponentPropsWithoutRef, ComponentRef, forwardRef } from 'react';
+import { forwardRef } from 'react';
+import type { ScrollAreaType } from './scroll-area';
 import styles from './scroll-area.module.css';
 
 export interface ScrollAreaScrollbarProps
-  extends ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Scrollbar> {
-  orientation?: 'vertical' | 'horizontal';
-  className?: string;
+  extends ScrollAreaPrimitive.Scrollbar.Props {
+  type?: ScrollAreaType;
 }
 
 export const ScrollAreaScrollbar = forwardRef<
-  ComponentRef<typeof ScrollAreaPrimitive.Scrollbar>,
+  HTMLDivElement,
   ScrollAreaScrollbarProps
->(({ className, orientation = 'vertical', ...props }, ref) => {
+>(({ className, orientation = 'vertical', type = 'hover', ...props }, ref) => {
   return (
     <ScrollAreaPrimitive.Scrollbar
       ref={ref}
       orientation={orientation}
-      className={cx(styles.scrollbar, className)}
+      className={cx(styles.scrollbar, styles[`scrollbar-${type}`], className)}
       {...props}
     >
       <ScrollAreaPrimitive.Thumb className={styles.thumb} />
@@ -27,4 +27,4 @@ export const ScrollAreaScrollbar = forwardRef<
   );
 });
 
-ScrollAreaScrollbar.displayName = ScrollAreaPrimitive.Scrollbar.displayName;
+ScrollAreaScrollbar.displayName = 'ScrollAreaScrollbar';

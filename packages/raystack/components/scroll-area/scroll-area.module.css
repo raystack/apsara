@@ -25,7 +25,10 @@
   background: transparent;
   pointer-events: auto;
   position: relative;
-  transition: width 150ms ease-out, height 150ms ease-out;
+  transition:
+    width 150ms ease-out,
+    height 150ms ease-out,
+    opacity 150ms ease-out;
 }
 
 .scrollbar[data-orientation="vertical"] {
@@ -48,7 +51,6 @@
 .thumb {
   flex: 1;
   background: var(--rs-color-border-base-primary);
-  /* TODO: Change to appropriate background var after the correct var is introduced */
   border-radius: var(--rs-radius-2);
   transition: opacity 150ms ease-out;
   opacity: 1;
@@ -58,4 +60,15 @@
 
 .corner {
   background: transparent;
+}
+.scrollbar:hover,
+.scrollbar-always,
+.scrollbar-hover[data-hovering],
+.scrollbar-scroll[data-scrolling] {
+  opacity: 1;
+}
+
+.scrollbar-hover,
+.scrollbar-scroll {
+  opacity: 0;
 }
