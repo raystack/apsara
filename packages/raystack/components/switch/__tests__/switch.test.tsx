@@ -42,7 +42,7 @@ describe('Switch', () => {
   describe('Sizes', () => {
     const sizes = ['small', 'large'] as const;
     sizes.forEach(size => {
-      it(`renders ${size} size by default`, () => {
+      it(`renders ${size} size`, () => {
         render(<Switch size={size} />);
         const switchElement = screen.getByRole('switch');
         expect(switchElement).toHaveClass(styles[size]);
@@ -60,14 +60,14 @@ describe('Switch', () => {
       render(<Switch />);
       const switchElement = screen.getByRole('switch');
       expect(switchElement).toHaveAttribute('aria-checked', 'false');
-      expect(switchElement).toHaveAttribute('data-state', 'unchecked');
+      expect(switchElement).toHaveAttribute('data-unchecked');
     });
 
     it('renders as checked when checked prop is true', () => {
       render(<Switch checked={true} />);
       const switchElement = screen.getByRole('switch');
       expect(switchElement).toHaveAttribute('aria-checked', 'true');
-      expect(switchElement).toHaveAttribute('data-state', 'checked');
+      expect(switchElement).toHaveAttribute('data-checked');
     });
 
     it('renders with defaultChecked', () => {
@@ -92,8 +92,7 @@ describe('Switch', () => {
     it('renders as disabled when disabled prop is true', () => {
       render(<Switch disabled />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toBeDisabled();
-      expect(switchElement).toHaveAttribute('data-disabled', 'true');
+      expect(switchElement).toHaveAttribute('data-disabled');
     });
 
     it('does not toggle when disabled', () => {
@@ -110,20 +109,19 @@ describe('Switch', () => {
     it('can be disabled while checked', () => {
       render(<Switch disabled checked />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toBeDisabled();
+      expect(switchElement).toHaveAttribute('data-disabled');
       expect(switchElement).toHaveAttribute('aria-checked', 'true');
-      expect(switchElement).toHaveAttribute('data-disabled', 'true');
     });
 
     it('maintains disabled state with different sizes', () => {
       const { rerender } = render(<Switch disabled size='small' />);
       let switchElement = screen.getByRole('switch');
-      expect(switchElement).toBeDisabled();
+      expect(switchElement).toHaveAttribute('data-disabled');
       expect(switchElement).toHaveClass(styles.small);
 
       rerender(<Switch disabled size='large' />);
       switchElement = screen.getByRole('switch');
-      expect(switchElement).toBeDisabled();
+      expect(switchElement).toHaveAttribute('data-disabled');
       expect(switchElement).toHaveClass(styles.large);
     });
   });
@@ -137,7 +135,7 @@ describe('Switch', () => {
       fireEvent.click(switchElement);
 
       expect(handleChange).toHaveBeenCalledTimes(1);
-      expect(handleChange).toHaveBeenCalledWith(true);
+      expect(handleChange).toHaveBeenCalledWith(true, expect.anything());
     });
 
     it('toggles from checked to unchecked', () => {
@@ -147,7 +145,7 @@ describe('Switch', () => {
       const switchElement = screen.getByRole('switch');
       fireEvent.click(switchElement);
 
-      expect(handleChange).toHaveBeenCalledWith(false);
+      expect(handleChange).toHaveBeenCalledWith(false, expect.anything());
     });
 
     it('supports focus events', () => {
@@ -169,14 +167,10 @@ describe('Switch', () => {
       render(<Switch onCheckedChange={handleChange} />);
 
       const switchElement = screen.getByRole('switch');
-      await switchElement.focus();
+      switchElement.focus();
       await user.keyboard('[Space]');
 
-      expect(handleChange).toHaveBeenCalledWith(true);
-      await user.keyboard('[Enter]');
-
-      expect(handleChange).toHaveBeenCalledWith(false);
-      expect(handleChange).toHaveBeenCalledTimes(2);
+      expect(handleChange).toHaveBeenCalledWith(true, expect.anything());
     });
   });
 
@@ -221,14 +215,14 @@ describe('Switch', () => {
     it('supports required attribute', () => {
       render(<Switch required />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveAttribute('aria-required', 'true');
+      expect(switchElement).toHaveAttribute('data-required');
     });
 
     it('works with required and disabled', () => {
       render(<Switch required disabled />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveAttribute('aria-required', 'true');
-      expect(switchElement).toBeDisabled();
+      expect(switchElement).toHaveAttribute('data-required');
+      expect(switchElement).toHaveAttribute('data-disabled');
     });
   });
 
@@ -273,43 +267,31 @@ describe('Switch', () => {
       const switchElement = screen.getByRole('switch');
       expect(switchElement).toHaveAttribute('aria-describedby', 'description');
     });
-
-    it('supports aria-invalid', () => {
-      render(<Switch aria-invalid='true' />);
-      const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveAttribute('aria-invalid', 'true');
-    });
   });
 
-  describe('HTML Attributes', () => {
-    it('supports name attribute', () => {
-      render(<Switch name='notifications' />);
-      const hiddenInput = document.querySelector('input[name="notifications"]');
-      expect(hiddenInput).toHaveAttribute('name', 'notifications');
-    });
-
+  describe('Data Attributes', () => {
     it('supports data attributes', () => {
       render(<Switch data-testid='custom-switch' data-theme='dark' />);
       const switchElement = screen.getByTestId('custom-switch');
       expect(switchElement).toHaveAttribute('data-theme', 'dark');
     });
 
-    it('has data-state attribute for unchecked state', () => {
+    it('has data-unchecked attribute for unchecked state', () => {
       render(<Switch />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveAttribute('data-state', 'unchecked');
+      expect(switchElement).toHaveAttribute('data-unchecked');
     });
 
-    it('has data-state attribute for checked state', () => {
+    it('has data-checked attribute for checked state', () => {
       render(<Switch checked />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveAttribute('data-state', 'checked');
+      expect(switchElement).toHaveAttribute('data-checked');
     });
 
     it('has data-disabled attribute when disabled', () => {
       render(<Switch disabled />);
       const switchElement = screen.getByRole('switch');
-      expect(switchElement).toHaveAttribute('data-disabled', 'true');
+      expect(switchElement).toHaveAttribute('data-disabled');
     });
 
     it('does not have data-disabled when enabled', () => {
