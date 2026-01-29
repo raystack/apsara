@@ -21,8 +21,8 @@ export const playground = {
   controls: {
     type: {
       type: 'select',
-      options: ['auto', 'always', 'scroll', 'hover'],
-      defaultValue: 'auto'
+      options: ['always', 'hover', 'scroll'],
+      defaultValue: 'hover'
     }
   },
   getCode
@@ -100,9 +100,9 @@ export const typeDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Auto (default)',
+      name: 'Hover (default)',
       code: `
-<ScrollArea style={{ height: '200px', width: '300px' }} type="auto">
+<ScrollArea style={{ height: '200px', width: '300px' }} type="hover">
   <Flex direction="column" gap={2}>
     {Array.from({ length: 20 }, (_, i) => (
       <Text key={i} size="small">
@@ -116,19 +116,6 @@ export const typeDemo = {
       name: 'Always',
       code: `
 <ScrollArea style={{ height: '200px', width: '300px' }} type="always">
-  <Flex direction="column" gap={2}>
-    {Array.from({ length: 20 }, (_, i) => (
-      <Text key={i} size="small">
-        Item {i + 1}
-      </Text>
-    ))}
-  </Flex>
-</ScrollArea>`
-    },
-    {
-      name: 'Hover',
-      code: `
-<ScrollArea style={{ height: '200px', width: '300px' }} type="hover">
   <Flex direction="column" gap={2}>
     {Array.from({ length: 20 }, (_, i) => (
       <Text key={i} size="small">

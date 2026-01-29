@@ -1,15 +1,14 @@
 import type React from 'react';
 
-export interface ScrollAreaRootProps {
+export interface ScrollAreaProps {
   /**
    * Controls when the scrollbar appears.
-   * - `auto`: Scrollbar appears only when content overflows (default)
    * - `always`: Scrollbar is always visible
+   * - `hover`: Scrollbar appears on hover (default)
    * - `scroll`: Scrollbar appears during scrolling
-   * - `hover`: Scrollbar appears on hover
-   * @default 'auto'
+   * @default 'hover'
    */
-  type?: 'auto' | 'always' | 'scroll' | 'hover';
+  type?: 'always' | 'hover' | 'scroll';
 
   /**
    * Custom className for the root element.
@@ -22,7 +21,17 @@ export interface ScrollAreaRootProps {
   style?: React.CSSProperties;
 
   /**
-   * The content to be scrolled. Both vertical and horizontal scrollbars are automatically rendered and shown when content overflows.
+   * The content to be scrolled. Both vertical and horizontal scrollbars are automatically rendered.
    */
   children?: React.ReactNode;
+
+  /**
+   * Allows you to replace the component's HTML element with a different tag, or compose it with another component.
+   * Accepts a `ReactElement` or a function that returns the element to render.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((props: React.HTMLAttributes<HTMLElement>) => React.ReactElement);
 }
