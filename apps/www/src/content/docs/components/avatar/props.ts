@@ -44,8 +44,14 @@ export interface AvatarProps {
     | 'crimson'
     | 'gold';
 
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * Allows you to replace the component's HTML element with a different tag,
+   * or compose it with another component. Accepts a ReactElement or a function
+   * that returns the element to render.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
 
   /** Additional CSS class names */
   className?: string;

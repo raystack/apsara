@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { Avatar, AvatarGroup } from '../avatar';
 import styles from '../avatar.module.css';
 import { getAvatarColor } from '../utils';
@@ -312,6 +312,8 @@ describe('Avatar', () => {
 
 class MockImage extends EventTarget {
   _src: string = '';
+  _complete: boolean = false;
+  onload: (() => void) | null = null;
 
   constructor() {
     super();
@@ -327,20 +329,27 @@ class MockImage extends EventTarget {
       return;
     }
     this._src = src;
-    this.onSrcChange();
+    // Simulate async image loading
+    setTimeout(() => {
+      this._complete = true;
+      // Call onload callback if set
+      if (this.onload) {
+        this.onload();
+      }
+      // Also dispatch the event
+      this.dispatchEvent(new Event('load'));
+    }, 0);
   }
 
   get complete() {
-    return !this.src;
+    return this._complete;
   }
 
   get naturalWidth() {
-    return this.complete ? 300 : 0;
+    return this._complete ? 300 : 0;
   }
 
-  onSrcChange() {
-    setTimeout(() => {
-      this.dispatchEvent(new Event('load'));
-    }, 100);
+  get naturalHeight() {
+    return this._complete ? 300 : 0;
   }
 }
