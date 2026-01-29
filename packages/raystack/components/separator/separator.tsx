@@ -1,5 +1,5 @@
+import { Separator as SeparatorPrimitive } from '@base-ui/react/separator';
 import { cva } from 'class-variance-authority';
-import { Separator as SeparatorPrimitive } from 'radix-ui';
 
 import styles from './separator.module.css';
 
@@ -22,12 +22,9 @@ const separator = cva(styles.separator, {
   }
 });
 
-interface SeparatorProps {
-  className?: string;
-  orientation?: 'horizontal' | 'vertical';
+interface SeparatorProps extends SeparatorPrimitive.Props {
   size?: 'small' | 'half' | 'full';
   color?: 'primary' | 'secondary' | 'tertiary';
-  'aria-label'?: string;
 }
 
 export function Separator({
@@ -35,17 +32,12 @@ export function Separator({
   orientation = 'horizontal',
   size,
   color,
-  'aria-label': ariaLabel,
   ...props
 }: SeparatorProps) {
   return (
-    <SeparatorPrimitive.Root
-      decorative
+    <SeparatorPrimitive
       orientation={orientation}
       className={separator({ size, color, className })}
-      aria-orientation={orientation}
-      aria-label={ariaLabel || `${orientation} separator`}
-      role='separator'
       {...props}
     />
   );

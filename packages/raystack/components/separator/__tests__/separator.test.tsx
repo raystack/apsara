@@ -79,28 +79,16 @@ describe('Separator', () => {
       expect(screen.getByRole('separator')).toBeInTheDocument();
     });
 
-    it('has default aria-label for horizontal separator', () => {
-      render(<Separator />);
-      const separator = screen.getByRole('separator');
-      expect(separator).toHaveAttribute('aria-label', 'horizontal separator');
-    });
-
-    it('has default aria-label for vertical separator', () => {
-      render(<Separator orientation='vertical' />);
-      const separator = screen.getByRole('separator');
-      expect(separator).toHaveAttribute('aria-label', 'vertical separator');
-    });
-
     it('supports custom aria-label', () => {
       render(<Separator aria-label='Section divider' />);
       const separator = screen.getByRole('separator');
       expect(separator).toHaveAttribute('aria-label', 'Section divider');
     });
 
-    it('is marked as decorative', () => {
+    it('has aria-orientation attribute', () => {
       render(<Separator />);
       const separator = screen.getByRole('separator');
-      expect(separator).toHaveAttribute('aria-orientation');
+      expect(separator).toHaveAttribute('aria-orientation', 'horizontal');
     });
   });
 });
