@@ -1,8 +1,8 @@
 'use client';
 
-import { VariantProps, cva, cx } from 'class-variance-authority';
-import { Checkbox as CheckboxPrimitive } from 'radix-ui';
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
+import { cx } from 'class-variance-authority';
+import { ElementRef, forwardRef } from 'react';
 
 import styles from './checkbox.module.css';
 
@@ -42,63 +42,22 @@ const IndeterminateIcon = () => (
   </svg>
 );
 
-const checkbox = cva(styles.checkbox);
-
-type CheckboxVariants = VariantProps<typeof checkbox>;
-type CheckedState = boolean | 'indeterminate';
-
-export interface CheckboxProps
-  extends Omit<
-      ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>,
-      keyof CheckboxVariants
-    >,
-    CheckboxVariants {
-  checked?: CheckedState;
-  defaultChecked?: CheckedState;
-  onCheckedChange?: (checked: CheckedState) => void;
-}
-
 export const Checkbox = forwardRef<
   ElementRef<typeof CheckboxPrimitive.Root>,
-  CheckboxProps
->(
-  (
-    { className, disabled, checked, defaultChecked, onCheckedChange, ...props },
-    forwardedRef
-  ) => {
-    const isIndeterminate =
-      checked === 'indeterminate' || defaultChecked === 'indeterminate';
-
-    return (
-      <CheckboxPrimitive.Root
-        className={checkbox({
-          className: cx(className, {
-            [styles['checkbox-disabled']]: disabled,
-            [styles['checkbox-indeterminate']]: isIndeterminate
-          })
-        })}
-        checked={isIndeterminate || checked === true}
-        defaultChecked={defaultChecked === true}
-        onCheckedChange={value => {
-          if (onCheckedChange) {
-            // If it's currently indeterminate, next state will be unchecked
-            if (checked === 'indeterminate') {
-              onCheckedChange(false);
-            } else {
-              onCheckedChange(value);
-            }
-          }
-        }}
-        disabled={disabled}
-        ref={forwardedRef}
-        {...props}
-      >
-        <CheckboxPrimitive.Indicator className={styles.indicator}>
-          {isIndeterminate ? <IndeterminateIcon /> : <CheckMarkIcon />}
-        </CheckboxPrimitive.Indicator>
-      </CheckboxPrimitive.Root>
-    );
-  }
-);
+  CheckboxPrimitive.Root.Props
+>(({ className, indeterminate, ...props }, ref) => {
+  return (
+    <CheckboxPrimitive.Root
+      className={cx(styles.checkbox, className)}
+      indeterminate={indeterminate}
+      ref={ref}
+      {...props}
+    >
+      <CheckboxPrimitive.Indicator className={styles.indicator}>
+        {indeterminate ? <IndeterminateIcon /> : <CheckMarkIcon />}
+      </CheckboxPrimitive.Indicator>
+    </CheckboxPrimitive.Root>
+  );
+});
 
 Checkbox.displayName = 'Checkbox';

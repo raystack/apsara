@@ -13,9 +13,14 @@ export const playground = {
   type: 'playground',
   controls: {
     checked: {
-      type: 'select',
-      options: ['true', 'false', 'indeterminate'],
-      initialValue: 'true'
+      type: 'checkbox',
+      initialValue: false,
+      defaultValue: false
+    },
+    indeterminate: {
+      type: 'checkbox',
+      initialValue: false,
+      defaultValue: false
     },
     disabled: {
       type: 'checkbox',
@@ -34,11 +39,11 @@ export const statesExamples = {
     },
     {
       name: 'Checked',
-      code: `<Checkbox checked={true} />`
+      code: `<Checkbox checked/>`
     },
     {
       name: 'Indeterminate',
-      code: `<Checkbox checked="indeterminate" />`
+      code: `<Checkbox indeterminate />`
     },
     {
       name: 'Disabled',

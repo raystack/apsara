@@ -2,17 +2,22 @@ export interface CheckboxProps {
   /**
    * The controlled state of the checkbox
    */
-  checked?: boolean | 'indeterminate';
+  checked?: boolean;
 
   /**
    * The default state when initially rendered
    */
-  defaultChecked?: boolean | 'indeterminate';
+  defaultChecked?: boolean;
 
   /**
    * Event handler called when the state changes
    */
-  onCheckedChange?: (checked: boolean | 'indeterminate') => void;
+  onCheckedChange?: (checked: boolean) => void;
+
+  /**
+   * When true, the checkbox is in an indeterminate state
+   */
+  indeterminate?: boolean;
 
   /**
    * When true, prevents the user from interacting with the checkbox
