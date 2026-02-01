@@ -3,7 +3,7 @@ title: Radius
 description: Overview of the border radius scale and style variants in Apsara.
 ---
 
-Border radius tokens control the roundness of corners throughout your interface. Apsara provides a consistent radius scale with support for different style variants.
+Border radius tokens control the roundness of corners throughout your interface. These tokens automatically adjust based on the active style variant—modern style uses sharp, minimal radii while traditional style uses softer, more rounded corners. By using radius tokens instead of fixed values, your custom components will seamlessly adapt when the style changes.
 
 ## Radius Scale
 
@@ -41,56 +41,72 @@ When using `data-style="traditional"`, the radius values increase for a softer, 
   ]}
 />
 
-## Style Comparison
-
-<TokenTable
-  tokens={[
-    { name: "--rs-radius-1", value: "2px / 8px", description: "Modern / Traditional" },
-    { name: "--rs-radius-2", value: "4px / 16px", description: "Modern / Traditional" },
-    { name: "--rs-radius-3", value: "6px / 20px", description: "Modern / Traditional" },
-    { name: "--rs-radius-4", value: "8px / 24px", description: "Modern / Traditional" },
-    { name: "--rs-radius-5", value: "12px / 32px", description: "Modern / Traditional" },
-    { name: "--rs-radius-6", value: "16px / 40px", description: "Modern / Traditional" },
-    { name: "--rs-radius-full", value: "800px / 1600px", description: "Modern / Traditional" },
-  ]}
-/>
-
 ## Usage
 
 ```css
-/* Buttons */
-.button {
-  border-radius: var(--rs-radius-3);
+/* Dashboard widget container */
+.widget {
+  border-radius: var(--rs-radius-4);
+  overflow: hidden;
 }
 
-/* Cards */
-.card {
+.widget-header {
+  border-radius: var(--rs-radius-4) var(--rs-radius-4) 0 0;
+}
+
+/* Filter tags with remove button */
+.filter-tag {
+  border-radius: var(--rs-radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+/* Nested card with image */
+.preview-card {
   border-radius: var(--rs-radius-4);
 }
 
-/* Badges and chips */
-.badge {
-  border-radius: var(--rs-radius-2);
-}
-
-/* Pills and tags */
-.pill {
-  border-radius: var(--rs-radius-full);
-}
-
-/* Avatar */
-.avatar {
-  border-radius: var(--rs-radius-full);
-}
-
-/* Input fields */
-.input {
+.preview-card-image {
   border-radius: var(--rs-radius-3);
 }
 
-/* Modal */
-.modal {
-  border-radius: var(--rs-radius-5);
+/* Search results dropdown */
+.search-results {
+  border-radius: var(--rs-radius-3);
+}
+
+.search-result-item:first-child {
+  border-radius: var(--rs-radius-3) var(--rs-radius-3) 0 0;
+}
+
+.search-result-item:last-child {
+  border-radius: 0 0 var(--rs-radius-3) var(--rs-radius-3);
+}
+
+/* User avatar with status indicator */
+.avatar-wrapper {
+  position: relative;
+}
+
+.avatar-image {
+  border-radius: var(--rs-radius-full);
+}
+
+.avatar-status {
+  border-radius: var(--rs-radius-full);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* Segmented control */
+.segmented-control {
+  border-radius: var(--rs-radius-3);
+}
+
+.segmented-control-item[data-active="true"] {
+  border-radius: var(--rs-radius-2);
 }
 ```
 

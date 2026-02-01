@@ -3,7 +3,7 @@ title: Effects
 description: Overview of shadow and blur effect tokens in Apsara.
 ---
 
-Effects add depth and visual hierarchy to your interface through shadows and blur. Apsara provides semantic effect tokens that work consistently across light and dark themes.
+Effects add depth and visual hierarchy to your interface through shadows and blur. These tokens are calibrated to work consistently across light and dark themes—shadows automatically adjust their intensity and color to maintain appropriate contrast in each mode. Using effect tokens ensures your custom surfaces and overlays integrate naturally with the rest of your interface.
 
 ## Shadows
 
@@ -36,64 +36,67 @@ Blur tokens are used for backdrop effects and creating depth through transparenc
 
 ## Usage
 
-### Shadows
-
 ```css
-/* Card with subtle shadow */
-.card {
+/* Dashboard widget with hover interaction */
+.dashboard-widget {
   box-shadow: var(--rs-shadow-feather);
+  transition: box-shadow 0.2s ease;
 }
 
-/* Card on hover with lifted effect */
-.card:hover {
-  box-shadow: var(--rs-shadow-lifted);
+.dashboard-widget:hover {
+  box-shadow: var(--rs-shadow-soft);
 }
 
-/* Dropdown menu */
-.dropdown {
-  box-shadow: var(--rs-shadow-lifted);
-}
-
-/* Modal dialog */
-.modal {
+/* Floating action panel */
+.action-panel {
+  position: fixed;
+  bottom: var(--rs-space-6);
+  right: var(--rs-space-6);
   box-shadow: var(--rs-shadow-floating);
 }
 
-/* Pressed button state */
-.button:active {
+/* Command palette / spotlight search */
+.command-palette {
+  box-shadow: var(--rs-shadow-floating);
+  backdrop-filter: var(--rs-blur-xl);
+  background-color: var(--rs-color-overlay-white-a8);
+}
+
+/* Sticky header with scroll shadow */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  box-shadow: var(--rs-shadow-feather);
+  backdrop-filter: var(--rs-blur-lg);
+  background-color: var(--rs-color-overlay-white-a6);
+}
+
+/* Context menu */
+.context-menu {
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+/* Pressed/active toggle state */
+.toggle[data-pressed="true"] {
   box-shadow: var(--rs-shadow-inset);
 }
-```
 
-### Blur Effects
-
-```css
-/* Frosted glass effect */
-.glass {
-  backdrop-filter: var(--rs-blur-lg);
-  background-color: var(--rs-color-overlay-white-a4);
-}
-
-/* Subtle background blur */
-.overlay {
+/* Image lightbox overlay */
+.lightbox-backdrop {
   backdrop-filter: var(--rs-blur-xl);
+  background-color: var(--rs-color-overlay-black-a8);
+}
+
+/* Notification toast */
+.toast {
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+/* Draggable item while dragging */
+.draggable[data-dragging="true"] {
+  box-shadow: var(--rs-shadow-floating);
 }
 ```
-
-## Elevation Hierarchy
-
-Use shadows to establish visual hierarchy and indicate interactive states:
-
-<TokenTable
-  type="shadow"
-  tokens={[
-    { name: "none", value: "Level 0", description: "Flat surfaces, backgrounds" },
-    { name: "--rs-shadow-feather", value: "Level 1", description: "Cards, panels" },
-    { name: "--rs-shadow-soft", value: "Level 2", description: "Buttons, interactive cards" },
-    { name: "--rs-shadow-lifted", value: "Level 3", description: "Dropdowns, popovers, hover states" },
-    { name: "--rs-shadow-floating", value: "Level 4", description: "Modals, dialogs, toasts" },
-  ]}
-/>
 
 ## Best Practices
 

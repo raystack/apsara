@@ -68,6 +68,36 @@ Gray color variants affect neutral tones throughout the interface:
   ]}
 />
 
+## Token Naming Convention
+
+Apsara tokens follow a consistent naming pattern that makes them easy to discover and use:
+
+```
+--rs-{category}-{property}-{variant}-{state}
+```
+
+<TokenTable
+  tokens={[
+    { name: "--rs-", value: "Prefix", description: "All Apsara tokens start with this prefix" },
+    { name: "category", value: "color, space, radius, shadow, font, etc.", description: "The type of design token" },
+    { name: "property", value: "foreground, background, border, size, weight, etc.", description: "What the token controls" },
+    { name: "variant", value: "base, accent, danger, success, etc.", description: "Semantic meaning or color variant" },
+    { name: "state", value: "primary, secondary, hover, emphasis, etc.", description: "Visual weight or interaction state" },
+  ]}
+/>
+
+### Examples
+
+<TokenTable
+  tokens={[
+    { name: "--rs-color-foreground-base-primary", description: "Color → Foreground → Base variant → Primary weight" },
+    { name: "--rs-color-background-accent-emphasis", description: "Color → Background → Accent variant → Emphasis weight" },
+    { name: "--rs-space-5", description: "Space → Step 5 in the scale" },
+    { name: "--rs-radius-3", description: "Radius → Step 3 in the scale" },
+    { name: "--rs-font-size-regular", description: "Font → Size → Regular variant" },
+  ]}
+/>
+
 ## ThemeProvider Props
 
 <auto-type-table path="./props.ts" name="ThemeProviderProps" />

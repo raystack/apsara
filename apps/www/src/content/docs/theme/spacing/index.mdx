@@ -3,7 +3,7 @@ title: Spacing
 description: Overview of the space scale and spacing tokens in Apsara.
 ---
 
-Consistent spacing creates visual rhythm and hierarchy in your interface. Apsara provides a comprehensive spacing scale through CSS custom properties that you can use throughout your application.
+Consistent spacing creates visual rhythm and hierarchy in your interface. Apsara provides a comprehensive spacing scale through CSS custom properties that maintain proportional relationships across your application. These tokens ensure consistent spacing whether you're building custom layouts, extending components, or creating new UI patterns.
 
 ## Scale
 
@@ -32,31 +32,6 @@ Spacing values are derived from a 17-step scale, which provides fine-grained con
   ]}
 />
 
-## Tokens
-
-Space scale tokens can be accessed using CSS variables. Use these tokens to style your custom components, ensuring they are consistent with the rest of your theme.
-
-```css
-/* Space scale */
-var(--rs-space-1);   /* 2px */
-var(--rs-space-2);   /* 4px */
-var(--rs-space-3);   /* 8px */
-var(--rs-space-4);   /* 12px */
-var(--rs-space-5);   /* 16px */
-var(--rs-space-6);   /* 20px */
-var(--rs-space-7);   /* 24px */
-var(--rs-space-8);   /* 28px */
-var(--rs-space-9);   /* 32px */
-var(--rs-space-10);  /* 40px */
-var(--rs-space-11);  /* 48px */
-var(--rs-space-12);  /* 56px */
-var(--rs-space-13);  /* 64px */
-var(--rs-space-14);  /* 72px */
-var(--rs-space-15);  /* 80px */
-var(--rs-space-16);  /* 96px */
-var(--rs-space-17);  /* 120px */
-```
-
 ## Semantic Groupings
 
 The spacing scale can be organized into semantic groups for easier selection:
@@ -69,6 +44,49 @@ The spacing scale can be organized into semantic groups for easier selection:
     { name: "Layout", value: "56px - 120px", description: "Page sections, major divisions (tokens 12-17)" },
   ]}
 />
+
+## Usage
+
+```css
+/* Custom card grid layout */
+.card-grid {
+  display: grid;
+  gap: var(--rs-space-5);
+  padding: var(--rs-space-7);
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-4) var(--rs-space-5);
+}
+
+/* Page section with header */
+.page-section {
+  margin-top: var(--rs-space-13);
+}
+
+.page-section-header {
+  margin-bottom: var(--rs-space-6);
+}
+
+/* Form field groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  margin-bottom: var(--rs-space-5);
+}
+
+/* Inline icon with text */
+.icon-text {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+```
 
 ## Best Practices
 
