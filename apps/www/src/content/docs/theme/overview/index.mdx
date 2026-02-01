@@ -1,0 +1,270 @@
+---
+title: Overview
+description: Understanding the Apsara theming system and ThemeProvider.
+---
+
+import { Table } from "@raystack/apsara";
+
+Apsara provides a flexible theming system that supports light and dark modes, multiple accent colors, gray color variants, and style presets. The `ThemeProvider` component manages theme state and applies the appropriate CSS variables to your application.
+
+## Installation
+
+Wrap your application with the `ThemeProvider` component:
+
+```tsx
+import { ThemeProvider } from "@raystack/apsara";
+
+function App() {
+  return (
+    <ThemeProvider>
+      {/* Your application */}
+    </ThemeProvider>
+  );
+}
+```
+
+## Theme Modes
+
+Apsara supports three theme modes:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Mode</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>light</code></Table.Cell>
+      <Table.Cell>Light color scheme</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>dark</code></Table.Cell>
+      <Table.Cell>Dark color scheme</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>system</code></Table.Cell>
+      <Table.Cell>Follows the user's system preference</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Style Variants
+
+Style variants affect the overall visual appearance, including border radius and typography:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Style</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>modern</code></Table.Cell>
+      <Table.Cell>Sharp corners, Inter font family (default)</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>traditional</code></Table.Cell>
+      <Table.Cell>Softer, rounded corners, Lora/Josefin Sans fonts</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Accent Colors
+
+Accent colors define the primary brand color used throughout the interface:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Color</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>indigo</code></Table.Cell>
+      <Table.Cell>Blue-violet accent (default)</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>orange</code></Table.Cell>
+      <Table.Cell>Warm orange accent</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>mint</code></Table.Cell>
+      <Table.Cell>Fresh mint/teal accent</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Gray Colors
+
+Gray color variants affect neutral tones throughout the interface:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Color</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>gray</code></Table.Cell>
+      <Table.Cell>Pure neutral gray (default)</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>mauve</code></Table.Cell>
+      <Table.Cell>Warm gray with purple undertone</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>slate</code></Table.Cell>
+      <Table.Cell>Cool gray with blue undertone</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## ThemeProvider Props
+
+<auto-type-table path="./props.ts" name="ThemeProviderProps" />
+
+## useTheme Hook
+
+Access and control the current theme using the `useTheme` hook:
+
+```tsx
+import { useTheme } from "@raystack/apsara";
+
+function ThemeToggle() {
+  const { theme, setTheme, resolvedTheme, systemTheme } = useTheme();
+
+  return (
+    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+
+### useTheme Return Values
+
+<auto-type-table path="./props.ts" name="UseThemeProps" />
+
+## Examples
+
+### Basic Setup
+
+```tsx
+import { ThemeProvider } from "@raystack/apsara";
+
+function App() {
+  return (
+    <ThemeProvider defaultTheme="system">
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+### Custom Accent Color
+
+```tsx
+<ThemeProvider accentColor="orange" grayColor="slate">
+  <YourApp />
+</ThemeProvider>
+```
+
+### Traditional Style
+
+```tsx
+<ThemeProvider style="traditional">
+  <YourApp />
+</ThemeProvider>
+```
+
+### Force Dark Mode
+
+```tsx
+<ThemeProvider forcedTheme="dark">
+  <YourApp />
+</ThemeProvider>
+```
+
+### Complete Configuration
+
+```tsx
+<ThemeProvider
+  defaultTheme="system"
+  enableSystem={true}
+  style="modern"
+  accentColor="indigo"
+  grayColor="gray"
+  storageKey="my-app-theme"
+  disableTransitionOnChange={false}
+>
+  <YourApp />
+</ThemeProvider>
+```
+
+## HTML Attributes
+
+The ThemeProvider sets the following attributes on the document element:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Attribute</Table.Head>
+      <Table.Head>Example Value</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>data-theme</code></Table.Cell>
+      <Table.Cell><code>"light"</code> or <code>"dark"</code></Table.Cell>
+      <Table.Cell>Current color scheme</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>data-style</code></Table.Cell>
+      <Table.Cell><code>"modern"</code> or <code>"traditional"</code></Table.Cell>
+      <Table.Cell>Visual style variant</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>data-accent-color</code></Table.Cell>
+      <Table.Cell><code>"indigo"</code></Table.Cell>
+      <Table.Cell>Accent color</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>data-gray-color</code></Table.Cell>
+      <Table.Cell><code>"gray"</code></Table.Cell>
+      <Table.Cell>Gray color variant</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Avoiding Flash
+
+The ThemeProvider includes an inline script that runs before React hydration to prevent flash of incorrect theme. This ensures the correct theme is applied immediately on page load.
+
+For SSR frameworks, ensure the ThemeProvider is included in your root layout:
+
+```tsx
+// Next.js App Router example
+// app/layout.tsx
+import { ThemeProvider } from "@raystack/apsara";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+The `suppressHydrationWarning` is needed because the theme script modifies the HTML element before React hydrates.

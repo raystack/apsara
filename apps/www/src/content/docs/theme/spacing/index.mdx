@@ -1,0 +1,183 @@
+---
+title: Spacing
+description: Overview of the space scale and spacing tokens in Apsara.
+---
+
+import { Table } from "@raystack/apsara";
+
+Consistent spacing creates visual rhythm and hierarchy in your interface. Apsara provides a comprehensive spacing scale through CSS custom properties that you can use throughout your application.
+
+## Scale
+
+Spacing values are derived from a 17-step scale, which provides fine-grained control over layout spacing. The scale starts at 2px and progressively increases to 120px, allowing for both tight and spacious layouts.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-1</code></Table.Cell>
+      <Table.Cell>2px</Table.Cell>
+      <Table.Cell>Minimal spacing, icon gaps</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-2</code></Table.Cell>
+      <Table.Cell>4px</Table.Cell>
+      <Table.Cell>Tight spacing, small gaps</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-3</code></Table.Cell>
+      <Table.Cell>8px</Table.Cell>
+      <Table.Cell>Compact padding, inline spacing</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-4</code></Table.Cell>
+      <Table.Cell>12px</Table.Cell>
+      <Table.Cell>Standard small padding</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-5</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+      <Table.Cell>Default padding, common gaps</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-6</code></Table.Cell>
+      <Table.Cell>20px</Table.Cell>
+      <Table.Cell>Medium padding</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-7</code></Table.Cell>
+      <Table.Cell>24px</Table.Cell>
+      <Table.Cell>Comfortable spacing</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-8</code></Table.Cell>
+      <Table.Cell>28px</Table.Cell>
+      <Table.Cell>Generous padding</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-9</code></Table.Cell>
+      <Table.Cell>32px</Table.Cell>
+      <Table.Cell>Large spacing</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-10</code></Table.Cell>
+      <Table.Cell>40px</Table.Cell>
+      <Table.Cell>Section gaps</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-11</code></Table.Cell>
+      <Table.Cell>48px</Table.Cell>
+      <Table.Cell>Large section spacing</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-12</code></Table.Cell>
+      <Table.Cell>56px</Table.Cell>
+      <Table.Cell>Extra large spacing</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-13</code></Table.Cell>
+      <Table.Cell>64px</Table.Cell>
+      <Table.Cell>Major divisions</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-14</code></Table.Cell>
+      <Table.Cell>72px</Table.Cell>
+      <Table.Cell>Layout spacing</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-15</code></Table.Cell>
+      <Table.Cell>80px</Table.Cell>
+      <Table.Cell>Page sections</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-16</code></Table.Cell>
+      <Table.Cell>96px</Table.Cell>
+      <Table.Cell>Large page sections</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-space-17</code></Table.Cell>
+      <Table.Cell>120px</Table.Cell>
+      <Table.Cell>Maximum spacing</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Tokens
+
+Space scale tokens can be accessed using CSS variables. Use these tokens to style your custom components, ensuring they are consistent with the rest of your theme.
+
+```css
+/* Space scale */
+var(--rs-space-1);   /* 2px */
+var(--rs-space-2);   /* 4px */
+var(--rs-space-3);   /* 8px */
+var(--rs-space-4);   /* 12px */
+var(--rs-space-5);   /* 16px */
+var(--rs-space-6);   /* 20px */
+var(--rs-space-7);   /* 24px */
+var(--rs-space-8);   /* 28px */
+var(--rs-space-9);   /* 32px */
+var(--rs-space-10);  /* 40px */
+var(--rs-space-11);  /* 48px */
+var(--rs-space-12);  /* 56px */
+var(--rs-space-13);  /* 64px */
+var(--rs-space-14);  /* 72px */
+var(--rs-space-15);  /* 80px */
+var(--rs-space-16);  /* 96px */
+var(--rs-space-17);  /* 120px */
+```
+
+## Semantic Groupings
+
+The spacing scale can be organized into semantic groups for easier selection:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Group</Table.Head>
+      <Table.Head>Tokens</Table.Head>
+      <Table.Head>Values</Table.Head>
+      <Table.Head>Purpose</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><strong>Compact</strong></Table.Cell>
+      <Table.Cell>1-3</Table.Cell>
+      <Table.Cell>2px - 8px</Table.Cell>
+      <Table.Cell>Tight UI elements, icon spacing</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><strong>Comfortable</strong></Table.Cell>
+      <Table.Cell>4-7</Table.Cell>
+      <Table.Cell>12px - 24px</Table.Cell>
+      <Table.Cell>Standard component padding</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><strong>Spacious</strong></Table.Cell>
+      <Table.Cell>8-11</Table.Cell>
+      <Table.Cell>28px - 48px</Table.Cell>
+      <Table.Cell>Section spacing, larger gaps</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><strong>Layout</strong></Table.Cell>
+      <Table.Cell>12-17</Table.Cell>
+      <Table.Cell>56px - 120px</Table.Cell>
+      <Table.Cell>Page sections, major divisions</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Best Practices
+
+- **Use smaller values (1-5)** for internal component spacing like padding and gaps between inline elements
+- **Use medium values (5-9)** for spacing between related components and within sections
+- **Use larger values (10-17)** for spacing between sections and major layout divisions
+- **Be consistent** - use the same spacing token for similar contexts throughout your application
+- **Avoid mixing** pixel values with spacing tokens to maintain consistency

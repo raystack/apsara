@@ -1,0 +1,535 @@
+---
+title: Colors
+description: Overview of the color system and semantic color tokens in Apsara.
+---
+
+import { Table } from "@raystack/apsara";
+
+Apsara uses a semantic color system that provides meaningful, context-aware colors for your interface. Colors are organized by their purpose rather than their appearance, making it easy to maintain consistency and support theming.
+
+## Foreground Colors
+
+Foreground colors are used for text, icons, and other content elements.
+
+### Base Foreground
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-base-primary</code></Table.Cell>
+      <Table.Cell>Primary text color for headings and important content</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-base-secondary</code></Table.Cell>
+      <Table.Cell>Secondary text color for supporting content</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-base-tertiary</code></Table.Cell>
+      <Table.Cell>Tertiary text color for muted or placeholder content</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-base-emphasis</code></Table.Cell>
+      <Table.Cell>High contrast text for emphasis on colored backgrounds</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Semantic Foreground
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-accent-primary</code></Table.Cell>
+      <Table.Cell>Accent color for interactive elements and links</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-accent-primary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for accent foreground</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-accent-emphasis</code></Table.Cell>
+      <Table.Cell>Text on accent emphasis backgrounds</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-danger-primary</code></Table.Cell>
+      <Table.Cell>Error and destructive action text</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-danger-primary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for danger foreground</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-danger-emphasis</code></Table.Cell>
+      <Table.Cell>Text on danger emphasis backgrounds</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-attention-primary</code></Table.Cell>
+      <Table.Cell>Warning and attention text</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-attention-primary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for attention foreground</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-attention-emphasis</code></Table.Cell>
+      <Table.Cell>Text on attention emphasis backgrounds</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-success-primary</code></Table.Cell>
+      <Table.Cell>Success and positive action text</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-success-primary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for success foreground</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-foreground-success-emphasis</code></Table.Cell>
+      <Table.Cell>Text on success emphasis backgrounds</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Background Colors
+
+Background colors define surfaces and containers in your interface.
+
+### Base Background
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-base-primary</code></Table.Cell>
+      <Table.Cell>Primary background for main content areas</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-base-primary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for primary background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-base-secondary</code></Table.Cell>
+      <Table.Cell>Secondary background for cards and panels</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-neutral-primary</code></Table.Cell>
+      <Table.Cell>Neutral background for subtle elements</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-neutral-secondary</code></Table.Cell>
+      <Table.Cell>Secondary neutral background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-neutral-secondary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for secondary neutral background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-neutral-tertiary</code></Table.Cell>
+      <Table.Cell>Tertiary neutral background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-neutral-tertiary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for tertiary neutral background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-neutral-emphasis</code></Table.Cell>
+      <Table.Cell>High contrast neutral background</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Semantic Background
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-accent-primary</code></Table.Cell>
+      <Table.Cell>Subtle accent background for highlights</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-accent-emphasis</code></Table.Cell>
+      <Table.Cell>Strong accent background for buttons and CTAs</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-accent-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for accent emphasis background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-danger-primary</code></Table.Cell>
+      <Table.Cell>Subtle danger background for error states</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-danger-emphasis</code></Table.Cell>
+      <Table.Cell>Strong danger background for destructive actions</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-danger-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for danger emphasis background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-attention-primary</code></Table.Cell>
+      <Table.Cell>Subtle attention background for warnings</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-attention-emphasis</code></Table.Cell>
+      <Table.Cell>Strong attention background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-attention-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for attention emphasis background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-success-primary</code></Table.Cell>
+      <Table.Cell>Subtle success background for positive states</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-success-emphasis</code></Table.Cell>
+      <Table.Cell>Strong success background</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-background-success-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for success emphasis background</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Border Colors
+
+Border colors define boundaries and separators.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Description</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-base-primary</code></Table.Cell>
+      <Table.Cell>Primary border for subtle boundaries</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-base-secondary</code></Table.Cell>
+      <Table.Cell>Secondary border for dividers</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-base-tertiary</code></Table.Cell>
+      <Table.Cell>Tertiary border for inputs and cards</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-base-tertiary-hover</code></Table.Cell>
+      <Table.Cell>Hover state for tertiary border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-base-focus</code></Table.Cell>
+      <Table.Cell>Focus ring for interactive elements</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-base-emphasis</code></Table.Cell>
+      <Table.Cell>High contrast border for emphasis</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-accent-primary</code></Table.Cell>
+      <Table.Cell>Accent border for highlights</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-accent-emphasis</code></Table.Cell>
+      <Table.Cell>Strong accent border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-accent-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for accent emphasis border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-danger-primary</code></Table.Cell>
+      <Table.Cell>Danger border for error states</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-danger-emphasis</code></Table.Cell>
+      <Table.Cell>Strong danger border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-danger-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for danger emphasis border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-attention-primary</code></Table.Cell>
+      <Table.Cell>Attention border for warnings</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-attention-emphasis</code></Table.Cell>
+      <Table.Cell>Strong attention border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-attention-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for attention emphasis border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-success-primary</code></Table.Cell>
+      <Table.Cell>Success border for positive states</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-success-emphasis</code></Table.Cell>
+      <Table.Cell>Strong success border</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-border-success-emphasis-hover</code></Table.Cell>
+      <Table.Cell>Hover state for success emphasis border</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Overlay Colors
+
+Overlay colors are used for modals, tooltips, and layered elements.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Opacity</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-base-primary</code></Table.Cell>
+      <Table.Cell>Default overlay</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a1</code></Table.Cell>
+      <Table.Cell>5%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a2</code></Table.Cell>
+      <Table.Cell>10%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a3</code></Table.Cell>
+      <Table.Cell>15%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a4</code></Table.Cell>
+      <Table.Cell>20%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a5</code></Table.Cell>
+      <Table.Cell>30%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a6</code></Table.Cell>
+      <Table.Cell>40%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a7</code></Table.Cell>
+      <Table.Cell>50%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a8</code></Table.Cell>
+      <Table.Cell>60%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a9</code></Table.Cell>
+      <Table.Cell>70%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a10</code></Table.Cell>
+      <Table.Cell>80%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a11</code></Table.Cell>
+      <Table.Cell>90%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-black-a12</code></Table.Cell>
+      <Table.Cell>95%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a1</code></Table.Cell>
+      <Table.Cell>5%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a2</code></Table.Cell>
+      <Table.Cell>10%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a3</code></Table.Cell>
+      <Table.Cell>15%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a4</code></Table.Cell>
+      <Table.Cell>20%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a5</code></Table.Cell>
+      <Table.Cell>30%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a6</code></Table.Cell>
+      <Table.Cell>40%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a7</code></Table.Cell>
+      <Table.Cell>50%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a8</code></Table.Cell>
+      <Table.Cell>60%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a9</code></Table.Cell>
+      <Table.Cell>70%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a10</code></Table.Cell>
+      <Table.Cell>80%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a11</code></Table.Cell>
+      <Table.Cell>90%</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-color-overlay-white-a12</code></Table.Cell>
+      <Table.Cell>95%</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Visualization Colors
+
+A palette of colors designed for data visualization, charts, and graphs.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Color</Table.Head>
+      <Table.Head>Tokens</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell>Sky</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-sky-6</code>, <code>--rs-color-viz-sky-8</code>, <code>--rs-color-viz-sky-9</code>, <code>--rs-color-viz-sky-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Mint</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-mint-6</code>, <code>--rs-color-viz-mint-8</code>, <code>--rs-color-viz-mint-9</code>, <code>--rs-color-viz-mint-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Lime</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-lime-6</code>, <code>--rs-color-viz-lime-8</code>, <code>--rs-color-viz-lime-9</code>, <code>--rs-color-viz-lime-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Grass</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-grass-6</code>, <code>--rs-color-viz-grass-8</code>, <code>--rs-color-viz-grass-9</code>, <code>--rs-color-viz-grass-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Green</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-green-6</code>, <code>--rs-color-viz-green-8</code>, <code>--rs-color-viz-green-9</code>, <code>--rs-color-viz-green-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Jade</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-jade-6</code>, <code>--rs-color-viz-jade-8</code>, <code>--rs-color-viz-jade-9</code>, <code>--rs-color-viz-jade-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Cyan</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-cyan-6</code>, <code>--rs-color-viz-cyan-8</code>, <code>--rs-color-viz-cyan-9</code>, <code>--rs-color-viz-cyan-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Blue</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-blue-6</code>, <code>--rs-color-viz-blue-8</code>, <code>--rs-color-viz-blue-9</code>, <code>--rs-color-viz-blue-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Iris</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-iris-6</code>, <code>--rs-color-viz-iris-8</code>, <code>--rs-color-viz-iris-9</code>, <code>--rs-color-viz-iris-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Purple</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-purple-6</code>, <code>--rs-color-viz-purple-8</code>, <code>--rs-color-viz-purple-9</code>, <code>--rs-color-viz-purple-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Pink</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-pink-6</code>, <code>--rs-color-viz-pink-8</code>, <code>--rs-color-viz-pink-9</code>, <code>--rs-color-viz-pink-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Crimson</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-crimson-6</code>, <code>--rs-color-viz-crimson-8</code>, <code>--rs-color-viz-crimson-9</code>, <code>--rs-color-viz-crimson-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Orange</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-orange-6</code>, <code>--rs-color-viz-orange-8</code>, <code>--rs-color-viz-orange-9</code>, <code>--rs-color-viz-orange-11</code></Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Gold</Table.Cell>
+      <Table.Cell><code>--rs-color-viz-gold-6</code>, <code>--rs-color-viz-gold-8</code>, <code>--rs-color-viz-gold-9</code>, <code>--rs-color-viz-gold-11</code></Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Usage
+
+```css
+/* Text colors */
+.heading {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.description {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+/* Background colors */
+.card {
+  background-color: var(--rs-color-background-base-secondary);
+}
+
+.button-primary {
+  background-color: var(--rs-color-background-accent-emphasis);
+  color: var(--rs-color-foreground-accent-emphasis);
+}
+
+/* Border colors */
+.input {
+  border: 1px solid var(--rs-color-border-base-tertiary);
+}
+
+.input:focus {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+/* Semantic states */
+.error {
+  color: var(--rs-color-foreground-danger-primary);
+  background-color: var(--rs-color-background-danger-primary);
+  border-color: var(--rs-color-border-danger-primary);
+}
+```
+
+## Best Practices
+
+- **Use semantic tokens** - Prefer semantic color tokens over raw color values for consistency and theming support
+- **Match foreground with background** - Use corresponding foreground colors when placing text on semantic backgrounds (e.g., `foreground-accent-emphasis` on `background-accent-emphasis`)
+- **Respect color hierarchy** - Use primary colors for main content, secondary for supporting content, and tertiary for subtle elements
+- **Test in both themes** - Ensure your color choices work well in both light and dark modes

@@ -1,0 +1,180 @@
+---
+title: Effects
+description: Overview of shadow and blur effect tokens in Apsara.
+---
+
+import { Table } from "@raystack/apsara";
+
+Effects add depth and visual hierarchy to your interface through shadows and blur. Apsara provides semantic effect tokens that work consistently across light and dark themes.
+
+## Shadows
+
+Shadow tokens create elevation and depth, helping users understand the layering of interface elements.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Description</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-shadow-feather</code></Table.Cell>
+      <Table.Cell>Subtle, minimal shadow</Table.Cell>
+      <Table.Cell>Cards, subtle elevation</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-shadow-soft</code></Table.Cell>
+      <Table.Cell>Soft, gentle shadow</Table.Cell>
+      <Table.Cell>Buttons, interactive elements</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-shadow-lifted</code></Table.Cell>
+      <Table.Cell>Noticeable elevation</Table.Cell>
+      <Table.Cell>Dropdowns, popovers</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-shadow-floating</code></Table.Cell>
+      <Table.Cell>Strong floating effect</Table.Cell>
+      <Table.Cell>Modals, dialogs, tooltips</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-shadow-inset</code></Table.Cell>
+      <Table.Cell>Inner shadow</Table.Cell>
+      <Table.Cell>Pressed states, inputs</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Blur Effects
+
+Blur tokens are used for backdrop effects and creating depth through transparency.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-blur-sm</code></Table.Cell>
+      <Table.Cell>blur(0.5px)</Table.Cell>
+      <Table.Cell>Subtle blur effect</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-blur-md</code></Table.Cell>
+      <Table.Cell>blur(1px)</Table.Cell>
+      <Table.Cell>Medium blur effect</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-blur-lg</code></Table.Cell>
+      <Table.Cell>blur(2px)</Table.Cell>
+      <Table.Cell>Noticeable blur effect</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-blur-xl</code></Table.Cell>
+      <Table.Cell>blur(4px)</Table.Cell>
+      <Table.Cell>Strong blur for overlays</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Usage
+
+### Shadows
+
+```css
+/* Card with subtle shadow */
+.card {
+  box-shadow: var(--rs-shadow-feather);
+}
+
+/* Card on hover with lifted effect */
+.card:hover {
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+/* Dropdown menu */
+.dropdown {
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+/* Modal dialog */
+.modal {
+  box-shadow: var(--rs-shadow-floating);
+}
+
+/* Pressed button state */
+.button:active {
+  box-shadow: var(--rs-shadow-inset);
+}
+```
+
+### Blur Effects
+
+```css
+/* Frosted glass effect */
+.glass {
+  backdrop-filter: var(--rs-blur-lg);
+  background-color: var(--rs-color-overlay-white-a4);
+}
+
+/* Subtle background blur */
+.overlay {
+  backdrop-filter: var(--rs-blur-xl);
+}
+```
+
+## Elevation Hierarchy
+
+Use shadows to establish visual hierarchy and indicate interactive states:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Level</Table.Head>
+      <Table.Head>Shadow</Table.Head>
+      <Table.Head>Examples</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell>Level 0</Table.Cell>
+      <Table.Cell>None</Table.Cell>
+      <Table.Cell>Flat surfaces, backgrounds</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Level 1</Table.Cell>
+      <Table.Cell><code>--rs-shadow-feather</code></Table.Cell>
+      <Table.Cell>Cards, panels</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Level 2</Table.Cell>
+      <Table.Cell><code>--rs-shadow-soft</code></Table.Cell>
+      <Table.Cell>Buttons, interactive cards</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Level 3</Table.Cell>
+      <Table.Cell><code>--rs-shadow-lifted</code></Table.Cell>
+      <Table.Cell>Dropdowns, popovers, hover states</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Level 4</Table.Cell>
+      <Table.Cell><code>--rs-shadow-floating</code></Table.Cell>
+      <Table.Cell>Modals, dialogs, toasts</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Best Practices
+
+- **Use shadows sparingly** - Too many shadows can make interfaces feel cluttered
+- **Match elevation to importance** - Higher elevation shadows for more prominent elements
+- **Consider theme context** - Shadows are automatically adjusted for dark theme
+- **Combine with blur** - Use blur effects with overlays for a modern frosted glass aesthetic
+- **Animate transitions** - Smooth shadow transitions on hover create polished interactions

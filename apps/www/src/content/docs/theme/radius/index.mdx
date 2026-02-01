@@ -1,0 +1,219 @@
+---
+title: Radius
+description: Overview of the border radius scale and style variants in Apsara.
+---
+
+import { Table } from "@raystack/apsara";
+
+Border radius tokens control the roundness of corners throughout your interface. Apsara provides a consistent radius scale with support for different style variants.
+
+## Radius Scale
+
+The radius scale provides 7 tokens for different levels of roundness, from subtle to fully circular.
+
+### Modern Style (Default)
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-1</code></Table.Cell>
+      <Table.Cell>2px</Table.Cell>
+      <Table.Cell>Subtle rounding for small elements</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-2</code></Table.Cell>
+      <Table.Cell>4px</Table.Cell>
+      <Table.Cell>Badges, chips, small buttons</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-3</code></Table.Cell>
+      <Table.Cell>6px</Table.Cell>
+      <Table.Cell>Inputs, buttons, cards</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-4</code></Table.Cell>
+      <Table.Cell>8px</Table.Cell>
+      <Table.Cell>Modals, dialogs, larger cards</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-5</code></Table.Cell>
+      <Table.Cell>12px</Table.Cell>
+      <Table.Cell>Large containers, panels</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-6</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+      <Table.Cell>Extra large containers</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-full</code></Table.Cell>
+      <Table.Cell>800px</Table.Cell>
+      <Table.Cell>Pills, circular elements, avatars</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Traditional Style
+
+When using `data-style="traditional"`, the radius values increase for a softer, more rounded appearance.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-1</code></Table.Cell>
+      <Table.Cell>8px</Table.Cell>
+      <Table.Cell>Subtle rounding for small elements</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-2</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+      <Table.Cell>Badges, chips, small buttons</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-3</code></Table.Cell>
+      <Table.Cell>20px</Table.Cell>
+      <Table.Cell>Inputs, buttons, cards</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-4</code></Table.Cell>
+      <Table.Cell>24px</Table.Cell>
+      <Table.Cell>Modals, dialogs, larger cards</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-5</code></Table.Cell>
+      <Table.Cell>32px</Table.Cell>
+      <Table.Cell>Large containers, panels</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-6</code></Table.Cell>
+      <Table.Cell>40px</Table.Cell>
+      <Table.Cell>Extra large containers</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-full</code></Table.Cell>
+      <Table.Cell>1600px</Table.Cell>
+      <Table.Cell>Pills, circular elements, avatars</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Style Comparison
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Modern</Table.Head>
+      <Table.Head>Traditional</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-1</code></Table.Cell>
+      <Table.Cell>2px</Table.Cell>
+      <Table.Cell>8px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-2</code></Table.Cell>
+      <Table.Cell>4px</Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-3</code></Table.Cell>
+      <Table.Cell>6px</Table.Cell>
+      <Table.Cell>20px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-4</code></Table.Cell>
+      <Table.Cell>8px</Table.Cell>
+      <Table.Cell>24px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-5</code></Table.Cell>
+      <Table.Cell>12px</Table.Cell>
+      <Table.Cell>32px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-6</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+      <Table.Cell>40px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-radius-full</code></Table.Cell>
+      <Table.Cell>800px</Table.Cell>
+      <Table.Cell>1600px</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Usage
+
+```css
+/* Buttons */
+.button {
+  border-radius: var(--rs-radius-3);
+}
+
+/* Cards */
+.card {
+  border-radius: var(--rs-radius-4);
+}
+
+/* Badges and chips */
+.badge {
+  border-radius: var(--rs-radius-2);
+}
+
+/* Pills and tags */
+.pill {
+  border-radius: var(--rs-radius-full);
+}
+
+/* Avatar */
+.avatar {
+  border-radius: var(--rs-radius-full);
+}
+
+/* Input fields */
+.input {
+  border-radius: var(--rs-radius-3);
+}
+
+/* Modal */
+.modal {
+  border-radius: var(--rs-radius-5);
+}
+```
+
+## Enabling Style Variants
+
+To switch between modern and traditional styles, set the `data-style` attribute on your root element:
+
+```html
+<!-- Modern style (default) -->
+<html data-style="modern">
+
+<!-- Traditional style -->
+<html data-style="traditional">
+```
+
+## Best Practices
+
+- **Be consistent** - Use the same radius token for similar elements throughout your application
+- **Match element size** - Use smaller radius values for smaller elements, larger values for containers
+- **Use radius-full for circles** - When you need perfectly circular elements, use `--rs-radius-full`
+- **Consider style context** - Choose modern for sharp, contemporary designs; traditional for softer, friendly aesthetics

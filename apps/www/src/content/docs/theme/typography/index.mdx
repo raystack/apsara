@@ -1,0 +1,461 @@
+---
+title: Typography
+description: Overview of the typography system and text tokens in Apsara.
+---
+
+import { Table } from "@raystack/apsara";
+
+Apsara provides a comprehensive typography system with carefully crafted font families, sizes, weights, and spacing to ensure readable and consistent text across your application.
+
+## Font Families
+
+Apsara includes three font family categories for different use cases.
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Default Value</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-title</code></Table.Cell>
+      <Table.Cell>Inter, sans-serif</Table.Cell>
+      <Table.Cell>Headings and titles</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-body</code></Table.Cell>
+      <Table.Cell>Inter, sans-serif</Table.Cell>
+      <Table.Cell>Body text and paragraphs</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-mono</code></Table.Cell>
+      <Table.Cell>Menlo, JetBrains Mono, monospace</Table.Cell>
+      <Table.Cell>Code and technical content</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Available Fonts
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Font</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-inter</code></Table.Cell>
+      <Table.Cell>Inter</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-lora</code></Table.Cell>
+      <Table.Cell>Lora</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-josefin-sans</code></Table.Cell>
+      <Table.Cell>Josefin Sans</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-jetbrains-mono</code></Table.Cell>
+      <Table.Cell>JetBrains Mono</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-menlo</code></Table.Cell>
+      <Table.Cell>Menlo</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Font Weights
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-weight-regular</code></Table.Cell>
+      <Table.Cell>400</Table.Cell>
+      <Table.Cell>Body text, descriptions</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-weight-medium</code></Table.Cell>
+      <Table.Cell>500</Table.Cell>
+      <Table.Cell>Headings, labels, emphasis</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Body Text
+
+Font sizes, line heights, and letter spacing for body content.
+
+### Font Sizes
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Size</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-micro</code></Table.Cell>
+      <Table.Cell>10px</Table.Cell>
+      <Table.Cell>Fine print, timestamps</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-mini</code></Table.Cell>
+      <Table.Cell>11px</Table.Cell>
+      <Table.Cell>Captions, badges</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-small</code></Table.Cell>
+      <Table.Cell>12px</Table.Cell>
+      <Table.Cell>Secondary text, labels</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-regular</code></Table.Cell>
+      <Table.Cell>14px</Table.Cell>
+      <Table.Cell>Default body text</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-large</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+      <Table.Cell>Large body text, introductions</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Line Heights
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-micro</code></Table.Cell>
+      <Table.Cell>12px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-mini</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-small</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-regular</code></Table.Cell>
+      <Table.Cell>20px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-large</code></Table.Cell>
+      <Table.Cell>24px</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Letter Spacing
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-micro</code></Table.Cell>
+      <Table.Cell>0.5px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-mini</code></Table.Cell>
+      <Table.Cell>0.5px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-small</code></Table.Cell>
+      <Table.Cell>0.4px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-regular</code></Table.Cell>
+      <Table.Cell>0.25px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-large</code></Table.Cell>
+      <Table.Cell>0.5px</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Title Text
+
+Font sizes, line heights, and letter spacing for headings and titles.
+
+### Font Sizes
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Size</Table.Head>
+      <Table.Head>Use Case</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-t1</code></Table.Cell>
+      <Table.Cell>20px</Table.Cell>
+      <Table.Cell>Small headings (h4)</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-t2</code></Table.Cell>
+      <Table.Cell>24px</Table.Cell>
+      <Table.Cell>Section headings (h3)</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-t3</code></Table.Cell>
+      <Table.Cell>28px</Table.Cell>
+      <Table.Cell>Page headings (h2)</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-t4</code></Table.Cell>
+      <Table.Cell>32px</Table.Cell>
+      <Table.Cell>Main titles (h1)</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Line Heights
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-t1</code></Table.Cell>
+      <Table.Cell>24px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-t2</code></Table.Cell>
+      <Table.Cell>32px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-t3</code></Table.Cell>
+      <Table.Cell>36px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-t4</code></Table.Cell>
+      <Table.Cell>40px</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Letter Spacing
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-t1</code></Table.Cell>
+      <Table.Cell>0</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-t2</code></Table.Cell>
+      <Table.Cell>0</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-t3</code></Table.Cell>
+      <Table.Cell>0</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-t4</code></Table.Cell>
+      <Table.Cell>0</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Monospace Text
+
+Font sizes, line heights, and letter spacing for code and technical content.
+
+### Font Sizes
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Size</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-mono-mini</code></Table.Cell>
+      <Table.Cell>11px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-mono-small</code></Table.Cell>
+      <Table.Cell>12px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-mono-regular</code></Table.Cell>
+      <Table.Cell>14px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-size-mono-large</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Line Heights
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-mono-mini</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-mono-small</code></Table.Cell>
+      <Table.Cell>16px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-mono-regular</code></Table.Cell>
+      <Table.Cell>20px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-line-height-mono-large</code></Table.Cell>
+      <Table.Cell>24px</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+### Letter Spacing
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Value</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-mono-mini</code></Table.Cell>
+      <Table.Cell>0px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-mono-small</code></Table.Cell>
+      <Table.Cell>0px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-mono-regular</code></Table.Cell>
+      <Table.Cell>0px</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-letter-spacing-mono-large</code></Table.Cell>
+      <Table.Cell>0px</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Style Variants
+
+Apsara supports different style variants that change typography to match your design preference.
+
+### Traditional Style
+
+When using `data-style="traditional"`, the font families change to:
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Token</Table.Head>
+      <Table.Head>Traditional Value</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-title</code></Table.Cell>
+      <Table.Cell>Lora, serif</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell><code>--rs-font-body</code></Table.Cell>
+      <Table.Cell>Josefin Sans, sans-serif</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table>
+
+## Usage
+
+```css
+/* Body text */
+.paragraph {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-regular);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+}
+
+/* Headings */
+.heading {
+  font-family: var(--rs-font-title);
+  font-size: var(--rs-font-size-t2);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-t2);
+}
+
+/* Code */
+.code {
+  font-family: var(--rs-font-mono);
+  font-size: var(--rs-font-size-mono-small);
+  line-height: var(--rs-line-height-mono-small);
+}
+
+/* Small text */
+.caption {
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+```
+
+## Best Practices
+
+- **Use semantic sizing** - Match font sizes to their intended purpose (body, titles, code)
+- **Pair sizes with line heights** - Always use the corresponding line height token for each font size
+- **Maintain hierarchy** - Use font weights and sizes to establish clear visual hierarchy
+- **Consider readability** - Use appropriate letter spacing for different text sizes
