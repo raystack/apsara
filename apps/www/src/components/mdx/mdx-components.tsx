@@ -11,6 +11,7 @@ import type {
   TableHTMLAttributes
 } from 'react';
 import Demo from '../demo';
+import { TokenTable } from '../tokentable';
 import { TypeTable } from '../typetable';
 import { Code } from './code';
 import styles from './mdx-components.module.css';
@@ -116,6 +117,9 @@ const mdxComponents = {
       {...props}
       className={cx(styles['prose-type-table'], props.className)}
     />
+  ),
+  TokenTable: (props: ComponentPropsWithoutRef<typeof TokenTable>) => (
+    <TokenTable {...props} />
   ),
   Demo
 };

@@ -3,97 +3,43 @@ title: Typography
 description: Overview of the typography system and text tokens in Apsara.
 ---
 
-import { Table } from "@raystack/apsara";
-
 Apsara provides a comprehensive typography system with carefully crafted font families, sizes, weights, and spacing to ensure readable and consistent text across your application.
 
 ## Font Families
 
 Apsara includes three font family categories for different use cases.
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Default Value</Table.Head>
-      <Table.Head>Use Case</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-title</code></Table.Cell>
-      <Table.Cell>Inter, sans-serif</Table.Cell>
-      <Table.Cell>Headings and titles</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-body</code></Table.Cell>
-      <Table.Cell>Inter, sans-serif</Table.Cell>
-      <Table.Cell>Body text and paragraphs</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-mono</code></Table.Cell>
-      <Table.Cell>Menlo, JetBrains Mono, monospace</Table.Cell>
-      <Table.Cell>Code and technical content</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-title", value: "Inter, sans-serif", description: "Headings and titles" },
+    { name: "--rs-font-body", value: "Inter, sans-serif", description: "Body text and paragraphs" },
+    { name: "--rs-font-mono", value: "Menlo, JetBrains Mono, monospace", description: "Code and technical content" },
+  ]}
+/>
 
 ### Available Fonts
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Font</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-inter</code></Table.Cell>
-      <Table.Cell>Inter</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-lora</code></Table.Cell>
-      <Table.Cell>Lora</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-josefin-sans</code></Table.Cell>
-      <Table.Cell>Josefin Sans</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-jetbrains-mono</code></Table.Cell>
-      <Table.Cell>JetBrains Mono</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-menlo</code></Table.Cell>
-      <Table.Cell>Menlo</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-inter", value: "Inter", description: "Modern sans-serif font" },
+    { name: "--rs-font-lora", value: "Lora", description: "Elegant serif font" },
+    { name: "--rs-font-josefin-sans", value: "Josefin Sans", description: "Geometric sans-serif font" },
+    { name: "--rs-font-jetbrains-mono", value: "JetBrains Mono", description: "Developer-focused monospace font" },
+    { name: "--rs-font-menlo", value: "Menlo", description: "System monospace font" },
+  ]}
+/>
 
 ## Font Weights
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-      <Table.Head>Use Case</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-weight-regular</code></Table.Cell>
-      <Table.Cell>400</Table.Cell>
-      <Table.Cell>Body text, descriptions</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-weight-medium</code></Table.Cell>
-      <Table.Cell>500</Table.Cell>
-      <Table.Cell>Headings, labels, emphasis</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-weight-regular", value: "400", description: "Body text, descriptions" },
+    { name: "--rs-font-weight-medium", value: "500", description: "Headings, labels, emphasis" },
+  ]}
+/>
 
 ## Body Text
 
@@ -101,108 +47,42 @@ Font sizes, line heights, and letter spacing for body content.
 
 ### Font Sizes
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Size</Table.Head>
-      <Table.Head>Use Case</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-micro</code></Table.Cell>
-      <Table.Cell>10px</Table.Cell>
-      <Table.Cell>Fine print, timestamps</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-mini</code></Table.Cell>
-      <Table.Cell>11px</Table.Cell>
-      <Table.Cell>Captions, badges</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-small</code></Table.Cell>
-      <Table.Cell>12px</Table.Cell>
-      <Table.Cell>Secondary text, labels</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-regular</code></Table.Cell>
-      <Table.Cell>14px</Table.Cell>
-      <Table.Cell>Default body text</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-large</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-      <Table.Cell>Large body text, introductions</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-size-micro", value: "10px", description: "Fine print, timestamps" },
+    { name: "--rs-font-size-mini", value: "11px", description: "Captions, badges" },
+    { name: "--rs-font-size-small", value: "12px", description: "Secondary text, labels" },
+    { name: "--rs-font-size-regular", value: "14px", description: "Default body text" },
+    { name: "--rs-font-size-large", value: "16px", description: "Large body text, introductions" },
+  ]}
+/>
 
 ### Line Heights
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-micro</code></Table.Cell>
-      <Table.Cell>12px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-mini</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-small</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-regular</code></Table.Cell>
-      <Table.Cell>20px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-large</code></Table.Cell>
-      <Table.Cell>24px</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-line-height-micro", value: "12px", description: "For micro font size" },
+    { name: "--rs-line-height-mini", value: "16px", description: "For mini font size" },
+    { name: "--rs-line-height-small", value: "16px", description: "For small font size" },
+    { name: "--rs-line-height-regular", value: "20px", description: "For regular font size" },
+    { name: "--rs-line-height-large", value: "24px", description: "For large font size" },
+  ]}
+/>
 
 ### Letter Spacing
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-micro</code></Table.Cell>
-      <Table.Cell>0.5px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-mini</code></Table.Cell>
-      <Table.Cell>0.5px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-small</code></Table.Cell>
-      <Table.Cell>0.4px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-regular</code></Table.Cell>
-      <Table.Cell>0.25px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-large</code></Table.Cell>
-      <Table.Cell>0.5px</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-letter-spacing-micro", value: "0.5px", description: "For micro font size" },
+    { name: "--rs-letter-spacing-mini", value: "0.5px", description: "For mini font size" },
+    { name: "--rs-letter-spacing-small", value: "0.4px", description: "For small font size" },
+    { name: "--rs-letter-spacing-regular", value: "0.25px", description: "For regular font size" },
+    { name: "--rs-letter-spacing-large", value: "0.5px", description: "For large font size" },
+  ]}
+/>
 
 ## Title Text
 
@@ -210,95 +90,39 @@ Font sizes, line heights, and letter spacing for headings and titles.
 
 ### Font Sizes
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Size</Table.Head>
-      <Table.Head>Use Case</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-t1</code></Table.Cell>
-      <Table.Cell>20px</Table.Cell>
-      <Table.Cell>Small headings (h4)</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-t2</code></Table.Cell>
-      <Table.Cell>24px</Table.Cell>
-      <Table.Cell>Section headings (h3)</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-t3</code></Table.Cell>
-      <Table.Cell>28px</Table.Cell>
-      <Table.Cell>Page headings (h2)</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-t4</code></Table.Cell>
-      <Table.Cell>32px</Table.Cell>
-      <Table.Cell>Main titles (h1)</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-size-t1", value: "20px", description: "Small headings (h4)" },
+    { name: "--rs-font-size-t2", value: "24px", description: "Section headings (h3)" },
+    { name: "--rs-font-size-t3", value: "28px", description: "Page headings (h2)" },
+    { name: "--rs-font-size-t4", value: "32px", description: "Main titles (h1)" },
+  ]}
+/>
 
 ### Line Heights
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-t1</code></Table.Cell>
-      <Table.Cell>24px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-t2</code></Table.Cell>
-      <Table.Cell>32px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-t3</code></Table.Cell>
-      <Table.Cell>36px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-t4</code></Table.Cell>
-      <Table.Cell>40px</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-line-height-t1", value: "24px", description: "For t1 font size" },
+    { name: "--rs-line-height-t2", value: "32px", description: "For t2 font size" },
+    { name: "--rs-line-height-t3", value: "36px", description: "For t3 font size" },
+    { name: "--rs-line-height-t4", value: "40px", description: "For t4 font size" },
+  ]}
+/>
 
 ### Letter Spacing
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-t1</code></Table.Cell>
-      <Table.Cell>0</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-t2</code></Table.Cell>
-      <Table.Cell>0</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-t3</code></Table.Cell>
-      <Table.Cell>0</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-t4</code></Table.Cell>
-      <Table.Cell>0</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-letter-spacing-t1", value: "0", description: "For t1 font size" },
+    { name: "--rs-letter-spacing-t2", value: "0", description: "For t2 font size" },
+    { name: "--rs-letter-spacing-t3", value: "0", description: "For t3 font size" },
+    { name: "--rs-letter-spacing-t4", value: "0", description: "For t4 font size" },
+  ]}
+/>
 
 ## Monospace Text
 
@@ -306,90 +130,39 @@ Font sizes, line heights, and letter spacing for code and technical content.
 
 ### Font Sizes
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Size</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-mono-mini</code></Table.Cell>
-      <Table.Cell>11px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-mono-small</code></Table.Cell>
-      <Table.Cell>12px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-mono-regular</code></Table.Cell>
-      <Table.Cell>14px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-size-mono-large</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-size-mono-mini", value: "11px", description: "Small code snippets" },
+    { name: "--rs-font-size-mono-small", value: "12px", description: "Inline code" },
+    { name: "--rs-font-size-mono-regular", value: "14px", description: "Code blocks" },
+    { name: "--rs-font-size-mono-large", value: "16px", description: "Large code displays" },
+  ]}
+/>
 
 ### Line Heights
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-mono-mini</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-mono-small</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-mono-regular</code></Table.Cell>
-      <Table.Cell>20px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-line-height-mono-large</code></Table.Cell>
-      <Table.Cell>24px</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-line-height-mono-mini", value: "16px", description: "For mono mini font size" },
+    { name: "--rs-line-height-mono-small", value: "16px", description: "For mono small font size" },
+    { name: "--rs-line-height-mono-regular", value: "20px", description: "For mono regular font size" },
+    { name: "--rs-line-height-mono-large", value: "24px", description: "For mono large font size" },
+  ]}
+/>
 
 ### Letter Spacing
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-mono-mini</code></Table.Cell>
-      <Table.Cell>0px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-mono-small</code></Table.Cell>
-      <Table.Cell>0px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-mono-regular</code></Table.Cell>
-      <Table.Cell>0px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-letter-spacing-mono-large</code></Table.Cell>
-      <Table.Cell>0px</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-letter-spacing-mono-mini", value: "0px", description: "For mono mini font size" },
+    { name: "--rs-letter-spacing-mono-small", value: "0px", description: "For mono small font size" },
+    { name: "--rs-letter-spacing-mono-regular", value: "0px", description: "For mono regular font size" },
+    { name: "--rs-letter-spacing-mono-large", value: "0px", description: "For mono large font size" },
+  ]}
+/>
 
 ## Style Variants
 
@@ -399,24 +172,13 @@ Apsara supports different style variants that change typography to match your de
 
 When using `data-style="traditional"`, the font families change to:
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Traditional Value</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-title</code></Table.Cell>
-      <Table.Cell>Lora, serif</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-font-body</code></Table.Cell>
-      <Table.Cell>Josefin Sans, sans-serif</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-title", value: "Lora, serif", description: "Title font in traditional style" },
+    { name: "--rs-font-body", value: "Josefin Sans, sans-serif", description: "Body font in traditional style" },
+  ]}
+/>
 
 ## Usage
 

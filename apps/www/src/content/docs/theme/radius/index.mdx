@@ -3,8 +3,6 @@ title: Radius
 description: Overview of the border radius scale and style variants in Apsara.
 ---
 
-import { Table } from "@raystack/apsara";
-
 Border radius tokens control the roundness of corners throughout your interface. Apsara provides a consistent radius scale with support for different style variants.
 
 ## Radius Scale
@@ -13,152 +11,49 @@ The radius scale provides 7 tokens for different levels of roundness, from subtl
 
 ### Modern Style (Default)
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-      <Table.Head>Use Case</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-1</code></Table.Cell>
-      <Table.Cell>2px</Table.Cell>
-      <Table.Cell>Subtle rounding for small elements</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-2</code></Table.Cell>
-      <Table.Cell>4px</Table.Cell>
-      <Table.Cell>Badges, chips, small buttons</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-3</code></Table.Cell>
-      <Table.Cell>6px</Table.Cell>
-      <Table.Cell>Inputs, buttons, cards</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-4</code></Table.Cell>
-      <Table.Cell>8px</Table.Cell>
-      <Table.Cell>Modals, dialogs, larger cards</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-5</code></Table.Cell>
-      <Table.Cell>12px</Table.Cell>
-      <Table.Cell>Large containers, panels</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-6</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-      <Table.Cell>Extra large containers</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-full</code></Table.Cell>
-      <Table.Cell>800px</Table.Cell>
-      <Table.Cell>Pills, circular elements, avatars</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="radius"
+  tokens={[
+    { name: "--rs-radius-1", value: "2px", description: "Subtle rounding for small elements" },
+    { name: "--rs-radius-2", value: "4px", description: "Badges, chips, small buttons" },
+    { name: "--rs-radius-3", value: "6px", description: "Inputs, buttons, cards" },
+    { name: "--rs-radius-4", value: "8px", description: "Modals, dialogs, larger cards" },
+    { name: "--rs-radius-5", value: "12px", description: "Large containers, panels" },
+    { name: "--rs-radius-6", value: "16px", description: "Extra large containers" },
+    { name: "--rs-radius-full", value: "800px", description: "Pills, circular elements, avatars" },
+  ]}
+/>
 
 ### Traditional Style
 
 When using `data-style="traditional"`, the radius values increase for a softer, more rounded appearance.
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Value</Table.Head>
-      <Table.Head>Use Case</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-1</code></Table.Cell>
-      <Table.Cell>8px</Table.Cell>
-      <Table.Cell>Subtle rounding for small elements</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-2</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-      <Table.Cell>Badges, chips, small buttons</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-3</code></Table.Cell>
-      <Table.Cell>20px</Table.Cell>
-      <Table.Cell>Inputs, buttons, cards</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-4</code></Table.Cell>
-      <Table.Cell>24px</Table.Cell>
-      <Table.Cell>Modals, dialogs, larger cards</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-5</code></Table.Cell>
-      <Table.Cell>32px</Table.Cell>
-      <Table.Cell>Large containers, panels</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-6</code></Table.Cell>
-      <Table.Cell>40px</Table.Cell>
-      <Table.Cell>Extra large containers</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-full</code></Table.Cell>
-      <Table.Cell>1600px</Table.Cell>
-      <Table.Cell>Pills, circular elements, avatars</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  type="radius"
+  tokens={[
+    { name: "--rs-radius-1", value: "8px", description: "Subtle rounding for small elements" },
+    { name: "--rs-radius-2", value: "16px", description: "Badges, chips, small buttons" },
+    { name: "--rs-radius-3", value: "20px", description: "Inputs, buttons, cards" },
+    { name: "--rs-radius-4", value: "24px", description: "Modals, dialogs, larger cards" },
+    { name: "--rs-radius-5", value: "32px", description: "Large containers, panels" },
+    { name: "--rs-radius-6", value: "40px", description: "Extra large containers" },
+    { name: "--rs-radius-full", value: "1600px", description: "Pills, circular elements, avatars" },
+  ]}
+/>
 
 ## Style Comparison
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Token</Table.Head>
-      <Table.Head>Modern</Table.Head>
-      <Table.Head>Traditional</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-1</code></Table.Cell>
-      <Table.Cell>2px</Table.Cell>
-      <Table.Cell>8px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-2</code></Table.Cell>
-      <Table.Cell>4px</Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-3</code></Table.Cell>
-      <Table.Cell>6px</Table.Cell>
-      <Table.Cell>20px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-4</code></Table.Cell>
-      <Table.Cell>8px</Table.Cell>
-      <Table.Cell>24px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-5</code></Table.Cell>
-      <Table.Cell>12px</Table.Cell>
-      <Table.Cell>32px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-6</code></Table.Cell>
-      <Table.Cell>16px</Table.Cell>
-      <Table.Cell>40px</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>--rs-radius-full</code></Table.Cell>
-      <Table.Cell>800px</Table.Cell>
-      <Table.Cell>1600px</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  tokens={[
+    { name: "--rs-radius-1", value: "2px / 8px", description: "Modern / Traditional" },
+    { name: "--rs-radius-2", value: "4px / 16px", description: "Modern / Traditional" },
+    { name: "--rs-radius-3", value: "6px / 20px", description: "Modern / Traditional" },
+    { name: "--rs-radius-4", value: "8px / 24px", description: "Modern / Traditional" },
+    { name: "--rs-radius-5", value: "12px / 32px", description: "Modern / Traditional" },
+    { name: "--rs-radius-6", value: "16px / 40px", description: "Modern / Traditional" },
+    { name: "--rs-radius-full", value: "800px / 1600px", description: "Modern / Traditional" },
+  ]}
+/>
 
 ## Usage
 

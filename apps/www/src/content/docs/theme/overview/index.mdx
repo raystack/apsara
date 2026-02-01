@@ -3,8 +3,6 @@ title: Overview
 description: Understanding the Apsara theming system and ThemeProvider.
 ---
 
-import { Table } from "@raystack/apsara";
-
 Apsara provides a flexible theming system that supports light and dark modes, multiple accent colors, gray color variants, and style presets. The `ThemeProvider` component manages theme state and applies the appropriate CSS variables to your application.
 
 ## Installation
@@ -27,105 +25,48 @@ function App() {
 
 Apsara supports three theme modes:
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Mode</Table.Head>
-      <Table.Head>Description</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>light</code></Table.Cell>
-      <Table.Cell>Light color scheme</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>dark</code></Table.Cell>
-      <Table.Cell>Dark color scheme</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>system</code></Table.Cell>
-      <Table.Cell>Follows the user's system preference</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  tokens={[
+    { name: "light", value: "Light mode", description: "Light color scheme" },
+    { name: "dark", value: "Dark mode", description: "Dark color scheme" },
+    { name: "system", value: "System preference", description: "Follows the user's system preference" },
+  ]}
+/>
 
 ## Style Variants
 
 Style variants affect the overall visual appearance, including border radius and typography:
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Style</Table.Head>
-      <Table.Head>Description</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>modern</code></Table.Cell>
-      <Table.Cell>Sharp corners, Inter font family (default)</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>traditional</code></Table.Cell>
-      <Table.Cell>Softer, rounded corners, Lora/Josefin Sans fonts</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  tokens={[
+    { name: "modern", value: "Default", description: "Sharp corners, Inter font family" },
+    { name: "traditional", value: "Alternative", description: "Softer, rounded corners, Lora/Josefin Sans fonts" },
+  ]}
+/>
 
 ## Accent Colors
 
 Accent colors define the primary brand color used throughout the interface:
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Color</Table.Head>
-      <Table.Head>Description</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>indigo</code></Table.Cell>
-      <Table.Cell>Blue-violet accent (default)</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>orange</code></Table.Cell>
-      <Table.Cell>Warm orange accent</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>mint</code></Table.Cell>
-      <Table.Cell>Fresh mint/teal accent</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  tokens={[
+    { name: "indigo", value: "default", description: "Blue-violet accent" },
+    { name: "orange", description: "Warm orange accent" },
+    { name: "mint", description: "Fresh mint/teal accent" },
+  ]}
+/>
 
 ## Gray Colors
 
 Gray color variants affect neutral tones throughout the interface:
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Color</Table.Head>
-      <Table.Head>Description</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>gray</code></Table.Cell>
-      <Table.Cell>Pure neutral gray (default)</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>mauve</code></Table.Cell>
-      <Table.Cell>Warm gray with purple undertone</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>slate</code></Table.Cell>
-      <Table.Cell>Cool gray with blue undertone</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  tokens={[
+    { name: "gray", value: "default", description: "Pure neutral gray" },
+    { name: "mauve", description: "Warm gray with purple undertone" },
+    { name: "slate", description: "Cool gray with blue undertone" },
+  ]}
+/>
 
 ## ThemeProvider Props
 
@@ -213,37 +154,14 @@ function App() {
 
 The ThemeProvider sets the following attributes on the document element:
 
-<Table>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Attribute</Table.Head>
-      <Table.Head>Example Value</Table.Head>
-      <Table.Head>Description</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell><code>data-theme</code></Table.Cell>
-      <Table.Cell><code>"light"</code> or <code>"dark"</code></Table.Cell>
-      <Table.Cell>Current color scheme</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>data-style</code></Table.Cell>
-      <Table.Cell><code>"modern"</code> or <code>"traditional"</code></Table.Cell>
-      <Table.Cell>Visual style variant</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>data-accent-color</code></Table.Cell>
-      <Table.Cell><code>"indigo"</code></Table.Cell>
-      <Table.Cell>Accent color</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell><code>data-gray-color</code></Table.Cell>
-      <Table.Cell><code>"gray"</code></Table.Cell>
-      <Table.Cell>Gray color variant</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table>
+<TokenTable
+  tokens={[
+    { name: "data-theme", value: '"light" | "dark"', description: "Current color scheme" },
+    { name: "data-style", value: '"modern" | "traditional"', description: "Visual style variant" },
+    { name: "data-accent-color", value: '"indigo"', description: "Accent color" },
+    { name: "data-gray-color", value: '"gray"', description: "Gray color variant" },
+  ]}
+/>
 
 ## Avoiding Flash
 
