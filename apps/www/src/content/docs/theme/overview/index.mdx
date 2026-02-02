@@ -3,130 +3,11 @@ title: Overview
 description: Understanding the Apsara theming system and ThemeProvider.
 ---
 
-Apsara provides a flexible theming system that supports light and dark modes, multiple accent colors, gray color variants, and style presets. The `ThemeProvider` component manages theme state and applies the appropriate CSS variables to your application.
+Apsara provides a theming system built on CSS custom properties (tokens). Tokens are semantic variables that automatically resolve to appropriate values based on the active theme—so your UI adapts seamlessly when users switch between light and dark modes or when you change accent colors, without any code changes.
 
 ## Installation
 
 Wrap your application with the `ThemeProvider` component:
-
-```tsx
-import { ThemeProvider } from "@raystack/apsara";
-
-function App() {
-  return (
-    <ThemeProvider>
-      {/* Your application */}
-    </ThemeProvider>
-  );
-}
-```
-
-## Theme Modes
-
-Apsara supports three theme modes:
-
-<TokenTable
-  tokens={[
-    { name: "light", value: "Light mode", description: "Light color scheme" },
-    { name: "dark", value: "Dark mode", description: "Dark color scheme" },
-    { name: "system", value: "System preference", description: "Follows the user's system preference" },
-  ]}
-/>
-
-## Style Variants
-
-Style variants affect the overall visual appearance, including border radius and typography:
-
-<TokenTable
-  tokens={[
-    { name: "modern", value: "Default", description: "Sharp corners, Inter font family" },
-    { name: "traditional", value: "Alternative", description: "Softer, rounded corners, Lora/Josefin Sans fonts" },
-  ]}
-/>
-
-## Accent Colors
-
-Accent colors define the primary brand color used throughout the interface:
-
-<TokenTable
-  tokens={[
-    { name: "indigo", value: "default", description: "Blue-violet accent" },
-    { name: "orange", description: "Warm orange accent" },
-    { name: "mint", description: "Fresh mint/teal accent" },
-  ]}
-/>
-
-## Gray Colors
-
-Gray color variants affect neutral tones throughout the interface:
-
-<TokenTable
-  tokens={[
-    { name: "gray", value: "default", description: "Pure neutral gray" },
-    { name: "mauve", description: "Warm gray with purple undertone" },
-    { name: "slate", description: "Cool gray with blue undertone" },
-  ]}
-/>
-
-## Token Naming Convention
-
-Apsara tokens follow a consistent naming pattern that makes them easy to discover and use:
-
-```
---rs-{category}-{property}-{variant}-{state}
-```
-
-<TokenTable
-  tokens={[
-    { name: "--rs-", value: "Prefix", description: "All Apsara tokens start with this prefix" },
-    { name: "category", value: "color, space, radius, shadow, font, etc.", description: "The type of design token" },
-    { name: "property", value: "foreground, background, border, size, weight, etc.", description: "What the token controls" },
-    { name: "variant", value: "base, accent, danger, success, etc.", description: "Semantic meaning or color variant" },
-    { name: "state", value: "primary, secondary, hover, emphasis, etc.", description: "Visual weight or interaction state" },
-  ]}
-/>
-
-### Examples
-
-<TokenTable
-  tokens={[
-    { name: "--rs-color-foreground-base-primary", description: "Color → Foreground → Base variant → Primary weight" },
-    { name: "--rs-color-background-accent-emphasis", description: "Color → Background → Accent variant → Emphasis weight" },
-    { name: "--rs-space-5", description: "Space → Step 5 in the scale" },
-    { name: "--rs-radius-3", description: "Radius → Step 3 in the scale" },
-    { name: "--rs-font-size-regular", description: "Font → Size → Regular variant" },
-  ]}
-/>
-
-## ThemeProvider Props
-
-<auto-type-table path="./props.ts" name="ThemeProviderProps" />
-
-## useTheme Hook
-
-Access and control the current theme using the `useTheme` hook:
-
-```tsx
-import { useTheme } from "@raystack/apsara";
-
-function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme, systemTheme } = useTheme();
-
-  return (
-    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
-      Toggle theme
-    </button>
-  );
-}
-```
-
-### useTheme Return Values
-
-<auto-type-table path="./props.ts" name="UseThemeProps" />
-
-## Examples
-
-### Basic Setup
 
 ```tsx
 import { ThemeProvider } from "@raystack/apsara";
@@ -140,68 +21,97 @@ function App() {
 }
 ```
 
-### Custom Accent Color
+## Customization
+
+The ThemeProvider accepts props to control the visual identity of your application. Combine `style` variants with `accentColor` and `grayColor` to create distinct aesthetics—from sharp and technical to warm and editorial. The `defaultTheme` prop controls light/dark mode, with `system` respecting the user's OS preference.
 
 ```tsx
-<ThemeProvider accentColor="orange" grayColor="slate">
-  <YourApp />
-</ThemeProvider>
+// Clean, technical aesthetic
+<ThemeProvider style="modern" accentColor="indigo" grayColor="slate">
+
+// Warm, editorial feel
+<ThemeProvider style="traditional" accentColor="orange" grayColor="mauve">
+
+// Vibrant and fresh
+<ThemeProvider style="modern" accentColor="mint" grayColor="gray">
 ```
 
-### Traditional Style
+See [API Reference](#api-reference) for all available props and options.
 
-```tsx
-<ThemeProvider style="traditional">
-  <YourApp />
-</ThemeProvider>
+## Tokens
+
+Tokens follow a consistent naming pattern:
+
+```
+--rs-{category}-{property}-{variant}-{state}
 ```
 
-### Force Dark Mode
+**Examples:**
+- `--rs-color-foreground-base-primary` — primary text color
+- `--rs-color-background-accent-emphasis` — accent button background
+- `--rs-space-5` — 16px spacing
+- `--rs-radius-3` — medium border radius
+- `--rs-shadow-lifted` — elevated shadow
 
-```tsx
-<ThemeProvider forcedTheme="dark">
-  <YourApp />
-</ThemeProvider>
+**Using tokens in CSS:**
+
+```css
+.custom-card {
+  background: var(--rs-color-background-base-secondary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-4);
+  padding: var(--rs-space-5);
+  box-shadow: var(--rs-shadow-feather);
+}
 ```
 
-### Complete Configuration
+**Token Categories:**
+- [Colors](/theme/colors) — foreground, background, border, and overlay colors
+- [Spacing](/theme/spacing) — consistent scale from 2px to 120px
+- [Radius](/theme/radius) — border radius that adapts to style variants
+- [Typography](/theme/typography) — font families, sizes, weights, and line heights
+- [Effects](/theme/effects) — shadows and blur for depth and elevation
+
+## API Reference
+
+### ThemeProvider
+
+The `ThemeProvider` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
+
+<auto-type-table path="./props.ts" name="ThemeProviderProps" />
+
+### useTheme
+
+The `useTheme` hook provides access to the current theme state and methods to change it. Use this to build theme toggles, read the resolved theme for conditional rendering, or sync with external systems.
 
 ```tsx
-<ThemeProvider
-  defaultTheme="system"
-  enableSystem={true}
-  style="modern"
-  accentColor="indigo"
-  grayColor="gray"
-  storageKey="my-app-theme"
-  disableTransitionOnChange={false}
->
-  <YourApp />
-</ThemeProvider>
+import { useTheme } from "@raystack/apsara";
+
+function ThemeToggle() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  return (
+    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
 ```
 
-## HTML Attributes
+<auto-type-table path="./props.ts" name="UseThemeProps" />
 
-The ThemeProvider sets the following attributes on the document element:
+## Framework Integration
 
-<TokenTable
-  tokens={[
-    { name: "data-theme", value: '"light" | "dark"', description: "Current color scheme" },
-    { name: "data-style", value: '"modern" | "traditional"', description: "Visual style variant" },
-    { name: "data-accent-color", value: '"indigo"', description: "Accent color" },
-    { name: "data-gray-color", value: '"gray"', description: "Gray color variant" },
-  ]}
-/>
+**HTML Attributes** — the ThemeProvider sets data attributes on the document element for CSS targeting:
+- `data-theme` — current color scheme (`light` | `dark`)
+- `data-style` — active style variant (`modern` | `traditional`)
+- `data-accent-color` — active accent color (`indigo` | `orange` | `mint`)
+- `data-gray-color` — active gray variant (`gray` | `mauve` | `slate`)
 
-## Avoiding Flash
-
-The ThemeProvider includes an inline script that runs before React hydration to prevent flash of incorrect theme. This ensures the correct theme is applied immediately on page load.
-
-For SSR frameworks, ensure the ThemeProvider is included in your root layout:
+**SSR & Flash Prevention** — the ThemeProvider includes an inline script that runs before React hydration to prevent flash of incorrect theme. For SSR frameworks, include the provider in your root layout:
 
 ```tsx
-// Next.js App Router example
-// app/layout.tsx
+// Next.js App Router: app/layout.tsx
 import { ThemeProvider } from "@raystack/apsara";
 
 export default function RootLayout({ children }) {
@@ -215,4 +125,4 @@ export default function RootLayout({ children }) {
 }
 ```
 
-The `suppressHydrationWarning` is needed because the theme script modifies the HTML element before React hydrates.
+The `suppressHydrationWarning` is required because the theme script modifies the HTML element before React hydrates.
