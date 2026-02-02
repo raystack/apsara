@@ -5,6 +5,7 @@
 }
 
 .list {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--rs-space-2);
@@ -27,7 +28,7 @@
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   border-radius: var(--rs-radius-2);
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   flex: 1;
   text-align: center;
   text-overflow: ellipsis;
@@ -37,18 +38,17 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 .trigger:hover:not([data-disabled]) {
   color: var(--rs-color-foreground-base-primary);
 }
 
-.trigger[data-state="active"] {
-  background-color: var(--rs-color-background-base-primary);
+/* Active tab - transparent background so indicator shows through */
+.trigger[data-active] {
   color: var(--rs-color-foreground-base-primary);
-  box-shadow: var(--rs-shadow-feather);
-  font-size: var(--rs-font-size-small);
-  font-weight: var(--rs-font-weight-medium);
 }
 
 .trigger[data-disabled] {
@@ -68,10 +68,28 @@
   flex-shrink: 0;
 }
 
+.indicator {
+  position: absolute;
+  background-color: var(--rs-color-background-base-primary);
+  border-radius: var(--rs-radius-2);
+  box-shadow: var(--rs-shadow-feather);
+  transition:
+    top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  top: var(--active-tab-top, 0);
+  left: var(--active-tab-left, 0);
+  width: var(--active-tab-width, 0);
+  height: var(--active-tab-height, 0);
+  z-index: 0;
+}
+
 .content {
   outline: none;
 }
 
-.content[data-state="inactive"] {
+/* Base UI uses hidden attribute for inactive panels */
+.content[hidden] {
   display: none;
 }

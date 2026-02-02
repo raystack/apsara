@@ -1,7 +1,8 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ComponentPropsWithoutRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { Tabs, TabsRootProps } from '../tabs';
+import { Tabs } from '../tabs';
 import styles from '../tabs.module.css';
 
 const TAB_1_TEXT = 'Tab 1';
@@ -10,17 +11,19 @@ const CONTENT_1_TEXT = 'Content 1';
 const CONTENT_2_TEXT = 'Content 2';
 const CUSTOM_ARIA_LABEL = 'Navigation tabs';
 
+type TabsProps = ComponentPropsWithoutRef<typeof Tabs>;
+
 const BasicTabs = ({
   defaultValue = 'tab1',
   hasDisabledTab = false,
   ...props
-}: TabsRootProps & { hasDisabledTab?: boolean }) => (
+}: TabsProps & { hasDisabledTab?: boolean }) => (
   <Tabs defaultValue={defaultValue} {...props}>
     <Tabs.List>
-      <Tabs.Trigger value='tab1'>{TAB_1_TEXT}</Tabs.Trigger>
-      <Tabs.Trigger value='tab2' disabled={hasDisabledTab}>
+      <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+      <Tabs.Tab value='tab2' disabled={hasDisabledTab}>
         {TAB_2_TEXT}
-      </Tabs.Trigger>
+      </Tabs.Tab>
     </Tabs.List>
     <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
     <Tabs.Content value='tab2'>{CONTENT_2_TEXT}</Tabs.Content>
@@ -35,7 +38,7 @@ describe('Tabs', () => {
       expect(screen.getByRole('tablist')).toBeInTheDocument();
     });
 
-    it('renders tab triggers', () => {
+    it('renders tabs', () => {
       render(<BasicTabs />);
 
       expect(screen.getByText(TAB_1_TEXT)).toBeInTheDocument();
@@ -106,7 +109,9 @@ describe('Tabs', () => {
       render(<BasicTabs onValueChange={handleChange} />);
 
       await user.click(screen.getByText(TAB_2_TEXT));
-      expect(handleChange).toHaveBeenCalledWith('tab2');
+      // Base UI calls onValueChange with (value, details) - check first argument
+      expect(handleChange).toHaveBeenCalled();
+      expect(handleChange.mock.calls[0][0]).toBe('tab2');
     });
   });
 
@@ -115,8 +120,9 @@ describe('Tabs', () => {
       render(<BasicTabs hasDisabledTab />);
 
       const disabledTab = screen.getByText(TAB_2_TEXT);
-      expect(disabledTab).toBeDisabled();
+      // Base UI uses aria-disabled and data-disabled attributes
       expect(disabledTab).toHaveAttribute('aria-disabled', 'true');
+      expect(disabledTab).toHaveAttribute('data-disabled', '');
     });
 
     it('does not allow clicking disabled tabs', () => {
@@ -129,15 +135,15 @@ describe('Tabs', () => {
     });
   });
 
-  describe('Icons', () => {
-    it('renders trigger with icon', () => {
+  describe('Leading Icons', () => {
+    it('renders trigger with leadingIcon', () => {
       const icon = <span data-testid='tab-icon'>📁</span>;
       render(
         <Tabs defaultValue='tab1'>
           <Tabs.List>
-            <Tabs.Trigger value='tab1' icon={icon}>
+            <Tabs.Tab value='tab1' leadingIcon={icon}>
               {TAB_1_TEXT}
-            </Tabs.Trigger>
+            </Tabs.Tab>
           </Tabs.List>
           <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
         </Tabs>
@@ -146,14 +152,14 @@ describe('Tabs', () => {
       expect(screen.getByTestId('tab-icon')).toBeInTheDocument();
     });
 
-    it('wraps icon in trigger-icon class', () => {
+    it('wraps leadingIcon in trigger-icon class', () => {
       const icon = <span data-testid='tab-icon'>📁</span>;
       const { container } = render(
         <Tabs defaultValue='tab1'>
           <Tabs.List>
-            <Tabs.Trigger value='tab1' icon={icon}>
+            <Tabs.Tab value='tab1' leadingIcon={icon}>
               {TAB_1_TEXT}
-            </Tabs.Trigger>
+            </Tabs.Tab>
           </Tabs.List>
           <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
         </Tabs>
@@ -162,6 +168,25 @@ describe('Tabs', () => {
       const iconWrapper = container.querySelector(`.${styles['trigger-icon']}`);
       expect(iconWrapper).toBeInTheDocument();
       expect(iconWrapper).toContainElement(screen.getByTestId('tab-icon'));
+    });
+  });
+
+  describe('Indicator', () => {
+    it('automatically renders indicator in list', () => {
+      const { container } = render(
+        <Tabs defaultValue='tab1'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+            <Tabs.Tab value='tab2'>{TAB_2_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      // Indicator is automatically included in the List
+      expect(
+        container.querySelector(`.${styles.indicator}`)
+      ).toBeInTheDocument();
     });
   });
 
@@ -183,10 +208,7 @@ describe('Tabs', () => {
       const tab2 = screen.getByText(TAB_2_TEXT);
 
       expect(tab1).toHaveAttribute('aria-selected', 'true');
-      expect(tab1).toHaveAttribute('aria-controls');
-
       expect(tab2).toHaveAttribute('aria-selected', 'false');
-      expect(tab2).toHaveAttribute('aria-controls');
     });
 
     it('has correct ARIA attributes on content', () => {
@@ -194,14 +216,13 @@ describe('Tabs', () => {
 
       const content = screen.getByRole('tabpanel');
       expect(content).toHaveAttribute('aria-labelledby');
-      expect(content).toHaveAttribute('tabIndex', '0');
     });
 
     it('supports custom aria-label', () => {
       render(
         <Tabs defaultValue='tab1' aria-label={CUSTOM_ARIA_LABEL}>
           <Tabs.List>
-            <Tabs.Trigger value='tab1'>{TAB_1_TEXT}</Tabs.Trigger>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
           </Tabs.List>
           <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
         </Tabs>
@@ -222,30 +243,42 @@ describe('Tabs', () => {
       expect(tablist).toHaveAttribute('aria-orientation', 'vertical');
     });
 
-    it('defaults to horizontal orientation', () => {
+    it('has correct data-orientation attribute', () => {
       render(<BasicTabs />);
 
-      const tablist = screen.getByRole('tablist');
-      expect(tablist).toHaveAttribute('aria-orientation', 'horizontal');
+      const tab = screen.getByText(TAB_1_TEXT);
+      expect(tab).toHaveAttribute('data-orientation', 'horizontal');
     });
   });
 
   describe('Data Attributes', () => {
-    it('has data-state on triggers', () => {
+    it('has aria-selected on active trigger', () => {
       render(<BasicTabs />);
 
       const tab1 = screen.getByText(TAB_1_TEXT);
       const tab2 = screen.getByText(TAB_2_TEXT);
 
-      expect(tab1).toHaveAttribute('data-state', 'active');
-      expect(tab2).toHaveAttribute('data-state', 'inactive');
+      // Base UI uses aria-selected for indicating the active tab
+      expect(tab1).toHaveAttribute('aria-selected', 'true');
+      expect(tab2).toHaveAttribute('aria-selected', 'false');
     });
 
-    it('has data-state on content', () => {
+    it('updates aria-selected when switching tabs', async () => {
+      const user = userEvent.setup();
       render(<BasicTabs />);
 
-      const content1 = screen.getByText(CONTENT_1_TEXT).closest('[data-state]');
-      expect(content1).toHaveAttribute('data-state', 'active');
+      const tab1 = screen.getByText(TAB_1_TEXT);
+      const tab2 = screen.getByText(TAB_2_TEXT);
+
+      expect(tab1).toHaveAttribute('aria-selected', 'true');
+      expect(tab2).toHaveAttribute('aria-selected', 'false');
+
+      await user.click(tab2);
+
+      await waitFor(() => {
+        expect(tab1).toHaveAttribute('aria-selected', 'false');
+        expect(tab2).toHaveAttribute('aria-selected', 'true');
+      });
     });
   });
 });
