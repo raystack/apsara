@@ -3,46 +3,162 @@ title: Getting Started
 description: A quick tutorial to get you up and running with Apsara.
 ---
 
-Apsara is a pre-styled component library that is designed to work out of the box with minimal configuration.
+This guide walks you through installing Apsara and building your first component.
+
+## Prerequisites
+
+Apsara requires:
+
+- **Node.js** 18 or later
+- **React** 18 or 19
 
 ## Installation
 
-Getting up and running is quick and easy.
-
-### 1. Install Apsara
-
-Install Apsara from your command line.
+Install the package using your preferred package manager:
 
 ```package-install
 @raystack/apsara
 ```
 
-### 2. Import the CSS file
+## Setup
 
-Import the global CSS file at the root of your application.
+### 1. Import styles
+
+Add the CSS import at the root of your application, before any component renders:
 
 ```ts
 import "@raystack/apsara/style.css";
 ```
 
-#### Using normalize.css
+This single stylesheet includes all component styles and CSS custom properties (tokens) for theming.
 
-Apsara includes an optional `normalize.css` stylesheet to help ensure consistency across different browsers. Unlike a CSS reset, `normalize.css` preserves useful default styles while correcting inconsistencies in how browsers render HTML elements.
+### 2. Add ThemeProvider
 
-If you'd like to enable it, simply import the provided stylesheet in your project:
+Wrap your application with `ThemeProvider` to enable theming support:
+
+```tsx
+import { ThemeProvider } from "@raystack/apsara";
+import "@raystack/apsara/style.css";
+
+function App() {
+  return (
+    <ThemeProvider defaultTheme="system">
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+The `defaultTheme` prop accepts `"light"`, `"dark"`, or `"system"` (follows OS preference).
+
+### 3. Use components
+
+Import and use components directly:
+
+```tsx
+import { Button, Flex, Text } from "@raystack/apsara";
+
+function Example() {
+  return (
+    <Flex direction="column" gap="4">
+      <Text size="4" weight="medium">Welcome to Apsara</Text>
+      <Flex gap="3">
+        <Button variant="solid" color="accent">Primary Action</Button>
+        <Button variant="outline">Secondary</Button>
+      </Flex>
+    </Flex>
+  );
+}
+```
+
+## Framework Setup
+
+### Next.js (App Router)
+
+Add the provider to your root layout:
+
+```tsx
+// app/layout.tsx
+import { ThemeProvider } from "@raystack/apsara";
+import "@raystack/apsara/style.css";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider defaultTheme="system">
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+The `suppressHydrationWarning` attribute is required because `ThemeProvider` injects a script to prevent theme flash during hydration.
+
+### Vite
+
+Add the provider to your main entry file:
+
+```tsx
+// main.tsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ThemeProvider } from "@raystack/apsara";
+import "@raystack/apsara/style.css";
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <ThemeProvider defaultTheme="system">
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>
+);
+```
+
+## Optional: Normalize CSS
+
+Apsara includes an optional normalize stylesheet that ensures consistent rendering across browsers while preserving useful defaults:
 
 ```ts
 import "@raystack/apsara/normalize.css";
+import "@raystack/apsara/style.css";
 ```
 
-### 3. Start building
+Import it before the main stylesheet if you choose to use it.
 
-You are now ready to use Apsara components.
+## Importing Icons
 
-```jsx
-import { Button } from "@raystack/apsara";
+Apsara exports a set of icons that can be imported separately:
 
-<Button variant="solid" color="accent">
-  Click here!
-</Button>;
+```tsx
+import { MagnifyingGlassIcon, Cross2Icon } from "@raystack/apsara/icons";
+
+<Button leadingIcon={<MagnifyingGlassIcon />}>Search</Button>
 ```
+
+## Importing Hooks
+
+Utility hooks are available from a dedicated export:
+
+```tsx
+import { useTheme } from "@raystack/apsara/hooks";
+
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+
+  return (
+    <Button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+      Toggle Theme
+    </Button>
+  );
+}
+```
+
+## Next Steps
+
+- [Theme Overview](/theme/overview) — Configure colors, spacing, and style variants
+- [Button](/components/button) — Start with a common component
+- [DataTable](/components/datatable) — Build data-rich interfaces
