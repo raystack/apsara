@@ -1,9 +1,10 @@
+import { Dialog as DialogPrimitive } from '@base-ui/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '~/components/button';
-import { Sheet, SheetProps } from '../sheet';
+import { Sheet } from '../sheet';
 import styles from '../sheet.module.css';
 
 const TRIGGER_TEXT = 'Open Sheet';
@@ -12,17 +13,19 @@ const SHEET_CONTENT = 'This is test sheet content';
 const SHEET_DESCRIPTION = 'This is test sheet description';
 
 const BasicSheet = ({
-  canClose = false,
+  showCloseButton = true,
   ...props
-}: SheetProps & { canClose?: boolean }) => (
+}: DialogPrimitive.Root.Props & { showCloseButton?: boolean }) => (
   <Sheet {...props}>
-    <Sheet.Trigger asChild>
+    <Sheet.Trigger>
       <Button>{TRIGGER_TEXT}</Button>
     </Sheet.Trigger>
-    <Sheet.Content close={canClose}>
-      <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
-      <Sheet.Description>{SHEET_DESCRIPTION}</Sheet.Description>
-      {SHEET_CONTENT}
+    <Sheet.Content showCloseButton={showCloseButton}>
+      <Sheet.Header>
+        <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+        <Sheet.Description>{SHEET_DESCRIPTION}</Sheet.Description>
+      </Sheet.Header>
+      <Sheet.Body>{SHEET_CONTENT}</Sheet.Body>
     </Sheet.Content>
   </Sheet>
 );
@@ -50,9 +53,7 @@ describe('Sheet', () => {
       await renderAndOpenSheet(<BasicSheet />);
 
       await waitFor(() => {
-        expect(
-          screen.getByRole('dialog', { hidden: true })
-        ).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
         expect(screen.getByText(SHEET_TITLE)).toBeInTheDocument();
         expect(screen.getByText(SHEET_DESCRIPTION)).toBeInTheDocument();
       });
@@ -62,7 +63,7 @@ describe('Sheet', () => {
       await renderAndOpenSheet(<BasicSheet />);
 
       await waitFor(() => {
-        const sheet = screen.getByRole('dialog', { hidden: true });
+        const sheet = screen.getByRole('dialog');
         expect(sheet.closest('body')).toBe(document.body);
       });
     });
@@ -86,7 +87,7 @@ describe('Sheet', () => {
       await renderAndOpenSheet(<BasicSheet />);
 
       await waitFor(() => {
-        const content = screen.getByRole('dialog', { hidden: true });
+        const content = screen.getByRole('dialog');
         expect(content).toHaveClass(styles['sheetContent-right']);
       });
     });
@@ -95,12 +96,14 @@ describe('Sheet', () => {
       const user = userEvent.setup();
       render(
         <Sheet>
-          <Sheet.Trigger asChild>
+          <Sheet.Trigger>
             <Button>{TRIGGER_TEXT}</Button>
           </Sheet.Trigger>
           <Sheet.Content side='left'>
-            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
-            {SHEET_CONTENT}
+            <Sheet.Header>
+              <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            </Sheet.Header>
+            <Sheet.Body>{SHEET_CONTENT}</Sheet.Body>
           </Sheet.Content>
         </Sheet>
       );
@@ -108,7 +111,7 @@ describe('Sheet', () => {
       await user.click(screen.getByText(TRIGGER_TEXT));
 
       await waitFor(() => {
-        const content = screen.getByRole('dialog', { hidden: true });
+        const content = screen.getByRole('dialog');
         expect(content).toHaveClass(styles['sheetContent-left']);
       });
     });
@@ -117,12 +120,14 @@ describe('Sheet', () => {
       const user = userEvent.setup();
       render(
         <Sheet>
-          <Sheet.Trigger asChild>
+          <Sheet.Trigger>
             <Button>{TRIGGER_TEXT}</Button>
           </Sheet.Trigger>
           <Sheet.Content side='top'>
-            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
-            {SHEET_CONTENT}
+            <Sheet.Header>
+              <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            </Sheet.Header>
+            <Sheet.Body>{SHEET_CONTENT}</Sheet.Body>
           </Sheet.Content>
         </Sheet>
       );
@@ -130,7 +135,7 @@ describe('Sheet', () => {
       await user.click(screen.getByText(TRIGGER_TEXT));
 
       await waitFor(() => {
-        const content = screen.getByRole('dialog', { hidden: true });
+        const content = screen.getByRole('dialog');
         expect(content).toHaveClass(styles['sheetContent-top']);
       });
     });
@@ -139,12 +144,14 @@ describe('Sheet', () => {
       const user = userEvent.setup();
       render(
         <Sheet>
-          <Sheet.Trigger asChild>
+          <Sheet.Trigger>
             <Button>{TRIGGER_TEXT}</Button>
           </Sheet.Trigger>
           <Sheet.Content side='bottom'>
-            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
-            {SHEET_CONTENT}
+            <Sheet.Header>
+              <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            </Sheet.Header>
+            <Sheet.Body>{SHEET_CONTENT}</Sheet.Body>
           </Sheet.Content>
         </Sheet>
       );
@@ -152,7 +159,7 @@ describe('Sheet', () => {
       await user.click(screen.getByText(TRIGGER_TEXT));
 
       await waitFor(() => {
-        const content = screen.getByRole('dialog', { hidden: true });
+        const content = screen.getByRole('dialog');
         expect(content).toHaveClass(styles['sheetContent-bottom']);
       });
     });
@@ -161,12 +168,14 @@ describe('Sheet', () => {
       const user = userEvent.setup();
       render(
         <Sheet>
-          <Sheet.Trigger asChild>
+          <Sheet.Trigger>
             <Button>{TRIGGER_TEXT}</Button>
           </Sheet.Trigger>
           <Sheet.Content className='custom-sheet'>
-            <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
-            {SHEET_CONTENT}
+            <Sheet.Header>
+              <Sheet.Title>{SHEET_TITLE}</Sheet.Title>
+            </Sheet.Header>
+            <Sheet.Body>{SHEET_CONTENT}</Sheet.Body>
           </Sheet.Content>
         </Sheet>
       );
@@ -174,7 +183,7 @@ describe('Sheet', () => {
       await user.click(screen.getByText(TRIGGER_TEXT));
 
       await waitFor(() => {
-        const content = screen.getByRole('dialog', { hidden: true });
+        const content = screen.getByRole('dialog');
         expect(content).toHaveClass('custom-sheet');
         expect(content).toHaveClass(styles.sheetContent);
       });
@@ -182,26 +191,26 @@ describe('Sheet', () => {
   });
 
   describe('Close Behavior', () => {
-    it('renders close button when close prop is true', async () => {
-      await renderAndOpenSheet(<BasicSheet canClose />);
+    it('renders close button when showCloseButton prop is true', async () => {
+      await renderAndOpenSheet(<BasicSheet showCloseButton />);
 
-      expect(screen.getByLabelText('Close')).toBeInTheDocument();
+      expect(screen.getByLabelText('Close Sheet')).toBeInTheDocument();
     });
 
-    it('does not render close button when close prop is false', async () => {
-      await renderAndOpenSheet(<BasicSheet canClose={false} />);
+    it('does not render close button when showCloseButton prop is false', async () => {
+      await renderAndOpenSheet(<BasicSheet showCloseButton={false} />);
 
       await waitFor(() => {
-        expect(screen.queryByLabelText('Close')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Close Sheet')).not.toBeInTheDocument();
       });
     });
 
     it('closes sheet when close button is clicked', async () => {
       const user = userEvent.setup();
 
-      await renderAndOpenSheet(<BasicSheet canClose />);
+      await renderAndOpenSheet(<BasicSheet showCloseButton />);
 
-      await user.click(screen.getByLabelText('Close'));
+      await user.click(screen.getByLabelText('Close Sheet'));
 
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       expect(screen.queryByText(SHEET_TITLE)).not.toBeInTheDocument();
@@ -244,11 +253,13 @@ describe('Sheet', () => {
 
       rerender(
         <Sheet open={true}>
-          <Sheet.Content>{SHEET_CONTENT}</Sheet.Content>
+          <Sheet.Content>
+            <Sheet.Body>{SHEET_CONTENT}</Sheet.Body>
+          </Sheet.Content>
         </Sheet>
       );
 
-      expect(screen.getByRole('dialog', { hidden: true })).toBeInTheDocument();
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
 
     it('calls onOpenChange when state changes', async () => {
@@ -259,7 +270,10 @@ describe('Sheet', () => {
       const trigger = screen.getByText(TRIGGER_TEXT);
       await user.click(trigger);
 
-      expect(onOpenChange).toHaveBeenCalledWith(true);
+      expect(onOpenChange).toHaveBeenCalled();
+      // Base UI passes the open state as the first argument
+      const callArgs = onOpenChange.mock.calls[0];
+      expect(callArgs[0]).toBe(true);
     });
   });
 
@@ -274,60 +288,13 @@ describe('Sheet', () => {
     //   });
     // });
 
-    // it('has default ARIA label', async () => {
-    //   await renderAndOpenSheet(<BasicSheet />);
-
-    //   await waitFor(() => {
-    //     const dialog = screen.getByRole('dialog', { hidden: true });
-    //     expect(dialog).toHaveAttribute('aria-label', 'Sheet with overlay');
-    //   });
-    // });
-
-    it('uses custom ARIA label when provided', async () => {
-      const user = userEvent.setup();
-      render(
-        <Sheet>
-          <Sheet.Trigger asChild>
-            <Button>{TRIGGER_TEXT}</Button>
-          </Sheet.Trigger>
-          <Sheet.Content ariaLabel='Custom sheet label'>
-            {SHEET_CONTENT}
-          </Sheet.Content>
-        </Sheet>
-      );
-
-      await user.click(screen.getByText(TRIGGER_TEXT));
+    it('has proper ARIA attributes', async () => {
+      await renderAndOpenSheet(<BasicSheet />);
 
       await waitFor(() => {
-        const dialog = screen.getByRole('dialog', { hidden: true });
-        expect(dialog).toHaveAttribute('aria-label', 'Custom sheet label');
-      });
-    });
-
-    it('handles ARIA description when provided', async () => {
-      const user = userEvent.setup();
-      render(
-        <Sheet>
-          <Sheet.Trigger asChild>
-            <Button>{TRIGGER_TEXT}</Button>
-          </Sheet.Trigger>
-          <Sheet.Content ariaDescription='This sheet contains important information'>
-            {SHEET_CONTENT}
-          </Sheet.Content>
-        </Sheet>
-      );
-
-      await user.click(screen.getByText(TRIGGER_TEXT));
-
-      await waitFor(() => {
-        const dialog = screen.getByRole('dialog', { hidden: true });
-        expect(dialog).toHaveAttribute(
-          'aria-describedby',
-          'sheet with overlay'
-        );
-        expect(
-          screen.getByText('This sheet contains important information')
-        ).toBeInTheDocument();
+        const dialog = screen.getByRole('dialog');
+        expect(dialog).toBeInTheDocument();
+        expect(dialog).toHaveAttribute('aria-label', 'Sheet');
       });
     });
   });

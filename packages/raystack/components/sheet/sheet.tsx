@@ -1,15 +1,15 @@
 'use client';
 
+import { Dialog as DialogPrimitive } from '@base-ui/react';
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { cva, VariantProps } from 'class-variance-authority';
-import { Dialog as DialogPrimitive } from 'radix-ui';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import {
-  ComponentProps,
-  ComponentPropsWithoutRef,
-  ElementRef,
-  forwardRef
+  type ComponentProps,
+  type ElementRef,
+  forwardRef,
+  HTMLAttributes,
+  type ReactNode
 } from 'react';
-import { DialogDescription, DialogTitle } from '../dialog/dialog';
 import styles from './sheet.module.css';
 
 const sheetContent = cva(styles.sheetContent, {
@@ -26,104 +26,114 @@ const sheetContent = cva(styles.sheetContent, {
   }
 });
 
-export interface DialogContentProps
-  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+export interface SheetContentProps
+  extends DialogPrimitive.Popup.Props,
     VariantProps<typeof sheetContent> {
-  ariaLabel?: string;
-  ariaDescription?: string;
+  showCloseButton?: boolean;
+  overlayProps?: DialogPrimitive.Backdrop.Props;
 }
 
 export const SheetContent = forwardRef<
-  ElementRef<typeof DialogPrimitive.Content>,
-  DialogContentProps & { close?: boolean; children?: React.ReactNode }
+  ElementRef<typeof DialogPrimitive.Popup>,
+  SheetContentProps
 >(
   (
-    { className, children, close, side, ariaLabel, ariaDescription, ...props },
-    forwardedRef
+    {
+      className,
+      children,
+      side = 'right',
+      showCloseButton = true,
+      overlayProps,
+      ...props
+    },
+    ref
   ) => {
     return (
       <DialogPrimitive.Portal>
-        <Overlay>
-          <DialogPrimitive.Content
-            {...props}
-            ref={forwardedRef}
+        <DialogPrimitive.Backdrop
+          {...overlayProps}
+          className={cx(styles.overlay, overlayProps?.className)}
+        />
+        <DialogPrimitive.Viewport>
+          <DialogPrimitive.Popup
+            ref={ref}
             className={sheetContent({ side, className })}
-            aria-label={ariaLabel || 'Sheet with overlay'}
-            aria-describedby={
-              ariaDescription ? 'sheet with overlay' : undefined
-            }
-            role='dialog'
-            tabIndex={-1}
+            aria-label='Sheet'
+            {...props}
           >
             {children}
-            {close && (
-              <CloseButton aria-label='Close sheet'>
+            {showCloseButton && (
+              <DialogPrimitive.Close
+                className={styles.close}
+                aria-label='Close Sheet'
+              >
                 <Cross1Icon aria-hidden='true' />
-              </CloseButton>
+              </DialogPrimitive.Close>
             )}
-            {ariaDescription && (
-              <div id='sheet-description' className='sr-only'>
-                {ariaDescription}
-              </div>
-            )}
-          </DialogPrimitive.Content>
-        </Overlay>
+          </DialogPrimitive.Popup>
+        </DialogPrimitive.Viewport>
       </DialogPrimitive.Portal>
     );
   }
 );
+SheetContent.displayName = 'Sheet.Content';
 
-const overlay = cva(styles.overlay);
-export interface OverlayProps
-  extends ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>,
-    VariantProps<typeof overlay> {}
+const SheetHeader = ({
+  children,
+  className
+}: {
+  children: ReactNode;
+  className?: string;
+}) => <div className={cx(styles.header, className)}>{children}</div>;
+SheetHeader.displayName = 'Sheet.Header';
 
-const Overlay = forwardRef<
-  ElementRef<typeof DialogPrimitive.Overlay>,
-  OverlayProps
+const SheetTitle = forwardRef<
+  ElementRef<typeof DialogPrimitive.Title>,
+  DialogPrimitive.Title.Props
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
+  <DialogPrimitive.Title
     ref={ref}
-    className={overlay({ className })}
-    aria-hidden='true'
-    role='presentation'
+    className={cx(styles.title, className)}
     {...props}
   />
 ));
+SheetTitle.displayName = 'Sheet.Title';
 
-Overlay.displayName = DialogPrimitive.Overlay.displayName;
+const SheetDescription = forwardRef<
+  ElementRef<typeof DialogPrimitive.Description>,
+  DialogPrimitive.Description.Props
+>(({ className, ...props }, ref) => (
+  <DialogPrimitive.Description
+    ref={ref}
+    className={cx(styles.description, className)}
+    {...props}
+  />
+));
+SheetDescription.displayName = 'Sheet.Description';
 
-const close = cva(styles.close);
-type CloseButtonProps = ComponentProps<typeof DialogPrimitive.Close>;
+const SheetBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cx(styles.body, className)} {...props} />
+  )
+);
+SheetBody.displayName = 'Sheet.Body';
 
-export function CloseButton({
-  children,
-  className,
-  ...props
-}: CloseButtonProps) {
-  return (
-    <DialogPrimitive.Close
-      className={close({ className })}
-      {...props}
-      aria-label='Close'
-    >
-      {children}
-    </DialogPrimitive.Close>
-  );
-}
+const SheetFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cx(styles.footer, className)} {...props} />
+  )
+);
+SheetFooter.displayName = 'Sheet.Footer';
 
-export type SheetProps = ComponentProps<typeof DialogPrimitive.Root> & {
-  ariaLabel?: string;
-};
+export type SheetProps = ComponentProps<typeof DialogPrimitive.Root>;
 
-export function RootSheet({ children, ariaLabel, ...props }: SheetProps) {
-  return <DialogPrimitive.Root {...props}>{children}</DialogPrimitive.Root>;
-}
-
-export const Sheet = Object.assign(RootSheet, {
+export const Sheet = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogPrimitive.Trigger,
   Content: SheetContent,
-  Close: DialogPrimitive.Close,
-  Title: DialogTitle,
-  Description: DialogDescription
+  Header: SheetHeader,
+  Title: SheetTitle,
+  Description: SheetDescription,
+  Body: SheetBody,
+  Footer: SheetFooter,
+  Close: DialogPrimitive.Close
 });
