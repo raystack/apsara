@@ -40,10 +40,10 @@ import { Accordion } from '@raystack/apsara'
 
 ### Single vs Multiple
 
-The Accordion component supports two types of behavior:
+The Accordion component supports two modes:
 
-- **Single**: Only one item can be open at a time
-- **Multiple**: Multiple items can be open simultaneously
+- **Single** (default): Only one item can be open at a time. Set `multiple={false}` or omit the prop.
+- **Multiple**: Multiple items can be open simultaneously. Set `multiple={true}`.
 
 <Demo data={typeDemo} />
 
@@ -64,20 +64,3 @@ Individual accordion items can be disabled using the `disabled` prop.
 The accordion content can contain any React elements, allowing for rich layouts and complex content.
 
 <Demo data={customContentDemo} />
-
-## Accessibility
-
-The Accordion component is built on top of [Radix UI's Accordion primitive](https://www.radix-ui.com/primitives/docs/components/accordion) and follows the WAI-ARIA design pattern for accordions. It includes:
-
-- Proper ARIA attributes for screen readers
-- Keyboard navigation support
-- Focus management
-- Semantic HTML structure
-
-## Keyboard Navigation
-
-- **Space** or **Enter**: Toggle the focused accordion item
-- **Arrow Down**: Move focus to the next accordion item
-- **Arrow Up**: Move focus to the previous accordion item
-- **Home**: Move focus to the first accordion item
-- **End**: Move focus to the last accordion item
