@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, createContext, useContext } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 
 const PreContext = createContext<{
   hasPreParent: boolean;
@@ -11,7 +11,10 @@ const PreContext = createContext<{
 export const PreContextProvider = ({
   children,
   hasPreParent
-}: { children: ReactNode; hasPreParent: boolean }) => {
+}: {
+  children: ReactNode;
+  hasPreParent: boolean;
+}) => {
   return (
     <PreContext.Provider value={{ hasPreParent }}>
       {children}

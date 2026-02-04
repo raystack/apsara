@@ -1,91 +1,67 @@
-import { type VariantProps, cva } from 'class-variance-authority';
-import { Tabs as TabsPrimitive } from 'radix-ui';
-import {
-  ComponentPropsWithoutRef,
-  ElementRef,
-  ReactNode,
-  forwardRef
-} from 'react';
-
+import { Tabs as TabsPrimitive } from '@base-ui/react';
+import { cx } from 'class-variance-authority';
+import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react';
 import styles from './tabs.module.css';
 
-const root = cva(styles.root);
-const list = cva(styles.list);
-const trigger = cva(styles.trigger);
-const content = cva(styles.content);
+const TabsRoot = forwardRef<HTMLDivElement, TabsPrimitive.Root.Props>(
+  ({ className, ...props }, ref) => (
+    <TabsPrimitive.Root
+      ref={ref}
+      className={cx(styles.root, className)}
+      {...props}
+    />
+  )
+);
+TabsRoot.displayName = 'Tabs.Root';
 
-export interface TabsRootProps
-  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Root>,
-    VariantProps<typeof root> {
-  defaultValue?: string;
-  'aria-label'?: string;
+const TabsList = forwardRef<HTMLDivElement, TabsPrimitive.List.Props>(
+  ({ className, children, ...props }, ref) => (
+    <TabsPrimitive.List
+      ref={ref}
+      className={cx(styles.list, className)}
+      {...props}
+    >
+      {children}
+      <TabsPrimitive.Indicator className={styles.indicator} />
+    </TabsPrimitive.List>
+  )
+);
+TabsList.displayName = 'Tabs.List';
+
+interface TabsTabProps
+  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Tab> {
+  leadingIcon?: ReactNode;
 }
 
-interface TabsTriggerProps
-  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
-  icon?: ReactNode;
-  disabled?: boolean;
-}
+const TabsTab = forwardRef<HTMLButtonElement, TabsTabProps>(
+  ({ className, leadingIcon, children, ...props }, ref) => (
+    <TabsPrimitive.Tab
+      ref={ref}
+      className={cx(styles.trigger, className)}
+      {...props}
+    >
+      {leadingIcon && (
+        <span className={styles['trigger-icon']}>{leadingIcon}</span>
+      )}
+      {children}
+    </TabsPrimitive.Tab>
+  )
+);
+TabsTab.displayName = 'Tabs.Tab';
 
-const TabsRoot = forwardRef<
-  ElementRef<typeof TabsPrimitive.Root>,
-  TabsRootProps
->(({ className, 'aria-label': ariaLabel, ...props }, ref) => (
-  <TabsPrimitive.Root
-    ref={ref}
-    className={root({ className })}
-    aria-label={ariaLabel || 'Tabs'}
-    {...props}
-  />
-));
-
-const TabsList = forwardRef<
-  ElementRef<typeof TabsPrimitive.List>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    role='tablist'
-    className={list({ className })}
-    {...props}
-  />
-));
-
-const TabsTrigger = forwardRef<
-  ElementRef<typeof TabsPrimitive.Trigger>,
-  TabsTriggerProps
->(({ className, icon, children, disabled, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={trigger({ className })}
-    disabled={disabled}
-    aria-disabled={disabled}
-    {...props}
-  >
-    {icon && <span className={styles['trigger-icon']}>{icon}</span>}
-    {children}
-  </TabsPrimitive.Trigger>
-));
-
-const TabsContent = forwardRef<
-  ElementRef<typeof TabsPrimitive.Content>,
-  ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    role='tabpanel'
-    className={content({ className })}
-    {...props}
-  />
-));
-
-TabsRoot.displayName = TabsPrimitive.Root.displayName;
-TabsList.displayName = TabsPrimitive.List.displayName;
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
-TabsContent.displayName = TabsPrimitive.Content.displayName;
+const TabsContent = forwardRef<HTMLDivElement, TabsPrimitive.Panel.Props>(
+  ({ className, ...props }, ref) => (
+    <TabsPrimitive.Panel
+      ref={ref}
+      className={cx(styles.content, className)}
+      {...props}
+    />
+  )
+);
+TabsContent.displayName = 'Tabs.Content';
 
 export const Tabs = Object.assign(TabsRoot, {
   List: TabsList,
-  Trigger: TabsTrigger,
+  Tab: TabsTab,
   Content: TabsContent
 });

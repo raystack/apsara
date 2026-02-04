@@ -40,9 +40,9 @@ function Table(props: TableHTMLAttributes<HTMLTableElement>) {
 }
 
 const mdxComponents = {
-  CodeBlockTabsTrigger: (
-    props: ComponentPropsWithoutRef<typeof Tabs.Trigger>
-  ) => <Tabs.Trigger {...props} />,
+  CodeBlockTabsTrigger: (props: ComponentPropsWithoutRef<typeof Tabs.Tab>) => (
+    <Tabs.Tab {...props} />
+  ),
   CodeBlockTabs: (props: HTMLAttributes<HTMLDivElement>) => (
     <Tabs defaultValue='npm' className={props.className}>
       {props.children}
