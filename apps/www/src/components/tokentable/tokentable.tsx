@@ -1,9 +1,7 @@
 'use client';
 
-import { Flex, Text, Tooltip } from '@raystack/apsara';
+import { CopyButton, Flex, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
-import { CheckIcon, CopyIcon } from 'lucide-react';
-import { type ReactNode, useCallback, useState } from 'react';
 import styles from './tokentable.module.css';
 
 export type TokenType =
@@ -31,36 +29,6 @@ export interface TokenTableProps {
   type?: TokenType;
   /** Additional CSS class name */
   className?: string;
-}
-
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  }, [text]);
-
-  return (
-    <Tooltip message={copied ? 'Copied!' : 'Copy to clipboard'} side='right'>
-      <button
-        onClick={handleCopy}
-        className={styles.copyButton}
-        aria-label={copied ? 'Copied' : 'Copy token name'}
-      >
-        {copied ? (
-          <CheckIcon size={14} className={styles.copyIconSuccess} />
-        ) : (
-          <CopyIcon size={14} />
-        )}
-      </button>
-    </Tooltip>
-  );
 }
 
 function TokenPreview({ token, type }: { token: TokenItem; type: TokenType }) {
@@ -153,7 +121,11 @@ export function TokenTable({
             >
               <Flex align='center' gap={2}>
                 <code className={styles.tokenName}>{token.name}</code>
-                <CopyButton text={`var(${token.name})`} />
+                <CopyButton
+                  text={`var(${token.name})`}
+                  variant='ghost'
+                  className={styles.copyButton}
+                />
               </Flex>
             </div>
             {showValue && (

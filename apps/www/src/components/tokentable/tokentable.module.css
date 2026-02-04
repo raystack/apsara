@@ -135,32 +135,14 @@
 }
 
 .copyButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  background: transparent;
-  color: var(--rs-color-foreground-base-tertiary);
-  cursor: pointer;
-  border-radius: var(--rs-radius-2);
-  transition: all 0.15s ease;
   opacity: 0;
+  transition: opacity 0.15s ease;
 }
 
-.row:hover .copyButton {
+.row:hover .copyButton,
+.row:focus-within .copyButton,
+.copyButton:focus-visible {
   opacity: 1;
-}
-
-.copyButton:hover {
-  background: var(--rs-color-background-neutral-secondary);
-  color: var(--rs-color-foreground-base-primary);
-}
-
-.copyIconSuccess {
-  color: var(--rs-color-foreground-success-primary);
 }
 
 /* Preview styles */

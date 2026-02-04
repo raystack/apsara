@@ -38,7 +38,6 @@ Wrap your application with `ThemeProvider` to enable theming support:
 
 ```tsx
 import { ThemeProvider } from "@raystack/apsara";
-import "@raystack/apsara/style.css";
 
 function App() {
   return (
@@ -134,6 +133,7 @@ Import it before the main stylesheet if you choose to use it.
 Apsara exports a set of icons that can be imported separately:
 
 ```tsx
+import { Button } from "@raystack/apsara";
 import { MagnifyingGlassIcon, Cross2Icon } from "@raystack/apsara/icons";
 
 <Button leadingIcon={<MagnifyingGlassIcon />}>Search</Button>
@@ -144,6 +144,7 @@ import { MagnifyingGlassIcon, Cross2Icon } from "@raystack/apsara/icons";
 Utility hooks are available from a dedicated export:
 
 ```tsx
+import { Button } from "@raystack/apsara";
 import { useTheme } from "@raystack/apsara/hooks";
 
 function ThemeToggle() {
