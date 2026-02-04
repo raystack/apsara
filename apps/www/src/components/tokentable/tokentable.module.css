@@ -43,7 +43,7 @@
 }
 
 .valueLabel {
-  width: 120px;
+  min-width: 80px;
   flex-shrink: 0;
 }
 
@@ -104,7 +104,7 @@
 }
 
 .valueCell {
-  width: 120px;
+  min-width: 80px;
   flex-shrink: 0;
 }
 
