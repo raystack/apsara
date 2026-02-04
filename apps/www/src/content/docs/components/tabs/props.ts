@@ -1,12 +1,15 @@
 export interface TabsRootProps {
-  /** The initial active tab value. If not provided, no tab will be selected by default. */
-  defaultValue?: string;
+  /** The initial active tab value. */
+  defaultValue?: any;
 
   /** The controlled active tab value. */
-  value?: string;
+  value?: any;
 
   /** Callback function triggered when the active tab changes. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: any) => void;
+
+  /** The orientation of the tabs. */
+  orientation?: 'horizontal' | 'vertical';
 
   /** Additional CSS class names. */
   className?: string;
@@ -17,12 +20,12 @@ export interface TabsListProps {
   className?: string;
 }
 
-export interface TabsTriggerProps {
+export interface TabsTabProps {
   /** Unique identifier for the tab. */
-  value: string;
+  value: any;
 
-  /** Optional icon element to display. */
-  icon?: React.ReactNode;
+  /** Optional icon element to display before the label. */
+  leadingIcon?: React.ReactNode;
 
   /** Whether the tab is disabled. */
   disabled?: boolean;
@@ -33,7 +36,10 @@ export interface TabsTriggerProps {
 
 export interface TabsContentProps {
   /** Matching identifier for the tab. */
-  value: string;
+  value: any;
+
+  /** Whether to keep the panel in the DOM while hidden. */
+  keepMounted?: boolean;
 
   /** Additional CSS class names. */
   className?: string;

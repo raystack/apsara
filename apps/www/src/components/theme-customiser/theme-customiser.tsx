@@ -1,6 +1,6 @@
 'use client';
-import { getPropsString } from '@/lib/utils';
 import { Button, Radio, Tabs } from '@raystack/apsara';
+import { getPropsString } from '@/lib/utils';
 import { ThemeOptions, useTheme } from '../theme';
 import styles from './theme-customiser.module.css';
 
@@ -44,8 +44,8 @@ export default function ThemeCustomizer() {
           }
         >
           <Tabs.List>
-            <Tabs.Trigger value='modern'>Modern</Tabs.Trigger>
-            <Tabs.Trigger value='traditional'>Traditional</Tabs.Trigger>
+            <Tabs.Tab value='modern'>Modern</Tabs.Tab>
+            <Tabs.Tab value='traditional'>Traditional</Tabs.Tab>
           </Tabs.List>
         </Tabs>
       </div>
@@ -58,8 +58,8 @@ export default function ThemeCustomizer() {
           }
         >
           <Tabs.List>
-            <Tabs.Trigger value='light'>Light</Tabs.Trigger>
-            <Tabs.Trigger value='dark'>Dark</Tabs.Trigger>
+            <Tabs.Tab value='light'>Light</Tabs.Tab>
+            <Tabs.Tab value='dark'>Dark</Tabs.Tab>
           </Tabs.List>
         </Tabs>
       </div>

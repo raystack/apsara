@@ -11,11 +11,11 @@ export function TabsExamples() {
         <Flex gap='large' direction='column'>
           <Tabs defaultValue='tab1'>
             <Tabs.List>
-              <Tabs.Trigger value='tab1'>Account</Tabs.Trigger>
-              <Tabs.Trigger value='tab2' disabled>
+              <Tabs.Tab value='tab1'>Account</Tabs.Tab>
+              <Tabs.Tab value='tab2' disabled>
                 Password
-              </Tabs.Trigger>
-              <Tabs.Trigger value='tab3'>Settings</Tabs.Trigger>
+              </Tabs.Tab>
+              <Tabs.Tab value='tab3'>Settings</Tabs.Tab>
             </Tabs.List>
             <Tabs.Content value='tab1'>Account settings</Tabs.Content>
             <Tabs.Content value='tab2'>Password settings</Tabs.Content>
@@ -25,8 +25,8 @@ export function TabsExamples() {
         <Flex gap='large' direction='column'>
           <Tabs defaultValue='tab1'>
             <Tabs.List>
-              <Tabs.Trigger value='tab1'>Home</Tabs.Trigger>
-              <Tabs.Trigger value='tab2' icon={<Info />} />
+              <Tabs.Tab value='tab1'>Home</Tabs.Tab>
+              <Tabs.Tab value='tab2' leadingIcon={<Info />} />
             </Tabs.List>
             <Tabs.Content value='tab1'>Home</Tabs.Content>
             <Tabs.Content value='tab2'>Info</Tabs.Content>
