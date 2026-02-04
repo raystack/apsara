@@ -265,7 +265,8 @@ export function VirtualizedContent({
 
   const showLoaderRows = isLoading && rows.length > 0;
   const loaderRowsHeight = showLoaderRows ? loadingRowCount * rowHeight : 0;
-  const totalHeight = virtualizer.getTotalSize() + loaderRowsHeight;
+  const virtualTotalSize = virtualizer.getTotalSize();
+  const totalHeight = virtualTotalSize + loaderRowsHeight;
   const visibleColumns = table.getVisibleLeafColumns();
 
   return (
@@ -299,7 +300,7 @@ export function VirtualizedContent({
                 col => col.columnDef as DataTableColumnDef<unknown, unknown>
               )}
               rowHeight={rowHeight}
-              startTop={virtualizer.getTotalSize()}
+              startTop={virtualTotalSize}
             />
           )}
         </div>
