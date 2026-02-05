@@ -26,7 +26,7 @@ export function DialogExamples() {
         </Dialog>
         <Dialog>
           <Dialog.Trigger render={<Button variant='outline' />}>
-            <Button variant='outline'>Open Dialog</Button>
+            Open Dialog
           </Dialog.Trigger>
           <Dialog.Content width={600} showCloseButton={false}>
             <Dialog.Title>No Close Button</Dialog.Title>
