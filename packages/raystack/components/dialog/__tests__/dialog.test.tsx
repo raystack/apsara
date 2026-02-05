@@ -24,7 +24,6 @@ const BasicDialog = ({
     <Dialog.Content>
       <Dialog.Header>
         <Dialog.Title>{DIALOG_TITLE}</Dialog.Title>
-        <Dialog.CloseButton />
       </Dialog.Header>
       <Dialog.Body>
         <Dialog.Description>{DIALOG_DESCRIPTION}</Dialog.Description>

@@ -9,7 +9,7 @@ import {
   ElementRef,
   forwardRef
 } from 'react';
-import { DialogDescription, DialogTitle } from '../dialog/dialog';
+import { DialogDescription, DialogTitle } from '../dialog/dialog-misc';
 import styles from './sheet.module.css';
 
 const sheetContent = cva(styles.sheetContent, {
