@@ -151,11 +151,11 @@ describe('Tooltip', () => {
       expect(arrow).not.toBeInTheDocument();
     });
 
-    it('shows arrow by default', () => {
+    it('shows arrow when showArrow is true', () => {
       render(
         <Tooltip open={true}>
           <Tooltip.Trigger render={<button>Trigger</button>} />
-          <Tooltip.Content>Tooltip</Tooltip.Content>
+          <Tooltip.Content showArrow={true}>Tooltip</Tooltip.Content>
         </Tooltip>
       );
 
