@@ -11,8 +11,8 @@ export interface DialogContentProps extends DialogPrimitive.Popup.Props {
   overlay?: DialogPrimitive.Backdrop.Props & { blur?: boolean };
   width?: string | number;
   /**
-   * Disables nested dialog animation (scaling and translation)
-   * @default true
+   * Toggles nested dialog animation (scaling and translation)
+   * `@default` true
    */
   showNestedAnimation?: boolean;
 }
