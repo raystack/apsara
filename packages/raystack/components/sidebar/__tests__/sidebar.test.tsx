@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Sidebar } from '../sidebar';
-import { SidebarRootProps } from '../sidebar-root';
 import styles from '../sidebar.module.css';
+import { SidebarRootProps } from '../sidebar-root';
 
 const HEADER_TEXT = 'Apsara';
 const MAIN_GROUP_LABEL = 'Main';
@@ -101,7 +101,8 @@ describe('Sidebar', () => {
       render(<BasicSidebar open={false} />);
 
       const nav = screen.getByRole('navigation');
-      expect(nav).toHaveAttribute('data-state', 'collapsed');
+      expect(nav).toHaveAttribute('data-closed');
+      expect(nav).not.toHaveAttribute('data-open');
     });
 
     it('does not show handle when not collapsible', () => {
