@@ -1,0 +1,97 @@
+---
+title: Spacing
+description: Overview of the space scale and spacing tokens in Apsara.
+---
+
+Consistent spacing creates visual rhythm and hierarchy in your interface. Apsara provides a comprehensive spacing scale through CSS custom properties that maintain proportional relationships across your application. These tokens ensure consistent spacing whether you're building custom layouts, extending components, or creating new UI patterns.
+
+## Scale
+
+Spacing values are derived from a 17-step scale, which provides fine-grained control over layout spacing. The scale starts at 2px and progressively increases to 120px, allowing for both tight and spacious layouts.
+
+<TokenTable
+  type="spacing"
+  tokens={[
+    { name: "--rs-space-1", value: "2px", description: "Minimal spacing, icon gaps" },
+    { name: "--rs-space-2", value: "4px", description: "Tight spacing, small gaps" },
+    { name: "--rs-space-3", value: "8px", description: "Compact padding, inline spacing" },
+    { name: "--rs-space-4", value: "12px", description: "Standard small padding" },
+    { name: "--rs-space-5", value: "16px", description: "Default padding, common gaps" },
+    { name: "--rs-space-6", value: "20px", description: "Medium padding" },
+    { name: "--rs-space-7", value: "24px", description: "Comfortable spacing" },
+    { name: "--rs-space-8", value: "28px", description: "Generous padding" },
+    { name: "--rs-space-9", value: "32px", description: "Large spacing" },
+    { name: "--rs-space-10", value: "40px", description: "Section gaps" },
+    { name: "--rs-space-11", value: "48px", description: "Large section spacing" },
+    { name: "--rs-space-12", value: "56px", description: "Extra large spacing" },
+    { name: "--rs-space-13", value: "64px", description: "Major divisions" },
+    { name: "--rs-space-14", value: "72px", description: "Layout spacing" },
+    { name: "--rs-space-15", value: "80px", description: "Page sections" },
+    { name: "--rs-space-16", value: "96px", description: "Large page sections" },
+    { name: "--rs-space-17", value: "120px", description: "Maximum spacing" },
+  ]}
+/>
+
+## Semantic Groupings
+
+The spacing scale can be organized into semantic groups for easier selection:
+
+<TokenTable
+  tokens={[
+    { name: "Compact", value: "2px - 8px", description: "Tight UI elements, icon spacing (tokens 1-3)" },
+    { name: "Comfortable", value: "12px - 24px", description: "Standard component padding (tokens 4-7)" },
+    { name: "Spacious", value: "28px - 48px", description: "Section spacing, larger gaps (tokens 8-11)" },
+    { name: "Layout", value: "56px - 120px", description: "Page sections, major divisions (tokens 12-17)" },
+  ]}
+/>
+
+## Usage
+
+```css
+/* Custom card grid layout */
+.card-grid {
+  display: grid;
+  gap: var(--rs-space-5);
+  padding: var(--rs-space-7);
+}
+
+/* Sidebar navigation */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-4) var(--rs-space-5);
+}
+
+/* Page section with header */
+.page-section {
+  margin-top: var(--rs-space-13);
+}
+
+.page-section-header {
+  margin-bottom: var(--rs-space-6);
+}
+
+/* Form field groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  margin-bottom: var(--rs-space-5);
+}
+
+/* Inline icon with text */
+.icon-text {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+```
+
+## Best Practices
+
+- **Use smaller values (1-5)** for internal component spacing like padding and gaps between inline elements
+- **Use medium values (5-9)** for spacing between related components and within sections
+- **Use larger values (10-17)** for spacing between sections and major layout divisions
+- **Be consistent** - use the same spacing token for similar contexts throughout your application
+- **Avoid mixing** pixel values with spacing tokens to maintain consistency

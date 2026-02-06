@@ -1,0 +1,130 @@
+---
+title: Radius
+description: Overview of the border radius scale and style variants in Apsara.
+---
+
+Border radius tokens control the roundness of corners throughout your interface. These tokens automatically adjust based on the active style variant—modern style uses sharp, minimal radii while traditional style uses softer, more rounded corners. By using radius tokens instead of fixed values, your custom components will seamlessly adapt when the style changes.
+
+## Radius Scale
+
+The radius scale provides 7 tokens for different levels of roundness, from subtle to fully circular.
+
+### Modern Style (Default)
+
+<TokenTable
+  type="radius"
+  tokens={[
+    { name: "--rs-radius-1", value: "2px", description: "Subtle rounding for small elements" },
+    { name: "--rs-radius-2", value: "4px", description: "Badges, chips, small buttons" },
+    { name: "--rs-radius-3", value: "6px", description: "Inputs, buttons, cards" },
+    { name: "--rs-radius-4", value: "8px", description: "Modals, dialogs, larger cards" },
+    { name: "--rs-radius-5", value: "12px", description: "Large containers, panels" },
+    { name: "--rs-radius-6", value: "16px", description: "Extra large containers" },
+    { name: "--rs-radius-full", value: "800px", description: "Pills, circular elements, avatars" },
+  ]}
+/>
+
+### Traditional Style
+
+When using `data-style="traditional"`, the radius values increase for a softer, more rounded appearance.
+
+<TokenTable
+  type="radius"
+  tokens={[
+    { name: "--rs-radius-1", value: "8px", description: "Subtle rounding for small elements" },
+    { name: "--rs-radius-2", value: "16px", description: "Badges, chips, small buttons" },
+    { name: "--rs-radius-3", value: "20px", description: "Inputs, buttons, cards" },
+    { name: "--rs-radius-4", value: "24px", description: "Modals, dialogs, larger cards" },
+    { name: "--rs-radius-5", value: "32px", description: "Large containers, panels" },
+    { name: "--rs-radius-6", value: "40px", description: "Extra large containers" },
+    { name: "--rs-radius-full", value: "1600px", description: "Pills, circular elements, avatars" },
+  ]}
+/>
+
+## Usage
+
+```css
+/* Dashboard widget container */
+.widget {
+  border-radius: var(--rs-radius-4);
+  overflow: hidden;
+}
+
+.widget-header {
+  border-radius: var(--rs-radius-4) var(--rs-radius-4) 0 0;
+}
+
+/* Filter tags with remove button */
+.filter-tag {
+  border-radius: var(--rs-radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+}
+
+/* Nested card with image */
+.preview-card {
+  border-radius: var(--rs-radius-4);
+}
+
+.preview-card-image {
+  border-radius: var(--rs-radius-3);
+}
+
+/* Search results dropdown */
+.search-results {
+  border-radius: var(--rs-radius-3);
+}
+
+.search-result-item:first-child {
+  border-radius: var(--rs-radius-3) var(--rs-radius-3) 0 0;
+}
+
+.search-result-item:last-child {
+  border-radius: 0 0 var(--rs-radius-3) var(--rs-radius-3);
+}
+
+/* User avatar with status indicator */
+.avatar-wrapper {
+  position: relative;
+}
+
+.avatar-image {
+  border-radius: var(--rs-radius-full);
+}
+
+.avatar-status {
+  border-radius: var(--rs-radius-full);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* Segmented control */
+.segmented-control {
+  border-radius: var(--rs-radius-3);
+}
+
+.segmented-control-item[data-active="true"] {
+  border-radius: var(--rs-radius-2);
+}
+```
+
+## Enabling Style Variants
+
+To switch between modern and traditional styles, set the `data-style` attribute on your root element:
+
+```html
+<!-- Modern style (default) -->
+<html data-style="modern">
+
+<!-- Traditional style -->
+<html data-style="traditional">
+```
+
+## Best Practices
+
+- **Be consistent** - Use the same radius token for similar elements throughout your application
+- **Match element size** - Use smaller radius values for smaller elements, larger values for containers
+- **Use radius-full for circles** - When you need perfectly circular elements, use `--rs-radius-full`
+- **Consider style context** - Choose modern for sharp, contemporary designs; traditional for softer, friendly aesthetics

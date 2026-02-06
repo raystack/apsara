@@ -11,6 +11,7 @@ import type {
   TableHTMLAttributes
 } from 'react';
 import Demo from '../demo';
+import { TokenTable } from '../tokentable';
 import { TypeTable } from '../typetable';
 import { Code } from './code';
 import styles from './mdx-components.module.css';
@@ -33,8 +34,11 @@ function Image(
 
 function Table(props: TableHTMLAttributes<HTMLTableElement>) {
   return (
-    <div className='relative overflow-auto prose-no-margin my-6'>
-      <table {...props} />
+    <div className='relative overflow-auto prose-no-margin'>
+      <table
+        {...props}
+        className={cx(styles['prose-table'], props.className)}
+      />
     </div>
   );
 }
@@ -116,6 +120,9 @@ const mdxComponents = {
       {...props}
       className={cx(styles['prose-type-table'], props.className)}
     />
+  ),
+  TokenTable: (props: ComponentPropsWithoutRef<typeof TokenTable>) => (
+    <TokenTable {...props} />
   ),
   Demo
 };
