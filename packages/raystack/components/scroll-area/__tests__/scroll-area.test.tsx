@@ -1,17 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { ScrollArea } from '../scroll-area';
-import { ScrollAreaRootProps } from '../scroll-area-root';
+import { ScrollArea, ScrollAreaProps } from '../scroll-area';
 import styles from '../scroll-area.module.css';
 
 const CONTENT_TEXT = 'Scrollable content';
 const TEST_ID = 'test-scroll-area';
 
 const BasicScrollArea = ({
-  type = 'auto',
+  type = 'hover',
   children,
   ...props
-}: ScrollAreaRootProps) => (
+}: ScrollAreaProps) => (
   <ScrollArea type={type} data-testid={TEST_ID} {...props}>
     {children}
   </ScrollArea>
@@ -90,7 +89,7 @@ describe('ScrollArea', () => {
   });
 
   describe('Type Prop', () => {
-    const types = ['auto', 'always', 'scroll', 'hover'] as const;
+    const types = ['always', 'hover', 'scroll'] as const;
 
     it.each(types)('renders with type %s', type => {
       const { container } = render(
@@ -101,22 +100,26 @@ describe('ScrollArea', () => {
 
       const root = container.querySelector(`[data-testid="${TEST_ID}"]`);
       expect(root).toBeInTheDocument();
+
+      // Check scrollbar has the correct type class
+      const scrollbar = container.querySelector(`.${styles.scrollbar}`);
+      expect(scrollbar).toHaveClass(styles[`scrollbar-${type}`]);
     });
 
-    it('defaults to auto type', () => {
+    it('defaults to hover type', () => {
       const { container } = render(
         <ScrollArea data-testid={TEST_ID}>
           <div>Content</div>
         </ScrollArea>
       );
 
-      const root = container.querySelector(`[data-testid="${TEST_ID}"]`);
-      expect(root).toBeInTheDocument();
+      const scrollbar = container.querySelector(`.${styles.scrollbar}`);
+      expect(scrollbar).toHaveClass(styles['scrollbar-hover']);
     });
   });
 
   describe('Scrollbars', () => {
-    it('renders vertical scrollbar automatically', () => {
+    it('renders vertical scrollbar', () => {
       const { container } = render(
         <BasicScrollArea
           type='always'
@@ -132,7 +135,7 @@ describe('ScrollArea', () => {
       expect(scrollbar).toBeInTheDocument();
     });
 
-    it('renders horizontal scrollbar automatically', () => {
+    it('renders horizontal scrollbar', () => {
       const { container } = render(
         <BasicScrollArea
           type='always'
@@ -172,20 +175,8 @@ describe('ScrollArea', () => {
         </BasicScrollArea>
       );
 
-      const scrollbar = container.querySelector(
-        `[data-orientation="vertical"]`
-      );
-      expect(scrollbar).toBeInTheDocument();
-      // Thumb is a child of scrollbar (Radix UI controls its rendering based on scroll position)
-      const thumb = scrollbar?.querySelector(`.${styles.thumb}`);
-      // If thumb exists, verify it has the correct class
-      if (thumb) {
-        expect(thumb).toHaveClass(styles.thumb);
-      } else {
-        // Thumb may not render if Radix UI determines no scroll is needed
-        // This is expected behavior - we verify the scrollbar structure is correct
-        expect(scrollbar).toBeInTheDocument();
-      }
+      const thumb = container.querySelector(`.${styles.thumb}`);
+      expect(thumb).toBeInTheDocument();
     });
   });
 

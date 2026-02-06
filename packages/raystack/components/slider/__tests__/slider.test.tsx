@@ -119,36 +119,10 @@ describe('Slider', () => {
   });
 
   describe('Accessibility', () => {
-    it('has default aria-label for single slider', () => {
-      const { container } = render(<Slider />);
-      const root = container.querySelector(`.${styles.slider}`);
-      // Base UI doesn't set default aria-label automatically
-      // The component should set it, but if not, we check it's at least not conflicting
-      const ariaLabel = root?.getAttribute('aria-label');
-      expect(ariaLabel === 'Slider' || ariaLabel === null).toBe(true);
-    });
-
-    it('has default aria-label for range slider', () => {
-      const { container } = render(<Slider variant='range' />);
-      const root = container.querySelector(`.${styles.slider}`);
-      const ariaLabel = root?.getAttribute('aria-label');
-      expect(ariaLabel === 'Range slider' || ariaLabel === null).toBe(true);
-    });
-
     it('uses custom aria-label', () => {
       const { container } = render(<Slider aria-label='Audio volume' />);
       const root = container.querySelector(`.${styles.slider}`);
       expect(root).toHaveAttribute('aria-label', 'Audio volume');
-    });
-
-    it('sets aria-valuetext', async () => {
-      render(<Slider value={50} aria-valuetext='50 percent' />);
-      await waitFor(() => {
-        const slider = screen.getByRole('slider');
-        // Base UI may use getAriaValueText callback which formats the value
-        // So we just check that the slider exists and has some value
-        expect(slider).toBeInTheDocument();
-      });
     });
   });
 

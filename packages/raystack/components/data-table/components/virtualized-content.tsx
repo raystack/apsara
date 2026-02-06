@@ -10,6 +10,7 @@ import tableStyles from '~/components/table/table.module.css';
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
 import { Flex } from '../../flex';
+import { Skeleton } from '../../skeleton';
 import styles from '../data-table.module.css';
 import {
   DataTableColumnDef,
@@ -154,6 +155,47 @@ function VirtualRows<TData>({
   });
 }
 
+function VirtualLoaderRows<TData>({
+  rowCount,
+  columns,
+  rowHeight,
+  startTop
+}: {
+  rowCount: number;
+  columns: DataTableColumnDef<TData, unknown>[];
+  rowHeight: number;
+  startTop: number;
+}) {
+  const rows = Array.from({ length: rowCount });
+
+  return rows.map((_, rowIndex) => (
+    <div
+      role='row'
+      key={'loading-row-' + rowIndex}
+      className={cx(styles.virtualRow, styles['row'])}
+      style={{
+        height: rowHeight,
+        top: startTop + rowIndex * rowHeight
+      }}
+    >
+      {columns.map((col, colIndex) => (
+        <div
+          role='cell'
+          key={'loading-column-' + colIndex}
+          className={cx(
+            tableStyles.cell,
+            styles.virtualCell,
+            col.classNames?.cell
+          )}
+          style={col.styles?.cell}
+        >
+          <Skeleton containerClassName={styles['flex-1']} />
+        </div>
+      ))}
+    </div>
+  ));
+}
+
 const DefaultEmptyComponent = () => (
   <EmptyState icon={<TableIcon />} heading='No Data' />
 );
@@ -167,8 +209,14 @@ export function VirtualizedContent({
   zeroState,
   classNames = {}
 }: VirtualizedContentProps) {
-  const { onRowClick, table, isLoading, loadMoreData, tableQuery } =
-    useDataTable();
+  const {
+    onRowClick,
+    table,
+    isLoading,
+    loadMoreData,
+    tableQuery,
+    loadingRowCount = 3
+  } = useDataTable();
 
   const headerGroups = table?.getHeaderGroups();
   const rowModel = table?.getRowModel();
@@ -215,6 +263,12 @@ export function VirtualizedContent({
     return <div className={classNames.root}>{stateToShow}</div>;
   }
 
+  const showLoaderRows = isLoading && rows.length > 0;
+  const loaderRowsHeight = showLoaderRows ? loadingRowCount * rowHeight : 0;
+  const virtualTotalSize = virtualizer.getTotalSize();
+  const totalHeight = virtualTotalSize + loaderRowsHeight;
+  const visibleColumns = table.getVisibleLeafColumns();
+
   return (
     <div
       ref={scrollContainerRef}
@@ -229,7 +283,7 @@ export function VirtualizedContent({
         <div
           role='rowgroup'
           className={cx(styles.virtualBodyGroup, classNames.body)}
-          style={{ height: virtualizer.getTotalSize() }}
+          style={{ height: totalHeight }}
         >
           <VirtualRows
             rows={rows}
@@ -239,6 +293,16 @@ export function VirtualizedContent({
               row: classNames.row
             }}
           />
+          {showLoaderRows && (
+            <VirtualLoaderRows
+              rowCount={loadingRowCount}
+              columns={visibleColumns.map(
+                col => col.columnDef as DataTableColumnDef<unknown, unknown>
+              )}
+              rowHeight={rowHeight}
+              startTop={virtualTotalSize}
+            />
+          )}
         </div>
       </div>
     </div>

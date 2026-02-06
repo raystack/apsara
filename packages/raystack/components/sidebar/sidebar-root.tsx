@@ -1,13 +1,11 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { Collapsible } from 'radix-ui';
 import {
   ComponentPropsWithoutRef,
-  ComponentRef,
-  ReactNode,
   createContext,
   forwardRef,
+  ReactNode,
   useCallback,
   useState
 } from 'react';
@@ -23,18 +21,17 @@ export const SidebarContext = createContext<SidebarContextValue>({
   isCollapsed: false
 });
 
-export interface SidebarRootProps
-  extends ComponentPropsWithoutRef<typeof Collapsible.Root> {
+export interface SidebarRootProps extends ComponentPropsWithoutRef<'aside'> {
   position?: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
   collapsible?: boolean;
   tooltipMessage?: ReactNode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export const SidebarRoot = forwardRef<
-  ComponentRef<typeof Collapsible.Root>,
-  SidebarRootProps
->(
+export const SidebarRoot = forwardRef<HTMLElement, SidebarRootProps>(
   (
     {
       className,
@@ -44,14 +41,13 @@ export const SidebarRoot = forwardRef<
       hideCollapsedItemTooltip,
       collapsible = true,
       tooltipMessage,
-      defaultOpen,
+      defaultOpen = true,
       children,
       ...props
     },
     ref
   ) => {
     const [internalOpen, setInternalOpen] = useState(defaultOpen);
-
     const open = providedOpen ?? internalOpen;
 
     const handleOpenChange = useCallback(
@@ -67,50 +63,46 @@ export const SidebarRoot = forwardRef<
         value={{ isCollapsed: !open, hideCollapsedItemTooltip }}
       >
         <Tooltip.Provider>
-          <Collapsible.Root
+          <aside
             ref={ref}
             className={cx(styles.root, className)}
             data-position={position}
-            data-state={open ? 'expanded' : 'collapsed'}
-            data-collapse-disabled={!collapsible}
-            open={open}
-            onOpenChange={collapsible ? handleOpenChange : undefined}
+            data-open={open ? '' : undefined}
+            data-closed={!open ? '' : undefined}
+            data-collapse-disabled={!collapsible ? '' : undefined}
             aria-label='Navigation Sidebar'
             aria-expanded={open}
             role='navigation'
             {...props}
-            asChild
           >
-            <aside>
-              {collapsible && (
-                <Tooltip
-                  message={
-                    tooltipMessage ??
-                    (open ? 'Click to collapse' : 'Click to expand')
-                  }
-                  side={position === 'left' ? 'right' : 'left'}
-                  asChild
-                  followCursor
-                  sideOffset={10}
-                >
-                  <div
-                    className={styles.resizeHandle}
-                    onClick={() => handleOpenChange(!open)}
-                    role='button'
-                    tabIndex={0}
-                    aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleOpenChange(!open);
-                      }
-                    }}
-                  />
-                </Tooltip>
-              )}
-              {children}
-            </aside>
-          </Collapsible.Root>
+            {collapsible && (
+              <Tooltip
+                message={
+                  tooltipMessage ??
+                  (open ? 'Click to collapse' : 'Click to expand')
+                }
+                side={position === 'left' ? 'right' : 'left'}
+                asChild
+                followCursor
+                sideOffset={10}
+              >
+                <div
+                  className={styles.resizeHandle}
+                  onClick={() => handleOpenChange(!open)}
+                  role='button'
+                  tabIndex={0}
+                  aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleOpenChange(!open);
+                    }
+                  }}
+                />
+              </Tooltip>
+            )}
+            {children}
+          </aside>
         </Tooltip.Provider>
       </SidebarContext.Provider>
     );
