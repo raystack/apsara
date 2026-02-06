@@ -1,20 +1,14 @@
 'use client';
 
+import { Accordion as AccordionPrimitive } from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { Accordion as AccordionPrimitive } from 'radix-ui';
-import { ElementRef, ReactNode, forwardRef } from 'react';
+import { ElementRef, forwardRef } from 'react';
 import styles from './accordion.module.css';
-
-export interface AccordionTriggerProps
-  extends AccordionPrimitive.AccordionTriggerProps {
-  children: ReactNode;
-  className?: string;
-}
 
 export const AccordionTrigger = forwardRef<
   ElementRef<typeof AccordionPrimitive.Trigger>,
-  AccordionTriggerProps
+  AccordionPrimitive.Trigger.Props
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Header className={styles['accordion-header']}>
     <AccordionPrimitive.Trigger
@@ -28,4 +22,4 @@ export const AccordionTrigger = forwardRef<
   </AccordionPrimitive.Header>
 ));
 
-AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
+AccordionTrigger.displayName = 'Accordion.Trigger';

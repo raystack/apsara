@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Accordion } from '../accordion';
-import { AccordionRootProps } from '../accordion-root';
 import styles from '../accordion.module.css';
+import { AccordionRootProps } from '../accordion-root';
 
 const ITEM_1_TEXT = 'Item 1';
 const ITEM_2_TEXT = 'Item 2';
@@ -183,7 +183,8 @@ describe('Accordion', () => {
       render(<BasicAccordion hasDisabledItem />);
 
       const trigger = screen.getByRole('button', { name: ITEM_2_TEXT });
-      expect(trigger).toBeDisabled();
+      // Base UI uses aria-disabled instead of disabled attribute
+      expect(trigger).toHaveAttribute('aria-disabled', 'true');
     });
   });
 
@@ -207,20 +208,21 @@ describe('Accordion', () => {
     it('forwards ref correctly', () => {
       const ref = vi.fn();
       render(
-        <Accordion>
+        <Accordion defaultValue='item-1'>
           <Accordion.Item value='item-1'>
             <Accordion.Trigger>{ITEM_1_TEXT}</Accordion.Trigger>
             <Accordion.Content ref={ref}>{CONTENT_1_TEXT}</Accordion.Content>
           </Accordion.Item>
         </Accordion>
       );
+      // Base UI Panel ref should be called when panel is open
       expect(ref).toHaveBeenCalled();
     });
   });
 
   describe('Multiple Items', () => {
     it('handles multiple accordion items independently', () => {
-      render(<BasicAccordion type='multiple' />);
+      render(<BasicAccordion multiple={true} />);
 
       const trigger1 = screen.getByRole('button', { name: ITEM_1_TEXT });
       const trigger2 = screen.getByRole('button', { name: ITEM_2_TEXT });

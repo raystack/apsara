@@ -1,21 +1,15 @@
 'use client';
 
+import { Accordion as AccordionPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { Accordion as AccordionPrimitive } from 'radix-ui';
-import { ElementRef, ReactNode, forwardRef } from 'react';
+import { ElementRef, forwardRef } from 'react';
 import styles from './accordion.module.css';
 
-export interface AccordionContentProps
-  extends AccordionPrimitive.AccordionContentProps {
-  children: ReactNode;
-  className?: string;
-}
-
 export const AccordionContent = forwardRef<
-  ElementRef<typeof AccordionPrimitive.Content>,
-  AccordionContentProps
+  ElementRef<typeof AccordionPrimitive.Panel>,
+  AccordionPrimitive.Panel.Props
 >(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Content
+  <AccordionPrimitive.Panel
     ref={ref}
     className={styles['accordion-content']}
     {...props}
@@ -23,7 +17,7 @@ export const AccordionContent = forwardRef<
     <div className={cx(styles['accordion-content-inner'], className)}>
       {children}
     </div>
-  </AccordionPrimitive.Content>
+  </AccordionPrimitive.Panel>
 ));
 
-AccordionContent.displayName = AccordionPrimitive.Content.displayName;
+AccordionContent.displayName = 'Accordion.Content';

@@ -1,32 +1,30 @@
 export interface AccordionRootProps {
   /**
-   * Controls how many accordion items can be open at once.
-   * - "single": Only one item can be open at a time
-   * - "multiple": Multiple items can be open simultaneously
-   * @defaultValue "single"
+   * Whether multiple  accordion items can be open at the same time.
+   * @defaultValue false
    */
-  type?: 'single' | 'multiple';
+  multiple?: boolean;
 
   /**
-   * The controlled value of the accordion
+   * The controlled value of the accordion.
+   * For single mode: string | undefined
+   * For multiple mode: string[]
    */
   value?: string | string[];
 
   /**
-   * The default value of the accordion
+   * The default value of the accordion.
+   * For single mode: string | undefined
+   * For multiple mode: string[]
    */
   defaultValue?: string | string[];
 
   /**
-   * Event handler called when the value changes
+   * Event handler called when the value changes.
+   * For single mode: (value?: string) => void
+   * For multiple mode: (value?: string[]) => void
    */
-  onValueChange?: (value: string | string[]) => void;
-
-  /**
-   * Whether the accordion is collapsible when type is single
-   * @defaultValue true
-   */
-  collapsible?: boolean;
+  onValueChange?: (value?: string | string[]) => void;
 
   /**
    * Whether the accordion is disabled
@@ -41,10 +39,22 @@ export interface AccordionRootProps {
   orientation?: 'horizontal' | 'vertical';
 
   /**
-   * The direction of the accordion
-   * @defaultValue "ltr"
+   * Whether to loop keyboard focus back to the first item when the end is reached
+   * @defaultValue true
    */
-  dir?: 'ltr' | 'rtl';
+  loopFocus?: boolean;
+
+  /**
+   * Whether to keep the element in the DOM while the panel is closed
+   * @defaultValue false
+   */
+  keepMounted?: boolean;
+
+  /**
+   * Allows the browser's built-in page search to find and expand the panel contents
+   * @defaultValue false
+   */
+  hiddenUntilFound?: boolean;
 
   /** Custom CSS class names */
   className?: string;
@@ -73,10 +83,16 @@ export interface AccordionTriggerProps {
 
 export interface AccordionContentProps {
   /**
-   * Whether the content is force mounted
+   * Whether to keep the element in the DOM while the panel is closed
    * @defaultValue false
    */
-  forceMount?: boolean;
+  keepMounted?: boolean;
+
+  /**
+   * Allows the browser's built-in page search to find and expand the panel contents
+   * @defaultValue false
+   */
+  hiddenUntilFound?: boolean;
 
   /** Custom CSS class names */
   className?: string;
