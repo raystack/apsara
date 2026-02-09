@@ -155,45 +155,50 @@ function VirtualRows<TData>({
   });
 }
 
-function VirtualLoaderRows<TData>({
-  rowCount,
+function VirtualLoaderRows({
   columns,
   rowHeight,
-  startTop
+  count
 }: {
-  rowCount: number;
-  columns: DataTableColumnDef<TData, unknown>[];
+  columns: ReturnType<
+    ReturnType<typeof useDataTable>['table']['getVisibleLeafColumns']
+  >;
   rowHeight: number;
-  startTop: number;
+  count: number;
 }) {
-  const rows = Array.from({ length: rowCount });
-
-  return rows.map((_, rowIndex) => (
-    <div
-      role='row'
-      key={'loading-row-' + rowIndex}
-      className={cx(styles.virtualRow, styles['row'])}
-      style={{
-        height: rowHeight,
-        top: startTop + rowIndex * rowHeight
-      }}
-    >
-      {columns.map((col, colIndex) => (
+  return (
+    <div className={styles.stickyLoaderContainer}>
+      {Array.from({ length: count }).map((_, rowIndex) => (
         <div
-          role='cell'
-          key={'loading-column-' + colIndex}
-          className={cx(
-            tableStyles.cell,
-            styles.virtualCell,
-            col.classNames?.cell
-          )}
-          style={col.styles?.cell}
+          role='row'
+          key={'loading-row-' + rowIndex}
+          className={cx(styles.virtualRow, styles['row'], styles.loaderRow)}
+          style={{ height: rowHeight }}
         >
-          <Skeleton containerClassName={styles['flex-1']} />
+          {columns.map((col, colIndex) => {
+            const columnDef = col.columnDef as DataTableColumnDef<
+              unknown,
+              unknown
+            >;
+            return (
+              <div
+                role='cell'
+                key={'loading-column-' + colIndex}
+                className={cx(
+                  tableStyles.cell,
+                  styles.virtualCell,
+                  columnDef.classNames?.cell
+                )}
+                style={columnDef.styles?.cell}
+              >
+                <Skeleton containerClassName={styles['flex-1']} />
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>
-  ));
+  );
 }
 
 const DefaultEmptyComponent = () => (
@@ -224,6 +229,8 @@ export function VirtualizedContent({
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
+  const showLoaderRows = isLoading && rows.length > 0;
+
   const virtualizer = useVirtualizer({
     count: rows.length,
     getScrollElement: () => scrollContainerRef.current,
@@ -244,6 +251,8 @@ export function VirtualizedContent({
     }
   }, [isLoading, loadMoreData, loadMoreOffset]);
 
+  const totalHeight = virtualizer.getTotalSize();
+
   const hasData = rows?.length > 0 || isLoading;
 
   const hasFiltersOrSearch =
@@ -263,10 +272,6 @@ export function VirtualizedContent({
     return <div className={classNames.root}>{stateToShow}</div>;
   }
 
-  const showLoaderRows = isLoading && rows.length > 0;
-  const loaderRowsHeight = showLoaderRows ? loadingRowCount * rowHeight : 0;
-  const virtualTotalSize = virtualizer.getTotalSize();
-  const totalHeight = virtualTotalSize + loaderRowsHeight;
   const visibleColumns = table.getVisibleLeafColumns();
 
   return (
@@ -293,18 +298,15 @@ export function VirtualizedContent({
               row: classNames.row
             }}
           />
-          {showLoaderRows && (
-            <VirtualLoaderRows
-              rowCount={loadingRowCount}
-              columns={visibleColumns.map(
-                col => col.columnDef as DataTableColumnDef<unknown, unknown>
-              )}
-              rowHeight={rowHeight}
-              startTop={virtualTotalSize}
-            />
-          )}
         </div>
       </div>
+      {showLoaderRows && (
+        <VirtualLoaderRows
+          columns={visibleColumns}
+          rowHeight={rowHeight}
+          count={loadingRowCount}
+        />
+      )}
     </div>
   );
 }
