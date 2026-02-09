@@ -144,3 +144,14 @@
   font-weight: 500;
   padding: var(--rs-space-3) var(--rs-space-4);
 }
+
+.stickyLoaderContainer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  background: var(--rs-color-background-base-primary);
+}
+
+.loaderRow {
+  position: relative;
+}
