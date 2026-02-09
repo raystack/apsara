@@ -1,13 +1,13 @@
 'use client';
 
-import { ReactNode, useMemo } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
-import { DropdownMenu } from '../../dropdown-menu';
 import { FilterChip } from '../../filter-chip';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
+import { Menu } from '../../menu';
 import { DataTableColumn } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 import { useFilters } from '../hooks/useFilters';
@@ -63,20 +63,20 @@ function AddFilter<TData, TValue>({
   }, [children, appliedFiltersSet, availableFilters]);
 
   return availableFilters.length > 0 ? (
-    <DropdownMenu>
-      <DropdownMenu.Trigger asChild>{trigger}</DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+    <Menu>
+      <Menu.Trigger render={trigger as React.ReactElement}>{}</Menu.Trigger>
+      <Menu.Content>
         {availableFilters?.map(column => {
           const columnDef = column.columnDef;
           const id = columnDef.accessorKey || column.id;
           return (
-            <DropdownMenu.Item key={id} onClick={() => onAddFilter(column)}>
+            <Menu.Item key={id} onClick={() => onAddFilter(column)}>
               {columnDef.header || id}
-            </DropdownMenu.Item>
+            </Menu.Item>
           );
         })}
-      </DropdownMenu.Content>
-    </DropdownMenu>
+      </Menu.Content>
+    </Menu>
   ) : null;
 }
 

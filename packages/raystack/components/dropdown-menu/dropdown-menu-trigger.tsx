@@ -2,7 +2,7 @@
 
 import { MenuButton, MenuButtonProps } from '@ariakit/react';
 import { Slot } from 'radix-ui';
-import { PointerEvent, forwardRef } from 'react';
+import { forwardRef, PointerEvent } from 'react';
 import { TriangleRightIcon } from '~/icons';
 import { DropdownMenuItem, DropdownMenuItemProps } from './dropdown-menu-item';
 import { useDropdownContext } from './dropdown-menu-root';

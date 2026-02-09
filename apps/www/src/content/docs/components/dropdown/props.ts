@@ -1,5 +1,5 @@
-export interface DropdownMenuRootProps {
-  /** Enables search functionality within the dropdown menu */
+export interface MenuRootProps {
+  /** Enables search functionality within the menu */
   autocomplete?: boolean;
 
   /** Controls the autocomplete behavior mode
@@ -18,70 +18,61 @@ export interface DropdownMenuRootProps {
   /** Callback fired when the search value changes */
   onSearch?: (value: string) => void;
 
-  /** Placement of the dropdown relative to the trigger
-   * @default "bottom-start""
-   */
-  placement?:
-    | 'top'
-    | 'top-start'
-    | 'top-end'
-    | 'bottom'
-    | 'bottom-start'
-    | 'bottom-end'
-    | 'left'
-    | 'left-start'
-    | 'left-end'
-    | 'right'
-    | 'right-start'
-    | 'right-end';
-
-  /** Whether the dropdown should loop focus when navigating with keyboard
+  /** Whether the menu should loop focus when navigating with keyboard
    * @default true
    */
-  focusLoop?: boolean;
+  loopFocus?: boolean;
 
-  /** Control the open state of the dropdown
+  /** Control the open state of the menu
    * @default false
    */
   open?: boolean;
 
-  /** Callback fired when the dropdown is opened or closed */
+  /** Callback fired when the menu is opened or closed */
   onOpenChange?: (open: boolean) => void;
+
+  /** Whether the menu is modal (traps focus and blocks outside interaction)
+   * @default true
+   */
+  modal?: boolean;
 }
 
-export interface DropdownMenuTriggerProps {
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+export interface MenuTriggerProps {
+  /** Render a custom element as the trigger using Base UI's render prop pattern */
+  render?: React.ReactElement;
 
-  /** Whether the dropdown should stop propagation of the click event
+  /** Whether the menu should stop propagation of the click event
    * @default true
    */
   stopPropagation?: boolean;
 }
 
-export interface DropdownMenuContentProps {
+export interface MenuContentProps {
   /** Placeholder text for the autocomplete search input
    * @default "Search..."
    */
   searchPlaceholder?: string;
 
   /**
-   * The distance between the popover and the anchor element.
+   * The distance between the popup and the anchor element.
    * @default 4
    */
-  gutter?: number;
+  sideOffset?: number;
 
   /**
-   * The skidding of the popover along the anchor element. Can be set to negative values to make the popover shift to the opposite side.
-   * @default 0
+   * The side of the anchor element to place the popup.
+   * @default "bottom"
    */
-  shift?: number;
+  side?: 'top' | 'bottom' | 'left' | 'right';
 
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * The alignment of the popup relative to the anchor element.
+   * @default "start"
+   */
+  align?: 'start' | 'center' | 'end';
 }
 
-export interface DropdownMenuItemProps {
+export interface MenuItemProps {
   /** Icon element to display before item text */
   leadingIcon?: React.ReactNode;
 
@@ -97,35 +88,26 @@ export interface DropdownMenuItemProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /** Render a custom element using Base UI's render prop pattern */
+  render?: React.ReactElement;
 }
 
-export interface DropdownMenuGroupProps {
+export interface MenuGroupProps {
   /** Additional CSS class names */
   className?: string;
-
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
 }
 
-export interface DropdownMenuLabelProps {
+export interface MenuLabelProps {
   /** Additional CSS class names */
   className?: string;
-
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
 }
 
-export interface DropdownMenuSeparatorProps {
+export interface MenuSeparatorProps {
   /** Additional CSS class names */
   className?: string;
-
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
 }
 
-export interface DropdownMenuEmptyStateProps {
+export interface MenuEmptyStateProps {
   /** React nodes to render in empty state */
   children?: React.ReactNode;
 

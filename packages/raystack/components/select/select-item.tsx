@@ -5,7 +5,7 @@ import { cx } from 'class-variance-authority';
 import { Select as SelectPrimitive } from 'radix-ui';
 import { ElementRef, forwardRef, useLayoutEffect } from 'react';
 import { Checkbox } from '../checkbox';
-import { getMatch } from '../dropdown-menu/utils';
+import { getMatch } from '../menu/utils';
 import { Text } from '../text';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';

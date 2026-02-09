@@ -1,12 +1,17 @@
 'use client';
 
-import { Menu, MenuProps, useMenuContext } from '@ariakit/react';
-import { Combobox, ComboboxList } from '@ariakit/react';
+import {
+  Combobox,
+  ComboboxList,
+  Menu,
+  MenuProps,
+  useMenuContext
+} from '@ariakit/react';
 import { cx } from 'class-variance-authority';
 import { Slot, VisuallyHidden } from 'radix-ui';
 import { ElementRef, forwardRef, useEffect, useRef, useState } from 'react';
-import { useDropdownContext } from './dropdown-menu-root';
 import styles from './dropdown-menu.module.css';
+import { useDropdownContext } from './dropdown-menu-root';
 import { WithAsChild } from './types';
 
 export interface MenuContentProps extends WithAsChild<MenuProps> {

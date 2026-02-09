@@ -1,7 +1,12 @@
 'use client';
 
-import { MenuItem, MenuItemProps, useMenuContext } from '@ariakit/react';
-import { ComboboxItem, ComboboxItemProps } from '@ariakit/react';
+import {
+  ComboboxItem,
+  ComboboxItemProps,
+  MenuItem,
+  MenuItemProps,
+  useMenuContext
+} from '@ariakit/react';
 import { Slot } from 'radix-ui';
 import { forwardRef } from 'react';
 import { Cell, CellBaseProps } from './cell';

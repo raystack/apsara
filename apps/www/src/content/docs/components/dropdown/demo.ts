@@ -4,57 +4,57 @@ import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
   return `
-  <DropdownMenu${getPropsString(props)}>
-    <DropdownMenu.Trigger asChild>
-      <Button>Actions</Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content>
-      <DropdownMenu.Group>
-        <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
-        <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
-        <DropdownMenu.Item>Rename...</DropdownMenu.Item>
-      </DropdownMenu.Group>
-      <DropdownMenu.Separator />
-      <DropdownMenu.Label>Actions</DropdownMenu.Label>
-      <DropdownMenu>
-        <DropdownMenu.TriggerItem>
+  <Menu${getPropsString(props)}>
+    <Menu.Trigger render={<Button />}>
+      Actions
+    </Menu.Trigger>
+    <Menu.Content>
+      <Menu.Group>
+        <Menu.Item>Assign member...</Menu.Item>
+        <Menu.Item>Subscribe...</Menu.Item>
+        <Menu.Item>Rename...</Menu.Item>
+      </Menu.Group>
+      <Menu.Separator />
+      <Menu.Label>Actions</Menu.Label>
+      <Menu.SubMenu>
+        <Menu.SubTrigger>
           Export
-        </DropdownMenu.TriggerItem>
-        <DropdownMenu.Content>
-          <DropdownMenu>
-            <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
-            <DropdownMenu.TriggerItem>
+        </Menu.SubTrigger>
+        <Menu.SubContent>
+          <Menu.SubMenu>
+            <Menu.Item>All (.zip)</Menu.Item>
+            <Menu.SubTrigger>
               CSV
-            </DropdownMenu.TriggerItem>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item>All</DropdownMenu.Item>
-              <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-              <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenu.TriggerItem>
+            </Menu.SubTrigger>
+            <Menu.SubContent>
+              <Menu.Item>All</Menu.Item>
+              <Menu.Item>3 Months</Menu.Item>
+              <Menu.Item>6 Months</Menu.Item>
+            </Menu.SubContent>
+          </Menu.SubMenu>
+          <Menu.SubMenu>
+            <Menu.SubTrigger>
               PDF
-            </DropdownMenu.TriggerItem>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item>All</DropdownMenu.Item>
-              <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-              <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu>
-        </DropdownMenu.Content>
-      </DropdownMenu>
-      <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
-      <DropdownMenu.Item
+            </Menu.SubTrigger>
+            <Menu.SubContent>
+              <Menu.Item>All</Menu.Item>
+              <Menu.Item>3 Months</Menu.Item>
+              <Menu.Item>6 Months</Menu.Item>
+            </Menu.SubContent>
+          </Menu.SubMenu>
+        </Menu.SubContent>
+      </Menu.SubMenu>
+      <Menu.Item disabled>Copy</Menu.Item>
+      <Menu.Item
         trailingIcon={
           <Text size="micro" variant="secondary">
             ⌘⇧D
           </Text>
         }>
         Delete...
-      </DropdownMenu.Item>
-    </DropdownMenu.Content>
-    </DropdownMenu>`;
+      </Menu.Item>
+    </Menu.Content>
+    </Menu>`;
 };
 
 export const playground = {
@@ -71,55 +71,55 @@ export const playground = {
 export const basicDemo = {
   type: 'code',
   code: `
-  <DropdownMenu>
-    <DropdownMenu.Trigger asChild>
-      <Button color="neutral">Open Menu</Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content>
-      <DropdownMenu.Item>Profile</DropdownMenu.Item>
-      <DropdownMenu.Item>Settings</DropdownMenu.Item>
-      <DropdownMenu.Separator />
-      <DropdownMenu.Item>Logout</DropdownMenu.Item>
-    </DropdownMenu.Content>
-  </DropdownMenu>`
+  <Menu>
+    <Menu.Trigger render={<Button color="neutral" />}>
+      Open Menu
+    </Menu.Trigger>
+    <Menu.Content>
+      <Menu.Item>Profile</Menu.Item>
+      <Menu.Item>Settings</Menu.Item>
+      <Menu.Separator />
+      <Menu.Item>Logout</Menu.Item>
+    </Menu.Content>
+  </Menu>`
 };
 export const iconsDemo = {
   type: 'code',
   code: `
-  <DropdownMenu>
-    <DropdownMenu.Trigger asChild>
-      <Button color="neutral">Actions</Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content>
-      <DropdownMenu.Item leadingIcon={<>📝</>}>Edit</DropdownMenu.Item>
-      <DropdownMenu.Item leadingIcon={<>📋</>} trailingIcon={<>⌘C</>}>Copy</DropdownMenu.Item>
-      <DropdownMenu.Separator />
-      <DropdownMenu.Item leadingIcon={<>🗑️</>}>Delete</DropdownMenu.Item>
-    </DropdownMenu.Content>
-  </DropdownMenu>`
+  <Menu>
+    <Menu.Trigger render={<Button color="neutral" />}>
+      Actions
+    </Menu.Trigger>
+    <Menu.Content>
+      <Menu.Item leadingIcon={<>📝</>}>Edit</Menu.Item>
+      <Menu.Item leadingIcon={<>📋</>} trailingIcon={<>⌘C</>}>Copy</Menu.Item>
+      <Menu.Separator />
+      <Menu.Item leadingIcon={<>🗑️</>}>Delete</Menu.Item>
+    </Menu.Content>
+  </Menu>`
 };
 
 export const customDemo = {
   type: 'code',
   code: `
-  <DropdownMenu>
-    <DropdownMenu.Trigger asChild>
-      <Button color="neutral">More</Button>
-    </DropdownMenu.Trigger>
-    <DropdownMenu.Content>
-      <DropdownMenu.Label>Actions</DropdownMenu.Label>
-      <DropdownMenu.Group>
-        <DropdownMenu.Item>New File</DropdownMenu.Item>
-        <DropdownMenu.Item>New Folder</DropdownMenu.Item>
-      </DropdownMenu.Group>
-      <DropdownMenu.Separator />
-      <DropdownMenu.Label>Sort By</DropdownMenu.Label>
-      <DropdownMenu.Group>
-        <DropdownMenu.Item>Name</DropdownMenu.Item>
-        <DropdownMenu.Item>Date</DropdownMenu.Item>
-      </DropdownMenu.Group>
-    </DropdownMenu.Content>
-  </DropdownMenu>`
+  <Menu>
+    <Menu.Trigger render={<Button color="neutral" />}>
+      More
+    </Menu.Trigger>
+    <Menu.Content>
+      <Menu.Label>Actions</Menu.Label>
+      <Menu.Group>
+        <Menu.Item>New File</Menu.Item>
+        <Menu.Item>New Folder</Menu.Item>
+      </Menu.Group>
+      <Menu.Separator />
+      <Menu.Label>Sort By</Menu.Label>
+      <Menu.Group>
+        <Menu.Item>Name</Menu.Item>
+        <Menu.Item>Date</Menu.Item>
+      </Menu.Group>
+    </Menu.Content>
+  </Menu>`
 };
 
 export const autocompleteDemo = {
@@ -128,43 +128,43 @@ export const autocompleteDemo = {
     {
       name: 'Default Autocomplete',
       code: `
-      <DropdownMenu autocomplete>
-      <DropdownMenu.Trigger asChild>
-        <Button color="neutral">Default Autocomplete</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content searchPlaceholder="Search">
-        <DropdownMenu.Group>
-          <DropdownMenu.Label>Heading</DropdownMenu.Label>
-          <DropdownMenu.Item>Assign member...</DropdownMenu.Item>
-          <DropdownMenu.Item>Subscribe...</DropdownMenu.Item>
-          <DropdownMenu.Item>Rename...</DropdownMenu.Item>
-        </DropdownMenu.Group>
-        <DropdownMenu.Separator />
-        <DropdownMenu.Label>Actions</DropdownMenu.Label>
-        <DropdownMenu autocomplete>
-          <DropdownMenu.TriggerItem>Export</DropdownMenu.TriggerItem>
-          <DropdownMenu.Content>
-            <DropdownMenu.Item>All (.zip)</DropdownMenu.Item>
-            <DropdownMenu>
-              <DropdownMenu.TriggerItem>CSV</DropdownMenu.TriggerItem>
-              <DropdownMenu.Content>
-                <DropdownMenu.Item>All</DropdownMenu.Item>
-                <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-                <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenu.TriggerItem>PDF</DropdownMenu.TriggerItem>
-              <DropdownMenu.Content>
-                <DropdownMenu.Item>All</DropdownMenu.Item>
-                <DropdownMenu.Item>3 Months</DropdownMenu.Item>
-                <DropdownMenu.Item>6 Months</DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu>
-          </DropdownMenu.Content>
-        </DropdownMenu>
-        <DropdownMenu.Item disabled>Copy</DropdownMenu.Item>
-        <DropdownMenu.Item
+      <Menu autocomplete>
+      <Menu.Trigger render={<Button color="neutral" />}>
+        Default Autocomplete
+      </Menu.Trigger>
+      <Menu.Content searchPlaceholder="Search">
+        <Menu.Group>
+          <Menu.Label>Heading</Menu.Label>
+          <Menu.Item>Assign member...</Menu.Item>
+          <Menu.Item>Subscribe...</Menu.Item>
+          <Menu.Item>Rename...</Menu.Item>
+        </Menu.Group>
+        <Menu.Separator />
+        <Menu.Label>Actions</Menu.Label>
+        <Menu.SubMenu>
+          <Menu.SubTrigger>Export</Menu.SubTrigger>
+          <Menu.SubContent>
+            <Menu.Item>All (.zip)</Menu.Item>
+            <Menu.SubMenu>
+              <Menu.SubTrigger>CSV</Menu.SubTrigger>
+              <Menu.SubContent>
+                <Menu.Item>All</Menu.Item>
+                <Menu.Item>3 Months</Menu.Item>
+                <Menu.Item>6 Months</Menu.Item>
+              </Menu.SubContent>
+            </Menu.SubMenu>
+            <Menu.SubMenu>
+              <Menu.SubTrigger>PDF</Menu.SubTrigger>
+              <Menu.SubContent>
+                <Menu.Item>All</Menu.Item>
+                <Menu.Item>3 Months</Menu.Item>
+                <Menu.Item>6 Months</Menu.Item>
+              </Menu.SubContent>
+            </Menu.SubMenu>
+          </Menu.SubContent>
+        </Menu.SubMenu>
+        <Menu.Item disabled>Copy</Menu.Item>
+        <Menu.Item
           value="remove"
           trailingIcon={
             <Text size="micro" variant="secondary">
@@ -172,9 +172,9 @@ export const autocompleteDemo = {
             </Text>
           }>
           Delete...
-        </DropdownMenu.Item>
-      </DropdownMenu.Content>
-    </DropdownMenu>`
+        </Menu.Item>
+      </Menu.Content>
+    </Menu>`
     },
     {
       name: 'Manual Autocomplete',
@@ -189,21 +189,21 @@ export const autocompleteDemo = {
         ];
 
         const [simpleSearchQuery, setSimpleSearchQuery] = React.useState("");
-        return <DropdownMenu
+        return <Menu
                 autocomplete
                 autocompleteMode="manual"
                 onSearch={value => setSimpleSearchQuery(value)}>
-                <DropdownMenu.Trigger asChild>
-                  <Button color="neutral">Manual Autocomplete</Button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content searchPlaceholder="Search">
+                <Menu.Trigger render={<Button color="neutral" />}>
+                  Manual Autocomplete
+                </Menu.Trigger>
+                <Menu.Content searchPlaceholder="Search">
                   {items
                     .filter(item => item.toLowerCase().includes(simpleSearchQuery))
                     .map((item, index) => (
-                      <DropdownMenu.Item key={index}>{item}</DropdownMenu.Item>
+                      <Menu.Item key={index}>{item}</Menu.Item>
                     ))}
-                </DropdownMenu.Content>
-              </DropdownMenu>
+                </Menu.Content>
+              </Menu>
   }`
     }
   ]
@@ -219,7 +219,7 @@ export const linearDemo = {
       code: `function LinearDropdownDemo() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const renderDropdownMenu = (items: DropdownMenuItem[], query: string) => {
+  const renderMenu = (items: DropdownMenuItem[], query: string) => {
     const filteredItems = filterDropdownMenuItems(items, query);
 
     if (searchQuery && filteredItems.length === 0) {
@@ -230,29 +230,29 @@ export const linearDemo = {
       switch (item.type) {
         case "group":
           return (
-            <DropdownMenu.Group key={index}>
-              <DropdownMenu.Label>{item.label}</DropdownMenu.Label>
-              {item.items && renderDropdownMenu(item.items, query)}
-            </DropdownMenu.Group>
+            <Menu.Group key={index}>
+              <Menu.Label>{item.label}</Menu.Label>
+              {item.items && renderMenu(item.items, query)}
+            </Menu.Group>
           );
         case "separator":
-          return <DropdownMenu.Separator key={index} />;
+          return <Menu.Separator key={index} />;
         case "submenu":
           return (
-            <DropdownMenu key={index}>
-              <DropdownMenu.TriggerItem
+            <Menu.SubMenu key={index}>
+              <Menu.SubTrigger
                 trailingIcon={item.trailingIcon}
                 leadingIcon={item.leadingIcon}>
                 {item.label}
-              </DropdownMenu.TriggerItem>
-              <DropdownMenu.Content>
-                {item.items && renderDropdownMenu(item.items, query)}
-              </DropdownMenu.Content>
-            </DropdownMenu>
+              </Menu.SubTrigger>
+              <Menu.SubContent>
+                {item.items && renderMenu(item.items, query)}
+              </Menu.SubContent>
+            </Menu.SubMenu>
           );
         case "item":
           return (
-            <DropdownMenu.Item
+            <Menu.Item
               key={index}
               disabled={item.disabled}
               trailingIcon={item.trailingIcon}
@@ -265,7 +265,7 @@ export const linearDemo = {
                     </Fragment>
                   ))
                 : item.label}
-            </DropdownMenu.Item>
+            </Menu.Item>
           );
         default:
           return null;
@@ -274,17 +274,17 @@ export const linearDemo = {
   };
 
   return (
-    <DropdownMenu
+    <Menu
       autocomplete
       autocompleteMode="manual"
       onSearch={(value: string) => setSearchQuery(value)}>
-      <DropdownMenu.Trigger asChild>
-        <Button>Actions</Button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content searchPlaceholder="Search">
-        {renderDropdownMenu(dropdownMenuData, searchQuery)}
-      </DropdownMenu.Content>
-    </DropdownMenu>
+      <Menu.Trigger render={<Button />}>
+        Actions
+      </Menu.Trigger>
+      <Menu.Content searchPlaceholder="Search">
+        {renderMenu(dropdownMenuData, searchQuery)}
+      </Menu.Content>
+    </Menu>
   );
 }
 `

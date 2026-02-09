@@ -1,7 +1,7 @@
 ---
-title: Dropdown Menu
+title: Menu
 description: Displays a menu to the user, such as a set of actions or functions, triggered by a button.
-source: packages/raystack/components/dropdown
+source: packages/raystack/components/menu
 ---
 
 import {
@@ -18,80 +18,88 @@ import {
 ## Usage
 
 ```tsx
-import { DropdownMenu } from '@raystack/apsara'
+import { Menu } from '@raystack/apsara'
 ```
 
-## Dropdown Props
+## Menu Props
 
-The DropdownMenu component is composed of several parts, each with their own props.
+The Menu component is composed of several parts, each with their own props.
 
-The root element is the parent component that holds the dropdown menu. Using the `autocomplete` prop, you can enable autocomplete functionality. Built on top of [Ariakit MenuProvider](https://ariakit.org/reference/menu-provider)
+The root element is the parent component that holds the menu. Using the `autocomplete` prop, you can enable autocomplete functionality. Built on top of [Base UI Menu](https://base-ui.com/react/components/menu)
 
-<auto-type-table path="./props.ts" name="DropdownMenuRootProps" />
+<auto-type-table path="./props.ts" name="MenuRootProps" />
 
-### DropdownMenu.Trigger Props
+### Menu.Trigger Props
 
-The button that triggers the dropdown menu. Built on top of [Ariakit MenuButton](https://ariakit.org/reference/menu-button)
+The button that triggers the menu. Built on top of [Base UI Menu.Trigger](https://base-ui.com/react/components/menu)
 
 By default, the click event is not propagated. You can override this behavior by passing `stopPropagation={false}`.
 
-<auto-type-table path="./props.ts" name="DropdownMenuTriggerProps" />
+Use the `render` prop to render a custom trigger element.
 
-### DropdownMenu.TriggerItem Props
+<auto-type-table path="./props.ts" name="MenuTriggerProps" />
 
-`TriggerItem` is a helper component that renders a `DropdownMenu.Trigger` as a `DropdownMenu.MenuItem`.
+### Menu.Content Props
 
-Accepts all `DropdownMenu.Item` props. The component is helpful to match styles for sub menu trigger. Use DropdownMenu.Trigger if you want more control.
+The container that holds the menu items. Built on top of [Base UI Menu.Popup](https://base-ui.com/react/components/menu)
 
-### DropdownMenu.Content Props
+<auto-type-table path="./props.ts" name="MenuContentProps" />
 
-The container that holds the dropdown menu items. Built on top of [Ariakit Menu](https://ariakit.org/reference/menu)
+### Menu.Item Props
 
-<auto-type-table path="./props.ts" name="DropdownMenuContentProps" />
+Individual clickable options within the menu. Built on top of [Base UI Menu.Item](https://base-ui.com/react/components/menu).
 
-### DropdownMenu.Item Props
+Renders as a [Base UI Autocomplete.Item](https://base-ui.com/react/components/autocomplete) when used in an autocomplete menu. By default, the item's `children` is used for matching and selection, which can be overriden by passing a `value` prop.
 
-Individual clickable options within the dropdown menu. Built on top of [Ariakit MenuItem](https://ariakit.org/reference/menu-item).
+<auto-type-table path="./props.ts" name="MenuItemProps" />
 
-Renders as an [Ariakit ComboboxItem](https://ariakit.org/reference/combobox-item) when used in an autocomplete dropdown. By default, the item's `children` is used for matching and selection, which can be overriden by passing a `value` prop.
+### Menu.Group Props
 
-<auto-type-table path="./props.ts" name="DropdownMenuItemProps" />
+A way to group related menu items together. Built on top of [Base UI Menu.Group](https://base-ui.com/react/components/menu)
 
-### DropdownMenu.Group Props
+<auto-type-table path="./props.ts" name="MenuGroupProps" />
 
-A way to group related menu items together. Built on top of [Ariakit MenuGroup](https://ariakit.org/reference/menu-group)
+### Menu.Label Props
 
-<auto-type-table path="./props.ts" name="DropdownMenuGroupProps" />
+Renders a label in a menu group. This component should be wrapped with Menu.Group so the `aria-labelledby` is correctly set on the group element. Built on top of [Base UI Menu.GroupLabel](https://base-ui.com/react/components/menu)
 
-### DropdownMenu.Label Props
+<auto-type-table path="./props.ts" name="MenuLabelProps" />
 
-Renders a label in a menu group. This component should be wrapped with DropdownMenu.Group so the `aria-labelledby` is correctly set on the group element. Built on top of [Ariakit MenuGroupLabel](https://ariakit.org/reference/menu-group-label)
+### Menu.Separator Props
 
-<auto-type-table path="./props.ts" name="DropdownMenuLabelProps" />
+Visual divider between menu items or groups.
 
-### DropdownMenu.Separator Props
+<auto-type-table path="./props.ts" name="MenuSeparatorProps" />
 
-Visual divider between menu items or groups. Built on top of [Ariakit MenuSeparator](https://ariakit.org/reference/menu-separator)
-
-<auto-type-table path="./props.ts" name="DropdownMenuSeparatorProps" />
-
-### DropdownMenu.EmptyState Props
+### Menu.EmptyState Props
 
 Placeholder content when there are no menu items to display.
 
-<auto-type-table path="./props.ts" name="DropdownMenuEmptyStateProps" />
+<auto-type-table path="./props.ts" name="MenuEmptyStateProps" />
+
+### Menu.SubMenu
+
+Wraps a submenu root. Use with `Menu.SubTrigger` and `Menu.SubContent` to create nested menus. Built on top of [Base UI Menu.SubmenuRoot](https://base-ui.com/react/components/menu)
+
+### Menu.SubTrigger Props
+
+The trigger item for a submenu. Renders with a trailing chevron icon by default. Accepts `leadingIcon` and `trailingIcon` props.
+
+### Menu.SubContent Props
+
+The content container for a submenu. Same structure as `Menu.Content` but without autocomplete support.
 
 ## Examples
 
 ### Basic Usage
 
-A simple dropdown menu with basic functionality.
+A simple menu with basic functionality.
 
 <Demo data={basicDemo} />
 
 ### With Icons
 
-You can add icons to the dropdown items. Supports both leading and trailing icons.
+You can add icons to the menu items. Supports both leading and trailing icons.
 
 <Demo data={iconsDemo} />
 
@@ -103,15 +111,15 @@ Organize related menu items into sections with descriptive headers.
 
 ### Autocomplete
 
-To enable autocomplete, pass the `autocomplete` prop to the Dropdown root element. Each menu instance will manage its own autocomplete behavior.
+To enable autocomplete, pass the `autocomplete` prop to the Menu root element. Each menu instance will manage its own autocomplete behavior.
 
 By default, only the top-level menu items are filtered. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
 
 <Demo data={autocompleteDemo} />
 
-### Linear inspired Dropdown
+### Linear inspired Menu
 
-This is a Linear-inspired dropdown component that supports custom filtering and displays nested options. Users can search through all nested items using a single input field.
+This is a Linear-inspired menu component that supports custom filtering and displays nested options. Users can search through all nested items using a single input field.
 
 To closely replicate Linear-style filtering, the filtering logic should include result ranking. Using a utility like [match-sorter](https://www.npmjs.com/package/match-sorter) can help achieve this by sorting filtered results based on relevance.
 
