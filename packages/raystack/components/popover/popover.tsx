@@ -1,52 +1,57 @@
 'use client';
 
-import { cva } from 'class-variance-authority';
-import { Popover as PopoverPrimitive } from 'radix-ui';
-import React from 'react';
-
+import { Popover as PopoverPrimitive } from '@base-ui/react';
+import { cx } from 'class-variance-authority';
+import { ElementRef, forwardRef } from 'react';
 import styles from './popover.module.css';
 
-const popoverContent = cva(styles.popover);
-
 export interface PopoverContentProps
-  extends React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content> {
-  ariaLabel?: string;
-}
+  extends Omit<
+      PopoverPrimitive.Positioner.Props,
+      'render' | 'className' | 'style'
+    >,
+    PopoverPrimitive.Popup.Props {}
 
-const PopoverContent = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Content>,
+const PopoverContent = forwardRef<
+  ElementRef<typeof PopoverPrimitive.Popup>,
   PopoverContentProps
 >(
   (
     {
+      initialFocus,
+      finalFocus,
       className,
-      align = 'center',
-      sideOffset = 4,
-      ariaLabel = 'Popover content',
-      collisionPadding = 3,
-      ...props
+      style,
+      render,
+      children,
+      ...positionerProps
     },
     ref
-  ) => (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Content
-        ref={ref}
-        align={align}
-        sideOffset={sideOffset}
-        collisionPadding={collisionPadding}
-        avoidCollisions
-        className={popoverContent({ className })}
-        role='dialog'
-        aria-modal='true'
-        aria-label={ariaLabel}
-        {...props}
-      >
-        {props.children}
-      </PopoverPrimitive.Content>
-    </PopoverPrimitive.Portal>
-  )
+  ) => {
+    return (
+      <PopoverPrimitive.Portal>
+        <PopoverPrimitive.Positioner
+          sideOffset={4}
+          collisionPadding={3}
+          className={styles.popoverPositioner}
+          {...positionerProps}
+        >
+          <PopoverPrimitive.Popup
+            ref={ref}
+            className={cx(styles.popover, className)}
+            render={render}
+            initialFocus={initialFocus}
+            finalFocus={finalFocus}
+            style={style}
+          >
+            {children}
+          </PopoverPrimitive.Popup>
+        </PopoverPrimitive.Positioner>
+      </PopoverPrimitive.Portal>
+    );
+  }
 );
-PopoverContent.displayName = PopoverPrimitive.Content.displayName;
+PopoverContent.displayName = 'Popover.Content';
 
 export const Popover = Object.assign(PopoverPrimitive.Root, {
   Trigger: PopoverPrimitive.Trigger,

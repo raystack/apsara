@@ -58,3 +58,52 @@
 :global(.prose) ol:not([data-demo] ol) li:first-child {
   margin-top: var(--rs-space-3);
 }
+
+/* Markdown table styles */
+.prose-table {
+  width: 100%;
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  overflow: hidden;
+  margin: var(--rs-space-5) 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.prose-table thead {
+  background: var(--rs-color-background-base-secondary);
+}
+
+.prose-table th {
+  text-align: left;
+  padding: var(--rs-space-3) var(--rs-space-4);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  color: var(--rs-color-foreground-base-primary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.prose-table td {
+  padding: var(--rs-space-3) var(--rs-space-4);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  color: var(--rs-color-foreground-base-secondary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.prose-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prose-table tbody tr:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.prose-table code {
+  font-family: var(--rs-font-mono);
+  font-size: var(--rs-font-size-mono-small);
+  line-height: var(--rs-line-height-mono-small);
+  color: var(--rs-color-foreground-base-primary);
+}

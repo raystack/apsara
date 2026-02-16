@@ -10,6 +10,7 @@ import tableStyles from '~/components/table/table.module.css';
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
 import { Flex } from '../../flex';
+import { Skeleton } from '../../skeleton';
 import styles from '../data-table.module.css';
 import {
   DataTableColumnDef,
@@ -154,6 +155,52 @@ function VirtualRows<TData>({
   });
 }
 
+function VirtualLoaderRows({
+  columns,
+  rowHeight,
+  count
+}: {
+  columns: ReturnType<
+    ReturnType<typeof useDataTable>['table']['getVisibleLeafColumns']
+  >;
+  rowHeight: number;
+  count: number;
+}) {
+  return (
+    <div className={styles.stickyLoaderContainer}>
+      {Array.from({ length: count }).map((_, rowIndex) => (
+        <div
+          role='row'
+          key={'loading-row-' + rowIndex}
+          className={cx(styles.virtualRow, styles['row'], styles.loaderRow)}
+          style={{ height: rowHeight }}
+        >
+          {columns.map((col, colIndex) => {
+            const columnDef = col.columnDef as DataTableColumnDef<
+              unknown,
+              unknown
+            >;
+            return (
+              <div
+                role='cell'
+                key={'loading-column-' + colIndex}
+                className={cx(
+                  tableStyles.cell,
+                  styles.virtualCell,
+                  columnDef.classNames?.cell
+                )}
+                style={columnDef.styles?.cell}
+              >
+                <Skeleton containerClassName={styles['flex-1']} />
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const DefaultEmptyComponent = () => (
   <EmptyState icon={<TableIcon />} heading='No Data' />
 );
@@ -167,14 +214,22 @@ export function VirtualizedContent({
   zeroState,
   classNames = {}
 }: VirtualizedContentProps) {
-  const { onRowClick, table, isLoading, loadMoreData, tableQuery } =
-    useDataTable();
+  const {
+    onRowClick,
+    table,
+    isLoading,
+    loadMoreData,
+    tableQuery,
+    loadingRowCount = 3
+  } = useDataTable();
 
   const headerGroups = table?.getHeaderGroups();
   const rowModel = table?.getRowModel();
   const { rows = [] } = rowModel || {};
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const showLoaderRows = isLoading && rows.length > 0;
 
   const virtualizer = useVirtualizer({
     count: rows.length,
@@ -196,6 +251,8 @@ export function VirtualizedContent({
     }
   }, [isLoading, loadMoreData, loadMoreOffset]);
 
+  const totalHeight = virtualizer.getTotalSize();
+
   const hasData = rows?.length > 0 || isLoading;
 
   const hasFiltersOrSearch =
@@ -215,6 +272,8 @@ export function VirtualizedContent({
     return <div className={classNames.root}>{stateToShow}</div>;
   }
 
+  const visibleColumns = table.getVisibleLeafColumns();
+
   return (
     <div
       ref={scrollContainerRef}
@@ -229,7 +288,7 @@ export function VirtualizedContent({
         <div
           role='rowgroup'
           className={cx(styles.virtualBodyGroup, classNames.body)}
-          style={{ height: virtualizer.getTotalSize() }}
+          style={{ height: totalHeight }}
         >
           <VirtualRows
             rows={rows}
@@ -241,6 +300,13 @@ export function VirtualizedContent({
           />
         </div>
       </div>
+      {showLoaderRows && (
+        <VirtualLoaderRows
+          columns={visibleColumns}
+          rowHeight={rowHeight}
+          count={loadingRowCount}
+        />
+      )}
     </div>
   );
 }
