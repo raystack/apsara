@@ -355,7 +355,7 @@ describe('Combobox', () => {
       await user.click(input);
 
       await waitFor(() => {
-        expect(onOpenChange).toHaveBeenCalledWith(true);
+        expect(onOpenChange).toHaveBeenCalledWith(true, expect.anything());
       });
     });
 

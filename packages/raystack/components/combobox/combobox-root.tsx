@@ -39,9 +39,8 @@ export const useComboboxContext = <
 export interface BaseComboboxRootProps<Value>
   extends Omit<
     ComboboxPrimitive.Root.Props<Value, boolean>,
-    'onValueChange' | 'onInputValueChange' | 'onOpenChange' | 'multiple'
+    'onValueChange' | 'onInputValueChange' | 'multiple'
   > {
-  onOpenChange?: (open: boolean) => void;
   onInputValueChange?: (inputValue: string) => void;
 }
 
@@ -70,7 +69,6 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
   children,
   onValueChange,
   onInputValueChange,
-  onOpenChange,
   value: providedValue,
   defaultValue,
   items,
