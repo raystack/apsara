@@ -8,14 +8,14 @@ export function DialogExamples() {
     <PlaygroundLayout title='Dialog'>
       <Flex gap='medium'>
         <Dialog>
-          <Dialog.Trigger asChild>
-            <Button> Dialog</Button>
-          </Dialog.Trigger>
+          <Dialog.Trigger render={<Button />}>Dialog</Dialog.Trigger>
           <Dialog.Content
             width='400px'
-            overlayBlur
-            overlayClassName='custom-overlay'
-            overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            overlay={{
+              blur: true,
+              className: 'custom-overlay',
+              style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' }
+            }}
           >
             <Dialog.Title>Custom Styled Dialog</Dialog.Title>
             <Dialog.Description className='custom-description'>
@@ -25,10 +25,10 @@ export function DialogExamples() {
           </Dialog.Content>
         </Dialog>
         <Dialog>
-          <Dialog.Trigger asChild>
-            <Button variant='outline'>Open Dialog</Button>
+          <Dialog.Trigger render={<Button variant='outline' />}>
+            Open Dialog
           </Dialog.Trigger>
-          <Dialog.Content width={600} close={false}>
+          <Dialog.Content width={600} showCloseButton={false}>
             <Dialog.Title>No Close Button</Dialog.Title>
             <Dialog.Description>
               This dialog doesn't show the close button.

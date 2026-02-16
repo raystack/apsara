@@ -9,7 +9,6 @@ import {
 } from './sheet-misc';
 
 export type { SheetContentProps } from './sheet-content';
-export type { SheetRootProps } from './sheet-root';
 
 export const Sheet = Object.assign(DialogPrimitive.Root, {
   Trigger: DialogPrimitive.Trigger,

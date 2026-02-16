@@ -16,26 +16,28 @@ export interface DialogContentProps {
   /** Controls dialog width */
   width?: string | number;
 
-  /** Enables backdrop blur effect */
-  overlayBlur?: boolean;
+  /**
+   * Controls whether to show the close button
+   * @default true
+   */
+  showCloseButton?: boolean;
 
-  /** Custom class for overlay styling */
-  overlayClassName?: string;
+  /**
+   * Toggle nested dialog animation (scaling and translation)
+   * @default true
+   */
+  showNestedAnimation?: boolean;
 
-  /** Custom styles for overlay */
-  overlayStyle?: React.CSSProperties;
+  /** Overlay configuration including blur, className, and style */
+  overlay?: {
+    blur?: boolean;
+    className?: string;
+    style?: React.CSSProperties;
+    forceRender?: boolean;
+  } & React.ComponentPropsWithoutRef<'div'>;
 
   /** Additional CSS class names */
   className?: string;
-
-  /** Position of the dialog */
-  side?: 'top' | 'right' | 'bottom' | 'left';
-
-  /** Accessible label for the dialog */
-  ariaLabel?: string;
-
-  /** Detailed description for screen readers */
-  ariaDescription?: string;
 }
 
 export interface DialogHeaderProps {
