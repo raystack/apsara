@@ -1,64 +1,60 @@
 'use client';
 
-import {
-  ComboboxGroup as AriakitComboboxGroup,
-  ComboboxGroupLabel as AriakitComboboxGroupLabel,
-  ComboboxSeparator as AriakitComboboxSeparator
-} from '@ariakit/react';
+import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import { ElementRef, forwardRef } from 'react';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
 export const ComboboxLabel = forwardRef<
-  ElementRef<typeof AriakitComboboxGroupLabel>,
-  ComponentPropsWithoutRef<typeof AriakitComboboxGroupLabel>
+  ElementRef<typeof ComboboxPrimitive.GroupLabel>,
+  ComboboxPrimitive.GroupLabel.Props
 >(({ className, ...props }, ref) => {
-  const { inputValue } = useComboboxContext();
-  if (inputValue?.length) return null;
+  const { inputValue, hasItems } = useComboboxContext();
+  if (!hasItems && inputValue?.length) return null;
 
   return (
-    <AriakitComboboxGroupLabel
+    <ComboboxPrimitive.GroupLabel
       ref={ref}
       className={cx(styles.label, className)}
       {...props}
     />
   );
 });
-ComboboxLabel.displayName = 'ComboboxLabel';
+ComboboxLabel.displayName = 'Combobox.Label';
 
 export const ComboboxGroup = forwardRef<
-  ElementRef<typeof AriakitComboboxGroup>,
-  ComponentPropsWithoutRef<typeof AriakitComboboxGroup>
+  ElementRef<typeof ComboboxPrimitive.Group>,
+  ComboboxPrimitive.Group.Props
 >(({ className, children, ...props }, ref) => {
-  const { inputValue } = useComboboxContext();
-  if (inputValue?.length) return children;
+  const { inputValue, hasItems } = useComboboxContext();
+  if (!hasItems && inputValue?.length) return children;
 
   return (
-    <AriakitComboboxGroup
+    <ComboboxPrimitive.Group
       ref={ref}
       className={cx(styles.group, className)}
       {...props}
     >
       {children}
-    </AriakitComboboxGroup>
+    </ComboboxPrimitive.Group>
   );
 });
-ComboboxGroup.displayName = 'ComboboxGroup';
+ComboboxGroup.displayName = 'Combobox.Group';
 
 export const ComboboxSeparator = forwardRef<
-  ElementRef<typeof AriakitComboboxSeparator>,
-  ComponentPropsWithoutRef<typeof AriakitComboboxSeparator>
+  ElementRef<typeof ComboboxPrimitive.Separator>,
+  ComboboxPrimitive.Separator.Props
 >(({ className, ...props }, ref) => {
-  const { inputValue } = useComboboxContext();
-  if (inputValue?.length) return null;
+  const { inputValue, hasItems } = useComboboxContext();
+  if (!hasItems && inputValue?.length) return null;
 
   return (
-    <AriakitComboboxSeparator
+    <ComboboxPrimitive.Separator
       ref={ref}
       className={cx(styles.separator, className)}
       {...props}
     />
   );
 });
-ComboboxSeparator.displayName = 'ComboboxSeparator';
+ComboboxSeparator.displayName = 'Combobox.Separator';

@@ -74,13 +74,13 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
     ],
     filterType: 'multiselect',
     enableColumnFilter: true,
-    enableHiding: true,
-
+    enableHiding: true
   },
   {
     accessorKey: 'email',
     header: 'Email',
-    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>
+    cell: ({ row }) => <div className='lowercase'>{row.getValue('email')}</div>,
+    enableColumnFilter: true
   },
   {
     accessorKey: 'amount',

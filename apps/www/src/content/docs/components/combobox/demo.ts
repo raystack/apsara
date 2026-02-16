@@ -6,7 +6,7 @@ export const getCode = (props: Record<string, unknown>) => {
   const { multiple, ...rest } = props;
   return `
   <Combobox${getPropsString({ ...(multiple ? { multiple } : {}) })}>
-    <Combobox.Input placeholder="Enter a fruit"${getPropsString(rest)} />
+    <Combobox.Input placeholder="Select a fruit"${getPropsString(rest)} width={240} />
     <Combobox.Content>
       <Combobox.Item>Apple</Combobox.Item>
       <Combobox.Item>Banana</Combobox.Item>
@@ -48,53 +48,24 @@ export const basicDemo = {
   </Combobox>`
 };
 
-export const iconDemo = {
-  type: 'code',
-  code: `
-  <Combobox>
-    <Combobox.Input placeholder="Enter a fruit" />
-    <Combobox.Content>
-      <Combobox.Item leadingIcon={<Info size={16} />}>Apple</Combobox.Item>
-      <Combobox.Item leadingIcon={<X size={16} />}>Banana</Combobox.Item>
-      <Combobox.Item leadingIcon={<Home size={16} />}>Grape</Combobox.Item>
-      <Combobox.Item leadingIcon={<Laugh size={16} />}>Orange</Combobox.Item>
-    </Combobox.Content>
-  </Combobox>`
-};
-
-export const sizeDemo = {
-  type: 'code',
-  code: `
-  <Flex align="center" gap="large">
-    <Combobox>
-      <Combobox.Input size="small" placeholder="Small combobox" />
-      <Combobox.Content>
-        <Combobox.Item>Option 1</Combobox.Item>
-        <Combobox.Item>Option 2</Combobox.Item>
-      </Combobox.Content>
-    </Combobox>
-    <Combobox>
-      <Combobox.Input placeholder="Large combobox" />
-      <Combobox.Content>
-        <Combobox.Item>Option 1</Combobox.Item>
-        <Combobox.Item>Option 2</Combobox.Item>
-      </Combobox.Content>
-    </Combobox>
-  </Flex>`
-};
-
 export const multipleDemo = {
   type: 'code',
   code: `
   <Combobox multiple>
-    <Combobox.Input placeholder="Select fruits..." />
+    <Combobox.Input placeholder="Select fruits" width={300} />
     <Combobox.Content>
       <Combobox.Item>Apple</Combobox.Item>
       <Combobox.Item>Banana</Combobox.Item>
       <Combobox.Item>Grape</Combobox.Item>
       <Combobox.Item>Orange</Combobox.Item>
-      <Combobox.Item>Pineapple</Combobox.Item>
       <Combobox.Item>Mango</Combobox.Item>
+      <Combobox.Item>Pineapple</Combobox.Item>
+      <Combobox.Item>Strawberry</Combobox.Item>
+      <Combobox.Item>Watermelon</Combobox.Item>
+      <Combobox.Item>Kiwi</Combobox.Item>
+      <Combobox.Item>Lemon</Combobox.Item>
+      <Combobox.Item>Lime</Combobox.Item>
+      <Combobox.Item>Lemon</Combobox.Item>
     </Combobox.Content>
   </Combobox>`
 };
@@ -103,19 +74,52 @@ export const groupDemo = {
   type: 'code',
   code: `
   <Combobox>
-    <Combobox.Input placeholder="Enter a fruit" />
+    <Combobox.Input placeholder="Search items" width={240} />
     <Combobox.Content>
       <Combobox.Group>
         <Combobox.Label>Fruits</Combobox.Label>
-        <Combobox.Item>Apple</Combobox.Item>
-        <Combobox.Item>Banana</Combobox.Item>
+        <Combobox.Item value="apple">Apple</Combobox.Item>
+        <Combobox.Item value="banana">Banana</Combobox.Item>
       </Combobox.Group>
       <Combobox.Separator />
       <Combobox.Group>
         <Combobox.Label>Vegetables</Combobox.Label>
-        <Combobox.Item>Carrot</Combobox.Item>
-        <Combobox.Item>Broccoli</Combobox.Item>
+        <Combobox.Item value="carrot">Carrot</Combobox.Item>
+        <Combobox.Item value="broccoli">Broccoli</Combobox.Item>
       </Combobox.Group>
+    </Combobox.Content>
+  </Combobox>`
+};
+
+export const iconDemo = {
+  type: 'code',
+  code: `
+  <Combobox>
+    <Combobox.Input placeholder="Select a fruit" width={240} />
+    <Combobox.Content>
+      <Combobox.Item value="apple" leadingIcon={<Info size={16} />}>Apple</Combobox.Item>
+      <Combobox.Item value="banana" leadingIcon={<X size={16} />}>Banana</Combobox.Item>
+      <Combobox.Item value="grape" leadingIcon={<Home size={16} />}>Grape</Combobox.Item>
+      <Combobox.Item value="orange" leadingIcon={<Laugh size={16} />}>Orange</Combobox.Item>
+    </Combobox.Content>
+  </Combobox>`
+};
+
+export const withLabelDemo = {
+  type: 'code',
+  code: `
+  <Combobox>
+    <Combobox.Input
+      placeholder="Select a fruit"
+      label="Favorite Fruit"
+      helperText="Choose your favorite fruit"
+      width={240}
+    />
+    <Combobox.Content>
+      <Combobox.Item value="apple">Apple</Combobox.Item>
+      <Combobox.Item value="banana">Banana</Combobox.Item>
+      <Combobox.Item value="blueberry">Blueberry</Combobox.Item>
+      <Combobox.Item value="grapes">Grapes</Combobox.Item>
     </Combobox.Content>
   </Combobox>`
 };
