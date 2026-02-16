@@ -1,21 +1,15 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { Select as SelectPrimitive } from 'radix-ui';
-import {
-  ElementRef,
-  forwardRef,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react';
+import { forwardRef, useLayoutEffect, useRef, useState } from 'react';
 import { Chip } from '../chip';
 import { Text } from '../text';
 import styles from './select.module.css';
 import { ItemType } from './types';
 
-interface SelectMultipleValueProps extends SelectPrimitive.SelectValueProps {
+interface SelectMultipleValueProps {
   data: ItemType[];
+  className?: string;
 }
 
 /*
@@ -28,7 +22,7 @@ const calculateTextWidth = (text: string, fontSize: number = 11): number => {
 };
 
 export const SelectMultipleValue = forwardRef<
-  ElementRef<typeof SelectPrimitive.Value>,
+  HTMLSpanElement,
   SelectMultipleValueProps
 >(({ data = [], ...props }, ref) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -51,7 +45,6 @@ export const SelectMultipleValue = forwardRef<
   useLayoutEffect(() => {
     if (!containerRef.current || data.length === 0) return;
 
-    // Calculate chip widths based on text length and icon width
     const chipWidths: number[] = data.map(item => {
       const text =
         typeof item.children === 'string' ? item.children : item.value;
@@ -62,13 +55,11 @@ export const SelectMultipleValue = forwardRef<
     let totalWidth = 0;
     let count = 0;
 
-    // Always show at least one chip
     if (data.length > 0) {
       count = 1;
       totalWidth = chipWidths[0];
     }
 
-    // Try to fit more chips
     for (let i = 1; i < data.length; i++) {
       const newWidth = totalWidth + chipWidths[i];
       if (newWidth <= containerWidth) {
@@ -84,7 +75,7 @@ export const SelectMultipleValue = forwardRef<
 
   return (
     <div ref={containerRef} className={cx(styles.valueContent)}>
-      <SelectPrimitive.Value ref={ref} {...props}>
+      <span ref={ref} {...props}>
         <div className={cx(styles.valueContent)}>
           {data.slice(0, visibleCount).map(item => (
             <Chip key={item.value} leadingIcon={item.leadingIcon}>
@@ -95,7 +86,7 @@ export const SelectMultipleValue = forwardRef<
             <Text>+{data.length - visibleCount}</Text>
           )}
         </div>
-      </SelectPrimitive.Value>
+      </span>
     </div>
   );
 });

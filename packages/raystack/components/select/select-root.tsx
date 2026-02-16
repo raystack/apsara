@@ -1,251 +1,233 @@
 'use client';
 
-import { ComboboxProvider } from '@ariakit/react';
-import { Select as SelectPrimitive } from 'radix-ui';
+import {
+  Combobox as ComboboxPrimitive,
+  Select as SelectPrimitive
+} from '@base-ui/react';
 import {
   createContext,
+  RefObject,
   useCallback,
   useContext,
-  useId,
   useMemo,
   useRef,
   useState
 } from 'react';
 import { ItemType } from './types';
 
-interface CommonProps {
+type SelectMode = 'select' | 'combobox';
+
+interface SelectContextValue {
+  mode: SelectMode;
+  multiple: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
+  inputValue: string;
+  hasItems: boolean;
+  items: Record<string, ItemType>;
+  triggerRef: RefObject<HTMLElement | null>;
+  registerItem: (item: ItemType) => void;
+  unregisterItem: (value: string) => void;
+  shouldFilter: boolean;
+}
+
+const SelectContext = createContext<SelectContextValue | undefined>(undefined);
+
+export const useSelectContext = (): SelectContextValue => {
+  const context = useContext(SelectContext);
+  if (!context) {
+    throw new Error('useSelectContext must be used within a SelectProvider');
+  }
+  return context;
+};
+
+// Conditional type: single mode returns Value, multiple mode returns Value[]
+type SelectValueType<
+  Value,
+  Multiple extends boolean | undefined
+> = Multiple extends true ? Value[] : Value;
+
+export type SelectRootProps<
+  Value = any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  Multiple extends boolean | undefined = false
+> = {
+  children?: React.ReactNode;
+  multiple?: Multiple;
+  value?: SelectValueType<Value, Multiple> | null;
+  defaultValue?: SelectValueType<Value, Multiple> | null;
+  onValueChange?: (value: SelectValueType<Value, Multiple>) => void;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  disabled?: boolean;
+  required?: boolean;
+  name?: string;
+  items?: Value[];
   autocomplete?: boolean;
   autocompleteMode?: 'auto' | 'manual';
   searchValue?: string;
   onSearch?: (value: string) => void;
   defaultSearchValue?: string;
-}
-
-interface SelectContextValue extends CommonProps {
-  value?: string | string[];
-  registerItem: (item: ItemType) => void;
-  unregisterItem: (value: string) => void;
-  multiple: boolean;
-  items: Record<string, ItemType>;
-  updateSelectionInProgress: (value: boolean) => void;
-  setValue: (value: string) => void;
-}
-
-interface UseSelectContext extends SelectContextValue {
-  shouldFilter?: boolean;
-}
-
-/*
-Root context to manage the Select control
-@remarks Only for internal usage.
-*/
-const SelectContext = createContext<SelectContextValue | undefined>(undefined);
-
-export const useSelectContext = (): UseSelectContext => {
-  const context = useContext(SelectContext);
-  if (!context) {
-    throw new Error('useSelectContext must be used within a SelectProvider');
-  }
-  const shouldFilter = !!(
-    context?.autocomplete &&
-    context?.autocompleteMode === 'auto' &&
-    context?.searchValue?.length
-  );
-  return {
-    ...context,
-    shouldFilter
-  };
 };
 
-interface NormalSelectRootProps extends SelectPrimitive.SelectProps {
-  autocomplete?: false;
-  autocompleteMode?: never;
-  searchValue?: never;
-  onSearch?: never;
-  defaultSearchValue?: never;
-}
-
-interface AutocompleteSelectRootProps
-  extends SelectPrimitive.SelectProps,
-    CommonProps {
-  autocomplete: true;
-}
-
-type BaseSelectProps = Omit<
-  NormalSelectRootProps | AutocompleteSelectRootProps,
-  'autoComplete' | 'value' | 'onValueChange' | 'defaultValue'
-> & {
-  htmlAutoComplete?: string;
-};
-
-export interface SingleSelectProps extends BaseSelectProps {
-  multiple?: false;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  defaultValue?: string;
-}
-
-export interface MultipleSelectProps extends BaseSelectProps {
-  multiple: true;
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
-  defaultValue?: string[];
-}
-
-export type SelectRootProps = SingleSelectProps | MultipleSelectProps;
-
-const SELECT_INTERNAL_VALUE = 'SELECT_INTERNAL_VALUE';
-
-export const SelectRoot = (props: SelectRootProps) => {
+export function SelectRoot<
+  Value = any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  Multiple extends boolean | undefined = false
+>(props: SelectRootProps<Value, Multiple>) {
   const {
     children,
     value: providedValue,
     onValueChange,
     defaultValue,
-    autocomplete,
+    autocomplete = false,
     autocompleteMode = 'auto',
     searchValue: providedSearchValue,
     onSearch,
     defaultSearchValue = '',
     open: providedOpen,
-    defaultOpen = false,
+    defaultOpen,
     onOpenChange,
-    htmlAutoComplete,
-    multiple = false,
+    multiple = false as Multiple,
+    items: itemsProp,
+    disabled,
+    required,
+    name,
     ...rest
   } = props;
 
-  const [internalValue, setInternalValue] = useState<
-    string | string[] | undefined
-  >(defaultValue);
+  const [internalValue, setInternalValue] = useState<any>(defaultValue ?? null); // eslint-disable-line @typescript-eslint/no-explicit-any
   const [internalSearchValue, setInternalSearchValue] =
     useState(defaultSearchValue);
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const [items, setItems] = useState<SelectContextValue['items']>({});
-  const id = useId();
-  const isSelectionInProgress = useRef(false);
+  const [registeredItems, setRegisteredItems] = useState<
+    Record<string, ItemType>
+  >({});
+  const triggerRef = useRef<HTMLElement>(null);
 
   const computedValue = providedValue ?? internalValue;
   const searchValue = providedSearchValue ?? internalSearchValue;
-  const open = providedOpen ?? internalOpen;
+  const mode: SelectMode = autocomplete ? 'combobox' : 'select';
 
-  const updateSelectionInProgress = useCallback((value: boolean) => {
-    isSelectionInProgress.current = value;
-  }, []);
-
-  const setValue = useCallback(
-    (value: string) => {
-      /*
-       * If the select is placed inside a form, onChange is called with an empty value
-       * WORKAROUND FOR ISSUE https://github.com/radix-ui/primitives/issues/3135
-       */
-      if (value === '') return;
-
-      if (multiple) {
-        updateSelectionInProgress(true);
-        const set = new Set<string>(
-          Array.isArray(computedValue)
-            ? computedValue
-            : [computedValue ?? ''].filter(Boolean)
-        );
-
-        if (set.has(value)) set.delete(value);
-        else set.add(value);
-
-        const newValue = Array.from(set);
-
-        setInternalValue(newValue);
-        (onValueChange as MultipleSelectProps['onValueChange'])?.(newValue);
-      } else {
-        setInternalValue(value);
-        (onValueChange as SingleSelectProps['onValueChange'])?.(value);
-      }
-    },
-    [multiple, onValueChange, computedValue, updateSelectionInProgress]
-  );
-
-  const setSearchValue = useCallback(
-    (value: string) => {
+  const handleInputValueChange = useCallback(
+    (
+      value: string,
+      _eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+    ) => {
       setInternalSearchValue(value);
       onSearch?.(value);
     },
     [onSearch]
   );
 
+  const handleSelectValueChange = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (value: any) => {
+      setInternalValue(value);
+      onValueChange?.(value);
+    },
+    [onValueChange]
+  );
+
+  const handleComboboxValueChange = useCallback(
+    (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      value: any,
+      _eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+    ) => {
+      setInternalValue(value);
+      onValueChange?.(value);
+    },
+    [onValueChange]
+  );
+
   const handleOpenChange = useCallback(
-    (value: boolean) => {
-      if (isSelectionInProgress.current) return;
-      setInternalOpen(value);
-      onOpenChange?.(value);
+    (open: boolean) => {
+      onOpenChange?.(open);
     },
     [onOpenChange]
   );
 
-  const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
-    setItems(prev => ({ ...prev, [item.value]: item }));
+  const registerItem = useCallback((item: ItemType) => {
+    setRegisteredItems(prev => ({ ...prev, [String(item.value)]: item }));
   }, []);
 
-  const unregisterItem = useCallback<SelectContextValue['unregisterItem']>(
-    value => {
-      setItems(prev => {
-        const { [value]: _, ...rest } = prev;
-        return rest;
-      });
-    },
-    []
+  const unregisterItem = useCallback((value: string) => {
+    setRegisteredItems(prev => {
+      const { [value]: _, ...rest } = prev;
+      return rest;
+    });
+  }, []);
+
+  const shouldFilter =
+    mode === 'combobox' &&
+    autocompleteMode === 'auto' &&
+    !itemsProp &&
+    searchValue.length > 0;
+
+  const contextValue = useMemo(
+    () => ({
+      mode,
+      multiple: !!multiple,
+      value: computedValue,
+      inputValue: searchValue,
+      hasItems: !!itemsProp,
+      items: registeredItems,
+      triggerRef,
+      registerItem,
+      unregisterItem,
+      shouldFilter
+    }),
+    [
+      mode,
+      multiple,
+      computedValue,
+      searchValue,
+      itemsProp,
+      registeredItems,
+      registerItem,
+      unregisterItem,
+      shouldFilter
+    ]
   );
 
-  /*
-   * Radix internally shows the placeholder when the value is empty.
-   * This value is used to manage the internal value of Radix Select to make it work
-   */
-  const radixValue = useMemo(() => {
-    if (!computedValue) return '';
-    if (typeof computedValue === 'string') return computedValue;
-    if (Array.isArray(computedValue) && computedValue.length)
-      return `${SELECT_INTERNAL_VALUE}-${id}`;
-    return String(computedValue) ?? '';
-  }, [computedValue, id]);
-
-  const element = (
-    <ComboboxProvider
-      resetValueOnHide
-      focusLoop={false}
-      includesBaseElement={false}
-      value={searchValue}
-      setValue={setSearchValue}
-      open={open}
-      setOpen={handleOpenChange}
-    >
-      {children}
-    </ComboboxProvider>
-  );
+  if (mode === 'combobox') {
+    return (
+      <SelectContext.Provider value={contextValue}>
+        <ComboboxPrimitive.Root
+          multiple={multiple as boolean}
+          onValueChange={handleComboboxValueChange}
+          onInputValueChange={handleInputValueChange}
+          items={itemsProp}
+          value={providedValue as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+          defaultValue={defaultValue as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+          open={providedOpen}
+          defaultOpen={defaultOpen}
+          onOpenChange={handleOpenChange}
+          modal
+          {...rest}
+        >
+          {children}
+        </ComboboxPrimitive.Root>
+      </SelectContext.Provider>
+    );
+  }
 
   return (
-    <SelectContext.Provider
-      value={{
-        value: computedValue,
-        registerItem,
-        unregisterItem,
-        autocomplete,
-        autocompleteMode,
-        searchValue,
-        multiple,
-        items,
-        updateSelectionInProgress,
-        setValue
-      }}
-    >
+    <SelectContext.Provider value={contextValue}>
       <SelectPrimitive.Root
-        autoComplete={htmlAutoComplete}
-        value={radixValue}
-        onValueChange={setValue}
-        open={open}
+        multiple={multiple as boolean}
+        onValueChange={handleSelectValueChange}
+        value={providedValue as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+        defaultValue={defaultValue as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+        open={providedOpen}
+        defaultOpen={defaultOpen}
         onOpenChange={handleOpenChange}
+        disabled={disabled}
+        required={required}
+        name={name}
         {...rest}
       >
-        {autocomplete ? element : children}
+        {children}
       </SelectPrimitive.Root>
     </SelectContext.Provider>
   );
-};
+}

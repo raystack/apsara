@@ -1,6 +1,8 @@
-.content {
-  --apsara-select-padding: var(--rs-space-2);
+.positioner {
   z-index: var(--rs-z-index-portal);
+}
+
+.content {
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
@@ -9,10 +11,15 @@
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-soft);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  min-width: var(--radix-select-trigger-width);
+  min-width: var(--anchor-width);
   transition: all 0.2s ease;
   max-height: 320px;
+  overflow: auto;
   position: relative;
+}
+
+.list {
+  padding: var(--rs-space-2);
 }
 
 .menuitem {
@@ -27,13 +34,13 @@
   border-radius: var(--rs-radius-2);
 }
 
-.menuitem[data-highlighted],
-.menuitem[data-active-item="true"] {
+.menuitem[data-highlighted] {
   outline: none;
   cursor: pointer;
   background: var(--rs-color-background-base-primary-hover);
 }
-.content:not([data-multiselectable="true"]) .menuitem[data-state="checked"] {
+
+.content:not([data-multiselectable="true"]) .menuitem[data-selected] {
   background: var(--rs-color-background-neutral-secondary);
 }
 
@@ -114,6 +121,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
   gap: var(--rs-space-2);
 }
+
 .trigger[data-multiselectable="true"] {
   padding-top: var(--rs-space-2);
   padding-bottom: var(--rs-space-2);
@@ -124,6 +132,7 @@
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
 }
+
 .trigger:focus-visible {
   outline: 1px solid var(--rs-color-border-accent-emphasis);
 }
@@ -213,14 +222,12 @@
 }
 
 .placeholder,
-[data-placeholder],
-.valueContent[data-state="placeholder"] {
+[data-placeholder] {
   color: var(--rs-color-foreground-base-tertiary);
 }
 
 .placeholder:hover,
-[data-placeholder]:hover,
-.valueContent[data-state="placeholder"]:hover {
+[data-placeholder]:hover {
   color: var(--rs-color-foreground-base-tertiary);
 }
 
@@ -247,8 +254,7 @@
 }
 
 .trigger[data-disabled] .placeholder,
-.trigger[data-disabled] [data-placeholder],
-.trigger[data-disabled] .valueContent[data-state="placeholder"] {
+.trigger[data-disabled] [data-placeholder] {
   color: var(--rs-color-foreground-base-tertiary);
 }
 
@@ -257,30 +263,12 @@
   pointer-events: none;
 }
 
-.comboboxContent,
-.viewport {
-  padding: var(--apsara-select-padding);
-}
-
-.comboboxViewport {
+.list:empty {
   padding: 0;
 }
 
-/*
-  Empty state matches:
-   1. Completely empty container
-   2. Container where all .item children have data-hidden="true"
-*/
-.comboboxContent:empty,
-.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))) {
-  padding: 0;
-}
-.comboboxContainer:has(.comboboxContent:empty) .comboboxInput,
-.comboboxContainer:has(
-    .comboboxContent:not(:has(.menuitem:not([data-hidden="true"])))
-  )
-  .comboboxInput {
-  border-bottom: none;
+.content:has(.list:empty) {
+  border: none;
 }
 
 .comboboxInput {
@@ -302,8 +290,4 @@
 
 .comboboxInput:focus {
   outline: none;
-}
-
-.hidden {
-  display: none;
 }

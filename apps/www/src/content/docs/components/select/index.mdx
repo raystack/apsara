@@ -27,7 +27,7 @@ import { Select } from "@raystack/apsara";
 
 The Select component is composed of several parts, each with their own props.
 
-The root element is the parent component that holds the select. Using the `autocomplete` prop, you can enable autocomplete functionality. Autcomplet is built using [Ariakit ComboboxProvider](https://ariakit.org/reference/combobox-provider)
+The root element is the parent component that holds the select. Using the `autocomplete` prop, you can enable autocomplete functionality built on [Base UI Combobox](https://base-ui.com/react/components/combobox).
 
 <auto-type-table path="./props.ts" name="SelectRootProps" />
 
@@ -36,6 +36,12 @@ The root element is the parent component that holds the select. Using the `autoc
 The button that triggers the Select.
 
 <auto-type-table path="./props.ts" name="SelectTriggerProps" />
+
+### Select.Value Props
+
+Displays the selected value inside the trigger. Supports a render function for custom value display.
+
+<auto-type-table path="./props.ts" name="SelectValueProps" />
 
 ### Select.Content Props
 
@@ -75,7 +81,7 @@ Visual divider between Select items or groups.
 
 ### Icon
 
-You can pass `leadingIcon` prop to Select.Item to include items
+You can pass the `leadingIcon` prop to Select.Item to display an icon before the label.
 
 <Demo data={iconDemo} />
 
@@ -114,4 +120,6 @@ The Select component follows WAI-ARIA guidelines:
 - Trigger has role `combobox`
 - Content has role `listbox`
 - Items have role `option`
-- ARIA labels and descriptions
+- Selected items are marked with `aria-selected`
+- Keyboard navigation: Arrow keys to navigate, Enter to select, Escape to close
+- Full focus management within the popup
