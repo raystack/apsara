@@ -7,8 +7,7 @@ import {
   MenuSeparator
 } from './menu-misc';
 import { MenuRoot, MenuSubMenu } from './menu-root';
-import { MenuSubTrigger } from './menu-subtrigger';
-import { MenuTrigger } from './menu-trigger';
+import { MenuSubTrigger, MenuTrigger } from './menu-trigger';
 
 export const Menu = Object.assign(MenuRoot, {
   Trigger: MenuTrigger,
@@ -18,7 +17,7 @@ export const Menu = Object.assign(MenuRoot, {
   Label: MenuLabel,
   Separator: MenuSeparator,
   EmptyState: MenuEmptyState,
-  SubMenu: MenuSubMenu,
-  SubTrigger: MenuSubTrigger,
-  SubContent: MenuSubContent
+  Submenu: MenuSubMenu,
+  SubmenuTrigger: MenuSubTrigger,
+  SubmenuContent: MenuSubContent
 });

@@ -10,7 +10,8 @@
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
-.cell[data-highlighted] {
+.cell[data-highlighted],
+.cell[data-popup-open] {
   outline: none;
   cursor: pointer;
   font-weight: var(--rs-font-weight-regular);

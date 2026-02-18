@@ -8,42 +8,111 @@ import { cx } from 'class-variance-authority';
 import { forwardRef, useCallback, useRef } from 'react';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
+import {
+  dispatchKeyboardEvent,
+  isElementSubMenuOpen,
+  isElementSubMenuTrigger,
+  KEYCODES
+} from './utils';
 
-export interface MenuContentProps extends MenuPrimitive.Popup.Props {
+export interface MenuContentProps
+  extends Omit<
+      MenuPrimitive.Positioner.Props,
+      'render' | 'className' | 'style'
+    >,
+    MenuPrimitive.Popup.Props {
   searchPlaceholder?: string;
-  sideOffset?: number;
-  side?: MenuPrimitive.Positioner.Props['side'];
-  align?: MenuPrimitive.Positioner.Props['align'];
-  name?: string;
 }
 
 export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
   (
     {
-      name,
       className,
       children,
       searchPlaceholder = 'Search...',
+      render,
+      finalFocus,
+      style,
       sideOffset = 4,
-      side,
-      align,
-      ...props
+      align = 'start',
+      onFocus,
+      ...positionerProps
     },
     ref
   ) => {
-    const { autocomplete, searchValue, onSearch } = useMenuContext();
-    const inputRef = useRef<HTMLInputElement>(null);
+    const {
+      autocomplete,
+      inputValue,
+      onInputValueChange,
+      inputRef,
+      isInitialRender,
+      parent
+    } = useMenuContext();
+
     const focusInput = useCallback(() => {
-      if (document?.activeElement !== inputRef.current)
-        inputRef.current?.focus();
+      if (document?.activeElement !== inputRef?.current)
+        inputRef?.current?.focus();
+    }, [inputRef]);
+    const highlightedItem = useRef<
+      [index: number, reason: 'keyboard' | 'pointer' | 'none']
+    >([-1, 'none']);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const highlightFirstItem = useCallback(() => {
+      if (!isInitialRender?.current) return;
+      isInitialRender.current = false;
+      const item = containerRef.current?.querySelector(
+        '[role="option"]:nth-child(1)'
+      );
+      if (!item) return;
+      item.dispatchEvent(new PointerEvent('mousemove', { bubbles: true }));
+    }, [isInitialRender]);
+
+    const checkAndOpenSubMenu = useCallback(() => {
+      if (highlightedItem.current[0] === -1) return;
+
+      const item = containerRef.current?.querySelector(
+        `[role="option"]:nth-child(${highlightedItem.current[0] + 1})`
+      );
+      if (!item || !isElementSubMenuTrigger(item)) return;
+      dispatchKeyboardEvent(item, KEYCODES.ARROW_RIGHT);
+    }, []);
+
+    const checkAndCloseSubMenu = useCallback((e: KeyboardEvent) => {
+      if (highlightedItem.current[0] === -1) return;
+      const item = containerRef.current?.querySelector(
+        `[role="option"]:nth-child(${highlightedItem.current[0] + 1})`
+      );
+      if (
+        !item ||
+        !isElementSubMenuTrigger(item) ||
+        !isElementSubMenuOpen(item)
+      )
+        return;
+      dispatchKeyboardEvent(item, KEYCODES.ESCAPE);
+      e.stopPropagation();
+    }, []);
+
+    const blurStaleMenuItem = useCallback((index: number) => {
+      const item = containerRef.current?.querySelector(
+        `[role="option"]:nth-child(${index + 1})`
+      );
+      if (
+        !item ||
+        !isElementSubMenuTrigger(item) ||
+        !isElementSubMenuOpen(item)
+      )
+        return;
+      dispatchKeyboardEvent(item, KEYCODES.ESCAPE);
+      item.dispatchEvent(new PointerEvent('pointerout', { bubbles: true }));
     }, []);
 
     return (
       <MenuPrimitive.Portal>
         <MenuPrimitive.Positioner
           sideOffset={sideOffset}
-          side={side}
           align={align}
+          {...positionerProps}
         >
           <MenuPrimitive.Popup
             ref={ref}
@@ -52,51 +121,65 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
               autocomplete && styles.comboboxContainer,
               className
             )}
-            {...props}
-            role={autocomplete ? 'dialog' : undefined}
+            style={style}
+            render={render}
+            finalFocus={finalFocus}
+            role={autocomplete ? 'dialog' : 'menu'}
             onFocus={
-              autocomplete
+              autocomplete || parent?.autocomplete
                 ? e => {
-                    console.log('focus ', name);
                     focusInput();
                     e.stopPropagation();
+                    highlightFirstItem();
+                    onFocus?.(e);
                   }
                 : undefined
             }
-            // onMouseEnter={e => {
-            //   console.log('mouse enter');
-            //   inputRef.current?.focus();
-            //   e.stopPropagation();
-            // }}
-            data-menu
           >
             {autocomplete ? (
               <AutocompletePrimitive.Root
                 inline
                 open
-                value={searchValue}
-                onValueChange={(value: string) => onSearch?.(value)}
-                autoHighlight={searchValue?.length}
+                value={inputValue}
+                onValueChange={(value: string) => onInputValueChange?.(value)}
+                autoHighlight={!!inputValue?.length}
                 mode='none'
                 loopFocus={false}
+                onItemHighlighted={(value, eventDetails) => {
+                  if (
+                    highlightedItem.current[1] === 'pointer' &&
+                    eventDetails.reason === 'keyboard'
+                  ) {
+                    // focus moved using keyboard after using pointer
+                    blurStaleMenuItem(highlightedItem.current[0]);
+                  }
+                  highlightedItem.current = [
+                    eventDetails.index,
+                    eventDetails.reason
+                  ];
+                }}
               >
                 <AutocompletePrimitive.Input
-                  autoFocus
                   placeholder={searchPlaceholder}
                   className={styles.comboboxInput}
                   ref={inputRef}
+                  onPointerEnter={e => {
+                    focusInput();
+                  }}
                   onKeyDown={e => {
-                    if (
-                      e.key === 'Escape' ||
-                      e.key === 'ArrowLeft' ||
-                      e.key === 'ArrowRight'
-                    )
-                      return;
-                    console.log('key down', e.key);
+                    if (e.key === 'ArrowLeft') return;
+                    if (e.key === 'Escape')
+                      return checkAndCloseSubMenu(e.nativeEvent);
+                    if (e.key === 'ArrowRight' || e.key === 'Enter')
+                      checkAndOpenSubMenu();
                     e.stopPropagation();
                   }}
+                  tabIndex={-1}
                 />
-                <AutocompletePrimitive.List className={styles.comboboxContent}>
+                <AutocompletePrimitive.List
+                  className={styles.comboboxContent}
+                  ref={containerRef}
+                >
                   {children}
                 </AutocompletePrimitive.List>
               </AutocompletePrimitive.Root>

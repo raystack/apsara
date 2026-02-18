@@ -15,14 +15,14 @@ export interface MenuItemProps extends MenuPrimitive.Item.Props, CellBaseProps {
 
 export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
   ({ children, value, leadingIcon, trailingIcon, render, ...props }, ref) => {
-    const { autocomplete, searchValue, shouldFilter } = useMenuContext();
+    const { autocomplete, inputValue, shouldFilter } = useMenuContext();
 
     const cell = render ?? (
       <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
     );
 
     // In auto mode, hide items that don't match the search value
-    if (shouldFilter && !getMatch(value, children, searchValue)) {
+    if (shouldFilter && !getMatch(value, children, inputValue)) {
       return null;
     }
 

@@ -1,17 +1,27 @@
 'use client';
 
 import { Menu as MenuPrimitive } from '@base-ui/react';
-import { createContext, useCallback, useContext, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState
+} from 'react';
 
 interface CommonProps {
   autocomplete?: boolean;
   autocompleteMode?: 'auto' | 'manual';
-  searchValue?: string;
+  inputValue?: string;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
+  contentRef?: React.RefObject<HTMLDivElement | null>;
+  isInitialRender?: React.RefObject<boolean>;
+  open?: boolean;
 }
 
 interface MenuContextValue extends CommonProps {
   parent?: CommonProps;
-  onSearch?: (value: string) => void;
+  onInputValueChange?: (value: string) => void;
 }
 
 interface UseMenuContextReturn extends MenuContextValue {
@@ -36,13 +46,13 @@ export const useMenuContext = (): UseMenuContextReturn => {
   const shouldFilter = !!(
     context?.autocomplete &&
     context?.autocompleteMode === 'auto' &&
-    context?.searchValue?.length
+    context?.inputValue?.length
   );
 
   const shouldFilterParent = !!(
     context?.parent?.autocomplete &&
     context?.parent?.autocompleteMode === 'auto' &&
-    context?.parent?.searchValue?.length
+    context?.parent?.inputValue?.length
   );
 
   return {
@@ -66,17 +76,17 @@ export interface MenuRootBaseProps {
 export interface NormalMenuRootProps extends MenuPrimitive.Root.Props {
   autocomplete?: false;
   autocompleteMode?: never;
-  searchValue?: never;
-  onSearch?: never;
-  defaultSearchValue?: never;
+  inputValue?: never;
+  onInputValueChange?: never;
+  defaultInputValue?: never;
 }
 
 export interface AutocompleteMenuRootProps
   extends MenuPrimitive.Root.Props,
     CommonProps {
   autocomplete: true;
-  onSearch?: (value: string) => void;
-  defaultSearchValue?: string;
+  onInputValueChange?: (value: string) => void;
+  defaultInputValue?: string;
 }
 
 export type MenuRootProps = NormalMenuRootProps | AutocompleteMenuRootProps;
@@ -84,47 +94,64 @@ export type MenuRootProps = NormalMenuRootProps | AutocompleteMenuRootProps;
 export const MenuRoot = ({
   autocomplete,
   autocompleteMode = 'auto',
-  searchValue: providedSearchValue,
-  onSearch,
-  defaultSearchValue = '',
+  inputValue: providedInputValue,
+  onInputValueChange,
+  defaultInputValue = '',
+  open: providedOpen,
+  onOpenChange,
+  defaultOpen = false,
   ...props
 }: MenuRootProps) => {
-  const [internalSearchValue, setInternalSearchValue] =
-    useState(defaultSearchValue);
-  const parentContext = useMenuContext();
+  const [internalInputValue, setInternalInputValue] =
+    useState(defaultInputValue);
 
-  const searchValue = providedSearchValue ?? internalSearchValue;
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const open = providedOpen ?? internalOpen;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isInitialRender = useRef(true);
+
+  const inputValue = providedInputValue ?? internalInputValue;
 
   const setValue = useCallback(
     (value: string) => {
-      setInternalSearchValue(value);
-      onSearch?.(value);
+      setInternalInputValue(value);
+      onInputValueChange?.(value);
     },
-    [onSearch]
+    [onInputValueChange]
   );
 
   const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
     useCallback(
-      (open: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
-        if (!open && autocomplete) {
+      (value: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
+        if (!value && autocomplete) {
           setValue('');
+          isInitialRender.current = true;
         }
-        props.onOpenChange?.(open, eventDetails);
+        setInternalOpen(value);
+        onOpenChange?.(value, eventDetails);
       },
-      [props.onOpenChange, setValue, autocomplete]
+      [onOpenChange, setValue, autocomplete]
     );
 
   return (
     <MenuContext.Provider
       value={{
         autocomplete,
-        parent: parentContext,
+        inputRef,
         autocompleteMode,
-        searchValue,
-        onSearch: setValue
+        inputValue,
+        onInputValueChange: setValue,
+        open: open,
+        isInitialRender,
+        contentRef
       }}
     >
-      <MenuPrimitive.Root {...props} onOpenChange={handleOpenChange} />
+      <MenuPrimitive.Root
+        {...props}
+        open={open}
+        onOpenChange={handleOpenChange}
+      />
     </MenuContext.Provider>
   );
 };
@@ -134,18 +161,18 @@ export interface NormalMenuSubMenuProps
   extends MenuPrimitive.SubmenuRoot.Props {
   autocomplete?: false;
   autocompleteMode?: never;
-  searchValue?: never;
-  onSearch?: never;
-  defaultSearchValue?: never;
+  inputValue?: never;
+  onInputValueChange?: never;
+  defaultInputValue?: never;
 }
 
 export interface AutocompleteMenuSubMenuProps
   extends MenuPrimitive.SubmenuRoot.Props {
   autocomplete: true;
   autocompleteMode?: 'auto' | 'manual';
-  searchValue?: string;
-  onSearch?: (value: string) => void;
-  defaultSearchValue?: string;
+  inputValue?: string;
+  onInputValueChange?: (value: string) => void;
+  defaultInputValue?: string;
 }
 
 export type MenuSubMenuProps =
@@ -155,46 +182,64 @@ export type MenuSubMenuProps =
 export const MenuSubMenu = ({
   autocomplete,
   autocompleteMode = 'auto',
-  searchValue: providedSearchValue,
-  onSearch,
-  defaultSearchValue = '',
+  inputValue: providedInputValue,
+  onInputValueChange,
+  defaultInputValue = '',
+  open: providedOpen,
+  onOpenChange,
+  defaultOpen = false,
   ...props
 }: MenuSubMenuProps) => {
-  const [internalSearchValue, setInternalSearchValue] =
-    useState(defaultSearchValue);
+  const [internalInputValue, setInternalInputValue] =
+    useState(defaultInputValue);
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const open = providedOpen ?? internalOpen;
   const parentContext = useMenuContext();
-
-  const searchValue = providedSearchValue ?? internalSearchValue;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isInitialRender = useRef(true);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const inputValue = providedInputValue ?? internalInputValue;
 
   const setValue = useCallback(
     (value: string) => {
-      setInternalSearchValue(value);
-      onSearch?.(value);
+      setInternalInputValue(value);
+      onInputValueChange?.(value);
     },
-    [onSearch]
+    [onInputValueChange]
   );
 
   const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
     useCallback(
-      (open: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
-        if (!open && autocomplete) {
+      (value: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
+        if (!value && autocomplete) {
           setValue('');
+          isInitialRender.current = true;
         }
+        setInternalOpen(value);
+        onOpenChange?.(value, eventDetails);
       },
-      [setValue, autocomplete]
+      [onOpenChange, setValue, autocomplete]
     );
 
   return (
     <MenuContext.Provider
       value={{
         autocomplete,
+        inputRef,
         parent: parentContext,
         autocompleteMode,
-        searchValue,
-        onSearch: setValue
+        inputValue,
+        onInputValueChange: setValue,
+        open: open,
+        isInitialRender,
+        contentRef
       }}
     >
-      <MenuPrimitive.SubmenuRoot {...props} onOpenChange={handleOpenChange} />
+      <MenuPrimitive.SubmenuRoot
+        {...props}
+        open={open}
+        onOpenChange={handleOpenChange}
+      />
     </MenuContext.Provider>
   );
 };
