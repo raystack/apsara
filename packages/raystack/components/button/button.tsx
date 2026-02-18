@@ -1,11 +1,6 @@
-import { type VariantProps, cva } from 'class-variance-authority';
-import { Slot } from 'radix-ui';
-import {
-  ButtonHTMLAttributes,
-  PropsWithChildren,
-  ReactNode,
-  forwardRef
-} from 'react';
+import { Button as ButtonPrimitive } from '@base-ui/react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ElementRef, forwardRef, PropsWithChildren, ReactNode } from 'react';
 
 import { Spinner } from '../spinner';
 import styles from './button.module.css';
@@ -130,8 +125,7 @@ const getLoaderOnlyClass = (size: 'small' | 'normal' | null) =>
     : styles['loader-only-button-normal'];
 
 type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
-  ButtonHTMLAttributes<HTMLButtonElement> & {
-    asChild?: boolean;
+  ButtonPrimitive.Props & {
     loading?: boolean;
     loaderText?: ReactNode;
     leadingIcon?: ReactNode;
@@ -141,14 +135,16 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     style?: React.CSSProperties;
   };
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<
+  ElementRef<typeof ButtonPrimitive>,
+  ButtonProps
+>(
   (
     {
       className,
       variant = 'solid',
       color = 'accent',
       size = 'normal',
-      asChild = false,
       disabled,
       loading,
       loaderText,
@@ -158,21 +154,24 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       width,
       style = {},
       children,
+      render,
       ...props
     },
     ref
   ) => {
-    const Comp = asChild ? Slot.Root : 'button';
     const isLoaderOnly = loading && !loaderText;
     const widthStyle = { maxWidth, width };
     const buttonStyle = { ...widthStyle, ...style };
 
     return (
-      <Comp
+      <ButtonPrimitive
         className={`${button({ variant, size, color, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
         ref={ref}
         disabled={disabled}
         style={buttonStyle}
+        render={render}
+        nativeButton={!render}
+        focusableWhenDisabled={loading}
         {...props}
       >
         {loading ? (
@@ -197,7 +196,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             )}
           </>
         )}
-      </Comp>
+      </ButtonPrimitive>
     );
   }
 );
