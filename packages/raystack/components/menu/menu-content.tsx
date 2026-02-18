@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  Combobox as ComboboxPrimitive,
+  Autocomplete as AutocompletePrimitive,
   Menu as MenuPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { forwardRef, useRef } from 'react';
+import { forwardRef, useCallback, useRef } from 'react';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 
@@ -14,11 +14,13 @@ export interface MenuContentProps extends MenuPrimitive.Popup.Props {
   sideOffset?: number;
   side?: MenuPrimitive.Positioner.Props['side'];
   align?: MenuPrimitive.Positioner.Props['align'];
+  name?: string;
 }
 
 export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
   (
     {
+      name,
       className,
       children,
       searchPlaceholder = 'Search...',
@@ -31,6 +33,10 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
   ) => {
     const { autocomplete, searchValue, onSearch } = useMenuContext();
     const inputRef = useRef<HTMLInputElement>(null);
+    const focusInput = useCallback(() => {
+      if (document?.activeElement !== inputRef.current)
+        inputRef.current?.focus();
+    }, []);
 
     return (
       <MenuPrimitive.Portal>
@@ -48,42 +54,52 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
             )}
             {...props}
             role={autocomplete ? 'dialog' : undefined}
-            onFocus={e => {
-              console.log('focus');
-              inputRef.current?.focus();
-            }}
+            onFocus={
+              autocomplete
+                ? e => {
+                    console.log('focus ', name);
+                    focusInput();
+                    e.stopPropagation();
+                  }
+                : undefined
+            }
+            // onMouseEnter={e => {
+            //   console.log('mouse enter');
+            //   inputRef.current?.focus();
+            //   e.stopPropagation();
+            // }}
+            data-menu
           >
             {autocomplete ? (
-              <ComboboxPrimitive.Root
+              <AutocompletePrimitive.Root
                 inline
                 open
-                autoComplete='none'
-                inputValue={searchValue}
-                onInputValueChange={(value: string) => onSearch?.(value)}
-                autoHighlight
-                highlightItemOnHover
+                value={searchValue}
+                onValueChange={(value: string) => onSearch?.(value)}
+                autoHighlight={searchValue?.length}
+                mode='none'
+                loopFocus={false}
               >
-                <ComboboxPrimitive.Input
+                <AutocompletePrimitive.Input
                   autoFocus
                   placeholder={searchPlaceholder}
                   className={styles.comboboxInput}
                   ref={inputRef}
                   onKeyDown={e => {
-                    if (e.key !== 'Escape') {
-                      e.stopPropagation();
-                    }
-                  }}
-                  onBlurCapture={e => {
-                    console.log('blur');
+                    if (
+                      e.key === 'Escape' ||
+                      e.key === 'ArrowLeft' ||
+                      e.key === 'ArrowRight'
+                    )
+                      return;
+                    console.log('key down', e.key);
                     e.stopPropagation();
-                    e.preventDefault();
-                    // e.preventBaseUIHandler();
                   }}
                 />
-                <ComboboxPrimitive.List className={styles.comboboxContent}>
+                <AutocompletePrimitive.List className={styles.comboboxContent}>
                   {children}
-                </ComboboxPrimitive.List>
-              </ComboboxPrimitive.Root>
+                </AutocompletePrimitive.List>
+              </AutocompletePrimitive.Root>
             ) : (
               children
             )}

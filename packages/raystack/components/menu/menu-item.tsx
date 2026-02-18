@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Combobox as ComboboxPrimitive,
+  Autocomplete as AutocompletePrimitive,
   Menu as MenuPrimitive
 } from '@base-ui/react';
 import { forwardRef } from 'react';
@@ -28,15 +28,17 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
 
     if (autocomplete) {
       return (
-        <ComboboxPrimitive.Item
+        <AutocompletePrimitive.Item
           ref={ref}
           value={value}
           render={<MenuPrimitive.Item render={cell} />}
           // render={cell}
           {...props}
+          // aria-selected={false}
+          // data-selected={undefined}
         >
           {children}
-        </ComboboxPrimitive.Item>
+        </AutocompletePrimitive.Item>
       );
     }
 
