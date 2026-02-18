@@ -8,13 +8,17 @@ import { playground, alignDemo, truncateDemo, weightDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Headline } from '@raystack/apsara'
+
+<Headline />
 ```
 
-## Headline Props
+## API Reference
 
 <auto-type-table path="./props.ts" name="HeadlineProps" />
 
@@ -31,3 +35,8 @@ import { Headline } from '@raystack/apsara'
 ### Truncation
 
 <Demo data={truncateDemo} />
+
+## Accessibility
+
+- Renders as semantic heading elements (`h1`–`h6`) for proper document outline
+- Supports `aria-level` for custom heading levels

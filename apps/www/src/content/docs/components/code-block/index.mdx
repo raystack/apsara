@@ -17,63 +17,63 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { CodeBlock } from '@raystack/apsara'
+
+<CodeBlock>
+  <CodeBlock.Header>
+    <CodeBlock.Label />
+    <CodeBlock.LanguageSelect>
+      <CodeBlock.LanguageSelectTrigger />
+    </CodeBlock.LanguageSelect>
+    <CodeBlock.CopyButton />
+  </CodeBlock.Header>
+  <CodeBlock.Content>
+    <CodeBlock.Code />
+  </CodeBlock.Content>
+  <CodeBlock.CollapseTrigger />
+</CodeBlock>
 ```
-
-## Component Structure
-
-The CodeBlock component uses a composite pattern, providing modular sub-components for flexible code display:
-
-- `CodeBlock` - Root container that manages state and context
-- `CodeBlock.Header` - Optional header section for labels and controls
-- `CodeBlock.Content` - Main content area containing code blocks
-- `CodeBlock.Label` - Text label displayed in the header
-- `CodeBlock.Code` - Individual code block with syntax highlighting
-- `CodeBlock.CopyButton` - Copy functionality (floating or inline variants)
-- `CodeBlock.LanguageSelect` - Language selection dropdown container
-- `CodeBlock.LanguageSelectTrigger` - Button to open language selection
-- `CodeBlock.LanguageSelectContent` - Language select content container
-- `CodeBlock.LanguageSelectItem` - Individual language option
-- `CodeBlock.CollapseTrigger` - Button to expand/collapse long code blocks
 
 ## API Reference
 
-### CodeBlock Props
+### Root
 
 <auto-type-table path="./props.ts" name="CodeBlockProps" />
 
-### CodeBlock.Header Props
+### Header
 
 <auto-type-table path="./props.ts" name="CodeBlockHeaderProps" />
 
-### CodeBlock.Content Props
+### Content
 
 <auto-type-table path="./props.ts" name="CodeBlockContentProps" />
 
-### CodeBlock.Label Props
+### Label
 
 <auto-type-table path="./props.ts" name="CodeBlockLabelProps" />
 
-### CodeBlock.LanguageSelect Props
+### LanguageSelect
 
 <auto-type-table path="./props.ts" name="CodeBlockLanguageSelectProps" />
 
-### CodeBlock.LanguageSelectTrigger Props
+### LanguageSelectTrigger
 
 <auto-type-table path="./props.ts" name="CodeBlockLanguageSelectTriggerProps" />
 
-### CodeBlock.CopyButton Props
+### CopyButton
 
 <auto-type-table path="./props.ts" name="CodeBlockCopyButtonProps" />
 
-### CodeBlock.Code Props
+### Code
 
 <auto-type-table path="./props.ts" name="CodeBlockCodeProps" />
 
-### CodeBlock.CollapseTrigger Props
+### CollapseTrigger
 
 <auto-type-table path="./props.ts" name="CodeBlockCollapseTriggerProps" />
 
@@ -110,9 +110,7 @@ For long code snippets, use the `maxLines` prop to create collapsible code block
 
 <Demo data={collapsibleDemo} />
 
-
 ### Copy Button Variants
-
 
 The `CodeBlock.CopyButton` component offers two placement options:
 - **Floating**: Overlays on the code block using `variant="floating"`

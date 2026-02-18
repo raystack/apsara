@@ -8,7 +8,9 @@ import { preview } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import {
@@ -19,73 +21,48 @@ import {
   useDataTable,
   EmptyFilterValue
 } from "@raystack/apsara";
+
+<DataTable>
+  <DataTable.Toolbar>
+    <DataTable.Search />
+    <DataTable.Filters />
+    <DataTable.DisplayControls />
+  </DataTable.Toolbar>
+  <DataTable.Content />
+</DataTable>
 ```
 
-## DataTable Props
+## API Reference
+
+### Root
 
 <auto-type-table path="./props.ts" name="DataTableProps" />
 
-### DataTable.DisplayControls Props
+### DisplayControls
 
 <auto-type-table path="./props.ts" name="DisplayControlsProps" />
 
-### DataTable.Filters Props
+### Filters
 
 <auto-type-table path="./props.ts" name="FiltersProps" />
 
-## DataTableQuery Interface
+### Query
 
 <auto-type-table path="./props.ts" name="DataTableQuery" />
 
-## DataTableColumn Interface
+### ColumnDef
 
 <auto-type-table path="./props.ts" name="DataTableColumnDef" />
 
-## DataTable.Content Props
+### Content
 
 <auto-type-table path="./props.ts" name="DataTableContentProps" />
 
-## DataTable.VirtualizedContent Props
-
-<auto-type-table path="./props.ts" name="VirtualizedContentProps" />
-
-### Virtualized Content
+### VirtualizedContent
 
 For large datasets, use `DataTable.VirtualizedContent` for better performance. Parent container must have a fixed height.
 
-```tsx
-<div style={{ height: 400 }}>
-  <DataTable
-    data={data}
-    columns={columns}
-    defaultSort={{ name: "name", order: "asc" }}>
-    <DataTable.Toolbar />
-    <DataTable.VirtualizedContent rowHeight={44} />
-  </DataTable>
-</div>
-```
-
-#### Fixed Width Columns
-
-By default, columns share equal width. For fixed width columns, use `flex: 'none'` with `width`:
-
-```tsx
-const columns = [
-  {
-    accessorKey: "select",
-    header: "",
-    styles: {
-      header: { width: 50, flex: "none" },
-      cell: { width: 50, flex: "none" }
-    }
-  },
-  {
-    accessorKey: "name",
-    header: "Name"
-    // Uses flex: 1 1 0 by default (equal width)
-  }
-];
-```
+<auto-type-table path="./props.ts" name="VirtualizedContentProps" />
 
 ## Examples
 
@@ -409,3 +386,10 @@ import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
   }
 />
 ```
+
+## Accessibility
+
+- Uses semantic `table`, `thead`, `tbody`, `tr`, `th`, and `td` elements
+- Supports keyboard navigation between cells and rows
+- Sort state is communicated via `aria-sort` attribute
+- Filter controls are accessible via keyboard

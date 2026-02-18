@@ -14,13 +14,17 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Badge } from '@raystack/apsara'
+
+<Badge />
 ```
 
-## Badge Props
+## API Reference
 
 <auto-type-table path="./props.ts" name="BadgeProps" />
 
@@ -44,7 +48,7 @@ Badges can include an icon to provide additional visual context. By default ther
 
 <Demo data={iconDemo} />
 
-### Accessibility
+## Accessibility
 
 The Badge component includes screen reader support through the `screenReaderText` prop, only be announced to screen readers. By default no text is passed to `screenReaderText` prop.
 

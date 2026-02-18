@@ -8,17 +8,26 @@ import { playground,  basicDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Grid } from "@raystack/apsara";
+
+<Grid>
+  <Grid.Item />
+  <Grid.Item />
+</Grid>
 ```
 
-## Grid Props
+## API Reference
+
+### Root
 
 <auto-type-table path="./props.ts" name="GridProps" />
 
-### Grid.Item Props
+### Item
 
 Grid.Item is a wrapper component that must be a direct child of Grid. Use it when you need to customize the positioning or styling of individual grid items.
 
@@ -29,3 +38,8 @@ Grid.Item is a wrapper component that must be a direct child of Grid. Use it whe
 ### Basic Usage
 
 <Demo data={basicDemo} />
+
+## Accessibility
+
+- Uses semantic HTML for proper document structure
+- Supports standard content accessibility patterns

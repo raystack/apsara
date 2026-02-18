@@ -8,13 +8,17 @@ import { playground, inputDemo, iconDemo, actionDemo, operationsDemo } from "./d
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { FilterChip } from "@raystack/apsara";
+
+<FilterChip />
 ```
 
-## FilterChip Props
+## API Reference
 
 <auto-type-table path="./props.ts" name="FilterChipProps" />
 
@@ -47,3 +51,9 @@ FilterChip supports custom filter operations through the `operations` prop. When
 - If no operations are specified, default operations are used based on the column type
 
 <Demo data={operationsDemo} />
+
+## Accessibility
+
+- Uses `button` role with appropriate ARIA attributes
+- Supports keyboard activation and removal
+- Active filter state is communicated via `aria-pressed`

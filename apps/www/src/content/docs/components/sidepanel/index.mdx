@@ -8,13 +8,21 @@ import { basicDemo, positionDemo, preview } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { SidePanel } from "@raystack/apsara";
+
+<SidePanel>
+  <SidePanel.Header />
+</SidePanel>
 ```
 
-## SidePanel Props
+## API Reference
+
+### Root
 
 Customize the SidePanel appearance with these configuration options.
 
@@ -22,7 +30,7 @@ The `SidePanel` component is composed of several parts, each with their own prop
 
 <auto-type-table path="./props.ts" name="SidePanelProps" />
 
-### SidePanel.Header
+### Header
 
 <auto-type-table path="./props.ts" name="SidePanelHeaderProps" />
 
@@ -37,3 +45,9 @@ The `SidePanel` component is composed of several parts, each with their own prop
 The SidePanel can be positioned on either the left or right side of the screen.
 
 <Demo data={positionDemo} />
+
+## Accessibility
+
+- Uses `role="complementary"` for proper landmark identification
+- Supports keyboard navigation and focus management
+- Panel state is communicated to screen readers

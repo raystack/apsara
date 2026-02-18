@@ -14,25 +14,36 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Accordion } from '@raystack/apsara'
+
+<Accordion>
+  <Accordion.Item>
+    <Accordion.Trigger />
+    <Accordion.Content />
+  </Accordion.Item>
+</Accordion>
 ```
 
-## Accordion Props
+## API Reference
+
+### Root
 
 <auto-type-table path="./props.ts" name="AccordionRootProps" />
 
-### Accordion.Item Props
+### Item
 
 <auto-type-table path="./props.ts" name="AccordionItemProps" />
 
-### Accordion.Trigger Props
+### Trigger
 
 <auto-type-table path="./props.ts" name="AccordionTriggerProps" />
 
-### Accordion.Content Props
+### Content
 
 <auto-type-table path="./props.ts" name="AccordionContentProps" />
 
@@ -64,3 +75,10 @@ Individual accordion items can be disabled using the `disabled` prop.
 The accordion content can contain any React elements, allowing for rich layouts and complex content.
 
 <Demo data={customContentDemo} />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Accordion pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/)
+- Trigger elements use `aria-expanded` to indicate open/closed state
+- Supports keyboard navigation with Enter and Space to toggle items
+- Content panels use `aria-controls` and `aria-labelledby` for association

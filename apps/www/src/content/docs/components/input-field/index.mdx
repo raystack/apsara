@@ -20,13 +20,17 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { InputField } from "@raystack/apsara";
+
+<InputField />
 ```
 
-## InputField Props
+## API Reference
 
 <auto-type-table path="./props.ts" name="InputFieldProps" />
 
@@ -91,3 +95,10 @@ InputField comes in two sizes: small (24px) and large (32px).
 Input field that can display and manage chips/tags.
 
 <Demo data={sizeChipDemo} />
+
+## Accessibility
+
+- Associates label with input via `htmlFor` and `id` attributes
+- Error messages are linked with `aria-describedby`
+- Required state is communicated via `aria-required`
+- Invalid state is communicated via `aria-invalid`

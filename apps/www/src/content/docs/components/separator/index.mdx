@@ -8,13 +8,17 @@ import { playground, sizeDemo, colorDemo, orientationDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Separator } from '@raystack/apsara'
+
+<Separator />
 ```
 
-## Separator Props
+## API Reference
 
 <auto-type-table path="./props.ts" name="SeparatorProps" />
 
@@ -37,3 +41,9 @@ The Separator component supports three sizes.
 Separator can be rendered in both horizontal and vertical orientations.
 
 <Demo data={orientationDemo} />
+
+## Accessibility
+
+- Uses `role="separator"` for proper semantic meaning
+- Supports `aria-orientation` for horizontal and vertical variants
+- Decorative separators use `role="none"` to hide from screen readers

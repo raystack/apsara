@@ -19,13 +19,17 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Amount } from '@raystack/apsara'
+
+<Amount />
 ```
 
-## Amount Props
+## API Reference
 
 <auto-type-table path="./props.ts" name="AmountProps" />
 
@@ -68,3 +72,8 @@ For numbers larger than JavaScript's safe integer limit (2^53 - 1), pass the val
 ### With Text
 
 <Demo data={withTextDemo} />
+
+## Accessibility
+
+- Uses semantic HTML elements for proper content structure
+- Supports `aria-label` for providing accessible descriptions to screen readers
