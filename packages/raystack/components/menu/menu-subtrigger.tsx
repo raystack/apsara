@@ -1,5 +1,6 @@
 'use client';
 
+import { Combobox } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { forwardRef } from 'react';
 import { TriangleRightIcon } from '~/icons';
@@ -32,11 +33,39 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
     ) {
       return null;
     }
-
+    // if (parent?.autocomplete) {
+    //   return (
+    //     <Combobox.Item
+    //       ref={ref}
+    //       value={value}
+    //       render={
+    //         <MenuPrimitive.SubmenuTrigger
+    //           render={
+    //             <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
+    //           }
+    //         />
+    //       }
+    //       {...props}
+    //     >
+    //       {children}
+    //     </Combobox.Item>
+    //   );
+    // }
     return (
       <MenuPrimitive.SubmenuTrigger
         ref={ref}
-        render={<Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />}
+        render={
+          parent?.autocomplete ? (
+            <Combobox.Item
+              value={value}
+              render={
+                <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
+              }
+            />
+          ) : (
+            <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
+          )
+        }
         {...props}
       >
         {children}

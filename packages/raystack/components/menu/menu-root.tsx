@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  Autocomplete as AutocompletePrimitive,
-  Menu as MenuPrimitive
-} from '@base-ui/react';
+import { Menu as MenuPrimitive } from '@base-ui/react';
 import { createContext, useCallback, useContext, useState } from 'react';
 
 interface CommonProps {
@@ -14,7 +11,7 @@ interface CommonProps {
 
 interface MenuContextValue extends CommonProps {
   parent?: CommonProps;
-  // onSearch?: (value: string) => void;
+  onSearch?: (value: string) => void;
 }
 
 interface UseMenuContextReturn extends MenuContextValue {
@@ -106,9 +103,16 @@ export const MenuRoot = ({
     [onSearch]
   );
 
-  const element = <MenuPrimitive.Root {...props} />;
-
-  console.log('menu root');
+  const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
+    useCallback(
+      (open: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
+        if (!open && autocomplete) {
+          setValue('');
+        }
+        props.onOpenChange?.(open, eventDetails);
+      },
+      [props.onOpenChange, setValue, autocomplete]
+    );
 
   return (
     <MenuContext.Provider
@@ -116,23 +120,11 @@ export const MenuRoot = ({
         autocomplete,
         parent: parentContext,
         autocompleteMode,
-        searchValue
-        // onSearch: setValue
+        searchValue,
+        onSearch: setValue
       }}
     >
-      {autocomplete ? (
-        <AutocompletePrimitive.Root
-          mode='none'
-          value={searchValue}
-          defaultValue={defaultSearchValue}
-          onValueChange={(value: string) => setValue(value)}
-          autoHighlight
-        >
-          {element}
-        </AutocompletePrimitive.Root>
-      ) : (
-        element
-      )}
+      <MenuPrimitive.Root {...props} onOpenChange={handleOpenChange} />
     </MenuContext.Provider>
   );
 };
@@ -182,7 +174,15 @@ export const MenuSubMenu = ({
     [onSearch]
   );
 
-  const element = <MenuPrimitive.SubmenuRoot {...props} />;
+  const handleOpenChange: MenuPrimitive.Root.Props['onOpenChange'] =
+    useCallback(
+      (open: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
+        if (!open && autocomplete) {
+          setValue('');
+        }
+      },
+      [setValue, autocomplete]
+    );
 
   return (
     <MenuContext.Provider
@@ -190,24 +190,11 @@ export const MenuSubMenu = ({
         autocomplete,
         parent: parentContext,
         autocompleteMode,
-        searchValue
-        // onSearch: setValue
+        searchValue,
+        onSearch: setValue
       }}
     >
-      {autocomplete ? (
-        <AutocompletePrimitive.Root
-          mode='none'
-          value={searchValue}
-          defaultValue={defaultSearchValue}
-          onValueChange={(value: string) => setValue(value)}
-          autoHighlight
-          open
-        >
-          {element}
-        </AutocompletePrimitive.Root>
-      ) : (
-        element
-      )}
+      <MenuPrimitive.SubmenuRoot {...props} onOpenChange={handleOpenChange} />
     </MenuContext.Provider>
   );
 };

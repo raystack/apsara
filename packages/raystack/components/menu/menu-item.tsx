@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Autocomplete as AutocompletePrimitive,
+  Combobox as ComboboxPrimitive,
   Menu as MenuPrimitive
 } from '@base-ui/react';
 import { forwardRef } from 'react';
@@ -20,13 +20,6 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
     const cell = render ?? (
       <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
     );
-    const commonProps = {
-      ref,
-      render: render ?? (
-        <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />
-      ),
-      children
-    };
 
     // In auto mode, hide items that don't match the search value
     if (shouldFilter && !getMatch(value, children, searchValue)) {
@@ -35,22 +28,31 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
 
     if (autocomplete) {
       return (
-        <AutocompletePrimitive.Item value={value} {...commonProps} {...props} />
+        <ComboboxPrimitive.Item
+          ref={ref}
+          value={value}
+          render={<MenuPrimitive.Item render={cell} />}
+          // render={cell}
+          {...props}
+        >
+          {children}
+        </ComboboxPrimitive.Item>
       );
     }
 
     return (
       <MenuPrimitive.Item
-        {...commonProps}
+        ref={ref}
+        render={cell}
         {...props}
-        // render={
-        //   autocomplete ? (
-        //     <AutocompletePrimitive.Item value={value} render={cell} />
-        //   ) : (
-        //     cell
-        //   )
-        // }
-      />
+        onFocus={e => {
+          e.stopPropagation();
+          e.preventDefault();
+          e.preventBaseUIHandler();
+        }}
+      >
+        {children}
+      </MenuPrimitive.Item>
     );
   }
 );

@@ -1,7 +1,8 @@
 'use client';
 
-import { Menu as MenuPrimitive } from '@base-ui/react';
+import { Combobox, Menu as MenuPrimitive } from '@base-ui/react';
 import { forwardRef } from 'react';
+import { useMenuContext } from './menu-root';
 
 export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
   stopPropagation?: boolean;
@@ -9,7 +10,6 @@ export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
 
 export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
   ({ children, stopPropagation = true, onClick, ...props }, ref) => {
-    console.log('menu trigger');
     return (
       <MenuPrimitive.Trigger
         ref={ref}

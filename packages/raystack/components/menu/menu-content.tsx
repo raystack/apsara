@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  Autocomplete as AutocompletePrimitive,
+  Combobox as ComboboxPrimitive,
   Menu as MenuPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 
@@ -29,7 +29,8 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
     },
     ref
   ) => {
-    const { autocomplete } = useMenuContext();
+    const { autocomplete, searchValue, onSearch } = useMenuContext();
+    const inputRef = useRef<HTMLInputElement>(null);
 
     return (
       <MenuPrimitive.Portal>
@@ -47,22 +48,42 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
             )}
             {...props}
             role={autocomplete ? 'dialog' : undefined}
+            onFocus={e => {
+              console.log('focus');
+              inputRef.current?.focus();
+            }}
           >
             {autocomplete ? (
-              <>
-                <AutocompletePrimitive.Input
+              <ComboboxPrimitive.Root
+                inline
+                open
+                autoComplete='none'
+                inputValue={searchValue}
+                onInputValueChange={(value: string) => onSearch?.(value)}
+                autoHighlight
+                highlightItemOnHover
+              >
+                <ComboboxPrimitive.Input
                   autoFocus
                   placeholder={searchPlaceholder}
                   className={styles.comboboxInput}
+                  ref={inputRef}
                   onKeyDown={e => {
-                    e.stopPropagation();
+                    if (e.key !== 'Escape') {
+                      e.stopPropagation();
+                    }
                   }}
-                  tabIndex={-1}
+                  onBlurCapture={e => {
+                    console.log('blur');
+                    e.stopPropagation();
+                    e.preventDefault();
+                    // e.preventBaseUIHandler();
+                  }}
                 />
-                <AutocompletePrimitive.List className={styles.comboboxContent}>
+                <ComboboxPrimitive.List className={styles.comboboxContent}>
                   {children}
-                </AutocompletePrimitive.List>
-              </>
+                </ComboboxPrimitive.List>
+              </ComboboxPrimitive.Root>
             ) : (
               children
             )}
