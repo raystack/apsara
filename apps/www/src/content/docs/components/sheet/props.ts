@@ -1,9 +1,12 @@
 export interface SheetProps {
-  /** The content to be rendered inside the sheet. */
-  children: React.ReactNode;
+  /** Boolean to control the default open state. */
+  defaultOpen?: boolean;
 
-  /** Accessible label for the sheet trigger. */
-  ariaLabel?: string;
+  /** Controlled open state. */
+  open?: boolean;
+
+  /** Callback when open state changes. */
+  onOpenChange?: (open: boolean) => void;
 }
 
 export interface SheetContentProps {
@@ -11,14 +14,22 @@ export interface SheetContentProps {
   side?: 'top' | 'right' | 'bottom' | 'left';
 
   /** Whether to show the close button. */
-  close?: boolean;
+  showCloseButton?: boolean;
 
-  /** Accessible label for the sheet content. */
-  ariaLabel?: string;
+  /** Props to pass to the backdrop/overlay component. */
+  overlayProps?: {
+    className?: string;
+    style?: React.CSSProperties;
 
-  /** Accessible description for the sheet content. */
-  ariaDescription?: string;
+    forceRender?: boolean;
+  };
 
   /** The content to be rendered inside the sheet. */
-  children: React.ReactNode;
+  children?: React.ReactNode;
+
+  /** Additional CSS class name. */
+  className?: string;
+
+  /** Additional inline styles. */
+  style?: React.CSSProperties;
 }

@@ -1439,7 +1439,6 @@ const Page = () => {
               <Dialog.Content width='500px'>
                 <Dialog.Header>
                   <Dialog.Title>Dialog Title</Dialog.Title>
-                  <Dialog.CloseButton />
                 </Dialog.Header>
                 <Dialog.Body>
                   <Text>This is the dialog content. </Text>

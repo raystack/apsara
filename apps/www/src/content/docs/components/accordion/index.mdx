@@ -14,25 +14,44 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Accordion } from '@raystack/apsara'
+
+<Accordion>
+  <Accordion.Item>
+    <Accordion.Trigger />
+    <Accordion.Content />
+  </Accordion.Item>
+</Accordion>
 ```
 
-## Accordion Props
+## API Reference
+
+### Root
+
+Groups all parts of the accordion.
 
 <auto-type-table path="./props.ts" name="AccordionRootProps" />
 
-### Accordion.Item Props
+### Item
+
+Groups an accordion header with its content panel.
 
 <auto-type-table path="./props.ts" name="AccordionItemProps" />
 
-### Accordion.Trigger Props
+### Trigger
+
+Toggles the visibility of its associated content.
 
 <auto-type-table path="./props.ts" name="AccordionTriggerProps" />
 
-### Accordion.Content Props
+### Content
+
+Contains the collapsible content for an item.
 
 <auto-type-table path="./props.ts" name="AccordionContentProps" />
 
@@ -40,10 +59,10 @@ import { Accordion } from '@raystack/apsara'
 
 ### Single vs Multiple
 
-The Accordion component supports two types of behavior:
+The Accordion component supports two modes:
 
-- **Single**: Only one item can be open at a time
-- **Multiple**: Multiple items can be open simultaneously
+- **Single** (default): Only one item can be open at a time. Set `multiple={false}` or omit the prop.
+- **Multiple**: Multiple items can be open simultaneously. Set `multiple={true}`.
 
 <Demo data={typeDemo} />
 
@@ -67,17 +86,7 @@ The accordion content can contain any React elements, allowing for rich layouts 
 
 ## Accessibility
 
-The Accordion component is built on top of [Radix UI's Accordion primitive](https://www.radix-ui.com/primitives/docs/components/accordion) and follows the WAI-ARIA design pattern for accordions. It includes:
-
-- Proper ARIA attributes for screen readers
-- Keyboard navigation support
-- Focus management
-- Semantic HTML structure
-
-## Keyboard Navigation
-
-- **Space** or **Enter**: Toggle the focused accordion item
-- **Arrow Down**: Move focus to the next accordion item
-- **Arrow Up**: Move focus to the previous accordion item
-- **Home**: Move focus to the first accordion item
-- **End**: Move focus to the last accordion item
+- Follows the [WAI-ARIA Accordion pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/)
+- Trigger elements use `aria-expanded` to indicate open/closed state
+- Supports keyboard navigation with Enter and Space to toggle items
+- Content panels use `aria-controls` and `aria-labelledby` for association

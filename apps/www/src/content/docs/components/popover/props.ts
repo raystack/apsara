@@ -13,32 +13,49 @@ export interface PopoverRootProps {
 }
 
 export interface PopoverContentProps {
-  /**
-   * Accessible label for the popover content.
-   * @default "Popover content"
-   */
-  ariaLabel?: string;
-
   /** Preferred side of the trigger to render. */
   side?: 'top' | 'right' | 'bottom' | 'left';
-
-  /** Distance in pixels from the trigger. */
-  sideOffset?: number;
 
   /** Alignment relative to trigger. */
   align?: 'start' | 'center' | 'end';
 
+  /** Distance in pixels from the trigger. */
+  sideOffset?: number;
+
   /** Offset in pixels from alignment edge. */
   alignOffset?: number;
 
-  /** Boolean to prevent collision with viewport edges. */
-  avoidCollisions?: boolean;
-
   /** Padding between content and viewport edges. */
   collisionPadding?: number;
+
+  /** Boundary element for collision detection. */
+  collisionBoundary?: Element | Element[] | null;
+
+  /** Additional CSS class name. */
+  className?: string;
+
+  /** Additional inline styles. */
+  style?: React.CSSProperties;
+
+  /** Custom render function.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((props: any, state: any) => React.ReactElement);
+
+  /** Element to receive initial focus when popover opens. */
+  initialFocus?: boolean | number | React.RefObject<HTMLElement>;
+
+  /** Element to receive focus when popover closes. */
+  finalFocus?: boolean | React.RefObject<HTMLElement>;
+
+  /** Content to render inside the popover. */
+  children?: React.ReactNode;
 }
 
 export interface PopoverTriggerProps {
-  /** Boolean to merge props onto child element. */
-  asChild?: boolean;
+  /** Additional CSS class name. */
+  className?: string;
 }

@@ -1,19 +1,13 @@
 'use client';
 
+import { Accordion as AccordionPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { Accordion as AccordionPrimitive } from 'radix-ui';
-import { ElementRef, ReactNode, forwardRef } from 'react';
+import { ElementRef, forwardRef } from 'react';
 import styles from './accordion.module.css';
-
-export interface AccordionItemProps
-  extends AccordionPrimitive.AccordionItemProps {
-  children: ReactNode;
-  className?: string;
-}
 
 export const AccordionItem = forwardRef<
   ElementRef<typeof AccordionPrimitive.Item>,
-  AccordionItemProps
+  AccordionPrimitive.Item.Props
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
@@ -24,4 +18,4 @@ export const AccordionItem = forwardRef<
   </AccordionPrimitive.Item>
 ));
 
-AccordionItem.displayName = AccordionPrimitive.Item.displayName;
+AccordionItem.displayName = 'Accordion.Item';

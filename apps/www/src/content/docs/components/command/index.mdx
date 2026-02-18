@@ -8,13 +8,23 @@ import { basicDemo, preview } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Command } from "@raystack/apsara";
+
+<Command />
 ```
 ## Examples
 
 ### Basic Usage
 
 <Demo data={basicDemo} />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
+- Supports keyboard navigation with arrow keys and Enter to select
+- Uses `role="listbox"` for the command list and `role="option"` for items

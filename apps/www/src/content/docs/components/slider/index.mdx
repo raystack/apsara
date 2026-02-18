@@ -8,15 +8,30 @@ import { playground, variantDemo, controlDemo, thumbSizeDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
-import { Slider } from '@raystack/apsara'
+import { Slider, SliderValue } from '@raystack/apsara'
+
+<Slider>
+  <Slider.Value />
+</Slider>
 ```
 
-## Slider Props
+## API Reference
+
+### Root
+
+Renders the slider track and thumb control.
 
 <auto-type-table path="./props.ts" name="SliderProps" />
+
+### Value
+
+This component is used to display the current value of the slider.
+<auto-type-table path="./props.ts" name="SliderValueProps" />
 
 ## Examples
 
@@ -38,36 +53,7 @@ Different thumb sizes for various use cases and visual preferences.
 
 ## Accessibility
 
-The Slider component follows WAI-ARIA guidelines for the [Slider Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/slider/).
-
-### ARIA Attributes
-
-The component handles the following ARIA attributes:
-
-- `aria-label`: Provides an accessible name for the slider
-- `aria-valuetext`: Provides a human-readable text alternative for the current value
-- `aria-valuemin`: Set automatically based on the `min` prop
-- `aria-valuemax`: Set automatically based on the `max` prop
-- `aria-valuenow`: Updated automatically as the value changes
-
-### Example with Custom ARIA Labels
-
-```tsx
-<div style={{ width: "400px" }}>
-  <Slider
-    variant="range"
-    label={["Start Date", "End Date"]}
-    defaultValue={[20, 80]}
-    aria-label="Date range selector"
-    aria-valuetext="From January 20 to January 80"
-    onChange={value => console.log(value)}
-  />
-</div>
-```
-
-### Screen Reader Considerations
-
-- Each thumb in a range slider has its own accessible label
-- Values are announced as they change
-- The component supports both mouse and keyboard interactions
-- Labels are properly associated with their respective thumbs
+- Follows the [WAI-ARIA Slider pattern](https://www.w3.org/WAI/ARIA/apg/patterns/slider/)
+- Supports keyboard control with arrow keys, Home, and End
+- Uses `aria-valuemin`, `aria-valuemax`, and `aria-valuenow` attributes
+- Value changes are announced to screen readers

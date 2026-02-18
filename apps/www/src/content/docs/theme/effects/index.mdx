@@ -1,0 +1,107 @@
+---
+title: Effects
+description: Overview of shadow and blur effect tokens in Apsara.
+---
+
+Effects add depth and visual hierarchy to your interface through shadows and blur. These tokens are calibrated to work consistently across light and dark themes—shadows automatically adjust their intensity and color to maintain appropriate contrast in each mode. Using effect tokens ensures your custom surfaces and overlays integrate naturally with the rest of your interface.
+
+## Shadows
+
+Shadow tokens create elevation and depth, helping users understand the layering of interface elements.
+
+<TokenTable
+  type="shadow"
+  tokens={[
+    { name: "--rs-shadow-feather", value: "subtle", description: "Cards, subtle elevation" },
+    { name: "--rs-shadow-soft", value: "gentle", description: "Buttons, interactive elements" },
+    { name: "--rs-shadow-lifted", value: "noticeable", description: "Dropdowns, popovers" },
+    { name: "--rs-shadow-floating", value: "strong", description: "Modals, dialogs, tooltips" },
+    { name: "--rs-shadow-inset", value: "inner", description: "Pressed states, inputs" },
+  ]}
+/>
+
+## Blur Effects
+
+Blur tokens are used for backdrop effects and creating depth through transparency.
+
+<TokenTable
+  type="blur"
+  tokens={[
+    { name: "--rs-blur-sm", value: "blur(0.5px)", description: "Subtle blur effect" },
+    { name: "--rs-blur-md", value: "blur(1px)", description: "Medium blur effect" },
+    { name: "--rs-blur-lg", value: "blur(2px)", description: "Noticeable blur effect" },
+    { name: "--rs-blur-xl", value: "blur(4px)", description: "Strong blur for overlays" },
+  ]}
+/>
+
+## Usage
+
+```css
+/* Dashboard widget with hover interaction */
+.dashboard-widget {
+  box-shadow: var(--rs-shadow-feather);
+  transition: box-shadow 0.2s ease;
+}
+
+.dashboard-widget:hover {
+  box-shadow: var(--rs-shadow-soft);
+}
+
+/* Floating action panel */
+.action-panel {
+  position: fixed;
+  bottom: var(--rs-space-6);
+  right: var(--rs-space-6);
+  box-shadow: var(--rs-shadow-floating);
+}
+
+/* Command palette / spotlight search */
+.command-palette {
+  box-shadow: var(--rs-shadow-floating);
+  backdrop-filter: var(--rs-blur-xl);
+  background-color: var(--rs-color-overlay-white-a8);
+}
+
+/* Sticky header with scroll shadow */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  box-shadow: var(--rs-shadow-feather);
+  backdrop-filter: var(--rs-blur-lg);
+  background-color: var(--rs-color-overlay-white-a6);
+}
+
+/* Context menu */
+.context-menu {
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+/* Pressed/active toggle state */
+.toggle[data-pressed="true"] {
+  box-shadow: var(--rs-shadow-inset);
+}
+
+/* Image lightbox overlay */
+.lightbox-backdrop {
+  backdrop-filter: var(--rs-blur-xl);
+  background-color: var(--rs-color-overlay-black-a8);
+}
+
+/* Notification toast */
+.toast {
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+/* Draggable item while dragging */
+.draggable[data-dragging="true"] {
+  box-shadow: var(--rs-shadow-floating);
+}
+```
+
+## Best Practices
+
+- **Use shadows sparingly** - Too many shadows can make interfaces feel cluttered
+- **Match elevation to importance** - Higher elevation shadows for more prominent elements
+- **Consider theme context** - Shadows are automatically adjusted for dark theme
+- **Combine with blur** - Use blur effects with overlays for a modern frosted glass aesthetic
+- **Animate transitions** - Smooth shadow transitions on hover create polished interactions

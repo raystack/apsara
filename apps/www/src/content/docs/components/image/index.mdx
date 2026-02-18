@@ -8,13 +8,19 @@ import { playground, radiusDemo, fitDemo, fallbackDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Image } from "@raystack/apsara";
+
+<Image />
 ```
 
-## Image Props
+## API Reference
+
+Renders a responsive image with fallback support.
 
 <auto-type-table path="./props.ts" name="ImageProps" />
 
@@ -37,30 +43,6 @@ Choose from different border radius styles to match your design.
 Handle image loading failures gracefully with fallback images.
 
 <Demo data={fallbackDemo} />
-
-## Styling
-
-The IconButton uses CSS variables for consistent styling across themes:
-
-- Background color uses `--rs-color-background-base-primary`
-- Border color uses `--rs-color-border-base-primary`
-- Text color uses `--rs-color-foreground-base-primary`
-- Hover state uses `--rs-color-background-base-primary-hover`
-- Disabled state uses reduced opacity and different background/border colors
-
-## Accessibility
-
-The IconButton component inherits all the accessibility features of the native HTML button element:
-
-- Keyboard navigation support
-- Proper disabled state handling
-- Can be focused and activated using keyboard
-- Supports all standard button ARIA attributes
-
-For better accessibility, make sure to:
-
-- Provide meaningful aria-label when the button's purpose isn't clear from the icon alone
-- Consider adding tooltips for icon-only buttons
 
 ## Accessibility
 

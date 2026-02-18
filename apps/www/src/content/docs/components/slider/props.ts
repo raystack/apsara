@@ -38,9 +38,20 @@ export interface SliderProps {
    */
   thumbSize?: 'small' | 'large';
 
-  /** Callback when value changes. */
-  onChange?: (value: number | [number, number]) => void;
+  /** Callback when value changes. Receives the new value. */
+  onValueChange?: (value: number | number[], eventDetails: any) => void;
 
+  /** Additional CSS class name. */
+  className?: string;
+
+  /** Whether the slider is disabled. */
+  disabled?: boolean;
+
+  /** Name attribute for form submission. */
+  name?: string;
+}
+
+export interface SliderValueProps {
   /** Additional CSS class name. */
   className?: string;
 }

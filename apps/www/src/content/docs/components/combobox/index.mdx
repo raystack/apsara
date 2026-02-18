@@ -16,13 +16,28 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Combobox } from "@raystack/apsara";
+
+<Combobox>
+  <Combobox.Input />
+  <Combobox.Content>
+    <Combobox.Group>
+      <Combobox.Label />
+      <Combobox.Item />
+    </Combobox.Group>
+    <Combobox.Separator />
+  </Combobox.Content>
+</Combobox>
 ```
 
-## Combobox Props
+## API Reference
+
+### Root
 
 The Combobox component is composed of several parts, each with their own props.
 
@@ -30,37 +45,37 @@ The root element is the parent component that manages the combobox state includi
 
 <auto-type-table path="./props.ts" name="ComboboxRootProps" />
 
-### Combobox.Input Props
+### Input
 
 The input field that triggers the combobox dropdown and allows users to type and filter options.
 
 <auto-type-table path="./props.ts" name="ComboboxInputProps" />
 
-### Combobox.Content Props
+### Content
 
 The dropdown container that holds the combobox items.
 
 <auto-type-table path="./props.ts" name="ComboboxContentProps" />
 
-### Combobox.Item Props
+### Item
 
 Individual selectable options within the combobox.
 
 <auto-type-table path="./props.ts" name="ComboboxItemProps" />
 
-### Combobox.Group Props
+### Group
 
 A way to group related combobox items together.
 
 <auto-type-table path="./props.ts" name="ComboboxGroupProps" />
 
-### Combobox.Label Props
+### Label
 
 Renders a label in a combobox group. This component should be used inside Combobox.Group.
 
 <auto-type-table path="./props.ts" name="ComboboxLabelProps" />
 
-### Combobox.Separator Props
+### Separator
 
 Visual divider between combobox items or groups.
 
@@ -110,4 +125,3 @@ The Combobox component follows WAI-ARIA guidelines:
 - Supports keyboard navigation (Arrow keys, Enter, Escape)
 - ARIA labels and descriptions for screen readers
 - Focus management between input and listbox
-

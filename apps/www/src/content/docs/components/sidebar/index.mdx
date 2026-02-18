@@ -8,25 +8,38 @@ import { preview, positionDemo, stateDemo, tooltipDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Sidebar } from "@raystack/apsara";
+
+<Sidebar>
+  <Sidebar.Header />
+  <Sidebar.Group>
+    <Sidebar.Item />
+  </Sidebar.Group>
+</Sidebar>
 ```
 
-## Sidebar Props
+## API Reference
+
+### Root
+
+Groups all parts of the sidebar navigation.
 
 <auto-type-table path="./props.ts" name="SidebarRootProps" />
 
-### Sidebar.Header Props
+### Header
 
 The header section is a container component that accepts all `div` props. It's commonly used to create a header with an icon and title.
 
-### Sidebar.Group Props
+### Group
 
 <auto-type-table path="./props.ts" name="SidebarGroupProps" />
 
-### Sidebar.Item Props
+### Item
 
 *Note: `leadingIcon` is optional and will show a fallback avatar only in collapsed state. You can pass `<></>` to render truly nothing.*
 
