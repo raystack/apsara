@@ -1546,14 +1546,16 @@ const Page = () => {
                             Open Menu
                           </Menu.Trigger>
                           <Menu.Content>
-                            <Menu.Label>Team Actions</Menu.Label>
-                            <Tooltip
-                              message='Add a new member to your team'
-                              side='right'
-                            >
-                              <Menu.Item>Add Member</Menu.Item>
-                            </Tooltip>
-                            <Menu.Item>Edit Team</Menu.Item>
+                            <Menu.Group>
+                              <Menu.Label>Team Actions</Menu.Label>
+                              <Tooltip
+                                message='Add a new member to your team'
+                                side='right'
+                              >
+                                <Menu.Item>Add Member</Menu.Item>
+                              </Tooltip>
+                              <Menu.Item>Edit Team</Menu.Item>
+                            </Menu.Group>
                             <Menu.Separator />
                             <Menu.Group>
                               <Menu.Label>Settings</Menu.Label>
@@ -1678,14 +1680,16 @@ const Page = () => {
                           Open Menu
                         </Menu.Trigger>
                         <Menu.Content>
-                          <Menu.Label>Team Actions</Menu.Label>
-                          <Tooltip
-                            message='Add a new member to your team'
-                            side='right'
-                          >
-                            <Menu.Item>Add Member</Menu.Item>
-                          </Tooltip>
-                          <Menu.Item>Edit Team</Menu.Item>
+                          <Menu.Group>
+                            <Menu.Label>Team Actions</Menu.Label>
+                            <Tooltip
+                              message='Add a new member to your team'
+                              side='right'
+                            >
+                              <Menu.Item>Add Member</Menu.Item>
+                            </Tooltip>
+                            <Menu.Item>Edit Team</Menu.Item>
+                          </Menu.Group>
                           <Menu.Separator />
                           <Menu.Group>
                             <Menu.Label>Settings</Menu.Label>
@@ -1814,14 +1818,16 @@ const Page = () => {
                             Open Menu
                           </Menu.Trigger>
                           <Menu.Content>
-                            <Menu.Label>Team Actions</Menu.Label>
-                            <Tooltip
-                              message='Add a new member to your team'
-                              side='right'
-                            >
-                              <Menu.Item>Add Member</Menu.Item>
-                            </Tooltip>
-                            <Menu.Item>Edit Team</Menu.Item>
+                            <Menu.Group>
+                              <Menu.Label>Team Actions</Menu.Label>
+                              <Tooltip
+                                message='Add a new member to your team'
+                                side='right'
+                              >
+                                <Menu.Item>Add Member</Menu.Item>
+                              </Tooltip>
+                              <Menu.Item>Edit Team</Menu.Item>
+                            </Menu.Group>
                             <Menu.Separator />
                             <Menu.Group>
                               <Menu.Label>Settings</Menu.Label>

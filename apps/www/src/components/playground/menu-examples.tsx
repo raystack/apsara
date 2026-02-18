@@ -3,7 +3,7 @@
 import { Button, Flex, Menu } from '@raystack/apsara';
 import PlaygroundLayout from './playground-layout';
 
-export function DropdownMenuExamples() {
+export function MenuExamples() {
   return (
     <PlaygroundLayout title='Menu'>
       <Flex gap='medium' wrap='wrap'>
@@ -34,14 +34,14 @@ export function DropdownMenuExamples() {
         <Menu>
           <Menu.Trigger render={<Button color='neutral' />}>More</Menu.Trigger>
           <Menu.Content>
-            <Menu.Label>Actions</Menu.Label>
             <Menu.Group>
+              <Menu.Label>Actions</Menu.Label>
               <Menu.Item>New File</Menu.Item>
               <Menu.Item>New Folder</Menu.Item>
             </Menu.Group>
             <Menu.Separator />
-            <Menu.Label>Sort By</Menu.Label>
             <Menu.Group>
+              <Menu.Label>Sort By</Menu.Label>
               <Menu.Item>Name</Menu.Item>
               <Menu.Item>Date</Menu.Item>
             </Menu.Group>

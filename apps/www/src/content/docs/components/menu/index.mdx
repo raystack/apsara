@@ -9,6 +9,7 @@ import {
   iconsDemo,
   customDemo,
   basicDemo,
+  submenuDemo,
   autocompleteDemo,
   linearDemo,
 } from "./demo.ts";
@@ -25,13 +26,13 @@ import { Menu } from '@raystack/apsara'
 
 The Menu component is composed of several parts, each with their own props.
 
-The root element is the parent component that holds the menu. Using the `autocomplete` prop, you can enable autocomplete functionality. Built on top of [Base UI Menu](https://base-ui.com/react/components/menu)
+The root element is the parent component that holds the menu. Using the `autocomplete` prop, you can enable search functionality.
 
 <auto-type-table path="./props.ts" name="MenuRootProps" />
 
 ### Menu.Trigger Props
 
-The button that triggers the menu. Built on top of [Base UI Menu.Trigger](https://base-ui.com/react/components/menu)
+The button that triggers the menu.
 
 By default, the click event is not propagated. You can override this behavior by passing `stopPropagation={false}`.
 
@@ -41,7 +42,7 @@ Use the `render` prop to render a custom trigger element.
 
 ### Menu.Content Props
 
-The container that holds the menu items. Built on top of [Base UI Menu.Popup](https://base-ui.com/react/components/menu)
+The container that holds the menu items. When autocomplete is enabled, renders an inline search input inside the popup with a search input.
 
 <auto-type-table path="./props.ts" name="MenuContentProps" />
 
@@ -49,25 +50,25 @@ The container that holds the menu items. Built on top of [Base UI Menu.Popup](ht
 
 Individual clickable options within the menu. Built on top of [Base UI Menu.Item](https://base-ui.com/react/components/menu).
 
-Renders as a [Base UI Autocomplete.Item](https://base-ui.com/react/components/autocomplete) when used in an autocomplete menu. By default, the item's `children` is used for matching and selection, which can be overriden by passing a `value` prop.
+Renders as a `role='option'`when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
 
 <auto-type-table path="./props.ts" name="MenuItemProps" />
 
 ### Menu.Group Props
 
-A way to group related menu items together. Built on top of [Base UI Menu.Group](https://base-ui.com/react/components/menu)
+A way to group related menu items together. When filtering is active, the group wrapper is removed and items are rendered flat.
 
 <auto-type-table path="./props.ts" name="MenuGroupProps" />
 
 ### Menu.Label Props
 
-Renders a label in a menu group. This component should be wrapped with Menu.Group so the `aria-labelledby` is correctly set on the group element. Built on top of [Base UI Menu.GroupLabel](https://base-ui.com/react/components/menu)
+Renders a label in a menu group. This component should be wrapped with Menu.Group so the `aria-labelledby` is correctly set on the group element. Hidden when filtering is active.
 
 <auto-type-table path="./props.ts" name="MenuLabelProps" />
 
 ### Menu.Separator Props
 
-Visual divider between menu items or groups.
+Visual divider between menu items or groups. Hidden when filtering is active.
 
 <auto-type-table path="./props.ts" name="MenuSeparatorProps" />
 
@@ -77,17 +78,27 @@ Placeholder content when there are no menu items to display.
 
 <auto-type-table path="./props.ts" name="MenuEmptyStateProps" />
 
-### Menu.SubMenu
+### Menu.SubMenu Props
 
-Wraps a submenu root. Use with `Menu.SubTrigger` and `Menu.SubContent` to create nested menus. Built on top of [Base UI Menu.SubmenuRoot](https://base-ui.com/react/components/menu)
+Wraps a submenu root. Use with `Menu.SubTrigger` and `Menu.SubContent` to create nested menus.
+
+Supports its own `autocomplete` prop to enable search functionality within the submenu independently from the parent menu.
+
+<auto-type-table path="./props.ts" name="MenuSubMenuProps" />
 
 ### Menu.SubTrigger Props
 
 The trigger item for a submenu. Renders with a trailing chevron icon by default. Accepts `leadingIcon` and `trailingIcon` props.
 
+When inside a searchable parent menu, the `value` prop can be used for autocomplete matching.
+
+<auto-type-table path="./props.ts" name="MenuSubTriggerProps" />
+
 ### Menu.SubContent Props
 
-The content container for a submenu. Same structure as `Menu.Content` but without autocomplete support.
+The content container for a submenu. Shares the same API as `Menu.Content` with a default `sideOffset` of `2`.
+
+<auto-type-table path="./props.ts" name="MenuSubContentProps" />
 
 ## Examples
 
@@ -109,11 +120,21 @@ Organize related menu items into sections with descriptive headers.
 
 <Demo data={customDemo} />
 
+### Submenu
+
+Use `Menu.SubMenu`, `Menu.SubTrigger`, and `Menu.SubContent` to create nested menus with multiple levels.
+
+<Demo data={submenuDemo} />
+
 ### Autocomplete
 
 To enable autocomplete, pass the `autocomplete` prop to the Menu root element. Each menu instance will manage its own autocomplete behavior.
 
-By default, only the top-level menu items are filtered. For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic.
+By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
+
+For submenus, you can independently enable autocomplete by passing `autocomplete` to `Menu.SubMenu`.
+
+For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic using the `onInputValueChange` callback.
 
 <Demo data={autocompleteDemo} />
 

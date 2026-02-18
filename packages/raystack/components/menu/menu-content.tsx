@@ -110,6 +110,7 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
     return (
       <MenuPrimitive.Portal>
         <MenuPrimitive.Positioner
+          className={styles.positioner}
           sideOffset={sideOffset}
           align={align}
           {...positionerProps}

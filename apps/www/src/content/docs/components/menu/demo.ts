@@ -3,47 +3,51 @@
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
+  const contentProps = props.autocomplete
+    ? ' searchPlaceholder="Search..."'
+    : '';
   return `
   <Menu${getPropsString(props)}>
     <Menu.Trigger render={<Button />}>
       Actions
     </Menu.Trigger>
-    <Menu.Content>
+    <Menu.Content${contentProps}>
       <Menu.Group>
         <Menu.Item>Assign member...</Menu.Item>
         <Menu.Item>Subscribe...</Menu.Item>
         <Menu.Item>Rename...</Menu.Item>
       </Menu.Group>
       <Menu.Separator />
+      <Menu.Group>
       <Menu.Label>Actions</Menu.Label>
-      <Menu.SubMenu>
-        <Menu.SubTrigger>
+      <Menu.Submenu>
+        <Menu.SubmenuTrigger>
           Export
-        </Menu.SubTrigger>
-        <Menu.SubContent>
-          <Menu.SubMenu>
+        </Menu.SubmenuTrigger>
+        <Menu.SubmenuContent>
+          <Menu.Submenu>
             <Menu.Item>All (.zip)</Menu.Item>
-            <Menu.SubTrigger>
+            <Menu.SubmenuTrigger>
               CSV
-            </Menu.SubTrigger>
-            <Menu.SubContent>
+            </Menu.SubmenuTrigger>
+            <Menu.SubmenuContent>
               <Menu.Item>All</Menu.Item>
               <Menu.Item>3 Months</Menu.Item>
               <Menu.Item>6 Months</Menu.Item>
-            </Menu.SubContent>
-          </Menu.SubMenu>
-          <Menu.SubMenu>
-            <Menu.SubTrigger>
+            </Menu.SubmenuContent>
+          </Menu.Submenu>
+          <Menu.Submenu>
+            <Menu.SubmenuTrigger>
               PDF
-            </Menu.SubTrigger>
-            <Menu.SubContent>
+            </Menu.SubmenuTrigger>
+            <Menu.SubmenuContent>
               <Menu.Item>All</Menu.Item>
               <Menu.Item>3 Months</Menu.Item>
               <Menu.Item>6 Months</Menu.Item>
-            </Menu.SubContent>
-          </Menu.SubMenu>
-        </Menu.SubContent>
-      </Menu.SubMenu>
+            </Menu.SubmenuContent>
+          </Menu.Submenu>
+        </Menu.SubmenuContent>
+      </Menu.Submenu>
       <Menu.Item disabled>Copy</Menu.Item>
       <Menu.Item
         trailingIcon={
@@ -53,6 +57,7 @@ export const getCode = (props: any) => {
         }>
         Delete...
       </Menu.Item>
+      </Menu.Group>
     </Menu.Content>
     </Menu>`;
 };
@@ -107,17 +112,41 @@ export const customDemo = {
       More
     </Menu.Trigger>
     <Menu.Content>
-      <Menu.Label>Actions</Menu.Label>
       <Menu.Group>
+        <Menu.Label>Actions</Menu.Label>
         <Menu.Item>New File</Menu.Item>
         <Menu.Item>New Folder</Menu.Item>
       </Menu.Group>
       <Menu.Separator />
-      <Menu.Label>Sort By</Menu.Label>
       <Menu.Group>
+        <Menu.Label>Sort By</Menu.Label>
         <Menu.Item>Name</Menu.Item>
         <Menu.Item>Date</Menu.Item>
       </Menu.Group>
+    </Menu.Content>
+  </Menu>`
+};
+
+export const submenuDemo = {
+  type: 'code',
+  code: `
+  <Menu>
+    <Menu.Trigger render={<Button color="neutral" />}>
+      Basic Menu
+    </Menu.Trigger>
+    <Menu.Content>
+      <Menu.Item>Profile</Menu.Item>
+      <Menu.Item>Settings</Menu.Item>
+      <Menu.Separator />
+      <Menu.Item>Logout</Menu.Item>
+      <Menu.Submenu>
+        <Menu.SubmenuTrigger>Sub Menu</Menu.SubmenuTrigger>
+        <Menu.SubmenuContent>
+          <Menu.Item>Sub Menu Item 1</Menu.Item>
+          <Menu.Item>Sub Menu Item 2</Menu.Item>
+          <Menu.Item>Sub Menu Item 3</Menu.Item>
+        </Menu.SubmenuContent>
+      </Menu.Submenu>
     </Menu.Content>
   </Menu>`
 };
@@ -140,29 +169,30 @@ export const autocompleteDemo = {
           <Menu.Item>Rename...</Menu.Item>
         </Menu.Group>
         <Menu.Separator />
+        <Menu.Group>
         <Menu.Label>Actions</Menu.Label>
-        <Menu.SubMenu>
-          <Menu.SubTrigger>Export</Menu.SubTrigger>
-          <Menu.SubContent>
+        <Menu.Submenu>
+          <Menu.SubmenuTrigger>Export</Menu.SubmenuTrigger>
+          <Menu.SubmenuContent>
             <Menu.Item>All (.zip)</Menu.Item>
-            <Menu.SubMenu>
-              <Menu.SubTrigger>CSV</Menu.SubTrigger>
-              <Menu.SubContent>
+            <Menu.Submenu>
+              <Menu.SubmenuTrigger>CSV</Menu.SubmenuTrigger>
+              <Menu.SubmenuContent>
                 <Menu.Item>All</Menu.Item>
                 <Menu.Item>3 Months</Menu.Item>
                 <Menu.Item>6 Months</Menu.Item>
-              </Menu.SubContent>
-            </Menu.SubMenu>
-            <Menu.SubMenu>
-              <Menu.SubTrigger>PDF</Menu.SubTrigger>
-              <Menu.SubContent>
+              </Menu.SubmenuContent>
+            </Menu.Submenu>
+            <Menu.Submenu>
+              <Menu.SubmenuTrigger>PDF</Menu.SubmenuTrigger>
+              <Menu.SubmenuContent>
                 <Menu.Item>All</Menu.Item>
                 <Menu.Item>3 Months</Menu.Item>
                 <Menu.Item>6 Months</Menu.Item>
-              </Menu.SubContent>
-            </Menu.SubMenu>
-          </Menu.SubContent>
-        </Menu.SubMenu>
+              </Menu.SubmenuContent>
+            </Menu.Submenu>
+          </Menu.SubmenuContent>
+        </Menu.Submenu>
         <Menu.Item disabled>Copy</Menu.Item>
         <Menu.Item
           value="remove"
@@ -173,6 +203,28 @@ export const autocompleteDemo = {
           }>
           Delete...
         </Menu.Item>
+        </Menu.Group>
+      </Menu.Content>
+    </Menu>`
+    },
+    {
+      name: 'Searchable Submenu',
+      code: `
+      <Menu autocomplete>
+      <Menu.Trigger render={<Button color="neutral" />}>
+        Searchable Submenu
+      </Menu.Trigger>
+      <Menu.Content searchPlaceholder="Search actions...">
+        <Menu.Item>Copy</Menu.Item>
+        <Menu.Item value="remove">Delete...</Menu.Item>
+        <Menu.Submenu autocomplete>
+          <Menu.SubmenuTrigger>Sub Menu</Menu.SubmenuTrigger>
+          <Menu.SubmenuContent>
+            <Menu.Item>Sub Menu Item 1</Menu.Item>
+            <Menu.Item>Sub Menu Item 2</Menu.Item>
+            <Menu.Item>Sub Menu Item 3</Menu.Item>
+          </Menu.SubmenuContent>
+        </Menu.Submenu>
       </Menu.Content>
     </Menu>`
     },
@@ -192,7 +244,7 @@ export const autocompleteDemo = {
         return <Menu
                 autocomplete
                 autocompleteMode="manual"
-                onSearch={value => setSimpleSearchQuery(value)}>
+                onInputValueChange={value => setSimpleSearchQuery(value)}>
                 <Menu.Trigger render={<Button color="neutral" />}>
                   Manual Autocomplete
                 </Menu.Trigger>
@@ -212,15 +264,15 @@ export const autocompleteDemo = {
 export const linearDemo = {
   type: 'code',
   previewCode: false,
-  code: `<LinearDropdownDemo />`,
+  code: `<LinearMenuDemo />`,
   codePreview: [
     {
       label: 'index.tsx',
-      code: `function LinearDropdownDemo() {
+      code: `function LinearMenuDemo() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const renderMenu = (items: DropdownMenuItem[], query: string) => {
-    const filteredItems = filterDropdownMenuItems(items, query);
+  const renderMenu = (items: MenuItem[], query: string) => {
+    const filteredItems = filterMenuItems(items, query);
 
     if (searchQuery && filteredItems.length === 0) {
       return <div className="no-results">No results</div>;
@@ -239,16 +291,16 @@ export const linearDemo = {
           return <Menu.Separator key={index} />;
         case "submenu":
           return (
-            <Menu.SubMenu key={index}>
-              <Menu.SubTrigger
+            <Menu.Submenu key={index}>
+              <Menu.SubmenuTrigger
                 trailingIcon={item.trailingIcon}
                 leadingIcon={item.leadingIcon}>
                 {item.label}
-              </Menu.SubTrigger>
-              <Menu.SubContent>
+              </Menu.SubmenuTrigger>
+              <Menu.SubmenuContent>
                 {item.items && renderMenu(item.items, query)}
-              </Menu.SubContent>
-            </Menu.SubMenu>
+              </Menu.SubmenuContent>
+            </Menu.Submenu>
           );
         case "item":
           return (
@@ -277,12 +329,12 @@ export const linearDemo = {
     <Menu
       autocomplete
       autocompleteMode="manual"
-      onSearch={(value: string) => setSearchQuery(value)}>
+      onInputValueChange={(value: string) => setSearchQuery(value)}>
       <Menu.Trigger render={<Button />}>
         Actions
       </Menu.Trigger>
       <Menu.Content searchPlaceholder="Search">
-        {renderMenu(dropdownMenuData, searchQuery)}
+        {renderMenu(menuData, searchQuery)}
       </Menu.Content>
     </Menu>
   );
@@ -291,15 +343,15 @@ export const linearDemo = {
     },
     {
       label: 'utils.ts',
-      code: `function filterDropdownMenuItems(
-  items: DropdownMenuItem[],
+      code: `function filterMenuItems(
+  items: MenuItem[],
   query: string,
   path: string[] = [],
   isInsideSubmenu = false,
-): DropdownMenuItem[] {
+): MenuItem[] {
   if (!query?.length) return items;
   const normalizedQuery = query.trim().toLowerCase();
-  const results: DropdownMenuItem[] = [];
+  const results: MenuItem[] = [];
 
   for (const item of items) {
     if (item.type === "separator") continue;
@@ -311,12 +363,12 @@ export const linearDemo = {
         results.push({
           ...item,
           label: fullPath,
-        } as DropdownMenuItem);
+        } as MenuItem);
       }
     }
 
     if (item.type === "submenu") {
-      const nested = filterDropdownMenuItems(
+      const nested = filterMenuItems(
         item.items,
         query,
         [...path, item.label],
@@ -326,7 +378,7 @@ export const linearDemo = {
     }
 
     if (item.type === "group") {
-      const nested = filterDropdownMenuItems(
+      const nested = filterMenuItems(
         item.items,
         query,
         path,
@@ -341,7 +393,7 @@ export const linearDemo = {
     },
     {
       label: 'data.ts',
-      code: `type DropdownMenuItem =
+      code: `type MenuItem =
   | {
       type: "item";
       label: string | string[];
@@ -350,16 +402,16 @@ export const linearDemo = {
       leadingIcon?: ReactNode;
     }
   | { type: "separator" }
-  | { type: "group"; label: string; items: DropdownMenuItem[] }
+  | { type: "group"; label: string; items: MenuItem[] }
   | {
       type: "submenu";
       label: string;
-      items: DropdownMenuItem[];
+      items: MenuItem[];
       trailingIcon?: ReactNode;
       leadingIcon?: ReactNode;
     };
 
-const dropdownMenuData: DropdownMenuItem[] = [
+const menuData: MenuItem[] = [
   {
     type: "group",
     label: "Heading",

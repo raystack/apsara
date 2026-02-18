@@ -148,9 +148,11 @@ export const MenuRoot = ({
       }}
     >
       <MenuPrimitive.Root
-        {...props}
         open={open}
         onOpenChange={handleOpenChange}
+        loopFocus={false}
+        modal
+        {...props}
       />
     </MenuContext.Provider>
   );
@@ -236,9 +238,10 @@ export const MenuSubMenu = ({
       }}
     >
       <MenuPrimitive.SubmenuRoot
-        {...props}
+        loopFocus={false}
         open={open}
         onOpenChange={handleOpenChange}
+        {...props}
       />
     </MenuContext.Provider>
   );
