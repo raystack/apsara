@@ -1,21 +1,27 @@
 'use client';
 
-import { ComboboxItem } from '@ariakit/react';
+import {
+  Combobox as ComboboxPrimitive,
+  Select as SelectPrimitive
+} from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { Select as SelectPrimitive } from 'radix-ui';
-import { ElementRef, forwardRef, useLayoutEffect } from 'react';
+import { forwardRef, ReactNode, useLayoutEffect } from 'react';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../dropdown-menu/utils';
 import { Text } from '../text';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
-export const SelectItem = forwardRef<
-  ElementRef<typeof SelectPrimitive.Item>,
-  Omit<SelectPrimitive.SelectItemProps, 'asChild'> & {
-    leadingIcon?: React.ReactNode;
-  }
->(
+export interface SelectItemProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
+  leadingIcon?: ReactNode;
+  disabled?: boolean;
+  className?: string;
+  children: ReactNode;
+}
+
+export const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>(
   (
     {
       className,
@@ -27,22 +33,29 @@ export const SelectItem = forwardRef<
     },
     ref
   ) => {
-    const value = String(providedValue);
+    const registryKey = String(providedValue);
     const {
+      mode,
       registerItem,
       unregisterItem,
-      autocomplete,
-      searchValue,
-      value: selectValue,
-      shouldFilter,
+      inputValue,
+      hasItems,
       multiple
     } = useSelectContext();
 
-    const isSelected = multiple
-      ? selectValue?.includes(value)
-      : value === selectValue;
-    const isMatched = getMatch(value, children, searchValue);
-    const isHidden = shouldFilter && isSelected && !isMatched;
+    useLayoutEffect(() => {
+      registerItem({ leadingIcon, children, value: providedValue });
+      return () => {
+        unregisterItem(registryKey);
+      };
+    }, [
+      registryKey,
+      providedValue,
+      children,
+      registerItem,
+      unregisterItem,
+      leadingIcon
+    ]);
 
     const element =
       typeof children === 'string' ? (
@@ -54,49 +67,45 @@ export const SelectItem = forwardRef<
         children
       );
 
-    useLayoutEffect(() => {
-      registerItem({ leadingIcon, children, value });
-      return () => {
-        unregisterItem(value);
-      };
-    }, [value, children, registerItem, unregisterItem, leadingIcon]);
+    if (mode === 'combobox') {
+      // Client-side filtering when items prop not provided
+      if (!hasItems && inputValue?.length) {
+        const isMatched = getMatch(registryKey, children, inputValue);
+        if (!isMatched) return null;
+      }
 
-    if (shouldFilter && !isMatched && !isSelected) {
-      // Not selected and doesn't match search, so don't render at all
-      return null;
+      return (
+        <ComboboxPrimitive.Item
+          ref={ref}
+          value={providedValue}
+          className={cx(styles.menuitem, className)}
+          disabled={disabled}
+          {...props}
+          render={(renderProps, state) => (
+            <div {...renderProps}>
+              {multiple && <Checkbox checked={state.selected} />}
+              {element}
+            </div>
+          )}
+        />
+      );
     }
 
     return (
       <SelectPrimitive.Item
-        ref={ref}
-        value={value}
-        className={cx(styles.menuitem, className, isHidden && styles.hidden)}
-        data-hidden={isHidden}
-        disabled={disabled || isHidden}
-        asChild={autocomplete}
-        aria-selected={isSelected}
-        data-checked={isSelected}
+        ref={ref as React.Ref<HTMLDivElement>}
+        value={providedValue}
+        className={cx(styles.menuitem, className)}
+        disabled={disabled}
         {...props}
-      >
-        {autocomplete ? (
-          <ComboboxItem
-            clickOnEnter={false}
-            clickOnSpace={false}
-            onBlurCapture={event => {
-              event.preventDefault();
-            }}
-          >
-            {multiple && <Checkbox checked={isSelected} />}
+        render={(renderProps, state) => (
+          <div {...renderProps}>
+            {multiple && <Checkbox checked={state.selected} />}
             {element}
-          </ComboboxItem>
-        ) : (
-          <>
-            {multiple && <Checkbox checked={isSelected} />}
-            {element}
-          </>
+          </div>
         )}
-      </SelectPrimitive.Item>
+      />
     );
   }
 );
-SelectItem.displayName = SelectPrimitive.Item.displayName;
+SelectItem.displayName = 'Select.Item';
