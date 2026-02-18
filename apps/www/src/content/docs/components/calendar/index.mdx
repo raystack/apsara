@@ -14,23 +14,35 @@ import {
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Calendar, RangePicker, DatePicker } from '@raystack/apsara'
+
+<Calendar />
+
+<RangePicker />
+
+<DatePicker />
 ```
 
-## Calendar Props
+## API Reference
+
+### Calendar
+
+Renders a standalone calendar for date selection.
 
 <auto-type-table path="./props.ts" name="CalendarProps" />
 
-## RangePicker Props
+### RangePicker
 
 The RangePicker supports customizing the popover behavior using the `popoverProps` prop.
 
 <auto-type-table path="./props.ts" name="RangePickerProps" />
 
-## DatePicker Props
+### DatePicker
 
 The DatePicker supports customizing the popover behavior using the `popoverProps` prop.
 
@@ -87,3 +99,9 @@ The Range Picker component allows selecting a date range with the following beha
 Badges can include an icon to provide additional visual context. By default there is no icon.
 
 <Demo data={datePickerDemo} />
+
+## Accessibility
+
+- Supports keyboard navigation between dates with arrow keys
+- Uses `aria-label` attributes for date cells
+- Selected and disabled dates are announced to screen readers

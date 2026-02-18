@@ -8,13 +8,30 @@ import { preview, basicDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Table } from "@raystack/apsara";
+
+<Table>
+  <Table.Header>
+    <Table.Row>
+      <Table.Cell />
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell />
+    </Table.Row>
+  </Table.Body>
+</Table>
 ```
 
-## Table Props
+## API Reference
+
+### Root
 
 Customize the Table appearance with these configuration options.
 
@@ -22,31 +39,31 @@ The `Table` component is composed of several parts, each with their own props
 
 <auto-type-table path="./props.ts" name="TableProps" />
 
-### Table.Header Props
+### Header
 
 Defines the table’s header row.
 
 <auto-type-table path="./props.ts" name="TableHeaderProps" />
 
-### Table.Body Props
+### Body
 
 Wraps the table rows inside the body section.
 
 <auto-type-table path="./props.ts" name="TableBodyProps" />
 
-### Table.Row Props
+### Row
 
 Represents a single row in the table.
 
 <auto-type-table path="./props.ts" name="TableRowProps" />
 
-### Table.Cell Props
+### Cell
 
 Represents a single cell in a row
 
 <auto-type-table path="./props.ts" name="TableCellProps" />
 
-### Table.SectionHeader Props
+### SectionHeader
 
 Represents a section heading, grouping different rows of the table.
 
@@ -57,3 +74,9 @@ Represents a section heading, grouping different rows of the table.
 ### Basic Usage
 
 <Demo data={basicDemo} />
+
+## Accessibility
+
+- Uses semantic `table`, `thead`, `tbody`, `tr`, `th`, and `td` elements
+- Supports `aria-label` for table identification
+- Header cells use `scope` attribute for row/column association

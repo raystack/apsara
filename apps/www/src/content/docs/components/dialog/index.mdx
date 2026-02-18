@@ -8,47 +8,81 @@ import { playground, closeDemo, customDemo, controlledDemo, onlyHeaderDemo, only
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Dialog } from '@raystack/apsara'
+
+<Dialog>
+  <Dialog.Trigger />
+  <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title />
+      <Dialog.CloseButton />
+    </Dialog.Header>
+    <Dialog.Body>
+      <Dialog.Description />
+    </Dialog.Body>
+    <Dialog.Footer />
+  </Dialog.Content>
+</Dialog>
 ```
 
-## Dialog Props
+## API Reference
+
+### Root
+
+Groups all parts of the dialog.
 
 <auto-type-table path="./props.ts" name="DialogProps" />
 
-### Dialog.Content Props
+### Content
+
+Renders the dialog panel overlay.
 
 <auto-type-table path="./props.ts" name="DialogContentProps" />
 
+### Header
 
-### Dialog.Header Props
+Renders the dialog header section.
 
 <auto-type-table path="./props.ts" name="DialogHeaderProps" />
 
-### Dialog.Title Props
+### Title
+
+Renders the dialog title text.
 
 <auto-type-table path="./props.ts" name="DialogTitleProps" />
 
-### Dialog.Body Props
+### Body
+
+Renders the main content area of the dialog.
 
 <auto-type-table path="./props.ts" name="DialogBodyProps" />
 
-### Dialog.Description Props
+### Description
+
+Renders supplementary text within the dialog body.
 
 <auto-type-table path="./props.ts" name="DialogDescriptionProps" />
 
-### Dialog.Trigger Props
+### Trigger
+
+Renders the element that opens the dialog.
 
 <auto-type-table path="./props.ts" name="DialogTriggerProps" />
 
-### Dialog.CloseButton Props
+### CloseButton
+
+Renders a button that closes the dialog.
 
 <auto-type-table path="./props.ts" name="DialogCloseButtonProps" />
 
+### Footer
 
-### Dialog.Footer Props
+Renders the dialog footer section.
 
 <auto-type-table path="./props.ts" name="DialogFooterProps" />
 
@@ -65,7 +99,6 @@ Example of a controlled dialog with custom state management.
 Example with custom width and overlay styling.
 
 <Demo data={customDemo} />
-
 
 ### With Header and Body
 
@@ -85,7 +118,7 @@ You can nest dialogs within one another. When a nested dialog opens, the parent 
 
 <Demo data={nestedDemo} />
 
-### Accessibility
+## Accessibility
 
 - Dialog has `role="dialog"` and `aria-modal="true"`
 - Uses `aria-label` or `aria-labelledby` to identify the dialog

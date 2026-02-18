@@ -8,7 +8,9 @@ import { preview } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import {
@@ -19,35 +21,62 @@ import {
   useDataTable,
   EmptyFilterValue
 } from "@raystack/apsara";
+
+<DataTable>
+  <DataTable.Toolbar>
+    <DataTable.Search />
+    <DataTable.Filters />
+    <DataTable.DisplayControls />
+  </DataTable.Toolbar>
+  <DataTable.Content />
+</DataTable>
 ```
 
-## DataTable Props
+## API Reference
+
+### Root
+
+Groups all parts of the data table and manages state.
 
 <auto-type-table path="./props.ts" name="DataTableProps" />
 
-### DataTable.DisplayControls Props
+### DisplayControls
+
+Renders column visibility and display options.
 
 <auto-type-table path="./props.ts" name="DisplayControlsProps" />
 
-### DataTable.Filters Props
+### Filters
+
+Renders the filter controls for table columns.
 
 <auto-type-table path="./props.ts" name="FiltersProps" />
 
-## DataTableQuery Interface
+### Query
+
+Describes the query state for server-side integration.
 
 <auto-type-table path="./props.ts" name="DataTableQuery" />
 
-## DataTableColumn Interface
+### ColumnDef
+
+Describes the column configuration interface.
 
 <auto-type-table path="./props.ts" name="DataTableColumnDef" />
 
-## DataTable.Content Props
+### Content
+
+Renders the table content area.
 
 <auto-type-table path="./props.ts" name="DataTableContentProps" />
 
-## DataTable.VirtualizedContent Props
+### VirtualizedContent
+
+For large datasets, use `DataTable.VirtualizedContent` for better performance. Parent container must have a fixed height.
 
 <auto-type-table path="./props.ts" name="VirtualizedContentProps" />
+
+## Examples
 
 ### Virtualized Content
 
@@ -86,8 +115,6 @@ const columns = [
   }
 ];
 ```
-
-## Examples
 
 ### Basic Usage
 
@@ -409,3 +436,10 @@ import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
   }
 />
 ```
+
+## Accessibility
+
+- Uses semantic `table`, `thead`, `tbody`, `tr`, `th`, and `td` elements
+- Supports keyboard navigation between cells and rows
+- Sort state is communicated via `aria-sort` attribute
+- Filter controls are accessible via keyboard
