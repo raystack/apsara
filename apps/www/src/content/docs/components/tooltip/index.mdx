@@ -8,31 +8,39 @@ import { playground, sideDemo, alignDemo, customDemo, providerDemo, trackCursorD
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Tooltip } from "@raystack/apsara";
+
+<Tooltip.Provider>
+  <Tooltip />
+</Tooltip.Provider>
 ```
 
-## Tooltip Props
+## API Reference
+
+### Root
 
 The Tooltip component accepts various props to customize its behavior and appearance. You can use it either as a standalone component or nested within a TooltipProvider for enhanced functionality.
 
 <auto-type-table path="./props.ts" name="TooltipProps" />
 
-## Tooltip.Trigger Props
+### Trigger
 
 The Trigger component wraps the element that activates the tooltip.
 
 <auto-type-table path="./props.ts" name="TooltipTriggerProps" />
 
-## Tooltip.Content Props
+### Content
 
 The Content component displays the tooltip content and controls positioning.
 
 <auto-type-table path="./props.ts" name="TooltipContentProps" />
 
-## Tooltip.Provider Props
+### Provider
 
 The Provider component serves as a context wrapper that provides global configuration and functionality to all tooltip instances within your application.
 

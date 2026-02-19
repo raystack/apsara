@@ -8,25 +8,36 @@ import { playground, alignDemo, positionDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Popover } from "@raystack/apsara";
+
+<Popover>
+  <Popover.Trigger />
+  <Popover.Content />
+</Popover>
 ```
 
-## Popover Props
+## API Reference
 
-The Popover component consists of several parts, each with their own props:
+### Root
 
-### Popover Props
+Groups all parts of the popover.
 
 <auto-type-table path="./props.ts" name="PopoverRootProps" />
 
-### Popover.Content Props
+### Content
+
+Renders the popover content panel.
 
 <auto-type-table path="./props.ts" name="PopoverContentProps" />
 
-### Popover.Trigger Props
+### Trigger
+
+Renders the element that opens the popover.
 
 <auto-type-table path="./props.ts" name="PopoverTriggerProps" />
 
@@ -46,7 +57,7 @@ Customize how the popover aligns with its trigger.
 
 ## Accessibility
 
-The Callout component includes appropriate ARIA attributes for accessibility:
-
-- Uses semantic HTML elements for proper structure
-- Dismiss button includes `aria-label` for screen readers
+- Follows the [WAI-ARIA Dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+- Trigger uses `aria-haspopup` and `aria-expanded` attributes
+- Focus is managed when opening and closing the popover
+- Supports dismissal with Escape key

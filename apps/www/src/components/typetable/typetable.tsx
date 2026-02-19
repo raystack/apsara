@@ -57,7 +57,7 @@ export function TypeTable({
         <p className={styles.propLabel}>Prop</p>
         <p className={styles.typeLabel}>Type</p>
       </div>
-      <Accordion type='multiple'>
+      <Accordion multiple>
         {entries.map(([key, value]) => (
           <Item key={key} name={key} item={value} />
         ))}

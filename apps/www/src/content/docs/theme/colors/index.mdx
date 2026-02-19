@@ -1,0 +1,228 @@
+---
+title: Colors
+description: Overview of the color system and semantic color tokens in Apsara.
+---
+
+Apsara uses a semantic color system that provides meaningful, context-aware colors for your interface. Rather than using fixed color values, semantic tokens represent the intended purpose of a color—such as "primary text" or "danger background"—and automatically resolve to the appropriate value based on the active theme and style. This abstraction allows you to build consistent, themeable interfaces by focusing on what a color represents rather than what it looks like.
+
+## Foreground Colors
+
+Foreground colors are used for text, icons, and other content elements.
+
+<TokenTable
+  type="color"
+  tokens={[
+    { name: "--rs-color-foreground-base-primary", description: "Primary text color for headings and important content" },
+    { name: "--rs-color-foreground-base-secondary", description: "Secondary text color for supporting content" },
+    { name: "--rs-color-foreground-base-tertiary", description: "Tertiary text color for muted or placeholder content" },
+    { name: "--rs-color-foreground-base-emphasis", description: "High contrast text for emphasis on colored backgrounds" },
+    { name: "--rs-color-foreground-accent-primary", description: "Accent color for interactive elements and links" },
+    { name: "--rs-color-foreground-accent-primary-hover", description: "Hover state for accent foreground" },
+    { name: "--rs-color-foreground-accent-emphasis", description: "Text on accent emphasis backgrounds" },
+    { name: "--rs-color-foreground-danger-primary", description: "Error and destructive action text" },
+    { name: "--rs-color-foreground-danger-primary-hover", description: "Hover state for danger foreground" },
+    { name: "--rs-color-foreground-danger-emphasis", description: "Text on danger emphasis backgrounds" },
+    { name: "--rs-color-foreground-attention-primary", description: "Warning and attention text" },
+    { name: "--rs-color-foreground-attention-primary-hover", description: "Hover state for attention foreground" },
+    { name: "--rs-color-foreground-attention-emphasis", description: "Text on attention emphasis backgrounds" },
+    { name: "--rs-color-foreground-success-primary", description: "Success and positive action text" },
+    { name: "--rs-color-foreground-success-primary-hover", description: "Hover state for success foreground" },
+    { name: "--rs-color-foreground-success-emphasis", description: "Text on success emphasis backgrounds" },
+  ]}
+/>
+
+## Background Colors
+
+Background colors define surfaces and containers in your interface.
+
+<TokenTable
+  type="color"
+  tokens={[
+    { name: "--rs-color-background-base-primary", description: "Primary background for main content areas" },
+    { name: "--rs-color-background-base-primary-hover", description: "Hover state for primary background" },
+    { name: "--rs-color-background-base-secondary", description: "Secondary background for cards and panels" },
+    { name: "--rs-color-background-neutral-primary", description: "Neutral background for subtle elements" },
+    { name: "--rs-color-background-neutral-secondary", description: "Secondary neutral background" },
+    { name: "--rs-color-background-neutral-secondary-hover", description: "Hover state for secondary neutral background" },
+    { name: "--rs-color-background-neutral-tertiary", description: "Tertiary neutral background" },
+    { name: "--rs-color-background-neutral-tertiary-hover", description: "Hover state for tertiary neutral background" },
+    { name: "--rs-color-background-neutral-emphasis", description: "High contrast neutral background" },
+    { name: "--rs-color-background-accent-primary", description: "Subtle accent background for highlights" },
+    { name: "--rs-color-background-accent-emphasis", description: "Strong accent background for buttons and CTAs" },
+    { name: "--rs-color-background-accent-emphasis-hover", description: "Hover state for accent emphasis background" },
+    { name: "--rs-color-background-danger-primary", description: "Subtle danger background for error states" },
+    { name: "--rs-color-background-danger-emphasis", description: "Strong danger background for destructive actions" },
+    { name: "--rs-color-background-danger-emphasis-hover", description: "Hover state for danger emphasis background" },
+    { name: "--rs-color-background-attention-primary", description: "Subtle attention background for warnings" },
+    { name: "--rs-color-background-attention-emphasis", description: "Strong attention background" },
+    { name: "--rs-color-background-attention-emphasis-hover", description: "Hover state for attention emphasis background" },
+    { name: "--rs-color-background-success-primary", description: "Subtle success background for positive states" },
+    { name: "--rs-color-background-success-emphasis", description: "Strong success background" },
+    { name: "--rs-color-background-success-emphasis-hover", description: "Hover state for success emphasis background" },
+  ]}
+/>
+
+## Border Colors
+
+Border colors define boundaries and separators.
+
+<TokenTable
+  type="color"
+  tokens={[
+    { name: "--rs-color-border-base-primary", description: "Primary border for subtle boundaries" },
+    { name: "--rs-color-border-base-secondary", description: "Secondary border for dividers" },
+    { name: "--rs-color-border-base-tertiary", description: "Tertiary border for inputs and cards" },
+    { name: "--rs-color-border-base-tertiary-hover", description: "Hover state for tertiary border" },
+    { name: "--rs-color-border-base-focus", description: "Focus ring for interactive elements" },
+    { name: "--rs-color-border-base-emphasis", description: "High contrast border for emphasis" },
+    { name: "--rs-color-border-accent-primary", description: "Accent border for highlights" },
+    { name: "--rs-color-border-accent-emphasis", description: "Strong accent border" },
+    { name: "--rs-color-border-accent-emphasis-hover", description: "Hover state for accent emphasis border" },
+    { name: "--rs-color-border-danger-primary", description: "Danger border for error states" },
+    { name: "--rs-color-border-danger-emphasis", description: "Strong danger border" },
+    { name: "--rs-color-border-danger-emphasis-hover", description: "Hover state for danger emphasis border" },
+    { name: "--rs-color-border-attention-primary", description: "Attention border for warnings" },
+    { name: "--rs-color-border-attention-emphasis", description: "Strong attention border" },
+    { name: "--rs-color-border-attention-emphasis-hover", description: "Hover state for attention emphasis border" },
+    { name: "--rs-color-border-success-primary", description: "Success border for positive states" },
+    { name: "--rs-color-border-success-emphasis", description: "Strong success border" },
+    { name: "--rs-color-border-success-emphasis-hover", description: "Hover state for success emphasis border" },
+  ]}
+/>
+
+## Overlay Colors
+
+Overlay colors are used for modals, tooltips, and layered elements.
+
+<TokenTable
+  type="color"
+  tokens={[
+    { name: "--rs-color-overlay-base-primary", description: "Default overlay" },
+    { name: "--rs-color-overlay-black-a1", description: "Black overlay at 5% opacity" },
+    { name: "--rs-color-overlay-black-a2", description: "Black overlay at 10% opacity" },
+    { name: "--rs-color-overlay-black-a3", description: "Black overlay at 15% opacity" },
+    { name: "--rs-color-overlay-black-a4", description: "Black overlay at 20% opacity" },
+    { name: "--rs-color-overlay-black-a5", description: "Black overlay at 30% opacity" },
+    { name: "--rs-color-overlay-black-a6", description: "Black overlay at 40% opacity" },
+    { name: "--rs-color-overlay-black-a7", description: "Black overlay at 50% opacity" },
+    { name: "--rs-color-overlay-black-a8", description: "Black overlay at 60% opacity" },
+    { name: "--rs-color-overlay-black-a9", description: "Black overlay at 70% opacity" },
+    { name: "--rs-color-overlay-black-a10", description: "Black overlay at 80% opacity" },
+    { name: "--rs-color-overlay-black-a11", description: "Black overlay at 90% opacity" },
+    { name: "--rs-color-overlay-black-a12", description: "Black overlay at 95% opacity" },
+    { name: "--rs-color-overlay-white-a1", description: "White overlay at 5% opacity" },
+    { name: "--rs-color-overlay-white-a2", description: "White overlay at 10% opacity" },
+    { name: "--rs-color-overlay-white-a3", description: "White overlay at 15% opacity" },
+    { name: "--rs-color-overlay-white-a4", description: "White overlay at 20% opacity" },
+    { name: "--rs-color-overlay-white-a5", description: "White overlay at 30% opacity" },
+    { name: "--rs-color-overlay-white-a6", description: "White overlay at 40% opacity" },
+    { name: "--rs-color-overlay-white-a7", description: "White overlay at 50% opacity" },
+    { name: "--rs-color-overlay-white-a8", description: "White overlay at 60% opacity" },
+    { name: "--rs-color-overlay-white-a9", description: "White overlay at 70% opacity" },
+    { name: "--rs-color-overlay-white-a10", description: "White overlay at 80% opacity" },
+    { name: "--rs-color-overlay-white-a11", description: "White overlay at 90% opacity" },
+    { name: "--rs-color-overlay-white-a12", description: "White overlay at 95% opacity" },
+  ]}
+/>
+
+## Visualization Colors
+
+A palette of colors designed for data visualization, charts, and graphs.
+
+<TokenTable
+  type="color"
+  tokens={[
+    { name: "--rs-color-viz-sky-9", description: "Sky blue for data visualization" },
+    { name: "--rs-color-viz-mint-9", description: "Mint for data visualization" },
+    { name: "--rs-color-viz-lime-9", description: "Lime for data visualization" },
+    { name: "--rs-color-viz-grass-9", description: "Grass green for data visualization" },
+    { name: "--rs-color-viz-green-9", description: "Green for data visualization" },
+    { name: "--rs-color-viz-jade-9", description: "Jade for data visualization" },
+    { name: "--rs-color-viz-cyan-9", description: "Cyan for data visualization" },
+    { name: "--rs-color-viz-blue-9", description: "Blue for data visualization" },
+    { name: "--rs-color-viz-iris-9", description: "Iris for data visualization" },
+    { name: "--rs-color-viz-purple-9", description: "Purple for data visualization" },
+    { name: "--rs-color-viz-pink-9", description: "Pink for data visualization" },
+    { name: "--rs-color-viz-crimson-9", description: "Crimson for data visualization" },
+    { name: "--rs-color-viz-orange-9", description: "Orange for data visualization" },
+    { name: "--rs-color-viz-gold-9", description: "Gold for data visualization" },
+  ]}
+/>
+
+## Usage
+
+```css
+/* Custom status indicator */
+.status-badge {
+  padding: var(--rs-space-1) var(--rs-space-3);
+  border-radius: var(--rs-radius-full);
+}
+
+.status-badge[data-status="active"] {
+  background-color: var(--rs-color-background-success-primary);
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.status-badge[data-status="pending"] {
+  background-color: var(--rs-color-background-attention-primary);
+  color: var(--rs-color-foreground-attention-primary);
+}
+
+.status-badge[data-status="error"] {
+  background-color: var(--rs-color-background-danger-primary);
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+/* Data table with hover states */
+.data-table-row {
+  border-bottom: 1px solid var(--rs-color-border-base-primary);
+}
+
+.data-table-row:hover {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.data-table-cell-muted {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+/* Metric card with visualization */
+.metric-card {
+  background: var(--rs-color-background-base-secondary);
+  border: 1px solid var(--rs-color-border-base-primary);
+}
+
+.metric-value {
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.metric-trend-up {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.metric-trend-down {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+/* Sidebar navigation */
+.nav-item {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.nav-item:hover {
+  background-color: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.nav-item[data-active="true"] {
+  background-color: var(--rs-color-background-accent-primary);
+  color: var(--rs-color-foreground-accent-primary);
+}
+```
+
+## Best Practices
+
+- **Use semantic tokens** - Prefer semantic color tokens over raw color values for consistency and theming support
+- **Match foreground with background** - Use corresponding foreground colors when placing text on semantic backgrounds (e.g., `foreground-accent-emphasis` on `background-accent-emphasis`)
+- **Respect color hierarchy** - Use primary colors for main content, secondary for supporting content, and tertiary for subtle elements
+- **Test in both themes** - Ensure your color choices work well in both light and dark modes

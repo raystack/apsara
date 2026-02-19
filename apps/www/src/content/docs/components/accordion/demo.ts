@@ -28,10 +28,9 @@ export const getCode = (props: Record<string, unknown>) => {
 export const playground = {
   type: 'playground',
   controls: {
-    type: {
-      type: 'select',
-      options: ['single', 'multiple'],
-      defaultValue: 'single'
+    multiple: {
+      type: 'checkbox',
+      defaultValue: false
     }
   },
   getCode
@@ -43,7 +42,7 @@ export const typeDemo = {
     {
       name: 'Single',
       code: `
-<Accordion type="single" collapsible>
+<Accordion multiple={false}>
   <Accordion.Item value="item-1">
     <Accordion.Trigger>What is Apsara?</Accordion.Trigger>
     <Accordion.Content>
@@ -67,7 +66,7 @@ export const typeDemo = {
     {
       name: 'Multiple',
       code: `
-<Accordion type="multiple">
+<Accordion multiple>
   <Accordion.Item value="item-1">
     <Accordion.Trigger>What is Apsara?</Accordion.Trigger>
     <Accordion.Content>

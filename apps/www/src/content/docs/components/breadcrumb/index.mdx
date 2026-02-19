@@ -16,25 +16,45 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Breadcrumb } from '@raystack/apsara'
+
+<Breadcrumb>
+  <Breadcrumb.Item />
+  <Breadcrumb.Separator />
+  <Breadcrumb.Item />
+  <Breadcrumb.Ellipsis />
+  <Breadcrumb.Item />
+</Breadcrumb>
 ```
 
-## Breadcrumb Props
+## API Reference
+
+### Root
+
+Groups all parts of the breadcrumb navigation.
 
 <auto-type-table path="./props.ts" name="BreadcrumbProps" />
 
-### Breadcrumb.Item Props
+### Item
+
+Renders an individual breadcrumb link.
 
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
 
-### Breadcrumb.Separator Props
+### Separator
+
+Renders a visual divider between breadcrumb items.
 
 <auto-type-table path="./props.ts" name="BreadcrumbSeparatorProps" />
 
-### Breadcrumb.Ellipsis Props
+### Ellipsis
+
+Renders a collapsed indicator for hidden breadcrumb items.
 
 <auto-type-table path="./props.ts" name="BreadcrumbEllipsisProps" />
 
@@ -79,3 +99,9 @@ Use the `as` prop to render the breadcrumb item as a custom component. By defaul
 When a custom component is provided, the props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
 
 <Demo data={asDemo} />
+
+## Accessibility
+
+- Uses `nav` element with `aria-label="Breadcrumb"` for proper landmark identification
+- Current page is indicated with `aria-current="page"`
+- Separator elements are hidden from screen readers with `aria-hidden`

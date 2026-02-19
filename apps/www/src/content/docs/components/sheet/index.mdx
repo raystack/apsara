@@ -8,27 +8,59 @@ import { playground, basicDemo, positionDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Sheet } from "@raystack/apsara";
+
+<Sheet>
+  <Sheet.Content>
+    <Sheet.Header>
+      <Sheet.Title />
+      <Sheet.Description />
+    </Sheet.Header>
+    <Sheet.Body />
+    <Sheet.Footer />
+  </Sheet.Content>
+</Sheet>
 ```
 
-## Sheet Props
+## API Reference
+
+### Root
+
+Groups all parts of the sheet.
 
 <auto-type-table path="./props.ts" name="SheetProps" />
 
-### Sheet.Content Props
+### Content
+
+Renders the sheet panel that slides in from a screen edge.
 
 <auto-type-table path="./props.ts" name="SheetContentProps" />
 
-### Sheet.Title Props
+### Header
 
-- Inherits all HTML heading element props
+- `children`: React.ReactNode - Content to render inside the header
+- `className`: string - Additional CSS class name
 
-### Sheet.Description Props
+### Title
 
-- Inherits all HTML paragraph element props
+- Inherits all Base UI Dialog.Title props
+
+### Description
+
+- Inherits all Base UI Dialog.Description props
+
+### Body
+
+- Inherits all HTML div element props
+
+### Footer
+
+- Inherits all HTML div element props
 
 ## Examples
 
@@ -44,8 +76,7 @@ The Sheet can slide in from different sides of the screen.
 
 ## Accessibility
 
-Sheet components are built with proper accessibility features following WAI-ARIA guidelines:
-
-- Uses semantic HTML elements for proper structure
-- Dismiss button includes `aria-label` and `aria-description` for screen readers
-- Interactive elements are keyboard accessible
+- Uses `role="dialog"` with `aria-modal="true"`
+- Focus is trapped within the sheet and restored on close
+- Supports dismissal with Escape key
+- Title is announced via `aria-labelledby`

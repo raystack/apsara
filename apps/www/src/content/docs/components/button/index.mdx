@@ -16,13 +16,19 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Button } from '@raystack/apsara'
+
+<Button />
 ```
 
-## Button Props
+## API Reference
+
+Renders a clickable button element.
 
 <auto-type-table path="./props.ts" name="ButtonProps" />
 
@@ -62,3 +68,10 @@ The Button component offers inbuilt loading states. Loading state is used to sig
 The button component accepts optional leading and/or trailing icons.
 
 <Demo data={iconsDemo} />
+
+## Accessibility
+
+- Uses native `button` element with proper ARIA attributes
+- Supports keyboard activation with Enter and Space keys
+- Disabled state is communicated via `aria-disabled` attribute
+- Loading state prevents interaction and announces status to screen readers

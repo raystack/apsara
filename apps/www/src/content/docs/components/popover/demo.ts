@@ -7,7 +7,7 @@ export const getCode = (props: any) => {
   return `
   <Popover>
     <Popover.Trigger asChild>
-      <Button>Top Popover</Button>
+      <Button>Popover</Button>
     </Popover.Trigger>
     <Popover.Content${getPropsString(rest)}>
     ${children}

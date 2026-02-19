@@ -1,0 +1,134 @@
+---
+title: Overview
+description: Understanding the Apsara theming system and ThemeProvider.
+---
+
+Apsara provides a theming system built on CSS custom properties (tokens). Tokens are semantic variables that automatically resolve to appropriate values based on the active theme—so your UI adapts seamlessly when users switch between light and dark modes or when you change accent colors, without any code changes.
+
+## Installation
+
+Wrap your application with the `ThemeProvider` component:
+
+```tsx
+import { ThemeProvider } from "@raystack/apsara";
+
+function App() {
+  return (
+    <ThemeProvider defaultTheme="system">
+      <YourApp />
+    </ThemeProvider>
+  );
+}
+```
+
+## Customization
+
+The ThemeProvider accepts props to control the visual identity of your application. Combine `style` variants with `accentColor` and `grayColor` to create distinct aesthetics—from sharp and technical to warm and editorial. The `defaultTheme` prop controls light/dark mode, with `system` respecting the user's OS preference.
+
+```tsx
+// Clean, technical aesthetic
+<ThemeProvider style="modern" accentColor="indigo" grayColor="slate">
+
+// Warm, editorial feel
+<ThemeProvider style="traditional" accentColor="orange" grayColor="mauve">
+
+// Vibrant and fresh
+<ThemeProvider style="modern" accentColor="mint" grayColor="gray">
+```
+
+See [API Reference](#api-reference) for all available props and options.
+
+## Tokens
+
+Tokens follow two naming patterns:
+
+**Semantic tokens** — for context-aware values that adapt to theme:
+```
+--rs-{category}-{property}-{variant}-{state}
+```
+
+**Scale tokens** — for numerical progressions:
+```
+--rs-{category}-{step}
+```
+
+**Examples:**
+- `--rs-color-foreground-base-primary` — primary text color
+- `--rs-color-background-accent-emphasis` — accent button background
+- `--rs-space-5` — 16px spacing
+- `--rs-radius-3` — medium border radius
+- `--rs-shadow-lifted` — elevated shadow
+
+**Using tokens in CSS:**
+
+```css
+.custom-card {
+  background: var(--rs-color-background-base-secondary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-4);
+  padding: var(--rs-space-5);
+  box-shadow: var(--rs-shadow-feather);
+}
+```
+
+**Token Categories:**
+- [Colors](/theme/colors) — foreground, background, border, and overlay colors
+- [Spacing](/theme/spacing) — consistent scale from 2px to 120px
+- [Radius](/theme/radius) — border radius that adapts to style variants
+- [Typography](/theme/typography) — font families, sizes, weights, and line heights
+- [Effects](/theme/effects) — shadows and blur for depth and elevation
+
+## API Reference
+
+### ThemeProvider
+
+The `ThemeProvider` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
+
+<auto-type-table path="./props.ts" name="ThemeProviderProps" />
+
+### useTheme
+
+The `useTheme` hook provides access to the current theme state and methods to change it. Use this to build theme toggles, read the resolved theme for conditional rendering, or sync with external systems.
+
+```tsx
+import { useTheme } from "@raystack/apsara";
+
+function ThemeToggle() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+
+  return (
+    <button onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>
+      Toggle theme
+    </button>
+  );
+}
+```
+
+<auto-type-table path="./props.ts" name="UseThemeProps" />
+
+## Framework Integration
+
+**HTML Attributes** — the ThemeProvider sets data attributes on the document element for CSS targeting:
+- `data-theme` — current color scheme (`light` | `dark`)
+- `data-style` — active style variant (`modern` | `traditional`)
+- `data-accent-color` — active accent color (`indigo` | `orange` | `mint`)
+- `data-gray-color` — active gray variant (`gray` | `mauve` | `slate`)
+
+**SSR & Flash Prevention** — the ThemeProvider includes an inline script that runs before React hydration to prevent flash of incorrect theme. For SSR frameworks, include the provider in your root layout:
+
+```tsx
+// Next.js App Router: app/layout.tsx
+import { ThemeProvider } from "@raystack/apsara";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+The `suppressHydrationWarning` is required because the theme script modifies the HTML element before React hydrates.

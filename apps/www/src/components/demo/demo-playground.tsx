@@ -100,7 +100,11 @@ export default function DemoPlayground({
     <>
       <DemoPreview type='code' code={previewCode} scope={scope} />
       <Dialog open={openPlayground} onOpenChange={setOpenPlayground}>
-        <Dialog.Content className={styles.playgroundDialog}>
+        <Dialog.Content
+          className={styles.playgroundDialog}
+          showCloseButton={false}
+          showNestedAnimation={false}
+        >
           <Dialog.Header className={styles.playgroundHeader}>
             <DemoTitle className={styles.playgroundTitle} />
             <Flex gap={3} align='center'>

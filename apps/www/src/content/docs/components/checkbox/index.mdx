@@ -8,13 +8,19 @@ import { playground, statesExamples } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Checkbox } from "@raystack/apsara";
+
+<Checkbox />
 ```
 
-## Checkbox Props
+## API Reference
+
+Renders a toggleable checkbox input.
 
 <auto-type-table path="./props.ts" name="CheckboxProps" />
 
@@ -30,3 +36,10 @@ The Checkbox component supports multiple states to represent different selection
 - Disabled: Disabled state
 
 <Demo data={statesExamples} />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/)
+- Supports keyboard activation with Space key
+- Uses `aria-checked` to indicate state (checked, unchecked, indeterminate)
+- Associates with labels via `id` and `htmlFor` attributes

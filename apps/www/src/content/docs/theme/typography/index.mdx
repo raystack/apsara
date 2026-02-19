@@ -1,0 +1,201 @@
+---
+title: Typography
+description: Overview of the typography system and text tokens in Apsara.
+---
+
+Apsara provides a comprehensive typography system with carefully crafted font families, sizes, weights, and spacing. Typography tokens adapt based on the active style variant—modern style uses Inter for a clean, technical aesthetic while traditional style uses Lora and Josefin Sans for a warmer, editorial feel. Using these tokens ensures your text styling remains consistent and automatically adapts to style changes.
+
+## Font Families
+
+Apsara includes three font family categories for different use cases.
+
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-title", value: "Inter, sans-serif", description: "Headings and titles" },
+    { name: "--rs-font-body", value: "Inter, sans-serif", description: "Body text and paragraphs" },
+    { name: "--rs-font-mono", value: "Menlo, JetBrains Mono, monospace", description: "Code and technical content" },
+  ]}
+/>
+
+### Available Fonts
+
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-inter", value: "Inter", description: "Modern sans-serif font" },
+    { name: "--rs-font-lora", value: "Lora", description: "Elegant serif font" },
+    { name: "--rs-font-josefin-sans", value: "Josefin Sans", description: "Geometric sans-serif font" },
+    { name: "--rs-font-jetbrains-mono", value: "JetBrains Mono", description: "Developer-focused monospace font" },
+    { name: "--rs-font-menlo", value: "Menlo", description: "System monospace font" },
+  ]}
+/>
+
+## Font Weights
+
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-weight-regular", value: "400", description: "Body text, descriptions" },
+    { name: "--rs-font-weight-medium", value: "500", description: "Headings, labels, emphasis" },
+  ]}
+/>
+
+## Body Text
+
+Font sizes, line heights, and letter spacing for body content.
+
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-size-micro", value: "10px", description: "Fine print, timestamps" },
+    { name: "--rs-line-height-micro", value: "12px", description: "Line height for micro" },
+    { name: "--rs-letter-spacing-micro", value: "0.5px", description: "Letter spacing for micro" },
+    { name: "--rs-font-size-mini", value: "11px", description: "Captions, badges" },
+    { name: "--rs-line-height-mini", value: "16px", description: "Line height for mini" },
+    { name: "--rs-letter-spacing-mini", value: "0.5px", description: "Letter spacing for mini" },
+    { name: "--rs-font-size-small", value: "12px", description: "Secondary text, labels" },
+    { name: "--rs-line-height-small", value: "16px", description: "Line height for small" },
+    { name: "--rs-letter-spacing-small", value: "0.4px", description: "Letter spacing for small" },
+    { name: "--rs-font-size-regular", value: "14px", description: "Default body text" },
+    { name: "--rs-line-height-regular", value: "20px", description: "Line height for regular" },
+    { name: "--rs-letter-spacing-regular", value: "0.25px", description: "Letter spacing for regular" },
+    { name: "--rs-font-size-large", value: "16px", description: "Large body text, introductions" },
+    { name: "--rs-line-height-large", value: "24px", description: "Line height for large" },
+    { name: "--rs-letter-spacing-large", value: "0.5px", description: "Letter spacing for large" },
+  ]}
+/>
+
+## Title Text
+
+Font sizes, line heights, and letter spacing for headings and titles.
+
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-size-t1", value: "20px", description: "Small headings (h4)" },
+    { name: "--rs-line-height-t1", value: "24px", description: "Line height for t1" },
+    { name: "--rs-letter-spacing-t1", value: "0", description: "Letter spacing for t1" },
+    { name: "--rs-font-size-t2", value: "24px", description: "Section headings (h3)" },
+    { name: "--rs-line-height-t2", value: "32px", description: "Line height for t2" },
+    { name: "--rs-letter-spacing-t2", value: "0", description: "Letter spacing for t2" },
+    { name: "--rs-font-size-t3", value: "28px", description: "Page headings (h2)" },
+    { name: "--rs-line-height-t3", value: "36px", description: "Line height for t3" },
+    { name: "--rs-letter-spacing-t3", value: "0", description: "Letter spacing for t3" },
+    { name: "--rs-font-size-t4", value: "32px", description: "Main titles (h1)" },
+    { name: "--rs-line-height-t4", value: "40px", description: "Line height for t4" },
+    { name: "--rs-letter-spacing-t4", value: "0", description: "Letter spacing for t4" },
+  ]}
+/>
+
+## Monospace Text
+
+Font sizes, line heights, and letter spacing for code and technical content.
+
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-size-mono-mini", value: "11px", description: "Small code snippets" },
+    { name: "--rs-line-height-mono-mini", value: "16px", description: "Line height for mono mini" },
+    { name: "--rs-letter-spacing-mono-mini", value: "0px", description: "Letter spacing for mono mini" },
+    { name: "--rs-font-size-mono-small", value: "12px", description: "Inline code" },
+    { name: "--rs-line-height-mono-small", value: "16px", description: "Line height for mono small" },
+    { name: "--rs-letter-spacing-mono-small", value: "0px", description: "Letter spacing for mono small" },
+    { name: "--rs-font-size-mono-regular", value: "14px", description: "Code blocks" },
+    { name: "--rs-line-height-mono-regular", value: "20px", description: "Line height for mono regular" },
+    { name: "--rs-letter-spacing-mono-regular", value: "0px", description: "Letter spacing for mono regular" },
+    { name: "--rs-font-size-mono-large", value: "16px", description: "Large code displays" },
+    { name: "--rs-line-height-mono-large", value: "24px", description: "Line height for mono large" },
+    { name: "--rs-letter-spacing-mono-large", value: "0px", description: "Letter spacing for mono large" },
+  ]}
+/>
+
+## Style Variants
+
+Apsara supports different style variants that change typography to match your design preference.
+
+### Traditional Style
+
+When using `data-style="traditional"`, the font families change to:
+
+<TokenTable
+  type="typography"
+  tokens={[
+    { name: "--rs-font-title", value: "Lora, serif", description: "Title font in traditional style" },
+    { name: "--rs-font-body", value: "Josefin Sans, sans-serif", description: "Body font in traditional style" },
+  ]}
+/>
+
+## Usage
+
+```css
+/* Dashboard metric display */
+.metric-label {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  text-transform: uppercase;
+}
+
+.metric-value {
+  font-family: var(--rs-font-title);
+  font-size: var(--rs-font-size-t3);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-t3);
+}
+
+/* Article or blog post layout */
+.article-title {
+  font-family: var(--rs-font-title);
+  font-size: var(--rs-font-size-t4);
+  line-height: var(--rs-line-height-t4);
+  font-weight: var(--rs-font-weight-medium);
+}
+
+.article-meta {
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.article-body {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+}
+
+/* Terminal or log output */
+.log-output {
+  font-family: var(--rs-font-mono);
+  font-size: var(--rs-font-size-mono-small);
+  line-height: var(--rs-line-height-mono-small);
+}
+
+.log-timestamp {
+  font-family: var(--rs-font-mono);
+  font-size: var(--rs-font-size-mono-mini);
+  line-height: var(--rs-line-height-mono-mini);
+}
+
+/* Data table headers and cells */
+.table-header {
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.table-cell {
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+}
+```
+
+## Best Practices
+
+- **Use semantic sizing** - Match font sizes to their intended purpose (body, titles, code)
+- **Pair sizes with line heights** - Always use the corresponding line height token for each font size
+- **Maintain hierarchy** - Use font weights and sizes to establish clear visual hierarchy
+- **Consider readability** - Use appropriate letter spacing for different text sizes

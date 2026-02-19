@@ -3,7 +3,68 @@ title: Introduction
 description: A design system for building accessible and composable user interfaces in React.
 ---
 
-Apsara is a design system that simplifies React application development. It offers a collection
-of carefully crafted components that work seamlessly together, are accessible out of the box,
-and help create consistent user interfaces quickly.
+Apsara is an open-source React component library that provides enterprise-grade, accessible components for building complex data interfaces. Built on [Radix UI](https://www.radix-ui.com/) primitives and [Base UI](https://base-ui.com/), it combines unstyled accessibility foundations with a carefully designed visual layer powered by CSS custom properties.
 
+## Why Apsara?
+
+**Accessibility first** — Every component is built on battle-tested primitives that handle ARIA attributes, focus management, and keyboard navigation correctly. You get accessible UI without the effort.
+
+**Consistent design language** — A unified token system ensures visual consistency across your application. Colors, spacing, typography, and effects all follow predictable patterns that adapt automatically to light and dark modes.
+
+**Production ready** — Components are designed for real-world applications: data tables with sorting and filtering, command palettes, multi-select comboboxes, and complex form controls that handle edge cases gracefully.
+
+**Minimal footprint** — No runtime CSS-in-JS. Styles are vanilla CSS with semantic tokens, keeping your bundle lean and your performance predictable.
+
+## Components
+
+Apsara provides over 50 components organized by function:
+
+| Category | Components |
+|----------|------------|
+| **Layout** | Box, Flex, Grid, Container, Separator |
+| **Navigation** | Navbar, Sidebar, Breadcrumb, Tabs, Link |
+| **Data Display** | DataTable, Table, List, Avatar, Badge, Chip, Indicator |
+| **Forms** | Button, InputField, TextArea, Select, Combobox, Checkbox, Radio, Switch, Slider, ColorPicker, Calendar |
+| **Feedback** | Dialog, Sheet, Popover, Tooltip, Toast, Callout, EmptyState, Skeleton, Spinner |
+| **Utilities** | Command, Search, CopyButton, CodeBlock, ScrollArea |
+
+## Theming
+
+The theming system uses CSS custom properties (tokens) that automatically adapt to the active theme. Wrap your app with `ThemeProvider` to enable light/dark modes, accent colors, and style variants.
+
+```tsx
+import { ThemeProvider } from "@raystack/apsara";
+
+<ThemeProvider defaultTheme="system" accentColor="indigo">
+  <App />
+</ThemeProvider>
+```
+
+Tokens follow a consistent naming convention:
+
+```css
+.custom-element {
+  color: var(--rs-color-foreground-base-primary);
+  background: var(--rs-color-background-base-secondary);
+  padding: var(--rs-space-4);
+  border-radius: var(--rs-radius-3);
+}
+```
+
+See the [Theme Overview](/theme/overview) for complete documentation.
+
+## Technology
+
+Apsara is built with:
+
+- **[Radix UI](https://www.radix-ui.com/)** — Unstyled, accessible component primitives
+- **[Base UI](https://base-ui.com/)** — Headless UI components from MUI
+- **[TanStack Table](https://tanstack.com/table)** — Powerful data table utilities
+- **[class-variance-authority](https://cva.style/)** — Type-safe component variants
+- **TypeScript** — Full type definitions for all components and props
+
+## Next Steps
+
+- [Getting Started](/getting-started) — Install Apsara and build your first component
+- [Theme Overview](/theme/overview) — Learn about the theming system
+- [Components](/components/button) — Explore the component library

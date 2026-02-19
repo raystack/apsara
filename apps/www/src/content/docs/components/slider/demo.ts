@@ -36,21 +36,22 @@ export const variantDemo = {
     }
   ]
 };
+
 export const controlDemo = {
   type: 'code',
   tabs: [
     {
       name: 'Single',
-      code: `function ControlledRangeSlider() {
+      code: `function ControlledSlider() {
   const [value, setValue] = React.useState(50);
 
   return (
     <Flex direction="column" gap="medium" align="center" style={{ width: "400px" }}>
-       <Slider
+      <Slider
         variant="single"
         value={value}
         label="Value"
-        onChange={(newValue) => setValue(newValue as number)}
+        onValueChange={(newValue) => setValue(newValue as number)}
       />
       <Text>Value {value}</Text>
     </Flex>
@@ -68,7 +69,7 @@ export const controlDemo = {
         variant="range"
         value={value}
         label={["Lower", "Upper"]}
-        onChange={(newValue) => setValue(newValue as [number, number])}
+        onValueChange={(newValue) => setValue(newValue as [number, number])}
       />
       <Text>Lower {value[0]}</Text>
       <Text>Upper {value[1]}</Text>
@@ -83,16 +84,16 @@ export const thumbSizeDemo = {
   type: 'code',
   code: `<Flex direction="column" gap="extra-large" align="center" style={{ width: "400px" }}>
   <Slider
-      variant="single"
-      label="Large Thumb"
-      defaultValue={50}
-      thumbSize="large"
-    />
-    <Slider
-      variant="single"
-      label="Small Thumb"
-      defaultValue={50}
-      thumbSize="small"
-    />
+    variant="single"
+    label="Large Thumb"
+    defaultValue={50}
+    thumbSize="large"
+  />
+  <Slider
+    variant="single"
+    label="Small Thumb"
+    defaultValue={50}
+    thumbSize="small"
+  />
 </Flex>`
 };
