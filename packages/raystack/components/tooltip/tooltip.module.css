@@ -2,16 +2,18 @@
   width: fit-content;
   display: flex;
 }
+.positioner {
+  z-index: var(--rs-z-index-portal);
+}
 
 .content {
   position: relative;
   box-sizing: border-box;
-  z-index: var(--rs-z-index-portal);
   padding: var(--rs-space-2) var(--rs-space-3);
   border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  box-shadow: var(--rs-shadow-soft);
+  box-shadow: var(--rs-shadow-lifted);
   color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-mini);
   font-weight: var(--rs-font-weight-medium);
@@ -20,64 +22,69 @@
   width: fit-content;
   max-width: 400px;
   animation-duration: 400ms;
+  transform-origin: var(--transform-origin);
 }
 
-.content[data-state="delayed-open"][data-side="top"]:not(
-    [data-follow-cursor="true"]
-  ) {
+.content[data-open][data-side="top"]:not([data-instant]) {
   animation-name: slideDownAndFade;
 }
 
-.content[data-state="delayed-open"][data-side="right"]:not(
-    [data-follow-cursor="true"]
-  ) {
+.content[data-open][data-side="right"]:not([data-instant]) {
   animation-name: slideLeftAndFade;
 }
 
-.content[data-state="delayed-open"][data-side="bottom"]:not(
-    [data-follow-cursor="true"]
-  ) {
+.content[data-open][data-side="bottom"]:not([data-instant]) {
   animation-name: slideUpAndFade;
 }
 
-.content[data-state="delayed-open"][data-side="left"]:not(
-    [data-follow-cursor="true"]
-  ) {
+.content[data-open][data-side="left"]:not([data-instant]) {
   animation-name: slideRightAndFade;
 }
-
-.arrow {
-  fill: var(--rs-color-background-base-primary);
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 1px 0 var(--rs-color-border-base-primary))
-    drop-shadow(0 1px 1px var(--rs-color-border-base-primary));
-  transform: translateX(-1px);
-  margin-top: -1px;
-}
-
-/* Corner positions */
-.content[data-side="top"][data-align="start"]:not([data-follow-cursor="true"]) {
+.content[data-side="top"][data-align="start"]:not([data-instant]) {
   animation-name: slideDownRightAndFade;
 }
 
-.content[data-side="top"][data-align="end"]:not([data-follow-cursor="true"]) {
+.content[data-side="top"][data-align="end"]:not([data-instant]) {
   animation-name: slideDownLeftAndFade;
 }
 
-.content[data-side="bottom"][data-align="start"]:not(
-    [data-follow-cursor="true"]
-  ) {
+.content[data-side="bottom"][data-align="start"]:not([data-instant]) {
   animation-name: slideUpRightAndFade;
 }
 
-.content[data-side="bottom"][data-align="end"]:not(
-    [data-follow-cursor="true"]
-  ) {
+.content[data-side="bottom"][data-align="end"]:not([data-instant]) {
   animation-name: slideUpLeftAndFade;
 }
-.content[data-follow-cursor="true"] {
-  animation-name: fade;
+
+.arrow svg {
+  color: var(--rs-color-background-base-primary);
+}
+.arrow {
+  z-index: var(--rs-z-index-portal);
+  filter: drop-shadow(0 1px 0 var(--rs-color-border-base-primary))
+    drop-shadow(0 1px 1px var(--rs-color-border-base-primary));
+}
+
+/* Arrow positioning based on side */
+.arrow[data-side="top"] {
+  bottom: -7px;
+}
+
+.arrow[data-side="bottom"] {
+  transform: translateY(-100%) rotate(180deg);
+  top: 0;
+}
+
+.arrow[data-side="left"],
+.arrow[data-side="inline-start"] {
+  right: 0;
+  transform: translateY(-50%) translateX(100%) rotate(-90deg);
+}
+
+.arrow[data-side="right"],
+.arrow[data-side="inline-end"] {
+  left: 0;
+  transform: translateY(-50%) translateX(-100%) rotate(90deg);
 }
 
 @keyframes fade {
@@ -99,20 +106,12 @@
     opacity: 0;
     transform: translateX(-2px);
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
 }
 
 @keyframes slideDownAndFade {
   from {
     opacity: 0;
     transform: translateY(-2px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -121,20 +120,12 @@
     opacity: 0;
     transform: translateX(2px);
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
 }
 
 @keyframes slideDownRightAndFade {
   from {
     opacity: 0;
     transform: translate(-2px, -2px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(0, 0);
   }
 }
 
@@ -143,10 +134,6 @@
     opacity: 0;
     transform: translate(2px, -2px);
   }
-  to {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
 }
 
 @keyframes slideUpRightAndFade {
@@ -154,19 +141,11 @@
     opacity: 0;
     transform: translate(-2px, 2px);
   }
-  to {
-    opacity: 1;
-    transform: translate(0, 0);
-  }
 }
 
 @keyframes slideUpLeftAndFade {
   from {
     opacity: 0;
     transform: translate(2px, 2px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(0, 0);
   }
 }

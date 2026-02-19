@@ -1,41 +1,5 @@
 export interface TooltipProps {
   /**
-   * Content to display in the tooltip.
-   */
-  message: string | React.ReactNode;
-
-  /**
-   * Element that triggers the tooltip.
-   */
-  children: React.ReactNode;
-
-  /**
-   * Position of the tooltip relative to the trigger.
-   * @default "top"
-   */
-  side?:
-    | 'top'
-    | 'right'
-    | 'bottom'
-    | 'left'
-    | 'top-left'
-    | 'top-right'
-    | 'bottom-left'
-    | 'bottom-right';
-
-  /**
-   * Whether the tooltip should follow the cursor.
-   * @default false
-   */
-  followCursor?: boolean;
-
-  /**
-   * Whether the tooltip is disabled.
-   * @default false
-   */
-  disabled?: boolean;
-
-  /**
    * The controlled open state of the tooltip.
    */
   open?: boolean;
@@ -47,49 +11,91 @@ export interface TooltipProps {
 
   /**
    * Event handler called when the open state of the tooltip changes.
-   * @default false
    */
   onOpenChange?: (open: boolean) => void;
 
   /**
    * Delay before showing the tooltip, in milliseconds.
-   * Overrides the prop of TooltipProvider.
    * @default 200
    */
   delayDuration?: number;
 
   /**
    * Prevents Tooltip from remaining open when hovering. Disabling this has accessibility consequences.
-   * Overrides the prop of TooltipProvider.
    */
   disableHoverableContent?: boolean;
 
   /**
-   * Additional ID for Tooltip Content
+   * Track cursor axis ('none', 'x', 'y', or 'both')
+   * @default 'none'
    */
-  id?: string;
+  trackCursorAxis?: 'none' | 'x' | 'y' | 'both';
+}
+
+export interface TooltipTriggerProps {
+  /**
+   * React element to render as the trigger. Props will be merged onto this element.
+   */
+  render?: React.ReactElement;
 
   /**
-   * Additional CSS class names.
+   * Additional CSS class names
+   */
+  className?: string;
+}
+
+export interface TooltipContentProps {
+  /**
+   * Controls whether to show the arrow
+   * @default false
+   */
+  showArrow?: boolean;
+
+  /**
+   * Side placement of the tooltip
+   * @default "top"
+   */
+  side?: 'top' | 'bottom' | 'left' | 'right';
+
+  /**
+   * Alignment of the tooltip
+   * @default "center"
+   */
+  align?: 'start' | 'center' | 'end';
+
+  /**
+   * Side offset for positioning
+   * @default 4
+   */
+  sideOffset?: number;
+
+  /**
+   * Align offset for positioning
+   * @default 0
+   */
+  alignOffset?: number;
+
+  /**
+   * Additional CSS class names
    */
   className?: string;
 }
 
 export interface TooltipProviderProps {
   /**
-   * Delay before showing the tooltip, in milliseconds.
+   * How long to wait before opening a tooltip. Specified in milliseconds.
    * @default 200
    */
-  delayDuration?: number;
+  delay?: number;
 
   /**
-   * Delay before showing the tooltip when moving between tooltips, in milliseconds.
-   * @default 200
+   * How long to wait before closing a tooltip. Specified in milliseconds.
    */
-  skipDelayDuration?: number;
+  closeDelay?: number;
 
   /**
-   * Prevents Tooltip from remaining open when hovering. Disabling this has accessibility consequences.
+   * Another tooltip will open instantly if the previous tooltip is closed within this timeout. Specified in milliseconds.
+   * @default 400
    */
-  disableHoverableContent?: boolean;
+  timeout?: number;
 }
