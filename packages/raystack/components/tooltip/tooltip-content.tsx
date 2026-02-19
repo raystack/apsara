@@ -14,7 +14,7 @@ export interface TooltipContentProps
     TooltipPrimitive.Popup.Props {
   /**
    * Controls whether to show the arrow
-   * @default true
+   * `@default` false
    */
   showArrow?: boolean;
 }
