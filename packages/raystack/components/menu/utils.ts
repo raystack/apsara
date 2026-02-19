@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 export const getMatch = (
   value?: string,
@@ -8,18 +8,24 @@ export const getMatch = (
   if (!search?.length) return true;
   const childrenValue = getChildrenValue(children)?.toLowerCase();
 
-  return (
+  return !!(
     value?.toLowerCase().includes(search.toLowerCase()) ||
     childrenValue?.includes(search.toLowerCase())
   );
 };
 
 export const getChildrenValue = (children?: ReactNode) => {
-  if (typeof children === 'string') return children;
-  if (typeof children === 'object' && children !== null) {
-    return children.toString();
-  }
-  return null;
+  let value = '';
+  if (!children) return value;
+
+  React.Children.forEach(children, child => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      value += child + ' ';
+    } else if (React.isValidElement<{ children?: ReactNode }>(child)) {
+      value += getChildrenValue(child.props.children) + ' ';
+    }
+  });
+  return value.trim();
 };
 
 export const KEYCODES: Record<string, [string, number]> = {
@@ -28,8 +34,9 @@ export const KEYCODES: Record<string, [string, number]> = {
 };
 
 export const dispatchKeyboardEvent = (
-  element: Element,
-  key: (typeof KEYCODES)[keyof typeof KEYCODES]
+  element: Element | EventTarget,
+  key: (typeof KEYCODES)[keyof typeof KEYCODES],
+  bubbles: boolean = true
 ) => {
   const [keyName, keyCode] = key;
   return element.dispatchEvent(
@@ -38,7 +45,7 @@ export const dispatchKeyboardEvent = (
       code: keyName,
       keyCode: keyCode,
       which: keyCode,
-      bubbles: true
+      bubbles
     })
   );
 };

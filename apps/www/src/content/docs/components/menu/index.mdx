@@ -2,6 +2,7 @@
 title: Menu
 description: Displays a menu to the user, such as a set of actions or functions, triggered by a button.
 source: packages/raystack/components/menu
+tag: new
 ---
 
 import {
@@ -22,15 +23,17 @@ import {
 import { Menu } from '@raystack/apsara'
 ```
 
-## Menu Props
+## API Reference
 
 The Menu component is composed of several parts, each with their own props.
+
+### Root
 
 The root element is the parent component that holds the menu. Using the `autocomplete` prop, you can enable search functionality.
 
 <auto-type-table path="./props.ts" name="MenuRootProps" />
 
-### Menu.Trigger Props
+### Trigger
 
 The button that triggers the menu.
 
@@ -40,53 +43,53 @@ Use the `render` prop to render a custom trigger element.
 
 <auto-type-table path="./props.ts" name="MenuTriggerProps" />
 
-### Menu.Content Props
+### Content
 
 The container that holds the menu items. When autocomplete is enabled, renders an inline search input inside the popup with a search input.
 
 <auto-type-table path="./props.ts" name="MenuContentProps" />
 
-### Menu.Item Props
+### Item
 
 Individual clickable options within the menu. Built on top of [Base UI Menu.Item](https://base-ui.com/react/components/menu).
 
-Renders as a `role='option'`when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
+Renders as a `role='option' `when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
 
 <auto-type-table path="./props.ts" name="MenuItemProps" />
 
-### Menu.Group Props
+### Group
 
 A way to group related menu items together. When filtering is active, the group wrapper is removed and items are rendered flat.
 
 <auto-type-table path="./props.ts" name="MenuGroupProps" />
 
-### Menu.Label Props
+### Label
 
 Renders a label in a menu group. This component should be wrapped with Menu.Group so the `aria-labelledby` is correctly set on the group element. Hidden when filtering is active.
 
 <auto-type-table path="./props.ts" name="MenuLabelProps" />
 
-### Menu.Separator Props
+### Separator
 
 Visual divider between menu items or groups. Hidden when filtering is active.
 
 <auto-type-table path="./props.ts" name="MenuSeparatorProps" />
 
-### Menu.EmptyState Props
+### EmptyState
 
 Placeholder content when there are no menu items to display.
 
 <auto-type-table path="./props.ts" name="MenuEmptyStateProps" />
 
-### Menu.SubMenu Props
+### Submenu
 
-Wraps a submenu root. Use with `Menu.SubTrigger` and `Menu.SubContent` to create nested menus.
+Wraps a submenu root. Use with `Menu.SubmenuTrigger` and `Menu.SubmenuContent` to create nested menus.
 
 Supports its own `autocomplete` prop to enable search functionality within the submenu independently from the parent menu.
 
 <auto-type-table path="./props.ts" name="MenuSubMenuProps" />
 
-### Menu.SubTrigger Props
+### SubmenuTrigger
 
 The trigger item for a submenu. Renders with a trailing chevron icon by default. Accepts `leadingIcon` and `trailingIcon` props.
 
@@ -94,7 +97,7 @@ When inside a searchable parent menu, the `value` prop can be used for autocompl
 
 <auto-type-table path="./props.ts" name="MenuSubTriggerProps" />
 
-### Menu.SubContent Props
+### SubmenuContent
 
 The content container for a submenu. Shares the same API as `Menu.Content` with a default `sideOffset` of `2`.
 
@@ -122,7 +125,7 @@ Organize related menu items into sections with descriptive headers.
 
 ### Submenu
 
-Use `Menu.SubMenu`, `Menu.SubTrigger`, and `Menu.SubContent` to create nested menus with multiple levels.
+Use `Menu.Submenu`, `Menu.SubmenuTrigger`, and `Menu.SubmenuContent` to create nested menus with multiple levels.
 
 <Demo data={submenuDemo} />
 
@@ -132,7 +135,7 @@ To enable autocomplete, pass the `autocomplete` prop to the Menu root element. E
 
 By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
 
-For submenus, you can independently enable autocomplete by passing `autocomplete` to `Menu.SubMenu`.
+For submenus, you can independently enable autocomplete by passing `autocomplete` to `Menu.Submenu`.
 
 For more advanced control, set `autocompleteMode="manual"` and implement your own custom filtering logic using the `onInputValueChange` callback.
 

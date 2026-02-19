@@ -32,10 +32,7 @@ export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>(
           ref={ref}
           value={value}
           render={<MenuPrimitive.Item render={cell} />}
-          // render={cell}
           {...props}
-          // aria-selected={false}
-          // data-selected={undefined}
         >
           {children}
         </AutocompletePrimitive.Item>

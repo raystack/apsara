@@ -5,7 +5,7 @@ import {
   Menu as MenuPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { forwardRef, useCallback, useRef } from 'react';
+import { forwardRef, KeyboardEvent, useCallback, useRef } from 'react';
 import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 import {
@@ -61,42 +61,39 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
     const highlightFirstItem = useCallback(() => {
       if (!isInitialRender?.current) return;
       isInitialRender.current = false;
-      const item = containerRef.current?.querySelector(
-        '[role="option"]:nth-child(1)'
-      );
+      const item = containerRef.current?.querySelector('[role="option"]');
       if (!item) return;
       item.dispatchEvent(new PointerEvent('mousemove', { bubbles: true }));
     }, [isInitialRender]);
 
     const checkAndOpenSubMenu = useCallback(() => {
       if (highlightedItem.current[0] === -1) return;
-
-      const item = containerRef.current?.querySelector(
-        `[role="option"]:nth-child(${highlightedItem.current[0] + 1})`
-      );
+      const items = containerRef.current?.querySelectorAll('[role="option"]');
+      const item = items?.[highlightedItem.current[0]];
       if (!item || !isElementSubMenuTrigger(item)) return;
       dispatchKeyboardEvent(item, KEYCODES.ARROW_RIGHT);
     }, []);
 
-    const checkAndCloseSubMenu = useCallback((e: KeyboardEvent) => {
-      if (highlightedItem.current[0] === -1) return;
-      const item = containerRef.current?.querySelector(
-        `[role="option"]:nth-child(${highlightedItem.current[0] + 1})`
-      );
-      if (
-        !item ||
-        !isElementSubMenuTrigger(item) ||
-        !isElementSubMenuOpen(item)
-      )
-        return;
-      dispatchKeyboardEvent(item, KEYCODES.ESCAPE);
-      e.stopPropagation();
-    }, []);
+    const checkAndCloseSubMenu = useCallback(
+      (e: KeyboardEvent<HTMLInputElement>) => {
+        if (highlightedItem.current[0] === -1) return;
+        const items = containerRef.current?.querySelectorAll('[role="option"]');
+        const item = items?.[highlightedItem.current[0]];
+        if (
+          !item ||
+          !isElementSubMenuTrigger(item) ||
+          !isElementSubMenuOpen(item)
+        )
+          return;
+        dispatchKeyboardEvent(item, KEYCODES.ESCAPE);
+        e.stopPropagation();
+      },
+      []
+    );
 
     const blurStaleMenuItem = useCallback((index: number) => {
-      const item = containerRef.current?.querySelector(
-        `[role="option"]:nth-child(${index + 1})`
-      );
+      const items = containerRef.current?.querySelectorAll('[role="option"]');
+      const item = items?.[index];
       if (
         !item ||
         !isElementSubMenuTrigger(item) ||
@@ -169,8 +166,7 @@ export const MenuContent = forwardRef<HTMLDivElement, MenuContentProps>(
                   }}
                   onKeyDown={e => {
                     if (e.key === 'ArrowLeft') return;
-                    if (e.key === 'Escape')
-                      return checkAndCloseSubMenu(e.nativeEvent);
+                    if (e.key === 'Escape') return checkAndCloseSubMenu(e);
                     if (e.key === 'ArrowRight' || e.key === 'Enter')
                       checkAndOpenSubMenu();
                     e.stopPropagation();

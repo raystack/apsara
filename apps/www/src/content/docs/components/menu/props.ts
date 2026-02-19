@@ -1,3 +1,5 @@
+import { CSSProperties, ReactElement, ReactNode } from 'react';
+
 export interface MenuRootProps {
   /** Enables search functionality within the menu */
   autocomplete?: boolean;
@@ -37,14 +39,14 @@ export interface MenuRootProps {
   modal?: boolean;
 
   /** Whether the menu should loop focus when navigating with keyboard
-   * @default true
+   * @default false
    */
   loopFocus?: boolean;
 }
 
 export interface MenuTriggerProps {
   /** Render a custom element as the trigger using Base UI's render prop pattern */
-  render?: React.ReactElement;
+  render?: ReactElement;
 
   /** Whether the menu should stop propagation of the click event
    * @default true
@@ -77,10 +79,10 @@ export interface MenuContentProps {
   align?: 'start' | 'center' | 'end';
 
   /** Render a custom element using Base UI's render prop pattern */
-  render?: React.ReactElement;
+  render?: ReactElement;
 
   /** Inline styles */
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 
   /** Additional CSS class names */
   className?: string;
@@ -88,10 +90,10 @@ export interface MenuContentProps {
 
 export interface MenuItemProps {
   /** Icon element to display before item text */
-  leadingIcon?: React.ReactNode;
+  leadingIcon?: ReactNode;
 
   /** Icon element to display after item text */
-  trailingIcon?: React.ReactNode;
+  trailingIcon?: ReactNode;
 
   /** Whether the item is disabled */
   disabled?: boolean;
@@ -103,7 +105,7 @@ export interface MenuItemProps {
   className?: string;
 
   /** Render a custom element using Base UI's render prop pattern */
-  render?: React.ReactElement;
+  render?: ReactElement;
 }
 
 export interface MenuGroupProps {
@@ -123,7 +125,7 @@ export interface MenuSeparatorProps {
 
 export interface MenuEmptyStateProps {
   /** React nodes to render in empty state */
-  children?: React.ReactNode;
+  children?: ReactNode;
 
   /** Additional CSS class names */
   className?: string;
@@ -165,10 +167,10 @@ export interface MenuSubMenuProps {
 
 export interface MenuSubTriggerProps {
   /** Icon element to display before trigger text */
-  leadingIcon?: React.ReactNode;
+  leadingIcon?: ReactNode;
 
   /** Icon element to display after trigger text. Defaults to a chevron right icon. */
-  trailingIcon?: React.ReactNode;
+  trailingIcon?: ReactNode;
 
   /** Value used for autocomplete matching when inside a searchable parent menu */
   value?: string;
@@ -199,10 +201,10 @@ export interface MenuSubContentProps {
   align?: 'start' | 'center' | 'end';
 
   /** Render a custom element using Base UI's render prop pattern */
-  render?: React.ReactElement;
+  render?: ReactElement;
 
   /** Inline styles */
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 
   /** Additional CSS class names */
   className?: string;

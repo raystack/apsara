@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useMemo } from 'react';
+import React, { isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
@@ -64,7 +64,9 @@ function AddFilter<TData, TValue>({
 
   return availableFilters.length > 0 ? (
     <Menu>
-      <Menu.Trigger render={trigger as React.ReactElement}>{}</Menu.Trigger>
+      <Menu.Trigger
+        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+      />
       <Menu.Content>
         {availableFilters?.map(column => {
           const columnDef = column.columnDef;

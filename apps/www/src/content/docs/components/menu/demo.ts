@@ -26,7 +26,6 @@ export const getCode = (props: any) => {
         </Menu.SubmenuTrigger>
         <Menu.SubmenuContent>
           <Menu.Submenu>
-            <Menu.Item>All (.zip)</Menu.Item>
             <Menu.SubmenuTrigger>
               CSV
             </Menu.SubmenuTrigger>
@@ -193,7 +192,7 @@ export const autocompleteDemo = {
             </Menu.Submenu>
           </Menu.SubmenuContent>
         </Menu.Submenu>
-        <Menu.Item disabled>Copy</Menu.Item>
+        <Menu.Item><span>Custom Label</span></Menu.Item>
         <Menu.Item
           value="remove"
           trailingIcon={
@@ -250,7 +249,7 @@ export const autocompleteDemo = {
                 </Menu.Trigger>
                 <Menu.Content searchPlaceholder="Search">
                   {items
-                    .filter(item => item.toLowerCase().includes(simpleSearchQuery))
+                    .filter(item => item.toLowerCase().includes(simpleSearchQuery.toLowerCase()))
                     .map((item, index) => (
                       <Menu.Item key={index}>{item}</Menu.Item>
                     ))}
@@ -392,7 +391,7 @@ export const linearDemo = {
 }`
     },
     {
-      label: 'data.ts',
+      label: 'data.tsx',
       code: `type MenuItem =
   | {
       type: "item";

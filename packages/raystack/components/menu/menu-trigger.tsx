@@ -43,8 +43,6 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
       value,
       trailingIcon = <TriangleRightIcon />,
       leadingIcon,
-      onPointerEnter,
-      onKeyDown,
       ...props
     },
     ref
@@ -70,13 +68,13 @@ export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
               onPointerEnter={e => {
                 if (document?.activeElement !== parent?.inputRef?.current)
                   parent?.inputRef?.current?.focus();
-                onPointerEnter?.(e);
+                props?.onPointerEnter?.(e);
               }}
               onKeyDown={e => {
                 requestAnimationFrame(() => {
                   inputRef?.current?.focus();
                 });
-                onKeyDown?.(e);
+                props?.onKeyDown?.(e);
               }}
             />
           ) : (
