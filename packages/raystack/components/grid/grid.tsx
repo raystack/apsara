@@ -1,5 +1,5 @@
-import { Slot } from 'radix-ui';
-import { HTMLAttributes, forwardRef, useMemo } from 'react';
+import { mergeProps, useRender } from '@base-ui/react';
+import { forwardRef, useMemo } from 'react';
 import { AlignExtendedType, AlignType } from './types';
 
 const GAPS = {
@@ -12,7 +12,7 @@ const GAPS = {
 
 type GapType = keyof typeof GAPS;
 
-type GridProps = HTMLAttributes<HTMLDivElement> & {
+type GridProps = useRender.ComponentProps<'div'> & {
   /**
    * Supports CSS Grid template areas syntax.
    *
@@ -54,7 +54,6 @@ type GridProps = HTMLAttributes<HTMLDivElement> & {
   justifyContent?: AlignExtendedType;
   alignContent?: AlignExtendedType;
   inline?: boolean;
-  asChild?: boolean;
 };
 
 export const Grid = forwardRef<HTMLDivElement, GridProps>(
@@ -75,7 +74,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
       alignContent,
       inline = false,
       style = {},
-      asChild,
+      render,
       ...props
     },
     ref
@@ -95,31 +94,32 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
       return templateAreas;
     }, [templateAreas]);
 
-    const Comp = asChild ? Slot.Root : 'div';
+    const gridStyle = {
+      display: inline ? 'inline-grid' : 'grid',
+      gridTemplateAreas,
+      gridAutoFlow: autoFlow,
+      gridAutoColumns: autoColumns,
+      gridAutoRows: autoRows,
+      gridTemplateColumns,
+      gridTemplateRows,
+      gap: gap && GAPS[gap],
+      columnGap: columnGap && GAPS[columnGap],
+      rowGap: rowGap && GAPS[rowGap],
+      justifyItems,
+      alignItems,
+      justifyContent,
+      alignContent,
+      ...style
+    };
 
-    return (
-      <Comp
-        ref={ref}
-        style={{
-          display: inline ? 'inline-grid' : 'grid',
-          gridTemplateAreas,
-          gridAutoFlow: autoFlow,
-          gridAutoColumns: autoColumns,
-          gridAutoRows: autoRows,
-          gridTemplateColumns,
-          gridTemplateRows,
-          gap: gap && GAPS[gap],
-          columnGap: columnGap && GAPS[columnGap],
-          rowGap: rowGap && GAPS[rowGap],
-          justifyItems,
-          alignItems,
-          justifyContent,
-          alignContent,
-          ...style
-        }}
-        {...props}
-      />
-    );
+    const element = useRender({
+      defaultTagName: 'div',
+      ref,
+      render,
+      props: mergeProps<'div'>({ style: gridStyle }, props)
+    });
+
+    return element;
   }
 );
 

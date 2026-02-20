@@ -1,6 +1,6 @@
-import { VariantProps, cva } from 'class-variance-authority';
-import { HTMLAttributes, PropsWithChildren, forwardRef } from 'react';
-
+import { mergeProps, useRender } from '@base-ui/react';
+import { cva, VariantProps } from 'class-variance-authority';
+import { forwardRef } from 'react';
 import styles from './flex.module.css';
 
 const flex = cva(styles.flex, {
@@ -57,13 +57,11 @@ const flex = cva(styles.flex, {
   }
 });
 
-type BoxProps = PropsWithChildren<VariantProps<typeof flex>> &
-  HTMLAttributes<HTMLDivElement>;
+type BoxProps = VariantProps<typeof flex> & useRender.ComponentProps<'div'>;
 
 export const Flex = forwardRef<HTMLDivElement, BoxProps>(
   (
     {
-      children,
       direction,
       align,
       justify,
@@ -71,26 +69,30 @@ export const Flex = forwardRef<HTMLDivElement, BoxProps>(
       gap,
       className,
       width,
+      render,
       ...props
     },
     ref
   ) => {
-    return (
-      <div
-        className={flex({
-          direction,
-          align,
-          justify,
-          wrap,
-          gap,
-          className,
-          width
-        })}
-        {...props}
-        ref={ref}
-      >
-        {children}
-      </div>
-    );
+    const flexProps = {
+      className: flex({
+        direction,
+        align,
+        justify,
+        wrap,
+        gap,
+        className,
+        width
+      })
+    };
+
+    const element = useRender({
+      defaultTagName: 'div',
+      ref,
+      render,
+      props: mergeProps<'div'>(flexProps, props)
+    });
+
+    return element;
   }
 );

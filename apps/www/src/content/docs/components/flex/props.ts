@@ -14,6 +14,21 @@ export interface FlexProps {
   /** Sets how flex items are placed in the flex container defining the main axis and the direction (normal or reversed) */
   direction?: 'row' | 'rowReverse' | 'column' | 'columnReverse';
 
+  /**
+   * Sets the width of the flex container.
+   */
+  width?: 'full';
+
+  /**
+   * Allows rendering the flex container as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((props: React.HTMLAttributes<HTMLDivElement>) => React.ReactElement);
+
   /** Custom CSS class names */
   className?: string;
 }

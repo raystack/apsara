@@ -1,3 +1,5 @@
+import { ButtonHTMLAttributes } from 'react';
+
 export type ButtonProps = {
   /**
    * Visual style variant
@@ -41,8 +43,27 @@ export type ButtonProps = {
   /** Custom width for the button */
   width?: string | number;
 
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * Whether the component renders a native <button> element when replacing it via the render prop. Set to false if the rendered element is not a button (e.g. <div>).
+   * Defaults to false when render prop is provided.
+   */
+  nativeButton?: boolean;
+
+  /**
+   * Whether the button should be focusable when disabled.
+   * Defaults to true when loading is true.
+   */
+  focusableWhenDisabled?: boolean;
+
+  /**
+   * Allows rendering the button as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement<ButtonHTMLAttributes<HTMLButtonElement>>
+    | ((props: ButtonHTMLAttributes<HTMLButtonElement>) => React.ReactElement);
 
   /** Additional CSS class names */
   className?: string;
