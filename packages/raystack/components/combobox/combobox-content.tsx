@@ -1,97 +1,59 @@
 'use client';
 
-import { ComboboxList } from '@ariakit/react';
+import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { Popover as PopoverPrimitive } from 'radix-ui';
-import {
-  ComponentPropsWithoutRef,
-  ElementRef,
-  forwardRef,
-  useCallback
-} from 'react';
+import { ElementRef, forwardRef } from 'react';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxContentProps
   extends Omit<
-    ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>,
-    'asChild'
-  > {}
+      ComboboxPrimitive.Positioner.Props,
+      'render' | 'className' | 'style'
+    >,
+    ComboboxPrimitive.Popup.Props {}
 
 export const ComboboxContent = forwardRef<
-  ElementRef<typeof PopoverPrimitive.Content>,
+  ElementRef<typeof ComboboxPrimitive.Popup>,
   ComboboxContentProps
 >(
   (
     {
       className,
       children,
+      style,
+      render,
+      initialFocus,
+      finalFocus,
       sideOffset = 4,
-      align = 'start',
-      onOpenAutoFocus,
-      onInteractOutside,
-      onFocusOutside,
-      ...props
+      ...positionerProps
     },
     ref
   ) => {
-    const { inputRef, listRef, value, setInputValue, multiple } =
-      useComboboxContext();
-
-    const handleOnInteractOutside = useCallback<
-      NonNullable<
-        ComponentPropsWithoutRef<
-          typeof PopoverPrimitive.Content
-        >['onInteractOutside']
-      >
-    >(
-      event => {
-        const target = event.target as Element | null;
-        const isInput = target === inputRef.current;
-        const inListbox = target && listRef.current?.contains(target);
-        if (isInput || inListbox) {
-          event.preventDefault();
-          return;
-        }
-        if (!multiple) {
-          if (typeof value === 'string' && value.length) setInputValue(value);
-          else setInputValue('');
-        }
-        onInteractOutside?.(event);
-      },
-      [onInteractOutside, inputRef, listRef, multiple, value, setInputValue]
-    );
-
-    const handleOnOpenAutoFocus = useCallback<
-      NonNullable<
-        ComponentPropsWithoutRef<
-          typeof PopoverPrimitive.Content
-        >['onOpenAutoFocus']
-      >
-    >(
-      event => {
-        event.preventDefault();
-        onOpenAutoFocus?.(event);
-      },
-      [onOpenAutoFocus]
-    );
+    const { inputContainerRef } = useComboboxContext();
     return (
-      <PopoverPrimitive.Portal>
-        <PopoverPrimitive.Content
-          ref={ref}
+      <ComboboxPrimitive.Portal>
+        <ComboboxPrimitive.Positioner
           sideOffset={sideOffset}
-          align={align}
-          className={cx(styles.content, className)}
-          onOpenAutoFocus={handleOnOpenAutoFocus}
-          onInteractOutside={handleOnInteractOutside}
-          {...props}
+          className={styles.positioner}
+          anchor={inputContainerRef}
+          {...positionerProps}
         >
-          <ComboboxList ref={listRef} role='listbox' className={styles.list}>
-            {children}
-          </ComboboxList>
-        </PopoverPrimitive.Content>
-      </PopoverPrimitive.Portal>
+          <ComboboxPrimitive.Popup
+            ref={ref}
+            className={cx(styles.content, className)}
+            style={style}
+            render={render}
+            initialFocus={initialFocus}
+            finalFocus={finalFocus}
+          >
+            <ComboboxPrimitive.List className={styles.list}>
+              {children}
+            </ComboboxPrimitive.List>
+          </ComboboxPrimitive.Popup>
+        </ComboboxPrimitive.Positioner>
+      </ComboboxPrimitive.Portal>
     );
   }
 );
-ComboboxContent.displayName = 'ComboboxContent';
+ComboboxContent.displayName = 'Combobox.Content';

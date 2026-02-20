@@ -2,7 +2,12 @@
 
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react';
+import {
+  ComponentPropsWithoutRef,
+  forwardRef,
+  ReactNode,
+  RefObject
+} from 'react';
 import { Chip } from '../chip';
 import { Tooltip } from '../tooltip';
 import styles from './input-field.module.css';
@@ -43,6 +48,7 @@ export interface InputFieldProps
   maxChipsVisible?: number;
   infoTooltip?: string;
   variant?: 'default' | 'borderless';
+  containerRef?: RefObject<HTMLDivElement | null>;
 }
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
@@ -65,6 +71,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       size,
       infoTooltip,
       variant = 'default',
+      containerRef,
       ...props
     },
     ref
@@ -95,6 +102,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             disabled && styles['input-disabled-wrapper'],
             chips?.length && styles['has-chips']
           )}
+          ref={containerRef}
         >
           {leadingIcon && (
             <div className={styles['leading-icon']}>{leadingIcon}</div>

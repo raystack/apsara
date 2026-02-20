@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export const getMatch = (
-  value?: string,
+  value?: any,
   children?: ReactNode,
-  search?: string,
+  search?: string
 ) => {
   if (!search?.length) return true;
   const childrenValue = getChildrenValue(children)?.toLowerCase();
@@ -15,8 +15,8 @@ export const getMatch = (
 };
 
 export const getChildrenValue = (children?: ReactNode) => {
-  if (typeof children === "string") return children;
-  if (typeof children === "object" && children !== null) {
+  if (typeof children === 'string') return children;
+  if (typeof children === 'object' && children !== null) {
     return children.toString();
   }
   return null;

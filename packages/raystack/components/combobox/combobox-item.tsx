@@ -1,23 +1,19 @@
 'use client';
 
-import { ComboboxItem as AriakitComboboxItem } from '@ariakit/react';
+import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import { forwardRef, ReactNode } from 'react';
 import { Checkbox } from '../checkbox';
 import { getMatch } from '../dropdown-menu/utils';
 import { Text } from '../text';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
-export interface ComboboxItemProps
-  extends ComponentPropsWithoutRef<typeof AriakitComboboxItem> {
-  leadingIcon?: React.ReactNode;
+export interface ComboboxItemProps extends ComboboxPrimitive.Item.Props {
+  leadingIcon?: ReactNode;
 }
 
-export const ComboboxItem = forwardRef<
-  ElementRef<typeof AriakitComboboxItem>,
-  ComboboxItemProps
->(
+export const ComboboxItem = forwardRef<HTMLDivElement, ComboboxItemProps>(
   (
     {
       className,
@@ -25,21 +21,24 @@ export const ComboboxItem = forwardRef<
       value: providedValue,
       leadingIcon,
       disabled,
+      render,
       ...props
     },
     ref
   ) => {
     const value = providedValue
-      ? String(providedValue)
+      ? providedValue
       : typeof children === 'string'
         ? children
         : undefined;
-    const { multiple, value: comboboxValue, inputValue } = useComboboxContext();
 
-    const isSelected = multiple
-      ? comboboxValue?.includes(value ?? '')
-      : value === comboboxValue;
-    const isMatched = getMatch(value, children, inputValue);
+    const { multiple, inputValue, hasItems } = useComboboxContext();
+
+    // When items prop is not provided on Root, use custom filtering
+    if (!hasItems && inputValue?.length) {
+      const isMatched = getMatch(value, children, inputValue);
+      if (!isMatched) return null;
+    }
 
     const element =
       typeof children === 'string' ? (
@@ -51,26 +50,25 @@ export const ComboboxItem = forwardRef<
         children
       );
 
-    if (inputValue?.length && !isMatched) {
-      // Doesn't match search, so don't render at all
-      return null;
-    }
-
     return (
-      <AriakitComboboxItem
+      <ComboboxPrimitive.Item
         ref={ref}
         value={value}
         className={cx(styles.menuitem, className)}
-        focusOnHover
-        aria-selected={isSelected}
-        data-selected={isSelected}
-        resetValueOnSelect={multiple}
+        disabled={disabled}
         {...props}
-      >
-        {multiple && <Checkbox checked={isSelected} />}
-        {element}
-      </AriakitComboboxItem>
+        render={
+          render
+            ? render
+            : (renderProps, state) => (
+                <div {...renderProps}>
+                  {multiple && <Checkbox checked={state.selected} />}
+                  {element}
+                </div>
+              )
+        }
+      />
     );
   }
 );
-ComboboxItem.displayName = 'ComboboxItem';
+ComboboxItem.displayName = 'Combobox.Item';
