@@ -1,12 +1,9 @@
 'use client';
 
-import {
-  Combobox as ComboboxPrimitive,
-  Select as SelectPrimitive
-} from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cva, VariantProps } from 'class-variance-authority';
-import { forwardRef, SVGAttributes } from 'react';
+import { Select as SelectPrimitive, Slot } from 'radix-ui';
+import { ElementRef, forwardRef, SVGAttributes } from 'react';
 import { Flex } from '../flex';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
@@ -33,15 +30,16 @@ const trigger = cva(styles.trigger, {
   }
 });
 
-export interface SelectTriggerProps extends VariantProps<typeof trigger> {
+export interface SelectTriggerProps
+  extends SelectPrimitive.SelectTriggerProps,
+    VariantProps<typeof trigger> {
   iconProps?: IconProps;
-  className?: string;
-  children?: React.ReactNode;
-  'aria-label'?: string;
-  disabled?: boolean;
 }
 
-export const SelectTrigger = forwardRef<HTMLElement, SelectTriggerProps>(
+export const SelectTrigger = forwardRef<
+  ElementRef<typeof SelectPrimitive.Trigger>,
+  SelectTriggerProps
+>(
   (
     {
       size,
@@ -49,60 +47,34 @@ export const SelectTrigger = forwardRef<HTMLElement, SelectTriggerProps>(
       className,
       children,
       iconProps = {},
+      asChild,
       'aria-label': ariaLabel,
       ...props
     },
     ref
   ) => {
-    const { mode, multiple, triggerRef } = useSelectContext();
-
-    const triggerClassName = trigger({ size, variant, className });
-    const icon = (
-      <ChevronDownIcon
-        className={styles.triggerIcon}
-        aria-hidden='true'
-        {...iconProps}
-      />
-    );
-
-    const content = (
-      <Flex className={styles.triggerContent} align='center' gap={2}>
-        {children}
-      </Flex>
-    );
-
-    if (mode === 'combobox') {
-      return (
-        <ComboboxPrimitive.Trigger
-          ref={(node: HTMLElement | null) => {
-            (triggerRef as React.MutableRefObject<HTMLElement | null>).current =
-              node;
-            if (typeof ref === 'function') ref(node);
-            else if (ref) ref.current = node;
-          }}
-          data-multiselectable={multiple ? true : undefined}
-          className={triggerClassName}
-          aria-label={ariaLabel || 'Select option'}
-          {...props}
-        >
-          {content}
-          {icon}
-        </ComboboxPrimitive.Trigger>
-      );
-    }
-
+    const { multiple, autocomplete } = useSelectContext();
     return (
       <SelectPrimitive.Trigger
-        ref={ref as React.Ref<HTMLButtonElement>}
         data-multiselectable={multiple ? true : undefined}
-        className={triggerClassName}
+        ref={ref}
+        className={trigger({ size, variant, className })}
         aria-label={ariaLabel || 'Select option'}
+        aria-haspopup={autocomplete ? 'dialog' : 'listbox'}
         {...props}
       >
-        {content}
-        {icon}
+        <Flex className={styles.triggerContent} align='center' gap={2}>
+          {asChild ? <Slot.Root>{children}</Slot.Root> : children}
+        </Flex>
+        <SelectPrimitive.Icon asChild>
+          <ChevronDownIcon
+            className={styles.triggerIcon}
+            aria-hidden='true'
+            {...iconProps}
+          />
+        </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
     );
   }
 );
-SelectTrigger.displayName = 'Select.Trigger';
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;

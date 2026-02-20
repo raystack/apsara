@@ -31,8 +31,8 @@ export const playground = {
     },
     variant: {
       type: 'select',
-      options: ['outline', 'text'],
-      defaultValue: 'outline'
+      options: ['default', 'filter'],
+      defaultValue: 'default'
     },
     autocomplete: {
       type: 'checkbox',
@@ -104,10 +104,10 @@ export const variantDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Outline',
+      name: 'Default',
       code: `
   <Select>
-  <Select.Trigger variant="outline">
+  <Select.Trigger>
     <Select.Value placeholder="Select..." />
   </Select.Trigger>
   <Select.Content>
@@ -118,11 +118,11 @@ export const variantDemo = {
 </Select>`
     },
     {
-      name: 'Text',
+      name: 'Filter',
       code: `
   <Select>
-  <Select.Trigger variant="text">
-    <Select.Value placeholder="Select..." />
+  <Select.Trigger variant="filter">
+    <Select.Value placeholder="Filter..." />
   </Select.Trigger>
   <Select.Content>
     <Select.Item value="all">All</Select.Item>

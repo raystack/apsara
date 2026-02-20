@@ -1,37 +1,22 @@
 'use client';
 
-import {
-  Combobox as ComboboxPrimitive,
-  Select as SelectPrimitive
-} from '@base-ui/react';
 import { cx } from 'class-variance-authority';
+import { Select as SelectPrimitive } from 'radix-ui';
 import { ElementRef, Fragment, forwardRef } from 'react';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
 export const SelectGroup = forwardRef<
-  HTMLDivElement,
-  { className?: string; children?: React.ReactNode }
+  ElementRef<typeof SelectPrimitive.Group>,
+  SelectPrimitive.SelectGroupProps
 >(({ className, children, ...props }, ref) => {
-  const { mode, shouldFilter } = useSelectContext();
+  const { shouldFilter } = useSelectContext();
 
   if (shouldFilter) return <Fragment>{children}</Fragment>;
 
-  if (mode === 'combobox') {
-    return (
-      <ComboboxPrimitive.Group
-        ref={ref}
-        className={cx(styles.menugroup, className)}
-        {...props}
-      >
-        {children}
-      </ComboboxPrimitive.Group>
-    );
-  }
-
   return (
     <SelectPrimitive.Group
-      ref={ref as React.Ref<ElementRef<typeof SelectPrimitive.Group>>}
+      ref={ref}
       className={cx(styles.menugroup, className)}
       {...props}
     >
@@ -39,62 +24,39 @@ export const SelectGroup = forwardRef<
     </SelectPrimitive.Group>
   );
 });
-SelectGroup.displayName = 'Select.Group';
+SelectGroup.displayName = SelectPrimitive.Group.displayName;
 
 export const SelectLabel = forwardRef<
-  HTMLDivElement,
-  { className?: string; children?: React.ReactNode }
+  ElementRef<typeof SelectPrimitive.Label>,
+  SelectPrimitive.SelectLabelProps
 >(({ className, ...props }, ref) => {
-  const { mode, shouldFilter } = useSelectContext();
+  const { shouldFilter } = useSelectContext();
 
   if (shouldFilter) return null;
 
-  if (mode === 'combobox') {
-    return (
-      <ComboboxPrimitive.GroupLabel
-        ref={ref}
-        className={cx(styles.label, className)}
-        {...props}
-      />
-    );
-  }
-
   return (
-    <SelectPrimitive.GroupLabel
-      ref={ref as React.Ref<ElementRef<typeof SelectPrimitive.GroupLabel>>}
+    <SelectPrimitive.Label
+      ref={ref}
       className={cx(styles.label, className)}
       {...props}
     />
   );
 });
-SelectLabel.displayName = 'Select.Label';
+SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
 export const SelectSeparator = forwardRef<
-  HTMLDivElement,
-  { className?: string }
+  ElementRef<typeof SelectPrimitive.Separator>,
+  SelectPrimitive.SelectSeparatorProps
 >(({ className, ...props }, ref) => {
-  const { mode, shouldFilter } = useSelectContext();
+  const { shouldFilter } = useSelectContext();
 
   if (shouldFilter) return null;
-
-  if (mode === 'combobox') {
-    return (
-      <ComboboxPrimitive.Separator
-        ref={ref}
-        className={cx(styles.separator, className)}
-        {...props}
-      />
-    );
-  }
-
-  // Base UI Select doesn't have a Separator primitive, use a styled div
   return (
-    <div
+    <SelectPrimitive.Separator
       ref={ref}
-      role='separator'
       className={cx(styles.separator, className)}
       {...props}
     />
   );
 });
-SelectSeparator.displayName = 'Select.Separator';
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName;

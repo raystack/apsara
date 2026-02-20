@@ -1,6 +1,11 @@
 'use client';
 
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon
+} from '@radix-ui/react-icons';
 import { cva, cx } from 'class-variance-authority';
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import {
@@ -10,6 +15,7 @@ import {
   dateLib
 } from 'react-day-picker';
 
+import { Flex } from '../flex/flex';
 import { IconButton } from '../icon-button';
 import { Select } from '../select';
 import { Skeleton } from '../skeleton';
@@ -76,15 +82,27 @@ function DropDown({
         <Select.Value />
       </Select.Trigger>
       <Select.Content className={styles.dropdownContent}>
-        {options.map(opt => (
-          <Select.Item
-            value={opt.value.toString()}
-            key={opt.value}
-            disabled={opt.disabled}
-          >
-            {opt.label}
-          </Select.Item>
-        ))}
+        <Select.ScrollUpButton asChild>
+          <Flex justify='center'>
+            <ChevronUpIcon />
+          </Flex>
+        </Select.ScrollUpButton>
+        <Select.Viewport>
+          {options.map(opt => (
+            <Select.Item
+              value={opt.value.toString()}
+              key={opt.value}
+              disabled={opt.disabled}
+            >
+              {opt.label}
+            </Select.Item>
+          ))}
+        </Select.Viewport>
+        <Select.ScrollDownButton asChild>
+          <Flex justify='center'>
+            <ChevronDownIcon />
+          </Flex>
+        </Select.ScrollDownButton>
       </Select.Content>
     </Select>
   );
