@@ -16,12 +16,24 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { AnnouncementBar } from '@raystack/apsara'
+
+<AnnouncementBar />
 ```
 
-## Announcement Bar Props
+## API Reference
+
+Renders a dismissible banner for announcements and alerts.
 
 <auto-type-table path="./props.ts" name="AnnouncementBarProps" />
+
+## Accessibility
+
+- Uses `role="banner"` for proper landmark identification
+- Supports keyboard dismissal and focus management
+- Provides `aria-label` support for screen readers

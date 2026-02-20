@@ -8,13 +8,19 @@ import { playground, stateDemo, sizeDemo, controlDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Switch } from "@raystack/apsara";
+
+<Switch />
 ```
 
-## Switch Props
+## API Reference
+
+Renders a toggleable switch input.
 
 <auto-type-table path="./props.ts" name="SwitchProps" />
 
@@ -37,3 +43,10 @@ The Switch component comes in two sizes: large (default) and small.
 Use the Switch component in a controlled manner to manage its state externally.
 
 <Demo data={controlDemo} />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Switch pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)
+- Uses `role="switch"` with `aria-checked` for state
+- Supports keyboard activation with Space key
+- Associates with labels via `id` and `htmlFor` attributes

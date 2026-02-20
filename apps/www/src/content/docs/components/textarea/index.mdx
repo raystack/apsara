@@ -14,13 +14,19 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { TextArea } from "@raystack/apsara";
+
+<TextArea />
 ```
 
-## TextArea Props
+## API Reference
+
+Renders a multi-line text input.
 
 <auto-type-table path="./props.ts" name="TextAreaProps" />
 
@@ -49,3 +55,10 @@ Example of TextArea in controlled mode.
 TextArea with custom width specification.
 
 <Demo data={widthDemo} />
+
+## Accessibility
+
+- Associates label with textarea via `htmlFor` and `id` attributes
+- Error messages are linked with `aria-describedby`
+- Required state is communicated via `aria-required`
+- Invalid state is communicated via `aria-invalid`

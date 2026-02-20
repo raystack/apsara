@@ -278,16 +278,6 @@ describe('Sheet', () => {
   });
 
   describe('Accessibility', () => {
-    // it('has correct ARIA roles', async () => {
-    //   await renderAndOpenSheet(<BasicSheet />);
-
-    //   await waitFor(() => {
-    //     const dialog = screen.getByRole('dialog');
-    //     expect(dialog).toBeInTheDocument();
-    //     expect(dialog).toHaveAttribute('tabIndex', '-1');
-    //   });
-    // });
-
     it('has proper ARIA attributes', async () => {
       await renderAndOpenSheet(<BasicSheet />);
 
