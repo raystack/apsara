@@ -2,20 +2,19 @@
 
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import {
+import React, {
+  cloneElement,
+  forwardRef,
   HTMLAttributes,
   ReactElement,
-  ReactEventHandler,
-  ReactNode,
-  cloneElement,
-  forwardRef
+  ReactNode
 } from 'react';
-import { DropdownMenu } from '../dropdown-menu';
+import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
 export interface BreadcrumbDropdownItem {
   label: string;
-  onClick?: ReactEventHandler<HTMLDivElement>;
+  onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 export interface BreadcrumbItemProps extends HTMLAttributes<HTMLAnchorElement> {
@@ -55,27 +54,23 @@ export const BreadcrumbItem = forwardRef<
 
     if (dropdownItems) {
       return (
-        <DropdownMenu>
-          <DropdownMenu.Trigger
-            className={styles['breadcrumb-dropdown-trigger']}
-          >
+        <Menu>
+          <Menu.Trigger className={styles['breadcrumb-dropdown-trigger']}>
             {label}
             <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content
-            className={styles['breadcrumb-dropdown-content']}
-          >
+          </Menu.Trigger>
+          <Menu.Content className={styles['breadcrumb-dropdown-content']}>
             {dropdownItems.map((dropdownItem, dropdownIndex) => (
-              <DropdownMenu.Item
+              <Menu.Item
                 key={dropdownIndex}
                 className={styles['breadcrumb-dropdown-item']}
-                onSelect={dropdownItem?.onClick}
+                onClick={dropdownItem?.onClick}
               >
                 {dropdownItem.label}
-              </DropdownMenu.Item>
+              </Menu.Item>
             ))}
-          </DropdownMenu.Content>
-        </DropdownMenu>
+          </Menu.Content>
+        </Menu>
       );
     }
     return (

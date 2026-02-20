@@ -1,5 +1,5 @@
 'use client';
-import { DropdownMenu } from '@raystack/apsara';
+import { Menu } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import { buttonVariants } from 'fumadocs-ui/components/ui/button';
 import { Check, ChevronDown, Copy, ExternalLinkIcon } from 'lucide-react';
@@ -233,26 +233,28 @@ export function ViewOptions({
   }, [markdownUrl]);
 
   return (
-    <DropdownMenu placement='bottom-end'>
-      <DropdownMenu.Trigger asChild>
-        <button
-          className={cx(
-            buttonVariants({
-              color: 'secondary',
-              size: 'sm',
-              className: 'bg-fd-secondary'
-            })
-          )}
-          style={{
-            borderTopLeftRadius: '0px',
-            borderBottomLeftRadius: '0px',
-            borderLeft: 'none'
-          }}
-        >
-          <ChevronDown size={16} />
-        </button>
-      </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+    <Menu>
+      <Menu.Trigger
+        render={
+          <button
+            className={cx(
+              buttonVariants({
+                color: 'secondary',
+                size: 'sm',
+                className: 'bg-fd-secondary'
+              })
+            )}
+            style={{
+              borderTopLeftRadius: '0px',
+              borderBottomLeftRadius: '0px',
+              borderLeft: 'none'
+            }}
+          />
+        }
+      >
+        <ChevronDown size={16} />
+      </Menu.Trigger>
+      <Menu.Content>
         {items.map(item => (
           <a
             key={item.title}
@@ -260,17 +262,17 @@ export function ViewOptions({
             rel='noreferrer noopener'
             target='_blank'
           >
-            <DropdownMenu.Item
+            <Menu.Item
               leadingIcon={item.icon}
               trailingIcon={
                 <ExternalLinkIcon className='size-3.5 text-fd-muted-foreground ms-auto' />
               }
             >
               {item.title}
-            </DropdownMenu.Item>
+            </Menu.Item>
           </a>
         ))}
-      </DropdownMenu.Content>
-    </DropdownMenu>
+      </Menu.Content>
+    </Menu>
   );
 }
