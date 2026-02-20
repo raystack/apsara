@@ -1,5 +1,8 @@
-.content {
+.positioner {
   z-index: var(--rs-z-index-portal);
+}
+
+.content {
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
@@ -9,7 +12,7 @@
   box-shadow: var(--rs-shadow-soft);
   border: 1px solid var(--rs-color-border-base-primary);
   max-height: 320px;
-  min-width: var(--radix-popover-trigger-width);
+  min-width: var(--anchor-width);
   overflow: auto;
 }
 
@@ -41,8 +44,7 @@
   border-radius: var(--rs-radius-2);
 }
 
-.menuitem[data-highlighted],
-.menuitem[data-active-item="true"] {
+.menuitem[data-highlighted] {
   outline: none;
   cursor: pointer;
   background: var(--rs-color-background-base-primary-hover);

@@ -4,7 +4,7 @@ description: A popup that displays information related to an element when it rec
 source: packages/raystack/components/tooltip
 ---
 
-import { playground, sideDemo, customDemo,followCursorDemo, providerDemo } from "./demo.ts";
+import { playground, sideDemo, alignDemo, customDemo, providerDemo, trackCursorDemo, arrowDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -28,9 +28,21 @@ The Tooltip component accepts various props to customize its behavior and appear
 
 <auto-type-table path="./props.ts" name="TooltipProps" />
 
+### Trigger
+
+The Trigger component wraps the element that activates the tooltip.
+
+<auto-type-table path="./props.ts" name="TooltipTriggerProps" />
+
+### Content
+
+The Content component displays the tooltip content and controls positioning.
+
+<auto-type-table path="./props.ts" name="TooltipContentProps" />
+
 ### Provider
 
-The TooltipProvider component serves as a context wrapper that provides global configuration and functionality to all tooltip instances within your application.
+The Provider component serves as a context wrapper that provides global configuration and functionality to all tooltip instances within your application.
 
 <auto-type-table path="./props.ts" name="TooltipProviderProps" />
 
@@ -38,9 +50,15 @@ The TooltipProvider component serves as a context wrapper that provides global c
 
 ### Side
 
-The Tooltip component can be positioned in different directions using the `side` prop:
+The Tooltip Content component can be positioned in different directions using the `side` prop:
 
 <Demo data={sideDemo} />
+
+### Align
+
+The Tooltip Content component can be aligned in different directions using the `align` prop:
+
+<Demo data={alignDemo} />
 
 ### Custom Content
 
@@ -54,18 +72,14 @@ The TooltipProvider component can be used to provide a global configuration for 
 
 <Demo data={providerDemo} />
 
-### Follow Cursor
+### Track Cursor
 
-When `followCursor` is true, the tooltip will follow the cursor and will be positioned relative to the cursor.
+Use `trackCursorAxis` prop on the Root component to make the tooltip follow the cursor:
 
-<Demo data={followCursorDemo} />
+<Demo data={trackCursorDemo} />
 
-## Accessibility
+### With Arrow
 
-The Tooltip component follows WAI-ARIA guidelines for tooltips:
+Show the arrow by setting `showArrow={true}` on the Content component:
 
-- Uses `role="tooltip"` for proper semantic meaning
-- Automatically manages focus and hover interactions
-- Supports keyboard navigation
-- Provides appropriate ARIA attributes for accessibility
-- Manages enter/exit animations for smooth user experience
+<Demo data={arrowDemo} />

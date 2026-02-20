@@ -1,172 +1,145 @@
 'use client';
 
-import { ComboboxProvider, ComboboxProviderProps } from '@ariakit/react';
-import { Popover as PopoverPrimitive } from 'radix-ui';
+import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import {
   createContext,
   RefObject,
   useCallback,
   useContext,
+  useMemo,
   useRef,
   useState
 } from 'react';
 
-interface ComboboxContextValue {
-  setValue: (value: string | string[]) => void;
-  value?: string | string[];
-  inputValue?: string;
-  setInputValue: (inputValue: string) => void;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  inputRef: RefObject<HTMLInputElement | null>;
+interface ComboboxContextValue<Value = string> {
   multiple: boolean;
-  listRef: RefObject<HTMLDivElement | null>;
+  inputValue: string;
+  hasItems: boolean;
+  inputContainerRef: RefObject<HTMLDivElement | null>;
+  value: Value | Value[] | null | undefined;
+  onValueChange?: (value: Value | Value[] | null) => void;
 }
 
-const ComboboxContext = createContext<ComboboxContextValue | undefined>(
-  undefined
-);
+const ComboboxContext = createContext<
+  ComboboxContextValue<unknown> | undefined
+>(undefined);
 
-export const useComboboxContext = (): ComboboxContextValue => {
+export const useComboboxContext = <
+  Value = string
+>(): ComboboxContextValue<Value> => {
   const context = useContext(ComboboxContext);
   if (!context) {
     throw new Error(
       'useComboboxContext must be used within a ComboboxProvider'
     );
   }
-  return context;
+  return context as ComboboxContextValue<Value>;
 };
-export interface BaseComboboxRootProps
-  extends Omit<
-    ComboboxProviderProps,
-    | 'value'
-    | 'setValue'
-    | 'selectedValue'
-    | 'setSelectedValue'
-    | 'defaultSelectedValue'
-    | 'defaultValue'
-    | 'resetValueOnHide'
-    | 'resetValueOnSelect'
-  > {
-  onOpenChange?: (open: boolean) => void;
-  modal?: boolean;
-  inputValue?: string;
-  onInputValueChange?: (inputValue: string) => void;
-  defaultInputValue?: string;
-}
-export interface SingleComboboxProps extends BaseComboboxRootProps {
-  multiple?: false;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  defaultValue?: string;
-}
-export interface MultipleComboboxProps extends BaseComboboxRootProps {
-  multiple: true;
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
-  defaultValue?: string[];
-}
-export type ComboboxRootProps = SingleComboboxProps | MultipleComboboxProps;
 
-export const ComboboxRoot = ({
-  modal = false,
+export interface BaseComboboxRootProps<Value>
+  extends Omit<
+    ComboboxPrimitive.Root.Props<Value, boolean>,
+    'onValueChange' | 'onInputValueChange' | 'multiple'
+  > {
+  onInputValueChange?: (inputValue: string) => void;
+}
+
+export interface SingleComboboxProps<Value = string>
+  extends BaseComboboxRootProps<Value> {
+  multiple?: false;
+  value?: Value | null;
+  defaultValue?: Value | null;
+  onValueChange?: (value: Value | null) => void;
+}
+
+export interface MultipleComboboxProps<Value = string>
+  extends BaseComboboxRootProps<Value> {
+  multiple: true;
+  value?: Value[];
+  defaultValue?: Value[];
+  onValueChange?: (value: Value[]) => void;
+}
+
+export type ComboboxRootProps<Value = string> =
+  | SingleComboboxProps<Value>
+  | MultipleComboboxProps<Value>;
+
+export const ComboboxRoot = <Value extends unknown | unknown[]>({
   multiple = false,
   children,
-  value: providedValue,
-  defaultValue = multiple ? [] : undefined,
   onValueChange,
-  inputValue: providedInputValue,
   onInputValueChange,
-  defaultInputValue,
-  open: providedOpen,
-  defaultOpen = false,
-  onOpenChange,
+  value: providedValue,
+  defaultValue,
+  items,
   ...props
-}: ComboboxRootProps) => {
+}: ComboboxRootProps<Value>) => {
+  const [inputValue, setInputValue] = useState('');
   const [internalValue, setInternalValue] = useState<
-    string | string[] | undefined
-  >(defaultValue);
-  const [internalInputValue, setInternalInputValue] =
-    useState(defaultInputValue);
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+    Value | Value[] | null | undefined
+  >(defaultValue ?? null);
+  const inputContainerRef = useRef<HTMLDivElement>(null);
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+  const computedValue = providedValue ?? internalValue;
 
-  const value = providedValue ?? internalValue;
-  const inputValue = providedInputValue ?? internalInputValue;
-  const open = providedOpen ?? internalOpen;
+  const handleInputValueChange = useCallback(
+    (
+      value: string,
+      eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+    ) => {
+      setInputValue(value);
+      onInputValueChange?.(value);
+    },
+    [onInputValueChange]
+  );
 
-  const setValue = useCallback(
-    (newValue: string | string[] | undefined) => {
+  const handleValueChange = useCallback(
+    (
+      value: Value | Value[] | null,
+      eventDetails: ComboboxPrimitive.Root.ChangeEventDetails
+    ) => {
+      setInternalValue(value);
       if (multiple) {
-        const formattedValue = newValue
-          ? Array.isArray(newValue)
-            ? newValue
-            : [newValue]
-          : [];
-        setInternalValue(formattedValue);
-        (onValueChange as MultipleComboboxProps['onValueChange'])?.(
-          formattedValue
+        (onValueChange as MultipleComboboxProps<Value>['onValueChange'])?.(
+          value as Value[]
         );
       } else {
-        setInternalValue(String(newValue));
-        (onValueChange as SingleComboboxProps['onValueChange'])?.(
-          String(newValue)
+        (onValueChange as SingleComboboxProps<Value>['onValueChange'])?.(
+          value as Value | null
         );
       }
     },
     [onValueChange, multiple]
   );
 
-  const setInputValue = useCallback(
-    (newValue: string) => {
-      if (!multiple && newValue.length === 0) setValue('');
-      setInternalInputValue(newValue);
-      onInputValueChange?.(newValue);
-    },
-    [onInputValueChange, setValue, multiple]
-  );
-
-  const setOpen = useCallback(
-    (newOpen: boolean) => {
-      setInternalOpen(newOpen);
-      onOpenChange?.(newOpen);
-    },
-    [onOpenChange]
+  const contextValue = useMemo(
+    () => ({
+      multiple,
+      inputValue,
+      hasItems: !!items,
+      inputContainerRef,
+      value: computedValue,
+      onValueChange: handleValueChange
+    }),
+    [multiple, inputValue, items, computedValue, handleValueChange]
   );
 
   return (
     <ComboboxContext.Provider
-      value={{
-        setValue,
-        value,
-        inputValue,
-        setInputValue,
-        open,
-        setOpen,
-        inputRef,
-        multiple,
-        listRef
-      }}
+      value={contextValue as ComboboxContextValue<unknown>}
     >
-      <PopoverPrimitive.Root open={open} onOpenChange={setOpen} modal={modal}>
-        <ComboboxProvider
-          open={open}
-          setOpen={setOpen}
-          value={inputValue}
-          setValue={setInputValue}
-          selectedValue={value}
-          setSelectedValue={setValue}
-          focusLoop={false}
-          includesBaseElement={false}
-          resetValueOnHide={multiple}
-          resetValueOnSelect={multiple}
-          {...props}
-        >
-          {children}
-        </ComboboxProvider>
-      </PopoverPrimitive.Root>
+      <ComboboxPrimitive.Root
+        multiple={multiple}
+        onValueChange={handleValueChange}
+        onInputValueChange={handleInputValueChange}
+        items={items}
+        value={providedValue}
+        defaultValue={defaultValue}
+        modal
+        {...props}
+      >
+        {children}
+      </ComboboxPrimitive.Root>
     </ComboboxContext.Provider>
   );
 };

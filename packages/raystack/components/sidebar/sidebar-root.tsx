@@ -62,48 +62,48 @@ export const SidebarRoot = forwardRef<HTMLElement, SidebarRootProps>(
       <SidebarContext.Provider
         value={{ isCollapsed: !open, hideCollapsedItemTooltip }}
       >
-        <Tooltip.Provider>
-          <aside
-            ref={ref}
-            className={cx(styles.root, className)}
-            data-position={position}
-            data-open={open ? '' : undefined}
-            data-closed={!open ? '' : undefined}
-            data-collapse-disabled={!collapsible ? '' : undefined}
-            aria-label='Navigation Sidebar'
-            aria-expanded={open}
-            role='navigation'
-            {...props}
-          >
-            {collapsible && (
-              <Tooltip
-                message={
-                  tooltipMessage ??
-                  (open ? 'Click to collapse' : 'Click to expand')
+        <aside
+          ref={ref}
+          className={cx(styles.root, className)}
+          data-position={position}
+          data-open={open ? '' : undefined}
+          data-closed={!open ? '' : undefined}
+          data-collapse-disabled={!collapsible ? '' : undefined}
+          aria-label='Navigation Sidebar'
+          aria-expanded={open}
+          role='navigation'
+          {...props}
+        >
+          {collapsible && (
+            <Tooltip trackCursorAxis='y'>
+              <Tooltip.Trigger
+                render={
+                  <div
+                    className={styles.resizeHandle}
+                    onClick={() => handleOpenChange(!open)}
+                    role='button'
+                    tabIndex={0}
+                    aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleOpenChange(!open);
+                      }
+                    }}
+                  />
                 }
+              />
+              <Tooltip.Content
                 side={position === 'left' ? 'right' : 'left'}
-                asChild
-                followCursor
                 sideOffset={10}
               >
-                <div
-                  className={styles.resizeHandle}
-                  onClick={() => handleOpenChange(!open)}
-                  role='button'
-                  tabIndex={0}
-                  aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleOpenChange(!open);
-                    }
-                  }}
-                />
-              </Tooltip>
-            )}
-            {children}
-          </aside>
-        </Tooltip.Provider>
+                {tooltipMessage ??
+                  (open ? 'Click to collapse' : 'Click to expand')}
+              </Tooltip.Content>
+            </Tooltip>
+          )}
+          {children}
+        </aside>
       </SidebarContext.Provider>
     );
   }
