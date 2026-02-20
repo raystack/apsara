@@ -16,13 +16,22 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Combobox } from "@raystack/apsara";
+
+<Combobox>
+  <Combobox.Input />
+  <Combobox.Content />
+</Combobox>
 ```
 
-## Combobox Props
+## API Reference
+
+### Root Props
 
 The Combobox component is composed of several parts, each with their own props.
 
@@ -30,19 +39,19 @@ The root element is the parent component that manages the combobox state includi
 
 <auto-type-table path="./props.ts" name="ComboboxRootProps" />
 
-### Combobox.Input Props
+### Input Props
 
 The input field that triggers the combobox dropdown and allows users to type and filter options.
 
 <auto-type-table path="./props.ts" name="ComboboxInputProps" />
 
-### Combobox.Content Props
+### Content Props
 
 The dropdown container that holds the combobox items.
 
 <auto-type-table path="./props.ts" name="ComboboxContentProps" />
 
-### Combobox.Item Props
+### Item Props
 
 Individual selectable options within the combobox. In single mode, selecting an item closes the dropdown. In multiple mode, items show checkboxes and the dropdown remains open.
 
@@ -50,19 +59,19 @@ When no `value` prop is provided, the text content of `children` is used as the 
 
 <auto-type-table path="./props.ts" name="ComboboxItemProps" />
 
-### Combobox.Group Props
+### Group Props
 
 A way to group related combobox items together.
 
 <auto-type-table path="./props.ts" name="ComboboxGroupProps" />
 
-### Combobox.Label Props
+### Label Props
 
 Renders a label in a combobox group. This component should be wrapped with `Combobox.Group`.
 
 <auto-type-table path="./props.ts" name="ComboboxLabelProps" />
 
-### Combobox.Separator Props
+### Separator Props
 
 Visual divider between combobox items or groups.
 
