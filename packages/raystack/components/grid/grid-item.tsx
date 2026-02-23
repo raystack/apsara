@@ -1,8 +1,8 @@
-import { Slot } from 'radix-ui';
-import { HTMLAttributes, forwardRef } from 'react';
+import { mergeProps, useRender } from '@base-ui/react';
+import { forwardRef } from 'react';
 import { AlignType } from './types';
 
-type GridItemProps = HTMLAttributes<HTMLDivElement> & {
+type GridItemProps = useRender.ComponentProps<'div'> & {
   area?: string;
   colStart?: number | string;
   colEnd?: number | string;
@@ -12,7 +12,6 @@ type GridItemProps = HTMLAttributes<HTMLDivElement> & {
   rowSpan?: number | string;
   justifySelf?: AlignType;
   alignSelf?: AlignType;
-  asChild?: boolean;
 };
 
 export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
@@ -28,31 +27,32 @@ export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
       justifySelf,
       alignSelf,
       style,
-      asChild,
+      render,
       ...props
     },
     ref
   ) => {
-    const Comp = asChild ? Slot.Root : 'div';
+    const gridItemStyle = {
+      gridArea: area,
+      gridColumnStart: colStart,
+      gridColumnEnd: colEnd,
+      gridRowStart: rowStart,
+      gridRowEnd: rowEnd,
+      gridColumn: colSpan ? `span ${colSpan}` : undefined,
+      gridRow: rowSpan ? `span ${rowSpan}` : undefined,
+      justifySelf,
+      alignSelf,
+      ...style
+    };
 
-    return (
-      <Comp
-        ref={ref}
-        style={{
-          gridArea: area,
-          gridColumnStart: colStart,
-          gridColumnEnd: colEnd,
-          gridRowStart: rowStart,
-          gridRowEnd: rowEnd,
-          gridColumn: colSpan ? `span ${colSpan}` : undefined,
-          gridRow: rowSpan ? `span ${rowSpan}` : undefined,
-          justifySelf,
-          alignSelf,
-          ...style
-        }}
-        {...props}
-      />
-    );
+    const element = useRender({
+      defaultTagName: 'div',
+      ref,
+      render,
+      props: mergeProps<'div'>({ style: gridItemStyle }, props)
+    });
+
+    return element;
   }
 );
 
