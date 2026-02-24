@@ -1,0 +1,62 @@
+---
+title: FilterCard
+description: A sectioned card component for grouping filter controls and configuration options.
+source: packages/raystack/components/filter-card
+---
+
+import { playground, sectionsDemo, withoutTitleDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { FilterCard } from '@raystack/apsara'
+
+<FilterCard>
+  <FilterCard.Section>
+    <FilterCard.Item label="Label">
+      Action content
+    </FilterCard.Item>
+  </FilterCard.Section>
+  <FilterCard.Section title="Section Title">
+    Content
+  </FilterCard.Section>
+</FilterCard>
+```
+
+## API Reference
+
+### FilterCard
+
+The outer container for the filter card.
+
+<auto-type-table path="./props.ts" name="FilterCardProps" />
+
+### FilterCard.Section
+
+A section within the filter card with an optional title.
+
+<auto-type-table path="./props.ts" name="FilterCardSectionProps" />
+
+### FilterCard.Item
+
+A label-action row within a section.
+
+<auto-type-table path="./props.ts" name="FilterCardItemProps" />
+
+## Examples
+
+### With Sections
+
+Multiple sections separated by a divider:
+
+<Demo data={sectionsDemo} />
+
+### Without Title
+
+Sections can be rendered without a title:
+
+<Demo data={withoutTitleDemo} />

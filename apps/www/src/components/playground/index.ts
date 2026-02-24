@@ -16,6 +16,7 @@ export * from './data-table-examples';
 export * from './dialog-examples';
 export * from './dropdown-menu-examples';
 export * from './empty-state-examples';
+export * from './filter-card-examples';
 export * from './filter-chip-examples';
 export * from './flex-examples';
 export * from './headline-examples';

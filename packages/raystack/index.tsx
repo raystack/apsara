@@ -30,6 +30,7 @@ export {
 export { Dialog } from './components/dialog';
 export { DropdownMenu } from './components/dropdown-menu';
 export { EmptyState } from './components/empty-state';
+export { FilterCard } from './components/filter-card';
 export { FilterChip } from './components/filter-chip';
 export { Flex } from './components/flex';
 export { Grid } from './components/grid';
