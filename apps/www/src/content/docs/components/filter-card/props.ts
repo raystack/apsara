@@ -59,3 +59,17 @@ export interface FilterCardItemProps {
   /** Additional CSS class names */
   className?: string;
 }
+
+export interface FilterCardFooterProps {
+  /** Content of the footer */
+  children?: React.ReactNode;
+
+  /** Additional CSS class names */
+  className?: string;
+
+  /**
+   * Flex justify content
+   * @defaultValue "end"
+   */
+  justify?: 'start' | 'center' | 'end' | 'between';
+}

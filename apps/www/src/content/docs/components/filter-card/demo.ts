@@ -57,9 +57,9 @@ export const sectionsDemo = {
     <FilterCard.Section title="Display Properties">
       <Text size={1}>Name, Creator, Project</Text>
     </FilterCard.Section>
-    <FilterCard.Section align="end">
+    <FilterCard.Footer>
       <Button variant="ghost" size="small">Reset to default</Button>
-    </FilterCard.Section>
+    </FilterCard.Footer>
   </FilterCard>`
 };
 

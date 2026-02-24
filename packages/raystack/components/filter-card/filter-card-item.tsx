@@ -15,7 +15,7 @@ export const FilterCardItem = forwardRef<HTMLDivElement, FilterCardItemProps>(
     return (
       <div ref={ref} className={cx(styles.item, className)} {...props}>
         <Text size={1}>{label}</Text>
-        <div>{children}</div>
+        {children}
       </div>
     );
   }
