@@ -12,7 +12,7 @@ export function FilterCardExamples() {
             <Select defaultValue='auto'>
               <Select.Trigger
                 size='small'
-                variant='filter'
+                variant='outline'
                 style={{ width: '100%' }}
               >
                 <Select.Value />
@@ -28,7 +28,7 @@ export function FilterCardExamples() {
             <Select defaultValue='none'>
               <Select.Trigger
                 size='small'
-                variant='filter'
+                variant='outline'
                 style={{ width: '100%' }}
               >
                 <Select.Value />
@@ -45,7 +45,7 @@ export function FilterCardExamples() {
           <Text size={1}>Name, Creator, Project</Text>
         </FilterCard.Section>
         <FilterCard.Footer>
-          <Button variant='ghost' size='small'>
+          <Button variant='text' size='small' color='neutral'>
             Reset to default
           </Button>
         </FilterCard.Footer>

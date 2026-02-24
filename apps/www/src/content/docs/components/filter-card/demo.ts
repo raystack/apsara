@@ -31,7 +31,7 @@ export const sectionsDemo = {
     <FilterCard.Section>
       <FilterCard.Item label="Ordering">
         <Select defaultValue="auto">
-          <Select.Trigger size="small" variant="filter" style={{ width: "100%" }}>
+          <Select.Trigger size="small" variant="outline" style={{ width: "100%" }}>
             <Select.Value />
           </Select.Trigger>
           <Select.Content>
@@ -43,7 +43,7 @@ export const sectionsDemo = {
       </FilterCard.Item>
       <FilterCard.Item label="Grouping">
         <Select defaultValue="none">
-          <Select.Trigger size="small" variant="filter" style={{ width: "100%" }}>
+          <Select.Trigger size="small" variant="outline" style={{ width: "100%" }}>
             <Select.Value />
           </Select.Trigger>
           <Select.Content>
@@ -58,7 +58,7 @@ export const sectionsDemo = {
       <Text size={1}>Name, Creator, Project</Text>
     </FilterCard.Section>
     <FilterCard.Footer>
-      <Button variant="ghost" size="small">Reset to default</Button>
+      <Button variant="text" size="small" color="neutral">Reset to default</Button>
     </FilterCard.Footer>
   </FilterCard>`
 };

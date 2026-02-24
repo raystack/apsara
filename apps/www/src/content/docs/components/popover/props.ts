@@ -13,6 +13,12 @@ export interface PopoverRootProps {
 }
 
 export interface PopoverContentProps {
+  /**
+   * Visual style variant
+   * @defaultValue "default"
+   */
+  variant?: 'default' | 'unstyled';
+
   /** Preferred side of the trigger to render. */
   side?: 'top' | 'right' | 'bottom' | 'left';
 
