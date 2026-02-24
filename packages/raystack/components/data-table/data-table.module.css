@@ -7,18 +7,8 @@
   background: var(--rs-color-background-base-primary);
 }
 
-.display-popover-content {
-  padding: 0px;
-  min-width: 300px;
-}
-
-.display-popover-properties-container {
-  --select-width: 160px;
-  padding: var(--rs-space-5);
-  border-bottom: 1px solid var(--rs-color-border-base-primary);
-}
-
 .display-popover-properties-select {
+  --select-width: 160px;
   width: var(--select-width);
 }
 .display-popover-properties-select[with-icon-button] {
@@ -30,10 +20,6 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.display-popover-reset-container {
-  padding: var(--rs-space-3) var(--rs-space-5);
 }
 
 .display-popover-sort-icon {

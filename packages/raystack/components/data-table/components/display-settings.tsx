@@ -4,13 +4,12 @@ import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 
 import { ReactNode } from 'react';
 import { Button } from '../../button';
-import { Flex } from '../../flex';
+import { FilterCard } from '../../filter-card';
 import { Popover } from '../../popover';
-import styles from '../data-table.module.css';
 import {
   DataTableColumn,
-  SortOrdersValues,
-  defaultGroupOption
+  defaultGroupOption,
+  SortOrdersValues
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 import { DisplayProperties } from './display-properties';
@@ -86,16 +85,9 @@ export function DisplaySettings<TData, TValue>({
   return (
     <Popover>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
-      <Popover.Content
-        className={styles['display-popover-content']}
-        align='end'
-      >
-        <Flex direction='column'>
-          <Flex
-            direction='column'
-            className={styles['display-popover-properties-container']}
-            gap={5}
-          >
+      <Popover.Content variant='unstyled' align='end'>
+        <FilterCard>
+          <FilterCard.Section>
             <Ordering
               columnList={sortableColumns}
               onChange={onSortChange}
@@ -107,19 +99,16 @@ export function DisplaySettings<TData, TValue>({
               onChange={onGroupChange}
               value={tableQuery?.group_by?.[0] || defaultGroupOption.id}
             />
-          </Flex>
-          <Flex className={styles['display-popover-properties-container']}>
+          </FilterCard.Section>
+          <FilterCard.Section title='Display Properties'>
             <DisplayProperties columns={columns} />
-          </Flex>
-          <Flex
-            justify='end'
-            className={styles['display-popover-reset-container']}
-          >
+          </FilterCard.Section>
+          <FilterCard.Footer>
             <Button variant='text' onClick={onReset} color='neutral'>
               Reset to default
             </Button>
-          </Flex>
-        </Flex>
+          </FilterCard.Footer>
+        </FilterCard>
       </Popover.Content>
     </Popover>
   );

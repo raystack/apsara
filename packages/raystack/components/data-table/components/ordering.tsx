@@ -2,10 +2,10 @@
 
 import { TextAlignBottomIcon, TextAlignTopIcon } from '@radix-ui/react-icons';
 
+import { FilterCard } from '../../filter-card';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Select } from '../../select';
-import { Text } from '../../text';
 import styles from '../data-table.module.css';
 import {
   ColumnData,
@@ -32,11 +32,8 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
   }
 
   return (
-    <Flex justify='between' align='center'>
-      <Text size={2} weight={500} className={styles['flex-1']}>
-        Ordering
-      </Text>
-      <Flex gap='extra-small' className={styles['flex-1']}>
+    <FilterCard.Item label='Ordering'>
+      <Flex gap='extra-small'>
         <Select
           onValueChange={handleColumnChange}
           value={value.name}
@@ -71,6 +68,6 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           )}
         </IconButton>
       </Flex>
-    </Flex>
+    </FilterCard.Item>
   );
 }

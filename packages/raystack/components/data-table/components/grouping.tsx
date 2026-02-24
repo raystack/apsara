@@ -1,8 +1,7 @@
 'use client';
 
-import { Flex } from '../../flex';
+import { FilterCard } from '../../filter-card';
 import { Select } from '../../select';
-import { Text } from '../../text';
 import styles from '../data-table.module.css';
 import { DataTableColumn, defaultGroupOption } from '../data-table.types';
 
@@ -41,30 +40,25 @@ export function Grouping<TData, TValue>({
   };
 
   return (
-    <Flex justify='between' align='center'>
-      <Text size={2} weight={500} className={styles['flex-1']}>
-        Grouping
-      </Text>
-      <Flex className={styles['flex-1']}>
-        <Select onValueChange={handleGroupChange} value={value}>
-          <Select.Trigger
-            size='small'
-            className={styles['display-popover-properties-select']}
-          >
-            <Select.Value placeholder='Select value' />
-          </Select.Trigger>
-          <Select.Content data-variant='filter'>
-            <Select.Item value={defaultGroupOption.id}>
-              {defaultGroupOption.label}
+    <FilterCard.Item label='Grouping'>
+      <Select onValueChange={handleGroupChange} value={value}>
+        <Select.Trigger
+          size='small'
+          className={styles['display-popover-properties-select']}
+        >
+          <Select.Value placeholder='Select value' />
+        </Select.Trigger>
+        <Select.Content data-variant='filter'>
+          <Select.Item value={defaultGroupOption.id}>
+            {defaultGroupOption.label}
+          </Select.Item>
+          {columnList.map(column => (
+            <Select.Item key={column.id} value={column.id}>
+              {column.label}
             </Select.Item>
-            {columnList.map(column => (
-              <Select.Item key={column.id} value={column.id}>
-                {column.label}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select>
-      </Flex>
-    </Flex>
+          ))}
+        </Select.Content>
+      </Select>
+    </FilterCard.Item>
   );
 }
