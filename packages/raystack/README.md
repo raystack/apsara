@@ -81,7 +81,7 @@ function App() {
 ### Overlay
 
 - `Popover` - Contextual overlays
-- `Sheet` - Slide-out panels
+- `Drawer` - Slide-out panels with swipe-to-dismiss
 - `Dialog` - Modal dialogs
 
 ## Documentation
