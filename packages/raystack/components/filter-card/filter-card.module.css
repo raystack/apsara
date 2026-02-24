@@ -1,0 +1,31 @@
+.filterCard {
+  width: 320px;
+  background: var(--rs-color-background-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-3);
+  box-shadow: var(--rs-shadow-soft);
+}
+
+.section {
+  padding: var(--rs-space-5);
+}
+
+.section:not(:last-child) {
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.sectionTitle {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  color: var(--rs-color-foreground-base-primary);
+  margin-bottom: var(--rs-space-3);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
