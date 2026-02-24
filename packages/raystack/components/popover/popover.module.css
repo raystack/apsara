@@ -19,6 +19,12 @@
   animation: slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.popoverUnstyled {
+  outline: 0;
+  box-sizing: border-box;
+  animation: slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 @keyframes slideUpAndFade {
   from {
     opacity: 0;

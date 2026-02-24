@@ -1,16 +1,29 @@
 'use client';
 
 import { Popover as PopoverPrimitive } from '@base-ui/react';
-import { cx } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 import { ElementRef, forwardRef } from 'react';
 import styles from './popover.module.css';
+
+const popover = cva(undefined, {
+  variants: {
+    variant: {
+      default: styles.popover,
+      unstyled: styles.popoverUnstyled
+    }
+  },
+  defaultVariants: {
+    variant: 'default'
+  }
+});
 
 export interface PopoverContentProps
   extends Omit<
       PopoverPrimitive.Positioner.Props,
       'render' | 'className' | 'style'
     >,
-    PopoverPrimitive.Popup.Props {}
+    PopoverPrimitive.Popup.Props,
+    VariantProps<typeof popover> {}
 
 const PopoverContent = forwardRef<
   ElementRef<typeof PopoverPrimitive.Popup>,
@@ -24,6 +37,7 @@ const PopoverContent = forwardRef<
       style,
       render,
       children,
+      variant,
       ...positionerProps
     },
     ref
@@ -38,7 +52,7 @@ const PopoverContent = forwardRef<
         >
           <PopoverPrimitive.Popup
             ref={ref}
-            className={cx(styles.popover, className)}
+            className={popover({ variant, className })}
             render={render}
             initialFocus={initialFocus}
             finalFocus={finalFocus}
