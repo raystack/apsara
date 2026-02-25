@@ -33,6 +33,15 @@ export interface FilterChipProps {
   /** Callback to remove the filter chip */
   onRemove?: () => void;
 
+  /** Props forwarded to the underlying Select component. Refer to Select component for full props list. */
+  selectProps?: {
+    autocomplete?: boolean;
+    autocompleteMode?: 'auto' | 'manual';
+    onSearch?: (value: string) => void;
+    searchValue?: string;
+    defaultSearchValue?: string;
+  };
+
   /** Additional CSS class names */
   className?: string;
 }

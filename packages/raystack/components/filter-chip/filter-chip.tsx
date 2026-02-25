@@ -15,6 +15,7 @@ import { DatePicker } from '../calendar';
 import { Flex } from '../flex';
 import { InputField } from '../input-field';
 import { Select } from '../select';
+import { BaseSelectProps } from '../select/select-root';
 import { Text } from '../text';
 import styles from './filter-chip.module.css';
 import { Operation } from './filter-chip-operation';
@@ -44,6 +45,7 @@ export interface FilterChipProps extends VariantProps<typeof chip> {
   onOperationChange?: (operation: string) => void;
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
+  selectProps?: BaseSelectProps;
 }
 
 export const FilterChip = ({
@@ -59,6 +61,7 @@ export const FilterChip = ({
   leadingIcon,
   variant,
   operations,
+  selectProps,
   ...props
 }: FilterChipProps) => {
   const computedOperations = operations?.length
@@ -98,6 +101,7 @@ export const FilterChip = ({
             value={isMultiSelectColumn ? filterValue : filterValue.toString()}
             onValueChange={handleFilterValueChange}
             multiple={isMultiSelectColumn}
+            {...selectProps}
           >
             <Select.Trigger
               iconProps={{
