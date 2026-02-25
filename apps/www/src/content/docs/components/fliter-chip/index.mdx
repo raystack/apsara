@@ -4,7 +4,7 @@ description: A compact, interactive element for filtering data with various inpu
 source: packages/raystack/components/filter-chip
 ---
 
-import { playground, inputDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
+import { playground, inputDemo, autocompleteDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -25,6 +25,12 @@ import { FilterChip } from "@raystack/apsara";
 FilterChip supports four different input types to handle various filtering needs.
 
 <Demo data={inputDemo} />
+
+### Select with Autocomplete
+
+Use `selectProps` to enable autocomplete search on select and multiselect filter types. This renders a search input inside the dropdown for filtering options.
+
+<Demo data={autocompleteDemo} />
 
 ### With Leading Icon
 

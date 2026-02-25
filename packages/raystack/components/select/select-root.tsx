@@ -71,7 +71,7 @@ interface AutocompleteSelectRootProps
   autocomplete: true;
 }
 
-type BaseSelectProps = Omit<
+export type BaseSelectProps = Omit<
   NormalSelectRootProps | AutocompleteSelectRootProps,
   'autoComplete' | 'value' | 'onValueChange' | 'defaultValue'
 > & {
