@@ -1,8 +1,8 @@
-import { Avatar, Button, DropdownMenu, Flex, Text } from '@raystack/apsara';
+import { Avatar, Button, Flex, Menu, Text } from '@raystack/apsara';
 import { Calendar, ChevronRight, Download } from 'lucide-react';
 import { Fragment, ReactNode, useState } from 'react';
 
-type DropdownMenuItem =
+type MenuItem =
   | {
       type: 'item';
       label: string | string[];
@@ -11,16 +11,16 @@ type DropdownMenuItem =
       leadingIcon?: ReactNode;
     }
   | { type: 'separator' }
-  | { type: 'group'; label: string; items: DropdownMenuItem[] }
+  | { type: 'group'; label: string; items: MenuItem[] }
   | {
       type: 'submenu';
       label: string;
-      items: DropdownMenuItem[];
+      items: MenuItem[];
       trailingIcon?: ReactNode;
       leadingIcon?: ReactNode;
     };
 
-const dropdownMenuData: DropdownMenuItem[] = [
+const menuData: MenuItem[] = [
   {
     type: 'group',
     label: 'Actions',
@@ -158,15 +158,15 @@ const dropdownMenuData: DropdownMenuItem[] = [
   }
 ];
 
-function filterDropdownMenuItems(
-  items: DropdownMenuItem[],
+function filterMenuItems(
+  items: MenuItem[],
   query: string,
   path: string[] = [],
   isInsideSubmenu = false
-): DropdownMenuItem[] {
+): MenuItem[] {
   if (!query?.length) return items;
   const normalizedQuery = query.trim().toLowerCase();
-  const results: DropdownMenuItem[] = [];
+  const results: MenuItem[] = [];
 
   for (const item of items) {
     if (item.type === 'separator') continue;
@@ -178,12 +178,12 @@ function filterDropdownMenuItems(
         results.push({
           ...item,
           label: fullPath
-        } as DropdownMenuItem);
+        } as MenuItem);
       }
     }
 
     if (item.type === 'submenu') {
-      const nested = filterDropdownMenuItems(
+      const nested = filterMenuItems(
         item.items,
         query,
         [...path, item.label],
@@ -193,12 +193,7 @@ function filterDropdownMenuItems(
     }
 
     if (item.type === 'group') {
-      const nested = filterDropdownMenuItems(
-        item.items,
-        query,
-        path,
-        isInsideSubmenu
-      );
+      const nested = filterMenuItems(item.items, query, path, isInsideSubmenu);
       results.push(...nested);
     }
   }
@@ -206,11 +201,11 @@ function filterDropdownMenuItems(
   return results.slice(0, 8);
 }
 
-export default function LinearDropdownDemo() {
+export default function LinearMenuDemo() {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const renderDropdownMenu = (items: DropdownMenuItem[], query: string) => {
-    const filteredItems = filterDropdownMenuItems(items, query);
+  const renderMenu = (items: MenuItem[], query: string) => {
+    const filteredItems = filterMenuItems(items, query);
 
     if (searchQuery && filteredItems.length === 0) {
       return (
@@ -224,30 +219,30 @@ export default function LinearDropdownDemo() {
       switch (item.type) {
         case 'group':
           return (
-            <DropdownMenu.Group key={index}>
-              <DropdownMenu.Label>{item.label}</DropdownMenu.Label>
-              {item.items && renderDropdownMenu(item.items, query)}
-            </DropdownMenu.Group>
+            <Menu.Group key={index}>
+              <Menu.Label>{item.label}</Menu.Label>
+              {item.items && renderMenu(item.items, query)}
+            </Menu.Group>
           );
         case 'separator':
-          return <DropdownMenu.Separator key={index} />;
+          return <Menu.Separator key={index} />;
         case 'submenu':
           return (
-            <DropdownMenu key={index}>
-              <DropdownMenu.TriggerItem
+            <Menu.Submenu key={index}>
+              <Menu.SubmenuTrigger
                 trailingIcon={item.trailingIcon}
                 leadingIcon={item.leadingIcon}
               >
                 {item.label}
-              </DropdownMenu.TriggerItem>
-              <DropdownMenu.Content>
-                {item.items && renderDropdownMenu(item.items, query)}
-              </DropdownMenu.Content>
-            </DropdownMenu>
+              </Menu.SubmenuTrigger>
+              <Menu.SubmenuContent>
+                {item.items && renderMenu(item.items, query)}
+              </Menu.SubmenuContent>
+            </Menu.Submenu>
           );
         case 'item':
           return (
-            <DropdownMenu.Item
+            <Menu.Item
               key={index}
               disabled={item.disabled}
               trailingIcon={item.trailingIcon}
@@ -261,7 +256,7 @@ export default function LinearDropdownDemo() {
                     </Fragment>
                   ))
                 : item.label}
-            </DropdownMenu.Item>
+            </Menu.Item>
           );
         default:
           return null;
@@ -271,18 +266,16 @@ export default function LinearDropdownDemo() {
 
   return (
     <Flex style={{ padding: 50 }}>
-      <DropdownMenu
+      <Menu
         autocomplete
         autocompleteMode='manual'
-        onSearch={(value: string) => setSearchQuery(value)}
+        onInputValueChange={(value: string) => setSearchQuery(value)}
       >
-        <DropdownMenu.Trigger asChild>
-          <Button>Actions</Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content searchPlaceholder='Search'>
-          {renderDropdownMenu(dropdownMenuData, searchQuery)}
-        </DropdownMenu.Content>
-      </DropdownMenu>
+        <Menu.Trigger render={<Button />}>Actions</Menu.Trigger>
+        <Menu.Content searchPlaceholder='Search'>
+          {renderMenu(menuData, searchQuery)}
+        </Menu.Content>
+      </Menu>
     </Flex>
   );
 }

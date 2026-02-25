@@ -1,6 +1,8 @@
+.positioner {
+  z-index: var(--rs-z-index-portal);
+}
 .content {
   overflow: hidden;
-  z-index: var(--rs-z-index-portal);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -14,7 +16,7 @@
   box-shadow: var(--rs-shadow-lifted);
   border: 0.5px solid var(--rs-color-border-base-primary);
   color: var(--rs-color-foreground-base-primary);
-  min-width: var(--popover-anchor-width);
+  min-width: var(--anchor-width);
 }
 .content:focus,
 .content:focus-visible {
