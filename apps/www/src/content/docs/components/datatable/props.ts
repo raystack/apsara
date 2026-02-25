@@ -76,6 +76,17 @@ export interface DataTableColumnDef<TData, TValue> {
   /** Options for select filter */
   filterOptions?: FilterSelectOption[];
 
+  /** Props forwarded to filter components by type. Refer to Select component for full props list. */
+  filterProps?: {
+    select?: {
+      autocomplete?: boolean;
+      autocompleteMode?: 'auto' | 'manual';
+      onSearch?: (value: string) => void;
+      searchValue?: string;
+      defaultSearchValue?: string;
+    };
+  };
+
   /** Hide column by default */
   defaultHidden?: boolean;
 }
@@ -96,6 +107,7 @@ export interface FiltersProps {
         availableFilters: DataTableColumn<TData, TValue>[];
         appliedFilters: Set<string>;
       }) => ReactNode);
+}
 export interface DataTableContentProps {
   /**
    * Custom empty state shown when initial data exists but no results match after filters/search.
