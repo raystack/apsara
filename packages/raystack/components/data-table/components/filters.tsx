@@ -124,6 +124,7 @@ export function Filters<TData, TValue>({
         filterType: columnDef?.filterType || FilterType.string,
         label: (columnDef?.header as string) || '',
         options: columnDef?.filterOptions || [],
+        selectProps: columnDef?.filterProps?.select,
         ...filter
       };
     }) || [];
@@ -149,6 +150,7 @@ export function Filters<TData, TValue>({
               }
               columnType={filter.filterType}
               options={filter.options}
+              selectProps={filter.selectProps}
               className={classNames?.filterChips}
             />
           ))}
