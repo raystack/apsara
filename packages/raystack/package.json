@@ -126,8 +126,7 @@
     "dayjs": "^1.11.11",
     "prism-react-renderer": "^2.4.1",
     "radix-ui": "^1.4.2",
-    "react-day-picker": "^9.6.7",
-    "sonner": "^2.0.6"
+    "react-day-picker": "^9.6.7"
   },
   "peerDependencies": {
     "@types/react": "^18 || ^19",
