@@ -197,3 +197,11 @@ button.selectValue:hover {
 .dateField [data-trailing] {
   margin-left: auto;
 }
+
+.dateFieldWrapper [class*="helper-text"] {
+  display: none;
+}
+
+.dateFieldWrapper [class*="input-error-wrapper"] {
+  border: 1px solid var(--rs-color-border-danger-primary);
+}
