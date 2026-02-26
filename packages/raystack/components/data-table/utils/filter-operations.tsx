@@ -166,11 +166,13 @@ const handleStringBasedTypes = (
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes
 ): DataTableFilterValues => {
   switch (filterType) {
-    case FilterType.date:
+    case FilterType.date: {
+      const dateValue = dayjs(value);
       return {
         value,
-        stringValue: (value as Date).toISOString()
+        stringValue: dateValue.isValid() ? dateValue.toISOString() : ''
       };
+    }
     case FilterType.select:
       return {
         stringValue: value === EmptyFilterValue ? '' : value,
