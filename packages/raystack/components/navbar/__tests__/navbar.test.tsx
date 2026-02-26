@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Navbar } from '../navbar';
-import { NavbarRootProps } from '../navbar-root';
 import styles from '../navbar.module.css';
+import { NavbarRootProps } from '../navbar-root';
 
 const START_TEXT = 'Explore';
 const END_BUTTON_TEXT = 'Action';
@@ -118,6 +118,22 @@ describe('Navbar', () => {
     });
   });
 
+  describe('Shadow', () => {
+    it('shows shadow by default', () => {
+      render(<BasicNavbar />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-shadow', 'true');
+    });
+
+    it('hides shadow when shadow is false', () => {
+      render(<BasicNavbar shadow={false} />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-shadow', 'false');
+    });
+  });
+
   describe('Navbar.Start', () => {
     it('renders start section content', () => {
       render(
@@ -201,6 +217,31 @@ describe('Navbar', () => {
 
       const start = screen.getByTestId('start');
       expect(start).toBeInTheDocument();
+    });
+  });
+
+  describe('Navbar.Center', () => {
+    it('renders center section content', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.Center>
+            <span>Center</span>
+          </Navbar.Center>
+        </BasicNavbar>
+      );
+
+      expect(screen.getByText('Center')).toBeInTheDocument();
+    });
+
+    it('applies center styles', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.Center data-testid='center-section' />
+        </BasicNavbar>
+      );
+
+      const center = container.querySelector(`.${styles.center}`);
+      expect(center).toBeInTheDocument();
     });
   });
 
@@ -369,18 +410,21 @@ describe('Navbar', () => {
       expect(containerEl).toBeInTheDocument();
     });
 
-    it('positions Start and End correctly', () => {
+    it('positions Start, Center, and End correctly', () => {
       const { container } = render(
         <BasicNavbar>
           <Navbar.Start data-testid='start'>Start</Navbar.Start>
+          <Navbar.Center data-testid='center'>Center</Navbar.Center>
           <Navbar.End data-testid='end'>End</Navbar.End>
         </BasicNavbar>
       );
 
       const start = container.querySelector(`.${styles.start}`);
+      const center = container.querySelector(`.${styles.center}`);
       const end = container.querySelector(`.${styles.end}`);
 
       expect(start).toBeInTheDocument();
+      expect(center).toBeInTheDocument();
       expect(end).toBeInTheDocument();
     });
   });

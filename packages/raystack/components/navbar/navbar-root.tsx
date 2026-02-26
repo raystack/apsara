@@ -7,15 +7,17 @@ import styles from './navbar.module.css';
 
 export interface NavbarRootProps extends ComponentPropsWithoutRef<'nav'> {
   sticky?: boolean;
+  shadow?: boolean;
 }
 
 export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
-  ({ className, sticky = false, children, ...props }, ref) => {
+  ({ className, sticky = false, shadow = true, children, ...props }, ref) => {
     return (
       <nav
         ref={ref}
         className={cx(styles.root, className)}
         data-sticky={sticky}
+        data-shadow={shadow}
         role='navigation'
         {...props}
       >

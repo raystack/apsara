@@ -6,6 +6,12 @@ export interface NavbarRootProps {
   sticky?: boolean;
 
   /**
+   * Show the bottom shadow.
+   * @default true
+   */
+  shadow?: boolean;
+
+  /**
    * Accessible label for the navigation.
    * Use this to provide a description of the navbar's purpose.
    */
@@ -23,6 +29,13 @@ export interface NavbarStartProps {
    * Accessible label for the start section. Use this to describe the purpose
    * of the content in the start section (e.g., "Brand and navigation links").
    * When provided, the section will have `role="group"`.
+   */
+  'aria-label'?: string;
+}
+
+export interface NavbarCenterProps {
+  /**
+   * Accessible label for the center section. When provided, the section will have `role="group"`.
    */
   'aria-label'?: string;
 }
