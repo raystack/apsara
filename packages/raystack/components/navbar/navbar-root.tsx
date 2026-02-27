@@ -10,7 +10,6 @@ import {
   useRef,
   useState
 } from 'react';
-import { Flex } from '../flex';
 import styles from './navbar.module.css';
 
 const SCROLL_THRESHOLD = 10;
@@ -122,9 +121,7 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
         role='navigation'
         {...props}
       >
-        <Flex align='center' justify='between' className={styles.container}>
-          {children}
-        </Flex>
+        <div className={styles.container}>{children}</div>
       </nav>
     );
   }

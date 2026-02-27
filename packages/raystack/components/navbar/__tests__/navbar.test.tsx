@@ -474,7 +474,7 @@ describe('Navbar', () => {
   });
 
   describe('Container Layout', () => {
-    it('renders container with flex layout', () => {
+    it('renders container with grid layout', () => {
       const { container } = render(<BasicNavbar />);
 
       const containerEl = container.querySelector(`.${styles.container}`);

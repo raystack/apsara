@@ -46,7 +46,7 @@ The start section is a container that accepts Flex props (`align`, `gap`, `direc
 
 ### Center
 
-The center section sits between Start and End, and centers its content. It accepts Flex props and section props.
+The center section sits in the middle of the navbar in a fixed position—it stays absolutely centered regardless of the width of Start or End content. The navbar uses a 3-column grid (Start | Center | End) so the center does not shift when left or right content changes. It accepts Flex props and section props.
 
 <auto-type-table path="./props.ts" name="NavbarCenterProps" />
 
@@ -72,7 +72,7 @@ Use the `shadow` prop to show or hide the bottom shadow. Default is `true`.
 
 ### Section Layouts
 
-You can use any combination of Start, Center, and End. The sections automatically position themselves with proper spacing.
+You can use any combination of Start, Center, and End. The navbar uses a 3-column grid so each section renders in its own space; the center remains absolutely centered.
 
 <Demo data={sectionsDemo} />
 
