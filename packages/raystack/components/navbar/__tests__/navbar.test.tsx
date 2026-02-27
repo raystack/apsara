@@ -249,6 +249,30 @@ describe('Navbar', () => {
       expect(screen.getByText('Center')).toBeInTheDocument();
     });
 
+    it('supports aria-label for center section', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.Center aria-label='Center actions'>
+            <span>Center</span>
+          </Navbar.Center>
+        </BasicNavbar>
+      );
+
+      const center = screen.getByRole('group', { name: 'Center actions' });
+      expect(center).toBeInTheDocument();
+    });
+
+    it('does not add role when aria-label is not provided', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.Center data-testid='center' />
+        </BasicNavbar>
+      );
+
+      const center = container.querySelector('[data-testid="center"]');
+      expect(center).not.toHaveAttribute('role');
+    });
+
     it('applies center styles', () => {
       const { container } = render(
         <BasicNavbar>
@@ -257,6 +281,17 @@ describe('Navbar', () => {
       );
 
       const center = container.querySelector(`.${styles.center}`);
+      expect(center).toBeInTheDocument();
+    });
+
+    it('applies custom className', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.Center className='custom-center-class' />
+        </BasicNavbar>
+      );
+
+      const center = container.querySelector('.custom-center-class');
       expect(center).toBeInTheDocument();
     });
   });
@@ -361,6 +396,26 @@ describe('Navbar', () => {
       );
 
       expect(screen.getByText(START_TEXT)).toBeInTheDocument();
+      expect(screen.getByText(END_BUTTON_TEXT)).toBeInTheDocument();
+    });
+
+    it('renders complete navbar with Start, Center, and End', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.Start>
+            <span>{START_TEXT}</span>
+          </Navbar.Start>
+          <Navbar.Center>
+            <span>Center</span>
+          </Navbar.Center>
+          <Navbar.End>
+            <button>{END_BUTTON_TEXT}</button>
+          </Navbar.End>
+        </BasicNavbar>
+      );
+
+      expect(screen.getByText(START_TEXT)).toBeInTheDocument();
+      expect(screen.getByText('Center')).toBeInTheDocument();
       expect(screen.getByText(END_BUTTON_TEXT)).toBeInTheDocument();
     });
 

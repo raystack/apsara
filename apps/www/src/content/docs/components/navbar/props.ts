@@ -13,7 +13,7 @@ export interface NavbarRootProps {
 
   /**
    * Hide the navbar when the user scrolls down, show it when they scroll up.
-   * Listens to window scroll. Works best with `sticky={true}`.
+   * Uses the navbar's scroll parent (e.g. ScrollArea) or window.
    * @default false
    */
   hideOnScroll?: boolean;
