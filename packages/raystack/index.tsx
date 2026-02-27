@@ -29,7 +29,6 @@ export {
 } from './components/data-table';
 export { Dialog } from './components/dialog';
 export { Drawer } from './components/drawer';
-export { DropdownMenu } from './components/dropdown-menu';
 export { EmptyState } from './components/empty-state';
 export { FilterChip } from './components/filter-chip';
 export { Flex } from './components/flex';
@@ -42,6 +41,7 @@ export { InputField } from './components/input-field';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
+export { Menu } from './components/menu';
 export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
 export { Radio } from './components/radio';

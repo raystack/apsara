@@ -13,7 +13,7 @@ import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { Suspense } from 'react';
 import DataTableDemo from '../datatable-demo';
-import LinearDropdownDemo from '../linear-dropdown-demo';
+import LinearMenuDemo from '../linear-dropdown-demo';
 import PopoverColorPicker from '../popover-color-picker';
 import DemoPlayground from './demo-playground';
 import DemoPreview from './demo-preview';
@@ -25,7 +25,7 @@ export default function Demo(props: DemoProps) {
     scope = {
       ...Apsara,
       DataTableDemo,
-      LinearDropdownDemo,
+      LinearMenuDemo,
       PopoverColorPicker,
       Info,
       X,
