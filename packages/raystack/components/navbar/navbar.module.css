@@ -6,9 +6,10 @@
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
   box-sizing: border-box;
   min-height: var(--rs-space-11);
+  transition: transform 0.2s ease-in-out;
 }
 
-.root[data-shadow='true'] {
+.root[data-shadow="true"] {
   box-shadow: var(--rs-shadow-feather);
 }
 
@@ -18,7 +19,12 @@
   z-index: var(--rs-z-index-portal);
 }
 
+.root[data-hidden="true"] {
+  transform: translateY(-100%);
+}
+
 .container {
+  display: flex;
   width: 100%;
   align-items: center;
 }

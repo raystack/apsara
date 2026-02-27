@@ -134,6 +134,22 @@ describe('Navbar', () => {
     });
   });
 
+  describe('hideOnScroll', () => {
+    it('does not set data-hidden when hideOnScroll is false', () => {
+      render(<BasicNavbar />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).not.toHaveAttribute('data-hidden');
+    });
+
+    it('sets data-hidden when hideOnScroll is true', () => {
+      render(<BasicNavbar hideOnScroll />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-hidden', 'false');
+    });
+  });
+
   describe('Navbar.Start', () => {
     it('renders start section content', () => {
       render(

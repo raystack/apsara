@@ -12,6 +12,13 @@ export interface NavbarRootProps {
   shadow?: boolean;
 
   /**
+   * Hide the navbar when the user scrolls down, show it when they scroll up.
+   * Listens to window scroll. Works best with `sticky={true}`.
+   * @default false
+   */
+  hideOnScroll?: boolean;
+
+  /**
    * Accessible label for the navigation.
    * Use this to provide a description of the navbar's purpose.
    */
