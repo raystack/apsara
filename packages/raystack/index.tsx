@@ -28,6 +28,7 @@ export {
   useDataTable
 } from './components/data-table';
 export { Dialog } from './components/dialog';
+export { Drawer } from './components/drawer';
 export { EmptyState } from './components/empty-state';
 export { FilterChip } from './components/filter-chip';
 export { Flex } from './components/flex';
@@ -48,7 +49,6 @@ export { ScrollArea } from './components/scroll-area';
 export { Search } from './components/search';
 export { Select } from './components/select';
 export { Separator } from './components/separator';
-export { Sheet } from './components/sheet';
 export { SidePanel } from './components/side-panel';
 export { Sidebar } from './components/sidebar';
 export { Skeleton } from './components/skeleton';
