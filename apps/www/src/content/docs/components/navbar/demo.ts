@@ -2,6 +2,7 @@
 
 export const preview = {
   type: 'code',
+  previewClassName: 'previewTop',
   code: `
   <Navbar>
     <Navbar.Start>
@@ -21,6 +22,7 @@ export const preview = {
 
 export const stickyDemo = {
   type: 'code',
+  previewClassName: 'previewTop',
   tabs: [
     {
       name: 'Default',
@@ -39,25 +41,79 @@ export const stickyDemo = {
     {
       name: 'Sticky',
       code: `
-      <Navbar sticky>
+      <div className="navbar-sticky-demo-scroll" style={{ width: '100%', alignSelf: 'stretch', overflow: 'auto', height: 300 }}>
+        <Navbar sticky>
+          <Navbar.Start>
+            <Text size="regular" weight="medium">Navigation</Text>
+          </Navbar.Start>
+          <Navbar.End>
+            <Button variant="ghost" size="small">Home</Button>
+            <Button variant="ghost" size="small">About</Button>
+            <Button variant="ghost" size="small">Contact</Button>
+          </Navbar.End>
+        </Navbar>
+        <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 400, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
+      </div>`
+    }
+  ]
+};
+
+export const shadowDemo = {
+  type: 'code',
+  previewClassName: 'previewTop',
+  tabs: [
+    {
+      name: 'With shadow (default)',
+      code: `
+      <Navbar shadow>
         <Navbar.Start>
-          <Text size="regular" weight="medium">Navigation</Text>
+          <Text size="regular" weight="medium">Brand</Text>
         </Navbar.Start>
         <Navbar.End>
-          <Button variant="ghost" size="small">Home</Button>
-          <Button variant="ghost" size="small">About</Button>
-          <Button variant="ghost" size="small">Contact</Button>
+          <Button size="small">Action</Button>
+        </Navbar.End>
+      </Navbar>`
+    },
+    {
+      name: 'Without shadow',
+      code: `
+      <Navbar shadow={false}>
+        <Navbar.Start>
+          <Text size="regular" weight="medium">Brand</Text>
+        </Navbar.Start>
+        <Navbar.End>
+          <Button size="small">Action</Button>
         </Navbar.End>
       </Navbar>`
     }
   ]
 };
 
+export const hideOnScrollDemo = {
+  type: 'code',
+  previewClassName: 'previewTop',
+  code: `
+  <div className="navbar-sticky-demo-scroll" style={{ width: '100%', alignSelf: 'stretch', overflow: 'auto', height: 300 }}>
+    <Navbar sticky hideOnScroll>
+      <Navbar.Start>
+        <Text size="regular" weight="medium">Navigation</Text>
+      </Navbar.Start>
+      <Navbar.End>
+        <Button variant="ghost" size="small">Home</Button>
+        <Button variant="ghost" size="small">About</Button>
+        <Button variant="ghost" size="small">Contact</Button>
+      </Navbar.End>
+    </Navbar>
+    <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 400, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
+  </div>`
+};
+
 export const sectionsDemo = {
   type: 'code',
+  previewClassName: 'previewTop',
   tabs: [
     {
-      name: 'Start Only',
+      name: 'Start',
       code: `
       <Navbar>
         <Navbar.Start>
@@ -66,7 +122,16 @@ export const sectionsDemo = {
       </Navbar>`
     },
     {
-      name: 'End Only',
+      name: 'Center',
+      code: `
+      <Navbar>
+        <Navbar.Center>
+          <Text size="regular" weight="medium">Centered Title</Text>
+        </Navbar.Center>
+      </Navbar>`
+    },
+    {
+      name: 'End',
       code: `
       <Navbar>
         <Navbar.End>
@@ -76,14 +141,16 @@ export const sectionsDemo = {
       </Navbar>`
     },
     {
-      name: 'Both Sections',
+      name: 'Start, Center and End',
       code: `
       <Navbar>
         <Navbar.Start>
           <Text size="regular" weight="medium">Explore</Text>
         </Navbar.Start>
+        <Navbar.Center>
+          <Text size="regular" weight="medium">Brand</Text>
+        </Navbar.Center>
         <Navbar.End>
-          <Search placeholder="Search..." size="small" style={{ width: '200px' }} />
           <Button variant="outline" size="small">Action</Button>
         </Navbar.End>
       </Navbar>`
@@ -93,6 +160,7 @@ export const sectionsDemo = {
 
 export const accessibilityDemo = {
   type: 'code',
+  previewClassName: 'previewTop',
   tabs: [
     {
       name: 'Custom aria-label',

@@ -12,7 +12,8 @@ export default function DemoPreview({
   code,
   tabs,
   scope,
-  codePreview
+  codePreview,
+  previewClassName
 }: DemoPreviewProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [activeCodePreviewTab, setActiveCodePreviewTab] = useState(0);
@@ -39,8 +40,19 @@ export default function DemoPreview({
             ))}
           </div>
         )}
-        <div className={styles.preview}>
-          <Preview />
+        <div
+          className={cx(
+            styles.preview,
+            previewClassName && styles[previewClassName as keyof typeof styles]
+          )}
+        >
+          <Preview
+            className={
+              previewClassName === 'previewTop'
+                ? styles.previewContentTop
+                : undefined
+            }
+          />
         </div>
 
         {Array.isArray(codePreview) ? (

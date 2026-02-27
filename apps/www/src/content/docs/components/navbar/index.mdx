@@ -1,6 +1,6 @@
 ---
 title: Navbar
-description: A horizontal navigation bar component with flexible left and right sections for building site headers and navigation.
+description: A horizontal navigation bar component with flexible start, center, and end sections for building site headers and navigation.
 source: packages/raystack/components/navbar
 tag: new
 ---
@@ -8,7 +8,9 @@ tag: new
 import {
   preview,
   stickyDemo,
+  shadowDemo,
   sectionsDemo,
+  hideOnScrollDemo,
   accessibilityDemo,
 } from "./demo.ts";
 
@@ -23,6 +25,7 @@ import { Navbar } from "@raystack/apsara";
 
 <Navbar>
   <Navbar.Start />
+  <Navbar.Center />
   <Navbar.End />
 </Navbar>
 ```
@@ -37,13 +40,19 @@ Renders the navigation bar container.
 
 ### Start
 
-The start section is a container component that accepts all `div` props. It's commonly used for brand logos, primary navigation links, or page titles.
+The start section is a container that accepts Flex props (`align`, `gap`, `direction`, etc.) and section props. It's commonly used for brand logos, primary navigation links, or page titles.
 
 <auto-type-table path="./props.ts" name="NavbarStartProps" />
 
+### Center
+
+The center section sits in the middle of the navbar in a fixed position—it stays absolutely centered regardless of the width of Start or End content. The navbar uses a 3-column grid (Start | Center | End) so the center does not shift when left or right content changes. It accepts Flex props and section props.
+
+<auto-type-table path="./props.ts" name="NavbarCenterProps" />
+
 ### End
 
-The end section is a container component that accepts all `div` props. It's commonly used for search inputs, action buttons, user menus, or secondary navigation.
+The end section is a container that accepts Flex props and section props. It's commonly used for search inputs, action buttons, user menus, or secondary navigation.
 
 <auto-type-table path="./props.ts" name="NavbarEndProps" />
 
@@ -55,11 +64,23 @@ The Navbar can be made sticky to remain visible at the top of the viewport when 
 
 <Demo data={stickyDemo} />
 
+### Shadow
+
+Use the `shadow` prop to show or hide the bottom shadow. Default is `true`.
+
+<Demo data={shadowDemo} />
+
 ### Section Layouts
 
-You can use either or both sections depending on your needs. The sections automatically position themselves with proper spacing.
+You can use any combination of Start, Center, and End. The navbar uses a 3-column grid so each section renders in its own space; the center remains absolutely centered.
 
 <Demo data={sectionsDemo} />
+
+### Hide on scroll
+
+Set `hideOnScroll` to hide the navbar when the user scrolls down and show it when they scroll up. It works with both window scroll and scroll containers (e.g. ScrollArea). The navbar slides out of view with a transition. The slide animation is only visible when the navbar is sticky (or fixed); without it, the navbar simply scrolls away with the content.
+
+<Demo data={hideOnScrollDemo} />
 
 ### Accessibility
 
@@ -73,7 +94,7 @@ The Navbar implements the following accessibility features:
 
 - Proper ARIA roles and attributes
   - `role="navigation"` for the main navbar
-  - `role="group"` for Start and End sections when `aria-label` is provided
+  - `role="group"` for Start, Center, and End sections when `aria-label` is provided
   - Customizable `aria-label` and `aria-labelledby` support
 
 - Semantic HTML

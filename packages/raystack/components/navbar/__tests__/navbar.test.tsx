@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Navbar } from '../navbar';
-import { NavbarRootProps } from '../navbar-root';
 import styles from '../navbar.module.css';
+import { NavbarRootProps } from '../navbar-root';
 
 const START_TEXT = 'Explore';
 const END_BUTTON_TEXT = 'Action';
@@ -118,6 +118,38 @@ describe('Navbar', () => {
     });
   });
 
+  describe('Shadow', () => {
+    it('shows shadow by default', () => {
+      render(<BasicNavbar />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-shadow', 'true');
+    });
+
+    it('hides shadow when shadow is false', () => {
+      render(<BasicNavbar shadow={false} />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-shadow', 'false');
+    });
+  });
+
+  describe('hideOnScroll', () => {
+    it('does not set data-hidden when hideOnScroll is false', () => {
+      render(<BasicNavbar />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).not.toHaveAttribute('data-hidden');
+    });
+
+    it('sets data-hidden when hideOnScroll is true', () => {
+      render(<BasicNavbar hideOnScroll />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-hidden', 'false');
+    });
+  });
+
   describe('Navbar.Start', () => {
     it('renders start section content', () => {
       render(
@@ -201,6 +233,66 @@ describe('Navbar', () => {
 
       const start = screen.getByTestId('start');
       expect(start).toBeInTheDocument();
+    });
+  });
+
+  describe('Navbar.Center', () => {
+    it('renders center section content', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.Center>
+            <span>Center</span>
+          </Navbar.Center>
+        </BasicNavbar>
+      );
+
+      expect(screen.getByText('Center')).toBeInTheDocument();
+    });
+
+    it('supports aria-label for center section', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.Center aria-label='Center actions'>
+            <span>Center</span>
+          </Navbar.Center>
+        </BasicNavbar>
+      );
+
+      const center = screen.getByRole('group', { name: 'Center actions' });
+      expect(center).toBeInTheDocument();
+    });
+
+    it('does not add role when aria-label is not provided', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.Center data-testid='center' />
+        </BasicNavbar>
+      );
+
+      const center = container.querySelector('[data-testid="center"]');
+      expect(center).not.toHaveAttribute('role');
+    });
+
+    it('applies center styles', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.Center data-testid='center-section' />
+        </BasicNavbar>
+      );
+
+      const center = container.querySelector(`.${styles.center}`);
+      expect(center).toBeInTheDocument();
+    });
+
+    it('applies custom className', () => {
+      const { container } = render(
+        <BasicNavbar>
+          <Navbar.Center className='custom-center-class' />
+        </BasicNavbar>
+      );
+
+      const center = container.querySelector('.custom-center-class');
+      expect(center).toBeInTheDocument();
     });
   });
 
@@ -307,6 +399,26 @@ describe('Navbar', () => {
       expect(screen.getByText(END_BUTTON_TEXT)).toBeInTheDocument();
     });
 
+    it('renders complete navbar with Start, Center, and End', () => {
+      render(
+        <BasicNavbar>
+          <Navbar.Start>
+            <span>{START_TEXT}</span>
+          </Navbar.Start>
+          <Navbar.Center>
+            <span>Center</span>
+          </Navbar.Center>
+          <Navbar.End>
+            <button>{END_BUTTON_TEXT}</button>
+          </Navbar.End>
+        </BasicNavbar>
+      );
+
+      expect(screen.getByText(START_TEXT)).toBeInTheDocument();
+      expect(screen.getByText('Center')).toBeInTheDocument();
+      expect(screen.getByText(END_BUTTON_TEXT)).toBeInTheDocument();
+    });
+
     it('renders only Start section', () => {
       render(
         <BasicNavbar>
@@ -362,25 +474,28 @@ describe('Navbar', () => {
   });
 
   describe('Container Layout', () => {
-    it('renders container with flex layout', () => {
+    it('renders container with grid layout', () => {
       const { container } = render(<BasicNavbar />);
 
       const containerEl = container.querySelector(`.${styles.container}`);
       expect(containerEl).toBeInTheDocument();
     });
 
-    it('positions Start and End correctly', () => {
+    it('positions Start, Center, and End correctly', () => {
       const { container } = render(
         <BasicNavbar>
           <Navbar.Start data-testid='start'>Start</Navbar.Start>
+          <Navbar.Center data-testid='center'>Center</Navbar.Center>
           <Navbar.End data-testid='end'>End</Navbar.End>
         </BasicNavbar>
       );
 
       const start = container.querySelector(`.${styles.start}`);
+      const center = container.querySelector(`.${styles.center}`);
       const end = container.querySelector(`.${styles.end}`);
 
       expect(start).toBeInTheDocument();
+      expect(center).toBeInTheDocument();
       expect(end).toBeInTheDocument();
     });
   });
