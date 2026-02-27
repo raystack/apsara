@@ -37,7 +37,6 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
 export interface NavbarRootProps extends ComponentPropsWithoutRef<'nav'> {
   sticky?: boolean;
   shadow?: boolean;
-  /** Hide navbar when user scrolls down, show when they scroll up. Uses scroll parent or window. */
   hideOnScroll?: boolean;
 }
 
