@@ -41,14 +41,48 @@ export const stickyDemo = {
     {
       name: 'Sticky',
       code: `
-      <Navbar sticky>
+      <div className="navbar-sticky-demo-scroll" style={{ width: '100%', alignSelf: 'stretch', overflow: 'auto', height: 300 }}>
+        <Navbar sticky>
+          <Navbar.Start>
+            <Text size="regular" weight="medium">Navigation</Text>
+          </Navbar.Start>
+          <Navbar.End>
+            <Button variant="ghost" size="small">Home</Button>
+            <Button variant="ghost" size="small">About</Button>
+            <Button variant="ghost" size="small">Contact</Button>
+          </Navbar.End>
+        </Navbar>
+        <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 400, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
+      </div>`
+    }
+  ]
+};
+
+export const shadowDemo = {
+  type: 'code',
+  previewClassName: 'previewTop',
+  tabs: [
+    {
+      name: 'With shadow (default)',
+      code: `
+      <Navbar shadow>
         <Navbar.Start>
-          <Text size="regular" weight="medium">Navigation</Text>
+          <Text size="regular" weight="medium">Brand</Text>
         </Navbar.Start>
         <Navbar.End>
-          <Button variant="ghost" size="small">Home</Button>
-          <Button variant="ghost" size="small">About</Button>
-          <Button variant="ghost" size="small">Contact</Button>
+          <Button size="small">Action</Button>
+        </Navbar.End>
+      </Navbar>`
+    },
+    {
+      name: 'Without shadow',
+      code: `
+      <Navbar shadow={false}>
+        <Navbar.Start>
+          <Text size="regular" weight="medium">Brand</Text>
+        </Navbar.Start>
+        <Navbar.End>
+          <Button size="small">Action</Button>
         </Navbar.End>
       </Navbar>`
     }

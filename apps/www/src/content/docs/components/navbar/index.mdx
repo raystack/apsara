@@ -8,6 +8,7 @@ tag: new
 import {
   preview,
   stickyDemo,
+  shadowDemo,
   sectionsDemo,
   accessibilityDemo,
 } from "./demo.ts";
@@ -61,6 +62,12 @@ The end section is a container that accepts Flex props and section props. It's c
 The Navbar can be made sticky to remain visible at the top of the viewport when scrolling.
 
 <Demo data={stickyDemo} />
+
+### Shadow
+
+Use the `shadow` prop to show or hide the bottom shadow. Default is `true`.
+
+<Demo data={shadowDemo} />
 
 ### Section Layouts
 
