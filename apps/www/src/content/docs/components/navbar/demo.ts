@@ -57,7 +57,7 @@ export const sectionsDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Start Only',
+      name: 'Start',
       code: `
       <Navbar>
         <Navbar.Start>
@@ -66,7 +66,16 @@ export const sectionsDemo = {
       </Navbar>`
     },
     {
-      name: 'End Only',
+      name: 'Center',
+      code: `
+      <Navbar>
+        <Navbar.Center>
+          <Text size="regular" weight="medium">Centered Title</Text>
+        </Navbar.Center>
+      </Navbar>`
+    },
+    {
+      name: 'End',
       code: `
       <Navbar>
         <Navbar.End>
@@ -76,14 +85,16 @@ export const sectionsDemo = {
       </Navbar>`
     },
     {
-      name: 'Both Sections',
+      name: 'Start, Center and End',
       code: `
       <Navbar>
         <Navbar.Start>
           <Text size="regular" weight="medium">Explore</Text>
         </Navbar.Start>
+        <Navbar.Center>
+          <Text size="regular" weight="medium">Brand</Text>
+        </Navbar.Center>
         <Navbar.End>
-          <Search placeholder="Search..." size="small" style={{ width: '200px' }} />
           <Button variant="outline" size="small">Action</Button>
         </Navbar.End>
       </Navbar>`
