@@ -24,6 +24,34 @@
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
 
+.previewTop {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+  min-height: unset;
+}
+
+.previewContentTop {
+  padding: 0 !important;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.previewContentTop > * {
+  margin-bottom: var(--rs-space-8);
+}
+
+.previewContentTop::after {
+  content: '';
+  display: block;
+  width: calc(100% - 2 * var(--rs-space-8));
+  min-height: 200px;
+  margin: 0 var(--rs-space-8) var(--rs-space-8);
+  border: 2px dashed var(--rs-color-border-base-secondary);
+  box-sizing: border-box;
+}
+
 .previewReset {
   position: absolute;
   bottom: 8px;

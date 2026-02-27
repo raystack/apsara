@@ -2,6 +2,7 @@
 
 export const preview = {
   type: 'code',
+  previewClassName: 'previewTop',
   code: `
   <Navbar>
     <Navbar.Start>
@@ -21,6 +22,7 @@ export const preview = {
 
 export const stickyDemo = {
   type: 'code',
+  previewClassName: 'previewTop',
   tabs: [
     {
       name: 'Default',
@@ -55,6 +57,7 @@ export const stickyDemo = {
 
 export const sectionsDemo = {
   type: 'code',
+  previewClassName: 'previewTop',
   tabs: [
     {
       name: 'Start',
@@ -104,6 +107,7 @@ export const sectionsDemo = {
 
 export const accessibilityDemo = {
   type: 'code',
+  previewClassName: 'previewTop',
   tabs: [
     {
       name: 'Custom aria-label',
