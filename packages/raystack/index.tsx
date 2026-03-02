@@ -14,6 +14,7 @@ export { Callout } from './components/callout';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';
 export { CodeBlock } from './components/code-block';
+export { Collapsible } from './components/collapsible';
 export * from './components/color-picker';
 export { Combobox } from './components/combobox';
 export { Command } from './components/command';
