@@ -24,6 +24,74 @@
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
 
+.previewTop {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+  min-height: unset;
+}
+
+.previewContentTop {
+  padding: 0 !important;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.previewContentTop > * {
+  margin-bottom: var(--rs-space-8);
+}
+
+.previewContentTop::after {
+  content: '';
+  display: block;
+  width: calc(100% - 2 * var(--rs-space-8));
+  min-height: 200px;
+  margin: 0 var(--rs-space-8) var(--rs-space-8);
+  border: 2px dashed var(--rs-color-border-base-secondary);
+  box-sizing: border-box;
+}
+
+.previewSidebar {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 480px;
+  height: 480px;
+  width: 100%;
+  padding: 0;
+}
+
+.previewSidebar > * {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  height: 100%;
+  min-height: 0;
+}
+
+.previewContentSidebar {
+  padding: 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Single direct child (react-live wrapper) grows to fill so inner Flex/Sidebar get a defined height */
+.previewContentSidebar > * {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Sidebar aside: height 100% doesn't resolve in this context, use fixed height to match preview */
+.previewSidebar aside {
+  height: 480px;
+}
+
 .previewReset {
   position: absolute;
   bottom: 8px;

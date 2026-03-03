@@ -10,6 +10,7 @@ export type DemoPreviewProps = {
   tabs?: { name: string; code: string }[];
   scope?: ScopeType;
   codePreview?: string | TabProps[];
+  previewClassName?: string;
 };
 
 export type DemoPlaygroundProps = {
