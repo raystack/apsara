@@ -246,10 +246,10 @@ describe('Sidebar', () => {
       expect(item).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('hides text when collapsed', () => {
+    it('keeps label in DOM when collapsed (sr-only for screen readers)', () => {
       render(<BasicSidebar open={false} />);
 
-      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
     });
   });
 
