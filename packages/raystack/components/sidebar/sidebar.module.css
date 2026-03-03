@@ -25,7 +25,7 @@
 }
 
 .root[data-closed] {
-  width: 57px;
+  width: var(--rs-space-12);
 }
 
 .header {
@@ -47,7 +47,7 @@
 }
 
 .root[data-closed] .main {
-  align-items: center;
+  align-items: flex-start;
 }
 
 .root[data-closed] [data-collapse-hidden] {
@@ -74,7 +74,7 @@
 }
 
 .root[data-closed] .nav-item {
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .nav-item:hover {
@@ -129,7 +129,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 4px;
+  width: var(--rs-space-2);
   height: 100%;
   cursor: ew-resize;
   transition: background-color 0.2s ease;
@@ -159,7 +159,7 @@
 }
 
 .root[data-closed] .nav-group {
-  align-items: center;
+  align-items: flex-start;
 }
 
 .nav-group-header {
@@ -186,8 +186,25 @@
   width: 100%;
 }
 
+/* Hide group header visually when collapsed but reserve vertical space to prevent shift */
+.root[data-closed] .nav-group-header {
+  visibility: hidden;
+}
+
 .root[data-closed] .nav-group-label {
   width: 0;
+  min-width: 0;
+  overflow: hidden;
   opacity: 0;
-  display: none;
+  visibility: hidden;
+  /* Keep in flow (no display: none) so header row height is preserved */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root,
+  .nav-item,
+  .nav-text,
+  .resizeHandle {
+    transition: none;
+  }
 }
