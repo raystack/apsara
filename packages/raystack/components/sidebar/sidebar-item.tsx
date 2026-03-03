@@ -93,8 +93,9 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
 
     if (isCollapsed && !hideCollapsedItemTooltip) {
       return (
-        <Tooltip message={children} side='right'>
-          {content}
+        <Tooltip>
+          <Tooltip.Trigger render={content} />
+          <Tooltip.Content side='right'>{children}</Tooltip.Content>
         </Tooltip>
       );
     }
