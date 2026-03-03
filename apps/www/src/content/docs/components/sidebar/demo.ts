@@ -242,3 +242,45 @@ export const tooltipDemo = {
           </Sidebar.Main>
         </Sidebar>`)
 };
+
+export const collapsibleDemo = {
+  type: 'code',
+  previewClassName: 'previewSidebar',
+  code: sidebarLayout(`<Sidebar defaultOpen collapsible={false}>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+};
+
+export const hideTooltipDemo = {
+  type: 'code',
+  previewClassName: 'previewSidebar',
+  code: sidebarLayout(`<Sidebar defaultOpen={false} hideCollapsedItemTooltip>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Settings</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+};

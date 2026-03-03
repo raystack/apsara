@@ -43,7 +43,7 @@
 }
 
 .previewContentTop::after {
-  content: '';
+  content: "";
   display: block;
   width: calc(100% - 2 * var(--rs-space-8));
   min-height: 200px;

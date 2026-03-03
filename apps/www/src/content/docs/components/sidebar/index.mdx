@@ -4,7 +4,14 @@ description: A collapsible side navigation panel component.
 source: packages/raystack/components/sidebar
 ---
 
-import { preview, positionDemo, stateDemo, tooltipDemo } from "./demo.ts";
+import {
+  preview,
+  positionDemo,
+  stateDemo,
+  tooltipDemo,
+  collapsibleDemo,
+  hideTooltipDemo
+} from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -17,9 +24,12 @@ import { Sidebar } from "@raystack/apsara";
 
 <Sidebar>
   <Sidebar.Header />
-  <Sidebar.Group>
-    <Sidebar.Item />
-  </Sidebar.Group>
+  <Sidebar.Main>
+    <Sidebar.Group label="Group name">
+      <Sidebar.Item href="#">Item</Sidebar.Item>
+    </Sidebar.Group>
+  </Sidebar.Main>
+  <Sidebar.Footer />
 </Sidebar>
 ```
 
@@ -27,7 +37,7 @@ import { Sidebar } from "@raystack/apsara";
 
 ### Root
 
-Groups all parts of the sidebar navigation.
+Groups all parts of the sidebar navigation. Use `collapsible={false}` to hide the resize handle and prevent toggling. Use `hideCollapsedItemTooltip` to disable tooltips on items when the sidebar is collapsed.
 
 <auto-type-table path="./props.ts" name="SidebarRootProps" />
 
@@ -35,15 +45,23 @@ Groups all parts of the sidebar navigation.
 
 The header section is a container component that accepts all `div` props. It's commonly used to create a header with an icon and title.
 
+### Main
+
+The main section wraps navigation groups and items. It accepts all `div` props and scrolls when content overflows.
+
 ### Group
 
 <auto-type-table path="./props.ts" name="SidebarGroupProps" />
 
 ### Item
 
-*Note: `leadingIcon` is optional and will show a fallback avatar only in collapsed state. You can pass `<></>` to render truly nothing.*
+*Note: `leadingIcon` is optional and will show a fallback avatar only in collapsed state. You can pass `<></>` to render truly nothing. Use the `as` prop to render as a custom element (e.g. a router `Link`).*
 
 <auto-type-table path="./props.ts" name="SidebarItemProps" />
+
+### Footer
+
+The footer section is a container that accepts all `div` props. It's commonly used for secondary links (e.g. Help, Preferences) and stays at the bottom of the sidebar.
 
 ## Examples
 
@@ -68,6 +86,18 @@ You can customize the tooltip message that appears when hovering over the collap
 You can use Sidebar as a controlled component to conditionally render different tooltip messages.
 
 <Demo data={tooltipDemo} />
+
+### Non-collapsible
+
+Set `collapsible={false}` to hide the resize handle and prevent the sidebar from being collapsed or expanded.
+
+<Demo data={collapsibleDemo} />
+
+### Hide item tooltips when collapsed
+
+Set `hideCollapsedItemTooltip` to disable tooltips on navigation items when the sidebar is collapsed. Useful when item labels are redundant with the collapse tooltip or you want a cleaner collapsed state.
+
+<Demo data={hideTooltipDemo} />
 
 ## Accessibility
 
