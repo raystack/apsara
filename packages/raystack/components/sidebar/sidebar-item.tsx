@@ -63,7 +63,7 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         className: cx(styles['nav-item'], classNames?.root),
         'data-active': active,
         'data-disabled': disabled,
-        role: 'menuitem',
+        role: 'listitem',
         'aria-current': active ? 'page' : undefined,
         'aria-disabled': disabled,
         ...props

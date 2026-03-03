@@ -199,7 +199,7 @@ describe('Sidebar', () => {
     it('has proper ARIA attributes', () => {
       render(<BasicSidebar />);
 
-      const footer = screen.getByRole('group', { name: 'Footer navigation' });
+      const footer = screen.getByRole('list', { name: 'Footer navigation' });
       expect(footer).toBeInTheDocument();
     });
   });
