@@ -76,7 +76,7 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
               variant='soft'
               color='neutral'
               fallback={children[0].toUpperCase()}
-              style={{ cursor: 'pointer' }}
+              className={styles['nav-fallback-avatar']}
             />
           </Flex>
         ) : null}

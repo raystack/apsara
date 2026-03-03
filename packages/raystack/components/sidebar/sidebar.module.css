@@ -106,6 +106,10 @@
   flex-shrink: 0;
 }
 
+.nav-fallback-avatar {
+  cursor: pointer;
+}
+
 .nav-text {
   color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-small);
