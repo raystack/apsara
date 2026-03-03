@@ -124,9 +124,15 @@
 }
 
 .root[data-closed] .nav-text {
-  width: 0;
-  opacity: 0;
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .resizeHandle {
@@ -205,6 +211,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .root,
   .nav-item,
   .nav-text,

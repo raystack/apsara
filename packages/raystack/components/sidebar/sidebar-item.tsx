@@ -83,11 +83,9 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         {!shouldShowFallback && leadingIcon ? (
           <Flex {...iconProps}>{leadingIcon}</Flex>
         ) : null}
-        {!isCollapsed && (
-          <span className={cx(styles['nav-text'], classNames?.text)}>
-            {children}
-          </span>
-        )}
+        <span className={cx(styles['nav-text'], classNames?.text)}>
+          {children}
+        </span>
       </>
     );
 
