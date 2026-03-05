@@ -389,6 +389,22 @@ describe('Breadcrumb', () => {
       );
       expect(ref).toHaveBeenCalled();
     });
+
+    it('has role="presentation" and aria-hidden="true" for screen readers', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          <Breadcrumb.Separator />
+          <Breadcrumb.Item>Products</Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const separator = container.querySelector(
+        `.${styles['breadcrumb-separator']}`
+      );
+      expect(separator).toHaveAttribute('role', 'presentation');
+      expect(separator).toHaveAttribute('aria-hidden', 'true');
+    });
   });
 
   describe('BreadcrumbEllipsis', () => {

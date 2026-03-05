@@ -126,4 +126,4 @@ Use the `disabled` prop for non-clickable, visually muted items—for example, l
 - Uses `nav` element with `aria-label="Breadcrumb"` for proper landmark identification
 - Current page is indicated with `aria-current="page"`
 - Disabled items use `aria-disabled="true"`
-- Separator elements are hidden from screen readers with `aria-hidden`
+- Separator elements are decorative and use `role="presentation"` and `aria-hidden="true"` so screen readers skip them
