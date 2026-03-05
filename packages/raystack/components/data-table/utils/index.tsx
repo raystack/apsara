@@ -163,10 +163,6 @@ const isSearchChanged = (oldSearch?: string, newSearch?: string): boolean => {
  * Checks if there is an active filter, search, or updated sort/grouping
  * compared to the defaults. Used to distinguish zero state from empty state.
  */
-/**
- * Checks if there is an active filter, search, or updated sort/grouping
- * compared to the defaults. Used to distinguish zero state from empty state.
- */
 export const hasActiveQuery = (
   tableQuery: InternalQuery,
   defaultSort: DataTableSort
