@@ -36,6 +36,9 @@ export interface BreadcrumbItem {
    * @default "<a />"
    */
   as?: ReactElement;
+
+  /** Custom CSS class name applied to the list item wrapper */
+  className?: string;
 }
 
 export interface BreadcrumbProps {
@@ -44,6 +47,19 @@ export interface BreadcrumbProps {
    * @defaultValue "medium"
    */
   size?: 'small' | 'medium';
+
+  /**
+   * Maximum number of breadcrumb items to show. When there are more items, the list is collapsed.
+   * When collapsed: at least 1 item is always shown at the start and 1 at the end (minimum 2 visible items; there cannot be fewer than 2).
+   * Values less than 2 are treated as 2.
+   */
+  maxItems?: number;
+
+  /**
+   * Number of items to show before the ellipsis when collapsed.
+   * When not set, derived from maxItems (e.g. maxItems=5 → 2 before, rest after).
+   */
+  itemsBeforeCollapse?: number;
 
   /** Custom CSS class names */
   className?: string;

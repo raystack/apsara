@@ -10,6 +10,8 @@ import {
   separatorDemo,
   iconsDemo,
   ellipsisDemo,
+  maxItemsDemo,
+  itemsBeforeCollapseDemo,
   dropdownDemo,
   asDemo,
 } from "./demo.ts";
@@ -42,7 +44,7 @@ Groups all parts of the breadcrumb navigation.
 
 ### Item
 
-Renders an individual breadcrumb link.
+Renders an individual breadcrumb link. Use the `current` prop on the item that represents the current page so it is styled and exposed to assistive tech (e.g. `aria-current="page"`).
 
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
 
@@ -72,11 +74,23 @@ Customize the separator between breadcrumb items using the `separator` prop.
 
 <Demo data={separatorDemo} />
 
-### Ellipsis
+### Ellipsis (manual)
 
-Use the `Breadcrumb.Ellipsis` component to truncate the breadcrumb trail when you need to display a large number of items in a limited space.
+Use the `Breadcrumb.Ellipsis` component to manually truncate the breadcrumb trail when you need to display a large number of items in a limited space.
 
 <Demo data={ellipsisDemo} />
+
+### Auto-collapse (maxItems)
+
+Set `maxItems` to automatically collapse the trail when there are more items: the first few and the last items are shown with an ellipsis in between. When collapsed, there is always at least 1 item at the start and 1 at the end—there cannot be fewer than 2 visible items. The number of items before the ellipsis is controlled by `itemsBeforeCollapse` (when not set, it is derived from `maxItems`). The number of items after the ellipsis is always derived (`maxItems` minus before). Values of `maxItems` less than 2 are treated as 2.
+
+<Demo data={maxItemsDemo} />
+
+### itemsBeforeCollapse
+
+Control how many items appear before the ellipsis when collapsed. With `maxItems={5}` and `itemsBeforeCollapse={2}`, you get 2 items before and 3 after (until the cap).
+
+<Demo data={itemsBeforeCollapseDemo} />
 
 ### Icons
 

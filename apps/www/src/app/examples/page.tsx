@@ -3,6 +3,7 @@ import {
   Amount,
   Avatar,
   AvatarGroup,
+  Breadcrumb,
   Button,
   Calendar,
   Callout,
@@ -36,6 +37,35 @@ import {
 } from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
+
+const breadcrumbTrail = (
+  <>
+    <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item href='/products'>Products</Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item href='/products/electronics'>Electronics</Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item href='/products/electronics/laptops'>
+      Laptops
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item href='/products/electronics/laptops/gaming'>
+      Gaming
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item href='/products/electronics/laptops/gaming/accessories'>
+      Accessories
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item
+      href='/products/electronics/laptops/gaming/accessories'
+      current
+    >
+      Footwear
+    </Breadcrumb.Item>
+  </>
+);
 
 const Page = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -223,6 +253,101 @@ const Page = () => {
                   </Button>
                 </Navbar.End>
               </Navbar>
+            </Flex>
+          </Flex>
+
+          {/* Breadcrumb Examples */}
+          <Text
+            size='large'
+            weight='medium'
+            style={{ marginTop: '32px', marginBottom: '16px' }}
+          >
+            Breadcrumb Examples
+          </Text>
+          <Flex direction='column' gap={8} style={{ maxWidth: '100%' }}>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                1. (no props) – manual ellipsis
+              </Text>
+              <Breadcrumb>
+                <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Ellipsis />
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item
+                  href='/products/electronics/laptops/gaming/accessories'
+                  current
+                >
+                  Footwear
+                </Breadcrumb.Item>
+              </Breadcrumb>
+            </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                2. maxItems=8
+              </Text>
+              <Breadcrumb maxItems={8}>{breadcrumbTrail}</Breadcrumb>
+            </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                3. maxItems=5
+              </Text>
+              <Breadcrumb maxItems={5}>{breadcrumbTrail}</Breadcrumb>
+            </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                4. maxItems=3
+              </Text>
+              <Breadcrumb maxItems={3}>{breadcrumbTrail}</Breadcrumb>
+            </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                5. maxItems=5 itemsBeforeCollapse=2
+              </Text>
+              <Breadcrumb maxItems={5} itemsBeforeCollapse={2}>
+                {breadcrumbTrail}
+              </Breadcrumb>
+            </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                6. maxItems=5 itemsBeforeCollapse=5 (4 before + 1 after)
+              </Text>
+              <Breadcrumb maxItems={5} itemsBeforeCollapse={5}>
+                <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item href='/products'>Products</Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item href='/products/electronics'>
+                  Electronics
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item href='/products/electronics/laptops'>
+                  Laptops
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item href='/products/electronics/laptops/gaming'>
+                  Gaming
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item href='/products/electronics/laptops/gaming/accessories'>
+                  Accessories
+                </Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item
+                  href='/products/electronics/laptops/gaming/accessories'
+                  current
+                >
+                  Footwear
+                </Breadcrumb.Item>
+              </Breadcrumb>
+            </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                7. size=small maxItems=4
+              </Text>
+              <Breadcrumb size='small' maxItems={4}>
+                {breadcrumbTrail}
+              </Breadcrumb>
             </Flex>
           </Flex>
 
