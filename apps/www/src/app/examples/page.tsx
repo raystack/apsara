@@ -349,6 +349,46 @@ const Page = () => {
                 {breadcrumbTrail}
               </Breadcrumb>
             </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                8. Long labels (no truncation) – layout pushed / overflow
+              </Text>
+              <div
+                style={{
+                  maxWidth: '320px',
+                  border: '1px solid var(--rs-color-border-base-primary)',
+                  borderRadius: 'var(--rs-radius-medium)',
+                  padding: 'var(--rs-space-3)'
+                }}
+              >
+                <Breadcrumb>
+                  <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
+                  <Breadcrumb.Separator />
+                  <Breadcrumb.Item href='/products'>Products</Breadcrumb.Item>
+                  <Breadcrumb.Separator />
+                  <Breadcrumb.Item
+                    href='/products/electronics/laptops/gaming'
+                    current
+                  >
+                    Very Long Category Name That Pushes The Layout
+                  </Breadcrumb.Item>
+                </Breadcrumb>
+              </div>
+            </Flex>
+            <Flex direction='column' gap={2}>
+              <Text size='small' weight='medium'>
+                9. Disabled item (e.g. loading or no access)
+              </Text>
+              <Breadcrumb>
+                <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item disabled>Loading…</Breadcrumb.Item>
+                <Breadcrumb.Separator />
+                <Breadcrumb.Item href='/products' current>
+                  Products
+                </Breadcrumb.Item>
+              </Breadcrumb>
+            </Flex>
           </Flex>
 
           <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>

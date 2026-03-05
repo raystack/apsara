@@ -191,6 +191,64 @@ describe('Breadcrumb', () => {
       expect(link).toHaveAttribute('aria-label', 'Products');
       expect(link).toHaveAttribute('data-testid', 'item');
     });
+
+    it('renders as span with disabled styles when disabled', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item disabled>Loading…</Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const link = container.querySelector('a');
+      expect(link).not.toBeInTheDocument();
+
+      const span = container.querySelector(
+        `span.${styles['breadcrumb-link-disabled']}`
+      );
+      expect(span).toBeInTheDocument();
+      expect(span).toHaveClass(styles['breadcrumb-link']);
+      expect(span).toHaveClass(styles['breadcrumb-link-disabled']);
+      expect(span).toHaveAttribute('aria-disabled', 'true');
+      expect(span).toHaveTextContent('Loading…');
+    });
+
+    it('disabled item has no href and is not focusable as link', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item disabled href='/skipped'>
+            No access
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const span = container.querySelector(
+        `span.${styles['breadcrumb-link-disabled']}`
+      );
+      expect(span).toBeInTheDocument();
+      expect(container.querySelector('a')).not.toBeInTheDocument();
+    });
+
+    it('disabled with dropdownItems renders as disabled span not dropdown', () => {
+      const items = [
+        { label: 'Option 1', onClick: vi.fn() },
+        { label: 'Option 2', onClick: vi.fn() }
+      ];
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item disabled dropdownItems={items}>
+            Categories
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const span = container.querySelector(
+        `span.${styles['breadcrumb-link-disabled']}`
+      );
+      expect(span).toBeInTheDocument();
+      expect(span).toHaveTextContent('Categories');
+      fireEvent.click(span!);
+      expect(screen.queryByText('Option 1')).not.toBeInTheDocument();
+    });
   });
 
   describe('BreadcrumbItem with Dropdown', () => {

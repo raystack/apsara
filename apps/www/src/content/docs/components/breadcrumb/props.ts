@@ -17,6 +17,12 @@ export interface BreadcrumbItem {
   current?: boolean;
 
   /**
+   * When true, the item is non-clickable and visually muted (e.g. loading or no access).
+   * @defaultValue false
+   */
+  disabled?: boolean;
+
+  /**
    * Optional array of dropdown items
    *
    * When `dropdownItems` is provided, the `as` and `href` props are ignored.

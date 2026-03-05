@@ -20,6 +20,8 @@ export interface BreadcrumbDropdownItem {
 export interface BreadcrumbItemProps extends HTMLAttributes<HTMLAnchorElement> {
   leadingIcon?: ReactNode;
   current?: boolean;
+  /** When true, the item is non-clickable and visually muted (e.g. loading or no access). */
+  disabled?: boolean;
   dropdownItems?: BreadcrumbDropdownItem[];
   href?: string;
   as?: ReactElement;
@@ -36,6 +38,7 @@ export const BreadcrumbItem = forwardRef<
       className,
       leadingIcon,
       current,
+      disabled,
       href,
       dropdownItems,
       ...props
@@ -52,7 +55,7 @@ export const BreadcrumbItem = forwardRef<
       </>
     );
 
-    if (dropdownItems) {
+    if (dropdownItems && !disabled) {
       return (
         <Menu>
           <Menu.Trigger className={styles['breadcrumb-dropdown-trigger']}>
@@ -71,6 +74,22 @@ export const BreadcrumbItem = forwardRef<
             ))}
           </Menu.Content>
         </Menu>
+      );
+    }
+    if (disabled) {
+      return (
+        <li className={cx(styles['breadcrumb-item'], className)}>
+          <span
+            ref={ref as React.RefObject<HTMLSpanElement>}
+            className={cx(
+              styles['breadcrumb-link'],
+              styles['breadcrumb-link-disabled']
+            )}
+            aria-disabled='true'
+          >
+            {label}
+          </span>
+        </li>
       );
     }
     return (

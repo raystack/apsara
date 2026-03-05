@@ -149,6 +149,18 @@ export const asDemo = {
   </Breadcrumb>`
 };
 
+export const disabledDemo = {
+  type: 'code',
+  code: `
+  <Breadcrumb>
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item disabled>Loading…</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products" current>Products</Breadcrumb.Item>
+  </Breadcrumb>`
+};
+
 export const iconsDemo = {
   type: 'code',
   tabs: [
