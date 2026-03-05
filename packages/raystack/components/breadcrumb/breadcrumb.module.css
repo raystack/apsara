@@ -45,6 +45,11 @@
 .breadcrumb-link-active {
   color: var(--rs-color-foreground-base-primary);
   font-weight: var(--rs-font-weight-medium);
+  cursor: default;
+}
+
+.breadcrumb-link-active:hover {
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .breadcrumb-link-disabled {
