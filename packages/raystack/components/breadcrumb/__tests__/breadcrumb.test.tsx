@@ -194,6 +194,7 @@ describe('Breadcrumb', () => {
       expect(span).toHaveClass(styles['breadcrumb-link']);
       expect(span).toHaveClass(styles['breadcrumb-link-active']);
       expect(span).toHaveAttribute('aria-current', 'page');
+      expect(span).toHaveAttribute('data-current', 'true');
       expect(span).toHaveTextContent('Current Page');
     });
 
@@ -267,6 +268,7 @@ describe('Breadcrumb', () => {
       expect(span).toHaveClass(styles['breadcrumb-link']);
       expect(span).toHaveClass(styles['breadcrumb-link-disabled']);
       expect(span).toHaveAttribute('aria-disabled', 'true');
+      expect(span).toHaveAttribute('data-disabled', 'true');
       expect(span).toHaveTextContent('Loading…');
     });
 

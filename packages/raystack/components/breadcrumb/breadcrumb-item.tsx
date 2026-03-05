@@ -111,6 +111,7 @@ export const BreadcrumbItem = forwardRef<
               styles['breadcrumb-link-disabled']
             )}
             aria-disabled='true'
+            data-disabled='true'
           >
             {label}
           </span>
@@ -127,6 +128,7 @@ export const BreadcrumbItem = forwardRef<
               styles['breadcrumb-link-active']
             )}
             aria-current='page'
+            data-current='true'
           >
             {label}
           </span>

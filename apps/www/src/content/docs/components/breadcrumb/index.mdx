@@ -48,6 +48,24 @@ Groups all parts of the breadcrumb navigation.
 
 Renders an individual breadcrumb link. Use the `current` prop on the item that represents the current page so it is styled and exposed to assistive tech (e.g. `aria-current="page"`). Use the `disabled` prop for non-clickable, visually muted items (e.g. loading or no access).
 
+Item elements expose data attributes for CSS state targeting so you can style current and disabled states without relying on internal class names:
+
+| Attribute | When present |
+|-----------|----------------|
+| `data-current="true"` | Item is the current page (`current` prop) |
+| `data-disabled="true"` | Item is disabled (`disabled` prop) |
+
+Example:
+
+```css
+[data-current="true"] {
+  color: var(--my-brand);
+}
+[data-disabled="true"] {
+  opacity: 0.6;
+}
+```
+
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
 
 ### Separator
