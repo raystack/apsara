@@ -13,6 +13,7 @@ import {
   maxItemsDemo,
   itemsBeforeCollapseDemo,
   dropdownDemo,
+  dropdownLinksDemo,
   asDemo,
   disabledDemo,
 } from "./demo.ts";
@@ -101,11 +102,13 @@ Breadcrumb items can include icons via `leadingIcon` (before the label) or `trai
 
 ### Dropdown
 
-Breadcrumb items can include dropdown menus for additional navigation options. Specify the dropdown items using the `dropdownItems` prop.
+Breadcrumb items can include dropdown menus for additional navigation options. Specify the dropdown items using the `dropdownItems` prop. Each item can have `label`, optional `href` (renders as a link), optional `target` and `rel` (e.g. `target="_blank"` `rel="noopener noreferrer"` for new tab), and optional `onClick`.
 
-**Note:** When `dropdownItems` is provided, the `as` and `href` props are ignored.
+**Note:** When `dropdownItems` is provided, the `as` and `href` props on the breadcrumb item are ignored.
 
 <Demo data={dropdownDemo} />
+
+<Demo data={dropdownLinksDemo} />
 
 ### As
 

@@ -14,6 +14,9 @@ import styles from './breadcrumb.module.css';
 
 export interface BreadcrumbDropdownItem {
   label: string;
+  href?: string;
+  target?: string;
+  rel?: string;
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
@@ -68,15 +71,32 @@ export const BreadcrumbItem = forwardRef<
             <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
           </Menu.Trigger>
           <Menu.Content className={styles['breadcrumb-dropdown-content']}>
-            {dropdownItems.map((dropdownItem, dropdownIndex) => (
-              <Menu.Item
-                key={dropdownIndex}
-                className={styles['breadcrumb-dropdown-item']}
-                onClick={dropdownItem?.onClick}
-              >
-                {dropdownItem.label}
-              </Menu.Item>
-            ))}
+            {dropdownItems.map((dropdownItem, dropdownIndex) =>
+              dropdownItem.href ? (
+                <Menu.Item
+                  key={dropdownIndex}
+                  render={
+                    <a
+                      href={dropdownItem.href}
+                      target={dropdownItem.target}
+                      rel={dropdownItem.rel}
+                      className={styles['breadcrumb-dropdown-item']}
+                    />
+                  }
+                  onClick={dropdownItem?.onClick}
+                >
+                  {dropdownItem.label}
+                </Menu.Item>
+              ) : (
+                <Menu.Item
+                  key={dropdownIndex}
+                  className={styles['breadcrumb-dropdown-item']}
+                  onClick={dropdownItem?.onClick}
+                >
+                  {dropdownItem.label}
+                </Menu.Item>
+              )
+            )}
           </Menu.Content>
         </Menu>
       );

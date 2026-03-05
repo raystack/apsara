@@ -137,6 +137,23 @@ export const dropdownDemo = {
     <Breadcrumb.Item href="/category/subcategory/current">Current Page</Breadcrumb.Item>
   </Breadcrumb>`
 };
+
+export const dropdownLinksDemo = {
+  type: 'code',
+  code: `
+  <Breadcrumb>
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item dropdownItems={[
+        { label: 'Electronics', href: '/electronics', target: '_blank', rel: 'noopener noreferrer' },
+        { label: 'Clothing', href: '/clothing' },
+        { label: 'Books', onClick: () => {console.log('Books')}}
+      ]}>Categories</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/current" current>Current</Breadcrumb.Item>
+  </Breadcrumb>`
+};
+
 export const asDemo = {
   type: 'code',
   code: `

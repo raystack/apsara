@@ -350,6 +350,38 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('Clothing')).toBeInTheDocument();
       expect(screen.getByText('Books')).toBeInTheDocument();
     });
+
+    it('renders dropdown items with href as links', () => {
+      render(
+        <Breadcrumb>
+          <Breadcrumb.Item
+            dropdownItems={[
+              {
+                label: 'New tab',
+                href: '/page',
+                target: '_blank',
+                rel: 'noopener noreferrer'
+              },
+              { label: 'Same tab', href: '/other' }
+            ]}
+          >
+            Categories
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      fireEvent.click(screen.getByText('Categories'));
+
+      const newTabLink = screen.getByText('New tab');
+      expect(newTabLink.tagName).toBe('A');
+      expect(newTabLink).toHaveAttribute('href', '/page');
+      expect(newTabLink).toHaveAttribute('target', '_blank');
+      expect(newTabLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+      const sameTabLink = screen.getByText('Same tab');
+      expect(sameTabLink.tagName).toBe('A');
+      expect(sameTabLink).toHaveAttribute('href', '/other');
+    });
   });
 
   describe('BreadcrumbSeparator', () => {

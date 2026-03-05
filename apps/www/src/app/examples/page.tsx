@@ -417,6 +417,36 @@ const Page = () => {
               </Breadcrumb.Item>
             </Breadcrumb>
           </Flex>
+          <Flex direction='column' gap={2}>
+            <Text size='small' weight='medium'>
+              11. Dropdown with links (href, target, rel)
+            </Text>
+            <Breadcrumb>
+              <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
+              <Breadcrumb.Separator />
+              <Breadcrumb.Item
+                dropdownItems={[
+                  {
+                    label: 'Electronics',
+                    href: '/electronics',
+                    target: '_blank',
+                    rel: 'noopener noreferrer'
+                  },
+                  { label: 'Clothing', href: '/clothing' },
+                  {
+                    label: 'Books',
+                    onClick: () => console.log('Books clicked')
+                  }
+                ]}
+              >
+                Categories
+              </Breadcrumb.Item>
+              <Breadcrumb.Separator />
+              <Breadcrumb.Item href='/current' current>
+                Current
+              </Breadcrumb.Item>
+            </Breadcrumb>
+          </Flex>
           <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>
             <Search
               placeholder='Default large search'
