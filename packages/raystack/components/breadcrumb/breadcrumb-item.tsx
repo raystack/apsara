@@ -97,15 +97,28 @@ export const BreadcrumbItem = forwardRef<
         </li>
       );
     }
+    if (current) {
+      return (
+        <li className={cx(styles['breadcrumb-item'], className)}>
+          <span
+            ref={ref as React.RefObject<HTMLSpanElement>}
+            className={cx(
+              styles['breadcrumb-link'],
+              styles['breadcrumb-link-active']
+            )}
+            aria-current='page'
+          >
+            {label}
+          </span>
+        </li>
+      );
+    }
     return (
       <li className={cx(styles['breadcrumb-item'], className)}>
         {cloneElement(
           renderedElement,
           {
-            className: cx(
-              styles['breadcrumb-link'],
-              current && styles['breadcrumb-link-active']
-            ),
+            className: styles['breadcrumb-link'],
             href,
             ...props,
             ...renderedElement.props

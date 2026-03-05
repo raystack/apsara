@@ -177,7 +177,7 @@ describe('Breadcrumb', () => {
       expect(link?.textContent).toMatch(/L\s*Label\s*T/);
     });
 
-    it('applies current/active state', () => {
+    it('applies current/active state and renders as span with aria-current', () => {
       const { container } = render(
         <Breadcrumb>
           <Breadcrumb.Item current>Current Page</Breadcrumb.Item>
@@ -185,7 +185,16 @@ describe('Breadcrumb', () => {
       );
 
       const link = container.querySelector('a');
-      expect(link).toHaveClass(styles['breadcrumb-link-active']);
+      expect(link).not.toBeInTheDocument();
+
+      const span = container.querySelector(
+        `span.${styles['breadcrumb-link-active']}`
+      );
+      expect(span).toBeInTheDocument();
+      expect(span).toHaveClass(styles['breadcrumb-link']);
+      expect(span).toHaveClass(styles['breadcrumb-link-active']);
+      expect(span).toHaveAttribute('aria-current', 'page');
+      expect(span).toHaveTextContent('Current Page');
     });
 
     it('renders with custom element using as prop', () => {
