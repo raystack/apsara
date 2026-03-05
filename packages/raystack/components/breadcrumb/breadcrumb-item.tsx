@@ -19,6 +19,7 @@ export interface BreadcrumbDropdownItem {
 
 export interface BreadcrumbItemProps extends HTMLAttributes<HTMLAnchorElement> {
   leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
   current?: boolean;
   /** When true, the item is non-clickable and visually muted (e.g. loading or no access). */
   disabled?: boolean;
@@ -37,6 +38,7 @@ export const BreadcrumbItem = forwardRef<
       children,
       className,
       leadingIcon,
+      trailingIcon,
       current,
       disabled,
       href,
@@ -52,6 +54,9 @@ export const BreadcrumbItem = forwardRef<
           <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
         )}
         {children && <span>{children}</span>}
+        {trailingIcon && (
+          <span className={styles['breadcrumb-icon']}>{trailingIcon}</span>
+        )}
       </>
     );
 

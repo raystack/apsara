@@ -128,6 +128,55 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('Home')).toBeInTheDocument();
     });
 
+    it('renders with trailing icon', () => {
+      render(
+        <Breadcrumb>
+          <Breadcrumb.Item
+            trailingIcon={<span data-testid='trailing-icon'>▶</span>}
+          >
+            Next
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const icon = screen.getByTestId('trailing-icon');
+      expect(icon).toBeInTheDocument();
+      expect(icon.parentElement).toHaveClass(styles['breadcrumb-icon']);
+      expect(screen.getByText('Next')).toBeInTheDocument();
+    });
+
+    it('renders with both leading and trailing icons', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item
+            leadingIcon={<span data-testid='leading'>L</span>}
+            trailingIcon={<span data-testid='trailing'>T</span>}
+          >
+            Label
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const leading = screen.getByTestId('leading');
+      const trailing = screen.getByTestId('trailing');
+      const label = screen.getByText('Label');
+
+      expect(leading).toBeInTheDocument();
+      expect(trailing).toBeInTheDocument();
+      expect(label).toBeInTheDocument();
+      expect(leading.parentElement).toHaveClass(styles['breadcrumb-icon']);
+      expect(trailing.parentElement).toHaveClass(styles['breadcrumb-icon']);
+
+      const link = container.querySelector(`.${styles['breadcrumb-link']}`);
+      const iconWrappers = link?.querySelectorAll(
+        `.${styles['breadcrumb-icon']}`
+      );
+      expect(iconWrappers).toHaveLength(2);
+      expect(iconWrappers?.[0]).toContainElement(leading);
+      expect(iconWrappers?.[1]).toContainElement(trailing);
+      expect(link?.textContent).toMatch(/L\s*Label\s*T/);
+    });
+
     it('applies current/active state', () => {
       const { container } = render(
         <Breadcrumb>

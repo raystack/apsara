@@ -391,6 +391,32 @@ const Page = () => {
             </Flex>
           </Flex>
 
+          <Flex direction='column' gap={2}>
+            <Text size='small' weight='medium'>
+              10. Leading and trailing icons
+            </Text>
+            <Breadcrumb>
+              <Breadcrumb.Item href='/' leadingIcon={<BellIcon />}>
+                Home
+              </Breadcrumb.Item>
+              <Breadcrumb.Separator />
+              <Breadcrumb.Item
+                href='/documents'
+                leadingIcon={<FilterIcon />}
+                trailingIcon={<SidebarIcon />}
+              >
+                Documents
+              </Breadcrumb.Item>
+              <Breadcrumb.Separator />
+              <Breadcrumb.Item
+                href='/settings'
+                trailingIcon={<OrganizationIcon />}
+                current
+              >
+                Settings
+              </Breadcrumb.Item>
+            </Breadcrumb>
+          </Flex>
           <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>
             <Search
               placeholder='Default large search'
