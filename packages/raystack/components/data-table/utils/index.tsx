@@ -1,15 +1,16 @@
 import { TableState } from '@tanstack/table-core';
+import dayjs from 'dayjs';
 
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import {
   DataTableColumnDef,
   DataTableQuery,
   DataTableSort,
+  defaultGroupOption,
   GroupedData,
   InternalFilter,
   InternalQuery,
-  SortOrders,
-  defaultGroupOption
+  SortOrders
 } from '../data-table.types';
 import {
   getFilterFn,
@@ -20,7 +21,11 @@ import {
 export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
     query.filters
-      ?.filter(data => data.value !== '')
+      ?.filter(data => {
+        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data.value !== '') return true;
+        return false;
+      })
       ?.map(data => {
         const valueObject =
           data._type === FilterType.date
@@ -188,7 +193,12 @@ export function transformToDataTableQuery(
 
   const sanitizedFilters =
     filters
-      ?.filter(data => data._type === FilterType.select || data.value !== '')
+      ?.filter(data => {
+        if (data._type === FilterType.select) return true;
+        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data.value !== '') return true;
+        return false;
+      })
       ?.map(data => ({
         name: data.name,
         operator: getFilterOperator({

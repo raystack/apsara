@@ -1,14 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { FilterType } from '~/types/filters';
-import { EmptyFilterValue } from '~/types/filters';
+import { EmptyFilterValue, FilterType } from '~/types/filters';
 import {
   DataTableColumnDef,
   DataTableQuery,
   DataTableSort,
+  defaultGroupOption,
   InternalFilter,
   InternalQuery,
-  SortOrders,
-  defaultGroupOption
+  SortOrders
 } from '../../data-table.types';
 import {
   dataTableQueryToInternal,
@@ -166,6 +165,42 @@ describe('Data Table Utils', () => {
       const result = queryToTableState(query);
 
       expect(result.columnFilters).toHaveLength(2);
+    });
+
+    it('should filter out invalid date filters', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: new Date('invalid'),
+            _type: FilterType.date
+          }
+        ]
+      };
+      const result = queryToTableState(query);
+
+      expect(result.columnFilters).toHaveLength(0);
+    });
+
+    it('should keep valid date filters', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: new Date('2023-12-01'),
+            _type: FilterType.date
+          }
+        ]
+      };
+      const result = queryToTableState(query);
+
+      expect(result.columnFilters).toHaveLength(1);
+      expect(result.columnFilters![0]).toEqual({
+        id: 'createdAt',
+        value: { date: new Date('2023-12-01') }
+      });
     });
 
     it('should convert sort to table state', () => {
@@ -634,6 +669,41 @@ describe('Data Table Utils', () => {
       const result = transformToDataTableQuery(query);
       expect(result.filters).toHaveLength(1);
       expect(result.filters![0].name).toBe('status');
+    });
+
+    it('should filter out invalid date filters', () => {
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: new Date('invalid'),
+            _type: FilterType.date
+          }
+        ]
+      };
+
+      const result = transformToDataTableQuery(query);
+      expect(result.filters).toHaveLength(0);
+    });
+
+    it('should keep valid date filters', () => {
+      const date = new Date('2023-12-01');
+      const query: InternalQuery = {
+        filters: [
+          {
+            name: 'createdAt',
+            operator: 'eq',
+            value: date,
+            _type: FilterType.date
+          }
+        ]
+      };
+
+      const result = transformToDataTableQuery(query);
+      expect(result.filters).toHaveLength(1);
+      expect(result.filters![0].name).toBe('createdAt');
+      expect(result.filters![0].stringValue).toBe(date.toISOString());
     });
 
     it('should preserve other query properties', () => {

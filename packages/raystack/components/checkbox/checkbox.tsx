@@ -1,6 +1,7 @@
 'use client';
 
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
+import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
 import { cx } from 'class-variance-authority';
 import { ElementRef, forwardRef } from 'react';
 
@@ -42,22 +43,42 @@ const IndeterminateIcon = () => (
   </svg>
 );
 
-export const Checkbox = forwardRef<
+const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupPrimitive.Props>(
+  ({ className, ...props }, ref) => (
+    <CheckboxGroupPrimitive
+      ref={ref}
+      className={cx(styles.group, className)}
+      {...props}
+    />
+  )
+);
+
+CheckboxGroup.displayName = 'Checkbox.Group';
+
+const CheckboxItem = forwardRef<
   ElementRef<typeof CheckboxPrimitive.Root>,
   CheckboxPrimitive.Root.Props
->(({ className, indeterminate, ...props }, ref) => {
+>(({ className, ...props }, ref) => {
   return (
     <CheckboxPrimitive.Root
       className={cx(styles.checkbox, className)}
-      indeterminate={indeterminate}
       ref={ref}
       {...props}
     >
-      <CheckboxPrimitive.Indicator className={styles.indicator}>
-        {indeterminate ? <IndeterminateIcon /> : <CheckMarkIcon />}
-      </CheckboxPrimitive.Indicator>
+      <CheckboxPrimitive.Indicator
+        className={styles.indicator}
+        render={(props, state) => (
+          <span {...props}>
+            {state.indeterminate ? <IndeterminateIcon /> : <CheckMarkIcon />}
+          </span>
+        )}
+      />
     </CheckboxPrimitive.Root>
   );
 });
 
-Checkbox.displayName = 'Checkbox';
+CheckboxItem.displayName = 'Checkbox';
+
+export const Checkbox = Object.assign(CheckboxItem, {
+  Group: CheckboxGroup
+});

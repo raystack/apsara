@@ -9,6 +9,7 @@ import {
   DataTable,
   DatePicker,
   Dialog,
+  Drawer,
   EmptyState,
   Flex,
   IconButton,
@@ -21,7 +22,6 @@ import {
   ScrollArea,
   Search,
   Select,
-  Sheet,
   Sidebar,
   Spinner,
   Text,
@@ -40,7 +40,7 @@ import React, { useState } from 'react';
 const Page = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [nestedDialogOpen, setNestedDialogOpen] = useState(false);
-  const [dialogSheetOpen, setDialogSheetOpen] = useState(false);
+  const [dialogDrawerOpen, setDialogDrawerOpen] = useState(false);
   const [search1, setSearch1] = useState('');
   const [search2, setSearch2] = useState('');
   const [search3, setSearch3] = useState('');
@@ -1536,9 +1536,9 @@ const Page = () => {
                         </Button>
                         <Button
                           variant='outline'
-                          onClick={() => setDialogSheetOpen(true)}
+                          onClick={() => setDialogDrawerOpen(true)}
                         >
-                          Open Sheet
+                          Open Drawer
                         </Button>
                         <Menu>
                           <Menu.Trigger render={<Button variant='outline' />}>
@@ -1584,10 +1584,14 @@ const Page = () => {
               </Dialog.Content>
             </Dialog>
 
-            <Sheet open={dialogSheetOpen} onOpenChange={setDialogSheetOpen}>
-              <Sheet.Content side='right' close>
-                <Sheet.Title>Sheet Title</Sheet.Title>
-                <Text>This is the sheet content. </Text>
+            <Drawer
+              open={dialogDrawerOpen}
+              onOpenChange={setDialogDrawerOpen}
+              side='right'
+            >
+              <Drawer.Content side='right'>
+                <Drawer.Title>Drawer Title</Drawer.Title>
+                <Text>This is the drawer content. </Text>
                 <Flex direction='column' gap={4} style={{ marginTop: '16px' }}>
                   <Text size='small'>Team Members:</Text>
                   <AvatarGroup>
@@ -1708,8 +1712,8 @@ const Page = () => {
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
                 />
-              </Sheet.Content>
-            </Sheet>
+              </Drawer.Content>
+            </Drawer>
 
             <Dialog open={nestedDialogOpen} onOpenChange={setNestedDialogOpen}>
               <Dialog.Content width='500px'>
