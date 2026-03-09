@@ -85,42 +85,6 @@ export const ellipsisDemo = {
   </Breadcrumb>`
 };
 
-export const maxItemsDemo = {
-  type: 'code',
-  code: `
-  <Breadcrumb maxItems={4}>
-    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/electronics">Electronics</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/laptops">Laptops</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/gaming" current>Gaming</Breadcrumb.Item>
-  </Breadcrumb>`
-};
-
-export const itemsBeforeCollapseDemo = {
-  type: 'code',
-  code: `
-  <Breadcrumb maxItems={5} itemsBeforeCollapse={2}>
-    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/electronics">Electronics</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/laptops">Laptops</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/gaming">Gaming</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/accessories">Accessories</Breadcrumb.Item>
-    <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/footwear" current>Footwear</Breadcrumb.Item>
-  </Breadcrumb>`
-};
-
 export const dropdownDemo = {
   type: 'code',
   code: `
