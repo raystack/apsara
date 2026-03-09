@@ -11,8 +11,8 @@ const tsxCode = `{\`function add(a: number, b: number): number {
 }\`}`;
 
 const longCode = `{\`<Dialog>
-  <Dialog.Trigger asChild>
-    <Button>Basic Dialog</Button>
+  <Dialog.Trigger render={<Button />}>
+    Basic Dialog
   </Dialog.Trigger>
   <Dialog.Content
     width={300}
@@ -21,7 +21,6 @@ const longCode = `{\`<Dialog>
   >
     <Dialog.Header>
       <Dialog.Title>A simple dialog example</Dialog.Title>
-      <Dialog.CloseButton />
     </Dialog.Header>
     <Dialog.Body>
       <Dialog.Description>
@@ -30,9 +29,7 @@ const longCode = `{\`<Dialog>
     </Dialog.Body>
     <Dialog.Footer>
       <Button>OK</Button>
-      <Dialog.Close asChild>
-        <Button color="neutral">Cancel</Button>
-      </Dialog.Close>
+      <Dialog.Close render={<Button color="neutral">Cancel</Button>} />
     </Dialog.Footer>
   </Dialog.Content>
 </Dialog>\`}`;

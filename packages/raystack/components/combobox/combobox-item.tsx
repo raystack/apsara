@@ -4,7 +4,7 @@ import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import { forwardRef, ReactNode } from 'react';
 import { Checkbox } from '../checkbox';
-import { getMatch } from '../dropdown-menu/utils';
+import { getMatch } from '../menu/utils';
 import { Text } from '../text';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';

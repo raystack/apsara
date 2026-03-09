@@ -8,31 +8,51 @@ import { basicDemo, preview } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { List } from "@raystack/apsara";
+
+<List>
+  <List.Header />
+  <List.Item>
+    <List.Label />
+    <List.Value />
+  </List.Item>
+</List>
 ```
 
-## List Props
+## API Reference
 
-### List Props
+### Root
+
+Groups all parts of the list.
 
 <auto-type-table path="./props.ts" name="ListRootProps" />
 
-### List.Header Props
+### Header
+
+Renders a header section above the list items.
 
 <auto-type-table path="./props.ts" name="ListHeaderProps" />
 
-### List.Item Props
+### Item
+
+Renders an individual list row.
 
 <auto-type-table path="./props.ts" name="ListItemProps" />
 
-### List.Label Props
+### Label
+
+Renders the key text within a list item.
 
 <auto-type-table path="./props.ts" name="ListLabelProps" />
 
-### List.Value Props
+### Value
+
+Renders the value text within a list item.
 
 <auto-type-table path="./props.ts" name="ListValueProps" />
 

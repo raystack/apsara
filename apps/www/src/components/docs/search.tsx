@@ -1,5 +1,4 @@
 'use client';
-import { getFileFromUrl, getFolderFromUrl } from '@/lib/utils';
 import {
   Cross1Icon,
   ExclamationTriangleIcon,
@@ -15,13 +14,14 @@ import {
 } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import {
+  flattenTree,
   type Item as PageItem,
-  Root,
-  flattenTree
+  Root
 } from 'fumadocs-core/page-tree';
 import { useDocsSearch } from 'fumadocs-core/search/client';
 import { useRouter } from 'next/navigation';
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { getFileFromUrl, getFolderFromUrl } from '@/lib/utils';
 import styles from './search.module.css';
 
 type Item = Omit<PageItem, 'type'> & {
@@ -134,10 +134,8 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>
-        <IconButton size={3} aria-label='Search docs'>
-          <MagnifyingGlassIcon />
-        </IconButton>
+      <Dialog.Trigger render={<IconButton size={3} aria-label='Search docs' />}>
+        <MagnifyingGlassIcon />
       </Dialog.Trigger>
       <Dialog.Content width={512} className={styles.searchContainer}>
         <Command className={styles.searchCommand} filter={() => 1}>

@@ -11,6 +11,7 @@ import type {
   FilterTypes,
   FilterValueType
 } from '~/types/filters';
+import type { BaseSelectProps } from '../select/select-root';
 
 export type DataTableMode = 'client' | 'server';
 
@@ -80,6 +81,9 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   enableHiding?: boolean;
   defaultHidden?: boolean;
   filterOptions?: FilterSelectOption[];
+  filterProps?: {
+    select?: BaseSelectProps;
+  };
   classNames?: {
     cell?: string;
     header?: string;

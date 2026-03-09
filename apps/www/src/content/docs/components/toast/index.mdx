@@ -8,13 +8,19 @@ import { preview, basicDemo, iconsDemo, disabledDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { ToastContainer, toast } from '@raystack/apsara'
+
+<ToastContainer />
 ```
 
-## Toast Props
+## API Reference
+
+Renders a temporary notification message.
 
 <auto-type-table path="./props.ts" name="ToastProps" />
 
@@ -41,3 +47,9 @@ import { ToastContainer, toast, Button } from '@raystack/apsara'
   Trigger toast
 </Button>
 ```
+
+## Accessibility
+
+- Uses `role="alert"` for important notifications
+- Automatically announced to screen readers via `aria-live` region
+- Dismissible toasts support keyboard interaction

@@ -1,12 +1,11 @@
 'use client';
 
+import { Slider } from '@base-ui/react/slider';
 import { cx } from 'class-variance-authority';
-import { Slider } from 'radix-ui';
-import { type ComponentProps } from 'react';
-import { useColorPicker } from './color-picker-root';
 import styles from './color-picker.module.css';
+import { useColorPicker } from './color-picker-root';
 
-export type ColorPickerHueProps = ComponentProps<typeof Slider.Root>;
+export type ColorPickerHueProps = Slider.Root.Props;
 export const ColorPickerHue = ({
   className,
   ...props
@@ -16,15 +15,18 @@ export const ColorPickerHue = ({
     <Slider.Root
       className={cx(styles.sliderRoot, className)}
       max={360}
-      onValueChange={([hue]) => setColor({ h: hue })}
+      onValueChange={value => setColor({ h: value as number })}
       step={1}
-      value={[hue]}
+      value={hue}
+      thumbAlignment='edge'
       {...props}
     >
-      <Slider.Track className={cx(styles.sliderTrack, styles.hueTrack)}>
-        <Slider.Range className={styles.sliderRange} />
-      </Slider.Track>
-      <Slider.Thumb className={styles.sliderThumb} />
+      <Slider.Control className={styles.sliderControl}>
+        <Slider.Track className={cx(styles.sliderTrack, styles.hueTrack)}>
+          <Slider.Indicator className={styles.sliderRange} />
+          <Slider.Thumb className={styles.sliderThumb} aria-label='Hue' />
+        </Slider.Track>
+      </Slider.Control>
     </Slider.Root>
   );
 };

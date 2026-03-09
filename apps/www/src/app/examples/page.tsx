@@ -9,19 +9,19 @@ import {
   DataTable,
   DatePicker,
   Dialog,
-  DropdownMenu,
+  Drawer,
   EmptyState,
   Flex,
   IconButton,
   Indicator,
   InputField,
+  Menu,
   Navbar,
   Popover,
   RangePicker,
   ScrollArea,
   Search,
   Select,
-  Sheet,
   Sidebar,
   Spinner,
   Text,
@@ -40,7 +40,7 @@ import React, { useState } from 'react';
 const Page = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [nestedDialogOpen, setNestedDialogOpen] = useState(false);
-  const [dialogSheetOpen, setDialogSheetOpen] = useState(false);
+  const [dialogDrawerOpen, setDialogDrawerOpen] = useState(false);
   const [search1, setSearch1] = useState('');
   const [search2, setSearch2] = useState('');
   const [search3, setSearch3] = useState('');
@@ -1439,7 +1439,6 @@ const Page = () => {
               <Dialog.Content width='500px'>
                 <Dialog.Header>
                   <Dialog.Title>Dialog Title</Dialog.Title>
-                  <Dialog.CloseButton />
                 </Dialog.Header>
                 <Dialog.Body>
                   <Text>This is the dialog content. </Text>
@@ -1537,39 +1536,35 @@ const Page = () => {
                         </Button>
                         <Button
                           variant='outline'
-                          onClick={() => setDialogSheetOpen(true)}
+                          onClick={() => setDialogDrawerOpen(true)}
                         >
-                          Open Sheet
+                          Open Drawer
                         </Button>
-                        <DropdownMenu>
-                          <DropdownMenu.Trigger asChild>
-                            <Button variant='outline'>Open Menu</Button>
-                          </DropdownMenu.Trigger>
-                          <DropdownMenu.Content>
-                            <DropdownMenu.Label>
-                              Team Actions
-                            </DropdownMenu.Label>
-                            <Tooltip
-                              message='Add a new member to your team'
-                              side='right'
-                            >
-                              <DropdownMenu.Item>Add Member</DropdownMenu.Item>
-                            </Tooltip>
-                            <DropdownMenu.Item>Edit Team</DropdownMenu.Item>
-                            <DropdownMenu.Separator />
-                            <DropdownMenu.Group>
-                              <DropdownMenu.Label>Settings</DropdownMenu.Label>
-                              <DropdownMenu.Item>Permissions</DropdownMenu.Item>
-                              <DropdownMenu.Item>
-                                Notifications
-                              </DropdownMenu.Item>
-                            </DropdownMenu.Group>
-                            <DropdownMenu.Separator />
-                            <DropdownMenu.Item color='danger'>
-                              Delete Team
-                            </DropdownMenu.Item>
-                          </DropdownMenu.Content>
-                        </DropdownMenu>
+                        <Menu>
+                          <Menu.Trigger render={<Button variant='outline' />}>
+                            Open Menu
+                          </Menu.Trigger>
+                          <Menu.Content>
+                            <Menu.Group>
+                              <Menu.Label>Team Actions</Menu.Label>
+                              <Tooltip
+                                message='Add a new member to your team'
+                                side='right'
+                              >
+                                <Menu.Item>Add Member</Menu.Item>
+                              </Tooltip>
+                              <Menu.Item>Edit Team</Menu.Item>
+                            </Menu.Group>
+                            <Menu.Separator />
+                            <Menu.Group>
+                              <Menu.Label>Settings</Menu.Label>
+                              <Menu.Item>Permissions</Menu.Item>
+                              <Menu.Item>Notifications</Menu.Item>
+                            </Menu.Group>
+                            <Menu.Separator />
+                            <Menu.Item color='danger'>Delete Team</Menu.Item>
+                          </Menu.Content>
+                        </Menu>
                       </Flex>
                     </Flex>
                   </Flex>
@@ -1589,10 +1584,14 @@ const Page = () => {
               </Dialog.Content>
             </Dialog>
 
-            <Sheet open={dialogSheetOpen} onOpenChange={setDialogSheetOpen}>
-              <Sheet.Content side='right' close>
-                <Sheet.Title>Sheet Title</Sheet.Title>
-                <Text>This is the sheet content. </Text>
+            <Drawer
+              open={dialogDrawerOpen}
+              onOpenChange={setDialogDrawerOpen}
+              side='right'
+            >
+              <Drawer.Content side='right'>
+                <Drawer.Title>Drawer Title</Drawer.Title>
+                <Text>This is the drawer content. </Text>
                 <Flex direction='column' gap={4} style={{ marginTop: '16px' }}>
                   <Text size='small'>Team Members:</Text>
                   <AvatarGroup>
@@ -1679,31 +1678,31 @@ const Page = () => {
                       <Indicator variant='success' label='5'>
                         <Button variant='outline'>Active Members</Button>
                       </Indicator>
-                      <DropdownMenu>
-                        <DropdownMenu.Trigger asChild>
-                          <Button variant='outline'>Open Menu</Button>
-                        </DropdownMenu.Trigger>
-                        <DropdownMenu.Content>
-                          <DropdownMenu.Label>Team Actions</DropdownMenu.Label>
-                          <Tooltip
-                            message='Add a new member to your team'
-                            side='right'
-                          >
-                            <DropdownMenu.Item>Add Member</DropdownMenu.Item>
-                          </Tooltip>
-                          <DropdownMenu.Item>Edit Team</DropdownMenu.Item>
-                          <DropdownMenu.Separator />
-                          <DropdownMenu.Group>
-                            <DropdownMenu.Label>Settings</DropdownMenu.Label>
-                            <DropdownMenu.Item>Permissions</DropdownMenu.Item>
-                            <DropdownMenu.Item>Notifications</DropdownMenu.Item>
-                          </DropdownMenu.Group>
-                          <DropdownMenu.Separator />
-                          <DropdownMenu.Item color='danger'>
-                            Delete Team
-                          </DropdownMenu.Item>
-                        </DropdownMenu.Content>
-                      </DropdownMenu>
+                      <Menu>
+                        <Menu.Trigger render={<Button variant='outline' />}>
+                          Open Menu
+                        </Menu.Trigger>
+                        <Menu.Content>
+                          <Menu.Group>
+                            <Menu.Label>Team Actions</Menu.Label>
+                            <Tooltip
+                              message='Add a new member to your team'
+                              side='right'
+                            >
+                              <Menu.Item>Add Member</Menu.Item>
+                            </Tooltip>
+                            <Menu.Item>Edit Team</Menu.Item>
+                          </Menu.Group>
+                          <Menu.Separator />
+                          <Menu.Group>
+                            <Menu.Label>Settings</Menu.Label>
+                            <Menu.Item>Permissions</Menu.Item>
+                            <Menu.Item>Notifications</Menu.Item>
+                          </Menu.Group>
+                          <Menu.Separator />
+                          <Menu.Item color='danger'>Delete Team</Menu.Item>
+                        </Menu.Content>
+                      </Menu>
                     </Flex>
                   </Flex>
                 </Flex>
@@ -1713,8 +1712,8 @@ const Page = () => {
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
                 />
-              </Sheet.Content>
-            </Sheet>
+              </Drawer.Content>
+            </Drawer>
 
             <Dialog open={nestedDialogOpen} onOpenChange={setNestedDialogOpen}>
               <Dialog.Content width='500px'>
@@ -1817,35 +1816,31 @@ const Page = () => {
                         <Indicator variant='success' label='5'>
                           <Button variant='outline'>Active Members</Button>
                         </Indicator>
-                        <DropdownMenu>
-                          <DropdownMenu.Trigger asChild>
-                            <Button variant='outline'>Open Menu</Button>
-                          </DropdownMenu.Trigger>
-                          <DropdownMenu.Content>
-                            <DropdownMenu.Label>
-                              Team Actions
-                            </DropdownMenu.Label>
-                            <Tooltip
-                              message='Add a new member to your team'
-                              side='right'
-                            >
-                              <DropdownMenu.Item>Add Member</DropdownMenu.Item>
-                            </Tooltip>
-                            <DropdownMenu.Item>Edit Team</DropdownMenu.Item>
-                            <DropdownMenu.Separator />
-                            <DropdownMenu.Group>
-                              <DropdownMenu.Label>Settings</DropdownMenu.Label>
-                              <DropdownMenu.Item>Permissions</DropdownMenu.Item>
-                              <DropdownMenu.Item>
-                                Notifications
-                              </DropdownMenu.Item>
-                            </DropdownMenu.Group>
-                            <DropdownMenu.Separator />
-                            <DropdownMenu.Item color='danger'>
-                              Delete Team
-                            </DropdownMenu.Item>
-                          </DropdownMenu.Content>
-                        </DropdownMenu>
+                        <Menu>
+                          <Menu.Trigger render={<Button variant='outline' />}>
+                            Open Menu
+                          </Menu.Trigger>
+                          <Menu.Content>
+                            <Menu.Group>
+                              <Menu.Label>Team Actions</Menu.Label>
+                              <Tooltip
+                                message='Add a new member to your team'
+                                side='right'
+                              >
+                                <Menu.Item>Add Member</Menu.Item>
+                              </Tooltip>
+                              <Menu.Item>Edit Team</Menu.Item>
+                            </Menu.Group>
+                            <Menu.Separator />
+                            <Menu.Group>
+                              <Menu.Label>Settings</Menu.Label>
+                              <Menu.Item>Permissions</Menu.Item>
+                              <Menu.Item>Notifications</Menu.Item>
+                            </Menu.Group>
+                            <Menu.Separator />
+                            <Menu.Item color='danger'>Delete Team</Menu.Item>
+                          </Menu.Content>
+                        </Menu>
                       </Flex>
                     </Flex>
                   </Flex>

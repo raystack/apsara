@@ -95,10 +95,14 @@ export interface GridProps {
   inline?: boolean;
 
   /**
-   * Merges the grid's props with its child component.
-   * Useful for composition with other components.
+   * Allows rendering the grid as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
    */
-  asChild?: boolean;
+  render?:
+    | React.ReactElement
+    | ((props: React.HTMLAttributes<HTMLDivElement>) => React.ReactElement);
 }
 
 export interface GridItemProps {
@@ -149,8 +153,12 @@ export interface GridItemProps {
   alignSelf?: 'start' | 'end' | 'center' | 'stretch';
 
   /**
-   * Merges the grid item's props with its child component.
-   * Useful for composition with other components.
+   * Allows rendering the grid item as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
    */
-  asChild?: boolean;
+  render?:
+    | React.ReactElement
+    | ((props: React.HTMLAttributes<HTMLDivElement>) => React.ReactElement);
 }

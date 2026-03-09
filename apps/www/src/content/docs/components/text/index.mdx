@@ -17,13 +17,17 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Text } from '@raystack/apsara'
+
+<Text />
 ```
 
-## Text Props
+## API Reference
 
 According to the element rendered using `as`, Text will extend over the default HTML Attributes
 
@@ -58,3 +62,8 @@ According to the element rendered using `as`, Text will extend over the default 
 ### Style
 
 <Demo data={styleDemo} />
+
+## Accessibility
+
+- Uses semantic HTML elements for proper content structure
+- Supports appropriate ARIA attributes for screen readers

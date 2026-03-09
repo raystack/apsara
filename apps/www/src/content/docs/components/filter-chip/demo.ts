@@ -61,6 +61,22 @@ export const inputDemo = {
 />`
     },
     {
+      name: 'Select with Autocomplete',
+      code: `
+<FilterChip
+  label="Status"
+  leadingIcon={<Info />}
+  columnType="select"
+  options={[
+    { label: "Active", value: "active" },
+    { label: "Inactive", value: "inactive" },
+    { label: "Pending", value: "pending" },
+    { label: "Archived", value: "archived" }
+  ]}
+  selectProps={{ autocomplete: true }}
+/>`
+    },
+    {
       name: 'Date',
       code: `
 <FilterChip
@@ -90,6 +106,22 @@ export const inputDemo = {
   ]
 };
 
+export const autocompleteDemo = {
+  type: 'code',
+  code: `
+<FilterChip
+  label="Status"
+  leadingIcon={<Info />}
+  columnType="select"
+  options={[
+    { label: "Active", value: "active" },
+    { label: "Inactive", value: "inactive" },
+    { label: "Pending", value: "pending" },
+    { label: "Archived", value: "archived" }
+  ]}
+  selectProps={{ autocomplete: true }}
+/>`
+};
 export const iconDemo = {
   type: 'code',
   code: `

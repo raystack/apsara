@@ -8,22 +8,32 @@ import { preview, stateDemo, labelDemo, formDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Radio } from "@raystack/apsara";
+
+<Radio.Group>
+  <Radio />
+  <Radio />
+</Radio.Group>
 ```
 
-## Radio Props
+## API Reference
 
-### Radio.Group Props
+### Group
+
+Groups radio buttons and manages their shared state.
 
 <auto-type-table path="./props.ts" name="RadioGroupProps" />
 
-### Radio Props
+### Root
+
+Renders an individual radio button.
 
 <auto-type-table path="./props.ts" name="RadioProps" />
-
 
 ## Examples
 
@@ -44,3 +54,10 @@ Radio buttons should always be accompanied by labels for accessibility and usabi
 Radio buttons can be used in forms with proper validation and submission handling.
 
 <Demo data={formDemo} />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Radio Group pattern](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)
+- Supports keyboard navigation with arrow keys within the group
+- Uses `role="radiogroup"` for the group and `role="radio"` for items
+- Selected state is communicated via `aria-checked`

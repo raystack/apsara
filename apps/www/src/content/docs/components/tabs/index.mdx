@@ -8,25 +8,44 @@ import { preview, basicDemo, iconsDemo, disabledDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Tabs } from "@raystack/apsara";
+
+<Tabs>
+  <Tabs.List>
+    <Tabs.Tab />
+  </Tabs.List>
+  <Tabs.Content />
+</Tabs>
 ```
 
-## Tabs Props
+## API Reference
+
+### Root
+
+Groups all parts of the tabs component.
 
 <auto-type-table path="./props.ts" name="TabsRootProps" />
 
-### Tabs.List Props
+### List
+
+Renders the tab navigation bar.
 
 <auto-type-table path="./props.ts" name="TabsListProps" />
 
-### Tabs.Tab Props
+### Tab
+
+Renders an individual tab button.
 
 <auto-type-table path="./props.ts" name="TabsTabProps" />
 
-### Tabs.Content Props
+### Content
+
+Renders the content panel for a tab.
 
 <auto-type-table path="./props.ts" name="TabsContentProps" />
 
@@ -43,3 +62,10 @@ import { Tabs } from "@raystack/apsara";
 ### Disabled Tab
 
 <Demo data={disabledDemo} />
+
+## Accessibility
+
+- Follows the [WAI-ARIA Tabs pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)
+- Supports keyboard navigation with arrow keys between tabs
+- Uses `role="tablist"`, `role="tab"`, and `role="tabpanel"`
+- Active tab is indicated with `aria-selected`

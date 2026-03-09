@@ -8,13 +8,17 @@ import { playground, sizesDemo, stateDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { CopyButton } from "@raystack/apsara";
+
+<CopyButton />
 ```
 
-## Props
+## API Reference
 
 The CopyButton component extends IconButton props and accepts the following additional props
 
@@ -35,3 +39,9 @@ Like IconButton, CopyButton supports different sizes:
 The CopyButton inherits all states from IconButton
 
 <Demo data={stateDemo} />
+
+## Accessibility
+
+- Uses `button` role with appropriate `aria-label`
+- Announces copy confirmation to screen readers via `aria-live` region
+- Supports keyboard activation with Enter and Space keys

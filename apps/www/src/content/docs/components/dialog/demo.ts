@@ -1,11 +1,11 @@
 'use client';
 
-export const getCode = (props: any) => {
-  const { title, description, ...rest } = props;
+export const getCode = (props: { title?: string; description?: string }) => {
+  const { title, description } = props;
   return `
     <Dialog>
-      <Dialog.Trigger asChild>
-        <Button >Basic Dialog</Button>
+      <Dialog.Trigger render={<Button />}>
+        Basic Dialog
       </Dialog.Trigger>
       <Dialog.Content
         width={300}
@@ -14,7 +14,6 @@ export const getCode = (props: any) => {
       >
         <Dialog.Header>
           <Dialog.Title>${title}</Dialog.Title>
-          <Dialog.CloseButton />
         </Dialog.Header>
         <Dialog.Body>
           <Dialog.Description>
@@ -22,7 +21,7 @@ export const getCode = (props: any) => {
           </Dialog.Description>
         </Dialog.Body>
         <Dialog.Footer>
-        <Dialog.Close asChild><Button variant="outline" color="neutral">Cancel</Button></Dialog.Close>
+        <Dialog.Close render={<Button variant="outline" color="neutral">Cancel</Button>} />
         <Button>OK</Button>
         </Dialog.Footer>
       </Dialog.Content>
@@ -49,8 +48,8 @@ export const controlledDemo = {
 
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger asChild>
-          <Button>Controlled Dialog</Button>
+        <Dialog.Trigger render={<Button />}>
+          Controlled Dialog
         </Dialog.Trigger>
         <Dialog.Content width={600}>
           <Dialog.Body>
@@ -69,14 +68,12 @@ export const customDemo = {
   type: 'code',
   code: `
   <Dialog>
-    <Dialog.Trigger asChild>
-      <Button>Styled Dialog</Button>
+    <Dialog.Trigger render={<Button />}>
+      Styled Dialog
     </Dialog.Trigger>
     <Dialog.Content
       width="400px"
-      overlayBlur
-      overlayClassName="custom-overlay"
-      overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' } }}
     >
       <Dialog.Body>
         <Dialog.Title>Custom Styled Dialog</Dialog.Title>
@@ -92,18 +89,15 @@ export const onlyHeaderDemo = {
   type: 'code',
   code: `
   <Dialog>
-    <Dialog.Trigger asChild>
-      <Button>Only Header and Body</Button>
+    <Dialog.Trigger render={<Button />}>
+      Only Header and Body
     </Dialog.Trigger>
     <Dialog.Content
       width="400px"
-      overlayBlur
-      overlayClassName="custom-overlay"
-      overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' } }}
     >
       <Dialog.Header>
         <Dialog.Title>Title</Dialog.Title>
-        <Dialog.CloseButton />
       </Dialog.Header>
       <Dialog.Body>
         <Dialog.Description className="custom-description">
@@ -118,14 +112,12 @@ export const onlyFooterDemo = {
   type: 'code',
   code: `
   <Dialog>
-    <Dialog.Trigger asChild>
-      <Button>Only Footer and Body</Button>
+    <Dialog.Trigger render={<Button />}>
+      Only Footer and Body
     </Dialog.Trigger>
     <Dialog.Content
       width="400px"
-      overlayBlur
-      overlayClassName="custom-overlay"
-      overlayStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' } }}
     >
       <Dialog.Body>
         <Dialog.Title>Title</Dialog.Title>
@@ -134,9 +126,60 @@ export const onlyFooterDemo = {
         </Dialog.Description>
       </Dialog.Body>
       <Dialog.Footer>
-        <Dialog.Close asChild><Button color="neutral">Close</Button></Dialog.Close>
+        <Dialog.Close render={<Button color="neutral">Close</Button>} />
         <Button color="danger">Cancel</Button>
       </Dialog.Footer>
     </Dialog.Content>
   </Dialog>`
+};
+
+export const nestedDemo = {
+  type: 'code',
+  code: `
+  function NestedDialogExample() {
+    const [parentOpen, setParentOpen] = React.useState(false);
+    const [nestedOpen, setNestedOpen] = React.useState(false);
+
+    return (
+      <>
+        <Dialog open={parentOpen} onOpenChange={setParentOpen}>
+          <Dialog.Trigger render={<Button />}>
+            Open Parent Dialog
+          </Dialog.Trigger>
+          <Dialog.Content width={400}>
+            <Dialog.Header>
+              <Dialog.Title>Parent Dialog</Dialog.Title>
+            </Dialog.Header>
+            <Dialog.Body>
+              <Dialog.Description>
+                This is the parent dialog. Click the button below to open a nested dialog.
+              </Dialog.Description>
+              <Dialog open={nestedOpen} onOpenChange={setNestedOpen}>
+                <Dialog.Trigger render={<Button />}>
+                  Open Nested Dialog
+                </Dialog.Trigger>
+                <Dialog.Content width={400}>
+                  <Dialog.Header>
+                    <Dialog.Title>Nested Dialog</Dialog.Title>
+                  </Dialog.Header>
+                  <Dialog.Body>
+                    <Dialog.Description>
+                      This is a nested dialog. Notice how the parent dialog scales down
+                      and becomes slightly transparent when this dialog is open.
+                    </Dialog.Description>
+                  </Dialog.Body>
+                  <Dialog.Footer>
+                    <Dialog.Close render={<Button variant="outline" color="neutral">Close</Button>} />
+                  </Dialog.Footer>
+                </Dialog.Content>
+              </Dialog>
+            </Dialog.Body>
+            <Dialog.Footer>
+              <Dialog.Close render={<Button variant="outline" color="neutral">Close Parent</Button>} />
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog>
+      </>
+    );
+  }`
 };

@@ -17,13 +17,28 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Select } from "@raystack/apsara";
+
+<Select>
+  <Select.Trigger />
+  <Select.Content>
+    <Select.Group>
+      <Select.Label />
+      <Select.Item />
+    </Select.Group>
+    <Select.Separator />
+  </Select.Content>
+</Select>
 ```
 
-## Select Props
+## API Reference
+
+### Root
 
 The Select component is composed of several parts, each with their own props.
 
@@ -31,37 +46,37 @@ The root element is the parent component that holds the select. Using the `autoc
 
 <auto-type-table path="./props.ts" name="SelectRootProps" />
 
-### Select.Trigger Props
+### Trigger
 
 The button that triggers the Select.
 
 <auto-type-table path="./props.ts" name="SelectTriggerProps" />
 
-### Select.Content Props
+### Content
 
 The container that holds the Select items.
 
 <auto-type-table path="./props.ts" name="SelectContentProps" />
 
-### Select.Item Props
+### Item
 
 Individual clickable options within the Select.
 
 <auto-type-table path="./props.ts" name="SelectItemProps" />
 
-### Select.Group Props
+### Group
 
 A way to group related Select items together.
 
 <auto-type-table path="./props.ts" name="SelectGroupProps" />
 
-### Select.Label Props
+### Label
 
 Renders a label in a Select group. This component can only be used inside Select.Group
 
 <auto-type-table path="./props.ts" name="SelectLabelProps" />
 
-### Select.Separator Props
+### Separator
 
 Visual divider between Select items or groups.
 

@@ -15,13 +15,17 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { ScrollArea } from "@raystack/apsara";
+
+<ScrollArea />
 ```
 
-## Scroll Area Props
+## API Reference
 
 The Scroll Area component extends standard HTML div attributes, so you can use props like `style`, `id`, `onClick`, and other standard HTML attributes in addition to the props listed below.
 
@@ -61,3 +65,9 @@ Control when the scrollbar appears using the `type` prop.
 - **Auto Corner**: Corner element is automatically added when both scrollbars are visible
 - **Scroll Chaining**: Scroll continues to parent page when reaching container boundaries
 - **Customizable Visibility**: Control when scrollbars appear using the `type` prop
+
+## Accessibility
+
+- Scrollable region is keyboard accessible
+- Scrollbar elements are hidden from screen readers with `aria-hidden`
+- Supports standard scrolling keyboard shortcuts

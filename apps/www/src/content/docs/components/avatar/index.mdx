@@ -17,17 +17,32 @@ import {
 
 <Demo data={playground} />
 
-## Usage
+## Anatomy
+
+Import and assemble the component:
 
 ```tsx
 import { Avatar, AvatarGroup, getAvatarColor } from '@raystack/apsara'
+
+<Avatar />
+
+<AvatarGroup>
+  <Avatar />
+  <Avatar />
+</AvatarGroup>
 ```
 
-## Avatar Props
+## API Reference
+
+### Avatar
+
+Renders an individual avatar with image or initials fallback.
 
 <auto-type-table path="./props.ts" name="AvatarProps" />
 
-## AvatarGroup Props
+### AvatarGroup
+
+Groups multiple avatars with overlap and count indicator.
 
 <auto-type-table path="./props.ts" name="AvatarGroupProps" />
 
@@ -68,3 +83,9 @@ Avatar can display user images with graceful fallback to initials when images fa
 use `getAvatarColor` utility to generate colors based on a string.
 
 <Demo data={generatedColorDemo} />
+
+## Accessibility
+
+- Uses `alt` text for avatar images to support screen readers
+- Provides `aria-label` fallback when no image is available
+- AvatarGroup announces the count of items to assistive technologies
