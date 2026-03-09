@@ -159,6 +159,27 @@ const isSearchChanged = (oldSearch?: string, newSearch?: string): boolean => {
   return oldSearch !== newSearch;
 };
 
+/**
+ * Checks if there is an active filter, search, or updated sort/grouping
+ * compared to the defaults. Used to distinguish zero state from empty state.
+ */
+export const hasActiveQuery = (
+  tableQuery: InternalQuery,
+  defaultSort: DataTableSort
+): boolean => {
+  const hasFilters =
+    (tableQuery?.filters && tableQuery.filters.length > 0) || false;
+  const hasSearch = Boolean(
+    tableQuery?.search && tableQuery.search.trim() !== ''
+  );
+  const sortChanged = isSortChanged([defaultSort], tableQuery.sort || []);
+  const groupChanged = isGroupChanged(
+    [defaultGroupOption.id],
+    tableQuery.group_by || []
+  );
+  return hasFilters || hasSearch || sortChanged || groupChanged;
+};
+
 export const hasQueryChanged = (
   oldQuery: InternalQuery | null,
   newQuery: InternalQuery
