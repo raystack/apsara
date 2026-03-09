@@ -18,6 +18,7 @@ import {
   VirtualizedContentProps
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
+import { hasActiveQuery } from '../utils';
 
 function VirtualHeaders<TData>({
   headerGroups = [],
@@ -220,6 +221,7 @@ export function VirtualizedContent({
     isLoading,
     loadMoreData,
     tableQuery,
+    defaultSort,
     loadingRowCount = 3
   } = useDataTable();
 
@@ -255,12 +257,10 @@ export function VirtualizedContent({
 
   const hasData = rows?.length > 0 || isLoading;
 
-  const hasFiltersOrSearch =
-    (tableQuery?.filters && tableQuery.filters.length > 0) ||
-    Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
+  const hasChanges = hasActiveQuery(tableQuery || {}, defaultSort);
 
-  const isZeroState = !hasData && !hasFiltersOrSearch;
-  const isEmptyState = !hasData && hasFiltersOrSearch;
+  const isZeroState = !hasData && !hasChanges;
+  const isEmptyState = !hasData && hasChanges;
 
   const stateToShow: React.ReactNode = isZeroState
     ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)

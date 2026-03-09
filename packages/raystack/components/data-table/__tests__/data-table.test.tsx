@@ -1,9 +1,17 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { DataTable } from '../data-table';
 import styles from '../data-table.module.css';
 import { DataTableColumnDef } from '../data-table.types';
+
+beforeAll(() => {
+  global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn()
+  }));
+});
 
 interface TestData {
   id: number;
@@ -43,7 +51,11 @@ describe('DataTable', () => {
   describe('Basic Rendering', () => {
     it('renders data table with content', () => {
       render(
-        <DataTable data={mockData} columns={mockColumns}>
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
           <DataTable.Content />
         </DataTable>
       );
@@ -58,7 +70,11 @@ describe('DataTable', () => {
       };
 
       render(
-        <DataTable data={mockData} columns={mockColumns}>
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
           <TestComponent />
         </DataTable>
       );
@@ -68,7 +84,11 @@ describe('DataTable', () => {
 
     it('renders with empty data', () => {
       render(
-        <DataTable data={[]} columns={mockColumns}>
+        <DataTable
+          data={[]}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
           <DataTable.Content />
         </DataTable>
       );
@@ -80,7 +100,11 @@ describe('DataTable', () => {
   describe('Data Display', () => {
     it('displays table data in content', () => {
       render(
-        <DataTable data={mockData} columns={mockColumns}>
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
           <DataTable.Content />
         </DataTable>
       );
@@ -94,7 +118,11 @@ describe('DataTable', () => {
 
     it('displays column headers', () => {
       render(
-        <DataTable data={mockData} columns={mockColumns}>
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
           <DataTable.Content />
         </DataTable>
       );
@@ -114,6 +142,7 @@ describe('DataTable', () => {
         <DataTable
           data={mockData}
           columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
           onRowClick={onRowClick}
         >
           <DataTable.Content />
@@ -129,7 +158,11 @@ describe('DataTable', () => {
   describe('Component Composition', () => {
     it('renders with toolbar', () => {
       const { container } = render(
-        <DataTable data={mockData} columns={mockColumns}>
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
           <DataTable.Toolbar />
           <DataTable.Content />
         </DataTable>
@@ -142,7 +175,11 @@ describe('DataTable', () => {
 
     it('renders with search', () => {
       render(
-        <DataTable data={mockData} columns={mockColumns}>
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
           <DataTable.Search />
           <DataTable.Content />
         </DataTable>
@@ -407,6 +444,135 @@ describe('DataTable', () => {
 
       // If data is displayed, it means hasData is true, which means shouldShowFilters would be true
       expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+  });
+
+  describe('Display Settings Reset', () => {
+    const columnsWithSortAndGroup: DataTableColumnDef<TestData, unknown>[] = [
+      {
+        id: 'name',
+        accessorKey: 'name',
+        header: 'Name',
+        cell: ({ getValue }) => getValue(),
+        enableSorting: true,
+        enableGrouping: true
+      },
+      {
+        id: 'email',
+        accessorKey: 'email',
+        header: 'Email',
+        cell: ({ getValue }) => getValue(),
+        enableSorting: true
+      },
+      {
+        id: 'status',
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ getValue }) => getValue(),
+        enableSorting: true,
+        enableGrouping: true
+      }
+    ];
+
+    it('resets sort and group to defaults on reset click', async () => {
+      const onTableQueryChange = vi.fn();
+      const user = userEvent.setup();
+
+      render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithSortAndGroup}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          mode='server'
+          onTableQueryChange={onTableQueryChange}
+          query={{
+            sort: [{ name: 'email', order: 'desc' }],
+            group_by: ['status']
+          }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      // Open Display popover and click reset
+      await user.click(screen.getByText('Display'));
+      await user.click(screen.getByText('Reset to default'));
+
+      // Verify onTableQueryChange was called with default sort and no group
+      expect(onTableQueryChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          sort: [{ name: 'name', order: 'asc' }],
+          group_by: []
+        })
+      );
+    });
+
+    it('does not show zero state when sort or group changes in client mode', () => {
+      render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithSortAndGroup}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          mode='client'
+          query={{
+            sort: [{ name: 'email', order: 'desc' }],
+            group_by: ['status']
+          }}
+        >
+          <DataTable.Content
+            zeroState={<div data-testid='zero-state'>No data</div>}
+            emptyState={<div data-testid='empty-state'>No results</div>}
+          />
+        </DataTable>
+      );
+
+      // Data should still be visible, not zero/empty state
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+      expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('empty-state')).not.toBeInTheDocument();
+    });
+
+    it('shows empty state when sort is changed and no data', () => {
+      render(
+        <DataTable
+          data={[]}
+          columns={columnsWithSortAndGroup}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            sort: [{ name: 'email', order: 'desc' }]
+          }}
+        >
+          <DataTable.Content
+            zeroState={<div data-testid='zero-state'>No data</div>}
+            emptyState={<div data-testid='empty-state'>No results</div>}
+          />
+        </DataTable>
+      );
+
+      expect(screen.getByTestId('empty-state')).toBeInTheDocument();
+      expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
+    });
+
+    it('shows empty state when group is changed and no data', () => {
+      render(
+        <DataTable
+          data={[]}
+          columns={columnsWithSortAndGroup}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{
+            group_by: ['status']
+          }}
+        >
+          <DataTable.Content
+            zeroState={<div data-testid='zero-state'>No data</div>}
+            emptyState={<div data-testid='empty-state'>No results</div>}
+          />
+        </DataTable>
+      );
+
+      expect(screen.getByTestId('empty-state')).toBeInTheDocument();
+      expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
     });
   });
 });

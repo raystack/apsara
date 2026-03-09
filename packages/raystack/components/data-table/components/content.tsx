@@ -18,6 +18,7 @@ import {
   GroupedData
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
+import { hasActiveQuery } from '../utils';
 
 function Headers<TData>({
   headerGroups = [],
@@ -172,7 +173,8 @@ export function Content({
     isLoading,
     loadMoreData,
     loadingRowCount = 3,
-    tableQuery
+    tableQuery,
+    defaultSort
   } = useDataTable();
 
   const headerGroups = table?.getHeaderGroups();
@@ -219,12 +221,10 @@ export function Content({
 
   const hasData = rows?.length > 0 || isLoading;
 
-  const hasFiltersOrSearch =
-    (tableQuery?.filters && tableQuery.filters.length > 0) ||
-    Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
+  const hasChanges = hasActiveQuery(tableQuery || {}, defaultSort);
 
-  const isZeroState = !hasData && !hasFiltersOrSearch;
-  const isEmptyState = !hasData && hasFiltersOrSearch;
+  const isZeroState = !hasData && !hasChanges;
+  const isEmptyState = !hasData && hasChanges;
 
   const stateToShow: React.ReactNode = isZeroState
     ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)
