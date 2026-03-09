@@ -1,14 +1,15 @@
 'use client';
 
-import { ComboboxProvider } from '@ariakit/react';
-import { Select as SelectPrimitive } from 'radix-ui';
+import {
+  Combobox as ComboboxPrimitive,
+  Select as SelectPrimitive
+} from '@base-ui/react';
 import {
   createContext,
+  ReactNode,
   useCallback,
   useContext,
-  useId,
   useMemo,
-  useRef,
   useState
 } from 'react';
 import { ItemType } from './types';
@@ -27,8 +28,7 @@ interface SelectContextValue extends CommonProps {
   unregisterItem: (value: string) => void;
   multiple: boolean;
   items: Record<string, ItemType>;
-  updateSelectionInProgress: (value: boolean) => void;
-  setValue: (value: string) => void;
+  hasItems?: boolean;
 }
 
 interface UseSelectContext extends SelectContextValue {
@@ -57,26 +57,16 @@ export const useSelectContext = (): UseSelectContext => {
   };
 };
 
-interface NormalSelectRootProps extends SelectPrimitive.SelectProps {
-  autocomplete?: false;
-  autocompleteMode?: never;
-  searchValue?: never;
-  onSearch?: never;
-  defaultSearchValue?: never;
+interface BaseSelectProps extends CommonProps {
+  children?: ReactNode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  disabled?: boolean;
+  required?: boolean;
+  name?: string;
+  items?: string[];
 }
-
-interface AutocompleteSelectRootProps
-  extends SelectPrimitive.SelectProps,
-    CommonProps {
-  autocomplete: true;
-}
-
-type BaseSelectProps = Omit<
-  NormalSelectRootProps | AutocompleteSelectRootProps,
-  'autoComplete' | 'value' | 'onValueChange' | 'defaultValue'
-> & {
-  htmlAutoComplete?: string;
-};
 
 export interface SingleSelectProps extends BaseSelectProps {
   multiple?: false;
@@ -94,8 +84,6 @@ export interface MultipleSelectProps extends BaseSelectProps {
 
 export type SelectRootProps = SingleSelectProps | MultipleSelectProps;
 
-const SELECT_INTERNAL_VALUE = 'SELECT_INTERNAL_VALUE';
-
 export const SelectRoot = (props: SelectRootProps) => {
   const {
     children,
@@ -110,8 +98,11 @@ export const SelectRoot = (props: SelectRootProps) => {
     open: providedOpen,
     defaultOpen = false,
     onOpenChange,
-    htmlAutoComplete,
     multiple = false,
+    disabled,
+    required,
+    name,
+    items: itemsProp,
     ...rest
   } = props;
 
@@ -120,52 +111,31 @@ export const SelectRoot = (props: SelectRootProps) => {
   >(defaultValue);
   const [internalSearchValue, setInternalSearchValue] =
     useState(defaultSearchValue);
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const [items, setItems] = useState<SelectContextValue['items']>({});
-  const id = useId();
-  const isSelectionInProgress = useRef(false);
+  const [registeredItems, setRegisteredItems] = useState<
+    SelectContextValue['items']
+  >({});
 
   const computedValue = providedValue ?? internalValue;
   const searchValue = providedSearchValue ?? internalSearchValue;
-  const open = providedOpen ?? internalOpen;
 
-  const updateSelectionInProgress = useCallback((value: boolean) => {
-    isSelectionInProgress.current = value;
-  }, []);
-
-  const setValue = useCallback(
-    (value: string) => {
-      /*
-       * If the select is placed inside a form, onChange is called with an empty value
-       * WORKAROUND FOR ISSUE https://github.com/radix-ui/primitives/issues/3135
-       */
-      if (value === '') return;
-
+  const handleValueChange = useCallback(
+    (value: any, _eventDetails?: any) => {
+      setInternalValue(value);
       if (multiple) {
-        updateSelectionInProgress(true);
-        const set = new Set<string>(
-          Array.isArray(computedValue)
-            ? computedValue
-            : [computedValue ?? ''].filter(Boolean)
+        (onValueChange as MultipleSelectProps['onValueChange'])?.(
+          value as string[]
         );
-
-        if (set.has(value)) set.delete(value);
-        else set.add(value);
-
-        const newValue = Array.from(set);
-
-        setInternalValue(newValue);
-        (onValueChange as MultipleSelectProps['onValueChange'])?.(newValue);
       } else {
-        setInternalValue(value);
-        (onValueChange as SingleSelectProps['onValueChange'])?.(value);
+        (onValueChange as SingleSelectProps['onValueChange'])?.(
+          value as string
+        );
       }
     },
-    [multiple, onValueChange, computedValue, updateSelectionInProgress]
+    [multiple, onValueChange]
   );
 
-  const setSearchValue = useCallback(
-    (value: string) => {
+  const handleSearchValueChange = useCallback(
+    (value: string, _eventDetails?: any) => {
       setInternalSearchValue(value);
       onSearch?.(value);
     },
@@ -173,21 +143,19 @@ export const SelectRoot = (props: SelectRootProps) => {
   );
 
   const handleOpenChange = useCallback(
-    (value: boolean) => {
-      if (isSelectionInProgress.current) return;
-      setInternalOpen(value);
-      onOpenChange?.(value);
+    (open: boolean, _eventDetails?: any) => {
+      onOpenChange?.(open);
     },
     [onOpenChange]
   );
 
   const registerItem = useCallback<SelectContextValue['registerItem']>(item => {
-    setItems(prev => ({ ...prev, [item.value]: item }));
+    setRegisteredItems(prev => ({ ...prev, [item.value]: item }));
   }, []);
 
   const unregisterItem = useCallback<SelectContextValue['unregisterItem']>(
     value => {
-      setItems(prev => {
+      setRegisteredItems(prev => {
         const { [value]: _, ...rest } = prev;
         return rest;
       });
@@ -195,56 +163,66 @@ export const SelectRoot = (props: SelectRootProps) => {
     []
   );
 
-  /*
-   * Radix internally shows the placeholder when the value is empty.
-   * This value is used to manage the internal value of Radix Select to make it work
-   */
-  const radixValue = useMemo(() => {
-    if (!computedValue) return '';
-    if (typeof computedValue === 'string') return computedValue;
-    if (Array.isArray(computedValue) && computedValue.length)
-      return `${SELECT_INTERNAL_VALUE}-${id}`;
-    return String(computedValue) ?? '';
-  }, [computedValue, id]);
-
-  const element = (
-    <ComboboxProvider
-      resetValueOnHide
-      focusLoop={false}
-      includesBaseElement={false}
-      value={searchValue}
-      setValue={setSearchValue}
-      open={open}
-      setOpen={handleOpenChange}
-    >
-      {children}
-    </ComboboxProvider>
+  const contextValue = useMemo(
+    () => ({
+      value: computedValue,
+      registerItem,
+      unregisterItem,
+      autocomplete,
+      autocompleteMode,
+      searchValue,
+      multiple,
+      items: registeredItems,
+      hasItems: !!itemsProp
+    }),
+    [
+      computedValue,
+      registerItem,
+      unregisterItem,
+      autocomplete,
+      autocompleteMode,
+      searchValue,
+      multiple,
+      registeredItems,
+      itemsProp
+    ]
   );
 
+  const commonProps = {
+    value: providedValue as any,
+    defaultValue: defaultValue as any,
+    onValueChange: handleValueChange,
+    open: providedOpen,
+    defaultOpen,
+    onOpenChange: handleOpenChange,
+    multiple: multiple as any,
+    disabled,
+    modal: true as const,
+    ...rest
+  };
+
+  if (autocomplete) {
+    return (
+      <SelectContext.Provider value={contextValue}>
+        <ComboboxPrimitive.Root
+          {...commonProps}
+          onInputValueChange={handleSearchValueChange}
+          filter={itemsProp ? undefined : null}
+          items={itemsProp}
+          loopFocus={false}
+          // @ts-ignore BaseUI types are not up to date
+          autoHighlight='always'
+        >
+          {children}
+        </ComboboxPrimitive.Root>
+      </SelectContext.Provider>
+    );
+  }
+
   return (
-    <SelectContext.Provider
-      value={{
-        value: computedValue,
-        registerItem,
-        unregisterItem,
-        autocomplete,
-        autocompleteMode,
-        searchValue,
-        multiple,
-        items,
-        updateSelectionInProgress,
-        setValue
-      }}
-    >
-      <SelectPrimitive.Root
-        autoComplete={htmlAutoComplete}
-        value={radixValue}
-        onValueChange={setValue}
-        open={open}
-        onOpenChange={handleOpenChange}
-        {...rest}
-      >
-        {autocomplete ? element : children}
+    <SelectContext.Provider value={contextValue}>
+      <SelectPrimitive.Root {...commonProps} required={required} name={name}>
+        {children}
       </SelectPrimitive.Root>
     </SelectContext.Provider>
   );
