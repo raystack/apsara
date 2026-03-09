@@ -87,10 +87,23 @@
 }
 
 .breadcrumb-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: var(--rs-space-3);
   cursor: pointer;
   color: var(--rs-color-foreground-base-primary);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  text-decoration: none;
+  border: none;
+  background: none;
+  text-align: left;
+  box-sizing: border-box;
 }
 
 .breadcrumb-dropdown-item:hover {
   background-color: var(--rs-color-background-base-primary-hover);
+  border-radius: var(--rs-radius-2);
 }

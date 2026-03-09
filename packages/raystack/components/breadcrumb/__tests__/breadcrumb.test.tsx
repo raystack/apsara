@@ -194,6 +194,7 @@ describe('Breadcrumb', () => {
       expect(span).toHaveClass(styles['breadcrumb-link']);
       expect(span).toHaveClass(styles['breadcrumb-link-active']);
       expect(span).toHaveAttribute('aria-current', 'page');
+      expect(span).toHaveAttribute('data-current', 'true');
       expect(span).toHaveTextContent('Current Page');
     });
 
@@ -267,6 +268,7 @@ describe('Breadcrumb', () => {
       expect(span).toHaveClass(styles['breadcrumb-link']);
       expect(span).toHaveClass(styles['breadcrumb-link-disabled']);
       expect(span).toHaveAttribute('aria-disabled', 'true');
+      expect(span).toHaveAttribute('data-disabled', 'true');
       expect(span).toHaveTextContent('Loading…');
     });
 
@@ -349,6 +351,38 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('Electronics')).toBeInTheDocument();
       expect(screen.getByText('Clothing')).toBeInTheDocument();
       expect(screen.getByText('Books')).toBeInTheDocument();
+    });
+
+    it('renders dropdown items with href as links', () => {
+      render(
+        <Breadcrumb>
+          <Breadcrumb.Item
+            dropdownItems={[
+              {
+                label: 'New tab',
+                href: '/page',
+                target: '_blank',
+                rel: 'noopener noreferrer'
+              },
+              { label: 'Same tab', href: '/other' }
+            ]}
+          >
+            Categories
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      fireEvent.click(screen.getByText('Categories'));
+
+      const newTabLink = screen.getByText('New tab');
+      expect(newTabLink.tagName).toBe('A');
+      expect(newTabLink).toHaveAttribute('href', '/page');
+      expect(newTabLink).toHaveAttribute('target', '_blank');
+      expect(newTabLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+      const sameTabLink = screen.getByText('Same tab');
+      expect(sameTabLink.tagName).toBe('A');
+      expect(sameTabLink).toHaveAttribute('href', '/other');
     });
   });
 

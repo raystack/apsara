@@ -33,6 +33,12 @@ export interface BreadcrumbItem {
   dropdownItems?: {
     /** Text to display for the dropdown item */
     label: string;
+    /** When set, the option renders as a link. Use with target and rel for new tab (e.g. target="_blank" rel="noopener noreferrer"). */
+    href?: string;
+    /** Link target (e.g. "_blank" for new tab). */
+    target?: string;
+    /** Link rel (e.g. "noopener noreferrer" when target="_blank"). */
+    rel?: string;
     /** Callback function when a dropdown item is clicked */
     onClick?: ReactEventHandler<HTMLDivElement>;
   }[];
