@@ -19,7 +19,10 @@ export interface BreadcrumbDropdownItem {
 
 export interface BreadcrumbItemProps extends HTMLAttributes<HTMLAnchorElement> {
   leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
   current?: boolean;
+  /** When true, the item is non-clickable and visually muted (e.g. loading or no access). */
+  disabled?: boolean;
   dropdownItems?: BreadcrumbDropdownItem[];
   href?: string;
   as?: ReactElement;
@@ -35,7 +38,9 @@ export const BreadcrumbItem = forwardRef<
       children,
       className,
       leadingIcon,
+      trailingIcon,
       current,
+      disabled,
       href,
       dropdownItems,
       ...props
@@ -49,10 +54,13 @@ export const BreadcrumbItem = forwardRef<
           <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
         )}
         {children && <span>{children}</span>}
+        {trailingIcon && (
+          <span className={styles['breadcrumb-icon']}>{trailingIcon}</span>
+        )}
       </>
     );
 
-    if (dropdownItems) {
+    if (dropdownItems && !disabled) {
       return (
         <Menu>
           <Menu.Trigger className={styles['breadcrumb-dropdown-trigger']}>
@@ -73,15 +81,44 @@ export const BreadcrumbItem = forwardRef<
         </Menu>
       );
     }
+    if (disabled) {
+      return (
+        <li className={cx(styles['breadcrumb-item'], className)}>
+          <span
+            ref={ref as React.RefObject<HTMLSpanElement>}
+            className={cx(
+              styles['breadcrumb-link'],
+              styles['breadcrumb-link-disabled']
+            )}
+            aria-disabled='true'
+          >
+            {label}
+          </span>
+        </li>
+      );
+    }
+    if (current) {
+      return (
+        <li className={cx(styles['breadcrumb-item'], className)}>
+          <span
+            ref={ref as React.RefObject<HTMLSpanElement>}
+            className={cx(
+              styles['breadcrumb-link'],
+              styles['breadcrumb-link-active']
+            )}
+            aria-current='page'
+          >
+            {label}
+          </span>
+        </li>
+      );
+    }
     return (
       <li className={cx(styles['breadcrumb-item'], className)}>
         {cloneElement(
           renderedElement,
           {
-            className: cx(
-              styles['breadcrumb-link'],
-              current && styles['breadcrumb-link-active']
-            ),
+            className: styles['breadcrumb-link'],
             href,
             ...props,
             ...renderedElement.props

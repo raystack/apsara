@@ -113,11 +113,23 @@ export const asDemo = {
   </Breadcrumb>`
 };
 
+export const disabledDemo = {
+  type: 'code',
+  code: `
+  <Breadcrumb>
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item disabled>Loading…</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products" current>Products</Breadcrumb.Item>
+  </Breadcrumb>`
+};
+
 export const iconsDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Text with Icon',
+      name: 'Leading Icon',
       code: `
       <Breadcrumb>
         <Breadcrumb.Item href="/" leadingIcon={<BellIcon />}>Home</Breadcrumb.Item>
@@ -125,6 +137,28 @@ export const iconsDemo = {
         <Breadcrumb.Item href="/documents" leadingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
         <Breadcrumb.Item href="/settings" leadingIcon={<ShoppingBagFilledIcon />}>Settings</Breadcrumb.Item>
+      </Breadcrumb>`
+    },
+    {
+      name: 'Trailing Icon',
+      code: `
+      <Breadcrumb>
+        <Breadcrumb.Item href="/" trailingIcon={<BellIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/documents" trailingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/settings" trailingIcon={<ShoppingBagFilledIcon />}>Settings</Breadcrumb.Item>
+      </Breadcrumb>`
+    },
+    {
+      name: 'Both Icons',
+      code: `
+      <Breadcrumb>
+        <Breadcrumb.Item href="/" leadingIcon={<BellIcon />} trailingIcon={<FilterIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/documents" leadingIcon={<FilterIcon />} trailingIcon={<ShoppingBagFilledIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/settings" leadingIcon={<ShoppingBagFilledIcon />} trailingIcon={<BellIcon />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {

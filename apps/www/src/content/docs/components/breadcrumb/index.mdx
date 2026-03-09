@@ -12,6 +12,7 @@ import {
   ellipsisDemo,
   dropdownDemo,
   asDemo,
+  disabledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -42,7 +43,7 @@ Groups all parts of the breadcrumb navigation.
 
 ### Item
 
-Renders an individual breadcrumb link. Use the `current` prop on the item that represents the current page so it is styled and exposed to assistive tech (e.g. `aria-current="page"`).
+Renders an individual breadcrumb link. Use the `current` prop on the item that represents the current page so it is styled and exposed to assistive tech (e.g. `aria-current="page"`). Use the `disabled` prop for non-clickable, visually muted items (e.g. loading or no access).
 
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
 
@@ -80,7 +81,7 @@ Use the `Breadcrumb.Ellipsis` component to truncate the breadcrumb trail when yo
 
 ### Icons
 
-Breadcrumb items can include icons either alongside text or as standalone elements.
+Breadcrumb items can include icons via `leadingIcon` (before the label) or `trailingIcon` (after the label), either alongside text or as standalone elements.
 
 <Demo data={iconsDemo} />
 
@@ -100,8 +101,15 @@ When a custom component is provided, the props are merged, with the custom compo
 
 <Demo data={asDemo} />
 
+### Disabled
+
+Use the `disabled` prop for non-clickable, visually muted items—for example, loading states or segments the user does not have access to. Disabled items render as a span with `aria-disabled="true"` and do not navigate.
+
+<Demo data={disabledDemo} />
+
 ## Accessibility
 
 - Uses `nav` element with `aria-label="Breadcrumb"` for proper landmark identification
 - Current page is indicated with `aria-current="page"`
-- Separator elements are hidden from screen readers with `aria-hidden`
+- Disabled items use `aria-disabled="true"`
+- Separator elements are decorative and use `role="presentation"` and `aria-hidden="true"` so screen readers skip them

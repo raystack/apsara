@@ -7,14 +7,23 @@ export interface BreadcrumbItem {
   /** URL for the item link */
   href?: string;
 
-  /** Optional icon element to display */
+  /** Optional icon element to display before the label */
   leadingIcon?: ReactNode;
+
+  /** Optional icon element to display after the label */
+  trailingIcon?: ReactNode;
 
   /**
    * Whether the item is the current page
    * @defaultValue false
    */
   current?: boolean;
+
+  /**
+   * When true, the item is non-clickable and visually muted (e.g. loading or no access).
+   * @defaultValue false
+   */
+  disabled?: boolean;
 
   /**
    * Optional array of dropdown items
