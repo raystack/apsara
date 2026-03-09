@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
 import {
-  Updater,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getSortedRowModel,
+  Updater,
   useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Content } from "./components/content";
-import { DisplaySettings } from "./components/display-settings";
-import { Filters } from "./components/filters";
-import { TableSearch } from "./components/search";
-import { Toolbar } from "./components/toolbar";
-import { VirtualizedContent } from "./components/virtualized-content";
-import { TableContext } from "./context";
+  VisibilityState
+} from '@tanstack/react-table';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Content } from './components/content';
+import { DisplaySettings } from './components/display-settings';
+import { Filters } from './components/filters';
+import { TableSearch } from './components/search';
+import { Toolbar } from './components/toolbar';
+import { VirtualizedContent } from './components/virtualized-content';
+import { TableContext } from './context';
 import {
   DataTableProps,
   defaultGroupOption,
   GroupedData,
   InternalQuery,
   TableContextType,
-  TableQueryUpdateFn,
-} from "./data-table.types";
+  TableQueryUpdateFn
+} from './data-table.types';
 import {
   getColumnsWithFilterFn,
   getDefaultTableQuery,
@@ -32,14 +32,14 @@ import {
   groupData,
   hasQueryChanged,
   queryToTableState,
-  transformToDataTableQuery,
-} from "./utils";
+  transformToDataTableQuery
+} from './utils';
 
 function DataTableRoot<TData, TValue>({
   data = [],
   columns,
   query,
-  mode = "client",
+  mode = 'client',
   isLoading = false,
   loadingRowCount = 3,
   defaultSort,
@@ -47,9 +47,12 @@ function DataTableRoot<TData, TValue>({
   onTableQueryChange,
   onLoadMore,
   onRowClick,
-  onColumnVisibilityChange,
+  onColumnVisibilityChange
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
-  const defaultTableQuery = getDefaultTableQuery(defaultSort, query);
+  const defaultTableQuery = useMemo(
+    () => getDefaultTableQuery(defaultSort, query),
+    [defaultSort, query]
+  );
   const initialColumnVisibility = getInitialColumnVisibility(columns);
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -57,8 +60,8 @@ function DataTableRoot<TData, TValue>({
   );
   const handleColumnVisibilityChange = useCallback(
     (value: Updater<VisibilityState>) => {
-      setColumnVisibility((prev) => {
-        const newValue = typeof value === "function" ? value(prev) : value;
+      setColumnVisibility(prev => {
+        const newValue = typeof value === 'function' ? value(prev) : value;
         onColumnVisibilityChange?.(newValue);
         return newValue;
       });
@@ -77,12 +80,18 @@ function DataTableRoot<TData, TValue>({
   );
 
   const onDisplaySettingsReset = useCallback(() => {
-    setTableQuery((prev) => ({ ...prev, ...defaultTableQuery }));
+    setTableQuery(prev => ({
+      ...prev,
+      ...defaultTableQuery,
+      sort: [defaultSort],
+      group_by: [defaultGroupOption.id]
+    }));
     handleColumnVisibilityChange(initialColumnVisibility);
   }, [
+    defaultSort,
     defaultTableQuery,
     initialColumnVisibility,
-    handleColumnVisibilityChange,
+    handleColumnVisibilityChange
   ]);
 
   const group_by = tableQuery.group_by?.[0];
@@ -102,7 +111,7 @@ function DataTableRoot<TData, TValue>({
       tableQuery &&
       onTableQueryChange &&
       hasQueryChanged(oldQueryRef.current, tableQuery) &&
-      mode === "server"
+      mode === 'server'
     ) {
       onTableQueryChange(transformToDataTableQuery(tableQuery));
       oldQueryRef.current = tableQuery;
@@ -114,31 +123,31 @@ function DataTableRoot<TData, TValue>({
     columns: columnsWithFilters,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
-    getSubRows: (row) => (row as unknown as GroupedData<TData>)?.subRows || [],
-    getSortedRowModel: mode === "server" ? undefined : getSortedRowModel(),
-    getFilteredRowModel: mode === "server" ? undefined : getFilteredRowModel(),
-    manualSorting: mode === "server",
-    manualFiltering: mode === "server",
+    getSubRows: row => (row as unknown as GroupedData<TData>)?.subRows || [],
+    getSortedRowModel: mode === 'server' ? undefined : getSortedRowModel(),
+    getFilteredRowModel: mode === 'server' ? undefined : getFilteredRowModel(),
+    manualSorting: mode === 'server',
+    manualFiltering: mode === 'server',
     onColumnVisibilityChange: handleColumnVisibilityChange,
-    globalFilterFn: mode === "server" ? undefined : "auto",
+    globalFilterFn: mode === 'server' ? undefined : 'auto',
     initialState: {
-      columnVisibility: initialColumnVisibility,
+      columnVisibility: initialColumnVisibility
     },
     filterFromLeafRows: true,
     state: {
       ...reactTableState,
       columnVisibility: columnVisibility,
       expanded:
-        group_by && group_by !== defaultGroupOption.id ? true : undefined,
-    },
+        group_by && group_by !== defaultGroupOption.id ? true : undefined
+    }
   });
 
   function updateTableQuery(fn: TableQueryUpdateFn) {
-    setTableQuery((prev) => fn(prev));
+    setTableQuery(prev => fn(prev));
   }
 
   const loadMoreData = useCallback(() => {
-    if (mode === "server" && onLoadMore) {
+    if (mode === 'server' && onLoadMore) {
       onLoadMore();
     }
   }, [mode, onLoadMore]);
@@ -146,9 +155,9 @@ function DataTableRoot<TData, TValue>({
   const searchQuery = query?.search;
   useEffect(() => {
     if (searchQuery) {
-      updateTableQuery((prev) => ({
+      updateTableQuery(prev => ({
         ...prev,
-        search: searchQuery,
+        search: searchQuery
       }));
     }
   }, [searchQuery]);
@@ -184,7 +193,7 @@ function DataTableRoot<TData, TValue>({
       defaultSort,
       loadingRowCount,
       onRowClick,
-      shouldShowFilters,
+      shouldShowFilters
     };
   }, [
     table,
@@ -198,7 +207,7 @@ function DataTableRoot<TData, TValue>({
     defaultSort,
     loadingRowCount,
     onRowClick,
-    shouldShowFilters,
+    shouldShowFilters
   ]);
 
   return (
@@ -214,5 +223,5 @@ export const DataTable = Object.assign(DataTableRoot, {
   Toolbar: Toolbar,
   Search: TableSearch,
   Filters: Filters,
-  DisplayControls: DisplaySettings,
+  DisplayControls: DisplaySettings
 });
