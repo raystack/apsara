@@ -38,35 +38,6 @@ import {
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
-const breadcrumbTrail = (
-  <>
-    <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item href='/products'>Products</Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item href='/products/electronics'>Electronics</Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item href='/products/electronics/laptops'>
-      Laptops
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item href='/products/electronics/laptops/gaming'>
-      Gaming
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item href='/products/electronics/laptops/gaming/accessories'>
-      Accessories
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item
-      href='/products/electronics/laptops/gaming/accessories'
-      current
-    >
-      Footwear
-    </Breadcrumb.Item>
-  </>
-);
-
 const Page = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [nestedDialogOpen, setNestedDialogOpen] = useState(false);
@@ -256,6 +227,7 @@ const Page = () => {
             </Flex>
           </Flex>
 
+<<<<<<< feat/trailing-icon-and-disabled-item
           {/* Breadcrumb Examples */}
           <Text
             size='large'
@@ -417,6 +389,8 @@ const Page = () => {
               </Breadcrumb.Item>
             </Breadcrumb>
           </Flex>
+=======
+>>>>>>> feat/breadcrumb-auto-ellipsis
           <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>
             <Search
               placeholder='Default large search'
