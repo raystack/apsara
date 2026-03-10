@@ -109,6 +109,85 @@ export const Component = Object.assign(ComponentRoot, {
 });
 ```
 
+### Base UI Primitive Wrapping (when applicable)
+
+When the component wraps a Base UI primitive from `@base-ui/react`, follow these additional conventions:
+
+**Naming:** The Base UI `Popup` (or `Panel`) sub-component is always exported as `Content` in Apsara. The `Content` wrapper internally composes `Portal`, `Positioner`, and `Popup` (or `Panel`) so consumers only deal with a single sub-component.
+
+**Content Props Interface:** Merge Positioner props with Popup/Panel props so positioning config (`side`, `align`, `sideOffset`, etc.) is passed directly on `<Component.Content>`. Separate them internally via rest spread:
+
+```tsx
+export interface ComponentContentProps
+  extends Omit<
+      ComponentPrimitive.Positioner.Props,
+      'render' | 'className' | 'style'
+    >,
+    ComponentPrimitive.Popup.Props {
+  /** @default false */
+  showArrow?: boolean;
+}
+```
+
+**Content Component Template:**
+
+```tsx
+const ComponentContent = forwardRef<
+  ElementRef<typeof ComponentPrimitive.Popup>,
+  ComponentContentProps
+>(
+  (
+    {
+      className,
+      children,
+      showArrow = false,
+      style,
+      render,
+      ...positionerProps
+    },
+    ref
+  ) => {
+    return (
+      <ComponentPrimitive.Portal>
+        <ComponentPrimitive.Positioner
+          sideOffset={showArrow ? 10 : 4}
+          collisionPadding={3}
+          className={styles.positioner}
+          {...positionerProps}
+        >
+          <ComponentPrimitive.Popup
+            ref={ref}
+            className={cx(styles.popup, className)}
+            style={style}
+            render={render}
+          >
+            {children}
+            {showArrow && (
+              <ComponentPrimitive.Arrow className={styles.arrow}>
+                {/* arrow SVG */}
+              </ComponentPrimitive.Arrow>
+            )}
+          </ComponentPrimitive.Popup>
+        </ComponentPrimitive.Positioner>
+      </ComponentPrimitive.Portal>
+    );
+  }
+);
+ComponentContent.displayName = 'Component.Content';
+```
+
+Key rules:
+- `ref` forwards to the `Popup`/`Panel` element (the visible content container)
+- `className` and `style` apply to `Popup`/`Panel`, NOT the Positioner
+- Positioner gets its own CSS class from the module (e.g., `styles.positioner`)
+- If the Base UI primitive uses `Panel` instead of `Popup`, substitute accordingly but still export as `Content`
+- Arrow is optional, controlled by `showArrow` prop (default `false`). When `showArrow` is true, increase `sideOffset` to account for arrow size
+
+**Existing examples:**
+- `Popover.Content` wraps `Portal > Positioner > Popup` — see `components/popover/popover.tsx`
+- `Tooltip.Content` wraps `Portal > Positioner > Popup` with arrow support — see `components/tooltip/tooltip-content.tsx`
+- `PreviewCard.Content` wraps `Portal > Positioner > Popup` with arrow support — see `components/preview-card/preview-card.tsx`
+
 ## Step 2: Create the Index File
 
 Simple re-export:
