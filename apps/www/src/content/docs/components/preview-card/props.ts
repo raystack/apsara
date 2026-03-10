@@ -1,5 +1,5 @@
 export interface PreviewCardRootProps {
-  /** Whether the preview card is open (controlled). */
+  /** Whether the preview card is currently open (controlled). */
   open?: boolean;
 
   /**
@@ -8,8 +8,47 @@ export interface PreviewCardRootProps {
    */
   defaultOpen?: boolean;
 
-  /** Callback when the open state changes. */
+  /** Event handler called when the preview card is opened or closed. */
   onOpenChange?: (open: boolean) => void;
+
+  /** Event handler called after any animations complete when the preview card is opened or closed. */
+  onOpenChangeComplete?: (open: boolean) => void;
+
+  /**
+   * A ref to imperative actions.
+   * - `unmount`: Unmounts the preview card popup.
+   * - `close`: Closes the preview card imperatively when called.
+   * @remarks `React.RefObject<PreviewCard.Root.Actions | null>`
+   */
+  actionsRef?: React.RefObject<{
+    unmount: () => void;
+    close: () => void;
+  } | null>;
+
+  /**
+   * ID of the trigger that the preview card is associated with.
+   * Useful in conjunction with the `defaultOpen` prop.
+   */
+  defaultTriggerId?: string | null;
+
+  /**
+   * ID of the trigger that the preview card is associated with.
+   * Useful in conjunction with the `open` prop for controlled preview cards.
+   */
+  triggerId?: string | null;
+
+  /**
+   * A handle to associate the preview card with a trigger.
+   * If specified, allows external triggers to control the card's open state.
+   * Can be created with `PreviewCard.createHandle()`.
+   */
+  handle?: unknown;
+
+  /**
+   * The content of the preview card.
+   * Can be a regular React node or a render function that receives the payload of the active trigger.
+   */
+  children?: React.ReactNode | ((payload: unknown) => React.ReactNode);
 }
 
 export interface PreviewCardTriggerProps {
@@ -17,71 +56,162 @@ export interface PreviewCardTriggerProps {
   href?: string;
 
   /**
-   * Wait time in milliseconds before the preview card opens.
+   * How long to wait before the preview card opens. Specified in milliseconds.
    * @defaultValue 600
    */
   delay?: number;
 
   /**
-   * Wait time in milliseconds before the preview card closes.
+   * How long to wait before closing the preview card. Specified in milliseconds.
    * @defaultValue 300
    */
   closeDelay?: number;
 
-  /** Additional CSS class name. */
-  className?: string;
+  /** A handle to associate the trigger with a preview card. */
+  handle?: unknown;
+
+  /** A payload to pass to the preview card when it is opened. */
+  payload?: unknown;
+
+  /**
+   * CSS class applied to the element, or a function that returns a class based on state.
+   */
+  className?: string | ((state: { open: boolean }) => string | undefined);
+
+  /**
+   * Allows you to replace the component's HTML element
+   * with a different tag, or compose it with another component.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((
+        props: React.HTMLAttributes<HTMLElement>,
+        state: { open: boolean }
+      ) => React.ReactElement);
 }
 
 export interface PreviewCardContentProps {
-  /** Preferred side of the trigger to render.
-   * @defaultValue 'bottom'
-   */
-  side?: 'top' | 'right' | 'bottom' | 'left';
-
-  /** Alignment relative to trigger.
-   * @defaultValue 'center'
-   */
-  align?: 'start' | 'center' | 'end';
-
-  /** Distance in pixels from the trigger.
-   * @defaultValue 4
-   */
-  sideOffset?: number;
-
-  /** Offset in pixels from alignment edge. */
-  alignOffset?: number;
-
-  /** Padding between content and viewport edges. */
-  collisionPadding?: number;
-
   /**
    * Controls whether to show the arrow.
    * @defaultValue false
    */
   showArrow?: boolean;
 
-  /** Additional CSS class name. */
-  className?: string;
+  /**
+   * Which side of the anchor element to align the popup against.
+   * May automatically change to avoid collisions.
+   * @defaultValue 'bottom'
+   */
+  side?: 'top' | 'right' | 'bottom' | 'left';
 
-  /** Additional inline styles. */
-  style?: React.CSSProperties;
+  /**
+   * How to align the popup relative to the specified side.
+   * @defaultValue 'center'
+   */
+  align?: 'start' | 'center' | 'end';
 
-  /** Custom render function.
+  /**
+   * Distance between the anchor and the popup in pixels.
+   * Also accepts a function to read anchor/positioner dimensions.
+   * @remarks `number | OffsetFunction`
+   * @defaultValue 4
+   */
+  sideOffset?: number | ((data: OffsetData) => number);
+
+  /**
+   * Additional offset along the alignment axis in pixels.
+   * Also accepts a function to read anchor/positioner dimensions.
+   * @remarks `number | OffsetFunction`
+   * @defaultValue 0
+   */
+  alignOffset?: number | ((data: OffsetData) => number);
+
+  /**
+   * Additional space to maintain from the edge of the collision boundary.
+   */
+  collisionPadding?: number;
+
+  /**
+   * An element or a rectangle that delimits the area that the popup is confined to.
+   * @defaultValue 'clipping-ancestors'
+   */
+  collisionBoundary?: Element | Element[] | 'clipping-ancestors';
+
+  /**
+   * Determines how to handle collisions when positioning the popup.
+   */
+  collisionAvoidance?: {
+    side?: 'escape' | 'flip';
+    align?: 'shift' | 'flip';
+  };
+
+  /**
+   * Whether to disable the popup from tracking any layout shift of its positioning anchor.
+   * @defaultValue false
+   */
+  disableAnchorTracking?: boolean;
+
+  /**
+   * Minimum distance to maintain between the arrow and the edges of the popup.
+   * Prevents the arrow element from hanging out of rounded corners.
+   * @defaultValue 5
+   */
+  arrowPadding?: number;
+
+  /**
+   * An element to position the popup against.
+   * By default, the popup will be positioned against the trigger.
+   */
+  anchor?: Element | React.RefObject<Element | null> | null;
+
+  /**
+   * Whether to maintain the popup in the viewport after the anchor element was scrolled out of view.
+   * @defaultValue false
+   */
+  sticky?: boolean;
+
+  /**
+   * Determines which CSS `position` property to use.
+   * @defaultValue 'absolute'
+   */
+  positionMethod?: 'absolute' | 'fixed';
+
+  /**
+   * Allows you to replace the popup's HTML element with a different tag, or compose it with another component.
    *
    * @remarks `ReactElement | function`
    */
   render?:
     | React.ReactElement
-    | ((props: any, state: any) => React.ReactElement);
+    | ((
+        props: React.HTMLAttributes<HTMLElement>,
+        state: { open: boolean; side: string; align: string }
+      ) => React.ReactElement);
 
   /** Content to render inside the preview card. */
   children?: React.ReactNode;
 }
 
 export interface PreviewCardViewportProps {
-  /** Additional CSS class name. */
-  className?: string;
+  /**
+   * Allows you to replace the component's HTML element
+   * with a different tag, or compose it with another component.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?:
+    | React.ReactElement
+    | ((
+        props: React.HTMLAttributes<HTMLElement>,
+        state: Record<string, unknown>
+      ) => React.ReactElement);
+}
 
-  /** Content to render inside the viewport. */
-  children?: React.ReactNode;
+interface OffsetData {
+  anchor: { width: number; height: number };
+  positioner: { width: number; height: number };
+  side: 'top' | 'bottom' | 'left' | 'right';
+  align: 'start' | 'center' | 'end';
 }
