@@ -575,4 +575,61 @@ describe('DataTable', () => {
       expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
     });
   });
+
+  describe('stickyGroupHeader (anchor group title)', () => {
+    const columnsWithGrouping: DataTableColumnDef<TestData, unknown>[] = [
+      {
+        id: 'name',
+        accessorKey: 'name',
+        header: 'Name',
+        cell: ({ getValue }) => getValue(),
+        enableGrouping: true
+      },
+      {
+        id: 'status',
+        accessorKey: 'status',
+        header: 'Status',
+        cell: ({ getValue }) => getValue(),
+        enableGrouping: true
+      }
+    ];
+
+    it('applies sticky class to group section header when stickyGroupHeader is true', () => {
+      const { container } = render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithGrouping}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{ group_by: ['status'] }}
+          stickyGroupHeader
+        >
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      const sectionHeaderCell = container.querySelector(
+        `th.${styles.stickySectionHeader}`
+      );
+      expect(sectionHeaderCell).toBeInTheDocument();
+    });
+
+    it('does not apply sticky class when stickyGroupHeader is false (default)', () => {
+      const { container } = render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithGrouping}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          query={{ group_by: ['status'] }}
+          stickyGroupHeader={false}
+        >
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      const sectionHeaderCell = container.querySelector(
+        `th.${styles.stickySectionHeader}`
+      );
+      expect(sectionHeaderCell).not.toBeInTheDocument();
+    });
+  });
 });

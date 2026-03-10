@@ -1,6 +1,5 @@
 .toolbar {
-  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3)
-    var(--rs-space-5);
+  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3) var(--rs-space-5);
   align-self: stretch;
 
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
@@ -21,12 +20,13 @@
 .display-popover-properties-select {
   width: var(--select-width);
 }
+
 .display-popover-properties-select[with-icon-button] {
   /* Reduce Icon button with "--rs-space-7" and flex gap "--rs-space-2" */
   width: calc(var(--select-width) - var(--rs-space-7) - var(--rs-space-2));
 }
 
-.display-popover-properties-select > span {
+.display-popover-properties-select>span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -145,6 +145,19 @@
   padding: var(--rs-space-3) var(--rs-space-4);
 }
 
+/* Sticky group anchor: shows current group label while scrolling (virtualized) */
+.stickyGroupAnchor {
+  position: sticky;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  background: var(--rs-color-background-base-secondary);
+  font-weight: 500;
+  padding: var(--rs-space-3);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  box-shadow: 0 1px 0 0 var(--rs-color-border-base-primary);
+}
+
 .stickyLoaderContainer {
   position: sticky;
   bottom: 0;
@@ -154,4 +167,13 @@
 
 .loaderRow {
   position: relative;
+}
+
+/* Non-virtualized: sticky section header under table header */
+.stickySectionHeader {
+  position: sticky;
+  top: var(--rs-space-10);
+  z-index: 1;
+  background: var(--rs-color-background-base-secondary);
+  box-shadow: 0 1px 0 0 var(--rs-color-border-base-primary);
 }

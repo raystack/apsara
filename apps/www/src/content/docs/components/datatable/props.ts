@@ -35,6 +35,13 @@ export interface DataTableProps {
   onColumnVisibilityChange?: (
     columnVisibility: Record<string, boolean>
   ) => void;
+
+  /**
+   * When true (default), the current group label sticks under the table header while scrolling (anchor group title).
+   * Applies to both Content and VirtualizedContent when grouping is enabled.
+   * @defaultValue false
+   */
+  stickyGroupHeader?: boolean;
 }
 
 export interface DataTableQuery {
