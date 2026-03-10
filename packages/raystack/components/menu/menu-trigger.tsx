@@ -4,7 +4,10 @@ import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { forwardRef } from 'react';
 import { TriangleRightIcon } from '~/icons';
+import { Button } from '../button';
+import { useMenubarContext } from '../menubar/menubar';
 import { Cell, CellBaseProps } from './cell';
+import styles from './menu.module.css';
 import { useMenuContext } from './menu-root';
 import { getMatch } from './utils';
 
@@ -13,10 +16,21 @@ export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
 }
 
 export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
-  ({ children, stopPropagation = true, onClick, ...props }, ref) => {
+  ({ children, stopPropagation = true, onClick, render, ...props }, ref) => {
+    const inMenubarContext = useMenubarContext();
+    const menubarRender = inMenubarContext ? (
+      <Button
+        variant='text'
+        color='neutral'
+        size='small'
+        className={styles.menuBarTrigger}
+      />
+    ) : undefined;
+
     return (
       <MenuPrimitive.Trigger
         ref={ref}
+        render={render ?? menubarRender}
         onClick={e => {
           if (stopPropagation) e.stopPropagation();
           onClick?.(e);
