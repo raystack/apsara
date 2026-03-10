@@ -575,4 +575,21 @@ describe('DataTable', () => {
       expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
     });
   });
+
+  describe('getRowKey', () => {
+    it('renders with getRowKey callback for stable row keys', () => {
+      render(
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          getRowKey={row => row.id}
+        >
+          <DataTable.Content />
+        </DataTable>
+      );
+      expect(screen.getByRole('table')).toBeInTheDocument();
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+  });
 });

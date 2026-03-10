@@ -112,6 +112,8 @@ export interface DataTableProps<TData, TValue> {
   onLoadMore?: () => Promise<void>;
   onRowClick?: (row: TData) => void;
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
+  /** Return a stable unique key for each row (used as React key). Use for sortable/filterable tables. */
+  getRowKey?: (row: TData, index: number) => string;
 }
 
 export type DataTableContentClassNames = {
