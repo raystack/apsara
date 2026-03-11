@@ -1,0 +1,93 @@
+---
+title: Progress
+description: Displays the completion progress of a task.
+source: packages/raystack/components/progress
+tag: new
+---
+
+import { playground, directUsageDemo, variantDemo, customizationDemo, animatedDemo, withLabelsDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Progress } from '@raystack/apsara'
+
+{/* Direct usage — renders track automatically */}
+<Progress value={40} />
+
+{/* Composable usage */}
+<Progress value={40}>
+  <Progress.Label>Uploading...</Progress.Label>
+  <Progress.Value />
+  <Progress.Track />
+</Progress>
+```
+
+## API Reference
+
+### Root
+
+The main container for the progress. Renders a default track when no children are provided. Set `value` to `null` for an indeterminate state.
+
+<auto-type-table path="./props.ts" name="ProgressProps" />
+
+### Label
+
+Displays a label for the progress.
+
+<auto-type-table path="./props.ts" name="ProgressLabelProps" />
+
+### Value
+
+Displays the formatted current value as a percentage.
+
+<auto-type-table path="./props.ts" name="ProgressValueProps" />
+
+### Track
+
+Contains the indicator that visualizes the current value.
+
+<auto-type-table path="./props.ts" name="ProgressTrackProps" />
+
+## Examples
+
+### Variant
+
+The progress supports `linear` and `circular` variants.
+
+<Demo data={variantDemo} />
+
+### Direct Usage
+
+The simplest way to use the progress. When no children are provided, it renders the track automatically.
+
+<Demo data={directUsageDemo} />
+
+### Customization
+
+Customize the track for both variants. For linear, use `height` on the track. For circular, use `width`/`height` on the track to control the overall size and `--rs-progress-track-size` to control the stroke thickness.
+
+<Demo data={customizationDemo} />
+
+### Animated
+
+Use controlled `value` to animate the progress indicator.
+
+<Demo data={animatedDemo} />
+
+### With Labels
+
+Compose with `Progress.Label` and `Progress.Value` for additional context.
+
+<Demo data={withLabelsDemo} />
+
+## Accessibility
+
+- Uses the `progressbar` ARIA role
+- Sets `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes
+- Supports indeterminate state when `value` is `null`
+- Supports `aria-label` and `aria-valuetext` for screen readers

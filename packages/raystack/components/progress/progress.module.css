@@ -1,0 +1,97 @@
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.value {
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  color: var(--rs-color-foreground-base-primary);
+  text-align: right;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  overflow: clip;
+  border-radius: 1px;
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
+.indicator {
+  height: 100%;
+  background-color: var(--rs-color-background-accent-emphasis);
+  transition: width 500ms;
+}
+
+/* Circular variant — viewBox is 72×72, SVG scales to container size */
+.progress-variant-circular {
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.circularSvg {
+  --rs-progress-track-size: 4px;
+  --rs-progress-radius: calc((72px - var(--rs-progress-track-size) * 2) / 2);
+  --rs-progress-circumference: calc(2 * 3.14159265 * var(--rs-progress-radius));
+  width: 72px;
+  height: 72px;
+  aspect-ratio: 1;
+  transform: rotate(-90deg);
+}
+
+.circularTrackCircle,
+.circularIndicatorCircle {
+  cx: 50%;
+  cy: 50%;
+  r: var(--rs-progress-radius);
+  stroke-width: var(--rs-progress-track-size);
+  fill: none;
+}
+
+.circularTrackCircle {
+  stroke: var(--rs-color-background-neutral-secondary);
+}
+
+.circularIndicatorCircle {
+  stroke: var(--rs-color-background-accent-emphasis);
+  stroke-dasharray: var(--rs-progress-circumference);
+  stroke-dashoffset: calc(
+    var(--rs-progress-circumference) *
+    (1 - var(--rs-progress-percentage, 0) / 100)
+  );
+  stroke-linecap: butt;
+  transition: stroke-dashoffset 500ms;
+}
+
+.progress-variant-circular .value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: var(--rs-font-weight-medium);
+  text-align: center;
+  white-space: nowrap;
+}
