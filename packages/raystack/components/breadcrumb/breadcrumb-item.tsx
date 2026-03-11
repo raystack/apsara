@@ -55,7 +55,10 @@ export const BreadcrumbItem = forwardRef<
     if (dropdownItems) {
       return (
         <Menu>
-          <Menu.Trigger className={styles['breadcrumb-dropdown-trigger']}>
+          <Menu.Trigger
+            ref={ref as React.Ref<HTMLButtonElement>}
+            className={styles['breadcrumb-dropdown-trigger']}
+          >
             {label}
             <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
           </Menu.Trigger>
