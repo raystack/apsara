@@ -46,6 +46,7 @@ export { Menu } from './components/menu';
 export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
 export { PreviewCard } from './components/preview-card';
+export { Progress } from './components/progress';
 export { Radio } from './components/radio';
 export { ScrollArea } from './components/scroll-area';
 export { Search } from './components/search';
