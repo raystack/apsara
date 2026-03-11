@@ -1,0 +1,91 @@
+---
+title: Meter
+description: A graphical display of a numeric value within a known range.
+source: packages/raystack/components/meter
+---
+
+import { playground, directUsageDemo, variantDemo, customizationDemo, withLabelsDemo, customRangeDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Meter } from '@raystack/apsara'
+
+{/* Direct usage — renders track automatically */}
+<Meter value={40} />
+
+{/* Composable usage */}
+<Meter value={40}>
+  <Meter.Label>Storage used</Meter.Label>
+  <Meter.Value />
+  <Meter.Track />
+</Meter>
+```
+
+## API Reference
+
+### Root
+
+The main container for the meter. Renders a default track when no children are provided.
+
+<auto-type-table path="./props.ts" name="MeterProps" />
+
+### Label
+
+Displays a label for the meter.
+
+<auto-type-table path="./props.ts" name="MeterLabelProps" />
+
+### Value
+
+Displays the formatted current value as a percentage.
+
+<auto-type-table path="./props.ts" name="MeterValueProps" />
+
+### Track
+
+Contains the indicator that visualizes the current value.
+
+<auto-type-table path="./props.ts" name="MeterTrackProps" />
+
+## Examples
+
+### Variant
+
+The meter supports `linear` and `circular` variants.
+
+<Demo data={variantDemo} />
+
+### Direct Usage
+
+The simplest way to use the meter. When no children are provided, it renders the track automatically.
+
+<Demo data={directUsageDemo} />
+
+### Customization
+
+Customize the track for both variants. For linear, use `height` on the track. For circular, use `width`/`height` on the track to control the overall size and `--rs-meter-track-size` to control the stroke thickness.
+
+<Demo data={customizationDemo} />
+
+### With Labels
+
+Compose with `Meter.Label` and `Meter.Value` for additional context.
+
+<Demo data={withLabelsDemo} />
+
+### Custom Range
+
+Use `min` and `max` to define custom value ranges.
+
+<Demo data={customRangeDemo} />
+
+## Accessibility
+
+- Uses the `meter` ARIA role
+- Sets `aria-valuenow`, `aria-valuemin`, and `aria-valuemax` attributes
+- Supports `aria-label` and `aria-valuetext` for screen readers
