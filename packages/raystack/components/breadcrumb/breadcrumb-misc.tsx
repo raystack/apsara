@@ -2,7 +2,7 @@
 
 import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { HTMLAttributes, forwardRef } from 'react';
+import { forwardRef, HTMLAttributes } from 'react';
 import styles from './breadcrumb.module.css';
 
 export interface BreadcrumbEllipsisProps
@@ -21,13 +21,19 @@ export const BreadcrumbEllipsis = forwardRef<
     ref
   ) => {
     return (
-      <span
-        className={cx(styles['breadcrumb-ellipsis'], className)}
-        ref={ref}
-        {...props}
+      <li
+        className={styles['breadcrumb-item']}
+        role='presentation'
+        aria-hidden='true'
       >
-        {children}
-      </span>
+        <span
+          className={cx(styles['breadcrumb-ellipsis'], className)}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </span>
+      </li>
     );
   }
 );
@@ -50,13 +56,19 @@ export const BreadcrumbSeparator = forwardRef<
     ref
   ) => {
     return (
-      <span
-        className={cx(styles['breadcrumb-separator'], className)}
-        ref={ref}
-        {...props}
+      <li
+        className={styles['breadcrumb-item']}
+        role='presentation'
+        aria-hidden='true'
       >
-        {children}
-      </span>
+        <span
+          className={cx(styles['breadcrumb-separator'], className)}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </span>
+      </li>
     );
   }
 );
