@@ -57,7 +57,12 @@ export const BreadcrumbItem = forwardRef<
         <Menu>
           <Menu.Trigger
             ref={ref as React.Ref<HTMLButtonElement>}
-            className={styles['breadcrumb-dropdown-trigger']}
+            className={cx(styles['breadcrumb-dropdown-trigger'], className)}
+            id={props.id}
+            title={props.title}
+            aria-label={props['aria-label']}
+            aria-labelledby={props['aria-labelledby']}
+            aria-describedby={props['aria-describedby']}
           >
             {label}
             <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
