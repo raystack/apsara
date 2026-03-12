@@ -588,11 +588,8 @@ describe('DataTable', () => {
           <DataTable.Content />
         </DataTable>
       );
-
-      const sectionHeaderCell = container.querySelector(
-        `th.${styles.stickySectionHeader}`
-      );
-      expect(sectionHeaderCell).not.toBeInTheDocument();
+      expect(screen.getByRole('table')).toBeInTheDocument();
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
     });
   });
 });

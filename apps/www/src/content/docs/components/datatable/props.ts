@@ -37,12 +37,12 @@ export interface DataTableProps {
   ) => void;
 
   /**
-   * When true (default), the current group label sticks under the table header while scrolling (anchor group title).
+   * When true, the current group label sticks under the table header while scrolling (anchor group title).
    * Applies to both Content and VirtualizedContent when grouping is enabled.
    * @defaultValue false
    */
   stickyGroupHeader?: boolean;
-  
+
   /**
    * Return a stable unique id for each row (used as React key).
    * Use for sortable/filterable tables to avoid key issues when rows reorder.

@@ -48,7 +48,7 @@ function DataTableRoot<TData, TValue>({
   onLoadMore,
   onRowClick,
   onColumnVisibilityChange,
-  stickyGroupHeader = false
+  stickyGroupHeader = false,
   getRowId
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableQuery = useMemo(
