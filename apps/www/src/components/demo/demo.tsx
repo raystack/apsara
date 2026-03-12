@@ -8,6 +8,11 @@ import {
   UploadIcon
 } from '@radix-ui/react-icons';
 import * as Apsara from '@raystack/apsara';
+import {
+  BellIcon,
+  FilterIcon,
+  ShoppingBagFilledIcon
+} from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
@@ -24,6 +29,9 @@ export default function Demo(props: DemoProps) {
     data,
     scope = {
       ...Apsara,
+      BellIcon,
+      FilterIcon,
+      ShoppingBagFilledIcon,
       DataTableDemo,
       LinearMenuDemo,
       PopoverColorPicker,

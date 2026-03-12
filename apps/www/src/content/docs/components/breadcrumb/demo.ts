@@ -26,23 +26,30 @@ export const playground = {
 
 export const sizeDemo = {
   type: 'code',
-  code: `
-  <Flex gap="medium" direction="column">
-     <Breadcrumb size="small">
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
-      </Breadcrumb>
-     <Breadcrumb size="medium">
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
-      </Breadcrumb>
-  </Flex>`
+  tabs: [
+    {
+      name: 'Small',
+      code: `
+  <Breadcrumb size="small">
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
+  </Breadcrumb>`
+    },
+    {
+      name: 'Medium',
+      code: `
+  <Breadcrumb size="medium">
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
+  </Breadcrumb>`
+    }
+  ]
 };
 
 export const separatorDemo = {
@@ -113,22 +120,22 @@ export const iconsDemo = {
       name: 'Text with Icon',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="/" leadingIcon={<>H</>}>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="/" leadingIcon={<BellIcon />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/documents" leadingIcon={<>D</>}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="/documents" leadingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/settings" leadingIcon={<>S</>}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="/settings" leadingIcon={<ShoppingBagFilledIcon />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
       name: 'Only Icon',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="/" leadingIcon={<>H</>}/>
+        <Breadcrumb.Item href="/" leadingIcon={<BellIcon />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/documents" leadingIcon={<>D</>}/>
+        <Breadcrumb.Item href="/documents" leadingIcon={<FilterIcon />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/settings" leadingIcon={<>S</>}/>
+        <Breadcrumb.Item href="/settings" leadingIcon={<ShoppingBagFilledIcon />}/>
       </Breadcrumb>`
     }
   ]

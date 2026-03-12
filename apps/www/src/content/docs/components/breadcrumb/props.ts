@@ -36,6 +36,9 @@ export interface BreadcrumbItem {
    * @default "<a />"
    */
   as?: ReactElement;
+
+  /** Custom CSS class name applied to the list item wrapper */
+  className?: string;
 }
 
 export interface BreadcrumbProps {
