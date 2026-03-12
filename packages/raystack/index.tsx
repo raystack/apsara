@@ -45,6 +45,7 @@ export { List } from './components/list';
 export { Menu } from './components/menu';
 export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
+export { PreviewCard } from './components/preview-card';
 export { Radio } from './components/radio';
 export { ScrollArea } from './components/scroll-area';
 export { Search } from './components/search';
@@ -66,5 +67,5 @@ export {
   ThemeSwitcher,
   useTheme
 } from './components/theme-provider';
-export { ToastContainer, toast } from './components/toast';
+export { Toast, toastManager } from './components/toast';
 export { Tooltip } from './components/tooltip';

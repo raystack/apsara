@@ -24,6 +24,7 @@ import {
   Select,
   Sidebar,
   Spinner,
+  Tabs,
   Text,
   TextArea,
   Tooltip
@@ -132,6 +133,29 @@ const Page = () => {
           <Text size='large' weight='medium' style={{ marginBottom: '24px' }}>
             Main
           </Text>
+
+          <Text
+            size='large'
+            weight='medium'
+            style={{ marginTop: '0', marginBottom: '16px' }}
+          >
+            Tabs Examples
+          </Text>
+          <Flex direction='column' gap={6} style={{ marginBottom: '32px' }}>
+            <Tabs defaultValue='tab1'>
+              <Tabs.List>
+                <Tabs.Tab value='tab1'>Account</Tabs.Tab>
+                <Tabs.Tab value='tab2' disabled>
+                  Password
+                </Tabs.Tab>
+                <Tabs.Tab value='tab3'>Settings</Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Content value='tab1'>Account settings</Tabs.Content>
+              <Tabs.Content value='tab2'>Password settings</Tabs.Content>
+              <Tabs.Content value='tab3'>Other settings</Tabs.Content>
+            </Tabs>
+          </Flex>
+
           <code
             style={{
               fontFamily: 'var(--rs-font-mono)',

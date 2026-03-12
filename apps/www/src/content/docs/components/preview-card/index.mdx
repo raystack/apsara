@@ -1,0 +1,78 @@
+---
+title: PreviewCard
+description: A popup that appears when a link is hovered, showing a preview for sighted users.
+source: packages/raystack/components/preview-card
+tag: new
+---
+
+import { playground, arrowDemo, positionDemo, contentTransitionsDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { PreviewCard } from "@raystack/apsara";
+
+<PreviewCard>
+  <PreviewCard.Trigger href="/some-url">Hover me</PreviewCard.Trigger>
+  <PreviewCard.Content>
+    Preview content here
+  </PreviewCard.Content>
+</PreviewCard>
+```
+
+## API Reference
+
+### Root
+
+Groups all parts of the preview card.
+
+<auto-type-table path="./props.ts" name="PreviewCardRootProps" />
+
+### Trigger
+
+A link element that opens the preview card on hover. Renders an `<a>` tag.
+
+<auto-type-table path="./props.ts" name="PreviewCardTriggerProps" />
+
+### Content
+
+Renders the preview card content panel, wrapping Portal, Positioner, and Popup internally.
+
+<auto-type-table path="./props.ts" name="PreviewCardContentProps" />
+
+### Viewport
+
+Optional wrapper for animating content transitions when multiple triggers share one card via `createHandle`. Provides direction-aware slide animations.
+
+<auto-type-table path="./props.ts" name="PreviewCardViewportProps" />
+
+## Examples
+
+### With Arrow
+
+Display an arrow pointing to the trigger element.
+
+<Demo data={arrowDemo} />
+
+### Content Transitions
+
+When multiple triggers share one card via `createHandle`, wrap content in `Viewport` to animate transitions between them. Content slides in from the direction of the newly hovered trigger.
+
+<Demo data={contentTransitionsDemo} />
+
+### Positioning
+
+Control the position of the preview card relative to its trigger.
+
+<Demo data={positionDemo} />
+
+## Accessibility
+
+- Opens on hover with configurable delay (default 600ms)
+- Closes when the pointer leaves the trigger or content area
+- Content is accessible to screen readers when open
+- Trigger renders as a semantic `<a>` element

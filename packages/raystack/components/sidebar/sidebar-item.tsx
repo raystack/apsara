@@ -53,7 +53,7 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
       align: 'center',
       gap: 3,
       className: cx(styles['nav-leading-icon'], classNames?.leadingIcon),
-      ariaHidden: true
+      'aria-hidden': true
     } as const;
 
     const content = cloneElement(
