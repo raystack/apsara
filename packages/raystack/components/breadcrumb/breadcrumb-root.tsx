@@ -1,7 +1,7 @@
 'use client';
 
-import { type VariantProps, cva } from 'class-variance-authority';
-import { HTMLAttributes, forwardRef } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { forwardRef, HTMLAttributes } from 'react';
 import styles from './breadcrumb.module.css';
 
 const breadcrumbVariants = cva(styles['breadcrumb'], {
@@ -21,11 +21,15 @@ export interface BreadcrumbProps
     HTMLAttributes<HTMLDivElement> {}
 
 export const BreadcrumbRoot = forwardRef<HTMLDivElement, BreadcrumbProps>(
-  ({ className, children, size = 'medium', ...props }, ref) => {
+  (
+    { className, children, size = 'medium', 'aria-label': ariaLabel, ...props },
+    ref
+  ) => {
     return (
       <nav
         className={breadcrumbVariants({ size, className })}
         ref={ref}
+        aria-label={ariaLabel ?? 'Breadcrumb'}
         {...props}
       >
         <ol className={styles['breadcrumb-list']}>{children}</ol>

@@ -1,4 +1,4 @@
-import { ReactElement, ReactEventHandler, ReactNode } from 'react';
+import { ElementType, ReactEventHandler, ReactNode } from 'react';
 
 export interface BreadcrumbItem {
   /** Text to display for the item */
@@ -29,13 +29,12 @@ export interface BreadcrumbItem {
   }[];
 
   /**
-   * Custom element used to render the Item.
+   * Component to render as (e.g. NextLink). Pass the component reference, not a JSX element.
+   * Receives breadcrumb item props (href, className, ref, children, etc.).
    *
-   * All props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
-   *
-   * @default "<a />"
+   * @default "a"
    */
-  as?: ReactElement;
+  as?: ElementType;
 }
 
 export interface BreadcrumbProps {
