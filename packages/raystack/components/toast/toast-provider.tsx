@@ -24,9 +24,11 @@ export interface ToastProviderProps
   position?: ToastPosition;
 }
 
-function ToastList() {
+function ToastList({ position }: { position: ToastPosition }) {
   const { toasts } = ToastPrimitive.useToastManager();
-  return toasts.map(toast => <ToastRoot key={toast.id} toast={toast} />);
+  return toasts.map(toast => (
+    <ToastRoot key={toast.id} toast={toast} position={position} />
+  ));
 }
 
 export const ToastProvider = forwardRef<
@@ -41,7 +43,7 @@ export const ToastProvider = forwardRef<
           ref={ref}
           className={cx(styles.viewport, styles[`viewport-${position}`])}
         >
-          <ToastList />
+          <ToastList position={position} />
         </ToastPrimitive.Viewport>
       </ToastPrimitive.Portal>
     </ToastPrimitive.Provider>

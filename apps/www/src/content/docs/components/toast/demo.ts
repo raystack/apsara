@@ -7,7 +7,7 @@ export const preview = {
     return (
       <Toast.Provider>
         <Flex gap="medium" wrap="wrap">
-          <Button onClick={() => toastManager.add({ title: "This is a toast", type: "success" })}>
+          <Button onClick={() => toastManager.add({ title: "This is a toast" })}>
             Trigger toast
           </Button>
         </Flex>
@@ -27,6 +27,13 @@ export const basicDemo = {
 export const typesDemo = {
   type: 'code',
   tabs: [
+    {
+      name: 'Default',
+      code: `
+  <Button onClick={() => toastManager.add({ title: "Default toast" })}>
+    Default
+  </Button>`
+    },
     {
       name: 'Success',
       code: `
@@ -53,13 +60,6 @@ export const typesDemo = {
       code: `
   <Button onClick={() => toastManager.add({ title: "FYI: System update available", type: "info" })}>
     Info
-  </Button>`
-    },
-    {
-      name: 'Loading',
-      code: `
-  <Button onClick={() => toastManager.add({ title: "Processing...", type: "loading", timeout: 0 })}>
-    Loading
   </Button>`
     }
   ]
@@ -139,32 +139,100 @@ export const positionDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Bottom Right',
+      name: 'Top Left',
       code: `
-  <Button onClick={() => toastManager.add({ title: "Bottom right toast" })}>
-    Bottom Right
-  </Button>`
+  function ToastPreview() {
+  const manager = Toast.createToastManager();
+    return (
+      <Toast.Provider position="top-left" toastManager={manager}>
+        <Flex gap="medium" wrap="wrap">
+          <Button onClick={() => manager.add({ title: "Top left toast", type: "success" })}>
+            Trigger toast
+          </Button>
+        </Flex>
+      </Toast.Provider>
+    )
+  }`
     },
     {
       name: 'Top Center',
       code: `
-  <Button onClick={() => toastManager.add({ title: "Top center toast" })}>
-    Top Center
-  </Button>`
+  function ToastPreview() {
+  const manager = Toast.createToastManager();
+    return (
+      <Toast.Provider position="top-center" toastManager={manager}>
+        <Flex gap="medium" wrap="wrap">
+          <Button onClick={() => manager.add({ title: "Top center toast", type: "success" })}>
+            Trigger toast
+          </Button>
+        </Flex>
+      </Toast.Provider>
+    )
+  }`
     },
     {
       name: 'Top Right',
       code: `
-  <Button onClick={() => toastManager.add({ title: "Top right toast" })}>
-    Top Right
-  </Button>`
+  function ToastPreview() {
+  const manager = Toast.createToastManager();
+    return (
+      <Toast.Provider position="top-right" toastManager={manager}>
+        <Flex gap="medium" wrap="wrap">
+          <Button onClick={() => manager.add({ title: "Top right toast", type: "success" })}>
+            Trigger toast
+          </Button>
+        </Flex>
+      </Toast.Provider>
+    )
+  }`
     },
     {
       name: 'Bottom Left',
       code: `
-  <Button onClick={() => toastManager.add({ title: "Bottom left toast" })}>
-    Bottom Left
-  </Button>`
+  function ToastPreview() {
+  const manager = Toast.createToastManager();
+    return (
+      <Toast.Provider position="bottom-left" toastManager={manager}>
+        <Flex gap="medium" wrap="wrap">
+          <Button onClick={() => manager.add({ title: "Bottom left toast", type: "success" })}>
+            Trigger toast
+          </Button>
+        </Flex>
+      </Toast.Provider>
+    )
+  }`
+    },
+    {
+      name: 'Bottom Center',
+      code: `
+  function ToastPreview() {
+  const manager = Toast.createToastManager();
+    return (
+      <Toast.Provider position="bottom-center" toastManager={manager}>
+        <Flex gap="medium" wrap="wrap">
+          <Button onClick={() => manager.add({ title: "Bottom center toast", type: "success" })}>
+            Trigger toast
+          </Button>
+        </Flex>
+      </Toast.Provider>
+    )
+  }`
+    },
+    {
+      name: 'Bottom Right',
+      code: `
+  function ToastPreview() {
+  const manager = Toast.createToastManager();
+    return (
+      <Toast.Provider position="bottom-right" toastManager={manager}>
+        <Flex gap="medium" wrap="wrap">
+          <Button onClick={() => manager.add({ title: "Bottom right toast", type: "success" })}>
+            Trigger toast
+          </Button>
+        </Flex>
+      </Toast.Provider>
+    )
+  }`
     }
   ]
 };
