@@ -149,7 +149,7 @@ function Rows<TData>({
       >
         {cells.map(cell => {
           const columnDef = cell.column.columnDef as DataTableColumnDef<
-            unknown,
+            TData,
             unknown
           >;
           return (
@@ -195,36 +195,39 @@ export function Content({
   const lastRowRef = useRef<HTMLTableRowElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const target = entries[0];
-      if (target.isIntersecting && !isLoading) {
-        loadMoreData();
-      }
-    },
-    [loadMoreData, isLoading]
-  );
+  /* Refs keep callback stable so observer is only recreated when mode/rows.length change; */
+  const loadMoreDataRef = useRef(loadMoreData);
+  const isLoadingRef = useRef(isLoading);
+  loadMoreDataRef.current = loadMoreData;
+  isLoadingRef.current = isLoading;
+
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (!target?.isIntersecting) return;
+    if (isLoadingRef.current) return;
+    const loadMore = loadMoreDataRef.current;
+    if (loadMore) loadMore();
+  }, []);
 
   useEffect(() => {
     if (mode !== 'server') return;
 
     if (observerRef.current) {
       observerRef.current.disconnect();
+      observerRef.current = null;
     }
+
+    const lastRow = lastRowRef.current;
+    if (!lastRow) return;
 
     observerRef.current = new IntersectionObserver(handleObserver, {
       threshold: 0.1
     });
-    const lastRow = lastRowRef.current;
-    if (lastRow) {
-      observerRef.current.observe(lastRow);
-    }
+    observerRef.current.observe(lastRow);
 
     return () => {
-      if (observerRef.current && lastRow) {
-        observerRef.current.unobserve(lastRow);
-        observerRef.current.disconnect();
-      }
+      observerRef.current?.disconnect();
+      observerRef.current = null;
     };
   }, [mode, rows.length, handleObserver]);
 

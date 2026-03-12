@@ -156,6 +156,10 @@ function MyTable() {
 
 Columns can be configured with various options:
 
+**Performance:** Pass a stable `columns` reference (e.g. define at module scope or wrap in `useMemo`) so the table doesn't recompute filters, grouping, or sort state on every render.
+
+**Row ids:** For sortable or filterable tables, pass `getRowId` so each row has a stable React key (e.g. `getRowId={(row) => row.id}` or `getRowId={(row) => row.uuid}`).
+
 ```ts
 interface DataTableColumnDef<TData, TValue> {
   accessorKey: string; // Key to access data

@@ -134,7 +134,7 @@ function VirtualRows<TData>({
       >
         {cells.map(cell => {
           const columnDef = cell.column.columnDef as DataTableColumnDef<
-            unknown,
+            TData,
             unknown
           >;
           return (

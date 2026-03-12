@@ -114,6 +114,8 @@ export interface DataTableProps<TData, TValue> {
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
   /** When true, group headers stick under the table header while scrolling. Default is false. */
   stickyGroupHeader?: boolean;
+  /** Return a stable unique id for each row (used as React key). Use for sortable/filterable tables. */
+  getRowId?: (row: TData, index: number) => string;
 }
 
 export type DataTableContentClassNames = {

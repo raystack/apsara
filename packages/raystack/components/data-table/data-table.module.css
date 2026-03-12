@@ -1,5 +1,5 @@
 .toolbar {
-  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3) var(--rs-space-5);
+  padding: var(--rs-space-3) 0;
   align-self: stretch;
 
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
@@ -142,7 +142,7 @@
   align-items: center;
   background: var(--rs-color-background-base-secondary);
   font-weight: 500;
-  padding: var(--rs-space-3) var(--rs-space-4);
+  padding: var(--rs-space-3);
 }
 
 /* Sticky group anchor: shows current group label while scrolling (virtualized) */
