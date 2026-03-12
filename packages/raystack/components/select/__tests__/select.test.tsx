@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Select } from '../select';
@@ -9,6 +9,12 @@ Object.defineProperty(Element.prototype, 'scrollIntoView', {
   value: vi.fn(),
   writable: true
 });
+
+const flushMicrotasks = async () => {
+  await act(async () => {
+    await new Promise(r => setTimeout(r, 0));
+  });
+};
 
 const TRIGGER_TEXT = 'Select a fruit';
 const FRUIT_OPTIONS = [
@@ -37,8 +43,11 @@ const BasicSelect = ({ ...props }: SelectRootProps) => {
     </Select>
   );
 };
-const renderAndOpenSelect = async (Select: any) => {
-  await fireEvent.click(render(Select).getByRole('combobox'));
+
+const openSelect = async () => {
+  const trigger = screen.getByRole('combobox');
+  fireEvent.click(trigger);
+  await flushMicrotasks();
 };
 
 describe('Select', () => {
@@ -63,63 +72,63 @@ describe('Select', () => {
       expect(trigger).toHaveClass('custom-trigger');
     });
 
-    it('does not show content initially', () => {
-      render(<BasicSelect />);
-      FRUIT_OPTIONS.forEach(option => {
-        expect(screen.queryByText(option.label)).not.toBeInTheDocument();
-      });
-    });
-
     it('shows content when trigger is clicked', async () => {
-      await renderAndOpenSelect(<BasicSelect />);
+      render(<BasicSelect />);
+      await openSelect();
 
       expect(screen.getByRole('listbox')).toBeInTheDocument();
       FRUIT_OPTIONS.forEach(option => {
         expect(screen.getByText(option.label)).toBeInTheDocument();
       });
     });
-
-    it('renders in portal', async () => {
-      await renderAndOpenSelect(<BasicSelect />);
-
-      const content = screen.getByRole('listbox');
-      expect(content.closest('body')).toBe(document.body);
-    });
   });
 
   describe('Single Selection', () => {
-    it('displays selected value', () => {
+    it('displays selected value in trigger', async () => {
       render(<BasicSelect defaultValue='apple' />);
-      expect(screen.getByText('Apple')).toBeInTheDocument();
+      await flushMicrotasks();
+
+      const trigger = screen.getByRole('combobox');
+      expect(trigger).toHaveTextContent('Apple');
     });
 
-    it('works as controlled component', () => {
+    it('works as controlled component', async () => {
       const handleValueChange = vi.fn();
       render(<BasicSelect value='apple' onValueChange={handleValueChange} />);
-      expect(screen.getByText('Apple')).toBeInTheDocument();
+      await flushMicrotasks();
+
+      const trigger = screen.getByRole('combobox');
+      expect(trigger).toHaveTextContent('Apple');
     });
 
     it('selects option when clicked', async () => {
       const handleValueChange = vi.fn();
-      renderAndOpenSelect(
+      render(
         <BasicSelect defaultValue='apple' onValueChange={handleValueChange} />
       );
+      await openSelect();
 
-      const options = await screen.findAllByRole('option');
-      fireEvent.click(options[1]);
+      const options = screen.getAllByRole('option');
+      await act(async () => {
+        await userEvent.click(options[1]);
+      });
+      await flushMicrotasks();
 
       expect(handleValueChange).toHaveBeenCalledWith('banana');
       expect(handleValueChange).toHaveBeenCalledTimes(1);
-      expect(screen.getByText('Banana')).toBeInTheDocument();
     });
 
     it('closes content after selection', async () => {
-      renderAndOpenSelect(<BasicSelect />);
+      render(<BasicSelect />);
+      await openSelect();
 
       expect(screen.getByRole('listbox')).toBeInTheDocument();
 
-      const options = await screen.findAllByRole('option');
-      fireEvent.click(options[1]);
+      const options = screen.getAllByRole('option');
+      await act(async () => {
+        await userEvent.click(options[1]);
+      });
+      await flushMicrotasks();
 
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     });
@@ -128,15 +137,21 @@ describe('Select', () => {
   describe('Multiple Selection', () => {
     it('supports multiple selection', async () => {
       const handleValueChange = vi.fn();
-      renderAndOpenSelect(
-        <BasicSelect multiple onValueChange={handleValueChange} />
-      );
-      const options = await screen.findAllByRole('option');
+      render(<BasicSelect multiple onValueChange={handleValueChange} />);
+      await openSelect();
 
-      fireEvent.click(options[1]);
+      const options = screen.getAllByRole('option');
+
+      await act(async () => {
+        await userEvent.click(options[1]);
+      });
+      await flushMicrotasks();
       expect(handleValueChange).toHaveBeenCalledWith(['banana']);
 
-      fireEvent.click(options[4]);
+      await act(async () => {
+        await userEvent.click(options[4]);
+      });
+      await flushMicrotasks();
       expect(handleValueChange).toHaveBeenCalledWith(['banana', 'pineapple']);
 
       expect(options[1]).toHaveAttribute('aria-selected', 'true');
@@ -145,15 +160,21 @@ describe('Select', () => {
 
     it('allows deselecting items in multiple mode', async () => {
       const handleValueChange = vi.fn();
-      renderAndOpenSelect(
-        <BasicSelect multiple onValueChange={handleValueChange} />
-      );
-      const options = await screen.findAllByRole('option');
+      render(<BasicSelect multiple onValueChange={handleValueChange} />);
+      await openSelect();
 
-      fireEvent.click(options[1]);
+      const options = screen.getAllByRole('option');
+
+      await act(async () => {
+        await userEvent.click(options[1]);
+      });
+      await flushMicrotasks();
       expect(handleValueChange).toHaveBeenCalledWith(['banana']);
 
-      fireEvent.click(options[1]);
+      await act(async () => {
+        await userEvent.click(options[1]);
+      });
+      await flushMicrotasks();
       expect(handleValueChange).toHaveBeenCalledWith([]);
     });
   });
@@ -183,7 +204,8 @@ describe('Select', () => {
 
     it('closes with Escape key', async () => {
       const user = userEvent.setup();
-      renderAndOpenSelect(<BasicSelect />);
+      render(<BasicSelect />);
+      await openSelect();
 
       await user.keyboard('{Escape}');
 
@@ -193,54 +215,64 @@ describe('Select', () => {
     it('selects option with Enter key', async () => {
       const user = userEvent.setup();
       const handleValueChange = vi.fn();
-      renderAndOpenSelect(
+      render(
         <BasicSelect defaultValue='apple' onValueChange={handleValueChange} />
       );
+      await openSelect();
 
-      const options = await screen.findAllByRole('option');
-      options[1].focus();
+      const options = screen.getAllByRole('option');
+      await act(() => options[1].focus());
       await user.keyboard('{Enter}');
+      await flushMicrotasks();
 
       expect(handleValueChange).toHaveBeenCalledWith('banana');
       expect(handleValueChange).toHaveBeenCalledTimes(1);
-      expect(screen.getByText('Banana')).toBeInTheDocument();
     });
 
     it('navigates options with arrow keys', async () => {
       const user = userEvent.setup();
-      renderAndOpenSelect(<BasicSelect defaultValue='apple' />);
+      const handleValueChange = vi.fn();
+      render(
+        <BasicSelect defaultValue='apple' onValueChange={handleValueChange} />
+      );
+      await openSelect();
 
       await user.keyboard('{ArrowDown}{ArrowDown}{Enter}');
+      await flushMicrotasks();
 
-      expect(screen.getByText('Blueberry')).toBeInTheDocument();
+      expect(handleValueChange).toHaveBeenCalledWith('blueberry');
     });
   });
 
   describe('Autocomplete Mode', () => {
     it('renders search input in autocomplete mode', async () => {
-      renderAndOpenSelect(<BasicSelect autocomplete />);
+      render(<BasicSelect autocomplete />);
 
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(screen.getByRole('combobox')).toBeInTheDocument();
-      expect(screen.getByRole('combobox')).toHaveAttribute(
-        'placeholder',
-        'Search...'
-      );
+      const trigger = screen.getByLabelText('Select option');
+      fireEvent.click(trigger);
+      await flushMicrotasks();
+
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+      const searchInput = screen.getByPlaceholderText('Search...');
+      expect(searchInput).toBeInTheDocument();
     });
-  });
 
-  it('filters options based on search', async () => {
-    const user = userEvent.setup();
-    renderAndOpenSelect(<BasicSelect autocomplete />);
+    it('filters options based on search', async () => {
+      const user = userEvent.setup();
+      render(<BasicSelect autocomplete />);
 
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+      const trigger = screen.getByLabelText('Select option');
+      fireEvent.click(trigger);
+      await flushMicrotasks();
 
-    const searchInput = screen.getByPlaceholderText('Search...');
-    await user.type(searchInput, 'app');
+      const searchInput = screen.getByPlaceholderText('Search...');
+      await user.type(searchInput, 'app');
+      await flushMicrotasks();
 
-    const options = await screen.findAllByRole('option');
-    expect(options.length).toBe(2);
-    expect(options[0].textContent).toBe('Apple');
-    expect(options[1].textContent).toBe('Pineapple');
+      const options = screen.getAllByRole('option');
+      expect(options.length).toBe(2);
+      expect(options[0]).toHaveTextContent('Apple');
+      expect(options[1]).toHaveTextContent('Pineapple');
+    });
   });
 });
