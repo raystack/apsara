@@ -68,4 +68,5 @@ export {
   useTheme
 } from './components/theme-provider';
 export { ToastContainer, toast } from './components/toast';
+export { Toggle } from './components/toggle';
 export { Tooltip } from './components/tooltip';

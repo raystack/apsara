@@ -1,10 +1,16 @@
 'use client';
 
 import {
+  FontBoldIcon,
+  FontItalicIcon,
   InfoCircledIcon,
   Pencil2Icon,
   PlusIcon,
+  TextAlignCenterIcon,
+  TextAlignLeftIcon,
+  TextAlignRightIcon,
   TransformIcon,
+  UnderlineIcon,
   UploadIcon
 } from '@radix-ui/react-icons';
 import * as Apsara from '@raystack/apsara';
@@ -37,6 +43,12 @@ export default function Demo(props: DemoProps) {
       Pencil2Icon,
       InfoCircledIcon,
       UploadIcon,
+      FontBoldIcon,
+      FontItalicIcon,
+      UnderlineIcon,
+      TextAlignLeftIcon,
+      TextAlignCenterIcon,
+      TextAlignRightIcon,
       dayjs
     }
   } = props;
