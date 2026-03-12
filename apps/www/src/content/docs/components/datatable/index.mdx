@@ -214,6 +214,22 @@ const columns = [
 ];
 ```
 
+#### Anchor group title
+
+When grouping is enabled, you can make the current group label stick under the table header while scrolling (anchor group title) in both `DataTable.Content` and `DataTable.VirtualizedContent` by setting `stickyGroupHeader={true}` on the root. It is off by default.
+
+```tsx
+<DataTable
+  data={data}
+  columns={columns}
+  defaultSort={{ name: "name", order: "asc" }}
+  stickyGroupHeader={true}
+>
+  <DataTable.Toolbar />
+  <DataTable.Content />
+</DataTable>
+```
+
 ### Server-side Integration
 
 ```tsx

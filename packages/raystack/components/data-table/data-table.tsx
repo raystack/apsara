@@ -48,6 +48,7 @@ function DataTableRoot<TData, TValue>({
   onLoadMore,
   onRowClick,
   onColumnVisibilityChange,
+  stickyGroupHeader = false,
   getRowId
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableQuery = useMemo(
@@ -195,7 +196,8 @@ function DataTableRoot<TData, TValue>({
       defaultSort,
       loadingRowCount,
       onRowClick,
-      shouldShowFilters
+      shouldShowFilters,
+      stickyGroupHeader
     };
   }, [
     table,
@@ -209,7 +211,8 @@ function DataTableRoot<TData, TValue>({
     defaultSort,
     loadingRowCount,
     onRowClick,
-    shouldShowFilters
+    shouldShowFilters,
+    stickyGroupHeader
   ]);
 
   return (

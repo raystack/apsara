@@ -60,6 +60,7 @@ interface RowsProps<TData> {
     row?: string;
   };
   lastRowRef?: React.RefObject<HTMLTableRowElement | null>;
+  stickyGroupHeader?: boolean;
 }
 
 function LoaderRows({
@@ -86,13 +87,20 @@ function LoaderRows({
 
 function GroupHeader<TData>({
   colSpan,
-  data
+  data,
+  stickySectionHeader
 }: {
   colSpan: number;
   data: GroupedData<TData>;
+  stickySectionHeader?: boolean;
 }) {
   return (
-    <Table.SectionHeader colSpan={colSpan}>
+    <Table.SectionHeader
+      colSpan={colSpan}
+      classNames={
+        stickySectionHeader ? { cell: styles.stickySectionHeader } : undefined
+      }
+    >
       <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
@@ -107,7 +115,8 @@ function Rows<TData>({
   rows = [],
   onRowClick,
   classNames,
-  lastRowRef
+  lastRowRef,
+  stickyGroupHeader = false
 }: RowsProps<TData>) {
   return rows.map((row, idx) => {
     const isSelected = row.getIsSelected();
@@ -121,6 +130,7 @@ function Rows<TData>({
           key={row.id}
           colSpan={cells.length}
           data={row.original as GroupedData<unknown>}
+          stickySectionHeader={stickyGroupHeader}
         />
       );
     }
@@ -174,7 +184,8 @@ export function Content({
     loadMoreData,
     loadingRowCount = 3,
     tableQuery,
-    defaultSort
+    defaultSort,
+    stickyGroupHeader = false
   } = useDataTable();
 
   const headerGroups = table?.getHeaderGroups();
@@ -251,6 +262,7 @@ export function Content({
                 classNames={{
                   row: classNames.row
                 }}
+                stickyGroupHeader={stickyGroupHeader}
               />
               {isLoading ? (
                 <LoaderRows
