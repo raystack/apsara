@@ -246,10 +246,14 @@ describe('Sidebar', () => {
       expect(item).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('keeps label in DOM when collapsed (sr-only for screen readers)', () => {
+    it('hides text when collapsed and sets aria-label for screen readers', () => {
       render(<BasicSidebar open={false} />);
 
-      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+      const dashboardLink = screen.getByRole('listitem', {
+        name: DASHBOARD_ITEM_TEXT
+      });
+      expect(dashboardLink).toHaveAttribute('aria-label', DASHBOARD_ITEM_TEXT);
     });
   });
 

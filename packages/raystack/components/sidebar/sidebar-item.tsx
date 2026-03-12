@@ -66,6 +66,9 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         role: 'listitem',
         'aria-current': active ? 'page' : undefined,
         'aria-disabled': disabled,
+        ...(isCollapsed && typeof children === 'string'
+          ? { 'aria-label': children }
+          : {}),
         ...props
       },
       <>
@@ -83,9 +86,11 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         {!shouldShowFallback && leadingIcon ? (
           <Flex {...iconProps}>{leadingIcon}</Flex>
         ) : null}
-        <span className={cx(styles['nav-text'], classNames?.text)}>
-          {children}
-        </span>
+        {!isCollapsed && (
+          <span className={cx(styles['nav-text'], classNames?.text)}>
+            {children}
+          </span>
+        )}
       </>
     );
 
