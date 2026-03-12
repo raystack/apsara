@@ -1,0 +1,83 @@
+---
+title: Toggle
+description: A two-state button that can be toggled on or off, used standalone or within a group.
+source: packages/raystack/components/toggle
+tag: new
+---
+
+import { playground, preview, groupDemo, multipleDemo, sizeDemo, controlledDemo, disabledDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and use the component:
+
+```tsx
+import { Toggle } from "@raystack/apsara";
+
+<Toggle aria-label="Bold">B</Toggle>
+```
+
+Use `Toggle.Group` to manage a set of toggles with shared state:
+
+```tsx
+<Toggle.Group defaultValue={["left"]}>
+  <Toggle value="left" aria-label="Align left">L</Toggle>
+  <Toggle value="center" aria-label="Align center">C</Toggle>
+  <Toggle value="right" aria-label="Align right">R</Toggle>
+</Toggle.Group>
+```
+
+## API Reference
+
+### Root
+
+A two-state button that can be toggled on or off.
+
+<auto-type-table path="./props.ts" name="ToggleProps" />
+
+### Group
+
+Groups multiple toggle buttons and manages their shared pressed state.
+
+<auto-type-table path="./props.ts" name="ToggleGroupProps" />
+
+## Examples
+
+### Group
+
+Use `Toggle.Group` for exclusive or multi-select toggle sets. By default, only one toggle can be pressed at a time.
+
+<Demo data={groupDemo} />
+
+### Multiple Selection
+
+Set `multiple` on the group to allow more than one toggle to be pressed simultaneously.
+
+<Demo data={multipleDemo} />
+
+### Size
+
+The toggle supports four sizes matching the icon button sizes.
+
+<Demo data={sizeDemo} />
+
+### Controlled
+
+Control the pressed state programmatically.
+
+<Demo data={controlledDemo} />
+
+### Disabled
+
+Disable individual toggles or the entire group.
+
+<Demo data={disabledDemo} />
+
+## Accessibility
+
+- Uses native `<button>` element with `aria-pressed` for toggle state
+- Supports keyboard activation with Space and Enter keys
+- `Toggle.Group` renders with `role="group"` and supports arrow key navigation
+- Use `aria-label` on each toggle to provide an accessible name when using icon-only content
