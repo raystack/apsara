@@ -47,7 +47,8 @@ function DataTableRoot<TData, TValue>({
   onTableQueryChange,
   onLoadMore,
   onRowClick,
-  onColumnVisibilityChange
+  onColumnVisibilityChange,
+  getRowId
 }: React.PropsWithChildren<DataTableProps<TData, TValue>>) {
   const defaultTableQuery = useMemo(
     () => getDefaultTableQuery(defaultSort, query),
@@ -121,6 +122,7 @@ function DataTableRoot<TData, TValue>({
   const table = useReactTable({
     data: groupedData as unknown as TData[],
     columns: columnsWithFilters,
+    getRowId,
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getSubRows: row => (row as unknown as GroupedData<TData>)?.subRows || [],

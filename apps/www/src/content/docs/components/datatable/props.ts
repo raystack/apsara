@@ -35,6 +35,12 @@ export interface DataTableProps {
   onColumnVisibilityChange?: (
     columnVisibility: Record<string, boolean>
   ) => void;
+
+  /**
+   * Return a stable unique id for each row (used as React key).
+   * Use for sortable/filterable tables to avoid key issues when rows reorder.
+   */
+  getRowId?: (row: any, index: number) => string;
 }
 
 export interface DataTableQuery {
