@@ -44,6 +44,7 @@ export { Link } from './components/link';
 export { List } from './components/list';
 export { Menu } from './components/menu';
 export { Navbar } from './components/navbar';
+export { NumberField } from './components/number-field';
 export { Popover } from './components/popover';
 export { PreviewCard } from './components/preview-card';
 export { Radio } from './components/radio';

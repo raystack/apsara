@@ -1,0 +1,123 @@
+---
+title: Number Field
+description: A numeric input component with increment and decrement buttons, supporting scrub interaction.
+source: packages/raystack/components/number-field
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  minMaxDemo,
+  stepDemo,
+  disabledDemo,
+  composedDemo,
+  formatDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and use the component standalone or composed:
+
+```tsx
+import { NumberField } from "@raystack/apsara";
+
+{/* Standalone — renders decrement, input, and increment internally */}
+<NumberField defaultValue={0} />
+
+{/* Composed — full control over sub-components */}
+<NumberField defaultValue={0}>
+  <NumberField.ScrubArea label="Amount" />
+  <NumberField.Group>
+    <NumberField.Decrement />
+    <NumberField.Input />
+    <NumberField.Increment />
+  </NumberField.Group>
+</NumberField>
+```
+
+## API Reference
+
+### Root
+
+The root component that manages numeric state. When no children are provided, it renders a default group with decrement, input, and increment controls.
+
+<auto-type-table path="./props.ts" name="NumberFieldProps" />
+
+### Group
+
+Groups the input and button controls together.
+
+<auto-type-table path="./props.ts" name="NumberFieldGroupProps" />
+
+### Input
+
+The numeric input element.
+
+<auto-type-table path="./props.ts" name="NumberFieldInputProps" />
+
+### Decrement
+
+Button to decrease the value.
+
+<auto-type-table path="./props.ts" name="NumberFieldDecrementProps" />
+
+### Increment
+
+Button to increase the value.
+
+<auto-type-table path="./props.ts" name="NumberFieldIncrementProps" />
+
+### ScrubArea
+
+An interactive area that allows adjusting the value by dragging. Renders a Label component internally.
+
+<auto-type-table path="./props.ts" name="NumberFieldScrubAreaProps" />
+
+## Examples
+
+### Basic
+
+A standalone number field with default controls.
+
+<Demo data={basicDemo} />
+
+### Min / Max
+
+Number field constrained to a range.
+
+<Demo data={minMaxDemo} />
+
+### Step
+
+Number field with a custom step amount.
+
+<Demo data={stepDemo} />
+
+### Disabled
+
+Number field in disabled state.
+
+<Demo data={disabledDemo} />
+
+### Composed with ScrubArea
+
+Full control with scrub area for drag-to-adjust interaction.
+
+<Demo data={composedDemo} />
+
+### Formatted
+
+Number field with currency formatting.
+
+<Demo data={formatDemo} />
+
+## Accessibility
+
+- The input has `role="textbox"` with `aria-roledescription="Number field"`
+- Increment and decrement buttons are keyboard accessible
+- ScrubArea associates its label with the input via `htmlFor`
+- Supports `aria-valuemin`, `aria-valuemax`, and `aria-valuenow`
+- Keyboard: Arrow Up/Down to increment/decrement, Shift for large step, Meta for small step
