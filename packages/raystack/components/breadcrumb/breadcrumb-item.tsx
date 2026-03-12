@@ -13,7 +13,6 @@ import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
 export interface BreadcrumbDropdownItem {
-  /** Optional stable key for list reconciliation (use when items can reorder). Falls back to index if omitted. */
   key?: string;
   label: string;
   onClick?: React.MouseEventHandler<HTMLElement>;
