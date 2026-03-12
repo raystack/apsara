@@ -3,20 +3,19 @@
 const mainAreaStyle = `{{ flex: 1, border: '2px dashed var(--rs-color-border-base-secondary)', margin: 'var(--rs-space-4)', boxSizing: 'border-box' }}`;
 
 const sidebarLayout = (sidebar: string) =>
-  `<Flex style={{ width: '100%', height: '100%', minHeight: 480 }}>
+  `<Flex style={{ width: '100%', height: 480 }}>
   ${sidebar.trim()}
   <Flex style=${mainAreaStyle} />
 </Flex>`;
 
 const sidebarLayoutRight = (sidebar: string) =>
-  `<Flex style={{ width: '100%', height: '100%', minHeight: 480 }}>
+  `<Flex style={{ width: '100%', height: 480 }}>
   <Flex style=${mainAreaStyle} />
   ${sidebar.trim()}
 </Flex>`;
 
 export const preview = {
   type: 'code',
-  previewClassName: 'previewSidebar',
   code: sidebarLayout(`
   <Sidebar defaultOpen>
     <Sidebar.Header>
@@ -63,7 +62,6 @@ export const preview = {
 
 export const positionDemo = {
   type: 'code',
-  previewClassName: 'previewSidebar',
   tabs: [
     {
       name: 'Left',
@@ -118,7 +116,6 @@ export const positionDemo = {
 
 export const stateDemo = {
   type: 'code',
-  previewClassName: 'previewSidebar',
   tabs: [
     {
       name: 'Expanded',
@@ -217,7 +214,6 @@ export const stateDemo = {
 
 export const tooltipDemo = {
   type: 'code',
-  previewClassName: 'previewSidebar',
   code: sidebarLayout(`<Sidebar
           defaultOpen
           tooltipMessage="Toggle navigation"
@@ -245,7 +241,6 @@ export const tooltipDemo = {
 
 export const collapsibleDemo = {
   type: 'code',
-  previewClassName: 'previewSidebar',
   code: sidebarLayout(`<Sidebar defaultOpen collapsible={false}>
           <Sidebar.Header>
             <Flex align="center" gap={3}>
@@ -266,7 +261,6 @@ export const collapsibleDemo = {
 
 export const hideTooltipDemo = {
   type: 'code',
-  previewClassName: 'previewSidebar',
   code: sidebarLayout(`<Sidebar defaultOpen={false} hideCollapsedItemTooltip>
           <Sidebar.Header>
             <Flex align="center" gap={3}>
