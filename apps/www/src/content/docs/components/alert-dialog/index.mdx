@@ -1,0 +1,123 @@
+---
+title: AlertDialog
+description: A modal dialog that interrupts the user with important content and expects a response. Unlike Dialog, it does not close on outside click, requiring explicit user action.
+source: packages/raystack/components/alert-dialog
+tag: new
+---
+
+import { playground, controlledDemo, menuDemo, discardDemo, nestedDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { AlertDialog } from '@raystack/apsara'
+
+<AlertDialog>
+  <AlertDialog.Trigger />
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title />
+    </AlertDialog.Header>
+    <AlertDialog.Body>
+      <AlertDialog.Description />
+    </AlertDialog.Body>
+    <AlertDialog.Footer>
+      <AlertDialog.Close />
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog>
+```
+
+## API Reference
+
+### Root
+
+Groups all parts of the alert dialog.
+
+<auto-type-table path="./props.ts" name="AlertDialogProps" />
+
+### Content
+
+Renders the alert dialog panel overlay.
+
+<auto-type-table path="./props.ts" name="AlertDialogContentProps" />
+
+### Header
+
+Renders the alert dialog header section.
+
+<auto-type-table path="./props.ts" name="AlertDialogHeaderProps" />
+
+### Title
+
+Renders the alert dialog title text.
+
+<auto-type-table path="./props.ts" name="AlertDialogTitleProps" />
+
+### Body
+
+Renders the main content area of the alert dialog.
+
+<auto-type-table path="./props.ts" name="AlertDialogBodyProps" />
+
+### Description
+
+Renders supplementary text within the alert dialog body.
+
+<auto-type-table path="./props.ts" name="AlertDialogDescriptionProps" />
+
+### Trigger
+
+Renders the element that opens the alert dialog.
+
+<auto-type-table path="./props.ts" name="AlertDialogTriggerProps" />
+
+### CloseButton
+
+Renders a button that closes the alert dialog.
+
+<auto-type-table path="./props.ts" name="AlertDialogCloseButtonProps" />
+
+### Footer
+
+Renders the alert dialog footer section.
+
+<auto-type-table path="./props.ts" name="AlertDialogFooterProps" />
+
+## Examples
+
+### Controlled
+
+Example of a controlled alert dialog with custom state management.
+
+<Demo data={controlledDemo} />
+
+### Composing with Menu
+
+Open an alert dialog from a menu item. Since the trigger is outside the `AlertDialog.Root`, use the controlled `open` / `onOpenChange` props.
+
+<Demo data={menuDemo} />
+
+### Discard Changes
+
+A common pattern for confirming destructive navigation. Both actions use `AlertDialog.Close` to dismiss the dialog.
+
+<Demo data={discardDemo} />
+
+### Nested Alert Dialogs
+
+You can nest alert dialogs for multi-step confirmation flows. When a nested alert dialog opens, the parent dialog automatically scales down and becomes slightly transparent.
+
+<Demo data={nestedDemo} />
+
+## Accessibility
+
+- Alert dialog has `role="alertdialog"` and `aria-modal="true"`
+- Does not close on outside click (backdrop), requiring explicit user action
+- Uses `aria-label` or `aria-labelledby` to identify the dialog
+- Uses `aria-describedby` to provide additional context
+- Focus is trapped within the alert dialog while open
