@@ -44,4 +44,5 @@ export * from './tabs-examples';
 export * from './text-area-examples';
 export * from './text-examples';
 export * from './toast-examples';
+export * from './toolbar-examples';
 export * from './tooltip-examples';

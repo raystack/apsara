@@ -1,0 +1,95 @@
+---
+title: Toolbar
+description: A container for grouping interactive controls with accessible keyboard navigation.
+source: packages/raystack/components/toolbar
+tag: new
+---
+
+import { preview, groupDemo, compositionDemo, disabledDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Toolbar } from '@raystack/apsara'
+
+<Toolbar>
+  <Toolbar.Button />
+  <Toolbar.Group>
+    <Toolbar.Button />
+    <Toolbar.Button />
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Link />
+  <Toolbar.Input />
+</Toolbar>
+```
+
+## API Reference
+
+### Root
+
+Groups all toolbar controls. Manages keyboard navigation between items.
+
+<auto-type-table path="./props.ts" name="ToolbarProps" />
+
+### Button
+
+An interactive button within the toolbar. Supports the `render` prop to compose with other components like `Button` or `IconButton`.
+
+<auto-type-table path="./props.ts" name="ToolbarButtonProps" />
+
+### Group
+
+Groups related toolbar items together.
+
+<auto-type-table path="./props.ts" name="ToolbarGroupProps" />
+
+### Separator
+
+A visual divider between toolbar sections.
+
+<auto-type-table path="./props.ts" name="ToolbarSeparatorProps" />
+
+### Link
+
+An anchor element for navigation within the toolbar.
+
+<auto-type-table path="./props.ts" name="ToolbarLinkProps" />
+
+### Input
+
+A native input element with integrated keyboard navigation.
+
+<auto-type-table path="./props.ts" name="ToolbarInputProps" />
+
+## Examples
+
+### Grouped
+
+Use `Toolbar.Group` to group related buttons.
+
+<Demo data={groupDemo} />
+
+### Composition
+
+Use the `render` prop on `Toolbar.Button` to compose with Apsara components like `Button` and `IconButton`.
+
+<Demo data={compositionDemo} />
+
+### Disabled
+
+Disable all toolbar items by setting `disabled` on the root.
+
+<Demo data={disabledDemo} />
+
+## Accessibility
+
+- Uses `role="toolbar"` for proper semantic grouping
+- Arrow keys navigate between focusable items
+- `Home` and `End` keys jump to first and last items
+- Focus loops by default (configurable via `loopFocus`)
+- Disabled items remain focusable for screen reader discoverability
