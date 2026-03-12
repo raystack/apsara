@@ -1,3 +1,296 @@
-.toast-wrapper {
-  margin-right: var(--rs-space-3);
+/* ===== Viewport ===== */
+.viewport {
+  --gap: 0.75rem;
+  position: fixed;
+  z-index: var(--rs-z-index-portal);
+  width: 360px;
+  max-width: calc(100vw - var(--rs-space-10));
+  outline: none;
+}
+
+/* Position variants */
+.viewport-top-left {
+  top: var(--rs-space-5);
+  left: var(--rs-space-5);
+}
+
+.viewport-top-center {
+  top: var(--rs-space-5);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.viewport-top-right {
+  top: var(--rs-space-5);
+  right: var(--rs-space-5);
+}
+
+.viewport-bottom-left {
+  bottom: var(--rs-space-5);
+  left: var(--rs-space-5);
+}
+
+.viewport-bottom-center {
+  bottom: var(--rs-space-5);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.viewport-bottom-right {
+  bottom: var(--rs-space-5);
+  right: var(--rs-space-5);
+}
+
+/* ===== Toast Root (stacking) ===== */
+.root {
+  --peek: 0.75rem;
+  --scale: calc(max(0, 1 - (var(--toast-index) * 0.1)));
+  --shrink: calc(1 - var(--scale));
+  --height: var(--toast-frontmost-height, var(--toast-height));
+
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--height);
+
+  background: var(--rs-color-background-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  box-shadow: var(--rs-shadow-lifted);
+  padding: var(--rs-space-3);
+  background-clip: padding-box;
+  overflow: clip;
+
+  user-select: none;
+  cursor: default;
+  z-index: calc(1000 - var(--toast-index));
+
+  transition:
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 500ms,
+    height 150ms;
+}
+
+/* ===== Vertical position: bottom ===== */
+.root[data-position*="bottom"] {
+  --offset-y: calc(
+    var(--toast-offset-y) *
+    -1 +
+    (var(--toast-index) * var(--gap) * -1) +
+    var(--toast-swipe-movement-y)
+  );
+
+  bottom: 0;
+  top: auto;
+  transform-origin: bottom center;
+
+  transform: translateX(var(--toast-swipe-movement-x))
+    translateY(
+      calc(
+        var(--toast-swipe-movement-y) -
+        (var(--toast-index) * var(--peek)) -
+        (var(--shrink) * var(--height))
+      )
+    )
+    scale(var(--scale));
+}
+
+/* ===== Vertical position: top ===== */
+.root[data-position*="top"] {
+  --offset-y: calc(
+    var(--toast-offset-y) +
+    (var(--toast-index) * var(--gap)) +
+    var(--toast-swipe-movement-y)
+  );
+
+  top: 0;
+  bottom: auto;
+  transform-origin: top center;
+
+  transform: translateX(var(--toast-swipe-movement-x))
+    translateY(
+      calc(
+        var(--toast-swipe-movement-y) +
+        (var(--toast-index) * var(--peek)) +
+        (var(--shrink) * var(--height))
+      )
+    )
+    scale(var(--scale));
+}
+
+/* ===== Horizontal alignment ===== */
+.root[data-position*="right"] {
+  right: 0;
+  left: auto;
+}
+
+.root[data-position*="left"] {
+  left: 0;
+  right: auto;
+}
+
+.root[data-position*="center"] {
+  left: 0;
+  right: 0;
+}
+
+/* ===== Expanded state (on hover) ===== */
+.root[data-expanded] {
+  transform: translateX(var(--toast-swipe-movement-x))
+    translateY(var(--offset-y));
+  height: var(--toast-height);
+}
+
+/* ===== Gap area for hover detection between toasts ===== */
+.root[data-position*="bottom"]::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  width: 100%;
+  left: 0;
+  height: calc(var(--gap) + 1px);
+}
+
+.root[data-position*="top"]::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  left: 0;
+  height: calc(var(--gap) + 1px);
+}
+
+/* ===== Enter animations ===== */
+.root[data-position*="bottom"][data-starting-style] {
+  transform: translateY(calc(100% + var(--rs-space-5)));
+}
+
+.root[data-position*="top"][data-starting-style] {
+  transform: translateY(calc(-100% - var(--rs-space-5)));
+}
+
+/* ===== Limited state ===== */
+.root[data-limited] {
+  opacity: 0;
+}
+
+/* ===== Exit animations ===== */
+.root[data-ending-style] {
+  opacity: 0;
+}
+
+/* Default exit (no swipe) */
+.root[data-position*="bottom"][data-ending-style]:not([data-swipe-direction]) {
+  transform: translateY(calc(100% + var(--rs-space-5)));
+}
+
+.root[data-position*="top"][data-ending-style]:not([data-swipe-direction]) {
+  transform: translateY(calc(-100% - var(--rs-space-5)));
+}
+
+/* Swipe exit directions */
+.root[data-ending-style][data-swipe-direction="up"] {
+  transform: translateY(calc(var(--toast-swipe-movement-y) - 150%));
+}
+
+.root[data-ending-style][data-swipe-direction="down"] {
+  transform: translateY(calc(var(--toast-swipe-movement-y) + 150%));
+}
+
+.root[data-ending-style][data-swipe-direction="left"] {
+  transform: translateX(calc(var(--toast-swipe-movement-x) - 150%))
+    translateY(var(--offset-y));
+}
+
+.root[data-ending-style][data-swipe-direction="right"] {
+  transform: translateX(calc(var(--toast-swipe-movement-x) + 150%))
+    translateY(var(--offset-y));
+}
+
+/* ===== Type-based styling ===== */
+.root[data-type="success"] {
+  background: var(--rs-color-background-success-primary);
+  border-color: var(--rs-color-border-success-primary);
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.root[data-type="error"] {
+  background: var(--rs-color-background-danger-primary);
+  border-color: var(--rs-color-border-danger-primary);
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.root[data-type="warning"] {
+  background: var(--rs-color-background-attention-primary);
+  border-color: var(--rs-color-border-attention-primary);
+  color: var(--rs-color-foreground-attention-primary);
+}
+
+.root[data-type="info"] {
+  background: var(--rs-color-background-accent-primary);
+  border-color: var(--rs-color-border-accent-primary);
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+/* ===== Content (stacking visibility) ===== */
+.content {
+  display: flex;
+  align-items: start;
+  gap: var(--rs-space-5);
+  transition: opacity 250ms;
+}
+
+.content[data-behind] {
+  opacity: 0;
+}
+
+.content[data-expanded] {
+  opacity: 1;
+}
+
+/* ===== Text container (title + description) ===== */
+.textContainer {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ===== Title ===== */
+.title {
+  color: inherit;
+  font-size: var(--rs-font-size-regular);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+  margin: 0;
+}
+
+/* ===== Description ===== */
+.description {
+  color: inherit;
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  margin: 0;
+}
+
+/* Override description color for typed toasts */
+.root[data-type="success"] .description,
+.root[data-type="error"] .description,
+.root[data-type="warning"] .description,
+.root[data-type="info"] .description {
+  opacity: 0.85;
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition: none;
+  }
+
+  .root[data-starting-style],
+  .root[data-ending-style] {
+    transform: none;
+  }
 }
