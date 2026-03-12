@@ -28,6 +28,7 @@ export * from './label-examples';
 export * from './link-examples';
 export * from './list-examples';
 export * from './menu-examples';
+export * from './number-field-examples';
 export * from './popover-examples';
 export * from './preview-card-examples';
 export * from './radio-examples';
