@@ -576,14 +576,14 @@ describe('DataTable', () => {
     });
   });
 
-  describe('getRowKey', () => {
-    it('renders with getRowKey callback for stable row keys', () => {
+  describe('getRowId', () => {
+    it('renders with getRowId callback for stable row keys', () => {
       render(
         <DataTable
           data={mockData}
           columns={mockColumns}
           defaultSort={{ name: 'name', order: 'asc' }}
-          getRowKey={row => row.id}
+          getRowId={row => row.id}
         >
           <DataTable.Content />
         </DataTable>
