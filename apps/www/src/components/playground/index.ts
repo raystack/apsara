@@ -13,6 +13,7 @@ export * from './collapsible-examples';
 export * from './combobox-examples';
 export * from './command-examples';
 export * from './container-examples';
+export * from './context-menu-examples';
 export * from './data-table-examples';
 export * from './dialog-examples';
 export * from './drawer-examples';

@@ -1,0 +1,135 @@
+---
+title: Context Menu
+description: Displays a menu activated by right-click or long press, such as a set of actions or functions.
+source: packages/raystack/components/context-menu
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  iconsDemo,
+  customDemo,
+  submenuDemo,
+  autocompleteDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Usage
+
+```tsx
+import { ContextMenu } from '@raystack/apsara'
+```
+
+## API Reference
+
+The ContextMenu component is composed of several parts, each with their own props.
+
+### Root
+
+The root element is the parent component that holds the context menu. Using the `autocomplete` prop, you can enable search functionality.
+
+<auto-type-table path="./props.ts" name="ContextMenuRootProps" />
+
+### Trigger
+
+The area that opens the context menu on right-click or long press. Renders a `<div>` element.
+
+<auto-type-table path="./props.ts" name="ContextMenuTriggerProps" />
+
+### Content
+
+The container that holds the menu items. When autocomplete is enabled, renders an inline search input inside the popup.
+
+<auto-type-table path="./props.ts" name="ContextMenuContentProps" />
+
+### Item
+
+Individual clickable options within the menu. Built on top of [Base UI ContextMenu.Item](https://base-ui.com/react/components/context-menu).
+
+Renders as a `role='option'` when used in an autocomplete menu. By default, the item's `children` text content is used for matching, which can be overridden by passing a `value` prop.
+
+<auto-type-table path="./props.ts" name="ContextMenuItemProps" />
+
+### Group
+
+A way to group related menu items together. When filtering is active, the group wrapper is removed and items are rendered flat.
+
+<auto-type-table path="./props.ts" name="ContextMenuGroupProps" />
+
+### Label
+
+Renders a label in a menu group. This component should be wrapped with ContextMenu.Group so the `aria-labelledby` is correctly set on the group element. Hidden when filtering is active.
+
+<auto-type-table path="./props.ts" name="ContextMenuLabelProps" />
+
+### Separator
+
+Visual divider between menu items or groups. Hidden when filtering is active.
+
+<auto-type-table path="./props.ts" name="ContextMenuSeparatorProps" />
+
+### EmptyState
+
+Placeholder content when there are no menu items to display.
+
+<auto-type-table path="./props.ts" name="ContextMenuEmptyStateProps" />
+
+### Submenu
+
+Wraps a submenu root. Use with `ContextMenu.SubmenuTrigger` and `ContextMenu.SubmenuContent` to create nested menus.
+
+Supports its own `autocomplete` prop to enable search functionality within the submenu independently from the parent menu.
+
+<auto-type-table path="./props.ts" name="ContextMenuSubMenuProps" />
+
+### SubmenuTrigger
+
+The trigger item for a submenu. Renders with a trailing chevron icon by default. Accepts `leadingIcon` and `trailingIcon` props.
+
+When inside a searchable parent menu, the `value` prop can be used for autocomplete matching.
+
+<auto-type-table path="./props.ts" name="ContextMenuSubTriggerProps" />
+
+### SubmenuContent
+
+The content container for a submenu. Shares the same API as `ContextMenu.Content` with a default `sideOffset` of `2`.
+
+<auto-type-table path="./props.ts" name="ContextMenuSubContentProps" />
+
+## Examples
+
+### Basic Usage
+
+A simple context menu with basic functionality. Right-click the trigger area to open.
+
+<Demo data={basicDemo} />
+
+### With Icons
+
+You can add icons to the menu items. Supports both leading and trailing icons.
+
+<Demo data={iconsDemo} />
+
+### With Groups and Labels
+
+Organize related menu items into sections with descriptive headers.
+
+<Demo data={customDemo} />
+
+### Submenu
+
+Use `ContextMenu.Submenu`, `ContextMenu.SubmenuTrigger`, and `ContextMenu.SubmenuContent` to create nested menus with multiple levels.
+
+<Demo data={submenuDemo} />
+
+### Autocomplete
+
+To enable autocomplete, pass the `autocomplete` prop to the ContextMenu root element. Each menu instance will manage its own autocomplete behavior.
+
+By default (`autocompleteMode="auto"`), items are automatically filtered as the user types. The filter matches against the item's `value` prop or its `children` text content.
+
+For submenus, you can independently enable autocomplete by passing `autocomplete` to `ContextMenu.Submenu`.
+
+<Demo data={autocompleteDemo} />
