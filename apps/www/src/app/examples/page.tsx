@@ -98,7 +98,7 @@ const Page = () => {
               Dashboard
             </Sidebar.Item>
 
-            <Sidebar.Item href='#' leadingIcon={0}>
+            <Sidebar.Item href='#' leadingIcon={<BellIcon />}>
               Analytics
             </Sidebar.Item>
 

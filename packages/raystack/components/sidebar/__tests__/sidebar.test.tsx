@@ -199,7 +199,7 @@ describe('Sidebar', () => {
     it('has proper ARIA attributes', () => {
       render(<BasicSidebar />);
 
-      const footer = screen.getByRole('group', { name: 'Footer navigation' });
+      const footer = screen.getByRole('list', { name: 'Footer navigation' });
       expect(footer).toBeInTheDocument();
     });
   });
@@ -246,10 +246,14 @@ describe('Sidebar', () => {
       expect(item).toHaveAttribute('aria-disabled', 'true');
     });
 
-    it('hides text when collapsed', () => {
+    it('hides text when collapsed and sets aria-label for screen readers', () => {
       render(<BasicSidebar open={false} />);
 
       expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+      const dashboardLink = screen.getByRole('listitem', {
+        name: DASHBOARD_ITEM_TEXT
+      });
+      expect(dashboardLink).toHaveAttribute('aria-label', DASHBOARD_ITEM_TEXT);
     });
   });
 
