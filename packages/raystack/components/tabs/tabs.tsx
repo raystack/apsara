@@ -41,7 +41,9 @@ const TabsTab = forwardRef<HTMLButtonElement, TabsTabProps>(
       {...props}
     >
       {leadingIcon && (
-        <span className={styles['trigger-icon']}>{leadingIcon}</span>
+        <span className={styles['trigger-icon']} aria-hidden>
+          {leadingIcon}
+        </span>
       )}
       {children}
     </TabsPrimitive.Tab>

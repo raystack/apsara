@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
-
 import { ComponentProps } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { CodeBlock } from '../code-block';
 
 // Mock the clipboard API
@@ -146,13 +145,14 @@ describe('CodeBlock', () => {
     it('updates language when language select is changed', () => {
       const { rerender } = render(<LanguageSelectCodeBlock value='jsx' />);
 
-      expect(screen.getByText('JavaScript')).toBeInTheDocument();
+      const trigger = screen.getByRole('combobox');
+      expect(trigger).toHaveTextContent('JavaScript');
       expect(screen.getByText('function')).toBeInTheDocument();
       expect(screen.queryByText('def')).not.toBeInTheDocument();
 
       rerender(<LanguageSelectCodeBlock value='python' />);
 
-      expect(screen.getByText('Python')).toBeInTheDocument();
+      expect(trigger).toHaveTextContent('Python');
       expect(screen.getByText('def')).toBeInTheDocument();
       expect(screen.queryByText('function')).not.toBeInTheDocument();
     });

@@ -30,6 +30,7 @@ export * from './link-examples';
 export * from './list-examples';
 export * from './menu-examples';
 export * from './popover-examples';
+export * from './preview-card-examples';
 export * from './radio-examples';
 export * from './search-examples';
 export * from './select-examples';
