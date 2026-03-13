@@ -1,0 +1,64 @@
+---
+title: Menubar
+description: A horizontal menu bar providing commands and options for your application, typically used at the top of a window.
+source: packages/raystack/components/menubar
+tag: new
+---
+
+import { preview, verticalDemo, autocompleteDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Usage
+
+```tsx
+import { Menu, Menubar } from '@raystack/apsara'
+
+<Menubar>
+  <Menu>
+    <Menu.Trigger>File</Menu.Trigger>
+    <Menu.Content>
+      <Menu.Item>New</Menu.Item>
+      <Menu.Item>Open</Menu.Item>
+    </Menu.Content>
+  </Menu>
+  <Menu>
+    <Menu.Trigger>Edit</Menu.Trigger>
+    <Menu.Content>
+      <Menu.Item>Undo</Menu.Item>
+      <Menu.Item>Redo</Menu.Item>
+    </Menu.Content>
+  </Menu>
+</Menubar>
+```
+
+The `Menubar` component wraps multiple `Menu` instances. Menu triggers are automatically styled when inside a Menubar. If you pass a `render` prop to `Menu.Trigger`, the default menubar trigger styling is skipped, allowing full custom rendering.
+
+## API Reference
+
+### Root
+
+The container element for the menubar.
+
+<auto-type-table path="./props.ts" name="MenubarProps" />
+
+## Examples
+
+### Vertical
+
+Use the `orientation` prop to render a vertical menubar.
+
+<Demo data={verticalDemo} />
+
+### Autocomplete
+
+Use the `autocomplete` prop on `Menu` to enable search filtering within a menubar menu.
+
+<Demo data={autocompleteDemo} />
+
+## Accessibility
+
+- Uses `role="menubar"` for proper ARIA semantics
+- Supports keyboard navigation between menu triggers using arrow keys
+- `loopFocus` cycles focus from last to first trigger (enabled by default)
+- Each menu trigger opens its dropdown on click or Enter/Space

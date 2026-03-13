@@ -43,6 +43,7 @@ export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
 export { Menu } from './components/menu';
+export { Menubar } from './components/menubar';
 export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
 export { PreviewCard } from './components/preview-card';
