@@ -42,7 +42,7 @@ Groups all parts of the breadcrumb navigation.
 
 ### Item
 
-Renders an individual breadcrumb link.
+Renders an individual breadcrumb link. Ref is forwarded to the link or custom component when using `as` (not when using `dropdownItems`).
 
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
 
@@ -94,9 +94,12 @@ Breadcrumb items can include dropdown menus for additional navigation options. S
 
 ### As
 
-Use the `as` prop to render the breadcrumb item as a custom component. By default, breadcrumb items are rendered as `a` tags.
+Use the `as` prop to render the breadcrumb item as a custom component. Pass the **component reference** (e.g. `as={NextLink}`), not a JSX element. Put `href` and other props on `Breadcrumb.Item`; they are passed through to the component. By default, items render as `a` tags.
 
-When a custom component is provided, the props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
+```tsx
+// Correct: pass the component, set href on the item
+<Breadcrumb.Item href="/" as={NextLink}>Home</Breadcrumb.Item>
+```
 
 <Demo data={asDemo} />
 

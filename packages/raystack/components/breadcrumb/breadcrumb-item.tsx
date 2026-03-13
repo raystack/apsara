@@ -2,13 +2,7 @@
 
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import React, {
-  cloneElement,
-  forwardRef,
-  HTMLAttributes,
-  ReactElement,
-  ReactNode
-} from 'react';
+import React, { forwardRef, HTMLAttributes, ReactNode } from 'react';
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
@@ -22,7 +16,8 @@ export interface BreadcrumbItemProps extends HTMLAttributes<HTMLAnchorElement> {
   current?: boolean;
   dropdownItems?: BreadcrumbDropdownItem[];
   href?: string;
-  as?: ReactElement;
+  /** Component to render as (e.g. NextLink). Receives our props (href, className, ref, etc.). Defaults to "a". */
+  as?: React.ElementType;
 }
 
 export const BreadcrumbItem = forwardRef<
@@ -42,14 +37,15 @@ export const BreadcrumbItem = forwardRef<
     },
     ref
   ) => {
-    const renderedElement = as ?? <a ref={ref} />;
-    const label = (
+    const Component = as ?? 'a';
+    // Only wrap in spans when needed for layout (leading icon); otherwise keep link content as plain text so DOM shows <a>Home</a> not <a><span>Home</span></a>
+    const label = leadingIcon ? (
       <>
-        {leadingIcon && (
-          <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
-        )}
-        {children && <span>{children}</span>}
+        <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
+        {children != null && <span>{children}</span>}
       </>
+    ) : (
+      children
     );
 
     if (dropdownItems) {
@@ -73,21 +69,35 @@ export const BreadcrumbItem = forwardRef<
         </Menu>
       );
     }
+    // Current page: render as non-link <span> (semantic; no href)
+    if (current) {
+      return (
+        <li className={cx(styles['breadcrumb-item'], className)}>
+          <span
+            ref={ref as React.RefObject<HTMLSpanElement>}
+            className={cx(
+              styles['breadcrumb-link'],
+              styles['breadcrumb-link-active']
+            )}
+            aria-current='page'
+            {...props}
+          >
+            {label}
+          </span>
+        </li>
+      );
+    }
+    // Link: render as <a> or custom Component (e.g. NextLink → <a> in DOM)
     return (
       <li className={cx(styles['breadcrumb-item'], className)}>
-        {cloneElement(
-          renderedElement,
-          {
-            className: cx(
-              styles['breadcrumb-link'],
-              current && styles['breadcrumb-link-active']
-            ),
-            href,
-            ...props,
-            ...renderedElement.props
-          },
-          label
-        )}
+        <Component
+          ref={ref}
+          className={cx(styles['breadcrumb-link'])}
+          href={href}
+          {...props}
+        >
+          {label}
+        </Component>
       </li>
     );
   }
