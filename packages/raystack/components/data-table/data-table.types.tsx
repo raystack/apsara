@@ -81,6 +81,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   enableHiding?: boolean;
   defaultHidden?: boolean;
   filterOptions?: FilterSelectOption[];
+  defaultFilterValue?: unknown;
   filterProps?: {
     select?: BaseSelectProps;
   };
