@@ -16,7 +16,7 @@ export default function HomePage() {
         </h1>
         <h3>
           Apsara is an elegant and beautiful re-usable React component library
-          built using Radix UI.
+          built using Base UI.
         </h3>
       </div>
     </main>
