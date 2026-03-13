@@ -23,7 +23,7 @@ export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
         variant='text'
         color='neutral'
         size='small'
-        className={styles.menuBarTrigger}
+        className={`${styles.menuBarTrigger} rs-menu-trigger`}
       />
     ) : undefined;
 
