@@ -68,5 +68,5 @@ export {
   ThemeSwitcher,
   useTheme
 } from './components/theme-provider';
-export { ToastContainer, toast } from './components/toast';
+export { Toast, toastManager } from './components/toast';
 export { Tooltip } from './components/tooltip';
