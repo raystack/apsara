@@ -19,6 +19,7 @@ export * from './components/color-picker';
 export { Combobox } from './components/combobox';
 export { Command } from './components/command';
 export { Container } from './components/container';
+export { ContextMenu } from './components/context-menu';
 export { CopyButton } from './components/copy-button';
 export {
   DataTable,
