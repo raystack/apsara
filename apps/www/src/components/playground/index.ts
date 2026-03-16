@@ -1,3 +1,4 @@
+export * from './alert-dialog-examples';
 export * from './amount-examples';
 export * from './announcement-bar-examples';
 export * from './avatar-examples';
