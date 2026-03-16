@@ -19,12 +19,7 @@ const createPlugins = ({ rootDir, declarationDir }) => [
     optDeps: true,
     // Note: Include deps with subpaths that need to be externalized in include array.
     // https://github.com/Septh/rollup-plugin-node-externals?tab=readme-ov-file#1-this-plugin-is-smart
-    include: [
-      'react/jsx-runtime',
-      'react-dom/client',
-      /^dayjs\/plugin\/.*/,
-      /^@radix-ui\/.*/
-    ]
+    include: ['react/jsx-runtime', 'react-dom/client', /^dayjs\/plugin\/.*/]
   }),
   nodeResolve(),
   commonjs(),

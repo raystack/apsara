@@ -1,55 +1,97 @@
 ---
 title: Toast
-description: Toast wrapper and function. Toast internally uses Sonner
+description: Displays temporary notification messages using Base UI Toast primitives.
 source: packages/raystack/components/toast
 ---
 
-import { preview, basicDemo, iconsDemo, disabledDemo } from "./demo.ts";
+import { preview, basicDemo, typesDemo, descriptionDemo, actionDemo, promiseDemo, positionDemo, updateDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
 ## Anatomy
 
-Import and assemble the component:
+Import and set up the toast system:
 
 ```tsx
-import { ToastContainer, toast } from '@raystack/apsara'
+import { Toast, toastManager } from '@raystack/apsara'
 
-<ToastContainer />
+// Wrap your app with Toast.Provider (once, at root)
+<Toast.Provider position="bottom-right">
+  <App />
+</Toast.Provider>
+
+// Trigger toasts from anywhere
+toastManager.add({ title: 'Hello!', type: 'success' })
 ```
 
 ## API Reference
 
-Renders a temporary notification message.
+### Toast.Provider
 
-<auto-type-table path="./props.ts" name="ToastProps" />
+Renders the toast viewport and manages the toast lifecycle. Place once at the root of your app.
+
+<auto-type-table path="./props.ts" name="ToastProviderProps" />
+
+### toastManager.add(options)
+
+Creates a new toast and returns its unique ID. The `toastManager` can be imported and used anywhere — including outside React components (e.g., API interceptors, utility functions).
+
+<auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
+
+### toastManager methods
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `add` | `(options) => string` | Create a toast, returns its ID |
+| `close` | `(id: string) => void` | Close a specific toast by ID |
+| `update` | `(id: string, options) => void` | Update an existing toast's properties |
+| `promise` | `(promise, { loading, success, error }) => Promise` | Create a toast that tracks a promise lifecycle |
 
 ## Examples
 
-### Basic Usage
+### Basic Toast
 
-```tsx
-import { ToastContainer, toast, Button } from '@raystack/apsara'
+<Demo data={basicDemo} />
 
-<ToastContainer />
-<Button
-  variant="primary"
-  onClick={() =>
-    toast.success("Data loaded successfully.", {
-      dismissible: true,
-      action: (
-        <Button size="small" onClick={() => console.log("Toast appears")}>
-          Click Me
-        </Button>
-      ),
-    })
-  }>
-  Trigger toast
-</Button>
-```
+### Type Variants
+
+Use the `type` prop to change the visual styling of the toast.
+
+<Demo data={typesDemo} />
+
+### With Title and Description
+
+<Demo data={descriptionDemo} />
+
+### With Action Button
+
+Use `actionProps` to render an action button inside the toast.
+
+<Demo data={actionDemo} />
+
+### Promise Toast
+
+Track an async operation with automatic loading, success, and error states.
+
+<Demo data={promiseDemo} />
+
+### Positioning
+
+Control where toasts appear on screen with the `position` prop on `Toast.Provider`.
+
+<Demo data={positionDemo} />
+
+### Close and Update
+
+Create a toast, then update or close it programmatically using the returned ID.
+
+<Demo data={updateDemo} />
 
 ## Accessibility
 
-- Uses `role="alert"` for important notifications
-- Automatically announced to screen readers via `aria-live` region
-- Dismissible toasts support keyboard interaction
+- Uses `aria-live` regions for screen reader announcements
+- `priority: 'high'` uses `role="alert"` (assertive) for urgent notifications
+- `priority: 'low'` (default) uses `role="status"` (polite) for non-urgent notifications
+- Close button has `aria-label="Close toast"`
+- Supports keyboard navigation and Escape to dismiss
+- Swipe-to-dismiss gesture support
