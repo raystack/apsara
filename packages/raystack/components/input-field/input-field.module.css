@@ -3,13 +3,14 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: var(--rs-space-1);
+  gap: var(--rs-space-2);
   width: 100%;
   position: relative;
 }
 
 .label {
   color: var(--rs-color-foreground-base-secondary);
+  font-style: normal;
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
@@ -129,7 +130,6 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
-  padding-top: var(--rs-space-2);
 }
 
 .helper-text-error {
@@ -279,7 +279,6 @@
 .labelContainer {
   display: flex;
   align-items: center;
-  padding-bottom: var(--rs-space-2);
 }
 
 .helpIcon {
