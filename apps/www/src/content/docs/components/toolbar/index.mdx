@@ -5,7 +5,7 @@ source: packages/raystack/components/toolbar
 tag: new
 ---
 
-import { preview, groupDemo, compositionDemo, disabledDemo } from "./demo.ts";
+import { preview, groupDemo, verticalDemo, compositionDemo, disabledDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -74,9 +74,15 @@ Use `Toolbar.Group` to group related buttons.
 
 <Demo data={groupDemo} />
 
+### Vertical
+
+Use the `orientation` prop to render the toolbar vertically.
+
+<Demo data={verticalDemo} />
+
 ### Composition
 
-Use the `render` prop on `Toolbar.Button` to compose with Apsara components like `Button` and `IconButton`.
+Use the `render` prop to compose with other components.
 
 <Demo data={compositionDemo} />
 

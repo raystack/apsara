@@ -30,6 +30,23 @@ export const groupDemo = {
 </Toolbar>`
 };
 
+export const verticalDemo = {
+  type: 'code',
+  code: `<Toolbar orientation="vertical">
+  <Toolbar.Group>
+    <Toolbar.Button>Bold</Toolbar.Button>
+    <Toolbar.Button>Italic</Toolbar.Button>
+    <Toolbar.Button>Underline</Toolbar.Button>
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Toolbar.Group>
+    <Toolbar.Button>Left</Toolbar.Button>
+    <Toolbar.Button>Center</Toolbar.Button>
+    <Toolbar.Button>Right</Toolbar.Button>
+  </Toolbar.Group>
+</Toolbar>`
+};
+
 export const compositionDemo = {
   type: 'code',
   code: `<Toolbar>

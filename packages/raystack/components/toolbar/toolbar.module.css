@@ -10,6 +10,10 @@
   align-items: center;
   gap: var(--rs-space-1);
 }
+.root[data-orientation="vertical"],
+.root[data-orientation="vertical"] .group {
+  flex-direction: column;
+}
 
 .root > *,
 .group > * {
@@ -18,9 +22,15 @@
 
 .separator {
   flex-shrink: 0;
-  width: 1px;
-  height: 16px;
   background-color: var(--rs-color-border-base-primary);
+}
+.separator[data-orientation="vertical"] {
+  width: 1px;
+  height: var(--rs-space-5);
+}
+.separator[data-orientation="horizontal"] {
+  width: calc(100% - var(--rs-space-3));
+  height: 1px;
 }
 .group {
   padding: 0;
