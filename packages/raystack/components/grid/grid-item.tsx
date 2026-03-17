@@ -1,5 +1,4 @@
 import { mergeProps, useRender } from '@base-ui/react';
-import { forwardRef } from 'react';
 import { AlignType } from './types';
 
 type GridItemProps = useRender.ComponentProps<'div'> & {
@@ -14,46 +13,42 @@ type GridItemProps = useRender.ComponentProps<'div'> & {
   alignSelf?: AlignType;
 };
 
-export const GridItem = forwardRef<HTMLDivElement, GridItemProps>(
-  (
-    {
-      area,
-      colStart,
-      colEnd,
-      rowStart,
-      rowEnd,
-      colSpan,
-      rowSpan,
-      justifySelf,
-      alignSelf,
-      style,
-      render,
-      ...props
-    },
-    ref
-  ) => {
-    const gridItemStyle = {
-      gridArea: area,
-      gridColumnStart: colStart,
-      gridColumnEnd: colEnd,
-      gridRowStart: rowStart,
-      gridRowEnd: rowEnd,
-      gridColumn: colSpan ? `span ${colSpan}` : undefined,
-      gridRow: rowSpan ? `span ${rowSpan}` : undefined,
-      justifySelf,
-      alignSelf,
-      ...style
-    };
+export function GridItem({
+  area,
+  colStart,
+  colEnd,
+  rowStart,
+  rowEnd,
+  colSpan,
+  rowSpan,
+  justifySelf,
+  alignSelf,
+  style,
+  render,
+  ref,
+  ...props
+}: GridItemProps) {
+  const gridItemStyle = {
+    gridArea: area,
+    gridColumnStart: colStart,
+    gridColumnEnd: colEnd,
+    gridRowStart: rowStart,
+    gridRowEnd: rowEnd,
+    gridColumn: colSpan ? `span ${colSpan}` : undefined,
+    gridRow: rowSpan ? `span ${rowSpan}` : undefined,
+    justifySelf,
+    alignSelf,
+    ...style
+  };
 
-    const element = useRender({
-      defaultTagName: 'div',
-      ref,
-      render,
-      props: mergeProps<'div'>({ style: gridItemStyle }, props)
-    });
+  const element = useRender({
+    defaultTagName: 'div',
+    ref,
+    render,
+    props: mergeProps<'div'>({ style: gridItemStyle }, props)
+  });
 
-    return element;
-  }
-);
+  return element;
+}
 
-GridItem.displayName = 'GridItem';
+GridItem.displayName = 'Grid.Item';
