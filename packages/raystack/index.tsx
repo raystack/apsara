@@ -72,5 +72,6 @@ export {
   ThemeSwitcher,
   useTheme
 } from './components/theme-provider';
-export { Toast, toastManager } from './components/toast';
+export { ToastContainer, toast } from './components/toast';
+export { Toggle } from './components/toggle';
 export { Tooltip } from './components/tooltip';
