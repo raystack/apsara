@@ -6,7 +6,7 @@ import {
 } from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cva, VariantProps } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, forwardRef, SVGAttributes } from 'react';
+import { ComponentProps, SVGAttributes } from 'react';
 import { Flex } from '../flex';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
@@ -34,48 +34,44 @@ const trigger = cva(styles.trigger, {
 });
 
 export interface SelectTriggerProps
-  extends ComponentPropsWithoutRef<'button'>,
+  extends ComponentProps<'button'>,
     VariantProps<typeof trigger> {
   iconProps?: IconProps;
 }
 
-export const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
-  (
-    {
-      size,
-      variant,
-      className,
-      children,
-      iconProps = {},
-      'aria-label': ariaLabel,
-      ...props
-    },
-    ref
-  ) => {
-    const { multiple, autocomplete } = useSelectContext();
+export function SelectTrigger({
+  ref,
+  size,
+  variant,
+  className,
+  children,
+  iconProps = {},
+  'aria-label': ariaLabel,
+  ...props
+}: SelectTriggerProps) {
+  const { multiple, autocomplete } = useSelectContext();
 
-    const TriggerPrimitive = autocomplete
-      ? ComboboxPrimitive.Trigger
-      : SelectPrimitive.Trigger;
+  const TriggerPrimitive = autocomplete
+    ? ComboboxPrimitive.Trigger
+    : SelectPrimitive.Trigger;
 
-    return (
-      <TriggerPrimitive
-        data-multiselectable={multiple ? true : undefined}
-        ref={ref}
-        className={trigger({ size, variant, className })}
-        aria-label={ariaLabel || 'Select option'}
-        {...props}
-      >
-        <Flex className={styles.triggerContent} align='center' gap={2}>
-          {children}
-        </Flex>
-        <ChevronDownIcon
-          className={styles.triggerIcon}
-          aria-hidden='true'
-          {...iconProps}
-        />
-      </TriggerPrimitive>
-    );
-  }
-);
+  return (
+    <TriggerPrimitive
+      data-multiselectable={multiple ? true : undefined}
+      ref={ref}
+      className={trigger({ size, variant, className })}
+      aria-label={ariaLabel || 'Select option'}
+      {...props}
+    >
+      <Flex className={styles.triggerContent} align='center' gap={2}>
+        {children}
+      </Flex>
+      <ChevronDownIcon
+        className={styles.triggerIcon}
+        aria-hidden='true'
+        {...iconProps}
+      />
+    </TriggerPrimitive>
+  );
+}
 SelectTrigger.displayName = 'Select.Trigger';

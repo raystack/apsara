@@ -2,20 +2,20 @@
 
 import { Progress as ProgressPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type ElementRef, forwardRef, useContext } from 'react';
+import { useContext } from 'react';
 import styles from './progress.module.css';
 import { ProgressContext } from './progress-root';
 
-export const ProgressTrack = forwardRef<
-  ElementRef<typeof ProgressPrimitive.Track>,
-  ProgressPrimitive.Track.Props
->(({ className, children, ...props }, ref) => {
+export function ProgressTrack({
+  className,
+  children,
+  ...props
+}: ProgressPrimitive.Track.Props) {
   const { variant } = useContext(ProgressContext);
 
   if (variant === 'circular') {
     return (
       <ProgressPrimitive.Track
-        ref={ref}
         className={cx(styles.circularSvg, className)}
         {...props}
         render={({ children: trackChildren, ...trackProps }) => (
@@ -34,15 +34,11 @@ export const ProgressTrack = forwardRef<
   }
 
   return (
-    <ProgressPrimitive.Track
-      ref={ref}
-      className={cx(styles.track, className)}
-      {...props}
-    >
+    <ProgressPrimitive.Track className={cx(styles.track, className)} {...props}>
       <ProgressPrimitive.Indicator className={styles.indicator} />
       {children}
     </ProgressPrimitive.Track>
   );
-});
+}
 
-ProgressTrack.displayName = 'ProgressTrack';
+ProgressTrack.displayName = 'Progress.Track';

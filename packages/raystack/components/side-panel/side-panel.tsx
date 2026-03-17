@@ -31,6 +31,8 @@ const SidePanelRoot = ({
   );
 };
 
+SidePanelRoot.displayName = 'SidePanel';
+
 interface SidePanelHeaderProps {
   title: string;
   icon?: ReactNode;
@@ -64,6 +66,8 @@ const SidePanelHeader = ({
   );
 };
 
+SidePanelHeader.displayName = 'SidePanel.Header';
+
 interface SidePanelSectionProps {
   children: ReactNode;
 }
@@ -71,6 +75,8 @@ interface SidePanelSectionProps {
 const SidePanelSection = ({ children }: SidePanelSectionProps) => {
   return <div className={styles['side-panel-section']}>{children}</div>;
 };
+
+SidePanelSection.displayName = 'SidePanel.Section';
 
 export const SidePanel = Object.assign(SidePanelRoot, {
   Header: SidePanelHeader,
