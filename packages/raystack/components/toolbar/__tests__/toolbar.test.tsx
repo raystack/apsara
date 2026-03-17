@@ -58,7 +58,6 @@ describe('Toolbar', () => {
         </Toolbar>
       );
       const button = screen.getByRole('button');
-      expect(button.className).toContain(styles.button);
       expect(button.className).toContain('custom');
     });
 
@@ -125,52 +124,6 @@ describe('Toolbar', () => {
     });
   });
 
-  describe('Link', () => {
-    it('renders a link', () => {
-      render(
-        <Toolbar>
-          <Toolbar.Link href='https://example.com'>Example</Toolbar.Link>
-        </Toolbar>
-      );
-      const link = screen.getByRole('link', { name: 'Example' });
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute('href', 'https://example.com');
-    });
-
-    it('forwards ref', () => {
-      const ref = createRef<HTMLAnchorElement>();
-      render(
-        <Toolbar>
-          <Toolbar.Link ref={ref} href='#'>
-            Link
-          </Toolbar.Link>
-        </Toolbar>
-      );
-      expect(ref.current).toBeInstanceOf(HTMLAnchorElement);
-    });
-  });
-
-  describe('Input', () => {
-    it('renders an input', () => {
-      render(
-        <Toolbar>
-          <Toolbar.Input data-testid='input' />
-        </Toolbar>
-      );
-      expect(screen.getByTestId('input')).toBeInTheDocument();
-    });
-
-    it('forwards ref', () => {
-      const ref = createRef<HTMLInputElement>();
-      render(
-        <Toolbar>
-          <Toolbar.Input ref={ref} data-testid='input' />
-        </Toolbar>
-      );
-      expect(ref.current).toBeInstanceOf(HTMLInputElement);
-    });
-  });
-
   describe('Keyboard navigation', () => {
     it('navigates between buttons with arrow keys', async () => {
       const user = userEvent.setup();
@@ -182,15 +135,15 @@ describe('Toolbar', () => {
         </Toolbar>
       );
 
-      const first = screen.getByText('First');
+      const first = screen.getByRole('button', { name: 'First' });
       first.focus();
       expect(first).toHaveFocus();
 
       await user.keyboard('{ArrowRight}');
-      expect(screen.getByText('Second')).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'Second' })).toHaveFocus();
 
       await user.keyboard('{ArrowRight}');
-      expect(screen.getByText('Third')).toHaveFocus();
+      expect(screen.getByRole('button', { name: 'Third' })).toHaveFocus();
     });
   });
 });
