@@ -72,10 +72,15 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
         value: 'failed'
       }
     ],
-    filterType: 'multiselect',
+    filterType: 'select',
     enableColumnFilter: true,
     enableHiding: true,
-
+    defaultFilterValue: '',
+    filterProps: {
+      select: {
+        autocomplete: true
+      }
+    }
   },
   {
     accessorKey: 'email',
