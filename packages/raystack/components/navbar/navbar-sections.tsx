@@ -1,17 +1,20 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { ComponentProps } from 'react';
 import { Flex } from '../flex';
 import styles from './navbar.module.css';
 
-export interface NavbarStartProps
-  extends ComponentPropsWithoutRef<typeof Flex> {}
+export interface NavbarStartProps extends ComponentProps<typeof Flex> {}
 
-export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
-  ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (
+export function NavbarStart({
+  className,
+  children,
+  'aria-label': ariaLabel,
+  ...props
+}: NavbarStartProps) {
+  return (
     <Flex
-      ref={ref}
       align='center'
       gap={5}
       className={cx(styles.start, className)}
@@ -21,17 +24,21 @@ export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
     >
       {children}
     </Flex>
-  )
-);
+  );
+}
 
 NavbarStart.displayName = 'Navbar.Start';
 
-export interface NavbarEndProps extends ComponentPropsWithoutRef<typeof Flex> {}
+export interface NavbarEndProps extends ComponentProps<typeof Flex> {}
 
-export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
-  ({ className, children, 'aria-label': ariaLabel, ...props }, ref) => (
+export function NavbarEnd({
+  className,
+  children,
+  'aria-label': ariaLabel,
+  ...props
+}: NavbarEndProps) {
+  return (
     <Flex
-      ref={ref}
       align='center'
       gap={5}
       className={cx(styles.end, className)}
@@ -41,7 +48,7 @@ export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
     >
       {children}
     </Flex>
-  )
-);
+  );
+}
 
 NavbarEnd.displayName = 'Navbar.End';

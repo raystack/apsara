@@ -1,7 +1,7 @@
 'use client';
 
-import { type VariantProps, cva } from 'class-variance-authority';
-import { ImgHTMLAttributes } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps, SyntheticEvent } from 'react';
 
 import styles from './image.module.css';
 
@@ -25,12 +25,8 @@ const image = cva(styles.image, {
   }
 });
 
-interface ImageProps
-  extends ImgHTMLAttributes<HTMLImageElement>,
-    VariantProps<typeof image> {
+interface ImageProps extends ComponentProps<'img'>, VariantProps<typeof image> {
   fallback?: string;
-  width?: string | number;
-  height?: string | number;
 }
 
 export function Image({
@@ -47,9 +43,7 @@ export function Image({
   decoding = 'async',
   ...props
 }: ImageProps) {
-  const handleError = (
-    event: React.SyntheticEvent<HTMLImageElement, Event>
-  ) => {
+  const handleError = (event: SyntheticEvent<HTMLImageElement, Event>) => {
     if (fallback) {
       event.currentTarget.src = fallback;
     }
