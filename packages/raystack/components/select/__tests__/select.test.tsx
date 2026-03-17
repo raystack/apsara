@@ -154,8 +154,9 @@ describe('Select', () => {
       await flushMicrotasks();
       expect(handleValueChange).toHaveBeenCalledWith(['banana', 'pineapple']);
 
-      expect(options[1]).toHaveAttribute('aria-selected', 'true');
-      expect(options[4]).toHaveAttribute('aria-selected', 'true');
+      const optionsAfterSelection = screen.getAllByRole('option');
+      expect(optionsAfterSelection[1]).toHaveAttribute('aria-selected', 'true');
+      expect(optionsAfterSelection[4]).toHaveAttribute('aria-selected', 'true');
     });
 
     it('allows deselecting items in multiple mode', async () => {

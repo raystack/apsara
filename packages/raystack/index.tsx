@@ -2,6 +2,7 @@ import './styles/index.css';
 import './normalize.css';
 
 export { Accordion } from './components/accordion';
+export { AlertDialog } from './components/alert-dialog';
 export { Amount } from './components/amount';
 export { AnnouncementBar } from './components/announcement-bar';
 export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
@@ -19,6 +20,7 @@ export * from './components/color-picker';
 export { Combobox } from './components/combobox';
 export { Command } from './components/command';
 export { Container } from './components/container';
+export { ContextMenu } from './components/context-menu';
 export { CopyButton } from './components/copy-button';
 export {
   DataTable,
@@ -43,9 +45,12 @@ export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
 export { Menu } from './components/menu';
+export { Menubar } from './components/menubar';
+export { Meter } from './components/meter';
 export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
 export { PreviewCard } from './components/preview-card';
+export { Progress } from './components/progress';
 export { Radio } from './components/radio';
 export { ScrollArea } from './components/scroll-area';
 export { Search } from './components/search';
@@ -68,5 +73,6 @@ export {
   useTheme
 } from './components/theme-provider';
 export { Toast, toastManager } from './components/toast';
+export { Toggle } from './components/toggle';
 export { Toolbar } from './components/toolbar';
 export { Tooltip } from './components/tooltip';
