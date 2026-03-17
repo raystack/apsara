@@ -45,8 +45,8 @@ export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
 export { Menu } from './components/menu';
-export { Meter } from './components/meter';
 export { Menubar } from './components/menubar';
+export { Meter } from './components/meter';
 export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
 export { PreviewCard } from './components/preview-card';
@@ -72,6 +72,6 @@ export {
   ThemeSwitcher,
   useTheme
 } from './components/theme-provider';
-export { ToastContainer, toast } from './components/toast';
+export { Toast, toastManager } from './components/toast';
 export { Toggle } from './components/toggle';
 export { Tooltip } from './components/tooltip';
