@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
+
+import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Switch } from '../switch';
 import styles from '../switch.module.css';
@@ -177,7 +178,7 @@ describe('Switch', () => {
   describe('Controlled vs Uncontrolled', () => {
     it('works as controlled component', () => {
       const Component = () => {
-        const [checked, setChecked] = React.useState(false);
+        const [checked, setChecked] = useState(false);
         return (
           <Switch
             checked={checked}

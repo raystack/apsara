@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Tabs } from '../tabs';
 import styles from '../tabs.module.css';
@@ -11,7 +11,7 @@ const CONTENT_1_TEXT = 'Content 1';
 const CONTENT_2_TEXT = 'Content 2';
 const CUSTOM_ARIA_LABEL = 'Navigation tabs';
 
-type TabsProps = ComponentPropsWithoutRef<typeof Tabs>;
+type TabsProps = ComponentProps<typeof Tabs>;
 
 const BasicTabs = ({
   defaultValue = 'tab1',

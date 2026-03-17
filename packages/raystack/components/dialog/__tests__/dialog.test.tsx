@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
+
+import { type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Dialog } from '../dialog';
 import styles from '../dialog.module.css';
@@ -17,7 +18,7 @@ const BasicDialog = ({
 }: {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) => (
   <Dialog open={open} onOpenChange={onOpenChange} {...props}>
     <Dialog.Trigger>{TRIGGER_TEXT}</Dialog.Trigger>

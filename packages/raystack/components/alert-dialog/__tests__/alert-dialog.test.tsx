@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
+
+import { type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import styles from '../../dialog/dialog.module.css';
 import { AlertDialog } from '../alert-dialog';
@@ -17,7 +18,7 @@ const BasicAlertDialog = ({
 }: {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) => (
   <AlertDialog open={open} onOpenChange={onOpenChange} {...props}>
     <AlertDialog.Trigger>{TRIGGER_TEXT}</AlertDialog.Trigger>
