@@ -63,9 +63,12 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
         className: cx(styles['nav-item'], classNames?.root),
         'data-active': active,
         'data-disabled': disabled,
-        role: 'menuitem',
+        role: 'listitem',
         'aria-current': active ? 'page' : undefined,
         'aria-disabled': disabled,
+        ...(isCollapsed && typeof children === 'string'
+          ? { 'aria-label': children }
+          : {}),
         ...props
       },
       <>
@@ -76,7 +79,7 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
               variant='soft'
               color='neutral'
               fallback={children[0].toUpperCase()}
-              style={{ cursor: 'pointer' }}
+              className={styles['nav-fallback-avatar']}
             />
           </Flex>
         ) : null}
@@ -93,8 +96,9 @@ export const SidebarItem = forwardRef<HTMLAnchorElement, SidebarItemProps>(
 
     if (isCollapsed && !hideCollapsedItemTooltip) {
       return (
-        <Tooltip message={children} side='right'>
-          {content}
+        <Tooltip>
+          <Tooltip.Trigger render={content} />
+          <Tooltip.Content side='right'>{children}</Tooltip.Content>
         </Tooltip>
       );
     }
