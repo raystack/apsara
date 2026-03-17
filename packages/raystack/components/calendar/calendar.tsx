@@ -210,3 +210,5 @@ export const Calendar = function ({
     />
   );
 };
+
+Calendar.displayName = 'Calendar';
