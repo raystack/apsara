@@ -15,6 +15,9 @@
   flex-direction: column;
 }
 
+.root[data-orientation="vertical"] button {
+  width: 100%;
+}
 .root > *,
 .group > * {
   border: none;
