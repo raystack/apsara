@@ -1,5 +1,5 @@
-import { type VariantProps, cva } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps } from 'react';
 import styles from './text.module.css';
 
 export const textVariants = cva(styles.text, {
@@ -131,58 +131,48 @@ export type TextBaseProps = VariantProps<typeof textVariants> & {
     | 900;
 };
 
-type TextSpanProps = { as?: 'span' } & ComponentPropsWithoutRef<'span'>;
-type TextDivProps = { as: 'div' } & ComponentPropsWithoutRef<'div'>;
-type TextLabelProps = { as: 'label' } & ComponentPropsWithoutRef<'label'>;
-type TextPProps = { as: 'p' } & ComponentPropsWithoutRef<'p'>;
-type TextAProps = { as: 'a' } & ComponentPropsWithoutRef<'a'>;
+type TextSpanProps = { as?: 'span' } & ComponentProps<'span'>;
+type TextDivProps = { as: 'div' } & ComponentProps<'div'>;
+type TextLabelProps = { as: 'label' } & ComponentProps<'label'>;
+type TextPProps = { as: 'p' } & ComponentProps<'p'>;
+type TextAProps = { as: 'a' } & ComponentProps<'a'>;
 export type TextProps = TextBaseProps &
   (TextSpanProps | TextDivProps | TextLabelProps | TextPProps | TextAProps);
-type TextRef =
-  | HTMLSpanElement
-  | HTMLParagraphElement
-  | HTMLDivElement
-  | HTMLLabelElement
-  | HTMLAnchorElement;
 
-export const Text = forwardRef<TextRef, TextProps>(
-  (
-    {
-      className,
-      size,
-      variant,
-      weight,
-      transform,
-      align,
-      lineClamp,
-      underline,
-      strikeThrough,
-      italic,
-      as: Component = 'span',
-      children,
-      ...rest
-    },
-    ref
-  ) => {
-    const textClassName = textVariants({
-      size,
-      className,
-      weight,
-      variant,
-      transform,
-      align,
-      lineClamp,
-      underline,
-      strikeThrough,
-      italic
-    });
+export function Text({
+  className,
+  size,
+  variant,
+  weight,
+  transform,
+  align,
+  lineClamp,
+  underline,
+  strikeThrough,
+  italic,
+  as: Component = 'span',
+  children,
+  ...rest
+}: TextProps) {
+  const textClassName = textVariants({
+    size,
+    className,
+    weight,
+    variant,
+    transform,
+    align,
+    lineClamp,
+    underline,
+    strikeThrough,
+    italic
+  });
 
-    return (
-      <Component ref={ref} className={textClassName} {...rest}>
-        {children}
-      </Component>
-    );
-  }
-);
+  return (
+    // @ts-expect-error polymorphic ref
+    <Component className={textClassName} {...rest}>
+      {children}
+    </Component>
+  );
+}
 
 Text.displayName = 'Text';

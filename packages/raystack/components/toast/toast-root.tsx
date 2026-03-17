@@ -3,7 +3,6 @@
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { type ElementRef, forwardRef } from 'react';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -34,16 +33,17 @@ export interface ToastRootProps
   position?: ToastPosition;
 }
 
-export const ToastRoot = forwardRef<
-  ElementRef<typeof ToastPrimitive.Root>,
-  ToastRootProps
->(({ toast, className, position = 'bottom-right', ...props }, ref) => {
+export function ToastRoot({
+  toast,
+  className,
+  position = 'bottom-right',
+  ...props
+}: ToastRootProps) {
   const swipeDirection = getSwipeDirection(position);
   const hasDescription = !!toast.description;
 
   return (
     <ToastPrimitive.Root
-      ref={ref}
       toast={toast}
       className={cx(styles.root, className)}
       swipeDirection={swipeDirection}
@@ -82,6 +82,6 @@ export const ToastRoot = forwardRef<
       </ToastPrimitive.Content>
     </ToastPrimitive.Root>
   );
-});
+}
 
 ToastRoot.displayName = 'Toast';

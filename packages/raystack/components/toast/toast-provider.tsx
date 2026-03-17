@@ -2,7 +2,6 @@
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type ElementRef, forwardRef } from 'react';
 import styles from './toast.module.css';
 import { toastManager } from './toast-manager';
 import { ToastRoot } from './toast-root';
@@ -31,16 +30,16 @@ function ToastList({ position }: { position: ToastPosition }) {
   ));
 }
 
-export const ToastProvider = forwardRef<
-  ElementRef<typeof ToastPrimitive.Viewport>,
-  ToastProviderProps
->(({ position = 'bottom-right', children, ...props }, ref) => {
+export function ToastProvider({
+  position = 'bottom-right',
+  children,
+  ...props
+}: ToastProviderProps) {
   return (
     <ToastPrimitive.Provider toastManager={toastManager} {...props}>
       {children}
       <ToastPrimitive.Portal>
         <ToastPrimitive.Viewport
-          ref={ref}
           className={cx(styles.viewport, styles[`viewport-${position}`])}
         >
           <ToastList position={position} />
@@ -48,6 +47,6 @@ export const ToastProvider = forwardRef<
       </ToastPrimitive.Portal>
     </ToastPrimitive.Provider>
   );
-});
+}
 
 ToastProvider.displayName = 'Toast.Provider';
