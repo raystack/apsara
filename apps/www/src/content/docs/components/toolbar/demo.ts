@@ -33,20 +33,24 @@ export const groupDemo = {
 export const compositionDemo = {
   type: 'code',
   code: `<Toolbar>
-  <Toolbar.Button render={<Button variant="text" color="neutral" size="small" />}>
-    32px
-  </Toolbar.Button>
-  <Toolbar.Separator />
-  <Toolbar.Group>
-    <Toolbar.Button render={<IconButton variant="text" color="neutral" size="small" />}>
-      <FontBoldIcon />
-    </Toolbar.Button>
-    <Toolbar.Button render={<IconButton variant="text" color="neutral" size="small" />}>
-      <FontItalicIcon />
-    </Toolbar.Button>
+  <Toolbar.Group aria-label="Alignment" render={<Toggle.Group/>}>
+    <Toolbar.Button render={<Toggle size={4}/>} ><TextAlignLeftIcon /></Toolbar.Button>
+    <Toolbar.Button render={<Toggle size={4}/>}><TextAlignRightIcon /></Toolbar.Button>
   </Toolbar.Group>
   <Toolbar.Separator />
-  <Toolbar.Link href="https://example.com">Help</Toolbar.Link>
+  <Toolbar.Group aria-label="Numerical format">
+    <Toolbar.Button aria-label="Format as currency">Format</Toolbar.Button>
+  </Toolbar.Group>
+  <Toolbar.Separator />
+  <Select defaultValue="Helvetica">
+    <Toolbar.Button render={<Select.Trigger variant="text" size="small" />}>
+      <Select.Value />
+    </Toolbar.Button>
+    <Select.Content sideOffset={8}>
+      <Select.Item value="Helvetica">Helvetica</Select.Item>
+      <Select.Item value="Arial">Arial</Select.Item>
+    </Select.Content>
+  </Select>
 </Toolbar>`
 };
 

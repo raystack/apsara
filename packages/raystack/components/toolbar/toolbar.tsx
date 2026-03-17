@@ -3,7 +3,7 @@
 import { Toolbar as ToolbarPrimitive } from '@base-ui/react/toolbar';
 import { cx } from 'class-variance-authority';
 import { ElementRef, forwardRef } from 'react';
-
+import { Button } from '../button';
 import styles from './toolbar.module.css';
 
 const ToolbarRoot = forwardRef<
@@ -21,10 +21,10 @@ ToolbarRoot.displayName = 'Toolbar';
 const ToolbarButton = forwardRef<
   ElementRef<typeof ToolbarPrimitive.Button>,
   ToolbarPrimitive.Button.Props
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <ToolbarPrimitive.Button
     ref={ref}
-    className={cx(styles.button, className)}
+    render={<Button variant='text' color='neutral' size='small' />}
     {...props}
   />
 ));
@@ -54,26 +54,8 @@ const ToolbarSeparator = forwardRef<
 ));
 ToolbarSeparator.displayName = 'Toolbar.Separator';
 
-const ToolbarLink = forwardRef<
-  ElementRef<typeof ToolbarPrimitive.Link>,
-  ToolbarPrimitive.Link.Props
->(({ className, ...props }, ref) => (
-  <ToolbarPrimitive.Link ref={ref} className={cx(className)} {...props} />
-));
-ToolbarLink.displayName = 'Toolbar.Link';
-
-const ToolbarInput = forwardRef<
-  ElementRef<typeof ToolbarPrimitive.Input>,
-  ToolbarPrimitive.Input.Props
->(({ className, ...props }, ref) => (
-  <ToolbarPrimitive.Input ref={ref} className={cx(className)} {...props} />
-));
-ToolbarInput.displayName = 'Toolbar.Input';
-
 export const Toolbar = Object.assign(ToolbarRoot, {
   Button: ToolbarButton,
   Group: ToolbarGroup,
-  Separator: ToolbarSeparator,
-  Link: ToolbarLink,
-  Input: ToolbarInput
+  Separator: ToolbarSeparator
 });
