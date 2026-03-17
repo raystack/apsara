@@ -1,0 +1,14 @@
+.menubar {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-1);
+  padding: var(--rs-space-1);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+  overflow: clip;
+}
+
+.menubar[data-orientation="vertical"] {
+  flex-direction: column;
+  align-items: stretch;
+}

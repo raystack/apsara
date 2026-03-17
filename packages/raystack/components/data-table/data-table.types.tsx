@@ -112,6 +112,10 @@ export interface DataTableProps<TData, TValue> {
   onLoadMore?: () => Promise<void>;
   onRowClick?: (row: TData) => void;
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
+  /** When true, group headers stick under the table header while scrolling. Default is false. */
+  stickyGroupHeader?: boolean;
+  /** Return a stable unique id for each row (used as React key). Use for sortable/filterable tables. */
+  getRowId?: (row: TData, index: number) => string;
 }
 
 export type DataTableContentClassNames = {
@@ -156,6 +160,7 @@ export type TableContextType<TData, TValue> = {
   updateTableQuery: (fn: TableQueryUpdateFn) => void;
   onRowClick?: (row: TData) => void;
   shouldShowFilters?: boolean;
+  stickyGroupHeader?: boolean;
 };
 
 export interface ColumnData {

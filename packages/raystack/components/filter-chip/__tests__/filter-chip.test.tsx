@@ -82,7 +82,9 @@ describe('FilterChip', () => {
         <FilterChip label='Name' columnType={FilterType.string} />
       );
 
-      const input = container.querySelector('input');
+      const input = container.querySelector(
+        `.${styles.inputFieldWrapper} input`
+      );
       expect(input).toBeInTheDocument();
     });
 
@@ -96,7 +98,9 @@ describe('FilterChip', () => {
         />
       );
 
-      const input = container.querySelector('input') as HTMLInputElement;
+      const input = container.querySelector(
+        `.${styles.inputFieldWrapper} input`
+      ) as HTMLInputElement;
       fireEvent.change(input, { target: { value: 'test value' } });
 
       expect(onValueChange).toHaveBeenCalledWith(
@@ -114,7 +118,9 @@ describe('FilterChip', () => {
         />
       );
 
-      const input = container.querySelector('input');
+      const input = container.querySelector(
+        `.${styles.inputFieldWrapper} input`
+      );
       expect(input).toHaveValue('initial value');
     });
   });
