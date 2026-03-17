@@ -3,17 +3,17 @@
 import { cx } from 'class-variance-authority';
 import Color from 'color';
 import {
-  type HTMLAttributes,
+  ComponentProps,
   PointerEvent as ReactPointerEvent,
   useCallback,
   useEffect,
   useMemo,
   useRef
 } from 'react';
-import { useColorPicker } from './color-picker-root';
 import styles from './color-picker.module.css';
+import { useColorPicker } from './color-picker-root';
 
-export type ColorPickerAreaProps = HTMLAttributes<HTMLDivElement>;
+export type ColorPickerAreaProps = ComponentProps<'div'>;
 
 export const ColorPickerArea = ({
   className,
@@ -114,3 +114,5 @@ export const ColorPickerArea = ({
     </div>
   );
 };
+
+ColorPickerArea.displayName = 'ColorPicker.Area';

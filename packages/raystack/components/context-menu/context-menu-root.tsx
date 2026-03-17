@@ -73,7 +73,7 @@ export const ContextMenuRoot = ({
     );
 
   return (
-    <MenuContext.Provider
+    <MenuContext
       value={{
         autocomplete,
         inputRef,
@@ -91,7 +91,7 @@ export const ContextMenuRoot = ({
         loopFocus={false}
         {...props}
       />
-    </MenuContext.Provider>
+    </MenuContext>
   );
 };
 ContextMenuRoot.displayName = 'ContextMenu';
@@ -164,7 +164,7 @@ export const ContextMenuSubMenu = ({
     );
 
   return (
-    <MenuContext.Provider
+    <MenuContext
       value={{
         autocomplete,
         inputRef,
@@ -183,7 +183,7 @@ export const ContextMenuSubMenu = ({
         onOpenChange={handleOpenChange}
         {...props}
       />
-    </MenuContext.Provider>
+    </MenuContext>
   );
 };
 ContextMenuSubMenu.displayName = 'ContextMenu.SubMenu';
