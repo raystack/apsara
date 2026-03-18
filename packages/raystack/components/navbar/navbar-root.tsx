@@ -1,12 +1,12 @@
 'use client';
 
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
 import type { RefObject } from 'react';
 import {
   ComponentPropsWithoutRef,
   ComponentRef,
   forwardRef,
-  useCallback,
   useEffect,
   useRef,
   useState
@@ -120,19 +120,11 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
       return () => target.removeEventListener('scroll', handleScroll);
     }, [hideOnScroll]);
 
-    // Merge internal nav ref with forwarded ref so callers can also attach a ref
-    const setRef = useCallback(
-      (node: HTMLElement | null) => {
-        navRef.current = node;
-        if (typeof ref === 'function') ref(node);
-        else if (ref) ref.current = node;
-      },
-      [ref]
-    );
+    const mergedRef = useMergedRefs(navRef, ref);
 
     return (
       <nav
-        ref={setRef}
+        ref={mergedRef}
         className={cx(styles.root, className)}
         data-sticky={sticky}
         data-shadow={shadow}
