@@ -62,42 +62,6 @@ export const stickyDemo = {
   ]
 };
 
-export const shadowDemo = {
-  type: 'code',
-  tabs: [
-    {
-      name: 'With shadow (default)',
-      code: `
-      <div className="navbar-demo-wrapper">
-        <Navbar shadow>
-          <Navbar.Start>
-            <Text size="regular" weight="medium">Brand</Text>
-          </Navbar.Start>
-          <Navbar.End>
-            <Button size="small">Action</Button>
-          </Navbar.End>
-        </Navbar>
-        <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 200, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
-      </div>`
-    },
-    {
-      name: 'Without shadow',
-      code: `
-      <div className="navbar-demo-wrapper">
-        <Navbar shadow={false}>
-          <Navbar.Start>
-            <Text size="regular" weight="medium">Brand</Text>
-          </Navbar.Start>
-          <Navbar.End>
-            <Button size="small">Action</Button>
-          </Navbar.End>
-        </Navbar>
-        <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 200, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
-      </div>`
-    }
-  ]
-};
-
 export const hideOnScrollDemo = {
   type: 'code',
   code: `

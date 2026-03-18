@@ -42,8 +42,6 @@ function getScrollParent(el: HTMLElement | null): HTMLElement | null {
 export interface NavbarRootProps extends ComponentPropsWithoutRef<'nav'> {
   /** Stick navbar to top of viewport (or scroll container) while scrolling */
   sticky?: boolean;
-  /** Show bottom shadow; set false to disable */
-  shadow?: boolean;
   /** Hide navbar when scrolling down, show when scrolling up or near top */
   hideOnScroll?: boolean;
   /** Ref to the scroll container. When provided (and current is set), used for hide-on-scroll instead of auto-detection. Otherwise the nearest scrollable ancestor or window is used. */
@@ -55,7 +53,6 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
     {
       className,
       sticky = false,
-      shadow = true,
       hideOnScroll = false,
       scrollContainerRef,
       children,
@@ -133,7 +130,6 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
         ref={mergedRef}
         className={cx(styles.root, className)}
         data-sticky={sticky}
-        data-shadow={shadow}
         role='navigation'
         {...props}
       >

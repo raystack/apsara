@@ -6,12 +6,6 @@ export interface NavbarRootProps {
   sticky?: boolean;
 
   /**
-   * Show the bottom shadow.
-   * @default true
-   */
-  shadow?: boolean;
-
-  /**
    * Hide the navbar when the user scrolls down, show it when they scroll up.
    * Uses the navbar's scroll parent (e.g. ScrollArea) or window.
    * @default false

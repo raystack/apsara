@@ -118,22 +118,6 @@ describe('Navbar', () => {
     });
   });
 
-  describe('Shadow', () => {
-    it('shows shadow by default', () => {
-      render(<BasicNavbar />);
-
-      const nav = screen.getByRole('navigation');
-      expect(nav).toHaveAttribute('data-shadow', 'true');
-    });
-
-    it('hides shadow when shadow is false', () => {
-      render(<BasicNavbar shadow={false} />);
-
-      const nav = screen.getByRole('navigation');
-      expect(nav).toHaveAttribute('data-shadow', 'false');
-    });
-  });
-
   describe('hideOnScroll', () => {
     it('does not set data-hidden when hideOnScroll is false', () => {
       render(<BasicNavbar />);
