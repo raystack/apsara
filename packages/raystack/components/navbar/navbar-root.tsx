@@ -62,10 +62,8 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
   ) => {
     // hideOnScroll: whether navbar is currently hidden (driven by scroll position/direction)
     const [hidden, setHidden] = useState(false);
-    // Last scroll position; used to compute delta and drive hide/show
+    // Last scroll position at which we updated hidden; only updated when we show/hide or are at top
     const lastScrollY = useRef(0);
-    // Accumulated scroll delta in current direction; makes slow scrolls still trigger hide/show
-    const accum = useRef(0);
     // Nav DOM node; used to find scroll container and attach listeners
     const navRef = useRef<HTMLElement>(null);
 
@@ -87,26 +85,16 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
           const scrollY = isWindow
             ? (window.scrollY ?? document.documentElement.scrollTop)
             : scrollContainer!.scrollTop;
-          const delta = scrollY - lastScrollY.current;
-          lastScrollY.current = scrollY;
 
           if (scrollY <= SHOW_AT_TOP_THRESHOLD) {
             setHidden(false);
-            accum.current = 0;
-          } else if (delta > 0) {
-            // Scrolling down: add to accum, reset if we were scrolling up
-            accum.current = accum.current > 0 ? accum.current + delta : delta;
-            if (accum.current >= SCROLL_THRESHOLD) {
-              setHidden(true);
-              accum.current = 0;
-            }
-          } else if (delta < 0) {
-            // Scrolling up: add to accum (delta is negative), reset if we were scrolling down
-            accum.current = accum.current < 0 ? accum.current + delta : delta;
-            if (accum.current <= -SCROLL_THRESHOLD) {
-              setHidden(false);
-              accum.current = 0;
-            }
+            lastScrollY.current = scrollY;
+          } else if (scrollY > lastScrollY.current + SCROLL_THRESHOLD) {
+            setHidden(true);
+            lastScrollY.current = scrollY;
+          } else if (scrollY < lastScrollY.current - SCROLL_THRESHOLD) {
+            setHidden(false);
+            lastScrollY.current = scrollY;
           }
           ticking = false;
         });
