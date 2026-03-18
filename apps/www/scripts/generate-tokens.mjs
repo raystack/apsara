@@ -4,9 +4,9 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const STYLES_DIR = path.resolve(__dirname, '../../../packages/raystack/styles');
-const OUTPUT = path.resolve(
+const OUTPUT_DIR = path.resolve(
   __dirname,
-  '../src/app/(llms)/tokens.mdx/tokens.md'
+  '../src/app/(llms)/tokens.mdx/[category]'
 );
 
 const FILES = [
@@ -97,12 +97,16 @@ function buildCategory(fileName, sections) {
 }
 
 async function main() {
-  let output = '# Apsara Design Tokens\n';
+  await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
   for (const file of FILES) {
     const content = await fs.readFile(path.join(STYLES_DIR, file), 'utf-8');
     const sections = parseCSSFile(content);
     if (!sections.length) continue;
+
+    const name = file.replace('.css', '');
+    const title = name.charAt(0).toUpperCase() + name.slice(1);
+    let output = `# ${title} Tokens\n`;
 
     const groups = buildCategory(file, sections);
     for (const [heading, tokens] of groups) {
@@ -111,11 +115,11 @@ async function main() {
         output += `${t.name}: ${t.value}\n`;
       }
     }
-  }
 
-  await fs.mkdir(path.dirname(OUTPUT), { recursive: true });
-  await fs.writeFile(OUTPUT, output);
-  console.log(`Generated ${OUTPUT}`);
+    const outPath = path.join(OUTPUT_DIR, `${name}.md`);
+    await fs.writeFile(outPath, output);
+    console.log(`Generated ${outPath}`);
+  }
 }
 
 main();
