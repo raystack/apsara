@@ -8,8 +8,7 @@ import {
   ComponentRef,
   forwardRef,
   useEffect,
-  useRef,
-  useState
+  useRef
 } from 'react';
 import styles from './navbar.module.css';
 
@@ -64,11 +63,9 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
     },
     ref
   ) => {
-    // hideOnScroll: whether navbar is currently hidden (driven by scroll position/direction)
-    const [hidden, setHidden] = useState(false);
-    // Last scroll position at which we updated hidden; only updated when we show/hide or are at top
+    // Last scroll position at which we updated data-hidden; only updated when we show/hide or are at top
     const lastScrollY = useRef(0);
-    // Nav DOM node; used to find scroll container and attach listeners
+    // Nav DOM node; used to find scroll container, attach listeners, and set data-hidden
     const navRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -100,15 +97,20 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
         ticking = true;
         requestAnimationFrame(() => {
           const scrollY = getScrollTop();
+          const nav = navRef.current;
+          if (!nav) {
+            ticking = false;
+            return;
+          }
 
           if (scrollY <= SHOW_AT_TOP_THRESHOLD) {
-            setHidden(false);
+            nav.setAttribute('data-hidden', 'false');
             lastScrollY.current = scrollY;
           } else if (scrollY > lastScrollY.current + SCROLL_THRESHOLD) {
-            setHidden(true);
+            nav.setAttribute('data-hidden', 'true');
             lastScrollY.current = scrollY;
           } else if (scrollY < lastScrollY.current - SCROLL_THRESHOLD) {
-            setHidden(false);
+            nav.setAttribute('data-hidden', 'false');
             lastScrollY.current = scrollY;
           }
           ticking = false;
@@ -116,8 +118,12 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
       };
 
       lastScrollY.current = getScrollTop();
+      el.setAttribute('data-hidden', 'false');
       target.addEventListener('scroll', handleScroll, { passive: true });
-      return () => target.removeEventListener('scroll', handleScroll);
+      return () => {
+        target.removeEventListener('scroll', handleScroll);
+        el.removeAttribute('data-hidden');
+      };
     }, [hideOnScroll]);
 
     const mergedRef = useMergedRefs(navRef, ref);
@@ -128,7 +134,6 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
         className={cx(styles.root, className)}
         data-sticky={sticky}
         data-shadow={shadow}
-        data-hidden={hideOnScroll ? hidden : undefined}
         role='navigation'
         {...props}
       >
