@@ -17,6 +17,10 @@ const FILES = [
   'typography.css'
 ];
 
+function stripVar(value) {
+  return value.replace(/var\((--[\w-]+)\)/g, '$1');
+}
+
 function parseCSSFile(content) {
   const sections = [];
   let currentSelector = null;
@@ -26,7 +30,6 @@ function parseCSSFile(content) {
   for (const line of content.split('\n')) {
     const trimmed = line.trim();
 
-    // Match selector like :root, [data-theme="dark"], [data-style="modern"]
     const selectorMatch = trimmed.match(/^(:root|\[[\w-]+="[\w-]+"\])\s*\{/);
     if (selectorMatch) {
       currentSelector = selectorMatch[1];
@@ -47,10 +50,8 @@ function parseCSSFile(content) {
       continue;
     }
 
-    // Match comment like /* Base Foreground Colors */
     const commentMatch = trimmed.match(/^\/\*\s*(.+?)\s*\*\/$/);
     if (commentMatch && currentSelector) {
-      // Flush previous group
       if (tokens.length) {
         sections.push({
           selector: currentSelector,
@@ -60,63 +61,55 @@ function parseCSSFile(content) {
         tokens = [];
       }
       currentComment = commentMatch[1];
-      // Skip "Example usage:" comments
       if (currentComment.startsWith('Example usage:')) currentComment = null;
       continue;
     }
 
-    // Match CSS variable
     const varMatch = trimmed.match(
       /^(--[\w-]+)\s*:\s*(.+?)\s*;(?:\s*\/\*\s*(.+?)\s*\*\/)?$/
     );
     if (varMatch && currentSelector) {
-      tokens.push({
-        name: varMatch[1],
-        value: varMatch[2],
-        note: varMatch[3] || ''
-      });
+      tokens.push({ name: varMatch[1], value: stripVar(varMatch[2]) });
     }
   }
 
   return sections;
 }
 
-function sectionsToMarkdown(fileName, sections) {
+function buildCategory(fileName, sections) {
   const name =
     fileName.replace('.css', '').charAt(0).toUpperCase() +
     fileName.replace('.css', '').slice(1);
-  let md = `## ${name}\n\n`;
 
-  let lastSelector = null;
+  const groups = new Map();
+
   for (const section of sections) {
-    if (section.selector !== lastSelector) {
-      md += `### ${section.selector}\n\n`;
-      lastSelector = section.selector;
-    }
-    if (section.comment) {
-      md += `#### ${section.comment}\n\n`;
-    }
-    md += '| Token | Value |\n|-------|-------|\n';
-    for (const t of section.tokens) {
-      const val = t.note ? `${t.value} (${t.note})` : t.value;
-      md += `| \`${t.name}\` | \`${val}\` |\n`;
-    }
-    md += '\n';
+    const prefix =
+      section.selector === ':root' ? name : `${name} (${section.selector})`;
+    const heading = section.comment ? `${prefix} - ${section.comment}` : prefix;
+
+    const existing = groups.get(heading) || [];
+    existing.push(...section.tokens);
+    groups.set(heading, existing);
   }
 
-  return md;
+  return groups;
 }
 
 async function main() {
-  let output = '# Apsara Design Tokens\n\n';
-  output +=
-    '> Complete list of CSS custom property tokens from @raystack/apsara.\n\n';
+  let output = '# Apsara Design Tokens\n';
 
   for (const file of FILES) {
     const content = await fs.readFile(path.join(STYLES_DIR, file), 'utf-8');
     const sections = parseCSSFile(content);
-    if (sections.length) {
-      output += sectionsToMarkdown(file, sections);
+    if (!sections.length) continue;
+
+    const groups = buildCategory(file, sections);
+    for (const [heading, tokens] of groups) {
+      output += `\n## ${heading}\n`;
+      for (const t of tokens) {
+        output += `${t.name}: ${t.value}\n`;
+      }
     }
   }
 
