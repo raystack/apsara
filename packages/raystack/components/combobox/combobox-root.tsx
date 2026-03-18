@@ -125,9 +125,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
   );
 
   return (
-    <ComboboxContext.Provider
-      value={contextValue as ComboboxContextValue<unknown>}
-    >
+    <ComboboxContext value={contextValue as ComboboxContextValue<unknown>}>
       <ComboboxPrimitive.Root
         multiple={multiple}
         onValueChange={handleValueChange}
@@ -140,6 +138,8 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
       >
         {children}
       </ComboboxPrimitive.Root>
-    </ComboboxContext.Provider>
+    </ComboboxContext>
   );
 };
+
+ComboboxRoot.displayName = 'Combobox';
