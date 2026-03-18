@@ -24,7 +24,7 @@ export interface TabsTabProps {
   /** Unique identifier for the tab. */
   value: any;
 
-  /** Optional icon element to display before the label. */
+  /** Optional icon element to display before the label. Rendered in a wrapper with aria-hidden so it is not announced by screen readers (decorative). */
   leadingIcon?: React.ReactNode;
 
   /** Whether the tab is disabled. */

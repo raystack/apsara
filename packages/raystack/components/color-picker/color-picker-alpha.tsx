@@ -32,3 +32,5 @@ export const ColorPickerAlpha = ({
     </Slider.Root>
   );
 };
+
+ColorPickerAlpha.displayName = 'ColorPicker.Alpha';

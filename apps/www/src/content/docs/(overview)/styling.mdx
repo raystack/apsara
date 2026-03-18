@@ -1,0 +1,194 @@
+---
+title: Styling
+description: How to style and customize Apsara components in your application.
+---
+
+Apsara uses vanilla CSS with CSS custom properties (tokens) for all styling. There is no runtime CSS-in-JS — styles are static, scoped, and predictable. This guide covers the recommended ways to customize components and build your own styled elements.
+
+## Using Design Tokens
+
+Design tokens are CSS custom properties that adapt automatically to the active theme. Always use tokens instead of hard-coded values — this ensures your UI stays consistent and responds to light/dark mode changes.
+
+```css
+.card {
+  color: var(--rs-color-foreground-base-primary);
+  background: var(--rs-color-background-base-secondary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  padding: var(--rs-space-5);
+  border-radius: var(--rs-radius-3);
+  box-shadow: var(--rs-shadow-feather);
+  font-size: var(--rs-font-size-small);
+}
+```
+
+See the [Theme](/theme/overview) section for the complete token reference.
+
+## Customizing Components
+
+### With className
+
+Every Apsara component accepts a `className` prop. Use it alongside tokens to add custom styles:
+
+```tsx
+import { Button } from "@raystack/apsara";
+
+<Button className="my-button" variant="outline">
+  Custom styled
+</Button>
+```
+
+```css
+.my-button {
+  min-width: 200px;
+  border-radius: var(--rs-radius-5);
+}
+```
+
+### With style Prop
+
+For one-off adjustments, use the inline `style` prop:
+
+```tsx
+<Flex gap="4" style={{ maxWidth: 600, margin: "0 auto" }}>
+  <Button style={{ flex: 1 }}>Full width</Button>
+</Flex>
+```
+
+### With Data Attributes
+
+Apsara components built on [Base UI](https://base-ui.com/) expose data attributes that reflect component state. Use these for state-driven styling without JavaScript:
+
+```css
+/* Style a sidebar based on open/closed state */
+.my-sidebar[data-open] {
+  width: 240px;
+}
+
+.my-sidebar[data-closed] {
+  width: 57px;
+}
+
+/* Style based on active state */
+.my-nav-item[data-active="true"] {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
+/* Animate entry and exit */
+.my-overlay[data-starting-style],
+.my-overlay[data-ending-style] {
+  opacity: 0;
+}
+```
+
+Common data attributes include `data-open`, `data-closed`, `data-active`, `data-disabled`, `data-state`, `data-starting-style`, and `data-ending-style`.
+
+## Theming with Data Attributes
+
+The `ThemeProvider` sets data attributes on the root `<html>` element. Use these to conditionally style elements based on the active theme:
+
+```css
+/* Dark mode specific styles */
+[data-theme="dark"] .custom-card {
+  border-color: var(--rs-color-border-base-tertiary);
+}
+
+/* Traditional style variant */
+[data-style="traditional"] .custom-heading {
+  font-family: var(--rs-font-family-serif);
+}
+```
+
+Available theme attributes:
+
+| Attribute | Values |
+|-----------|--------|
+| `data-theme` | `light`, `dark` |
+| `data-style` | `modern`, `traditional` |
+| `data-accent-color` | `indigo`, `orange`, `mint` |
+| `data-gray-color` | `gray`, `mauve`, `slate`, `sage` |
+
+## Writing Component Styles
+
+When building custom components in your application, follow these patterns used internally by Apsara:
+
+### Use CSS Modules for Scoping
+
+CSS Modules prevent class name collisions and keep styles co-located with components:
+
+```tsx
+// status-card.tsx
+import styles from "./status-card.module.css";
+
+export function StatusCard({ status, children }) {
+  return (
+    <div className={`${styles.card} ${styles[`card-${status}`]}`}>
+      {children}
+    </div>
+  );
+}
+```
+
+```css
+/* status-card.module.css */
+.card {
+  padding: var(--rs-space-4);
+  border-radius: var(--rs-radius-3);
+  border: 1px solid var(--rs-color-border-base-primary);
+}
+
+.card-success {
+  border-color: var(--rs-color-border-success-emphasis);
+  background: var(--rs-color-background-success-primary);
+}
+
+.card-danger {
+  border-color: var(--rs-color-border-danger-emphasis);
+  background: var(--rs-color-background-danger-primary);
+}
+```
+
+### Use CVA for Variant Management
+
+Apsara uses [class-variance-authority](https://cva.style/) (CVA) to manage component variants with type safety. This is recommended for components with multiple visual variations:
+
+```tsx
+import { cva, type VariantProps } from "class-variance-authority";
+import styles from "./tag.module.css";
+
+const tag = cva(styles.tag, {
+  variants: {
+    size: {
+      small: styles["tag-small"],
+      medium: styles["tag-medium"],
+    },
+    color: {
+      neutral: styles["tag-neutral"],
+      accent: styles["tag-accent"],
+    },
+  },
+  defaultVariants: {
+    size: "medium",
+    color: "neutral",
+  },
+});
+
+type TagProps = VariantProps<typeof tag> & { className?: string };
+
+export function Tag({ size, color, className, children }: TagProps) {
+  return <span className={tag({ size, color, className })}>{children}</span>;
+}
+```
+
+CVA handles merging the base class, variant classes, and any custom `className` passed by consumers.
+
+## Best Practices
+
+**Use semantic tokens, not primitives.** Prefer `--rs-color-foreground-base-primary` over `--rs-neutral-12`. Semantic tokens automatically adapt across themes; primitives do not carry semantic meaning.
+
+**Avoid hard-coded colors.** Every color value should come from a token. This guarantees proper light/dark mode support and visual consistency.
+
+**Use spacing tokens for layout.** Consistent spacing creates visual rhythm. Use `--rs-space-*` tokens for padding, margin, and gap values.
+
+**Keep specificity low.** Use single class selectors. Avoid `!important` and deeply nested selectors that are hard to override.
+
+**Co-locate styles with components.** Place `.module.css` files next to their component files. This makes it easy to find and maintain styles.

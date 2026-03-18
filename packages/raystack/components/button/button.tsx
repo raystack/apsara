@@ -1,6 +1,6 @@
 import { Button as ButtonPrimitive } from '@base-ui/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { ElementRef, forwardRef, PropsWithChildren, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import { Spinner } from '../spinner';
 import styles from './button.module.css';
@@ -124,7 +124,7 @@ const getLoaderOnlyClass = (size: 'small' | 'normal' | null) =>
     ? styles['loader-only-button-small']
     : styles['loader-only-button-normal'];
 
-type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
+type ButtonProps = VariantProps<typeof button> &
   ButtonPrimitive.Props & {
     loading?: boolean;
     loaderText?: ReactNode;
@@ -135,69 +135,60 @@ type ButtonProps = PropsWithChildren<VariantProps<typeof button>> &
     style?: React.CSSProperties;
   };
 
-export const Button = forwardRef<
-  ElementRef<typeof ButtonPrimitive>,
-  ButtonProps
->(
-  (
-    {
-      className,
-      variant = 'solid',
-      color = 'accent',
-      size = 'normal',
-      disabled,
-      loading,
-      loaderText,
-      leadingIcon,
-      trailingIcon,
-      maxWidth,
-      width,
-      style = {},
-      children,
-      render,
-      ...props
-    },
-    ref
-  ) => {
-    const isLoaderOnly = loading && !loaderText;
-    const widthStyle = { maxWidth, width };
-    const buttonStyle = { ...widthStyle, ...style };
+export const Button = ({
+  className,
+  variant = 'solid',
+  color = 'accent',
+  size = 'normal',
+  disabled,
+  loading,
+  loaderText,
+  leadingIcon,
+  trailingIcon,
+  maxWidth,
+  width,
+  style = {},
+  children,
+  render,
+  ...props
+}: ButtonProps) => {
+  const isLoaderOnly = loading && !loaderText;
+  const widthStyle = { maxWidth, width };
+  const buttonStyle = { ...widthStyle, ...style };
 
-    return (
-      <ButtonPrimitive
-        className={`${button({ variant, size, color, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
-        ref={ref}
-        disabled={disabled}
-        style={buttonStyle}
-        render={render}
-        nativeButton={!render}
-        focusableWhenDisabled={loading}
-        {...props}
-      >
-        {loading ? (
-          <>
-            <Spinner size={1} color='default' />
-            {loaderText && (
-              <span className={styles['loader-text']}>{loaderText}</span>
-            )}
-          </>
-        ) : (
-          <>
-            {leadingIcon && (
-              <span className={`${styles['icon']} ${styles['icon-leading']}`}>
-                {leadingIcon}
-              </span>
-            )}
-            {children}
-            {trailingIcon && (
-              <span className={`${styles['icon']} ${styles['icon-trailing']}`}>
-                {trailingIcon}
-              </span>
-            )}
-          </>
-        )}
-      </ButtonPrimitive>
-    );
-  }
-);
+  return (
+    <ButtonPrimitive
+      className={`${button({ variant, size, color, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
+      disabled={disabled}
+      style={buttonStyle}
+      render={render}
+      nativeButton={!render}
+      focusableWhenDisabled={loading}
+      {...props}
+    >
+      {loading ? (
+        <>
+          <Spinner size={1} color='default' />
+          {loaderText && (
+            <span className={styles['loader-text']}>{loaderText}</span>
+          )}
+        </>
+      ) : (
+        <>
+          {leadingIcon && (
+            <span className={`${styles['icon']} ${styles['icon-leading']}`}>
+              {leadingIcon}
+            </span>
+          )}
+          {children}
+          {trailingIcon && (
+            <span className={`${styles['icon']} ${styles['icon-trailing']}`}>
+              {trailingIcon}
+            </span>
+          )}
+        </>
+      )}
+    </ButtonPrimitive>
+  );
+};
 Button.displayName = 'Button';
