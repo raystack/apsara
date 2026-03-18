@@ -3,7 +3,7 @@
 export const preview = {
   type: 'code',
   code: `
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+  <div className="navbar-demo-wrapper">
     <Navbar>
       <Navbar.Start>
         <Text size="regular" weight="medium">Explore</Text>
@@ -28,7 +28,7 @@ export const stickyDemo = {
     {
       name: 'Default',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar>
           <Navbar.Start>
             <Text size="regular" weight="medium">Navigation</Text>
@@ -45,7 +45,7 @@ export const stickyDemo = {
     {
       name: 'Sticky',
       code: `
-      <div className="navbar-sticky-demo-scroll" style={{ width: '100%', alignSelf: 'stretch', overflow: 'auto', height: 300 }}>
+      <div className="navbar-demo-wrapper navbar-sticky-demo-scroll" style={{ width: '100%', alignSelf: 'stretch', overflow: 'auto', height: 300 }}>
         <Navbar sticky>
           <Navbar.Start>
             <Text size="regular" weight="medium">Navigation</Text>
@@ -68,7 +68,7 @@ export const shadowDemo = {
     {
       name: 'With shadow (default)',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar shadow>
           <Navbar.Start>
             <Text size="regular" weight="medium">Brand</Text>
@@ -83,7 +83,7 @@ export const shadowDemo = {
     {
       name: 'Without shadow',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar shadow={false}>
           <Navbar.Start>
             <Text size="regular" weight="medium">Brand</Text>
@@ -101,7 +101,7 @@ export const shadowDemo = {
 export const hideOnScrollDemo = {
   type: 'code',
   code: `
-  <div className="navbar-sticky-demo-scroll" style={{ width: '100%', alignSelf: 'stretch', overflow: 'auto', height: 300 }}>
+  <div className="navbar-demo-wrapper navbar-sticky-demo-scroll" style={{ width: '100%', alignSelf: 'stretch', overflow: 'auto', height: 300 }}>
     <Navbar sticky hideOnScroll>
       <Navbar.Start>
         <Text size="regular" weight="medium">Navigation</Text>
@@ -122,7 +122,7 @@ export const sectionsDemo = {
     {
       name: 'Start',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar>
           <Navbar.Start>
             <Text size="regular" weight="medium">Brand Name</Text>
@@ -134,7 +134,7 @@ export const sectionsDemo = {
     {
       name: 'Center',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar>
           <Navbar.Center>
             <Text size="regular" weight="medium">Centered Title</Text>
@@ -146,7 +146,7 @@ export const sectionsDemo = {
     {
       name: 'End',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar>
           <Navbar.End>
             <Button variant="outline" size="small">Login</Button>
@@ -159,7 +159,7 @@ export const sectionsDemo = {
     {
       name: 'Start, Center and End',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar>
           <Navbar.Start>
             <Text size="regular" weight="medium">Explore</Text>
@@ -183,7 +183,7 @@ export const accessibilityDemo = {
     {
       name: 'Custom aria-label',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar aria-label="Primary navigation">
           <Navbar.Start>
             <Text size="regular" weight="medium">Brand</Text>
@@ -198,7 +198,7 @@ export const accessibilityDemo = {
     {
       name: 'With aria-labelledby',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar aria-labelledby="nav-heading">
           <Navbar.Start>
             <Text size="regular" weight="medium">Brand</Text>
@@ -213,7 +213,7 @@ export const accessibilityDemo = {
     {
       name: 'Section Labels',
       code: `
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: '100%' }}>
+      <div className="navbar-demo-wrapper">
         <Navbar>
           <Navbar.Start aria-label="Brand and navigation links">
             <Text size="regular" weight="medium">Brand</Text>
