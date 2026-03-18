@@ -78,32 +78,18 @@ export const BreadcrumbItem = ({
       </Menu>
     );
   }
-  if (disabled) {
+  if (disabled || current) {
     return (
       <li className={cx(styles['breadcrumb-item'], className)}>
         <span
           ref={ref as React.RefObject<HTMLSpanElement>}
           className={cx(
             styles['breadcrumb-link'],
-            styles['breadcrumb-link-disabled']
+            disabled && styles['breadcrumb-link-disabled'],
+            current && styles['breadcrumb-link-active']
           )}
-          aria-disabled='true'
-        >
-          {label}
-        </span>
-      </li>
-    );
-  }
-  if (current) {
-    return (
-      <li className={cx(styles['breadcrumb-item'], className)}>
-        <span
-          ref={ref as React.RefObject<HTMLSpanElement>}
-          className={cx(
-            styles['breadcrumb-link'],
-            styles['breadcrumb-link-active']
-          )}
-          aria-current='page'
+          {...(disabled && { 'aria-disabled': 'true' })}
+          {...(current && { 'aria-current': 'page' })}
         >
           {label}
         </span>
