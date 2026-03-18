@@ -69,3 +69,5 @@ Renders the content panel for a tab.
 - Supports keyboard navigation with arrow keys between tabs
 - Uses `role="tablist"`, `role="tab"`, and `role="tabpanel"`
 - Active tab is indicated with `aria-selected`
+- Leading icon is wrapped with `aria-hidden` so it is not announced (treated as decorative)
+- Respects `prefers-reduced-motion: reduce`: the tab indicator does not animate when the user has requested reduced motion in OS/browser settings

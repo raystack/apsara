@@ -65,18 +65,18 @@ export const filterOperationsMap: FilterFunctionsMap = {
       );
     },
     contains: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      const columnValue = (row.getValue(columnId) as string).toLowerCase();
-      const filterStr = (filterValue.value as string).toLowerCase();
+      const columnValue = String(row.getValue(columnId)).toLowerCase();
+      const filterStr = String(filterValue.value).toLowerCase();
       return columnValue.includes(filterStr);
     },
     starts_with: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      const columnValue = (row.getValue(columnId) as string).toLowerCase();
-      const filterStr = (filterValue.value as string).toLowerCase();
+      const columnValue = String(row.getValue(columnId)).toLowerCase();
+      const filterStr = String(filterValue.value).toLowerCase();
       return columnValue.startsWith(filterStr);
     },
     ends_with: (row, columnId, filterValue: FilterValue, _addMeta) => {
-      const columnValue = (row.getValue(columnId) as string).toLowerCase();
-      const filterStr = (filterValue.value as string).toLowerCase();
+      const columnValue = String(row.getValue(columnId)).toLowerCase();
+      const filterStr = String(filterValue.value).toLowerCase();
       return columnValue.endsWith(filterStr);
     }
   },

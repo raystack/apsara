@@ -29,7 +29,7 @@ export const SidebarFooter = forwardRef<
     ref={ref}
     className={cx(styles.footer, className)}
     direction='column'
-    role='group'
+    role='list'
     aria-label='Footer navigation'
     {...props}
   >

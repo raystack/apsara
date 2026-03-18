@@ -18,11 +18,12 @@ export function useFilters<TData, TValue>() {
     const dataType = getDataType({ filterType, dataType: columnDef.dataType });
     const defaultFilter = filterOperators[filterType][0];
     const defaultValue =
-      filterType === FilterType.date
+      columnDef.defaultFilterValue ??
+      (filterType === FilterType.date
         ? new Date()
         : filterType === FilterType.select
           ? options[0].value
-          : '';
+          : '');
 
     updateTableQuery(query => {
       return {
