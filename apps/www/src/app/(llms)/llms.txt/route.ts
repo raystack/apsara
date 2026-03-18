@@ -11,7 +11,9 @@ export async function GET() {
   for (const page of docs.getPages()) {
     const dir = page.slugs[0] ?? 'root';
     const list = map.get(dir) ?? [];
-    list.push(`- [${page.data.title}](${page.url}): ${page.data.description}`);
+    list.push(
+      `- [${page.data.title}](${page.url}.mdx): ${page.data.description}`
+    );
     map.set(dir, list);
   }
 
