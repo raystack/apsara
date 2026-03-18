@@ -7,7 +7,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "generate:tokens": "node scripts/generate-tokens.mjs",
     "postinstall": "fumadocs-mdx",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
