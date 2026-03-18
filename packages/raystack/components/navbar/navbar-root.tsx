@@ -1,6 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
+import type { RefObject } from 'react';
 import {
   ComponentPropsWithoutRef,
   ComponentRef,
@@ -46,6 +47,8 @@ export interface NavbarRootProps extends ComponentPropsWithoutRef<'nav'> {
   shadow?: boolean;
   /** Hide navbar when scrolling down, show when scrolling up or near top */
   hideOnScroll?: boolean;
+  /** Ref to the scroll container. When provided (and current is set), used for hide-on-scroll instead of auto-detection. Otherwise the nearest scrollable ancestor or window is used. */
+  scrollContainerRef?: RefObject<HTMLElement | null>;
 }
 
 export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
@@ -55,6 +58,7 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
       sticky = false,
       shadow = true,
       hideOnScroll = false,
+      scrollContainerRef,
       children,
       ...props
     },
@@ -73,18 +77,29 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
       const el = navRef.current;
       if (!el) return;
 
-      const scrollContainer = getScrollParent(el);
+      // Use custom ref if provided and set; else detect scroll parent; else window
+      const scrollContainer: HTMLElement | null =
+        scrollContainerRef?.current ?? getScrollParent(el);
       const isWindow = scrollContainer === null;
+
+      if (isWindow && typeof window === 'undefined') return;
+
+      const target: Window | HTMLElement = isWindow
+        ? window
+        : (scrollContainer as HTMLElement);
 
       // Throttle scroll work to one update per frame
       let ticking = false;
+      const getScrollTop = () =>
+        target === window
+          ? (window.scrollY ?? document.documentElement.scrollTop)
+          : (target as HTMLElement).scrollTop;
+
       const handleScroll = () => {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
-          const scrollY = isWindow
-            ? (window.scrollY ?? document.documentElement.scrollTop)
-            : scrollContainer!.scrollTop;
+          const scrollY = getScrollTop();
 
           if (scrollY <= SHOW_AT_TOP_THRESHOLD) {
             setHidden(false);
@@ -100,23 +115,9 @@ export const NavbarRoot = forwardRef<ComponentRef<'nav'>, NavbarRootProps>(
         });
       };
 
-      // Listen on window when there is no scrollable parent; otherwise use that parent
-      if (isWindow) {
-        if (typeof window === 'undefined') return;
-        lastScrollY.current =
-          window.scrollY ?? document.documentElement.scrollTop;
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-      }
-
-      if (scrollContainer) {
-        lastScrollY.current = scrollContainer.scrollTop;
-        scrollContainer.addEventListener('scroll', handleScroll, {
-          passive: true
-        });
-        return () =>
-          scrollContainer.removeEventListener('scroll', handleScroll);
-      }
+      lastScrollY.current = getScrollTop();
+      target.addEventListener('scroll', handleScroll, { passive: true });
+      return () => target.removeEventListener('scroll', handleScroll);
     }, [hideOnScroll]);
 
     // Merge internal nav ref with forwarded ref so callers can also attach a ref

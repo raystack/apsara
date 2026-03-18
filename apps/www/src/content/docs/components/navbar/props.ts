@@ -19,6 +19,12 @@ export interface NavbarRootProps {
   hideOnScroll?: boolean;
 
   /**
+   * Ref to the scroll container. When provided (and current is set), used for hide-on-scroll
+   * instead of auto-detection. Otherwise the nearest scrollable ancestor or window is used.
+   */
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
+
+  /**
    * Accessible label for the navigation.
    * Use this to provide a description of the navbar's purpose.
    */
