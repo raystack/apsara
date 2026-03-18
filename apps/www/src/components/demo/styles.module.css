@@ -24,6 +24,7 @@
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
 
+/* Opt-in: top-aligned preview with dotted content area (e.g. navbar demos) */
 .previewTop {
   align-items: flex-start;
   justify-content: flex-start;

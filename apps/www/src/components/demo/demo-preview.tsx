@@ -12,8 +12,7 @@ export default function DemoPreview({
   code,
   tabs,
   scope,
-  codePreview,
-  previewClassName
+  codePreview
 }: DemoPreviewProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [activeCodePreviewTab, setActiveCodePreviewTab] = useState(0);
@@ -40,19 +39,8 @@ export default function DemoPreview({
             ))}
           </div>
         )}
-        <div
-          className={cx(
-            styles.preview,
-            previewClassName && styles[previewClassName as keyof typeof styles]
-          )}
-        >
-          <Preview
-            className={
-              previewClassName === 'previewTop'
-                ? styles.previewContentTop
-                : undefined
-            }
-          />
+        <div className={styles.preview}>
+          <Preview />
         </div>
 
         {Array.isArray(codePreview) ? (
@@ -83,19 +71,3 @@ export default function DemoPreview({
     </LiveProvider>
   );
 }
-{
-  /* // {Array.isArray(codePreview) ? ( */
-}
-//   <Tabs
-//     items={codePreview.map(tab => tab.label)}
-//     className={styles.codeTabGroup}
-//   >
-//     {codePreview.map(tab => (
-//       <Tab className={styles.codeTab} value={tab.label} key={tab.label}>
-//         <Editor code={tab.code} />
-//       </Tab>
-//     ))}
-//   </Tabs>
-// ) : (
-//   <Editor code={previewCode} />
-// )}
