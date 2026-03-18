@@ -6,6 +6,9 @@ export const revalidate = false;
 export async function GET() {
   const scanned: string[] = [];
   scanned.push('# Apsara Design System Documentation for LLMs');
+  scanned.push(
+    '- [Design Tokens](/tokens.mdx): Complete list of CSS variables for colors, spacing, typography, effects, and radius'
+  );
   const map = new Map<string, string[]>();
 
   for (const page of docs.getPages()) {
