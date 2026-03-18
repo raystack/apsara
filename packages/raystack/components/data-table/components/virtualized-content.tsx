@@ -5,7 +5,7 @@ import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
-import { useCallback, useRef } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import tableStyles from '~/components/table/table.module.css';
 import { Badge } from '../../badge';
 import { EmptyState } from '../../empty-state';
@@ -14,10 +14,12 @@ import { Skeleton } from '../../skeleton';
 import styles from '../data-table.module.css';
 import {
   DataTableColumnDef,
+  defaultGroupOption,
   GroupedData,
   VirtualizedContentProps
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
+import { hasActiveQuery } from '../utils';
 
 function VirtualHeaders<TData>({
   headerGroups = [],
@@ -132,7 +134,7 @@ function VirtualRows<TData>({
       >
         {cells.map(cell => {
           const columnDef = cell.column.columnDef as DataTableColumnDef<
-            unknown,
+            TData,
             unknown
           >;
           return (
@@ -220,7 +222,9 @@ export function VirtualizedContent({
     isLoading,
     loadMoreData,
     tableQuery,
-    loadingRowCount = 3
+    defaultSort,
+    loadingRowCount = 3,
+    stickyGroupHeader = false
   } = useDataTable();
 
   const headerGroups = table?.getHeaderGroups();
@@ -228,6 +232,24 @@ export function VirtualizedContent({
   const { rows = [] } = rowModel || {};
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const [stickyGroup, setStickyGroup] = useState<GroupedData<unknown> | null>(
+    null
+  );
+  const [headerHeight, setHeaderHeight] = useState(40);
+
+  const groupBy = tableQuery?.group_by?.[0];
+  const isGrouped = Boolean(groupBy) && groupBy !== defaultGroupOption.id;
+
+  const groupHeaderList = useMemo(() => {
+    const list: { index: number; data: GroupedData<unknown> }[] = [];
+    rows.forEach((row, i) => {
+      if (row.subRows && row.subRows.length > 0) {
+        list.push({ index: i, data: row.original as GroupedData<unknown> });
+      }
+    });
+    return list;
+  }, [rows]);
 
   const showLoaderRows = isLoading && rows.length > 0;
 
@@ -242,25 +264,54 @@ export function VirtualizedContent({
     overscan
   });
 
+  const updateStickyGroup = useCallback(() => {
+    if (!stickyGroupHeader || !isGrouped || groupHeaderList.length === 0) {
+      setStickyGroup(null);
+      return;
+    }
+    const items = virtualizer.getVirtualItems();
+    const firstIndex = items[0]?.index ?? 0;
+    const current = groupHeaderList
+      .filter(g => g.index <= firstIndex)
+      .pop()?.data;
+    setStickyGroup(current ?? null);
+  }, [stickyGroupHeader, isGrouped, groupHeaderList, virtualizer]);
+
   const handleVirtualScroll = useCallback(() => {
-    if (!scrollContainerRef.current || isLoading) return;
-    const { scrollTop, scrollHeight, clientHeight } =
-      scrollContainerRef.current;
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    if (stickyGroupHeader) updateStickyGroup();
+    if (isLoading) return;
+    const { scrollTop, scrollHeight, clientHeight } = el;
     if (scrollHeight - scrollTop - clientHeight < loadMoreOffset) {
       loadMoreData();
     }
-  }, [isLoading, loadMoreData, loadMoreOffset]);
+  }, [
+    stickyGroupHeader,
+    isLoading,
+    loadMoreData,
+    loadMoreOffset,
+    updateStickyGroup
+  ]);
 
   const totalHeight = virtualizer.getTotalSize();
 
+  useLayoutEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.getBoundingClientRect().height);
+    }
+  }, [headerGroups]);
+
+  useLayoutEffect(() => {
+    if (stickyGroupHeader) updateStickyGroup();
+  }, [stickyGroupHeader, updateStickyGroup, groupHeaderList, isGrouped]);
+
   const hasData = rows?.length > 0 || isLoading;
 
-  const hasFiltersOrSearch =
-    (tableQuery?.filters && tableQuery.filters.length > 0) ||
-    Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
+  const hasChanges = hasActiveQuery(tableQuery || {}, defaultSort);
 
-  const isZeroState = !hasData && !hasFiltersOrSearch;
-  const isEmptyState = !hasData && hasFiltersOrSearch;
+  const isZeroState = !hasData && !hasChanges;
+  const isEmptyState = !hasData && hasChanges;
 
   const stateToShow: React.ReactNode = isZeroState
     ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)
@@ -281,10 +332,26 @@ export function VirtualizedContent({
       onScroll={handleVirtualScroll}
     >
       <div role='table' className={cx(styles.virtualTable, classNames.table)}>
-        <VirtualHeaders
-          headerGroups={headerGroups}
-          className={cx(styles.stickyHeader, classNames.header)}
-        />
+        <div ref={headerRef}>
+          <VirtualHeaders
+            headerGroups={headerGroups}
+            className={cx(styles.stickyHeader, classNames.header)}
+          />
+        </div>
+        {stickyGroupHeader && isGrouped && stickyGroup && (
+          <div
+            role='row'
+            className={styles.stickyGroupAnchor}
+            style={{ top: headerHeight }}
+          >
+            <Flex gap={3} align='center'>
+              {stickyGroup.label}
+              {stickyGroup.showGroupCount ? (
+                <Badge variant='neutral'>{stickyGroup.count}</Badge>
+              ) : null}
+            </Flex>
+          </div>
+        )}
         <div
           role='rowgroup'
           className={cx(styles.virtualBodyGroup, classNames.body)}

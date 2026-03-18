@@ -2,6 +2,7 @@ import './styles/index.css';
 import './normalize.css';
 
 export { Accordion } from './components/accordion';
+export { AlertDialog } from './components/alert-dialog';
 export { Amount } from './components/amount';
 export { AnnouncementBar } from './components/announcement-bar';
 export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
@@ -14,10 +15,12 @@ export { Callout } from './components/callout';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';
 export { CodeBlock } from './components/code-block';
+export { Collapsible } from './components/collapsible';
 export * from './components/color-picker';
 export { Combobox } from './components/combobox';
 export { Command } from './components/command';
 export { Container } from './components/container';
+export { ContextMenu } from './components/context-menu';
 export { CopyButton } from './components/copy-button';
 export {
   DataTable,
@@ -28,6 +31,7 @@ export {
   useDataTable
 } from './components/data-table';
 export { Dialog } from './components/dialog';
+export { Drawer } from './components/drawer';
 export { EmptyState } from './components/empty-state';
 export { FilterChip } from './components/filter-chip';
 export { Flex } from './components/flex';
@@ -41,14 +45,17 @@ export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
 export { Menu } from './components/menu';
+export { Menubar } from './components/menubar';
+export { Meter } from './components/meter';
 export { Navbar } from './components/navbar';
 export { Popover } from './components/popover';
+export { PreviewCard } from './components/preview-card';
+export { Progress } from './components/progress';
 export { Radio } from './components/radio';
 export { ScrollArea } from './components/scroll-area';
 export { Search } from './components/search';
 export { Select } from './components/select';
 export { Separator } from './components/separator';
-export { Sheet } from './components/sheet';
 export { SidePanel } from './components/side-panel';
 export { Sidebar } from './components/sidebar';
 export { Skeleton } from './components/skeleton';
@@ -65,5 +72,6 @@ export {
   ThemeSwitcher,
   useTheme
 } from './components/theme-provider';
-export { ToastContainer, toast } from './components/toast';
+export { Toast, toastManager } from './components/toast';
+export { Toggle } from './components/toggle';
 export { Tooltip } from './components/tooltip';

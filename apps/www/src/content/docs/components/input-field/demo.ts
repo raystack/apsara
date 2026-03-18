@@ -18,6 +18,7 @@ export const playground = {
     optional: { type: 'checkbox', defaultValue: false },
     prefix: { type: 'text', initialValue: '' },
     suffix: { type: 'text', initialValue: '' },
+    width: { type: 'text', initialValue: '560px' },
     size: {
       type: 'select',
       options: ['small', 'large'],
@@ -33,6 +34,7 @@ export const basicDemo = {
   <InputField
   label="Default"
   placeholder="Enter text"
+  width="560px"
 />`
 };
 export const helperTextDemo = {
@@ -42,6 +44,7 @@ export const helperTextDemo = {
   label="With label"
   placeholder="Enter text"
   helperText="This is a helper text"
+  width="560px"
 />`
 };
 export const errorDemo = {
@@ -51,6 +54,7 @@ export const errorDemo = {
   label="With Error"
   placeholder="Enter text"
   error="This field is required"
+  width="560px"
 />`
 };
 export const prefixDemo = {
@@ -61,6 +65,7 @@ export const prefixDemo = {
   placeholder="0.00"
   prefix="$"
   suffix="USD"
+  width="560px"
 />`
 };
 export const iconDemo = {
@@ -71,6 +76,7 @@ export const iconDemo = {
   placeholder="Enter text"
   leadingIcon={<Home size={16}/>}
   trailingIcon={<Info  size={16}/>}
+  width="560px"
 />`
 };
 export const optionalDemo = {
@@ -80,6 +86,7 @@ export const optionalDemo = {
   label="Optional Field"
   placeholder="Enter text"
   optional
+  width="560px"
 />`
 };
 export const disabledDemo = {
@@ -89,6 +96,7 @@ export const disabledDemo = {
   label="Disabled"
   placeholder="Enter text"
   disabled
+  width="560px"
 />`
 };
 export const widthDemo = {

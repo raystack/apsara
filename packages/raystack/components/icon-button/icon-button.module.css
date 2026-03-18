@@ -1,5 +1,6 @@
 .iconButton {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   background-color: transparent;
@@ -45,8 +46,8 @@
   height: var(--rs-space-7);
 }
 
-.iconButton > div,
-.iconButton > div > * {
+.iconButton>div,
+.iconButton>div>* {
   width: 100%;
   height: 100%;
 }

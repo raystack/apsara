@@ -1,3 +1,9 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+}
+
 .checkbox {
   all: unset;
   box-sizing: border-box;

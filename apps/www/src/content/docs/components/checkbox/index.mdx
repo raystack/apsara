@@ -4,7 +4,7 @@ description: Checkbox is a user interface control that enables users to toggle b
 source: packages/raystack/components/checkbox
 ---
 
-import { playground, statesExamples } from "./demo.ts";
+import { playground, statesExamples, groupDemo, groupDisabledDemo, parentDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -18,11 +18,29 @@ import { Checkbox } from "@raystack/apsara";
 <Checkbox />
 ```
 
+Use `Checkbox.Group` to manage shared state across multiple checkboxes:
+
+```tsx
+<Checkbox.Group defaultValue={["apple"]}>
+  <Checkbox name="apple" />
+  <Checkbox name="banana" />
+  <Checkbox name="cherry" />
+</Checkbox.Group>
+```
+
 ## API Reference
+
+### Root
 
 Renders a toggleable checkbox input.
 
 <auto-type-table path="./props.ts" name="CheckboxProps" />
+
+### Group
+
+Groups multiple checkboxes and manages their shared checked state via a `string[]` value.
+
+<auto-type-table path="./props.ts" name="CheckboxGroupProps" />
 
 ## Examples
 
@@ -37,9 +55,28 @@ The Checkbox component supports multiple states to represent different selection
 
 <Demo data={statesExamples} />
 
+### Group
+
+Use `Checkbox.Group` to coordinate multiple checkboxes with shared state.
+
+<Demo data={groupDemo} />
+
+### Disabled Group
+
+Disable the entire group to prevent user interaction.
+
+<Demo data={groupDisabledDemo} />
+
+### Parent Checkbox
+
+Use a parent checkbox with `allValues` to toggle all items at once.
+
+<Demo data={parentDemo} />
+
 ## Accessibility
 
 - Follows the [WAI-ARIA Checkbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/)
 - Supports keyboard activation with Space key
 - Uses `aria-checked` to indicate state (checked, unchecked, indeterminate)
 - Associates with labels via `id` and `htmlFor` attributes
+- Wrap `Checkbox.Group` with `aria-label` or `aria-labelledby` for an accessible group name

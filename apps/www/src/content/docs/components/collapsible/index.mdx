@@ -1,0 +1,74 @@
+---
+title: Collapsible
+description: An interactive component that toggles the visibility of its content panel.
+source: packages/raystack/components/collapsible
+tag: new
+---
+
+import {
+  preview,
+  controlledDemo,
+  defaultOpenDemo,
+  disabledDemo,
+} from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Collapsible } from '@raystack/apsara'
+
+<Collapsible>
+  <Collapsible.Trigger />
+  <Collapsible.Panel />
+</Collapsible>
+```
+
+## API Reference
+
+### Root
+
+Groups all parts of the collapsible.
+
+<auto-type-table path="./props.ts" name="CollapsibleProps" />
+
+### Trigger
+
+A button that toggles the visibility of the panel.
+
+<auto-type-table path="./props.ts" name="CollapsibleTriggerProps" />
+
+### Panel
+
+Contains the collapsible content.
+
+<auto-type-table path="./props.ts" name="CollapsiblePanelProps" />
+
+## Examples
+
+### Controlled
+
+You can control the collapsible state by providing `open` and `onOpenChange` props.
+
+<Demo data={controlledDemo} />
+
+### Default Open
+
+Use `defaultOpen` to have the panel initially expanded.
+
+<Demo data={defaultOpenDemo} />
+
+### Disabled
+
+The collapsible can be disabled to prevent user interaction.
+
+<Demo data={disabledDemo} />
+
+## Accessibility
+
+- The Trigger uses `aria-expanded` to indicate the open/closed state of the panel.
+- Supports keyboard interaction with Enter and Space to toggle the panel.
+- The Panel is automatically associated with the Trigger via `aria-controls`.

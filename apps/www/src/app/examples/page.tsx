@@ -9,6 +9,7 @@ import {
   DataTable,
   DatePicker,
   Dialog,
+  Drawer,
   EmptyState,
   Flex,
   IconButton,
@@ -21,9 +22,9 @@ import {
   ScrollArea,
   Search,
   Select,
-  Sheet,
   Sidebar,
   Spinner,
+  Tabs,
   Text,
   TextArea,
   Tooltip
@@ -40,6 +41,7 @@ import React, { useState } from 'react';
 const Page = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [nestedDialogOpen, setNestedDialogOpen] = useState(false);
+  const [dialogDrawerOpen, setDialogDrawerOpen] = useState(false);
   const [dialogSheetOpen, setDialogSheetOpen] = useState(false);
   const [search1, setSearch1] = useState('');
   const [search2, setSearch2] = useState('');
@@ -97,7 +99,7 @@ const Page = () => {
               Dashboard
             </Sidebar.Item>
 
-            <Sidebar.Item href='#' leadingIcon={0}>
+            <Sidebar.Item href='#' leadingIcon={<BellIcon />}>
               Analytics
             </Sidebar.Item>
 
@@ -128,7 +130,7 @@ const Page = () => {
             overflow: 'auto'
           }}
         >
-          <Navbar sticky hideOnScroll>
+          <Navbar sticky>
             <Navbar.Start>
               <Text size='regular' weight='medium'>
                 Examples
@@ -407,10 +409,22 @@ const Page = () => {
                 Skeleton Examples
               </Text>
 
-              <Tooltip message='Hello this is a long dummy text that spans multiple lines and is quite lengthy. It is used to demonstrate the functionality of the tooltip component in various scenarios. Hello this is a long dummy text that spans multiple lines and is quite lengthy. It is used to demonstrate the functionality of the tooltip component in various scenarios.'>
-                <Button variant='solid' color='accent'>
-                  Hello
-                </Button>
+              <Tooltip>
+                <Tooltip.Trigger
+                  render={
+                    <Button variant='solid' color='accent'>
+                      Hello
+                    </Button>
+                  }
+                />
+                <Tooltip.Content>
+                  Hello this is a long dummy text that spans multiple lines and
+                  is quite lengthy. It is used to demonstrate the functionality
+                  of the tooltip component in various scenarios. Hello this is a
+                  long dummy text that spans multiple lines and is quite
+                  lengthy. It is used to demonstrate the functionality of the
+                  tooltip component in various scenarios.
+                </Tooltip.Content>
               </Tooltip>
 
               <Flex gap={2}>
@@ -1503,13 +1517,17 @@ const Page = () => {
 
                       <Flex direction='column' gap={2}>
                         <Text size='small'>Quick Actions:</Text>
-                        <Tooltip
-                          message='Click to send a message to all team members'
-                          side='top'
-                        >
-                          <Button variant='solid' color='accent'>
-                            Show hover tooltip
-                          </Button>
+                        <Tooltip>
+                          <Tooltip.Trigger
+                            render={
+                              <Button variant='solid' color='accent'>
+                                Show hover tooltip
+                              </Button>
+                            }
+                          />
+                          <Tooltip.Content side='top'>
+                            Click to send a message to all team members
+                          </Tooltip.Content>
                         </Tooltip>
                       </Flex>
                     </Flex>
@@ -1595,11 +1613,13 @@ const Page = () => {
                             <Menu.Content>
                               <Menu.Group>
                                 <Menu.Label>Team Actions</Menu.Label>
-                                <Tooltip
-                                  message='Add a new member to your team'
-                                  side='right'
-                                >
-                                  <Menu.Item>Add Member</Menu.Item>
+                                <Tooltip>
+                                  <Tooltip.Trigger
+                                    render={<Menu.Item>Add Member</Menu.Item>}
+                                  />
+                                  <Tooltip.Content side='right'>
+                                    Add a new member to your team
+                                  </Tooltip.Content>
                                 </Tooltip>
                                 <Menu.Item>Edit Team</Menu.Item>
                               </Menu.Group>
@@ -1610,7 +1630,7 @@ const Page = () => {
                                 <Menu.Item>Notifications</Menu.Item>
                               </Menu.Group>
                               <Menu.Separator />
-                              <Menu.Item color='danger'>Delete Team</Menu.Item>
+                              <Menu.Item>Delete Team</Menu.Item>
                             </Menu.Content>
                           </Menu>
                         </Flex>
@@ -1635,144 +1655,6 @@ const Page = () => {
                 </Dialog.Content>
               </Dialog>
 
-              <Sheet open={dialogSheetOpen} onOpenChange={setDialogSheetOpen}>
-                <Sheet.Content side='right' close>
-                  <Sheet.Title>Sheet Title</Sheet.Title>
-                  <Text>This is the sheet content. </Text>
-                  <Flex
-                    direction='column'
-                    gap={4}
-                    style={{ marginTop: '16px' }}
-                  >
-                    <Text size='small'>Team Members:</Text>
-                    <AvatarGroup>
-                      <Avatar size={5} color='indigo' fallback='JD' />
-                      <Avatar size={5} color='mint' fallback='AS' />
-                      <Avatar size={5} color='sky' fallback='RK' />
-                      <Avatar size={5} color='purple' fallback='+2' />
-                    </AvatarGroup>
-
-                    <Flex direction='column' gap={2}>
-                      <Text size='small'>Quick Actions:</Text>
-                      <Tooltip
-                        message='Click to send a message to all team members'
-                        side='top'
-                      >
-                        <Button variant='solid' color='accent'>
-                          Show hover tooltip
-                        </Button>
-                      </Tooltip>
-                    </Flex>
-                  </Flex>
-
-                  <Flex
-                    direction='column'
-                    gap={4}
-                    style={{ marginTop: '32px' }}
-                  >
-                    <Flex direction='column' gap={2}>
-                      <Text size='small'>Team Role:</Text>
-                      <Select
-                        value={selectValue}
-                        onValueChange={setSelectValue}
-                      >
-                        <Select.Trigger>
-                          <Select.Value placeholder='Select a role' />
-                        </Select.Trigger>
-                        <Select.Content>
-                          <Select.Item value='admin'>Administrator</Select.Item>
-                          <Select.Item value='editor'>Editor</Select.Item>
-                          <Select.Item value='viewer'>Viewer</Select.Item>
-                          <Select.Item value='member'>Member</Select.Item>
-                        </Select.Content>
-                      </Select>
-                    </Flex>
-
-                    <Flex direction='column' gap={2}>
-                      <Popover>
-                        <Popover.Trigger>
-                          <Button variant='ghost' size='small'>
-                            <FilterIcon />
-                            <Text size='small'>Filter Help</Text>
-                          </Button>
-                        </Popover.Trigger>
-                        <Popover.Content>
-                          <Flex
-                            direction='column'
-                            gap={2}
-                            style={{ padding: '8px' }}
-                          >
-                            <Text size='small' weight='medium'>
-                              Filter Team Members
-                            </Text>
-                            <Text size='small'>
-                              You can filter team members by:
-                            </Text>
-                            <ul style={{ margin: 0, paddingLeft: '16px' }}>
-                              <li>
-                                <Text size='small'>Name</Text>
-                              </li>
-                              <li>
-                                <Text size='small'>Role</Text>
-                              </li>
-                              <li>
-                                <Text size='small'>Department</Text>
-                              </li>
-                            </ul>
-                          </Flex>
-                        </Popover.Content>
-                      </Popover>
-                      <InputField
-                        label='Filter Team Members'
-                        placeholder='Type to filter...'
-                        leadingIcon={<FilterIcon />}
-                        width='100%'
-                      />
-                    </Flex>
-
-                    <Flex direction='column' gap={2}>
-                      <Text size='small'>Actions:</Text>
-                      <Flex gap={2}>
-                        <Indicator variant='success' label='5'>
-                          <Button variant='outline'>Active Members</Button>
-                        </Indicator>
-                        <Menu>
-                          <Menu.Trigger render={<Button variant='outline' />}>
-                            Open Menu
-                          </Menu.Trigger>
-                          <Menu.Content>
-                            <Menu.Group>
-                              <Menu.Label>Team Actions</Menu.Label>
-                              <Tooltip
-                                message='Add a new member to your team'
-                                side='right'
-                              >
-                                <Menu.Item>Add Member</Menu.Item>
-                              </Tooltip>
-                              <Menu.Item>Edit Team</Menu.Item>
-                            </Menu.Group>
-                            <Menu.Separator />
-                            <Menu.Group>
-                              <Menu.Label>Settings</Menu.Label>
-                              <Menu.Item>Permissions</Menu.Item>
-                              <Menu.Item>Notifications</Menu.Item>
-                            </Menu.Group>
-                            <Menu.Separator />
-                            <Menu.Item color='danger'>Delete Team</Menu.Item>
-                          </Menu.Content>
-                        </Menu>
-                      </Flex>
-                    </Flex>
-                  </Flex>
-
-                  <TextArea
-                    label='Example Text Area'
-                    value={inputValue}
-                    onChange={e => setInputValue(e.target.value)}
-                  />
-                </Sheet.Content>
-              </Sheet>
-
               <Dialog
                 open={nestedDialogOpen}
                 onOpenChange={setNestedDialogOpen}
@@ -1795,13 +1677,17 @@ const Page = () => {
 
                       <Flex direction='column' gap={2}>
                         <Text size='small'>Quick Actions:</Text>
-                        <Tooltip
-                          message='Click to send a message to all team members'
-                          side='top'
-                        >
-                          <Button variant='solid' color='accent'>
-                            Show hover tooltip
-                          </Button>
+                        <Tooltip>
+                          <Tooltip.Trigger
+                            render={
+                              <Button variant='solid' color='accent'>
+                                Show hover tooltip
+                              </Button>
+                            }
+                          />
+                          <Tooltip.Content side='top'>
+                            Click to send a message to all team members
+                          </Tooltip.Content>
                         </Tooltip>
                       </Flex>
                     </Flex>
@@ -1886,11 +1772,13 @@ const Page = () => {
                             <Menu.Content>
                               <Menu.Group>
                                 <Menu.Label>Team Actions</Menu.Label>
-                                <Tooltip
-                                  message='Add a new member to your team'
-                                  side='right'
-                                >
-                                  <Menu.Item>Add Member</Menu.Item>
+                                <Tooltip>
+                                  <Tooltip.Trigger
+                                    render={<Menu.Item>Add Member</Menu.Item>}
+                                  />
+                                  <Tooltip.Content side='right'>
+                                    Add a new member to your team
+                                  </Tooltip.Content>
                                 </Tooltip>
                                 <Menu.Item>Edit Team</Menu.Item>
                               </Menu.Group>
@@ -1901,7 +1789,7 @@ const Page = () => {
                                 <Menu.Item>Notifications</Menu.Item>
                               </Menu.Group>
                               <Menu.Separator />
-                              <Menu.Item color='danger'>Delete Team</Menu.Item>
+                              <Menu.Item>Delete Team</Menu.Item>
                             </Menu.Content>
                           </Menu>
                         </Flex>
@@ -2192,40 +2080,70 @@ const Page = () => {
             <Flex direction='column' gap={6}>
               <Flex direction='column' gap={3}>
                 <AvatarGroup max={4}>
-                  <Tooltip message='JD'>
-                    <Avatar
-                      radius='small'
-                      size={7}
-                      fallback='JD'
-                      color='indigo'
+                  <Tooltip>
+                    <Tooltip.Trigger
+                      render={
+                        <Avatar
+                          radius='small'
+                          size={7}
+                          fallback='JD'
+                          color='indigo'
+                        />
+                      }
                     />
+                    <Tooltip.Content>JD</Tooltip.Content>
                   </Tooltip>
-                  <Tooltip message='AS'>
-                    <Avatar
-                      radius='small'
-                      size={7}
-                      fallback='AS'
-                      color='mint'
+                  <Tooltip>
+                    <Tooltip.Trigger
+                      render={
+                        <Avatar
+                          radius='small'
+                          size={7}
+                          fallback='AS'
+                          color='mint'
+                        />
+                      }
                     />
+                    <Tooltip.Content>AS</Tooltip.Content>
                   </Tooltip>
-                  <Tooltip message='RK'>
-                    <Avatar radius='small' size={7} fallback='RK' color='sky' />
-                  </Tooltip>
-                  <Tooltip message='PL'>
-                    <Avatar
-                      radius='small'
-                      size={7}
-                      fallback='PL'
-                      color='purple'
+                  <Tooltip>
+                    <Tooltip.Trigger
+                      render={
+                        <Avatar
+                          radius='small'
+                          size={7}
+                          fallback='RK'
+                          color='sky'
+                        />
+                      }
                     />
+                    <Tooltip.Content>RK</Tooltip.Content>
                   </Tooltip>
-                  <Tooltip message='MN'>
-                    <Avatar
-                      radius='small'
-                      size={7}
-                      fallback='MN'
-                      color='pink'
+                  <Tooltip>
+                    <Tooltip.Trigger
+                      render={
+                        <Avatar
+                          radius='small'
+                          size={7}
+                          fallback='PL'
+                          color='purple'
+                        />
+                      }
                     />
+                    <Tooltip.Content>PL</Tooltip.Content>
+                  </Tooltip>
+                  <Tooltip>
+                    <Tooltip.Trigger
+                      render={
+                        <Avatar
+                          radius='small'
+                          size={7}
+                          fallback='MN'
+                          color='pink'
+                        />
+                      }
+                    />
+                    <Tooltip.Content>MN</Tooltip.Content>
                   </Tooltip>
                 </AvatarGroup>
               </Flex>

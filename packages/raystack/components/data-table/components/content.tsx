@@ -18,6 +18,7 @@ import {
   GroupedData
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
+import { hasActiveQuery } from '../utils';
 
 function Headers<TData>({
   headerGroups = [],
@@ -59,6 +60,7 @@ interface RowsProps<TData> {
     row?: string;
   };
   lastRowRef?: React.RefObject<HTMLTableRowElement | null>;
+  stickyGroupHeader?: boolean;
 }
 
 function LoaderRows({
@@ -85,13 +87,20 @@ function LoaderRows({
 
 function GroupHeader<TData>({
   colSpan,
-  data
+  data,
+  stickySectionHeader
 }: {
   colSpan: number;
   data: GroupedData<TData>;
+  stickySectionHeader?: boolean;
 }) {
   return (
-    <Table.SectionHeader colSpan={colSpan}>
+    <Table.SectionHeader
+      colSpan={colSpan}
+      classNames={
+        stickySectionHeader ? { cell: styles.stickySectionHeader } : undefined
+      }
+    >
       <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
@@ -106,7 +115,8 @@ function Rows<TData>({
   rows = [],
   onRowClick,
   classNames,
-  lastRowRef
+  lastRowRef,
+  stickyGroupHeader = false
 }: RowsProps<TData>) {
   return rows.map((row, idx) => {
     const isSelected = row.getIsSelected();
@@ -120,6 +130,7 @@ function Rows<TData>({
           key={row.id}
           colSpan={cells.length}
           data={row.original as GroupedData<unknown>}
+          stickySectionHeader={stickyGroupHeader}
         />
       );
     }
@@ -138,7 +149,7 @@ function Rows<TData>({
       >
         {cells.map(cell => {
           const columnDef = cell.column.columnDef as DataTableColumnDef<
-            unknown,
+            TData,
             unknown
           >;
           return (
@@ -172,7 +183,9 @@ export function Content({
     isLoading,
     loadMoreData,
     loadingRowCount = 3,
-    tableQuery
+    tableQuery,
+    defaultSort,
+    stickyGroupHeader = false
   } = useDataTable();
 
   const headerGroups = table?.getHeaderGroups();
@@ -182,36 +195,39 @@ export function Content({
   const lastRowRef = useRef<HTMLTableRowElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const target = entries[0];
-      if (target.isIntersecting && !isLoading) {
-        loadMoreData();
-      }
-    },
-    [loadMoreData, isLoading]
-  );
+  /* Refs keep callback stable so observer is only recreated when mode/rows.length change; */
+  const loadMoreDataRef = useRef(loadMoreData);
+  const isLoadingRef = useRef(isLoading);
+  loadMoreDataRef.current = loadMoreData;
+  isLoadingRef.current = isLoading;
+
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    const target = entries[0];
+    if (!target?.isIntersecting) return;
+    if (isLoadingRef.current) return;
+    const loadMore = loadMoreDataRef.current;
+    if (loadMore) loadMore();
+  }, []);
 
   useEffect(() => {
     if (mode !== 'server') return;
 
     if (observerRef.current) {
       observerRef.current.disconnect();
+      observerRef.current = null;
     }
+
+    const lastRow = lastRowRef.current;
+    if (!lastRow) return;
 
     observerRef.current = new IntersectionObserver(handleObserver, {
       threshold: 0.1
     });
-    const lastRow = lastRowRef.current;
-    if (lastRow) {
-      observerRef.current.observe(lastRow);
-    }
+    observerRef.current.observe(lastRow);
 
     return () => {
-      if (observerRef.current && lastRow) {
-        observerRef.current.unobserve(lastRow);
-        observerRef.current.disconnect();
-      }
+      observerRef.current?.disconnect();
+      observerRef.current = null;
     };
   }, [mode, rows.length, handleObserver]);
 
@@ -219,12 +235,10 @@ export function Content({
 
   const hasData = rows?.length > 0 || isLoading;
 
-  const hasFiltersOrSearch =
-    (tableQuery?.filters && tableQuery.filters.length > 0) ||
-    Boolean(tableQuery?.search && tableQuery.search.trim() !== '');
+  const hasChanges = hasActiveQuery(tableQuery || {}, defaultSort);
 
-  const isZeroState = !hasData && !hasFiltersOrSearch;
-  const isEmptyState = !hasData && hasFiltersOrSearch;
+  const isZeroState = !hasData && !hasChanges;
+  const isEmptyState = !hasData && hasChanges;
 
   const stateToShow: React.ReactNode = isZeroState
     ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)
@@ -248,6 +262,7 @@ export function Content({
                 classNames={{
                   row: classNames.row
                 }}
+                stickyGroupHeader={stickyGroupHeader}
               />
               {isLoading ? (
                 <LoaderRows

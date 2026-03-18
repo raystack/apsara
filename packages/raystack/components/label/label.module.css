@@ -8,18 +8,21 @@
 
 .label-small {
   font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .label-medium {
   font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .label-large {
   font-size: var(--rs-font-size-regular);
+  font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
 }

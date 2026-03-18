@@ -1,0 +1,83 @@
+---
+title: Drawer
+description: A panel that slides in from the edge of the screen with swipe-to-dismiss gestures.
+source: packages/raystack/components/drawer
+---
+
+import { playground, basicDemo, positionDemo } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Drawer } from "@raystack/apsara";
+
+<Drawer side="right">
+  <Drawer.Content>
+    <Drawer.Header>
+      <Drawer.Title />
+      <Drawer.Description />
+    </Drawer.Header>
+    <Drawer.Body />
+    <Drawer.Footer />
+  </Drawer.Content>
+</Drawer>
+```
+
+## API Reference
+
+### Root
+
+Groups all parts of the drawer. The `side` prop determines both the slide direction and the swipe-to-dismiss direction.
+
+<auto-type-table path="./props.ts" name="DrawerProps" />
+
+### Content
+
+Renders the drawer panel that slides in from a screen edge.
+
+<auto-type-table path="./props.ts" name="DrawerContentProps" />
+
+### Header
+
+- `children`: React.ReactNode - Content to render inside the header
+- `className`: string - Additional CSS class name
+
+### Title
+
+- Inherits all Base UI Drawer.Title props
+
+### Description
+
+- Inherits all Base UI Drawer.Description props
+
+### Body
+
+- Inherits all HTML div element props
+
+### Footer
+
+- Inherits all HTML div element props
+
+## Examples
+
+### Basic
+
+<Demo data={basicDemo} />
+
+### Positioning
+
+The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is automatically configured based on the `side` prop.
+
+<Demo data={positionDemo} />
+
+## Accessibility
+
+- Uses `role="dialog"` with `aria-modal="true"`
+- Focus is trapped within the drawer and restored on close
+- Supports dismissal with Escape key and swipe gestures
+- Title is announced via `aria-labelledby`
+
