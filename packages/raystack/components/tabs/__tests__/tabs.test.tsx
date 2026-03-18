@@ -169,6 +169,23 @@ describe('Tabs', () => {
       expect(iconWrapper).toBeInTheDocument();
       expect(iconWrapper).toContainElement(screen.getByTestId('tab-icon'));
     });
+
+    it('sets aria-hidden on leadingIcon wrapper for accessibility', () => {
+      const icon = <span data-testid='tab-icon'>📁</span>;
+      const { container } = render(
+        <Tabs defaultValue='tab1'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1' leadingIcon={icon}>
+              {TAB_1_TEXT}
+            </Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const iconWrapper = container.querySelector(`.${styles['trigger-icon']}`);
+      expect(iconWrapper).toHaveAttribute('aria-hidden', 'true');
+    });
   });
 
   describe('Indicator', () => {

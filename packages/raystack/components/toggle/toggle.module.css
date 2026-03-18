@@ -1,0 +1,99 @@
+.toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--rs-color-foreground-base-secondary);
+  cursor: pointer;
+  padding: var(--rs-space-1);
+  transition: color 0.2s ease;
+  background-color: var(--rs-color-background-base-secondary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-1);
+}
+.toggleContent {
+  border-radius: var(--rs-radius-1);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.toggleContent > * {
+  width: 100%;
+  height: 100%;
+}
+
+.toggle:hover,
+.toggle[data-pressed] {
+  color: var(--rs-color-foreground-base-primary);
+}
+.toggle:hover .toggleContent,
+.toggle[data-pressed] .toggleContent {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.toggle[data-disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.size-1 {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+}
+
+.size-2 {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+}
+
+.size-3 {
+  width: var(--rs-space-6);
+  height: var(--rs-space-6);
+}
+
+.size-4 {
+  width: var(--rs-space-7);
+  height: var(--rs-space-7);
+}
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: var(--rs-space-1);
+  background-color: var(--rs-color-background-base-secondary);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-1);
+  overflow: clip;
+}
+
+/* Toggle inside Group — strip standalone container styles.
+   Border-radius is handled by the group's overflow: clip. */
+.group .toggle {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.group .toggle:hover {
+  background-color: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-inset);
+}
+
+.group .toggle[data-pressed] {
+  background-color: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-inset);
+}
+
+/* Vertical group */
+.group[data-orientation="vertical"] {
+  flex-direction: column;
+}
+
+.group[data-disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}

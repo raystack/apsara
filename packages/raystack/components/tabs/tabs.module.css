@@ -34,7 +34,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  height: 28px;
+  height: var(--rs-space-8);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   box-sizing: border-box;
@@ -42,6 +42,7 @@
   z-index: 1;
 }
 
+/* Hover state on trigger */
 .trigger:hover:not([data-disabled]) {
   color: var(--rs-color-foreground-base-primary);
 }
@@ -60,8 +61,8 @@
 
 .trigger-icon {
   display: inline-flex;
-  width: 16px;
-  height: 16px;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
   color: currentColor;
   justify-content: center;
   align-items: center;
@@ -83,6 +84,15 @@
   width: var(--active-tab-width, 0);
   height: var(--active-tab-height, 0);
   z-index: 0;
+}
+
+/* Media query that matches when the user has 
+asked the OS/browser for less or no motion 
+(e.g. “Reduce motion” in accessibility settings). */
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    transition: none;
+  }
 }
 
 .content {

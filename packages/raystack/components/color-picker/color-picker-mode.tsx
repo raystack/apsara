@@ -3,8 +3,8 @@
 import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
 import { Select } from '../select';
-import { useColorPicker } from './color-picker-root';
 import styles from './color-picker.module.css';
+import { useColorPicker } from './color-picker-root';
 import { ModeType, SUPPORTED_MODES } from './utils';
 
 export interface ColorPickerModeProps
@@ -36,3 +36,5 @@ export const ColorPickerMode = ({
     </Select>
   );
 };
+
+ColorPickerMode.displayName = 'ColorPicker.Mode';

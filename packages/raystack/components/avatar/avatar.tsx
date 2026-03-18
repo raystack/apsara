@@ -1,12 +1,6 @@
 import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 import { cva, cx, VariantProps } from 'class-variance-authority';
-import {
-  ComponentPropsWithoutRef,
-  forwardRef,
-  isValidElement,
-  ReactElement,
-  ReactNode
-} from 'react';
+import { ComponentProps, isValidElement, ReactElement, ReactNode } from 'react';
 import styles from './avatar.module.css';
 import { AVATAR_COLORS } from './utils';
 
@@ -160,64 +154,73 @@ export interface AvatarProps
   className?: string;
 }
 
-const AvatarRoot = forwardRef<HTMLSpanElement, AvatarProps>(
-  (
-    { className, alt, src, fallback, size, radius, variant, color, ...props },
-    ref
-  ) => (
-    <AvatarPrimitive.Root
-      ref={ref}
-      className={cx(
-        styles.imageWrapper,
-        avatar({ size, radius, variant, color }),
-        className
-      )}
-      {...props}
-    >
-      <AvatarPrimitive.Image className={image()} src={src} alt={alt} />
-      <AvatarPrimitive.Fallback className={styles.fallback}>
-        {fallback}
-      </AvatarPrimitive.Fallback>
-    </AvatarPrimitive.Root>
-  )
+const AvatarRoot = ({
+  className,
+  alt,
+  src,
+  fallback,
+  size,
+  radius,
+  variant,
+  color,
+  ...props
+}: AvatarProps) => (
+  <AvatarPrimitive.Root
+    className={cx(
+      styles.imageWrapper,
+      avatar({ size, radius, variant, color }),
+      className
+    )}
+    {...props}
+  >
+    <AvatarPrimitive.Image className={image()} src={src} alt={alt} />
+    <AvatarPrimitive.Fallback className={styles.fallback}>
+      {fallback}
+    </AvatarPrimitive.Fallback>
+  </AvatarPrimitive.Root>
 );
 
-AvatarRoot.displayName = AvatarPrimitive.Root.displayName;
+AvatarRoot.displayName = 'Avatar';
 
 export const Avatar = AvatarRoot;
 
-export interface AvatarGroupProps extends ComponentPropsWithoutRef<'div'> {
+export interface AvatarGroupProps extends ComponentProps<'div'> {
   children: React.ReactElement<AvatarProps>[];
   max?: number;
 }
 
-export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
-  ({ children, max, className, ...props }, ref) => {
-    const avatars = max ? children.slice(0, max) : children;
-    const count = max && children.length > max ? children.length - max : 0;
+export const AvatarGroup = ({
+  children,
+  max,
+  className,
+  ...props
+}: AvatarGroupProps) => {
+  const avatars = max ? children.slice(0, max) : children;
+  const count = max && children.length > max ? children.length - max : 0;
 
-    // Overflow avatar matches the first avatar styling
-    const firstAvatarProps = getAvatarProps(avatars[0]);
+  // Overflow avatar matches the first avatar styling
+  const firstAvatarProps = getAvatarProps(avatars[0]);
 
-    return (
-      <div ref={ref} className={cx(styles.avatarGroup, className)} {...props}>
-        {avatars.map((avatar, index) => (
-          <div key={index} className={styles.avatarWrapper}>
-            {avatar}
-          </div>
-        ))}
-        {count > 0 && (
-          <div className={styles.avatarWrapper}>
-            <Avatar
-              size={firstAvatarProps.size}
-              radius={firstAvatarProps.radius}
-              variant={firstAvatarProps.variant}
-              color='neutral'
-              fallback={`+${count}`}
-            />
-          </div>
-        )}
-      </div>
-    );
-  }
-);
+  return (
+    <div className={cx(styles.avatarGroup, className)} {...props}>
+      {avatars.map((avatar, index) => (
+        <div key={index} className={styles.avatarWrapper}>
+          {avatar}
+        </div>
+      ))}
+      {count > 0 && (
+        <div className={styles.avatarWrapper}>
+          <Avatar
+            size={firstAvatarProps.size}
+            radius={firstAvatarProps.radius}
+            variant={firstAvatarProps.variant}
+            color='neutral'
+            fallback={`+${count}`}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+AvatarGroup.displayName = 'Avatar.Group';

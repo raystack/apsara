@@ -31,6 +31,8 @@ export interface BreadcrumbItem {
    * When `dropdownItems` is provided, the `as` and `href` props are ignored.
    */
   dropdownItems?: {
+    /** Optional stable key for list reconciliation. Falls back to index if omitted. */
+    key?: string;
     /** Text to display for the dropdown item */
     label: string;
     /** When set, the option renders as a link. Use with target and rel for new tab (e.g. target="_blank" rel="noopener noreferrer"). */

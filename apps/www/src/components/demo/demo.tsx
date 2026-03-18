@@ -1,17 +1,25 @@
 'use client';
 
 import {
+  FontBoldIcon,
+  FontItalicIcon,
   InfoCircledIcon,
   Pencil2Icon,
   PlusIcon,
+  TextAlignCenterIcon,
+  TextAlignLeftIcon,
+  TextAlignRightIcon,
   TransformIcon,
+  UnderlineIcon,
   UploadIcon
 } from '@radix-ui/react-icons';
 import * as Apsara from '@raystack/apsara';
 import {
   BellIcon,
   FilterIcon,
-  ShoppingBagFilledIcon
+  OrganizationIcon,
+  ShoppingBagFilledIcon,
+  SidebarIcon
 } from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import { Home, Info, Laugh, X } from 'lucide-react';
@@ -32,6 +40,8 @@ export default function Demo(props: DemoProps) {
       BellIcon,
       FilterIcon,
       ShoppingBagFilledIcon,
+      OrganizationIcon,
+      SidebarIcon,
       DataTableDemo,
       LinearMenuDemo,
       PopoverColorPicker,
@@ -45,6 +55,12 @@ export default function Demo(props: DemoProps) {
       Pencil2Icon,
       InfoCircledIcon,
       UploadIcon,
+      FontBoldIcon,
+      FontItalicIcon,
+      UnderlineIcon,
+      TextAlignLeftIcon,
+      TextAlignCenterIcon,
+      TextAlignRightIcon,
       dayjs
     }
   } = props;
