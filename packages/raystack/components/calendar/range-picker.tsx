@@ -3,7 +3,7 @@
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
-import { useCallback, useMemo, useState } from 'react';
+import { isValidElement, useCallback, useMemo, useState } from 'react';
 import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
 import { Flex } from '../flex';
 import { InputField } from '../input-field';
@@ -167,7 +167,9 @@ export function RangePicker({
 
   return (
     <Popover open={showCalendar} onOpenChange={setShowCalendar}>
-      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+      <Popover.Trigger
+        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+      />
       <Popover.Content
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
@@ -199,3 +201,5 @@ export function RangePicker({
     </Popover>
   );
 }
+
+RangePicker.displayName = 'RangePicker';
