@@ -20,5 +20,7 @@ export async function GET() {
     scanned.push(value.join('\n'));
   }
 
-  return new Response(scanned.join('\n\n'));
+  return new Response(scanned.join('\n\n'), {
+    headers: { 'Content-Type': 'text/markdown' }
+  });
 }
