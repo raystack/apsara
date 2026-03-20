@@ -2,9 +2,8 @@
 
 import { cx } from 'class-variance-authority';
 import {
+  ComponentProps,
   createContext,
-  forwardRef,
-  HTMLAttributes,
   useCallback,
   useContext,
   useState
@@ -38,7 +37,7 @@ export const useCodeBlockContext = () => {
 };
 
 export interface CodeBlockProps
-  extends HTMLAttributes<HTMLDivElement>,
+  extends ComponentProps<'div'>,
     CodeBlockCommonProps {
   defaultValue?: string;
   maxHeight?: string | number;
@@ -47,70 +46,65 @@ export interface CodeBlockProps
   onCollapseChange?: (value: boolean) => void;
 }
 
-export const CodeBlockRoot = forwardRef<HTMLDivElement, CodeBlockProps>(
-  (
-    {
-      children,
-      value: providedValue,
-      onValueChange,
-      defaultValue,
-      hideLineNumbers = false,
-      maxLines,
-      maxHeight,
-      className,
-      collapsed: providedCollapsed,
-      defaultCollapsed = true,
-      onCollapseChange,
-      ...props
+export const CodeBlockRoot = ({
+  children,
+  value: providedValue,
+  onValueChange,
+  defaultValue,
+  hideLineNumbers = false,
+  maxLines,
+  maxHeight,
+  className,
+  collapsed: providedCollapsed,
+  defaultCollapsed = true,
+  onCollapseChange,
+  ...props
+}: CodeBlockProps) => {
+  const [internalValue, setInternalValue] = useState<string | undefined>(
+    defaultValue
+  );
+  const [code, setCode] = useState<string | undefined>();
+  const [internalCollapsed, setInternalCollapsed] = useState<boolean>(
+    defaultCollapsed ?? false
+  );
+
+  const collapsed = providedCollapsed ?? internalCollapsed;
+
+  const value = providedValue ?? internalValue ?? defaultValue;
+
+  const setValue = useCallback(
+    (newValue: string) => {
+      setInternalValue(newValue);
+      onValueChange?.(newValue);
     },
-    ref
-  ) => {
-    const [internalValue, setInternalValue] = useState<string | undefined>(
-      defaultValue
-    );
-    const [code, setCode] = useState<string | undefined>();
-    const [internalCollapsed, setInternalCollapsed] = useState<boolean>(
-      defaultCollapsed ?? false
-    );
+    [onValueChange]
+  );
 
-    const collapsed = providedCollapsed ?? internalCollapsed;
+  const toggleCollapsed = useCallback(() => {
+    setInternalCollapsed(_internalCollapsed => {
+      onCollapseChange?.(!_internalCollapsed);
+      return !_internalCollapsed;
+    });
+  }, [onCollapseChange]);
 
-    const value = providedValue ?? internalValue ?? defaultValue;
-
-    const setValue = useCallback(
-      (newValue: string) => {
-        setInternalValue(newValue);
-        onValueChange?.(newValue);
-      },
-      [onValueChange]
-    );
-
-    const toggleCollapsed = useCallback(() => {
-      setInternalCollapsed(_internalCollapsed => {
-        onCollapseChange?.(!_internalCollapsed);
-        return !_internalCollapsed;
-      });
-    }, [onCollapseChange]);
-
-    return (
-      <CodeBlockContext.Provider
-        value={{
-          hideLineNumbers,
-          value,
-          setValue,
-          code,
-          setCode,
-          maxLines: maxLines && maxLines + 1, // to compensate for the absolute collapse trigger
-          collapsed,
-          toggleCollapsed
-        }}
-      >
-        <div ref={ref} className={cx(styles.container, className)} {...props}>
-          {children}
-        </div>
-      </CodeBlockContext.Provider>
-    );
-  }
-);
+  return (
+    <CodeBlockContext
+      value={{
+        hideLineNumbers,
+        value,
+        setValue,
+        code,
+        setCode,
+        maxLines: maxLines && maxLines + 1, // to compensate for the absolute collapse trigger
+        collapsed,
+        toggleCollapsed
+      }}
+    >
+      <div className={cx(styles.container, className)} {...props}>
+        {children}
+      </div>
+    </CodeBlockContext>
+  );
+};
 
 CodeBlockRoot.displayName = 'CodeBlock';

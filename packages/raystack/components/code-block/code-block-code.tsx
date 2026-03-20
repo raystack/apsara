@@ -2,13 +2,13 @@
 
 import { cx } from 'class-variance-authority';
 import { Highlight, Language } from 'prism-react-renderer';
-import { forwardRef, HTMLAttributes, memo } from 'react';
+import { ComponentProps, memo } from 'react';
 import { useIsomorphicLayoutEffect } from '~/hooks';
 import code from './code.module.css';
 import styles from './code-block.module.css';
 import { useCodeBlockContext } from './code-block-root';
 
-export interface CodeBlockCodeProps extends HTMLAttributes<HTMLDivElement> {
+export interface CodeBlockCodeProps extends ComponentProps<'div'> {
   children: string;
   language: Language;
   value?: string;
@@ -17,40 +17,43 @@ export interface CodeBlockCodeProps extends HTMLAttributes<HTMLDivElement> {
 
 const emptyTheme = { plain: {}, styles: [] };
 
-export const CodeBlockCode = forwardRef<HTMLDivElement, CodeBlockCodeProps>(
-  ({ children, language, className, value, ...props }, ref) => {
-    const { value: contextValue, setCode, setValue } = useCodeBlockContext();
-    const computedValue = value ?? language;
-    const isContextValueDefined = !!contextValue;
-    const shouldRender =
-      !isContextValueDefined || contextValue === computedValue;
-    const content = children.trim();
+export const CodeBlockCode = ({
+  children,
+  language,
+  className,
+  value,
+  ...props
+}: CodeBlockCodeProps) => {
+  const { value: contextValue, setCode, setValue } = useCodeBlockContext();
+  const computedValue = value ?? language;
+  const isContextValueDefined = !!contextValue;
+  const shouldRender = !isContextValueDefined || contextValue === computedValue;
+  const content = children.trim();
 
-    useIsomorphicLayoutEffect(() => {
-      // if value is not defined, set the value
-      if (!isContextValueDefined) setValue(language);
-      // if should render, store the code
-      if (shouldRender) setCode(content);
-    }, [
-      content,
-      setCode,
-      shouldRender,
-      setValue,
-      language,
-      isContextValueDefined
-    ]);
+  useIsomorphicLayoutEffect(() => {
+    // if value is not defined, set the value
+    if (!isContextValueDefined) setValue(language);
+    // if should render, store the code
+    if (shouldRender) setCode(content);
+  }, [
+    content,
+    setCode,
+    shouldRender,
+    setValue,
+    language,
+    isContextValueDefined
+  ]);
 
-    if (!shouldRender) return null;
+  if (!shouldRender) return null;
 
-    return (
-      <div ref={ref} className={cx(styles.codeContent, className)} {...props}>
-        <CodeHighlight content={content} language={language} />
-      </div>
-    );
-  }
-);
+  return (
+    <div className={cx(styles.codeContent, className)} {...props}>
+      <CodeHighlight content={content} language={language} />
+    </div>
+  );
+};
 
-CodeBlockCode.displayName = 'CodeBlockCode';
+CodeBlockCode.displayName = 'CodeBlock.Code';
 
 const CodeHighlight = memo(
   ({ content, language }: { content: string; language: Language }) => {

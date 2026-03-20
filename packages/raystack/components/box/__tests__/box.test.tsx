@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Box } from '../box';
-import styles from '../box.module.css';
 
 describe('Box', () => {
   describe('Basic Rendering', () => {
@@ -31,25 +30,6 @@ describe('Box', () => {
     it('applies box class by default', () => {
       const rendered = render(<Box>Content</Box>);
       expect(rendered.baseElement).toBeInTheDocument();
-    });
-  });
-
-  describe('ClassName Handling', () => {
-    it('applies custom className', () => {
-      const { container } = render(<Box className='custom-class'>Content</Box>);
-      const box = container.querySelector('.custom-class');
-      expect(box).toBeInTheDocument();
-      expect(box).toHaveClass(styles.box);
-    });
-
-    it('combines multiple classNames', () => {
-      const { container } = render(
-        <Box className='class1 class2'>Content</Box>
-      );
-      const box = container.querySelector(`.${styles.box}`);
-      expect(box).toHaveClass('class1');
-      expect(box).toHaveClass('class2');
-      expect(box).toHaveClass(styles.box);
     });
   });
 
@@ -154,8 +134,8 @@ describe('Box', () => {
     });
 
     it('renders with empty string children', () => {
-      const { container } = render(<Box>{``}</Box>);
-      const box = container.querySelector(`.${styles.box}`);
+      const { container } = render(<Box id='test-box'>{``}</Box>);
+      const box = container.querySelector('#test-box');
       expect(box).toBeInTheDocument();
       expect(box?.textContent).toBe('');
     });

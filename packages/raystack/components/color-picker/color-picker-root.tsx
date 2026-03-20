@@ -2,14 +2,14 @@
 
 import Color, { type ColorLike } from 'color';
 import {
-  ComponentPropsWithoutRef,
+  ComponentProps,
   createContext,
   useCallback,
   useContext,
   useState
 } from 'react';
 import { Flex } from '../flex';
-import { ColorObject, ModeType, getColorString } from './utils';
+import { ColorObject, getColorString, ModeType } from './utils';
 
 type ColorPickerContextValue = {
   hue: number;
@@ -34,7 +34,7 @@ export const useColorPicker = () => {
 };
 
 export interface ColorPickerProps
-  extends Omit<ComponentPropsWithoutRef<typeof Flex>, 'defaultValue'> {
+  extends Omit<ComponentProps<typeof Flex>, 'defaultValue'> {
   value?: ColorLike;
   defaultValue?: ColorLike;
   onValueChange?: (value: string, mode: string) => void;
@@ -97,7 +97,7 @@ export const ColorPickerRoot = ({
   );
 
   return (
-    <ColorPickerContext.Provider
+    <ColorPickerContext
       value={{
         hue,
         saturation,
@@ -109,6 +109,8 @@ export const ColorPickerRoot = ({
       }}
     >
       <Flex direction='column' gap={4} {...props} />
-    </ColorPickerContext.Provider>
+    </ColorPickerContext>
   );
 };
+
+ColorPickerRoot.displayName = 'ColorPicker';
