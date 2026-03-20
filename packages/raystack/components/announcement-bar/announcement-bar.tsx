@@ -1,13 +1,13 @@
 'use client';
 
-import { type VariantProps, cva } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 
 import { Flex } from '../flex';
 import { Text } from '../text';
 import styles from './announcement-bar.module.css';
 
-const announementBar = cva(styles['announcement-bar'], {
+const announcementBar = cva(styles['announcement-bar'], {
   variants: {
     variant: {
       gradient: styles['announcement-bar-gradient'],
@@ -20,7 +20,7 @@ const announementBar = cva(styles['announcement-bar'], {
   }
 });
 
-type AnnouncementBarProps = VariantProps<typeof announementBar> & {
+type AnnouncementBarProps = VariantProps<typeof announcementBar> & {
   leadingIcon?: ReactNode;
   className?: string;
   text: string;
@@ -41,7 +41,7 @@ export const AnnouncementBar = ({
 }: AnnouncementBarProps) => {
   return (
     <Flex
-      className={announementBar({ className, variant })}
+      className={announcementBar({ className, variant })}
       justify='center'
       align='center'
       gap='small'
@@ -65,3 +65,5 @@ export const AnnouncementBar = ({
     </Flex>
   );
 };
+
+AnnouncementBar.displayName = 'AnnouncementBar';

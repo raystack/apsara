@@ -2,75 +2,59 @@
 
 import { ChevronRightIcon, DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { forwardRef, HTMLAttributes } from 'react';
+import { ComponentProps } from 'react';
 import styles from './breadcrumb.module.css';
 
-export interface BreadcrumbEllipsisProps
-  extends HTMLAttributes<HTMLSpanElement> {}
+export interface BreadcrumbEllipsisProps extends ComponentProps<'span'> {}
 
-export const BreadcrumbEllipsis = forwardRef<
-  HTMLSpanElement,
-  BreadcrumbEllipsisProps
->(
-  (
-    {
-      className,
-      children = <DotsHorizontalIcon width={20} height={20} />,
-      ...props
-    },
-    ref
-  ) => {
-    return (
-      <li
-        className={styles['breadcrumb-item']}
-        role='presentation'
-        aria-hidden='true'
+export const BreadcrumbEllipsis = ({
+  ref,
+  className,
+  children = <DotsHorizontalIcon width={20} height={20} />,
+  ...props
+}: BreadcrumbEllipsisProps) => {
+  return (
+    <li
+      className={styles['breadcrumb-item']}
+      role='presentation'
+      aria-hidden='true'
+    >
+      <span
+        className={cx(styles['breadcrumb-ellipsis'], className)}
+        ref={ref}
+        {...props}
       >
-        <span
-          className={cx(styles['breadcrumb-ellipsis'], className)}
-          ref={ref}
-          {...props}
-        >
-          {children}
-        </span>
-      </li>
-    );
-  }
-);
+        {children}
+      </span>
+    </li>
+  );
+};
 
-BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis';
+BreadcrumbEllipsis.displayName = 'Breadcrumb.Ellipsis';
 
-export interface BreadcrumbSeparatorProps
-  extends HTMLAttributes<HTMLSpanElement> {}
+export interface BreadcrumbSeparatorProps extends ComponentProps<'span'> {}
 
-export const BreadcrumbSeparator = forwardRef<
-  HTMLSpanElement,
-  BreadcrumbSeparatorProps
->(
-  (
-    {
-      children = <ChevronRightIcon width={12} height={12} />,
-      className,
-      ...props
-    },
-    ref
-  ) => {
-    return (
-      <li
-        className={styles['breadcrumb-item']}
-        role='presentation'
-        aria-hidden='true'
+export const BreadcrumbSeparator = ({
+  ref,
+  children = <ChevronRightIcon width={12} height={12} />,
+  className,
+  ...props
+}: BreadcrumbSeparatorProps) => {
+  return (
+    <li
+      className={styles['breadcrumb-item']}
+      role='presentation'
+      aria-hidden='true'
+    >
+      <span
+        className={cx(styles['breadcrumb-separator'], className)}
+        ref={ref}
+        {...props}
       >
-        <span
-          className={cx(styles['breadcrumb-separator'], className)}
-          ref={ref}
-          {...props}
-        >
-          {children}
-        </span>
-      </li>
-    );
-  }
-);
+        {children}
+      </span>
+    </li>
+  );
+};
 
-BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';
+BreadcrumbSeparator.displayName = 'Breadcrumb.Separator';
