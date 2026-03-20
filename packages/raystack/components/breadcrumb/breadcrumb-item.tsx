@@ -35,6 +35,14 @@ export const BreadcrumbItem = ({
   dropdownItems,
   ...props
 }: BreadcrumbItemProps) => {
+  const {
+    id,
+    title,
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledby,
+    'aria-describedby': ariaDescribedby
+  } = props;
+
   const renderedElement = as ?? <a ref={ref} />;
   const label = (
     <>
@@ -52,7 +60,11 @@ export const BreadcrumbItem = ({
           <Menu.Trigger
             ref={ref as React.Ref<HTMLButtonElement>}
             className={styles['breadcrumb-dropdown-trigger']}
-            {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+            id={id}
+            title={title}
+            aria-label={ariaLabel}
+            aria-labelledby={ariaLabelledby}
+            aria-describedby={ariaDescribedby}
           >
             {label}
             <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
