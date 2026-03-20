@@ -1,4 +1,4 @@
-import { ElementType, ReactEventHandler, ReactNode } from 'react';
+import { ReactElement, ReactEventHandler, ReactNode } from 'react';
 
 export interface BreadcrumbItem {
   /** Text to display for the item */
@@ -19,7 +19,7 @@ export interface BreadcrumbItem {
   /**
    * Optional array of dropdown items
    *
-   * When `dropdownItems` is provided, the `as` and `href` props are ignored.
+   * When `dropdownItems` is provided, the `render` and `href` props are ignored.
    */
   dropdownItems?: {
     /** Optional stable key for list reconciliation. Falls back to index if omitted. */
@@ -31,12 +31,12 @@ export interface BreadcrumbItem {
   }[];
 
   /**
-   * Component to render as (e.g. NextLink). Pass the component reference, not a JSX element.
-   * Receives breadcrumb item props (href, className, ref, children, etc.).
+   * Render prop for polymorphism (Base UI `useRender`).
+   * Pass a JSX element to replace the default rendered `<a>`.
    *
-   * @default "a"
+   * Example: `render={<NextLink />}`
    */
-  as?: ElementType;
+  render?: ReactElement;
 }
 
 export interface BreadcrumbProps {

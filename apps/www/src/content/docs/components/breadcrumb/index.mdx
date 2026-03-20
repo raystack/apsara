@@ -42,7 +42,7 @@ Groups all parts of the breadcrumb navigation.
 
 ### Item
 
-Renders an individual breadcrumb link. Ref is forwarded to the link or custom component when using `as` (not when using `dropdownItems`).
+Renders an individual breadcrumb link. Ref is forwarded to the rendered element when using `render` (not when using `dropdownItems`).
 
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
 
@@ -88,17 +88,17 @@ Breadcrumb items can include icons either alongside text or as standalone elemen
 
 Breadcrumb items can include dropdown menus for additional navigation options. Specify the dropdown items using the `dropdownItems` prop.
 
-**Note:** When `dropdownItems` is provided, the `as` and `href` props are ignored.
+**Note:** When `dropdownItems` is provided, the `render` and `href` props are ignored.
 
 <Demo data={dropdownDemo} />
 
-### As
+### Render
 
-Use the `as` prop to render the breadcrumb item as a custom component. Pass the **component reference** (e.g. `as={NextLink}`), not a JSX element. Put `href` and other props on `Breadcrumb.Item`; they are passed through to the component. By default, items render as `a` tags.
+Use the `render` prop to render the breadcrumb item as a custom component. Pass a JSX element (e.g. `render={<NextLink />}`) and we will replace the default `<a>` while merging props. By default, items render as `a` tags.
 
 ```tsx
-// Correct: pass the component, set href on the item
-<Breadcrumb.Item href="/" as={NextLink}>Home</Breadcrumb.Item>
+// Correct: set href on the item (it will be forwarded into the rendered element)
+<Breadcrumb.Item href="/" render={<NextLink />}>Home</Breadcrumb.Item>
 ```
 
 <Demo data={asDemo} />

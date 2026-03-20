@@ -144,7 +144,7 @@ describe('Breadcrumb', () => {
       expect(currentEl).toHaveAttribute('aria-current', 'page');
     });
 
-    it('renders with custom element using as prop', () => {
+    it('renders with custom element using render prop', () => {
       const CustomLink: React.ComponentType<
         React.AnchorHTMLAttributes<HTMLAnchorElement>
       > = ({ children, ...props }) => (
@@ -155,7 +155,7 @@ describe('Breadcrumb', () => {
 
       const { container } = render(
         <Breadcrumb>
-          <Breadcrumb.Item as={CustomLink}>Custom</Breadcrumb.Item>
+          <Breadcrumb.Item render={<CustomLink />}>Custom</Breadcrumb.Item>
         </Breadcrumb>
       );
 
@@ -175,7 +175,7 @@ describe('Breadcrumb', () => {
       expect(ref).toHaveBeenCalled();
     });
 
-    it('forwards ref when using as prop (component)', () => {
+    it('forwards ref when using render prop (component)', () => {
       const CustomLink = forwardRef<
         HTMLAnchorElement,
         React.AnchorHTMLAttributes<HTMLAnchorElement>
@@ -187,7 +187,7 @@ describe('Breadcrumb', () => {
       const ref = vi.fn();
       render(
         <Breadcrumb>
-          <Breadcrumb.Item ref={ref} as={CustomLink}>
+          <Breadcrumb.Item ref={ref} render={<CustomLink />}>
             Custom
           </Breadcrumb.Item>
         </Breadcrumb>
