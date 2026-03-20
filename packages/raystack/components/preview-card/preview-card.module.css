@@ -110,3 +110,13 @@
   translate: -30% 0;
   opacity: 0;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable open/close transitions for reduced-motion users. */
+  .positioner,
+  .popup,
+  .viewport [data-previous],
+  .viewport [data-current] {
+    transition: none;
+  }
+}
