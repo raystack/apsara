@@ -94,8 +94,8 @@ export const dropdownDemo = {
     <Breadcrumb.Item href="/category">Category</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item dropdownItems={[
-        { label: 'Option 1', onClick: () => {console.log('Option 1')}},
-        { label: 'Option 2', onClick: () => {console.log('Option 2')}}
+        { children: 'Option 1', onClick: () => {console.log('Option 1')}},
+        { children: 'Option 2', onClick: () => {console.log('Option 2')}}
       ]}>Subcategory</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="/category/subcategory/current">Current Page</Breadcrumb.Item>
@@ -109,9 +109,9 @@ export const dropdownLinksDemo = {
     <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item dropdownItems={[
-        { label: 'Electronics', href: '/electronics', target: '_blank', rel: 'noopener noreferrer' },
-        { label: 'Clothing', href: '/clothing' },
-        { label: 'Books', onClick: () => {console.log('Books')}}
+        { children: 'Electronics', render: <a href="/electronics" target="_blank" rel="noopener noreferrer" /> },
+        { children: 'Clothing', render: <a href="/clothing" /> },
+        { children: 'Books', onClick: () => {console.log('Books')}}
       ]}>Categories</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="/current" current>Current</Breadcrumb.Item>

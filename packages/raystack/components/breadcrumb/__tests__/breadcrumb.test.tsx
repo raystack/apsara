@@ -290,8 +290,8 @@ describe('Breadcrumb', () => {
 
     it('disabled with dropdownItems renders as disabled span not dropdown', () => {
       const items = [
-        { label: 'Option 1', onClick: vi.fn() },
-        { label: 'Option 2', onClick: vi.fn() }
+        { children: 'Option 1', onClick: vi.fn() },
+        { children: 'Option 2', onClick: vi.fn() }
       ];
       const { container } = render(
         <Breadcrumb>
@@ -314,8 +314,8 @@ describe('Breadcrumb', () => {
   describe('BreadcrumbItem with Dropdown', () => {
     it('renders dropdown trigger when dropdownItems provided', () => {
       const items = [
-        { label: 'Option 1', onClick: vi.fn() },
-        { label: 'Option 2', onClick: vi.fn() }
+        { children: 'Option 1', onClick: vi.fn() },
+        { children: 'Option 2', onClick: vi.fn() }
       ];
 
       render(
@@ -333,9 +333,9 @@ describe('Breadcrumb', () => {
 
     it('renders dropdown items on click', () => {
       const items = [
-        { label: 'Electronics' },
-        { label: 'Clothing' },
-        { label: 'Books' }
+        { children: 'Electronics' },
+        { children: 'Clothing' },
+        { children: 'Books' }
       ];
 
       render(
@@ -359,12 +359,15 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item
             dropdownItems={[
               {
-                label: 'New tab',
-                href: '/page',
-                target: '_blank',
-                rel: 'noopener noreferrer'
+                children: 'New tab',
+                render: (
+                  <a href='/page' target='_blank' rel='noopener noreferrer' />
+                )
               },
-              { label: 'Same tab', href: '/other' }
+              {
+                children: 'Same tab',
+                render: <a href='/other' />
+              }
             ]}
           >
             Categories
@@ -554,9 +557,9 @@ describe('Breadcrumb', () => {
 
     it('renders breadcrumb with icons and dropdown', () => {
       const categories = [
-        { label: 'Electronics' },
-        { label: 'Clothing' },
-        { label: 'Books' }
+        { children: 'Electronics' },
+        { children: 'Clothing' },
+        { children: 'Books' }
       ];
 
       render(

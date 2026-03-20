@@ -106,7 +106,7 @@ Breadcrumb items can include icons via `leadingIcon` (before the label) or `trai
 
 ### Dropdown
 
-Breadcrumb items can include dropdown menus for additional navigation options. Specify the dropdown items using the `dropdownItems` prop. Each item can have `label`, optional `href` (renders as a link), optional `target` and `rel` (e.g. `target="_blank"` `rel="noopener noreferrer"` for new tab), and optional `onClick`.
+Breadcrumb items can include dropdown menus for additional navigation options. Specify them with the `dropdownItems` prop: each entry is the same props as `<Menu.Item>` (e.g. `children` for the label, `onClick`, `disabled`, `render` for a link such as `<a href="…" />`, etc.). You can also pass `key` for stable list keys.
 
 **Note:** When `dropdownItems` is provided, the `as` and `href` props on the breadcrumb item are ignored.
 

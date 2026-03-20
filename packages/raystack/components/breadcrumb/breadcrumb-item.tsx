@@ -11,17 +11,14 @@ import React, {
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
-export type BreadcrumbDropdownItem = {
+/**
+ * Each entry maps to `<Menu.Item>`. Use `children`, `render`, `onClick`,
+ * `disabled`, etc. — whatever `Menu.Item` supports.
+ */
+export type BreadcrumbDropdownItem = ComponentProps<typeof Menu.Item> & {
+  /** Optional stable key for React list reconciliation (not passed to `Menu.Item`). */
   key?: string;
-  label: ReactNode;
-  /**
-   * Convenience API for link-like menu items. If you need more control,
-   * pass `render` directly via the Menu.Item props supported below.
-   */
-  href?: string;
-  target?: string;
-  rel?: string;
-} & Omit<ComponentProps<typeof Menu.Item>, 'children'>;
+};
 
 export interface BreadcrumbItemProps extends ComponentProps<'a'> {
   leadingIcon?: ReactNode;
@@ -74,45 +71,18 @@ export const BreadcrumbItem = ({
           {dropdownItems.map((dropdownItem, dropdownIndex) => {
             const {
               key,
-              label: dropdownLabel,
-              href: dropdownHref,
-              target: dropdownTarget,
-              rel: dropdownRel,
-              render,
-              className: dropdownItemClassName,
-              ...dropdownItemProps
+              className: itemClassName,
+              ...menuItemProps
             } = dropdownItem;
-
-            const effectiveRender =
-              dropdownHref && !render ? (
-                <a
-                  href={dropdownHref}
-                  target={dropdownTarget}
-                  rel={dropdownRel}
-                  className={cx(
-                    styles['breadcrumb-dropdown-item'],
-                    dropdownItemClassName
-                  )}
-                />
-              ) : (
-                render
-              );
-
             return (
               <Menu.Item
                 key={key ?? dropdownIndex}
-                {...dropdownItemProps}
-                {...(effectiveRender
-                  ? { render: effectiveRender }
-                  : {
-                      className: cx(
-                        styles['breadcrumb-dropdown-item'],
-                        dropdownItemClassName
-                      )
-                    })}
-              >
-                {dropdownLabel}
-              </Menu.Item>
+                className={cx(
+                  styles['breadcrumb-dropdown-item'],
+                  itemClassName
+                )}
+                {...menuItemProps}
+              />
             );
           })}
         </Menu.Content>
@@ -145,11 +115,11 @@ export const BreadcrumbItem = ({
       {cloneElement(
         renderedElement,
         {
-          ref,
           className: styles['breadcrumb-link'],
           href,
           ...props,
-          ...renderedElement.props
+          ...renderedElement.props,
+          ref
         },
         label
       )}
