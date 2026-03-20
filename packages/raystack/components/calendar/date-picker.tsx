@@ -4,7 +4,13 @@ import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  isValidElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { PropsBase, PropsSingleRequired } from 'react-day-picker';
 import { InputField } from '../input-field';
 import { InputFieldProps } from '../input-field/input-field';
@@ -193,7 +199,9 @@ export function DatePicker({
 
   return (
     <Popover open={showCalendar} onOpenChange={onOpenChange}>
-      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+      <Popover.Trigger
+        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+      />
       <Popover.Content
         ref={contentRef}
         {...popoverProps}
@@ -215,3 +223,5 @@ export function DatePicker({
     </Popover>
   );
 }
+
+DatePicker.displayName = 'DatePicker';

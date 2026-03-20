@@ -3,7 +3,6 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
 import { cx } from 'class-variance-authority';
-import { ElementRef, forwardRef } from 'react';
 
 import styles from './checkbox.module.css';
 
@@ -43,26 +42,21 @@ const IndeterminateIcon = () => (
   </svg>
 );
 
-const CheckboxGroup = forwardRef<HTMLDivElement, CheckboxGroupPrimitive.Props>(
-  ({ className, ...props }, ref) => (
+function CheckboxGroup({ className, ...props }: CheckboxGroupPrimitive.Props) {
+  return (
     <CheckboxGroupPrimitive
-      ref={ref}
       className={cx(styles.group, className)}
       {...props}
     />
-  )
-);
+  );
+}
 
 CheckboxGroup.displayName = 'Checkbox.Group';
 
-const CheckboxItem = forwardRef<
-  ElementRef<typeof CheckboxPrimitive.Root>,
-  CheckboxPrimitive.Root.Props
->(({ className, ...props }, ref) => {
+function CheckboxItem({ className, ...props }: CheckboxPrimitive.Root.Props) {
   return (
     <CheckboxPrimitive.Root
       className={cx(styles.checkbox, className)}
-      ref={ref}
       {...props}
     >
       <CheckboxPrimitive.Indicator
@@ -75,7 +69,7 @@ const CheckboxItem = forwardRef<
       />
     </CheckboxPrimitive.Root>
   );
-});
+}
 
 CheckboxItem.displayName = 'Checkbox';
 

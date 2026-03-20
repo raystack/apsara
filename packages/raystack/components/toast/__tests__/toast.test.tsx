@@ -1,28 +1,49 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { ToastContainer, toast } from '../toast';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Toast, toastManager } from '../toast';
+
+const renderWithProvider = (
+  props?: Partial<React.ComponentProps<typeof Toast.Provider>>
+) => {
+  return render(
+    <Toast.Provider {...props}>
+      <div>App content</div>
+    </Toast.Provider>
+  );
+};
 
 describe('Toast', () => {
-  beforeEach(() => {
-    render(<ToastContainer />);
-  });
-
-  describe('ToastContainer', () => {
-    it('renders ToastContainer component', () => {
-      expect(screen.getByLabelText('Notifications alt+T')).toBeInTheDocument();
+  describe('Toast.Provider', () => {
+    it('renders provider with children', () => {
+      renderWithProvider();
+      expect(screen.getByText('App content')).toBeInTheDocument();
     });
   });
 
-  describe('Toast Function', () => {
-    it('shows basic toast message', async () => {
-      toast('Hello World');
+  describe('toastManager.add()', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('shows basic toast with title', async () => {
+      act(() => {
+        toastManager.add({ title: 'Hello World' });
+      });
       expect(await screen.findByText('Hello World')).toBeInTheDocument();
     });
 
-    it('shows JSX content in toast', async () => {
-      const jsxContent = <div data-testid='jsx-content'>JSX Content</div>;
-      toast(jsxContent);
-      expect(await screen.findByTestId('jsx-content')).toBeInTheDocument();
+    it('shows toast with title and description', async () => {
+      act(() => {
+        toastManager.add({
+          title: 'Toast Title',
+          description: 'Toast description text'
+        });
+      });
+      expect(await screen.findByText('Toast Title')).toBeInTheDocument();
+      expect(
+        await screen.findByText('Toast description text')
+      ).toBeInTheDocument();
     });
 
     const toastTypes = [
@@ -32,32 +53,79 @@ describe('Toast', () => {
       'info',
       'loading'
     ] as const;
+
     toastTypes.forEach(type => {
-      it(`supports ${type} toast`, async () => {
-        toast[type]('Success message');
-        expect(await screen.findByText('Success message')).toBeInTheDocument();
+      it(`supports ${type} type`, async () => {
+        act(() => {
+          toastManager.add({ title: `${type} message`, type });
+        });
+        const toastEl = await screen.findByText(`${type} message`);
+        expect(toastEl).toBeInTheDocument();
+        expect(toastEl.closest(`[data-type="${type}"]`)).toBeInTheDocument();
       });
     });
+  });
 
-    it('supports custom toast with options', async () => {
-      const customOptions = {
-        duration: 5000,
-        description: 'Custom description'
-      };
-
-      toast('Custom toast', customOptions);
-      expect(await screen.findByText('Custom toast')).toBeInTheDocument();
+  describe('toastManager.close()', () => {
+    beforeEach(() => {
+      renderWithProvider();
     });
 
-    it('supports promise-based toast', async () => {
-      const promise = new Promise(resolve => {
-        setTimeout(() => resolve('Promise resolved'), 100);
+    it('closes a specific toast by id', async () => {
+      let id: string;
+      act(() => {
+        id = toastManager.add({ title: 'Dismissible toast' });
+      });
+      expect(await screen.findByText('Dismissible toast')).toBeInTheDocument();
+
+      act(() => {
+        toastManager.close(id!);
       });
 
-      toast.promise(promise, {
-        loading: 'Loading...',
-        success: 'Success!',
-        error: 'Error!'
+      await waitFor(() => {
+        expect(screen.queryByText('Dismissible toast')).not.toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('toastManager.update()', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('updates an existing toast', async () => {
+      let id: string;
+      act(() => {
+        id = toastManager.add({ title: 'Original title' });
+      });
+      expect(await screen.findByText('Original title')).toBeInTheDocument();
+
+      act(() => {
+        toastManager.update(id!, { title: 'Updated title' });
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Updated title')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('toastManager.promise()', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('shows loading then success on resolution', async () => {
+      const promise = new Promise(resolve =>
+        setTimeout(() => resolve('ok'), 50)
+      );
+
+      act(() => {
+        toastManager.promise(promise, {
+          loading: 'Loading...',
+          success: 'Success!',
+          error: 'Error!'
+        });
       });
 
       expect(await screen.findByText('Loading...')).toBeInTheDocument();
@@ -70,116 +138,116 @@ describe('Toast', () => {
       );
     });
 
-    it('supports dismiss functionality', async () => {
-      const toastId = toast('Dismissible toast');
-      expect(await screen.findByText('Dismissible toast')).toBeInTheDocument();
+    it('shows loading then error on rejection', async () => {
+      const promise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('fail')), 50)
+      );
 
-      toast.dismiss(toastId);
-
-      await waitFor(() => {
-        expect(screen.queryByText('Dismissible toast')).not.toBeInTheDocument();
+      let result: Promise<unknown>;
+      act(() => {
+        result = toastManager.promise(promise, {
+          loading: 'Loading...',
+          success: 'Success!',
+          error: 'Error!'
+        });
       });
+
+      expect(await screen.findByText('Loading...')).toBeInTheDocument();
+
+      // Catch the rejection to prevent unhandled promise rejection
+      await result!.catch(() => undefined);
+
+      await waitFor(
+        () => {
+          expect(screen.getByText('Error!')).toBeInTheDocument();
+        },
+        { timeout: 200 }
+      );
+    });
+  });
+
+  describe('Toast close button', () => {
+    beforeEach(() => {
+      renderWithProvider();
     });
 
-    it('supports dismissAll functionality', async () => {
-      toast('First toast');
-      toast('Second toast');
+    it('renders close button and dismisses toast on click', async () => {
+      const user = userEvent.setup();
 
-      expect(await screen.findByText('First toast')).toBeInTheDocument();
-      expect(await screen.findByText('Second toast')).toBeInTheDocument();
+      act(() => {
+        toastManager.add({ title: 'Closable toast' });
+      });
 
-      // Dismiss all toasts by calling dismiss without ID
-      toast.dismiss();
+      const closeBtn = await screen.findByLabelText('Close toast');
+      expect(closeBtn).toBeInTheDocument();
+
+      await user.click(closeBtn);
 
       await waitFor(() => {
-        expect(screen.queryByText('First toast')).not.toBeInTheDocument();
-        expect(screen.queryByText('Second toast')).not.toBeInTheDocument();
+        expect(screen.queryByText('Closable toast')).not.toBeInTheDocument();
       });
     });
+  });
 
-    it('handles multiple toasts simultaneously', async () => {
-      toast('First toast');
-      toast('Second toast');
-      toast('Third toast');
+  describe('Toast action button', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('renders action button from actionProps', async () => {
+      const onClick = vi.fn();
+
+      act(() => {
+        toastManager.add({
+          title: 'With Action',
+          actionProps: { children: 'Undo', onClick }
+        });
+      });
+
+      expect(await screen.findByText('Undo')).toBeInTheDocument();
+    });
+  });
+
+  describe('Multiple toasts', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('shows multiple toasts simultaneously', async () => {
+      act(() => {
+        toastManager.add({ title: 'First toast' });
+        toastManager.add({ title: 'Second toast' });
+        toastManager.add({ title: 'Third toast' });
+      });
 
       expect(await screen.findByText('First toast')).toBeInTheDocument();
       expect(await screen.findByText('Second toast')).toBeInTheDocument();
       expect(await screen.findByText('Third toast')).toBeInTheDocument();
     });
+  });
 
-    it('supports custom action buttons', async () => {
-      toast('Toast with action', {
-        action: {
-          label: 'Undo',
-          onClick: () => console.log('Undo clicked')
-        }
+  describe('onClose callback', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('fires onClose when toast is closed', async () => {
+      const onClose = vi.fn();
+      let id: string;
+
+      act(() => {
+        id = toastManager.add({ title: 'Callback toast', onClose });
       });
-
-      expect(await screen.findByText('Toast with action')).toBeInTheDocument();
-      expect(await screen.findByText('Undo')).toBeInTheDocument();
-    });
-
-    it('supports custom duration', async () => {
-      const shortDuration = 100;
-      toast('Short duration toast', { duration: shortDuration });
-
-      expect(
-        await screen.findByText('Short duration toast')
-      ).toBeInTheDocument();
-
-      await waitFor(
-        () => {
-          expect(
-            screen.queryByText('Short duration toast')
-          ).not.toBeInTheDocument();
-        },
-        { timeout: 500 }
-      );
-    });
-
-    it('supports custom className', async () => {
-      const customClass = 'custom-toast-class';
-      toast('Custom class toast', { className: customClass });
-
-      expect(await screen.findByText('Custom class toast')).toBeInTheDocument();
-    });
-
-    it('supports custom style', async () => {
-      const customStyle = { backgroundColor: 'red' };
-      toast('Custom style toast', { style: customStyle });
-
-      expect(await screen.findByText('Custom style toast')).toBeInTheDocument();
-    });
-
-    it('supports onDismiss callback', async () => {
-      const onDismiss = vi.fn();
-      toast('Callback toast', { onDismiss });
 
       expect(await screen.findByText('Callback toast')).toBeInTheDocument();
 
-      // Dismiss the toast
-      toast.dismiss();
+      act(() => {
+        toastManager.close(id!);
+      });
 
       await waitFor(() => {
-        expect(onDismiss).toHaveBeenCalled();
+        expect(onClose).toHaveBeenCalled();
       });
-    });
-
-    it('supports onAutoClose callback', async () => {
-      const onAutoClose = vi.fn();
-      toast('Auto close toast', {
-        duration: 100,
-        onAutoClose
-      });
-
-      expect(await screen.findByText('Auto close toast')).toBeInTheDocument();
-
-      await waitFor(
-        () => {
-          expect(onAutoClose).toHaveBeenCalled();
-        },
-        { timeout: 200 }
-      );
     });
   });
 });

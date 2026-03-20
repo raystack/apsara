@@ -1,4 +1,4 @@
-import { VariantProps, cva } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
 import { ElementRef, forwardRef } from 'react';
 import { Flex } from '../flex';
 

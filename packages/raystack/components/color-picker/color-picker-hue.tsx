@@ -30,3 +30,5 @@ export const ColorPickerHue = ({
     </Slider.Root>
   );
 };
+
+ColorPickerHue.displayName = 'ColorPicker.Hue';

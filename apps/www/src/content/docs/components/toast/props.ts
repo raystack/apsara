@@ -1,15 +1,4 @@
-export interface ToastProps {
-  /**
-   * Text shown below the title.
-   */
-  description?: string;
-
-  /**
-   * Auto-close time in milliseconds.
-   * @default 4000
-   */
-  duration?: number;
-
+export interface ToastProviderProps {
   /**
    * Toast position on screen.
    * @default "bottom-right"
@@ -23,74 +12,70 @@ export interface ToastProps {
     | 'bottom-center';
 
   /**
-   * Allow user to dismiss toast.
-   * @default true
+   * Maximum number of visible toasts.
+   * @default 3
    */
-  dismissible?: boolean;
+  limit?: number;
 
   /**
-   * Leading icon element.
+   * Default auto-dismiss time in milliseconds.
+   * @default 5000
    */
-  icon?: React.ReactNode;
+  timeout?: number;
+
+  children?: React.ReactNode;
+}
+
+export interface ToastManagerAddOptions {
+  /**
+   * The title of the toast.
+   */
+  title?: React.ReactNode;
 
   /**
-   * Inverts the color scheme.
-   * @default false
+   * The description of the toast.
    */
-  invert?: boolean;
+  description?: React.ReactNode;
 
   /**
-   * Show close button.
-   * @default false
+   * The type of the toast. Controls visual styling.
    */
-  closeButton?: boolean;
+  type?: 'success' | 'error' | 'info' | 'warning' | 'loading';
 
   /**
-   * Remove default styling.
-   * @default false
+   * Auto-dismiss time in milliseconds. 0 prevents auto-dismiss.
+   * @default 5000
    */
-  unstyled?: boolean;
+  timeout?: number;
 
   /**
-   * Primary button configuration.
+   * Announcement priority for screen readers.
+   * @default "low"
    */
-  action?: {
-    label: string;
-    onClick: () => void;
-  };
+  priority?: 'low' | 'high';
 
   /**
-   * Secondary button configuration.
+   * Callback when the toast is closed.
    */
-  cancel?: {
-    label: string;
-    onClick: () => void;
-  };
+  onClose?: () => void;
 
   /**
-   * Styles for the primary button.
-   * @default {}
+   * Callback when the toast is removed after closing animation completes.
    */
-  actionButtonStyle?: React.CSSProperties;
+  onRemove?: () => void;
 
   /**
-   * Styles for the secondary button.
-   * @default {}
+   * Props for the action button rendered in the toast.
    */
-  cancelButtonStyle?: React.CSSProperties;
+  actionProps?: React.ComponentPropsWithoutRef<'button'>;
 
   /**
-   * Called on manual dismiss.
+   * Custom data to attach to the toast.
    */
-  onDismiss?: () => void;
+  data?: Record<string, unknown>;
 
   /**
-   * Called when the toast auto-closes.
-   */
-  onAutoClose?: () => void;
-
-  /**
-   * Custom toast ID.
+   * Optional custom ID for the toast. Auto-generated if not provided.
    */
   id?: string;
 }
