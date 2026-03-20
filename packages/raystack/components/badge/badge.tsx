@@ -1,47 +1,49 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { ReactNode } from "react";
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps, ReactNode } from 'react';
 
-import styles from "./badge.module.css";
+import styles from './badge.module.css';
 
 const badge = cva(styles['badge'], {
   variants: {
     variant: {
-      accent: styles["badge-accent"],
-      warning: styles["badge-warning"],
-      danger: styles["badge-danger"],
-      success: styles["badge-success"],
-      neutral: styles["badge-neutral"],
-      gradient: styles["badge-gradient"]
+      accent: styles['badge-accent'],
+      warning: styles['badge-warning'],
+      danger: styles['badge-danger'],
+      success: styles['badge-success'],
+      neutral: styles['badge-neutral'],
+      gradient: styles['badge-gradient']
     },
     size: {
-      micro: styles["badge-micro"],
-      small: styles["badge-small"],
-      regular: styles["badge-regular"],
+      micro: styles['badge-micro'],
+      small: styles['badge-small'],
+      regular: styles['badge-regular']
     },
     defaultVariants: {
-      variant: "accent",
-      size: "small"
+      variant: 'accent',
+      size: 'small'
     }
-  },
+  }
 });
 
-type BadgeProps = VariantProps<typeof badge> & {
-  icon?: ReactNode;
-  children: ReactNode;
-  className?: string;
-  screenReaderText?: string;
-}
+type BadgeProps = VariantProps<typeof badge> &
+  ComponentProps<'span'> & {
+    icon?: ReactNode;
+    children: ReactNode;
+    className?: string;
+    screenReaderText?: string;
+  };
 
-export const Badge = ({ 
+export const Badge = ({
   variant = 'accent',
   size = 'small',
   icon,
   children,
   className,
-  screenReaderText
+  screenReaderText,
+  ...props
 }: BadgeProps) => {
   return (
-    <span className={badge({ variant, size, className })}>
+    <span className={badge({ variant, size, className })} {...props}>
       {icon && <span className={styles['icon']}>{icon}</span>}
       {screenReaderText && (
         <span className={styles['sr-only']}>{screenReaderText}</span>
@@ -51,4 +53,4 @@ export const Badge = ({
   );
 };
 
-Badge.displayName = "Badge";
+Badge.displayName = 'Badge';

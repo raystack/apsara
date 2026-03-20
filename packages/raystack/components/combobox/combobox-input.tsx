@@ -2,22 +2,18 @@
 
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { ElementRef, forwardRef } from 'react';
+import { type ComponentProps } from 'react';
 import { InputField } from '../input-field';
-import { InputFieldProps } from '../input-field/input-field';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxInputProps
   extends Omit<
-    InputFieldProps,
+    ComponentProps<typeof InputField>,
     'trailingIcon' | 'suffix' | 'chips' | 'maxChipsVisible'
   > {}
 
-export const ComboboxInput = forwardRef<
-  ElementRef<typeof ComboboxPrimitive.Input>,
-  ComboboxInputProps
->(({ ...props }, ref) => {
+export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
   const { multiple, inputContainerRef, value, onValueChange } =
     useComboboxContext();
   return (
@@ -41,5 +37,5 @@ export const ComboboxInput = forwardRef<
       }
     />
   );
-});
+};
 ComboboxInput.displayName = 'Combobox.Input';

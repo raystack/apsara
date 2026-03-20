@@ -2,13 +2,13 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](LICENSE) [![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev/) [![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev) [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 
-Apsara 🧚‍♀️ is an open-source React UI component library built on Radix UI primitives and vanilla CSS. It provides enterprise-grade, accessible components designed for building complex data interfaces.
+Apsara 🧚‍♀️ is an open-source React UI component library built on Base UI primitives. It provides enterprise-grade, accessible components designed for building complex data interfaces.
 
 <p align="center"><img width=80% src="./apps/www/public/banner.png" /></p>
 
 ## Key Features
 
-- **Accessible Components**: Built on Radix UI primitives ensuring ARIA compliance and keyboard navigation
+- **Accessible Components**: Built on Base UI primitives ensuring ARIA compliance and keyboard navigation
 - **Flexible Styling**: Uses vanilla CSS with HTML data-attributes for powerful theming and style customization
 - **Enterprise Ready**: Designed for complex data-driven applications with components like:
   - Data Tables

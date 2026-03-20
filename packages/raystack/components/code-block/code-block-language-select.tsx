@@ -2,7 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import { Language } from 'prism-react-renderer';
-import { ComponentProps, ElementRef, forwardRef } from 'react';
+import { ComponentProps } from 'react';
 import { Select } from '../select';
 import { SingleSelectProps } from '../select/select-root';
 import styles from './code-block.module.css';
@@ -17,15 +17,14 @@ export const CodeBlockLanguageSelect = (props: SingleSelectProps) => {
   return <Select onValueChange={handleValueChange} value={value} {...props} />;
 };
 
-CodeBlockLanguageSelect.displayName = 'CodeBlockLanguageSelect';
+CodeBlockLanguageSelect.displayName = 'CodeBlock.LanguageSelect';
 
-export const CodeBlockLanguageSelectTrigger = forwardRef<
-  ElementRef<typeof Select.Trigger>,
-  ComponentProps<typeof Select.Trigger>
->(({ className, ...props }, ref) => {
+export function CodeBlockLanguageSelectTrigger({
+  className,
+  ...props
+}: ComponentProps<typeof Select.Trigger>) {
   return (
     <Select.Trigger
-      ref={ref}
       className={cx(styles.languageSelectTrigger, className)}
       size='small'
       variant='text'
@@ -34,6 +33,6 @@ export const CodeBlockLanguageSelectTrigger = forwardRef<
       <Select.Value />
     </Select.Trigger>
   );
-});
+}
 
-CodeBlockLanguageSelectTrigger.displayName = 'CodeBlockLanguageSelectTrigger';
+CodeBlockLanguageSelectTrigger.displayName = 'CodeBlock.LanguageSelectTrigger';
