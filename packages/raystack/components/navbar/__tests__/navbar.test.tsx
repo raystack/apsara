@@ -162,7 +162,7 @@ describe('Navbar', () => {
       expect(start).toBeInTheDocument();
     });
 
-    it('does not add role when aria-label is not provided', () => {
+    it('has role group when aria-label is not provided', () => {
       const { container } = render(
         <BasicNavbar>
           <Navbar.Start data-testid='start' />
@@ -170,7 +170,7 @@ describe('Navbar', () => {
       );
 
       const start = container.querySelector('[data-testid="start"]');
-      expect(start).not.toHaveAttribute('role');
+      expect(start).toHaveAttribute('role', 'group');
     });
 
     it('applies start styles', () => {
@@ -246,7 +246,7 @@ describe('Navbar', () => {
       expect(center).toBeInTheDocument();
     });
 
-    it('does not add role when aria-label is not provided', () => {
+    it('has role group when aria-label is not provided', () => {
       const { container } = render(
         <BasicNavbar>
           <Navbar.Center data-testid='center' />
@@ -254,7 +254,7 @@ describe('Navbar', () => {
       );
 
       const center = container.querySelector('[data-testid="center"]');
-      expect(center).not.toHaveAttribute('role');
+      expect(center).toHaveAttribute('role', 'group');
     });
 
     it('applies center styles', () => {
@@ -308,7 +308,7 @@ describe('Navbar', () => {
       expect(end).toBeInTheDocument();
     });
 
-    it('does not add role when aria-label is not provided', () => {
+    it('has role group when aria-label is not provided', () => {
       const { container } = render(
         <BasicNavbar>
           <Navbar.End data-testid='end' />
@@ -316,7 +316,7 @@ describe('Navbar', () => {
       );
 
       const end = container.querySelector('[data-testid="end"]');
-      expect(end).not.toHaveAttribute('role');
+      expect(end).toHaveAttribute('role', 'group');
     });
 
     it('applies end styles', () => {
