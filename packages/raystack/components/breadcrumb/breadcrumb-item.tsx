@@ -47,23 +47,29 @@ export const BreadcrumbItem = ({
 
   if (dropdownItems) {
     return (
-      <Menu>
-        <Menu.Trigger className={styles['breadcrumb-dropdown-trigger']}>
-          {label}
-          <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
-        </Menu.Trigger>
-        <Menu.Content className={styles['breadcrumb-dropdown-content']}>
-          {dropdownItems.map((dropdownItem, dropdownIndex) => (
-            <Menu.Item
-              key={dropdownItem.key ?? dropdownIndex}
-              className={styles['breadcrumb-dropdown-item']}
-              onClick={dropdownItem?.onClick}
-            >
-              {dropdownItem.label}
-            </Menu.Item>
-          ))}
-        </Menu.Content>
-      </Menu>
+      <li className={cx(styles['breadcrumb-item'], className)}>
+        <Menu>
+          <Menu.Trigger
+            ref={ref as React.Ref<HTMLButtonElement>}
+            className={styles['breadcrumb-dropdown-trigger']}
+            {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+          >
+            {label}
+            <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
+          </Menu.Trigger>
+          <Menu.Content className={styles['breadcrumb-dropdown-content']}>
+            {dropdownItems.map((dropdownItem, dropdownIndex) => (
+              <Menu.Item
+                key={dropdownItem.key ?? dropdownIndex}
+                className={styles['breadcrumb-dropdown-item']}
+                onClick={dropdownItem?.onClick}
+              >
+                {dropdownItem.label}
+              </Menu.Item>
+            ))}
+          </Menu.Content>
+        </Menu>
+      </li>
     );
   }
   return (
@@ -77,7 +83,8 @@ export const BreadcrumbItem = ({
           ),
           href,
           ...props,
-          ...renderedElement.props
+          ...renderedElement.props,
+          ref
         },
         label
       )}
