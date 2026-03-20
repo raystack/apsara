@@ -9,11 +9,11 @@ export async function GET() {
   scanned.push('## tokens');
   scanned.push(
     [
-      '- [Color Tokens](/tokens.mdx/colors): CSS variables for foreground, background, border, and overlay colors',
-      '- [Spacing Tokens](/tokens.mdx/spacing): CSS variables for spacing scale',
-      '- [Typography Tokens](/tokens.mdx/typography): CSS variables for fonts, sizes, line heights, and letter spacing',
-      '- [Effects Tokens](/tokens.mdx/effects): CSS variables for shadows and blurs',
-      '- [Radius Tokens](/tokens.mdx/radius): CSS variables for border radius'
+      '- [Color Tokens](/tokens/colors.mdx): CSS variables for foreground, background, border, and overlay colors',
+      '- [Spacing Tokens](/tokens/spacing.mdx): CSS variables for spacing scale',
+      '- [Typography Tokens](/tokens/typography.mdx): CSS variables for fonts, sizes, line heights, and letter spacing',
+      '- [Effects Tokens](/tokens/effects.mdx): CSS variables for shadows and blurs',
+      '- [Radius Tokens](/tokens/radius.mdx): CSS variables for border radius'
     ].join('\n')
   );
   const map = new Map<string, string[]>();
