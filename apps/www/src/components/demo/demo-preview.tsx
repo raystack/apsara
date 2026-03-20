@@ -71,19 +71,3 @@ export default function DemoPreview({
     </LiveProvider>
   );
 }
-{
-  /* // {Array.isArray(codePreview) ? ( */
-}
-//   <Tabs
-//     items={codePreview.map(tab => tab.label)}
-//     className={styles.codeTabGroup}
-//   >
-//     {codePreview.map(tab => (
-//       <Tab className={styles.codeTab} value={tab.label} key={tab.label}>
-//         <Editor code={tab.code} />
-//       </Tab>
-//     ))}
-//   </Tabs>
-// ) : (
-//   <Editor code={previewCode} />
-// )}
