@@ -77,3 +77,13 @@
   padding: var(--rs-space-5) var(--rs-space-4);
   border-top: 0px;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-icon {
+    transition: none;
+  }
+
+  .accordion-content {
+    transition: none;
+  }
+}

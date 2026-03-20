@@ -7,3 +7,9 @@
 .link:hover {
   opacity: 0.8;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}

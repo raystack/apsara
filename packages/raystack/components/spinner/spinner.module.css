@@ -90,6 +90,13 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  /* Disable spinner rotation for reduced-motion users. */
+  .pole {
+    animation: none;
+  }
+}
+
 .spinner-size-1 {
   width: var(--rs-space-4);
   height: var(--rs-space-4);

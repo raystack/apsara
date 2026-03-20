@@ -149,3 +149,9 @@
     transform: translate(2px, 2px);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    animation: none !important;
+  }
+}

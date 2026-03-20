@@ -18,3 +18,9 @@
 .panel[data-ending-style] {
   height: 0;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}

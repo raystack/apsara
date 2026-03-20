@@ -253,6 +253,13 @@
   animation: spin 1s linear infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  /* Disable button loader rotation for reduced-motion users. */
+  .loader {
+    animation: none;
+  }
+}
+
 .loader-text {
   margin-left: var(--rs-space-3);
 }

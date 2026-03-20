@@ -36,3 +36,10 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  /* Disable shimmer animation for reduced-motion users. */
+  .animate::after {
+    animation: none;
+  }
+}
+
