@@ -11,14 +11,17 @@ import React, {
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
-export interface BreadcrumbDropdownItem {
+export type BreadcrumbDropdownItem = {
   key?: string;
-  label: string;
+  label: ReactNode;
+  /**
+   * Convenience API for link-like menu items. If you need more control,
+   * pass `render` directly via the Menu.Item props supported below.
+   */
   href?: string;
   target?: string;
   rel?: string;
-  onClick?: React.MouseEventHandler<HTMLElement>;
-}
+} & Omit<ComponentProps<typeof Menu.Item>, 'children'>;
 
 export interface BreadcrumbItemProps extends ComponentProps<'a'> {
   leadingIcon?: ReactNode;
@@ -68,32 +71,50 @@ export const BreadcrumbItem = ({
           <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
         </Menu.Trigger>
         <Menu.Content className={styles['breadcrumb-dropdown-content']}>
-          {dropdownItems.map((dropdownItem, dropdownIndex) =>
-            dropdownItem.href ? (
+          {dropdownItems.map((dropdownItem, dropdownIndex) => {
+            const {
+              key,
+              label: dropdownLabel,
+              href: dropdownHref,
+              target: dropdownTarget,
+              rel: dropdownRel,
+              render,
+              className: dropdownItemClassName,
+              ...dropdownItemProps
+            } = dropdownItem;
+
+            const effectiveRender =
+              dropdownHref && !render ? (
+                <a
+                  href={dropdownHref}
+                  target={dropdownTarget}
+                  rel={dropdownRel}
+                  className={cx(
+                    styles['breadcrumb-dropdown-item'],
+                    dropdownItemClassName
+                  )}
+                />
+              ) : (
+                render
+              );
+
+            return (
               <Menu.Item
-                key={dropdownItem.key ?? dropdownIndex}
-                render={
-                  <a
-                    href={dropdownItem.href}
-                    target={dropdownItem.target}
-                    rel={dropdownItem.rel}
-                    className={styles['breadcrumb-dropdown-item']}
-                  />
-                }
-                onClick={dropdownItem?.onClick}
+                key={key ?? dropdownIndex}
+                {...dropdownItemProps}
+                {...(effectiveRender
+                  ? { render: effectiveRender }
+                  : {
+                      className: cx(
+                        styles['breadcrumb-dropdown-item'],
+                        dropdownItemClassName
+                      )
+                    })}
               >
-                {dropdownItem.label}
+                {dropdownLabel}
               </Menu.Item>
-            ) : (
-              <Menu.Item
-                key={dropdownItem.key ?? dropdownIndex}
-                className={styles['breadcrumb-dropdown-item']}
-                onClick={dropdownItem?.onClick}
-              >
-                {dropdownItem.label}
-              </Menu.Item>
-            )
-          )}
+            );
+          })}
         </Menu.Content>
       </Menu>
     );
