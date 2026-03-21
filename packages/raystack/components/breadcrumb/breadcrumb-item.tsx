@@ -11,11 +11,14 @@ import React, {
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
-export interface BreadcrumbDropdownItem {
+/**
+ * Each entry maps to `<Menu.Item>`. Use `children`, `render`, `onClick`,
+ * `disabled`, etc. — whatever `Menu.Item` supports.
+ */
+export type BreadcrumbDropdownItem = ComponentProps<typeof Menu.Item> & {
+  /** Optional stable key for React list reconciliation (not passed to `Menu.Item`). */
   key?: string;
-  label: string;
-  onClick?: React.MouseEventHandler<HTMLElement>;
-}
+};
 
 export interface BreadcrumbItemProps extends ComponentProps<'a'> {
   leadingIcon?: ReactNode;
@@ -65,15 +68,23 @@ export const BreadcrumbItem = ({
           <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
         </Menu.Trigger>
         <Menu.Content className={styles['breadcrumb-dropdown-content']}>
-          {dropdownItems.map((dropdownItem, dropdownIndex) => (
-            <Menu.Item
-              key={dropdownItem.key ?? dropdownIndex}
-              className={styles['breadcrumb-dropdown-item']}
-              onClick={dropdownItem?.onClick}
-            >
-              {dropdownItem.label}
-            </Menu.Item>
-          ))}
+          {dropdownItems.map((dropdownItem, dropdownIndex) => {
+            const {
+              key,
+              className: itemClassName,
+              ...menuItemProps
+            } = dropdownItem;
+            return (
+              <Menu.Item
+                key={key ?? dropdownIndex}
+                className={cx(
+                  styles['breadcrumb-dropdown-item'],
+                  itemClassName
+                )}
+                {...menuItemProps}
+              />
+            );
+          })}
         </Menu.Content>
       </Menu>
     );
@@ -88,8 +99,11 @@ export const BreadcrumbItem = ({
             disabled && styles['breadcrumb-link-disabled'],
             current && styles['breadcrumb-link-active']
           )}
-          {...(disabled && { 'aria-disabled': 'true' })}
-          {...(current && { 'aria-current': 'page' })}
+          {...(disabled && {
+            'aria-disabled': 'true',
+            'data-disabled': 'true'
+          })}
+          {...(current && { 'aria-current': 'page', 'data-current': 'true' })}
         >
           {label}
         </span>
@@ -101,11 +115,11 @@ export const BreadcrumbItem = ({
       {cloneElement(
         renderedElement,
         {
-          ref,
           className: styles['breadcrumb-link'],
           href,
           ...props,
-          ...renderedElement.props
+          ...renderedElement.props,
+          ref
         },
         label
       )}
