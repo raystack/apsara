@@ -24,12 +24,19 @@ BreadcrumbEllipsis.displayName = 'Breadcrumb.Ellipsis';
 export interface BreadcrumbSeparatorProps extends ComponentProps<'span'> {}
 
 export const BreadcrumbSeparator = ({
+  ref,
   children = <ChevronRightIcon width={12} height={12} />,
   className,
   ...props
 }: BreadcrumbSeparatorProps) => {
   return (
-    <span className={cx(styles['breadcrumb-separator'], className)} {...props}>
+    <span
+      ref={ref}
+      className={cx(styles['breadcrumb-separator'], className)}
+      role='presentation'
+      aria-hidden='true'
+      {...props}
+    >
       {children}
     </span>
   );

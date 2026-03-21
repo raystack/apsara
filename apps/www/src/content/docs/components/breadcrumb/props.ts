@@ -1,4 +1,4 @@
-import { ReactElement, ReactEventHandler, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 export interface BreadcrumbItem {
   /** Text to display for the item */
@@ -7,8 +7,11 @@ export interface BreadcrumbItem {
   /** URL for the item link */
   href?: string;
 
-  /** Optional icon element to display */
+  /** Optional icon element to display before the label */
   leadingIcon?: ReactNode;
+
+  /** Optional icon element to display after the label */
+  trailingIcon?: ReactNode;
 
   /**
    * Whether the item is the current page
@@ -17,18 +20,22 @@ export interface BreadcrumbItem {
   current?: boolean;
 
   /**
-   * Optional array of dropdown items
+   * When true, the item is non-clickable and visually muted (e.g. loading or no access).
+   * @defaultValue false
+   */
+  disabled?: boolean;
+
+  /**
+   * Optional array of dropdown entries; each object is passed to `<Menu.Item>`
+   * (e.g. `children`, `onClick`, `render` for a link, etc.), plus optional `key`
+   * for React list reconciliation (not forwarded to `Menu.Item`).
    *
    * When `dropdownItems` is provided, the `as` and `href` props are ignored.
    */
-  dropdownItems?: {
-    /** Optional stable key for list reconciliation. Falls back to index if omitted. */
+  dropdownItems?: (Record<string, unknown> & {
     key?: string;
-    /** Text to display for the dropdown item */
-    label: string;
-    /** Callback function when a dropdown item is clicked */
-    onClick?: ReactEventHandler<HTMLDivElement>;
-  }[];
+    children?: ReactNode;
+  })[];
 
   /**
    * Custom element used to render the Item.
