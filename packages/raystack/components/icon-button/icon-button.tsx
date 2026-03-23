@@ -1,7 +1,6 @@
 import { cva, VariantProps } from 'class-variance-authority';
-import { ElementRef, forwardRef } from 'react';
+import { ComponentProps } from 'react';
 import { Flex } from '../flex';
-
 import styles from './icon-button.module.css';
 
 const iconButton = cva(styles.iconButton, {
@@ -19,27 +18,23 @@ const iconButton = cva(styles.iconButton, {
 });
 
 export interface IconButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends ComponentProps<'button'>,
     VariantProps<typeof iconButton> {
   size?: 1 | 2 | 3 | 4;
   'aria-label'?: string;
 }
 
-export const IconButton = forwardRef<ElementRef<'button'>, IconButtonProps>(
-  (
-    {
-      className,
-      size,
-      disabled,
-      children,
-      'aria-label': ariaLabel,
-      style,
-      ...props
-    },
-    ref
-  ) => (
+export function IconButton({
+  className,
+  size,
+  disabled,
+  children,
+  'aria-label': ariaLabel,
+  style,
+  ...props
+}: IconButtonProps) {
+  return (
     <button
-      ref={ref}
       className={iconButton({ size, className })}
       disabled={disabled}
       type='button'
@@ -52,7 +47,7 @@ export const IconButton = forwardRef<ElementRef<'button'>, IconButtonProps>(
         {children}
       </Flex>
     </button>
-  )
-);
+  );
+}
 
 IconButton.displayName = 'IconButton';

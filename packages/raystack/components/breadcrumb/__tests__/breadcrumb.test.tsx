@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import React, { forwardRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Breadcrumb } from '../breadcrumb';
 import styles from '../breadcrumb.module.css';
@@ -184,34 +185,37 @@ describe('Breadcrumb', () => {
         </Breadcrumb>
       );
 
-      const link = container.querySelector('a');
-      expect(link).not.toBeInTheDocument();
-
-      const span = container.querySelector(
+      // Current page renders as <span> (non-link), not <a>
+      const currentEl = container.querySelector(
         `span.${styles['breadcrumb-link-active']}`
       );
-      expect(span).toBeInTheDocument();
-      expect(span).toHaveClass(styles['breadcrumb-link']);
-      expect(span).toHaveClass(styles['breadcrumb-link-active']);
-      expect(span).toHaveAttribute('aria-current', 'page');
-      expect(span).toHaveAttribute('data-current', 'true');
-      expect(span).toHaveTextContent('Current Page');
+      expect(currentEl).toBeInTheDocument();
+      expect(currentEl).toHaveAttribute('aria-current', 'page');
+      expect(currentEl).toHaveClass(styles['breadcrumb-link']);
+      expect(currentEl).toHaveClass(styles['breadcrumb-link-active']);
+      expect(currentEl).toHaveAttribute('data-current', 'true');
+      expect(currentEl).toHaveTextContent('Current Page');
+      expect(container.querySelector('a')).not.toBeInTheDocument();
     });
 
-    it('renders with custom element using as prop', () => {
-      const CustomLink = ({ children, ...props }: any) => (
-        <button {...props}>{children}</button>
+    it('renders with custom element using render prop', () => {
+      const CustomLink: React.ComponentType<
+        React.AnchorHTMLAttributes<HTMLAnchorElement>
+      > = ({ children, ...props }) => (
+        <a data-custom-link {...props}>
+          {children}
+        </a>
       );
 
       const { container } = render(
         <Breadcrumb>
-          <Breadcrumb.Item as={<CustomLink />}>Custom</Breadcrumb.Item>
+          <Breadcrumb.Item render={<CustomLink />}>Custom</Breadcrumb.Item>
         </Breadcrumb>
       );
 
-      const button = container.querySelector('button');
-      expect(button).toBeInTheDocument();
-      expect(button).toHaveClass(styles['breadcrumb-link']);
+      const link = container.querySelector('[data-custom-link]');
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveClass(styles['breadcrumb-link']);
       expect(screen.getByText('Custom')).toBeInTheDocument();
     });
 
@@ -220,6 +224,26 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item ref={ref}>Item</Breadcrumb.Item>
+        </Breadcrumb>
+      );
+      expect(ref).toHaveBeenCalled();
+    });
+
+    it('forwards ref when using render prop (component)', () => {
+      const CustomLink = forwardRef<
+        HTMLAnchorElement,
+        React.AnchorHTMLAttributes<HTMLAnchorElement>
+      >(({ children, ...props }, ref) => (
+        <a ref={ref} data-custom-link {...props}>
+          {children}
+        </a>
+      ));
+      const ref = vi.fn();
+      render(
+        <Breadcrumb>
+          <Breadcrumb.Item ref={ref} render={<CustomLink />}>
+            Custom
+          </Breadcrumb.Item>
         </Breadcrumb>
       );
       expect(ref).toHaveBeenCalled();

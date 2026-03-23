@@ -122,9 +122,9 @@ export const asDemo = {
   type: 'code',
   code: `
   <Breadcrumb>
-    <Breadcrumb.Item href="/home" as={<NextLink href="/" />}>Home</Breadcrumb.Item>
+    <Breadcrumb.Item href="/" render={<NextLink />}>Home</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/playground" as={<NextLink />}>Playground</Breadcrumb.Item>
+    <Breadcrumb.Item href="/playground" render={<NextLink />}>Playground</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="/docs" current>Docs</Breadcrumb.Item>
   </Breadcrumb>`

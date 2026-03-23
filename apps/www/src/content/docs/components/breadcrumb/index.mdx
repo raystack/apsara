@@ -108,17 +108,19 @@ Breadcrumb items can include icons via `leadingIcon` (before the label) or `trai
 
 Breadcrumb items can include dropdown menus for additional navigation options. Specify them with the `dropdownItems` prop: each entry is the same props as `<Menu.Item>` (e.g. `children` for the label, `onClick`, `disabled`, `render` for a link such as `<a href="…" />`, etc.). You can also pass `key` for stable list keys.
 
-**Note:** When `dropdownItems` is provided, the `as` and `href` props on the breadcrumb item are ignored.
+**Note:** When `dropdownItems` is provided, the `render` and `href` props are ignored.
 
 <Demo data={dropdownDemo} />
-
 <Demo data={dropdownLinksDemo} />
 
-### As
+### Render
 
-Use the `as` prop to render the breadcrumb item as a custom component. By default, breadcrumb items are rendered as `a` tags.
+Use the `render` prop to render the breadcrumb item as a custom component. Pass a JSX element (e.g. `render={<NextLink />}`) and we will replace the default `<a>` while merging props. By default, items render as `a` tags.
 
-When a custom component is provided, the props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
+```tsx
+// Correct: set href on the item (it will be forwarded into the rendered element)
+<Breadcrumb.Item href="/" render={<NextLink />}>Home</Breadcrumb.Item>
+```
 
 <Demo data={asDemo} />
 

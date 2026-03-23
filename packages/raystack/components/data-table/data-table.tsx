@@ -215,12 +215,10 @@ function DataTableRoot<TData, TValue>({
     stickyGroupHeader
   ]);
 
-  return (
-    <TableContext.Provider value={contextValue}>
-      {children}
-    </TableContext.Provider>
-  );
+  return <TableContext value={contextValue}>{children}</TableContext>;
 }
+
+DataTableRoot.displayName = 'DataTable';
 
 export const DataTable = Object.assign(DataTableRoot, {
   Content: Content,

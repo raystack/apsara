@@ -30,7 +30,7 @@ export interface BreadcrumbItem {
    * (e.g. `children`, `onClick`, `render` for a link, etc.), plus optional `key`
    * for React list reconciliation (not forwarded to `Menu.Item`).
    *
-   * When `dropdownItems` is provided, the `as` and `href` props are ignored.
+   * When `dropdownItems` is provided, the `render` and `href` props are ignored.
    */
   dropdownItems?: (Record<string, unknown> & {
     key?: string;
@@ -38,13 +38,12 @@ export interface BreadcrumbItem {
   })[];
 
   /**
-   * Custom element used to render the Item.
+   * Render prop for polymorphism (Base UI `useRender`).
+   * Pass a JSX element to replace the default rendered `<a>`.
    *
-   * All props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
-   *
-   * @default "<a />"
+   * Example: `render={<NextLink />}`
    */
-  as?: ReactElement;
+  render?: ReactElement;
 
   /** Custom CSS class name applied to the list item wrapper */
   className?: string;

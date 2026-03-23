@@ -10,5 +10,7 @@ export async function GET() {
   const header =
     '<SYSTEM>This is the full developer documentation for Apsara Design System.</SYSTEM>';
 
-  return new Response(header + '\n\n' + scanned.join('\n\n***\n\n'));
+  return new Response(header + '\n\n' + scanned.join('\n\n***\n\n'), {
+    headers: { 'Content-Type': 'text/markdown' }
+  });
 }

@@ -22,6 +22,10 @@ const config = {
       {
         source: '/docs/:path*.md',
         destination: '/llms.mdx/:path*'
+      },
+      {
+        source: '/tokens/:path*.mdx',
+        destination: '/tokens.mdx/:path*'
       }
     ];
   },
