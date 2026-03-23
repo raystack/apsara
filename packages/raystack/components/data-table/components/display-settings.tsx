@@ -9,8 +9,8 @@ import { Popover } from '../../popover';
 import styles from '../data-table.module.css';
 import {
   DataTableColumn,
-  SortOrdersValues,
-  defaultGroupOption
+  defaultGroupOption,
+  SortOrdersValues
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 import { DisplayProperties } from './display-properties';
@@ -124,3 +124,5 @@ export function DisplaySettings<TData, TValue>({
     </Popover>
   );
 }
+
+DisplaySettings.displayName = 'DataTable.DisplayControls';

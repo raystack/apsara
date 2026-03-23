@@ -1,4 +1,5 @@
 import { cx } from 'class-variance-authority';
+import { ComponentProps, ReactNode } from 'react';
 import { Flex } from '../flex';
 import { Text } from '../text';
 import styles from './empty-state.module.css';
@@ -10,28 +11,34 @@ type classNameKeys =
   | 'heading'
   | 'subHeading';
 
-interface EmptyStateProps {
-  icon: React.ReactNode;
-  heading?: React.ReactNode;
-  subHeading?: React.ReactNode;
-  primaryAction?: React.ReactNode;
-  secondaryAction?: React.ReactNode;
+interface EmptyStateProps extends ComponentProps<typeof Flex> {
+  icon: ReactNode;
+  heading?: ReactNode;
+  subHeading?: ReactNode;
+  primaryAction?: ReactNode;
+  secondaryAction?: ReactNode;
   classNames?: Partial<Record<classNameKeys, string>>;
   variant?: 'empty1' | 'empty2';
 }
 
-export const EmptyState = ({
+export function EmptyState({
   icon,
   heading,
   subHeading,
   primaryAction,
   secondaryAction,
   classNames,
-  variant = 'empty1'
-}: EmptyStateProps) => {
+  variant = 'empty1',
+  ...props
+}: EmptyStateProps) {
   if (variant === 'empty2') {
     return (
-      <Flex align='center' justify='center' className={styles.emptyStatePage}>
+      <Flex
+        align='center'
+        justify='center'
+        className={styles.emptyStatePage}
+        {...props}
+      >
         <Flex
           direction='column'
           align='start'
@@ -81,6 +88,7 @@ export const EmptyState = ({
       align='center'
       gap='medium'
       className={cx(styles.emptyState, classNames?.container)}
+      {...props}
     >
       <div className={cx(styles.iconContainer, classNames?.iconContainer)}>
         <div className={cx(styles.icon, classNames?.icon)}>{icon}</div>
@@ -113,4 +121,6 @@ export const EmptyState = ({
       {secondaryAction}
     </Flex>
   );
-};
+}
+
+EmptyState.displayName = 'EmptyState';

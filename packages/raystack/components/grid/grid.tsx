@@ -1,5 +1,5 @@
 import { mergeProps, useRender } from '@base-ui/react';
-import { forwardRef, useMemo } from 'react';
+import { useMemo } from 'react';
 import { AlignExtendedType, AlignType } from './types';
 
 const GAPS = {
@@ -56,71 +56,67 @@ type GridProps = useRender.ComponentProps<'div'> & {
   inline?: boolean;
 };
 
-export const Grid = forwardRef<HTMLDivElement, GridProps>(
-  (
-    {
-      templateAreas,
-      autoFlow,
-      autoColumns,
-      autoRows,
-      columns,
-      rows,
-      gap,
-      columnGap,
-      rowGap,
-      justifyItems,
-      alignItems,
-      justifyContent,
-      alignContent,
-      inline = false,
-      style = {},
-      render,
-      ...props
-    },
-    ref
-  ) => {
-    const gridTemplateColumns =
-      typeof columns === 'number' ? `repeat(${columns}, 1fr)` : columns;
-    const gridTemplateRows =
-      typeof rows === 'number' ? `repeat(${rows}, 1fr)` : rows;
+export function Grid({
+  templateAreas,
+  autoFlow,
+  autoColumns,
+  autoRows,
+  columns,
+  rows,
+  gap,
+  columnGap,
+  rowGap,
+  justifyItems,
+  alignItems,
+  justifyContent,
+  alignContent,
+  inline = false,
+  style = {},
+  render,
+  ref,
+  ...props
+}: GridProps) {
+  const gridTemplateColumns =
+    typeof columns === 'number' ? `repeat(${columns}, 1fr)` : columns;
+  const gridTemplateRows =
+    typeof rows === 'number' ? `repeat(${rows}, 1fr)` : rows;
 
-    const gridTemplateAreas = useMemo(() => {
-      if (Array.isArray(templateAreas)) {
-        return templateAreas
-          .map(area => `"${area}"`)
-          .join(' ')
-          .trim();
-      }
-      return templateAreas;
-    }, [templateAreas]);
+  const gridTemplateAreas = useMemo(() => {
+    if (Array.isArray(templateAreas)) {
+      return templateAreas
+        .map(area => `"${area}"`)
+        .join(' ')
+        .trim();
+    }
+    return templateAreas;
+  }, [templateAreas]);
 
-    const gridStyle = {
-      display: inline ? 'inline-grid' : 'grid',
-      gridTemplateAreas,
-      gridAutoFlow: autoFlow,
-      gridAutoColumns: autoColumns,
-      gridAutoRows: autoRows,
-      gridTemplateColumns,
-      gridTemplateRows,
-      gap: gap && GAPS[gap],
-      columnGap: columnGap && GAPS[columnGap],
-      rowGap: rowGap && GAPS[rowGap],
-      justifyItems,
-      alignItems,
-      justifyContent,
-      alignContent,
-      ...style
-    };
+  const gridStyle = {
+    display: inline ? 'inline-grid' : 'grid',
+    gridTemplateAreas,
+    gridAutoFlow: autoFlow,
+    gridAutoColumns: autoColumns,
+    gridAutoRows: autoRows,
+    gridTemplateColumns,
+    gridTemplateRows,
+    gap: gap && GAPS[gap],
+    columnGap: columnGap && GAPS[columnGap],
+    rowGap: rowGap && GAPS[rowGap],
+    justifyItems,
+    alignItems,
+    justifyContent,
+    alignContent,
+    ...style
+  };
 
-    const element = useRender({
-      defaultTagName: 'div',
-      ref,
-      render,
-      props: mergeProps<'div'>({ style: gridStyle }, props)
-    });
+  const element = useRender({
+    defaultTagName: 'div',
+    ref,
+    render,
+    props: mergeProps<'div'>({ style: gridStyle }, props)
+  });
 
-    return element;
-  }
-);
+  return element;
+}
 
 Grid.displayName = 'Grid';

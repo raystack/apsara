@@ -377,3 +377,5 @@ export function VirtualizedContent({
     </div>
   );
 }
+
+VirtualizedContent.displayName = 'DataTable.VirtualizedContent';

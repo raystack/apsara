@@ -166,3 +166,5 @@ export function Filters<TData, TValue>({
     </Flex>
   );
 }
+
+Filters.displayName = 'DataTable.Filters';
