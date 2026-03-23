@@ -23,11 +23,18 @@ export interface BreadcrumbProps
 export const BreadcrumbRoot = ({
   className,
   children,
+  ref,
   size = 'medium',
+  'aria-label': ariaLabel,
   ...props
 }: BreadcrumbProps) => {
   return (
-    <nav className={breadcrumbVariants({ size, className })} {...props}>
+    <nav
+      className={breadcrumbVariants({ size, className })}
+      ref={ref}
+      aria-label={ariaLabel ?? 'Breadcrumb'}
+      {...props}
+    >
       <ol className={styles['breadcrumb-list']}>{children}</ol>
     </nav>
   );

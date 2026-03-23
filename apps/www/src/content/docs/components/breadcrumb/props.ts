@@ -19,7 +19,7 @@ export interface BreadcrumbItem {
   /**
    * Optional array of dropdown items
    *
-   * When `dropdownItems` is provided, the `as` and `href` props are ignored.
+   * When `dropdownItems` is provided, the `render` and `href` props are ignored.
    */
   dropdownItems?: {
     /** Optional stable key for list reconciliation. Falls back to index if omitted. */
@@ -31,13 +31,12 @@ export interface BreadcrumbItem {
   }[];
 
   /**
-   * Custom element used to render the Item.
+   * Render prop for polymorphism (Base UI `useRender`).
+   * Pass a JSX element to replace the default rendered `<a>`.
    *
-   * All props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
-   *
-   * @default "<a />"
+   * Example: `render={<NextLink />}`
    */
-  as?: ReactElement;
+  render?: ReactElement;
 }
 
 export interface BreadcrumbProps {

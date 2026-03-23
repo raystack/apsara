@@ -1,13 +1,9 @@
 'use client';
 
+import { mergeProps, useRender } from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import React, {
-  ComponentProps,
-  cloneElement,
-  ReactElement,
-  ReactNode
-} from 'react';
+import React, { ReactNode } from 'react';
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
@@ -17,16 +13,15 @@ export interface BreadcrumbDropdownItem {
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
-export interface BreadcrumbItemProps extends ComponentProps<'a'> {
+export interface BreadcrumbItemProps extends useRender.ComponentProps<'a'> {
   leadingIcon?: ReactNode;
   current?: boolean;
   dropdownItems?: BreadcrumbDropdownItem[];
-  as?: ReactElement;
 }
 
 export const BreadcrumbItem = ({
   ref,
-  as,
+  render,
   children,
   className,
   leadingIcon,
@@ -35,6 +30,15 @@ export const BreadcrumbItem = ({
   dropdownItems,
   ...props
 }: BreadcrumbItemProps) => {
+  const label = leadingIcon ? (
+    <>
+      <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
+      {children != null && <span>{children}</span>}
+    </>
+  ) : (
+    children
+  );
+
   const {
     id,
     title,
@@ -43,15 +47,19 @@ export const BreadcrumbItem = ({
     'aria-describedby': ariaDescribedby
   } = props;
 
-  const renderedElement = as ?? <a ref={ref} />;
-  const label = (
-    <>
-      {leadingIcon && (
-        <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
-      )}
-      {children && <span>{children}</span>}
-    </>
-  );
+  const linkElement = useRender({
+    defaultTagName: 'a',
+    ref,
+    render,
+    props: mergeProps<'a'>(
+      {
+        className: cx(styles['breadcrumb-link']),
+        href,
+        children: label
+      },
+      props
+    )
+  });
 
   if (dropdownItems) {
     return (
@@ -84,23 +92,25 @@ export const BreadcrumbItem = ({
       </li>
     );
   }
-  return (
-    <li className={cx(styles['breadcrumb-item'], className)}>
-      {cloneElement(
-        renderedElement,
-        {
-          className: cx(
+  if (current) {
+    return (
+      <li className={cx(styles['breadcrumb-item'], className)}>
+        <span
+          ref={ref as React.RefObject<HTMLSpanElement>}
+          className={cx(
             styles['breadcrumb-link'],
-            current && styles['breadcrumb-link-active']
-          ),
-          href,
-          ...props,
-          ...renderedElement.props,
-          ref
-        },
-        label
-      )}
-    </li>
+            styles['breadcrumb-link-active']
+          )}
+          aria-current='page'
+          {...props}
+        >
+          {label}
+        </span>
+      </li>
+    );
+  }
+  return (
+    <li className={cx(styles['breadcrumb-item'], className)}>{linkElement}</li>
   );
 };
 
