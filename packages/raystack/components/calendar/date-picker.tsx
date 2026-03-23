@@ -175,7 +175,7 @@ export function DatePicker({
     <InputField
       size='small'
       placeholder='Select date'
-      error={error}
+      aria-invalid={!!error}
       className={styles.datePickerInput}
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
       {...inputFieldProps}

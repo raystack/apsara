@@ -1,6 +1,5 @@
 'use client';
 
-import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import {
   ComponentPropsWithoutRef,
@@ -9,7 +8,6 @@ import {
   RefObject
 } from 'react';
 import { Chip } from '../chip';
-import { Tooltip } from '../tooltip';
 import styles from './input-field.module.css';
 
 // Todo: Add a dropdown support
@@ -32,21 +30,16 @@ const inputWrapper = cva(styles.inputWrapper, {
 });
 
 export interface InputFieldProps
-  extends Omit<ComponentPropsWithoutRef<'input'>, 'error' | 'size'>,
+  extends Omit<ComponentPropsWithoutRef<'input'>, 'size'>,
     VariantProps<typeof inputWrapper> {
-  label?: string;
-  helperText?: string;
-  error?: string;
   disabled?: boolean;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
-  optional?: boolean;
   prefix?: string;
   suffix?: string;
   width?: string | number;
   chips?: Array<{ label: string; onRemove?: () => void }>;
   maxChipsVisible?: number;
-  infoTooltip?: string;
   variant?: 'default' | 'borderless';
   containerRef?: RefObject<HTMLDivElement | null>;
 }
@@ -56,20 +49,15 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     {
       className,
       disabled,
-      label,
-      helperText,
       placeholder,
-      error,
       leadingIcon,
       trailingIcon,
-      optional,
       prefix,
       suffix,
       width,
       chips,
       maxChipsVisible = 2,
       size,
-      infoTooltip,
       variant = 'default',
       containerRef,
       ...props
@@ -77,94 +65,57 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     ref
   ) => {
     return (
-      <div className={styles.container} style={{ width: width || '100%' }}>
-        {label && (
-          <div className={styles.labelContainer}>
-            <label
-              className={cx(styles.label, disabled && styles['label-disabled'])}
-            >
-              {label}
-              {optional && <span className={styles.optional}>(optional)</span>}
-            </label>
-            {infoTooltip && (
-              <Tooltip>
-                <Tooltip.Trigger
-                  render={
-                    <span className={styles.helpIcon}>
-                      <InfoCircledIcon />
-                    </span>
-                  }
-                />
-                <Tooltip.Content side='right'>{infoTooltip}</Tooltip.Content>
-              </Tooltip>
-            )}
-          </div>
+      <div
+        className={cx(
+          inputWrapper({ size, variant }),
+          disabled && styles['input-disabled-wrapper'],
+          chips?.length && styles['has-chips']
         )}
-        <div
-          className={cx(
-            inputWrapper({ size, variant, className }),
-            error && styles['input-error-wrapper'],
-            disabled && styles['input-disabled-wrapper'],
-            chips?.length && styles['has-chips']
-          )}
-          ref={containerRef}
-        >
-          {leadingIcon && (
-            <div className={styles['leading-icon']}>{leadingIcon}</div>
-          )}
-          {prefix && <div className={styles.prefix}>{prefix}</div>}
+        style={{ width: width || '100%' }}
+        ref={containerRef}
+      >
+        {leadingIcon && (
+          <div className={styles['leading-icon']}>{leadingIcon}</div>
+        )}
+        {prefix && <div className={styles.prefix}>{prefix}</div>}
 
-          <div className={styles['chip-input-container']}>
-            {chips?.slice(0, maxChipsVisible).map((chip, index) => (
-              <Chip
-                key={index}
-                variant='outline'
-                isDismissible={!!chip.onRemove}
-                onDismiss={chip.onRemove}
-                className={styles.chip}
-              >
-                {chip.label}
-              </Chip>
-            ))}
-            {chips && chips.length > maxChipsVisible && (
-              <span className={styles['chip-overflow']}>
-                +{chips.length - maxChipsVisible}
-              </span>
-            )}
-            <input
-              ref={ref}
-              className={cx(
-                styles['input-field'],
-                leadingIcon && styles['has-leading-icon'],
-                trailingIcon && styles['has-trailing-icon'],
-                prefix && styles['has-prefix'],
-                suffix && styles['has-suffix'],
-                error && styles['input-error'],
-                disabled && styles['input-disabled'],
-                className
-              )}
-              aria-invalid={!!error}
-              placeholder={placeholder}
-              disabled={disabled}
-              {...props}
-            />
-          </div>
-
-          {suffix && <div className={styles.suffix}>{suffix}</div>}
-          {trailingIcon && (
-            <div className={styles['trailing-icon']}>{trailingIcon}</div>
+        <div className={styles['chip-input-container']}>
+          {chips?.slice(0, maxChipsVisible).map((chip, index) => (
+            <Chip
+              key={index}
+              variant='outline'
+              isDismissible={!!chip.onRemove}
+              onDismiss={chip.onRemove}
+              className={styles.chip}
+            >
+              {chip.label}
+            </Chip>
+          ))}
+          {chips && chips.length > maxChipsVisible && (
+            <span className={styles['chip-overflow']}>
+              +{chips.length - maxChipsVisible}
+            </span>
           )}
-        </div>
-        {(error || helperText) && (
-          <span
+          <input
+            ref={ref}
             className={cx(
-              styles['helper-text'],
-              error && styles['helper-text-error'],
-              disabled && styles['helper-text-disabled']
+              styles['input-field'],
+              leadingIcon && styles['has-leading-icon'],
+              trailingIcon && styles['has-trailing-icon'],
+              prefix && styles['has-prefix'],
+              suffix && styles['has-suffix'],
+              disabled && styles['input-disabled'],
+              className
             )}
-          >
-            {error || helperText}
-          </span>
+            placeholder={placeholder}
+            disabled={disabled}
+            {...props}
+          />
+        </div>
+
+        {suffix && <div className={styles.suffix}>{suffix}</div>}
+        {trailingIcon && (
+          <div className={styles['trailing-icon']}>{trailingIcon}</div>
         )}
       </div>
     );

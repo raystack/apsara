@@ -1,0 +1,67 @@
+---
+title: Form
+description: A native form element with consolidated error handling and validation.
+source: packages/raystack/components/form
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  withFieldsDemo,
+  serverErrorsDemo,
+  validationModesDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Form, Field, InputField, Button } from "@raystack/apsara";
+
+<Form onSubmit={handleSubmit}>
+  <Field label="Email">
+    <InputField placeholder="Enter email" />
+  </Field>
+  <Button type="submit">Submit</Button>
+</Form>
+```
+
+## API Reference
+
+<auto-type-table path="./props.ts" name="FormProps" />
+
+## Examples
+
+### Basic Form
+
+A simple form with submit handling.
+
+<Demo data={basicDemo} />
+
+### With Fields
+
+Form with multiple fields using the Field component.
+
+<Demo data={withFieldsDemo} />
+
+### Server-Side Errors
+
+Pass server validation errors to the `errors` prop. Errors clear automatically when the user modifies the corresponding field.
+
+<Demo data={serverErrorsDemo} />
+
+### Validation Modes
+
+Control when validation occurs: `onSubmit` (default), `onBlur`, or `onChange`.
+
+<Demo data={validationModesDemo} />
+
+## Accessibility
+
+- Renders a native `<form>` element
+- Works with native constraint validation attributes (`required`, `pattern`, `minLength`, etc.)
+- Compatible with React Hook Form, TanStack Form, and other form libraries

@@ -1,26 +1,5 @@
 /* Note: If making changes here, possibly also need to make changes in text-area.module.css for design consistency. */
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--rs-space-2);
-  width: 100%;
-  position: relative;
-}
-
-.label {
-  color: var(--rs-color-foreground-base-secondary);
-  font-style: normal;
-  font-weight: var(--rs-font-weight-medium);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
-}
-
-.label-disabled {
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
 .inputWrapper {
   display: flex;
   align-items: center;
@@ -46,15 +25,12 @@
   outline: none;
 }
 
-.input-error-wrapper {
+.inputWrapper[data-invalid] {
   border-color: var(--rs-color-border-danger-primary);
 }
 
-.input-error-wrapper:hover {
-  border-color: var(--rs-color-border-danger-emphasis-hover);
-}
-
-.input-error-wrapper:focus-within {
+.inputWrapper[data-invalid]:hover,
+.inputWrapper[data-invalid]:focus-within {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
@@ -124,37 +100,12 @@
   cursor: not-allowed;
 }
 
-.helper-text {
-  color: var(--rs-color-foreground-base-secondary);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
-}
-
-.helper-text-error {
-  color: var(--rs-color-foreground-danger-primary);
-}
-
-.helper-text-disabled {
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
 .has-leading-icon {
   padding-left: var(--rs-space-2);
 }
 
 .has-trailing-icon {
   padding-right: var(--rs-space-2);
-}
-
-.optional {
-  color: var(--rs-color-foreground-base-tertiary);
-  font-weight: var(--rs-font-weight-regular);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
-  margin-left: var(--rs-space-1);
 }
 
 .has-chips {
@@ -276,20 +227,6 @@
   padding-right: var(--rs-space-2);
 }
 
-.labelContainer {
-  display: flex;
-  align-items: center;
-}
-
-.helpIcon {
-  color: var(--rs-color-foreground-base-secondary);
-  display: flex;
-  align-items: center;
-  margin-left: var(--rs-space-2);
-  width: 12px;
-  height: 12px;
-}
-
 .variant-borderless {
   border-color: transparent;
 }
@@ -301,13 +238,4 @@
 .variant-borderless:focus-within {
   border-color: transparent;
   outline: none;
-}
-
-.input-error-wrapper.variant-borderless {
-  border-color: transparent;
-}
-
-.input-error-wrapper.variant-borderless:hover,
-.input-error-wrapper.variant-borderless:focus-within {
-  border-color: transparent;
 }

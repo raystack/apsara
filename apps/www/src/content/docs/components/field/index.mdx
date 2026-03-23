@@ -1,0 +1,141 @@
+---
+title: Field
+description: Provides accessible labels, descriptions, and error messages for form controls.
+source: packages/raystack/components/field
+tag: new
+---
+
+import {
+  playground,
+  simpleDemo,
+  errorDemo,
+  helperTextDemo,
+  requiredDemo,
+  optionalDemo,
+  subComponentDemo,
+  withInputFieldDemo,
+  withTextAreaDemo,
+  withSelectDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Field supports two APIs: a **simple props API** for common use cases and a **sub-component API** for advanced customization.
+
+### Simple API
+
+```tsx
+import { Field, InputField } from "@raystack/apsara";
+
+<Field label="Email" helperText="We won't share it" error={errors.email?.message}>
+  <InputField placeholder="Enter email" />
+</Field>
+```
+
+### Sub-component API
+
+```tsx
+import { Field } from "@raystack/apsara";
+
+<Field name="email">
+  <Field.Label>Email</Field.Label>
+  <Field.Control required placeholder="Enter email" />
+  <Field.Error match="valueMissing">Email is required</Field.Error>
+  <Field.Description>We'll send a verification link</Field.Description>
+</Field>
+```
+
+## API Reference
+
+### Root
+
+Groups all parts of the field. Renders a `<div>` element.
+
+<auto-type-table path="./props.ts" name="FieldProps" />
+
+### Label
+
+An accessible label automatically associated with the field control. Renders a `<label>` element.
+
+<auto-type-table path="./props.ts" name="FieldLabelProps" />
+
+### Control
+
+A native input element for use with the sub-component API. Renders an `<input>` element.
+
+<auto-type-table path="./props.ts" name="FieldControlProps" />
+
+### Error
+
+An error message displayed when validation fails. Renders a `<div>` element.
+
+<auto-type-table path="./props.ts" name="FieldErrorProps" />
+
+### Description
+
+A paragraph with additional information about the field. Renders a `<p>` element.
+
+<auto-type-table path="./props.ts" name="FieldDescriptionProps" />
+
+### Validity
+
+Provides field validity state to a render function. Use for custom validity-based rendering.
+
+## Examples
+
+### With InputField
+
+Use Field to add label, helper text, and error to an InputField.
+
+<Demo data={withInputFieldDemo} />
+
+### With TextArea
+
+Field works with TextArea the same way.
+
+<Demo data={withTextAreaDemo} />
+
+### With Select
+
+Base UI-based components like Select auto-connect with Field for accessibility.
+
+<Demo data={withSelectDemo} />
+
+### Error State
+
+Shows an error message and sets the invalid state on the field.
+
+<Demo data={errorDemo} />
+
+### Helper Text
+
+Displays additional context below the control.
+
+<Demo data={helperTextDemo} />
+
+### Required Field
+
+Shows a required indicator next to the label.
+
+<Demo data={requiredDemo} />
+
+### Optional Field
+
+Shows an optional indicator next to the label.
+
+<Demo data={optionalDemo} />
+
+### Sub-component API
+
+Use sub-components for Base UI native validation and custom error matching.
+
+<Demo data={subComponentDemo} />
+
+## Accessibility
+
+- `Field.Label` automatically associates with the field control via `aria-labelledby`
+- `Field.Description` automatically associates via `aria-describedby`
+- `Field.Error` automatically associates error messages with the control
+- Data attributes (`data-invalid`, `data-dirty`, `data-touched`, `data-filled`, `data-focused`) propagate to all sub-components

@@ -1,7 +1,7 @@
 ---
 title: TextArea
-description: A multi-line text input field with support for labels and helper text.
-source: packages/raystack/components/textarea
+description: A multi-line text input field.
+source: packages/raystack/components/text-area
 ---
 
 import {
@@ -9,7 +9,7 @@ import {
   basicDemo,
   controlledDemo,
   widthDemo,
-  errorDemo,
+  withFieldDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -21,12 +21,22 @@ Import and assemble the component:
 ```tsx
 import { TextArea } from "@raystack/apsara";
 
-<TextArea />
+<TextArea placeholder="Enter text" />
+```
+
+For labels, helper text, and error messages, wrap with [Field](/docs/components/field):
+
+```tsx
+import { Field, TextArea } from "@raystack/apsara";
+
+<Field label="Bio" helperText="Tell us about yourself" error={errors.bio?.message}>
+  <TextArea placeholder="Write something..." />
+</Field>
 ```
 
 ## API Reference
 
-Renders a multi-line text input.
+Renders a multi-line text input. For label, helper text, and error support, use with [Field](/docs/components/field).
 
 <auto-type-table path="./props.ts" name="TextAreaProps" />
 
@@ -34,15 +44,15 @@ Renders a multi-line text input.
 
 ### Basic Usage
 
-The most basic usage of TextArea with just a label and placeholder.
+A basic TextArea with a placeholder.
 
 <Demo data={basicDemo} />
 
-### Error State
+### With Field
 
-TextArea in error state with custom styling.
+Use Field to add label, helper text, and error handling.
 
-<Demo data={errorDemo} />
+<Demo data={withFieldDemo} />
 
 ### Controlled Usage
 
@@ -58,7 +68,6 @@ TextArea with custom width specification.
 
 ## Accessibility
 
-- Associates label with textarea via `htmlFor` and `id` attributes
-- Error messages are linked with `aria-describedby`
+- Use with [Field](/docs/components/field) for automatic label association and error linking
 - Required state is communicated via `aria-required`
 - Invalid state is communicated via `aria-invalid`
