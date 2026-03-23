@@ -168,9 +168,17 @@ const handleStringBasedTypes = (
   switch (filterType) {
     case FilterType.date: {
       const dateValue = dayjs(value);
+      let stringValue = '';
+      if (dateValue.isValid()) {
+        try {
+          stringValue = dateValue.toISOString();
+        } catch {
+          stringValue = '';
+        }
+      }
       return {
         value,
-        stringValue: dateValue.isValid() ? dateValue.toISOString() : ''
+        stringValue
       };
     }
     case FilterType.select:
