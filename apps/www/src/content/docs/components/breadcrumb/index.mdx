@@ -11,7 +11,9 @@ import {
   iconsDemo,
   ellipsisDemo,
   dropdownDemo,
+  dropdownLinksDemo,
   asDemo,
+  disabledDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -42,7 +44,25 @@ Groups all parts of the breadcrumb navigation.
 
 ### Item
 
-Renders an individual breadcrumb link. Ref is forwarded to the rendered element when using `render` (not when using `dropdownItems`).
+Renders an individual breadcrumb link. Use the `current` prop on the item that represents the current page so it is styled and exposed to assistive tech (e.g. `aria-current="page"`). Use the `disabled` prop for non-clickable, visually muted items (e.g. loading or no access).
+
+Item elements expose data attributes for CSS state targeting so you can style current and disabled states without relying on internal class names:
+
+| Attribute | When present |
+|-----------|----------------|
+| `data-current="true"` | Item is the current page (`current` prop) |
+| `data-disabled="true"` | Item is disabled (`disabled` prop) |
+
+Example:
+
+```css
+[data-current="true"] {
+  color: var(--my-brand);
+}
+[data-disabled="true"] {
+  opacity: 0.6;
+}
+```
 
 <auto-type-table path="./props.ts" name="BreadcrumbItem" />
 
@@ -80,17 +100,18 @@ Use the `Breadcrumb.Ellipsis` component to truncate the breadcrumb trail when yo
 
 ### Icons
 
-Breadcrumb items can include icons either alongside text or as standalone elements.
+Breadcrumb items can include icons via `leadingIcon` (before the label) or `trailingIcon` (after the label), either alongside text or as standalone elements.
 
 <Demo data={iconsDemo} />
 
 ### Dropdown
 
-Breadcrumb items can include dropdown menus for additional navigation options. Specify the dropdown items using the `dropdownItems` prop.
+Breadcrumb items can include dropdown menus for additional navigation options. Specify them with the `dropdownItems` prop: each entry is the same props as `<Menu.Item>` (e.g. `children` for the label, `onClick`, `disabled`, `render` for a link such as `<a href="…" />`, etc.). You can also pass `key` for stable list keys.
 
 **Note:** When `dropdownItems` is provided, the `render` and `href` props are ignored.
 
 <Demo data={dropdownDemo} />
+<Demo data={dropdownLinksDemo} />
 
 ### Render
 
@@ -103,8 +124,15 @@ Use the `render` prop to render the breadcrumb item as a custom component. Pass 
 
 <Demo data={asDemo} />
 
+### Disabled
+
+Use the `disabled` prop for non-clickable, visually muted items—for example, loading states or segments the user does not have access to. Disabled items render as a span with `aria-disabled="true"` and do not navigate.
+
+<Demo data={disabledDemo} />
+
 ## Accessibility
 
 - Uses `nav` element with `aria-label="Breadcrumb"` for proper landmark identification
 - Current page is indicated with `aria-current="page"`
-- Separator elements are hidden from screen readers with `aria-hidden`
+- Disabled items use `aria-disabled="true"`
+- Separator elements are decorative and use `role="presentation"` and `aria-hidden="true"` so screen readers skip them

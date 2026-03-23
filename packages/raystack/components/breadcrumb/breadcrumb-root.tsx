@@ -16,6 +16,9 @@ const breadcrumbVariants = cva(styles['breadcrumb'], {
   }
 });
 
+/**
+ * Breadcrumb root: renders a nav with an ordered list of items and separators.
+ */
 export interface BreadcrumbProps
   extends VariantProps<typeof breadcrumbVariants>,
     ComponentProps<'nav'> {}

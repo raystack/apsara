@@ -3,19 +3,25 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import React, { ReactNode } from 'react';
+import React, { ComponentProps, ReactNode } from 'react';
 import { Menu } from '../menu';
 import styles from './breadcrumb.module.css';
 
-export interface BreadcrumbDropdownItem {
+/**
+ * Each entry maps to `<Menu.Item>`. Use `children`, `render`, `onClick`,
+ * `disabled`, etc. - whatever `Menu.Item` supports.
+ */
+export type BreadcrumbDropdownItem = ComponentProps<typeof Menu.Item> & {
+  /** Optional stable key for React list reconciliation (not passed to `Menu.Item`). */
   key?: string;
-  label: string;
-  onClick?: React.MouseEventHandler<HTMLElement>;
-}
+};
 
 export interface BreadcrumbItemProps extends useRender.ComponentProps<'a'> {
   leadingIcon?: ReactNode;
+  trailingIcon?: ReactNode;
   current?: boolean;
+  /** When true, the item is non-clickable and visually muted (e.g. loading or no access). */
+  disabled?: boolean;
   dropdownItems?: BreadcrumbDropdownItem[];
 }
 
@@ -25,19 +31,27 @@ export const BreadcrumbItem = ({
   children,
   className,
   leadingIcon,
+  trailingIcon,
   current,
+  disabled,
   href,
   dropdownItems,
   ...props
 }: BreadcrumbItemProps) => {
-  const label = leadingIcon ? (
-    <>
-      <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
-      {children != null && <span>{children}</span>}
-    </>
-  ) : (
-    children
-  );
+  const label =
+    leadingIcon || trailingIcon ? (
+      <>
+        {leadingIcon && (
+          <span className={styles['breadcrumb-icon']}>{leadingIcon}</span>
+        )}
+        {children != null && <span>{children}</span>}
+        {trailingIcon && (
+          <span className={styles['breadcrumb-icon']}>{trailingIcon}</span>
+        )}
+      </>
+    ) : (
+      children
+    );
 
   const {
     id,
@@ -61,7 +75,7 @@ export const BreadcrumbItem = ({
     )
   });
 
-  if (dropdownItems) {
+  if (dropdownItems && !disabled) {
     return (
       <li className={cx(styles['breadcrumb-item'], className)}>
         <Menu>
@@ -78,37 +92,51 @@ export const BreadcrumbItem = ({
             <ChevronDownIcon className={styles['breadcrumb-dropdown-icon']} />
           </Menu.Trigger>
           <Menu.Content className={styles['breadcrumb-dropdown-content']}>
-            {dropdownItems.map((dropdownItem, dropdownIndex) => (
-              <Menu.Item
-                key={dropdownItem.key ?? dropdownIndex}
-                className={styles['breadcrumb-dropdown-item']}
-                onClick={dropdownItem?.onClick}
-              >
-                {dropdownItem.label}
-              </Menu.Item>
-            ))}
+            {dropdownItems.map((dropdownItem, dropdownIndex) => {
+              const {
+                key,
+                className: itemClassName,
+                ...menuItemProps
+              } = dropdownItem;
+              return (
+                <Menu.Item
+                  key={key ?? dropdownIndex}
+                  className={cx(
+                    styles['breadcrumb-dropdown-item'],
+                    itemClassName
+                  )}
+                  {...menuItemProps}
+                />
+              );
+            })}
           </Menu.Content>
         </Menu>
       </li>
     );
   }
-  if (current) {
+
+  if (disabled || current) {
     return (
       <li className={cx(styles['breadcrumb-item'], className)}>
         <span
           ref={ref as React.RefObject<HTMLSpanElement>}
           className={cx(
             styles['breadcrumb-link'],
-            styles['breadcrumb-link-active']
+            disabled && styles['breadcrumb-link-disabled'],
+            current && styles['breadcrumb-link-active']
           )}
-          aria-current='page'
-          {...props}
+          {...(disabled && {
+            'aria-disabled': 'true',
+            'data-disabled': 'true'
+          })}
+          {...(current && { 'aria-current': 'page', 'data-current': 'true' })}
         >
           {label}
         </span>
       </li>
     );
   }
+
   return (
     <li className={cx(styles['breadcrumb-item'], className)}>{linkElement}</li>
   );
