@@ -286,3 +286,5 @@ export function Content({
     </div>
   );
 }
+
+Content.displayName = 'DataTable.Content';
