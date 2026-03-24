@@ -8,14 +8,25 @@ import styles from './breadcrumb.module.css';
 export interface BreadcrumbEllipsisProps extends ComponentProps<'span'> {}
 
 export const BreadcrumbEllipsis = ({
+  ref,
   className,
   children = <DotsHorizontalIcon width={20} height={20} />,
   ...props
 }: BreadcrumbEllipsisProps) => {
   return (
-    <span className={cx(styles['breadcrumb-ellipsis'], className)} {...props}>
-      {children}
-    </span>
+    <li
+      className={styles['breadcrumb-item']}
+      role='presentation'
+      aria-hidden='true'
+    >
+      <span
+        className={cx(styles['breadcrumb-ellipsis'], className)}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </span>
+    </li>
   );
 };
 
@@ -24,14 +35,27 @@ BreadcrumbEllipsis.displayName = 'Breadcrumb.Ellipsis';
 export interface BreadcrumbSeparatorProps extends ComponentProps<'span'> {}
 
 export const BreadcrumbSeparator = ({
+  ref,
   children = <ChevronRightIcon width={12} height={12} />,
   className,
   ...props
 }: BreadcrumbSeparatorProps) => {
   return (
-    <span className={cx(styles['breadcrumb-separator'], className)} {...props}>
-      {children}
-    </span>
+    <li
+      className={styles['breadcrumb-item']}
+      role='presentation'
+      aria-hidden='true'
+    >
+      <span
+        className={cx(styles['breadcrumb-separator'], className)}
+        ref={ref}
+        role='presentation'
+        aria-hidden='true'
+        {...props}
+      >
+        {children}
+      </span>
+    </li>
   );
 };
 

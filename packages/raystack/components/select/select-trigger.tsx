@@ -37,6 +37,7 @@ export interface SelectTriggerProps
   extends ComponentProps<'button'>,
     VariantProps<typeof trigger> {
   iconProps?: IconProps;
+  nativeButton?: boolean;
 }
 
 export function SelectTrigger({

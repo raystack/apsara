@@ -14,7 +14,6 @@ export interface SearchProps extends Omit<InputFieldProps, 'leadingIcon'> {
 }
 
 export function Search({
-  ref,
   className,
   disabled,
   placeholder = 'Search',
@@ -60,7 +59,6 @@ export function Search({
         className={className}
         aria-label={placeholder}
         variant={variant}
-        ref={ref}
         {...props}
       />
     </div>

@@ -1,4 +1,4 @@
-import { ReactElement, ReactEventHandler, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 export interface BreadcrumbItem {
   /** Text to display for the item */
@@ -7,8 +7,11 @@ export interface BreadcrumbItem {
   /** URL for the item link */
   href?: string;
 
-  /** Optional icon element to display */
+  /** Optional icon element to display before the label */
   leadingIcon?: ReactNode;
+
+  /** Optional icon element to display after the label */
+  trailingIcon?: ReactNode;
 
   /**
    * Whether the item is the current page
@@ -17,27 +20,33 @@ export interface BreadcrumbItem {
   current?: boolean;
 
   /**
-   * Optional array of dropdown items
-   *
-   * When `dropdownItems` is provided, the `as` and `href` props are ignored.
+   * When true, the item is non-clickable and visually muted (e.g. loading or no access).
+   * @defaultValue false
    */
-  dropdownItems?: {
-    /** Optional stable key for list reconciliation. Falls back to index if omitted. */
-    key?: string;
-    /** Text to display for the dropdown item */
-    label: string;
-    /** Callback function when a dropdown item is clicked */
-    onClick?: ReactEventHandler<HTMLDivElement>;
-  }[];
+  disabled?: boolean;
 
   /**
-   * Custom element used to render the Item.
+   * Optional array of dropdown entries; each object is passed to `<Menu.Item>`
+   * (e.g. `children`, `onClick`, `render` for a link, etc.), plus optional `key`
+   * for React list reconciliation (not forwarded to `Menu.Item`).
    *
-   * All props are merged, with the custom component's props taking precedence over the breadcrumb item's props.
-   *
-   * @default "<a />"
+   * When `dropdownItems` is provided, the `render` and `href` props are ignored.
    */
-  as?: ReactElement;
+  dropdownItems?: (Record<string, unknown> & {
+    key?: string;
+    children?: ReactNode;
+  })[];
+
+  /**
+   * Render prop for polymorphism (Base UI `useRender`).
+   * Pass a JSX element to replace the default rendered `<a>`.
+   *
+   * Example: `render={<NextLink />}`
+   */
+  render?: ReactElement;
+
+  /** Custom CSS class name applied to the list item wrapper */
+  className?: string;
 }
 
 export interface BreadcrumbProps {
