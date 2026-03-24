@@ -8,7 +8,7 @@ import styles from './tooltip.module.css';
 export interface TooltipContentProps
   extends Omit<
       TooltipPrimitive.Positioner.Props,
-      'className' | 'style' | 'render'
+      'className' | 'style' | 'render' | 'ref'
     >,
     TooltipPrimitive.Popup.Props {
   /**
@@ -19,6 +19,7 @@ export interface TooltipContentProps
 }
 
 export function TooltipContent({
+  ref,
   className,
   children,
   showArrow = false,
@@ -36,6 +37,7 @@ export function TooltipContent({
         {...positionerProps}
       >
         <TooltipPrimitive.Popup
+          ref={ref}
           className={cx(styles.content, className)}
           style={style}
           render={render}
