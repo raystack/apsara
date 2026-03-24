@@ -14,8 +14,7 @@ export type ToastPosition =
   | 'bottom-center'
   | 'bottom-right';
 
-export interface ToastProviderProps
-  extends Omit<ToastPrimitive.Provider.Props, 'toastManager'> {
+export interface ToastProviderProps extends ToastPrimitive.Provider.Props {
   /**
    * Position of the toast viewport on screen.
    * @default "bottom-right"

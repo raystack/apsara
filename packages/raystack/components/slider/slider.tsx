@@ -96,3 +96,5 @@ SliderRoot.displayName = 'Slider';
 export const Slider = Object.assign(SliderRoot, {
   Value: SliderPrimitive.Value
 });
+
+Slider.Value.displayName = 'Slider.Value';
