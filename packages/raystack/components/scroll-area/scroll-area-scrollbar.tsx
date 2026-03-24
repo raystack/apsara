@@ -27,4 +27,4 @@ export function ScrollAreaScrollbar({
   );
 }
 
-ScrollAreaScrollbar.displayName = 'ScrollAreaScrollbar';
+ScrollAreaScrollbar.displayName = 'ScrollArea.Scrollbar';

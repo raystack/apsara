@@ -7,7 +7,7 @@ import styles from './popover.module.css';
 export interface PopoverContentProps
   extends Omit<
       PopoverPrimitive.Positioner.Props,
-      'render' | 'className' | 'style'
+      'render' | 'className' | 'style' | 'ref'
     >,
     PopoverPrimitive.Popup.Props {}
 
