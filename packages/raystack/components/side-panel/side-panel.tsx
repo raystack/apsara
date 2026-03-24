@@ -1,5 +1,5 @@
-import { cva, VariantProps } from 'class-variance-authority';
-import { Fragment, ReactNode } from 'react';
+import { cva, cx, VariantProps } from 'class-variance-authority';
+import { ComponentProps, Fragment, ReactNode } from 'react';
 import { Flex } from '../flex';
 import { Text } from '../text';
 import styles from './side-panel.module.css';
@@ -16,22 +16,21 @@ const sidePanelRoot = cva(styles['side-panel'], {
   }
 });
 
-interface SidePanelProps extends VariantProps<typeof sidePanelRoot> {
-  children: ReactNode;
-  className?: string;
-}
+interface SidePanelProps
+  extends ComponentProps<'aside'>,
+    VariantProps<typeof sidePanelRoot> {}
 
 const SidePanelRoot = ({
-  children,
   side = 'right',
-  className
+  className,
+  ...props
 }: SidePanelProps) => {
-  return (
-    <aside className={sidePanelRoot({ side, className })}>{children}</aside>
-  );
+  return <aside className={sidePanelRoot({ side, className })} {...props} />;
 };
 
-interface SidePanelHeaderProps {
+SidePanelRoot.displayName = 'SidePanel';
+
+interface SidePanelHeaderProps extends ComponentProps<'div'> {
   title: string;
   icon?: ReactNode;
   actions?: Array<ReactNode>;
@@ -42,10 +41,11 @@ const SidePanelHeader = ({
   title,
   icon,
   actions = [],
-  description
+  description,
+  ...props
 }: SidePanelHeaderProps) => {
   return (
-    <div className={styles['side-panel-header']}>
+    <div className={styles['side-panel-header']} {...props}>
       <Flex gap={3} justify='between' align='center'>
         <Flex gap={3}>
           {icon}
@@ -64,13 +64,17 @@ const SidePanelHeader = ({
   );
 };
 
-interface SidePanelSectionProps {
-  children: ReactNode;
-}
+SidePanelHeader.displayName = 'SidePanel.Header';
 
-const SidePanelSection = ({ children }: SidePanelSectionProps) => {
-  return <div className={styles['side-panel-section']}>{children}</div>;
+interface SidePanelSectionProps extends ComponentProps<'div'> {}
+
+const SidePanelSection = ({ className, ...props }: SidePanelSectionProps) => {
+  return (
+    <div className={cx(styles['side-panel-section'], className)} {...props} />
+  );
 };
+
+SidePanelSection.displayName = 'SidePanel.Section';
 
 export const SidePanel = Object.assign(SidePanelRoot, {
   Header: SidePanelHeader,
