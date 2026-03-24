@@ -13,13 +13,13 @@ export function BreadcrumbExamples() {
           <Breadcrumb.Item
             dropdownItems={[
               {
-                label: 'Clothes',
+                children: 'Clothes',
                 onClick: () => {
                   console.log('Clothes');
                 }
               },
               {
-                label: 'Electronics',
+                children: 'Electronics',
                 onClick: () => {
                   console.log('Electronics');
                 }
@@ -29,7 +29,7 @@ export function BreadcrumbExamples() {
             Products
           </Breadcrumb.Item>
           <Breadcrumb.Separator />
-          <Breadcrumb.Item href='/products/shoes' as={<a />} current>
+          <Breadcrumb.Item href='/products/shoes' render={<a />} current>
             Shoes
           </Breadcrumb.Item>
         </Breadcrumb>

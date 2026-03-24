@@ -1,7 +1,7 @@
-import { getLLMText } from '@/lib/ai';
-import { docs } from '@/lib/source';
 import { notFound } from 'next/navigation';
 import { type NextRequest, NextResponse } from 'next/server';
+import { getLLMText } from '@/lib/ai';
+import { docs } from '@/lib/source';
 
 // cached forever
 export const revalidate = false;
@@ -15,7 +15,9 @@ export async function GET(
 
   if (!page) notFound();
 
-  return new NextResponse(await getLLMText(page));
+  return new NextResponse(await getLLMText(page), {
+    headers: { 'Content-Type': 'text/markdown' }
+  });
 }
 
 export function generateStaticParams() {
