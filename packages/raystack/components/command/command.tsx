@@ -1,10 +1,10 @@
 'use client';
 
+import { Dialog as DialogPrimitive } from '@base-ui/react';
 import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { cva } from 'class-variance-authority';
 import { Command as CommandPrimitive } from 'cmdk';
-import { Dialog as DialogPrimitive } from 'radix-ui';
-import React from 'react';
+import { type ComponentProps, ReactNode } from 'react';
 
 import { Dialog } from '../dialog';
 import { Flex } from '../flex';
@@ -14,12 +14,14 @@ const command = cva(styles.command);
 function CommandRoot({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive>) {
+}: ComponentProps<typeof CommandPrimitive>) {
   return <CommandPrimitive className={command({ className })} {...props} />;
 }
 CommandRoot.displayName = 'Command';
 
-interface CommandDialogProps extends DialogPrimitive.DialogProps {}
+interface CommandDialogProps extends DialogPrimitive.Root.Props {
+  children: ReactNode;
+}
 
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
@@ -30,12 +32,13 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
     </Dialog>
   );
 };
+CommandDialog.displayName = 'Command.Dialog';
 
 const input = cva(styles.input);
 function CommandInput({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <Flex
       align='center'
@@ -59,15 +62,13 @@ const list = cva(styles.list);
 function CommandList({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.List>) {
+}: ComponentProps<typeof CommandPrimitive.List>) {
   return <CommandPrimitive.List className={list({ className })} {...props} />;
 }
 
 CommandList.displayName = 'Command.List';
 
-function CommandEmpty(
-  props: React.ComponentProps<typeof CommandPrimitive.Empty>
-) {
+function CommandEmpty(props: ComponentProps<typeof CommandPrimitive.Empty>) {
   return <CommandPrimitive.Empty className={styles.empty} {...props} />;
 }
 
@@ -77,7 +78,7 @@ const group = cva(styles.group);
 function CommandGroup({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Group>) {
+}: ComponentProps<typeof CommandPrimitive.Group>) {
   return <CommandPrimitive.Group className={group({ className })} {...props} />;
 }
 
@@ -87,7 +88,7 @@ const separator = cva(styles.separator);
 function CommandSeparator({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Separator>) {
+}: ComponentProps<typeof CommandPrimitive.Separator>) {
   return (
     <CommandPrimitive.Separator
       className={separator({ className })}
@@ -101,22 +102,19 @@ const item = cva(styles.item);
 function CommandItem({
   className,
   ...props
-}: React.ComponentProps<typeof CommandPrimitive.Item>) {
+}: ComponentProps<typeof CommandPrimitive.Item>) {
   return <CommandPrimitive.Item className={item({ className })} {...props} />;
 }
 
 CommandItem.displayName = 'Command.Item';
 
 const shortcut = cva(styles.shortcut);
-const CommandShortcut = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLSpanElement>) => {
+const CommandShortcut = ({ className, ...props }: ComponentProps<'span'>) => {
   return <span className={shortcut({ className })} {...props} />;
 };
 CommandShortcut.displayName = 'Command.Shortcut';
 
-export const Command: any = Object.assign(CommandRoot, {
+export const Command = Object.assign(CommandRoot, {
   Dialog: CommandDialog,
   Input: CommandInput,
   List: CommandList,
