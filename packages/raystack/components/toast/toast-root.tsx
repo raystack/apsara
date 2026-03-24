@@ -3,7 +3,6 @@
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { type ElementRef, forwardRef } from 'react';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
@@ -28,22 +27,21 @@ function getSwipeDirection(position: ToastPosition): SwipeDirection[] {
   return ['right', verticalDirection];
 }
 
-export interface ToastRootProps
-  extends Omit<ToastPrimitive.Root.Props, 'toast'> {
-  toast: ToastPrimitive.Root.Props['toast'];
+export interface ToastRootProps extends ToastPrimitive.Root.Props {
   position?: ToastPosition;
 }
 
-export const ToastRoot = forwardRef<
-  ElementRef<typeof ToastPrimitive.Root>,
-  ToastRootProps
->(({ toast, className, position = 'bottom-right', ...props }, ref) => {
+export function ToastRoot({
+  toast,
+  className,
+  position = 'bottom-right',
+  ...props
+}: ToastRootProps) {
   const swipeDirection = getSwipeDirection(position);
   const hasDescription = !!toast.description;
 
   return (
     <ToastPrimitive.Root
-      ref={ref}
       toast={toast}
       className={cx(styles.root, className)}
       swipeDirection={swipeDirection}
@@ -82,6 +80,6 @@ export const ToastRoot = forwardRef<
       </ToastPrimitive.Content>
     </ToastPrimitive.Root>
   );
-});
+}
 
 ToastRoot.displayName = 'Toast';

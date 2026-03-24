@@ -1,74 +1,78 @@
-import { type VariantProps, cva } from 'class-variance-authority';
-import React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps } from 'react';
 import styles from './table.module.css';
 
 const table = cva(styles['table']);
-const TableRoot = React.forwardRef<
-  HTMLTableElement,
-  React.TableHTMLAttributes<HTMLTableElement> &
-    React.PropsWithChildren<VariantProps<typeof table>>
->(({ className, ...props }, ref) => {
-  return <table ref={ref} {...props} className={table({ className })} />;
-});
+function TableRoot({
+  className,
+  ...props
+}: ComponentProps<'table'> & VariantProps<typeof table>) {
+  return <table {...props} className={table({ className })} />;
+}
+TableRoot.displayName = 'Table';
 
 const header = cva(styles['header']);
-const TableHeader = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement> &
-    React.PropsWithChildren<VariantProps<typeof header>>
->(({ className, ...props }, ref) => {
-  return <thead ref={ref} {...props} className={header({ className })} />;
-});
+function TableHeader({
+  className,
+  ...props
+}: ComponentProps<'thead'> & VariantProps<typeof header>) {
+  return <thead {...props} className={header({ className })} />;
+}
+TableHeader.displayName = 'Table.Header';
 
-const TableBody = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement> & React.PropsWithChildren
->(({ ...props }, ref) => {
-  return <tbody ref={ref} {...props} />;
-});
+function TableBody({ ...props }: ComponentProps<'tbody'>) {
+  return <tbody {...props} />;
+}
+TableBody.displayName = 'Table.Body';
 
-const TableRow = React.forwardRef<
-  HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement> & React.PropsWithChildren
->(({ ...props }, ref) => {
-  return <tr ref={ref} {...props} />;
-});
+function TableRow({ ...props }: ComponentProps<'tr'>) {
+  return <tr {...props} />;
+}
+TableRow.displayName = 'Table.Row';
 
 const head = cva(styles['head']);
-const TableHead = React.forwardRef<
-  HTMLTableCellElement,
-  React.ThHTMLAttributes<HTMLTableCellElement> &
-    React.PropsWithChildren<VariantProps<typeof head>>
->(({ className, ...props }, ref) => {
-  return <th ref={ref} {...props} className={head({ className })} />;
-});
+function TableHead({
+  className,
+  ...props
+}: ComponentProps<'th'> & VariantProps<typeof head>) {
+  return <th {...props} className={head({ className })} />;
+}
+TableHead.displayName = 'Table.Head';
 
 const cell = cva(styles['cell']);
-const TableCell = React.forwardRef<
-  HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement> &
-    React.PropsWithChildren<VariantProps<typeof cell>>
->(({ className, ...props }, ref) => {
-  return <td ref={ref} {...props} className={cell({ className })} />;
-});
+function TableCell({
+  className,
+  ...props
+}: ComponentProps<'td'> & VariantProps<typeof cell>) {
+  return <td {...props} className={cell({ className })} />;
+}
+TableCell.displayName = 'Table.Cell';
 
 const sectionHeader = cva(styles['sectionHeader']);
 type SectionHeaderClassNames = 'row' | 'cell';
-const SectionHeader = React.forwardRef<
-  HTMLTableRowElement,
-  React.PropsWithChildren & {
-    colSpan: number;
-    classNames?: Partial<Record<SectionHeaderClassNames, string>>;
-  }
->(({ classNames, colSpan, children }, ref) => {
+function SectionHeader({
+  classNames,
+  colSpan,
+  children,
+  ref,
+  ...rest
+}: ComponentProps<'tr'> & {
+  colSpan: number;
+  classNames?: Partial<Record<SectionHeaderClassNames, string>>;
+}) {
   return (
-    <tr ref={ref} className={sectionHeader({ className: classNames?.row })}>
+    <tr
+      ref={ref}
+      className={sectionHeader({ className: classNames?.row })}
+      {...rest}
+    >
       <th colSpan={colSpan} className={classNames?.cell}>
         {children}
       </th>
     </tr>
   );
-});
+}
+SectionHeader.displayName = 'Table.SectionHeader';
 
 export const Table = Object.assign(TableRoot, {
   Header: TableHeader,

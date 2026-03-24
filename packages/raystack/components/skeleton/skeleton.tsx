@@ -1,7 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { CSSProperties, createContext, useContext } from 'react';
+import { CSSProperties, createContext, ReactNode, useContext } from 'react';
 import styles from './skeleton.module.css';
 
 export interface SkeletonProps {
@@ -23,7 +23,7 @@ export interface SkeletonProps {
 const SkeletonContext = createContext<SkeletonProps | null>(null);
 
 interface SkeletonProviderProps extends SkeletonProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const SkeletonBase = (props: SkeletonProps) => {
@@ -86,12 +86,12 @@ const SkeletonBase = (props: SkeletonProps) => {
   );
 };
 
+SkeletonBase.displayName = 'Skeleton';
+
 const Provider = ({ children, ...props }: SkeletonProviderProps) => {
-  return (
-    <SkeletonContext.Provider value={props}>
-      {children}
-    </SkeletonContext.Provider>
-  );
+  return <SkeletonContext value={props}>{children}</SkeletonContext>;
 };
+
+Provider.displayName = 'Skeleton.Provider';
 
 export const Skeleton = Object.assign(SkeletonBase, { Provider });
