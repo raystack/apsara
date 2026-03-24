@@ -3,7 +3,6 @@
 import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
 import { ToggleGroup as ToggleGroupPrimitive } from '@base-ui/react/toggle-group';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ElementRef, forwardRef } from 'react';
 
 import styles from './toggle.module.css';
 
@@ -27,30 +26,21 @@ export interface ToggleProps
   size?: 1 | 2 | 3 | 4;
 }
 
-const ToggleRoot = forwardRef<ElementRef<typeof TogglePrimitive>, ToggleProps>(
-  ({ className, children, size, ...props }, ref) => (
-    <TogglePrimitive
-      ref={ref}
-      className={toggleVariants({ size, className })}
-      {...props}
-    >
+function ToggleRoot({ className, children, size, ...props }: ToggleProps) {
+  return (
+    <TogglePrimitive className={toggleVariants({ size, className })} {...props}>
       <span className={styles.toggleContent}>{children}</span>
     </TogglePrimitive>
-  )
-);
+  );
+}
 
 ToggleRoot.displayName = 'Toggle';
 
-const ToggleGroup = forwardRef<
-  ElementRef<typeof ToggleGroupPrimitive>,
-  ToggleGroupPrimitive.Props
->(({ className, ...props }, ref) => (
-  <ToggleGroupPrimitive
-    ref={ref}
-    className={cx(styles.group, className)}
-    {...props}
-  />
-));
+function ToggleGroup({ className, ...props }: ToggleGroupPrimitive.Props) {
+  return (
+    <ToggleGroupPrimitive className={cx(styles.group, className)} {...props} />
+  );
+}
 
 ToggleGroup.displayName = 'Toggle.Group';
 

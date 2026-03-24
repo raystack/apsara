@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
+
+import { type ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '~/components/button';
 import { Drawer } from '../drawer';
@@ -33,7 +34,7 @@ const BasicDrawer = ({
   </Drawer>
 );
 
-async function renderAndOpenDrawer(DrawerElement: React.ReactElement) {
+async function renderAndOpenDrawer(DrawerElement: ReactElement) {
   fireEvent.click(render(DrawerElement).getByText(TRIGGER_TEXT));
 }
 

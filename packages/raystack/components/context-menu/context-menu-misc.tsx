@@ -2,7 +2,7 @@
 
 import { ContextMenu as ContextMenuPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, Fragment, HTMLAttributes, ReactNode } from 'react';
+import { ComponentProps, Fragment } from 'react';
 import styles from '../menu/menu.module.css';
 import { useMenuContext } from '../menu/menu-root';
 
@@ -49,7 +49,7 @@ ContextMenuLabel.displayName = 'ContextMenu.Label';
 export const ContextMenuSeparator = ({
   className,
   ...props
-}: HTMLAttributes<HTMLDivElement>) => {
+}: ComponentProps<'div'>) => {
   const { shouldFilter } = useMenuContext();
 
   if (shouldFilter) {
