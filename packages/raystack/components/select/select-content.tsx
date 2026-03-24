@@ -5,21 +5,19 @@ import {
   Select as SelectPrimitive
 } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ReactNode } from 'react';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
-export interface SelectContentProps {
-  ref?: React.Ref<HTMLDivElement>;
-  className?: string;
-  children?: ReactNode;
+export interface SelectContentProps
+  extends Omit<
+      SelectPrimitive.Positioner.Props,
+      'render' | 'className' | 'style' | 'ref'
+    >,
+    SelectPrimitive.Popup.Props {
   searchPlaceholder?: string;
-  sideOffset?: number;
-  style?: React.CSSProperties;
 }
 
 export function SelectContent({
-  ref,
   className,
   children,
   searchPlaceholder = 'Search...',
@@ -36,7 +34,6 @@ export function SelectContent({
           className={styles.positioner}
         >
           <ComboboxPrimitive.Popup
-            ref={ref}
             className={cx(styles.content, className)}
             data-multiselectable={multiple ? true : undefined}
             {...props}
@@ -64,7 +61,6 @@ export function SelectContent({
       alignItemWithTrigger={false}
     >
       <SelectPrimitive.Popup
-        ref={ref}
         className={cx(styles.content, className)}
         data-multiselectable={multiple ? true : undefined}
         {...props}

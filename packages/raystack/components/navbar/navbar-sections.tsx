@@ -7,48 +7,78 @@ import styles from './navbar.module.css';
 
 export interface NavbarStartProps extends ComponentProps<typeof Flex> {}
 
-export function NavbarStart({
+export const NavbarStart = ({
   className,
   children,
   'aria-label': ariaLabel,
+  align = 'center',
+  gap = 5,
   ...props
-}: NavbarStartProps) {
+}: NavbarStartProps) => {
   return (
     <Flex
-      align='center'
-      gap={5}
+      align={align}
+      gap={gap}
       className={cx(styles.start, className)}
-      role={ariaLabel ? 'group' : undefined}
       aria-label={ariaLabel}
       {...props}
+      role='group'
     >
       {children}
     </Flex>
   );
-}
+};
 
 NavbarStart.displayName = 'Navbar.Start';
 
-export interface NavbarEndProps extends ComponentProps<typeof Flex> {}
+export interface NavbarCenterProps extends ComponentProps<typeof Flex> {}
 
-export function NavbarEnd({
+export const NavbarCenter = ({
   className,
   children,
   'aria-label': ariaLabel,
+  align = 'center',
+  gap = 5,
   ...props
-}: NavbarEndProps) {
+}: NavbarCenterProps) => {
   return (
     <Flex
-      align='center'
-      gap={5}
-      className={cx(styles.end, className)}
-      role={ariaLabel ? 'group' : undefined}
+      align={align}
+      gap={gap}
+      className={cx(styles.center, className)}
       aria-label={ariaLabel}
       {...props}
+      role='group'
     >
       {children}
     </Flex>
   );
-}
+};
+
+NavbarCenter.displayName = 'Navbar.Center';
+
+export interface NavbarEndProps extends ComponentProps<typeof Flex> {}
+
+export const NavbarEnd = ({
+  className,
+  children,
+  'aria-label': ariaLabel,
+  align = 'center',
+  gap = 5,
+  ...props
+}: NavbarEndProps) => {
+  return (
+    <Flex
+      align={align}
+      gap={gap}
+      className={cx(styles.end, className)}
+      aria-label={ariaLabel}
+      {...props}
+      role='group'
+    >
+      {children}
+    </Flex>
+  );
+};
 
 NavbarEnd.displayName = 'Navbar.End';

@@ -1,5 +1,5 @@
 import { cva, VariantProps } from 'class-variance-authority';
-import { ComponentProps } from 'react';
+import { ComponentProps, HTMLAttributes, PropsWithChildren } from 'react';
 
 import styles from './container.module.css';
 

@@ -7,7 +7,7 @@ import styles from './preview-card.module.css';
 export interface PreviewCardContentProps
   extends Omit<
       PreviewCardPrimitive.Positioner.Props,
-      'render' | 'className' | 'style'
+      'render' | 'className' | 'style' | 'ref'
     >,
     PreviewCardPrimitive.Popup.Props {
   /**
@@ -65,13 +65,11 @@ function PreviewCardContent({
 PreviewCardContent.displayName = 'PreviewCard.Content';
 
 function PreviewCardViewport({
-  ref,
   className,
   ...props
 }: PreviewCardPrimitive.Viewport.Props) {
   return (
     <PreviewCardPrimitive.Viewport
-      ref={ref}
       className={cx(styles.viewport, className)}
       {...props}
     />

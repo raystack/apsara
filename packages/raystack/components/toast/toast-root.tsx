@@ -27,9 +27,7 @@ function getSwipeDirection(position: ToastPosition): SwipeDirection[] {
   return ['right', verticalDirection];
 }
 
-export interface ToastRootProps
-  extends Omit<ToastPrimitive.Root.Props, 'toast'> {
-  toast: ToastPrimitive.Root.Props['toast'];
+export interface ToastRootProps extends ToastPrimitive.Root.Props {
   position?: ToastPosition;
 }
 

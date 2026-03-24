@@ -9,14 +9,9 @@ import { Fragment, ReactNode } from 'react';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
-export interface SelectGroupProps {
-  ref?: React.Ref<HTMLDivElement>;
-  className?: string;
-  children?: ReactNode;
-}
+export interface SelectGroupProps extends SelectPrimitive.Group.Props {}
 
 export function SelectGroup({
-  ref,
   className,
   children,
   ...props
@@ -30,24 +25,16 @@ export function SelectGroup({
     : SelectPrimitive.Group;
 
   return (
-    <GroupPrimitive
-      ref={ref}
-      className={cx(styles.menugroup, className)}
-      {...props}
-    >
+    <GroupPrimitive className={cx(styles.menugroup, className)} {...props}>
       {children}
     </GroupPrimitive>
   );
 }
 SelectGroup.displayName = 'Select.Group';
 
-export interface SelectLabelProps {
-  ref?: React.Ref<HTMLDivElement>;
-  className?: string;
-  children?: ReactNode;
-}
+export interface SelectLabelProps extends SelectPrimitive.GroupLabel.Props {}
 
-export function SelectLabel({ ref, className, ...props }: SelectLabelProps) {
+export function SelectLabel({ className, ...props }: SelectLabelProps) {
   const { shouldFilter, autocomplete } = useSelectContext();
 
   if (shouldFilter) return null;
@@ -56,26 +43,13 @@ export function SelectLabel({ ref, className, ...props }: SelectLabelProps) {
     ? ComboboxPrimitive.GroupLabel
     : SelectPrimitive.GroupLabel;
 
-  return (
-    <LabelPrimitive
-      ref={ref}
-      className={cx(styles.label, className)}
-      {...props}
-    />
-  );
+  return <LabelPrimitive className={cx(styles.label, className)} {...props} />;
 }
 SelectLabel.displayName = 'Select.Label';
 
-export interface SelectSeparatorProps {
-  ref?: React.Ref<HTMLDivElement>;
-  className?: string;
-}
+export interface SelectSeparatorProps extends SelectPrimitive.Separator.Props {}
 
-export function SelectSeparator({
-  ref,
-  className,
-  ...props
-}: SelectSeparatorProps) {
+export function SelectSeparator({ className, ...props }: SelectSeparatorProps) {
   const { shouldFilter, autocomplete } = useSelectContext();
 
   if (shouldFilter) return null;
@@ -86,7 +60,6 @@ export function SelectSeparator({
 
   return (
     <SeparatorPrimitive
-      ref={ref}
       className={cx(styles.separator, className)}
       {...props}
     />

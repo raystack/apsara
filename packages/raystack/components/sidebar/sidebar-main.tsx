@@ -7,9 +7,8 @@ import styles from './sidebar.module.css';
 
 export function SidebarMain({
   className,
-  children,
   ...props
-}: ComponentProps<'div'>) {
+}: ComponentProps<typeof Flex>) {
   return (
     <Flex
       className={cx(styles.main, className)}
@@ -17,9 +16,7 @@ export function SidebarMain({
       role='group'
       aria-label='Main navigation'
       {...props}
-    >
-      {children}
-    </Flex>
+    />
   );
 }
 

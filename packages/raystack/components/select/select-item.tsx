@@ -12,17 +12,11 @@ import { Text } from '../text';
 import styles from './select.module.css';
 import { useSelectContext } from './select-root';
 
-export interface SelectItemProps {
-  ref?: React.Ref<HTMLDivElement>;
-  className?: string;
-  children?: ReactNode;
-  value: string;
+export interface SelectItemProps extends SelectPrimitive.Item.Props {
   leadingIcon?: ReactNode;
-  disabled?: boolean;
 }
 
 export function SelectItem({
-  ref,
   className,
   children,
   value: providedValue,
@@ -75,7 +69,6 @@ export function SelectItem({
 
   return (
     <ItemPrimitive
-      ref={ref}
       value={value}
       className={cx(styles.menuitem, className, isHidden && styles.hidden)}
       data-hidden={isHidden || undefined}

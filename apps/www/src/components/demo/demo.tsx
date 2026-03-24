@@ -18,6 +18,7 @@ import {
   BellIcon,
   FilterIcon,
   OrganizationIcon,
+  ShoppingBagFilledIcon,
   SidebarIcon
 } from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
@@ -38,6 +39,7 @@ export default function Demo(props: DemoProps) {
       ...Apsara,
       BellIcon,
       FilterIcon,
+      ShoppingBagFilledIcon,
       OrganizationIcon,
       SidebarIcon,
       DataTableDemo,

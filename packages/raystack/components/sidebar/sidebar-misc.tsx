@@ -7,27 +7,23 @@ import styles from './sidebar.module.css';
 
 export function SidebarHeader({
   className,
-  children,
   ...props
-}: ComponentProps<'div'>) {
+}: ComponentProps<typeof Flex>) {
   return (
     <Flex
       align='center'
       className={cx(styles.header, className)}
       role='banner'
       {...props}
-    >
-      {children}
-    </Flex>
+    />
   );
 }
 SidebarHeader.displayName = 'Sidebar.Header';
 
 export function SidebarFooter({
   className,
-  children,
   ...props
-}: ComponentProps<'div'>) {
+}: ComponentProps<typeof Flex>) {
   return (
     <Flex
       className={cx(styles.footer, className)}
@@ -35,14 +31,12 @@ export function SidebarFooter({
       role='list'
       aria-label='Footer navigation'
       {...props}
-    >
-      {children}
-    </Flex>
+    />
   );
 }
 SidebarFooter.displayName = 'Sidebar.Footer';
 
-export interface SidebarNavigationGroupProps extends ComponentProps<'div'> {
+export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
   label: string;
   leadingIcon?: ReactNode;
   classNames?: {

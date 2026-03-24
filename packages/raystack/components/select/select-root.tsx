@@ -227,3 +227,5 @@ export const SelectRoot = (props: SelectRootProps) => {
     </SelectContext>
   );
 };
+
+SelectRoot.displayName = 'Select';

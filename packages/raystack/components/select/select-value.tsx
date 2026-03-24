@@ -1,7 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ReactNode, useMemo } from 'react';
+import { ComponentProps, ReactNode, useMemo } from 'react';
 import styles from './select.module.css';
 import { SelectMultipleValue } from './select-multiple-value';
 import { useSelectContext } from './select-root';
@@ -9,15 +9,13 @@ import { ItemType } from './types';
 
 type ValueType = Omit<ItemType, 'children'>;
 
-type SelectValueProps = {
-  ref?: React.Ref<HTMLSpanElement>;
+type SelectValueProps = ComponentProps<'span'> & {
   placeholder?: string;
   children?: ((value?: ValueType | ValueType[]) => ReactNode) | ReactNode;
   className?: string;
 };
 
 export function SelectValue({
-  ref,
   children,
   placeholder,
   className,
@@ -42,7 +40,6 @@ export function SelectValue({
   if (!hasValue) {
     return (
       <span
-        ref={ref}
         data-placeholder=''
         className={cx(styles.placeholder, className)}
         {...props}
@@ -54,7 +51,7 @@ export function SelectValue({
 
   if (typeof children === 'function') {
     return (
-      <span ref={ref} className={className} {...props}>
+      <span className={className} {...props}>
         {children(item)}
       </span>
     );
@@ -62,7 +59,7 @@ export function SelectValue({
 
   if (children) {
     return (
-      <span ref={ref} className={className} {...props}>
+      <span className={className} {...props}>
         {children}
       </span>
     );
@@ -73,7 +70,7 @@ export function SelectValue({
   }
 
   return (
-    <span ref={ref} className={className} {...props}>
+    <span className={className} {...props}>
       <div className={cx(styles.valueContent)}>
         {typeof item?.children === 'string' && item?.leadingIcon && (
           <div className={styles.itemIcon}>{item.leadingIcon}</div>
