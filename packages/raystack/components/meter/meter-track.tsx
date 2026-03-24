@@ -2,20 +2,20 @@
 
 import { Meter as MeterPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { type ElementRef, forwardRef, useContext } from 'react';
+import { useContext } from 'react';
 import styles from './meter.module.css';
 import { MeterContext } from './meter-root';
 
-export const MeterTrack = forwardRef<
-  ElementRef<typeof MeterPrimitive.Track>,
-  MeterPrimitive.Track.Props
->(({ className, children, ...props }, ref) => {
+export function MeterTrack({
+  className,
+  children,
+  ...props
+}: MeterPrimitive.Track.Props) {
   const { variant } = useContext(MeterContext);
 
   if (variant === 'circular') {
     return (
       <MeterPrimitive.Track
-        ref={ref}
         className={cx(styles.circularSvg, className)}
         {...props}
         render={({ children: trackChildren, ...trackProps }) => (
@@ -34,15 +34,11 @@ export const MeterTrack = forwardRef<
   }
 
   return (
-    <MeterPrimitive.Track
-      ref={ref}
-      className={cx(styles.track, className)}
-      {...props}
-    >
+    <MeterPrimitive.Track className={cx(styles.track, className)} {...props}>
       <MeterPrimitive.Indicator className={styles.indicator} />
       {children}
     </MeterPrimitive.Track>
   );
-});
+}
 
-MeterTrack.displayName = 'MeterTrack';
+MeterTrack.displayName = 'Meter.Track';
