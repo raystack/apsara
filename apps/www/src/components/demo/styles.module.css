@@ -24,14 +24,10 @@
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
 
-.previewReset {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  padding: var(--rs-space-1, 2px);
-  width: var(--rs-space-5, 16px);
-  height: var(--rs-space-5, 16px);
-  border-radius: var(--rs-radius-1, 2px);
+.preview:has(:global(.navbar-demo-wrapper)) {
+  align-items: flex-start;
+  justify-content: flex-start;
+  min-height: unset;
 }
 
 .form {
@@ -48,6 +44,7 @@
   flex-shrink: 0;
   max-height: 400px;
 }
+
 .noShadow {
   box-shadow: none;
 }
@@ -148,6 +145,7 @@
   .previewContainer {
     flex-direction: column;
   }
+
   .form {
     width: 100%;
     max-height: 280px;
@@ -155,6 +153,7 @@
     border-left: none;
   }
 }
+
 .playgroundDialog {
   height: 88vh;
   width: 72%;
@@ -165,39 +164,47 @@
   display: flex;
   flex-direction: column;
 }
+
 .playgroundHeader {
   border: 0.5px solid var(--rs-color-border-base-primary);
   background: var(--rs-color-background-base-secondary);
   height: 32px;
   padding: 0 var(--rs-space-5);
 }
+
 .playgroundTitle {
   font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
 }
+
 .playgroundContent {
   flex: 1;
   border-radius: 0;
   border: none;
 }
+
 .playgroundPreviewContainer {
   flex: 2;
 }
+
 .playgroundPreview {
   border-bottom: none;
   padding-bottom: 1px;
 }
+
 .playgroundControls {
   border-bottom: none;
   max-height: none;
 }
+
 .playgroundEditor {
   flex: 1;
   border-top: 0.5px solid var(--rs-color-border-base-primary);
   overflow: auto;
 }
+
 .playgroundPreviewContent {
   padding: var(--rs-space-12);
   align-items: safe center;
