@@ -160,6 +160,7 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  margin-top: var(--rs-space-3);
 }
 
 .root[data-closed] .nav-group {
@@ -190,9 +191,23 @@
   width: 100%;
 }
 
-/* Hide group header visually when collapsed but reserve vertical space to prevent shift */
+/* Hide group header text when collapsed but show a separator line in its place */
 .root[data-closed] .nav-group-header {
   visibility: hidden;
+  position: relative;
+  align-self: stretch;
+}
+
+.root[data-closed] .nav-group-header::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--rs-space-5);
+  height: 1px;
+  background: var(--rs-color-border-base-primary);
+  visibility: visible;
 }
 
 .root[data-closed] .nav-group-label {
@@ -205,6 +220,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .root,
   .nav-item,
   .nav-text,
