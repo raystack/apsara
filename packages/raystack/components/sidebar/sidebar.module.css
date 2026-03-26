@@ -20,6 +20,16 @@
   border-left: 1px solid var(--rs-color-border-base-primary);
 }
 
+.root[data-variant="floating"] {
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+.root[data-variant="inset"] {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
 .root[data-open] {
   width: 240px;
 }
@@ -247,6 +257,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .root,
   .nav-item,
   .nav-text,

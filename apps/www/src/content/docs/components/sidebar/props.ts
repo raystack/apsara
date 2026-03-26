@@ -22,6 +22,11 @@ export interface SidebarRootProps {
    */
   position?: 'left' | 'right';
 
+  /** Visual style variant of the Sidebar.
+   * @default "plain"
+   */
+  variant?: 'plain' | 'floating' | 'inset';
+
   /** Hide tooltips on sidebar items when sidebar is collapsed.
    * @default false
    */

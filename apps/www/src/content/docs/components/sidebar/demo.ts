@@ -114,6 +114,75 @@ export const positionDemo = {
   ]
 };
 
+export const variantDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Plain',
+      code: sidebarLayout(`
+      <Sidebar open={true} variant="plain">
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+    },
+    {
+      name: 'Floating',
+      code: sidebarLayout(`
+      <Sidebar open={true} variant="floating">
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+    },
+    {
+      name: 'Inset',
+      code: sidebarLayout(`
+      <Sidebar open={true} variant="inset">
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+    }
+  ]
+};
+
 export const stateDemo = {
   type: 'code',
   tabs: [

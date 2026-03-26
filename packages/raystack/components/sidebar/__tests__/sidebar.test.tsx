@@ -157,6 +157,20 @@ describe('Sidebar', () => {
       const sidebar = container.querySelector('[data-position="right"]');
       expect(sidebar).toBeInTheDocument();
     });
+
+    it('applies floating variant when specified', () => {
+      const { container } = render(<BasicSidebar variant='floating' />);
+
+      const sidebar = container.querySelector('[data-variant="floating"]');
+      expect(sidebar).toBeInTheDocument();
+    });
+
+    it('applies inset variant when specified', () => {
+      const { container } = render(<BasicSidebar variant='inset' />);
+
+      const sidebar = container.querySelector('[data-variant="inset"]');
+      expect(sidebar).toBeInTheDocument();
+    });
   });
 
   describe('Sidebar Header', () => {

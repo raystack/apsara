@@ -7,6 +7,7 @@ source: packages/raystack/components/sidebar
 import {
   preview,
   positionDemo,
+  variantDemo,
   stateDemo,
   tooltipDemo,
   collapsibleDemo,
@@ -82,6 +83,16 @@ Renders a sidebar row that opens an Apsara menu with additional `Sidebar.Item` e
 The Sidebar can be positioned on either the left or right side of the screen.
 
 <Demo data={positionDemo} />
+
+### Variants
+
+Use `variant` to switch the Sidebar surface style:
+
+- `plain` (default): regular surface with side border
+- `floating`: lifted surface with shadow
+- `inset`: transparent surface without border or shadow
+
+<Demo data={variantDemo} />
 
 ### State
 
