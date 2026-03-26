@@ -83,3 +83,28 @@ export interface SidebarItemProps {
     text?: string;
   };
 }
+
+export interface SidebarMoreProps {
+  /** String for the more trigger label. */
+  label?: string;
+
+  /** Optional ReactNode for the trigger icon. */
+  leadingIcon?: ReactNode;
+
+  /** Sidebar items rendered inside the menu content. */
+  children?: ReactNode;
+
+  /** Optional class names for customizing parts of the more trigger/menu. */
+  classNames?: {
+    /** Class name for the trigger root element. */
+    root?: string;
+    /** Class name for the leading icon container. */
+    leadingIcon?: string;
+    /** Class name for the text element. */
+    text?: string;
+    /** Class name for menu item root elements. */
+    menuItem?: string;
+    /** Class name for menu content container. */
+    menuContent?: string;
+  };
+}

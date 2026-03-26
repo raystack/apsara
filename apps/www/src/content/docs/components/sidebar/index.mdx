@@ -10,7 +10,8 @@ import {
   stateDemo,
   tooltipDemo,
   collapsibleDemo,
-  hideTooltipDemo
+  hideTooltipDemo,
+  moreDemo
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -27,6 +28,9 @@ import { Sidebar } from "@raystack/apsara";
   <Sidebar.Main>
     <Sidebar.Group label="Group name">
       <Sidebar.Item href="#">Item</Sidebar.Item>
+      <Sidebar.More label="More">
+        <Sidebar.Item href="#">Hidden item</Sidebar.Item>
+      </Sidebar.More>
     </Sidebar.Group>
   </Sidebar.Main>
   <Sidebar.Footer />
@@ -63,6 +67,14 @@ The main section wraps navigation groups and items. It accepts all `div` props a
 
 The footer section is a container that accepts all `div` props. It's commonly used for secondary links (e.g. Help, Preferences) and stays at the bottom of the sidebar.
 
+### More
+
+Renders a sidebar row that opens an Apsara menu with additional `Sidebar.Item` entries. It can be used inside `Sidebar.Group` or directly under `Sidebar.Main` / `Sidebar.Footer`.
+
+*Note: if `leadingIcon` is not provided, the trigger uses a default dots icon. In collapsed state, it follows the same item tooltip behavior and respects `hideCollapsedItemTooltip`.*
+
+<auto-type-table path="./props.ts" name="SidebarMoreProps" />
+
 ## Examples
 
 ### Position
@@ -98,6 +110,12 @@ Set `collapsible={false}` to hide the resize handle and prevent the sidebar from
 Set `hideCollapsedItemTooltip` to disable tooltips on navigation items when the sidebar is collapsed. Useful when item labels are redundant with the collapse tooltip or you want a cleaner collapsed state.
 
 <Demo data={hideTooltipDemo} />
+
+### More
+
+Use `Sidebar.More` when you want to keep a section compact and move secondary items into a menu.
+
+<Demo data={moreDemo} />
 
 ## Accessibility
 

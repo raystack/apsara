@@ -8,10 +8,9 @@ import {
   ReactNode,
   useContext
 } from 'react';
-import { Avatar } from '../avatar';
-import { Flex } from '../flex';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
+import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { SidebarContext } from './sidebar-root';
 
 export interface SidebarItemProps extends ComponentProps<'a'> {
@@ -43,13 +42,6 @@ export function SidebarItem({
     typeof children === 'string' &&
     children.length > 0;
 
-  const iconProps = {
-    align: 'center',
-    gap: 3,
-    className: cx(styles['nav-leading-icon'], classNames?.leadingIcon),
-    'aria-hidden': true
-  } as const;
-
   const content = cloneElement(
     as,
     {
@@ -65,20 +57,11 @@ export function SidebarItem({
       ...props
     },
     <>
-      {shouldShowFallback ? (
-        <Flex {...iconProps}>
-          <Avatar
-            size={1}
-            variant='soft'
-            color='neutral'
-            fallback={children[0].toUpperCase()}
-            className={styles['nav-fallback-avatar']}
-          />
-        </Flex>
-      ) : null}
-      {!shouldShowFallback && leadingIcon ? (
-        <Flex {...iconProps}>{leadingIcon}</Flex>
-      ) : null}
+      <SidebarLeadingVisual
+        leadingIcon={!shouldShowFallback ? leadingIcon : undefined}
+        fallbackText={shouldShowFallback ? children : undefined}
+        className={classNames?.leadingIcon}
+      />
       {!isCollapsed && (
         <span className={cx(styles['nav-text'], classNames?.text)}>
           {children}

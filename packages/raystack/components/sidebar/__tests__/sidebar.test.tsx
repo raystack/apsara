@@ -272,4 +272,38 @@ describe('Sidebar', () => {
       expect(group).toBeInTheDocument();
     });
   });
+
+  describe('Sidebar More', () => {
+    it('renders More trigger and opens menu items', () => {
+      render(
+        <BasicSidebar>
+          <Sidebar.More label='More items'>
+            <Sidebar.Item href='#'>Logs</Sidebar.Item>
+            <Sidebar.Item href='#'>Audit</Sidebar.Item>
+          </Sidebar.More>
+        </BasicSidebar>
+      );
+
+      const trigger = screen.getByText('More items').closest('button');
+      expect(trigger).toBeInTheDocument();
+      if (!trigger) return;
+      fireEvent.click(trigger);
+
+      expect(screen.getByText('Logs')).toBeInTheDocument();
+      expect(screen.getByText('Audit')).toBeInTheDocument();
+    });
+
+    it('sets aria-label for collapsed More trigger', () => {
+      render(
+        <BasicSidebar open={false}>
+          <Sidebar.More label='Overflow'>
+            <Sidebar.Item href='#'>Logs</Sidebar.Item>
+          </Sidebar.More>
+        </BasicSidebar>
+      );
+
+      const trigger = screen.getByRole('listitem', { name: 'Overflow' });
+      expect(trigger).toHaveAttribute('aria-label', 'Overflow');
+    });
+  });
 });

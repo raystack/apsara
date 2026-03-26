@@ -13,11 +13,13 @@ import styles from './sidebar.module.css';
 
 export interface SidebarContextValue {
   isCollapsed: boolean;
+  position: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
 }
 
 export const SidebarContext = createContext<SidebarContextValue>({
-  isCollapsed: false
+  isCollapsed: false,
+  position: 'left'
 });
 
 export interface SidebarRootProps extends ComponentProps<'aside'> {
@@ -54,7 +56,9 @@ export function SidebarRoot({
   );
 
   return (
-    <SidebarContext value={{ isCollapsed: !open, hideCollapsedItemTooltip }}>
+    <SidebarContext
+      value={{ isCollapsed: !open, position, hideCollapsedItemTooltip }}
+    >
       <aside
         className={cx(styles.root, className)}
         data-position={position}
