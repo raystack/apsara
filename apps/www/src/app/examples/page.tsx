@@ -86,7 +86,7 @@ const Page = () => {
           backgroundColor: 'var(--rs-color-background-base-primary)'
         }}
       >
-        <Sidebar defaultOpen variant='inset'>
+        <Sidebar defaultOpen variant='floating'>
           <Sidebar.Header>
             <Flex align='center' gap={3}>
               <IconButton
