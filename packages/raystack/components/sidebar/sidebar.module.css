@@ -22,6 +22,9 @@
 
 .root[data-variant="floating"] {
   box-shadow: var(--rs-shadow-lifted);
+  border-radius: var(--rs-radius-3);
+  margin: var(--rs-space-4);
+  border: 0.5px solid var(--rs-color-border-base-primary);
 }
 
 .root[data-variant="inset"] {
