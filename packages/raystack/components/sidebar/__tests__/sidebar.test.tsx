@@ -285,6 +285,154 @@ describe('Sidebar', () => {
       const group = screen.getByLabelText(MAIN_GROUP_LABEL);
       expect(group).toBeInTheDocument();
     });
+
+    it('renders accordion trigger when accordion is enabled', () => {
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              accordion
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      expect(trigger).toBeInTheDocument();
+      expect(trigger).toHaveAttribute('data-panel-open');
+    });
+
+    it('toggles group items when accordion is enabled', () => {
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              accordion
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+    });
+
+    it('forces accordion panel open when sidebar is collapsed', () => {
+      const { rerender } = render(
+        <Sidebar open>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              accordion
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      fireEvent.click(trigger);
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+
+      rerender(
+        <Sidebar open={false}>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              accordion
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      expect(
+        screen.getByRole('listitem', { name: DASHBOARD_ITEM_TEXT })
+      ).toBeInTheDocument();
+    });
+
+    it('renders right icon when provided in accordion header', () => {
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              accordion
+              trailingIcon={<span data-testid='group-trailing-icon'>+</span>}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      expect(screen.getByTestId('group-trailing-icon')).toBeInTheDocument();
+    });
+
+    it('does not toggle accordion when trailing icon is clicked', () => {
+      const onTrailingIconClick = vi.fn();
+
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              accordion
+              trailingIcon={
+                <button
+                  type='button'
+                  data-testid='group-trailing-action'
+                  onClick={onTrailingIconClick}
+                >
+                  +
+                </button>
+              }
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      expect(trigger).toHaveAttribute('data-panel-open');
+
+      fireEvent.click(screen.getByTestId('group-trailing-action'));
+
+      expect(onTrailingIconClick).toHaveBeenCalledTimes(1);
+      expect(trigger).toHaveAttribute('data-panel-open');
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+    });
   });
 
   describe('Sidebar More', () => {
