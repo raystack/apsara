@@ -19,6 +19,7 @@ export function ScrollAreaScrollbar({
   return (
     <ScrollAreaPrimitive.Scrollbar
       orientation={orientation}
+      keepMounted
       className={cx(styles.scrollbar, styles[`scrollbar-${type}`], className)}
       {...props}
     >
