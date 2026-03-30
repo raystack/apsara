@@ -1,6 +1,6 @@
 'use client';
 
-import { DrawerPreview as DrawerPrimitive } from '@base-ui/react/drawer';
+import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';

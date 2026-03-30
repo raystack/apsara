@@ -5,9 +5,7 @@ import { getPropsString } from '@/lib/utils';
 export const getCode = (props: Record<string, unknown>) => {
   return `
     <Drawer${getPropsString(props)}>
-      <Drawer.Trigger>
-        <Button>Drawer</Button>
-      </Drawer.Trigger>
+      <Drawer.Trigger render={<Button />}>Drawer</Drawer.Trigger>
       <Drawer.Content${getPropsString(props)}>
         <Drawer.Header>
           <Drawer.Title>Drawer</Drawer.Title>
@@ -38,9 +36,7 @@ export const basicDemo = {
   type: 'code',
   code: `
   <Drawer side="right">
-    <Drawer.Trigger>
-      <Button>Open Drawer</Button>
-    </Drawer.Trigger>
+    <Drawer.Trigger render={<Button />}>Open Drawer</Drawer.Trigger>
     <Drawer.Content>
       <Drawer.Header>
         <Drawer.Title>Drawer Title</Drawer.Title>
@@ -58,9 +54,7 @@ export const positionDemo = {
   code: `
   <Flex gap="medium">
     <Drawer side="top">
-      <Drawer.Trigger>
-        <Button>Top Drawer</Button>
-      </Drawer.Trigger>
+      <Drawer.Trigger render={<Button />}>Top Drawer</Drawer.Trigger>
       <Drawer.Content side="top">
         <Drawer.Header>
           <Drawer.Title>Top Drawer</Drawer.Title>
@@ -70,9 +64,7 @@ export const positionDemo = {
       </Drawer.Content>
     </Drawer>
     <Drawer side="right">
-      <Drawer.Trigger>
-        <Button>Right Drawer</Button>
-      </Drawer.Trigger>
+      <Drawer.Trigger render={<Button />}>Right Drawer</Drawer.Trigger>
       <Drawer.Content side="right">
         <Drawer.Header>
           <Drawer.Title>Right Drawer</Drawer.Title>
@@ -82,9 +74,7 @@ export const positionDemo = {
       </Drawer.Content>
     </Drawer>
     <Drawer side="left">
-      <Drawer.Trigger>
-        <Button>Left Drawer</Button>
-      </Drawer.Trigger>
+      <Drawer.Trigger render={<Button />}>Left Drawer</Drawer.Trigger>
       <Drawer.Content side="left">
         <Drawer.Header>
           <Drawer.Title>Left Drawer</Drawer.Title>
@@ -94,9 +84,7 @@ export const positionDemo = {
       </Drawer.Content>
     </Drawer>
     <Drawer side="bottom">
-      <Drawer.Trigger>
-        <Button>Bottom Drawer</Button>
-      </Drawer.Trigger>
+      <Drawer.Trigger render={<Button />}>Bottom Drawer</Drawer.Trigger>
       <Drawer.Content side="bottom">
         <Drawer.Header>
           <Drawer.Title>Bottom Drawer</Drawer.Title>
