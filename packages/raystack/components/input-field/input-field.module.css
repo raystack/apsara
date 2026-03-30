@@ -27,7 +27,7 @@
   width: 100%;
   position: relative;
   border-radius: var(--rs-radius-2);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   background: var(--rs-color-background-base-primary);
   transition: all 0.2s ease;
   box-sizing: border-box;

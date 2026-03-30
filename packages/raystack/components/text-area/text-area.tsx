@@ -51,10 +51,15 @@ function TextArea({
             {!required && <span className={styles.optional}>(optional)</span>}
           </label>
           {infoTooltip && (
-            <Tooltip message={infoTooltip} side='right'>
-              <span className={styles.helpIcon}>
-                <InfoCircledIcon />
-              </span>
+            <Tooltip>
+              <Tooltip.Trigger
+                render={
+                  <span className={styles.helpIcon}>
+                    <InfoCircledIcon />
+                  </span>
+                }
+              />
+              <Tooltip.Content side='right'>{infoTooltip}</Tooltip.Content>
             </Tooltip>
           )}
         </div>
