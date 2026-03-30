@@ -1,3 +1,4 @@
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { MenuContent, MenuSubContent } from './menu-content';
 import { MenuItem } from './menu-item';
 import {
@@ -19,5 +20,6 @@ export const Menu = Object.assign(MenuRoot, {
   EmptyState: MenuEmptyState,
   Submenu: MenuSubMenu,
   SubmenuTrigger: MenuSubTrigger,
-  SubmenuContent: MenuSubContent
+  SubmenuContent: MenuSubContent,
+  createHandle: MenuPrimitive.createHandle
 });
