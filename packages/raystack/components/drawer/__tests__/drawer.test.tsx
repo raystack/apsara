@@ -21,9 +21,7 @@ const BasicDrawer = ({
   side?: 'top' | 'right' | 'bottom' | 'left';
 } & Record<string, unknown>) => (
   <Drawer side={side} {...props}>
-    <Drawer.Trigger>
-      <Button>{TRIGGER_TEXT}</Button>
-    </Drawer.Trigger>
+    <Drawer.Trigger render={<Button />}>{TRIGGER_TEXT}</Drawer.Trigger>
     <Drawer.Content side={side} showCloseButton={showCloseButton}>
       <Drawer.Header>
         <Drawer.Title>{DRAWER_TITLE}</Drawer.Title>
@@ -134,9 +132,7 @@ describe('Drawer', () => {
       const user = userEvent.setup();
       render(
         <Drawer side='right'>
-          <Drawer.Trigger>
-            <Button>{TRIGGER_TEXT}</Button>
-          </Drawer.Trigger>
+          <Drawer.Trigger render={<Button />}>{TRIGGER_TEXT}</Drawer.Trigger>
           <Drawer.Content className='custom-drawer'>
             <Drawer.Header>
               <Drawer.Title>{DRAWER_TITLE}</Drawer.Title>

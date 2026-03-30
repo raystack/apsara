@@ -1,6 +1,6 @@
 'use client';
 
-import { DrawerPreview as DrawerPrimitive } from '@base-ui/react/drawer';
+import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, type ReactNode } from 'react';
 import styles from './drawer.module.css';
