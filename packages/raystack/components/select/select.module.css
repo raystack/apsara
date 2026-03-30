@@ -71,11 +71,10 @@
   user-select: none;
   -webkit-user-select: none;
   transition: all 0.2s ease;
-  box-shadow: var(--rs-shadow-feather);
 }
 
 .trigger-outline {
-  border: 0.5px solid var(--rs-color-border-base-secondary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
 }
 
 .trigger-text {

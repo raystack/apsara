@@ -6,5 +6,10 @@ figma.connect(Tooltip, '<FIGMA_LINK>?node-id=3598-25261', {
   props: {
     message: figma.textContent('Tooltip text')
   },
-  example: props => <Tooltip {...props}>TOOLTIP_TRIGGER</Tooltip>
+  example: props => (
+    <Tooltip>
+      <Tooltip.Trigger render={<button />}>TOOLTIP_TRIGGER</Tooltip.Trigger>
+      <Tooltip.Content>{props.message}</Tooltip.Content>
+    </Tooltip>
+  )
 });

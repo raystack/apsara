@@ -149,23 +149,24 @@ export const Calendar = function ({
           const hasDateInfo = Boolean(dateComponent);
 
           return (
-            <Tooltip
-              side='top'
-              disabled={loadingData || !showTooltip || !message}
-              message={message}
-            >
-              <button
-                {...buttonProps}
-                className={cx(
-                  buttonProps.className,
-                  hasDateInfo && styles.dayButtonWithInfo
-                )}
+            <Tooltip disabled={loadingData || !showTooltip || !message}>
+              <Tooltip.Trigger
+                render={
+                  <button
+                    {...buttonProps}
+                    className={cx(
+                      buttonProps.className,
+                      hasDateInfo && styles.dayButtonWithInfo
+                    )}
+                  />
+                }
               >
                 {hasDateInfo && (
                   <div className={styles.dayInfo}>{dateComponent}</div>
                 )}
                 <span className={styles.dayNumber}>{buttonProps.children}</span>
-              </button>
+              </Tooltip.Trigger>
+              <Tooltip.Content side='top'>{message}</Tooltip.Content>
             </Tooltip>
           );
         },
