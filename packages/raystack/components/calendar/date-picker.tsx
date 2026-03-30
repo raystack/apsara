@@ -3,7 +3,7 @@
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
+import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import {
   isValidElement,
   useCallback,
