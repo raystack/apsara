@@ -158,14 +158,16 @@ export const Calendar = function ({
                       buttonProps.className,
                       hasDateInfo && styles.dayButtonWithInfo
                     )}
-                  />
+                  >
+                    {hasDateInfo && (
+                      <div className={styles.dayInfo}>{dateComponent}</div>
+                    )}
+                    <span className={styles.dayNumber}>
+                      {buttonProps.children}
+                    </span>
+                  </button>
                 }
-              >
-                {hasDateInfo && (
-                  <div className={styles.dayInfo}>{dateComponent}</div>
-                )}
-                <span className={styles.dayNumber}>{buttonProps.children}</span>
-              </Tooltip.Trigger>
+              />
               <Tooltip.Content side='top'>{message}</Tooltip.Content>
             </Tooltip>
           );
