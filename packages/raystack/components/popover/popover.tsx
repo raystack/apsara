@@ -48,5 +48,6 @@ PopoverContent.displayName = 'Popover.Content';
 export const Popover = Object.assign(PopoverPrimitive.Root, {
   Trigger: PopoverPrimitive.Trigger,
   Close: PopoverPrimitive.Close,
-  Content: PopoverContent
+  Content: PopoverContent,
+  createHandle: PopoverPrimitive.createHandle
 });
