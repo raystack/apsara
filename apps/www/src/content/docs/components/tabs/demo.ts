@@ -6,23 +6,17 @@ export const preview = {
   <Flex direction="row" gap="large" style={{ width: "100%", fontSize: "12px", padding: "0 16px" }}>
     <Tabs defaultValue="tab-one">
       <Tabs.List>
-        <Tabs.Tab value="tab-two">Hosting</Tabs.Tab>
-        <Tabs.Tab value="tab-four">Billing</Tabs.Tab>
-        <Tabs.Tab value="tab-five">SEO</Tabs.Tab>
+        <Tabs.Tab value="tab-one">Hosting</Tabs.Tab>
+        <Tabs.Tab value="tab-two">Billing</Tabs.Tab>
+        <Tabs.Tab value="tab-three">SEO</Tabs.Tab>
       </Tabs.List>
       <Tabs.Content value="tab-one">
-        <Text>General settings content</Text>
-      </Tabs.Content>
-      <Tabs.Content value="tab-two">
         <Text>Hosting configuration content</Text>
       </Tabs.Content>
+      <Tabs.Content value="tab-two">
+        <Text>Billing preferences content</Text>
+      </Tabs.Content>
       <Tabs.Content value="tab-three">
-        <Text>Editor preferences content</Text>
-      </Tabs.Content>
-      <Tabs.Content value="tab-four">
-        <Text>Billing information content</Text>
-      </Tabs.Content>
-      <Tabs.Content value="tab-five">
         <Text>SEO settings content</Text>
       </Tabs.Content>
     </Tabs>
