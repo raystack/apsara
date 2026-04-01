@@ -27,6 +27,6 @@
 }
 
 .clearButton svg {
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }

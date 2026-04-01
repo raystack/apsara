@@ -25,8 +25,8 @@
   display: flex;
   align-items: center;
   margin-left: var(--rs-space-2);
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }
 
 .optional {
@@ -54,7 +54,7 @@
   outline: none;
   height: auto;
   width: 100%;
-  min-height: 64px;
+  min-height: var(--rs-space-13);
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-2);

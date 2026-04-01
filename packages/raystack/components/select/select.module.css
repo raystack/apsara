@@ -84,7 +84,7 @@
 
 .trigger-small {
   padding: var(--rs-space-2);
-  min-height: 24px;
+  min-height: var(--rs-space-7);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -102,7 +102,7 @@
 
 .trigger-medium {
   padding: var(--rs-space-3);
-  min-height: 32px;
+  min-height: var(--rs-space-9);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -148,8 +148,8 @@
 }
 
 .triggerIcon {
-  width: 16px;
-  height: 16px;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
   margin-left: var(--rs-space-3);
   flex-shrink: 0;
   color: var(--rs-color-foreground-base-secondary);
@@ -164,7 +164,7 @@
 
 .content[data-variant="text"] .menuitem {
   padding: var(--rs-space-1) var(--rs-space-2);
-  min-height: 24px !important;
+  min-height: var(--rs-space-7) !important;
   font-size: var(--rs-font-size-small);
 }
 
@@ -199,18 +199,18 @@
 }
 
 .itemIcon svg {
-  width: 16px;
-  height: 16px;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
 }
 
 .trigger-small .valueContent .itemIcon svg {
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }
 
 .trigger-small .triggerIcon {
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
   margin-left: var(--rs-space-2);
   flex-shrink: 0;
 }

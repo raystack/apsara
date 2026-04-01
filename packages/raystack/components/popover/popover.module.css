@@ -8,7 +8,7 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   box-sizing: border-box;
-  min-width: 120px;
+  min-width: var(--rs-space-17);
   max-width: 18rem;
   padding: var(--rs-space-3);
   background-color: var(--rs-color-background-base-primary);
@@ -22,7 +22,7 @@
 @keyframes slideUpAndFade {
   from {
     opacity: 0;
-    transform: translateY(2px);
+    transform: translateY(var(--rs-space-1));
   }
   to {
     opacity: 1;

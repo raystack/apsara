@@ -1,6 +1,6 @@
 .announcement-bar {
   width: 100%;
-  min-height: 40px;
+  min-height: var(--rs-space-10);
   padding: var(--rs-space-3) var(--rs-space-7);
 }
 
@@ -36,8 +36,8 @@
 
 .icon,
 .icon > svg {
-  min-height: 16px;
-  min-width: 16px;
+  min-height: var(--rs-space-5);
+  min-width: var(--rs-space-5);
 }
 
 .action-btn {
