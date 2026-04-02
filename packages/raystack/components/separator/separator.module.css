@@ -19,12 +19,12 @@
 
 .separator-small[data-orientation="horizontal"] {
   height: 1px;
-  width: 20px;
+  width: var(--rs-space-6);
 }
 
 .separator-small[data-orientation="vertical"] {
   width: 1px;
-  height: 20px;
+  height: var(--rs-space-6);
 }
 
 .separator-half[data-orientation="horizontal"] {

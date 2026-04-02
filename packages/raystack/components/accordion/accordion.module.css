@@ -9,6 +9,7 @@
 
 .accordion-trigger {
   display: flex;
+  /* Todo: var does not exist for 36px */
   min-height: 36px;
   padding: 0 var(--rs-space-4);
   justify-content: space-between;
@@ -25,6 +26,7 @@
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
 }
+
 .accordion-item:not(:first-child) .accordion-trigger {
   border-top: none;
 }

@@ -91,11 +91,11 @@
 }
 
 .theme :global(.token.important) {
-  font-weight: 500;
+  font-weight: var(--rs-font-weight-medium);
 }
 
 .theme :global(.token.bold) {
-  font-weight: 500;
+  font-weight: var(--rs-font-weight-medium);
 }
 
 .theme :global(.token.italic) {

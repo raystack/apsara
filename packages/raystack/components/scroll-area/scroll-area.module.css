@@ -1,5 +1,5 @@
 :root {
-  --rs-scrollbar-size-default: 4px;
+  --rs-scrollbar-size-default: var(--rs-space-2);
   --rs-scrollbar-size-hover: 6px;
 }
 
