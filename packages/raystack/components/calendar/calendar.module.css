@@ -7,7 +7,7 @@
 }
 
 .captionLabel,
-.dropdowns > span,
+.dropdowns>span,
 .dropdown_trigger {
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
@@ -197,7 +197,7 @@
 
 .disabled {
   color: var(--rs-color-foreground-base-tertiary);
-  opacity: 0.8;
+  opacity: 0.5;
 }
 
 .day.today button::after {

@@ -42,7 +42,7 @@
 } */
 
 .menuitem[data-disabled] {
-  opacity: 0.6;
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .trigger:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -228,7 +228,7 @@
 .trigger[data-disabled] {
   background: var(--rs-color-background-base-primary);
   border-color: var(--rs-color-border-base-tertiary);
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed !important;
   pointer-events: none;
 }
