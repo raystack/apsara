@@ -54,8 +54,6 @@
 
 .trigger[data-disabled] {
   opacity: 0.5;
-  cursor: not-allowed;
-  color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
 }
 

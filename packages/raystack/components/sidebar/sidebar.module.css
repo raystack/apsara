@@ -95,7 +95,6 @@
 
 .nav-item[data-disabled="true"] {
   opacity: 0.5;
-  cursor: not-allowed;
   pointer-events: none;
 }
 
@@ -205,6 +204,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .root,
   .nav-item,
   .nav-text,
