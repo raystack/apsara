@@ -1,8 +1,8 @@
 ---
 ID: RFC 001
 Created: January 15, 2026
-Status: Accepted
-RFC PR:
+Status: Completed
+RFC PR: https://github.com/raystack/apsara/pull/730
 ---
 
 # Base UI Migration
