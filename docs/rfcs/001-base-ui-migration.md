@@ -5,29 +5,37 @@ Status: Completed
 RFC PR: https://github.com/raystack/apsara/pull/730
 ---
 
-# Base UI Migration
+# Base UI Migration <!-- omit in toc -->
 
 This RFC proposes migrating the Apsara design system from Radix UI to Base UI for enhanced consistency and features.
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-- [Base UI Migration](#base-ui-migration)
-  - [Table of Contents](#table-of-contents)
-  - [Background](#background)
-    - [Current Problems](#current-problems)
-  - [Proposal](#proposal)
-  - [Why Base UI?](#why-base-ui)
-  - [Pros and Cons](#pros-and-cons)
-    - [Pros](#pros)
-    - [Cons](#cons)
-  - [Differences and Analysis](#differences-and-analysis)
-    - [General Differences from Radix UI](#general-differences-from-radix-ui)
-    - [Component-Specific Differences from Radix UI](#component-specific-differences-from-radix-ui)
-  - [Table of Comparison](#table-of-comparison)
-  - [Impact and Effort](#impact-and-effort)
-    - [Impact](#impact)
-    - [Effort](#effort)
-  - [Helpful Links](#helpful-links)
+- [Background](#background)
+  - [Current Problems](#current-problems)
+- [Proposal](#proposal)
+- [Why Base UI?](#why-base-ui)
+- [Pros and Cons](#pros-and-cons)
+  - [Pros](#pros)
+  - [Cons](#cons)
+- [Differences and Analysis](#differences-and-analysis)
+  - [General Differences from Radix UI](#general-differences-from-radix-ui)
+    - [`asChild` Prop Replacement](#aschild-prop-replacement)
+    - [Naming Conventions](#naming-conventions)
+    - [Backdrop vs. Overlay](#backdrop-vs-overlay)
+    - [Positioning of Content](#positioning-of-content)
+    - [Detached Triggers](#detached-triggers)
+  - [Component-Specific Differences from Radix UI](#component-specific-differences-from-radix-ui)
+    - [Accordion](#accordion)
+    - [Slider and Accordion](#slider-and-accordion)
+    - [Command](#command)
+    - [Command, Combobox, Select](#command-combobox-select)
+    - [Dropdown](#dropdown)
+- [Table of Comparison](#table-of-comparison)
+- [Impact and Effort](#impact-and-effort)
+  - [Impact](#impact)
+  - [Effort](#effort)
+- [Helpful Links](#helpful-links)
 
 ## Background
 
@@ -111,7 +119,9 @@ Base UI is an excellent fit for Apsara's requirements:
 ```
 
 > [!NOTE]
-> **Analysis**: More powerful for complex cases, we would be going ahead with `render` moving forward.
+> **Analysis**
+>
+> More powerful for complex cases, we would be going ahead with `render` moving forward.
 > e.g, `Sidebar.Item` requires custom element rendering, but due its DOM structure, `asChild` couldn't be used. We had to add an `as` prop to solve this, but `render` resolves this natively.
 
 #### Naming Conventions
@@ -152,7 +162,9 @@ Base UI is an excellent fit for Apsara's requirements:
 ```
 
 > [!NOTE]
-> **Analysis**: To maintain consistency across components, we'll expose `*.Content` in Apsara wrappers, abstracting the difference.
+> **Analysis**
+>
+> To maintain consistency across components, we'll expose `*.Content` in Apsara wrappers, abstracting the difference.
 
 #### Backdrop vs. Overlay
 
@@ -174,7 +186,9 @@ Base UI is an excellent fit for Apsara's requirements:
 ```
 
 > [!NOTE]
-> **Analysis**: Minor rename; we'll retain `Overlay` in Apsara for familiarity.
+> **Analysis**
+>
+> Minor rename; we'll retain `Overlay` in Apsara for familiarity.
 
 #### Positioning of Content
 
@@ -200,7 +214,9 @@ Base UI is an excellent fit for Apsara's requirements:
 ```
 
 > [!NOTE]
-> **Analysis**: We'll wrap Positioner + Content in Apsara and expose a single `Content` component, hiding the complexity.
+> **Analysis**
+>
+> We'll wrap Positioner + Content in Apsara and expose a single `Content` component, hiding the complexity.
 
 #### Detached Triggers
 
@@ -218,7 +234,9 @@ const demoDialog = Dialog.createHandle();
 ```
 
 > [!NOTE]
-> **Analysis**: A significant upgrade for flexible UIs, addressing a common Radix limitation.
+> **Analysis**
+>
+> A significant upgrade for flexible UIs, addressing a common Radix limitation.
 
 ### Component-Specific Differences from Radix UI
 
@@ -228,7 +246,9 @@ const demoDialog = Dialog.createHandle();
 - Base UI: `multiple={boolean}` (default: `false`).
 
 > [!NOTE]
-> Analysis: Simpler API; we'll map existing props in Apsara wrappers. This aligns with how `multiple` is used in Select & Dropdown
+> **Analysis**
+>
+> Simpler API; we'll map existing props in Apsara wrappers. This aligns with how `multiple` is used in Select & Dropdown
 
 #### Slider and Accordion
 
@@ -236,7 +256,9 @@ const demoDialog = Dialog.createHandle();
 - Base UI: Always accepts arrays for values.
 
 > [!NOTE]
-> Analysis: We will be keeping the support for both array and singular values, internally we would be formatting as per Base UI needs
+> **Analysis**
+>
+> We will be keeping the support for both array and singular values, internally we would be formatting as per Base UI needs
 
 #### Command
 
@@ -244,7 +266,9 @@ const demoDialog = Dialog.createHandle();
 - Base UI: Aligns with Combobox/Select.
 
 > [!NOTE]
-> Analysis: Removes Cmdk dependency. We would be implementing this with Autocomplete + Dialog in Apsara
+> **Analysis**
+>
+> Removes Cmdk dependency. We would be implementing this with Autocomplete + Dialog in Apsara
 
 #### Command, Combobox, Select
 
@@ -257,7 +281,9 @@ Composition options:
 - Option C: Use object values directly without an items array
 
 > [!NOTE]
-> Analysis: We would be preferring Option A but also abstract Apsara API to support similar usage like before.
+> **Analysis**
+>
+> We would be preferring Option A but also abstract Apsara API to support similar usage like before.
 
 #### Dropdown
 
@@ -265,7 +291,9 @@ Composition options:
 - Base UI: Menu + Autocomplete.
 
 > [!NOTE]
-> Analysis: Removes Ariakit dependency. We would be implementing this with Autocomplete + Menu in Apsara
+> **Analysis**
+>
+> Removes Ariakit dependency. We would be implementing this with Autocomplete + Menu in Apsara
 
 ## Table of Comparison
 
