@@ -93,9 +93,10 @@ Base UI is an excellent fit for Apsara's requirements:
 
 ### General Differences from Radix UI
 
-- **`asChild` Prop Replacement**:
-  - Radix: `asChild` for simple component composition.
-  - Base UI: Introduces a `render` prop, which can mimic `asChild` or act as a function for more control.
+#### `asChild` Prop Replacement
+
+- Radix: `asChild` for simple component composition.
+- Base UI: Introduces a `render` prop, which can mimic `asChild` or act as a function for more control.
 
 ```jsx
 // Radix
@@ -109,12 +110,14 @@ Base UI is an excellent fit for Apsara's requirements:
 </DropdownMenu.Trigger>
 ```
 
-  > **Analysis**: More powerful for complex cases, we would be going ahead with `render` moving forward.
-  > e.g, `Sidebar.Item` requires custom element rendering, but due its DOM structure, `asChild` couldn't be used. We had to add an `as` prop to solve this, but `render` resolves this natively.
+> [!NOTE]
+> **Analysis**: More powerful for complex cases, we would be going ahead with `render` moving forward.
+> e.g, `Sidebar.Item` requires custom element rendering, but due its DOM structure, `asChild` couldn't be used. We had to add an `as` prop to solve this, but `render` resolves this natively.
 
-- **Naming Conventions**:
-  - Radix: Uniform `*.Content` for all component content.
-  - Base UI: Uses `*.Popup` or `*.Panel`
+#### Naming Conventions
+
+- Radix: Uniform `*.Content` for all component content.
+- Base UI: Uses `*.Popup` or `*.Panel`
 
 ```jsx
 // Radix
@@ -148,11 +151,13 @@ Base UI is an excellent fit for Apsara's requirements:
 </Accordion.Root>
 ```
 
-  > **Analysis**: To maintain consistency across components, we'll expose `*.Content` in Apsara wrappers, abstracting the difference.
+> [!NOTE]
+> **Analysis**: To maintain consistency across components, we'll expose `*.Content` in Apsara wrappers, abstracting the difference.
 
-- **Backdrop vs. Overlay**:
-  - Radix: Component named `Overlay`.
-  - Base UI: Component named `Backdrop`.
+#### Backdrop vs. Overlay
+
+- Radix: Component named `Overlay`.
+- Base UI: Component named `Backdrop`.
 
 ```jsx
 // Radix
@@ -168,11 +173,13 @@ Base UI is an excellent fit for Apsara's requirements:
 </Dialog.Root>
 ```
 
-  > **Analysis**: Minor rename; we'll retain `Overlay` in Apsara for familiarity.
+> [!NOTE]
+> **Analysis**: Minor rename; we'll retain `Overlay` in Apsara for familiarity.
 
-- **Positioning of Content**:
-  - Radix: Props like `side` and `align` directly on `*.Content` (e.g., `Popover.Content`).
-  - Base UI: Props passed to a separate `Positioner` component.
+#### Positioning of Content
+
+- Radix: Props like `side` and `align` directly on `*.Content` (e.g., `Popover.Content`).
+- Base UI: Props passed to a separate `Positioner` component.
 
 ```jsx
 // Radix
@@ -192,11 +199,13 @@ Base UI is an excellent fit for Apsara's requirements:
 </Popover.Root>
 ```
 
-  > **Analysis**: We'll wrap Positioner + Content in Apsara and expose a single `Content` component, hiding the complexity.
+> [!NOTE]
+> **Analysis**: We'll wrap Positioner + Content in Apsara and expose a single `Content` component, hiding the complexity.
 
-- **Detached Triggers**:
-  - Radix: Not supported.
-  - Base UI: Supported for Dialog, Popover, DropdownMenu, allowing triggers outside the component tree.
+#### Detached Triggers
+
+- Radix: Not supported.
+- Base UI: Supported for Dialog, Popover, DropdownMenu, allowing triggers outside the component tree.
 
 ```jsx
 // Base UI
@@ -208,44 +217,55 @@ const demoDialog = Dialog.createHandle();
 </Dialog.Root>
 ```
 
-  > **Analysis**: A significant upgrade for flexible UIs, addressing a common Radix limitation.
+> [!NOTE]
+> **Analysis**: A significant upgrade for flexible UIs, addressing a common Radix limitation.
 
 ### Component-Specific Differences from Radix UI
 
-- **Accordion**:
-  - Radix: `type="single" | "multiple"`.
-  - Base UI: `multiple={boolean}` (default: `false`).
+#### Accordion
 
-  > Analysis: Simpler API; we'll map existing props in Apsara wrappers. This aligns with how `multiple` is used in Select & Dropdown
+- Radix: `type="single" | "multiple"`.
+- Base UI: `multiple={boolean}` (default: `false`).
 
-- **Slider and Accordion**:
-  - Radix: Works with both array and singular values
-  - Base UI: Always accepts arrays for values.
+> [!NOTE]
+> Analysis: Simpler API; we'll map existing props in Apsara wrappers. This aligns with how `multiple` is used in Select & Dropdown
 
-  > Analysis: We will be keeping the support for both array and singular values, internally we would be formatting as per Base UI needs
+#### Slider and Accordion
 
-- **Command**:
-  - Cmdk: Custom API.
-  - Base UI: Aligns with Combobox/Select.
+- Radix: Works with both array and singular values
+- Base UI: Always accepts arrays for values.
 
-  > Analysis: Removes Cmdk dependency. We would be implementing this with Autocomplete + Dialog in Apsara
+> [!NOTE]
+> Analysis: We will be keeping the support for both array and singular values, internally we would be formatting as per Base UI needs
 
-- **Command, Combobox, Select**:
-  - Radix/Ariakit: Support only string-only values.
-  - Base UI: Supports any value type, multiple composition modes
+#### Command
 
-  Composition options:
-  - **Option A (recommended)**: Pass items to root; Base UI handles filtering, empty states, and labels
-  - Option B: Use render functions for value/output customization
-  - Option C: Use object values directly without an items array
+- Cmdk: Custom API.
+- Base UI: Aligns with Combobox/Select.
 
-  > Analysis: We would be preferring Option A but also abstract Apsara API to support similar usage like before.
+> [!NOTE]
+> Analysis: Removes Cmdk dependency. We would be implementing this with Autocomplete + Dialog in Apsara
 
-- **Dropdown**:
-  - Ariakit: For filterable/nested menus.
-  - Base UI: Menu + Autocomplete.
+#### Command, Combobox, Select
 
-  > Analysis: Removes Ariakit dependency. We would be implementing this with Autocomplete + Menu in Apsara
+- Radix/Ariakit: Support only string-only values.
+- Base UI: Supports any value type, multiple composition modes
+
+Composition options:
+- **Option A (recommended)**: Pass items to root; Base UI handles filtering, empty states, and labels
+- Option B: Use render functions for value/output customization
+- Option C: Use object values directly without an items array
+
+> [!NOTE]
+> Analysis: We would be preferring Option A but also abstract Apsara API to support similar usage like before.
+
+#### Dropdown
+
+- Ariakit: For filterable/nested menus.
+- Base UI: Menu + Autocomplete.
+
+> [!NOTE]
+> Analysis: Removes Ariakit dependency. We would be implementing this with Autocomplete + Menu in Apsara
 
 ## Table of Comparison
 
