@@ -5,37 +5,39 @@ Status: Completed
 RFC PR: https://github.com/raystack/apsara/pull/730
 ---
 
-# Base UI Migration <!-- omit in toc -->
+# Base UI Migration
 
 This RFC proposes migrating the Apsara design system from Radix UI to Base UI for enhanced consistency and features.
 
-## Table of Contents <!-- omit in toc -->
+## Table of Contents
 
-- [Background](#background)
-  - [Current Problems](#current-problems)
-- [Proposal](#proposal)
-- [Why Base UI?](#why-base-ui)
-- [Pros and Cons](#pros-and-cons)
-  - [Pros](#pros)
-  - [Cons](#cons)
-- [Differences and Analysis](#differences-and-analysis)
-  - [General Differences from Radix UI](#general-differences-from-radix-ui)
-    - [`asChild` Prop Replacement](#aschild-prop-replacement)
-    - [Naming Conventions](#naming-conventions)
-    - [Backdrop vs. Overlay](#backdrop-vs-overlay)
-    - [Positioning of Content](#positioning-of-content)
-    - [Detached Triggers](#detached-triggers)
-  - [Component-Specific Differences from Radix UI](#component-specific-differences-from-radix-ui)
-    - [Accordion](#accordion)
-    - [Slider and Accordion](#slider-and-accordion)
-    - [Command](#command)
-    - [Command, Combobox, Select](#command-combobox-select)
-    - [Dropdown](#dropdown)
-- [Table of Comparison](#table-of-comparison)
-- [Impact and Effort](#impact-and-effort)
-  - [Impact](#impact)
-  - [Effort](#effort)
-- [Helpful Links](#helpful-links)
+- [Base UI Migration](#base-ui-migration)
+  - [Table of Contents](#table-of-contents)
+  - [Background](#background)
+    - [Current Problems](#current-problems)
+  - [Proposal](#proposal)
+  - [Why Base UI?](#why-base-ui)
+  - [Pros and Cons](#pros-and-cons)
+    - [Pros](#pros)
+    - [Cons](#cons)
+  - [Differences and Analysis](#differences-and-analysis)
+    - [General Differences from Radix UI](#general-differences-from-radix-ui)
+      - [`asChild` Prop Replacement](#aschild-prop-replacement)
+      - [Naming Conventions](#naming-conventions)
+      - [Backdrop vs. Overlay](#backdrop-vs-overlay)
+      - [Positioning of Content](#positioning-of-content)
+      - [Detached Triggers](#detached-triggers)
+    - [Component-Specific Differences from Radix UI](#component-specific-differences-from-radix-ui)
+      - [Accordion](#accordion)
+      - [Slider and Accordion](#slider-and-accordion)
+      - [Command](#command)
+      - [Command, Combobox, Select](#command-combobox-select)
+      - [Dropdown](#dropdown)
+  - [Table of Comparison](#table-of-comparison)
+  - [Impact and Effort](#impact-and-effort)
+    - [Impact](#impact)
+    - [Effort](#effort)
+  - [Helpful Links](#helpful-links)
 
 ## Background
 
