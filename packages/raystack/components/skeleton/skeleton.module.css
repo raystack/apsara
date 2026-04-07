@@ -24,7 +24,6 @@
     var(--skeleton-highlight-color),
     transparent
   );
-  animation: shimmer var(--skeleton-duration) infinite;
 }
 
 @keyframes shimmer {
@@ -36,10 +35,9 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  /* Disable shimmer animation for reduced-motion users. */
+@media (prefers-reduced-motion: no-preference) {
   .animate::after {
-    animation: none;
+    animation: shimmer var(--skeleton-duration) infinite;
   }
 }
 

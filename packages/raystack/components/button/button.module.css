@@ -13,7 +13,6 @@
   padding: var(--rs-space-3) var(--rs-space-4);
   border-radius: var(--rs-radius-2);
   text-wrap: nowrap;
-  transition: all 0.2s ease-in-out;
 }
 
 .button:focus-visible {
@@ -250,13 +249,15 @@
   border-radius: 50%;
   width: 10px;
   height: 10px;
-  animation: spin 1s linear infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  /* Disable button loader rotation for reduced-motion users. */
+@media (prefers-reduced-motion: no-preference) {
+  .button {
+    transition: all 0.2s ease-in-out;
+  }
+
   .loader {
-    animation: none;
+    animation: spin 1s linear infinite;
   }
 }
 

@@ -62,8 +62,13 @@
   line-height: var(--rs-line-height-small);
   color: var(--rs-color-foreground-base-primary);
   padding: var(--rs-space-3);
-  transition: all 0.2s ease;
   overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .textarea {
+    transition: all 0.2s ease;
+  }
 }
 
 .textarea:hover {

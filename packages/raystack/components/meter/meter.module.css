@@ -42,7 +42,6 @@
 .indicator {
   height: 100%;
   background-color: var(--rs-color-background-accent-emphasis);
-  transition: width 500ms;
 }
 
 /* Circular variant — viewBox is 72×72, SVG scales to container size */
@@ -83,7 +82,16 @@
     (1 - var(--rs-meter-percentage, 0) / 100)
   );
   stroke-linecap: butt;
-  transition: stroke-dashoffset 500ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .indicator {
+    transition: width 500ms;
+  }
+
+  .circularIndicatorCircle {
+    transition: stroke-dashoffset 500ms;
+  }
 }
 
 .meter-variant-circular .value {

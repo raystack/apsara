@@ -74,11 +74,6 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-feather);
-  transition:
-    top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   top: var(--active-tab-top, 0);
   left: var(--active-tab-left, 0);
   width: var(--active-tab-width, 0);
@@ -86,12 +81,13 @@
   z-index: 0;
 }
 
-/* Media query that matches when the user has 
-asked the OS/browser for less or no motion 
-(e.g. “Reduce motion” in accessibility settings). */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
   .indicator {
-    transition: none;
+    transition:
+      top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 

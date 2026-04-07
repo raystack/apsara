@@ -123,4 +123,4 @@ You can nest dialogs within one another. When a nested dialog opens, the parent 
 - Dialog has `role="dialog"` and `aria-modal="true"`
 - Uses `aria-label` or `aria-labelledby` to identify the dialog
 - Uses `aria-describedby` to provide additional context
-- Respects `prefers-reduced-motion: reduce` by disabling dialog overlay/backdrop and panel transitions
+- Respects motion preferences: dialog panel motion is enabled only when `prefers-reduced-motion: no-preference`

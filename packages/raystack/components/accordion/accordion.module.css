@@ -47,7 +47,6 @@
   color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
   flex-shrink: 0;
-  transition: transform 150ms ease-in-out;
   width: var(--rs-space-4);
   height: var(--rs-space-4);
 }
@@ -55,7 +54,6 @@
 .accordion-content {
   height: var(--accordion-panel-height);
   overflow: hidden;
-  transition: height 150ms ease-out;
 }
 
 .accordion-content[data-starting-style],
@@ -78,12 +76,12 @@
   border-top: 0px;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
   .accordion-icon {
-    transition: none;
+    transition: transform 150ms ease-in-out;
   }
 
   .accordion-content {
-    transition: none;
+    transition: height 150ms ease-out;
   }
 }
