@@ -11,7 +11,7 @@
   border-radius: var(--rs-radius-2);
   white-space: nowrap;
   cursor: default;
-  transition: all 0.2s ease;
+  transition: var(--rs-transition-interactive);
   box-sizing: border-box;
   height: fit-content;
   width: fit-content;

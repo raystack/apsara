@@ -21,40 +21,9 @@
   letter-spacing: var(--rs-letter-spacing-mini);
   width: fit-content;
   max-width: 400px;
-  animation-duration: 400ms;
   transform-origin: var(--transform-origin);
 }
 
-.content[data-open][data-side="top"]:not([data-instant]) {
-  animation-name: slideDownAndFade;
-}
-
-.content[data-open][data-side="right"]:not([data-instant]) {
-  animation-name: slideLeftAndFade;
-}
-
-.content[data-open][data-side="bottom"]:not([data-instant]) {
-  animation-name: slideUpAndFade;
-}
-
-.content[data-open][data-side="left"]:not([data-instant]) {
-  animation-name: slideRightAndFade;
-}
-.content[data-side="top"][data-align="start"]:not([data-instant]) {
-  animation-name: slideDownRightAndFade;
-}
-
-.content[data-side="top"][data-align="end"]:not([data-instant]) {
-  animation-name: slideDownLeftAndFade;
-}
-
-.content[data-side="bottom"][data-align="start"]:not([data-instant]) {
-  animation-name: slideUpRightAndFade;
-}
-
-.content[data-side="bottom"][data-align="end"]:not([data-instant]) {
-  animation-name: slideUpLeftAndFade;
-}
 
 .arrow svg {
   color: var(--rs-color-background-base-primary);
@@ -156,5 +125,43 @@
   from {
     opacity: 0;
     transform: translate(var(--rs-space-1), var(--rs-space-1));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content {
+    animation-duration: 400ms;
+  }
+
+  .content[data-open][data-side="top"]:not([data-instant]) {
+    animation-name: slideDownAndFade;
+  }
+
+  .content[data-open][data-side="right"]:not([data-instant]) {
+    animation-name: slideLeftAndFade;
+  }
+
+  .content[data-open][data-side="bottom"]:not([data-instant]) {
+    animation-name: slideUpAndFade;
+  }
+
+  .content[data-open][data-side="left"]:not([data-instant]) {
+    animation-name: slideRightAndFade;
+  }
+
+  .content[data-side="top"][data-align="start"]:not([data-instant]) {
+    animation-name: slideDownRightAndFade;
+  }
+
+  .content[data-side="top"][data-align="end"]:not([data-instant]) {
+    animation-name: slideDownLeftAndFade;
+  }
+
+  .content[data-side="bottom"][data-align="start"]:not([data-instant]) {
+    animation-name: slideUpRightAndFade;
+  }
+
+  .content[data-side="bottom"][data-align="end"]:not([data-instant]) {
+    animation-name: slideUpLeftAndFade;
   }
 }

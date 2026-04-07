@@ -49,8 +49,13 @@
   background: var(--rs-color-foreground-base-emphasis);
   border-radius: var(--rs-radius-full);
   transform: translateX(var(--rs-space-1));
-  transition: transform 200ms ease-in-out;
   will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .thumb {
+    transition: transform 200ms ease-in-out;
+  }
 }
 
 /* Small switch thumb sizing */

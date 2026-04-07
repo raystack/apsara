@@ -66,10 +66,7 @@
   cursor: default;
   z-index: calc(1000 - var(--toast-index));
 
-  transition:
-    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 500ms,
-    height 150ms;
+  transition: opacity 500ms;
 }
 
 /* ===== Vertical position: bottom ===== */
@@ -283,14 +280,11 @@
   opacity: 0.85;
 }
 
-/* ===== Reduced motion ===== */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: no-preference) {
   .root {
-    transition: none;
-  }
-
-  .root[data-starting-style],
-  .root[data-ending-style] {
-    transform: none;
+    transition:
+      transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 500ms,
+      height 150ms;
   }
 }

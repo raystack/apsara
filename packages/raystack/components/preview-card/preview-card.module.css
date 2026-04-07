@@ -6,9 +6,7 @@
   height: var(--positioner-height);
   width: var(--positioner-width);
   max-width: var(--available-width);
-  transition-property: top, left, right, bottom, transform;
-  transition-timing-function: var(--easing);
-  transition-duration: var(--animation-duration);
+  transition: opacity var(--animation-duration) var(--easing);
 }
 
 .popup {
@@ -25,9 +23,7 @@
   width: var(--popup-width, auto);
   height: var(--popup-height, auto);
 
-  transition-property: width, height, opacity, transform;
-  transition-timing-function: var(--easing);
-  transition-duration: var(--animation-duration);
+  transition: opacity var(--animation-duration) var(--easing);
 }
 
 .popup[data-starting-style],
@@ -79,9 +75,7 @@
   width: var(--popup-width);
   translate: 0;
   opacity: 1;
-  transition:
-    translate var(--animation-duration) var(--easing),
-    opacity calc(var(--animation-duration) / 2) var(--easing);
+  transition: opacity calc(var(--animation-duration) / 2) var(--easing);
 }
 
 .viewport[data-activation-direction~="left"]
@@ -106,4 +100,31 @@
   [data-previous][data-ending-style] {
   translate: -30% 0;
   opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .positioner {
+    transition:
+      top var(--animation-duration) var(--easing),
+      left var(--animation-duration) var(--easing),
+      right var(--animation-duration) var(--easing),
+      bottom var(--animation-duration) var(--easing),
+      transform var(--animation-duration) var(--easing),
+      opacity var(--animation-duration) var(--easing);
+  }
+
+  .popup {
+    transition:
+      width var(--animation-duration) var(--easing),
+      height var(--animation-duration) var(--easing),
+      opacity var(--animation-duration) var(--easing),
+      transform var(--animation-duration) var(--easing);
+  }
+
+  .viewport [data-previous],
+  .viewport [data-current] {
+    transition:
+      translate var(--animation-duration) var(--easing),
+      opacity calc(var(--animation-duration) / 2) var(--easing);
+  }
 }

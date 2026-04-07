@@ -23,7 +23,7 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transition: all 150ms;
+  transition: opacity 150ms;
   transform: translate(-50%, -50%);
 }
 
@@ -84,11 +84,9 @@
   z-index: var(--rs-z-index-portal);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .dialogOverlay,
+@media (prefers-reduced-motion: no-preference) {
   .dialogContent {
-    animation: none;
-    transition: none;
+    transition: opacity 150ms, transform 150ms;
   }
 }
 
