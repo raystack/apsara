@@ -12,8 +12,8 @@
 }
 
 .icon {
-  height: 32px;
-  width: 32px;
+  height: var(--rs-space-9);
+  width: var(--rs-space-9);
   padding: var(--rs-space-3);
   box-sizing: content-box;
   border: 1px solid var(--rs-color-border-base-primary);

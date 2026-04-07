@@ -33,7 +33,7 @@
 .track {
   position: relative;
   width: 100%;
-  height: 4px;
+  height: var(--rs-space-2);
   overflow: clip;
   border-radius: 1px;
   background-color: var(--rs-color-background-neutral-secondary);
@@ -53,11 +53,11 @@
 }
 
 .circularSvg {
-  --rs-progress-track-size: 4px;
-  --rs-progress-radius: calc((72px - var(--rs-progress-track-size) * 2) / 2);
+  --rs-progress-track-size: var(--rs-space-2);
+  --rs-progress-radius: calc((var(--rs-space-14) - var(--rs-progress-track-size) * 2) / 2);
   --rs-progress-circumference: calc(2 * 3.14159265 * var(--rs-progress-radius));
-  width: 72px;
-  height: 72px;
+  width: var(--rs-space-14);
+  height: var(--rs-space-14);
   aspect-ratio: 1;
   transform: rotate(-90deg);
 }

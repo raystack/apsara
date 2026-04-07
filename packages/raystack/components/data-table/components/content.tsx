@@ -1,12 +1,13 @@
 'use client';
 
-import { TableIcon } from '@radix-ui/react-icons';
+import { Cross2Icon, TableIcon } from '@radix-ui/react-icons';
 import type { HeaderGroup, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { useCallback, useEffect, useRef } from 'react';
 
 import { Badge } from '../../badge';
+import { Button } from '../../button';
 import { EmptyState } from '../../empty-state';
 import { Flex } from '../../flex';
 import { Skeleton } from '../../skeleton';
@@ -18,7 +19,12 @@ import {
   GroupedData
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
-import { hasActiveQuery } from '../utils';
+import {
+  countLeafRows,
+  getClientHiddenLeafRowCount,
+  hasActiveQuery,
+  hasActiveTableFiltering
+} from '../utils';
 
 function Headers<TData>({
   headerGroups = [],
@@ -180,12 +186,14 @@ export function Content({
     onRowClick,
     table,
     mode,
+    totalRowCount,
     isLoading,
     loadMoreData,
     loadingRowCount = 3,
     tableQuery,
     defaultSort,
-    stickyGroupHeader = false
+    stickyGroupHeader = false,
+    updateTableQuery
   } = useDataTable();
 
   const headerGroups = table?.getHeaderGroups();
@@ -246,6 +254,26 @@ export function Content({
       ? (emptyState ?? <DefaultEmptyComponent />)
       : null;
 
+  const hiddenLeafRowCount =
+    mode === 'client'
+      ? getClientHiddenLeafRowCount(table)
+      : totalRowCount !== undefined
+        ? Math.max(0, totalRowCount - countLeafRows(rows))
+        : null;
+  const hasActiveFiltering = !isLoading && hasActiveTableFiltering(table);
+  const showFilterSummary =
+    hasActiveFiltering &&
+    (mode === 'server' ||
+      (typeof hiddenLeafRowCount === 'number' && hiddenLeafRowCount > 0));
+
+  const handleClearFilters = useCallback(() => {
+    updateTableQuery(prev => ({
+      ...prev,
+      filters: [],
+      search: ''
+    }));
+  }, [updateTableQuery]);
+
   return (
     <div className={cx(styles.contentRoot, classNames.root)}>
       <Table className={classNames.table}>
@@ -283,6 +311,37 @@ export function Content({
           )}
         </Table.Body>
       </Table>
+      {showFilterSummary ? (
+        <Flex
+          className={styles.filterSummaryFooter}
+          justify='center'
+          align='center'
+        >
+          {mode === 'server' && hiddenLeafRowCount === null ? (
+            <span className={styles.filterSummaryLabel}>
+              Some items might be hidden by filters
+            </span>
+          ) : (
+            <Flex align='center' gap={2}>
+              <span className={styles.filterSummaryCount}>
+                {hiddenLeafRowCount}
+              </span>
+              <span className={styles.filterSummaryLabel}>
+                items hidden by filters
+              </span>
+            </Flex>
+          )}
+          <Button
+            variant='text'
+            color='neutral'
+            size='small'
+            trailingIcon={<Cross2Icon />}
+            onClick={handleClearFilters}
+          >
+            Clear Filters
+          </Button>
+        </Flex>
+      ) : null}
     </div>
   );
 }

@@ -17,6 +17,7 @@
 }
 
 .button:focus-visible {
+  /* Todo: var does not exist for 1px */
   outline: 1px solid var(--rs-color-border-accent-emphasis);
 }
 
@@ -239,9 +240,10 @@
 }
 
 .loader {
-  border: 2px solid var(--rs-color-background-base-primary);
-  border-top: 2px solid var(--rs-color-foreground-base-primary);
+  border: var(--rs-space-1) solid var(--rs-color-background-base-primary);
+  border-top: var(--rs-space-1) solid var(--rs-color-foreground-base-primary);
   border-radius: 50%;
+  /* Todo: var does not exist for 10px */
   width: 10px;
   height: 10px;
   animation: spin 1s linear infinite;
