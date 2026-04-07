@@ -59,18 +59,15 @@
 }
 
 .input-disabled-wrapper {
-  background: var(--rs-color-background-base-primary);
-  border-color: var(--rs-color-border-base-tertiary);
-  opacity: 0.4;
-  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .leading-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
   color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
   margin-left: var(--rs-space-3);
@@ -81,8 +78,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
   color: var(--rs-color-foreground-base-secondary);
   pointer-events: none;
   margin-right: var(--rs-space-3);
@@ -99,7 +96,7 @@
   background: transparent;
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
-  line-height: 32px;
+  line-height: var(--rs-line-height-t2);
   letter-spacing: var(--rs-letter-spacing-small);
   outline: none;
   box-sizing: border-box;
@@ -121,7 +118,6 @@
 
 .input-disabled {
   color: var(--rs-color-foreground-base-tertiary);
-  cursor: not-allowed;
 }
 
 .helper-text {
@@ -180,7 +176,7 @@
   gap: var(--rs-space-2);
   align-items: center;
   width: 100%;
-  min-height: 32px;
+  min-height: var(--rs-space-9);
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -195,7 +191,7 @@
 
 .has-chips .input-field {
   padding: 6px 0;
-  min-width: 80px;
+  min-width: var(--rs-space-15);
   width: auto;
   flex: 1;
   line-height: normal;
@@ -203,35 +199,35 @@
 
 /* Size variants */
 .size-large {
-  min-height: 32px;
+  min-height: var(--rs-space-9);
 }
 
 .size-large .input-field {
-  height: 32px;
+  height: var(--rs-space-9);
 }
 
 .size-small {
-  min-height: 24px;
+  min-height: var(--rs-space-7);
 }
 
 .size-small .input-field {
-  height: 24px;
-  line-height: 24px;
+  height: var(--rs-space-7);
+  line-height: var(--rs-line-height-large);
 }
 
 .size-small .chip-input-container {
-  min-height: 24px;
+  min-height: var(--rs-space-7);
   padding-top: 0;
   padding-bottom: 0;
 }
 
 .size-large .chip-input-container {
-  min-height: 32px;
+  min-height: var(--rs-space-9);
 }
 
 .chip-overflow {
   color: var(--rs-color-foreground-base-primary);
-  font-size: 12px;
+  font-size: var(--rs-font-size-small);
   border-radius: var(--rs-radius-2);
 }
 
@@ -286,8 +282,8 @@
   display: flex;
   align-items: center;
   margin-left: var(--rs-space-2);
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }
 
 .variant-borderless {

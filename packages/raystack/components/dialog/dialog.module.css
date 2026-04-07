@@ -41,7 +41,7 @@
   inset: 0;
   position: absolute;
   border-radius: inherit;
-  background-color: rgb(0 0 0 / 0.05);
+  background-color: var(--rs-color-overlay-black-a1);
 }
 
 .dialogContent.showNestedAnimation[data-starting-style],

@@ -22,11 +22,10 @@
 }
 
 .clearButton:disabled {
-  cursor: not-allowed;
   opacity: 0.5;
 }
 
 .clearButton svg {
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }

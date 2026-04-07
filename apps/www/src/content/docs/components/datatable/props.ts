@@ -8,6 +8,12 @@ export interface DataTableProps {
   data: Array<T>;
 
   /**
+   * Total rows available on server.
+   * Used in server mode to show hidden-by-filter count in footer.
+   */
+  totalRowCount?: number;
+
+  /**
    * Data processing mode
    * @defaultValue "client"
    */
