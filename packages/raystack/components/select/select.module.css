@@ -13,7 +13,7 @@
   box-shadow: var(--rs-shadow-soft);
   border: 0.5px solid var(--rs-color-border-base-primary);
   min-width: var(--anchor-width);
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  transition: var(--rs-transition-interactive);
   max-height: 320px;
   position: relative;
   overflow: auto;
