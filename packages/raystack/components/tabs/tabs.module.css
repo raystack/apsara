@@ -2,6 +2,27 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  --tabs-trigger-height: var(--rs-space-8);
+  --tabs-trigger-padding-inline: var(--rs-space-3);
+  --tabs-trigger-font-size: var(--rs-font-size-regular);
+  --tabs-trigger-line-height: var(--rs-line-height-regular);
+  --tabs-trigger-letter-spacing: var(--rs-letter-spacing-regular);
+}
+
+.size-small {
+  --tabs-trigger-height: var(--rs-space-6);
+  --tabs-trigger-padding-inline: var(--rs-space-2);
+  --tabs-trigger-font-size: var(--rs-font-size-mini);
+  --tabs-trigger-line-height: var(--rs-line-height-mini);
+  --tabs-trigger-letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.size-medium {
+  --tabs-trigger-height: var(--rs-space-7);
+  --tabs-trigger-padding-inline: var(--rs-space-3);
+  --tabs-trigger-font-size: var(--rs-font-size-small);
+  --tabs-trigger-line-height: var(--rs-line-height-small);
+  --tabs-trigger-letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .list {
@@ -22,9 +43,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--rs-space-2);
-  font-size: var(--rs-font-size-small);
+  font-size: var(--tabs-trigger-font-size);
+  font-style: normal;
   font-weight: var(--rs-font-weight-medium);
-  padding: var(--rs-space-2) var(--rs-space-3);
+  padding: 0 var(--tabs-trigger-padding-inline);
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   border-radius: var(--rs-radius-2);
@@ -34,9 +56,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  height: var(--rs-space-8);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
+  height: var(--tabs-trigger-height);
+  line-height: var(--tabs-trigger-line-height);
+  letter-spacing: var(--tabs-trigger-letter-spacing);
   box-sizing: border-box;
   position: relative;
   z-index: 1;
@@ -100,4 +122,49 @@ asked the OS/browser for less or no motion
 /* Base UI uses hidden attribute for inactive panels */
 .content[hidden] {
   display: none;
+}
+
+/* Shared non-segmented list reset */
+.variant-standalone .list,
+.variant-plain .list {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.variant-standalone .indicator,
+.variant-plain .indicator {
+  display: none;
+}
+
+/* Standalone variant: chip-like tabs with independent borders */
+.variant-standalone .trigger {
+  /* Chip look: no outer padding and visible border */
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  background: transparent;
+}
+
+.variant-standalone .trigger[data-active] {
+  background: var(--rs-color-background-neutral-primary);
+  border: 0.5px solid var(--rs-color-border-base-secondary);
+}
+
+/* Plain variant: text-like tabs with larger gaps */
+.variant-plain .list {
+  gap: var(--rs-space-6);
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  justify-content: center;
+}
+
+.variant-plain .trigger {
+  flex: 0 0 auto;
+  border-radius: 0;
+  /* Reserve underline space to prevent layout/typography shifting when active */
+  border-bottom: 1px solid transparent;
+}
+
+.variant-plain .trigger[data-active] {
+  border-bottom-color: var(--rs-color-border-base-emphasis);
 }
