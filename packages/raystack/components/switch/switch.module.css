@@ -34,7 +34,6 @@
 }
 
 .switch[data-disabled] {
-  cursor: not-allowed;
   background: var(--rs-color-background-neutral-primary);
 }
 

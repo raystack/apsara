@@ -33,7 +33,6 @@
 .button:disabled,
 .button-disabled {
   opacity: 0.5;
-  cursor: not-allowed;
   pointer-events: initial;
 }
 
@@ -104,7 +103,7 @@
 .button-outline.button-disabled {
   opacity: 0.5;
   background-color: transparent;
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .button-outline:disabled:hover,
@@ -127,7 +126,6 @@
   background-color: transparent;
   color: var(--rs-color-foreground-accent-primary);
   border-color: var(--rs-color-border-accent-primary);
-  cursor: not-allowed;
 }
 
 .button-outline-accent.button-loading:hover {
@@ -170,7 +168,6 @@
 .button-ghost:disabled,
 .button-ghost.button-disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .button-ghost:disabled:hover,
@@ -192,7 +189,6 @@
 .button-ghost.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: transparent;
   border-color: var(--rs-color-border-base-primary);
-  cursor: not-allowed;
 }
 
 .button-text {
@@ -210,7 +206,6 @@
 .button-text:disabled,
 .button-text.button-disabled {
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .button-text.button-loading:hover,
@@ -218,7 +213,6 @@
 .button-text.button-loading[data-radix-popover-trigger][data-state="open"],
 .button-text.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: transparent;
-  cursor: not-allowed;
 }
 
 .button-text:disabled:hover,
@@ -243,7 +237,6 @@
 .button-loading[data-radix-popover-trigger][data-state="open"],
 .button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
   background-color: inherit;
-  cursor: not-allowed;
 }
 
 .loader {
