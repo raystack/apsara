@@ -73,7 +73,7 @@ export function Callout({
 
   return (
     <div
-      className={cx(callout({ type, outline, highContrast }), className)}
+      className={callout({ type, outline, highContrast, className })}
       style={combinedStyle}
       role={getRole()}
       aria-live={type === 'alert' ? 'assertive' : 'polite'}
