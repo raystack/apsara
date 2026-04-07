@@ -1,17 +1,7 @@
 import { Tabs as TabsPrimitive } from '@base-ui/react';
-import { cva, cx } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 import styles from './tabs.module.css';
-
-type TabsVariant = 'segmented' | 'standalone' | 'plain';
-type TabsSize = 'small' | 'medium' | 'large';
-
-type TabsRootProps = TabsPrimitive.Root.Props & {
-  /** Visual variant for how tabs are rendered. */
-  variant?: TabsVariant;
-  /** Size variant for all tab triggers. */
-  size?: TabsSize;
-};
 
 const tabsRoot = cva(styles.root, {
   variants: {
@@ -31,6 +21,8 @@ const tabsRoot = cva(styles.root, {
     size: 'large'
   }
 });
+
+type TabsRootProps = TabsPrimitive.Root.Props & VariantProps<typeof tabsRoot>;
 
 function TabsRoot({ className, variant, size, ...props }: TabsRootProps) {
   return (
