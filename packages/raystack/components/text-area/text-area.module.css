@@ -20,13 +20,17 @@
   letter-spacing: var(--rs-letter-spacing-mini);
 }
 
+.labelDisabled {
+  opacity: 0.5;
+}
+
 .helpIcon {
   color: var(--rs-color-foreground-base-secondary);
   display: flex;
   align-items: center;
   margin-left: var(--rs-space-2);
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }
 
 .optional {
@@ -54,9 +58,9 @@
   outline: none;
   height: auto;
   width: 100%;
-  min-height: 64px;
+  min-height: var(--rs-space-13);
   background-color: var(--rs-color-background-base-primary);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-2);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -76,7 +80,7 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-.textarea:focus {
+.textarea:focus:not(:disabled) {
   border-color: var(--rs-color-border-accent-emphasis);
   background: var(--rs-color-background-base-primary);
   outline: none;
@@ -90,11 +94,7 @@
 }
 
 .textarea:disabled {
-  background: var(--rs-color-background-base-primary);
-  border-color: var(--rs-color-border-base-tertiary);
-  color: var(--rs-color-foreground-base-tertiary);
-  cursor: not-allowed;
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .textarea:read-only {
@@ -105,11 +105,11 @@
   border-color: var(--rs-color-border-danger-primary);
 }
 
-.error:hover {
+.error:hover:not(:disabled) {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
-.error:focus {
+.error:focus:not(:disabled) {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
@@ -118,5 +118,5 @@
 }
 
 .helperTextDisabled {
-  color: var(--rs-color-foreground-base-tertiary);
+  opacity: 0.5;
 }

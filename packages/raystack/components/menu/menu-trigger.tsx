@@ -2,7 +2,6 @@
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { forwardRef } from 'react';
 import { TriangleRightIcon } from '~/icons';
 import { Button } from '../button';
 import { useMenubarContext } from '../menubar/menubar';
@@ -15,33 +14,36 @@ export interface MenuTriggerProps extends MenuPrimitive.Trigger.Props {
   stopPropagation?: boolean;
 }
 
-export const MenuTrigger = forwardRef<HTMLButtonElement, MenuTriggerProps>(
-  ({ children, stopPropagation = true, onClick, render, ...props }, ref) => {
-    const inMenubarContext = useMenubarContext();
-    const menubarRender = inMenubarContext ? (
-      <Button
-        variant='text'
-        color='neutral'
-        size='small'
-        className={`${styles.menuBarTrigger} rs-menu-trigger`}
-      />
-    ) : undefined;
+export function MenuTrigger({
+  children,
+  stopPropagation = true,
+  onClick,
+  render,
+  ...props
+}: MenuTriggerProps) {
+  const inMenubarContext = useMenubarContext();
+  const menubarRender = inMenubarContext ? (
+    <Button
+      variant='text'
+      color='neutral'
+      size='small'
+      className={`${styles.menuBarTrigger} rs-menu-trigger`}
+    />
+  ) : undefined;
 
-    return (
-      <MenuPrimitive.Trigger
-        ref={ref}
-        render={render ?? menubarRender}
-        onClick={e => {
-          if (stopPropagation) e.stopPropagation();
-          onClick?.(e);
-        }}
-        {...props}
-      >
-        {children}
-      </MenuPrimitive.Trigger>
-    );
-  }
-);
+  return (
+    <MenuPrimitive.Trigger
+      render={render ?? menubarRender}
+      onClick={e => {
+        if (stopPropagation) e.stopPropagation();
+        onClick?.(e);
+      }}
+      {...props}
+    >
+      {children}
+    </MenuPrimitive.Trigger>
+  );
+}
 MenuTrigger.displayName = 'Menu.Trigger';
 
 export interface MenuSubTriggerProps
@@ -50,58 +52,49 @@ export interface MenuSubTriggerProps
   value?: string;
 }
 
-export const MenuSubTrigger = forwardRef<HTMLDivElement, MenuSubTriggerProps>(
-  (
-    {
-      children,
-      value,
-      trailingIcon = <TriangleRightIcon />,
-      leadingIcon,
-      ...props
-    },
-    ref
-  ) => {
-    const { parent, inputRef } = useMenuContext();
+export function MenuSubTrigger({
+  children,
+  value,
+  trailingIcon = <TriangleRightIcon />,
+  leadingIcon,
+  ...props
+}: MenuSubTriggerProps) {
+  const { parent, inputRef } = useMenuContext();
 
-    if (
-      parent?.shouldFilter &&
-      !getMatch(value, children, parent?.inputValue)
-    ) {
-      return null;
-    }
-
-    const cell = <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />;
-    return (
-      <MenuPrimitive.SubmenuTrigger
-        ref={ref}
-        render={
-          parent?.autocomplete ? (
-            <AutocompletePrimitive.Item
-              value={value}
-              render={cell}
-              onPointerEnter={e => {
-                if (document?.activeElement !== parent?.inputRef?.current)
-                  parent?.inputRef?.current?.focus();
-                props?.onPointerEnter?.(e);
-              }}
-              onKeyDown={e => {
-                requestAnimationFrame(() => {
-                  inputRef?.current?.focus();
-                });
-                props?.onKeyDown?.(e);
-              }}
-            />
-          ) : (
-            cell
-          )
-        }
-        {...props}
-        role={parent?.autocomplete ? 'option' : 'menuitem'}
-        data-slot='menu-subtrigger'
-      >
-        {children}
-      </MenuPrimitive.SubmenuTrigger>
-    );
+  if (parent?.shouldFilter && !getMatch(value, children, parent?.inputValue)) {
+    return null;
   }
-);
-MenuSubTrigger.displayName = 'Menu.SubTrigger';
+
+  const cell = <Cell leadingIcon={leadingIcon} trailingIcon={trailingIcon} />;
+  return (
+    <MenuPrimitive.SubmenuTrigger
+      render={
+        parent?.autocomplete ? (
+          <AutocompletePrimitive.Item
+            value={value}
+            render={cell}
+            onPointerEnter={e => {
+              if (document?.activeElement !== parent?.inputRef?.current)
+                parent?.inputRef?.current?.focus();
+              props?.onPointerEnter?.(e);
+            }}
+            onKeyDown={e => {
+              requestAnimationFrame(() => {
+                inputRef?.current?.focus();
+              });
+              props?.onKeyDown?.(e);
+            }}
+          />
+        ) : (
+          cell
+        )
+      }
+      {...props}
+      role={parent?.autocomplete ? 'option' : 'menuitem'}
+      data-slot='menu-subtrigger'
+    >
+      {children}
+    </MenuPrimitive.SubmenuTrigger>
+  );
+}
+MenuSubTrigger.displayName = 'Menu.SubmenuTrigger';

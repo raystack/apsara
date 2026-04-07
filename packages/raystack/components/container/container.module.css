@@ -14,14 +14,17 @@
 }
 
 .container-small {
+  /* Todo: var does not exist for 430px */
   max-width: 430px;
 }
 
 .container-medium {
+  /* Todo: var does not exist for 715px */
   max-width: 715px;
 }
 
 .container-large {
+  /* Todo: var does not exist for 1145px */
   max-width: 1145px;
 }
 

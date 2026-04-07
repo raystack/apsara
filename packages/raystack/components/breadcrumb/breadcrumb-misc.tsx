@@ -49,6 +49,8 @@ export const BreadcrumbSeparator = ({
       <span
         className={cx(styles['breadcrumb-separator'], className)}
         ref={ref}
+        role='presentation'
+        aria-hidden='true'
         {...props}
       >
         {children}

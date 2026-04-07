@@ -1,5 +1,5 @@
-import { type VariantProps, cva } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, ReactNode } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps, ReactNode } from 'react';
 
 import styles from './list.module.css';
 
@@ -11,26 +11,26 @@ const header = cva(styles.header);
 const headerText = cva(styles['header-text']);
 
 interface ListRootProps
-  extends ComponentPropsWithoutRef<'ul'>,
+  extends ComponentProps<'ul'>,
     VariantProps<typeof list> {
   children: ReactNode;
   maxWidth?: string | number;
 }
 
-interface ListItemProps extends ComponentPropsWithoutRef<'li'> {
+interface ListItemProps extends ComponentProps<'li'> {
   children: ReactNode;
 }
 
-interface ListLabelProps extends ComponentPropsWithoutRef<'span'> {
+interface ListLabelProps extends ComponentProps<'span'> {
   minWidth?: string;
   children: ReactNode;
 }
 
-interface ListValueProps extends ComponentPropsWithoutRef<'span'> {
+interface ListValueProps extends ComponentProps<'span'> {
   children: ReactNode;
 }
 
-interface ListHeaderProps extends ComponentPropsWithoutRef<'div'> {
+interface ListHeaderProps extends ComponentProps<'div'> {
   children: ReactNode;
 }
 
@@ -102,10 +102,10 @@ const ListHeader = ({ children, className, ...props }: ListHeaderProps) => {
 };
 
 ListRoot.displayName = 'List';
-ListHeader.displayName = 'ListHeader';
-ListItem.displayName = 'ListItem';
-ListLabel.displayName = 'ListLabel';
-ListValue.displayName = 'ListValue';
+ListHeader.displayName = 'List.Header';
+ListItem.displayName = 'List.Item';
+ListLabel.displayName = 'List.Label';
+ListValue.displayName = 'List.Value';
 
 export const List = Object.assign(ListRoot, {
   Header: ListHeader,

@@ -1,7 +1,8 @@
 import { Popover as PopoverPrimitive } from '@base-ui/react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
+
+import { type ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '~/components/button';
 import { Popover } from '../popover';
@@ -22,7 +23,7 @@ const BasicPopover = ({
   </Popover>
 );
 
-async function renderAndOpenPopover(PopoverElement: React.ReactElement) {
+async function renderAndOpenPopover(PopoverElement: ReactElement) {
   fireEvent.click(render(PopoverElement).getByText(TRIGGER_TEXT));
 }
 

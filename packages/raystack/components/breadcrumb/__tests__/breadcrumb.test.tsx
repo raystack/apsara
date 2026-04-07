@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import React, { forwardRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Breadcrumb } from '../breadcrumb';
 import styles from '../breadcrumb.module.css';
@@ -128,31 +129,93 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('Home')).toBeInTheDocument();
     });
 
-    it('applies current/active state', () => {
+    it('renders with trailing icon', () => {
+      render(
+        <Breadcrumb>
+          <Breadcrumb.Item
+            trailingIcon={<span data-testid='trailing-icon'>▶</span>}
+          >
+            Next
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const icon = screen.getByTestId('trailing-icon');
+      expect(icon).toBeInTheDocument();
+      expect(icon.parentElement).toHaveClass(styles['breadcrumb-icon']);
+      expect(screen.getByText('Next')).toBeInTheDocument();
+    });
+
+    it('renders with both leading and trailing icons', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item
+            leadingIcon={<span data-testid='leading'>L</span>}
+            trailingIcon={<span data-testid='trailing'>T</span>}
+          >
+            Label
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const leading = screen.getByTestId('leading');
+      const trailing = screen.getByTestId('trailing');
+      const label = screen.getByText('Label');
+
+      expect(leading).toBeInTheDocument();
+      expect(trailing).toBeInTheDocument();
+      expect(label).toBeInTheDocument();
+      expect(leading.parentElement).toHaveClass(styles['breadcrumb-icon']);
+      expect(trailing.parentElement).toHaveClass(styles['breadcrumb-icon']);
+
+      const link = container.querySelector(`.${styles['breadcrumb-link']}`);
+      const iconWrappers = link?.querySelectorAll(
+        `.${styles['breadcrumb-icon']}`
+      );
+      expect(iconWrappers).toHaveLength(2);
+      expect(iconWrappers?.[0]).toContainElement(leading);
+      expect(iconWrappers?.[1]).toContainElement(trailing);
+      expect(link?.textContent).toMatch(/L\s*Label\s*T/);
+    });
+
+    it('applies current/active state and renders as span with aria-current', () => {
       const { container } = render(
         <Breadcrumb>
           <Breadcrumb.Item current>Current Page</Breadcrumb.Item>
         </Breadcrumb>
       );
 
-      const link = container.querySelector('a');
-      expect(link).toHaveClass(styles['breadcrumb-link-active']);
+      // Current page renders as <span> (non-link), not <a>
+      const currentEl = container.querySelector(
+        `span.${styles['breadcrumb-link-active']}`
+      );
+      expect(currentEl).toBeInTheDocument();
+      expect(currentEl).toHaveAttribute('aria-current', 'page');
+      expect(currentEl).toHaveClass(styles['breadcrumb-link']);
+      expect(currentEl).toHaveClass(styles['breadcrumb-link-active']);
+      expect(currentEl).toHaveAttribute('data-current', 'true');
+      expect(currentEl).toHaveTextContent('Current Page');
+      expect(container.querySelector('a')).not.toBeInTheDocument();
     });
 
-    it('renders with custom element using as prop', () => {
-      const CustomLink = ({ children, ...props }: any) => (
-        <button {...props}>{children}</button>
+    it('renders with custom element using render prop', () => {
+      const CustomLink: React.ComponentType<
+        React.AnchorHTMLAttributes<HTMLAnchorElement>
+      > = ({ children, ...props }) => (
+        <a data-custom-link {...props}>
+          {children}
+        </a>
       );
 
       const { container } = render(
         <Breadcrumb>
-          <Breadcrumb.Item as={<CustomLink />}>Custom</Breadcrumb.Item>
+          <Breadcrumb.Item render={<CustomLink />}>Custom</Breadcrumb.Item>
         </Breadcrumb>
       );
 
-      const button = container.querySelector('button');
-      expect(button).toBeInTheDocument();
-      expect(button).toHaveClass(styles['breadcrumb-link']);
+      const link = container.querySelector('[data-custom-link]');
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveClass(styles['breadcrumb-link']);
       expect(screen.getByText('Custom')).toBeInTheDocument();
     });
 
@@ -161,6 +224,26 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item ref={ref}>Item</Breadcrumb.Item>
+        </Breadcrumb>
+      );
+      expect(ref).toHaveBeenCalled();
+    });
+
+    it('forwards ref when using render prop (component)', () => {
+      const CustomLink = forwardRef<
+        HTMLAnchorElement,
+        React.AnchorHTMLAttributes<HTMLAnchorElement>
+      >(({ children, ...props }, ref) => (
+        <a ref={ref} data-custom-link {...props}>
+          {children}
+        </a>
+      ));
+      const ref = vi.fn();
+      render(
+        <Breadcrumb>
+          <Breadcrumb.Item ref={ref} render={<CustomLink />}>
+            Custom
+          </Breadcrumb.Item>
         </Breadcrumb>
       );
       expect(ref).toHaveBeenCalled();
@@ -191,13 +274,72 @@ describe('Breadcrumb', () => {
       expect(link).toHaveAttribute('aria-label', 'Products');
       expect(link).toHaveAttribute('data-testid', 'item');
     });
+
+    it('renders as span with disabled styles when disabled', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item disabled>Loading…</Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const link = container.querySelector('a');
+      expect(link).not.toBeInTheDocument();
+
+      const span = container.querySelector(
+        `span.${styles['breadcrumb-link-disabled']}`
+      );
+      expect(span).toBeInTheDocument();
+      expect(span).toHaveClass(styles['breadcrumb-link']);
+      expect(span).toHaveClass(styles['breadcrumb-link-disabled']);
+      expect(span).toHaveAttribute('aria-disabled', 'true');
+      expect(span).toHaveAttribute('data-disabled', 'true');
+      expect(span).toHaveTextContent('Loading…');
+    });
+
+    it('disabled item has no href and is not focusable as link', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item disabled href='/skipped'>
+            No access
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const span = container.querySelector(
+        `span.${styles['breadcrumb-link-disabled']}`
+      );
+      expect(span).toBeInTheDocument();
+      expect(container.querySelector('a')).not.toBeInTheDocument();
+    });
+
+    it('disabled with dropdownItems renders as disabled span not dropdown', () => {
+      const items = [
+        { children: 'Option 1', onClick: vi.fn() },
+        { children: 'Option 2', onClick: vi.fn() }
+      ];
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item disabled dropdownItems={items}>
+            Categories
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const span = container.querySelector(
+        `span.${styles['breadcrumb-link-disabled']}`
+      );
+      expect(span).toBeInTheDocument();
+      expect(span).toHaveTextContent('Categories');
+      fireEvent.click(span!);
+      expect(screen.queryByText('Option 1')).not.toBeInTheDocument();
+    });
   });
 
   describe('BreadcrumbItem with Dropdown', () => {
     it('renders dropdown trigger when dropdownItems provided', () => {
       const items = [
-        { label: 'Option 1', onClick: vi.fn() },
-        { label: 'Option 2', onClick: vi.fn() }
+        { children: 'Option 1', onClick: vi.fn() },
+        { children: 'Option 2', onClick: vi.fn() }
       ];
 
       render(
@@ -215,9 +357,9 @@ describe('Breadcrumb', () => {
 
     it('renders dropdown items on click', () => {
       const items = [
-        { label: 'Electronics' },
-        { label: 'Clothing' },
-        { label: 'Books' }
+        { children: 'Electronics' },
+        { children: 'Clothing' },
+        { children: 'Books' }
       ];
 
       render(
@@ -233,6 +375,41 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('Electronics')).toBeInTheDocument();
       expect(screen.getByText('Clothing')).toBeInTheDocument();
       expect(screen.getByText('Books')).toBeInTheDocument();
+    });
+
+    it('renders dropdown items with href as links', () => {
+      render(
+        <Breadcrumb>
+          <Breadcrumb.Item
+            dropdownItems={[
+              {
+                children: 'New tab',
+                render: (
+                  <a href='/page' target='_blank' rel='noopener noreferrer' />
+                )
+              },
+              {
+                children: 'Same tab',
+                render: <a href='/other' />
+              }
+            ]}
+          >
+            Categories
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      fireEvent.click(screen.getByText('Categories'));
+
+      const newTabLink = screen.getByText('New tab');
+      expect(newTabLink.tagName).toBe('A');
+      expect(newTabLink).toHaveAttribute('href', '/page');
+      expect(newTabLink).toHaveAttribute('target', '_blank');
+      expect(newTabLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+      const sameTabLink = screen.getByText('Same tab');
+      expect(sameTabLink.tagName).toBe('A');
+      expect(sameTabLink).toHaveAttribute('href', '/other');
     });
   });
 
@@ -281,6 +458,22 @@ describe('Breadcrumb', () => {
         </Breadcrumb>
       );
       expect(ref).toHaveBeenCalled();
+    });
+
+    it('has role="presentation" and aria-hidden="true" for screen readers', () => {
+      const { container } = render(
+        <Breadcrumb>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          <Breadcrumb.Separator />
+          <Breadcrumb.Item>Products</Breadcrumb.Item>
+        </Breadcrumb>
+      );
+
+      const separator = container.querySelector(
+        `.${styles['breadcrumb-separator']}`
+      );
+      expect(separator).toHaveAttribute('role', 'presentation');
+      expect(separator).toHaveAttribute('aria-hidden', 'true');
     });
   });
 
@@ -388,9 +581,9 @@ describe('Breadcrumb', () => {
 
     it('renders breadcrumb with icons and dropdown', () => {
       const categories = [
-        { label: 'Electronics' },
-        { label: 'Clothing' },
-        { label: 'Books' }
+        { children: 'Electronics' },
+        { children: 'Clothing' },
+        { children: 'Books' }
       ];
 
       render(

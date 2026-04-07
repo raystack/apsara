@@ -41,6 +41,7 @@ function DataTableRoot<TData, TValue>({
   query,
   mode = 'client',
   isLoading = false,
+  totalRowCount,
   loadingRowCount = 3,
   defaultSort,
   children,
@@ -194,6 +195,7 @@ function DataTableRoot<TData, TValue>({
       updateTableQuery,
       onDisplaySettingsReset,
       defaultSort,
+      totalRowCount,
       loadingRowCount,
       onRowClick,
       shouldShowFilters,
@@ -209,18 +211,17 @@ function DataTableRoot<TData, TValue>({
     updateTableQuery,
     onDisplaySettingsReset,
     defaultSort,
+    totalRowCount,
     loadingRowCount,
     onRowClick,
     shouldShowFilters,
     stickyGroupHeader
   ]);
 
-  return (
-    <TableContext.Provider value={contextValue}>
-      {children}
-    </TableContext.Provider>
-  );
+  return <TableContext value={contextValue}>{children}</TableContext>;
 }
+
+DataTableRoot.displayName = 'DataTable';
 
 export const DataTable = Object.assign(DataTableRoot, {
   Content: Content,

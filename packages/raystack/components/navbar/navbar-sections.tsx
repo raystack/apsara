@@ -1,27 +1,22 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { ComponentProps } from 'react';
 import { Flex } from '../flex';
 import styles from './navbar.module.css';
 
-export interface NavbarStartProps
-  extends ComponentPropsWithoutRef<typeof Flex> {}
+export interface NavbarStartProps extends ComponentProps<typeof Flex> {}
 
-export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
-  (
-    {
-      className,
-      children,
-      'aria-label': ariaLabel,
-      align = 'center',
-      gap = 5,
-      ...props
-    },
-    ref
-  ) => (
+export const NavbarStart = ({
+  className,
+  children,
+  'aria-label': ariaLabel,
+  align = 'center',
+  gap = 5,
+  ...props
+}: NavbarStartProps) => {
+  return (
     <Flex
-      ref={ref}
       align={align}
       gap={gap}
       className={cx(styles.start, className)}
@@ -31,28 +26,23 @@ export const NavbarStart = forwardRef<HTMLDivElement, NavbarStartProps>(
     >
       {children}
     </Flex>
-  )
-);
+  );
+};
 
 NavbarStart.displayName = 'Navbar.Start';
 
-export interface NavbarCenterProps
-  extends ComponentPropsWithoutRef<typeof Flex> {}
+export interface NavbarCenterProps extends ComponentProps<typeof Flex> {}
 
-export const NavbarCenter = forwardRef<HTMLDivElement, NavbarCenterProps>(
-  (
-    {
-      className,
-      children,
-      'aria-label': ariaLabel,
-      align = 'center',
-      gap = 5,
-      ...props
-    },
-    ref
-  ) => (
+export const NavbarCenter = ({
+  className,
+  children,
+  'aria-label': ariaLabel,
+  align = 'center',
+  gap = 5,
+  ...props
+}: NavbarCenterProps) => {
+  return (
     <Flex
-      ref={ref}
       align={align}
       gap={gap}
       className={cx(styles.center, className)}
@@ -62,27 +52,23 @@ export const NavbarCenter = forwardRef<HTMLDivElement, NavbarCenterProps>(
     >
       {children}
     </Flex>
-  )
-);
+  );
+};
 
 NavbarCenter.displayName = 'Navbar.Center';
 
-export interface NavbarEndProps extends ComponentPropsWithoutRef<typeof Flex> {}
+export interface NavbarEndProps extends ComponentProps<typeof Flex> {}
 
-export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
-  (
-    {
-      className,
-      children,
-      'aria-label': ariaLabel,
-      align = 'center',
-      gap = 5,
-      ...props
-    },
-    ref
-  ) => (
+export const NavbarEnd = ({
+  className,
+  children,
+  'aria-label': ariaLabel,
+  align = 'center',
+  gap = 5,
+  ...props
+}: NavbarEndProps) => {
+  return (
     <Flex
-      ref={ref}
       align={align}
       gap={gap}
       className={cx(styles.end, className)}
@@ -92,7 +78,7 @@ export const NavbarEnd = forwardRef<HTMLDivElement, NavbarEndProps>(
     >
       {children}
     </Flex>
-  )
-);
+  );
+};
 
 NavbarEnd.displayName = 'Navbar.End';

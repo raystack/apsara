@@ -26,23 +26,30 @@ export const playground = {
 
 export const sizeDemo = {
   type: 'code',
-  code: `
-  <Flex gap="medium" direction="column">
-     <Breadcrumb size="small">
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
-      </Breadcrumb>
-     <Breadcrumb size="medium">
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
-        <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
-      </Breadcrumb>
-  </Flex>`
+  tabs: [
+    {
+      name: 'Small',
+      code: `
+  <Breadcrumb size="small">
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
+  </Breadcrumb>`
+    },
+    {
+      name: 'Medium',
+      code: `
+  <Breadcrumb size="medium">
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products">Products</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products/shoes" current>Shoes</Breadcrumb.Item>
+  </Breadcrumb>`
+    }
+  ]
 };
 
 export const separatorDemo = {
@@ -87,22 +94,51 @@ export const dropdownDemo = {
     <Breadcrumb.Item href="/category">Category</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item dropdownItems={[
-        { label: 'Option 1', onClick: () => {console.log('Option 1')}},
-        { label: 'Option 2', onClick: () => {console.log('Option 2')}}
+        { children: 'Option 1', onClick: () => {console.log('Option 1')}},
+        { children: 'Option 2', onClick: () => {console.log('Option 2')}}
       ]}>Subcategory</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="/category/subcategory/current">Current Page</Breadcrumb.Item>
   </Breadcrumb>`
 };
+
+export const dropdownLinksDemo = {
+  type: 'code',
+  code: `
+  <Breadcrumb>
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item dropdownItems={[
+        { children: 'Electronics', render: <a href="/electronics" target="_blank" rel="noopener noreferrer" /> },
+        { children: 'Clothing', render: <a href="/clothing" /> },
+        { children: 'Books', onClick: () => {console.log('Books')}}
+      ]}>Categories</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/current" current>Current</Breadcrumb.Item>
+  </Breadcrumb>`
+};
+
 export const asDemo = {
   type: 'code',
   code: `
   <Breadcrumb>
-    <Breadcrumb.Item href="/home" as={<NextLink href="/" />}>Home</Breadcrumb.Item>
+    <Breadcrumb.Item href="/" render={<NextLink />}>Home</Breadcrumb.Item>
     <Breadcrumb.Separator/>
-    <Breadcrumb.Item href="/playground" as={<NextLink />}>Playground</Breadcrumb.Item>
+    <Breadcrumb.Item href="/playground" render={<NextLink />}>Playground</Breadcrumb.Item>
     <Breadcrumb.Separator/>
     <Breadcrumb.Item href="/docs" current>Docs</Breadcrumb.Item>
+  </Breadcrumb>`
+};
+
+export const disabledDemo = {
+  type: 'code',
+  code: `
+  <Breadcrumb>
+    <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item disabled>Loading…</Breadcrumb.Item>
+    <Breadcrumb.Separator/>
+    <Breadcrumb.Item href="/products" current>Products</Breadcrumb.Item>
   </Breadcrumb>`
 };
 
@@ -110,25 +146,47 @@ export const iconsDemo = {
   type: 'code',
   tabs: [
     {
-      name: 'Text with Icon',
+      name: 'Leading Icon',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="/" leadingIcon={<>H</>}>Home</Breadcrumb.Item>
+        <Breadcrumb.Item href="/" leadingIcon={<BellIcon />}>Home</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/documents" leadingIcon={<>D</>}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Item href="/documents" leadingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/settings" leadingIcon={<>S</>}>Settings</Breadcrumb.Item>
+        <Breadcrumb.Item href="/settings" leadingIcon={<ShoppingBagFilledIcon />}>Settings</Breadcrumb.Item>
+      </Breadcrumb>`
+    },
+    {
+      name: 'Trailing Icon',
+      code: `
+      <Breadcrumb>
+        <Breadcrumb.Item href="/" trailingIcon={<BellIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/documents" trailingIcon={<FilterIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/settings" trailingIcon={<ShoppingBagFilledIcon />}>Settings</Breadcrumb.Item>
+      </Breadcrumb>`
+    },
+    {
+      name: 'Both Icons',
+      code: `
+      <Breadcrumb>
+        <Breadcrumb.Item href="/" leadingIcon={<BellIcon />} trailingIcon={<FilterIcon />}>Home</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/documents" leadingIcon={<FilterIcon />} trailingIcon={<ShoppingBagFilledIcon />}>Documents</Breadcrumb.Item>
+        <Breadcrumb.Separator/>
+        <Breadcrumb.Item href="/settings" leadingIcon={<ShoppingBagFilledIcon />} trailingIcon={<BellIcon />}>Settings</Breadcrumb.Item>
       </Breadcrumb>`
     },
     {
       name: 'Only Icon',
       code: `
       <Breadcrumb>
-        <Breadcrumb.Item href="/" leadingIcon={<>H</>}/>
+        <Breadcrumb.Item href="/" leadingIcon={<BellIcon />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/documents" leadingIcon={<>D</>}/>
+        <Breadcrumb.Item href="/documents" leadingIcon={<FilterIcon />}/>
         <Breadcrumb.Separator/>
-        <Breadcrumb.Item href="/settings" leadingIcon={<>S</>}/>
+        <Breadcrumb.Item href="/settings" leadingIcon={<ShoppingBagFilledIcon />}/>
       </Breadcrumb>`
     }
   ]

@@ -16,10 +16,7 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  box-shadow:
-    0 1px 1px 0 rgba(0, 0, 0, 0.07),
-    0 2px 5px 0 rgba(0, 0, 0, 0.07),
-    0 3px 8px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: var(--rs-shadow-lifted);
   color: var(--rs-color-foreground-base-primary);
   transform-origin: var(--transform-origin);
 

@@ -13,12 +13,12 @@
 
 .switch.large {
   width: 34px;
-  height: 20px;
+  height: var(--rs-space-6);
 }
 
 .switch.small {
   width: 26px;
-  height: 16px;
+  height: var(--rs-space-5);
 }
 
 .switch:not([data-disabled]):hover {
@@ -34,7 +34,6 @@
 }
 
 .switch[data-disabled] {
-  cursor: not-allowed;
   background: var(--rs-color-background-neutral-primary);
 }
 
@@ -45,11 +44,11 @@
 .thumb {
   position: absolute;
   left: 0;
-  width: 16px;
-  height: 16px;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
   background: var(--rs-color-foreground-base-emphasis);
   border-radius: var(--rs-radius-full);
-  transform: translateX(2px);
+  transform: translateX(var(--rs-space-1));
   will-change: transform;
 }
 
@@ -61,15 +60,15 @@
 
 /* Small switch thumb sizing */
 .switch.small .thumb {
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }
 
 .switch[data-checked] .thumb {
-  transform: translateX(16px);
+  transform: translateX(var(--rs-space-5));
 }
 
 /* Small switch thumb positioning */
 .switch.small[data-checked] .thumb {
-  transform: translateX(12px);
+  transform: translateX(var(--rs-space-4));
 }

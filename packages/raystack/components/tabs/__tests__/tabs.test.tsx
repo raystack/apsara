@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentProps } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Tabs } from '../tabs';
 import styles from '../tabs.module.css';
@@ -11,7 +11,7 @@ const CONTENT_1_TEXT = 'Content 1';
 const CONTENT_2_TEXT = 'Content 2';
 const CUSTOM_ARIA_LABEL = 'Navigation tabs';
 
-type TabsProps = ComponentPropsWithoutRef<typeof Tabs>;
+type TabsProps = ComponentProps<typeof Tabs>;
 
 const BasicTabs = ({
   defaultValue = 'tab1',
@@ -265,6 +265,90 @@ describe('Tabs', () => {
 
       const tab = screen.getByText(TAB_1_TEXT);
       expect(tab).toHaveAttribute('data-orientation', 'horizontal');
+    });
+  });
+
+  describe('Variants', () => {
+    it('applies standalone variant class', () => {
+      render(
+        <Tabs defaultValue='tab1' variant='standalone'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['variant-standalone']);
+    });
+
+    it('defaults to segmented variant class', () => {
+      render(
+        <Tabs defaultValue='tab1'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['variant-segmented']);
+    });
+
+    it('applies plain variant class', () => {
+      render(
+        <Tabs defaultValue='tab1' variant='plain'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['variant-plain']);
+    });
+  });
+
+  describe('Sizes', () => {
+    it('defaults to large size class', () => {
+      render(
+        <Tabs defaultValue='tab1'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['size-large']);
+    });
+
+    it('applies small size class', () => {
+      render(
+        <Tabs defaultValue='tab1' size='small'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['size-small']);
     });
   });
 

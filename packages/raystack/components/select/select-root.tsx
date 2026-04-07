@@ -203,7 +203,7 @@ export const SelectRoot = (props: SelectRootProps) => {
 
   if (autocomplete) {
     return (
-      <SelectContext.Provider value={contextValue}>
+      <SelectContext value={contextValue}>
         <ComboboxPrimitive.Root
           {...commonProps}
           onInputValueChange={handleSearchValueChange}
@@ -215,15 +215,17 @@ export const SelectRoot = (props: SelectRootProps) => {
         >
           {children}
         </ComboboxPrimitive.Root>
-      </SelectContext.Provider>
+      </SelectContext>
     );
   }
 
   return (
-    <SelectContext.Provider value={contextValue}>
+    <SelectContext value={contextValue}>
       <SelectPrimitive.Root {...commonProps} required={required} name={name}>
         {children}
       </SelectPrimitive.Root>
-    </SelectContext.Provider>
+    </SelectContext>
   );
 };
+
+SelectRoot.displayName = 'Select';
