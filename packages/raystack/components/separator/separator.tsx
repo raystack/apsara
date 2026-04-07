@@ -1,5 +1,5 @@
 import { Separator as SeparatorPrimitive } from '@base-ui/react/separator';
-import { cva } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 import styles from './separator.module.css';
 
@@ -22,10 +22,7 @@ const separator = cva(styles.separator, {
   }
 });
 
-interface SeparatorProps extends SeparatorPrimitive.Props {
-  size?: 'small' | 'half' | 'full';
-  color?: 'primary' | 'secondary' | 'tertiary';
-}
+type SeparatorProps = SeparatorPrimitive.Props & VariantProps<typeof separator>;
 
 export function Separator({
   className,
