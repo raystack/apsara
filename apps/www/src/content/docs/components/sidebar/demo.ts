@@ -358,6 +358,38 @@ export const hideTooltipDemo = {
         </Sidebar>`)
 };
 
+export const accordionGroupDemo = {
+  type: 'code',
+  code: sidebarLayout(`<Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              Overview
+            </Sidebar.Item>
+            <Sidebar.Group label="Resources" accordion>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                Reports
+              </Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Activities
+              </Sidebar.Item>
+            </Sidebar.Group>
+            <Sidebar.Group label="Account" trailingIcon={<OrganizationIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Settings
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+};
+
 export const moreDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen>

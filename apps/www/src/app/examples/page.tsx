@@ -111,7 +111,28 @@ const Page = () => {
               Analytics
             </Sidebar.Item>
 
-            <Sidebar.Group label='Resources'>
+            <Sidebar.Group
+              label='Resources'
+              accordion
+              trailingIcon={
+                <button
+                  type='button'
+                  onClick={() => alert('Resources trailing icon clicked')}
+                  aria-label='Resources group actions'
+                  style={{
+                    border: 0,
+                    background: 'transparent',
+                    color: 'inherit',
+                    padding: 0,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <DotsHorizontalIcon width={16} height={16} />
+                </button>
+              }
+            >
               <Sidebar.Item href='#' leadingIcon={<FileTextIcon />}>
                 Reports
               </Sidebar.Item>
@@ -132,7 +153,27 @@ const Page = () => {
               </Sidebar.More>
             </Sidebar.Group>
 
-            <Sidebar.Group label='Account'>
+            <Sidebar.Group
+              label='Account'
+              trailingIcon={
+                <button
+                  type='button'
+                  onClick={() => alert('Account trailing icon clicked')}
+                  aria-label='Account group actions'
+                  style={{
+                    border: 0,
+                    background: 'transparent',
+                    color: 'inherit',
+                    padding: 0,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <DotsHorizontalIcon width={16} height={16} />
+                </button>
+              }
+            >
               <Sidebar.Item href='#' leadingIcon={<GearIcon />}>
                 Settings
               </Sidebar.Item>
