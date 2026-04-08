@@ -62,16 +62,6 @@
   letter-spacing: var(--rs-letter-spacing-small);
 }
 
-.value {
-  color: var(--rs-color-foreground-base-primary);
-  font-size: var(--rs-font-size-small);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
-}
-
 .removeIconContainer {
   display: flex;
   align-items: center;

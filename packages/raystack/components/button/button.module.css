@@ -16,7 +16,6 @@
 }
 
 .button:focus-visible {
-  /* Todo: var does not exist for 1px */
   outline: 1px solid var(--rs-color-border-accent-emphasis);
 }
 
@@ -60,24 +59,18 @@
 }
 
 .button-solid:hover,
-.button-solid:active,
-.button-solid[data-radix-popover-trigger][data-state="open"],
-.button-solid[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-solid:active {
   background-color: var(--rs-color-background-accent-emphasis-hover);
 }
 
 .button-solid.button-disabled:hover,
-.button-solid.button-disabled:active,
-.button-solid[data-radix-popover-trigger][data-state="open"],
-.button-solid.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-solid.button-disabled:active {
   color: var(--rs-color-foreground-accent-emphasis);
   background-color: var(--rs-color-background-accent-emphasis);
 }
 
 .button-solid.button-loading:hover,
-.button-solid.button-loading:active,
-.button-solid.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-solid.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-solid.button-loading:active {
   background-color: var(--rs-color-background-accent-emphasis);
 }
 
@@ -108,20 +101,14 @@
 .button-outline:disabled:hover,
 .button-outline.button-disabled:hover,
 .button-outline:disabled:active,
-.button-outline.button-disabled:active,
-.button-outline:disabled[data-radix-popover-trigger][data-state="open"],
-.button-outline.button-disabled[data-radix-popover-trigger][data-state="open"],
-.button-outline:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
-.button-outline.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-outline.button-disabled:active {
   background-color: transparent;
   color: var(--rs-color-foreground-accent-primary);
   border-color: var(--rs-color-border-accent-emphasis);
 }
 
 .button-outline.button-loading:hover,
-.button-outline.button-loading:active,
-.button-outline.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-outline.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-outline.button-loading:active {
   background-color: transparent;
   color: var(--rs-color-foreground-accent-primary);
   border-color: var(--rs-color-border-accent-primary);
@@ -158,9 +145,7 @@
 }
 
 .button-ghost:hover,
-.button-ghost:active,
-.button-ghost[data-radix-popover-trigger][data-state="open"],
-.button-ghost[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-ghost:active {
   background-color: var(--rs-color-background-base-primary-hover);
 }
 
@@ -172,20 +157,14 @@
 .button-ghost:disabled:hover,
 .button-ghost.button-disabled:hover,
 .button-ghost:disabled:active,
-.button-ghost.button-disabled:active,
-.button-ghost:disabled[data-radix-popover-trigger][data-state="open"],
-.button-ghost.button-disabled[data-radix-popover-trigger][data-state="open"],
-.button-ghost:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
-.button-ghost.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-ghost.button-disabled:active {
   color: var(--rs-color-foreground-base-primary);
   background-color: transparent;
   border-color: var(--rs-color-border-base-primary);
 }
 
 .button-ghost.button-loading:hover,
-.button-ghost.button-loading:active,
-.button-ghost.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-ghost.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-ghost.button-loading:active {
   background-color: transparent;
   border-color: var(--rs-color-border-base-primary);
 }
@@ -196,9 +175,7 @@
 }
 
 .button-text:hover,
-.button-text:active,
-.button-text[data-radix-popover-trigger][data-state="open"],
-.button-text[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-text:active {
   background-color: var(--rs-color-background-base-primary-hover);
 }
 
@@ -208,20 +185,14 @@
 }
 
 .button-text.button-loading:hover,
-.button-text.button-loading:active,
-.button-text.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-text.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-text.button-loading:active {
   background-color: transparent;
 }
 
 .button-text:disabled:hover,
 .button-text.button-disabled:hover,
 .button-text:disabled:active,
-.button-text.button-disabled:active,
-.button-text:disabled[data-radix-popover-trigger][data-state="open"],
-.button-text.button-disabled[data-radix-popover-trigger][data-state="open"],
-.button-text:disabled[data-radix-dropdown-menu-trigger][data-state="open"],
-.button-text.button-disabled[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-text.button-disabled:active {
   color: var(--rs-color-foreground-base-primary);
   background-color: transparent;
 }
@@ -232,28 +203,13 @@
 }
 
 .button-loading:hover,
-.button-loading:active,
-.button-loading[data-radix-popover-trigger][data-state="open"],
-.button-loading[data-radix-dropdown-menu-trigger][data-state="open"] {
+.button-loading:active {
   background-color: inherit;
-}
-
-.loader {
-  border: var(--rs-space-1) solid var(--rs-color-background-base-primary);
-  border-top: var(--rs-space-1) solid var(--rs-color-foreground-base-primary);
-  border-radius: 50%;
-  /* Todo: var does not exist for 10px */
-  width: 10px;
-  height: 10px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .button {
     transition: all 0.2s ease-in-out;
-  }
-
-  .loader {
-    animation: spin 1s linear infinite;
   }
 }
 
