@@ -268,6 +268,90 @@ describe('Tabs', () => {
     });
   });
 
+  describe('Variants', () => {
+    it('applies standalone variant class', () => {
+      render(
+        <Tabs defaultValue='tab1' variant='standalone'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['variant-standalone']);
+    });
+
+    it('defaults to segmented variant class', () => {
+      render(
+        <Tabs defaultValue='tab1'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['variant-segmented']);
+    });
+
+    it('applies plain variant class', () => {
+      render(
+        <Tabs defaultValue='tab1' variant='plain'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['variant-plain']);
+    });
+  });
+
+  describe('Sizes', () => {
+    it('defaults to large size class', () => {
+      render(
+        <Tabs defaultValue='tab1'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['size-large']);
+    });
+
+    it('applies small size class', () => {
+      render(
+        <Tabs defaultValue='tab1' size='small'>
+          <Tabs.List>
+            <Tabs.Tab value='tab1'>{TAB_1_TEXT}</Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Content value='tab1'>{CONTENT_1_TEXT}</Tabs.Content>
+        </Tabs>
+      );
+
+      const tablist = screen.getByRole('tablist');
+      const root = tablist.closest(`.${styles.root}`);
+      expect(root).not.toBeNull();
+      expect(root).toHaveClass(styles['size-small']);
+    });
+  });
+
   describe('Data Attributes', () => {
     it('has aria-selected on active trigger', () => {
       render(<BasicTabs />);

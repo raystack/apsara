@@ -44,7 +44,7 @@
 }
 
 .indicator-variant-warning {
-  background-color: var(--rs-attention-9);
+  background-color: var(--rs-color-background-attention-emphasis);
   color: var(--rs-color-foreground-attention-emphasis);
 }
 

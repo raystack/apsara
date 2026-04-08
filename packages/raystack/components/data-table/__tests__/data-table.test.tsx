@@ -445,6 +445,60 @@ describe('DataTable', () => {
       // If data is displayed, it means hasData is true, which means shouldShowFilters would be true
       expect(screen.getByText('John Doe')).toBeInTheDocument();
     });
+
+    it('shows server hidden count when totalRowCount is provided', () => {
+      render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          mode='server'
+          totalRowCount={10}
+          query={{
+            filters: [
+              {
+                name: 'name',
+                operator: 'neq',
+                value: 'John Doe'
+              }
+            ]
+          }}
+        >
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      expect(screen.getByText('7')).toBeInTheDocument();
+      expect(screen.getByText('items hidden by filters')).toBeInTheDocument();
+      expect(screen.getByText('Clear Filters')).toBeInTheDocument();
+    });
+
+    it('shows generic server hidden message when totalRowCount is missing', () => {
+      render(
+        <DataTable
+          data={mockData}
+          columns={columnsWithFilters}
+          defaultSort={{ name: 'name', order: 'asc' }}
+          mode='server'
+          query={{
+            filters: [
+              {
+                name: 'name',
+                operator: 'neq',
+                value: 'John Doe'
+              }
+            ]
+          }}
+        >
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      expect(
+        screen.getByText('Some items might be hidden by filters')
+      ).toBeInTheDocument();
+      expect(screen.getByText('Clear Filters')).toBeInTheDocument();
+    });
   });
 
   describe('Display Settings Reset', () => {

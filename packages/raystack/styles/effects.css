@@ -7,6 +7,9 @@
     --rs-shadow-floating: 0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 8px 0px rgba(0, 0, 0, 0.04), 0px 3px 17px 0px rgba(0, 0, 0, 0.04), 0px 4px 30px 0px rgba(0, 0, 0, 0.13); /* xl */
     --rs-shadow-inset: 0px 1px 1px 0px rgba(0, 0, 0, 0.04) inset;
 
+    /* Transitions */
+    --rs-transition-interactive: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+
     /* Blurs */
     /* Example usage: backdrop-filter:: var(--rs-blur-sm); */
     --rs-blur-sm: blur(0.5px);

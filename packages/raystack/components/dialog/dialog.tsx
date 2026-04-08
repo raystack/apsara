@@ -18,5 +18,6 @@ export const Dialog = Object.assign(DialogPrimitive.Root, {
   Close: DialogPrimitive.Close,
   CloseButton: CloseButton,
   Title: DialogTitle,
-  Description: DialogDescription
+  Description: DialogDescription,
+  createHandle: DialogPrimitive.createHandle
 });

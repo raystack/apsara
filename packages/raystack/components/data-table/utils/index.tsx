@@ -1,3 +1,4 @@
+import type { Row, Table } from '@tanstack/react-table';
 import { TableState } from '@tanstack/table-core';
 import dayjs from 'dayjs';
 
@@ -312,6 +313,29 @@ export function dataTableQueryToInternal(query: DataTableQuery): InternalQuery {
     ...rest,
     filters: internalFilters
   };
+}
+
+/** Leaf count from the row tree. Do not use `model.flatRows` here: with `filterFromLeafRows`, TanStack's filtered model leaves `flatRows` empty while `rows` is correct. */
+export function countLeafRows<T>(rows: Row<T>[]): number {
+  return rows.reduce(
+    (n, row) => n + (row.subRows?.length ? countLeafRows(row.subRows) : 1),
+    0
+  );
+}
+
+/** Difference between pre- and post-filter leaf rows (client mode only). */
+export function getClientHiddenLeafRowCount<T>(table: Table<T>): number {
+  const pre = table.getPreFilteredRowModel();
+  const post = table.getFilteredRowModel();
+  return Math.max(0, countLeafRows(pre.rows) - countLeafRows(post.rows));
+}
+
+export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
+  const state = table.getState();
+  if (state.columnFilters?.length > 0) return true;
+  const gf = state.globalFilter;
+  if (gf === undefined || gf === null) return false;
+  return String(gf).trim() !== '';
 }
 
 export function getDefaultTableQuery(

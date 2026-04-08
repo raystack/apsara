@@ -1,5 +1,5 @@
 :root {
-  --rs-scrollbar-size-default: 4px;
+  --rs-scrollbar-size-default: var(--rs-space-2);
   --rs-scrollbar-size-hover: 6px;
 }
 
@@ -25,10 +25,7 @@
   background: transparent;
   pointer-events: auto;
   position: relative;
-  transition:
-    width 150ms ease-out,
-    height 150ms ease-out,
-    opacity 150ms ease-out;
+  transition: opacity 150ms ease-out;
 }
 
 .scrollbar[data-orientation="vertical"] {
@@ -56,6 +53,15 @@
   opacity: 1;
   pointer-events: auto;
   touch-action: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scrollbar {
+    transition:
+      width 150ms ease-out,
+      height 150ms ease-out,
+      opacity 150ms ease-out;
+  }
 }
 
 .corner {

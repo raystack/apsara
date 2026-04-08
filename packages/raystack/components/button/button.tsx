@@ -1,5 +1,5 @@
 import { Button as ButtonPrimitive } from '@base-ui/react';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 
 import { Spinner } from '../spinner';
@@ -158,7 +158,10 @@ export const Button = ({
 
   return (
     <ButtonPrimitive
-      className={`${button({ variant, size, color, disabled, loading, className })} ${isLoaderOnly ? getLoaderOnlyClass(size) : ''}`}
+      className={cx(
+        button({ variant, size, color, disabled, loading, className }),
+        isLoaderOnly && getLoaderOnlyClass(size)
+      )}
       disabled={disabled}
       style={buttonStyle}
       render={render}
@@ -176,13 +179,13 @@ export const Button = ({
       ) : (
         <>
           {leadingIcon && (
-            <span className={`${styles['icon']} ${styles['icon-leading']}`}>
+            <span className={cx(styles['icon'], styles['icon-leading'])}>
               {leadingIcon}
             </span>
           )}
           {children}
           {trailingIcon && (
-            <span className={`${styles['icon']} ${styles['icon-trailing']}`}>
+            <span className={cx(styles['icon'], styles['icon-trailing'])}>
               {trailingIcon}
             </span>
           )}

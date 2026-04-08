@@ -107,6 +107,7 @@ export interface DataTableProps<TData, TValue> {
   query?: DataTableQuery; // Initial query (will be transformed to internal format)
   mode?: DataTableMode;
   isLoading?: boolean;
+  totalRowCount?: number;
   loadingRowCount?: number;
   onTableQueryChange?: (query: DataTableQuery) => void;
   defaultSort: DataTableSort;
@@ -156,6 +157,7 @@ export type TableContextType<TData, TValue> = {
   mode: DataTableMode;
   defaultSort: DataTableSort;
   tableQuery?: InternalQuery;
+  totalRowCount?: number;
   loadingRowCount?: number;
   onDisplaySettingsReset: () => void;
   updateTableQuery: (fn: TableQueryUpdateFn) => void;

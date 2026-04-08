@@ -5,5 +5,6 @@ import { TooltipProvider, TooltipTrigger } from './tooltip-misc';
 export const Tooltip = Object.assign(TooltipPrimitive.Root, {
   Provider: TooltipProvider,
   Trigger: TooltipTrigger,
-  Content: TooltipContent
+  Content: TooltipContent,
+  createHandle: TooltipPrimitive.createHandle
 });

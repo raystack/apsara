@@ -3,11 +3,12 @@
   border-radius: var(--rs-radius-4);
   background: var(--rs-color-background-base-primary);
   width: fit-content;
+  /* Todo: var does not exist for 346px */
   min-height: 346px;
 }
 
 .captionLabel,
-.dropdowns > span,
+.dropdowns>span,
 .dropdown_trigger {
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
@@ -26,6 +27,7 @@
 .navButton {
   position: absolute;
   top: 0;
+  /* Todo: var does not exist for 0px */
   border: 0px;
   color: var(--rs-color-foreground-base-primary);
   background: var(--rs-color-background-base-primary);
@@ -82,7 +84,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid transparent;
+  border: var(--rs-space-1) solid transparent;
   margin-bottom: var(--rs-space-1);
 }
 
@@ -91,7 +93,7 @@
   height: var(--rs-space-10, 40px);
   flex-shrink: 0;
   border-radius: var(--rs-radius-5);
-  border: 1px solid var(--rs-color-border-accent-emphasis-hover);
+  border: var(--rs-space-1) solid var(--rs-color-border-accent-emphasis-hover);
   background-color: transparent;
 }
 
@@ -170,7 +172,7 @@
 
 .calendarPopover {
   padding: var(--rs-space-3) !important;
-  /* border: none !important; */
+  /* Todo: var does not exist for 0.5px */
   border: 0.5px solid var(--rs-color-border-base-primary) !important;
   min-width: max-content;
   width: fit-content;
@@ -196,8 +198,7 @@
 }
 
 .disabled {
-  color: var(--rs-color-foreground-base-tertiary);
-  opacity: 0.8;
+  opacity: 0.5;
 }
 
 .day.today button::after {
@@ -250,7 +251,7 @@
 
 .dayInfo {
   position: absolute;
-  top: -2px;
+  top: calc(-1 * var(--rs-space-1));
   left: 50%;
   transform: translateX(-50%);
   display: flex;

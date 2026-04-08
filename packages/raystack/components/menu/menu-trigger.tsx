@@ -2,6 +2,7 @@
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
+import { cx } from 'class-variance-authority';
 import { TriangleRightIcon } from '~/icons';
 import { Button } from '../button';
 import { useMenubarContext } from '../menubar/menubar';
@@ -27,7 +28,7 @@ export function MenuTrigger({
       variant='text'
       color='neutral'
       size='small'
-      className={`${styles.menuBarTrigger} rs-menu-trigger`}
+      className={cx(styles.menuBarTrigger, 'rs-menu-trigger')}
     />
   ) : undefined;
 

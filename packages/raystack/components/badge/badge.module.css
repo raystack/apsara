@@ -15,6 +15,7 @@
   font-size: var(--rs-font-size-micro);
   line-height: var(--rs-line-height-micro);
   letter-spacing: var(--rs-letter-spacing-micro);
+  /* Todo: var does not exist for 18px */
   height: 18px;
 }
 
@@ -22,6 +23,7 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
+  /* Todo: var does not exist for 22px */
   height: 22px;
 }
 
@@ -29,7 +31,7 @@
   font-size: var(--rs-font-size-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
-  height: 28px;
+  height: var(--rs-space-8);
 }
 
 /* Variants */
@@ -72,22 +74,25 @@
 }
 
 .badge-micro .icon {
+  /* Todo: var does not exist for 10px */
   width: 10px;
   height: 10px;
 }
 
 .badge-small .icon {
-  width: 12px;
-  height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }
 
 .badge-regular .icon {
+  /* Todo: var does not exist for 14px */
   width: 14px;
   height: 14px;
 }
 
 .sr-only {
   position: absolute;
+  /* Todo: var does not exist for 1px */
   width: 1px;
   height: 1px;
   padding: 0;

@@ -235,6 +235,7 @@ When grouping is enabled, you can make the current group label stick under the t
 ```tsx
 function ServerTable() {
   const [data, setData] = useState([]);
+  const [totalRowCount, setTotalRowCount] = useState<number | undefined>();
   const [query, setQuery] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const handleQueryChange = async (query: DataTableQuery) => {
@@ -242,11 +243,13 @@ function ServerTable() {
     setQuery(query);
     const response = await fetchData(query);
     setData(response.data);
+    setTotalRowCount(response.totalRowCount);
     setIsLoading(false);
   };
   return (
     <DataTable
       data={data}
+      totalRowCount={totalRowCount}
       query={query}
       columns={columns}
       isLoading={isLoading}
@@ -258,6 +261,16 @@ function ServerTable() {
   );
 }
 ```
+
+### Filter Summary Footer
+
+- In `mode="client"`, footer count is computed from in-memory rows and shown as:
+  `X items hidden by filters`
+- In `mode="server"`:
+  - if `totalRowCount` is provided, footer shows the same numeric pattern
+  - if `totalRowCount` is missing, footer shows:
+    `Some items might be hidden by filters`
+- `Clear Filters` clears both active filters and search.
 
 ### Custom Styling
 

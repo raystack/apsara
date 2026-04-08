@@ -1,7 +1,7 @@
 'use client';
 
 import { InfoCircledIcon } from '@radix-ui/react-icons';
-import { cva, cx } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ChangeEvent, ComponentProps } from 'react';
 import { Tooltip } from '../tooltip';
 
@@ -15,7 +15,9 @@ const textArea = cva(styles.textarea, {
   }
 });
 
-export interface TextAreaProps extends ComponentProps<'textarea'> {
+export interface TextAreaProps
+  extends ComponentProps<'textarea'>,
+    VariantProps<typeof textArea> {
   label?: string;
   required?: boolean;
   infoTooltip?: string;
@@ -51,10 +53,15 @@ function TextArea({
             {!required && <span className={styles.optional}>(optional)</span>}
           </label>
           {infoTooltip && (
-            <Tooltip message={infoTooltip} side='right'>
-              <span className={styles.helpIcon}>
-                <InfoCircledIcon />
-              </span>
+            <Tooltip>
+              <Tooltip.Trigger
+                render={
+                  <span className={styles.helpIcon}>
+                    <InfoCircledIcon />
+                  </span>
+                }
+              />
+              <Tooltip.Content side='right'>{infoTooltip}</Tooltip.Content>
             </Tooltip>
           )}
         </div>

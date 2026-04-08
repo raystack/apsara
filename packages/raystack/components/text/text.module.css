@@ -62,7 +62,7 @@
   letter-spacing: var(--rs-letter-spacing-regular);
 }
 .text-7 {
-  font-size: 20px;
+  font-size: var(--rs-font-size-t1);
   line-height: var(--rs-line-height-large);
   letter-spacing: var(--rs-letter-spacing-large);
 }
@@ -72,13 +72,13 @@
   letter-spacing: var(--rs-letter-spacing-large);
 }
 .text-9 {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: var(--rs-font-size-t2);
+  line-height: var(--rs-line-height-t2);
   letter-spacing: var(--rs-letter-spacing-large);
 }
 .text-10 {
-  font-size: 28px;
-  line-height: 36px;
+  font-size: var(--rs-font-size-t3);
+  line-height: var(--rs-line-height-t3);
   letter-spacing: var(--rs-letter-spacing-large);
 }
 

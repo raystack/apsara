@@ -7,7 +7,12 @@
   box-shadow: var(--rs-shadow-feather);
   box-sizing: border-box;
   min-height: var(--rs-space-11);
-  transition: transform 0.2s ease-in-out;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .root {
+    transition: transform 0.2s ease-in-out;
+  }
 }
 
 .root[data-sticky="true"] {
