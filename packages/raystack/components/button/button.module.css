@@ -32,6 +32,7 @@
 .button-disabled {
   opacity: 0.5;
   pointer-events: initial;
+  cursor: default;
 }
 
 .button:disabled:hover,
