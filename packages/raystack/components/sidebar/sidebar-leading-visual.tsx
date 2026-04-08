@@ -12,6 +12,25 @@ interface SidebarLeadingVisualProps {
   className?: string;
 }
 
+function AvatarContainer({
+  children,
+  className
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <Flex
+      align='center'
+      gap={3}
+      className={cx(styles['nav-leading-icon'], className)}
+      aria-hidden='true'
+    >
+      {children}
+    </Flex>
+  );
+}
+
 export function SidebarLeadingVisual({
   leadingIcon,
   fallbackText,
@@ -19,25 +38,13 @@ export function SidebarLeadingVisual({
 }: SidebarLeadingVisualProps) {
   if (leadingIcon) {
     return (
-      <Flex
-        align='center'
-        gap={3}
-        className={cx(styles['nav-leading-icon'], className)}
-        aria-hidden='true'
-      >
-        {leadingIcon}
-      </Flex>
+      <AvatarContainer className={className}>{leadingIcon}</AvatarContainer>
     );
   }
 
   if (fallbackText && fallbackText.length > 0) {
     return (
-      <Flex
-        align='center'
-        gap={3}
-        className={cx(styles['nav-leading-icon'], className)}
-        aria-hidden='true'
-      >
+      <AvatarContainer className={className}>
         <Avatar
           size={1}
           variant='soft'
@@ -45,7 +52,7 @@ export function SidebarLeadingVisual({
           fallback={fallbackText[0].toUpperCase()}
           className={styles['nav-fallback-avatar']}
         />
-      </Flex>
+      </AvatarContainer>
     );
   }
 
