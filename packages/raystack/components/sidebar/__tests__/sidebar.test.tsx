@@ -286,13 +286,13 @@ describe('Sidebar', () => {
       expect(group).toBeInTheDocument();
     });
 
-    it('renders accordion trigger when accordion is enabled', () => {
+    it('renders collapsible trigger when collapsible is enabled', () => {
       render(
         <Sidebar>
           <Sidebar.Main>
             <Sidebar.Group
               label={MAIN_GROUP_LABEL}
-              accordion
+              collapsible
               leadingIcon={<TestIcon />}
             >
               <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
@@ -308,13 +308,13 @@ describe('Sidebar', () => {
       expect(trigger).toHaveAttribute('data-panel-open');
     });
 
-    it('toggles group items when accordion is enabled', () => {
+    it('toggles group items when collapsible is enabled', () => {
       render(
         <Sidebar>
           <Sidebar.Main>
             <Sidebar.Group
               label={MAIN_GROUP_LABEL}
-              accordion
+              collapsible
               leadingIcon={<TestIcon />}
             >
               <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
@@ -335,13 +335,13 @@ describe('Sidebar', () => {
       expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
     });
 
-    it('forces accordion panel open when sidebar is collapsed', () => {
+    it('forces collapsible panel open when sidebar is collapsed', () => {
       const { rerender } = render(
         <Sidebar open>
           <Sidebar.Main>
             <Sidebar.Group
               label={MAIN_GROUP_LABEL}
-              accordion
+              collapsible
               leadingIcon={<TestIcon />}
             >
               <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
@@ -361,7 +361,7 @@ describe('Sidebar', () => {
           <Sidebar.Main>
             <Sidebar.Group
               label={MAIN_GROUP_LABEL}
-              accordion
+              collapsible
               leadingIcon={<TestIcon />}
             >
               <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
@@ -377,13 +377,13 @@ describe('Sidebar', () => {
       ).toBeInTheDocument();
     });
 
-    it('renders right icon when provided in accordion header', () => {
+    it('renders right icon when provided in collapsible header', () => {
       render(
         <Sidebar>
           <Sidebar.Main>
             <Sidebar.Group
               label={MAIN_GROUP_LABEL}
-              accordion
+              collapsible
               trailingIcon={<span data-testid='group-trailing-icon'>+</span>}
             >
               <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
@@ -397,7 +397,7 @@ describe('Sidebar', () => {
       expect(screen.getByTestId('group-trailing-icon')).toBeInTheDocument();
     });
 
-    it('does not toggle accordion when trailing icon is clicked', () => {
+    it('does not toggle collapsible when trailing icon is clicked', () => {
       const onTrailingIconClick = vi.fn();
 
       render(
@@ -405,7 +405,7 @@ describe('Sidebar', () => {
           <Sidebar.Main>
             <Sidebar.Group
               label={MAIN_GROUP_LABEL}
-              accordion
+              collapsible
               trailingIcon={
                 <button
                   type='button'

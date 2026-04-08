@@ -358,7 +358,7 @@ export const hideTooltipDemo = {
         </Sidebar>`)
 };
 
-export const accordionGroupDemo = {
+export const collapsibleGroupDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen>
           <Sidebar.Header>
@@ -373,7 +373,7 @@ export const accordionGroupDemo = {
             <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
               Overview
             </Sidebar.Item>
-            <Sidebar.Group label="Resources" accordion>
+            <Sidebar.Group label="Resources" collapsible>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
                 Reports
               </Sidebar.Item>

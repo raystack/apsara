@@ -42,6 +42,11 @@ export interface SidebarGroupProps {
   /** String for the group title. */
   label: string;
 
+  /** Makes group items collapsible.
+   * @default false
+   */
+  collapsible?: boolean;
+
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;
 

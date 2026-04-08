@@ -42,7 +42,7 @@ SidebarFooter.displayName = 'Sidebar.Footer';
 export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
   label: string;
   value?: string;
-  accordion?: boolean;
+  collapsible?: boolean;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
   classNames?: {
@@ -60,7 +60,7 @@ export function SidebarNavigationGroup({
   className,
   label,
   value,
-  accordion = false,
+  collapsible = false,
   leadingIcon,
   trailingIcon,
   classNames,
@@ -70,7 +70,7 @@ export function SidebarNavigationGroup({
   const { isCollapsed } = useContext(SidebarContext);
   const groupValue = value ?? label;
 
-  if (!accordion) {
+  if (!collapsible) {
     return (
       <section
         className={cx(styles['nav-group'], className)}
