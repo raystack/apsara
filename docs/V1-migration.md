@@ -6,35 +6,53 @@ This guide covers all breaking changes when upgrading from the last stable Radix
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Cross-Cutting Changes](#cross-cutting-changes)
-- [Component Migration](#component-migration)
-  - [Accordion](#accordion)
-  - [Avatar](#avatar)
-  - [Breadcrumb](#breadcrumb)
-  - [Button](#button)
-  - [Checkbox](#checkbox)
-  - [Combobox](#combobox)
-  - [Data Table](#data-table)
-  - [Dialog](#dialog)
-  - [DropdownMenu -> Menu](#dropdownmenu---menu)
-  - [Flex](#flex)
-  - [Grid](#grid)
-  - [Popover](#popover)
-  - [Radio](#radio)
-  - [ScrollArea](#scrollarea)
-  - [Select](#select)
-  - [Separator](#separator)
-  - [Sheet -> Drawer](#sheet---drawer)
-  - [Sidebar](#sidebar)
-  - [Slider](#slider)
-  - [Switch](#switch)
-  - [Tabs](#tabs)
-  - [Toast](#toast)
-  - [Tooltip](#tooltip)
-- [New Components](#new-components)
-- [Removed Exports](#removed-exports)
-- [Migration Checklist](#migration-checklist)
+- [Apsara v1.0.0 Migration Guide: Radix UI / Ariakit -\> Base UI](#apsara-v100-migration-guide-radix-ui--ariakit---base-ui)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Cross-Cutting Changes](#cross-cutting-changes)
+    - [`asChild` Replaced by `render`](#aschild-replaced-by-render)
+    - [Callback Signatures](#callback-signatures)
+    - [Data Attributes](#data-attributes)
+    - [CSS Variables](#css-variables)
+  - [Component Migration](#component-migration)
+    - [Accordion](#accordion)
+      - [New Props](#new-props)
+    - [Avatar](#avatar)
+    - [Breadcrumb](#breadcrumb)
+    - [Button](#button)
+    - [Checkbox](#checkbox)
+      - [New: `Checkbox.Group`](#new-checkboxgroup)
+    - [Data Table](#data-table)
+    - [Dialog](#dialog)
+      - [New Features](#new-features)
+    - [DropdownMenu -\> Menu](#dropdownmenu---menu)
+      - [New Features](#new-features-1)
+    - [Flex](#flex)
+    - [Grid](#grid)
+    - [Popover](#popover)
+      - [New Features](#new-features-2)
+    - [Radio](#radio)
+    - [ScrollArea](#scrollarea)
+    - [Select](#select)
+      - [New Features](#new-features-3)
+    - [Separator](#separator)
+    - [Sheet -\> Drawer](#sheet---drawer)
+      - [New Features](#new-features-4)
+    - [Sidebar](#sidebar)
+      - [New Features](#new-features-5)
+    - [Slider](#slider)
+      - [New Features](#new-features-6)
+    - [Switch](#switch)
+    - [Tabs](#tabs)
+      - [New Features](#new-features-7)
+    - [Toast](#toast)
+      - [New Features](#new-features-8)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-9)
+  - [New Components](#new-components)
+  - [Removed Exports](#removed-exports)
+  - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
+  - [Migration Checklist](#migration-checklist)
 
 ---
 
@@ -121,7 +139,23 @@ If you reference these CSS variables in custom styles:
 
 2. **`onValueChange` in single mode** now receives `string | undefined` (not just `string`).
 
-3. **Type exports removed** -- `AccordionItemProps`, `AccordionTriggerProps`, `AccordionContentProps` are no longer exported.
+3. **`forceMount` replaced by `keepMounted`:**
+   ```tsx
+   // Before
+   <Accordion.Content forceMount>...</Accordion.Content>
+
+   // After
+   <Accordion keepMounted>  {/* or on individual Content */}
+   ```
+
+4. **`dir` prop removed.**
+
+5. **Type exports removed** -- `AccordionItemProps`, `AccordionTriggerProps`, `AccordionContentProps` are no longer exported.
+
+#### New Props
+
+- `loopFocus` -- loop keyboard navigation from last to first item
+- `hiddenUntilFound` -- content is searchable by browser find-in-page even when collapsed
 
 ---
 
@@ -193,7 +227,6 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
   <Checkbox name="apple" />
   <Checkbox name="banana" />
 </Checkbox.Group>
-```
 
 ---
 
@@ -609,6 +642,15 @@ import { Radio } from '@raystack/apsara';
 - `toastManager.update(id, props)` for modifying existing toasts
 - `Toast.createToastManager` and `Toast.useToastManager`
 
+**Promise toast pattern:**
+```tsx
+toastManager.promise(fetchData(), {
+  loading: { title: "Loading...", description: "Please wait" },
+  success: { title: "Done!", type: "success" },
+  error: { title: "Failed", type: "error" },
+});
+```
+
 ---
 
 ### Tooltip
@@ -630,15 +672,24 @@ import { Radio } from '@raystack/apsara';
 
 1. **`message` prop removed** -- content goes in `<Tooltip.Content>`.
 2. **`children` is no longer the trigger** -- wrap in `<Tooltip.Trigger>`.
-3. **Removed props:** `disabled`, `followCursor`, `classNames`, `triggerStyle`, `contentStyle`, `disableHoverableContent`, `skipDelayDuration`.
-4. **Diagonal `side` values removed:**
+3. **`followCursor` replaced by `trackCursorAxis`:**
+   ```tsx
+   // Before
+   <Tooltip followCursor>...</Tooltip>
+
+   // After
+   <Tooltip trackCursorAxis="both">...</Tooltip>
+   // Options: "none" | "x" | "y" | "both"
+   ```
+4. **Removed props:** `classNames`, `triggerStyle`, `contentStyle`, `disableHoverableContent`, `skipDelayDuration`.
+5. **Diagonal `side` values removed:**
    - `side="top-left"` -> `side="top" align="start"`
    - `side="top-right"` -> `side="top" align="end"`
    - `side="bottom-left"` -> `side="bottom" align="start"`
    - `side="bottom-right"` -> `side="bottom" align="end"`
-5. **`showArrow` default changed** from `true` to `false`.
-6. **`delayDuration` renamed to `delay`.**
-7. **Auto-provider wrapping removed** -- consumer decides whether to use `<Tooltip.Provider>`.
+6. **`showArrow` default changed** from `true` to `false`.
+7. **`delayDuration` renamed to `delay`.**
+8. **Auto-provider wrapping removed** -- consumer decides whether to use `<Tooltip.Provider>`.
 
 #### New Features
 
@@ -677,14 +728,14 @@ These are purely additive -- no migration needed.
 | `ToastContainer` | `Toast.Provider` | See [Toast](#toast) |
 | `toast` (function) | `toastManager` (object) | See [Toast](#toast) |
 | `RadioItem` | `Radio` | See [Radio](#radio) |
-
 ---
 
 ## Migration Checklist
 
 - [ ] Upgrade to React 19
+- [ ] Update CSS import order (`normalize.css` before `style.css`)
 - [ ] Global find-and-replace: `asChild` -> `render` prop pattern
-- [ ] Update `onValueChange`/`onOpenChange`/`onCheckedChange` callback signatures
+- [ ] Update callback signatures where TypeScript complains
 - [ ] Replace `DropdownMenu` imports with `Menu`
 - [ ] Replace `Sheet` imports with `Drawer`
 - [ ] Replace `ToastContainer`/`toast` with `Toast.Provider`/`toastManager`
@@ -694,5 +745,7 @@ These are purely additive -- no migration needed.
 - [ ] Replace `Select.ScrollUpButton`/`ScrollDownButton` with `ScrollUpArrow`/`ScrollDownArrow`
 - [ ] Remove `Select.Viewport` wrapper
 - [ ] Rewrite all Tooltip usages to compound component pattern
+- [ ] Update Accordion: `type` -> `multiple`, remove `collapsible`, `forceMount` -> `keepMounted`
 - [ ] Update custom CSS targeting `data-state` attributes (see [Data Attributes](#data-attributes))
 - [ ] Update custom CSS referencing `--radix-*` variables (see [CSS Variables](#css-variables))
+- [ ] Test all components end-to-end
