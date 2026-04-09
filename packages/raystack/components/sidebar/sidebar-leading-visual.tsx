@@ -1,7 +1,7 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { Avatar } from '../avatar';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
@@ -10,14 +10,17 @@ interface SidebarLeadingVisualProps {
   leadingIcon?: ReactNode;
   fallbackText?: string;
   className?: string;
+  render?: ComponentProps<typeof Flex>['render'];
 }
 
 function AvatarContainer({
   children,
-  className
+  className,
+  render
 }: {
   children: ReactNode;
   className?: string;
+  render?: ComponentProps<typeof Flex>['render'];
 }) {
   return (
     <Flex
@@ -25,6 +28,7 @@ function AvatarContainer({
       gap={3}
       className={cx(styles['nav-leading-icon'], className)}
       aria-hidden='true'
+      render={render}
     >
       {children}
     </Flex>
@@ -34,17 +38,20 @@ function AvatarContainer({
 export function SidebarLeadingVisual({
   leadingIcon,
   fallbackText,
-  className
+  className,
+  render
 }: SidebarLeadingVisualProps) {
   if (leadingIcon) {
     return (
-      <AvatarContainer className={className}>{leadingIcon}</AvatarContainer>
+      <AvatarContainer className={className} render={render}>
+        {leadingIcon}
+      </AvatarContainer>
     );
   }
 
   if (fallbackText && fallbackText.length > 0) {
     return (
-      <AvatarContainer className={className}>
+      <AvatarContainer className={className} render={render}>
         <Avatar
           size={1}
           variant='soft'

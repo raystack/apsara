@@ -6,7 +6,9 @@ import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode, useContext } from 'react';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
+import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { SidebarContext } from './sidebar-root';
+import { SidebarTrailingVisual } from './sidebar-trailing-visual';
 
 export function SidebarHeader({
   className,
@@ -86,24 +88,18 @@ export function SidebarNavigationGroup({
             classNames?.header
           )}
         >
-          {leadingIcon && (
-            <span className={cx(styles['nav-leading-icon'], classNames?.icon)}>
-              {leadingIcon}
-            </span>
-          )}
+          <SidebarLeadingVisual
+            leadingIcon={leadingIcon}
+            className={classNames?.icon}
+            render={<span />}
+          />
           <span className={cx(styles['nav-group-label'], classNames?.label)}>
             {label}
           </span>
-          {trailingIcon ? (
-            <span
-              className={cx(
-                styles['nav-group-trailing-icon'],
-                classNames?.trailingIcon
-              )}
-            >
-              {trailingIcon}
-            </span>
-          ) : null}
+          <SidebarTrailingVisual
+            trailingIcon={trailingIcon}
+            className={classNames?.trailingIcon}
+          />
         </Flex>
         <Flex
           direction='column'
@@ -138,13 +134,11 @@ export function SidebarNavigationGroup({
             <AccordionPrimitive.Trigger
               className={cx(styles['nav-group-trigger'], classNames?.trigger)}
             >
-              {leadingIcon && (
-                <span
-                  className={cx(styles['nav-leading-icon'], classNames?.icon)}
-                >
-                  {leadingIcon}
-                </span>
-              )}
+              <SidebarLeadingVisual
+                leadingIcon={leadingIcon}
+                className={classNames?.icon}
+                render={<span />}
+              />
               <span
                 className={cx(styles['nav-group-label'], classNames?.label)}
               >
@@ -155,16 +149,10 @@ export function SidebarNavigationGroup({
                 aria-hidden='true'
               />
             </AccordionPrimitive.Trigger>
-            {trailingIcon ? (
-              <span
-                className={cx(
-                  styles['nav-group-trailing-icon'],
-                  classNames?.trailingIcon
-                )}
-              >
-                {trailingIcon}
-              </span>
-            ) : null}
+            <SidebarTrailingVisual
+              trailingIcon={trailingIcon}
+              className={classNames?.trailingIcon}
+            />
           </AccordionPrimitive.Header>
           <AccordionPrimitive.Panel className={styles['nav-group-panel']}>
             <Flex

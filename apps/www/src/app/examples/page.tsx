@@ -86,7 +86,7 @@ const Page = () => {
           backgroundColor: 'var(--rs-color-background-base-primary)'
         }}
       >
-        <Sidebar defaultOpen variant='floating'>
+        <Sidebar defaultOpen variant='plain'>
           <Sidebar.Header>
             <Flex align='center' gap={3}>
               <IconButton
@@ -113,7 +113,7 @@ const Page = () => {
 
             <Sidebar.Group
               label='Resources'
-              accordion
+              collapsible
               trailingIcon={
                 <button
                   type='button'
