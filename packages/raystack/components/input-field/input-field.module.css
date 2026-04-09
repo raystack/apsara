@@ -112,10 +112,6 @@
   background: var(--rs-color-background-base-primary);
 }
 
-.input-default {
-  color: var(--rs-color-foreground-base-primary);
-}
-
 .input-disabled {
   color: var(--rs-color-foreground-base-tertiary);
 }
