@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 import { cva, cx, VariantProps } from 'class-variance-authority';
 import { ComponentProps, isValidElement, ReactElement, ReactNode } from 'react';

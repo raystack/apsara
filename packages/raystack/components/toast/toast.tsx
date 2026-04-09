@@ -1,3 +1,5 @@
+'use client';
+
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { ToastProvider } from './toast-provider';
 import { ToastRoot } from './toast-root';

@@ -1,3 +1,5 @@
+'use client';
+
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { ComboboxContent } from './combobox-content';
 import { ComboboxInput } from './combobox-input';

@@ -1,3 +1,5 @@
+'use client';
+
 import { mergeProps, useRender } from '@base-ui/react';
 import { cva, VariantProps } from 'class-variance-authority';
 import styles from './flex.module.css';

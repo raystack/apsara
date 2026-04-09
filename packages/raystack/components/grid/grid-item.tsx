@@ -1,3 +1,5 @@
+'use client';
+
 import { mergeProps, useRender } from '@base-ui/react';
 import { AlignType } from './types';
 

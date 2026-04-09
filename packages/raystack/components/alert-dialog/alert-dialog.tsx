@@ -1,3 +1,5 @@
+'use client';
+
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react';
 import { AlertDialogContent } from './alert-dialog-content';
 import {
