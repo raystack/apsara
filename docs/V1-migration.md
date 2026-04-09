@@ -63,7 +63,6 @@ This guide covers all breaking changes when upgrading from the last stable Radix
 - **React 19 required.** The peer dependency changed from `^18 || ^19` to `^19` only. React 18 is no longer supported.
 - The library no longer uses `radix-ui`, `@ariakit/react`, or `sonner`. It now uses `@base-ui/react` and `@base-ui/utils` internally. These are installed automatically as dependencies of the package.
 - `@radix-ui/react-icons` is still used.
-
 ---
 
 ## Cross-Cutting Changes
@@ -72,28 +71,64 @@ These patterns apply across many components. Address them globally before tackli
 
 ### `asChild` Replaced by `render`
 
-Radix's `asChild` composition pattern is gone. Use the `render` prop instead:
+Radix's `asChild` composition pattern is gone. Use the `render` prop instead. Note that with `render`, children text goes on the parent, not inside the rendered element.
 
 ```tsx
-// Before
-<Button asChild><a href="/">Link</a></Button>
+// Before — asChild merges props onto the child element
+<Button asChild>
+  <a href="/">Link</a>
+</Button>
 
-// After
+// After — render specifies the element, children go on the wrapper
 <Button render={<a href="/" />}>Link</Button>
 ```
 
-Affected components: Button, Grid, Grid.Item, Popover.Trigger, Menu.Trigger, Drawer.Trigger, and others.
+```tsx
+// Before — Trigger with asChild
+<Dialog.Trigger asChild>
+  <Button variant="outline">Open Dialog</Button>
+</Dialog.Trigger>
+
+// After — Trigger with render
+<Dialog.Trigger render={<Button variant="outline" />}>
+  Open Dialog
+</Dialog.Trigger>
+```
+
+```tsx
+// Before — Close with asChild
+<Dialog.Close asChild>
+  <Button color="neutral">Cancel</Button>
+</Dialog.Close>
+
+// After — Close with render (entire element in render)
+<Dialog.Close render={<Button color="neutral">Cancel</Button>} />
+```
+
+Affected components: Button, Grid, Grid.Item, Popover.Trigger, Menu.Trigger, Drawer.Trigger, Dialog.Trigger, Dialog.Close, AlertDialog.Trigger, Breadcrumb.Item, Tooltip.Trigger.
 
 ### Callback Signatures
 
-Most `onValueChange`, `onOpenChange`, and `onCheckedChange` callbacks now receive a second `eventDetails` argument:
+Most `onValueChange`, `onOpenChange`, and `onCheckedChange` callbacks now receive an optional second `eventDetails` argument:
 
 ```tsx
 // Before
-onOpenChange={(open: boolean) => { ... }}
+<Accordion onValueChange={(value: string) => {
+  console.log(value);
+}} />
+
+// After — second arg added, but it's optional
+<Accordion onValueChange={(value: string | undefined, eventDetails) => {
+  console.log(value);
+}} />
+```
+
+```tsx
+// Before
+<Switch onCheckedChange={(checked: boolean) => setEnabled(checked)} />
 
 // After
-onOpenChange={(open: boolean, eventDetails) => { ... }}
+<Switch onCheckedChange={(checked: boolean, event) => setEnabled(checked)} />
 ```
 
 Existing handlers that ignore extra args still work at runtime, but TypeScript types may require updating.
@@ -108,8 +143,38 @@ If you target Apsara component data attributes in custom CSS, these have changed
 | `data-state="closed"` | `data-closed` |
 | `data-state="checked"` | `data-checked` |
 | `data-state="unchecked"` | `data-unchecked` |
+| `data-state="active"` | `data-active` |
 | `data-active-item="true"` | `data-highlighted` |
 | `data-disabled="true"` | `data-disabled` (no value) |
+
+```css
+/* Before */
+.my-panel[data-state="open"] { opacity: 1; }
+.my-panel[data-state="closed"] { opacity: 0; }
+.my-checkbox[data-state="checked"] { background: blue; }
+.my-item[data-active-item="true"] { background: gray; }
+.my-switch[data-disabled="true"] { opacity: 0.5; }
+
+/* After */
+.my-panel[data-open] { opacity: 1; }
+.my-panel[data-closed] { opacity: 0; }
+.my-checkbox[data-checked] { background: blue; }
+.my-item[data-highlighted] { background: gray; }
+.my-switch[data-disabled] { opacity: 0.5; }
+```
+
+Animation data attributes also changed:
+
+```css
+/* Before — Radix keyframe animation */
+.overlay[data-state="open"] { animation: fadeIn 200ms; }
+.overlay[data-state="closed"] { animation: fadeOut 200ms; }
+
+/* After — Base UI CSS transitions */
+.overlay { transition: opacity 200ms; }
+.overlay[data-starting-style] { opacity: 0; }
+.overlay[data-ending-style] { opacity: 0; }
+```
 
 ### CSS Variables
 
@@ -122,6 +187,16 @@ If you reference these CSS variables in custom styles:
 | `--radix-accordion-content-height` | `--accordion-panel-height` |
 | `--radix-collapsible-content-*` | Removed |
 
+```css
+/* Before */
+.dropdown { min-width: var(--radix-popover-trigger-width); }
+.accordion-panel { height: var(--radix-accordion-content-height); }
+
+/* After */
+.dropdown { min-width: var(--anchor-width); }
+.accordion-panel { height: var(--accordion-panel-height); }
+```
+
 ---
 
 ## Component Migration
@@ -129,26 +204,65 @@ If you reference these CSS variables in custom styles:
 ### Accordion
 
 1. **`type` prop replaced with `multiple` boolean**, `collapsible` prop removed (always collapsible):
-   ```tsx
-   // Before
-   <Accordion type="single" collapsible>
-   <Accordion type="multiple">
 
-   // After
-   <Accordion>                    {/* single, always collapsible */}
-   <Accordion multiple>           {/* multiple mode */}
-   ```
+```tsx
+// Before
+<Accordion type="single" collapsible defaultValue="item-1">
+  <Accordion.Item value="item-1">
+    <Accordion.Trigger>Section 1</Accordion.Trigger>
+    <Accordion.Content>Content 1</Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item value="item-2">
+    <Accordion.Trigger>Section 2</Accordion.Trigger>
+    <Accordion.Content>Content 2</Accordion.Content>
+  </Accordion.Item>
+</Accordion>
 
-2. **`onValueChange` in single mode** now receives `string | undefined` (not just `string`).
+// After
+<Accordion defaultValue="item-1">
+  <Accordion.Item value="item-1">
+    <Accordion.Trigger>Section 1</Accordion.Trigger>
+    <Accordion.Content>Content 1</Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item value="item-2">
+    <Accordion.Trigger>Section 2</Accordion.Trigger>
+    <Accordion.Content>Content 2</Accordion.Content>
+  </Accordion.Item>
+</Accordion>
+```
+
+```tsx
+// Before — multiple mode
+<Accordion type="multiple" defaultValue={["item-1", "item-2"]}>
+
+// After — multiple mode
+<Accordion multiple defaultValue={["item-1", "item-2"]}>
+```
+
+2. **`onValueChange` in single mode** now receives `string | undefined` (not just `string`):
+
+```tsx
+// Before
+<Accordion type="single" onValueChange={(value: string) => setValue(value)}>
+
+// After — value can be undefined when all items are collapsed
+<Accordion onValueChange={(value: string | undefined) => setValue(value)}>
+```
 
 3. **`forceMount` replaced by `keepMounted`:**
-   ```tsx
-   // Before
-   <Accordion.Content forceMount>...</Accordion.Content>
 
-   // After
-   <Accordion keepMounted>  {/* or on individual Content */}
-   ```
+```tsx
+// Before
+<Accordion.Content forceMount>Always in DOM</Accordion.Content>
+
+// After — on root (applies to all) or individual Content
+<Accordion keepMounted>
+  <Accordion.Item value="item-1">
+    <Accordion.Trigger>Title</Accordion.Trigger>
+    <Accordion.Content>Always in DOM</Accordion.Content>
+  </Accordion.Item>
+</Accordion>
+```
 
 4. **`dir` prop removed.**
 
@@ -163,8 +277,29 @@ If you reference these CSS variables in custom styles:
 
 ### Avatar
 
-1. **`asChild` prop removed.**
-2. **`delayMs` and other Radix-specific root props** no longer recognized.
+1. **`asChild` prop removed:**
+
+```tsx
+// Before
+<Avatar asChild fallback="JD">
+  <a href="/profile" />
+</Avatar>
+
+// After — compose by wrapping instead
+<a href="/profile">
+  <Avatar fallback="JD" />
+</a>
+```
+
+2. **`delayMs` and other Radix-specific root props** no longer recognized:
+
+```tsx
+// Before — Radix-specific prop
+<Avatar delayMs={300} src="/photo.jpg" fallback="JD" />
+
+// After — delayMs removed, no equivalent
+<Avatar src="/photo.jpg" fallback="JD" />
+```
 
 Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `className`, `AvatarGroup` with `max`, and `getAvatarColor`.
 
@@ -173,52 +308,114 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 ### Breadcrumb
 
 1. **`as` prop renamed to `render`** on `BreadcrumbItem`:
-   ```tsx
-   // Before
-   <Breadcrumb.Item as={<CustomLink />}>...</Breadcrumb.Item>
 
-   // After
-   <Breadcrumb.Item render={<CustomLink />}>...</Breadcrumb.Item>
-   ```
+```tsx
+// Before
+<Breadcrumb>
+  <Breadcrumb.Item as={<Link href="/home" />}>Home</Breadcrumb.Item>
+  <Breadcrumb.Item as={<Link href="/settings" />}>Settings</Breadcrumb.Item>
+  <Breadcrumb.Item current>Profile</Breadcrumb.Item>
+</Breadcrumb>
 
-2. **`current` items now render `<span>` instead of `<a>`.**
+// After
+<Breadcrumb>
+  <Breadcrumb.Item render={<Link href="/home" />}>Home</Breadcrumb.Item>
+  <Breadcrumb.Item render={<Link href="/settings" />}>Settings</Breadcrumb.Item>
+  <Breadcrumb.Item current>Profile</Breadcrumb.Item>
+</Breadcrumb>
+```
+
+2. **`current` items now render `<span>` instead of `<a>`.** If you had CSS targeting `a` elements for current breadcrumb items, update to target `span`.
 
 3. **`dropdownItems` shape changed** -- `label` -> `children`:
-   ```tsx
-   // Before
-   dropdownItems={[{ label: 'Option', onClick: handler }]}
 
-   // After
-   dropdownItems={[{ children: 'Option', onClick: handler }]}
-   ```
+```tsx
+// Before
+<Breadcrumb.Item
+  dropdownItems={[
+    { label: 'Option A', onClick: handleA },
+    { label: 'Option B', onClick: handleB },
+  ]}
+>
+  More
+</Breadcrumb.Item>
+
+// After
+<Breadcrumb.Item
+  dropdownItems={[
+    { children: 'Option A', onClick: handleA },
+    { children: 'Option B', onClick: handleB },
+  ]}
+>
+  More
+</Breadcrumb.Item>
+```
 
 ---
 
 ### Button
 
-1. **`asChild` removed** -- use `render` prop:
-   ```tsx
-   // Before
-   <Button asChild><a href="/">Link</a></Button>
+**`asChild` removed** -- use `render` prop:
 
-   // After
-   <Button render={<a href="/" />}>Link</Button>
-   ```
+```tsx
+// Before — rendering as a link
+<Button asChild variant="outline">
+  <a href="/dashboard">Go to Dashboard</a>
+</Button>
+
+// After
+<Button render={<a href="/dashboard" />} variant="outline">
+  Go to Dashboard
+</Button>
+```
+
+```tsx
+// Before — rendering as a router Link
+<Button asChild>
+  <Link to="/settings">Settings</Link>
+</Button>
+
+// After
+<Button render={<Link to="/settings" />}>Settings</Button>
+```
 
 ---
 
 ### Checkbox
 
 1. **Indeterminate API changed** -- `checked="indeterminate"` replaced by separate `indeterminate` boolean:
-   ```tsx
-   // Before
-   <Checkbox checked="indeterminate" />
 
-   // After
-   <Checkbox indeterminate />
-   ```
+```tsx
+// Before
+<Checkbox checked="indeterminate" />
+<Checkbox defaultChecked="indeterminate" />
 
-2. **`onCheckedChange` now receives 2 args** -- `(checked: boolean, eventDetails)`. The `CheckedState` type (`boolean | 'indeterminate'`) no longer exists.
+// After
+<Checkbox indeterminate />
+<Checkbox indeterminate defaultChecked={false} />
+```
+
+2. **`onCheckedChange` now receives 2 args** -- `(checked: boolean, eventDetails)`. The `CheckedState` type (`boolean | 'indeterminate'`) no longer exists:
+
+```tsx
+// Before
+<Checkbox
+  checked={isChecked}
+  onCheckedChange={(val: boolean | "indeterminate") => {
+    if (val === "indeterminate") { /* handle */ }
+    else { setChecked(val); }
+  }}
+/>
+
+// After — val is always boolean, indeterminate is a separate prop
+<Checkbox
+  checked={isChecked}
+  indeterminate={isIndeterminate}
+  onCheckedChange={(val: boolean, event) => {
+    setChecked(val);
+  }}
+/>
+```
 
 3. **`CheckboxProps` type export removed.**
 
@@ -230,13 +427,38 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
   <Checkbox name="banana" />
 </Checkbox.Group>
 ```
+
 ---
 
 ### Combobox
 
-1. **`onOpenChange` signature changed** -- now `(open, eventDetails)` (2 args). `onValueChange` and `onInputValueChange` are unchanged (1 arg).
+1. **`onOpenChange` signature changed** -- now `(open, eventDetails)` (2 args). `onValueChange` and `onInputValueChange` are unchanged (1 arg):
 
-2. **Content props removed** -- `align`, `onOpenAutoFocus`, `onInteractOutside`, `onFocusOutside` no longer accepted. New: `initialFocus`, `finalFocus`.
+```tsx
+// Before
+<Combobox onOpenChange={(open: boolean) => setIsOpen(open)}>
+
+// After
+<Combobox onOpenChange={(open: boolean, eventDetails) => setIsOpen(open)}>
+```
+
+2. **Content props removed** -- `align`, `onOpenAutoFocus`, `onInteractOutside`, `onFocusOutside` no longer accepted. New: `initialFocus`, `finalFocus`:
+
+```tsx
+// Before
+<Combobox.Content
+  align="start"
+  onOpenAutoFocus={(e) => e.preventDefault()}
+  onInteractOutside={handleOutside}
+  onFocusOutside={handleFocusOut}
+>
+
+// After
+<Combobox.Content
+  initialFocus={inputRef}
+  finalFocus={triggerRef}
+>
+```
 
 3. **`modal` prop removed** -- always modal.
 
@@ -246,6 +468,38 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 6. **Backspace-to-remove-last-chip removed** in multiple mode.
 
+**Full before/after example:**
+
+```tsx
+// Before
+<Combobox
+  modal={false}
+  defaultInputValue="app"
+  onOpenChange={(open) => setOpen(open)}
+  onValueChange={(value) => setValue(value)}
+>
+  <Combobox.Input placeholder="Search fruits" />
+  <Combobox.Content align="start" onInteractOutside={handleOutside}>
+    <Combobox.Item value="apple" focusOnHover>Apple</Combobox.Item>
+    <Combobox.Item value="banana" focusOnHover>Banana</Combobox.Item>
+    <Combobox.Item value="cherry" focusOnHover>Cherry</Combobox.Item>
+  </Combobox.Content>
+</Combobox>
+
+// After
+<Combobox
+  onOpenChange={(open, details) => setOpen(open)}
+  onValueChange={(value) => setValue(value)}
+>
+  <Combobox.Input placeholder="Search fruits" />
+  <Combobox.Content>
+    <Combobox.Item value="apple">Apple</Combobox.Item>
+    <Combobox.Item value="banana">Banana</Combobox.Item>
+    <Combobox.Item value="cherry">Cherry</Combobox.Item>
+  </Combobox.Content>
+</Combobox>
+```
+
 #### New Features
 
 - `Combobox.useFilter` and `Combobox.useFilteredItems` hooks for declarative filtering
@@ -253,30 +507,23 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 - `items` prop on Root for built-in filtering
 - `render` prop on Content and Item
 
-```tsx
-// Before
-<Combobox modal={false} defaultInputValue="app" onOpenChange={(open) => {}}>
-  <Combobox.Input placeholder="Search" />
-  <Combobox.Content align="start" onInteractOutside={handler}>
-    <Combobox.Item value="apple" focusOnHover>Apple</Combobox.Item>
-  </Combobox.Content>
-</Combobox>
-
-// After
-<Combobox onOpenChange={(open, details) => {}}>
-  <Combobox.Input placeholder="Search" />
-  <Combobox.Content>
-    <Combobox.Item value="apple">Apple</Combobox.Item>
-  </Combobox.Content>
-</Combobox>
-```
-
 ---
 
 ### Data Table
 
-- `defaultSort` is now effectively required for "Reset to default" and empty/zero state detection to work properly.
-- New `totalRowCount` prop -- when provided in `mode='server'`, shows a "N items hidden by filters" message.
+```tsx
+// Before — defaultSort was optional
+<DataTable columns={columns} data={data} />
+
+// After — defaultSort is effectively required for reset/empty state detection
+<DataTable columns={columns} data={data} defaultSort={[{ id: 'name', desc: false }]} />
+```
+
+- New `totalRowCount` prop -- when provided in `mode='server'`, shows a "N items hidden by filters" message:
+
+```tsx
+<DataTable mode="server" totalRowCount={1000} columns={columns} data={visibleData} />
+```
 
 ---
 
@@ -290,20 +537,67 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 ```tsx
 // Before
-<Dialog.Content ariaLabel="Settings" overlayBlur overlayClassName="my-overlay">
-  <Dialog.Header>
-    <Dialog.Title>Settings</Dialog.Title>
-    <Dialog.CloseButton />
-  </Dialog.Header>
-</Dialog.Content>
+<Dialog open={open} onOpenChange={setOpen}>
+  <Dialog.Trigger asChild>
+    <Button>Open Settings</Button>
+  </Dialog.Trigger>
+  <Dialog.Content
+    width="500px"
+    ariaLabel="Settings"
+    ariaDescription="Configure your preferences"
+    overlayBlur
+    overlayClassName="my-overlay"
+    overlayStyle={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+  >
+    <Dialog.Header>
+      <Dialog.Title>Settings</Dialog.Title>
+      <Dialog.CloseButton />
+    </Dialog.Header>
+    <Dialog.Body>
+      <Dialog.Description>Configure your preferences.</Dialog.Description>
+      <form>{/* form fields */}</form>
+    </Dialog.Body>
+    <Dialog.Footer>
+      <Dialog.Close asChild>
+        <Button color="neutral">Cancel</Button>
+      </Dialog.Close>
+      <Button>Save</Button>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog>
 
 // After
-<Dialog.Content aria-label="Settings" overlay={{ blur: true, className: "my-overlay" }}>
-  <Dialog.Header>
-    <Dialog.Title>Settings</Dialog.Title>
-    {/* CloseButton auto-rendered by Content */}
-  </Dialog.Header>
-</Dialog.Content>
+<Dialog open={open} onOpenChange={setOpen}>
+  <Dialog.Trigger render={<Button />}>Open Settings</Dialog.Trigger>
+  <Dialog.Content
+    width="500px"
+    aria-label="Settings"
+    overlay={{
+      blur: true,
+      className: "my-overlay",
+      style: { backgroundColor: "rgba(0,0,0,0.5)" },
+    }}
+  >
+    <Dialog.Header>
+      <Dialog.Title>Settings</Dialog.Title>
+      {/* CloseButton auto-rendered by Content — remove manual placement */}
+    </Dialog.Header>
+    <Dialog.Body>
+      <Dialog.Description>Configure your preferences.</Dialog.Description>
+      <form>{/* form fields */}</form>
+    </Dialog.Body>
+    <Dialog.Footer>
+      <Dialog.Close render={<Button color="neutral">Cancel</Button>} />
+      <Button>Save</Button>
+    </Dialog.Footer>
+  </Dialog.Content>
+</Dialog>
+```
+
+To suppress the auto close button:
+
+```tsx
+<Dialog.Content showCloseButton={false}>
 ```
 
 #### New Features
@@ -318,44 +612,81 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 **Export renamed: `DropdownMenu` -> `Menu`**
 
-1. **Import changed:**
-   ```tsx
-   // Before
-   import { DropdownMenu } from '@raystack/apsara';
+**Full before/after example:**
 
-   // After
-   import { Menu } from '@raystack/apsara';
-   ```
+```tsx
+// Before
+import { DropdownMenu } from '@raystack/apsara';
 
-2. **Nested menu API restructured** -- `TriggerItem` replaced by dedicated sub-components:
-   ```tsx
-   // Before
-   <DropdownMenu>
-     <DropdownMenu.TriggerItem>Sub Menu</DropdownMenu.TriggerItem>
-     <DropdownMenu.Content>
-       <DropdownMenu.Item>Nested</DropdownMenu.Item>
-     </DropdownMenu.Content>
-   </DropdownMenu>
+<DropdownMenu
+  autocomplete
+  searchValue={query}
+  onSearch={setQuery}
+  focusLoop
+  onOpenChange={(open) => console.log(open)}
+>
+  <DropdownMenu.Trigger asChild>
+    <Button>Actions</Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Content gutter={8} searchPlaceholder="Filter...">
+    <DropdownMenu.Label>File</DropdownMenu.Label>
+    <DropdownMenu.Group>
+      <DropdownMenu.Item leadingIcon={<EditIcon />}>Edit</DropdownMenu.Item>
+      <DropdownMenu.Item>Copy</DropdownMenu.Item>
+    </DropdownMenu.Group>
+    <DropdownMenu.Separator />
+    <DropdownMenu>
+      <DropdownMenu.TriggerItem>Export as...</DropdownMenu.TriggerItem>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item>CSV</DropdownMenu.Item>
+        <DropdownMenu.Item>PDF</DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu>
+  </DropdownMenu.Content>
+</DropdownMenu>
 
-   // After
-   <Menu.Submenu>
-     <Menu.SubmenuTrigger>Sub Menu</Menu.SubmenuTrigger>
-     <Menu.SubmenuContent>
-       <Menu.Item>Nested</Menu.Item>
-     </Menu.SubmenuContent>
-   </Menu.Submenu>
-   ```
+// After
+import { Menu } from '@raystack/apsara';
 
-3. **`asChild` -> `render`** on Trigger.
+<Menu
+  autocomplete
+  inputValue={query}
+  onInputValueChange={setQuery}
+  loopFocus
+  onOpenChange={(open, details) => console.log(open)}
+>
+  <Menu.Trigger render={<Button />}>Actions</Menu.Trigger>
+  <Menu.Content sideOffset={8} searchPlaceholder="Filter...">
+    <Menu.Group>
+      <Menu.Label>File</Menu.Label>
+      <Menu.Item leadingIcon={<EditIcon />}>Edit</Menu.Item>
+      <Menu.Item>Copy</Menu.Item>
+    </Menu.Group>
+    <Menu.Separator />
+    <Menu.Submenu>
+      <Menu.SubmenuTrigger>Export as...</Menu.SubmenuTrigger>
+      <Menu.SubmenuContent>
+        <Menu.Item>CSV</Menu.Item>
+        <Menu.Item>PDF</Menu.Item>
+      </Menu.SubmenuContent>
+    </Menu.Submenu>
+  </Menu.Content>
+</Menu>
+```
 
-4. **Search prop renames:**
-   - `searchValue` -> `inputValue`
-   - `onSearch` -> `onInputValueChange`
-   - `defaultSearchValue` -> `defaultInputValue`
+**Summary of prop renames:**
 
-5. **`focusLoop` -> `loopFocus`** (default changed from `true` to `false`).
-
-6. **Content props:** `gutter` -> `sideOffset`. `portal`, `portalElement`, `unmountOnHide` removed.
+| Old (`DropdownMenu`) | New (`Menu`) |
+|---------------------|-------------|
+| `searchValue` | `inputValue` |
+| `onSearch` | `onInputValueChange` |
+| `defaultSearchValue` | `defaultInputValue` |
+| `focusLoop` | `loopFocus` (default flipped: was `true`, now `false`) |
+| `Content gutter={N}` | `Content sideOffset={N}` |
+| `Content portal` | Removed (always portaled) |
+| `Content portalElement` | Removed |
+| `Content unmountOnHide` | Removed |
+| `DropdownMenu.TriggerItem` | `Menu.SubmenuTrigger` (inside `Menu.Submenu`) |
 
 #### New Features
 
@@ -367,27 +698,72 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 ### Flex
 
-- New `render` prop to change the underlying element (e.g., `render={<section />}`).
-- Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors if you typed Flex props explicitly.
+```tsx
+// Before — Flex always rendered as <div>
+<Flex gap="3" align="center">content</Flex>
+
+// After — unchanged for basic usage, but now supports render prop
+<Flex gap="3" align="center">content</Flex>
+
+// New — render as a different element
+<Flex render={<section />} gap="3" align="center">content</Flex>
+<Flex render={<nav />} gap="3" direction="column">links</Flex>
+```
+
+Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors if you typed Flex props explicitly.
 
 ---
 
 ### Grid
 
-- `asChild` removed from both `Grid` and `Grid.Item`. Use `render`:
-  ```tsx
-  // Before
-  <Grid asChild><section>...</section></Grid>
+**`asChild` removed** from both `Grid` and `Grid.Item`. Use `render`:
 
-  // After
-  <Grid render={<section />}>...</Grid>
-  ```
+```tsx
+// Before
+<Grid asChild columns="3" gap="4">
+  <section>
+    <Grid.Item asChild colSpan="2">
+      <article>Wide content</article>
+    </Grid.Item>
+    <Grid.Item>Narrow content</Grid.Item>
+  </section>
+</Grid>
+
+// After
+<Grid render={<section />} columns="3" gap="4">
+  <Grid.Item render={<article />} colSpan="2">Wide content</Grid.Item>
+  <Grid.Item>Narrow content</Grid.Item>
+</Grid>
+```
 
 ---
 
 ### Popover
 
-1. **`asChild` removed from Trigger** -- use `render` prop or pass children directly.
+1. **`asChild` removed from Trigger** -- use `render` prop or pass children directly:
+
+```tsx
+// Before
+<Popover>
+  <Popover.Trigger asChild>
+    <Button>Open Popover</Button>
+  </Popover.Trigger>
+  <Popover.Content side="bottom" align="start" ariaLabel="Options">
+    <p>Popover content here</p>
+    <Popover.Close>Close</Popover.Close>
+  </Popover.Content>
+</Popover>
+
+// After
+<Popover>
+  <Popover.Trigger render={<Button />}>Open Popover</Popover.Trigger>
+  <Popover.Content side="bottom" align="start" aria-label="Options">
+    <p>Popover content here</p>
+    <Popover.Close>Close</Popover.Close>
+  </Popover.Content>
+</Popover>
+```
+
 2. **`ariaLabel` custom prop removed** -- use standard `aria-label` instead.
 
 Positioning props (`side`, `align`, `sideOffset`, `collisionPadding`) are preserved.
@@ -401,33 +777,60 @@ Positioning props (`side`, `align`, `sideOffset`, `collisionPadding`) are preser
 
 ### Radio
 
-**Component hierarchy inverted** -- this is the most disruptive change:
+**Component hierarchy inverted** -- the root/item relationship is swapped:
 
 ```tsx
 // Before
 import { Radio, RadioItem } from '@raystack/apsara';
 
-<Radio defaultValue="opt1" onValueChange={handler}>
-  <Radio.Item value="opt1" />
-  <Radio.Item value="opt2" />
+<Radio
+  defaultValue="option2"
+  onValueChange={(value: string) => setSelected(value)}
+  orientation="vertical"
+  aria-label="Choose plan"
+>
+  <Radio.Item value="option1" id="free" />
+  <Radio.Item value="option2" id="pro" />
+  <Radio.Item value="option3" id="enterprise" disabled />
 </Radio>
 
 // After
 import { Radio } from '@raystack/apsara';
 
-<Radio.Group defaultValue="opt1" onValueChange={handler}>
-  <Radio value="opt1" />
-  <Radio value="opt2" />
+<Radio.Group
+  defaultValue="option2"
+  onValueChange={(value, event) => setSelected(value)}
+  aria-label="Choose plan"
+>
+  <Radio value="option1" id="free" />
+  <Radio value="option2" id="pro" />
+  <Radio value="option3" id="enterprise" disabled />
 </Radio.Group>
 ```
 
-- `RadioItem` export removed -- use `Radio` for individual items.
-- `onValueChange` now receives 2 args.
-- `RadioItemProps` type export removed.
+Key changes:
+- `<Radio>` (was group root) -> `<Radio.Group>`
+- `<Radio.Item>` (was individual item) -> `<Radio>`
+- `RadioItem` named export removed
+- `RadioItemProps` type export removed
+- `onValueChange` now receives 2 args
+- `orientation` prop removed
 
 ---
 
 ### ScrollArea
+
+```tsx
+// Before — type="auto" was the default
+<ScrollArea type="auto" style={{ height: 300 }}>
+  <div>Scrollable content...</div>
+</ScrollArea>
+
+// After — type="auto" removed, default is now "hover"
+<ScrollArea type="hover" style={{ height: 300 }}>
+  <div>Scrollable content...</div>
+</ScrollArea>
+```
 
 1. **`type="auto"` removed.** Remaining options: `'always'`, `'hover'`, `'scroll'`.
 2. **Default `type` changed** from `'auto'` to `'hover'`.
@@ -438,18 +841,6 @@ import { Radio } from '@raystack/apsara';
 ### Select
 
 1. **Sub-component renames:**
-   - `Select.ScrollUpButton` -> `Select.ScrollUpArrow`
-   - `Select.ScrollDownButton` -> `Select.ScrollDownArrow`
-   - `Select.Viewport` -> removed (no longer needed)
-
-2. **`SelectContent` props removed** -- `position`, `asChild`, `onEscapeKeyDown`, `onPointerDownOutside`.
-
-3. **`SelectItem` uses `render` prop** instead of `asChild`.
-
-#### New Features
-
-- `items` prop for external filtering
-- Explicit `disabled`, `required`, `name` props on Root
 
 ```tsx
 // Before
@@ -459,8 +850,13 @@ import { Radio } from '@raystack/apsara';
   </Select.Trigger>
   <Select.Content position="popper" sideOffset={4}>
     <Select.Viewport>
-      <Select.Item value="apple">Apple</Select.Item>
+      <Select.Group>
+        <Select.Label>Fruits</Select.Label>
+        <Select.Item value="apple">Apple</Select.Item>
+        <Select.Item value="banana">Banana</Select.Item>
+      </Select.Group>
     </Select.Viewport>
+    <Select.ScrollUpButton />
     <Select.ScrollDownButton />
   </Select.Content>
 </Select>
@@ -471,15 +867,46 @@ import { Radio } from '@raystack/apsara';
     <Select.Value placeholder="Pick a fruit" />
   </Select.Trigger>
   <Select.Content sideOffset={4}>
-    <Select.Item value="apple">Apple</Select.Item>
+    <Select.Group>
+      <Select.Label>Fruits</Select.Label>
+      <Select.Item value="apple">Apple</Select.Item>
+      <Select.Item value="banana">Banana</Select.Item>
+    </Select.Group>
+    <Select.ScrollUpArrow />
     <Select.ScrollDownArrow />
   </Select.Content>
 </Select>
 ```
 
+Summary of renames:
+- `Select.ScrollUpButton` -> `Select.ScrollUpArrow`
+- `Select.ScrollDownButton` -> `Select.ScrollDownArrow`
+- `Select.Viewport` -> removed (no longer needed, remove the wrapper)
+- `position="popper"` -> removed (always popper-style)
+
+2. **`SelectContent` props removed** -- `position`, `asChild`, `onEscapeKeyDown`, `onPointerDownOutside`.
+
+3. **`SelectItem` uses `render` prop** instead of `asChild`.
+
+#### New Features
+
+- `items` prop for external filtering
+- Explicit `disabled`, `required`, `name` props on Root
+
 ---
 
 ### Separator
+
+```tsx
+// Before — decorative was accepted, aria-label auto-generated
+<Separator decorative orientation="horizontal" />
+{/* auto-generated aria-label="horizontal separator" */}
+
+// After — decorative removed, no auto aria-label
+<Separator orientation="horizontal" />
+{/* add aria-label manually if needed */}
+<Separator orientation="horizontal" aria-label="Section divider" />
+```
 
 1. **`decorative` prop removed.**
 2. **Default `aria-label` removed** -- no longer auto-generates `"horizontal separator"`. Add explicitly if needed.
@@ -490,65 +917,114 @@ import { Radio } from '@raystack/apsara';
 
 **Export renamed: `Sheet` -> `Drawer`**
 
-1. **All sub-components renamed** -- `Sheet.*` -> `Drawer.*`.
-
-2. **`asChild` -> `render`** on Trigger.
-
-3. **`side` must be passed to both Root AND Content:**
-   ```tsx
-   // Before
-   <Sheet><Sheet.Content side="left">...</Sheet.Content></Sheet>
-
-   // After
-   <Drawer side="left"><Drawer.Content side="left">...</Drawer.Content></Drawer>
-   ```
-
-4. **Close button prop renamed** -- `close` -> `showCloseButton` (default changed to `true`).
-
-#### New Features
-
-- Swipe-to-dismiss
-- Structured layout: `Drawer.Header`, `Drawer.Body`, `Drawer.Footer`
-- `Drawer.createHandle` for drag handle
-
 ```tsx
 // Before
+import { Sheet } from '@raystack/apsara';
+
 <Sheet open={open} onOpenChange={setOpen}>
-  <Sheet.Trigger asChild><Button>Open</Button></Sheet.Trigger>
+  <Sheet.Trigger asChild>
+    <Button>Open Panel</Button>
+  </Sheet.Trigger>
   <Sheet.Content side="right" close={true}>
-    <Sheet.Title>Title</Sheet.Title>
-    {content}
+    <Sheet.Title>Settings</Sheet.Title>
+    <Sheet.Description>Manage your preferences</Sheet.Description>
+    <form>{/* form fields */}</form>
   </Sheet.Content>
 </Sheet>
 
 // After
+import { Drawer } from '@raystack/apsara';
+
 <Drawer open={open} onOpenChange={setOpen} side="right">
-  <Drawer.Trigger render={<Button />}>Open</Drawer.Trigger>
-  <Drawer.Content side="right">
+  <Drawer.Trigger render={<Button />}>Open Panel</Drawer.Trigger>
+  <Drawer.Content side="right" showCloseButton>
     <Drawer.Header>
-      <Drawer.Title>Title</Drawer.Title>
+      <Drawer.Title>Settings</Drawer.Title>
+      <Drawer.Description>Manage your preferences</Drawer.Description>
     </Drawer.Header>
-    <Drawer.Body>{content}</Drawer.Body>
+    <Drawer.Body>
+      <form>{/* form fields */}</form>
+    </Drawer.Body>
+    <Drawer.Footer>
+      <Button>Save</Button>
+    </Drawer.Footer>
   </Drawer.Content>
 </Drawer>
 ```
+
+Key changes:
+- All `Sheet.*` -> `Drawer.*`
+- `asChild` -> `render` on Trigger
+- `side` must be on both `<Drawer>` root AND `<Drawer.Content>`
+- `close` prop -> `showCloseButton` (default changed from `false` to `true`)
+- New structured layout: `Drawer.Header`, `Drawer.Body`, `Drawer.Footer`
+
+#### New Features
+
+- Swipe-to-dismiss
+- `Drawer.createHandle` for drag handle
 
 ---
 
 ### Sidebar
 
-1. **`disabled` prop replaced by `collapsible={false}`.**
+1. **`disabled` prop replaced by `collapsible={false}`:**
+
+```tsx
+// Before — disabled prevents toggling but still shows trigger
+<Sidebar disabled>
+
+// After — collapsible={false} hides the resize handle entirely
+<Sidebar collapsible={false}>
+```
 
 2. **`asChild` removed from Root** -- always renders `<aside>`.
 
 3. **Item rendering:** `asChild` replaced by `as` prop:
-   ```tsx
-   // Before
-   <Sidebar.Item asChild><Link href="/x">X</Link></Sidebar.Item>
 
-   // After
-   <Sidebar.Item as={<Link href="/x" />}>X</Sidebar.Item>
-   ```
+```tsx
+// Before
+<Sidebar.Item asChild>
+  <Link href="/dashboard">Dashboard</Link>
+</Sidebar.Item>
+
+// After
+<Sidebar.Item as={<Link href="/dashboard" />} leadingIcon={<HomeIcon />}>
+  Dashboard
+</Sidebar.Item>
+```
+
+**Full before/after example:**
+
+```tsx
+// Before
+<Sidebar open={isOpen} onOpenChange={setIsOpen} disabled={!canCollapse}>
+  <div>Logo</div>
+  <Sidebar.Item asChild>
+    <Link href="/home">Home</Link>
+  </Sidebar.Item>
+  <Sidebar.Item asChild>
+    <Link href="/settings">Settings</Link>
+  </Sidebar.Item>
+</Sidebar>
+
+// After
+<Sidebar open={isOpen} onOpenChange={setIsOpen} collapsible={canCollapse} position="left">
+  <Sidebar.Header>
+    <span data-collapse-hidden>Logo</span>
+  </Sidebar.Header>
+  <Sidebar.Main>
+    <Sidebar.Group label="Navigation">
+      <Sidebar.Item as={<Link href="/home" />} leadingIcon={<HomeIcon />} active>
+        Home
+      </Sidebar.Item>
+      <Sidebar.Item as={<Link href="/settings" />} leadingIcon={<SettingsIcon />}>
+        Settings
+      </Sidebar.Item>
+    </Sidebar.Group>
+  </Sidebar.Main>
+</Sidebar>
+```
 
 #### New Features
 
@@ -562,22 +1038,69 @@ import { Radio } from '@raystack/apsara';
 
 ### Slider
 
-1. **`onChange` removed** -- use `onValueChange`:
-   ```tsx
-   // Before
-   <Slider onChange={(val) => setValue(val)} />
+**`onChange` removed** -- use `onValueChange`:
 
-   // After
-   <Slider onValueChange={(val, details) => setValue(val)} />
-   ```
+```tsx
+// Before — single value
+<Slider
+  variant="single"
+  defaultValue={50}
+  min={0}
+  max={100}
+  step={1}
+  onChange={(val) => console.log(val)}
+/>
+
+// After — single value
+<Slider
+  variant="single"
+  defaultValue={50}
+  min={0}
+  max={100}
+  step={1}
+  onValueChange={(val, details) => console.log(val)}
+/>
+```
+
+```tsx
+// Before — range slider
+<Slider variant="range" value={[20, 80]} onChange={(val) => setRange(val)} />
+
+// After — range slider
+<Slider variant="range" value={[20, 80]} onValueChange={(val, details) => setRange(val)} />
+```
 
 #### New Features
 
-- `Slider.Value` sub-component for inline value display
+- `Slider.Value` sub-component for inline value display:
+
+```tsx
+<Slider defaultValue={50}>
+  <Slider.Value />  {/* renders the current value */}
+</Slider>
+```
 
 ---
 
 ### Switch
+
+```tsx
+// Before
+<Switch
+  checked={enabled}
+  onCheckedChange={(checked: boolean) => setEnabled(checked)}
+  name="notifications"
+  required
+/>
+
+// After
+<Switch
+  checked={enabled}
+  onCheckedChange={(checked: boolean, event) => setEnabled(checked)}
+  name="notifications"
+  required
+/>
+```
 
 1. **`onCheckedChange` now receives 2 args** -- `(checked, eventDetails)`.
 2. **`required`:** `aria-required="true"` -> `data-required`.
@@ -587,21 +1110,45 @@ import { Radio } from '@raystack/apsara';
 
 ### Tabs
 
-1. **`Tabs.Trigger` renamed to `Tabs.Tab`.**
-2. **`icon` prop renamed to `leadingIcon`.**
-
 ```tsx
 // Before
-<Tabs.Trigger value="tab1" icon={<HomeIcon />}>Home</Tabs.Trigger>
+<Tabs defaultValue="account" onValueChange={(val) => setTab(val)}>
+  <Tabs.List>
+    <Tabs.Trigger value="account" icon={<UserIcon />}>Account</Tabs.Trigger>
+    <Tabs.Trigger value="settings" icon={<SettingsIcon />}>Settings</Tabs.Trigger>
+    <Tabs.Trigger value="billing" disabled>Billing</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="account">Account content</Tabs.Content>
+  <Tabs.Content value="settings">Settings content</Tabs.Content>
+  <Tabs.Content value="billing">Billing content</Tabs.Content>
+</Tabs>
 
 // After
-<Tabs.Tab value="tab1" leadingIcon={<HomeIcon />}>Home</Tabs.Tab>
+<Tabs defaultValue="account" onValueChange={(val, details) => setTab(val)}>
+  <Tabs.List>
+    <Tabs.Tab value="account" leadingIcon={<UserIcon />}>Account</Tabs.Tab>
+    <Tabs.Tab value="settings" leadingIcon={<SettingsIcon />}>Settings</Tabs.Tab>
+    <Tabs.Tab value="billing" disabled>Billing</Tabs.Tab>
+  </Tabs.List>
+  <Tabs.Content value="account">Account content</Tabs.Content>
+  <Tabs.Content value="settings">Settings content</Tabs.Content>
+  <Tabs.Content value="billing">Billing content</Tabs.Content>
+</Tabs>
 ```
+
+Key changes:
+- `Tabs.Trigger` -> `Tabs.Tab`
+- `icon` prop -> `leadingIcon`
+- `onValueChange` now receives 2 args
 
 #### New Features
 
 - Three variants: `segmented` (default), `standalone`, `plain`
 - Three sizes: `small`, `medium`, `large`
+
+```tsx
+<Tabs variant="standalone" size="small" defaultValue="tab1">
+```
 
 ---
 
@@ -609,33 +1156,66 @@ import { Radio } from '@raystack/apsara';
 
 **Exports renamed: `ToastContainer`/`toast` -> `Toast`/`toastManager`**
 
-1. **Provider model changed** -- standalone `<ToastContainer />` -> wrapping `<Toast.Provider>`:
-   ```tsx
-   // Before
-   <App /><ToastContainer />
+```tsx
+// ===== BEFORE (Sonner-based) =====
+import { ToastContainer, toast } from '@raystack/apsara';
 
-   // After
-   <Toast.Provider position="bottom-right"><App /></Toast.Provider>
-   ```
+// Provider — rendered standalone, no children
+function App() {
+  return (
+    <>
+      <MainContent />
+      <ToastContainer />
+    </>
+  );
+}
 
-2. **Toast creation API changed:**
-   ```tsx
-   // Before
-   toast('Hello');
-   toast.success('Done');
-   toast.dismiss(id);
-   toast('Deleted', { action: { label: 'Undo', onClick: handler } });
+// Creating toasts
+toast('Simple message');
+toast.success('Operation complete');
+toast.error('Something went wrong');
+toast('File deleted', {
+  duration: 5000,
+  action: { label: 'Undo', onClick: handleUndo },
+});
+const id = toast('Uploading...');
+toast.dismiss(id);
+toast.dismiss(); // dismiss all
 
-   // After
-   toastManager.add({ title: 'Hello' });
-   toastManager.add({ title: 'Done', type: 'success' });
-   toastManager.close(id);
-   toastManager.add({ title: 'Deleted', actionProps: { children: 'Undo', onClick: handler } });
-   ```
+// ===== AFTER (Base UI-based) =====
+import { Toast, toastManager } from '@raystack/apsara';
 
-3. **Callbacks:** `onDismiss`/`onAutoClose` -> `onClose`.
+// Provider — must wrap app as a context provider
+function App() {
+  return (
+    <Toast.Provider position="bottom-right">
+      <MainContent />
+    </Toast.Provider>
+  );
+}
 
-4. **No per-toast inline styles** -- styling is CSS-driven via `data-type` attribute.
+// Creating toasts
+toastManager.add({ title: 'Simple message' });
+toastManager.add({ title: 'Operation complete', type: 'success' });
+toastManager.add({ title: 'Something went wrong', type: 'error' });
+toastManager.add({
+  title: 'File deleted',
+  actionProps: { children: 'Undo', onClick: handleUndo },
+});
+const id = toastManager.add({ title: 'Uploading...' });
+toastManager.close(id);
+// no built-in dismiss-all
+```
+
+**Callbacks changed:**
+
+```tsx
+// Before
+toast('msg', { onDismiss: handler, onAutoClose: handler2 });
+
+// After
+toastManager.add({ title: 'msg', onClose: handler });
+```
 
 #### New Features
 
@@ -645,6 +1225,7 @@ import { Radio } from '@raystack/apsara';
 - `Toast.createToastManager` and `Toast.useToastManager`
 
 **Promise toast pattern:**
+
 ```tsx
 toastManager.promise(fetchData(), {
   loading: { title: "Loading...", description: "Please wait" },
@@ -657,41 +1238,107 @@ toastManager.promise(fetchData(), {
 
 ### Tooltip
 
-**Complete API redesign -- every usage must be rewritten.**
+**Complete API redesign -- monolithic wrapper to compound component. Every usage must be rewritten.**
 
 ```tsx
-// Before
-<Tooltip message="Hello" side="top" showArrow delayDuration={200}>
-  <Button>Hover</Button>
+// Before — monolithic: message prop, children is the trigger
+<Tooltip
+  message="Save your changes"
+  side="top"
+  showArrow
+  delayDuration={200}
+>
+  <Button>Save</Button>
 </Tooltip>
 
-// After
+// After — compound: separate Trigger and Content
 <Tooltip delay={200}>
-  <Tooltip.Trigger render={<Button />}>Hover</Tooltip.Trigger>
-  <Tooltip.Content side="top" showArrow>Hello</Tooltip.Content>
+  <Tooltip.Trigger render={<Button />}>Save</Tooltip.Trigger>
+  <Tooltip.Content side="top" showArrow>Save your changes</Tooltip.Content>
 </Tooltip>
 ```
 
-1. **`message` prop removed** -- content goes in `<Tooltip.Content>`.
-2. **`children` is no longer the trigger** -- wrap in `<Tooltip.Trigger>`.
-3. **`followCursor` replaced by `trackCursorAxis`:**
-   ```tsx
-   // Before
-   <Tooltip followCursor>...</Tooltip>
+```tsx
+// Before — with followCursor
+<Tooltip message="Following you" followCursor side="bottom">
+  <div className="area">Hover area</div>
+</Tooltip>
 
-   // After
-   <Tooltip trackCursorAxis="both">...</Tooltip>
-   // Options: "none" | "x" | "y" | "both"
-   ```
-4. **Removed props:** `classNames`, `triggerStyle`, `contentStyle`, `disableHoverableContent`, `skipDelayDuration`.
-5. **Diagonal `side` values removed:**
-   - `side="top-left"` -> `side="top" align="start"`
-   - `side="top-right"` -> `side="top" align="end"`
-   - `side="bottom-left"` -> `side="bottom" align="start"`
-   - `side="bottom-right"` -> `side="bottom" align="end"`
-6. **`showArrow` default changed** from `true` to `false`.
-7. **`delayDuration` renamed to `delay`.**
-8. **Auto-provider wrapping removed** -- consumer decides whether to use `<Tooltip.Provider>`.
+// After — trackCursorAxis replaces followCursor
+<Tooltip trackCursorAxis="both">
+  <Tooltip.Trigger render={<div className="area" />}>Hover area</Tooltip.Trigger>
+  <Tooltip.Content side="bottom">Following you</Tooltip.Content>
+</Tooltip>
+```
+
+```tsx
+// Before — diagonal side values
+<Tooltip message="Info" side="top-left">
+  <span>Hover</span>
+</Tooltip>
+
+// After — use side + align
+<Tooltip>
+  <Tooltip.Trigger render={<span />}>Hover</Tooltip.Trigger>
+  <Tooltip.Content side="top" align="start">Info</Tooltip.Content>
+</Tooltip>
+```
+
+```tsx
+// Before — disabled tooltip
+<Tooltip message="Won't show" disabled>
+  <Button>No tooltip</Button>
+</Tooltip>
+
+// After — conditional rendering (no disabled prop)
+{showTooltip ? (
+  <Tooltip>
+    <Tooltip.Trigger render={<Button />}>With tooltip</Tooltip.Trigger>
+    <Tooltip.Content>Info</Tooltip.Content>
+  </Tooltip>
+) : (
+  <Button>No tooltip</Button>
+)}
+```
+
+```tsx
+// Before — Provider with Radix props
+<Tooltip.Provider delayDuration={100} skipDelayDuration={200}>
+  <Tooltip message="First">Item 1</Tooltip>
+  <Tooltip message="Second">Item 2</Tooltip>
+</Tooltip.Provider>
+
+// After — Provider with Base UI props
+<Tooltip.Provider delay={100}>
+  <Tooltip>
+    <Tooltip.Trigger render={<span />}>Item 1</Tooltip.Trigger>
+    <Tooltip.Content>First</Tooltip.Content>
+  </Tooltip>
+  <Tooltip>
+    <Tooltip.Trigger render={<span />}>Item 2</Tooltip.Trigger>
+    <Tooltip.Content>Second</Tooltip.Content>
+  </Tooltip>
+</Tooltip.Provider>
+```
+
+**Summary of all changes:**
+
+| Old | New |
+|-----|-----|
+| `message="text"` | `<Tooltip.Content>text</Tooltip.Content>` |
+| `children` (trigger) | `<Tooltip.Trigger render={<Element />}>` |
+| `followCursor` | `trackCursorAxis="both"` (options: `"none"`, `"x"`, `"y"`, `"both"`) |
+| `disabled` | Conditional rendering |
+| `side="top-left"` | `side="top" align="start"` |
+| `side="top-right"` | `side="top" align="end"` |
+| `side="bottom-left"` | `side="bottom" align="start"` |
+| `side="bottom-right"` | `side="bottom" align="end"` |
+| `showArrow` (default `true`) | `showArrow` on Content (default `false`) |
+| `delayDuration={N}` | `delay={N}` |
+| `classNames={{ content, arrow }}` | `className` on Content |
+| `triggerStyle` / `contentStyle` | `style` on Content or trigger element |
+| `disableHoverableContent` | Removed |
+| `skipDelayDuration` | Removed |
 
 #### New Features
 
