@@ -1,5 +1,3 @@
-'use client';
-
 import { Tooltip as TooltipPrimitive } from '@base-ui/react';
 import { TooltipContent } from './tooltip-content';
 import { TooltipProvider, TooltipTrigger } from './tooltip-misc';

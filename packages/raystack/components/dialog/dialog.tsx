@@ -1,5 +1,3 @@
-'use client';
-
 import { Dialog as DialogPrimitive } from '@base-ui/react';
 import { DialogContent } from './dialog-content';
 import {

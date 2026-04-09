@@ -1,5 +1,3 @@
-'use client';
-
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { DrawerContent } from './drawer-content';
 import {

@@ -1,5 +1,3 @@
-'use client';
-
 import { Select as SelectPrimitive } from '@base-ui/react';
 import { SelectContent } from './select-content';
 import { SelectItem } from './select-item';
