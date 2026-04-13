@@ -112,7 +112,7 @@ export const withLabelDemo = {
     <Combobox.Input
       placeholder="Select a fruit"
       label="Favorite Fruit"
-      helperText="Choose your favorite fruit"
+      description="Choose your favorite fruit"
       width={240}
     />
     <Combobox.Content>

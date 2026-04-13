@@ -24,19 +24,19 @@ import { TextArea } from "@raystack/apsara";
 <TextArea placeholder="Enter text" />
 ```
 
-For labels, helper text, and error messages, wrap with [Field](/docs/components/field):
+For labels, description, and error messages, wrap with [Field](/docs/components/field):
 
 ```tsx
 import { Field, TextArea } from "@raystack/apsara";
 
-<Field label="Bio" helperText="Tell us about yourself" error={errors.bio?.message}>
+<Field label="Bio" description="Tell us about yourself" error={errors.bio?.message}>
   <TextArea placeholder="Write something..." />
 </Field>
 ```
 
 ## API Reference
 
-Renders a multi-line text input. For label, helper text, and error support, use with [Field](/docs/components/field).
+Renders a multi-line text input. For label, description, and error support, use with [Field](/docs/components/field).
 
 <auto-type-table path="./props.ts" name="TextAreaProps" />
 
@@ -50,7 +50,7 @@ A basic TextArea with a placeholder.
 
 ### With Field
 
-Use Field to add label, helper text, and error handling.
+Use Field to add label, description, and error handling.
 
 <Demo data={withFieldDemo} />
 

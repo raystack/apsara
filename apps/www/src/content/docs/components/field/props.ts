@@ -2,26 +2,18 @@ export interface FieldProps {
   /** Text or node to render as the field label. */
   label?: React.ReactNode;
 
-  /** Helper text displayed below the control. Hidden when error is present. */
-  helperText?: React.ReactNode;
+  /** Description text displayed below the control. Hidden when error is present. */
+  description?: React.ReactNode;
 
   /** Error message displayed below the control. Sets the field to invalid state. */
   error?: React.ReactNode;
 
   /**
-   * Shows a required indicator (*) next to the label.
-   * @defaultValue false
+   * Whether the field is required. When false, shows an (optional) indicator next to the label.
+   * Also sets the required attribute on child form controls via context.
+   * @defaultValue true
    */
   required?: boolean;
-
-  /**
-   * Shows an (optional) indicator next to the label.
-   * @defaultValue false
-   */
-  optional?: boolean;
-
-  /** Custom width for the field container. */
-  width?: string | number;
 
   /** Identifies the field during form submission. */
   name?: string;
@@ -54,6 +46,12 @@ export interface FieldProps {
 }
 
 export interface FieldLabelProps {
+  /**
+   * Whether the field is required. When false, shows an (optional) indicator next to the label.
+   * @defaultValue true
+   */
+  required?: boolean;
+
   /** Additional CSS class names. */
   className?: string;
 }

@@ -11,6 +11,7 @@ import {
   useContext,
   useId
 } from 'react';
+import { useFieldContext } from '../field';
 import { Label } from '../label';
 import styles from './number-field.module.css';
 
@@ -19,9 +20,11 @@ const NumberFieldContext = createContext<{ fieldId: string } | null>(null);
 const NumberFieldRoot = forwardRef<
   ElementRef<typeof NumberFieldPrimitive.Root>,
   NumberFieldPrimitive.Root.Props & { children?: ReactNode }
->(({ className, children, id, ...props }, ref) => {
+>(({ className, children, id, required, ...props }, ref) => {
   const generatedId = useId();
   const fieldId = id ?? generatedId;
+  const fieldContext = useFieldContext();
+  const resolvedRequired = required ?? fieldContext?.required;
 
   return (
     <NumberFieldContext.Provider value={{ fieldId }}>
@@ -29,6 +32,7 @@ const NumberFieldRoot = forwardRef<
         ref={ref}
         className={cx(styles.root, className)}
         id={fieldId}
+        required={resolvedRequired}
         {...props}
       >
         {children ?? (

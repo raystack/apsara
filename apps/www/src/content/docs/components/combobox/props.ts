@@ -61,8 +61,8 @@ export interface ComboboxInputProps {
   /** Text label above the input */
   label?: string;
 
-  /** Helper text below the input */
-  helperText?: string;
+  /** Description text below the input */
+  description?: string;
 
   /** Error message to display below the input */
   error?: string;

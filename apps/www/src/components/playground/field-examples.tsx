@@ -8,7 +8,7 @@ export function FieldExamples() {
     <PlaygroundLayout title='Field'>
       <Flex gap='large' wrap='wrap'>
         <Flex gap='large' direction='column' style={{ width: 300 }}>
-          <Field label='Name' required helperText='Enter your full name'>
+          <Field label='Name' required description='Enter your full name'>
             <InputField placeholder='John Doe' />
           </Field>
           <Field label='Email' error='Please enter a valid email'>
@@ -19,7 +19,7 @@ export function FieldExamples() {
           </Field>
         </Flex>
         <Flex gap='large' direction='column' style={{ width: 300 }}>
-          <Field label='Bio' optional helperText='Tell us about yourself'>
+          <Field label='Bio' optional description='Tell us about yourself'>
             <TextArea placeholder='Write something...' />
           </Field>
           <Field label='Disabled' disabled>

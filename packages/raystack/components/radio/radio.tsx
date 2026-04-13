@@ -2,17 +2,24 @@ import { Radio as RadioPrimitive } from '@base-ui/react/radio';
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { cx } from 'class-variance-authority';
 import { forwardRef } from 'react';
+import { useFieldContext } from '../field';
 
 import styles from './radio.module.css';
 
 const RadioGroup = forwardRef<HTMLDivElement, RadioGroupPrimitive.Props>(
-  ({ className, ...props }, ref) => (
-    <RadioGroupPrimitive
-      ref={ref}
-      className={cx(styles.radio, className)}
-      {...props}
-    />
-  )
+  ({ className, required, ...props }, ref) => {
+    const fieldContext = useFieldContext();
+    const resolvedRequired = required ?? fieldContext?.required;
+
+    return (
+      <RadioGroupPrimitive
+        ref={ref}
+        className={cx(styles.radio, className)}
+        required={resolvedRequired}
+        {...props}
+      />
+    );
+  }
 );
 
 RadioGroup.displayName = 'Radio.Group';

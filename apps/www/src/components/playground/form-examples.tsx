@@ -28,7 +28,7 @@ export function FormExamples() {
             <InputField placeholder='Doe' />
           </Field>
         </Fieldset>
-        <Field label='Email' required helperText="We'll send a confirmation">
+        <Field label='Email' required description="We'll send a confirmation">
           <InputField type='email' placeholder='john@example.com' />
         </Field>
         <Field label='Message' optional>

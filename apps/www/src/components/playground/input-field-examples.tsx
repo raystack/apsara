@@ -12,7 +12,7 @@ export function InputFieldExamples() {
           <Field label='Default'>
             <InputField placeholder='Enter text' />
           </Field>
-          <Field label='With Helper Text' helperText='This is a helper text'>
+          <Field label='With Description' description='This is a description'>
             <InputField placeholder='Enter text' />
           </Field>
           <Field label='With Error' error='This field is required'>

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Field } from '../field';
 import styles from '../field.module.css';
+import { Field } from '../index';
 
 describe('Field', () => {
   describe('Basic Rendering', () => {
@@ -32,24 +32,6 @@ describe('Field', () => {
       render(<Field ref={ref}>content</Field>);
       expect(ref).toHaveBeenCalled();
     });
-
-    it('defaults to 100% width', () => {
-      const { container } = render(<Field>content</Field>);
-      const field = container.firstElementChild;
-      expect(field).toHaveStyle({ width: '100%' });
-    });
-
-    it('accepts custom width', () => {
-      const { container } = render(<Field width='300px'>content</Field>);
-      const field = container.firstElementChild;
-      expect(field).toHaveStyle({ width: '300px' });
-    });
-
-    it('accepts numeric width', () => {
-      const { container } = render(<Field width={400}>content</Field>);
-      const field = container.firstElementChild;
-      expect(field).toHaveStyle({ width: '400px' });
-    });
   });
 
   describe('Simple API - Label', () => {
@@ -69,35 +51,30 @@ describe('Field', () => {
       expect(container.querySelector('label')).not.toBeInTheDocument();
     });
 
-    it('renders required indicator', () => {
+    it('renders optional indicator when required={false}', () => {
       render(
-        <Field label='Email' required>
-          content
-        </Field>
-      );
-      expect(screen.getByText('*')).toBeInTheDocument();
-      expect(screen.getByText('*')).toHaveAttribute('aria-hidden', 'true');
-    });
-
-    it('renders optional indicator', () => {
-      render(
-        <Field label='Email' optional>
+        <Field label='Email' required={false}>
           content
         </Field>
       );
       expect(screen.getByText('(optional)')).toBeInTheDocument();
     });
+
+    it('does not render optional indicator by default', () => {
+      render(<Field label='Email'>content</Field>);
+      expect(screen.queryByText('(optional)')).not.toBeInTheDocument();
+    });
   });
 
-  describe('Simple API - Helper Text', () => {
-    it('renders helper text', () => {
-      render(<Field helperText='Enter a valid email'>content</Field>);
+  describe('Simple API - Description', () => {
+    it('renders description text', () => {
+      render(<Field description='Enter a valid email'>content</Field>);
       expect(screen.getByText('Enter a valid email')).toBeInTheDocument();
     });
 
-    it('does not render helper text when error is present', () => {
+    it('does not render description when error is present', () => {
       render(
-        <Field helperText='Enter email' error='Invalid email'>
+        <Field description='Enter email' error='Invalid email'>
           content
         </Field>
       );
@@ -160,6 +137,15 @@ describe('Field', () => {
         </Field>
       );
       expect(screen.getByPlaceholderText('Type here')).toBeInTheDocument();
+    });
+
+    it('renders optional indicator on Field.Label via required={false}', () => {
+      render(
+        <Field>
+          <Field.Label required={false}>Username</Field.Label>
+        </Field>
+      );
+      expect(screen.getByText('(optional)')).toBeInTheDocument();
     });
 
     it('applies custom className to sub-components', () => {

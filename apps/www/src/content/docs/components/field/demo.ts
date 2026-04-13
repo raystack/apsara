@@ -3,10 +3,10 @@
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
-  const { label, helperText, error, required, optional, ...rest } = props;
+  const { label, description, error, required, optional, ...rest } = props;
   const fieldProps: Record<string, unknown> = {};
   if (label) fieldProps.label = label;
-  if (helperText) fieldProps.helperText = helperText;
+  if (description) fieldProps.description = description;
   if (error) fieldProps.error = error;
   if (required) fieldProps.required = required;
   if (optional) fieldProps.optional = optional;
@@ -19,7 +19,7 @@ export const playground = {
   type: 'playground',
   controls: {
     label: { type: 'text', initialValue: 'Email' },
-    helperText: { type: 'text', initialValue: "We won't share your email" },
+    description: { type: 'text', initialValue: "We won't share your email" },
     error: { type: 'text', initialValue: '' },
     required: { type: 'checkbox', initialValue: false, defaultValue: false },
     optional: { type: 'checkbox', initialValue: false, defaultValue: false },
@@ -30,7 +30,7 @@ export const playground = {
 
 export const simpleDemo = {
   type: 'code',
-  code: `<Field label="Name" helperText="Enter your full name">
+  code: `<Field label="Name" description="Enter your full name">
   <InputField placeholder="John Doe" />
 </Field>`
 };
@@ -42,9 +42,9 @@ export const errorDemo = {
 </Field>`
 };
 
-export const helperTextDemo = {
+export const descriptionDemo = {
   type: 'code',
-  code: `<Field label="Password" helperText="Must be at least 8 characters">
+  code: `<Field label="Password" description="Must be at least 8 characters">
   <InputField type="password" placeholder="Enter password" />
 </Field>`
 };
@@ -58,7 +58,7 @@ export const requiredDemo = {
 
 export const optionalDemo = {
   type: 'code',
-  code: `<Field label="Phone Number" optional helperText="We may use this for verification">
+  code: `<Field label="Phone Number" optional description="We may use this for verification">
   <InputField placeholder="Enter phone number" />
 </Field>`
 };
@@ -74,16 +74,43 @@ export const subComponentDemo = {
 </Field>`
 };
 
+export const constraintErrorsDemo = {
+  type: 'code',
+  code: `<Field name="password">
+  <Field.Label>Password</Field.Label>
+  <Field.Control type="password" required minLength={8} placeholder="Create a password" />
+  <Field.Error match="valueMissing">Password is required</Field.Error>
+  <Field.Error match="tooShort">Must be at least 8 characters</Field.Error>
+  <Field.Description>Minimum 8 characters</Field.Description>
+</Field>`
+};
+
+export const customValidateDemo = {
+  type: 'code',
+  code: `<Field
+  name="slug"
+  validate={(value) => {
+    if (!value) return 'Slug is required';
+    if (!/^[a-z0-9-]+$/.test(String(value))) return 'Only lowercase letters, numbers, and hyphens';
+    return null;
+  }}
+>
+  <Field.Label>URL Slug</Field.Label>
+  <Field.Control required placeholder="my-page-slug" />
+  <Field.Error match="customError" />
+</Field>`
+};
+
 export const withInputFieldDemo = {
   type: 'code',
-  code: `<Field label="Full Name" required helperText="As it appears on your ID">
+  code: `<Field label="Full Name" required description="As it appears on your ID">
   <InputField placeholder="John Doe" />
 </Field>`
 };
 
 export const withTextAreaDemo = {
   type: 'code',
-  code: `<Field label="Bio" optional helperText="Tell us about yourself">
+  code: `<Field label="Bio" optional description="Tell us about yourself">
   <TextArea placeholder="Write something..." />
 </Field>`
 };

@@ -9,10 +9,12 @@ import {
   playground,
   simpleDemo,
   errorDemo,
-  helperTextDemo,
+  descriptionDemo,
   requiredDemo,
   optionalDemo,
   subComponentDemo,
+  constraintErrorsDemo,
+  customValidateDemo,
   withInputFieldDemo,
   withTextAreaDemo,
   withSelectDemo,
@@ -22,27 +24,32 @@ import {
 
 ## Anatomy
 
-Field supports two APIs: a **simple props API** for common use cases and a **sub-component API** for advanced customization.
+Field supports two APIs: a **simple props API** for common use cases and a **sub-component API** for constraint validation.
 
 ### Simple API
+
+Use `label`, `description`, and `error` props for quick forms or when validation is handled externally (e.g., React Hook Form).
 
 ```tsx
 import { Field, InputField } from "@raystack/apsara";
 
-<Field label="Email" helperText="We won't share it" error={errors.email?.message}>
+<Field label="Email" description="We won't share it" error={errors.email?.message}>
   <InputField placeholder="Enter email" />
 </Field>
 ```
 
 ### Sub-component API
 
+Use sub-components for built-in constraint validation with `Field.Control` and `Field.Error match="..."`. This uses native HTML validation attributes and shows targeted error messages.
+
 ```tsx
 import { Field } from "@raystack/apsara";
 
 <Field name="email">
   <Field.Label>Email</Field.Label>
-  <Field.Control required placeholder="Enter email" />
+  <Field.Control required type="email" placeholder="Enter email" />
   <Field.Error match="valueMissing">Email is required</Field.Error>
+  <Field.Error match="typeMismatch">Enter a valid email address</Field.Error>
   <Field.Description>We'll send a verification link</Field.Description>
 </Field>
 ```
@@ -63,7 +70,7 @@ An accessible label automatically associated with the field control. Renders a `
 
 ### Control
 
-A native input element for use with the sub-component API. Renders an `<input>` element.
+A native input element for use with the sub-component API. Renders an `<input>` element. Supports standard HTML validation attributes: `required`, `type`, `pattern`, `minLength`, `maxLength`, `min`, `max`, `step`.
 
 <auto-type-table path="./props.ts" name="FieldControlProps" />
 
@@ -71,11 +78,20 @@ A native input element for use with the sub-component API. Renders an `<input>` 
 
 An error message displayed when validation fails. Renders a `<div>` element.
 
+The `match` prop controls when the error is shown:
+
+- **`match="valueMissing"`** — shown when a `required` field is empty
+- **`match="typeMismatch"`** — shown when `type="email"` or `type="url"` value is invalid
+- **`match="patternMismatch"`** — shown when value doesn't match the `pattern` regex
+- **`match="tooShort"` / `match="tooLong"`** — shown for `minLength` / `maxLength` violations
+- **`match="rangeUnderflow"` / `match="rangeOverflow"`** — shown for `min` / `max` violations
+- **`match="customError"`** — shown when the Field's `validate` prop returns an error
+
 <auto-type-table path="./props.ts" name="FieldErrorProps" />
 
 ### Description
 
-A paragraph with additional information about the field. Renders a `<p>` element.
+A paragraph with additional information about the field. Renders a `<p>` element. Hidden when an error is present (in the simple API).
 
 <auto-type-table path="./props.ts" name="FieldDescriptionProps" />
 
@@ -87,7 +103,7 @@ Provides field validity state to a render function. Use for custom validity-base
 
 ### With InputField
 
-Use Field to add label, helper text, and error to an InputField.
+Use Field to add label, description, and error to an InputField.
 
 <Demo data={withInputFieldDemo} />
 
@@ -105,15 +121,27 @@ Base UI-based components like Select auto-connect with Field for accessibility.
 
 ### Error State
 
-Shows an error message and sets the invalid state on the field.
+Pass an error string to show the error message and set the field to invalid state. The description is hidden while an error is shown.
 
 <Demo data={errorDemo} />
 
-### Helper Text
+### Constraint Validation Errors
+
+Use `Field.Control` with native attributes and multiple `Field.Error` elements to show targeted messages for each validation constraint.
+
+<Demo data={constraintErrorsDemo} />
+
+### Custom Validation
+
+Use the `validate` prop to run custom logic. Return an error string to fail, or `null` to pass. The error renders via `Field.Error match="customError"`.
+
+<Demo data={customValidateDemo} />
+
+### Description
 
 Displays additional context below the control.
 
-<Demo data={helperTextDemo} />
+<Demo data={descriptionDemo} />
 
 ### Required Field
 
@@ -129,7 +157,7 @@ Shows an optional indicator next to the label.
 
 ### Sub-component API
 
-Use sub-components for Base UI native validation and custom error matching.
+Use sub-components for built-in constraint validation with custom error matching.
 
 <Demo data={subComponentDemo} />
 
@@ -139,3 +167,4 @@ Use sub-components for Base UI native validation and custom error matching.
 - `Field.Description` automatically associates via `aria-describedby`
 - `Field.Error` automatically associates error messages with the control
 - Data attributes (`data-invalid`, `data-dirty`, `data-touched`, `data-filled`, `data-focused`) propagate to all sub-components
+- When used inside a `Form`, the field participates in form-level validation

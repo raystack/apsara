@@ -7,7 +7,7 @@ export function TextAreaExamples() {
   return (
     <PlaygroundLayout title='TextArea'>
       <Flex gap='large' wrap='wrap'>
-        <Field label='Basic TextArea' helperText='This is a helper text'>
+        <Field label='Basic TextArea' description='This is a description'>
           <TextArea placeholder='Enter your text here' />
         </Field>
         <Field label='Error TextArea' error='This field has an error'>

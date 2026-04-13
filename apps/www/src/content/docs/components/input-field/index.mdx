@@ -28,19 +28,19 @@ import { InputField } from "@raystack/apsara";
 <InputField placeholder="Enter text" />
 ```
 
-For labels, helper text, and error messages, wrap with [Field](/docs/components/field):
+For labels, description, and error messages, wrap with [Field](/docs/components/field):
 
 ```tsx
 import { Field, InputField } from "@raystack/apsara";
 
-<Field label="Email" helperText="We won't share it" error={errors.email?.message}>
+<Field label="Email" description="We won't share it" error={errors.email?.message}>
   <InputField placeholder="Enter email" />
 </Field>
 ```
 
 ## API Reference
 
-Renders a text input control. For label, helper text, and error support, use with [Field](/docs/components/field).
+Renders a text input control. For label, description, and error support, use with [Field](/docs/components/field).
 
 <auto-type-table path="./props.ts" name="InputFieldProps" />
 
@@ -54,7 +54,7 @@ A basic input field with a placeholder.
 
 ### With Field
 
-Use Field to add label, helper text, and error handling.
+Use Field to add label, description, and error handling.
 
 <Demo data={withFieldDemo} />
 

@@ -10,6 +10,7 @@ import {
   useRef,
   useState
 } from 'react';
+import { useFieldContext } from '../field';
 
 interface ComboboxContextValue<Value = string> {
   multiple: boolean;
@@ -72,8 +73,12 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
   value: providedValue,
   defaultValue,
   items,
+  required,
   ...props
 }: ComboboxRootProps<Value>) => {
+  const fieldContext = useFieldContext();
+  const resolvedRequired = required ?? fieldContext?.required;
+
   const [inputValue, setInputValue] = useState('');
   const [internalValue, setInternalValue] = useState<
     Value | Value[] | null | undefined
@@ -133,6 +138,7 @@ export const ComboboxRoot = <Value extends unknown | unknown[]>({
         items={items}
         value={providedValue}
         defaultValue={defaultValue}
+        required={resolvedRequired}
         modal
         {...props}
       >

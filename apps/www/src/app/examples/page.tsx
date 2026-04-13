@@ -185,8 +185,6 @@ const Page = () => {
                 placeholder='Default large search'
                 showClearButton
                 value={search1}
-                label='Search'
-                helperText='This is a helper text'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSearch1(e.target.value)
                 }
@@ -1334,7 +1332,6 @@ const Page = () => {
                 variant='borderless'
                 showClearButton
                 value={search3}
-                label='Search'
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   setSearch3(e.target.value)
                 }
@@ -1581,7 +1578,6 @@ const Page = () => {
                           </Popover.Content>
                         </Popover>
                         <InputField
-                          label='Filter Team Members'
                           placeholder='Type to filter...'
                           leadingIcon={<FilterIcon />}
                           width='100%'
@@ -1638,7 +1634,6 @@ const Page = () => {
                     </Flex>
 
                     <TextArea
-                      label='Example Text Area'
                       value={inputValue}
                       onChange={e => setInputValue(e.target.value)}
                     />
@@ -1752,7 +1747,6 @@ const Page = () => {
                           </Popover.Content>
                         </Popover>
                         <InputField
-                          label='Filter Team Members'
                           placeholder='Type to filter...'
                           leadingIcon={<FilterIcon />}
                           width='100%'

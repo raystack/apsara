@@ -29,7 +29,7 @@ export const basicDemo = {
 export const withFieldDemo = {
   type: 'code',
   code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
-  <Field label="Bio" optional helperText="Tell us about yourself">
+  <Field label="Bio" optional description="Tell us about yourself">
     <TextArea placeholder="Write something..." />
   </Field>
   <Field label="Comments" required error="This field is required">
@@ -41,10 +41,10 @@ export const withFieldDemo = {
 export const controlledDemo = {
   type: 'code',
   code: `function ControlledExample() {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('');
 
   return (
-    <Field label="Controlled TextArea" helperText={\`\${value.length} characters\`}>
+    <Field label="Controlled TextArea" description={\`\${value.length} characters\`}>
       <TextArea
         value={value}
         onChange={(e) => setValue(e.target.value)}

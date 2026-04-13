@@ -1,5 +1,4 @@
-'use client';
-
+import { Input as InputPrimitive } from '@base-ui/react/input';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import {
   ComponentPropsWithoutRef,
@@ -8,9 +7,8 @@ import {
   RefObject
 } from 'react';
 import { Chip } from '../chip';
+import { useFieldContext } from '../field';
 import styles from './input-field.module.css';
-
-// Todo: Add a dropdown support
 
 const inputWrapper = cva(styles.inputWrapper, {
   variants: {
@@ -60,17 +58,21 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       size,
       variant = 'default',
       containerRef,
+      required,
       ...props
     },
     ref
   ) => {
+    const fieldContext = useFieldContext();
+    const resolvedRequired = required ?? fieldContext?.required;
+
     return (
       <div
         className={cx(
           inputWrapper({ size, variant }),
-          disabled && styles['input-disabled-wrapper'],
           chips?.length && styles['has-chips']
         )}
+        data-disabled={disabled || undefined}
         style={{ width: width || '100%' }}
         ref={containerRef}
       >
@@ -96,7 +98,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
               +{chips.length - maxChipsVisible}
             </span>
           )}
-          <input
+          <InputPrimitive
             ref={ref}
             className={cx(
               styles['input-field'],
@@ -104,11 +106,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
               trailingIcon && styles['has-trailing-icon'],
               prefix && styles['has-prefix'],
               suffix && styles['has-suffix'],
-              disabled && styles['input-disabled'],
               className
             )}
             placeholder={placeholder}
             disabled={disabled}
+            required={resolvedRequired}
             {...props}
           />
         </div>

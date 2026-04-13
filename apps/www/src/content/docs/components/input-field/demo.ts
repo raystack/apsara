@@ -32,7 +32,7 @@ export const basicDemo = {
 export const withFieldDemo = {
   type: 'code',
   code: `<Flex direction="column" gap="medium" style={{ width: 560 }}>
-  <Field label="Email" required helperText="We won't share your email">
+  <Field label="Email" required description="We won't share your email">
     <InputField type="email" placeholder="Enter email" />
   </Field>
   <Field label="Name" error="This field is required">

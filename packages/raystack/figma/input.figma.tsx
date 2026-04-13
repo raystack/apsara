@@ -34,7 +34,7 @@ figma.connect(InputField, '<FIGMA_LINK>?node-id=1-297', {
       true: figma.textContent('Label'),
       false: undefined
     }),
-    helperText: figma.boolean('Helper text', {
+    description: figma.boolean('Helper text', {
       true: figma.textContent('Helper Text'),
       false: undefined
     }),
