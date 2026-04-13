@@ -11,6 +11,12 @@ export interface TabsRootProps {
   /** The orientation of the tabs. */
   orientation?: 'horizontal' | 'vertical';
 
+  /** Visual variant for how tabs are rendered. */
+  variant?: 'segmented' | 'standalone' | 'plain';
+
+  /** Size variant applied to all tab triggers. */
+  size?: 'small' | 'medium' | 'large';
+
   /** Additional CSS class names. */
   className?: string;
 }

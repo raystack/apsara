@@ -18,5 +18,6 @@ export const AlertDialog = Object.assign(AlertDialogPrimitive.Root, {
   Close: AlertDialogPrimitive.Close,
   CloseButton: CloseButton,
   Title: AlertDialogTitle,
-  Description: AlertDialogDescription
+  Description: AlertDialogDescription,
+  createHandle: AlertDialogPrimitive.createHandle
 });

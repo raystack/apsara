@@ -135,7 +135,7 @@ export const MenuRoot = ({
     );
 
   return (
-    <MenuContext.Provider
+    <MenuContext
       value={{
         autocomplete,
         inputRef,
@@ -154,7 +154,7 @@ export const MenuRoot = ({
         modal
         {...props}
       />
-    </MenuContext.Provider>
+    </MenuContext>
   );
 };
 MenuRoot.displayName = 'Menu';
@@ -224,7 +224,7 @@ export const MenuSubMenu = ({
     );
 
   return (
-    <MenuContext.Provider
+    <MenuContext
       value={{
         autocomplete,
         inputRef,
@@ -243,7 +243,7 @@ export const MenuSubMenu = ({
         onOpenChange={handleOpenChange}
         {...props}
       />
-    </MenuContext.Provider>
+    </MenuContext>
   );
 };
-MenuSubMenu.displayName = 'Menu.SubMenu';
+MenuSubMenu.displayName = 'Menu.Submenu';

@@ -1,40 +1,41 @@
-import { cva, type VariantProps } from "class-variance-authority";
-import { HTMLAttributes, PropsWithChildren } from "react";
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps, PropsWithChildren } from 'react';
 
-import styles from "./label.module.css";
+import styles from './label.module.css';
 
 const label = cva(styles.label, {
   variants: {
     size: {
-      small: styles["label-small"],
-      medium: styles["label-medium"],
-      large: styles["label-large"],
+      small: styles['label-small'],
+      medium: styles['label-medium'],
+      large: styles['label-large']
     },
     required: {
-      true: styles["label-required"],
+      true: styles['label-required']
     }
   },
   defaultVariants: {
-    size: "small",
-    required: false,
-  },
+    size: 'small',
+    required: false
+  }
 });
 
-interface LabelProps extends PropsWithChildren<VariantProps<typeof label>>, 
-  Omit<HTMLAttributes<HTMLLabelElement>, 'required'> {
+interface LabelProps
+  extends PropsWithChildren<VariantProps<typeof label>>,
+    Omit<ComponentProps<'label'>, 'required'> {
   required?: boolean;
   requiredIndicator?: string;
   htmlFor?: string;
 }
 
-export function Label({ 
-  children, 
-  className, 
-  size, 
-  required, 
-  requiredIndicator = "*",
+export function Label({
+  children,
+  className,
+  size,
+  required,
+  requiredIndicator = '*',
   htmlFor,
-  ...props 
+  ...props
 }: LabelProps) {
   return (
     <label
@@ -44,10 +45,10 @@ export function Label({
     >
       {children}
       {required && (
-        <span 
-          className={styles["required-indicator"]} 
-          aria-hidden="true"
-          role="presentation"
+        <span
+          className={styles['required-indicator']}
+          aria-hidden='true'
+          role='presentation'
         >
           {requiredIndicator}
         </span>
@@ -56,4 +57,6 @@ export function Label({
   );
 }
 
-export type { LabelProps }; 
+Label.displayName = 'Label';
+
+export type { LabelProps };

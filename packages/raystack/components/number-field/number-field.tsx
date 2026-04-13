@@ -3,33 +3,28 @@
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react';
 import { MinusIcon, PlusIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import {
-  createContext,
-  ElementRef,
-  forwardRef,
-  type ReactNode,
-  useContext,
-  useId
-} from 'react';
+import { ComponentProps, createContext, useContext, useId } from 'react';
 import { useFieldContext } from '../field';
 import { Label } from '../label';
 import styles from './number-field.module.css';
 
 const NumberFieldContext = createContext<{ fieldId: string } | null>(null);
 
-const NumberFieldRoot = forwardRef<
-  ElementRef<typeof NumberFieldPrimitive.Root>,
-  NumberFieldPrimitive.Root.Props & { children?: ReactNode }
->(({ className, children, id, required, ...props }, ref) => {
+function NumberFieldRoot({
+  className,
+  children,
+  id,
+  required,
+  ...props
+}: NumberFieldPrimitive.Root.Props) {
   const generatedId = useId();
   const fieldId = id ?? generatedId;
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
   return (
-    <NumberFieldContext.Provider value={{ fieldId }}>
+    <NumberFieldContext value={{ fieldId }}>
       <NumberFieldPrimitive.Root
-        ref={ref}
         className={cx(styles.root, className)}
         id={fieldId}
         required={resolvedRequired}
@@ -43,61 +38,67 @@ const NumberFieldRoot = forwardRef<
           </NumberFieldPrimitive.Group>
         )}
       </NumberFieldPrimitive.Root>
-    </NumberFieldContext.Provider>
+    </NumberFieldContext>
   );
-});
+}
 NumberFieldRoot.displayName = 'NumberField';
 
-const NumberFieldGroup = forwardRef<
-  ElementRef<typeof NumberFieldPrimitive.Group>,
-  NumberFieldPrimitive.Group.Props
->(({ className, ...props }, ref) => (
-  <NumberFieldPrimitive.Group
-    ref={ref}
-    className={cx(styles.group, className)}
-    {...props}
-  />
-));
+function NumberFieldGroup({
+  className,
+  ...props
+}: NumberFieldPrimitive.Group.Props) {
+  return (
+    <NumberFieldPrimitive.Group
+      className={cx(styles.group, className)}
+      {...props}
+    />
+  );
+}
 NumberFieldGroup.displayName = 'NumberField.Group';
 
-const NumberFieldInput = forwardRef<
-  ElementRef<typeof NumberFieldPrimitive.Input>,
-  NumberFieldPrimitive.Input.Props
->(({ className, ...props }, ref) => (
-  <NumberFieldPrimitive.Input
-    ref={ref}
-    className={cx(styles.input, className)}
-    {...props}
-  />
-));
+function NumberFieldInput({
+  className,
+  ...props
+}: NumberFieldPrimitive.Input.Props) {
+  return (
+    <NumberFieldPrimitive.Input
+      className={cx(styles.input, className)}
+      {...props}
+    />
+  );
+}
 NumberFieldInput.displayName = 'NumberField.Input';
 
-const NumberFieldDecrement = forwardRef<
-  ElementRef<typeof NumberFieldPrimitive.Decrement>,
-  NumberFieldPrimitive.Decrement.Props
->(({ className, children, ...props }, ref) => (
-  <NumberFieldPrimitive.Decrement
-    ref={ref}
-    className={cx(styles.decrement, className)}
-    {...props}
-  >
-    {children ?? <MinusIcon width={12} height={12} />}
-  </NumberFieldPrimitive.Decrement>
-));
+function NumberFieldDecrement({
+  className,
+  children,
+  ...props
+}: NumberFieldPrimitive.Decrement.Props) {
+  return (
+    <NumberFieldPrimitive.Decrement
+      className={cx(styles.decrement, className)}
+      {...props}
+    >
+      {children ?? <MinusIcon width={12} height={12} />}
+    </NumberFieldPrimitive.Decrement>
+  );
+}
 NumberFieldDecrement.displayName = 'NumberField.Decrement';
 
-const NumberFieldIncrement = forwardRef<
-  ElementRef<typeof NumberFieldPrimitive.Increment>,
-  NumberFieldPrimitive.Increment.Props
->(({ className, children, ...props }, ref) => (
-  <NumberFieldPrimitive.Increment
-    ref={ref}
-    className={cx(styles.increment, className)}
-    {...props}
-  >
-    {children ?? <PlusIcon width={12} height={12} />}
-  </NumberFieldPrimitive.Increment>
-));
+function NumberFieldIncrement({
+  className,
+  children,
+  ...props
+}: NumberFieldPrimitive.Increment.Props) {
+  return (
+    <NumberFieldPrimitive.Increment
+      className={cx(styles.increment, className)}
+      {...props}
+    >
+      {children ?? <PlusIcon width={12} height={12} />}
+    </NumberFieldPrimitive.Increment>
+  );
+}
 NumberFieldIncrement.displayName = 'NumberField.Increment';
 
 export interface NumberFieldScrubAreaProps
@@ -105,15 +106,15 @@ export interface NumberFieldScrubAreaProps
   label: string;
 }
 
-const NumberFieldScrubArea = forwardRef<
-  ElementRef<typeof NumberFieldPrimitive.ScrubArea>,
-  NumberFieldScrubAreaProps
->(({ className, label, ...props }, ref) => {
+function NumberFieldScrubArea({
+  className,
+  label,
+  ...props
+}: NumberFieldScrubAreaProps) {
   const context = useContext(NumberFieldContext);
 
   return (
     <NumberFieldPrimitive.ScrubArea
-      ref={ref}
       className={cx(styles['scrub-area'], className)}
       {...props}
     >
@@ -127,10 +128,10 @@ const NumberFieldScrubArea = forwardRef<
       </NumberFieldPrimitive.ScrubAreaCursor>
     </NumberFieldPrimitive.ScrubArea>
   );
-});
+}
 NumberFieldScrubArea.displayName = 'NumberField.ScrubArea';
 
-function CursorGrowIcon(props: React.ComponentProps<'svg'>) {
+function CursorGrowIcon(props: ComponentProps<'svg'>) {
   return (
     <svg
       aria-hidden='true'

@@ -1,13 +1,16 @@
 'use client';
 
-import { DrawerPreview as DrawerPrimitive } from '@base-ui/react/drawer';
+import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
-const sideToSwipeDirection: Record<Side, Side> = {
-  top: 'top',
+const sideToSwipeDirection: Record<
+  Side,
+  DrawerPrimitive.Root.Props['swipeDirection']
+> = {
+  top: 'up',
   right: 'right',
-  bottom: 'bottom',
+  bottom: 'down',
   left: 'left'
 };
 

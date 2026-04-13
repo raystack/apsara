@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  min-width: 80px;
+  min-width: var(--rs-space-15);
   height: var(--rs-space-8);
   touch-action: none;
   user-select: none;
@@ -58,8 +58,8 @@
 }
 
 .thumbLarge {
-  width: 24px;
-  height: 20px;
+  width: var(--rs-space-7);
+  height: var(--rs-space-6);
   position: relative;
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
@@ -79,8 +79,8 @@
 }
 
 .thumbSmall {
-  width: 8px;
-  height: 16px;
+  width: var(--rs-space-3);
+  height: var(--rs-space-5);
   border-radius: var(--rs-radius-full);
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);

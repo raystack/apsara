@@ -3,6 +3,7 @@ import {
   Amount,
   Avatar,
   AvatarGroup,
+  Breadcrumb,
   Button,
   Calendar,
   Callout,

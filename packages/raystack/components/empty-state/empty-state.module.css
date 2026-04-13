@@ -12,8 +12,8 @@
 }
 
 .icon {
-  height: 32px;
-  width: 32px;
+  height: var(--rs-space-9);
+  width: var(--rs-space-9);
   padding: var(--rs-space-3);
   box-sizing: content-box;
   border: 1px solid var(--rs-color-border-base-primary);
@@ -41,7 +41,6 @@
   background-color: inherit;
   z-index: -10;
   transform: rotate(-42deg);
-  /* box-shadow: var(--rs-shadow-inset); */
 }
 
 .headerText {
@@ -81,13 +80,6 @@
   max-width: 366px;
 }
 
-.emptyStateLeft {
-  padding: var(--rs-space-9) var(--rs-space-5);
-  width: 100%;
-  height: 100%;
-  text-align: left;
-}
-
 .iconLarge {
   height: 68px;
   width: 68px;
@@ -98,11 +90,6 @@
   width: 100%;
   border-color: currentColor;
   padding: var(--rs-space-4);
-}
-
-.actionContainer {
-  display: flex;
-  gap: var(--rs-space-3);
 }
 
 .emptyStatePage {

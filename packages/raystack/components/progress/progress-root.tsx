@@ -2,7 +2,7 @@
 
 import { Progress as ProgressPrimitive } from '@base-ui/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { createContext, type ElementRef, forwardRef } from 'react';
+import { type CSSProperties, createContext } from 'react';
 import styles from './progress.module.css';
 import { ProgressTrack } from './progress-track';
 
@@ -34,48 +34,39 @@ export const ProgressContext = createContext<ProgressContextValue>({
   percentage: 0
 });
 
-export const ProgressRoot = forwardRef<
-  ElementRef<typeof ProgressPrimitive.Root>,
-  ProgressProps
->(
-  (
-    {
-      className,
-      style = {},
-      variant = 'linear',
-      children = <ProgressTrack />,
-      value = 0,
-      min = 0,
-      max = 100,
-      ...props
-    },
-    ref
-  ) => {
-    const percentage = value === null ? 0 : ((value - min) * 100) / (max - min);
+export function ProgressRoot({
+  className,
+  style = {},
+  variant = 'linear',
+  children = <ProgressTrack />,
+  value = 0,
+  min = 0,
+  max = 100,
+  ...props
+}: ProgressProps) {
+  const percentage = value === null ? 0 : ((value - min) * 100) / (max - min);
 
-    return (
-      <ProgressContext.Provider
-        value={{ variant: variant ?? 'linear', value, percentage }}
+  return (
+    <ProgressContext
+      value={{ variant: variant ?? 'linear', value, percentage }}
+    >
+      <ProgressPrimitive.Root
+        className={progress({ variant, className })}
+        style={
+          {
+            ...style,
+            '--rs-progress-percentage': percentage
+          } as CSSProperties
+        }
+        value={value}
+        min={min}
+        max={max}
+        {...props}
       >
-        <ProgressPrimitive.Root
-          ref={ref}
-          className={progress({ variant, className })}
-          style={
-            {
-              ...style,
-              '--rs-progress-percentage': percentage
-            } as React.CSSProperties
-          }
-          value={value}
-          min={min}
-          max={max}
-          {...props}
-        >
-          {children}
-        </ProgressPrimitive.Root>
-      </ProgressContext.Provider>
-    );
-  }
-);
+        {children}
+      </ProgressPrimitive.Root>
+    </ProgressContext>
+  );
+}
 
-ProgressRoot.displayName = 'ProgressRoot';
+ProgressRoot.displayName = 'Progress';

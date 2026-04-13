@@ -1,4 +1,4 @@
-import { DrawerPreview as DrawerPrimitive } from '@base-ui/react/drawer';
+import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { DrawerContent } from './drawer-content';
 import {
   DrawerBody,
@@ -20,5 +20,6 @@ export const Drawer = Object.assign(DrawerRoot, {
   Description: DrawerDescription,
   Body: DrawerBody,
   Footer: DrawerFooter,
-  Close: DrawerPrimitive.Close
+  Close: DrawerPrimitive.Close,
+  createHandle: DrawerPrimitive.createHandle
 });

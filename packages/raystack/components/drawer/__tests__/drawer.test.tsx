@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import React from 'react';
+
+import { type ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '~/components/button';
 import { Drawer } from '../drawer';
@@ -20,9 +21,7 @@ const BasicDrawer = ({
   side?: 'top' | 'right' | 'bottom' | 'left';
 } & Record<string, unknown>) => (
   <Drawer side={side} {...props}>
-    <Drawer.Trigger>
-      <Button>{TRIGGER_TEXT}</Button>
-    </Drawer.Trigger>
+    <Drawer.Trigger render={<Button />}>{TRIGGER_TEXT}</Drawer.Trigger>
     <Drawer.Content side={side} showCloseButton={showCloseButton}>
       <Drawer.Header>
         <Drawer.Title>{DRAWER_TITLE}</Drawer.Title>
@@ -33,7 +32,7 @@ const BasicDrawer = ({
   </Drawer>
 );
 
-async function renderAndOpenDrawer(DrawerElement: React.ReactElement) {
+async function renderAndOpenDrawer(DrawerElement: ReactElement) {
   fireEvent.click(render(DrawerElement).getByText(TRIGGER_TEXT));
 }
 
@@ -133,9 +132,7 @@ describe('Drawer', () => {
       const user = userEvent.setup();
       render(
         <Drawer side='right'>
-          <Drawer.Trigger>
-            <Button>{TRIGGER_TEXT}</Button>
-          </Drawer.Trigger>
+          <Drawer.Trigger render={<Button />}>{TRIGGER_TEXT}</Drawer.Trigger>
           <Drawer.Content className='custom-drawer'>
             <Drawer.Header>
               <Drawer.Title>{DRAWER_TITLE}</Drawer.Title>

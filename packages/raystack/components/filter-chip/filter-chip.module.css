@@ -3,7 +3,7 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  height: 24px;
+  height: var(--rs-space-7);
   background: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   text-wrap: nowrap;
@@ -44,8 +44,8 @@
 
 /* Control height of Select items */
 .chip [role="option"] {
-  min-height: 24px !important;
-  height: 24px !important;
+  min-height: var(--rs-space-7) !important;
+  height: var(--rs-space-7) !important;
 }
 
 /* Style for select triggers */
@@ -60,16 +60,6 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-}
-
-.value {
-  color: var(--rs-color-foreground-base-primary);
-  font-size: var(--rs-font-size-small);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 16px;
-  letter-spacing: 0.4px;
 }
 
 .removeIconContainer {
@@ -91,8 +81,8 @@
   cursor: pointer;
   color: var(--rs-color-foreground-base-primary);
   transition: color 0.2s ease-in-out;
-  width: 12px !important;
-  height: 12px !important;
+  width: var(--rs-space-4) !important;
+  height: var(--rs-space-4) !important;
 }
 
 .removeIcon:hover {
@@ -135,10 +125,10 @@ button.selectValue:hover {
 .leadingIcon {
   display: flex;
   align-items: center;
-  width: 12px;
-  height: 12px;
-  max-width: 12px;
-  max-height: 12px;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  max-width: var(--rs-space-4);
+  max-height: var(--rs-space-4);
 }
 
 .inputFieldWrapper {
@@ -156,8 +146,8 @@ button.selectValue:hover {
 
 /* Match height of InputField when FilterChip variant is text */
 .chip[data-variant="text"] .inputField {
-  height: 24px;
-  min-height: 24px;
+  height: var(--rs-space-7);
+  min-height: var(--rs-space-7);
 }
 
 .inputFieldWrapper input {
@@ -167,7 +157,7 @@ button.selectValue:hover {
 
 .dateFieldWrapper {
   padding: 0 var(--rs-space-2);
-  min-width: 120px;
+  min-width: var(--rs-space-17);
 }
 
 .dateField {
@@ -184,8 +174,8 @@ button.selectValue:hover {
 
 /* match height of the DatePicker when FilterChip variant is text */
 .chip[data-variant="text"] .dateField {
-  height: 24px;
-  min-height: 24px;
+  height: var(--rs-space-7);
+  min-height: var(--rs-space-7);
 }
 
 .dateField input {

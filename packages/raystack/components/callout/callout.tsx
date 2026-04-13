@@ -1,7 +1,7 @@
 'use client';
 
 import { InfoCircledIcon } from '@radix-ui/react-icons';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { type ComponentProps, type CSSProperties, type ReactNode } from 'react';
 
 import styles from './callout.module.css';
@@ -73,7 +73,7 @@ export function Callout({
 
   return (
     <div
-      className={`${callout({ type, outline, highContrast })} ${className || ''}`}
+      className={callout({ type, outline, highContrast, className })}
       style={combinedStyle}
       role={getRole()}
       aria-live={type === 'alert' ? 'assertive' : 'polite'}

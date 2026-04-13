@@ -1,45 +1,56 @@
 import { Tabs as TabsPrimitive } from '@base-ui/react';
-import { cx } from 'class-variance-authority';
-import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { ReactNode } from 'react';
 import styles from './tabs.module.css';
 
-const TabsRoot = forwardRef<HTMLDivElement, TabsPrimitive.Root.Props>(
-  ({ className, ...props }, ref) => (
+const tabsRoot = cva(styles.root, {
+  variants: {
+    variant: {
+      segmented: styles['variant-segmented'],
+      standalone: styles['variant-standalone'],
+      plain: styles['variant-plain']
+    },
+    size: {
+      small: styles['size-small'],
+      medium: styles['size-medium'],
+      large: styles['size-large']
+    }
+  },
+  defaultVariants: {
+    variant: 'segmented',
+    size: 'large'
+  }
+});
+
+type TabsRootProps = TabsPrimitive.Root.Props & VariantProps<typeof tabsRoot>;
+
+function TabsRoot({ className, variant, size, ...props }: TabsRootProps) {
+  return (
     <TabsPrimitive.Root
-      ref={ref}
-      className={cx(styles.root, className)}
+      className={cx(tabsRoot({ variant, size }), className)}
       {...props}
     />
-  )
-);
+  );
+}
 TabsRoot.displayName = 'Tabs.Root';
 
-const TabsList = forwardRef<HTMLDivElement, TabsPrimitive.List.Props>(
-  ({ className, children, ...props }, ref) => (
-    <TabsPrimitive.List
-      ref={ref}
-      className={cx(styles.list, className)}
-      {...props}
-    >
+function TabsList({ className, children, ...props }: TabsPrimitive.List.Props) {
+  return (
+    <TabsPrimitive.List className={cx(styles.list, className)} {...props}>
       {children}
       <TabsPrimitive.Indicator className={styles.indicator} />
     </TabsPrimitive.List>
-  )
-);
+  );
+}
 TabsList.displayName = 'Tabs.List';
 
-interface TabsTabProps
-  extends ComponentPropsWithoutRef<typeof TabsPrimitive.Tab> {
+interface TabsTabProps extends TabsPrimitive.Tab.Props {
   leadingIcon?: ReactNode;
 }
 
-const TabsTab = forwardRef<HTMLButtonElement, TabsTabProps>(
-  ({ className, leadingIcon, children, ...props }, ref) => (
-    <TabsPrimitive.Tab
-      ref={ref}
-      className={cx(styles.trigger, className)}
-      {...props}
-    >
+function TabsTab({ className, leadingIcon, children, ...props }: TabsTabProps) {
+  return (
+    <TabsPrimitive.Tab className={cx(styles.trigger, className)} {...props}>
       {leadingIcon && (
         <span className={styles['trigger-icon']} aria-hidden>
           {leadingIcon}
@@ -47,19 +58,15 @@ const TabsTab = forwardRef<HTMLButtonElement, TabsTabProps>(
       )}
       {children}
     </TabsPrimitive.Tab>
-  )
-);
+  );
+}
 TabsTab.displayName = 'Tabs.Tab';
 
-const TabsContent = forwardRef<HTMLDivElement, TabsPrimitive.Panel.Props>(
-  ({ className, ...props }, ref) => (
-    <TabsPrimitive.Panel
-      ref={ref}
-      className={cx(styles.content, className)}
-      {...props}
-    />
-  )
-);
+function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
+  return (
+    <TabsPrimitive.Panel className={cx(styles.content, className)} {...props} />
+  );
+}
 TabsContent.displayName = 'Tabs.Content';
 
 export const Tabs = Object.assign(TabsRoot, {

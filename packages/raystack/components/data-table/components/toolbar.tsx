@@ -25,3 +25,5 @@ export function Toolbar<TData, TValue>({ className }: { className?: string }) {
     </Flex>
   );
 }
+
+Toolbar.displayName = 'DataTable.Toolbar';

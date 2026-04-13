@@ -1,6 +1,6 @@
 'use client';
 
-import React, {
+import {
   createContext,
   Fragment,
   memo,
@@ -21,17 +21,19 @@ const defaultContext: UseThemeProps = { setTheme: _ => {}, themes: [] };
 
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
+export function ThemeProvider(props: ThemeProviderProps) {
   const context = useContext(ThemeContext);
 
   // Ignore nested context providers, just passthrough children
   if (context) return <Fragment>{props.children}</Fragment>;
   return <Theme {...props} />;
-};
+}
+
+ThemeProvider.displayName = 'ThemeProvider';
 
 const defaultThemes = ['light', 'dark'];
 
-const Theme: React.FC<ThemeProviderProps> = ({
+const Theme = ({
   forcedTheme,
   disableTransitionOnChange = false,
   enableSystem = true,
@@ -46,7 +48,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
   style = 'modern',
   accentColor = 'indigo',
   grayColor = 'gray'
-}) => {
+}: ThemeProviderProps) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)
   );
@@ -198,7 +200,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
   );
 
   return (
-    <ThemeContext.Provider value={providerValue}>
+    <ThemeContext value={providerValue}>
       <ThemeScript
         {...{
           forcedTheme,
@@ -219,7 +221,7 @@ const Theme: React.FC<ThemeProviderProps> = ({
         }}
       />
       {children}
-    </ThemeContext.Provider>
+    </ThemeContext>
   );
 };
 
@@ -355,7 +357,7 @@ const disableAnimation = () => {
   const css = document.createElement('style');
   css.appendChild(
     document.createTextNode(
-      `*{-webkit-transition:none!important;-moz-transition:none!important;-o-transition:none!important;-ms-transition:none!important;transition:none!important}`
+      `*{-webkit-transition:none!important;transition:none!important}`
     )
   );
   document.head.appendChild(css);

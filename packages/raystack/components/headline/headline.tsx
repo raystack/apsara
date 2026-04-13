@@ -1,6 +1,5 @@
-import { type VariantProps, cva } from 'class-variance-authority';
-import { HTMLAttributes, forwardRef } from 'react';
-
+import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps } from 'react';
 import styles from './headline.module.css';
 
 const headline = cva(styles.headline, {
@@ -43,31 +42,25 @@ export type HeadlineBaseProps = VariantProps<typeof headline> & {
 };
 
 type HeadlineProps = HeadlineBaseProps &
-  HTMLAttributes<HTMLHeadingElement> & {
+  ComponentProps<'h1'> & {
     as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   };
 
-export const Headline = forwardRef<HTMLHeadingElement, HeadlineProps>(
-  (
-    {
-      className,
-      size,
-      weight,
-      align,
-      truncate,
-      as: Component = 'h2',
-      ...props
-    },
-    ref
-  ) => {
-    return (
-      <Component
-        ref={ref}
-        className={headline({ size, weight, align, truncate, className })}
-        {...props}
-      />
-    );
-  }
-);
+export function Headline({
+  className,
+  size,
+  weight,
+  align,
+  truncate,
+  as: Component = 'h2',
+  ...props
+}: HeadlineProps) {
+  return (
+    <Component
+      className={headline({ size, weight, align, truncate, className })}
+      {...props}
+    />
+  );
+}
 
 Headline.displayName = 'Headline';
