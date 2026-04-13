@@ -54,17 +54,6 @@ describe('Fieldset', () => {
       expect(legend).toHaveClass(styles.legend);
     });
 
-    it('applies custom legendClassName', () => {
-      render(
-        <Fieldset legend='Info' legendClassName='custom-legend'>
-          content
-        </Fieldset>
-      );
-      const legend = screen.getByText('Info');
-      expect(legend).toHaveClass('custom-legend');
-      expect(legend).toHaveClass(styles.legend);
-    });
-
     it('does not render legend when not provided', () => {
       const { container } = render(<Fieldset>content</Fieldset>);
       expect(

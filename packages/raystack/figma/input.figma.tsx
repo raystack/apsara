@@ -1,8 +1,9 @@
 import figma from '@figma/code-connect';
+import { Field } from '../components/field';
 import { InputField } from '../components/input-field';
 
 figma.connect(InputField, '<FIGMA_LINK>?node-id=1-297', {
-  imports: ["import { InputField } from '@raystack/apsara'"],
+  imports: ["import { Field, InputField } from '@raystack/apsara'"],
   props: {
     prefix: figma.enum('Variant', {
       Prefix: figma.textContent('Prefix')
@@ -41,5 +42,14 @@ figma.connect(InputField, '<FIGMA_LINK>?node-id=1-297', {
     optional: figma.boolean('Optional'),
     leadingIcon: figma.instance('Leading Icon')
   },
-  example: props => <InputField {...props} />
+  example: ({ label, description, optional, ...props }) => {
+    if (label || description || optional) {
+      return (
+        <Field label={label} description={description} required={!optional}>
+          <InputField {...props} />
+        </Field>
+      );
+    }
+    return <InputField {...props} />;
+  }
 });

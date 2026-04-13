@@ -1,8 +1,9 @@
 import figma from '@figma/code-connect';
+import { Field } from '../components/field';
 import { TextArea } from '../components/text-area';
 
 figma.connect(TextArea, '<FIGMA_LINK>?node-id=180-585', {
-  imports: ["import { TextArea } from '@raystack/apsara'"],
+  imports: ["import { Field, TextArea } from '@raystack/apsara'"],
   props: {
     placeholder: figma.enum('State', {
       Default: figma.textContent('Place holder'),
@@ -23,5 +24,14 @@ figma.connect(TextArea, '<FIGMA_LINK>?node-id=180-585', {
     }),
     isOptional: figma.boolean('Optional')
   },
-  example: props => <TextArea {...props} />
+  example: ({ label, description, isOptional, ...props }) => {
+    if (label || description || isOptional) {
+      return (
+        <Field label={label} description={description} required={!isOptional}>
+          <TextArea {...props} />
+        </Field>
+      );
+    }
+    return <TextArea {...props} />;
+  }
 });
