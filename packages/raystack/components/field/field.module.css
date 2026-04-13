@@ -57,12 +57,12 @@
   background: var(--rs-color-background-base-primary);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
-  line-height: 32px;
+  line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   outline: none;
   box-sizing: border-box;
   transition: all 0.2s ease;
-  height: 32px;
+  height: var(--rs-space-9);
 }
 
 .input:hover {
