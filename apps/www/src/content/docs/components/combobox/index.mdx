@@ -10,7 +10,7 @@ import {
   multipleDemo,
   groupDemo,
   iconDemo,
-  withLabelDemo,
+  withFieldDemo,
   controlledDemo,
 } from "./demo.ts";
 
@@ -91,11 +91,11 @@ You can pass the `leadingIcon` prop to `Combobox.Item` to display icons before i
 
 <Demo data={iconDemo} />
 
-### With Label and Description
+### With Field
 
-The input supports `label`, `description`, and other `InputField` props.
+Wrap the Combobox with [Field](/docs/components/field) to add a label, description, and error handling.
 
-<Demo data={withLabelDemo} />
+<Demo data={withFieldDemo} />
 
 ### Groups and Separators
 

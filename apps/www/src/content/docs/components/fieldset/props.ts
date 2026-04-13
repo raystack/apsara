@@ -1,6 +1,6 @@
 export interface FieldsetProps {
-  /** Text or node to render as the fieldset legend. */
-  legend?: React.ReactNode;
+  /** Text to render as the fieldset legend. */
+  legend?: string;
 
   /**
    * Whether the fieldset and all its child controls are disabled.
@@ -10,9 +10,6 @@ export interface FieldsetProps {
 
   /** Additional CSS class names for the fieldset. */
   className?: string;
-
-  /** Additional CSS class names for the legend (when using `legend` prop). */
-  legendClassName?: string;
 }
 
 export interface FieldsetLegendProps {

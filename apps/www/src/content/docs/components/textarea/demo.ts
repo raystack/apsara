@@ -29,7 +29,7 @@ export const basicDemo = {
 export const withFieldDemo = {
   type: 'code',
   code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
-  <Field label="Bio" optional description="Tell us about yourself">
+  <Field label="Bio" required={false} description="Tell us about yourself">
     <TextArea placeholder="Write something..." />
   </Field>
   <Field label="Comments" required error="This field is required">

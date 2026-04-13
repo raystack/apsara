@@ -3,13 +3,12 @@
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
-  const { label, description, error, required, optional, ...rest } = props;
+  const { label, description, error, required, ...rest } = props;
   const fieldProps: Record<string, unknown> = {};
   if (label) fieldProps.label = label;
   if (description) fieldProps.description = description;
   if (error) fieldProps.error = error;
-  if (required) fieldProps.required = required;
-  if (optional) fieldProps.optional = optional;
+  if (required !== undefined) fieldProps.required = required;
   return `<Field${getPropsString(fieldProps)}>
   <InputField${getPropsString(rest)} placeholder="Enter text" />
 </Field>`;
@@ -21,8 +20,7 @@ export const playground = {
     label: { type: 'text', initialValue: 'Email' },
     description: { type: 'text', initialValue: "We won't share your email" },
     error: { type: 'text', initialValue: '' },
-    required: { type: 'checkbox', initialValue: false, defaultValue: false },
-    optional: { type: 'checkbox', initialValue: false, defaultValue: false },
+    required: { type: 'checkbox', initialValue: true, defaultValue: true },
     disabled: { type: 'checkbox', initialValue: false, defaultValue: false }
   },
   getCode
@@ -58,7 +56,7 @@ export const requiredDemo = {
 
 export const optionalDemo = {
   type: 'code',
-  code: `<Field label="Phone Number" optional description="We may use this for verification">
+  code: `<Field label="Phone Number" required={false} description="We may use this for verification">
   <InputField placeholder="Enter phone number" />
 </Field>`
 };
@@ -110,7 +108,7 @@ export const withInputFieldDemo = {
 
 export const withTextAreaDemo = {
   type: 'code',
-  code: `<Field label="Bio" optional description="Tell us about yourself">
+  code: `<Field label="Bio" required={false} description="Tell us about yourself">
   <TextArea placeholder="Write something..." />
 </Field>`
 };

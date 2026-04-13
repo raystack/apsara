@@ -11,7 +11,7 @@ export function FieldsetExamples() {
           <Field label='Phone' required>
             <InputField type='tel' placeholder='+1 (555) 000-0000' />
           </Field>
-          <Field label='Address' optional>
+          <Field label='Address' required={false}>
             <InputField placeholder='123 Main St' />
           </Field>
         </Fieldset>

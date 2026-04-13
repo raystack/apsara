@@ -31,7 +31,7 @@ export function FormExamples() {
         <Field label='Email' required description="We'll send a confirmation">
           <InputField type='email' placeholder='john@example.com' />
         </Field>
-        <Field label='Message' optional>
+        <Field label='Message' required={false}>
           <TextArea placeholder='Tell us more...' />
         </Field>
         <Button type='submit'>Submit</Button>

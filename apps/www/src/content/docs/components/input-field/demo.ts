@@ -38,7 +38,7 @@ export const withFieldDemo = {
   <Field label="Name" error="This field is required">
     <InputField placeholder="Enter name" />
   </Field>
-  <Field label="Phone" optional>
+  <Field label="Phone" required={false}>
     <InputField type="tel" placeholder="Enter phone" />
   </Field>
 </Flex>`

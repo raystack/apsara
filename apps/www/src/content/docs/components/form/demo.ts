@@ -6,7 +6,7 @@ export const playground = {
   <Field label="Email" required>
     <InputField type="email" placeholder="Enter email" />
   </Field>
-  <Field label="Message" optional>
+  <Field label="Message" required={false}>
     <TextArea placeholder="Enter message" />
   </Field>
   <Button type="submit">Submit</Button>
@@ -35,7 +35,7 @@ export const withFieldsDemo = {
   <Field label="Email" required description="We'll send a confirmation email">
     <InputField type="email" placeholder="john@example.com" />
   </Field>
-  <Field label="Bio" optional>
+  <Field label="Bio" required={false}>
     <TextArea placeholder="Tell us about yourself" />
   </Field>
   <Button type="submit">Create Account</Button>

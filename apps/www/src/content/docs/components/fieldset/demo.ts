@@ -21,7 +21,7 @@ export const basicDemo = {
   <Field label="Phone" required>
     <InputField type="tel" placeholder="+1 (555) 000-0000" />
   </Field>
-  <Field label="Address" optional>
+  <Field label="Address" required={false}>
     <InputField placeholder="123 Main St" />
   </Field>
 </Fieldset>`
@@ -64,7 +64,7 @@ export const nestedDemo = {
     <Field label="Company" required>
       <InputField placeholder="Acme Inc." />
     </Field>
-    <Field label="Role" optional>
+    <Field label="Role" required={false}>
       <InputField placeholder="Software Engineer" />
     </Field>
   </Fieldset>

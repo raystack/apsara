@@ -14,12 +14,16 @@ export function FieldExamples() {
           <Field label='Email' error='Please enter a valid email'>
             <InputField type='email' placeholder='Enter email' />
           </Field>
-          <Field label='Phone' optional>
+          <Field label='Phone' required={false}>
             <InputField placeholder='Enter phone' />
           </Field>
         </Flex>
         <Flex gap='large' direction='column' style={{ width: 300 }}>
-          <Field label='Bio' optional description='Tell us about yourself'>
+          <Field
+            label='Bio'
+            required={false}
+            description='Tell us about yourself'
+          >
             <TextArea placeholder='Write something...' />
           </Field>
           <Field label='Disabled' disabled>
