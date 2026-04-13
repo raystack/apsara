@@ -41,7 +41,7 @@ export const withFieldDemo = {
 export const controlledDemo = {
   type: 'code',
   code: `function ControlledExample() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = React.useState('');
 
   return (
     <Field label="Controlled TextArea" description={\`\${value.length} characters\`}>
