@@ -1,43 +1,22 @@
 export interface TextAreaProps {
-  /**
-   * Text label displayed above the textarea.
-   */
-  label: string;
+  /** Whether the textarea is disabled. */
+  disabled?: boolean;
+
+  /** Placeholder text. */
+  placeholder?: string;
 
   /**
-   * Boolean indicating if the field is optional.
-   * @default false
-   */
-  isOptional?: boolean;
-
-  /**
-   * Helper text displayed below the textarea.
-   */
-  helperText?: string;
-
-  /**
-   * Boolean to show error state.
-   */
-  error?: boolean;
-
-  /**
-   * Custom width for the textarea container.
-   * @default "200px"
+   * Custom width for the textarea.
+   * @defaultValue "100%"
    */
   width?: string | number;
 
-  /**
-   * Controlled value for the textarea.
-   */
+  /** Controlled value for the textarea. */
   value?: string;
 
-  /**
-   * Change handler for controlled usage.
-   */
-  onChange?: (value: string) => void;
+  /** Change handler for controlled usage. */
+  onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 
-  /**
-   * Additional CSS class names.
-   */
+  /** Additional CSS class names. */
   className?: string;
 }

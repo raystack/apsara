@@ -14,6 +14,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Callback Signatures](#callback-signatures)
     - [Data Attributes](#data-attributes)
     - [CSS Variables](#css-variables)
+    - [Form Field Pattern](#form-field-pattern)
   - [Component Migration](#component-migration)
     - [Accordion](#accordion)
       - [New Props](#new-props)
@@ -31,6 +32,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
       - [New Features](#new-features-2)
     - [Flex](#flex)
     - [Grid](#grid)
+    - [InputField](#inputfield)
     - [Popover](#popover)
       - [New Features](#new-features-3)
     - [Radio](#radio)
@@ -47,6 +49,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Switch](#switch)
     - [Tabs](#tabs)
       - [New Features](#new-features-8)
+    - [TextArea](#textarea)
     - [Toast](#toast)
       - [New Features](#new-features-9)
     - [Tooltip](#tooltip)
@@ -196,6 +199,32 @@ If you reference these CSS variables in custom styles:
 .dropdown { min-width: var(--anchor-width); }
 .accordion-panel { height: var(--accordion-panel-height); }
 ```
+
+### Form Field Pattern
+
+Labels, descriptions, errors, and optional indicators have been extracted from individual form controls into a new `Field` wrapper component. This is a **breaking change** for `InputField` and `TextArea`.
+
+**Before:** Each control rendered its own label, helper text, and error.
+
+```tsx
+<InputField label="Email" helperText="We won't share it" error="Required" optional />
+<TextArea label="Bio" helperText="Tell us about yourself" />
+```
+
+**After:** Wrap controls with `<Field>` for labels, descriptions, and errors. Controls are now pure inputs.
+
+```tsx
+<Field label="Email" description="We won't share it" error="Required" required={false}>
+  <InputField />
+</Field>
+<Field label="Bio" description="Tell us about yourself">
+  <TextArea />
+</Field>
+```
+
+The `Field` component also provides context so that child controls (InputField, TextArea, Select, Checkbox, Switch, Radio, NumberField, Combobox) automatically inherit `required` state without passing it explicitly.
+
+See [InputField](#inputfield) and [TextArea](#textarea) for full migration details.
 
 ---
 
@@ -738,6 +767,86 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 
 ---
 
+### InputField
+
+**Label, helper text, error, and optional indicator moved to `Field` wrapper.** InputField is now a pure input control — wrap it with the new `Field` component for labels, descriptions, and error messages.
+
+1. **`label` prop removed** — use `<Field label="...">`:
+
+```tsx
+// Before
+<InputField label="Email" placeholder="Enter email" />
+
+// After
+<Field label="Email">
+  <InputField placeholder="Enter email" />
+</Field>
+```
+
+2. **`helperText` prop removed** — use `<Field description="...">`:
+
+```tsx
+// Before
+<InputField label="Password" helperText="Must be at least 8 characters" placeholder="Enter password" />
+
+// After
+<Field label="Password" description="Must be at least 8 characters">
+  <InputField placeholder="Enter password" />
+</Field>
+```
+
+3. **`error` prop removed** — use `<Field error="...">`:
+
+```tsx
+// Before
+<InputField label="Email" error="Please enter a valid email" placeholder="Enter email" />
+
+// After
+<Field label="Email" error="Please enter a valid email">
+  <InputField placeholder="Enter email" />
+</Field>
+```
+
+4. **`optional` prop removed** — use `<Field required={false}>`:
+
+```tsx
+// Before
+<InputField label="Phone" optional placeholder="Enter phone" />
+
+// After
+<Field label="Phone" required={false}>
+  <InputField placeholder="Enter phone" />
+</Field>
+```
+
+5. **`infoTooltip` prop removed** — no direct replacement. Compose manually if needed.
+
+6. **`required` now inherited from Field context.** When inside a `<Field>`, the InputField automatically inherits the `required` state. You can still pass `required` directly to override.
+
+**Full before/after example:**
+
+```tsx
+// Before
+<InputField
+  label="Email"
+  helperText="We won't share your email"
+  error={errors.email}
+  optional
+  infoTooltip="Used for account recovery"
+  placeholder="Enter email"
+  leadingIcon={<MailIcon size={16} />}
+/>
+
+// After
+<Field label="Email" description="We won't share your email" error={errors.email} required={false}>
+  <InputField placeholder="Enter email" leadingIcon={<MailIcon size={16} />} />
+</Field>
+```
+
+Unchanged props: `size`, `variant`, `disabled`, `leadingIcon`, `trailingIcon`, `prefix`, `suffix`, `width`, `chips`, `maxChipsVisible`, `containerRef`, and all native `<input>` attributes.
+
+---
+
 ### Popover
 
 1. **`asChild` removed from Trigger** -- use `render` prop or pass children directly:
@@ -1152,6 +1261,84 @@ Key changes:
 
 ---
 
+### TextArea
+
+**Label, helper text, error, and optional indicator moved to `Field` wrapper.** TextArea is now a pure textarea control — wrap it with the new `Field` component for labels, descriptions, and error messages.
+
+1. **`label` prop removed** — use `<Field label="...">`:
+
+```tsx
+// Before
+<TextArea label="Bio" placeholder="Write something..." />
+
+// After
+<Field label="Bio">
+  <TextArea placeholder="Write something..." />
+</Field>
+```
+
+2. **`helperText` prop removed** — use `<Field description="...">`:
+
+```tsx
+// Before
+<TextArea label="Bio" helperText="Tell us about yourself" placeholder="Write something..." />
+
+// After
+<Field label="Bio" description="Tell us about yourself">
+  <TextArea placeholder="Write something..." />
+</Field>
+```
+
+3. **`error` prop changed** — was a `boolean` on TextArea, now a `string` message on Field:
+
+```tsx
+// Before
+<TextArea label="Bio" error helperText="This field is required" />
+
+// After
+<Field label="Bio" error="This field is required">
+  <TextArea />
+</Field>
+```
+
+4. **`required` now driven by Field context.** The old TextArea had `required` which also controlled the optional indicator. Now `required` defaults to `true` on Field and is inherited via context:
+
+```tsx
+// Before — required=false showed "(optional)" indicator
+<TextArea label="Bio" required={false} placeholder="Write something..." />
+
+// After
+<Field label="Bio" required={false}>
+  <TextArea placeholder="Write something..." />
+</Field>
+```
+
+5. **`infoTooltip` prop removed** — no direct replacement. Compose manually if needed.
+
+**Full before/after example:**
+
+```tsx
+// Before
+<TextArea
+  label="Bio"
+  helperText="Tell us about yourself"
+  error={hasError}
+  required={false}
+  infoTooltip="This will appear on your profile"
+  placeholder="Write something..."
+  width="400px"
+/>
+
+// After
+<Field label="Bio" description="Tell us about yourself" error={hasError ? "This field is required" : undefined} required={false}>
+  <TextArea placeholder="Write something..." width="400px" />
+</Field>
+```
+
+Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, and all native `<textarea>` attributes.
+
+---
+
 ### Toast
 
 **Exports renamed: `ToastContainer`/`toast` -> `Toast`/`toastManager`**
@@ -1357,6 +1544,9 @@ These are purely additive -- no migration needed.
 | **Collapsible** | Trigger, Panel |
 | **ContextMenu** | Trigger, Content, Item, Group, Label, Separator, Submenu, SubmenuTrigger, SubmenuContent |
 | **Drawer** | Trigger, Content, Header, Title, Description, Body, Footer, Close, createHandle |
+| **Field** | Label, Control, Error, Description, Validity. Wraps form controls with accessible labels, descriptions, and error messages. Supports simple props API (`label`, `description`, `error`) and sub-component API for constraint validation. |
+| **Fieldset** | Legend. Groups related form fields with an accessible legend. |
+| **Form** | Native form element with consolidated error handling, constraint validation, custom validation, and server-side error support. |
 | **Menu** | Trigger, Content, Item, Group, Label, Separator, Submenu, SubmenuTrigger, SubmenuContent, createHandle |
 | **Menubar** | (compose with Menu children) |
 | **Meter** | Label, Value, Track (linear + circular variants) |
@@ -1395,6 +1585,9 @@ These are purely additive -- no migration needed.
 - [ ] Remove `Select.Viewport` wrapper
 - [ ] Rewrite all Tooltip usages to compound component pattern
 - [ ] Update Accordion: `type` -> `multiple`, remove `collapsible`, `forceMount` -> `keepMounted`
+- [ ] Wrap InputField usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [InputField](#inputfield))
+- [ ] Wrap TextArea usages with `<Field>` — move `label`, `helperText`, `error`, `required` to Field props (see [TextArea](#textarea))
+- [ ] Remove `infoTooltip` from InputField and TextArea (no longer supported)
 - [ ] Update custom CSS targeting `data-state` attributes (see [Data Attributes](#data-attributes))
 - [ ] Update custom CSS referencing `--radix-*` variables (see [CSS Variables](#css-variables))
 - [ ] Test all components end-to-end

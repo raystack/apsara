@@ -3,6 +3,7 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
 import { cx } from 'class-variance-authority';
+import { useFieldContext } from '../field';
 
 import styles from './checkbox.module.css';
 
@@ -53,10 +54,18 @@ function CheckboxGroup({ className, ...props }: CheckboxGroupPrimitive.Props) {
 
 CheckboxGroup.displayName = 'Checkbox.Group';
 
-function CheckboxItem({ className, ...props }: CheckboxPrimitive.Root.Props) {
+function CheckboxItem({
+  className,
+  required,
+  ...props
+}: CheckboxPrimitive.Root.Props) {
+  const fieldContext = useFieldContext();
+  const resolvedRequired = required ?? fieldContext?.required;
+
   return (
     <CheckboxPrimitive.Root
       className={cx(styles.checkbox, className)}
+      required={resolvedRequired}
       {...props}
     >
       <CheckboxPrimitive.Indicator

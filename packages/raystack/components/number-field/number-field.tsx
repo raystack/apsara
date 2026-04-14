@@ -3,7 +3,8 @@
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react';
 import { MinusIcon, PlusIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps, createContext, useContext, useId } from 'react';
+import { ComponentProps, createContext, useContext, useId } from 'react';
+import { useFieldContext } from '../field';
 import { Label } from '../label';
 import styles from './number-field.module.css';
 
@@ -13,16 +14,20 @@ function NumberFieldRoot({
   className,
   children,
   id,
+  required,
   ...props
 }: NumberFieldPrimitive.Root.Props) {
   const generatedId = useId();
   const fieldId = id ?? generatedId;
+  const fieldContext = useFieldContext();
+  const resolvedRequired = required ?? fieldContext?.required;
 
   return (
     <NumberFieldContext value={{ fieldId }}>
       <NumberFieldPrimitive.Root
         className={cx(styles.root, className)}
         id={fieldId}
+        required={resolvedRequired}
         {...props}
       >
         {children ?? (

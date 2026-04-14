@@ -1,21 +1,19 @@
 ---
 title: Input Field
-description: A text input component with support for labels, helper text, and various states.
+description: A text input component with support for icons, prefix/suffix, chips, and size variants.
 source: packages/raystack/components/input-field
 ---
 
 import {
   playground,
   basicDemo,
-  helperTextDemo,
-  errorDemo,
   prefixDemo,
   iconDemo,
-  optionalDemo,
   disabledDemo,
   widthDemo,
   sizeDemo,
   sizeChipDemo,
+  withFieldDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -27,12 +25,22 @@ Import and assemble the component:
 ```tsx
 import { InputField } from "@raystack/apsara";
 
-<InputField />
+<InputField placeholder="Enter text" />
+```
+
+For labels, description, and error messages, wrap with [Field](/docs/components/field):
+
+```tsx
+import { Field, InputField } from "@raystack/apsara";
+
+<Field label="Email" description="We won't share it" error={errors.email?.message}>
+  <InputField placeholder="Enter email" />
+</Field>
 ```
 
 ## API Reference
 
-Renders a text input with label, helper text, and error support.
+Renders a text input control. For label, description, and error support, use with [Field](/docs/components/field).
 
 <auto-type-table path="./props.ts" name="InputFieldProps" />
 
@@ -40,21 +48,15 @@ Renders a text input with label, helper text, and error support.
 
 ### Basic Input
 
-A basic input field with a label and placeholder.
+A basic input field with a placeholder.
 
 <Demo data={basicDemo} />
 
-### With Helper Text
+### With Field
 
-Input field with additional helper text below.
+Use Field to add label, description, and error handling.
 
-<Demo data={helperTextDemo} />
-
-### With Error
-
-Input field displaying an error state with error message.
-
-<Demo data={errorDemo} />
+<Demo data={withFieldDemo} />
 
 ### With Prefix/Suffix
 
@@ -67,12 +69,6 @@ Input field with prefix and suffix text.
 Input field with leading and trailing icons.
 
 <Demo data={iconDemo} />
-
-### Optional Field
-
-Input field marked as optional.
-
-<Demo data={optionalDemo} />
 
 ### Disabled State
 
@@ -100,7 +96,6 @@ Input field that can display and manage chips/tags.
 
 ## Accessibility
 
-- Associates label with input via `htmlFor` and `id` attributes
-- Error messages are linked with `aria-describedby`
+- Use with [Field](/docs/components/field) for automatic label association and error linking
 - Required state is communicated via `aria-required`
-- Invalid state is communicated via `aria-invalid`
+- Supports all native `<input>` attributes

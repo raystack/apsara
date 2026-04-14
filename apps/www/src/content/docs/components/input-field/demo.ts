@@ -3,19 +3,15 @@
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
-  return `<InputField${getPropsString(props)}/>`;
+  return `<InputField${getPropsString(props)} placeholder="Enter text" />`;
 };
 
 export const playground = {
   type: 'playground',
   controls: {
-    label: { type: 'text', initialValue: 'Your Name' },
-    helperText: { type: 'text', initialValue: 'Enter your full name' },
-    error: { type: 'text', initialValue: '' },
     disabled: { type: 'checkbox', initialValue: false, defaultValue: false },
     leadingIcon: { type: 'icon', initialValue: '' },
     trailingIcon: { type: 'icon', initialValue: '' },
-    optional: { type: 'checkbox', defaultValue: false },
     prefix: { type: 'text', initialValue: '' },
     suffix: { type: 'text', initialValue: '' },
     width: { type: 'text', initialValue: '560px' },
@@ -30,105 +26,78 @@ export const playground = {
 
 export const basicDemo = {
   type: 'code',
-  code: `
-  <InputField
-  label="Default"
-  placeholder="Enter text"
-  width="560px"
-/>`
+  code: `<InputField placeholder="Enter text" width="560px" />`
 };
-export const helperTextDemo = {
+
+export const withFieldDemo = {
   type: 'code',
-  code: `
-  <InputField
-  label="With label"
-  placeholder="Enter text"
-  helperText="This is a helper text"
-  width="560px"
-/>`
+  code: `<Flex direction="column" gap="medium" style={{ width: 560 }}>
+  <Field label="Email" required description="We won't share your email">
+    <InputField type="email" placeholder="Enter email" />
+  </Field>
+  <Field label="Name" error="This field is required">
+    <InputField placeholder="Enter name" />
+  </Field>
+  <Field label="Phone" required={false}>
+    <InputField type="tel" placeholder="Enter phone" />
+  </Field>
+</Flex>`
 };
-export const errorDemo = {
-  type: 'code',
-  code: `
- <InputField
-  label="With Error"
-  placeholder="Enter text"
-  error="This field is required"
-  width="560px"
-/>`
-};
+
 export const prefixDemo = {
   type: 'code',
-  code: `
- <InputField
-  label="With Prefix/Suffix"
+  code: `<InputField
   placeholder="0.00"
   prefix="$"
   suffix="USD"
   width="560px"
 />`
 };
+
 export const iconDemo = {
   type: 'code',
-  code: `
- <InputField
-  label="With Icons"
+  code: `<InputField
   placeholder="Enter text"
   leadingIcon={<Home size={16}/>}
-  trailingIcon={<Info  size={16}/>}
+  trailingIcon={<Info size={16}/>}
   width="560px"
 />`
 };
-export const optionalDemo = {
-  type: 'code',
-  code: `
- <InputField
-  label="Optional Field"
-  placeholder="Enter text"
-  optional
-  width="560px"
-/>`
-};
+
 export const disabledDemo = {
   type: 'code',
-  code: `
-<InputField
-  label="Disabled"
+  code: `<InputField
   placeholder="Enter text"
   disabled
   width="560px"
 />`
 };
+
 export const widthDemo = {
   type: 'code',
-  code: `
-<InputField
-  label="Custom Width"
+  code: `<InputField
   placeholder="Enter text"
   width="300px"
 />`
 };
+
 export const sizeDemo = {
   type: 'code',
-  code: `
-<Flex direction="column" gap="medium">
+  code: `<Flex direction="column" gap="medium">
   <InputField
-    label="Large Input (Default)"
-    placeholder="32px height"
+    placeholder="32px height (default)"
   />
   <InputField
-    label="Small Input"
     placeholder="24px height"
     size="small"
   />
 </Flex>`
 };
+
 export const sizeChipDemo = {
   type: 'code',
-  code: `
-<Flex direction="column" gap="medium">
+  code: `<Flex direction="column" gap="medium">
   <InputField
-    label="Large Input with Chips"
     placeholder="Type and press Enter..."
     chips={[
       { label: "A", onRemove: () => console.log("Remove A") },
@@ -136,7 +105,6 @@ export const sizeChipDemo = {
     ]}
   />
   <InputField
-    label="Small Input with Chips"
     placeholder="Type and press Enter..."
     size="small"
     chips={[

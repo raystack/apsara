@@ -3,31 +3,19 @@
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: any) => {
-  return `<TextArea${getPropsString(props)}/>`;
+  return `<TextArea${getPropsString(props)} placeholder="Enter text" />`;
 };
 
 export const playground = {
   type: 'playground',
   controls: {
-    label: {
-      type: 'text',
-      initialValue: 'Textarea'
-    },
-    isOptional: {
-      type: 'checkbox',
-      defaultValue: false
-    },
-    helperText: {
-      type: 'text',
-      default: 'Helper text'
-    },
-    error: {
+    disabled: {
       type: 'checkbox',
       defaultValue: false
     },
     width: {
       type: 'text',
-      defaultValue: '200px'
+      defaultValue: '400px'
     }
   },
   getCode
@@ -35,47 +23,41 @@ export const playground = {
 
 export const basicDemo = {
   type: 'code',
-  code: `
-  <TextArea
-  label="Basic TextArea"
-  placeholder="Enter your text here"
-/>`
+  code: `<TextArea placeholder="Enter your text here" />`
+};
+
+export const withFieldDemo = {
+  type: 'code',
+  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  <Field label="Bio" required={false} description="Tell us about yourself">
+    <TextArea placeholder="Write something..." />
+  </Field>
+  <Field label="Comments" required error="This field is required">
+    <TextArea placeholder="Enter comments" />
+  </Field>
+</Flex>`
 };
 
 export const controlledDemo = {
   type: 'code',
-  code: `
-  function ControlledExample() {
+  code: `function ControlledExample() {
   const [value, setValue] = React.useState('');
-  
+
   return (
-    <TextArea
-      label="Controlled TextArea"
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      helperText={\`Current value: \${value.length} characters\`}
-      placeholder="Type something..."
-    />
+    <Field label="Controlled TextArea" description={\`\${value.length} characters\`}>
+      <TextArea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Type something..."
+      />
+    </Field>
   );
 }`
 };
 
-export const errorDemo = {
-  type: 'code',
-  code: `
- <TextArea
-  label="Error TextArea"
-  error={true}
-  helperText="This field has an error"
-  placeholder="Enter your text here"
-/>`
-};
-
 export const widthDemo = {
   type: 'code',
-  code: `
-<TextArea
-  label="Custom Width"
+  code: `<TextArea
   width="300px"
   placeholder="This textarea is 300px wide"
 />`

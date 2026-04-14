@@ -1,0 +1,94 @@
+---
+title: Fieldset
+description: Groups related form fields with an accessible legend.
+source: packages/raystack/components/fieldset
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  subComponentDemo,
+  disabledDemo,
+  nestedDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Fieldset supports a **simple props API** and a **sub-component API**.
+
+### Simple API
+
+```tsx
+import { Fieldset, Field, InputField } from "@raystack/apsara";
+
+<Fieldset legend="Personal Information">
+  <Field label="First Name">
+    <InputField placeholder="John" />
+  </Field>
+  <Field label="Last Name">
+    <InputField placeholder="Doe" />
+  </Field>
+</Fieldset>
+```
+
+### Sub-component API
+
+```tsx
+import { Fieldset, Field, InputField } from "@raystack/apsara";
+
+<Fieldset>
+  <Fieldset.Legend>Personal Information</Fieldset.Legend>
+  <Field label="First Name">
+    <InputField placeholder="John" />
+  </Field>
+</Fieldset>
+```
+
+## API Reference
+
+### Root
+
+Groups related fields with a shared legend. Renders a `<fieldset>` element.
+
+<auto-type-table path="./props.ts" name="FieldsetProps" />
+
+### Legend
+
+An accessible legend for the fieldset. Renders a `<div>` element with `role="presentation"`.
+
+<auto-type-table path="./props.ts" name="FieldsetLegendProps" />
+
+## Examples
+
+### Basic Fieldset
+
+A fieldset grouping related fields with a legend.
+
+<Demo data={basicDemo} />
+
+### Sub-component API
+
+Using `Fieldset.Legend` for custom legend styling.
+
+<Demo data={subComponentDemo} />
+
+### Disabled Fieldset
+
+All fields within a disabled fieldset are disabled.
+
+<Demo data={disabledDemo} />
+
+### Nested Fieldsets
+
+Fieldsets can be nested to create logical groupings.
+
+<Demo data={nestedDemo} />
+
+## Accessibility
+
+- Renders a native `<fieldset>` element for semantic grouping
+- `Fieldset.Legend` provides an accessible name for the group
+- The `disabled` prop propagates to all child form controls

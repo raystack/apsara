@@ -105,23 +105,20 @@ export const iconDemo = {
   </Combobox>`
 };
 
-export const withLabelDemo = {
+export const withFieldDemo = {
   type: 'code',
   code: `
-  <Combobox>
-    <Combobox.Input
-      placeholder="Select a fruit"
-      label="Favorite Fruit"
-      helperText="Choose your favorite fruit"
-      width={240}
-    />
-    <Combobox.Content>
-      <Combobox.Item value="apple">Apple</Combobox.Item>
-      <Combobox.Item value="banana">Banana</Combobox.Item>
-      <Combobox.Item value="blueberry">Blueberry</Combobox.Item>
-      <Combobox.Item value="grapes">Grapes</Combobox.Item>
-    </Combobox.Content>
-  </Combobox>`
+  <Field label="Favorite Fruit" description="Choose your favorite fruit">
+    <Combobox>
+      <Combobox.Input placeholder="Select a fruit" width={240} />
+      <Combobox.Content>
+        <Combobox.Item value="apple">Apple</Combobox.Item>
+        <Combobox.Item value="banana">Banana</Combobox.Item>
+        <Combobox.Item value="blueberry">Blueberry</Combobox.Item>
+        <Combobox.Item value="grapes">Grapes</Combobox.Item>
+      </Combobox.Content>
+    </Combobox>
+  </Field>`
 };
 
 export const controlledDemo = {

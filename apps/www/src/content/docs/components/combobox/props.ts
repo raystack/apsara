@@ -53,34 +53,25 @@ export interface ComboboxRootProps {
 
 export interface ComboboxInputProps {
   /**
-   * Size variant of the input field
+   * Size variant of the input field.
    * @default "large"
    */
   size?: 'small' | 'large';
 
-  /** Text label above the input */
-  label?: string;
-
-  /** Helper text below the input */
-  helperText?: string;
-
-  /** Error message to display below the input */
-  error?: string;
-
-  /** Whether the input is disabled */
+  /** Whether the input is disabled. */
   disabled?: boolean;
 
-  /** Icon element to display at the start of input */
+  /** Icon element to display at the start of input. */
   leadingIcon?: React.ReactNode;
 
-  /** Shows "(Optional)" text next to label */
-  optional?: boolean;
-
-  /** Text or symbol to show before input value */
+  /** Text or symbol to show before input value. */
   prefix?: string;
 
   /** Placeholder text for the input field. */
   placeholder?: string;
+
+  /** Custom width for the input field. */
+  width?: string | number;
 
   /** Additional CSS class names. */
   className?: string;
