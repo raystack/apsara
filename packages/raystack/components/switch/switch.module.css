@@ -12,12 +12,12 @@
 }
 
 .switch.large {
-  width: 34px;
+  width: calc(var(--rs-space-5) * 2 + var(--rs-space-1));
   height: var(--rs-space-6);
 }
 
 .switch.small {
-  width: 26px;
+  width: calc(var(--rs-space-4) * 2 + var(--rs-space-1));
   height: var(--rs-space-5);
 }
 
