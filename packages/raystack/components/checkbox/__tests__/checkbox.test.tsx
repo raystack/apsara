@@ -31,6 +31,23 @@ describe('Checkbox', () => {
     });
   });
 
+  describe('Sizes', () => {
+    const sizes = ['small', 'large'] as const;
+    sizes.forEach(size => {
+      it(`renders ${size} size`, () => {
+        render(<Checkbox size={size} />);
+        const checkbox = screen.getByRole('checkbox');
+        expect(checkbox).toHaveClass(styles[size]);
+      });
+    });
+
+    it('renders large size by default', () => {
+      render(<Checkbox />);
+      const checkbox = screen.getByRole('checkbox');
+      expect(checkbox).toHaveClass(styles.large);
+    });
+  });
+
   describe('Checked State', () => {
     it('renders unchecked by default', () => {
       render(<Checkbox />);
@@ -133,6 +150,44 @@ describe('Checkbox', () => {
     });
   });
 
+  describe('Custom Icons', () => {
+    it('renders custom checked icon when provided', () => {
+      render(
+        <Checkbox
+          checked
+          checkedIcon={<span data-testid='custom-check'>custom</span>}
+        />
+      );
+      expect(screen.getByTestId('custom-check')).toBeInTheDocument();
+    });
+
+    it('renders custom indeterminate icon when provided', () => {
+      render(
+        <Checkbox
+          indeterminate
+          indeterminateIcon={
+            <span data-testid='custom-indeterminate'>custom</span>
+          }
+        />
+      );
+      expect(screen.getByTestId('custom-indeterminate')).toBeInTheDocument();
+    });
+
+    it('renders default check icon when no custom icon is provided', () => {
+      const { container } = render(<Checkbox checked />);
+      const indicator = container.querySelector(`.${styles.indicator}`);
+      const svg = indicator?.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+    });
+
+    it('renders default indeterminate icon when no custom icon is provided', () => {
+      const { container } = render(<Checkbox indeterminate />);
+      const indicator = container.querySelector(`.${styles.indicator}`);
+      const svg = indicator?.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+    });
+  });
+
   describe('Event Handling', () => {
     it('calls onCheckedChange when clicked', () => {
       const handleChange = vi.fn();
@@ -231,6 +286,12 @@ describe('Checkbox', () => {
       render(<Checkbox aria-invalid='true' />);
       const checkbox = screen.getByRole('checkbox');
       expect(checkbox).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('supports required prop', () => {
+      render(<Checkbox required />);
+      const checkbox = screen.getByRole('checkbox');
+      expect(checkbox).toHaveAttribute('data-required');
     });
   });
 });

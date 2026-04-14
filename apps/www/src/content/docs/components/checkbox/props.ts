@@ -35,6 +35,27 @@ export interface CheckboxProps {
    */
   parent?: boolean;
 
+  /**
+   * The size of the checkbox.
+   * @defaultValue 'large'
+   */
+  size?: 'small' | 'large';
+
+  /**
+   * Custom icon to render when the checkbox is checked.
+   */
+  checkedIcon?: React.ReactNode;
+
+  /**
+   * Custom icon to render when the checkbox is in the indeterminate state.
+   */
+  indeterminateIcon?: React.ReactNode;
+
+  /**
+   * Ref to the hidden `<input>` element for form integration.
+   */
+  inputRef?: React.Ref<HTMLInputElement>;
+
   /** Additional CSS class name. */
   className?: string;
 }
@@ -59,6 +80,12 @@ export interface CheckboxGroupProps {
    * @defaultValue false
    */
   disabled?: boolean;
+
+  /**
+   * Layout direction of the checkbox group.
+   * @defaultValue 'vertical'
+   */
+  orientation?: 'vertical' | 'horizontal';
 
   /** Additional CSS class name. */
   className?: string;

@@ -2,7 +2,8 @@
 
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
-import { cx } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { ReactNode } from 'react';
 import { useFieldContext } from '../field';
 
 import styles from './checkbox.module.css';
@@ -43,10 +44,37 @@ const IndeterminateIcon = () => (
   </svg>
 );
 
-function CheckboxGroup({ className, ...props }: CheckboxGroupPrimitive.Props) {
+const checkboxVariants = cva(styles.checkbox, {
+  variants: {
+    size: {
+      small: styles.small,
+      large: styles.large
+    }
+  },
+  defaultVariants: {
+    size: 'large'
+  }
+});
+
+interface CheckboxGroupProps extends CheckboxGroupPrimitive.Props {
+  /** Layout direction of the checkbox group.
+   * @defaultValue 'vertical'
+   */
+  orientation?: 'vertical' | 'horizontal';
+}
+
+function CheckboxGroup({
+  className,
+  orientation = 'vertical',
+  ...props
+}: CheckboxGroupProps) {
   return (
     <CheckboxGroupPrimitive
-      className={cx(styles.group, className)}
+      className={cx(
+        styles.group,
+        orientation === 'horizontal' && styles['group-horizontal'],
+        className
+      )}
       {...props}
     />
   );
@@ -54,17 +82,33 @@ function CheckboxGroup({ className, ...props }: CheckboxGroupPrimitive.Props) {
 
 CheckboxGroup.displayName = 'Checkbox.Group';
 
+interface CheckboxItemProps
+  extends CheckboxPrimitive.Root.Props,
+    VariantProps<typeof checkboxVariants> {
+  /** Custom icon to render when the checkbox is checked. */
+  checkedIcon?: ReactNode;
+  /** Custom icon to render when the checkbox is in the indeterminate state. */
+  indeterminateIcon?: ReactNode;
+  /** Ref to the hidden <input> element for form integration. */
+  inputRef?: React.Ref<HTMLInputElement>;
+  /** When true, the checkbox acts as a parent (select all) checkbox within a group. */
+  parent?: boolean;
+}
+
 function CheckboxItem({
   className,
   required,
+  size,
+  checkedIcon,
+  indeterminateIcon,
   ...props
-}: CheckboxPrimitive.Root.Props) {
+}: CheckboxItemProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
   return (
     <CheckboxPrimitive.Root
-      className={cx(styles.checkbox, className)}
+      className={checkboxVariants({ size, className })}
       required={resolvedRequired}
       {...props}
     >
@@ -72,7 +116,9 @@ function CheckboxItem({
         className={styles.indicator}
         render={(props, state) => (
           <span {...props}>
-            {state.indeterminate ? <IndeterminateIcon /> : <CheckMarkIcon />}
+            {state.indeterminate
+              ? (indeterminateIcon ?? <IndeterminateIcon />)
+              : (checkedIcon ?? <CheckMarkIcon />)}
           </span>
         )}
       />
