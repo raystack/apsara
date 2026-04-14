@@ -32,19 +32,19 @@ describe('InputField', () => {
 
     it('sets custom width', () => {
       const { container } = render(<InputField width='300px' />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
+      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveStyle({ width: '300px' });
     });
 
     it('sets numeric width as pixels', () => {
       const { container } = render(<InputField width={400} />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
+      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveStyle({ width: '400px' });
     });
 
     it('defaults to 100% width', () => {
       const { container } = render(<InputField />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
+      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveStyle({ width: '100%' });
     });
 
@@ -58,13 +58,13 @@ describe('InputField', () => {
   describe('Sizes', () => {
     it('renders large size by default', () => {
       const { container } = render(<InputField />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
+      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['size-large']);
     });
 
     it('renders small size when specified', () => {
       const { container } = render(<InputField size='small' />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
+      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['size-small']);
     });
   });
@@ -72,13 +72,13 @@ describe('InputField', () => {
   describe('Variants', () => {
     it('renders default variant by default', () => {
       const { container } = render(<InputField />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
+      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['variant-default']);
     });
 
     it('renders borderless variant when specified', () => {
       const { container } = render(<InputField variant='borderless' />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
+      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['variant-borderless']);
     });
   });
@@ -160,6 +160,35 @@ describe('InputField', () => {
       }));
       render(<InputField chips={chips} maxChipsVisible={3} />);
       expect(screen.getByText('+2')).toBeInTheDocument();
+    });
+
+    it('does not render dismiss button on chips when disabled', () => {
+      const handleRemove = vi.fn();
+      const chips = [{ label: 'Tag1', onRemove: handleRemove }];
+      render(<InputField chips={chips} disabled />);
+      const dismissButton = screen.queryByRole('button', {
+        name: 'Remove Tag1'
+      });
+      expect(dismissButton).not.toBeInTheDocument();
+    });
+
+    it('chips are non-interactive when disabled', () => {
+      const handleRemove = vi.fn();
+      const chips = [{ label: 'Tag1', onRemove: handleRemove }];
+      const { container } = render(<InputField chips={chips} disabled />);
+      const chip = container.querySelector(`.${styles.chip}`);
+      expect(chip).toHaveAttribute('data-disabled');
+    });
+
+    it('chips remain interactive when not disabled', () => {
+      const handleRemove = vi.fn();
+      const chips = [{ label: 'Tag1', onRemove: handleRemove }];
+      render(<InputField chips={chips} />);
+      const dismissButton = screen.getByRole('button', {
+        name: 'Remove Tag1'
+      });
+      fireEvent.click(dismissButton);
+      expect(handleRemove).toHaveBeenCalledTimes(1);
     });
   });
 
