@@ -42,14 +42,12 @@ export interface CheckboxProps {
   size?: 'small' | 'large';
 
   /**
-   * Custom indicator content. Can be a ReactNode or a function receiving `{ checked, indeterminate }` state.
+   * Custom render function for the indicator. Receives `(props, state)` where state includes `checked` and `indeterminate`.
    */
-  children?:
-    | React.ReactNode
-    | ((state: {
-        checked: boolean;
-        indeterminate: boolean;
-      }) => React.ReactNode);
+  render?: (
+    props: React.HTMLAttributes<HTMLSpanElement>,
+    state: { checked: boolean; indeterminate: boolean }
+  ) => React.ReactNode;
 
   /** Additional CSS class name. */
   className?: string;

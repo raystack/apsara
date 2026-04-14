@@ -3,7 +3,6 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { type ReactNode } from 'react';
 import { useFieldContext } from '../field';
 
 import styles from './checkbox.module.css';
@@ -84,18 +83,13 @@ CheckboxGroup.displayName = 'Checkbox.Group';
 
 interface CheckboxItemProps
   extends CheckboxPrimitive.Root.Props,
-    VariantProps<typeof checkboxVariants> {
-  /** Custom indicator content. Can be a ReactNode or a function receiving the checkbox state. */
-  children?:
-    | ReactNode
-    | ((state: { checked: boolean; indeterminate: boolean }) => ReactNode);
-}
+    VariantProps<typeof checkboxVariants> {}
 
 function CheckboxItem({
   className,
   required,
   size,
-  children,
+  render,
   ...props
 }: CheckboxItemProps) {
   const fieldContext = useFieldContext();
@@ -109,24 +103,14 @@ function CheckboxItem({
     >
       <CheckboxPrimitive.Indicator
         className={styles.indicator}
-        render={(props, state) => (
-          <span {...props}>
-            {children ? (
-              typeof children === 'function' ? (
-                children({
-                  checked: state.checked,
-                  indeterminate: state.indeterminate
-                })
-              ) : (
-                children
-              )
-            ) : state.indeterminate ? (
-              <IndeterminateIcon />
-            ) : (
-              <CheckMarkIcon />
-            )}
-          </span>
-        )}
+        render={
+          render ??
+          ((props, state) => (
+            <span {...props}>
+              {state.indeterminate ? <IndeterminateIcon /> : <CheckMarkIcon />}
+            </span>
+          ))
+        }
       />
     </CheckboxPrimitive.Root>
   );
