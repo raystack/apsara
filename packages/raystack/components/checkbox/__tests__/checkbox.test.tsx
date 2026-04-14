@@ -150,37 +150,50 @@ describe('Checkbox', () => {
     });
   });
 
-  describe('Custom Icons', () => {
-    it('renders custom checked icon when provided', () => {
+  describe('Children (Custom Icons)', () => {
+    it('renders children as ReactNode when provided', () => {
       render(
-        <Checkbox
-          checked
-          checkedIcon={<span data-testid='custom-check'>custom</span>}
-        />
+        <Checkbox checked>
+          <span data-testid='custom-icon'>custom</span>
+        </Checkbox>
       );
-      expect(screen.getByTestId('custom-check')).toBeInTheDocument();
+      expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
     });
 
-    it('renders custom indeterminate icon when provided', () => {
+    it('renders children as render function with state', () => {
       render(
-        <Checkbox
-          indeterminate
-          indeterminateIcon={
-            <span data-testid='custom-indeterminate'>custom</span>
-          }
-        />
+        <Checkbox checked>
+          {({ checked, indeterminate }) => (
+            <span data-testid='render-fn'>
+              {checked ? 'yes' : 'no'}-{indeterminate ? 'mixed' : 'clear'}
+            </span>
+          )}
+        </Checkbox>
       );
-      expect(screen.getByTestId('custom-indeterminate')).toBeInTheDocument();
+      expect(screen.getByTestId('render-fn')).toHaveTextContent('yes-clear');
     });
 
-    it('renders default check icon when no custom icon is provided', () => {
+    it('renders render function with indeterminate state', () => {
+      render(
+        <Checkbox indeterminate>
+          {({ indeterminate }) => (
+            <span data-testid='render-fn'>
+              {indeterminate ? 'mixed' : 'clear'}
+            </span>
+          )}
+        </Checkbox>
+      );
+      expect(screen.getByTestId('render-fn')).toHaveTextContent('mixed');
+    });
+
+    it('renders default check icon when no children provided', () => {
       const { container } = render(<Checkbox checked />);
       const indicator = container.querySelector(`.${styles.indicator}`);
       const svg = indicator?.querySelector('svg');
       expect(svg).toBeInTheDocument();
     });
 
-    it('renders default indeterminate icon when no custom icon is provided', () => {
+    it('renders default indeterminate icon when no children provided', () => {
       const { container } = render(<Checkbox indeterminate />);
       const indicator = container.querySelector(`.${styles.indicator}`);
       const svg = indicator?.querySelector('svg');

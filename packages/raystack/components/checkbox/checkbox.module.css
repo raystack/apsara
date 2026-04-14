@@ -37,12 +37,6 @@
   min-height: var(--rs-space-4);
 }
 
-/* A1: Focus-visible ring for keyboard navigation (WCAG 2.4.7) */
-.checkbox:focus-visible {
-  outline: 2px solid var(--rs-color-border-accent-emphasis);
-  outline-offset: 2px;
-}
-
 .checkbox:hover {
   background: var(--rs-color-background-base-primary-hover);
   border-color: var(--rs-color-border-base-focus);

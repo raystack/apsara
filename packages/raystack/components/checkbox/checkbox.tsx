@@ -3,7 +3,7 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { useFieldContext } from '../field';
 
 import styles from './checkbox.module.css';
@@ -85,22 +85,17 @@ CheckboxGroup.displayName = 'Checkbox.Group';
 interface CheckboxItemProps
   extends CheckboxPrimitive.Root.Props,
     VariantProps<typeof checkboxVariants> {
-  /** Custom icon to render when the checkbox is checked. */
-  checkedIcon?: ReactNode;
-  /** Custom icon to render when the checkbox is in the indeterminate state. */
-  indeterminateIcon?: ReactNode;
-  /** Ref to the hidden <input> element for form integration. */
-  inputRef?: React.Ref<HTMLInputElement>;
-  /** When true, the checkbox acts as a parent (select all) checkbox within a group. */
-  parent?: boolean;
+  /** Custom indicator content. Can be a ReactNode or a function receiving the checkbox state. */
+  children?:
+    | ReactNode
+    | ((state: { checked: boolean; indeterminate: boolean }) => ReactNode);
 }
 
 function CheckboxItem({
   className,
   required,
   size,
-  checkedIcon,
-  indeterminateIcon,
+  children,
   ...props
 }: CheckboxItemProps) {
   const fieldContext = useFieldContext();
@@ -116,9 +111,20 @@ function CheckboxItem({
         className={styles.indicator}
         render={(props, state) => (
           <span {...props}>
-            {state.indeterminate
-              ? (indeterminateIcon ?? <IndeterminateIcon />)
-              : (checkedIcon ?? <CheckMarkIcon />)}
+            {children ? (
+              typeof children === 'function' ? (
+                children({
+                  checked: state.checked,
+                  indeterminate: state.indeterminate
+                })
+              ) : (
+                children
+              )
+            ) : state.indeterminate ? (
+              <IndeterminateIcon />
+            ) : (
+              <CheckMarkIcon />
+            )}
           </span>
         )}
       />

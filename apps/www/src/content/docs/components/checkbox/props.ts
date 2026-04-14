@@ -42,19 +42,14 @@ export interface CheckboxProps {
   size?: 'small' | 'large';
 
   /**
-   * Custom icon to render when the checkbox is checked.
+   * Custom indicator content. Can be a ReactNode or a function receiving `{ checked, indeterminate }` state.
    */
-  checkedIcon?: React.ReactNode;
-
-  /**
-   * Custom icon to render when the checkbox is in the indeterminate state.
-   */
-  indeterminateIcon?: React.ReactNode;
-
-  /**
-   * Ref to the hidden `<input>` element for form integration.
-   */
-  inputRef?: React.Ref<HTMLInputElement>;
+  children?:
+    | React.ReactNode
+    | ((state: {
+        checked: boolean;
+        indeterminate: boolean;
+      }) => React.ReactNode);
 
   /** Additional CSS class name. */
   className?: string;
