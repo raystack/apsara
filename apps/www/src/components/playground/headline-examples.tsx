@@ -8,13 +8,13 @@ export function HeadlineExamples() {
     <PlaygroundLayout title='Headline'>
       <Flex direction='column' gap='large'>
         <Flex direction='column' gap='large'>
-          <Headline size='large' as='h1'>
+          <Headline size='large' render={<h1 />}>
             Large Headline
           </Headline>
 
           <Headline size='medium'>Medium Headline</Headline>
 
-          <Headline size='small' as='h3'>
+          <Headline size='small' render={<h3 />}>
             Small Headline
           </Headline>
         </Flex>
