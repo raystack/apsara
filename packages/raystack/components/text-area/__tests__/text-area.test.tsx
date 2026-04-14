@@ -108,6 +108,48 @@ describe('TextArea', () => {
     });
   });
 
+  describe('Rows', () => {
+    it('defaults to 3 rows', () => {
+      render(<TextArea />);
+      const textarea = screen.getByRole('textbox');
+      expect(textarea).toHaveAttribute('rows', '3');
+    });
+
+    it('allows overriding rows', () => {
+      render(<TextArea rows={6} />);
+      const textarea = screen.getByRole('textbox');
+      expect(textarea).toHaveAttribute('rows', '6');
+    });
+  });
+
+  describe('Sizes', () => {
+    it('renders large size by default', () => {
+      render(<TextArea />);
+      const textarea = screen.getByRole('textbox');
+      expect(textarea).toHaveClass(styles['size-large']);
+    });
+
+    it('renders small size when specified', () => {
+      render(<TextArea size='small' />);
+      const textarea = screen.getByRole('textbox');
+      expect(textarea).toHaveClass(styles['size-small']);
+    });
+  });
+
+  describe('Variants', () => {
+    it('renders default variant by default', () => {
+      render(<TextArea />);
+      const textarea = screen.getByRole('textbox');
+      expect(textarea).toHaveClass(styles['variant-default']);
+    });
+
+    it('renders borderless variant when specified', () => {
+      render(<TextArea variant='borderless' />);
+      const textarea = screen.getByRole('textbox');
+      expect(textarea).toHaveClass(styles['variant-borderless']);
+    });
+  });
+
   describe('Accessibility', () => {
     it('supports aria-label', () => {
       render(<TextArea aria-label='Message input' />);

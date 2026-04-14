@@ -5,7 +5,6 @@
   outline: none;
   height: auto;
   width: 100%;
-  min-height: var(--rs-space-13);
   background-color: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-2);
@@ -13,7 +12,7 @@
   line-height: var(--rs-line-height-small);
   color: var(--rs-color-foreground-base-primary);
   padding: var(--rs-space-3);
-  overflow: hidden;
+  overflow: auto;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -60,4 +59,35 @@
 
 .textarea[data-invalid]:focus {
   border-color: var(--rs-color-border-danger-emphasis-hover);
+}
+
+/* Size variants */
+.size-large {
+  padding: var(--rs-space-3);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+}
+
+.size-small {
+  padding: var(--rs-space-2);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+}
+
+/* Variant styles */
+.variant-default {
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
+}
+
+.variant-borderless {
+  border-color: transparent;
+}
+
+.variant-borderless:hover {
+  border-color: transparent;
+}
+
+.variant-borderless:focus:not(:disabled) {
+  border-color: transparent;
+  outline: none;
 }
