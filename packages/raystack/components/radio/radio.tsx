@@ -1,21 +1,42 @@
 import { Radio as RadioPrimitive } from '@base-ui/react/radio';
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
-import { cx } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { useFieldContext } from '../field';
 
 import styles from './radio.module.css';
 
+const radioVariants = cva(styles.radioitem, {
+  variants: {
+    size: {
+      small: styles.small,
+      large: styles.large
+    }
+  },
+  defaultVariants: {
+    size: 'large'
+  }
+});
+
+interface RadioGroupProps extends RadioGroupPrimitive.Props {
+  orientation?: 'vertical' | 'horizontal';
+}
+
 function RadioGroup({
   className,
+  orientation = 'vertical',
   required,
   ...props
-}: RadioGroupPrimitive.Props) {
+}: RadioGroupProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
   return (
     <RadioGroupPrimitive
-      className={cx(styles.radio, className)}
+      className={cx(
+        styles.group,
+        orientation === 'horizontal' && styles['group-horizontal'],
+        className
+      )}
       required={resolvedRequired}
       {...props}
     />
@@ -24,9 +45,16 @@ function RadioGroup({
 
 RadioGroup.displayName = 'Radio.Group';
 
-function RadioItem({ className, ...props }: RadioPrimitive.Root.Props) {
+interface RadioItemProps
+  extends RadioPrimitive.Root.Props,
+    VariantProps<typeof radioVariants> {}
+
+function RadioItem({ className, size, ...props }: RadioItemProps) {
   return (
-    <RadioPrimitive.Root {...props} className={cx(styles.radioitem, className)}>
+    <RadioPrimitive.Root
+      {...props}
+      className={radioVariants({ size, className })}
+    >
       <RadioPrimitive.Indicator className={styles.indicator} />
     </RadioPrimitive.Root>
   );

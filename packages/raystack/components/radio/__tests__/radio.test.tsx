@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Radio } from '../radio';
+import styles from '../radio.module.css';
 
 describe('Radio', () => {
   describe('Basic Rendering', () => {
@@ -256,6 +257,77 @@ describe('Radio', () => {
 
       const radio = screen.getByRole('radio');
       expect(radio).toHaveAttribute('data-disabled');
+    });
+  });
+
+  describe('Sizes', () => {
+    const sizes = ['small', 'large'] as const;
+    sizes.forEach(size => {
+      it(`renders ${size} size`, () => {
+        render(
+          <Radio.Group>
+            <Radio value='option1' size={size} />
+          </Radio.Group>
+        );
+        const radio = screen.getByRole('radio');
+        expect(radio).toHaveClass(styles[size]);
+      });
+    });
+
+    it('renders large size by default', () => {
+      render(
+        <Radio.Group>
+          <Radio value='option1' />
+        </Radio.Group>
+      );
+      const radio = screen.getByRole('radio');
+      expect(radio).toHaveClass(styles.large);
+    });
+
+    it('applies radioitem base class with size variant', () => {
+      render(
+        <Radio.Group>
+          <Radio value='option1' size='small' />
+        </Radio.Group>
+      );
+      const radio = screen.getByRole('radio');
+      expect(radio).toHaveClass(styles.radioitem);
+      expect(radio).toHaveClass(styles.small);
+    });
+  });
+
+  describe('Orientation', () => {
+    it('applies vertical layout by default', () => {
+      render(
+        <Radio.Group>
+          <Radio value='option1' />
+        </Radio.Group>
+      );
+      const group = screen.getByRole('radiogroup');
+      expect(group).toHaveClass(styles.group);
+      expect(group).not.toHaveClass(styles['group-horizontal']);
+    });
+
+    it('applies vertical layout when orientation is vertical', () => {
+      render(
+        <Radio.Group orientation='vertical'>
+          <Radio value='option1' />
+        </Radio.Group>
+      );
+      const group = screen.getByRole('radiogroup');
+      expect(group).toHaveClass(styles.group);
+      expect(group).not.toHaveClass(styles['group-horizontal']);
+    });
+
+    it('applies horizontal layout when orientation is horizontal', () => {
+      render(
+        <Radio.Group orientation='horizontal'>
+          <Radio value='option1' />
+        </Radio.Group>
+      );
+      const group = screen.getByRole('radiogroup');
+      expect(group).toHaveClass(styles.group);
+      expect(group).toHaveClass(styles['group-horizontal']);
     });
   });
 });
