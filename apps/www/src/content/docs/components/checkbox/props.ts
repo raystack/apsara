@@ -20,9 +20,23 @@ export interface CheckboxProps {
   indeterminate?: boolean;
 
   /**
-   * When true, prevents the user from interacting with the checkbox
+   * When true, prevents the user from interacting with the checkbox.
+   * @defaultValue false
    */
   disabled?: boolean;
+
+  /**
+   * When true, the checkbox is displayed in a read-only state.
+   * The user cannot change the value but it is still focusable.
+   * @defaultValue false
+   */
+  readOnly?: boolean;
+
+  /**
+   * When true, the user must tick the checkbox before submitting a form.
+   * @defaultValue false
+   */
+  required?: boolean;
 
   /**
    * Identifies the checkbox within a `Checkbox.Group`. The group uses this value in its `value` array.
