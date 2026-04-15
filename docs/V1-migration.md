@@ -1089,7 +1089,7 @@ Key changes:
 
 2. **`asChild` removed from Root** -- always renders `<aside>`.
 
-3. **Item rendering:** `asChild` replaced by `as` prop:
+3. **Item rendering:** `asChild` replaced by `render` prop:
 
 ```tsx
 // Before
@@ -1098,7 +1098,7 @@ Key changes:
 </Sidebar.Item>
 
 // After
-<Sidebar.Item as={<Link href="/dashboard" />} leadingIcon={<HomeIcon />}>
+<Sidebar.Item render={<Link href="/dashboard" />} leadingIcon={<HomeIcon />}>
   Dashboard
 </Sidebar.Item>
 ```
@@ -1124,10 +1124,10 @@ Key changes:
   </Sidebar.Header>
   <Sidebar.Main>
     <Sidebar.Group label="Navigation">
-      <Sidebar.Item as={<Link href="/home" />} leadingIcon={<HomeIcon />} active>
+      <Sidebar.Item render={<Link href="/home" />} leadingIcon={<HomeIcon />} active>
         Home
       </Sidebar.Item>
-      <Sidebar.Item as={<Link href="/settings" />} leadingIcon={<SettingsIcon />}>
+      <Sidebar.Item render={<Link href="/settings" />} leadingIcon={<SettingsIcon />}>
         Settings
       </Sidebar.Item>
     </Sidebar.Group>

@@ -81,7 +81,7 @@ export interface SidebarItemProps {
    *
    * @default "<a />"
    */
-  as?: ReactElement;
+  render?: ReactElement;
 
   /** Optional class names for customizing parts of the item. */
   classNames?: {
@@ -112,8 +112,6 @@ export interface SidebarMoreProps {
     leadingIcon?: string;
     /** Class name for the text element. */
     text?: string;
-    /** Class name for menu item root elements. */
-    menuItem?: string;
     /** Class name for menu content container. */
     menuContent?: string;
   };

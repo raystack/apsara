@@ -18,7 +18,6 @@ export interface SidebarMoreProps {
     root?: string;
     leadingIcon?: string;
     text?: string;
-    menuItem?: string;
     menuContent?: string;
   };
 }
@@ -75,12 +74,7 @@ export function SidebarMore({
         className={classNames?.menuContent}
         side={position === 'left' ? 'right' : 'left'}
       >
-        <SidebarMoreProvider
-          value={{
-            isInsideSidebarMore: true,
-            menuItemClassName: classNames?.menuItem
-          }}
-        >
+        <SidebarMoreProvider value={{ isInsideSidebarMore: true }}>
           {children}
         </SidebarMoreProvider>
       </Menu.Content>

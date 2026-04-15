@@ -14,7 +14,7 @@ export interface SidebarItemProps extends ComponentProps<'a'> {
   leadingIcon?: ReactNode;
   active?: boolean;
   disabled?: boolean;
-  as?: ReactElement;
+  render?: ReactElement;
   classNames?: {
     root?: string;
     leadingIcon?: string;
@@ -28,7 +28,7 @@ export function SidebarItem({
   children,
   active,
   disabled,
-  as = <a />,
+  render = <a />,
   ...props
 }: SidebarItemProps) {
   const { isCollapsed, hideCollapsedItemTooltip } = useContext(SidebarContext);
@@ -70,48 +70,31 @@ export function SidebarItem({
     </>
   );
 
-  const menuContent = useRender({
+  const content = useRender({
     defaultTagName: 'a',
-    render: as,
+    render,
     props: mergeProps<'a'>(
       {
         className: cx(
-          styles['more-menu-item'],
-          classNames?.root,
-          sidebarMoreContext?.menuItemClassName
+          insideSidebarMore ? styles['more-menu-item'] : styles['nav-item'],
+          classNames?.root
         ),
         'data-active': active,
         'data-disabled': disabled,
         'aria-current': active ? 'page' : undefined,
         'aria-disabled': disabled,
-        children: menuChildren
-      } as useRender.ComponentProps<'a'>,
-      props
-    )
-  });
-
-  const content = useRender({
-    defaultTagName: 'a',
-    render: as,
-    props: mergeProps<'a'>(
-      {
-        className: cx(styles['nav-item'], classNames?.root),
-        'data-active': active,
-        'data-disabled': disabled,
-        role: 'listitem',
-        'aria-current': active ? 'page' : undefined,
-        'aria-disabled': disabled,
-        ...(isCollapsed && typeof children === 'string'
+        ...(!insideSidebarMore ? { role: 'listitem' } : {}),
+        ...(isCollapsed && typeof children === 'string' && !insideSidebarMore
           ? { 'aria-label': children }
           : {}),
-        children: sidebarChildren
+        children: insideSidebarMore ? menuChildren : sidebarChildren
       } as useRender.ComponentProps<'a'>,
       props
     )
   });
 
   if (insideSidebarMore) {
-    return <Menu.Item disabled={disabled} render={menuContent} />;
+    return <Menu.Item disabled={disabled} render={content} />;
   }
 
   if (isCollapsed && !hideCollapsedItemTooltip) {

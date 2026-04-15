@@ -4,7 +4,6 @@ import { createContext, ReactNode, useContext } from 'react';
 
 interface SidebarMoreContextValue {
   isInsideSidebarMore: boolean;
-  menuItemClassName?: string;
 }
 
 const SidebarMoreContext = createContext<SidebarMoreContextValue | undefined>(

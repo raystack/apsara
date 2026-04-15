@@ -260,6 +260,21 @@ describe('Sidebar', () => {
       expect(item).toHaveAttribute('aria-disabled', 'true');
     });
 
+    it('renders custom element via render prop', () => {
+      render(
+        <BasicSidebar>
+          <Sidebar.Item render={<button />} data-testid='custom-render-item'>
+            Custom Item
+          </Sidebar.Item>
+        </BasicSidebar>
+      );
+
+      const item = screen.getByTestId('custom-render-item');
+      expect(item.tagName).toBe('BUTTON');
+      expect(item).toHaveAttribute('role', 'listitem');
+      expect(item).toHaveTextContent('Custom Item');
+    });
+
     it('hides text when collapsed and sets aria-label for screen readers', () => {
       render(<BasicSidebar open={false} />);
 
