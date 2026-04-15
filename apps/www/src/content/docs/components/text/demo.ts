@@ -25,8 +25,8 @@ export const playground = {
     },
     render: {
       type: 'select',
-      options: ['span', 'p', 'div', 'label', 'a'],
-      defaultValue: 'span'
+      options: ['<span />', '<p />', '<div />', '<label />', '<a />'],
+      defaultValue: '<span />'
     },
     size: {
       type: 'select',
