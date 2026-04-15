@@ -12,6 +12,7 @@ import {
   useMemo,
   useState
 } from 'react';
+import { useFieldContext } from '../field';
 import { ItemType } from './types';
 
 interface CommonProps {
@@ -106,6 +107,9 @@ export const SelectRoot = (props: SelectRootProps) => {
     ...rest
   } = props;
 
+  const fieldContext = useFieldContext();
+  const resolvedRequired = required ?? fieldContext?.required;
+
   const [internalValue, setInternalValue] = useState<
     string | string[] | undefined
   >(defaultValue);
@@ -198,7 +202,9 @@ export const SelectRoot = (props: SelectRootProps) => {
     multiple: multiple as any,
     disabled,
     modal: true as const,
-    ...rest
+    ...rest,
+    required: resolvedRequired,
+    name
   };
 
   if (autocomplete) {
@@ -220,11 +226,9 @@ export const SelectRoot = (props: SelectRootProps) => {
   }
 
   return (
-    <SelectContext value={contextValue}>
-      <SelectPrimitive.Root {...commonProps} required={required} name={name}>
-        {children}
-      </SelectPrimitive.Root>
-    </SelectContext>
+    <SelectContext.Provider value={contextValue}>
+      <SelectPrimitive.Root {...commonProps}>{children}</SelectPrimitive.Root>
+    </SelectContext.Provider>
   );
 };
 

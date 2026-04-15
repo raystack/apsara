@@ -32,19 +32,19 @@ describe('InputField', () => {
 
     it('sets custom width', () => {
       const { container } = render(<InputField width='300px' />);
-      const wrapper = container.querySelector(`.${styles.container}`);
+      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
       expect(wrapper).toHaveStyle({ width: '300px' });
     });
 
     it('sets numeric width as pixels', () => {
       const { container } = render(<InputField width={400} />);
-      const wrapper = container.querySelector(`.${styles.container}`);
+      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
       expect(wrapper).toHaveStyle({ width: '400px' });
     });
 
     it('defaults to 100% width', () => {
       const { container } = render(<InputField />);
-      const wrapper = container.querySelector(`.${styles.container}`);
+      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
       expect(wrapper).toHaveStyle({ width: '100%' });
     });
 
@@ -80,71 +80,6 @@ describe('InputField', () => {
       const { container } = render(<InputField variant='borderless' />);
       const wrapper = container.querySelector(`.${styles.inputWrapper}`);
       expect(wrapper).toHaveClass(styles['variant-borderless']);
-    });
-  });
-
-  describe('Label and Helper Text', () => {
-    it('renders with label', () => {
-      render(<InputField label='Email Address' />);
-      expect(screen.getByText('Email Address')).toBeInTheDocument();
-    });
-
-    it('renders optional indicator', () => {
-      render(<InputField label='Phone' optional />);
-      expect(screen.getByText('(optional)')).toBeInTheDocument();
-    });
-
-    it('renders helper text', () => {
-      render(<InputField helperText='Enter a valid email' />);
-      expect(screen.getByText('Enter a valid email')).toBeInTheDocument();
-    });
-
-    it('renders info tooltip with label', () => {
-      const { container } = render(
-        <InputField label='Username' infoTooltip='Must be unique' />
-      );
-      const helpIcon = container.querySelector(`.${styles.helpIcon}`);
-      expect(helpIcon).toBeInTheDocument();
-    });
-
-    it('does not render info tooltip without label', () => {
-      const { container } = render(<InputField infoTooltip='Must be unique' />);
-      const helpIcon = container.querySelector(`.${styles.helpIcon}`);
-      expect(helpIcon).not.toBeInTheDocument();
-    });
-  });
-
-  describe('Error State', () => {
-    it('renders error message', () => {
-      render(<InputField error='Invalid input' />);
-      expect(screen.getByText('Invalid input')).toBeInTheDocument();
-    });
-
-    it('applies error styles to input', () => {
-      render(<InputField error='Invalid' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveClass(styles['input-error']);
-      expect(input).toHaveAttribute('aria-invalid', 'true');
-    });
-
-    it('applies error styles to wrapper', () => {
-      const { container } = render(<InputField error='Invalid' />);
-      const wrapper = container.querySelector(`.${styles.inputWrapper}`);
-      expect(wrapper).toHaveClass(styles['input-error-wrapper']);
-    });
-
-    it('shows error message instead of helper text', () => {
-      render(
-        <InputField helperText='Enter email' error='Invalid email format' />
-      );
-      expect(screen.getByText('Invalid email format')).toBeInTheDocument();
-      expect(screen.queryByText('Enter email')).not.toBeInTheDocument();
-    });
-
-    it('error text has error styles', () => {
-      render(<InputField error='Invalid input' />);
-      const errorText = screen.getByText('Invalid input');
-      expect(errorText).toHaveClass(styles['helper-text-error']);
     });
   });
 
@@ -272,18 +207,6 @@ describe('InputField', () => {
   });
 
   describe('Accessibility', () => {
-    it('sets aria-invalid when error is present', () => {
-      render(<InputField error='Invalid input' />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('aria-invalid', 'true');
-    });
-
-    it('does not set aria-invalid when no error', () => {
-      render(<InputField />);
-      const input = screen.getByRole('textbox');
-      expect(input).toHaveAttribute('aria-invalid', 'false');
-    });
-
     it('supports aria-label', () => {
       render(<InputField aria-label='Search input' />);
       const input = screen.getByLabelText('Search input');

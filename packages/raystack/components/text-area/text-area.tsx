@@ -1,100 +1,50 @@
-'use client';
-
-import { InfoCircledIcon } from '@radix-ui/react-icons';
-import { cva, cx, type VariantProps } from 'class-variance-authority';
-import { ChangeEvent, ComponentProps } from 'react';
-import { Tooltip } from '../tooltip';
+import { Field as FieldPrimitive } from '@base-ui/react/field';
+import { cx } from 'class-variance-authority';
+import { ChangeEvent, type ComponentProps } from 'react';
+import { useFieldContext } from '../field';
 
 import styles from './text-area.module.css';
 
-const textArea = cva(styles.textarea, {
-  variants: {
-    error: {
-      true: styles.error
-    }
-  }
-});
-
-export interface TextAreaProps
-  extends ComponentProps<'textarea'>,
-    VariantProps<typeof textArea> {
-  label?: string;
-  required?: boolean;
-  infoTooltip?: string;
-  helperText?: string;
-  error?: boolean;
+export interface TextAreaProps extends ComponentProps<'textarea'> {
   disabled?: boolean;
+  placeholder?: string;
   width?: string | number;
   value?: string;
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-function TextArea({
+export function TextArea({
   className,
   style,
-  label,
-  required,
-  infoTooltip,
-  helperText,
-  error,
   disabled,
   width = '100%',
   value,
   onChange,
   placeholder,
+  required,
   ...props
 }: TextAreaProps) {
-  return (
-    <div className={styles.container} style={{ width }}>
-      {label && (
-        <div className={styles.labelContainer}>
-          <label className={cx(styles.label, disabled && styles.labelDisabled)}>
-            {label}
-            {!required && <span className={styles.optional}>(optional)</span>}
-          </label>
-          {infoTooltip && (
-            <Tooltip>
-              <Tooltip.Trigger
-                render={
-                  <span className={styles.helpIcon}>
-                    <InfoCircledIcon />
-                  </span>
-                }
-              />
-              <Tooltip.Content side='right'>{infoTooltip}</Tooltip.Content>
-            </Tooltip>
-          )}
-        </div>
-      )}
-      <textarea
-        className={cx(
-          textArea({ error }),
-          disabled && styles.disabled,
-          className
-        )}
-        value={value}
-        onChange={onChange}
-        required={required}
-        disabled={disabled}
-        placeholder={placeholder}
-        style={style}
-        {...props}
-      />
-      {helperText && (
-        <span
-          className={cx(
-            styles.helperText,
-            error && styles.helperTextError,
-            disabled && styles.helperTextDisabled
-          )}
-        >
-          {helperText}
-        </span>
-      )}
-    </div>
+  const fieldContext = useFieldContext();
+  const resolvedRequired = required ?? fieldContext?.required;
+
+  const textarea = (
+    <textarea
+      className={cx(styles.textarea, disabled && styles.disabled, className)}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      placeholder={placeholder}
+      required={resolvedRequired}
+      style={{ ...style, width }}
+      {...props}
+    />
   );
+
+  if (fieldContext) {
+    return <FieldPrimitive.Control render={textarea} />;
+  }
+
+  return textarea;
 }
 
 TextArea.displayName = 'TextArea';
-
-export { TextArea };

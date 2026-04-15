@@ -1,24 +1,19 @@
 'use client';
 
-import { Flex, TextArea } from '@raystack/apsara';
+import { Field, Flex, TextArea } from '@raystack/apsara';
 import PlaygroundLayout from './playground-layout';
 
 export function TextAreaExamples() {
   return (
     <PlaygroundLayout title='TextArea'>
       <Flex gap='large' wrap='wrap'>
-        <TextArea label='Basic TextArea' placeholder='Enter your text here' />
-        <TextArea
-          label='Basic TextArea'
-          placeholder='Enter your text here'
-          helperText='This is a helper text'
-        />
-        <TextArea
-          label='Error TextArea'
-          error={true}
-          helperText='This field has an error'
-          placeholder='Enter your text here'
-        />
+        <Field label='Basic TextArea' description='This is a description'>
+          <TextArea placeholder='Enter your text here' />
+        </Field>
+        <Field label='Error TextArea' error='This field has an error'>
+          <TextArea placeholder='Enter your text here' />
+        </Field>
+        <TextArea placeholder='Without Field wrapper' width='300px' />
       </Flex>
     </PlaygroundLayout>
   );

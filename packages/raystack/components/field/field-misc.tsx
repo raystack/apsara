@@ -1,0 +1,70 @@
+import { Field as FieldPrimitive } from '@base-ui/react/field';
+import { cx } from 'class-variance-authority';
+import styles from './field.module.css';
+
+export interface FieldLabelProps extends FieldPrimitive.Label.Props {
+  required?: boolean;
+}
+
+export function FieldLabel({
+  className,
+  ref,
+  required,
+  children,
+  ...props
+}: FieldLabelProps) {
+  return (
+    <FieldPrimitive.Label
+      ref={ref}
+      className={cx(styles.label, className)}
+      {...props}
+    >
+      {children}
+      {required === false && (
+        <span className={styles.optional}>(optional)</span>
+      )}
+    </FieldPrimitive.Label>
+  );
+}
+
+export function FieldControl({
+  className,
+  ref,
+  ...props
+}: FieldPrimitive.Control.Props) {
+  return (
+    <FieldPrimitive.Control
+      ref={ref}
+      className={cx(styles.input, className)}
+      {...props}
+    />
+  );
+}
+
+export function FieldError({
+  className,
+  ref,
+  ...props
+}: FieldPrimitive.Error.Props) {
+  return (
+    <FieldPrimitive.Error
+      ref={ref}
+      className={cx(styles.error, className)}
+      {...props}
+    />
+  );
+}
+
+export function FieldDescription({
+  className,
+  ref,
+  ...props
+}: FieldPrimitive.Description.Props) {
+  return (
+    <FieldPrimitive.Description
+      ref={ref}
+      className={cx(styles.description, className)}
+      {...props}
+    />
+  );
+}

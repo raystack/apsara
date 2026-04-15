@@ -1,0 +1,136 @@
+---
+title: Form
+description: A native form element with consolidated error handling and validation.
+source: packages/raystack/components/form
+tag: new
+---
+
+import {
+  playground,
+  basicDemo,
+  withFieldsDemo,
+  constraintValidationDemo,
+  customValidationDemo,
+  serverErrorsDemo,
+  propsApiErrorDemo,
+  validationModesDemo,
+  rhfDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Form, Field, InputField, Button } from "@raystack/apsara";
+
+<Form onSubmit={handleSubmit}>
+  <Field label="Email">
+    <InputField placeholder="Enter email" />
+  </Field>
+  <Button type="submit">Submit</Button>
+</Form>
+```
+
+## API Reference
+
+<auto-type-table path="./props.ts" name="FormProps" />
+
+## Error Handling
+
+Form supports two approaches to displaying errors, depending on how you build your form.
+
+### Props API (Simple)
+
+Pass error strings directly to the Field `error` prop. This works well with custom validation logic or external form libraries like React Hook Form.
+
+<Demo data={propsApiErrorDemo} />
+
+### Sub-component API (Constraint Validation)
+
+Use `Field.Control` with native HTML validation attributes and `Field.Error` with `match` to show specific messages for each constraint. The Form handles validation automatically on submit.
+
+Available `match` values correspond to the browser [ValidityState](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState) properties:
+
+| `match` value | Triggered by |
+|---|---|
+| `"valueMissing"` | `required` attribute |
+| `"typeMismatch"` | `type="email"`, `type="url"` |
+| `"patternMismatch"` | `pattern` attribute |
+| `"tooShort"` | `minLength` attribute |
+| `"tooLong"` | `maxLength` attribute |
+| `"rangeUnderflow"` | `min` attribute |
+| `"rangeOverflow"` | `max` attribute |
+| `"stepMismatch"` | `step` attribute |
+| `"customError"` | `validate` prop on Field |
+
+<Demo data={constraintValidationDemo} />
+
+### Custom Validation
+
+Use the `validate` prop on Field to run custom logic. Return an error string to fail, or `null` to pass. The error renders via `Field.Error match="customError"`.
+
+<Demo data={customValidationDemo} />
+
+### Server-Side Errors
+
+Pass server validation errors to the Form `errors` prop. Keys must match the `name` prop on each Field. Errors clear automatically when the user modifies the corresponding field.
+
+<Demo data={serverErrorsDemo} />
+
+## Examples
+
+### Basic Form
+
+A simple form with submit handling.
+
+<Demo data={basicDemo} />
+
+### With Fields
+
+Form with multiple fields using the Field component.
+
+<Demo data={withFieldsDemo} />
+
+### Validation Modes
+
+Control when validation occurs: `onSubmit` (default), `onBlur`, or `onChange`.
+
+<Demo data={validationModesDemo} />
+
+### React Hook Form
+
+Use `register()` for text inputs and `Controller` for custom controls. Pass `errors.field?.message` to Field's `error` prop.
+
+<Demo data={rhfDemo} />
+
+## Important Notes
+
+### Wrap interactive controls in Field
+
+Components like **Switch** and **Checkbox** internally register with the Form validation system. They **must** be placed inside a `<Field>` when used within a `<Form>`, even if you don't need a label or error message. Without a Field wrapper, they use a shared default context that interferes with form submission.
+
+```tsx
+{/* Correct */}
+<Field label="Notifications">
+  <Switch checked={value} onCheckedChange={onChange} />
+</Field>
+
+{/* Incorrect - breaks Form validation */}
+<Switch checked={value} onCheckedChange={onChange} />
+```
+
+### Constraint validation vs. external validation
+
+Form provides built-in constraint validation using native HTML attributes (`required`, `type`, `pattern`, etc.) with `Field.Control` and `Field.Error match="..."`. This is the simplest approach when you don't need a form library.
+
+When using React Hook Form or similar, use the **props API** instead: pass `error={errors.field?.message}` to Field and let the library handle validation. Both approaches work with `<Form>`.
+
+## Accessibility
+
+- Renders a native `<form>` element with `noValidate` (validation is handled in JavaScript, not by browser tooltips)
+- Works with native constraint validation attributes (`required`, `pattern`, `minLength`, etc.)
+- Compatible with React Hook Form, TanStack Form, and other form libraries
+- Error messages are automatically associated with controls via `aria-describedby`
