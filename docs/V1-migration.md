@@ -23,37 +23,38 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Button](#button)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
-    - [Combobox](#combobox)
       - [New Features](#new-features)
+    - [Combobox](#combobox)
+      - [New Features](#new-features-1)
     - [Data Table](#data-table)
     - [Dialog](#dialog)
-      - [New Features](#new-features-1)
-    - [DropdownMenu -\> Menu](#dropdownmenu---menu)
       - [New Features](#new-features-2)
+    - [DropdownMenu -\> Menu](#dropdownmenu---menu)
+      - [New Features](#new-features-3)
     - [Flex](#flex)
     - [Grid](#grid)
     - [InputField](#inputfield)
     - [Popover](#popover)
-      - [New Features](#new-features-3)
+      - [New Features](#new-features-4)
     - [Radio](#radio)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
-      - [New Features](#new-features-4)
+      - [New Features](#new-features-5)
     - [Separator](#separator)
     - [Sheet -\> Drawer](#sheet---drawer)
-      - [New Features](#new-features-5)
-    - [Sidebar](#sidebar)
       - [New Features](#new-features-6)
-    - [Slider](#slider)
+    - [Sidebar](#sidebar)
       - [New Features](#new-features-7)
+    - [Slider](#slider)
+      - [New Features](#new-features-8)
     - [Switch](#switch)
     - [Tabs](#tabs)
-      - [New Features](#new-features-8)
+      - [New Features](#new-features-9)
     - [TextArea](#textarea)
     - [Toast](#toast)
-      - [New Features](#new-features-9)
-    - [Tooltip](#tooltip)
       - [New Features](#new-features-10)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-11)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -452,6 +453,38 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 ```tsx
 <Checkbox.Group defaultValue={['apple']} onValueChange={setSelected}>
+  <Checkbox name="apple" />
+  <Checkbox name="banana" />
+</Checkbox.Group>
+```
+
+#### New Features
+
+- `size` prop (`'small' | 'large'`, default `'large'`) for controlling checkbox dimensions
+- `render` prop for custom indicator rendering — receives `(props, state)` where state includes `checked` and `indeterminate`
+- `readOnly` prop for non-editable display with reduced opacity
+- `orientation` prop on `Checkbox.Group` (`'vertical' | 'horizontal'`, default `'vertical'`)
+- Enhanced disabled state preserves checked/indeterminate visual appearance
+- Invalid state styling with danger border (and danger background when checked/indeterminate)
+
+```tsx
+// Size variants
+<Checkbox size="small" />
+<Checkbox size="large" /> {/* default */}
+
+// Custom indicator
+<Checkbox
+  checked
+  render={(props, state) => (
+    <span {...props}>{state.checked ? '✓' : ''}</span>
+  )}
+/>
+
+// Read-only checkbox
+<Checkbox checked readOnly />
+
+// Horizontal group layout
+<Checkbox.Group defaultValue={['apple']} orientation="horizontal">
   <Checkbox name="apple" />
   <Checkbox name="banana" />
 </Checkbox.Group>
