@@ -87,7 +87,7 @@ function SidebarItem({ item, pathname }: { item: Item; pathname: string }) {
     <Sidebar.Item
       key={item?.$id}
       leadingIcon={item?.icon}
-      as={<Link href={item.url} />}
+      render={<Link href={item.url} />}
       active={isActiveUrl(item.url, pathname, false)}
       classNames={{
         text: styles.itemText
