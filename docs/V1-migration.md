@@ -36,24 +36,25 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Popover](#popover)
       - [New Features](#new-features-3)
     - [Radio](#radio)
+      - [New Features](#new-features-4)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
-      - [New Features](#new-features-4)
+      - [New Features](#new-features-5)
     - [Separator](#separator)
     - [Sheet -\> Drawer](#sheet---drawer)
-      - [New Features](#new-features-5)
-    - [Sidebar](#sidebar)
       - [New Features](#new-features-6)
-    - [Slider](#slider)
+    - [Sidebar](#sidebar)
       - [New Features](#new-features-7)
+    - [Slider](#slider)
+      - [New Features](#new-features-8)
     - [Switch](#switch)
     - [Tabs](#tabs)
-      - [New Features](#new-features-8)
+      - [New Features](#new-features-9)
     - [TextArea](#textarea)
     - [Toast](#toast)
-      - [New Features](#new-features-9)
-    - [Tooltip](#tooltip)
       - [New Features](#new-features-10)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-11)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -909,6 +910,7 @@ import { Radio } from '@raystack/apsara';
 <Radio.Group
   defaultValue="option2"
   onValueChange={(value, event) => setSelected(value)}
+  orientation="vertical"
   aria-label="Choose plan"
 >
   <Radio value="option1" id="free" />
@@ -923,7 +925,18 @@ Key changes:
 - `RadioItem` named export removed
 - `RadioItemProps` type export removed
 - `onValueChange` now receives 2 args
-- `orientation` prop removed
+
+#### New Features
+
+- `size` prop on `<Radio>`: `"large"` (default) or `"small"`
+- `orientation` prop on `<Radio.Group>`: `"vertical"` (default) or `"horizontal"`
+
+```tsx
+<Radio.Group orientation="horizontal">
+  <Radio value="a" size="small" id="a" />
+  <Radio value="b" size="small" id="b" />
+</Radio.Group>
+```
 
 ---
 
