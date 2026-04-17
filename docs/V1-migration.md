@@ -50,10 +50,11 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Tabs](#tabs)
       - [New Features](#new-features-8)
     - [TextArea](#textarea)
-    - [Toast](#toast)
       - [New Features](#new-features-9)
-    - [Tooltip](#tooltip)
+    - [Toast](#toast)
       - [New Features](#new-features-10)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-11)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -1337,6 +1338,28 @@ Key changes:
 
 5. **`infoTooltip` prop removed** — no direct replacement. Compose manually if needed.
 
+6. **`overflow` changed from `hidden` to `auto`.** Text that exceeds the visible area now scrolls instead of being clipped. If you relied on the old hidden-overflow behavior (e.g., pairing with JavaScript auto-resize), test that your layout still works:
+
+```css
+/* Before — content beyond the visible area was clipped */
+.textarea { overflow: hidden; }
+
+/* After — content scrolls when it exceeds visible rows */
+.textarea { overflow: auto; }
+```
+
+7. **`min-height` removed; height is now row-based.** The textarea no longer has a CSS `min-height` (`var(--rs-space-13)`). Instead, the visible height is determined by the `rows` attribute (default `3`). If you depended on the old fixed minimum height, set `rows` or apply a custom `min-height` via `style` or `className`:
+
+```tsx
+// Before — min-height enforced by CSS token
+<TextArea placeholder="Write something..." />
+
+// After — height determined by rows (default 3); override if needed
+<TextArea placeholder="Write something..." rows={5} />
+// or restore a min-height via style
+<TextArea placeholder="Write something..." style={{ minHeight: 'var(--rs-space-13)' }} />
+```
+
 **Full before/after example:**
 
 ```tsx
@@ -1357,7 +1380,27 @@ Key changes:
 </Field>
 ```
 
-Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, and all native `<textarea>` attributes.
+Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, `rows`, and all native `<textarea>` attributes.
+
+#### New Features
+
+- `size` prop — `'large'` (default) or `'small'`. Controls padding and font size:
+
+```tsx
+<TextArea size="small" placeholder="Compact textarea" />
+```
+
+- `variant` prop — `'default'` (default) or `'borderless'`. Controls border visibility:
+
+```tsx
+<TextArea variant="borderless" placeholder="No border" />
+```
+
+- `rows` prop — sets the number of visible text rows (default `3`). Replaces the old CSS `min-height` for controlling textarea height:
+
+```tsx
+<TextArea rows={6} placeholder="Taller textarea" />
+```
 
 ---
 
@@ -1610,6 +1653,7 @@ These are purely additive -- no migration needed.
 - [ ] Wrap InputField usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [InputField](#inputfield))
 - [ ] Wrap TextArea usages with `<Field>` — move `label`, `helperText`, `error`, `required` to Field props (see [TextArea](#textarea))
 - [ ] Remove `infoTooltip` from InputField and TextArea (no longer supported)
+- [ ] Review TextArea usages for overflow behavior change (`hidden` -> `auto`) and removed `min-height` (see [TextArea](#textarea))
 - [ ] Update custom CSS targeting `data-state` attributes (see [Data Attributes](#data-attributes))
 - [ ] Update custom CSS referencing `--radix-*` variables (see [CSS Variables](#css-variables))
 - [ ] Test all components end-to-end
