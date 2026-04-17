@@ -22,6 +22,11 @@ export interface SidebarRootProps {
    */
   position?: 'left' | 'right';
 
+  /** Visual style variant of the Sidebar.
+   * @default "plain"
+   */
+  variant?: 'plain' | 'floating' | 'inset';
+
   /** Hide tooltips on sidebar items when sidebar is collapsed.
    * @default false
    */
@@ -36,6 +41,11 @@ export interface SidebarRootProps {
 export interface SidebarGroupProps {
   /** String for the group title. */
   label: string;
+
+  /** Makes group items collapsible.
+   * @default false
+   */
+  collapsible?: boolean;
 
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;
@@ -71,7 +81,7 @@ export interface SidebarItemProps {
    *
    * @default "<a />"
    */
-  as?: ReactElement;
+  render?: ReactElement;
 
   /** Optional class names for customizing parts of the item. */
   classNames?: {
@@ -81,5 +91,28 @@ export interface SidebarItemProps {
     leadingIcon?: string;
     /** Class name for the text element. */
     text?: string;
+  };
+}
+
+export interface SidebarMoreProps {
+  /** String for the more trigger label. */
+  label?: string;
+
+  /** Optional ReactNode for the trigger icon. */
+  leadingIcon?: ReactNode;
+
+  /** Sidebar items rendered inside the menu content. */
+  children?: ReactNode;
+
+  /** Optional class names for customizing parts of the more trigger/menu. */
+  classNames?: {
+    /** Class name for the trigger root element. */
+    root?: string;
+    /** Class name for the leading icon container. */
+    leadingIcon?: string;
+    /** Class name for the text element. */
+    text?: string;
+    /** Class name for menu content container. */
+    menuContent?: string;
   };
 }

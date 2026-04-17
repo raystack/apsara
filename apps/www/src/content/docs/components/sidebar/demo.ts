@@ -27,6 +27,9 @@ export const preview = {
       </Flex>
     </Sidebar.Header>
     <Sidebar.Main>
+      <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+        Overview
+      </Sidebar.Item>
       <Sidebar.Group label="Main">
         <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
           Dashboard
@@ -44,11 +47,6 @@ export const preview = {
         </Sidebar.Item>
         <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
           Activities
-        </Sidebar.Item>
-      </Sidebar.Group>
-      <Sidebar.Group label="Support">
-        <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
-          Help
         </Sidebar.Item>
       </Sidebar.Group>
     </Sidebar.Main>
@@ -76,6 +74,7 @@ export const positionDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -100,6 +99,7 @@ export const positionDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -107,6 +107,75 @@ export const positionDemo = {
             </Sidebar.Group>
             <Sidebar.Group label="Support">
               <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+    }
+  ]
+};
+
+export const variantDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Plain',
+      code: sidebarLayout(`
+      <Sidebar open={true} variant="plain">
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+    },
+    {
+      name: 'Floating',
+      code: sidebarLayout(`
+      <Sidebar open={true} variant="floating">
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+    },
+    {
+      name: 'Inset',
+      code: sidebarLayout(`
+      <Sidebar open={true} variant="inset">
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
         </Sidebar>`)
@@ -129,6 +198,7 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -152,6 +222,7 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -175,6 +246,7 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -198,6 +270,7 @@ export const stateDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -227,6 +300,7 @@ export const tooltipDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -251,6 +325,7 @@ export const collapsibleDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
@@ -271,10 +346,91 @@ export const hideTooltipDemo = {
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />}>Overview</Sidebar.Item>
             <Sidebar.Group label="Main">
               <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              Help
+            </Sidebar.Item>
           </Sidebar.Main>
+        </Sidebar>`)
+};
+
+export const collapsibleGroupDemo = {
+  type: 'code',
+  code: sidebarLayout(`<Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              Overview
+            </Sidebar.Item>
+            <Sidebar.Group label="Resources" collapsible>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                Reports
+              </Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Activities
+              </Sidebar.Item>
+            </Sidebar.Group>
+            <Sidebar.Group label="Account" trailingIcon={<OrganizationIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Settings
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+};
+
+export const moreDemo = {
+  type: 'code',
+  code: sidebarLayout(`<Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
+              Dashboard
+            </Sidebar.Item>
+            <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+              Analytics
+            </Sidebar.Item>
+            <Sidebar.Group label="Resources">
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Reports
+              </Sidebar.Item>
+              <Sidebar.More label="More">
+                <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />}>
+                  Activities
+                </Sidebar.Item>
+                <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />} disabled>
+                  Notifications
+                </Sidebar.Item>
+              </Sidebar.More>
+            </Sidebar.Group>
+          </Sidebar.Main>
+          <Sidebar.Footer>
+            <Sidebar.More label="More">
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Preferences
+              </Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                Documentation
+              </Sidebar.Item>
+            </Sidebar.More>
+          </Sidebar.Footer>
         </Sidebar>`)
 };

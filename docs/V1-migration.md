@@ -1080,28 +1080,50 @@ Key changes:
 1. **`disabled` prop replaced by `collapsible={false}`:**
 
 ```tsx
-// Before — disabled prevents toggling but still shows trigger
+// Before
 <Sidebar disabled>
 
-// After — collapsible={false} hides the resize handle entirely
+// After
 <Sidebar collapsible={false}>
 ```
 
-2. **`asChild` removed from Root** -- always renders `<aside>`.
+2. **`asChild` removed — Sidebar no longer wraps `Collapsible.Root`**
 
-3. **Item rendering:** `asChild` replaced by `as` prop:
+`Sidebar` renders `<aside>` directly and no longer accepts `Collapsible.Root`-specific props.
+
+3. **`Sidebar.Item` custom element prop renamed: `as` -> `render`**
 
 ```tsx
 // Before
-<Sidebar.Item asChild>
-  <Link href="/dashboard">Dashboard</Link>
-</Sidebar.Item>
-
-// After
 <Sidebar.Item as={<Link href="/dashboard" />} leadingIcon={<HomeIcon />}>
   Dashboard
 </Sidebar.Item>
+
+// After
+<Sidebar.Item render={<Link href="/dashboard" />} leadingIcon={<HomeIcon />}>
+  Dashboard
+</Sidebar.Item>
 ```
+
+4. **Sidebar components no longer forward refs**
+
+If you were attaching refs to `Sidebar`, `Sidebar.Header`, `Sidebar.Main`, `Sidebar.Footer`, `Sidebar.Group`, or `Sidebar.Item`, update those usages to target a wrapper DOM element instead.
+
+5. **`data-state` replaced with `data-open` / `data-closed`**
+
+```css
+/* Before */
+[data-state="expanded"] { ... }
+[data-state="collapsed"] { ... }
+
+/* After */
+[data-open] { ... }
+[data-closed] { ... }
+```
+
+6. **`Sidebar.Item` role changed: `menuitem` -> `listitem`**
+
+7. **`Sidebar.Footer` role changed: `group` -> `list`**
 
 **Full before/after example:**
 
@@ -1109,11 +1131,11 @@ Key changes:
 // Before
 <Sidebar open={isOpen} onOpenChange={setIsOpen} disabled={!canCollapse}>
   <div>Logo</div>
-  <Sidebar.Item asChild>
-    <Link href="/home">Home</Link>
+  <Sidebar.Item as={<Link href="/home" />} leadingIcon={<HomeIcon />} active>
+    Home
   </Sidebar.Item>
-  <Sidebar.Item asChild>
-    <Link href="/settings">Settings</Link>
+  <Sidebar.Item as={<Link href="/settings" />} leadingIcon={<SettingsIcon />}>
+    Settings
   </Sidebar.Item>
 </Sidebar>
 
@@ -1124,10 +1146,10 @@ Key changes:
   </Sidebar.Header>
   <Sidebar.Main>
     <Sidebar.Group label="Navigation">
-      <Sidebar.Item as={<Link href="/home" />} leadingIcon={<HomeIcon />} active>
+      <Sidebar.Item render={<Link href="/home" />} leadingIcon={<HomeIcon />} active>
         Home
       </Sidebar.Item>
-      <Sidebar.Item as={<Link href="/settings" />} leadingIcon={<SettingsIcon />}>
+      <Sidebar.Item render={<Link href="/settings" />} leadingIcon={<SettingsIcon />}>
         Settings
       </Sidebar.Item>
     </Sidebar.Group>

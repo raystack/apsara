@@ -7,10 +7,13 @@ source: packages/raystack/components/sidebar
 import {
   preview,
   positionDemo,
+  variantDemo,
+  collapsibleGroupDemo,
   stateDemo,
   tooltipDemo,
   collapsibleDemo,
-  hideTooltipDemo
+  hideTooltipDemo,
+  moreDemo
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -27,6 +30,9 @@ import { Sidebar } from "@raystack/apsara";
   <Sidebar.Main>
     <Sidebar.Group label="Group name">
       <Sidebar.Item href="#">Item</Sidebar.Item>
+      <Sidebar.More label="More">
+        <Sidebar.Item href="#">Hidden item</Sidebar.Item>
+      </Sidebar.More>
     </Sidebar.Group>
   </Sidebar.Main>
   <Sidebar.Footer />
@@ -55,13 +61,21 @@ The main section wraps navigation groups and items. It accepts all `div` props a
 
 ### Item
 
-*Note: `leadingIcon` is optional and will show a fallback avatar only in collapsed state. You can pass `<></>` to render truly nothing. Use the `as` prop to render as a custom element (e.g. a router `Link`).*
+*Note: `leadingIcon` is optional and will show a fallback avatar only in collapsed state. You can pass `<></>` to render truly nothing. Use the `render` prop to render as a custom element (e.g. a router `Link`).*
 
 <auto-type-table path="./props.ts" name="SidebarItemProps" />
 
 ### Footer
 
 The footer section is a container that accepts all `div` props. It's commonly used for secondary links (e.g. Help, Preferences) and stays at the bottom of the sidebar.
+
+### More
+
+Renders a sidebar row that opens an Apsara menu with additional `Sidebar.Item` entries. It can be used inside `Sidebar.Group` or directly under `Sidebar.Main` / `Sidebar.Footer`.
+
+*Note: if `leadingIcon` is not provided, the trigger uses a default dots icon. In collapsed state, it follows the same item tooltip behavior and respects `hideCollapsedItemTooltip`.*
+
+<auto-type-table path="./props.ts" name="SidebarMoreProps" />
 
 ## Examples
 
@@ -70,6 +84,16 @@ The footer section is a container that accepts all `div` props. It's commonly us
 The Sidebar can be positioned on either the left or right side of the screen.
 
 <Demo data={positionDemo} />
+
+### Variants
+
+Use `variant` to switch the Sidebar surface style:
+
+- `plain` (default): regular surface with side border
+- `floating`: lifted surface with shadow
+- `inset`: transparent surface without border or shadow
+
+<Demo data={variantDemo} />
 
 ### State
 
@@ -98,6 +122,18 @@ Set `collapsible={false}` to hide the resize handle and prevent the sidebar from
 Set `hideCollapsedItemTooltip` to disable tooltips on navigation items when the sidebar is collapsed. Useful when item labels are redundant with the collapse tooltip or you want a cleaner collapsed state.
 
 <Demo data={hideTooltipDemo} />
+
+### Collapsible Group
+
+Enable `collapsible` on `Sidebar.Group` to make section items collapsible. You can also pass `trailingIcon` for section-level actions.
+
+<Demo data={collapsibleGroupDemo} />
+
+### More
+
+Use `Sidebar.More` when you want to keep a section compact and move secondary items into a menu.
+
+<Demo data={moreDemo} />
 
 ## Accessibility
 

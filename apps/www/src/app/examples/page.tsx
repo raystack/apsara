@@ -1,5 +1,18 @@
 'use client';
 import {
+  ActivityLogIcon,
+  BarChartIcon,
+  DashboardIcon,
+  DotsHorizontalIcon,
+  FileTextIcon,
+  GearIcon,
+  HomeIcon,
+  MixerHorizontalIcon,
+  PersonIcon,
+  QuestionMarkCircledIcon,
+  BellIcon as RadixBellIcon
+} from '@radix-ui/react-icons';
+import {
   Amount,
   Avatar,
   AvatarGroup,
@@ -30,12 +43,6 @@ import {
   TextArea,
   Tooltip
 } from '@raystack/apsara';
-import {
-  BellIcon,
-  FilterIcon,
-  OrganizationIcon,
-  SidebarIcon
-} from '@raystack/apsara/icons';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
@@ -59,16 +66,16 @@ const Page = () => {
 
   // Sample options data with icons
   const selectOptions = [
-    { value: 'dashboard', label: 'Dashboard', icon: <BellIcon /> },
-    { value: 'analytics', label: 'Analytics', icon: <FilterIcon /> },
-    { value: 'settings', label: 'Settings', icon: <OrganizationIcon /> },
-    { value: 'profile', label: 'Profile', icon: <SidebarIcon /> }
+    { value: 'dashboard', label: 'Dashboard', icon: <RadixBellIcon /> },
+    { value: 'analytics', label: 'Analytics', icon: <MixerHorizontalIcon /> },
+    { value: 'settings', label: 'Settings', icon: <PersonIcon /> },
+    { value: 'profile', label: 'Profile', icon: <DashboardIcon /> }
   ];
 
   const filterOptions = [
-    { value: 'Option 1', label: 'Option 1', icon: <BellIcon /> },
-    { value: 'Option 2', label: 'Option 2', icon: <FilterIcon /> },
-    { value: 'Option 3', label: 'Option 3', icon: <OrganizationIcon /> }
+    { value: 'Option 1', label: 'Option 1', icon: <RadixBellIcon /> },
+    { value: 'Option 2', label: 'Option 2', icon: <MixerHorizontalIcon /> },
+    { value: 'Option 3', label: 'Option 3', icon: <PersonIcon /> }
   ];
 
   return (
@@ -79,7 +86,7 @@ const Page = () => {
           backgroundColor: 'var(--rs-color-background-base-primary)'
         }}
       >
-        <Sidebar defaultOpen>
+        <Sidebar defaultOpen variant='plain'>
           <Sidebar.Header>
             <Flex align='center' gap={3}>
               <IconButton
@@ -87,7 +94,7 @@ const Page = () => {
                 onClick={() => console.log('Logo clicked')}
                 aria-label='Logo'
               >
-                <BellIcon width={24} height={24} />
+                <RadixBellIcon width={24} height={24} />
               </IconButton>
               <Text size={4} weight='medium'>
                 Raystack
@@ -96,31 +103,103 @@ const Page = () => {
           </Sidebar.Header>
 
           <Sidebar.Main>
-            <Sidebar.Item href='#' active leadingIcon={<BellIcon />}>
+            <Sidebar.Item href='#' active leadingIcon={<HomeIcon />}>
               Dashboard
             </Sidebar.Item>
 
-            <Sidebar.Item href='#' leadingIcon={<BellIcon />}>
+            <Sidebar.Item href='#' leadingIcon={<BarChartIcon />}>
               Analytics
             </Sidebar.Item>
 
-            <Sidebar.Group label='Resources' leadingIcon={<FilterIcon />}>
-              <Sidebar.Item href='#'>Reports</Sidebar.Item>
-
-              <Sidebar.Item href='#'>Activities</Sidebar.Item>
+            <Sidebar.Group
+              label='Resources'
+              collapsible
+              trailingIcon={
+                <button
+                  type='button'
+                  onClick={() => alert('Resources trailing icon clicked')}
+                  aria-label='Resources group actions'
+                  style={{
+                    border: 0,
+                    background: 'transparent',
+                    color: 'inherit',
+                    padding: 0,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <DotsHorizontalIcon width={16} height={16} />
+                </button>
+              }
+            >
+              <Sidebar.Item href='#' leadingIcon={<FileTextIcon />}>
+                Reports
+              </Sidebar.Item>
+              <Sidebar.More label='More'>
+                <Sidebar.Item
+                  href='#'
+                  target='_blank'
+                  leadingIcon={<ActivityLogIcon />}
+                >
+                  Activities
+                </Sidebar.Item>
+                <Sidebar.Item
+                  onClick={() => console.log('Notifications clicked')}
+                  leadingIcon={<RadixBellIcon />}
+                >
+                  Notifications
+                </Sidebar.Item>
+              </Sidebar.More>
             </Sidebar.Group>
 
-            <Sidebar.Group label='Account'>
-              <Sidebar.Item href='#'>Settings</Sidebar.Item>
-
-              <Sidebar.Item href='#'>Notifications</Sidebar.Item>
+            <Sidebar.Group
+              label='Account'
+              trailingIcon={
+                <button
+                  type='button'
+                  onClick={() => alert('Account trailing icon clicked')}
+                  aria-label='Account group actions'
+                  style={{
+                    border: 0,
+                    background: 'transparent',
+                    color: 'inherit',
+                    padding: 0,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <DotsHorizontalIcon width={16} height={16} />
+                </button>
+              }
+            >
+              <Sidebar.Item href='#' leadingIcon={<GearIcon />}>
+                Settings
+              </Sidebar.Item>
+              <Sidebar.More leadingIcon={<DotsHorizontalIcon />}>
+                <Sidebar.Item href='#' leadingIcon={<RadixBellIcon />}>
+                  Notifications
+                </Sidebar.Item>
+                <Sidebar.Item href='#' leadingIcon={<PersonIcon />} disabled>
+                  Billing
+                </Sidebar.Item>
+              </Sidebar.More>
             </Sidebar.Group>
           </Sidebar.Main>
 
           <Sidebar.Footer>
-            <Sidebar.Item href='#'>Help & Support</Sidebar.Item>
-
-            <Sidebar.Item href='#'>Preferences</Sidebar.Item>
+            <Sidebar.Item href='#' leadingIcon={<QuestionMarkCircledIcon />}>
+              Help & Support
+            </Sidebar.Item>
+            <Sidebar.More label='More footer'>
+              <Sidebar.Item href='#' leadingIcon={<GearIcon />}>
+                Preferences
+              </Sidebar.Item>
+              <Sidebar.Item href='#' leadingIcon={<FileTextIcon />}>
+                Documentation
+              </Sidebar.Item>
+            </Sidebar.More>
           </Sidebar.Footer>
         </Sidebar>
 
@@ -283,7 +362,7 @@ const Page = () => {
                         color: 'var(--rs-color-foreground-base-secondary)'
                       }}
                     >
-                      <BellIcon style={{ width: '8px', height: '8px' }} />
+                      <RadixBellIcon style={{ width: '8px', height: '8px' }} />
                       <Text style={{ fontSize: '8px' }} color='secondary'>
                         25%
                       </Text>
@@ -298,7 +377,7 @@ const Page = () => {
                         color: 'var(--rs-color-foreground-base-secondary)'
                       }}
                     >
-                      <BellIcon style={{ width: '8px', height: '8px' }} />
+                      <RadixBellIcon style={{ width: '8px', height: '8px' }} />
                       <Text style={{ fontSize: '8px' }} color='secondary'>
                         25%
                       </Text>
@@ -313,7 +392,7 @@ const Page = () => {
                         color: 'var(--rs-color-foreground-base-secondary)'
                       }}
                     >
-                      <BellIcon style={{ width: '8px', height: '8px' }} />
+                      <RadixBellIcon style={{ width: '8px', height: '8px' }} />
                       <Text style={{ fontSize: '8px' }} color='secondary'>
                         25%
                       </Text>
@@ -350,7 +429,9 @@ const Page = () => {
                           color: 'var(--rs-color-foreground-base-secondary)'
                         }}
                       >
-                        <BellIcon style={{ width: '8px', height: '8px' }} />
+                        <RadixBellIcon
+                          style={{ width: '8px', height: '8px' }}
+                        />
                         <Text style={{ fontSize: '8px' }} color='secondary'>
                           Sun
                         </Text>
@@ -369,7 +450,9 @@ const Page = () => {
                           color: 'var(--rs-color-foreground-base-secondary)'
                         }}
                       >
-                        <BellIcon style={{ width: '8px', height: '8px' }} />
+                        <RadixBellIcon
+                          style={{ width: '8px', height: '8px' }}
+                        />
                         <Text style={{ fontSize: '8px' }} color='secondary'>
                           15th
                         </Text>
@@ -388,7 +471,9 @@ const Page = () => {
                           color: 'var(--rs-color-foreground-base-secondary)'
                         }}
                       >
-                        <BellIcon style={{ width: '8px', height: '8px' }} />
+                        <RadixBellIcon
+                          style={{ width: '8px', height: '8px' }}
+                        />
                         <Text style={{ fontSize: '8px' }} color='secondary'>
                           Today
                         </Text>
@@ -1362,7 +1447,7 @@ const Page = () => {
             </Text>
 
             <EmptyState
-              icon={<FilterIcon />}
+              icon={<MixerHorizontalIcon />}
               heading='KYC required for image orders'
               subHeading='Please contact your organization owner to complete the KYC process for the image orders. You can also contact support@raystack.io for assistance.'
               primaryAction={
@@ -1559,7 +1644,7 @@ const Page = () => {
                         <Popover>
                           <Popover.Trigger>
                             <Button variant='ghost' size='small'>
-                              <FilterIcon />
+                              <MixerHorizontalIcon />
                               <Text size='small'>Filter Help</Text>
                             </Button>
                           </Popover.Trigger>
@@ -1580,7 +1665,7 @@ const Page = () => {
                         </Popover>
                         <InputField
                           placeholder='Type to filter...'
-                          leadingIcon={<FilterIcon />}
+                          leadingIcon={<MixerHorizontalIcon />}
                           width='100%'
                         />
                       </Flex>
@@ -1717,7 +1802,7 @@ const Page = () => {
                         <Popover>
                           <Popover.Trigger>
                             <Button variant='ghost' size='small'>
-                              <FilterIcon />
+                              <MixerHorizontalIcon />
                               <Text size='small'>Filter Help</Text>
                             </Button>
                           </Popover.Trigger>
@@ -1749,7 +1834,7 @@ const Page = () => {
                         </Popover>
                         <InputField
                           placeholder='Type to filter...'
-                          leadingIcon={<FilterIcon />}
+                          leadingIcon={<MixerHorizontalIcon />}
                           width='100%'
                         />
                       </Flex>
@@ -2191,7 +2276,7 @@ const Page = () => {
                   <DataTable.Content
                     zeroState={
                       <EmptyState
-                        icon={<OrganizationIcon />}
+                        icon={<PersonIcon />}
                         heading='Zero state'
                         variant='empty2'
                         subHeading='Get started by creating your first user. Filter bar and search are hidden in zero state.'
@@ -2199,7 +2284,7 @@ const Page = () => {
                     }
                     emptyState={
                       <EmptyState
-                        icon={<FilterIcon />}
+                        icon={<MixerHorizontalIcon />}
                         heading='Empty state'
                         variant='empty1'
                         subHeading="We couldn't find any matches for that keyword or filter."
@@ -2271,7 +2356,7 @@ const Page = () => {
                   <DataTable.Content
                     zeroState={
                       <EmptyState
-                        icon={<OrganizationIcon />}
+                        icon={<PersonIcon />}
                         heading='zero state'
                         variant='empty2'
                         subHeading='Get started by creating your first user.'
@@ -2279,7 +2364,7 @@ const Page = () => {
                     }
                     emptyState={
                       <EmptyState
-                        icon={<FilterIcon />}
+                        icon={<MixerHorizontalIcon />}
                         heading='empty state'
                         variant='empty1'
                         subHeading="We couldn't find any matches for that filter. Try adjusting your filters or search query. Filter bar remains visible so you can modify filters."
@@ -2346,7 +2431,7 @@ const Page = () => {
                   <DataTable.Content
                     zeroState={
                       <EmptyState
-                        icon={<OrganizationIcon />}
+                        icon={<PersonIcon />}
                         heading='zero state'
                         variant='empty2'
                         subHeading='Get started by creating your first user.'
@@ -2354,7 +2439,7 @@ const Page = () => {
                     }
                     emptyState={
                       <EmptyState
-                        icon={<FilterIcon />}
+                        icon={<MixerHorizontalIcon />}
                         heading='empty state'
                         variant='empty1'
                         subHeading="We couldn't find any matches for that search. Try a different search term. Filter bar stays hidden when only search is applied."
@@ -2407,7 +2492,7 @@ const Page = () => {
                         align='center'
                         style={{ padding: '40px' }}
                       >
-                        <OrganizationIcon
+                        <PersonIcon
                           width={48}
                           height={48}
                           style={{ opacity: 0.5 }}
@@ -2429,7 +2514,7 @@ const Page = () => {
                     }
                     emptyState={
                       <EmptyState
-                        icon={<FilterIcon />}
+                        icon={<MixerHorizontalIcon />}
                         heading='empty state'
                         variant='empty1'
                         subHeading='Try adjusting your filters or search query.'
@@ -2477,7 +2562,7 @@ const Page = () => {
                   <DataTable.Content
                     zeroState={
                       <EmptyState
-                        icon={<OrganizationIcon />}
+                        icon={<PersonIcon />}
                         heading='zero state'
                         variant='empty2'
                         subHeading='Search is enabled even in zero state. Start typing to see empty state. Filter bar will only appear when filters are applied.'
@@ -2485,7 +2570,7 @@ const Page = () => {
                     }
                     emptyState={
                       <EmptyState
-                        icon={<FilterIcon />}
+                        icon={<MixerHorizontalIcon />}
                         heading='empty state'
                         variant='empty1'
                         subHeading='Search applied but no results. Filter bar stays hidden when only search is used.'
@@ -2551,7 +2636,7 @@ const Page = () => {
                   <DataTable.Content
                     zeroState={
                       <EmptyState
-                        icon={<OrganizationIcon />}
+                        icon={<PersonIcon />}
                         heading='zero state'
                         variant='empty2'
                         subHeading='Get started by creating your first user.'
@@ -2559,7 +2644,7 @@ const Page = () => {
                     }
                     emptyState={
                       <EmptyState
-                        icon={<FilterIcon />}
+                        icon={<MixerHorizontalIcon />}
                         heading='empty state'
                         variant='empty1'
                         subHeading="We couldn't find any matches for that keyword or filter."

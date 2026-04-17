@@ -5,6 +5,7 @@ import {
   SidebarHeader,
   SidebarNavigationGroup
 } from './sidebar-misc';
+import { SidebarMore } from './sidebar-more';
 import { SidebarRoot } from './sidebar-root';
 
 export const Sidebar = Object.assign(SidebarRoot, {
@@ -12,5 +13,6 @@ export const Sidebar = Object.assign(SidebarRoot, {
   Main: SidebarMain,
   Footer: SidebarFooter,
   Item: SidebarItem,
-  Group: SidebarNavigationGroup
+  Group: SidebarNavigationGroup,
+  More: SidebarMore
 });
