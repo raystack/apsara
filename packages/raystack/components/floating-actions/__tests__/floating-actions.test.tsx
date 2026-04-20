@@ -40,7 +40,7 @@ describe('FloatingActions', () => {
   });
 
   describe('Separator', () => {
-    it('renders a vertical separator by default', () => {
+    it('renders a vertical separator', () => {
       render(
         <FloatingActions>
           <FloatingActions.Separator data-testid='sep' />
@@ -49,14 +49,14 @@ describe('FloatingActions', () => {
       const sep = screen.getByTestId('sep');
       expect(sep).toBeInTheDocument();
       expect(sep).toHaveAttribute('data-orientation', 'vertical');
+      expect(sep.className).toContain(styles.separator);
     });
 
-    it('accepts Separator props (orientation, size, color, className)', () => {
+    it('accepts Separator props (size, color, className)', () => {
       render(
         <FloatingActions>
           <FloatingActions.Separator
             data-testid='sep'
-            orientation='horizontal'
             size='small'
             color='secondary'
             className='custom-sep'
@@ -64,7 +64,6 @@ describe('FloatingActions', () => {
         </FloatingActions>
       );
       const sep = screen.getByTestId('sep');
-      expect(sep).toHaveAttribute('data-orientation', 'horizontal');
       expect(sep.className).toContain('custom-sep');
     });
   });

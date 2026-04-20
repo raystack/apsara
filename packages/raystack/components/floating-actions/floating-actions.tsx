@@ -16,14 +16,20 @@ const FloatingActionsRoot = ({
 );
 FloatingActionsRoot.displayName = 'FloatingActions';
 
-export type FloatingActionsSeparatorProps = ComponentProps<typeof Separator>;
+export type FloatingActionsSeparatorProps = Omit<
+  ComponentProps<typeof Separator>,
+  'orientation'
+>;
 
 const FloatingActionsSeparator = ({
-  orientation = 'vertical',
-  size = 'full',
+  className,
   ...props
 }: FloatingActionsSeparatorProps) => (
-  <Separator orientation={orientation} size={size} {...props} />
+  <Separator
+    orientation='vertical'
+    className={cx(styles.separator, className)}
+    {...props}
+  />
 );
 FloatingActionsSeparator.displayName = 'FloatingActions.Separator';
 

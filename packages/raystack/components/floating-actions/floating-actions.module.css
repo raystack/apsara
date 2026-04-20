@@ -9,3 +9,7 @@
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-lifted);
 }
+
+.separator.separator {
+  height: var(--rs-space-5);
+}
