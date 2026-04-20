@@ -55,5 +55,5 @@ Use `IconButton` inside the bar for compact toolbars.
 ## Accessibility
 
 - The root uses `role="toolbar"` so it is announced as a group of interactive controls. Override the `role` prop when a different grouping is more appropriate.
-- The separator is marked `aria-hidden` because it has no semantic meaning.
+- The separator renders with `role="separator"` and `aria-orientation="vertical"` via the Base UI primitive, communicating structural grouping between action clusters.
 - Provide an `aria-label` on the root when the toolbar's purpose is not obvious from its contents (e.g. `aria-label="Selection actions"`).
