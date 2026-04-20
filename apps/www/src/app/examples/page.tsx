@@ -10,7 +10,8 @@ import {
   MixerHorizontalIcon,
   PersonIcon,
   QuestionMarkCircledIcon,
-  BellIcon as RadixBellIcon
+  BellIcon as RadixBellIcon,
+  TransformIcon
 } from '@radix-ui/react-icons';
 import {
   Amount,
@@ -20,12 +21,14 @@ import {
   Button,
   Calendar,
   Callout,
+  Chip,
   DataTable,
   DatePicker,
   Dialog,
   Drawer,
   EmptyState,
   Flex,
+  FloatingActions,
   IconButton,
   Indicator,
   InputField,
@@ -2752,6 +2755,80 @@ const Page = () => {
                     ))}
                   </Flex>
                 </ScrollArea>
+              </Flex>
+            </Flex>
+
+            <Text
+              size='large'
+              weight='medium'
+              style={{ marginTop: '32px', marginBottom: '16px' }}
+            >
+              FloatingActions Examples
+            </Text>
+
+            <Flex direction='column' gap={6}>
+              <Flex direction='column' gap={3}>
+                <Text size='small'>Selection with actions:</Text>
+                <FloatingActions aria-label='Selection actions'>
+                  <Chip
+                    variant='outline'
+                    size='large'
+                    color='accent'
+                    leadingIcon={<TransformIcon />}
+                    isDismissible
+                  >
+                    2 selected
+                  </Chip>
+                  <FloatingActions.Separator />
+                  <Button variant='outline' color='neutral' size='small'>
+                    Move to
+                  </Button>
+                  <Button variant='outline' color='neutral' size='small'>
+                    Actions
+                  </Button>
+                </FloatingActions>
+              </Flex>
+
+              <Flex direction='column' gap={3}>
+                <Text size='small'>Multiple action groups:</Text>
+                <FloatingActions aria-label='Bulk actions'>
+                  <Chip
+                    variant='outline'
+                    size='large'
+                    color='accent'
+                    leadingIcon={<TransformIcon />}
+                    isDismissible
+                  >
+                    5 selected
+                  </Chip>
+                  <FloatingActions.Separator />
+                  <Button variant='outline' color='neutral' size='small'>
+                    Archive
+                  </Button>
+                  <Button variant='outline' color='neutral' size='small'>
+                    Move to
+                  </Button>
+                  <FloatingActions.Separator />
+                  <Button variant='outline' color='danger' size='small'>
+                    Delete
+                  </Button>
+                </FloatingActions>
+              </Flex>
+
+              <Flex direction='column' gap={3}>
+                <Text size='small'>Icon-only actions:</Text>
+                <FloatingActions aria-label='Row actions'>
+                  <IconButton variant='text' color='neutral' size='small'>
+                    <GearIcon />
+                  </IconButton>
+                  <IconButton variant='text' color='neutral' size='small'>
+                    <FileTextIcon />
+                  </IconButton>
+                  <FloatingActions.Separator />
+                  <IconButton variant='text' color='neutral' size='small'>
+                    <DotsHorizontalIcon />
+                  </IconButton>
+                </FloatingActions>
               </Flex>
             </Flex>
 

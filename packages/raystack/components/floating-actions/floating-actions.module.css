@@ -1,0 +1,18 @@
+.root {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rs-space-3);
+  padding: var(--rs-space-4) var(--rs-space-5);
+  background: var(--rs-color-background-base-primary);
+  border-radius: var(--rs-radius-2);
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+.separator {
+  flex-shrink: 0;
+  width: 1px;
+  height: var(--rs-space-5);
+  background-color: var(--rs-color-border-base-primary);
+}

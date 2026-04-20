@@ -1,0 +1,59 @@
+---
+title: Floating Actions
+description: A floating bar for surfacing contextual actions, typically shown when items are selected.
+source: packages/raystack/components/floating-actions
+tag: new
+---
+
+import { preview, bulkActionsDemo, iconOnlyDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+Compose the bar from existing Apsara primitives. `FloatingActions` provides the container and a matching vertical separator; everything inside is freely composable.
+
+```tsx
+import { FloatingActions, Chip, Button } from '@raystack/apsara'
+
+<FloatingActions>
+  <Chip isDismissible>2 selected</Chip>
+  <FloatingActions.Separator />
+  <Button>Move to</Button>
+  <Button>Actions</Button>
+</FloatingActions>
+```
+
+## API Reference
+
+### Root
+
+The floating container. Renders as a `role="toolbar"` element by default.
+
+<auto-type-table path="./props.ts" name="FloatingActionsProps" />
+
+### Separator
+
+A vertical divider sized to the bar's content.
+
+<auto-type-table path="./props.ts" name="FloatingActionsSeparatorProps" />
+
+## Examples
+
+### Bulk actions
+
+Pair a dismissible `Chip` with action buttons to build a selection toolbar.
+
+<Demo data={bulkActionsDemo} />
+
+### Icon-only actions
+
+Use `IconButton` inside the bar for compact toolbars.
+
+<Demo data={iconOnlyDemo} />
+
+## Accessibility
+
+- The root uses `role="toolbar"` so it is announced as a group of interactive controls. Override the `role` prop when a different grouping is more appropriate.
+- The separator is marked `aria-hidden` because it has no semantic meaning.
+- Provide an `aria-label` on the root when the toolbar's purpose is not obvious from its contents (e.g. `aria-label="Selection actions"`).
