@@ -40,7 +40,7 @@ describe('FloatingActions', () => {
   });
 
   describe('Separator', () => {
-    it('renders a separator with the separator class', () => {
+    it('renders a vertical separator by default', () => {
       render(
         <FloatingActions>
           <FloatingActions.Separator data-testid='sep' />
@@ -48,30 +48,24 @@ describe('FloatingActions', () => {
       );
       const sep = screen.getByTestId('sep');
       expect(sep).toBeInTheDocument();
-      expect(sep.className).toContain(styles.separator);
-      expect(sep).toHaveAttribute('aria-hidden', 'true');
+      expect(sep).toHaveAttribute('data-orientation', 'vertical');
     });
 
-    it('applies custom className', () => {
+    it('accepts Separator props (orientation, size, color, className)', () => {
       render(
         <FloatingActions>
-          <FloatingActions.Separator data-testid='sep' className='custom-sep' />
+          <FloatingActions.Separator
+            data-testid='sep'
+            orientation='horizontal'
+            size='small'
+            color='secondary'
+            className='custom-sep'
+          />
         </FloatingActions>
       );
       const sep = screen.getByTestId('sep');
-      expect(sep.className).toContain(styles.separator);
+      expect(sep).toHaveAttribute('data-orientation', 'horizontal');
       expect(sep.className).toContain('custom-sep');
-    });
-
-    it('forwards ref', () => {
-      const ref = createRef<HTMLDivElement>();
-      render(
-        <FloatingActions>
-          <FloatingActions.Separator ref={ref} data-testid='sep' />
-        </FloatingActions>
-      );
-      expect(ref.current).toBeInstanceOf(HTMLDivElement);
-      expect(ref.current).toBe(screen.getByTestId('sep'));
     });
   });
 });

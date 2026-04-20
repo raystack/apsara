@@ -2,6 +2,7 @@
 
 import { cx } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
+import { Separator } from '../separator';
 import styles from './floating-actions.module.css';
 
 export interface FloatingActionsProps extends ComponentProps<'div'> {}
@@ -15,17 +16,14 @@ const FloatingActionsRoot = ({
 );
 FloatingActionsRoot.displayName = 'FloatingActions';
 
-export interface FloatingActionsSeparatorProps extends ComponentProps<'div'> {}
+export type FloatingActionsSeparatorProps = ComponentProps<typeof Separator>;
 
 const FloatingActionsSeparator = ({
-  className,
+  orientation = 'vertical',
+  size = 'full',
   ...props
 }: FloatingActionsSeparatorProps) => (
-  <div
-    aria-hidden='true'
-    className={cx(styles.separator, className)}
-    {...props}
-  />
+  <Separator orientation={orientation} size={size} {...props} />
 );
 FloatingActionsSeparator.displayName = 'FloatingActions.Separator';
 
