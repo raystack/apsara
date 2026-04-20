@@ -10,6 +10,6 @@
   box-shadow: var(--rs-shadow-lifted);
 }
 
-.separator.separator {
+.separator[data-orientation="vertical"] {
   height: var(--rs-space-5);
 }
