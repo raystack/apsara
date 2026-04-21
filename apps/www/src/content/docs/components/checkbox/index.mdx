@@ -4,7 +4,7 @@ description: Checkbox is a user interface control that enables users to toggle b
 source: packages/raystack/components/checkbox
 ---
 
-import { playground, statesExamples, groupDemo, groupDisabledDemo, parentDemo } from "./demo.ts";
+import { playground, statesExamples, sizeExamples, groupDemo, groupHorizontalDemo, groupDisabledDemo, parentDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -55,11 +55,23 @@ The Checkbox component supports multiple states to represent different selection
 
 <Demo data={statesExamples} />
 
+### Size Variants
+
+The Checkbox component comes in two sizes: `large` (default) and `small`.
+
+<Demo data={sizeExamples} />
+
 ### Group
 
 Use `Checkbox.Group` to coordinate multiple checkboxes with shared state.
 
 <Demo data={groupDemo} />
+
+### Horizontal Group
+
+Use the `orientation` prop to lay out checkboxes in a horizontal row.
+
+<Demo data={groupHorizontalDemo} />
 
 ### Disabled Group
 
@@ -80,3 +92,6 @@ Use a parent checkbox with `allValues` to toggle all items at once.
 - Uses `aria-checked` to indicate state (checked, unchecked, indeterminate)
 - Associates with labels via `id` and `htmlFor` attributes
 - Wrap `Checkbox.Group` with `aria-label` or `aria-labelledby` for an accessible group name
+- **Disabled state** preserves the visual checked/indeterminate appearance while preventing interaction
+- **Read-only state** reduces opacity and changes cursor to indicate non-editable content
+- **Invalid state** displays a danger border (or danger background when checked/indeterminate) for form validation feedback

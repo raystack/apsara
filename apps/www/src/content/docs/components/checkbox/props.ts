@@ -20,9 +20,23 @@ export interface CheckboxProps {
   indeterminate?: boolean;
 
   /**
-   * When true, prevents the user from interacting with the checkbox
+   * When true, prevents the user from interacting with the checkbox.
+   * @defaultValue false
    */
   disabled?: boolean;
+
+  /**
+   * When true, the checkbox is displayed in a read-only state.
+   * The user cannot change the value but it is still focusable.
+   * @defaultValue false
+   */
+  readOnly?: boolean;
+
+  /**
+   * When true, the user must tick the checkbox before submitting a form.
+   * @defaultValue false
+   */
+  required?: boolean;
 
   /**
    * Identifies the checkbox within a `Checkbox.Group`. The group uses this value in its `value` array.
@@ -34,6 +48,20 @@ export interface CheckboxProps {
    * @defaultValue false
    */
   parent?: boolean;
+
+  /**
+   * The size of the checkbox.
+   * @defaultValue 'large'
+   */
+  size?: 'small' | 'large';
+
+  /**
+   * Custom render function for the indicator. Receives `(props, state)` where state includes `checked` and `indeterminate`.
+   */
+  render?: (
+    props: React.HTMLAttributes<HTMLSpanElement>,
+    state: { checked: boolean; indeterminate: boolean }
+  ) => React.ReactNode;
 
   /** Additional CSS class name. */
   className?: string;
@@ -59,6 +87,12 @@ export interface CheckboxGroupProps {
    * @defaultValue false
    */
   disabled?: boolean;
+
+  /**
+   * Layout direction of the checkbox group.
+   * @defaultValue 'vertical'
+   */
+  orientation?: 'vertical' | 'horizontal';
 
   /** Additional CSS class name. */
   className?: string;

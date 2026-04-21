@@ -31,6 +31,23 @@ describe('Checkbox', () => {
     });
   });
 
+  describe('Sizes', () => {
+    const sizes = ['small', 'large'] as const;
+    sizes.forEach(size => {
+      it(`renders ${size} size`, () => {
+        render(<Checkbox size={size} />);
+        const checkbox = screen.getByRole('checkbox');
+        expect(checkbox).toHaveClass(styles[size]);
+      });
+    });
+
+    it('renders large size by default', () => {
+      render(<Checkbox />);
+      const checkbox = screen.getByRole('checkbox');
+      expect(checkbox).toHaveClass(styles.large);
+    });
+  });
+
   describe('Checked State', () => {
     it('renders unchecked by default', () => {
       render(<Checkbox />);
@@ -133,6 +150,52 @@ describe('Checkbox', () => {
     });
   });
 
+  describe('Custom Indicator (render prop)', () => {
+    it('renders custom indicator via render prop', () => {
+      render(
+        <Checkbox
+          checked
+          render={(props, state) => (
+            <span {...props} data-testid='custom-indicator'>
+              {state.checked ? 'checked' : 'unchecked'}
+            </span>
+          )}
+        />
+      );
+      expect(screen.getByTestId('custom-indicator')).toHaveTextContent(
+        'checked'
+      );
+    });
+
+    it('receives indeterminate state in render prop', () => {
+      render(
+        <Checkbox
+          indeterminate
+          render={(props, state) => (
+            <span {...props} data-testid='custom-indicator'>
+              {state.indeterminate ? 'mixed' : 'clear'}
+            </span>
+          )}
+        />
+      );
+      expect(screen.getByTestId('custom-indicator')).toHaveTextContent('mixed');
+    });
+
+    it('renders default check icon when no render prop provided', () => {
+      const { container } = render(<Checkbox checked />);
+      const indicator = container.querySelector(`.${styles.indicator}`);
+      const svg = indicator?.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+    });
+
+    it('renders default indeterminate icon when no render prop provided', () => {
+      const { container } = render(<Checkbox indeterminate />);
+      const indicator = container.querySelector(`.${styles.indicator}`);
+      const svg = indicator?.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+    });
+  });
+
   describe('Event Handling', () => {
     it('calls onCheckedChange when clicked', () => {
       const handleChange = vi.fn();
@@ -231,6 +294,12 @@ describe('Checkbox', () => {
       render(<Checkbox aria-invalid='true' />);
       const checkbox = screen.getByRole('checkbox');
       expect(checkbox).toHaveAttribute('aria-invalid', 'true');
+    });
+
+    it('supports required prop', () => {
+      render(<Checkbox required />);
+      const checkbox = screen.getByRole('checkbox');
+      expect(checkbox).toHaveAttribute('data-required');
     });
   });
 });
