@@ -1,10 +1,19 @@
 ---
 title: Command
-description: Fast, composable, unstyled command menu for React.
+description: Fast, composable command menu built on top of the Base UI Autocomplete primitive.
 source: packages/raystack/components/command
+tag: update
 ---
 
-import { basicDemo, preview } from "./demo.ts";
+import {
+  preview,
+  basicDemo,
+  groupedDemo,
+  withIconsDemo,
+  withShortcutsDemo,
+  dialogDemo,
+  controlledDemo,
+} from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -15,16 +24,162 @@ Import and assemble the component:
 ```tsx
 import { Command } from "@raystack/apsara";
 
-<Command />
+<Command>
+  <Command.Panel>
+    <Command.Input />
+    <Command.List>
+      <Command.Empty>No results found.</Command.Empty>
+      <Command.Group>
+        <Command.Label>Suggestions</Command.Label>
+        <Command.Item>Item</Command.Item>
+      </Command.Group>
+      <Command.Separator />
+    </Command.List>
+    <Command.Footer />
+  </Command.Panel>
+</Command>
 ```
+
+For a command palette launched by a keyboard shortcut, wrap `Command` in `Command.Dialog`:
+
+```tsx
+<Command.Dialog>
+  <Command.Dialog.Trigger>Open</Command.Dialog.Trigger>
+  <Command.Dialog.Content>
+    <Command>
+      <Command.Input />
+      <Command.List>{/* ... */}</Command.List>
+    </Command>
+  </Command.Dialog.Content>
+</Command.Dialog>
+```
+
+## Built-in auto-search
+
+By default, `Command` filters `Command.Item` children based on the input value — the same behavior as our [Combobox](/docs/components/combobox). No `items` prop is required. Matching is case-insensitive and looks at both the `value` prop and the item's text content.
+
+Pass the `items` prop to opt out of this built-in behavior and delegate filtering to Base UI's internal logic (or your own `filter` function).
+
+## API Reference
+
+### Root
+
+The root element owns the input value, the list of items, and the context used by every sub-component.
+
+<auto-type-table path="./props.ts" name="CommandRootProps" />
+
+### Panel
+
+A styled card wrapper that gives the command menu its popover look when used inline (outside of `Command.Dialog`).
+
+<auto-type-table path="./props.ts" name="CommandPanelProps" />
+
+### Input
+
+Text input that drives the search. Accepts the same props as `InputField` and defaults to a magnifying-glass leading icon.
+
+<auto-type-table path="./props.ts" name="CommandInputProps" />
+
+### List
+
+Scrollable container for groups and items. Renders with `role="listbox"`.
+
+<auto-type-table path="./props.ts" name="CommandListProps" />
+
+### Empty
+
+Rendered when no items are visible (all filtered out, or the list is empty). Automatically hidden when the list contains at least one item.
+
+<auto-type-table path="./props.ts" name="CommandEmptyProps" />
+
+### Item
+
+A selectable entry. When `value` is omitted and `children` is a string, the string is used as the value. `onClick` fires on pointer click **and** on keyboard `Enter` when the item is highlighted.
+
+<auto-type-table path="./props.ts" name="CommandItemProps" />
+
+### Group
+
+Groups related items. The group and its children are hidden automatically while the user is searching.
+
+<auto-type-table path="./props.ts" name="CommandGroupProps" />
+
+### Label
+
+Renders a label inside `Command.Group`.
+
+<auto-type-table path="./props.ts" name="CommandLabelProps" />
+
+### Separator
+
+Visual divider between groups. Hidden while searching.
+
+<auto-type-table path="./props.ts" name="CommandSeparatorProps" />
+
+### Shortcut
+
+A `<kbd>` element for keyboard hints inline with items or the footer.
+
+<auto-type-table path="./props.ts" name="CommandShortcutProps" />
+
+### Footer
+
+Optional footer slot rendered below the list.
+
+<auto-type-table path="./props.ts" name="CommandFooterProps" />
+
+### Dialog
+
+`Command.Dialog` is an alias for the Base UI Dialog root, plus a composed `Content` sub-component that provides the portal, backdrop, viewport, and popup.
+
+<auto-type-table path="./props.ts" name="CommandDialogProps" />
+
+#### Dialog Content
+
+<auto-type-table path="./props.ts" name="CommandDialogContentProps" />
+
 ## Examples
 
-### Basic Usage
+### Basic
+
+A command menu with a flat list of items. Type to filter.
 
 <Demo data={basicDemo} />
 
+### Groups and Separators
+
+Organise items into groups with labels and visual separators. Groups, labels, and separators are hidden automatically while searching.
+
+<Demo data={groupedDemo} />
+
+### With Icons
+
+Pass a `leadingIcon` on `Command.Item` to render an icon before the label.
+
+<Demo data={withIconsDemo} />
+
+### With Shortcuts and Footer
+
+Annotate items with `Command.Shortcut` and pair with `Command.Footer` for help text.
+
+<Demo data={withShortcutsDemo} />
+
+### Command Dialog
+
+Use `Command.Dialog` to render the command menu in a modal triggered by a keyboard shortcut.
+
+<Demo data={dialogDemo} />
+
+### Controlled
+
+Control the input value by passing `value` and `onValueChange`.
+
+<Demo data={controlledDemo} />
+
 ## Accessibility
 
-- Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)
-- Supports keyboard navigation with arrow keys and Enter to select
-- Uses `role="listbox"` for the command list and `role="option"` for items
+- Follows the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/).
+- Input uses `role="combobox"`, list uses `role="listbox"`, items use `role="option"`.
+- Keyboard: `ArrowDown` / `ArrowUp` move the highlight, `Enter` activates the highlighted item, `Escape` closes the dialog.
+- Disabled items expose `aria-disabled="true"` and are skipped in keyboard navigation.
+- When used inside `Command.Dialog`, focus is trapped in the dialog and returned to the trigger on close.

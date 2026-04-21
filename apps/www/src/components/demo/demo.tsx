@@ -1,11 +1,17 @@
 'use client';
 
 import {
+  Component1Icon,
+  FileIcon,
   FontBoldIcon,
+  FontFamilyIcon,
   FontItalicIcon,
   InfoCircledIcon,
+  LayersIcon,
+  OpenInNewWindowIcon,
   Pencil2Icon,
   PlusIcon,
+  Share2Icon,
   TextAlignCenterIcon,
   TextAlignLeftIcon,
   TextAlignRightIcon,
@@ -61,6 +67,12 @@ export default function Demo(props: DemoProps) {
       TextAlignLeftIcon,
       TextAlignCenterIcon,
       TextAlignRightIcon,
+      Component1Icon,
+      FileIcon,
+      FontFamilyIcon,
+      LayersIcon,
+      OpenInNewWindowIcon,
+      Share2Icon,
       dayjs
     }
   } = props;
