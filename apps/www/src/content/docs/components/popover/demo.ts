@@ -6,9 +6,7 @@ export const getCode = (props: any) => {
   const { children, ...rest } = props;
   return `
   <Popover>
-    <Popover.Trigger asChild>
-      <Button>Popover</Button>
-    </Popover.Trigger>
+    <Popover.Trigger render={<Button />}>Popover</Popover.Trigger>
     <Popover.Content${getPropsString(rest)}>
     ${children}
     </Popover.Content>
@@ -43,8 +41,8 @@ export const positionDemo = {
       name: 'Top',
       code: `
       <Popover>
-        <Popover.Trigger asChild>
-          <Button>Top Popover</Button>
+        <Popover.Trigger render={<Button />}>
+          Top Popover
         </Popover.Trigger>
         <Popover.Content side="top">
           <Text size="2">Content appears above the trigger</Text>
@@ -55,8 +53,8 @@ export const positionDemo = {
       name: 'Right',
       code: `
       <Popover>
-        <Popover.Trigger asChild>
-          <Button>Right Popover</Button>
+        <Popover.Trigger render={<Button />}>
+          Right Popover
         </Popover.Trigger>
         <Popover.Content side="right">
           <Text size="2">Content appears to the right</Text>
@@ -67,8 +65,8 @@ export const positionDemo = {
       name: 'Bottom',
       code: `
       <Popover>
-        <Popover.Trigger asChild>
-          <Button>Bottom Popover</Button>
+        <Popover.Trigger render={<Button />}>
+          Bottom Popover
         </Popover.Trigger>
         <Popover.Content side="bottom">
           <Text size="2">Content appears below the trigger</Text>
@@ -79,8 +77,8 @@ export const positionDemo = {
       name: 'Left',
       code: `
       <Popover>
-        <Popover.Trigger asChild>
-          <Button>Left Popover</Button>
+        <Popover.Trigger render={<Button />}>
+          Left Popover
         </Popover.Trigger>
         <Popover.Content side="left">
           <Text size="2">Content appears to the left</Text>
@@ -96,8 +94,8 @@ export const alignDemo = {
       name: 'Center',
       code: `
       <Popover>
-        <Popover.Trigger asChild>
-          <Button>Center Aligned</Button>
+        <Popover.Trigger render={<Button />}>
+          Center Aligned
         </Popover.Trigger>
         <Popover.Content align="center">
           <Text size="2">Centered with the trigger</Text>
@@ -108,8 +106,8 @@ export const alignDemo = {
       name: 'Start',
       code: `
       <Popover>
-        <Popover.Trigger asChild>
-          <Button>Start Aligned</Button>
+        <Popover.Trigger render={<Button />}>
+          Start Aligned
         </Popover.Trigger>
         <Popover.Content align="start">
           <Text size="2">Aligned to the start</Text>
@@ -120,8 +118,8 @@ export const alignDemo = {
       name: 'End',
       code: `
       <Popover>
-        <Popover.Trigger asChild>
-          <Button>End Aligned</Button>
+        <Popover.Trigger render={<Button />}>
+          End Aligned
         </Popover.Trigger>
         <Popover.Content align="end">
           <Text size="2">Aligned to the end</Text>

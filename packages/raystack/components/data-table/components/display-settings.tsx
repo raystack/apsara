@@ -2,7 +2,7 @@
 
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 
-import { ReactNode } from 'react';
+import { isValidElement, ReactNode } from 'react';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import { Popover } from '../../popover';
@@ -85,7 +85,9 @@ export function DisplaySettings<TData, TValue>({
 
   return (
     <Popover>
-      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+      <Popover.Trigger
+        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+      />
       <Popover.Content
         className={styles['display-popover-content']}
         align='end'

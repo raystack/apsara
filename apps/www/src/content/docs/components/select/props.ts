@@ -78,22 +78,37 @@ export interface SelectGroupProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
 }
 
 export interface SelectLabelProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
 }
 
 export interface SelectSeparatorProps {
   /** Additional CSS class names */
   className?: string;
 
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
 }

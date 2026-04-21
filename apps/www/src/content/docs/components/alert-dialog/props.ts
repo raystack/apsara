@@ -61,16 +61,26 @@ export interface AlertDialogDescriptionProps {
 }
 
 export interface AlertDialogTriggerProps {
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
 
   /** Additional CSS class names */
   className?: string;
 }
 
 export interface AlertDialogCloseButtonProps {
-  /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  /**
+   * Allows rendering as a different element.
+   * Accepts a React element or a function that receives props and returns an element.
+   *
+   * @remarks `ReactElement | function`
+   */
+  render?: React.ReactElement;
 
   /** Additional CSS class names */
   className?: string;
