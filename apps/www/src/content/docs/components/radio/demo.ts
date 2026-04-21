@@ -51,13 +51,13 @@ export const sizeDemo = {
     {
       name: 'Large (default)',
       code: `
-<Radio.Group defaultValue="1">
+<Radio.Group defaultValue="1" size="large">
   <Flex gap="small" align="center">
-    <Radio value="1" size="large" id="sl1" />
+    <Radio value="1" id="sl1" />
     <label htmlFor="sl1">Large Option One</label>
   </Flex>
   <Flex gap="small" align="center">
-    <Radio value="2" size="large" id="sl2" />
+    <Radio value="2" id="sl2" />
     <label htmlFor="sl2">Large Option Two</label>
   </Flex>
 </Radio.Group>`
@@ -65,14 +65,28 @@ export const sizeDemo = {
     {
       name: 'Small',
       code: `
-<Radio.Group defaultValue="1">
+<Radio.Group defaultValue="1" size="small">
   <Flex gap="small" align="center">
-    <Radio value="1" size="small" id="ss1" />
+    <Radio value="1" id="ss1" />
     <label htmlFor="ss1">Small Option One</label>
   </Flex>
   <Flex gap="small" align="center">
-    <Radio value="2" size="small" id="ss2" />
+    <Radio value="2" id="ss2" />
     <label htmlFor="ss2">Small Option Two</label>
+  </Flex>
+</Radio.Group>`
+    },
+    {
+      name: 'Per-item override',
+      code: `
+<Radio.Group defaultValue="1" size="small">
+  <Flex gap="small" align="center">
+    <Radio value="1" id="so1" />
+    <label htmlFor="so1">Small (from group)</label>
+  </Flex>
+  <Flex gap="small" align="center">
+    <Radio value="2" size="large" id="so2" />
+    <label htmlFor="so2">Large (overrides group)</label>
   </Flex>
 </Radio.Group>`
     }

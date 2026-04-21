@@ -22,14 +22,17 @@
   box-sizing: border-box;
 }
 
-.large {
+/* Group-level size — low specificity via :where() so item-level size wins */
+:where(.group-large) .radioitem,
+.radioitem.large {
   width: var(--rs-space-5);
   height: var(--rs-space-5);
   min-width: var(--rs-space-5);
   min-height: var(--rs-space-5);
 }
 
-.small {
+:where(.group-small) .radioitem,
+.radioitem.small {
   width: var(--rs-space-4);
   height: var(--rs-space-4);
   min-width: var(--rs-space-4);
@@ -81,10 +84,17 @@
   background: var(--rs-color-foreground-base-emphasis);
 }
 
-/* Scale indicator dot for small size */
-.small .indicator::after {
+/* Scale indicator dot for small size — group-level (low specificity) */
+/* Scale indicator dot for small size — item-level overrides group */
+:where(.group-small) .indicator::after,
+.radioitem.small .indicator::after {
   width: var(--rs-space-1);
   height: var(--rs-space-1);
+}
+
+.radioitem.large .indicator::after {
+  width: var(--rs-space-2);
+  height: var(--rs-space-2);
 }
 
 .radioitem[data-disabled] .indicator::after {

@@ -1,9 +1,26 @@
 import { Radio as RadioPrimitive } from '@base-ui/react/radio';
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
-import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { useFieldContext } from '../field';
 
 import styles from './radio.module.css';
+
+const radioGroupVariants = cva(styles.group, {
+  variants: {
+    orientation: {
+      vertical: '',
+      horizontal: styles['group-horizontal']
+    },
+    size: {
+      small: styles['group-small'],
+      large: styles['group-large']
+    }
+  },
+  defaultVariants: {
+    orientation: 'vertical',
+    size: 'large'
+  }
+});
 
 const radioVariants = cva(styles.radioitem, {
   variants: {
@@ -11,19 +28,19 @@ const radioVariants = cva(styles.radioitem, {
       small: styles.small,
       large: styles.large
     }
-  },
-  defaultVariants: {
-    size: 'large'
   }
 });
 
-interface RadioGroupProps extends RadioGroupPrimitive.Props {
+interface RadioGroupProps
+  extends RadioGroupPrimitive.Props,
+    Omit<VariantProps<typeof radioGroupVariants>, 'orientation'> {
   orientation?: 'vertical' | 'horizontal';
 }
 
 function RadioGroup({
   className,
   orientation = 'vertical',
+  size,
   required,
   ...props
 }: RadioGroupProps) {
@@ -32,11 +49,8 @@ function RadioGroup({
 
   return (
     <RadioGroupPrimitive
-      className={cx(
-        styles.group,
-        orientation === 'horizontal' && styles['group-horizontal'],
-        className
-      )}
+      aria-orientation={orientation}
+      className={radioGroupVariants({ orientation, size, className })}
       required={resolvedRequired}
       {...props}
     />

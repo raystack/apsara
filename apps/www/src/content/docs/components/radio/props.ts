@@ -17,6 +17,12 @@ export interface RadioGroupProps {
    */
   orientation?: 'vertical' | 'horizontal';
 
+  /**
+   * The default size applied to all radio items in the group. Can be overridden per item.
+   * @default "large"
+   */
+  size?: 'large' | 'small';
+
   /** The name of the radio group when submitted as a form field. */
   name?: string;
 
@@ -42,8 +48,8 @@ export interface RadioProps {
   disabled?: boolean;
 
   /**
-   * The size of the radio button.
-   * @default "large"
+   * The size of the radio button. Overrides the `size` set on `Radio.Group`.
+   * If neither is set, defaults to `"large"` via the group.
    */
   size?: 'large' | 'small';
 

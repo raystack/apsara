@@ -36,7 +36,6 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Popover](#popover)
       - [New Features](#new-features-3)
     - [Radio](#radio)
-      - [New Features](#new-features-4)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
       - [New Features](#new-features-5)
@@ -925,18 +924,6 @@ Key changes:
 - `RadioItem` named export removed
 - `RadioItemProps` type export removed
 - `onValueChange` now receives 2 args
-
-#### New Features
-
-- `size` prop on `<Radio>`: `"large"` (default) or `"small"`
-- `orientation` prop on `<Radio.Group>`: `"vertical"` (default) or `"horizontal"`
-
-```tsx
-<Radio.Group orientation="horizontal">
-  <Radio value="a" size="small" id="a" />
-  <Radio value="b" size="small" id="b" />
-</Radio.Group>
-```
 
 ---
 

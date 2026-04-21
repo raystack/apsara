@@ -274,14 +274,14 @@ describe('Radio', () => {
       });
     });
 
-    it('renders large size by default', () => {
+    it('renders large size by default on the group', () => {
       render(
         <Radio.Group>
           <Radio value='option1' />
         </Radio.Group>
       );
-      const radio = screen.getByRole('radio');
-      expect(radio).toHaveClass(styles.large);
+      const group = screen.getByRole('radiogroup');
+      expect(group).toHaveClass(styles['group-large']);
     });
 
     it('applies radioitem base class with size variant', () => {
@@ -293,6 +293,26 @@ describe('Radio', () => {
       const radio = screen.getByRole('radio');
       expect(radio).toHaveClass(styles.radioitem);
       expect(radio).toHaveClass(styles.small);
+    });
+
+    it('applies size on the group when provided', () => {
+      render(
+        <Radio.Group size='small'>
+          <Radio value='option1' />
+        </Radio.Group>
+      );
+      const group = screen.getByRole('radiogroup');
+      expect(group).toHaveClass(styles['group-small']);
+    });
+
+    it('item size overrides group size', () => {
+      render(
+        <Radio.Group size='small'>
+          <Radio value='option1' size='large' />
+        </Radio.Group>
+      );
+      const radio = screen.getByRole('radio');
+      expect(radio).toHaveClass(styles.large);
     });
   });
 
