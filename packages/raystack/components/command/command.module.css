@@ -168,7 +168,7 @@
 }
 
 .backdropBlur {
-  backdrop-filter: blur(var(--rs-space-2));
+  backdrop-filter: var(--rs-blur-lg);
 }
 
 .backdrop[data-starting-style],
