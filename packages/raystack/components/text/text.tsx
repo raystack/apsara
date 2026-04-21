@@ -1,5 +1,5 @@
+import { mergeProps, useRender } from '@base-ui/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { ComponentProps } from 'react';
 import styles from './text.module.css';
 
 export const textVariants = cva(styles.text, {
@@ -131,13 +131,7 @@ export type TextBaseProps = VariantProps<typeof textVariants> & {
     | 900;
 };
 
-type TextSpanProps = { as?: 'span' } & ComponentProps<'span'>;
-type TextDivProps = { as: 'div' } & ComponentProps<'div'>;
-type TextLabelProps = { as: 'label' } & ComponentProps<'label'>;
-type TextPProps = { as: 'p' } & ComponentProps<'p'>;
-type TextAProps = { as: 'a' } & ComponentProps<'a'>;
-export type TextProps = TextBaseProps &
-  (TextSpanProps | TextDivProps | TextLabelProps | TextPProps | TextAProps);
+export type TextProps = TextBaseProps & useRender.ComponentProps<'span'>;
 
 export function Text({
   className,
@@ -150,9 +144,9 @@ export function Text({
   underline,
   strikeThrough,
   italic,
-  as: Component = 'span',
-  children,
-  ...rest
+  render,
+  ref,
+  ...props
 }: TextProps) {
   const textClassName = textVariants({
     size,
@@ -167,12 +161,14 @@ export function Text({
     italic
   });
 
-  return (
-    // @ts-expect-error polymorphic ref
-    <Component className={textClassName} {...rest}>
-      {children}
-    </Component>
-  );
+  const element = useRender({
+    defaultTagName: 'span',
+    ref,
+    render,
+    props: mergeProps<'span'>({ className: textClassName }, props)
+  });
+
+  return element;
 }
 
 Text.displayName = 'Text';

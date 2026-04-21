@@ -12,10 +12,13 @@ export interface HeadlineProps {
   weight?: 'regular' | 'medium';
 
   /**
-   * HTML heading element to render.
+   * Custom render element or function. Accepts a JSX element (e.g. `<h1 />`)
+   * or a render function for full control.
    * @default "h2"
    */
-  as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  render?:
+    | React.ReactElement
+    | ((props: React.ComponentPropsWithRef<'h2'>) => React.ReactElement);
 
   /**
    * Text alignment.
