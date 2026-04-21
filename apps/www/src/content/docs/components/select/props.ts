@@ -79,7 +79,7 @@ export interface SelectGroupProps {
   className?: string;
 
   /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  render?: React.ReactElement;
 }
 
 export interface SelectLabelProps {
@@ -87,7 +87,7 @@ export interface SelectLabelProps {
   className?: string;
 
   /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  render?: React.ReactElement;
 }
 
 export interface SelectSeparatorProps {
@@ -95,5 +95,5 @@ export interface SelectSeparatorProps {
   className?: string;
 
   /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  render?: React.ReactElement;
 }

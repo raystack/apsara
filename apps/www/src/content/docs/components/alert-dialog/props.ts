@@ -62,7 +62,7 @@ export interface AlertDialogDescriptionProps {
 
 export interface AlertDialogTriggerProps {
   /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  render?: React.ReactElement;
 
   /** Additional CSS class names */
   className?: string;
@@ -70,7 +70,7 @@ export interface AlertDialogTriggerProps {
 
 export interface AlertDialogCloseButtonProps {
   /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  render?: React.ReactElement;
 
   /** Additional CSS class names */
   className?: string;

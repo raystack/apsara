@@ -68,7 +68,7 @@ export interface DialogDescriptionProps {
 
 export interface DialogTriggerProps {
   /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  render?: React.ReactElement;
 
   /** Additional CSS class names */
   className?: string;
@@ -76,7 +76,7 @@ export interface DialogTriggerProps {
 
 export interface DialogCloseButtonProps {
   /** Boolean to merge props onto child element */
-  asChild?: boolean;
+  render?: React.ReactElement;
 
   /** Additional CSS class names */
   className?: string;

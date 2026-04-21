@@ -48,15 +48,12 @@ export const popoverDemo = {
 
   return (
     <Popover>
-      <Popover.Trigger asChild>
-        <Button
-          style={{
+      <Popover.Trigger render={<Button style={{
             width: 60,
             height: 60,
             background: color
-          }}
+          }}/>}>
         />
-      </Popover.Trigger>
       <Popover.Content>
         <ColorPicker
           value={color}

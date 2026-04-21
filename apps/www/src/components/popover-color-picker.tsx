@@ -1,5 +1,4 @@
-import { Button, Flex, Popover } from '@raystack/apsara';
-import { ColorPicker } from '@raystack/apsara';
+import { Button, ColorPicker, Flex, Popover } from '@raystack/apsara';
 import { useState } from 'react';
 
 export default function PopoverColorPicker() {
@@ -7,15 +6,17 @@ export default function PopoverColorPicker() {
 
   return (
     <Popover>
-      <Popover.Trigger asChild>
-        <Button
-          style={{
-            width: 60,
-            height: 60,
-            background: color
-          }}
-        />
-      </Popover.Trigger>
+      <Popover.Trigger
+        render={
+          <Button
+            style={{
+              width: 60,
+              height: 60,
+              background: color
+            }}
+          />
+        }
+      />
       <Popover.Content>
         <ColorPicker
           value={color}
