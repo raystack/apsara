@@ -52,7 +52,7 @@ export const popoverDemo = {
             width: 60,
             height: 60,
             background: color
-          }}/>}>
+          }} />}
         />
       <Popover.Content>
         <ColorPicker
