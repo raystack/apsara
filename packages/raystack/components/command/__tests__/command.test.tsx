@@ -22,17 +22,15 @@ const ITEMS = [
 
 const BasicCommand = (props: React.ComponentProps<typeof Command>) => (
   <Command {...props}>
-    <Command.Panel>
-      <Command.Input placeholder='Type a command or search...' />
-      <Command.List>
-        <Command.Empty>No results found.</Command.Empty>
-        {ITEMS.map(item => (
-          <Command.Item key={item.value} value={item.value}>
-            {item.label}
-          </Command.Item>
-        ))}
-      </Command.List>
-    </Command.Panel>
+    <Command.Input placeholder='Type a command or search...' />
+    <Command.Content>
+      <Command.Empty>No results found.</Command.Empty>
+      {ITEMS.map(item => (
+        <Command.Item key={item.value} value={item.value}>
+          {item.label}
+        </Command.Item>
+      ))}
+    </Command.Content>
   </Command>
 );
 
@@ -64,6 +62,11 @@ describe('Command', () => {
     it('list has listbox role', () => {
       render(<BasicCommand />);
       expect(screen.getByRole('listbox')).toBeInTheDocument();
+    });
+
+    it('renders root with panel styles', () => {
+      const { container } = render(<BasicCommand />);
+      expect(container.querySelector(`.${styles.panel}`)).toBeInTheDocument();
     });
   });
 
@@ -135,12 +138,10 @@ describe('Command', () => {
 
       render(
         <Command items={items}>
-          <Command.Panel>
-            <Command.Input placeholder='Search...' />
-            <Command.List>
-              <Command.Item>Always Visible Custom</Command.Item>
-            </Command.List>
-          </Command.Panel>
+          <Command.Input placeholder='Search...' />
+          <Command.Content>
+            <Command.Item>Always Visible Custom</Command.Item>
+          </Command.Content>
         </Command>
       );
 
@@ -156,23 +157,21 @@ describe('Command', () => {
   describe('Groups and Separators', () => {
     const GroupedCommand = () => (
       <Command>
-        <Command.Panel>
-          <Command.Input placeholder='Search' />
-          <Command.List>
-            <Command.Empty>No results</Command.Empty>
-            <Command.Group>
-              <Command.Label>Suggestions</Command.Label>
-              <Command.Item>Calendar</Command.Item>
-              <Command.Item>Calculator</Command.Item>
-            </Command.Group>
-            <Command.Separator />
-            <Command.Group>
-              <Command.Label>Settings</Command.Label>
-              <Command.Item>Profile</Command.Item>
-              <Command.Item>Billing</Command.Item>
-            </Command.Group>
-          </Command.List>
-        </Command.Panel>
+        <Command.Input placeholder='Search' />
+        <Command.Content>
+          <Command.Empty>No results</Command.Empty>
+          <Command.Group>
+            <Command.Label>Suggestions</Command.Label>
+            <Command.Item>Calendar</Command.Item>
+            <Command.Item>Calculator</Command.Item>
+          </Command.Group>
+          <Command.Separator />
+          <Command.Group>
+            <Command.Label>Settings</Command.Label>
+            <Command.Item>Profile</Command.Item>
+            <Command.Item>Billing</Command.Item>
+          </Command.Group>
+        </Command.Content>
       </Command>
     );
 
@@ -203,12 +202,10 @@ describe('Command', () => {
       const handleClick = vi.fn();
       render(
         <Command>
-          <Command.Panel>
-            <Command.Input placeholder='Search' />
-            <Command.List>
-              <Command.Item onClick={handleClick}>Calendar</Command.Item>
-            </Command.List>
-          </Command.Panel>
+          <Command.Input placeholder='Search' />
+          <Command.Content>
+            <Command.Item onClick={handleClick}>Calendar</Command.Item>
+          </Command.Content>
         </Command>
       );
 
@@ -222,13 +219,11 @@ describe('Command', () => {
 
       render(
         <Command>
-          <Command.Panel>
-            <Command.Input placeholder='Search' />
-            <Command.List>
-              <Command.Item onClick={handleClick}>Calendar</Command.Item>
-              <Command.Item>Calculator</Command.Item>
-            </Command.List>
-          </Command.Panel>
+          <Command.Input placeholder='Search' />
+          <Command.Content>
+            <Command.Item onClick={handleClick}>Calendar</Command.Item>
+            <Command.Item>Calculator</Command.Item>
+          </Command.Content>
         </Command>
       );
 
@@ -255,13 +250,11 @@ describe('Command', () => {
               handleChange(v, details);
             }}
           >
-            <Command.Panel>
-              <Command.Input placeholder='Search' />
-              <Command.List>
-                <Command.Item>Calendar</Command.Item>
-                <Command.Item>Calculator</Command.Item>
-              </Command.List>
-            </Command.Panel>
+            <Command.Input placeholder='Search' />
+            <Command.Content>
+              <Command.Item>Calendar</Command.Item>
+              <Command.Item>Calculator</Command.Item>
+            </Command.Content>
           </Command>
         );
       };
@@ -279,79 +272,15 @@ describe('Command', () => {
     it('marks item as disabled via aria-disabled', () => {
       render(
         <Command>
-          <Command.Panel>
-            <Command.Input placeholder='Search' />
-            <Command.List>
-              <Command.Item disabled>Calendar</Command.Item>
-            </Command.List>
-          </Command.Panel>
+          <Command.Input placeholder='Search' />
+          <Command.Content>
+            <Command.Item disabled>Calendar</Command.Item>
+          </Command.Content>
         </Command>
       );
 
       const option = screen.getByText('Calendar').closest('[role="option"]');
       expect(option).toHaveAttribute('aria-disabled', 'true');
-    });
-  });
-
-  describe('Panel / Footer / Shortcut', () => {
-    it('renders Command.Panel wrapper with default class', () => {
-      render(
-        <Command>
-          <Command.Panel data-testid='panel'>
-            <Command.Input placeholder='Search' />
-          </Command.Panel>
-        </Command>
-      );
-
-      const panel = screen.getByTestId('panel');
-      expect(panel).toHaveClass(styles.panel);
-    });
-
-    it('merges custom className on Panel', () => {
-      render(
-        <Command>
-          <Command.Panel className='custom-panel' data-testid='panel'>
-            <Command.Input placeholder='Search' />
-          </Command.Panel>
-        </Command>
-      );
-
-      const panel = screen.getByTestId('panel');
-      expect(panel).toHaveClass('custom-panel');
-      expect(panel).toHaveClass(styles.panel);
-    });
-
-    it('renders Command.Footer', () => {
-      render(
-        <Command>
-          <Command.Panel>
-            <Command.Input placeholder='Search' />
-            <Command.Footer data-testid='footer'>Footer content</Command.Footer>
-          </Command.Panel>
-        </Command>
-      );
-
-      const footer = screen.getByTestId('footer');
-      expect(footer).toHaveTextContent('Footer content');
-      expect(footer).toHaveClass(styles.footer);
-    });
-
-    it('renders Command.Shortcut as <kbd>', () => {
-      render(
-        <Command>
-          <Command.Panel>
-            <Command.Input placeholder='Search' />
-            <Command.List>
-              <Command.Item>
-                Profile <Command.Shortcut>⌘P</Command.Shortcut>
-              </Command.Item>
-            </Command.List>
-          </Command.Panel>
-        </Command>
-      );
-
-      const kbd = screen.getByText('⌘P');
-      expect(kbd.tagName).toBe('KBD');
     });
   });
 
@@ -361,15 +290,15 @@ describe('Command', () => {
 
       render(
         <Command.Dialog>
-          <Command.Dialog.Trigger>Open Menu</Command.Dialog.Trigger>
-          <Command.Dialog.Content>
+          <Command.DialogTrigger>Open Menu</Command.DialogTrigger>
+          <Command.DialogContent>
             <Command>
               <Command.Input placeholder='Search' />
-              <Command.List>
+              <Command.Content>
                 <Command.Item>Calendar</Command.Item>
-              </Command.List>
+              </Command.Content>
             </Command>
-          </Command.Dialog.Content>
+          </Command.DialogContent>
         </Command.Dialog>
       );
 

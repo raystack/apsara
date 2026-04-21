@@ -4,13 +4,13 @@ import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomple
 import { cx } from 'class-variance-authority';
 import styles from './command.module.css';
 
-export type CommandListProps = AutocompletePrimitive.List.Props;
+export type CommandContentProps = AutocompletePrimitive.List.Props;
 
-export const CommandList = ({
+export const CommandContent = ({
   ref,
   className,
   ...props
-}: CommandListProps & { ref?: React.Ref<HTMLDivElement> }) => {
+}: CommandContentProps & { ref?: React.Ref<HTMLDivElement> }) => {
   return (
     <AutocompletePrimitive.List
       ref={ref}
@@ -20,4 +20,4 @@ export const CommandList = ({
   );
 };
 
-CommandList.displayName = 'Command.List';
+CommandContent.displayName = 'Command.Content';

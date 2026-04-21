@@ -24,54 +24,35 @@ export function CommandExamples() {
         <Text>Inline command menu</Text>
         <Flex style={{ width: 420 }}>
           <Command>
-            <Command.Panel>
-              <Command.Input placeholder='Type a command or search...' />
-              <Command.List>
-                <Command.Empty>No results found.</Command.Empty>
-                <Command.Group>
-                  <Command.Label>Suggestions</Command.Label>
-                  <Command.Item>Calendar</Command.Item>
-                  <Command.Item>Search Emoji</Command.Item>
-                  <Command.Item>Calculator</Command.Item>
-                </Command.Group>
-                <Command.Separator />
-                <Command.Group>
-                  <Command.Label>Settings</Command.Label>
-                  <Command.Item>
-                    Profile <Command.Shortcut>⌘P</Command.Shortcut>
-                  </Command.Item>
-                  <Command.Item>
-                    Billing <Command.Shortcut>⌘B</Command.Shortcut>
-                  </Command.Item>
-                  <Command.Item>
-                    Settings <Command.Shortcut>⌘S</Command.Shortcut>
-                  </Command.Item>
-                </Command.Group>
-              </Command.List>
-              <Command.Footer>
-                <span>
-                  Press <Command.Shortcut>↵</Command.Shortcut> to select
-                </span>
-                <span>
-                  <Command.Shortcut>ESC</Command.Shortcut> to close
-                </span>
-              </Command.Footer>
-            </Command.Panel>
+            <Command.Input placeholder='Type a command or search...' />
+            <Command.Content>
+              <Command.Empty>No results found.</Command.Empty>
+              <Command.Group>
+                <Command.Label>Suggestions</Command.Label>
+                <Command.Item>Calendar</Command.Item>
+                <Command.Item>Search Emoji</Command.Item>
+                <Command.Item>Calculator</Command.Item>
+              </Command.Group>
+              <Command.Separator />
+              <Command.Group>
+                <Command.Label>Settings</Command.Label>
+                <Command.Item>Profile</Command.Item>
+                <Command.Item>Billing</Command.Item>
+                <Command.Item>Settings</Command.Item>
+              </Command.Group>
+            </Command.Content>
           </Command>
         </Flex>
 
-        <Text>
-          Dialog — press <Command.Shortcut>⌘K</Command.Shortcut> or click the
-          button
-        </Text>
+        <Text>Dialog — press ⌘K or click the button</Text>
         <Command.Dialog open={open} onOpenChange={setOpen}>
-          <Command.Dialog.Trigger render={<Button variant='outline' />}>
+          <Command.DialogTrigger render={<Button variant='outline' />}>
             Open Command Menu
-          </Command.Dialog.Trigger>
-          <Command.Dialog.Content>
+          </Command.DialogTrigger>
+          <Command.DialogContent>
             <Command>
               <Command.Input placeholder='Type a command or search...' />
-              <Command.List>
+              <Command.Content>
                 <Command.Empty>No results found.</Command.Empty>
                 <Command.Group>
                   <Command.Label>Suggestions</Command.Label>
@@ -85,9 +66,9 @@ export function CommandExamples() {
                     Calculator
                   </Command.Item>
                 </Command.Group>
-              </Command.List>
+              </Command.Content>
             </Command>
-          </Command.Dialog.Content>
+          </Command.DialogContent>
         </Command.Dialog>
       </Flex>
     </PlaygroundLayout>

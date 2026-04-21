@@ -60,28 +60,28 @@ export const CommandSeparator = ({
 };
 CommandSeparator.displayName = 'Command.Separator';
 
-export type CommandShortcutProps = ComponentProps<'kbd'>;
+export type CommandShortcutProps = ComponentProps<'span'>;
 
 export const CommandShortcut = ({
   className,
+  children,
   ...props
-}: CommandShortcutProps) => (
-  <kbd className={cx(styles.shortcut, className)} {...props} />
-);
+}: CommandShortcutProps) => {
+  const keys =
+    typeof children === 'string'
+      ? children.trim().split(/\s+/).filter(Boolean)
+      : Array.isArray(children)
+        ? children
+        : [children];
+
+  return (
+    <span className={cx(styles.shortcut, className)} {...props}>
+      {keys.map((key, index) => (
+        <kbd key={index} className={styles.shortcutKey}>
+          {key}
+        </kbd>
+      ))}
+    </span>
+  );
+};
 CommandShortcut.displayName = 'Command.Shortcut';
-
-export type CommandFooterProps = ComponentProps<'div'>;
-
-export const CommandFooter = ({ className, ...props }: CommandFooterProps) => (
-  <div className={cx(styles.footer, className)} {...props} />
-);
-CommandFooter.displayName = 'Command.Footer';
-
-export type CommandPanelProps = ComponentProps<'div'>;
-
-export const CommandPanel = ({ className, ...props }: CommandPanelProps) => (
-  <div className={cx(styles.panel, className)} {...props} />
-);
-CommandPanel.displayName = 'Command.Panel';
-
-export const CommandCollection = AutocompletePrimitive.Collection;

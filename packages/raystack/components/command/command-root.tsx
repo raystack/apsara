@@ -1,6 +1,7 @@
 'use client';
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
+import { cx } from 'class-variance-authority';
 import {
   createContext,
   type RefObject,
@@ -10,6 +11,7 @@ import {
   useRef,
   useState
 } from 'react';
+import styles from './command.module.css';
 
 interface CommandContextValue {
   inputValue: string;
@@ -37,6 +39,8 @@ export interface CommandRootProps
    * delegated to Base UI's built-in logic (or the user's custom `filter`).
    */
   items?: readonly any[];
+  /** Additional CSS class for the panel wrapper. */
+  className?: string;
 }
 
 export const CommandRoot = ({
@@ -48,6 +52,7 @@ export const CommandRoot = ({
   open = true,
   autoHighlight = 'always',
   keepHighlight = true,
+  className,
   children,
   ...props
 }: CommandRootProps) => {
@@ -92,7 +97,7 @@ export const CommandRoot = ({
         items={items}
         {...props}
       >
-        {children}
+        <div className={cx(styles.panel, className)}>{children}</div>
       </AutocompletePrimitive.Root>
     </CommandContext.Provider>
   );

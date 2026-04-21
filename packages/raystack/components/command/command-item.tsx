@@ -10,6 +10,8 @@ import { useCommandContext } from './command-root';
 export interface CommandItemProps extends AutocompletePrimitive.Item.Props {
   /** Icon rendered at the start of the item. */
   leadingIcon?: ReactNode;
+  /** Node rendered at the end of the item (e.g. `Command.Shortcut`). */
+  trailingIcon?: ReactNode;
 }
 
 export const CommandItem = ({
@@ -17,6 +19,7 @@ export const CommandItem = ({
   children,
   value: providedValue,
   leadingIcon,
+  trailingIcon,
   ...props
 }: CommandItemProps) => {
   const value =
@@ -44,7 +47,10 @@ export const CommandItem = ({
       {...props}
     >
       {leadingIcon && <span className={styles.itemIcon}>{leadingIcon}</span>}
-      {children}
+      <span className={styles.itemLabel}>{children}</span>
+      {trailingIcon && (
+        <span className={styles.itemTrailing}>{trailingIcon}</span>
+      )}
     </AutocompletePrimitive.Item>
   );
 };

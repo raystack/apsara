@@ -2,46 +2,52 @@
 
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { cx } from 'class-variance-authority';
-import { type ComponentProps } from 'react';
+import { forwardRef } from 'react';
 import styles from './command.module.css';
 
-export const CommandDialogRoot = DialogPrimitive.Root;
+export const CommandDialog = (props: DialogPrimitive.Root.Props) => (
+  <DialogPrimitive.Root {...props} />
+);
+CommandDialog.displayName = 'Command.Dialog';
 
-export const CommandDialogTrigger = DialogPrimitive.Trigger;
-
-export const CommandDialogClose = DialogPrimitive.Close;
-
-export const CommandDialogTitle = DialogPrimitive.Title;
-
-export const CommandDialogDescription = DialogPrimitive.Description;
+export const CommandDialogTrigger = forwardRef<
+  HTMLButtonElement,
+  DialogPrimitive.Trigger.Props
+>((props, ref) => <DialogPrimitive.Trigger ref={ref} {...props} />);
+CommandDialogTrigger.displayName = 'Command.DialogTrigger';
 
 export interface CommandDialogContentProps extends DialogPrimitive.Popup.Props {
-  /** Props forwarded to the underlying `Dialog.Portal`. */
-  portalProps?: ComponentProps<typeof DialogPrimitive.Portal>;
-  /** Override the class applied to the backdrop. */
-  backdropClassName?: string;
-  /** Override the class applied to the viewport. */
-  viewportClassName?: string;
+  overlay?: DialogPrimitive.Backdrop.Props & { blur?: boolean };
+  width?: string | number;
 }
 
-export const CommandDialogContent = ({
+export function CommandDialogContent({
   className,
   children,
-  portalProps,
-  backdropClassName,
-  viewportClassName,
+  overlay,
+  width,
+  style,
   ...props
-}: CommandDialogContentProps) => {
+}: CommandDialogContentProps) {
+  const {
+    blur = false,
+    className: overlayClassName,
+    ...overlayProps
+  } = overlay ?? {};
   return (
-    <DialogPrimitive.Portal {...portalProps}>
+    <DialogPrimitive.Portal>
       <DialogPrimitive.Backdrop
-        className={cx(styles.backdrop, backdropClassName)}
+        {...overlayProps}
+        className={cx(
+          styles.backdrop,
+          blur && styles.backdropBlur,
+          overlayClassName
+        )}
       />
-      <DialogPrimitive.Viewport
-        className={cx(styles.viewport, viewportClassName)}
-      >
+      <DialogPrimitive.Viewport className={styles.viewport}>
         <DialogPrimitive.Popup
           className={cx(styles.dialogPopup, className)}
+          style={{ width, ...style }}
           {...props}
         >
           {children}
@@ -49,5 +55,5 @@ export const CommandDialogContent = ({
       </DialogPrimitive.Viewport>
     </DialogPrimitive.Portal>
   );
-};
-CommandDialogContent.displayName = 'Command.Dialog.Content';
+}
+CommandDialogContent.displayName = 'Command.DialogContent';

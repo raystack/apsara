@@ -49,10 +49,8 @@ export interface CommandRootProps {
    * Only applied when `items` is provided.
    */
   filter?: (itemValue: unknown, query: string) => boolean;
-}
 
-export interface CommandPanelProps {
-  /** Additional CSS class names. */
+  /** Additional CSS class names for the panel wrapper. */
   className?: string;
 }
 
@@ -79,7 +77,7 @@ export interface CommandInputProps {
   className?: string;
 }
 
-export interface CommandListProps {
+export interface CommandContentProps {
   /** Additional CSS class names. */
   className?: string;
 }
@@ -104,6 +102,9 @@ export interface CommandItemProps {
 
   /** Icon rendered before the item label. */
   leadingIcon?: React.ReactNode;
+
+  /** Node rendered after the item label (e.g. `Command.Shortcut` or an icon). */
+  trailingIcon?: React.ReactNode;
 
   /**
    * Click handler fired on pointer click and on keyboard `Enter`
@@ -135,11 +136,6 @@ export interface CommandShortcutProps {
   className?: string;
 }
 
-export interface CommandFooterProps {
-  /** Additional CSS class names. */
-  className?: string;
-}
-
 export interface CommandDialogProps {
   /** Controlled open state. */
   open?: boolean;
@@ -164,9 +160,16 @@ export interface CommandDialogContentProps {
   /** Additional CSS class names applied to the dialog popup. */
   className?: string;
 
-  /** Class name applied to the backdrop. */
-  backdropClassName?: string;
+  /**
+   * Props forwarded to the backdrop element. Set `blur` to `true` to enable
+   * a backdrop blur.
+   * @defaultValue `{ blur: false }`
+   */
+  overlay?: {
+    blur?: boolean;
+    className?: string;
+  };
 
-  /** Class name applied to the viewport. */
-  viewportClassName?: string;
+  /** Explicit width for the dialog popup. */
+  width?: string | number;
 }

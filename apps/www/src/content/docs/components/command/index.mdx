@@ -7,11 +7,10 @@ tag: update
 
 import {
   preview,
-  basicDemo,
+  inlineDemo,
   groupedDemo,
   withIconsDemo,
-  withShortcutsDemo,
-  dialogDemo,
+  shortcutDemo,
   controlledDemo,
 } from "./demo.ts";
 
@@ -19,40 +18,31 @@ import {
 
 ## Anatomy
 
-Import and assemble the component:
+Import and assemble the component inside `Command.Dialog` for a command palette:
 
 ```tsx
 import { Command } from "@raystack/apsara";
 
-<Command>
-  <Command.Panel>
-    <Command.Input />
-    <Command.List>
-      <Command.Empty>No results found.</Command.Empty>
-      <Command.Group>
-        <Command.Label>Suggestions</Command.Label>
-        <Command.Item>Item</Command.Item>
-      </Command.Group>
-      <Command.Separator />
-    </Command.List>
-    <Command.Footer />
-  </Command.Panel>
-</Command>
-```
-
-For a command palette launched by a keyboard shortcut, wrap `Command` in `Command.Dialog`:
-
-```tsx
 <Command.Dialog>
-  <Command.Dialog.Trigger>Open</Command.Dialog.Trigger>
-  <Command.Dialog.Content>
+  <Command.DialogTrigger>Open</Command.DialogTrigger>
+  <Command.DialogContent>
     <Command>
       <Command.Input />
-      <Command.List>{/* ... */}</Command.List>
+      <Command.Content>
+        <Command.Empty>No results found.</Command.Empty>
+        <Command.Group>
+          <Command.Label>Suggestions</Command.Label>
+          <Command.Item>Item</Command.Item>
+        </Command.Group>
+        <Command.Separator />
+      </Command.Content>
     </Command>
-  </Command.Dialog.Content>
+  </Command.DialogContent>
 </Command.Dialog>
 ```
+
+`Command` can also be rendered inline (without a dialog) — useful for embedding a
+persistent command menu in a page or surface.
 
 ## Built-in auto-search
 
@@ -64,15 +54,9 @@ Pass the `items` prop to opt out of this built-in behavior and delegate filterin
 
 ### Root
 
-The root element owns the input value, the list of items, and the context used by every sub-component.
+The root element owns the input value, the list of items, and the context used by every sub-component. Renders as a styled panel that gives the command menu its popover look.
 
 <auto-type-table path="./props.ts" name="CommandRootProps" />
-
-### Panel
-
-A styled card wrapper that gives the command menu its popover look when used inline (outside of `Command.Dialog`).
-
-<auto-type-table path="./props.ts" name="CommandPanelProps" />
 
 ### Input
 
@@ -80,11 +64,11 @@ Text input that drives the search. Accepts the same props as `InputField` and de
 
 <auto-type-table path="./props.ts" name="CommandInputProps" />
 
-### List
+### Content
 
 Scrollable container for groups and items. Renders with `role="listbox"`.
 
-<auto-type-table path="./props.ts" name="CommandListProps" />
+<auto-type-table path="./props.ts" name="CommandContentProps" />
 
 ### Empty
 
@@ -118,33 +102,29 @@ Visual divider between groups. Hidden while searching.
 
 ### Shortcut
 
-A `<kbd>` element for keyboard hints inline with items or the footer.
+A `<kbd>` element for keyboard hints. Typically passed as `trailingIcon` on `Command.Item`.
 
 <auto-type-table path="./props.ts" name="CommandShortcutProps" />
 
-### Footer
-
-Optional footer slot rendered below the list.
-
-<auto-type-table path="./props.ts" name="CommandFooterProps" />
-
 ### Dialog
 
-`Command.Dialog` is an alias for the Base UI Dialog root, plus a composed `Content` sub-component that provides the portal, backdrop, viewport, and popup.
+`Command.Dialog` is an alias for the Base UI Dialog root. Pair it with `Command.DialogTrigger` and `Command.DialogContent` to render the command menu in a centered modal.
 
 <auto-type-table path="./props.ts" name="CommandDialogProps" />
 
-#### Dialog Content
+#### DialogContent
+
+Renders the portal, backdrop, viewport, and popup for the command palette. The backdrop is not blurred by default — pass `overlay={{ blur: true }}` to enable it. Unlike `Dialog.Content`, there is no close button; users dismiss the palette via `Escape` or by clicking the backdrop.
 
 <auto-type-table path="./props.ts" name="CommandDialogContentProps" />
 
 ## Examples
 
-### Basic
+### Inline
 
-A command menu with a flat list of items. Type to filter.
+A command menu rendered inline, without a dialog. Use this when the command menu is a permanent surface on the page.
 
-<Demo data={basicDemo} />
+<Demo data={inlineDemo} />
 
 ### Groups and Separators
 
@@ -158,17 +138,11 @@ Pass a `leadingIcon` on `Command.Item` to render an icon before the label.
 
 <Demo data={withIconsDemo} />
 
-### With Shortcuts and Footer
+### Keyboard Shortcut
 
-Annotate items with `Command.Shortcut` and pair with `Command.Footer` for help text.
+Bind a keyboard shortcut (e.g. `⌘K`) to toggle the command palette open.
 
-<Demo data={withShortcutsDemo} />
-
-### Command Dialog
-
-Use `Command.Dialog` to render the command menu in a modal triggered by a keyboard shortcut.
-
-<Demo data={dialogDemo} />
+<Demo data={shortcutDemo} />
 
 ### Controlled
 
