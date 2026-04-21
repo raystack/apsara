@@ -58,6 +58,18 @@ export const preview = {
                 <Command.Item leadingIcon={<LayersIcon />} onClick={() => setOpen(false)}>
                   Styles
                 </Command.Item>
+                <Command.Item leadingIcon={<ColorWheelIcon />} onClick={() => setOpen(false)}>
+                  Colors
+                </Command.Item>
+                <Command.Item leadingIcon={<SpaceBetweenHorizontallyIcon />} onClick={() => setOpen(false)}>
+                  Spacing
+                </Command.Item>
+                <Command.Item leadingIcon={<BorderSolidIcon />} onClick={() => setOpen(false)}>
+                  Borders
+                </Command.Item>
+                <Command.Item leadingIcon={<ShadowIcon />} onClick={() => setOpen(false)}>
+                  Shadows
+                </Command.Item>
               </Command.Group>
             </Command.Content>`)
 };
@@ -67,7 +79,7 @@ export const inlineDemo = {
   code: `
   <Flex style={{ width: 420 }}>
     <Command>
-      <Command.Input placeholder="Search..." />
+      <Command.Input placeholder="Search..." autoFocus={false} />
       <Command.Content>
         <Command.Empty>No results found.</Command.Empty>
         <Command.Item>Calendar</Command.Item>
@@ -156,6 +168,46 @@ export const shortcutDemo = {
       return () => document.removeEventListener('keydown', handler);
     }, []);`
   )
+};
+
+export const itemsDemo = {
+  type: 'code',
+  code: `
+  function ItemsCommand() {
+    const [open, setOpen] = React.useState(false);
+    const items = [
+      'Calendar',
+      'Search Emoji',
+      'Calculator',
+      'Profile',
+      'Billing',
+      'Settings'
+    ];
+
+    return (
+      <Command.Dialog open={open} onOpenChange={setOpen}>
+        <Command.DialogTrigger render={<Button variant="outline" />}>
+          Open Command Menu
+        </Command.DialogTrigger>
+        <Command.DialogContent>
+          <Command items={items}>
+            <Command.Input placeholder="Search..." />
+            <Command.Content>
+              {(item) => (
+                <Command.Item
+                  key={item}
+                  value={item}
+                  onClick={() => setOpen(false)}
+                >
+                  {item}
+                </Command.Item>
+              )}
+            </Command.Content>
+          </Command>
+        </Command.DialogContent>
+      </Command.Dialog>
+    );
+  }`
 };
 
 export const controlledDemo = {

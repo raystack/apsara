@@ -1,6 +1,8 @@
 'use client';
 
 import {
+  BorderSolidIcon,
+  ColorWheelIcon,
   Component1Icon,
   FileIcon,
   FontBoldIcon,
@@ -11,7 +13,9 @@ import {
   OpenInNewWindowIcon,
   Pencil2Icon,
   PlusIcon,
+  ShadowIcon,
   Share2Icon,
+  SpaceBetweenHorizontallyIcon,
   TextAlignCenterIcon,
   TextAlignLeftIcon,
   TextAlignRightIcon,
@@ -73,6 +77,10 @@ export default function Demo(props: DemoProps) {
       LayersIcon,
       OpenInNewWindowIcon,
       Share2Icon,
+      BorderSolidIcon,
+      ColorWheelIcon,
+      ShadowIcon,
+      SpaceBetweenHorizontallyIcon,
       dayjs
     }
   } = props;

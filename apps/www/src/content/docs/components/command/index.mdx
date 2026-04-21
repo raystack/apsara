@@ -12,6 +12,7 @@ import {
   withIconsDemo,
   shortcutDemo,
   controlledDemo,
+  itemsDemo,
 } from "./demo.ts";
 
 <Demo data={preview} />
@@ -43,12 +44,6 @@ import { Command } from "@raystack/apsara";
 
 `Command` can also be rendered inline (without a dialog) — useful for embedding a
 persistent command menu in a page or surface.
-
-## Built-in auto-search
-
-By default, `Command` filters `Command.Item` children based on the input value — the same behavior as our [Combobox](/docs/components/combobox). No `items` prop is required. Matching is case-insensitive and looks at both the `value` prop and the item's text content.
-
-Pass the `items` prop to opt out of this built-in behavior and delegate filtering to Base UI's internal logic (or your own `filter` function).
 
 ## API Reference
 
@@ -149,6 +144,14 @@ Bind a keyboard shortcut (e.g. `⌘K`) to toggle the command palette open.
 Control the input value by passing `value` and `onValueChange`.
 
 <Demo data={controlledDemo} />
+
+### Items prop
+
+By default, `Command` filters `Command.Item` children based on the input value — the same behavior as our [Combobox](/docs/components/combobox). No `items` prop is required. Matching is case-insensitive and looks at both the `value` prop and the item's text content.
+
+Pass the `items` prop to opt out of this built-in behavior and delegate filtering to Base UI's internal logic (or your own `filter` function). `Command.Content` then accepts a render function that receives each item.
+
+<Demo data={itemsDemo} />
 
 ## Accessibility
 
