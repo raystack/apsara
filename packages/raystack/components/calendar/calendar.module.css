@@ -8,7 +8,7 @@
 }
 
 .captionLabel,
-.dropdowns>span,
+.dropdowns > span,
 .dropdown_trigger {
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);

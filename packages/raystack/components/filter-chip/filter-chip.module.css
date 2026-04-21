@@ -151,7 +151,7 @@ button.selectValue:hover {
 }
 
 .inputFieldWrapper [class*="input-field-module_inputWrapper"],
-.dateFieldWrapper [class*="input-field-module_inputWrapper"]{
+.dateFieldWrapper [class*="input-field-module_inputWrapper"] {
   border: none;
   background: none;
 }
@@ -191,7 +191,7 @@ button.selectValue:hover {
 }
 
 .inputFieldWrapper input:focus,
-.dateFieldWrapper input:focus{
+.dateFieldWrapper input:focus {
   background: transparent;
 }
 
