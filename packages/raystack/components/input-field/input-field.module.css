@@ -62,7 +62,6 @@
   height: var(--rs-space-5);
   color: var(--rs-color-foreground-base-secondary);
   margin-right: var(--rs-space-3);
-  pointer-events: auto;
 }
 
 .input-field {
