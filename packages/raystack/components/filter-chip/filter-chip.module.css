@@ -35,27 +35,27 @@
 
 /* Target any input fields within the chip */
 .chip input {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  min-height: unset !important;
-  padding: 0 !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  min-height: unset;
+  padding: 0;
 }
 
 /* Control height of Select items */
 .chip [role="option"] {
-  min-height: var(--rs-space-7) !important;
-  height: var(--rs-space-7) !important;
+  min-height: var(--rs-space-7);
+  height: var(--rs-space-7);
 }
 
 /* Style for select triggers */
 .chip [data-trigger] {
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  min-height: unset !important;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  min-height: unset;
   border-radius: var(--rs-radius-1);
-  color: var(--rs-color-foreground-base-primary) !important;
+  color: var(--rs-color-foreground-base-primary);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
@@ -81,8 +81,8 @@
   cursor: pointer;
   color: var(--rs-color-foreground-base-primary);
   transition: color 0.2s ease-in-out;
-  width: var(--rs-space-4) !important;
-  height: var(--rs-space-4) !important;
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
 }
 
 .removeIcon:hover {
@@ -105,7 +105,7 @@
 }
 
 .selectValue * {
-  font-weight: var(--rs-font-weight-regular) !important;
+  font-weight: var(--rs-font-weight-regular);
 }
 
 .operationValue {
@@ -150,9 +150,15 @@ button.selectValue:hover {
   min-height: var(--rs-space-7);
 }
 
+.inputFieldWrapper [class*="input-field-module_inputWrapper"],
+.dateFieldWrapper [class*="input-field-module_inputWrapper"]{
+  border: none;
+  background: none;
+}
+
 .inputFieldWrapper input {
-  padding-left: var(--rs-space-2) !important;
-  padding-right: var(--rs-space-2) !important;
+  padding-left: var(--rs-space-2);
+  padding-right: var(--rs-space-2);
 }
 
 .dateFieldWrapper {
@@ -180,8 +186,13 @@ button.selectValue:hover {
 
 .dateField input {
   text-align: left;
-  padding-left: var(--rs-space-2) !important;
-  padding-right: var(--rs-space-2) !important;
+  padding-left: var(--rs-space-2);
+  padding-right: var(--rs-space-2);
+}
+
+.inputFieldWrapper input:focus,
+.dateFieldWrapper input:focus{
+  background: transparent;
 }
 
 .dateField [data-trailing] {
