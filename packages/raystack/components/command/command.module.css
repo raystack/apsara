@@ -4,9 +4,7 @@
   overflow: hidden;
   isolation: isolate;
   width: 100%;
-  border-radius: var(--rs-radius-2);
   background-color: var(--rs-color-background-base-primary);
-  box-shadow: var(--rs-shadow-floating);
 }
 
 .inputWrapper {
@@ -14,11 +12,6 @@
   flex-direction: column;
   padding: var(--rs-space-2);
   background-color: var(--rs-color-background-base-primary);
-}
-
-.inputIcon {
-  color: var(--rs-color-foreground-base-tertiary);
-  flex-shrink: 0;
 }
 
 .list {
@@ -89,7 +82,7 @@
   color: var(--rs-color-foreground-base-secondary);
 }
 
-.list:has([role='option']) .empty {
+.list:has([role="option"]) .empty {
   display: none;
 }
 

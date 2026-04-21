@@ -1,7 +1,6 @@
 'use client';
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
-import { MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { type ComponentProps, type ReactNode } from 'react';
 import { InputField } from '../input-field';
 import styles from './command.module.css';
@@ -12,7 +11,7 @@ export interface CommandInputProps
     ComponentProps<typeof InputField>,
     'trailingIcon' | 'chips' | 'maxChipsVisible' | 'variant'
   > {
-  /** Icon rendered at the start of the input. Defaults to a magnifying glass. */
+  /** Icon rendered at the start of the input. */
   leadingIcon?: ReactNode;
 }
 
@@ -32,15 +31,7 @@ export const CommandInput = ({
         render={
           <InputField
             containerRef={inputContainerRef}
-            leadingIcon={
-              leadingIcon ?? (
-                <MagnifyingGlassIcon
-                  className={styles.inputIcon}
-                  width={16}
-                  height={16}
-                />
-              )
-            }
+            leadingIcon={leadingIcon}
             variant='borderless'
             size={size}
             autoFocus={autoFocus}
