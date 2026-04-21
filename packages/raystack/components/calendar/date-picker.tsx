@@ -200,6 +200,7 @@ export function DatePicker({
   return (
     <Popover open={showCalendar} onOpenChange={onOpenChange}>
       <Popover.Trigger
+        nativeButton={isValidElement(trigger) ? false : true}
         render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
       />
       <Popover.Content
