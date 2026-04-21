@@ -161,11 +161,13 @@ export const shortcutDemo = {
       const handler = (event) => {
         if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
           event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
           setOpen(prev => !prev);
         }
       };
-      document.addEventListener('keydown', handler);
-      return () => document.removeEventListener('keydown', handler);
+      document.addEventListener('keydown', handler, true);
+      return () => document.removeEventListener('keydown', handler, true);
     }, []);`
   )
 };
