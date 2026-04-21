@@ -11,7 +11,6 @@
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-small);
   color: var(--rs-color-foreground-base-primary);
-  padding: var(--rs-space-3);
   overflow: auto;
 }
 
@@ -64,14 +63,10 @@
 /* Size variants */
 .size-large {
   padding: var(--rs-space-3);
-  font-size: var(--rs-font-size-small);
-  line-height: var(--rs-line-height-small);
 }
 
 .size-small {
   padding: var(--rs-space-2);
-  font-size: var(--rs-font-size-small);
-  line-height: var(--rs-line-height-small);
 }
 
 /* Variant styles */

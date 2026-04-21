@@ -23,6 +23,11 @@ export const playground = {
       options: ['default', 'borderless'],
       defaultValue: 'default'
     },
+    rows: {
+      type: 'number',
+      defaultValue: 3,
+      min: 1
+    },
     width: {
       type: 'text',
       defaultValue: '400px'
