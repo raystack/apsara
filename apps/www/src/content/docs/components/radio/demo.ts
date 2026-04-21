@@ -1,22 +1,44 @@
 'use client';
 
-export const preview = {
-  type: 'code',
-  code: `
-<Radio.Group defaultValue="2">
+import { getPropsString } from '@/lib/utils';
+
+export const getCode = (props: any) => {
+  return `
+<Radio.Group defaultValue="2"${getPropsString(props)}>
   <Flex gap="small" align="center">
-    <Radio value="1" id="P1" />
-    <label htmlFor="P1">Option One</label>
+    <Radio value="1" id="pg-r1" />
+    <label htmlFor="pg-r1">Option One</label>
   </Flex>
   <Flex gap="small" align="center">
-    <Radio value="2" id="P2" />
-    <label htmlFor="P2">Option Two</label>
+    <Radio value="2" id="pg-r2" />
+    <label htmlFor="pg-r2">Option Two</label>
   </Flex>
   <Flex gap="small" align="center">
-    <Radio value="3" id="P3" disabled />
-    <label htmlFor="P3">Option Three</label>
+    <Radio value="3" id="pg-r3" />
+    <label htmlFor="pg-r3">Option Three</label>
   </Flex>
-</Radio.Group>`
+</Radio.Group>`;
+};
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    orientation: {
+      type: 'select',
+      options: ['vertical', 'horizontal'],
+      defaultValue: 'vertical'
+    },
+    size: {
+      type: 'select',
+      options: ['large', 'small'],
+      defaultValue: 'large'
+    },
+    disabled: {
+      type: 'checkbox',
+      defaultValue: false
+    }
+  },
+  getCode
 };
 
 export const stateDemo = {

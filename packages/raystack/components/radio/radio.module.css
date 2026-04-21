@@ -78,23 +78,22 @@
 .indicator::after {
   content: "";
   display: block;
-  width: var(--rs-space-2);
-  height: var(--rs-space-2);
+  width: var(--rs-radius-3);
+  height: var(--rs-radius-3);
   border-radius: var(--rs-radius-full);
   background: var(--rs-color-foreground-base-emphasis);
 }
 
-/* Scale indicator dot for small size — group-level (low specificity) */
-/* Scale indicator dot for small size — item-level overrides group */
+/* Scale indicator dot for small size — group-level and item-level */
 :where(.group-small) .indicator::after,
 .radioitem.small .indicator::after {
-  width: var(--rs-space-1);
-  height: var(--rs-space-1);
+  width: var(--rs-radius-2);
+  height: var(--rs-radius-2);
 }
 
 .radioitem.large .indicator::after {
-  width: var(--rs-space-2);
-  height: var(--rs-space-2);
+  width: var(--rs-radius-3);
+  height: var(--rs-radius-3);
 }
 
 .radioitem[data-disabled] .indicator::after {
