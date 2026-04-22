@@ -58,7 +58,7 @@ export const useSelectContext = (): UseSelectContext => {
   };
 };
 
-interface BaseSelectProps extends CommonProps {
+export interface BaseSelectProps extends CommonProps {
   children?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
