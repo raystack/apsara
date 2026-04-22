@@ -1,11 +1,30 @@
 import { Field as FieldPrimitive } from '@base-ui/react/field';
-import { cx } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ChangeEvent, type ComponentProps } from 'react';
 import { useFieldContext } from '../field';
 
 import styles from './text-area.module.css';
 
-export interface TextAreaProps extends ComponentProps<'textarea'> {
+const textAreaVariants = cva(styles.textarea, {
+  variants: {
+    size: {
+      small: styles['size-small'],
+      large: styles['size-large']
+    },
+    variant: {
+      default: styles['variant-default'],
+      borderless: styles['variant-borderless']
+    }
+  },
+  defaultVariants: {
+    size: 'large',
+    variant: 'default'
+  }
+});
+
+export interface TextAreaProps
+  extends Omit<ComponentProps<'textarea'>, 'size'>,
+    VariantProps<typeof textAreaVariants> {
   disabled?: boolean;
   placeholder?: string;
   width?: string | number;
@@ -22,6 +41,8 @@ export function TextArea({
   onChange,
   placeholder,
   required,
+  size,
+  variant,
   ...props
 }: TextAreaProps) {
   const fieldContext = useFieldContext();
@@ -29,7 +50,12 @@ export function TextArea({
 
   const textarea = (
     <textarea
-      className={cx(styles.textarea, disabled && styles.disabled, className)}
+      rows={3}
+      className={cx(
+        textAreaVariants({ size, variant }),
+        disabled && styles.disabled,
+        className
+      )}
       value={value}
       onChange={onChange}
       disabled={disabled}

@@ -13,6 +13,21 @@ export const playground = {
       type: 'checkbox',
       defaultValue: false
     },
+    size: {
+      type: 'select',
+      options: ['large', 'small'],
+      defaultValue: 'large'
+    },
+    variant: {
+      type: 'select',
+      options: ['default', 'borderless'],
+      defaultValue: 'default'
+    },
+    rows: {
+      type: 'number',
+      defaultValue: 3,
+      min: 1
+    },
     width: {
       type: 'text',
       defaultValue: '400px'
@@ -53,6 +68,30 @@ export const controlledDemo = {
     </Field>
   );
 }`
+};
+
+export const sizeDemo = {
+  type: 'code',
+  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  <TextArea placeholder="Large size (default)" />
+  <TextArea placeholder="Small size" size="small" />
+</Flex>`
+};
+
+export const variantDemo = {
+  type: 'code',
+  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  <TextArea placeholder="Default variant" />
+  <TextArea placeholder="Borderless variant" variant="borderless" />
+</Flex>`
+};
+
+export const rowsDemo = {
+  type: 'code',
+  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  <TextArea placeholder="Default (3 rows)" />
+  <TextArea placeholder="6 rows" rows={6} />
+</Flex>`
 };
 
 export const widthDemo = {

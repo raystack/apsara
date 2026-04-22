@@ -1,6 +1,6 @@
 ---
 title: TextArea
-description: A multi-line text input field.
+description: A multi-line text input field with size and variant options.
 source: packages/raystack/components/text-area
 ---
 
@@ -8,6 +8,9 @@ import {
   playground,
   basicDemo,
   controlledDemo,
+  sizeDemo,
+  variantDemo,
+  rowsDemo,
   widthDemo,
   withFieldDemo,
 } from "./demo.ts";
@@ -60,6 +63,24 @@ Example of TextArea in controlled mode.
 
 <Demo data={controlledDemo} />
 
+### Size Variants
+
+TextArea comes in two sizes: `large` (default) and `small`.
+
+<Demo data={sizeDemo} />
+
+### Visual Variants
+
+TextArea supports `default` and `borderless` visual variants.
+
+<Demo data={variantDemo} />
+
+### Custom Rows
+
+TextArea defaults to 3 visible rows. Use the `rows` prop to adjust.
+
+<Demo data={rowsDemo} />
+
 ### Custom Width
 
 TextArea with custom width specification.
@@ -71,3 +92,4 @@ TextArea with custom width specification.
 - Use with [Field](/docs/components/field) for automatic label association and error linking
 - Required state is communicated via `aria-required`
 - Invalid state is communicated via `aria-invalid`
+- Content is scrollable when text exceeds the visible rows
