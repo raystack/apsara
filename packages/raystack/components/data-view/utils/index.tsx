@@ -1,0 +1,360 @@
+import type { ColumnDef, Row, Table } from '@tanstack/react-table';
+import { TableState } from '@tanstack/table-core';
+import dayjs from 'dayjs';
+
+import { FilterOperatorTypes, FilterType } from '~/types/filters';
+import {
+  DataViewField,
+  DataViewQuery,
+  DataViewSort,
+  defaultGroupOption,
+  GroupedData,
+  InternalFilter,
+  InternalQuery,
+  SortOrders
+} from '../data-view.types';
+import {
+  getFilterFn,
+  getFilterOperator,
+  getFilterValue
+} from './filter-operations';
+
+export function queryToTableState(query: InternalQuery): Partial<TableState> {
+  const columnFilters =
+    query.filters
+      ?.filter(data => {
+        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data.value !== '') return true;
+        return false;
+      })
+      ?.map(data => {
+        const valueObject =
+          data._type === FilterType.date
+            ? { date: data.value }
+            : { value: data.value };
+        return {
+          value: valueObject,
+          id: data?.name
+        };
+      }) || [];
+
+  const sorting = query.sort?.map(data => ({
+    id: data?.name,
+    desc: data?.order === SortOrders.DESC
+  }));
+  return {
+    columnFilters: columnFilters,
+    sorting: sorting,
+    globalFilter: query.search
+  };
+}
+
+/**
+ * Convert field metadata to TanStack ColumnDefs. These carry filter/sort/group/
+ * visibility capability and the filter predicate, but no `cell` renderer —
+ * cell/header rendering is installed by each renderer from its own column spec.
+ * `header` is set to `field.label` so any renderer that falls back to the
+ * TanStack header string sees the right label.
+ */
+export function fieldsToColumnDefs<TData>(
+  fields: DataViewField<TData>[] = [],
+  filters: InternalFilter[] = []
+): ColumnDef<TData>[] {
+  return fields.map(field => {
+    const colFilter = filters?.find(f => f.name === field.accessorKey);
+    const filterFn = colFilter?.operator
+      ? getFilterFn(field.filterType || FilterType.string, colFilter.operator)
+      : undefined;
+
+    return {
+      id: field.accessorKey,
+      accessorKey: field.accessorKey,
+      header: field.label,
+      enableColumnFilter: field.filterable ?? false,
+      enableSorting: field.sortable ?? false,
+      enableGrouping: field.groupable ?? false,
+      enableHiding: field.hideable ?? false,
+      filterFn
+    } as ColumnDef<TData>;
+  });
+}
+
+export function groupData<TData>(
+  data: TData[],
+  group_by?: string,
+  fields: DataViewField<TData>[] = []
+): GroupedData<TData>[] {
+  if (!data) return [];
+  if (!group_by || group_by === defaultGroupOption.id)
+    return data as GroupedData<TData>[];
+
+  const groupMap = new Map<string, TData[]>();
+  data.forEach((currentData: TData) => {
+    const item = currentData as Record<string, string>;
+    const keyValue = item[group_by];
+    if (!groupMap.has(keyValue)) {
+      groupMap.set(keyValue, []);
+    }
+    groupMap.get(keyValue)?.push(item as TData);
+  });
+
+  const field = fields.find(f => f.accessorKey === group_by);
+  const showGroupCount = field?.showGroupCount || false;
+  const groupLablesMap = field?.groupLabelsMap || {};
+  const groupCountMap = field?.groupCountMap || {};
+  const groupedData: GroupedData<TData>[] = [];
+
+  groupMap.forEach((value, key) => {
+    groupedData.push({
+      label: groupLablesMap[key] || key,
+      group_key: key,
+      subRows: value,
+      count: groupCountMap[key] ?? value.length,
+      showGroupCount
+    });
+  });
+
+  return groupedData;
+}
+
+const generateFilterMap = (
+  filters: InternalFilter[] = []
+): Map<string, any> => {
+  return new Map(
+    filters
+      ?.filter(data => data._type === FilterType.select || data.value !== '')
+      .map(({ name, operator, value }) => [`${name}-${operator}`, value])
+  );
+};
+
+const generateSortMap = (sort: DataViewSort[] = []): Map<string, string> => {
+  return new Map(sort.map(({ name, order }) => [name, order]));
+};
+
+const isFilterChanged = (
+  oldFilters: InternalFilter[] = [],
+  newFilters: InternalFilter[] = []
+): boolean => {
+  const oldFilterMap = generateFilterMap(oldFilters);
+  const newFilterMap = generateFilterMap(newFilters);
+
+  if (oldFilterMap.size !== newFilterMap.size) return true;
+
+  return [...newFilterMap].some(
+    ([key, value]) => oldFilterMap.get(key) !== value
+  );
+};
+
+const isSortChanged = (
+  oldSort: DataViewSort[] = [],
+  newSort: DataViewSort[] = []
+): boolean => {
+  if (oldSort.length !== newSort.length) return true;
+
+  const oldSortMap = generateSortMap(oldSort);
+  const newSortMap = generateSortMap(newSort);
+
+  return [...newSortMap].some(([key, order]) => oldSortMap.get(key) !== order);
+};
+
+const isGroupChanged = (
+  oldGroupBy: string[] = [],
+  newGroupBy: string[] = []
+): boolean => {
+  if (oldGroupBy.length !== newGroupBy.length) return true;
+
+  const oldGroupSet = new Set(oldGroupBy);
+  return newGroupBy.some(item => !oldGroupSet.has(item));
+};
+
+const isSearchChanged = (oldSearch?: string, newSearch?: string): boolean => {
+  return oldSearch !== newSearch;
+};
+
+/**
+ * Checks if there is an active filter, search, or updated sort/grouping
+ * compared to the defaults. Used to distinguish zero state from empty state.
+ */
+export const hasActiveQuery = (
+  tableQuery: InternalQuery,
+  defaultSort: DataViewSort
+): boolean => {
+  const hasFilters =
+    (tableQuery?.filters && tableQuery.filters.length > 0) || false;
+  const hasSearch = Boolean(
+    tableQuery?.search && tableQuery.search.trim() !== ''
+  );
+  const sortChanged = isSortChanged([defaultSort], tableQuery.sort || []);
+  const groupChanged = isGroupChanged(
+    [defaultGroupOption.id],
+    tableQuery.group_by || []
+  );
+  return hasFilters || hasSearch || sortChanged || groupChanged;
+};
+
+export const hasQueryChanged = (
+  oldQuery: InternalQuery | null,
+  newQuery: InternalQuery
+): boolean => {
+  if (!oldQuery) return true;
+  return (
+    isFilterChanged(oldQuery.filters, newQuery.filters) ||
+    isSortChanged(oldQuery.sort, newQuery.sort) ||
+    isGroupChanged(oldQuery.group_by, newQuery.group_by) ||
+    isSearchChanged(oldQuery.search, newQuery.search)
+  );
+};
+
+export function getInitialColumnVisibility<TData>(
+  fields: DataViewField<TData>[] = []
+): Record<string, boolean> {
+  return fields.reduce<Record<string, boolean>>((acc, field) => {
+    acc[field.accessorKey] = field.defaultHidden ? false : true;
+    return acc;
+  }, {});
+}
+
+export function transformToDataViewQuery(query: InternalQuery): DataViewQuery {
+  const { group_by = [], filters = [], sort = [], ...rest } = query;
+  const sanitizedGroupBy = group_by?.filter(
+    key => key !== defaultGroupOption.id
+  );
+
+  const sanitizedFilters =
+    filters
+      ?.filter(data => {
+        if (data._type === FilterType.select) return true;
+        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data.value !== '') return true;
+        return false;
+      })
+      ?.map(data => ({
+        name: data.name,
+        operator: getFilterOperator({
+          operator: data.operator,
+          value: data.value,
+          filterType: data._type
+        }),
+        ...getFilterValue({
+          value: data.value,
+          filterType: data._type,
+          dataType: data._dataType,
+          operator: data.operator
+        })
+      })) || [];
+
+  return {
+    ...rest,
+    sort: sort,
+    group_by: sanitizedGroupBy,
+    filters: sanitizedFilters
+  };
+}
+
+// Transform DataViewQuery to InternalQuery
+// This reverses the transformation done by transformToDataViewQuery
+export function dataViewQueryToInternal(query: DataViewQuery): InternalQuery {
+  const { filters, ...rest } = query;
+
+  if (!filters) {
+    return rest;
+  }
+
+  // Convert DataViewFilter[] to InternalFilter[]
+  const internalFilters: InternalFilter[] = filters.map(filter => {
+    const {
+      operator,
+      value,
+      stringValue,
+      numberValue,
+      boolValue,
+      ...filterRest
+    } = filter;
+
+    // Reverse the operator mapping and wildcard transformation
+    let transformedFilter = {
+      operator: operator as FilterOperatorTypes,
+      value: value,
+      ...(stringValue !== undefined && { stringValue }),
+      ...(numberValue !== undefined && { numberValue }),
+      ...(boolValue !== undefined && { boolValue })
+    };
+
+    // If operator is 'ilike', determine the original operator based on wildcards
+    if (operator === 'ilike' && stringValue) {
+      if (stringValue.startsWith('%') && stringValue.endsWith('%')) {
+        transformedFilter = {
+          operator: 'contains',
+          value: stringValue.slice(1, -1) // Remove % from both ends
+        };
+      } else if (stringValue.endsWith('%')) {
+        transformedFilter = {
+          operator: 'starts_with',
+          value: stringValue.slice(0, -1) // Remove % from end
+        };
+      } else if (stringValue.startsWith('%')) {
+        transformedFilter = {
+          operator: 'ends_with',
+          value: stringValue.slice(1) // Remove % from start
+        };
+      } else {
+        // Default to contains if no wildcards (shouldn't happen normally)
+        transformedFilter = {
+          operator: 'contains',
+          value: stringValue
+        };
+      }
+    }
+
+    return {
+      ...filterRest,
+      ...transformedFilter,
+      // We don't have type information, so leave it undefined
+      // The UI will need to infer or set these based on column definitions
+      _type: undefined,
+      _dataType: undefined
+    } as InternalFilter;
+  });
+
+  return {
+    ...rest,
+    filters: internalFilters
+  };
+}
+
+/** Leaf count from the row tree. Do not use `model.flatRows` here: with `filterFromLeafRows`, TanStack's filtered model leaves `flatRows` empty while `rows` is correct. */
+export function countLeafRows<T>(rows: Row<T>[]): number {
+  return rows.reduce(
+    (n, row) => n + (row.subRows?.length ? countLeafRows(row.subRows) : 1),
+    0
+  );
+}
+
+/** Difference between pre- and post-filter leaf rows (client mode only). */
+export function getClientHiddenLeafRowCount<T>(table: Table<T>): number {
+  const pre = table.getPreFilteredRowModel();
+  const post = table.getFilteredRowModel();
+  return Math.max(0, countLeafRows(pre.rows) - countLeafRows(post.rows));
+}
+
+export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
+  const state = table.getState();
+  if (state.columnFilters?.length > 0) return true;
+  const gf = state.globalFilter;
+  if (gf === undefined || gf === null) return false;
+  return String(gf).trim() !== '';
+}
+
+export function getDefaultTableQuery(
+  defaultSort: DataViewSort,
+  oldQuery: DataViewQuery = {}
+): InternalQuery {
+  // Convert DataViewQuery to InternalQuery
+  const internalQuery = dataViewQueryToInternal(oldQuery);
+
+  return {
+    sort: [defaultSort],
+    group_by: [defaultGroupOption.id],
+    ...internalQuery
+  };
+}
