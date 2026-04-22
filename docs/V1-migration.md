@@ -23,38 +23,41 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Button](#button)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
-    - [Combobox](#combobox)
       - [New Features](#new-features)
+    - [Combobox](#combobox)
+      - [New Features](#new-features-1)
     - [Data Table](#data-table)
     - [Dialog](#dialog)
-      - [New Features](#new-features-1)
-    - [DropdownMenu -\> Menu](#dropdownmenu---menu)
       - [New Features](#new-features-2)
+    - [DropdownMenu -\> Menu](#dropdownmenu---menu)
+      - [New Features](#new-features-3)
     - [Flex](#flex)
     - [Grid](#grid)
+    - [Headline](#headline)
     - [InputField](#inputfield)
     - [Popover](#popover)
-      - [New Features](#new-features-3)
+      - [New Features](#new-features-4)
     - [Radio](#radio)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
-      - [New Features](#new-features-4)
+      - [New Features](#new-features-5)
     - [Separator](#separator)
     - [Sheet -\> Drawer](#sheet---drawer)
-      - [New Features](#new-features-5)
-    - [Sidebar](#sidebar)
       - [New Features](#new-features-6)
-    - [Slider](#slider)
+    - [Sidebar](#sidebar)
       - [New Features](#new-features-7)
+    - [Slider](#slider)
+      - [New Features](#new-features-8)
     - [Switch](#switch)
     - [Tabs](#tabs)
-      - [New Features](#new-features-8)
-    - [TextArea](#textarea)
       - [New Features](#new-features-9)
-    - [Toast](#toast)
+    - [Text](#text)
+    - [TextArea](#textarea)
       - [New Features](#new-features-10)
-    - [Tooltip](#tooltip)
+    - [Toast](#toast)
       - [New Features](#new-features-11)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-12)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -110,6 +113,8 @@ Radix's `asChild` composition pattern is gone. Use the `render` prop instead. No
 ```
 
 Affected components: Button, Grid, Grid.Item, Popover.Trigger, Menu.Trigger, Drawer.Trigger, Dialog.Trigger, Dialog.Close, AlertDialog.Trigger, Breadcrumb.Item, Tooltip.Trigger.
+
+> **Note:** Text and Headline also replace their `as` prop with `render`, but using a different pattern. Instead of `asChild` (which forwarded all props to a child element), `as` was a simple string tag name. The new `render` prop accepts a JSX element or a render function, matching the Base UI convention. See [Text](#text) and [Headline](#headline) for details.
 
 ### Callback Signatures
 
@@ -458,6 +463,38 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 </Checkbox.Group>
 ```
 
+#### New Features
+
+- `size` prop (`'small' | 'large'`, default `'large'`) for controlling checkbox dimensions
+- `render` prop for custom indicator rendering — receives `(props, state)` where state includes `checked` and `indeterminate`
+- `readOnly` prop for non-editable display with reduced opacity
+- `orientation` prop on `Checkbox.Group` (`'vertical' | 'horizontal'`, default `'vertical'`)
+- Enhanced disabled state preserves checked/indeterminate visual appearance
+- Invalid state styling with danger border (and danger background when checked/indeterminate)
+
+```tsx
+// Size variants
+<Checkbox size="small" />
+<Checkbox size="large" /> {/* default */}
+
+// Custom indicator
+<Checkbox
+  checked
+  render={(props, state) => (
+    <span {...props}>{state.checked ? '✓' : ''}</span>
+  )}
+/>
+
+// Read-only checkbox
+<Checkbox checked readOnly />
+
+// Horizontal group layout
+<Checkbox.Group defaultValue={['apple']} orientation="horizontal">
+  <Checkbox name="apple" />
+  <Checkbox name="banana" />
+</Checkbox.Group>
+```
+
 ---
 
 ### Combobox
@@ -768,6 +805,35 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 
 ---
 
+### Headline
+
+**`as` prop replaced by `render`:**
+
+The `as` prop accepted a string tag name (`'h1'` through `'h6'`). The new `render` prop accepts a JSX element or a render function, consistent with the Base UI pattern used across the library. The default element remains `<h2>`.
+
+```tsx
+// Before
+<Headline as="h1" size="large">Page Title</Headline>
+<Headline as="h3" size="small">Section Title</Headline>
+<Headline>Default h2</Headline>
+
+// After
+<Headline render={<h1 />} size="large">Page Title</Headline>
+<Headline render={<h3 />} size="small">Section Title</Headline>
+<Headline>Default h2</Headline>
+```
+
+The `render` prop also supports render functions for full control:
+
+```tsx
+// Render function for custom element
+<Headline render={props => <h1 {...props} />}>Page Title</Headline>
+```
+
+**TypeScript:** The type changed from `HeadlineBaseProps & ComponentProps<'h1'> & { as?: 'h1' | ... | 'h6' }` to `HeadlineBaseProps & useRender.ComponentProps<'h2'>`. If you explicitly typed Headline props, update to `HeadlineProps` (now exported).
+
+---
+
 ### InputField
 
 **Label, helper text, error, and optional indicator moved to `Field` wrapper.** InputField is now a pure input control — wrap it with the new `Field` component for labels, descriptions, and error messages.
@@ -910,6 +976,7 @@ import { Radio } from '@raystack/apsara';
 <Radio.Group
   defaultValue="option2"
   onValueChange={(value, event) => setSelected(value)}
+  orientation="vertical"
   aria-label="Choose plan"
 >
   <Radio value="option1" id="free" />
@@ -924,7 +991,6 @@ Key changes:
 - `RadioItem` named export removed
 - `RadioItemProps` type export removed
 - `onValueChange` now receives 2 args
-- `orientation` prop removed
 
 ---
 
@@ -1284,6 +1350,49 @@ Key changes:
 
 ---
 
+### Text
+
+**`as` prop replaced by `render`:**
+
+The `as` prop accepted a string tag name (`'span'`, `'p'`, `'div'`, `'label'`, `'a'`). The new `render` prop accepts a JSX element or a render function, consistent with the Base UI pattern used across the library. The default element remains `<span>`.
+
+```tsx
+// Before
+<Text as="label">Username</Text>
+<Text as="p">Paragraph text</Text>
+<Text as="a" href="/link">Click here</Text>
+<Text>Default span</Text>
+
+// After
+<Text render={<label />}>Username</Text>
+<Text render={<p />}>Paragraph text</Text>
+<Text render={<a href="/link" />}>Click here</Text>
+<Text>Default span</Text>
+```
+
+Note that HTML attributes specific to the rendered element (like `href` for anchors, `htmlFor` for labels) now go on the JSX element inside `render`, not on `Text` itself:
+
+```tsx
+// Before
+<Text as="label" htmlFor="email-input">Email</Text>
+<Text as="a" href="#section" target="_blank">Link</Text>
+
+// After
+<Text render={<label htmlFor="email-input" />}>Email</Text>
+<Text render={<a href="#section" target="_blank" />}>Link</Text>
+```
+
+The `render` prop also supports render functions for full control:
+
+```tsx
+// Render function for any element
+<Text render={props => <section {...props} />}>Custom element</Text>
+```
+
+**TypeScript:** The type changed from a discriminated union (`TextSpanProps | TextDivProps | TextLabelProps | TextPProps | TextAProps`) to `TextBaseProps & useRender.ComponentProps<'span'>`. The `render` prop now accepts any element, so you are no longer limited to the five original tag names. The `// @ts-expect-error` that was needed internally for polymorphic refs is also gone.
+
+---
+
 ### TextArea
 
 **Label, helper text, error, and optional indicator moved to `Field` wrapper.** TextArea is now a pure textarea control — wrap it with the new `Field` component for labels, descriptions, and error messages.
@@ -1639,6 +1748,8 @@ These are purely additive -- no migration needed.
 - [ ] Upgrade to React 19
 - [ ] Update CSS import order (`normalize.css` before `style.css`)
 - [ ] Global find-and-replace: `asChild` -> `render` prop pattern
+- [ ] Replace `Text as="..."` with `Text render={<element />}` (see [Text](#text))
+- [ ] Replace `Headline as="..."` with `Headline render={<element />}` (see [Headline](#headline))
 - [ ] Update callback signatures where TypeScript complains
 - [ ] Replace `DropdownMenu` imports with `Menu`
 - [ ] Replace `Sheet` imports with `Drawer`

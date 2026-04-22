@@ -206,49 +206,59 @@ describe('Text', () => {
     });
   });
 
-  describe('As Rendering', () => {
-    it('renders as div when specified', () => {
-      render(<Text as='div'>Div text</Text>);
+  describe('Render Prop', () => {
+    it('renders as div via render prop', () => {
+      render(<Text render={<div />}>Div text</Text>);
 
       const div = screen.getByText('Div text');
       expect(div.tagName.toLowerCase()).toBe('div');
     });
 
-    it('renders as paragraph when specified', () => {
-      render(<Text as='p'>Paragraph text</Text>);
+    it('renders as paragraph via render prop', () => {
+      render(<Text render={<p />}>Paragraph text</Text>);
 
       const p = screen.getByText('Paragraph text');
       expect(p.tagName.toLowerCase()).toBe('p');
     });
 
-    it('renders as label when specified', () => {
-      render(<Text as='label'>Label text</Text>);
+    it('renders as label via render prop', () => {
+      render(<Text render={<label />}>Label text</Text>);
 
       const label = screen.getByText('Label text');
       expect(label.tagName.toLowerCase()).toBe('label');
     });
 
-    it('renders as anchor when specified', () => {
-      render(
-        <Text as='a' href='#test'>
-          Link text
-        </Text>
-      );
+    it('renders as anchor via render prop', () => {
+      render(<Text render={<a href='#test' />}>Link text</Text>);
 
       const a = screen.getByText('Link text');
       expect(a.tagName.toLowerCase()).toBe('a');
       expect(a).toHaveAttribute('href', '#test');
     });
 
-    it('forwards props to the correct element type', () => {
+    it('renders as h1 via render prop', () => {
+      render(<Text render={<h1 />}>Heading text</Text>);
+
+      const h1 = screen.getByText('Heading text');
+      expect(h1.tagName.toLowerCase()).toBe('h1');
+    });
+
+    it('forwards props to the rendered element', () => {
       render(
-        <Text as='label' htmlFor='test-input'>
-          Label for input
-        </Text>
+        <Text render={<label htmlFor='test-input' />}>Label for input</Text>
       );
 
       const label = screen.getByText('Label for input');
       expect(label).toHaveAttribute('for', 'test-input');
+    });
+
+    it('supports render function', () => {
+      render(
+        <Text render={props => <section {...props} />}>Section text</Text>
+      );
+
+      const section = screen.getByText('Section text');
+      expect(section.tagName.toLowerCase()).toBe('section');
     });
   });
 

@@ -23,10 +23,10 @@ export const playground = {
       ],
       defaultValue: 'primary'
     },
-    as: {
+    render: {
       type: 'select',
-      options: ['span', 'p', 'div', 'label', 'a'],
-      defaultValue: 'span'
+      options: ['<span />', '<p />', '<div />', '<label />', '<a />'],
+      defaultValue: '<span />'
     },
     size: {
       type: 'select',

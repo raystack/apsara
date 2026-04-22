@@ -1,5 +1,5 @@
+import { mergeProps, useRender } from '@base-ui/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { ComponentProps } from 'react';
 import styles from './headline.module.css';
 
 const headline = cva(styles.headline, {
@@ -41,10 +41,7 @@ export type HeadlineBaseProps = VariantProps<typeof headline> & {
   size?: 't1' | 't2' | 't3' | 't4' | 'small' | 'medium' | 'large';
 };
 
-type HeadlineProps = HeadlineBaseProps &
-  ComponentProps<'h1'> & {
-    as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-  };
+export type HeadlineProps = HeadlineBaseProps & useRender.ComponentProps<'h2'>;
 
 export function Headline({
   className,
@@ -52,15 +49,21 @@ export function Headline({
   weight,
   align,
   truncate,
-  as: Component = 'h2',
+  render,
+  ref,
   ...props
 }: HeadlineProps) {
-  return (
-    <Component
-      className={headline({ size, weight, align, truncate, className })}
-      {...props}
-    />
-  );
+  const element = useRender({
+    defaultTagName: 'h2',
+    ref,
+    render,
+    props: mergeProps<'h2'>(
+      { className: headline({ size, weight, align, truncate, className }) },
+      props
+    )
+  });
+
+  return element;
 }
 
 Headline.displayName = 'Headline';
