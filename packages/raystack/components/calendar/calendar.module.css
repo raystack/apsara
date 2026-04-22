@@ -170,6 +170,9 @@
   visibility: hidden;
 }
 
+/* Selector Doubling: chains the class with itself to raise specificity
+   from (0,1,0) to (0,2,0), beating react-day-picker's compound selectors
+   without resorting to !important or ID selectors. */
 .calendarPopover.calendarPopover {
   padding: var(--rs-space-3);
   /* Todo: var does not exist for 0.5px */
