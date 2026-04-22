@@ -115,6 +115,11 @@
   height: var(--rs-space-4);
 }
 
+.chip[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .dismiss-button {
   background: none;
   border: none;

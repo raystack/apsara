@@ -4,21 +4,37 @@
   gap: var(--rs-space-3);
 }
 
+.group-horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 .checkbox {
   all: unset;
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--rs-space-5);
-  height: var(--rs-space-5);
-  min-width: var(--rs-space-5);
-  min-height: var(--rs-space-5);
   border-radius: var(--rs-radius-1);
   background: var(--rs-color-background-base-primary);
   border: 1px solid var(--rs-color-border-base-secondary);
   cursor: pointer;
   flex-shrink: 0;
+}
+
+/* Size variants */
+.large {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+  min-width: var(--rs-space-5);
+  min-height: var(--rs-space-5);
+}
+
+.small {
+  width: var(--rs-space-4);
+  height: var(--rs-space-4);
+  min-width: var(--rs-space-4);
+  min-height: var(--rs-space-4);
 }
 
 .checkbox:hover {
@@ -41,18 +57,48 @@
   border: none;
 }
 
+/* A5: Indeterminate hover visual feedback */
 .checkbox[data-indeterminate]:hover {
-  background: var(--rs-color-background-neutral-tertiary);
+  background: var(--rs-color-background-neutral-secondary);
   border: none;
 }
 
-.checkbox[data-disabled] {
-  opacity: 0.5;
+/* A2: Read-only styling */
+.checkbox[data-readonly] {
+  cursor: default;
+  opacity: 0.7;
 }
 
-.checkbox[data-disabled]:hover {
-  background: var(--rs-color-background-base-primary);
-  border-color: var(--rs-color-border-base-primary);
+/* A3: Invalid state — red border for validation errors */
+.checkbox[data-invalid] {
+  border-color: var(--rs-color-border-danger-primary);
+}
+
+.checkbox[data-invalid][data-checked],
+.checkbox[data-invalid][data-indeterminate] {
+  background: var(--rs-color-background-danger-primary);
+  border-color: var(--rs-color-border-danger-primary);
+}
+
+/* A4: Disabled state */
+.checkbox[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* A4: Preserve checked state when disabled */
+.checkbox[data-disabled][data-checked],
+.checkbox[data-disabled][data-checked]:hover {
+  background: var(--rs-color-background-accent-emphasis);
+  border: none;
+}
+
+/* A4: Preserve indeterminate state when disabled */
+.checkbox[data-disabled][data-indeterminate],
+.checkbox[data-disabled][data-indeterminate]:hover {
+  background: var(--rs-color-background-neutral-tertiary);
+  border: none;
 }
 
 .indicator {
@@ -65,6 +111,6 @@
 }
 
 .icon {
-  width: var(--rs-space-5);
-  height: var(--rs-space-5);
+  width: 100%;
+  height: 100%;
 }

@@ -30,19 +30,47 @@ describe('Headline', () => {
     });
   });
 
-  describe('As Prop', () => {
-    const headingLevels = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const;
-
-    it.each(headingLevels)('renders as %s element', level => {
-      render(<Headline as={level}>Heading</Headline>);
+  describe('Render Prop', () => {
+    it('renders as h1 via render prop', () => {
+      render(<Headline render={<h1 />}>Heading</Headline>);
       const heading = screen.getByText('Heading');
-      expect(heading.tagName).toBe(level.toUpperCase());
+      expect(heading.tagName).toBe('H1');
+    });
+
+    it('renders as h3 via render prop', () => {
+      render(<Headline render={<h3 />}>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading.tagName).toBe('H3');
+    });
+
+    it('renders as h4 via render prop', () => {
+      render(<Headline render={<h4 />}>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading.tagName).toBe('H4');
+    });
+
+    it('renders as h5 via render prop', () => {
+      render(<Headline render={<h5 />}>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading.tagName).toBe('H5');
+    });
+
+    it('renders as h6 via render prop', () => {
+      render(<Headline render={<h6 />}>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading.tagName).toBe('H6');
     });
 
     it('renders as h2 by default', () => {
       render(<Headline>Heading</Headline>);
       const heading = screen.getByText('Heading');
       expect(heading.tagName).toBe('H2');
+    });
+
+    it('supports render function', () => {
+      render(<Headline render={props => <h1 {...props} />}>Heading</Headline>);
+      const heading = screen.getByText('Heading');
+      expect(heading.tagName).toBe('H1');
     });
   });
 

@@ -42,7 +42,7 @@ export function Link({
       {...externalProps}
       {...downloadProps}
       {...props}
-      as='a'
+      render={<a />}
     >
       {children}
     </Text>

@@ -157,6 +157,20 @@ describe('Sidebar', () => {
       const sidebar = container.querySelector('[data-position="right"]');
       expect(sidebar).toBeInTheDocument();
     });
+
+    it('applies floating variant when specified', () => {
+      const { container } = render(<BasicSidebar variant='floating' />);
+
+      const sidebar = container.querySelector('[data-variant="floating"]');
+      expect(sidebar).toBeInTheDocument();
+    });
+
+    it('applies inset variant when specified', () => {
+      const { container } = render(<BasicSidebar variant='inset' />);
+
+      const sidebar = container.querySelector('[data-variant="inset"]');
+      expect(sidebar).toBeInTheDocument();
+    });
   });
 
   describe('Sidebar Header', () => {
@@ -246,6 +260,21 @@ describe('Sidebar', () => {
       expect(item).toHaveAttribute('aria-disabled', 'true');
     });
 
+    it('renders custom element via render prop', () => {
+      render(
+        <BasicSidebar>
+          <Sidebar.Item render={<button />} data-testid='custom-render-item'>
+            Custom Item
+          </Sidebar.Item>
+        </BasicSidebar>
+      );
+
+      const item = screen.getByTestId('custom-render-item');
+      expect(item.tagName).toBe('BUTTON');
+      expect(item).toHaveAttribute('role', 'listitem');
+      expect(item).toHaveTextContent('Custom Item');
+    });
+
     it('hides text when collapsed and sets aria-label for screen readers', () => {
       render(<BasicSidebar open={false} />);
 
@@ -270,6 +299,188 @@ describe('Sidebar', () => {
 
       const group = screen.getByLabelText(MAIN_GROUP_LABEL);
       expect(group).toBeInTheDocument();
+    });
+
+    it('renders collapsible trigger when collapsible is enabled', () => {
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      expect(trigger).toBeInTheDocument();
+      expect(trigger).toHaveAttribute('data-panel-open');
+    });
+
+    it('toggles group items when collapsible is enabled', () => {
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+    });
+
+    it('forces collapsible panel open when sidebar is collapsed', () => {
+      const { rerender } = render(
+        <Sidebar open>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      fireEvent.click(trigger);
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+
+      rerender(
+        <Sidebar open={false}>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              leadingIcon={<TestIcon />}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      expect(
+        screen.getByRole('listitem', { name: DASHBOARD_ITEM_TEXT })
+      ).toBeInTheDocument();
+    });
+
+    it('renders right icon when provided in collapsible header', () => {
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              trailingIcon={<span data-testid='group-trailing-icon'>+</span>}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      expect(screen.getByTestId('group-trailing-icon')).toBeInTheDocument();
+    });
+
+    it('does not toggle collapsible when trailing icon is clicked', () => {
+      const onTrailingIconClick = vi.fn();
+
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              trailingIcon={
+                <button
+                  type='button'
+                  data-testid='group-trailing-action'
+                  onClick={onTrailingIconClick}
+                >
+                  +
+                </button>
+              }
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      expect(trigger).toHaveAttribute('data-panel-open');
+
+      fireEvent.click(screen.getByTestId('group-trailing-action'));
+
+      expect(onTrailingIconClick).toHaveBeenCalledTimes(1);
+      expect(trigger).toHaveAttribute('data-panel-open');
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+    });
+  });
+
+  describe('Sidebar More', () => {
+    it('renders More trigger and opens menu items', () => {
+      render(
+        <BasicSidebar>
+          <Sidebar.More label='More items'>
+            <Sidebar.Item href='#'>Logs</Sidebar.Item>
+            <Sidebar.Item href='#'>Audit</Sidebar.Item>
+          </Sidebar.More>
+        </BasicSidebar>
+      );
+
+      const trigger = screen.getByText('More items').closest('button');
+      expect(trigger).toBeInTheDocument();
+      if (!trigger) return;
+      fireEvent.click(trigger);
+
+      expect(screen.getByText('Logs')).toBeInTheDocument();
+      expect(screen.getByText('Audit')).toBeInTheDocument();
+    });
+
+    it('sets aria-label for collapsed More trigger', () => {
+      render(
+        <BasicSidebar open={false}>
+          <Sidebar.More label='Overflow'>
+            <Sidebar.Item href='#'>Logs</Sidebar.Item>
+          </Sidebar.More>
+        </BasicSidebar>
+      );
+
+      const trigger = screen.getByRole('listitem', { name: 'Overflow' });
+      expect(trigger).toHaveAttribute('aria-label', 'Overflow');
     });
   });
 });

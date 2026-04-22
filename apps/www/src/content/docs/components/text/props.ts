@@ -1,9 +1,12 @@
 export interface TextProps {
   /**
-   * Text element to render as.
+   * Custom render element or function. Accepts a JSX element (e.g. `<p />`)
+   * or a render function for full control.
    * @default "span"
    */
-  as?: 'span' | 'p' | 'div' | 'label' | 'a';
+  render?:
+    | React.ReactElement
+    | ((props: React.ComponentPropsWithRef<'span'>) => React.ReactElement);
 
   /**
    * The visual style variant.
