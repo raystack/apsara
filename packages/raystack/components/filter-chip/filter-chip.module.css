@@ -150,12 +150,6 @@ button.selectValue:hover {
   min-height: var(--rs-space-7);
 }
 
-.inputFieldWrapper [class*="input-field-module_inputWrapper"],
-.dateFieldWrapper [class*="input-field-module_inputWrapper"] {
-  border: none;
-  background: none;
-}
-
 .inputFieldWrapper input {
   padding-left: var(--rs-space-2);
   padding-right: var(--rs-space-2);
@@ -188,11 +182,6 @@ button.selectValue:hover {
   text-align: left;
   padding-left: var(--rs-space-2);
   padding-right: var(--rs-space-2);
-}
-
-.inputFieldWrapper input:focus,
-.dateFieldWrapper input:focus {
-  background: transparent;
 }
 
 .dateField [data-trailing] {
