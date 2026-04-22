@@ -975,6 +975,7 @@ import { Radio } from '@raystack/apsara';
 <Radio.Group
   defaultValue="option2"
   onValueChange={(value, event) => setSelected(value)}
+  orientation="vertical"
   aria-label="Choose plan"
 >
   <Radio value="option1" id="free" />
@@ -989,7 +990,6 @@ Key changes:
 - `RadioItem` named export removed
 - `RadioItemProps` type export removed
 - `onValueChange` now receives 2 args
-- `orientation` prop removed
 
 ---
 
