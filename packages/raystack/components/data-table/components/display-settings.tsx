@@ -2,15 +2,16 @@
 
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 
-import { ReactNode } from 'react';
+import { cx } from 'class-variance-authority';
+import { isValidElement, ReactNode } from 'react';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
 import { Popover } from '../../popover';
 import styles from '../data-table.module.css';
 import {
   DataTableColumn,
-  SortOrdersValues,
-  defaultGroupOption
+  defaultGroupOption,
+  SortOrdersValues
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 import { DisplayProperties } from './display-properties';
@@ -19,6 +20,7 @@ import { Ordering } from './ordering';
 
 interface DisplaySettingsProps {
   trigger?: ReactNode;
+  classNames?: { content?: string };
 }
 
 export function DisplaySettings<TData, TValue>({
@@ -31,7 +33,8 @@ export function DisplaySettings<TData, TValue>({
     >
       Display
     </Button>
-  )
+  ),
+  classNames
 }: DisplaySettingsProps) {
   const {
     table,
@@ -87,7 +90,7 @@ export function DisplaySettings<TData, TValue>({
     <Popover>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Content
-        className={styles['display-popover-content']}
+        className={cx(styles['display-popover-content'], classNames?.content)}
         align='end'
       >
         <Flex direction='column'>
