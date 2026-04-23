@@ -32,9 +32,32 @@ export const sizeDemo = {
 
 export const clearDemo = {
   type: 'code',
-  code: `
-  <Flex direction="column" gap="medium" align="center">
-    <Search placeholder="Type to search..." value="Searchable text" showClearButton />
-    <Search placeholder="Basic search..." />
-  </Flex>`
+  tabs: [
+    {
+      name: 'Uncontrolled',
+      code: `
+      <Flex direction="column" gap="medium" align="center">
+        <Search placeholder="Type to search..." showClearButton />
+      </Flex>`
+    },
+    {
+      name: 'Controlled',
+      code: `
+      function ControlledSearch() {
+        const [value, setValue] = React.useState("Searchable text");
+
+        return (
+          <Flex direction="column" gap="medium" align="center">
+            <Search
+              placeholder="Type to search..."
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              showClearButton
+              onClear={() => setValue("")}
+            />
+          </Flex>
+        );
+      }`
+    }
+  ]
 };

@@ -35,17 +35,23 @@ export const AccordionRoot = ({
   ...rest
 }: AccordionRootProps) => {
   // Convert value to array format for Base UI
-  const baseValue = value
-    ? Array.isArray(value)
-      ? value
-      : [value]
-    : undefined;
+  const baseValue =
+    value !== undefined
+      ? Array.isArray(value)
+        ? value
+        : value === ''
+          ? []
+          : [value]
+      : undefined;
 
-  const baseDefaultValue = defaultValue
-    ? Array.isArray(defaultValue)
-      ? defaultValue
-      : [defaultValue]
-    : undefined;
+  const baseDefaultValue =
+    defaultValue !== undefined
+      ? Array.isArray(defaultValue)
+        ? defaultValue
+        : defaultValue === ''
+          ? []
+          : [defaultValue]
+      : undefined;
 
   const handleValueChange = (
     newValue: string[],
@@ -55,9 +61,7 @@ export const AccordionRoot = ({
       if (multiple) {
         (onValueChange as (value: string[]) => void)(newValue);
       } else {
-        (onValueChange as (value: string | undefined) => void)(
-          newValue[0] || undefined
-        );
+        (onValueChange as (value: string) => void)(newValue[0] ?? '');
       }
     }
   };
