@@ -13,7 +13,9 @@ import {
   type DataViewTableColumn,
   EmptyState,
   Flex,
+  getAvatarColor,
   IconButton,
+  Indicator,
   Navbar,
   Sidebar,
   Tabs,
@@ -215,7 +217,12 @@ const STATUS_COLOR: Record<
 // Cell renderers shared between Table and List renderers.
 const renderNameCell = ({ row }: ProfileCell) => (
   <Flex align='center' gap={3} style={{ minWidth: 0 }}>
-    <Avatar fallback={row.original.name.charAt(0)} size={5} />
+    <Avatar
+      fallback={row.original.name.charAt(0)}
+      size={5}
+      radius='full'
+      color={getAvatarColor(row.original.name)}
+    />
     <Flex direction='column' style={{ minWidth: 0 }}>
       <Text size={3} weight='medium'>
         {row.original.name}
@@ -266,7 +273,13 @@ const renderCollaboratorsCell = ({ row }: ProfileCell) => {
   return (
     <AvatarGroup max={3}>
       {collaborators.map(c => (
-        <Avatar key={c.id} fallback={c.name.charAt(0)} size={4} />
+        <Avatar
+          key={c.id}
+          fallback={c.name.charAt(0)}
+          size={3}
+          radius='full'
+          color={getAvatarColor(c.name)}
+        />
       ))}
     </AvatarGroup>
   );
@@ -396,25 +409,14 @@ const listColumns: DataViewListColumn<Profile>[] = [
   }
 ];
 
-const STATUS_DOT_COLOR: Record<Profile['status'], string> = {
-  Active: 'var(--rs-color-foreground-success-primary, #16a34a)',
-  Away: 'var(--rs-color-foreground-attention-primary, #d97706)',
-  Offline: 'var(--rs-color-foreground-base-tertiary, #9ca3af)'
+const INDICATOR_COLOR: Record<
+  Profile['status'],
+  'success' | 'warning' | 'neutral'
+> = {
+  Active: 'success',
+  Away: 'warning',
+  Offline: 'neutral'
 };
-
-function StatusRing({ status }: { status: Profile['status'] }) {
-  const color = STATUS_DOT_COLOR[status];
-  return (
-    <div
-      style={{
-        width: 8,
-        height: 8,
-        backgroundColor: color,
-        borderRadius: '100%'
-      }}
-    />
-  );
-}
 
 function ProfileCard({ profile }: { profile: Profile }) {
   return (
@@ -430,7 +432,13 @@ function ProfileCard({ profile }: { profile: Profile }) {
     >
       <Flex align='center' gap={3} style={{ minWidth: 0 }}>
         <DataView.DisplayAccess accessorKey='status'>
-          <StatusRing status={profile.status} />
+          <Indicator variant={INDICATOR_COLOR[profile.status]}>
+            <Avatar
+              size={4}
+              fallback={profile.name.charAt(0)}
+              color={getAvatarColor(profile.name)}
+            />
+          </Indicator>
         </DataView.DisplayAccess>
         <DataView.DisplayAccess accessorKey='name'>
           <Text
@@ -486,7 +494,6 @@ function ProfileCard({ profile }: { profile: Profile }) {
 type ViewMode = 'table' | 'list' | 'custom';
 
 const Page = () => {
-  const [navbarSearch, setNavbarSearch] = useState('');
   const [view, setView] = useState<ViewMode>('table');
 
   return (
@@ -504,19 +511,17 @@ const Page = () => {
               <BellIcon width={24} height={24} />
             </IconButton>
             <Text size={4} weight='medium'>
-              Raystack
+              Apsara
             </Text>
           </Flex>
         </Sidebar.Header>
         <Sidebar.Main>
-          <Sidebar.Item href='/examples' active leadingIcon={<BellIcon />}>
-            Examples
-          </Sidebar.Item>
           <Sidebar.Item
-            href='/examples/dataview-list'
+            href='/examples/dataview'
             leadingIcon={<SidebarIcon />}
+            active
           >
-            DataView · People
+            DataView
           </Sidebar.Item>
         </Sidebar.Main>
         <Sidebar.Footer>
@@ -535,20 +540,7 @@ const Page = () => {
               DataView · People directory
             </Text>
           </Navbar.Start>
-          <Navbar.Center>
-            <Tabs
-              value={view}
-              onValueChange={v => setView(v as ViewMode)}
-              size='small'
-              style={{ width: '400px' }}
-            >
-              <Tabs.List>
-                <Tabs.Tab value='table'>Table View</Tabs.Tab>
-                <Tabs.Tab value='list'>List View</Tabs.Tab>
-                <Tabs.Tab value='custom'>Custom View</Tabs.Tab>
-              </Tabs.List>
-            </Tabs>
-          </Navbar.Center>
+          <Navbar.Center></Navbar.Center>
         </Navbar>
 
         <Flex
@@ -568,7 +560,21 @@ const Page = () => {
             getRowId={(row: Profile) => row.id}
           >
             <Flex gap={4} direction='column'>
-              <DataView.Search placeholder='Search people' />
+              <Flex justify='between' gap={4}>
+                <DataView.Search placeholder='Search people' width={400} />
+                <Tabs
+                  value={view}
+                  onValueChange={v => setView(v as ViewMode)}
+                  size='small'
+                  style={{ width: '400px' }}
+                >
+                  <Tabs.List>
+                    <Tabs.Tab value='table'>Table View</Tabs.Tab>
+                    <Tabs.Tab value='list'>List View</Tabs.Tab>
+                    <Tabs.Tab value='custom'>Custom View</Tabs.Tab>
+                  </Tabs.List>
+                </Tabs>
+              </Flex>
               <DataView.Toolbar />
             </Flex>
             {view === 'table' && (
