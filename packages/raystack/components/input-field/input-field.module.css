@@ -1,6 +1,6 @@
 /* Note: If making changes here, possibly also need to make changes in text-area.module.css for design consistency. */
 
-.inputWrapper {
+.input-wrapper {
   display: flex;
   align-items: center;
   width: 100%;
@@ -13,32 +13,32 @@
   overflow: hidden;
 }
 
-.inputWrapper:hover {
+.input-wrapper:hover {
   border-color: var(--rs-color-border-base-focus);
   background: var(--rs-color-background-base-primary-hover);
 }
 
-.inputWrapper:focus-within,
-.inputWrapper:has(.input-field[data-active="true"]) {
+.input-wrapper:focus-within,
+.input-wrapper:has(.input-field[data-active="true"]) {
   border-color: var(--rs-color-border-accent-emphasis);
   background-color: var(--rs-color-background-base-primary);
   outline: none;
 }
 
-.inputWrapper[data-invalid] {
+.input-wrapper[data-invalid] {
   border-color: var(--rs-color-border-danger-primary);
 }
 
-.inputWrapper[data-invalid]:hover,
-.inputWrapper[data-invalid]:focus-within {
+.input-wrapper[data-invalid]:hover,
+.input-wrapper[data-invalid]:focus-within {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
-.inputWrapper[data-disabled] {
+.input-wrapper[data-disabled] {
   opacity: 0.5;
 }
 
-.inputWrapper[data-disabled]:hover {
+.input-wrapper[data-disabled]:hover {
   border-color: var(--rs-color-border-base-tertiary);
   background: var(--rs-color-background-base-primary);
 }
@@ -50,7 +50,6 @@
   width: var(--rs-space-5);
   height: var(--rs-space-5);
   color: var(--rs-color-foreground-base-secondary);
-  pointer-events: none;
   margin-left: var(--rs-space-3);
   pointer-events: auto;
 }
@@ -62,9 +61,7 @@
   width: var(--rs-space-5);
   height: var(--rs-space-5);
   color: var(--rs-color-foreground-base-secondary);
-  pointer-events: none;
   margin-right: var(--rs-space-3);
-  pointer-events: auto;
 }
 
 .input-field {

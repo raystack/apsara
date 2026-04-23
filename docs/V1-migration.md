@@ -23,41 +23,43 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Button](#button)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
-    - [Combobox](#combobox)
       - [New Features](#new-features)
-    - [Command](#command)
+    - [Combobox](#combobox)
       - [New Features](#new-features-1)
+    - [Command](#command)
+      - [New Features](#new-features-2)
     - [Data Table](#data-table)
     - [Dialog](#dialog)
-      - [New Features](#new-features-2)
-    - [DropdownMenu -\> Menu](#dropdownmenu---menu)
       - [New Features](#new-features-3)
+    - [DropdownMenu -\> Menu](#dropdownmenu---menu)
+      - [New Features](#new-features-4)
     - [Flex](#flex)
     - [Grid](#grid)
     - [Headline](#headline)
     - [InputField](#inputfield)
     - [Popover](#popover)
-      - [New Features](#new-features-4)
+      - [New Features](#new-features-5)
     - [Radio](#radio)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
-      - [New Features](#new-features-5)
+      - [New Features](#new-features-6)
     - [Separator](#separator)
     - [Sheet -\> Drawer](#sheet---drawer)
-      - [New Features](#new-features-6)
-    - [Sidebar](#sidebar)
       - [New Features](#new-features-7)
-    - [Slider](#slider)
+    - [Sidebar](#sidebar)
       - [New Features](#new-features-8)
+    - [Slider](#slider)
+      - [New Features](#new-features-9)
     - [Switch](#switch)
     - [Tabs](#tabs)
-      - [New Features](#new-features-9)
+      - [New Features](#new-features-10)
     - [Text](#text)
     - [TextArea](#textarea)
-    - [Toast](#toast)
-      - [New Features](#new-features-10)
-    - [Tooltip](#tooltip)
       - [New Features](#new-features-11)
+    - [Toast](#toast)
+      - [New Features](#new-features-12)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-13)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -458,6 +460,38 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 ```tsx
 <Checkbox.Group defaultValue={['apple']} onValueChange={setSelected}>
+  <Checkbox name="apple" />
+  <Checkbox name="banana" />
+</Checkbox.Group>
+```
+
+#### New Features
+
+- `size` prop (`'small' | 'large'`, default `'large'`) for controlling checkbox dimensions
+- `render` prop for custom indicator rendering — receives `(props, state)` where state includes `checked` and `indeterminate`
+- `readOnly` prop for non-editable display with reduced opacity
+- `orientation` prop on `Checkbox.Group` (`'vertical' | 'horizontal'`, default `'vertical'`)
+- Enhanced disabled state preserves checked/indeterminate visual appearance
+- Invalid state styling with danger border (and danger background when checked/indeterminate)
+
+```tsx
+// Size variants
+<Checkbox size="small" />
+<Checkbox size="large" /> {/* default */}
+
+// Custom indicator
+<Checkbox
+  checked
+  render={(props, state) => (
+    <span {...props}>{state.checked ? '✓' : ''}</span>
+  )}
+/>
+
+// Read-only checkbox
+<Checkbox checked readOnly />
+
+// Horizontal group layout
+<Checkbox.Group defaultValue={['apple']} orientation="horizontal">
   <Checkbox name="apple" />
   <Checkbox name="banana" />
 </Checkbox.Group>
@@ -1147,6 +1181,7 @@ import { Radio } from '@raystack/apsara';
 <Radio.Group
   defaultValue="option2"
   onValueChange={(value, event) => setSelected(value)}
+  orientation="vertical"
   aria-label="Choose plan"
 >
   <Radio value="option1" id="free" />
@@ -1161,7 +1196,6 @@ Key changes:
 - `RadioItem` named export removed
 - `RadioItemProps` type export removed
 - `onValueChange` now receives 2 args
-- `orientation` prop removed
 
 ---
 
@@ -1618,6 +1652,28 @@ The `render` prop also supports render functions for full control:
 
 5. **`infoTooltip` prop removed** — no direct replacement. Compose manually if needed.
 
+6. **`overflow` changed from `hidden` to `auto`.** Text that exceeds the visible area now scrolls instead of being clipped. If you relied on the old hidden-overflow behavior (e.g., pairing with JavaScript auto-resize), test that your layout still works:
+
+```css
+/* Before — content beyond the visible area was clipped */
+.textarea { overflow: hidden; }
+
+/* After — content scrolls when it exceeds visible rows */
+.textarea { overflow: auto; }
+```
+
+7. **`min-height` removed; height is now row-based.** The textarea no longer has a CSS `min-height` (`var(--rs-space-13)`). Instead, the visible height is determined by the `rows` attribute (default `3`). If you depended on the old fixed minimum height, set `rows` or apply a custom `min-height` via `style` or `className`:
+
+```tsx
+// Before — min-height enforced by CSS token
+<TextArea placeholder="Write something..." />
+
+// After — height determined by rows (default 3); override if needed
+<TextArea placeholder="Write something..." rows={5} />
+// or restore a min-height via style
+<TextArea placeholder="Write something..." style={{ minHeight: 'var(--rs-space-13)' }} />
+```
+
 **Full before/after example:**
 
 ```tsx
@@ -1638,7 +1694,27 @@ The `render` prop also supports render functions for full control:
 </Field>
 ```
 
-Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, and all native `<textarea>` attributes.
+Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, `rows`, and all native `<textarea>` attributes.
+
+#### New Features
+
+- `size` prop — `'large'` (default) or `'small'`. Controls padding and font size:
+
+```tsx
+<TextArea size="small" placeholder="Compact textarea" />
+```
+
+- `variant` prop — `'default'` (default) or `'borderless'`. Controls border visibility:
+
+```tsx
+<TextArea variant="borderless" placeholder="No border" />
+```
+
+- `rows` prop — sets the number of visible text rows (default `3`). Replaces the old CSS `min-height` for controlling textarea height:
+
+```tsx
+<TextArea rows={6} placeholder="Taller textarea" />
+```
 
 ---
 
@@ -1894,6 +1970,7 @@ These are purely additive -- no migration needed.
 - [ ] Wrap InputField usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [InputField](#inputfield))
 - [ ] Wrap TextArea usages with `<Field>` — move `label`, `helperText`, `error`, `required` to Field props (see [TextArea](#textarea))
 - [ ] Remove `infoTooltip` from InputField and TextArea (no longer supported)
+- [ ] Review TextArea usages for overflow behavior change (`hidden` -> `auto`) and removed `min-height` (see [TextArea](#textarea))
 - [ ] Update custom CSS targeting `data-state` attributes (see [Data Attributes](#data-attributes))
 - [ ] Update custom CSS referencing `--radix-*` variables (see [CSS Variables](#css-variables))
 - [ ] Test all components end-to-end

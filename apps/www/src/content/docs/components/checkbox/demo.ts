@@ -25,6 +25,11 @@ export const playground = {
     disabled: {
       type: 'checkbox',
       defaultValue: false
+    },
+    size: {
+      type: 'select',
+      options: ['large', 'small'],
+      defaultValue: 'large'
     }
   },
   getCode
@@ -52,6 +57,20 @@ export const statesExamples = {
   ]
 };
 
+export const sizeExamples = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Large (default)',
+      code: `<Checkbox size="large" />`
+    },
+    {
+      name: 'Small',
+      code: `<Checkbox size="small" />`
+    }
+  ]
+};
+
 export const groupDemo = {
   type: 'code',
   code: `
@@ -69,6 +88,25 @@ export const groupDemo = {
       <Checkbox name="cherry" id="cg-cherry" />
       <label htmlFor="cg-cherry">Cherry</label>
     </Flex>
+  </Flex>
+</Checkbox.Group>`
+};
+
+export const groupHorizontalDemo = {
+  type: 'code',
+  code: `
+<Checkbox.Group defaultValue={["banana"]} orientation="horizontal">
+  <Flex gap="small" align="center">
+    <Checkbox name="apple" id="ch-apple" />
+    <label htmlFor="ch-apple">Apple</label>
+  </Flex>
+  <Flex gap="small" align="center">
+    <Checkbox name="banana" id="ch-banana" />
+    <label htmlFor="ch-banana">Banana</label>
+  </Flex>
+  <Flex gap="small" align="center">
+    <Checkbox name="cherry" id="ch-cherry" />
+    <label htmlFor="ch-cherry">Cherry</label>
   </Flex>
 </Checkbox.Group>`
 };

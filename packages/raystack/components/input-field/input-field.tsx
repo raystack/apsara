@@ -5,7 +5,7 @@ import { Chip } from '../chip';
 import { useFieldContext } from '../field';
 import styles from './input-field.module.css';
 
-const inputWrapper = cva(styles.inputWrapper, {
+const inputWrapper = cva(styles['input-wrapper'], {
   variants: {
     size: {
       small: styles['size-small'],
@@ -77,9 +77,10 @@ export function InputField({
           <Chip
             key={index}
             variant='outline'
-            isDismissible={!!chip.onRemove}
-            onDismiss={chip.onRemove}
+            isDismissible={!disabled && !!chip.onRemove}
+            onDismiss={disabled ? undefined : chip.onRemove}
             className={styles.chip}
+            disabled={disabled}
           >
             {chip.label}
           </Chip>

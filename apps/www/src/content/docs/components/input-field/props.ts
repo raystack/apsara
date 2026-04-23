@@ -5,7 +5,7 @@ export interface InputFieldProps {
    */
   size?: 'small' | 'large';
 
-  /** Whether the input is disabled. */
+  /** Whether the input is disabled. When true, chips are also disabled and their dismiss buttons are hidden. */
   disabled?: boolean;
 
   /** Icon element to display at the start of input. */
@@ -39,6 +39,9 @@ export interface InputFieldProps {
    * @defaultValue "default"
    */
   variant?: 'default' | 'borderless';
+
+  /** Ref to the outer container div. */
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 
   /** Additional CSS class names. */
   className?: string;

@@ -8,7 +8,7 @@
 }
 
 .captionLabel,
-.dropdowns>span,
+.dropdowns > span,
 .dropdown_trigger {
   font-weight: var(--rs-font-weight-medium);
   font-size: var(--rs-font-size-mini);
@@ -170,13 +170,16 @@
   visibility: hidden;
 }
 
-.calendarPopover {
-  padding: var(--rs-space-3) !important;
+/* Selector Doubling: chains the class with itself to raise specificity
+   from (0,1,0) to (0,2,0), beating react-day-picker's compound selectors
+   without resorting to !important or ID selectors. */
+.calendarPopover.calendarPopover {
+  padding: var(--rs-space-3);
   /* Todo: var does not exist for 0.5px */
-  border: 0.5px solid var(--rs-color-border-base-primary) !important;
+  border: 0.5px solid var(--rs-color-border-base-primary);
   min-width: max-content;
   width: fit-content;
-  max-width: none !important;
+  max-width: none;
 }
 
 .dropdowns {
