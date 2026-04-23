@@ -231,6 +231,13 @@ function DataViewRoot<TData>({
 
 DataViewRoot.displayName = 'DataView';
 
+/**
+ * @preview
+ * `DataView` is a preview component. Its API is not yet stable and
+ * **will have breaking changes** before the 1.0 release — prop names,
+ * sub-component shapes, and context surface may all change without
+ * following semver. Pin to exact versions if depending on it.
+ */
 // biome-ignore lint/suspicious/noShadowRestrictedNames: public component name intentionally matches the package export
 export const DataView = Object.assign(DataViewRoot, {
   // Renderers — each takes its own row render spec (`columns` on Table/List).
