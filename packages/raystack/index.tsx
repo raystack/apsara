@@ -41,7 +41,7 @@ export {
   DataViewTableColumn,
   DataViewTableProps,
   useDataView
-} from './components/data-view';
+} from './components/data-view-beta';
 export { Dialog } from './components/dialog';
 export { Drawer } from './components/drawer';
 export { EmptyState } from './components/empty-state';
