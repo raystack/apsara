@@ -36,6 +36,7 @@ export const preview = {
                   leadingIcon={<Share2Icon />}
                   trailingIcon={<Command.Shortcut>⌘ ⇧ W</Command.Shortcut>}
                   onClick={() => setOpen(false)}
+                  disabled
                 >
                   Run workflow...
                 </Command.Item>

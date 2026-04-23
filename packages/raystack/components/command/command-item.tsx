@@ -10,7 +10,7 @@ import { useCommandContext } from './command-root';
 export interface CommandItemProps extends AutocompletePrimitive.Item.Props {
   /** Icon rendered at the start of the item. */
   leadingIcon?: ReactNode;
-  /** Node rendered at the end of the item (e.g. `Command.Shortcut`). */
+  /** Icon rendered at the end of the item (e.g. `Command.Shortcut`). */
   trailingIcon?: ReactNode;
 }
 
@@ -20,6 +20,7 @@ export const CommandItem = ({
   value: providedValue,
   leadingIcon,
   trailingIcon,
+  disabled,
   ...props
 }: CommandItemProps) => {
   const value =
@@ -40,17 +41,40 @@ export const CommandItem = ({
     if (!isMatched) return null;
   }
 
+  const content = (
+    <>
+      {leadingIcon && <span className={styles.itemIcon}>{leadingIcon}</span>}
+      <span className={styles.itemLabel}>{children}</span>
+      {trailingIcon && (
+        <span className={styles.itemTrailing}>{trailingIcon}</span>
+      )}
+    </>
+  );
+
+  /**
+   * TODO: Fix this when Base UI fixes this issue
+   * This is a workaround to prevent item focus when the disabled prop is true.
+   */
+  if (disabled) {
+    return (
+      <div
+        className={cx(styles.item, className)}
+        role='option'
+        data-disabled={true}
+        aria-disabled={true}
+      >
+        {content}
+      </div>
+    );
+  }
+
   return (
     <AutocompletePrimitive.Item
       value={value}
       className={cx(styles.item, className)}
       {...props}
     >
-      {leadingIcon && <span className={styles.itemIcon}>{leadingIcon}</span>}
-      <span className={styles.itemLabel}>{children}</span>
-      {trailingIcon && (
-        <span className={styles.itemTrailing}>{trailingIcon}</span>
-      )}
+      {content}
     </AutocompletePrimitive.Item>
   );
 };
