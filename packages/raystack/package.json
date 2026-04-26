@@ -92,6 +92,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/ui": "^3.2.4",
+    "culori": "^4.0.2",
     "dotenv": "^17.2.2",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
