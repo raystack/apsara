@@ -5,7 +5,7 @@ source: packages/raystack/components/floating-actions
 tag: new
 ---
 
-import { preview, variantsDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
+import { preview, variantsDemo, sideDemo, alignDemo, disabledDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -65,6 +65,24 @@ Pair a dismissible `Chip` with action buttons to build a selection toolbar.
 Use `IconButton` inside the bar for compact toolbars.
 
 <Demo data={iconOnlyDemo} />
+
+### Side
+
+`side` controls which vertical edge of the viewport the bar pins to.
+
+<Demo data={sideDemo} />
+
+### Align
+
+`align` controls the horizontal alignment of the bar along the chosen `side`.
+
+<Demo data={alignDemo} />
+
+### Disabled
+
+`disabled` on the root cascades to every focusable item registered with the underlying Toolbar primitive, so the whole bar can be greyed out in one place (e.g. while a bulk action is pending).
+
+<Demo data={disabledDemo} />
 
 ### Grouped actions
 

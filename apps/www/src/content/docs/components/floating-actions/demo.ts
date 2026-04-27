@@ -29,10 +29,20 @@ export const variantsDemo = {
   style={{
     position: 'relative',
     width: '100%',
-    height: 200,
+    alignSelf: 'stretch',
     transform: 'translateZ(0)'
   }}
 >
+  <div style={{ height: '100%', overflowY: 'auto' }}>
+    <div
+      style={{
+        height: 500,
+        border: '2px dashed var(--rs-color-border-base-secondary)',
+        margin: 'var(--rs-space-4)',
+        boxSizing: 'border-box'
+      }}
+    />
+  </div>
   <FloatingActions aria-label="Selection actions">
     <Chip
       variant="outline"
@@ -95,7 +105,11 @@ export const bulkActionsDemo = {
 export const iconOnlyDemo = {
   type: 'code',
   code: `<div style={{ paddingBlock: 'var(--rs-space-9)' }}>
-  <FloatingActions variant="inline" aria-label="Row actions">
+  <FloatingActions
+    variant="inline"
+    aria-label="Row actions"
+    style={{ gap: 'var(--rs-space-5)' }}
+  >
     <IconButton aria-label="Edit" variant="text" color="neutral" size="small"><Pencil2Icon /></IconButton>
     <IconButton aria-label="Upload" variant="text" color="neutral" size="small"><UploadIcon /></IconButton>
     <FloatingActions.Separator />
@@ -114,18 +128,19 @@ export const scrollingDemo = {
           position: 'relative',
           width: '100%',
           height: '320px',
-          overflowY: 'auto',
           transform: 'translateZ(0)'
         }}
       >
-        <div
-          style={{
-            height: '800px',
-            border: '2px dashed var(--rs-color-border-base-secondary)',
-            margin: 'var(--rs-space-4)',
-            boxSizing: 'border-box'
-          }}
-        />
+        <div style={{ height: '100%', overflowY: 'auto' }}>
+          <div
+            style={{
+              height: '800px',
+              border: '2px dashed var(--rs-color-border-base-secondary)',
+              margin: 'var(--rs-space-4)',
+              boxSizing: 'border-box'
+            }}
+          />
+        </div>
         <FloatingActions aria-label="Selection actions">
           <Chip
             variant="outline"
@@ -143,6 +158,76 @@ export const scrollingDemo = {
       </div>
     );
   }`
+};
+
+const placementWrapper = (props: string) =>
+  `<div
+  style={{
+    position: 'relative',
+    width: '100%',
+    height: 240,
+    transform: 'translateZ(0)'
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      inset: '0 var(--rs-space-4)',
+      border: '2px dashed var(--rs-color-border-base-secondary)',
+      boxSizing: 'border-box'
+    }}
+  />
+  <FloatingActions ${props} aria-label="Selection actions">
+    <Chip
+      variant="outline"
+      size="large"
+      color="accent"
+      leadingIcon={<CheckCircledIcon />}
+      isDismissible
+    >
+      2 selected
+    </Chip>
+    <FloatingActions.Separator />
+    <Button variant="outline" color="neutral" size="small">Move to</Button>
+    <Button variant="outline" color="neutral" size="small">Actions</Button>
+  </FloatingActions>
+</div>`;
+
+export const sideDemo = {
+  type: 'code',
+  tabs: [
+    { name: 'Bottom', code: placementWrapper('side="bottom"') },
+    { name: 'Top', code: placementWrapper('side="top"') }
+  ]
+};
+
+export const alignDemo = {
+  type: 'code',
+  tabs: [
+    { name: 'Start', code: placementWrapper('align="start"') },
+    { name: 'Center', code: placementWrapper('align="center"') },
+    { name: 'End', code: placementWrapper('align="end"') }
+  ]
+};
+
+export const disabledDemo = {
+  type: 'code',
+  code: `<div style={{ paddingBlock: 'var(--rs-space-9)' }}>
+  <FloatingActions disabled variant="inline" aria-label="Selection actions">
+    <Chip
+      variant="outline"
+      size="large"
+      color="accent"
+      leadingIcon={<CheckCircledIcon />}
+      isDismissible
+    >
+      2 selected
+    </Chip>
+    <FloatingActions.Separator />
+    <Button variant="outline" color="neutral" size="small">Move to</Button>
+    <Button variant="outline" color="neutral" size="small">Actions</Button>
+  </FloatingActions>
+</div>`
 };
 
 export const groupDemo = {
