@@ -165,7 +165,8 @@ const placementWrapper = (props: string) =>
   style={{
     position: 'relative',
     width: '100%',
-    height: 240,
+    alignSelf: 'stretch',
+    minHeight: 240,
     transform: 'translateZ(0)'
   }}
 >
@@ -208,26 +209,6 @@ export const alignDemo = {
     { name: 'Center', code: placementWrapper('align="center"') },
     { name: 'End', code: placementWrapper('align="end"') }
   ]
-};
-
-export const disabledDemo = {
-  type: 'code',
-  code: `<div style={{ paddingBlock: 'var(--rs-space-9)' }}>
-  <FloatingActions disabled variant="inline" aria-label="Selection actions">
-    <Chip
-      variant="outline"
-      size="large"
-      color="accent"
-      leadingIcon={<CheckCircledIcon />}
-      isDismissible
-    >
-      2 selected
-    </Chip>
-    <FloatingActions.Separator />
-    <Button variant="outline" color="neutral" size="small">Move to</Button>
-    <Button variant="outline" color="neutral" size="small">Actions</Button>
-  </FloatingActions>
-</div>`
 };
 
 export const groupDemo = {
