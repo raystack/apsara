@@ -30,13 +30,13 @@ Built on top of Base UI's [Toolbar](https://base-ui.com/react/components/toolbar
 
 ### Root
 
-The container. Pins itself to the viewport by default (`variant="floating"`) and forwards the underlying Toolbar primitive props (`disabled`, `orientation`, `loopFocus`, plus all `<div>` attributes).
+The container. Pins itself to the viewport by default (`variant="floating"`) and forwards the underlying Toolbar primitive props (`orientation`, `loopFocus`, plus all `<div>` attributes).
 
 <auto-type-table path="./props.ts" name="FloatingActionsProps" />
 
 ### Group
 
-Cluster related items so that the toolbar treats them as a single navigation unit. Useful when you have a few destructive actions you want to disable together (`disabled` cascades to every focusable child).
+Cluster related items so that the toolbar treats them as a single navigation unit. Useful when you want a destructive cluster (e.g. "Delete") to read as one section, separated from the rest of the bar by a `Separator`.
 
 <auto-type-table path="./props.ts" name="FloatingActionsGroupProps" />
 
@@ -80,7 +80,7 @@ Use `IconButton` inside the bar for compact toolbars.
 
 ### Grouped actions
 
-Use `FloatingActions.Group` to cluster related items so they navigate as one unit and can be disabled together.
+Use `FloatingActions.Group` to cluster related items so they navigate as one unit, separated from the rest of the bar by a `Separator`.
 
 <Demo data={groupDemo} />
 

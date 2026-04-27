@@ -230,7 +230,7 @@ export const groupDemo = {
       <Button variant="outline" color="neutral" size="small">Move to</Button>
     </FloatingActions.Group>
     <FloatingActions.Separator />
-    <FloatingActions.Group disabled>
+    <FloatingActions.Group>
       <Button variant="outline" color="danger" size="small">Delete</Button>
     </FloatingActions.Group>
   </FloatingActions>

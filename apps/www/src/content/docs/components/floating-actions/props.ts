@@ -20,13 +20,6 @@ export interface FloatingActionsProps {
   align?: 'start' | 'center' | 'end';
 
   /**
-   * Disables every focusable item rendered inside the bar. Forwarded
-   * to the underlying Base UI Toolbar primitive.
-   * @defaultValue false
-   */
-  disabled?: boolean;
-
-  /**
    * Layout orientation of the toolbar. Forwarded to the underlying
    * Base UI Toolbar primitive.
    * @defaultValue "horizontal"
@@ -48,12 +41,6 @@ export interface FloatingActionsProps {
 }
 
 export interface FloatingActionsGroupProps {
-  /**
-   * Disables every focusable item rendered inside the group.
-   * @defaultValue false
-   */
-  disabled?: boolean;
-
   /** Additional CSS class names. */
   className?: string;
 
