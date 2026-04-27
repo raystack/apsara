@@ -23,39 +23,43 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Button](#button)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
-    - [Combobox](#combobox)
       - [New Features](#new-features)
+    - [Combobox](#combobox)
+      - [New Features](#new-features-1)
+    - [Command](#command)
+      - [New Features](#new-features-2)
     - [Data Table](#data-table)
     - [Dialog](#dialog)
-      - [New Features](#new-features-1)
+      - [New Features](#new-features-3)
     - [DropdownMenu -\> Menu](#dropdownmenu---menu)
-      - [New Features](#new-features-2)
+      - [New Features](#new-features-4)
     - [Flex](#flex)
     - [Grid](#grid)
     - [Headline](#headline)
     - [InputField](#inputfield)
     - [Popover](#popover)
-      - [New Features](#new-features-3)
+      - [New Features](#new-features-5)
     - [Radio](#radio)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
-      - [New Features](#new-features-4)
+      - [New Features](#new-features-6)
     - [Separator](#separator)
     - [Sheet -\> Drawer](#sheet---drawer)
-      - [New Features](#new-features-5)
-    - [Sidebar](#sidebar)
-      - [New Features](#new-features-6)
-    - [Slider](#slider)
       - [New Features](#new-features-7)
+    - [Sidebar](#sidebar)
+      - [New Features](#new-features-8)
+    - [Slider](#slider)
+      - [New Features](#new-features-9)
     - [Switch](#switch)
     - [Tabs](#tabs)
-      - [New Features](#new-features-8)
+      - [New Features](#new-features-10)
     - [Text](#text)
     - [TextArea](#textarea)
+      - [New Features](#new-features-11)
     - [Toast](#toast)
-      - [New Features](#new-features-9)
+      - [New Features](#new-features-12)
     - [Tooltip](#tooltip)
-      - [New Features](#new-features-10)
+      - [New Features](#new-features-13)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -461,6 +465,38 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 </Checkbox.Group>
 ```
 
+#### New Features
+
+- `size` prop (`'small' | 'large'`, default `'large'`) for controlling checkbox dimensions
+- `render` prop for custom indicator rendering — receives `(props, state)` where state includes `checked` and `indeterminate`
+- `readOnly` prop for non-editable display with reduced opacity
+- `orientation` prop on `Checkbox.Group` (`'vertical' | 'horizontal'`, default `'vertical'`)
+- Enhanced disabled state preserves checked/indeterminate visual appearance
+- Invalid state styling with danger border (and danger background when checked/indeterminate)
+
+```tsx
+// Size variants
+<Checkbox size="small" />
+<Checkbox size="large" /> {/* default */}
+
+// Custom indicator
+<Checkbox
+  checked
+  render={(props, state) => (
+    <span {...props}>{state.checked ? '✓' : ''}</span>
+  )}
+/>
+
+// Read-only checkbox
+<Checkbox checked readOnly />
+
+// Horizontal group layout
+<Checkbox.Group defaultValue={['apple']} orientation="horizontal">
+  <Checkbox name="apple" />
+  <Checkbox name="banana" />
+</Checkbox.Group>
+```
+
 ---
 
 ### Combobox
@@ -539,6 +575,209 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 - Generic value type support: `<Combobox<CustomType>>`
 - `items` prop on Root for built-in filtering
 - `render` prop on Content and Item
+
+---
+
+### Command
+
+**Underlying primitive changed from `cmdk` to Base UI `Autocomplete`.** Most usages will need to be rewritten.
+
+1. **`Command.List` renamed to `Command.Content`:**
+
+```tsx
+// Before
+<Command>
+  <Command.Input />
+  <Command.List>
+    <Command.Empty>No results</Command.Empty>
+    <Command.Item>Item</Command.Item>
+  </Command.List>
+</Command>
+
+// After
+<Command>
+  <Command.Input />
+  <Command.Content>
+    <Command.Empty>No results</Command.Empty>
+    <Command.Item>Item</Command.Item>
+  </Command.Content>
+</Command>
+```
+
+2. **`Command.Group` `heading` prop replaced by `Command.Label` child:**
+
+```tsx
+// Before
+<Command.Group heading="Suggestions">
+  <Command.Item>Calendar</Command.Item>
+  <Command.Item>Calculator</Command.Item>
+</Command.Group>
+
+// After
+<Command.Group>
+  <Command.Label>Suggestions</Command.Label>
+  <Command.Item>Calendar</Command.Item>
+  <Command.Item>Calculator</Command.Item>
+</Command.Group>
+```
+
+3. **`Command.Item` `onSelect` replaced by `onClick`:**
+
+```tsx
+// Before — cmdk's onSelect with the item's value
+<Command.Item value="calendar" onSelect={(value) => handleSelect(value)}>
+  Calendar
+</Command.Item>
+
+// After — standard DOM onClick; derive the value from your handler closure
+<Command.Item value="calendar" onClick={() => handleSelect('calendar')}>
+  Calendar
+</Command.Item>
+```
+
+`onClick` fires on pointer click and on keyboard `Enter` when the item is highlighted.
+
+4. **Icons now use `leadingIcon` / `trailingIcon` props** instead of being composed inline:
+
+```tsx
+// Before — icons rendered as children
+<Command.Item>
+  <CalendarIcon />
+  Calendar
+  <Command.Shortcut>⌘ C</Command.Shortcut>
+</Command.Item>
+
+// After — icons passed as props, layout handled internally
+<Command.Item
+  leadingIcon={<CalendarIcon />}
+  trailingIcon={<Command.Shortcut>⌘ C</Command.Shortcut>}
+>
+  Calendar
+</Command.Item>
+```
+
+5. **`Command.Shortcut` now wraps each key in its own `<kbd>`.** The string children are split on whitespace; array/element children are wrapped per item. Previously `Command.Shortcut` rendered a single `<span>`:
+
+```tsx
+// Before — plain <span>
+<Command.Shortcut>⌘ K</Command.Shortcut>
+// renders: <span>⌘ K</span>
+
+// After — <kbd> per token, split by whitespace
+<Command.Shortcut>⌘ K</Command.Shortcut>
+// renders: <span><kbd>⌘</kbd><kbd>K</kbd></span>
+```
+
+If you had custom CSS targeting `Command.Shortcut`'s inner content, update it to target the inner `<kbd>` elements.
+
+6. **Dialog composition is now explicit.** The old `Command.Dialog` internally wrapped Apsara's `Dialog` + `Dialog.Content` and nested a `Command` root automatically. The new API splits that into three pieces: `Command.Dialog` (root), `Command.DialogTrigger`, and `Command.DialogContent`. You must render `<Command>` yourself inside `DialogContent`:
+
+```tsx
+// Before — Dialog and Command were fused
+<Command.Dialog open={open} onOpenChange={setOpen}>
+  <Command.Input />
+  <Command.List>
+    <Command.Item>Item</Command.Item>
+  </Command.List>
+</Command.Dialog>
+{/* separate trigger wired via keyboard shortcut only */}
+
+// After — explicit trigger + content + nested Command
+<Command.Dialog open={open} onOpenChange={setOpen}>
+  <Command.DialogTrigger render={<Button variant="outline" />}>
+    Open Command Menu
+  </Command.DialogTrigger>
+  <Command.DialogContent>
+    <Command>
+      <Command.Input />
+      <Command.Content>
+        <Command.Item>Item</Command.Item>
+      </Command.Content>
+    </Command>
+  </Command.DialogContent>
+</Command.Dialog>
+```
+
+`Command.DialogContent` replaces the old reliance on `Dialog.Content`: it renders its own portal, backdrop, viewport, and popup. It does not render a close button — users dismiss with `Escape` or by clicking the backdrop. Pass `overlay={{ blur: true }}` for a blurred backdrop.
+
+7. **`filter` prop signature changed** and now only applies when `items` is provided (see New Features). The old cmdk signature was `(value: string, search: string, keywords?: string[]) => number` (returning a 0–1 score); the new Base UI signature is `(itemValue: unknown, query: string) => boolean`:
+
+```tsx
+// Before — cmdk numeric score
+<Command filter={(value, search) => value.includes(search) ? 1 : 0}>
+
+// After — Base UI boolean (only active when `items` is provided)
+<Command
+  items={items}
+  filter={(itemValue, query) =>
+    String(itemValue).toLowerCase().includes(query.toLowerCase())
+  }
+>
+```
+
+Without `items`, `Command` uses its built-in auto-filter over `Command.Item` children (case-insensitive match against `value` and text content), and `filter` is ignored.
+
+8. **`onValueChange` receives 2 args** on both the root and `Command.Input` — `(value: string, eventDetails)`.
+
+9. **`Command.Input` props changed.** It now accepts the same props as `InputField` (e.g. `size`, `leadingIcon`, `placeholder`, `autoFocus`). Defaults: `size="large"`, `autoFocus={true}`, leading icon is a magnifying glass. `trailingIcon`, `chips`, `maxChipsVisible`, and `variant` are not accepted.
+
+**Full before/after example:**
+
+```tsx
+// Before
+import { Command } from '@raystack/apsara';
+
+<Command.Dialog open={open} onOpenChange={setOpen}>
+  <Command.Input placeholder="Type a command..." />
+  <Command.List>
+    <Command.Empty>No results.</Command.Empty>
+    <Command.Group heading="Suggestions">
+      <Command.Item value="calendar" onSelect={(v) => run(v)}>
+        <CalendarIcon />
+        Calendar
+        <Command.Shortcut>⌘ C</Command.Shortcut>
+      </Command.Item>
+    </Command.Group>
+  </Command.List>
+</Command.Dialog>
+
+// After
+import { Command, Button } from '@raystack/apsara';
+
+<Command.Dialog open={open} onOpenChange={setOpen}>
+  <Command.DialogTrigger render={<Button variant="outline" />}>
+    Open Command Menu
+  </Command.DialogTrigger>
+  <Command.DialogContent>
+    <Command>
+      <Command.Input placeholder="Type a command..." />
+      <Command.Content>
+        <Command.Empty>No results.</Command.Empty>
+        <Command.Group>
+          <Command.Label>Suggestions</Command.Label>
+          <Command.Item
+            value="calendar"
+            leadingIcon={<CalendarIcon />}
+            trailingIcon={<Command.Shortcut>⌘ C</Command.Shortcut>}
+            onClick={() => run('calendar')}
+          >
+            Calendar
+          </Command.Item>
+        </Command.Group>
+      </Command.Content>
+    </Command>
+  </Command.DialogContent>
+</Command.Dialog>
+```
+
+#### New Features
+
+- `Command.Label` sub-component for group labels (pairs with `Command.Group`).
+- `Command.DialogTrigger` and `Command.DialogContent` sub-components for composing the palette's dialog shell.
+- `items` prop on Root to delegate filtering to Base UI. When provided, `Command.Content` accepts a render function that receives each item.
+- `leadingIcon` / `trailingIcon` props on `Command.Item` with built-in layout.
+- `autoHighlight`, `keepHighlight`, `inline`, and `open` props forwarded from Base UI `Autocomplete.Root`.
+- Inherits Base UI combobox a11y: `role="combobox"` on the input, `role="listbox"` on the content, `role="option"` on items. `ArrowUp`/`ArrowDown`/`Enter`/`Escape` keyboard navigation.
 
 ---
 
@@ -942,6 +1181,7 @@ import { Radio } from '@raystack/apsara';
 <Radio.Group
   defaultValue="option2"
   onValueChange={(value, event) => setSelected(value)}
+  orientation="vertical"
   aria-label="Choose plan"
 >
   <Radio value="option1" id="free" />
@@ -956,7 +1196,6 @@ Key changes:
 - `RadioItem` named export removed
 - `RadioItemProps` type export removed
 - `onValueChange` now receives 2 args
-- `orientation` prop removed
 
 ---
 
@@ -1413,6 +1652,28 @@ The `render` prop also supports render functions for full control:
 
 5. **`infoTooltip` prop removed** — no direct replacement. Compose manually if needed.
 
+6. **`overflow` changed from `hidden` to `auto`.** Text that exceeds the visible area now scrolls instead of being clipped. If you relied on the old hidden-overflow behavior (e.g., pairing with JavaScript auto-resize), test that your layout still works:
+
+```css
+/* Before — content beyond the visible area was clipped */
+.textarea { overflow: hidden; }
+
+/* After — content scrolls when it exceeds visible rows */
+.textarea { overflow: auto; }
+```
+
+7. **`min-height` removed; height is now row-based.** The textarea no longer has a CSS `min-height` (`var(--rs-space-13)`). Instead, the visible height is determined by the `rows` attribute (default `3`). If you depended on the old fixed minimum height, set `rows` or apply a custom `min-height` via `style` or `className`:
+
+```tsx
+// Before — min-height enforced by CSS token
+<TextArea placeholder="Write something..." />
+
+// After — height determined by rows (default 3); override if needed
+<TextArea placeholder="Write something..." rows={5} />
+// or restore a min-height via style
+<TextArea placeholder="Write something..." style={{ minHeight: 'var(--rs-space-13)' }} />
+```
+
 **Full before/after example:**
 
 ```tsx
@@ -1433,7 +1694,27 @@ The `render` prop also supports render functions for full control:
 </Field>
 ```
 
-Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, and all native `<textarea>` attributes.
+Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, `rows`, and all native `<textarea>` attributes.
+
+#### New Features
+
+- `size` prop — `'large'` (default) or `'small'`. Controls padding and font size:
+
+```tsx
+<TextArea size="small" placeholder="Compact textarea" />
+```
+
+- `variant` prop — `'default'` (default) or `'borderless'`. Controls border visibility:
+
+```tsx
+<TextArea variant="borderless" placeholder="No border" />
+```
+
+- `rows` prop — sets the number of visible text rows (default `3`). Replaces the old CSS `min-height` for controlling textarea height:
+
+```tsx
+<TextArea rows={6} placeholder="Taller textarea" />
+```
 
 ---
 
@@ -1685,9 +1966,11 @@ These are purely additive -- no migration needed.
 - [ ] Remove `Select.Viewport` wrapper
 - [ ] Rewrite all Tooltip usages to compound component pattern
 - [ ] Update Accordion: `type` -> `multiple`, remove `collapsible`, `forceMount` -> `keepMounted`
+- [ ] Update Command: `Command.List` -> `Command.Content`, `Group heading` -> `<Command.Label>`, `onSelect` -> `onClick`, inline icons -> `leadingIcon`/`trailingIcon`, wrap dialog usages with `Command.DialogTrigger` + `Command.DialogContent` (see [Command](#command))
 - [ ] Wrap InputField usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [InputField](#inputfield))
 - [ ] Wrap TextArea usages with `<Field>` — move `label`, `helperText`, `error`, `required` to Field props (see [TextArea](#textarea))
 - [ ] Remove `infoTooltip` from InputField and TextArea (no longer supported)
+- [ ] Review TextArea usages for overflow behavior change (`hidden` -> `auto`) and removed `min-height` (see [TextArea](#textarea))
 - [ ] Update custom CSS targeting `data-state` attributes (see [Data Attributes](#data-attributes))
 - [ ] Update custom CSS referencing `--radix-*` variables (see [CSS Variables](#css-variables))
 - [ ] Test all components end-to-end

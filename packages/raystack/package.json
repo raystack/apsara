@@ -121,7 +121,6 @@
     "@tanstack/react-virtual": "^3.13.13",
     "@tanstack/table-core": "^8.9.2",
     "class-variance-authority": "^0.7.1",
-    "cmdk": "^1.1.1",
     "color": "^5.0.0",
     "dayjs": "^1.11.11",
     "prism-react-renderer": "^2.4.1",

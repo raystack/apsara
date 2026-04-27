@@ -63,6 +63,44 @@ describe('Checkbox.Group', () => {
     });
   });
 
+  describe('Orientation', () => {
+    it('renders vertical by default', () => {
+      render(
+        <Checkbox.Group data-testid='group'>
+          <Checkbox name='apple' />
+          <Checkbox name='banana' />
+        </Checkbox.Group>
+      );
+      const group = screen.getByTestId('group');
+      expect(group).toHaveClass(styles.group);
+      expect(group).not.toHaveClass(styles['group-horizontal']);
+    });
+
+    it('renders vertical when orientation="vertical"', () => {
+      render(
+        <Checkbox.Group orientation='vertical' data-testid='group'>
+          <Checkbox name='apple' />
+          <Checkbox name='banana' />
+        </Checkbox.Group>
+      );
+      const group = screen.getByTestId('group');
+      expect(group).toHaveClass(styles.group);
+      expect(group).not.toHaveClass(styles['group-horizontal']);
+    });
+
+    it('renders horizontal when orientation="horizontal"', () => {
+      render(
+        <Checkbox.Group orientation='horizontal' data-testid='group'>
+          <Checkbox name='apple' />
+          <Checkbox name='banana' />
+        </Checkbox.Group>
+      );
+      const group = screen.getByTestId('group');
+      expect(group).toHaveClass(styles.group);
+      expect(group).toHaveClass(styles['group-horizontal']);
+    });
+  });
+
   describe('Selection Behavior', () => {
     it('works with defaultValue', () => {
       render(

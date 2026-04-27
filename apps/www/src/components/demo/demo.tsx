@@ -1,12 +1,22 @@
 'use client';
 
 import {
+  BorderSolidIcon,
   CheckCircledIcon,
+  ColorWheelIcon,
+  Component1Icon,
+  FileIcon,
   FontBoldIcon,
+  FontFamilyIcon,
   FontItalicIcon,
   InfoCircledIcon,
+  LayersIcon,
+  OpenInNewWindowIcon,
   Pencil2Icon,
   PlusIcon,
+  ShadowIcon,
+  Share2Icon,
+  SpaceBetweenHorizontallyIcon,
   TextAlignCenterIcon,
   TextAlignLeftIcon,
   TextAlignRightIcon,
@@ -65,6 +75,16 @@ export default function Demo(props: DemoProps) {
       TextAlignLeftIcon,
       TextAlignCenterIcon,
       TextAlignRightIcon,
+      Component1Icon,
+      FileIcon,
+      FontFamilyIcon,
+      LayersIcon,
+      OpenInNewWindowIcon,
+      Share2Icon,
+      BorderSolidIcon,
+      ColorWheelIcon,
+      ShadowIcon,
+      SpaceBetweenHorizontallyIcon,
       dayjs
     }
   } = props;
