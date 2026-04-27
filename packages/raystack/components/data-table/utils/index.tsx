@@ -117,7 +117,7 @@ const generateFilterMap = (
 };
 
 const generateSortMap = (sort: DataTableSort[] = []): Map<string, string> => {
-  return new Map(sort.map(({ name, order }) => [name, order]));
+  return new Map(sort.filter(Boolean).map(({ name, order }) => [name, order]));
 };
 
 const isFilterChanged = (
@@ -173,7 +173,10 @@ export const hasActiveQuery = (
   const hasSearch = Boolean(
     tableQuery?.search && tableQuery.search.trim() !== ''
   );
-  const sortChanged = isSortChanged([defaultSort], tableQuery.sort || []);
+  const sortChanged = isSortChanged(
+    defaultSort ? [defaultSort] : [],
+    tableQuery.sort || []
+  );
   const groupChanged = isGroupChanged(
     [defaultGroupOption.id],
     tableQuery.group_by || []
