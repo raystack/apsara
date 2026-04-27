@@ -1,5 +1,4 @@
-import { Flex, Text } from '@raystack/apsara';
-import styles from './not-found.module.css';
+import { Flex, Separator, Text } from '@raystack/apsara';
 
 export default function NotFound() {
   return (
@@ -13,7 +12,7 @@ export default function NotFound() {
       <Text size={10} weight='bold'>
         404
       </Text>
-      <div className={styles.divider} />
+      <Separator orientation='vertical' style={{ height: '48px' }} />
       <Text size={7}>This page could not be found.</Text>
     </Flex>
   );
