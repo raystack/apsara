@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  CheckCircledIcon,
   FontBoldIcon,
   FontItalicIcon,
   InfoCircledIcon,
@@ -54,6 +55,7 @@ export default function Demo(props: DemoProps) {
       NextLink,
       PlusIcon,
       TransformIcon,
+      CheckCircledIcon,
       Pencil2Icon,
       InfoCircledIcon,
       UploadIcon,

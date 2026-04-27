@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
-import { FloatingActions } from '../floating-actions';
 import styles from '../floating-actions.module.css';
+import { FloatingActions } from '../index';
 
 describe('FloatingActions', () => {
   it('renders with children and a toolbar role', () => {
@@ -14,6 +14,31 @@ describe('FloatingActions', () => {
     const root = screen.getByRole('toolbar');
     expect(root).toBeInTheDocument();
     expect(screen.getByText('content')).toBeInTheDocument();
+  });
+
+  it('defaults to the floating variant anchored bottom-center', () => {
+    render(<FloatingActions>content</FloatingActions>);
+    const root = screen.getByRole('toolbar');
+    expect(root).toHaveAttribute('data-variant', 'floating');
+    expect(root).toHaveAttribute('data-side', 'bottom');
+    expect(root).toHaveAttribute('data-align', 'center');
+  });
+
+  it('renders the inline variant without floating positioning attributes', () => {
+    render(<FloatingActions variant='inline'>content</FloatingActions>);
+    const root = screen.getByRole('toolbar');
+    expect(root).toHaveAttribute('data-variant', 'inline');
+  });
+
+  it('reflects side and align on the root for floating variant', () => {
+    render(
+      <FloatingActions side='top' align='end'>
+        content
+      </FloatingActions>
+    );
+    const root = screen.getByRole('toolbar');
+    expect(root).toHaveAttribute('data-side', 'top');
+    expect(root).toHaveAttribute('data-align', 'end');
   });
 
   it('applies custom className to the root', () => {
@@ -30,13 +55,19 @@ describe('FloatingActions', () => {
     expect(ref.current).toBe(screen.getByRole('toolbar'));
   });
 
-  it('allows overriding the root role', () => {
-    render(
-      <FloatingActions role='group' aria-label='bulk'>
-        content
-      </FloatingActions>
-    );
-    expect(screen.getByRole('group', { name: 'bulk' })).toBeInTheDocument();
+  describe('Group', () => {
+    it('renders a Toolbar.Group inside the root', () => {
+      render(
+        <FloatingActions>
+          <FloatingActions.Group data-testid='group'>
+            <button type='button'>action</button>
+          </FloatingActions.Group>
+        </FloatingActions>
+      );
+      const group = screen.getByTestId('group');
+      expect(group).toBeInTheDocument();
+      expect(group.className).toContain(styles.group);
+    });
   });
 
   describe('Separator', () => {
