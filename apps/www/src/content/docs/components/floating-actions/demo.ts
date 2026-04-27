@@ -20,22 +20,55 @@ export const preview = {
 </div>`
 };
 
-export const floatingDemo = {
+export const variantsDemo = {
   type: 'code',
-  code: `<FloatingActions side="bottom" align="center" aria-label="Selection actions">
-  <Chip
-    variant="outline"
-    size="large"
-    color="accent"
-    leadingIcon={<CheckCircledIcon />}
-    isDismissible
-  >
-    2 selected
-  </Chip>
-  <FloatingActions.Separator />
-  <Button variant="outline" color="neutral" size="small">Move to</Button>
-  <Button variant="outline" color="neutral" size="small">Actions</Button>
-</FloatingActions>`
+  tabs: [
+    {
+      name: 'Floating',
+      code: `<div
+  style={{
+    position: 'relative',
+    width: '100%',
+    height: 200,
+    transform: 'translateZ(0)'
+  }}
+>
+  <FloatingActions aria-label="Selection actions">
+    <Chip
+      variant="outline"
+      size="large"
+      color="accent"
+      leadingIcon={<CheckCircledIcon />}
+      isDismissible
+    >
+      2 selected
+    </Chip>
+    <FloatingActions.Separator />
+    <Button variant="outline" color="neutral" size="small">Move to</Button>
+    <Button variant="outline" color="neutral" size="small">Actions</Button>
+  </FloatingActions>
+</div>`
+    },
+    {
+      name: 'Inline',
+      code: `<div style={{ paddingBlock: 'var(--rs-space-9)' }}>
+  <FloatingActions variant="inline" aria-label="Selection actions">
+    <Chip
+      variant="outline"
+      size="large"
+      color="accent"
+      leadingIcon={<CheckCircledIcon />}
+      isDismissible
+    >
+      2 selected
+    </Chip>
+    <FloatingActions.Separator />
+    <Button variant="outline" color="neutral" size="small">Move to</Button>
+    <Button variant="outline" color="neutral" size="small">Actions</Button>
+  </FloatingActions>
+</div>`
+    }
+  ]
 };
 
 export const bulkActionsDemo = {
@@ -75,33 +108,24 @@ export const scrollingDemo = {
   type: 'code',
   code: `
   function ScrollingDemo() {
-    const rows = Array.from({ length: 20 }, (_, i) => i + 1);
     return (
       <div
         style={{
           position: 'relative',
+          width: '100%',
           height: '320px',
           overflowY: 'auto',
-          transform: 'translateZ(0)',
-          border: '1px solid var(--rs-color-border-base-primary)',
-          borderRadius: 'var(--rs-radius-2)',
-          padding: 'var(--rs-space-5)'
+          transform: 'translateZ(0)'
         }}
       >
-        <Flex direction="column" gap="small">
-          {rows.map(row => (
-            <div
-              key={row}
-              style={{
-                padding: 'var(--rs-space-4)',
-                background: 'var(--rs-color-background-base-secondary)',
-                borderRadius: 'var(--rs-radius-1)'
-              }}
-            >
-              Row {row}
-            </div>
-          ))}
-        </Flex>
+        <div
+          style={{
+            height: '800px',
+            border: '2px dashed var(--rs-color-border-base-secondary)',
+            margin: 'var(--rs-space-4)',
+            boxSizing: 'border-box'
+          }}
+        />
         <FloatingActions aria-label="Selection actions">
           <Chip
             variant="outline"
