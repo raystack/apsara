@@ -5,7 +5,7 @@ source: packages/raystack/components/floating-actions
 tag: new
 ---
 
-import { preview, floatingDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
+import { preview, floatingDemo, inlineDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -30,7 +30,7 @@ Built on top of Base UI's [Toolbar](https://base-ui.com/react/components/toolbar
 
 ### Root
 
-The container. Pins itself to the viewport by default (`variant="floating"`) and forwards the underlying Toolbar primitive props (`orientation`, `loopFocus`, plus all `<div>` attributes).
+The container. Pins itself to the viewport by default (`variant="floating"`) and forwards all `<div>` attributes to the underlying Toolbar primitive.
 
 <auto-type-table path="./props.ts" name="FloatingActionsProps" />
 
@@ -58,7 +58,7 @@ The default. Renders with `position: fixed` and is anchored to the viewport via 
 
 Opt out of viewport positioning when you want the bar to flow with surrounding content (e.g. inside a card, table cell, or storybook frame).
 
-<Demo data={preview} />
+<Demo data={inlineDemo} />
 
 ## Examples
 

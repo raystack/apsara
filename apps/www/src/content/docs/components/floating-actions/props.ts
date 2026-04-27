@@ -19,20 +19,6 @@ export interface FloatingActionsProps {
    */
   align?: 'start' | 'center' | 'end';
 
-  /**
-   * Layout orientation of the toolbar. Forwarded to the underlying
-   * Base UI Toolbar primitive.
-   * @defaultValue "horizontal"
-   */
-  orientation?: 'horizontal' | 'vertical';
-
-  /**
-   * Whether keyboard navigation wraps focus when reaching either end
-   * of the bar. Forwarded to the underlying Base UI Toolbar primitive.
-   * @defaultValue true
-   */
-  loopFocus?: boolean;
-
   /** Additional CSS class names. */
   className?: string;
 
