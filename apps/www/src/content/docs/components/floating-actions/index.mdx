@@ -5,16 +5,16 @@ source: packages/raystack/components/floating-actions
 tag: new
 ---
 
-import { preview, floatingDemo, bulkActionsDemo, iconOnlyDemo } from "./demo.ts";
+import { preview, floatingDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
 ## Anatomy
 
-Import and assemble the component along with other primitives. `FloatingActions` provides the container (built on top of [`Separator`](/docs/components/separator) for the divider); everything inside is freely composable.
+Import and assemble the component:
 
 ```tsx
-import { FloatingActions, Chip, Button } from '@raystack/apsara'
+import { FloatingActions, Chip, Button } from "@raystack/apsara";
 
 <FloatingActions aria-label="Selection actions">
   <Chip isDismissible>2 selected</Chip>
@@ -26,15 +26,23 @@ import { FloatingActions, Chip, Button } from '@raystack/apsara'
 
 ## API Reference
 
+Built on top of Base UI's [Toolbar](https://base-ui.com/react/components/toolbar) primitive, so keyboard navigation, roving focus, and the `role="toolbar"` semantics come from the primitive.
+
 ### Root
 
-The container. Renders as a `role="toolbar"` element by default and pins itself to the viewport (`variant="floating"`).
+The container. Pins itself to the viewport by default (`variant="floating"`) and forwards the underlying Toolbar primitive props (`disabled`, `orientation`, `loopFocus`, plus all `<div>` attributes).
 
 <auto-type-table path="./props.ts" name="FloatingActionsProps" />
 
+### Group
+
+Cluster related items so that the toolbar treats them as a single navigation unit. Useful when you have a few destructive actions you want to disable together (`disabled` cascades to every focusable child).
+
+<auto-type-table path="./props.ts" name="FloatingActionsGroupProps" />
+
 ### Separator
 
-A vertical divider sized to the bar's content.
+A vertical divider sized to the bar's content. Built on top of [`Separator`](/docs/components/separator).
 
 <auto-type-table path="./props.ts" name="FloatingActionsSeparatorProps" />
 
@@ -66,8 +74,20 @@ Use `IconButton` inside the bar for compact toolbars.
 
 <Demo data={iconOnlyDemo} />
 
+### Grouped actions
+
+Use `FloatingActions.Group` to cluster related items so they navigate as one unit and can be disabled together.
+
+<Demo data={groupDemo} />
+
+### Scrolling context
+
+The floating variant stays pinned to the viewport (or the nearest containing block) while content scrolls beneath it — the canonical use case for a bulk-selection bar over a long list or table.
+
+<Demo data={scrollingDemo} />
+
 ## Accessibility
 
-- The root uses `role="toolbar"` so it is announced as a group of interactive controls. Override the `role` prop when a different grouping is more appropriate.
+- The root uses `role="toolbar"` (enforced by the Base UI Toolbar primitive) and is announced as a group of interactive controls. Keyboard focus moves between toolbar items with the arrow keys.
 - The separator renders with `role="separator"` and `aria-orientation="vertical"` via the Base UI primitive, communicating structural grouping between action clusters.
 - Provide an `aria-label` on the root when the toolbar's purpose is not obvious from its contents (e.g. `aria-label="Selection actions"`).

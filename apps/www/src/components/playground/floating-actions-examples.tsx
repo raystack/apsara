@@ -52,6 +52,34 @@ export function FloatingActionsExamples() {
           </Button>
         </FloatingActions>
 
+        <Text>Inline — grouped actions:</Text>
+        <FloatingActions variant='inline' aria-label='Bulk actions'>
+          <Chip
+            variant='outline'
+            size='large'
+            color='accent'
+            leadingIcon={<CheckCircledIcon />}
+            isDismissible
+          >
+            3 selected
+          </Chip>
+          <FloatingActions.Separator />
+          <FloatingActions.Group>
+            <Button variant='outline' color='neutral' size='small'>
+              Archive
+            </Button>
+            <Button variant='outline' color='neutral' size='small'>
+              Move to
+            </Button>
+          </FloatingActions.Group>
+          <FloatingActions.Separator />
+          <FloatingActions.Group disabled>
+            <Button variant='outline' color='danger' size='small'>
+              Delete
+            </Button>
+          </FloatingActions.Group>
+        </FloatingActions>
+
         <Text>Floating (default) — pins to bottom-center of the viewport:</Text>
         <FloatingActions aria-label='Floating selection actions'>
           <Chip

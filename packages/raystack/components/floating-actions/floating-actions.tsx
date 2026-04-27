@@ -1,7 +1,7 @@
 'use client';
 
+import { Toolbar as ToolbarPrimitive } from '@base-ui/react/toolbar';
 import { cx } from 'class-variance-authority';
-import type { ComponentProps } from 'react';
 import { Separator } from '../separator';
 import styles from './floating-actions.module.css';
 
@@ -9,7 +9,7 @@ export type FloatingActionsVariant = 'inline' | 'floating';
 export type FloatingActionsSide = 'top' | 'bottom';
 export type FloatingActionsAlign = 'start' | 'center' | 'end';
 
-export interface FloatingActionsProps extends ComponentProps<'div'> {
+export interface FloatingActionsProps extends ToolbarPrimitive.Root.Props {
   /**
    * Visual layout. `floating` pins the bar to the viewport via
    * `position: fixed`; `inline` renders in normal document flow.
@@ -29,16 +29,14 @@ export interface FloatingActionsProps extends ComponentProps<'div'> {
   align?: FloatingActionsAlign;
 }
 
-const FloatingActionsRoot = ({
+export const FloatingActionsRoot = ({
   className,
-  role = 'toolbar',
   variant = 'floating',
   side = 'bottom',
   align = 'center',
   ...props
 }: FloatingActionsProps) => (
-  <div
-    role={role}
+  <ToolbarPrimitive.Root
     data-variant={variant}
     data-side={side}
     data-align={align}
@@ -48,12 +46,22 @@ const FloatingActionsRoot = ({
 );
 FloatingActionsRoot.displayName = 'FloatingActions';
 
+export type FloatingActionsGroupProps = ToolbarPrimitive.Group.Props;
+
+export const FloatingActionsGroup = ({
+  className,
+  ...props
+}: FloatingActionsGroupProps) => (
+  <ToolbarPrimitive.Group className={cx(styles.group, className)} {...props} />
+);
+FloatingActionsGroup.displayName = 'FloatingActions.Group';
+
 export type FloatingActionsSeparatorProps = Omit<
-  ComponentProps<typeof Separator>,
+  React.ComponentProps<typeof Separator>,
   'orientation'
 >;
 
-const FloatingActionsSeparator = ({
+export const FloatingActionsSeparator = ({
   className,
   ...props
 }: FloatingActionsSeparatorProps) => (
@@ -64,7 +72,3 @@ const FloatingActionsSeparator = ({
   />
 );
 FloatingActionsSeparator.displayName = 'FloatingActions.Separator';
-
-export const FloatingActions = Object.assign(FloatingActionsRoot, {
-  Separator: FloatingActionsSeparator
-});

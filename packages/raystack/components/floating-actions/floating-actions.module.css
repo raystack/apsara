@@ -39,6 +39,12 @@
   right: var(--rs-space-5);
 }
 
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+
 .separator[data-orientation="vertical"] {
   height: var(--rs-space-5);
 }
