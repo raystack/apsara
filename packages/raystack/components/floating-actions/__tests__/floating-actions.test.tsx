@@ -16,6 +16,31 @@ describe('FloatingActions', () => {
     expect(screen.getByText('content')).toBeInTheDocument();
   });
 
+  it('defaults to the floating variant anchored bottom-center', () => {
+    render(<FloatingActions>content</FloatingActions>);
+    const root = screen.getByRole('toolbar');
+    expect(root).toHaveAttribute('data-variant', 'floating');
+    expect(root).toHaveAttribute('data-side', 'bottom');
+    expect(root).toHaveAttribute('data-align', 'center');
+  });
+
+  it('renders the inline variant without floating positioning attributes', () => {
+    render(<FloatingActions variant='inline'>content</FloatingActions>);
+    const root = screen.getByRole('toolbar');
+    expect(root).toHaveAttribute('data-variant', 'inline');
+  });
+
+  it('reflects side and align on the root for floating variant', () => {
+    render(
+      <FloatingActions side='top' align='end'>
+        content
+      </FloatingActions>
+    );
+    const root = screen.getByRole('toolbar');
+    expect(root).toHaveAttribute('data-side', 'top');
+    expect(root).toHaveAttribute('data-align', 'end');
+  });
+
   it('applies custom className to the root', () => {
     render(<FloatingActions className='custom'>content</FloatingActions>);
     const root = screen.getByRole('toolbar');

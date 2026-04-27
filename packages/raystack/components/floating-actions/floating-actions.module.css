@@ -10,6 +10,35 @@
   box-shadow: var(--rs-shadow-lifted);
 }
 
+/* ===== Floating variant ===== */
+.root[data-variant="floating"] {
+  position: fixed;
+  z-index: var(--rs-z-index-portal);
+}
+
+/* Vertical edge */
+.root[data-variant="floating"][data-side="bottom"] {
+  bottom: var(--rs-space-5);
+}
+
+.root[data-variant="floating"][data-side="top"] {
+  top: var(--rs-space-5);
+}
+
+/* Horizontal alignment */
+.root[data-variant="floating"][data-align="start"] {
+  left: var(--rs-space-5);
+}
+
+.root[data-variant="floating"][data-align="center"] {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.root[data-variant="floating"][data-align="end"] {
+  right: var(--rs-space-5);
+}
+
 .separator[data-orientation="vertical"] {
   height: var(--rs-space-5);
 }
