@@ -10,7 +10,10 @@ export type FloatingActionsSide = 'top' | 'bottom';
 export type FloatingActionsAlign = 'start' | 'center' | 'end';
 
 export interface FloatingActionsProps
-  extends Omit<ToolbarPrimitive.Root.Props, 'disabled'> {
+  extends Omit<
+    ToolbarPrimitive.Root.Props,
+    'disabled' | 'orientation' | 'loopFocus'
+  > {
   /**
    * Visual layout. `floating` pins the bar to the viewport via
    * `position: fixed`; `inline` renders in normal document flow.

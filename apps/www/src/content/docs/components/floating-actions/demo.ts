@@ -2,6 +2,33 @@
 
 export const preview = {
   type: 'code',
+  code: `<div
+  style={{
+    position: 'relative',
+    width: '100%',
+    height: 240,
+    transform: 'translateZ(0)'
+  }}
+>
+  <FloatingActions aria-label="Selection actions">
+    <Chip
+      variant="outline"
+      size="large"
+      color="accent"
+      leadingIcon={<CheckCircledIcon />}
+      isDismissible
+    >
+      2 selected
+    </Chip>
+    <FloatingActions.Separator />
+    <Button variant="outline" color="neutral" size="small">Move to</Button>
+    <Button variant="outline" color="neutral" size="small">Actions</Button>
+  </FloatingActions>
+</div>`
+};
+
+export const inlineDemo = {
+  type: 'code',
   code: `<div style={{ paddingBlock: 'var(--rs-space-9)' }}>
   <FloatingActions variant="inline" aria-label="Selection actions">
     <Chip
