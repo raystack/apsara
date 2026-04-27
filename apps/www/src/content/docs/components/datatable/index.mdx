@@ -478,7 +478,7 @@ DataTable does not ship a built-in selection toolbar, but the underlying TanStac
 
 Notes:
 - `table.resetRowSelection()` clears the selection; wire it to `Chip`'s `onDismiss`.
-- The overlay uses `position: absolute` on the parent wrapper, so the last row of data isn't hidden behind it — if your table is tall, add `padding-bottom` on `DataTable.Content`'s scroll container to match.
+- `FloatingActions` defaults to `variant="floating"` (`position: fixed`, bottom-center), so no positioning CSS is needed at the call site. To scope the bar to the table region rather than the viewport, give an ancestor `transform`, `filter`, or `contain: paint` so it becomes the containing block for `position: fixed`. Add `padding-bottom` on `DataTable.Content`'s scroll container if rows would otherwise sit behind the bar.
 - When DataTable ships first-class row selection, this pattern will migrate to a selection-aware helper; the user-level API (the chip + buttons inside `FloatingActions`) stays the same.
 
 ## Accessibility

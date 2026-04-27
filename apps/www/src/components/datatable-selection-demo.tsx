@@ -78,35 +78,25 @@ function SelectionBar() {
   if (selected.length === 0) return null;
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: 'var(--rs-space-9)',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 2
-      }}
-    >
-      <FloatingActions aria-label='Selection actions'>
-        <Chip
-          variant='outline'
-          size='large'
-          color='neutral'
-          leadingIcon={<TransformIcon />}
-          isDismissible
-          onDismiss={() => table.resetRowSelection()}
-        >
-          {selected.length} selected
-        </Chip>
-        <FloatingActions.Separator />
-        <Button variant='outline' color='neutral' size='small'>
-          Move to
-        </Button>
-        <Button variant='outline' color='neutral' size='small'>
-          Actions
-        </Button>
-      </FloatingActions>
-    </div>
+    <FloatingActions aria-label='Selection actions'>
+      <Chip
+        variant='outline'
+        size='large'
+        color='neutral'
+        leadingIcon={<TransformIcon />}
+        isDismissible
+        onDismiss={() => table.resetRowSelection()}
+      >
+        {selected.length} selected
+      </Chip>
+      <FloatingActions.Separator />
+      <Button variant='outline' color='neutral' size='small'>
+        Move to
+      </Button>
+      <Button variant='outline' color='neutral' size='small'>
+        Actions
+      </Button>
+    </FloatingActions>
   );
 }
 
@@ -133,7 +123,8 @@ const DataTableSelectionDemo = () => {
         position: 'relative',
         height: 760,
         width: '100%',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        transform: 'translateZ(0)'
       }}
     >
       <DataTable
@@ -148,7 +139,7 @@ const DataTableSelectionDemo = () => {
         <InitialSelection />
         <SelectionBar />
       </DataTable>
-      <style>{`.dt-selection-demo-scroll { padding-bottom: 160px; }`}</style>
+      <style>{`.dt-selection-demo-scroll { padding-bottom: 80px; }`}</style>
     </div>
   );
 };

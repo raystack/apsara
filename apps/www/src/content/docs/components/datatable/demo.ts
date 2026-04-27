@@ -49,60 +49,49 @@ const selectionColumn = {
   enableHiding: false,
 };
 
-// 2. Render the overlay bar alongside DataTable, reading selection from context.
+// 2. Render the bar alongside DataTable, reading selection from context.
+//    FloatingActions defaults to variant="floating" (position: fixed,
+//    bottom-center), so no positioning CSS is needed here.
 function SelectionBar() {
   const { table } = useDataTable();
   const selected = table.getSelectedRowModel().rows;
   if (selected.length === 0) return null;
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: "var(--rs-space-9)",
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 2,
-      }}
-    >
-      <FloatingActions aria-label="Selection actions">
-        <Chip
-          variant="outline"
-          size="large"
-          color="neutral"
-          leadingIcon={<TransformIcon />}
-          isDismissible
-          onDismiss={() => table.resetRowSelection()}
-        >
-          {selected.length} selected
-        </Chip>
-        <FloatingActions.Separator />
-        <Button variant="outline" color="neutral" size="small">
-          Move to
-        </Button>
-        <Button variant="outline" color="neutral" size="small">
-          Actions
-        </Button>
-      </FloatingActions>
-    </div>
+    <FloatingActions aria-label="Selection actions">
+      <Chip
+        variant="outline"
+        size="large"
+        color="neutral"
+        leadingIcon={<TransformIcon />}
+        isDismissible
+        onDismiss={() => table.resetRowSelection()}
+      >
+        {selected.length} selected
+      </Chip>
+      <FloatingActions.Separator />
+      <Button variant="outline" color="neutral" size="small">
+        Move to
+      </Button>
+      <Button variant="outline" color="neutral" size="small">
+        Actions
+      </Button>
+    </FloatingActions>
   );
 }
 
-// 3. Compose. The wrapping element must be \`position: relative\` so the
-// overlay anchors to the table region (not the viewport).
-<div style={{ position: "relative", flex: 1, minHeight: 0 }}>
-  <DataTable
-    data={rows}
-    columns={[selectionColumn, ...columns]}
-    mode="client"
-    defaultSort={{ name: "name", order: "asc" }}
-  >
-    <DataTable.Toolbar />
-    <DataTable.Search />
-    <DataTable.Content />
-    <SelectionBar />
-  </DataTable>
-</div>`
+// 3. Compose.
+<DataTable
+  data={rows}
+  columns={[selectionColumn, ...columns]}
+  mode="client"
+  defaultSort={{ name: "name", order: "asc" }}
+>
+  <DataTable.Toolbar />
+  <DataTable.Search />
+  <DataTable.Content />
+  <SelectionBar />
+</DataTable>`
     }
   ]
 };
