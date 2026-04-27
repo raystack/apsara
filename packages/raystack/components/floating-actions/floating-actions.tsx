@@ -9,7 +9,8 @@ export type FloatingActionsVariant = 'inline' | 'floating';
 export type FloatingActionsSide = 'top' | 'bottom';
 export type FloatingActionsAlign = 'start' | 'center' | 'end';
 
-export interface FloatingActionsProps extends ToolbarPrimitive.Root.Props {
+export interface FloatingActionsProps
+  extends Omit<ToolbarPrimitive.Root.Props, 'disabled'> {
   /**
    * Visual layout. `floating` pins the bar to the viewport via
    * `position: fixed`; `inline` renders in normal document flow.
@@ -46,7 +47,10 @@ export const FloatingActionsRoot = ({
 );
 FloatingActionsRoot.displayName = 'FloatingActions';
 
-export type FloatingActionsGroupProps = ToolbarPrimitive.Group.Props;
+export type FloatingActionsGroupProps = Omit<
+  ToolbarPrimitive.Group.Props,
+  'disabled'
+>;
 
 export const FloatingActionsGroup = ({
   className,

@@ -73,7 +73,7 @@ export function FloatingActionsExamples() {
             </Button>
           </FloatingActions.Group>
           <FloatingActions.Separator />
-          <FloatingActions.Group disabled>
+          <FloatingActions.Group>
             <Button variant='outline' color='danger' size='small'>
               Delete
             </Button>
