@@ -110,7 +110,7 @@ export interface DataTableProps<TData, TValue> {
   totalRowCount?: number;
   loadingRowCount?: number;
   onTableQueryChange?: (query: DataTableQuery) => void;
-  defaultSort: DataTableSort;
+  defaultSort?: DataTableSort;
   onLoadMore?: () => Promise<void>;
   onRowClick?: (row: TData) => void;
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;

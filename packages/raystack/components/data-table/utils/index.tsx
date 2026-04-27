@@ -349,7 +349,7 @@ export function getDefaultTableQuery(
   const internalQuery = dataTableQueryToInternal(oldQuery);
 
   return {
-    sort: [defaultSort],
+    sort: defaultSort ? [defaultSort] : [],
     group_by: [defaultGroupOption.id],
     ...internalQuery
   };
