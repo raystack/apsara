@@ -165,6 +165,35 @@ describe('Chip', () => {
     });
   });
 
+  describe('Disabled State', () => {
+    it('sets data-disabled attribute when disabled', () => {
+      render(<Chip disabled>Disabled Chip</Chip>);
+
+      const chip = screen.getByRole('status');
+      expect(chip).toHaveAttribute('data-disabled');
+    });
+
+    it('does not set data-disabled when not disabled', () => {
+      render(<Chip>Active Chip</Chip>);
+
+      const chip = screen.getByRole('status');
+      expect(chip).not.toHaveAttribute('data-disabled');
+    });
+
+    it('does not call onClick when disabled', () => {
+      const onClick = vi.fn();
+      render(
+        <Chip disabled onClick={onClick}>
+          Disabled Chip
+        </Chip>
+      );
+
+      const chip = screen.getByRole('status');
+      fireEvent.click(chip);
+      expect(onClick).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Accessibility', () => {
     it('uses status role by default', () => {
       render(<Chip>Test Chip</Chip>);

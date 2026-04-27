@@ -55,26 +55,24 @@ For simple components, define everything in a single file. For complex component
 
 import { ComponentName as ComponentPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ElementRef, forwardRef } from 'react';
 import styles from './<name>.module.css';
 
-const ComponentRoot = forwardRef<
-  ElementRef<typeof ComponentPrimitive.Root>,
-  ComponentPrimitive.Root.Props
->(({ className, ...props }, ref) => (
+const ComponentRoot = ({
+  className,
+  ...props
+}: ComponentPrimitive.Root.Props) => (
   <ComponentPrimitive.Root
-    ref={ref}
     className={cx(styles.root, className)}
     {...props}
   />
-));
+);
 
 ComponentRoot.displayName = 'Component';
 ```
 
 Key rules:
 - `'use client'` directive on all interactive component files
-- `forwardRef` on every custom wrapper, typed with `ElementRef<typeof Primitive>`
+- Use React 19 ref-as-prop — plain function components, not `forwardRef`/`ElementRef`; `ref` flows through `...props` or is destructured when it must target a non-default element
 - `displayName` set for React DevTools (e.g., `'Component.Trigger'`)
 - `cx()` from `class-variance-authority` to merge CSS module class with user's `className`
 - Spread `...props` last so consumers can override defaults
@@ -99,9 +97,9 @@ Single-file:
 
 ```tsx
 // <name>.tsx
-const ComponentRoot = forwardRef<...>(...);
-const ComponentTrigger = forwardRef<...>(...);
-const ComponentPanel = forwardRef<...>(...);
+const ComponentRoot = (props) => (...);
+const ComponentTrigger = (props) => (...);
+const ComponentPanel = (props) => (...);
 
 export const Component = Object.assign(ComponentRoot, {
   Trigger: ComponentTrigger,
@@ -132,46 +130,37 @@ export interface ComponentContentProps
 **Content Component Template:**
 
 ```tsx
-const ComponentContent = forwardRef<
-  ElementRef<typeof ComponentPrimitive.Popup>,
-  ComponentContentProps
->(
-  (
-    {
-      className,
-      children,
-      showArrow = false,
-      style,
-      render,
-      ...positionerProps
-    },
-    ref
-  ) => {
-    return (
-      <ComponentPrimitive.Portal>
-        <ComponentPrimitive.Positioner
-          sideOffset={showArrow ? 10 : 4}
-          collisionPadding={3}
-          className={styles.positioner}
-          {...positionerProps}
-        >
-          <ComponentPrimitive.Popup
-            ref={ref}
-            className={cx(styles.popup, className)}
-            style={style}
-            render={render}
-          >
-            {children}
-            {showArrow && (
-              <ComponentPrimitive.Arrow className={styles.arrow}>
-                {/* arrow SVG */}
-              </ComponentPrimitive.Arrow>
-            )}
-          </ComponentPrimitive.Popup>
-        </ComponentPrimitive.Positioner>
-      </ComponentPrimitive.Portal>
-    );
-  }
+const ComponentContent = ({
+  className,
+  children,
+  showArrow = false,
+  style,
+  render,
+  ref,
+  ...positionerProps
+}: ComponentContentProps) => (
+  <ComponentPrimitive.Portal>
+    <ComponentPrimitive.Positioner
+      sideOffset={showArrow ? 10 : 4}
+      collisionPadding={3}
+      className={styles.positioner}
+      {...positionerProps}
+    >
+      <ComponentPrimitive.Popup
+        ref={ref}
+        className={cx(styles.popup, className)}
+        style={style}
+        render={render}
+      >
+        {children}
+        {showArrow && (
+          <ComponentPrimitive.Arrow className={styles.arrow}>
+            {/* arrow SVG */}
+          </ComponentPrimitive.Arrow>
+        )}
+      </ComponentPrimitive.Popup>
+    </ComponentPrimitive.Positioner>
+  </ComponentPrimitive.Portal>
 );
 ComponentContent.displayName = 'Component.Content';
 ```
@@ -506,7 +495,7 @@ Checklist:
 - [ ] Component builds without errors
 - [ ] All tests pass
 - [ ] Docs site builds and new page is generated
-- [ ] `forwardRef` and `displayName` set on all sub-components
+- [ ] `displayName` set on all sub-components
 - [ ] CSS uses `--rs-*` tokens only
 - [ ] Export in `packages/raystack/index.tsx` in alphabetical order
 - [ ] Playground example added and registered

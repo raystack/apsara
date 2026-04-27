@@ -14,11 +14,11 @@
 }
 
 .clearButton {
-  color: var(--rs-color-foreground-base-tertiary) !important;
+  color: var(--rs-color-foreground-base-tertiary);
 }
 
 .clearButton:hover {
-  color: var(--rs-color-foreground-base-secondary) !important;
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .clearButton:disabled {

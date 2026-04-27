@@ -158,7 +158,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
               </IconButton>
             )}
           </Flex>
-          <Command.List className={styles.searchList}>
+          <Command.Content className={styles.searchList}>
             <Command.Empty>
               <EmptyState
                 variant='empty1'
@@ -214,7 +214,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
                 {index < defaultItems.length - 1 && <Command.Separator />}
               </div>
             ))}
-          </Command.List>
+          </Command.Content>
         </Command>
       </Dialog.Content>
     </Dialog>

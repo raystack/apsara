@@ -73,6 +73,19 @@ export const disabledDemo = {
 />`
 };
 
+export const disabledChipsDemo = {
+  type: 'code',
+  code: `<InputField
+  placeholder="Type and press Enter..."
+  disabled
+  width="560px"
+  chips={[
+    { label: "Tag1", onRemove: () => console.log("Remove Tag1") },
+    { label: "Tag2", onRemove: () => console.log("Remove Tag2") }
+  ]}
+/>`
+};
+
 export const widthDemo = {
   type: 'code',
   code: `<InputField

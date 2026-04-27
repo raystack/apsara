@@ -4,9 +4,9 @@ description: A radio group component for selecting a single option from a list o
 source: packages/raystack/components/radio
 ---
 
-import { preview, stateDemo, labelDemo, formDemo } from "./demo.ts";
+import { playground, stateDemo, sizeDemo, orientationDemo, labelDemo, formDemo } from "./demo.ts";
 
-<Demo data={preview} />
+<Demo data={playground} />
 
 ## Anatomy
 
@@ -42,6 +42,18 @@ Renders an individual radio button.
 Radio buttons support different states to indicate interactivity and selection.
 
 <Demo data={stateDemo} />
+
+### Size Variants
+
+The Radio component comes in two sizes: large (default) and small. Set `size` on `Radio.Group` to apply it to every item, or set it on an individual `Radio` to override the group value.
+
+<Demo data={sizeDemo} />
+
+### Orientation
+
+The Radio.Group supports vertical (default) and horizontal orientation to control the layout direction of its items.
+
+<Demo data={orientationDemo} />
 
 ### With Labels
 

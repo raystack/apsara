@@ -168,6 +168,7 @@ export function RangePicker({
   return (
     <Popover open={showCalendar} onOpenChange={setShowCalendar}>
       <Popover.Trigger
+        nativeButton={isValidElement(trigger) ? false : true}
         render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
       />
       <Popover.Content
