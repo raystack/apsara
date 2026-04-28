@@ -102,9 +102,9 @@ const rollupConfig = configs.map(conf => {
         preserveModules: true,
         preserveModulesRoot: conf.inputPath,
         paths: id => {
-          if (id === 'dayjs') return 'dayjs/esm';
+          if (id === 'dayjs') return 'dayjs/esm/index.js';
           if (id.startsWith('dayjs/plugin/'))
-            return id.replace('dayjs/plugin/', 'dayjs/esm/plugin/');
+            return `${id.replace('dayjs/plugin/', 'dayjs/esm/plugin/')}/index.js`;
           return id;
         }
       },

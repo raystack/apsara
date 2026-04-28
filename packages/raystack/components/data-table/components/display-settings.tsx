@@ -2,6 +2,7 @@
 
 import { MixerHorizontalIcon } from '@radix-ui/react-icons';
 
+import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode } from 'react';
 import { Button } from '../../button';
 import { Flex } from '../../flex';
@@ -19,6 +20,7 @@ import { Ordering } from './ordering';
 
 interface DisplaySettingsProps {
   trigger?: ReactNode;
+  classNames?: { content?: string };
 }
 
 export function DisplaySettings<TData, TValue>({
@@ -31,7 +33,8 @@ export function DisplaySettings<TData, TValue>({
     >
       Display
     </Button>
-  )
+  ),
+  classNames
 }: DisplaySettingsProps) {
   const {
     table,
@@ -89,7 +92,7 @@ export function DisplaySettings<TData, TValue>({
         render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
       />
       <Popover.Content
-        className={styles['display-popover-content']}
+        className={cx(styles['display-popover-content'], classNames?.content)}
         align='end'
       >
         <Flex direction='column'>
