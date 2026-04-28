@@ -12,7 +12,8 @@ export default function DemoPreview({
   code,
   tabs,
   scope,
-  codePreview
+  codePreview,
+  style
 }: DemoPreviewProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [activeCodePreviewTab, setActiveCodePreviewTab] = useState(0);
@@ -40,7 +41,7 @@ export default function DemoPreview({
           </div>
         )}
         <div className={styles.preview}>
-          <Preview />
+          <Preview style={style} />
         </div>
 
         {Array.isArray(codePreview) ? (

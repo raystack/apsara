@@ -19,5 +19,8 @@ export const playground = {
     actionLabel: { type: 'text', initialValue: 'Read More' },
     actionIcon: { type: 'icon', defaultValue: '' }
   },
-  getCode
+  getCode,
+  style: {
+    padding: 0
+  }
 };

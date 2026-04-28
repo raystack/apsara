@@ -54,7 +54,8 @@ const getUpdatedProps = (
 export default function DemoPlayground({
   scope,
   controls,
-  getCode
+  getCode,
+  style
 }: DemoPlaygroundProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -98,7 +99,7 @@ export default function DemoPlayground({
 
   return (
     <>
-      <DemoPreview type='code' code={previewCode} scope={scope} />
+      <DemoPreview type='code' code={previewCode} scope={scope} style={style} />
       <Dialog open={openPlayground} onOpenChange={setOpenPlayground}>
         <Dialog.Content
           className={styles.playgroundDialog}
@@ -136,7 +137,10 @@ export default function DemoPlayground({
                 )}
               >
                 <div className={cx(styles.preview, styles.playgroundPreview)}>
-                  <Preview className={styles.playgroundPreviewContent} />
+                  <Preview
+                    className={styles.playgroundPreviewContent}
+                    style={style}
+                  />
                 </div>
                 <DemoControls
                   controls={controls}

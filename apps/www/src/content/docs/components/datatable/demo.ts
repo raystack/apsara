@@ -2,6 +2,9 @@
 
 export const preview = {
   type: 'code',
+  style: {
+    padding: 0
+  },
   tabs: [
     {
       name: 'Non-Virtualized',
