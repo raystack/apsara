@@ -2,7 +2,7 @@
   "name": "apsara-for-vscode",
   "displayName": "Apsara for VSCode",
   "publisher": "Raystack",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "description": "VS Code extension for @raystack/apsara",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -62,14 +62,13 @@
   },
   "dependencies": {
     "@raystack/apsara": "^0.56.6",
-    "color": "^5.0.0",
+    "culori": "^4.0.2",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12"
   },
   "devDependencies": {
     "@raystack/tools-config": "workspace:*",
-    "@types/color": "^4.2.0",
     "@types/node": "20.x",
     "@types/vscode": "^1.70.0",
     "@vscode/vsce": "^3.5.0",

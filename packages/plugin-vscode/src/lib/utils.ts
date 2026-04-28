@@ -1,8 +1,16 @@
-import Color from 'color';
+import { converter, parse } from 'culori';
 import type { Color as VSCodeColorType } from 'vscode-languageserver';
 import tokens from '../tokens';
 
 export const TOKEN_PREFIX = 'rs';
+
+const toRgb = converter('rgb');
+const toOklch = converter('oklch');
+
+const round = (n: number | undefined, p: number) =>
+  Number.parseFloat((n ?? 0).toFixed(p));
+
+const clamp01 = (v: number | undefined) => Math.max(0, Math.min(1, v ?? 0));
 
 /**
  * Get the token name for a given token group and name
@@ -41,52 +49,55 @@ export const getTokenValueFromName = (tokenName: string): string | null => {
 };
 
 /**
- * Converts a Color object to VS Code Color format
- * @param color - The color to convert
- * @returns The color in VS Code Color format
+ * Parses a CSS color string (oklch, hex, rgb, etc.) into VS Code's Color shape.
+ * Returns null for non-renderable inputs (currentColor, inherit, parse failure).
  */
 export const colorToVSCodeColor = (color: string): VSCodeColorType | null => {
+  if (color === 'transparent') {
+    return { red: 0, green: 0, blue: 0, alpha: 0 };
+  }
+  if (color === 'currentColor' || color === 'inherit') {
+    return null;
+  }
   try {
-    // Handle transparent values
-    if (color === 'transparent') {
-      return {
-        red: 0,
-        green: 0,
-        blue: 0,
-        alpha: 0
-      };
-    }
-    // handles special CSS values that don't have a specific color
-    if (color === 'currentColor' || color === 'inherit') {
-      return null;
-    }
-
-    const rgb = Color(color).rgb();
+    const parsed = parse(color);
+    if (!parsed) return null;
+    const rgb = toRgb(parsed);
+    if (!rgb) return null;
     return {
-      red: rgb.red() / 255,
-      green: rgb.green() / 255,
-      blue: rgb.blue() / 255,
-      alpha: rgb.alpha()
+      red: clamp01(rgb.r),
+      green: clamp01(rgb.g),
+      blue: clamp01(rgb.b),
+      alpha: rgb.alpha ?? 1
     };
   } catch {
-    // If the color library can't parse the value, return null
     return null;
   }
 };
 
 /**
- * Converts a VS Code Color to a Color object
- * @param color - The VS Code color object to convert
- * @returns The color in hex format
+ * Serializes VS Code's Color (sRGB 0-1 floats) to an oklch() string.
+ * Output format matches the design system convention so picker edits
+ * stay consistent with the rest of the codebase.
  */
 export const VSCodeColorToColor = (color: VSCodeColorType): string => {
-  return Color.rgb(
-    Math.round(color.red * 255),
-    Math.round(color.green * 255),
-    Math.round(color.blue * 255)
-  )
-    .alpha(color.alpha)
-    .hex();
+  const oklch = toOklch({
+    mode: 'rgb',
+    r: color.red,
+    g: color.green,
+    b: color.blue,
+    alpha: color.alpha
+  });
+  if (!oklch) return '';
+
+  const L = round(oklch.l, 4);
+  const C = round(oklch.c, 4);
+  const H = Number.isFinite(oklch.h) ? round(oklch.h, 2) : 0;
+  const body = `${L} ${C} ${H}`;
+  if (color.alpha === undefined || color.alpha === 1) {
+    return `oklch(${body})`;
+  }
+  return `oklch(${body} / ${round(color.alpha, 4)})`;
 };
 
 // Function to get the pattern match and the range around the cursor
