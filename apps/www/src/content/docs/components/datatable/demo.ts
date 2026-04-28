@@ -5,19 +5,11 @@ export const preview = {
   style: {
     padding: 0
   },
-  tabs: [
-    {
-      name: 'Non-Virtualized',
-      code: `<DataTableDemo />`
-    },
-    {
-      name: 'Virtualized',
-      code: `<DataTableVirtualizedDemo />`
-    }
-  ],
+  previewCode: false,
+  code: `<DataTableDemo />`,
   codePreview: [
     {
-      label: 'Non-Virtualized',
+      label: 'index.tsx',
       code: `
       <DataTable
         data={data}
@@ -27,9 +19,20 @@ export const preview = {
         <DataTable.Toolbar />
         <DataTable.Content />
       </DataTable>`
-    },
+    }
+  ]
+};
+
+export const virtualizedPreview = {
+  type: 'code',
+  style: {
+    padding: 0
+  },
+  previewCode: false,
+  code: `<DataTableVirtualizedDemo />`,
+  codePreview: [
     {
-      label: 'Virtualized',
+      label: 'index.tsx',
       code: `
       /* Parent container must have a fixed height */
       <div style={{ height: 400 }}>

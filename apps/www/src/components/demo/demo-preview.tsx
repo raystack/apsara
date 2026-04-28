@@ -45,33 +45,26 @@ export default function DemoPreview({
         </div>
 
         {Array.isArray(codePreview) ? (
-          tabs ? (
-            <Editor
-              code={codePreview[activeTab]?.code ?? codePreview[0].code}
-              key={activeTab}
-            />
-          ) : (
-            <div className={styles.codeTabGroup}>
-              <div className={styles.tabs}>
-                {codePreview.map((tab, index) => (
-                  <button
-                    key={tab.label}
-                    className={cx(
-                      styles.tab,
-                      index === activeCodePreviewTab && styles.activeTab
-                    )}
-                    onClick={() => setActiveCodePreviewTab(index)}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-              <Editor
-                code={codePreview[activeCodePreviewTab].code}
-                key={activeCodePreviewTab}
-              />
+          <div className={styles.codeTabGroup}>
+            <div className={styles.tabs}>
+              {codePreview.map((tab, index) => (
+                <button
+                  key={tab.label}
+                  className={cx(
+                    styles.tab,
+                    index === activeCodePreviewTab && styles.activeTab
+                  )}
+                  onClick={() => setActiveCodePreviewTab(index)}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
-          )
+            <Editor
+              code={codePreview[activeCodePreviewTab].code}
+              key={activeCodePreviewTab}
+            />
+          </div>
         ) : (
           <Editor code={previewCode} />
         )}

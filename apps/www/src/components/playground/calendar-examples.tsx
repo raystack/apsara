@@ -9,7 +9,7 @@ export function CalendarExamples() {
       <Flex gap='medium' direction='column'>
         <Calendar numberOfMonths={2} />
         <RangePicker inputFieldsProps={{ startDate: { size: 'small' } }} />
-        <DatePicker inputFieldProps={{ size: 'medium' }} />
+        <DatePicker inputFieldProps={{ size: 'small' }} />
       </Flex>
     </PlaygroundLayout>
   );
