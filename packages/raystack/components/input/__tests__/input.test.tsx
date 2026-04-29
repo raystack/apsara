@@ -1,18 +1,18 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { InputField } from '../input-field';
-import styles from '../input-field.module.css';
+import { Input } from '../input';
+import styles from '../input.module.css';
 
-describe('InputField', () => {
+describe('Input', () => {
   describe('Basic Rendering', () => {
     it('renders input element', () => {
-      render(<InputField />);
+      render(<Input />);
       const input = screen.getByRole('textbox');
       expect(input).toBeInTheDocument();
     });
 
     it('applies custom className', () => {
-      render(<InputField className='custom-input' />);
+      render(<Input className='custom-input' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveClass('custom-input');
       expect(input).toHaveClass(styles['input-field']);
@@ -20,36 +20,36 @@ describe('InputField', () => {
 
     it('forwards ref correctly', () => {
       const ref = vi.fn();
-      render(<InputField ref={ref} />);
+      render(<Input ref={ref} />);
       expect(ref).toHaveBeenCalled();
     });
 
     it('renders with placeholder', () => {
-      render(<InputField placeholder='Enter text here' />);
+      render(<Input placeholder='Enter text here' />);
       const input = screen.getByPlaceholderText('Enter text here');
       expect(input).toBeInTheDocument();
     });
 
     it('sets custom width', () => {
-      const { container } = render(<InputField width='300px' />);
+      const { container } = render(<Input width='300px' />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveStyle({ width: '300px' });
     });
 
     it('sets numeric width as pixels', () => {
-      const { container } = render(<InputField width={400} />);
+      const { container } = render(<Input width={400} />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveStyle({ width: '400px' });
     });
 
     it('defaults to 100% width', () => {
-      const { container } = render(<InputField />);
+      const { container } = render(<Input />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveStyle({ width: '100%' });
     });
 
     it('disables input when disabled prop is true', () => {
-      render(<InputField disabled />);
+      render(<Input disabled />);
       const input = screen.getByRole('textbox');
       expect(input).toBeDisabled();
     });
@@ -57,13 +57,13 @@ describe('InputField', () => {
 
   describe('Sizes', () => {
     it('renders large size by default', () => {
-      const { container } = render(<InputField />);
+      const { container } = render(<Input />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['size-large']);
     });
 
     it('renders small size when specified', () => {
-      const { container } = render(<InputField size='small' />);
+      const { container } = render(<Input size='small' />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['size-small']);
     });
@@ -71,13 +71,13 @@ describe('InputField', () => {
 
   describe('Variants', () => {
     it('renders default variant by default', () => {
-      const { container } = render(<InputField />);
+      const { container } = render(<Input />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['variant-default']);
     });
 
     it('renders borderless variant when specified', () => {
-      const { container } = render(<InputField variant='borderless' />);
+      const { container } = render(<Input variant='borderless' />);
       const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
       expect(wrapper).toHaveClass(styles['variant-borderless']);
     });
@@ -86,7 +86,7 @@ describe('InputField', () => {
   describe('Icons', () => {
     it('renders leading icon', () => {
       const icon = <span data-testid='search-icon'>🔍</span>;
-      const { container } = render(<InputField leadingIcon={icon} />);
+      const { container } = render(<Input leadingIcon={icon} />);
       expect(screen.getByTestId('search-icon')).toBeInTheDocument();
       const iconContainer = container.querySelector(
         `.${styles['leading-icon']}`
@@ -96,7 +96,7 @@ describe('InputField', () => {
 
     it('renders trailing icon', () => {
       const icon = <span data-testid='clear-icon'>✕</span>;
-      const { container } = render(<InputField trailingIcon={icon} />);
+      const { container } = render(<Input trailingIcon={icon} />);
       expect(screen.getByTestId('clear-icon')).toBeInTheDocument();
       const iconContainer = container.querySelector(
         `.${styles['trailing-icon']}`
@@ -107,17 +107,17 @@ describe('InputField', () => {
 
   describe('Prefix and Suffix', () => {
     it('renders prefix', () => {
-      render(<InputField prefix='$' />);
+      render(<Input prefix='$' />);
       expect(screen.getByText('$')).toBeInTheDocument();
     });
 
     it('renders suffix', () => {
-      render(<InputField suffix='USD' />);
+      render(<Input suffix='USD' />);
       expect(screen.getByText('USD')).toBeInTheDocument();
     });
 
     it('renders both prefix and suffix', () => {
-      render(<InputField prefix='$' suffix='USD' />);
+      render(<Input prefix='$' suffix='USD' />);
       expect(screen.getByText('$')).toBeInTheDocument();
       expect(screen.getByText('USD')).toBeInTheDocument();
     });
@@ -126,7 +126,7 @@ describe('InputField', () => {
   describe('Chips', () => {
     it('renders chips', () => {
       const chips = [{ label: 'Tag1' }, { label: 'Tag2' }];
-      render(<InputField chips={chips} />);
+      render(<Input chips={chips} />);
       expect(screen.getByText('Tag1')).toBeInTheDocument();
       expect(screen.getByText('Tag2')).toBeInTheDocument();
     });
@@ -138,7 +138,7 @@ describe('InputField', () => {
         { label: 'Tag3' },
         { label: 'Tag4' }
       ];
-      render(<InputField chips={chips} maxChipsVisible={2} />);
+      render(<Input chips={chips} maxChipsVisible={2} />);
       expect(screen.getByText('Tag1')).toBeInTheDocument();
       expect(screen.getByText('Tag2')).toBeInTheDocument();
       expect(screen.queryByText('Tag3')).not.toBeInTheDocument();
@@ -149,7 +149,7 @@ describe('InputField', () => {
     it('renders dismissible chips with onRemove', () => {
       const handleRemove = vi.fn();
       const chips = [{ label: 'Tag1', onRemove: handleRemove }];
-      const { container } = render(<InputField chips={chips} />);
+      const { container } = render(<Input chips={chips} />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toBeInTheDocument();
     });
@@ -158,14 +158,14 @@ describe('InputField', () => {
       const chips = Array.from({ length: 5 }, (_, i) => ({
         label: `Tag${i + 1}`
       }));
-      render(<InputField chips={chips} maxChipsVisible={3} />);
+      render(<Input chips={chips} maxChipsVisible={3} />);
       expect(screen.getByText('+2')).toBeInTheDocument();
     });
 
     it('does not render dismiss button on chips when disabled', () => {
       const handleRemove = vi.fn();
       const chips = [{ label: 'Tag1', onRemove: handleRemove }];
-      render(<InputField chips={chips} disabled />);
+      render(<Input chips={chips} disabled />);
       const dismissButton = screen.queryByRole('button', {
         name: 'Remove Tag1'
       });
@@ -175,7 +175,7 @@ describe('InputField', () => {
     it('chips are non-interactive when disabled', () => {
       const handleRemove = vi.fn();
       const chips = [{ label: 'Tag1', onRemove: handleRemove }];
-      const { container } = render(<InputField chips={chips} disabled />);
+      const { container } = render(<Input chips={chips} disabled />);
       const chip = container.querySelector(`.${styles.chip}`);
       expect(chip).toHaveAttribute('data-disabled');
     });
@@ -183,7 +183,7 @@ describe('InputField', () => {
     it('chips remain interactive when not disabled', () => {
       const handleRemove = vi.fn();
       const chips = [{ label: 'Tag1', onRemove: handleRemove }];
-      render(<InputField chips={chips} />);
+      render(<Input chips={chips} />);
       const dismissButton = screen.getByRole('button', {
         name: 'Remove Tag1'
       });
@@ -195,7 +195,7 @@ describe('InputField', () => {
   describe('Event Handling', () => {
     it('handles onChange event', () => {
       const handleChange = vi.fn();
-      render(<InputField onChange={handleChange} />);
+      render(<Input onChange={handleChange} />);
       const input = screen.getByRole('textbox');
       fireEvent.change(input, { target: { value: 'test' } });
       expect(handleChange).toHaveBeenCalled();
@@ -203,7 +203,7 @@ describe('InputField', () => {
 
     it('handles onFocus event', () => {
       const handleFocus = vi.fn();
-      render(<InputField onFocus={handleFocus} />);
+      render(<Input onFocus={handleFocus} />);
       const input = screen.getByRole('textbox');
       fireEvent.focus(input);
       expect(handleFocus).toHaveBeenCalled();
@@ -211,7 +211,7 @@ describe('InputField', () => {
 
     it('handles onBlur event', () => {
       const handleBlur = vi.fn();
-      render(<InputField onBlur={handleBlur} />);
+      render(<Input onBlur={handleBlur} />);
       const input = screen.getByRole('textbox');
       fireEvent.blur(input);
       expect(handleBlur).toHaveBeenCalled();
@@ -219,7 +219,7 @@ describe('InputField', () => {
 
     it('handles onKeyDown event', () => {
       const handleKeyDown = vi.fn();
-      render(<InputField onKeyDown={handleKeyDown} />);
+      render(<Input onKeyDown={handleKeyDown} />);
       const input = screen.getByRole('textbox');
       fireEvent.keyDown(input, { key: 'Enter' });
       expect(handleKeyDown).toHaveBeenCalled();
@@ -229,7 +229,7 @@ describe('InputField', () => {
   describe('Input Types', () => {
     const inputTypes = ['text', 'email', 'password', 'number', 'tel', 'url'];
     it.each(inputTypes)('supports %s type', type => {
-      const { container } = render(<InputField type={type} />);
+      const { container } = render(<Input type={type} />);
       const input = container.querySelector('input');
       expect(input).toHaveAttribute('type', type);
     });
@@ -237,19 +237,19 @@ describe('InputField', () => {
 
   describe('Accessibility', () => {
     it('supports aria-label', () => {
-      render(<InputField aria-label='Search input' />);
+      render(<Input aria-label='Search input' />);
       const input = screen.getByLabelText('Search input');
       expect(input).toBeInTheDocument();
     });
 
     it('supports aria-describedby', () => {
-      render(<InputField aria-describedby='description' />);
+      render(<Input aria-describedby='description' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('aria-describedby', 'description');
     });
 
     it('supports aria-required', () => {
-      render(<InputField required aria-required='true' />);
+      render(<Input required aria-required='true' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('aria-required', 'true');
     });
@@ -257,43 +257,43 @@ describe('InputField', () => {
 
   describe('Form Attributes', () => {
     it('supports name attribute', () => {
-      render(<InputField name='email' />);
+      render(<Input name='email' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('name', 'email');
     });
 
     it('supports id attribute', () => {
-      render(<InputField id='email-input' />);
+      render(<Input id='email-input' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('id', 'email-input');
     });
 
     it('supports autoComplete attribute', () => {
-      render(<InputField autoComplete='email' />);
+      render(<Input autoComplete='email' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('autoComplete', 'email');
     });
 
     it('supports required attribute', () => {
-      render(<InputField required />);
+      render(<Input required />);
       const input = screen.getByRole('textbox');
       expect(input).toBeRequired();
     });
 
     it('supports readOnly attribute', () => {
-      render(<InputField readOnly value='Read only text' />);
+      render(<Input readOnly value='Read only text' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('readOnly');
     });
 
     it('supports maxLength attribute', () => {
-      render(<InputField maxLength={50} />);
+      render(<Input maxLength={50} />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('maxLength', '50');
     });
 
     it('supports pattern attribute', () => {
-      render(<InputField pattern='[0-9]*' />);
+      render(<Input pattern='[0-9]*' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('pattern', '[0-9]*');
     });

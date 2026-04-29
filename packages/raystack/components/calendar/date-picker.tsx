@@ -12,8 +12,8 @@ import {
   useState
 } from 'react';
 import { PropsBase, PropsSingleRequired } from 'react-day-picker';
-import { InputField } from '../input-field';
-import { InputFieldProps } from '../input-field/input-field';
+import { Input } from '../input';
+import { InputProps } from '../input/input';
 import { Popover } from '../popover';
 import { PopoverContentProps } from '../popover/popover';
 import { Calendar } from './calendar';
@@ -23,7 +23,7 @@ dayjs.extend(customParseFormat);
 
 interface DatePickerProps {
   dateFormat?: string;
-  inputFieldProps?: InputFieldProps;
+  inputProps?: InputProps;
   calendarProps?: PropsSingleRequired & PropsBase;
   onSelect?: (date: Date) => void;
   value?: Date;
@@ -37,7 +37,7 @@ interface DatePickerProps {
 
 export function DatePicker({
   dateFormat = 'DD/MM/YYYY',
-  inputFieldProps,
+  inputProps,
   calendarProps,
   value = new Date(),
   onSelect = () => {},
@@ -53,9 +53,9 @@ export function DatePicker({
   const formattedDate = dayjs(selectedDate).format(dateFormat);
 
   const isDropdownOpenRef = useRef(false);
-  const inputFieldRef = useRef<HTMLInputElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const isInputFieldFocused = useRef(false);
+  const isInputFocused = useRef(false);
   const selectedDateRef = useRef(selectedDate);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export function DatePicker({
   const isElementOutside = useCallback((el: HTMLElement) => {
     return (
       !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
-      !inputFieldRef.current?.contains(el) && // InputField
+      !inputRef.current?.contains(el) && // Input
       !contentRef.current?.contains(el)
     );
   }, []);
@@ -79,17 +79,17 @@ export function DatePicker({
   );
 
   function registerEventListeners() {
-    isInputFieldFocused.current = true;
+    isInputFocused.current = true;
     document.addEventListener('mouseup', handleMouseDown);
   }
 
   function removeEventListeners(skipUpdate = false) {
-    isInputFieldFocused.current = false;
+    isInputFocused.current = false;
     setShowCalendar(false);
 
     const updatedVal = dayjs(selectedDateRef.current).format(dateFormat);
 
-    if (inputFieldRef.current) inputFieldRef.current.value = updatedVal;
+    if (inputRef.current) inputRef.current.value = updatedVal;
     if (!error && !skipUpdate) onSelect(dayjs(updatedVal).toDate());
 
     document.removeEventListener('mouseup', handleMouseDown);
@@ -109,7 +109,7 @@ export function DatePicker({
   function onOpenChange(open?: boolean) {
     if (
       !isDropdownOpenRef.current &&
-      !(isInputFieldFocused.current && showCalendar)
+      !(isInputFocused.current && showCalendar)
     ) {
       setShowCalendar(Boolean(open));
     }
@@ -118,23 +118,23 @@ export function DatePicker({
   }
 
   function handleInputFocus() {
-    if (isInputFieldFocused.current) return;
+    if (isInputFocused.current) return;
     if (!showCalendar) setShowCalendar(true);
   }
 
   function handleInputBlur(event: React.FocusEvent) {
-    if (isInputFieldFocused.current) {
+    if (isInputFocused.current) {
       const el = event.relatedTarget as HTMLElement | null;
       if (el && isElementOutside(el)) removeEventListeners();
     } else {
       registerEventListeners();
-      setTimeout(() => inputFieldRef.current?.select());
+      setTimeout(() => inputRef.current?.select());
     }
   }
 
   function handleKeyUp(event: React.KeyboardEvent) {
-    if (event.code === 'Enter' && inputFieldRef.current) {
-      inputFieldRef.current.blur();
+    if (event.code === 'Enter' && inputRef.current) {
+      inputRef.current.blur();
       removeEventListeners();
     }
   }
@@ -172,14 +172,14 @@ export function DatePicker({
   }
 
   const defaultTrigger = (
-    <InputField
+    <Input
       size='small'
       placeholder='Select date'
       aria-invalid={!!error}
       className={styles.datePickerInput}
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
-      {...inputFieldProps}
-      ref={inputFieldRef}
+      {...inputProps}
+      ref={inputRef}
       value={formattedDate}
       onChange={handleInputChange}
       onFocus={handleInputFocus}

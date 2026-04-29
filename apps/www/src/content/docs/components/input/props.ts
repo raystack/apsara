@@ -1,6 +1,6 @@
-export interface InputFieldProps {
+export interface InputProps {
   /**
-   * Size variant of the input field.
+   * Size variant of the input.
    * @defaultValue "large"
    */
   size?: 'small' | 'large';
@@ -20,7 +20,7 @@ export interface InputFieldProps {
   /** Text or symbol to show after input value. */
   suffix?: string;
 
-  /** Custom width for the input field. */
+  /** Custom width for the input. */
   width?: string | number;
 
   /**
