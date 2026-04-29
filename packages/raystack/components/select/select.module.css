@@ -10,7 +10,6 @@
   box-sizing: border-box;
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
-  box-shadow: var(--rs-shadow-soft);
   border: 0.5px solid var(--rs-color-border-base-primary);
   min-width: var(--anchor-width);
   transition: var(--rs-transition-interactive);
@@ -79,7 +78,6 @@
 
 .trigger-text {
   border: none;
-  box-shadow: none;
 }
 
 .trigger-small {
@@ -161,7 +159,6 @@
   margin-top: var(--rs-space-2);
   padding: var(--rs-space-1);
   border: 0.5px solid var(--rs-color-border-base-primary);
-  box-shadow: var(--rs-shadow-soft);
 }
 
 .content[data-variant="text"] .menuitem {
