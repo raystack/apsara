@@ -1,0 +1,101 @@
+---
+title: Floating Actions
+description: A floating bar for surfacing contextual actions, typically shown when items are selected.
+source: packages/raystack/components/floating-actions
+tag: new
+---
+
+import { preview, variantsDemo, sideDemo, alignDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { FloatingActions, Chip, Button } from "@raystack/apsara";
+
+<FloatingActions aria-label="Selection actions">
+  <Chip isDismissible>2 selected</Chip>
+  <FloatingActions.Separator />
+  <Button>Move to</Button>
+  <Button>Actions</Button>
+</FloatingActions>
+```
+
+## API Reference
+
+Built on top of Base UI's [Toolbar](https://base-ui.com/react/components/toolbar) primitive, so keyboard navigation, roving focus, and the `role="toolbar"` semantics come from the primitive.
+
+### Root
+
+The container. Pins itself to the viewport by default (`variant="floating"`) and forwards all `<div>` attributes to the underlying Toolbar primitive.
+
+<auto-type-table path="./props.ts" name="FloatingActionsProps" />
+
+### Group
+
+Cluster related items so that the toolbar treats them as a single navigation unit. Useful when you want a destructive cluster (e.g. "Delete") to read as one section, separated from the rest of the bar by a `Separator`.
+
+<auto-type-table path="./props.ts" name="FloatingActionsGroupProps" />
+
+### Separator
+
+A vertical divider sized to the bar's content. Built on top of [`Separator`](/docs/components/separator).
+
+<auto-type-table path="./props.ts" name="FloatingActionsSeparatorProps" />
+
+## Variants
+
+`floating` (default) renders with `position: fixed` anchored to the viewport via `side` and `align` — use it when the bar should follow the user as the page scrolls (bulk-selection toolbars, contextual action trays). `inline` opts out of viewport positioning so the bar flows with surrounding content.
+
+<Demo data={variantsDemo} />
+
+## Examples
+
+### Bulk actions
+
+Pair a dismissible `Chip` with action buttons to build a selection toolbar.
+
+<Demo data={bulkActionsDemo} />
+
+### Icon-only actions
+
+Use `IconButton` inside the bar for compact toolbars.
+
+<Demo data={iconOnlyDemo} />
+
+### Side
+
+`side` controls which vertical edge of the viewport the bar pins to.
+
+<Demo data={sideDemo} />
+
+### Align
+
+`align` controls the horizontal alignment of the bar along the chosen `side`.
+
+<Demo data={alignDemo} />
+
+### Grouped actions
+
+Use `FloatingActions.Group` to cluster related items so they navigate as one unit, separated from the rest of the bar by a `Separator`.
+
+<Demo data={groupDemo} />
+
+### Scrolling context
+
+The floating variant stays pinned to the viewport (or the nearest containing block) while content scrolls beneath it — the canonical use case for a bulk-selection bar over a long list or table.
+
+<Demo data={scrollingDemo} />
+
+### Use with DataTable
+
+For the row-selection pattern — rendering this bar over a `DataTable` and wiring it to selected rows — see [DataTable → Row selection](/docs/components/datatable#row-selection).
+
+## Accessibility
+
+- The root uses `role="toolbar"` (enforced by the Base UI Toolbar primitive) and is announced as a group of interactive controls. Keyboard focus moves between toolbar items with the arrow keys.
+- The separator renders with `role="separator"` and `aria-orientation="vertical"` via the Base UI primitive, communicating structural grouping between action clusters.
+- Provide an `aria-label` on the root when the toolbar's purpose is not obvious from its contents (e.g. `aria-label="Selection actions"`).

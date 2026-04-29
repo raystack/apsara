@@ -2,6 +2,7 @@
 
 import {
   BorderSolidIcon,
+  CheckCircledIcon,
   ColorWheelIcon,
   Component1Icon,
   FileIcon,
@@ -36,6 +37,7 @@ import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { Suspense } from 'react';
 import { DataTableDemo, DataTableVirtualizedDemo } from '../datatable-demo';
+import DataTableSelectionDemo from '../datatable-selection-demo';
 import ChipInputDemo from '../inputfield-chip-demo';
 import LinearMenuDemo from '../linear-dropdown-demo';
 import PopoverColorPicker from '../popover-color-picker';
@@ -56,6 +58,7 @@ export default function Demo(props: DemoProps) {
       DataTableDemo,
       DataTableVirtualizedDemo,
       ChipInputDemo,
+      DataTableSelectionDemo,
       LinearMenuDemo,
       PopoverColorPicker,
       Info,
@@ -65,6 +68,7 @@ export default function Demo(props: DemoProps) {
       NextLink,
       PlusIcon,
       TransformIcon,
+      CheckCircledIcon,
       Pencil2Icon,
       InfoCircledIcon,
       UploadIcon,

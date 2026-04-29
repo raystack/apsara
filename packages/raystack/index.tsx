@@ -37,6 +37,7 @@ export { Field } from './components/field';
 export { Fieldset } from './components/fieldset';
 export { FilterChip } from './components/filter-chip';
 export { Flex } from './components/flex';
+export { FloatingActions } from './components/floating-actions';
 export { Form } from './components/form';
 export { Grid } from './components/grid';
 export { Headline } from './components/headline';
