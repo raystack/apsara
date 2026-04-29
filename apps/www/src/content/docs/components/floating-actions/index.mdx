@@ -5,7 +5,7 @@ source: packages/raystack/components/floating-actions
 tag: new
 ---
 
-import { preview, floatingDemo, inlineDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
+import { preview, variantsDemo, sideDemo, alignDemo, bulkActionsDemo, iconOnlyDemo, groupDemo, scrollingDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -48,17 +48,9 @@ A vertical divider sized to the bar's content. Built on top of [`Separator`](/do
 
 ## Variants
 
-### Floating
+`floating` (default) renders with `position: fixed` anchored to the viewport via `side` and `align` — use it when the bar should follow the user as the page scrolls (bulk-selection toolbars, contextual action trays). `inline` opts out of viewport positioning so the bar flows with surrounding content.
 
-The default. Renders with `position: fixed` and is anchored to the viewport via `side` and `align`. Use this when the bar should follow the user as the page scrolls (bulk-selection toolbars, contextual action trays).
-
-<Demo data={floatingDemo} />
-
-### Inline
-
-Opt out of viewport positioning when you want the bar to flow with surrounding content (e.g. inside a card, table cell, or storybook frame).
-
-<Demo data={inlineDemo} />
+<Demo data={variantsDemo} />
 
 ## Examples
 
@@ -74,6 +66,18 @@ Use `IconButton` inside the bar for compact toolbars.
 
 <Demo data={iconOnlyDemo} />
 
+### Side
+
+`side` controls which vertical edge of the viewport the bar pins to.
+
+<Demo data={sideDemo} />
+
+### Align
+
+`align` controls the horizontal alignment of the bar along the chosen `side`.
+
+<Demo data={alignDemo} />
+
 ### Grouped actions
 
 Use `FloatingActions.Group` to cluster related items so they navigate as one unit, separated from the rest of the bar by a `Separator`.
@@ -85,6 +89,10 @@ Use `FloatingActions.Group` to cluster related items so they navigate as one uni
 The floating variant stays pinned to the viewport (or the nearest containing block) while content scrolls beneath it — the canonical use case for a bulk-selection bar over a long list or table.
 
 <Demo data={scrollingDemo} />
+
+### Use with DataTable
+
+For the row-selection pattern — rendering this bar over a `DataTable` and wiring it to selected rows — see [DataTable → Row selection](/docs/components/datatable#row-selection).
 
 ## Accessibility
 
