@@ -130,30 +130,42 @@ export const sizeChipDemo = {
 
 export const interactiveChipDemo = {
   type: 'code',
-  code: `function ChipInputDemo() {
-  const [chips, setChips] = React.useState([
-    { label: "Tag1" },
-    { label: "Tag2" }
-  ]);
-  const [input, setInput] = React.useState("");
+  style: {
+    padding: 0
+  },
+  previewCode: false,
+  code: `<ChipInputDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+    const [chips, setChips] = React.useState([
+      { label: "Tag1" },
+      { label: "Tag2" },
+      { label: "Tag3" },
+      { label: "Tag4" },
+      { label: "Tag5" },
 
-  return (
-    <InputField
-      placeholder="Type and press Enter..."
-      width="560px"
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && input.trim()) {
-          setChips([...chips, { label: input.trim() }]);
-          setInput("");
-        }
-      }}
-      chips={chips.map((c, i) => ({
-        label: c.label,
-        onRemove: () => setChips(chips.filter((_, j) => j !== i))
-      }))}
-    />
-  );
-}`
+    ]);
+    const [input, setInput] = React.useState("");
+
+      <InputField
+        placeholder="Type and press Enter..."
+        width="560px"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && input.trim()) {
+            setChips([...chips, { label: input.trim() }]);
+            setInput("");
+          }
+        }}
+        chips={chips.map((c, i) => ({
+          label: c.label,
+          onRemove: () => setChips(chips.filter((_, j) => j !== i))
+        }))}
+        maxChipsVisible={4}
+      />`
+    }
+  ]
 };

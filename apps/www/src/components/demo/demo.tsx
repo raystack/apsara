@@ -36,6 +36,7 @@ import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { Suspense } from 'react';
 import { DataTableDemo, DataTableVirtualizedDemo } from '../datatable-demo';
+import ChipInputDemo from '../inputfield-chip-demo';
 import LinearMenuDemo from '../linear-dropdown-demo';
 import PopoverColorPicker from '../popover-color-picker';
 import DemoPlayground from './demo-playground';
@@ -54,6 +55,7 @@ export default function Demo(props: DemoProps) {
       SidebarIcon,
       DataTableDemo,
       DataTableVirtualizedDemo,
+      ChipInputDemo,
       LinearMenuDemo,
       PopoverColorPicker,
       Info,

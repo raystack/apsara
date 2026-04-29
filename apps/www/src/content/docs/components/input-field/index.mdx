@@ -72,6 +72,24 @@ Input field with leading and trailing icons.
 
 <Demo data={iconDemo} />
 
+### Interactive Chips
+
+Accepts an array of chips, each with a `label` and an optional `onRemove` callback. 
+
+`maxChipsVisible` caps how many are rendered before collapsing the rest into an overflow counter.
+
+```tsx
+chips?: Array<{ label: string; onRemove?: () => void }>;                                                                                       
+maxChipsVisible?: number;  // defaults to 2   
+```
+
+This is purely a presentation layer — it does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
+
+The example below 
+  appends a chip on `Enter`, removes one when its dismiss button is clicked.
+
+<Demo data={interactiveChipDemo} />
+
 ### Disabled State
 
 Input field in disabled state.
@@ -101,12 +119,6 @@ InputField comes in two sizes: small (24px) and large (32px).
 Input field that can display and manage chips/tags.
 
 <Demo data={sizeChipDemo} />
-
-### Interactive Chips
-
-Type text and press Enter to add chips. Click the dismiss button to remove them.
-
-<Demo data={interactiveChipDemo} />
 
 ## Accessibility
 

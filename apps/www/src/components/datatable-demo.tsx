@@ -4,6 +4,7 @@ import {
   DataTableColumnDef,
   Flex
 } from '@raystack/apsara';
+import { useMemo } from 'react';
 
 const statuses = ['pending', 'processing', 'success', 'failed'] as const;
 
@@ -106,9 +107,8 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
   }
 ];
 
-const data = generateData(100);
-
 const DataTableDemo = () => {
+  const data = useMemo(() => generateData(100), []);
   return (
     <Flex direction='column' gap={4} width='full'>
       <div style={{ height: 400 }}>
@@ -127,6 +127,8 @@ const DataTableDemo = () => {
 };
 
 const DataTableVirtualizedDemo = () => {
+  const data = useMemo(() => generateData(1000), []);
+
   return (
     <Flex direction='column' gap={4} width='full'>
       <div style={{ height: 400 }}>
