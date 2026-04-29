@@ -1,5 +1,54 @@
 'use client';
 
+export const getCode = (
+  _updatedProps: Record<string, any>,
+  allProps: Record<string, any>
+) => {
+  const { title, description, type, actionButton } = allProps;
+  const opts: string[] = [];
+  if (title && title !== '') opts.push(`title: "${title}"`);
+  if (description && description !== '')
+    opts.push(`description: "${description}"`);
+  if (type && type !== 'default') opts.push(`type: "${type}"`);
+  if (actionButton)
+    opts.push(`actionProps: { children: "Action", onClick: () => {} }`);
+
+  const optsStr = opts.length ? `{ ${opts.join(', ')} }` : '{}';
+
+  return `
+  <Toast.Provider>
+    <Button onClick={() => toastManager.add(${optsStr})}>
+      Show toast
+    </Button>
+  </Toast.Provider>`;
+};
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    title: {
+      type: 'text',
+      initialValue: 'Order placed',
+      defaultValue: ''
+    },
+    description: {
+      type: 'text',
+      initialValue: 'Monday, 7 Oct 2024 at 10:20 AM',
+      defaultValue: ''
+    },
+    type: {
+      type: 'select',
+      options: ['default', 'success', 'error', 'warning', 'info', 'loading'],
+      defaultValue: 'default'
+    },
+    actionButton: {
+      type: 'checkbox',
+      defaultValue: false
+    }
+  },
+  getCode
+};
+
 export const preview = {
   type: 'code',
   code: `
