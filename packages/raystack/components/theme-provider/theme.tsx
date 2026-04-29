@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 
@@ -47,7 +48,8 @@ const Theme = ({
   nonce,
   style = 'modern',
   accentColor = 'indigo',
-  grayColor = 'gray'
+  grayColor = 'gray',
+  onThemeChange
 }: ThemeProviderProps) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)
@@ -124,7 +126,7 @@ const Theme = ({
         // Unsupported
       }
     },
-    [forcedTheme]
+    [storageKey]
   );
 
   const handleMediaQuery = useCallback(
@@ -136,7 +138,7 @@ const Theme = ({
         applyTheme('system');
       }
     },
-    [theme, forcedTheme]
+    [theme, forcedTheme, enableSystem, applyTheme]
   );
 
   // Always listen to System preference
@@ -170,6 +172,25 @@ const Theme = ({
     // @ts-ignore
     applyTheme(forcedTheme ?? theme);
   }, [forcedTheme, theme]);
+
+  // Fire onThemeChange on actual changes, skipping the initial mount.
+  // Ref keeps the latest callback without re-firing when consumers pass an inline function.
+  const onThemeChangeRef = useRef(onThemeChange);
+  useEffect(() => {
+    onThemeChangeRef.current = onThemeChange;
+  });
+  const themeChangeMounted = useRef(false);
+  useEffect(() => {
+    if (!themeChangeMounted.current) {
+      themeChangeMounted.current = true;
+      return;
+    }
+    if (theme) {
+      const resolved =
+        theme === 'system' && resolvedTheme ? resolvedTheme : theme;
+      onThemeChangeRef.current?.(theme, resolved);
+    }
+  }, [theme, resolvedTheme]);
 
   const providerValue = useMemo(
     () => ({
@@ -277,7 +298,7 @@ const ThemeScript = memo(
       setColorScheme = true
     ) => {
       const resolvedName = value ? value[name] : name;
-      const val = literal ? name + `|| ''` : `'${resolvedName}'`;
+      const val = literal ? name : `'${resolvedName}'`;
       let text = '';
 
       // MUCH faster to set colorScheme alongside HTML attribute/class
@@ -293,13 +314,17 @@ const ThemeScript = memo(
       }
 
       if (attribute === 'class') {
-        if (literal || resolvedName) {
+        if (literal) {
+          text += `if(${val})c.add(${val})`;
+        } else if (resolvedName) {
           text += `c.add(${val})`;
         } else {
           text += `null`;
         }
       } else {
-        if (resolvedName) {
+        if (literal) {
+          text += `if(${val})d[s](n,${val})`;
+        } else if (resolvedName) {
           text += `d[s](n,${val})`;
         }
       }

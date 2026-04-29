@@ -14,7 +14,7 @@ export interface UseThemeProps {
   /** If `enableSystem` is true and the active theme is "system", this returns whether the system preference resolved to "dark" or "light". Otherwise, identical to `theme` */
   resolvedTheme?: string;
   /** If enableSystem is true, returns the System theme preference ("dark" or "light"), regardless what the active theme is */
-  systemTheme?: "dark" | "light";
+  systemTheme?: 'dark' | 'light';
 }
 
 export interface ThemeProviderProps {
@@ -33,7 +33,7 @@ export interface ThemeProviderProps {
   /** Default theme name (for v0.0.12 and lower the default was light). If `enableSystem` is false, the default theme is light */
   defaultTheme?: string;
   /** HTML attribute modified based on the active theme. Accepts `class` and `data-*` (meaning any data attribute, `data-mode`, `data-color`, etc.) */
-  attribute?: string | "class";
+  attribute?: string | 'class';
   /** Mapping of theme name to HTML attribute value. Object where key is the theme name and value is the attribute value */
   value?: ValueObject;
   /** Nonce string to pass to the inline script for CSP headers */
@@ -46,4 +46,6 @@ export interface ThemeProviderProps {
   accentColor?: 'indigo' | 'orange' | 'mint';
   /** Gray color variant for the theme, options are 'gray', 'mauve', or 'slate' */
   grayColor?: 'gray' | 'mauve' | 'slate';
+  /** Called when the active theme changes. `resolvedTheme` is the actual applied theme (`'light'`/`'dark'` when `theme` is `'system'`). Not fired on initial mount. */
+  onThemeChange?: (theme: string, resolvedTheme: string) => void;
 }
