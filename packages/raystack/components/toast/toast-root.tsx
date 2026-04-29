@@ -7,6 +7,7 @@ import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
 import styles from './toast.module.css';
+import type { ToastData } from './toast-manager';
 import type { ToastPosition } from './toast-provider';
 
 type SwipeDirection = 'up' | 'down' | 'left' | 'right';
@@ -39,6 +40,7 @@ export function ToastRoot({
 }: ToastRootProps) {
   const swipeDirection = getSwipeDirection(position);
   const hasDescription = !!toast.description;
+  const leadingIcon = (toast.data as ToastData | undefined)?.leadingIcon;
 
   return (
     <ToastPrimitive.Root
@@ -48,7 +50,15 @@ export function ToastRoot({
       data-position={position}
       {...props}
     >
-      <ToastPrimitive.Content className={styles.content}>
+      <ToastPrimitive.Content
+        className={styles.content}
+        data-has-description={hasDescription ? '' : undefined}
+      >
+        {leadingIcon && (
+          <span className={styles.leadingIcon} aria-hidden='true'>
+            {leadingIcon}
+          </span>
+        )}
         <Flex direction='column' gap={1} className={styles.textContainer}>
           {toast.title && (
             <ToastPrimitive.Title
@@ -63,7 +73,7 @@ export function ToastRoot({
             </ToastPrimitive.Description>
           )}
         </Flex>
-        <Flex align='center' gap={3}>
+        <Flex align='center' gap={3} className={styles.actions}>
           {toast.actionProps && (
             <ToastPrimitive.Action
               {...toast.actionProps}

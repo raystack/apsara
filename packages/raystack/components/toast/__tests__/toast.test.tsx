@@ -208,6 +208,53 @@ describe('Toast', () => {
     });
   });
 
+  describe('Toast leadingIcon', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('renders leadingIcon when provided', async () => {
+      act(() => {
+        toastManager.add({
+          title: 'With icon',
+          leadingIcon: <svg data-testid='leading-icon' />
+        });
+      });
+
+      expect(await screen.findByText('With icon')).toBeInTheDocument();
+      expect(screen.getByTestId('leading-icon')).toBeInTheDocument();
+    });
+
+    it('does not render leading-icon slot when leadingIcon is omitted', async () => {
+      act(() => {
+        toastManager.add({ title: 'No icon' });
+      });
+
+      expect(await screen.findByText('No icon')).toBeInTheDocument();
+      expect(screen.queryByTestId('leading-icon')).not.toBeInTheDocument();
+    });
+
+    it('forwards leadingIcon through update()', async () => {
+      let id: string;
+      act(() => {
+        id = toastManager.add({ title: 'Initial' });
+      });
+      expect(await screen.findByText('Initial')).toBeInTheDocument();
+
+      act(() => {
+        toastManager.update(id!, {
+          title: 'Updated',
+          leadingIcon: <svg data-testid='updated-icon' />
+        });
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Updated')).toBeInTheDocument();
+        expect(screen.getByTestId('updated-icon')).toBeInTheDocument();
+      });
+    });
+  });
+
   describe('Multiple toasts', () => {
     beforeEach(() => {
       renderWithProvider();

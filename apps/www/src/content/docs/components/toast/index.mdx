@@ -4,7 +4,7 @@ description: Displays temporary notification messages using Base UI Toast primit
 source: packages/raystack/components/toast
 ---
 
-import { preview, basicDemo, typesDemo, descriptionDemo, actionDemo, promiseDemo, positionDemo, updateDemo } from "./demo.ts";
+import { preview, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, updateDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -55,13 +55,19 @@ Creates a new toast and returns its unique ID. The `toastManager` can be importe
 
 ### Type Variants
 
-Use the `type` prop to change the visual styling of the toast.
+Use the `type` prop to drive the leading icon color (e.g. green for success, red for error). The toast container itself stays visually neutral regardless of type.
 
 <Demo data={typesDemo} />
 
 ### With Title and Description
 
 <Demo data={descriptionDemo} />
+
+### With Leading Icon
+
+Pass any React node via `leadingIcon` to render an icon before the title. The icon inherits color from the toast `type`.
+
+<Demo data={leadingIconDemo} />
 
 ### With Action Button
 

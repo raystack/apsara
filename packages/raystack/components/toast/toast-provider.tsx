@@ -3,7 +3,11 @@
 import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import styles from './toast.module.css';
-import { toastManager } from './toast-manager';
+import {
+  _baseManagerRef,
+  toastManager as defaultToastManager,
+  type ToastManager
+} from './toast-manager';
 import { ToastRoot } from './toast-root';
 
 export type ToastPosition =
@@ -14,12 +18,19 @@ export type ToastPosition =
   | 'bottom-center'
   | 'bottom-right';
 
-export interface ToastProviderProps extends ToastPrimitive.Provider.Props {
+export interface ToastProviderProps
+  extends Omit<ToastPrimitive.Provider.Props, 'toastManager'> {
   /**
    * Position of the toast viewport on screen.
    * @default "bottom-right"
    */
   position?: ToastPosition;
+  /**
+   * Toast manager instance. Defaults to the singleton exported as
+   * `toastManager`. Provide a custom one created via
+   * `Toast.createToastManager()` to scope toasts to this provider.
+   */
+  toastManager?: ToastManager;
 }
 
 function ToastList({ position }: { position: ToastPosition }) {
@@ -31,11 +42,18 @@ function ToastList({ position }: { position: ToastPosition }) {
 
 export function ToastProvider({
   position = 'bottom-right',
+  toastManager = defaultToastManager,
   children,
   ...props
 }: ToastProviderProps) {
+  const baseManager = _baseManagerRef.get(toastManager);
+  if (!baseManager) {
+    throw new Error(
+      'ToastProvider: invalid toastManager. Use `Toast.createToastManager()` from @raystack/apsara to create one.'
+    );
+  }
   return (
-    <ToastPrimitive.Provider toastManager={toastManager} {...props}>
+    <ToastPrimitive.Provider toastManager={baseManager} {...props}>
       {children}
       <ToastPrimitive.Portal>
         <ToastPrimitive.Viewport

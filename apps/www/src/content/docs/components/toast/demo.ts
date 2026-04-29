@@ -86,6 +86,35 @@ export const descriptionDemo = {
   </Flex>`
 };
 
+export const leadingIconDemo = {
+  type: 'code',
+  code: `
+  <Flex gap="medium" wrap="wrap">
+    <Button onClick={() => toastManager.add({
+      title: "Saved successfully",
+      type: "success",
+      leadingIcon: <CheckCircledIcon />
+    })}>
+      Success with icon
+    </Button>
+    <Button onClick={() => toastManager.add({
+      title: "Upload failed",
+      description: "We couldn't upload your file. Please try again.",
+      type: "error",
+      leadingIcon: <CrossCircledIcon />
+    })}>
+      Error with icon
+    </Button>
+    <Button onClick={() => toastManager.add({
+      title: "FYI: System update available",
+      type: "info",
+      leadingIcon: <InfoCircledIcon />
+    })}>
+      Info with icon
+    </Button>
+  </Flex>`
+};
+
 export const actionDemo = {
   type: 'code',
   code: `

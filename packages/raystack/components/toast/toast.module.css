@@ -205,37 +205,18 @@
     translateY(var(--offset-y));
 }
 
-/* ===== Type-based styling ===== */
-.root[data-type="success"] {
-  background: var(--rs-color-background-success-primary);
-  border-color: var(--rs-color-border-success-primary);
-  color: var(--rs-color-foreground-success-primary);
-}
-
-.root[data-type="error"] {
-  background: var(--rs-color-background-danger-primary);
-  border-color: var(--rs-color-border-danger-primary);
-  color: var(--rs-color-foreground-danger-primary);
-}
-
-.root[data-type="warning"] {
-  background: var(--rs-color-background-attention-primary);
-  border-color: var(--rs-color-border-attention-primary);
-  color: var(--rs-color-foreground-attention-primary);
-}
-
-.root[data-type="info"] {
-  background: var(--rs-color-background-accent-primary);
-  border-color: var(--rs-color-border-accent-primary);
-  color: var(--rs-color-foreground-accent-primary);
-}
-
 /* ===== Content (stacking visibility) ===== */
 .content {
   display: flex;
-  align-items: start;
-  gap: var(--rs-space-5);
+  align-items: center;
+  gap: var(--rs-space-3);
   transition: opacity 250ms;
+}
+
+/* Top-align icon and actions when description is present so the icon
+   sits next to the title rather than centering against both lines. */
+.content[data-has-description] {
+  align-items: flex-start;
 }
 
 .content[data-behind] {
@@ -246,15 +227,54 @@
   opacity: 1;
 }
 
+/* ===== Leading icon ===== */
+.leadingIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.leadingIcon > svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Type-based leading icon colors. The toast itself stays visually neutral
+   across all types — only the leading icon changes color per type. */
+.root[data-type="success"] .leadingIcon {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.root[data-type="error"] .leadingIcon {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.root[data-type="warning"] .leadingIcon {
+  color: var(--rs-color-foreground-attention-primary);
+}
+
+.root[data-type="info"] .leadingIcon {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
 /* ===== Text container (title + description) ===== */
 .textContainer {
   flex: 1;
   min-width: 0;
 }
 
+/* ===== Actions (action button + close) ===== */
+.actions {
+  flex-shrink: 0;
+}
+
 /* ===== Title ===== */
 .title {
-  color: inherit;
+  color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-regular);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-regular);
@@ -264,20 +284,12 @@
 
 /* ===== Description ===== */
 .description {
-  color: inherit;
+  color: var(--rs-color-foreground-base-secondary);
   font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-regular);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   margin: 0;
-}
-
-/* Override description color for typed toasts */
-.root[data-type="success"] .description,
-.root[data-type="error"] .description,
-.root[data-type="warning"] .description,
-.root[data-type="info"] .description {
-  opacity: 0.85;
 }
 
 @media (prefers-reduced-motion: no-preference) {

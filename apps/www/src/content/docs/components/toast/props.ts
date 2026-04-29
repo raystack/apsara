@@ -70,6 +70,12 @@ export interface ToastManagerAddOptions {
   actionProps?: React.ComponentPropsWithoutRef<'button'>;
 
   /**
+   * Icon rendered before the toast title. Inherits color from the toast type
+   * (e.g. green for `type: "success"`).
+   */
+  leadingIcon?: React.ReactNode;
+
+  /**
    * Custom data to attach to the toast.
    */
   data?: Record<string, unknown>;
