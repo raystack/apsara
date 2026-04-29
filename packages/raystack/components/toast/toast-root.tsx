@@ -81,7 +81,9 @@ export function ToastRoot({
               </span>
             )}
             {toast.title && (
-              <ToastPrimitive.Title className={styles.title}>
+              <ToastPrimitive.Title
+                className={hasDescription ? styles.title : styles.description}
+              >
                 {toast.title}
               </ToastPrimitive.Title>
             )}
