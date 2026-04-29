@@ -23,6 +23,7 @@ export * from './field-examples';
 export * from './fieldset-examples';
 export * from './filter-chip-examples';
 export * from './flex-examples';
+export * from './floating-actions-examples';
 export * from './form-examples';
 export * from './headline-examples';
 export * from './icon-button-examples';

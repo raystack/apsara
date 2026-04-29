@@ -2,6 +2,7 @@
 
 import {
   BorderSolidIcon,
+  CheckCircledIcon,
   ColorWheelIcon,
   Component1Icon,
   FileIcon,
@@ -62,6 +63,7 @@ export default function Demo(props: DemoProps) {
       NextLink,
       PlusIcon,
       TransformIcon,
+      CheckCircledIcon,
       Pencil2Icon,
       InfoCircledIcon,
       UploadIcon,
