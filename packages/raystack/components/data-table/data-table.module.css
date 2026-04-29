@@ -35,7 +35,7 @@
   min-width: 0;
 }
 
-.display-popover-properties-select>span {
+.display-popover-properties-select > span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
