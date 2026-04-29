@@ -5,7 +5,6 @@ import { MinusIcon, PlusIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, createContext, useContext, useId } from 'react';
 import { useFieldContext } from '../field';
-import { Label } from '../label';
 import styles from './number-field.module.css';
 
 const NumberFieldContext = createContext<{ fieldId: string } | null>(null);
@@ -118,9 +117,9 @@ function NumberFieldScrubArea({
       className={cx(styles['scrub-area'], className)}
       {...props}
     >
-      <Label className={styles['scrub-area-label']} htmlFor={context?.fieldId}>
+      <label className={styles['scrub-area-label']} htmlFor={context?.fieldId}>
         {label}
-      </Label>
+      </label>
       <NumberFieldPrimitive.ScrubAreaCursor
         className={styles['scrub-area-cursor']}
       >

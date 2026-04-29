@@ -30,7 +30,6 @@ export * from './icon-button-examples';
 export * from './image-examples';
 export * from './indicator-examples';
 export * from './input-field-examples';
-export * from './label-examples';
 export * from './link-examples';
 export * from './list-examples';
 export * from './menu-examples';

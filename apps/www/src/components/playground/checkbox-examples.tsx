@@ -1,6 +1,6 @@
 'use client';
 
-import { Checkbox, Flex, Text } from '@raystack/apsara';
+import { Checkbox, Field, Flex, Text } from '@raystack/apsara';
 import PlaygroundLayout from './playground-layout';
 
 export function CheckboxExamples() {
@@ -20,15 +20,21 @@ export function CheckboxExamples() {
           <Flex direction='column' gap='small'>
             <Flex gap='small' align='center'>
               <Checkbox name='apple' id='pg-apple' />
-              <label htmlFor='pg-apple'>Apple</label>
+              <Field.Label orientation='horizontal' htmlFor='pg-apple'>
+                Apple
+              </Field.Label>
             </Flex>
             <Flex gap='small' align='center'>
               <Checkbox name='banana' id='pg-banana' />
-              <label htmlFor='pg-banana'>Banana</label>
+              <Field.Label orientation='horizontal' htmlFor='pg-banana'>
+                Banana
+              </Field.Label>
             </Flex>
             <Flex gap='small' align='center'>
               <Checkbox name='cherry' id='pg-cherry' />
-              <label htmlFor='pg-cherry'>Cherry</label>
+              <Field.Label orientation='horizontal' htmlFor='pg-cherry'>
+                Cherry
+              </Field.Label>
             </Flex>
           </Flex>
         </Checkbox.Group>

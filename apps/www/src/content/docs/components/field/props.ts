@@ -52,6 +52,13 @@ export interface FieldLabelProps {
    */
   required?: boolean;
 
+  /**
+   * Layout direction of the label relative to the control it labels.
+   * Use `horizontal` when placing the label inline next to a Radio or Checkbox.
+   * @defaultValue "vertical"
+   */
+  orientation?: 'vertical' | 'horizontal';
+
   /** Additional CSS class names. */
   className?: string;
 }

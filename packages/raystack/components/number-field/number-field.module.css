@@ -74,6 +74,11 @@
 
 .scrub-area-label {
   cursor: ew-resize;
+  color: var(--rs-color-foreground-base-secondary);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
 }
 
 .scrub-area-cursor {
