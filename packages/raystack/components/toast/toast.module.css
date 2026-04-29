@@ -208,15 +208,9 @@
 /* ===== Content (stacking visibility) ===== */
 .content {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--rs-space-3);
   transition: opacity 250ms;
-}
-
-/* Top-align icon and actions when description is present so the icon
-   sits next to the title rather than centering against both lines. */
-.content[data-has-description] {
-  align-items: flex-start;
 }
 
 .content[data-behind] {
@@ -225,6 +219,30 @@
 
 .content[data-expanded] {
   opacity: 1;
+}
+
+/* ===== Header row (icon + title + actions) ===== */
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-5);
+  min-height: var(--rs-space-7);
+  width: 100%;
+}
+
+.headerLeft {
+  display: flex;
+  flex: 1 0 0;
+  align-items: center;
+  gap: var(--rs-space-3);
+  min-width: 0;
+}
+
+/* ===== Description row (indented to align under title text) ===== */
+.descriptionRow {
+  display: flex;
+  padding-left: var(--rs-space-7);
+  width: 100%;
 }
 
 /* ===== Leading icon ===== */
@@ -261,12 +279,6 @@
   color: var(--rs-color-foreground-accent-primary);
 }
 
-/* ===== Text container (title + description) ===== */
-.textContainer {
-  flex: 1;
-  min-width: 0;
-}
-
 /* ===== Actions (action button + close) ===== */
 .actions {
   flex-shrink: 0;
@@ -284,7 +296,7 @@
 
 /* ===== Description ===== */
 .description {
-  color: var(--rs-color-foreground-base-secondary);
+  color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-regular);
   line-height: var(--rs-line-height-small);

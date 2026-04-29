@@ -72,43 +72,42 @@ export function ToastRoot({
       data-position={position}
       {...props}
     >
-      <ToastPrimitive.Content
-        className={styles.content}
-        data-has-description={hasDescription ? '' : undefined}
-      >
-        {leadingIcon && (
-          <span className={styles.leadingIcon} aria-hidden='true'>
-            {leadingIcon}
-          </span>
-        )}
-        <Flex direction='column' gap={1} className={styles.textContainer}>
-          {toast.title && (
-            <ToastPrimitive.Title
-              className={hasDescription ? styles.title : styles.description}
+      <ToastPrimitive.Content className={styles.content}>
+        <div className={styles.header}>
+          <div className={styles.headerLeft}>
+            {leadingIcon && (
+              <span className={styles.leadingIcon} aria-hidden='true'>
+                {leadingIcon}
+              </span>
+            )}
+            {toast.title && (
+              <ToastPrimitive.Title className={styles.title}>
+                {toast.title}
+              </ToastPrimitive.Title>
+            )}
+          </div>
+          <Flex align='center' gap={3} className={styles.actions}>
+            {toast.actionProps && (
+              <ToastPrimitive.Action
+                {...toast.actionProps}
+                render={<Button variant='text' color='neutral' size='small' />}
+              />
+            )}
+            <ToastPrimitive.Close
+              aria-label='Close toast'
+              render={<IconButton size={2} />}
             >
-              {toast.title}
-            </ToastPrimitive.Title>
-          )}
-          {hasDescription && (
+              <Cross1Icon />
+            </ToastPrimitive.Close>
+          </Flex>
+        </div>
+        {hasDescription && (
+          <div className={styles.descriptionRow}>
             <ToastPrimitive.Description className={styles.description}>
               {toast.description}
             </ToastPrimitive.Description>
-          )}
-        </Flex>
-        <Flex align='center' gap={3} className={styles.actions}>
-          {toast.actionProps && (
-            <ToastPrimitive.Action
-              {...toast.actionProps}
-              render={<Button variant='text' color='neutral' size='small' />}
-            />
-          )}
-          <ToastPrimitive.Close
-            aria-label='Close toast'
-            render={<IconButton size={2} />}
-          >
-            <Cross1Icon />
-          </ToastPrimitive.Close>
-        </Flex>
+          </div>
+        )}
       </ToastPrimitive.Content>
     </ToastPrimitive.Root>
   );
