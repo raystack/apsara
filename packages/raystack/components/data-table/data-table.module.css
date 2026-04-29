@@ -8,24 +8,31 @@
 
 .display-popover-content {
   padding: 0px;
-  /* Todo: var does not exist for 300px */
-  min-width: 300px;
+  /* Todo: var does not exist for 352px */
+  width: 352px;
+  max-width: 352px;
+  border-radius: var(--rs-radius-3);
 }
 
 .display-popover-properties-container {
-  /* Todo: var does not exist for 160px */
-  --select-width: 160px;
   padding: var(--rs-space-5);
   border-bottom: 1px solid var(--rs-color-border-base-primary);
 }
 
-.display-popover-properties-select {
-  width: var(--select-width);
+.display-popover-properties-label {
+  /* Todo: var does not exist for 154px */
+  width: 154px;
+  flex-shrink: 0;
 }
 
-.display-popover-properties-select[with-icon-button] {
-  /* Reduce Icon button with "--rs-space-7" and flex gap "--rs-space-2" */
-  width: calc(var(--select-width) - var(--rs-space-7) - var(--rs-space-2));
+.display-popover-properties-control {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.display-popover-properties-select {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .display-popover-properties-select>span {

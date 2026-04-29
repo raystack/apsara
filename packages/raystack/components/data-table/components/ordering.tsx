@@ -32,11 +32,20 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
   }
 
   return (
-    <Flex justify='between' align='center'>
-      <Text size={2} weight={500} className={styles['flex-1']}>
+    <Flex align='center' gap={5}>
+      <Text
+        size='small'
+        weight='medium'
+        variant='secondary'
+        className={styles['display-popover-properties-label']}
+      >
         Ordering
       </Text>
-      <Flex gap='extra-small' className={styles['flex-1']}>
+      <Flex
+        gap={3}
+        align='center'
+        className={styles['display-popover-properties-control']}
+      >
         <Select
           onValueChange={handleColumnChange}
           value={value.name}
@@ -45,7 +54,6 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           <Select.Trigger
             size='small'
             className={styles['display-popover-properties-select']}
-            with-icon-button='true'
           >
             <Select.Value placeholder='Select value' />
           </Select.Trigger>

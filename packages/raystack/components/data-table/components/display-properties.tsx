@@ -13,9 +13,11 @@ export function DisplayProperties<TData, TValue>({
   const hidableColumns = columns?.filter(col => col.columnDef.enableHiding);
 
   return (
-    <Flex direction='column' gap={3}>
-      <Text>Display Properties</Text>
-      <Flex gap={3} wrap='wrap'>
+    <Flex direction='column' gap={5}>
+      <Text size='small' weight='medium' variant='secondary'>
+        Display Properties
+      </Text>
+      <Flex gap={3} wrap='wrap' align='center'>
         {hidableColumns.map(column => (
           <Chip
             key={column.id}
