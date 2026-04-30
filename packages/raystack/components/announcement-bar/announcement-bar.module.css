@@ -7,8 +7,8 @@
 .announcement-bar-gradient {
   background: radial-gradient(
     36.63% 405.48% at 50% 50%,
-    #eeaeca 0%,
-    #df94e9 100%
+    oklch(0.8184 0.0825 351.13) 0%,
+    oklch(0.7701 0.1422 322.63) 100%
   );
 }
 

@@ -101,7 +101,7 @@
 }
 
 .callout-gradient {
-  background: radial-gradient(circle, #ad00e933 0%, #ef040433 100%);
+  background: radial-gradient(circle, oklch(0.5674 0.2831 312.58 / 0.2) 0%, oklch(0.5988 0.2445 29.12 / 0.2) 100%);
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -194,8 +194,8 @@
 }
 
 .callout-outline.callout-gradient {
-  background: radial-gradient(circle, #ad00e933 0%, #ef040433 100%);
-  border: 0.5px solid #ef040444;
+  background: radial-gradient(circle, oklch(0.5674 0.2831 312.58 / 0.2) 0%, oklch(0.5988 0.2445 29.12 / 0.2) 100%);
+  border: 0.5px solid oklch(0.5988 0.2445 29.12 / 0.2667);
   color: var(--rs-color-foreground-base-primary);
 }
 
