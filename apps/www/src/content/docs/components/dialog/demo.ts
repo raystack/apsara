@@ -73,7 +73,7 @@ export const customDemo = {
     </Dialog.Trigger>
     <Dialog.Content
       width="400px"
-      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' } }}
+      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'oklch(0 0 0 / 0.5)' } }}
     >
       <Dialog.Body>
         <Dialog.Title>Custom Styled Dialog</Dialog.Title>
@@ -94,7 +94,7 @@ export const onlyHeaderDemo = {
     </Dialog.Trigger>
     <Dialog.Content
       width="400px"
-      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' } }}
+      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'oklch(0 0 0 / 0.5)' } }}
     >
       <Dialog.Header>
         <Dialog.Title>Title</Dialog.Title>
@@ -117,7 +117,7 @@ export const onlyFooterDemo = {
     </Dialog.Trigger>
     <Dialog.Content
       width="400px"
-      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'rgba(0, 0, 0, 0.5)' } }}
+      overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'oklch(0 0 0 / 0.5)' } }}
     >
       <Dialog.Body>
         <Dialog.Title>Title</Dialog.Title>

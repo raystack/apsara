@@ -62,32 +62,32 @@
   /* Overlay Colors */
   --rs-color-overlay-base-primary: var(--rs-overlay-1);
   /* Black Overlay */
-  --rs-color-overlay-black-a1: #0000000D; /* 5% opacity */
-  --rs-color-overlay-black-a2: #0000001A; /* 10% opacity */
-  --rs-color-overlay-black-a3: #00000026; /* 15% opacity */
-  --rs-color-overlay-black-a4: #00000033; /* 20% opacity */
-  --rs-color-overlay-black-a5: #0000004D; /* 30% opacity */
-  --rs-color-overlay-black-a6: #00000066; /* 40% opacity */
-  --rs-color-overlay-black-a7: #00000080; /* 50% opacity */
-  --rs-color-overlay-black-a8: #00000099; /* 60% opacity */
-  --rs-color-overlay-black-a9: #000000B3; /* 70% opacity */
-  --rs-color-overlay-black-a10: #000000CC; /* 80% opacity */
-  --rs-color-overlay-black-a11: #000000E6; /* 90% opacity */
-  --rs-color-overlay-black-a12: #000000F2; /* 95% opacity */
+  --rs-color-overlay-black-a1: oklch(0 0 0 / 0.051); /* 5% opacity */
+  --rs-color-overlay-black-a2: oklch(0 0 0 / 0.102); /* 10% opacity */
+  --rs-color-overlay-black-a3: oklch(0 0 0 / 0.149); /* 15% opacity */
+  --rs-color-overlay-black-a4: oklch(0 0 0 / 0.2); /* 20% opacity */
+  --rs-color-overlay-black-a5: oklch(0 0 0 / 0.302); /* 30% opacity */
+  --rs-color-overlay-black-a6: oklch(0 0 0 / 0.4); /* 40% opacity */
+  --rs-color-overlay-black-a7: oklch(0 0 0 / 0.502); /* 50% opacity */
+  --rs-color-overlay-black-a8: oklch(0 0 0 / 0.6); /* 60% opacity */
+  --rs-color-overlay-black-a9: oklch(0 0 0 / 0.702); /* 70% opacity */
+  --rs-color-overlay-black-a10: oklch(0 0 0 / 0.8); /* 80% opacity */
+  --rs-color-overlay-black-a11: oklch(0 0 0 / 0.902); /* 90% opacity */
+  --rs-color-overlay-black-a12: oklch(0 0 0 / 0.949); /* 95% opacity */
 
   /* White Overlay */
-  --rs-color-overlay-white-a1: #ffffff0D; /* 5% opacity */
-  --rs-color-overlay-white-a2: #ffffff1A; /* 10% opacity */
-  --rs-color-overlay-white-a3: #ffffff26; /* 15% opacity */
-  --rs-color-overlay-white-a4: #ffffff33; /* 20% opacity */
-  --rs-color-overlay-white-a5: #ffffff4D; /* 30% opacity */
-  --rs-color-overlay-white-a6: #ffffff66; /* 40% opacity */
-  --rs-color-overlay-white-a7: #ffffff80; /* 50% opacity */
-  --rs-color-overlay-white-a8: #ffffff99; /* 60% opacity */
-  --rs-color-overlay-white-a9: #ffffffB3; /* 70% opacity */
-  --rs-color-overlay-white-a10: #ffffffCC; /* 80% opacity */
-  --rs-color-overlay-white-a11: #ffffffE6; /* 90% opacity */
-  --rs-color-overlay-white-a12: #ffffffF2; /* 95% opacity */
+  --rs-color-overlay-white-a1: oklch(1 0 0 / 0.051); /* 5% opacity */
+  --rs-color-overlay-white-a2: oklch(1 0 0 / 0.102); /* 10% opacity */
+  --rs-color-overlay-white-a3: oklch(1 0 0 / 0.149); /* 15% opacity */
+  --rs-color-overlay-white-a4: oklch(1 0 0 / 0.2); /* 20% opacity */
+  --rs-color-overlay-white-a5: oklch(1 0 0 / 0.302); /* 30% opacity */
+  --rs-color-overlay-white-a6: oklch(1 0 0 / 0.4); /* 40% opacity */
+  --rs-color-overlay-white-a7: oklch(1 0 0 / 0.502); /* 50% opacity */
+  --rs-color-overlay-white-a8: oklch(1 0 0 / 0.6); /* 60% opacity */
+  --rs-color-overlay-white-a9: oklch(1 0 0 / 0.702); /* 70% opacity */
+  --rs-color-overlay-white-a10: oklch(1 0 0 / 0.8); /* 80% opacity */
+  --rs-color-overlay-white-a11: oklch(1 0 0 / 0.902); /* 90% opacity */
+  --rs-color-overlay-white-a12: oklch(1 0 0 / 0.949); /* 95% opacity */
 
   /* Additional Background Colors */
   --rs-color-background-neutral-primary: var(--rs-neutral-3);

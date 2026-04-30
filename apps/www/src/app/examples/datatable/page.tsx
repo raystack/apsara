@@ -3,6 +3,7 @@
 import {
   Button,
   DataTable,
+  DataTableColumnDef,
   EmptyState,
   Flex,
   IconButton,
@@ -377,19 +378,22 @@ const sampleData = [
   }
 ];
 
-const columns = [
+const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
     enableColumnFilter: true,
     filterType: 'string' as const,
-    enableGrouping: true
+    enableGrouping: true,
+    showGroupCount: true,
+    enableSorting: true
   },
   {
     accessorKey: 'email',
     header: 'Email',
     enableColumnFilter: true,
-    filterType: 'string' as const
+    filterType: 'string' as const,
+    enableSorting: true
   },
   {
     accessorKey: 'role',
@@ -398,18 +402,43 @@ const columns = [
     filterType: 'select' as const,
     enableGrouping: true,
     showGroupCount: true,
+    enableSorting: true,
     filterOptions: [
       { value: 'Admin', label: 'Admin' },
       { value: 'User', label: 'User' },
       { value: 'Manager', label: 'Manager' }
     ]
   },
-  { accessorKey: 'department', header: 'Department' },
-  { accessorKey: 'team', header: 'Team' },
-  { accessorKey: 'location', header: 'Location' },
+  {
+    accessorKey: 'department',
+    header: 'Department',
+    enableGrouping: true,
+    showGroupCount: true,
+    enableSorting: true
+  },
+  {
+    accessorKey: 'team',
+    header: 'Team',
+    enableGrouping: true,
+    showGroupCount: true,
+    enableSorting: true
+  },
+  {
+    accessorKey: 'location',
+    header: 'Location',
+    enableGrouping: true,
+    showGroupCount: true,
+    enableSorting: true
+  },
   { accessorKey: 'phone', header: 'Phone' },
-  { accessorKey: 'status', header: 'Status' },
-  { accessorKey: 'joined', header: 'Joined' },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    enableGrouping: true,
+    showGroupCount: true,
+    enableSorting: true
+  },
+  { accessorKey: 'joined', header: 'Joined', enableSorting: true },
   { accessorKey: 'name', id: 'name_2', header: 'Name (2)' },
   { accessorKey: 'email', id: 'email_2', header: 'Email (2)' },
   { accessorKey: 'role', id: 'role_2', header: 'Role (2)' },
@@ -424,32 +453,8 @@ const columns = [
   { accessorKey: 'role', id: 'role_3', header: 'Role (3)' }
 ];
 
-const PAGE_SIZE = 10;
-const MAX_ROWS = 50;
-
 const Page = () => {
   const [navbarSearch, setNavbarSearch] = useState('');
-  const [data, setData] = useState(() => sampleData.slice(0, PAGE_SIZE));
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-
-  const loadMore = (): Promise<void> => {
-    if (loading || !hasMore) return Promise.resolve();
-    setLoading(true);
-    return new Promise(resolve => {
-      setTimeout(() => {
-        setData(prev => {
-          const next = sampleData.slice(prev.length, prev.length + PAGE_SIZE);
-          if (next.length < PAGE_SIZE) setHasMore(false);
-          return prev.length + next.length <= MAX_ROWS
-            ? [...prev, ...next]
-            : prev;
-        });
-        setLoading(false);
-        resolve();
-      }, 500);
-    });
-  };
 
   return (
     <Flex
@@ -502,7 +507,7 @@ const Page = () => {
         <Navbar>
           <Navbar.Start>
             <Text size='regular' weight='medium'>
-              DataTable – Infinite scroll
+              DataTable – Client mode
             </Text>
           </Navbar.Start>
           <Navbar.End>
@@ -532,11 +537,9 @@ const Page = () => {
           }}
         >
           <DataTable
-            data={data}
+            data={sampleData}
             columns={columns}
-            mode='server'
-            isLoading={loading}
-            onLoadMore={loadMore}
+            mode='client'
             defaultSort={{ name: 'name', order: 'asc' }}
             stickyGroupHeader
           >
