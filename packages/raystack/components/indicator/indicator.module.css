@@ -5,8 +5,12 @@
 
 .indicator {
   position: absolute;
-  top: calc(-1 * var(--rs-space-2));
-  right: calc(-1 * var(--rs-space-2));
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--rs-radius-full);
   white-space: nowrap;
   font-weight: var(--rs-font-weight-regular);
@@ -21,20 +25,16 @@
 }
 
 .indicator:has(.label) {
-  top: calc(-1 * var(--rs-space-4));
-  right: calc(-1 * var(--rs-space-6));
-}
-
-/* This adjusts the right side spacing if the label is 1 or 2 characters */
-.indicator:has(.label[data-length="1"]),
-.indicator:has(.label[data-length="2"]) {
-  right: calc(-1 * var(--rs-space-3));
+  /* Todo: var does not exist for 18px */
+  min-width: 18px;
+  height: 18px;
 }
 
 .dot {
   display: block;
-  width: var(--rs-space-3);
-  height: var(--rs-space-3);
+  /* Todo: var does not exist for 5px */
+  width: 5px;
+  height: 5px;
   border-radius: var(--rs-radius-full);
 }
 
