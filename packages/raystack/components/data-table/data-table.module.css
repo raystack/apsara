@@ -8,8 +8,7 @@
 
 .display-popover-content {
   padding: 0px;
-  /* Todo: var does not exist for 352px */
-  width: 352px;
+  min-width: 320px;
   max-width: 352px;
   border-radius: var(--rs-radius-3);
 }
@@ -20,8 +19,7 @@
 }
 
 .display-popover-properties-label {
-  /* Todo: var does not exist for 154px */
-  width: 154px;
+  min-width: 100px;
   flex-shrink: 0;
 }
 
@@ -43,11 +41,6 @@
 
 .display-popover-reset-container {
   padding: var(--rs-space-3) var(--rs-space-5);
-}
-
-.display-popover-sort-icon {
-  height: var(--rs-space-6);
-  width: var(--rs-space-6);
 }
 
 .flex-1 {
