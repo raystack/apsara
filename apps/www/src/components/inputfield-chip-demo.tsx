@@ -19,13 +19,13 @@ export default function ChipInputDemo() {
       onChange={e => setInput(e.target.value)}
       onKeyDown={e => {
         if (e.key === 'Enter' && input.trim()) {
-          setChips([...chips, { label: input.trim() }]);
+          setChips(prev => [...prev, { label: input.trim() }]);
           setInput('');
         }
       }}
       chips={chips.map((c, i) => ({
         label: c.label,
-        onRemove: () => setChips(chips.filter((_, j) => j !== i))
+        onRemove: () => setChips(prev => prev.filter((_, j) => j !== i))
       }))}
       maxChipsVisible={4}
     />
