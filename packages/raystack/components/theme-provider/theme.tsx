@@ -10,10 +10,10 @@ import {
   useMemo,
   useState
 } from 'react';
-
 import type { ThemeProviderProps, UseThemeProps } from './types';
+import { COLOR_SCHEMES } from './types';
 
-const colorSchemes = ['light', 'dark'];
+const colorSchemes: string[] = [...COLOR_SCHEMES];
 const MEDIA = '(prefers-color-scheme: dark)';
 const isServer = typeof window === 'undefined';
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
@@ -31,7 +31,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
 
 ThemeProvider.displayName = 'ThemeProvider';
 
-const defaultThemes = ['light', 'dark'];
+const defaultThemes: string[] = [...COLOR_SCHEMES];
 
 const Theme = ({
   forcedTheme,

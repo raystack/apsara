@@ -5,7 +5,8 @@
  */
 
 
-[data-gray-color='gray'] {
+[data-gray-color='gray'],
+[data-theme='light'] {
     --rs-gray-1: oklch(0.9911 0 0);
     --rs-gray-2: oklch(0.9821 0 0);
     --rs-gray-3: oklch(0.9551 0 0);
@@ -20,7 +21,8 @@
     --rs-gray-12: oklch(0.2435 0 0);
 }
 
-[data-gray-color='gray'][data-theme='dark'] {
+[data-gray-color='gray'][data-theme='dark'],
+[data-theme='dark'] {
     --rs-gray-1: oklch(0.1776 0 0);
     --rs-gray-2: oklch(0.2134 0 0);
     --rs-gray-3: oklch(0.252 0 0);

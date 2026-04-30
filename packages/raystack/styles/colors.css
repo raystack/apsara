@@ -1,9 +1,10 @@
-/* 
- * Note: Use color variables from this file only. 
- * Avoid using color variables from other files in the v1/styles folder directly. 
+/*
+ * Note: Use color variables from this file only.
+ * Avoid using color variables from other files in the styles folder directly.
  */
 
-:root {
+[data-theme='light'],
+[data-theme='dark'] {
   /* Base Foreground Colors */
   --rs-color-foreground-base-primary: var(--rs-neutral-12);
   --rs-color-foreground-base-secondary: var(--rs-neutral-11);
@@ -108,7 +109,7 @@
   --rs-color-foreground-danger-emphasis: var(--rs-danger-contrast);
   --rs-color-foreground-attention-emphasis: var(--rs-attention-contrast);
   --rs-color-foreground-success-emphasis: var(--rs-success-contrast);
-  
+
   /* Visualization Colors */
   /* Sky */
   --rs-color-viz-sky-11: var(--rs-viz-sky-11);

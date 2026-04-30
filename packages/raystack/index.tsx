@@ -74,6 +74,8 @@ export { TextArea } from './components/text-area';
 export {
   ThemeProvider,
   ThemeProviderProps,
+  ThemeScope,
+  ThemeScopeProps,
   ThemeSwitcher,
   useTheme
 } from './components/theme-provider';

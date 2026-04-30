@@ -2,6 +2,16 @@ interface ValueObject {
   [themeName: string]: string;
 }
 
+export const COLOR_SCHEMES = ['light', 'dark'] as const;
+export const ACCENT_COLORS = ['indigo', 'orange', 'mint'] as const;
+export const GRAY_COLORS = ['gray', 'mauve', 'slate'] as const;
+export const STYLE_VARIANTS = ['modern', 'traditional'] as const;
+
+export type ColorScheme = (typeof COLOR_SCHEMES)[number];
+export type AccentColor = (typeof ACCENT_COLORS)[number];
+export type GrayColor = (typeof GRAY_COLORS)[number];
+export type StyleVariant = (typeof STYLE_VARIANTS)[number];
+
 export interface UseThemeProps {
   /** List of all available theme names */
   themes: string[];
@@ -14,7 +24,7 @@ export interface UseThemeProps {
   /** If `enableSystem` is true and the active theme is "system", this returns whether the system preference resolved to "dark" or "light". Otherwise, identical to `theme` */
   resolvedTheme?: string;
   /** If enableSystem is true, returns the System theme preference ("dark" or "light"), regardless what the active theme is */
-  systemTheme?: "dark" | "light";
+  systemTheme?: 'dark' | 'light';
 }
 
 export interface ThemeProviderProps {
@@ -33,17 +43,17 @@ export interface ThemeProviderProps {
   /** Default theme name (for v0.0.12 and lower the default was light). If `enableSystem` is false, the default theme is light */
   defaultTheme?: string;
   /** HTML attribute modified based on the active theme. Accepts `class` and `data-*` (meaning any data attribute, `data-mode`, `data-color`, etc.) */
-  attribute?: string | "class";
+  attribute?: string | 'class';
   /** Mapping of theme name to HTML attribute value. Object where key is the theme name and value is the attribute value */
   value?: ValueObject;
   /** Nonce string to pass to the inline script for CSP headers */
   nonce?: string;
   /** React children to be rendered within the ThemeProvider */
   children?: React.ReactNode;
-  /** Style variant of the theme, either 'modern' or 'traditional'. Affects the radius and font properties. */
-  style?: 'modern' | 'traditional';
-  /** Accent color for the theme, options are 'indigo', 'orange', or 'mint' */
-  accentColor?: 'indigo' | 'orange' | 'mint';
-  /** Gray color variant for the theme, options are 'gray', 'mauve', or 'slate' */
-  grayColor?: 'gray' | 'mauve' | 'slate';
+  /** Style variant of the theme. Affects the radius and font properties. */
+  style?: StyleVariant;
+  /** Accent color for the theme. */
+  accentColor?: AccentColor;
+  /** Gray color variant for the theme. */
+  grayColor?: GrayColor;
 }

@@ -132,3 +132,83 @@ export default function RootLayout({ children }) {
 ```
 
 The `suppressHydrationWarning` is required because the theme script modifies the HTML element before React hydrates.
+
+## Scoped Theming
+
+Themes are not limited to the document root. Any element with a `data-theme` attribute creates an isolated theme scope — descendants resolve every design token from the nearest scoped ancestor. This enables theme preview cards, split-screen comparisons, and dark sidebars in light apps without any extra plumbing.
+
+### Bare attribute
+
+Because scoping is implemented in CSS, you can opt in by simply setting the attribute on any element:
+
+```tsx
+<html data-theme="dark">
+  {/* Page is dark */}
+  <div data-theme="light">
+    {/* This subtree renders with light tokens */}
+    <Button>Light button inside dark page</Button>
+  </div>
+</html>
+```
+
+The package's stylesheet handles the rest: every `--rs-color-*` token, `color-scheme` for native form controls and scrollbars, and the smooth transition during theme switches all follow the scoped attribute.
+
+### `ThemeScope` component
+
+For a typed convenience wrapper, use `ThemeScope`:
+
+```tsx
+import { ThemeScope } from "@raystack/apsara";
+
+<ThemeScope theme="dark">
+  <Card>Dark scoped card</Card>
+</ThemeScope>
+```
+
+`ThemeScope` writes `data-theme` (and optionally `data-accent-color`, `data-gray-color`, `data-style`) onto a wrapper element. By default it renders a `<div>`. Use the `render` prop to fuse the scope onto an element you already have, with no extra wrapping div:
+
+```tsx
+<ThemeScope theme="dark" render={<Flex direction="column" gap={5} />}>
+  <Heading>...</Heading>
+  <Text>...</Text>
+</ThemeScope>
+```
+
+### Combining with accent and gray overrides
+
+A scope can override accent or gray independently of theme. This is useful for highlighting a section without changing its color scheme:
+
+```tsx
+<ThemeScope accentColor="orange">
+  <Button color="accent">Orange accent in this region only</Button>
+</ThemeScope>
+
+<ThemeScope theme="dark" accentColor="mint" grayColor="slate">
+  <Card>Dark mint-on-slate card</Card>
+</ThemeScope>
+```
+
+### State management
+
+`ThemeScope` is stateless — the consumer owns the theme value. For an interactive scope, drive it with React state:
+
+```tsx
+const [scopeTheme, setScopeTheme] = useState<'light' | 'dark'>('dark');
+
+<ThemeScope theme={scopeTheme} render={<Flex direction="column" />}>
+  <Toggle onClick={() => setScopeTheme(t => t === 'dark' ? 'light' : 'dark')}>
+    Toggle this scope
+  </Toggle>
+  <Card>...</Card>
+</ThemeScope>
+```
+
+If you need persistence across page loads, manage it yourself with `localStorage` and a `useEffect`. `ThemeScope` deliberately avoids touching storage to keep the component pure and to avoid disambiguation issues when multiple scopes share a page.
+
+<auto-type-table path="./props.ts" name="ThemeScopeProps" />
+
+### When to reach for `ThemeScope` vs. the bare attribute
+
+- Use the **bare `data-theme` attribute** when you're already rendering a custom element and don't want another wrapper. The CSS handles everything — components inside will theme correctly.
+- Use **`ThemeScope`** when you want typed props (`theme`, `accentColor`, etc.), defaults handled for you, and a single import that documents intent.
+- Both produce the same DOM output when `ThemeScope` is given a `render` prop.
