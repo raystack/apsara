@@ -1,7 +1,7 @@
 'use client';
 
 import { InfoCircledIcon } from '@radix-ui/react-icons';
-import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { type ComponentProps, type CSSProperties, type ReactNode } from 'react';
 
 import styles from './callout.module.css';
