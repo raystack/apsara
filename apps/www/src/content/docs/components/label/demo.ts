@@ -11,6 +11,7 @@ export const playground = {
   type: 'playground',
   controls: {
     required: { type: 'checkbox', defaultValue: true },
+    optionalText: { type: 'text', defaultValue: '(optional)' },
     htmlFor: { type: 'text', defaultValue: '' },
     children: { type: 'text', initialValue: 'Label' }
   },
@@ -32,5 +33,8 @@ export const optionalDemo = {
   <Flex direction="column" gap="small">
     <Label>Required field</Label>
     <Label required={false}>Optional field</Label>
+    <Label required={false} optionalText="— not required">
+      Custom optional text
+    </Label>
   </Flex>`
 };

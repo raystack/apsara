@@ -1,9 +1,15 @@
 export interface LabelProps {
   /**
-   * Whether the labelled control is required. When `false`, an `(optional)`
-   * indicator is rendered next to the label.
+   * Whether the labelled control is required. When `false`, an optional
+   * indicator (see `optionalText`) is rendered next to the label.
    */
   required?: boolean;
+
+  /**
+   * Text rendered next to the label when `required={false}`.
+   * @defaultValue "(optional)"
+   */
+  optionalText?: string;
 
   /** Associates the label with a form control using its ID. */
   htmlFor?: string;
