@@ -149,7 +149,7 @@ export const interactiveChipDemo = {
     ]);
     const [input, setInput] = React.useState("");
 
-      <InputField
+      <Input
         placeholder="Type and press Enter..."
         width="560px"
         value={input}

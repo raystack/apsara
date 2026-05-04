@@ -1,4 +1,4 @@
-import { InputField } from '@raystack/apsara';
+import { Input } from '@raystack/apsara';
 import { useState } from 'react';
 
 export default function ChipInputDemo() {
@@ -12,7 +12,7 @@ export default function ChipInputDemo() {
   const [input, setInput] = useState('');
 
   return (
-    <InputField
+    <Input
       placeholder='Type and press Enter...'
       width='560px'
       value={input}
