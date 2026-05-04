@@ -216,7 +216,7 @@ export const SelectRoot = (props: SelectRootProps) => {
           filter={itemsProp ? undefined : null}
           items={itemsProp}
           loopFocus={false}
-          // @ts-ignore BaseUI types are not up to date
+          // @ts-ignore @base-ui/react@1.3.0 ComboboxRootProps types `autoHighlight` as `boolean | undefined`, but the runtime accepts `always | input-change`. Remove when upstream types are corrected.
           autoHighlight='always'
         >
           {children}

@@ -195,8 +195,8 @@ export const Amount = ({
       minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
       maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
       useGrouping: groupDigits
-      // @ts-ignore - Handling large numbers as string or number, so we need to pass the value as string or number.
-    }).format(finalBaseValue);
+      // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
+    } as Intl.NumberFormatOptions).format(finalBaseValue);
 
     return <span {...props}>{formattedValue}</span>;
   } catch (error) {

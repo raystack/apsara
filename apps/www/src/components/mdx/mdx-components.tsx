@@ -66,6 +66,7 @@ const mdxComponents = {
   img: Image,
   h1: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
+      //@ts-expect-error - Headline component type doesn't support h1 element
       as='h1'
       size='t4'
       {...props}
@@ -74,6 +75,7 @@ const mdxComponents = {
   ),
   h2: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
+      //@ts-expect-error - Headline component type doesn't support h2 element
       as='h2'
       size='t3'
       {...props}
@@ -82,6 +84,7 @@ const mdxComponents = {
   ),
   h3: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
+      //@ts-expect-error - Headline component type doesn't support h3 element
       as='h3'
       size='t2'
       {...props}
@@ -90,6 +93,7 @@ const mdxComponents = {
   ),
   h4: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
+      //@ts-expect-error - Headline component type doesn't support h4 element
       as='h4'
       size='t1'
       {...props}
@@ -107,7 +111,7 @@ const mdxComponents = {
   ),
   h6: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Text
-      // @ts-expect-error - Text component type doesn't support h6 element
+      //@ts-expect-error - Text component type doesn't support h6 element
       as='h6'
       size='regular'
       {...props}

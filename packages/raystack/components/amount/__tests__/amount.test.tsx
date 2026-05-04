@@ -179,13 +179,13 @@ describe('Amount', () => {
 
   describe('Edge Cases', () => {
     it('handles undefined value', () => {
-      // @ts-ignore - Testing edge case
+      // @ts-expect-error Testing runtime fallback for nullish value
       render(<Amount value={undefined} />);
       expect(screen.getByText('$0.00')).toBeInTheDocument();
     });
 
     it('handles null value', () => {
-      // @ts-ignore - Testing edge case
+      // @ts-expect-error Testing runtime fallback for nullish value
       render(<Amount value={null} />);
       expect(screen.getByText('$0.00')).toBeInTheDocument();
     });
