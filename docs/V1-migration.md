@@ -37,6 +37,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Grid](#grid)
     - [Headline](#headline)
     - [InputField](#inputfield)
+    - [Label](#label)
     - [Popover](#popover)
       - [New Features](#new-features-5)
     - [Radio](#radio)
@@ -1119,6 +1120,64 @@ Unchanged props: `size`, `variant`, `disabled`, `leadingIcon`, `trailingIcon`, `
 
 ---
 
+### Label
+
+The standalone `Label` component has been rebuilt as a polymorphic, layout-neutral component. The old `size` and `requiredIndicator` props are removed and the `required` prop semantics now match `Field.Label`.
+
+1. **`size` prop removed.** Typography is fixed to match `Field.Label` (Body/Mini Plus — medium weight, mini font size, secondary foreground). If you need a different size, render a `Text` instead.
+
+```tsx
+// Before
+<Label size="medium">Email</Label>
+<Label size="large">Email</Label>
+
+// After
+<Label>Email</Label>
+```
+
+2. **`requiredIndicator` prop removed and `required` semantics flipped.** Previously `required={true}` rendered an asterisk via `requiredIndicator` (default `*`). Now `Label` follows the `Field` convention: passing `required={false}` renders an `(optional)` indicator. Customize the text via `optionalText`.
+
+```tsx
+// Before
+<Label required>Email</Label>                                  // shows "Email *"
+<Label required requiredIndicator=" (Required)">Email</Label>  // shows "Email (Required)"
+
+// After
+<Label>Email</Label>                                            // shows "Email"
+<Label required={false}>Email</Label>                           // shows "Email (optional)"
+<Label required={false} optionalText="— not required">Email</Label>
+```
+
+3. **No layout / spacing styles by default.** The new `Label` is typography-only — no `padding-bottom`. Pointer cursor is wired through the `.label[for]` selector, so it activates automatically when `htmlFor` is set. For inline rows next to Radio/Checkbox, compose with `Flex`.
+
+```tsx
+// Before — bare <label> next to a Radio.Item
+<Flex gap="small" align="center">
+  <Radio.Item value="1" id="opt-1" />
+  <label htmlFor="opt-1">Option One</label>
+</Flex>
+
+// After — use Label
+<Flex gap="small" align="center">
+  <Radio value="1" id="opt-1" />
+  <Label htmlFor="opt-1">Option One</Label>
+</Flex>
+```
+
+4. **New: `render` prop.** `Label` now uses `useRender`, so you can swap the underlying element while preserving label semantics, classes, and ref forwarding.
+
+```tsx
+<Label render={<span />}>Inline label</Label>
+```
+
+5. **`Field.Label` now extends `LabelProps`.** `FieldLabelProps = FieldPrimitive.Label.Props & LabelProps`, so any future Label prop flows through automatically. The `(optional)` indicator is now owned by `Label` — no behavior change for callers; `Field.Label required={false}` still renders `(optional)`, and you can now also pass `optionalText` directly on `Field.Label`.
+
+6. **Field spacing tightened.** `Field` now uses `gap: var(--rs-space-2)` (was `--rs-space-1`) and no longer applies `padding-bottom` to the label or `padding-top` to description/error. The visual gap between label / control / helper text is now ~4px (matches Figma). If you were relying on the old spacing, expect a slight reduction in vertical space.
+
+**TypeScript:** The exported `LabelProps` changed from `PropsWithChildren<VariantProps<typeof label>> & Omit<ComponentProps<'label'>, 'required'>` to `useRender.ComponentProps<'label'> & { required?: boolean; optionalText?: string }`.
+
+---
+
 ### Popover
 
 1. **`asChild` removed from Trigger** -- use `render` prop or pass children directly:
@@ -1967,6 +2026,7 @@ These are purely additive -- no migration needed.
 - [ ] Rewrite all Tooltip usages to compound component pattern
 - [ ] Update Accordion: `type` -> `multiple`, remove `collapsible`, `forceMount` -> `keepMounted`
 - [ ] Update Command: `Command.List` -> `Command.Content`, `Group heading` -> `<Command.Label>`, `onSelect` -> `onClick`, inline icons -> `leadingIcon`/`trailingIcon`, wrap dialog usages with `Command.DialogTrigger` + `Command.DialogContent` (see [Command](#command))
+- [ ] Update Label usages: drop `size` and `requiredIndicator` props; flip `required` to `required={false}` for an `(optional)` indicator (see [Label](#label))
 - [ ] Wrap InputField usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [InputField](#inputfield))
 - [ ] Wrap TextArea usages with `<Field>` — move `label`, `helperText`, `error`, `required` to Field props (see [TextArea](#textarea))
 - [ ] Remove `infoTooltip` from InputField and TextArea (no longer supported)
