@@ -73,9 +73,9 @@ export const dismissableDemo = {
   type: 'code',
   code: `
   <Flex gap="large">
-    <Chip isDismissible onDismiss={() => alert('dismissed')} ariaLabel="Dismissible chip">Dismissable Chip</Chip>
-    <Chip variant="outline" color="accent" isDismissible onDismiss={() => alert('dismissed')} ariaLabel="Dismissible chip">Dismissable Chip</Chip>
-    <Chip variant="filled" color="accent" isDismissible onDismiss={() => alert('dismissed')} ariaLabel="Dismissible chip">Dismissable Chip</Chip>
+    <Chip isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
+    <Chip variant="outline" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
+    <Chip variant="filled" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
   </Flex>`
 };
 

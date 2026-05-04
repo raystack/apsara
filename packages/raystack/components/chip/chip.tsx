@@ -34,7 +34,6 @@ type ChipProps = ComponentProps<'span'> &
     isDismissible?: boolean;
     children: ReactNode;
     onDismiss?: () => void;
-    ariaLabel?: string;
     disabled?: boolean;
   };
 
@@ -50,9 +49,8 @@ export const Chip = ({
   onDismiss,
   onClick,
   role = 'status',
-  ariaLabel,
   disabled,
-  'aria-label': ariaLabelAttr,
+  'aria-label': ariaLabel,
   ...props
 }: ChipProps) => {
   const handleDismiss = (e: React.MouseEvent) => {
@@ -66,9 +64,7 @@ export const Chip = ({
       className={chip({ variant, size, color, className })}
       role={role}
       aria-label={
-        ariaLabel ??
-        ariaLabelAttr ??
-        (typeof children === 'string' ? children : undefined)
+        ariaLabel ?? (typeof children === 'string' ? children : undefined)
       }
       onClick={disabled ? undefined : onClick}
       data-disabled={disabled || undefined}

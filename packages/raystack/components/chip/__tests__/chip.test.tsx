@@ -214,15 +214,15 @@ describe('Chip', () => {
       expect(chip).toHaveAttribute('aria-label', 'Test Label');
     });
 
-    it('uses custom ariaLabel when provided', () => {
-      render(<Chip ariaLabel='Custom Label'>Test Chip</Chip>);
+    it('uses custom aria-label when provided', () => {
+      render(<Chip aria-label='Custom Label'>Test Chip</Chip>);
 
       const chip = screen.getByRole('status');
       expect(chip).toHaveAttribute('aria-label', 'Custom Label');
     });
 
-    it('custom ariaLabel overrides string children', () => {
-      render(<Chip ariaLabel='Override Label'>String Child</Chip>);
+    it('custom aria-label overrides string children', () => {
+      render(<Chip aria-label='Override Label'>String Child</Chip>);
 
       const chip = screen.getByRole('status');
       expect(chip).toHaveAttribute('aria-label', 'Override Label');
