@@ -26,6 +26,19 @@ type AccordionMultipleProps = Omit<
 
 export type AccordionRootProps = AccordionSingleProps | AccordionMultipleProps;
 
+/**
+ * Convert the wrapper's `string | string[]` API into Base UI's `string[]` format.
+ *
+ * Only `undefined` maps to `undefined` (uncontrolled).
+ * Empty string and empty array map to `[]` (controlled, nothing open) — this prevents the
+ * controlled → uncontrolled flip that would otherwise break reopen-after-close.
+ */
+const toArray = (v: string | string[] | undefined): string[] | undefined => {
+  if (v === undefined) return undefined;
+  if (Array.isArray(v)) return v;
+  return v === '' ? [] : [v];
+};
+
 export const AccordionRoot = ({
   className,
   multiple = false,
@@ -34,31 +47,16 @@ export const AccordionRoot = ({
   onValueChange,
   ...rest
 }: AccordionRootProps) => {
-  // Convert value to array format for Base UI
-  const baseValue = value
-    ? Array.isArray(value)
-      ? value
-      : [value]
-    : undefined;
-
-  const baseDefaultValue = defaultValue
-    ? Array.isArray(defaultValue)
-      ? defaultValue
-      : [defaultValue]
-    : undefined;
-
   const handleValueChange = (
     newValue: string[],
     eventDetails: AccordionPrimitive.Root.ChangeEventDetails
   ) => {
-    if (onValueChange) {
-      if (multiple) {
-        (onValueChange as (value: string[]) => void)(newValue);
-      } else {
-        (onValueChange as (value: string | undefined) => void)(
-          newValue[0] || undefined
-        );
-      }
+    if (!onValueChange) return;
+
+    if (multiple) {
+      (onValueChange as (v: string[]) => void)(newValue);
+    } else {
+      (onValueChange as (v: string) => void)(newValue[0] ?? '');
     }
   };
 
@@ -66,8 +64,8 @@ export const AccordionRoot = ({
     <AccordionPrimitive.Root
       className={cx(styles.accordion, className)}
       multiple={multiple}
-      value={baseValue}
-      defaultValue={baseDefaultValue}
+      value={toArray(value)}
+      defaultValue={toArray(defaultValue)}
       onValueChange={handleValueChange}
       {...rest}
     />

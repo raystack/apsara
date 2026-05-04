@@ -1,5 +1,9 @@
 'use client';
 
+const styleDemo = {
+  padding: 0
+};
+
 export const preview = {
   type: 'code',
   code: `
@@ -19,7 +23,8 @@ export const preview = {
       </Navbar.End>
     </Navbar>
     <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 200, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
-  </div>`
+  </div>`,
+  style: styleDemo
 };
 
 export const stickyDemo = {
@@ -59,7 +64,8 @@ export const stickyDemo = {
         <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 400, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
       </div>`
     }
-  ]
+  ],
+  style: styleDemo
 };
 
 export const hideOnScrollDemo = {
@@ -77,7 +83,8 @@ export const hideOnScrollDemo = {
       </Navbar.End>
     </Navbar>
     <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 400, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
-  </div>`
+  </div>`,
+  style: styleDemo
 };
 
 export const sectionsDemo = {
@@ -138,7 +145,8 @@ export const sectionsDemo = {
         <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 200, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
       </div>`
     }
-  ]
+  ],
+  style: styleDemo
 };
 
 export const accessibilityDemo = {
@@ -190,5 +198,6 @@ export const accessibilityDemo = {
         <div style={{ margin: 'var(--rs-space-8)', width: 'calc(100% - 2 * var(--rs-space-8))', minHeight: 200, border: '2px dashed var(--rs-color-border-base-secondary)', boxSizing: 'border-box' }} />
       </div>`
     }
-  ]
+  ],
+  style: styleDemo
 };
