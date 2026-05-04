@@ -2,7 +2,7 @@
 
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { cva, cx, VariantProps } from 'class-variance-authority';
-import { ReactElement, ReactNode, useCallback, useState } from 'react';
+import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import {
   FilterOperation,
   FilterOperator,
@@ -32,13 +32,12 @@ const chip = cva(styles.chip, {
   }
 });
 
-export interface FilterChipProps extends VariantProps<typeof chip> {
+export interface FilterChipProps
+  extends ComponentProps<'div'>,
+    VariantProps<typeof chip> {
   label: string;
   value?: string;
   onRemove?: () => void;
-  className?: string;
-  ref?: React.RefObject<HTMLDivElement>;
-  children?: ReactNode;
   columnType?: FilterTypes;
   options?: FilterSelectOption[];
   onValueChange?: (value: any, operation: string) => void;

@@ -44,5 +44,5 @@ export interface ChipProps {
   role?: string;
 
   /** Custom accessibility label for the chip */
-  ariaLabel?: string;
+  'aria-label'?: string;
 }

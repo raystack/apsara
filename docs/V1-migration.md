@@ -21,6 +21,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Avatar](#avatar)
     - [Breadcrumb](#breadcrumb)
     - [Button](#button)
+    - [Chip](#chip)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
       - [New Features](#new-features)
@@ -415,6 +416,31 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 // After
 <Button render={<Link to="/settings" />}>Settings</Button>
+```
+
+---
+
+### Chip
+
+**`ariaLabel` prop removed** -- use the standard `aria-label` HTML attribute:
+
+```tsx
+// Before
+<Chip ariaLabel="Dismissible chip" isDismissible onDismiss={...}>
+  Tag
+</Chip>
+
+// After
+<Chip aria-label="Dismissible chip" isDismissible onDismiss={...}>
+  Tag
+</Chip>
+```
+
+`Chip` now forwards all standard HTML attributes through `...props`, making the dedicated `ariaLabel` prop redundant. The auto-fallback to string children when no label is supplied is unchanged:
+
+```tsx
+// Still works — uses "Tag" as the accessibility label
+<Chip>Tag</Chip>
 ```
 
 ---

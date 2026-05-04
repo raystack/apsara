@@ -35,7 +35,7 @@ export function ChipExamples() {
         <Chip
           isDismissible
           onDismiss={() => alert('dismissed')}
-          ariaLabel='Dismissible chip'
+          aria-label='Dismissible chip'
         >
           Dismissable Chip
         </Chip>
@@ -44,7 +44,7 @@ export function ChipExamples() {
           color='accent'
           isDismissible
           onDismiss={() => alert('dismissed')}
-          ariaLabel='Dismissible chip'
+          aria-label='Dismissible chip'
         >
           Dismissable Chip
         </Chip>
@@ -53,7 +53,7 @@ export function ChipExamples() {
           color='accent'
           isDismissible
           onDismiss={() => alert('dismissed')}
-          ariaLabel='Dismissible chip'
+          aria-label='Dismissible chip'
         >
           Dismissable Chip
         </Chip>
