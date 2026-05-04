@@ -4,13 +4,13 @@
 export const shadow = {
   /* Shadows */
   feather:
-    '0px 1px 1px 0px rgba(0, 0, 0, 0.06), 0px 4px 4px -1px rgba(0, 0, 0, 0.02)' /* sm */,
-  soft: '0px 2px 4px 0px rgba(0, 0, 0, 0.04), 0px 1px 2px 0px rgba(0, 0, 0, 0.04)' /* md */,
+    '0px 1px 1px 0px oklch(0 0 0 / 0.06), 0px 4px 4px -1px oklch(0 0 0 / 0.02)' /* sm */,
+  soft: '0px 2px 4px 0px oklch(0 0 0 / 0.04), 0px 1px 2px 0px oklch(0 0 0 / 0.04)' /* md */,
   lifted:
-    '0px 1px 1px 0px rgba(0, 0, 0, 0.07), 0px 2px 5px 0px rgba(0, 0, 0, 0.07), 0px 3px 8px 0px rgba(0, 0, 0, 0.07)' /* lg */,
+    '0px 1px 1px 0px oklch(0 0 0 / 0.07), 0px 2px 5px 0px oklch(0 0 0 / 0.07), 0px 3px 8px 0px oklch(0 0 0 / 0.07)' /* lg */,
   floating:
-    '0px 1px 1px 0px rgba(0, 0, 0, 0.04), 0px 2px 8px 0px rgba(0, 0, 0, 0.04), 0px 3px 17px 0px rgba(0, 0, 0, 0.04), 0px 4px 30px 0px rgba(0, 0, 0, 0.13)' /* xl */,
-  inset: '0px 1px 1px 0px rgba(0, 0, 0, 0.04) inset'
+    '0px 1px 1px 0px oklch(0 0 0 / 0.04), 0px 2px 8px 0px oklch(0 0 0 / 0.04), 0px 3px 17px 0px oklch(0 0 0 / 0.04), 0px 4px 30px 0px oklch(0 0 0 / 0.13)' /* xl */,
+  inset: '0px 1px 1px 0px oklch(0 0 0 / 0.04) inset'
 } as const;
 
 export const blur = {

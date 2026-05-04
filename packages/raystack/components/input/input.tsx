@@ -3,7 +3,7 @@ import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode, RefObject } from 'react';
 import { Chip } from '../chip';
 import { useFieldContext } from '../field';
-import styles from './input-field.module.css';
+import styles from './input.module.css';
 
 const inputWrapper = cva(styles['input-wrapper'], {
   variants: {
@@ -22,7 +22,7 @@ const inputWrapper = cva(styles['input-wrapper'], {
   }
 });
 
-export interface InputFieldProps
+export interface InputProps
   extends Omit<InputPrimitive.Props, 'size'>,
     VariantProps<typeof inputWrapper> {
   disabled?: boolean;
@@ -37,7 +37,7 @@ export interface InputFieldProps
   containerRef?: RefObject<HTMLDivElement | null>;
 }
 
-export function InputField({
+export function Input({
   className,
   disabled,
   placeholder,
@@ -53,7 +53,7 @@ export function InputField({
   containerRef,
   required,
   ...props
-}: InputFieldProps) {
+}: InputProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
@@ -114,4 +114,4 @@ export function InputField({
   );
 }
 
-InputField.displayName = 'InputField';
+Input.displayName = 'Input';

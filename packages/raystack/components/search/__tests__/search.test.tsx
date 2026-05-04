@@ -196,8 +196,8 @@ describe('Search', () => {
     });
   });
 
-  describe('InputField Props', () => {
-    it('passes className to input field', () => {
+  describe('Input Props', () => {
+    it('passes className to input', () => {
       render(<Search className='custom-search' />);
       const input = screen.getByRole('textbox');
       expect(input).toHaveClass('custom-search');
