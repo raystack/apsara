@@ -2,11 +2,9 @@ import {
   Checkbox,
   DataTable,
   DataTableColumnDef,
-  Flex,
-  Switch,
-  Text
+  Flex
 } from '@raystack/apsara';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 const statuses = ['pending', 'processing', 'success', 'failed'] as const;
 
@@ -31,12 +29,12 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
     header: 'Status',
     styles: {
       cell: {
-        width: 120,
+        width: 180,
         flex: 'none',
         paddingLeft: 'var(--rs-space-7)'
       },
       header: {
-        width: 120,
+        width: 180,
         flex: 'none',
         paddingLeft: 'var(--rs-space-7)'
       }
@@ -110,16 +108,9 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
 ];
 
 const DataTableDemo = () => {
-  const [virtualized, setVirtualized] = useState(true);
-
   const data = useMemo(() => generateData(100), []);
-
   return (
-    <Flex direction='column' gap='4' width='full'>
-      <Flex align='center' gap='2'>
-        <Switch checked={virtualized} onCheckedChange={setVirtualized} />
-        <Text>Virtualized (100 rows)</Text>
-      </Flex>
+    <Flex direction='column' gap={4} width='full'>
       <div style={{ height: 400 }}>
         <DataTable
           data={data}
@@ -128,15 +119,31 @@ const DataTableDemo = () => {
           defaultSort={{ name: 'email', order: 'asc' }}
         >
           <DataTable.Toolbar />
-          {virtualized ? (
-            <DataTable.VirtualizedContent rowHeight={44.5} />
-          ) : (
-            <DataTable.Content />
-          )}
+          <DataTable.Content />
         </DataTable>
       </div>
     </Flex>
   );
 };
 
-export default DataTableDemo;
+const DataTableVirtualizedDemo = () => {
+  const data = useMemo(() => generateData(1000), []);
+
+  return (
+    <Flex direction='column' gap={4} width='full'>
+      <div style={{ height: 400 }}>
+        <DataTable
+          data={data}
+          mode='client'
+          columns={columns}
+          defaultSort={{ name: 'email', order: 'asc' }}
+        >
+          <DataTable.Toolbar />
+          <DataTable.VirtualizedContent rowHeight={44.5} />
+        </DataTable>
+      </div>
+    </Flex>
+  );
+};
+
+export { DataTableDemo, DataTableVirtualizedDemo };

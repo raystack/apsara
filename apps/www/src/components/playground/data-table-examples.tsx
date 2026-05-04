@@ -1,6 +1,6 @@
 'use client';
 
-import DataTableDemo from '../datatable-demo';
+import { DataTableDemo } from '../datatable-demo';
 import PlaygroundLayout from './playground-layout';
 
 export function DataTableExamples() {

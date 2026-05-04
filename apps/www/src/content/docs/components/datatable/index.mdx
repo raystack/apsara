@@ -4,7 +4,7 @@ description: An advanced React table that supports filtering, sorting, and pagin
 source: packages/raystack/components/datatable
 ---
 
-import { preview, rowSelectionDemo } from "./demo.ts";
+import { preview, virtualizedPreview, rowSelectionDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -82,17 +82,7 @@ For large datasets, use `DataTable.VirtualizedContent` for better performance. P
 
 For large datasets, use `DataTable.VirtualizedContent` for better performance. Parent container must have a fixed height.
 
-```tsx
-<div style={{ height: 400 }}>
-  <DataTable
-    data={data}
-    columns={columns}
-    defaultSort={{ name: "name", order: "asc" }}>
-    <DataTable.Toolbar />
-    <DataTable.VirtualizedContent rowHeight={44} />
-  </DataTable>
-</div>
-```
+<Demo data={virtualizedPreview} />
 
 #### Fixed Width Columns
 

@@ -2,6 +2,10 @@
 
 import { getPropsString } from '@/lib/utils';
 
+const styleDemo = {
+  alignItems: 'flex-start'
+};
+
 export const getCode = (props: Record<string, unknown>) => {
   return `<Accordion${getPropsString(props)}>
         <Accordion.Item value="item-1">
@@ -33,11 +37,13 @@ export const playground = {
       defaultValue: false
     }
   },
+  style: styleDemo,
   getCode
 };
 
 export const typeDemo = {
   type: 'code',
+  style: styleDemo,
   tabs: [
     {
       name: 'Single',
@@ -91,6 +97,7 @@ export const typeDemo = {
 };
 export const controlledDemo = {
   type: 'code',
+  style: styleDemo,
   code: `
   function ControlledAccordion() {
   const [value, setValue] = React.useState('item-1');
@@ -112,6 +119,7 @@ export const controlledDemo = {
 
 export const disabledDemo = {
   type: 'code',
+  style: styleDemo,
   code: `
 <Accordion>
   <Accordion.Item value="item-1">
@@ -131,6 +139,7 @@ export const disabledDemo = {
 
 export const customContentDemo = {
   type: 'code',
+  style: styleDemo,
   code: `
 <Accordion>
   <Accordion.Item value="item-1">

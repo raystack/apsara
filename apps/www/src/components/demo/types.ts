@@ -1,3 +1,5 @@
+import { CSSProperties } from 'react';
+
 export type ScopeType = Record<string, unknown>;
 
 type TabProps = {
@@ -10,6 +12,7 @@ export type DemoPreviewProps = {
   tabs?: { name: string; code: string }[];
   scope?: ScopeType;
   codePreview?: string | TabProps[];
+  style?: CSSProperties;
 };
 
 export type DemoPlaygroundProps = {
@@ -17,6 +20,7 @@ export type DemoPlaygroundProps = {
   controls: ControlsType;
   getCode: GetCodeType;
   scope?: ScopeType;
+  style?: CSSProperties;
 };
 
 export type DemoProps = {

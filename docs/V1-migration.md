@@ -36,7 +36,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Flex](#flex)
     - [Grid](#grid)
     - [Headline](#headline)
-    - [InputField](#inputfield)
+    - [Input (formerly InputField)](#input-formerly-inputfield)
     - [Label](#label)
     - [Popover](#popover)
       - [New Features](#new-features-5)
@@ -211,7 +211,7 @@ If you reference these CSS variables in custom styles:
 
 ### Form Field Pattern
 
-Labels, descriptions, errors, and optional indicators have been extracted from individual form controls into a new `Field` wrapper component. This is a **breaking change** for `InputField` and `TextArea`.
+Labels, descriptions, errors, and optional indicators have been extracted from individual form controls into a new `Field` wrapper component. This is a **breaking change** for `InputField` (now `Input`) and `TextArea`.
 
 **Before:** Each control rendered its own label, helper text, and error.
 
@@ -220,20 +220,20 @@ Labels, descriptions, errors, and optional indicators have been extracted from i
 <TextArea label="Bio" helperText="Tell us about yourself" />
 ```
 
-**After:** Wrap controls with `<Field>` for labels, descriptions, and errors. Controls are now pure inputs.
+**After:** Wrap controls with `<Field>` for labels, descriptions, and errors. Controls are now pure inputs. Note: `InputField` has also been renamed to `Input`.
 
 ```tsx
 <Field label="Email" description="We won't share it" error="Required" required={false}>
-  <InputField />
+  <Input />
 </Field>
 <Field label="Bio" description="Tell us about yourself">
   <TextArea />
 </Field>
 ```
 
-The `Field` component also provides context so that child controls (InputField, TextArea, Select, Checkbox, Switch, Radio, NumberField, Combobox) automatically inherit `required` state without passing it explicitly.
+The `Field` component also provides context so that child controls (Input, TextArea, Select, Checkbox, Switch, Radio, NumberField, Combobox) automatically inherit `required` state without passing it explicitly.
 
-See [InputField](#inputfield) and [TextArea](#textarea) for full migration details.
+See [Input (formerly InputField)](#input-formerly-inputfield) and [TextArea](#textarea) for full migration details.
 
 ---
 
@@ -720,7 +720,7 @@ Without `items`, `Command` uses its built-in auto-filter over `Command.Item` chi
 
 8. **`onValueChange` receives 2 args** on both the root and `Command.Input` — `(value: string, eventDetails)`.
 
-9. **`Command.Input` props changed.** It now accepts the same props as `InputField` (e.g. `size`, `leadingIcon`, `placeholder`, `autoFocus`). Defaults: `size="large"`, `autoFocus={true}`, leading icon is a magnifying glass. `trailingIcon`, `chips`, `maxChipsVisible`, and `variant` are not accepted.
+9. **`Command.Input` props changed.** It now accepts the same props as `Input` (e.g. `size`, `leadingIcon`, `placeholder`, `autoFocus`). Defaults: `size="large"`, `autoFocus={true}`, leading icon is a magnifying glass. `trailingIcon`, `chips`, `maxChipsVisible`, and `variant` are not accepted.
 
 **Full before/after example:**
 
@@ -1040,9 +1040,11 @@ The `render` prop also supports render functions for full control:
 
 ---
 
-### InputField
+### Input (formerly InputField)
 
-**Label, helper text, error, and optional indicator moved to `Field` wrapper.** InputField is now a pure input control — wrap it with the new `Field` component for labels, descriptions, and error messages.
+**`InputField` has been renamed to `Input`.** Update all imports and usages: `import { InputField } from "@raystack/apsara"` → `import { Input } from "@raystack/apsara"`.
+
+**Label, helper text, error, and optional indicator moved to `Field` wrapper.** Input is now a pure input control — wrap it with the new `Field` component for labels, descriptions, and error messages.
 
 1. **`label` prop removed** — use `<Field label="...">`:
 
@@ -1052,7 +1054,7 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Email">
-  <InputField placeholder="Enter email" />
+  <Input placeholder="Enter email" />
 </Field>
 ```
 
@@ -1064,7 +1066,7 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Password" description="Must be at least 8 characters">
-  <InputField placeholder="Enter password" />
+  <Input placeholder="Enter password" />
 </Field>
 ```
 
@@ -1076,7 +1078,7 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Email" error="Please enter a valid email">
-  <InputField placeholder="Enter email" />
+  <Input placeholder="Enter email" />
 </Field>
 ```
 
@@ -1088,13 +1090,15 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Phone" required={false}>
-  <InputField placeholder="Enter phone" />
+  <Input placeholder="Enter phone" />
 </Field>
 ```
 
 5. **`infoTooltip` prop removed** — no direct replacement. Compose manually if needed.
 
-6. **`required` now inherited from Field context.** When inside a `<Field>`, the InputField automatically inherits the `required` state. You can still pass `required` directly to override.
+6. **`required` now inherited from Field context.** When inside a `<Field>`, the Input automatically inherits the `required` state. You can still pass `required` directly to override.
+
+7. **`InputFieldProps` type renamed to `InputProps`.** Update any explicit type imports.
 
 **Full before/after example:**
 
@@ -1112,11 +1116,16 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Email" description="We won't share your email" error={errors.email} required={false}>
-  <InputField placeholder="Enter email" leadingIcon={<MailIcon size={16} />} />
+  <Input placeholder="Enter email" leadingIcon={<MailIcon size={16} />} />
 </Field>
 ```
 
 Unchanged props: `size`, `variant`, `disabled`, `leadingIcon`, `trailingIcon`, `prefix`, `suffix`, `width`, `chips`, `maxChipsVisible`, `containerRef`, and all native `<input>` attributes.
+
+**Related API changes:**
+
+- `DatePicker.inputFieldProps` → `DatePicker.inputProps`
+- `RangePicker.inputFieldsProps` → `RangePicker.inputsProps`
 
 ---
 
@@ -2028,8 +2037,10 @@ These are purely additive -- no migration needed.
 - [ ] Update Command: `Command.List` -> `Command.Content`, `Group heading` -> `<Command.Label>`, `onSelect` -> `onClick`, inline icons -> `leadingIcon`/`trailingIcon`, wrap dialog usages with `Command.DialogTrigger` + `Command.DialogContent` (see [Command](#command))
 - [ ] Update Label usages: drop `size` and `requiredIndicator` props; flip `required` to `required={false}` for an `(optional)` indicator (see [Label](#label))
 - [ ] Wrap InputField usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [InputField](#inputfield))
+- [ ] Rename `InputField` imports/usages to `Input` (see [Input (formerly InputField)](#input-formerly-inputfield))
+- [ ] Wrap Input usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [Input (formerly InputField)](#input-formerly-inputfield))
 - [ ] Wrap TextArea usages with `<Field>` — move `label`, `helperText`, `error`, `required` to Field props (see [TextArea](#textarea))
-- [ ] Remove `infoTooltip` from InputField and TextArea (no longer supported)
+- [ ] Remove `infoTooltip` from Input and TextArea (no longer supported)
 - [ ] Review TextArea usages for overflow behavior change (`hidden` -> `auto`) and removed `min-height` (see [TextArea](#textarea))
 - [ ] Update custom CSS targeting `data-state` attributes (see [Data Attributes](#data-attributes))
 - [ ] Update custom CSS referencing `--radix-*` variables (see [CSS Variables](#css-variables))

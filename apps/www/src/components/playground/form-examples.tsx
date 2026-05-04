@@ -5,7 +5,7 @@ import {
   Field,
   Fieldset,
   Form,
-  InputField,
+  Input,
   TextArea
 } from '@raystack/apsara';
 import PlaygroundLayout from './playground-layout';
@@ -22,14 +22,14 @@ export function FormExamples() {
       >
         <Fieldset legend='Personal Information'>
           <Field label='First Name' required>
-            <InputField placeholder='John' />
+            <Input placeholder='John' />
           </Field>
           <Field label='Last Name' required>
-            <InputField placeholder='Doe' />
+            <Input placeholder='Doe' />
           </Field>
         </Fieldset>
         <Field label='Email' required description="We'll send a confirmation">
-          <InputField type='email' placeholder='john@example.com' />
+          <Input type='email' placeholder='john@example.com' />
         </Field>
         <Field label='Message' required={false}>
           <TextArea placeholder='Tell us more...' />

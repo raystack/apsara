@@ -8,7 +8,7 @@ import {
 import {
   Flex,
   IconButton,
-  InputField,
+  Input,
   Select,
   Switch,
   Text
@@ -152,7 +152,7 @@ export default function DemoControls({
         // For text and number types
         return (
           <div key={prop} className={styles.controlField}>
-            <InputField
+            <Input
               size='small'
               label={propLabel}
               value={

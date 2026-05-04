@@ -6,121 +6,121 @@
 
 
 [data-gray-color='gray'] {
-    --rs-gray-1: #fcfcfc;
-    --rs-gray-2: #f9f9f9;
-    --rs-gray-3: #f0f0f0;
-    --rs-gray-4: #e8e8e8;
-    --rs-gray-5: #e0e0e0;
-    --rs-gray-6: #d9d9d9;
-    --rs-gray-7: #cecece;
-    --rs-gray-8: #bbbbbb;
-    --rs-gray-9: #8d8d8d;
-    --rs-gray-10: #838383;
-    --rs-gray-11: #646464;
-    --rs-gray-12: #202020;
+    --rs-gray-1: oklch(0.9911 0 0);
+    --rs-gray-2: oklch(0.9821 0 0);
+    --rs-gray-3: oklch(0.9551 0 0);
+    --rs-gray-4: oklch(0.931 0 0);
+    --rs-gray-5: oklch(0.9067 0 0);
+    --rs-gray-6: oklch(0.8853 0 0);
+    --rs-gray-7: oklch(0.8514 0 0);
+    --rs-gray-8: oklch(0.7921 0 0);
+    --rs-gray-9: oklch(0.6434 0 0);
+    --rs-gray-10: oklch(0.61 0 0);
+    --rs-gray-11: oklch(0.5032 0 0);
+    --rs-gray-12: oklch(0.2435 0 0);
 }
 
 [data-gray-color='gray'][data-theme='dark'] {
-    --rs-gray-1: #111111;
-    --rs-gray-2: #191919;
-    --rs-gray-3: #222222;
-    --rs-gray-4: #2a2a2a;
-    --rs-gray-5: #313131;
-    --rs-gray-6: #3a3a3a;
-    --rs-gray-7: #484848;
-    --rs-gray-8: #606060;
-    --rs-gray-9: #6e6e6e;
-    --rs-gray-10: #7b7b7b;
-    --rs-gray-11: #b4b4b4;
-    --rs-gray-12: #eeeeee;
+    --rs-gray-1: oklch(0.1776 0 0);
+    --rs-gray-2: oklch(0.2134 0 0);
+    --rs-gray-3: oklch(0.252 0 0);
+    --rs-gray-4: oklch(0.285 0 0);
+    --rs-gray-5: oklch(0.3132 0 0);
+    --rs-gray-6: oklch(0.3485 0 0);
+    --rs-gray-7: oklch(0.4017 0 0);
+    --rs-gray-8: oklch(0.4891 0 0);
+    --rs-gray-9: oklch(0.5382 0 0);
+    --rs-gray-10: oklch(0.5829 0 0);
+    --rs-gray-11: oklch(0.7699 0 0);
+    --rs-gray-12: oklch(0.9491 0 0);
 }
 
 [data-gray-color='mauve'] {
-    --rs-gray-1: #fdfcfd;
-    --rs-gray-2: #faf9fb;
-    --rs-gray-3: #f2eff3;
-    --rs-gray-4: #eae7ec;
-    --rs-gray-5: #e3dfe6;
-    --rs-gray-6: #dbd8e0;
-    --rs-gray-7: #d0cdd7;
-    --rs-gray-8: #bcbac7;
-    --rs-gray-9: #8e8c99;
-    --rs-gray-10: #84828e;
-    --rs-gray-11: #65636d;
-    --rs-gray-12: #211f26;
+    --rs-gray-1: oklch(0.9921 0.0017 325.59);
+    --rs-gray-2: oklch(0.9834 0.0028 308.43);
+    --rs-gray-3: oklch(0.9556 0.0062 317.75);
+    --rs-gray-4: oklch(0.9317 0.0074 312.3);
+    --rs-gray-5: oklch(0.9088 0.0103 311.17);
+    --rs-gray-6: oklch(0.8869 0.0113 303.09);
+    --rs-gray-7: oklch(0.8537 0.0141 299.76);
+    --rs-gray-8: oklch(0.7945 0.0183 293.05);
+    --rs-gray-9: oklch(0.646 0.0193 292.92);
+    --rs-gray-10: oklch(0.6123 0.018 293.51);
+    --rs-gray-11: oklch(0.505 0.0158 295);
+    --rs-gray-12: oklch(0.2445 0.0134 298.46);
 }
 
 [data-gray-color='mauve'][data-theme='dark'] {
-    --rs-gray-1: #121113;
-    --rs-gray-2: #1a191b;
-    --rs-gray-3: #232225;
-    --rs-gray-4: #2b292d;
-    --rs-gray-5: #323035;
-    --rs-gray-6: #3c393f;
-    --rs-gray-7: #49474e;
-    --rs-gray-8: #625f69;
-    --rs-gray-9: #6f6d78;
-    --rs-gray-10: #7c7a85;
-    --rs-gray-11: #b5b2bc;
-    --rs-gray-12: #eeeef0;
+    --rs-gray-1: oklch(0.1797 0.0043 308.19);
+    --rs-gray-2: oklch(0.2154 0.0041 308.25);
+    --rs-gray-3: oklch(0.2543 0.0057 301.13);
+    --rs-gray-4: oklch(0.2846 0.0077 308.16);
+    --rs-gray-5: oklch(0.3132 0.0092 303.92);
+    --rs-gray-6: oklch(0.3499 0.011 308.11);
+    --rs-gray-7: oklch(0.4024 0.0119 298.9);
+    --rs-gray-8: oklch(0.4917 0.0162 299.48);
+    --rs-gray-9: oklch(0.5403 0.0171 294.16);
+    --rs-gray-10: oklch(0.5849 0.0168 294.22);
+    --rs-gray-11: oklch(0.7691 0.0144 299.72);
+    --rs-gray-12: oklch(0.9497 0.0027 286.35);
 }
 
 [data-gray-color='slate'] {
-    --rs-gray-1: #fcfcfd;
-    --rs-gray-2: #f9f9fb;
-    --rs-gray-3: #f0f0f3;
-    --rs-gray-4: #e8e8ec;
-    --rs-gray-5: #e0e1e6;
-    --rs-gray-6: #d9d9e0;
-    --rs-gray-7: #cdced6;
-    --rs-gray-8: #b9bbc6;
-    --rs-gray-9: #8b8d98;
-    --rs-gray-10: #80838d;
-    --rs-gray-11: #60646c;
-    --rs-gray-12: #1c2024;
+    --rs-gray-1: oklch(0.9913 0.0013 286.38);
+    --rs-gray-2: oklch(0.9827 0.0026 286.35);
+    --rs-gray-3: oklch(0.956 0.004 286.32);
+    --rs-gray-4: oklch(0.9321 0.0054 286.3);
+    --rs-gray-5: oklch(0.9104 0.0068 277.16);
+    --rs-gray-6: oklch(0.8873 0.0095 286.2);
+    --rs-gray-7: oklch(0.853 0.0111 280.45);
+    --rs-gray-8: oklch(0.7938 0.0156 277.79);
+    --rs-gray-9: oklch(0.6453 0.0165 277.7);
+    --rs-gray-10: oklch(0.6108 0.0155 272.56);
+    --rs-gray-11: oklch(0.5025 0.0136 264.44);
+    --rs-gray-12: oklch(0.2411 0.0097 248.23);
 }
 
 [data-gray-color='slate'][data-theme='dark'] {
-    --rs-gray-1: #111113;
-    --rs-gray-2: #18191b;
-    --rs-gray-3: #212225;
-    --rs-gray-4: #272a2d;
-    --rs-gray-5: #2e3135;
-    --rs-gray-6: #363a3f;
-    --rs-gray-7: #43484e;
-    --rs-gray-8: #5a6169;
-    --rs-gray-9: #696e77;
-    --rs-gray-10: #777b84;
-    --rs-gray-11: #b0b4ba;
-    --rs-gray-12: #edeef0;
+    --rs-gray-1: oklch(0.1785 0.0041 285.98);
+    --rs-gray-2: oklch(0.2132 0.0042 264.48);
+    --rs-gray-3: oklch(0.2521 0.0058 271.18);
+    --rs-gray-4: oklch(0.2832 0.007 248.07);
+    --rs-gray-5: oklch(0.3118 0.0083 255.56);
+    --rs-gray-6: oklch(0.3466 0.0103 253.97);
+    --rs-gray-7: oklch(0.3993 0.0121 252.94);
+    --rs-gray-8: oklch(0.4893 0.0155 251.69);
+    --rs-gray-9: oklch(0.537 0.0153 262.34);
+    --rs-gray-10: oklch(0.5825 0.0145 266.63);
+    --rs-gray-11: oklch(0.7686 0.0096 258.34);
+    --rs-gray-12: oklch(0.9489 0.0029 264.54);
 }
 
 [data-gray-color='sage'] {
-    --rs-gray-1: #fbfdfc;
-    --rs-gray-2: #f7f9f8;
-    --rs-gray-3: #eef1f0;
-    --rs-gray-4: #e6e9e8;
-    --rs-gray-5: #dfe2e0;
-    --rs-gray-6: #d7dad9;
-    --rs-gray-7: #cbcfcd;
-    --rs-gray-8: #b8bcba;
-    --rs-gray-9: #868e8b;
-    --rs-gray-10: #7c8481;
-    --rs-gray-11: #5f6563;
-    --rs-gray-12: #1a211e;
+    --rs-gray-1: oklch(0.9923 0.0025 165.08);
+    --rs-gray-2: oklch(0.9803 0.0025 165.08);
+    --rs-gray-3: oklch(0.9556 0.0035 174.48);
+    --rs-gray-4: oklch(0.9314 0.0035 174.48);
+    --rs-gray-5: oklch(0.9099 0.0042 157.17);
+    --rs-gray-6: oklch(0.8858 0.0035 174.47);
+    --rs-gray-7: oklch(0.8508 0.0052 164.98);
+    --rs-gray-8: oklch(0.7915 0.0052 164.97);
+    --rs-gray-9: oklch(0.6392 0.0103 171.61);
+    --rs-gray-10: oklch(0.6057 0.0105 171.57);
+    --rs-gray-11: oklch(0.5008 0.0081 174.11);
+    --rs-gray-12: oklch(0.2396 0.0117 167.56);
 }
 
 [data-gray-color='sage'][data-theme='dark'] {
-    --rs-gray-1: #101211;
-    --rs-gray-2: #171918;
-    --rs-gray-3: #202221;
-    --rs-gray-4: #272a29;
-    --rs-gray-5: #2e3130;
-    --rs-gray-6: #373b39;
-    --rs-gray-7: #444947;
-    --rs-gray-8: #5b625f;
-    --rs-gray-9: #63706b;
-    --rs-gray-10: #717d79;
-    --rs-gray-11: #adb5b2;
-    --rs-gray-12: #eceeed;
+    --rs-gray-1: oklch(0.1795 0.0038 164.58);
+    --rs-gray-2: oklch(0.2108 0.0036 164.68);
+    --rs-gray-3: oklch(0.2495 0.0035 164.77);
+    --rs-gray-4: oklch(0.2816 0.0047 174.1);
+    --rs-gray-5: oklch(0.3098 0.0046 174.15);
+    --rs-gray-6: oklch(0.3478 0.0064 164.65);
+    --rs-gray-7: oklch(0.4001 0.0073 170.09);
+    --rs-gray-8: oklch(0.489 0.0099 168.42);
+    --rs-gray-9: oklch(0.5327 0.0175 170.54);
+    --rs-gray-10: oklch(0.5785 0.0155 173.79);
+    --rs-gray-11: oklch(0.7659 0.0099 171.7);
+    --rs-gray-12: oklch(0.9473 0.0025 165.07);
 }

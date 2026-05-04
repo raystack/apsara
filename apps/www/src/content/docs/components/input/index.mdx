@@ -1,7 +1,7 @@
 ---
-title: Input Field
+title: Input
 description: A text input component with support for icons, prefix/suffix, chips, and size variants.
-source: packages/raystack/components/input-field
+source: packages/raystack/components/input
 ---
 
 import {
@@ -14,6 +14,7 @@ import {
   widthDemo,
   sizeDemo,
   sizeChipDemo,
+  interactiveChipDemo,
   withFieldDemo,
 } from "./demo.ts";
 
@@ -24,18 +25,18 @@ import {
 Import and assemble the component:
 
 ```tsx
-import { InputField } from "@raystack/apsara";
+import { Input } from "@raystack/apsara";
 
-<InputField placeholder="Enter text" />
+<Input placeholder="Enter text" />
 ```
 
 For labels, description, and error messages, wrap with [Field](/docs/components/field):
 
 ```tsx
-import { Field, InputField } from "@raystack/apsara";
+import { Field, Input } from "@raystack/apsara";
 
 <Field label="Email" description="We won't share it" error={errors.email?.message}>
-  <InputField placeholder="Enter email" />
+  <Input placeholder="Enter email" />
 </Field>
 ```
 
@@ -43,13 +44,13 @@ import { Field, InputField } from "@raystack/apsara";
 
 Renders a text input control. For label, description, and error support, use with [Field](/docs/components/field).
 
-<auto-type-table path="./props.ts" name="InputFieldProps" />
+<auto-type-table path="./props.ts" name="InputProps" />
 
 ## Examples
 
 ### Basic Input
 
-A basic input field with a placeholder.
+A basic input with a placeholder.
 
 <Demo data={basicDemo} />
 
@@ -61,19 +62,37 @@ Use Field to add label, description, and error handling.
 
 ### With Prefix/Suffix
 
-Input field with prefix and suffix text.
+Input with prefix and suffix text.
 
 <Demo data={prefixDemo} />
 
 ### With Icons
 
-Input field with leading and trailing icons.
+Input with leading and trailing icons.
 
 <Demo data={iconDemo} />
 
+### Interactive Chips
+
+Accepts an array of chips, each with a `label` and an optional `onRemove` callback. 
+
+`maxChipsVisible` caps how many are rendered before collapsing the rest into an overflow counter.
+
+```tsx
+chips?: Array<{ label: string; onRemove?: () => void }>;                                                                                       
+maxChipsVisible?: number;  // defaults to 2   
+```
+
+This is purely a presentation layer — it does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
+
+The example below 
+  appends a chip on `Enter`, removes one when its dismiss button is clicked.
+
+<Demo data={interactiveChipDemo} />
+
 ### Disabled State
 
-Input field in disabled state.
+Input in disabled state.
 
 <Demo data={disabledDemo} />
 
@@ -85,19 +104,19 @@ When disabled, chips become non-interactive and their dismiss buttons are hidden
 
 ### Custom Width
 
-Input field with custom width.
+Input with custom width.
 
 <Demo data={widthDemo} />
 
 ### Size Variants
 
-InputField comes in two sizes: small (24px) and large (32px).
+Input comes in two sizes: small (24px) and large (32px).
 
 <Demo data={sizeDemo} />
 
 ### With Chips
 
-Input field that can display and manage chips/tags.
+Input that can display and manage chips/tags.
 
 <Demo data={sizeChipDemo} />
 

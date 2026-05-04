@@ -41,11 +41,19 @@ export function Grouping<TData, TValue>({
   };
 
   return (
-    <Flex justify='between' align='center'>
-      <Text size={2} weight={500} className={styles['flex-1']}>
+    <Flex align='center' gap={5}>
+      <Text
+        size='small'
+        weight='medium'
+        variant='secondary'
+        className={styles['display-popover-properties-label']}
+      >
         Grouping
       </Text>
-      <Flex className={styles['flex-1']}>
+      <Flex
+        align='center'
+        className={styles['display-popover-properties-control']}
+      >
         <Select onValueChange={handleGroupChange} value={value}>
           <Select.Trigger
             size='small'

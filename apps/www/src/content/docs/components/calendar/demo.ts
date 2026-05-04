@@ -29,6 +29,10 @@ export const calendarDemo = {
     {
       name: 'With Loading',
       code: `<Calendar loadingData={true} numberOfMonths={2} />`
+    },
+    {
+      name: 'With Dropdowns',
+      code: `<Calendar captionLayout="dropdown" fromYear={2020} toYear={2030} />`
     }
   ]
 };
@@ -104,21 +108,21 @@ export const dateInfoDemo = {
     {
       name: 'With Date Info',
       code: `
-<Calendar
-  numberOfMonths={2}
-  dateInfo={{
-    [dayjs().format('DD-MM-YYYY')]: (
-      <Flex
-        align='center'
-        gap={2}
-        style={{ fontSize: '8px', color: 'var(--rs-color-foreground-base-secondary)' }}
-      >
-        <Info style={{ width: '8px', height: '8px' }} />
-        <Text style={{ fontSize: '8px' }} color='secondary'>25%</Text>
-      </Flex>
-    )
-  }}
-/>`
+      <Calendar
+        numberOfMonths={2}
+        dateInfo={{
+          [dayjs().format('DD-MM-YYYY')]: (
+            <Flex
+              align='center'
+              gap={2}
+              style={{ fontSize: '8px', color: 'var(--rs-color-foreground-base-secondary)' }}
+            >
+              <Info style={{ width: '8px', height: '8px' }} />
+              <Text style={{ fontSize: '8px' }} color='secondary'>25%</Text>
+            </Flex>
+          )
+        }}
+      />`
     }
   ]
 };

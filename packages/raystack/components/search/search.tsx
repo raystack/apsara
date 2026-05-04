@@ -2,12 +2,12 @@
 
 import { CrossCircledIcon, MagnifyingGlassIcon } from '@radix-ui/react-icons';
 import { IconButton } from '../icon-button';
-import { InputField } from '../input-field';
-import { InputFieldProps } from '../input-field/input-field';
+import { Input } from '../input';
+import { InputProps } from '../input/input';
 
 import styles from './search.module.css';
 
-export interface SearchProps extends Omit<InputFieldProps, 'leadingIcon'> {
+export interface SearchProps extends Omit<InputProps, 'leadingIcon'> {
   showClearButton?: boolean;
   onClear?: () => void;
   variant?: 'default' | 'borderless';
@@ -48,7 +48,7 @@ export function Search({
 
   return (
     <div className={styles.container} role='search' style={{ width }}>
-      <InputField
+      <Input
         leadingIcon={<MagnifyingGlassIcon />}
         trailingIcon={trailingIconWithClear}
         placeholder={placeholder}

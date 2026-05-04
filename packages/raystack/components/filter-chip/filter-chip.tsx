@@ -13,7 +13,7 @@ import {
 } from '~/types/filters';
 import { DatePicker } from '../calendar';
 import { Flex } from '../flex';
-import { InputField } from '../input-field';
+import { Input } from '../input';
 import { Select } from '../select';
 import { BaseSelectProps } from '../select/select-root';
 import { Text } from '../text';
@@ -140,14 +140,14 @@ export const FilterChip = ({
               value={filterValue}
               onSelect={date => handleFilterValueChange(date)}
               showCalendarIcon={false}
-              inputFieldProps={{ className: styles.dateField }}
+              inputProps={{ className: styles.dateField }}
             />
           </div>
         );
       default:
         return (
           <div className={styles.inputFieldWrapper}>
-            <InputField
+            <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
               className={styles.inputField}
               value={filterValue}

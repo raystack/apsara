@@ -1,9 +1,10 @@
 .preview {
-  padding: 0;
+  padding: var(--rs-space-10);
   width: 100%;
-  height: 100%;
+  height: stretch;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: auto;
+  overflow: visible;
 }

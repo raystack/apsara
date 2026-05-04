@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--rs-radius-2, 4px);
-  overflow: hidden;
+  overflow: clip;
   border: 1px solid var(--rs-color-border-base-primary);
   width: 100%;
 }
@@ -15,6 +15,7 @@
 
 .preview {
   flex: 1;
+  height: 100%;
   position: relative;
   display: flex;
   align-items: center;

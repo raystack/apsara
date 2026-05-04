@@ -79,7 +79,6 @@
 
 .trigger-text {
   border: none;
-  box-shadow: none;
 }
 
 .trigger-small {
@@ -248,7 +247,8 @@
 }
 
 .content:has(.comboboxContent:empty) .comboboxInput,
-.content:has(.comboboxContent:not(:has(.menuitem:not([data-hidden="true"])))) .comboboxInput {
+.content:has(.comboboxContent:not(:has(.menuitem:not([data-hidden="true"]))))
+  .comboboxInput {
   border-bottom: none;
 }
 
