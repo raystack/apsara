@@ -1,16 +1,26 @@
-import { converter, parse } from 'culori';
+import convertImport from 'color-convert';
 import type { Color as VSCodeColorType } from 'vscode-languageserver';
 import tokens from '../tokens';
 
 export const TOKEN_PREFIX = 'rs';
 
-const toRgb = converter('rgb');
-const toOklch = converter('oklch');
+// color-convert@^3.1.3 ships oklch at runtime but its .d.ts omits it; shim until upstream catches up.
+type RawTriple = (input: [number, number, number]) => [number, number, number];
+const convert = convertImport as typeof convertImport & {
+  rgb: { oklch: { raw: RawTriple } };
+  oklch: { rgb: { raw: RawTriple } };
+};
 
-const round = (n: number | undefined, p: number) =>
-  Number.parseFloat((n ?? 0).toFixed(p));
+// Tokens are always written as oklch(L C H) or oklch(L C H / A).
+const OKLCH_REGEX =
+  /^\s*oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\s*\)\s*$/;
 
-const clamp01 = (v: number | undefined) => Math.max(0, Math.min(1, v ?? 0));
+// color-convert uses L 0-100 and C in the 0-100 range that matches CSS × 100.
+const CSS_TO_CC = 100;
+
+const round = (n: number, p: number) => Number.parseFloat(n.toFixed(p));
+
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 /**
  * Get the token name for a given token group and name
@@ -49,8 +59,9 @@ export const getTokenValueFromName = (tokenName: string): string | null => {
 };
 
 /**
- * Parses a CSS color string (oklch, hex, rgb, etc.) into VS Code's Color shape.
- * Returns null for non-renderable inputs (currentColor, inherit, parse failure).
+ * Parses an oklch() token value into VS Code's Color shape.
+ * Tokens are the only callers; non-oklch inputs (other than the
+ * transparent/currentColor/inherit keywords) return null.
  */
 export const colorToVSCodeColor = (color: string): VSCodeColorType | null => {
   if (color === 'transparent') {
@@ -59,40 +70,37 @@ export const colorToVSCodeColor = (color: string): VSCodeColorType | null => {
   if (color === 'currentColor' || color === 'inherit') {
     return null;
   }
-  try {
-    const parsed = parse(color);
-    if (!parsed) return null;
-    const rgb = toRgb(parsed);
-    if (!rgb) return null;
-    return {
-      red: clamp01(rgb.r),
-      green: clamp01(rgb.g),
-      blue: clamp01(rgb.b),
-      alpha: rgb.alpha ?? 1
-    };
-  } catch {
-    return null;
-  }
+  const match = OKLCH_REGEX.exec(color);
+  if (!match) return null;
+  const [, lStr, cStr, hStr, aStr] = match;
+  const l = Number.parseFloat(lStr) * CSS_TO_CC;
+  const c = Number.parseFloat(cStr) * CSS_TO_CC;
+  const h = Number.parseFloat(hStr);
+  const alpha = aStr === undefined ? 1 : Number.parseFloat(aStr);
+  const [r, g, b] = convert.oklch.rgb.raw([l, c, h]);
+  return {
+    red: clamp01(r / 255),
+    green: clamp01(g / 255),
+    blue: clamp01(b / 255),
+    alpha
+  };
 };
 
 /**
- * Serializes VS Code's Color (sRGB 0-1 floats) to an oklch() string.
- * Output format matches the design system convention so picker edits
- * stay consistent with the rest of the codebase.
+ * Serializes VS Code's Color (sRGB 0-1 floats) to an oklch() string,
+ * matching the design system's token format so picker edits stay
+ * consistent with the rest of the codebase.
  */
 export const VSCodeColorToColor = (color: VSCodeColorType): string => {
-  const oklch = toOklch({
-    mode: 'rgb',
-    r: color.red,
-    g: color.green,
-    b: color.blue,
-    alpha: color.alpha
-  });
-  if (!oklch) return '';
-
-  const L = round(oklch.l, 4);
-  const C = round(oklch.c, 4);
-  const H = Number.isFinite(oklch.h) ? round(oklch.h, 2) : 0;
+  const [l, c, h] = convert.rgb.oklch.raw([
+    color.red * 255,
+    color.green * 255,
+    color.blue * 255
+  ]);
+  const L = round(l / CSS_TO_CC, 4);
+  const C = round(c / CSS_TO_CC, 4);
+  // color-convert returns an arbitrary hue for achromatic colors; pin to 0.
+  const H = C === 0 ? 0 : round(h, 2);
   const body = `${L} ${C} ${H}`;
   if (color.alpha === undefined || color.alpha === 1) {
     return `oklch(${body})`;
