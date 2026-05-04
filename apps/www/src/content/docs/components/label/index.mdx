@@ -1,0 +1,51 @@
+---
+title: Label
+description: A text label component that provides names for form controls.
+source: packages/raystack/components/label
+---
+
+import { inlineDemo, optionalDemo, playground } from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Label } from '@raystack/apsara'
+
+<Label htmlFor="email">Email</Label>
+```
+
+## API Reference
+
+Renders a text label for form elements. Outside of a `Field`, use `Label` to
+attach a label to a control via `htmlFor`. Inside a `Field`, prefer
+`Field.Label` so the label is wired up to the field automatically.
+
+`Label` is layout-neutral — compose it with `Flex` (or wrap a control as a
+child) to lay out the label and its control.
+
+<auto-type-table path="./props.ts" name="LabelProps" />
+
+## Examples
+
+### Inline with a control
+
+Use `Flex` to place a label next to a Radio or Checkbox.
+
+<Demo data={inlineDemo} />
+
+### Optional indicator
+
+Pass `required={false}` to display an `(optional)` indicator next to the label.
+
+<Demo data={optionalDemo} />
+
+## Accessibility
+
+- Renders a semantic HTML `<label>` element by default
+- Supports programmatic association with form controls via `htmlFor`
+- Maintains WCAG compliant color contrast ratios
+- Shows a pointer cursor when associated with a control via `htmlFor`

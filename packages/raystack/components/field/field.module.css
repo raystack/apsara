@@ -14,17 +14,8 @@
   padding-bottom: var(--rs-space-2);
 }
 
-.label-horizontal {
-  padding-bottom: 0;
-  cursor: pointer;
-}
-
 .label[data-disabled] {
   color: var(--rs-color-foreground-base-tertiary);
-}
-
-.label-horizontal[data-disabled] {
-  cursor: not-allowed;
 }
 
 .optional {

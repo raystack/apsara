@@ -1,0 +1,26 @@
+.label {
+  color: var(--rs-color-foreground-base-secondary);
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  margin: 0;
+}
+
+.label[for] {
+  cursor: pointer;
+}
+
+.label[data-disabled] {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.label[for][data-disabled] {
+  cursor: not-allowed;
+}
+
+.optional {
+  color: var(--rs-color-foreground-base-tertiary);
+  font-weight: var(--rs-font-weight-regular);
+  margin-left: var(--rs-space-1);
+}

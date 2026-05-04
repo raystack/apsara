@@ -1,6 +1,6 @@
 'use client';
 
-import { Field, Flex, Radio } from '@raystack/apsara';
+import { Flex, Label, Radio } from '@raystack/apsara';
 import PlaygroundLayout from './playground-layout';
 
 export function RadioExamples() {
@@ -10,21 +10,15 @@ export function RadioExamples() {
         <Flex gap='large'>
           <Flex gap='small' align='center'>
             <Radio value='1' id='P1' />
-            <Field.Label orientation='horizontal' htmlFor='P1'>
-              Option One
-            </Field.Label>
+            <Label htmlFor='P1'>Option One</Label>
           </Flex>
           <Flex gap='small' align='center'>
             <Radio value='2' id='P2' />
-            <Field.Label orientation='horizontal' htmlFor='P2'>
-              Option Two
-            </Field.Label>
+            <Label htmlFor='P2'>Option Two</Label>
           </Flex>
           <Flex gap='small' align='center'>
             <Radio value='3' id='P3' disabled />
-            <Field.Label orientation='horizontal' htmlFor='P3'>
-              Option Three
-            </Field.Label>
+            <Label htmlFor='P3'>Option Three</Label>
           </Flex>
         </Flex>
       </Radio.Group>
