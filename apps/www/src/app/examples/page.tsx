@@ -28,7 +28,7 @@ import {
   Flex,
   IconButton,
   Indicator,
-  InputField,
+  Input,
   Menu,
   Navbar,
   Popover,
@@ -516,7 +516,7 @@ const Page = () => {
                 <Button variant='outline' color='accent' size='small' loading>
                   Search
                 </Button>
-                <InputField size='small' />
+                <Input size='small' />
               </Flex>
 
               {/* Button Examples */}
@@ -1663,7 +1663,7 @@ const Page = () => {
                             </Flex>
                           </Popover.Content>
                         </Popover>
-                        <InputField
+                        <Input
                           placeholder='Type to filter...'
                           leadingIcon={<MixerHorizontalIcon />}
                           width='100%'
@@ -1832,7 +1832,7 @@ const Page = () => {
                             </Flex>
                           </Popover.Content>
                         </Popover>
-                        <InputField
+                        <Input
                           placeholder='Type to filter...'
                           leadingIcon={<MixerHorizontalIcon />}
                           width='100%'

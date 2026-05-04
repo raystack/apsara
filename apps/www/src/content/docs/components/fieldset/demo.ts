@@ -4,13 +4,13 @@ export const playground = {
   type: 'code',
   code: `<Fieldset legend="Personal Information">
   <Field label="First Name" required>
-    <InputField placeholder="John" />
+    <Input placeholder="John" />
   </Field>
   <Field label="Last Name" required>
-    <InputField placeholder="Doe" />
+    <Input placeholder="Doe" />
   </Field>
   <Field label="Email" required>
-    <InputField type="email" placeholder="john@example.com" />
+    <Input type="email" placeholder="john@example.com" />
   </Field>
 </Fieldset>`
 };
@@ -19,10 +19,10 @@ export const basicDemo = {
   type: 'code',
   code: `<Fieldset legend="Contact Details">
   <Field label="Phone" required>
-    <InputField type="tel" placeholder="+1 (555) 000-0000" />
+    <Input type="tel" placeholder="+1 (555) 000-0000" />
   </Field>
   <Field label="Address" required={false}>
-    <InputField placeholder="123 Main St" />
+    <Input placeholder="123 Main St" />
   </Field>
 </Fieldset>`
 };
@@ -32,10 +32,10 @@ export const subComponentDemo = {
   code: `<Fieldset>
   <Fieldset.Legend>Account Settings</Fieldset.Legend>
   <Field label="Username" required>
-    <InputField placeholder="Enter username" />
+    <Input placeholder="Enter username" />
   </Field>
   <Field label="Password" required>
-    <InputField type="password" placeholder="Enter password" />
+    <Input type="password" placeholder="Enter password" />
   </Field>
 </Fieldset>`
 };
@@ -44,10 +44,10 @@ export const disabledDemo = {
   type: 'code',
   code: `<Fieldset legend="Disabled Section" disabled>
   <Field label="Read Only Field">
-    <InputField placeholder="Cannot edit" />
+    <Input placeholder="Cannot edit" />
   </Field>
   <Field label="Another Field">
-    <InputField placeholder="Also disabled" />
+    <Input placeholder="Also disabled" />
   </Field>
 </Fieldset>`
 };
@@ -57,15 +57,15 @@ export const nestedDemo = {
   code: `<Form>
   <Fieldset legend="Personal Info">
     <Field label="Full Name" required>
-      <InputField placeholder="John Doe" />
+      <Input placeholder="John Doe" />
     </Field>
   </Fieldset>
   <Fieldset legend="Work Info">
     <Field label="Company" required>
-      <InputField placeholder="Acme Inc." />
+      <Input placeholder="Acme Inc." />
     </Field>
     <Field label="Role" required={false}>
-      <InputField placeholder="Software Engineer" />
+      <Input placeholder="Software Engineer" />
     </Field>
   </Fieldset>
   <Button type="submit">Save</Button>

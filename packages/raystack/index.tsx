@@ -44,7 +44,7 @@ export { Headline } from './components/headline';
 export { IconButton } from './components/icon-button';
 export { Image } from './components/image';
 export { Indicator } from './components/indicator';
-export { InputField } from './components/input-field';
+export { Input } from './components/input';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';

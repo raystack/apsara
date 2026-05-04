@@ -3,13 +3,13 @@
 import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { type ComponentProps } from 'react';
-import { InputField } from '../input-field';
+import { Input } from '../input';
 import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxInputProps
   extends Omit<
-    ComponentProps<typeof InputField>,
+    ComponentProps<typeof Input>,
     'trailingIcon' | 'suffix' | 'chips' | 'maxChipsVisible'
   > {}
 
@@ -20,7 +20,7 @@ export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
     <ComboboxPrimitive.Input
       ref={ref}
       render={
-        <InputField
+        <Input
           containerRef={inputContainerRef}
           chips={
             multiple && Array.isArray(value)

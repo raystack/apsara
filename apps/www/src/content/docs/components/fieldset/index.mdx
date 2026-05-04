@@ -22,14 +22,14 @@ Fieldset supports a **simple props API** and a **sub-component API**.
 ### Simple API
 
 ```tsx
-import { Fieldset, Field, InputField } from "@raystack/apsara";
+import { Fieldset, Field, Input } from "@raystack/apsara";
 
 <Fieldset legend="Personal Information">
   <Field label="First Name">
-    <InputField placeholder="John" />
+    <Input placeholder="John" />
   </Field>
   <Field label="Last Name">
-    <InputField placeholder="Doe" />
+    <Input placeholder="Doe" />
   </Field>
 </Fieldset>
 ```
@@ -37,12 +37,12 @@ import { Fieldset, Field, InputField } from "@raystack/apsara";
 ### Sub-component API
 
 ```tsx
-import { Fieldset, Field, InputField } from "@raystack/apsara";
+import { Fieldset, Field, Input } from "@raystack/apsara";
 
 <Fieldset>
   <Fieldset.Legend>Personal Information</Fieldset.Legend>
   <Field label="First Name">
-    <InputField placeholder="John" />
+    <Input placeholder="John" />
   </Field>
 </Fieldset>
 ```

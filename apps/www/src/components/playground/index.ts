@@ -29,7 +29,7 @@ export * from './headline-examples';
 export * from './icon-button-examples';
 export * from './image-examples';
 export * from './indicator-examples';
-export * from './input-field-examples';
+export * from './input-examples';
 export * from './label-examples';
 export * from './link-examples';
 export * from './list-examples';
