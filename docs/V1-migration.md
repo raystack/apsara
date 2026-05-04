@@ -210,6 +210,21 @@ If you reference these CSS variables in custom styles:
 .accordion-panel { height: var(--accordion-panel-height); }
 ```
 
+#### Overlay Tokens
+
+`--rs-color-overlay-base-primary` has been removed. Its direct equivalent is `--rs-color-overlay-black-a5`. For theme-aware behavior (black in light, white in dark), use `--rs-color-overlay-base-a5` instead.
+
+```css
+/* Before */
+.backdrop { background-color: var(--rs-color-overlay-base-primary); }
+
+/* After — equivalent (always 30% black) */
+.backdrop { background-color: var(--rs-color-overlay-black-a5); }
+
+/* After — theme-aware (30% black in light, 30% white in dark) */
+.backdrop { background-color: var(--rs-color-overlay-base-a5); }
+```
+
 ### Form Field Pattern
 
 Labels, descriptions, errors, and optional indicators have been extracted from individual form controls into a new `Field` wrapper component. This is a **breaking change** for `InputField` (now `Input`) and `TextArea`.

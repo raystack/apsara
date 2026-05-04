@@ -161,7 +161,7 @@
   position: fixed;
   inset: 0;
   z-index: var(--rs-z-index-portal);
-  background-color: var(--rs-color-overlay-base-primary);
+  background-color: var(--rs-color-overlay-black-a5);
   transition:
     opacity 200ms ease-out,
     backdrop-filter 200ms ease-out;
