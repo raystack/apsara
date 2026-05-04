@@ -1,5 +1,5 @@
 'use client';
-import { Button, Radio, Tabs } from '@raystack/apsara';
+import { Button, Label, Radio, Tabs } from '@raystack/apsara';
 import { getPropsString } from '@/lib/utils';
 import { ThemeOptions, useTheme } from '../theme';
 import styles from './theme-customiser.module.css';
@@ -65,7 +65,7 @@ export default function ThemeCustomizer() {
       </div>
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>Accent Color</h3>
-        <Radio
+        <Radio.Group
           value={accentColor}
           onValueChange={value =>
             setTheme({
@@ -75,29 +75,29 @@ export default function ThemeCustomizer() {
         >
           <div className={styles.radioGroup}>
             <div className={styles.radioOption}>
-              <Radio.Item value='indigo' id='accent-indigo' />
-              <label className={styles.radioLabel} htmlFor='accent-indigo'>
+              <Radio value='indigo' id='accent-indigo' />
+              <Label className={styles.radioLabel} htmlFor='accent-indigo'>
                 Indigo
-              </label>
+              </Label>
             </div>
             <div className={styles.radioOption}>
-              <Radio.Item value='orange' id='accent-orange' />
-              <label className={styles.radioLabel} htmlFor='accent-orange'>
+              <Radio value='orange' id='accent-orange' />
+              <Label className={styles.radioLabel} htmlFor='accent-orange'>
                 Orange
-              </label>
+              </Label>
             </div>
             <div className={styles.radioOption}>
-              <Radio.Item value='mint' id='accent-mint' />
-              <label className={styles.radioLabel} htmlFor='accent-mint'>
+              <Radio value='mint' id='accent-mint' />
+              <Label className={styles.radioLabel} htmlFor='accent-mint'>
                 Mint
-              </label>
+              </Label>
             </div>
           </div>
-        </Radio>
+        </Radio.Group>
       </div>
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>Gray Color</h3>
-        <Radio
+        <Radio.Group
           value={grayColor}
           onValueChange={value =>
             setTheme({ grayColor: value as ThemeOptions['grayColor'] })
@@ -105,25 +105,25 @@ export default function ThemeCustomizer() {
         >
           <div className={styles.radioGroup}>
             <div className={styles.radioOption}>
-              <Radio.Item value='gray' id='gray-gray' />
-              <label className={styles.radioLabel} htmlFor='gray-gray'>
+              <Radio value='gray' id='gray-gray' />
+              <Label className={styles.radioLabel} htmlFor='gray-gray'>
                 Gray
-              </label>
+              </Label>
             </div>
             <div className={styles.radioOption}>
-              <Radio.Item value='mauve' id='gray-mauve' />
-              <label className={styles.radioLabel} htmlFor='gray-mauve'>
+              <Radio value='mauve' id='gray-mauve' />
+              <Label className={styles.radioLabel} htmlFor='gray-mauve'>
                 Mauve
-              </label>
+              </Label>
             </div>
             <div className={styles.radioOption}>
-              <Radio.Item value='slate' id='gray-slate' />
-              <label className={styles.radioLabel} htmlFor='gray-slate'>
+              <Radio value='slate' id='gray-slate' />
+              <Label className={styles.radioLabel} htmlFor='gray-slate'>
                 Slate
-              </label>
+              </Label>
             </div>
           </div>
-        </Radio>
+        </Radio.Group>
       </div>
       <Button onClick={handleCopyTheme} type='button' width='100%'>
         Copy Theme Options

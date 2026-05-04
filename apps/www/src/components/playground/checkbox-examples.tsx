@@ -1,6 +1,6 @@
 'use client';
 
-import { Checkbox, Flex, Text } from '@raystack/apsara';
+import { Checkbox, Flex, Label, Text } from '@raystack/apsara';
 import PlaygroundLayout from './playground-layout';
 
 export function CheckboxExamples() {
@@ -9,9 +9,9 @@ export function CheckboxExamples() {
       <Flex direction='column' gap='large'>
         <Flex gap='medium'>
           <Checkbox />
-          <Checkbox checked={true} />
-          <Checkbox checked='indeterminate' />
-          <Checkbox checked={true} disabled />
+          <Checkbox checked />
+          <Checkbox indeterminate />
+          <Checkbox checked disabled />
         </Flex>
         <Text size={2} weight={500}>
           Checkbox.Group
@@ -20,15 +20,15 @@ export function CheckboxExamples() {
           <Flex direction='column' gap='small'>
             <Flex gap='small' align='center'>
               <Checkbox name='apple' id='pg-apple' />
-              <label htmlFor='pg-apple'>Apple</label>
+              <Label htmlFor='pg-apple'>Apple</Label>
             </Flex>
             <Flex gap='small' align='center'>
               <Checkbox name='banana' id='pg-banana' />
-              <label htmlFor='pg-banana'>Banana</label>
+              <Label htmlFor='pg-banana'>Banana</Label>
             </Flex>
             <Flex gap='small' align='center'>
               <Checkbox name='cherry' id='pg-cherry' />
-              <label htmlFor='pg-cherry'>Cherry</label>
+              <Label htmlFor='pg-cherry'>Cherry</Label>
             </Flex>
           </Flex>
         </Checkbox.Group>

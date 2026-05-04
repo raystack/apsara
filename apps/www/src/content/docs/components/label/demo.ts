@@ -10,36 +10,31 @@ export const getCode = (props: any) => {
 export const playground = {
   type: 'playground',
   controls: {
-    size: {
-      type: 'select',
-      options: ['small', 'medium', 'large'],
-      defaultValue: 'small'
-    },
-    required: { type: 'checkbox', defaultValue: false },
-    requiredIndicator: { type: 'text', defaultValue: '*' },
+    required: { type: 'checkbox', defaultValue: true },
+    optionalText: { type: 'text', defaultValue: '(optional)' },
+    htmlFor: { type: 'text', defaultValue: '' },
     children: { type: 'text', initialValue: 'Label' }
   },
   getCode
 };
 
-export const sizeDemo = {
+export const inlineDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
-    <Label size="small">Small Label</Label>
-    <Label size="medium">Medium Label</Label>
-    <Label size="large">Large Label</Label>
+  <Flex gap="small" align="center">
+    <Checkbox id="terms" />
+    <Label htmlFor="terms">Accept terms</Label>
   </Flex>`
 };
-export const requiredDemo = {
+
+export const optionalDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
-    <Label size="medium" required>
-      Required Field
-      </Label>
-      <Label size="medium" required requiredIndicator=" (Required)">
-      Required Field
+  <Flex direction="column" gap="small">
+    <Label>Required field</Label>
+    <Label required={false}>Optional field</Label>
+    <Label required={false} optionalText="— not required">
+      Custom optional text
     </Label>
   </Flex>`
 };

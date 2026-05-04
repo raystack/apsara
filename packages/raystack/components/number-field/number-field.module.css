@@ -72,7 +72,8 @@
   cursor: ew-resize;
 }
 
-.scrub-area-label {
+.scrub-area-label,
+.scrub-area-label[for] {
   cursor: ew-resize;
 }
 

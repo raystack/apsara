@@ -4,7 +4,7 @@ description: A text label component that provides names for form controls.
 source: packages/raystack/components/label
 ---
 
-import { playground, requiredDemo, sizeDemo } from "./demo.ts";
+import { inlineDemo, optionalDemo, playground } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -15,35 +15,38 @@ Import and assemble the component:
 ```tsx
 import { Label } from '@raystack/apsara'
 
-<Label />
+<Label htmlFor="email">Email</Label>
 ```
 
 ## API Reference
 
-Renders a text label for form elements.
+Renders a text label for form elements. Outside of a `Field`, use `Label` to
+attach a label to a control via `htmlFor`. Inside a `Field`, prefer
+`Field.Label` so the label is wired up to the field automatically.
+
+`Label` is layout-neutral — compose it with `Flex` (or wrap a control as a
+child) to lay out the label and its control.
 
 <auto-type-table path="./props.ts" name="LabelProps" />
 
 ## Examples
 
-### Size
+### Inline with a control
 
-Labels have 3 different sizes.
+Use `Flex` to place a label next to a Radio or Checkbox.
 
-<Demo data={sizeDemo} />
+<Demo data={inlineDemo} />
 
-### Required
+### Optional indicator
 
-Labels can indicate required fields with either a default asterisk or custom text.
+Pass `required={false}` to display an `(optional)` indicator next to the label.
+Override the text via `optionalText`.
 
-<Demo data={requiredDemo} />
+<Demo data={optionalDemo} />
 
 ## Accessibility
 
-The Label component is designed with accessibility in mind:
-
-- Uses semantic HTML `<label>` element
+- Renders a semantic HTML `<label>` element by default
 - Supports programmatic association with form controls via `htmlFor`
-- Required indicators are properly hidden from screen readers
 - Maintains WCAG compliant color contrast ratios
-- Supports keyboard navigation when used with form controls
+- Shows a pointer cursor when associated with a control via `htmlFor`
