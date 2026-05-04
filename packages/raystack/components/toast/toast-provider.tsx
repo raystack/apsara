@@ -4,7 +4,6 @@ import { Toast as ToastPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import styles from './toast.module.css';
 import {
-  _baseManagerRef,
   toastManager as defaultToastManager,
   type ToastManager
 } from './toast-manager';
@@ -46,14 +45,8 @@ export function ToastProvider({
   children,
   ...props
 }: ToastProviderProps) {
-  const baseManager = _baseManagerRef.get(toastManager);
-  if (!baseManager) {
-    throw new Error(
-      'ToastProvider: invalid toastManager. Use `Toast.createToastManager()` from @raystack/apsara to create one.'
-    );
-  }
   return (
-    <ToastPrimitive.Provider toastManager={baseManager} {...props}>
+    <ToastPrimitive.Provider toastManager={toastManager} {...props}>
       {children}
       <ToastPrimitive.Portal>
         <ToastPrimitive.Viewport

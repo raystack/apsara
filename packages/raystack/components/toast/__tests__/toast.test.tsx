@@ -234,6 +234,22 @@ describe('Toast', () => {
       expect(screen.queryByTestId('leading-icon')).not.toBeInTheDocument();
     });
 
+    it('renders no icon when leadingIcon is explicitly null, even with a type default', async () => {
+      act(() => {
+        toastManager.add({
+          title: 'No icon success',
+          type: 'success',
+          leadingIcon: null
+        });
+      });
+
+      const toastEl = await screen.findByText('No icon success');
+      const root = toastEl.closest('[data-type="success"]');
+      expect(root).toBeInTheDocument();
+      // The leading-icon wrapper (the only aria-hidden span in the toast) should not render.
+      expect(root!.querySelector('[aria-hidden="true"]')).toBeNull();
+    });
+
     it('forwards leadingIcon through update()', async () => {
       let id: string;
       act(() => {

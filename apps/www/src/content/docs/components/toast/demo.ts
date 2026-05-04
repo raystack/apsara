@@ -137,7 +137,10 @@ export const descriptionDemo = {
 
 export const leadingIconDemo = {
   type: 'code',
-  code: `
+  tabs: [
+    {
+      name: 'Custom icons',
+      code: `
   <Flex gap="medium" wrap="wrap">
     <Button onClick={() => toastManager.add({
       title: "Saved successfully",
@@ -162,6 +165,20 @@ export const leadingIconDemo = {
       Info with icon
     </Button>
   </Flex>`
+    },
+    {
+      name: 'No icon',
+      code: `
+  <Button onClick={() => toastManager.add({
+    title: "Plain success toast",
+    description: "No icon at all, even though type is success.",
+    type: "success",
+    leadingIcon: null
+  })}>
+    Success without icon
+  </Button>`
+    }
+  ]
 };
 
 export const actionDemo = {
@@ -313,6 +330,34 @@ export const positionDemo = {
   }`
     }
   ]
+};
+
+export const hookDemo = {
+  type: 'code',
+  code: `
+  function HookDemo() {
+    // Hook usage lives in an inner component so it runs inside the Provider.
+    function Inner() {
+      const { add, toasts } = useToastManager();
+      return (
+        <Flex direction="column" gap="medium">
+          <Button onClick={() => add({
+            title: "Triggered via hook",
+            description: "Same leadingIcon-aware API as the singleton manager.",
+            type: "success"
+          })}>
+            Show toast
+          </Button>
+          <span>Active toasts: {toasts.length}</span>
+        </Flex>
+      )
+    }
+    return (
+      <Toast.Provider>
+        <Inner />
+      </Toast.Provider>
+    )
+  }`
 };
 
 export const updateDemo = {
