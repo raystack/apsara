@@ -227,5 +227,44 @@ describe('Chip', () => {
       const chip = screen.getByRole('status');
       expect(chip).toHaveAttribute('aria-label', 'Override Label');
     });
+
+    it('accepts native aria-label attribute', () => {
+      render(<Chip aria-label='Native Label'>String Child</Chip>);
+
+      const chip = screen.getByRole('status');
+      expect(chip).toHaveAttribute('aria-label', 'Native Label');
+    });
+  });
+
+  describe('Forwarded HTML attributes', () => {
+    it('forwards arbitrary HTML attributes onto the root span', () => {
+      render(
+        <Chip
+          id='my-chip'
+          data-testid='chip-root'
+          data-state='active'
+          title='Tooltip'
+        >
+          Test Chip
+        </Chip>
+      );
+
+      const chip = screen.getByTestId('chip-root');
+      expect(chip).toHaveAttribute('id', 'my-chip');
+      expect(chip).toHaveAttribute('data-state', 'active');
+      expect(chip).toHaveAttribute('title', 'Tooltip');
+    });
+
+    it('forwards mouse events from the spread props', () => {
+      const onMouseEnter = vi.fn();
+      render(
+        <Chip onMouseEnter={onMouseEnter} data-testid='chip-root'>
+          Test Chip
+        </Chip>
+      );
+
+      fireEvent.mouseEnter(screen.getByTestId('chip-root'));
+      expect(onMouseEnter).toHaveBeenCalledTimes(1);
+    });
   });
 });
