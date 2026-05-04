@@ -1720,7 +1720,9 @@ Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, `rows`
 
 ### Toast
 
-**Exports renamed: `ToastContainer`/`toast` -> `Toast`/`toastManager`**
+The library moved from Sonner to Base UI Toast primitives. The flat `toast()` function with chained shortcuts (`toast.success`, `toast.error`, `toast.dismiss`, …) is replaced by a single `toastManager.add(options)` entrypoint, and the standalone `<ToastContainer />` becomes a context-bearing `<Toast.Provider>` that wraps your tree.
+
+**Exports renamed: `ToastContainer` / `toast` -> `Toast.Provider` / `toastManager`**
 
 ```tsx
 // ===== BEFORE (Sonner-based) =====
@@ -1731,7 +1733,7 @@ function App() {
   return (
     <>
       <MainContent />
-      <ToastContainer />
+      <ToastContainer position="bottom-right" duration={5000} visibleToasts={3} />
     </>
   );
 }
@@ -1740,6 +1742,7 @@ function App() {
 toast('Simple message');
 toast.success('Operation complete');
 toast.error('Something went wrong');
+toast.message('File deleted', { description: 'You can undo this action' });
 toast('File deleted', {
   duration: 5000,
   action: { label: 'Undo', onClick: handleUndo },
@@ -1751,54 +1754,115 @@ toast.dismiss(); // dismiss all
 // ===== AFTER (Base UI-based) =====
 import { Toast, toastManager } from '@raystack/apsara';
 
-// Provider — must wrap app as a context provider
+// Provider — wraps the app and supplies context (required for useToastManager)
 function App() {
   return (
-    <Toast.Provider position="bottom-right">
+    <Toast.Provider position="bottom-right" timeout={5000} limit={3}>
       <MainContent />
     </Toast.Provider>
   );
 }
 
-// Creating toasts
+// Creating toasts — single entrypoint, `type` drives styling and default icon
 toastManager.add({ title: 'Simple message' });
 toastManager.add({ title: 'Operation complete', type: 'success' });
 toastManager.add({ title: 'Something went wrong', type: 'error' });
+toastManager.add({ title: 'File deleted', description: 'You can undo this action' });
 toastManager.add({
   title: 'File deleted',
+  timeout: 5000,
   actionProps: { children: 'Undo', onClick: handleUndo },
 });
-const id = toastManager.add({ title: 'Uploading...' });
+const id = toastManager.add({ title: 'Uploading...', type: 'loading' });
 toastManager.close(id);
-// no built-in dismiss-all
+toastManager.close(); // close all
 ```
 
-**Callbacks changed:**
+**Provider prop mapping (`<ToastContainer>` -> `<Toast.Provider>`):**
+
+| Before | After | Notes |
+| --- | --- | --- |
+| `duration` | `timeout` | Default auto-dismiss in ms; overridable per toast. |
+| `visibleToasts` | `limit` | Max visible toasts (default 3). |
+| `position` | `position` | Same accepted values. |
+| `theme`, `richColors`, `closeButton`, `expand`, `gap`, `offset` | — | Removed. Theme follows the app's theme provider, the close button is always shown, expand-on-hover is always on. |
+
+**Toast option mapping (`toast(msg, options)` -> `toastManager.add(options)`):**
+
+| Before | After | Notes |
+| --- | --- | --- |
+| First-arg message | `title` | Now part of the options object. |
+| `description` | `description` | If `title` is omitted, `description` is promoted into the headline slot so the layout stays single-line. |
+| `duration` | `timeout` | `0` disables auto-dismiss (was `Infinity` in sonner). |
+| `action: { label, onClick }` | `actionProps: { children, onClick, ...buttonProps }` | Accepts any `<button>` props; rendered as a tertiary action button. |
+| `cancel` | — | Removed. |
+| `important` | `priority: 'high'` | Drives `role="alert"` (assertive) instead of `role="status"` (polite). |
+| `icon` | `leadingIcon` | Each `type` ships a sensible default icon. Pass any node to override; pass `null` to render no icon at all. |
+| `onDismiss`, `onAutoClose` | `onClose` | Single callback fired whenever the toast closes (manual, swipe, or timeout). |
+| — | `onRemove` | NEW — fires after the exit animation completes. |
+| `id` | `id` | Same. |
+
+**Type variants replace shortcut methods:**
+
+```tsx
+// Before — chained methods
+toast.success('Done');
+toast.error('Failed');
+toast.info('FYI');
+toast.warning('Heads up');
+toast.loading('Working...');
+
+// After — single `add()`, pass `type`
+toastManager.add({ title: 'Done', type: 'success' });
+toastManager.add({ title: 'Failed', type: 'error' });
+toastManager.add({ title: 'FYI', type: 'info' });
+toastManager.add({ title: 'Heads up', type: 'warning' });
+toastManager.add({ title: 'Working...', type: 'loading' });
+```
+
+`type` drives the leading-icon color and default icon. The toast container itself stays visually neutral across types.
+
+**Promise toast:**
 
 ```tsx
 // Before
-toast('msg', { onDismiss: handler, onAutoClose: handler2 });
+toast.promise(fetchData(), {
+  loading: 'Loading...',
+  success: (data) => `Loaded ${data.name}`,
+  error: 'Failed to load',
+});
 
-// After
-toastManager.add({ title: 'msg', onClose: handler });
+// After — every stage accepts a string or an `update`-shaped options object
+toastManager.promise(fetchData(), {
+  loading: { title: 'Loading...', description: 'Please wait' },
+  success: (data) => ({ title: 'Done!', description: `Loaded ${data.name}`, type: 'success' }),
+  error: { title: 'Failed', type: 'error' },
+});
 ```
+
+**Updating an existing toast (NEW):**
+
+```tsx
+// Before — no in-place update; you had to dismiss + re-create
+const id = toast.loading('Saving...');
+toast.dismiss(id);
+toast.success('Saved');
+
+// After — patch in place, every field optional
+const id = toastManager.add({ title: 'Saving...', type: 'loading' });
+toastManager.update(id, { title: 'Saved', type: 'success', timeout: 3000 });
+```
+
+**Removed: `toast.custom`.** Pass any `ReactNode` to `title` / `description` for rich content.
 
 #### New Features
 
-- Toast stacking with peek animation and expand-on-hover
-- Swipe-to-dismiss
-- `toastManager.update(id, props)` for modifying existing toasts
-- `Toast.createToastManager` and `Toast.useToastManager`
-
-**Promise toast pattern:**
-
-```tsx
-toastManager.promise(fetchData(), {
-  loading: { title: "Loading...", description: "Please wait" },
-  success: { title: "Done!", type: "success" },
-  error: { title: "Failed", type: "error" },
-});
-```
+- Top-level `useToastManager()` hook for dispatching from inside components and reading the reactive `toasts[]` list. Exported standalone (not on the `Toast` namespace) so React's rules-of-hooks lint recognizes it.
+- `Toast.createToastManager()` factory for scoping toasts to a specific provider — pass it via `<Toast.Provider toastManager={...}>`.
+- First-class `leadingIcon`: defaults per `type`, override with any node, opt out with `null`.
+- `toastManager.update(id, options)` patches an existing toast in place.
+- Toast stacking with peek animation, expand-on-hover, and swipe-to-dismiss.
+- `priority: 'high'` switches the live region from polite to assertive; toast motion respects `prefers-reduced-motion`.
 
 ---
 
