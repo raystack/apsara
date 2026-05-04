@@ -1,27 +1,8 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--rs-space-1);
+  gap: var(--rs-space-2);
   width: 100%;
-}
-
-.label {
-  color: var(--rs-color-foreground-base-secondary);
-  font-weight: var(--rs-font-weight-medium);
-  font-size: var(--rs-font-size-mini);
-  line-height: var(--rs-line-height-mini);
-  letter-spacing: var(--rs-letter-spacing-mini);
-  padding-bottom: var(--rs-space-2);
-}
-
-.label[data-disabled] {
-  color: var(--rs-color-foreground-base-tertiary);
-}
-
-.optional {
-  color: var(--rs-color-foreground-base-tertiary);
-  font-weight: var(--rs-font-weight-regular);
-  margin-left: var(--rs-space-1);
 }
 
 .control {
@@ -35,7 +16,6 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
-  padding-top: var(--rs-space-2);
   margin: 0;
 }
 
@@ -45,7 +25,6 @@
   font-size: var(--rs-font-size-mini);
   line-height: var(--rs-line-height-mini);
   letter-spacing: var(--rs-letter-spacing-mini);
-  padding-top: var(--rs-space-2);
   margin: 0;
 }
 
