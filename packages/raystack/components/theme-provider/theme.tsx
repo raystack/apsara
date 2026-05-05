@@ -170,33 +170,38 @@ const Theme = ({
   // Ref-held callback so consumer render churn doesn't drive effect cadence.
   const onThemeChangeRef = useRef(onThemeChange);
   onThemeChangeRef.current = onThemeChange;
-  const lastResolvedRef = useRef<string | undefined>(undefined);
+  const lastRef = useRef<{ theme: string; resolved: string } | undefined>(
+    undefined
+  );
 
-  // Apply on theme/forcedTheme change, then notify on real resolved-theme changes.
+  // Apply on theme/forcedTheme change, then notify on real changes.
   useEffect(() => {
-    // @ts-ignore
-    applyTheme(forcedTheme ?? theme);
+    const target = forcedTheme ?? theme;
+    if (target) applyTheme(target);
 
     if (!theme) return;
     const resolved =
       forcedTheme ?? (theme === 'system' ? resolvedTheme : theme);
     if (!resolved) return;
 
+    const prev = lastRef.current;
+    lastRef.current = { theme, resolved };
+
     if (
-      lastResolvedRef.current !== undefined &&
-      lastResolvedRef.current !== resolved
+      prev !== undefined &&
+      (prev.theme !== theme || prev.resolved !== resolved)
     ) {
       onThemeChangeRef.current?.(theme, resolved);
     }
-    lastResolvedRef.current = resolved;
-  }, [forcedTheme, theme, resolvedTheme]);
+  }, [forcedTheme, theme, resolvedTheme, applyTheme]);
 
   const providerValue = useMemo(
     () => ({
       theme,
       setTheme,
       forcedTheme,
-      resolvedTheme: theme === 'system' ? resolvedTheme : theme,
+      resolvedTheme:
+        forcedTheme ?? (theme === 'system' ? resolvedTheme : theme),
       themes: enableSystem ? [...themes, 'system'] : themes,
       systemTheme: (enableSystem ? resolvedTheme : undefined) as
         | 'light'
