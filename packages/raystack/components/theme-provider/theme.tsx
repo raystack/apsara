@@ -170,19 +170,24 @@ const Theme = ({
   // Ref-held callback so consumer render churn doesn't drive effect cadence.
   const onThemeChangeRef = useRef(onThemeChange);
   onThemeChangeRef.current = onThemeChange;
-  const themeChangeMounted = useRef(false);
+  const lastResolvedRef = useRef<string | undefined>(undefined);
 
-  // Apply on theme/forcedTheme change, then notify (skipping initial mount).
+  // Apply on theme/forcedTheme change, then notify on real resolved-theme changes.
   useEffect(() => {
     // @ts-ignore
     applyTheme(forcedTheme ?? theme);
 
-    if (themeChangeMounted.current && theme) {
-      const resolved =
-        theme === 'system' && resolvedTheme ? resolvedTheme : theme;
+    if (!theme) return;
+    const resolved = theme === 'system' ? resolvedTheme : theme;
+    if (!resolved) return;
+
+    if (
+      lastResolvedRef.current !== undefined &&
+      lastResolvedRef.current !== resolved
+    ) {
       onThemeChangeRef.current?.(theme, resolved);
     }
-    themeChangeMounted.current = true;
+    lastResolvedRef.current = resolved;
   }, [forcedTheme, theme, resolvedTheme]);
 
   const providerValue = useMemo(
