@@ -167,30 +167,23 @@ const Theme = ({
     return () => window.removeEventListener('storage', handleStorage);
   }, [setTheme]);
 
-  // Whenever theme or forcedTheme changes, apply it
+  // Ref-held callback so consumer render churn doesn't drive effect cadence.
+  const onThemeChangeRef = useRef(onThemeChange);
+  onThemeChangeRef.current = onThemeChange;
+  const themeChangeMounted = useRef(false);
+
+  // Apply on theme/forcedTheme change, then notify (skipping initial mount).
   useEffect(() => {
     // @ts-ignore
     applyTheme(forcedTheme ?? theme);
-  }, [forcedTheme, theme]);
 
-  // Fire onThemeChange on actual changes, skipping the initial mount.
-  // Ref keeps the latest callback without re-firing when consumers pass an inline function.
-  const onThemeChangeRef = useRef(onThemeChange);
-  useEffect(() => {
-    onThemeChangeRef.current = onThemeChange;
-  });
-  const themeChangeMounted = useRef(false);
-  useEffect(() => {
-    if (!themeChangeMounted.current) {
-      themeChangeMounted.current = true;
-      return;
-    }
-    if (theme) {
+    if (themeChangeMounted.current && theme) {
       const resolved =
         theme === 'system' && resolvedTheme ? resolvedTheme : theme;
       onThemeChangeRef.current?.(theme, resolved);
     }
-  }, [theme, resolvedTheme]);
+    themeChangeMounted.current = true;
+  }, [forcedTheme, theme, resolvedTheme]);
 
   const providerValue = useMemo(
     () => ({
