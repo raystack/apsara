@@ -169,7 +169,7 @@ function VirtualLoaderRows({
   count: number;
 }) {
   return (
-    <div className={styles.stickyLoaderContainer}>
+    <div role='rowgroup' className={styles.loaderContainer}>
       {Array.from({ length: count }).map((_, rowIndex) => (
         <div
           role='row'
