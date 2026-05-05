@@ -17,7 +17,7 @@ export interface FormProps {
    * `preventDefault()` is called on the native submit event when used.
    */
   onFormSubmit?: (
-    formValues: Record<string, unknown>,
+    formValues: Record<string, any>,
     eventDetails: object
   ) => void;
 

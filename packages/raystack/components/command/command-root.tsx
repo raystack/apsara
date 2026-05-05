@@ -32,13 +32,13 @@ export const useCommandContext = (): CommandContextValue => {
 };
 
 export interface CommandRootProps
-  extends Omit<AutocompletePrimitive.Root.Props<unknown>, 'items'> {
+  extends Omit<AutocompletePrimitive.Root.Props<any>, 'items'> {
   /**
    * Items to be displayed and filtered by Base UI internally.
    * When provided, the auto-search fallback is disabled and filtering is
    * delegated to Base UI's built-in logic (or the user's custom `filter`).
    */
-  items?: readonly unknown[];
+  items?: readonly any[];
   /** Additional CSS class for the panel wrapper. */
   className?: string;
 }

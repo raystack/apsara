@@ -1,12 +1,12 @@
 export interface TabsRootProps {
   /** The initial active tab value. */
-  defaultValue?: string;
+  defaultValue?: any;
 
   /** The controlled active tab value. */
-  value?: string;
+  value?: any;
 
   /** Callback function triggered when the active tab changes. */
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: any) => void;
 
   /** The orientation of the tabs. */
   orientation?: 'horizontal' | 'vertical';
@@ -28,7 +28,7 @@ export interface TabsListProps {
 
 export interface TabsTabProps {
   /** Unique identifier for the tab. */
-  value: string;
+  value: any;
 
   /** Optional icon element to display before the label. Rendered in a wrapper with aria-hidden so it is not announced by screen readers (decorative). */
   leadingIcon?: React.ReactNode;
@@ -42,7 +42,7 @@ export interface TabsTabProps {
 
 export interface TabsContentProps {
   /** Matching identifier for the tab. */
-  value: string;
+  value: any;
 
   /** Whether to keep the panel in the DOM while hidden. */
   keepMounted?: boolean;
