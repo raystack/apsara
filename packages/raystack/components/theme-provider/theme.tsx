@@ -60,7 +60,7 @@ const Theme = ({
   const attrs = !value ? themes : Object.values(value);
 
   const applyTheme = useCallback(
-    (theme: string) => {
+    (theme: string | undefined) => {
       let resolved = theme;
       if (!resolved) return;
 
@@ -96,8 +96,7 @@ const Theme = ({
         const colorScheme = colorSchemes.includes(resolved)
           ? resolved
           : fallback;
-        // @ts-ignore
-        d.style.colorScheme = colorScheme;
+        d.style.colorScheme = colorScheme ?? '';
       }
 
       enable?.();

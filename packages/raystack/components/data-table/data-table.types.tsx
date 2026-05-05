@@ -21,7 +21,7 @@ export const SortOrders = {
 } as const;
 
 export interface DataTableFilterValues {
-  value: any;
+  value: unknown;
   // Only one of these value fields should be present at a time
   boolValue?: boolean;
   stringValue?: string;

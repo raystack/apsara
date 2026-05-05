@@ -1,9 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
-  console.log('props:', props);
+export const getCode = (props: ComponentPropsType) => {
   return `<Amount${getPropsString(props)}/>`;
 };
 

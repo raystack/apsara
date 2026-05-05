@@ -45,9 +45,9 @@ export type PropChangeHandlerType = (
   value: string | boolean | number
 ) => void;
 
-export type ComponentPropsType = Record<string, any>;
+export type ComponentPropsType = Record<string, unknown>;
 
 export type GetCodeType = (
-  updatedProps: Record<string, any>,
-  props: Record<string, any>
+  updatedProps: ComponentPropsType,
+  props: ComponentPropsType
 ) => string;

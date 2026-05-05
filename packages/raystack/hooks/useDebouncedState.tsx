@@ -33,7 +33,7 @@ export type UseDebouncedStateReturnValue<T> = [
  * @example
  * const [value, setValue] = useDebouncedState('Hello', 1000, { leading: true });
  */
-export function useDebouncedState<T = any>(
+export function useDebouncedState<T = unknown>(
   defaultValue: T,
   delay: number,
   options: UseDebouncedStateOptions = { leading: false }

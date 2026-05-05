@@ -43,7 +43,7 @@ export interface PopoverContentProps {
    */
   render?:
     | React.ReactElement
-    | ((props: any, state: any) => React.ReactElement);
+    | ((props: unknown, state: unknown) => React.ReactElement);
 
   /** Element to receive initial focus when popover opens. */
   initialFocus?: boolean | number | React.RefObject<HTMLElement>;

@@ -66,7 +66,7 @@ const mdxComponents = {
   img: Image,
   h1: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
-      as='h1'
+      render={<h1 />}
       size='t4'
       {...props}
       className={cx(styles['prose-h1'], props.className)}
@@ -74,7 +74,7 @@ const mdxComponents = {
   ),
   h2: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
-      as='h2'
+      render={<h2 />}
       size='t3'
       {...props}
       className={cx(styles['prose-h2'], props.className)}
@@ -82,7 +82,7 @@ const mdxComponents = {
   ),
   h3: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
-      as='h3'
+      render={<h3 />}
       size='t2'
       {...props}
       className={cx(styles['prose-h3'], props.className)}
@@ -90,7 +90,7 @@ const mdxComponents = {
   ),
   h4: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Headline
-      as='h4'
+      render={<h4 />}
       size='t1'
       {...props}
       className={cx(styles['prose-h4'], props.className)}
@@ -98,8 +98,7 @@ const mdxComponents = {
   ),
   h5: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Text
-      //@ts-expect-error - Text component type doesn't support h5 element
-      as='h5'
+      render={<h5 />}
       size='large'
       {...props}
       className={cx(styles['prose-h5'], props.className)}
@@ -107,8 +106,7 @@ const mdxComponents = {
   ),
   h6: (props: HTMLAttributes<HTMLHeadingElement>) => (
     <Text
-      // @ts-expect-error - Text component type doesn't support h6 element
-      as='h6'
+      render={<h6 />}
       size='regular'
       {...props}
       className={cx(styles['prose-h6'], props.className)}

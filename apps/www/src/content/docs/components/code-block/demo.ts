@@ -1,5 +1,6 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
 const jsxCode = `{\`function add(a, b) {
@@ -34,7 +35,7 @@ const longCode = `{\`<Dialog>
   </Dialog.Content>
 </Dialog>\`}`;
 
-const getCode = (props: Record<string, unknown>) => {
+const getCode = (props: ComponentPropsType) => {
   const { children, maxLines, defaultValue = 'jsx', ...rest } = props;
   return `<CodeBlock${getPropsString({ ...rest, ...(maxLines ? { maxLines: Number(maxLines) } : {}), defaultValue })}>
   <CodeBlock.Header>

@@ -39,7 +39,7 @@ export interface SliderProps {
   thumbSize?: 'small' | 'large';
 
   /** Callback when value changes. Receives the new value. */
-  onValueChange?: (value: number | number[], eventDetails: any) => void;
+  onValueChange?: (value: number | number[], eventDetails: unknown) => void;
 
   /** Additional CSS class name. */
   className?: string;

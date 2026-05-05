@@ -35,7 +35,7 @@ export interface SelectTriggerProps {
   variant?: 'default' | 'filter';
 
   /** Props for the chevron icon. */
-  iconProps?: Record<string, any>;
+  iconProps?: Record<string, unknown>;
 
   /** Accessible label. */
   ariaLabel?: string;

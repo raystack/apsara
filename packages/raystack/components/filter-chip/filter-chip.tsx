@@ -32,15 +32,17 @@ const chip = cva(styles.chip, {
   }
 });
 
+export type FilterChipValue = string | string[] | number | Date;
+
 export interface FilterChipProps
   extends ComponentProps<'div'>,
     VariantProps<typeof chip> {
   label: string;
-  value?: string;
+  value?: FilterChipValue;
   onRemove?: () => void;
   columnType?: FilterTypes;
   options?: FilterSelectOption[];
-  onValueChange?: (value: any, operation: string) => void;
+  onValueChange?: (value: FilterChipValue, operation: string) => void;
   onOperationChange?: (operation: string) => void;
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];

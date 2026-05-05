@@ -3,12 +3,12 @@
 import { Separator } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { ReactSVGElement } from 'react';
+import { ComponentType, SVGProps } from 'react';
 import styles from './icon-details.module.css';
 
 export interface IconDetailsProps {
   name: string;
-  icon: (props: any) => ReactSVGElement;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 const SIZES = [12, 16, 24, 48, 64];
