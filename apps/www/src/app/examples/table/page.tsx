@@ -113,7 +113,8 @@ const Page = () => {
       let shouldShow = true;
       if (filters.includes('email')) {
         shouldShow = item.email.includes(
-          tableQuery?.filters?.[filters.indexOf('email')]?.value || ''
+          (tableQuery?.filters?.[filters.indexOf('email')]?.value as string) ||
+            ''
         );
       }
       if (shouldShow && filters.includes('amount')) {
@@ -122,9 +123,9 @@ const Page = () => {
           tableQuery?.filters?.[filters.indexOf('amount')]?.value;
       }
       if (shouldShow && filters.includes('status')) {
-        shouldShow = tableQuery?.filters?.[
-          filters.indexOf('status')
-        ]?.value.includes(item.status);
+        shouldShow = (
+          tableQuery?.filters?.[filters.indexOf('status')]?.value as string[]
+        ).includes(item.status);
       }
       return shouldShow;
     });

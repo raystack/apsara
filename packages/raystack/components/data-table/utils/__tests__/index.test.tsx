@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { EmptyFilterValue, FilterType } from '~/types/filters';
+import {
+  EmptyFilterValue,
+  FilterOperatorTypes,
+  FilterType
+} from '~/types/filters';
 import {
   DataTableColumnDef,
   DataTableQuery,
@@ -21,7 +25,7 @@ import {
 } from '../index';
 
 // Mock data for tests
-const mockColumns: DataTableColumnDef<any, any>[] = [
+const mockColumns: DataTableColumnDef<unknown, unknown>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -226,7 +230,7 @@ describe('Data Table Utils', () => {
 
     it('should handle null/undefined filters', () => {
       const query: InternalQuery = {
-        filters: null as any
+        filters: null as unknown as InternalFilter[]
       };
       const result = queryToTableState(query);
 
@@ -235,7 +239,7 @@ describe('Data Table Utils', () => {
 
     it('should handle null/undefined sort', () => {
       const query: InternalQuery = {
-        sort: null as any
+        sort: null as unknown as DataTableSort[]
       };
       const result = queryToTableState(query);
 
@@ -295,7 +299,7 @@ describe('Data Table Utils', () => {
       const filtersWithoutOperator: InternalFilter[] = [
         {
           name: 'name',
-          operator: '' as any,
+          operator: '' as unknown as FilterOperatorTypes,
           value: 'Alice',
           _type: FilterType.string
         }
@@ -348,7 +352,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should use groupLabelsMap when provided', () => {
-      const columnsWithLabels: DataTableColumnDef<any, any>[] = [
+      const columnsWithLabels: DataTableColumnDef<unknown, unknown>[] = [
         {
           accessorKey: 'department',
           header: 'Department',
@@ -375,7 +379,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should use groupCountMap when provided', () => {
-      const columnsWithCount: DataTableColumnDef<any, any>[] = [
+      const columnsWithCount: DataTableColumnDef<unknown, unknown>[] = [
         {
           accessorKey: 'department',
           header: 'Department',
@@ -402,7 +406,7 @@ describe('Data Table Utils', () => {
     });
 
     it('should handle showGroupCount flag', () => {
-      const columnsWithShowCount: DataTableColumnDef<any, any>[] = [
+      const columnsWithShowCount: DataTableColumnDef<unknown, unknown>[] = [
         {
           accessorKey: 'department',
           header: 'Department',
@@ -418,8 +422,8 @@ describe('Data Table Utils', () => {
     });
 
     it('should return empty array for null/undefined data', () => {
-      expect(groupData(null as any)).toEqual([]);
-      expect(groupData(undefined as any)).toEqual([]);
+      expect(groupData(null as unknown as never[])).toEqual([]);
+      expect(groupData(undefined as unknown as never[])).toEqual([]);
     });
 
     it('should handle empty data array', () => {
@@ -595,7 +599,7 @@ describe('Data Table Utils', () => {
         {
           header: 'Actions'
           // No accessorKey
-        } as any
+        } as unknown as DataTableColumnDef<unknown, unknown>
       ];
 
       const result = getInitialColumnVisibility(columnsWithoutAccessor);
@@ -1547,7 +1551,11 @@ describe('Data Table Utils', () => {
     });
 
     it('should handle circular references in filter values', () => {
-      const circularObj: any = { name: 'test' };
+      interface CircularObj {
+        name: string;
+        self?: CircularObj;
+      }
+      const circularObj: CircularObj = { name: 'test' };
       circularObj.self = circularObj;
 
       const query: InternalQuery = {

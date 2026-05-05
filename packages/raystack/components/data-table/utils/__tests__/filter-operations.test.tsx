@@ -1,3 +1,4 @@
+import type { Row } from '@tanstack/table-core';
 import dayjs from 'dayjs';
 import { describe, expect, it, vi } from 'vitest';
 import { EmptyFilterValue, FilterType } from '~/types/filters';
@@ -16,7 +17,7 @@ describe('Filter Operations', () => {
   const createMockRow = (value: unknown) =>
     ({
       getValue: vi.fn().mockReturnValue(value)
-    }) as any;
+    }) as unknown as Row<unknown>;
 
   describe('Number Filter Operations', () => {
     it('should handle eq (equals) operation', () => {
@@ -502,7 +503,7 @@ describe('Filter Operations', () => {
         mockRow,
         'status',
         {
-          value: 'not-an-array' as any
+          value: 'not-an-array' as unknown as string[]
         },
         addMeta
       );
@@ -512,7 +513,7 @@ describe('Filter Operations', () => {
         mockRow,
         'status',
         {
-          value: 'not-an-array' as any
+          value: 'not-an-array' as unknown as string[]
         },
         addMeta
       );

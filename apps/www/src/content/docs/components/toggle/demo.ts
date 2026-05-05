@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-const getCode = (props: any) => {
+const getCode = (props: ComponentPropsType) => {
   return `<Toggle aria-label="Bold"${getPropsString(props)}>
   <FontBoldIcon />
 </Toggle>`;

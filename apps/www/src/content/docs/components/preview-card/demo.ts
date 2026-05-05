@@ -1,10 +1,11 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
 const PLACEHOLDER = `<div style={{ width: 200, height: 120, borderRadius: "var(--rs-radius-2)", backgroundColor: "var(--rs-color-background-accent-primary)" }} />`;
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { children, ...rest } = props;
   return `
   <PreviewCard>

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { type ReactNode } from 'react';
+import { type ReactElement, type ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import styles from '../../dialog/dialog.module.css';
 import { AlertDialog } from '../alert-dialog';
@@ -38,7 +38,7 @@ const BasicAlertDialog = ({
   </AlertDialog>
 );
 
-function renderAndOpenAlertDialog(Dialog: any) {
+function renderAndOpenAlertDialog(Dialog: ReactElement) {
   fireEvent.click(render(Dialog).getByText(TRIGGER_TEXT));
 }
 

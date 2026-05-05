@@ -1,12 +1,13 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
 const styleDemo = {
   alignItems: 'flex-start'
 };
 
-export const getCode = (props: Record<string, unknown>) => {
+export const getCode = (props: ComponentPropsType) => {
   return `<Accordion${getPropsString(props)}>
         <Accordion.Item value="item-1">
           <Accordion.Trigger>Is it accessible?</Accordion.Trigger>

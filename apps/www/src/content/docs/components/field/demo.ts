@@ -1,10 +1,11 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { label, description, error, required, ...rest } = props;
-  const fieldProps: Record<string, unknown> = {};
+  const fieldProps: ComponentPropsType = {};
   if (label) fieldProps.label = label;
   if (description) fieldProps.description = description;
   if (error) fieldProps.error = error;

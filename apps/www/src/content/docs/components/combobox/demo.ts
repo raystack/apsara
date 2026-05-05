@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: Record<string, unknown>) => {
+export const getCode = (props: ComponentPropsType) => {
   const { multiple, ...rest } = props;
   return `
   <Combobox${getPropsString({ ...(multiple ? { multiple } : {}) })}>

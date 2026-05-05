@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   if (props.checked === 'false') props.checked = false;
   else if (props.checked === 'true') props.checked = true;
 
