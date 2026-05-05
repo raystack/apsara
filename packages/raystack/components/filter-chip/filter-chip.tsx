@@ -139,7 +139,7 @@ export const FilterChip = ({
               value={filterValue}
               onSelect={date => handleFilterValueChange(date)}
               showCalendarIcon={false}
-              inputProps={{ className: styles.dateField }}
+              inputProps={{ classNames: { container: styles.dateField } }}
             />
           </div>
         );
@@ -148,7 +148,7 @@ export const FilterChip = ({
           <div className={styles.inputFieldWrapper}>
             <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
-              className={styles.inputField}
+              classNames={{ container: styles.inputField }}
               value={filterValue}
               onChange={e => handleFilterValueChange(e.target.value)}
             />

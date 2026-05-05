@@ -1,5 +1,54 @@
 'use client';
 
+export const getCode = (
+  _updatedProps: Record<string, any>,
+  allProps: Record<string, any>
+) => {
+  const { title, description, type, actionButton } = allProps;
+  const opts: string[] = [];
+  if (title && title !== '') opts.push(`title: "${title}"`);
+  if (description && description !== '')
+    opts.push(`description: "${description}"`);
+  if (type && type !== 'default') opts.push(`type: "${type}"`);
+  if (actionButton)
+    opts.push(`actionProps: { children: "Action", onClick: () => {} }`);
+
+  const optsStr = opts.length ? `{ ${opts.join(', ')} }` : '{}';
+
+  return `
+  <Toast.Provider>
+    <Button onClick={() => toastManager.add(${optsStr})}>
+      Show toast
+    </Button>
+  </Toast.Provider>`;
+};
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    title: {
+      type: 'text',
+      initialValue: 'Order placed',
+      defaultValue: ''
+    },
+    description: {
+      type: 'text',
+      initialValue: 'Monday, 7 Oct 2024 at 10:20 AM',
+      defaultValue: ''
+    },
+    type: {
+      type: 'select',
+      options: ['default', 'success', 'error', 'warning', 'info', 'loading'],
+      defaultValue: 'default'
+    },
+    actionButton: {
+      type: 'checkbox',
+      defaultValue: false
+    }
+  },
+  getCode
+};
+
 export const preview = {
   type: 'code',
   code: `
@@ -84,6 +133,52 @@ export const descriptionDemo = {
       Error with description
     </Button>
   </Flex>`
+};
+
+export const leadingIconDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Custom icons',
+      code: `
+  <Flex gap="medium" wrap="wrap">
+    <Button onClick={() => toastManager.add({
+      title: "Saved successfully",
+      type: "success",
+      leadingIcon: <CheckCircledIcon />
+    })}>
+      Success with icon
+    </Button>
+    <Button onClick={() => toastManager.add({
+      title: "Upload failed",
+      description: "We couldn't upload your file. Please try again.",
+      type: "error",
+      leadingIcon: <CrossCircledIcon />
+    })}>
+      Error with icon
+    </Button>
+    <Button onClick={() => toastManager.add({
+      title: "FYI: System update available",
+      type: "info",
+      leadingIcon: <InfoCircledIcon />
+    })}>
+      Info with icon
+    </Button>
+  </Flex>`
+    },
+    {
+      name: 'No icon',
+      code: `
+  <Button onClick={() => toastManager.add({
+    title: "Plain success toast",
+    description: "No icon at all, even though type is success.",
+    type: "success",
+    leadingIcon: null
+  })}>
+    Success without icon
+  </Button>`
+    }
+  ]
 };
 
 export const actionDemo = {
@@ -235,6 +330,34 @@ export const positionDemo = {
   }`
     }
   ]
+};
+
+export const hookDemo = {
+  type: 'code',
+  code: `
+  function HookDemo() {
+    // Hook usage lives in an inner component so it runs inside the Provider.
+    function Inner() {
+      const { add, toasts } = useToastManager();
+      return (
+        <Flex direction="column" gap="medium">
+          <Button onClick={() => add({
+            title: "Triggered via hook",
+            description: "Same leadingIcon-aware API as the singleton manager.",
+            type: "success"
+          })}>
+            Show toast
+          </Button>
+          <span>Active toasts: {toasts.length}</span>
+        </Flex>
+      )
+    }
+    return (
+      <Toast.Provider>
+        <Inner />
+      </Toast.Provider>
+    )
+  }`
 };
 
 export const updateDemo = {

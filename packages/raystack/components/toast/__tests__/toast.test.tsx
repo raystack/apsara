@@ -208,6 +208,69 @@ describe('Toast', () => {
     });
   });
 
+  describe('Toast leadingIcon', () => {
+    beforeEach(() => {
+      renderWithProvider();
+    });
+
+    it('renders leadingIcon when provided', async () => {
+      act(() => {
+        toastManager.add({
+          title: 'With icon',
+          leadingIcon: <svg data-testid='leading-icon' />
+        });
+      });
+
+      expect(await screen.findByText('With icon')).toBeInTheDocument();
+      expect(screen.getByTestId('leading-icon')).toBeInTheDocument();
+    });
+
+    it('does not render leading-icon slot when leadingIcon is omitted', async () => {
+      act(() => {
+        toastManager.add({ title: 'No icon' });
+      });
+
+      expect(await screen.findByText('No icon')).toBeInTheDocument();
+      expect(screen.queryByTestId('leading-icon')).not.toBeInTheDocument();
+    });
+
+    it('renders no icon when leadingIcon is explicitly null, even with a type default', async () => {
+      act(() => {
+        toastManager.add({
+          title: 'No icon success',
+          type: 'success',
+          leadingIcon: null
+        });
+      });
+
+      const toastEl = await screen.findByText('No icon success');
+      const root = toastEl.closest('[data-type="success"]');
+      expect(root).toBeInTheDocument();
+      // The leading-icon wrapper (the only aria-hidden span in the toast) should not render.
+      expect(root!.querySelector('[aria-hidden="true"]')).toBeNull();
+    });
+
+    it('forwards leadingIcon through update()', async () => {
+      let id: string;
+      act(() => {
+        id = toastManager.add({ title: 'Initial' });
+      });
+      expect(await screen.findByText('Initial')).toBeInTheDocument();
+
+      act(() => {
+        toastManager.update(id!, {
+          title: 'Updated',
+          leadingIcon: <svg data-testid='updated-icon' />
+        });
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Updated')).toBeInTheDocument();
+        expect(screen.getByTestId('updated-icon')).toBeInTheDocument();
+      });
+    });
+  });
+
   describe('Multiple toasts', () => {
     beforeEach(() => {
       renderWithProvider();

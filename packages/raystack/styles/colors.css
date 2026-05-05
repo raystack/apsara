@@ -1,6 +1,6 @@
-/* 
- * Note: Use color variables from this file only. 
- * Avoid using color variables from other files in the v1/styles folder directly. 
+/*
+ * Note: Use color variables from this file only.
+ * Avoid using color variables from other files in the v1/styles folder directly.
  */
 
 :root {
@@ -59,35 +59,47 @@
   --rs-color-border-success-primary: var(--rs-success-7);
   --rs-color-border-success-emphasis: var(--rs-success-9);
 
-  /* Overlay Colors */
-  --rs-color-overlay-base-primary: var(--rs-overlay-1);
+  /* Overlay Base Colors */
+  --rs-color-overlay-base-a1: var(--rs-alpha-a1);
+  --rs-color-overlay-base-a2: var(--rs-alpha-a2);
+  --rs-color-overlay-base-a3: var(--rs-alpha-a3);
+  --rs-color-overlay-base-a4: var(--rs-alpha-a4);
+  --rs-color-overlay-base-a5: var(--rs-alpha-a5);
+  --rs-color-overlay-base-a6: var(--rs-alpha-a6);
+  --rs-color-overlay-base-a7: var(--rs-alpha-a7);
+  --rs-color-overlay-base-a8: var(--rs-alpha-a8);
+  --rs-color-overlay-base-a9: var(--rs-alpha-a9);
+  --rs-color-overlay-base-a10: var(--rs-alpha-a10);
+  --rs-color-overlay-base-a11: var(--rs-alpha-a11);
+  --rs-color-overlay-base-a12: var(--rs-alpha-a12);
+
   /* Black Overlay */
-  --rs-color-overlay-black-a1: oklch(0 0 0 / 0.051); /* 5% opacity */
-  --rs-color-overlay-black-a2: oklch(0 0 0 / 0.102); /* 10% opacity */
-  --rs-color-overlay-black-a3: oklch(0 0 0 / 0.149); /* 15% opacity */
-  --rs-color-overlay-black-a4: oklch(0 0 0 / 0.2); /* 20% opacity */
-  --rs-color-overlay-black-a5: oklch(0 0 0 / 0.302); /* 30% opacity */
-  --rs-color-overlay-black-a6: oklch(0 0 0 / 0.4); /* 40% opacity */
-  --rs-color-overlay-black-a7: oklch(0 0 0 / 0.502); /* 50% opacity */
-  --rs-color-overlay-black-a8: oklch(0 0 0 / 0.6); /* 60% opacity */
-  --rs-color-overlay-black-a9: oklch(0 0 0 / 0.702); /* 70% opacity */
-  --rs-color-overlay-black-a10: oklch(0 0 0 / 0.8); /* 80% opacity */
-  --rs-color-overlay-black-a11: oklch(0 0 0 / 0.902); /* 90% opacity */
-  --rs-color-overlay-black-a12: oklch(0 0 0 / 0.949); /* 95% opacity */
+  --rs-color-overlay-black-a1: oklch(0 0 0 / 0.05);
+  --rs-color-overlay-black-a2: oklch(0 0 0 / 0.1);
+  --rs-color-overlay-black-a3: oklch(0 0 0 / 0.15);
+  --rs-color-overlay-black-a4: oklch(0 0 0 / 0.2);
+  --rs-color-overlay-black-a5: oklch(0 0 0 / 0.3);
+  --rs-color-overlay-black-a6: oklch(0 0 0 / 0.4);
+  --rs-color-overlay-black-a7: oklch(0 0 0 / 0.5);
+  --rs-color-overlay-black-a8: oklch(0 0 0 / 0.6);
+  --rs-color-overlay-black-a9: oklch(0 0 0 / 0.7);
+  --rs-color-overlay-black-a10: oklch(0 0 0 / 0.8);
+  --rs-color-overlay-black-a11: oklch(0 0 0 / 0.9);
+  --rs-color-overlay-black-a12: oklch(0 0 0 / 0.95);
 
   /* White Overlay */
-  --rs-color-overlay-white-a1: oklch(1 0 0 / 0.051); /* 5% opacity */
-  --rs-color-overlay-white-a2: oklch(1 0 0 / 0.102); /* 10% opacity */
-  --rs-color-overlay-white-a3: oklch(1 0 0 / 0.149); /* 15% opacity */
-  --rs-color-overlay-white-a4: oklch(1 0 0 / 0.2); /* 20% opacity */
-  --rs-color-overlay-white-a5: oklch(1 0 0 / 0.302); /* 30% opacity */
-  --rs-color-overlay-white-a6: oklch(1 0 0 / 0.4); /* 40% opacity */
-  --rs-color-overlay-white-a7: oklch(1 0 0 / 0.502); /* 50% opacity */
-  --rs-color-overlay-white-a8: oklch(1 0 0 / 0.6); /* 60% opacity */
-  --rs-color-overlay-white-a9: oklch(1 0 0 / 0.702); /* 70% opacity */
-  --rs-color-overlay-white-a10: oklch(1 0 0 / 0.8); /* 80% opacity */
-  --rs-color-overlay-white-a11: oklch(1 0 0 / 0.902); /* 90% opacity */
-  --rs-color-overlay-white-a12: oklch(1 0 0 / 0.949); /* 95% opacity */
+  --rs-color-overlay-white-a1: oklch(1 0 0 / 0.05);
+  --rs-color-overlay-white-a2: oklch(1 0 0 / 0.1);
+  --rs-color-overlay-white-a3: oklch(1 0 0 / 0.15);
+  --rs-color-overlay-white-a4: oklch(1 0 0 / 0.2);
+  --rs-color-overlay-white-a5: oklch(1 0 0 / 0.3);
+  --rs-color-overlay-white-a6: oklch(1 0 0 / 0.4);
+  --rs-color-overlay-white-a7: oklch(1 0 0 / 0.5);
+  --rs-color-overlay-white-a8: oklch(1 0 0 / 0.6);
+  --rs-color-overlay-white-a9: oklch(1 0 0 / 0.7);
+  --rs-color-overlay-white-a10: oklch(1 0 0 / 0.8);
+  --rs-color-overlay-white-a11: oklch(1 0 0 / 0.9);
+  --rs-color-overlay-white-a12: oklch(1 0 0 / 0.95);
 
   /* Additional Background Colors */
   --rs-color-background-neutral-primary: var(--rs-neutral-3);
@@ -108,7 +120,7 @@
   --rs-color-foreground-danger-emphasis: var(--rs-danger-contrast);
   --rs-color-foreground-attention-emphasis: var(--rs-attention-contrast);
   --rs-color-foreground-success-emphasis: var(--rs-success-contrast);
-  
+
   /* Visualization Colors */
   /* Sky */
   --rs-color-viz-sky-11: var(--rs-viz-sky-11);

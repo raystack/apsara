@@ -4,9 +4,9 @@ description: Displays temporary notification messages using Base UI Toast primit
 source: packages/raystack/components/toast
 ---
 
-import { preview, basicDemo, typesDemo, descriptionDemo, actionDemo, promiseDemo, positionDemo, updateDemo } from "./demo.ts";
+import { playground, basicDemo, typesDemo, descriptionDemo, leadingIconDemo, actionDemo, promiseDemo, positionDemo, updateDemo, hookDemo } from "./demo.ts";
 
-<Demo data={preview} />
+<Demo data={playground} />
 
 ## Anatomy
 
@@ -38,14 +38,55 @@ Creates a new toast and returns its unique ID. The `toastManager` can be importe
 
 <auto-type-table path="./props.ts" name="ToastManagerAddOptions" />
 
-### toastManager methods
+### createToastManager()
 
-| Method | Signature | Description |
-|--------|-----------|-------------|
-| `add` | `(options) => string` | Create a toast, returns its ID |
-| `close` | `(id: string) => void` | Close a specific toast by ID |
-| `update` | `(id: string, options) => void` | Update an existing toast's properties |
-| `promise` | `(promise, { loading, success, error }) => Promise` | Create a toast that tracks a promise lifecycle |
+Factory that returns a fresh toast manager. The exported singleton `toastManager` is one such instance created at module load. Pass a custom manager to `<Toast.Provider toastManager={...}>` to scope toasts to that provider.
+
+```tsx
+import { Toast, createToastManager } from '@raystack/apsara'
+
+const manager = createToastManager()
+
+<Toast.Provider toastManager={manager}>
+  <App />
+</Toast.Provider>
+```
+
+The returned object exposes the four manager methods:
+
+<auto-type-table path="./props.ts" name="CreateToastManagerReturn" />
+
+#### Update options
+
+The `update(id, options)` method accepts a partial of the toast — every field optional, used to patch an existing toast in place.
+
+<auto-type-table path="./props.ts" name="ToastManagerUpdateOptions" />
+
+#### Promise options
+
+The `promise(promise, options)` method drives a toast through the resolve/reject lifecycle of a Promise.
+
+<auto-type-table path="./props.ts" name="ToastManagerPromiseOptions" />
+
+### useToastManager()
+
+Hook for dispatching toasts from inside a component tree wrapped by `<Toast.Provider>`. Returns the same methods as `createToastManager()` — including first-class `leadingIcon` support — plus a reactive `toasts` array reflecting the currently-displayed toasts.
+
+```tsx
+import { useToastManager } from '@raystack/apsara'
+```
+
+The hook is exported as a top-level named export (not as `Toast.useToastManager`) so React's rules-of-hooks linting recognizes it correctly.
+
+<auto-type-table path="./props.ts" name="UseToastManagerReturn" />
+
+#### Toast object
+
+Each entry in `toasts` is a snapshot of a currently-mounted toast.
+
+<auto-type-table path="./props.ts" name="ToastObject" />
+
+Prefer the singleton `toastManager` when triggering toasts from non-React code (interceptors, utility functions, event handlers outside the provider). Use `useToastManager()` inside components when you need access to the live `toasts` array, or want the dispatch call colocated with the rest of the component's logic.
 
 ## Examples
 
@@ -55,13 +96,19 @@ Creates a new toast and returns its unique ID. The `toastManager` can be importe
 
 ### Type Variants
 
-Use the `type` prop to change the visual styling of the toast.
+Use the `type` prop to drive the leading icon color (e.g. green for success, red for error). The toast container itself stays visually neutral regardless of type.
 
 <Demo data={typesDemo} />
 
 ### With Title and Description
 
 <Demo data={descriptionDemo} />
+
+### With Leading Icon
+
+Each toast `type` ships with a sensible default icon. Pass `leadingIcon` to override it with any React node, or pass `leadingIcon: null` to render no icon at all.
+
+<Demo data={leadingIconDemo} />
 
 ### With Action Button
 
@@ -86,6 +133,12 @@ Control where toasts appear on screen with the `position` prop on `Toast.Provide
 Create a toast, then update or close it programmatically using the returned ID.
 
 <Demo data={updateDemo} />
+
+### Dispatching from a Component (Hook)
+
+Use `useToastManager()` inside a component to dispatch toasts and/or read the reactive list of active toasts. The component must be a descendant of `<Toast.Provider>`.
+
+<Demo data={hookDemo} />
 
 ## Accessibility
 
