@@ -54,8 +54,8 @@ const Theme = ({
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)
   );
-  const [resolvedTheme, setResolvedTheme] = useState(() =>
-    getTheme(storageKey)
+  const [resolvedTheme, setResolvedTheme] = useState<string | undefined>(
+    undefined
   );
   const attrs = !value ? themes : Object.values(value);
 
