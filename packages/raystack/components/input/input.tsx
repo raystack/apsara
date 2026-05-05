@@ -35,6 +35,7 @@ export interface InputProps
   maxChipsVisible?: number;
   variant?: 'default' | 'borderless';
   containerRef?: RefObject<HTMLDivElement | null>;
+  classNames?: { container?: string };
 }
 
 export function Input({
@@ -51,6 +52,7 @@ export function Input({
   size,
   variant = 'default',
   containerRef,
+  classNames,
   required,
   ...props
 }: InputProps) {
@@ -61,7 +63,8 @@ export function Input({
     <div
       className={cx(
         inputWrapper({ size, variant }),
-        chips?.length && styles['has-chips']
+        chips?.length && styles['has-chips'],
+        classNames?.container
       )}
       data-disabled={disabled || undefined}
       style={{ width: width || '100%' }}
