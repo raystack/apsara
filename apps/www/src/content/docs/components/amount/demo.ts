@@ -4,7 +4,6 @@ import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
 export const getCode = (props: ComponentPropsType) => {
-  console.log('props:', props);
   return `<Amount${getPropsString(props)}/>`;
 };
 

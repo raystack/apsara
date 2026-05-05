@@ -36,7 +36,7 @@ export interface FilterChipProps
   extends ComponentProps<'div'>,
     VariantProps<typeof chip> {
   label: string;
-  value?: string;
+  value?: string | string[] | number | Date;
   onRemove?: () => void;
   columnType?: FilterTypes;
   options?: FilterSelectOption[];

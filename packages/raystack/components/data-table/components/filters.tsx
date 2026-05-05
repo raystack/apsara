@@ -137,8 +137,7 @@ export function Filters<TData, TValue>({
             <FilterChip
               key={filter.name}
               label={filter.label}
-              // TODO: FilterChip.value is typed `string`, but filter.value can be string[] (multiselect) or Date at runtime. Widen FilterChip's prop and remove this cast.
-              value={filter.value as string}
+              value={filter.value as string | string[] | number | Date}
               onRemove={() => handleRemoveFilter(filter.name)}
               onValueChange={value =>
                 handleFilterValueChange(filter.name, value)

@@ -1,12 +1,12 @@
 export interface RadioGroupProps {
   /** The value of the radio item that should be checked by default. */
-  defaultValue?: unknown;
+  defaultValue?: string;
 
   /** The controlled value of the radio item that is checked. */
-  value?: unknown;
+  value?: string;
 
   /** Event handler called when the value changes. */
-  onValueChange?: (value: unknown, event: Event) => void;
+  onValueChange?: (value: string, event: Event) => void;
 
   /** When true, prevents user interaction with the radio group. */
   disabled?: boolean;
@@ -42,7 +42,7 @@ export interface RadioGroupProps {
 
 export interface RadioProps {
   /** The unique value of the radio item. */
-  value: unknown;
+  value: string;
 
   /** When true, prevents user interaction with this radio item. */
   disabled?: boolean;

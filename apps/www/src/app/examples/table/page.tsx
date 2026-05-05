@@ -124,7 +124,9 @@ const Page = () => {
       }
       if (shouldShow && filters.includes('status')) {
         shouldShow = (
-          tableQuery?.filters?.[filters.indexOf('status')]?.value as string[]
+          (tableQuery?.filters?.[filters.indexOf('status')]?.value as
+            | string[]
+            | undefined) ?? []
         ).includes(item.status);
       }
       return shouldShow;
