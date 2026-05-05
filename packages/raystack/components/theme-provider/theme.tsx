@@ -178,7 +178,8 @@ const Theme = ({
     applyTheme(forcedTheme ?? theme);
 
     if (!theme) return;
-    const resolved = theme === 'system' ? resolvedTheme : theme;
+    const resolved =
+      forcedTheme ?? (theme === 'system' ? resolvedTheme : theme);
     if (!resolved) return;
 
     if (
