@@ -8,6 +8,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 
@@ -47,13 +48,14 @@ const Theme = ({
   nonce,
   style = 'modern',
   accentColor = 'indigo',
-  grayColor = 'gray'
+  grayColor = 'gray',
+  onThemeChange
 }: ThemeProviderProps) => {
   const [theme, setThemeState] = useState(() =>
     getTheme(storageKey, defaultTheme)
   );
-  const [resolvedTheme, setResolvedTheme] = useState(() =>
-    getTheme(storageKey)
+  const [resolvedTheme, setResolvedTheme] = useState<string | undefined>(
+    undefined
   );
   const attrs = !value ? themes : Object.values(value);
 
@@ -124,7 +126,7 @@ const Theme = ({
         // Unsupported
       }
     },
-    [forcedTheme]
+    [storageKey]
   );
 
   const handleMediaQuery = useCallback(
@@ -136,7 +138,7 @@ const Theme = ({
         applyTheme('system');
       }
     },
-    [theme, forcedTheme]
+    [theme, forcedTheme, enableSystem, applyTheme]
   );
 
   // Always listen to System preference
@@ -165,18 +167,41 @@ const Theme = ({
     return () => window.removeEventListener('storage', handleStorage);
   }, [setTheme]);
 
-  // Whenever theme or forcedTheme changes, apply it
+  // Ref-held callback so consumer render churn doesn't drive effect cadence.
+  const onThemeChangeRef = useRef(onThemeChange);
+  onThemeChangeRef.current = onThemeChange;
+  const lastRef = useRef<{ theme: string; resolved: string } | undefined>(
+    undefined
+  );
+
+  // Apply on theme/forcedTheme change, then notify on real changes.
   useEffect(() => {
-    // @ts-ignore
-    applyTheme(forcedTheme ?? theme);
-  }, [forcedTheme, theme]);
+    const target = forcedTheme ?? theme;
+    if (target) applyTheme(target);
+
+    if (!theme) return;
+    const resolved =
+      forcedTheme ?? (theme === 'system' ? resolvedTheme : theme);
+    if (!resolved) return;
+
+    const prev = lastRef.current;
+    lastRef.current = { theme, resolved };
+
+    if (
+      prev !== undefined &&
+      (prev.theme !== theme || prev.resolved !== resolved)
+    ) {
+      onThemeChangeRef.current?.(theme, resolved);
+    }
+  }, [forcedTheme, theme, resolvedTheme, applyTheme]);
 
   const providerValue = useMemo(
     () => ({
       theme,
       setTheme,
       forcedTheme,
-      resolvedTheme: theme === 'system' ? resolvedTheme : theme,
+      resolvedTheme:
+        forcedTheme ?? (theme === 'system' ? resolvedTheme : theme),
       themes: enableSystem ? [...themes, 'system'] : themes,
       systemTheme: (enableSystem ? resolvedTheme : undefined) as
         | 'light'
@@ -277,7 +302,7 @@ const ThemeScript = memo(
       setColorScheme = true
     ) => {
       const resolvedName = value ? value[name] : name;
-      const val = literal ? name + `|| ''` : `'${resolvedName}'`;
+      const val = literal ? name : `'${resolvedName}'`;
       let text = '';
 
       // MUCH faster to set colorScheme alongside HTML attribute/class
@@ -293,13 +318,17 @@ const ThemeScript = memo(
       }
 
       if (attribute === 'class') {
-        if (literal || resolvedName) {
+        if (literal) {
+          text += `if(${val})c.add(${val})`;
+        } else if (resolvedName) {
           text += `c.add(${val})`;
         } else {
           text += `null`;
         }
       } else {
-        if (resolvedName) {
+        if (literal) {
+          text += `if(${val})d[s](n,${val})`;
+        } else if (resolvedName) {
           text += `d[s](n,${val})`;
         }
       }
