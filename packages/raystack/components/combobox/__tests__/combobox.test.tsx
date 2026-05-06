@@ -184,6 +184,52 @@ describe('Combobox', () => {
 
       expect(screen.getByRole('listbox')).toBeInTheDocument();
     });
+
+    it('hides placeholder once an item is selected in multi-select mode', async () => {
+      const user = userEvent.setup();
+      render(<BasicCombobox multiple />);
+
+      const input = screen.getByRole('combobox');
+      expect(input).toHaveAttribute('placeholder', PLACEHOLDER_TEXT);
+
+      await user.click(input);
+
+      const bananaOption = await screen.findByText('Banana');
+      await clickOption(bananaOption);
+
+      await waitFor(() => {
+        expect(input).not.toHaveAttribute('placeholder');
+      });
+    });
+
+    it('keeps placeholder in single-select mode even after selection', async () => {
+      const user = userEvent.setup();
+      render(<BasicCombobox />);
+
+      const input = screen.getByRole('combobox');
+      await user.click(input);
+
+      const bananaOption = await screen.findByText('Banana');
+      await clickOption(bananaOption);
+
+      expect(input).toHaveAttribute('placeholder', PLACEHOLDER_TEXT);
+    });
+
+    it('restores placeholder when all selected items are removed in multi-select mode', async () => {
+      const user = userEvent.setup();
+      render(<BasicCombobox multiple defaultValue={['banana']} />);
+
+      const input = screen.getByRole('combobox');
+      expect(input).not.toHaveAttribute('placeholder');
+
+      await user.click(input);
+      const bananaOption = await screen.findByText('Banana');
+      await clickOption(bananaOption);
+
+      await waitFor(() => {
+        expect(input).toHaveAttribute('placeholder', PLACEHOLDER_TEXT);
+      });
+    });
   });
 
   describe('Keyboard Navigation', () => {

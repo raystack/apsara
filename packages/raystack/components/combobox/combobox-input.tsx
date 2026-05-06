@@ -13,9 +13,14 @@ export interface ComboboxInputProps
     'trailingIcon' | 'suffix' | 'chips' | 'maxChipsVisible'
   > {}
 
-export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
+export const ComboboxInput = ({
+  ref,
+  placeholder,
+  ...props
+}: ComboboxInputProps) => {
   const { multiple, inputContainerRef, value, onValueChange } =
     useComboboxContext();
+  const hasSelectedChips = multiple && Array.isArray(value) && value.length > 0;
   return (
     <ComboboxPrimitive.Input
       ref={ref}
@@ -31,6 +36,7 @@ export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
                 }))
               : undefined
           }
+          placeholder={hasSelectedChips ? undefined : placeholder}
           trailingIcon={<ChevronDownIcon className={styles.triggerIcon} />}
           {...props}
         />
