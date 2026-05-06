@@ -22,7 +22,7 @@ const BasicAlertDialog = ({
 }) => (
   <AlertDialog open={open} onOpenChange={onOpenChange} {...props}>
     <AlertDialog.Trigger>{TRIGGER_TEXT}</AlertDialog.Trigger>
-    <AlertDialog.Content>
+    <AlertDialog.Content showCloseButton>
       <AlertDialog.Header>
         <AlertDialog.Title>{ALERT_TITLE}</AlertDialog.Title>
       </AlertDialog.Header>
