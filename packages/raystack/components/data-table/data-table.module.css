@@ -186,7 +186,10 @@
   align-items: center;
   background: var(--rs-color-background-base-secondary);
   font-weight: var(--rs-font-weight-medium);
-  padding: var(--rs-space-3);
+  padding: 0 var(--rs-space-3);
+  height: var(--rs-space-10);
+  margin-bottom: calc(-1 * var(--rs-space-10));
+  box-sizing: border-box;
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
   box-shadow: 0 1px 0 0 var(--rs-color-border-base-primary);
 }
@@ -202,7 +205,7 @@
 /* Non-virtualized: sticky section header under table header */
 .stickySectionHeader {
   position: sticky;
-  top: var(--rs-space-10);
+  top: var(--rs-space-8);
   z-index: 1;
   background: var(--rs-color-background-base-secondary);
   box-shadow: 0 1px 0 0 var(--rs-color-border-base-primary);
