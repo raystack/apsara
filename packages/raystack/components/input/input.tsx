@@ -102,7 +102,7 @@ export function Input({
             suffix && styles['has-suffix'],
             className
           )}
-          placeholder={placeholder}
+          placeholder={chips?.length ? undefined : placeholder}
           disabled={disabled}
           required={resolvedRequired}
           {...props}
