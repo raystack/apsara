@@ -18,7 +18,7 @@ const tabsRoot = cva(styles.root, {
   },
   defaultVariants: {
     variant: 'segmented',
-    size: 'large'
+    size: 'medium'
   }
 });
 
