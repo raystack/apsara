@@ -53,8 +53,18 @@ export const composedDemo = {
 
 export const formatDemo = {
   type: 'code',
-  code: `<NumberField
-  defaultValue={1000}
-  format={{ style: 'currency', currency: 'USD' }}
-/>`
+  tabs: [
+    {
+      name: 'System locale (default)',
+      code: `<NumberField defaultValue={1000} format={{ style: 'currency', currency: 'USD' }} />`
+    },
+    {
+      name: 'Pinned to en-US',
+      code: `<NumberField defaultValue={1000} locale="en-US" format={{ style: 'currency', currency: 'USD' }} />`
+    },
+    {
+      name: 'Pinned to de-DE',
+      code: `<NumberField defaultValue={1000} locale="de-DE" format={{ style: 'currency', currency: 'EUR' }} />`
+    }
+  ]
 };

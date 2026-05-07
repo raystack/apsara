@@ -41,6 +41,15 @@ export interface NumberFieldProps {
    */
   required?: boolean;
 
+  /**
+   * BCP 47 locale tag (or array). Controls separators, grouping, and currency
+   * symbol placement when used with `format`. Defaults to the user's runtime locale,
+   * which means rendered output varies by browser. Pass an explicit value when
+   * deterministic formatting is required.
+   * @defaultValue runtime locale
+   */
+  locale?: Intl.LocalesArgument;
+
   /** Number formatting options (Intl.NumberFormatOptions). */
   format?: Intl.NumberFormatOptions;
 
