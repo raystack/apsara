@@ -78,3 +78,8 @@
 .scrollbar-scroll {
   opacity: 0;
 }
+
+.scrollbar[data-orientation="vertical"]:not([data-has-overflow-y]),
+.scrollbar[data-orientation="horizontal"]:not([data-has-overflow-x]) {
+  display: none;
+}
