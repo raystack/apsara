@@ -439,18 +439,18 @@ const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
     enableSorting: true
   },
   { accessorKey: 'joined', header: 'Joined', enableSorting: true },
-  { accessorKey: 'name', id: 'name_2', header: 'Name (2)' },
-  { accessorKey: 'email', id: 'email_2', header: 'Email (2)' },
-  { accessorKey: 'role', id: 'role_2', header: 'Role (2)' },
-  { accessorKey: 'department', id: 'dept_2', header: 'Department (2)' },
-  { accessorKey: 'team', id: 'team_2', header: 'Team (2)' },
-  { accessorKey: 'location', id: 'loc_2', header: 'Location (2)' },
-  { accessorKey: 'phone', id: 'phone_2', header: 'Phone (2)' },
-  { accessorKey: 'status', id: 'status_2', header: 'Status (2)' },
-  { accessorKey: 'joined', id: 'joined_2', header: 'Joined (2)' },
-  { accessorKey: 'name', id: 'name_3', header: 'Name (3)' },
-  { accessorKey: 'email', id: 'email_3', header: 'Email (3)' },
-  { accessorKey: 'role', id: 'role_3', header: 'Role (3)' }
+  { accessorKey: 'name', id: 'name_2', header: 'Name' },
+  { accessorKey: 'email', id: 'email_2', header: 'Email' },
+  { accessorKey: 'role', id: 'role_2', header: 'Role' },
+  { accessorKey: 'department', id: 'dept_2', header: 'Department' },
+  { accessorKey: 'team', id: 'team_2', header: 'Team' },
+  { accessorKey: 'location', id: 'loc_2', header: 'Location' },
+  { accessorKey: 'phone', id: 'phone_2', header: 'Phone' },
+  { accessorKey: 'status', id: 'status_2', header: 'Status' },
+  { accessorKey: 'joined', id: 'joined_2', header: 'Joined' },
+  { accessorKey: 'name', id: 'name_3', header: 'Name' },
+  { accessorKey: 'email', id: 'email_3', header: 'Email' },
+  { accessorKey: 'role', id: 'role_3', header: 'Role' }
 ];
 
 const Page = () => {
