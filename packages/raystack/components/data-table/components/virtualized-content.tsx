@@ -65,13 +65,12 @@ function VirtualHeaders<TData>({
 
 function VirtualGroupHeader<TData>({
   data,
-  style
+  ...rest
 }: {
   data: GroupedData<TData>;
-  style?: React.CSSProperties;
-}) {
+} & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div role='row' className={styles.virtualSectionHeader} style={style}>
+    <div role='row' className={styles.virtualSectionHeader} {...rest}>
       <Flex gap={3} align='center'>
         {data?.label}
         {data.showGroupCount ? (
@@ -117,6 +116,7 @@ function VirtualRows<TData>({
         <VirtualGroupHeader
           key={rowKey}
           data={row.original as GroupedData<unknown>}
+          aria-hidden={isHidden ? 'true' : undefined}
           style={
             isHidden
               ? { ...positionStyle, visibility: 'hidden' }
@@ -341,7 +341,7 @@ export function VirtualizedContent({
         </div>
         {stickyGroupHeader && isGrouped && stickyGroup && (
           <div
-            role='row'
+            aria-hidden='true'
             className={styles.stickyGroupAnchor}
             style={{
               top: headerHeight,
