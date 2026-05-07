@@ -54,7 +54,7 @@
   flex: 1;
   overflow-y: auto;
   width: 100%;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-6);
   align-items: flex-start;
 }
 
@@ -235,7 +235,6 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  margin-top: var(--rs-space-3);
 }
 
 .root[data-closed] .nav-group {
@@ -247,11 +246,9 @@
   height: var(--rs-space-7);
   padding: var(--rs-space-2) var(--rs-space-3);
   margin-bottom: var(--rs-space-1);
-  justify-content: space-between;
   align-items: center;
   align-self: stretch;
   color: var(--rs-color-foreground-base-secondary);
-  margin-top: var(--rs-space-4);
   border-radius: var(--rs-radius-2);
 }
 
@@ -265,10 +262,6 @@
 
 .nav-group-accordion-item .nav-group-header {
   padding: 0;
-}
-
-.nav-group-header:first-child {
-  margin-top: 0;
 }
 
 .nav-group-label {

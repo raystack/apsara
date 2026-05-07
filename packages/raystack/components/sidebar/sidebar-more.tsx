@@ -63,7 +63,10 @@ export function SidebarMore({
       {isCollapsed && !hideCollapsedItemTooltip ? (
         <Tooltip>
           <Tooltip.Trigger render={<Menu.Trigger render={triggerContent} />} />
-          <Tooltip.Content side={position === 'left' ? 'right' : 'left'}>
+          <Tooltip.Content
+            side={position === 'left' ? 'right' : 'left'}
+            sideOffset={16}
+          >
             {label}
           </Tooltip.Content>
         </Tooltip>

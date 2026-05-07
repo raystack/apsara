@@ -9,6 +9,7 @@ import {
   positionDemo,
   variantDemo,
   collapsibleGroupDemo,
+  groupIconDemo,
   stateDemo,
   tooltipDemo,
   collapsibleDemo,
@@ -122,6 +123,12 @@ Set `collapsible={false}` to hide the resize handle and prevent the sidebar from
 Set `hideCollapsedItemTooltip` to disable tooltips on navigation items when the sidebar is collapsed. Useful when item labels are redundant with the collapse tooltip or you want a cleaner collapsed state.
 
 <Demo data={hideTooltipDemo} />
+
+### Group with icon
+
+Pass `leadingIcon` to `Sidebar.Group` to render an icon next to the section label.
+
+<Demo data={groupIconDemo} />
 
 ### Collapsible Group
 
