@@ -227,9 +227,9 @@
 /* Non-virtualized: sticky section header under table header */
 .contentRoot .stickySectionHeader {
   position: sticky;
-  top: calc(var(--rs-space-8) + 0.5px);
+  top: calc(var(--rs-space-9) + 0.5px);
   z-index: 1;
-  height: var(--rs-space-8);
+  height: var(--rs-space-9);
   padding: var(--rs-space-3);
   box-sizing: border-box;
   background: var(--rs-color-background-base-secondary);
