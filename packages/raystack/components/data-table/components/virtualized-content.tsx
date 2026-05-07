@@ -19,6 +19,7 @@ import {
   VirtualizedContentProps
 } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
+import { useStickyGroupAnchor } from '../hooks/useStickyGroupAnchor';
 import { hasActiveQuery } from '../utils';
 
 function VirtualHeaders<TData>({
@@ -85,16 +86,18 @@ function VirtualRows<TData>({
   rows,
   virtualizer,
   onRowClick,
-  classNames
+  classNames,
+  hiddenGroupIndex
 }: {
   rows: Row<TData>[];
   virtualizer: ReturnType<typeof useVirtualizer>;
   onRowClick?: (row: TData) => void;
   classNames?: { row?: string };
+  hiddenGroupIndex?: number | null;
 }) {
   const items = virtualizer.getVirtualItems();
 
-  return items.map((item, idx) => {
+  return items.map(item => {
     const row = rows[item.index];
     if (!row) return null;
 
@@ -109,11 +112,16 @@ function VirtualRows<TData>({
     };
 
     if (isGroupHeader) {
+      const isHidden = item.index === hiddenGroupIndex;
       return (
         <VirtualGroupHeader
           key={rowKey}
           data={row.original as GroupedData<unknown>}
-          style={positionStyle}
+          style={
+            isHidden
+              ? { ...positionStyle, visibility: 'hidden' }
+              : positionStyle
+          }
         />
       );
     }
@@ -209,7 +217,7 @@ const DefaultEmptyComponent = () => (
 
 export function VirtualizedContent({
   rowHeight = 40,
-  groupHeaderHeight,
+  groupHeaderHeight = 32,
   overscan = 5,
   loadMoreOffset = 100,
   emptyState,
@@ -233,9 +241,6 @@ export function VirtualizedContent({
 
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
-  const [stickyGroup, setStickyGroup] = useState<GroupedData<unknown> | null>(
-    null
-  );
   const [headerHeight, setHeaderHeight] = useState(40);
 
   const groupBy = tableQuery?.group_by?.[0];
@@ -259,28 +264,28 @@ export function VirtualizedContent({
     estimateSize: index => {
       const row = rows[index];
       const isGroupHeader = row?.subRows && row.subRows.length > 0;
-      return isGroupHeader ? (groupHeaderHeight ?? rowHeight) : rowHeight;
+      return isGroupHeader ? groupHeaderHeight : rowHeight;
     },
     overscan
   });
 
-  const updateStickyGroup = useCallback(() => {
-    if (!stickyGroupHeader || !isGrouped || groupHeaderList.length === 0) {
-      setStickyGroup(null);
-      return;
-    }
-    const items = virtualizer.getVirtualItems();
-    const firstIndex = items[0]?.index ?? 0;
-    const current = groupHeaderList
-      .filter(g => g.index <= firstIndex)
-      .pop()?.data;
-    setStickyGroup(current ?? null);
-  }, [stickyGroupHeader, isGrouped, groupHeaderList, virtualizer]);
+  const anchorPixelHeight = groupHeaderHeight;
+
+  const {
+    stickyGroup,
+    stickyGroupIndex,
+    recompute: recomputeStickyGroup
+  } = useStickyGroupAnchor<unknown>({
+    enabled: stickyGroupHeader && isGrouped,
+    groupHeaderList,
+    virtualizer,
+    scrollContainerRef
+  });
 
   const handleVirtualScroll = useCallback(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
-    if (stickyGroupHeader) updateStickyGroup();
+    if (stickyGroupHeader) recomputeStickyGroup();
     if (isLoading) return;
     const { scrollTop, scrollHeight, clientHeight } = el;
     if (scrollHeight - scrollTop - clientHeight < loadMoreOffset) {
@@ -291,7 +296,7 @@ export function VirtualizedContent({
     isLoading,
     loadMoreData,
     loadMoreOffset,
-    updateStickyGroup
+    recomputeStickyGroup
   ]);
 
   const totalHeight = virtualizer.getTotalSize();
@@ -301,10 +306,6 @@ export function VirtualizedContent({
       setHeaderHeight(headerRef.current.getBoundingClientRect().height);
     }
   }, [headerGroups]);
-
-  useLayoutEffect(() => {
-    if (stickyGroupHeader) updateStickyGroup();
-  }, [stickyGroupHeader, updateStickyGroup, groupHeaderList, isGrouped]);
 
   const hasData = rows?.length > 0 || isLoading;
 
@@ -342,7 +343,11 @@ export function VirtualizedContent({
           <div
             role='row'
             className={styles.stickyGroupAnchor}
-            style={{ top: headerHeight }}
+            style={{
+              top: headerHeight,
+              height: anchorPixelHeight,
+              marginBottom: -anchorPixelHeight
+            }}
           >
             <Flex gap={3} align='center'>
               {stickyGroup.label}
@@ -364,6 +369,7 @@ export function VirtualizedContent({
             classNames={{
               row: classNames.row
             }}
+            hiddenGroupIndex={stickyGroupIndex}
           />
         </div>
       </div>
