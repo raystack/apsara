@@ -1,6 +1,5 @@
 .toolbar {
-  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3)
-    var(--rs-space-5);
+  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3) var(--rs-space-5);
   align-self: stretch;
 
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
@@ -227,7 +226,7 @@
 /* Non-virtualized: sticky section header under table header */
 .contentRoot .stickySectionHeader {
   position: sticky;
-  top: calc(var(--rs-space-9) + 0.5px);
+  top: var(--rs-space-9);
   z-index: 1;
   height: var(--rs-space-9);
   padding: var(--rs-space-3);
