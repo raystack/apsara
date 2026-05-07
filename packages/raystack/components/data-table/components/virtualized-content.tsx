@@ -332,11 +332,11 @@ export function VirtualizedContent({
       onScroll={handleVirtualScroll}
     >
       <div role='table' className={cx(styles.virtualTable, classNames.table)}>
-        <div ref={headerRef}>
-          <VirtualHeaders
-            headerGroups={headerGroups}
-            className={cx(styles.stickyHeader, classNames.header)}
-          />
+        <div
+          ref={headerRef}
+          className={cx(styles.stickyHeader, classNames.header)}
+        >
+          <VirtualHeaders headerGroups={headerGroups} />
         </div>
         {stickyGroupHeader && isGrouped && stickyGroup && (
           <div
