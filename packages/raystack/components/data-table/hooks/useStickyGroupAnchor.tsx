@@ -49,9 +49,12 @@ export function useStickyGroupAnchor<TData>({
 
     let currentIdx = -1;
     for (let i = 0; i < groupHeaderList.length; i++) {
-      const m = virtualizer.measurementsCache[groupHeaderList[i].index];
-      if (!m) continue;
-      if (m.start <= scrollTop) {
+      const start = virtualizer.getOffsetForIndex(
+        groupHeaderList[i].index,
+        'start'
+      )?.[0];
+      if (start === undefined) continue;
+      if (start <= scrollTop) {
         currentIdx = i;
       } else {
         break;
