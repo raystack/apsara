@@ -10,7 +10,6 @@ import {
   DataView,
   type DataViewField,
   type DataViewListColumn,
-  type DataViewTableColumn,
   EmptyState,
   Flex,
   getAvatarColor,
@@ -18,11 +17,9 @@ import {
   Indicator,
   Navbar,
   Sidebar,
-  Tabs,
   Text
 } from '@raystack/apsara';
 import { BellIcon, FilterIcon, SidebarIcon } from '@raystack/apsara/icons';
-import { useState } from 'react';
 
 type ProfileCell = { row: { original: Profile } };
 
@@ -214,7 +211,7 @@ const STATUS_COLOR: Record<
   Offline: 'neutral'
 };
 
-// Cell renderers shared between Table and List renderers.
+// Cell renderers shared between Table and List variants of DataView.List.
 const renderNameCell = ({ row }: ProfileCell) => (
   <Flex align='center' gap={3} style={{ minWidth: 0 }}>
     <Avatar
@@ -292,7 +289,7 @@ const renderUpdatedAtCell = ({ row }: ProfileCell) => (
 );
 
 // Renderer-agnostic metadata — drives filters, sort, group, visibility across
-// every renderer (Table, List, Timeline, …).
+// every renderer (List variants, Custom, …). Declared once on root.
 const fields: DataViewField<Profile>[] = [
   {
     accessorKey: 'name',
@@ -366,47 +363,38 @@ const fields: DataViewField<Profile>[] = [
   }
 ];
 
-// Table renderer spec — pairs a cell renderer to each field that should
-// appear as a table column.
-const tableColumns: DataViewTableColumn<Profile>[] = [
-  { accessorKey: 'name', cell: renderNameCell },
-  { accessorKey: 'subheading', cell: renderEmailCell },
-  { accessorKey: 'role', cell: renderRoleCell },
-  { accessorKey: 'label', cell: renderLabelCell },
-  { accessorKey: 'team', cell: renderTeamCell },
-  { accessorKey: 'status', cell: renderStatusCell },
-  { accessorKey: 'collaborators', cell: renderCollaboratorsCell },
-  { accessorKey: 'updatedAt', cell: renderUpdatedAtCell }
-];
-
-// List renderer spec — composes Name+Email into a single cell and omits
-// fields it doesn't show. Each column gets its own grid track width.
-const listColumns: DataViewListColumn<Profile>[] = [
+// Table presentation of DataView.List — all fields surfaced as columns.
+const tableColumns: DataViewListColumn<Profile>[] = [
+  { accessorKey: 'name', cell: renderNameCell, width: 'minmax(220px, 1.5fr)' },
   {
-    accessorKey: 'name',
-    cell: renderNameCell,
-    width: 'minmax(240px, 1.5fr)'
+    accessorKey: 'subheading',
+    cell: renderEmailCell,
+    width: 'minmax(200px, 1fr)'
   },
-  {
-    accessorKey: 'label',
-    cell: renderLabelCell,
-    width: 'minmax(160px, 1fr)'
-  },
-  {
-    accessorKey: 'team',
-    cell: renderTeamCell,
-    width: 'minmax(140px, 1fr)'
-  },
+  { accessorKey: 'role', cell: renderRoleCell, width: '120px' },
+  { accessorKey: 'label', cell: renderLabelCell, width: 'minmax(140px, 1fr)' },
+  { accessorKey: 'team', cell: renderTeamCell, width: 'minmax(120px, 1fr)' },
+  { accessorKey: 'status', cell: renderStatusCell, width: '120px' },
   {
     accessorKey: 'collaborators',
     cell: renderCollaboratorsCell,
     width: 'auto'
   },
+  { accessorKey: 'updatedAt', cell: renderUpdatedAtCell, width: '140px' }
+];
+
+// List presentation of DataView.List — the `1fr` middle track on Name pushes
+// trailing metadata to the right edge (justify-between effect via grid).
+const listColumns: DataViewListColumn<Profile>[] = [
+  { accessorKey: 'name', cell: renderNameCell, width: '1fr' },
+  { accessorKey: 'label', cell: renderLabelCell, width: 'auto' },
+  { accessorKey: 'team', cell: renderTeamCell, width: 'auto' },
   {
-    accessorKey: 'status',
-    cell: renderStatusCell,
-    width: '120px'
-  }
+    accessorKey: 'collaborators',
+    cell: renderCollaboratorsCell,
+    width: 'auto'
+  },
+  { accessorKey: 'status', cell: renderStatusCell, width: 'auto' }
 ];
 
 const INDICATOR_COLOR: Record<
@@ -491,11 +479,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
   );
 }
 
-type ViewMode = 'table' | 'list' | 'custom';
-
 const Page = () => {
-  const [view, setView] = useState<ViewMode>('table');
-
   return (
     <Flex
       style={{
@@ -558,87 +542,74 @@ const Page = () => {
             mode='client'
             defaultSort={{ name: 'name', order: 'asc' }}
             getRowId={(row: Profile) => row.id}
+            views={[
+              { value: 'table', label: 'Table' },
+              { value: 'list', label: 'List' },
+              { value: 'custom', label: 'Custom' }
+            ]}
+            defaultView='table'
           >
-            <Flex gap={4} direction='column'>
-              <Flex justify='between' gap={4}>
-                <DataView.Search placeholder='Search people' width={400} />
-                <Tabs
-                  value={view}
-                  onValueChange={v => setView(v as ViewMode)}
-                  size='small'
-                  style={{ width: '400px' }}
-                >
-                  <Tabs.List>
-                    <Tabs.Tab value='table'>Table View</Tabs.Tab>
-                    <Tabs.Tab value='list'>List View</Tabs.Tab>
-                    <Tabs.Tab value='custom'>Custom View</Tabs.Tab>
-                  </Tabs.List>
-                </Tabs>
-              </Flex>
-              <DataView.Toolbar />
-            </Flex>
-            {view === 'table' && (
-              <DataView.Table
-                columns={tableColumns}
-                emptyState={
-                  <EmptyState
-                    icon={<FilterIcon />}
-                    heading='No matching people'
-                    variant='empty1'
-                    subHeading='Try adjusting your filters or search.'
-                  />
-                }
+            <DataView.Search placeholder='Search people' width={300} />
+            <DataView.Toolbar>
+              <DataView.Filters />
+              <DataView.DisplayControls />
+            </DataView.Toolbar>
+
+            {/* Same renderer, two presentations — switched by the view switcher in DisplayControls */}
+            <DataView.List
+              name='table'
+              variant='table'
+              columns={tableColumns}
+            />
+            <DataView.List
+              name='list'
+              variant='list'
+              columns={listColumns}
+              rowHeight={72}
+              showDividers
+              showGroupHeaders
+            />
+
+            <DataView.Custom<Profile> name='custom'>
+              {({ table, hasData }) => {
+                if (!hasData) return null;
+                const rows = table
+                  .getRowModel()
+                  .rows.filter(r => !r.subRows?.length);
+                return (
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns:
+                        'repeat(auto-fill, minmax(320px, 1fr))',
+                      gap: '12px'
+                    }}
+                  >
+                    {rows.map(row => (
+                      <ProfileCard key={row.id} profile={row.original} />
+                    ))}
+                  </div>
+                );
+              }}
+            </DataView.Custom>
+
+            {/* Empty/zero state lifted out of renderers — single sibling reads context */}
+            <DataView.EmptyState>
+              <EmptyState
+                icon={<FilterIcon />}
+                heading='No matching people'
+                variant='empty1'
+                subHeading='Try adjusting your filters or search.'
               />
-            )}
-            {view === 'list' && (
-              <DataView.List
-                columns={listColumns}
-                rowHeight={72}
-                showDividers
-                showGroupHeaders
-                emptyState={
-                  <EmptyState
-                    icon={<FilterIcon />}
-                    heading='No matching people'
-                    variant='empty1'
-                    subHeading='Try adjusting your filters or search.'
-                  />
-                }
+            </DataView.EmptyState>
+            <DataView.ZeroState>
+              <EmptyState
+                icon={<FilterIcon />}
+                heading='No people yet'
+                variant='empty1'
+                subHeading='Add your first teammate to get started.'
               />
-            )}
-            {view === 'custom' && (
-              <DataView.Renderer<Profile>>
-                {({ table }) => {
-                  const rows = table
-                    .getRowModel()
-                    .rows.filter(r => !r.subRows?.length);
-                  if (!rows.length) {
-                    return (
-                      <EmptyState
-                        icon={<FilterIcon />}
-                        heading='No matching people'
-                        variant='empty1'
-                        subHeading='Try adjusting your filters or search.'
-                      />
-                    );
-                  }
-                  return (
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns:
-                          'repeat(auto-fill, minmax(320px, 1fr))',
-                        gap: '12px'
-                      }}
-                    >
-                      {rows.map(row => (
-                        <ProfileCard key={row.id} profile={row.original} />
-                      ))}
-                    </div>
-                  );
-                }}
-              </DataView.Renderer>
-            )}
+            </DataView.ZeroState>
           </DataView>
         </Flex>
       </Flex>

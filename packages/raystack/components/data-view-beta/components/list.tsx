@@ -1,7 +1,7 @@
 'use client';
 
-import { Cross2Icon, TableIcon } from '@radix-ui/react-icons';
-import type { Row } from '@tanstack/react-table';
+import { Cross2Icon } from '@radix-ui/react-icons';
+import type { Header, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { cx } from 'class-variance-authority';
@@ -9,7 +9,6 @@ import { CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Badge } from '../../badge';
 import { Button } from '../../button';
-import { EmptyState } from '../../empty-state';
 import { Flex } from '../../flex';
 import styles from '../data-view.module.css';
 import {
@@ -21,13 +20,8 @@ import { useDataView } from '../hooks/useDataView';
 import {
   countLeafRows,
   getClientHiddenLeafRowCount,
-  hasActiveQuery,
   hasActiveTableFiltering
 } from '../utils';
-
-const DefaultEmptyComponent = () => (
-  <EmptyState icon={<TableIcon />} heading='No Data' />
-);
 
 function formatGridWidth(width: string | number | undefined) {
   if (width === undefined) return '1fr';
@@ -36,15 +30,19 @@ function formatGridWidth(width: string | number | undefined) {
 }
 
 export function DataViewList<TData, TValue = unknown>({
+  name,
+  variant = 'list',
+  showHeaders,
+  role,
+  fields: fieldsOverride,
   columns,
-  rowHeight = 56,
+  rowHeight,
   virtualized = false,
   overscan = 8,
-  showDividers = false,
+  showDividers,
   showGroupHeaders = true,
+  stickyGroupHeader = false,
   loadMoreOffset = 100,
-  emptyState,
-  zeroState,
   classNames = {}
 }: DataViewListProps<TData, TValue>) {
   const {
@@ -54,13 +52,29 @@ export function DataViewList<TData, TValue = unknown>({
     isLoading,
     loadMoreData,
     tableQuery,
-    defaultSort,
     totalRowCount,
-    updateTableQuery
+    updateTableQuery,
+    activeView,
+    registerFieldsForView,
+    hasData
   } = useDataView<TData>();
 
-  const rowModel = table?.getRowModel();
-  const { rows = [] } = rowModel || {};
+  // Register per-view field override so the toolbar's effectiveFields reflects
+  // this renderer's metadata while it's the active view.
+  useEffect(() => {
+    if (!name || !fieldsOverride) return;
+    return registerFieldsForView(name, fieldsOverride);
+  }, [name, fieldsOverride, registerFieldsForView]);
+
+  // Multi-view gate. When `name` is set, render only when this is the active
+  // view. When `name` is unset (single-renderer mode), always render.
+  const isActive = !name || activeView === undefined || activeView === name;
+
+  const isTableVariant = variant === 'table';
+  const headersVisible = showHeaders ?? isTableVariant;
+  const ariaRole = role ?? (isTableVariant ? 'table' : 'list');
+  const dividers = showDividers ?? isTableVariant;
+  const effectiveRowHeight = rowHeight ?? (isTableVariant ? 40 : 56);
 
   const visibleLeafColumns = table.getVisibleLeafColumns();
 
@@ -70,8 +84,7 @@ export function DataViewList<TData, TValue = unknown>({
     return map;
   }, [columns]);
 
-  // Render order comes from `columns` prop; filter out any accessor whose
-  // TanStack column is currently hidden.
+  // Render order from `columns`, filtered by current TanStack visibility.
   const renderedAccessors = useMemo(() => {
     const visibleSet = new Set(visibleLeafColumns.map(c => c.id));
     return columns.map(c => c.accessorKey).filter(k => visibleSet.has(k));
@@ -82,6 +95,23 @@ export function DataViewList<TData, TValue = unknown>({
       .map(accessor => formatGridWidth(columnMap.get(accessor)?.width))
       .join(' ');
   }, [renderedAccessors, columnMap]);
+
+  const headerGroups = table?.getHeaderGroups() ?? [];
+  const lastHeaderGroup = headerGroups[headerGroups.length - 1];
+  const headersInOrder = useMemo(() => {
+    if (!lastHeaderGroup) return [] as Header<TData, TValue>[];
+    return renderedAccessors
+      .map(
+        accessor =>
+          lastHeaderGroup.headers.find(h => h.column.id === accessor) as
+            | Header<TData, TValue>
+            | undefined
+      )
+      .filter((h): h is Header<TData, TValue> => Boolean(h));
+  }, [lastHeaderGroup, renderedAccessors]);
+
+  const rowModel = table?.getRowModel();
+  const { rows = [] } = rowModel || {};
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -102,6 +132,7 @@ export function DataViewList<TData, TValue = unknown>({
 
   // Non-virtualized load-more via last-row IntersectionObserver
   useEffect(() => {
+    if (!isActive) return;
     if (mode !== 'server' || virtualized) return;
 
     if (observerRef.current) {
@@ -121,7 +152,7 @@ export function DataViewList<TData, TValue = unknown>({
       observerRef.current?.disconnect();
       observerRef.current = null;
     };
-  }, [mode, virtualized, rows.length, handleObserver]);
+  }, [isActive, mode, virtualized, rows.length, handleObserver]);
 
   const virtualizer = useVirtualizer({
     count: rows.length,
@@ -129,21 +160,10 @@ export function DataViewList<TData, TValue = unknown>({
     estimateSize: i => {
       const row = rows[i];
       const isGroupHeader = row?.subRows && row.subRows.length > 0;
-      return isGroupHeader ? 36 : rowHeight;
+      return isGroupHeader ? 36 : effectiveRowHeight;
     },
     overscan
   });
-
-  const hasData = rows.length > 0 || isLoading;
-  const hasChanges = hasActiveQuery(tableQuery || {}, defaultSort);
-  const isZeroState = !hasData && !hasChanges;
-  const isEmptyState = !hasData && hasChanges;
-
-  const stateToShow = isZeroState
-    ? (zeroState ?? emptyState ?? <DefaultEmptyComponent />)
-    : isEmptyState
-      ? (emptyState ?? <DefaultEmptyComponent />)
-      : null;
 
   const hiddenLeafRowCount =
     mode === 'client'
@@ -176,13 +196,48 @@ export function DataViewList<TData, TValue = unknown>({
     }
   }, [virtualized, isLoading, loadMoreData, loadMoreOffset]);
 
-  if (!hasData) {
+  if (!isActive) return null;
+  if (!hasData) return null;
+
+  const renderHeaderRow = () => {
+    if (!headersVisible) return null;
     return (
-      <div className={cx(styles.listRoot, classNames.root)}>
-        <div className={styles.listEmptyState}>{stateToShow}</div>
+      <div
+        role={ariaRole === 'table' ? 'rowgroup' : undefined}
+        className={cx(styles.listHeader, classNames.header)}
+      >
+        <div
+          role={ariaRole === 'table' ? 'row' : undefined}
+          className={styles.listHeaderRow}
+        >
+          {headersInOrder.map(header => {
+            const spec = columnMap.get(header.column.id);
+            const content =
+              spec?.header !== undefined
+                ? flexRender(spec.header, header.getContext())
+                : flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  );
+            return (
+              <div
+                role={ariaRole === 'table' ? 'columnheader' : undefined}
+                key={header.id}
+                className={cx(
+                  styles.listHeaderCell,
+                  spec?.classNames?.header,
+                  classNames.headerCell
+                )}
+                style={spec?.styles?.header}
+              >
+                {content}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
-  }
+  };
 
   const renderRowCells = (row: Row<TData>) =>
     renderedAccessors.map(accessor => {
@@ -191,16 +246,26 @@ export function DataViewList<TData, TValue = unknown>({
       if (!cell) {
         return (
           <div
+            role={ariaRole === 'table' ? 'cell' : undefined}
             key={accessor}
-            className={cx(styles.listCell, spec?.classNames?.cell)}
+            className={cx(
+              styles.listCell,
+              spec?.classNames?.cell,
+              classNames.cell
+            )}
             style={spec?.styles?.cell}
           />
         );
       }
       return (
         <div
+          role={ariaRole === 'table' ? 'cell' : undefined}
           key={cell.id}
-          className={cx(styles.listCell, spec?.classNames?.cell)}
+          className={cx(
+            styles.listCell,
+            spec?.classNames?.cell,
+            classNames.cell
+          )}
           style={spec?.styles?.cell}
         >
           {spec?.cell
@@ -219,7 +284,11 @@ export function DataViewList<TData, TValue = unknown>({
     return (
       <div
         key={key ?? row.id}
-        className={cx(styles.listGroupHeader, classNames.groupHeader)}
+        className={cx(
+          styles.listGroupHeader,
+          stickyGroupHeader && styles.listGroupHeaderSticky,
+          classNames.groupHeader
+        )}
         style={style}
       >
         <Flex gap={3} align='center'>
@@ -239,11 +308,12 @@ export function DataViewList<TData, TValue = unknown>({
     refCb?: (el: HTMLDivElement | null) => void
   ) => (
     <div
+      role={ariaRole === 'table' ? 'row' : 'listitem'}
       key={key ?? row.id}
       ref={refCb}
       className={cx(
         styles.listRow,
-        showDividers && styles.listRowDivider,
+        dividers && styles.listRowDivider,
         onRowClick && styles.clickable,
         classNames.row
       )}
@@ -260,9 +330,15 @@ export function DataViewList<TData, TValue = unknown>({
       className={cx(styles.listRoot, classNames.root)}
       onScroll={handleVirtualScroll}
     >
-      <div className={styles.listGrid} style={{ gridTemplateColumns }}>
+      <div
+        role={ariaRole}
+        className={styles.listGrid}
+        style={{ gridTemplateColumns }}
+      >
+        {renderHeaderRow()}
         {virtualized ? (
           <div
+            role={ariaRole === 'table' ? 'rowgroup' : undefined}
             style={{
               gridColumn: '1 / -1',
               display: 'grid',

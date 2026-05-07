@@ -95,38 +95,39 @@ export interface DataViewField<TData = any> {
 }
 
 /**
- * Table row render spec. Points at a field via `accessorKey` and adds
- * per-column cell/header renderers. Filterable/sortable/etc. live on the field,
- * not duplicated here.
- */
-export interface DataViewTableColumn<TData, TValue = unknown> {
-  accessorKey: string;
-  /** TanStack-style cell renderer. Receives `CellContext` and returns ReactNode. */
-  cell?: ColumnDef<TData, TValue>['cell'];
-  /** TanStack-style header renderer. Overrides the field's `label` for this renderer. */
-  header?: ColumnDef<TData, TValue>['header'];
-  classNames?: {
-    cell?: string;
-    header?: string;
-  };
-  styles?: {
-    cell?: React.CSSProperties;
-    header?: React.CSSProperties;
-  };
-}
-
-/**
- * List row render spec. Same data shape as Table plus a CSS grid `width` hint.
- * List has no column headers, so no `header` renderer.
+ * Unified column spec for DataView.List. Same shape used for both
+ * `variant="table"` and `variant="list"`. The `header` slot is only rendered
+ * when headers are visible (default for `variant="table"`).
  */
 export interface DataViewListColumn<TData, TValue = unknown> {
   accessorKey: string;
   /** TanStack-style cell renderer. */
   cell?: ColumnDef<TData, TValue>['cell'];
+  /** TanStack-style header renderer. Overrides the field's `label`. */
+  header?: ColumnDef<TData, TValue>['header'];
   /** CSS grid track width. `1fr`, `auto`, `'200px'`, `'minmax(80px, 1fr)'`, or a number (pixels). Defaults to `1fr`. */
   width?: string | number;
-  classNames?: { cell?: string };
-  styles?: { cell?: React.CSSProperties };
+  classNames?: { cell?: string; header?: string };
+  styles?: { cell?: React.CSSProperties; header?: React.CSSProperties };
+}
+
+/**
+ * @deprecated Use `DataViewListColumn` with `<DataView.List variant="table" />`.
+ * Kept as a type alias for backwards compatibility.
+ */
+export type DataViewTableColumn<TData, TValue = unknown> = DataViewListColumn<
+  TData,
+  TValue
+>;
+
+/**
+ * One entry in the multi-view configuration. `value` matches the `name` prop on
+ * a renderer; `label` shows in the view switcher.
+ */
+export interface ViewSpec {
+  value: string;
+  label: string;
+  icon?: React.ReactNode;
 }
 
 export interface DataViewProps<TData> {
@@ -145,6 +146,14 @@ export interface DataViewProps<TData> {
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
   /** Return a stable unique id for each row (used as React key). Use for sortable/filterable tables. */
   getRowId?: (row: TData, index: number) => string;
+  /** Multi-view configuration. When set, the toolbar's DisplayControls renders a view switcher and renderers gate themselves on the active view via their `name` prop. */
+  views?: ViewSpec[];
+  /** Default active view (uncontrolled). Should match a `views[].value`. */
+  defaultView?: string;
+  /** Active view (controlled). */
+  view?: string;
+  /** Called when the active view changes. */
+  onViewChange?: (view: string) => void;
 }
 
 export type DataViewContentClassNames = {
@@ -155,64 +164,70 @@ export type DataViewContentClassNames = {
   row?: string;
 };
 
-export type DataViewTableBaseProps<TData, TValue = unknown> = {
-  /** Table column render specs (cell/header/styles) keyed by field accessor. */
-  columns: DataViewTableColumn<TData, TValue>[];
-  emptyState?: React.ReactNode;
-  zeroState?: React.ReactNode;
-  classNames?: DataViewContentClassNames;
-  /** When true, renders with virtualized rows. */
-  virtualized?: boolean;
-  /** Height of each row in pixels. Used for virtualized mode. */
-  rowHeight?: number;
-  /** Height of group header rows in pixels. Falls back to rowHeight if not set. */
-  groupHeaderHeight?: number;
-  /** Number of rows to render outside visible area. */
-  overscan?: number;
-  /** Distance in pixels from bottom to trigger load more. */
-  loadMoreOffset?: number;
-  /** When true, group headers stick under the table header while scrolling. Default is false. */
-  stickyGroupHeader?: boolean;
-};
-
-export type DataViewTableProps<
-  TData,
-  TValue = unknown
-> = DataViewTableBaseProps<TData, TValue>;
-
 export type DataViewListClassNames = {
   root?: string;
+  header?: string;
+  headerCell?: string;
   row?: string;
   cell?: string;
   groupHeader?: string;
 };
 
 export interface DataViewListProps<TData, TValue = unknown> {
-  /** List column render specs (cell/width/styles) keyed by field accessor. */
+  /** Multi-view name. When set, the renderer gates itself on the active view. */
+  name?: string;
+  /** Visual variant. `table` renders headers and uses `role="table"`; `list` renders no headers and uses `role="list"`. Default `list`. */
+  variant?: 'table' | 'list';
+  /** Override the header row visibility. Defaults to `variant === 'table'`. */
+  showHeaders?: boolean;
+  /** Override the ARIA role applied to the renderer root. Defaults to derived from `variant`. */
+  role?: 'table' | 'list';
+  /** Optional view-scoped field override. Full replacement of root `fields` for this view's active session. */
+  fields?: DataViewField<TData>[];
+
+  /** Column render specs (cell/header/width/styles). */
   columns: DataViewListColumn<TData, TValue>[];
-  /** Row height in px. Used when virtualized. Default 56. */
+  /** Row height in px. Default 40 for `variant="table"`, 56 for `variant="list"`. */
   rowHeight?: number;
   /** When true, virtualizes rows. */
   virtualized?: boolean;
   /** Number of rows to render outside the viewport when virtualized. */
   overscan?: number;
-  /** Render thin dividers between rows. */
+  /** Render thin dividers between rows. Defaults to true for `variant="table"`. */
   showDividers?: boolean;
   /** Show group section headers when grouping is active. Default true. */
   showGroupHeaders?: boolean;
+  /** When true, group headers stick under the table header while scrolling. Default false. */
+  stickyGroupHeader?: boolean;
   /** Distance in pixels from bottom to trigger load more. */
   loadMoreOffset?: number;
-  emptyState?: React.ReactNode;
-  zeroState?: React.ReactNode;
   classNames?: DataViewListClassNames;
 }
+
+/**
+ * @deprecated Pass these to `DataView.List` with `variant="table"` instead.
+ */
+export type DataViewTableBaseProps<TData, TValue = unknown> = Omit<
+  DataViewListProps<TData, TValue>,
+  'variant'
+>;
+
+/**
+ * @deprecated Use `DataViewListProps` with `variant="table"`.
+ */
+export type DataViewTableProps<
+  TData,
+  TValue = unknown
+> = DataViewTableBaseProps<TData, TValue>;
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;
 
 export type DataViewContextType<TData> = {
   table: Table<TData>;
-  /** Renderer-agnostic field metadata — Filters/DisplayControls/every renderer reads from here. */
+  /** Effective fields for the active view (= override fields if registered, else root fields). */
   fields: DataViewField<TData>[];
+  /** Root-declared fields, unchanged by view overrides. */
+  rootFields: DataViewField<TData>[];
   isLoading?: boolean;
   loadMoreData: () => void;
   mode: DataViewMode;
@@ -224,6 +239,22 @@ export type DataViewContextType<TData> = {
   updateTableQuery: (fn: TableQueryUpdateFn) => void;
   onRowClick?: (row: TData) => void;
   shouldShowFilters?: boolean;
+
+  // multi-view
+  views?: ViewSpec[];
+  activeView?: string;
+  setActiveView: (view: string) => void;
+  /** Called by each renderer on mount to register its `fields` override for its `name`. Returns a cleanup function. */
+  registerFieldsForView: (
+    name: string,
+    fields: DataViewField<TData>[]
+  ) => () => void;
+
+  // global derived state — shared across all renderers and sibling components
+  hasData: boolean;
+  hasActiveQuery: boolean;
+  isZeroState: boolean;
+  isEmptyState: boolean;
 };
 
 export interface ColumnData {

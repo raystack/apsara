@@ -12,6 +12,7 @@ import { useDataView } from '../hooks/useDataView';
 import { DisplayProperties } from './display-properties';
 import { Grouping } from './grouping';
 import { Ordering } from './ordering';
+import { ViewSwitcher } from './view-switcher';
 
 interface DisplaySettingsProps {
   trigger?: ReactNode;
@@ -34,7 +35,8 @@ export function DisplaySettings<TData>({
     updateTableQuery,
     tableQuery,
     defaultSort,
-    onDisplaySettingsReset
+    onDisplaySettingsReset,
+    views
   } = useDataView<TData>();
 
   const sortableColumns = (fields ?? [])
@@ -75,6 +77,8 @@ export function DisplaySettings<TData>({
     onDisplaySettingsReset();
   }
 
+  const showViewSwitcher = (views?.length ?? 0) > 1;
+
   return (
     <Popover>
       <Popover.Trigger
@@ -85,6 +89,11 @@ export function DisplaySettings<TData>({
         align='end'
       >
         <Flex direction='column'>
+          {showViewSwitcher ? (
+            <Flex className={styles['display-popover-properties-container']}>
+              <ViewSwitcher />
+            </Flex>
+          ) : null}
           <Flex
             direction='column'
             className={styles['display-popover-properties-container']}

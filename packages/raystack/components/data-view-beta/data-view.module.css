@@ -211,7 +211,7 @@
   box-shadow: 0 1px 0 0 var(--rs-color-border-base-primary);
 }
 
-/* List renderer styles */
+/* List renderer styles (handles both variant="table" and variant="list") */
 .listRoot {
   width: 100%;
   height: 100%;
@@ -223,6 +223,34 @@
   display: grid;
   width: 100%;
   align-items: stretch;
+}
+
+.listHeader {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--rs-color-background-base-primary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.listHeaderRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.listHeaderCell {
+  padding: var(--rs-space-3) var(--rs-space-4);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  font-weight: var(--rs-font-weight-medium);
+  font-size: var(--rs-font-size-small);
+  color: var(--rs-color-foreground-base-secondary);
+  box-sizing: border-box;
 }
 
 .listRow {
@@ -261,6 +289,12 @@
   box-sizing: border-box;
 }
 
+.listGroupHeaderSticky {
+  position: sticky;
+  top: var(--rs-space-10);
+  z-index: 1;
+}
+
 .listEmptyState {
   display: flex;
   justify-content: center;
@@ -268,4 +302,19 @@
   padding: var(--rs-space-9) 0;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Empty / Zero state sibling container */
+.dataStateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--rs-space-9) 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Multi-view switcher inside DisplayControls */
+.viewSwitcher {
+  flex-shrink: 0;
 }

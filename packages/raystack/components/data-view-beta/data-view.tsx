@@ -11,18 +11,22 @@ import {
 } from '@tanstack/react-table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Content } from './components/content';
+import { DataViewCustom } from './components/custom';
 import { DisplayAccess } from './components/display-access';
 import { DisplaySettings } from './components/display-settings';
+import { DataViewEmptyState } from './components/empty-state';
 import { Filters } from './components/filters';
 import { DataViewList } from './components/list';
-import { DataViewRenderer } from './components/renderer';
 import { DataViewSearch } from './components/search';
 import { DataViewTable } from './components/table';
 import { Toolbar } from './components/toolbar';
+import { ViewSwitcher } from './components/view-switcher';
 import { VirtualizedContent } from './components/virtualized-content';
+import { DataViewZeroState } from './components/zero-state';
 import { DataViewContext } from './context';
 import {
   DataViewContextType,
+  DataViewField,
   DataViewProps,
   defaultGroupOption,
   GroupedData,
@@ -30,6 +34,7 @@ import {
   TableQueryUpdateFn
 } from './data-view.types';
 import {
+  hasActiveQuery as computeHasActiveQuery,
   fieldsToColumnDefs,
   getDefaultTableQuery,
   getInitialColumnVisibility,
@@ -53,12 +58,59 @@ function DataViewRoot<TData>({
   onLoadMore,
   onRowClick,
   onColumnVisibilityChange,
-  getRowId
+  getRowId,
+  views,
+  defaultView,
+  view,
+  onViewChange
 }: React.PropsWithChildren<DataViewProps<TData>>) {
   const defaultTableQuery = useMemo(
     () => getDefaultTableQuery(defaultSort, query),
     [defaultSort, query]
   );
+
+  // Active view (controlled / uncontrolled)
+  const isViewControlled = view !== undefined;
+  const [internalActiveView, setInternalActiveView] = useState<
+    string | undefined
+  >(defaultView ?? views?.[0]?.value);
+  const activeView = isViewControlled ? view : internalActiveView;
+  const setActiveView = useCallback(
+    (next: string) => {
+      if (!isViewControlled) setInternalActiveView(next);
+      onViewChange?.(next);
+    },
+    [isViewControlled, onViewChange]
+  );
+
+  // Per-view field overrides registered by mounted renderers.
+  const [fieldsByView, setFieldsByView] = useState<
+    Record<string, DataViewField<TData>[]>
+  >({});
+
+  const registerFieldsForView = useCallback(
+    (name: string, override: DataViewField<TData>[]) => {
+      setFieldsByView(prev => {
+        if (prev[name] === override) return prev;
+        return { ...prev, [name]: override };
+      });
+      return () => {
+        setFieldsByView(prev => {
+          if (!(name in prev)) return prev;
+          const next = { ...prev };
+          delete next[name];
+          return next;
+        });
+      };
+    },
+    []
+  );
+
+  const effectiveFields = useMemo(() => {
+    if (activeView && fieldsByView[activeView]) return fieldsByView[activeView];
+    return fields;
+  }, [activeView, fieldsByView, fields]);
+
   const initialColumnVisibility = useMemo(
     () => getInitialColumnVisibility(fields),
     [fields]
@@ -105,17 +157,16 @@ function DataViewRoot<TData>({
 
   const group_by = tableQuery.group_by?.[0];
 
-  // Metadata-only ColumnDefs. Filter fn is installed from field metadata and
-  // the current filter query; cell/header rendering lives on each renderer's
-  // column spec (DataView.Table / DataView.List), not here.
+  // Build column defs from the effective (active-view) fields so toolbar +
+  // headless filter/sort/visibility track per-view metadata overrides.
   const columnDefs = useMemo(
-    () => fieldsToColumnDefs<TData>(fields, tableQuery.filters),
-    [fields, tableQuery.filters]
+    () => fieldsToColumnDefs<TData>(effectiveFields, tableQuery.filters),
+    [effectiveFields, tableQuery.filters]
   );
 
   const groupedData = useMemo(
-    () => groupData(data, group_by, fields),
-    [data, group_by, fields]
+    () => groupData(data, group_by, effectiveFields),
+    [data, group_by, effectiveFields]
   );
 
   useEffect(() => {
@@ -175,29 +226,33 @@ function DataViewRoot<TData>({
     }
   }, [searchQuery]);
 
-  // Determine if filters should be visible
-  // Filters should be visible if there is data OR if filters are applied (empty state)
-  // Filters should NOT be visible if no data AND no filters (zero state)
-  // Note: Search alone does not show the filter bar
-  const shouldShowFilters = useMemo(() => {
-    const hasFilters =
-      (tableQuery?.filters && tableQuery.filters.length > 0) || false;
-
+  const rowCount = (() => {
     try {
-      const rowModel = table.getRowModel();
-      const hasData = (rowModel?.rows?.length ?? 0) > 0;
-      return hasData || hasFilters;
+      return table.getRowModel().rows.length;
     } catch {
-      // If table is not ready yet, check if we have initial data
-      // If no filters and no data, don't show filters
-      return hasFilters || data.length > 0;
+      return data.length;
     }
-  }, [table, tableQuery, data.length]);
+  })();
+
+  const hasData = rowCount > 0 || isLoading;
+
+  const hasActiveQueryFlag = useMemo(
+    () => computeHasActiveQuery(tableQuery, defaultSort),
+    [tableQuery, defaultSort]
+  );
+
+  const isZeroState = !hasData && !hasActiveQueryFlag;
+  const isEmptyState = !hasData && hasActiveQueryFlag;
+
+  // Filters bar: visible when there's data OR an active filter, but hidden
+  // for the pure zero-state (no data + no query) so the empty surface stays clean.
+  const shouldShowFilters = hasData || hasActiveQueryFlag;
 
   const contextValue: DataViewContextType<TData> = useMemo(() => {
     return {
       table,
-      fields,
+      fields: effectiveFields,
+      rootFields: fields,
       mode,
       isLoading,
       loadMoreData,
@@ -208,22 +263,38 @@ function DataViewRoot<TData>({
       totalRowCount,
       loadingRowCount,
       onRowClick,
-      shouldShowFilters
+      shouldShowFilters,
+      views,
+      activeView,
+      setActiveView,
+      registerFieldsForView,
+      hasData,
+      hasActiveQuery: hasActiveQueryFlag,
+      isZeroState,
+      isEmptyState
     };
   }, [
     table,
+    effectiveFields,
     fields,
     mode,
     isLoading,
     loadMoreData,
     tableQuery,
-    updateTableQuery,
     onDisplaySettingsReset,
     defaultSort,
     totalRowCount,
     loadingRowCount,
     onRowClick,
-    shouldShowFilters
+    shouldShowFilters,
+    views,
+    activeView,
+    setActiveView,
+    registerFieldsForView,
+    hasData,
+    hasActiveQueryFlag,
+    isZeroState,
+    isEmptyState
   ]);
 
   return <DataViewContext value={contextValue}>{children}</DataViewContext>;
@@ -240,16 +311,24 @@ DataViewRoot.displayName = 'DataView';
  */
 // biome-ignore lint/suspicious/noShadowRestrictedNames: public component name intentionally matches the package export
 export const DataView = Object.assign(DataViewRoot, {
-  // Renderers — each takes its own row render spec (`columns` on Table/List).
-  Table: DataViewTable,
+  // Renderers
   List: DataViewList,
+  /** @deprecated Use `<DataView.List variant="table" />` */
+  Table: DataViewTable,
   // Escape hatch — render prop receives the full DataView context.
-  Renderer: DataViewRenderer,
+  Custom: DataViewCustom,
+  /** @deprecated Renamed to `DataView.Custom`. */
+  Renderer: DataViewCustom,
   // Legacy sub-renderer exports (used by consumers that imported inner pieces).
   Content: Content,
   VirtualizedContent: VirtualizedContent,
   // Visibility primitive for free-form renderers.
   DisplayAccess: DisplayAccess,
+  // Empty / zero state siblings (driven by context).
+  EmptyState: DataViewEmptyState,
+  ZeroState: DataViewZeroState,
+  // View switching primitive (used by DisplayControls; can be placed standalone).
+  ViewSwitcher: ViewSwitcher,
   // Toolbar primitives
   Toolbar: Toolbar,
   Search: DataViewSearch,
