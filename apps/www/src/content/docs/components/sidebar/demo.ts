@@ -402,6 +402,39 @@ export const collapsibleGroupDemo = {
   style: styleDemo
 };
 
+export const groupIconDemo = {
+  type: 'code',
+  code: sidebarLayout(`<Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Group label="Workspace" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
+                Dashboard
+              </Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                Analytics
+              </Sidebar.Item>
+            </Sidebar.Group>
+            <Sidebar.Group label="Resources" leadingIcon={<FilterIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Reports
+              </Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />}>
+                Activities
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`),
+  style: styleDemo
+};
+
 export const moreDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen>

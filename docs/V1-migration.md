@@ -1506,6 +1506,8 @@ If you were attaching refs to `Sidebar`, `Sidebar.Header`, `Sidebar.Main`, `Side
 
 7. **`Sidebar.Footer` role changed: `group` -> `list`**
 
+8. **Spacing tightened to match Figma.** The gap between sidebar groups is now `var(--rs-space-6)` (20px, was 4px), and `.nav-group` / `.nav-group-header` no longer apply a `margin-top`. Collapsed `Sidebar.Item` and `Sidebar.More` tooltips now render with a 16px `sideOffset` for clearance from the rail. If you were overriding sidebar group spacing or tooltip positioning, expect slightly different vertical rhythm.
+
 **Full before/after example:**
 
 ```tsx
