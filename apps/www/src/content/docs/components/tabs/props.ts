@@ -14,7 +14,10 @@ export interface TabsRootProps {
   /** Visual variant for how tabs are rendered. */
   variant?: 'segmented' | 'standalone' | 'plain';
 
-  /** Size variant applied to all tab triggers. */
+  /**
+   * Size variant applied to all tab triggers.
+   * @default 'medium'
+   */
   size?: 'small' | 'medium' | 'large';
 
   /** Additional CSS class names. */

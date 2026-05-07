@@ -1656,7 +1656,7 @@ Key changes:
 #### New Features
 
 - Three variants: `segmented` (default), `standalone`, `plain`
-- Three sizes: `small`, `medium`, `large`
+- Three sizes: `small`, `medium` (default), `large`
 
 ```tsx
 <Tabs variant="standalone" size="small" defaultValue="tab1">
