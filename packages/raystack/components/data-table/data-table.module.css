@@ -228,7 +228,7 @@
   position: sticky;
   top: var(--rs-space-9);
   z-index: 1;
-  height: var(--rs-space-9);
+  height: var(--rs-space-10);
   padding: var(--rs-space-3);
   box-sizing: border-box;
   background: var(--rs-color-background-base-secondary);
