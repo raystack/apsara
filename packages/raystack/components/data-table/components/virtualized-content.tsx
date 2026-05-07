@@ -247,14 +247,25 @@ export function VirtualizedContent({
   const isGrouped = Boolean(groupBy) && groupBy !== defaultGroupOption.id;
 
   const groupHeaderList = useMemo(() => {
-    const list: { index: number; data: GroupedData<unknown> }[] = [];
+    const list: {
+      index: number;
+      start: number;
+      data: GroupedData<unknown>;
+    }[] = [];
+    let offset = 0;
     rows.forEach((row, i) => {
-      if (row.subRows && row.subRows.length > 0) {
-        list.push({ index: i, data: row.original as GroupedData<unknown> });
+      const isGroupHeader = row.subRows && row.subRows.length > 0;
+      if (isGroupHeader) {
+        list.push({
+          index: i,
+          start: offset,
+          data: row.original as GroupedData<unknown>
+        });
       }
+      offset += isGroupHeader ? groupHeaderHeight : rowHeight;
     });
     return list;
-  }, [rows]);
+  }, [rows, groupHeaderHeight, rowHeight]);
 
   const showLoaderRows = isLoading && rows.length > 0;
 
@@ -278,7 +289,6 @@ export function VirtualizedContent({
   } = useStickyGroupAnchor<unknown>({
     enabled: stickyGroupHeader && isGrouped,
     groupHeaderList,
-    virtualizer,
     scrollContainerRef
   });
 
