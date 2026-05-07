@@ -10,35 +10,35 @@
 
 /* Position variants */
 .viewport-top-left {
-  top: var(--rs-space-5);
-  left: var(--rs-space-5);
+  top: var(--rs-space-6);
+  left: var(--rs-space-6);
 }
 
 .viewport-top-center {
-  top: var(--rs-space-5);
+  top: var(--rs-space-6);
   left: 50%;
   transform: translateX(-50%);
 }
 
 .viewport-top-right {
-  top: var(--rs-space-5);
-  right: var(--rs-space-5);
+  top: var(--rs-space-6);
+  right: var(--rs-space-6);
 }
 
 .viewport-bottom-left {
-  bottom: var(--rs-space-5);
-  left: var(--rs-space-5);
+  bottom: var(--rs-space-6);
+  left: var(--rs-space-6);
 }
 
 .viewport-bottom-center {
-  bottom: var(--rs-space-5);
+  bottom: var(--rs-space-6);
   left: 50%;
   transform: translateX(-50%);
 }
 
 .viewport-bottom-right {
-  bottom: var(--rs-space-5);
-  right: var(--rs-space-5);
+  bottom: var(--rs-space-6);
+  right: var(--rs-space-6);
 }
 
 /* ===== Toast Root (stacking) ===== */
@@ -160,11 +160,11 @@
 
 /* ===== Enter animations ===== */
 .root[data-position*="bottom"][data-starting-style] {
-  transform: translateY(calc(100% + var(--rs-space-5)));
+  transform: translateY(calc(100% + var(--rs-space-6)));
 }
 
 .root[data-position*="top"][data-starting-style] {
-  transform: translateY(calc(-100% - var(--rs-space-5)));
+  transform: translateY(calc(-100% - var(--rs-space-6)));
 }
 
 /* ===== Limited state ===== */
@@ -179,11 +179,11 @@
 
 /* Default exit (no swipe) */
 .root[data-position*="bottom"][data-ending-style]:not([data-swipe-direction]) {
-  transform: translateY(calc(100% + var(--rs-space-5)));
+  transform: translateY(calc(100% + var(--rs-space-6)));
 }
 
 .root[data-position*="top"][data-ending-style]:not([data-swipe-direction]) {
-  transform: translateY(calc(-100% - var(--rs-space-5)));
+  transform: translateY(calc(-100% - var(--rs-space-6)));
 }
 
 /* Swipe exit directions */
