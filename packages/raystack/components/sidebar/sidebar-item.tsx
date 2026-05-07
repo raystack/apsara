@@ -101,7 +101,9 @@ export function SidebarItem({
     return (
       <Tooltip>
         <Tooltip.Trigger render={content} />
-        <Tooltip.Content side='right'>{children}</Tooltip.Content>
+        <Tooltip.Content side='right' sideOffset={16}>
+          {children}
+        </Tooltip.Content>
       </Tooltip>
     );
   }
