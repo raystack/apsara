@@ -6,6 +6,7 @@ import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
 import styles from '../dialog/dialog.module.css';
 import { Flex } from '../flex';
+import alertDialogStyles from './alert-dialog.module.css';
 
 export const AlertDialogHeader = ({
   className,
@@ -28,7 +29,7 @@ export const AlertDialogFooter = ({
   <Flex
     gap={5}
     justify='end'
-    className={cx(styles.footer, className)}
+    className={cx(styles.footer, alertDialogStyles.footer, className)}
     {...props}
   />
 );
