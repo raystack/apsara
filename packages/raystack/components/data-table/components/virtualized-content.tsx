@@ -217,7 +217,7 @@ const DefaultEmptyComponent = () => (
 
 export function VirtualizedContent({
   rowHeight = 40,
-  groupHeaderHeight,
+  groupHeaderHeight = 40,
   overscan = 5,
   loadMoreOffset = 100,
   emptyState,
@@ -264,12 +264,12 @@ export function VirtualizedContent({
     estimateSize: index => {
       const row = rows[index];
       const isGroupHeader = row?.subRows && row.subRows.length > 0;
-      return isGroupHeader ? (groupHeaderHeight ?? rowHeight) : rowHeight;
+      return isGroupHeader ? groupHeaderHeight : rowHeight;
     },
     overscan
   });
 
-  const anchorPixelHeight = groupHeaderHeight ?? rowHeight;
+  const anchorPixelHeight = groupHeaderHeight;
 
   const {
     stickyGroup,
