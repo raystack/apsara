@@ -33,7 +33,7 @@
   min-width: 0;
 }
 
-.display-popover-properties-select > span {
+.display-popover-properties-select>span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -81,6 +81,11 @@
 .contentRoot {
   height: 100%;
   overflow: auto;
+}
+
+.contentRoot table {
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .row {
