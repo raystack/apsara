@@ -110,7 +110,9 @@ Full control with scrub area for drag-to-adjust interaction.
 
 ### Formatted
 
-Number field with currency formatting.
+Number field with currency formatting, powered by `Intl.NumberFormat` internally.
+
+`format` sets what to format (currency, decimals); `locale` sets how it's written. Pin `locale` when the output should be stable across different users. 
 
 <Demo data={formatDemo} />
 

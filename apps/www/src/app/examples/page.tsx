@@ -286,7 +286,7 @@ const Page = () => {
                   required: true,
                   selected: new Date()
                 }}
-                inputFieldProps={{
+                inputProps={{
                   size: 'small'
                 }}
               />
@@ -315,7 +315,7 @@ const Page = () => {
                   endMonth: dayjs('2027-12-01').toDate(),
                   defaultMonth: dayjs('2027-11-01').toDate()
                 }}
-                inputFieldsProps={{
+                inputsProps={{
                   startDate: {
                     size: 'small'
                   },
