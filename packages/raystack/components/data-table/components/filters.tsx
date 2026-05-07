@@ -130,7 +130,11 @@ export function Filters<TData, TValue>({
     }) || [];
 
   return (
-    <Flex gap={3} className={className}>
+    <Flex
+      gap={3}
+      className={className}
+      data-has-filter-chips={appliedFilters.length > 0 || undefined}
+    >
       {appliedFilters.length > 0 && (
         <Flex gap={3} className={classNames?.container}>
           {appliedFilters.map(filter => (
