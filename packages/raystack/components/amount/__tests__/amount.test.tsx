@@ -203,5 +203,70 @@ describe('Amount', () => {
       expect(element).toBeInTheDocument();
       consoleSpy.mockRestore();
     });
+
+    it('handles negative string values in minor units', () => {
+      render(<Amount value='-1299' />);
+      expect(screen.getByText('-$12.99')).toBeInTheDocument();
+    });
+  });
+
+  describe('BigInt support', () => {
+    it('formats a bigint as major units regardless of valueInMinorUnits', () => {
+      render(<Amount value={1299n} />);
+      expect(screen.getByText('$1,299.00')).toBeInTheDocument();
+    });
+
+    it('matches the major-units result when valueInMinorUnits is false', () => {
+      render(<Amount value={1299n} valueInMinorUnits={false} />);
+      expect(screen.getByText('$1,299.00')).toBeInTheDocument();
+    });
+
+    it('preserves precision beyond Number.MAX_SAFE_INTEGER', () => {
+      render(<Amount value={9999999999999999999n} valueInMinorUnits={false} />);
+      expect(
+        screen.getByText('$9,999,999,999,999,999,999.00')
+      ).toBeInTheDocument();
+    });
+
+    it('formats negative bigint values', () => {
+      render(<Amount value={-1299n} />);
+      expect(screen.getByText('-$1,299.00')).toBeInTheDocument();
+    });
+
+    it('formats bigint with a zero-decimal currency', () => {
+      render(<Amount value={1299n} currency='JPY' locale='en-US' />);
+      expect(screen.getByText('¥1,299')).toBeInTheDocument();
+    });
+
+    it('does not warn about safe integer limit for bigint values', () => {
+      const consoleSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => null);
+      render(<Amount value={9999999999999999999n} valueInMinorUnits={false} />);
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('hideCurrency', () => {
+    it('hides the currency symbol while preserving formatting', () => {
+      render(<Amount value={1299} hideCurrency />);
+      expect(screen.getByText('12.99')).toBeInTheDocument();
+    });
+
+    it('hides currency for bigint values', () => {
+      render(<Amount value={1299n} hideCurrency />);
+      expect(screen.getByText('1,299')).toBeInTheDocument();
+    });
+
+    it('overrides currencyDisplay when set', () => {
+      render(<Amount value={1299} hideCurrency currencyDisplay='code' />);
+      expect(screen.getByText('12.99')).toBeInTheDocument();
+    });
+
+    it('respects the currency for decimal-place math even when hidden', () => {
+      render(<Amount value={1299} currency='JPY' hideCurrency />);
+      expect(screen.getByText('1,299')).toBeInTheDocument();
+    });
   });
 });

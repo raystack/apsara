@@ -46,6 +46,10 @@ export const playground = {
     groupDigits: {
       type: 'checkbox',
       defaultValue: true
+    },
+    hideCurrency: {
+      type: 'checkbox',
+      defaultValue: false
     }
   },
   getCode
@@ -119,6 +123,17 @@ export const currencyDisplayDemo = {
   `
 };
 
+export const hideCurrencyDemo = {
+  type: 'code',
+  code: `
+  <Flex gap={4}>
+    <Amount value={1299} hideCurrency /> {/* 12.99 */}
+    <Amount value={1299} currency="JPY" hideCurrency /> {/* 1,299 */}
+    <Amount value={1299} hideCurrency currencyDisplay="code" />{/* 12.99 — currencyDisplay is ignored */}
+  </Flex>
+  `
+};
+
 export const groupDigitsDemo = {
   type: 'code',
   code: `
@@ -149,13 +164,24 @@ export const withTextDemo = {
 export const largeNumbersDemo = {
   type: 'code',
   code: `
-  <Flex gap={4}>
-    {/* For large numbers, use string to maintain precision */}
+  <Flex direction='column' gap={4}>
+    {/* 
+    For large numbers, use string (supports decimals) or bigint (integer-only)
+    to maintain precision 
+  */}
     <Amount value="999999999999999" /> {/* $9,999,999,999,999.99 */}
-    <Amount value="10000100091636935" valueInMinorUnits={false} hideDecimals /> {/* $10,000,100,091,636,935 */}
-    
-    {/* Numbers exceeding safe integer limit will show warning in console */}
-    <Amount value={999999999999999} /> {/* Will show warning */}
+    <Amount value="10000100091636935" 
+    valueInMinorUnits={false} hideDecimals />{/* $10,000,100,091,636,935 */}
+
+    {/* 
+    BigInt is always treated as major units — valueInMinorUnits is ignored 
+  */}
+    <Amount value={BigInt("9999999999999999999")} valueInMinorUnits={false} />{/* $9,999,999,999,999,999,999.00 */}
+
+    {/* 
+    Numbers exceeding safe integer limit will show warning in console 
+  */}
+    <Amount value={99999999999999999} />{/* Exceeds Number.MAX_SAFE_INTEGER (~9 × 10^15) — logs a console warning */}
   </Flex>
   `
 };

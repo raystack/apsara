@@ -1,14 +1,18 @@
 export interface AmountProps {
   /**
-   * The monetary value to display
-   * For large numbers (> 2^53), pass the value as string to maintain precision
+   * The monetary value to display.
+   * For exact precision beyond 2^53, pass either:
+   *   - a `string` — supports decimals (e.g. "1299" or "12.99")
+   *   - a `bigint` — integer-only; treated as already in major units, so
+   *     `valueInMinorUnits` is ignored when value is a bigint
    * @default 0
    * @example
    * valueInMinorUnits=true: 1299 => "$12.99"
    * valueInMinorUnits=false: 12.99 => "$12.99"
-   * Large numbers: "999999999999999" => "$9,999,999,999,999.99"
+   * Large strings: "999999999999999" => "$9,999,999,999,999.99"
+   * BigInt: 1299n => "$1,299.00" (always major units)
    */
-  value: number | string;
+  value: number | string | bigint;
 
   /**
    * ISO 4217 currency code
@@ -65,4 +69,14 @@ export interface AmountProps {
    * @default true
    */
   groupDigits?: boolean;
+
+  /**
+   * Render the formatted number without a currency symbol, code, or name.
+   * Locale-driven separators, grouping, and fraction digits are preserved.
+   * When true, `currencyDisplay` is ignored.
+   * @default false
+   * @example
+   * <Amount value={1299} hideCurrency /> => "12.99"
+   */
+  hideCurrency?: boolean;
 }
