@@ -400,14 +400,16 @@ const columns: DataTableColumnDef<(typeof fullDataset)[number], unknown>[] = [
     enableColumnFilter: true,
     filterType: 'string' as const,
     enableGrouping: true,
-    showGroupCount: true
+    showGroupCount: true,
+    enableHiding: true
   },
   {
     accessorKey: 'email',
     header: 'Email',
     enableSorting: true,
     enableColumnFilter: true,
-    filterType: 'string' as const
+    filterType: 'string' as const,
+    enableHiding: true
   },
   {
     accessorKey: 'role',
@@ -417,6 +419,7 @@ const columns: DataTableColumnDef<(typeof fullDataset)[number], unknown>[] = [
     filterType: 'select' as const,
     enableGrouping: true,
     showGroupCount: true,
+    enableHiding: true,
     filterOptions: [
       { value: 'Admin', label: 'Admin' },
       { value: 'User', label: 'User' },
@@ -428,23 +431,26 @@ const columns: DataTableColumnDef<(typeof fullDataset)[number], unknown>[] = [
     header: 'Department',
     enableSorting: true,
     enableGrouping: true,
-    showGroupCount: true
+    showGroupCount: true,
+    enableHiding: true
   },
   {
     accessorKey: 'team',
     header: 'Team',
     enableSorting: true,
     enableGrouping: true,
-    showGroupCount: true
+    showGroupCount: true,
+    enableHiding: true
   },
   {
     accessorKey: 'location',
     header: 'Location',
     enableSorting: true,
     enableGrouping: true,
-    showGroupCount: true
+    showGroupCount: true,
+    enableHiding: true
   },
-  { accessorKey: 'phone', header: 'Phone' },
+  { accessorKey: 'phone', header: 'Phone', enableHiding: true },
   {
     accessorKey: 'status',
     header: 'Status',
@@ -453,12 +459,18 @@ const columns: DataTableColumnDef<(typeof fullDataset)[number], unknown>[] = [
     showGroupCount: true,
     enableColumnFilter: true,
     filterType: 'select' as const,
+    enableHiding: true,
     filterOptions: [
       { value: 'Active', label: 'Active' },
       { value: 'Away', label: 'Away' }
     ]
   },
-  { accessorKey: 'joined', header: 'Joined', enableSorting: true }
+  {
+    accessorKey: 'joined',
+    header: 'Joined',
+    enableSorting: true,
+    enableHiding: true
+  }
 ];
 
 const Page = () => {
