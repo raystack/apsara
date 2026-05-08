@@ -206,9 +206,9 @@ export const Amount = ({
 
     const decimals = getCurrencyDecimals(validCurrency);
 
-    // Convert minor → major units. Three input shapes: bigint, string, number.
-    // bigint is always treated as already in major units (it cannot represent
-    // fractions), so `valueInMinorUnits` is ignored for bigint.
+    // Convert minor → major units.
+    // Three input shapes: bigint, string, number.
+    // BigInt is always treated as already in major units (it cannot represent fractions), so `valueInMinorUnits` is ignored for BigInt.
     let baseValue: number | string | bigint;
     if (typeof value === 'bigint') {
       baseValue = value;
@@ -227,8 +227,7 @@ export const Amount = ({
       baseValue = value;
     }
 
-    // Remove decimals when hideDecimals is true. bigint has no decimals, so
-    // it's a no-op there.
+    // Remove decimals when hideDecimals is true. BigInt has no decimals, so it's a no-op there.
     const finalBaseValue: number | string | bigint = !hideDecimals
       ? baseValue
       : typeof baseValue === 'bigint'
@@ -237,11 +236,13 @@ export const Amount = ({
           ? baseValue.split('.')[0]
           : Math.trunc(baseValue);
 
-    // Always format in currency mode — Intl's currency-style handles fraction
-    // digits per the currency, locale-correct grouping/separators, and
-    // auto-clamps when only one of min/max is user-provided. For hideCurrency
-    // we then strip the currency token from the output via formatToParts(),
-    // which avoids the divergent defaults of style: 'decimal'.
+    /**
+     * Always format in currency mode — Intl's currency-style handles fraction digits per the currency,
+     * locale-correct grouping/separators,
+     * and auto-clamps when only one of min/max is user-provided.
+     * For hideCurrency, we then strip the currency token from the output via formatToParts(),
+     * which avoids the divergent defaults of style: 'decimal'.
+     */
     const formatOptions: Intl.NumberFormatOptions = {
       style: 'currency',
       currency: validCurrency.toUpperCase(),
@@ -266,9 +267,12 @@ export const Amount = ({
 
     const formatter = new Intl.NumberFormat(locale, formatOptions);
 
-    // For hideCurrency, strip the `currency` parts and trim leading/trailing
-    // whitespace that locales like de-DE leave behind (e.g. "1.234,56 €"
-    // becomes "1.234,56 " before the trim). Otherwise format directly.
+    /**
+     * For hideCurrency, strip the `currency` parts and trim leading/trailing
+     * whitespace that locales like de-DE leave behind
+     * (e.g. "1.234,56 €" becomes "1.234,56 " before the trim).
+     * Otherwise format directly.
+     */
     const formattedValue: string = hideCurrency
       ? formatter
           .formatToParts(
