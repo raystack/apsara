@@ -39,3 +39,23 @@ export const clearDemo = {
     <Search placeholder="Basic search..." />
   </Flex>`
 };
+
+export const onValueChangeDemo = {
+  type: 'code',
+  code: `function SearchValueChangeExample() {
+  const [query, setQuery] = React.useState("");
+
+  return (
+    <Flex direction="column" gap="medium" style={{ width: 400 }}>
+      <Search
+        placeholder="Search items..."
+        value={query}
+        onValueChange={setQuery}
+        showClearButton
+        onClear={() => setQuery("")}
+      />
+      <Text size="small">Query: {query || "(empty)"}</Text>
+    </Flex>
+  );
+}`
+};

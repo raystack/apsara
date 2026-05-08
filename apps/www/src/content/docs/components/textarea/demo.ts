@@ -71,6 +71,23 @@ export const controlledDemo = {
 }`
 };
 
+export const onValueChangeDemo = {
+  type: 'code',
+  code: `function TextAreaValueChangeExample() {
+  const [value, setValue] = React.useState('');
+
+  return (
+    <Field label="Bio" description={\`\${value.length} characters\`}>
+      <TextArea
+        value={value}
+        onValueChange={setValue}
+        placeholder="Tell us about yourself..."
+      />
+    </Field>
+  );
+}`
+};
+
 export const sizeDemo = {
   type: 'code',
   code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>

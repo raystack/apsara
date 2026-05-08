@@ -71,6 +71,30 @@ describe('TextArea', () => {
   });
 
   describe('Event Handling', () => {
+    it('calls onValueChange with the new string value', () => {
+      const handleValueChange = vi.fn();
+      render(<TextArea onValueChange={handleValueChange} />);
+      const textarea = screen.getByRole('textbox');
+
+      fireEvent.change(textarea, { target: { value: 'hello' } });
+      expect(handleValueChange).toHaveBeenCalledTimes(1);
+      expect(handleValueChange.mock.calls[0][0]).toBe('hello');
+      expect(handleValueChange.mock.calls[0][1]).toBeDefined();
+    });
+
+    it('calls both onChange and onValueChange', () => {
+      const handleChange = vi.fn();
+      const handleValueChange = vi.fn();
+      render(
+        <TextArea onChange={handleChange} onValueChange={handleValueChange} />
+      );
+      const textarea = screen.getByRole('textbox');
+
+      fireEvent.change(textarea, { target: { value: 'hi' } });
+      expect(handleChange).toHaveBeenCalledTimes(1);
+      expect(handleValueChange).toHaveBeenCalledTimes(1);
+    });
+
     it('handles onFocus event', () => {
       const handleFocus = vi.fn();
       render(<TextArea onFocus={handleFocus} />);
