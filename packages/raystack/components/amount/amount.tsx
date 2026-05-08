@@ -249,12 +249,38 @@ export const Amount = ({
     // ignoring the currency's decimal count. Mirror the currency-style behavior
     // by defaulting both to `decimals` so round amounts like 1200 (USD) still
     // render as "12.00" instead of "12". User-provided values win.
-    const resolvedMinFrac = hideDecimals
+    let resolvedMinFrac = hideDecimals
       ? 0
       : (minimumFractionDigits ?? (hideCurrency ? decimals : undefined));
-    const resolvedMaxFrac = hideDecimals
+    let resolvedMaxFrac = hideDecimals
       ? 0
       : (maximumFractionDigits ?? (hideCurrency ? decimals : undefined));
+
+    // In hideCurrency mode, the currency-decimal default applied to the
+    // unspecified bound can invert min > max when the user provides only
+    // one of the two (e.g. maximumFractionDigits=1 with USD's default min
+    // of 2). Intl throws RangeError on inversion — clamp the *defaulted*
+    // side toward the user-provided side.
+    if (
+      hideCurrency &&
+      !hideDecimals &&
+      resolvedMinFrac !== undefined &&
+      resolvedMaxFrac !== undefined
+    ) {
+      if (
+        minimumFractionDigits === undefined &&
+        maximumFractionDigits !== undefined &&
+        resolvedMinFrac > resolvedMaxFrac
+      ) {
+        resolvedMinFrac = resolvedMaxFrac;
+      } else if (
+        maximumFractionDigits === undefined &&
+        minimumFractionDigits !== undefined &&
+        resolvedMaxFrac < resolvedMinFrac
+      ) {
+        resolvedMaxFrac = resolvedMinFrac;
+      }
+    }
 
     const formatOptions: Intl.NumberFormatOptions = {
       minimumFractionDigits: resolvedMinFrac,
