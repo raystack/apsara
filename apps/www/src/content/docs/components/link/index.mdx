@@ -56,6 +56,16 @@ Additional style variations including underlined and external links.
 
 <Demo data={styleDemo} />
 
+### Custom render
+
+Use the `render` prop to render as a custom element such as a router `Link`. All props (including `external`, `download`, and ARIA attributes) are forwarded to the provided element.
+
+```tsx
+import { Link as RouterLink } from "react-router-dom";
+
+<Link render={<RouterLink to="/about" />}>About</Link>
+```
+
 ## Accessibility
 
 The Link component follows accessibility best practices:
