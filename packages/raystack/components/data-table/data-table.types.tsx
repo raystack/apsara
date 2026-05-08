@@ -139,7 +139,7 @@ export type DataTableContentProps = DataTableContentBaseProps;
 export type VirtualizedContentProps = DataTableContentBaseProps & {
   /** Height of each row in pixels. */
   rowHeight?: number;
-  /** Height of group header rows in pixels. Falls back to rowHeight if not set. */
+  /** Height of group header rows in pixels. Defaults to 40 (matches the non-virtualized section header height). */
   groupHeaderHeight?: number;
   /** Number of rows to render outside visible area. */
   overscan?: number;

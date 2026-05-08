@@ -13,7 +13,7 @@ import {
   Text
 } from '@raystack/apsara';
 import { BellIcon, FilterIcon, SidebarIcon } from '@raystack/apsara/icons';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 const sampleData = [
   {
@@ -378,33 +378,47 @@ const sampleData = [
   }
 ];
 
-const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
+const PAGE_SIZE = 25;
+const TOTAL_ROWS = 200;
+
+const fullDataset = Array.from({ length: TOTAL_ROWS }, (_, i) => {
+  const base = sampleData[i % sampleData.length];
+  return {
+    ...base,
+    id: String(i + 1),
+    name: `${base.name} ${Math.floor(i / sampleData.length) + 1}`,
+    email: `${base.name.toLowerCase()}${i + 1}@example.com`,
+    phone: `+1-555-${String(1000 + i).padStart(4, '0')}`
+  };
+});
+
+const columns: DataTableColumnDef<(typeof fullDataset)[number], unknown>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
+    enableSorting: true,
     enableColumnFilter: true,
     filterType: 'string' as const,
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true,
     enableHiding: true
   },
   {
     accessorKey: 'email',
     header: 'Email',
+    enableSorting: true,
     enableColumnFilter: true,
     filterType: 'string' as const,
-    enableSorting: true,
     enableHiding: true
   },
   {
     accessorKey: 'role',
     header: 'Role',
+    enableSorting: true,
     enableColumnFilter: true,
     filterType: 'select' as const,
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true,
     enableHiding: true,
     filterOptions: [
       { value: 'Admin', label: 'Admin' },
@@ -415,78 +429,64 @@ const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
   {
     accessorKey: 'department',
     header: 'Department',
+    enableSorting: true,
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true,
     enableHiding: true
   },
   {
     accessorKey: 'team',
     header: 'Team',
+    enableSorting: true,
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true,
     enableHiding: true
   },
   {
     accessorKey: 'location',
     header: 'Location',
+    enableSorting: true,
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true,
     enableHiding: true
   },
   { accessorKey: 'phone', header: 'Phone', enableHiding: true },
   {
     accessorKey: 'status',
     header: 'Status',
+    enableSorting: true,
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true,
-    enableHiding: true
+    enableColumnFilter: true,
+    filterType: 'select' as const,
+    enableHiding: true,
+    filterOptions: [
+      { value: 'Active', label: 'Active' },
+      { value: 'Away', label: 'Away' }
+    ]
   },
   {
     accessorKey: 'joined',
     header: 'Joined',
     enableSorting: true,
     enableHiding: true
-  },
-  { accessorKey: 'name', id: 'name_2', header: 'Name', enableHiding: true },
-  { accessorKey: 'email', id: 'email_2', header: 'Email', enableHiding: true },
-  { accessorKey: 'role', id: 'role_2', header: 'Role', enableHiding: true },
-  {
-    accessorKey: 'department',
-    id: 'dept_2',
-    header: 'Department',
-    enableHiding: true
-  },
-  { accessorKey: 'team', id: 'team_2', header: 'Team', enableHiding: true },
-  {
-    accessorKey: 'location',
-    id: 'loc_2',
-    header: 'Location',
-    enableHiding: true
-  },
-  { accessorKey: 'phone', id: 'phone_2', header: 'Phone', enableHiding: true },
-  {
-    accessorKey: 'status',
-    id: 'status_2',
-    header: 'Status',
-    enableHiding: true
-  },
-  {
-    accessorKey: 'joined',
-    id: 'joined_2',
-    header: 'Joined',
-    enableHiding: true
-  },
-  { accessorKey: 'name', id: 'name_3', header: 'Name', enableHiding: true },
-  { accessorKey: 'email', id: 'email_3', header: 'Email', enableHiding: true },
-  { accessorKey: 'role', id: 'role_3', header: 'Role', enableHiding: true }
+  }
 ];
 
 const Page = () => {
   const [navbarSearch, setNavbarSearch] = useState('');
+  const [data, setData] = useState(() => fullDataset.slice(0, PAGE_SIZE));
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLoadMore = useCallback(async () => {
+    if (data.length >= TOTAL_ROWS || isLoading) return;
+    setIsLoading(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setData(prev => fullDataset.slice(0, prev.length + PAGE_SIZE));
+    setIsLoading(false);
+  }, [data.length, isLoading]);
+
+  const tableColumns = useMemo(() => columns, []);
 
   return (
     <Flex
@@ -508,23 +508,22 @@ const Page = () => {
           </Flex>
         </Sidebar.Header>
         <Sidebar.Main>
-          <Sidebar.Item href='/examples' active leadingIcon={<BellIcon />}>
+          <Sidebar.Item href='/examples' leadingIcon={<BellIcon />}>
             Examples
           </Sidebar.Item>
           <Sidebar.Item
-            href='/examples/datatable'
+            href='/examples/datatable-virtual'
+            active
             leadingIcon={<SidebarIcon />}
           >
-            DataTable
+            DataTable – Virtualized
           </Sidebar.Item>
-          <Sidebar.Group label='Resources' leadingIcon={<FilterIcon />}>
-            <Sidebar.Item href='#'>Reports</Sidebar.Item>
-            <Sidebar.Item href='#'>Activities</Sidebar.Item>
-          </Sidebar.Group>
-          <Sidebar.Group label='Account'>
-            <Sidebar.Item href='#'>Settings</Sidebar.Item>
-            <Sidebar.Item href='#'>Notifications</Sidebar.Item>
-          </Sidebar.Group>
+          <Sidebar.Item
+            href='/examples/datatable-content'
+            leadingIcon={<SidebarIcon />}
+          >
+            DataTable – Content
+          </Sidebar.Item>
         </Sidebar.Main>
         <Sidebar.Footer>
           <Sidebar.Item href='#'>Help & Support</Sidebar.Item>
@@ -539,7 +538,8 @@ const Page = () => {
         <Navbar>
           <Navbar.Start>
             <Text size='regular' weight='medium'>
-              DataTable – Client mode
+              DataTable – Virtualized – {TOTAL_ROWS} rows w/ infinite scroll,
+              grouping &amp; sorting
             </Text>
           </Navbar.Start>
           <Navbar.End>
@@ -563,30 +563,37 @@ const Page = () => {
           direction='column'
           style={{
             flex: 1,
-            overflow: 'auto',
+            overflow: 'hidden',
             padding: '24px',
             minWidth: 0
           }}
         >
           <DataTable
-            data={sampleData}
-            columns={columns}
-            mode='client'
+            data={data}
+            columns={tableColumns}
+            mode='server'
+            isLoading={isLoading}
+            totalRowCount={TOTAL_ROWS}
+            loadingRowCount={3}
+            onLoadMore={handleLoadMore}
             defaultSort={{ name: 'name', order: 'asc' }}
             stickyGroupHeader
           >
             <DataTable.Toolbar />
             <DataTable.Search />
-            <DataTable.Content
-              emptyState={
-                <EmptyState
-                  icon={<FilterIcon />}
-                  heading='No results'
-                  variant='empty1'
-                  subHeading='Try adjusting your filters or search.'
-                />
-              }
-            />
+            <Flex direction='column' style={{ flex: 1, minHeight: 0 }}>
+              <DataTable.VirtualizedContent
+                rowHeight={44.5}
+                emptyState={
+                  <EmptyState
+                    icon={<FilterIcon />}
+                    heading='No results'
+                    variant='empty1'
+                    subHeading='Try adjusting your filters or search.'
+                  />
+                }
+              />
+            </Flex>
           </DataTable>
         </Flex>
       </Flex>
