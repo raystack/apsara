@@ -229,16 +229,13 @@ export const Amount = ({
 
     // Remove decimals when hideDecimals is true. bigint has no decimals, so
     // it's a no-op there.
-    let finalBaseValue: number | string | bigint;
-    if (!hideDecimals) {
-      finalBaseValue = baseValue;
-    } else if (typeof baseValue === 'bigint') {
-      finalBaseValue = baseValue;
-    } else if (typeof baseValue === 'string') {
-      finalBaseValue = baseValue.split('.')[0];
-    } else {
-      finalBaseValue = Math.trunc(baseValue);
-    }
+    const finalBaseValue: number | string | bigint = !hideDecimals
+      ? baseValue
+      : typeof baseValue === 'bigint'
+        ? baseValue
+        : typeof baseValue === 'string'
+          ? baseValue.split('.')[0]
+          : Math.trunc(baseValue);
 
     // Always format in currency mode — Intl's currency-style handles fraction
     // digits per the currency, locale-correct grouping/separators, and
@@ -269,26 +266,23 @@ export const Amount = ({
 
     const formatter = new Intl.NumberFormat(locale, formatOptions);
 
-    let formattedValue: string;
-    if (hideCurrency) {
-      // Strip the `currency` parts; trim the result to drop the leading/
-      // trailing whitespace that locales like de-DE leave behind (e.g.
-      // "1.234,56 €" becomes "1.234,56 " before the trim).
-      formattedValue = formatter
-        .formatToParts(
-          // @ts-expect-error TS lib types omit `string` from formatToParts() params, but Intl accepts numeric strings at runtime.
+    // For hideCurrency, strip the `currency` parts and trim leading/trailing
+    // whitespace that locales like de-DE leave behind (e.g. "1.234,56 €"
+    // becomes "1.234,56 " before the trim). Otherwise format directly.
+    const formattedValue: string = hideCurrency
+      ? formatter
+          .formatToParts(
+            // @ts-expect-error TS lib types omit `string` from formatToParts() params, but Intl accepts numeric strings at runtime.
+            finalBaseValue
+          )
+          .filter(p => p.type !== 'currency')
+          .map(p => p.value)
+          .join('')
+          .trim()
+      : formatter.format(
+          // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
           finalBaseValue
-        )
-        .filter(p => p.type !== 'currency')
-        .map(p => p.value)
-        .join('')
-        .trim();
-    } else {
-      formattedValue = formatter.format(
-        // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
-        finalBaseValue
-      );
-    }
+        );
 
     return <span {...props}>{formattedValue}</span>;
   } catch (error) {
