@@ -17,8 +17,14 @@ export interface SearchProps {
   /** The controlled value of the input. */
   value?: string;
 
-  /** Callback when input value changes. */
-  onChange?: (value: string) => void;
+  /** Native change handler. Receives the React change event. */
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+  /**
+   * Convenience callback fired with the new string value.
+   * Forwarded to the underlying Input — use this when you only need the value.
+   */
+  onValueChange?: (value: string, eventDetails: unknown) => void;
 
   /** Callback when clear button is clicked. */
   onClear?: () => void;

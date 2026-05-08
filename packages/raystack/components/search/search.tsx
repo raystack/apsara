@@ -14,14 +14,12 @@ export interface SearchProps extends Omit<InputProps, 'leadingIcon'> {
 }
 
 export function Search({
-  className,
   disabled,
   placeholder = 'Search',
   size,
   showClearButton,
   onClear,
   value,
-  onChange,
   width = '100%',
   variant = 'default',
   ...props
@@ -54,9 +52,7 @@ export function Search({
         placeholder={placeholder}
         disabled={disabled}
         value={value}
-        onChange={onChange}
         size={size}
-        className={className}
         aria-label={placeholder}
         variant={variant}
         {...props}

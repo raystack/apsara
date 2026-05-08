@@ -129,6 +129,24 @@ export const sizeChipDemo = {
 </Flex>`
 };
 
+export const onValueChangeDemo = {
+  type: 'code',
+  code: `function ValueChangeExample() {
+  const [value, setValue] = React.useState("");
+
+  return (
+    <Flex direction="column" gap="medium" style={{ width: 400 }}>
+      <Input
+        placeholder="Type something..."
+        value={value}
+        onValueChange={setValue}
+      />
+      <Text size="small">Current value: {value || "(empty)"}</Text>
+    </Flex>
+  );
+}`
+};
+
 export const interactiveChipDemo = {
   type: 'code',
   style: {
