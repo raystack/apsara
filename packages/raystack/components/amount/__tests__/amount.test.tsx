@@ -311,15 +311,15 @@ describe('Amount', () => {
     });
 
     it('clamps min when only maximumFractionDigits is provided (avoids RangeError)', () => {
-      // USD's default min of 2 would invert against max=1 → Intl throws.
-      // Clamp resolvedMinFrac down to maximumFractionDigits.
+      // USD's default min of 2 would invert against max=1; with style:'currency'
+      // + formatToParts(), Intl's spec auto-clamps min → 1, so 12.99 rounds to 13.0.
       render(<Amount value={1299} hideCurrency maximumFractionDigits={1} />);
       expect(screen.getByText('13.0')).toBeInTheDocument();
     });
 
     it('clamps max when only minimumFractionDigits is provided (avoids RangeError)', () => {
-      // USD's default max of 2 would invert against min=3 → Intl throws.
-      // Clamp resolvedMaxFrac up to minimumFractionDigits.
+      // USD's default max of 2 would invert against min=3; with style:'currency'
+      // + formatToParts(), Intl's spec auto-clamps max → 3, so 12.99 pads to 12.990.
       render(<Amount value={1299} hideCurrency minimumFractionDigits={3} />);
       expect(screen.getByText('12.990')).toBeInTheDocument();
     });

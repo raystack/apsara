@@ -118,29 +118,24 @@ function isValidCurrency(currency: string): boolean {
 }
 
 /**
- * Detects whether the runtime implements Intl.NumberFormat V3 string-precision
- * support (Chrome 106+, Firefox 116+, Safari 15.4+, Node 19+). On V3 runtimes,
+ * Whether the runtime implements Intl.NumberFormat V3 string-precision support
+ * (Chrome 106+, Firefox 116+, Safari 15.4+, Node 19+). On V3 runtimes,
  * `format(string)` preserves exact precision; on older runtimes the string is
- * coerced via `Number()` first, losing precision beyond 2^53. Memoized so the
- * probe runs at most once per session.
+ * coerced via `Number()` first, losing precision beyond 2^53. Probed once at
+ * module load.
  */
-let _supportsIntlStringPrecision: boolean | undefined;
-function supportsIntlStringPrecision(): boolean {
-  if (_supportsIntlStringPrecision !== undefined) {
-    return _supportsIntlStringPrecision;
-  }
+const SUPPORTS_INTL_STRING_PRECISION: boolean = (() => {
   try {
     // 20-digit value whose tail (`...112`) is lost when coerced to Number.
     const probe = new Intl.NumberFormat('en-US').format(
-      '11111111111111111112' as unknown as number
+      // @ts-expect-error TS lib types omit `string` from format() params; needed for the V3 precision probe.
+      '11111111111111111112'
     );
-    _supportsIntlStringPrecision =
-      probe.replace(/[^\d]/g, '') === '11111111111111111112';
+    return probe.replace(/[^\d]/g, '') === '11111111111111111112';
   } catch {
-    _supportsIntlStringPrecision = false;
+    return false;
   }
-  return _supportsIntlStringPrecision;
-}
+})();
 
 /**
  * Amount component for displaying monetary values.
@@ -245,60 +240,24 @@ export const Amount = ({
       finalBaseValue = Math.trunc(baseValue);
     }
 
-    // For style: 'decimal' (hideCurrency), Intl uses min=0/max=3 by default,
-    // ignoring the currency's decimal count. Mirror the currency-style behavior
-    // by defaulting both to `decimals` so round amounts like 1200 (USD) still
-    // render as "12.00" instead of "12". User-provided values win.
-    let resolvedMinFrac = hideDecimals
-      ? 0
-      : (minimumFractionDigits ?? (hideCurrency ? decimals : undefined));
-    let resolvedMaxFrac = hideDecimals
-      ? 0
-      : (maximumFractionDigits ?? (hideCurrency ? decimals : undefined));
-
-    // In hideCurrency mode, the currency-decimal default applied to the
-    // unspecified bound can invert min > max when the user provides only
-    // one of the two (e.g. maximumFractionDigits=1 with USD's default min
-    // of 2). Intl throws RangeError on inversion — clamp the *defaulted*
-    // side toward the user-provided side.
-    if (
-      hideCurrency &&
-      !hideDecimals &&
-      resolvedMinFrac !== undefined &&
-      resolvedMaxFrac !== undefined
-    ) {
-      if (
-        minimumFractionDigits === undefined &&
-        maximumFractionDigits !== undefined &&
-        resolvedMinFrac > resolvedMaxFrac
-      ) {
-        resolvedMinFrac = resolvedMaxFrac;
-      } else if (
-        maximumFractionDigits === undefined &&
-        minimumFractionDigits !== undefined &&
-        resolvedMaxFrac < resolvedMinFrac
-      ) {
-        resolvedMaxFrac = resolvedMinFrac;
-      }
-    }
-
+    // Always format in currency mode — Intl's currency-style handles fraction
+    // digits per the currency, locale-correct grouping/separators, and
+    // auto-clamps when only one of min/max is user-provided. For hideCurrency
+    // we then strip the currency token from the output via formatToParts(),
+    // which avoids the divergent defaults of style: 'decimal'.
     const formatOptions: Intl.NumberFormatOptions = {
-      minimumFractionDigits: resolvedMinFrac,
-      maximumFractionDigits: resolvedMaxFrac,
-      useGrouping: groupDigits,
-      ...(hideCurrency
-        ? { style: 'decimal' }
-        : {
-            style: 'currency',
-            currency: validCurrency.toUpperCase(),
-            currencyDisplay
-          })
+      style: 'currency',
+      currency: validCurrency.toUpperCase(),
+      currencyDisplay,
+      minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
+      maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
+      useGrouping: groupDigits
     };
 
     if (
       typeof finalBaseValue === 'string' &&
       finalBaseValue.replace(/\D/g, '').length > 15 &&
-      !supportsIntlStringPrecision()
+      !SUPPORTS_INTL_STRING_PRECISION
     ) {
       console.warn(
         'Amount: this runtime does not support Intl.NumberFormat V3 string precision ' +
@@ -308,11 +267,28 @@ export const Amount = ({
       );
     }
 
-    const formattedValue = new Intl.NumberFormat(
-      locale,
-      formatOptions
-      // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
-    ).format(finalBaseValue);
+    const formatter = new Intl.NumberFormat(locale, formatOptions);
+
+    let formattedValue: string;
+    if (hideCurrency) {
+      // Strip the `currency` parts; trim the result to drop the leading/
+      // trailing whitespace that locales like de-DE leave behind (e.g.
+      // "1.234,56 €" becomes "1.234,56 " before the trim).
+      formattedValue = formatter
+        .formatToParts(
+          // @ts-expect-error TS lib types omit `string` from formatToParts() params, but Intl accepts numeric strings at runtime.
+          finalBaseValue
+        )
+        .filter(p => p.type !== 'currency')
+        .map(p => p.value)
+        .join('')
+        .trim();
+    } else {
+      formattedValue = formatter.format(
+        // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
+        finalBaseValue
+      );
+    }
 
     return <span {...props}>{formattedValue}</span>;
   } catch (error) {
