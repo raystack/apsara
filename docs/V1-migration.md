@@ -1168,6 +1168,16 @@ Unchanged props: `size`, `variant`, `disabled`, `leadingIcon`, `trailingIcon`, `
 - `DatePicker.inputFieldProps` → `DatePicker.inputProps`
 - `RangePicker.inputFieldsProps` → `RangePicker.inputsProps`
 
+#### New Features
+
+- `onValueChange` callback — provided by Base UI's Input primitive. Fires with the new string value (and an `eventDetails` second arg) alongside the standard `onChange`. Use it when you only need the value:
+
+```tsx
+<Input value={value} onValueChange={setValue} placeholder="Enter text" />
+```
+
+The `Search` component forwards `onValueChange` to the underlying Input, so it works there as well.
+
 ---
 
 ### Label
@@ -1825,6 +1835,12 @@ Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, `rows`
 
 ```tsx
 <TextArea rows={6} placeholder="Taller textarea" />
+```
+
+- `onValueChange` callback — fires alongside `onChange` with the new string value (and the React change event as the second arg). Use it when you only need the value:
+
+```tsx
+<TextArea value={value} onValueChange={setValue} placeholder="Write something..." />
 ```
 
 ---
