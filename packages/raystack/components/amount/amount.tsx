@@ -2,7 +2,7 @@ import { type ComponentProps } from 'react';
 
 export interface AmountProps extends ComponentProps<'span'> {
   /**
-\   * The monetary value to display.
+   * The monetary value to display.
    * For exact precision beyond 2^53, pass either:
    *   - a `string` — supports decimals (e.g. "1299" or "12.99")
    *   - a `bigint` — integer-only; treated as already in major units, so
@@ -118,6 +118,31 @@ function isValidCurrency(currency: string): boolean {
 }
 
 /**
+ * Detects whether the runtime implements Intl.NumberFormat V3 string-precision
+ * support (Chrome 106+, Firefox 116+, Safari 15.4+, Node 19+). On V3 runtimes,
+ * `format(string)` preserves exact precision; on older runtimes the string is
+ * coerced via `Number()` first, losing precision beyond 2^53. Memoized so the
+ * probe runs at most once per session.
+ */
+let _supportsIntlStringPrecision: boolean | undefined;
+function supportsIntlStringPrecision(): boolean {
+  if (_supportsIntlStringPrecision !== undefined) {
+    return _supportsIntlStringPrecision;
+  }
+  try {
+    // 20-digit value whose tail (`...112`) is lost when coerced to Number.
+    const probe = new Intl.NumberFormat('en-US').format(
+      '11111111111111111112' as unknown as number
+    );
+    _supportsIntlStringPrecision =
+      probe.replace(/[^\d]/g, '') === '11111111111111111112';
+  } catch {
+    _supportsIntlStringPrecision = false;
+  }
+  return _supportsIntlStringPrecision;
+}
+
+/**
  * Amount component for displaying monetary values.
  * Automatically formats currencies using Intl.NumberFormat.
  * Inherits styling from parent Text component.
@@ -220,9 +245,20 @@ export const Amount = ({
       finalBaseValue = Math.trunc(baseValue);
     }
 
+    // For style: 'decimal' (hideCurrency), Intl uses min=0/max=3 by default,
+    // ignoring the currency's decimal count. Mirror the currency-style behavior
+    // by defaulting both to `decimals` so round amounts like 1200 (USD) still
+    // render as "12.00" instead of "12". User-provided values win.
+    const resolvedMinFrac = hideDecimals
+      ? 0
+      : (minimumFractionDigits ?? (hideCurrency ? decimals : undefined));
+    const resolvedMaxFrac = hideDecimals
+      ? 0
+      : (maximumFractionDigits ?? (hideCurrency ? decimals : undefined));
+
     const formatOptions: Intl.NumberFormatOptions = {
-      minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
-      maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
+      minimumFractionDigits: resolvedMinFrac,
+      maximumFractionDigits: resolvedMaxFrac,
       useGrouping: groupDigits,
       ...(hideCurrency
         ? { style: 'decimal' }
@@ -232,6 +268,19 @@ export const Amount = ({
             currencyDisplay
           })
     };
+
+    if (
+      typeof finalBaseValue === 'string' &&
+      finalBaseValue.replace(/\D/g, '').length > 15 &&
+      !supportsIntlStringPrecision()
+    ) {
+      console.warn(
+        'Amount: this runtime does not support Intl.NumberFormat V3 string precision ' +
+          '(requires Chrome 106+, Firefox 116+, Safari 15.4+, or Node 19+). ' +
+          'Large string values may lose precision when formatted. ' +
+          'Pass a bigint for exact integer formatting on older runtimes.'
+      );
+    }
 
     const formattedValue = new Intl.NumberFormat(
       locale,

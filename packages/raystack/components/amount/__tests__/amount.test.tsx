@@ -208,6 +208,20 @@ describe('Amount', () => {
       render(<Amount value='-1299' />);
       expect(screen.getByText('-$12.99')).toBeInTheDocument();
     });
+
+    it('does not warn about Intl V3 support on a V3 runtime for large strings', () => {
+      // The test environment (Node 22) supports Intl V3, so passing a large
+      // string should format with full precision and never log the
+      // string-precision fallback warning.
+      const consoleSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => null);
+      render(<Amount value='10000100091636935' valueInMinorUnits={false} />);
+      expect(consoleSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('Intl.NumberFormat V3')
+      );
+      consoleSpy.mockRestore();
+    });
   });
 
   describe('BigInt support', () => {
@@ -254,9 +268,19 @@ describe('Amount', () => {
       expect(screen.getByText('12.99')).toBeInTheDocument();
     });
 
-    it('hides currency for bigint values', () => {
+    it('preserves trailing zeros for round amounts (USD)', () => {
+      render(<Amount value={1200} hideCurrency />);
+      expect(screen.getByText('12.00')).toBeInTheDocument();
+    });
+
+    it('preserves currency fraction digits for round bigint values', () => {
       render(<Amount value={1299n} hideCurrency />);
-      expect(screen.getByText('1,299')).toBeInTheDocument();
+      expect(screen.getByText('1,299.00')).toBeInTheDocument();
+    });
+
+    it('preserves currency fraction digits for a 3-decimal currency (BHD)', () => {
+      render(<Amount value={1234} currency='BHD' hideCurrency />);
+      expect(screen.getByText('1.234')).toBeInTheDocument();
     });
 
     it('overrides currencyDisplay when set', () => {
@@ -267,6 +291,23 @@ describe('Amount', () => {
     it('respects the currency for decimal-place math even when hidden', () => {
       render(<Amount value={1299} currency='JPY' hideCurrency />);
       expect(screen.getByText('1,299')).toBeInTheDocument();
+    });
+
+    it('honors explicit minimumFractionDigits over the currency default', () => {
+      render(
+        <Amount
+          value={1200}
+          hideCurrency
+          minimumFractionDigits={4}
+          maximumFractionDigits={4}
+        />
+      );
+      expect(screen.getByText('12.0000')).toBeInTheDocument();
+    });
+
+    it('hideDecimals wins over the currency-default fraction digits', () => {
+      render(<Amount value={1200} hideCurrency hideDecimals />);
+      expect(screen.getByText('12')).toBeInTheDocument();
     });
   });
 });
