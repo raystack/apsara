@@ -209,16 +209,16 @@ describe('Amount', () => {
       expect(screen.getByText('-$12.99')).toBeInTheDocument();
     });
 
-    it('does not warn about Intl V3 support on a V3 runtime for large strings', () => {
-      // The test environment (Node 22) supports Intl V3, so passing a large
-      // string should format with full precision and never log the
-      // string-precision fallback warning.
+    it('warns when a string longer than 15 digits is formatted', () => {
+      // The component flags potential precision loss for any >15-digit string,
+      // letting the developer decide whether their runtime targets are at risk
+      // and whether to switch to bigint.
       const consoleSpy = vi
         .spyOn(console, 'warn')
         .mockImplementation(() => null);
       render(<Amount value='10000100091636935' valueInMinorUnits={false} />);
-      expect(consoleSpy).not.toHaveBeenCalledWith(
-        expect.stringContaining('Intl.NumberFormat V3')
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('longer than 15 digits')
       );
       consoleSpy.mockRestore();
     });

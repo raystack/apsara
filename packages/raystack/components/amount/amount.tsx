@@ -118,26 +118,6 @@ function isValidCurrency(currency: string): boolean {
 }
 
 /**
- * Whether the runtime implements Intl.NumberFormat V3 string-precision support
- * (Chrome 106+, Firefox 116+, Safari 15.4+, Node 19+). On V3 runtimes,
- * `format(string)` preserves exact precision; on older runtimes the string is
- * coerced via `Number()` first, losing precision beyond 2^53. Probed once at
- * module load.
- */
-const SUPPORTS_INTL_STRING_PRECISION: boolean = (() => {
-  try {
-    // 20-digit value whose tail (`...112`) is lost when coerced to Number.
-    const probe = new Intl.NumberFormat('en-US').format(
-      // @ts-expect-error TS lib types omit `string` from format() params; needed for the V3 precision probe.
-      '11111111111111111112'
-    );
-    return probe.replace(/[^\d]/g, '') === '11111111111111111112';
-  } catch {
-    return false;
-  }
-})();
-
-/**
  * Amount component for displaying monetary values.
  * Automatically formats currencies using Intl.NumberFormat.
  * Inherits styling from parent Text component.
@@ -206,9 +186,12 @@ export const Amount = ({
 
     const decimals = getCurrencyDecimals(validCurrency);
 
-    // Convert minor → major units.
-    // Three input shapes: bigint, string, number.
-    // BigInt is always treated as already in major units (it cannot represent fractions), so `valueInMinorUnits` is ignored for BigInt.
+    /**
+     * Convert minor → major units.
+     * Three input shapes: bigint, string, number.
+     * BigInt is always treated as already in major units (it cannot represent fractions),
+     * so `valueInMinorUnits` is ignored for BigInt.
+     */
     let baseValue: number | string | bigint;
     if (typeof value === 'bigint') {
       baseValue = value;
@@ -252,16 +235,21 @@ export const Amount = ({
       useGrouping: groupDigits
     };
 
+    /**
+     * Only flag strings whose digit count exceeds 15 — Number.MAX_SAFE_INTEGER
+     * is 9,007,199,254,740,991 (16 digits), so ≤15-digit strings round-trip
+     * through Number() without precision loss even on non-V3 runtimes.
+     */
     if (
       typeof finalBaseValue === 'string' &&
-      finalBaseValue.replace(/\D/g, '').length > 15 &&
-      !SUPPORTS_INTL_STRING_PRECISION
+      finalBaseValue.replace(/\D/g, '').length > 15
     ) {
       console.warn(
-        'Amount: this runtime does not support Intl.NumberFormat V3 string precision ' +
-          '(requires Chrome 106+, Firefox 116+, Safari 15.4+, or Node 19+). ' +
-          'Large string values may lose precision when formatted. ' +
-          'Pass a bigint for exact integer formatting on older runtimes.'
+        'Amount: a string longer than 15 digits is being formatted. ' +
+          'Older runtimes without Intl.NumberFormat V3 string-precision support ' +
+          '(Chrome <106, Firefox <116, Safari <15.4, Node <19) coerce strings via ' +
+          'Number() first, which loses precision beyond 2^53. Pass a bigint for ' +
+          'exact integer formatting if your targets include those runtimes.'
       );
     }
 
