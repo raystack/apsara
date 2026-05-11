@@ -6,47 +6,47 @@ import PlaygroundLayout from './playground-layout';
 export function PopoverExamples() {
   return (
     <PlaygroundLayout title='Popover'>
-      <Flex gap='medium' wrap='wrap'>
+      <Flex gap={5} wrap='wrap'>
         <Popover>
           <Popover.Trigger render={<Button />}>Top Popover</Popover.Trigger>
           <Popover.Content side='top'>
-            <Text size='2'>Content appears above the trigger</Text>
+            <Text size='small'>Content appears above the trigger</Text>
           </Popover.Content>
         </Popover>
         <Popover>
           <Popover.Trigger render={<Button />}>Right Popover</Popover.Trigger>
           <Popover.Content side='right'>
-            <Text size='2'>Content appears to the right</Text>
+            <Text size='small'>Content appears to the right</Text>
           </Popover.Content>
         </Popover>
         <Popover>
           <Popover.Trigger render={<Button />}>Bottom Popover</Popover.Trigger>
           <Popover.Content side='bottom'>
-            <Text size='2'>Content appears below the trigger</Text>
+            <Text size='small'>Content appears below the trigger</Text>
           </Popover.Content>
         </Popover>
         <Popover>
           <Popover.Trigger render={<Button />}>Left Popover</Popover.Trigger>
           <Popover.Content side='left'>
-            <Text size='2'>Content appears to the left</Text>
+            <Text size='small'>Content appears to the left</Text>
           </Popover.Content>
         </Popover>
         <Popover>
           <Popover.Trigger render={<Button />}>Center Aligned</Popover.Trigger>
           <Popover.Content align='center'>
-            <Text size='2'>Centered with the trigger</Text>
+            <Text size='small'>Centered with the trigger</Text>
           </Popover.Content>
         </Popover>
         <Popover>
           <Popover.Trigger render={<Button />}>Start Aligned</Popover.Trigger>
           <Popover.Content align='start'>
-            <Text size='2'>Aligned to the start</Text>
+            <Text size='small'>Aligned to the start</Text>
           </Popover.Content>
         </Popover>
         <Popover>
           <Popover.Trigger render={<Button />}>End Aligned</Popover.Trigger>
           <Popover.Content align='end'>
-            <Text size='2'>Aligned to the end</Text>
+            <Text size='small'>Aligned to the end</Text>
           </Popover.Content>
         </Popover>
       </Flex>

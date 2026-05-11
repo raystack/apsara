@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function AlertDialogExamples() {
   return (
     <PlaygroundLayout title='AlertDialog'>
-      <Flex gap='medium'>
+      <Flex gap={5}>
         <AlertDialog>
           <AlertDialog.Trigger render={<Button color='danger' />}>
             Delete Item

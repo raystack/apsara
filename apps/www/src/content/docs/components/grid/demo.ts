@@ -21,8 +21,8 @@ export const playground = {
   controls: {
     gap: {
       type: 'select',
-      options: ['extra-small', 'small', 'medium', 'large', 'extra-large'],
-      initialValue: 'small'
+      options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+      initialValue: 3
     },
     rows: {
       type: 'number',
@@ -54,7 +54,7 @@ export const basicDemo = {
   type: 'code',
   code: `
   <Grid
-  gap="small"
+  gap={3}
   rows={2}
   columns={2}>
   <Button>Button 1</Button>

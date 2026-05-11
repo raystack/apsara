@@ -7,16 +7,16 @@ export function RadioExamples() {
   return (
     <PlaygroundLayout title='Radio'>
       <Radio.Group defaultValue='2'>
-        <Flex gap='large'>
-          <Flex gap='small' align='center'>
+        <Flex gap={9}>
+          <Flex gap={3} align='center'>
             <Radio value='1' id='P1' />
             <Label htmlFor='P1'>Option One</Label>
           </Flex>
-          <Flex gap='small' align='center'>
+          <Flex gap={3} align='center'>
             <Radio value='2' id='P2' />
             <Label htmlFor='P2'>Option Two</Label>
           </Flex>
-          <Flex gap='small' align='center'>
+          <Flex gap={3} align='center'>
             <Radio value='3' id='P3' disabled />
             <Label htmlFor='P3'>Option Three</Label>
           </Flex>

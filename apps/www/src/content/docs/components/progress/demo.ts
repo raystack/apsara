@@ -24,7 +24,7 @@ export const playground = {
 
 export const directUsageDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+  code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Progress value={40} />
   <Progress value={70} />
   <Progress value={100} />
@@ -36,7 +36,7 @@ export const variantDemo = {
   tabs: [
     {
       name: 'Linear',
-      code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+      code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Progress value={15}>
     <Flex justify="between">
       <Progress.Label>Uploading...</Progress.Label>
@@ -48,7 +48,7 @@ export const variantDemo = {
     },
     {
       name: 'Circular',
-      code: `<Flex gap="large" align="center">
+      code: `<Flex gap={9} align="center">
   <Progress variant="circular" value={70}>
     <Progress.Track />
     <Progress.Value />
@@ -71,7 +71,7 @@ export const customizationDemo = {
   tabs: [
     {
       name: 'Linear',
-      code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+      code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Progress value={60}>
     <Progress.Track style={{ height: 2 }} />
   </Progress>
@@ -85,7 +85,7 @@ export const customizationDemo = {
     },
     {
       name: 'Circular',
-      code: `<Flex gap="large" align="center">
+      code: `<Flex gap={9} align="center">
   <Progress variant="circular" value={60}>
     <Progress.Track style={{ width: 48, height: 48 }} />
     <Progress.Value />
@@ -123,7 +123,7 @@ export const animatedDemo = {
   }, []);
 
   return (
-    <Flex gap="large" align="center">
+    <Flex gap={9} align="center">
       <Progress value={value} style={{ width: 300 }}>
         <Flex justify="between">
           <Progress.Label>Uploading...</Progress.Label>
@@ -142,7 +142,7 @@ export const animatedDemo = {
 
 export const withLabelsDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+  code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Progress value={60}>
     <Flex justify="between">
       <Progress.Label>Uploading files...</Progress.Label>

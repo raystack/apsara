@@ -55,7 +55,7 @@ export const playground = {
 export const variantsDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <EmptyState
       variant="empty1"
       icon={<BellIcon />}

@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function SliderExamples() {
   return (
     <PlaygroundLayout title='Slider'>
-      <Flex gap='extra-large' style={{ width: 400 }} direction='column'>
+      <Flex gap={11} style={{ width: 400 }} direction='column'>
         <Slider variant='single' label='Value' defaultValue={50} />
         <Slider
           variant='range'

@@ -1014,17 +1014,39 @@ import { Menu } from '@raystack/apsara';
 
 ```tsx
 // Before — Flex always rendered as <div>
-<Flex gap="3" align="center">content</Flex>
+<Flex gap={3} align="center">content</Flex>
 
 // After — unchanged for basic usage, but now supports render prop
-<Flex gap="3" align="center">content</Flex>
+<Flex gap={3} align="center">content</Flex>
 
 // New — render as a different element
-<Flex render={<section />} gap="3" align="center">content</Flex>
-<Flex render={<nav />} gap="3" direction="column">links</Flex>
+<Flex render={<section />} gap={3} align="center">content</Flex>
+<Flex render={<nav />} gap={3} direction="column">links</Flex>
 ```
 
 Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors if you typed Flex props explicitly.
+
+**`gap` scale unified to numeric tokens (1–17).** The named aliases (`'extra-small' | 'small' | 'medium' | 'large' | 'extra-large'`) have been removed. `gap` now accepts a number from `1` to `17` mapped directly to `--rs-space-1` through `--rs-space-17`, matching the full spacing token scale (the old numeric set capped at `9`).
+
+| Before | After | Token |
+|---|---|---|
+| `gap="extra-small"` | `gap={2}` | `--rs-space-2` (4px) |
+| `gap="small"` | `gap={3}` | `--rs-space-3` (8px) |
+| `gap="medium"` | `gap={5}` | `--rs-space-5` (16px) |
+| `gap="large"` | `gap={9}` | `--rs-space-9` (32px) |
+| `gap="extra-large"` | `gap={11}` | `--rs-space-11` (48px) |
+
+Numeric values `1`–`9` remain unchanged. Values `10`–`17` are new and unlock the larger spacing tokens (40px, 48px, 56px, 64px, 72px, 80px, 96px, 120px) that were previously inaccessible from `Flex`.
+
+```tsx
+// Before
+<Flex gap="medium" direction="column">…</Flex>
+
+// After
+<Flex gap={5} direction="column">…</Flex>
+```
+
+**TypeScript:** `gap` is now `1 | 2 | … | 17`.
 
 ---
 
@@ -1034,7 +1056,7 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 
 ```tsx
 // Before
-<Grid asChild columns="3" gap="4">
+<Grid asChild columns="3" gap="medium">
   <section>
     <Grid.Item asChild colSpan="2">
       <article>Wide content</article>
@@ -1044,11 +1066,35 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 </Grid>
 
 // After
-<Grid render={<section />} columns="3" gap="4">
+<Grid render={<section />} columns="3" gap={5}>
   <Grid.Item render={<article />} colSpan="2">Wide content</Grid.Item>
   <Grid.Item>Narrow content</Grid.Item>
 </Grid>
 ```
+
+**`gap`, `columnGap`, `rowGap` switched to the same numeric scale as Flex (1–17).** The named aliases (`'extra-small' | 'small' | 'medium' | 'large' | 'extra-large'`) have been removed. Both layout primitives now share a single `gap` token vocabulary, so values are portable between them.
+
+| Before | After | Token |
+|---|---|---|
+| `gap="extra-small"` | `gap={2}` | `--rs-space-2` (4px) |
+| `gap="small"` | `gap={3}` | `--rs-space-3` (8px) |
+| `gap="medium"` | `gap={5}` | `--rs-space-5` (16px) |
+| `gap="large"` | `gap={9}` | `--rs-space-9` (32px) |
+| `gap="extra-large"` | `gap={11}` | `--rs-space-11` (48px) |
+
+The same mapping applies to `columnGap` and `rowGap`.
+
+```tsx
+// Before
+<Grid columns={3} gap="medium" columnGap="large" rowGap="small">…</Grid>
+
+// After
+<Grid columns={3} gap={5} columnGap={9} rowGap={3}>…</Grid>
+```
+
+**Implementation note:** `gap`, `columnGap`, and `rowGap` are now applied via CSS classes (from a shared gap utility reused by `Flex`) instead of inline `style`. Custom CSS that overrode the previous inline `gap` style via `style={{ gap: '...' }}` continues to work as before — your inline override still wins over the class.
+
+**TypeScript:** `gap`, `columnGap`, `rowGap` are now `1 | 2 | … | 17`.
 
 ---
 
@@ -1078,6 +1124,28 @@ The `render` prop also supports render functions for full control:
 ```
 
 **TypeScript:** The type changed from `HeadlineBaseProps & ComponentProps<'h1'> & { as?: 'h1' | ... | 'h6' }` to `HeadlineBaseProps & useRender.ComponentProps<'h2'>`. If you explicitly typed Headline props, update to `HeadlineProps` (now exported).
+
+**`size` scale unified to `t1`–`t4` (token-aligned).** The deprecated `'small' | 'medium' | 'large'` aliases have been removed. Use the typographic-token names instead. Each alias was just a CSS shadow over a `t*` token, so the mapping is a straight rename — no visual change.
+
+| Before | After | Token |
+|---|---|---|
+| `size="small"` | `size="t2"` | `--rs-font-size-t2` (24px) |
+| `size="medium"` | `size="t3"` | `--rs-font-size-t3` (28px) |
+| `size="large"` | `size="t4"` | `--rs-font-size-t4` (32px) |
+
+```tsx
+// Before
+<Headline size="large">Page Title</Headline>
+<Headline size="medium">Section</Headline>
+<Headline size="small">Subsection</Headline>
+
+// After
+<Headline size="t4">Page Title</Headline>
+<Headline size="t3">Section</Headline>
+<Headline size="t2">Subsection</Headline>
+```
+
+**TypeScript:** `HeadlineProps['size']` is now `'t1' | 't2' | 't3' | 't4'` (was `'t1' | 't2' | 't3' | 't4' | 'small' | 'medium' | 'large'`).
 
 ---
 
@@ -1726,6 +1794,57 @@ The `render` prop also supports render functions for full control:
 ```
 
 **TypeScript:** The type changed from a discriminated union (`TextSpanProps | TextDivProps | TextLabelProps | TextPProps | TextAProps`) to `TextBaseProps & useRender.ComponentProps<'span'>`. The `render` prop now accepts any element, so you are no longer limited to the five original tag names. The `// @ts-expect-error` that was needed internally for polymorphic refs is also gone.
+
+**`size` scale unified to named tokens.** Numeric sizes (`1`–`10`) have been removed; `Text` now accepts only the named scale `'micro' | 'mini' | 'small' | 'regular' | 'large'` mapped 1:1 to the typography tokens (`--rs-font-size-micro` through `--rs-font-size-large`). The top half of the numeric scale (`7`–`10`) covered title-sized type and was never appropriate on `Text` — those should move to `Headline`.
+
+| Before | After | Token / pixels |
+|---|---|---|
+| `size={1}` | `size="mini"` | 11px (exact) |
+| `size={2}` | `size="small"` | 12px (exact) |
+| `size={3}` | `size="small"` | 13px → 12px (nearest) |
+| `size={4}` | `size="regular"` | 14px (exact) |
+| `size={5}` | `size="large"` | 16px (exact) |
+| `size={6}` | `size="large"` | 18px → 16px (nearest within Text scale) |
+| `size={7}` | `<Headline size="t1">` | 20px (exact) |
+| `size={8}` | `<Headline size="t1">` | 22px → 20px (nearest) |
+| `size={9}` | `<Headline size="t2">` | 24px (exact) |
+| `size={10}` | `<Headline size="t3">` | 28px (exact) |
+
+```tsx
+// Before
+<Text size={2}>Caption</Text>
+<Text size={4}>Body</Text>
+<Text size={9}>Page title</Text>
+
+// After
+<Text size="small">Caption</Text>
+<Text size="regular">Body</Text>
+<Headline size="t2">Page title</Headline>
+```
+
+**`weight` scale unified to `'regular' | 'medium'`.** Numeric weights (`100`–`900`) and the keyword set (`'normal' | 'lighter' | 'bold' | 'bolder'`) have been removed. The token system only defines two weights (`--rs-font-weight-regular` = 400 and `--rs-font-weight-medium` = 500), so accepting the rest was misleading — anything heavier than `500` rendered as whatever the loaded font happened to support.
+
+| Before | After |
+|---|---|
+| `weight="normal"`, `weight="lighter"` | `weight="regular"` |
+| `weight={100}`, `{200}`, `{300}`, `{400}` | `weight="regular"` |
+| `weight={500}` | `weight="medium"` |
+| `weight="bold"`, `weight="bolder"` | `weight="medium"` |
+| `weight={600}`, `{700}`, `{800}`, `{900}` | `weight="medium"` (nearest supported) |
+
+If you relied on the previous heavier weights, bold-looking text now renders as `medium` (500). Use a custom `className` and an explicit font-weight if you need anything outside the token range.
+
+```tsx
+// Before
+<Text weight="bold">Important</Text>
+<Text weight={600}>Heading-ish</Text>
+
+// After
+<Text weight="medium">Important</Text>
+<Text weight="medium">Heading-ish</Text>
+```
+
+**TypeScript:** `TextProps['size']` is now `'micro' | 'mini' | 'small' | 'regular' | 'large'` and `TextProps['weight']` is now `'regular' | 'medium'`.
 
 ---
 

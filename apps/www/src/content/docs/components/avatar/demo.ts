@@ -53,7 +53,7 @@ export const playground = {
 export const variantDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="end">
+  <Flex gap={5} align="end">
     <Avatar size={6} variant="soft" fallback="RC" />
     <Avatar size={6} variant="solid" fallback="RC" />
   </Flex>`
@@ -61,8 +61,8 @@ export const variantDemo = {
 
 export const sizesDemo = {
   type: 'code',
-  code: `<Flex gap="large" direction="column">
-  <Flex gap="small" align="end">
+  code: `<Flex gap={9} direction="column">
+  <Flex gap={3} align="end">
     <Avatar size={1} fallback="RC" />
     <Avatar size={2} fallback="RC" />
     <Avatar size={3} fallback="RC" />
@@ -73,7 +73,7 @@ export const sizesDemo = {
     <Avatar size={8} fallback="RC" />
     <Avatar size={9} fallback="RC" />
   </Flex>
-  <Flex gap="small">
+  <Flex gap={3}>
     <Avatar size={10} fallback="RC" />
     <Avatar size={11} fallback="RC" />
     <Avatar size={12} fallback="RC" />
@@ -88,7 +88,7 @@ export const colorsDemo = {
     {
       name: 'Base',
       code: `
-      <Flex gap="medium">
+      <Flex gap={5}>
         <Avatar size={6} color="indigo" fallback="RC" />
         <Avatar size={6} color="orange" fallback="RC" />
         <Avatar size={6} color="mint" fallback="RC" />
@@ -98,7 +98,7 @@ export const colorsDemo = {
     {
       name: 'Extended',
       code: `
-      <Flex gap="medium">
+      <Flex gap={5}>
         <Avatar size={6} color="sky" fallback="RC" />
         <Avatar size={6} color="lime" fallback="RC" />
         <Avatar size={6} color="grass" fallback="RC" />
@@ -116,7 +116,7 @@ export const colorsDemo = {
 export const radiusDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="end">
+  <Flex gap={5} align="end">
     <Avatar size={6} radius="full" fallback="RC" />
     <Avatar size={6} radius="small" fallback="RC" />
   </Flex>`
@@ -124,7 +124,7 @@ export const radiusDemo = {
 export const imageDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="end">
+  <Flex gap={5} align="end">
     <Avatar size={6} radius="full" fallback="RC" src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80" />
     <Avatar size={8} radius="small" fallback="RC" src="https://images.unsplash.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80" />
   </Flex>`
@@ -133,7 +133,7 @@ export const imageDemo = {
 export const generatedColorDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="end">
+  <Flex gap={5} align="end">
     <Avatar size={6} color={getAvatarColor("abcde")} fallback="RC" />
   </Flex>`
 };

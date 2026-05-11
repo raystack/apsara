@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function BreadcrumbExamples() {
   return (
     <PlaygroundLayout title='Breadcrumb'>
-      <Flex gap='medium' direction='column'>
+      <Flex gap={5} direction='column'>
         <Breadcrumb size='small'>
           <Breadcrumb.Item href='/'>Home</Breadcrumb.Item>
           <Breadcrumb.Separator />

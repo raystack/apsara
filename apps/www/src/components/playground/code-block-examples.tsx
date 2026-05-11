@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function CodeBlockExamples() {
   return (
     <PlaygroundLayout title='CodeBlock'>
-      <Flex gap='large' style={{ width: 800 }}>
+      <Flex gap={9} style={{ width: 800 }}>
         <CodeBlock maxLines={10} defaultValue='jsx'>
           <CodeBlock.Header>
             <CodeBlock.Label>Code</CodeBlock.Label>

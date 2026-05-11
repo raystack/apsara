@@ -56,7 +56,7 @@ export const sizeDemo = {
 export const separatorDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" direction="column">
+  <Flex gap={5} direction="column">
     <Breadcrumb>
       <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
       <Breadcrumb.Separator>|</Breadcrumb.Separator>

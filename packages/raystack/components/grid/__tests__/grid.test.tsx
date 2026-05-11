@@ -1,6 +1,8 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import gapStyles from '~/shared/gap/gap.module.css';
 import { Grid } from '../grid';
+import styles from '../grid.module.css';
 
 describe('Grid', () => {
   describe('Basic Rendering', () => {
@@ -21,16 +23,17 @@ describe('Grid', () => {
       expect(ref).toHaveBeenCalled();
     });
 
-    it('applies grid display style', () => {
+    it('applies grid display class', () => {
       const { container } = render(<Grid>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({ display: 'grid' });
+      expect(grid).toHaveClass(styles.grid);
+      expect(grid).not.toHaveClass(styles['grid-inline']);
     });
 
-    it('applies inline-grid when inline is true', () => {
+    it('applies inline-grid class when inline is true', () => {
       const { container } = render(<Grid inline>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({ display: 'inline-grid' });
+      expect(grid).toHaveClass(styles['grid-inline']);
     });
   });
 
@@ -86,36 +89,25 @@ describe('Grid', () => {
 
   describe('Gap Properties', () => {
     const gaps = [
-      'extra-small',
-      'small',
-      'medium',
-      'large',
-      'extra-large'
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
     ] as const;
-    const gapValues = {
-      'extra-small': 'var(--rs-space-2)',
-      small: 'var(--rs-space-3)',
-      medium: 'var(--rs-space-5)',
-      large: 'var(--rs-space-9)',
-      'extra-large': 'var(--rs-space-11)'
-    };
 
     it.each(gaps)('renders %s gap correctly', gap => {
       const { container } = render(<Grid gap={gap}>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({ gap: gapValues[gap] });
+      expect(grid).toHaveClass(gapStyles[`gap-${gap}`]);
     });
 
     it.each(gaps)('renders %s column gap correctly', gap => {
       const { container } = render(<Grid columnGap={gap}>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({ columnGap: gapValues[gap] });
+      expect(grid).toHaveClass(gapStyles[`column-gap-${gap}`]);
     });
 
     it.each(gaps)('renders %s row gap correctly', gap => {
       const { container } = render(<Grid rowGap={gap}>Content</Grid>);
       const grid = container.firstChild as HTMLElement;
-      expect(grid).toHaveStyle({ rowGap: gapValues[gap] });
+      expect(grid).toHaveClass(gapStyles[`row-gap-${gap}`]);
     });
   });
 
@@ -173,25 +165,23 @@ describe('Grid', () => {
       expect(grid).toHaveStyle({ alignItems: align });
     });
 
-    it.each([...alignments, ...extendedAlignments])(
-      'renders %s justify content correctly',
-      align => {
-        const { container } = render(
-          <Grid justifyContent={align}>Content</Grid>
-        );
-        const grid = container.firstChild as HTMLElement;
-        expect(grid).toHaveStyle({ justifyContent: align });
-      }
-    );
+    it.each([
+      ...alignments,
+      ...extendedAlignments
+    ])('renders %s justify content correctly', align => {
+      const { container } = render(<Grid justifyContent={align}>Content</Grid>);
+      const grid = container.firstChild as HTMLElement;
+      expect(grid).toHaveStyle({ justifyContent: align });
+    });
 
-    it.each([...alignments, ...extendedAlignments])(
-      'renders %s align content correctly',
-      align => {
-        const { container } = render(<Grid alignContent={align}>Content</Grid>);
-        const grid = container.firstChild as HTMLElement;
-        expect(grid).toHaveStyle({ alignContent: align });
-      }
-    );
+    it.each([
+      ...alignments,
+      ...extendedAlignments
+    ])('renders %s align content correctly', align => {
+      const { container } = render(<Grid alignContent={align}>Content</Grid>);
+      const grid = container.firstChild as HTMLElement;
+      expect(grid).toHaveStyle({ alignContent: align });
+    });
   });
 
   describe('HTML Attributes', () => {

@@ -7,7 +7,7 @@ import PlaygroundLayout from './playground-layout';
 export function IconButtonExamples() {
   return (
     <PlaygroundLayout title='IconButton'>
-      <Flex gap='large' align='center' wrap='wrap'>
+      <Flex gap={9} align='center' wrap='wrap'>
         <IconButton size={1}>
           <Info size={16} />
         </IconButton>

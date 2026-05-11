@@ -175,7 +175,7 @@ export const FilterChip = ({
             {leadingIcon}
           </span>
         )}
-        <Text size={2} weight='normal'>
+        <Text size='small' weight='regular'>
           {label}
         </Text>
       </Flex>

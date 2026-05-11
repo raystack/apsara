@@ -42,7 +42,7 @@ export function EmptyState({
         <Flex
           direction='column'
           align='start'
-          gap='medium'
+          gap={5}
           className={cx(styles.emptyStateContent, classNames?.container)}
         >
           <div className={cx(styles.iconContainer, classNames?.iconContainer)}>
@@ -55,8 +55,8 @@ export function EmptyState({
 
           {heading && (
             <Text
-              size={5}
-              weight={500}
+              size='large'
+              weight='medium'
               className={cx(styles.headerText, classNames?.heading)}
             >
               {heading}
@@ -65,15 +65,15 @@ export function EmptyState({
 
           {subHeading && (
             <Text
-              size={4}
-              weight={400}
+              size='regular'
+              weight='regular'
               className={cx(styles.subHeaderText, classNames?.subHeading)}
             >
               {subHeading}
             </Text>
           )}
 
-          <Flex gap='medium'>
+          <Flex gap={5}>
             {primaryAction}
             {secondaryAction}
           </Flex>
@@ -86,7 +86,7 @@ export function EmptyState({
     <Flex
       direction='column'
       align='center'
-      gap='medium'
+      gap={5}
       className={cx(styles.emptyState, classNames?.container)}
       {...props}
     >
@@ -94,11 +94,11 @@ export function EmptyState({
         <div className={cx(styles.icon, classNames?.icon)}>{icon}</div>
       </div>
 
-      <Flex direction='column' gap='small' align='center'>
+      <Flex direction='column' gap={3} align='center'>
         {heading && (
           <Text
-            size={5}
-            weight={500}
+            size='large'
+            weight='medium'
             className={cx(styles.headerText, classNames?.heading)}
           >
             {heading}
@@ -107,8 +107,8 @@ export function EmptyState({
 
         {subHeading && (
           <Text
-            size={4}
-            weight={400}
+            size='regular'
+            weight='regular'
             className={cx(styles.subHeaderText, classNames?.subHeading)}
           >
             {subHeading}

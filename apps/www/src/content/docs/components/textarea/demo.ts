@@ -44,7 +44,7 @@ export const basicDemo = {
 
 export const withFieldDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  code: `<Flex direction="column" gap={5} style={{ width: 400 }}>
   <Field label="Bio" required={false} description="Tell us about yourself">
     <TextArea placeholder="Write something..." />
   </Field>
@@ -90,7 +90,7 @@ export const onValueChangeDemo = {
 
 export const sizeDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  code: `<Flex direction="column" gap={5} style={{ width: 400 }}>
   <TextArea placeholder="Large size (default)" />
   <TextArea placeholder="Small size" size="small" />
 </Flex>`
@@ -98,7 +98,7 @@ export const sizeDemo = {
 
 export const variantDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  code: `<Flex direction="column" gap={5} style={{ width: 400 }}>
   <TextArea placeholder="Default variant" />
   <TextArea placeholder="Borderless variant" variant="borderless" />
 </Flex>`
@@ -106,7 +106,7 @@ export const variantDemo = {
 
 export const rowsDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium" style={{ width: 400 }}>
+  code: `<Flex direction="column" gap={5} style={{ width: 400 }}>
   <TextArea placeholder="Default (3 rows)" />
   <TextArea placeholder="6 rows" rows={6} />
 </Flex>`

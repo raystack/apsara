@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import gapStyles from '~/shared/gap/gap.module.css';
 import { Flex } from '../flex';
 import styles from '../flex.module.css';
 
@@ -108,19 +109,14 @@ describe('Flex', () => {
   });
 
   describe('Gap', () => {
-    const numericGaps = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
-    const namedGaps = [
-      'extra-small',
-      'small',
-      'medium',
-      'large',
-      'extra-large'
+    const numericGaps = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
     ] as const;
 
     it.each(numericGaps)('renders gap %s correctly', gap => {
       const { container } = render(<Flex gap={gap}>Content</Flex>);
       const flex = container.firstChild as HTMLElement;
-      expect(flex).toHaveClass(styles[`gap-${gap}`]);
+      expect(flex).toHaveClass(gapStyles[`gap-${gap}`]);
     });
   });
 

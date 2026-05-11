@@ -75,7 +75,7 @@ describe('Headline', () => {
   });
 
   describe('Sizes', () => {
-    const sizes = ['t1', 't2', 't3', 't4', 'small', 'medium', 'large'] as const;
+    const sizes = ['t1', 't2', 't3', 't4'] as const;
 
     it.each(sizes)('renders %s size correctly', size => {
       render(<Headline size={size}>Heading</Headline>);

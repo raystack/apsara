@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function MenubarExamples() {
   return (
     <PlaygroundLayout title='Menubar'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Menubar>
           <Menu>
             <Menu.Trigger>File</Menu.Trigger>
