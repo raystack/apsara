@@ -30,7 +30,7 @@ export const playground = {
 export const stateDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <Switch />
     <Switch defaultChecked />
     <Switch disabled />
@@ -42,7 +42,7 @@ export const stateDemo = {
 export const sizeDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <Switch size="large" />
     <Switch size="large" defaultChecked />
     <Switch size="small" />

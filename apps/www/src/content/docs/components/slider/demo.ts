@@ -47,7 +47,7 @@ export const controlDemo = {
   const [value, setValue] = React.useState(50);
 
   return (
-    <Flex direction="column" gap="medium" align="center" style={{ width: "400px" }}>
+    <Flex direction="column" gap={5} align="center" style={{ width: "400px" }}>
       <Slider
         variant="single"
         value={value}
@@ -65,7 +65,7 @@ export const controlDemo = {
   const [value, setValue] = React.useState([25, 75]);
 
   return (
-    <Flex direction="column" gap="medium" align="center" style={{ width: "400px" }}>
+    <Flex direction="column" gap={5} align="center" style={{ width: "400px" }}>
       <Slider
         variant="range"
         value={value}
@@ -83,7 +83,7 @@ export const controlDemo = {
 
 export const thumbSizeDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="extra-large" align="center" style={{ width: "400px" }}>
+  code: `<Flex direction="column" gap={11} align="center" style={{ width: "400px" }}>
   <Slider
     variant="single"
     label="Large Thumb"

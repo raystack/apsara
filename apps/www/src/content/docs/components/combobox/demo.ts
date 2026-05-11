@@ -130,7 +130,7 @@ export const controlledDemo = {
     const [inputValue, setInputValue] = React.useState("");
 
     return (
-      <Flex direction="column" gap="medium">
+      <Flex direction="column" gap={5}>
         <Text>Selected: {value || "None"}</Text>
         <Combobox
           value={value}

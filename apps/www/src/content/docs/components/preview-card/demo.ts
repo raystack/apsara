@@ -11,7 +11,7 @@ export const getCode = (props: ComponentPropsType) => {
   <PreviewCard>
     <PreviewCard.Trigger href="#">Hover to preview</PreviewCard.Trigger>
     <PreviewCard.Content${getPropsString(rest)}>
-      <Flex direction="column" gap="small">
+      <Flex direction="column" gap={3}>
         ${PLACEHOLDER}
         <Text size="small">${children}</Text>
       </Flex>
@@ -48,7 +48,7 @@ export const arrowDemo = {
   <PreviewCard>
     <PreviewCard.Trigger href="#">Hover to preview</PreviewCard.Trigger>
     <PreviewCard.Content showArrow>
-      <Flex direction="column" gap="small">
+      <Flex direction="column" gap={3}>
         ${PLACEHOLDER}
         <Text size="small">Preview content with an arrow indicator</Text>
       </Flex>
@@ -79,7 +79,7 @@ export const contentTransitionsDemo = {
   };
 
   return (
-    <Flex gap="medium">
+    <Flex gap={5}>
       <PreviewCard.Trigger handle={handle} payload="page-a" href="#">
         Page A
       </PreviewCard.Trigger>
@@ -97,7 +97,7 @@ export const contentTransitionsDemo = {
           return (
             <PreviewCard.Content style={{ maxWidth: 240 }}>
               <PreviewCard.Viewport>
-                <Flex direction="column" gap="small">
+                <Flex direction="column" gap={3}>
                   <div style={{ width: "100%", height: 120, borderRadius: "var(--rs-radius-2)", backgroundColor: page.color, padding: "var(--rs-space-4)" }} />
                   <Text size="small" weight="medium">{page.title}</Text>
                   <Text size="mini">{page.description}</Text>
@@ -121,7 +121,7 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="top">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
             <Text size="small">Content appears above the trigger</Text>
           </Flex>
@@ -134,7 +134,7 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="right">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
             <Text size="small">Content appears to the right</Text>
           </Flex>
@@ -147,7 +147,7 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="bottom">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
             <Text size="small">Content appears below the trigger</Text>
           </Flex>
@@ -160,7 +160,7 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="left">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
             <Text size="small">Content appears to the left</Text>
           </Flex>

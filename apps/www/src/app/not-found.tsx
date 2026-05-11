@@ -5,7 +5,7 @@ export default function NotFound() {
     <Flex
       align='center'
       justify='center'
-      gap='large'
+      gap={9}
       width='full'
       style={{ height: '100vh' }}
     >

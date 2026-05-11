@@ -41,7 +41,7 @@ export const playground = {
 export const alignDemo = {
   type: 'code',
   code: `
-  <Flex direction="column" style={{width:"100%"}} gap="large">
+  <Flex direction="column" style={{width:"100%"}} gap={9}>
     <Headline size="t2" align="left">Left Aligned</Headline>
     <Headline size="t2" align="center">Center Aligned</Headline>
     <Headline size="t2" align="right">Right Aligned</Headline>
@@ -60,7 +60,7 @@ export const truncateDemo = {
 export const weightDemo = {
   type: 'code',
   code: `
-  <Flex direction="column" style={{width:"100%"}} gap="large">
+  <Flex direction="column" style={{width:"100%"}} gap={9}>
     <Headline size="t2" weight="regular">Regular Weight Headline</Headline>
     <Headline size="t2" weight="medium">Medium Weight Headline</Headline>
   </Flex>`

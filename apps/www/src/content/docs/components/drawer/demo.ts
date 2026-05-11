@@ -53,7 +53,7 @@ export const basicDemo = {
 export const positionDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium">
+  <Flex gap={5}>
     <Drawer side="top">
       <Drawer.Trigger render={<Button />}>Top Drawer</Drawer.Trigger>
       <Drawer.Content side="top">
