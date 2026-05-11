@@ -24,10 +24,13 @@ export interface IndicatorProps
   label?: string;
   children?: ReactNode;
   'aria-label'?: string;
+  classNames?: {
+    indicator?: string;
+  };
 }
 
 export const Indicator = ({
-  className,
+  classNames,
   variant,
   label,
   children,
@@ -40,7 +43,10 @@ export const Indicator = ({
     <div className={styles.wrapper} {...props}>
       {children}
       <div
-        className={indicator({ variant, className })}
+        className={indicator({
+          variant,
+          className: classNames?.indicator
+        })}
         role='status'
         aria-label={accessibilityLabel}
       >

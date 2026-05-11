@@ -52,7 +52,6 @@
 
 .main {
   flex: 1;
-  overflow-y: auto;
   width: 100%;
   gap: var(--rs-space-6);
   align-items: flex-start;
