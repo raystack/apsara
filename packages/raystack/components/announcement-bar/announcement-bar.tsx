@@ -48,14 +48,14 @@ export const AnnouncementBar = ({
       {...props}
     >
       {leadingIcon && <span className={styles['icon']}>{leadingIcon}</span>}
-      <Text className={styles.text} size={2} weight={500}>
+      <Text className={styles.text} size='small' weight='medium'>
         {text}
       </Text>
       {actionLabel || actionIcon ? (
         <Text
           className={styles['action-btn']}
-          size={2}
-          weight={500}
+          size='small'
+          weight='medium'
           onClick={onActionClick}
         >
           {actionLabel}

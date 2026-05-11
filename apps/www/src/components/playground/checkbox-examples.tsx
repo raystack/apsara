@@ -13,7 +13,7 @@ export function CheckboxExamples() {
           <Checkbox indeterminate />
           <Checkbox checked disabled />
         </Flex>
-        <Text size={2} weight={500}>
+        <Text size='small' weight='medium'>
           Checkbox.Group
         </Text>
         <Checkbox.Group defaultValue={['banana']}>

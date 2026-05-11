@@ -221,10 +221,10 @@ const renderNameCell = ({ row }: ProfileCell) => (
       color={getAvatarColor(row.original.name)}
     />
     <Flex direction='column' style={{ minWidth: 0 }}>
-      <Text size={3} weight='medium'>
+      <Text size='small' weight='medium'>
         {row.original.name}
       </Text>
-      <Text size={2} variant='secondary'>
+      <Text size='small' variant='secondary'>
         {row.original.subheading}
       </Text>
     </Flex>
@@ -232,7 +232,7 @@ const renderNameCell = ({ row }: ProfileCell) => (
 );
 
 const renderEmailCell = ({ row }: ProfileCell) => (
-  <Text size={2} variant='secondary'>
+  <Text size='small' variant='secondary'>
     {row.original.subheading}
   </Text>
 );
@@ -248,7 +248,7 @@ const renderLabelCell = ({ row }: ProfileCell) => (
 );
 
 const renderTeamCell = ({ row }: ProfileCell) => (
-  <Text size={2} variant='secondary'>
+  <Text size='small' variant='secondary'>
     {row.original.team}
   </Text>
 );
@@ -262,7 +262,7 @@ const renderCollaboratorsCell = ({ row }: ProfileCell) => {
   const collaborators = row.original.collaborators;
   if (!collaborators.length) {
     return (
-      <Text size={2} variant='secondary'>
+      <Text size='small' variant='secondary'>
         —
       </Text>
     );
@@ -283,7 +283,7 @@ const renderCollaboratorsCell = ({ row }: ProfileCell) => {
 };
 
 const renderUpdatedAtCell = ({ row }: ProfileCell) => (
-  <Text size={2} variant='secondary'>
+  <Text size='small' variant='secondary'>
     {row.original.updatedAt}
   </Text>
 );
@@ -444,7 +444,7 @@ function ProfileCard({ profile }: { profile: Profile }) {
           </Text>
         </DataView.DisplayAccess>
         <DataView.DisplayAccess accessorKey='role'>
-          <Text size={2} variant='secondary'>
+          <Text size='small' variant='secondary'>
             {profile.role}
           </Text>
         </DataView.DisplayAccess>
@@ -494,7 +494,7 @@ const Page = () => {
             <IconButton size={4} onClick={() => {}} aria-label='Logo'>
               <BellIcon width={24} height={24} />
             </IconButton>
-            <Text size={4} weight='medium'>
+            <Text size='regular' weight='medium'>
               Apsara
             </Text>
           </Flex>

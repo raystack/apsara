@@ -25,22 +25,15 @@ export function TextExamples() {
           <Text variant='success'>success</Text>
         </Flex>
         <Flex gap='medium' align='center' direction='column'>
-          <Text size='1'>This is a text</Text>
-          <Text size='2'>This is a text</Text>
-          <Text size='3'>This is a text</Text>
-          <Text size='4'>This is a text</Text>
-          <Text size='5'>This is a text</Text>
+          <Text size='micro'>This is a text</Text>
+          <Text size='mini'>This is a text</Text>
+          <Text size='small'>This is a text</Text>
+          <Text size='regular'>This is a text</Text>
+          <Text size='large'>This is a text</Text>
         </Flex>
         <Flex gap='medium' align='center' direction='column'>
-          <Text weight='100'>This is a text</Text>
-          <Text weight='200'>This is a text</Text>
-          <Text weight='300'>This is a text</Text>
-          <Text weight='400'>This is a text</Text>
-          <Text weight='500'>This is a text</Text>
-          <Text weight='600'>This is a text</Text>
-          <Text weight='700'>This is a text</Text>
-          <Text weight='800'>This is a text</Text>
-          <Text weight='900'>This is a text</Text>
+          <Text weight='regular'>This is a text</Text>
+          <Text weight='medium'>This is a text</Text>
         </Flex>
       </Flex>
     </PlaygroundLayout>

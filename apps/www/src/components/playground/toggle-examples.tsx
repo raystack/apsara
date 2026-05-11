@@ -15,7 +15,7 @@ export function ToggleExamples() {
   return (
     <PlaygroundLayout title='Toggle'>
       <Flex direction='column' gap='large'>
-        <Text size={2} weight={500}>
+        <Text size='small' weight='medium'>
           Standalone
         </Text>
         <Flex gap='medium' align='center'>
@@ -30,7 +30,7 @@ export function ToggleExamples() {
           </Toggle>
         </Flex>
 
-        <Text size={2} weight={500}>
+        <Text size='small' weight='medium'>
           Sizes
         </Text>
         <Flex gap='medium' align='center'>
@@ -48,7 +48,7 @@ export function ToggleExamples() {
           </Toggle>
         </Flex>
 
-        <Text size={2} weight={500}>
+        <Text size='small' weight='medium'>
           Toggle.Group (single selection)
         </Text>
         <Toggle.Group defaultValue={['center']} aria-label='Text alignment'>
@@ -63,7 +63,7 @@ export function ToggleExamples() {
           </Toggle>
         </Toggle.Group>
 
-        <Text size={2} weight={500}>
+        <Text size='small' weight='medium'>
           Toggle.Group (multiple selection)
         </Text>
         <Toggle.Group multiple aria-label='Text formatting'>
@@ -78,7 +78,7 @@ export function ToggleExamples() {
           </Toggle>
         </Toggle.Group>
 
-        <Text size={2} weight={500}>
+        <Text size='small' weight='medium'>
           Disabled Group
         </Text>
         <Toggle.Group disabled aria-label='Disabled alignment'>

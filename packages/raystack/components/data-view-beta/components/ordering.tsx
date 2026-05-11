@@ -33,7 +33,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
 
   return (
     <Flex justify='between' align='center'>
-      <Text size={2} weight={500} className={styles['flex-1']}>
+      <Text size='small' weight='medium' className={styles['flex-1']}>
         Ordering
       </Text>
       <Flex gap='extra-small' className={styles['flex-1']}>

@@ -55,8 +55,8 @@ export function EmptyState({
 
           {heading && (
             <Text
-              size={5}
-              weight={500}
+              size='large'
+              weight='medium'
               className={cx(styles.headerText, classNames?.heading)}
             >
               {heading}
@@ -65,8 +65,8 @@ export function EmptyState({
 
           {subHeading && (
             <Text
-              size={4}
-              weight={400}
+              size='regular'
+              weight='regular'
               className={cx(styles.subHeaderText, classNames?.subHeading)}
             >
               {subHeading}
@@ -97,8 +97,8 @@ export function EmptyState({
       <Flex direction='column' gap='small' align='center'>
         {heading && (
           <Text
-            size={5}
-            weight={500}
+            size='large'
+            weight='medium'
             className={cx(styles.headerText, classNames?.heading)}
           >
             {heading}
@@ -107,8 +107,8 @@ export function EmptyState({
 
         {subHeading && (
           <Text
-            size={4}
-            weight={400}
+            size='regular'
+            weight='regular'
             className={cx(styles.subHeaderText, classNames?.subHeading)}
           >
             {subHeading}

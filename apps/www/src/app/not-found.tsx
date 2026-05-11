@@ -1,4 +1,4 @@
-import { Flex, Separator, Text } from '@raystack/apsara';
+import { Flex, Headline, Separator } from '@raystack/apsara';
 
 export default function NotFound() {
   return (
@@ -9,11 +9,13 @@ export default function NotFound() {
       width='full'
       style={{ height: '100vh' }}
     >
-      <Text size={10} weight='bold'>
+      <Headline size='t3' weight='medium'>
         404
-      </Text>
+      </Headline>
       <Separator orientation='vertical' style={{ height: '48px' }} />
-      <Text size={7}>This page could not be found.</Text>
+      <Headline size='t1' weight='regular'>
+        This page could not be found.
+      </Headline>
     </Flex>
   );
 }

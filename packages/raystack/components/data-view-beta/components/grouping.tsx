@@ -34,7 +34,7 @@ export function Grouping<TData>({
 
   return (
     <Flex justify='between' align='center'>
-      <Text size={2} weight={500} className={styles['flex-1']}>
+      <Text size='small' weight='medium' className={styles['flex-1']}>
         Grouping
       </Text>
       <Flex className={styles['flex-1']}>

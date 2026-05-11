@@ -42,16 +42,16 @@ export const alignDemo = {
   type: 'code',
   code: `
   <Flex direction="column" style={{width:"100%"}} gap="large">
-    <Headline size="small" align="left">Left Aligned</Headline>
-    <Headline size="small" align="center">Center Aligned</Headline>
-    <Headline size="small" align="right">Right Aligned</Headline>
+    <Headline size="t2" align="left">Left Aligned</Headline>
+    <Headline size="t2" align="center">Center Aligned</Headline>
+    <Headline size="t2" align="right">Right Aligned</Headline>
   </Flex>`
 };
 export const truncateDemo = {
   type: 'code',
   code: `
   <Flex style={{ width: "200px" }}>
-    <Headline size="small" truncate>
+    <Headline size="t2" truncate>
       This is a very long headline that will be truncated with an ellipsis
     </Headline>
   </Flex>`

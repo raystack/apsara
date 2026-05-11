@@ -502,7 +502,7 @@ const Page = () => {
             <IconButton size={4} onClick={() => {}} aria-label='Logo'>
               <BellIcon width={24} height={24} />
             </IconButton>
-            <Text size={4} weight='medium'>
+            <Text size='regular' weight='medium'>
               Raystack
             </Text>
           </Flex>

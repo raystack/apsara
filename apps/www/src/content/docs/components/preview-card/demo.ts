@@ -13,7 +13,7 @@ export const getCode = (props: ComponentPropsType) => {
     <PreviewCard.Content${getPropsString(rest)}>
       <Flex direction="column" gap="small">
         ${PLACEHOLDER}
-        <Text size="2">${children}</Text>
+        <Text size="small">${children}</Text>
       </Flex>
     </PreviewCard.Content>
   </PreviewCard>`;
@@ -50,7 +50,7 @@ export const arrowDemo = {
     <PreviewCard.Content showArrow>
       <Flex direction="column" gap="small">
         ${PLACEHOLDER}
-        <Text size="2">Preview content with an arrow indicator</Text>
+        <Text size="small">Preview content with an arrow indicator</Text>
       </Flex>
     </PreviewCard.Content>
   </PreviewCard>`
@@ -99,8 +99,8 @@ export const contentTransitionsDemo = {
               <PreviewCard.Viewport>
                 <Flex direction="column" gap="small">
                   <div style={{ width: "100%", height: 120, borderRadius: "var(--rs-radius-2)", backgroundColor: page.color, padding: "var(--rs-space-4)" }} />
-                  <Text size="2" weight="medium">{page.title}</Text>
-                  <Text size="1">{page.description}</Text>
+                  <Text size="small" weight="medium">{page.title}</Text>
+                  <Text size="mini">{page.description}</Text>
                 </Flex>
               </PreviewCard.Viewport>
             </PreviewCard.Content>
@@ -123,7 +123,7 @@ export const positionDemo = {
         <PreviewCard.Content side="top">
           <Flex direction="column" gap="small">
             ${PLACEHOLDER}
-            <Text size="2">Content appears above the trigger</Text>
+            <Text size="small">Content appears above the trigger</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`
@@ -136,7 +136,7 @@ export const positionDemo = {
         <PreviewCard.Content side="right">
           <Flex direction="column" gap="small">
             ${PLACEHOLDER}
-            <Text size="2">Content appears to the right</Text>
+            <Text size="small">Content appears to the right</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`
@@ -149,7 +149,7 @@ export const positionDemo = {
         <PreviewCard.Content side="bottom">
           <Flex direction="column" gap="small">
             ${PLACEHOLDER}
-            <Text size="2">Content appears below the trigger</Text>
+            <Text size="small">Content appears below the trigger</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`
@@ -162,7 +162,7 @@ export const positionDemo = {
         <PreviewCard.Content side="left">
           <Flex direction="column" gap="small">
             ${PLACEHOLDER}
-            <Text size="2">Content appears to the left</Text>
+            <Text size="small">Content appears to the left</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`

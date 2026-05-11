@@ -21,7 +21,7 @@ export function PreviewCardExamples() {
           <PreviewCard.Content side='bottom'>
             <Flex direction='column' gap='small'>
               <div style={placeholderStyle} />
-              <Text size='2'>Content appears below the trigger</Text>
+              <Text size='small'>Content appears below the trigger</Text>
             </Flex>
           </PreviewCard.Content>
         </PreviewCard>
@@ -32,7 +32,7 @@ export function PreviewCardExamples() {
           <PreviewCard.Content side='top'>
             <Flex direction='column' gap='small'>
               <div style={placeholderStyle} />
-              <Text size='2'>Content appears above the trigger</Text>
+              <Text size='small'>Content appears above the trigger</Text>
             </Flex>
           </PreviewCard.Content>
         </PreviewCard>
@@ -41,7 +41,7 @@ export function PreviewCardExamples() {
           <PreviewCard.Content showArrow>
             <Flex direction='column' gap='small'>
               <div style={placeholderStyle} />
-              <Text size='2'>Preview content with an arrow indicator</Text>
+              <Text size='small'>Preview content with an arrow indicator</Text>
             </Flex>
           </PreviewCard.Content>
         </PreviewCard>

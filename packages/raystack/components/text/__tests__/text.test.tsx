@@ -49,23 +49,7 @@ describe('Text', () => {
   });
 
   describe('Size Options', () => {
-    const sizes = [
-      'micro',
-      'mini',
-      'small',
-      'regular',
-      'large',
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10
-    ] as const;
+    const sizes = ['micro', 'mini', 'small', 'regular', 'large'] as const;
     sizes.forEach(size => {
       it(`applies ${size} size`, () => {
         const { container } = render(<Text size={size}>{size}</Text>);
@@ -79,23 +63,7 @@ describe('Text', () => {
   });
 
   describe('Weight Options', () => {
-    const weights = [
-      'regular',
-      'medium',
-      'bold',
-      'bolder',
-      'normal',
-      'lighter',
-      100,
-      200,
-      300,
-      400,
-      500,
-      600,
-      700,
-      800,
-      900
-    ] as const;
+    const weights = ['regular', 'medium'] as const;
     weights.forEach(weight => {
       it(`applies ${weight} weight`, () => {
         const { container } = render(<Text weight={weight}>{weight}</Text>);

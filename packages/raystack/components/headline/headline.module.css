@@ -29,20 +29,6 @@
   letter-spacing: var(--rs-letter-spacing-t4);
 }
 
-/* Deprecated Headline Size */
-.headline-small {
-  font-size: var(--rs-font-size-t2);
-  line-height: var(--rs-line-height-t2);
-}
-.headline-medium {
-  font-size: var(--rs-font-size-t3);
-  line-height: var(--rs-line-height-t3);
-}
-.headline-large {
-  font-size: var(--rs-font-size-t4);
-  line-height: var(--rs-line-height-t4);
-}
-
 .headline-align-left {
   text-align: left;
 }
