@@ -14,6 +14,9 @@ export interface IndicatorProps {
   /** The content to show the indicator on */
   children: React.ReactNode;
 
+  /** Additional CSS class names */
+  className?: string;
+
   /** Map of classNames for internal components */
   classNames?: {
     /** Class for the indicator badge/dot element */
