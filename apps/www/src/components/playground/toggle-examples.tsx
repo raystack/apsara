@@ -14,11 +14,11 @@ import PlaygroundLayout from './playground-layout';
 export function ToggleExamples() {
   return (
     <PlaygroundLayout title='Toggle'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text size='small' weight='medium'>
           Standalone
         </Text>
-        <Flex gap='medium' align='center'>
+        <Flex gap={5} align='center'>
           <Toggle aria-label='Bold'>
             <FontBoldIcon />
           </Toggle>
@@ -33,7 +33,7 @@ export function ToggleExamples() {
         <Text size='small' weight='medium'>
           Sizes
         </Text>
-        <Flex gap='medium' align='center'>
+        <Flex gap={5} align='center'>
           <Toggle size={1} aria-label='Bold'>
             <FontBoldIcon />
           </Toggle>

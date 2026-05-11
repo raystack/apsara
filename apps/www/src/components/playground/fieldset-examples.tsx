@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function FieldsetExamples() {
   return (
     <PlaygroundLayout title='Fieldset'>
-      <Flex gap='large' direction='column' style={{ maxWidth: 400 }}>
+      <Flex gap={9} direction='column' style={{ maxWidth: 400 }}>
         <Fieldset legend='Contact Details'>
           <Field label='Phone' required>
             <Input type='tel' placeholder='+1 (555) 000-0000' />

@@ -13,13 +13,13 @@ const placeholderStyle = {
 export function PreviewCardExamples() {
   return (
     <PlaygroundLayout title='PreviewCard'>
-      <Flex gap='medium' wrap='wrap'>
+      <Flex gap={5} wrap='wrap'>
         <PreviewCard>
           <PreviewCard.Trigger href='#'>
             Hover to preview (bottom)
           </PreviewCard.Trigger>
           <PreviewCard.Content side='bottom'>
-            <Flex direction='column' gap='small'>
+            <Flex direction='column' gap={3}>
               <div style={placeholderStyle} />
               <Text size='small'>Content appears below the trigger</Text>
             </Flex>
@@ -30,7 +30,7 @@ export function PreviewCardExamples() {
             Hover to preview (top)
           </PreviewCard.Trigger>
           <PreviewCard.Content side='top'>
-            <Flex direction='column' gap='small'>
+            <Flex direction='column' gap={3}>
               <div style={placeholderStyle} />
               <Text size='small'>Content appears above the trigger</Text>
             </Flex>
@@ -39,7 +39,7 @@ export function PreviewCardExamples() {
         <PreviewCard>
           <PreviewCard.Trigger href='#'>Hover with arrow</PreviewCard.Trigger>
           <PreviewCard.Content showArrow>
-            <Flex direction='column' gap='small'>
+            <Flex direction='column' gap={3}>
               <div style={placeholderStyle} />
               <Text size='small'>Preview content with an arrow indicator</Text>
             </Flex>

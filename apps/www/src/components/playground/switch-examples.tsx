@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function SwitchExamples() {
   return (
     <PlaygroundLayout title='Switch'>
-      <Flex gap='large' align='center' wrap='wrap'>
+      <Flex gap={9} align='center' wrap='wrap'>
         <Switch />
         <Switch defaultChecked />
         <Switch disabled />
@@ -14,13 +14,13 @@ export function SwitchExamples() {
         <Switch required />
       </Flex>
 
-      <Flex gap='large' align='center' wrap='wrap'>
+      <Flex gap={9} align='center' wrap='wrap'>
         <Text>Large (default):</Text>
         <Switch size='large' />
         <Switch size='large' defaultChecked />
       </Flex>
 
-      <Flex gap='large' align='center' wrap='wrap'>
+      <Flex gap={9} align='center' wrap='wrap'>
         <Text>Small:</Text>
         <Switch size='small' />
         <Switch size='small' defaultChecked />

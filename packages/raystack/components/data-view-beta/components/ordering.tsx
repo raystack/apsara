@@ -36,7 +36,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
       <Text size='small' weight='medium' className={styles['flex-1']}>
         Ordering
       </Text>
-      <Flex gap='extra-small' className={styles['flex-1']}>
+      <Flex gap={2} className={styles['flex-1']}>
         <Select
           onValueChange={handleColumnChange}
           value={value.name}

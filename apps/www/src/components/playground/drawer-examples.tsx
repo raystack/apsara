@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function DrawerExamples() {
   return (
     <PlaygroundLayout title='Drawer'>
-      <Flex gap='medium' wrap='wrap'>
+      <Flex gap={5} wrap='wrap'>
         <Drawer side='top'>
           <Drawer.Trigger render={<Button />}>Top Drawer</Drawer.Trigger>
           <Drawer.Content side='top'>

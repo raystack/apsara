@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function ContainerExamples() {
   return (
     <PlaygroundLayout title='Container'>
-      <Flex gap='large' wrap='wrap'>
+      <Flex gap={9} wrap='wrap'>
         <Container size='small' align='left'>
           <Text>
             Lorem Ipsum is simply dummy text of the printing and typesetting

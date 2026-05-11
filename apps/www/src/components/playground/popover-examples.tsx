@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function PopoverExamples() {
   return (
     <PlaygroundLayout title='Popover'>
-      <Flex gap='medium' wrap='wrap'>
+      <Flex gap={5} wrap='wrap'>
         <Popover>
           <Popover.Trigger render={<Button />}>Top Popover</Popover.Trigger>
           <Popover.Content side='top'>

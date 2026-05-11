@@ -5,7 +5,7 @@ import PlaygroundLayout from './playground-layout';
 export function AnnouncementBarExamples() {
   return (
     <PlaygroundLayout title='Announcement Bar'>
-      <Flex gap='medium' direction='column'>
+      <Flex gap={5} direction='column'>
         <AnnouncementBar
           variant='normal'
           text='We have introduced a new feature'

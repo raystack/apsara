@@ -1014,17 +1014,39 @@ import { Menu } from '@raystack/apsara';
 
 ```tsx
 // Before — Flex always rendered as <div>
-<Flex gap="3" align="center">content</Flex>
+<Flex gap={3} align="center">content</Flex>
 
 // After — unchanged for basic usage, but now supports render prop
-<Flex gap="3" align="center">content</Flex>
+<Flex gap={3} align="center">content</Flex>
 
 // New — render as a different element
-<Flex render={<section />} gap="3" align="center">content</Flex>
-<Flex render={<nav />} gap="3" direction="column">links</Flex>
+<Flex render={<section />} gap={3} align="center">content</Flex>
+<Flex render={<nav />} gap={3} direction="column">links</Flex>
 ```
 
 Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors if you typed Flex props explicitly.
+
+**`gap` scale unified to numeric tokens (1–17).** The named aliases (`'extra-small' | 'small' | 'medium' | 'large' | 'extra-large'`) have been removed. `gap` now accepts a number from `1` to `17` mapped directly to `--rs-space-1` through `--rs-space-17`, matching the full spacing token scale (the old numeric set capped at `9`).
+
+| Before | After | Token |
+|---|---|---|
+| `gap="extra-small"` | `gap={2}` | `--rs-space-2` (4px) |
+| `gap="small"` | `gap={3}` | `--rs-space-3` (8px) |
+| `gap="medium"` | `gap={5}` | `--rs-space-5` (16px) |
+| `gap="large"` | `gap={9}` | `--rs-space-9` (32px) |
+| `gap="extra-large"` | `gap={11}` | `--rs-space-11` (48px) |
+
+Numeric values `1`–`9` remain unchanged. Values `10`–`17` are new and unlock the larger spacing tokens (40px, 48px, 56px, 64px, 72px, 80px, 96px, 120px) that were previously inaccessible from `Flex`.
+
+```tsx
+// Before
+<Flex gap="medium" direction="column">…</Flex>
+
+// After
+<Flex gap={5} direction="column">…</Flex>
+```
+
+**TypeScript:** `gap` is now `1 | 2 | … | 17`.
 
 ---
 
@@ -1034,7 +1056,7 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 
 ```tsx
 // Before
-<Grid asChild columns="3" gap="4">
+<Grid asChild columns="3" gap="medium">
   <section>
     <Grid.Item asChild colSpan="2">
       <article>Wide content</article>
@@ -1044,11 +1066,35 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 </Grid>
 
 // After
-<Grid render={<section />} columns="3" gap="4">
+<Grid render={<section />} columns="3" gap={5}>
   <Grid.Item render={<article />} colSpan="2">Wide content</Grid.Item>
   <Grid.Item>Narrow content</Grid.Item>
 </Grid>
 ```
+
+**`gap`, `columnGap`, `rowGap` switched to the same numeric scale as Flex (1–17).** The named aliases (`'extra-small' | 'small' | 'medium' | 'large' | 'extra-large'`) have been removed. Both layout primitives now share a single `gap` token vocabulary, so values are portable between them.
+
+| Before | After | Token |
+|---|---|---|
+| `gap="extra-small"` | `gap={2}` | `--rs-space-2` (4px) |
+| `gap="small"` | `gap={3}` | `--rs-space-3` (8px) |
+| `gap="medium"` | `gap={5}` | `--rs-space-5` (16px) |
+| `gap="large"` | `gap={9}` | `--rs-space-9` (32px) |
+| `gap="extra-large"` | `gap={11}` | `--rs-space-11` (48px) |
+
+The same mapping applies to `columnGap` and `rowGap`.
+
+```tsx
+// Before
+<Grid columns={3} gap="medium" columnGap="large" rowGap="small">…</Grid>
+
+// After
+<Grid columns={3} gap={5} columnGap={9} rowGap={3}>…</Grid>
+```
+
+**Implementation note:** `gap`, `columnGap`, and `rowGap` are now applied via CSS classes (from a shared gap utility reused by `Flex`) instead of inline `style`. Custom CSS that overrode the previous inline `gap` style via `style={{ gap: '...' }}` continues to work as before — your inline override still wins over the class.
+
+**TypeScript:** `gap`, `columnGap`, `rowGap` are now `1 | 2 | … | 17`.
 
 ---
 

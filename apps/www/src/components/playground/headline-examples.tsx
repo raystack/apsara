@@ -6,8 +6,8 @@ import PlaygroundLayout from './playground-layout';
 export function HeadlineExamples() {
   return (
     <PlaygroundLayout title='Headline'>
-      <Flex direction='column' gap='large'>
-        <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
+        <Flex direction='column' gap={9}>
           <Headline size='t4' render={<h1 />}>
             Large Headline
           </Headline>
@@ -18,7 +18,7 @@ export function HeadlineExamples() {
             Small Headline
           </Headline>
         </Flex>
-        <Flex direction='column' style={{ width: '500px' }} gap='large'>
+        <Flex direction='column' style={{ width: '500px' }} gap={9}>
           <Headline size='t2' align='left'>
             Left Aligned
           </Headline>

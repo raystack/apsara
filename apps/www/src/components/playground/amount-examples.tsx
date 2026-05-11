@@ -6,8 +6,8 @@ import PlaygroundLayout from './playground-layout';
 export function AmountExamples() {
   return (
     <PlaygroundLayout title='Amount'>
-      <Flex gap='extra-large' wrap='wrap'>
-        <Flex gap='medium' align='center' direction='column'>
+      <Flex gap={11} wrap='wrap'>
+        <Flex gap={5} align='center' direction='column'>
           <Text>
             Total: <Amount value={1299} />
           </Text>
@@ -27,7 +27,7 @@ export function AmountExamples() {
             Grouping: <Amount value={129999999} groupDigits />
           </Text>
         </Flex>
-        <Flex gap='medium' align='center' direction='column'>
+        <Flex gap={5} align='center' direction='column'>
           <Text>
             JPY: <Amount value={1299} currency='JPY' />
           </Text>

@@ -7,8 +7,8 @@ import PlaygroundLayout from './playground-layout';
 export function InputExamples() {
   return (
     <PlaygroundLayout title='Input'>
-      <Flex gap='large' wrap='wrap'>
-        <Flex gap='large' direction='column' style={{ width: 300 }}>
+      <Flex gap={9} wrap='wrap'>
+        <Flex gap={9} direction='column' style={{ width: 300 }}>
           <Field label='Default'>
             <Input placeholder='Enter text' />
           </Field>
@@ -19,7 +19,7 @@ export function InputExamples() {
             <Input placeholder='Enter text' />
           </Field>
         </Flex>
-        <Flex gap='large' direction='column' style={{ width: 300 }}>
+        <Flex gap={9} direction='column' style={{ width: 300 }}>
           <Input placeholder='0.00' prefix='$' suffix='USD' />
           <Input
             placeholder='Enter text'

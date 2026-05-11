@@ -44,7 +44,7 @@ export const AnnouncementBar = ({
       className={announcementBar({ className, variant })}
       justify='center'
       align='center'
-      gap='small'
+      gap={3}
       {...props}
     >
       {leadingIcon && <span className={styles['icon']}>{leadingIcon}</span>}

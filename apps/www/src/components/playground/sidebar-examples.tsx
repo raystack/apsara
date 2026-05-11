@@ -7,7 +7,7 @@ import PlaygroundLayout from './playground-layout';
 export function SidebarExamples() {
   return (
     <PlaygroundLayout title='Sidebar'>
-      <Flex gap='large' wrap='wrap'>
+      <Flex gap={9} wrap='wrap'>
         <Sidebar open={false}>
           <Sidebar.Header>
             <Flex align='center' gap={3}>

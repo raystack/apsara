@@ -7,7 +7,7 @@ import PlaygroundLayout from './playground-layout';
 export function FloatingActionsExamples() {
   return (
     <PlaygroundLayout title='FloatingActions'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text>Inline:</Text>
         <FloatingActions variant='inline' aria-label='Selection actions'>
           <Chip

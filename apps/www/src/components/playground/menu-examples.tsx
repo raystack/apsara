@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function MenuExamples() {
   return (
     <PlaygroundLayout title='Menu'>
-      <Flex gap='medium' wrap='wrap'>
+      <Flex gap={5} wrap='wrap'>
         <Menu>
           <Menu.Trigger render={<Button color='neutral' />}>
             Open Menu
