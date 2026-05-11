@@ -1388,6 +1388,16 @@ Summary of renames:
 
 3. **`SelectItem` uses `render` prop** instead of `asChild`.
 
+4. **Default alignment changed: bottom-center -> bottom-start (bottom-left).** `Select.Content` now opens flush to the trigger's start edge instead of horizontally centered. Pass `align="center"` to mimic the previous behavior.
+
+```tsx
+// v1 default (bottom-left)
+<Select.Content>...</Select.Content>
+
+// Opt back into v0 behavior
+<Select.Content align="center">...</Select.Content>
+```
+
 #### New Features
 
 - `items` prop for external filtering
