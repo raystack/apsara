@@ -1,4 +1,4 @@
-import { cva, VariantProps } from 'class-variance-authority';
+import { cva, cx, VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 
 import styles from './indicator.module.css';
@@ -24,10 +24,14 @@ export interface IndicatorProps
   label?: string;
   children?: ReactNode;
   'aria-label'?: string;
+  classNames?: {
+    container?: string;
+  };
 }
 
 export const Indicator = ({
   className,
+  classNames,
   variant,
   label,
   children,
@@ -37,7 +41,7 @@ export const Indicator = ({
   const accessibilityLabel = ariaLabel || label || `${variant} indicator`;
 
   return (
-    <div className={styles.wrapper} {...props}>
+    <div className={cx(styles.wrapper, classNames?.container)} {...props}>
       {children}
       <div
         className={indicator({ variant, className })}
