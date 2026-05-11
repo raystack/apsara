@@ -19,7 +19,7 @@ export interface IndicatorProps {
 
   /** Map of classNames for internal components */
   classNames?: {
-    /** Class for the indicator badge/dot element */
-    indicator?: string;
+    /** Class for the outer container element */
+    container?: string;
   };
 }
