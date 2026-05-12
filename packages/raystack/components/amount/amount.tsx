@@ -2,14 +2,19 @@ import { type ComponentProps } from 'react';
 
 export interface AmountProps extends ComponentProps<'span'> {
   /**
-   * The monetary value to display
-   * For large numbers (> 2^53), pass the value as string to maintain precision
+   * The monetary value to display.
+   * For exact precision beyond 2^53, pass either:
+   *   - a `string` — supports decimals (e.g. "1299" or "12.99")
+   *   - a `bigint` — integer-only; treated as already in major units, so
+   *     `valueInMinorUnits` is ignored when value is a bigint
    * @default 0
    * @example
    * valueInMinorUnits=true: 1299 => "$12.99"
    * valueInMinorUnits=false: 12.99 => "$12.99"
+   * Large strings: "999999999999999" => "$9,999,999,999,999.99"
+   * BigInt: 1299n => "$1,299.00" (always major units)
    */
-  value: number | string;
+  value: number | string | bigint;
 
   /**
    * ISO 4217 currency code
@@ -66,6 +71,16 @@ export interface AmountProps extends ComponentProps<'span'> {
    * @default true
    */
   groupDigits?: boolean;
+
+  /**
+   * Render the formatted number without a currency symbol, code, or name.
+   * Locale-driven separators, grouping, and fraction digits are preserved.
+   * When true, `currencyDisplay` is ignored.
+   * @default false
+   * @example
+   * <Amount value={1299} hideCurrency /> => "12.99"
+   */
+  hideCurrency?: boolean;
 }
 
 /**
@@ -151,6 +166,7 @@ export const Amount = ({
   maximumFractionDigits,
   groupDigits = true,
   valueInMinorUnits = true,
+  hideCurrency = false,
   ...props
 }: AmountProps) => {
   try {
@@ -160,7 +176,7 @@ export const Amount = ({
     ) {
       console.warn(
         `Warning: The number ${value} exceeds JavaScript's safe integer limit (${Number.MAX_SAFE_INTEGER}). ` +
-          'For large numbers, pass the value as a string to maintain precision.'
+          'For large numbers, pass the value as a bigint or string to maintain precision.'
       );
     }
 
@@ -171,37 +187,88 @@ export const Amount = ({
 
     const decimals = getCurrencyDecimals(validCurrency);
 
-    // Handle minor units - use string manipulation for strings and Math.pow for numbers
-    const baseValue =
-      valueInMinorUnits && decimals > 0
-        ? typeof value === 'string'
-          ? value.slice(0, -decimals) + '.' + value.slice(-decimals)
-          : value / Math.pow(10, decimals)
-        : value;
+    /**
+     * Convert minor → major units.
+     * Three input shapes: bigint, string, number.
+     * BigInt is always treated as already in major units (it cannot represent fractions),
+     * so `valueInMinorUnits` is ignored for BigInt.
+     */
+    let baseValue: number | string | bigint;
+    if (typeof value === 'bigint') {
+      baseValue = value;
+    } else if (valueInMinorUnits && decimals > 0) {
+      if (typeof value === 'string') {
+        const isNegative = value.startsWith('-');
+        const unsigned = isNegative ? value.slice(1) : value;
+        const [intPart, fracPart = ''] = unsigned.split('.');
+        // Shift the existing decimal point left by `decimals` without
+        // round-tripping through Number — preserves precision for large strings
+        // and handles decimal strings like "12.99" (=> "0.1299" for USD).
+        const allDigits = intPart + fracPart;
+        const fracLen = fracPart.length + decimals;
+        const padded = allDigits.padStart(fracLen + 1, '0');
+        const major = padded.slice(0, -fracLen);
+        const minor = padded.slice(-fracLen);
+        baseValue = `${isNegative ? '-' : ''}${major}.${minor}`;
+      } else {
+        baseValue = value / Math.pow(10, decimals);
+      }
+    } else {
+      baseValue = value;
+    }
 
-    // Remove decimals if hideDecimals is true - handle string and number separately
-    // Note: Not all numbers passed is converted to string as methods like Math.trunc
-    // or toString cannot handle large numbers thus, we need to handle it separately (large numbers passed in value throws console warning).
-    const finalBaseValue = hideDecimals
-      ? typeof baseValue === 'string'
-        ? baseValue.split('.')[0]
-        : Math.trunc(baseValue)
-      : baseValue;
+    // Remove decimals when hideDecimals is true. BigInt has no decimals, so it's a no-op there.
+    const finalBaseValue: number | string | bigint = !hideDecimals
+      ? baseValue
+      : typeof baseValue === 'bigint'
+        ? baseValue
+        : typeof baseValue === 'string'
+          ? baseValue.split('.')[0]
+          : Math.trunc(baseValue);
 
-    const formattedValue = new Intl.NumberFormat(locale, {
-      style: 'currency' as const,
+    /**
+     * Always format in currency mode — Intl's currency-style handles fraction digits per the currency,
+     * locale-correct grouping/separators,
+     * and auto-clamps when only one of min/max is user-provided.
+     * For hideCurrency, we then strip the currency token from the output via formatToParts(),
+     * which avoids the divergent defaults of style: 'decimal'.
+     */
+    const formatOptions: Intl.NumberFormatOptions = {
+      style: 'currency',
       currency: validCurrency.toUpperCase(),
       currencyDisplay,
       minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
       maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
       useGrouping: groupDigits
-      // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
-    } as Intl.NumberFormatOptions).format(finalBaseValue);
+    };
+
+    const formatter = new Intl.NumberFormat(locale, formatOptions);
+
+    /**
+     * For hideCurrency, strip the `currency` parts and trim leading/trailing
+     * whitespace that locales like de-DE leave behind
+     * (e.g. "1.234,56 €" becomes "1.234,56 " before the trim).
+     * Otherwise format directly.
+     */
+    const formattedValue: string = hideCurrency
+      ? formatter
+          .formatToParts(
+            // @ts-expect-error TS lib types omit `string` from formatToParts() params, but Intl accepts numeric strings at runtime.
+            finalBaseValue
+          )
+          .filter(p => p.type !== 'currency')
+          .map(p => p.value)
+          .join('')
+          .trim()
+      : formatter.format(
+          // @ts-expect-error TS lib types omit `string` from format() params, but Intl.NumberFormat accepts numeric strings at runtime — needed for large values that would lose precision as `number`.
+          finalBaseValue
+        );
 
     return <span {...props}>{formattedValue}</span>;
   } catch (error) {
     console.error('Error formatting amount:', error);
-    return <span {...props}>{value}</span>;
+    return <span {...props}>{String(value)}</span>;
   }
 };
 

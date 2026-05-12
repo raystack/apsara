@@ -37,9 +37,25 @@ describe('Amount', () => {
       expect(screen.getByText('$1,299.00')).toBeInTheDocument();
     });
 
-    it('handles decimal string values', () => {
+    it('handles integer string values in minor units', () => {
       render(<Amount value='1299' valueInMinorUnits={true} />);
       expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('handles decimal string values in major units', () => {
+      render(<Amount value='12.99' valueInMinorUnits={false} />);
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('handles decimal strings in minor units the same way as the equivalent number', () => {
+      // Regression: '12.99' previously coerced to NaN under valueInMinorUnits.
+      // It must now match the number path: 12.99 / 100 → 0.1299 → "$0.13".
+      const { rerender } = render(
+        <Amount value={12.99} valueInMinorUnits={true} />
+      );
+      const numberOutput = screen.getByText('$0.13').textContent;
+      rerender(<Amount value='12.99' valueInMinorUnits={true} />);
+      expect(screen.getByText('$0.13').textContent).toBe(numberOutput);
     });
 
     it('warns when number exceeds safe integer limit', () => {
@@ -202,6 +218,107 @@ describe('Amount', () => {
       });
       expect(element).toBeInTheDocument();
       consoleSpy.mockRestore();
+    });
+
+    it('handles negative string values in minor units', () => {
+      render(<Amount value='-1299' />);
+      expect(screen.getByText('-$12.99')).toBeInTheDocument();
+    });
+  });
+
+  describe('BigInt support', () => {
+    it('formats a bigint as major units (valueInMinorUnits is ignored)', () => {
+      render(<Amount value={1299n} valueInMinorUnits />);
+      expect(screen.getByText('$1,299.00')).toBeInTheDocument();
+    });
+
+    it('preserves precision beyond Number.MAX_SAFE_INTEGER', () => {
+      render(<Amount value={9999999999999999999n} />);
+      expect(
+        screen.getByText('$9,999,999,999,999,999,999.00')
+      ).toBeInTheDocument();
+    });
+
+    it('formats negative bigint values', () => {
+      render(<Amount value={-1299n} />);
+      expect(screen.getByText('-$1,299.00')).toBeInTheDocument();
+    });
+
+    it('formats bigint with a zero-decimal currency', () => {
+      render(<Amount value={1299n} currency='JPY' locale='en-US' />);
+      expect(screen.getByText('¥1,299')).toBeInTheDocument();
+    });
+
+    it('does not warn about safe integer limit for bigint values', () => {
+      const consoleSpy = vi
+        .spyOn(console, 'warn')
+        .mockImplementation(() => null);
+      render(<Amount value={9999999999999999999n} />);
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('hideCurrency', () => {
+    it('hides the currency symbol while preserving formatting', () => {
+      render(<Amount value={1299} hideCurrency />);
+      expect(screen.getByText('12.99')).toBeInTheDocument();
+    });
+
+    it('preserves trailing zeros for round amounts (USD)', () => {
+      render(<Amount value={1200} hideCurrency />);
+      expect(screen.getByText('12.00')).toBeInTheDocument();
+    });
+
+    it('preserves currency fraction digits for round bigint values', () => {
+      render(<Amount value={1299n} hideCurrency />);
+      expect(screen.getByText('1,299.00')).toBeInTheDocument();
+    });
+
+    it('preserves currency fraction digits for a 3-decimal currency (BHD)', () => {
+      render(<Amount value={1234} currency='BHD' hideCurrency />);
+      expect(screen.getByText('1.234')).toBeInTheDocument();
+    });
+
+    it('overrides currencyDisplay when set', () => {
+      render(<Amount value={1299} hideCurrency currencyDisplay='code' />);
+      expect(screen.getByText('12.99')).toBeInTheDocument();
+    });
+
+    it('respects the currency for decimal-place math even when hidden', () => {
+      render(<Amount value={1299} currency='JPY' hideCurrency />);
+      expect(screen.getByText('1,299')).toBeInTheDocument();
+    });
+
+    it('honors explicit minimumFractionDigits over the currency default', () => {
+      render(
+        <Amount
+          value={1200}
+          hideCurrency
+          minimumFractionDigits={4}
+          maximumFractionDigits={4}
+        />
+      );
+      expect(screen.getByText('12.0000')).toBeInTheDocument();
+    });
+
+    it('hideDecimals wins over the currency-default fraction digits', () => {
+      render(<Amount value={1200} hideCurrency hideDecimals />);
+      expect(screen.getByText('12')).toBeInTheDocument();
+    });
+
+    it('clamps min when only maximumFractionDigits is provided (avoids RangeError)', () => {
+      // USD's default min of 2 would invert against max=1; with style:'currency'
+      // + formatToParts(), Intl's spec auto-clamps min → 1, so 12.99 rounds to 13.0.
+      render(<Amount value={1299} hideCurrency maximumFractionDigits={1} />);
+      expect(screen.getByText('13.0')).toBeInTheDocument();
+    });
+
+    it('clamps max when only minimumFractionDigits is provided (avoids RangeError)', () => {
+      // USD's default max of 2 would invert against min=3; with style:'currency'
+      // + formatToParts(), Intl's spec auto-clamps max → 3, so 12.99 pads to 12.990.
+      render(<Amount value={1299} hideCurrency minimumFractionDigits={3} />);
+      expect(screen.getByText('12.990')).toBeInTheDocument();
     });
   });
 });
