@@ -173,10 +173,10 @@ export const largeNumbersDemo = {
     <Amount value="10000100091636935" 
     valueInMinorUnits={false} hideDecimals />{/* $10,000,100,091,636,935 */}
 
-    {/* 
-    BigInt is always treated as major units — valueInMinorUnits is ignored 
+    {/*
+    BigInt is always treated as major units — valueInMinorUnits is ignored
   */}
-    <Amount value={BigInt("9999999999999999999")} valueInMinorUnits={false} />{/* $9,999,999,999,999,999,999.00 */}
+    <Amount value={BigInt("9999999999999999999")} />{/* $9,999,999,999,999,999,999.00 */}
 
     {/* 
     Numbers exceeding safe integer limit will show warning in console 

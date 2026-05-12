@@ -11,7 +11,8 @@ export interface AmountProps extends ComponentProps<'span'> {
    * @example
    * valueInMinorUnits=true: 1299 => "$12.99"
    * valueInMinorUnits=false: 12.99 => "$12.99"
-   * bigint: 1299n => "$1,299.00" (always major units)
+   * Large strings: "999999999999999" => "$9,999,999,999,999.99"
+   * BigInt: 1299n => "$1,299.00" (always major units)
    */
   value: number | string | bigint;
 
@@ -198,10 +199,16 @@ export const Amount = ({
     } else if (valueInMinorUnits && decimals > 0) {
       if (typeof value === 'string') {
         const isNegative = value.startsWith('-');
-        const digits = isNegative ? value.slice(1) : value;
-        const padded = digits.padStart(decimals + 1, '0');
-        const major = padded.slice(0, -decimals);
-        const minor = padded.slice(-decimals);
+        const unsigned = isNegative ? value.slice(1) : value;
+        const [intPart, fracPart = ''] = unsigned.split('.');
+        // Shift the existing decimal point left by `decimals` without
+        // round-tripping through Number — preserves precision for large strings
+        // and handles decimal strings like "12.99" (=> "0.1299" for USD).
+        const allDigits = intPart + fracPart;
+        const fracLen = fracPart.length + decimals;
+        const padded = allDigits.padStart(fracLen + 1, '0');
+        const major = padded.slice(0, -fracLen);
+        const minor = padded.slice(-fracLen);
         baseValue = `${isNegative ? '-' : ''}${major}.${minor}`;
       } else {
         baseValue = value / Math.pow(10, decimals);
@@ -234,24 +241,6 @@ export const Amount = ({
       maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
       useGrouping: groupDigits
     };
-
-    /**
-     * Only flag strings whose digit count exceeds 15 — Number.MAX_SAFE_INTEGER
-     * is 9,007,199,254,740,991 (16 digits), so ≤15-digit strings round-trip
-     * through Number() without precision loss even on non-V3 runtimes.
-     */
-    if (
-      typeof finalBaseValue === 'string' &&
-      finalBaseValue.replace(/\D/g, '').length > 15
-    ) {
-      console.warn(
-        'Amount: a string longer than 15 digits is being formatted. ' +
-          'Older runtimes without Intl.NumberFormat V3 string-precision support ' +
-          '(Chrome <106, Firefox <116, Safari <15.4, Node <19) coerce strings via ' +
-          'Number() first, which loses precision beyond 2^53. Pass a bigint for ' +
-          'exact integer formatting if your targets include those runtimes.'
-      );
-    }
 
     const formatter = new Intl.NumberFormat(locale, formatOptions);
 

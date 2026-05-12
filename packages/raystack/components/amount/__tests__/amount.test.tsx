@@ -37,9 +37,25 @@ describe('Amount', () => {
       expect(screen.getByText('$1,299.00')).toBeInTheDocument();
     });
 
-    it('handles decimal string values', () => {
+    it('handles integer string values in minor units', () => {
       render(<Amount value='1299' valueInMinorUnits={true} />);
       expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('handles decimal string values in major units', () => {
+      render(<Amount value='12.99' valueInMinorUnits={false} />);
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('handles decimal strings in minor units the same way as the equivalent number', () => {
+      // Regression: '12.99' previously coerced to NaN under valueInMinorUnits.
+      // It must now match the number path: 12.99 / 100 → 0.1299 → "$0.13".
+      const { rerender } = render(
+        <Amount value={12.99} valueInMinorUnits={true} />
+      );
+      const numberOutput = screen.getByText('$0.13').textContent;
+      rerender(<Amount value='12.99' valueInMinorUnits={true} />);
+      expect(screen.getByText('$0.13').textContent).toBe(numberOutput);
     });
 
     it('warns when number exceeds safe integer limit', () => {
@@ -208,35 +224,16 @@ describe('Amount', () => {
       render(<Amount value='-1299' />);
       expect(screen.getByText('-$12.99')).toBeInTheDocument();
     });
-
-    it('warns when a string longer than 15 digits is formatted', () => {
-      // The component flags potential precision loss for any >15-digit string,
-      // letting the developer decide whether their runtime targets are at risk
-      // and whether to switch to bigint.
-      const consoleSpy = vi
-        .spyOn(console, 'warn')
-        .mockImplementation(() => null);
-      render(<Amount value='10000100091636935' valueInMinorUnits={false} />);
-      expect(consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('longer than 15 digits')
-      );
-      consoleSpy.mockRestore();
-    });
   });
 
   describe('BigInt support', () => {
-    it('formats a bigint as major units regardless of valueInMinorUnits', () => {
-      render(<Amount value={1299n} />);
-      expect(screen.getByText('$1,299.00')).toBeInTheDocument();
-    });
-
-    it('matches the major-units result when valueInMinorUnits is false', () => {
-      render(<Amount value={1299n} valueInMinorUnits={false} />);
+    it('formats a bigint as major units (valueInMinorUnits is ignored)', () => {
+      render(<Amount value={1299n} valueInMinorUnits />);
       expect(screen.getByText('$1,299.00')).toBeInTheDocument();
     });
 
     it('preserves precision beyond Number.MAX_SAFE_INTEGER', () => {
-      render(<Amount value={9999999999999999999n} valueInMinorUnits={false} />);
+      render(<Amount value={9999999999999999999n} />);
       expect(
         screen.getByText('$9,999,999,999,999,999,999.00')
       ).toBeInTheDocument();
@@ -256,7 +253,7 @@ describe('Amount', () => {
       const consoleSpy = vi
         .spyOn(console, 'warn')
         .mockImplementation(() => null);
-      render(<Amount value={9999999999999999999n} valueInMinorUnits={false} />);
+      render(<Amount value={9999999999999999999n} />);
       expect(consoleSpy).not.toHaveBeenCalled();
       consoleSpy.mockRestore();
     });

@@ -1,1 +1,1 @@
-export { Amount } from './amount';
+export { Amount, type AmountProps } from './amount';
