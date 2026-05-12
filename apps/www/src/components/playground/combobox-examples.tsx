@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function ComboboxExamples() {
   return (
     <PlaygroundLayout title='Combobox'>
-      <Flex gap='large' wrap='wrap'>
+      <Flex gap={9} wrap='wrap'>
         <Combobox>
           <Combobox.Input placeholder='Select a fruit' width={240} />
           <Combobox.Content>

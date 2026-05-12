@@ -131,7 +131,7 @@ export function RangePicker({
   };
 
   const defaultTrigger = (
-    <Flex gap='medium' className={pickerGroupClassName}>
+    <Flex gap={5} className={pickerGroupClassName}>
       <Input
         size='small'
         placeholder='Select start date'

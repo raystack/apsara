@@ -79,7 +79,7 @@ export const basicDemo = {
 export const sizeDemo = {
   type: 'code',
   code: `
-  <Flex align="center" gap="large">
+  <Flex align="center" gap={9}>
   <Select>
   <Select.Trigger size="small">
     <Select.Value placeholder="Small select" />

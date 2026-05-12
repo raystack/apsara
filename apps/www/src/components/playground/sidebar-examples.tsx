@@ -7,14 +7,14 @@ import PlaygroundLayout from './playground-layout';
 export function SidebarExamples() {
   return (
     <PlaygroundLayout title='Sidebar'>
-      <Flex gap='large' wrap='wrap'>
+      <Flex gap={9} wrap='wrap'>
         <Sidebar open={false}>
           <Sidebar.Header>
             <Flex align='center' gap={3}>
               <IconButton size={4} aria-label='Home'>
                 <Home />
               </IconButton>
-              <Text size={4} weight='medium' data-collapse-hidden>
+              <Text size='regular' weight='medium' data-collapse-hidden>
                 Apsara
               </Text>
             </Flex>
@@ -34,7 +34,7 @@ export function SidebarExamples() {
               <IconButton size={4} aria-label='Home'>
                 <Home />
               </IconButton>
-              <Text size={4} weight='medium' data-collapse-hidden>
+              <Text size='regular' weight='medium' data-collapse-hidden>
                 Apsara
               </Text>
             </Flex>
@@ -66,7 +66,7 @@ export function SidebarExamples() {
               <IconButton size={4} aria-label='Home'>
                 <Home width={24} height={24} />
               </IconButton>
-              <Text size={4} weight='medium' data-collapse-hidden>
+              <Text size='regular' weight='medium' data-collapse-hidden>
                 Apsara
               </Text>
             </Flex>

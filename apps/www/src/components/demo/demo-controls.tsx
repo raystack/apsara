@@ -6,6 +6,7 @@ import {
   UploadIcon
 } from '@radix-ui/react-icons';
 import {
+  Field,
   Flex,
   IconButton,
   Input,
@@ -151,10 +152,9 @@ export default function DemoControls({
 
         // For text and number types
         return (
-          <div key={prop} className={styles.controlField}>
+          <Field key={prop} label={propLabel} className={styles.inputLabel}>
             <Input
               size='small'
-              label={propLabel}
               value={
                 control.type === 'number'
                   ? String(Number(propValue))
@@ -170,9 +170,9 @@ export default function DemoControls({
               type={control.type === 'number' ? 'number' : 'text'}
               min={control.min}
               max={control.max}
-              className={cx(styles.noShadow, styles.inputLabel)}
+              className={styles.noShadow}
             />
-          </div>
+          </Field>
         );
       })}
     </div>

@@ -1,0 +1,7 @@
+.grid {
+  display: grid;
+}
+
+.grid-inline {
+  display: inline-grid;
+}

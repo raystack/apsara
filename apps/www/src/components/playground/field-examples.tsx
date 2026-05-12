@@ -6,8 +6,8 @@ import PlaygroundLayout from './playground-layout';
 export function FieldExamples() {
   return (
     <PlaygroundLayout title='Field'>
-      <Flex gap='large' wrap='wrap'>
-        <Flex gap='large' direction='column' style={{ width: 300 }}>
+      <Flex gap={9} wrap='wrap'>
+        <Flex gap={9} direction='column' style={{ width: 300 }}>
           <Field label='Name' required description='Enter your full name'>
             <Input placeholder='John Doe' />
           </Field>
@@ -18,7 +18,7 @@ export function FieldExamples() {
             <Input placeholder='Enter phone' />
           </Field>
         </Flex>
-        <Flex gap='large' direction='column' style={{ width: 300 }}>
+        <Flex gap={9} direction='column' style={{ width: 300 }}>
           <Field
             label='Bio'
             required={false}

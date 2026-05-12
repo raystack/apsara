@@ -55,7 +55,7 @@ export const preview = {
   function ToastPreview() {
     return (
       <Toast.Provider>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => toastManager.add({ title: "This is a toast" })}>
             Trigger toast
           </Button>
@@ -117,7 +117,7 @@ export const typesDemo = {
 export const descriptionDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" wrap="wrap">
+  <Flex gap={5} wrap="wrap">
     <Button onClick={() => toastManager.add({
       title: "File uploaded",
       description: "Your document has been uploaded successfully.",
@@ -141,7 +141,7 @@ export const leadingIconDemo = {
     {
       name: 'Custom icons',
       code: `
-  <Flex gap="medium" wrap="wrap">
+  <Flex gap={5} wrap="wrap">
     <Button onClick={() => toastManager.add({
       title: "Saved successfully",
       type: "success",
@@ -240,7 +240,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="top-left" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Top left toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -256,7 +256,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="top-center" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Top center toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -272,7 +272,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="top-right" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Top right toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -288,7 +288,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="bottom-left" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Bottom left toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -304,7 +304,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="bottom-center" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Bottom center toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -320,7 +320,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="bottom-right" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Bottom right toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -340,7 +340,7 @@ export const hookDemo = {
     function Inner() {
       const { add, toasts } = useToastManager();
       return (
-        <Flex direction="column" gap="medium">
+        <Flex direction="column" gap={5}>
           <Button onClick={() => add({
             title: "Triggered via hook",
             description: "Same leadingIcon-aware API as the singleton manager.",
@@ -366,7 +366,7 @@ export const updateDemo = {
   function UpdateToast() {
     const idRef = React.useRef(null);
     return (
-      <Flex gap="medium" wrap="wrap">
+      <Flex gap={5} wrap="wrap">
         <Button onClick={() => {
           idRef.current = toastManager.add({ title: "Processing...", type: "loading", timeout: 0 });
         }}>

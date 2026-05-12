@@ -44,7 +44,7 @@ export const playground = {
 export const variantsDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <Chip variant="outline">Outline</Chip>
     <Chip variant="filled">Filled</Chip>
   </Flex>`
@@ -53,7 +53,7 @@ export const variantsDemo = {
 export const sizesDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <Chip size="small">Small</Chip>
     <Chip size="large">Large</Chip>
   </Flex>`
@@ -62,7 +62,7 @@ export const sizesDemo = {
 export const colorDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <Chip color="neutral" variant="outline">Outline</Chip>
     <Chip color="neutral" variant="filled">Filled</Chip>
     <Chip color="accent" variant="outline">Outline</Chip>
@@ -73,7 +73,7 @@ export const colorDemo = {
 export const dismissableDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <Chip isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
     <Chip variant="outline" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>
     <Chip variant="filled" color="accent" isDismissible onDismiss={() => alert('dismissed')} aria-label="Dismissible chip">Dismissable Chip</Chip>

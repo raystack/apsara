@@ -1,5 +1,6 @@
 import { mergeProps, useRender } from '@base-ui/react';
 import { cva, VariantProps } from 'class-variance-authority';
+import { gapVariants } from '~/shared/gap';
 import styles from './flex.module.css';
 
 const flex = cva(styles.flex, {
@@ -28,22 +29,7 @@ const flex = cva(styles.flex, {
       wrap: styles['wrap-wrap'],
       wrapReverse: styles['wrap-wrapReverse']
     },
-    gap: {
-      1: styles['gap-1'],
-      2: styles['gap-2'],
-      3: styles['gap-3'],
-      4: styles['gap-4'],
-      5: styles['gap-5'],
-      6: styles['gap-6'],
-      7: styles['gap-7'],
-      8: styles['gap-8'],
-      9: styles['gap-9'],
-      'extra-small': styles['gap-xs'],
-      small: styles['gap-sm'],
-      medium: styles['gap-md'],
-      large: styles['gap-lg'],
-      'extra-large': styles['gap-xl']
-    },
+    gap: gapVariants,
     width: {
       full: styles['width-full']
     }

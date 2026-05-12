@@ -22,7 +22,7 @@ export const playground = {
 export const inlineDemo = {
   type: 'code',
   code: `
-  <Flex gap="small" align="center">
+  <Flex gap={3} align="center">
     <Checkbox id="terms" />
     <Label htmlFor="terms">Accept terms</Label>
   </Flex>`
@@ -31,7 +31,7 @@ export const inlineDemo = {
 export const optionalDemo = {
   type: 'code',
   code: `
-  <Flex direction="column" gap="small">
+  <Flex direction="column" gap={3}>
     <Label>Required field</Label>
     <Label required={false}>Optional field</Label>
     <Label required={false} optionalText="— not required">

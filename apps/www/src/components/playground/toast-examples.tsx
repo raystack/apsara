@@ -7,7 +7,7 @@ export function ToastExamples() {
   return (
     <PlaygroundLayout title='Toast'>
       <Toast.Provider position='bottom-right'>
-        <Flex gap='large' wrap='wrap'>
+        <Flex gap={9} wrap='wrap'>
           <Button
             onClick={() =>
               toastManager.add({ title: 'Success toast', type: 'success' })
@@ -37,7 +37,7 @@ export function ToastExamples() {
             Info Toast
           </Button>
         </Flex>
-        <Flex gap='large' wrap='wrap'>
+        <Flex gap={9} wrap='wrap'>
           <Button
             onClick={() =>
               toastManager.add({

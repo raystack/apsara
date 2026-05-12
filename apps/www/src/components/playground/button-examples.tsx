@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function ButtonExamples() {
   return (
     <PlaygroundLayout title='Button'>
-      <Flex gap='medium'>
+      <Flex gap={5}>
         <Button color='accent' size='small'>
           Small
         </Button>
@@ -14,7 +14,7 @@ export function ButtonExamples() {
           Large
         </Button>
       </Flex>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Button color='accent' loading>
           Button
         </Button>
@@ -26,7 +26,7 @@ export function ButtonExamples() {
         <Button color='neutral'>Button</Button>
         <Button color='success'>Button</Button>
       </Flex>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Button variant='outline' color='accent' loading>
           Button
         </Button>
@@ -46,7 +46,7 @@ export function ButtonExamples() {
           Button
         </Button>
       </Flex>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Button variant='ghost' color='accent' loading>
           Button
         </Button>
@@ -66,7 +66,7 @@ export function ButtonExamples() {
           Button
         </Button>
       </Flex>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Button variant='text' color='accent' loading>
           Button
         </Button>

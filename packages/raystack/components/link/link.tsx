@@ -1,10 +1,11 @@
+import { useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps } from 'react';
 import { Text, type TextBaseProps } from '../text';
 import styles from './link.module.css';
 
-export interface LinkProps extends TextBaseProps, ComponentProps<'a'> {
-  href: string;
+export interface LinkProps
+  extends TextBaseProps,
+    useRender.ComponentProps<'a'> {
   external?: boolean;
   download?: boolean | string;
 }
@@ -16,6 +17,7 @@ export function Link({
   size = 'small',
   external,
   download,
+  render = <a />,
   ...props
 }: LinkProps) {
   const externalProps = external
@@ -42,7 +44,7 @@ export function Link({
       {...externalProps}
       {...downloadProps}
       {...props}
-      render={<a />}
+      render={render}
     >
       {children}
     </Text>

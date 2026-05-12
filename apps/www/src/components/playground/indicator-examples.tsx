@@ -6,8 +6,8 @@ import PlaygroundLayout from './playground-layout';
 export function IndicatorExamples() {
   return (
     <PlaygroundLayout title='Indicator'>
-      <Flex gap='large' direction='column' wrap='wrap'>
-        <Flex gap='large' align='center' wrap='wrap'>
+      <Flex gap={9} direction='column' wrap='wrap'>
+        <Flex gap={9} align='center' wrap='wrap'>
           <Indicator variant='accent'>
             <Button color='neutral'>Notification</Button>
           </Indicator>
@@ -24,7 +24,7 @@ export function IndicatorExamples() {
             <Button color='neutral'>Notification</Button>
           </Indicator>
         </Flex>
-        <Flex gap='large' wrap='wrap'>
+        <Flex gap={9} wrap='wrap'>
           <Indicator variant='accent' label='2 new'>
             <Button color='neutral'>Notification</Button>
           </Indicator>

@@ -16,6 +16,7 @@ import {
   sizeChipDemo,
   interactiveChipDemo,
   withFieldDemo,
+  onValueChangeDemo,
 } from "./demo.ts";
 
 <Demo data={playground} />
@@ -59,6 +60,12 @@ A basic input with a placeholder.
 Use Field to add label, description, and error handling.
 
 <Demo data={withFieldDemo} />
+
+### Controlled Value
+
+Use `onValueChange` for a callback that receives only the new string value, or `onChange` for the full React change event. Both fire on every keystroke — pick whichever fits your needs.
+
+<Demo data={onValueChangeDemo} />
 
 ### With Prefix/Suffix
 

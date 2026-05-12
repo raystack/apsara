@@ -49,7 +49,7 @@ const SidePanelHeader = ({
       <Flex gap={3} justify='between' align='center'>
         <Flex gap={3}>
           {icon}
-          <Text size={5} weight={500}>
+          <Text size='large' weight='medium'>
             {title}
           </Text>
         </Flex>
@@ -59,7 +59,7 @@ const SidePanelHeader = ({
           ))}
         </Flex>
       </Flex>
-      {description ? <Text size={2}>{description}</Text> : null}
+      {description ? <Text size='small'>{description}</Text> : null}
     </div>
   );
 };

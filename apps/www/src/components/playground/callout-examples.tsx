@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function CalloutExamples() {
   return (
     <PlaygroundLayout title='Callout'>
-      <Flex gap='medium' wrap='wrap'>
+      <Flex gap={5} wrap='wrap'>
         <Callout type='grey'>Default Callout</Callout>
         <Callout type='success'>Success Callout</Callout>
         <Callout type='alert'>Alert Callout</Callout>

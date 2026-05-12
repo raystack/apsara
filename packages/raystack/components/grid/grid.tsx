@@ -1,60 +1,63 @@
 import { mergeProps, useRender } from '@base-ui/react';
+import { cva, VariantProps } from 'class-variance-authority';
 import { useMemo } from 'react';
+import { columnGapVariants, gapVariants, rowGapVariants } from '~/shared/gap';
+import styles from './grid.module.css';
 import { AlignExtendedType, AlignType } from './types';
 
-const GAPS = {
-  'extra-small': 'var(--rs-space-2)',
-  small: 'var(--rs-space-3)',
-  medium: 'var(--rs-space-5)',
-  large: 'var(--rs-space-9)',
-  'extra-large': 'var(--rs-space-11)'
-} as const;
+const grid = cva(styles.grid, {
+  variants: {
+    inline: {
+      true: styles['grid-inline'],
+      false: null
+    },
+    gap: gapVariants,
+    columnGap: columnGapVariants,
+    rowGap: rowGapVariants
+  }
+});
 
-type GapType = keyof typeof GAPS;
+type GridProps = useRender.ComponentProps<'div'> &
+  VariantProps<typeof grid> & {
+    /**
+     * Supports CSS Grid template areas syntax.
+     *
+     * @example
+     * <Grid templateAreas="header header header" />
+     * <Grid templateAreas={["header header header", "sidebar main main", "footer footer footer"]} />
+     */
+    templateAreas?: string | string[];
+    autoFlow?: 'row' | 'column' | 'dense' | 'row dense' | 'column dense';
+    autoColumns?: string;
+    autoRows?: string;
 
-type GridProps = useRender.ComponentProps<'div'> & {
-  /**
-   * Supports CSS Grid template areas syntax.
-   *
-   * @example
-   * <Grid templateAreas="header header header" />
-   * <Grid templateAreas={["header header header", "sidebar main main", "footer footer footer"]} />
-   */
-  templateAreas?: string | string[];
-  autoFlow?: 'row' | 'column' | 'dense' | 'row dense' | 'column dense';
-  autoColumns?: string;
-  autoRows?: string;
+    /**
+     * Supports CSS Grid template columns syntax.
+     *
+     * If you pass a number, columns will be created using repeat(n, 1fr).
+     *
+     * @example
+     * <Grid columns="1fr 1fr 1fr" />
+     * <Grid columns={3} />
+     */
+    columns?: string | number;
 
-  /**
-   * Supports CSS Grid template columns syntax.
-   *
-   * If you pass a number, columns will be created using repeat(n, 1fr).
-   *
-   * @example
-   * <Grid columns="1fr 1fr 1fr" />
-   * <Grid columns={3} />
-   */
-  columns?: string | number;
-
-  /**
-   * Supports CSS Grid template rows syntax.
-   *
-   * If you pass a number, rows will be created using repeat(n, 1fr).
-   *
-   * @example
-   * <Grid rows="1fr 1fr 1fr" />
-   * <Grid rows={3} />
-   */
-  rows?: string | number;
-  gap?: GapType;
-  columnGap?: GapType;
-  rowGap?: GapType;
-  justifyItems?: AlignType;
-  alignItems?: AlignType;
-  justifyContent?: AlignExtendedType;
-  alignContent?: AlignExtendedType;
-  inline?: boolean;
-};
+    /**
+     * Supports CSS Grid template rows syntax.
+     *
+     * If you pass a number, rows will be created using repeat(n, 1fr).
+     *
+     * @example
+     * <Grid rows="1fr 1fr 1fr" />
+     * <Grid rows={3} />
+     */
+    rows?: string | number;
+    justifyItems?: AlignType;
+    alignItems?: AlignType;
+    justifyContent?: AlignExtendedType;
+    alignContent?: AlignExtendedType;
+    inline?: boolean;
+  };
 
 export function Grid({
   templateAreas,
@@ -71,6 +74,7 @@ export function Grid({
   justifyContent,
   alignContent,
   inline = false,
+  className,
   style = {},
   render,
   ref,
@@ -92,16 +96,12 @@ export function Grid({
   }, [templateAreas]);
 
   const gridStyle = {
-    display: inline ? 'inline-grid' : 'grid',
     gridTemplateAreas,
     gridAutoFlow: autoFlow,
     gridAutoColumns: autoColumns,
     gridAutoRows: autoRows,
     gridTemplateColumns,
     gridTemplateRows,
-    gap: gap && GAPS[gap],
-    columnGap: columnGap && GAPS[columnGap],
-    rowGap: rowGap && GAPS[rowGap],
     justifyItems,
     alignItems,
     justifyContent,
@@ -113,7 +113,13 @@ export function Grid({
     defaultTagName: 'div',
     ref,
     render,
-    props: mergeProps<'div'>({ style: gridStyle }, props)
+    props: mergeProps<'div'>(
+      {
+        className: grid({ inline, gap, columnGap, rowGap, className }),
+        style: gridStyle
+      },
+      props
+    )
   });
 
   return element;

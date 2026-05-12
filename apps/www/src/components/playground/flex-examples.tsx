@@ -6,28 +6,28 @@ import PlaygroundLayout from './playground-layout';
 export function FlexExamples() {
   return (
     <PlaygroundLayout title='Flex'>
-      <Flex gap='large' direction='column'>
-        <Flex gap='extra-small' align='center'>
+      <Flex gap={9} direction='column'>
+        <Flex gap={2} align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap='small' align='center'>
+        <Flex gap={3} align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap='medium' align='center'>
+        <Flex gap={5} align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap='large' align='center'>
+        <Flex gap={9} align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>
         </Flex>
-        <Flex gap='extra-large' align='center'>
+        <Flex gap={11} align='center'>
           <Button>Button 1</Button>
           <Button>Button 2</Button>
           <Button>Button 3</Button>

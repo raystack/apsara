@@ -30,7 +30,7 @@ export const playground = {
 export const sizeDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <IconButton size={1}><Info size={16} /></IconButton>
     <IconButton size={2}><Info size={16} /></IconButton>
     <IconButton size={3}><Info size={16} /></IconButton>
@@ -40,7 +40,7 @@ export const sizeDemo = {
 export const stateDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <IconButton size={4}><Info size={16} /></IconButton>
     <IconButton size={4} disabled><Info size={16} /></IconButton>
   </Flex>`

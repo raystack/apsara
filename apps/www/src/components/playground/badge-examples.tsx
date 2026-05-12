@@ -7,7 +7,7 @@ import PlaygroundLayout from './playground-layout';
 export function BadgeExamples() {
   return (
     <PlaygroundLayout title='Badge'>
-      <Flex gap='medium'>
+      <Flex gap={5}>
         <Badge variant='accent'>Accent</Badge>
         <Badge variant='warning'>Warning</Badge>
         <Badge variant='danger'>Danger</Badge>
@@ -15,12 +15,12 @@ export function BadgeExamples() {
         <Badge variant='neutral'>Neutral</Badge>
         <Badge variant='gradient'>Gradient</Badge>
       </Flex>
-      <Flex gap='medium' align='center'>
+      <Flex gap={5} align='center'>
         <Badge size='micro'>Micro</Badge>
         <Badge size='small'>Small</Badge>
         <Badge size='regular'>Regular</Badge>
       </Flex>
-      <Flex gap='medium'>
+      <Flex gap={5}>
         <Badge icon={<Home size='16' />}>Badge</Badge>
         <Badge icon={<Laugh size='16' />}>Badge</Badge>
         <Badge icon='🔥'>Badge</Badge>

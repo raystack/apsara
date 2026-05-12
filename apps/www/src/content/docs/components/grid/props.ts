@@ -40,18 +40,70 @@ export interface GridProps {
 
   /**
    * Sets the gap between grid items.
+   * Each step maps directly to `--rs-space-1` through `--rs-space-17`.
    */
-  gap?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
+  gap?:
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17;
 
   /**
-   * Sets the gap between grid columns.
+   * Sets the gap between grid columns. Uses the same scale as `gap`.
    */
-  columnGap?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
+  columnGap?:
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17;
 
   /**
-   * Sets the gap between grid rows.
+   * Sets the gap between grid rows. Uses the same scale as `gap`.
    */
-  rowGap?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
+  rowGap?:
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17;
 
   /**
    * Aligns grid items along the inline (row) axis.

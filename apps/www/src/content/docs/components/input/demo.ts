@@ -32,7 +32,7 @@ export const basicDemo = {
 
 export const withFieldDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium" style={{ width: 560 }}>
+  code: `<Flex direction="column" gap={5} style={{ width: 560 }}>
   <Field label="Email" required description="We won't share your email">
     <Input type="email" placeholder="Enter email" />
   </Field>
@@ -97,7 +97,7 @@ export const widthDemo = {
 
 export const sizeDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium">
+  code: `<Flex direction="column" gap={5}>
   <Input
     placeholder="32px height (default)"
   />
@@ -110,7 +110,7 @@ export const sizeDemo = {
 
 export const sizeChipDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium">
+  code: `<Flex direction="column" gap={5}>
   <Input
     placeholder="Type and press Enter..."
     chips={[
@@ -127,6 +127,24 @@ export const sizeChipDemo = {
     ]}
   />
 </Flex>`
+};
+
+export const onValueChangeDemo = {
+  type: 'code',
+  code: `function ValueChangeExample() {
+  const [value, setValue] = React.useState("");
+
+  return (
+    <Flex direction="column" gap={5} style={{ width: 400 }}>
+      <Input
+        placeholder="Type something..."
+        value={value}
+        onValueChange={setValue}
+      />
+      <Text size="small">Current value: {value || "(empty)"}</Text>
+    </Flex>
+  );
+}`
 };
 
 export const interactiveChipDemo = {

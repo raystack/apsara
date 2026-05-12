@@ -14,7 +14,7 @@ import PlaygroundLayout from './playground-layout';
 export function ToolbarExamples() {
   return (
     <PlaygroundLayout title='Toolbar'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text>Default:</Text>
         <Toolbar>
           <Toolbar.Button>Bold</Toolbar.Button>

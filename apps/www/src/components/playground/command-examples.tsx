@@ -20,7 +20,7 @@ export function CommandExamples() {
 
   return (
     <PlaygroundLayout title='Command'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text>Inline command menu</Text>
         <Flex style={{ width: 420 }}>
           <Command>

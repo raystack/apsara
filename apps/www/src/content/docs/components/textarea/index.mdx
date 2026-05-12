@@ -8,6 +8,7 @@ import {
   playground,
   basicDemo,
   controlledDemo,
+  onValueChangeDemo,
   sizeDemo,
   variantDemo,
   rowsDemo,
@@ -62,6 +63,12 @@ Use Field to add label, description, and error handling.
 Example of TextArea in controlled mode.
 
 <Demo data={controlledDemo} />
+
+### Using `onValueChange`
+
+`onValueChange` is a convenience callback that fires alongside `onChange` and receives just the new string value. Use it when you don't need the full React change event.
+
+<Demo data={onValueChangeDemo} />
 
 ### Size Variants
 

@@ -3,7 +3,7 @@
 export const preview = {
   type: 'code',
   code: `
-  <Flex direction="row" gap="large" style={{ width: "100%", fontSize: "12px", padding: "0 16px" }}>
+  <Flex direction="row" gap={9} style={{ width: "100%", fontSize: "12px", padding: "0 16px" }}>
     <Tabs defaultValue="tab-one">
       <Tabs.List>
         <Tabs.Tab value="tab-one">Hosting</Tabs.Tab>

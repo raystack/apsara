@@ -77,6 +77,47 @@ describe('Link', () => {
     });
   });
 
+  describe('Custom render', () => {
+    it('renders as the element provided via render prop', () => {
+      render(
+        <Link href='/test' render={<button type='button' />}>
+          Custom
+        </Link>
+      );
+      const link = screen.getByRole('link');
+      expect(link.tagName).toBe('BUTTON');
+      expect(link).toHaveAttribute('type', 'button');
+    });
+
+    it('forwards Link props to the custom rendered element', () => {
+      render(
+        <Link
+          href='https://example.com'
+          external
+          render={<a data-custom='yes' />}
+        >
+          External
+        </Link>
+      );
+      const link = screen.getByRole('link');
+      expect(link).toHaveAttribute('href', 'https://example.com');
+      expect(link).toHaveAttribute('target', '_blank');
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+      expect(link).toHaveAttribute('data-custom', 'yes');
+    });
+
+    it('preserves the link className on the custom rendered element', () => {
+      render(
+        <Link href='/test' render={<div />}>
+          Custom
+        </Link>
+      );
+      const link = screen.getByRole('link');
+      expect(link.tagName).toBe('DIV');
+      expect(link).toHaveClass(styles.link);
+    });
+  });
+
   describe('HTML Attributes', () => {
     it('supports title attribute', () => {
       render(

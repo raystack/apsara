@@ -1,5 +1,6 @@
 .positioner {
   z-index: var(--rs-z-index-portal);
+  background-color: var(--rs-color-background-base-primary);
 }
 
 .content {
