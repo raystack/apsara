@@ -65,6 +65,7 @@ export { Menubar } from './components/menubar';
 export { Meter } from './components/meter';
 export { Navbar } from './components/navbar';
 export { NumberField } from './components/number-field';
+export { OTPField } from './components/otp-field';
 export { Popover } from './components/popover';
 export { PreviewCard } from './components/preview-card';
 export { Progress } from './components/progress';

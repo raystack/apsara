@@ -1,0 +1,84 @@
+.otp-field {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+}
+
+.otp-field-input {
+  width: 24px;
+  height: 32px;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-base-primary);
+  text-align: center;
+  font-family: var(--rs-font-body);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  color: var(--rs-color-foreground-base-primary);
+  outline: none;
+  transition: var(--rs-transition-interactive);
+  -moz-appearance: textfield;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.otp-field-input::-webkit-outer-spin-button,
+.otp-field-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.otp-field-input::placeholder {
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.otp-field-input:hover:not(:focus):not(:disabled):not([data-disabled]):not(
+    [data-readonly]
+  ) {
+  border-color: var(--rs-color-border-base-focus);
+}
+
+.otp-field-input:focus:not([data-readonly]) {
+  border-color: var(--rs-color-border-accent-emphasis);
+}
+
+.otp-field-input[data-invalid] {
+  border-color: var(--rs-color-border-danger-primary);
+}
+
+.otp-field-input[data-invalid]:hover:not(:focus),
+.otp-field-input[data-invalid]:focus:not([data-readonly]) {
+  border-color: var(--rs-color-border-danger-emphasis-hover);
+}
+
+.otp-field-input[data-disabled],
+.otp-field-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: var(--rs-color-foreground-base-tertiary);
+}
+
+.otp-field-input[data-disabled]:hover,
+.otp-field-input:disabled:hover {
+  border-color: var(--rs-color-border-base-tertiary);
+  background: var(--rs-color-background-base-primary);
+}
+
+.otp-field-input[data-readonly] {
+  cursor: default;
+}
+
+.otp-field-separator {
+  flex-shrink: 0;
+  width: 8px;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background-color: var(--rs-color-foreground-base-tertiary);
+}
