@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Slider } from '../slider';
@@ -76,12 +76,10 @@ describe('Slider', () => {
       expect(slider).toBeInTheDocument();
     });
 
-    it('handles single value', async () => {
-      render(<Slider value={50} />);
-      await waitFor(() => {
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('aria-valuenow', '50');
-      });
+    it('handles single value', () => {
+      const { container } = render(<Slider value={50} />);
+      const slider = container.querySelector('input[type="range"]');
+      expect(slider).toHaveAttribute('aria-valuenow', '50');
     });
 
     it('handles range values', async () => {
@@ -109,12 +107,10 @@ describe('Slider', () => {
       expect(container.textContent).toContain('Max');
     });
 
-    it('sets aria-label for thumbs', async () => {
-      render(<Slider label='Volume' />);
-      await waitFor(() => {
-        const slider = screen.getByRole('slider');
-        expect(slider).toHaveAttribute('aria-label', 'Volume');
-      });
+    it('sets aria-label for thumbs', () => {
+      const { container } = render(<Slider label='Volume' />);
+      const slider = container.querySelector('input[type="range"]');
+      expect(slider).toHaveAttribute('aria-label', 'Volume');
     });
   });
 
@@ -141,14 +137,12 @@ describe('Slider', () => {
       expect(root).toHaveAttribute('aria-label', 'Audio volume');
     });
 
-    it('sets aria-valuetext', async () => {
-      render(<Slider value={50} aria-valuetext='50 percent' />);
-      await waitFor(() => {
-        const slider = screen.getByRole('slider');
-        // Base UI may use getAriaValueText callback which formats the value
-        // So we just check that the slider exists and has some value
-        expect(slider).toBeInTheDocument();
-      });
+    it('sets aria-valuetext', () => {
+      const { container } = render(
+        <Slider value={50} aria-valuetext='50 percent' />
+      );
+      const slider = container.querySelector('input[type="range"]');
+      expect(slider).toBeInTheDocument();
     });
   });
 
