@@ -1,1 +1,1 @@
-export { AnnouncementBar } from "./announcement-bar";
+export { AnnouncementBar } from './announcement-bar';

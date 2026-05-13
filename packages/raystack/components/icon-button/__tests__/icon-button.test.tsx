@@ -57,10 +57,11 @@ describe('IconButton', () => {
       expect(button).toBeDisabled();
     });
 
-    it('sets aria-disabled when disabled', () => {
+    it('uses native disabled instead of aria-disabled', () => {
       render(<IconButton disabled>Icon</IconButton>);
       const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('aria-disabled', 'true');
+      expect(button).toBeDisabled();
+      expect(button).not.toHaveAttribute('aria-disabled');
     });
 
     it('does not trigger click when disabled', () => {

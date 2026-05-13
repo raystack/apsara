@@ -13,4 +13,11 @@ export interface SpinnerProps {
 
   /** Additional CSS class names. */
   className?: string;
+
+  /**
+   * Accessible label announced to screen readers. Ignored when
+   * `aria-hidden="true"` is passed.
+   * @default "Loading"
+   */
+  ariaLabel?: string;
 }

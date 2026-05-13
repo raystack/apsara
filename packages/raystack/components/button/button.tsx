@@ -167,11 +167,12 @@ export const Button = ({
       render={render}
       nativeButton={!render}
       focusableWhenDisabled={loading}
+      aria-busy={loading || undefined}
       {...props}
     >
       {loading ? (
         <>
-          <Spinner size={1} color='default' />
+          <Spinner size={1} color='default' aria-hidden='true' />
           {loaderText && (
             <span className={styles['loader-text']}>{loaderText}</span>
           )}

@@ -46,7 +46,12 @@ Override the text via `optionalText`.
 
 ## Accessibility
 
-- Renders a semantic HTML `<label>` element by default
-- Supports programmatic association with form controls via `htmlFor`
-- Maintains WCAG compliant color contrast ratios
-- Shows a pointer cursor when associated with a control via `htmlFor`
+- Renders a semantic HTML `<label>` element by default.
+- Supports programmatic association with form controls via `htmlFor`.
+- When `required={false}`, an `(optional)` indicator is appended
+  (customise the text via `optionalText`).
+- When `required={true}` and `showRequiredIndicator` is set, a
+  `(required)` indicator is appended (customise via `requiredText`). The
+  indicator is real text, so screen readers announce it.
+- Maintains WCAG compliant color contrast ratios.
+- Shows a pointer cursor when associated with a control via `htmlFor`.

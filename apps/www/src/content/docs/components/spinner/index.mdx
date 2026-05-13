@@ -42,6 +42,13 @@ The Spinner component offers 6 color values. `default` prop sets the color to `c
 
 The Spinner component includes appropriate ARIA attributes for accessibility:
 
-- `role="status"`: Indicates that the element is a status indicator.
-- `aria-hidden="true"`: Hides the spinner from screen readers, as it's a visual indicator only.
-- Respects motion preferences: spinner rotation is enabled only when `prefers-reduced-motion: no-preference`
+- `role="status"` and `aria-live="polite"`: assistive tech announces the
+  spinner as a polite live region when it appears.
+- `aria-label`: announced label, defaults to `"Loading"`. Override with the
+  `ariaLabel` prop (or the standard `aria-label` attribute) for
+  context-specific text like `"Saving changes"`.
+- Pass `aria-hidden="true"` for purely decorative spinners (e.g. inside a
+  button that already has `aria-busy`). The status role and label are
+  removed automatically so the two attributes don't conflict.
+- Respects motion preferences: spinner rotation is enabled only when
+  `prefers-reduced-motion: no-preference`.

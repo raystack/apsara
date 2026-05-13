@@ -11,6 +11,20 @@ export interface LabelProps {
    */
   optionalText?: string;
 
+  /**
+   * Text rendered next to the label when `required={true}` and
+   * `showRequiredIndicator` is enabled.
+   * @defaultValue "(required)"
+   */
+  requiredText?: string;
+
+  /**
+   * When `true` and `required={true}`, renders a `(required)` indicator next
+   * to the label. Disabled by default to preserve existing visual layouts.
+   * @defaultValue false
+   */
+  showRequiredIndicator?: boolean;
+
   /** Associates the label with a form control using its ID. */
   htmlFor?: string;
 

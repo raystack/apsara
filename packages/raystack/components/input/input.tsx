@@ -54,10 +54,12 @@ export function Input({
   containerRef,
   classNames,
   required,
+  'aria-invalid': ariaInvalid,
   ...props
 }: InputProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
+  const resolvedInvalid = ariaInvalid ?? fieldContext?.invalid ?? undefined;
 
   return (
     <div
@@ -71,7 +73,9 @@ export function Input({
       ref={containerRef}
     >
       {leadingIcon && (
-        <div className={styles['leading-icon']}>{leadingIcon}</div>
+        <div className={styles['leading-icon']} aria-hidden='true'>
+          {leadingIcon}
+        </div>
       )}
       {prefix && <div className={styles.prefix}>{prefix}</div>}
 
@@ -105,13 +109,17 @@ export function Input({
           placeholder={chips?.length ? undefined : placeholder}
           disabled={disabled}
           required={resolvedRequired}
+          aria-invalid={resolvedInvalid}
+          aria-required={resolvedRequired || undefined}
           {...props}
         />
       </div>
 
       {suffix && <div className={styles.suffix}>{suffix}</div>}
       {trailingIcon && (
-        <div className={styles['trailing-icon']}>{trailingIcon}</div>
+        <div className={styles['trailing-icon']} aria-hidden='true'>
+          {trailingIcon}
+        </div>
       )}
     </div>
   );

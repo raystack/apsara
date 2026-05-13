@@ -83,7 +83,6 @@ export function SidebarItem({
         'data-disabled': disabled,
         'aria-current': active ? 'page' : undefined,
         'aria-disabled': disabled,
-        ...(!insideSidebarMore ? { role: 'listitem' } : {}),
         ...(isCollapsed && typeof children === 'string' && !insideSidebarMore
           ? { 'aria-label': children }
           : {}),

@@ -66,6 +66,12 @@ Renders the value text within a list item.
 
 The List component implements proper ARIA attributes for accessibility:
 
-- List has `role="list"` and `aria-label`
-- List.Item has `role="listitem"`
-- List.Header has `role="heading"` and `aria-level={3}`
+- List renders a `<ul>` with explicit `role="list"`. The role is kept
+  even though the element is native, because Safari/VoiceOver drop the
+  implicit list role when `list-style: none` is applied.
+- List relies on the native `<li>` semantics for items — no redundant
+  `role="listitem"` is set.
+- No generic default `aria-label` is added. Pass `aria-label` when the
+  list needs an accessible name distinct from surrounding context.
+- List.Header has `role="heading"` and exposes a configurable `level` prop
+  (1–6, defaults to 3) so the heading rank matches the document outline.

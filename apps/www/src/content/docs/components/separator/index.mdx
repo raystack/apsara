@@ -46,6 +46,8 @@ Separator can be rendered in both horizontal and vertical orientations.
 
 ## Accessibility
 
-- Uses `role="separator"` for proper semantic meaning
-- Supports `aria-orientation` for horizontal and vertical variants
-- Decorative separators use `role="none"` to hide from screen readers
+- Uses `role="separator"` and `aria-orientation` by default so the divider
+  is announced and oriented correctly.
+- Pass `decorative` when the separator is purely visual (for example
+  between icons in a toolbar). It then renders with `role="presentation"`
+  and `aria-hidden="true"` so assistive tech skips it.

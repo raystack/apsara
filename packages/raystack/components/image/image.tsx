@@ -65,8 +65,6 @@ export function Image({
       loading={loading}
       decoding={decoding}
       {...props}
-      role='img'
-      aria-label={alt}
     />
   );
 }

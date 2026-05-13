@@ -152,7 +152,7 @@ The Sidebar implements the following accessibility features:
 
   - `role="navigation"` for the main sidebar
   - `role="banner"` for the header
-  - `role="list"` for item containers (Main groups, Footer) and `role="listitem"` for navigation items
+  - `role="list"` for item containers (Main groups, Footer); navigation items rely on the native semantics of their underlying element (`<a>` by default) instead of an explicit `role="listitem"`
   - `aria-expanded` to indicate sidebar state
   - `aria-current="page"` for active items
   - `aria-disabled="true"` for disabled items

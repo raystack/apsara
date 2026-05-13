@@ -34,8 +34,13 @@ export function DrawerContent({
   side = 'right',
   showCloseButton = true,
   overlayProps,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
+  closeLabel = 'Close',
   ...props
-}: DrawerContentProps) {
+}: DrawerContentProps & { closeLabel?: string }) {
+  const resolvedAriaLabel =
+    ariaLabel ?? (ariaLabelledBy ? undefined : 'Drawer');
   return (
     <DrawerPrimitive.Portal>
       <DrawerPrimitive.Backdrop
@@ -45,7 +50,8 @@ export function DrawerContent({
       <DrawerPrimitive.Viewport className={styles.viewport}>
         <DrawerPrimitive.Popup
           className={drawerPopup({ side, className })}
-          aria-label='Drawer'
+          aria-label={resolvedAriaLabel}
+          aria-labelledby={ariaLabelledBy}
           {...props}
         >
           <DrawerPrimitive.Content className={styles.content}>
@@ -53,7 +59,7 @@ export function DrawerContent({
             {showCloseButton && (
               <DrawerPrimitive.Close
                 className={styles.close}
-                aria-label='Close Drawer'
+                aria-label={closeLabel}
               >
                 <Cross1Icon aria-hidden='true' />
               </DrawerPrimitive.Close>

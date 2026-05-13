@@ -33,11 +33,17 @@ TableRow.displayName = 'Table.Row';
 const head = cva(styles['head']);
 function TableHead({
   className,
+  scope = 'col',
   ...props
 }: ComponentProps<'th'> & VariantProps<typeof head>) {
-  return <th {...props} className={head({ className })} />;
+  return <th scope={scope} {...props} className={head({ className })} />;
 }
 TableHead.displayName = 'Table.Head';
+
+function TableCaption({ ...props }: ComponentProps<'caption'>) {
+  return <caption {...props} />;
+}
+TableCaption.displayName = 'Table.Caption';
 
 const cell = cva(styles['cell']);
 function TableCell({
@@ -66,7 +72,7 @@ function SectionHeader({
       className={sectionHeader({ className: classNames?.row })}
       {...rest}
     >
-      <th colSpan={colSpan} className={classNames?.cell}>
+      <th scope='colgroup' colSpan={colSpan} className={classNames?.cell}>
         {children}
       </th>
     </tr>
@@ -80,5 +86,6 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Head: TableHead,
   Cell: TableCell,
+  Caption: TableCaption,
   SectionHeader: SectionHeader
 });

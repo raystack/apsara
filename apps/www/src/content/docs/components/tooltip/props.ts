@@ -79,6 +79,19 @@ export interface TooltipContentProps {
    * Additional CSS class names
    */
   className?: string;
+
+  /**
+   * Accessible label for the tooltip popup. Use when `children` is a
+   * ReactNode (icons, custom markup) that wouldn't expose a readable name
+   * on its own.
+   */
+  'aria-label'?: string;
+
+  /**
+   * ID of an element that labels the tooltip popup. Alternative to
+   * `aria-label` when the labelling text lives elsewhere in the DOM.
+   */
+  'aria-labelledby'?: string;
 }
 
 export interface TooltipProviderProps {

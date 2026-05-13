@@ -47,9 +47,24 @@ describe('Spinner', () => {
 
   it('has correct accessibility attributes', () => {
     render(<Spinner />);
-    const spinner = screen.getByRole('status', { hidden: true });
+    const spinner = screen.getByRole('status');
     expect(spinner).toHaveAttribute('role', 'status');
+    expect(spinner).toHaveAttribute('aria-label', 'Loading');
+    expect(spinner).toHaveAttribute('aria-live', 'polite');
+    expect(spinner).not.toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('uses custom aria-label when provided', () => {
+    render(<Spinner ariaLabel='Saving' />);
+    const spinner = screen.getByRole('status');
+    expect(spinner).toHaveAttribute('aria-label', 'Saving');
+  });
+
+  it('honors aria-hidden override and drops status role', () => {
+    render(<Spinner aria-hidden='true' data-testid='hidden-spinner' />);
+    const spinner = screen.getByTestId('hidden-spinner');
     expect(spinner).toHaveAttribute('aria-hidden', 'true');
+    expect(spinner).not.toHaveAttribute('role');
   });
 
   it('renders properly inside a button', () => {
