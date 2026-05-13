@@ -14,6 +14,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Callback Signatures](#callback-signatures)
     - [Data Attributes](#data-attributes)
     - [CSS Variables](#css-variables)
+      - [Overlay Tokens](#overlay-tokens)
     - [Form Field Pattern](#form-field-pattern)
   - [Component Migration](#component-migration)
     - [Accordion](#accordion)
@@ -38,30 +39,31 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Grid](#grid)
     - [Headline](#headline)
     - [Input (formerly InputField)](#input-formerly-inputfield)
+      - [New Features](#new-features-5)
     - [Label](#label)
     - [Popover](#popover)
-      - [New Features](#new-features-5)
+      - [New Features](#new-features-6)
     - [Radio](#radio)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
-      - [New Features](#new-features-6)
+      - [New Features](#new-features-7)
     - [Separator](#separator)
     - [Sheet -\> Drawer](#sheet---drawer)
-      - [New Features](#new-features-7)
-    - [Sidebar](#sidebar)
       - [New Features](#new-features-8)
-    - [Slider](#slider)
+    - [Sidebar](#sidebar)
       - [New Features](#new-features-9)
+    - [Slider](#slider)
+      - [New Features](#new-features-10)
     - [Switch](#switch)
     - [Tabs](#tabs)
-      - [New Features](#new-features-10)
+      - [New Features](#new-features-11)
     - [Text](#text)
     - [TextArea](#textarea)
-      - [New Features](#new-features-11)
-    - [Toast](#toast)
       - [New Features](#new-features-12)
-    - [Tooltip](#tooltip)
+    - [Toast](#toast)
       - [New Features](#new-features-13)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-14)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -937,6 +939,7 @@ import { DropdownMenu } from '@raystack/apsara';
   searchValue={query}
   onSearch={setQuery}
   focusLoop
+  placement="bottom-start"
   onOpenChange={(open) => console.log(open)}
 >
   <DropdownMenu.Trigger asChild>
@@ -970,7 +973,7 @@ import { Menu } from '@raystack/apsara';
   onOpenChange={(open, details) => console.log(open)}
 >
   <Menu.Trigger render={<Button />}>Actions</Menu.Trigger>
-  <Menu.Content sideOffset={8} searchPlaceholder="Filter...">
+  <Menu.Content side="bottom" align="start" sideOffset={8} searchPlaceholder="Filter...">
     <Menu.Group>
       <Menu.Label>File</Menu.Label>
       <Menu.Item leadingIcon={<EditIcon />}>Edit</Menu.Item>
@@ -996,10 +999,14 @@ import { Menu } from '@raystack/apsara';
 | `onSearch` | `onInputValueChange` |
 | `defaultSearchValue` | `defaultInputValue` |
 | `focusLoop` | `loopFocus` (default flipped: was `true`, now `false`) |
+| `placement` (Menu Root) | `side` + `align` (Menu.Content) (split into two props; e.g. `placement="bottom-start"` → `side="bottom" align="start"`) |
+| `onOpenChange={(open) => ...}` | `onOpenChange={(open, eventDetails) => ...}` (signature now receives a second `eventDetails` arg) |
 | `Content gutter={N}` | `Content sideOffset={N}` |
+| `Content shift={N}` | `Content alignOffset={N}` |
 | `Content portal` | Removed (always portaled) |
 | `Content portalElement` | Removed |
 | `Content unmountOnHide` | Removed |
+| `Trigger asChild` / `Content asChild` / `Item asChild` | `render` prop (see [`asChild` Replaced by `render`](#aschild-replaced-by-render)) |
 | `DropdownMenu.TriggerItem` | `Menu.SubmenuTrigger` (inside `Menu.Submenu`) |
 
 #### New Features
@@ -1007,6 +1014,8 @@ import { Menu } from '@raystack/apsara';
 - `Menu.Submenu`, `Menu.SubmenuTrigger`, `Menu.SubmenuContent`
 - `Menu.createHandle` for imperative control
 - Menubar integration
+- `defaultOpen` for uncontrolled open state
+- `modal` prop (default `true`) to toggle focus trap / outside-interaction blocking
 
 ---
 

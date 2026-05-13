@@ -12,6 +12,7 @@ import {
   localeDemo,
   hideDecimalsDemo,
   currencyDisplayDemo,
+  hideCurrencyDemo,
   groupDigitsDemo,
   withTextDemo,
   largeNumbersDemo,
@@ -61,13 +62,19 @@ Formats and displays monetary values with locale and currency support.
 
 <Demo data={currencyDisplayDemo} />
 
+### hideCurrency
+
+Render only the formatted number, without any currency symbol, code, or name. Locale-driven separators and decimal places are preserved.
+
+<Demo data={hideCurrencyDemo} />
+
 ### groupDigits
 
 <Demo data={groupDigitsDemo} />
 
 ### Large Numbers
 
-For numbers larger than JavaScript's safe integer limit (2^53 - 1), pass the value as a string to maintain precision.
+For numbers larger than JavaScript's safe integer limit (2^53 - 1), pass the value as a `string` (supports decimals) or a `bigint` (integer-only). BigInt values are always treated as already in major units, so `valueInMinorUnits` is ignored for them.
 
 <Demo data={largeNumbersDemo} />
 
