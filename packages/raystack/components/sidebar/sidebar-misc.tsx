@@ -1,6 +1,9 @@
 'use client';
 
-import { Accordion as AccordionPrimitive } from '@base-ui/react';
+import {
+  Accordion as AccordionPrimitive,
+  type AccordionRootProps
+} from '@base-ui/react';
 import { TriangleDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { ComponentProps, ReactNode, useContext } from 'react';
@@ -41,9 +44,13 @@ export function SidebarFooter({
 }
 SidebarFooter.displayName = 'Sidebar.Footer';
 
-export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
+export interface SidebarNavigationGroupProps
+  extends ComponentProps<'section'>,
+    Pick<
+      AccordionRootProps,
+      'value' | 'defaultValue' | 'onValueChange' | 'disabled'
+    > {
   label: string;
-  value?: string;
   collapsible?: boolean;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
@@ -62,6 +69,9 @@ export function SidebarNavigationGroup({
   className,
   label,
   value,
+  defaultValue,
+  onValueChange,
+  disabled,
   collapsible = false,
   leadingIcon,
   trailingIcon,
@@ -70,7 +80,7 @@ export function SidebarNavigationGroup({
   ...props
 }: SidebarNavigationGroupProps) {
   const { isCollapsed } = useContext(SidebarContext);
-  const groupValue = value ?? label;
+  const groupValue = label;
 
   if (!collapsible) {
     return (
@@ -122,7 +132,10 @@ export function SidebarNavigationGroup({
         key={isCollapsed ? 'collapsed' : 'expanded'}
         className={styles['nav-group-accordion']}
         multiple
-        defaultValue={[groupValue]}
+        disabled={disabled}
+        {...(value !== undefined
+          ? { value, onValueChange }
+          : { defaultValue: defaultValue ?? [groupValue] })}
       >
         <AccordionPrimitive.Item
           value={groupValue}
