@@ -412,6 +412,102 @@ describe('Sidebar', () => {
       expect(screen.getByTestId('group-trailing-icon')).toBeInTheDocument();
     });
 
+    it('respects defaultOpen=false for uncontrolled collapsible group', () => {
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              defaultOpen={false}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      expect(trigger).not.toHaveAttribute('data-panel-open');
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+    });
+
+    it('controls open state via open prop and fires onOpenChange', () => {
+      const onOpenChange = vi.fn();
+      const { rerender } = render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              open={false}
+              onOpenChange={onOpenChange}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      fireEvent.click(trigger);
+      expect(onOpenChange).toHaveBeenCalledWith(true);
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+
+      rerender(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              open={true}
+              onOpenChange={onOpenChange}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+    });
+
+    it('fires onOpenChange when uncontrolled group is toggled', () => {
+      const onOpenChange = vi.fn();
+      render(
+        <Sidebar>
+          <Sidebar.Main>
+            <Sidebar.Group
+              label={MAIN_GROUP_LABEL}
+              collapsible
+              onOpenChange={onOpenChange}
+            >
+              <Sidebar.Item href='#' leadingIcon={<InfoIcon />}>
+                {DASHBOARD_ITEM_TEXT}
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const trigger = screen.getByRole('button', { name: /Main/ });
+      fireEvent.click(trigger);
+      expect(onOpenChange).toHaveBeenLastCalledWith(false);
+      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+
+      fireEvent.click(trigger);
+      expect(onOpenChange).toHaveBeenLastCalledWith(true);
+      expect(screen.getByText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+    });
+
     it('does not toggle collapsible when trailing icon is clicked', () => {
       const onTrailingIconClick = vi.fn();
 

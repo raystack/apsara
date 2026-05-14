@@ -402,6 +402,59 @@ export const collapsibleGroupDemo = {
   style: styleDemo
 };
 
+export const controlledGroupDemo = {
+  type: 'code',
+  style: styleDemo,
+  code: `
+        function ControlledSidebarGroup() {
+          const [resourcesOpen, setResourcesOpen] = React.useState(true);
+
+          return (
+            ${sidebarLayout(`<Sidebar defaultOpen>
+              <Sidebar.Header>
+                <Flex align="center" gap={3}>
+                  <IconButton size={4} aria-label="Logo">
+                    <BellIcon width={24} height={24} />
+                  </IconButton>
+                  <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
+                </Flex>
+              </Sidebar.Header>
+              <Sidebar.Main>
+                <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                  Overview
+                </Sidebar.Item>
+                <Sidebar.Group
+                  label="Resources"
+                  collapsible
+                  open={resourcesOpen}
+                  onOpenChange={setResourcesOpen}
+                >
+                  <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                    Reports
+                  </Sidebar.Item>
+                  <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                    Activities
+                  </Sidebar.Item>
+                </Sidebar.Group>
+              </Sidebar.Main>
+              <Sidebar.Footer>
+                <Sidebar.Item
+                  render={
+                    <button
+                      type="button"
+                      onClick={() => setResourcesOpen(open => !open)}
+                    />
+                  }
+                  leadingIcon={<BellIcon width={16} height={16} />}
+                >
+                  {resourcesOpen ? 'Collapse Resources' : 'Expand Resources'}
+                </Sidebar.Item>
+              </Sidebar.Footer>
+            </Sidebar>`)}
+          );
+        }`
+};
+
 export const groupIconDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen>

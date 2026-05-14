@@ -3,7 +3,13 @@
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
 import { TriangleDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ReactNode, useContext } from 'react';
+import {
+  ComponentProps,
+  ReactNode,
+  useCallback,
+  useContext,
+  useState
+} from 'react';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
@@ -43,8 +49,10 @@ SidebarFooter.displayName = 'Sidebar.Footer';
 
 export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
   label: string;
-  value?: string;
   collapsible?: boolean;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
   leadingIcon?: ReactNode;
   trailingIcon?: ReactNode;
   classNames?: {
@@ -61,8 +69,10 @@ export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
 export function SidebarNavigationGroup({
   className,
   label,
-  value,
   collapsible = false,
+  open: providedOpen,
+  defaultOpen = true,
+  onOpenChange,
   leadingIcon,
   trailingIcon,
   classNames,
@@ -70,7 +80,18 @@ export function SidebarNavigationGroup({
   ...props
 }: SidebarNavigationGroupProps) {
   const { isCollapsed } = useContext(SidebarContext);
-  const groupValue = value ?? label;
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const isOpen = isCollapsed || (providedOpen ?? internalOpen);
+
+  const handleOpenChange = useCallback(
+    (value: unknown[]) => {
+      if (isCollapsed) return;
+      const nextOpen = value.length > 0;
+      setInternalOpen(nextOpen);
+      onOpenChange?.(nextOpen);
+    },
+    [isCollapsed, onOpenChange]
+  );
 
   if (!collapsible) {
     return (
@@ -119,13 +140,13 @@ export function SidebarNavigationGroup({
       {...props}
     >
       <AccordionPrimitive.Root
-        key={isCollapsed ? 'collapsed' : 'expanded'}
         className={styles['nav-group-accordion']}
         multiple
-        defaultValue={[groupValue]}
+        value={isOpen ? [true] : []}
+        onValueChange={handleOpenChange}
       >
         <AccordionPrimitive.Item
-          value={groupValue}
+          value={true}
           className={styles['nav-group-accordion-item']}
         >
           <AccordionPrimitive.Header
