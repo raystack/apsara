@@ -4,11 +4,11 @@ import { Field, Flex, OTPField, Text } from '@raystack/apsara';
 import { useState } from 'react';
 import PlaygroundLayout from './playground-layout';
 
-const renderSlots = (length: number, offset = 0) =>
+const renderSlots = (length: number, offset = 0, totalLength = length) =>
   Array.from({ length }, (_, i) => (
     <OTPField.Input
       key={i + offset}
-      aria-label={`Character ${i + 1 + offset} of ${length + offset}`}
+      aria-label={`Character ${i + 1 + offset} of ${totalLength}`}
     />
   ));
 
@@ -56,14 +56,9 @@ export function OTPFieldExamples() {
       <Flex direction='column' gap={9}>
         <Text>With separator:</Text>
         <OTPField length={6}>
-          {renderSlots(3)}
+          {renderSlots(3, 0, 6)}
           <OTPField.Separator />
-          {Array.from({ length: 3 }, (_, i) => (
-            <OTPField.Input
-              key={`b-${i}`}
-              aria-label={`Character ${i + 4} of 6`}
-            />
-          ))}
+          {renderSlots(3, 3, 6)}
         </OTPField>
       </Flex>
 

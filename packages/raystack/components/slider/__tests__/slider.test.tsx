@@ -82,14 +82,12 @@ describe('Slider', () => {
       expect(slider).toHaveAttribute('aria-valuenow', '50');
     });
 
-    it('handles range values', async () => {
+    it('handles range values', () => {
       const { container } = render(<Slider variant='range' value={[20, 80]} />);
-      await waitFor(() => {
-        const sliders = container.querySelectorAll('input[type="range"]');
-        expect(sliders.length).toBeGreaterThanOrEqual(2);
-        expect(sliders[0]).toHaveAttribute('aria-valuenow', '20');
-        expect(sliders[1]).toHaveAttribute('aria-valuenow', '80');
-      });
+      const sliders = container.querySelectorAll('input[type="range"]');
+      expect(sliders.length).toBeGreaterThanOrEqual(2);
+      expect(sliders[0]).toHaveAttribute('aria-valuenow', '20');
+      expect(sliders[1]).toHaveAttribute('aria-valuenow', '80');
     });
   });
 
@@ -141,8 +139,8 @@ describe('Slider', () => {
       const { container } = render(
         <Slider value={50} aria-valuetext='50 percent' />
       );
-      const slider = container.querySelector('input[type="range"]');
-      expect(slider).toBeInTheDocument();
+      const root = container.querySelector(`.${styles.slider}`);
+      expect(root).toHaveAttribute('aria-valuetext', '50 percent');
     });
   });
 
