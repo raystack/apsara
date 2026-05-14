@@ -5,8 +5,8 @@
 }
 
 .otp-field-input {
-  width: 24px;
-  height: 32px;
+  width: var(--rs-space-7);
+  height: var(--rs-space-9);
   min-width: 0;
   padding: 0;
   margin: 0;
@@ -40,19 +40,21 @@
 
 .otp-field-input:hover:not(:focus):not(:disabled):not([data-disabled]):not(
     [data-readonly]
-  ) {
+  ):not([data-invalid]) {
   border-color: var(--rs-color-border-base-focus);
 }
 
-.otp-field-input:focus:not([data-readonly]) {
+.otp-field-input:focus:not([data-readonly]):not([data-invalid]) {
   border-color: var(--rs-color-border-accent-emphasis);
 }
 
 .otp-field-input[data-invalid] {
-  border-color: var(--rs-color-border-danger-primary);
+  border-color: var(--rs-color-border-danger-emphasis);
 }
 
-.otp-field-input[data-invalid]:hover:not(:focus),
+.otp-field-input[data-invalid]:hover:not(:disabled):not([data-disabled]):not(
+    [data-readonly]
+  ),
 .otp-field-input[data-invalid]:focus:not([data-readonly]) {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }

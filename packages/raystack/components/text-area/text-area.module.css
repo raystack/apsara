@@ -49,7 +49,7 @@
 }
 
 .textarea[data-invalid] {
-  border-color: var(--rs-color-border-danger-primary);
+  border-color: var(--rs-color-border-danger-emphasis);
 }
 
 .textarea[data-invalid]:hover {

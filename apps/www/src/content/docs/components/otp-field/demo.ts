@@ -163,9 +163,16 @@ export const customSanitizeDemo = {
 
 export const withFieldDemo = {
   type: 'code',
-  code: `<Flex justify="center">
+  code: `<Flex direction="column" gap={6}>
   <Field label="Verification code" description="Enter the 6-digit code we sent to your device.">
     <OTPField length={6}>
+      {Array.from({ length: 6 }, (_, i) => (
+        <OTPField.Input key={i} aria-label={\`Character \${i + 1} of 6\`} />
+      ))}
+    </OTPField>
+  </Field>
+  <Field label="Verification code" description="Enter the 6-digit code we sent to your device." error="Invalid OTP">
+    <OTPField length={6} defaultValue="123456">
       {Array.from({ length: 6 }, (_, i) => (
         <OTPField.Input key={i} aria-label={\`Character \${i + 1} of 6\`} />
       ))}

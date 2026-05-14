@@ -25,12 +25,12 @@
   outline: none;
 }
 
-.input-wrapper[data-invalid] {
-  border-color: var(--rs-color-border-danger-primary);
+.input-wrapper:has(.input-field[data-invalid]) {
+  border-color: var(--rs-color-border-danger-emphasis);
 }
 
-.input-wrapper[data-invalid]:hover,
-.input-wrapper[data-invalid]:focus-within {
+.input-wrapper:has(.input-field[data-invalid]):hover,
+.input-wrapper:has(.input-field[data-invalid]):focus-within {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
