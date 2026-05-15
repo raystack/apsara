@@ -290,7 +290,7 @@ A cross-component accessibility pass landed in v1.0 (closes issue #673). Most ch
 | SidePanel | Header title rendered as `<h2>` (was `<span>` via `<Text>`). New `titleId` prop for wiring `aria-labelledby` on the `<aside>`. |
 | Skeleton | Placeholder marked `aria-hidden="true"`. |
 | Spinner | Default behaviour flipped — was `aria-hidden`, now `role="status"` with `aria-label="Loading"` (override via standard `aria-label`). Pass `aria-hidden="true"` to opt back to silent (e.g. inside a Button that already has `aria-busy`). |
-| Table | `Table.Head` defaults `scope="col"`. New `Table.Caption` sub-component. |
+| Table | `Table.Head` defaults `scope="col"`. |
 | TextArea | `aria-invalid` / `aria-required` flow from `Field` context. |
 | Tooltip | `aria-label` / `aria-labelledby` on `Tooltip.Content` so ReactNode messages can have a clean accessible name. |
 

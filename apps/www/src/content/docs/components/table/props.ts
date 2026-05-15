@@ -26,14 +26,6 @@ export interface TableHeadProps {
   scope?: 'col' | 'row' | 'colgroup' | 'rowgroup';
 }
 
-export interface TableCaptionProps {
-  /** Caption content describing the purpose of the table. */
-  children?: React.ReactNode;
-
-  /** Additional CSS class names. */
-  className?: string;
-}
-
 export interface TableCellProps {
   /** Additional CSS class names. */
   className?: string;

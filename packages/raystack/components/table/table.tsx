@@ -40,11 +40,6 @@ function TableHead({
 }
 TableHead.displayName = 'Table.Head';
 
-function TableCaption({ ...props }: ComponentProps<'caption'>) {
-  return <caption {...props} />;
-}
-TableCaption.displayName = 'Table.Caption';
-
 const cell = cva(styles['cell']);
 function TableCell({
   className,
@@ -86,6 +81,5 @@ export const Table = Object.assign(TableRoot, {
   Row: TableRow,
   Head: TableHead,
   Cell: TableCell,
-  Caption: TableCaption,
   SectionHeader: SectionHeader
 });
