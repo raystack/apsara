@@ -280,7 +280,7 @@ A cross-component accessibility pass landed in v1.0 (closes issue #673). Most ch
 | IconButton | Redundant `aria-disabled` removed. `aria-label` strongly recommended in JSDoc. |
 | Image | Redundant `role="img"` + `aria-label={alt}` removed. Empty `alt` is presentational. |
 | Input | `aria-invalid` / `aria-required` flow from `Field` context. Leading / trailing icon wrappers `aria-hidden`. |
-| Label | New `requiredText` + `showRequiredIndicator` props (default off). |
+| Label | New `requiredText` prop. Pass it (e.g. `requiredText="(required)"` or `requiredText="*"`) when `required={true}` to render a required indicator. Omitted by default — apsara still surfaces no required marker unless opted into. |
 | Link | Explicit `role="link"` removed. Custom `render` to non-anchor elements no longer announced as links. |
 | List | Redundant `role="listitem"` removed on `<li>`; default `aria-label="List"` removed. `List.Header` now forwards `aria-level` (1–6, defaults to `3` — was hardcoded). `role="list"` kept on `<ul>` because Safari drops the implicit role under `list-style: none`. |
 | ScrollArea | `aria-label` / `aria-labelledby` apply `role="region"` to the viewport. |

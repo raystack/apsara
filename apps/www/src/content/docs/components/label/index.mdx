@@ -50,8 +50,9 @@ Override the text via `optionalText`.
 - Supports programmatic association with form controls via `htmlFor`.
 - When `required={false}`, an `(optional)` indicator is appended
   (customise the text via `optionalText`).
-- When `required={true}` and `showRequiredIndicator` is set, a
-  `(required)` indicator is appended (customise via `requiredText`). The
-  indicator is real text, so screen readers announce it.
+- When `required={true}` and `requiredText` is passed (e.g.
+  `requiredText="(required)"` or `requiredText="*"`), that text is appended
+  next to the label. No indicator is rendered by default. The indicator is
+  real text, so screen readers announce it.
 - Maintains WCAG compliant color contrast ratios.
 - Shows a pointer cursor when associated with a control via `htmlFor`.
