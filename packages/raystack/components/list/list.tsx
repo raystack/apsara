@@ -32,7 +32,11 @@ interface ListValueProps extends ComponentProps<'span'> {
 
 interface ListHeaderProps extends ComponentProps<'div'> {
   children: ReactNode;
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  /**
+   * Heading level set as `aria-level` on the underlying heading.
+   * @default 3
+   */
+  'aria-level'?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 const ListRoot = ({
@@ -93,14 +97,14 @@ const ListValue = ({ children, className, ...props }: ListValueProps) => {
 const ListHeader = ({
   children,
   className,
-  level = 3,
+  'aria-level': ariaLevel = 3,
   ...props
 }: ListHeaderProps) => {
   return (
     <div
       className={header({ className })}
       role='heading'
-      aria-level={level}
+      aria-level={ariaLevel}
       {...props}
     >
       <span className={headerText()}>{children}</span>

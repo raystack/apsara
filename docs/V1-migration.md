@@ -282,7 +282,7 @@ A cross-component accessibility pass landed in v1.0 (closes issue #673). Most ch
 | Input | `aria-invalid` / `aria-required` flow from `Field` context. Leading / trailing icon wrappers `aria-hidden`. |
 | Label | New `requiredText` + `showRequiredIndicator` props (default off). |
 | Link | Explicit `role="link"` removed. Custom `render` to non-anchor elements no longer announced as links. |
-| List | Redundant `role="listitem"` removed on `<li>`; default `aria-label="List"` removed. `List.Header` has new `level` prop (default `3`, was hardcoded). `role="list"` kept on `<ul>` because Safari drops the implicit role under `list-style: none`. |
+| List | Redundant `role="listitem"` removed on `<li>`; default `aria-label="List"` removed. `List.Header` now forwards `aria-level` (1–6, defaults to `3` — was hardcoded). `role="list"` kept on `<ul>` because Safari drops the implicit role under `list-style: none`. |
 | ScrollArea | `aria-label` / `aria-labelledby` apply `role="region"` to the viewport. |
 | Select | `aria-multiselectable` removed from internal Combobox list (`data-multiselectable` retained for styling). |
 | Separator | New `decorative` prop → `role="presentation"` + `aria-hidden`. |

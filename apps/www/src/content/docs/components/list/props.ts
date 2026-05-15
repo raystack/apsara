@@ -11,10 +11,10 @@ export interface ListHeaderProps {
   children?: React.ReactNode;
 
   /**
-   * Heading level (`aria-level`) for the header.
+   * Heading level set as `aria-level` on the underlying heading element.
    * @default 3
    */
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  'aria-level'?: 1 | 2 | 3 | 4 | 5 | 6;
 
   /** Additional CSS class names. */
   className?: string;
