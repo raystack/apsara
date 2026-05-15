@@ -19,5 +19,5 @@ export interface SpinnerProps {
    * `aria-hidden="true"` is passed.
    * @default "Loading"
    */
-  ariaLabel?: string;
+  'aria-label'?: string;
 }

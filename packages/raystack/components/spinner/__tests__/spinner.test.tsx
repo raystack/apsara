@@ -55,7 +55,7 @@ describe('Spinner', () => {
   });
 
   it('uses custom aria-label when provided', () => {
-    render(<Spinner ariaLabel='Saving' />);
+    render(<Spinner aria-label='Saving' />);
     const spinner = screen.getByRole('status');
     expect(spinner).toHaveAttribute('aria-label', 'Saving');
   });

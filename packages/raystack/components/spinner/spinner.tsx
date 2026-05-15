@@ -33,15 +33,13 @@ export interface SpinnerProps
     VariantProps<typeof spinner> {
   size?: 1 | 2 | 3 | 4 | 5 | 6;
   color?: 'default' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
-  ariaLabel?: string;
 }
 
 export function Spinner({
   className,
   size,
   color,
-  ariaLabel = 'Loading',
-  'aria-label': ariaLabelStandard,
+  'aria-label': ariaLabel = 'Loading',
   'aria-hidden': ariaHidden,
   ...props
 }: SpinnerProps) {
@@ -50,7 +48,7 @@ export function Spinner({
     <div
       className={spinner({ size, color, className })}
       role={isDecorative ? undefined : 'status'}
-      aria-label={isDecorative ? undefined : (ariaLabelStandard ?? ariaLabel)}
+      aria-label={isDecorative ? undefined : ariaLabel}
       aria-live={isDecorative ? undefined : 'polite'}
       aria-hidden={isDecorative || undefined}
       {...props}
