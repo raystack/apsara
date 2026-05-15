@@ -6,7 +6,7 @@ import {
   Flex,
   IconButton,
   Text,
-  ThemeScope
+  ThemeProvider
 } from '@raystack/apsara';
 import { Moon, Sun } from 'lucide-react';
 import { useState } from 'react';
@@ -54,80 +54,76 @@ const Page = () => {
         </IconButton>
       </Flex>
 
-      <ThemeScope
-        theme={scopeTheme}
-        render={
-          <Flex
-            direction='column'
-            gap={5}
-            style={{ ...panelStyle, alignSelf: 'flex-start' }}
-          />
-        }
-      >
-        <Flex justify='between' align='center' gap={5}>
-          <Text size={4} weight={500}>
-            Scoped box
+      <ThemeProvider forcedTheme={scopeTheme}>
+        <Flex
+          direction='column'
+          gap={5}
+          style={{ ...panelStyle, alignSelf: 'flex-start' }}
+        >
+          <Flex justify='between' align='center' gap={5}>
+            <Text size={4} weight={500}>
+              Scoped box
+            </Text>
+            <IconButton
+              aria-label='Toggle scope theme'
+              size={3}
+              onClick={() =>
+                setScopeTheme(scopeTheme === 'dark' ? 'light' : 'dark')
+              }
+            >
+              {scopeTheme === 'dark' ? <Sun /> : <Moon />}
+            </IconButton>
+          </Flex>
+          <Text size={3} variant='secondary'>
+            This box themes itself via{' '}
+            <code>data-theme=&quot;{scopeTheme}&quot;</code>, independent of the
+            page.
           </Text>
-          <IconButton
-            aria-label='Toggle scope theme'
-            size={3}
-            onClick={() =>
-              setScopeTheme(scopeTheme === 'dark' ? 'light' : 'dark')
-            }
-          >
-            {scopeTheme === 'dark' ? <Sun /> : <Moon />}
-          </IconButton>
+          <Flex gap={3}>
+            <Button variant='solid' color='accent'>
+              Solid
+            </Button>
+            <Button variant='outline' color='neutral'>
+              Outline
+            </Button>
+          </Flex>
         </Flex>
-        <Text size={3} variant='secondary'>
-          This box themes itself via{' '}
-          <code>data-theme=&quot;{scopeTheme}&quot;</code>, independent of the
-          page.
-        </Text>
-        <Flex gap={3}>
-          <Button variant='solid' color='accent'>
-            Solid
-          </Button>
-          <Button variant='outline' color='neutral'>
-            Outline
-          </Button>
-        </Flex>
-      </ThemeScope>
+      </ThemeProvider>
 
-      <ThemeScope
-        theme={calloutScopeTheme}
-        render={
-          <Flex
-            direction='column'
-            gap={4}
-            style={{ ...panelStyle, alignSelf: 'flex-start' }}
-          />
-        }
-      >
-        <Flex justify='between' align='center' gap={5}>
-          <Text size={4} weight={500}>
-            Semantic colors in scope
+      <ThemeProvider forcedTheme={calloutScopeTheme}>
+        <Flex
+          direction='column'
+          gap={4}
+          style={{ ...panelStyle, alignSelf: 'flex-start' }}
+        >
+          <Flex justify='between' align='center' gap={5}>
+            <Text size={4} weight={500}>
+              Semantic colors in scope
+            </Text>
+            <IconButton
+              aria-label='Toggle callout scope theme'
+              size={3}
+              onClick={() =>
+                setCalloutScopeTheme(
+                  calloutScopeTheme === 'dark' ? 'light' : 'dark'
+                )
+              }
+            >
+              {calloutScopeTheme === 'dark' ? <Sun /> : <Moon />}
+            </IconButton>
+          </Flex>
+          <Text size={3} variant='secondary'>
+            Accent, success, danger, and attention tokens all re-resolve at the
+            scope.
           </Text>
-          <IconButton
-            aria-label='Toggle callout scope theme'
-            size={3}
-            onClick={() =>
-              setCalloutScopeTheme(
-                calloutScopeTheme === 'dark' ? 'light' : 'dark'
-              )
-            }
-          >
-            {calloutScopeTheme === 'dark' ? <Sun /> : <Moon />}
-          </IconButton>
+          <Callout type='accent'>Accent — informational message</Callout>
+          <Callout type='success'>Success — operation completed</Callout>
+          <Callout type='alert'>Danger — something went wrong</Callout>
+          <Callout type='attention'>
+            Attention — review before continuing
+          </Callout>
         </Flex>
-        <Text size={3} variant='secondary'>
-          Accent, success, danger, and attention tokens all re-resolve at the
-          scope.
-        </Text>
-        <Callout type='accent'>Accent — informational message</Callout>
-        <Callout type='success'>Success — operation completed</Callout>
-        <Callout type='alert'>Danger — something went wrong</Callout>
-        <Callout type='attention'>Attention — review before continuing</Callout>
-      </ThemeScope>
+      </ThemeProvider>
     </Flex>
   );
 };

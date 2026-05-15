@@ -78,26 +78,6 @@ export type ThemeProviderProps = {
   children?: React.ReactNode;
 };
 
-export type ThemeScopeProps = {
-  /** Color scheme for this subtree. Sets `data-theme` on the rendered element. */
-  theme?: 'light' | 'dark';
-
-  /** Accent color for this subtree. Sets `data-accent-color`. */
-  accentColor?: 'indigo' | 'orange' | 'mint';
-
-  /** Gray variant for this subtree. Sets `data-gray-color`. */
-  grayColor?: 'gray' | 'mauve' | 'slate';
-
-  /** Style variant for this subtree. Sets `data-style`. */
-  styleVariant?: 'modern' | 'traditional';
-
-  /** Element to render the scope on. Defaults to a `<div>`. Use this to fuse the scope onto an existing layout element and avoid an extra wrapper. */
-  render?: React.ReactElement;
-
-  /** React children rendered inside the scope. */
-  children?: React.ReactNode;
-};
-
 export type UseThemeProps = {
   /** Current theme name ("light", "dark", or "system") */
   theme?: string;

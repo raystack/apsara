@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  Fragment,
   memo,
   useCallback,
   useContext,
@@ -25,12 +24,32 @@ export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 export function ThemeProvider(props: ThemeProviderProps) {
   const context = useContext(ThemeContext);
 
-  // Ignore nested context providers, just passthrough children
-  if (context) return <Fragment>{props.children}</Fragment>;
+  // Nested usage: scoped subtree. Render a wrapper element that overrides
+  // theme tokens locally via `data-*` attributes; the parent provider's
+  // global state remains the source of truth for descendants reading
+  // `useTheme()`.
+  if (context) return <Scoped {...props} />;
   return <Theme {...props} />;
 }
 
 ThemeProvider.displayName = 'ThemeProvider';
+
+const Scoped = ({
+  forcedTheme,
+  accentColor,
+  grayColor,
+  style,
+  children
+}: ThemeProviderProps) => (
+  <div
+    data-theme={forcedTheme}
+    data-accent-color={accentColor}
+    data-gray-color={grayColor}
+    data-style={style}
+  >
+    {children}
+  </div>
+);
 
 const defaultThemes: string[] = [...COLOR_SCHEMES];
 
