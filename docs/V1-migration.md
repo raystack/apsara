@@ -262,7 +262,7 @@ A cross-component accessibility pass landed in v1.0 (closes issue #673). Most ch
 
 | Old | New |
 |-----|-----|
-| `getByRole('listitem')` on Sidebar / List items | Items rely on native semantics now — query the underlying element (`getByRole('link')`, `getByText(...)`, etc.) |
+| `getByRole('listitem')` on List items | `<li>` no longer carries an explicit `role="listitem"` — it relies on native semantics. (Sidebar items still expose `role="listitem"`.) |
 | `getByRole('img')` on decorative images (`alt=""`) | Use `getByAltText('')` or a selector — empty `alt` is presentational |
 | `getByRole('region')` on unlabelled `Container` | Pass `aria-label` / `aria-labelledby` to opt in to the region landmark |
 | `getByLabelText('Close Drawer')` | `getByLabelText('Close')` (or pass `closeLabel="Close Drawer"` to restore old copy) |
@@ -286,7 +286,6 @@ A cross-component accessibility pass landed in v1.0 (closes issue #673). Most ch
 | ScrollArea | `aria-label` / `aria-labelledby` apply `role="region"` to the viewport. |
 | Select | `aria-multiselectable` removed from internal Combobox list (`data-multiselectable` retained for styling). |
 | Separator | New `decorative` prop → `role="presentation"` + `aria-hidden`. |
-| Sidebar | Orphan `role="listitem"` removed from items. |
 | SidePanel | Header title rendered as `<h2>` (was `<span>` via `<Text>`). New `titleId` prop for wiring `aria-labelledby` on the `<aside>`. |
 | Skeleton | Placeholder marked `aria-hidden="true"`. |
 | Spinner | Default behaviour flipped — was `aria-hidden`, now `role="status"` with `aria-label="Loading"` (override via standard `aria-label`). Pass `aria-hidden="true"` to opt back to silent (e.g. inside a Button that already has `aria-busy`). |

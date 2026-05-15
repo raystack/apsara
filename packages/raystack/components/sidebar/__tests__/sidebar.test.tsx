@@ -271,8 +271,7 @@ describe('Sidebar', () => {
 
       const item = screen.getByTestId('custom-render-item');
       expect(item.tagName).toBe('BUTTON');
-      // role="listitem" is not applied — items rely on their native semantics
-      expect(item).not.toHaveAttribute('role');
+      expect(item).toHaveAttribute('role', 'listitem');
       expect(item).toHaveTextContent('Custom Item');
     });
 
@@ -280,7 +279,9 @@ describe('Sidebar', () => {
       render(<BasicSidebar open={false} />);
 
       expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
-      const dashboardLink = screen.getByLabelText(DASHBOARD_ITEM_TEXT);
+      const dashboardLink = screen.getByRole('listitem', {
+        name: DASHBOARD_ITEM_TEXT
+      });
       expect(dashboardLink).toHaveAttribute('aria-label', DASHBOARD_ITEM_TEXT);
     });
   });
@@ -386,7 +387,9 @@ describe('Sidebar', () => {
         </Sidebar>
       );
 
-      expect(screen.getByLabelText(DASHBOARD_ITEM_TEXT)).toBeInTheDocument();
+      expect(
+        screen.getByRole('listitem', { name: DASHBOARD_ITEM_TEXT })
+      ).toBeInTheDocument();
     });
 
     it('renders right icon when provided in collapsible header', () => {
