@@ -6,8 +6,8 @@ import dayjs from 'dayjs';
 import { isValidElement, useCallback, useMemo, useState } from 'react';
 import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
 import { Flex } from '../flex';
-import { InputField } from '../input-field';
-import { InputFieldProps } from '../input-field/input-field';
+import { Input } from '../input';
+import { InputProps } from '../input/input';
 import { Popover } from '../popover';
 import { PopoverContentProps } from '../popover/popover';
 import { Calendar } from './calendar';
@@ -15,7 +15,7 @@ import styles from './calendar.module.css';
 
 interface RangePickerProps {
   dateFormat?: string;
-  inputFieldsProps?: { startDate?: InputFieldProps; endDate?: InputFieldProps };
+  inputsProps?: { startDate?: InputProps; endDate?: InputProps };
   calendarProps?: PropsRangeRequired & PropsBase;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
@@ -34,7 +34,7 @@ type RangeFields = keyof DateRange;
 
 export function RangePicker({
   dateFormat = 'DD/MM/YYYY',
-  inputFieldsProps = {},
+  inputsProps = {},
   calendarProps,
   onSelect = () => {},
   value,
@@ -131,13 +131,13 @@ export function RangePicker({
   };
 
   const defaultTrigger = (
-    <Flex gap='medium' className={pickerGroupClassName}>
-      <InputField
+    <Flex gap={5} className={pickerGroupClassName}>
+      <Input
         size='small'
         placeholder='Select start date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
-        {...(inputFieldsProps.startDate ?? {})}
+        {...(inputsProps.startDate ?? {})}
         value={startDate}
         readOnly
         data-range-field='start'
@@ -145,12 +145,12 @@ export function RangePicker({
         onClick={onTriggerClick}
       />
 
-      <InputField
+      <Input
         size='small'
         placeholder='Select end date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
-        {...(inputFieldsProps.endDate ?? {})}
+        {...(inputsProps.endDate ?? {})}
         value={endDate}
         readOnly
         data-range-field='end'

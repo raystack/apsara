@@ -68,6 +68,12 @@ export type ThemeProviderProps = {
   /** Mapping of theme name to HTML attribute value */
   value?: { [themeName: string]: string };
 
+  /**
+   * Called when the active theme changes. `resolvedTheme` is the actual applied theme
+   * (`"light"`/`"dark"` when `theme` is `"system"`). Not fired on initial mount.
+   */
+  onThemeChange?: (theme: string, resolvedTheme: string) => void;
+
   /** React children */
   children?: React.ReactNode;
 };

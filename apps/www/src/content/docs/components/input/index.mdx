@@ -1,0 +1,134 @@
+---
+title: Input
+description: A text input component with support for icons, prefix/suffix, chips, and size variants.
+source: packages/raystack/components/input
+---
+
+import {
+  playground,
+  basicDemo,
+  prefixDemo,
+  iconDemo,
+  disabledDemo,
+  disabledChipsDemo,
+  widthDemo,
+  sizeDemo,
+  sizeChipDemo,
+  interactiveChipDemo,
+  withFieldDemo,
+  onValueChangeDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component:
+
+```tsx
+import { Input } from "@raystack/apsara";
+
+<Input placeholder="Enter text" />
+```
+
+For labels, description, and error messages, wrap with [Field](/docs/components/field):
+
+```tsx
+import { Field, Input } from "@raystack/apsara";
+
+<Field label="Email" description="We won't share it" error={errors.email?.message}>
+  <Input placeholder="Enter email" />
+</Field>
+```
+
+## API Reference
+
+Renders a text input control. For label, description, and error support, use with [Field](/docs/components/field).
+
+<auto-type-table path="./props.ts" name="InputProps" />
+
+## Examples
+
+### Basic Input
+
+A basic input with a placeholder.
+
+<Demo data={basicDemo} />
+
+### With Field
+
+Use Field to add label, description, and error handling.
+
+<Demo data={withFieldDemo} />
+
+### Controlled Value
+
+Use `onValueChange` for a callback that receives only the new string value, or `onChange` for the full React change event. Both fire on every keystroke — pick whichever fits your needs.
+
+<Demo data={onValueChangeDemo} />
+
+### With Prefix/Suffix
+
+Input with prefix and suffix text.
+
+<Demo data={prefixDemo} />
+
+### With Icons
+
+Input with leading and trailing icons.
+
+<Demo data={iconDemo} />
+
+### Interactive Chips
+
+Accepts an array of chips, each with a `label` and an optional `onRemove` callback. 
+
+`maxChipsVisible` caps how many are rendered before collapsing the rest into an overflow counter.
+
+```tsx
+chips?: Array<{ label: string; onRemove?: () => void }>;                                                                                       
+maxChipsVisible?: number;  // defaults to 2   
+```
+
+This is purely a presentation layer — it does not manage chip state. The wrapper component owns the array and decides when items are added or removed.
+
+The example below 
+  appends a chip on `Enter`, removes one when its dismiss button is clicked.
+
+<Demo data={interactiveChipDemo} />
+
+### Disabled State
+
+Input in disabled state.
+
+<Demo data={disabledDemo} />
+
+### Disabled with Chips
+
+When disabled, chips become non-interactive and their dismiss buttons are hidden.
+
+<Demo data={disabledChipsDemo} />
+
+### Custom Width
+
+Input with custom width.
+
+<Demo data={widthDemo} />
+
+### Size Variants
+
+Input comes in two sizes: small (24px) and large (32px).
+
+<Demo data={sizeDemo} />
+
+### With Chips
+
+Input that can display and manage chips/tags.
+
+<Demo data={sizeChipDemo} />
+
+## Accessibility
+
+- Use with [Field](/docs/components/field) for automatic label association and error linking
+- Required state is communicated via `aria-required`
+- Supports all native `<input>` attributes

@@ -21,7 +21,7 @@ export interface UseThemeProps {
   setTheme: (theme: string) => void;
   /** Active theme name */
   theme?: string;
-  /** If `enableSystem` is true and the active theme is "system", this returns whether the system preference resolved to "dark" or "light". Otherwise, identical to `theme` */
+  /** The actually applied theme. Returns `forcedTheme` when set; otherwise the system preference (`"light"`/`"dark"`) when `theme` is `"system"`; otherwise identical to `theme`. */
   resolvedTheme?: string;
   /** If enableSystem is true, returns the System theme preference ("dark" or "light"), regardless what the active theme is */
   systemTheme?: 'dark' | 'light';
@@ -56,4 +56,6 @@ export interface ThemeProviderProps {
   accentColor?: AccentColor;
   /** Gray color variant for the theme. */
   grayColor?: GrayColor;
+  /** Called when the active theme changes. `resolvedTheme` is the actual applied theme (`'light'`/`'dark'` when `theme` is `'system'`). Not fired on initial mount. */
+  onThemeChange?: (theme: string, resolvedTheme: string) => void;
 }

@@ -4,7 +4,7 @@ description: A search input component with built-in search icon and optional cle
 source: packages/raystack/components/search
 ---
 
-import { playground, sizeDemo, clearDemo } from "./demo.ts";
+import { playground, sizeDemo, clearDemo, onValueChangeDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -37,6 +37,12 @@ The Search component comes in two sizes to fit different design contexts.
 The Search component can include a clear button that appears when there is input value.
 
 <Demo data={clearDemo} />
+
+### Controlled Value
+
+Use `onValueChange` to receive only the new query string, or `onChange` for the full React change event. The Search component forwards both to the underlying [Input](/docs/components/input).
+
+<Demo data={onValueChangeDemo} />
 
 ## Accessibility
 

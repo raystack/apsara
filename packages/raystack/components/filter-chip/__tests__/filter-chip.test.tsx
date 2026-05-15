@@ -124,4 +124,21 @@ describe('FilterChip', () => {
       expect(input).toHaveValue('initial value');
     });
   });
+
+  describe('Forwarded HTML attributes', () => {
+    it('forwards arbitrary HTML attributes onto the root div', () => {
+      render(
+        <FilterChip
+          label='Name'
+          id='my-filter'
+          data-testid='filter-root'
+          title='Tooltip'
+        />
+      );
+
+      const root = screen.getByTestId('filter-root');
+      expect(root).toHaveAttribute('id', 'my-filter');
+      expect(root).toHaveAttribute('title', 'Tooltip');
+    });
+  });
 });

@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: Record<string, unknown>) => {
+export const getCode = (props: ComponentPropsType) => {
   const { children, ...rest } = props;
   return `<Headline${getPropsString(rest)}>${children}</Headline>`;
 };
@@ -40,17 +41,17 @@ export const playground = {
 export const alignDemo = {
   type: 'code',
   code: `
-  <Flex direction="column" style={{width:"100%"}} gap="large">
-    <Headline size="small" align="left">Left Aligned</Headline>
-    <Headline size="small" align="center">Center Aligned</Headline>
-    <Headline size="small" align="right">Right Aligned</Headline>
+  <Flex direction="column" style={{width:"100%"}} gap={9}>
+    <Headline size="t2" align="left">Left Aligned</Headline>
+    <Headline size="t2" align="center">Center Aligned</Headline>
+    <Headline size="t2" align="right">Right Aligned</Headline>
   </Flex>`
 };
 export const truncateDemo = {
   type: 'code',
   code: `
   <Flex style={{ width: "200px" }}>
-    <Headline size="small" truncate>
+    <Headline size="t2" truncate>
       This is a very long headline that will be truncated with an ellipsis
     </Headline>
   </Flex>`
@@ -59,7 +60,7 @@ export const truncateDemo = {
 export const weightDemo = {
   type: 'code',
   code: `
-  <Flex direction="column" style={{width:"100%"}} gap="large">
+  <Flex direction="column" style={{width:"100%"}} gap={9}>
     <Headline size="t2" weight="regular">Regular Weight Headline</Headline>
     <Headline size="t2" weight="medium">Medium Weight Headline</Headline>
   </Flex>`

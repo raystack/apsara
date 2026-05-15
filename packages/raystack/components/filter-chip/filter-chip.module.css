@@ -144,7 +144,7 @@ button.selectValue:hover {
   box-shadow: none;
 }
 
-/* Match height of InputField when FilterChip variant is text */
+/* Match height of Input when FilterChip variant is text */
 .chip[data-variant="text"] .inputField {
   height: var(--rs-space-7);
   min-height: var(--rs-space-7);

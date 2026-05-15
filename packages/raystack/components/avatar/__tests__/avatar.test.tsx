@@ -8,7 +8,7 @@ describe('Avatar', () => {
   const ogImage = window.Image;
 
   beforeAll(() => {
-    window.Image = MockImage as any;
+    window.Image = MockImage as unknown as typeof Image;
   });
 
   afterAll(() => {

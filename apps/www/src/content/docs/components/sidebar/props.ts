@@ -47,6 +47,17 @@ export interface SidebarGroupProps {
    */
   collapsible?: boolean;
 
+  /** Controls the group's expanded/collapsed state. Only applies when `collapsible` is true. */
+  open?: boolean;
+
+  /** Default expanded/collapsed state when uncontrolled. Only applies when `collapsible` is true.
+   * @default true
+   */
+  defaultOpen?: boolean;
+
+  /** Callback when the group's expanded/collapsed state changes. */
+  onOpenChange?: (open: boolean) => void;
+
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;
 

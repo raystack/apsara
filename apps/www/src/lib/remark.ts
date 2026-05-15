@@ -14,21 +14,40 @@ interface TypeObj {
   entries: TableEntry[];
 }
 
+interface MdxJsxAttributeLike {
+  type: 'mdxJsxAttribute';
+  name: string;
+  value?: { value?: string } | string | null;
+}
+
+interface MdxJsxFlowElementLike {
+  name: string | null;
+  attributes: Array<
+    MdxJsxAttributeLike | { type: 'mdxJsxExpressionAttribute' }
+  >;
+}
+
 export function remarkTypeTableToMd() {
   return (tree: Root) => {
     visit(
       tree,
       'mdxJsxFlowElement',
-      (node: any, index: number | undefined, parent: Parent | undefined) => {
+      (
+        node: MdxJsxFlowElementLike,
+        index: number | undefined,
+        parent: Parent | undefined
+      ) => {
         if (node.name !== 'TypeTable' || !parent || typeof index !== 'number')
           return;
 
         const typeProp = node.attributes.find(
-          (attr: any) => attr.name === 'type'
+          (attr): attr is MdxJsxAttributeLike =>
+            attr.type === 'mdxJsxAttribute' && attr.name === 'type'
         );
         if (
           !typeProp ||
           !typeProp.value ||
+          typeof typeProp.value === 'string' ||
           typeof typeProp.value.value !== 'string'
         )
           return;

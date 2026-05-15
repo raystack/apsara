@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   return `<Meter${getPropsString(props)} />`;
 };
 
@@ -23,7 +24,7 @@ export const playground = {
 
 export const directUsageDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+  code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Meter value={40} />
   <Meter value={70} />
   <Meter value={100} />
@@ -35,7 +36,7 @@ export const variantDemo = {
   tabs: [
     {
       name: 'Linear',
-      code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+      code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Meter value={15}>
     <Flex justify="between">
       <Meter.Label>Storage used</Meter.Label>
@@ -47,7 +48,7 @@ export const variantDemo = {
     },
     {
       name: 'Circular',
-      code: `<Flex gap="large" align="center">
+      code: `<Flex gap={9} align="center">
   <Meter variant="circular" value={70}>
     <Meter.Track />
     <Meter.Value />
@@ -70,7 +71,7 @@ export const customizationDemo = {
   tabs: [
     {
       name: 'Linear',
-      code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+      code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Meter value={60}>
     <Meter.Track style={{ height: 2 }} />
   </Meter>
@@ -84,7 +85,7 @@ export const customizationDemo = {
     },
     {
       name: 'Circular',
-      code: `<Flex gap="large" align="center">
+      code: `<Flex gap={9} align="center">
   <Meter variant="circular" value={60}>
     <Meter.Track style={{ width: 48, height: 48 }} />
     <Meter.Value />
@@ -108,7 +109,7 @@ export const customizationDemo = {
 
 export const withLabelsDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+  code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Meter value={60}>
     <Flex justify="between">
       <Meter.Label>CPU Usage</Meter.Label>
@@ -128,7 +129,7 @@ export const withLabelsDemo = {
 
 export const customRangeDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="large" style={{ width: "300px" }}>
+  code: `<Flex direction="column" gap={9} style={{ width: "300px" }}>
   <Meter value={750} min={0} max={1000}>
     <Flex justify="between">
       <Meter.Label>API Calls</Meter.Label>

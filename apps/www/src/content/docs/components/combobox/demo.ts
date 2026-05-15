@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: Record<string, unknown>) => {
+export const getCode = (props: ComponentPropsType) => {
   const { multiple, ...rest } = props;
   return `
   <Combobox${getPropsString({ ...(multiple ? { multiple } : {}) })}>
@@ -129,7 +130,7 @@ export const controlledDemo = {
     const [inputValue, setInputValue] = React.useState("");
 
     return (
-      <Flex direction="column" gap="medium">
+      <Flex direction="column" gap={5}>
         <Text>Selected: {value || "None"}</Text>
         <Combobox
           value={value}

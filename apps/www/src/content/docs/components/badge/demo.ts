@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   return `<Badge${getPropsString(props)}/>`;
 };
 
@@ -44,7 +45,7 @@ export const playground = {
 export const variantDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium">
+  <Flex gap={5}>
     <Badge variant="accent">Accent</Badge>
     <Badge variant="warning">Warning</Badge>
     <Badge variant="danger">Danger</Badge>
@@ -57,7 +58,7 @@ export const variantDemo = {
 export const sizesDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="center">
+  <Flex gap={5} align="center">
     <Badge size="micro">Micro</Badge>
     <Badge size="small">Small</Badge>
     <Badge size="regular">Regular</Badge>
@@ -67,7 +68,7 @@ export const sizesDemo = {
 export const iconDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium">
+  <Flex gap={5}>
     <Badge icon={<Home size="16"/>}>Badge</Badge>
     <Badge icon={<Laugh size="16"/>}>Badge</Badge>
     <Badge icon="🔥">Badge</Badge>

@@ -22,6 +22,8 @@ export function SelectContent({
   children,
   searchPlaceholder = 'Search...',
   sideOffset = 4,
+  side = 'bottom',
+  align = 'start',
   ...props
 }: SelectContentProps) {
   const { autocomplete, multiple } = useSelectContext();
@@ -31,6 +33,8 @@ export function SelectContent({
       <ComboboxPrimitive.Portal>
         <ComboboxPrimitive.Positioner
           sideOffset={sideOffset}
+          side={side}
+          align={align}
           className={styles.positioner}
         >
           <ComboboxPrimitive.Popup
@@ -41,6 +45,7 @@ export function SelectContent({
             <ComboboxPrimitive.Input
               placeholder={searchPlaceholder}
               className={styles.comboboxInput}
+              size={12}
             />
             <ComboboxPrimitive.List
               className={styles.comboboxContent}
@@ -57,6 +62,8 @@ export function SelectContent({
   return (
     <SelectPrimitive.Positioner
       sideOffset={sideOffset}
+      side={side}
+      align={align}
       className={styles.positioner}
       alignItemWithTrigger={false}
     >

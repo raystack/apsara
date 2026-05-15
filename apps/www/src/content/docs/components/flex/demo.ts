@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   return `
     <Flex${getPropsString(props)} style={{width:"100%",height:"100%"}}>
       <Button>Button 1</Button>
@@ -15,8 +16,8 @@ export const playground = {
   controls: {
     gap: {
       type: 'select',
-      options: ['extra-small', 'small', 'medium', 'large', 'extra-large'],
-      initialValue: 'small'
+      options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+      initialValue: 3
     },
     wrap: {
       type: 'select',
@@ -45,13 +46,13 @@ export const playground = {
 export const basicDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
-    <Flex gap="medium" direction="column">
+  <Flex gap={9}>
+    <Flex gap={5} direction="column">
       <Button>Primary button</Button>
       <Button>Primary button</Button>
       <Button>Primary button</Button>
     </Flex>
-    <Flex gap="medium" direction="column">
+    <Flex gap={5} direction="column">
       <Button>Primary button</Button>
       <Button>Primary button</Button>
       <Button>Primary button</Button>

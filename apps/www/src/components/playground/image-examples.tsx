@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function ImageExamples() {
   return (
     <PlaygroundLayout title='Image'>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Image
           src='https://images.unsplash.com/photo-1447690709975-318628b14c57'
           alt='Nature'

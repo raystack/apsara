@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   return `<Image${getPropsString(props)}/>`;
 };
 
@@ -34,7 +35,7 @@ export const playground = {
 export const fitDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <Image 
     src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
     alt="Nature landscape"
@@ -61,7 +62,7 @@ export const fitDemo = {
 export const radiusDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <Image 
     src="https://images.unsplash.com/photo-1447690709975-318628b14c57"
     alt="Nature"
@@ -95,7 +96,7 @@ export const radiusDemo = {
 export const fallbackDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <Image 
     src="invalid-image-url.jpg"
     fallback="https://images.unsplash.com/photo-1447690709975-318628b14c57"

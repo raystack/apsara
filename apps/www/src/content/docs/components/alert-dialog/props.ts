@@ -12,7 +12,7 @@ export interface AlertDialogContentProps {
 
   /**
    * Controls whether to show the close button
-   * @default true
+   * @default false
    */
   showCloseButton?: boolean;
 

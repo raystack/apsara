@@ -9,6 +9,8 @@ import {
   positionDemo,
   variantDemo,
   collapsibleGroupDemo,
+  controlledGroupDemo,
+  groupIconDemo,
   stateDemo,
   tooltipDemo,
   collapsibleDemo,
@@ -123,11 +125,23 @@ Set `hideCollapsedItemTooltip` to disable tooltips on navigation items when the 
 
 <Demo data={hideTooltipDemo} />
 
+### Group with icon
+
+Pass `leadingIcon` to `Sidebar.Group` to render an icon next to the section label.
+
+<Demo data={groupIconDemo} />
+
 ### Collapsible Group
 
-Enable `collapsible` on `Sidebar.Group` to make section items collapsible. You can also pass `trailingIcon` for section-level actions.
+Enable `collapsible` on `Sidebar.Group` to make section items collapsible. You can also pass `trailingIcon` for section-level actions. Use `defaultOpen` to set the initial expanded state of an uncontrolled group.
 
 <Demo data={collapsibleGroupDemo} />
+
+### Controlled Group
+
+Use `open` together with `onOpenChange` on `Sidebar.Group` to control the group's expanded state from outside the component.
+
+<Demo data={controlledGroupDemo} />
 
 ### More
 

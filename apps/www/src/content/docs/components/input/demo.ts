@@ -1,9 +1,10 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
-  return `<InputField${getPropsString(props)} placeholder="Enter text" />`;
+export const getCode = (props: ComponentPropsType) => {
+  return `<Input${getPropsString(props)} placeholder="Enter text" />`;
 };
 
 export const playground = {
@@ -26,27 +27,27 @@ export const playground = {
 
 export const basicDemo = {
   type: 'code',
-  code: `<InputField placeholder="Enter text" width="560px" />`
+  code: `<Input placeholder="Enter text" width="560px" />`
 };
 
 export const withFieldDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium" style={{ width: 560 }}>
+  code: `<Flex direction="column" gap={5} style={{ width: 560 }}>
   <Field label="Email" required description="We won't share your email">
-    <InputField type="email" placeholder="Enter email" />
+    <Input type="email" placeholder="Enter email" />
   </Field>
   <Field label="Name" error="This field is required">
-    <InputField placeholder="Enter name" />
+    <Input placeholder="Enter name" />
   </Field>
   <Field label="Phone" required={false}>
-    <InputField type="tel" placeholder="Enter phone" />
+    <Input type="tel" placeholder="Enter phone" />
   </Field>
 </Flex>`
 };
 
 export const prefixDemo = {
   type: 'code',
-  code: `<InputField
+  code: `<Input
   placeholder="0.00"
   prefix="$"
   suffix="USD"
@@ -56,7 +57,7 @@ export const prefixDemo = {
 
 export const iconDemo = {
   type: 'code',
-  code: `<InputField
+  code: `<Input
   placeholder="Enter text"
   leadingIcon={<Home size={16}/>}
   trailingIcon={<Info size={16}/>}
@@ -66,7 +67,7 @@ export const iconDemo = {
 
 export const disabledDemo = {
   type: 'code',
-  code: `<InputField
+  code: `<Input
   placeholder="Enter text"
   disabled
   width="560px"
@@ -75,7 +76,7 @@ export const disabledDemo = {
 
 export const disabledChipsDemo = {
   type: 'code',
-  code: `<InputField
+  code: `<Input
   placeholder="Type and press Enter..."
   disabled
   width="560px"
@@ -88,7 +89,7 @@ export const disabledChipsDemo = {
 
 export const widthDemo = {
   type: 'code',
-  code: `<InputField
+  code: `<Input
   placeholder="Enter text"
   width="300px"
 />`
@@ -96,11 +97,11 @@ export const widthDemo = {
 
 export const sizeDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium">
-  <InputField
+  code: `<Flex direction="column" gap={5}>
+  <Input
     placeholder="32px height (default)"
   />
-  <InputField
+  <Input
     placeholder="24px height"
     size="small"
   />
@@ -109,15 +110,15 @@ export const sizeDemo = {
 
 export const sizeChipDemo = {
   type: 'code',
-  code: `<Flex direction="column" gap="medium">
-  <InputField
+  code: `<Flex direction="column" gap={5}>
+  <Input
     placeholder="Type and press Enter..."
     chips={[
       { label: "A", onRemove: () => console.log("Remove A") },
       { label: "B", onRemove: () => console.log("Remove B") }
     ]}
   />
-  <InputField
+  <Input
     placeholder="Type and press Enter..."
     size="small"
     chips={[
@@ -126,4 +127,64 @@ export const sizeChipDemo = {
     ]}
   />
 </Flex>`
+};
+
+export const onValueChangeDemo = {
+  type: 'code',
+  code: `function ValueChangeExample() {
+  const [value, setValue] = React.useState("");
+
+  return (
+    <Flex direction="column" gap={5} style={{ width: 400 }}>
+      <Input
+        placeholder="Type something..."
+        value={value}
+        onValueChange={setValue}
+      />
+      <Text size="small">Current value: {value || "(empty)"}</Text>
+    </Flex>
+  );
+}`
+};
+
+export const interactiveChipDemo = {
+  type: 'code',
+  style: {
+    padding: 0
+  },
+  previewCode: false,
+  code: `<ChipInputDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+    const [chips, setChips] = React.useState([
+      { label: "Tag1" },
+      { label: "Tag2" },
+      { label: "Tag3" },
+      { label: "Tag4" },
+      { label: "Tag5" },
+
+    ]);
+    const [input, setInput] = React.useState("");
+
+      <Input
+        placeholder="Type and press Enter..."
+        width="560px"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && input.trim()) {
+            setChips([...chips, { label: input.trim() }]);
+            setInput("");
+          }
+        }}
+        chips={chips.map((c, i) => ({
+          label: c.label,
+          onRemove: () => setChips(chips.filter((_, j) => j !== i))
+        }))}
+        maxChipsVisible={4}
+      />`
+    }
+  ]
 };

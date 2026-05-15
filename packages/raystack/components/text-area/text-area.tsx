@@ -30,6 +30,10 @@ export interface TextAreaProps
   width?: string | number;
   value?: string;
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  onValueChange?: (
+    value: string,
+    event: ChangeEvent<HTMLTextAreaElement>
+  ) => void;
 }
 
 export function TextArea({
@@ -39,6 +43,7 @@ export function TextArea({
   width = '100%',
   value,
   onChange,
+  onValueChange,
   placeholder,
   required,
   size,
@@ -47,6 +52,11 @@ export function TextArea({
 }: TextAreaProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
+
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    onChange?.(event);
+    onValueChange?.(event.target.value, event);
+  };
 
   const textarea = (
     <textarea
@@ -57,7 +67,7 @@ export function TextArea({
         className
       )}
       value={value}
-      onChange={onChange}
+      onChange={handleChange}
       disabled={disabled}
       placeholder={placeholder}
       required={resolvedRequired}

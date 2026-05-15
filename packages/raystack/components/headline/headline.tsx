@@ -8,10 +8,7 @@ const headline = cva(styles.headline, {
       t1: styles['headline-t1'],
       t2: styles['headline-t2'],
       t3: styles['headline-t3'],
-      t4: styles['headline-t4'],
-      small: styles['headline-small'],
-      medium: styles['headline-medium'],
-      large: styles['headline-large']
+      t4: styles['headline-t4']
     },
     weight: {
       regular: styles['headline-weight-regular'],
@@ -34,12 +31,7 @@ const headline = cva(styles.headline, {
   }
 });
 
-export type HeadlineBaseProps = VariantProps<typeof headline> & {
-  /**
-   * @remarks Use "t1" | "t2" | "t3" | "t4"
-   */
-  size?: 't1' | 't2' | 't3' | 't4' | 'small' | 'medium' | 'large';
-};
+export type HeadlineBaseProps = VariantProps<typeof headline>;
 
 export type HeadlineProps = HeadlineBaseProps & useRender.ComponentProps<'h2'>;
 

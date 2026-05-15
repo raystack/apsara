@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { autocomplete, multiple, ...rest } = props;
   return `
   <Select${getPropsString({ ...(autocomplete ? { autocomplete } : {}), ...(multiple ? { multiple } : {}) })}>
@@ -78,7 +79,7 @@ export const basicDemo = {
 export const sizeDemo = {
   type: 'code',
   code: `
-  <Flex align="center" gap="large">
+  <Flex align="center" gap={9}>
   <Select>
   <Select.Trigger size="small">
     <Select.Value placeholder="Small select" />

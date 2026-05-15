@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function SelectExamples() {
   return (
     <PlaygroundLayout title='Select'>
-      <Flex align='center' gap='large' wrap='wrap'>
+      <Flex align='center' gap={9} wrap='wrap'>
         <Select>
           <Select.Trigger size='small'>
             <Select.Value placeholder='Small select' />

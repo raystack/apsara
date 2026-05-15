@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function SkeletonExamples() {
   return (
     <PlaygroundLayout title='Skeleton'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         {/* Basic Usage */}
         <Skeleton width={200} height={20} />
 
@@ -22,13 +22,13 @@ export function SkeletonExamples() {
         />
 
         {/* Animation Control */}
-        <Flex direction='column' gap='medium'>
+        <Flex direction='column' gap={5}>
           <Skeleton width={200} height={20} duration={2.5} />
           <Skeleton width={200} height={20} enableAnimation={false} />
         </Flex>
 
         {/* Card Layout Example */}
-        <Flex direction='column' gap='medium' style={{ width: '300px' }}>
+        <Flex direction='column' gap={5} style={{ width: '300px' }}>
           <Skeleton height={200} /> {/* Image placeholder */}
           <Skeleton height={20} width='80%' /> {/* Title placeholder */}
           <Skeleton height={15} count={3} /> {/* Text lines placeholder */}

@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: Record<string, unknown>) => {
+export const getCode = (props: ComponentPropsType) => {
   return `
     <Drawer${getPropsString(props)}>
       <Drawer.Trigger render={<Button />}>Drawer</Drawer.Trigger>
@@ -52,7 +53,7 @@ export const basicDemo = {
 export const positionDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium">
+  <Flex gap={5}>
     <Drawer side="top">
       <Drawer.Trigger render={<Button />}>Top Drawer</Drawer.Trigger>
       <Drawer.Content side="top">

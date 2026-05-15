@@ -1,16 +1,17 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { label, description, error, required, ...rest } = props;
-  const fieldProps: Record<string, unknown> = {};
+  const fieldProps: ComponentPropsType = {};
   if (label) fieldProps.label = label;
   if (description) fieldProps.description = description;
   if (error) fieldProps.error = error;
   if (required !== undefined) fieldProps.required = required;
   return `<Field${getPropsString(fieldProps)}>
-  <InputField${getPropsString(rest)} placeholder="Enter text" />
+  <Input${getPropsString(rest)} placeholder="Enter text" />
 </Field>`;
 };
 
@@ -29,35 +30,35 @@ export const playground = {
 export const simpleDemo = {
   type: 'code',
   code: `<Field label="Name" description="Enter your full name">
-  <InputField placeholder="John Doe" />
+  <Input placeholder="John Doe" />
 </Field>`
 };
 
 export const errorDemo = {
   type: 'code',
   code: `<Field label="Email" error="Please enter a valid email address">
-  <InputField placeholder="Enter email" />
+  <Input placeholder="Enter email" />
 </Field>`
 };
 
 export const descriptionDemo = {
   type: 'code',
   code: `<Field label="Password" description="Must be at least 8 characters">
-  <InputField type="password" placeholder="Enter password" />
+  <Input type="password" placeholder="Enter password" />
 </Field>`
 };
 
 export const requiredDemo = {
   type: 'code',
   code: `<Field label="Username" required>
-  <InputField placeholder="Enter username" />
+  <Input placeholder="Enter username" />
 </Field>`
 };
 
 export const optionalDemo = {
   type: 'code',
   code: `<Field label="Phone Number" required={false} description="We may use this for verification">
-  <InputField placeholder="Enter phone number" />
+  <Input placeholder="Enter phone number" />
 </Field>`
 };
 
@@ -99,10 +100,10 @@ export const customValidateDemo = {
 </Field>`
 };
 
-export const withInputFieldDemo = {
+export const withInputDemo = {
   type: 'code',
   code: `<Field label="Full Name" required description="As it appears on your ID">
-  <InputField placeholder="John Doe" />
+  <Input placeholder="John Doe" />
 </Field>`
 };
 

@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   return `<Separator${getPropsString(props)}/>`;
 };
 
@@ -30,7 +31,7 @@ export const playground = {
 export const sizeDemo = {
   type: 'code',
   code: `
-  <Flex direction="column" gap="large" align="center" style={{width:"400px"}}>
+  <Flex direction="column" gap={9} align="center" style={{width:"400px"}}>
     <Separator size="small" />
     <Separator size="half" />
     <Separator size="full" />
@@ -40,7 +41,7 @@ export const sizeDemo = {
 export const colorDemo = {
   type: 'code',
   code: `
-  <Flex direction="column" gap="large" align="center" style={{width:"400px"}}>
+  <Flex direction="column" gap={9} align="center" style={{width:"400px"}}>
     <Separator color="primary" />
     <Separator color="secondary" />
     <Separator color="tertiary" />
@@ -49,7 +50,7 @@ export const colorDemo = {
 export const orientationDemo = {
   type: 'code',
   code: `
-  <Flex gap="extra-large" align="center" justify="center" style={{width:"400px",height:"150px"}}>
+  <Flex gap={11} align="center" justify="center" style={{width:"400px",height:"150px"}}>
     <Separator size="half" />
     <Separator orientation="vertical" />
   </Flex>`

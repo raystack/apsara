@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   return `<AnnouncementBar${getPropsString(props)}/>`;
 };
 
@@ -19,5 +20,8 @@ export const playground = {
     actionLabel: { type: 'text', initialValue: 'Read More' },
     actionIcon: { type: 'icon', defaultValue: '' }
   },
-  getCode
+  getCode,
+  style: {
+    padding: 0
+  }
 };

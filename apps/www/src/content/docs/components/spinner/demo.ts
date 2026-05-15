@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   return `<Spinner${getPropsString(props)}/>`;
 };
 
@@ -34,7 +35,7 @@ export const playground = {
 export const sizeDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="center">
+  <Flex gap={5} align="center">
     <Spinner size={1} />
     <Spinner size={2} />
     <Spinner size={3} />
@@ -46,7 +47,7 @@ export const sizeDemo = {
 export const colorDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <Spinner size={4} color="default" />
     <Spinner size={4} color="neutral" />
     <Spinner size={4} color="accent" />

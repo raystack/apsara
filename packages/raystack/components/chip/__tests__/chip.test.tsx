@@ -214,18 +214,57 @@ describe('Chip', () => {
       expect(chip).toHaveAttribute('aria-label', 'Test Label');
     });
 
-    it('uses custom ariaLabel when provided', () => {
-      render(<Chip ariaLabel='Custom Label'>Test Chip</Chip>);
+    it('uses custom aria-label when provided', () => {
+      render(<Chip aria-label='Custom Label'>Test Chip</Chip>);
 
       const chip = screen.getByRole('status');
       expect(chip).toHaveAttribute('aria-label', 'Custom Label');
     });
 
-    it('custom ariaLabel overrides string children', () => {
-      render(<Chip ariaLabel='Override Label'>String Child</Chip>);
+    it('custom aria-label overrides string children', () => {
+      render(<Chip aria-label='Override Label'>String Child</Chip>);
 
       const chip = screen.getByRole('status');
       expect(chip).toHaveAttribute('aria-label', 'Override Label');
+    });
+
+    it('accepts native aria-label attribute', () => {
+      render(<Chip aria-label='Native Label'>String Child</Chip>);
+
+      const chip = screen.getByRole('status');
+      expect(chip).toHaveAttribute('aria-label', 'Native Label');
+    });
+  });
+
+  describe('Forwarded HTML attributes', () => {
+    it('forwards arbitrary HTML attributes onto the root span', () => {
+      render(
+        <Chip
+          id='my-chip'
+          data-testid='chip-root'
+          data-state='active'
+          title='Tooltip'
+        >
+          Test Chip
+        </Chip>
+      );
+
+      const chip = screen.getByTestId('chip-root');
+      expect(chip).toHaveAttribute('id', 'my-chip');
+      expect(chip).toHaveAttribute('data-state', 'active');
+      expect(chip).toHaveAttribute('title', 'Tooltip');
+    });
+
+    it('forwards mouse events from the spread props', () => {
+      const onMouseEnter = vi.fn();
+      render(
+        <Chip onMouseEnter={onMouseEnter} data-testid='chip-root'>
+          Test Chip
+        </Chip>
+      );
+
+      fireEvent.mouseEnter(screen.getByTestId('chip-root'));
+      expect(onMouseEnter).toHaveBeenCalledTimes(1);
     });
   });
 });

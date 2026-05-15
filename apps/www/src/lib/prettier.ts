@@ -1,6 +1,4 @@
-// @ts-ignore
 import tsParser from 'prettier/parser-typescript';
-// @ts-ignore
 import prettier from 'prettier/standalone';
 
 const prettierOptions = {

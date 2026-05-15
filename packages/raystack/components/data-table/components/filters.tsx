@@ -4,7 +4,7 @@ import React, { isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
-import { FilterChip } from '../../filter-chip';
+import { FilterChip, type FilterChipValue } from '../../filter-chip';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Menu } from '../../menu';
@@ -130,14 +130,18 @@ export function Filters<TData, TValue>({
     }) || [];
 
   return (
-    <Flex gap={3} className={className}>
+    <Flex
+      gap={3}
+      className={className}
+      data-has-filter-chips={appliedFilters.length > 0 || undefined}
+    >
       {appliedFilters.length > 0 && (
         <Flex gap={3} className={classNames?.container}>
           {appliedFilters.map(filter => (
             <FilterChip
               key={filter.name}
               label={filter.label}
-              value={filter.value}
+              value={filter.value as FilterChipValue}
               onRemove={() => handleRemoveFilter(filter.name)}
               onValueChange={value =>
                 handleFilterValueChange(filter.name, value)

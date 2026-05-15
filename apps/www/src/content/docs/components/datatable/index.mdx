@@ -4,7 +4,7 @@ description: An advanced React table that supports filtering, sorting, and pagin
 source: packages/raystack/components/datatable
 ---
 
-import { preview, rowSelectionDemo } from "./demo.ts";
+import { preview, virtualizedPreview, rowSelectionDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -82,17 +82,7 @@ For large datasets, use `DataTable.VirtualizedContent` for better performance. P
 
 For large datasets, use `DataTable.VirtualizedContent` for better performance. Parent container must have a fixed height.
 
-```tsx
-<div style={{ height: 400 }}>
-  <DataTable
-    data={data}
-    columns={columns}
-    defaultSort={{ name: "name", order: "asc" }}>
-    <DataTable.Toolbar />
-    <DataTable.VirtualizedContent rowHeight={44} />
-  </DataTable>
-</div>
-```
+<Demo data={virtualizedPreview} />
 
 #### Fixed Width Columns
 
@@ -450,10 +440,10 @@ import { OrganizationIcon, FilterIcon } from "@raystack/apsara/icons";
     <Flex direction="column" gap={4} align="center" style={{ padding: "40px" }}>
       <OrganizationIcon width={48} height={48} style={{ opacity: 0.5 }} />
       <Flex direction="column" gap={2} align="center">
-        <Text size={4} weight="medium">
+        <Text size="regular" weight="medium">
           No data available
         </Text>
-        <Text size={2} style={{ color: "var(--rs-color-text-subtle)" }}>
+        <Text size='small' style={{ color: "var(--rs-color-text-subtle)" }}>
           There are no users in the system. Create your first user to get started.
         </Text>
       </Flex>

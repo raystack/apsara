@@ -1,13 +1,31 @@
 'use client';
 
 import { Toast as ToastPrimitive } from '@base-ui/react';
-import { Cross1Icon } from '@radix-ui/react-icons';
+import {
+  CheckCircledIcon,
+  Cross1Icon,
+  CrossCircledIcon,
+  ExclamationTriangleIcon,
+  InfoCircledIcon
+} from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 import { Button } from '../button';
 import { Flex } from '../flex';
 import { IconButton } from '../icon-button';
+import { Spinner } from '../spinner';
 import styles from './toast.module.css';
+import type { ToastData } from './toast-manager';
 import type { ToastPosition } from './toast-provider';
+
+const TOAST_ICONS: Record<string, ReactNode> = {
+  default: <InfoCircledIcon />,
+  success: <CheckCircledIcon />,
+  error: <CrossCircledIcon />,
+  warning: <ExclamationTriangleIcon />,
+  info: <InfoCircledIcon />,
+  loading: <Spinner size={2} color='default' />
+};
 
 type SwipeDirection = 'up' | 'down' | 'left' | 'right';
 
@@ -38,7 +56,19 @@ export function ToastRoot({
   ...props
 }: ToastRootProps) {
   const swipeDirection = getSwipeDirection(position);
-  const hasDescription = !!toast.description;
+  // Promote description into the title slot when title is missing so the icon
+  // and headline sit on the same row. The second row only renders when both
+  // are present.
+  const title = toast.title ?? toast.description;
+  const hasBoth = !!toast.title && !!toast.description;
+  // `leadingIcon: undefined` (omitted) → fall back to the type default.
+  // `leadingIcon: null` → explicit opt-out, render nothing.
+  // anything else → use what the user provided.
+  const userIcon = (toast.data as ToastData | undefined)?.leadingIcon;
+  const leadingIcon =
+    userIcon !== undefined
+      ? userIcon
+      : ((toast.type ? TOAST_ICONS[toast.type] : null) ?? TOAST_ICONS.default);
 
   return (
     <ToastPrimitive.Root
@@ -49,33 +79,49 @@ export function ToastRoot({
       {...props}
     >
       <ToastPrimitive.Content className={styles.content}>
-        <Flex direction='column' gap={1} className={styles.textContainer}>
-          {toast.title && (
-            <ToastPrimitive.Title
-              className={hasDescription ? styles.title : styles.description}
+        <Flex align='start' gap={3} width='full'>
+          {leadingIcon && (
+            <span className={styles.leadingIcon} aria-hidden='true'>
+              {leadingIcon}
+            </span>
+          )}
+          <Flex direction='column' gap={3} className={styles.contentColumn}>
+            <Flex
+              align='center'
+              justify='between'
+              gap={5}
+              className={styles.topRow}
             >
-              {toast.title}
-            </ToastPrimitive.Title>
-          )}
-          {hasDescription && (
-            <ToastPrimitive.Description className={styles.description}>
-              {toast.description}
-            </ToastPrimitive.Description>
-          )}
-        </Flex>
-        <Flex align='center' gap={3}>
-          {toast.actionProps && (
-            <ToastPrimitive.Action
-              {...toast.actionProps}
-              render={<Button variant='text' color='neutral' size='small' />}
-            />
-          )}
-          <ToastPrimitive.Close
-            aria-label='Close toast'
-            render={<IconButton size={2} />}
-          >
-            <Cross1Icon />
-          </ToastPrimitive.Close>
+              {title && (
+                <ToastPrimitive.Title
+                  className={hasBoth ? styles.title : styles.description}
+                >
+                  {title}
+                </ToastPrimitive.Title>
+              )}
+              <Flex align='center' gap={3} className={styles.actions}>
+                {toast.actionProps && (
+                  <ToastPrimitive.Action
+                    {...toast.actionProps}
+                    render={
+                      <Button variant='text' color='neutral' size='small' />
+                    }
+                  />
+                )}
+                <ToastPrimitive.Close
+                  aria-label='Close toast'
+                  render={<IconButton size={2} />}
+                >
+                  <Cross1Icon />
+                </ToastPrimitive.Close>
+              </Flex>
+            </Flex>
+            {hasBoth && (
+              <ToastPrimitive.Description className={styles.description}>
+                {toast.description}
+              </ToastPrimitive.Description>
+            )}
+          </Flex>
         </Flex>
       </ToastPrimitive.Content>
     </ToastPrimitive.Root>

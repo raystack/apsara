@@ -14,6 +14,7 @@ import {
   SortOrders
 } from '../data-table.types';
 import {
+  type FilterPrimitive,
   getFilterFn,
   getFilterOperator,
   getFilterValue
@@ -23,7 +24,8 @@ export function queryToTableState(query: InternalQuery): Partial<TableState> {
   const columnFilters =
     query.filters
       ?.filter(data => {
-        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data._type === FilterType.date)
+          return dayjs(data.value as string | Date).isValid();
         if (data.value !== '') return true;
         return false;
       })
@@ -68,10 +70,10 @@ export function getColumnsWithFilterFn<TData, TValue>(
   });
 }
 
-export function groupData<TData>(
+export function groupData<TData, TValue = unknown>(
   data: TData[],
   group_by?: string,
-  columns: DataTableColumnDef<TData, any>[] = []
+  columns: DataTableColumnDef<TData, TValue>[] = []
 ): GroupedData<TData>[] {
   if (!data) return [];
   if (!group_by || group_by === defaultGroupOption.id)
@@ -108,7 +110,7 @@ export function groupData<TData>(
 
 const generateFilterMap = (
   filters: InternalFilter[] = []
-): Map<string, any> => {
+): Map<string, unknown> => {
   return new Map(
     filters
       ?.filter(data => data._type === FilterType.select || data.value !== '')
@@ -220,7 +222,8 @@ export function transformToDataTableQuery(
     filters
       ?.filter(data => {
         if (data._type === FilterType.select) return true;
-        if (data._type === FilterType.date) return dayjs(data.value).isValid();
+        if (data._type === FilterType.date)
+          return dayjs(data.value as string | Date).isValid();
         if (data.value !== '') return true;
         return false;
       })
@@ -228,11 +231,11 @@ export function transformToDataTableQuery(
         name: data.name,
         operator: getFilterOperator({
           operator: data.operator,
-          value: data.value,
+          value: data.value as FilterPrimitive,
           filterType: data._type
         }),
         ...getFilterValue({
-          value: data.value,
+          value: data.value as FilterPrimitive,
           filterType: data._type,
           dataType: data._dataType,
           operator: data.operator

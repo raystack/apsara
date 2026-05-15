@@ -1,4 +1,4 @@
-import { InputFieldProps } from '../input-field/props';
+import { InputProps } from '../input/props';
 import { PopoverContentProps } from '../popover/props';
 
 export interface CalendarProps {
@@ -68,10 +68,10 @@ export interface RangePickerProps {
   /** Props for customizing the calendar */
   calendarProps?: CalendarProps;
 
-  /** Props for customizing the input fields */
-  inputFieldsProps?: {
-    startDate?: InputFieldProps;
-    endDate?: InputFieldProps;
+  /** Props for customizing the inputs */
+  inputsProps?: {
+    startDate?: InputProps;
+    endDate?: InputProps;
   };
 
   /** Render prop for custom trigger */
@@ -108,8 +108,8 @@ export interface DatePickerProps {
    */
   dateFormat?: string;
 
-  /** Props for customizing the input field */
-  inputFieldProps?: InputFieldProps;
+  /** Props for customizing the input */
+  inputProps?: InputProps;
 
   /** Initial date value */
   value?: Date;

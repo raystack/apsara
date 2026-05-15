@@ -1,7 +1,7 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import { ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 
 import styles from './chip.module.css';
 
@@ -27,19 +27,15 @@ const chip = cva(styles.chip, {
   }
 });
 
-type ChipProps = VariantProps<typeof chip> & {
-  trailingIcon?: ReactNode;
-  leadingIcon?: ReactNode;
-  isDismissible?: boolean;
-  children: ReactNode;
-  className?: string;
-  onDismiss?: () => void;
-  onClick?: () => void;
-  role?: string;
-  ariaLabel?: string;
-  disabled?: boolean;
-  'data-state'?: string;
-};
+type ChipProps = ComponentProps<'span'> &
+  VariantProps<typeof chip> & {
+    trailingIcon?: ReactNode;
+    leadingIcon?: ReactNode;
+    isDismissible?: boolean;
+    children: ReactNode;
+    onDismiss?: () => void;
+    disabled?: boolean;
+  };
 
 export const Chip = ({
   variant,
@@ -53,9 +49,9 @@ export const Chip = ({
   onDismiss,
   onClick,
   role = 'status',
-  ariaLabel,
   disabled,
-  'data-state': dataState
+  'aria-label': ariaLabel,
+  ...props
 }: ChipProps) => {
   const handleDismiss = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -64,14 +60,14 @@ export const Chip = ({
 
   return (
     <span
+      {...props}
       className={chip({ variant, size, color, className })}
       role={role}
       aria-label={
-        ariaLabel || (typeof children === 'string' ? children : undefined)
+        ariaLabel ?? (typeof children === 'string' ? children : undefined)
       }
       onClick={disabled ? undefined : onClick}
       data-disabled={disabled || undefined}
-      data-state={dataState}
     >
       {leadingIcon && (
         <span

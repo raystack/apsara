@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function TextAreaExamples() {
   return (
     <PlaygroundLayout title='TextArea'>
-      <Flex gap='large' wrap='wrap'>
+      <Flex gap={9} wrap='wrap'>
         <Field label='Basic TextArea' description='This is a description'>
           <TextArea placeholder='Enter your text here' />
         </Field>

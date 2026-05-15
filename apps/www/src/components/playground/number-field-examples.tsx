@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function NumberFieldExamples() {
   return (
     <PlaygroundLayout title='Number Field'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text>Default:</Text>
         <NumberField defaultValue={0} />
 

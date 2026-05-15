@@ -52,7 +52,7 @@ export function useFilters<TData, TValue>() {
     });
   }
 
-  function handleFilterValueChange(columnId: string, value: any) {
+  function handleFilterValueChange(columnId: string, value: unknown) {
     updateTableQuery(query => {
       return {
         ...query,

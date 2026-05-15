@@ -7,8 +7,8 @@ import PlaygroundLayout from './playground-layout';
 export function TabsExamples() {
   return (
     <PlaygroundLayout title='Tabs'>
-      <Flex gap='extra-large' wrap='wrap'>
-        <Flex gap='large' direction='column'>
+      <Flex gap={11} wrap='wrap'>
+        <Flex gap={9} direction='column'>
           <Tabs defaultValue='tab1'>
             <Tabs.List>
               <Tabs.Tab value='tab1'>Account</Tabs.Tab>
@@ -22,7 +22,7 @@ export function TabsExamples() {
             <Tabs.Content value='tab3'>Other settings</Tabs.Content>
           </Tabs>
         </Flex>
-        <Flex gap='large' direction='column'>
+        <Flex gap={9} direction='column'>
           <Tabs defaultValue='tab1'>
             <Tabs.List>
               <Tabs.Tab value='tab1'>Home</Tabs.Tab>

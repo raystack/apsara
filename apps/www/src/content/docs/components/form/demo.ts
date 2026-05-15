@@ -4,7 +4,7 @@ export const playground = {
   type: 'code',
   code: `<Form onSubmit={(e) => { e.preventDefault(); alert('Submitted!'); }}>
   <Field label="Email" required>
-    <InputField type="email" placeholder="Enter email" />
+    <Input type="email" placeholder="Enter email" />
   </Field>
   <Field label="Message" required={false}>
     <TextArea placeholder="Enter message" />
@@ -17,7 +17,7 @@ export const basicDemo = {
   type: 'code',
   code: `<Form onSubmit={(e) => { e.preventDefault(); alert('Submitted!'); }}>
   <Field label="Name" required>
-    <InputField placeholder="Enter your name" />
+    <Input placeholder="Enter your name" />
   </Field>
   <Button type="submit">Submit</Button>
 </Form>`
@@ -27,13 +27,13 @@ export const withFieldsDemo = {
   type: 'code',
   code: `<Form onSubmit={(e) => { e.preventDefault(); }}>
   <Field label="First Name" required>
-    <InputField placeholder="John" />
+    <Input placeholder="John" />
   </Field>
   <Field label="Last Name" required>
-    <InputField placeholder="Doe" />
+    <Input placeholder="Doe" />
   </Field>
   <Field label="Email" required description="We'll send a confirmation email">
-    <InputField type="email" placeholder="john@example.com" />
+    <Input type="email" placeholder="john@example.com" />
   </Field>
   <Field label="Bio" required={false}>
     <TextArea placeholder="Tell us about yourself" />
@@ -106,7 +106,7 @@ export const serverErrorsDemo = {
   return (
     <Form onSubmit={handleSubmit} errors={errors}>
       <Field name="email" label="Email" required>
-        <InputField type="email" placeholder="Enter email" />
+        <Input type="email" placeholder="Enter email" />
       </Field>
       <Button type="submit">Submit</Button>
     </Form>
@@ -131,10 +131,10 @@ export const propsApiErrorDemo = {
   return (
     <Form onSubmit={handleSubmit}>
       <Field label="Name" required error={errors.name}>
-        <InputField name="name" placeholder="Enter name" />
+        <Input name="name" placeholder="Enter name" />
       </Field>
       <Field label="Email" required error={errors.email}>
-        <InputField name="email" type="email" placeholder="Enter email" />
+        <Input name="email" type="email" placeholder="Enter email" />
       </Field>
       <Button type="submit">Submit</Button>
     </Form>
@@ -190,11 +190,11 @@ export const rhfDemo = {
   return (
     <Form onSubmit={handleSubmit((data) => alert(JSON.stringify(data)))}>
       <Field label="Name" required error={errors.name?.message}>
-        <InputField {...register('name', { required: 'Name is required' })} placeholder="Your name" />
+        <Input {...register('name', { required: 'Name is required' })} placeholder="Your name" />
       </Field>
 
       <Field label="Email" required error={errors.email?.message}>
-        <InputField {...register('email', { required: 'Email is required' })} placeholder="Email" />
+        <Input {...register('email', { required: 'Email is required' })} placeholder="Email" />
       </Field>
 
       <Field label="Role" required error={errors.role?.message}>

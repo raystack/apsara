@@ -20,7 +20,7 @@ export interface AlertDialogContentProps
 export const AlertDialogContent = ({
   className,
   children,
-  showCloseButton = true,
+  showCloseButton = false,
   overlay,
   width,
   style,

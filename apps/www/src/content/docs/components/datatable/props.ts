@@ -53,14 +53,14 @@ export interface DataTableProps {
    * Return a stable unique id for each row (used as React key).
    * Use for sortable/filterable tables to avoid key issues when rows reorder.
    */
-  getRowId?: (row: any, index: number) => string;
+  getRowId?: (row: unknown, index: number) => string;
 }
 
 export interface DataTableQuery {
   filters?: Array<{
     name: string;
     operator: FilterOperatorTypes;
-    value: any;
+    value: unknown;
   }>;
   sort?: Array<{
     key: string;

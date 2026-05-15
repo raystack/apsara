@@ -15,7 +15,7 @@ import {
   subComponentDemo,
   constraintErrorsDemo,
   customValidateDemo,
-  withInputFieldDemo,
+  withInputDemo,
   withTextAreaDemo,
   withSelectDemo,
 } from "./demo.ts";
@@ -31,10 +31,10 @@ Field supports two APIs: a **simple props API** for common use cases and a **sub
 Use `label`, `description`, and `error` props for quick forms or when validation is handled externally (e.g., React Hook Form).
 
 ```tsx
-import { Field, InputField } from "@raystack/apsara";
+import { Field, Input } from "@raystack/apsara";
 
 <Field label="Email" description="We won't share it" error={errors.email?.message}>
-  <InputField placeholder="Enter email" />
+  <Input placeholder="Enter email" />
 </Field>
 ```
 
@@ -101,11 +101,11 @@ Provides field validity state to a render function. Use for custom validity-base
 
 ## Examples
 
-### With InputField
+### With Input
 
-Use Field to add label, description, and error to an InputField.
+Use Field to add label, description, and error to an Input.
 
-<Demo data={withInputFieldDemo} />
+<Demo data={withInputDemo} />
 
 ### With TextArea
 

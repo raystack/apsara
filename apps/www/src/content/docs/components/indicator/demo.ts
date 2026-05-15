@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { children, ...rest } = props;
   return `<Indicator${getPropsString(rest)}>${children}</Indicator>`;
 };
@@ -27,7 +28,7 @@ export const playground = {
 export const variantDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <Indicator variant="accent">
       <Button color='neutral'>Notification</Button>
     </Indicator>
@@ -48,7 +49,7 @@ export const variantDemo = {
 export const labelDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <Indicator variant="accent" label="2 new">
       <Button color='neutral'>Notification</Button>
     </Indicator>

@@ -2,7 +2,7 @@
 
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { cva, cx, VariantProps } from 'class-variance-authority';
-import { ReactElement, ReactNode, useCallback, useState } from 'react';
+import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import {
   FilterOperation,
   FilterOperator,
@@ -13,7 +13,7 @@ import {
 } from '~/types/filters';
 import { DatePicker } from '../calendar';
 import { Flex } from '../flex';
-import { InputField } from '../input-field';
+import { Input } from '../input';
 import { Select } from '../select';
 import { BaseSelectProps } from '../select/select-root';
 import { Text } from '../text';
@@ -32,16 +32,17 @@ const chip = cva(styles.chip, {
   }
 });
 
-export interface FilterChipProps extends VariantProps<typeof chip> {
+export type FilterChipValue = string | string[] | number | Date;
+
+export interface FilterChipProps
+  extends ComponentProps<'div'>,
+    VariantProps<typeof chip> {
   label: string;
-  value?: string;
+  value?: FilterChipValue;
   onRemove?: () => void;
-  className?: string;
-  ref?: React.RefObject<HTMLDivElement>;
-  children?: ReactNode;
   columnType?: FilterTypes;
   options?: FilterSelectOption[];
-  onValueChange?: (value: any, operation: string) => void;
+  onValueChange?: (value: FilterChipValue, operation: string) => void;
   onOperationChange?: (operation: string) => void;
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
@@ -140,16 +141,16 @@ export const FilterChip = ({
               value={filterValue}
               onSelect={date => handleFilterValueChange(date)}
               showCalendarIcon={false}
-              inputFieldProps={{ className: styles.dateField }}
+              inputProps={{ classNames: { container: styles.dateField } }}
             />
           </div>
         );
       default:
         return (
           <div className={styles.inputFieldWrapper}>
-            <InputField
+            <Input
               variant={variant === 'text' ? 'borderless' : 'default'}
-              className={styles.inputField}
+              classNames={{ container: styles.inputField }}
               value={filterValue}
               onChange={e => handleFilterValueChange(e.target.value)}
             />
@@ -174,7 +175,7 @@ export const FilterChip = ({
             {leadingIcon}
           </span>
         )}
-        <Text size={2} weight='normal'>
+        <Text size='small' weight='regular'>
           {label}
         </Text>
       </Flex>

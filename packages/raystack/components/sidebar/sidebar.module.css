@@ -2,7 +2,7 @@
   display: flex;
   width: 220px;
   height: 100%;
-  padding: var(--rs-space-5) var(--rs-space-4);
+  padding: var(--rs-space-5) 0;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
@@ -42,19 +42,18 @@
 
 .header {
   gap: var(--rs-space-3);
-  padding: var(--rs-space-2);
+  padding: var(--rs-space-2) var(--rs-space-5) var(--rs-space-7);
   align-self: stretch;
-  border-radius: var(--rs-radius-2);
   background: var(--rs-color-background-base-primary);
   overflow: hidden;
-  margin-bottom: var(--rs-space-6);
 }
 
 .main {
   flex: 1;
   overflow-y: auto;
-  width: 100%;
-  gap: var(--rs-space-2);
+  align-self: stretch;
+  padding: 0 var(--rs-space-4);
+  gap: var(--rs-space-6);
   align-items: flex-start;
 }
 
@@ -68,6 +67,7 @@
 
 .footer {
   width: 100%;
+  padding: 0 var(--rs-space-4);
   gap: var(--rs-space-2);
 }
 
@@ -235,7 +235,6 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  margin-top: var(--rs-space-3);
 }
 
 .root[data-closed] .nav-group {
@@ -247,11 +246,9 @@
   height: var(--rs-space-7);
   padding: var(--rs-space-2) var(--rs-space-3);
   margin-bottom: var(--rs-space-1);
-  justify-content: space-between;
   align-items: center;
   align-self: stretch;
   color: var(--rs-color-foreground-base-secondary);
-  margin-top: var(--rs-space-4);
   border-radius: var(--rs-radius-2);
 }
 
@@ -265,10 +262,6 @@
 
 .nav-group-accordion-item .nav-group-header {
   padding: 0;
-}
-
-.nav-group-header:first-child {
-  margin-top: 0;
 }
 
 .nav-group-label {

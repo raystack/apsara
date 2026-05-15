@@ -1,6 +1,26 @@
 export interface FlexProps {
-  /** Sets the gutter space between row and columns */
-  gap?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
+  /**
+   * Sets the gutter space between rows and columns.
+   * Each step maps directly to `--rs-space-1` through `--rs-space-17`.
+   */
+  gap?:
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17;
 
   /** Sets whether flex items are forced onto one line or can wrap onto multiple lines */
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';

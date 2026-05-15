@@ -6,8 +6,8 @@ import PlaygroundLayout from './playground-layout';
 export function LinkExamples() {
   return (
     <PlaygroundLayout title='Link'>
-      <Flex gap='large' direction='column'>
-        <Flex gap='medium' align='center' wrap='wrap'>
+      <Flex gap={9} direction='column'>
+        <Flex gap={5} align='center' wrap='wrap'>
           <Link href='#' variant='primary'>
             Primary Link
           </Link>
@@ -30,7 +30,7 @@ export function LinkExamples() {
             Success Link
           </Link>
         </Flex>
-        <Flex gap='medium' align='end' wrap='wrap'>
+        <Flex gap={5} align='end' wrap='wrap'>
           <Link href='#' size={1}>
             Size 1
           </Link>
@@ -62,7 +62,7 @@ export function LinkExamples() {
             Size 10
           </Link>
         </Flex>
-        <Flex gap='medium' align='end' wrap='wrap'>
+        <Flex gap={5} align='end' wrap='wrap'>
           <Link href='#' weight='normal'>
             Normal Weight
           </Link>
@@ -73,7 +73,7 @@ export function LinkExamples() {
             Weight 500
           </Link>
         </Flex>
-        <Flex gap='medium' align='end' wrap='wrap'>
+        <Flex gap={5} align='end' wrap='wrap'>
           <Link href='#' variant='primary' underline>
             Underlined Link
           </Link>

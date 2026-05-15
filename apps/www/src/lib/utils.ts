@@ -1,5 +1,7 @@
+import type { ComponentPropsType } from '@/components/demo/types';
+
 export const getPropsString = (
-  props: any,
+  props: ComponentPropsType,
   hasLeadingWhiteSpace: boolean = true
 ) => {
   const str = Object.entries(props)

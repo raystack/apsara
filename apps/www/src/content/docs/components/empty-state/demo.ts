@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { primaryAction, secondaryAction, ...rest } = props;
   const primaryActionCode = primaryAction
     ? `<Button>Primary Action</Button>`
@@ -54,7 +55,7 @@ export const playground = {
 export const variantsDemo = {
   type: 'code',
   code: `
-  <Flex gap="large">
+  <Flex gap={9}>
     <EmptyState
       variant="empty1"
       icon={<BellIcon />}

@@ -1,6 +1,6 @@
-export interface InputFieldProps {
+export interface InputProps {
   /**
-   * Size variant of the input field.
+   * Size variant of the input.
    * @defaultValue "large"
    */
   size?: 'small' | 'large';
@@ -20,7 +20,7 @@ export interface InputFieldProps {
   /** Text or symbol to show after input value. */
   suffix?: string;
 
-  /** Custom width for the input field. */
+  /** Custom width for the input. */
   width?: string | number;
 
   /**
@@ -42,6 +42,18 @@ export interface InputFieldProps {
 
   /** Ref to the outer container div. */
   containerRef?: React.RefObject<HTMLDivElement | null>;
+
+  /** The controlled value of the input. */
+  value?: string;
+
+  /** Native change handler. Receives the React change event. */
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+  /**
+   * Convenience callback fired with the new string value.
+   * Provided by Base UI's Input primitive — use this when you only need the value.
+   */
+  onValueChange?: (value: string, eventDetails: unknown) => void;
 
   /** Additional CSS class names. */
   className?: string;

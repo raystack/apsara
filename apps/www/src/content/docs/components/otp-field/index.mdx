@@ -1,0 +1,123 @@
+---
+title: OTP Field
+description: A one-time password input split into individual character slots with automatic focus management.
+source: packages/raystack/components/otp-field
+tag: new
+---
+
+import {
+  playground,
+  separatorDemo,
+  maskedDemo,
+  alphanumericDemo,
+  disabledDemo,
+  readOnlyDemo,
+  controlledDemo,
+  onCompleteDemo,
+  customSanitizeDemo,
+  withFieldDemo,
+} from "./demo.ts";
+
+<Demo data={playground} />
+
+## Anatomy
+
+Import and assemble the component. `length` is required so the field can manage state, validate input, and detect completion.
+
+```tsx
+import { OTPField } from "@raystack/apsara";
+
+<OTPField length={6}>
+  <OTPField.Input />
+  <OTPField.Input />
+  <OTPField.Input />
+  <OTPField.Separator />
+  <OTPField.Input />
+  <OTPField.Input />
+  <OTPField.Input />
+</OTPField>
+```
+
+## API Reference
+
+### Root
+
+Groups all parts of the field and manages their state.
+
+<auto-type-table path="./props.ts" name="OTPFieldProps" />
+
+### Input
+
+An individual character slot. Render one per slot (typically using `Array.from`).
+
+<auto-type-table path="./props.ts" name="OTPFieldInputProps" />
+
+### Separator
+
+A visual separator between slot groups, styled to fit between OTP slots.
+
+<auto-type-table path="./props.ts" name="OTPFieldSeparatorProps" />
+
+## Examples
+
+### With separator
+
+Group slots visually with `OTPField.Separator` to make long codes easier to read.
+
+<Demo data={separatorDemo} />
+
+### Masked
+
+Use `mask` to obscure entered characters — useful for sensitive codes.
+
+<Demo data={maskedDemo} />
+
+### Alphanumeric
+
+Use `validationType` to accept letters, digits, or both. Defaults to `"numeric"`.
+
+<Demo data={alphanumericDemo} />
+
+### Disabled
+
+Set `disabled` to prevent interaction.
+
+<Demo data={disabledDemo} />
+
+### Read-only
+
+Set `readOnly` to display a value without allowing edits.
+
+<Demo data={readOnlyDemo} />
+
+### Controlled
+
+Pass `value` and `onValueChange` to control the field from React state.
+
+<Demo data={controlledDemo} />
+
+### Complete callback
+
+`onValueComplete` fires once all slots are filled. Combine with `autoSubmit` to submit the surrounding form automatically.
+
+<Demo data={onCompleteDemo} />
+
+### Custom sanitization
+
+Set `validationType="none"` and provide `sanitizeValue` to restrict input to a custom set of characters.
+
+<Demo data={customSanitizeDemo} />
+
+### With Field
+
+Compose with `Field` to get an associated label and description.
+
+<Demo data={withFieldDemo} />
+
+## Accessibility
+
+- Each slot must have an accessible name. Use a wrapping `<label>`, `Field.Label`, or set `aria-label` on every slot announcing its position (e.g., `"Character 1 of 6"`).
+- The first slot inherits `id`; subsequent slots derive their ids as `{id}-2`, `{id}-3`, and so on.
+- A hidden validation input is rendered with `autoComplete="one-time-code"` so browsers can suggest codes received via SMS.
+- Typing a character advances focus to the next slot. Backspace clears the current slot and steps backwards. Arrow keys move between slots without changing the value.
+- Paste fills slots starting at the focused position, honoring the configured `validationType` and `length`.

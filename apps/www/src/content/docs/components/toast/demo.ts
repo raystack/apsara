@@ -1,12 +1,61 @@
 'use client';
 
+export const getCode = (
+  _updatedProps: Record<string, any>,
+  allProps: Record<string, any>
+) => {
+  const { title, description, type, actionButton } = allProps;
+  const opts: string[] = [];
+  if (title && title !== '') opts.push(`title: "${title}"`);
+  if (description && description !== '')
+    opts.push(`description: "${description}"`);
+  if (type && type !== 'default') opts.push(`type: "${type}"`);
+  if (actionButton)
+    opts.push(`actionProps: { children: "Action", onClick: () => {} }`);
+
+  const optsStr = opts.length ? `{ ${opts.join(', ')} }` : '{}';
+
+  return `
+  <Toast.Provider>
+    <Button onClick={() => toastManager.add(${optsStr})}>
+      Show toast
+    </Button>
+  </Toast.Provider>`;
+};
+
+export const playground = {
+  type: 'playground',
+  controls: {
+    title: {
+      type: 'text',
+      initialValue: 'Order placed',
+      defaultValue: ''
+    },
+    description: {
+      type: 'text',
+      initialValue: 'Monday, 7 Oct 2024 at 10:20 AM',
+      defaultValue: ''
+    },
+    type: {
+      type: 'select',
+      options: ['default', 'success', 'error', 'warning', 'info', 'loading'],
+      defaultValue: 'default'
+    },
+    actionButton: {
+      type: 'checkbox',
+      defaultValue: false
+    }
+  },
+  getCode
+};
+
 export const preview = {
   type: 'code',
   code: `
   function ToastPreview() {
     return (
       <Toast.Provider>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => toastManager.add({ title: "This is a toast" })}>
             Trigger toast
           </Button>
@@ -68,7 +117,7 @@ export const typesDemo = {
 export const descriptionDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" wrap="wrap">
+  <Flex gap={5} wrap="wrap">
     <Button onClick={() => toastManager.add({
       title: "File uploaded",
       description: "Your document has been uploaded successfully.",
@@ -84,6 +133,52 @@ export const descriptionDemo = {
       Error with description
     </Button>
   </Flex>`
+};
+
+export const leadingIconDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'Custom icons',
+      code: `
+  <Flex gap={5} wrap="wrap">
+    <Button onClick={() => toastManager.add({
+      title: "Saved successfully",
+      type: "success",
+      leadingIcon: <CheckCircledIcon />
+    })}>
+      Success with icon
+    </Button>
+    <Button onClick={() => toastManager.add({
+      title: "Upload failed",
+      description: "We couldn't upload your file. Please try again.",
+      type: "error",
+      leadingIcon: <CrossCircledIcon />
+    })}>
+      Error with icon
+    </Button>
+    <Button onClick={() => toastManager.add({
+      title: "FYI: System update available",
+      type: "info",
+      leadingIcon: <InfoCircledIcon />
+    })}>
+      Info with icon
+    </Button>
+  </Flex>`
+    },
+    {
+      name: 'No icon',
+      code: `
+  <Button onClick={() => toastManager.add({
+    title: "Plain success toast",
+    description: "No icon at all, even though type is success.",
+    type: "success",
+    leadingIcon: null
+  })}>
+    Success without icon
+  </Button>`
+    }
+  ]
 };
 
 export const actionDemo = {
@@ -145,7 +240,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="top-left" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Top left toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -161,7 +256,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="top-center" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Top center toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -177,7 +272,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="top-right" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Top right toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -193,7 +288,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="bottom-left" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Bottom left toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -209,7 +304,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="bottom-center" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Bottom center toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -225,7 +320,7 @@ export const positionDemo = {
   const manager = Toast.createToastManager();
     return (
       <Toast.Provider position="bottom-right" toastManager={manager}>
-        <Flex gap="medium" wrap="wrap">
+        <Flex gap={5} wrap="wrap">
           <Button onClick={() => manager.add({ title: "Bottom right toast", type: "success" })}>
             Trigger toast
           </Button>
@@ -237,13 +332,41 @@ export const positionDemo = {
   ]
 };
 
+export const hookDemo = {
+  type: 'code',
+  code: `
+  function HookDemo() {
+    // Hook usage lives in an inner component so it runs inside the Provider.
+    function Inner() {
+      const { add, toasts } = useToastManager();
+      return (
+        <Flex direction="column" gap={5}>
+          <Button onClick={() => add({
+            title: "Triggered via hook",
+            description: "Same leadingIcon-aware API as the singleton manager.",
+            type: "success"
+          })}>
+            Show toast
+          </Button>
+          <span>Active toasts: {toasts.length}</span>
+        </Flex>
+      )
+    }
+    return (
+      <Toast.Provider>
+        <Inner />
+      </Toast.Provider>
+    )
+  }`
+};
+
 export const updateDemo = {
   type: 'code',
   code: `
   function UpdateToast() {
     const idRef = React.useRef(null);
     return (
-      <Flex gap="medium" wrap="wrap">
+      <Flex gap={5} wrap="wrap">
         <Button onClick={() => {
           idRef.current = toastManager.add({ title: "Processing...", type: "loading", timeout: 0 });
         }}>

@@ -2,6 +2,10 @@
 
 const mainAreaStyle = `{{ flex: 1, border: '2px dashed var(--rs-color-border-base-secondary)', margin: 'var(--rs-space-4)', boxSizing: 'border-box' }}`;
 
+const styleDemo = {
+  padding: 0
+};
+
 const sidebarLayout = (sidebar: string) =>
   `<Flex style={{ width: '100%', height: 480 }}>
   ${sidebar.trim()}
@@ -23,7 +27,7 @@ export const preview = {
         <IconButton size={4} aria-label="Logo">
           <BellIcon width={24} height={24} />
         </IconButton>
-        <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+        <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
       </Flex>
     </Sidebar.Header>
     <Sidebar.Main>
@@ -55,7 +59,8 @@ export const preview = {
         Help & Support
       </Sidebar.Item>
     </Sidebar.Footer>
-  </Sidebar>`)
+  </Sidebar>`),
+  style: styleDemo
 };
 
 export const positionDemo = {
@@ -70,7 +75,7 @@ export const positionDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -95,7 +100,7 @@ export const positionDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -111,7 +116,8 @@ export const positionDemo = {
           </Sidebar.Main>
         </Sidebar>`)
     }
-  ]
+  ],
+  style: styleDemo
 };
 
 export const variantDemo = {
@@ -126,7 +132,7 @@ export const variantDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -147,7 +153,7 @@ export const variantDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -168,7 +174,7 @@ export const variantDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -180,7 +186,8 @@ export const variantDemo = {
           </Sidebar.Main>
         </Sidebar>`)
     }
-  ]
+  ],
+  style: styleDemo
 };
 
 export const stateDemo = {
@@ -194,7 +201,7 @@ export const stateDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -218,7 +225,7 @@ export const stateDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -242,7 +249,7 @@ export const stateDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -266,7 +273,7 @@ export const stateDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -282,7 +289,8 @@ export const stateDemo = {
           </Sidebar.Main>
         </Sidebar>`)
     }
-  ]
+  ],
+  style: styleDemo
 };
 
 export const tooltipDemo = {
@@ -296,7 +304,7 @@ export const tooltipDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -310,7 +318,8 @@ export const tooltipDemo = {
               <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Help</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
-        </Sidebar>`)
+        </Sidebar>`),
+  style: styleDemo
 };
 
 export const collapsibleDemo = {
@@ -321,7 +330,7 @@ export const collapsibleDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -331,7 +340,8 @@ export const collapsibleDemo = {
               <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
-        </Sidebar>`)
+        </Sidebar>`),
+  style: styleDemo
 };
 
 export const hideTooltipDemo = {
@@ -342,7 +352,7 @@ export const hideTooltipDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -355,7 +365,8 @@ export const hideTooltipDemo = {
               Help
             </Sidebar.Item>
           </Sidebar.Main>
-        </Sidebar>`)
+        </Sidebar>`),
+  style: styleDemo
 };
 
 export const collapsibleGroupDemo = {
@@ -366,7 +377,7 @@ export const collapsibleGroupDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -387,7 +398,94 @@ export const collapsibleGroupDemo = {
               </Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
-        </Sidebar>`)
+        </Sidebar>`),
+  style: styleDemo
+};
+
+export const controlledGroupDemo = {
+  type: 'code',
+  style: styleDemo,
+  code: `
+        function ControlledSidebarGroup() {
+          const [resourcesOpen, setResourcesOpen] = React.useState(true);
+
+          return (
+            ${sidebarLayout(`<Sidebar defaultOpen>
+              <Sidebar.Header>
+                <Flex align="center" gap={3}>
+                  <IconButton size={4} aria-label="Logo">
+                    <BellIcon width={24} height={24} />
+                  </IconButton>
+                  <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
+                </Flex>
+              </Sidebar.Header>
+              <Sidebar.Main>
+                <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                  Overview
+                </Sidebar.Item>
+                <Sidebar.Group
+                  label="Resources"
+                  collapsible
+                  open={resourcesOpen}
+                  onOpenChange={setResourcesOpen}
+                >
+                  <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                    Reports
+                  </Sidebar.Item>
+                  <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                    Activities
+                  </Sidebar.Item>
+                </Sidebar.Group>
+              </Sidebar.Main>
+              <Sidebar.Footer>
+                <Sidebar.Item
+                  render={
+                    <button
+                      type="button"
+                      onClick={() => setResourcesOpen(open => !open)}
+                    />
+                  }
+                  leadingIcon={<BellIcon width={16} height={16} />}
+                >
+                  {resourcesOpen ? 'Collapse Resources' : 'Expand Resources'}
+                </Sidebar.Item>
+              </Sidebar.Footer>
+            </Sidebar>`)}
+          );
+        }`
+};
+
+export const groupIconDemo = {
+  type: 'code',
+  code: sidebarLayout(`<Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Flex align="center" gap={3}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Group label="Workspace" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
+                Dashboard
+              </Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>
+                Analytics
+              </Sidebar.Item>
+            </Sidebar.Group>
+            <Sidebar.Group label="Resources" leadingIcon={<FilterIcon width={16} height={16} />}>
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+                Reports
+              </Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />}>
+                Activities
+              </Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`),
+  style: styleDemo
 };
 
 export const moreDemo = {
@@ -398,7 +496,7 @@ export const moreDemo = {
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight="medium" data-collapse-hidden>Apsara</Text>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
             </Flex>
           </Sidebar.Header>
           <Sidebar.Main>
@@ -432,5 +530,6 @@ export const moreDemo = {
               </Sidebar.Item>
             </Sidebar.More>
           </Sidebar.Footer>
-        </Sidebar>`)
+        </Sidebar>`),
+  style: styleDemo
 };

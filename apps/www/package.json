@@ -41,6 +41,7 @@
     "@raystack/tools-config": "workspace:*",
     "@types/mdx": "^2.0.13",
     "@types/node": "^24.9.2",
+    "@types/prettier": "^2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "typescript": "^5.9.3"

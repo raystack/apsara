@@ -2,7 +2,7 @@
 .viewport {
   --gap: 0.75rem;
   position: fixed;
-  z-index: var(--rs-z-index-portal);
+  z-index: var(--rs-z-index-toast);
   width: 360px;
   max-width: calc(100vw - var(--rs-space-10));
   outline: none;
@@ -10,35 +10,35 @@
 
 /* Position variants */
 .viewport-top-left {
-  top: var(--rs-space-5);
-  left: var(--rs-space-5);
+  top: var(--rs-space-7);
+  left: var(--rs-space-7);
 }
 
 .viewport-top-center {
-  top: var(--rs-space-5);
+  top: var(--rs-space-7);
   left: 50%;
   transform: translateX(-50%);
 }
 
 .viewport-top-right {
-  top: var(--rs-space-5);
-  right: var(--rs-space-5);
+  top: var(--rs-space-7);
+  right: var(--rs-space-7);
 }
 
 .viewport-bottom-left {
-  bottom: var(--rs-space-5);
-  left: var(--rs-space-5);
+  bottom: var(--rs-space-7);
+  left: var(--rs-space-7);
 }
 
 .viewport-bottom-center {
-  bottom: var(--rs-space-5);
+  bottom: var(--rs-space-7);
   left: 50%;
   transform: translateX(-50%);
 }
 
 .viewport-bottom-right {
-  bottom: var(--rs-space-5);
-  right: var(--rs-space-5);
+  bottom: var(--rs-space-7);
+  right: var(--rs-space-7);
 }
 
 /* ===== Toast Root (stacking) ===== */
@@ -160,11 +160,11 @@
 
 /* ===== Enter animations ===== */
 .root[data-position*="bottom"][data-starting-style] {
-  transform: translateY(calc(100% + var(--rs-space-5)));
+  transform: translateY(calc(100% + var(--rs-space-7)));
 }
 
 .root[data-position*="top"][data-starting-style] {
-  transform: translateY(calc(-100% - var(--rs-space-5)));
+  transform: translateY(calc(-100% - var(--rs-space-7)));
 }
 
 /* ===== Limited state ===== */
@@ -179,11 +179,11 @@
 
 /* Default exit (no swipe) */
 .root[data-position*="bottom"][data-ending-style]:not([data-swipe-direction]) {
-  transform: translateY(calc(100% + var(--rs-space-5)));
+  transform: translateY(calc(100% + var(--rs-space-7)));
 }
 
 .root[data-position*="top"][data-ending-style]:not([data-swipe-direction]) {
-  transform: translateY(calc(-100% - var(--rs-space-5)));
+  transform: translateY(calc(-100% - var(--rs-space-7)));
 }
 
 /* Swipe exit directions */
@@ -205,36 +205,8 @@
     translateY(var(--offset-y));
 }
 
-/* ===== Type-based styling ===== */
-.root[data-type="success"] {
-  background: var(--rs-color-background-success-primary);
-  border-color: var(--rs-color-border-success-primary);
-  color: var(--rs-color-foreground-success-primary);
-}
-
-.root[data-type="error"] {
-  background: var(--rs-color-background-danger-primary);
-  border-color: var(--rs-color-border-danger-primary);
-  color: var(--rs-color-foreground-danger-primary);
-}
-
-.root[data-type="warning"] {
-  background: var(--rs-color-background-attention-primary);
-  border-color: var(--rs-color-border-attention-primary);
-  color: var(--rs-color-foreground-attention-primary);
-}
-
-.root[data-type="info"] {
-  background: var(--rs-color-background-accent-primary);
-  border-color: var(--rs-color-border-accent-primary);
-  color: var(--rs-color-foreground-accent-primary);
-}
-
 /* ===== Content (stacking visibility) ===== */
 .content {
-  display: flex;
-  align-items: start;
-  gap: var(--rs-space-5);
   transition: opacity 250ms;
 }
 
@@ -246,15 +218,62 @@
   opacity: 1;
 }
 
-/* ===== Text container (title + description) ===== */
-.textContainer {
+/* ===== Content column (claims remaining space next to the icon) ===== */
+.contentColumn {
   flex: 1;
   min-width: 0;
 }
 
+/* ===== Top row (headline + actions) ===== */
+.topRow {
+  min-height: var(--rs-space-7);
+}
+
+/* ===== Leading icon =====
+   The wrapper height matches the top row's min-height so the SVG (centered
+   inside via align/justify) lines up with the headline's vertical center,
+   even though the wrapper itself is top-aligned in the outer flex. */
+.leadingIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--rs-space-5);
+  min-height: var(--rs-space-7);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.leadingIcon > svg {
+  width: var(--rs-space-5);
+  height: var(--rs-space-5);
+}
+
+/* Type-based leading icon colors. The toast itself stays visually neutral
+   across all types — only the leading icon changes color per type. */
+.root[data-type="success"] .leadingIcon {
+  color: var(--rs-color-foreground-success-primary);
+}
+
+.root[data-type="error"] .leadingIcon {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.root[data-type="warning"] .leadingIcon {
+  color: var(--rs-color-foreground-attention-primary);
+}
+
+.root[data-type="info"] .leadingIcon {
+  color: var(--rs-color-foreground-accent-primary);
+}
+
+/* ===== Actions (action button + close) ===== */
+.actions {
+  flex-shrink: 0;
+}
+
 /* ===== Title ===== */
 .title {
-  color: inherit;
+  color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-regular);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-regular);
@@ -264,20 +283,12 @@
 
 /* ===== Description ===== */
 .description {
-  color: inherit;
+  color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-regular);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   margin: 0;
-}
-
-/* Override description color for typed toasts */
-.root[data-type="success"] .description,
-.root[data-type="error"] .description,
-.root[data-type="warning"] .description,
-.root[data-type="info"] .description {
-  opacity: 0.85;
 }
 
 @media (prefers-reduced-motion: no-preference) {

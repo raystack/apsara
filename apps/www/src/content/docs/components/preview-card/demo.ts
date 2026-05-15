@@ -1,18 +1,19 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
 const PLACEHOLDER = `<div style={{ width: 200, height: 120, borderRadius: "var(--rs-radius-2)", backgroundColor: "var(--rs-color-background-accent-primary)" }} />`;
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { children, ...rest } = props;
   return `
   <PreviewCard>
     <PreviewCard.Trigger href="#">Hover to preview</PreviewCard.Trigger>
     <PreviewCard.Content${getPropsString(rest)}>
-      <Flex direction="column" gap="small">
+      <Flex direction="column" gap={3}>
         ${PLACEHOLDER}
-        <Text size="2">${children}</Text>
+        <Text size="small">${children}</Text>
       </Flex>
     </PreviewCard.Content>
   </PreviewCard>`;
@@ -47,9 +48,9 @@ export const arrowDemo = {
   <PreviewCard>
     <PreviewCard.Trigger href="#">Hover to preview</PreviewCard.Trigger>
     <PreviewCard.Content showArrow>
-      <Flex direction="column" gap="small">
+      <Flex direction="column" gap={3}>
         ${PLACEHOLDER}
-        <Text size="2">Preview content with an arrow indicator</Text>
+        <Text size="small">Preview content with an arrow indicator</Text>
       </Flex>
     </PreviewCard.Content>
   </PreviewCard>`
@@ -78,7 +79,7 @@ export const contentTransitionsDemo = {
   };
 
   return (
-    <Flex gap="medium">
+    <Flex gap={5}>
       <PreviewCard.Trigger handle={handle} payload="page-a" href="#">
         Page A
       </PreviewCard.Trigger>
@@ -96,10 +97,10 @@ export const contentTransitionsDemo = {
           return (
             <PreviewCard.Content style={{ maxWidth: 240 }}>
               <PreviewCard.Viewport>
-                <Flex direction="column" gap="small">
+                <Flex direction="column" gap={3}>
                   <div style={{ width: "100%", height: 120, borderRadius: "var(--rs-radius-2)", backgroundColor: page.color, padding: "var(--rs-space-4)" }} />
-                  <Text size="2" weight="medium">{page.title}</Text>
-                  <Text size="1">{page.description}</Text>
+                  <Text size="small" weight="medium">{page.title}</Text>
+                  <Text size="mini">{page.description}</Text>
                 </Flex>
               </PreviewCard.Viewport>
             </PreviewCard.Content>
@@ -120,9 +121,9 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="top">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
-            <Text size="2">Content appears above the trigger</Text>
+            <Text size="small">Content appears above the trigger</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`
@@ -133,9 +134,9 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="right">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
-            <Text size="2">Content appears to the right</Text>
+            <Text size="small">Content appears to the right</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`
@@ -146,9 +147,9 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="bottom">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
-            <Text size="2">Content appears below the trigger</Text>
+            <Text size="small">Content appears below the trigger</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`
@@ -159,9 +160,9 @@ export const positionDemo = {
       <PreviewCard>
         <PreviewCard.Trigger href="#">Hover me</PreviewCard.Trigger>
         <PreviewCard.Content side="left">
-          <Flex direction="column" gap="small">
+          <Flex direction="column" gap={3}>
             ${PLACEHOLDER}
-            <Text size="2">Content appears to the left</Text>
+            <Text size="small">Content appears to the left</Text>
           </Flex>
         </PreviewCard.Content>
       </PreviewCard>`

@@ -2,13 +2,13 @@
 
 import { Autocomplete as AutocompletePrimitive } from '@base-ui/react/autocomplete';
 import { type ComponentProps, type ReactNode } from 'react';
-import { InputField } from '../input-field';
+import { Input } from '../input';
 import styles from './command.module.css';
 import { useCommandContext } from './command-root';
 
 export interface CommandInputProps
   extends Omit<
-    ComponentProps<typeof InputField>,
+    ComponentProps<typeof Input>,
     'trailingIcon' | 'chips' | 'maxChipsVisible' | 'variant'
   > {
   /** Icon rendered at the start of the input. */
@@ -29,7 +29,7 @@ export const CommandInput = ({
       <AutocompletePrimitive.Input
         ref={ref}
         render={
-          <InputField
+          <Input
             containerRef={inputContainerRef}
             leadingIcon={leadingIcon}
             variant='borderless'

@@ -3,7 +3,7 @@ import './normalize.css';
 
 export { Accordion } from './components/accordion';
 export { AlertDialog } from './components/alert-dialog';
-export { Amount } from './components/amount';
+export { Amount, type AmountProps } from './components/amount';
 export { AnnouncementBar } from './components/announcement-bar';
 export { Avatar, AvatarGroup, getAvatarColor } from './components/avatar';
 export { Badge } from './components/badge';
@@ -30,6 +30,18 @@ export {
   EmptyFilterValue,
   useDataTable
 } from './components/data-table';
+export {
+  DataView,
+  DataViewField,
+  DataViewListColumn,
+  DataViewListProps,
+  DataViewProps,
+  DataViewQuery,
+  DataViewSort,
+  DataViewTableColumn,
+  DataViewTableProps,
+  useDataView
+} from './components/data-view-beta';
 export { Dialog } from './components/dialog';
 export { Drawer } from './components/drawer';
 export { EmptyState } from './components/empty-state';
@@ -44,7 +56,7 @@ export { Headline } from './components/headline';
 export { IconButton } from './components/icon-button';
 export { Image } from './components/image';
 export { Indicator } from './components/indicator';
-export { InputField } from './components/input-field';
+export { Input } from './components/input';
 export { Label } from './components/label';
 export { Link } from './components/link';
 export { List } from './components/list';
@@ -53,6 +65,7 @@ export { Menubar } from './components/menubar';
 export { Meter } from './components/meter';
 export { Navbar } from './components/navbar';
 export { NumberField } from './components/number-field';
+export { OTPField } from './components/otp-field';
 export { Popover } from './components/popover';
 export { PreviewCard } from './components/preview-card';
 export { Progress } from './components/progress';
@@ -79,7 +92,7 @@ export {
   ThemeSwitcher,
   useTheme
 } from './components/theme-provider';
-export { Toast, toastManager } from './components/toast';
+export { Toast, toastManager, useToastManager } from './components/toast';
 export { Toggle } from './components/toggle';
 export { Toolbar } from './components/toolbar';
 export { Tooltip } from './components/tooltip';

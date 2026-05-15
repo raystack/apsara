@@ -6,10 +6,10 @@ import PlaygroundLayout from './playground-layout';
 export function SeparatorExamples() {
   return (
     <PlaygroundLayout title='Separator'>
-      <Flex wrap='wrap' gap='large'>
+      <Flex wrap='wrap' gap={9}>
         <Flex
           direction='column'
-          gap='large'
+          gap={9}
           align='center'
           style={{ width: '400px' }}
         >
@@ -19,7 +19,7 @@ export function SeparatorExamples() {
         </Flex>
         <Flex
           direction='column'
-          gap='large'
+          gap={9}
           align='center'
           style={{ width: '400px' }}
         >

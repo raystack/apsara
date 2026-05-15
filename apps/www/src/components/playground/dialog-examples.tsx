@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function DialogExamples() {
   return (
     <PlaygroundLayout title='Dialog'>
-      <Flex gap='medium'>
+      <Flex gap={5}>
         <Dialog>
           <Dialog.Trigger render={<Button />}>Dialog</Dialog.Trigger>
           <Dialog.Content

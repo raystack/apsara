@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function CollapsibleExamples() {
   return (
     <PlaygroundLayout title='Collapsible'>
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text>Default:</Text>
         <Collapsible>
           <Collapsible.Trigger>Toggle content</Collapsible.Trigger>
@@ -16,7 +16,7 @@ export function CollapsibleExamples() {
         </Collapsible>
       </Flex>
 
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text>Default open:</Text>
         <Collapsible defaultOpen>
           <Collapsible.Trigger>Toggle content</Collapsible.Trigger>
@@ -26,7 +26,7 @@ export function CollapsibleExamples() {
         </Collapsible>
       </Flex>
 
-      <Flex direction='column' gap='large'>
+      <Flex direction='column' gap={9}>
         <Text>Disabled:</Text>
         <Collapsible disabled>
           <Collapsible.Trigger>Cannot toggle (disabled)</Collapsible.Trigger>

@@ -6,11 +6,11 @@ import PlaygroundLayout from './playground-layout';
 export function ChipExamples() {
   return (
     <PlaygroundLayout title='Chip'>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Chip size='small'>Small</Chip>
         <Chip size='large'>Large</Chip>
       </Flex>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Chip color='neutral' variant='outline'>
           Outline
         </Chip>
@@ -24,18 +24,18 @@ export function ChipExamples() {
           Filled
         </Chip>
       </Flex>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Chip leadingIcon='O'>Add Item</Chip>
         <Chip trailingIcon='O'>Next</Chip>
         <Chip leadingIcon='O' trailingIcon='O'>
           Download
         </Chip>
       </Flex>
-      <Flex gap='large'>
+      <Flex gap={9}>
         <Chip
           isDismissible
           onDismiss={() => alert('dismissed')}
-          ariaLabel='Dismissible chip'
+          aria-label='Dismissible chip'
         >
           Dismissable Chip
         </Chip>
@@ -44,7 +44,7 @@ export function ChipExamples() {
           color='accent'
           isDismissible
           onDismiss={() => alert('dismissed')}
-          ariaLabel='Dismissible chip'
+          aria-label='Dismissible chip'
         >
           Dismissable Chip
         </Chip>
@@ -53,7 +53,7 @@ export function ChipExamples() {
           color='accent'
           isDismissible
           onDismiss={() => alert('dismissed')}
-          ariaLabel='Dismissible chip'
+          aria-label='Dismissible chip'
         >
           Dismissable Chip
         </Chip>

@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function TooltipExamples() {
   return (
     <PlaygroundLayout title='Tooltip'>
-      <Flex gap='medium' align='center' wrap='wrap'>
+      <Flex gap={5} align='center' wrap='wrap'>
         <Tooltip>
           <Tooltip.Trigger render={<Button />}>Top</Tooltip.Trigger>
           <Tooltip.Content side='top'>Top tooltip</Tooltip.Content>

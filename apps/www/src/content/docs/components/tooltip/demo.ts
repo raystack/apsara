@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { children = 'Tooltip message', trackCursorAxis, ...rest } = props;
   return `
     <Tooltip ${trackCursorAxis ? `trackCursorAxis="${trackCursorAxis}"` : ''}>
@@ -57,7 +58,7 @@ export const playground = {
 export const sideDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="center">
+  <Flex gap={5} align="center">
     <Tooltip>
       <Tooltip.Trigger render={<Button />}>Top</Tooltip.Trigger>
       <Tooltip.Content side="top">Top tooltip</Tooltip.Content>
@@ -79,7 +80,7 @@ export const sideDemo = {
 export const alignDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <Tooltip>
       <Tooltip.Trigger render={<Button />}>Start</Tooltip.Trigger>
       <Tooltip.Content align="start">Start tooltip</Tooltip.Content>
@@ -112,7 +113,7 @@ export const providerDemo = {
   type: 'code',
   code: `
   <Tooltip.Provider>
-    <Flex gap="medium" align="center">
+    <Flex gap={5} align="center">
       <Tooltip>
         <Tooltip.Trigger render={<Button />}>Tooltip 1</Tooltip.Trigger>
         <Tooltip.Content>Top Left tooltip</Tooltip.Content>

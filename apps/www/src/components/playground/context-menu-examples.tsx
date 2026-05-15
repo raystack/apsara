@@ -6,7 +6,7 @@ import PlaygroundLayout from './playground-layout';
 export function ContextMenuExamples() {
   return (
     <PlaygroundLayout title='Context Menu'>
-      <Flex gap='medium' wrap='wrap'>
+      <Flex gap={5} wrap='wrap'>
         <ContextMenu>
           <ContextMenu.Trigger
             style={{

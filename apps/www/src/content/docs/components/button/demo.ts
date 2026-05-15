@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { children, ...rest } = props;
   return `<Button${getPropsString(rest)}>${children}</Button>`;
 };
@@ -37,7 +38,7 @@ export const playground = {
 
 export const variantsDemo = {
   type: 'code',
-  code: `<Flex gap="large">
+  code: `<Flex gap={9}>
     <Button variant="solid">Solid</Button>
     <Button variant="outline">Outline</Button>
     <Button variant="ghost">Ghost</Button>
@@ -51,7 +52,7 @@ export const colorsDemo = {
     {
       name: 'Solid',
       code: `
-      <Flex gap="large">
+      <Flex gap={9}>
         <Button color="success">Accent</Button>
         <Button color="danger">Danger</Button>
         <Button color="neutral">Neutral</Button>
@@ -61,7 +62,7 @@ export const colorsDemo = {
     {
       name: 'Outline',
       code: `
-      <Flex gap="large">
+      <Flex gap={9}>
         <Button variant="outline" color="success">Accent</Button>
         <Button variant="outline" color="danger">Danger</Button>
         <Button variant="outline" color="neutral">Neutral</Button>
@@ -71,7 +72,7 @@ export const colorsDemo = {
     {
       name: 'Ghost',
       code: `
-      <Flex gap="large">
+      <Flex gap={9}>
         <Button variant="ghost" color="success">Accent</Button>
         <Button variant="ghost" color="danger">Danger</Button>
         <Button variant="ghost" color="neutral">Neutral</Button>
@@ -81,7 +82,7 @@ export const colorsDemo = {
     {
       name: 'Text',
       code: `
-      <Flex gap="large">
+      <Flex gap={9}>
         <Button variant="text" color="success">Accent</Button>
         <Button variant="text" color="danger">Danger</Button>
         <Button variant="text" color="neutral">Neutral</Button>
@@ -93,14 +94,14 @@ export const colorsDemo = {
 
 export const sizesDemo = {
   type: 'code',
-  code: `<Flex gap="large" align="center">
+  code: `<Flex gap={9} align="center">
     <Button size="small">Small</Button>
     <Button size="normal">Normal</Button>
   </Flex>`
 };
 export const disabledDemo = {
   type: 'code',
-  code: `<Flex gap="large">
+  code: `<Flex gap={9}>
     <Button variant="solid" disabled>Solid</Button>
     <Button variant="outline" disabled>Outline</Button>
     <Button variant="ghost" disabled>Ghost</Button>
@@ -109,7 +110,7 @@ export const disabledDemo = {
 };
 export const loadingDemo = {
   type: 'code',
-  code: `<Flex gap="large">
+  code: `<Flex gap={9}>
     <Button variant="solid" loading>Button</Button>
     <Button variant="solid" loading loaderText="Loading...">Button</Button>
     <Button variant="outline" loading loaderText="Loading...">Button</Button>
@@ -117,7 +118,7 @@ export const loadingDemo = {
 };
 export const iconsDemo = {
   type: 'code',
-  code: `<Flex gap="large">
+  code: `<Flex gap={9}>
     <Button variant="solid" color="accent" leadingIcon={<>I</>}>With leading icon</Button>
     <Button variant="solid" color="accent" trailingIcon={<>O</>}>With trailing icon</Button>
     <Button variant="solid" color="accent" leadingIcon={<>I</>} trailingIcon={<>O</>}>With both icons</Button>

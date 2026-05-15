@@ -28,7 +28,7 @@ import {
   Flex,
   IconButton,
   Indicator,
-  InputField,
+  Input,
   Menu,
   Navbar,
   Popover,
@@ -96,7 +96,7 @@ const Page = () => {
               >
                 <RadixBellIcon width={24} height={24} />
               </IconButton>
-              <Text size={4} weight='medium'>
+              <Text size='regular' weight='medium'>
                 Raystack
               </Text>
             </Flex>
@@ -286,7 +286,7 @@ const Page = () => {
                   required: true,
                   selected: new Date()
                 }}
-                inputFieldProps={{
+                inputProps={{
                   size: 'small'
                 }}
               />
@@ -315,7 +315,7 @@ const Page = () => {
                   endMonth: dayjs('2027-12-01').toDate(),
                   defaultMonth: dayjs('2027-11-01').toDate()
                 }}
-                inputFieldsProps={{
+                inputsProps={{
                   startDate: {
                     size: 'small'
                   },
@@ -516,7 +516,7 @@ const Page = () => {
                 <Button variant='outline' color='accent' size='small' loading>
                   Search
                 </Button>
-                <InputField size='small' />
+                <Input size='small' />
               </Flex>
 
               {/* Button Examples */}
@@ -1663,7 +1663,7 @@ const Page = () => {
                             </Flex>
                           </Popover.Content>
                         </Popover>
-                        <InputField
+                        <Input
                           placeholder='Type to filter...'
                           leadingIcon={<MixerHorizontalIcon />}
                           width='100%'
@@ -1832,7 +1832,7 @@ const Page = () => {
                             </Flex>
                           </Popover.Content>
                         </Popover>
-                        <InputField
+                        <Input
                           placeholder='Type to filter...'
                           leadingIcon={<MixerHorizontalIcon />}
                           width='100%'
@@ -2239,10 +2239,13 @@ const Page = () => {
 
             <Flex direction='column' gap={6}>
               <Flex direction='column' gap={3}>
-                <Text size={3} weight='medium'>
+                <Text size='small' weight='medium'>
                   Zero State - No Data, No Filters/Search
                 </Text>
-                <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                <Text
+                  size='small'
+                  style={{ color: 'var(--rs-color-text-subtle)' }}
+                >
                   Filter bar is hidden, search is disabled. Shows zeroState when
                   no data is fetched initially.
                 </Text>
@@ -2295,10 +2298,13 @@ const Page = () => {
               </Flex>
 
               <Flex direction='column' gap={3}>
-                <Text size={3} weight='medium'>
+                <Text size='small' weight='medium'>
                   Empty State - Filters Applied, No Results
                 </Text>
-                <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                <Text
+                  size='small'
+                  style={{ color: 'var(--rs-color-text-subtle)' }}
+                >
                   Filter bar is visible, search is enabled. Shows emptyState
                   when filters are applied but no results match.
                 </Text>
@@ -2375,10 +2381,13 @@ const Page = () => {
               </Flex>
 
               <Flex direction='column' gap={3}>
-                <Text size={3} weight='medium'>
+                <Text size='small' weight='medium'>
                   Empty State - Search Applied, No Results (Filter Bar Hidden)
                 </Text>
-                <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                <Text
+                  size='small'
+                  style={{ color: 'var(--rs-color-text-subtle)' }}
+                >
                   Filter bar stays hidden when only search is applied (no
                   filters). Search is enabled. Shows emptyState.
                 </Text>
@@ -2450,10 +2459,13 @@ const Page = () => {
               </Flex>
 
               <Flex direction='column' gap={3}>
-                <Text size={3} weight='medium'>
+                <Text size='small' weight='medium'>
                   Zero State with Custom Content
                 </Text>
-                <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                <Text
+                  size='small'
+                  style={{ color: 'var(--rs-color-text-subtle)' }}
+                >
                   Custom zeroState with action button. Filter bar and search are
                   hidden.
                 </Text>
@@ -2498,7 +2510,7 @@ const Page = () => {
                           style={{ opacity: 0.5 }}
                         />
                         <Flex direction='column' gap={2} align='center'>
-                          <Text size={4} weight='medium'>
+                          <Text size='regular' weight='medium'>
                             No data available
                           </Text>
                           <Text
@@ -2525,10 +2537,13 @@ const Page = () => {
               </Flex>
 
               <Flex direction='column' gap={3}>
-                <Text size={3} weight='medium'>
+                <Text size='small' weight='medium'>
                   Search Override - Always Enabled in Zero State
                 </Text>
-                <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                <Text
+                  size='small'
+                  style={{ color: 'var(--rs-color-text-subtle)' }}
+                >
                   Override auto-disable with autoDisableInZeroState={false}.
                   Filter bar stays hidden when only search is applied.
                 </Text>
@@ -2581,10 +2596,13 @@ const Page = () => {
               </Flex>
 
               <Flex direction='column' gap={3}>
-                <Text size={3} weight='medium'>
+                <Text size='small' weight='medium'>
                   Normal State - Data Present
                 </Text>
-                <Text size={2} style={{ color: 'var(--rs-color-text-subtle)' }}>
+                <Text
+                  size='small'
+                  style={{ color: 'var(--rs-color-text-subtle)' }}
+                >
                   Filter bar and search are enabled when data exists.
                 </Text>
                 <DataTable

@@ -35,7 +35,7 @@ export interface SelectTriggerProps {
   variant?: 'default' | 'filter';
 
   /** Props for the chevron icon. */
-  iconProps?: Record<string, any>;
+  iconProps?: Record<string, unknown>;
 
   /** Accessible label. */
   ariaLabel?: string;
@@ -57,10 +57,22 @@ export interface SelectContentProps {
   searchPlaceholder?: string;
 
   /**
-   * Position of the content
-   * @default "popper"
+   * Which side of the trigger to render the content on.
+   * @default "bottom"
    */
-  position?: 'item-aligned' | 'popper';
+  side?: 'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end';
+
+  /**
+   * Alignment of the content relative to the trigger along the chosen side.
+   * @default "start"
+   */
+  align?: 'start' | 'center' | 'end';
+
+  /**
+   * Distance in pixels between the trigger and the content.
+   * @default 4
+   */
+  sideOffset?: number;
 
   /** Additional CSS class names. */
   className?: string;

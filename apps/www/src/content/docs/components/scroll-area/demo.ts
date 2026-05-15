@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const content = `<Flex direction="column" gap={2}>
     {Array.from({ length: 20 }, (_, i) => (
       <Text key={i} size="small">

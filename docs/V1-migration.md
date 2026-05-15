@@ -14,6 +14,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Callback Signatures](#callback-signatures)
     - [Data Attributes](#data-attributes)
     - [CSS Variables](#css-variables)
+      - [Overlay Tokens](#overlay-tokens)
     - [Form Field Pattern](#form-field-pattern)
   - [Component Migration](#component-migration)
     - [Accordion](#accordion)
@@ -21,6 +22,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Avatar](#avatar)
     - [Breadcrumb](#breadcrumb)
     - [Button](#button)
+    - [Chip](#chip)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
       - [New Features](#new-features)
@@ -36,30 +38,32 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Flex](#flex)
     - [Grid](#grid)
     - [Headline](#headline)
-    - [InputField](#inputfield)
-    - [Popover](#popover)
+    - [Input (formerly InputField)](#input-formerly-inputfield)
       - [New Features](#new-features-5)
+    - [Label](#label)
+    - [Popover](#popover)
+      - [New Features](#new-features-6)
     - [Radio](#radio)
     - [ScrollArea](#scrollarea)
     - [Select](#select)
-      - [New Features](#new-features-6)
+      - [New Features](#new-features-7)
     - [Separator](#separator)
     - [Sheet -\> Drawer](#sheet---drawer)
-      - [New Features](#new-features-7)
-    - [Sidebar](#sidebar)
       - [New Features](#new-features-8)
-    - [Slider](#slider)
+    - [Sidebar](#sidebar)
       - [New Features](#new-features-9)
+    - [Slider](#slider)
+      - [New Features](#new-features-10)
     - [Switch](#switch)
     - [Tabs](#tabs)
-      - [New Features](#new-features-10)
+      - [New Features](#new-features-11)
     - [Text](#text)
     - [TextArea](#textarea)
-      - [New Features](#new-features-11)
-    - [Toast](#toast)
       - [New Features](#new-features-12)
-    - [Tooltip](#tooltip)
+    - [Toast](#toast)
       - [New Features](#new-features-13)
+    - [Tooltip](#tooltip)
+      - [New Features](#new-features-14)
   - [New Components](#new-components)
   - [Removed Exports](#removed-exports)
   - [| `RadioItem` | `Radio` | See Radio |](#-radioitem--radio--see-radio-)
@@ -208,9 +212,24 @@ If you reference these CSS variables in custom styles:
 .accordion-panel { height: var(--accordion-panel-height); }
 ```
 
+#### Overlay Tokens
+
+`--rs-color-overlay-base-primary` has been removed. Its direct equivalent is `--rs-color-overlay-black-a5`. For theme-aware behavior (black in light, white in dark), use `--rs-color-overlay-base-a5` instead.
+
+```css
+/* Before */
+.backdrop { background-color: var(--rs-color-overlay-base-primary); }
+
+/* After — equivalent (always 30% black) */
+.backdrop { background-color: var(--rs-color-overlay-black-a5); }
+
+/* After — theme-aware (30% black in light, 30% white in dark) */
+.backdrop { background-color: var(--rs-color-overlay-base-a5); }
+```
+
 ### Form Field Pattern
 
-Labels, descriptions, errors, and optional indicators have been extracted from individual form controls into a new `Field` wrapper component. This is a **breaking change** for `InputField` and `TextArea`.
+Labels, descriptions, errors, and optional indicators have been extracted from individual form controls into a new `Field` wrapper component. This is a **breaking change** for `InputField` (now `Input`) and `TextArea`.
 
 **Before:** Each control rendered its own label, helper text, and error.
 
@@ -219,20 +238,20 @@ Labels, descriptions, errors, and optional indicators have been extracted from i
 <TextArea label="Bio" helperText="Tell us about yourself" />
 ```
 
-**After:** Wrap controls with `<Field>` for labels, descriptions, and errors. Controls are now pure inputs.
+**After:** Wrap controls with `<Field>` for labels, descriptions, and errors. Controls are now pure inputs. Note: `InputField` has also been renamed to `Input`.
 
 ```tsx
 <Field label="Email" description="We won't share it" error="Required" required={false}>
-  <InputField />
+  <Input />
 </Field>
 <Field label="Bio" description="Tell us about yourself">
   <TextArea />
 </Field>
 ```
 
-The `Field` component also provides context so that child controls (InputField, TextArea, Select, Checkbox, Switch, Radio, NumberField, Combobox) automatically inherit `required` state without passing it explicitly.
+The `Field` component also provides context so that child controls (Input, TextArea, Select, Checkbox, Switch, Radio, NumberField, Combobox) automatically inherit `required` state without passing it explicitly.
 
-See [InputField](#inputfield) and [TextArea](#textarea) for full migration details.
+See [Input (formerly InputField)](#input-formerly-inputfield) and [TextArea](#textarea) for full migration details.
 
 ---
 
@@ -414,6 +433,31 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 // After
 <Button render={<Link to="/settings" />}>Settings</Button>
+```
+
+---
+
+### Chip
+
+**`ariaLabel` prop removed** -- use the standard `aria-label` HTML attribute:
+
+```tsx
+// Before
+<Chip ariaLabel="Dismissible chip" isDismissible onDismiss={...}>
+  Tag
+</Chip>
+
+// After
+<Chip aria-label="Dismissible chip" isDismissible onDismiss={...}>
+  Tag
+</Chip>
+```
+
+`Chip` now forwards all standard HTML attributes through `...props`, making the dedicated `ariaLabel` prop redundant. The auto-fallback to string children when no label is supplied is unchanged:
+
+```tsx
+// Still works — uses "Tag" as the accessibility label
+<Chip>Tag</Chip>
 ```
 
 ---
@@ -719,7 +763,7 @@ Without `items`, `Command` uses its built-in auto-filter over `Command.Item` chi
 
 8. **`onValueChange` receives 2 args** on both the root and `Command.Input` — `(value: string, eventDetails)`.
 
-9. **`Command.Input` props changed.** It now accepts the same props as `InputField` (e.g. `size`, `leadingIcon`, `placeholder`, `autoFocus`). Defaults: `size="large"`, `autoFocus={true}`, leading icon is a magnifying glass. `trailingIcon`, `chips`, `maxChipsVisible`, and `variant` are not accepted.
+9. **`Command.Input` props changed.** It now accepts the same props as `Input` (e.g. `size`, `leadingIcon`, `placeholder`, `autoFocus`). Defaults: `size="large"`, `autoFocus={true}`, leading icon is a magnifying glass. `trailingIcon`, `chips`, `maxChipsVisible`, and `variant` are not accepted.
 
 **Full before/after example:**
 
@@ -895,6 +939,7 @@ import { DropdownMenu } from '@raystack/apsara';
   searchValue={query}
   onSearch={setQuery}
   focusLoop
+  placement="bottom-start"
   onOpenChange={(open) => console.log(open)}
 >
   <DropdownMenu.Trigger asChild>
@@ -928,7 +973,7 @@ import { Menu } from '@raystack/apsara';
   onOpenChange={(open, details) => console.log(open)}
 >
   <Menu.Trigger render={<Button />}>Actions</Menu.Trigger>
-  <Menu.Content sideOffset={8} searchPlaceholder="Filter...">
+  <Menu.Content side="bottom" align="start" sideOffset={8} searchPlaceholder="Filter...">
     <Menu.Group>
       <Menu.Label>File</Menu.Label>
       <Menu.Item leadingIcon={<EditIcon />}>Edit</Menu.Item>
@@ -954,10 +999,14 @@ import { Menu } from '@raystack/apsara';
 | `onSearch` | `onInputValueChange` |
 | `defaultSearchValue` | `defaultInputValue` |
 | `focusLoop` | `loopFocus` (default flipped: was `true`, now `false`) |
+| `placement` (Menu Root) | `side` + `align` (Menu.Content) (split into two props; e.g. `placement="bottom-start"` → `side="bottom" align="start"`) |
+| `onOpenChange={(open) => ...}` | `onOpenChange={(open, eventDetails) => ...}` (signature now receives a second `eventDetails` arg) |
 | `Content gutter={N}` | `Content sideOffset={N}` |
+| `Content shift={N}` | `Content alignOffset={N}` |
 | `Content portal` | Removed (always portaled) |
 | `Content portalElement` | Removed |
 | `Content unmountOnHide` | Removed |
+| `Trigger asChild` / `Content asChild` / `Item asChild` | `render` prop (see [`asChild` Replaced by `render`](#aschild-replaced-by-render)) |
 | `DropdownMenu.TriggerItem` | `Menu.SubmenuTrigger` (inside `Menu.Submenu`) |
 
 #### New Features
@@ -965,6 +1014,8 @@ import { Menu } from '@raystack/apsara';
 - `Menu.Submenu`, `Menu.SubmenuTrigger`, `Menu.SubmenuContent`
 - `Menu.createHandle` for imperative control
 - Menubar integration
+- `defaultOpen` for uncontrolled open state
+- `modal` prop (default `true`) to toggle focus trap / outside-interaction blocking
 
 ---
 
@@ -972,17 +1023,39 @@ import { Menu } from '@raystack/apsara';
 
 ```tsx
 // Before — Flex always rendered as <div>
-<Flex gap="3" align="center">content</Flex>
+<Flex gap={3} align="center">content</Flex>
 
 // After — unchanged for basic usage, but now supports render prop
-<Flex gap="3" align="center">content</Flex>
+<Flex gap={3} align="center">content</Flex>
 
 // New — render as a different element
-<Flex render={<section />} gap="3" align="center">content</Flex>
-<Flex render={<nav />} gap="3" direction="column">links</Flex>
+<Flex render={<section />} gap={3} align="center">content</Flex>
+<Flex render={<nav />} gap={3} direction="column">links</Flex>
 ```
 
 Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors if you typed Flex props explicitly.
+
+**`gap` scale unified to numeric tokens (1–17).** The named aliases (`'extra-small' | 'small' | 'medium' | 'large' | 'extra-large'`) have been removed. `gap` now accepts a number from `1` to `17` mapped directly to `--rs-space-1` through `--rs-space-17`, matching the full spacing token scale (the old numeric set capped at `9`).
+
+| Before | After | Token |
+|---|---|---|
+| `gap="extra-small"` | `gap={2}` | `--rs-space-2` (4px) |
+| `gap="small"` | `gap={3}` | `--rs-space-3` (8px) |
+| `gap="medium"` | `gap={5}` | `--rs-space-5` (16px) |
+| `gap="large"` | `gap={9}` | `--rs-space-9` (32px) |
+| `gap="extra-large"` | `gap={11}` | `--rs-space-11` (48px) |
+
+Numeric values `1`–`9` remain unchanged. Values `10`–`17` are new and unlock the larger spacing tokens (40px, 48px, 56px, 64px, 72px, 80px, 96px, 120px) that were previously inaccessible from `Flex`.
+
+```tsx
+// Before
+<Flex gap="medium" direction="column">…</Flex>
+
+// After
+<Flex gap={5} direction="column">…</Flex>
+```
+
+**TypeScript:** `gap` is now `1 | 2 | … | 17`.
 
 ---
 
@@ -992,7 +1065,7 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 
 ```tsx
 // Before
-<Grid asChild columns="3" gap="4">
+<Grid asChild columns="3" gap="medium">
   <section>
     <Grid.Item asChild colSpan="2">
       <article>Wide content</article>
@@ -1002,11 +1075,35 @@ Type changed to `useRender.ComponentProps<'div'>` -- may cause TypeScript errors
 </Grid>
 
 // After
-<Grid render={<section />} columns="3" gap="4">
+<Grid render={<section />} columns="3" gap={5}>
   <Grid.Item render={<article />} colSpan="2">Wide content</Grid.Item>
   <Grid.Item>Narrow content</Grid.Item>
 </Grid>
 ```
+
+**`gap`, `columnGap`, `rowGap` switched to the same numeric scale as Flex (1–17).** The named aliases (`'extra-small' | 'small' | 'medium' | 'large' | 'extra-large'`) have been removed. Both layout primitives now share a single `gap` token vocabulary, so values are portable between them.
+
+| Before | After | Token |
+|---|---|---|
+| `gap="extra-small"` | `gap={2}` | `--rs-space-2` (4px) |
+| `gap="small"` | `gap={3}` | `--rs-space-3` (8px) |
+| `gap="medium"` | `gap={5}` | `--rs-space-5` (16px) |
+| `gap="large"` | `gap={9}` | `--rs-space-9` (32px) |
+| `gap="extra-large"` | `gap={11}` | `--rs-space-11` (48px) |
+
+The same mapping applies to `columnGap` and `rowGap`.
+
+```tsx
+// Before
+<Grid columns={3} gap="medium" columnGap="large" rowGap="small">…</Grid>
+
+// After
+<Grid columns={3} gap={5} columnGap={9} rowGap={3}>…</Grid>
+```
+
+**Implementation note:** `gap`, `columnGap`, and `rowGap` are now applied via CSS classes (from a shared gap utility reused by `Flex`) instead of inline `style`. Custom CSS that overrode the previous inline `gap` style via `style={{ gap: '...' }}` continues to work as before — your inline override still wins over the class.
+
+**TypeScript:** `gap`, `columnGap`, `rowGap` are now `1 | 2 | … | 17`.
 
 ---
 
@@ -1037,11 +1134,35 @@ The `render` prop also supports render functions for full control:
 
 **TypeScript:** The type changed from `HeadlineBaseProps & ComponentProps<'h1'> & { as?: 'h1' | ... | 'h6' }` to `HeadlineBaseProps & useRender.ComponentProps<'h2'>`. If you explicitly typed Headline props, update to `HeadlineProps` (now exported).
 
+**`size` scale unified to `t1`–`t4` (token-aligned).** The deprecated `'small' | 'medium' | 'large'` aliases have been removed. Use the typographic-token names instead. Each alias was just a CSS shadow over a `t*` token, so the mapping is a straight rename — no visual change.
+
+| Before | After | Token |
+|---|---|---|
+| `size="small"` | `size="t2"` | `--rs-font-size-t2` (24px) |
+| `size="medium"` | `size="t3"` | `--rs-font-size-t3` (28px) |
+| `size="large"` | `size="t4"` | `--rs-font-size-t4` (32px) |
+
+```tsx
+// Before
+<Headline size="large">Page Title</Headline>
+<Headline size="medium">Section</Headline>
+<Headline size="small">Subsection</Headline>
+
+// After
+<Headline size="t4">Page Title</Headline>
+<Headline size="t3">Section</Headline>
+<Headline size="t2">Subsection</Headline>
+```
+
+**TypeScript:** `HeadlineProps['size']` is now `'t1' | 't2' | 't3' | 't4'` (was `'t1' | 't2' | 't3' | 't4' | 'small' | 'medium' | 'large'`).
+
 ---
 
-### InputField
+### Input (formerly InputField)
 
-**Label, helper text, error, and optional indicator moved to `Field` wrapper.** InputField is now a pure input control — wrap it with the new `Field` component for labels, descriptions, and error messages.
+**`InputField` has been renamed to `Input`.** Update all imports and usages: `import { InputField } from "@raystack/apsara"` → `import { Input } from "@raystack/apsara"`.
+
+**Label, helper text, error, and optional indicator moved to `Field` wrapper.** Input is now a pure input control — wrap it with the new `Field` component for labels, descriptions, and error messages.
 
 1. **`label` prop removed** — use `<Field label="...">`:
 
@@ -1051,7 +1172,7 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Email">
-  <InputField placeholder="Enter email" />
+  <Input placeholder="Enter email" />
 </Field>
 ```
 
@@ -1063,7 +1184,7 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Password" description="Must be at least 8 characters">
-  <InputField placeholder="Enter password" />
+  <Input placeholder="Enter password" />
 </Field>
 ```
 
@@ -1075,7 +1196,7 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Email" error="Please enter a valid email">
-  <InputField placeholder="Enter email" />
+  <Input placeholder="Enter email" />
 </Field>
 ```
 
@@ -1087,13 +1208,15 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Phone" required={false}>
-  <InputField placeholder="Enter phone" />
+  <Input placeholder="Enter phone" />
 </Field>
 ```
 
 5. **`infoTooltip` prop removed** — no direct replacement. Compose manually if needed.
 
-6. **`required` now inherited from Field context.** When inside a `<Field>`, the InputField automatically inherits the `required` state. You can still pass `required` directly to override.
+6. **`required` now inherited from Field context.** When inside a `<Field>`, the Input automatically inherits the `required` state. You can still pass `required` directly to override.
+
+7. **`InputFieldProps` type renamed to `InputProps`.** Update any explicit type imports.
 
 **Full before/after example:**
 
@@ -1111,11 +1234,84 @@ The `render` prop also supports render functions for full control:
 
 // After
 <Field label="Email" description="We won't share your email" error={errors.email} required={false}>
-  <InputField placeholder="Enter email" leadingIcon={<MailIcon size={16} />} />
+  <Input placeholder="Enter email" leadingIcon={<MailIcon size={16} />} />
 </Field>
 ```
 
 Unchanged props: `size`, `variant`, `disabled`, `leadingIcon`, `trailingIcon`, `prefix`, `suffix`, `width`, `chips`, `maxChipsVisible`, `containerRef`, and all native `<input>` attributes.
+
+**Related API changes:**
+
+- `DatePicker.inputFieldProps` → `DatePicker.inputProps`
+- `RangePicker.inputFieldsProps` → `RangePicker.inputsProps`
+
+#### New Features
+
+- `onValueChange` callback — provided by Base UI's Input primitive. Fires with the new string value (and an `eventDetails` second arg) alongside the standard `onChange`. Use it when you only need the value:
+
+```tsx
+<Input value={value} onValueChange={setValue} placeholder="Enter text" />
+```
+
+The `Search` component forwards `onValueChange` to the underlying Input, so it works there as well.
+
+---
+
+### Label
+
+The standalone `Label` component has been rebuilt as a polymorphic, layout-neutral component. The old `size` and `requiredIndicator` props are removed and the `required` prop semantics now match `Field.Label`.
+
+1. **`size` prop removed.** Typography is fixed to match `Field.Label` (Body/Mini Plus — medium weight, mini font size, secondary foreground). If you need a different size, render a `Text` instead.
+
+```tsx
+// Before
+<Label size="medium">Email</Label>
+<Label size="large">Email</Label>
+
+// After
+<Label>Email</Label>
+```
+
+2. **`requiredIndicator` prop removed and `required` semantics flipped.** Previously `required={true}` rendered an asterisk via `requiredIndicator` (default `*`). Now `Label` follows the `Field` convention: passing `required={false}` renders an `(optional)` indicator. Customize the text via `optionalText`.
+
+```tsx
+// Before
+<Label required>Email</Label>                                  // shows "Email *"
+<Label required requiredIndicator=" (Required)">Email</Label>  // shows "Email (Required)"
+
+// After
+<Label>Email</Label>                                            // shows "Email"
+<Label required={false}>Email</Label>                           // shows "Email (optional)"
+<Label required={false} optionalText="— not required">Email</Label>
+```
+
+3. **No layout / spacing styles by default.** The new `Label` is typography-only — no `padding-bottom`. Pointer cursor is wired through the `.label[for]` selector, so it activates automatically when `htmlFor` is set. For inline rows next to Radio/Checkbox, compose with `Flex`.
+
+```tsx
+// Before — bare <label> next to a Radio.Item
+<Flex gap="small" align="center">
+  <Radio.Item value="1" id="opt-1" />
+  <label htmlFor="opt-1">Option One</label>
+</Flex>
+
+// After — use Label
+<Flex gap="small" align="center">
+  <Radio value="1" id="opt-1" />
+  <Label htmlFor="opt-1">Option One</Label>
+</Flex>
+```
+
+4. **New: `render` prop.** `Label` now uses `useRender`, so you can swap the underlying element while preserving label semantics, classes, and ref forwarding.
+
+```tsx
+<Label render={<span />}>Inline label</Label>
+```
+
+5. **`Field.Label` now extends `LabelProps`.** `FieldLabelProps = FieldPrimitive.Label.Props & LabelProps`, so any future Label prop flows through automatically. The `(optional)` indicator is now owned by `Label` — no behavior change for callers; `Field.Label required={false}` still renders `(optional)`, and you can now also pass `optionalText` directly on `Field.Label`.
+
+6. **Field spacing tightened.** `Field` now uses `gap: var(--rs-space-2)` (was `--rs-space-1`) and no longer applies `padding-bottom` to the label or `padding-top` to description/error. The visual gap between label / control / helper text is now ~4px (matches Figma). If you were relying on the old spacing, expect a slight reduction in vertical space.
+
+**TypeScript:** The exported `LabelProps` changed from `PropsWithChildren<VariantProps<typeof label>> & Omit<ComponentProps<'label'>, 'required'>` to `useRender.ComponentProps<'label'> & { required?: boolean; optionalText?: string }`.
 
 ---
 
@@ -1269,6 +1465,16 @@ Summary of renames:
 
 3. **`SelectItem` uses `render` prop** instead of `asChild`.
 
+4. **Default alignment changed: bottom-center -> bottom-start (bottom-left).** `Select.Content` now opens flush to the trigger's start edge instead of horizontally centered. Pass `align="center"` to mimic the previous behavior.
+
+```tsx
+// v1 default (bottom-left)
+<Select.Content>...</Select.Content>
+
+// Opt back into v0 behavior
+<Select.Content align="center">...</Select.Content>
+```
+
 #### New Features
 
 - `items` prop for external filtering
@@ -1396,6 +1602,8 @@ If you were attaching refs to `Sidebar`, `Sidebar.Header`, `Sidebar.Main`, `Side
 6. **`Sidebar.Item` role changed: `menuitem` -> `listitem`**
 
 7. **`Sidebar.Footer` role changed: `group` -> `list`**
+
+8. **Spacing tightened to match Figma.** The gap between sidebar groups is now `var(--rs-space-6)` (20px, was 4px), and `.nav-group` / `.nav-group-header` no longer apply a `margin-top`. Collapsed `Sidebar.Item` and `Sidebar.More` tooltips now render with a 16px `sideOffset` for clearance from the rail. If you were overriding sidebar group spacing or tooltip positioning, expect slightly different vertical rhythm.
 
 **Full before/after example:**
 
@@ -1547,7 +1755,7 @@ Key changes:
 #### New Features
 
 - Three variants: `segmented` (default), `standalone`, `plain`
-- Three sizes: `small`, `medium`, `large`
+- Three sizes: `small`, `medium` (default), `large`
 
 ```tsx
 <Tabs variant="standalone" size="small" defaultValue="tab1">
@@ -1595,6 +1803,57 @@ The `render` prop also supports render functions for full control:
 ```
 
 **TypeScript:** The type changed from a discriminated union (`TextSpanProps | TextDivProps | TextLabelProps | TextPProps | TextAProps`) to `TextBaseProps & useRender.ComponentProps<'span'>`. The `render` prop now accepts any element, so you are no longer limited to the five original tag names. The `// @ts-expect-error` that was needed internally for polymorphic refs is also gone.
+
+**`size` scale unified to named tokens.** Numeric sizes (`1`–`10`) have been removed; `Text` now accepts only the named scale `'micro' | 'mini' | 'small' | 'regular' | 'large'` mapped 1:1 to the typography tokens (`--rs-font-size-micro` through `--rs-font-size-large`). The top half of the numeric scale (`7`–`10`) covered title-sized type and was never appropriate on `Text` — those should move to `Headline`.
+
+| Before | After | Token / pixels |
+|---|---|---|
+| `size={1}` | `size="mini"` | 11px (exact) |
+| `size={2}` | `size="small"` | 12px (exact) |
+| `size={3}` | `size="small"` | 13px → 12px (nearest) |
+| `size={4}` | `size="regular"` | 14px (exact) |
+| `size={5}` | `size="large"` | 16px (exact) |
+| `size={6}` | `size="large"` | 18px → 16px (nearest within Text scale) |
+| `size={7}` | `<Headline size="t1">` | 20px (exact) |
+| `size={8}` | `<Headline size="t1">` | 22px → 20px (nearest) |
+| `size={9}` | `<Headline size="t2">` | 24px (exact) |
+| `size={10}` | `<Headline size="t3">` | 28px (exact) |
+
+```tsx
+// Before
+<Text size={2}>Caption</Text>
+<Text size={4}>Body</Text>
+<Text size={9}>Page title</Text>
+
+// After
+<Text size="small">Caption</Text>
+<Text size="regular">Body</Text>
+<Headline size="t2">Page title</Headline>
+```
+
+**`weight` scale unified to `'regular' | 'medium'`.** Numeric weights (`100`–`900`) and the keyword set (`'normal' | 'lighter' | 'bold' | 'bolder'`) have been removed. The token system only defines two weights (`--rs-font-weight-regular` = 400 and `--rs-font-weight-medium` = 500), so accepting the rest was misleading — anything heavier than `500` rendered as whatever the loaded font happened to support.
+
+| Before | After |
+|---|---|
+| `weight="normal"`, `weight="lighter"` | `weight="regular"` |
+| `weight={100}`, `{200}`, `{300}`, `{400}` | `weight="regular"` |
+| `weight={500}` | `weight="medium"` |
+| `weight="bold"`, `weight="bolder"` | `weight="medium"` |
+| `weight={600}`, `{700}`, `{800}`, `{900}` | `weight="medium"` (nearest supported) |
+
+If you relied on the previous heavier weights, bold-looking text now renders as `medium` (500). Use a custom `className` and an explicit font-weight if you need anything outside the token range.
+
+```tsx
+// Before
+<Text weight="bold">Important</Text>
+<Text weight={600}>Heading-ish</Text>
+
+// After
+<Text weight="medium">Important</Text>
+<Text weight="medium">Heading-ish</Text>
+```
+
+**TypeScript:** `TextProps['size']` is now `'micro' | 'mini' | 'small' | 'regular' | 'large'` and `TextProps['weight']` is now `'regular' | 'medium'`.
 
 ---
 
@@ -1716,11 +1975,19 @@ Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, `rows`
 <TextArea rows={6} placeholder="Taller textarea" />
 ```
 
+- `onValueChange` callback — fires alongside `onChange` with the new string value (and the React change event as the second arg). Use it when you only need the value:
+
+```tsx
+<TextArea value={value} onValueChange={setValue} placeholder="Write something..." />
+```
+
 ---
 
 ### Toast
 
-**Exports renamed: `ToastContainer`/`toast` -> `Toast`/`toastManager`**
+The library moved from Sonner to Base UI Toast primitives. The flat `toast()` function with chained shortcuts (`toast.success`, `toast.error`, `toast.dismiss`, …) is replaced by a single `toastManager.add(options)` entrypoint, and the standalone `<ToastContainer />` becomes a context-bearing `<Toast.Provider>` that wraps your tree.
+
+**Exports renamed: `ToastContainer` / `toast` -> `Toast.Provider` / `toastManager`**
 
 ```tsx
 // ===== BEFORE (Sonner-based) =====
@@ -1731,7 +1998,7 @@ function App() {
   return (
     <>
       <MainContent />
-      <ToastContainer />
+      <ToastContainer position="bottom-right" duration={5000} visibleToasts={3} />
     </>
   );
 }
@@ -1740,6 +2007,7 @@ function App() {
 toast('Simple message');
 toast.success('Operation complete');
 toast.error('Something went wrong');
+toast.message('File deleted', { description: 'You can undo this action' });
 toast('File deleted', {
   duration: 5000,
   action: { label: 'Undo', onClick: handleUndo },
@@ -1751,54 +2019,115 @@ toast.dismiss(); // dismiss all
 // ===== AFTER (Base UI-based) =====
 import { Toast, toastManager } from '@raystack/apsara';
 
-// Provider — must wrap app as a context provider
+// Provider — wraps the app and supplies context (required for useToastManager)
 function App() {
   return (
-    <Toast.Provider position="bottom-right">
+    <Toast.Provider position="bottom-right" timeout={5000} limit={3}>
       <MainContent />
     </Toast.Provider>
   );
 }
 
-// Creating toasts
+// Creating toasts — single entrypoint, `type` drives styling and default icon
 toastManager.add({ title: 'Simple message' });
 toastManager.add({ title: 'Operation complete', type: 'success' });
 toastManager.add({ title: 'Something went wrong', type: 'error' });
+toastManager.add({ title: 'File deleted', description: 'You can undo this action' });
 toastManager.add({
   title: 'File deleted',
+  timeout: 5000,
   actionProps: { children: 'Undo', onClick: handleUndo },
 });
-const id = toastManager.add({ title: 'Uploading...' });
+const id = toastManager.add({ title: 'Uploading...', type: 'loading' });
 toastManager.close(id);
-// no built-in dismiss-all
+toastManager.close(); // close all
 ```
 
-**Callbacks changed:**
+**Provider prop mapping (`<ToastContainer>` -> `<Toast.Provider>`):**
+
+| Before | After | Notes |
+| --- | --- | --- |
+| `duration` | `timeout` | Default auto-dismiss in ms; overridable per toast. |
+| `visibleToasts` | `limit` | Max visible toasts (default 3). |
+| `position` | `position` | Same accepted values. |
+| `theme`, `richColors`, `closeButton`, `expand`, `gap`, `offset` | — | Removed. Theme follows the app's theme provider, the close button is always shown, expand-on-hover is always on. |
+
+**Toast option mapping (`toast(msg, options)` -> `toastManager.add(options)`):**
+
+| Before | After | Notes |
+| --- | --- | --- |
+| First-arg message | `title` | Now part of the options object. |
+| `description` | `description` | If `title` is omitted, `description` is promoted into the headline slot so the layout stays single-line. |
+| `duration` | `timeout` | `0` disables auto-dismiss (was `Infinity` in sonner). |
+| `action: { label, onClick }` | `actionProps: { children, onClick, ...buttonProps }` | Accepts any `<button>` props; rendered as a tertiary action button. |
+| `cancel` | — | Removed. |
+| `important` | `priority: 'high'` | Drives `role="alert"` (assertive) instead of `role="status"` (polite). |
+| `icon` | `leadingIcon` | Each `type` ships a sensible default icon. Pass any node to override; pass `null` to render no icon at all. |
+| `onDismiss`, `onAutoClose` | `onClose` | Single callback fired whenever the toast closes (manual, swipe, or timeout). |
+| — | `onRemove` | NEW — fires after the exit animation completes. |
+| `id` | `id` | Same. |
+
+**Type variants replace shortcut methods:**
+
+```tsx
+// Before — chained methods
+toast.success('Done');
+toast.error('Failed');
+toast.info('FYI');
+toast.warning('Heads up');
+toast.loading('Working...');
+
+// After — single `add()`, pass `type`
+toastManager.add({ title: 'Done', type: 'success' });
+toastManager.add({ title: 'Failed', type: 'error' });
+toastManager.add({ title: 'FYI', type: 'info' });
+toastManager.add({ title: 'Heads up', type: 'warning' });
+toastManager.add({ title: 'Working...', type: 'loading' });
+```
+
+`type` drives the leading-icon color and default icon. The toast container itself stays visually neutral across types.
+
+**Promise toast:**
 
 ```tsx
 // Before
-toast('msg', { onDismiss: handler, onAutoClose: handler2 });
+toast.promise(fetchData(), {
+  loading: 'Loading...',
+  success: (data) => `Loaded ${data.name}`,
+  error: 'Failed to load',
+});
 
-// After
-toastManager.add({ title: 'msg', onClose: handler });
+// After — every stage accepts a string or an `update`-shaped options object
+toastManager.promise(fetchData(), {
+  loading: { title: 'Loading...', description: 'Please wait' },
+  success: (data) => ({ title: 'Done!', description: `Loaded ${data.name}`, type: 'success' }),
+  error: { title: 'Failed', type: 'error' },
+});
 ```
+
+**Updating an existing toast (NEW):**
+
+```tsx
+// Before — no in-place update; you had to dismiss + re-create
+const id = toast.loading('Saving...');
+toast.dismiss(id);
+toast.success('Saved');
+
+// After — patch in place, every field optional
+const id = toastManager.add({ title: 'Saving...', type: 'loading' });
+toastManager.update(id, { title: 'Saved', type: 'success', timeout: 3000 });
+```
+
+**Removed: `toast.custom`.** Pass any `ReactNode` to `title` / `description` for rich content.
 
 #### New Features
 
-- Toast stacking with peek animation and expand-on-hover
-- Swipe-to-dismiss
-- `toastManager.update(id, props)` for modifying existing toasts
-- `Toast.createToastManager` and `Toast.useToastManager`
-
-**Promise toast pattern:**
-
-```tsx
-toastManager.promise(fetchData(), {
-  loading: { title: "Loading...", description: "Please wait" },
-  success: { title: "Done!", type: "success" },
-  error: { title: "Failed", type: "error" },
-});
-```
+- Top-level `useToastManager()` hook for dispatching from inside components and reading the reactive `toasts[]` list. Exported standalone (not on the `Toast` namespace) so React's rules-of-hooks lint recognizes it.
+- `Toast.createToastManager()` factory for scoping toasts to a specific provider — pass it via `<Toast.Provider toastManager={...}>`.
+- First-class `leadingIcon`: defaults per `type`, override with any node, opt out with `null`.
+- `toastManager.update(id, options)` patches an existing toast in place.
+- Toast stacking with peek animation, expand-on-hover, and swipe-to-dismiss.
+- `priority: 'high'` switches the live region from polite to assertive; toast motion respects `prefers-reduced-motion`.
 
 ---
 
@@ -1967,9 +2296,12 @@ These are purely additive -- no migration needed.
 - [ ] Rewrite all Tooltip usages to compound component pattern
 - [ ] Update Accordion: `type` -> `multiple`, remove `collapsible`, `forceMount` -> `keepMounted`
 - [ ] Update Command: `Command.List` -> `Command.Content`, `Group heading` -> `<Command.Label>`, `onSelect` -> `onClick`, inline icons -> `leadingIcon`/`trailingIcon`, wrap dialog usages with `Command.DialogTrigger` + `Command.DialogContent` (see [Command](#command))
+- [ ] Update Label usages: drop `size` and `requiredIndicator` props; flip `required` to `required={false}` for an `(optional)` indicator (see [Label](#label))
 - [ ] Wrap InputField usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [InputField](#inputfield))
+- [ ] Rename `InputField` imports/usages to `Input` (see [Input (formerly InputField)](#input-formerly-inputfield))
+- [ ] Wrap Input usages with `<Field>` — move `label`, `helperText`, `error`, `optional` to Field props (see [Input (formerly InputField)](#input-formerly-inputfield))
 - [ ] Wrap TextArea usages with `<Field>` — move `label`, `helperText`, `error`, `required` to Field props (see [TextArea](#textarea))
-- [ ] Remove `infoTooltip` from InputField and TextArea (no longer supported)
+- [ ] Remove `infoTooltip` from Input and TextArea (no longer supported)
 - [ ] Review TextArea usages for overflow behavior change (`hidden` -> `auto`) and removed `min-height` (see [TextArea](#textarea))
 - [ ] Update custom CSS targeting `data-state` attributes (see [Data Attributes](#data-attributes))
 - [ ] Update custom CSS referencing `--radix-*` variables (see [CSS Variables](#css-variables))

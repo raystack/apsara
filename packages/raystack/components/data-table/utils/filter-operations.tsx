@@ -22,6 +22,8 @@ import { DataTableFilterValues } from '../data-table.types';
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
+export type FilterPrimitive = string | string[] | number | boolean | Date;
+
 export type FilterFunctionsMap = {
   number: Record<NumberFilterOperatorType, FilterFn<unknown>>;
   string: Record<StringFilterOperatorType, FilterFn<unknown>>;
@@ -162,12 +164,12 @@ export function getFilterFn<T extends keyof FilterFunctionsMap>(
 
 const handleStringBasedTypes = (
   filterType: FilterTypes,
-  value: any,
+  value: FilterPrimitive,
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes
 ): DataTableFilterValues => {
   switch (filterType) {
     case FilterType.date: {
-      const dateValue = dayjs(value);
+      const dateValue = dayjs(value as string | Date);
       let stringValue = '';
       if (dateValue.isValid()) {
         try {
@@ -183,33 +185,32 @@ const handleStringBasedTypes = (
     }
     case FilterType.select:
       return {
-        stringValue: value === EmptyFilterValue ? '' : value,
+        stringValue: value === EmptyFilterValue ? '' : (value as string),
         value
       };
     case FilterType.multiselect:
       return {
         value,
-        stringValue: value
-          .map((value: any) =>
-            value === EmptyFilterValue ? '' : String(value)
-          )
+        stringValue: (value as string[])
+          .map(item => (item === EmptyFilterValue ? '' : String(item)))
           .join()
       };
     case FilterType.string: {
+      const stringVal = value as string;
+      let processedValue = stringVal;
       // Apply wildcards for ilike operations
-      let processedValue = value;
-      // Check if we need to apply wildcards (operator could be UI type or already converted to 'ilike')
+      // (operator could be UI type or already converted to 'ilike')
       if (operator === 'contains') {
-        processedValue = `%${value}%`;
+        processedValue = `%${stringVal}%`;
       } else if (operator === 'starts_with') {
-        processedValue = `${value}%`;
+        processedValue = `${stringVal}%`;
       } else if (operator === 'ends_with') {
-        processedValue = `%${value}`;
+        processedValue = `%${stringVal}`;
       } else if (operator === 'ilike') {
         // If already converted to ilike, assume it needs contains-style wildcards
         // unless the value already has wildcards
-        if (!value.includes('%')) {
-          processedValue = `%${value}%`;
+        if (!stringVal.includes('%')) {
+          processedValue = `%${stringVal}%`;
         }
       }
       return {
@@ -219,7 +220,7 @@ const handleStringBasedTypes = (
     }
     default:
       return {
-        stringValue: value,
+        stringValue: value as string,
         value
       };
   }
@@ -230,7 +231,7 @@ export const getFilterOperator = ({
   filterType,
   operator
 }: {
-  value: any;
+  value: FilterPrimitive;
   filterType?: FilterTypes;
   operator: FilterOperatorTypes;
 }): DataTableFilterOperatorTypes => {
@@ -257,16 +258,16 @@ export const getFilterValue = ({
   filterType = FilterType.string,
   operator
 }: {
-  value: any;
+  value: FilterPrimitive;
   dataType?: FilterValueType;
   filterType?: FilterTypes;
   operator?: FilterOperatorTypes | DataTableFilterOperatorTypes;
 }): DataTableFilterValues => {
   if (dataType === 'boolean') {
-    return { boolValue: value, value };
+    return { boolValue: value as boolean, value };
   }
   if (dataType === 'number') {
-    return { numberValue: value, value };
+    return { numberValue: value as number, value };
   }
 
   // Handle string-based types

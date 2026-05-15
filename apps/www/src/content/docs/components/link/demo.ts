@@ -1,8 +1,9 @@
 'use client';
 
+import type { ComponentPropsType } from '@/components/demo/types';
 import { getPropsString } from '@/lib/utils';
 
-export const getCode = (props: any) => {
+export const getCode = (props: ComponentPropsType) => {
   const { children, ...rest } = props;
   return `<Link${getPropsString(rest)}>${children}</Link>`;
 };
@@ -46,7 +47,7 @@ export const playground = {
 export const variantDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="center">
+  <Flex gap={5} align="center">
     <Link href="#" variant="primary">Primary Link</Link>
     <Link href="#" variant="secondary">Secondary Link</Link>
     <Link href="#" variant="tertiary">Tertiary Link</Link>
@@ -59,7 +60,7 @@ export const variantDemo = {
 export const sizeDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
      <Link href="#" size="micro">This is a text</Link> 
     <Link href="#" size="mini">This is a text</Link> 
     <Link href="#" size="small">This is a text</Link> 
@@ -70,7 +71,7 @@ export const sizeDemo = {
 export const weightDemo = {
   type: 'code',
   code: `
-  <Flex gap="large" align="center">
+  <Flex gap={9} align="center">
     <Link href="#" weight="regular">This is a text</Link>
     <Link href="#" weight="medium">This is a text</Link>
   </Flex>`
@@ -78,7 +79,7 @@ export const weightDemo = {
 export const styleDemo = {
   type: 'code',
   code: `
-  <Flex gap="medium" align="end">
+  <Flex gap={5} align="end">
     <Link href="#" variant="primary" underline>Underlined Link</Link>
     <Link href="https://example.com" external>External Link</Link>
     <Link href="/assets/logo.svg" download>Download File</Link>

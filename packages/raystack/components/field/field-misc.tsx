@@ -1,28 +1,24 @@
 import { Field as FieldPrimitive } from '@base-ui/react/field';
 import { cx } from 'class-variance-authority';
+import { Label, type LabelProps } from '../label';
 import styles from './field.module.css';
 
-export interface FieldLabelProps extends FieldPrimitive.Label.Props {
-  required?: boolean;
-}
+export type FieldLabelProps = FieldPrimitive.Label.Props & LabelProps;
 
 export function FieldLabel({
-  className,
   ref,
   required,
+  optionalText,
   children,
   ...props
 }: FieldLabelProps) {
   return (
     <FieldPrimitive.Label
       ref={ref}
-      className={cx(styles.label, className)}
+      render={<Label required={required} optionalText={optionalText} />}
       {...props}
     >
       {children}
-      {required === false && (
-        <span className={styles.optional}>(optional)</span>
-      )}
     </FieldPrimitive.Label>
   );
 }

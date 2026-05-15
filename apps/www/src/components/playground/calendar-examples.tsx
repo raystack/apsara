@@ -6,10 +6,10 @@ import PlaygroundLayout from './playground-layout';
 export function CalendarExamples() {
   return (
     <PlaygroundLayout title='Calendar'>
-      <Flex gap='medium' direction='column'>
+      <Flex gap={5} direction='column'>
         <Calendar numberOfMonths={2} />
         <RangePicker inputFieldsProps={{ startDate: { size: 'small' } }} />
-        <DatePicker inputFieldProps={{ size: 'medium' }} />
+        <DatePicker inputFieldProps={{ size: 'small' }} />
       </Flex>
     </PlaygroundLayout>
   );

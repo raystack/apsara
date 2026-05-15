@@ -386,14 +386,16 @@ const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
     filterType: 'string' as const,
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true
+    enableSorting: true,
+    enableHiding: true
   },
   {
     accessorKey: 'email',
     header: 'Email',
     enableColumnFilter: true,
     filterType: 'string' as const,
-    enableSorting: true
+    enableSorting: true,
+    enableHiding: true
   },
   {
     accessorKey: 'role',
@@ -403,6 +405,7 @@ const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
     enableGrouping: true,
     showGroupCount: true,
     enableSorting: true,
+    enableHiding: true,
     filterOptions: [
       { value: 'Admin', label: 'Admin' },
       { value: 'User', label: 'User' },
@@ -414,43 +417,72 @@ const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
     header: 'Department',
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true
+    enableSorting: true,
+    enableHiding: true
   },
   {
     accessorKey: 'team',
     header: 'Team',
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true
+    enableSorting: true,
+    enableHiding: true
   },
   {
     accessorKey: 'location',
     header: 'Location',
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true
+    enableSorting: true,
+    enableHiding: true
   },
-  { accessorKey: 'phone', header: 'Phone' },
+  { accessorKey: 'phone', header: 'Phone', enableHiding: true },
   {
     accessorKey: 'status',
     header: 'Status',
     enableGrouping: true,
     showGroupCount: true,
-    enableSorting: true
+    enableSorting: true,
+    enableHiding: true
   },
-  { accessorKey: 'joined', header: 'Joined', enableSorting: true },
-  { accessorKey: 'name', id: 'name_2', header: 'Name (2)' },
-  { accessorKey: 'email', id: 'email_2', header: 'Email (2)' },
-  { accessorKey: 'role', id: 'role_2', header: 'Role (2)' },
-  { accessorKey: 'department', id: 'dept_2', header: 'Department (2)' },
-  { accessorKey: 'team', id: 'team_2', header: 'Team (2)' },
-  { accessorKey: 'location', id: 'loc_2', header: 'Location (2)' },
-  { accessorKey: 'phone', id: 'phone_2', header: 'Phone (2)' },
-  { accessorKey: 'status', id: 'status_2', header: 'Status (2)' },
-  { accessorKey: 'joined', id: 'joined_2', header: 'Joined (2)' },
-  { accessorKey: 'name', id: 'name_3', header: 'Name (3)' },
-  { accessorKey: 'email', id: 'email_3', header: 'Email (3)' },
-  { accessorKey: 'role', id: 'role_3', header: 'Role (3)' }
+  {
+    accessorKey: 'joined',
+    header: 'Joined',
+    enableSorting: true,
+    enableHiding: true
+  },
+  { accessorKey: 'name', id: 'name_2', header: 'Name', enableHiding: true },
+  { accessorKey: 'email', id: 'email_2', header: 'Email', enableHiding: true },
+  { accessorKey: 'role', id: 'role_2', header: 'Role', enableHiding: true },
+  {
+    accessorKey: 'department',
+    id: 'dept_2',
+    header: 'Department',
+    enableHiding: true
+  },
+  { accessorKey: 'team', id: 'team_2', header: 'Team', enableHiding: true },
+  {
+    accessorKey: 'location',
+    id: 'loc_2',
+    header: 'Location',
+    enableHiding: true
+  },
+  { accessorKey: 'phone', id: 'phone_2', header: 'Phone', enableHiding: true },
+  {
+    accessorKey: 'status',
+    id: 'status_2',
+    header: 'Status',
+    enableHiding: true
+  },
+  {
+    accessorKey: 'joined',
+    id: 'joined_2',
+    header: 'Joined',
+    enableHiding: true
+  },
+  { accessorKey: 'name', id: 'name_3', header: 'Name', enableHiding: true },
+  { accessorKey: 'email', id: 'email_3', header: 'Email', enableHiding: true },
+  { accessorKey: 'role', id: 'role_3', header: 'Role', enableHiding: true }
 ];
 
 const Page = () => {
@@ -470,7 +502,7 @@ const Page = () => {
             <IconButton size={4} onClick={() => {}} aria-label='Logo'>
               <BellIcon width={24} height={24} />
             </IconButton>
-            <Text size={4} weight='medium'>
+            <Text size='regular' weight='medium'>
               Raystack
             </Text>
           </Flex>

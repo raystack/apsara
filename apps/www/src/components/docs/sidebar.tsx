@@ -71,7 +71,7 @@ function renderNode(node: Node, pathname: string): ReactNode {
 
   // Handle page items
   if (node.type === 'page') {
-    return <SidebarItem item={node} pathname={pathname} />;
+    return <SidebarItem item={node} pathname={pathname} key={node.url} />;
   }
 
   // Handle separators (if needed)

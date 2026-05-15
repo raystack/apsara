@@ -1,62 +1,47 @@
-import { cva, type VariantProps } from 'class-variance-authority';
-import { ComponentProps, PropsWithChildren } from 'react';
+'use client';
 
+import { mergeProps, useRender } from '@base-ui/react';
+import { cx } from 'class-variance-authority';
 import styles from './label.module.css';
 
-const label = cva(styles.label, {
-  variants: {
-    size: {
-      small: styles['label-small'],
-      medium: styles['label-medium'],
-      large: styles['label-large']
-    },
-    required: {
-      true: styles['label-required']
-    }
-  },
-  defaultVariants: {
-    size: 'small',
-    required: false
-  }
-});
-
-interface LabelProps
-  extends PropsWithChildren<VariantProps<typeof label>>,
-    Omit<ComponentProps<'label'>, 'required'> {
+export interface LabelProps extends useRender.ComponentProps<'label'> {
+  /**
+   * Whether the labelled control is required. When `false`, an `(optional)`
+   * indicator is rendered next to the label.
+   */
   required?: boolean;
-  requiredIndicator?: string;
-  htmlFor?: string;
+  optionalText?: string;
 }
 
 export function Label({
-  children,
   className,
-  size,
   required,
-  requiredIndicator = '*',
-  htmlFor,
+  render,
+  ref,
+  children,
+  optionalText = '(optional)',
   ...props
 }: LabelProps) {
-  return (
-    <label
-      className={label({ size, required, className })}
-      htmlFor={htmlFor}
-      {...props}
-    >
+  const content = (
+    <>
       {children}
-      {required && (
-        <span
-          className={styles['required-indicator']}
-          aria-hidden='true'
-          role='presentation'
-        >
-          {requiredIndicator}
-        </span>
+      {required === false && (
+        <span className={styles.optional}>{optionalText}</span>
       )}
-    </label>
+    </>
   );
+
+  const element = useRender({
+    defaultTagName: 'label',
+    ref,
+    render,
+    props: mergeProps<'label'>(
+      { className: cx(styles.label, className), children: content },
+      props
+    )
+  });
+
+  return element;
 }
 
 Label.displayName = 'Label';
-
-export type { LabelProps };

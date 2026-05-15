@@ -3,7 +3,7 @@ import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode, RefObject } from 'react';
 import { Chip } from '../chip';
 import { useFieldContext } from '../field';
-import styles from './input-field.module.css';
+import styles from './input.module.css';
 
 const inputWrapper = cva(styles['input-wrapper'], {
   variants: {
@@ -22,7 +22,7 @@ const inputWrapper = cva(styles['input-wrapper'], {
   }
 });
 
-export interface InputFieldProps
+export interface InputProps
   extends Omit<InputPrimitive.Props, 'size'>,
     VariantProps<typeof inputWrapper> {
   disabled?: boolean;
@@ -35,9 +35,10 @@ export interface InputFieldProps
   maxChipsVisible?: number;
   variant?: 'default' | 'borderless';
   containerRef?: RefObject<HTMLDivElement | null>;
+  classNames?: { container?: string };
 }
 
-export function InputField({
+export function Input({
   className,
   disabled,
   placeholder,
@@ -51,9 +52,10 @@ export function InputField({
   size,
   variant = 'default',
   containerRef,
+  classNames,
   required,
   ...props
-}: InputFieldProps) {
+}: InputProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
 
@@ -61,7 +63,8 @@ export function InputField({
     <div
       className={cx(
         inputWrapper({ size, variant }),
-        chips?.length && styles['has-chips']
+        chips?.length && styles['has-chips'],
+        classNames?.container
       )}
       data-disabled={disabled || undefined}
       style={{ width: width || '100%' }}
@@ -99,7 +102,7 @@ export function InputField({
             suffix && styles['has-suffix'],
             className
           )}
-          placeholder={placeholder}
+          placeholder={chips?.length ? undefined : placeholder}
           disabled={disabled}
           required={resolvedRequired}
           {...props}
@@ -114,4 +117,4 @@ export function InputField({
   );
 }
 
-InputField.displayName = 'InputField';
+Input.displayName = 'Input';

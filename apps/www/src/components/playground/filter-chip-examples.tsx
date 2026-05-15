@@ -7,7 +7,7 @@ import PlaygroundLayout from './playground-layout';
 export function FilterChipExamples() {
   return (
     <PlaygroundLayout title='FilterChip'>
-      <Flex gap='large' wrap='wrap'>
+      <Flex gap={9} wrap='wrap'>
         <FilterChip
           label='Status'
           leadingIcon={<Info />}
