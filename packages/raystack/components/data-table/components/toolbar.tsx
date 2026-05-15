@@ -18,7 +18,8 @@ export function Toolbar<TData, TValue>({ className }: { className?: string }) {
     <Flex
       className={cx(styles['toolbar'], className)}
       justify='between'
-      align='center'
+      gap={3}
+      align='start'
     >
       <Filters<TData, TValue> />
       <DisplaySettings />

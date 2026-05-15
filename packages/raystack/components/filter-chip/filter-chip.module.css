@@ -8,15 +8,17 @@
   border-radius: var(--rs-radius-2);
   text-wrap: nowrap;
   width: fit-content;
+  min-width: min-content;
+  overflow: clip;
 }
 
 .chip-default {
   border: 1px solid var(--rs-color-border-base-tertiary);
-  box-shadow: var(--rs-shadow-feather);
 }
 
 .chip-label {
   padding: 0 var(--rs-space-3);
+  flex-shrink: 0;
 }
 .operationText {
   color: var(--rs-color-foreground-base-secondary);
@@ -26,6 +28,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .operationText:hover {
@@ -40,6 +43,7 @@
   background: transparent;
   min-height: unset;
   padding: 0;
+  text-overflow: ellipsis;
 }
 
 /* Control height of Select items */
@@ -54,7 +58,7 @@
   box-shadow: none;
   background: transparent;
   min-height: unset;
-  border-radius: var(--rs-radius-1);
+  border-radius: 0;
   color: var(--rs-color-foreground-base-primary);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
@@ -66,11 +70,13 @@
   display: flex;
   align-items: center;
   height: 100%;
-  padding-left: var(--rs-space-3);
-  padding-right: var(--rs-space-3);
+  padding-left: var(--rs-space-2);
+  padding-right: var(--rs-space-2);
   margin: 0;
-  border-top-right-radius: var(--rs-radius-2);
-  border-bottom-right-radius: var(--rs-radius-2);
+  width: var(--rs-space-7);
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .removeIconContainer:hover {
@@ -102,19 +108,18 @@
   min-height: auto;
   padding: var(--rs-space-2) var(--rs-space-3);
   border-radius: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .selectValue * {
   font-weight: var(--rs-font-weight-regular);
+  min-width: 0;
 }
 
 .operationValue {
   color: var(--rs-color-foreground-base-secondary);
-}
-
-.selectColumn {
-  border-top-right-radius: var(--rs-radius-2);
-  border-bottom-right-radius: var(--rs-radius-2);
+  flex-shrink: 0;
 }
 
 button.selectValue:hover {
@@ -132,14 +137,15 @@ button.selectValue:hover {
 }
 
 .inputFieldWrapper {
-  padding: 0 var(--rs-space-2);
-  min-width: 60px;
+  padding: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .inputField {
-  border-radius: var(--rs-radius-1);
-  min-height: 18px;
-  height: 18px;
+  border-radius: 0;
+  min-height: 22px;
+  height: 22px;
   border: none;
   box-shadow: none;
 }
@@ -151,23 +157,24 @@ button.selectValue:hover {
 }
 
 .inputFieldWrapper input {
-  padding-left: var(--rs-space-2);
-  padding-right: var(--rs-space-2);
+  padding-left: var(--rs-space-3);
+  padding-right: var(--rs-space-3);
 }
 
 .dateFieldWrapper {
-  padding: 0 var(--rs-space-2);
-  min-width: var(--rs-space-17);
+  padding: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .dateField {
-  border-radius: var(--rs-radius-1);
+  border-radius: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  height: 18px;
-  min-height: 18px;
+  width: fit-content;
+  height: 22px;
+  min-height: 22px;
   border: none;
   box-shadow: none;
 }
@@ -180,8 +187,8 @@ button.selectValue:hover {
 
 .dateField input {
   text-align: left;
-  padding-left: var(--rs-space-2);
-  padding-right: var(--rs-space-2);
+  padding-left: var(--rs-space-3);
+  padding-right: var(--rs-space-3);
 }
 
 .dateField [data-trailing] {

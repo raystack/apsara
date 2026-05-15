@@ -1,6 +1,7 @@
 'use client';
 
-import React, { isValidElement, ReactNode, useMemo } from 'react';
+import { cx } from 'class-variance-authority';
+import { isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
 import { Button } from '../../button';
@@ -8,6 +9,7 @@ import { FilterChip, type FilterChipValue } from '../../filter-chip';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Menu } from '../../menu';
+import styles from '../data-table.module.css';
 import { DataTableColumn } from '../data-table.types';
 import { useDataTable } from '../hooks/useDataTable';
 import { useFilters } from '../hooks/useFilters';
@@ -45,7 +47,7 @@ function AddFilter<TData, TValue>({
     else if (children) return children;
     else if (appliedFiltersSet.size > 0)
       return (
-        <IconButton size={4}>
+        <IconButton size={3}>
           <FilterIcon />
         </IconButton>
       );
@@ -88,7 +90,6 @@ export function Filters<TData, TValue>({
   trigger
 }: {
   classNames?: {
-    container?: string;
     filterChips?: string;
     addFilter?: string;
   };
@@ -132,34 +133,29 @@ export function Filters<TData, TValue>({
   return (
     <Flex
       gap={3}
-      className={className}
+      align='center'
+      className={cx(styles.filterContainer, className)}
       data-has-filter-chips={appliedFilters.length > 0 || undefined}
     >
-      {appliedFilters.length > 0 && (
-        <Flex gap={3} className={classNames?.container}>
-          {appliedFilters.map(filter => (
-            <FilterChip
-              key={filter.name}
-              label={filter.label}
-              value={filter.value as FilterChipValue}
-              onRemove={() => handleRemoveFilter(filter.name)}
-              onValueChange={value =>
-                handleFilterValueChange(filter.name, value)
-              }
-              onOperationChange={operator =>
-                handleFilterOperationChange(
-                  filter.name,
-                  operator as FilterOperatorTypes
-                )
-              }
-              columnType={filter.filterType}
-              options={filter.options}
-              selectProps={filter.selectProps}
-              className={classNames?.filterChips}
-            />
-          ))}
-        </Flex>
-      )}
+      {appliedFilters?.map(filter => (
+        <FilterChip
+          key={filter.name}
+          label={filter.label}
+          value={filter.value as FilterChipValue}
+          onRemove={() => handleRemoveFilter(filter.name)}
+          onValueChange={value => handleFilterValueChange(filter.name, value)}
+          onOperationChange={operator =>
+            handleFilterOperationChange(
+              filter.name,
+              operator as FilterOperatorTypes
+            )
+          }
+          columnType={filter.filterType}
+          options={filter.options}
+          selectProps={filter.selectProps}
+          className={classNames?.filterChips}
+        />
+      ))}
       <AddFilter
         columnList={columnList}
         appliedFiltersSet={appliedFiltersSet}

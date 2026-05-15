@@ -1,5 +1,6 @@
 .toolbar {
-  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3) var(--rs-space-5);
+  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3)
+    var(--rs-space-5);
   align-self: stretch;
 
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
@@ -37,7 +38,7 @@
   min-width: 0;
 }
 
-.display-popover-properties-select>span {
+.display-popover-properties-select > span {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -233,4 +234,8 @@
   box-sizing: border-box;
   background: var(--rs-color-background-base-secondary);
   box-shadow: 0 0.5px 0 0 var(--rs-color-border-base-primary);
+}
+
+.filterContainer {
+  flex-wrap: wrap;
 }
