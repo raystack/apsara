@@ -16,6 +16,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [CSS Variables](#css-variables)
       - [Overlay Tokens](#overlay-tokens)
     - [Form Field Pattern](#form-field-pattern)
+    - [Accessibility Baseline (PR #805)](#accessibility-baseline-pr-805)
   - [Component Migration](#component-migration)
     - [Accordion](#accordion)
       - [New Props](#new-props)
@@ -252,6 +253,48 @@ Labels, descriptions, errors, and optional indicators have been extracted from i
 The `Field` component also provides context so that child controls (Input, TextArea, Select, Checkbox, Switch, Radio, NumberField, Combobox) automatically inherit `required` state without passing it explicitly.
 
 See [Input (formerly InputField)](#input-formerly-inputfield) and [TextArea](#textarea) for full migration details.
+
+### Accessibility Baseline (PR #805)
+
+A cross-component accessibility pass landed in v1.0 (closes issue #673). Most changes are additive — new props with safe defaults. A handful change ARIA semantics, DOM structure, or default copy in ways that may require updates in consumer code.
+
+**Consumer-side patterns to grep for:**
+
+| Old | New |
+|-----|-----|
+| `getByRole('listitem')` on Sidebar / List items | Items rely on native semantics now — query the underlying element (`getByRole('link')`, `getByText(...)`, etc.) |
+| `getByRole('img')` on decorative images (`alt=""`) | Use `getByAltText('')` or a selector — empty `alt` is presentational |
+| `getByRole('region')` on unlabelled `Container` | Pass `aria-label` / `aria-labelledby` to opt in to the region landmark |
+| `getByLabelText('Close Drawer')` | `getByLabelText('Close')` (or pass `closeLabel="Close Drawer"` to restore old copy) |
+| `getByRole('status')` to detect a `Button`'s loading state | `expect(button).toHaveAttribute('aria-busy', 'true')` |
+| `[aria-disabled]` CSS selectors on `IconButton` | `[disabled]` or `:disabled` |
+
+**Per-component summary:**
+
+| Component | Change |
+|---|---|
+| AnnouncementBar | Action element is now a real `<button>` (was `<Text onClick>`). Keyboard focusable + focus ring. |
+| Button | `aria-busy` set when `loading`; internal spinner marked `aria-hidden`. |
+| Container | No default `role="region"`. Applied only when `aria-label` / `aria-labelledby` is supplied. |
+| Drawer (formerly Sheet) | Default close button label `"Close Drawer"` → `"Close"`. New `closeLabel` prop. `aria-label` / `aria-labelledby` customisable. |
+| IconButton | Redundant `aria-disabled` removed. `aria-label` strongly recommended in JSDoc. |
+| Image | Redundant `role="img"` + `aria-label={alt}` removed. Empty `alt` is presentational. |
+| Input | `aria-invalid` / `aria-required` flow from `Field` context. Leading / trailing icon wrappers `aria-hidden`. |
+| Label | New `requiredText` + `showRequiredIndicator` props (default off). |
+| Link | Explicit `role="link"` removed. Custom `render` to non-anchor elements no longer announced as links. |
+| List | Redundant `role="listitem"` removed on `<li>`; default `aria-label="List"` removed. `List.Header` has new `level` prop (default `3`, was hardcoded). `role="list"` kept on `<ul>` because Safari drops the implicit role under `list-style: none`. |
+| ScrollArea | `aria-label` / `aria-labelledby` apply `role="region"` to the viewport. |
+| Select | `aria-multiselectable` removed from internal Combobox list (`data-multiselectable` retained for styling). |
+| Separator | New `decorative` prop → `role="presentation"` + `aria-hidden`. |
+| Sidebar | Orphan `role="listitem"` removed from items. |
+| SidePanel | Header title rendered as `<h2>` (was `<span>` via `<Text>`). New `titleId` prop for wiring `aria-labelledby` on the `<aside>`. |
+| Skeleton | Placeholder marked `aria-hidden="true"`. |
+| Spinner | Default behaviour flipped — was `aria-hidden`, now `role="status"` with `aria-label="Loading"` (configurable via new `ariaLabel` prop). Pass `aria-hidden="true"` to opt back to silent (e.g. inside a Button that already has `aria-busy`). |
+| Table | `Table.Head` defaults `scope="col"`. New `Table.Caption` sub-component. |
+| TextArea | `aria-invalid` / `aria-required` flow from `Field` context. |
+| Tooltip | `aria-label` / `aria-labelledby` on `Tooltip.Content` so ReactNode messages can have a clean accessible name. |
+
+No visual breakage is expected — `normalize.css` resets default UA heading margins, and `AnnouncementBar`'s new `<button>` ships with a CSS reset that preserves the prior `<Text>` look.
 
 ---
 
