@@ -21,7 +21,7 @@ const defaultContext: UseThemeProps = { setTheme: _ => {}, themes: [] };
 
 export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
 
-export function ThemeProvider(props: ThemeProviderProps) {
+export function Theme(props: ThemeProviderProps) {
   const context = useContext(ThemeContext);
 
   // Nested usage: scoped subtree. Render a wrapper element that overrides
@@ -29,10 +29,16 @@ export function ThemeProvider(props: ThemeProviderProps) {
   // global state remains the source of truth for descendants reading
   // `useTheme()`.
   if (context) return <Scoped {...props} />;
-  return <Theme {...props} />;
+  return <Root {...props} />;
 }
 
-ThemeProvider.displayName = 'ThemeProvider';
+Theme.displayName = 'Theme';
+
+/**
+ * @deprecated Use `Theme` instead. `ThemeProvider` is kept as an alias for
+ * backward compatibility and will be removed in a future major release.
+ */
+export const ThemeProvider = Theme;
 
 const Scoped = ({
   forcedTheme,
@@ -53,7 +59,7 @@ const Scoped = ({
 
 const defaultThemes: string[] = [...COLOR_SCHEMES];
 
-const Theme = ({
+const Root = ({
   forcedTheme,
   disableTransitionOnChange = false,
   enableSystem = true,
