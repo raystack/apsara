@@ -54,7 +54,7 @@ export function DataViewSearch({
     <Search
       {...props}
       onChange={handleSearch}
-      value={tableQuery?.search}
+      value={tableQuery?.search ?? ''}
       onClear={handleClear}
       disabled={isDisabled}
     />
