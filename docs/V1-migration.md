@@ -841,6 +841,8 @@ import { Command, Button } from '@raystack/apsara';
 <DataTable mode="server" totalRowCount={1000} columns={columns} data={visibleData} />
 ```
 
+- **`DataTable.Filters` `classNames.container` is no longer supported.** The Filters `classNames` prop now accepts only `filterChips` and `addFilter`. Use the `className` prop on `DataTable.Filters` to style the outer wrapper.
+
 ---
 
 ### Dialog
