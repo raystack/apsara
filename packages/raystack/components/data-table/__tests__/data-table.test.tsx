@@ -187,6 +187,27 @@ describe('DataTable', () => {
 
       expect(screen.getByLabelText('Search')).toBeInTheDocument();
     });
+
+    it('clears the search input when the clear button is clicked', async () => {
+      const user = userEvent.setup();
+      render(
+        <DataTable
+          data={mockData}
+          columns={mockColumns}
+          defaultSort={{ name: 'name', order: 'asc' }}
+        >
+          <DataTable.Search showClearButton />
+          <DataTable.Content />
+        </DataTable>
+      );
+
+      const input = screen.getByLabelText('Search') as HTMLInputElement;
+      await user.type(input, 'hello');
+      expect(input.value).toBe('hello');
+
+      await user.click(screen.getByLabelText('Clear search'));
+      expect(input.value).toBe('');
+    });
   });
 
   describe('Zero State and Empty State', () => {

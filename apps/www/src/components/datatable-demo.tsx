@@ -146,4 +146,27 @@ const DataTableVirtualizedDemo = () => {
   );
 };
 
-export { DataTableDemo, DataTableVirtualizedDemo };
+const DataTableSearchDemo = () => {
+  const data = useMemo(() => generateData(50), []);
+
+  return (
+    <Flex
+      direction='column'
+      gap={4}
+      width='full'
+      style={{ height: 400, padding: '20px' }}
+    >
+      <DataTable
+        data={data}
+        mode='client'
+        columns={columns}
+        defaultSort={{ name: 'email', order: 'asc' }}
+      >
+        <DataTable.Search placeholder='Search payments…' showClearButton />
+        <DataTable.Content />
+      </DataTable>
+    </Flex>
+  );
+};
+
+export { DataTableDemo, DataTableSearchDemo, DataTableVirtualizedDemo };

@@ -4,7 +4,7 @@ description: An advanced React table that supports filtering, sorting, and pagin
 source: packages/raystack/components/datatable
 ---
 
-import { preview, virtualizedPreview, rowSelectionDemo } from "./demo.ts";
+import { preview, virtualizedPreview, searchPreview, rowSelectionDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -328,6 +328,8 @@ onColumnVisibilityChange={handleColumnVisibilityChange}>
 ### Using DataTable Search
 
 The `DataTable.Search` component provides search functionality that automatically integrates with the table query. By default, it is disabled in zero state (when no data and no filters/search applied).
+
+<Demo data={searchPreview} />
 
 ```tsx
 <DataTable
