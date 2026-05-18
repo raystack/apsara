@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ThemeSwitcher } from '../switcher';
 import { ThemeProvider, useTheme } from '../theme';
@@ -258,6 +259,97 @@ describe('ThemeProvider', () => {
       );
 
       expect(screen.getByTestId('themes')).toHaveTextContent('light,dark');
+    });
+  });
+
+  describe('resolvedTheme', () => {
+    it('reflects forcedTheme when set', () => {
+      const Probe = () => {
+        const { resolvedTheme } = useTheme();
+        return <span data-testid='resolved'>{resolvedTheme}</span>;
+      };
+
+      render(
+        <ThemeProvider
+          defaultTheme='light'
+          enableSystem={false}
+          forcedTheme='dark'
+        >
+          <Probe />
+        </ThemeProvider>
+      );
+
+      expect(screen.getByTestId('resolved')).toHaveTextContent('dark');
+    });
+  });
+
+  describe('onThemeChange', () => {
+    it('does not fire on initial mount', async () => {
+      const handler = vi.fn();
+
+      render(
+        <ThemeProvider
+          defaultTheme='light'
+          enableSystem={false}
+          onThemeChange={handler}
+        >
+          <div />
+        </ThemeProvider>
+      );
+
+      // Settle any post-mount effects (media-query listener + re-render).
+      await waitFor(() => {
+        expect(document.documentElement.getAttribute('data-theme')).toBe(
+          'light'
+        );
+      });
+
+      expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('fires when setTheme changes the theme', () => {
+      const handler = vi.fn();
+      const Probe = () => {
+        const { setTheme } = useTheme();
+        return <button onClick={() => setTheme('dark')}>set</button>;
+      };
+
+      render(
+        <ThemeProvider
+          defaultTheme='light'
+          enableSystem={false}
+          onThemeChange={handler}
+        >
+          <Probe />
+        </ThemeProvider>
+      );
+
+      fireEvent.click(screen.getByText('set'));
+      expect(handler).toHaveBeenCalledWith('dark', 'dark');
+    });
+
+    it('does not over-fire when the consumer passes an inline callback', () => {
+      const handler = vi.fn();
+      const Tree = () => {
+        const [count, setCount] = useState(0);
+        return (
+          <ThemeProvider
+            defaultTheme='light'
+            enableSystem={false}
+            // Inline arrow: a fresh function identity every render.
+            onThemeChange={(t, r) => handler(t, r)}
+          >
+            <button onClick={() => setCount(c => c + 1)}>bump {count}</button>
+          </ThemeProvider>
+        );
+      };
+
+      render(<Tree />);
+      fireEvent.click(screen.getByText(/bump/));
+      fireEvent.click(screen.getByText(/bump/));
+
+      // Theme never changed; consumer re-renders shouldn't drive the callback.
+      expect(handler).not.toHaveBeenCalled();
     });
   });
 
