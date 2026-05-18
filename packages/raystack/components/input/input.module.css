@@ -87,7 +87,6 @@
 
 .input-field:focus {
   border-color: var(--rs-color-border-accent-emphasis);
-  background: var(--rs-color-background-base-primary);
 }
 
 .input-field[data-disabled] {

@@ -49,6 +49,29 @@ export const virtualizedPreview = {
   ]
 };
 
+export const searchPreview = {
+  type: 'code',
+  style: {
+    padding: 0
+  },
+  previewCode: false,
+  code: `<DataTableSearchDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      <DataTable
+        data={data}
+        mode="client"
+        columns={columns}
+        defaultSort={{ name: "email", order: "asc" }}>
+        <DataTable.Search placeholder="Search payments…" />
+        <DataTable.Content />
+      </DataTable>`
+    }
+  ]
+};
+
 export const rowSelectionDemo = {
   type: 'code',
   previewCode: false,

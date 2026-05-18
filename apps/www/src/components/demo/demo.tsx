@@ -36,7 +36,11 @@ import dayjs from 'dayjs';
 import { Home, Info, Laugh, X } from 'lucide-react';
 import NextLink from 'next/link';
 import { Suspense } from 'react';
-import { DataTableDemo, DataTableVirtualizedDemo } from '../datatable-demo';
+import {
+  DataTableDemo,
+  DataTableSearchDemo,
+  DataTableVirtualizedDemo
+} from '../datatable-demo';
 import DataTableSelectionDemo from '../datatable-selection-demo';
 import ChipInputDemo from '../inputfield-chip-demo';
 import LinearMenuDemo from '../linear-dropdown-demo';
@@ -56,6 +60,7 @@ export default function Demo(props: DemoProps) {
       OrganizationIcon,
       SidebarIcon,
       DataTableDemo,
+      DataTableSearchDemo,
       DataTableVirtualizedDemo,
       ChipInputDemo,
       DataTableSelectionDemo,
