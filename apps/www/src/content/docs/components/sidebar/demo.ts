@@ -23,7 +23,7 @@ export const preview = {
   code: sidebarLayout(`
   <Sidebar defaultOpen>
     <Sidebar.Header>
-      <Flex align="center" gap={3}>
+      <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
         <IconButton size={4} aria-label="Logo">
           <BellIcon width={24} height={24} />
         </IconButton>
@@ -33,6 +33,9 @@ export const preview = {
     <Sidebar.Main>
       <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
         Overview
+      </Sidebar.Item>
+      <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>
+        Preview
       </Sidebar.Item>
       <Sidebar.Group label="Main">
         <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>
@@ -71,7 +74,7 @@ export const positionDemo = {
       code: sidebarLayout(`
       <Sidebar open={true} position="left">
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -96,7 +99,7 @@ export const positionDemo = {
       code: sidebarLayoutRight(`
       <Sidebar open={true} position="right">
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -128,7 +131,7 @@ export const variantDemo = {
       code: sidebarLayout(`
       <Sidebar open={true} variant="plain">
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -149,7 +152,7 @@ export const variantDemo = {
       code: sidebarLayout(`
       <Sidebar open={true} variant="floating">
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -170,7 +173,7 @@ export const variantDemo = {
       code: sidebarLayout(`
       <Sidebar open={true} variant="inset">
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -197,7 +200,7 @@ export const stateDemo = {
       name: 'Expanded',
       code: sidebarLayout(`<Sidebar open={true}>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -221,7 +224,7 @@ export const stateDemo = {
       name: 'Collapsed',
       code: sidebarLayout(`<Sidebar open={false}>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -245,7 +248,7 @@ export const stateDemo = {
       name: 'Uncontrolled',
       code: sidebarLayout(`<Sidebar>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -269,7 +272,7 @@ export const stateDemo = {
       name: 'Uncontrolled (default open)',
       code: sidebarLayout(`<Sidebar defaultOpen>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -300,7 +303,7 @@ export const tooltipDemo = {
           tooltipMessage="Toggle navigation"
         >
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -326,7 +329,7 @@ export const collapsibleDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen collapsible={false}>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -348,7 +351,7 @@ export const hideTooltipDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen={false} hideCollapsedItemTooltip>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -373,7 +376,7 @@ export const collapsibleGroupDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -412,7 +415,7 @@ export const controlledGroupDemo = {
           return (
             ${sidebarLayout(`<Sidebar defaultOpen>
               <Sidebar.Header>
-                <Flex align="center" gap={3}>
+                <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
                   <IconButton size={4} aria-label="Logo">
                     <BellIcon width={24} height={24} />
                   </IconButton>
@@ -459,7 +462,7 @@ export const groupIconDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>
@@ -492,7 +495,7 @@ export const moreDemo = {
   type: 'code',
   code: sidebarLayout(`<Sidebar defaultOpen>
           <Sidebar.Header>
-            <Flex align="center" gap={3}>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
                 <BellIcon width={24} height={24} />
               </IconButton>

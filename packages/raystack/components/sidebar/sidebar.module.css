@@ -9,6 +9,7 @@
   flex-shrink: 0;
   background: var(--rs-color-background-base-primary);
   position: relative;
+  gap: var(--rs-space-6);
 }
 
 .root[data-position="left"] {
@@ -42,7 +43,7 @@
 
 .header {
   gap: var(--rs-space-3);
-  padding: var(--rs-space-2) var(--rs-space-5) var(--rs-space-7);
+  padding: 0 var(--rs-space-4);
   align-self: stretch;
   background: var(--rs-color-background-base-primary);
   overflow: hidden;
@@ -53,7 +54,6 @@
   overflow-y: auto;
   align-self: stretch;
   padding: 0 var(--rs-space-4);
-  gap: var(--rs-space-6);
   align-items: flex-start;
 }
 
@@ -241,6 +241,10 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+}
+
+.main .nav-group:not(:first-child) {
+  margin-top: var(--rs-space-4);
 }
 
 .root[data-closed] .nav-group {

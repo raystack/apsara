@@ -14,6 +14,7 @@ export function SidebarMain({
       className={cx(styles.main, className)}
       direction='column'
       role='group'
+      gap={2}
       aria-label='Main navigation'
       {...props}
     />
