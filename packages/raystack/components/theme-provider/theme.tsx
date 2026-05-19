@@ -55,22 +55,31 @@ const StatelessScope = ({
   children
 }: ThemeProviderProps) => {
   const parent = useContext(ThemeContext);
+  const hasOverrides = !!(forcedTheme || accentColor || grayColor || style);
 
   // Layer scope overrides on top of the parent's context so `useTheme()`
-  // inside the scope sees the effective values. setTheme passes through —
-  // stateless scopes own no theme state.
+  // inside the scope sees the effective values. When no overrides are
+  // passed, return parent unchanged so the early-return below skips the
+  // wrapper entirely (preserves the pre-PR no-op behavior).
   const layered = useMemo<UseThemeProps | undefined>(
     () =>
-      parent && {
-        ...parent,
-        forcedTheme: forcedTheme ?? parent.forcedTheme,
-        resolvedTheme: forcedTheme ?? parent.resolvedTheme,
-        style: style ?? parent.style,
-        accentColor: accentColor ?? parent.accentColor,
-        grayColor: grayColor ?? parent.grayColor
-      },
-    [parent, forcedTheme, style, accentColor, grayColor]
+      !parent || !hasOverrides
+        ? parent
+        : {
+            ...parent,
+            forcedTheme: forcedTheme ?? parent.forcedTheme,
+            resolvedTheme: forcedTheme ?? parent.resolvedTheme,
+            style: style ?? parent.style,
+            accentColor: accentColor ?? parent.accentColor,
+            grayColor: grayColor ?? parent.grayColor
+          },
+    [parent, hasOverrides, forcedTheme, style, accentColor, grayColor]
   );
+
+  // No-op nesting: pass children through without a wrapper or new provider.
+  // Avoids the extra DOM node and the redundant context propagation when a
+  // consumer renders `<Theme>` inside another `<Theme>` without overrides.
+  if (!hasOverrides) return <>{children}</>;
 
   return (
     <ThemeContext value={layered}>
@@ -85,6 +94,8 @@ const StatelessScope = ({
     </ThemeContext>
   );
 };
+
+StatelessScope.displayName = 'Theme.StatelessScope';
 
 const readScopeStorage = (key: string): string | undefined => {
   if (isServer) return undefined;
@@ -120,12 +131,16 @@ const PersistedScope = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
-  // Persist on change; clear when unset.
+  // Persist on change; clear when unset. Compare against the current
+  // storage value first so initial mounts (and StrictMode double-effects)
+  // don't write back what we just read or fire spurious storage events to
+  // other tabs.
   useEffect(() => {
     try {
+      const current = localStorage.getItem(key);
       if (stored === undefined) {
-        localStorage.removeItem(key);
-      } else {
+        if (current !== null) localStorage.removeItem(key);
+      } else if (current !== stored) {
         localStorage.setItem(key, stored);
       }
     } catch {
@@ -177,6 +192,8 @@ const PersistedScope = ({
     </ThemeContext>
   );
 };
+
+PersistedScope.displayName = 'Theme.PersistedScope';
 
 const defaultThemes: string[] = [...COLOR_SCHEMES];
 
@@ -397,6 +414,8 @@ const Root = ({
     </ThemeContext>
   );
 };
+
+Root.displayName = 'Theme.Root';
 
 const ThemeScript = memo(
   ({

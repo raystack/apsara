@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ThemeProvider, useTheme } from '../theme';
+import { Theme, useTheme } from '../theme';
 
 // jsdom doesn't ship these; the root ThemeProvider needs them on mount.
 Object.defineProperty(window, 'localStorage', {
@@ -50,11 +50,11 @@ afterEach(() => {
 describe('ThemeProvider (scoped)', () => {
   it('renders a div wrapper with children when nested', () => {
     render(
-      <ThemeProvider>
-        <ThemeProvider forcedTheme='dark'>
+      <Theme>
+        <Theme forcedTheme='dark'>
           <span data-testid='child'>inside</span>
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     const child = screen.getByTestId('child');
@@ -64,11 +64,11 @@ describe('ThemeProvider (scoped)', () => {
 
   it('writes data-theme on the scoped wrapper', () => {
     render(
-      <ThemeProvider>
-        <ThemeProvider forcedTheme='dark'>
+      <Theme>
+        <Theme forcedTheme='dark'>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     expect(screen.getByTestId('child').parentElement).toHaveAttribute(
@@ -77,34 +77,34 @@ describe('ThemeProvider (scoped)', () => {
     );
   });
 
-  it('omits data attributes when their props are not provided', () => {
-    render(
-      <ThemeProvider>
-        <ThemeProvider>
+  it('passes children through unchanged when no override props are provided', () => {
+    // No-op nesting: a nested `<Theme>` with no override props should not
+    // introduce a wrapper element. This preserves the pre-PR behavior for
+    // consumers who accidentally nest providers.
+    const { container } = render(
+      <Theme>
+        <Theme>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
-    const wrapper = screen.getByTestId('child').parentElement!;
-    expect(wrapper).not.toHaveAttribute('data-theme');
-    expect(wrapper).not.toHaveAttribute('data-accent-color');
-    expect(wrapper).not.toHaveAttribute('data-gray-color');
-    expect(wrapper).not.toHaveAttribute('data-style');
+    // The child's parent is the test container — no scope wrapper in between.
+    expect(screen.getByTestId('child').parentElement).toBe(container);
   });
 
   it('writes every supported data attribute', () => {
     render(
-      <ThemeProvider>
-        <ThemeProvider
+      <Theme>
+        <Theme
           forcedTheme='light'
           accentColor='orange'
           grayColor='mauve'
           style='traditional'
         >
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     const wrapper = screen.getByTestId('child').parentElement!;
@@ -116,11 +116,11 @@ describe('ThemeProvider (scoped)', () => {
 
   it('does not propagate scope attrs to the document root', () => {
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider forcedTheme='dark' accentColor='orange'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme forcedTheme='dark' accentColor='orange'>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     // Root provider drives <html>'s attrs; scope only changes its own wrapper.
@@ -153,15 +153,11 @@ describe('useTheme inside a stateless scope', () => {
     };
 
     render(
-      <ThemeProvider
-        defaultTheme='dark'
-        enableSystem={false}
-        accentColor='indigo'
-      >
-        <ThemeProvider forcedTheme='light' accentColor='orange'>
+      <Theme defaultTheme='dark' enableSystem={false} accentColor='indigo'>
+        <Theme forcedTheme='light' accentColor='orange'>
           <Probe />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     // theme is the user's stored preference — stateless scope doesn't own it.
@@ -181,11 +177,11 @@ describe('useTheme inside a stateless scope', () => {
     };
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider forcedTheme='dark'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme forcedTheme='dark'>
           <Probe />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     fireEvent.click(screen.getByText('set'));
@@ -212,11 +208,11 @@ describe('ThemeProvider (persistent scope)', () => {
     );
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-1'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-1'>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     expect(screen.getByTestId('child').parentElement).toHaveAttribute(
@@ -229,11 +225,11 @@ describe('ThemeProvider (persistent scope)', () => {
     localStorageMock.getItem.mockReturnValue(null);
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-2' defaultTheme='dark'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-2' defaultTheme='dark'>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     expect(screen.getByTestId('child').parentElement).toHaveAttribute(
@@ -246,11 +242,11 @@ describe('ThemeProvider (persistent scope)', () => {
     localStorageMock.getItem.mockReturnValue(null);
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-3'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-3'>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     // No data-theme on wrapper → CSS inherits from parent.
@@ -265,11 +261,11 @@ describe('ThemeProvider (persistent scope)', () => {
     );
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-4' forcedTheme='light'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-4' forcedTheme='light'>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     // Displayed = forcedTheme; storage untouched.
@@ -299,11 +295,11 @@ describe('ThemeProvider (persistent scope)', () => {
     };
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-5'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-5'>
           <Probe />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     expect(screen.getByTestId('theme')).toHaveTextContent('dark');
@@ -327,12 +323,12 @@ describe('ThemeProvider (persistent scope)', () => {
     };
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-6'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-6'>
           <Probe />
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     fireEvent.click(screen.getByText('clear'));
@@ -349,11 +345,11 @@ describe('ThemeProvider (persistent scope)', () => {
     );
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-7'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-7'>
           <span data-testid='child' />
-        </ThemeProvider>
-      </ThemeProvider>
+        </Theme>
+      </Theme>
     );
 
     expect(screen.getByTestId('child').parentElement).toHaveAttribute(
@@ -386,13 +382,13 @@ describe('ThemeProvider (persistent scope)', () => {
     });
 
     render(
-      <ThemeProvider defaultTheme='light' enableSystem={false}>
-        <ThemeProvider storageKey='scope-outer'>
-          <ThemeProvider storageKey='scope-inner'>
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme storageKey='scope-outer'>
+          <Theme storageKey='scope-inner'>
             <span data-testid='inner' />
-          </ThemeProvider>
-        </ThemeProvider>
-      </ThemeProvider>
+          </Theme>
+        </Theme>
+      </Theme>
     );
 
     const innerWrapper = screen.getByTestId('inner').parentElement!;
