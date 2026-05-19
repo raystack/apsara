@@ -11,6 +11,7 @@
 }
 
 /* Native UI (form controls, scrollbars, text selection) follows the scoped theme */
+:root,
 [data-theme="light"] {
     color-scheme: light;
 }
@@ -20,6 +21,7 @@
 }
 
 /* Light Theme Colors */
+:root,
 [data-theme="light"] {
     /* Neutral Colors */
     --rs-neutral-1: var(--rs-gray-1);

@@ -5,6 +5,7 @@
  */
 
 
+:root,
 [data-gray-color='gray'],
 [data-theme='light'] {
     --rs-gray-1: oklch(0.9911 0 0);
