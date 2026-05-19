@@ -6,23 +6,21 @@
   background-color: transparent;
   border-radius: var(--rs-radius-1);
   border: none;
-  color: var(--rs-color-foreground-base-primary);
+  color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   transition: var(--rs-transition-interactive);
   padding: var(--rs-space-1);
 }
 
-.iconButton:hover:not(:disabled) {
+.iconButton:hover:not(:disabled),
+.iconButton:active:not(:disabled) {
   background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
 }
 
 .iconButton:disabled {
   opacity: 0.5;
   cursor: default;
-}
-
-.iconButton:active:not(:disabled) {
-  background-color: var(--rs-color-background-neutral-primary);
 }
 
 .iconButton-size-1 {
