@@ -183,7 +183,7 @@ A scope can override accent or gray independently of theme. This is useful for h
 
 ### State management
 
-Nested `ThemeProvider` is stateless — the consumer owns the theme value. For an interactive scope, drive it with React state:
+By default, a nested `ThemeProvider` is stateless — the consumer owns the theme value. For an interactive scope, drive it with React state:
 
 ```tsx
 const [scopeTheme, setScopeTheme] = useState<'light' | 'dark'>('dark');
@@ -196,7 +196,42 @@ const [scopeTheme, setScopeTheme] = useState<'light' | 'dark'>('dark');
 </ThemeProvider>
 ```
 
-If you need persistence across page loads, manage it yourself with `localStorage` and a `useEffect`. Nested providers deliberately avoid touching storage to keep them pure and to avoid disambiguation issues when multiple scopes share a page.
+### Persistent scope
+
+Pass `storageKey` to a nested `ThemeProvider` and it becomes stateful, persisting the scope's theme to localStorage. Descendants read and update it through the same `useTheme()` hook — it returns the nearest provider's state, so inside a persistent scope it returns the scope's theme and setter:
+
+```tsx
+import { ThemeProvider, useTheme } from "@raystack/apsara";
+
+function ScopeToggle() {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Toggle (currently {theme ?? "inherited"})
+    </button>
+  );
+}
+
+<ThemeProvider storageKey="dashboard-theme" defaultTheme="dark">
+  <ScopeToggle />
+  <Dashboard />
+</ThemeProvider>
+```
+
+**Behavior:**
+
+- On mount, the scope reads `localStorage[storageKey]`. If present, that value wins. Otherwise the scope uses `defaultTheme`. If neither is set, the scope inherits from its parent (no `data-theme` on the wrapper).
+- Inside the scope, `useTheme()` returns layered state: scope-owned fields (`theme`, `setTheme`) come from the scope; the rest (`themes`, `systemTheme`, etc.) are inherited from the root.
+- `setTheme(value)` updates state and writes to the scope's localStorage key.
+- `setTheme(undefined)` clears the storage entry and re-inherits from the parent.
+- Changes from other tabs propagate automatically via the `storage` event.
+- `forcedTheme`, if passed, wins over storage for display but is **not** persisted — it's a developer override, not a user choice.
+
+**Gotchas:**
+
+- Use a distinct `storageKey` per scope. Multiple scopes sharing one key is undefined behavior within the same tab.
+- There is no FOUC prevention for nested scopes. On reload, the scope renders with `defaultTheme` (or inherits) for one paint, then snaps to the saved value once React hydrates. For above-the-fold scopes you'll see a brief flash. The root provider's inline script protects `<html>` only; per-scope inline scripts are not emitted in this version.
 
 ### When to reach for a nested provider vs. the bare attribute
 

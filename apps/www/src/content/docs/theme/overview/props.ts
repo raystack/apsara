@@ -79,13 +79,13 @@ export type ThemeProviderProps = {
 };
 
 export type UseThemeProps = {
-  /** Current theme name ("light", "dark", or "system") */
+  /** Current theme name (root: user preference; persistent scope: stored value) */
   theme?: string;
 
-  /** Function to change the theme */
-  setTheme: (theme: string) => void;
+  /** Update the theme. Pass `undefined` in a persistent scope to clear it and re-inherit from the parent. */
+  setTheme: (theme: string | undefined) => void;
 
-  /** Resolved theme ("light" or "dark"), useful when theme is "system" */
+  /** Resolved theme — what's actually applied (`"light"`/`"dark"`, or `forcedTheme` if set) */
   resolvedTheme?: string;
 
   /** System preference, regardless of current theme */
@@ -96,4 +96,13 @@ export type UseThemeProps = {
 
   /** Forced theme if set, otherwise undefined */
   forcedTheme?: string;
+
+  /** Active style variant */
+  style?: 'modern' | 'traditional';
+
+  /** Active accent color */
+  accentColor?: 'indigo' | 'orange' | 'mint';
+
+  /** Active gray color */
+  grayColor?: 'gray' | 'mauve' | 'slate';
 };

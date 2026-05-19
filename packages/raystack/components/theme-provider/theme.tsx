@@ -40,22 +40,143 @@ Theme.displayName = 'Theme';
  */
 export const ThemeProvider = Theme;
 
-const Scoped = ({
+const Scoped = (props: ThemeProviderProps) =>
+  props.storageKey ? (
+    <PersistedScope {...props} />
+  ) : (
+    <StatelessScope {...props} />
+  );
+
+const StatelessScope = ({
   forcedTheme,
   accentColor,
   grayColor,
   style,
   children
-}: ThemeProviderProps) => (
-  <div
-    data-theme={forcedTheme}
-    data-accent-color={accentColor}
-    data-gray-color={grayColor}
-    data-style={style}
-  >
-    {children}
-  </div>
-);
+}: ThemeProviderProps) => {
+  const parent = useContext(ThemeContext);
+
+  // Layer scope overrides on top of the parent's context so `useTheme()`
+  // inside the scope sees the effective values. setTheme passes through —
+  // stateless scopes own no theme state.
+  const layered = useMemo<UseThemeProps | undefined>(
+    () =>
+      parent && {
+        ...parent,
+        forcedTheme: forcedTheme ?? parent.forcedTheme,
+        resolvedTheme: forcedTheme ?? parent.resolvedTheme,
+        style: style ?? parent.style,
+        accentColor: accentColor ?? parent.accentColor,
+        grayColor: grayColor ?? parent.grayColor
+      },
+    [parent, forcedTheme, style, accentColor, grayColor]
+  );
+
+  return (
+    <ThemeContext value={layered}>
+      <div
+        data-theme={forcedTheme}
+        data-accent-color={accentColor}
+        data-gray-color={grayColor}
+        data-style={style}
+      >
+        {children}
+      </div>
+    </ThemeContext>
+  );
+};
+
+const readScopeStorage = (key: string): string | undefined => {
+  if (isServer) return undefined;
+  try {
+    return localStorage.getItem(key) ?? undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const PersistedScope = ({
+  storageKey,
+  defaultTheme,
+  forcedTheme,
+  accentColor,
+  grayColor,
+  style,
+  children
+}: ThemeProviderProps) => {
+  // `storageKey!` is safe: the chooser only routes here when defined.
+  const key = storageKey as string;
+  const parent = useContext(ThemeContext);
+
+  const [stored, setStored] = useState<string | undefined>(
+    () => readScopeStorage(key) ?? defaultTheme
+  );
+
+  // Re-sync if the storageKey itself changes mid-life.
+  useEffect(() => {
+    setStored(readScopeStorage(key) ?? defaultTheme);
+    // defaultTheme is the seed only when storage is empty; intentionally
+    // excluded from deps to avoid re-applying it on prop changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key]);
+
+  // Persist on change; clear when unset.
+  useEffect(() => {
+    try {
+      if (stored === undefined) {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, stored);
+      }
+    } catch {
+      // unsupported (private mode, quota exceeded)
+    }
+  }, [key, stored]);
+
+  // Cross-tab sync.
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== key) return;
+      setStored(e.newValue ?? undefined);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [key]);
+
+  // forcedTheme wins for display but is NOT persisted — it's a developer
+  // override, not a user choice.
+  const displayed = forcedTheme ?? stored;
+
+  // Override theme + setTheme to point at this scope's state, inherit the
+  // rest from the parent (themes list, systemTheme, etc.).
+  const layered = useMemo<UseThemeProps | undefined>(
+    () =>
+      parent && {
+        ...parent,
+        theme: stored,
+        setTheme: setStored,
+        forcedTheme: forcedTheme ?? parent.forcedTheme,
+        resolvedTheme: displayed ?? parent.resolvedTheme,
+        style: style ?? parent.style,
+        accentColor: accentColor ?? parent.accentColor,
+        grayColor: grayColor ?? parent.grayColor
+      },
+    [parent, stored, displayed, forcedTheme, style, accentColor, grayColor]
+  );
+
+  return (
+    <ThemeContext value={layered}>
+      <div
+        data-theme={displayed}
+        data-accent-color={accentColor}
+        data-gray-color={grayColor}
+        data-style={style}
+      >
+        {children}
+      </div>
+    </ThemeContext>
+  );
+};
 
 const defaultThemes: string[] = [...COLOR_SCHEMES];
 
@@ -140,7 +261,10 @@ const Root = ({
   );
 
   const setTheme = useCallback(
-    (theme: string) => {
+    (theme: string | undefined) => {
+      // Root has no parent to inherit from, so `undefined` is a no-op here.
+      // (Persistent scopes use `undefined` to clear and re-inherit.)
+      if (theme === undefined) return;
       setThemeState(theme);
 
       // Save to storage

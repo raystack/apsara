@@ -17,14 +17,25 @@ export interface UseThemeProps {
   themes: string[];
   /** Forced theme name for the current page */
   forcedTheme?: string;
-  /** Update the theme */
-  setTheme: (theme: string) => void;
+  /**
+   * Update the theme. At the root this persists the user's choice. Inside a
+   * persistent scope (a nested `<Theme storageKey=…>`) it updates and persists
+   * the scope's theme; passing `undefined` clears the scope's storage entry
+   * and re-inherits from the parent.
+   */
+  setTheme: (theme: string | undefined) => void;
   /** Active theme name */
   theme?: string;
   /** The actually applied theme. Returns `forcedTheme` when set; otherwise the system preference (`"light"`/`"dark"`) when `theme` is `"system"`; otherwise identical to `theme`. */
   resolvedTheme?: string;
   /** If enableSystem is true, returns the System theme preference ("dark" or "light"), regardless what the active theme is */
   systemTheme?: 'dark' | 'light';
+  /** Active style variant. Reflects the nearest provider's effective value. */
+  style?: StyleVariant;
+  /** Active accent color. Reflects the nearest provider's effective value. */
+  accentColor?: AccentColor;
+  /** Active gray color. Reflects the nearest provider's effective value. */
+  grayColor?: GrayColor;
 }
 
 export interface ThemeProviderProps {
