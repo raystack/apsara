@@ -54,12 +54,10 @@ export function Input({
   containerRef,
   classNames,
   required,
-  'aria-invalid': ariaInvalid,
   ...props
 }: InputProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
-  const resolvedInvalid = ariaInvalid ?? fieldContext?.invalid ?? undefined;
 
   return (
     <div
@@ -109,8 +107,6 @@ export function Input({
           placeholder={chips?.length ? undefined : placeholder}
           disabled={disabled}
           required={resolvedRequired}
-          aria-invalid={resolvedInvalid}
-          aria-required={resolvedRequired || undefined}
           {...props}
         />
       </div>

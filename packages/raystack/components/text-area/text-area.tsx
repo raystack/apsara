@@ -48,12 +48,10 @@ export function TextArea({
   required,
   size,
   variant,
-  'aria-invalid': ariaInvalid,
   ...props
 }: TextAreaProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
-  const resolvedInvalid = ariaInvalid ?? fieldContext?.invalid ?? undefined;
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     onChange?.(event);
@@ -73,8 +71,6 @@ export function TextArea({
       disabled={disabled}
       placeholder={placeholder}
       required={resolvedRequired}
-      aria-invalid={resolvedInvalid}
-      aria-required={resolvedRequired || undefined}
       style={{ ...style, width }}
       {...props}
     />
