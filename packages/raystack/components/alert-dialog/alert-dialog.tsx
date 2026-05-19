@@ -5,8 +5,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-  CloseButton
+  AlertDialogTitle
 } from './alert-dialog-misc';
 
 export const AlertDialog = Object.assign(AlertDialogPrimitive.Root, {
@@ -16,7 +15,6 @@ export const AlertDialog = Object.assign(AlertDialogPrimitive.Root, {
   Trigger: AlertDialogPrimitive.Trigger,
   Content: AlertDialogContent,
   Close: AlertDialogPrimitive.Close,
-  CloseButton: CloseButton,
   Title: AlertDialogTitle,
   Description: AlertDialogDescription,
   createHandle: AlertDialogPrimitive.createHandle

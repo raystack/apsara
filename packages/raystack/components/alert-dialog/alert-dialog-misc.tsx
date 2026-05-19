@@ -1,7 +1,6 @@
 'use client';
 
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react';
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
 import styles from '../dialog/dialog.module.css';
@@ -49,23 +48,6 @@ export const AlertDialogBody = ({
 );
 
 AlertDialogBody.displayName = 'AlertDialog.Body';
-
-export const CloseButton = ({
-  className,
-  ...props
-}: AlertDialogPrimitive.Close.Props) => {
-  return (
-    <AlertDialogPrimitive.Close
-      className={cx(styles.close, className)}
-      aria-label='Close dialog'
-      {...props}
-    >
-      <Cross1Icon aria-hidden='true' />
-    </AlertDialogPrimitive.Close>
-  );
-};
-
-CloseButton.displayName = 'AlertDialog.CloseButton';
 
 export const AlertDialogTitle = ({
   className,

@@ -3,11 +3,9 @@
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
 import styles from '../dialog/dialog.module.css';
-import { CloseButton } from './alert-dialog-misc';
 
 export interface AlertDialogContentProps
   extends AlertDialogPrimitive.Popup.Props {
-  showCloseButton?: boolean;
   overlay?: AlertDialogPrimitive.Backdrop.Props & { blur?: boolean };
   width?: string | number;
   /**
@@ -20,7 +18,6 @@ export interface AlertDialogContentProps
 export const AlertDialogContent = ({
   className,
   children,
-  showCloseButton = false,
   overlay,
   width,
   style,
@@ -48,7 +45,6 @@ export const AlertDialogContent = ({
           {...props}
         >
           {children}
-          {showCloseButton && <CloseButton className={styles.closeButton} />}
         </AlertDialogPrimitive.Popup>
       </AlertDialogPrimitive.Viewport>
     </AlertDialogPrimitive.Portal>
