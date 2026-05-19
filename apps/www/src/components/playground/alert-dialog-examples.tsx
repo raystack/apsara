@@ -37,7 +37,7 @@ export function AlertDialogExamples() {
           <AlertDialog.Trigger render={<Button variant='outline' />}>
             Discard Changes
           </AlertDialog.Trigger>
-          <AlertDialog.Content width={400} showCloseButton={false}>
+          <AlertDialog.Content width={400}>
             <AlertDialog.Body>
               <AlertDialog.Title>Unsaved Changes</AlertDialog.Title>
               <AlertDialog.Description>

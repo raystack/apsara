@@ -11,12 +11,6 @@ export interface AlertDialogContentProps {
   width?: string | number;
 
   /**
-   * Controls whether to show the close button
-   * @default false
-   */
-  showCloseButton?: boolean;
-
-  /**
    * Toggle nested dialog animation (scaling and translation)
    * @default true
    */
@@ -61,19 +55,6 @@ export interface AlertDialogDescriptionProps {
 }
 
 export interface AlertDialogTriggerProps {
-  /**
-   * Allows rendering as a different element.
-   * Accepts a React element or a function that receives props and returns an element.
-   *
-   * @remarks `ReactElement | function`
-   */
-  render?: React.ReactElement;
-
-  /** Additional CSS class names */
-  className?: string;
-}
-
-export interface AlertDialogCloseButtonProps {
   /**
    * Allows rendering as a different element.
    * Accepts a React element or a function that receives props and returns an element.

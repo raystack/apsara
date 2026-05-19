@@ -1,3 +1,20 @@
+.header {
+  padding: var(--rs-space-7);
+  border-bottom: 0;
+}
+
+.header:has(+ .body) {
+  padding-bottom: var(--rs-space-5);
+}
+
+.body {
+  padding: 0 var(--rs-space-7) var(--rs-space-5);
+}
+
+.body:first-child {
+  padding: var(--rs-space-7);
+}
+
 .footer {
   border-top: 0;
 }
