@@ -25,6 +25,8 @@ export function TooltipContent({
   showArrow = false,
   style,
   render,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ...positionerProps
 }: TooltipContentProps) {
   return (
@@ -41,6 +43,8 @@ export function TooltipContent({
           className={cx(styles.content, className)}
           style={style}
           render={render}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
         >
           {typeof children === 'string' ? <Text>{children}</Text> : children}
           {showArrow && (

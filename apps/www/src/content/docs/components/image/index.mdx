@@ -50,9 +50,10 @@ The Image component follows accessibility best practices:
 
 ### ARIA Attributes
 
-- `role="img"`: Explicitly defines the image role for assistive technologies
-- `aria-label`: Provides description matching alt text for screen readers
-- `alt`: Required alternative text description for screen readers
+- `alt` is the accessible name. Set it to a meaningful description, or `""`
+  for decorative images (which marks the element as presentational).
+- No redundant `role="img"` or duplicated `aria-label` is emitted — the
+  native `<img>` element already provides those semantics.
 
 ### Performance
 

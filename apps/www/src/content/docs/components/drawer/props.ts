@@ -34,6 +34,12 @@ export interface DrawerContentProps {
   /** Whether to show the close button. */
   showCloseButton?: boolean;
 
+  /**
+   * Accessible label for the close button. Override for localisation.
+   * @default "Close"
+   */
+  closeLabel?: string;
+
   /** Props to pass to the backdrop/overlay component. */
   overlayProps?: {
     className?: string;

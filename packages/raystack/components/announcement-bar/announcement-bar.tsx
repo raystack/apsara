@@ -47,20 +47,25 @@ export const AnnouncementBar = ({
       gap={3}
       {...props}
     >
-      {leadingIcon && <span className={styles['icon']}>{leadingIcon}</span>}
+      {leadingIcon && (
+        <span className={styles['icon']} aria-hidden='true'>
+          {leadingIcon}
+        </span>
+      )}
       <Text className={styles.text} size='small' weight='medium'>
         {text}
       </Text>
       {actionLabel || actionIcon ? (
-        <Text
+        <button
+          type='button'
           className={styles['action-btn']}
-          size='small'
-          weight='medium'
           onClick={onActionClick}
         >
-          {actionLabel}
-          {actionIcon}
-        </Text>
+          <Text size='small' weight='medium'>
+            {actionLabel}
+          </Text>
+          {actionIcon && <span aria-hidden='true'>{actionIcon}</span>}
+        </button>
       ) : null}
     </Flex>
   );

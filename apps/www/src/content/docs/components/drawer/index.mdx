@@ -76,9 +76,13 @@ The Drawer can slide in from different sides of the screen. Swipe-to-dismiss is 
 
 ## Accessibility
 
-- Uses `role="dialog"` with `aria-modal="true"`
-- Focus is trapped within the drawer and restored on close
-- Supports dismissal with Escape key and swipe gestures
-- Title is announced via `aria-labelledby`
-- Respects motion preferences: drawer slide motion is enabled only when `prefers-reduced-motion: no-preference`
+- Uses `role="dialog"` with `aria-modal="true"`.
+- Focus is trapped within the drawer and restored on close.
+- Supports dismissal with Escape key and swipe gestures.
+- Default `aria-label` is `"Drawer"`. Pass `aria-label` or `aria-labelledby`
+  on `Drawer.Content` to give the dialog a meaningful name.
+- Close button label defaults to `"Close"`. Override with the `closeLabel`
+  prop for localisation or context-specific copy (e.g. `"Close settings"`).
+- Respects motion preferences: drawer slide motion is enabled only when
+  `prefers-reduced-motion: no-preference`.
 

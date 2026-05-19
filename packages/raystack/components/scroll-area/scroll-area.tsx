@@ -15,11 +15,19 @@ export function ScrollArea({
   className,
   type = 'hover',
   children,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ...props
 }: ScrollAreaProps) {
+  const hasLabel = !!(ariaLabel || ariaLabelledBy);
   return (
     <ScrollAreaPrimitive.Root className={cx(styles.root, className)} {...props}>
-      <ScrollAreaPrimitive.Viewport className={styles.viewport}>
+      <ScrollAreaPrimitive.Viewport
+        className={styles.viewport}
+        role={hasLabel ? 'region' : undefined}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+      >
         <ScrollAreaPrimitive.Content>{children}</ScrollAreaPrimitive.Content>
       </ScrollAreaPrimitive.Viewport>
       <ScrollAreaScrollbar orientation='vertical' type={type} />

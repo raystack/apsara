@@ -7,10 +7,21 @@ import styles from './label.module.css';
 export interface LabelProps extends useRender.ComponentProps<'label'> {
   /**
    * Whether the labelled control is required. When `false`, an `(optional)`
-   * indicator is rendered next to the label.
+   * indicator (see `optionalText`) is rendered next to the label.
    */
   required?: boolean;
+  /**
+   * Text rendered next to the label when `required={false}`.
+   * @default "(optional)"
+   */
   optionalText?: string;
+  /**
+   * Text rendered next to the label when `required={true}`. No indicator is
+   * rendered if this is omitted — preserving apsara's existing behaviour of
+   * not surfacing a required marker by default. Pass any non-empty string
+   * (`"(required)"`, `"*"`, etc.) to opt in.
+   */
+  requiredText?: string;
 }
 
 export function Label({
@@ -20,6 +31,7 @@ export function Label({
   ref,
   children,
   optionalText = '(optional)',
+  requiredText,
   ...props
 }: LabelProps) {
   const content = (
@@ -27,6 +39,9 @@ export function Label({
       {children}
       {required === false && (
         <span className={styles.optional}>{optionalText}</span>
+      )}
+      {required === true && requiredText && (
+        <span className={styles.optional}>{requiredText}</span>
       )}
     </>
   );

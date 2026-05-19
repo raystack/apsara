@@ -68,6 +68,9 @@ Control when the scrollbar appears using the `type` prop.
 
 ## Accessibility
 
-- Scrollable region is keyboard accessible
-- Scrollbar elements are hidden from screen readers with `aria-hidden`
-- Supports standard scrolling keyboard shortcuts
+- Scrollable region is keyboard accessible.
+- Scrollbar elements are hidden from screen readers with `aria-hidden`.
+- Supports standard scrolling keyboard shortcuts.
+- Pass `aria-label` or `aria-labelledby` to label the scrollable content.
+  When provided, the viewport is exposed as a labelled `region` landmark
+  so screen-reader users can navigate to it.

@@ -85,9 +85,9 @@ describe('Search', () => {
       expect(screen.getByLabelText('Clear search')).toBeInTheDocument();
     });
 
-    it('hides clear button when no value', () => {
+    it('renders clear button regardless of value (CSS hides it when empty)', () => {
       render(<Search showClearButton value='' />);
-      expect(screen.queryByLabelText('Clear search')).not.toBeInTheDocument();
+      expect(screen.getByLabelText('Clear search')).toBeInTheDocument();
     });
 
     it('calls onClear when clear button clicked', () => {

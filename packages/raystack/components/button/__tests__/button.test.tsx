@@ -99,20 +99,26 @@ describe('Button', () => {
     });
 
     it('handles loading state', () => {
-      render(<Button loading>Loading Button</Button>);
+      const { container } = render(<Button loading>Loading Button</Button>);
       const button = screen.getByRole('button');
       expect(button).toHaveClass(styles['button-loading']);
-      expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
+      expect(button).toHaveAttribute('aria-busy', 'true');
+      // Spinner is rendered as a decorative aria-hidden element inside the button
+      expect(
+        container.querySelector('[aria-hidden="true"]')
+      ).toBeInTheDocument();
     });
 
     it('shows loader text when loading', () => {
-      render(
+      const { container } = render(
         <Button loading loaderText='Please wait...'>
           Button
         </Button>
       );
       expect(screen.getByText('Please wait...')).toBeInTheDocument();
-      expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
+      expect(
+        container.querySelector('[aria-hidden="true"]')
+      ).toBeInTheDocument();
     });
 
     it('does not show children when loading', () => {

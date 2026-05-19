@@ -95,8 +95,10 @@ All props available on the Skeleton component can be passed to the Provider and 
 
 The Skeleton component follows accessibility best practices:
 
-- Uses semantic HTML elements
-- Provides appropriate ARIA attributes
-- Maintains sufficient color contrast
-- Respects motion preferences: skeleton shimmer is enabled only when `prefers-reduced-motion: no-preference`
-- Supports both block and inline layouts
+- The placeholder container is `aria-hidden="true"` so screen readers
+  skip the decorative shapes. Announce the loading state on a real status
+  region (e.g. a `<Spinner>` or `aria-live` text) elsewhere in the UI.
+- Maintains sufficient color contrast.
+- Respects motion preferences: skeleton shimmer is enabled only when
+  `prefers-reduced-motion: no-preference`.
+- Supports both block and inline layouts.

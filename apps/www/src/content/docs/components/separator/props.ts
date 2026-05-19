@@ -14,6 +14,14 @@ export interface SeparatorProps {
    */
   orientation?: 'horizontal' | 'vertical';
 
+  /**
+   * When `true`, the separator is treated as purely decorative
+   * (`role="presentation"`, `aria-hidden`). Use for visual dividers that
+   * don't convey structure.
+   * @default false
+   */
+  decorative?: boolean;
+
   /** Additional CSS class names. */
   className?: string;
 

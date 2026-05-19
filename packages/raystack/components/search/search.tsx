@@ -24,25 +24,24 @@ export function Search({
   variant = 'default',
   ...props
 }: SearchProps) {
-  const trailingIconWithClear =
-    showClearButton && value ? (
-      <div className={styles.clearButtonWrapper}>
-        <IconButton
-          size={size === 'small' ? 2 : 3}
-          onClick={e => {
-            e.stopPropagation();
-            if (!disabled && onClear) {
-              onClear();
-            }
-          }}
-          disabled={disabled}
-          aria-label='Clear search'
-          className={styles.clearButton}
-        >
-          <CrossCircledIcon />
-        </IconButton>
-      </div>
-    ) : undefined;
+  const trailingIconWithClear = showClearButton ? (
+    <div className={styles.clearButtonWrapper}>
+      <IconButton
+        size={size === 'small' ? 2 : 3}
+        onClick={e => {
+          e.stopPropagation();
+          if (!disabled && onClear) {
+            onClear();
+          }
+        }}
+        disabled={disabled}
+        aria-label='Clear search'
+        className={styles.clearButton}
+      >
+        <CrossCircledIcon />
+      </IconButton>
+    </div>
+  ) : undefined;
 
   return (
     <div className={styles.container} role='search' style={{ width }}>

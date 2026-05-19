@@ -5,6 +5,7 @@ import { Cross1Icon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
 import { Flex } from '../flex';
+import { IconButton } from '../icon-button';
 import styles from './dialog.module.css';
 
 export function DialogHeader({
@@ -55,14 +56,11 @@ export function DialogBody({
 
 DialogBody.displayName = 'Dialog.Body';
 
-export function CloseButton({
-  className,
-  ...props
-}: DialogPrimitive.Close.Props) {
+export function CloseButton(props: DialogPrimitive.Close.Props) {
   return (
     <DialogPrimitive.Close
-      className={cx(styles.close, className)}
       aria-label='Close dialog'
+      render={<IconButton size={3} />}
       {...props}
     >
       <Cross1Icon aria-hidden='true' />

@@ -71,8 +71,11 @@ The button component accepts optional leading and/or trailing icons.
 
 ## Accessibility
 
-- Uses native `button` element with proper ARIA attributes
-- Supports keyboard activation with Enter and Space keys
-- Disabled state is communicated via `aria-disabled` attribute
-- Loading state prevents interaction and announces status to screen readers
-- Respects motion preferences: button loader rotation is enabled only when `prefers-reduced-motion: no-preference`
+- Uses the native `<button>` element so keyboard activation with Enter and
+  Space works out of the box.
+- Disabled state is communicated via the native `disabled` attribute.
+- Loading state sets `aria-busy="true"` on the button so screen readers
+  announce the busy state. The internal spinner is rendered with
+  `aria-hidden="true"` to avoid double-announcing.
+- Respects motion preferences: button loader rotation is enabled only when
+  `prefers-reduced-motion: no-preference`.

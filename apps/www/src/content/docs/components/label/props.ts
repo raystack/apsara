@@ -11,6 +11,14 @@ export interface LabelProps {
    */
   optionalText?: string;
 
+  /**
+   * Text rendered next to the label when `required={true}`. No indicator is
+   * rendered if this is omitted — preserving apsara's existing behaviour of
+   * not surfacing a required marker by default. Pass any non-empty string
+   * (e.g. `"(required)"`, `"*"`) to opt in.
+   */
+  requiredText?: string;
+
   /** Associates the label with a form control using its ID. */
   htmlFor?: string;
 

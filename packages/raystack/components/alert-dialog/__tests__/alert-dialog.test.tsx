@@ -22,7 +22,7 @@ const BasicAlertDialog = ({
 }) => (
   <AlertDialog open={open} onOpenChange={onOpenChange} {...props}>
     <AlertDialog.Trigger>{TRIGGER_TEXT}</AlertDialog.Trigger>
-    <AlertDialog.Content showCloseButton>
+    <AlertDialog.Content>
       <AlertDialog.Header>
         <AlertDialog.Title>{ALERT_TITLE}</AlertDialog.Title>
       </AlertDialog.Header>
@@ -91,20 +91,6 @@ describe('AlertDialog', () => {
   });
 
   describe('Close Behavior', () => {
-    it('closes when close button is clicked', async () => {
-      renderAndOpenAlertDialog(<BasicAlertDialog />);
-
-      await waitFor(() => {
-        expect(screen.getByRole('alertdialog')).toBeInTheDocument();
-      });
-
-      fireEvent.click(screen.getByRole('button', { name: 'Close dialog' }));
-
-      await waitFor(() => {
-        expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
-      });
-    });
-
     it('closes when AlertDialog.Close is clicked', async () => {
       renderAndOpenAlertDialog(<BasicAlertDialog />);
 

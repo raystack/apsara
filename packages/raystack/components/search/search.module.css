@@ -13,6 +13,10 @@
   justify-content: center;
 }
 
+.container:has(input:placeholder-shown) .clearButtonWrapper {
+  display: none;
+}
+
 .clearButton {
   color: var(--rs-color-foreground-base-tertiary);
 }

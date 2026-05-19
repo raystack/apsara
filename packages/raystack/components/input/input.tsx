@@ -71,7 +71,9 @@ export function Input({
       ref={containerRef}
     >
       {leadingIcon && (
-        <div className={styles['leading-icon']}>{leadingIcon}</div>
+        <div className={styles['leading-icon']} aria-hidden='true'>
+          {leadingIcon}
+        </div>
       )}
       {prefix && <div className={styles.prefix}>{prefix}</div>}
 
@@ -111,7 +113,9 @@ export function Input({
 
       {suffix && <div className={styles.suffix}>{suffix}</div>}
       {trailingIcon && (
-        <div className={styles['trailing-icon']}>{trailingIcon}</div>
+        <div className={styles['trailing-icon']} aria-hidden='true'>
+          {trailingIcon}
+        </div>
       )}
     </div>
   );

@@ -156,14 +156,14 @@ describe('Drawer', () => {
     it('renders close button when showCloseButton prop is true', async () => {
       await renderAndOpenDrawer(<BasicDrawer showCloseButton />);
 
-      expect(screen.getByLabelText('Close Drawer')).toBeInTheDocument();
+      expect(screen.getByLabelText('Close')).toBeInTheDocument();
     });
 
     it('does not render close button when showCloseButton prop is false', async () => {
       await renderAndOpenDrawer(<BasicDrawer showCloseButton={false} />);
 
       await waitFor(() => {
-        expect(screen.queryByLabelText('Close Drawer')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText('Close')).not.toBeInTheDocument();
       });
     });
 
@@ -172,7 +172,7 @@ describe('Drawer', () => {
 
       await renderAndOpenDrawer(<BasicDrawer showCloseButton />);
 
-      await user.click(screen.getByLabelText('Close Drawer'));
+      await user.click(screen.getByLabelText('Close'));
 
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
       expect(screen.queryByText(DRAWER_TITLE)).not.toBeInTheDocument();

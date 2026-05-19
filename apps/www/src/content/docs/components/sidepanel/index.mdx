@@ -50,6 +50,9 @@ The SidePanel can be positioned on either the left or right side of the screen.
 
 ## Accessibility
 
-- Uses `role="complementary"` for proper landmark identification
-- Supports keyboard navigation and focus management
-- Panel state is communicated to screen readers
+- Renders as a native `<aside>` — assistive tech announces it as the
+  `complementary` landmark automatically.
+- `SidePanel.Header` renders the `title` as a semantic `<h2>` and assigns
+  it an auto-generated id (override via `titleId`). Pair it with
+  `aria-labelledby` on the `<aside>` to label the landmark.
+- Supports keyboard navigation and focus management of nested controls.

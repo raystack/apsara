@@ -35,16 +35,26 @@ export interface SpinnerProps
   color?: 'default' | 'neutral' | 'accent' | 'danger' | 'success' | 'attention';
 }
 
-export function Spinner({ className, size, color, ...props }: SpinnerProps) {
+export function Spinner({
+  className,
+  size,
+  color,
+  'aria-label': ariaLabel = 'Loading',
+  'aria-hidden': ariaHidden,
+  ...props
+}: SpinnerProps) {
+  const isDecorative = ariaHidden === true || ariaHidden === 'true';
   return (
     <div
       className={spinner({ size, color, className })}
-      role='status'
-      aria-hidden='true'
+      role={isDecorative ? undefined : 'status'}
+      aria-label={isDecorative ? undefined : ariaLabel}
+      aria-live={isDecorative ? undefined : 'polite'}
+      aria-hidden={isDecorative || undefined}
       {...props}
     >
       {[...Array(8)].map((_, index) => (
-        <div key={index} className={styles.pole} />
+        <div key={index} className={styles.pole} aria-hidden='true' />
       ))}
     </div>
   );

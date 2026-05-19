@@ -17,8 +17,10 @@ describe('Container', () => {
     });
 
     it('applies custom className', () => {
-      render(<Container className='custom-class'>Content</Container>);
-      const container = screen.getByRole('region');
+      const { container: root } = render(
+        <Container className='custom-class'>Content</Container>
+      );
+      const container = root.firstChild as HTMLElement;
       expect(container).toHaveClass('custom-class');
       expect(container).toHaveClass(styles.container);
     });
@@ -28,14 +30,16 @@ describe('Container', () => {
     const sizes = ['small', 'medium', 'large', 'none'] as const;
 
     it.each(sizes)('renders %s size correctly', size => {
-      render(<Container size={size}>Content</Container>);
-      const container = screen.getByRole('region');
+      const { container: root } = render(
+        <Container size={size}>Content</Container>
+      );
+      const container = root.firstChild as HTMLElement;
       expect(container).toHaveClass(styles[`container-${size}`]);
     });
 
     it('defaults to none size', () => {
-      render(<Container>Content</Container>);
-      const container = screen.getByRole('region');
+      const { container: root } = render(<Container>Content</Container>);
+      const container = root.firstChild as HTMLElement;
       expect(container).toHaveClass(styles['container-none']);
     });
   });
@@ -44,14 +48,16 @@ describe('Container', () => {
     const alignments = ['left', 'center', 'right'] as const;
 
     it.each(alignments)('renders %s alignment correctly', align => {
-      render(<Container align={align}>Content</Container>);
-      const container = screen.getByRole('region');
+      const { container: root } = render(
+        <Container align={align}>Content</Container>
+      );
+      const container = root.firstChild as HTMLElement;
       expect(container).toHaveClass(styles[`container-align-${align}`]);
     });
 
     it('defaults to center alignment', () => {
-      render(<Container>Content</Container>);
-      const container = screen.getByRole('region');
+      const { container: root } = render(<Container>Content</Container>);
+      const container = root.firstChild as HTMLElement;
       expect(container).toHaveClass(styles['container-align-center']);
     });
   });
@@ -74,14 +80,28 @@ describe('Container', () => {
           <Container aria-labelledby='heading'>Content</Container>
         </>
       );
+      // role="region" is applied automatically when a label is provided
       const container = screen.getByRole('region');
       expect(container).toHaveAttribute('aria-labelledby', 'heading');
     });
 
     it('supports id attribute', () => {
-      render(<Container id='main-container'>Content</Container>);
-      const container = screen.getByRole('region');
+      const { container: root } = render(
+        <Container id='main-container'>Content</Container>
+      );
+      const container = root.firstChild as HTMLElement;
       expect(container).toHaveAttribute('id', 'main-container');
+    });
+
+    it('does not apply role="region" by default', () => {
+      const { container: root } = render(<Container>Content</Container>);
+      const container = root.firstChild as HTMLElement;
+      expect(container).not.toHaveAttribute('role');
+    });
+
+    it('applies role="region" automatically when aria-label is provided', () => {
+      render(<Container aria-label='Labeled section'>Content</Container>);
+      expect(screen.getByRole('region')).toBeInTheDocument();
     });
   });
 });
