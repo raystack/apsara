@@ -13,9 +13,9 @@ export const AlertDialogHeader = ({
   ...props
 }: ComponentProps<typeof Flex>) => (
   <Flex
-    justify='between'
-    align='center'
-    className={cx(styles.header, className)}
+    direction='column'
+    gap={3}
+    className={cx(styles.header, alertDialogStyles.header, className)}
     {...props}
   />
 );
@@ -43,7 +43,7 @@ export const AlertDialogBody = ({
   <Flex
     direction='column'
     gap={3}
-    className={cx(styles.body, className)}
+    className={cx(styles.body, alertDialogStyles.body, className)}
     {...props}
   />
 );

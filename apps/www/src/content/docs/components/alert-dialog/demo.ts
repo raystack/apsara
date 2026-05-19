@@ -7,13 +7,13 @@ export const getCode = (props: { title?: string; description?: string }) => {
       <AlertDialog.Trigger render={<Button color="danger" />}>
         Discard draft
       </AlertDialog.Trigger>
-      <AlertDialog.Content width={400}>
-        <AlertDialog.Body>
+      <AlertDialog.Content>
+        <AlertDialog.Header>
           <AlertDialog.Title>${title}</AlertDialog.Title>
           <AlertDialog.Description>
           ${description}
           </AlertDialog.Description>
-        </AlertDialog.Body>
+        </AlertDialog.Header>
         <AlertDialog.Footer>
           <AlertDialog.Close render={<Button variant="outline" color="neutral">Cancel</Button>} />
           <AlertDialog.Close render={<Button color="danger">Discard</Button>} />
@@ -45,7 +45,7 @@ export const controlledDemo = {
         <AlertDialog.Trigger render={<Button color="danger" />}>
           Delete Account
         </AlertDialog.Trigger>
-        <AlertDialog.Content width={450}>
+        <AlertDialog.Content>
           <AlertDialog.Header>
             <AlertDialog.Title>Delete Account</AlertDialog.Title>
           </AlertDialog.Header>
@@ -88,7 +88,7 @@ export const menuDemo = {
         </Menu>
 
         <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <AlertDialog.Content width={400}>
+          <AlertDialog.Content>
             <AlertDialog.Body>
               <AlertDialog.Title>Delete item?</AlertDialog.Title>
               <AlertDialog.Description>
@@ -113,7 +113,7 @@ export const discardDemo = {
     <AlertDialog.Trigger render={<Button variant="outline" />}>
       Discard Changes
     </AlertDialog.Trigger>
-    <AlertDialog.Content width={400}>
+    <AlertDialog.Content>
       <AlertDialog.Header>
         <AlertDialog.Title>Unsaved Changes</AlertDialog.Title>
       </AlertDialog.Header>
@@ -139,7 +139,7 @@ export const nestedDemo = {
         <AlertDialog.Trigger render={<Button color="danger" />}>
           Delete Workspace
         </AlertDialog.Trigger>
-        <AlertDialog.Content width={450}>
+        <AlertDialog.Content>
           <AlertDialog.Header>
             <AlertDialog.Title>Delete Workspace</AlertDialog.Title>
           </AlertDialog.Header>
@@ -151,7 +151,7 @@ export const nestedDemo = {
               <AlertDialog.Trigger render={<Button color="danger" size="small" />}>
                 Confirm Delete
               </AlertDialog.Trigger>
-              <AlertDialog.Content width={400}>
+              <AlertDialog.Content>
                 <AlertDialog.Body>
                   <AlertDialog.Title>Final Confirmation</AlertDialog.Title>
                   <AlertDialog.Description>
