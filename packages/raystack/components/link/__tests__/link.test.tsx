@@ -84,7 +84,7 @@ describe('Link', () => {
           Custom
         </Link>
       );
-      const link = screen.getByRole('link');
+      const link = screen.getByRole('button', { name: 'Custom' });
       expect(link.tagName).toBe('BUTTON');
       expect(link).toHaveAttribute('type', 'button');
     });
@@ -108,11 +108,11 @@ describe('Link', () => {
 
     it('preserves the link className on the custom rendered element', () => {
       render(
-        <Link href='/test' render={<div />}>
+        <Link href='/test' render={<div data-testid='custom-link' />}>
           Custom
         </Link>
       );
-      const link = screen.getByRole('link');
+      const link = screen.getByTestId('custom-link');
       expect(link.tagName).toBe('DIV');
       expect(link).toHaveClass(styles.link);
     });

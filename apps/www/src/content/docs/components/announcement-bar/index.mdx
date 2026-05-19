@@ -34,6 +34,9 @@ Renders a dismissible banner for announcements and alerts.
 
 ## Accessibility
 
-- Uses `role="banner"` for proper landmark identification
-- Supports keyboard dismissal and focus management
-- Provides `aria-label` support for screen readers
+- The action (when `actionLabel` or `actionIcon` is provided) is rendered
+  as a real `<button>`, so it's focusable, reachable by Tab, and activated
+  by Enter/Space — not as a `<Text>` with an `onClick` handler.
+- The action button exposes a focus ring via `:focus-visible`.
+- Decorative `leadingIcon` and `actionIcon` are marked `aria-hidden="true"`
+  so they don't add noise to screen readers.

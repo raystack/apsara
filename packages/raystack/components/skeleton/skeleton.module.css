@@ -15,7 +15,7 @@
 }
 
 .animate::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
@@ -40,4 +40,3 @@
     animation: shimmer var(--skeleton-duration) infinite;
   }
 }
-

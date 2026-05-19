@@ -30,13 +30,19 @@ export function Container({
   size,
   align,
   className,
-  role = 'region',
+  role,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledBy,
   ...props
 }: ContainerProps) {
+  const hasLabel = !!(ariaLabel || ariaLabelledBy);
+  const resolvedRole = role ?? (hasLabel ? 'region' : undefined);
   return (
     <div
       className={container({ size, align, className })}
-      role={role}
+      role={resolvedRole}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       {...props}
     >
       {children}

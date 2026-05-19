@@ -115,7 +115,7 @@ describe('AnnouncementBar', () => {
 
     it('applies correct action button styles', () => {
       render(<AnnouncementBar text='Test' actionLabel='Action' />);
-      const actionBtn = screen.getByText('Action');
+      const actionBtn = screen.getByRole('button', { name: 'Action' });
       expect(actionBtn).toHaveClass(styles['action-btn']);
     });
   });

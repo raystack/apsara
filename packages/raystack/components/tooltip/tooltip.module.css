@@ -24,7 +24,6 @@
   transform-origin: var(--transform-origin);
 }
 
-
 .arrow svg {
   color: var(--rs-color-background-base-primary);
 }
@@ -104,20 +103,14 @@
 @keyframes slideDownLeftAndFade {
   from {
     opacity: 0;
-    transform: translate(
-      var(--rs-space-1),
-      calc(-1 * var(--rs-space-1))
-    );
+    transform: translate(var(--rs-space-1), calc(-1 * var(--rs-space-1)));
   }
 }
 
 @keyframes slideUpRightAndFade {
   from {
     opacity: 0;
-    transform: translate(
-      calc(-1 * var(--rs-space-1)),
-      var(--rs-space-1)
-    );
+    transform: translate(calc(-1 * var(--rs-space-1)), var(--rs-space-1));
   }
 }
 

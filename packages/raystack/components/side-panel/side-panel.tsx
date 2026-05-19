@@ -1,5 +1,5 @@
 import { cva, cx, VariantProps } from 'class-variance-authority';
-import { ComponentProps, Fragment, ReactNode } from 'react';
+import { ComponentProps, Fragment, ReactNode, useId } from 'react';
 import { Flex } from '../flex';
 import { Text } from '../text';
 import styles from './side-panel.module.css';
@@ -35,6 +35,7 @@ interface SidePanelHeaderProps extends ComponentProps<'div'> {
   icon?: ReactNode;
   actions?: Array<ReactNode>;
   description?: string;
+  titleId?: string;
 }
 
 const SidePanelHeader = ({
@@ -42,14 +43,17 @@ const SidePanelHeader = ({
   icon,
   actions = [],
   description,
+  titleId,
   ...props
 }: SidePanelHeaderProps) => {
+  const generatedId = useId();
+  const headingId = titleId ?? generatedId;
   return (
     <div className={styles['side-panel-header']} {...props}>
       <Flex gap={3} justify='between' align='center'>
         <Flex gap={3}>
           {icon}
-          <Text size='large' weight='medium'>
+          <Text id={headingId} render={<h2 />} size='large' weight='medium'>
             {title}
           </Text>
         </Flex>

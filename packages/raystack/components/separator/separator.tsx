@@ -22,19 +22,37 @@ const separator = cva(styles.separator, {
   }
 });
 
-type SeparatorProps = SeparatorPrimitive.Props & VariantProps<typeof separator>;
+type SeparatorProps = SeparatorPrimitive.Props &
+  VariantProps<typeof separator> & {
+    /**
+     * When true, the separator is purely decorative and hidden from
+     * assistive technology. Use for visual dividers that don't convey
+     * structure.
+     * @default false
+     */
+    decorative?: boolean;
+  };
 
 export function Separator({
   className,
   orientation = 'horizontal',
   size,
   color,
+  decorative,
   ...props
 }: SeparatorProps) {
+  const decorativeProps = decorative
+    ? {
+        role: 'presentation',
+        'aria-hidden': true,
+        'aria-orientation': undefined
+      }
+    : {};
   return (
     <SeparatorPrimitive
       orientation={orientation}
       className={separator({ size, color, className })}
+      {...decorativeProps}
       {...props}
     />
   );

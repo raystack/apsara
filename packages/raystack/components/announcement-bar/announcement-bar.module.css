@@ -41,7 +41,13 @@
 }
 
 .action-btn {
-  display: flex;
+  display: inline-flex;
+  align-items: center;
   gap: var(--rs-space-1);
   cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
 }

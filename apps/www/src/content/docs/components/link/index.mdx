@@ -70,9 +70,13 @@ import { Link as RouterLink } from "react-router-dom";
 
 The Link component follows accessibility best practices:
 
-- Uses native `<a>` elements with proper `role="link"`
-- External links include `target="_blank"` and `rel="noopener noreferrer"`
-- External links have aria-labels indicating they open in new tabs
-- Download links include appropriate aria-labels
-- Maintains color contrast ratios for all variants
-- Hover feedback uses an opacity transition
+- Renders a native `<a>` by default — no explicit `role="link"` is set
+  because the native element already provides it. If you swap the element
+  via `render` to something non-anchor (e.g. `<button>`), it will be
+  announced according to that element's own semantics.
+- External links include `target="_blank"` and `rel="noopener noreferrer"`.
+- External and download links auto-generate an `aria-label` when `children`
+  is a string (e.g. `"Docs (opens in new tab)"`). For non-string children,
+  pass `aria-label` yourself so screen readers get a clean label.
+- Maintains color contrast ratios for all variants.
+- Hover feedback uses an opacity transition.

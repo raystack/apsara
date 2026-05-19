@@ -47,10 +47,7 @@ export function SelectContent({
               className={styles.comboboxInput}
               size={12}
             />
-            <ComboboxPrimitive.List
-              className={styles.comboboxContent}
-              aria-multiselectable={multiple ? true : undefined}
-            >
+            <ComboboxPrimitive.List className={styles.comboboxContent}>
               {children}
             </ComboboxPrimitive.List>
           </ComboboxPrimitive.Popup>

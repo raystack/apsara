@@ -20,18 +20,24 @@ export function Link({
   render = <a />,
   ...props
 }: LinkProps) {
+  const userAriaLabel = props['aria-label'];
+  const textLabel = typeof children === 'string' ? children : undefined;
+
   const externalProps = external
     ? {
         target: '_blank',
         rel: 'noopener noreferrer',
-        'aria-label': `${children} (opens in new tab)`
+        'aria-label':
+          userAriaLabel ??
+          (textLabel ? `${textLabel} (opens in new tab)` : undefined)
       }
     : {};
 
   const downloadProps = download
     ? {
         download: typeof download === 'string' ? download : true,
-        'aria-label': `${children} (download)`
+        'aria-label':
+          userAriaLabel ?? (textLabel ? `${textLabel} (download)` : undefined)
       }
     : {};
 
@@ -40,7 +46,6 @@ export function Link({
       className={cx(styles.link, className)}
       variant={variant}
       size={size}
-      role='link'
       {...externalProps}
       {...downloadProps}
       {...props}

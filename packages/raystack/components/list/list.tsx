@@ -32,6 +32,11 @@ interface ListValueProps extends ComponentProps<'span'> {
 
 interface ListHeaderProps extends ComponentProps<'div'> {
   children: ReactNode;
+  /**
+   * Heading level set as `aria-level` on the underlying heading.
+   * @default 3
+   */
+  'aria-level'?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
 const ListRoot = ({
@@ -45,8 +50,9 @@ const ListRoot = ({
     <ul
       className={list({ className })}
       style={{ maxWidth, ...style }}
+      // `list-style: none` causes Safari/VoiceOver to drop the implicit
+      // list role; keep the explicit role so the list stays announced.
       role='list'
-      aria-label={props['aria-label'] || 'List'}
       {...props}
     >
       {children}
@@ -56,7 +62,7 @@ const ListRoot = ({
 
 const ListItem = ({ children, className, ...props }: ListItemProps) => {
   return (
-    <li className={listItem({ className })} role='listitem' {...props}>
+    <li className={listItem({ className })} {...props}>
       {children}
     </li>
   );
@@ -88,12 +94,17 @@ const ListValue = ({ children, className, ...props }: ListValueProps) => {
   );
 };
 
-const ListHeader = ({ children, className, ...props }: ListHeaderProps) => {
+const ListHeader = ({
+  children,
+  className,
+  'aria-level': ariaLevel = 3,
+  ...props
+}: ListHeaderProps) => {
   return (
     <div
       className={header({ className })}
       role='heading'
-      aria-level={3}
+      aria-level={ariaLevel}
       {...props}
     >
       <span className={headerText()}>{children}</span>

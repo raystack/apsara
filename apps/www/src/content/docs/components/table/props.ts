@@ -18,7 +18,13 @@ export interface TableRowProps {
   className?: string;
 }
 
-export interface TableHeadProps {}
+export interface TableHeadProps {
+  /**
+   * Associates the header cell with rows or columns it labels.
+   * @default "col"
+   */
+  scope?: 'col' | 'row' | 'colgroup' | 'rowgroup';
+}
 
 export interface TableCellProps {
   /** Additional CSS class names. */

@@ -21,6 +21,10 @@ export interface IconButtonProps
   extends ComponentProps<'button'>,
     VariantProps<typeof iconButton> {
   size?: 1 | 2 | 3 | 4;
+  /**
+   * Accessible name for the icon-only button. Strongly recommended so
+   * screen readers can announce its purpose.
+   */
   'aria-label'?: string;
 }
 
@@ -39,7 +43,6 @@ export function IconButton({
       disabled={disabled}
       type='button'
       aria-label={ariaLabel}
-      aria-disabled={disabled}
       style={style}
       {...props}
     >

@@ -24,8 +24,8 @@ describe('Image', () => {
     });
 
     it('defaults alt to empty string', () => {
-      render(<Image src='/test.jpg' />);
-      const img = screen.getByRole('img');
+      const { container } = render(<Image src='/test.jpg' />);
+      const img = container.querySelector('img');
       expect(img).toHaveAttribute('alt', '');
     });
 
@@ -158,16 +158,18 @@ describe('Image', () => {
       expect(screen.getByRole('img')).toBeInTheDocument();
     });
 
-    it('sets aria-label to alt text', () => {
+    it('does not set redundant aria-label (alt is the accessible name)', () => {
       render(<Image src='/test.jpg' alt='Descriptive text' />);
       const img = screen.getByRole('img');
-      expect(img).toHaveAttribute('aria-label', 'Descriptive text');
+      expect(img).not.toHaveAttribute('aria-label');
+      expect(img).toHaveAttribute('alt', 'Descriptive text');
     });
 
-    it('sets empty aria-label when alt is empty', () => {
-      render(<Image src='/test.jpg' />);
-      const img = screen.getByRole('img');
-      expect(img).toHaveAttribute('aria-label', '');
+    it('treats image as decorative when alt is empty', () => {
+      const { container } = render(<Image src='/test.jpg' />);
+      const img = container.querySelector('img');
+      expect(img).toHaveAttribute('alt', '');
+      expect(img).not.toHaveAttribute('aria-label');
     });
   });
 

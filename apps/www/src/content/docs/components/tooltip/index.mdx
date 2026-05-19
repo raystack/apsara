@@ -86,4 +86,10 @@ Show the arrow by setting `showArrow={true}` on the Content component:
 
 ## Accessibility
 
-- Respects motion preferences: tooltip entry motion is enabled only when `prefers-reduced-motion: no-preference`
+- The trigger is wired to the popup via `aria-describedby` automatically.
+- When `Tooltip.Content` receives a string `children`, that string is the
+  accessible description. For ReactNode content (icons, mixed markup),
+  pass `aria-label` (or `aria-labelledby`) on `Tooltip.Content` so screen
+  readers still announce a meaningful name.
+- Respects motion preferences: tooltip entry motion is enabled only when
+  `prefers-reduced-motion: no-preference`.

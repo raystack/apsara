@@ -58,6 +58,7 @@ const SkeletonBase = (props: SkeletonProps) => {
   return (
     <Container
       className={containerClassName}
+      aria-hidden='true'
       style={{
         display: inline ? 'inline-block' : 'flex',
         flexDirection: !inline ? 'column' : undefined,

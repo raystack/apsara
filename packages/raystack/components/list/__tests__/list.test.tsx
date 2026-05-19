@@ -45,10 +45,22 @@ describe('List', () => {
       expect(list).toHaveStyle({ maxWidth: '400px' });
     });
 
-    it('has default aria-label', () => {
+    it('does not set a generic default aria-label', () => {
       render(<List>Content</List>);
       const list = screen.getByRole('list');
-      expect(list).toHaveAttribute('aria-label', 'List');
+      expect(list).not.toHaveAttribute('aria-label');
+    });
+
+    it('forwards user-provided aria-label', () => {
+      render(<List aria-label='Recent activity'>Content</List>);
+      const list = screen.getByRole('list');
+      expect(list).toHaveAttribute('aria-label', 'Recent activity');
+    });
+
+    it('keeps explicit role="list" for Safari/VoiceOver', () => {
+      render(<List>Content</List>);
+      const list = screen.getByRole('list');
+      expect(list).toHaveAttribute('role', 'list');
     });
   });
 

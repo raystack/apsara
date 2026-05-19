@@ -36,4 +36,11 @@ export interface SidePanelHeaderProps {
    * Array of action elements to display in the header.
    */
   actions?: React.ReactNode[];
+
+  /**
+   * Optional id assigned to the title heading. Useful when wiring up
+   * `aria-labelledby` on the parent `<aside>` (or any other landmark).
+   * A unique id is generated automatically when omitted.
+   */
+  titleId?: string;
 }
