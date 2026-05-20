@@ -1,7 +1,6 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import Color from 'color';
 import {
   ComponentProps,
   PointerEvent as ReactPointerEvent,
@@ -12,6 +11,7 @@ import {
 } from 'react';
 import styles from './color-picker.module.css';
 import { useColorPicker } from './color-picker-root';
+import { getColorString } from './utils';
 
 export type ColorPickerAreaProps = ComponentProps<'div'>;
 
@@ -25,7 +25,10 @@ export const ColorPickerArea = ({
   const isThumbVisible = useRef(false);
 
   const { hue, saturation, lightness, setColor } = useColorPicker();
-  const color = Color.hsl(hue, saturation, lightness);
+  const thumbColor = getColorString(
+    { h: hue, s: saturation, l: lightness, alpha: 1 },
+    'hex'
+  );
 
   const backgroundGradient = useMemo(() => {
     return `linear-gradient(0deg, rgba(0,0,0,1), rgba(0,0,0,0)),
@@ -107,7 +110,7 @@ export const ColorPickerArea = ({
         className={cx(styles.sliderThumb, styles.selectionThumb)}
         ref={thumbRef}
         style={{
-          background: color.hex().toString(),
+          background: thumbColor,
           opacity: 0
         }}
       />

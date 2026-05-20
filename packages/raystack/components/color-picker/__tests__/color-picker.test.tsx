@@ -202,6 +202,42 @@ describe('ColorPicker', () => {
       input = screen.getByTestId('color-input');
       expect(input).toHaveValue('#00FF00');
     });
+
+    it('accepts oklch input', () => {
+      render(
+        <ColorPicker defaultValue='oklch(0.6279 0.2576 29.23)'>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+      const input = screen.getByTestId('color-input');
+      // Should render *some* hex value without throwing; exact bytes depend on
+      // HSL round-trip so we only assert shape.
+      expect((input as HTMLInputElement).value).toMatch(/^#[0-9A-F]{6}$/);
+    });
+
+    it('emits oklch when mode is oklch', () => {
+      render(
+        <ColorPicker defaultValue='#ff0000' mode='oklch'>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+      const input = screen.getByTestId('color-input');
+      expect((input as HTMLInputElement).value).toMatch(
+        /^oklch\([\d.]+ [\d.]+ [\d.]+\)$/
+      );
+    });
+
+    it('emits oklch with alpha tail when alpha < 1', () => {
+      render(
+        <ColorPicker defaultValue='rgba(255, 0, 0, 0.5)' mode='oklch'>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+      const input = screen.getByTestId('color-input');
+      expect((input as HTMLInputElement).value).toMatch(
+        /^oklch\([\d.]+ [\d.]+ [\d.]+ \/ [\d.]+\)$/
+      );
+    });
   });
 
   describe('ColorPicker.Mode', () => {

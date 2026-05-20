@@ -7,6 +7,7 @@ source: packages/raystack/components/color-picker
 import {
   preview,
   basicDemo,
+  oklchDemo,
   popoverDemo,
 } from "./demo.ts";
 
@@ -50,7 +51,7 @@ Provides a slider for selecting the alpha value of the color.
 
 ### Mode
 
-Lets users switch between different color models (e.g., HEX, RGB, HSL) via a dropdown menu.
+Lets users switch between different color models (HEX, RGB, HSL, OKLCH) via a dropdown menu.
 
 <auto-type-table path="./props.ts" name="ColorPickerModeProps" />
 
@@ -63,6 +64,14 @@ Displays the current color value in the selected color model and allows direct t
 ### Basic Usage
 
 <Demo data={basicDemo} />
+
+### OKLCH Mode
+
+The picker accepts and emits `oklch()` values. Pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'` to have the input render and emit oklch.
+
+Note that the picker's sliders still operate in HSL — `oklch` here is an input/output format, not a perceptual editing mode. The emitted oklch value is the result of an HSL → sRGB → OKLCH conversion, so a value-in will not be bit-identical to the value-out.
+
+<Demo data={oklchDemo} />
 
 ### Popover Integration
 

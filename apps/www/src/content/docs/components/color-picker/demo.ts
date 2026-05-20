@@ -36,6 +36,28 @@ export const basicDemo = {
 `
 };
 
+export const oklchDemo = {
+  type: 'code',
+  code: `<ColorPicker
+defaultValue='oklch(0.5438 0.191 267.01)'
+defaultMode='oklch'
+style={{
+  width: '240px',
+  height: '320px',
+  padding: 12,
+  background: 'white'
+}}
+>
+<ColorPicker.Area />
+<ColorPicker.Hue />
+<ColorPicker.Alpha />
+<Flex direction="row" gap={2}>
+  <ColorPicker.Mode />
+  <ColorPicker.Input />
+</Flex>
+</ColorPicker>`
+};
+
 export const popoverDemo = {
   type: 'code',
   previewCode: false,

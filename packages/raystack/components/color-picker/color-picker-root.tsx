@@ -1,6 +1,5 @@
 'use client';
 
-import Color, { type ColorLike } from 'color';
 import {
   ComponentProps,
   createContext,
@@ -9,7 +8,7 @@ import {
   useState
 } from 'react';
 import { Flex } from '../flex';
-import { ColorObject, getColorString, ModeType } from './utils';
+import { ColorObject, getColorString, ModeType, parseColor } from './utils';
 
 type ColorPickerContextValue = {
   hue: number;
@@ -35,8 +34,8 @@ export const useColorPicker = () => {
 
 export interface ColorPickerProps
   extends Omit<ComponentProps<typeof Flex>, 'defaultValue'> {
-  value?: ColorLike;
-  defaultValue?: ColorLike;
+  value?: string;
+  defaultValue?: string;
   onValueChange?: (value: string, mode: string) => void;
   defaultMode?: ModeType;
   mode?: ModeType;
@@ -51,11 +50,9 @@ export const ColorPickerRoot = ({
   onModeChange,
   ...props
 }: ColorPickerProps) => {
-  const providedColor = value && (Color(value).hsl().object() as ColorObject);
+  const providedColor = value ? parseColor(value) : undefined;
 
-  const [internalColor, setInternalColor] = useState(
-    Color(defaultValue).hsl().object() as ColorObject
-  );
+  const [internalColor, setInternalColor] = useState(parseColor(defaultValue));
   const [internalMode, setInternalMode] = useState(defaultMode);
 
   const hue = providedColor ? providedColor.h : internalColor.h;
@@ -73,14 +70,7 @@ export const ColorPickerRoot = ({
 
         if (!onValueChange) return updatedColor;
 
-        const color = Color.hsl(
-          updatedColor.h,
-          updatedColor.s,
-          updatedColor.l,
-          updatedColor?.alpha ?? 1
-        );
-
-        onValueChange(getColorString(color, mode), mode);
+        onValueChange(getColorString(updatedColor, mode), mode);
 
         return updatedColor;
       });
