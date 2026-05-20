@@ -7,7 +7,7 @@ import {
   parse
 } from 'culori';
 
-export const SUPPORTED_MODES = ['hex', 'hsl', 'rgb', 'oklch'];
+export const SUPPORTED_MODES = ['hex', 'hsl', 'rgb', 'oklch'] as const;
 
 export type ModeType = (typeof SUPPORTED_MODES)[number];
 

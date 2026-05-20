@@ -9,7 +9,7 @@ import { ModeType, SUPPORTED_MODES } from './utils';
 
 export interface ColorPickerModeProps
   extends ComponentProps<typeof Select.Trigger> {
-  options?: ModeType[];
+  options?: readonly ModeType[];
 }
 
 export const ColorPickerMode = ({
