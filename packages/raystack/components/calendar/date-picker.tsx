@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PropsBase } from 'react-day-picker';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -30,6 +30,7 @@ interface DatePickerProps {
   calendarProps?: Omit<PropsBase, 'mode'> & CalendarPropsExtended;
   onSelect?: (date: Date) => void;
   value?: Date;
+  defaultValue?: Date;
   children?:
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
@@ -43,25 +44,24 @@ export function DatePicker({
   inputProps,
   calendarProps,
   value: valueProp,
+  defaultValue,
   onSelect = () => {},
   children,
   showCalendarIcon = true,
   timeZone,
   popoverProps
 }: DatePickerProps) {
-  /*
-   * Stabilise the "no value" default — a fresh `new Date()` per render would
-   * flip the sync effect's timestamp dep across 1ms boundaries and loop.
-   */
-  const value = useMemo(() => valueProp ?? new Date(), [valueProp]);
-
-  const [selectedDate, setSelectedDate] = useState(value);
+  // Initial value: controlled prop > defaultValue (uncontrolled init) > today.
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    valueProp ?? defaultValue ?? new Date()
+  );
   const [error, setError] = useState<string>();
 
+  // Sync only when controlled — uncontrolled mode keeps its own state.
   // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
   useEffect(() => {
-    setSelectedDate(value);
-  }, [value?.getTime()]);
+    if (valueProp !== undefined) setSelectedDate(valueProp);
+  }, [valueProp?.getTime()]);
 
   const formattedDate = dayjs(selectedDate).format(dateFormat);
 

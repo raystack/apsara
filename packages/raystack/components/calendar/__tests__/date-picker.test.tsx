@@ -151,6 +151,67 @@ describe('DatePicker', () => {
     });
   });
 
+  describe('defaultValue (uncontrolled)', () => {
+    it('initializes from defaultValue when value is not provided', () => {
+      render(<DatePicker defaultValue={new Date(2024, 5, 15)} />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('15/06/2024');
+    });
+
+    it('value prop takes precedence over defaultValue', () => {
+      render(
+        <DatePicker
+          value={new Date(2025, 0, 1)}
+          defaultValue={new Date(2024, 5, 15)}
+        />
+      );
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('01/01/2025');
+    });
+
+    it('defaultValue is only honored at mount, not on later rerenders', () => {
+      const { rerender } = render(
+        <DatePicker defaultValue={new Date(2024, 5, 15)} />
+      );
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('15/06/2024');
+
+      // Changing defaultValue after mount should NOT update the input
+      // (uncontrolled semantics).
+      rerender(<DatePicker defaultValue={new Date(2030, 0, 1)} />);
+      expect(input.value).toBe('15/06/2024');
+    });
+  });
+
+  describe('onSelect fires once per commit', () => {
+    /*
+     * Regression for CLD-3195 #25: each commit path (calendar click, Enter,
+     * outside click) should fire onSelect exactly once with a single canonical
+     * Date.
+     */
+    it('Enter after typing a valid date fires onSelect exactly once', () => {
+      const onSelect = vi.fn();
+      render(<DatePicker onSelect={onSelect} />);
+
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      fireEvent.focus(input);
+      fireEvent.change(input, { target: { value: '15/06/2025' } });
+      fireEvent.keyUp(input, { code: 'Enter' });
+
+      expect(onSelect).toHaveBeenCalledTimes(1);
+      const calledWith = onSelect.mock.calls[0][0] as Date;
+      expect(dayjs(calledWith).format('DD/MM/YYYY')).toBe('15/06/2025');
+    });
+  });
+
   describe('typed-input bounds checking', () => {
     /*
      * Earlier `handleInputChange` compared the typed date against

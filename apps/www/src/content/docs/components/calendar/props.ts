@@ -166,7 +166,11 @@ export interface RangePickerProps {
   /** Props for customizing the calendar */
   calendarProps?: CalendarProps;
 
-  /** Props for customizing the inputs */
+  /**
+   * Props for customizing the inputs. Event handlers (`onChange`, `onFocus`,
+   * `onBlur`, `onKeyUp`) are not forwarded — use the picker's `onSelect` for
+   * value changes.
+   */
   inputsProps?: {
     startDate?: InputProps;
     endDate?: InputProps;
@@ -219,11 +223,18 @@ export interface DatePickerProps {
    */
   dateFormat?: string;
 
-  /** Props for customizing the input */
+  /**
+   * Props for customizing the input. Event handlers (`onChange`, `onFocus`,
+   * `onBlur`, `onKeyUp`) are not forwarded — use the picker's `onSelect` for
+   * value changes.
+   */
   inputProps?: InputProps;
 
-  /** Initial date value */
+  /** Controlled date value. Pair with `onSelect`. */
   value?: Date;
+
+  /** Initial (uncontrolled) date value. Ignored if `value` is set. */
+  defaultValue?: Date;
 
   /** Callback function when date is selected */
   onSelect?: (date: Date) => void;
