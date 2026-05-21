@@ -187,12 +187,10 @@ function VirtualRows<TData, TValue>({
 function VirtualLoaderRows<TData, TValue>({
   renderedAccessors,
   columnMap,
-  rowHeight,
   count
 }: {
   renderedAccessors: string[];
   columnMap: Map<string, DataViewTableColumn<TData, TValue>>;
-  rowHeight: number;
   count: number;
 }) {
   return (
@@ -202,7 +200,6 @@ function VirtualLoaderRows<TData, TValue>({
           role='row'
           key={'loading-row-' + rowIndex}
           className={cx(styles.virtualRow, styles['row'], styles.loaderRow)}
-          style={{ height: rowHeight }}
         >
           {renderedAccessors.map(accessor => {
             const spec = columnMap.get(accessor);
@@ -302,7 +299,7 @@ export function VirtualizedContent<TData, TValue = unknown>({
     return list;
   }, [rows]);
 
-  const showLoaderRows = isLoading && rows.length > 0;
+  const showLoaderRows = isLoading;
 
   const virtualizer = useVirtualizer({
     count: rows.length,
@@ -421,7 +418,6 @@ export function VirtualizedContent<TData, TValue = unknown>({
         <VirtualLoaderRows
           renderedAccessors={renderedAccessors}
           columnMap={columnMap}
-          rowHeight={rowHeight}
           count={loadingRowCount}
         />
       )}
