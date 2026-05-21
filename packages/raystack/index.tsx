@@ -10,7 +10,13 @@ export { Badge } from './components/badge';
 export { Box } from './components/box';
 export { Breadcrumb } from './components/breadcrumb';
 export { Button } from './components/button';
-export { Calendar, DatePicker, RangePicker } from './components/calendar';
+export {
+  Calendar,
+  type CalendarProps,
+  type CalendarPropsExtended,
+  DatePicker,
+  RangePicker
+} from './components/calendar';
 export { Callout } from './components/callout';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';

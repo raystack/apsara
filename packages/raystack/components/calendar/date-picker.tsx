@@ -4,27 +4,30 @@ import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import {
-  isValidElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
-import { PropsBase, PropsSingleRequired } from 'react-day-picker';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import { isValidElement, useEffect, useMemo, useRef, useState } from 'react';
+import { PropsBase } from 'react-day-picker';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
 import { PopoverContentProps } from '../popover/popover';
-import { Calendar } from './calendar';
+import { Calendar, type CalendarPropsExtended } from './calendar';
 import styles from './calendar.module.css';
+import { usePickerPopover } from './use-picker-popover';
 
 dayjs.extend(customParseFormat);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 interface DatePickerProps {
   dateFormat?: string;
   inputProps?: InputProps;
-  calendarProps?: PropsSingleRequired & PropsBase;
+  /*
+   * `mode` is owned by the picker; `selected`/`onSelect`/`required` aren't in
+   * PropsBase so they're already unreachable.
+   */
+  calendarProps?: Omit<PropsBase, 'mode'> & CalendarPropsExtended;
   onSelect?: (date: Date) => void;
   value?: Date;
   children?:
@@ -39,129 +42,107 @@ export function DatePicker({
   dateFormat = 'DD/MM/YYYY',
   inputProps,
   calendarProps,
-  value = new Date(),
+  value: valueProp,
   onSelect = () => {},
   children,
   showCalendarIcon = true,
   timeZone,
   popoverProps
 }: DatePickerProps) {
-  const [showCalendar, setShowCalendar] = useState(false);
+  /*
+   * Stabilise the "no value" default — a fresh `new Date()` per render would
+   * flip the sync effect's timestamp dep across 1ms boundaries and loop.
+   */
+  const value = useMemo(() => valueProp ?? new Date(), [valueProp]);
+
   const [selectedDate, setSelectedDate] = useState(value);
   const [error, setError] = useState<string>();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
+  useEffect(() => {
+    setSelectedDate(value);
+  }, [value?.getTime()]);
+
   const formattedDate = dayjs(selectedDate).format(dateFormat);
 
-  const isDropdownOpenRef = useRef(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
-  const isInputFocused = useRef(false);
+  const [inputValue, setInputValue] = useState(formattedDate);
+
+  /*
+   * Separate from `selectedDate` so chevron/dropdown nav doesn't rewrite the
+   * committed date — only day-clicks (`onSelect`) do.
+   */
+  const [viewMonth, setViewMonth] = useState<Date>(selectedDate);
+
+  // Mirror for reading inside the outside-click callback closure.
   const selectedDateRef = useRef(selectedDate);
 
   useEffect(() => {
     selectedDateRef.current = selectedDate;
   }, [selectedDate]);
 
-  const isElementOutside = useCallback((el: HTMLElement) => {
-    return (
-      !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
-      !inputRef.current?.contains(el) && // Input
-      !contentRef.current?.contains(el)
-    );
-  }, []);
+  // Sync the input when the committed date changes from a non-typing source.
+  useEffect(() => {
+    setInputValue(formattedDate);
+  }, [formattedDate]);
 
-  const handleMouseDown = useCallback(
-    (event: MouseEvent) => {
-      const el = event.target as HTMLElement | null;
-      if (el && isElementOutside(el)) removeEventListeners();
-    },
-    [isElementOutside]
-  );
+  // Hook owns open/close, outside-click, and the year/month dropdown carve-out.
+  const popover = usePickerPopover({
+    onOutsideClick: () => closePicker()
+  });
 
-  function registerEventListeners() {
-    isInputFocused.current = true;
-    document.addEventListener('mouseup', handleMouseDown);
+  // Reset the visible month on open or external selection change.
+  useEffect(() => {
+    if (popover.isOpen) setViewMonth(selectedDate);
+  }, [popover.isOpen, selectedDate]);
+
+  function closePicker() {
+    popover.disengage();
+    const committed = dayjs(selectedDateRef.current).format(dateFormat);
+    setInputValue(committed);
+    setError(undefined);
+    if (!error) onSelect(dayjs(committed).toDate());
   }
 
-  function removeEventListeners(skipUpdate = false) {
-    isInputFocused.current = false;
-    setShowCalendar(false);
-
-    const updatedVal = dayjs(selectedDateRef.current).format(dateFormat);
-
-    if (inputRef.current) inputRef.current.value = updatedVal;
-    if (!error && !skipUpdate) onSelect(dayjs(updatedVal).toDate());
-
-    document.removeEventListener('mouseup', handleMouseDown);
-  }
-
-  const handleSelect = (day: Date) => {
+  function handleSelect(day: Date) {
     setSelectedDate(day);
     onSelect(day);
     setError(undefined);
-    removeEventListeners(true);
-  };
-
-  function onDropdownOpen() {
-    isDropdownOpenRef.current = true;
-  }
-
-  function onOpenChange(open?: boolean) {
-    if (
-      !isDropdownOpenRef.current &&
-      !(isInputFocused.current && showCalendar)
-    ) {
-      setShowCalendar(Boolean(open));
-    }
-
-    isDropdownOpenRef.current = false;
-  }
-
-  function handleInputFocus() {
-    if (isInputFocused.current) return;
-    if (!showCalendar) setShowCalendar(true);
-  }
-
-  function handleInputBlur(event: React.FocusEvent) {
-    if (isInputFocused.current) {
-      const el = event.relatedTarget as HTMLElement | null;
-      if (el && isElementOutside(el)) removeEventListeners();
-    } else {
-      registerEventListeners();
-      setTimeout(() => inputRef.current?.select());
-    }
+    popover.disengage();
   }
 
   function handleKeyUp(event: React.KeyboardEvent) {
-    if (event.code === 'Enter' && inputRef.current) {
-      inputRef.current.blur();
-      removeEventListeners();
+    if (event.code === 'Enter' && popover.inputRef.current) {
+      popover.inputRef.current.blur();
+      closePicker();
     }
   }
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
+    setInputValue(value);
 
-    const format = value.includes('/')
-      ? 'DD/MM/YYYY'
-      : value.includes('-')
-        ? 'DD-MM-YYYY'
-        : undefined;
-    const date = dayjs(value, format);
+    const date = dayjs(value, dateFormat, true);
 
     const isValidDate = date.isValid();
 
+    /*
+     * RDP treats `startMonth`/`endMonth` as months — compare against month
+     * bounds so any day inside the boundary month is accepted.
+     */
     const isAfter =
       calendarProps?.startMonth !== undefined
-        ? dayjs(date).isSameOrAfter(calendarProps.startMonth)
+        ? date.isSameOrAfter(dayjs(calendarProps.startMonth).startOf('month'))
         : true;
     const isBefore =
       calendarProps?.endMonth !== undefined
-        ? dayjs(date).isSameOrBefore(calendarProps.endMonth)
+        ? date.isSameOrBefore(dayjs(calendarProps.endMonth).endOf('month'))
         : true;
 
-    const isValid =
-      isValidDate && isAfter && isBefore && dayjs(date).isSameOrBefore(dayjs());
+    /*
+     * No upper-bound on "future": the grid lets users click future days, so
+     * typing and clicking should agree.
+     */
+    const isValid = isValidDate && isAfter && isBefore;
 
     if (isValid) {
       setSelectedDate(date.toDate());
@@ -179,11 +160,11 @@ export function DatePicker({
       className={styles.datePickerInput}
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
       {...inputProps}
-      ref={inputRef}
-      value={formattedDate}
+      ref={popover.inputRef}
+      value={inputValue}
       onChange={handleInputChange}
-      onFocus={handleInputFocus}
-      onBlur={handleInputBlur}
+      onFocus={popover.handleInputFocus}
+      onBlur={popover.handleInputBlur}
       onKeyUp={handleKeyUp}
     />
   );
@@ -198,27 +179,36 @@ export function DatePicker({
     );
 
   return (
-    <Popover open={showCalendar} onOpenChange={onOpenChange}>
+    <Popover open={popover.isOpen} onOpenChange={popover.onOpenChange}>
       <Popover.Trigger
         nativeButton={isValidElement(trigger) ? false : true}
         render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
       />
       <Popover.Content
-        ref={contentRef}
+        ref={popover.contentRef}
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
         side={popoverProps?.side ?? 'top'}
       >
         <Calendar
-          required={true}
+          /*
+           * No `captionLayout` default — 'dropdown' renders Apsara Selects
+           * inside the popover whose unmount loops ("Maximum update depth").
+           * Consumers can opt in via `calendarProps.captionLayout`.
+           */
           {...calendarProps}
+          /*
+           * Must stay after spread: `required` is the discriminator for
+           * RDP's prop union, and a widened value would break the narrowing.
+           */
+          required={true}
           timeZone={timeZone}
-          onDropdownOpen={onDropdownOpen}
+          onDropdownOpen={popover.markDropdownOpen}
           mode='single'
           selected={selectedDate}
-          month={selectedDate}
+          month={viewMonth}
           onSelect={handleSelect}
-          onMonthChange={setSelectedDate}
+          onMonthChange={setViewMonth}
         />
       </Popover.Content>
     </Popover>

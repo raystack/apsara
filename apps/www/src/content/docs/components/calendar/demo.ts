@@ -32,7 +32,7 @@ export const calendarDemo = {
     },
     {
       name: 'With Dropdowns',
-      code: `<Calendar captionLayout="dropdown" fromYear={2020} toYear={2030} />`
+      code: `<Calendar captionLayout="dropdown" startMonth={new Date(2020, 0)} endMonth={new Date(2030, 11)}/>`
     }
   ]
 };
@@ -58,14 +58,8 @@ export const rangePickerDemo = {
           to: new Date(2024, 0, 15)
         }}
         calendarProps={{
-          mode: "range",
-          required: true,
-          selected: {
-            from: new Date(2024, 0, 1),
-            to: new Date(2024, 0, 15)
-          },
-          fromMonth: new Date(2024, 0, 1),
-          toMonth: new Date(2024, 11, 31),
+          startMonth: new Date(2024, 0, 1),
+          endMonth: new Date(2024, 11, 31),
         }}
       >
         {({ startDate, endDate }) => (

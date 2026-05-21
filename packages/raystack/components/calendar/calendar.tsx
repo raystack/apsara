@@ -2,13 +2,11 @@
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 import { cva, cx } from 'class-variance-authority';
+import dayjs from 'dayjs';
+import timezonePlugin from 'dayjs/plugin/timezone';
+import utcPlugin from 'dayjs/plugin/utc';
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
-import {
-  DayPicker,
-  DayPickerProps,
-  DropdownProps,
-  dateLib
-} from 'react-day-picker';
+import { DayPicker, DayPickerProps, DropdownProps } from 'react-day-picker';
 
 import { IconButton } from '../icon-button';
 import { Select } from '../select';
@@ -16,13 +14,21 @@ import { Skeleton } from '../skeleton';
 import { Tooltip } from '../tooltip';
 import styles from './calendar.module.css';
 
+// `timezone` plugin depends on `utc`.
+dayjs.extend(utcPlugin);
+dayjs.extend(timezonePlugin);
+
 interface OnDropdownOpen {
   onDropdownOpen?: VoidFunction;
 }
 
-interface CalendarPropsExtended {
+export interface CalendarPropsExtended {
   showTooltip?: boolean;
   tooltipMessages?: Record<string, ReactNode>;
+  /*
+   * Record keys are tz-aware `DD-MM-YYYY`; function form gets raw `day.date`
+   * (consumer must apply `timeZone` themselves to stay consistent).
+   */
   dateInfo?: Record<string, ReactNode> | ((date: Date) => ReactNode | null);
   loadingData?: boolean;
   timeZone?: string;
@@ -138,10 +144,16 @@ export const Calendar = function ({
         ),
         DayButton: props => {
           const { day, ...buttonProps } = props;
-          const dateKey = dateLib.format(day.date, 'dd-MM-yyyy');
+          /*
+           * Format in the picker's zone so the key matches the rendered day
+           * (otherwise UTC-day grids miss messages keyed at UTC midnight when
+           * the browser is in a non-UTC zone).
+           */
+          const dateKey = timeZone
+            ? dayjs(day.date).tz(timeZone).format('DD-MM-YYYY')
+            : dayjs(day.date).format('DD-MM-YYYY');
           const message = tooltipMessages[dateKey];
 
-          // Support both object and function for dateInfo
           const dateComponent =
             typeof dateInfo === 'function'
               ? dateInfo(day.date)

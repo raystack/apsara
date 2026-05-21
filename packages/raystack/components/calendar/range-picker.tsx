@@ -3,20 +3,30 @@
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
-import { isValidElement, useCallback, useMemo, useState } from 'react';
-import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
+import {
+  isValidElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
+import { DateRange, PropsBase } from 'react-day-picker';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
 import { PopoverContentProps } from '../popover/popover';
-import { Calendar } from './calendar';
+import { Calendar, type CalendarPropsExtended } from './calendar';
 import styles from './calendar.module.css';
 
 interface RangePickerProps {
   dateFormat?: string;
   inputsProps?: { startDate?: InputProps; endDate?: InputProps };
-  calendarProps?: PropsRangeRequired & PropsBase;
+  /*
+   * `mode` is owned by the picker; `selected`/`onSelect`/`required` aren't in
+   * PropsBase so they're already unreachable.
+   */
+  calendarProps?: Omit<PropsBase, 'mode'> & CalendarPropsExtended;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
@@ -38,10 +48,11 @@ export function RangePicker({
   calendarProps,
   onSelect = () => {},
   value,
-  defaultValue = {
-    to: new Date(),
-    from: new Date()
-  },
+  /*
+   * No inline default — the state machine's "first click sets `from`" branch
+   * needs an empty range to fire.
+   */
+  defaultValue,
   pickerGroupClassName,
   children,
   showCalendarIcon = true,
@@ -52,10 +63,25 @@ export function RangePicker({
   const [showCalendar, setShowCalendar] = useState(false);
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>('from');
-  const [internalValue, setInternalValue] = useState(value ?? defaultValue);
-  const [currentMonth, setCurrentMonth] = useState(internalValue?.from);
+  const [internalValue, setInternalValue] = useState<DateRange | undefined>(
+    value ?? defaultValue
+  );
+  const [currentMonth, setCurrentMonth] = useState<Date | undefined>(
+    internalValue?.from
+  );
 
-  const selectedRange = value ?? internalValue;
+  /*
+   * Sync visible month when controlled `value.from` changes externally
+   * (form reset, preset buttons, sync-from-URL).
+   */
+  // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
+  useEffect(() => {
+    if (value?.from) setCurrentMonth(value.from);
+  }, [value?.from?.getTime()]);
+
+  // Empty-range fallback so downstream `.from`/`.to` reads don't need guards.
+  const selectedRange: DateRange = value ??
+    internalValue ?? { from: undefined };
 
   const startDate = selectedRange.from
     ? dayjs(selectedRange.from).format(dateFormat)
@@ -64,8 +90,10 @@ export function RangePicker({
     ? dayjs(selectedRange.to).format(dateFormat)
     : '';
 
-  // Ensures two months are visible even when
-  // current month is the last allowed month (endMonth).
+  /*
+   * Ensures two months are visible even when the current month is the last
+   * allowed month (endMonth).
+   */
   const computedDefaultMonth = useMemo(() => {
     let month = currentMonth;
     if (calendarProps?.endMonth) {
@@ -95,39 +123,43 @@ export function RangePicker({
     [showCalendar]
   );
 
-  // Handle date selection with custom logic
+  /*
+   * State machine branches on `from`/`to`, not the focused input:
+   *   A.  !from           -> set `from`, advance to 'to'
+   *   B1. from, before    -> reset
+   *   B2. from, after     -> commit `to`, close
+   *   C.  from && to      -> restart
+   * `onSelect` fires on every step; consumers gate on `range.to` for completed
+   * ranges. `setInternalValue` runs even when controlled — wasted render.
+   */
   const handleSelect = (_: DateRange, selectedDay: Date) => {
-    let newRange = { ...selectedRange };
-    let newCurrentRangeField = currentRangeField;
+    const { from, to } = selectedRange;
+    let newRange: DateRange;
+    let newField: RangeFields = 'to';
+    let shouldClose = false;
 
-    if (currentRangeField === 'from') {
-      // If selecting start date and it's after the current end date
-      if (
-        selectedRange?.to &&
-        dayjs(selectedDay).isAfter(dayjs(selectedRange.to))
-      ) {
+    if (!from) {
+      // A: empty -> set from, advance
+      newRange = { from: selectedDay };
+    } else if (!to) {
+      if (dayjs(selectedDay).isBefore(dayjs(from))) {
+        // B1: click before from -> reset
         newRange = { from: selectedDay };
-        newCurrentRangeField = 'to';
       } else {
-        newRange.from = selectedDay;
-        if (!selectedRange?.to) newCurrentRangeField = 'to';
+        // B2: complete range -> close
+        newRange = { from, to: selectedDay };
+        newField = 'from';
+        shouldClose = true;
       }
     } else {
-      // If selecting end date and it's before the current start date
-      if (
-        selectedRange?.from &&
-        dayjs(selectedDay).isBefore(dayjs(selectedRange.from))
-      ) {
-        newRange = { from: selectedDay };
-        newCurrentRangeField = 'to';
-      } else newRange.to = selectedDay;
+      // C: both set -> restart
+      newRange = { from: selectedDay };
     }
 
-    if (newCurrentRangeField !== currentRangeField)
-      setCurrentRangeField(newCurrentRangeField);
-
+    if (newField !== currentRangeField) setCurrentRangeField(newField);
     setInternalValue(newRange);
     onSelect(newRange);
+    if (shouldClose) setShowCalendar(false);
   };
 
   const defaultTrigger = (
@@ -177,11 +209,20 @@ export function RangePicker({
         side={popoverProps?.side ?? 'top'}
       >
         <Calendar
+          /*
+           * No `captionLayout` default — 'dropdown' renders Apsara Selects
+           * inside the popover whose unmount loops ("Maximum update depth").
+           * Consumers can opt in via `calendarProps.captionLayout`.
+           */
           showOutsideDays={false}
           numberOfMonths={2}
           defaultMonth={selectedRange.from}
-          required={true}
           {...calendarProps}
+          /*
+           * Must stay after spread: `required` is the discriminator for
+           * RDP's prop union, and a widened value would break the narrowing.
+           */
+          required={true}
           timeZone={timeZone}
           mode='range'
           month={computedDefaultMonth}
