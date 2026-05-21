@@ -64,7 +64,7 @@ export function DatePicker({
   popoverProps: legacyPopoverProps,
   value: valueProp,
   defaultValue,
-  onSelect = () => {},
+  onSelect = () => undefined,
   children,
   showCalendarIcon = true,
   timeZone
@@ -73,9 +73,13 @@ export function DatePicker({
   const inputProps = { ...legacyInputProps, ...slotProps?.input };
   const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
   const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
-  // Initial value: controlled prop > defaultValue (uncontrolled init) > today.
-  const [selectedDate, setSelectedDate] = useState<Date>(
-    valueProp ?? defaultValue ?? new Date()
+  /*
+   * Initial value: controlled prop > defaultValue (uncontrolled init) >
+   * undefined. With both omitted the picker starts unselected so the
+   * "Select date" placeholder is honest.
+   */
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    valueProp ?? defaultValue
   );
   const [error, setError] = useState<string>();
 
@@ -85,18 +89,19 @@ export function DatePicker({
     if (valueProp !== undefined) setSelectedDate(valueProp);
   }, [valueProp?.getTime()]);
 
-  const formattedDate = dayjs(selectedDate).format(dateFormat);
+  const formattedDate = selectedDate
+    ? dayjs(selectedDate).format(dateFormat)
+    : '';
 
   const [inputValue, setInputValue] = useState(formattedDate);
 
   /*
    * Separate from `selectedDate` so chevron/dropdown nav doesn't rewrite the
    * committed date — only day-clicks (`onSelect`) do. Initial month honors
-   * `calendarProps.defaultMonth` when set; otherwise falls back to the
-   * selected date.
+   * `calendarProps.defaultMonth`, then the selected date, then today.
    */
   const [viewMonth, setViewMonth] = useState<Date>(
-    calendarProps?.defaultMonth ?? selectedDate
+    calendarProps?.defaultMonth ?? selectedDate ?? new Date()
   );
 
   // Mirror for reading inside the outside-click callback closure.
@@ -123,27 +128,33 @@ export function DatePicker({
    */
   useEffect(() => {
     if (popover.isOpen) {
-      setViewMonth(calendarProps?.defaultMonth ?? selectedDate);
+      setViewMonth(calendarProps?.defaultMonth ?? selectedDate ?? new Date());
     }
   }, [popover.isOpen, selectedDate, calendarProps?.defaultMonth]);
 
   function closePicker() {
     popover.disengage();
     const committedDate = selectedDateRef.current;
-    setInputValue(dayjs(committedDate).format(dateFormat));
+    setInputValue(committedDate ? dayjs(committedDate).format(dateFormat) : '');
     setError(undefined);
     /*
      * Emit the committed Date directly. Going through
      * `dayjs(formattedString).toDate()` re-parses the formatted string without
      * a format spec, which falls back to native `Date` parsing and can shift
      * non-ISO formats (e.g. DD/MM/YYYY → wrong Date).
+     *
+     * Skip when nothing was ever selected — `onSelect` is typed
+     * `(date: Date) => void` so we don't fire with `undefined`.
      */
-    if (!error) onSelect(committedDate);
+    if (!error && committedDate) onSelect(committedDate);
   }
 
-  function handleSelect(day: Date) {
+  function handleSelect(day: Date | undefined) {
     setSelectedDate(day);
-    onSelect(day);
+    // RDP can hand us `undefined` when `required={false}` and the user
+    // clicks the currently-selected day (deselect). Only forward defined
+    // dates to consumer `onSelect` — keeps the prop type narrow.
+    if (day) onSelect(day);
     setError(undefined);
     popover.disengage();
   }
@@ -241,8 +252,10 @@ export function DatePicker({
           /*
            * Must stay after spread: `required` is the discriminator for
            * RDP's prop union, and a widened value would break the narrowing.
+           * `required={false}` is intentional — the picker now supports an
+           * unselected initial state when no value/defaultValue is passed.
            */
-          required={true}
+          required={false}
           timeZone={timeZone}
           onDropdownOpen={popover.markDropdownOpen}
           mode='single'

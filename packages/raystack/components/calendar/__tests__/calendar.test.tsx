@@ -216,10 +216,10 @@ describe('Calendar', () => {
       );
 
       /*
-       * Renders for Sundays if any are visible; querySelector returns null
-       * otherwise. Test just exercises the function-based path.
+       * Renders for Sundays if any are visible. Test just exercises the
+       * function-based path — actual presence depends on which days the
+       * current month surfaces.
        */
-      const sundayInfo = container.querySelector('[data-testid="sunday-info"]');
       expect(container).toBeInTheDocument();
     });
 

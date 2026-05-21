@@ -180,6 +180,44 @@ describe('DatePicker', () => {
     });
   });
 
+  describe('unselected initial state (CLD-3195 #4)', () => {
+    it('renders with empty input + placeholder when no value or defaultValue is provided', () => {
+      render(<DatePicker />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('');
+    });
+
+    it('does not fire onSelect on close when nothing was ever selected', () => {
+      const onSelect = vi.fn();
+      render(<DatePicker onSelect={onSelect} />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      // Open + close without selecting.
+      fireEvent.focus(input);
+      fireEvent.keyUp(input, { code: 'Enter' });
+      expect(onSelect).not.toHaveBeenCalled();
+    });
+
+    it('passes selected=undefined to Calendar when picker has no value', () => {
+      const calls = renderWithCalendarSpy(<DatePicker />);
+      const last = calls[calls.length - 1];
+      expect(last.selected).toBeUndefined();
+    });
+
+    it('falls back month to today when no value/defaultValue/calendarProps.defaultMonth', () => {
+      const calls = renderWithCalendarSpy(<DatePicker />);
+      const last = calls[calls.length - 1];
+      const month = last.month as Date;
+      const today = new Date();
+      // Month should be in this calendar month (today's month/year).
+      expect(month.getMonth()).toBe(today.getMonth());
+      expect(month.getFullYear()).toBe(today.getFullYear());
+    });
+  });
+
   describe('defaultValue (uncontrolled)', () => {
     it('initializes from defaultValue when value is not provided', () => {
       render(<DatePicker defaultValue={new Date(2024, 5, 15)} />);

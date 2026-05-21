@@ -65,8 +65,6 @@ Tooltips, disabled days, timezone, controlled month navigation.
 
 <Demo data={calendarBehaviorDemo} />
 
-> The **Controlled Month** tab shows the `month` / `onMonthChange` API. In a real app, hold `month` in parent state and update it from `onMonthChange`: `const [month, setMonth] = useState(...); <Calendar month={month} onMonthChange={setMonth} />`. The demo uses a fixed date + logging callback, so the calendar stays pinned because no parent state advances on chevron clicks.
-
 #### Custom date information
 
 You can display custom components above each date using the `dateInfo` prop. The keys should be date strings in `"dd-MM-yyyy"` format, and the values are React components that will be rendered above the date number.

@@ -61,7 +61,7 @@ export function RangePicker({
   inputsProps: legacyInputsProps = {},
   calendarProps: legacyCalendarProps,
   popoverProps: legacyPopoverProps,
-  onSelect = () => {},
+  onSelect = () => undefined,
   value,
   /*
    * No inline default — the state machine's "first click sets `from`" branch

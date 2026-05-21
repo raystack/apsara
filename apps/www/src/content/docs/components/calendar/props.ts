@@ -249,10 +249,17 @@ export interface DatePickerProps {
   /** @deprecated Use `slotProps.input` instead. */
   inputProps?: InputProps;
 
-  /** Controlled date value. Pair with `onSelect`. */
+  /**
+   * Controlled date value. Pair with `onSelect`. Omit (along with
+   * `defaultValue`) to start the picker in an unselected state — the
+   * input shows its placeholder until the user selects a date.
+   */
   value?: Date;
 
-  /** Initial (uncontrolled) date value. Ignored if `value` is set. */
+  /**
+   * Initial (uncontrolled) date value. Ignored if `value` is set. Omit to
+   * start unselected.
+   */
   defaultValue?: Date;
 
   /** Callback function when date is selected */

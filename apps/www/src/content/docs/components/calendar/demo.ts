@@ -26,12 +26,12 @@ export const calendarDemo = {
     {
       name: 'Basic',
       code: `<Calendar
-  numberOfMonths={2}
-  defaultMonth={new Date(2025, 5, 1)}
-  showWeekNumber={false}
-  weekStartsOn={1}
-  showOutsideDays={false}
-/>`
+              numberOfMonths={2}
+              defaultMonth={new Date(2025, 5, 1)}
+              showWeekNumber={false}
+              weekStartsOn={1}
+              showOutsideDays={false}
+            />`
     },
     {
       name: 'With Loading',
@@ -40,16 +40,16 @@ export const calendarDemo = {
     {
       name: 'With Dropdowns',
       code: `<Calendar
-  captionLayout="dropdown"
-  startMonth={new Date(2020, 0)}
-  endMonth={new Date(2030, 11)}
-/>`
+              captionLayout="dropdown"
+              startMonth={new Date(2020, 0)}
+              endMonth={new Date(2030, 11)}
+            />`
     },
     {
       name: 'With Footer',
       code: `<Calendar
-  footer="Select any date to view details"
-/>`
+              footer="Select any date to view details"
+            />`
     }
   ]
 };
@@ -61,21 +61,21 @@ export const calendarBehaviorDemo = {
     {
       name: 'With Tooltips',
       code: `<Calendar
-  showTooltip
-  tooltipMessages={{
-    '15-06-2026': 'Holiday',
-    '20-06-2026': 'Team off-site',
-  }}
-/>`
+              showTooltip
+              tooltipMessages={{
+                '15-06-2026': 'Holiday',
+                '20-06-2026': 'Team off-site',
+              }}
+            />`
     },
     {
       name: 'With Disabled Dates',
       code: `<Calendar
-  disabled={{
-    before: new Date(),
-    after: new Date(2026, 11, 31),
-  }}
-/>`
+              disabled={{
+                before: new Date(),
+                after: new Date(2026, 11, 31),
+              }}
+            />`
     },
     {
       name: 'With Timezone',
@@ -83,11 +83,22 @@ export const calendarBehaviorDemo = {
     },
     {
       name: 'Controlled Month',
-      code: `<Calendar
-  month={new Date(2025, 5, 1)}
-  onMonthChange={(month) => console.log('Visible month:', month)}
-  numberOfMonths={2}
-/>`
+      code: `
+/*
+  In a real app, hold \`month\` in parent state and update it from
+  \`onMonthChange\`:
+
+    const [month, setMonth] = useState(new Date(2025, 5, 1));
+    <Calendar month={month} onMonthChange={setMonth} />
+
+  This demo uses a fixed date + logging callback, so the calendar stays
+  pinned to June 2025 because no parent state advances on chevron clicks.
+*/
+              <Calendar
+                month={new Date(2025, 5, 1)}
+                onMonthChange={(month) => console.log('Visible month:', month)}
+                numberOfMonths={2}
+              />`
     }
   ]
 };
@@ -158,22 +169,21 @@ export const dateInfoDemo = {
   tabs: [
     {
       name: 'With Date Info',
-      code: `
-      <Calendar
-        numberOfMonths={2}
-        dateInfo={{
-          [dayjs().format('DD-MM-YYYY')]: (
-            <Flex
-              align='center'
-              gap={2}
-              style={{ fontSize: '8px', color: 'var(--rs-color-foreground-base-secondary)' }}
-            >
-              <Info style={{ width: '8px', height: '8px' }} />
-              <Text style={{ fontSize: '8px' }} color='secondary'>25%</Text>
-            </Flex>
-          )
-        }}
-      />`
+      code: `<Calendar
+              numberOfMonths={2}
+              dateInfo={{
+                [dayjs().format('DD-MM-YYYY')]: (
+                  <Flex
+                    align='center'
+                    gap={2}
+                    style={{ fontSize: '8px', color: 'var(--rs-color-foreground-base-secondary)' }}
+                  >
+                    <Info style={{ width: '8px', height: '8px' }} />
+                    <Text style={{ fontSize: '8px' }} color='secondary'>25%</Text>
+                  </Flex>
+                )
+              }}
+            />`
     }
   ]
 };
