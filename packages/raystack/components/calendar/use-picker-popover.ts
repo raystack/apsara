@@ -19,13 +19,22 @@ export interface UsePickerPopoverReturn {
    * treated as an outside click.
    */
   markDropdownOpen: () => void;
+  /*
+   * Arm the outside-click listener. DatePicker engages on first input blur
+   * (typed-input pattern). Click-to-open consumers (e.g. RangePicker with
+   * readOnly inputs) should engage on open via `useEffect`.
+   */
+  engage: () => void;
   // Programmatic close — does NOT fire `onOutsideClick`.
   disengage: () => void;
 }
 
 /*
- * Popover machinery shared by the date pickers (DatePicker only today —
- * RangePicker's inputs are `readOnly` so it doesn't need this).
+ * Popover machinery shared by the date pickers.
+ *
+ * DatePicker drives engagement off input focus/blur (typed-input pattern).
+ * RangePicker (readOnly inputs) drives engagement off `isOpen` via a useEffect
+ * that calls `engage()` / `disengage()`.
  *
  * Why custom instead of Base UI's dismissal: Calendar's `captionLayout='dropdown'`
  * renders Selects inside the popover; their portals look "outside" to a naive
@@ -91,6 +100,17 @@ export function usePickerPopover({
     document.removeEventListener('mouseup', handleMouseDown);
   }, [handleMouseDown]);
 
+  /*
+   * Safety net: if the component unmounts while engaged (or `handleMouseDown`
+   * identity changes mid-life), strip the document listener so stale
+   * `onOutsideClickRef` invocations can't fire.
+   */
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('mouseup', handleMouseDown);
+    };
+  }, [handleMouseDown]);
+
   const handleInputFocus = useCallback(() => {
     if (isEngagedRef.current) return;
     setIsOpen(true);
@@ -135,6 +155,7 @@ export function usePickerPopover({
     handleInputBlur,
     onOpenChange,
     markDropdownOpen,
+    engage,
     disengage
   };
 }

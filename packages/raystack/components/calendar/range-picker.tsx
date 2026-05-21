@@ -3,13 +3,7 @@
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
-import {
-  isValidElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DateRange, PropsBase } from 'react-day-picker';
 import { Flex } from '../flex';
 import { Input } from '../input';
@@ -18,6 +12,7 @@ import { Popover } from '../popover';
 import { PopoverContentProps } from '../popover/popover';
 import { Calendar, type CalendarPropsExtended } from './calendar';
 import styles from './calendar.module.css';
+import { usePickerPopover } from './use-picker-popover';
 
 interface RangePickerProps {
   dateFormat?: string;
@@ -60,7 +55,21 @@ export function RangePicker({
   timeZone,
   popoverProps
 }: RangePickerProps) {
-  const [showCalendar, setShowCalendar] = useState(false);
+  /*
+   * Hook owns open/close, outside-click dismissal, and the year/month
+   * dropdown carve-out. Inputs stay `readOnly`, so we arm the listener on
+   * open (click-to-open path) instead of on input blur (typed-input path).
+   */
+  const popover = usePickerPopover({
+    onOutsideClick: () => popover.disengage()
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: engage/disengage are stable
+  useEffect(() => {
+    if (popover.isOpen) popover.engage();
+    else popover.disengage();
+  }, [popover.isOpen]);
+
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>('from');
   const [internalValue, setInternalValue] = useState<DateRange | undefined>(
@@ -92,19 +101,18 @@ export function RangePicker({
 
   /*
    * Ensures two months are visible even when the current month is the last
-   * allowed month (endMonth).
+   * allowed month (endMonth). Skips when `currentMonth` is undefined —
+   * `dayjs(undefined)` returns "now" and would falsely match `endMonth` if
+   * endMonth happens to be the current month, forcing the calendar away
+   * from its own default.
    */
   const computedDefaultMonth = useMemo(() => {
-    let month = currentMonth;
-    if (calendarProps?.endMonth) {
-      const endMonth = dayjs(calendarProps.endMonth);
-      const fromMonth = dayjs(currentMonth);
-
-      if (fromMonth.isSame(endMonth, 'month')) {
-        month = endMonth.subtract(1, 'month').toDate();
-      }
+    if (!currentMonth || !calendarProps?.endMonth) return currentMonth;
+    const endMonth = dayjs(calendarProps.endMonth);
+    if (dayjs(currentMonth).isSame(endMonth, 'month')) {
+      return endMonth.subtract(1, 'month').toDate();
     }
-    return month;
+    return currentMonth;
   }, [currentMonth, calendarProps?.endMonth]);
 
   const onTriggerClick = useCallback(
@@ -115,12 +123,12 @@ export function RangePicker({
       } else {
         setCurrentRangeField('to');
       }
-      if (showCalendar) {
+      if (popover.isOpen) {
         e.preventDefault();
         e.stopPropagation();
       }
     },
-    [showCalendar]
+    [popover.isOpen]
   );
 
   /*
@@ -130,8 +138,9 @@ export function RangePicker({
    *   B2. from, after     -> commit `to`, close
    *   C.  from && to      -> restart
    * `onSelect` fires on every step; consumers gate on `range.to` for completed
-   * ranges. `setInternalValue` runs even when controlled — wasted render.
+   * ranges.
    */
+  const isControlled = value !== undefined;
   const handleSelect = (_: DateRange, selectedDay: Date) => {
     const { from, to } = selectedRange;
     let newRange: DateRange;
@@ -157,9 +166,10 @@ export function RangePicker({
     }
 
     if (newField !== currentRangeField) setCurrentRangeField(newField);
-    setInternalValue(newRange);
+    // Only update internal state when uncontrolled — controlled consumers own `value`.
+    if (!isControlled) setInternalValue(newRange);
     onSelect(newRange);
-    if (shouldClose) setShowCalendar(false);
+    if (shouldClose) popover.disengage();
   };
 
   const defaultTrigger = (
@@ -173,7 +183,7 @@ export function RangePicker({
         value={startDate}
         readOnly
         data-range-field='start'
-        data-active={showCalendar && currentRangeField === 'from'}
+        data-active={popover.isOpen && currentRangeField === 'from'}
         onClick={onTriggerClick}
       />
 
@@ -186,24 +196,32 @@ export function RangePicker({
         value={endDate}
         readOnly
         data-range-field='end'
-        data-active={showCalendar && currentRangeField === 'to'}
+        data-active={popover.isOpen && currentRangeField === 'to'}
         onClick={onTriggerClick}
       />
     </Flex>
   );
 
-  const trigger =
+  /*
+   * Always wrap the trigger in a `<div>` so the rendered outer element is
+   * never a `<button>`. This keeps `nativeButton={false}` correct regardless
+   * of what the consumer passes (string, host element, React component that
+   * happens to render a button, etc.) — avoiding Base UI's button-nesting
+   * warning.
+   */
+  const triggerContent =
     typeof children === 'function'
       ? children({ startDate, endDate })
       : children || defaultTrigger;
 
   return (
-    <Popover open={showCalendar} onOpenChange={setShowCalendar}>
+    <Popover open={popover.isOpen} onOpenChange={popover.onOpenChange}>
       <Popover.Trigger
-        nativeButton={isValidElement(trigger) ? false : true}
-        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+        nativeButton={false}
+        render={<div>{triggerContent}</div>}
       />
       <Popover.Content
+        ref={popover.contentRef}
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
         side={popoverProps?.side ?? 'top'}
@@ -224,6 +242,7 @@ export function RangePicker({
            */
           required={true}
           timeZone={timeZone}
+          onDropdownOpen={popover.markDropdownOpen}
           mode='range'
           month={computedDefaultMonth}
           selected={selectedRange}

@@ -10,7 +10,7 @@ export const preview = {
     {
       name: 'Range Picker',
       code: `
-        <RangePicker inputFieldsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />`
+        <RangePicker inputsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />`
     },
     {
       name: 'Date Picker',
@@ -76,11 +76,11 @@ export const datePickerDemo = {
   tabs: [
     {
       name: 'Basic',
-      code: `<DatePicker textFieldProps={{ size: "medium" }} />`
+      code: `<DatePicker inputProps={{ size: "medium" }} />`
     },
     {
       name: 'Without Calendar Icon',
-      code: `<DatePicker showCalendarIcon={false} textFieldProps={{ size: "medium" }} />`
+      code: `<DatePicker showCalendarIcon={false} inputProps={{ size: "medium" }} />`
     },
     {
       name: 'Custom Trigger',

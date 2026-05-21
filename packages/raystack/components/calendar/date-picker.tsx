@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { isValidElement, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { PropsBase } from 'react-day-picker';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -69,9 +69,13 @@ export function DatePicker({
 
   /*
    * Separate from `selectedDate` so chevron/dropdown nav doesn't rewrite the
-   * committed date — only day-clicks (`onSelect`) do.
+   * committed date — only day-clicks (`onSelect`) do. Initial month honors
+   * `calendarProps.defaultMonth` when set; otherwise falls back to the
+   * selected date.
    */
-  const [viewMonth, setViewMonth] = useState<Date>(selectedDate);
+  const [viewMonth, setViewMonth] = useState<Date>(
+    calendarProps?.defaultMonth ?? selectedDate
+  );
 
   // Mirror for reading inside the outside-click callback closure.
   const selectedDateRef = useRef(selectedDate);
@@ -90,17 +94,29 @@ export function DatePicker({
     onOutsideClick: () => closePicker()
   });
 
-  // Reset the visible month on open or external selection change.
+  /*
+   * Reset the visible month on open or external selection change. Honor
+   * `calendarProps.defaultMonth` so consumers controlling the initial view
+   * see it every time the picker opens, not only on first mount.
+   */
   useEffect(() => {
-    if (popover.isOpen) setViewMonth(selectedDate);
-  }, [popover.isOpen, selectedDate]);
+    if (popover.isOpen) {
+      setViewMonth(calendarProps?.defaultMonth ?? selectedDate);
+    }
+  }, [popover.isOpen, selectedDate, calendarProps?.defaultMonth]);
 
   function closePicker() {
     popover.disengage();
-    const committed = dayjs(selectedDateRef.current).format(dateFormat);
-    setInputValue(committed);
+    const committedDate = selectedDateRef.current;
+    setInputValue(dayjs(committedDate).format(dateFormat));
     setError(undefined);
-    if (!error) onSelect(dayjs(committed).toDate());
+    /*
+     * Emit the committed Date directly. Going through
+     * `dayjs(formattedString).toDate()` re-parses the formatted string without
+     * a format spec, which falls back to native `Date` parsing and can shift
+     * non-ISO formats (e.g. DD/MM/YYYY → wrong Date).
+     */
+    if (!error) onSelect(committedDate);
   }
 
   function handleSelect(day: Date) {
@@ -169,20 +185,23 @@ export function DatePicker({
     />
   );
 
-  const trigger =
-    typeof children === 'function' ? (
-      children({ selectedDate: formattedDate })
-    ) : children ? (
-      <div>{children}</div>
-    ) : (
-      <div>{defaultTrigger}</div>
-    );
+  /*
+   * Always wrap the trigger in a `<div>` so the rendered outer element is
+   * never a `<button>`. This keeps `nativeButton={false}` correct regardless
+   * of what the consumer passes (string, host element, React component that
+   * happens to render a button, etc.) — avoiding Base UI's button-nesting
+   * warning.
+   */
+  const triggerContent =
+    typeof children === 'function'
+      ? children({ selectedDate: formattedDate })
+      : children || defaultTrigger;
 
   return (
     <Popover open={popover.isOpen} onOpenChange={popover.onOpenChange}>
       <Popover.Trigger
-        nativeButton={isValidElement(trigger) ? false : true}
-        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+        nativeButton={false}
+        render={<div>{triggerContent}</div>}
       />
       <Popover.Content
         ref={popover.contentRef}

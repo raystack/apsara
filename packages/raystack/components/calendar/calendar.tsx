@@ -5,7 +5,7 @@ import { cva, cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import timezonePlugin from 'dayjs/plugin/timezone';
 import utcPlugin from 'dayjs/plugin/utc';
-import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react';
 import { DayPicker, DayPickerProps, DropdownProps } from 'react-day-picker';
 
 import { IconButton } from '../icon-button';
@@ -53,9 +53,19 @@ function DropDown({
 }: DropDownComponentProps) {
   const [open, setOpen] = useState(false);
 
+  /*
+   * Mirror the callback into a ref so the effect depends only on `open` —
+   * parents that re-create `onDropdownOpen` per render would otherwise cause
+   * a re-fire on every parent render where `open` is true.
+   */
+  const onDropdownOpenRef = useRef(onDropdownOpen);
   useEffect(() => {
-    if (open && onDropdownOpen) onDropdownOpen();
-  }, [open, onDropdownOpen]);
+    onDropdownOpenRef.current = onDropdownOpen;
+  });
+
+  useEffect(() => {
+    if (open) onDropdownOpenRef.current?.();
+  }, [open]);
 
   function handleChange(value: string) {
     if (onChange) {

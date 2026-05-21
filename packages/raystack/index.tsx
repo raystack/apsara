@@ -15,6 +15,7 @@ export {
   type CalendarProps,
   type CalendarPropsExtended,
   DatePicker,
+  type DateRange,
   RangePicker
 } from './components/calendar';
 export { Callout } from './components/callout';
