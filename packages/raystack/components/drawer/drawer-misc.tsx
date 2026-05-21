@@ -2,16 +2,15 @@
 
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, type ReactNode } from 'react';
+import { ComponentProps } from 'react';
 import styles from './drawer.module.css';
 
 export const DrawerHeader = ({
-  children,
-  className
-}: {
-  children: ReactNode;
-  className?: string;
-}) => <div className={cx(styles.header, className)}>{children}</div>;
+  className,
+  ...props
+}: ComponentProps<'div'>) => (
+  <div className={cx(styles.header, className)} {...props} />
+);
 DrawerHeader.displayName = 'Drawer.Header';
 
 export function DrawerTitle({
