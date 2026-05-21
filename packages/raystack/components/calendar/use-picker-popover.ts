@@ -118,28 +118,41 @@ export function usePickerPopover({
 
   const handleInputBlur = useCallback(
     (event: React.FocusEvent) => {
+      const el = event.relatedTarget as HTMLElement | null;
       if (isEngagedRef.current) {
         // Engaged: blur is either outside (close) or into popover (no-op).
-        const el = event.relatedTarget as HTMLElement | null;
         if (el && isElementOutside(el)) onOutsideClickRef.current();
-      } else {
-        // First blur arms outside-click and selects text for type-to-overwrite.
-        engage();
-        setTimeout(() => inputRef.current?.select());
+        return;
       }
+      // Not yet engaged. If the user tab'd straight to an outside element,
+      // close immediately — otherwise keyboard users get stuck with the
+      // popover open until they mouse-click somewhere.
+      if (el && isElementOutside(el)) {
+        onOutsideClickRef.current();
+        return;
+      }
+      // First blur arms outside-click and selects text for type-to-overwrite.
+      engage();
+      setTimeout(() => inputRef.current?.select());
     },
     [isElementOutside, engage]
   );
 
   const onOpenChange = useCallback((open?: boolean) => {
-    // Ignore dropdown-triggered changes and re-focus while already open.
-    if (
-      !isDropdownOpenRef.current &&
-      !(isEngagedRef.current && isOpenRef.current)
-    ) {
-      setIsOpen(Boolean(open));
+    // Year/month dropdown opening inside the popover triggers an open-change
+    // we don't want; swallow it and consume the flag.
+    if (isDropdownOpenRef.current) {
+      isDropdownOpenRef.current = false;
+      return;
     }
-    isDropdownOpenRef.current = false;
+    /*
+     * Suppress only redundant *re-open* events fired by focus/click handlers
+     * while the picker is already engaged + open. Explicit close requests
+     * (Escape key, trigger toggle, programmatic) must always go through, or
+     * users get stuck with no way to close.
+     */
+    if (open === true && isEngagedRef.current && isOpenRef.current) return;
+    setIsOpen(Boolean(open));
   }, []);
 
   const markDropdownOpen = useCallback(() => {

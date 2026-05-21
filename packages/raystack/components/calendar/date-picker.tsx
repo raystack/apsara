@@ -20,14 +20,32 @@ dayjs.extend(customParseFormat);
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
+/*
+ * Picker-specific calendar surface. `mode` is owned by the picker; the other
+ * forced keys (`selected`/`onSelect`/`required`) aren't in `PropsBase` so
+ * they're already unreachable.
+ */
+type DatePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+
+interface DatePickerSlotProps {
+  input?: InputProps;
+  calendar?: DatePickerCalendarSlot;
+  popover?: PopoverContentProps;
+}
+
 interface DatePickerProps {
   dateFormat?: string;
-  inputProps?: InputProps;
-  /*
-   * `mode` is owned by the picker; `selected`/`onSelect`/`required` aren't in
-   * PropsBase so they're already unreachable.
+  /**
+   * Props for each picker slot. When both this and the legacy
+   * `inputProps`/`calendarProps`/`popoverProps` are set, `slotProps` wins.
    */
-  calendarProps?: Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+  slotProps?: DatePickerSlotProps;
+  /** @deprecated Use `slotProps.input` instead. */
+  inputProps?: InputProps;
+  /** @deprecated Use `slotProps.calendar` instead. */
+  calendarProps?: DatePickerCalendarSlot;
+  /** @deprecated Use `slotProps.popover` instead. */
+  popoverProps?: PopoverContentProps;
   onSelect?: (date: Date) => void;
   value?: Date;
   defaultValue?: Date;
@@ -36,21 +54,25 @@ interface DatePickerProps {
     | ((props: { selectedDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
   timeZone?: string;
-  popoverProps?: PopoverContentProps;
 }
 
 export function DatePicker({
   dateFormat = 'DD/MM/YYYY',
-  inputProps,
-  calendarProps,
+  slotProps,
+  inputProps: legacyInputProps,
+  calendarProps: legacyCalendarProps,
+  popoverProps: legacyPopoverProps,
   value: valueProp,
   defaultValue,
   onSelect = () => {},
   children,
   showCalendarIcon = true,
-  timeZone,
-  popoverProps
+  timeZone
 }: DatePickerProps) {
+  // Merge legacy props with slotProps; slotProps wins when both are set.
+  const inputProps = { ...legacyInputProps, ...slotProps?.input };
+  const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
+  const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
   // Initial value: controlled prop > defaultValue (uncontrolled init) > today.
   const [selectedDate, setSelectedDate] = useState<Date>(
     valueProp ?? defaultValue ?? new Date()

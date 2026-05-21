@@ -9,6 +9,7 @@ import {
   datePickerDemo,
   rangePickerDemo,
   calendarDemo,
+  calendarBehaviorDemo,
   dateInfoDemo,
 } from "./demo.ts";
 
@@ -38,13 +39,13 @@ Renders a standalone calendar for date selection.
 
 ### RangePicker
 
-The RangePicker supports customizing the popover behavior using the `popoverProps` prop.
+The RangePicker exposes its slots — `startInput`, `endInput`, `calendar`, `popover` — through the `slotProps` prop.
 
 <auto-type-table path="./props.ts" name="RangePickerProps" />
 
 ### DatePicker
 
-The DatePicker supports customizing the popover behavior using the `popoverProps` prop.
+The DatePicker exposes its slots — `input`, `calendar`, `popover` — through the `slotProps` prop.
 
 <auto-type-table path="./props.ts" name="DatePickerProps" />
 
@@ -52,11 +53,21 @@ The DatePicker supports customizing the popover behavior using the `popoverProps
 
 ### Calendar
 
-Choose between different variants to convey different meanings or importance levels. Default variant is `accent`.
+#### Layout & appearance
+
+Number of months, dropdown nav, loading state, footer.
 
 <Demo data={calendarDemo} />
 
-#### Custom Date Information
+#### Behavior & data
+
+Tooltips, disabled days, timezone, controlled month navigation.
+
+<Demo data={calendarBehaviorDemo} />
+
+> The **Controlled Month** tab shows the `month` / `onMonthChange` API. In a real app, hold `month` in parent state and update it from `onMonthChange`: `const [month, setMonth] = useState(...); <Calendar month={month} onMonthChange={setMonth} />`. The demo uses a fixed date + logging callback, so the calendar stays pinned because no parent state advances on chevron clicks.
+
+#### Custom date information
 
 You can display custom components above each date using the `dateInfo` prop. The keys should be date strings in `"dd-MM-yyyy"` format, and the values are React components that will be rendered above the date number.
 
@@ -64,39 +75,19 @@ You can display custom components above each date using the `dateInfo` prop. The
 
 ### Range Picker
 
-The Range Picker component allows selecting a date range with the following behaviors:
+Selects a date range across two inputs. The grid uses a state machine that branches on the current `from` / `to`:
 
-1. When selecting two different dates:
-   - The UI will show the exact selected dates
-   - The callback will return the start and end date as selected
-   ```tsx
-   // Example: If user selects April 1st and April 10th, 2025
-   // UI will show: April 1st, 2025 - April 10th, 2025
-   // Callback will return:
-   {
-     "from": "2025-03-31T18:30:00.000Z",
-     "to": "2025-04-09T18:30:00.000Z"
-   }
-   ```
+- **Empty** — first click sets `from` and advances focus to the end input.
+- **Only `from` set** — clicking a later date completes the range and closes the popover; clicking an earlier date resets `from`.
+- **Both set** — clicking again restarts: the new date becomes `from`, `to` clears.
 
-2. When clicking the same date twice:
-   - The UI will show the same date for both start and end
-   - The callback will return the start and end date as selected
-   ```tsx
-   // Example: If user clicks April 1st, 2025 twice
-   // UI will show: April 1st, 2025 - April 1st, 2025
-   // Callback will return:
-   {
-     "from": "2025-03-31T18:30:00.000Z",
-     "to": "2025-03-31T18:30:00.000Z"
-   }
-   ```
+`onSelect` fires on every step (the shape is `{ from?: Date; to?: Date }` — partial during interaction). Gate on `range.to` if you only want the completed-range event.
 
 <Demo data={rangePickerDemo} />
 
 ### Date Picker
 
-Badges can include an icon to provide additional visual context. By default there is no icon.
+Single-date selection with a typable input. The popover opens on focus; pressing Enter, blurring, or clicking outside commits the value and fires `onSelect`.
 
 <Demo data={datePickerDemo} />
 

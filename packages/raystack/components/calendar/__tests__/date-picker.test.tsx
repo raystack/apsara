@@ -74,6 +74,35 @@ describe('DatePicker', () => {
     });
   });
 
+  describe('slotProps surface', () => {
+    it('forwards slotProps.calendar to the Calendar slot', () => {
+      const calls = renderWithCalendarSpy(
+        <DatePicker slotProps={{ calendar: { captionLayout: 'dropdown' } }} />
+      );
+      const last = calls[calls.length - 1];
+      expect(last.captionLayout).toBe('dropdown');
+    });
+
+    it('slotProps.calendar wins over the deprecated calendarProps', () => {
+      const calls = renderWithCalendarSpy(
+        <DatePicker
+          calendarProps={{ captionLayout: 'label' }}
+          slotProps={{ calendar: { captionLayout: 'dropdown' } }}
+        />
+      );
+      const last = calls[calls.length - 1];
+      expect(last.captionLayout).toBe('dropdown');
+    });
+
+    it('forwards slotProps.input to the Input slot', () => {
+      render(
+        <DatePicker slotProps={{ input: { 'aria-label': 'pick-day' } }} />
+      );
+      const input = screen.getByPlaceholderText('Select date');
+      expect(input.getAttribute('aria-label')).toBe('pick-day');
+    });
+  });
+
   describe('month navigation does not mutate selection', () => {
     /*
      * Earlier the Calendar's `month` and `onMonthChange` were both wired to
@@ -353,7 +382,7 @@ describe('DatePicker', () => {
       }
     });
 
-    it('commits a valid date and fires onSelect once typing reaches a complete match', () => {
+    it('does not fire onSelect while typing — partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
       const onSelect = vi.fn();
       render(<DatePicker onSelect={onSelect} />);
 
@@ -361,13 +390,16 @@ describe('DatePicker', () => {
         'Select date'
       ) as HTMLInputElement;
 
-      // Partial input must not commit
+      // Partial input is not even parseable — no commit.
       fireEvent.change(input, { target: { value: '15/06' } });
       expect(onSelect).not.toHaveBeenCalled();
 
-      // Full valid input does not throw and clears error state
+      // Full valid input parses internally but still doesn't fire onSelect —
+      // commit only happens via Enter / blur / outside-click (see the
+      // dedicated single-fire test below for that path).
       fireEvent.change(input, { target: { value: '15/06/2025' } });
       expect(input.getAttribute('aria-invalid')).not.toBe('true');
+      expect(onSelect).not.toHaveBeenCalled();
     });
   });
 

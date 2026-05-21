@@ -117,6 +117,48 @@ describe('RangePicker', () => {
     });
   });
 
+  describe('slotProps surface', () => {
+    it('forwards slotProps.calendar to the Calendar slot', () => {
+      const { calls } = openPopoverAndCaptureCalendar(
+        <RangePicker slotProps={{ calendar: { captionLayout: 'dropdown' } }} />
+      );
+      const last = calls[calls.length - 1];
+      expect(last.captionLayout).toBe('dropdown');
+    });
+
+    it('slotProps.calendar wins over the deprecated calendarProps', () => {
+      const { calls } = openPopoverAndCaptureCalendar(
+        <RangePicker
+          calendarProps={{ captionLayout: 'label' }}
+          slotProps={{ calendar: { captionLayout: 'dropdown' } }}
+        />
+      );
+      const last = calls[calls.length - 1];
+      expect(last.captionLayout).toBe('dropdown');
+    });
+
+    it('forwards slotProps.startInput / endInput to each input', () => {
+      render(
+        <RangePicker
+          slotProps={{
+            startInput: { 'aria-label': 'pick-from' },
+            endInput: { 'aria-label': 'pick-to' }
+          }}
+        />
+      );
+      expect(
+        screen
+          .getByPlaceholderText('Select start date')
+          .getAttribute('aria-label')
+      ).toBe('pick-from');
+      expect(
+        screen
+          .getByPlaceholderText('Select end date')
+          .getAttribute('aria-label')
+      ).toBe('pick-to');
+    });
+  });
+
   describe('Regression: value prop syncs currentMonth', () => {
     it('passes the new value.from as the visible month when value changes', () => {
       const { rerender } = openPopoverAndCaptureCalendar(

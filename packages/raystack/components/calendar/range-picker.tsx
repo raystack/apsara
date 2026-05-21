@@ -14,14 +14,33 @@ import { Calendar, type CalendarPropsExtended } from './calendar';
 import styles from './calendar.module.css';
 import { usePickerPopover } from './use-picker-popover';
 
+/*
+ * Picker-specific calendar surface. `mode` is owned by the picker; the other
+ * forced keys (`selected`/`onSelect`/`required`) aren't in `PropsBase` so
+ * they're already unreachable.
+ */
+type RangePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+
+interface RangePickerSlotProps {
+  startInput?: InputProps;
+  endInput?: InputProps;
+  calendar?: RangePickerCalendarSlot;
+  popover?: PopoverContentProps;
+}
+
 interface RangePickerProps {
   dateFormat?: string;
-  inputsProps?: { startDate?: InputProps; endDate?: InputProps };
-  /*
-   * `mode` is owned by the picker; `selected`/`onSelect`/`required` aren't in
-   * PropsBase so they're already unreachable.
+  /**
+   * Props for each picker slot. When both this and the legacy
+   * `inputsProps`/`calendarProps`/`popoverProps` are set, `slotProps` wins.
    */
-  calendarProps?: Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+  slotProps?: RangePickerSlotProps;
+  /** @deprecated Use `slotProps.startInput` / `slotProps.endInput` instead. */
+  inputsProps?: { startDate?: InputProps; endDate?: InputProps };
+  /** @deprecated Use `slotProps.calendar` instead. */
+  calendarProps?: RangePickerCalendarSlot;
+  /** @deprecated Use `slotProps.popover` instead. */
+  popoverProps?: PopoverContentProps;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
@@ -32,15 +51,16 @@ interface RangePickerProps {
   showCalendarIcon?: boolean;
   footer?: React.ReactNode;
   timeZone?: string;
-  popoverProps?: PopoverContentProps;
 }
 
 type RangeFields = keyof DateRange;
 
 export function RangePicker({
   dateFormat = 'DD/MM/YYYY',
-  inputsProps = {},
-  calendarProps,
+  slotProps,
+  inputsProps: legacyInputsProps = {},
+  calendarProps: legacyCalendarProps,
+  popoverProps: legacyPopoverProps,
   onSelect = () => {},
   value,
   /*
@@ -52,9 +72,19 @@ export function RangePicker({
   children,
   showCalendarIcon = true,
   footer,
-  timeZone,
-  popoverProps
+  timeZone
 }: RangePickerProps) {
+  // Merge legacy props with slotProps; slotProps wins when both are set.
+  const startInputProps = {
+    ...legacyInputsProps.startDate,
+    ...slotProps?.startInput
+  };
+  const endInputProps = {
+    ...legacyInputsProps.endDate,
+    ...slotProps?.endInput
+  };
+  const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
+  const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
   /*
    * Hook owns open/close, outside-click dismissal, and the year/month
    * dropdown carve-out. Inputs stay `readOnly`, so we arm the listener on
@@ -81,12 +111,17 @@ export function RangePicker({
 
   /*
    * Sync visible month when controlled `value.from` changes externally
-   * (form reset, preset buttons, sync-from-URL).
+   * (form reset, preset buttons, sync-from-URL). Sync runs whenever
+   * `value` is defined — including when `value.from` is cleared — so a
+   * parent reset (`setValue({ from: undefined })`) actually unpins the
+   * calendar. Uncontrolled mode (value === undefined) skips entirely.
    */
+  const valueFromTime = value?.from?.getTime();
+  const isControlled = value !== undefined;
   // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
   useEffect(() => {
-    if (value?.from) setCurrentMonth(value.from);
-  }, [value?.from?.getTime()]);
+    if (isControlled) setCurrentMonth(value.from);
+  }, [valueFromTime, isControlled]);
 
   // Empty-range fallback so downstream `.from`/`.to` reads don't need guards.
   const selectedRange: DateRange = value ??
@@ -140,7 +175,6 @@ export function RangePicker({
    * `onSelect` fires on every step; consumers gate on `range.to` for completed
    * ranges.
    */
-  const isControlled = value !== undefined;
   const handleSelect = (_: DateRange, selectedDay: Date) => {
     const { from, to } = selectedRange;
     let newRange: DateRange;
@@ -179,7 +213,7 @@ export function RangePicker({
         placeholder='Select start date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
-        {...(inputsProps.startDate ?? {})}
+        {...startInputProps}
         value={startDate}
         readOnly
         data-range-field='start'
@@ -192,7 +226,7 @@ export function RangePicker({
         placeholder='Select end date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
-        {...(inputsProps.endDate ?? {})}
+        {...endInputProps}
         value={endDate}
         readOnly
         data-range-field='end'

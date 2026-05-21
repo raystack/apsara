@@ -10,7 +10,7 @@ export const preview = {
     {
       name: 'Range Picker',
       code: `
-        <RangePicker inputsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />`
+        <RangePicker slotProps={{ startInput: { size: "small" }, endInput: { size: "small" } }} />`
     },
     {
       name: 'Date Picker',
@@ -19,12 +19,19 @@ export const preview = {
   ]
 };
 
+// Layout & appearance: how the calendar looks and what chrome it renders.
 export const calendarDemo = {
   type: 'code',
   tabs: [
     {
       name: 'Basic',
-      code: `<Calendar numberOfMonths={2} />`
+      code: `<Calendar
+  numberOfMonths={2}
+  defaultMonth={new Date(2025, 5, 1)}
+  showWeekNumber={false}
+  weekStartsOn={1}
+  showOutsideDays={false}
+/>`
     },
     {
       name: 'With Loading',
@@ -32,7 +39,55 @@ export const calendarDemo = {
     },
     {
       name: 'With Dropdowns',
-      code: `<Calendar captionLayout="dropdown" startMonth={new Date(2020, 0)} endMonth={new Date(2030, 11)}/>`
+      code: `<Calendar
+  captionLayout="dropdown"
+  startMonth={new Date(2020, 0)}
+  endMonth={new Date(2030, 11)}
+/>`
+    },
+    {
+      name: 'With Footer',
+      code: `<Calendar
+  footer="Select any date to view details"
+/>`
+    }
+  ]
+};
+
+// Data & behavior: tooltips, disabled days, timezone, controlled navigation.
+export const calendarBehaviorDemo = {
+  type: 'code',
+  tabs: [
+    {
+      name: 'With Tooltips',
+      code: `<Calendar
+  showTooltip
+  tooltipMessages={{
+    '15-06-2026': 'Holiday',
+    '20-06-2026': 'Team off-site',
+  }}
+/>`
+    },
+    {
+      name: 'With Disabled Dates',
+      code: `<Calendar
+  disabled={{
+    before: new Date(),
+    after: new Date(2026, 11, 31),
+  }}
+/>`
+    },
+    {
+      name: 'With Timezone',
+      code: `<Calendar timeZone="America/New_York" />`
+    },
+    {
+      name: 'Controlled Month',
+      code: `<Calendar
+  month={new Date(2025, 5, 1)}
+  onMonthChange={(month) => console.log('Visible month:', month)}
+  numberOfMonths={2}
+/>`
     }
   ]
 };
@@ -57,9 +112,11 @@ export const rangePickerDemo = {
           from: new Date(2024, 0, 1),
           to: new Date(2024, 0, 15)
         }}
-        calendarProps={{
-          startMonth: new Date(2024, 0, 1),
-          endMonth: new Date(2024, 11, 31),
+        slotProps={{
+          calendar: {
+            startMonth: new Date(2024, 0, 1),
+            endMonth: new Date(2024, 11, 31),
+          },
         }}
       >
         {({ startDate, endDate }) => (
@@ -76,11 +133,11 @@ export const datePickerDemo = {
   tabs: [
     {
       name: 'Basic',
-      code: `<DatePicker inputProps={{ size: "medium" }} />`
+      code: `<DatePicker slotProps={{ input: { size: "medium" } }} />`
     },
     {
       name: 'Without Calendar Icon',
-      code: `<DatePicker showCalendarIcon={false} inputProps={{ size: "medium" }} />`
+      code: `<DatePicker showCalendarIcon={false} slotProps={{ input: { size: "medium" } }} />`
     },
     {
       name: 'Custom Trigger',

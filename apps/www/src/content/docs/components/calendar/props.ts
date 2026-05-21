@@ -163,14 +163,24 @@ export interface RangePickerProps {
   /** Controlled date range. */
   value?: { from?: Date; to?: Date };
 
-  /** Props for customizing the calendar */
+  /**
+   * Props for each picker slot. When both this and the legacy
+   * `inputsProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
+   *
+   * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
+   * forwarded — use `onSelect` for value changes.
+   */
+  slotProps?: {
+    startInput?: InputProps;
+    endInput?: InputProps;
+    calendar?: CalendarProps;
+    popover?: PopoverContentProps;
+  };
+
+  /** @deprecated Use `slotProps.calendar` instead. */
   calendarProps?: CalendarProps;
 
-  /**
-   * Props for customizing the inputs. Event handlers (`onChange`, `onFocus`,
-   * `onBlur`, `onKeyUp`) are not forwarded — use the picker's `onSelect` for
-   * value changes.
-   */
+  /** @deprecated Use `slotProps.startInput` / `slotProps.endInput` instead. */
   inputsProps?: {
     startDate?: InputProps;
     endDate?: InputProps;
@@ -207,7 +217,7 @@ export interface RangePickerProps {
    */
   timeZone?: string;
 
-  /** Props for customizing the popover */
+  /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
 }
 
@@ -224,10 +234,19 @@ export interface DatePickerProps {
   dateFormat?: string;
 
   /**
-   * Props for customizing the input. Event handlers (`onChange`, `onFocus`,
-   * `onBlur`, `onKeyUp`) are not forwarded — use the picker's `onSelect` for
-   * value changes.
+   * Props for each picker slot. When both this and the legacy
+   * `inputProps` / `calendarProps` / `popoverProps` are set, `slotProps` wins.
+   *
+   * Input event handlers (`onChange`, `onFocus`, `onBlur`, `onKeyUp`) are not
+   * forwarded — use `onSelect` for value changes.
    */
+  slotProps?: {
+    input?: InputProps;
+    calendar?: CalendarProps;
+    popover?: PopoverContentProps;
+  };
+
+  /** @deprecated Use `slotProps.input` instead. */
   inputProps?: InputProps;
 
   /** Controlled date value. Pair with `onSelect`. */
@@ -239,7 +258,7 @@ export interface DatePickerProps {
   /** Callback function when date is selected */
   onSelect?: (date: Date) => void;
 
-  /** Props for customizing the calendar */
+  /** @deprecated Use `slotProps.calendar` instead. */
   calendarProps?: CalendarProps;
 
   /**
@@ -270,6 +289,6 @@ export interface DatePickerProps {
    */
   timeZone?: string;
 
-  /** Props for customizing the popover */
+  /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
 }
