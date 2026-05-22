@@ -42,6 +42,19 @@ import {
   DataTableVirtualizedDemo
 } from '../datatable-demo';
 import DataTableSelectionDemo from '../datatable-selection-demo';
+import {
+  DataViewCustomDemo,
+  DataViewEmptyZeroDemo,
+  DataViewGroupingDemo,
+  DataViewListDemo,
+  DataViewLoadingDemo,
+  DataViewMultiViewDemo,
+  DataViewPerViewFieldsDemo,
+  DataViewSelectionDemo,
+  DataViewTableDemo,
+  DataViewVirtualizedDemo,
+  DataViewVirtualizedGroupingDemo
+} from '../dataview-demo';
 import ChipInputDemo from '../inputfield-chip-demo';
 import LinearMenuDemo from '../linear-dropdown-demo';
 import PopoverColorPicker from '../popover-color-picker';
@@ -62,6 +75,17 @@ export default function Demo(props: DemoProps) {
       DataTableDemo,
       DataTableSearchDemo,
       DataTableVirtualizedDemo,
+      DataViewTableDemo,
+      DataViewListDemo,
+      DataViewMultiViewDemo,
+      DataViewEmptyZeroDemo,
+      DataViewCustomDemo,
+      DataViewVirtualizedDemo,
+      DataViewGroupingDemo,
+      DataViewVirtualizedGroupingDemo,
+      DataViewLoadingDemo,
+      DataViewPerViewFieldsDemo,
+      DataViewSelectionDemo,
       ChipInputDemo,
       DataTableSelectionDemo,
       LinearMenuDemo,

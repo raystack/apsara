@@ -1,0 +1,317 @@
+/* Toolbar */
+.toolbar {
+  padding: var(--rs-space-3) var(--rs-space-7) var(--rs-space-3)
+    var(--rs-space-5);
+  align-self: stretch;
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  background: var(--rs-color-background-base-primary);
+}
+
+.toolbar:has([data-has-filter-chips]) {
+  padding-left: var(--rs-space-7);
+}
+
+/* Display popover */
+.display-popover-content {
+  padding: 0px;
+  min-width: 320px;
+  max-width: 352px;
+  border-radius: var(--rs-radius-3);
+}
+
+.display-popover-properties-container {
+  padding: var(--rs-space-5);
+  border-bottom: 1px solid var(--rs-color-border-base-primary);
+}
+
+.display-popover-properties-label {
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.display-popover-properties-control {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.display-popover-properties-select {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.display-popover-properties-select > span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.display-popover-reset-container {
+  padding: var(--rs-space-3) var(--rs-space-5);
+}
+
+.display-popover-sort-icon {
+  height: var(--rs-space-6);
+  width: var(--rs-space-6);
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+/* Filter container — chips wrap onto a new line when they overflow. */
+.filterContainer {
+  flex-wrap: wrap;
+}
+
+/* Filter-summary footer (inside renderer scroll container) */
+.filterSummaryFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--rs-space-4);
+  width: 100%;
+  padding: var(--rs-space-9) 0;
+  box-sizing: border-box;
+}
+
+.filterSummaryCount {
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+.filterSummaryLabel {
+  color: var(--rs-color-foreground-base-secondary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+/* Generic row hover (used by Custom render-prop helpers) */
+.clickable {
+  cursor: pointer;
+}
+
+/* List renderer (handles both variant="table" and variant="list").
+   Implemented with CSS Grid + subgrid: `.listGrid` defines the column tracks
+   once; every row/header subgrid-inherits them so cells stay aligned without
+   per-cell width math. */
+.listRoot {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: var(--rs-color-background-base-primary);
+}
+
+.listGrid {
+  display: grid;
+  width: 100%;
+  align-items: stretch;
+}
+
+.listHeader {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--rs-color-background-base-primary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.listHeaderRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.listHeaderCell {
+  padding: var(--rs-space-3);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  color: var(--rs-color-foreground-base-tertiary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.listBody {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+/* Virtualized body: rows are absolutely positioned, so the body is pulled out
+   of the subgrid flow. Each virtual row re-declares its own column template
+   inline. */
+.listBodyVirtual {
+  grid-column: 1 / -1;
+  position: relative;
+}
+
+.listRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: center;
+  background: var(--rs-color-background-base-primary);
+  box-sizing: border-box;
+}
+
+.listRow:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+/* Virtual row variant — positioned absolutely; gridTemplateColumns is set
+   inline so columns line up with the header. */
+.listRowVirtual {
+  display: grid;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  align-items: center;
+  background: var(--rs-color-background-base-primary);
+  box-sizing: border-box;
+}
+
+.listRowVirtual:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.listRowDivider {
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.listCell {
+  padding: var(--rs-space-4) var(--rs-space-3);
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: var(--rs-color-foreground-base-secondary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-regular);
+  font-style: normal;
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+  box-sizing: border-box;
+}
+
+.listGroupHeader {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-3);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* Virtualized group header — absolutely positioned within `.listBodyVirtual`. */
+.listGroupHeaderVirtual {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-3);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+/* Non-virtualized sticky group header. `top` is set inline by the renderer to
+   the measured column-header height (0 when headers are hidden). */
+.listGroupHeaderSticky {
+  position: sticky;
+  z-index: 1;
+}
+
+/* Virtualized sticky group anchor — single element that swaps content as the
+   user scrolls past each natural group header. `top` is set inline. */
+.listGroupAnchor {
+  position: sticky;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  grid-column: 1 / -1;
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-primary);
+  padding: var(--rs-space-3);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  box-sizing: border-box;
+  box-shadow: 0 0.5px 0 0 var(--rs-color-border-base-primary);
+}
+
+/* Loader skeleton row (virtualized + non-virtualized share this). Renders in
+   natural flow at the tail of the row pane. */
+.listLoaderRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Lets <Skeleton/> fill the available width inside a flex .listCell —
+   matches DataTable's virtualized skeleton container. */
+.skeletonFill {
+  flex: 1;
+}
+
+/* IntersectionObserver sentinel — sits below the loader rows. Non-visual. */
+.listSentinel {
+  grid-column: 1 / -1;
+  height: 1px;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Empty/zero sibling container */
+.dataStateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--rs-space-9) 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Multi-view switcher (inside DisplayControls or standalone) */
+.viewSwitcher {
+  flex-shrink: 0;
+}
