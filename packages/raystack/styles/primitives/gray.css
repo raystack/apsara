@@ -5,7 +5,10 @@
  */
 
 
-:root,
+/* The bare `[data-theme]` selectors below make the default-gray scale apply to
+ * scoped sections that set only `data-theme` (without an explicit
+ * `data-gray-color`). The `[data-gray-color='X'][data-theme='dark']` rules for
+ * non-default grays still win on specificity when both attributes are set. */
 [data-gray-color='gray'],
 [data-theme='light'] {
     --rs-gray-1: oklch(0.9911 0 0);

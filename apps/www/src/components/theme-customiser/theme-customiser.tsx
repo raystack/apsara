@@ -27,7 +27,7 @@ export default function ThemeCustomizer() {
         ([key, value]) => DEFAULT_OPTIONS[key as keyof ThemeOptions] !== value
       )
     );
-    const themeString: string = `<ThemeProvider${getPropsString(props)}>`;
+    const themeString: string = `<Theme${getPropsString(props)}>`;
 
     navigator.clipboard.writeText(themeString);
   };

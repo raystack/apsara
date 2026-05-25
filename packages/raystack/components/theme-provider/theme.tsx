@@ -13,7 +13,7 @@ import {
 import type { ThemeProviderProps, UseThemeProps } from './types';
 import { COLOR_SCHEMES } from './types';
 
-const colorSchemes: string[] = [...COLOR_SCHEMES];
+const colorSchemes: readonly string[] = COLOR_SCHEMES;
 const MEDIA = '(prefers-color-scheme: dark)';
 const isServer = typeof window === 'undefined';
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);

@@ -1,39 +1,39 @@
 ---
 title: Overview
-description: Understanding the Apsara theming system and ThemeProvider.
+description: Understanding the Apsara theming system and the Theme component.
 ---
 
 Apsara provides a theming system built on CSS custom properties (tokens). Tokens are semantic variables that automatically resolve to appropriate values based on the active theme—so your UI adapts seamlessly when users switch between light and dark modes or when you change accent colors, without any code changes.
 
 ## Installation
 
-Wrap your application with the `ThemeProvider` component:
+Wrap your application with the `Theme` component:
 
 ```tsx
-import { ThemeProvider } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system">
+    <Theme defaultTheme="system">
       <YourApp />
-    </ThemeProvider>
+    </Theme>
   );
 }
 ```
 
 ## Customization
 
-The ThemeProvider accepts props to control the visual identity of your application. Combine `style` variants with `accentColor` and `grayColor` to create distinct aesthetics—from sharp and technical to warm and editorial. The `defaultTheme` prop controls light/dark mode, with `system` respecting the user's OS preference.
+The `Theme` component accepts props to control the visual identity of your application. Combine `style` variants with `accentColor` and `grayColor` to create distinct aesthetics—from sharp and technical to warm and editorial. The `defaultTheme` prop controls light/dark mode, with `system` respecting the user's OS preference.
 
 ```tsx
 // Clean, technical aesthetic
-<ThemeProvider style="modern" accentColor="indigo" grayColor="slate">
+<Theme style="modern" accentColor="indigo" grayColor="slate">
 
 // Warm, editorial feel
-<ThemeProvider style="traditional" accentColor="orange" grayColor="mauve">
+<Theme style="traditional" accentColor="orange" grayColor="mauve">
 
 // Vibrant and fresh
-<ThemeProvider style="modern" accentColor="mint" grayColor="gray">
+<Theme style="modern" accentColor="mint" grayColor="gray">
 ```
 
 See [API Reference](#api-reference) for all available props and options.
@@ -80,11 +80,13 @@ Tokens follow two naming patterns:
 
 ## API Reference
 
-### ThemeProvider
+### Theme
 
-The `ThemeProvider` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
+The `Theme` component wraps your application and manages theme state. It handles persisting the user's preference to localStorage, syncing with system preferences, and injecting the appropriate CSS variables into the document.
 
 <auto-type-table path="./props.ts" name="ThemeProviderProps" />
+
+> `ThemeProvider` is a deprecated alias for `Theme`. New code should import `Theme`; the old name is kept for backward compatibility and will be removed in a future major release.
 
 ### useTheme
 
@@ -108,23 +110,23 @@ function ThemeToggle() {
 
 ## Framework Integration
 
-**HTML Attributes** — the ThemeProvider sets data attributes on the document element for CSS targeting:
+**HTML Attributes** — `Theme` sets data attributes on the document element for CSS targeting:
 - `data-theme` — current color scheme (`light` | `dark`)
 - `data-style` — active style variant (`modern` | `traditional`)
 - `data-accent-color` — active accent color (`indigo` | `orange` | `mint`)
 - `data-gray-color` — active gray variant (`gray` | `mauve` | `slate`)
 
-**SSR & Flash Prevention** — the ThemeProvider includes an inline script that runs before React hydration to prevent flash of incorrect theme. For SSR frameworks, include the provider in your root layout:
+**SSR & Flash Prevention** — `Theme` includes an inline script that runs before React hydration to prevent flash of incorrect theme. For SSR frameworks, include the provider in your root layout:
 
 ```tsx
 // Next.js App Router: app/layout.tsx
-import { ThemeProvider } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <Theme>{children}</Theme>
       </body>
     </html>
   );
@@ -153,55 +155,57 @@ Because scoping is implemented in CSS, you can opt in by simply setting the attr
 
 The package's stylesheet handles the rest: every `--rs-color-*` token, `color-scheme` for native form controls and scrollbars, and the smooth transition during theme switches all follow the scoped attribute.
 
-### Nested `ThemeProvider`
+### Nested `Theme`
 
-For a typed convenience wrapper, nest `ThemeProvider`:
+Render a `Theme` inside another `Theme` and the inner one switches to *scope mode*.
+
+For a typed convenience wrapper, nest `Theme`:
 
 ```tsx
-import { ThemeProvider } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
-<ThemeProvider forcedTheme="dark">
+<Theme forcedTheme="dark">
   <Card>Dark scoped card</Card>
-</ThemeProvider>
+</Theme>
 ```
 
-When `ThemeProvider` is rendered inside another `ThemeProvider`, it switches to scope mode: it writes `data-theme` (and optionally `data-accent-color`, `data-gray-color`, `data-style`) onto a wrapper `<div>` rather than the document root. The outer provider's state remains the source of truth for `useTheme()`.
+When `Theme` is rendered inside another `Theme`, it switches to scope mode: it writes `data-theme` (and optionally `data-accent-color`, `data-gray-color`, `data-style`) onto a wrapper `<div>` rather than the document root. The outer provider's state remains the source of truth for `useTheme()`.
 
 ### Combining with accent and gray overrides
 
 A scope can override accent or gray independently of theme. This is useful for highlighting a section without changing its color scheme:
 
 ```tsx
-<ThemeProvider accentColor="orange">
+<Theme accentColor="orange">
   <Button color="accent">Orange accent in this region only</Button>
-</ThemeProvider>
+</Theme>
 
-<ThemeProvider forcedTheme="dark" accentColor="mint" grayColor="slate">
+<Theme forcedTheme="dark" accentColor="mint" grayColor="slate">
   <Card>Dark mint-on-slate card</Card>
-</ThemeProvider>
+</Theme>
 ```
 
 ### State management
 
-By default, a nested `ThemeProvider` is stateless — the consumer owns the theme value. For an interactive scope, drive it with React state:
+By default, a nested `Theme` is stateless — the consumer owns the theme value. For an interactive scope, drive it with React state:
 
 ```tsx
 const [scopeTheme, setScopeTheme] = useState<'light' | 'dark'>('dark');
 
-<ThemeProvider forcedTheme={scopeTheme}>
+<Theme forcedTheme={scopeTheme}>
   <Toggle onClick={() => setScopeTheme(t => t === 'dark' ? 'light' : 'dark')}>
     Toggle this scope
   </Toggle>
   <Card>...</Card>
-</ThemeProvider>
+</Theme>
 ```
 
 ### Persistent scope
 
-Pass `storageKey` to a nested `ThemeProvider` and it becomes stateful, persisting the scope's theme to localStorage. Descendants read and update it through the same `useTheme()` hook — it returns the nearest provider's state, so inside a persistent scope it returns the scope's theme and setter:
+Pass `storageKey` to a nested `Theme` and it becomes stateful, persisting the scope's theme to localStorage. Descendants read and update it through the same `useTheme()` hook — it returns the nearest provider's state, so inside a persistent scope it returns the scope's theme and setter:
 
 ```tsx
-import { ThemeProvider, useTheme } from "@raystack/apsara";
+import { Theme, useTheme } from "@raystack/apsara";
 
 function ScopeToggle() {
   const { theme, setTheme } = useTheme();
@@ -213,10 +217,10 @@ function ScopeToggle() {
   );
 }
 
-<ThemeProvider storageKey="dashboard-theme" defaultTheme="dark">
+<Theme storageKey="dashboard-theme" defaultTheme="dark">
   <ScopeToggle />
   <Dashboard />
-</ThemeProvider>
+</Theme>
 ```
 
 **Behavior:**
@@ -236,4 +240,4 @@ function ScopeToggle() {
 ### When to reach for a nested provider vs. the bare attribute
 
 - Use the **bare `data-theme` attribute** when you're already rendering a custom element and don't want another wrapper. The CSS handles everything — components inside will theme correctly.
-- Use a **nested `ThemeProvider`** when you want typed props (`forcedTheme`, `accentColor`, etc.) and a single import that documents intent.
+- Use a **nested `Theme`** when you want typed props (`forcedTheme`, `accentColor`, etc.) and a single import that documents intent.

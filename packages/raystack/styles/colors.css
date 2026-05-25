@@ -3,7 +3,6 @@
  * Avoid using color variables from other files in the styles folder directly.
  */
 
-:root,
 [data-theme='light'],
 [data-theme='dark'] {
   /* Base Foreground Colors */

@@ -21,7 +21,6 @@
 }
 
 /* Light Theme Colors */
-:root,
 [data-theme="light"] {
     /* Neutral Colors */
     --rs-neutral-1: var(--rs-gray-1);

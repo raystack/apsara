@@ -5,7 +5,6 @@
  */
 
 /* [data-accent-color='indigo']  { */
-:root,
 [data-theme='light'] {
     --rs-accent-1: oklch(0.9943 0.0013 286.38);
     --rs-accent-2: oklch(0.9823 0.0083 271.33);

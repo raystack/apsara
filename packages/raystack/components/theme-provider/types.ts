@@ -59,7 +59,7 @@ export interface ThemeProviderProps {
   value?: ValueObject;
   /** Nonce string to pass to the inline script for CSP headers */
   nonce?: string;
-  /** React children to be rendered within the ThemeProvider */
+  /** React children to be rendered within the Theme component */
   children?: React.ReactNode;
   /** Style variant of the theme. Affects the radius and font properties. */
   style?: StyleVariant;
