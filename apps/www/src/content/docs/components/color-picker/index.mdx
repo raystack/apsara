@@ -7,6 +7,7 @@ source: packages/raystack/components/color-picker
 import {
   preview,
   basicDemo,
+  copyableDemo,
   oklchDemo,
   popoverDemo,
 } from "./demo.ts";
@@ -25,7 +26,7 @@ import { ColorPicker } from '@raystack/apsara'
   <ColorPicker.Hue />
   <ColorPicker.Alpha />
   <ColorPicker.Mode />
-  <ColorPicker.Input />
+  <ColorPicker.Input copyable />
 </ColorPicker>
 ```
 
@@ -57,13 +58,19 @@ Lets users switch between different color models (HEX, RGB, HSL, OKLCH) via a dr
 
 ### Input
 
-Displays the current color value in the selected color model as a read-only string. The value is updated automatically as the user interacts with the area, hue, or alpha controls.
+Displays the current color value in the selected color model as a read-only string. The value is updated automatically as the user interacts with the area, hue, or alpha controls. Pass `copyable` to render a copy-to-clipboard button in the input's trailing slot.
 
 ## Examples
 
 ### Basic Usage
 
 <Demo data={basicDemo} />
+
+### Copy to Clipboard
+
+Pass the `copyable` prop on `ColorPicker.Input` to render a copy-to-clipboard button in the input's trailing slot. The button copies the formatted color string in the active mode (e.g. `#FF0000`, `rgb(...)`, or `oklch(...)`) and shows a brief confirmation icon after a successful copy.
+
+<Demo data={copyableDemo} />
 
 ### OKLCH Mode
 

@@ -53,7 +53,7 @@ export default function ColorPickerExamplesPage() {
             <ColorPicker.Alpha />
             <Flex direction='row' gap={2}>
               <ColorPicker.Mode />
-              <ColorPicker.Input />
+              <ColorPicker.Input copyable />
             </Flex>
           </ColorPicker>
         </Flex>
@@ -75,7 +75,7 @@ export default function ColorPickerExamplesPage() {
             <ColorPicker.Alpha />
             <Flex direction='row' gap={2}>
               <ColorPicker.Mode />
-              <ColorPicker.Input />
+              <ColorPicker.Input copyable />
             </Flex>
           </ColorPicker>
         </Flex>
@@ -100,7 +100,7 @@ export default function ColorPickerExamplesPage() {
             <ColorPicker.Alpha />
             <Flex direction='row' gap={2}>
               <ColorPicker.Mode />
-              <ColorPicker.Input />
+              <ColorPicker.Input copyable />
             </Flex>
           </ColorPicker>
           <Flex direction='column' gap={1}>
@@ -149,7 +149,7 @@ export default function ColorPickerExamplesPage() {
                 <ColorPicker.Alpha />
                 <Flex direction='row' gap={2}>
                   <ColorPicker.Mode />
-                  <ColorPicker.Input />
+                  <ColorPicker.Input copyable />
                 </Flex>
               </ColorPicker>
             </Popover.Content>

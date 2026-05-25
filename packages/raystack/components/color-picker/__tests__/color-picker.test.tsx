@@ -1,6 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ColorPicker } from '../color-picker';
+
+const mockCopy = vi.fn();
+vi.mock('~/hooks/useCopyToClipboard', () => ({
+  useCopyToClipboard: () => ({ copy: mockCopy })
+}));
 
 // // Mock ResizeObserver for tests
 // const originalResizeObserver = global.ResizeObserver;
@@ -304,6 +309,57 @@ describe('ColorPicker', () => {
 
       const modeSelector = screen.getByTestId('mode-selector');
       expect(modeSelector).toBeInTheDocument();
+    });
+  });
+
+  describe('ColorPicker.Input copyable', () => {
+    beforeEach(() => {
+      mockCopy.mockClear();
+      mockCopy.mockResolvedValue(true);
+    });
+
+    it('does not render a copy button by default', () => {
+      const { container } = render(
+        <ColorPicker>
+          <ColorPicker.Input />
+        </ColorPicker>
+      );
+      expect(
+        container.querySelector('[data-test-id="copy-button"]')
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders a copy button when copyable is true', () => {
+      const { container } = render(
+        <ColorPicker>
+          <ColorPicker.Input copyable />
+        </ColorPicker>
+      );
+      expect(
+        container.querySelector('[data-test-id="copy-button"]')
+      ).toBeInTheDocument();
+    });
+
+    it('copies the formatted color string in hex mode', () => {
+      const { container } = render(
+        <ColorPicker defaultValue='#ff0000' mode='hex'>
+          <ColorPicker.Input copyable />
+        </ColorPicker>
+      );
+      const btn = container.querySelector('[data-test-id="copy-button"]');
+      fireEvent.click(btn!);
+      expect(mockCopy).toHaveBeenCalledWith('#FF0000');
+    });
+
+    it('copies the oklch string when mode is oklch', () => {
+      const { container } = render(
+        <ColorPicker defaultValue='#ff0000' mode='oklch'>
+          <ColorPicker.Input copyable />
+        </ColorPicker>
+      );
+      const btn = container.querySelector('[data-test-id="copy-button"]');
+      fireEvent.click(btn!);
+      expect(mockCopy).toHaveBeenCalledWith(expect.stringMatching(/^oklch\(/));
     });
   });
 
