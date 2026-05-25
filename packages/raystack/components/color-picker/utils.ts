@@ -102,7 +102,7 @@ export const getColorString = (color: ColorObject, mode: ModeType): string => {
 export const oklchToRgb = (l: number, c: number, h: number) =>
   toRgb({ mode: 'oklch', l, c, h });
 
-export type HslView = {
+type HslView = {
   h: number;
   s: number;
   l: number;
