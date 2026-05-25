@@ -95,7 +95,11 @@
   position: absolute;
   inset: 0;
   border-radius: var(--rs-radius-full);
-  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 1));
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--rs-color-picker-alpha-end, rgba(0, 0, 0, 1))
+  );
 }
 
 .selectTrigger {

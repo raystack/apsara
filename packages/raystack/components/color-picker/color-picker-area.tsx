@@ -14,7 +14,6 @@ import { useColorPicker } from './color-picker-root';
 import {
   CHROMA_MAX,
   clamp01,
-  getColorString,
   hslToOklch,
   oklchToHsl,
   oklchToRgb
@@ -44,36 +43,48 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
   const isThumbVisible = useRef(false);
 
   const { lightness, chroma, hue, setColor } = useColorPicker();
-  const thumbColor = getColorString(
-    { l: lightness, c: chroma, h: hue, alpha: 1 },
-    'hex'
+  // Use the native CSS oklch() so the thumb renders the actual picked color on
+  // wide-gamut (P3) displays — hex would silently sRGB-clip wide-gamut picks.
+  const thumbColor = useMemo(
+    () => `oklch(${lightness} ${chroma} ${hue})`,
+    [lightness, chroma, hue]
   );
 
+  // Coalesce hue-driven repaints into one per animation frame. A fast slider
+  // sweep would otherwise queue dozens of synchronous 96² repaints back-to-back.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    let cancelled = false;
+    const handle = requestAnimationFrame(() => {
+      if (cancelled) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const img = ctx.createImageData(CANVAS_RES, CANVAS_RES);
-    for (let y = 0; y < CANVAS_RES; y++) {
-      const L = 1 - y / (CANVAS_RES - 1);
-      for (let x = 0; x < CANVAS_RES; x++) {
-        const C = (x / (CANVAS_RES - 1)) * CHROMA_MAX;
-        const rgb = oklchToRgb(L, C, hue);
-        const idx = (y * CANVAS_RES + x) * 4;
-        if (!rgb) {
-          img.data[idx] = img.data[idx + 1] = img.data[idx + 2] = 128;
+      const img = ctx.createImageData(CANVAS_RES, CANVAS_RES);
+      for (let y = 0; y < CANVAS_RES; y++) {
+        const L = 1 - y / (CANVAS_RES - 1);
+        for (let x = 0; x < CANVAS_RES; x++) {
+          const C = (x / (CANVAS_RES - 1)) * CHROMA_MAX;
+          const rgb = oklchToRgb(L, C, hue);
+          const idx = (y * CANVAS_RES + x) * 4;
+          if (!rgb) {
+            img.data[idx] = img.data[idx + 1] = img.data[idx + 2] = 128;
+            img.data[idx + 3] = 255;
+            continue;
+          }
+          img.data[idx] = Math.round(clamp01(rgb.r) * 255);
+          img.data[idx + 1] = Math.round(clamp01(rgb.g) * 255);
+          img.data[idx + 2] = Math.round(clamp01(rgb.b) * 255);
           img.data[idx + 3] = 255;
-          continue;
         }
-        img.data[idx] = Math.round(clamp01(rgb.r) * 255);
-        img.data[idx + 1] = Math.round(clamp01(rgb.g) * 255);
-        img.data[idx + 2] = Math.round(clamp01(rgb.b) * 255);
-        img.data[idx + 3] = 255;
       }
-    }
-    ctx.putImageData(img, 0, 0);
+      ctx.putImageData(img, 0, 0);
+    });
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(handle);
+    };
   }, [hue]);
 
   useEffect(() => {

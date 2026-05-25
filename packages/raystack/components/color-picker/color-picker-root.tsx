@@ -5,6 +5,8 @@ import {
   createContext,
   useCallback,
   useContext,
+  useMemo,
+  useRef,
   useState
 } from 'react';
 import { Flex } from '../flex';
@@ -57,9 +59,14 @@ export const ColorPickerRoot = ({
   onModeChange,
   ...props
 }: ColorPickerProps) => {
-  const providedColor = value ? parseColor(value) : undefined;
+  const providedColor = useMemo(
+    () => (value ? parseColor(value) : undefined),
+    [value]
+  );
 
-  const [internalColor, setInternalColor] = useState(parseColor(defaultValue));
+  const [internalColor, setInternalColor] = useState(() =>
+    parseColor(defaultValue)
+  );
   const [internalMode, setInternalMode] = useState(defaultMode);
 
   const mode = providedMode ?? internalMode;
@@ -68,26 +75,39 @@ export const ColorPickerRoot = ({
   // the pad / thumb / input only reflect colors the active output mode can
   // actually represent. Internal state stays raw so switching back to oklch
   // restores any wide-gamut pick the user hadn't yet overwritten.
-  const rawColor: ColorObject = {
-    l: providedColor ? providedColor.l : internalColor.l,
-    c: providedColor ? providedColor.c : internalColor.c,
-    h: providedColor ? providedColor.h : internalColor.h,
-    alpha: (providedColor ? providedColor.alpha : internalColor.alpha) ?? 1
-  };
-  const display = mode === 'oklch' ? rawColor : clampToSrgb(rawColor);
+  const rawColor = useMemo<ColorObject>(
+    () => ({
+      l: providedColor ? providedColor.l : internalColor.l,
+      c: providedColor ? providedColor.c : internalColor.c,
+      h: providedColor ? providedColor.h : internalColor.h,
+      alpha: (providedColor ? providedColor.alpha : internalColor.alpha) ?? 1
+    }),
+    [providedColor, internalColor]
+  );
+  // clampToSrgb wraps culori's clampChroma, which is iterative — memoize so
+  // it doesn't re-run on unrelated re-renders during a drag.
+  const display = useMemo(
+    () => (mode === 'oklch' ? rawColor : clampToSrgb(rawColor)),
+    [mode, rawColor]
+  );
 
   const lightness = display.l;
   const chroma = display.c;
   const hue = display.h;
   const alpha = display.alpha ?? 1;
 
+  // Mirror the current effective color in a ref so setColor can compute the
+  // next value synchronously, without putting onValueChange inside the
+  // setInternalColor updater (where StrictMode would fire it twice).
+  const rawColorRef = useRef(rawColor);
+  rawColorRef.current = rawColor;
+
   const setColor = useCallback<ColorPickerContextValue['setColor']>(
     value => {
-      setInternalColor(prev => {
-        const next = { ...prev, ...value };
-        onValueChange?.(getColorString(next, mode), mode);
-        return next;
-      });
+      const next = { ...rawColorRef.current, ...value };
+      rawColorRef.current = next;
+      setInternalColor(next);
+      onValueChange?.(getColorString(next, mode), mode);
     },
     [mode, onValueChange]
   );
