@@ -8,12 +8,18 @@ import {
   useState
 } from 'react';
 import { Flex } from '../flex';
-import { ColorObject, getColorString, ModeType, parseColor } from './utils';
+import {
+  ColorObject,
+  clampToSrgb,
+  getColorString,
+  ModeType,
+  parseColor
+} from './utils';
 
 type ColorPickerContextValue = {
-  hue: number;
-  saturation: number;
   lightness: number;
+  chroma: number;
+  hue: number;
   alpha: number;
   mode: ModeType;
   setColor: (color: Partial<ColorObject>) => void;
@@ -41,6 +47,7 @@ export interface ColorPickerProps
   mode?: ModeType;
   onModeChange?: (mode: ModeType) => void;
 }
+
 export const ColorPickerRoot = ({
   value,
   defaultValue = '#ffffff',
@@ -55,24 +62,31 @@ export const ColorPickerRoot = ({
   const [internalColor, setInternalColor] = useState(parseColor(defaultValue));
   const [internalMode, setInternalMode] = useState(defaultMode);
 
-  const hue = providedColor ? providedColor.h : internalColor.h;
-  const saturation = providedColor ? providedColor.s : internalColor.s;
-  const lightness = providedColor ? providedColor.l : internalColor.l;
-  const alpha =
-    (providedColor ? providedColor?.alpha : internalColor?.alpha) ?? 1;
-
   const mode = providedMode ?? internalMode;
+
+  // In non-oklch modes, derive a display value clamped to the sRGB gamut so
+  // the pad / thumb / input only reflect colors the active output mode can
+  // actually represent. Internal state stays raw so switching back to oklch
+  // restores any wide-gamut pick the user hadn't yet overwritten.
+  const rawColor: ColorObject = {
+    l: providedColor ? providedColor.l : internalColor.l,
+    c: providedColor ? providedColor.c : internalColor.c,
+    h: providedColor ? providedColor.h : internalColor.h,
+    alpha: (providedColor ? providedColor.alpha : internalColor.alpha) ?? 1
+  };
+  const display = mode === 'oklch' ? rawColor : clampToSrgb(rawColor);
+
+  const lightness = display.l;
+  const chroma = display.c;
+  const hue = display.h;
+  const alpha = display.alpha ?? 1;
 
   const setColor = useCallback<ColorPickerContextValue['setColor']>(
     value => {
-      setInternalColor(_color => {
-        const updatedColor = { ..._color, ...value };
-
-        if (!onValueChange) return updatedColor;
-
-        onValueChange(getColorString(updatedColor, mode), mode);
-
-        return updatedColor;
+      setInternalColor(prev => {
+        const next = { ...prev, ...value };
+        onValueChange?.(getColorString(next, mode), mode);
+        return next;
       });
     },
     [mode, onValueChange]
@@ -89,9 +103,9 @@ export const ColorPickerRoot = ({
   return (
     <ColorPickerContext
       value={{
-        hue,
-        saturation,
         lightness,
+        chroma,
+        hue,
         alpha,
         mode,
         setColor,

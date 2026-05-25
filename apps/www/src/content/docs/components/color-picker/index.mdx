@@ -39,7 +39,7 @@ The `ColorPicker` is composed of several subcomponents, each responsible for a s
 
 ### Area
 
-Enables users to select a color from a palette. Typically used for choosing saturation and brightness.
+Enables users to select a color from a 2D palette. The surface adapts to the active mode: in `hex`, `rgb`, and `hsl` modes it renders the classic saturation × brightness gradient square; in `oklch` mode it renders a chroma × lightness plane covering the full P3 gamut.
 
 ### Hue
 
@@ -67,9 +67,7 @@ Displays the current color value in the selected color model and allows direct t
 
 ### OKLCH Mode
 
-The picker accepts and emits `oklch()` values. Pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'` to have the input render and emit oklch.
-
-Note that the picker's sliders still operate in HSL — `oklch` here is an input/output format, not a perceptual editing mode. The emitted oklch value is the result of an HSL → sRGB → OKLCH conversion, so a value-in will not be bit-identical to the value-out.
+The picker stores color internally in OKLCH. In `hex`, `rgb`, and `hsl` modes the area pad is the familiar HSL saturation × brightness square and the hue slider runs in HSL hue — so the picker behaves like a traditional color picker and only emits colors representable in the chosen format. Pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'` to switch to a chroma × lightness plane covering the full P3 gamut; the hue slider then runs in OKLCH hue, where equal steps correspond to equal perceptual changes.
 
 <Demo data={oklchDemo} />
 

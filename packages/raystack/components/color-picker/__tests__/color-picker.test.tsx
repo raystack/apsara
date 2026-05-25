@@ -66,17 +66,30 @@ describe('ColorPicker', () => {
       expect(area).toHaveClass('custom-area');
     });
 
-    it('renders with background gradient', () => {
+    it('renders the gradient canvas in oklch mode', () => {
       render(
-        <ColorPicker>
+        <ColorPicker mode='oklch'>
           <ColorPicker.Area data-testid='color-area' />
         </ColorPicker>
       );
 
       const area = screen.getByTestId('color-area');
-      expect(area).toHaveStyle(
-        'background: linear-gradient(0deg, rgba(0,0,0,1), rgba(0,0,0,0)), linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0)), hsl(0, 100%, 50%)'
+      expect(area.querySelector('canvas')).toBeInTheDocument();
+    });
+
+    it('renders the HSL gradient surface in non-oklch modes', () => {
+      render(
+        <ColorPicker mode='hex'>
+          <ColorPicker.Area data-testid='color-area' />
+        </ColorPicker>
       );
+
+      const area = screen.getByTestId('color-area');
+      // Non-oklch modes use a CSS-gradient div, not the canvas-painted
+      // OKLCH plane — the absence of <canvas> is what distinguishes them.
+      // (jsdom rejects `linear-gradient(...)` inline styles, so we can't
+      // assert the background string directly.)
+      expect(area.querySelector('canvas')).not.toBeInTheDocument();
     });
   });
 

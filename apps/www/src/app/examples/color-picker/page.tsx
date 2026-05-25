@@ -35,9 +35,10 @@ export default function ColorPickerExamplesPage() {
           ColorPicker
         </Text>
         <Text size='small' variant='secondary'>
-          The picker supports hex, rgb, hsl, and oklch as input and output
-          formats. Internal sliders operate in HSL; oklch is a serialization
-          mode, not a perceptual editing mode.
+          The picker edits internally in OKLCH for perceptual uniformity. The
+          area pad shows a chroma × lightness cross-section at the selected hue;
+          the <code>mode</code> prop selects the output format (hex / rgb / hsl
+          / oklch).
         </Text>
       </Flex>
 
