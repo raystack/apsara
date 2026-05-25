@@ -120,18 +120,17 @@ export const ColorPickerRoot = ({
     [onModeChange]
   );
 
+  // Memoize the context value so consumers (Area, Hue, Alpha, Input, Mode) only
+  // re-render when a slice they read actually changes — without this, every
+  // pointermove during a drag would broadcast a fresh object identity to all
+  // subcomponents.
+  const contextValue = useMemo<ColorPickerContextValue>(
+    () => ({ lightness, chroma, hue, alpha, mode, setColor, setMode }),
+    [lightness, chroma, hue, alpha, mode, setColor, setMode]
+  );
+
   return (
-    <ColorPickerContext
-      value={{
-        lightness,
-        chroma,
-        hue,
-        alpha,
-        mode,
-        setColor,
-        setMode
-      }}
-    >
+    <ColorPickerContext value={contextValue}>
       <Flex direction='column' gap={4} {...props} />
     </ColorPickerContext>
   );

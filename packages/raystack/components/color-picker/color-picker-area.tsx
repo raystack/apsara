@@ -116,6 +116,7 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
     isDragging.current = false;
     window.removeEventListener('pointermove', handlePointerMove);
     window.removeEventListener('pointerup', handlePointerUp);
+    window.removeEventListener('pointercancel', handlePointerUp);
   }, [handlePointerMove]);
 
   const handlePointerDown = useCallback(
@@ -125,6 +126,10 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
       handlePointerMove(e.nativeEvent);
       window.addEventListener('pointermove', handlePointerMove);
       window.addEventListener('pointerup', handlePointerUp);
+      // pointercancel fires instead of pointerup when the OS/browser preempts
+      // the gesture (system dialog, palm rejection, etc.). Handling it with the
+      // same cleanup prevents stranded listeners + isDragging stuck at true.
+      window.addEventListener('pointercancel', handlePointerUp);
     },
     [handlePointerMove, handlePointerUp]
   );
@@ -209,6 +214,7 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
     isDragging.current = false;
     window.removeEventListener('pointermove', handlePointerMove);
     window.removeEventListener('pointerup', handlePointerUp);
+    window.removeEventListener('pointercancel', handlePointerUp);
   }, [handlePointerMove]);
 
   const handlePointerDown = useCallback(
@@ -218,6 +224,10 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
       handlePointerMove(e.nativeEvent);
       window.addEventListener('pointermove', handlePointerMove);
       window.addEventListener('pointerup', handlePointerUp);
+      // pointercancel fires instead of pointerup when the OS/browser preempts
+      // the gesture (system dialog, palm rejection, etc.). Handling it with the
+      // same cleanup prevents stranded listeners + isDragging stuck at true.
+      window.addEventListener('pointercancel', handlePointerUp);
     },
     [handlePointerMove, handlePointerUp]
   );
