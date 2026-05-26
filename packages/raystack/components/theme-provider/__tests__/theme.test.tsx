@@ -484,16 +484,16 @@ describe('Theme (scoped)', () => {
   });
 });
 
-// `useTheme()` returns layered state inside a scope: scope-relevant fields
-// (resolvedTheme, accentColor, etc.) reflect the scope's overrides; the rest
-// is inherited from the root.
+// `useTheme()` always targets the nearest scope. Every active scope (with
+// overrides or a storageKey) owns its own theme state; persistence is a
+// separate concern (only persistent scopes write to localStorage).
 describe('useTheme inside a stateless scope', () => {
-  it('layers scope overrides onto the root state', () => {
+  it('owns its own theme state but inherits non-overridden fields from parent', () => {
     const Probe = () => {
       const { theme, resolvedTheme, accentColor, grayColor } = useTheme();
       return (
         <div>
-          <span data-testid='theme'>{theme}</span>
+          <span data-testid='theme'>{theme ?? ''}</span>
           <span data-testid='resolved'>{resolvedTheme}</span>
           <span data-testid='accent'>{accentColor}</span>
           <span data-testid='gray'>{grayColor}</span>
@@ -509,9 +509,9 @@ describe('useTheme inside a stateless scope', () => {
       </Theme>
     );
 
-    // theme is the user's stored preference — stateless scope doesn't own it.
-    expect(screen.getByTestId('theme')).toHaveTextContent('dark');
-    // resolvedTheme reflects what's displayed for this subtree.
+    // Scope owns its theme state; no defaultTheme passed → starts undefined.
+    expect(screen.getByTestId('theme')).toHaveTextContent('');
+    // resolvedTheme reflects what's displayed for this subtree (forcedTheme wins).
     expect(screen.getByTestId('resolved')).toHaveTextContent('light');
     // Overridden field comes from the scope.
     expect(screen.getByTestId('accent')).toHaveTextContent('orange');
@@ -519,22 +519,48 @@ describe('useTheme inside a stateless scope', () => {
     expect(screen.getByTestId('gray')).toHaveTextContent('gray');
   });
 
-  it('setTheme inside a stateless scope writes to the root storage', () => {
+  it('setTheme inside a stateless scope updates the scope, not the root', () => {
     const Probe = () => {
-      const { setTheme } = useTheme();
-      return <button onClick={() => setTheme('dark')}>set</button>;
+      const { theme, setTheme } = useTheme();
+      return (
+        <>
+          <button onClick={() => setTheme('dark')}>set</button>
+          <span data-testid='theme'>{theme ?? ''}</span>
+        </>
+      );
     };
 
     render(
       <Theme defaultTheme='light' enableSystem={false}>
-        <Theme forcedTheme='dark'>
+        <Theme accentColor='orange'>
           <Probe />
         </Theme>
       </Theme>
     );
 
     fireEvent.click(screen.getByText('set'));
-    // Stateless scope owns no theme state, so setTheme passes through to root.
+    // Scope owns its own state — call updates the scope, root's storage is
+    // untouched.
+    expect(localStorageMock.setItem).not.toHaveBeenCalledWith('theme', 'dark');
+    expect(screen.getByTestId('theme')).toHaveTextContent('dark');
+  });
+
+  it('useTheme({ storageKey }) reaches past the nearest scope to a specific ancestor', () => {
+    const Probe = () => {
+      const { setTheme } = useTheme({ storageKey: 'theme' });
+      return <button onClick={() => setTheme('dark')}>set root</button>;
+    };
+
+    render(
+      <Theme defaultTheme='light' enableSystem={false}>
+        <Theme accentColor='orange'>
+          <Probe />
+        </Theme>
+      </Theme>
+    );
+
+    fireEvent.click(screen.getByText('set root'));
+    // Hook targeted the root by its storageKey — root's storage was written.
     expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'dark');
   });
 });
@@ -589,7 +615,7 @@ describe('Theme (persistent scope)', () => {
     );
   });
 
-  it('omits data-theme entirely when storage and defaultTheme are both empty', () => {
+  it('inherits data-theme from parent when storage and defaultTheme are both empty', () => {
     localStorageMock.getItem.mockReturnValue(null);
 
     render(
@@ -600,9 +626,13 @@ describe('Theme (persistent scope)', () => {
       </Theme>
     );
 
-    // No data-theme on wrapper → CSS inherits from parent.
-    expect(screen.getByTestId('child').parentElement).not.toHaveAttribute(
-      'data-theme'
+    // Scope has no own value, so the wrapper mirrors the parent's
+    // resolvedTheme. This lets CSS rules like
+    // `[data-accent-color='X'][data-theme='dark']` still match when only one
+    // attribute is overridden in the scope.
+    expect(screen.getByTestId('child').parentElement).toHaveAttribute(
+      'data-theme',
+      'light'
     );
   });
 
@@ -685,8 +715,11 @@ describe('Theme (persistent scope)', () => {
     fireEvent.click(screen.getByText('clear'));
 
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('scope-6');
-    expect(screen.getByTestId('child').parentElement).not.toHaveAttribute(
-      'data-theme'
+    // After clearing, the scope has no own value and inherits the parent's
+    // resolvedTheme on the wrapper.
+    expect(screen.getByTestId('child').parentElement).toHaveAttribute(
+      'data-theme',
+      'light'
     );
   });
 

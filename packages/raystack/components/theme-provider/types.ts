@@ -12,16 +12,35 @@ export type AccentColor = (typeof ACCENT_COLORS)[number];
 export type GrayColor = (typeof GRAY_COLORS)[number];
 export type StyleVariant = (typeof STYLE_VARIANTS)[number];
 
+/**
+ * A minimal reference to a scope's theme state. Used internally by the
+ * `scopes` registry to let `useTheme({ storageKey })` target a specific
+ * scope past the nearest one.
+ */
+export interface ScopeRef {
+  theme?: string;
+  setTheme: (theme: string | undefined) => void;
+}
+
+export interface UseThemeOptions {
+  /**
+   * Target a scope (or the root) by its `storageKey` instead of the nearest
+   * ancestor. Useful for flipping the page-level theme from inside a
+   * nested scope.
+   */
+  storageKey?: string;
+}
+
 export interface UseThemeProps {
   /** List of all available theme names */
   themes: string[];
   /** Forced theme name for the current page */
   forcedTheme?: string;
   /**
-   * Update the theme. At the root this persists the user's choice. Inside a
-   * persistent scope (a nested `<Theme storageKey=…>`) it updates and persists
-   * the scope's theme; passing `undefined` clears the scope's storage entry
-   * and re-inherits from the parent.
+   * Update the theme of the nearest scope. At the root this persists the
+   * user's choice. Inside a persistent scope (a nested `<Theme storageKey=…>`)
+   * it updates and persists the scope's theme; passing `undefined` clears the
+   * scope's storage entry and re-inherits from the parent.
    */
   setTheme: (theme: string | undefined) => void;
   /** Active theme name */
@@ -36,6 +55,11 @@ export interface UseThemeProps {
   accentColor?: AccentColor;
   /** Active gray color. Reflects the nearest provider's effective value. */
   grayColor?: GrayColor;
+  /**
+   * Registry of all ancestor scopes keyed by `storageKey`. Used by
+   * `useTheme({ storageKey })` to address a specific scope. Internal API.
+   */
+  scopes?: Record<string, ScopeRef>;
 }
 
 export interface ThemeProviderProps {
