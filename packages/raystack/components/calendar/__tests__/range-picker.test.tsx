@@ -330,4 +330,124 @@ describe('RangePicker', () => {
       expect(endInput.getAttribute('data-active')).toBe('true');
     });
   });
+
+  describe('disabled state', () => {
+    /*
+     * Each input's trailing CalendarIcon renders as a sibling `<div>` to
+     * its `<input>`, so its clicks bubble to the shared `Popover.Trigger`
+     * even when the input is `disabled`. The picker is treated as
+     * fully disabled only when **both** inputs are disabled (matches the
+     * common "disable the whole range field" usage).
+     */
+    function getTrailingIconWithin(input: HTMLElement) {
+      /*
+       * Base UI's InputPrimitive also stamps `data-disabled` on the
+       * `<input>` itself, so a plain `[data-disabled]` selector matches
+       * the input first. The outer Input wrapper sets it to "true"; use
+       * the value form to land on the wrapper.
+       */
+      const wrapper = input.closest(
+        '[data-disabled="true"]'
+      ) as HTMLElement | null;
+      expect(wrapper).not.toBeNull();
+      const icon = wrapper!.querySelector(
+        '[aria-hidden="true"]'
+      ) as HTMLElement | null;
+      expect(icon).not.toBeNull();
+      return icon!;
+    }
+
+    it('does not open the popover when both inputs are disabled (legacy inputsProps)', () => {
+      calendarCalls.list.length = 0;
+      render(
+        <RangePicker
+          inputsProps={{
+            startDate: { disabled: true },
+            endDate: { disabled: true }
+          }}
+        />
+      );
+
+      const startInput = screen.getByPlaceholderText('Select start date');
+      const endInput = screen.getByPlaceholderText('Select end date');
+      fireEvent.click(getTrailingIconWithin(startInput));
+      fireEvent.click(getTrailingIconWithin(endInput));
+
+      expect(calendarCalls.list).toEqual([]);
+    });
+
+    it('does not open the popover when both inputs are disabled (slotProps)', () => {
+      calendarCalls.list.length = 0;
+      render(
+        <RangePicker
+          slotProps={{
+            startInput: { disabled: true },
+            endInput: { disabled: true }
+          }}
+        />
+      );
+
+      const startInput = screen.getByPlaceholderText('Select start date');
+      const endInput = screen.getByPlaceholderText('Select end date');
+      fireEvent.click(getTrailingIconWithin(startInput));
+      fireEvent.click(getTrailingIconWithin(endInput));
+
+      expect(calendarCalls.list).toEqual([]);
+    });
+
+    /*
+     * Partial-disable (one input disabled, the other enabled) also gates
+     * the popover. Without this, the enabled input's click would open the
+     * shared popover and the calendar's range state machine would happily
+     * rewrite the "disabled" field through the grid — defeating the
+     * disabled intent. Consumers who need to fix one side and pick the
+     * other should constrain the calendar via `calendarProps`.
+     */
+    it('does not open the popover when only the start input is disabled', () => {
+      calendarCalls.list.length = 0;
+      render(<RangePicker inputsProps={{ startDate: { disabled: true } }} />);
+
+      // Try every path: enabled-side click, enabled-side focus, and the
+      // trailing-icon click on the disabled side.
+      const startInput = screen.getByPlaceholderText('Select start date');
+      const endInput = screen.getByPlaceholderText('Select end date');
+      fireEvent.click(endInput);
+      fireEvent.focus(endInput);
+      fireEvent.click(getTrailingIconWithin(startInput));
+
+      expect(calendarCalls.list).toEqual([]);
+    });
+
+    it('does not open the popover when only the end input is disabled', () => {
+      calendarCalls.list.length = 0;
+      render(<RangePicker inputsProps={{ endDate: { disabled: true } }} />);
+
+      const startInput = screen.getByPlaceholderText('Select start date');
+      const endInput = screen.getByPlaceholderText('Select end date');
+      fireEvent.click(startInput);
+      fireEvent.focus(startInput);
+      fireEvent.click(getTrailingIconWithin(endInput));
+
+      expect(calendarCalls.list).toEqual([]);
+    });
+
+    it('forwards disabled to both underlying inputs', () => {
+      render(
+        <RangePicker
+          inputsProps={{
+            startDate: { disabled: true },
+            endDate: { disabled: true }
+          }}
+        />
+      );
+      const startInput = screen.getByPlaceholderText(
+        'Select start date'
+      ) as HTMLInputElement;
+      const endInput = screen.getByPlaceholderText(
+        'Select end date'
+      ) as HTMLInputElement;
+      expect(startInput.disabled).toBe(true);
+      expect(endInput.disabled).toBe(true);
+    });
+  });
 });

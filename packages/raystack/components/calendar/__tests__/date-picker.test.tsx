@@ -441,6 +441,78 @@ describe('DatePicker', () => {
     });
   });
 
+  describe('disabled state', () => {
+    /*
+     * The trailing CalendarIcon renders as a sibling `<div>` to the actual
+     * `<input>`, so its clicks bubble to the `Popover.Trigger` wrapper even
+     * when the input is `disabled`. Without the gate inside DatePicker, the
+     * popover would open on icon click despite the disabled input.
+     */
+    function getTrailingIcon(input: HTMLElement) {
+      /*
+       * Base UI's InputPrimitive also stamps `data-disabled` on the
+       * `<input>` itself, so a plain `[data-disabled]` selector matches
+       * the input first. The outer Input wrapper sets it to "true"; use
+       * the value form to land on the wrapper.
+       */
+      const wrapper = input.closest(
+        '[data-disabled="true"]'
+      ) as HTMLElement | null;
+      expect(wrapper).not.toBeNull();
+      const icon = wrapper!.querySelector(
+        '[aria-hidden="true"]'
+      ) as HTMLElement | null;
+      expect(icon).not.toBeNull();
+      return icon!;
+    }
+
+    it('does not open the popover when the trailing icon is clicked (legacy inputProps.disabled)', () => {
+      calendarCalls.list.length = 0;
+      render(<DatePicker inputProps={{ disabled: true }} />);
+
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.click(getTrailingIcon(input));
+
+      // Popover never opened → Calendar never rendered.
+      expect(calendarCalls.list).toEqual([]);
+    });
+
+    it('does not open the popover when the trailing icon is clicked (slotProps.input.disabled)', () => {
+      calendarCalls.list.length = 0;
+      render(<DatePicker slotProps={{ input: { disabled: true } }} />);
+
+      const input = screen.getByPlaceholderText('Select date');
+      fireEvent.click(getTrailingIcon(input));
+
+      expect(calendarCalls.list).toEqual([]);
+    });
+
+    it('forwards disabled to the underlying input', () => {
+      render(<DatePicker inputProps={{ disabled: true }} />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.disabled).toBe(true);
+    });
+
+    /*
+     * Sanity check: without `disabled`, the same trailing-icon click path
+     * does open the popover. Guards against a future change that
+     * accidentally swallows trigger clicks for everyone.
+     */
+    it('still opens the popover via the trailing icon when not disabled', () => {
+      calendarCalls.list.length = 0;
+      render(<DatePicker />);
+
+      const input = screen.getByPlaceholderText('Select date');
+      const wrapper = input.parentElement!.parentElement as HTMLElement;
+      const icon = wrapper.querySelector('[aria-hidden="true"]') as HTMLElement;
+      fireEvent.click(icon);
+
+      expect(calendarCalls.list.length).toBeGreaterThan(0);
+    });
+  });
+
   describe('typing does not throw on bounds checks', () => {
     it('does not throw on input change when only startMonth/endMonth are provided', () => {
       /*

@@ -74,6 +74,12 @@ export function DatePicker({
   const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
   const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
   /*
+   * Gate the popover when the input is disabled — the trailing icon
+   * renders as a sibling `<div>` to the `<input>`, so its clicks bubble
+   * to `Popover.Trigger` even when the input itself is `disabled`.
+   */
+  const isDisabled = !!inputProps.disabled;
+  /*
    * Initial value: controlled prop > defaultValue (uncontrolled init) >
    * undefined. With both omitted the picker starts unselected so the
    * "Select date" placeholder is honest.
@@ -231,7 +237,13 @@ export function DatePicker({
       : children || defaultTrigger;
 
   return (
-    <Popover open={popover.isOpen} onOpenChange={popover.onOpenChange}>
+    <Popover
+      open={isDisabled ? false : popover.isOpen}
+      onOpenChange={open => {
+        if (isDisabled) return;
+        popover.onOpenChange(open);
+      }}
+    >
       <Popover.Trigger
         nativeButton={false}
         render={<div>{triggerContent}</div>}

@@ -110,6 +110,24 @@ export const rangePickerDemo = {
       code: `<RangePicker />`
     },
     {
+      name: 'Disabled',
+      code: `
+      /* Disabling either input gates the whole picker — the shared popover would otherwise let users rewrite the "disabled" side through the calendar grid. To fix one side, constrain the calendar via \`calendarProps\` instead. */
+      <RangePicker slotProps={{ startInput: { disabled: true }, endInput: { disabled: true } }} />
+      `
+    },
+    {
+      name: 'Disabled Dates',
+      code: `
+      /* Pass a matcher to \`slotProps.calendar.disabled\` to block specific dates in the grid (here: weekends). The inputs stay interactive; the calendar refuses the disabled dates. */
+      <RangePicker
+        slotProps={{
+          calendar: { disabled: { dayOfWeek: [0, 6] } }
+        }}
+      />
+      `
+    },
+    {
       name: 'Without Calendar Icon',
       code: `<RangePicker showCalendarIcon={false} />`
     },
@@ -145,6 +163,22 @@ export const datePickerDemo = {
     {
       name: 'Basic',
       code: `<DatePicker slotProps={{ input: { size: "medium" } }} />`
+    },
+    {
+      name: 'Disabled',
+      code: `<DatePicker slotProps={{ input: { size: "medium", disabled: true } }} />`
+    },
+    {
+      name: 'Disabled Dates',
+      code: `
+      /* Pass a matcher to \`slotProps.calendar.disabled\` to block specific dates in the grid (here: every date before today). The input stays interactive; the calendar refuses the disabled dates. */
+      <DatePicker
+        slotProps={{
+          input: { size: "medium" },
+          calendar: { disabled: { before: new Date() } }
+        }}
+      />
+      `
     },
     {
       name: 'Without Calendar Icon',

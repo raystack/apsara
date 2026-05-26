@@ -86,6 +86,14 @@ export function RangePicker({
   const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
   const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
   /*
+   * Gate the popover whenever either input is disabled. Partial-disable
+   * leaks: the range state machine rewrites both `from` and `to` regardless
+   * of which input was clicked, and the trailing icon's click bubbles to
+   * `Popover.Trigger` even when the input is disabled. For "fix one side,
+   * pick the other", constrain the calendar via `calendarProps` instead.
+   */
+  const isDisabled = !!startInputProps.disabled || !!endInputProps.disabled;
+  /*
    * Hook owns open/close, outside-click dismissal, and the year/month
    * dropdown carve-out. Inputs stay `readOnly`, so we arm the listener on
    * open (click-to-open path) instead of on input blur (typed-input path).
@@ -249,7 +257,13 @@ export function RangePicker({
       : children || defaultTrigger;
 
   return (
-    <Popover open={popover.isOpen} onOpenChange={popover.onOpenChange}>
+    <Popover
+      open={isDisabled ? false : popover.isOpen}
+      onOpenChange={open => {
+        if (isDisabled) return;
+        popover.onOpenChange(open);
+      }}
+    >
       <Popover.Trigger
         nativeButton={false}
         render={<div>{triggerContent}</div>}
