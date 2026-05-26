@@ -6,7 +6,7 @@
 
 A coordinated overhaul of the three calendar surfaces — `Calendar`,
 `DatePicker`, `RangePicker` — that had drifted apart on behavior,
-defaults, and exposed API. 16 P0/P1 bugs fixed, a new `slotProps`
+defaults, and exposed API. 18 P0/P1 bugs fixed, a new `slotProps`
 API added, and the three legacy prop names (`inputProps`,
 `inputsProps`, `calendarProps`, `popoverProps`) marked
 `@deprecated` for a one-release window.
@@ -65,6 +65,19 @@ API added, and the three legacy prop names (`inputProps`,
 - **Calendar `onDropdownOpen` re-fire** fixed — ref-based mirror so
   the effect depends only on `open`; parent callback identity churn
   no longer re-fires.
+- **`disabled` on input now also gates the popover** on both pickers
+  — the trailing calendar icon renders as a sibling `<div>` to the
+  `<input>`, so its clicks bubbled to `Popover.Trigger` and opened
+  the calendar even when the input was `disabled`. RangePicker
+  treats either input disabled as fully disabled (partial-disable
+  would let the shared range state machine rewrite the "disabled"
+  side through the grid; constrain via `calendarProps` for
+  fix-one-side use cases).
+- **`dateInfo` icons render correctly when their day is selected** —
+  the `.dayInfo svg { fill: emphasis }` rule was overriding
+  `fill="none"` on stroke-based icons (lucide) and filling the
+  outline paths solid. `color` alone now carries the selected style
+  via `currentColor` for both stroke- and fill-based icon libraries.
 
 #### Code-review and audit follow-ups
 
@@ -111,17 +124,22 @@ Old props still work — `slotProps` wins when both are set.
   `fromMonth` / `toMonth` / `fromDate` / `toDate` props folded into
   the docs for `startMonth` / `endMonth` / `hidden`.
 - Showcase demos migrated to `slotProps`.
+- New **Disabled** and **Disabled Dates** tabs on both picker
+  demos. The RangePicker **Disabled** demo includes an inline
+  comment explaining the any-disabled gating rule and points at
+  `calendarProps` for partial-lock use cases.
 
 #### Tests
 
-38 new tests across 4 new files:
-- `date-picker.test.tsx` (27 tests) — slotProps, defaultValue,
+47 new tests across 4 new files:
+- `date-picker.test.tsx` (31 tests) — slotProps, defaultValue,
   unselected state, single-fire onSelect, strict parsing, bounds,
-  month navigation, calendarProps surface.
+  month navigation, calendarProps surface, disabled-state gating.
 - `date-picker.runtime.test.tsx` (4 tests) — mount/unmount loops
   with `captionLayout='dropdown'`.
-- `range-picker.test.tsx` (14 tests) — slotProps, state machine
-  (A/B1/B2/C), value→currentMonth sync, calendarProps surface.
+- `range-picker.test.tsx` (19 tests) — slotProps, state machine
+  (A/B1/B2/C), value→currentMonth sync, calendarProps surface,
+  disabled-state gating (both-disabled and partial-disabled paths).
 - `range-picker.runtime.test.tsx` (2 tests) — mount/unmount loops.
 
 Plus regression tests added to the existing `calendar.test.tsx`
