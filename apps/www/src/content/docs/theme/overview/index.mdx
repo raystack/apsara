@@ -171,34 +171,110 @@ import { Theme } from "@raystack/apsara";
 
 When `Theme` is rendered inside another `Theme`, it switches to scope mode: it writes `data-theme` (and optionally `data-accent-color`, `data-gray-color`, `data-style`) onto a wrapper `<div>` rather than the document root. The outer provider's state remains the source of truth for `useTheme()`.
 
-### Combining with accent and gray overrides
+### Inheritance rules
 
-A scope can override accent or gray independently of theme. This is useful for highlighting a section without changing its color scheme:
+Two rules cover every case:
+
+1. **Each prop inherits independently.** Any prop you don't pass to a nested `Theme` is inherited from the parent. Any prop you do pass overrides only that field — the rest still inherits.
+2. **`useTheme()` inside a scope talks to that scope only.** Calling `setTheme()` updates the nearest scope, never propagates outward. To target a specific outer scope (e.g., the root), use `useTheme({ storageKey })` — see [Targeting a specific scope](#targeting-a-specific-scope).
+
+### Activating a scope
+
+A nested `<Theme>` becomes an *active scope* (owns state, renders a wrapper, provides its own context) when you pass at least one of: `forcedTheme`, `defaultTheme`, `accentColor`, `grayColor`, `style`, or `storageKey`. A bare `<Theme>` with no props is a no-op pass-through — children render with the parent's context.
+
+If you want a section to act as a scope but don't need to override any specific token, pass `defaultTheme` (seeds an initial scope theme):
 
 ```tsx
-<Theme accentColor="orange">
-  <Button color="accent">Orange accent in this region only</Button>
-</Theme>
-
-<Theme forcedTheme="dark" accentColor="mint" grayColor="slate">
-  <Card>Dark mint-on-slate card</Card>
+<Theme defaultTheme="dark">
+  {/* This is now a stateless scope. setTheme inside updates this scope only. */}
 </Theme>
 ```
 
-### State management
+### Composition examples
 
-By default, a nested `Theme` is stateless — the consumer owns the theme value. For an interactive scope, drive it with React state:
+The cases below assume a configured page-level `Theme` and progressively richer nested overrides.
+
+**Both fully configured — independent states**
 
 ```tsx
-const [scopeTheme, setScopeTheme] = useState<'light' | 'dark'>('dark');
-
-<Theme forcedTheme={scopeTheme}>
-  <Toggle onClick={() => setScopeTheme(t => t === 'dark' ? 'light' : 'dark')}>
-    Toggle this scope
-  </Toggle>
-  <Card>...</Card>
+<Theme defaultTheme="dark" accentColor="orange" grayColor="mauve" style="traditional">
+  <Theme defaultTheme="light" accentColor="mint" grayColor="slate" style="modern">
+    <Card />
+  </Theme>
 </Theme>
 ```
+
+- Page: dark + orange + mauve + traditional. Persisted under `storageKey="theme"`.
+- Scope: light + mint + slate + modern. Owns its state in memory (no `storageKey`, so not persisted).
+- `Card` renders with the scope's values.
+- Toggling the page does not move the scope; toggling the scope does not move the page.
+
+**Partial override — single prop**
+
+```tsx
+<Theme defaultTheme="dark" accentColor="orange" grayColor="mauve" style="traditional">
+  <Theme accentColor="mint">
+    <Card />
+  </Theme>
+</Theme>
+```
+
+What `Card` sees:
+
+| Field | Source | Value |
+|---|---|---|
+| `resolvedTheme` | inherited from page | `dark` |
+| `accentColor` | own (scope) | `mint` |
+| `grayColor` | inherited | `mauve` |
+| `style` | inherited | `traditional` |
+
+- The wrapper `<div>` gets `data-theme="dark" data-accent-color="mint" data-gray-color="mauve" data-style="traditional"` so CSS rules like `[data-accent-color='mint'][data-theme='dark']` match correctly.
+- If the page theme later flips to light, the scope follows (still inheriting `theme`). Accent stays `mint`.
+- If the scope's own `setTheme()` is called, the scope decouples from the page for theme only; non-overridden fields keep inheriting.
+
+**Display-locked region — `forcedTheme`**
+
+```tsx
+<Theme defaultTheme="dark">
+  <Theme forcedTheme="light">
+    <PreviewCard />
+  </Theme>
+</Theme>
+```
+
+- `PreviewCard` and its descendants always render with the light theme, regardless of any toggle.
+- Accent / gray / style still inherit from the page.
+- `setTheme()` inside still updates the scope's stored value, but `forcedTheme` always wins for display.
+
+**Persistent independent island — `storageKey`**
+
+```tsx
+<Theme defaultTheme="dark">
+  <Theme storageKey="sidebar-theme" defaultTheme="dark">
+    <Sidebar>
+      <ScopeToggle />   {/* setTheme here updates and persists the sidebar's own theme */}
+    </Sidebar>
+  </Theme>
+</Theme>
+```
+
+- Two independent persisted entries: `localStorage["theme"]` (page) and `localStorage["sidebar-theme"]` (sidebar).
+- Reloading the page restores both to their last-saved values.
+- A toggle inside the sidebar flips only the sidebar.
+
+**Empty nested — no scope created**
+
+```tsx
+<Theme defaultTheme="dark">
+  <Theme>     {/* no props → no-op pass-through */}
+    <Card />
+  </Theme>
+</Theme>
+```
+
+- The inner `Theme` does nothing: no wrapper, no new context.
+- `useTheme()` inside `Card` returns the page's state.
+- `setTheme()` inside `Card` flips the page.
 
 ### Persistent scope
 
@@ -237,7 +313,39 @@ function ScopeToggle() {
 - Use a distinct `storageKey` per scope. Multiple scopes sharing one key is undefined behavior within the same tab.
 - There is no FOUC prevention for nested scopes. On reload, the scope renders with `defaultTheme` (or inherits) for one paint, then snaps to the saved value once React hydrates. For above-the-fold scopes you'll see a brief flash. The root provider's inline script protects `<html>` only; per-scope inline scripts are not emitted in this version.
 
+### Targeting a specific scope
+
+`useTheme()` always talks to the *nearest* scope. To target a specific outer scope (typically the root, so a deep button can flip the whole page), pass its `storageKey`:
+
+```tsx
+import { useTheme } from "@raystack/apsara";
+
+function PageThemeButton() {
+  // Reaches past nearer scopes to the root (whose default storageKey is "theme").
+  const { theme, setTheme } = useTheme({ storageKey: "theme" });
+  return (
+    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+      Flip page
+    </button>
+  );
+}
+```
+
+- If a matching scope is found, the hook returns its `theme` + `setTheme`; the rest of the fields still reflect the nearest scope.
+- If no scope with that `storageKey` exists in the ancestor tree, the hook falls back to the nearest scope (same as calling `useTheme()` with no argument).
+
+### Cheat sheet
+
+| What you want | What to pass on the nested `Theme` |
+|---|---|
+| Section is purely styled, no own state | Don't nest. There's nothing to scope. |
+| Section has its own theme, in-memory only | `defaultTheme="dark"` (any value) |
+| Section is locked to a theme regardless of toggles | `forcedTheme="dark"` |
+| Section overrides only accent / gray / style | Just pass those props; theme inherits |
+| Section persists its own theme across reloads | `storageKey="some-key"` (+ optional `defaultTheme`) |
+| Flip the page theme from inside a scope | `useTheme({ storageKey: "theme" }).setTheme(…)` |
+
 ### When to reach for a nested provider vs. the bare attribute
 
 - Use the **bare `data-theme` attribute** when you're already rendering a custom element and don't want another wrapper. The CSS handles everything — components inside will theme correctly.
-- Use a **nested `Theme`** when you want typed props (`forcedTheme`, `accentColor`, etc.) and a single import that documents intent.
+- Use a **nested `Theme`** when you want typed props (`forcedTheme`, `accentColor`, etc.), automatic inheritance of unspecified fields, and `useTheme()` integration.

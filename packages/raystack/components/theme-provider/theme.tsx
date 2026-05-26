@@ -82,7 +82,13 @@ const Scoped = ({
 }: ThemeProviderProps) => {
   const parent = useContext(ThemeContext);
   const isPersistent = !!storageKey;
-  const hasOverrides = !!(forcedTheme || accentColor || grayColor || style);
+  const hasOverrides = !!(
+    forcedTheme ||
+    accentColor ||
+    grayColor ||
+    style ||
+    defaultTheme
+  );
 
   // Every active scope owns its theme state so `useTheme()` always targets
   // the nearest scope — independent of persistence. Persistent scopes seed
