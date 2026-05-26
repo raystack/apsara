@@ -40,63 +40,6 @@ Theme.displayName = 'Theme';
  */
 export const ThemeProvider = Theme;
 
-const Scoped = (props: ThemeProviderProps) =>
-  props.storageKey ? (
-    <PersistedScope {...props} />
-  ) : (
-    <StatelessScope {...props} />
-  );
-
-const StatelessScope = ({
-  forcedTheme,
-  accentColor,
-  grayColor,
-  style,
-  children
-}: ThemeProviderProps) => {
-  const parent = useContext(ThemeContext);
-  const hasOverrides = !!(forcedTheme || accentColor || grayColor || style);
-
-  // Layer scope overrides on top of the parent's context so `useTheme()`
-  // inside the scope sees the effective values. When no overrides are
-  // passed, return parent unchanged so the early-return below skips the
-  // wrapper entirely (preserves the pre-PR no-op behavior).
-  const layered = useMemo<UseThemeProps | undefined>(
-    () =>
-      !parent || !hasOverrides
-        ? parent
-        : {
-            ...parent,
-            forcedTheme: forcedTheme ?? parent.forcedTheme,
-            resolvedTheme: forcedTheme ?? parent.resolvedTheme,
-            style: style ?? parent.style,
-            accentColor: accentColor ?? parent.accentColor,
-            grayColor: grayColor ?? parent.grayColor
-          },
-    [parent, hasOverrides, forcedTheme, style, accentColor, grayColor]
-  );
-
-  // No-op nesting: pass children through without a wrapper or new provider.
-  // Avoids the extra DOM node and the redundant context propagation when a
-  // consumer renders `<Theme>` inside another `<Theme>` without overrides.
-  if (!hasOverrides) return <>{children}</>;
-
-  return (
-    <ThemeContext value={layered}>
-      <div
-        data-theme={forcedTheme}
-        data-accent-color={accentColor}
-        data-gray-color={grayColor}
-        data-style={style}
-      >
-        {children}
-      </div>
-    </ThemeContext>
-  );
-};
-
-StatelessScope.displayName = 'Theme.StatelessScope';
-
 const readScopeStorage = (key: string): string | undefined => {
   if (isServer) return undefined;
   try {
@@ -106,7 +49,7 @@ const readScopeStorage = (key: string): string | undefined => {
   }
 };
 
-const PersistedScope = ({
+const Scoped = ({
   storageKey,
   defaultTheme,
   forcedTheme,
@@ -115,69 +58,92 @@ const PersistedScope = ({
   style,
   children
 }: ThemeProviderProps) => {
-  // `storageKey!` is safe: the chooser only routes here when defined.
-  const key = storageKey as string;
   const parent = useContext(ThemeContext);
+  const isPersistent = !!storageKey;
+  const hasOverrides = !!(forcedTheme || accentColor || grayColor || style);
 
-  const [stored, setStored] = useState<string | undefined>(
-    () => readScopeStorage(key) ?? defaultTheme
+  // For stateless scopes the state slot stays undefined and is never read.
+  // For persistent scopes it tracks the localStorage value and drives
+  // `useTheme()` for descendants.
+  const [stored, setStored] = useState<string | undefined>(() =>
+    isPersistent ? (readScopeStorage(storageKey!) ?? defaultTheme) : undefined
   );
 
   // Re-sync if the storageKey itself changes mid-life.
   useEffect(() => {
-    setStored(readScopeStorage(key) ?? defaultTheme);
+    if (!isPersistent) return;
+    setStored(readScopeStorage(storageKey!) ?? defaultTheme);
     // defaultTheme is the seed only when storage is empty; intentionally
     // excluded from deps to avoid re-applying it on prop changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]);
+  }, [storageKey, isPersistent]);
 
   // Persist on change; clear when unset. Compare against the current
   // storage value first so initial mounts (and StrictMode double-effects)
   // don't write back what we just read or fire spurious storage events to
   // other tabs.
   useEffect(() => {
+    if (!isPersistent) return;
     try {
-      const current = localStorage.getItem(key);
+      const current = localStorage.getItem(storageKey!);
       if (stored === undefined) {
-        if (current !== null) localStorage.removeItem(key);
+        if (current !== null) localStorage.removeItem(storageKey!);
       } else if (current !== stored) {
-        localStorage.setItem(key, stored);
+        localStorage.setItem(storageKey!, stored);
       }
     } catch {
       // unsupported (private mode, quota exceeded)
     }
-  }, [key, stored]);
+  }, [isPersistent, storageKey, stored]);
 
   // Cross-tab sync.
   useEffect(() => {
+    if (!isPersistent) return;
     const onStorage = (e: StorageEvent) => {
-      if (e.key !== key) return;
+      if (e.key !== storageKey) return;
       setStored(e.newValue ?? undefined);
     };
     window.addEventListener('storage', onStorage);
     return () => window.removeEventListener('storage', onStorage);
-  }, [key]);
+  }, [isPersistent, storageKey]);
 
-  // forcedTheme wins for display but is NOT persisted — it's a developer
-  // override, not a user choice.
-  const displayed = forcedTheme ?? stored;
+  // Persistent: forcedTheme wins, else the stored value.
+  // Stateless: forcedTheme only (no internal state to fall back to).
+  const displayed = isPersistent ? (forcedTheme ?? stored) : forcedTheme;
 
-  // Override theme + setTheme to point at this scope's state, inherit the
-  // rest from the parent (themes list, systemTheme, etc.).
-  const layered = useMemo<UseThemeProps | undefined>(
-    () =>
-      parent && {
-        ...parent,
-        theme: stored,
-        setTheme: setStored,
-        forcedTheme: forcedTheme ?? parent.forcedTheme,
-        resolvedTheme: displayed ?? parent.resolvedTheme,
-        style: style ?? parent.style,
-        accentColor: accentColor ?? parent.accentColor,
-        grayColor: grayColor ?? parent.grayColor
-      },
-    [parent, stored, displayed, forcedTheme, style, accentColor, grayColor]
-  );
+  // Layer scope overrides on top of the parent's context so `useTheme()`
+  // inside the scope sees the effective values. Persistent scopes also
+  // override `theme`/`setTheme` to point at this scope's own state.
+  const layered = useMemo<UseThemeProps | undefined>(() => {
+    if (!parent) return undefined;
+    if (!isPersistent && !hasOverrides) return parent;
+    const base = {
+      ...parent,
+      forcedTheme: forcedTheme ?? parent.forcedTheme,
+      resolvedTheme: displayed ?? parent.resolvedTheme,
+      style: style ?? parent.style,
+      accentColor: accentColor ?? parent.accentColor,
+      grayColor: grayColor ?? parent.grayColor
+    };
+    return isPersistent
+      ? { ...base, theme: stored, setTheme: setStored }
+      : base;
+  }, [
+    parent,
+    isPersistent,
+    hasOverrides,
+    stored,
+    displayed,
+    forcedTheme,
+    style,
+    accentColor,
+    grayColor
+  ]);
+
+  // No-op nesting: a stateless scope with no overrides passes children
+  // through without a wrapper or new provider. Persistent scopes always
+  // render the wrapper because descendants rely on the scope's context.
+  if (!isPersistent && !hasOverrides) return <>{children}</>;
 
   return (
     <ThemeContext value={layered}>
@@ -193,7 +159,7 @@ const PersistedScope = ({
   );
 };
 
-PersistedScope.displayName = 'Theme.PersistedScope';
+Scoped.displayName = 'Theme.Scoped';
 
 const defaultThemes: string[] = [...COLOR_SCHEMES];
 

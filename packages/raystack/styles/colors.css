@@ -3,8 +3,8 @@
  * Avoid using color variables from other files in the styles folder directly.
  */
 
-[data-theme='light'],
-[data-theme='dark'] {
+[data-theme="light"],
+[data-theme="dark"] {
   /* Base Foreground Colors */
   --rs-color-foreground-base-primary: var(--rs-neutral-12);
   --rs-color-foreground-base-secondary: var(--rs-neutral-11);

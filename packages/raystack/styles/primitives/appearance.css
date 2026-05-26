@@ -7,34 +7,36 @@
 /* Smooth theme switch transition — applies regardless of which theme is active */
 [data-theme="light"],
 [data-theme="dark"] {
-    transition: background-color 0.4s ease, color 0.4s ease;
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
 }
 
 /* Native UI (form controls, scrollbars, text selection) follows the scoped theme */
 :root,
 [data-theme="light"] {
-    color-scheme: light;
+  color-scheme: light;
 }
 
 [data-theme="dark"] {
-    color-scheme: dark;
+  color-scheme: dark;
 }
 
 /* Light Theme Colors */
 [data-theme="light"] {
-    /* Neutral Colors */
-    --rs-neutral-1: var(--rs-gray-1);
-    --rs-neutral-2: var(--rs-gray-2);
-    --rs-neutral-3: var(--rs-gray-3);
-    --rs-neutral-4: var(--rs-gray-4);
-    --rs-neutral-5: var(--rs-gray-5);
-    --rs-neutral-6: var(--rs-gray-6);
-    --rs-neutral-7: var(--rs-gray-7);
-    --rs-neutral-8: var(--rs-gray-8);
-    --rs-neutral-9: var(--rs-gray-9);
-    --rs-neutral-10: var(--rs-gray-10);
-    --rs-neutral-11: var(--rs-gray-11);
-    --rs-neutral-12: var(--rs-gray-12);
+  /* Neutral Colors */
+  --rs-neutral-1: var(--rs-gray-1);
+  --rs-neutral-2: var(--rs-gray-2);
+  --rs-neutral-3: var(--rs-gray-3);
+  --rs-neutral-4: var(--rs-gray-4);
+  --rs-neutral-5: var(--rs-gray-5);
+  --rs-neutral-6: var(--rs-gray-6);
+  --rs-neutral-7: var(--rs-gray-7);
+  --rs-neutral-8: var(--rs-gray-8);
+  --rs-neutral-9: var(--rs-gray-9);
+  --rs-neutral-10: var(--rs-gray-10);
+  --rs-neutral-11: var(--rs-gray-11);
+  --rs-neutral-12: var(--rs-gray-12);
 
   /* Attention Colors */
   --rs-attention-1: oklch(0.9943 0.0028 84.56);
@@ -158,19 +160,19 @@
 
 /* Dark Theme Colors */
 [data-theme="dark"] {
-    /* Neutral Colors */
-    --rs-neutral-1: var(--rs-gray-1);
-    --rs-neutral-2: var(--rs-gray-2);
-    --rs-neutral-3: var(--rs-gray-3);
-    --rs-neutral-4: var(--rs-gray-4);
-    --rs-neutral-5: var(--rs-gray-5);
-    --rs-neutral-6: var(--rs-gray-6);
-    --rs-neutral-7: var(--rs-gray-7);
-    --rs-neutral-8: var(--rs-gray-8);
-    --rs-neutral-9: var(--rs-gray-9);
-    --rs-neutral-10: var(--rs-gray-10);
-    --rs-neutral-11: var(--rs-gray-11);
-    --rs-neutral-12: var(--rs-gray-12);
+  /* Neutral Colors */
+  --rs-neutral-1: var(--rs-gray-1);
+  --rs-neutral-2: var(--rs-gray-2);
+  --rs-neutral-3: var(--rs-gray-3);
+  --rs-neutral-4: var(--rs-gray-4);
+  --rs-neutral-5: var(--rs-gray-5);
+  --rs-neutral-6: var(--rs-gray-6);
+  --rs-neutral-7: var(--rs-gray-7);
+  --rs-neutral-8: var(--rs-gray-8);
+  --rs-neutral-9: var(--rs-gray-9);
+  --rs-neutral-10: var(--rs-gray-10);
+  --rs-neutral-11: var(--rs-gray-11);
+  --rs-neutral-12: var(--rs-gray-12);
 
   /* Attention Colors */
   --rs-attention-1: oklch(0.1976 0.0409 80.17);
