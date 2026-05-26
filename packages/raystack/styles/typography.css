@@ -78,9 +78,16 @@
   --rs-letter-spacing-mono-large: 0px;
 }
 
+[data-style="modern"] {
+  --rs-font-title: var(--rs-font-inter), sans-serif;
+  --rs-font-body: var(--rs-font-inter), sans-serif;
+  font-family: var(--rs-font-body);
+}
+
 [data-style="traditional"] {
   --rs-font-title: var(--rs-font-lora), serif;
   --rs-font-body: var(--rs-font-josefin-sans), sans-serif;
+  font-family: var(--rs-font-body);
 }
 
 body {
