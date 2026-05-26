@@ -167,13 +167,11 @@ function VirtualRows<TData>({
 
 function VirtualLoaderRows({
   columns,
-  rowHeight,
   count
 }: {
   columns: ReturnType<
     ReturnType<typeof useDataTable>['table']['getVisibleLeafColumns']
   >;
-  rowHeight: number;
   count: number;
 }) {
   return (
@@ -183,7 +181,6 @@ function VirtualLoaderRows({
           role='row'
           key={'loading-row-' + rowIndex}
           className={cx(styles.virtualRow, styles['row'], styles.loaderRow)}
-          style={{ height: rowHeight }}
         >
           {columns.map((col, colIndex) => {
             const columnDef = col.columnDef as DataTableColumnDef<
@@ -267,7 +264,7 @@ export function VirtualizedContent({
     return list;
   }, [rows, groupHeaderHeight, rowHeight]);
 
-  const showLoaderRows = isLoading && rows.length > 0;
+  const showLoaderRows = isLoading;
 
   const virtualizer = useVirtualizer({
     count: rows.length,
@@ -386,7 +383,6 @@ export function VirtualizedContent({
       {showLoaderRows && (
         <VirtualLoaderRows
           columns={visibleColumns}
-          rowHeight={rowHeight}
           count={loadingRowCount}
         />
       )}
