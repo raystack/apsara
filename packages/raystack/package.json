@@ -122,7 +122,7 @@
     "@tanstack/react-virtual": "^3.13.13",
     "@tanstack/table-core": "^8.9.2",
     "class-variance-authority": "^0.7.1",
-    "color": "^5.0.0",
+    "culori": "^4.0.2",
     "dayjs": "^1.11.20",
     "prism-react-renderer": "^2.4.1",
     "react-day-picker": "^9.6.7"
