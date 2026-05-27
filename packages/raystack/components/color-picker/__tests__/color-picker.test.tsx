@@ -1,6 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ColorPicker } from '../color-picker';
+
+const mockCopy = vi.fn();
+vi.mock('~/hooks/useCopyToClipboard', () => ({
+  useCopyToClipboard: () => ({ copy: mockCopy })
+}));
 
 // // Mock ResizeObserver for tests
 // const originalResizeObserver = global.ResizeObserver;
@@ -66,17 +71,30 @@ describe('ColorPicker', () => {
       expect(area).toHaveClass('custom-area');
     });
 
-    it('renders with background gradient', () => {
+    it('renders the gradient canvas in oklch mode', () => {
       render(
-        <ColorPicker>
+        <ColorPicker mode='oklch'>
           <ColorPicker.Area data-testid='color-area' />
         </ColorPicker>
       );
 
       const area = screen.getByTestId('color-area');
-      expect(area).toHaveStyle(
-        'background: linear-gradient(0deg, rgba(0,0,0,1), rgba(0,0,0,0)), linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0)), hsl(0, 100%, 50%)'
+      expect(area.querySelector('canvas')).toBeInTheDocument();
+    });
+
+    it('renders the HSL gradient surface in non-oklch modes', () => {
+      render(
+        <ColorPicker mode='hex'>
+          <ColorPicker.Area data-testid='color-area' />
+        </ColorPicker>
       );
+
+      const area = screen.getByTestId('color-area');
+      // Non-oklch modes use a CSS-gradient div, not the canvas-painted
+      // OKLCH plane — the absence of <canvas> is what distinguishes them.
+      // (jsdom rejects `linear-gradient(...)` inline styles, so we can't
+      // assert the background string directly.)
+      expect(area.querySelector('canvas')).not.toBeInTheDocument();
     });
   });
 
@@ -202,6 +220,42 @@ describe('ColorPicker', () => {
       input = screen.getByTestId('color-input');
       expect(input).toHaveValue('#00FF00');
     });
+
+    it('accepts oklch input', () => {
+      render(
+        <ColorPicker defaultValue='oklch(0.6279 0.2576 29.23)'>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+      const input = screen.getByTestId('color-input');
+      // Should render *some* hex value without throwing; exact bytes depend on
+      // HSL round-trip so we only assert shape.
+      expect((input as HTMLInputElement).value).toMatch(/^#[0-9A-F]{6}$/);
+    });
+
+    it('emits oklch when mode is oklch', () => {
+      render(
+        <ColorPicker defaultValue='#ff0000' mode='oklch'>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+      const input = screen.getByTestId('color-input');
+      expect((input as HTMLInputElement).value).toMatch(
+        /^oklch\([\d.]+ [\d.]+ [\d.]+\)$/
+      );
+    });
+
+    it('emits oklch with alpha tail when alpha < 1', () => {
+      render(
+        <ColorPicker defaultValue='rgba(255, 0, 0, 0.5)' mode='oklch'>
+          <ColorPicker.Input data-testid='color-input' />
+        </ColorPicker>
+      );
+      const input = screen.getByTestId('color-input');
+      expect((input as HTMLInputElement).value).toMatch(
+        /^oklch\([\d.]+ [\d.]+ [\d.]+ \/ [\d.]+\)$/
+      );
+    });
   });
 
   describe('ColorPicker.Mode', () => {
@@ -255,6 +309,57 @@ describe('ColorPicker', () => {
 
       const modeSelector = screen.getByTestId('mode-selector');
       expect(modeSelector).toBeInTheDocument();
+    });
+  });
+
+  describe('ColorPicker.Input copyable', () => {
+    beforeEach(() => {
+      mockCopy.mockClear();
+      mockCopy.mockResolvedValue(true);
+    });
+
+    it('does not render a copy button by default', () => {
+      const { container } = render(
+        <ColorPicker>
+          <ColorPicker.Input />
+        </ColorPicker>
+      );
+      expect(
+        container.querySelector('[data-test-id="copy-button"]')
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders a copy button when copyable is true', () => {
+      const { container } = render(
+        <ColorPicker>
+          <ColorPicker.Input copyable />
+        </ColorPicker>
+      );
+      expect(
+        container.querySelector('[data-test-id="copy-button"]')
+      ).toBeInTheDocument();
+    });
+
+    it('copies the formatted color string in hex mode', () => {
+      const { container } = render(
+        <ColorPicker defaultValue='#ff0000' mode='hex'>
+          <ColorPicker.Input copyable />
+        </ColorPicker>
+      );
+      const btn = container.querySelector('[data-test-id="copy-button"]');
+      fireEvent.click(btn!);
+      expect(mockCopy).toHaveBeenCalledWith('#FF0000');
+    });
+
+    it('copies the oklch string when mode is oklch', () => {
+      const { container } = render(
+        <ColorPicker defaultValue='#ff0000' mode='oklch'>
+          <ColorPicker.Input copyable />
+        </ColorPicker>
+      );
+      const btn = container.querySelector('[data-test-id="copy-button"]');
+      fireEvent.click(btn!);
+      expect(mockCopy).toHaveBeenCalledWith(expect.stringMatching(/^oklch\(/));
     });
   });
 

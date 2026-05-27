@@ -7,6 +7,8 @@ source: packages/raystack/components/color-picker
 import {
   preview,
   basicDemo,
+  copyableDemo,
+  oklchDemo,
   popoverDemo,
 } from "./demo.ts";
 
@@ -24,7 +26,7 @@ import { ColorPicker } from '@raystack/apsara'
   <ColorPicker.Hue />
   <ColorPicker.Alpha />
   <ColorPicker.Mode />
-  <ColorPicker.Input />
+  <ColorPicker.Input copyable />
 </ColorPicker>
 ```
 
@@ -38,7 +40,7 @@ The `ColorPicker` is composed of several subcomponents, each responsible for a s
 
 ### Area
 
-Enables users to select a color from a palette. Typically used for choosing saturation and brightness.
+Enables users to select a color from a 2D palette. The surface adapts to the active mode: in `hex`, `rgb`, and `hsl` modes it renders the classic saturation × brightness gradient square; in `oklch` mode it renders a chroma × lightness plane covering the full P3 gamut.
 
 ### Hue
 
@@ -50,19 +52,31 @@ Provides a slider for selecting the alpha value of the color.
 
 ### Mode
 
-Lets users switch between different color models (e.g., HEX, RGB, HSL) via a dropdown menu.
+Lets users switch between different color models (HEX, RGB, HSL, OKLCH) via a dropdown menu.
 
 <auto-type-table path="./props.ts" name="ColorPickerModeProps" />
 
 ### Input
 
-Displays the current color value in the selected color model and allows direct text input.
+Displays the current color value in the selected color model as a read-only string. The value is updated automatically as the user interacts with the area, hue, or alpha controls. Pass `copyable` to render a copy-to-clipboard button in the input's trailing slot.
 
 ## Examples
 
 ### Basic Usage
 
 <Demo data={basicDemo} />
+
+### Copy to Clipboard
+
+Pass the `copyable` prop on `ColorPicker.Input` to render a copy-to-clipboard button in the input's trailing slot. The button copies the formatted color string in the active mode (e.g. `#FF0000`, `rgb(...)`, or `oklch(...)`) and shows a brief confirmation icon after a successful copy.
+
+<Demo data={copyableDemo} />
+
+### OKLCH Mode
+
+The picker stores color internally in OKLCH. In `hex`, `rgb`, and `hsl` modes the area pad is the familiar HSL saturation × brightness square and the hue slider runs in HSL hue — so the picker behaves like a traditional color picker and only emits colors representable in the chosen format. Pass an `oklch(...)` string as `defaultValue` and set `defaultMode='oklch'` to switch to a chroma × lightness plane covering the full P3 gamut; the hue slider then runs in OKLCH hue, where equal steps correspond to equal perceptual changes.
+
+<Demo data={oklchDemo} />
 
 ### Popover Integration
 

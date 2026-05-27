@@ -3,7 +3,7 @@
  */
 export interface ColorPickerProps {
   /**
-   * The controlled color value. Accepts hex, rgb, hsl, etc.
+   * The controlled color value. Accepts hex, rgb, hsl, oklch, etc.
    */
   value?: string;
   /**
@@ -16,14 +16,14 @@ export interface ColorPickerProps {
    */
   onValueChange?: (value: string, mode: string) => void;
   /**
-   * The initial color mode (hex, rgb, hsl).
+   * The initial color mode (hex, rgb, hsl, oklch).
    * @default 'hex'
    */
-  defaultMode?: 'hex' | 'rgb' | 'hsl';
+  defaultMode?: 'hex' | 'rgb' | 'hsl' | 'oklch';
   /**
    * The controlled color mode.
    */
-  mode?: 'hex' | 'rgb' | 'hsl';
+  mode?: 'hex' | 'rgb' | 'hsl' | 'oklch';
   /**
    * Callback fired when the color mode changes.
    */
@@ -36,7 +36,7 @@ export interface ColorPickerProps {
 export interface ColorPickerModeProps {
   /**
    * Supported color modes for the picker.
-   * @default ['hex', 'rgb', 'hsl']
+   * @default ['hex', 'rgb', 'hsl', 'oklch']
    */
-  options?: Array<'hex' | 'rgb' | 'hsl'>;
+  options?: Array<'hex' | 'rgb' | 'hsl' | 'oklch'>;
 }
