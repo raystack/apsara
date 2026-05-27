@@ -274,17 +274,19 @@ const Page = () => {
                 dateFormat='D MMM YYYY'
                 value={dayjs().add(16, 'year').toDate()}
                 onSelect={(value: Date) => console.log(value)}
-                calendarProps={{
-                  captionLayout: 'dropdown',
-                  startMonth: dayjs().add(3, 'month').toDate(),
-                  endMonth: dayjs().add(4, 'year').toDate(),
-                  disabled: {
-                    before: dayjs().add(3, 'month').toDate(),
-                    after: dayjs().add(3, 'year').toDate()
+                slotProps={{
+                  calendar: {
+                    captionLayout: 'dropdown',
+                    startMonth: dayjs().add(3, 'month').toDate(),
+                    endMonth: dayjs().add(4, 'year').toDate(),
+                    disabled: {
+                      before: dayjs().add(3, 'month').toDate(),
+                      after: dayjs().add(3, 'year').toDate()
+                    }
+                  },
+                  input: {
+                    size: 'small'
                   }
-                }}
-                inputProps={{
-                  size: 'small'
                 }}
               />
 
@@ -297,18 +299,18 @@ const Page = () => {
                     to: range.to ?? new Date()
                   })
                 }
-                calendarProps={{
-                  captionLayout: 'dropdown',
-                  numberOfMonths: 2,
-                  startMonth: dayjs('2024-01-01').toDate(),
-                  endMonth: dayjs('2027-12-01').toDate(),
-                  defaultMonth: dayjs('2027-11-01').toDate()
-                }}
-                inputsProps={{
-                  startDate: {
+                slotProps={{
+                  calendar: {
+                    captionLayout: 'dropdown',
+                    numberOfMonths: 2,
+                    startMonth: dayjs('2024-01-01').toDate(),
+                    endMonth: dayjs('2027-12-01').toDate(),
+                    defaultMonth: dayjs('2027-11-01').toDate()
+                  },
+                  startInput: {
                     size: 'small'
                   },
-                  endDate: {
+                  endInput: {
                     size: 'small'
                   }
                 }}
@@ -323,8 +325,10 @@ const Page = () => {
               />
 
               <DatePicker
-                calendarProps={{
-                  captionLayout: 'dropdown'
+                slotProps={{
+                  calendar: {
+                    captionLayout: 'dropdown'
+                  }
                 }}
               />
 

@@ -47,6 +47,12 @@ export interface FilterChipProps
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
+  /**
+   * Date display/parse format for `columnType="date"`, forwarded to the
+   * underlying DatePicker. Defaults to a month-as-text format so the
+   * month reads as e.g. "27 May 2026" instead of "27/05/2026".
+   */
+  dateFormat?: string;
 }
 
 export const FilterChip = ({
@@ -63,6 +69,7 @@ export const FilterChip = ({
   variant,
   operations,
   selectProps,
+  dateFormat = 'DD MMM YYYY',
   ...props
 }: FilterChipProps) => {
   const computedOperations = operations?.length
@@ -138,10 +145,16 @@ export const FilterChip = ({
         return (
           <div className={styles.dateFieldWrapper}>
             <DatePicker
-              value={filterValue}
+              value={filterValue instanceof Date ? filterValue : undefined}
               onSelect={date => handleFilterValueChange(date)}
+              dateFormat={dateFormat}
               showCalendarIcon={false}
-              inputProps={{ classNames: { container: styles.dateField } }}
+              slotProps={{
+                input: {
+                  width: 'fit-content',
+                  classNames: { container: styles.dateField }
+                }
+              }}
             />
           </div>
         );
@@ -153,6 +166,7 @@ export const FilterChip = ({
               classNames={{ container: styles.inputField }}
               value={filterValue}
               onChange={e => handleFilterValueChange(e.target.value)}
+              width='fit-content'
             />
           </div>
         );

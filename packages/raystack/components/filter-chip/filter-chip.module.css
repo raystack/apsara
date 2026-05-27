@@ -156,9 +156,18 @@ button.selectValue:hover {
   min-height: var(--rs-space-7);
 }
 
+/*
+* Hug the content via `field-sizing` (Chromium/Safari); elsewhere fall back
+* to the intrinsic `width: auto`. Bounds are guardrails: clickable floor +
+* runaway ceiling.
+*/
 .inputFieldWrapper input {
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);
+  field-sizing: content;
+  width: auto;
+  min-width: var(--rs-space-10);
+  max-width: 200px;
 }
 
 .dateFieldWrapper {
@@ -189,6 +198,11 @@ button.selectValue:hover {
   text-align: left;
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);
+  /* Hug the formatted date string — see .inputFieldWrapper input. */
+  field-sizing: content;
+  width: auto;
+  min-width: var(--rs-space-10);
+  max-width: 200px;
 }
 
 .dateField [data-trailing] {

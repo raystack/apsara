@@ -10,6 +10,11 @@ export interface FilterChipProps {
    */
   columnType?: 'select' | 'date' | 'string' | 'number';
 
+  /** Date display/parse format for `columnType="date"`, forwarded to the underlying DatePicker.
+   * @default "DD MMM YYYY"
+   */
+  dateFormat?: string;
+
   /** Filterchip variant
    * @default "default"
    */

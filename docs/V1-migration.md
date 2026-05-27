@@ -22,6 +22,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Avatar](#avatar)
     - [Breadcrumb](#breadcrumb)
     - [Button](#button)
+    - [Calendar, DatePicker & RangePicker](#calendar-datepicker--rangepicker)
     - [Chip](#chip)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
@@ -35,6 +36,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
       - [New Features](#new-features-3)
     - [DropdownMenu -\> Menu](#dropdownmenu---menu)
       - [New Features](#new-features-4)
+    - [FilterChip](#filterchip)
     - [Flex](#flex)
     - [Grid](#grid)
     - [Headline](#headline)
@@ -434,6 +436,72 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 // After
 <Button render={<Link to="/settings" />}>Settings</Button>
 ```
+
+---
+
+### Calendar, DatePicker & RangePicker
+
+The three calendar surfaces were overhauled (see the package CHANGELOG, PR #819). The consumer-facing migration items:
+
+1. **`slotProps` replaces the per-slot props.** `inputProps`, `calendarProps`, `popoverProps` (and `RangePicker`'s `inputsProps`) are now `@deprecated` — they still work, but `slotProps` wins when both are set. Migrate to the consolidated shape:
+
+```tsx
+// Before
+<DatePicker
+  inputProps={{ size: "small" }}
+  calendarProps={{ captionLayout: "dropdown" }}
+  popoverProps={{ side: "bottom" }}
+/>
+
+// After
+<DatePicker
+  slotProps={{
+    input: { size: "small" },
+    calendar: { captionLayout: "dropdown" },
+    popover: { side: "bottom" }
+  }}
+/>
+```
+
+`RangePicker` splits its two inputs explicitly:
+
+```tsx
+// Before
+<RangePicker inputsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />
+
+// After
+<RangePicker slotProps={{ startInput: { size: "small" }, endInput: { size: "small" } }} />
+```
+
+2. **`DatePicker` no longer defaults to today.** Previously `value` defaulted to `new Date()`, so the picker always rendered with today selected. It now starts **unselected** when neither `value` nor `defaultValue` is passed, and honors the "Select date" placeholder. If you relied on the today-default, opt in explicitly:
+
+```tsx
+// Before — implicitly selected today
+<DatePicker onSelect={setDate} />
+
+// After — opt in to the old behavior
+<DatePicker defaultValue={new Date()} onSelect={setDate} />
+```
+
+`RangePicker` likewise drops its `{ from: today, to: today }` default and starts empty.
+
+3. **`value` requires a real `Date` (or `undefined`).** Both pickers are now strict about their controlled value and sync on its timestamp — passing a string or other non-`Date` will throw. Coerce before passing:
+
+```tsx
+// Before — a string happened to coerce via dayjs
+<DatePicker value={isoString} />
+
+// After
+<DatePicker value={isoString ? new Date(isoString) : undefined} />
+```
+
+4. **`onSelect` only fires with a defined date.** It stays typed `(date: Date) => void` and no longer fires with `undefined` (e.g. on deselect). Use `defaultValue` for uncontrolled initialization instead of relying on `onSelect` firing on mount.
+
+5. **`value` is now reactive.** Controlled changes — form resets, preset buttons, URL-driven updates — propagate to the input on both pickers (previously the input could go stale).
+
+6. **Calendar date-bound props renamed.** `fromYear` / `toYear` / `fromMonth` / `toMonth` / `fromDate` / `toDate` are superseded by `startMonth` / `endMonth` (bounds) and `hidden` (disable specific days). See the Calendar docs.
+
+7. **New public types.** `CalendarProps`, `CalendarPropsExtended`, and `DateRange` are now re-exported from `@raystack/apsara`.
 
 ---
 
@@ -1018,6 +1086,22 @@ import { Menu } from '@raystack/apsara';
 - Menubar integration
 - `defaultOpen` for uncontrolled open state
 - `modal` prop (default `true`) to toggle focus trap / outside-interaction blocking
+
+---
+
+### FilterChip
+
+**Date columns now require a real `Date` value.** `FilterChip` forwards its value to the overhauled `DatePicker` (see [Calendar, DatePicker & RangePicker](#calendar-datepicker--rangepicker)), which is now strict about its `value` type. Previously a string was loosely coerced; now a non-`Date` value (including the empty-string default) starts the date field **unselected** instead of erroring. If you drive a `columnType="date"` chip with a controlled value, pass a `Date`:
+
+```tsx
+// Before — string value
+<FilterChip label="Created" columnType="date" value="2024-01-01" />
+
+// After — pass a Date
+<FilterChip label="Created" columnType="date" value={new Date("2024-01-01")} />
+```
+
+`onValueChange` for date columns receives a `Date` as before, and non-date column types are unaffected.
 
 ---
 

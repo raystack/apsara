@@ -78,6 +78,14 @@ API added, and the three legacy prop names (`inputProps`,
   `fill="none"` on stroke-based icons (lucide) and filling the
   outline paths solid. `color` alone now carries the selected style
   via `currentColor` for both stroke- and fill-based icon libraries.
+- **FilterChip date column no longer crashes** — the stricter
+  `DatePicker` `value?: Date` contract above surfaced a latent bug:
+  `FilterChip` seeded its value with `''` and forwarded that string
+  straight to the picker, so the new controlled-sync effect's
+  `valueProp?.getTime()` threw `TypeError`. `FilterChip` now coerces
+  non-`Date` values to `undefined` (the date field starts unselected)
+  and uses the new `slotProps.input` API instead of the deprecated
+  `inputProps`.
 
 #### Code-review and audit follow-ups
 
