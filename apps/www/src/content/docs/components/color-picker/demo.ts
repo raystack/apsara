@@ -16,7 +16,7 @@ style={{
 <ColorPicker.Alpha />
 <Flex direction="row" gap={2}>
   <ColorPicker.Mode />
-  <ColorPicker.Input />
+  <ColorPicker.Input copyable />
 </Flex>
 </ColorPicker>`
 };
@@ -34,6 +34,45 @@ export const basicDemo = {
   <ColorPicker.Hue />
 </ColorPicker>
 `
+};
+
+export const copyableDemo = {
+  type: 'code',
+  code: `<ColorPicker defaultValue='#5B8DEF' style={{
+  width: '240px',
+  height: '300px',
+  padding: 12,
+  background: 'white'
+}}>
+  <ColorPicker.Area />
+  <ColorPicker.Hue />
+  <Flex direction='row' gap={2}>
+    <ColorPicker.Mode />
+    <ColorPicker.Input copyable />
+  </Flex>
+</ColorPicker>`
+};
+
+export const oklchDemo = {
+  type: 'code',
+  code: `<ColorPicker
+defaultValue='oklch(0.5438 0.191 267.01)'
+defaultMode='oklch'
+style={{
+  width: '240px',
+  height: '320px',
+  padding: 12,
+  background: 'white'
+}}
+>
+<ColorPicker.Area />
+<ColorPicker.Hue />
+<ColorPicker.Alpha />
+<Flex direction="row" gap={2}>
+  <ColorPicker.Mode />
+  <ColorPicker.Input copyable />
+</Flex>
+</ColorPicker>`
 };
 
 export const popoverDemo = {
@@ -68,7 +107,7 @@ export const popoverDemo = {
           <ColorPicker.Alpha />
           <Flex direction='row' gap={2}>
             <ColorPicker.Mode />
-            <ColorPicker.Input />
+            <ColorPicker.Input copyable />
           </Flex>
         </ColorPicker>
       </Popover.Content>
