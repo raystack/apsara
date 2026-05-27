@@ -2,19 +2,64 @@ interface ValueObject {
   [themeName: string]: string;
 }
 
+export const COLOR_SCHEMES = ['light', 'dark'] as const;
+export const ACCENT_COLORS = ['indigo', 'orange', 'mint'] as const;
+export const GRAY_COLORS = ['gray', 'mauve', 'slate'] as const;
+export const STYLE_VARIANTS = ['modern', 'traditional'] as const;
+
+export type ColorScheme = (typeof COLOR_SCHEMES)[number];
+export type AccentColor = (typeof ACCENT_COLORS)[number];
+export type GrayColor = (typeof GRAY_COLORS)[number];
+export type StyleVariant = (typeof STYLE_VARIANTS)[number];
+
+/**
+ * A minimal reference to a scope's theme state. Used internally by the
+ * `scopes` registry to let `useTheme({ storageKey })` target a specific
+ * scope past the nearest one.
+ */
+export interface ScopeRef {
+  theme?: string;
+  setTheme: (theme: string | undefined) => void;
+}
+
+export interface UseThemeOptions {
+  /**
+   * Target a scope (or the root) by its `storageKey` instead of the nearest
+   * ancestor. Useful for flipping the page-level theme from inside a
+   * nested scope.
+   */
+  storageKey?: string;
+}
+
 export interface UseThemeProps {
   /** List of all available theme names */
   themes: string[];
   /** Forced theme name for the current page */
   forcedTheme?: string;
-  /** Update the theme */
-  setTheme: (theme: string) => void;
+  /**
+   * Update the theme of the nearest scope. At the root this persists the
+   * user's choice. Inside a persistent scope (a nested `<Theme storageKey=…>`)
+   * it updates and persists the scope's theme; passing `undefined` clears the
+   * scope's storage entry and re-inherits from the parent.
+   */
+  setTheme: (theme: string | undefined) => void;
   /** Active theme name */
   theme?: string;
   /** The actually applied theme. Returns `forcedTheme` when set; otherwise the system preference (`"light"`/`"dark"`) when `theme` is `"system"`; otherwise identical to `theme`. */
   resolvedTheme?: string;
   /** If enableSystem is true, returns the System theme preference ("dark" or "light"), regardless what the active theme is */
   systemTheme?: 'dark' | 'light';
+  /** Active style variant. Reflects the nearest provider's effective value. */
+  style?: StyleVariant;
+  /** Active accent color. Reflects the nearest provider's effective value. */
+  accentColor?: AccentColor;
+  /** Active gray color. Reflects the nearest provider's effective value. */
+  grayColor?: GrayColor;
+  /**
+   * Registry of all ancestor scopes keyed by `storageKey`. Used by
+   * `useTheme({ storageKey })` to address a specific scope. Internal API.
+   */
+  scopes?: Record<string, ScopeRef>;
 }
 
 export interface ThemeProviderProps {
@@ -38,14 +83,14 @@ export interface ThemeProviderProps {
   value?: ValueObject;
   /** Nonce string to pass to the inline script for CSP headers */
   nonce?: string;
-  /** React children to be rendered within the ThemeProvider */
+  /** React children to be rendered within the Theme component */
   children?: React.ReactNode;
-  /** Style variant of the theme, either 'modern' or 'traditional'. Affects the radius and font properties. */
-  style?: 'modern' | 'traditional';
-  /** Accent color for the theme, options are 'indigo', 'orange', or 'mint' */
-  accentColor?: 'indigo' | 'orange' | 'mint';
-  /** Gray color variant for the theme, options are 'gray', 'mauve', or 'slate' */
-  grayColor?: 'gray' | 'mauve' | 'slate';
+  /** Style variant of the theme. Affects the radius and font properties. */
+  style?: StyleVariant;
+  /** Accent color for the theme. */
+  accentColor?: AccentColor;
+  /** Gray color variant for the theme. */
+  grayColor?: GrayColor;
   /** Called when the active theme changes. `resolvedTheme` is the actual applied theme (`'light'`/`'dark'` when `theme` is `'system'`). Not fired on initial mount. */
   onThemeChange?: (theme: string, resolvedTheme: string) => void;
 }

@@ -4,13 +4,26 @@
  * All variables must be used from colors.css file only.
  */
 
-/* Light Theme Colors */
-:root {
-  /* Smooth theme switch transition */
+/* Smooth theme switch transition — applies regardless of which theme is active */
+[data-theme="light"],
+[data-theme="dark"] {
   transition:
     background-color 0.4s ease,
     color 0.4s ease;
+}
 
+/* Native UI (form controls, scrollbars, text selection) follows the scoped theme */
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Light Theme Colors */
+[data-theme="light"] {
   /* Neutral Colors */
   --rs-neutral-1: var(--rs-gray-1);
   --rs-neutral-2: var(--rs-gray-2);
@@ -146,7 +159,7 @@
 }
 
 /* Dark Theme Colors */
-html[data-theme="dark"] {
+[data-theme="dark"] {
   /* Neutral Colors */
   --rs-neutral-1: var(--rs-gray-1);
   --rs-neutral-2: var(--rs-gray-2);

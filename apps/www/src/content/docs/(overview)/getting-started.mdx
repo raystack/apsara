@@ -32,18 +32,18 @@ import "@raystack/apsara/style.css";
 
 This single stylesheet includes all component styles and CSS custom properties (tokens) for theming.
 
-### 2. Add ThemeProvider
+### 2. Add Theme
 
-Wrap your application with `ThemeProvider` to enable theming support:
+Wrap your application with `Theme` to enable theming support:
 
 ```tsx
-import { ThemeProvider } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="system">
+    <Theme defaultTheme="system">
       <YourApp />
-    </ThemeProvider>
+    </Theme>
   );
 }
 ```
@@ -78,23 +78,23 @@ Add the provider to your root layout:
 
 ```tsx
 // app/layout.tsx
-import { ThemeProvider } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 import "@raystack/apsara/style.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider defaultTheme="system">
+        <Theme defaultTheme="system">
           {children}
-        </ThemeProvider>
+        </Theme>
       </body>
     </html>
   );
 }
 ```
 
-The `suppressHydrationWarning` attribute is required because `ThemeProvider` injects a script to prevent theme flash during hydration.
+The `suppressHydrationWarning` attribute is required because `Theme` injects a script to prevent theme flash during hydration.
 
 ### Vite
 
@@ -104,15 +104,15 @@ Add the provider to your main entry file:
 // main.tsx
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ThemeProvider } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 import "@raystack/apsara/style.css";
 import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme="system">
+    <Theme defaultTheme="system">
       <App />
-    </ThemeProvider>
+    </Theme>
   </React.StrictMode>
 );
 ```

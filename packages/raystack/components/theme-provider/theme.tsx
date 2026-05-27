@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  Fragment,
   memo,
   useCallback,
   useContext,
@@ -11,30 +10,201 @@ import {
   useRef,
   useState
 } from 'react';
+import type {
+  ScopeRef,
+  ThemeProviderProps,
+  UseThemeOptions,
+  UseThemeProps
+} from './types';
+import { COLOR_SCHEMES } from './types';
 
-import type { ThemeProviderProps, UseThemeProps } from './types';
-
-const colorSchemes = ['light', 'dark'];
+const colorSchemes: readonly string[] = COLOR_SCHEMES;
 const MEDIA = '(prefers-color-scheme: dark)';
 const isServer = typeof window === 'undefined';
 const ThemeContext = createContext<UseThemeProps | undefined>(undefined);
 const defaultContext: UseThemeProps = { setTheme: _ => {}, themes: [] };
 
-export const useTheme = () => useContext(ThemeContext) ?? defaultContext;
+/**
+ * Read the current theme state from the nearest `<Theme>` ancestor (default)
+ * or from a specific ancestor by its `storageKey` when one is provided.
+ *
+ * `setTheme` from the return value updates *that* scope only — it never
+ * propagates outward. To flip the page-level theme from inside a scope,
+ * pass the root provider's `storageKey` (default `"theme"`).
+ */
+export const useTheme = (options?: UseThemeOptions): UseThemeProps => {
+  const ctx = useContext(ThemeContext) ?? defaultContext;
+  if (options?.storageKey) {
+    const target = ctx.scopes?.[options.storageKey];
+    if (target) {
+      return { ...ctx, theme: target.theme, setTheme: target.setTheme };
+    }
+  }
+  return ctx;
+};
 
-export function ThemeProvider(props: ThemeProviderProps) {
+export function Theme(props: ThemeProviderProps) {
   const context = useContext(ThemeContext);
 
-  // Ignore nested context providers, just passthrough children
-  if (context) return <Fragment>{props.children}</Fragment>;
-  return <Theme {...props} />;
+  // Nested usage: scoped subtree. Render a wrapper element that overrides
+  // theme tokens locally via `data-*` attributes; the parent provider's
+  // global state remains the source of truth for descendants reading
+  // `useTheme()`.
+  if (context) return <Scoped {...props} />;
+  return <Root {...props} />;
 }
 
-ThemeProvider.displayName = 'ThemeProvider';
+Theme.displayName = 'Theme';
 
-const defaultThemes = ['light', 'dark'];
+/**
+ * @deprecated Use `Theme` instead. `ThemeProvider` is kept as an alias for
+ * backward compatibility and will be removed in a future major release.
+ */
+export const ThemeProvider = Theme;
 
-const Theme = ({
+const readScopeStorage = (key: string): string | undefined => {
+  if (isServer) return undefined;
+  try {
+    return localStorage.getItem(key) ?? undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const Scoped = ({
+  storageKey,
+  defaultTheme,
+  forcedTheme,
+  accentColor,
+  grayColor,
+  style,
+  children
+}: ThemeProviderProps) => {
+  const parent = useContext(ThemeContext);
+  const isPersistent = !!storageKey;
+  const hasOverrides = !!(
+    forcedTheme ||
+    accentColor ||
+    grayColor ||
+    style ||
+    defaultTheme
+  );
+
+  // Every active scope owns its theme state so `useTheme()` always targets
+  // the nearest scope — independent of persistence. Persistent scopes seed
+  // their state from localStorage on first mount; stateless ones start from
+  // `defaultTheme` (or undefined) and live only in memory.
+  const [stored, setStored] = useState<string | undefined>(() =>
+    isPersistent
+      ? (readScopeStorage(storageKey!) ?? defaultTheme)
+      : defaultTheme
+  );
+
+  // Re-sync if the storageKey itself changes mid-life.
+  useEffect(() => {
+    if (!isPersistent) return;
+    setStored(readScopeStorage(storageKey!) ?? defaultTheme);
+    // defaultTheme is the seed only when storage is empty; intentionally
+    // excluded from deps to avoid re-applying it on prop changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey, isPersistent]);
+
+  // Persist on change; clear when unset. Compare against the current
+  // storage value first so initial mounts (and StrictMode double-effects)
+  // don't write back what we just read or fire spurious storage events to
+  // other tabs.
+  useEffect(() => {
+    if (!isPersistent) return;
+    try {
+      const current = localStorage.getItem(storageKey!);
+      if (stored === undefined) {
+        if (current !== null) localStorage.removeItem(storageKey!);
+      } else if (current !== stored) {
+        localStorage.setItem(storageKey!, stored);
+      }
+    } catch {
+      // unsupported (private mode, quota exceeded)
+    }
+  }, [isPersistent, storageKey, stored]);
+
+  // Cross-tab sync.
+  useEffect(() => {
+    if (!isPersistent) return;
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== storageKey) return;
+      setStored(e.newValue ?? undefined);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [isPersistent, storageKey]);
+
+  // `forcedTheme` wins for display; otherwise the scope's own stored value
+  // (which falls back to the parent's via `resolvedTheme` below when empty).
+  const displayed = forcedTheme ?? stored;
+
+  // Layer scope overrides on top of the parent's context so `useTheme()`
+  // inside the scope sees the effective values. Every active scope (persistent
+  // or with overrides) owns its own `theme`/`setTheme` — persistence is
+  // orthogonal. Scopes with a `storageKey` register themselves into `scopes`
+  // so `useTheme({ storageKey })` can address them past the nearest one.
+  const layered = useMemo<UseThemeProps | undefined>(() => {
+    if (!parent) return undefined;
+    if (!isPersistent && !hasOverrides) return parent;
+    const ownRef: ScopeRef = { theme: stored, setTheme: setStored };
+    const scopes = storageKey
+      ? { ...parent.scopes, [storageKey]: ownRef }
+      : parent.scopes;
+    return {
+      ...parent,
+      theme: stored,
+      setTheme: setStored,
+      forcedTheme: forcedTheme ?? parent.forcedTheme,
+      resolvedTheme: displayed ?? parent.resolvedTheme,
+      style: style ?? parent.style,
+      accentColor: accentColor ?? parent.accentColor,
+      grayColor: grayColor ?? parent.grayColor,
+      scopes
+    };
+  }, [
+    parent,
+    isPersistent,
+    hasOverrides,
+    storageKey,
+    stored,
+    displayed,
+    forcedTheme,
+    style,
+    accentColor,
+    grayColor
+  ]);
+
+  // No-op nesting: a stateless scope with no overrides passes children
+  // through without a wrapper or new provider. Persistent scopes always
+  // render the wrapper because descendants rely on the scope's context.
+  if (!isPersistent && !hasOverrides) return <>{children}</>;
+
+  // Mirror the layered (own + inherited) values onto the wrapper so CSS rules
+  // that combine attributes — e.g. `[data-accent-color='orange'][data-theme='dark']` —
+  // match even when the consumer overrides only one attribute.
+  return (
+    <ThemeContext value={layered}>
+      <div
+        data-theme={layered?.resolvedTheme}
+        data-accent-color={layered?.accentColor}
+        data-gray-color={layered?.grayColor}
+        data-style={layered?.style}
+      >
+        {children}
+      </div>
+    </ThemeContext>
+  );
+};
+
+Scoped.displayName = 'Theme.Scoped';
+
+const defaultThemes: string[] = [...COLOR_SCHEMES];
+
+const Root = ({
   forcedTheme,
   disableTransitionOnChange = false,
   enableSystem = true,
@@ -115,7 +285,10 @@ const Theme = ({
   );
 
   const setTheme = useCallback(
-    (theme: string) => {
+    (theme: string | undefined) => {
+      // Root has no parent to inherit from, so `undefined` is a no-op here.
+      // (Persistent scopes use `undefined` to clear and re-inherit.)
+      if (theme === undefined) return;
       setThemeState(theme);
 
       // Save to storage
@@ -208,7 +381,10 @@ const Theme = ({
         | undefined,
       style,
       accentColor,
-      grayColor
+      grayColor,
+      // Register the root in the scopes registry so descendants can target
+      // it explicitly via `useTheme({ storageKey })`.
+      scopes: { [storageKey]: { theme, setTheme } satisfies ScopeRef }
     }),
     [
       theme,
@@ -219,7 +395,8 @@ const Theme = ({
       themes,
       style,
       accentColor,
-      grayColor
+      grayColor,
+      storageKey
     ]
   );
 
@@ -248,6 +425,8 @@ const Theme = ({
     </ThemeContext>
   );
 };
+
+Root.displayName = 'Theme.Root';
 
 const ThemeScript = memo(
   ({

@@ -4,123 +4,128 @@
  * All variables must be used from colors.css file only.
  */
 
-
-[data-gray-color='gray'] {
-    --rs-gray-1: oklch(0.9911 0 0);
-    --rs-gray-2: oklch(0.9821 0 0);
-    --rs-gray-3: oklch(0.9551 0 0);
-    --rs-gray-4: oklch(0.931 0 0);
-    --rs-gray-5: oklch(0.9067 0 0);
-    --rs-gray-6: oklch(0.8853 0 0);
-    --rs-gray-7: oklch(0.8514 0 0);
-    --rs-gray-8: oklch(0.7921 0 0);
-    --rs-gray-9: oklch(0.6434 0 0);
-    --rs-gray-10: oklch(0.61 0 0);
-    --rs-gray-11: oklch(0.5032 0 0);
-    --rs-gray-12: oklch(0.2435 0 0);
+/* The bare `[data-theme]` selectors below make the default-gray scale apply to
+ * scoped sections that set only `data-theme` (without an explicit
+ * `data-gray-color`). The `[data-gray-color='X'][data-theme='dark']` rules for
+ * non-default grays still win on specificity when both attributes are set. */
+[data-gray-color="gray"],
+[data-theme="light"] {
+  --rs-gray-1: oklch(0.9911 0 0);
+  --rs-gray-2: oklch(0.9821 0 0);
+  --rs-gray-3: oklch(0.9551 0 0);
+  --rs-gray-4: oklch(0.931 0 0);
+  --rs-gray-5: oklch(0.9067 0 0);
+  --rs-gray-6: oklch(0.8853 0 0);
+  --rs-gray-7: oklch(0.8514 0 0);
+  --rs-gray-8: oklch(0.7921 0 0);
+  --rs-gray-9: oklch(0.6434 0 0);
+  --rs-gray-10: oklch(0.61 0 0);
+  --rs-gray-11: oklch(0.5032 0 0);
+  --rs-gray-12: oklch(0.2435 0 0);
 }
 
-[data-gray-color='gray'][data-theme='dark'] {
-    --rs-gray-1: oklch(0.1776 0 0);
-    --rs-gray-2: oklch(0.2134 0 0);
-    --rs-gray-3: oklch(0.252 0 0);
-    --rs-gray-4: oklch(0.285 0 0);
-    --rs-gray-5: oklch(0.3132 0 0);
-    --rs-gray-6: oklch(0.3485 0 0);
-    --rs-gray-7: oklch(0.4017 0 0);
-    --rs-gray-8: oklch(0.4891 0 0);
-    --rs-gray-9: oklch(0.5382 0 0);
-    --rs-gray-10: oklch(0.5829 0 0);
-    --rs-gray-11: oklch(0.7699 0 0);
-    --rs-gray-12: oklch(0.9491 0 0);
+[data-gray-color="gray"][data-theme="dark"],
+[data-theme="dark"] {
+  --rs-gray-1: oklch(0.1776 0 0);
+  --rs-gray-2: oklch(0.2134 0 0);
+  --rs-gray-3: oklch(0.252 0 0);
+  --rs-gray-4: oklch(0.285 0 0);
+  --rs-gray-5: oklch(0.3132 0 0);
+  --rs-gray-6: oklch(0.3485 0 0);
+  --rs-gray-7: oklch(0.4017 0 0);
+  --rs-gray-8: oklch(0.4891 0 0);
+  --rs-gray-9: oklch(0.5382 0 0);
+  --rs-gray-10: oklch(0.5829 0 0);
+  --rs-gray-11: oklch(0.7699 0 0);
+  --rs-gray-12: oklch(0.9491 0 0);
 }
 
-[data-gray-color='mauve'] {
-    --rs-gray-1: oklch(0.9921 0.0017 325.59);
-    --rs-gray-2: oklch(0.9834 0.0028 308.43);
-    --rs-gray-3: oklch(0.9556 0.0062 317.75);
-    --rs-gray-4: oklch(0.9317 0.0074 312.3);
-    --rs-gray-5: oklch(0.9088 0.0103 311.17);
-    --rs-gray-6: oklch(0.8869 0.0113 303.09);
-    --rs-gray-7: oklch(0.8537 0.0141 299.76);
-    --rs-gray-8: oklch(0.7945 0.0183 293.05);
-    --rs-gray-9: oklch(0.646 0.0193 292.92);
-    --rs-gray-10: oklch(0.6123 0.018 293.51);
-    --rs-gray-11: oklch(0.505 0.0158 295);
-    --rs-gray-12: oklch(0.2445 0.0134 298.46);
+[data-gray-color="mauve"] {
+  --rs-gray-1: oklch(0.9921 0.0017 325.59);
+  --rs-gray-2: oklch(0.9834 0.0028 308.43);
+  --rs-gray-3: oklch(0.9556 0.0062 317.75);
+  --rs-gray-4: oklch(0.9317 0.0074 312.3);
+  --rs-gray-5: oklch(0.9088 0.0103 311.17);
+  --rs-gray-6: oklch(0.8869 0.0113 303.09);
+  --rs-gray-7: oklch(0.8537 0.0141 299.76);
+  --rs-gray-8: oklch(0.7945 0.0183 293.05);
+  --rs-gray-9: oklch(0.646 0.0193 292.92);
+  --rs-gray-10: oklch(0.6123 0.018 293.51);
+  --rs-gray-11: oklch(0.505 0.0158 295);
+  --rs-gray-12: oklch(0.2445 0.0134 298.46);
 }
 
-[data-gray-color='mauve'][data-theme='dark'] {
-    --rs-gray-1: oklch(0.1797 0.0043 308.19);
-    --rs-gray-2: oklch(0.2154 0.0041 308.25);
-    --rs-gray-3: oklch(0.2543 0.0057 301.13);
-    --rs-gray-4: oklch(0.2846 0.0077 308.16);
-    --rs-gray-5: oklch(0.3132 0.0092 303.92);
-    --rs-gray-6: oklch(0.3499 0.011 308.11);
-    --rs-gray-7: oklch(0.4024 0.0119 298.9);
-    --rs-gray-8: oklch(0.4917 0.0162 299.48);
-    --rs-gray-9: oklch(0.5403 0.0171 294.16);
-    --rs-gray-10: oklch(0.5849 0.0168 294.22);
-    --rs-gray-11: oklch(0.7691 0.0144 299.72);
-    --rs-gray-12: oklch(0.9497 0.0027 286.35);
+[data-gray-color="mauve"][data-theme="dark"] {
+  --rs-gray-1: oklch(0.1797 0.0043 308.19);
+  --rs-gray-2: oklch(0.2154 0.0041 308.25);
+  --rs-gray-3: oklch(0.2543 0.0057 301.13);
+  --rs-gray-4: oklch(0.2846 0.0077 308.16);
+  --rs-gray-5: oklch(0.3132 0.0092 303.92);
+  --rs-gray-6: oklch(0.3499 0.011 308.11);
+  --rs-gray-7: oklch(0.4024 0.0119 298.9);
+  --rs-gray-8: oklch(0.4917 0.0162 299.48);
+  --rs-gray-9: oklch(0.5403 0.0171 294.16);
+  --rs-gray-10: oklch(0.5849 0.0168 294.22);
+  --rs-gray-11: oklch(0.7691 0.0144 299.72);
+  --rs-gray-12: oklch(0.9497 0.0027 286.35);
 }
 
-[data-gray-color='slate'] {
-    --rs-gray-1: oklch(0.9913 0.0013 286.38);
-    --rs-gray-2: oklch(0.9827 0.0026 286.35);
-    --rs-gray-3: oklch(0.956 0.004 286.32);
-    --rs-gray-4: oklch(0.9321 0.0054 286.3);
-    --rs-gray-5: oklch(0.9104 0.0068 277.16);
-    --rs-gray-6: oklch(0.8873 0.0095 286.2);
-    --rs-gray-7: oklch(0.853 0.0111 280.45);
-    --rs-gray-8: oklch(0.7938 0.0156 277.79);
-    --rs-gray-9: oklch(0.6453 0.0165 277.7);
-    --rs-gray-10: oklch(0.6108 0.0155 272.56);
-    --rs-gray-11: oklch(0.5025 0.0136 264.44);
-    --rs-gray-12: oklch(0.2411 0.0097 248.23);
+[data-gray-color="slate"] {
+  --rs-gray-1: oklch(0.9913 0.0013 286.38);
+  --rs-gray-2: oklch(0.9827 0.0026 286.35);
+  --rs-gray-3: oklch(0.956 0.004 286.32);
+  --rs-gray-4: oklch(0.9321 0.0054 286.3);
+  --rs-gray-5: oklch(0.9104 0.0068 277.16);
+  --rs-gray-6: oklch(0.8873 0.0095 286.2);
+  --rs-gray-7: oklch(0.853 0.0111 280.45);
+  --rs-gray-8: oklch(0.7938 0.0156 277.79);
+  --rs-gray-9: oklch(0.6453 0.0165 277.7);
+  --rs-gray-10: oklch(0.6108 0.0155 272.56);
+  --rs-gray-11: oklch(0.5025 0.0136 264.44);
+  --rs-gray-12: oklch(0.2411 0.0097 248.23);
 }
 
-[data-gray-color='slate'][data-theme='dark'] {
-    --rs-gray-1: oklch(0.1785 0.0041 285.98);
-    --rs-gray-2: oklch(0.2132 0.0042 264.48);
-    --rs-gray-3: oklch(0.2521 0.0058 271.18);
-    --rs-gray-4: oklch(0.2832 0.007 248.07);
-    --rs-gray-5: oklch(0.3118 0.0083 255.56);
-    --rs-gray-6: oklch(0.3466 0.0103 253.97);
-    --rs-gray-7: oklch(0.3993 0.0121 252.94);
-    --rs-gray-8: oklch(0.4893 0.0155 251.69);
-    --rs-gray-9: oklch(0.537 0.0153 262.34);
-    --rs-gray-10: oklch(0.5825 0.0145 266.63);
-    --rs-gray-11: oklch(0.7686 0.0096 258.34);
-    --rs-gray-12: oklch(0.9489 0.0029 264.54);
+[data-gray-color="slate"][data-theme="dark"] {
+  --rs-gray-1: oklch(0.1785 0.0041 285.98);
+  --rs-gray-2: oklch(0.2132 0.0042 264.48);
+  --rs-gray-3: oklch(0.2521 0.0058 271.18);
+  --rs-gray-4: oklch(0.2832 0.007 248.07);
+  --rs-gray-5: oklch(0.3118 0.0083 255.56);
+  --rs-gray-6: oklch(0.3466 0.0103 253.97);
+  --rs-gray-7: oklch(0.3993 0.0121 252.94);
+  --rs-gray-8: oklch(0.4893 0.0155 251.69);
+  --rs-gray-9: oklch(0.537 0.0153 262.34);
+  --rs-gray-10: oklch(0.5825 0.0145 266.63);
+  --rs-gray-11: oklch(0.7686 0.0096 258.34);
+  --rs-gray-12: oklch(0.9489 0.0029 264.54);
 }
 
-[data-gray-color='sage'] {
-    --rs-gray-1: oklch(0.9923 0.0025 165.08);
-    --rs-gray-2: oklch(0.9803 0.0025 165.08);
-    --rs-gray-3: oklch(0.9556 0.0035 174.48);
-    --rs-gray-4: oklch(0.9314 0.0035 174.48);
-    --rs-gray-5: oklch(0.9099 0.0042 157.17);
-    --rs-gray-6: oklch(0.8858 0.0035 174.47);
-    --rs-gray-7: oklch(0.8508 0.0052 164.98);
-    --rs-gray-8: oklch(0.7915 0.0052 164.97);
-    --rs-gray-9: oklch(0.6392 0.0103 171.61);
-    --rs-gray-10: oklch(0.6057 0.0105 171.57);
-    --rs-gray-11: oklch(0.5008 0.0081 174.11);
-    --rs-gray-12: oklch(0.2396 0.0117 167.56);
+[data-gray-color="sage"] {
+  --rs-gray-1: oklch(0.9923 0.0025 165.08);
+  --rs-gray-2: oklch(0.9803 0.0025 165.08);
+  --rs-gray-3: oklch(0.9556 0.0035 174.48);
+  --rs-gray-4: oklch(0.9314 0.0035 174.48);
+  --rs-gray-5: oklch(0.9099 0.0042 157.17);
+  --rs-gray-6: oklch(0.8858 0.0035 174.47);
+  --rs-gray-7: oklch(0.8508 0.0052 164.98);
+  --rs-gray-8: oklch(0.7915 0.0052 164.97);
+  --rs-gray-9: oklch(0.6392 0.0103 171.61);
+  --rs-gray-10: oklch(0.6057 0.0105 171.57);
+  --rs-gray-11: oklch(0.5008 0.0081 174.11);
+  --rs-gray-12: oklch(0.2396 0.0117 167.56);
 }
 
-[data-gray-color='sage'][data-theme='dark'] {
-    --rs-gray-1: oklch(0.1795 0.0038 164.58);
-    --rs-gray-2: oklch(0.2108 0.0036 164.68);
-    --rs-gray-3: oklch(0.2495 0.0035 164.77);
-    --rs-gray-4: oklch(0.2816 0.0047 174.1);
-    --rs-gray-5: oklch(0.3098 0.0046 174.15);
-    --rs-gray-6: oklch(0.3478 0.0064 164.65);
-    --rs-gray-7: oklch(0.4001 0.0073 170.09);
-    --rs-gray-8: oklch(0.489 0.0099 168.42);
-    --rs-gray-9: oklch(0.5327 0.0175 170.54);
-    --rs-gray-10: oklch(0.5785 0.0155 173.79);
-    --rs-gray-11: oklch(0.7659 0.0099 171.7);
-    --rs-gray-12: oklch(0.9473 0.0025 165.07);
+[data-gray-color="sage"][data-theme="dark"] {
+  --rs-gray-1: oklch(0.1795 0.0038 164.58);
+  --rs-gray-2: oklch(0.2108 0.0036 164.68);
+  --rs-gray-3: oklch(0.2495 0.0035 164.77);
+  --rs-gray-4: oklch(0.2816 0.0047 174.1);
+  --rs-gray-5: oklch(0.3098 0.0046 174.15);
+  --rs-gray-6: oklch(0.3478 0.0064 164.65);
+  --rs-gray-7: oklch(0.4001 0.0073 170.09);
+  --rs-gray-8: oklch(0.489 0.0099 168.42);
+  --rs-gray-9: oklch(0.5327 0.0175 170.54);
+  --rs-gray-10: oklch(0.5785 0.0155 173.79);
+  --rs-gray-11: oklch(0.7659 0.0099 171.7);
+  --rs-gray-12: oklch(0.9473 0.0025 165.07);
 }

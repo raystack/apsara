@@ -30,14 +30,14 @@ Apsara provides over 50 components organized by function:
 
 ## Theming
 
-The theming system uses CSS custom properties (tokens) that automatically adapt to the active theme. Wrap your app with `ThemeProvider` to enable light/dark modes, accent colors, and style variants.
+The theming system uses CSS custom properties (tokens) that automatically adapt to the active theme. Wrap your app with `Theme` to enable light/dark modes, accent colors, and style variants.
 
 ```tsx
-import { ThemeProvider } from "@raystack/apsara";
+import { Theme } from "@raystack/apsara";
 
-<ThemeProvider defaultTheme="system" accentColor="indigo">
+<Theme defaultTheme="system" accentColor="indigo">
   <App />
-</ThemeProvider>
+</Theme>
 ```
 
 Tokens follow a consistent naming convention:
