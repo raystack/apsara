@@ -84,7 +84,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: var(--rs-space-1) solid transparent;
+  border: 1px solid transparent;
   margin-bottom: var(--rs-space-1);
 }
 
@@ -93,7 +93,7 @@
   height: var(--rs-space-10, 40px);
   flex-shrink: 0;
   border-radius: var(--rs-radius-5);
-  border: var(--rs-space-1) solid var(--rs-color-border-accent-emphasis-hover);
+  border: 1px solid var(--rs-color-border-accent-emphasis-hover);
   background-color: transparent;
 }
 
@@ -272,11 +272,6 @@
 
 .selected:not(.rangeMiddle) .dayInfo * {
   color: var(--rs-color-foreground-base-emphasis);
-}
-
-.selected:not(.rangeMiddle) .dayInfo svg {
-  color: var(--rs-color-foreground-base-emphasis);
-  fill: var(--rs-color-foreground-base-emphasis);
 }
 
 .dayNumber {

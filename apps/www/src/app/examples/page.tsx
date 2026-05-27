@@ -281,10 +281,7 @@ const Page = () => {
                   disabled: {
                     before: dayjs().add(3, 'month').toDate(),
                     after: dayjs().add(3, 'year').toDate()
-                  },
-                  mode: 'single',
-                  required: true,
-                  selected: new Date()
+                  }
                 }}
                 inputProps={{
                   size: 'small'
@@ -302,15 +299,7 @@ const Page = () => {
                 }
                 calendarProps={{
                   captionLayout: 'dropdown',
-                  mode: 'range',
-                  required: true,
-                  selected: {
-                    from: dayjs('2027-11-15').toDate(),
-                    to: dayjs('2027-12-10').toDate()
-                  },
                   numberOfMonths: 2,
-                  fromYear: 2024,
-                  toYear: 2027,
                   startMonth: dayjs('2024-01-01').toDate(),
                   endMonth: dayjs('2027-12-01').toDate(),
                   defaultMonth: dayjs('2027-11-01').toDate()
@@ -335,10 +324,7 @@ const Page = () => {
 
               <DatePicker
                 calendarProps={{
-                  captionLayout: 'dropdown',
-                  mode: 'single',
-                  required: true,
-                  selected: new Date()
+                  captionLayout: 'dropdown'
                 }}
               />
 
@@ -1978,7 +1964,7 @@ const Page = () => {
             </Flex>
 
             <Text
-              size={10}
+              size='large'
               weight='medium'
               style={{ marginTop: '32px', marginBottom: '16px' }}
             >
@@ -2514,7 +2500,7 @@ const Page = () => {
                             No data available
                           </Text>
                           <Text
-                            size={2}
+                            size='small'
                             style={{ color: 'var(--rs-color-text-subtle)' }}
                           >
                             There are no users in the system. Create your first

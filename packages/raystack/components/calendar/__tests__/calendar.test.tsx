@@ -64,6 +64,27 @@ describe('Calendar', () => {
       const grid = screen.getByRole('grid');
       expect(grid).toBeInTheDocument();
     });
+
+    /*
+     * Regression: pre-fix the lookup key was formatted in the user's local
+     * zone, so UTC days were missed when the browser was in a non-UTC zone.
+     * Tested via `dateInfo` (renders inline) rather than `tooltipMessages`
+     * (which only updates aria-describedby on hover).
+     */
+    it('matches dateInfo by tz-aware day key when timeZone is set', () => {
+      render(
+        <Calendar
+          month={new Date(Date.UTC(2025, 5, 15))}
+          timeZone='UTC'
+          dateInfo={{ '15-06-2025': 'INFO-15' }}
+        />
+      );
+
+      const day15Button = screen.getByRole('button', {
+        name: /June 15(?:st|nd|rd|th)?,?\s*2025/i
+      });
+      expect(day15Button.textContent).toContain('INFO-15');
+    });
   });
 
   describe('Month Navigation', () => {
@@ -194,10 +215,11 @@ describe('Calendar', () => {
         />
       );
 
-      // Should render for Sundays if any are visible in current month
-      // The querySelector will return null if not found, which is fine
-      const sundayInfo = container.querySelector('[data-testid="sunday-info"]');
-      // Test passes if function approach works (may or may not find Sunday depending on month)
+      /*
+       * Renders for Sundays if any are visible. Test just exercises the
+       * function-based path — actual presence depends on which days the
+       * current month surfaces.
+       */
       expect(container).toBeInTheDocument();
     });
 

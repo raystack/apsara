@@ -4,164 +4,200 @@ import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import {
-  isValidElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
-import { PropsBase, PropsSingleRequired } from 'react-day-picker';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import { useEffect, useRef, useState } from 'react';
+import { PropsBase } from 'react-day-picker';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
 import { PopoverContentProps } from '../popover/popover';
-import { Calendar } from './calendar';
+import { Calendar, type CalendarPropsExtended } from './calendar';
 import styles from './calendar.module.css';
+import { usePickerPopover } from './use-picker-popover';
 
 dayjs.extend(customParseFormat);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+
+/*
+ * Picker-specific calendar surface. `mode` is owned by the picker; the other
+ * forced keys (`selected`/`onSelect`/`required`) aren't in `PropsBase` so
+ * they're already unreachable.
+ */
+type DatePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+
+interface DatePickerSlotProps {
+  input?: InputProps;
+  calendar?: DatePickerCalendarSlot;
+  popover?: PopoverContentProps;
+}
 
 interface DatePickerProps {
   dateFormat?: string;
+  /**
+   * Props for each picker slot. When both this and the legacy
+   * `inputProps`/`calendarProps`/`popoverProps` are set, `slotProps` wins.
+   */
+  slotProps?: DatePickerSlotProps;
+  /** @deprecated Use `slotProps.input` instead. */
   inputProps?: InputProps;
-  calendarProps?: PropsSingleRequired & PropsBase;
+  /** @deprecated Use `slotProps.calendar` instead. */
+  calendarProps?: DatePickerCalendarSlot;
+  /** @deprecated Use `slotProps.popover` instead. */
+  popoverProps?: PopoverContentProps;
   onSelect?: (date: Date) => void;
   value?: Date;
+  defaultValue?: Date;
   children?:
     | React.ReactNode
     | ((props: { selectedDate: string }) => React.ReactNode);
   showCalendarIcon?: boolean;
   timeZone?: string;
-  popoverProps?: PopoverContentProps;
 }
 
 export function DatePicker({
   dateFormat = 'DD/MM/YYYY',
-  inputProps,
-  calendarProps,
-  value = new Date(),
-  onSelect = () => {},
+  slotProps,
+  inputProps: legacyInputProps,
+  calendarProps: legacyCalendarProps,
+  popoverProps: legacyPopoverProps,
+  value: valueProp,
+  defaultValue,
+  onSelect = () => undefined,
   children,
   showCalendarIcon = true,
-  timeZone,
-  popoverProps
+  timeZone
 }: DatePickerProps) {
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(value);
+  // Merge legacy props with slotProps; slotProps wins when both are set.
+  const inputProps = { ...legacyInputProps, ...slotProps?.input };
+  const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
+  const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
+  /*
+   * Gate the popover when the input is disabled — the trailing icon
+   * renders as a sibling `<div>` to the `<input>`, so its clicks bubble
+   * to `Popover.Trigger` even when the input itself is `disabled`.
+   */
+  const isDisabled = !!inputProps.disabled;
+  /*
+   * Initial value: controlled prop > defaultValue (uncontrolled init) >
+   * undefined. With both omitted the picker starts unselected so the
+   * "Select date" placeholder is honest.
+   */
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    valueProp ?? defaultValue
+  );
   const [error, setError] = useState<string>();
 
-  const formattedDate = dayjs(selectedDate).format(dateFormat);
+  // Sync only when controlled — uncontrolled mode keeps its own state.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
+  useEffect(() => {
+    if (valueProp !== undefined) setSelectedDate(valueProp);
+  }, [valueProp?.getTime()]);
 
-  const isDropdownOpenRef = useRef(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
-  const isInputFocused = useRef(false);
+  const formattedDate = selectedDate
+    ? dayjs(selectedDate).format(dateFormat)
+    : '';
+
+  const [inputValue, setInputValue] = useState(formattedDate);
+
+  /*
+   * Separate from `selectedDate` so chevron/dropdown nav doesn't rewrite the
+   * committed date — only day-clicks (`onSelect`) do. Initial month honors
+   * `calendarProps.defaultMonth`, then the selected date, then today.
+   */
+  const [viewMonth, setViewMonth] = useState<Date>(
+    calendarProps?.defaultMonth ?? selectedDate ?? new Date()
+  );
+
+  // Mirror for reading inside the outside-click callback closure.
   const selectedDateRef = useRef(selectedDate);
 
   useEffect(() => {
     selectedDateRef.current = selectedDate;
   }, [selectedDate]);
 
-  const isElementOutside = useCallback((el: HTMLElement) => {
-    return (
-      !isDropdownOpenRef.current && // Month and Year dropdown from Date picker
-      !inputRef.current?.contains(el) && // Input
-      !contentRef.current?.contains(el)
-    );
-  }, []);
+  // Sync the input when the committed date changes from a non-typing source.
+  useEffect(() => {
+    setInputValue(formattedDate);
+  }, [formattedDate]);
 
-  const handleMouseDown = useCallback(
-    (event: MouseEvent) => {
-      const el = event.target as HTMLElement | null;
-      if (el && isElementOutside(el)) removeEventListeners();
-    },
-    [isElementOutside]
-  );
+  // Hook owns open/close, outside-click, and the year/month dropdown carve-out.
+  const popover = usePickerPopover({
+    onOutsideClick: () => closePicker()
+  });
 
-  function registerEventListeners() {
-    isInputFocused.current = true;
-    document.addEventListener('mouseup', handleMouseDown);
-  }
+  /*
+   * Reset the visible month on open or external selection change. Honor
+   * `calendarProps.defaultMonth` so consumers controlling the initial view
+   * see it every time the picker opens, not only on first mount.
+   */
+  useEffect(() => {
+    if (popover.isOpen) {
+      setViewMonth(calendarProps?.defaultMonth ?? selectedDate ?? new Date());
+    }
+  }, [popover.isOpen, selectedDate, calendarProps?.defaultMonth]);
 
-  function removeEventListeners(skipUpdate = false) {
-    isInputFocused.current = false;
-    setShowCalendar(false);
-
-    const updatedVal = dayjs(selectedDateRef.current).format(dateFormat);
-
-    if (inputRef.current) inputRef.current.value = updatedVal;
-    if (!error && !skipUpdate) onSelect(dayjs(updatedVal).toDate());
-
-    document.removeEventListener('mouseup', handleMouseDown);
-  }
-
-  const handleSelect = (day: Date) => {
-    setSelectedDate(day);
-    onSelect(day);
+  function closePicker() {
+    popover.disengage();
+    const committedDate = selectedDateRef.current;
+    setInputValue(committedDate ? dayjs(committedDate).format(dateFormat) : '');
     setError(undefined);
-    removeEventListeners(true);
-  };
-
-  function onDropdownOpen() {
-    isDropdownOpenRef.current = true;
+    /*
+     * Emit the committed Date directly. Going through
+     * `dayjs(formattedString).toDate()` re-parses the formatted string without
+     * a format spec, which falls back to native `Date` parsing and can shift
+     * non-ISO formats (e.g. DD/MM/YYYY → wrong Date).
+     *
+     * Skip when nothing was ever selected — `onSelect` is typed
+     * `(date: Date) => void` so we don't fire with `undefined`.
+     */
+    if (!error && committedDate) onSelect(committedDate);
   }
 
-  function onOpenChange(open?: boolean) {
-    if (
-      !isDropdownOpenRef.current &&
-      !(isInputFocused.current && showCalendar)
-    ) {
-      setShowCalendar(Boolean(open));
-    }
-
-    isDropdownOpenRef.current = false;
-  }
-
-  function handleInputFocus() {
-    if (isInputFocused.current) return;
-    if (!showCalendar) setShowCalendar(true);
-  }
-
-  function handleInputBlur(event: React.FocusEvent) {
-    if (isInputFocused.current) {
-      const el = event.relatedTarget as HTMLElement | null;
-      if (el && isElementOutside(el)) removeEventListeners();
-    } else {
-      registerEventListeners();
-      setTimeout(() => inputRef.current?.select());
-    }
+  function handleSelect(day: Date | undefined) {
+    setSelectedDate(day);
+    // RDP can hand us `undefined` when `required={false}` and the user
+    // clicks the currently-selected day (deselect). Only forward defined
+    // dates to consumer `onSelect` — keeps the prop type narrow.
+    if (day) onSelect(day);
+    setError(undefined);
+    popover.disengage();
   }
 
   function handleKeyUp(event: React.KeyboardEvent) {
-    if (event.code === 'Enter' && inputRef.current) {
-      inputRef.current.blur();
-      removeEventListeners();
+    if (event.code === 'Enter' && popover.inputRef.current) {
+      popover.inputRef.current.blur();
+      closePicker();
     }
   }
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
+    setInputValue(value);
 
-    const format = value.includes('/')
-      ? 'DD/MM/YYYY'
-      : value.includes('-')
-        ? 'DD-MM-YYYY'
-        : undefined;
-    const date = dayjs(value, format);
+    const date = dayjs(value, dateFormat, true);
 
     const isValidDate = date.isValid();
 
+    /*
+     * RDP treats `startMonth`/`endMonth` as months — compare against month
+     * bounds so any day inside the boundary month is accepted.
+     */
     const isAfter =
       calendarProps?.startMonth !== undefined
-        ? dayjs(date).isSameOrAfter(calendarProps.startMonth)
+        ? date.isSameOrAfter(dayjs(calendarProps.startMonth).startOf('month'))
         : true;
     const isBefore =
       calendarProps?.endMonth !== undefined
-        ? dayjs(date).isSameOrBefore(calendarProps.endMonth)
+        ? date.isSameOrBefore(dayjs(calendarProps.endMonth).endOf('month'))
         : true;
 
-    const isValid =
-      isValidDate && isAfter && isBefore && dayjs(date).isSameOrBefore(dayjs());
+    /*
+     * No upper-bound on "future": the grid lets users click future days, so
+     * typing and clicking should agree.
+     */
+    const isValid = isValidDate && isAfter && isBefore;
 
     if (isValid) {
       setSelectedDate(date.toDate());
@@ -179,46 +215,66 @@ export function DatePicker({
       className={styles.datePickerInput}
       trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
       {...inputProps}
-      ref={inputRef}
-      value={formattedDate}
+      ref={popover.inputRef}
+      value={inputValue}
       onChange={handleInputChange}
-      onFocus={handleInputFocus}
-      onBlur={handleInputBlur}
+      onFocus={popover.handleInputFocus}
+      onBlur={popover.handleInputBlur}
       onKeyUp={handleKeyUp}
     />
   );
 
-  const trigger =
-    typeof children === 'function' ? (
-      children({ selectedDate: formattedDate })
-    ) : children ? (
-      <div>{children}</div>
-    ) : (
-      <div>{defaultTrigger}</div>
-    );
+  /*
+   * Always wrap the trigger in a `<div>` so the rendered outer element is
+   * never a `<button>`. This keeps `nativeButton={false}` correct regardless
+   * of what the consumer passes (string, host element, React component that
+   * happens to render a button, etc.) — avoiding Base UI's button-nesting
+   * warning.
+   */
+  const triggerContent =
+    typeof children === 'function'
+      ? children({ selectedDate: formattedDate })
+      : children || defaultTrigger;
 
   return (
-    <Popover open={showCalendar} onOpenChange={onOpenChange}>
+    <Popover
+      open={isDisabled ? false : popover.isOpen}
+      onOpenChange={open => {
+        if (isDisabled) return;
+        popover.onOpenChange(open);
+      }}
+    >
       <Popover.Trigger
-        nativeButton={isValidElement(trigger) ? false : true}
-        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+        nativeButton={false}
+        render={<div>{triggerContent}</div>}
       />
       <Popover.Content
-        ref={contentRef}
+        ref={popover.contentRef}
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
         side={popoverProps?.side ?? 'top'}
       >
         <Calendar
-          required={true}
+          /*
+           * No `captionLayout` default — 'dropdown' renders Apsara Selects
+           * inside the popover whose unmount loops ("Maximum update depth").
+           * Consumers can opt in via `calendarProps.captionLayout`.
+           */
           {...calendarProps}
+          /*
+           * Must stay after spread: `required` is the discriminator for
+           * RDP's prop union, and a widened value would break the narrowing.
+           * `required={false}` is intentional — the picker now supports an
+           * unselected initial state when no value/defaultValue is passed.
+           */
+          required={false}
           timeZone={timeZone}
-          onDropdownOpen={onDropdownOpen}
+          onDropdownOpen={popover.markDropdownOpen}
           mode='single'
           selected={selectedDate}
-          month={selectedDate}
+          month={viewMonth}
           onSelect={handleSelect}
-          onMonthChange={setSelectedDate}
+          onMonthChange={setViewMonth}
         />
       </Popover.Content>
     </Popover>

@@ -3,20 +3,44 @@
 import { CalendarIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import dayjs from 'dayjs';
-import { isValidElement, useCallback, useMemo, useState } from 'react';
-import { DateRange, PropsBase, PropsRangeRequired } from 'react-day-picker';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DateRange, PropsBase } from 'react-day-picker';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
 import { Popover } from '../popover';
 import { PopoverContentProps } from '../popover/popover';
-import { Calendar } from './calendar';
+import { Calendar, type CalendarPropsExtended } from './calendar';
 import styles from './calendar.module.css';
+import { usePickerPopover } from './use-picker-popover';
+
+/*
+ * Picker-specific calendar surface. `mode` is owned by the picker; the other
+ * forced keys (`selected`/`onSelect`/`required`) aren't in `PropsBase` so
+ * they're already unreachable.
+ */
+type RangePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
+
+interface RangePickerSlotProps {
+  startInput?: InputProps;
+  endInput?: InputProps;
+  calendar?: RangePickerCalendarSlot;
+  popover?: PopoverContentProps;
+}
 
 interface RangePickerProps {
   dateFormat?: string;
+  /**
+   * Props for each picker slot. When both this and the legacy
+   * `inputsProps`/`calendarProps`/`popoverProps` are set, `slotProps` wins.
+   */
+  slotProps?: RangePickerSlotProps;
+  /** @deprecated Use `slotProps.startInput` / `slotProps.endInput` instead. */
   inputsProps?: { startDate?: InputProps; endDate?: InputProps };
-  calendarProps?: PropsRangeRequired & PropsBase;
+  /** @deprecated Use `slotProps.calendar` instead. */
+  calendarProps?: RangePickerCalendarSlot;
+  /** @deprecated Use `slotProps.popover` instead. */
+  popoverProps?: PopoverContentProps;
   onSelect?: (date: DateRange) => void;
   pickerGroupClassName?: string;
   value?: DateRange;
@@ -27,35 +51,89 @@ interface RangePickerProps {
   showCalendarIcon?: boolean;
   footer?: React.ReactNode;
   timeZone?: string;
-  popoverProps?: PopoverContentProps;
 }
 
 type RangeFields = keyof DateRange;
 
 export function RangePicker({
   dateFormat = 'DD/MM/YYYY',
-  inputsProps = {},
-  calendarProps,
-  onSelect = () => {},
+  slotProps,
+  inputsProps: legacyInputsProps = {},
+  calendarProps: legacyCalendarProps,
+  popoverProps: legacyPopoverProps,
+  onSelect = () => undefined,
   value,
-  defaultValue = {
-    to: new Date(),
-    from: new Date()
-  },
+  /*
+   * No inline default — the state machine's "first click sets `from`" branch
+   * needs an empty range to fire.
+   */
+  defaultValue,
   pickerGroupClassName,
   children,
   showCalendarIcon = true,
   footer,
-  timeZone,
-  popoverProps
+  timeZone
 }: RangePickerProps) {
-  const [showCalendar, setShowCalendar] = useState(false);
+  // Merge legacy props with slotProps; slotProps wins when both are set.
+  const startInputProps = {
+    ...legacyInputsProps.startDate,
+    ...slotProps?.startInput
+  };
+  const endInputProps = {
+    ...legacyInputsProps.endDate,
+    ...slotProps?.endInput
+  };
+  const calendarProps = { ...legacyCalendarProps, ...slotProps?.calendar };
+  const popoverProps = { ...legacyPopoverProps, ...slotProps?.popover };
+  /*
+   * Gate the popover whenever either input is disabled. Partial-disable
+   * leaks: the range state machine rewrites both `from` and `to` regardless
+   * of which input was clicked, and the trailing icon's click bubbles to
+   * `Popover.Trigger` even when the input is disabled. For "fix one side,
+   * pick the other", constrain the calendar via `calendarProps` instead.
+   */
+  const isDisabled = !!startInputProps.disabled || !!endInputProps.disabled;
+  /*
+   * Hook owns open/close, outside-click dismissal, and the year/month
+   * dropdown carve-out. Inputs stay `readOnly`, so we arm the listener on
+   * open (click-to-open path) instead of on input blur (typed-input path).
+   */
+  const popover = usePickerPopover({
+    onOutsideClick: () => popover.disengage()
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: engage/disengage are stable
+  useEffect(() => {
+    if (popover.isOpen) popover.engage();
+    else popover.disengage();
+  }, [popover.isOpen]);
+
   const [currentRangeField, setCurrentRangeField] =
     useState<RangeFields>('from');
-  const [internalValue, setInternalValue] = useState(value ?? defaultValue);
-  const [currentMonth, setCurrentMonth] = useState(internalValue?.from);
+  const [internalValue, setInternalValue] = useState<DateRange | undefined>(
+    value ?? defaultValue
+  );
+  const [currentMonth, setCurrentMonth] = useState<Date | undefined>(
+    internalValue?.from
+  );
 
-  const selectedRange = value ?? internalValue;
+  /*
+   * Sync visible month when controlled `value.from` changes externally
+   * (form reset, preset buttons, sync-from-URL). Sync runs whenever
+   * `value` is defined — including when `value.from` is cleared — so a
+   * parent reset (`setValue({ from: undefined })`) actually unpins the
+   * calendar. Uncontrolled mode (value === undefined) skips entirely.
+   */
+  const valueFromTime = value?.from?.getTime();
+  const isControlled = value !== undefined;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
+  useEffect(() => {
+    if (isControlled) setCurrentMonth(value.from);
+  }, [valueFromTime, isControlled]);
+
+  // Empty-range fallback so downstream `.from`/`.to` reads don't need guards.
+  const selectedRange: DateRange = value ??
+    internalValue ?? { from: undefined };
 
   const startDate = selectedRange.from
     ? dayjs(selectedRange.from).format(dateFormat)
@@ -64,19 +142,20 @@ export function RangePicker({
     ? dayjs(selectedRange.to).format(dateFormat)
     : '';
 
-  // Ensures two months are visible even when
-  // current month is the last allowed month (endMonth).
+  /*
+   * Ensures two months are visible even when the current month is the last
+   * allowed month (endMonth). Skips when `currentMonth` is undefined —
+   * `dayjs(undefined)` returns "now" and would falsely match `endMonth` if
+   * endMonth happens to be the current month, forcing the calendar away
+   * from its own default.
+   */
   const computedDefaultMonth = useMemo(() => {
-    let month = currentMonth;
-    if (calendarProps?.endMonth) {
-      const endMonth = dayjs(calendarProps.endMonth);
-      const fromMonth = dayjs(currentMonth);
-
-      if (fromMonth.isSame(endMonth, 'month')) {
-        month = endMonth.subtract(1, 'month').toDate();
-      }
+    if (!currentMonth || !calendarProps?.endMonth) return currentMonth;
+    const endMonth = dayjs(calendarProps.endMonth);
+    if (dayjs(currentMonth).isSame(endMonth, 'month')) {
+      return endMonth.subtract(1, 'month').toDate();
     }
-    return month;
+    return currentMonth;
   }, [currentMonth, calendarProps?.endMonth]);
 
   const onTriggerClick = useCallback(
@@ -87,47 +166,52 @@ export function RangePicker({
       } else {
         setCurrentRangeField('to');
       }
-      if (showCalendar) {
+      if (popover.isOpen) {
         e.preventDefault();
         e.stopPropagation();
       }
     },
-    [showCalendar]
+    [popover.isOpen]
   );
 
-  // Handle date selection with custom logic
+  /*
+   * State machine branches on `from`/`to`, not the focused input:
+   *   A.  !from           -> set `from`, advance to 'to'
+   *   B1. from, before    -> reset
+   *   B2. from, after     -> commit `to`, close
+   *   C.  from && to      -> restart
+   * `onSelect` fires on every step; consumers gate on `range.to` for completed
+   * ranges.
+   */
   const handleSelect = (_: DateRange, selectedDay: Date) => {
-    let newRange = { ...selectedRange };
-    let newCurrentRangeField = currentRangeField;
+    const { from, to } = selectedRange;
+    let newRange: DateRange;
+    let newField: RangeFields = 'to';
+    let shouldClose = false;
 
-    if (currentRangeField === 'from') {
-      // If selecting start date and it's after the current end date
-      if (
-        selectedRange?.to &&
-        dayjs(selectedDay).isAfter(dayjs(selectedRange.to))
-      ) {
+    if (!from) {
+      // A: empty -> set from, advance
+      newRange = { from: selectedDay };
+    } else if (!to) {
+      if (dayjs(selectedDay).isBefore(dayjs(from))) {
+        // B1: click before from -> reset
         newRange = { from: selectedDay };
-        newCurrentRangeField = 'to';
       } else {
-        newRange.from = selectedDay;
-        if (!selectedRange?.to) newCurrentRangeField = 'to';
+        // B2: complete range -> close
+        newRange = { from, to: selectedDay };
+        newField = 'from';
+        shouldClose = true;
       }
     } else {
-      // If selecting end date and it's before the current start date
-      if (
-        selectedRange?.from &&
-        dayjs(selectedDay).isBefore(dayjs(selectedRange.from))
-      ) {
-        newRange = { from: selectedDay };
-        newCurrentRangeField = 'to';
-      } else newRange.to = selectedDay;
+      // C: both set -> restart
+      newRange = { from: selectedDay };
     }
 
-    if (newCurrentRangeField !== currentRangeField)
-      setCurrentRangeField(newCurrentRangeField);
-
-    setInternalValue(newRange);
+    if (newField !== currentRangeField) setCurrentRangeField(newField);
+    // Only update internal state when uncontrolled — controlled consumers own `value`.
+    if (!isControlled) setInternalValue(newRange);
     onSelect(newRange);
+    if (shouldClose) popover.disengage();
   };
 
   const defaultTrigger = (
@@ -137,11 +221,11 @@ export function RangePicker({
         placeholder='Select start date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
-        {...(inputsProps.startDate ?? {})}
+        {...startInputProps}
         value={startDate}
         readOnly
         data-range-field='start'
-        data-active={showCalendar && currentRangeField === 'from'}
+        data-active={popover.isOpen && currentRangeField === 'from'}
         onClick={onTriggerClick}
       />
 
@@ -150,39 +234,63 @@ export function RangePicker({
         placeholder='Select end date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
-        {...(inputsProps.endDate ?? {})}
+        {...endInputProps}
         value={endDate}
         readOnly
         data-range-field='end'
-        data-active={showCalendar && currentRangeField === 'to'}
+        data-active={popover.isOpen && currentRangeField === 'to'}
         onClick={onTriggerClick}
       />
     </Flex>
   );
 
-  const trigger =
+  /*
+   * Always wrap the trigger in a `<div>` so the rendered outer element is
+   * never a `<button>`. This keeps `nativeButton={false}` correct regardless
+   * of what the consumer passes (string, host element, React component that
+   * happens to render a button, etc.) — avoiding Base UI's button-nesting
+   * warning.
+   */
+  const triggerContent =
     typeof children === 'function'
       ? children({ startDate, endDate })
       : children || defaultTrigger;
 
   return (
-    <Popover open={showCalendar} onOpenChange={setShowCalendar}>
+    <Popover
+      open={isDisabled ? false : popover.isOpen}
+      onOpenChange={open => {
+        if (isDisabled) return;
+        popover.onOpenChange(open);
+      }}
+    >
       <Popover.Trigger
-        nativeButton={isValidElement(trigger) ? false : true}
-        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+        nativeButton={false}
+        render={<div>{triggerContent}</div>}
       />
       <Popover.Content
+        ref={popover.contentRef}
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
         side={popoverProps?.side ?? 'top'}
       >
         <Calendar
+          /*
+           * No `captionLayout` default — 'dropdown' renders Apsara Selects
+           * inside the popover whose unmount loops ("Maximum update depth").
+           * Consumers can opt in via `calendarProps.captionLayout`.
+           */
           showOutsideDays={false}
           numberOfMonths={2}
           defaultMonth={selectedRange.from}
-          required={true}
           {...calendarProps}
+          /*
+           * Must stay after spread: `required` is the discriminator for
+           * RDP's prop union, and a widened value would break the narrowing.
+           */
+          required={true}
           timeZone={timeZone}
+          onDropdownOpen={popover.markDropdownOpen}
           mode='range'
           month={computedDefaultMonth}
           selected={selectedRange}
