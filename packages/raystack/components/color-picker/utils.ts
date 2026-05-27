@@ -1,5 +1,6 @@
 import {
   clampChroma,
+  clampRgb,
   converter,
   formatHex,
   formatHex8,
@@ -78,13 +79,9 @@ export const getColorString = (color: ColorObject, mode: ModeType): string => {
     alpha: color.alpha ?? 1
   });
   if (!rgb) return '';
-  const clipped = {
-    mode: 'rgb' as const,
-    r: clamp01(rgb.r),
-    g: clamp01(rgb.g),
-    b: clamp01(rgb.b),
-    alpha: rgb.alpha ?? 1
-  };
+  // clampRgb is culori's per-channel clip to [0, 1] — identical to the manual
+  // clamp it replaces, keeping non-oklch output a valid representable value.
+  const clipped = clampRgb(rgb);
 
   if (mode === 'hex') {
     const hex = clipped.alpha === 1 ? formatHex(clipped) : formatHex8(clipped);
