@@ -46,6 +46,7 @@ import {
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
+/** Kitchen-sink examples route rendering Apsara components for manual QA. */
 const Page = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [nestedDialogOpen, setNestedDialogOpen] = useState(false);

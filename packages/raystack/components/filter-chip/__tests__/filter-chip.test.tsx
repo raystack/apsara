@@ -125,6 +125,75 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Date Filter Type', () => {
+    it('renders the date picker without crashing when no value is set', () => {
+      // Regression: an unset date chip seeds its value with '' and forwarded
+      // that string to DatePicker, whose controlled-sync effect ran
+      // `valueProp?.getTime()` → "getTime is not a function".
+      expect(() =>
+        render(<FilterChip label='Created' columnType={FilterType.date} />)
+      ).not.toThrow();
+      expect(screen.getByPlaceholderText('Select date')).toBeInTheDocument();
+    });
+
+    it('coerces a non-Date value to unselected instead of crashing', () => {
+      // FilterChipValue allows string, but a date column needs a real Date —
+      // strings must start the field unselected, not throw.
+      expect(() =>
+        render(
+          <FilterChip
+            label='Created'
+            columnType={FilterType.date}
+            value='2026-05-27'
+          />
+        )
+      ).not.toThrow();
+      expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
+    });
+
+    it('formats a Date value with the default month-as-text format', () => {
+      // Local-component Date so the formatted string is timezone-stable.
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+        />
+      );
+      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+    });
+
+    it('honors a custom dateFormat', () => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          dateFormat='DD/MM/YYYY'
+        />
+      );
+      expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();
+    });
+  });
+
+  describe('Content-fit width', () => {
+    it('sizes the string input container to its content', () => {
+      const { container } = render(
+        <FilterChip label='Name' columnType={FilterType.string} />
+      );
+      const inputContainer = container.querySelector(`.${styles.inputField}`);
+      expect(inputContainer).toHaveStyle({ width: 'fit-content' });
+    });
+
+    it('sizes the date field container to its content', () => {
+      const { container } = render(
+        <FilterChip label='Created' columnType={FilterType.date} />
+      );
+      const dateContainer = container.querySelector(`.${styles.dateField}`);
+      expect(dateContainer).toHaveStyle({ width: 'fit-content' });
+    });
+  });
+
   describe('Forwarded HTML attributes', () => {
     it('forwards arbitrary HTML attributes onto the root div', () => {
       render(

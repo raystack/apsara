@@ -55,6 +55,14 @@ export interface FilterChipProps
   dateFormat?: string;
 }
 
+/**
+ * A compact, removable filter pill that pairs a label and operator with a
+ * value control chosen by `columnType`: a `Select` (`select`/`multiselect`),
+ * a `DatePicker` (`date`), or a text `Input` (`string`/`number`). The value
+ * control sizes to its content so the chip hugs the active filter. Emits
+ * `onValueChange`/`onOperationChange` and renders a remove button when
+ * `onRemove` is provided.
+ */
 export const FilterChip = ({
   label,
   value,
