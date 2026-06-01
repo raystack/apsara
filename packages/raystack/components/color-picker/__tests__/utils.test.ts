@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   CHROMA_MAX,
   clampToSrgb,
+  formatColor,
   getColorString,
   hslToOklch,
   oklchToHsl,
@@ -80,6 +81,72 @@ describe('color-picker utils', () => {
       expect(clamped.c).toBeLessThan(wide.c);
       expect(closeTo(clamped.l, wide.l, 0.01)).toBe(true);
       expect(closeTo(clamped.h, wide.h, 0.01)).toBe(true);
+    });
+  });
+
+  describe('formatColor', () => {
+    describe('hex', () => {
+      it('returns uppercase 6-digit hex for opaque inputs', () => {
+        expect(formatColor('#ff0000', 'hex')).toBe('#FF0000');
+        expect(formatColor('rgb(0, 255, 0)', 'hex')).toBe('#00FF00');
+        expect(formatColor('red', 'hex')).toBe('#FF0000');
+      });
+
+      it('returns uppercase 8-digit hex when alpha < 1', () => {
+        expect(formatColor('rgba(255, 0, 0, 0.5)', 'hex')).toBe('#FF000080');
+        expect(formatColor('oklch(0 0 0 / 0.5)', 'hex')).toBe('#00000080');
+      });
+
+      it('round-trips an in-gamut oklch to the same sRGB hex', () => {
+        expect(formatColor('oklch(0.6279 0.2576 29.23)', 'hex')).toBe(
+          '#FF0000'
+        );
+      });
+
+      it('gamut-maps wide-gamut OKLCH instead of per-channel clipping', () => {
+        // Per-channel clip would push this to #FF0000 (R channel saturates,
+        // hue lost). toGamut preserves hue by reducing chroma.
+        const hex = formatColor('oklch(0.7 0.32 30)', 'hex');
+        expect(hex).toMatch(/^#[0-9A-F]{6}$/);
+        expect(hex).not.toBe('#FF0000');
+      });
+    });
+
+    describe('rgb', () => {
+      it('returns rgb() for opaque and rgba() for translucent', () => {
+        expect(formatColor('#ff0000', 'rgb')).toBe('rgb(255, 0, 0)');
+        expect(formatColor('rgba(255, 0, 0, 0.5)', 'rgb')).toBe(
+          'rgba(255, 0, 0, 0.5)'
+        );
+      });
+    });
+
+    describe('hsl', () => {
+      it('returns hsl() for opaque and hsla() for translucent', () => {
+        expect(formatColor('#ff0000', 'hsl')).toMatch(/^hsl\(/);
+        expect(formatColor('rgba(255, 0, 0, 0.5)', 'hsl')).toMatch(/^hsla\(/);
+      });
+    });
+
+    describe('oklch', () => {
+      it('serializes to the design-system oklch() format', () => {
+        // hex → oklch should produce a parseable oklch with finite L/C/H.
+        const out = formatColor('#ff0000', 'oklch');
+        expect(out).toMatch(/^oklch\([\d.]+ [\d.]+ [\d.]+\)$/);
+      });
+
+      it('appends alpha tail when alpha < 1', () => {
+        expect(formatColor('rgba(255, 0, 0, 0.5)', 'oklch')).toMatch(
+          /^oklch\([\d.]+ [\d.]+ [\d.]+ \/ [\d.]+\)$/
+        );
+      });
+    });
+
+    it('returns null for unparseable input in every format', () => {
+      for (const fmt of ['hex', 'rgb', 'hsl', 'oklch'] as const) {
+        expect(formatColor('not a color', fmt)).toBeNull();
+        expect(formatColor('', fmt)).toBeNull();
+      }
     });
   });
 });

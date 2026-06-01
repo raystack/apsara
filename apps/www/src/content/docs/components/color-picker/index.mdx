@@ -84,6 +84,40 @@ The `ColorPicker` can be embedded within a `Popover` component to create a more 
 
 <Demo data={popoverDemo} />
 
+## Utilities
+
+### formatColor
+
+Converts any CSS color string to the requested format. Useful when consuming apsara color tokens (which are authored in OKLCH) from APIs that need a specific format — chart libraries, SVG attributes, canvas fills, design exports, and similar.
+
+```tsx
+import { formatColor } from '@raystack/apsara'
+
+formatColor('oklch(0.5438 0.191 267.01)', 'hex')   // '#3E63DD'
+formatColor('oklch(0.7 0.32 30)', 'hex')           // '#FF5843'  (gamut-mapped)
+formatColor('red', 'rgb')                          // 'rgb(255, 0, 0)'
+formatColor('rgba(255, 0, 0, 0.5)', 'hsl')         // 'hsla(0, 100%, 50%, 0.5)'
+formatColor('#FF0000', 'oklch')                    // 'oklch(0.6279 0.2577 29.23)'
+formatColor('not a color', 'hex')                  // null
+```
+
+**Behavior**
+
+- Accepts any CSS color string: `oklch()`, `rgb()`/`rgba()`, `hsl()`/`hsla()`, hex, named colors, `transparent`.
+- For `hex`, `rgb`, and `hsl` outputs, wide-gamut OKLCH inputs are gamut-mapped into sRGB by **reducing chroma while preserving lightness and hue**, so the returned string is the closest sRGB representation rather than a per-channel-clipped one (which would distort hue).
+- For `oklch` output, the full color is preserved — OKLCH can express the wide gamut natively. Output matches the design system's token format (4-decimal L/C, 2-decimal H, hue pinned to 0 when achromatic).
+- Hex is uppercase; uses 8-digit form (`#rrggbbaa`) when alpha < 1. Translucent rgb/hsl/oklch produce `rgba()` / `hsla()` / `oklch(... / A)`.
+- Returns `null` for unparseable input rather than throwing — safe to call on user-supplied strings.
+
+**Signature**
+
+```ts
+function formatColor(
+  value: string,
+  format: 'hex' | 'rgb' | 'hsl' | 'oklch'
+): string | null
+```
+
 ## Accessibility
 
 - Provides `aria-label` attributes for color areas and sliders
