@@ -7,8 +7,11 @@
   background: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   text-wrap: nowrap;
+  /* Hug content, but cap at the parent and shrink under it. `min-width: 0`
+   * is required: `min-content` would let the value leak in and beat the cap. */
   width: fit-content;
-  min-width: min-content;
+  min-width: 0;
+  max-width: 100%;
   overflow: clip;
 }
 
@@ -148,6 +151,9 @@ button.selectValue:hover {
   height: 22px;
   border: none;
   box-shadow: none;
+  /* Clickable floor for an empty value; on the container (not the input) so
+   * the `overflow: hidden` wrapper can still clip it away under pressure. */
+  min-width: var(--rs-space-10);
 }
 
 /* Match height of Input when FilterChip variant is text */
@@ -156,17 +162,14 @@ button.selectValue:hover {
   min-height: var(--rs-space-7);
 }
 
-/*
-* Hug the content via `field-sizing` (Chromium/Safari); elsewhere fall back
-* to the intrinsic `width: auto`. Bounds are guardrails: clickable floor +
-* runaway ceiling.
-*/
+/* Hug the value (`field-sizing`, `width: auto` fallback). `min-width: 0` lets
+ * it clip under pressure; `max-width` caps a runaway value so chips stay compact. */
 .inputFieldWrapper input {
   padding-left: var(--rs-space-3);
   padding-right: var(--rs-space-3);
   field-sizing: content;
   width: auto;
-  min-width: var(--rs-space-10);
+  min-width: 0;
   max-width: 200px;
 }
 
@@ -182,6 +185,8 @@ button.selectValue:hover {
   justify-content: space-between;
   align-items: center;
   width: fit-content;
+  /* Clickable floor on the container — see .inputField. */
+  min-width: var(--rs-space-10);
   height: 22px;
   min-height: 22px;
   border: none;
@@ -201,7 +206,7 @@ button.selectValue:hover {
   /* Hug the formatted date string — see .inputFieldWrapper input. */
   field-sizing: content;
   width: auto;
-  min-width: var(--rs-space-10);
+  min-width: 0;
   max-width: 200px;
 }
 
