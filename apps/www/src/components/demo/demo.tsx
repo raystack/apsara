@@ -50,7 +50,7 @@ import {
   DataViewLoadingDemo,
   DataViewMultiViewDemo,
   DataViewPerViewFieldsDemo,
-  DataViewSelectionDemo,
+  DataViewSearchDemo,
   DataViewTableDemo,
   DataViewVirtualizedDemo,
   DataViewVirtualizedGroupingDemo
@@ -85,7 +85,7 @@ export default function Demo(props: DemoProps) {
       DataViewVirtualizedGroupingDemo,
       DataViewLoadingDemo,
       DataViewPerViewFieldsDemo,
-      DataViewSelectionDemo,
+      DataViewSearchDemo,
       ChipInputDemo,
       DataTableSelectionDemo,
       LinearMenuDemo,

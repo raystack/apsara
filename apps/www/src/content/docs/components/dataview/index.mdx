@@ -6,6 +6,7 @@ source: packages/raystack/components/data-view
 
 import {
   tablePreview,
+  searchPreview,
   listPreview,
   multiViewPreview,
   emptyZeroPreview,
@@ -15,7 +16,6 @@ import {
   virtualizedGroupingPreview,
   loadingPreview,
   perViewFieldsPreview,
-  selectionPreview,
 } from "./demo.ts";
 
 <Demo data={tablePreview} />
@@ -148,11 +148,21 @@ Visibility is a **single global map** on context. `DataView.List` honours it for
 
 <auto-type-table path="./props.ts" name="DataViewZeroStateProps" />
 
-### DataView.ViewSwitcher
+### DataView.DisplayControls
 
-<auto-type-table path="./props.ts" name="DataViewViewSwitcherProps" />
+The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually.
+
+<auto-type-table path="./props.ts" name="DataViewDisplayControlsProps" />
 
 ## Examples
+
+### Search
+
+`DataView.Search` writes the input to `query.search`, which feeds TanStack's `globalFilter` — rows are filtered across every field as the user types. Drop it into the toolbar wherever you want it; in client mode no extra wiring is needed. Type a name, email, or team below to filter the rows.
+
+<Demo data={searchPreview} />
+
+By default search auto-disables in the zero state (no data and no active query) and re-enables the moment the user types. Pass `autoDisableInZeroState={false}` to keep it always enabled, or `disabled` to control it yourself. In server mode, read `query.search` in `onTableQueryChange` and filter on the backend.
 
 ### List variant
 
@@ -162,7 +172,7 @@ Visibility is a **single global map** on context. `DataView.List` honours it for
 
 ### Multi-view
 
-Pass `views` + give each renderer a `name`. `DataView.DisplayControls` hosts the switcher automatically (or place `<DataView.ViewSwitcher>` standalone). Query state — filters, sort, search, visibility — persists across switches.
+Pass `views` + give each renderer a `name`. `DataView.DisplayControls` hosts the view switcher at the top of its popover automatically — give each view an optional `leadingIcon` to show alongside its label. Query state — filters, sort, search, visibility — persists across switches.
 
 <Demo data={multiViewPreview} />
 
@@ -213,16 +223,6 @@ const listFields = fields.map((f) =>
 
 <DataView.List name="list" variant="list" columns={listColumns} fields={listFields} />;
 ```
-
-### Row selection
-
-`DataView` doesn't ship a built-in selection toolbar, but the TanStack table instance is exposed through `useDataView()`. Wire a leading checkbox column, then float a [`FloatingActions`](/docs/components/floating-actions) bar while any row is selected.
-
-<Demo data={selectionPreview} />
-
-Notes:
-- `table.resetRowSelection()` clears the selection; wire it to `Chip`'s `onDismiss`.
-- `FloatingActions` defaults to `variant="floating"` (`position: fixed`, bottom-center). To scope the bar to the table region rather than the viewport, give an ancestor `transform`, `filter`, or `contain: paint` so it becomes the containing block for the fixed bar.
 
 ### Custom group buckets (`groupByResolvers`)
 

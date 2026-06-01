@@ -19,7 +19,6 @@ import { Filters } from './components/filters';
 import { DataViewList } from './components/list';
 import { DataViewSearch } from './components/search';
 import { Toolbar } from './components/toolbar';
-import { ViewSwitcher } from './components/view-switcher';
 import { DataViewZeroState } from './components/zero-state';
 import { DataViewContext } from './context';
 import {
@@ -309,7 +308,6 @@ export const DataView = Object.assign(DataViewRoot, {
   DisplayAccess: DisplayAccess,
   EmptyState: DataViewEmptyState,
   ZeroState: DataViewZeroState,
-  ViewSwitcher: ViewSwitcher,
   Toolbar: Toolbar,
   Search: DataViewSearch,
   Filters: Filters,

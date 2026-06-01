@@ -214,6 +214,11 @@
   box-sizing: border-box;
 }
 
+.listHeaderCell:first-child,
+.listCell:first-child {
+  padding-left: var(--rs-space-7);
+}
+
 .listGroupHeader {
   grid-column: 1 / -1;
   display: flex;
@@ -309,9 +314,4 @@
   padding: var(--rs-space-9) 0;
   width: 100%;
   box-sizing: border-box;
-}
-
-/* Multi-view switcher (inside DisplayControls or standalone) */
-.viewSwitcher {
-  flex-shrink: 0;
 }

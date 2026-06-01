@@ -1,22 +1,18 @@
 'use client';
 
-import { TransformIcon } from '@radix-ui/react-icons';
+import { ListBulletIcon, RowsIcon } from '@radix-ui/react-icons';
 import {
   Avatar,
   Badge,
   Button,
-  Checkbox,
-  Chip,
   // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
   DataView,
   DataViewField,
   DataViewListColumn,
   Flex,
-  FloatingActions,
-  Text,
-  useDataView
+  Text
 } from '@raystack/apsara';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Person = {
   id: string;
@@ -194,11 +190,8 @@ export function DataViewTableDemo() {
       <div style={{ height: 400 }}>
         <DataView data={people} fields={fields} defaultSort={defaultSort}>
           <DataView.Toolbar>
-            <DataView.Search placeholder='Search people…' />
-            <Flex gap={3}>
-              <DataView.Filters />
-              <DataView.DisplayControls />
-            </Flex>
+            <DataView.Filters />
+            <DataView.DisplayControls />
           </DataView.Toolbar>
           <DataView.List variant='table' columns={tableColumns} />
         </DataView>
@@ -213,7 +206,6 @@ export function DataViewListDemo() {
       <div style={{ height: 400 }}>
         <DataView data={people} fields={fields} defaultSort={defaultSort}>
           <DataView.Toolbar>
-            <DataView.Search placeholder='Search…' />
             <DataView.Filters />
           </DataView.Toolbar>
           <DataView.List variant='list' columns={listColumns} />
@@ -223,11 +215,29 @@ export function DataViewListDemo() {
   );
 }
 
+export function DataViewSearchDemo() {
+  return (
+    <Flex direction='column' gap={4} width='full'>
+      <div style={{ height: 400 }}>
+        <DataView data={people} fields={fields} defaultSort={defaultSort}>
+          <DataView.Toolbar>
+            <DataView.Search placeholder='Search by name, email, team…' />
+          </DataView.Toolbar>
+          <DataView.List variant='table' columns={tableColumns} />
+          <DataView.EmptyState>
+            <Text>No people match your search.</Text>
+          </DataView.EmptyState>
+        </DataView>
+      </div>
+    </Flex>
+  );
+}
+
 export function DataViewMultiViewDemo() {
   const views = useMemo(
     () => [
-      { value: 'table', label: 'Table' },
-      { value: 'list', label: 'List' }
+      { value: 'table', label: 'Table', leadingIcon: <RowsIcon /> },
+      { value: 'list', label: 'List', leadingIcon: <ListBulletIcon /> }
     ],
     []
   );
@@ -242,14 +252,8 @@ export function DataViewMultiViewDemo() {
           defaultView='table'
         >
           <DataView.Toolbar>
-            <Flex gap={3}>
-              <DataView.Search />
-              <DataView.Filters />
-            </Flex>
-            <Flex gap={3}>
-              <DataView.ViewSwitcher />
-              <DataView.DisplayControls />
-            </Flex>
+            <DataView.Filters />
+            <DataView.DisplayControls />
           </DataView.Toolbar>
           <DataView.List name='table' variant='table' columns={tableColumns} />
           <DataView.List name='list' variant='list' columns={listColumns} />
@@ -275,7 +279,6 @@ export function DataViewEmptyZeroDemo() {
           }
         >
           <DataView.Toolbar>
-            <DataView.Search />
             <DataView.Filters />
           </DataView.Toolbar>
           <DataView.List variant='table' columns={tableColumns} />
@@ -387,11 +390,8 @@ export function DataViewVirtualizedDemo() {
       <div style={{ height: 400 }}>
         <DataView data={data} fields={fields} defaultSort={defaultSort}>
           <DataView.Toolbar>
-            <DataView.Search placeholder='Search 1,000 people…' />
-            <Flex gap={3}>
-              <DataView.Filters />
-              <DataView.DisplayControls />
-            </Flex>
+            <DataView.Filters />
+            <DataView.DisplayControls />
           </DataView.Toolbar>
           <DataView.List
             variant='table'
@@ -423,11 +423,8 @@ export function DataViewGroupingDemo() {
           query={{ group_by: ['team'] }}
         >
           <DataView.Toolbar>
-            <DataView.Search />
-            <Flex gap={3}>
-              <DataView.Filters />
-              <DataView.DisplayControls />
-            </Flex>
+            <DataView.Filters />
+            <DataView.DisplayControls />
           </DataView.Toolbar>
           <DataView.List
             variant='table'
@@ -458,11 +455,8 @@ export function DataViewVirtualizedGroupingDemo() {
           query={{ group_by: ['team'] }}
         >
           <DataView.Toolbar>
-            <DataView.Search placeholder='Search 1,500 people…' />
-            <Flex gap={3}>
-              <DataView.Filters />
-              <DataView.DisplayControls />
-            </Flex>
+            <DataView.Filters />
+            <DataView.DisplayControls />
           </DataView.Toolbar>
           <DataView.List
             variant='table'
@@ -507,7 +501,6 @@ export function DataViewLoadingDemo() {
           loadingRowCount={4}
         >
           <DataView.Toolbar>
-            <DataView.Search />
             <DataView.Filters />
           </DataView.Toolbar>
           <DataView.List variant='table' columns={tableColumns} />
@@ -548,7 +541,6 @@ export function DataViewVirtualizedLoadingDemo() {
           loadingRowCount={6}
         >
           <DataView.Toolbar>
-            <DataView.Search />
             <DataView.Filters />
           </DataView.Toolbar>
           <DataView.List
@@ -570,8 +562,8 @@ export function DataViewVirtualizedLoadingDemo() {
 export function DataViewPerViewFieldsDemo() {
   const views = useMemo(
     () => [
-      { value: 'table', label: 'Table' },
-      { value: 'list', label: 'List' }
+      { value: 'table', label: 'Table', leadingIcon: <RowsIcon /> },
+      { value: 'list', label: 'List', leadingIcon: <ListBulletIcon /> }
     ],
     []
   );
@@ -595,12 +587,8 @@ export function DataViewPerViewFieldsDemo() {
           defaultView='table'
         >
           <DataView.Toolbar>
-            <DataView.Search />
-            <Flex gap={3}>
-              <DataView.Filters />
-              <DataView.ViewSwitcher />
-              <DataView.DisplayControls />
-            </Flex>
+            <DataView.Filters />
+            <DataView.DisplayControls />
           </DataView.Toolbar>
           <DataView.List name='table' variant='table' columns={tableColumns} />
           <DataView.List
@@ -609,106 +597,6 @@ export function DataViewPerViewFieldsDemo() {
             columns={listColumns}
             fields={listFields}
           />
-        </DataView>
-      </div>
-    </Flex>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Row selection demo — reads the underlying TanStack table from useDataView()
-// and floats a FloatingActions bar when rows are selected.
-// ---------------------------------------------------------------------------
-
-const selectionColumn: DataViewListColumn<Person> = {
-  accessorKey: 'select',
-  width: '40px',
-  header: ({ table }) => (
-    <Checkbox
-      checked={table.getIsAllRowsSelected()}
-      onCheckedChange={value => table.toggleAllRowsSelected(Boolean(value))}
-      aria-label='Select all rows'
-    />
-  ),
-  cell: ({ row }) => (
-    <Checkbox
-      checked={row.getIsSelected()}
-      onCheckedChange={value => row.toggleSelected(Boolean(value))}
-      aria-label='Select row'
-      onClick={e => e.stopPropagation()}
-    />
-  )
-};
-
-function SelectionBar() {
-  const { table } = useDataView<Person>();
-  const selected = table.getSelectedRowModel().rows;
-  if (selected.length === 0) return null;
-
-  return (
-    <FloatingActions aria-label='Selection actions'>
-      <Chip
-        variant='outline'
-        size='large'
-        color='neutral'
-        leadingIcon={<TransformIcon />}
-        isDismissible
-        onDismiss={() => table.resetRowSelection()}
-      >
-        {selected.length} selected
-      </Chip>
-      <FloatingActions.Separator />
-      <Button variant='outline' color='neutral' size='small'>
-        Move to
-      </Button>
-      <Button variant='outline' color='neutral' size='small'>
-        Actions
-      </Button>
-    </FloatingActions>
-  );
-}
-
-function InitialSelection() {
-  const { table } = useDataView<Person>();
-  useEffect(() => {
-    table.setRowSelection({ '1': true });
-  }, [table]);
-  return null;
-}
-
-const selectionColumns: DataViewListColumn<Person>[] = [
-  selectionColumn,
-  ...tableColumns
-];
-
-export function DataViewSelectionDemo() {
-  return (
-    <Flex direction='column' gap={4} width='full'>
-      <div
-        style={{
-          position: 'relative',
-          height: 420,
-          width: '100%',
-          overflow: 'hidden',
-          transform: 'translateZ(0)'
-        }}
-      >
-        <DataView
-          data={people}
-          fields={fields}
-          defaultSort={defaultSort}
-          getRowId={row => row.id}
-        >
-          <DataView.Toolbar>
-            <DataView.Search />
-            <Flex gap={3}>
-              <DataView.Filters />
-              <DataView.DisplayControls />
-            </Flex>
-          </DataView.Toolbar>
-          <DataView.List variant='table' columns={selectionColumns} />
-          <InitialSelection />
-          <SelectionBar />
         </DataView>
       </div>
     </Flex>

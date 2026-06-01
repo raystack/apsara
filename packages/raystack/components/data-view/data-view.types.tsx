@@ -118,7 +118,8 @@ export interface DataViewListColumn<TData, TValue = unknown> {
 export interface ViewSpec {
   value: string;
   label: string;
-  icon?: React.ReactNode;
+  /** Optional icon rendered before the view's label in the switcher tab. */
+  leadingIcon?: React.ReactNode;
 }
 
 /**

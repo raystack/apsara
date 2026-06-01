@@ -11,7 +11,6 @@ export const tablePreview = {
       code: `
       <DataView data={data} fields={fields} defaultSort={{ name: "name", order: "asc" }}>
         <DataView.Toolbar>
-          <DataView.Search />
           <DataView.Filters />
           <DataView.DisplayControls />
         </DataView.Toolbar>
@@ -32,7 +31,6 @@ export const listPreview = {
       code: `
       <DataView data={data} fields={fields} defaultSort={{ name: "name", order: "asc" }}>
         <DataView.Toolbar>
-          <DataView.Search />
           <DataView.Filters />
         </DataView.Toolbar>
         <DataView.List variant="list" columns={listColumns} />
@@ -50,9 +48,11 @@ export const multiViewPreview = {
     {
       label: 'index.tsx',
       code: `
+      /* The view switcher lives inside the DisplayControls popover. Give each
+         view an optional leadingIcon to show alongside its label. */
       const views = [
-        { value: "table", label: "Table" },
-        { value: "list",  label: "List"  },
+        { value: "table", label: "Table", leadingIcon: <RowsIcon /> },
+        { value: "list",  label: "List",  leadingIcon: <ListBulletIcon /> },
       ];
 
       <DataView
@@ -63,9 +63,7 @@ export const multiViewPreview = {
         defaultView="table"
       >
         <DataView.Toolbar>
-          <DataView.Search />
           <DataView.Filters />
-          <DataView.ViewSwitcher />
           <DataView.DisplayControls />
         </DataView.Toolbar>
         <DataView.List name="table" variant="table" columns={tableColumns} />
@@ -86,7 +84,6 @@ export const emptyZeroPreview = {
       code: `
       <DataView data={data} fields={fields} defaultSort={{ name: "name", order: "asc" }}>
         <DataView.Toolbar>
-          <DataView.Search />
           <DataView.Filters />
         </DataView.Toolbar>
         <DataView.List variant="table" columns={tableColumns} />
@@ -116,7 +113,6 @@ export const virtualizedPreview = {
       <div style={{ height: 400 }}>
         <DataView data={data} fields={fields} defaultSort={{ name: "name", order: "asc" }}>
           <DataView.Toolbar>
-            <DataView.Search />
             <DataView.Filters />
             <DataView.DisplayControls />
           </DataView.Toolbar>
@@ -152,7 +148,6 @@ export const groupingPreview = {
         query={{ group_by: ["team"] }}
       >
         <DataView.Toolbar>
-          <DataView.Search />
           <DataView.Filters />
           <DataView.DisplayControls />
         </DataView.Toolbar>
@@ -187,7 +182,6 @@ export const virtualizedGroupingPreview = {
           query={{ group_by: ["team"] }}
         >
           <DataView.Toolbar>
-            <DataView.Search />
             <DataView.Filters />
             <DataView.DisplayControls />
           </DataView.Toolbar>
@@ -224,7 +218,6 @@ export const loadingPreview = {
         loadingRowCount={4}
       >
         <DataView.Toolbar>
-          <DataView.Search />
           <DataView.Filters />
         </DataView.Toolbar>
         <DataView.List variant="table" columns={tableColumns} />
@@ -261,9 +254,7 @@ export const perViewFieldsPreview = {
         defaultView="table"
       >
         <DataView.Toolbar>
-          <DataView.Search />
           <DataView.Filters />
-          <DataView.ViewSwitcher />
           <DataView.DisplayControls />
         </DataView.Toolbar>
         <DataView.List name="table" variant="table" columns={tableColumns} />
@@ -274,100 +265,6 @@ export const perViewFieldsPreview = {
           fields={listFields}
         />
       </DataView>`
-    }
-  ]
-};
-
-export const selectionPreview = {
-  type: 'code',
-  previewCode: false,
-  code: `<DataViewSelectionDemo />`,
-  codePreview: [
-    {
-      label: 'index.tsx',
-      code: `import {
-  Button,
-  Checkbox,
-  Chip,
-  DataView,
-  FloatingActions,
-  useDataView,
-} from "@raystack/apsara";
-import { TransformIcon } from "@radix-ui/react-icons";
-
-// 1. Leading checkbox column that wires TanStack selection through the
-//    DataView.List grid track.
-const selectionColumn = {
-  accessorKey: "select",
-  width: "40px",
-  header: ({ table }) => (
-    <Checkbox
-      checked={
-        table.getIsAllRowsSelected()
-          ? true
-          : table.getIsSomeRowsSelected()
-          ? "indeterminate"
-          : false
-      }
-      onCheckedChange={(v) => table.toggleAllRowsSelected(Boolean(v))}
-    />
-  ),
-  cell: ({ row }) => (
-    <Checkbox
-      checked={row.getIsSelected()}
-      onCheckedChange={(v) => row.toggleSelected(Boolean(v))}
-      onClick={(e) => e.stopPropagation()}
-    />
-  ),
-};
-
-// 2. Read selection from context and float a bar when any row is selected.
-function SelectionBar() {
-  const { table } = useDataView();
-  const selected = table.getSelectedRowModel().rows;
-  if (selected.length === 0) return null;
-
-  return (
-    <FloatingActions aria-label="Selection actions">
-      <Chip
-        variant="outline"
-        size="large"
-        color="neutral"
-        leadingIcon={<TransformIcon />}
-        isDismissible
-        onDismiss={() => table.resetRowSelection()}
-      >
-        {selected.length} selected
-      </Chip>
-      <FloatingActions.Separator />
-      <Button variant="outline" color="neutral" size="small">
-        Move to
-      </Button>
-      <Button variant="outline" color="neutral" size="small">
-        Actions
-      </Button>
-    </FloatingActions>
-  );
-}
-
-// 3. Compose.
-<DataView
-  data={rows}
-  fields={fields}
-  defaultSort={{ name: "name", order: "asc" }}
-  getRowId={(row) => row.id}
->
-  <DataView.Toolbar>
-    <DataView.Search />
-    <DataView.Filters />
-    <DataView.DisplayControls />
-  </DataView.Toolbar>
-  <DataView.List
-    variant="table"
-    columns={[selectionColumn, ...tableColumns]}
-  />
-  <SelectionBar />
-</DataView>`
     }
   ]
 };
@@ -403,6 +300,31 @@ export const customPreview = {
             ))
           }
         </DataView.Custom>
+      </DataView>`
+    }
+  ]
+};
+
+export const searchPreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewSearchDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* DataView.Search writes the input to query.search, which feeds
+         TanStack's globalFilter — rows are filtered across every field as
+         the user types. Try "ada", "design", or "invited". */
+      <DataView data={data} fields={fields} defaultSort={{ name: "name", order: "asc" }}>
+        <DataView.Toolbar>
+          <DataView.Search placeholder="Search by name, email, team…" />
+        </DataView.Toolbar>
+        <DataView.List variant="table" columns={tableColumns} />
+        <DataView.EmptyState>
+          <Text>No people match your search.</Text>
+        </DataView.EmptyState>
       </DataView>`
     }
   ]

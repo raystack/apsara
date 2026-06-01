@@ -205,12 +205,17 @@ export interface DataViewZeroStateProps {
   children: ReactNode;
 }
 
-export interface DataViewViewSwitcherProps {
-  /**
-   * @defaultValue "small"
-   */
-  size?: 'small' | 'medium' | 'large';
-  className?: string;
+export interface DataViewDisplayControlsProps {
+  /** Custom trigger element for the popover. */
+  trigger?: ReactNode;
+  /** Hide the multi-view switcher (shown by default when `views.length > 1`). */
+  hideViewSwitcher?: boolean;
+  /** Hide the Ordering (sort) control. */
+  hideOrdering?: boolean;
+  /** Hide the Grouping control. */
+  hideGrouping?: boolean;
+  /** Hide the Display Properties (column visibility) section. */
+  hideDisplayProperties?: boolean;
 }
 
 export interface ViewSpec {
@@ -218,7 +223,8 @@ export interface ViewSpec {
   value: string;
   /** Shown in the view switcher. */
   label: string;
-  icon?: ReactNode;
+  /** Optional icon rendered before the view's label in the switcher tab. */
+  leadingIcon?: ReactNode;
 }
 
 export interface DataViewQuery {

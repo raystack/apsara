@@ -16,13 +16,18 @@ import { ViewSwitcher } from './view-switcher';
 
 interface DisplayControlsProps {
   trigger?: ReactNode;
+  hideViewSwitcher?: boolean;
+  hideOrdering?: boolean;
+  hideGrouping?: boolean;
+  hideDisplayProperties?: boolean;
 }
 
 /**
- * `DataView.DisplayControls` — the popover housing Ordering, Grouping, Display
- * Properties (column visibility), and Reset. When `views.length > 1`, the
- * popover also hosts the view switcher (consumers can place
- * `<DataView.ViewSwitcher>` standalone elsewhere for layout flexibility).
+ * `DataView.DisplayControls` — the popover housing the view switcher, Ordering,
+ * Grouping, Display Properties (column visibility), and Reset. The view switcher
+ * appears at the top whenever `views.length > 1`. Each section can be hidden
+ * individually via `hideViewSwitcher` / `hideOrdering` / `hideGrouping` /
+ * `hideDisplayProperties`.
  */
 export function DisplayControls<TData>({
   trigger = (
@@ -34,7 +39,11 @@ export function DisplayControls<TData>({
     >
       Display
     </Button>
-  )
+  ),
+  hideViewSwitcher = false,
+  hideOrdering = false,
+  hideGrouping = false,
+  hideDisplayProperties = false
 }: DisplayControlsProps) {
   const {
     fields,
@@ -63,7 +72,8 @@ export function DisplayControls<TData>({
 
   const onReset = () => onDisplaySettingsReset();
 
-  const showViewSwitcher = (views?.length ?? 0) > 1;
+  const showViewSwitcher = !hideViewSwitcher && (views?.length ?? 0) > 1;
+  const showOrderingOrGrouping = !hideOrdering || !hideGrouping;
 
   return (
     <Popover>
@@ -80,26 +90,34 @@ export function DisplayControls<TData>({
               <ViewSwitcher />
             </Flex>
           ) : null}
-          <Flex
-            direction='column'
-            className={styles['display-popover-properties-container']}
-            gap={5}
-          >
-            <Ordering
-              columnList={sortableColumns}
-              onChange={onSortChange}
-              value={tableQuery?.sort?.[0] || defaultSort}
-            />
-            <Grouping
-              fields={fields ?? []}
-              onRemove={onGroupRemove}
-              onChange={onGroupChange}
-              value={tableQuery?.group_by?.[0] || defaultGroupOption.id}
-            />
-          </Flex>
-          <Flex className={styles['display-popover-properties-container']}>
-            <DisplayProperties fields={fields ?? []} />
-          </Flex>
+          {showOrderingOrGrouping ? (
+            <Flex
+              direction='column'
+              className={styles['display-popover-properties-container']}
+              gap={5}
+            >
+              {!hideOrdering ? (
+                <Ordering
+                  columnList={sortableColumns}
+                  onChange={onSortChange}
+                  value={tableQuery?.sort?.[0] || defaultSort}
+                />
+              ) : null}
+              {!hideGrouping ? (
+                <Grouping
+                  fields={fields ?? []}
+                  onRemove={onGroupRemove}
+                  onChange={onGroupChange}
+                  value={tableQuery?.group_by?.[0] || defaultGroupOption.id}
+                />
+              ) : null}
+            </Flex>
+          ) : null}
+          {!hideDisplayProperties ? (
+            <Flex className={styles['display-popover-properties-container']}>
+              <DisplayProperties fields={fields ?? []} />
+            </Flex>
+          ) : null}
           <Flex
             justify='end'
             className={styles['display-popover-reset-container']}
