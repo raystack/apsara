@@ -11,7 +11,7 @@ import {
   FilterTypes,
   filterOperators
 } from '~/types/filters';
-import { DatePicker } from '../calendar';
+import { DatePicker, type DatePickerProps } from '../calendar';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
@@ -34,6 +34,17 @@ const chip = cva(styles.chip, {
 
 export type FilterChipValue = string | string[] | number | Date;
 
+/**
+ * Subset of `DatePickerProps` that consumers may forward to the chip's
+ * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
+ * are owned by `FilterChip`; `children` would replace the input trigger and
+ * break the chip layout.
+ */
+export type FilterChipCalendarProps = Omit<
+  DatePickerProps,
+  'value' | 'onSelect' | 'defaultValue' | 'children'
+>;
+
 export interface FilterChipProps
   extends ComponentProps<'div'>,
     VariantProps<typeof chip> {
@@ -48,11 +59,11 @@ export interface FilterChipProps
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
   /**
-   * Date display/parse format for `columnType="date"`, forwarded to the
-   * underlying DatePicker. Defaults to a month-as-text format so the
-   * month reads as e.g. "27 May 2026" instead of "27/05/2026".
+   * Props forwarded to the underlying `DatePicker` for `columnType="date"`.
+   * `value`/`onSelect`/`defaultValue` are owned by `FilterChip` and excluded;
+   * `children` is excluded so the chip's input trigger isn't replaced.
    */
-  dateFormat?: string;
+  calendarProps?: FilterChipCalendarProps;
 }
 
 /**
@@ -77,7 +88,7 @@ export const FilterChip = ({
   variant,
   operations,
   selectProps,
-  dateFormat = 'DD MMM YYYY',
+  calendarProps,
   ...props
 }: FilterChipProps) => {
   const computedOperations = operations?.length
@@ -153,14 +164,16 @@ export const FilterChip = ({
         return (
           <div className={styles.dateFieldWrapper}>
             <DatePicker
+              showCalendarIcon={false}
+              {...calendarProps}
               value={filterValue instanceof Date ? filterValue : undefined}
               onSelect={date => handleFilterValueChange(date)}
-              dateFormat={dateFormat}
-              showCalendarIcon={false}
               slotProps={{
+                ...calendarProps?.slotProps,
                 input: {
                   width: 'fit-content',
-                  classNames: { container: styles.dateField }
+                  classNames: { container: styles.dateField },
+                  ...calendarProps?.slotProps?.input
                 }
               }}
             />

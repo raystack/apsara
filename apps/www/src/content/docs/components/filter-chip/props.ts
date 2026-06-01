@@ -10,11 +10,6 @@ export interface FilterChipProps {
    */
   columnType?: 'select' | 'date' | 'string' | 'number';
 
-  /** Date display/parse format for `columnType="date"`, forwarded to the underlying DatePicker.
-   * @default "DD MMM YYYY"
-   */
-  dateFormat?: string;
-
   /** Filterchip variant
    * @default "default"
    */
@@ -45,6 +40,18 @@ export interface FilterChipProps {
     onSearch?: (value: string) => void;
     searchValue?: string;
     defaultSearchValue?: string;
+  };
+
+  /** Props forwarded to the underlying DatePicker for `columnType="date"`. Refer to DatePicker for full props list. `dateFormat` defaults to `"DD MMM YYYY"`. */
+  calendarProps?: {
+    dateFormat?: string;
+    showCalendarIcon?: boolean;
+    timeZone?: string;
+    slotProps?: {
+      input?: Record<string, unknown>;
+      calendar?: Record<string, unknown>;
+      popover?: Record<string, unknown>;
+    };
   };
 
   /** Additional CSS class names */

@@ -86,6 +86,21 @@ API added, and the three legacy prop names (`inputProps`,
   non-`Date` values to `undefined` (the date field starts unselected)
   and uses the new `slotProps.input` API instead of the deprecated
   `inputProps`.
+- **FilterChip `calendarProps`** — mirrors the existing `selectProps`
+  pattern: forwards arbitrary props (e.g. `dateFormat`, `timeZone`,
+  `slotProps.calendar`) to the underlying `DatePicker` for
+  `columnType="date"`. `value`/`onSelect`/`defaultValue`/`children`
+  remain owned by `FilterChip`. The standalone `dateFormat` prop is
+  removed — pass `calendarProps={{ dateFormat: '…' }}` instead.
+  `DataTable` / `DataView` columns gain a parallel `filterProps.calendar`
+  slot alongside `filterProps.select`.
+- **`DatePicker` / `RangePicker` `dateFormat` default is now
+  `"DD MMM YYYY"`** (previously `"DD/MM/YYYY"`). Text-based months
+  (e.g. "27 May 2026") avoid the DD/MM vs MM/DD ambiguity that
+  showed up in mixed-locale screenshots. Consumers who relied on
+  the slash default must pass `dateFormat="DD/MM/YYYY"` explicitly.
+  `FilterChip`'s `columnType="date"` inherits the new default
+  directly — its prior internal override is removed.
 
 #### Code-review and audit follow-ups
 

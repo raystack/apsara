@@ -75,8 +75,8 @@ describe('RangePicker', () => {
         'Select end date'
       ) as HTMLInputElement;
 
-      expect(startInput.value).toBe('01/01/2026');
-      expect(endInput.value).toBe('15/01/2026');
+      expect(startInput.value).toBe('01 Jan 2026');
+      expect(endInput.value).toBe('15 Jan 2026');
     });
 
     it('does not crash when value is undefined and no defaultValue', () => {
@@ -227,7 +227,7 @@ describe('RangePicker', () => {
       const endInput = screen.getByPlaceholderText(
         'Select end date'
       ) as HTMLInputElement;
-      expect(startInput.value).toBe('15/01/2026');
+      expect(startInput.value).toBe('15 Jan 2026');
       expect(endInput.value).toBe('');
 
       /*
@@ -264,8 +264,8 @@ describe('RangePicker', () => {
       const endInput = screen.getByPlaceholderText(
         'Select end date'
       ) as HTMLInputElement;
-      expect(startInput.value).toBe('15/01/2026');
-      expect(endInput.value).toBe('20/01/2026');
+      expect(startInput.value).toBe('15 Jan 2026');
+      expect(endInput.value).toBe('20 Jan 2026');
 
       /*
        * Popover should have closed -> Calendar unmounted. A tight call-count
@@ -299,7 +299,7 @@ describe('RangePicker', () => {
       const endInput = screen.getByPlaceholderText(
         'Select end date'
       ) as HTMLInputElement;
-      expect(startInput.value).toBe('10/01/2026');
+      expect(startInput.value).toBe('10 Jan 2026');
       expect(endInput.value).toBe(''); // to cleared
       expect(endInput.getAttribute('data-active')).toBe('true'); // still on 'to'
     });
@@ -325,7 +325,7 @@ describe('RangePicker', () => {
       const endInput = screen.getByPlaceholderText(
         'Select end date'
       ) as HTMLInputElement;
-      expect(startInput.value).toBe('01/02/2026');
+      expect(startInput.value).toBe('01 Feb 2026');
       expect(endInput.value).toBe('');
       expect(endInput.getAttribute('data-active')).toBe('true');
     });

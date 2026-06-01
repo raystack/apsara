@@ -87,6 +87,21 @@ export const inputDemo = {
 />`
     },
     {
+      name: 'Date with calendarProps',
+      code: `
+<FilterChip
+  label="Created"
+  leadingIcon={<Info />}
+  columnType="date"
+  calendarProps={{
+    dateFormat: "YYYY-MM-DD",
+    slotProps: {
+      calendar: { captionLayout: "dropdown" }
+    }
+  }}
+/>`
+    },
+    {
       name: 'String',
       code: `
 <FilterChip
@@ -121,6 +136,21 @@ export const autocompleteDemo = {
     { label: "Archived", value: "archived" }
   ]}
   selectProps={{ autocomplete: true }}
+/>`
+};
+export const calendarPropsDemo = {
+  type: 'code',
+  code: `
+<FilterChip
+  label="Created"
+  leadingIcon={<Info />}
+  columnType="date"
+  calendarProps={{
+    dateFormat: "YYYY-MM-DD",
+    slotProps: {
+      calendar: { captionLayout: "dropdown" }
+    }
+  }}
 />`
 };
 export const iconDemo = {

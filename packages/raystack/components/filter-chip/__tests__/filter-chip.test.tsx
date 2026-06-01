@@ -163,13 +163,15 @@ describe('FilterChip', () => {
       expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
     });
 
-    it('honors a custom dateFormat', () => {
+    it('forwards calendarProps to the underlying DatePicker', () => {
+      // dateFormat is the easiest forwarded prop to observe — the formatted
+      // string in the input changes when it lands on DatePicker.
       render(
         <FilterChip
           label='Created'
           columnType={FilterType.date}
           value={new Date(2026, 4, 27)}
-          dateFormat='DD/MM/YYYY'
+          calendarProps={{ dateFormat: 'DD/MM/YYYY' }}
         />
       );
       expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();

@@ -502,6 +502,25 @@ The three calendar surfaces were overhauled (see the package CHANGELOG, PR #819)
 6. **Calendar date-bound props renamed.** `fromYear` / `toYear` / `fromMonth` / `toMonth` / `fromDate` / `toDate` are superseded by `startMonth` / `endMonth` (bounds) and `hidden` (disable specific days). See the Calendar docs.
 
 7. **New public types.** `CalendarProps`, `CalendarPropsExtended`, and `DateRange` are now re-exported from `@raystack/apsara`.
+8. **`dateFormat` default is now `"DD MMM YYYY"`.** Both `DatePicker` and `RangePicker` now render text-based months (e.g. "27 May 2026") by default instead of the locale-ambiguous "27/05/2026". If you rely on the slash format, opt in explicitly:
+
+```tsx
+// Before — implicit DD/MM/YYYY default
+<DatePicker value={date} />
+
+// After — same display
+<DatePicker dateFormat="DD/MM/YYYY" value={date} />
+```
+
+`FilterChip`'s `columnType="date"` inherits this new default directly (its prior internal override is dropped). To restore slash-format inside a chip, pass it via `calendarProps`:
+
+```tsx
+<FilterChip
+  label="Created"
+  columnType="date"
+  calendarProps={{ dateFormat: "DD/MM/YYYY" }}
+/>
+```
 
 ---
 
@@ -1102,6 +1121,29 @@ import { Menu } from '@raystack/apsara';
 ```
 
 `onValueChange` for date columns receives a `Date` as before, and non-date column types are unaffected.
+
+**New: `calendarProps` forwards arbitrary `DatePicker` props.** Mirrors the existing `selectProps` pattern. Use it to set `dateFormat` (defaults to `"DD MMM YYYY"`), `timeZone`, `slotProps.calendar`, etc. on the chip's date control. `value`, `onSelect`, `defaultValue`, and `children` stay owned by `FilterChip`.
+
+```tsx
+<FilterChip
+  label="Created"
+  columnType="date"
+  calendarProps={{
+    dateFormat: "YYYY-MM-DD",
+    slotProps: { calendar: { captionLayout: "dropdown" } }
+  }}
+/>
+```
+
+In `DataTable` / `DataView`, column-level `filterProps` gains a parallel `calendar` slot alongside `select`:
+
+```tsx
+{
+  accessorKey: "created_at",
+  filterType: "date",
+  filterProps: { calendar: { dateFormat: "YYYY-MM-DD" } }
+}
+```
 
 ---
 

@@ -95,7 +95,7 @@ export interface DataTableColumnDef<TData, TValue> {
   /** Options for select filter */
   filterOptions?: FilterSelectOption[];
 
-  /** Props forwarded to filter components by type. Refer to Select component for full props list. */
+  /** Props forwarded to filter components by type. Refer to Select and DatePicker for full props lists. */
   filterProps?: {
     select?: {
       autocomplete?: boolean;
@@ -103,6 +103,16 @@ export interface DataTableColumnDef<TData, TValue> {
       onSearch?: (value: string) => void;
       searchValue?: string;
       defaultSearchValue?: string;
+    };
+    calendar?: {
+      dateFormat?: string;
+      showCalendarIcon?: boolean;
+      timeZone?: string;
+      slotProps?: {
+        input?: Record<string, unknown>;
+        calendar?: Record<string, unknown>;
+        popover?: Record<string, unknown>;
+      };
     };
   };
 

@@ -11,6 +11,7 @@ import type {
   FilterTypes,
   FilterValueType
 } from '~/types/filters';
+import type { FilterChipCalendarProps } from '../filter-chip';
 import type { BaseSelectProps } from '../select/select-root';
 
 export type DataTableMode = 'client' | 'server';
@@ -84,6 +85,7 @@ export type DataTableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
   defaultFilterValue?: unknown;
   filterProps?: {
     select?: BaseSelectProps;
+    calendar?: FilterChipCalendarProps;
   };
   classNames?: {
     cell?: string;

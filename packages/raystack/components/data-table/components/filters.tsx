@@ -126,6 +126,7 @@ export function Filters<TData, TValue>({
         label: (columnDef?.header as string) || '',
         options: columnDef?.filterOptions || [],
         selectProps: columnDef?.filterProps?.select,
+        calendarProps: columnDef?.filterProps?.calendar,
         ...filter
       };
     }) || [];
@@ -153,6 +154,7 @@ export function Filters<TData, TValue>({
           columnType={filter.filterType}
           options={filter.options}
           selectProps={filter.selectProps}
+          calendarProps={filter.calendarProps}
           className={classNames?.filterChips}
         />
       ))}
