@@ -37,7 +37,7 @@
   min-height: var(--rs-space-4);
 }
 
-.checkbox:hover {
+.checkbox:not([data-disabled]):hover {
   background: var(--rs-color-background-base-primary-hover);
   border-color: var(--rs-color-border-base-focus);
 }
@@ -84,7 +84,6 @@
 .checkbox[data-disabled] {
   opacity: 0.5;
   cursor: not-allowed;
-  pointer-events: none;
 }
 
 /* A4: Preserve checked state when disabled */
