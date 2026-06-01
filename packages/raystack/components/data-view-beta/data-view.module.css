@@ -6,6 +6,19 @@
   background: var(--rs-color-background-base-primary);
 }
 
+/* Fill the toolbar and let the applied FilterChips wrap/shrink to the panel
+ * instead of overflowing in a single row. */
+.filters {
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.appliedFilters {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
 .display-popover-content {
   padding: 0px;
   /* Todo: var does not exist for 300px */

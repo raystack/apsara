@@ -1,5 +1,6 @@
 'use client';
 
+import { cx } from 'class-variance-authority';
 import { isValidElement, ReactNode, useMemo } from 'react';
 import { FilterIcon } from '~/icons';
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
@@ -8,6 +9,7 @@ import { FilterChip } from '../../filter-chip';
 import { Flex } from '../../flex';
 import { IconButton } from '../../icon-button';
 import { Menu } from '../../menu';
+import styles from '../data-view.module.css';
 import { DataViewField } from '../data-view.types';
 import { useDataView } from '../hooks/useDataView';
 import { useFilters } from '../hooks/useFilters';
@@ -120,9 +122,12 @@ export function Filters<TData>({
     }) || [];
 
   return (
-    <Flex gap={3} className={className}>
+    <Flex gap={3} className={cx(styles.filters, className)}>
       {appliedFilters.length > 0 && (
-        <Flex gap={3} className={classNames?.container}>
+        <Flex
+          gap={3}
+          className={cx(styles.appliedFilters, classNames?.container)}
+        >
           {appliedFilters.map(filter => (
             <FilterChip
               key={filter.name}
