@@ -32,7 +32,7 @@
 .button-disabled {
   opacity: 0.5;
   pointer-events: initial;
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .button:disabled:hover,
@@ -96,7 +96,7 @@
 .button-outline.button-disabled {
   opacity: 0.5;
   background-color: transparent;
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .button-outline:disabled:hover,

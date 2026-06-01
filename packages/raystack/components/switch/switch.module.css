@@ -35,6 +35,7 @@
 
 .switch[data-disabled] {
   background: var(--rs-color-background-neutral-primary);
+  cursor: not-allowed;
 }
 
 .switch[data-disabled][data-checked] {

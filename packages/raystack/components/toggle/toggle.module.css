@@ -36,6 +36,7 @@
 .toggle[data-disabled] {
   opacity: 0.5;
   pointer-events: none;
+  cursor: not-allowed;
 }
 
 .size-1 {
@@ -95,4 +96,5 @@
 .group[data-disabled] {
   opacity: 0.5;
   pointer-events: none;
+  cursor: not-allowed;
 }

@@ -58,6 +58,7 @@
 .radioitem[data-disabled]:hover {
   background: var(--rs-color-background-neutral-secondary);
   border-color: var(--rs-color-border-base-secondary);
+  cursor: not-allowed;
 }
 
 .radioitem[data-disabled][data-checked],
