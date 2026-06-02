@@ -123,28 +123,28 @@ export const Calendar = function ({
       showOutsideDays={showOutsideDays}
       timeZone={timeZone}
       components={{
-        Chevron: props => {
-          const icon =
-            props.orientation === 'left' ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            );
-
-          return (
-            <IconButton
-              {...props}
-              disabled={loadingData}
-              className={cx(props.className, loadingData && styles.disabled)}
-              size={3}
-              aria-label={
-                props.orientation === 'left' ? 'Previous month' : 'Next month'
-              }
-            >
-              {icon}
-            </IconButton>
-          );
-        },
+        PreviousMonthButton: ({ children, ...props }) => (
+          <IconButton
+            {...props}
+            disabled={loadingData ?? props.disabled}
+            className={cx(props.className, loadingData && styles.disabled)}
+            size={3}
+            aria-label='Previous month'
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+        ),
+        NextMonthButton: ({ children, ...props }) => (
+          <IconButton
+            {...props}
+            disabled={loadingData ?? props.disabled}
+            className={cx(props.className, loadingData && styles.disabled)}
+            size={3}
+            aria-label='Next month'
+          >
+            <ChevronRightIcon />
+          </IconButton>
+        ),
         Dropdown: (props: DropdownProps) => (
           <DropDown
             {...props}
