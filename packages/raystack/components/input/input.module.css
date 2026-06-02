@@ -36,6 +36,7 @@
 
 .input-wrapper[data-disabled] {
   opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .input-wrapper[data-disabled]:hover {
@@ -91,6 +92,7 @@
 
 .input-field[data-disabled] {
   color: var(--rs-color-foreground-base-tertiary);
+  cursor: not-allowed;
 }
 
 .has-leading-icon {

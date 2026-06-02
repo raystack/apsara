@@ -30,7 +30,7 @@ export function SelectContent({
 
   if (autocomplete) {
     return (
-      <ComboboxPrimitive.Portal>
+      <ComboboxPrimitive.Portal keepMounted>
         <ComboboxPrimitive.Positioner
           sideOffset={sideOffset}
           side={side}
