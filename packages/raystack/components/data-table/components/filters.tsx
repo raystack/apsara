@@ -50,7 +50,7 @@ function AddFilter<TData, TValue>({
     else if (children) return children;
     else if (appliedFiltersSet.size > 0)
       return (
-        <IconButton size={4} className={className}>
+        <IconButton size={3} className={className}>
           <FilterIcon />
         </IconButton>
       );

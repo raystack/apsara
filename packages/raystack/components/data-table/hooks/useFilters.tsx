@@ -24,7 +24,10 @@ export function useFilters<TData, TValue>() {
         : filterType === FilterType.select
           ? options[0]?.value
           : filterType === FilterType.multiselect
-            ? []
+            ? // first option preselected like select; [] when there are no options
+              options
+                .slice(0, 1)
+                .map(opt => opt.value)
             : '');
 
     updateTableQuery(query => {

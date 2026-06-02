@@ -196,13 +196,12 @@ for the tz-aware `dateKey` fix.
 - **DataTable: adding a `select` filter with no `filterOptions` no
   longer crashes** (`options[0].value` → `options[0]?.value`, parity
   with DataView).
-- **DataTable: `multiselect` filters default to `[]`** instead of
+- **DataTable: `multiselect` filters preselect the first option**
+  (matching `select`; `[]` when there are no options) instead of
   falling through to `''` — the chip's multi-`Select` expects an
   array value.
 - **DataTable: `classNames.addFilter` is now applied** to the default
   add-filter triggers (it was accepted and silently dropped).
-- **DataTable: add-filter `IconButton` is `size={4}`** (was `3`) —
-  matches the FilterChip height and DataView.
 - **FilterChip: removed a dead `selectColumn` class reference** left
   behind by #810; the chip's `border-radius` + `overflow: clip`
   already rounds the select trigger.

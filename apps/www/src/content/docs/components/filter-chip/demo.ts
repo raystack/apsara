@@ -62,22 +62,6 @@ export const inputDemo = {
 />`
     },
     {
-      name: 'Select with Autocomplete',
-      code: `
-<FilterChip
-  label="Status"
-  leadingIcon={<Info />}
-  columnType="select"
-  options={[
-    { label: "Active", value: "active" },
-    { label: "Inactive", value: "inactive" },
-    { label: "Pending", value: "pending" },
-    { label: "Archived", value: "archived" }
-  ]}
-  selectProps={{ autocomplete: true }}
-/>`
-    },
-    {
       name: 'Multiselect',
       code: `
 <FilterChip
@@ -98,21 +82,6 @@ export const inputDemo = {
   label="Created"
   leadingIcon={<Info />}
   columnType="date"
-/>`
-    },
-    {
-      name: 'Date with calendarProps',
-      code: `
-<FilterChip
-  label="Created"
-  leadingIcon={<Info />}
-  columnType="date"
-  calendarProps={{
-    dateFormat: "YYYY-MM-DD",
-    slotProps: {
-      calendar: { captionLayout: "dropdown" }
-    }
-  }}
 />`
     },
     {
