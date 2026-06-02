@@ -136,15 +136,36 @@ describe('FilterChip', () => {
       expect(screen.getByPlaceholderText('Select date')).toBeInTheDocument();
     });
 
-    it('coerces a non-Date value to unselected instead of crashing', () => {
-      // FilterChipValue allows string, but a date column needs a real Date —
-      // strings must start the field unselected, not throw.
+    it('parses a serialized string date value instead of rendering blank', () => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value='2026-05-27'
+        />
+      );
+      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+    });
+
+    it('parses an epoch number value', () => {
+      // Local-component Date so the timestamp is timezone-stable.
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27).getTime()}
+        />
+      );
+      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+    });
+
+    it('coerces an unparseable value to unselected instead of crashing', () => {
       expect(() =>
         render(
           <FilterChip
             label='Created'
             columnType={FilterType.date}
-            value='2026-05-27'
+            value='not-a-date'
           />
         )
       ).not.toThrow();
@@ -179,10 +200,8 @@ describe('FilterChip', () => {
   });
 
   describe('Content-fit width', () => {
-    // The value hug lives on the input itself (`field-sizing: content` in
-    // `.chip input`) — jsdom computes no layout, so these only pin the
-    // containers to the default fluid width that lets the input shrink and
-    // ellipsize under pressure instead of being clipped by the wrapper.
+    // The value hug lives on the input (`field-sizing` in `.chip input`);
+    // these pin the containers to the fluid width that lets the input shrink.
     it('keeps the string input container fluid so the input can shrink', () => {
       const { container } = render(
         <FilterChip label='Name' columnType={FilterType.string} />

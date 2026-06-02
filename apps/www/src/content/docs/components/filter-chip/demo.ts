@@ -7,7 +7,7 @@ export const getCode = (props: ComponentPropsType) => {
   const { onRemove, ...rest } = props;
   const onRemoveProp = onRemove ? `onRemove={() => alert("Removed")}` : '';
 
-  if (props.columnType === 'select')
+  if (props.columnType === 'select' || props.columnType === 'multiselect')
     return `
     <FilterChip${getPropsString(rest)}
       options={[
@@ -24,7 +24,7 @@ export const playground = {
   controls: {
     columnType: {
       type: 'select',
-      options: ['select', 'date', 'string', 'number'],
+      options: ['select', 'multiselect', 'date', 'string', 'number'],
       defaultValue: 'string'
     },
     variant: {
@@ -75,6 +75,20 @@ export const inputDemo = {
     { label: "Archived", value: "archived" }
   ]}
   selectProps={{ autocomplete: true }}
+/>`
+    },
+    {
+      name: 'Multiselect',
+      code: `
+<FilterChip
+  label="Status"
+  leadingIcon={<Info />}
+  columnType="multiselect"
+  options={[
+    { label: "Active", value: "active" },
+    { label: "Inactive", value: "inactive" },
+    { label: "Pending", value: "pending" }
+  ]}
 />`
     },
     {

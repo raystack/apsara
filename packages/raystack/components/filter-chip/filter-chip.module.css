@@ -39,12 +39,9 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-/* Target any input fields within the chip. The input itself hugs its value
- * (`field-sizing`, `width: auto` fallback) and is the element that shrinks
- * under parent-resize pressure (`flex-shrink`) — so `text-overflow` can
- * ellipsize with the side padding intact instead of the wrapper clipping it.
- * `min-width` keeps a clickable floor for an empty value; `max-width` caps a
- * runaway value so chips stay compact. */
+/* Inputs within the chip hug their value (`field-sizing`) and shrink under
+ * resize pressure so `text-overflow` ellipsizes with padding intact;
+ * `min-width` keeps an empty value clickable, `max-width` caps a runaway one. */
 .chip input {
   border: none;
   box-shadow: none;

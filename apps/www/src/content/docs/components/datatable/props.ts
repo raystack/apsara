@@ -92,7 +92,12 @@ export interface DataTableColumnDef<TData, TValue> {
   /** Enable grouping */
   enableGrouping?: boolean;
 
-  /** Options for select filter */
+  /** Type of filter input rendered in the filter chip
+   * @default "string"
+   */
+  filterType?: 'string' | 'number' | 'select' | 'multiselect' | 'date';
+
+  /** Options for select and multiselect filters */
   filterOptions?: FilterSelectOption[];
 
   /** Props forwarded to filter components by type. Refer to Select and DatePicker for full props lists. */
@@ -136,6 +141,16 @@ export interface FiltersProps {
         availableFilters: DataTableColumn<TData, TValue>[];
         appliedFilters: Set<string>;
       }) => ReactNode);
+
+  /** Additional CSS class names for the filters container */
+  className?: string;
+
+  /** Class names for inner elements. `addFilter` applies to the default
+   * add-filter triggers only — a custom `trigger` styles itself. */
+  classNames?: {
+    filterChips?: string;
+    addFilter?: string;
+  };
 }
 export interface DataTableContentProps {
   /**

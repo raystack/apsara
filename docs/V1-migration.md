@@ -501,7 +501,7 @@ The three calendar surfaces were overhauled (see the package CHANGELOG, PR #819)
 
 6. **Calendar date-bound props renamed.** `fromYear` / `toYear` / `fromMonth` / `toMonth` / `fromDate` / `toDate` are superseded by `startMonth` / `endMonth` (bounds) and `hidden` (disable specific days). See the Calendar docs.
 
-7. **New public types.** `CalendarProps`, `CalendarPropsExtended`, and `DateRange` are now re-exported from `@raystack/apsara`.
+7. **New public types.** `CalendarProps`, `CalendarPropsExtended`, `DateRange`, `DatePickerProps`, `DatePickerSlotProps`, `FilterChipProps`, `FilterChipValue`, and `FilterChipCalendarProps` are now re-exported from `@raystack/apsara`.
 8. **`dateFormat` default is now `"DD MMM YYYY"`.** Both `DatePicker` and `RangePicker` now render text-based months (e.g. "27 May 2026") by default instead of the locale-ambiguous "27/05/2026". If you rely on the slash format, opt in explicitly:
 
 ```tsx
@@ -1110,13 +1110,11 @@ import { Menu } from '@raystack/apsara';
 
 ### FilterChip
 
-**Date columns now require a real `Date` value.** `FilterChip` forwards its value to the overhauled `DatePicker` (see [Calendar, DatePicker & RangePicker](#calendar-datepicker--rangepicker)), which is now strict about its `value` type. Previously a string was loosely coerced; now a non-`Date` value (including the empty-string default) starts the date field **unselected** instead of erroring. If you drive a `columnType="date"` chip with a controlled value, pass a `Date`:
+**Date column values are parsed, not forwarded raw.** `FilterChip` forwards its value to the overhauled `DatePicker` (see [Calendar, DatePicker & RangePicker](#calendar-datepicker--rangepicker)), which is now strict about its `value` type — but the chip shields you from that: a `Date` passes through, and a string or epoch number (e.g. filter state hydrated from a URL or serialized query) is parsed for you. Only an unparseable value starts the date field **unselected** instead of erroring.
 
 ```tsx
-// Before — string value
+// All equivalent
 <FilterChip label="Created" columnType="date" value="2024-01-01" />
-
-// After — pass a Date
 <FilterChip label="Created" columnType="date" value={new Date("2024-01-01")} />
 ```
 

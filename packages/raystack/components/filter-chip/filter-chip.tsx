@@ -1,7 +1,8 @@
 'use client';
 
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { cva, cx, VariantProps } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
+import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import {
   FilterOperation,
@@ -33,6 +34,20 @@ const chip = cva(styles.chip, {
 });
 
 export type FilterChipValue = string | string[] | number | Date;
+
+/**
+ * Coerce a `FilterChipValue` to the `Date` the DatePicker expects — filter
+ * state hydrated from a serialized query arrives as a string or epoch number.
+ * Unparseable values leave the field unselected.
+ */
+const toDateValue = (value: unknown): Date | undefined => {
+  if (value instanceof Date) return value;
+  if (typeof value === 'string' || typeof value === 'number') {
+    const parsed = dayjs(value);
+    return parsed.isValid() ? parsed.toDate() : undefined;
+  }
+  return undefined;
+};
 
 /**
  * Subset of `DatePickerProps` that consumers may forward to the chip's
@@ -137,10 +152,7 @@ export const FilterChip = ({
                 }
               }}
               variant='text'
-              className={cx(
-                styles.selectValue,
-                !showOnRemove && styles.selectColumn
-              )}
+              className={styles.selectValue}
             >
               <Select.Value placeholder='Select value'>
                 {isMultiSelectColumn && filterValue.length > 1
@@ -166,7 +178,7 @@ export const FilterChip = ({
             <DatePicker
               showCalendarIcon={false}
               {...calendarProps}
-              value={filterValue instanceof Date ? filterValue : undefined}
+              value={toDateValue(filterValue)}
               onSelect={date => handleFilterValueChange(date)}
               slotProps={{
                 ...calendarProps?.slotProps,

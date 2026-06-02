@@ -29,13 +29,16 @@ interface AddFilterProps<TData, TValue> {
   appliedFiltersSet: Set<string>;
   onAddFilter: (column: DataTableColumn<TData, TValue>) => void;
   children?: Trigger<TData, TValue>;
+  /** Applied to the default triggers; custom `children` triggers style themselves. */
+  className?: string;
 }
 
 function AddFilter<TData, TValue>({
   columnList = [],
   appliedFiltersSet,
   onAddFilter,
-  children
+  children,
+  className
 }: AddFilterProps<TData, TValue>) {
   const availableFilters = columnList?.filter(
     col => !appliedFiltersSet.has(col.id)
@@ -47,7 +50,7 @@ function AddFilter<TData, TValue>({
     else if (children) return children;
     else if (appliedFiltersSet.size > 0)
       return (
-        <IconButton size={3}>
+        <IconButton size={4} className={className}>
           <FilterIcon />
         </IconButton>
       );
@@ -58,11 +61,12 @@ function AddFilter<TData, TValue>({
           size='small'
           leadingIcon={<FilterIcon />}
           color='neutral'
+          className={className}
         >
           Filter
         </Button>
       );
-  }, [children, appliedFiltersSet, availableFilters]);
+  }, [children, appliedFiltersSet, availableFilters, className]);
 
   return availableFilters.length > 0 ? (
     <Menu>
@@ -162,6 +166,7 @@ export function Filters<TData, TValue>({
         columnList={columnList}
         appliedFiltersSet={appliedFiltersSet}
         onAddFilter={onAddFilter}
+        className={classNames?.addFilter}
       >
         {trigger}
       </AddFilter>
