@@ -6,7 +6,8 @@ import {
   formatHex8,
   formatHsl,
   formatRgb,
-  parse
+  parse,
+  toGamut
 } from 'culori';
 
 export const SUPPORTED_MODES = ['hex', 'hsl', 'rgb', 'oklch'] as const;
@@ -27,6 +28,11 @@ export const CHROMA_MAX = 0.4;
 const toOklch = converter('oklch');
 const toRgb = converter('rgb');
 const toHsl = converter('hsl');
+
+// Reusable gamut-mapper: reduces chroma in OKLCH space until the color fits
+// sRGB while preserving lightness and hue. Created once because `toGamut`
+// returns a function and the inputs ('rgb' / 'oklch') are constant.
+const toSrgb = toGamut('rgb', 'oklch');
 
 const FALLBACK: ColorObject = { l: 1, c: 0, h: 0, alpha: 1 };
 
@@ -61,6 +67,59 @@ const formatOklchString = (color: ColorObject): string => {
   const alpha = color.alpha ?? 1;
   const body = `${L} ${C} ${H}`;
   return alpha === 1 ? `oklch(${body})` : `oklch(${body} / ${round(alpha, 4)})`;
+};
+
+/**
+ * Convert any CSS color string to the requested format.
+ *
+ * Wide-gamut OKLCH inputs are gamut-mapped into sRGB for `hex`/`rgb`/`hsl`
+ * outputs (chroma reduced, lightness and hue preserved), so the result is
+ * the closest sRGB representation of the requested color rather than a
+ * per-channel-clipped one that would distort hue. `oklch` output preserves
+ * the full color, since OKLCH can express the wide gamut natively.
+ *
+ * Hex is uppercase; uses 8-digit form when alpha < 1. RGB/HSL produce
+ * `rgb()`/`rgba()` and `hsl()`/`hsla()`. OKLCH matches the design system's
+ * token format (4-decimal L/C, 2-decimal H, hue pinned to 0 when achromatic).
+ *
+ * Returns `null` for unparseable input.
+ *
+ * @example
+ *   formatColor('oklch(0.5438 0.191 267.01)', 'hex')   // '#3E63DD'
+ *   formatColor('oklch(0.7 0.32 30)', 'hex')           // '#FF5843'
+ *   formatColor('red', 'rgb')                          // 'rgb(255, 0, 0)'
+ *   formatColor('rgba(255, 0, 0, 0.5)', 'hsl')         // 'hsla(0, 100%, 50%, 0.5)'
+ *   formatColor('#FF0000', 'oklch')                    // 'oklch(0.6279 0.2577 29.23)'
+ *   formatColor('not a color', 'hex')                  // null
+ */
+export const formatColor = (
+  value: string,
+  format: 'hex' | 'rgb' | 'hsl' | 'oklch'
+): string | null => {
+  const parsed = parse(value);
+  if (!parsed) return null;
+
+  if (format === 'oklch') {
+    const oklch = toOklch(parsed);
+    if (!oklch) return null;
+    return formatOklchString({
+      l: oklch.l ?? 0,
+      c: oklch.c ?? 0,
+      h: Number.isFinite(oklch.h) ? (oklch.h as number) : 0,
+      alpha: oklch.alpha ?? 1
+    });
+  }
+
+  // sRGB-bound formats: gamut-map first so wide-gamut OKLCH inputs land on
+  // the closest sRGB color (hue/lightness preserved) instead of producing
+  // per-channel-clipped hex/rgb/hsl that would shift the hue.
+  const safe = toSrgb(parsed);
+  if (format === 'hex') {
+    const hex = (safe.alpha ?? 1) === 1 ? formatHex(safe) : formatHex8(safe);
+    return hex.toUpperCase();
+  }
+  if (format === 'hsl') return formatHsl(safe);
+  return formatRgb(safe);
 };
 
 /**
