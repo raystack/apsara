@@ -7,8 +7,11 @@
   background: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   text-wrap: nowrap;
+  /* Hug content, but cap at the parent and shrink under it. `min-width: 0`
+   * is required: `min-content` would let the value leak in and beat the cap. */
   width: fit-content;
-  min-width: min-content;
+  min-width: 0;
+  max-width: 100%;
   overflow: clip;
 }
 
@@ -36,13 +39,20 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-/* Target any input fields within the chip */
+/* Inputs within the chip hug their value (`field-sizing`) and shrink under
+ * resize pressure so `text-overflow` ellipsizes with padding intact;
+ * `min-width` keeps an empty value clickable, `max-width` caps a runaway one. */
 .chip input {
   border: none;
   box-shadow: none;
   background: transparent;
   min-height: unset;
   padding: 0;
+  field-sizing: content;
+  max-width: 200px;
+  width: auto;
+  min-width: 50px;
+  flex-shrink: 1;
   text-overflow: ellipsis;
 }
 

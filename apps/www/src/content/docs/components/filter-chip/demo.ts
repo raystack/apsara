@@ -7,7 +7,7 @@ export const getCode = (props: ComponentPropsType) => {
   const { onRemove, ...rest } = props;
   const onRemoveProp = onRemove ? `onRemove={() => alert("Removed")}` : '';
 
-  if (props.columnType === 'select')
+  if (props.columnType === 'select' || props.columnType === 'multiselect')
     return `
     <FilterChip${getPropsString(rest)}
       options={[
@@ -24,7 +24,7 @@ export const playground = {
   controls: {
     columnType: {
       type: 'select',
-      options: ['select', 'date', 'string', 'number'],
+      options: ['select', 'multiselect', 'date', 'string', 'number'],
       defaultValue: 'string'
     },
     variant: {
@@ -62,19 +62,17 @@ export const inputDemo = {
 />`
     },
     {
-      name: 'Select with Autocomplete',
+      name: 'Multiselect',
       code: `
 <FilterChip
   label="Status"
   leadingIcon={<Info />}
-  columnType="select"
+  columnType="multiselect"
   options={[
     { label: "Active", value: "active" },
     { label: "Inactive", value: "inactive" },
-    { label: "Pending", value: "pending" },
-    { label: "Archived", value: "archived" }
+    { label: "Pending", value: "pending" }
   ]}
-  selectProps={{ autocomplete: true }}
 />`
     },
     {
@@ -121,6 +119,21 @@ export const autocompleteDemo = {
     { label: "Archived", value: "archived" }
   ]}
   selectProps={{ autocomplete: true }}
+/>`
+};
+export const calendarPropsDemo = {
+  type: 'code',
+  code: `
+<FilterChip
+  label="Created"
+  leadingIcon={<Info />}
+  columnType="date"
+  calendarProps={{
+    dateFormat: "YYYY-MM-DD",
+    slotProps: {
+      calendar: { captionLayout: "dropdown" }
+    }
+  }}
 />`
 };
 export const iconDemo = {

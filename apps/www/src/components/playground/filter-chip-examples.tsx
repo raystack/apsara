@@ -17,9 +17,19 @@ export function FilterChipExamples() {
             { label: 'Inactive', value: 'inactive' }
           ]}
         />
-        <FilterChip label='Date' leadingIcon={<Info />} columnType='date' />
-        <FilterChip label='Date' leadingIcon={<Info />} columnType='string' />
-        <FilterChip label='Date' leadingIcon={<Info />} columnType='number' />
+        <FilterChip
+          label='Team'
+          leadingIcon={<Info />}
+          columnType='multiselect'
+          options={[
+            { label: 'Frontend', value: 'frontend' },
+            { label: 'Backend', value: 'backend' },
+            { label: 'Design', value: 'design' }
+          ]}
+        />
+        <FilterChip label='Created' leadingIcon={<Info />} columnType='date' />
+        <FilterChip label='Name' leadingIcon={<Info />} columnType='string' />
+        <FilterChip label='Amount' leadingIcon={<Info />} columnType='number' />
       </Flex>
     </PlaygroundLayout>
   );

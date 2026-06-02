@@ -238,4 +238,8 @@
 
 .filterContainer {
   flex-wrap: wrap;
+  /* Fill the toolbar and shrink below content width so FilterChips truncate to
+   * the panel (resolve their `max-width: 100%`) instead of overflowing it. */
+  flex: 1;
+  min-width: 0;
 }

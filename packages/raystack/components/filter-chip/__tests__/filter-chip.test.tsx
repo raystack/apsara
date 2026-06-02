@@ -125,6 +125,100 @@ describe('FilterChip', () => {
     });
   });
 
+  describe('Date Filter Type', () => {
+    it('renders the date picker without crashing when no value is set', () => {
+      // Regression: an unset date chip seeds its value with '' and forwarded
+      // that string to DatePicker, whose controlled-sync effect ran
+      // `valueProp?.getTime()` → "getTime is not a function".
+      expect(() =>
+        render(<FilterChip label='Created' columnType={FilterType.date} />)
+      ).not.toThrow();
+      expect(screen.getByPlaceholderText('Select date')).toBeInTheDocument();
+    });
+
+    it('parses a serialized string date value instead of rendering blank', () => {
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value='2026-05-27'
+        />
+      );
+      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+    });
+
+    it('parses an epoch number value', () => {
+      // Local-component Date so the timestamp is timezone-stable.
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27).getTime()}
+        />
+      );
+      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+    });
+
+    it('coerces an unparseable value to unselected instead of crashing', () => {
+      expect(() =>
+        render(
+          <FilterChip
+            label='Created'
+            columnType={FilterType.date}
+            value='not-a-date'
+          />
+        )
+      ).not.toThrow();
+      expect(screen.getByPlaceholderText('Select date')).toHaveValue('');
+    });
+
+    it('formats a Date value with the default month-as-text format', () => {
+      // Local-component Date so the formatted string is timezone-stable.
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+        />
+      );
+      expect(screen.getByDisplayValue('27 May 2026')).toBeInTheDocument();
+    });
+
+    it('forwards calendarProps to the underlying DatePicker', () => {
+      // dateFormat is the easiest forwarded prop to observe — the formatted
+      // string in the input changes when it lands on DatePicker.
+      render(
+        <FilterChip
+          label='Created'
+          columnType={FilterType.date}
+          value={new Date(2026, 4, 27)}
+          calendarProps={{ dateFormat: 'DD/MM/YYYY' }}
+        />
+      );
+      expect(screen.getByDisplayValue('27/05/2026')).toBeInTheDocument();
+    });
+  });
+
+  describe('Content-fit width', () => {
+    // The value hug lives on the input (`field-sizing` in `.chip input`);
+    // these pin the containers to the fluid width that lets the input shrink.
+    it('keeps the string input container fluid so the input can shrink', () => {
+      const { container } = render(
+        <FilterChip label='Name' columnType={FilterType.string} />
+      );
+      const inputContainer = container.querySelector(`.${styles.inputField}`);
+      expect(inputContainer).toHaveStyle({ width: '100%' });
+    });
+
+    it('keeps the date field container fluid so the input can shrink', () => {
+      const { container } = render(
+        <FilterChip label='Created' columnType={FilterType.date} />
+      );
+      const dateContainer = container.querySelector(`.${styles.dateField}`);
+      expect(dateContainer).toHaveStyle({ width: '100%' });
+    });
+  });
+
   describe('Forwarded HTML attributes', () => {
     it('forwards arbitrary HTML attributes onto the root div', () => {
       render(

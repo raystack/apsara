@@ -146,7 +146,7 @@ export interface RangePickerProps {
    * - With spaces: "DD MMM YYYY", "MMM DD YYYY", "YYYY MMM DD"
    * - With full month: "DD MMMM YYYY", "MMMM DD YYYY", "YYYY MMMM DD"
    * - For more supported formats, refer to https://day.js.org/docs/en/display/format
-   * @defaultValue "DD/MM/YYYY"
+   * @defaultValue "DD MMM YYYY"
    */
   dateFormat?: string;
 
@@ -229,7 +229,7 @@ export interface DatePickerProps {
    * - With dots: "DD.MM.YYYY", "MM.DD.YYYY", "YYYY.MM.DD"
    * - With spaces: "DD MMM YYYY", "MMM DD YYYY", "YYYY MMM DD"
    * - With full month: "DD MMMM YYYY", "MMMM DD YYYY", "YYYY MMMM DD"
-   * @defaultValue "DD/MM/YYYY"
+   * @defaultValue "DD MMM YYYY"
    */
   dateFormat?: string;
 

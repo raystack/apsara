@@ -423,10 +423,24 @@ const columns: DataTableColumnDef<(typeof sampleData)[number], unknown>[] = [
   {
     accessorKey: 'team',
     header: 'Team',
+    enableColumnFilter: true,
+    filterType: 'multiselect' as const,
     enableGrouping: true,
     showGroupCount: true,
     enableSorting: true,
-    enableHiding: true
+    enableHiding: true,
+    filterOptions: [
+      { value: 'Frontend', label: 'Frontend' },
+      { value: 'Backend', label: 'Backend' },
+      { value: 'Design', label: 'Design' },
+      { value: 'DevOps', label: 'DevOps' },
+      { value: 'Content', label: 'Content' },
+      { value: 'Growth', label: 'Growth' },
+      { value: 'East', label: 'East' },
+      { value: 'West', label: 'West' },
+      { value: 'Tier 1', label: 'Tier 1' },
+      { value: 'Tier 2', label: 'Tier 2' }
+    ]
   },
   {
     accessorKey: 'location',

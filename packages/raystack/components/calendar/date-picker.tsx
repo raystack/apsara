@@ -27,13 +27,13 @@ dayjs.extend(isSameOrBefore);
  */
 type DatePickerCalendarSlot = Omit<PropsBase, 'mode'> & CalendarPropsExtended;
 
-interface DatePickerSlotProps {
+export interface DatePickerSlotProps {
   input?: InputProps;
   calendar?: DatePickerCalendarSlot;
   popover?: PopoverContentProps;
 }
 
-interface DatePickerProps {
+export interface DatePickerProps {
   dateFormat?: string;
   /**
    * Props for each picker slot. When both this and the legacy
@@ -57,7 +57,7 @@ interface DatePickerProps {
 }
 
 export function DatePicker({
-  dateFormat = 'DD/MM/YYYY',
+  dateFormat = 'DD MMM YYYY',
   slotProps,
   inputProps: legacyInputProps,
   calendarProps: legacyCalendarProps,

@@ -56,7 +56,7 @@ interface RangePickerProps {
 type RangeFields = keyof DateRange;
 
 export function RangePicker({
-  dateFormat = 'DD/MM/YYYY',
+  dateFormat = 'DD MMM YYYY',
   slotProps,
   inputsProps: legacyInputsProps = {},
   calendarProps: legacyCalendarProps,

@@ -92,10 +92,15 @@ export interface DataTableColumnDef<TData, TValue> {
   /** Enable grouping */
   enableGrouping?: boolean;
 
-  /** Options for select filter */
+  /** Type of filter input rendered in the filter chip
+   * @default "string"
+   */
+  filterType?: 'string' | 'number' | 'select' | 'multiselect' | 'date';
+
+  /** Options for select and multiselect filters */
   filterOptions?: FilterSelectOption[];
 
-  /** Props forwarded to filter components by type. Refer to Select component for full props list. */
+  /** Props forwarded to filter components by type. Refer to Select and DatePicker for full props lists. */
   filterProps?: {
     select?: {
       autocomplete?: boolean;
@@ -103,6 +108,16 @@ export interface DataTableColumnDef<TData, TValue> {
       onSearch?: (value: string) => void;
       searchValue?: string;
       defaultSearchValue?: string;
+    };
+    calendar?: {
+      dateFormat?: string;
+      showCalendarIcon?: boolean;
+      timeZone?: string;
+      slotProps?: {
+        input?: Record<string, unknown>;
+        calendar?: Record<string, unknown>;
+        popover?: Record<string, unknown>;
+      };
     };
   };
 
@@ -126,6 +141,16 @@ export interface FiltersProps {
         availableFilters: DataTableColumn<TData, TValue>[];
         appliedFilters: Set<string>;
       }) => ReactNode);
+
+  /** Additional CSS class names for the filters container */
+  className?: string;
+
+  /** Class names for inner elements. `addFilter` applies to the default
+   * add-filter triggers only — a custom `trigger` styles itself. */
+  classNames?: {
+    filterChips?: string;
+    addFilter?: string;
+  };
 }
 export interface DataTableContentProps {
   /**

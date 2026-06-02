@@ -22,6 +22,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [Avatar](#avatar)
     - [Breadcrumb](#breadcrumb)
     - [Button](#button)
+    - [Calendar, DatePicker & RangePicker](#calendar-datepicker--rangepicker)
     - [Chip](#chip)
     - [Checkbox](#checkbox)
       - [New: `Checkbox.Group`](#new-checkboxgroup)
@@ -35,6 +36,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
       - [New Features](#new-features-3)
     - [DropdownMenu -\> Menu](#dropdownmenu---menu)
       - [New Features](#new-features-4)
+    - [FilterChip](#filterchip)
     - [Flex](#flex)
     - [Grid](#grid)
     - [Headline](#headline)
@@ -433,6 +435,91 @@ Unchanged: `size`, `radius`, `variant`, `color`, `fallback`, `src`, `alt`, `clas
 
 // After
 <Button render={<Link to="/settings" />}>Settings</Button>
+```
+
+---
+
+### Calendar, DatePicker & RangePicker
+
+The three calendar surfaces were overhauled (see the package CHANGELOG, PR #819). The consumer-facing migration items:
+
+1. **`slotProps` replaces the per-slot props.** `inputProps`, `calendarProps`, `popoverProps` (and `RangePicker`'s `inputsProps`) are now `@deprecated` — they still work, but `slotProps` wins when both are set. Migrate to the consolidated shape:
+
+```tsx
+// Before
+<DatePicker
+  inputProps={{ size: "small" }}
+  calendarProps={{ captionLayout: "dropdown" }}
+  popoverProps={{ side: "bottom" }}
+/>
+
+// After
+<DatePicker
+  slotProps={{
+    input: { size: "small" },
+    calendar: { captionLayout: "dropdown" },
+    popover: { side: "bottom" }
+  }}
+/>
+```
+
+`RangePicker` splits its two inputs explicitly:
+
+```tsx
+// Before
+<RangePicker inputsProps={{ startDate: { size: "small" }, endDate: { size: "small" } }} />
+
+// After
+<RangePicker slotProps={{ startInput: { size: "small" }, endInput: { size: "small" } }} />
+```
+
+2. **`DatePicker` no longer defaults to today.** Previously `value` defaulted to `new Date()`, so the picker always rendered with today selected. It now starts **unselected** when neither `value` nor `defaultValue` is passed, and honors the "Select date" placeholder. If you relied on the today-default, opt in explicitly:
+
+```tsx
+// Before — implicitly selected today
+<DatePicker onSelect={setDate} />
+
+// After — opt in to the old behavior
+<DatePicker defaultValue={new Date()} onSelect={setDate} />
+```
+
+`RangePicker` likewise drops its `{ from: today, to: today }` default and starts empty.
+
+3. **`value` requires a real `Date` (or `undefined`).** Both pickers are now strict about their controlled value and sync on its timestamp — passing a string or other non-`Date` will throw. Coerce before passing:
+
+```tsx
+// Before — a string happened to coerce via dayjs
+<DatePicker value={isoString} />
+
+// After
+<DatePicker value={isoString ? new Date(isoString) : undefined} />
+```
+
+4. **`onSelect` only fires with a defined date.** It stays typed `(date: Date) => void` and no longer fires with `undefined` (e.g. on deselect). Use `defaultValue` for uncontrolled initialization instead of relying on `onSelect` firing on mount.
+
+5. **`value` is now reactive.** Controlled changes — form resets, preset buttons, URL-driven updates — propagate to the input on both pickers (previously the input could go stale).
+
+6. **Calendar date-bound props renamed.** `fromYear` / `toYear` / `fromMonth` / `toMonth` / `fromDate` / `toDate` are superseded by `startMonth` / `endMonth` (bounds) and `hidden` (disable specific days). See the Calendar docs.
+
+7. **New public types.** `CalendarProps`, `CalendarPropsExtended`, `DateRange`, `DatePickerProps`, `DatePickerSlotProps`, `FilterChipProps`, `FilterChipValue`, and `FilterChipCalendarProps` are now re-exported from `@raystack/apsara`.
+8. **`dateFormat` default is now `"DD MMM YYYY"`.** Both `DatePicker` and `RangePicker` now render text-based months (e.g. "27 May 2026") by default instead of the locale-ambiguous "27/05/2026". If you rely on the slash format, opt in explicitly:
+
+```tsx
+// Before — implicit DD/MM/YYYY default
+<DatePicker value={date} />
+
+// After — same display
+<DatePicker dateFormat="DD/MM/YYYY" value={date} />
+```
+
+`FilterChip`'s `columnType="date"` inherits this new default directly (its prior internal override is dropped). To restore slash-format inside a chip, pass it via `calendarProps`:
+
+```tsx
+<FilterChip
+  label="Created"
+  columnType="date"
+  calendarProps={{ dateFormat: "DD/MM/YYYY" }}
+/>
 ```
 
 ---
@@ -1018,6 +1105,43 @@ import { Menu } from '@raystack/apsara';
 - Menubar integration
 - `defaultOpen` for uncontrolled open state
 - `modal` prop (default `true`) to toggle focus trap / outside-interaction blocking
+
+---
+
+### FilterChip
+
+**Date column values are parsed, not forwarded raw.** `FilterChip` forwards its value to the overhauled `DatePicker` (see [Calendar, DatePicker & RangePicker](#calendar-datepicker--rangepicker)), which is now strict about its `value` type — but the chip shields you from that: a `Date` passes through, and a string or epoch number (e.g. filter state hydrated from a URL or serialized query) is parsed for you. Only an unparseable value starts the date field **unselected** instead of erroring.
+
+```tsx
+// All equivalent
+<FilterChip label="Created" columnType="date" value="2024-01-01" />
+<FilterChip label="Created" columnType="date" value={new Date("2024-01-01")} />
+```
+
+`onValueChange` for date columns receives a `Date` as before, and non-date column types are unaffected.
+
+**New: `calendarProps` forwards arbitrary `DatePicker` props.** Mirrors the existing `selectProps` pattern. Use it to set `dateFormat` (defaults to `"DD MMM YYYY"`), `timeZone`, `slotProps.calendar`, etc. on the chip's date control. `value`, `onSelect`, `defaultValue`, and `children` stay owned by `FilterChip`.
+
+```tsx
+<FilterChip
+  label="Created"
+  columnType="date"
+  calendarProps={{
+    dateFormat: "YYYY-MM-DD",
+    slotProps: { calendar: { captionLayout: "dropdown" } }
+  }}
+/>
+```
+
+In `DataTable` / `DataView`, column-level `filterProps` gains a parallel `calendar` slot alongside `select`:
+
+```tsx
+{
+  accessorKey: "created_at",
+  filterType: "date",
+  filterProps: { calendar: { dateFormat: "YYYY-MM-DD" } }
+}
+```
 
 ---
 

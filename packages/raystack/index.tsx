@@ -15,6 +15,8 @@ export {
   type CalendarProps,
   type CalendarPropsExtended,
   DatePicker,
+  type DatePickerProps,
+  type DatePickerSlotProps,
   type DateRange,
   RangePicker
 } from './components/calendar';
@@ -54,7 +56,12 @@ export { Drawer } from './components/drawer';
 export { EmptyState } from './components/empty-state';
 export { Field } from './components/field';
 export { Fieldset } from './components/fieldset';
-export { FilterChip } from './components/filter-chip';
+export {
+  FilterChip,
+  type FilterChipCalendarProps,
+  type FilterChipProps,
+  type FilterChipValue
+} from './components/filter-chip';
 export { Flex } from './components/flex';
 export { FloatingActions } from './components/floating-actions';
 export { Form } from './components/form';

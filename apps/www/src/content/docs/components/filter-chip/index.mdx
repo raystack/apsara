@@ -4,7 +4,7 @@ description: A compact, interactive element for filtering data with various inpu
 source: packages/raystack/components/filter-chip
 ---
 
-import { playground, inputDemo, autocompleteDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
+import { playground, inputDemo, autocompleteDemo, calendarPropsDemo, iconDemo, actionDemo, operationsDemo } from "./demo.ts";
 
 <Demo data={playground} />
 
@@ -28,7 +28,7 @@ Renders an interactive chip for filtering content.
 
 ### Input Types
 
-FilterChip supports four different input types to handle various filtering needs.
+FilterChip supports five input types — `select`, `multiselect`, `date`, `string`, and `number` — to handle various filtering needs. `multiselect` takes a `string[]` value and summarizes two or more selections as "N selected".
 
 <Demo data={inputDemo} />
 
@@ -37,6 +37,12 @@ FilterChip supports four different input types to handle various filtering needs
 Use `selectProps` to enable autocomplete search on select and multiselect filter types. This renders a search input inside the dropdown for filtering options.
 
 <Demo data={autocompleteDemo} />
+
+### Date with calendarProps
+
+Use `calendarProps` to forward DatePicker options — `dateFormat`, `timeZone`, `slotProps.calendar`, etc. — to the chip's date control. `value`, `onSelect`, and `defaultValue` are owned by `FilterChip`, and `children` is excluded so the chip's input trigger isn't replaced.
+
+<Demo data={calendarPropsDemo} />
 
 ### With Leading Icon
 

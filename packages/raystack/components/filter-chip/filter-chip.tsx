@@ -1,7 +1,8 @@
 'use client';
 
 import { Cross1Icon } from '@radix-ui/react-icons';
-import { cva, cx, VariantProps } from 'class-variance-authority';
+import { cva, VariantProps } from 'class-variance-authority';
+import dayjs from 'dayjs';
 import { ComponentProps, ReactElement, useCallback, useState } from 'react';
 import {
   FilterOperation,
@@ -11,7 +12,7 @@ import {
   FilterTypes,
   filterOperators
 } from '~/types/filters';
-import { DatePicker } from '../calendar';
+import { DatePicker, type DatePickerProps } from '../calendar';
 import { Flex } from '../flex';
 import { Input } from '../input';
 import { Select } from '../select';
@@ -34,6 +35,31 @@ const chip = cva(styles.chip, {
 
 export type FilterChipValue = string | string[] | number | Date;
 
+/**
+ * Coerce a `FilterChipValue` to the `Date` the DatePicker expects — filter
+ * state hydrated from a serialized query arrives as a string or epoch number.
+ * Unparseable values leave the field unselected.
+ */
+const toDateValue = (value: unknown): Date | undefined => {
+  if (value instanceof Date) return value;
+  if (typeof value === 'string' || typeof value === 'number') {
+    const parsed = dayjs(value);
+    return parsed.isValid() ? parsed.toDate() : undefined;
+  }
+  return undefined;
+};
+
+/**
+ * Subset of `DatePickerProps` that consumers may forward to the chip's
+ * built-in DatePicker via `calendarProps`. `value`/`onSelect`/`defaultValue`
+ * are owned by `FilterChip`; `children` would replace the input trigger and
+ * break the chip layout.
+ */
+export type FilterChipCalendarProps = Omit<
+  DatePickerProps,
+  'value' | 'onSelect' | 'defaultValue' | 'children'
+>;
+
 export interface FilterChipProps
   extends ComponentProps<'div'>,
     VariantProps<typeof chip> {
@@ -47,8 +73,22 @@ export interface FilterChipProps
   leadingIcon?: ReactElement;
   operations?: FilterOperator<string>[];
   selectProps?: BaseSelectProps;
+  /**
+   * Props forwarded to the underlying `DatePicker` for `columnType="date"`.
+   * `value`/`onSelect`/`defaultValue` are owned by `FilterChip` and excluded;
+   * `children` is excluded so the chip's input trigger isn't replaced.
+   */
+  calendarProps?: FilterChipCalendarProps;
 }
 
+/**
+ * A compact, removable filter pill that pairs a label and operator with a
+ * value control chosen by `columnType`: a `Select` (`select`/`multiselect`),
+ * a `DatePicker` (`date`), or a text `Input` (`string`/`number`). The value
+ * control sizes to its content so the chip hugs the active filter. Emits
+ * `onValueChange`/`onOperationChange` and renders a remove button when
+ * `onRemove` is provided.
+ */
 export const FilterChip = ({
   label,
   value,
@@ -63,6 +103,7 @@ export const FilterChip = ({
   variant,
   operations,
   selectProps,
+  calendarProps,
   ...props
 }: FilterChipProps) => {
   const computedOperations = operations?.length
@@ -111,10 +152,7 @@ export const FilterChip = ({
                 }
               }}
               variant='text'
-              className={cx(
-                styles.selectValue,
-                !showOnRemove && styles.selectColumn
-              )}
+              className={styles.selectValue}
             >
               <Select.Value placeholder='Select value'>
                 {isMultiSelectColumn && filterValue.length > 1
@@ -138,10 +176,17 @@ export const FilterChip = ({
         return (
           <div className={styles.dateFieldWrapper}>
             <DatePicker
-              value={filterValue}
-              onSelect={date => handleFilterValueChange(date)}
               showCalendarIcon={false}
-              inputProps={{ classNames: { container: styles.dateField } }}
+              {...calendarProps}
+              value={toDateValue(filterValue)}
+              onSelect={date => handleFilterValueChange(date)}
+              slotProps={{
+                ...calendarProps?.slotProps,
+                input: {
+                  classNames: { container: styles.dateField },
+                  ...calendarProps?.slotProps?.input
+                }
+              }}
             />
           </div>
         );

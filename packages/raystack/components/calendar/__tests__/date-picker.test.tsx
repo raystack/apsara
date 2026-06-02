@@ -161,6 +161,18 @@ describe('DatePicker', () => {
     });
   });
 
+  describe('default dateFormat', () => {
+    // Default is `DD MMM YYYY` (text-based month) so the input reads
+    // "27 May 2026" instead of the locale-ambiguous "27/05/2026".
+    it('renders a controlled Date in the DD MMM YYYY format by default', () => {
+      render(<DatePicker value={new Date(2026, 4, 27)} />);
+      const input = screen.getByPlaceholderText(
+        'Select date'
+      ) as HTMLInputElement;
+      expect(input.value).toBe('27 May 2026');
+    });
+  });
+
   describe('value prop is reactive', () => {
     /*
      * Earlier the picker only used `value` as the initial useState seed, so
@@ -173,10 +185,10 @@ describe('DatePicker', () => {
       const input = screen.getByPlaceholderText(
         'Select date'
       ) as HTMLInputElement;
-      expect(input.value).toBe('01/01/2026');
+      expect(input.value).toBe('01 Jan 2026');
 
       rerender(<DatePicker value={new Date(2026, 5, 15)} />);
-      expect(input.value).toBe('15/06/2026');
+      expect(input.value).toBe('15 Jun 2026');
     });
   });
 
@@ -224,7 +236,7 @@ describe('DatePicker', () => {
       const input = screen.getByPlaceholderText(
         'Select date'
       ) as HTMLInputElement;
-      expect(input.value).toBe('15/06/2024');
+      expect(input.value).toBe('15 Jun 2024');
     });
 
     it('value prop takes precedence over defaultValue', () => {
@@ -237,7 +249,7 @@ describe('DatePicker', () => {
       const input = screen.getByPlaceholderText(
         'Select date'
       ) as HTMLInputElement;
-      expect(input.value).toBe('01/01/2025');
+      expect(input.value).toBe('01 Jan 2025');
     });
 
     it('defaultValue is only honored at mount, not on later rerenders', () => {
@@ -247,12 +259,12 @@ describe('DatePicker', () => {
       const input = screen.getByPlaceholderText(
         'Select date'
       ) as HTMLInputElement;
-      expect(input.value).toBe('15/06/2024');
+      expect(input.value).toBe('15 Jun 2024');
 
       // Changing defaultValue after mount should NOT update the input
       // (uncontrolled semantics).
       rerender(<DatePicker defaultValue={new Date(2030, 0, 1)} />);
-      expect(input.value).toBe('15/06/2024');
+      expect(input.value).toBe('15 Jun 2024');
     });
   });
 
@@ -264,7 +276,7 @@ describe('DatePicker', () => {
      */
     it('Enter after typing a valid date fires onSelect exactly once', () => {
       const onSelect = vi.fn();
-      render(<DatePicker onSelect={onSelect} />);
+      render(<DatePicker dateFormat='DD/MM/YYYY' onSelect={onSelect} />);
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -287,7 +299,7 @@ describe('DatePicker', () => {
      * are now allowed; bounds come from `startMonth` / `endMonth`.
      */
     it('accepts a future date when no calendarProps bounds are set', () => {
-      render(<DatePicker />);
+      render(<DatePicker dateFormat='DD/MM/YYYY' />);
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -299,7 +311,10 @@ describe('DatePicker', () => {
 
     it('accepts a future date within endMonth', () => {
       render(
-        <DatePicker calendarProps={{ endMonth: new Date(2099, 11, 31) }} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          calendarProps={{ endMonth: new Date(2099, 11, 31) }}
+        />
       );
 
       const input = screen.getByPlaceholderText(
@@ -311,7 +326,10 @@ describe('DatePicker', () => {
 
     it('rejects a date past endMonth', () => {
       render(
-        <DatePicker calendarProps={{ endMonth: new Date(2026, 11, 31) }} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          calendarProps={{ endMonth: new Date(2026, 11, 31) }}
+        />
       );
 
       const input = screen.getByPlaceholderText(
@@ -323,7 +341,10 @@ describe('DatePicker', () => {
 
     it('rejects a date before startMonth', () => {
       render(
-        <DatePicker calendarProps={{ startMonth: new Date(2026, 0, 1) }} />
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          calendarProps={{ startMonth: new Date(2026, 0, 1) }}
+        />
       );
 
       const input = screen.getByPlaceholderText(
@@ -345,7 +366,13 @@ describe('DatePicker', () => {
     it('does not commit partial single-digit input as a date', () => {
       const onSelect = vi.fn();
       const initial = new Date(2026, 4, 20); // 20/05/2026
-      render(<DatePicker value={initial} onSelect={onSelect} />);
+      render(
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          value={initial}
+          onSelect={onSelect}
+        />
+      );
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -365,7 +392,7 @@ describe('DatePicker', () => {
 
     it('does not commit partial multi-char input that V8 would lenient-parse', () => {
       const initial = new Date(2026, 4, 20);
-      render(<DatePicker value={initial} />);
+      render(<DatePicker dateFormat='DD/MM/YYYY' value={initial} />);
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -377,7 +404,7 @@ describe('DatePicker', () => {
     });
 
     it('accepts a fully-typed valid date matching dateFormat', () => {
-      render(<DatePicker />);
+      render(<DatePicker dateFormat='DD/MM/YYYY' />);
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -395,7 +422,13 @@ describe('DatePicker', () => {
      */
     it('keeps typed characters visible while typing a full date one char at a time', () => {
       const onSelect = vi.fn();
-      render(<DatePicker value={new Date(2026, 4, 20)} onSelect={onSelect} />);
+      render(
+        <DatePicker
+          dateFormat='DD/MM/YYYY'
+          value={new Date(2026, 4, 20)}
+          onSelect={onSelect}
+        />
+      );
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -422,7 +455,7 @@ describe('DatePicker', () => {
 
     it('does not fire onSelect while typing — partial stays uncommitted, valid waits for commit (Enter/blur/outside-click)', () => {
       const onSelect = vi.fn();
-      render(<DatePicker onSelect={onSelect} />);
+      render(<DatePicker dateFormat='DD/MM/YYYY' onSelect={onSelect} />);
 
       const input = screen.getByPlaceholderText(
         'Select date'
@@ -523,6 +556,7 @@ describe('DatePicker', () => {
        */
       render(
         <DatePicker
+          dateFormat='DD/MM/YYYY'
           calendarProps={{
             startMonth: new Date(2020, 0, 1),
             endMonth: new Date(2030, 0, 1)
@@ -544,7 +578,7 @@ describe('DatePicker', () => {
        * Covers the no-bounds path — past regression had an unconditional
        * `isSameOrBefore(dayjs())` that threw without the plugin extended.
        */
-      render(<DatePicker />);
+      render(<DatePicker dateFormat='DD/MM/YYYY' />);
 
       const input = screen.getByPlaceholderText(
         'Select date'

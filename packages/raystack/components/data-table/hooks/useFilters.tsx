@@ -22,15 +22,19 @@ export function useFilters<TData, TValue>() {
       (filterType === FilterType.date
         ? new Date()
         : filterType === FilterType.select
-          ? options[0].value
-          : '');
+          ? options[0]?.value
+          : filterType === FilterType.multiselect
+            ? // first option preselected like select; [] when there are no options
+              options
+                .slice(0, 1)
+                .map(opt => opt.value)
+            : '');
 
     updateTableQuery(query => {
       return {
         ...query,
         filters: [
           ...(query.filters || []),
-          // TODO: Add default filter value in column definition
           {
             _dataType: dataType,
             _type: filterType,

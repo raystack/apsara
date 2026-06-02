@@ -78,6 +78,32 @@ API added, and the three legacy prop names (`inputProps`,
   `fill="none"` on stroke-based icons (lucide) and filling the
   outline paths solid. `color` alone now carries the selected style
   via `currentColor` for both stroke- and fill-based icon libraries.
+- **FilterChip date column no longer crashes** — the stricter
+  `DatePicker` `value?: Date` contract above surfaced a latent bug:
+  `FilterChip` seeded its value with `''` and forwarded that string
+  straight to the picker, so the new controlled-sync effect's
+  `valueProp?.getTime()` threw `TypeError`. `FilterChip` now parses
+  string and epoch-number values into a `Date` (unparseable values
+  start the field unselected) and uses the new `slotProps.input` API
+  instead of the deprecated `inputProps`.
+- **FilterChip `calendarProps`** — mirrors the existing `selectProps`
+  pattern: forwards arbitrary props (e.g. `dateFormat`, `timeZone`,
+  `slotProps.calendar`) to the underlying `DatePicker` for
+  `columnType="date"`. `value`/`onSelect`/`defaultValue`/`children`
+  remain owned by `FilterChip`. The standalone `dateFormat` prop is
+  removed — pass `calendarProps={{ dateFormat: '…' }}` instead.
+  `DataTable` / `DataView` columns gain a parallel `filterProps.calendar`
+  slot alongside `filterProps.select`. The supporting types —
+  `FilterChipProps`, `FilterChipCalendarProps`, `FilterChipValue`,
+  `DatePickerProps`, `DatePickerSlotProps` — are exported from the
+  package root.
+- **`DatePicker` / `RangePicker` `dateFormat` default is now
+  `"DD MMM YYYY"`** (previously `"DD/MM/YYYY"`). Text-based months
+  (e.g. "27 May 2026") avoid the DD/MM vs MM/DD ambiguity that
+  showed up in mixed-locale screenshots. Consumers who relied on
+  the slash default must pass `dateFormat="DD/MM/YYYY"` explicitly.
+  `FilterChip`'s `columnType="date"` inherits the new default
+  directly — its prior internal override is removed.
 
 #### Code-review and audit follow-ups
 
@@ -153,6 +179,32 @@ for the tz-aware `dateKey` fix.
 - `dayjs` bumped to `^1.11.20` (was `^1.11.11`) for the strict-parse
   + tz plugins.
 
+### FilterChip & filter toolbar fixes (PR #821)
+
+#### Fixes
+
+- **FilterChip values truncate instead of clipping** — the value
+  input hugs its content (`field-sizing: content`, `width: auto`
+  fallback), caps at 200px, and under toolbar resize pressure shrinks
+  with a visible ellipsis and intact side padding (previously the
+  wrapper clipped the input, hiding both). An empty value keeps a
+  50px clickable floor — the whole visible value area now focuses the
+  input.
+- **Applied filter chips wrap to the panel** — `DataTable`'s
+  `.filterContainer` and `DataView`'s filters row fill the toolbar,
+  wrap, and let chips shrink instead of overflowing in a single row.
+- **DataTable: adding a `select` filter with no `filterOptions` no
+  longer crashes** (`options[0].value` → `options[0]?.value`, parity
+  with DataView).
+- **DataTable: `multiselect` filters preselect the first option**
+  (matching `select`; `[]` when there are no options) instead of
+  falling through to `''` — the chip's multi-`Select` expects an
+  array value.
+- **DataTable: `classNames.addFilter` is now applied** to the default
+  add-filter triggers (it was accepted and silently dropped).
+- **FilterChip: removed a dead `selectColumn` class reference** left
+  behind by #810; the chip's `border-radius` + `overflow: clip`
+  already rounds the select trigger.
 
 ## 0.11.3
 

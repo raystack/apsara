@@ -1,1 +1,6 @@
-export { FilterChip, type FilterChipValue } from './filter-chip';
+export {
+  FilterChip,
+  type FilterChipCalendarProps,
+  type FilterChipProps,
+  type FilterChipValue
+} from './filter-chip';

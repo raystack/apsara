@@ -159,7 +159,8 @@ interface DataTableColumnDef<TData, TValue> {
   enableColumnFilter?: boolean; // Enable filtering
   enableHiding?: boolean; // Enable column visibility toggle
   enableGrouping?: boolean; // Enable grouping
-  filterOptions?: FilterSelectOption[]; // Options for select filter
+  filterType?: "string" | "number" | "select" | "multiselect" | "date"; // Filter input type
+  filterOptions?: FilterSelectOption[]; // Options for select/multiselect filters
   defaultHidden?: boolean; // Hide column by default
 }
 ```
@@ -174,6 +175,7 @@ Filter types:
 - Number: equals, not equals, less than, less than or equal, greater than, greater than or equal
 - Date: equals, not equals, before, on or before, after, on or after
 - Select: equals, not equals
+- Multiselect: is any of, is none of (value is a `string[]`)
 
 ### Sorting
 
