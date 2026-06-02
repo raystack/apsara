@@ -171,7 +171,6 @@ export const FilterChip = ({
               slotProps={{
                 ...calendarProps?.slotProps,
                 input: {
-                  width: 'fit-content',
                   classNames: { container: styles.dateField },
                   ...calendarProps?.slotProps?.input
                 }
@@ -187,7 +186,6 @@ export const FilterChip = ({
               classNames={{ container: styles.inputField }}
               value={filterValue}
               onChange={e => handleFilterValueChange(e.target.value)}
-              width='fit-content'
             />
           </div>
         );

@@ -179,20 +179,24 @@ describe('FilterChip', () => {
   });
 
   describe('Content-fit width', () => {
-    it('sizes the string input container to its content', () => {
+    // The value hug lives on the input itself (`field-sizing: content` in
+    // `.chip input`) — jsdom computes no layout, so these only pin the
+    // containers to the default fluid width that lets the input shrink and
+    // ellipsize under pressure instead of being clipped by the wrapper.
+    it('keeps the string input container fluid so the input can shrink', () => {
       const { container } = render(
         <FilterChip label='Name' columnType={FilterType.string} />
       );
       const inputContainer = container.querySelector(`.${styles.inputField}`);
-      expect(inputContainer).toHaveStyle({ width: 'fit-content' });
+      expect(inputContainer).toHaveStyle({ width: '100%' });
     });
 
-    it('sizes the date field container to its content', () => {
+    it('keeps the date field container fluid so the input can shrink', () => {
       const { container } = render(
         <FilterChip label='Created' columnType={FilterType.date} />
       );
       const dateContainer = container.querySelector(`.${styles.dateField}`);
-      expect(dateContainer).toHaveStyle({ width: 'fit-content' });
+      expect(dateContainer).toHaveStyle({ width: '100%' });
     });
   });
 
