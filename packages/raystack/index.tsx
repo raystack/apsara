@@ -45,10 +45,8 @@ export {
   DataViewProps,
   DataViewQuery,
   DataViewSort,
-  DataViewTableColumn,
-  DataViewTableProps,
   useDataView
-} from './components/data-view-beta';
+} from './components/data-view';
 export { Dialog } from './components/dialog';
 export { Drawer } from './components/drawer';
 export { EmptyState } from './components/empty-state';
