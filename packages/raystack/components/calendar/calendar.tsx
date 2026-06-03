@@ -126,7 +126,7 @@ export const Calendar = function ({
         PreviousMonthButton: ({ children, ...props }) => (
           <IconButton
             {...props}
-            disabled={loadingData ?? props.disabled}
+            disabled={loadingData || props.disabled}
             className={cx(props.className, loadingData && styles.disabled)}
             size={3}
             aria-label='Previous month'
@@ -137,7 +137,7 @@ export const Calendar = function ({
         NextMonthButton: ({ children, ...props }) => (
           <IconButton
             {...props}
-            disabled={loadingData ?? props.disabled}
+            disabled={loadingData || props.disabled}
             className={cx(props.className, loadingData && styles.disabled)}
             size={3}
             aria-label='Next month'
