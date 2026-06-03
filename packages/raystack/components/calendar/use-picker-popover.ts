@@ -13,7 +13,7 @@ export interface UsePickerPopoverReturn {
   contentRef: React.RefObject<HTMLDivElement | null>;
   handleInputFocus: () => void;
   handleInputBlur: (event: React.FocusEvent) => void;
-  onOpenChange: (open?: boolean) => void;
+  onOpenChange: (open?: boolean, reason?: string) => void;
   /*
    * Pass as Calendar's `onDropdownOpen` so the year/month dropdown isn't
    * treated as an outside click.
@@ -138,7 +138,7 @@ export function usePickerPopover({
     [isElementOutside, engage]
   );
 
-  const onOpenChange = useCallback((open?: boolean) => {
+  const onOpenChange = useCallback((open?: boolean, reason?: string) => {
     // Year/month dropdown opening inside the popover triggers an open-change
     // we don't want; swallow it and consume the flag.
     if (isDropdownOpenRef.current) {
@@ -146,10 +146,21 @@ export function usePickerPopover({
       return;
     }
     /*
+     * Base UI's `Popover.Trigger` wires `useClick`, which *toggles* the popover
+     * on every trigger click. The input's `onFocus` already opens the picker, so
+     * a single click both opens (focus) and then toggles back closed
+     * (trigger-press) — the popover flickers shut on the first click and only
+     * sticks open on the second. Ignore trigger-press *closes*: opening stays
+     * owned by focus (and trigger-press open), while closing is owned by our
+     * outside-click / blur / Enter / day-select logic — plus Base UI's own
+     * Escape/outside-press, which still flow through below.
+     */
+    if (reason === 'trigger-press' && open === false) return;
+    /*
      * Suppress only redundant *re-open* events fired by focus/click handlers
      * while the picker is already engaged + open. Explicit close requests
-     * (Escape key, trigger toggle, programmatic) must always go through, or
-     * users get stuck with no way to close.
+     * (Escape key, programmatic) must always go through, or users get stuck
+     * with no way to close.
      */
     if (open === true && isEngagedRef.current && isOpenRef.current) return;
     setIsOpen(Boolean(open));

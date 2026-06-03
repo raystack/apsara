@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import dayjs from 'dayjs';
 import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -587,6 +588,27 @@ describe('DatePicker', () => {
       expect(() => {
         fireEvent.change(input, { target: { value: '01/01/2020' } });
       }).not.toThrow();
+    });
+  });
+
+  describe('open/close on trigger click', () => {
+    /*
+     * Regression: Base UI's `Popover.Trigger` toggles open on every trigger
+     * click. The input's `onFocus` opens the picker, so the same click's
+     * trigger-press toggled it straight back closed — the popover flickered
+     * shut on the first click and only stuck open on the second. The hook's
+     * `onOpenChange` now ignores trigger-press *closes* (see use-picker-popover).
+     */
+    it('opens and stays open on the first click of the input', async () => {
+      const user = userEvent.setup();
+      render(<DatePicker />);
+
+      await user.click(screen.getByPlaceholderText('Select date'));
+      await act(async () => {
+        await new Promise(r => setTimeout(r, 0));
+      });
+
+      expect(screen.queryByRole('dialog')).toBeInTheDocument();
     });
   });
 });

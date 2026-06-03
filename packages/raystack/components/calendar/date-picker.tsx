@@ -239,9 +239,9 @@ export function DatePicker({
   return (
     <Popover
       open={isDisabled ? false : popover.isOpen}
-      onOpenChange={open => {
+      onOpenChange={(open, eventDetails) => {
         if (isDisabled) return;
-        popover.onOpenChange(open);
+        popover.onOpenChange(open, eventDetails?.reason);
       }}
     >
       <Popover.Trigger
@@ -255,18 +255,7 @@ export function DatePicker({
         side={popoverProps?.side ?? 'top'}
       >
         <Calendar
-          /*
-           * No `captionLayout` default — 'dropdown' renders Apsara Selects
-           * inside the popover whose unmount loops ("Maximum update depth").
-           * Consumers can opt in via `calendarProps.captionLayout`.
-           */
           {...calendarProps}
-          /*
-           * Must stay after spread: `required` is the discriminator for
-           * RDP's prop union, and a widened value would break the narrowing.
-           * `required={false}` is intentional — the picker now supports an
-           * unselected initial state when no value/defaultValue is passed.
-           */
           required={false}
           timeZone={timeZone}
           onDropdownOpen={popover.markDropdownOpen}
