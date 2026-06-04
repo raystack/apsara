@@ -1,0 +1,256 @@
+---
+title: DataView
+description: A unified data primitive whose query state drives swappable renderers. List, custom, multi-view — one filter/sort/group/search model.
+source: packages/raystack/components/data-view
+---
+
+import {
+  tablePreview,
+  searchPreview,
+  listPreview,
+  multiViewPreview,
+  emptyZeroPreview,
+  customPreview,
+  virtualizedPreview,
+  groupingPreview,
+  virtualizedGroupingPreview,
+  loadingPreview,
+  perViewFieldsPreview,
+} from "./demo.ts";
+
+<Demo data={tablePreview} />
+
+## Overview
+
+`DataView` owns the data layer — query state (filters, sort, group, search), client/server mode, row model derivation — and lets you pick the renderer that draws it. The same `<DataView>` can host a table, a list, or a free-form view, switchable at runtime without losing query state.
+
+In scope today: `DataView.List` (table + list presentations) and `DataView.Custom` (escape hatch for cards, kanban, gallery, etc.).
+
+## Anatomy
+
+```tsx
+import {
+  DataView,
+  DataViewField,
+  DataViewListColumn,
+  ViewSpec,
+  useDataView,
+  EmptyFilterValue,
+} from "@raystack/apsara";
+
+<DataView data={data} fields={fields} defaultSort={defaultSort}>
+  <DataView.Toolbar>
+    <DataView.Search />
+    <DataView.Filters />
+    <DataView.DisplayControls />
+  </DataView.Toolbar>
+
+  <DataView.List variant="table" columns={tableColumns} />
+
+  <DataView.EmptyState>{/* no matches */}</DataView.EmptyState>
+  <DataView.ZeroState>{/* no data yet */}</DataView.ZeroState>
+</DataView>
+```
+
+## Core ideas
+
+### Fields vs columns
+
+`fields` is renderer-agnostic metadata declared **once on the root** — filter capability, sort capability, group capability, visibility, group-header presentation. Cell/header renderers live on the **renderer's** column spec (e.g. `DataView.List`'s `columns`).
+
+```ts
+const fields: DataViewField<Person>[] = [
+  { accessorKey: "name",  label: "Name",   sortable: true, filterable: true, filterType: "string", hideable: true },
+  { accessorKey: "team",  label: "Team",   filterable: true, filterType: "select", groupable: true, filterOptions: [...] },
+  { accessorKey: "email", label: "Email",  hideable: true, defaultHidden: true },
+];
+
+const tableColumns: DataViewListColumn<Person>[] = [
+  { accessorKey: "name",  width: "1fr",  cell: ({ row }) => <Text>{row.original.name}</Text> },
+  { accessorKey: "team",  width: "auto", cell: ({ row }) => <Badge>{row.original.team}</Badge> },
+  { accessorKey: "email", width: "1fr",  cell: ({ row }) => <Text>{row.original.email}</Text> },
+];
+```
+
+### Empty vs zero state
+
+Empty/zero is computed once on context (`isEmptyState`, `isZeroState`) and exposed as sibling components.
+
+- **Zero state** — no data, no active query. The "first-use" surface. Toolbar is hidden automatically.
+- **Empty state** — no rows visible because filters/search/sort exclude them all. Toolbar stays visible so the user can correct it.
+
+```tsx
+<DataView.EmptyState>
+  <Text>No matches for your filters.</Text>
+</DataView.EmptyState>
+<DataView.ZeroState>
+  <Text>Nothing here yet.</Text>
+</DataView.ZeroState>
+```
+
+Renderers return `null` when `!hasData` — siblings render the messaging.
+
+### Display Properties (column visibility)
+
+Visibility is a **single global map** on context. `DataView.List` honours it for free (TanStack column visibility hides the grid track). For free-form renderers, wrap fields in `DataView.DisplayAccess`:
+
+```tsx
+<DataView.DisplayAccess accessorKey="email">
+  <Text>{row.email}</Text>
+</DataView.DisplayAccess>
+```
+
+`accessorKey`s not present in `fields` default to visible, so typos don't silently break renders.
+
+## API Reference
+
+### Root
+
+<auto-type-table path="./props.ts" name="DataViewProps" />
+
+### Field
+
+<auto-type-table path="./props.ts" name="DataViewField" />
+
+### Sort
+
+<auto-type-table path="./props.ts" name="DataViewSort" />
+
+### Query
+
+<auto-type-table path="./props.ts" name="DataViewQuery" />
+
+### View spec
+
+<auto-type-table path="./props.ts" name="ViewSpec" />
+
+### DataView.List
+
+<auto-type-table path="./props.ts" name="DataViewListProps" />
+
+#### Column
+
+<auto-type-table path="./props.ts" name="DataViewListColumn" />
+
+### DataView.Custom
+
+<auto-type-table path="./props.ts" name="DataViewCustomProps" />
+
+### DataView.DisplayAccess
+
+<auto-type-table path="./props.ts" name="DataViewDisplayAccessProps" />
+
+### DataView.EmptyState
+
+<auto-type-table path="./props.ts" name="DataViewEmptyStateProps" />
+
+### DataView.ZeroState
+
+<auto-type-table path="./props.ts" name="DataViewZeroStateProps" />
+
+### DataView.DisplayControls
+
+The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually.
+
+<auto-type-table path="./props.ts" name="DataViewDisplayControlsProps" />
+
+## Examples
+
+### Search
+
+`DataView.Search` writes the input to `query.search`, which feeds TanStack's `globalFilter` — rows are filtered across every field as the user types. Drop it into the toolbar wherever you want it; in client mode no extra wiring is needed. Type a name, email, or team below to filter the rows.
+
+<Demo data={searchPreview} />
+
+By default search auto-disables in the zero state (no data and no active query) and re-enables the moment the user types. Pass `autoDisableInZeroState={false}` to keep it always enabled, or `disabled` to control it yourself. In server mode, read `query.search` in `onTableQueryChange` and filter on the backend.
+
+### List variant
+
+`DataView.List` ships two presentations behind one renderer. Use `variant="list"` for card-style rows; the default `1fr` middle column with `auto` end columns gives you the familiar justify-between layout.
+
+<Demo data={listPreview} />
+
+### Multi-view
+
+Pass `views` + give each renderer a `name`. `DataView.DisplayControls` hosts the view switcher at the top of its popover automatically — give each view an optional `leadingIcon` to show alongside its label. Query state — filters, sort, search, visibility — persists across switches.
+
+<Demo data={multiViewPreview} />
+
+### Empty / zero state
+
+<Demo data={emptyZeroPreview} />
+
+### Custom renderer
+
+`DataView.Custom` exposes the full context as a render prop. Use it for cards, kanban, gallery, map, or any non-tabular presentation. Wrap fields in `DataView.DisplayAccess` so the single Display Properties toggle reaches them.
+
+<Demo data={customPreview} />
+
+### Virtualized list
+
+For large datasets, pass `virtualized` to `DataView.List`. The parent must have a fixed height — only the rows in view are rendered. Rows auto-measure after paint, so variable-height content (avatars, wrapped text, badges) just works. `estimatedRowHeight` is an optional hint used only until the first measurement.
+
+<Demo data={virtualizedPreview} />
+
+### Grouping with sticky header
+
+Group rows by any `groupable` field. `stickyGroupHeader` pins the active group label directly under the column headers while you scroll past that group's rows. Pick a different field from `DisplayControls` → Grouping at runtime — the wire format stays `group_by: string[]`.
+
+<Demo data={groupingPreview} />
+
+In virtualized mode, a single sticky-anchor element swaps its content as the user scrolls past each group's offset. The natural group header at the active offset is hidden so the anchor doesn't double-render the label, and the lookup uses binary search + `requestAnimationFrame` so the cost stays flat regardless of group count.
+
+<Demo data={virtualizedGroupingPreview} />
+
+### Loading state
+
+While `isLoading` is `true`, `DataView.List` renders `loadingRowCount` skeleton rows at the tail. Behaviour is identical in virtualized and non-virtualized mode, and during initial load (skeletons fill the row pane) as well as during paginated server-mode load-more (skeletons render below the last loaded row).
+
+<Demo data={loadingPreview} />
+
+In server mode, infinite scroll triggers via a single sentinel + `IntersectionObserver` — there are no scroll-distance knobs to tune. While `isLoading` is true the sentinel is suppressed so the consumer's `onLoadMore` isn't fired again during a fetch.
+
+### Per-view fields override
+
+Each renderer accepts an optional `fields` prop. It **fully replaces** the root `fields` for that view's active session — filter chips, sort menu, and Display Properties reflect the override while the view is active. Common pattern: spread root fields and tweak the few that differ.
+
+<Demo data={perViewFieldsPreview} />
+
+```tsx
+const listFields = fields.map((f) =>
+  f.accessorKey === "email" ? { ...f, hideable: false, defaultHidden: true } : f,
+);
+
+<DataView.List name="list" variant="list" columns={listColumns} fields={listFields} />;
+```
+
+### Custom group buckets (`groupByResolvers`)
+
+The wire format keeps `group_by: string[]`. To group by something that isn't a raw accessor (e.g. "by week of created_at"), supply a resolver:
+
+```tsx
+<DataView
+  groupByResolvers={{
+    name_first_letter: (row) => row.name.charAt(0).toUpperCase(),
+  }}
+  // query.group_by = ["name_first_letter"]
+/>
+```
+
+### Server mode
+
+```tsx
+<DataView
+  mode="server"
+  data={page.rows}
+  isLoading={loading}
+  totalRowCount={page.total}
+  query={query}
+  onTableQueryChange={(q) => setQuery(q)}
+  onLoadMore={() => fetchNext()}
+>
+  …
+</DataView>
+```
+
+In server mode, `onTableQueryChange` fires whenever the query changes. The `DataView.List` shows skeleton loader rows when `isLoading` is true. Filter predicates and sort run on the server — the local TanStack table is manual.
