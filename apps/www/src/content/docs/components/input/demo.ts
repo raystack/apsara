@@ -15,7 +15,6 @@ export const playground = {
     trailingIcon: { type: 'icon', initialValue: '' },
     prefix: { type: 'text', initialValue: '' },
     suffix: { type: 'text', initialValue: '' },
-    width: { type: 'text', initialValue: '560px' },
     size: {
       type: 'select',
       options: ['small', 'large'],
@@ -27,7 +26,7 @@ export const playground = {
 
 export const basicDemo = {
   type: 'code',
-  code: `<Input placeholder="Enter text" width="560px" />`
+  code: `<Input placeholder="Enter text" />`
 };
 
 export const withFieldDemo = {
@@ -51,7 +50,6 @@ export const prefixDemo = {
   placeholder="0.00"
   prefix="$"
   suffix="USD"
-  width="560px"
 />`
 };
 
@@ -61,7 +59,6 @@ export const iconDemo = {
   placeholder="Enter text"
   leadingIcon={<Home size={16}/>}
   trailingIcon={<Info size={16}/>}
-  width="560px"
 />`
 };
 
@@ -70,7 +67,6 @@ export const disabledDemo = {
   code: `<Input
   placeholder="Enter text"
   disabled
-  width="560px"
 />`
 };
 
@@ -79,19 +75,10 @@ export const disabledChipsDemo = {
   code: `<Input
   placeholder="Type and press Enter..."
   disabled
-  width="560px"
   chips={[
     { label: "Tag1", onRemove: () => console.log("Remove Tag1") },
     { label: "Tag2", onRemove: () => console.log("Remove Tag2") }
   ]}
-/>`
-};
-
-export const widthDemo = {
-  type: 'code',
-  code: `<Input
-  placeholder="Enter text"
-  width="300px"
 />`
 };
 
@@ -170,7 +157,6 @@ export const interactiveChipDemo = {
 
       <Input
         placeholder="Type and press Enter..."
-        width="560px"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
