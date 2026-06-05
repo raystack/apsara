@@ -13,9 +13,6 @@ export interface DialogProps {
 }
 
 export interface DialogContentProps {
-  /** Controls dialog width */
-  width?: string | number;
-
   /**
    * Controls whether to show the close button
    * @default true

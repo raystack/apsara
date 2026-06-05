@@ -8,7 +8,6 @@ import { CloseButton } from './dialog-misc';
 export interface DialogContentProps extends DialogPrimitive.Popup.Props {
   showCloseButton?: boolean;
   overlay?: DialogPrimitive.Backdrop.Props & { blur?: boolean };
-  width?: string | number;
   /**
    * Toggles nested dialog animation (scaling and translation)
    * `@default` true
@@ -21,7 +20,6 @@ export function DialogContent({
   children,
   showCloseButton = true,
   overlay,
-  width,
   style,
   showNestedAnimation = true,
   ...props
@@ -43,7 +41,7 @@ export function DialogContent({
             showNestedAnimation && styles.showNestedAnimation,
             className
           )}
-          style={{ width, ...style }}
+          style={style}
           {...props}
         >
           {children}

@@ -17,15 +17,17 @@ const callout = cva(styles.callout, {
       attention: styles['callout-attention'],
       normal: styles['callout-normal']
     },
-    outline: {
-      true: styles['callout-outline']
+    variant: {
+      solid: '',
+      outline: styles['callout-outline']
     },
     highContrast: {
       true: styles['callout-high-contrast']
     }
   },
   defaultVariants: {
-    type: 'grey'
+    type: 'grey',
+    variant: 'solid'
   }
 });
 
@@ -36,7 +38,6 @@ export interface CalloutProps
   action?: ReactNode;
   dismissible?: boolean;
   onDismiss?: () => void;
-  width?: string | number;
   style?: CSSProperties;
   icon?: ReactNode;
 }
@@ -44,22 +45,16 @@ export interface CalloutProps
 export function Callout({
   className,
   type = 'grey',
-  outline,
+  variant,
   highContrast,
   children,
   action,
   dismissible,
   onDismiss,
-  width,
   style,
   icon = <InfoCircledIcon />,
   ...props
 }: CalloutProps) {
-  const combinedStyle = {
-    ...style,
-    ...(width && { width: typeof width === 'number' ? `${width}px` : width })
-  };
-
   const getRole = () => {
     switch (type) {
       case 'alert':
@@ -73,8 +68,8 @@ export function Callout({
 
   return (
     <div
-      className={callout({ type, outline, highContrast, className })}
-      style={combinedStyle}
+      className={callout({ type, variant, highContrast, className })}
+      style={style}
       role={getRole()}
       aria-live={type === 'alert' ? 'assertive' : 'polite'}
       {...props}

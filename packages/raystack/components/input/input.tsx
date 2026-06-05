@@ -30,7 +30,6 @@ export interface InputProps
   trailingIcon?: ReactNode;
   prefix?: string;
   suffix?: string;
-  width?: string | number;
   chips?: Array<{ label: string; onRemove?: () => void }>;
   maxChipsVisible?: number;
   variant?: 'default' | 'borderless';
@@ -46,7 +45,6 @@ export function Input({
   trailingIcon,
   prefix,
   suffix,
-  width,
   chips,
   maxChipsVisible = 2,
   size,
@@ -67,7 +65,6 @@ export function Input({
         classNames?.container
       )}
       data-disabled={disabled || undefined}
-      style={{ width: width || '100%' }}
       ref={containerRef}
     >
       {leadingIcon && (

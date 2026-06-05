@@ -7,9 +7,6 @@ export interface AlertDialogProps {
 }
 
 export interface AlertDialogContentProps {
-  /** Controls alert dialog width */
-  width?: string | number;
-
   /**
    * Toggle nested dialog animation (scaling and translation)
    * @default true

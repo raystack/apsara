@@ -75,7 +75,7 @@ describe('Callout', () => {
     });
 
     it('renders outline variant', () => {
-      render(<Callout outline>Test message</Callout>);
+      render(<Callout variant='outline'>Test message</Callout>);
 
       const callout = screen.getByRole('status');
       expect(callout).toHaveClass(styles['callout-outline']);
@@ -142,22 +142,6 @@ describe('Callout', () => {
       expect(
         screen.getByRole('button', { name: 'Dismiss message' })
       ).toBeInTheDocument();
-    });
-  });
-
-  describe('Styling and Layout', () => {
-    it('applies custom width as number', () => {
-      render(<Callout width={300}>Custom width message</Callout>);
-
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveStyle({ width: '300px' });
-    });
-
-    it('applies custom width as string', () => {
-      render(<Callout width='50%'>Custom width message</Callout>);
-
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveStyle({ width: '50%' });
     });
   });
 

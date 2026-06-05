@@ -6,8 +6,7 @@ export default function NotFound() {
       align='center'
       justify='center'
       gap={9}
-      width='full'
-      style={{ height: '100vh' }}
+      style={{ width: '100%', height: '100vh' }}
     >
       <Headline size='t3' weight='medium' style={{ width: 'auto' }}>
         404

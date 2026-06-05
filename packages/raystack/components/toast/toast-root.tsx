@@ -79,7 +79,7 @@ export function ToastRoot({
       {...props}
     >
       <ToastPrimitive.Content className={styles.content}>
-        <Flex align='start' gap={3} width='full'>
+        <Flex align='start' gap={3} style={{ width: '100%' }}>
           {leadingIcon && (
             <span className={styles.leadingIcon} aria-hidden='true'>
               {leadingIcon}

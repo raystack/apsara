@@ -14,7 +14,6 @@ interface ListRootProps
   extends ComponentProps<'ul'>,
     VariantProps<typeof list> {
   children: ReactNode;
-  maxWidth?: string | number;
 }
 
 interface ListItemProps extends ComponentProps<'li'> {
@@ -22,7 +21,6 @@ interface ListItemProps extends ComponentProps<'li'> {
 }
 
 interface ListLabelProps extends ComponentProps<'span'> {
-  minWidth?: string;
   children: ReactNode;
 }
 
@@ -39,17 +37,11 @@ interface ListHeaderProps extends ComponentProps<'div'> {
   'aria-level'?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-const ListRoot = ({
-  children,
-  className,
-  maxWidth,
-  style,
-  ...props
-}: ListRootProps) => {
+const ListRoot = ({ children, className, style, ...props }: ListRootProps) => {
   return (
     <ul
       className={list({ className })}
-      style={{ maxWidth, ...style }}
+      style={style}
       // `list-style: none` causes Safari/VoiceOver to drop the implicit
       // list role; keep the explicit role so the list stays announced.
       role='list'
@@ -68,19 +60,9 @@ const ListItem = ({ children, className, ...props }: ListItemProps) => {
   );
 };
 
-const ListLabel = ({
-  children,
-  minWidth,
-  className,
-  style,
-  ...props
-}: ListLabelProps) => {
+const ListLabel = ({ children, className, ...props }: ListLabelProps) => {
   return (
-    <span
-      className={label({ className })}
-      style={{ minWidth, ...style }}
-      {...props}
-    >
+    <span className={label({ className })} {...props}>
       {children}
     </span>
   );

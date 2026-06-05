@@ -30,18 +30,6 @@ describe('TextArea', () => {
       render(<TextArea ref={ref} />);
       expect(ref).toHaveBeenCalled();
     });
-
-    it('defaults to 100% width', () => {
-      render(<TextArea />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveStyle({ width: '100%' });
-    });
-
-    it('accepts custom width as string', () => {
-      render(<TextArea width='500px' />);
-      const textarea = screen.getByRole('textbox');
-      expect(textarea).toHaveStyle({ width: '500px' });
-    });
   });
 
   describe('Disabled State', () => {

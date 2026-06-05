@@ -186,7 +186,7 @@ const defaultSort = { name: 'name', order: 'asc' as const };
 
 export function DataViewTableDemo() {
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataView data={people} fields={fields} defaultSort={defaultSort}>
           <DataView.Toolbar>
@@ -202,7 +202,7 @@ export function DataViewTableDemo() {
 
 export function DataViewListDemo() {
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataView data={people} fields={fields} defaultSort={defaultSort}>
           <DataView.Toolbar>
@@ -217,7 +217,7 @@ export function DataViewListDemo() {
 
 export function DataViewSearchDemo() {
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataView data={people} fields={fields} defaultSort={defaultSort}>
           <DataView.Toolbar>
@@ -242,7 +242,7 @@ export function DataViewMultiViewDemo() {
     []
   );
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataView
           data={people}
@@ -266,7 +266,7 @@ export function DataViewMultiViewDemo() {
 export function DataViewEmptyZeroDemo() {
   const [filtered, setFiltered] = useState(false);
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataView
           data={filtered ? [] : people}
@@ -296,7 +296,7 @@ export function DataViewEmptyZeroDemo() {
 
 export function DataViewCustomDemo() {
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <DataView data={people} fields={fields} defaultSort={defaultSort}>
         <DataView.Toolbar>
           <DataView.Filters />
@@ -386,7 +386,7 @@ function generatePeople(count: number): Person[] {
 export function DataViewVirtualizedDemo() {
   const data = useMemo(() => generatePeople(1000), []);
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataView data={data} fields={fields} defaultSort={defaultSort}>
           <DataView.Toolbar>
@@ -414,7 +414,7 @@ export function DataViewGroupingDemo() {
   // so the sticky group header visibly swaps as the user moves between teams.
   const groupedPeople = useMemo(() => generatePeople(60), []);
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 320 }}>
         <DataView
           data={groupedPeople}
@@ -446,7 +446,7 @@ export function DataViewGroupingDemo() {
 export function DataViewVirtualizedGroupingDemo() {
   const data = useMemo(() => generatePeople(1500), []);
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 360 }}>
         <DataView
           data={data}
@@ -478,7 +478,7 @@ export function DataViewVirtualizedGroupingDemo() {
 export function DataViewLoadingDemo() {
   const [isLoading, setIsLoading] = useState(true);
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <Flex gap={3} align='center'>
         <Button
           size='small'
@@ -518,7 +518,7 @@ export function DataViewVirtualizedLoadingDemo() {
   const [isLoading, setIsLoading] = useState(true);
   const allPeople = useMemo(() => generatePeople(1000), []);
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <Flex gap={3} align='center'>
         <Button
           size='small'
@@ -577,7 +577,7 @@ export function DataViewPerViewFieldsDemo() {
     []
   );
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataView
           data={people}

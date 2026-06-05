@@ -319,7 +319,7 @@ const Page = () => {
 
               <RangePicker
                 footer={
-                  <Callout width='100%' type='success'>
+                  <Callout style={{ width: '100%' }} type='success'>
                     Some important message in the footer
                   </Callout>
                 }
@@ -1570,7 +1570,7 @@ const Page = () => {
               <Button onClick={() => setDialogOpen(true)}>Open Dialog</Button>
 
               <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <Dialog.Content width='500px'>
+                <Dialog.Content style={{ width: 500 }}>
                   <Dialog.Header>
                     <Dialog.Title>Dialog Title</Dialog.Title>
                   </Dialog.Header>
@@ -1657,7 +1657,6 @@ const Page = () => {
                         <Input
                           placeholder='Type to filter...'
                           leadingIcon={<MixerHorizontalIcon />}
-                          width='100%'
                         />
                       </Flex>
 
@@ -1731,7 +1730,7 @@ const Page = () => {
                 open={nestedDialogOpen}
                 onOpenChange={setNestedDialogOpen}
               >
-                <Dialog.Content width='500px'>
+                <Dialog.Content style={{ width: 500 }}>
                   <Dialog.Body>
                     <Text>This is the nested dialog content. </Text>
                     <Flex
@@ -1826,7 +1825,6 @@ const Page = () => {
                         <Input
                           placeholder='Type to filter...'
                           leadingIcon={<MixerHorizontalIcon />}
-                          width='100%'
                         />
                       </Flex>
 

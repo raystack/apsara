@@ -30,24 +30,6 @@ describe('Input', () => {
       expect(input).toBeInTheDocument();
     });
 
-    it('sets custom width', () => {
-      const { container } = render(<Input width='300px' />);
-      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
-      expect(wrapper).toHaveStyle({ width: '300px' });
-    });
-
-    it('sets numeric width as pixels', () => {
-      const { container } = render(<Input width={400} />);
-      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
-      expect(wrapper).toHaveStyle({ width: '400px' });
-    });
-
-    it('defaults to 100% width', () => {
-      const { container } = render(<Input />);
-      const wrapper = container.querySelector(`.${styles['input-wrapper']}`);
-      expect(wrapper).toHaveStyle({ width: '100%' });
-    });
-
     it('disables input when disabled prop is true', () => {
       render(<Input disabled />);
       const input = screen.getByRole('textbox');

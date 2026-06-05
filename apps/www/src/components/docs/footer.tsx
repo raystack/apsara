@@ -10,7 +10,7 @@ type DocsFooterProps = {
 export default function DocsFooter({ url }: DocsFooterProps) {
   const neighbours = findNeighbour(docs.pageTree, url);
   return (
-    <Flex width='full' justify='between'>
+    <Flex style={{ width: '100%' }} justify='between'>
       {neighbours.previous ? (
         <Link href={neighbours.previous.url}>
           <Button

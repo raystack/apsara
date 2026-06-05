@@ -7,7 +7,6 @@ import styles from '../dialog/dialog.module.css';
 export interface AlertDialogContentProps
   extends AlertDialogPrimitive.Popup.Props {
   overlay?: AlertDialogPrimitive.Backdrop.Props & { blur?: boolean };
-  width?: string | number;
   /**
    * Toggles nested dialog animation (scaling and translation)
    * `@default` true
@@ -19,7 +18,6 @@ export const AlertDialogContent = ({
   className,
   children,
   overlay,
-  width,
   style,
   showNestedAnimation = true,
   ...props
@@ -41,7 +39,7 @@ export const AlertDialogContent = ({
             showNestedAnimation && styles.showNestedAnimation,
             className
           )}
-          style={{ width, ...style }}
+          style={style}
           {...props}
         >
           {children}

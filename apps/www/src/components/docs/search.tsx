@@ -137,7 +137,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
       <Dialog.Trigger render={<IconButton size={3} aria-label='Search docs' />}>
         <MagnifyingGlassIcon />
       </Dialog.Trigger>
-      <Dialog.Content width={512} className={styles.searchContainer}>
+      <Dialog.Content style={{ width: 512 }} className={styles.searchContainer}>
         <Command className={styles.searchCommand} filter={() => 1}>
           <Flex className={styles.inputContainer} align='center'>
             <Command.Input

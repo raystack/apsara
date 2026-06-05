@@ -130,8 +130,6 @@ type ButtonProps = VariantProps<typeof button> &
     loaderText?: ReactNode;
     leadingIcon?: ReactNode;
     trailingIcon?: ReactNode;
-    maxWidth?: string | number;
-    width?: string | number;
     style?: React.CSSProperties;
   };
 
@@ -145,16 +143,12 @@ export const Button = ({
   loaderText,
   leadingIcon,
   trailingIcon,
-  maxWidth,
-  width,
   style = {},
   children,
   render,
   ...props
 }: ButtonProps) => {
   const isLoaderOnly = loading && !loaderText;
-  const widthStyle = { maxWidth, width };
-  const buttonStyle = { ...widthStyle, ...style };
 
   return (
     <ButtonPrimitive
@@ -163,7 +157,7 @@ export const Button = ({
         isLoaderOnly && getLoaderOnlyClass(size)
       )}
       disabled={disabled}
-      style={buttonStyle}
+      style={style}
       render={render}
       nativeButton={!render}
       focusableWhenDisabled={loading}
