@@ -1,6 +1,7 @@
 .callout {
   position: relative;
   width: 400px;
+  max-width: 100%;
   padding: var(--rs-space-3);
   border-radius: var(--rs-radius-2);
   font-style: normal;
@@ -43,6 +44,8 @@
 
 .message {
   flex-shrink: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .actionsContainer {
@@ -73,6 +76,10 @@
   opacity: 0.7;
 }
 
+.dismiss:focus-visible {
+  outline: 1px solid var(--rs-color-border-accent-emphasis);
+}
+
 /* Type Variants */
 .callout-grey {
   background: var(--rs-color-background-neutral-primary);
@@ -100,7 +107,11 @@
 }
 
 .callout-gradient {
-  background: radial-gradient(circle, oklch(0.5674 0.2831 312.58 / 0.2) 0%, oklch(0.5988 0.2445 29.12 / 0.2) 100%);
+  background: radial-gradient(
+    circle,
+    oklch(0.5674 0.2831 312.58 / 0.2) 0%,
+    oklch(0.5988 0.2445 29.12 / 0.2) 100%
+  );
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -199,7 +210,11 @@
  * untokenized — keep the two in sync if the gradient stops ever change.
  */
 .callout-outline.callout-gradient {
-  background: radial-gradient(circle, oklch(0.5674 0.2831 312.58 / 0.2) 0%, oklch(0.5988 0.2445 29.12 / 0.2) 100%);
+  background: radial-gradient(
+    circle,
+    oklch(0.5674 0.2831 312.58 / 0.2) 0%,
+    oklch(0.5988 0.2445 29.12 / 0.2) 100%
+  );
   border: 0.5px solid oklch(0.5988 0.2445 29.12 / 0.2667);
   color: var(--rs-color-foreground-base-primary);
 }

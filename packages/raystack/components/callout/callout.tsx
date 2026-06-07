@@ -2,7 +2,12 @@
 
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { type ComponentProps, type CSSProperties, type ReactNode } from 'react';
+import {
+  type ComponentProps,
+  type CSSProperties,
+  type ReactNode,
+  useState
+} from 'react';
 
 import styles from './callout.module.css';
 
@@ -23,9 +28,6 @@ const callout = cva(styles.callout, {
     highContrast: {
       true: styles['callout-high-contrast']
     }
-  },
-  defaultVariants: {
-    type: 'grey'
   }
 });
 
@@ -34,7 +36,12 @@ export interface CalloutProps
     VariantProps<typeof callout> {
   children: ReactNode;
   action?: ReactNode;
+  /** Show a dismiss (close) button. */
   dismissible?: boolean;
+  /**
+   * Called when the dismiss button is clicked. When provided, the consumer owns
+   * removal (the callout stays mounted). When omitted, the callout hides itself.
+   */
   onDismiss?: () => void;
   width?: string | number;
   style?: CSSProperties;
@@ -55,27 +62,29 @@ export function Callout({
   icon = <InfoCircledIcon />,
   ...props
 }: CalloutProps) {
+  // Dismissal is controlled when `onDismiss` is given; otherwise fall back to
+  // uncontrolled and hide the callout internally.
+  const [dismissed, setDismissed] = useState(false);
+  const handleDismiss = () => {
+    onDismiss?.();
+    if (!onDismiss) setDismissed(true);
+  };
+  if (dismissed) return null;
+
+  // Resolve up front so `width={0}` is kept (a `width && …` guard would drop it).
+  const resolvedWidth = typeof width === 'number' ? `${width}px` : width;
   const combinedStyle = {
     ...style,
-    ...(width && { width: typeof width === 'number' ? `${width}px` : width })
+    width: resolvedWidth ?? style?.width
   };
 
-  const getRole = () => {
-    switch (type) {
-      case 'alert':
-        return 'alert';
-      case 'success':
-        return 'status';
-      default:
-        return 'status';
-    }
-  };
+  const role = type === 'alert' ? 'alert' : 'status';
 
   return (
     <div
       className={callout({ type, outline, highContrast, className })}
       style={combinedStyle}
-      role={getRole()}
+      role={role}
       aria-live={type === 'alert' ? 'assertive' : 'polite'}
       {...props}
     >
@@ -94,7 +103,7 @@ export function Callout({
           {dismissible && (
             <button
               className={styles.dismiss}
-              onClick={onDismiss}
+              onClick={handleDismiss}
               aria-label='Dismiss message'
               type='button'
             >

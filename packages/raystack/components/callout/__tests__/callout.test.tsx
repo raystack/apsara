@@ -126,6 +126,31 @@ describe('Callout', () => {
       expect(onDismiss).toHaveBeenCalledTimes(1);
     });
 
+    it('stays mounted after dismiss when onDismiss is provided (controlled)', () => {
+      const onDismiss = vi.fn();
+      render(
+        <Callout dismissible onDismiss={onDismiss}>
+          Controlled message
+        </Callout>
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Dismiss message' }));
+
+      // Consumer owns removal — the callout must not hide itself.
+      expect(screen.getByText('Controlled message')).toBeInTheDocument();
+    });
+
+    it('hides itself after dismiss when onDismiss is omitted (uncontrolled)', () => {
+      render(<Callout dismissible>Uncontrolled message</Callout>);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Dismiss message' }));
+
+      expect(
+        screen.queryByText('Uncontrolled message')
+      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    });
+
     it('renders both action and dismissible button', () => {
       const onDismiss = vi.fn();
       render(
@@ -158,6 +183,22 @@ describe('Callout', () => {
 
       const callout = screen.getByRole('status');
       expect(callout).toHaveStyle({ width: '50%' });
+    });
+
+    it('applies width={0} instead of dropping it', () => {
+      render(<Callout width={0}>Zero width message</Callout>);
+
+      const callout = screen.getByRole('status');
+      expect(callout).toHaveStyle({ width: '0px' });
+    });
+
+    it('falls back to style.width when no width prop is given', () => {
+      render(
+        <Callout style={{ width: '200px' }}>Styled width message</Callout>
+      );
+
+      const callout = screen.getByRole('status');
+      expect(callout).toHaveStyle({ width: '200px' });
     });
   });
 
