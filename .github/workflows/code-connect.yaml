@@ -1,8 +1,10 @@
 name: Publish Figma Code Connect
 
 # Code Connect mappings are version-independent — they only change when the
-# template files do. Publish to Figma whenever those files land on main.
+# template files do. Publish to Figma whenever those files land on main,
+# or trigger manually from the Actions tab.
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
