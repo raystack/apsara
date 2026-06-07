@@ -52,7 +52,8 @@
     "figma:update-config": "node scripts/update-figma-config.js",
     "figma:validate-config": "node scripts/validate-figma-config.js",
     "figma:generate-icons": "node scripts/generate-icons-code-connect.js",
-    "figma:publish": "pnpm figma:generate-icons && pnpm figma:update-config && figma connect publish"
+    "figma:publish": "figma connect publish --force --skip-update-check --exit-on-unreadable-files",
+    "figma:sync": "pnpm figma:generate-icons && pnpm figma:update-config && pnpm figma:publish"
   },
   "typesVersions": {
     "*": {
