@@ -210,7 +210,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .button {
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease;
   }
 }
 

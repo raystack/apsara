@@ -1,7 +1,7 @@
-import { ThemeProvider } from '@/components/theme';
 import { NextProvider } from 'fumadocs-core/framework/next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { ThemeProvider } from '@/components/theme';
 import '@/styles.css';
 import '@raystack/apsara/normalize.css';
 import '@raystack/apsara/style.css';
@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </head>
       <body className={styles.body}>
         <NextProvider>
-          <NextThemeProvider>
+          <NextThemeProvider disableTransitionOnChange>
             <ThemeProvider>{children}</ThemeProvider>
           </NextThemeProvider>
         </NextProvider>

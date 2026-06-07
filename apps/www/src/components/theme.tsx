@@ -3,8 +3,8 @@
 import { ThemeProvider as ApsaraThemeProvider } from '@raystack/apsara';
 import { useTheme as useNextTheme } from 'next-themes';
 import {
-  ReactNode,
   createContext,
+  ReactNode,
   useCallback,
   useContext,
   useState
@@ -55,6 +55,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     >
       <ApsaraThemeProvider
         key={key}
+        disableTransitionOnChange
         forcedTheme={theme}
         accentColor={options.accentColor}
         grayColor={options.grayColor}
