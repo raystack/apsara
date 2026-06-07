@@ -1,8 +1,14 @@
 {
   "codeConnect": {
-    "include": ["components/**/*", "figma/**/*"],
+    "include": [
+      "figma/**/*.figma.ts",
+      "figma/**/*.figma.batch.ts",
+      "figma/**/*.figma.batch.json"
+    ],
     "exclude": [],
     "parser": "react",
+    "label": "React",
+    "language": "jsx",
     "documentUrlSubstitutions": {
       "<FIGMA_LINK>": "FIGMA_FILE_URL"
     }
