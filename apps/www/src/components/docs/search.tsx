@@ -1,18 +1,21 @@
 'use client';
 import {
+  ChevronDownIcon,
+  ColorWheelIcon,
+  ComponentInstanceIcon,
+  CornersIcon,
   Cross1Icon,
+  DashboardIcon,
   ExclamationTriangleIcon,
-  MagnifyingGlassIcon
+  MagnifyingGlassIcon,
+  MixIcon,
+  ReaderIcon,
+  RocketIcon,
+  ShadowIcon,
+  SpaceBetweenVerticallyIcon,
+  TextIcon
 } from '@radix-ui/react-icons';
-import {
-  Command,
-  Dialog,
-  EmptyState,
-  Flex,
-  IconButton,
-  Text
-} from '@raystack/apsara';
-import { cx } from 'class-variance-authority';
+import { Command, Dialog, EmptyState, IconButton } from '@raystack/apsara';
 import {
   flattenTree,
   type Item as PageItem,
@@ -33,9 +36,34 @@ type SearchItems = {
   items: Item[];
 };
 
+// Docs pages carry no icon in their data, so map known page slugs to icons
+// (overview + foundations pages get meaningful ones). Everything else —
+// components and any future pages — falls back to a generic icon so every
+// top-level row stays icon-aligned.
+const PAGE_ICONS: Record<string, typeof MagnifyingGlassIcon> = {
+  docs: ReaderIcon,
+  'getting-started': RocketIcon,
+  styling: MixIcon,
+  overview: DashboardIcon,
+  colors: ColorWheelIcon,
+  typography: TextIcon,
+  spacing: SpaceBetweenVerticallyIcon,
+  radius: CornersIcon,
+  effects: ShadowIcon
+};
+const FallbackPageIcon = ComponentInstanceIcon;
+
+const getPageIcon = (url: string): typeof MagnifyingGlassIcon =>
+  PAGE_ICONS[getFileFromUrl(url)] ?? FallbackPageIcon;
+
 export default function DocsSearch({ pageTree }: { pageTree: Root }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  // Per-result manual expand/collapse overrides; reset whenever the query
+  // changes so the auto-open rule re-applies for the fresh result set.
+  const [openOverrides, setOpenOverrides] = useState<Record<string, boolean>>(
+    {}
+  );
 
   const { search, setSearch, query } = useDocsSearch({
     type: 'fetch'
@@ -58,16 +86,18 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
     const flattened = flattenTree(pageTree.children);
     if (!flattened.length) return [];
 
-    const items = flattened
-      .slice(0, 10)
-      .reduce<Record<string, Item[]>>((acc, item) => {
-        const folder = getFolderFromUrl(item.url);
-        if (!acc[folder]) {
-          acc[folder] = [];
-        }
-        acc[folder].push({ ...item, id: item.url });
-        return acc;
-      }, {});
+    // Default view shows the overview + foundations (theme) pages grouped by
+    // folder. Components are intentionally excluded — there are dozens of them,
+    // so they only surface once the user actually searches.
+    const items = flattened.reduce<Record<string, Item[]>>((acc, item) => {
+      const folder = getFolderFromUrl(item.url);
+      if (folder === 'components') return acc;
+      if (!acc[folder]) {
+        acc[folder] = [];
+      }
+      acc[folder].push({ ...item, id: item.url });
+      return acc;
+    }, {});
     return Object.entries(items).map(([heading, items]) => ({
       heading,
       items
@@ -113,7 +143,6 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
       },
       {}
     );
-    console.log('grouped', grouped);
 
     return Object.entries(grouped).map(([heading, items]) => ({
       heading,
@@ -122,6 +151,36 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
   }, [results]);
 
   const items = !isSearching ? defaultItems : searchResults;
+
+  // The `items` prop opts the Command out of its built-in per-item filtering
+  // and group-unwrapping: results are already filtered by fumadocs, and the
+  // grouped layout must stay intact while searching. An empty array is still
+  // truthy, so `hasItems` stays true even when there are no results.
+  const itemValues = useMemo(
+    () =>
+      items.flatMap(section =>
+        section.items.flatMap(item => [
+          item.id,
+          ...(item.items?.map(sub => sub.id) ?? [])
+        ])
+      ),
+    [items]
+  );
+
+  // A result's sub-details collapse behaves like an accordion: open it only
+  // when the match came from a sub-detail rather than the page title (e.g.
+  // "Toolbar" surfacing for "button" via its Button section). When the title
+  // itself matches, the page is the hit, so keep its sub-details collapsed.
+  const queryLower = trimmedQuery.toLowerCase();
+  const titleMatches = (item: Item) =>
+    typeof item.name === 'string' &&
+    item.name.toLowerCase().includes(queryLower);
+  const autoOpen = (item: Item) =>
+    isSearching && (item.items?.length ?? 0) > 0 && !titleMatches(item);
+  const isOpen = (item: Item) =>
+    item.id in openOverrides ? openOverrides[item.id] : autoOpen(item);
+  const toggleOpen = (item: Item) =>
+    setOpenOverrides(prev => ({ ...prev, [item.id]: !isOpen(item) }));
 
   const handleSelect = useCallback(
     (url: string) => {
@@ -137,15 +196,25 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
       <Dialog.Trigger render={<IconButton size={3} aria-label='Search docs' />}>
         <MagnifyingGlassIcon />
       </Dialog.Trigger>
-      <Dialog.Content width={512} className={styles.searchContainer}>
-        <Command className={styles.searchCommand} filter={() => 1}>
-          <Flex className={styles.inputContainer} align='center'>
+      <Dialog.Content
+        width={512}
+        showCloseButton={false}
+        className={styles.searchContainer}
+      >
+        <Command
+          items={itemValues}
+          mode='none'
+          value={search}
+          onValueChange={value => {
+            setSearch(value);
+            setOpenOverrides({});
+          }}
+        >
+          <div className={styles.inputContainer}>
             <Command.Input
+              leadingIcon={<MagnifyingGlassIcon />}
               placeholder='Search docs'
-              value={search}
-              onValueChange={setSearch}
               autoComplete='off'
-              className={styles.input}
             />
             {search.length > 0 && (
               <IconButton
@@ -157,9 +226,9 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
                 <Cross1Icon />
               </IconButton>
             )}
-          </Flex>
+          </div>
           <Command.Content className={styles.searchList}>
-            <Command.Empty>
+            <Command.Empty className={styles.searchEmpty}>
               <EmptyState
                 variant='empty1'
                 heading='No result found'
@@ -168,51 +237,71 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
               />
             </Command.Empty>
             {items.map((section, index) => (
-              <div key={section.heading}>
-                <Command.Group
-                  heading={section.heading}
-                  className={styles.searchGroup}
-                >
-                  {section.items.map(item => (
-                    <Fragment key={item.url}>
-                      <Command.Item
-                        key={item.id}
-                        value={item.id}
-                        onSelect={() => handleSelect(item.url)}
-                        className={styles.searchItem}
-                      >
-                        <Text size='small' variant='primary' lineClamp={1}>
+              <Fragment key={section.heading}>
+                <Command.Group>
+                  <Command.Label className={styles.searchGroupLabel}>
+                    {section.heading}
+                  </Command.Label>
+                  {section.items.map(item => {
+                    const ItemIcon = getPageIcon(item.url);
+                    const hasSubItems = (item.items?.length ?? 0) > 0;
+                    const expanded = isOpen(item);
+                    return (
+                      <Fragment key={item.id}>
+                        <Command.Item
+                          value={item.id}
+                          onClick={() => handleSelect(item.url)}
+                          leadingIcon={<ItemIcon />}
+                          trailingIcon={
+                            hasSubItems ? (
+                              <button
+                                type='button'
+                                aria-label={
+                                  expanded
+                                    ? 'Collapse section'
+                                    : 'Expand section'
+                                }
+                                aria-expanded={expanded}
+                                className={styles.searchAccordionToggle}
+                                onPointerDown={e => e.stopPropagation()}
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  toggleOpen(item);
+                                }}
+                              >
+                                <ChevronDownIcon
+                                  className={
+                                    expanded
+                                      ? styles.searchChevronOpen
+                                      : styles.searchChevron
+                                  }
+                                />
+                              </button>
+                            ) : undefined
+                          }
+                          className={styles.searchItem}
+                        >
                           {item.name}
-                        </Text>
-                      </Command.Item>
-                      {item.items?.length && item.items.length > 0 && (
-                        <div className={styles.searchSubItemsContainer}>
-                          {item.items?.map(subItem => (
-                            <Command.Item
-                              key={subItem.id}
-                              value={subItem.id}
-                              onSelect={() => handleSelect(subItem.url)}
-                              className={cx(
-                                styles.searchItem,
-                                styles.searchSubItem
-                              )}
-                            >
-                              <Text
-                                size='small'
-                                variant='primary'
-                                lineClamp={1}
+                        </Command.Item>
+                        {hasSubItems && expanded ? (
+                          <div className={styles.searchSubItemsContainer}>
+                            {item.items?.map(subItem => (
+                              <Command.Item
+                                key={subItem.id}
+                                value={subItem.id}
+                                onClick={() => handleSelect(subItem.url)}
                               >
                                 {subItem.name}
-                              </Text>
-                            </Command.Item>
-                          ))}
-                        </div>
-                      )}
-                    </Fragment>
-                  ))}
+                              </Command.Item>
+                            ))}
+                          </div>
+                        ) : null}
+                      </Fragment>
+                    );
+                  })}
                 </Command.Group>
-                {index < defaultItems.length - 1 && <Command.Separator />}
-              </div>
+                {index < items.length - 1 && <Command.Separator />}
+              </Fragment>
             ))}
           </Command.Content>
         </Command>
