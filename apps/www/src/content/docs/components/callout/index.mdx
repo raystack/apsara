@@ -54,7 +54,9 @@ The Callout component supports high contrast mode for better visibility:
 
 ### Dismissible
 
-The Callout component can be made dismissible:
+The Callout component can be made dismissible. When `onDismiss` is provided, the
+consumer controls removal (the callout stays mounted); when it is omitted, the
+callout hides itself.
 
 <Demo data={dismissibleDemo} />
 
@@ -77,3 +79,4 @@ The Callout component includes appropriate ARIA attributes for accessibility:
 - Uses semantic HTML elements for proper structure
 - Dismiss button includes `aria-label` for screen readers
 - Interactive elements are keyboard accessible
+- Dismiss button shows a visible focus ring on keyboard focus
