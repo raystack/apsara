@@ -28,10 +28,6 @@ export const playground = {
       type: 'number',
       defaultValue: 3,
       min: 1
-    },
-    width: {
-      type: 'text',
-      defaultValue: '400px'
     }
   },
   getCode
@@ -110,12 +106,4 @@ export const rowsDemo = {
   <TextArea placeholder="Default (3 rows)" />
   <TextArea placeholder="6 rows" rows={6} />
 </Flex>`
-};
-
-export const widthDemo = {
-  type: 'code',
-  code: `<TextArea
-  width="300px"
-  placeholder="This textarea is 300px wide"
-/>`
 };

@@ -33,18 +33,6 @@ describe('List', () => {
       expect(list).toHaveClass(styles.list);
     });
 
-    it('sets maxWidth style', () => {
-      render(<List maxWidth='500px'>Content</List>);
-      const list = screen.getByRole('list');
-      expect(list).toHaveStyle({ maxWidth: '500px' });
-    });
-
-    it('sets maxWidth as number', () => {
-      render(<List maxWidth={400}>Content</List>);
-      const list = screen.getByRole('list');
-      expect(list).toHaveStyle({ maxWidth: '400px' });
-    });
-
     it('does not set a generic default aria-label', () => {
       render(<List>Content</List>);
       const list = screen.getByRole('list');
@@ -149,18 +137,6 @@ describe('List', () => {
       );
       const label = container.querySelector(`.${styles.label}`);
       expect(label).toBeInTheDocument();
-    });
-
-    it('sets minWidth style', () => {
-      render(
-        <List>
-          <List.Item>
-            <List.Label minWidth='100px'>Label</List.Label>
-          </List.Item>
-        </List>
-      );
-      const label = screen.getByText('Label');
-      expect(label).toHaveStyle({ minWidth: '100px' });
     });
   });
 
@@ -299,7 +275,7 @@ describe('List', () => {
       render(
         <List>
           <List.Item>
-            <List.Label minWidth='100px'>Status:</List.Label>
+            <List.Label>Status:</List.Label>
             <List.Value>
               <span style={{ color: 'green' }}>Active</span>
             </List.Value>
@@ -307,8 +283,6 @@ describe('List', () => {
         </List>
       );
 
-      const label = screen.getByText('Status:');
-      expect(label).toHaveStyle({ minWidth: '100px' });
       const value = screen.getByText('Active');
       expect(value).toHaveStyle({ color: 'rgb(0, 128, 0)' });
     });

@@ -23,12 +23,16 @@ const callout = cva(styles.callout, {
       attention: styles['callout-attention'],
       normal: styles['callout-normal']
     },
-    outline: {
-      true: styles['callout-outline']
+    variant: {
+      solid: '',
+      outline: styles['callout-outline']
     },
     highContrast: {
       true: styles['callout-high-contrast']
     }
+  },
+  defaultVariants: {
+    variant: 'solid'
   }
 });
 
@@ -44,7 +48,6 @@ export interface CalloutProps
    * removal (the callout stays mounted). When omitted, the callout hides itself.
    */
   onDismiss?: () => void;
-  width?: string | number;
   style?: CSSProperties;
   icon?: ReactNode;
 }
@@ -52,14 +55,12 @@ export interface CalloutProps
 export function Callout({
   className,
   type = 'grey',
-  outline,
+  variant,
   highContrast,
   children,
   action,
   dismissible,
   onDismiss,
-  width,
-  style,
   icon = <InfoCircledIcon />,
   ...props
 }: CalloutProps) {
@@ -72,19 +73,11 @@ export function Callout({
   };
   if (dismissed) return null;
 
-  // Resolve up front so `width={0}` is kept (a `width && …` guard would drop it).
-  const resolvedWidth = typeof width === 'number' ? `${width}px` : width;
-  const combinedStyle = {
-    ...style,
-    width: resolvedWidth ?? style?.width
-  };
-
   const role = type === 'alert' ? 'alert' : 'status';
 
   return (
     <div
-      className={callout({ type, outline, highContrast, className })}
-      style={combinedStyle}
+      className={callout({ type, variant, highContrast, className })}
       role={role}
       aria-live={type === 'alert' ? 'assertive' : 'polite'}
       {...props}

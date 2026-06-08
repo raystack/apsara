@@ -13,7 +13,10 @@ export function TextAreaExamples() {
         <Field label='Error TextArea' error='This field has an error'>
           <TextArea placeholder='Enter your text here' />
         </Field>
-        <TextArea placeholder='Without Field wrapper' width='300px' />
+        <TextArea
+          placeholder='Without Field wrapper'
+          style={{ width: '300px' }}
+        />
       </Flex>
     </PlaygroundLayout>
   );

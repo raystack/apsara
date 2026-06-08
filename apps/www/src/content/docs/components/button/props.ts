@@ -37,12 +37,6 @@ export type ButtonProps = {
   /** Icon element to display after button text */
   trailingIcon?: React.ReactNode;
 
-  /** Custom maximum width for the button */
-  maxWidth?: string | number;
-
-  /** Custom width for the button */
-  width?: string | number;
-
   /**
    * Whether the component renders a native <button> element when replacing it via the render prop. Set to false if the rendered element is not a button (e.g. <div>).
    * Defaults to false when render prop is provided.

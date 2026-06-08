@@ -8,7 +8,7 @@ export const getCode = (props: { title?: string; description?: string }) => {
         Basic Dialog
       </Dialog.Trigger>
       <Dialog.Content
-        width={300}
+        style={{ width: 300 }}
         ariaLabel="Basic Dialog"
         ariaDescription="A simple dialog example"
       >
@@ -51,7 +51,7 @@ export const controlledDemo = {
         <Dialog.Trigger render={<Button />}>
           Controlled Dialog
         </Dialog.Trigger>
-        <Dialog.Content width={600}>
+        <Dialog.Content style={{ width: 600 }}>
           <Dialog.Body>
             <Dialog.Title>Controlled State</Dialog.Title>
             <Dialog.Description>
@@ -72,7 +72,7 @@ export const customDemo = {
       Styled Dialog
     </Dialog.Trigger>
     <Dialog.Content
-      width="400px"
+      style={{ width: '400px' }}
       overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'oklch(0 0 0 / 0.5)' } }}
     >
       <Dialog.Body>
@@ -93,7 +93,7 @@ export const onlyHeaderDemo = {
       Only Header and Body
     </Dialog.Trigger>
     <Dialog.Content
-      width="400px"
+      style={{ width: '400px' }}
       overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'oklch(0 0 0 / 0.5)' } }}
     >
       <Dialog.Header>
@@ -116,7 +116,7 @@ export const onlyFooterDemo = {
       Only Footer and Body
     </Dialog.Trigger>
     <Dialog.Content
-      width="400px"
+      style={{ width: '400px' }}
       overlay={{ blur: true, className: 'custom-overlay', style: { backgroundColor: 'oklch(0 0 0 / 0.5)' } }}
     >
       <Dialog.Body>
@@ -146,7 +146,7 @@ export const nestedDemo = {
           <Dialog.Trigger render={<Button />}>
             Open Parent Dialog
           </Dialog.Trigger>
-          <Dialog.Content width={400}>
+          <Dialog.Content style={{ width: 400 }}>
             <Dialog.Header>
               <Dialog.Title>Parent Dialog</Dialog.Title>
             </Dialog.Header>
@@ -158,7 +158,7 @@ export const nestedDemo = {
                 <Dialog.Trigger render={<Button />}>
                   Open Nested Dialog
                 </Dialog.Trigger>
-                <Dialog.Content width={400}>
+                <Dialog.Content style={{ width: 400 }}>
                   <Dialog.Header>
                     <Dialog.Title>Nested Dialog</Dialog.Title>
                   </Dialog.Header>

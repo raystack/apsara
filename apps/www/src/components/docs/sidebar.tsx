@@ -106,7 +106,12 @@ export default function DocsSidebar({ pageTree, className }: Props) {
   return (
     <Sidebar open collapsible={false} className={cx(className, styles.sidebar)}>
       <Sidebar.Header className={styles.header}>
-        <Flex align='center' gap={3} justify='between' width='full'>
+        <Flex
+          align='center'
+          gap={3}
+          justify='between'
+          style={{ width: '100%' }}
+        >
           <Link href='/'>
             <Logo onlyWordmark />
           </Link>

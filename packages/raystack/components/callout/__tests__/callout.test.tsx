@@ -75,7 +75,7 @@ describe('Callout', () => {
     });
 
     it('renders outline variant', () => {
-      render(<Callout outline>Test message</Callout>);
+      render(<Callout variant='outline'>Test message</Callout>);
 
       const callout = screen.getByRole('status');
       expect(callout).toHaveClass(styles['callout-outline']);
@@ -171,28 +171,7 @@ describe('Callout', () => {
   });
 
   describe('Styling and Layout', () => {
-    it('applies custom width as number', () => {
-      render(<Callout width={300}>Custom width message</Callout>);
-
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveStyle({ width: '300px' });
-    });
-
-    it('applies custom width as string', () => {
-      render(<Callout width='50%'>Custom width message</Callout>);
-
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveStyle({ width: '50%' });
-    });
-
-    it('applies width={0} instead of dropping it', () => {
-      render(<Callout width={0}>Zero width message</Callout>);
-
-      const callout = screen.getByRole('status');
-      expect(callout).toHaveStyle({ width: '0px' });
-    });
-
-    it('falls back to style.width when no width prop is given', () => {
+    it('forwards style to the callout', () => {
       render(
         <Callout style={{ width: '200px' }}>Styled width message</Callout>
       );

@@ -20,9 +20,6 @@ export interface InputProps {
   /** Text or symbol to show after input value. */
   suffix?: string;
 
-  /** Custom width for the input. */
-  width?: string | number;
-
   /**
    * Array of chip objects with label and optional onRemove function.
    */

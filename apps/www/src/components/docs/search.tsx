@@ -197,7 +197,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
         <MagnifyingGlassIcon />
       </Dialog.Trigger>
       <Dialog.Content
-        width={512}
+        style={{ width: 512 }}
         showCloseButton={false}
         className={styles.searchContainer}
       >

@@ -34,9 +34,10 @@ export const playground = {
     icon: {
       type: 'icon'
     },
-    outline: {
-      type: 'checkbox',
-      defaultValue: false
+    variant: {
+      type: 'select',
+      options: ['solid', 'outline'],
+      defaultValue: 'solid'
     },
     highContrast: {
       type: 'checkbox',
@@ -45,9 +46,6 @@ export const playground = {
     dismissible: {
       type: 'checkbox',
       defaultValue: false
-    },
-    width: {
-      type: 'text'
     }
   },
   getCode
@@ -71,7 +69,7 @@ export const outlineDemo = {
   code: `
   <Flex gap={5} direction="column">
     <Callout type="success">Without Outline Callout</Callout>
-    <Callout type="success" outline>With Outline Callout</Callout>
+    <Callout type="success" variant="outline">With Outline Callout</Callout>
   </Flex>`
 };
 
@@ -98,9 +96,4 @@ export const actionDemo = {
   <Callout type="success" action={<Button>Action</Button>}>
     A short message to attract user's attention
   </Callout>`
-};
-
-export const widthDemo = {
-  type: 'code',
-  code: `<Callout type="success" width={500}>A short message to attract user's attention</Callout>`
 };

@@ -16,6 +16,7 @@ This guide covers all breaking changes when upgrading from the last stable Radix
     - [CSS Variables](#css-variables)
       - [Overlay Tokens](#overlay-tokens)
     - [Form Field Pattern](#form-field-pattern)
+    - [One-off styling props removed](#one-off-styling-props-removed)
   - [Component Migration](#component-migration)
     - [Accordion](#accordion)
       - [New Props](#new-props)
@@ -254,6 +255,49 @@ Labels, descriptions, errors, and optional indicators have been extracted from i
 The `Field` component also provides context so that child controls (Input, TextArea, Select, Checkbox, Switch, Radio, NumberField, Combobox) automatically inherit `required` state without passing it explicitly.
 
 See [Input (formerly InputField)](#input-formerly-inputfield) and [TextArea](#textarea) for full migration details.
+
+### One-off styling props removed
+
+Several components exposed bespoke layout props (`width`, `maxWidth`, `minWidth`) and a boolean `outline` toggle. These are removed — handle layout via standard `style` / `className` (or a sized wrapper) instead. Each component forwards those to the underlying element. Defaults that were previously applied inline (e.g. `width: 100%`) are now provided by the component's own CSS, so **default rendering is unchanged** — only explicit prop usage needs migrating.
+
+> **Prefer `className` over inline `style`.** Where the element already has (or can reuse) a CSS class, apply the layout there via `className` rather than an inline `style` object — it keeps styling in your stylesheet and reuses existing rules. The `style={{ … }}` form shown below is the quickest 1:1 swap; reach for it only for genuinely one-off or dynamic values.
+
+| Component | Removed prop | Migrate to |
+|-----------|--------------|------------|
+| `Callout` | `width` | `style={{ width }}` |
+| `Callout` | `outline` (boolean) | `variant="outline"` (see below) |
+| `Button` | `width`, `maxWidth` | `style={{ width, maxWidth }}` |
+| `Input` | `width` | `classNames={{ container }}` or a sized wrapper (defaults to full width) |
+| `TextArea` | `width` | `style={{ width }}` (defaults to full width) |
+| `List` | `maxWidth` | `style={{ maxWidth }}` |
+| `List.Label` | `minWidth` | `style={{ minWidth }}` |
+| `Flex` | `width="full"` | `style={{ width: '100%' }}` |
+| `Dialog.Content` | `width` | `style={{ width }}` (default max-width unchanged) |
+| `AlertDialog.Content` | `width` | `style={{ width }}` |
+
+```tsx
+// Before
+<Button width="100%" />
+<Flex width="full" />
+<Dialog.Content width={500}>…</Dialog.Content>
+<List maxWidth="600px"><List.Label minWidth="88px">…</List.Label></List>
+
+// After
+<Button style={{ width: '100%' }} />
+<Flex style={{ width: '100%' }} />
+<Dialog.Content style={{ width: 500 }}>…</Dialog.Content>
+<List style={{ maxWidth: '600px' }}><List.Label style={{ minWidth: '88px' }}>…</List.Label></List>
+```
+
+**Callout `outline` → `variant`.** The boolean `outline` prop becomes a `variant` prop (`'solid' | 'outline'`, default `'solid'`). It stays orthogonal to `type`, so the combination still works:
+
+```tsx
+// Before
+<Callout type="success" outline>Saved</Callout>
+
+// After
+<Callout type="success" variant="outline">Saved</Callout>
+```
 
 ---
 
@@ -935,7 +979,7 @@ import { Command, Button } from '@raystack/apsara';
 ### Dialog
 
 1. **`DialogContent` props rewritten:**
-   - Removed: `ariaLabel`, `ariaDescription`, `overlayBlur`, `overlayClassName`, `overlayStyle`, `scrollableOverlay`
+   - Removed: `ariaLabel`, `ariaDescription`, `overlayBlur`, `overlayClassName`, `overlayStyle`, `scrollableOverlay`, `width` (use `style={{ width }}`)
    - New: `showCloseButton` (default `true`), `overlay` (object with `blur?: boolean`, `className`, `style`), `showNestedAnimation`
 
 2. **CloseButton is now auto-rendered** inside Content. Remove manual `<Dialog.CloseButton />` from headers. Pass `showCloseButton={false}` to suppress.
@@ -975,7 +1019,7 @@ import { Command, Button } from '@raystack/apsara';
 <Dialog open={open} onOpenChange={setOpen}>
   <Dialog.Trigger render={<Button />}>Open Settings</Dialog.Trigger>
   <Dialog.Content
-    width="500px"
+    style={{ width: 500 }}
     aria-label="Settings"
     overlay={{
       blur: true,
@@ -1364,7 +1408,9 @@ The `render` prop also supports render functions for full control:
 </Field>
 ```
 
-Unchanged props: `size`, `variant`, `disabled`, `leadingIcon`, `trailingIcon`, `prefix`, `suffix`, `width`, `chips`, `maxChipsVisible`, `containerRef`, and all native `<input>` attributes.
+Unchanged props: `size`, `variant`, `disabled`, `leadingIcon`, `trailingIcon`, `prefix`, `suffix`, `chips`, `maxChipsVisible`, `containerRef`, and all native `<input>` attributes.
+
+> **Removed:** `width` — use `classNames={{ container }}` or a sized wrapper. See [One-off styling props removed](#one-off-styling-props-removed).
 
 **Related API changes:**
 
@@ -2075,11 +2121,13 @@ If you relied on the previous heavier weights, bold-looking text now renders as 
 
 // After
 <Field label="Bio" description="Tell us about yourself" error={hasError ? "This field is required" : undefined} required={false}>
-  <TextArea placeholder="Write something..." width="400px" />
+  <TextArea placeholder="Write something..." style={{ width: 400 }} />
 </Field>
 ```
 
-Unchanged props: `disabled`, `placeholder`, `width`, `value`, `onChange`, `rows`, and all native `<textarea>` attributes.
+Unchanged props: `disabled`, `placeholder`, `value`, `onChange`, `rows`, and all native `<textarea>` attributes.
+
+> **Removed:** `width` — use `style={{ width }}`. The default `100%` width is now provided by CSS. See [One-off styling props removed](#one-off-styling-props-removed).
 
 #### New Features
 

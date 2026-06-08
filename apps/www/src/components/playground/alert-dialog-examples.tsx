@@ -11,7 +11,7 @@ export function AlertDialogExamples() {
           <AlertDialog.Trigger render={<Button color='danger' />}>
             Delete Item
           </AlertDialog.Trigger>
-          <AlertDialog.Content width='400px'>
+          <AlertDialog.Content style={{ width: '400px' }}>
             <AlertDialog.Header>
               <AlertDialog.Title>Are you sure?</AlertDialog.Title>
             </AlertDialog.Header>
@@ -37,7 +37,7 @@ export function AlertDialogExamples() {
           <AlertDialog.Trigger render={<Button variant='outline' />}>
             Discard Changes
           </AlertDialog.Trigger>
-          <AlertDialog.Content width={400}>
+          <AlertDialog.Content style={{ width: 400 }}>
             <AlertDialog.Body>
               <AlertDialog.Title>Unsaved Changes</AlertDialog.Title>
               <AlertDialog.Description>

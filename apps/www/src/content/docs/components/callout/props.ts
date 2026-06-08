@@ -13,10 +13,10 @@ export interface CalloutProps {
     | 'normal';
 
   /**
-   * Whether to show an outline border
-   * @defaultValue false
+   * Visual style variant.
+   * @defaultValue "solid"
    */
-  outline?: boolean;
+  variant?: 'solid' | 'outline';
 
   /**
    * Whether to use high contrast colors
@@ -47,12 +47,6 @@ export interface CalloutProps {
 
   /** Text content of the callout */
   children?: React.ReactNode;
-
-  /**
-   * Custom width for the callout
-   * @defaultValue 400
-   */
-  width?: string | number;
 
   /** Additional CSS class names */
   className?: string;

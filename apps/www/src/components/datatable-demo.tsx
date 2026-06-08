@@ -110,7 +110,7 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
 const DataTableDemo = () => {
   const data = useMemo(() => generateData(100), []);
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataTable
           data={data}
@@ -130,7 +130,7 @@ const DataTableVirtualizedDemo = () => {
   const data = useMemo(() => generateData(1000), []);
 
   return (
-    <Flex direction='column' gap={4} width='full'>
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
       <div style={{ height: 400 }}>
         <DataTable
           data={data}
@@ -153,8 +153,7 @@ const DataTableSearchDemo = () => {
     <Flex
       direction='column'
       gap={4}
-      width='full'
-      style={{ height: 400, padding: '20px' }}
+      style={{ width: '100%', height: 400, padding: '20px' }}
     >
       <DataTable
         data={data}

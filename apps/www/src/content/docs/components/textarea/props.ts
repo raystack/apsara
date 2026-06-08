@@ -18,12 +18,6 @@ export interface TextAreaProps {
   placeholder?: string;
 
   /**
-   * Custom width for the textarea.
-   * @defaultValue "100%"
-   */
-  width?: string | number;
-
-  /**
    * Number of visible text rows.
    * @defaultValue 3
    */

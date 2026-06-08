@@ -13,7 +13,10 @@ figma.connect(Callout, '<FIGMA_LINK>?node-id=661-1063', {
       Normal: 'normal',
       Grey: 'grey'
     }),
-    outline: figma.boolean('Outline'),
+    variant: figma.boolean('Outline', {
+      true: 'outline',
+      false: undefined
+    }),
     highContrast: figma.boolean('High Contrast'),
     structure: figma.nestedProps('.callout_structure', {
       children: figma.textContent(

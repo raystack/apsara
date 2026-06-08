@@ -120,20 +120,6 @@ describe('Flex', () => {
     });
   });
 
-  describe('Width', () => {
-    it('renders full width correctly', () => {
-      const { container } = render(<Flex width='full'>Content</Flex>);
-      const flex = container.firstChild as HTMLElement;
-      expect(flex).toHaveClass(styles['width-full']);
-    });
-
-    it('renders without width class when not specified', () => {
-      const { container } = render(<Flex>Content</Flex>);
-      const flex = container.firstChild as HTMLElement;
-      expect(flex).not.toHaveClass(styles['width-full']);
-    });
-  });
-
   describe('HTML Attributes', () => {
     it('supports data attributes', () => {
       const { container } = render(

@@ -34,8 +34,13 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           pageTree={docs.pageTree}
           source={page.data.source}
         />
-        <Flex width='full' align='start'>
-          <Flex direction='column' align='center' justify='center' width='full'>
+        <Flex style={{ width: '100%' }} align='start'>
+          <Flex
+            direction='column'
+            align='center'
+            justify='center'
+            style={{ width: '100%' }}
+          >
             <Flex
               direction='column'
               className={styles.content}
