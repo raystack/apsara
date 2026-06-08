@@ -104,6 +104,7 @@ export function Callout({
           {dismissible && (
             <IconButton
               size={1}
+              className={styles.dismiss}
               onClick={handleDismiss}
               aria-label='Dismiss message'
             >
