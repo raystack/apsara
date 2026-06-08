@@ -65,7 +65,6 @@ export function Input({
         classNames?.container
       )}
       data-disabled={disabled || undefined}
-      style={{ width: '100%' }}
       ref={containerRef}
     >
       {leadingIcon && (
