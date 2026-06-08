@@ -501,7 +501,7 @@ const Page = () => {
         </Sidebar.Header>
         <Sidebar.Main>
           <Sidebar.Item
-            href='/examples/dataview'
+            href='/examples/dataview-beta'
             leadingIcon={<SidebarIcon />}
             active
           >
@@ -565,7 +565,7 @@ const Page = () => {
               name='list'
               variant='list'
               columns={listColumns}
-              rowHeight={72}
+              estimatedRowHeight={72}
               showDividers
               showGroupHeaders
             />

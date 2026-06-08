@@ -71,7 +71,12 @@
   letter-spacing: var(--rs-letter-spacing-small);
   user-select: none;
   -webkit-user-select: none;
-  transition: all 0.2s ease;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trigger {
+    transition: all 0.2s ease;
+  }
 }
 
 .trigger-outline {

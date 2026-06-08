@@ -1,0 +1,160 @@
+'use client';
+
+import { cx } from 'class-variance-authority';
+import { isValidElement, ReactNode, useMemo } from 'react';
+import { FilterIcon } from '~/icons';
+import { FilterOperatorTypes, FilterType } from '~/types/filters';
+import { Button } from '../../button';
+import { FilterChip } from '../../filter-chip';
+import { Flex } from '../../flex';
+import { IconButton } from '../../icon-button';
+import { Menu } from '../../menu';
+import styles from '../data-view.module.css';
+import { DataViewField } from '../data-view.types';
+import { useDataView } from '../hooks/useDataView';
+import { useFilters } from '../hooks/useFilters';
+
+type Trigger<TData> =
+  | ReactNode
+  | ((args: {
+      availableFilters: DataViewField<TData>[];
+      appliedFilters: Set<string>;
+    }) => ReactNode);
+
+interface AddFilterProps<TData> {
+  fieldList: DataViewField<TData>[];
+  appliedFiltersSet: Set<string>;
+  onAddFilter: (field: DataViewField<TData>) => void;
+  children?: Trigger<TData>;
+}
+
+function AddFilter<TData>({
+  fieldList = [],
+  appliedFiltersSet,
+  onAddFilter,
+  children
+}: AddFilterProps<TData>) {
+  const availableFilters = fieldList?.filter(
+    f => !appliedFiltersSet.has(f.accessorKey)
+  );
+
+  const trigger = useMemo(() => {
+    if (typeof children === 'function')
+      return children({ availableFilters, appliedFilters: appliedFiltersSet });
+    if (children) return children;
+    if (appliedFiltersSet.size > 0) {
+      return (
+        <IconButton size={4}>
+          <FilterIcon />
+        </IconButton>
+      );
+    }
+    return (
+      <Button
+        variant='text'
+        size='small'
+        leadingIcon={<FilterIcon />}
+        color='neutral'
+      >
+        Filter
+      </Button>
+    );
+  }, [children, appliedFiltersSet, availableFilters]);
+
+  return availableFilters.length > 0 ? (
+    <Menu>
+      <Menu.Trigger
+        render={isValidElement(trigger) ? trigger : <button>{trigger}</button>}
+      />
+      <Menu.Content>
+        {availableFilters?.map(field => (
+          <Menu.Item key={field.accessorKey} onClick={() => onAddFilter(field)}>
+            {field.label}
+          </Menu.Item>
+        ))}
+      </Menu.Content>
+    </Menu>
+  ) : null;
+}
+
+export interface DataViewFiltersProps<TData> {
+  classNames?: {
+    filterChips?: string;
+    addFilter?: string;
+  };
+  className?: string;
+  trigger?: Trigger<TData>;
+}
+
+export function Filters<TData>({
+  classNames,
+  className,
+  trigger
+}: DataViewFiltersProps<TData>) {
+  const { fields, tableQuery } = useDataView<TData>();
+
+  const {
+    onAddFilter,
+    handleRemoveFilter,
+    handleFilterValueChange,
+    handleFilterOperationChange
+  } = useFilters<TData>();
+
+  const filterableFields = fields?.filter(f => f.filterable) ?? [];
+
+  const appliedFiltersSet = new Set(
+    tableQuery?.filters?.map(filter => filter.name)
+  );
+
+  const appliedFilters =
+    tableQuery?.filters?.map(filter => {
+      const field = fields?.find(f => f.accessorKey === filter.name);
+      return {
+        filterType: field?.filterType || FilterType.string,
+        label: field?.label || '',
+        options: field?.filterOptions || [],
+        selectProps: field?.filterProps?.select,
+        ...filter
+      };
+    }) || [];
+
+  const hasAppliedFilters = appliedFilters.length > 0;
+
+  return (
+    <Flex
+      gap={3}
+      align='center'
+      className={cx(styles.filterContainer, className)}
+      data-has-filter-chips={hasAppliedFilters || undefined}
+    >
+      {appliedFilters.map(filter => (
+        <FilterChip
+          key={filter.name}
+          label={filter.label}
+          value={filter.value}
+          onRemove={() => handleRemoveFilter(filter.name)}
+          onValueChange={value => handleFilterValueChange(filter.name, value)}
+          onOperationChange={operator =>
+            handleFilterOperationChange(
+              filter.name,
+              operator as FilterOperatorTypes
+            )
+          }
+          columnType={filter.filterType}
+          options={filter.options}
+          selectProps={filter.selectProps}
+          className={classNames?.filterChips}
+        />
+      ))}
+      <AddFilter
+        fieldList={filterableFields}
+        appliedFiltersSet={appliedFiltersSet}
+        onAddFilter={onAddFilter}
+      >
+        {trigger}
+      </AddFilter>
+    </Flex>
+  );
+}
+
+Filters.displayName = 'DataView.Filters';
