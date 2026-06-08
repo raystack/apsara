@@ -1,14 +1,11 @@
 'use client';
 
-import { Cross2Icon } from '@radix-ui/react-icons';
 import type { Header, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
 import { CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { Badge } from '../../badge';
-import { Button } from '../../button';
-import { Flex } from '../../flex';
 import { Skeleton } from '../../skeleton';
 import styles from '../data-view.module.css';
 import {
@@ -22,11 +19,7 @@ import { useElementHeight } from '../hooks/useElementHeight';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { useStickyGroupAnchor } from '../hooks/useStickyGroupAnchor';
 import { useVirtualRows } from '../hooks/useVirtualRows';
-import {
-  countLeafRows,
-  getClientHiddenLeafRowCount,
-  hasActiveTableFiltering
-} from '../utils';
+import { FilterSummary } from './clear-filters';
 
 function formatGridWidth(width: string | number | undefined) {
   if (width === undefined) return '1fr';
@@ -60,8 +53,6 @@ export function DataViewList<TData, TValue = unknown>({
     loadingRowCount = 3,
     loadMoreData,
     tableQuery,
-    totalRowCount,
-    updateTableQuery,
     activeView,
     registerFieldsForView,
     hasData
@@ -187,22 +178,6 @@ export function DataViewList<TData, TValue = unknown>({
     isLoading,
     onLoadMore: loadMoreData
   });
-
-  const hiddenLeafRowCount =
-    mode === 'client'
-      ? getClientHiddenLeafRowCount(table)
-      : totalRowCount !== undefined
-        ? Math.max(0, totalRowCount - countLeafRows(rows))
-        : null;
-  const hasActiveFiltering = !isLoading && hasActiveTableFiltering(table);
-  const showFilterSummary =
-    hasActiveFiltering &&
-    (mode === 'server' ||
-      (typeof hiddenLeafRowCount === 'number' && hiddenLeafRowCount > 0));
-
-  const handleClearFilters = useCallback(() => {
-    updateTableQuery(prev => ({ ...prev, filters: [], search: '' }));
-  }, [updateTableQuery]);
 
   // Sticky group anchor needs to recompute on scroll only. rAF-throttled so
   // the binary search runs at most once per frame regardless of how fast the
@@ -507,37 +482,7 @@ export function DataViewList<TData, TValue = unknown>({
           aria-hidden='true'
         />
       </div>
-      {showFilterSummary ? (
-        <Flex
-          className={styles.filterSummaryFooter}
-          justify='center'
-          align='center'
-        >
-          {mode === 'server' && hiddenLeafRowCount === null ? (
-            <span className={styles.filterSummaryLabel}>
-              Some items might be hidden by filters
-            </span>
-          ) : (
-            <Flex align='center' gap={2}>
-              <span className={styles.filterSummaryCount}>
-                {hiddenLeafRowCount}
-              </span>
-              <span className={styles.filterSummaryLabel}>
-                items hidden by filters
-              </span>
-            </Flex>
-          )}
-          <Button
-            variant='text'
-            color='neutral'
-            size='small'
-            trailingIcon={<Cross2Icon />}
-            onClick={handleClearFilters}
-          >
-            Clear Filters
-          </Button>
-        </Flex>
-      ) : null}
+      <FilterSummary />
     </div>
   );
 }
