@@ -1,11 +1,21 @@
 /* Resets for button */
 
 button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
+[type="button"],
+[type="reset"],
+[type="submit"] {
   -webkit-appearance: button;
-	appearance: button;
+  appearance: button;
   background-color: transparent;
   background-image: none;
+}
+
+/* Global native scrollbar styling — uses the Baseline standard scrollbar
+   properties (scrollbar-width / scrollbar-color), supported across Chrome,
+   Safari and Firefox. Note: scrollbar-width is keyword-only (no exact px) and
+   setting scrollbar-color opts out of the macOS overlay/auto-hide scrollbar.
+   Use the <ScrollArea> component where auto-hide / hover-grow polish matters. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rs-color-overlay-base-a5) transparent;
 }
