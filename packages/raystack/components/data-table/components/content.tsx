@@ -313,7 +313,10 @@ export function Content({
       </Table>
       {showFilterSummary ? (
         <Flex
-          className={styles.filterSummaryFooter}
+          className={cx(
+            styles.filterSummaryFooter,
+            isEmptyState && styles.filterSummaryFooterEmpty
+          )}
           justify='center'
           align='center'
         >
