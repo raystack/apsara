@@ -143,7 +143,6 @@ export const Button = ({
   loaderText,
   leadingIcon,
   trailingIcon,
-  style = {},
   children,
   render,
   ...props
@@ -157,7 +156,6 @@ export const Button = ({
         isLoaderOnly && getLoaderOnlyClass(size)
       )}
       disabled={disabled}
-      style={style}
       render={render}
       nativeButton={!render}
       focusableWhenDisabled={loading}

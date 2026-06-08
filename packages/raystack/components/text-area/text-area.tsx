@@ -37,7 +37,6 @@ export interface TextAreaProps
 
 export function TextArea({
   className,
-  style,
   disabled,
   value,
   onChange,
@@ -69,7 +68,6 @@ export function TextArea({
       disabled={disabled}
       placeholder={placeholder}
       required={resolvedRequired}
-      style={style}
       {...props}
     />
   );

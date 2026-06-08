@@ -18,7 +18,6 @@ export const AlertDialogContent = ({
   className,
   children,
   overlay,
-  style,
   showNestedAnimation = true,
   ...props
 }: AlertDialogContentProps) => {
@@ -39,7 +38,6 @@ export const AlertDialogContent = ({
             showNestedAnimation && styles.showNestedAnimation,
             className
           )}
-          style={style}
           {...props}
         >
           {children}

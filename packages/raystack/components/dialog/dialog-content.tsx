@@ -20,7 +20,6 @@ export function DialogContent({
   children,
   showCloseButton = true,
   overlay,
-  style,
   showNestedAnimation = true,
   ...props
 }: DialogContentProps) {
@@ -41,7 +40,6 @@ export function DialogContent({
             showNestedAnimation && styles.showNestedAnimation,
             className
           )}
-          style={style}
           {...props}
         >
           {children}

@@ -37,11 +37,10 @@ interface ListHeaderProps extends ComponentProps<'div'> {
   'aria-level'?: 1 | 2 | 3 | 4 | 5 | 6;
 }
 
-const ListRoot = ({ children, className, style, ...props }: ListRootProps) => {
+const ListRoot = ({ children, className, ...props }: ListRootProps) => {
   return (
     <ul
       className={list({ className })}
-      style={style}
       // `list-style: none` causes Safari/VoiceOver to drop the implicit
       // list role; keep the explicit role so the list stays announced.
       role='list'

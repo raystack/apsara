@@ -51,7 +51,6 @@ export function Callout({
   action,
   dismissible,
   onDismiss,
-  style,
   icon = <InfoCircledIcon />,
   ...props
 }: CalloutProps) {
@@ -69,7 +68,6 @@ export function Callout({
   return (
     <div
       className={callout({ type, variant, highContrast, className })}
-      style={style}
       role={getRole()}
       aria-live={type === 'alert' ? 'assertive' : 'polite'}
       {...props}
