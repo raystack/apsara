@@ -39,7 +39,10 @@ export interface CalloutProps {
    */
   icon?: React.ReactNode;
 
-  /** Callback function when dismiss button is clicked */
+  /**
+   * Called when the dismiss button is clicked. When provided, the consumer owns
+   * removal (the callout stays mounted). When omitted, the callout hides itself.
+   */
   onDismiss?: () => void;
 
   /** Text content of the callout */

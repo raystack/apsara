@@ -126,6 +126,31 @@ describe('Callout', () => {
       expect(onDismiss).toHaveBeenCalledTimes(1);
     });
 
+    it('stays mounted after dismiss when onDismiss is provided (controlled)', () => {
+      const onDismiss = vi.fn();
+      render(
+        <Callout dismissible onDismiss={onDismiss}>
+          Controlled message
+        </Callout>
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: 'Dismiss message' }));
+
+      // Consumer owns removal — the callout must not hide itself.
+      expect(screen.getByText('Controlled message')).toBeInTheDocument();
+    });
+
+    it('hides itself after dismiss when onDismiss is omitted (uncontrolled)', () => {
+      render(<Callout dismissible>Uncontrolled message</Callout>);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Dismiss message' }));
+
+      expect(
+        screen.queryByText('Uncontrolled message')
+      ).not.toBeInTheDocument();
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    });
+
     it('renders both action and dismissible button', () => {
       const onDismiss = vi.fn();
       render(
@@ -142,6 +167,17 @@ describe('Callout', () => {
       expect(
         screen.getByRole('button', { name: 'Dismiss message' })
       ).toBeInTheDocument();
+    });
+  });
+
+  describe('Styling and Layout', () => {
+    it('forwards style to the callout', () => {
+      render(
+        <Callout style={{ width: '200px' }}>Styled width message</Callout>
+      );
+
+      const callout = screen.getByRole('status');
+      expect(callout).toHaveStyle({ width: '200px' });
     });
   });
 
@@ -173,9 +209,11 @@ describe('Callout', () => {
       expect(dismissButton).toHaveAttribute('type', 'button');
       expect(dismissButton).toHaveAttribute('aria-label', 'Dismiss message');
 
+      // The icon is decorative: IconButton wraps it in an aria-hidden element,
+      // so the button is announced only by its aria-label.
       const svg = dismissButton.querySelector('svg');
-      expect(svg).toHaveAttribute('aria-hidden', 'true');
-      expect(svg).toHaveAttribute('role', 'presentation');
+      expect(svg).toBeInTheDocument();
+      expect(svg?.closest('[aria-hidden="true"]')).toBeInTheDocument();
     });
   });
 });
