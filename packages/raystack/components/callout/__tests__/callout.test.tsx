@@ -230,9 +230,11 @@ describe('Callout', () => {
       expect(dismissButton).toHaveAttribute('type', 'button');
       expect(dismissButton).toHaveAttribute('aria-label', 'Dismiss message');
 
+      // The icon is decorative: IconButton wraps it in an aria-hidden element,
+      // so the button is announced only by its aria-label.
       const svg = dismissButton.querySelector('svg');
-      expect(svg).toHaveAttribute('aria-hidden', 'true');
-      expect(svg).toHaveAttribute('role', 'presentation');
+      expect(svg).toBeInTheDocument();
+      expect(svg?.closest('[aria-hidden="true"]')).toBeInTheDocument();
     });
   });
 });
