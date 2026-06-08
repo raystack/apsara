@@ -60,6 +60,7 @@ const Page = () => {
   const [selectValue1, setSelectValue1] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
   const [inputValue, setInputValue] = useState('');
+  const [calloutDismissed, setCalloutDismissed] = useState(false);
   const [rangeValue, setRangeValue] = useState({
     from: dayjs('2027-11-15').toDate(),
     to: dayjs('2027-12-10').toDate()
@@ -2761,6 +2762,281 @@ const Page = () => {
                     ))}
                   </Flex>
                 </ScrollArea>
+              </Flex>
+            </Flex>
+
+            <Text
+              size='large'
+              weight='medium'
+              style={{ marginTop: '32px', marginBottom: '16px' }}
+            >
+              Callout
+            </Text>
+
+            <Flex direction='column' gap={6} style={{ maxWidth: '600px' }}>
+              {/* Types */}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  Types
+                </Text>
+                <Flex direction='column' gap={3}>
+                  <Callout width='100%' type='grey'>
+                    Grey callout (default)
+                  </Callout>
+                  <Callout width='100%' type='success'>
+                    Success callout
+                  </Callout>
+                  <Callout width='100%' type='alert'>
+                    Alert callout
+                  </Callout>
+                  <Callout width='100%' type='gradient'>
+                    Gradient callout
+                  </Callout>
+                  <Callout width='100%' type='accent'>
+                    Accent callout
+                  </Callout>
+                  <Callout width='100%' type='attention'>
+                    Attention callout
+                  </Callout>
+                  <Callout width='100%' type='normal'>
+                    Normal callout
+                  </Callout>
+                </Flex>
+              </Flex>
+
+              {/* Outline */}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  Outline
+                </Text>
+                <Callout width='100%' type='success'>
+                  Without outline
+                </Callout>
+                <Callout width='100%' type='success' outline>
+                  With outline
+                </Callout>
+              </Flex>
+
+              {/* High contrast */}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  High contrast
+                </Text>
+                <Callout width='100%' type='alert'>
+                  Normal contrast
+                </Callout>
+                <Callout width='100%' type='alert' highContrast>
+                  High contrast
+                </Callout>
+                <Callout width='100%' type='accent' outline highContrast>
+                  Outline + high contrast
+                </Callout>
+              </Flex>
+
+              {/* Custom icon */}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  Custom icon
+                </Text>
+                <Callout width='100%' type='attention' icon={<RadixBellIcon />}>
+                  Callout with a custom bell icon
+                </Callout>
+                <Callout width='100%' type='grey' icon={null}>
+                  Callout with no icon
+                </Callout>
+              </Flex>
+
+              {/* With action */}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  With action
+                </Text>
+                <Callout
+                  width='100%'
+                  type='accent'
+                  action={
+                    <Button size='small' variant='outline'>
+                      Upgrade
+                    </Button>
+                  }
+                >
+                  You&apos;re on the free plan
+                </Callout>
+              </Flex>
+
+              {/* Dismissible (controlled) */}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  Dismissible (controlled — consumer removes it in onDismiss)
+                </Text>
+                {calloutDismissed ? (
+                  <Button
+                    size='small'
+                    onClick={() => setCalloutDismissed(false)}
+                  >
+                    Restore callout
+                  </Button>
+                ) : (
+                  <Callout
+                    width='100%'
+                    type='success'
+                    dismissible
+                    onDismiss={() => setCalloutDismissed(true)}
+                  >
+                    Dismiss me
+                  </Callout>
+                )}
+              </Flex>
+
+              {/* Custom width */}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  Custom width
+                </Text>
+                <Callout type='gradient' width={240}>
+                  width = 240
+                </Callout>
+                <Callout type='gradient' width={480}>
+                  width = 480
+                </Callout>
+              </Flex>
+
+              {/*Figma replicas*/}
+              <Flex direction='column' gap={3}>
+                <Text size='small' variant='secondary'>
+                  Figma replicas
+                </Text>
+                <Callout type='normal' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='success' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='accent'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout
+                  type='grey'
+                  action={
+                    <Button variant='outline' color='neutral' size='small'>
+                      Button
+                    </Button>
+                  }
+                >
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='grey' dismissible>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout
+                  type='grey'
+                  action={
+                    <Button variant='outline' color='neutral' size='small'>
+                      Button
+                    </Button>
+                  }
+                >
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='normal'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='normal' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='normal' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='normal' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='grey'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='grey' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='grey' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='grey' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='accent'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='accent' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='accent' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='accent' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='alert'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='alert' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='alert' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='alert' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='success'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='success' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='success' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='success' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='attention'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='attention' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='attention' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='attention' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient'>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient' outline>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient' highContrast>
+                  A short message to attract user’s attention
+                </Callout>
+                <Callout type='gradient' outline highContrast>
+                  A short message to attract user’s attention
+                </Callout>
               </Flex>
             </Flex>
 
