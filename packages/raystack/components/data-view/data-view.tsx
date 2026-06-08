@@ -11,6 +11,7 @@ import {
 } from '@tanstack/react-table';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { DataViewClearFilters } from './components/clear-filters';
 import { DataViewCustom } from './components/custom';
 import { DisplayAccess } from './components/display-access';
 import { DisplayControls } from './components/display-controls';
@@ -308,6 +309,7 @@ export const DataView = Object.assign(DataViewRoot, {
   DisplayAccess: DisplayAccess,
   EmptyState: DataViewEmptyState,
   ZeroState: DataViewZeroState,
+  ClearFilters: DataViewClearFilters,
   Toolbar: Toolbar,
   Search: DataViewSearch,
   Filters: Filters,

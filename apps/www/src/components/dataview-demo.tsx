@@ -227,6 +227,7 @@ export function DataViewSearchDemo() {
           <DataView.EmptyState>
             <Text>No people match your search.</Text>
           </DataView.EmptyState>
+          <DataView.ClearFilters />
         </DataView>
       </div>
     </Flex>
@@ -288,6 +289,7 @@ export function DataViewEmptyZeroDemo() {
           <DataView.ZeroState>
             <Text>Nothing here yet.</Text>
           </DataView.ZeroState>
+          <DataView.ClearFilters />
         </DataView>
       </div>
     </Flex>

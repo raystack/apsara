@@ -95,6 +95,7 @@ export const emptyZeroPreview = {
         <DataView.ZeroState>
           <Text>Nothing here yet.</Text>
         </DataView.ZeroState>
+        <DataView.ClearFilters />
       </DataView>`
     }
   ]
@@ -325,6 +326,7 @@ export const searchPreview = {
         <DataView.EmptyState>
           <Text>No people match your search.</Text>
         </DataView.EmptyState>
+        <DataView.ClearFilters />
       </DataView>`
     }
   ]

@@ -1,5 +1,6 @@
 export { EmptyFilterValue } from '~/types/filters';
 
+export type { DataViewClearFiltersProps } from './components/clear-filters';
 export type { DataViewCustomProps } from './components/custom';
 export type { DataViewDisplayAccessProps } from './components/display-access';
 export type { DataViewEmptyStateProps } from './components/empty-state';

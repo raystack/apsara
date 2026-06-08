@@ -610,6 +610,7 @@ const Page = () => {
                 subHeading='Add your first teammate to get started.'
               />
             </DataView.ZeroState>
+            <DataView.ClearFilters />
           </DataView>
         </Flex>
       </Flex>

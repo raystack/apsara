@@ -648,12 +648,39 @@ describe('DataView', () => {
           <DataView.EmptyState>
             <div data-testid='empty'>no matches</div>
           </DataView.EmptyState>
+          <DataView.ClearFilters />
         </DataView>
       );
-      // In empty state, filter summary is *not* shown by the List (renderer
-      // returns null when !hasData). EmptyState sibling handles it. Just
-      // confirm the empty state path is taken.
+      // In the empty state the List renders nothing; the sibling
+      // DataView.ClearFilters surfaces the affordance.
       expect(screen.getByTestId('empty')).toBeInTheDocument();
+      const clearButton = screen.getByText('Clear Filters');
+      expect(clearButton).toBeInTheDocument();
+
+      // Clearing exits the empty state and reveals the rows.
+      await user.click(clearButton);
+      expect(screen.queryByTestId('empty')).not.toBeInTheDocument();
+      expect(screen.getByText('John Doe')).toBeInTheDocument();
+    });
+
+    it('renders the flat footer summary when rows are hidden by filters', () => {
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          mode='server'
+          totalRowCount={10}
+          query={{
+            filters: [{ name: 'name', operator: 'neq', value: 'John Doe' }]
+          }}
+        >
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      // List auto-renders DataViewClearFilters as the footer (data present).
+      expect(screen.getByText('items hidden by filters')).toBeInTheDocument();
+      expect(screen.getByText('Clear Filters')).toBeInTheDocument();
     });
   });
 
