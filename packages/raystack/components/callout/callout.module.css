@@ -60,26 +60,6 @@
   align-items: center;
 }
 
-.dismiss {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--rs-space-1);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  border-radius: var(--rs-radius-1);
-  color: var(--rs-color-foreground-base-secondary);
-}
-
-.dismiss:hover {
-  opacity: 0.7;
-}
-
-.dismiss:focus-visible {
-  outline: 1px solid var(--rs-color-border-accent-emphasis);
-}
-
 /* Type Variants */
 .callout-grey {
   background: var(--rs-color-background-neutral-primary);
