@@ -1,9 +1,15 @@
 'use client';
 
-import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { Cross1Icon, InfoCircledIcon } from '@radix-ui/react-icons';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { type ComponentProps, type CSSProperties, type ReactNode } from 'react';
+import {
+  type ComponentProps,
+  type CSSProperties,
+  type ReactNode,
+  useState
+} from 'react';
 
+import { IconButton } from '../icon-button';
 import styles from './callout.module.css';
 
 const callout = cva(styles.callout, {
@@ -17,15 +23,16 @@ const callout = cva(styles.callout, {
       attention: styles['callout-attention'],
       normal: styles['callout-normal']
     },
-    outline: {
-      true: styles['callout-outline']
+    variant: {
+      solid: '',
+      outline: styles['callout-outline']
     },
     highContrast: {
       true: styles['callout-high-contrast']
     }
   },
   defaultVariants: {
-    type: 'grey'
+    variant: 'solid'
   }
 });
 
@@ -34,9 +41,13 @@ export interface CalloutProps
     VariantProps<typeof callout> {
   children: ReactNode;
   action?: ReactNode;
+  /** Show a dismiss (close) button. */
   dismissible?: boolean;
+  /**
+   * Called when the dismiss button is clicked. When provided, the consumer owns
+   * removal (the callout stays mounted). When omitted, the callout hides itself.
+   */
   onDismiss?: () => void;
-  width?: string | number;
   style?: CSSProperties;
   icon?: ReactNode;
 }
@@ -44,38 +55,30 @@ export interface CalloutProps
 export function Callout({
   className,
   type = 'grey',
-  outline,
+  variant,
   highContrast,
   children,
   action,
   dismissible,
   onDismiss,
-  width,
-  style,
   icon = <InfoCircledIcon />,
   ...props
 }: CalloutProps) {
-  const combinedStyle = {
-    ...style,
-    ...(width && { width: typeof width === 'number' ? `${width}px` : width })
+  // Dismissal is controlled when `onDismiss` is given; otherwise fall back to
+  // uncontrolled and hide the callout internally.
+  const [dismissed, setDismissed] = useState(false);
+  const handleDismiss = () => {
+    onDismiss?.();
+    if (!onDismiss) setDismissed(true);
   };
+  if (dismissed) return null;
 
-  const getRole = () => {
-    switch (type) {
-      case 'alert':
-        return 'alert';
-      case 'success':
-        return 'status';
-      default:
-        return 'status';
-    }
-  };
+  const role = type === 'alert' ? 'alert' : 'status';
 
   return (
     <div
-      className={callout({ type, outline, highContrast, className })}
-      style={combinedStyle}
-      role={getRole()}
+      className={callout({ type, variant, highContrast, className })}
+      role={role}
       aria-live={type === 'alert' ? 'assertive' : 'polite'}
       {...props}
     >
@@ -92,29 +95,14 @@ export function Callout({
         <div className={styles.actionsContainer}>
           {action && <div className={styles.action}>{action}</div>}
           {dismissible && (
-            <button
+            <IconButton
+              size={1}
               className={styles.dismiss}
-              onClick={onDismiss}
+              onClick={handleDismiss}
               aria-label='Dismiss message'
-              type='button'
             >
-              <svg
-                width='12'
-                height='12'
-                viewBox='0 0 12 12'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-                aria-hidden='true'
-                role='presentation'
-              >
-                <path
-                  fillRule='evenodd'
-                  clipRule='evenodd'
-                  d='M9.5066 3.3066C9.73115 3.08205 9.73115 2.71798 9.5066 2.49343C9.28205 2.26887 8.91798 2.26887 8.69343 2.49343L6.00001 5.18684L3.3066 2.49343C3.08205 2.26887 2.71798 2.26887 2.49343 2.49343C2.26887 2.71798 2.26887 3.08205 2.49343 3.3066L5.18684 6.00001L2.49343 8.69343C2.26887 8.91798 2.26887 9.28205 2.49343 9.5066C2.71798 9.73115 3.08205 9.73115 3.3066 9.5066L6.00001 6.81318L8.69343 9.5066C8.91798 9.73115 9.28205 9.73115 9.5066 9.5066C9.73115 9.28205 9.73115 8.91798 9.5066 8.69343L6.81318 6.00001L9.5066 3.3066Z'
-                  fill='currentColor'
-                />
-              </svg>
-            </button>
+              <Cross1Icon />
+            </IconButton>
           )}
         </div>
       </div>

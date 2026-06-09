@@ -29,10 +29,7 @@ const flex = cva(styles.flex, {
       wrap: styles['wrap-wrap'],
       wrapReverse: styles['wrap-wrapReverse']
     },
-    gap: gapVariants,
-    width: {
-      full: styles['width-full']
-    }
+    gap: gapVariants
   },
   defaultVariants: {
     direction: 'row',
@@ -51,7 +48,6 @@ export function Flex({
   wrap,
   gap,
   className,
-  width,
   render,
   ref,
   ...props
@@ -63,8 +59,7 @@ export function Flex({
       justify,
       wrap,
       gap,
-      className,
-      width
+      className
     })
   };
 

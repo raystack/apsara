@@ -63,6 +63,17 @@
   box-sizing: border-box;
 }
 
+/* Empty-state variant of the footer: the same row hugs its content and gains a
+   border so it reads as a compact panel instead of a full-width bar. */
+.filterSummaryFooterEmpty {
+  width: fit-content;
+  gap: var(--rs-space-3);
+  margin: var(--rs-space-6) auto var(--rs-space-9);
+  padding: var(--rs-space-3) var(--rs-space-4);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-2);
+}
+
 .filterSummaryCount {
   color: var(--rs-color-foreground-base-primary);
   font-family: var(--rs-font-body);

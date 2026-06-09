@@ -1,7 +1,4 @@
 export interface ListRootProps {
-  /** Maximum width of the list container. */
-  maxWidth?: string | number;
-
   /** Additional CSS class names. */
   className?: string;
 }
@@ -35,9 +32,6 @@ export interface ListItemProps {
 }
 
 export interface ListLabelProps {
-  /** Minimum width of the label. */
-  minWidth?: string;
-
   /** Content to be displayed in the label. */
   children?: React.ReactNode;
 

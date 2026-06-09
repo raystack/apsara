@@ -14,7 +14,7 @@ export function CalloutExamples() {
         <Callout type='accent'>Accent Callout</Callout>
         <Callout type='attention'>Attention Callout</Callout>
         <Callout type='normal'>Normal Callout</Callout>
-        <Callout type='success' outline>
+        <Callout type='success' variant='outline'>
           With Outline Callout
         </Callout>
         <Callout dismissible onDismiss={() => alert('Dismissed!')}>

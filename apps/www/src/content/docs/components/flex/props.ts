@@ -35,11 +35,6 @@ export interface FlexProps {
   direction?: 'row' | 'rowReverse' | 'column' | 'columnReverse';
 
   /**
-   * Sets the width of the flex container.
-   */
-  width?: 'full';
-
-  /**
    * Allows rendering the flex container as a different element.
    * Accepts a React element or a function that receives props and returns an element.
    *

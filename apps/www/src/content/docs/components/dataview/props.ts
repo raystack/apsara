@@ -205,6 +205,11 @@ export interface DataViewZeroStateProps {
   children: ReactNode;
 }
 
+export interface DataViewClearFiltersProps {
+  /** Class applied to the filter-summary row. */
+  className?: string;
+}
+
 export interface DataViewDisplayControlsProps {
   /** Custom trigger element for the popover. */
   trigger?: ReactNode;

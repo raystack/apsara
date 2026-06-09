@@ -27,7 +27,6 @@ export interface TextAreaProps
     VariantProps<typeof textAreaVariants> {
   disabled?: boolean;
   placeholder?: string;
-  width?: string | number;
   value?: string;
   onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onValueChange?: (
@@ -38,9 +37,7 @@ export interface TextAreaProps
 
 export function TextArea({
   className,
-  style,
   disabled,
-  width = '100%',
   value,
   onChange,
   onValueChange,
@@ -71,7 +68,6 @@ export function TextArea({
       disabled={disabled}
       placeholder={placeholder}
       required={resolvedRequired}
-      style={{ ...style, width }}
       {...props}
     />
   );

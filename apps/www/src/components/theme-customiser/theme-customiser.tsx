@@ -125,7 +125,7 @@ export default function ThemeCustomizer() {
           </div>
         </Radio.Group>
       </div>
-      <Button onClick={handleCopyTheme} type='button' width='100%'>
+      <Button onClick={handleCopyTheme} type='button' style={{ width: '100%' }}>
         Copy Theme Options
       </Button>
     </div>

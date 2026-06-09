@@ -1,6 +1,7 @@
 .callout {
   position: relative;
-  width: 318px;
+  width: 400px;
+  max-width: 100%;
   padding: var(--rs-space-3);
   border-radius: var(--rs-radius-2);
   font-style: normal;
@@ -43,12 +44,14 @@
 
 .message {
   flex-shrink: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .actionsContainer {
   display: flex;
   align-items: center;
-  gap: var(--rs-space-2);
+  gap: var(--rs-space-3);
   flex-shrink: 0;
 }
 
@@ -57,30 +60,22 @@
   align-items: center;
 }
 
-.dismiss {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--rs-space-1);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  border-radius: var(--rs-radius-1);
-  color: inherit;
-}
-
-.dismiss:hover {
-  opacity: 0.7;
+/* Dismiss button stays flat: keep the transparent background and base colour on
+   hover/active (overrides IconButton's hover feedback). The descendant selector
+   out-specifies `.iconButton:hover` regardless of stylesheet order. */
+.callout .dismiss:hover:not(:disabled),
+.callout .dismiss:active:not(:disabled) {
+  background-color: transparent;
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 /* Type Variants */
 .callout-grey {
   background: var(--rs-color-background-neutral-primary);
-  color: var(--rs-color-foreground-base-primary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .callout-success {
-  gap: var(--rs-space-10);
   background: var(--rs-color-background-success-primary);
   color: var(--rs-color-foreground-success-primary);
 }
@@ -101,7 +96,11 @@
 }
 
 .callout-gradient {
-  background: radial-gradient(circle, oklch(0.5674 0.2831 312.58 / 0.2) 0%, oklch(0.5988 0.2445 29.12 / 0.2) 100%);
+  background: radial-gradient(
+    circle,
+    oklch(0.5674 0.2831 312.58 / 0.2) 0%,
+    oklch(0.5988 0.2445 29.12 / 0.2) 100%
+  );
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -112,7 +111,7 @@
 
 .callout-outline.callout-grey {
   background: var(--rs-color-background-neutral-primary);
-  border: 0.5px solid var(--rs-color-border-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
 }
 
 .callout-outline.callout-success {
@@ -165,7 +164,7 @@
 /* Success + Outline + High Contrast */
 .callout-outline.callout-high-contrast.callout-success {
   background: var(--rs-color-background-success-primary);
-  border: 0.5px solid var(--rs-color-border-success-emphasis);
+  border: 0.5px solid var(--rs-color-border-success-primary);
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -189,17 +188,33 @@
 
 .callout-outline.callout-high-contrast.callout-attention {
   background: var(--rs-color-background-attention-primary);
-  border: 0.5px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-attention-primary);
   color: var(--rs-color-foreground-base-primary);
 }
 
+/*
+ * Gradient + outline (no high contrast): keep the gradient fill and add a
+ * translucent border tinted to the gradient's warm endpoint. Intended behavior.
+ * The border is a one-off literal (no token) because the gradient itself is
+ * untokenized — keep the two in sync if the gradient stops ever change.
+ */
 .callout-outline.callout-gradient {
-  background: radial-gradient(circle, oklch(0.5674 0.2831 312.58 / 0.2) 0%, oklch(0.5988 0.2445 29.12 / 0.2) 100%);
+  background: radial-gradient(
+    circle,
+    oklch(0.5674 0.2831 312.58 / 0.2) 0%,
+    oklch(0.5988 0.2445 29.12 / 0.2) 100%
+  );
   border: 0.5px solid oklch(0.5988 0.2445 29.12 / 0.2667);
   color: var(--rs-color-foreground-base-primary);
 }
 
-/* High contrast gradient should match normal high contrast */
+/*
+ * High contrast gradient should match normal high contrast.
+ * Figma defines only one gradient variant (no outline/high-contrast states), so
+ * in high contrast — both on its own and combined with outline — we intentionally
+ * drop the gradient for the solid "normal" high-contrast surface. A gradient
+ * callout in high-contrast mode therefore reads identically to a normal one.
+ */
 .callout-high-contrast.callout-gradient {
   background: var(--rs-color-background-base-primary);
   color: var(--rs-color-foreground-base-primary);
@@ -214,13 +229,13 @@
 /* Normal variants */
 .callout-normal {
   background: var(--rs-color-background-base-primary);
-  color: var(--rs-color-foreground-base-primary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .callout-outline.callout-normal {
   background: var(--rs-color-background-base-primary);
-  border: 0.5px solid var(--rs-color-border-base-primary);
-  color: var(--rs-color-foreground-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
+  color: var(--rs-color-foreground-base-secondary);
 }
 
 .callout-high-contrast.callout-normal {

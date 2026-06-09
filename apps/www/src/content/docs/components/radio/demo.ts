@@ -196,7 +196,7 @@ export const formDemo = {
         <label htmlFor="yp">Yearly Plan</label>
       </Flex>
     </Radio.Group>
-    <Button type="submit" width="100%">Submit</Button>
+    <Button type="submit" style={{ width: "100%" }}>Submit</Button>
   </Flex>
 </form>`
 };

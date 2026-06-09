@@ -13,10 +13,10 @@ export interface CalloutProps {
     | 'normal';
 
   /**
-   * Whether to show an outline border
-   * @defaultValue false
+   * Visual style variant.
+   * @defaultValue "solid"
    */
-  outline?: boolean;
+  variant?: 'solid' | 'outline';
 
   /**
    * Whether to use high contrast colors
@@ -39,14 +39,14 @@ export interface CalloutProps {
    */
   icon?: React.ReactNode;
 
-  /** Callback function when dismiss button is clicked */
+  /**
+   * Called when the dismiss button is clicked. When provided, the consumer owns
+   * removal (the callout stays mounted). When omitted, the callout hides itself.
+   */
   onDismiss?: () => void;
 
   /** Text content of the callout */
   children?: React.ReactNode;
-
-  /** Custom width for the callout */
-  width?: string | number;
 
   /** Additional CSS class names */
   className?: string;

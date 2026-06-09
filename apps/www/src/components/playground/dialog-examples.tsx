@@ -10,7 +10,7 @@ export function DialogExamples() {
         <Dialog>
           <Dialog.Trigger render={<Button />}>Dialog</Dialog.Trigger>
           <Dialog.Content
-            width='400px'
+            style={{ width: '400px' }}
             overlay={{
               blur: true,
               className: 'custom-overlay',
@@ -28,7 +28,7 @@ export function DialogExamples() {
           <Dialog.Trigger render={<Button variant='outline' />}>
             Open Dialog
           </Dialog.Trigger>
-          <Dialog.Content width={600} showCloseButton={false}>
+          <Dialog.Content style={{ width: 600 }} showCloseButton={false}>
             <Dialog.Title>No Close Button</Dialog.Title>
             <Dialog.Description>
               This dialog doesn't show the close button.

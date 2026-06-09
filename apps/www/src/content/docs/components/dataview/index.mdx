@@ -49,6 +49,7 @@ import {
 
   <DataView.EmptyState>{/* no matches */}</DataView.EmptyState>
   <DataView.ZeroState>{/* no data yet */}</DataView.ZeroState>
+  <DataView.ClearFilters />
 </DataView>
 ```
 
@@ -86,9 +87,29 @@ Empty/zero is computed once on context (`isEmptyState`, `isZeroState`) and expos
 <DataView.ZeroState>
   <Text>Nothing here yet.</Text>
 </DataView.ZeroState>
+<DataView.ClearFilters />
 ```
 
 Renderers return `null` when `!hasData` — siblings render the messaging.
+
+### Clear filters
+
+When rows are hidden by filters, `DataView.List` automatically renders a flat
+footer summarising the hidden count with a **Clear Filters** action — the
+default treatment. `DataView.ClearFilters` is a separate sibling entry that
+surfaces the same action as a **bordered panel** in the empty state (a query
+returned no rows). It reads context, resets `filters`/`search` on click, and
+renders nothing outside the empty state — so place it once alongside
+`DataView.List`, separate from `DataView.EmptyState`, and it self-manages
+visibility.
+
+```tsx
+<DataView.List variant="table" columns={tableColumns} />
+<DataView.EmptyState>
+  <Text>No matches for your filters.</Text>
+</DataView.EmptyState>
+<DataView.ClearFilters />
+```
 
 ### Display Properties (column visibility)
 
@@ -153,6 +174,12 @@ Visibility is a **single global map** on context. `DataView.List` honours it for
 The popover housing the view switcher, Ordering, Grouping, and Display Properties. The view switcher appears at the top whenever `views.length > 1`. Each section can be hidden individually.
 
 <auto-type-table path="./props.ts" name="DataViewDisplayControlsProps" />
+
+### DataView.ClearFilters
+
+A context-driven "Clear Filters" affordance for the empty state. Place it as a sibling of `DataView.List` (separate from `DataView.EmptyState`); it renders a bordered panel when a query returns no rows and nothing otherwise. The flat footer for the data state is rendered automatically by `DataView.List`.
+
+<auto-type-table path="./props.ts" name="DataViewClearFiltersProps" />
 
 ## Examples
 
