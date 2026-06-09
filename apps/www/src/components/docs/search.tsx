@@ -42,10 +42,7 @@ type SearchItems = {
   items: Item[];
 };
 
-// Docs pages carry no icon in their data, so map known page slugs to icons
-// (overview + foundations pages get meaningful ones). Everything else —
-// components and any future pages — falls back to a generic icon so every
-// top-level row stays icon-aligned.
+/* Map known page slugs to icons; everything else falls back to a generic one. */
 const PAGE_ICONS: Record<string, typeof MagnifyingGlassIcon> = {
   docs: ReaderIcon,
   'getting-started': RocketIcon,
@@ -65,8 +62,7 @@ const getPageIcon = (url: string): typeof MagnifyingGlassIcon =>
 export default function DocsSearch({ pageTree }: { pageTree: Root }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  // Per-result manual expand/collapse overrides; reset whenever the query
-  // changes so the auto-open rule re-applies for the fresh result set.
+  /* Manual expand/collapse overrides; reset on query change. */
   const [openOverrides, setOpenOverrides] = useState<Record<string, boolean>>(
     {}
   );
@@ -92,9 +88,8 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
     const flattened = flattenTree(pageTree.children);
     if (!flattened.length) return [];
 
-    // Default view shows the overview + foundations (theme) pages grouped by
-    // folder. Components are intentionally excluded — there are dozens of them,
-    // so they only surface once the user actually searches.
+    /* Default view: overview + foundations grouped by folder; components are
+       excluded until the user searches. */
     const items = flattened.reduce<Record<string, Item[]>>((acc, item) => {
       const folder = getFolderFromUrl(item.url);
       if (folder === 'components') return acc;
@@ -112,9 +107,6 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
 
   const trimmedQuery = search.trim();
   const isSearching = trimmedQuery.length > 0;
-  // While fumadocs debounces + fetches, `query.data` is undefined. Without
-  // this flag the empty state would flash "No result found" for the duration
-  // of the request; instead we show a spinner until the fetch settles.
   const isLoading = isSearching && query.isLoading;
   const results =
     isSearching && query.data && query.data !== 'empty' ? query.data : [];
@@ -162,10 +154,8 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
 
   const items = !isSearching ? defaultItems : searchResults;
 
-  // The `items` prop opts the Command out of its built-in per-item filtering
-  // and group-unwrapping: results are already filtered by fumadocs, and the
-  // grouped layout must stay intact while searching. An empty array is still
-  // truthy, so `hasItems` stays true even when there are no results.
+  /* The `items` prop opts Command out of built-in filtering/unwrapping —
+     results are pre-filtered by fumadocs and the grouped layout stays intact. */
   const itemValues = useMemo(
     () =>
       items.flatMap(section =>
@@ -177,10 +167,8 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
     [items]
   );
 
-  // A result's sub-details collapse behaves like an accordion: open it only
-  // when the match came from a sub-detail rather than the page title (e.g.
-  // "Toolbar" surfacing for "button" via its Button section). When the title
-  // itself matches, the page is the hit, so keep its sub-details collapsed.
+  /* Auto-open sub-details only when the match came from a sub-detail, not the
+     page title; a title match keeps its sub-details collapsed. */
   const queryLower = trimmedQuery.toLowerCase();
   const titleMatches = (item: Item) =>
     typeof item.name === 'string' &&
@@ -238,20 +226,18 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
             )}
           </div>
           <Command.Content className={styles.searchList}>
-            {isLoading ? (
-              <div className={styles.searchLoading}>
+            <Command.Empty className={styles.searchEmpty}>
+              {isLoading ? (
                 <Spinner size={5} aria-label='Searching docs' />
-              </div>
-            ) : (
-              <Command.Empty className={styles.searchEmpty}>
+              ) : (
                 <EmptyState
                   variant='empty1'
                   heading='No result found'
                   subHeading='The keyword you’re searching for isn’t in the document—try using a different term.'
                   icon={<ExclamationTriangleIcon />}
                 />
-              </Command.Empty>
-            )}
+              )}
+            </Command.Empty>
             {items.map((section, index) => (
               <Fragment key={section.heading}>
                 <Command.Group>
