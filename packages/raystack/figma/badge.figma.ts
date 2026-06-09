@@ -5,7 +5,6 @@
 import figma from 'figma';
 
 const variant = figma.selectedInstance.getEnum('Variant', {
-  Accent: 'accent',
   Warning: 'warning',
   Danger: 'danger',
   Success: 'success',
@@ -14,7 +13,6 @@ const variant = figma.selectedInstance.getEnum('Variant', {
 });
 const size = figma.selectedInstance.getEnum('Size', {
   Micro: 'micro',
-  Small: 'small',
   Regular: 'regular'
 });
 // "Icon" BOOLEAN toggles the leading icon; resolve the child instance named "Icon"

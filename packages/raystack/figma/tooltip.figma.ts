@@ -20,12 +20,10 @@ const showArrow = figma.selectedInstance.getBoolean('Nob', {
 // Base UI positioning splits into two props: `side` (vertical) and `align`
 // (horizontal). V Position -> side, H Position -> align.
 const side = figma.selectedInstance.getEnum('V Position', {
-  Top: 'top',
   Bottom: 'bottom'
 });
 const align = figma.selectedInstance.getEnum('H Position', {
   Left: 'start',
-  Center: 'center',
   Right: 'end'
 });
 

@@ -7,10 +7,8 @@ import figma from 'figma';
 const instance = figma.selectedInstance;
 
 // Figma `Size` is Small/Large; code root supports `small` and `medium`.
-// Map Large -> medium (the larger of the two code options).
 const size = instance.getEnum('Size', {
-  Small: 'small',
-  Large: 'medium'
+  Small: 'small'
 });
 
 export default {

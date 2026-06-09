@@ -5,7 +5,6 @@
 import figma from 'figma';
 
 const variant = figma.selectedInstance.getEnum('Variant', {
-  Single: 'single',
   Range: 'range'
 });
 const handle = (function () {
@@ -16,8 +15,7 @@ const handle = (function () {
   const labelText = nestedLayer0.findText('Label');
   return {
     thumbSize: nestedLayer0.getEnum('Size', {
-      Small: 'small',
-      Large: 'large'
+      Small: 'small'
     }),
     label: nestedLayer0.getBoolean('Handle Label', {
       true:

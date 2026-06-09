@@ -4,21 +4,20 @@
 
 import figma from 'figma';
 
+// Component defaults (variant 'solid', color 'accent', size 'normal') are left
+// unmapped so getEnum returns undefined and renderProp omits the redundant prop.
 const variant = figma.selectedInstance.getEnum('Variant', {
-  Solid: 'solid',
   Outline: 'outline',
   Ghost: 'ghost',
   Text: 'text'
 });
 const color = figma.selectedInstance.getEnum('Color', {
-  Accent: 'accent',
   Neutral: 'neutral',
   Danger: 'danger',
   Success: 'success'
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Small: 'small',
-  Normal: 'normal'
+  Small: 'small'
 });
 // Label is a BOOLEAN controlling label visibility; Label Copy holds the text.
 const children = figma.selectedInstance.getBoolean('Label', {
@@ -63,7 +62,7 @@ export default {
     disabled
   )}${figma.helpers.react.renderProp(
     'leadingIcon',
-    leadingIcon
+    loading ? undefined : leadingIcon
   )}${figma.helpers.react.renderProp(
     'trailingIcon',
     trailingIcon

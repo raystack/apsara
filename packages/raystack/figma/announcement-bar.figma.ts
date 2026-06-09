@@ -5,7 +5,6 @@
 import figma from 'figma';
 
 const variant = figma.selectedInstance.getEnum('Variant', {
-  Normal: 'normal',
   Error: 'error',
   Gradient: 'gradient'
 });

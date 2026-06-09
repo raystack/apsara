@@ -8,7 +8,6 @@ const instance = figma.selectedInstance;
 
 // Variant Plain/Floating/Inset → code `variant`.
 const variant = instance.getEnum('Variant', {
-  Plain: 'plain',
   Floating: 'floating',
   Inset: 'inset'
 });

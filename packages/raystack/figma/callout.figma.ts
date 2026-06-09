@@ -10,8 +10,7 @@ const type = figma.selectedInstance.getEnum('Type', {
   Alert: 'alert',
   Gradient: 'gradient',
   Attentio: 'attention',
-  Normal: 'normal',
-  Grey: 'grey'
+  Normal: 'normal'
 });
 // Figma's "Outline" VARIANT now maps to the code `variant` prop: True →
 // 'outline', False unmapped (renderProp omits undefined → defaults to 'solid').

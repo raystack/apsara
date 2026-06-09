@@ -10,8 +10,7 @@ const disabled = figma.selectedInstance.getEnum('State', {
   Disabled: true
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Small: 'small',
-  Large: 'large'
+  Small: 'small'
 });
 // Selected is a VARIANT (False/True), not a boolean property.
 const defaultChecked = figma.selectedInstance.getEnum('Selected', {

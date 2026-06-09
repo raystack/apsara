@@ -39,8 +39,7 @@ const value = figma.selectedInstance.getEnum('State', {
   })
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Small: 'small',
-  Large: 'large'
+  Small: 'small'
 });
 const label = figma.selectedInstance.getBoolean('Label', {
   true: findTextContent('Label'),

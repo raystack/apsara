@@ -6,15 +6,12 @@ import figma from 'figma';
 
 const instance = figma.selectedInstance;
 
-// Variant Outline/Text → Select.Trigger `variant` (outline | text).
+// Variant Outline/Text → Select.Trigger `variant`.
 const variant = instance.getEnum('Variant', {
-  Outline: 'outline',
   Text: 'text'
 });
 // Size Normal/Small → Select.Trigger `size`. Code sizes are medium/small;
-// map Normal -> medium.
 const size = instance.getEnum('Size', {
-  Normal: 'medium',
   Small: 'small'
 });
 // Icon BOOLEAN gates the leading icon on a Select.Item; the swapped instance

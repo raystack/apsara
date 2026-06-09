@@ -5,13 +5,11 @@
 import figma from 'figma';
 
 const radius = figma.selectedInstance.getEnum('Radius', {
-  Small: 'small',
   Full: 'full'
 });
 const size = figma.selectedInstance.getEnum('Size', {
   '1': 1,
   '2': 2,
-  '3': 3,
   '4': 4,
   '5': 5,
   '6': 6,
@@ -22,7 +20,7 @@ const size = figma.selectedInstance.getEnum('Size', {
   '11': 11,
   '12': 12,
   '13': 13
-});
+}); // '3' removed (default)
 const fallback = figma.selectedInstance.getString('Initials');
 const src = figma.selectedInstance.getBoolean('Image', {
   true: 'https://example.com/avatar.png',

@@ -5,15 +5,12 @@
 import figma from 'figma';
 
 const variant = figma.selectedInstance.getEnum('Variant', {
-  Filled: 'filled',
-  Outline: 'outline'
+  Filled: 'filled'
 });
 const size = figma.selectedInstance.getEnum('Size', {
-  Small: 'small',
   Large: 'large'
 });
 const color = figma.selectedInstance.getEnum('Style', {
-  Neutral: 'neutral',
   Accent: 'accent'
 });
 // State (Default/Hover/Active) is visual-only — no code counterpart, intentionally unmapped.

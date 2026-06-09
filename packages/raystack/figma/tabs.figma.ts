@@ -4,15 +4,11 @@
 
 import figma from 'figma';
 
-// Variant → Tabs `variant` prop.
 const variant = figma.selectedInstance.getEnum('Variant', {
-  Segmented: 'segmented',
   Standalone: 'standalone',
   Plain: 'plain'
 });
-// Size → Tabs `size` prop.
 const size = figma.selectedInstance.getEnum('Size', {
-  Medium: 'medium',
   Large: 'large',
   Small: 'small'
 });
