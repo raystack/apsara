@@ -13,11 +13,12 @@ const type = figma.selectedInstance.getEnum('Type', {
   Normal: 'normal',
   Grey: 'grey'
 });
-// Outline and High Contrast are VARIANT (False/True) in Figma — map True to the boolean
-// prop and leave False unmapped (renderProp omits undefined).
-const outline = figma.selectedInstance.getEnum('Outline', {
-  True: true
+// Figma's "Outline" VARIANT now maps to the code `variant` prop: True →
+// 'outline', False unmapped (renderProp omits undefined → defaults to 'solid').
+const variant = figma.selectedInstance.getEnum('Outline', {
+  True: 'outline'
 });
+// High Contrast VARIANT (False/True) → boolean prop; True only.
 const highContrast = figma.selectedInstance.getEnum('High Contrast', {
   True: true
 });
@@ -54,8 +55,8 @@ export default {
     'type',
     type
   )}${figma.helpers.react.renderProp(
-    'outline',
-    outline
+    'variant',
+    variant
   )}${figma.helpers.react.renderProp(
     'highContrast',
     highContrast

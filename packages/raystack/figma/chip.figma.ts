@@ -17,6 +17,9 @@ const color = figma.selectedInstance.getEnum('Style', {
   Accent: 'accent'
 });
 // State (Default/Hover/Active) is visual-only — no code counterpart, intentionally unmapped.
+// children, dismiss and the leading/trailing icons live on the nested
+// ".chip_structure" instance (guarded — findInstance returns an ErrorHandle
+// when absent).
 const structure = (function () {
   const nested = figma.selectedInstance.findInstance('.chip_structure');
   if (!nested || nested.type !== 'INSTANCE') {
@@ -27,6 +30,15 @@ const structure = (function () {
       trailingIcon: undefined
     };
   }
+  // The icons are fixed nested instances (not instance-swap props) toggled by
+  // the "Leading icon" / "Trailing icon" BOOLEANs, so resolve them by layer
+  // name and render their connected component.
+  const renderNestedIcon = function (layerName: string) {
+    const icon = nested.findInstance(layerName);
+    return icon && icon.type === 'INSTANCE'
+      ? icon.executeTemplate().example
+      : undefined;
+  };
   return {
     children: nested.getBoolean('Label', {
       true: (function () {
@@ -36,12 +48,17 @@ const structure = (function () {
       false: undefined
     }),
     isDismissible: nested.getBoolean('Dismiss'),
-    leadingIcon: nested.getBoolean('Leading icon', {
-      true: nested.getInstanceSwap('Leading icon')?.executeTemplate().example,
-      false: undefined
+    // `leadingIcon` is driven by either the "Avatar" or the "Leading icon"
+    // BOOLEAN. Avatar takes precedence and renders the connected <Avatar />.
+    leadingIcon: nested.getBoolean('Avatar', {
+      true: renderNestedIcon('Avatar'),
+      false: nested.getBoolean('Leading icon', {
+        true: renderNestedIcon('Leading icon'),
+        false: undefined
+      })
     }),
     trailingIcon: nested.getBoolean('Trailing icon', {
-      true: nested.getInstanceSwap('Trailing icon')?.executeTemplate().example,
+      true: renderNestedIcon('Trailing icon'),
       false: undefined
     })
   };

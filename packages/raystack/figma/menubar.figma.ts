@@ -4,13 +4,38 @@
 
 import figma from 'figma';
 
-// Menubar exposes no Figma properties; it is a container that hosts Menu
-// instances. Compose a minimal realistic example from the public API.
+const instance = figma.selectedInstance;
 
-export default {
-  id: 'Menubar',
-  imports: ["import { Menubar, Menu } from '@raystack/apsara'"],
-  example: figma.code`<Menubar>
+// Render every direct child of the Menubar frame into a single flat list of
+// sections (so the array flattens correctly when interpolated):
+// - A Button instance (the menu triggers) becomes a <Menu> whose Trigger
+//   renders that button via the `render` prop, with an (empty) Menu.Content.
+// - Any other child is passed through and rendered directly.
+const items = instance.children.flatMap(child => {
+  if (child.type === 'INSTANCE') {
+    const rendered = child.hasCodeConnect()
+      ? child.executeTemplate().example
+      : undefined;
+    if (child.name === 'Button' && rendered) {
+      return figma.code`
+      <Menu>
+        <Menu.Trigger render={${rendered}} />
+        <Menu.Content />
+      </Menu>`.sections;
+    }
+    // Non-button instance → render it as-is.
+    return rendered ?? [];
+  }
+  if (child.type === 'TEXT') {
+    return figma.code`
+      ${child.textContent}`.sections;
+  }
+  return [];
+});
+
+// Fall back to a minimal realistic example when the frame exposes no
+// resolvable children (e.g. nothing selected).
+const fallback = figma.code`<Menubar>
       <Menu>
         <Menu.Trigger>File</Menu.Trigger>
         <Menu.Content>
@@ -18,6 +43,15 @@ export default {
           <Menu.Item value='open'>Open</Menu.Item>
         </Menu.Content>
       </Menu>
-    </Menubar>`,
+    </Menubar>`;
+
+export default {
+  id: 'Menubar',
+  imports: ["import { Menubar, Menu } from '@raystack/apsara'"],
+  example:
+    items.length > 0
+      ? figma.code`<Menubar>${items}
+    </Menubar>`
+      : fallback,
   metadata: { nestable: false }
 };
