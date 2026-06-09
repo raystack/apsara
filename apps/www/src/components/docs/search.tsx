@@ -15,7 +15,13 @@ import {
   SpaceBetweenVerticallyIcon,
   TextIcon
 } from '@radix-ui/react-icons';
-import { Command, Dialog, EmptyState, IconButton } from '@raystack/apsara';
+import {
+  Command,
+  Dialog,
+  EmptyState,
+  IconButton,
+  Spinner
+} from '@raystack/apsara';
 import {
   flattenTree,
   type Item as PageItem,
@@ -106,6 +112,10 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
 
   const trimmedQuery = search.trim();
   const isSearching = trimmedQuery.length > 0;
+  // While fumadocs debounces + fetches, `query.data` is undefined. Without
+  // this flag the empty state would flash "No result found" for the duration
+  // of the request; instead we show a spinner until the fetch settles.
+  const isLoading = isSearching && query.isLoading;
   const results =
     isSearching && query.data && query.data !== 'empty' ? query.data : [];
 
@@ -228,14 +238,20 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
             )}
           </div>
           <Command.Content className={styles.searchList}>
-            <Command.Empty className={styles.searchEmpty}>
-              <EmptyState
-                variant='empty1'
-                heading='No result found'
-                subHeading='The keyword you’re searching for isn’t in the document—try using a different term.'
-                icon={<ExclamationTriangleIcon />}
-              />
-            </Command.Empty>
+            {isLoading ? (
+              <div className={styles.searchLoading}>
+                <Spinner size={5} aria-label='Searching docs' />
+              </div>
+            ) : (
+              <Command.Empty className={styles.searchEmpty}>
+                <EmptyState
+                  variant='empty1'
+                  heading='No result found'
+                  subHeading='The keyword you’re searching for isn’t in the document—try using a different term.'
+                  icon={<ExclamationTriangleIcon />}
+                />
+              </Command.Empty>
+            )}
             {items.map((section, index) => (
               <Fragment key={section.heading}>
                 <Command.Group>

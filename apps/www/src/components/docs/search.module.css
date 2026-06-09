@@ -19,7 +19,8 @@
   max-height: 440px;
 }
 
-.searchEmpty {
+.searchEmpty,
+.searchLoading {
   display: flex;
   align-items: center;
   justify-content: center;
