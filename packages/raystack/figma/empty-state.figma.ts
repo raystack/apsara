@@ -4,50 +4,59 @@
 
 import figma from 'figma';
 
-const variant = figma.selectedInstance.getEnum('Variant', {
-  Empty: 'empty1',
+const instance = figma.selectedInstance;
+
+// Default variant 'empty1' (Figma "Empty") is omitted; only Zero → 'empty2'.
+const variant = instance.getEnum('Variant', {
   Zero: 'empty2'
 });
+
 const findTextContent = (name: string) => {
-  const t = figma.selectedInstance.findText(name);
+  const t = instance.findText(name);
   return t && t.type === 'TEXT' ? t.textContent : undefined;
 };
-const heading = figma.selectedInstance.getBoolean('Heading', {
-  true: figma.selectedInstance.getEnum('Variant', {
-    Empty: findTextContent('Looking for images in this area?'),
-    Zero: findTextContent('Organization')
-  }),
+const renderInstance = (name: string) => {
+  const i = instance.findInstance(name);
+  return i && i.type === 'INSTANCE' ? i.executeTemplate().example : undefined;
+};
+
+// "Heading" / "Sub heading" TEXT layers, gated by their BOOLEANs.
+const heading = instance.getBoolean('Heading', {
+  true: findTextContent('Heading'),
   false: undefined
 });
-const subHeading = figma.selectedInstance.getBoolean('Sub heading', {
-  true: figma.selectedInstance.getEnum('Variant', {
-    Empty: findTextContent('Draw your area of interest to find images'),
-    Zero: findTextContent(
-      'An organization in Aurora is a shared workspace where teams manage projects, AOIs, and image orders. It streamlines collaboration, analysis, and decision-making across industries.'
-    )
-  }),
+const subHeading = instance.getBoolean('Sub heading', {
+  true: findTextContent('Sub heading'),
   false: undefined
 });
+
+// Primary / Secondary actions are distinct Button instances ("Primary Button"
+// and "Secondary Button"), gated by their respective BOOLEANs.
+const primaryAction = instance.getBoolean('Primary Action', {
+  true: renderInstance('Primary Button'),
+  false: undefined
+});
+const secondaryAction = instance.getBoolean('Secondary Action', {
+  true: renderInstance('Secondary Button'),
+  false: undefined
+});
+
+// Icon: the "empty1" variant wraps it in ".state icon" (instance-swap "Icon");
+// the "empty2" variant uses a direct icon instance. Try the wrapper first, then
+// fall back to the first connected instance that isn't an action button.
 const icon = (function () {
-  const nested = figma.selectedInstance.findInstance('.state icon');
-  return nested && nested.type === 'INSTANCE'
-    ? nested.getInstanceSwap('Icon')?.executeTemplate().example
-    : undefined;
+  const stateIcon = instance.findInstance('.state icon');
+  if (stateIcon && stateIcon.type === 'INSTANCE') {
+    const swapped = stateIcon.getInstanceSwap('Icon');
+    if (swapped) return swapped.executeTemplate().example;
+  }
+  const [iconInstance] = instance.findConnectedInstances(
+    n => n.name !== 'Primary Button' && n.name !== 'Secondary Button'
+  );
+  return iconInstance && iconInstance.type === 'INSTANCE'
+    ? iconInstance.executeTemplate().example
+    : figma.helpers.react.jsxElement('<Icon />');
 })();
-const buttonExample = (function () {
-  const btn = figma.selectedInstance.findInstance('Button');
-  return btn && btn.type === 'INSTANCE'
-    ? btn.executeTemplate().example
-    : undefined;
-})();
-const primaryAction = figma.selectedInstance.getBoolean('Primary Action', {
-  true: buttonExample,
-  false: undefined
-});
-const secondaryAction = figma.selectedInstance.getBoolean('Secondary Action', {
-  true: buttonExample,
-  false: undefined
-});
 
 export default {
   id: 'EmptyState',
@@ -67,6 +76,6 @@ export default {
   )}${figma.helpers.react.renderProp(
     'secondaryAction',
     secondaryAction
-  )}${figma.helpers.react.renderProp('icon', icon)}/>`,
+  )}${figma.helpers.react.renderProp('icon', icon)} />`,
   metadata: { nestable: true }
 };

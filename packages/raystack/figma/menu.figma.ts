@@ -34,21 +34,30 @@ const cells = instance
     cell && cell.type === 'INSTANCE' ? cell.executeTemplate().example : []
   );
 
-// Fall back to placeholder content (Options / Empty) when no real cells exist.
-const placeholder = figma.code`${
-  options
-    ? figma.code`
-        <Menu.Item value='profile'>Profile</Menu.Item>
-        <Menu.Item value='settings'>Settings</Menu.Item>`
-    : ''
-}${
-  empty
-    ? figma.code`
-        <Menu.EmptyState>No results found</Menu.EmptyState>`
-    : ''
-}`.sections;
+// Empty BOOLEAN → render the actual "Empty state" layer (an EmptyState
+// instance) when present; otherwise fall back to the default Menu.EmptyState.
+const emptyContent = (function () {
+  const layer = instance.findInstance('Empty state');
+  if (layer && layer.type === 'INSTANCE') {
+    return layer.executeTemplate().example;
+  }
+  return figma.code`
+        <Menu.EmptyState>No results found</Menu.EmptyState>`.sections;
+})();
 
-const content = cells.length > 0 ? cells : placeholder;
+// Options BOOLEAN → placeholder items, shown only when there are no real cells.
+const optionsPlaceholder = options
+  ? figma.code`
+        <Menu.Item value='profile'>Profile</Menu.Item>
+        <Menu.Item value='settings'>Settings</Menu.Item>`.sections
+  : [];
+
+// Content priority: empty state → real cells → placeholder options.
+const content = empty
+  ? emptyContent
+  : cells.length > 0
+    ? cells
+    : optionsPlaceholder;
 
 export default {
   id: 'Menu',
