@@ -46,8 +46,8 @@ jobs:
       # *** so links read https://figma.com/file/***/?node-id=... in CI logs.
       - name: Mask Figma file keys 🔒
         env:
-          FIGMA_FILE_URL: ${{ vars.FIGMA_FILE_URL }}
-          FIGMA_ICONS_FILE_URL: ${{ vars.FIGMA_ICONS_FILE_URL }}
+          FIGMA_FILE_URL: ${{ secrets.FIGMA_FILE_URL }}
+          FIGMA_ICONS_FILE_URL: ${{ secrets.FIGMA_ICONS_FILE_URL }}
         run: |
           for url in "$FIGMA_FILE_URL" "$FIGMA_ICONS_FILE_URL"; do
             key=$(printf '%s' "$url" | sed -E 's#.*/(design|file)/([^/?]+).*#\2#')
@@ -61,14 +61,14 @@ jobs:
         working-directory: ./packages/raystack
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-          FIGMA_ICONS_FILE_URL: ${{ vars.FIGMA_ICONS_FILE_URL }}
+          FIGMA_ICONS_FILE_URL: ${{ secrets.FIGMA_ICONS_FILE_URL }}
         run: pnpm figma:generate-icons
 
       # Substitute the real Figma file URL into figma.config.json.
       - name: Update Figma config 🔧
         working-directory: ./packages/raystack
         env:
-          FIGMA_FILE_URL: ${{ vars.FIGMA_FILE_URL }}
+          FIGMA_FILE_URL: ${{ secrets.FIGMA_FILE_URL }}
         run: pnpm figma:update-config
 
       # Redact the file key from publish output at the source (belt-and-suspenders
