@@ -52,7 +52,8 @@
     "figma:update-config": "node scripts/update-figma-config.js",
     "figma:validate-config": "node scripts/validate-figma-config.js",
     "figma:generate-icons": "node scripts/generate-icons-code-connect.js",
-    "figma:publish": "pnpm figma:generate-icons && pnpm figma:update-config && figma connect publish"
+    "figma:publish": "figma connect publish --force --skip-update-check --exit-on-unreadable-files",
+    "figma:sync": "pnpm figma:generate-icons && pnpm figma:update-config && pnpm figma:publish"
   },
   "typesVersions": {
     "*": {
@@ -79,7 +80,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@figma/code-connect": "^1.3.5",
+    "@figma/code-connect": "^1.4.7",
     "@raystack/tools-config": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-image": "^3.0.2",

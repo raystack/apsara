@@ -1,0 +1,82 @@
+name: Publish Figma Code Connect
+
+# Code Connect mappings are version-independent — they only change when the
+# template files do. Publish to Figma whenever those files land on main,
+# or trigger manually from the Actions tab.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "packages/raystack/figma/**"
+      - "packages/raystack/figma.config.json"
+      - "packages/raystack/scripts/generate-icons-code-connect.js"
+      - ".github/workflows/code-connect.yaml"
+
+# Avoid overlapping publishes racing against the same Figma file.
+concurrency:
+  group: code-connect
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish Figma Code Connect
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm 9
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.3.0
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+
+      - name: Install Dependencies 🔧
+        run: pnpm install --frozen-lockfile
+
+      # Redact the Figma file keys from all subsequent step logs. The publish
+      # command prints every mapped node URL; masking turns the file key into
+      # *** so links read https://figma.com/file/***/?node-id=... in CI logs.
+      - name: Mask Figma file keys 🔒
+        env:
+          FIGMA_FILE_URL: ${{ vars.FIGMA_FILE_URL }}
+          FIGMA_ICONS_FILE_URL: ${{ vars.FIGMA_ICONS_FILE_URL }}
+        run: |
+          for url in "$FIGMA_FILE_URL" "$FIGMA_ICONS_FILE_URL"; do
+            key=$(printf '%s' "$url" | sed -E 's#.*/(design|file)/([^/?]+).*#\2#')
+            if [ -n "$key" ] && [ "$key" != "$url" ]; then
+              echo "::add-mask::$key"
+            fi
+          done
+
+      # Generate the per-icon batch JSON from the Figma icons file.
+      - name: Generate icon mappings 🎨
+        working-directory: ./packages/raystack
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          FIGMA_ICONS_FILE_URL: ${{ vars.FIGMA_ICONS_FILE_URL }}
+        run: pnpm figma:generate-icons
+
+      # Substitute the real Figma file URL into figma.config.json.
+      - name: Update Figma config 🔧
+        working-directory: ./packages/raystack
+        env:
+          FIGMA_FILE_URL: ${{ vars.FIGMA_FILE_URL }}
+        run: pnpm figma:update-config
+
+      # Redact the file key from publish output at the source (belt-and-suspenders
+      # with the add-mask step). pipefail preserves figma:publish's exit code.
+      - name: Publish to Figma 🚀
+        working-directory: ./packages/raystack
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: |
+          set -o pipefail
+          pnpm figma:publish 2>&1 | sed -E 's#(/(design|file)/)[^/?]+#\1***#g'

@@ -30,22 +30,26 @@ async function generateIcons() {
     }))
     .filter(c => c.name in icons);
 
-  const uniqueNames = new Set([...components.map(c => c.name)]);
+  // Emit a Code Connect batch file: every entry is published with the shared
+  // icons.figma.batch.ts template (entry fields are exposed as `figma.batch`).
+  const seen = new Set();
+  const entries = [];
+  for (const c of components) {
+    if (seen.has(c.figmaUrl)) continue;
+    seen.add(c.figmaUrl);
+    entries.push({ url: c.figmaUrl, component: c.name });
+  }
+
+  const batch = {
+    templateFile: './icons.figma.batch.ts',
+    components: entries
+  };
 
   fs.writeFileSync(
-    path.join(__dirname, '..', 'figma', 'icons.figma.tsx'),
-    `\
-  import figma from '@figma/code-connect'
-
-  import {
-  ${Array.from(uniqueNames)
-    .map(iconName => `  ${iconName},`)
-    .join('\n')}
-  } from '@radix-ui/react-icons'
-
-  ${components.map(c => `figma.connect(${c.name}, '${c.figmaUrl}')`).join('\n')}
-  `
+    path.join(__dirname, '..', 'figma', 'icons.figma.batch.json'),
+    JSON.stringify(batch, null, 2)
   );
+  console.log(`Wrote figma/icons.figma.batch.json (${entries.length} icons)`);
 }
 
 generateIcons();
