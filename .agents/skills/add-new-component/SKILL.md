@@ -4,6 +4,7 @@ description: End-to-end guide for adding a new component to the Apsara design sy
 metadata:
   author: raystack
   version: "1.0"
+  internal: true
 ---
 
 # Add New Component to Apsara
