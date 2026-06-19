@@ -47,6 +47,9 @@ const Page = () => {
   const [events, setEvents] = useState<string[]>([]);
   const [notifications, setNotifications] = useState(3);
   const [showLateCard, setShowLateCard] = useState(false);
+  // Track progress so the hero can offer "Resume" after a mid-tour stop.
+  const [lastIndex, setLastIndex] = useState(0);
+  const [resumable, setResumable] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<TourActions>(null);
 
@@ -171,6 +174,11 @@ const Page = () => {
     setEvents(prev =>
       [`${event.type} · #${event.index} ${detail}`.trim(), ...prev].slice(0, 8)
     );
+    // Offer "Resume" only when the tour was left mid-way (Escape or Stop),
+    // not when it ran to the end (finished) or was skipped.
+    if (event.type === 'tour:end') {
+      setResumable(event.status === 'closed' && event.index > 0);
+    }
   };
 
   return (
@@ -230,16 +238,45 @@ const Page = () => {
             {notifications > 0 && (
               <Badge variant='accent'>{notifications}</Badge>
             )}
-            <Button size='small' onClick={() => setTourOpen(true)}>
-              Start tour
-            </Button>
           </Navbar.End>
         </Navbar>
 
         <Flex
           direction='column'
+          align='start'
+          justify='start'
+          gap={4}
+          style={{
+            padding: 'var(--rs-space-9) var(--rs-space-9) var(--rs-space-7)',
+            textAlign: 'center'
+          }}
+        >
+          <Text size='large' weight='medium'>
+            Take the guided tour
+          </Text>
+          <Text
+            align='start'
+            size='small'
+            variant='secondary'
+            style={{ maxWidth: 440 }}
+          >
+            Ten steps across the sidebar, search, a dialog, plus late-mounting
+            and scrolled targets. Press Escape any time to leave.
+          </Text>
+          <Button
+            onClick={() => actionsRef.current?.start(resumable ? lastIndex : 0)}
+          >
+            {resumable ? `Resume tour (step ${lastIndex + 1})` : 'Start tour'}
+          </Button>
+        </Flex>
+
+        <Flex
+          direction='column'
           gap={7}
-          style={{ padding: 'var(--rs-space-9)', maxWidth: 760 }}
+          style={{
+            padding: '0 var(--rs-space-9) var(--rs-space-9)',
+            maxWidth: 760
+          }}
         >
           <Callout type='accent' icon={<RocketIcon />}>
             Click “Start tour”. Step 5 only advances when you click the invite
@@ -274,32 +311,6 @@ const Page = () => {
                   </Text>
                 ))
               )}
-            </Flex>
-            <Flex gap={3}>
-              <Button
-                size='small'
-                variant='outline'
-                color='neutral'
-                onClick={() => actionsRef.current?.start(0)}
-              >
-                actions.start()
-              </Button>
-              <Button
-                size='small'
-                variant='outline'
-                color='neutral'
-                onClick={() => actionsRef.current?.go(3)}
-              >
-                actions.go(3)
-              </Button>
-              <Button
-                size='small'
-                variant='outline'
-                color='neutral'
-                onClick={() => actionsRef.current?.stop()}
-              >
-                actions.stop()
-              </Button>
             </Flex>
           </Flex>
 
@@ -423,6 +434,7 @@ const Page = () => {
           // Ending the tour mid-dialog shouldn't strand the dialog open.
           if (!nextOpen) setInviteOpen(false);
         }}
+        onStepChange={index => setLastIndex(index)}
         onEvent={logEvent}
         actionsRef={actionsRef}
       >

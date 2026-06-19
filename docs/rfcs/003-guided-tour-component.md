@@ -1,8 +1,8 @@
 ---
 ID: RFC 003
-Created: June 17, 2026
+Created: June 19, 2026
 Status: Draft
-RFC PR: TBD
+RFC PR: https://github.com/raystack/apsara/pull/839
 ---
 
 # Guided Tour Component
