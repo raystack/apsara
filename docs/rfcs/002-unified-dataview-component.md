@@ -1,7 +1,7 @@
 ---
 ID: RFC 002
 Created: April 23, 2026
-Status: Draft
+Status: Completed
 RFC PR: https://github.com/raystack/apsara/pull/752
 ---
 
