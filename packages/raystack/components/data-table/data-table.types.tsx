@@ -157,7 +157,7 @@ export type TableContextType<TData, TValue> = {
   isLoading?: boolean;
   loadMoreData: () => void;
   mode: DataTableMode;
-  defaultSort: DataTableSort;
+  defaultSort?: DataTableSort;
   tableQuery?: InternalQuery;
   totalRowCount?: number;
   loadingRowCount?: number;

@@ -168,7 +168,7 @@ const isSearchChanged = (oldSearch?: string, newSearch?: string): boolean => {
  */
 export const hasActiveQuery = (
   tableQuery: InternalQuery,
-  defaultSort: DataTableSort
+  defaultSort?: DataTableSort
 ): boolean => {
   const hasFilters =
     (tableQuery?.filters && tableQuery.filters.length > 0) || false;
@@ -345,7 +345,7 @@ export function hasActiveTableFiltering<T>(table: Table<T>): boolean {
 }
 
 export function getDefaultTableQuery(
-  defaultSort: DataTableSort,
+  defaultSort?: DataTableSort,
   oldQuery: DataTableQuery = {}
 ): InternalQuery {
   // Convert DataTableQuery to InternalQuery
