@@ -107,3 +107,13 @@ export { Toast, toastManager, useToastManager } from './components/toast';
 export { Toggle } from './components/toggle';
 export { Toolbar } from './components/toolbar';
 export { Tooltip } from './components/tooltip';
+export {
+  Tour,
+  type TourActions,
+  type TourEndStatus,
+  type TourEvent,
+  type TourRenderProps,
+  type TourStep,
+  type TourTarget,
+  useTour
+} from './components/tour-beta';
