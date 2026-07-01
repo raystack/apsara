@@ -1,0 +1,188 @@
+---
+title: Tour
+description: Guided product walkthroughs — a sequence of cards that point at real elements, spotlight them, and let people move on, go back, or leave.
+source: packages/raystack/components/tour
+tag: new
+---
+
+import { preview } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+Describe a tour as an array of steps and drop in the root. With no children it
+renders the overlay plus the standard card.
+
+```tsx
+import { Tour } from "@raystack/apsara";
+
+const steps = [
+  { target: '[data-tour="search"]', title: "Search", content: "Find anything." },
+  { target: filtersRef, title: "Filter", content: "Narrow results.", side: "right" },
+  { title: "You're all set!", content: "Explore at your own pace." }, // no target → centered
+];
+
+<Tour steps={steps} defaultOpen />;
+```
+
+To compose the card yourself, pass the parts as children:
+
+```tsx
+<Tour steps={steps} defaultOpen>
+  <Tour.Overlay />
+  <Tour.Popover>
+    <Tour.Title />
+    <Tour.Description />
+    <Tour.Progress />
+    <Tour.Prev />
+    <Tour.Next />
+  </Tour.Popover>
+</Tour>
+```
+
+## API Reference
+
+### Tour
+
+The root. Holds the steps and the open/index state, resolves targets, emits
+events, and owns the actions. Renders a context provider — its children default
+to `<Tour.Overlay />` and `<Tour.Popover />`.
+
+<auto-type-table path="./props.ts" name="TourProps" />
+
+### Step
+
+Each entry in the `steps` array.
+
+<auto-type-table path="./props.ts" name="TourStep" />
+
+### Tour.Popover
+
+The card. Accepts positioning defaults and either static children, a render
+function, or the default layout.
+
+<auto-type-table path="./props.ts" name="TourPopoverProps" />
+
+### Tour.Overlay
+
+The dimmed backdrop with a spotlight cutout over the target.
+
+<auto-type-table path="./props.ts" name="TourOverlayProps" />
+
+### Tour.Progress
+
+Renders the step counter, e.g. "2 of 5".
+
+<auto-type-table path="./props.ts" name="TourProgressProps" />
+
+### Tour.Title / Tour.Description
+
+Give the card its accessible name and description, falling back to the step's
+`title` and `content`.
+
+### Tour.Next / Tour.Prev / Tour.Skip / Tour.Close
+
+Navigation buttons. Each runs your `onClick` first, then its action
+(`next`, `prev`, `skip`, `stop`). `Tour.Next` finishes the tour past the last
+step.
+
+### Actions
+
+`start`, `next`, `prev`, `go`, `skip`, and `stop`. Reach them through
+`actionsRef`, or anywhere inside `<Tour>` with the `useTour()` hook. `start` is
+the only action that runs while the tour is closed.
+
+<auto-type-table path="./props.ts" name="TourActions" />
+
+### Events
+
+Every lifecycle moment is reported to `onEvent`.
+
+<auto-type-table path="./props.ts" name="TourEvent" />
+
+## Examples
+
+### Controlled with imperative controls
+
+Control `open` and `stepIndex`, pass an `actionsRef`, and drive the tour from
+your own UI.
+
+```tsx
+const actionsRef = useRef<TourActions>(null);
+const [open, setOpen] = useState(false);
+const [index, setIndex] = useState(0);
+
+<Button onClick={() => actionsRef.current?.start()}>Take a tour</Button>
+
+<Tour
+  steps={steps}
+  open={open}
+  stepIndex={index}
+  actionsRef={actionsRef}
+  onOpenChange={(open, { status }) => {
+    setOpen(open);
+    if (!open) analytics.track("tour_end", { status });
+  }}
+  onStepChange={setIndex}
+/>;
+```
+
+### Custom card with a render function
+
+Leave out `Tour.Next` and advance from app code when the user does something —
+useful for action-gated steps (draw a shape, open a panel).
+
+```tsx
+<Tour steps={steps} open={open} stepIndex={index} actionsRef={actionsRef} disableOverlay>
+  <Tour.Popover>
+    {({ step, index, totalSteps, isLastStep, actions }) => (
+      <Flex direction="column" gap={3}>
+        <Text weight="medium">{step.title}</Text>
+        <Text variant="secondary">{step.content}</Text>
+        <Flex justify="between" align="center">
+          <Text size="mini">{index + 1} of {totalSteps}</Text>
+          <Button size="small" onClick={isLastStep ? actions.stop : actions.next}>
+            {isLastStep ? "Done" : "Next"}
+          </Button>
+        </Flex>
+      </Flex>
+    )}
+  </Tour.Popover>
+</Tour>;
+
+// advance the draw step once the app reports a shape on the map
+useEffect(() => {
+  if (open && index === 2 && store.hasShape) actionsRef.current?.go(3);
+}, [open, index, store.hasShape]);
+```
+
+### Targets and spotlight
+
+A target can be a CSS selector, an element, a React ref, or a function. Targets
+that mount after the tour starts are awaited automatically; if one never
+appears within `targetTimeout` the tour skips it (or stops, per
+`targetNotFound`). If a target unmounts mid-step — its dialog closes, its route
+changes — the tour recovers instead of leaving a broken overlay.
+
+```tsx
+const steps = [
+  { target: "#search", title: "Selector target" },
+  { target: searchRef, title: "Ref target", spotlightClicks: true },
+  { target: () => editor.getNode("aoi"), title: "Function target" },
+  { target: "#panel", spotlightTarget: "#panel-header", title: "Spotlight a child" },
+];
+```
+
+## Accessibility
+
+- The card is a Base UI `Popover`, so `Tour.Title` and `Tour.Description` provide
+  its accessible name and description and it is exposed as a `dialog`.
+- Focus moves into the card when a step opens and when the step changes, so
+  keyboard users can reach the navigation buttons. Steps with `spotlightClicks`
+  keep focus on the page so the highlighted element stays operable.
+- Escape ends the tour. Outside clicks and focus moves do not, so a step can keep
+  focus on the element it highlights.
+- The tour is non-modal (`modal={false}`); it does not trap focus or lock scroll.
+- Motion — the spotlight glide, card entry, and scroll-into-view — is enabled only
+  when `prefers-reduced-motion: no-preference`.

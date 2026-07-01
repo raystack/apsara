@@ -116,4 +116,4 @@ export {
   type TourStep,
   type TourTarget,
   useTour
-} from './components/tour-beta';
+} from './components/tour';

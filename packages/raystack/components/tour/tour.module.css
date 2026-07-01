@@ -1,0 +1,156 @@
+/* Tours sit above other portalled surfaces (dialogs, popovers) so steps can
+   spotlight elements inside them. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--rs-z-index-portal) + 1);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .overlay {
+    animation: tour-fade-in 250ms ease;
+  }
+}
+
+@keyframes tour-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* The dimming layer is this element's box-shadow; the element itself is the
+   transparent cutout over the target, so moving it animates the cutout. */
+.spotlight {
+  position: absolute;
+  pointer-events: none;
+  box-shadow: 0 0 0 200vmax var(--rs-color-overlay-black-a5);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spotlight {
+    transition:
+      left 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      top 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      width 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      height 300ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-radius 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+.overlayHit {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.positioner {
+  z-index: calc(var(--rs-z-index-portal) + 2);
+}
+
+/* Glide between step targets, but not while the popup is mounting — otherwise
+   the first open would animate in from the viewport origin. */
+@media (prefers-reduced-motion: no-preference) {
+  .positioner:has(.popup:not([data-starting-style])) {
+    transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+.popup {
+  box-sizing: border-box;
+  outline: 0;
+  width: max-content;
+  min-width: 16rem;
+  max-width: 20rem;
+  padding: var(--rs-space-5);
+  background-color: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-3);
+  box-shadow: var(--rs-shadow-soft);
+  color: var(--rs-color-foreground-base-primary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 200ms ease,
+    scale 200ms ease;
+}
+
+.popup[data-starting-style],
+.popup[data-ending-style] {
+  opacity: 0;
+  scale: 0.96;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stepContent {
+    animation: tour-step-in 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@keyframes tour-step-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--rs-space-1);
+  }
+}
+
+.arrow {
+  display: flex;
+  filter: drop-shadow(0 1px 0 var(--rs-color-border-base-primary))
+    drop-shadow(0 1px 1px var(--rs-color-border-base-primary));
+}
+
+.arrow svg {
+  display: block;
+  color: var(--rs-color-background-base-primary);
+}
+
+.arrow[data-side="top"] {
+  bottom: -6px;
+}
+
+.arrow[data-side="bottom"] {
+  top: 0;
+  transform: translateY(-100%) rotate(180deg);
+}
+
+.arrow[data-side="left"],
+.arrow[data-side="inline-start"] {
+  right: 0;
+  transform: translateY(-50%) translateX(100%) rotate(-90deg);
+}
+
+.arrow[data-side="right"],
+.arrow[data-side="inline-end"] {
+  left: 0;
+  transform: translateY(-50%) translateX(-100%) rotate(90deg);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+  font-weight: var(--rs-font-weight-medium);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.description {
+  margin: 0;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.footer {
+  margin-top: var(--rs-space-2);
+}

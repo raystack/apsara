@@ -19,11 +19,13 @@ import {
   Navbar,
   Search,
   Sidebar,
+  Switch,
   Text,
   Tour,
   type TourActions,
   type TourEvent,
-  type TourStep
+  type TourStep,
+  useTour
 } from '@raystack/apsara';
 import { useEffect, useRef, useState } from 'react';
 
@@ -34,27 +36,555 @@ const card: React.CSSProperties = {
   backgroundColor: 'var(--rs-color-background-base-primary)'
 };
 
-/** Per-step flags read by the custom popover layout below. */
-type StepData = {
-  /** When set, the step has no Next button — this hint shows instead. */
-  requiresAction?: string;
-  hidePrev?: boolean;
+const labCard: React.CSSProperties = {
+  ...card,
+  padding: 'var(--rs-space-5)',
+  height: '100%'
 };
 
-const Page = () => {
+/* -------------------------------------------------------------------------- */
+/* Shared helpers                                                             */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A small live status row, driven by `useTour` — shows idle/waiting/running.
+ * Rendered as a child of `<Tour>` so it can read the tour context.
+ */
+function StatusRow() {
+  const { status } = useTour();
+  return (
+    <Flex gap={2} align='center'>
+      <Text size='mini' variant='tertiary'>
+        useTour status:
+      </Text>
+      <Badge variant={status === 'running' ? 'accent' : 'neutral'}>
+        {status}
+      </Badge>
+    </Flex>
+  );
+}
+
+/** Consistent shell for each isolated edge-case demo. */
+function LabCard({
+  title,
+  children,
+  note
+}: {
+  title: string;
+  children: React.ReactNode;
+  note: React.ReactNode;
+}) {
+  return (
+    <Flex direction='column' gap={3} style={labCard}>
+      <Text size='regular' weight='medium'>
+        {title}
+      </Text>
+      <Text size='small' variant='secondary'>
+        {note}
+      </Text>
+      <Flex direction='column' gap={3} style={{ marginTop: 'auto' }}>
+        {children}
+      </Flex>
+    </Flex>
+  );
+}
+
+/** Tracks the most recent lifecycle line for a demo-local mini event log. */
+function useLastEvent() {
+  const [last, setLast] = useState<string>('—');
+  const onEvent = (e: TourEvent) => {
+    const detail =
+      e.type === 'tour:end' ? `status=${e.status}` : (e.step?.id ?? '');
+    setLast(`${e.type} · #${e.index} ${detail}`.trim());
+  };
+  return { last, onEvent };
+}
+
+function EventLine({ last }: { last: string }) {
+  return (
+    <Text
+      size='mini'
+      variant='tertiary'
+      style={{ fontFamily: 'var(--rs-font-mono)' }}
+    >
+      {last}
+    </Text>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge case: late-mounting target (MutationObserver wait → "waiting")        */
+/* -------------------------------------------------------------------------- */
+
+function LateMountDemo() {
+  const actionsRef = useRef<TourActions>(null);
+  const [mounted, setMounted] = useState(false);
+  const [phase, setPhase] = useState<'idle' | 'waiting' | 'running'>('idle');
+
+  const run = () => {
+    setMounted(false);
+    setPhase('waiting');
+    actionsRef.current?.start();
+    // The target only appears ~1.2s later — the tour waits for it.
+    window.setTimeout(() => setMounted(true), 1200);
+  };
+
+  return (
+    <LabCard
+      title='Late-mounting target'
+      note='The target mounts 1.2s after the tour starts. A MutationObserver resolves it the moment it appears; until then the tour is "waiting" and nothing is drawn.'
+    >
+      <Flex gap={2} align='center'>
+        <Button size='small' onClick={run}>
+          Run
+        </Button>
+        <Badge variant={phase === 'running' ? 'accent' : 'neutral'}>
+          {phase}
+        </Badge>
+      </Flex>
+      <div style={{ minHeight: 44 }}>
+        {mounted && (
+          <Flex id='lm-target' style={card} data-late>
+            <Text size='small'>I mounted late.</Text>
+          </Flex>
+        )}
+      </div>
+      <Tour
+        steps={[
+          {
+            id: 'late',
+            target: '#lm-target',
+            title: 'Waited for the target',
+            content:
+              'This element was not in the DOM when the tour started. The tour observed for it and resolved once it mounted.'
+          }
+        ]}
+        actionsRef={actionsRef}
+        onEvent={e => {
+          if (e.type === 'step:active') setPhase('running');
+          if (e.type === 'tour:end') setPhase('idle');
+        }}
+      />
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge case: target never appears → skip vs stop                             */
+/* -------------------------------------------------------------------------- */
+
+function MissingTargetDemo() {
+  const actionsRef = useRef<TourActions>(null);
+  const [policy, setPolicy] = useState<'skip' | 'stop'>('skip');
+  const { last, onEvent } = useLastEvent();
+
+  return (
+    <LabCard
+      title='Missing target → skip / stop'
+      note='The first step targets an element that never exists. After a 1.2s timeout the tour applies the targetNotFound policy — skipping to the next step or stopping.'
+    >
+      <Flex gap={3} align='center'>
+        <Switch
+          checked={policy === 'stop'}
+          onCheckedChange={c => setPolicy(c ? 'stop' : 'skip')}
+        />
+        <Text size='small'>
+          policy: <code>{policy}</code>
+        </Text>
+      </Flex>
+      <Flex gap={2} align='center'>
+        <Button size='small' onClick={() => actionsRef.current?.start()}>
+          Run
+        </Button>
+        <EventLine last={last} />
+      </Flex>
+      <div id='mt-real' style={card}>
+        <Text size='small'>Fallback target.</Text>
+      </div>
+      <Tour
+        key={policy}
+        steps={[
+          { id: 'ghost', target: '#mt-does-not-exist', title: 'Ghost step' },
+          {
+            id: 'recovered',
+            target: '#mt-real',
+            title: 'Recovered',
+            content: 'The ghost step timed out and the tour skipped to me.'
+          }
+        ]}
+        actionsRef={actionsRef}
+        targetTimeout={1200}
+        targetNotFound={policy}
+        onEvent={onEvent}
+      />
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge case: a resolved target unmounts mid-step (tour recovers)             */
+/* -------------------------------------------------------------------------- */
+
+function UnmountMidStepDemo() {
+  const actionsRef = useRef<TourActions>(null);
+  const [present, setPresent] = useState(true);
+  const { last, onEvent } = useLastEvent();
+
+  const start = () => {
+    setPresent(true);
+    actionsRef.current?.start();
+    // Simulate the target disappearing mid-step — as if a dialog holding it
+    // closed, or a route unmounted it — while the tour points at it.
+    window.setTimeout(() => setPresent(false), 1600);
+  };
+
+  return (
+    <LabCard
+      title='Target unmounts mid-step'
+      note='The tour opens on the card, which then vanishes ~1.6s later while its step is active. The tour drops the broken hole, waits, then advances — never a stranded overlay.'
+    >
+      <Flex gap={2} align='center'>
+        <Button size='small' onClick={start}>
+          Start
+        </Button>
+        <EventLine last={last} />
+      </Flex>
+      <div style={{ minHeight: 44 }}>
+        {present && (
+          <div id='um-target' style={card}>
+            <Text size='small'>I vanish mid-tour…</Text>
+          </div>
+        )}
+      </div>
+      <div id='um-fallback' style={card}>
+        <Text size='small'>Stable fallback.</Text>
+      </div>
+      <Tour
+        steps={[
+          {
+            id: 'removable',
+            target: '#um-target',
+            title: 'On the vanishing card',
+            content: 'Watch — this card is about to disappear.'
+          },
+          {
+            id: 'after',
+            target: '#um-fallback',
+            title: 'Recovered cleanly',
+            content: 'The target vanished, so the tour advanced here.'
+          }
+        ]}
+        actionsRef={actionsRef}
+        targetTimeout={1200}
+        onEvent={onEvent}
+      />
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge case (headline): close tour, close dialog, resume onto missing target */
+/* -------------------------------------------------------------------------- */
+
+function ResumeMissingDemo() {
+  const actionsRef = useRef<TourActions>(null);
+  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { last, onEvent } = useLastEvent();
+
+  return (
+    <LabCard
+      title='Resume after the target is gone'
+      note='Tour a field inside a dialog, close everything, then resume. The dialog stays closed so the field is gone — the tour waits and draws nothing (no orphaned dim), then ends cleanly.'
+    >
+      <Flex gap={2} align='center' wrap='wrap'>
+        <Button
+          size='small'
+          onClick={() => {
+            setDialogOpen(true);
+            setOpen(true);
+          }}
+        >
+          Open &amp; tour field
+        </Button>
+        <Button
+          size='small'
+          variant='outline'
+          color='neutral'
+          onClick={() => actionsRef.current?.start(0)}
+        >
+          Resume (field gone)
+        </Button>
+        <EventLine last={last} />
+      </Flex>
+
+      <Dialog
+        open={dialogOpen}
+        modal={false}
+        onOpenChange={next => {
+          if (!next && open) return; // tour owns dismissal while running
+          setDialogOpen(next);
+        }}
+      >
+        <Dialog.Content style={{ width: 360 }} showCloseButton={!open}>
+          <Dialog.Header>
+            <Dialog.Title>Invite a teammate</Dialog.Title>
+          </Dialog.Header>
+          <Dialog.Body>
+            <Input
+              id='rm-field'
+              placeholder='teammate@example.com'
+              aria-label='Email address'
+            />
+          </Dialog.Body>
+        </Dialog.Content>
+      </Dialog>
+
+      <Tour
+        steps={[
+          {
+            id: 'field',
+            target: '#rm-field',
+            title: 'Field inside a dialog',
+            content:
+              'Now press Escape (or close), then click “Resume” — the dialog stays closed, so this field no longer exists.',
+            spotlightClicks: true
+          }
+        ]}
+        open={open}
+        actionsRef={actionsRef}
+        targetTimeout={1500}
+        onEvent={onEvent}
+        onOpenChange={next => {
+          setOpen(next);
+          if (!next) setDialogOpen(false); // closing the tour closes the dialog
+        }}
+      />
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge case: spotlight follows scroll (and scrolls the target into view)     */
+/* -------------------------------------------------------------------------- */
+
+function ScrollTrackingDemo() {
+  const actionsRef = useRef<TourActions>(null);
+
+  return (
+    <LabCard
+      title='Scroll a nested container into view'
+      note='The target sits below the fold of a scroll box. The tour scrolls the nested container to bring it into view, then the spotlight tracks its exact rect.'
+    >
+      <Button size='small' onClick={() => actionsRef.current?.start()}>
+        Tour the item below the fold
+      </Button>
+      <div
+        style={{
+          height: 140,
+          overflow: 'auto',
+          border: '1px solid var(--rs-color-border-base-primary)',
+          borderRadius: 'var(--rs-radius-3)',
+          padding: 'var(--rs-space-3)'
+        }}
+      >
+        <Flex direction='column' gap={2}>
+          {Array.from({ length: 8 }, (_, i) => (
+            <Text key={i} size='small' variant='secondary'>
+              Row {i + 1}
+            </Text>
+          ))}
+          <div id='st-target' style={{ ...card, padding: 'var(--rs-space-3)' }}>
+            <Text size='small'>Target row (below the fold)</Text>
+          </div>
+          {Array.from({ length: 6 }, (_, i) => (
+            <Text key={i} size='small' variant='secondary'>
+              Row {i + 9}
+            </Text>
+          ))}
+        </Flex>
+      </div>
+      <Tour
+        steps={[
+          {
+            id: 'scrolled',
+            target: '#st-target',
+            title: 'Scrolled into view',
+            content:
+              'The tour scrolled this nested container to bring the row into view before anchoring.',
+            side: 'top'
+          }
+        ]}
+        actionsRef={actionsRef}
+      />
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge case: spotlight a child of the anchor (spotlightTarget)               */
+/* -------------------------------------------------------------------------- */
+
+function SpotlightChildDemo() {
+  const actionsRef = useRef<TourActions>(null);
+
+  return (
+    <LabCard
+      title='Spotlight a child element'
+      note='The popover anchors to the whole panel, but spotlightTarget highlights only its header — useful when the anchor is large.'
+    >
+      <Button size='small' onClick={() => actionsRef.current?.start()}>
+        Run
+      </Button>
+      <div id='sc-panel' style={{ ...card, padding: 0, overflow: 'hidden' }}>
+        <div
+          id='sc-header'
+          style={{
+            padding: 'var(--rs-space-3) var(--rs-space-4)',
+            borderBottom: '1px solid var(--rs-color-border-base-primary)',
+            backgroundColor: 'var(--rs-color-background-base-primary-hover)'
+          }}
+        >
+          <Text size='small' weight='medium'>
+            Panel header
+          </Text>
+        </div>
+        <div style={{ padding: 'var(--rs-space-4)' }}>
+          <Text size='small' variant='secondary'>
+            Panel body content that is not spotlighted.
+          </Text>
+        </div>
+      </div>
+      <Tour
+        steps={[
+          {
+            id: 'child',
+            target: '#sc-panel',
+            spotlightTarget: '#sc-header',
+            title: 'Spotlight a child',
+            content: 'Anchored to the panel, spotlight on just the header.',
+            side: 'bottom'
+          }
+        ]}
+        actionsRef={actionsRef}
+      />
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Edge case: action-gated step (advance from app state, no Next button)      */
+/* -------------------------------------------------------------------------- */
+
+function ActionGatedDemo() {
+  const actionsRef = useRef<TourActions>(null);
+  const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [checked, setChecked] = useState(false);
+
+  // Advance when the user performs the required action (toggles the switch).
+  useEffect(() => {
+    if (open && index === 0 && checked) actionsRef.current?.next();
+  }, [open, index, checked]);
+
+  return (
+    <LabCard
+      title='Action-gated step + useTour'
+      note='This step has no Next button — the tour advances only when you toggle the switch. The live status pill is powered by the useTour hook.'
+    >
+      <Button
+        size='small'
+        onClick={() => {
+          setChecked(false);
+          actionsRef.current?.start(0);
+        }}
+      >
+        Start
+      </Button>
+      <Flex gap={3} align='center'>
+        <Switch id='ag-switch' checked={checked} onCheckedChange={setChecked} />
+        <Text size='small'>Toggle to continue</Text>
+      </Flex>
+      <div id='ag-done' style={card}>
+        <Text size='small'>Finish line.</Text>
+      </div>
+      <Tour
+        steps={[
+          {
+            id: 'gate',
+            target: '#ag-switch',
+            title: 'Do the thing',
+            content: 'No Next here — flip the switch to advance.',
+            side: 'right',
+            spotlightClicks: true
+          },
+          {
+            id: 'gate-done',
+            target: '#ag-done',
+            title: 'You advanced by doing',
+            content: 'App code called actions.next() when the switch flipped.'
+          }
+        ]}
+        open={open}
+        stepIndex={index}
+        actionsRef={actionsRef}
+        onOpenChange={setOpen}
+        onStepChange={setIndex}
+      >
+        <Tour.Overlay />
+        <StatusRow />
+        <Tour.Popover>
+          {({ step, index, isLastStep, actions }) => {
+            const gated = index === 0;
+            return (
+              <>
+                <Flex justify='between' align='start' gap={3}>
+                  <Tour.Title />
+                  <Tour.Close />
+                </Flex>
+                <Tour.Description />
+                <Flex justify='between' align='center' gap={3}>
+                  <Tour.Progress />
+                  {gated ? (
+                    <Text size='mini' weight='medium' variant='accent'>
+                      Waiting for you…
+                    </Text>
+                  ) : (
+                    <Button
+                      size='small'
+                      onClick={isLastStep ? actions.stop : actions.next}
+                    >
+                      {isLastStep ? 'Done' : 'Next'}
+                    </Button>
+                  )}
+                </Flex>
+              </>
+            );
+          }}
+        </Tour.Popover>
+      </Tour>
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* The main product tour                                                      */
+/* -------------------------------------------------------------------------- */
+
+type StepData = { requiresAction?: string; hidePrev?: boolean };
+
+function ProductTour() {
   const [tourOpen, setTourOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [events, setEvents] = useState<string[]>([]);
   const [notifications, setNotifications] = useState(3);
   const [showLateCard, setShowLateCard] = useState(false);
-  // Track progress so the hero can offer "Resume" after a mid-tour stop.
   const [lastIndex, setLastIndex] = useState(0);
   const [resumable, setResumable] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<TourActions>(null);
 
-  // The "Reports" card mounts 1.5s after the tour starts, to demo the
-  // MutationObserver wait (status becomes `waiting` until it appears).
+  // The "Reports" card mounts 1.5s after the tour starts, to demo the wait.
   useEffect(() => {
     if (!tourOpen) return;
     const timer = setTimeout(() => setShowLateCard(true), 1500);
@@ -64,17 +594,15 @@ const Page = () => {
   const steps: TourStep[] = [
     {
       id: 'welcome',
-      // No target: renders as a centered, detached step.
       title: 'Welcome to Raystack',
       content:
-        'This tour is built entirely on Apsara primitives — Base UI popover, design tokens, and a spotlight backdrop. Use Next or press Escape to leave at any time.'
+        'A tour built entirely on Apsara primitives — Base UI popover, design tokens, and a spotlight backdrop. This first step has no target, so it is centered.'
     },
     {
       id: 'sidebar',
       target: '[data-tour="sidebar-nav"]',
       title: 'Navigate your workspace',
-      content:
-        'Everything lives in the sidebar. Dashboards, analytics and settings are one click away.',
+      content: 'Anchored to the sidebar with side="right", align="start".',
       side: 'right',
       align: 'start'
     },
@@ -83,7 +611,7 @@ const Page = () => {
       target: () => searchRef.current,
       title: 'Search anything',
       content:
-        'This step targets a React ref instead of a selector, and spotlightClicks lets you type into the field while the tour is running — try it.',
+        'This step targets a React ref, and spotlightClicks lets you type in the field while the tour runs.',
       side: 'bottom',
       spotlightClicks: true
     },
@@ -91,8 +619,7 @@ const Page = () => {
       id: 'notifications',
       target: '[data-tour="notifications"]',
       title: 'Stay in the loop',
-      content:
-        'The bell shows unread alerts. The spotlight here uses a larger padding and a pill radius.',
+      content: 'Larger spotlightPadding and a pill spotlightRadius here.',
       side: 'left',
       spotlightPadding: 8,
       spotlightRadius: 999
@@ -100,9 +627,9 @@ const Page = () => {
     {
       id: 'invite-open',
       target: '[data-tour="invite"]',
-      title: 'Invite your team',
+      title: 'Some steps require doing',
       content:
-        'Some steps require doing instead of reading. This one has no Next button — click the highlighted button to open the invite dialog and continue.',
+        'This step has no Next button — click the highlighted button to open the invite dialog and continue.',
       side: 'top',
       spotlightClicks: true,
       data: {
@@ -114,7 +641,7 @@ const Page = () => {
       target: '[data-tour="invite-email"]',
       title: 'Steps can live inside dialogs',
       content:
-        'This field mounted with the dialog, after the tour had already started. The tour dims the dialog itself and ignores light dismissal, so the dialog stays open while you type.',
+        'This field mounted with the dialog, after the tour started. The tour dims the dialog itself and ignores light dismissal, so it stays open while you type.',
       side: 'bottom',
       spotlightClicks: true,
       data: { hidePrev: true } satisfies StepData
@@ -136,7 +663,7 @@ const Page = () => {
       target: '[data-tour="reports"]',
       title: 'Targets can mount late',
       content:
-        'This card did not exist when the tour started. The tour waited for it to appear in the DOM before showing this step.',
+        'This card did not exist when the tour started. The tour waited for it before showing this step.',
       side: 'top',
       data: { hidePrev: true } satisfies StepData
     },
@@ -144,8 +671,7 @@ const Page = () => {
       id: 'scrolled-card',
       target: '[data-tour="billing"]',
       title: 'Scrolled into view',
-      content:
-        'This card was below the fold — the tour scrolled it into view before anchoring.',
+      content: 'This card was below the fold — the tour scrolled to it.',
       side: 'top'
     },
     {
@@ -153,7 +679,7 @@ const Page = () => {
       target: '[data-tour="event-log"]',
       title: 'Overlay is optional',
       content:
-        'This step sets disableOverlay — no dimming, no spotlight, and the whole page stays interactive. Pass it on the Tour itself to disable the overlay for every step.',
+        'This step sets disableOverlay — no dimming, no spotlight, the page stays fully interactive.',
       side: 'right',
       disableOverlay: true
     },
@@ -161,7 +687,7 @@ const Page = () => {
       id: 'done',
       title: 'You are all set',
       content:
-        'That is the whole tour. Restart it from the button in the header, or jump to any step with the controls below the event log.',
+        'That is the whole tour. Restart from the header, or explore the edge-case lab below.',
       data: { hidePrev: true } satisfies StepData
     }
   ];
@@ -174,8 +700,6 @@ const Page = () => {
     setEvents(prev =>
       [`${event.type} · #${event.index} ${detail}`.trim(), ...prev].slice(0, 8)
     );
-    // Offer "Resume" only when the tour was left mid-way (Escape or Stop),
-    // not when it ran to the end (finished) or was skipped.
     if (event.type === 'tour:end') {
       setResumable(event.status === 'closed' && event.index > 0);
     }
@@ -244,11 +768,9 @@ const Page = () => {
         <Flex
           direction='column'
           align='start'
-          justify='start'
           gap={4}
           style={{
-            padding: 'var(--rs-space-9) var(--rs-space-9) var(--rs-space-7)',
-            textAlign: 'center'
+            padding: 'var(--rs-space-9) var(--rs-space-9) var(--rs-space-7)'
           }}
         >
           <Text size='large' weight='medium'>
@@ -258,10 +780,11 @@ const Page = () => {
             align='start'
             size='small'
             variant='secondary'
-            style={{ maxWidth: 440 }}
+            style={{ maxWidth: 460 }}
           >
-            Ten steps across the sidebar, search, a dialog, plus late-mounting
-            and scrolled targets. Press Escape any time to leave.
+            Eleven steps across the sidebar, search, a dialog, plus
+            late-mounting and scrolled targets. Press Escape any time to leave.
+            Isolated edge-case demos are further down the page.
           </Text>
           <Button
             onClick={() => actionsRef.current?.start(resumable ? lastIndex : 0)}
@@ -279,9 +802,9 @@ const Page = () => {
           }}
         >
           <Callout type='accent' icon={<RocketIcon />}>
-            Click “Start tour”. Step 5 only advances when you click the invite
-            button, step 6 targets a field inside the dialog it opens, and the
-            later steps cover late-mounting and scrolled targets.
+            Step 5 only advances when you click the invite button, step 6
+            targets a field inside the dialog it opens, and later steps cover
+            late-mounting and scrolled targets.
           </Callout>
 
           <Flex direction='column' gap={3} style={card} data-tour='event-log'>
@@ -329,7 +852,6 @@ const Page = () => {
                 color='neutral'
                 onClick={() => {
                   setInviteOpen(true);
-                  // Advance the tour when the user performs the asked action.
                   actionsRef.current?.next();
                 }}
               >
@@ -371,16 +893,17 @@ const Page = () => {
             </Text>
             <Text size='small' variant='secondary'>
               Your plan renews on the 1st. This card lives below the fold so the
-              tour has to scroll to it.
+              tour scrolls to it.
             </Text>
             <Input placeholder='Promo code' />
           </Flex>
+
+          <EdgeCaseLab />
         </Flex>
       </Flex>
 
-      {/* Non-modal so the tour popover (outside the dialog) stays clickable;
-          while the tour runs, light dismissal is ignored — the tour decides
-          when the dialog closes. */}
+      {/* Non-modal so the tour popover stays clickable; while the tour runs
+          light dismissal is ignored — the tour decides when the dialog closes. */}
       <Dialog
         open={inviteOpen}
         modal={false}
@@ -429,9 +952,11 @@ const Page = () => {
       <Tour
         steps={steps}
         open={tourOpen}
+        // How long to wait for a missing target before skipping (default 5000).
+        // Lowered here so resuming onto a since-closed dialog skips promptly.
+        targetTimeout={2000}
         onOpenChange={nextOpen => {
           setTourOpen(nextOpen);
-          // Ending the tour mid-dialog shouldn't strand the dialog open.
           if (!nextOpen) setInviteOpen(false);
         }}
         onStepChange={index => setLastIndex(index)}
@@ -469,6 +994,47 @@ const Page = () => {
       </Tour>
     </Flex>
   );
-};
+}
 
-export default Page;
+/* -------------------------------------------------------------------------- */
+/* Edge-case lab                                                              */
+/* -------------------------------------------------------------------------- */
+
+function EdgeCaseLab() {
+  return (
+    <Flex
+      direction='column'
+      gap={4}
+      style={{ marginBottom: 'var(--rs-space-9)' }}
+    >
+      <Flex direction='column' gap={1}>
+        <Text size='large' weight='medium'>
+          Edge-case lab
+        </Text>
+        <Text size='small' variant='secondary'>
+          Each card is a self-contained tour that isolates one tricky lifecycle
+          scenario. Trigger them independently.
+        </Text>
+      </Flex>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: 'var(--rs-space-5)'
+        }}
+      >
+        <LateMountDemo />
+        <MissingTargetDemo />
+        <UnmountMidStepDemo />
+        <ResumeMissingDemo />
+        <ScrollTrackingDemo />
+        <SpotlightChildDemo />
+        <ActionGatedDemo />
+      </div>
+    </Flex>
+  );
+}
+
+export default function Page() {
+  return <ProductTour />;
+}

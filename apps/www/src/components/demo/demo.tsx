@@ -58,6 +58,7 @@ import {
 import ChipInputDemo from '../inputfield-chip-demo';
 import LinearMenuDemo from '../linear-dropdown-demo';
 import PopoverColorPicker from '../popover-color-picker';
+import TourDemo from '../tour-demo';
 import DemoPlayground from './demo-playground';
 import DemoPreview from './demo-preview';
 import { DemoProps } from './types';
@@ -90,6 +91,7 @@ export default function Demo(props: DemoProps) {
       DataTableSelectionDemo,
       LinearMenuDemo,
       PopoverColorPicker,
+      TourDemo,
       Info,
       X,
       Home,
