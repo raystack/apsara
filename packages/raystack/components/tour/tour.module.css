@@ -1,0 +1,185 @@
+/* Tours sit above other portalled surfaces (dialogs, popovers) so steps can
+   spotlight elements inside them. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--rs-z-index-portal) + 1);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Before the first step reveals, the dim is transparent — its hit strips must
+   not swallow clicks while the page is still usable. */
+.overlay[data-entered="false"] .overlayHit {
+  pointer-events: none;
+}
+
+/* The dim backdrop fades in once, on the first step, and then persists for the
+   whole tour. Between steps it never disappears; only the cutout closes and
+   reopens (see .spotlightCover), so the backdrop never flashes away. */
+.overlay[data-entered="false"] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .overlay {
+    transition: opacity 200ms ease;
+  }
+}
+
+/* The dimming layer is this element's box-shadow; the element itself is the
+   transparent cutout over the target. It never transitions position — it is
+   repositioned instantly while the cutout is covered (see .spotlightCover). */
+.spotlight {
+  position: absolute;
+  pointer-events: none;
+  box-shadow: 0 0 0 200vmax var(--rs-color-overlay-black-a5);
+}
+
+/* Fills the cutout with the same dim as the backdrop so the hole can fade shut
+   and reopen without the surrounding dim ever changing. Open step: transparent
+   (clear hole); between steps: opaque (hole dimmed closed). The cutout is
+   repositioned to the next target while this cover is opaque, so the move is
+   never seen — a soft fade both ways, never a slide. */
+.spotlightCover {
+  position: absolute;
+  pointer-events: none;
+  background-color: var(--rs-color-overlay-black-a5);
+  opacity: 0;
+}
+
+.overlay[data-hole-open="false"] .spotlightCover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spotlightCover {
+    transition: opacity 160ms ease;
+  }
+}
+
+.overlayHit {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.positioner {
+  z-index: calc(var(--rs-z-index-portal) + 2);
+}
+
+/* Glide between step targets in `move` mode only, and not while the popup is
+   mounting — otherwise the first open would animate in from the viewport
+   origin. `fade` mode repositions the card while it is hidden, so no glide. */
+@media (prefers-reduced-motion: no-preference) {
+  .positioner[data-transition="move"]:has(.popup:not([data-starting-style])) {
+    transition: transform 460ms cubic-bezier(0.33, 0.7, 0, 1);
+  }
+}
+
+.popup {
+  box-sizing: border-box;
+  outline: 0;
+  width: max-content;
+  min-width: 16rem;
+  max-width: 20rem;
+  padding: var(--rs-space-5);
+  background-color: var(--rs-color-background-base-primary);
+  border: 1px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-3);
+  box-shadow: var(--rs-shadow-soft);
+  color: var(--rs-color-foreground-base-primary);
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  transform-origin: var(--transform-origin);
+  transition:
+    opacity 200ms ease,
+    scale 200ms ease;
+}
+
+.popup[data-starting-style],
+.popup[data-ending-style] {
+  opacity: 0;
+  scale: 0.96;
+}
+
+/* Fade mode: the card is hidden until its target settles. Hiding is instant
+   (transition: none) so the reposition and content swap between steps are not
+   seen; revealing uses the .popup transition above for a soft fade-in in place. */
+.popup[data-transition="fade"][data-visible="false"] {
+  opacity: 0;
+  scale: 0.98;
+  transition: none;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-3);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .stepContent {
+    animation: tour-step-in 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@keyframes tour-step-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--rs-space-1);
+  }
+}
+
+.arrow {
+  display: flex;
+  filter: drop-shadow(0 1px 0 var(--rs-color-border-base-primary))
+    drop-shadow(0 1px 1px var(--rs-color-border-base-primary));
+}
+
+.arrow svg {
+  display: block;
+  color: var(--rs-color-background-base-primary);
+}
+
+.arrow[data-side="top"] {
+  bottom: -6px;
+}
+
+.arrow[data-side="bottom"] {
+  top: 0;
+  transform: translateY(-100%) rotate(180deg);
+}
+
+.arrow[data-side="left"],
+.arrow[data-side="inline-start"] {
+  right: 0;
+  transform: translateY(-50%) translateX(100%) rotate(-90deg);
+}
+
+.arrow[data-side="right"],
+.arrow[data-side="inline-end"] {
+  left: 0;
+  transform: translateY(-50%) translateX(-100%) rotate(90deg);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--rs-font-size-regular);
+  line-height: var(--rs-line-height-regular);
+  letter-spacing: var(--rs-letter-spacing-regular);
+  font-weight: var(--rs-font-weight-medium);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.description {
+  margin: 0;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.footer {
+  margin-top: var(--rs-space-2);
+}

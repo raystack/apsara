@@ -55,3 +55,4 @@ export * from './text-examples';
 export * from './toast-examples';
 export * from './toggle-examples';
 export * from './tooltip-examples';
+export * from './tour-examples';
