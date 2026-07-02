@@ -1,7 +1,12 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import type { TourActions, TourStatus, TourStep } from './types';
+import type {
+  TourActions,
+  TourStatus,
+  TourStep,
+  TourTransition
+} from './types';
 
 export interface TourContextValue {
   steps: TourStep[];
@@ -17,6 +22,17 @@ export interface TourContextValue {
   popoverOpen: boolean;
   /** Tour-level default for hiding the dimmed overlay. */
   disableOverlay: boolean;
+  /** How the spotlight and popover travel between steps. */
+  transition: TourTransition;
+  /**
+   * Whether the active step's target is settled and in view. Drives the
+   * fade-in of the spotlight (in every mode) and of the popover (in `fade`
+   * mode) so they appear only once the target has stopped moving, e.g. after
+   * scrolling into view. Computed the same way regardless of transition; in
+   * `move` mode the popover ignores it and glides, but the spotlight still
+   * respects it.
+   */
+  revealed: boolean;
   actions: TourActions;
 }
 

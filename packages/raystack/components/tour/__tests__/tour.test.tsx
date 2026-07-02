@@ -340,6 +340,38 @@ describe('Tour', () => {
     expect(document.querySelector('[data-status]')).not.toBeInTheDocument();
   });
 
+  it('treats a throwing function target as not-found instead of crashing', async () => {
+    const onOpenChange = vi.fn();
+    const events: TourEvent[] = [];
+    render(
+      <Tour
+        steps={[
+          {
+            id: 'boom',
+            // A resolver that throws (e.g. reading from an editor that is not
+            // ready) must degrade to "not found", not crash the tour.
+            target: () => {
+              throw new Error('resolver not ready');
+            },
+            title: 'Boom step'
+          }
+        ]}
+        defaultOpen
+        targetTimeout={50}
+        targetNotFound='stop'
+        onOpenChange={onOpenChange}
+        onEvent={event => events.push(event)}
+      />
+    );
+    await waitFor(() =>
+      expect(onOpenChange).toHaveBeenCalledWith(false, { status: 'closed' })
+    );
+    expect(events.some(event => event.type === 'error:target-not-found')).toBe(
+      true
+    );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
   it('drops the center hit-strip when spotlightClicks is set', async () => {
     const { rerender } = render(
       <div>
@@ -480,20 +512,20 @@ describe('Tour', () => {
     );
   });
 
-  it('supports custom popover content via a render function', async () => {
+  it('supports custom card content via a render function', async () => {
     render(
       <div>
         <button id='step-one' type='button'>
           One
         </button>
         <Tour steps={[STEPS[0]]} defaultOpen>
-          <Tour.Popover>
+          <Tour.Content>
             {({ step, index, totalSteps }) => (
               <div>
                 custom:{String(step.id)}:{index + 1}/{totalSteps}
               </div>
             )}
-          </Tour.Popover>
+          </Tour.Content>
         </Tour>
       </div>
     );
@@ -510,12 +542,12 @@ describe('Tour', () => {
           One
         </button>
         <Tour steps={[STEPS[0]]} defaultOpen onOpenChange={onOpenChange}>
-          <Tour.Popover>
+          <Tour.Content>
             <Tour.Title />
             <Tour.Description />
             <Tour.Skip />
             <Tour.Next />
-          </Tour.Popover>
+          </Tour.Content>
         </Tour>
       </div>
     );
@@ -534,9 +566,9 @@ describe('Tour', () => {
           One
         </button>
         <Tour steps={STEPS} defaultOpen>
-          <Tour.Popover>
+          <Tour.Content>
             <Tour.Progress format={(i, total) => `${i + 1}/${total}`} />
-          </Tour.Popover>
+          </Tour.Content>
         </Tour>
       </div>
     );
@@ -580,6 +612,48 @@ describe('Tour', () => {
       expect(screen.getByText('Step two')).toBeInTheDocument()
     );
     await waitFor(() => expect(screen.getByRole('dialog')).toHaveFocus());
+  });
+
+  it('defaults to the fade transition and reveals the spotlight in view', async () => {
+    render(<Page defaultOpen />);
+    const overlay = await waitFor(() => {
+      const el = document.querySelector('[data-status]');
+      expect(el).toBeInTheDocument();
+      return el as HTMLElement;
+    });
+    // The spotlight always cross-fades — it never carries the transition flag,
+    // which is a popover-only concern. Once the target is in view and its rect
+    // settles, the dim enters and the cutout opens.
+    expect(overlay).not.toHaveAttribute('data-transition');
+    await waitFor(() =>
+      expect(overlay).toHaveAttribute('data-entered', 'true')
+    );
+    expect(overlay).toHaveAttribute('data-hole-open', 'true');
+    // The popover carries the transition mode and its reveal flag.
+    const popup = screen.getByRole('dialog');
+    expect(popup).toHaveAttribute('data-transition', 'fade');
+    await waitFor(() => expect(popup).toHaveAttribute('data-visible', 'true'));
+  });
+
+  it('applies the move transition to the popover only', async () => {
+    render(<Page defaultOpen transition='move' />);
+    const popup = await waitFor(() => {
+      const el = screen.getByRole('dialog');
+      return el;
+    });
+    // Move affects the popover: it stays visible and glides.
+    expect(popup).toHaveAttribute('data-transition', 'move');
+    expect(popup).toHaveAttribute('data-visible', 'true');
+    // The spotlight still cross-fades regardless of the mode — no transition
+    // flag on the overlay, and its cutout opens once the target settles.
+    const overlay = document.querySelector('[data-status]');
+    expect(overlay).not.toHaveAttribute('data-transition');
+    await waitFor(() =>
+      expect(document.querySelector('[data-status]')).toHaveAttribute(
+        'data-hole-open',
+        'true'
+      )
+    );
   });
 
   it('throws when a part is used outside <Tour>', () => {

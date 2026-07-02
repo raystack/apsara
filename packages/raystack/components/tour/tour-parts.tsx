@@ -153,10 +153,10 @@ TourClose.displayName = 'Tour.Close';
 
 /**
  * The standard card: title + close, description, then progress and the
- * navigation buttons. Rendered by `Tour.Popover` when no children are given.
+ * navigation buttons. Rendered by `Tour.Content` when no children are given.
  */
 export function TourDefaultLayout() {
-  const { index } = useTourContext('Tour.Popover');
+  const { index } = useTourContext('Tour.Content');
   return (
     <>
       <Flex justify='between' align='start' gap={3}>

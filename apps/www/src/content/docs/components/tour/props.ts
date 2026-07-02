@@ -56,12 +56,20 @@ export interface TourProps {
   targetNotFound?: 'skip' | 'stop';
 
   /**
+   * How the popover card travels between steps. `fade` cross-fades it at each
+   * target; `move` glides it smoothly from one target to the next. The spotlight
+   * always cross-fades regardless — it never slides.
+   * @defaultValue 'fade'
+   */
+  transition?: 'fade' | 'move';
+
+  /**
    * Hide the dimmed overlay for the whole tour — only the popover shows and the page stays interactive.
    * @defaultValue false
    */
   disableOverlay?: boolean;
 
-  /** Tour UI. Defaults to `<Tour.Overlay />` + `<Tour.Popover />`. */
+  /** Tour UI. Defaults to `<Tour.Overlay />` + `<Tour.Content />`. */
   children?: React.ReactNode;
 }
 
@@ -144,9 +152,9 @@ export interface TourEvent {
   status?: 'finished' | 'skipped' | 'closed';
 }
 
-export interface TourPopoverProps {
+export interface TourContentProps {
   /**
-   * Default side of the target to place the popover on; steps override.
+   * Default side of the target to place the card on; steps override.
    * @defaultValue 'bottom'
    */
   side?: 'top' | 'right' | 'bottom' | 'left';
@@ -165,7 +173,7 @@ export interface TourPopoverProps {
 
   /**
    * Whether to render the pointing arrow.
-   * @defaultValue true
+   * @defaultValue false
    */
   showArrow?: boolean;
 

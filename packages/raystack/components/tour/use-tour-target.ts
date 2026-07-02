@@ -21,7 +21,16 @@ export function resolveTourTarget(
       return null;
     }
   }
-  if (typeof target === 'function') return target();
+  if (typeof target === 'function') {
+    try {
+      return target();
+    } catch {
+      // A throwing resolver (e.g. `() => editor.getNode('x')` before the editor
+      // is ready) should degrade to "not found", not crash the tour — matching
+      // how an invalid selector is handled above.
+      return null;
+    }
+  }
   if (target instanceof Element) return target;
   return target.current ?? null;
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { TourContent } from './tour-content';
 import { TourOverlay } from './tour-overlay';
 import {
   TourClose,
@@ -10,12 +11,11 @@ import {
   TourSkip,
   TourTitle
 } from './tour-parts';
-import { TourPopover } from './tour-popover';
 import { TourRoot } from './tour-root';
 
 export const Tour = Object.assign(TourRoot, {
   Overlay: TourOverlay,
-  Popover: TourPopover,
+  Content: TourContent,
   Title: TourTitle,
   Description: TourDescription,
   Progress: TourProgress,

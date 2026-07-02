@@ -31,13 +31,13 @@ To compose the card yourself, pass the parts as children:
 ```tsx
 <Tour steps={steps} defaultOpen>
   <Tour.Overlay />
-  <Tour.Popover>
+  <Tour.Content>
     <Tour.Title />
     <Tour.Description />
     <Tour.Progress />
     <Tour.Prev />
     <Tour.Next />
-  </Tour.Popover>
+  </Tour.Content>
 </Tour>
 ```
 
@@ -47,7 +47,7 @@ To compose the card yourself, pass the parts as children:
 
 The root. Holds the steps and the open/index state, resolves targets, emits
 events, and owns the actions. Renders a context provider — its children default
-to `<Tour.Overlay />` and `<Tour.Popover />`.
+to `<Tour.Overlay />` and `<Tour.Content />`.
 
 <auto-type-table path="./props.ts" name="TourProps" />
 
@@ -57,12 +57,12 @@ Each entry in the `steps` array.
 
 <auto-type-table path="./props.ts" name="TourStep" />
 
-### Tour.Popover
+### Tour.Content
 
 The card. Accepts positioning defaults and either static children, a render
 function, or the default layout.
 
-<auto-type-table path="./props.ts" name="TourPopoverProps" />
+<auto-type-table path="./props.ts" name="TourContentProps" />
 
 ### Tour.Overlay
 
@@ -135,7 +135,7 @@ useful for action-gated steps (draw a shape, open a panel).
 
 ```tsx
 <Tour steps={steps} open={open} stepIndex={index} actionsRef={actionsRef} disableOverlay>
-  <Tour.Popover>
+  <Tour.Content>
     {({ step, index, totalSteps, isLastStep, actions }) => (
       <Flex direction="column" gap={3}>
         <Text weight="medium">{step.title}</Text>
@@ -148,7 +148,7 @@ useful for action-gated steps (draw a shape, open a panel).
         </Flex>
       </Flex>
     )}
-  </Tour.Popover>
+  </Tour.Content>
 </Tour>;
 
 // advance the draw step once the app reports a shape on the map
@@ -174,9 +174,28 @@ const steps = [
 ];
 ```
 
+### Motion between steps
+
+The dimmed backdrop stays put for the whole tour — it never flashes away
+between steps. Only the spotlight cutout animates: it fades shut (dimming the
+old target), repositions while covered, and fades back open once the next
+target has scrolled into view and settled, so the hole never slides across the
+screen or opens at a position it is about to leave.
+
+The `transition` prop controls only the **popover card**. By default
+(`transition="fade"`) the card cross-fades with the spotlight. Set
+`transition="move"` to glide the card smoothly from one target to the next,
+which suits walkthroughs whose consecutive targets sit close together.
+
+```tsx
+<Tour steps={steps} defaultOpen transition="move" />
+```
+
+Both collapse to instant swaps under `prefers-reduced-motion: reduce`.
+
 ## Accessibility
 
-- The card is a Base UI `Popover`, so `Tour.Title` and `Tour.Description` provide
+- The card is built on a Base UI `Popover`, so `Tour.Title` and `Tour.Description` provide
   its accessible name and description and it is exposed as a `dialog`.
 - Focus moves into the card when a step opens and when the step changes, so
   keyboard users can reach the navigation buttons. Steps with `spotlightClicks`
@@ -184,5 +203,6 @@ const steps = [
 - Escape ends the tour. Outside clicks and focus moves do not, so a step can keep
   focus on the element it highlights.
 - The tour is non-modal (`modal={false}`); it does not trap focus or lock scroll.
-- Motion — the spotlight glide, card entry, and scroll-into-view — is enabled only
-  when `prefers-reduced-motion: no-preference`.
+- Motion — the spotlight cutout's fade, the card fade or glide, and scroll-into-view —
+  is enabled only when `prefers-reduced-motion: no-preference`; otherwise steps swap
+  instantly.

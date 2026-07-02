@@ -533,7 +533,7 @@ function ActionGatedDemo() {
       >
         <Tour.Overlay />
         <StatusRow />
-        <Tour.Popover>
+        <Tour.Content>
           {({ step, index, isLastStep, actions }) => {
             const gated = index === 0;
             return (
@@ -561,7 +561,132 @@ function ActionGatedDemo() {
               </>
             );
           }}
-        </Tour.Popover>
+        </Tour.Content>
+      </Tour>
+    </LabCard>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Custom card: fully bespoke content, styling, and controls                  */
+/* -------------------------------------------------------------------------- */
+
+function CustomCardDemo() {
+  const actionsRef = useRef<TourActions>(null);
+  const [showArrow, setShowArrow] = useState(true);
+
+  return (
+    <LabCard
+      title='Custom card'
+      note='Tour.Content takes any children (or a render function) plus className/style, so the card can be fully rebranded. Here the default layout is replaced with a bespoke header, dot progress, and custom buttons.'
+    >
+      <Flex gap={3} align='center'>
+        <Button size='small' onClick={() => actionsRef.current?.start()}>
+          Run
+        </Button>
+        <Flex gap={2} align='center'>
+          <Switch
+            id='cc-arrow'
+            checked={showArrow}
+            onCheckedChange={setShowArrow}
+          />
+          <Text size='small' render={<label htmlFor='cc-arrow' />}>
+            showArrow
+          </Text>
+        </Flex>
+      </Flex>
+      <div id='cc-target' style={card}>
+        <Text size='small'>Anchor for the custom card.</Text>
+      </div>
+      <Tour
+        steps={[
+          {
+            id: 'cc-1',
+            target: '#cc-target',
+            title: 'Fully custom',
+            content: 'This card supplies its own markup — no default layout.',
+            side: 'right'
+          },
+          {
+            id: 'cc-2',
+            target: '#cc-target',
+            title: 'Same anchor, new content',
+            content: 'Step content remounts, the card stays branded.',
+            side: 'right'
+          }
+        ]}
+        actionsRef={actionsRef}
+      >
+        <Tour.Overlay />
+        <Tour.Content
+          showArrow={showArrow}
+          style={{ padding: 0, overflow: 'hidden', maxWidth: '18rem' }}
+        >
+          {({ step, index, totalSteps, isLastStep, isFirstStep, actions }) => (
+            <>
+              <div
+                style={{
+                  padding: 'var(--rs-space-4) var(--rs-space-5)',
+                  background:
+                    'linear-gradient(90deg, var(--rs-color-background-accent-emphasis), var(--rs-color-background-accent-emphasis-hover))',
+                  color: 'var(--rs-color-foreground-accent-emphasis)'
+                }}
+              >
+                <Text
+                  size='regular'
+                  weight='medium'
+                  style={{ color: 'inherit' }}
+                >
+                  {step.title}
+                </Text>
+              </div>
+              <Flex
+                direction='column'
+                gap={4}
+                style={{ padding: 'var(--rs-space-5)' }}
+              >
+                <Text size='small' variant='secondary'>
+                  {step.content}
+                </Text>
+                <Flex justify='between' align='center'>
+                  <Flex gap={1} align='center'>
+                    {Array.from({ length: totalSteps }).map((_, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          backgroundColor:
+                            i === index
+                              ? 'var(--rs-color-background-accent-emphasis)'
+                              : 'var(--rs-color-border-base-primary)'
+                        }}
+                      />
+                    ))}
+                  </Flex>
+                  <Flex gap={2} align='center'>
+                    {!isFirstStep && (
+                      <Button
+                        size='small'
+                        variant='outline'
+                        onClick={actions.prev}
+                      >
+                        Back
+                      </Button>
+                    )}
+                    <Button
+                      size='small'
+                      onClick={isLastStep ? actions.stop : actions.next}
+                    >
+                      {isLastStep ? 'Finish' : 'Continue'}
+                    </Button>
+                  </Flex>
+                </Flex>
+              </Flex>
+            </>
+          )}
+        </Tour.Content>
       </Tour>
     </LabCard>
   );
@@ -581,6 +706,7 @@ function ProductTour() {
   const [showLateCard, setShowLateCard] = useState(false);
   const [lastIndex, setLastIndex] = useState(0);
   const [resumable, setResumable] = useState(false);
+  const [transition, setTransition] = useState<'fade' | 'move'>('fade');
   const searchRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<TourActions>(null);
 
@@ -786,11 +912,26 @@ function ProductTour() {
             late-mounting and scrolled targets. Press Escape any time to leave.
             Isolated edge-case demos are further down the page.
           </Text>
-          <Button
-            onClick={() => actionsRef.current?.start(resumable ? lastIndex : 0)}
-          >
-            {resumable ? `Resume tour (step ${lastIndex + 1})` : 'Start tour'}
-          </Button>
+          <Flex gap={4} align='center' wrap='wrap'>
+            <Button
+              onClick={() =>
+                actionsRef.current?.start(resumable ? lastIndex : 0)
+              }
+            >
+              {resumable ? `Resume tour (step ${lastIndex + 1})` : 'Start tour'}
+            </Button>
+            <Flex gap={2} align='center'>
+              <Switch
+                id='tour-transition'
+                checked={transition === 'move'}
+                onCheckedChange={c => setTransition(c ? 'move' : 'fade')}
+              />
+              <Text size='small' render={<label htmlFor='tour-transition' />}>
+                Glide the card (<code>transition="{transition}"</code>) — the
+                spotlight always fades
+              </Text>
+            </Flex>
+          </Flex>
         </Flex>
 
         <Flex
@@ -952,6 +1093,7 @@ function ProductTour() {
       <Tour
         steps={steps}
         open={tourOpen}
+        transition={transition}
         // How long to wait for a missing target before skipping (default 5000).
         // Lowered here so resuming onto a since-closed dialog skips promptly.
         targetTimeout={2000}
@@ -964,7 +1106,7 @@ function ProductTour() {
         actionsRef={actionsRef}
       >
         <Tour.Overlay />
-        <Tour.Popover>
+        <Tour.Content>
           {({ step, index }) => {
             const data = (step.data ?? {}) as StepData;
             return (
@@ -990,7 +1132,7 @@ function ProductTour() {
               </>
             );
           }}
-        </Tour.Popover>
+        </Tour.Content>
       </Tour>
     </Flex>
   );
@@ -1030,6 +1172,7 @@ function EdgeCaseLab() {
         <ScrollTrackingDemo />
         <SpotlightChildDemo />
         <ActionGatedDemo />
+        <CustomCardDemo />
       </div>
     </Flex>
   );

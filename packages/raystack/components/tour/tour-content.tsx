@@ -14,9 +14,9 @@ import { useTourContext } from './tour-context';
 import { TourDefaultLayout } from './tour-parts';
 import type { TourAlign, TourRenderProps, TourSide } from './types';
 
-export interface TourPopoverProps {
+export interface TourContentProps {
   /**
-   * Default side of the target to place the popover on; steps can override.
+   * Default side of the target to place the card on; steps can override.
    * @default 'bottom'
    */
   side?: TourSide;
@@ -24,31 +24,50 @@ export interface TourPopoverProps {
   align?: TourAlign;
   /** Default distance to the target in pixels; steps can override. @default 12 */
   sideOffset?: number;
-  /** @default true */
+  /** Whether to render the pointing arrow. @default false */
   showArrow?: boolean;
   className?: string;
   style?: CSSProperties;
   /**
-   * Popover content: static nodes or a render function receiving the active
+   * Card content: static nodes or a render function receiving the active
    * step. Defaults to the standard layout built from `Tour.Title`,
    * `Tour.Description`, `Tour.Progress` and the navigation buttons.
    */
   children?: ReactNode | ((props: TourRenderProps) => ReactNode);
 }
 
-export function TourPopover({
+export function TourContent({
   side = 'bottom',
   align = 'center',
   sideOffset = 12,
-  showArrow = true,
+  showArrow = false,
   className,
   style,
   children
-}: TourPopoverProps) {
-  const { popoverOpen, anchor, step, steps, index, status, actions } =
-    useTourContext('Tour.Popover');
+}: TourContentProps) {
+  const {
+    popoverOpen,
+    anchor,
+    step,
+    steps,
+    index,
+    status,
+    actions,
+    transition,
+    revealed
+  } = useTourContext('Tour.Content');
+  // Positioning-only: the card is "detached" (centered) whenever it has no
+  // anchor target, even if the step still spotlights something elsewhere via
+  // `spotlightTarget`. Deliberately looser than the root's `detachedStep`
+  // (which also requires no `spotlightTarget`) — a centered card can still
+  // drive a spotlight.
   const detached = step != null && step.target == null;
   const popupRef = useRef<HTMLDivElement>(null);
+
+  // In `fade` mode the card is hidden until its target settles (`revealed`),
+  // so a step that scrolls or mounts late doesn't flash the card at a stale
+  // position — it fades in, in place. `move` mode keeps it visible and glides.
+  const visible = transition !== 'fade' || revealed;
 
   // Detached steps anchor to the viewport center and open upwards, which
   // optically centers the popup while keeping it positioner-driven (so it
@@ -68,14 +87,14 @@ export function TourPopover({
   );
 
   // Keyboard continuity: the step content remounts on every step, so move
-  // focus back into the card when the step changes (and on open). Steps that
-  // invite page interaction (`spotlightClicks`) keep focus where it is.
+  // focus back into the card when the step changes (once it is revealed). Steps
+  // that invite page interaction (`spotlightClicks`) keep focus where it is.
   const spotlightClicks = step?.spotlightClicks ?? false;
   // biome-ignore lint/correctness/useExhaustiveDependencies: `index` is intentional — re-running on step change is how the card refocuses.
   useEffect(() => {
-    if (!popoverOpen || spotlightClicks) return;
+    if (!popoverOpen || !visible || spotlightClicks) return;
     popupRef.current?.focus({ preventScroll: true });
-  }, [popoverOpen, index, spotlightClicks]);
+  }, [popoverOpen, visible, index, spotlightClicks]);
 
   const renderProps: TourRenderProps | null = step
     ? {
@@ -108,12 +127,15 @@ export function TourPopover({
           sideOffset={step?.sideOffset ?? sideOffset}
           collisionPadding={12}
           className={styles.positioner}
+          data-transition={transition}
         >
           <PopoverPrimitive.Popup
             ref={popupRef}
             className={cx(styles.popup, className)}
             style={style}
             data-detached={detached || undefined}
+            data-transition={transition}
+            data-visible={visible ? 'true' : 'false'}
           >
             {showArrow && !detached && (
               <PopoverPrimitive.Arrow className={styles.arrow}>
@@ -146,4 +168,4 @@ export function TourPopover({
   );
 }
 
-TourPopover.displayName = 'Tour.Popover';
+TourContent.displayName = 'Tour.Content';
