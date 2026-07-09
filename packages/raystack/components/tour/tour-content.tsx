@@ -56,23 +56,11 @@ export function TourContent({
     transition,
     revealed
   } = useTourContext('Tour.Content');
-  // Positioning-only: the card is "detached" (centered) whenever it has no
-  // anchor target, even if the step still spotlights something elsewhere via
-  // `spotlightTarget`. Deliberately looser than the root's `detachedStep`
-  // (which also requires no `spotlightTarget`) — a centered card can still
-  // drive a spotlight.
   const detached = step != null && step.target == null;
   const popupRef = useRef<HTMLDivElement>(null);
 
-  // In `fade` mode the card is hidden until its target settles (`revealed`),
-  // so a step that scrolls or mounts late doesn't flash the card at a stale
-  // position — it fades in, in place. `move` mode keeps it visible and glides.
   const visible = transition !== 'fade' || revealed;
 
-  // Detached steps anchor to the viewport center and open upwards, which
-  // optically centers the popup while keeping it positioner-driven (so it
-  // still glides to and from regular steps). The rect is read lazily, so the
-  // positioner re-centers it on window resize.
   const centerAnchor = useMemo(
     () => ({
       getBoundingClientRect: () =>
@@ -86,9 +74,6 @@ export function TourContent({
     []
   );
 
-  // Keyboard continuity: the step content remounts on every step, so move
-  // focus back into the card when the step changes (once it is revealed). Steps
-  // that invite page interaction (`spotlightClicks`) keep focus where it is.
   const spotlightClicks = step?.spotlightClicks ?? false;
   // biome-ignore lint/correctness/useExhaustiveDependencies: `index` is intentional — re-running on step change is how the card refocuses.
   useEffect(() => {
@@ -114,8 +99,7 @@ export function TourContent({
       modal={false}
       onOpenChange={(nextOpen, eventDetails) => {
         if (nextOpen) return;
-        // Tours are persistent: outside presses and focus moves (e.g. into a
-        // spotlighted input) must not dismiss the step. Escape still exits.
+        // Tours are persistent — only Escape dismisses, not outside press/focus.
         if (eventDetails.reason === 'escape-key') actions.stop();
       }}
     >

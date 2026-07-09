@@ -30,7 +30,7 @@ const steps: TourStep[] = [
     id: 'settings',
     target: '[data-pg-tour="settings"]',
     title: 'Settings',
-    content: 'Anchored on the right with a pill spotlight.',
+    content: 'Anchored below with a pill spotlight.',
     side: 'bottom',
     spotlightRadius: 999,
     spotlightPadding: 6

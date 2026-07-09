@@ -151,10 +151,6 @@ export function TourClose({
 }
 TourClose.displayName = 'Tour.Close';
 
-/**
- * The standard card: title + close, description, then progress and the
- * navigation buttons. Rendered by `Tour.Content` when no children are given.
- */
 export function TourDefaultLayout() {
   const { index } = useTourContext('Tour.Content');
   return (

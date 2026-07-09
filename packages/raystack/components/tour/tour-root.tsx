@@ -13,7 +13,7 @@ import {
 } from 'react';
 import { TourContent } from './tour-content';
 import { TourContext, type TourContextValue } from './tour-context';
-import { rectsEqual, TourOverlay } from './tour-overlay';
+import { TourOverlay } from './tour-overlay';
 import type {
   TourActions,
   TourEndStatus,
@@ -24,28 +24,13 @@ import type {
 } from './types';
 import { usePrefersReducedMotion } from './use-prefers-reduced-motion';
 import { resolveTourTarget, useTourTarget } from './use-tour-target';
+import { rectsEqual } from './utils';
 
-/**
- * How long the previous step's cutout is given to fade out before the next
- * step is revealed (fade mode). Matches the overlay's opacity transition in
- * `tour.module.css`, so the reposition lands while the overlay is transparent.
- */
+// Must match the overlay's opacity transition in `tour.module.css`.
 const FADE_OUT_MS = 160;
 
-/**
- * Safety net for the reveal gate: if a step's target never settles into view —
- * it may never mount (a spotlight-only step whose element is absent), be larger
- * than the viewport, or animate continuously — reveal the step anyway after
- * this long so the tour can never hard-hang waiting on it.
- */
 const REVEAL_TIMEOUT_MS = 2000;
 
-/**
- * Whether `el` is visible in the viewport *and* within every scrollable
- * ancestor. The ancestor check matters: an element scrolled out of a nested
- * `overflow: auto` container can still sit within the window's bounds, so a
- * viewport-only test would wrongly skip scrolling it into view.
- */
 function isElementInView(el: Element): boolean {
   const rect = el.getBoundingClientRect();
   let node = el.parentElement;
@@ -67,10 +52,7 @@ function isElementInView(el: Element): boolean {
   }
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  // Fully within the viewport, or — for a target larger than the viewport —
-  // currently spanning it (edges past both sides). Without the span case an
-  // oversized target (a full-height panel) could never read as "in view", so
-  // the reveal loop would spin until its timeout instead of settling promptly.
+  // The second clause handles an oversized target spanning the viewport.
   const inViewY =
     (rect.top >= 0 && rect.bottom <= vh) ||
     (rect.height > vh && rect.top <= 0 && rect.bottom >= vh);
@@ -168,7 +150,6 @@ export function TourRoot({
   );
   const step = open ? (steps[index] ?? null) : null;
 
-  // Latest-value refs keep `actions` referentially stable across renders.
   const stepsRef = useRef(steps);
   stepsRef.current = steps;
   const indexRef = useRef(index);
@@ -209,7 +190,6 @@ export function TourRoot({
     [setIndexUnwrapped]
   );
 
-  // Everything except `start` is a no-op while the tour is closed.
   const actions = useMemo<TourActions>(
     () => ({
       start: (at = 0) => {
@@ -267,13 +247,24 @@ export function TourRoot({
     }
   }, [emit, setIndex, setOpen]);
 
-  const { element: anchor, state: targetState } = useTourTarget(step?.target, {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on open/index, not `step` — inline steps arrays give function targets a fresh identity each render.
+  const target = useMemo(
+    () => (open ? step?.target : undefined),
+    [open, index]
+  );
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on open/index, not `step`.
+  const spotlightTarget = useMemo(
+    () => (open ? step?.spotlightTarget : undefined),
+    [open, index]
+  );
+
+  const { element: anchor, state: targetState } = useTourTarget(target, {
     enabled: open && step != null,
     timeout: targetTimeout,
     onNotFound: handleTargetNotFound
   });
-  const { element: spotlightOverride } = useTourTarget(step?.spotlightTarget, {
-    enabled: open && step?.spotlightTarget != null,
+  const { element: spotlightOverride } = useTourTarget(spotlightTarget, {
+    enabled: open && spotlightTarget != null,
     timeout: targetTimeout
   });
   const spotlightElement = spotlightOverride ?? anchor;
@@ -285,30 +276,15 @@ export function TourRoot({
       ? 'running'
       : 'waiting';
 
-  // A detached step (welcome/finish) has no anchor and no spotlight; it is
-  // "revealed" as soon as it is running, since there is no target to wait for.
   const detachedStep =
     step != null && step.target == null && step.spotlightTarget == null;
 
-  // `revealed` gates the fade-in of the spotlight (always) and of the popover
-  // in `fade` mode: they appear only once the active step's target has scrolled
-  // into view and its rect has stopped moving, so the spotlight never fades in
-  // at a position it is about to leave. (In `move` mode the popover ignores
-  // this and glides instead — but the spotlight still cross-fades on it.)
-  //
-  // On a step-to-step change it also holds off for a grace period so the
-  // previous step's cutout can finish fading out before the next one lands. The
-  // very first step after opening has nothing to fade out, so it skips the
-  // grace, as does reduced motion (no fade to wait for).
   const reducedMotion = usePrefersReducedMotion();
   const [revealed, setRevealed] = useState(false);
   const shownOnceRef = useRef(false);
 
-  // Reset the reveal the instant the target changes — in render, not an effect
-  // — so the overlay never sees a stale `revealed` from the previous step for a
-  // frame (which would let it adopt the new target before the old hole has
-  // faded out, snapping the cutout across the screen). This is the standard
-  // "adjust state when a prop changes" pattern; the ref guards the re-render.
+  // Reset in render (not an effect) so the overlay never sees a stale `revealed`
+  // for a frame; the ref guards against a re-render loop.
   const revealedForRef = useRef(spotlightElement);
   if (revealedForRef.current !== spotlightElement) {
     revealedForRef.current = spotlightElement;
@@ -322,18 +298,12 @@ export function TourRoot({
       return;
     }
     if (detachedStep) {
-      // No target to settle on — reveal at once (the dim has no cutout).
       setRevealed(true);
       shownOnceRef.current = true;
       return;
     }
-    // Poll with a frame loop until the target is in view, its rect settles for
-    // two consecutive frames, and the fade-out grace has elapsed; then reveal
-    // once and stop — no per-frame re-render after that. A max-wait fallback
-    // reveals anyway if the target never settles: it may never mount (a
-    // spotlight-only step whose element is absent — `el` stays null), be larger
-    // than the viewport, or animate continuously. Without it the tour would
-    // hard-hang here with nothing on screen and no way to advance.
+    // The fallback reveal is a safety net so a target that never settles can't
+    // hang the tour.
     setRevealed(false);
     const el = spotlightElement;
     const grace = shownOnceRef.current && !reducedMotion ? FADE_OUT_MS : 0;
@@ -375,13 +345,9 @@ export function TourRoot({
       cancelAnimationFrame(frame);
       clearTimeout(fallback);
     };
-    // `spotlightElement` identity changes on every step change (and toggles when
-    // a target resolves/unmounts), so it — with `popoverOpen` — re-keys the loop
-    // per step; `step` is omitted since callers often rebuild the steps array.
   }, [popoverOpen, detachedStep, spotlightElement, reducedMotion]);
 
-  // Starts false (not `open`) so a tour mounted already-open still emits
-  // `tour:start`.
+  // Starts false so a tour mounted already-open still emits `tour:start`.
   const prevOpenRef = useRef(false);
   useEffect(() => {
     if (prevOpenRef.current === open) return;
@@ -413,22 +379,18 @@ export function TourRoot({
     emit({ type: 'step:active', index, step });
   }, [open, popoverOpen, index, step, emit]);
 
-  // Scroll the target into view once, when the step becomes active.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on `index`, not `step` — the per-render `step` identity would re-fire this and fight the user's scroll.
   useEffect(() => {
     if (!popoverOpen || !step || step.disableScroll) return;
     const el = resolveTourTarget(step.scrollTarget) ?? anchor;
     if (!el?.isConnected) return;
-    // `isElementInView` also checks scrollable ancestors, so a target clipped
-    // inside a nested scroll container counts as hidden and gets revealed.
     if (isElementInView(el)) return;
     el.scrollIntoView({
       block: 'center',
       inline: 'nearest',
       behavior: reducedMotion ? 'auto' : 'smooth'
     });
-    // `anchor` is intentionally in the deps: a late-resolving target should
-    // scroll into view the moment it lands, not only on index change.
-  }, [popoverOpen, step, anchor, reducedMotion]);
+  }, [popoverOpen, index, anchor, reducedMotion]);
 
   const contextValue = useMemo<TourContextValue>(
     () => ({
