@@ -71,7 +71,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           size={4}
           disabled={columnList.length === 0}
         >
-          {value?.order === SortOrders?.ASC ? (
+          {(value?.order ?? SortOrders.ASC) === SortOrders.ASC ? (
             <TextAlignTopIcon className={styles['display-popover-sort-icon']} />
           ) : (
             <TextAlignBottomIcon
