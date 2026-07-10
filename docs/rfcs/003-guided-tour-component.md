@@ -64,11 +64,11 @@ Build our own. A tour sits on top of the whole app and has to feel like part of 
 ```tsx
 <Tour>             // root: holds steps + open/index state, resolves targets, emits events, owns actions
   <Tour.Overlay/>  // dimmed backdrop with a spotlight hole over the target
-  <Tour.Popover>   // the card: static children, a render function, or the default layout
+  <Tour.Content>   // the card: static children, a render function, or the default layout
     <Tour.Title/> <Tour.Description/>   // fall back to step.title / step.content
     <Tour.Progress/>                    // "n of total", optional format()
     <Tour.Prev/> <Tour.Next/> <Tour.Skip/> <Tour.Close/>  // run your onClick, then the action
-  </Tour.Popover>
+  </Tour.Content>
 </Tour>
 // useTour() exposes the same state and actions anywhere inside <Tour>
 ```
@@ -122,7 +122,7 @@ interface TourRootProps {
 
   disableOverlay?: boolean;        // hide the dimmed overlay for the whole tour
 
-  children?: ReactNode;            // defaults to <Tour.Overlay/> + <Tour.Popover/>
+  children?: ReactNode;            // defaults to <Tour.Overlay/> + <Tour.Content/>
 }
 ```
 
@@ -165,7 +165,7 @@ const actionsRef = useRef<TourActions>(null);
   onStepChange={setIndex}
   disableOverlay
 >
-  <Tour.Popover>
+  <Tour.Content>
     {({ step, index, totalSteps, isLastStep, actions }) => (
       <Flex direction="column" gap={3}>
         <Text weight="medium">{step.title}</Text>
@@ -178,7 +178,7 @@ const actionsRef = useRef<TourActions>(null);
         </Flex>
       </Flex>
     )}
-  </Tour.Popover>
+  </Tour.Content>
 </Tour>
 ```
 
@@ -188,7 +188,7 @@ const actionsRef = useRef<TourActions>(null);
 
 ```tsx
 export const Tour = Object.assign(TourRoot, {
-  Overlay, Popover, Title, Description, Progress, Next, Prev, Skip, Close,
+  Overlay, Content, Title, Description, Progress, Next, Prev, Skip, Close,
 });
 ```
 
@@ -244,7 +244,7 @@ The transparent `.spotlight` div sits over the target, so its shadow dims everyt
 
 ### Positioning, Dismissal, and Z Index
 
-`Tour.Popover` is a `Popover.Root` (`modal={false}`) wrapping `Portal`, `Positioner`, and `Popup`, and takes `side`, `align`, `sideOffset`, and `showArrow` defaults that a step's `side`/`align`/`sideOffset` override. It anchors to the target, or for a detached step to a virtual viewport center anchor. Only escape closes the tour; outside clicks and focus moves are ignored, so a step can keep focus on the element it highlights. The overlay and positioner sit one and two layers above `--rs-z-index-portal`, so a step can spotlight content inside a dialog.
+`Tour.Content` is a `Popover.Root` (`modal={false}`) wrapping `Portal`, `Positioner`, and `Popup`, and takes `side`, `align`, `sideOffset`, and `showArrow` defaults that a step's `side`/`align`/`sideOffset` override. It anchors to the target, or for a detached step to a virtual viewport center anchor. Only escape closes the tour; outside clicks and focus moves are ignored, so a step can keep focus on the element it highlights. The overlay and positioner sit one and two layers above `--rs-z-index-portal`, so a step can spotlight content inside a dialog.
 
 ### Accessibility
 
