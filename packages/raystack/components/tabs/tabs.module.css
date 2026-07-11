@@ -94,8 +94,9 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-feather);
-  top: var(--active-tab-top, 0);
-  left: var(--active-tab-left, 0);
+  top: 0;
+  left: 0;
+  translate: var(--active-tab-left, 0) var(--active-tab-top, 0);
   width: var(--active-tab-width, 0);
   height: var(--active-tab-height, 0);
   z-index: 0;
@@ -104,10 +105,9 @@
 @media (prefers-reduced-motion: no-preference) {
   .indicator {
     transition:
-      top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      translate var(--rs-duration-moderate) var(--rs-ease-in-out),
+      width var(--rs-duration-moderate) var(--rs-ease-in-out),
+      height var(--rs-duration-moderate) var(--rs-ease-in-out);
   }
 }
 

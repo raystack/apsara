@@ -16,7 +16,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .textarea {
-    transition: all 0.2s ease;
+    transition: var(--rs-transition-interactive);
   }
 }
 

@@ -9,6 +9,7 @@
   cursor: pointer;
   background: var(--rs-color-background-neutral-secondary);
   border-radius: var(--rs-radius-full);
+  transition: background-color 200ms ease;
 }
 
 .switch.large {

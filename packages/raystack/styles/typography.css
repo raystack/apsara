@@ -130,13 +130,3 @@ textarea {
   caret-color: var(--rs-color-border-accent-emphasis);
 }
 
-/* Keyframe Animation */
-@keyframes dissolve-hide {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}

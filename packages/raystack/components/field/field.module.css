@@ -40,7 +40,7 @@
   letter-spacing: var(--rs-letter-spacing-small);
   outline: none;
   box-sizing: border-box;
-  transition: all 0.2s ease;
+  transition: var(--rs-transition-interactive);
   height: var(--rs-space-9);
 }
 

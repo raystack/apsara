@@ -123,7 +123,8 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .content {
-    animation-duration: 400ms;
+    animation-duration: var(--rs-duration-fast);
+    animation-timing-function: var(--rs-ease-out);
   }
 
   .content[data-open][data-side="top"]:not([data-instant]) {

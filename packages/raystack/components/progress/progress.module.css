@@ -86,11 +86,11 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .indicator {
-    transition: width 500ms;
+    transition: width var(--rs-duration-moderate) linear;
   }
 
   .circularIndicatorCircle {
-    transition: stroke-dashoffset 500ms;
+    transition: stroke-dashoffset var(--rs-duration-moderate) linear;
   }
 }
 

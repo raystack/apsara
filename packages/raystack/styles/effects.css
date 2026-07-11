@@ -10,6 +10,17 @@
     /* Transitions */
     --rs-transition-interactive: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 
+    /* Motion */
+    /* Example usage: transition: opacity var(--rs-duration-normal) var(--rs-ease-out); */
+    --rs-ease-out: cubic-bezier(0.22, 1, 0.36, 1);       /* entrances, exits, value changes */
+    --rs-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);   /* elements moving on screen */
+    --rs-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);    /* iOS-like drawer slide */
+    --rs-duration-fast: 150ms;      /* tooltips, menus, small popups */
+    --rs-duration-normal: 200ms;    /* popovers, dialogs, switches */
+    --rs-duration-moderate: 250ms;  /* tabs indicator, preview card, tour steps */
+    --rs-duration-slow: 400ms;      /* toasts */
+    --rs-duration-drawer: 450ms;    /* drawer */
+
     /* Blurs */
     /* Example usage: backdrop-filter:: var(--rs-blur-sm); */
     --rs-blur-sm: blur(0.5px);

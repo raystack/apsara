@@ -14,10 +14,29 @@
   box-shadow: var(--rs-shadow-soft);
   border: 0.5px solid var(--rs-color-border-base-primary);
   min-width: var(--anchor-width);
-  transition: var(--rs-transition-interactive);
+  transform-origin: var(--transform-origin);
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
   max-height: 320px;
   position: relative;
   overflow: auto;
+}
+
+.content[data-starting-style],
+.content[data-ending-style] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .content[data-starting-style],
+  .content[data-ending-style] {
+    transform: scale(0.97);
+  }
 }
 
 .menuitem {
@@ -75,7 +94,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .trigger {
-    transition: all 0.2s ease;
+    transition: var(--rs-transition-interactive);
   }
 }
 

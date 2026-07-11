@@ -340,7 +340,6 @@
 .nav-group-panel {
   height: var(--accordion-panel-height);
   overflow: hidden;
-  transition: height 0.2s ease;
 }
 
 .nav-group-panel[data-starting-style],
@@ -384,8 +383,13 @@
   .root,
   .nav-item,
   .nav-text,
-  .resizeHandle,
-  .nav-group-panel {
+  .resizeHandle {
     transition: width 0.2s ease;
+  }
+
+  .nav-group-panel {
+    transition:
+      width 0.2s ease,
+      height 0.2s ease;
   }
 }
