@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Chip } from '../chip';
 import styles from '../chip.module.css';
@@ -150,8 +151,28 @@ describe('Chip', () => {
       const onClick = vi.fn();
       render(<Chip onClick={onClick}>Clickable Chip</Chip>);
 
-      const chip = screen.getByRole('status');
+      const chip = screen.getByRole('button', { name: 'Clickable Chip' });
       fireEvent.click(chip);
+
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('renders a real button element for clickable chips', () => {
+      render(<Chip onClick={vi.fn()}>Clickable Chip</Chip>);
+
+      const chip = screen.getByRole('button', { name: 'Clickable Chip' });
+      expect(chip.tagName).toBe('BUTTON');
+      expect(chip).toHaveAttribute('type', 'button');
+    });
+
+    it('activates via keyboard Enter when focused', async () => {
+      const user = userEvent.setup();
+      const onClick = vi.fn();
+      render(<Chip onClick={onClick}>Clickable Chip</Chip>);
+
+      const chip = screen.getByRole('button', { name: 'Clickable Chip' });
+      chip.focus();
+      await user.keyboard('{Enter}');
 
       expect(onClick).toHaveBeenCalledTimes(1);
     });
@@ -188,7 +209,7 @@ describe('Chip', () => {
         </Chip>
       );
 
-      const chip = screen.getByRole('status');
+      const chip = screen.getByRole('button', { name: 'Disabled Chip' });
       fireEvent.click(chip);
       expect(onClick).not.toHaveBeenCalled();
     });

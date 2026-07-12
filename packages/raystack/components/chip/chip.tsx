@@ -1,6 +1,6 @@
 'use client';
 
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ComponentProps, ReactNode } from 'react';
 
 import styles from './chip.module.css';
@@ -48,7 +48,7 @@ export const Chip = ({
   className,
   onDismiss,
   onClick,
-  role = 'status',
+  role,
   disabled,
   'aria-label': ariaLabel,
   ...props
@@ -58,17 +58,16 @@ export const Chip = ({
     onDismiss?.();
   };
 
-  return (
-    <span
-      {...props}
-      className={chip({ variant, size, color, className })}
-      role={role}
-      aria-label={
-        ariaLabel ?? (typeof children === 'string' ? children : undefined)
-      }
-      onClick={disabled ? undefined : onClick}
-      data-disabled={disabled || undefined}
-    >
+  const isInteractive = !!onClick && !isDismissible;
+
+  const sharedProps = {
+    'aria-label':
+      ariaLabel ?? (typeof children === 'string' ? children : undefined),
+    'data-disabled': disabled || undefined
+  };
+
+  const content = (
+    <>
       {leadingIcon && (
         <span
           className={styles['leading-icon']}
@@ -114,6 +113,41 @@ export const Chip = ({
           {trailingIcon}
         </span>
       ) : null}
+    </>
+  );
+
+  if (isInteractive) {
+    return (
+      <button
+        {...(props as React.ComponentProps<'button'>)}
+        {...sharedProps}
+        type='button'
+        disabled={disabled}
+        role={role}
+        className={chip({
+          variant,
+          size,
+          color,
+          className: cx(styles['chip-interactive'], className)
+        })}
+        onClick={
+          onClick as unknown as React.MouseEventHandler<HTMLButtonElement>
+        }
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <span
+      {...props}
+      {...sharedProps}
+      className={chip({ variant, size, color, className })}
+      role={role ?? 'status'}
+      onClick={disabled ? undefined : onClick}
+    >
+      {content}
     </span>
   );
 };

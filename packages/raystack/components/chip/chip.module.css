@@ -130,3 +130,33 @@
   align-items: center;
   justify-content: center;
 }
+
+.chip-interactive {
+  cursor: pointer;
+  appearance: none;
+  font-family: inherit;
+}
+
+.chip-interactive:focus,
+.dismiss-button:focus {
+  outline: none;
+}
+
+.chip-interactive:focus-visible {
+  outline: var(--rs-focus-ring);
+}
+
+.dismiss-button:focus-visible {
+  outline: var(--rs-focus-ring);
+  border-radius: var(--rs-radius-1);
+}
+
+.dismiss-button:active {
+  transform: scale(var(--rs-scale-pressed-strong));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dismiss-button {
+    transition: transform var(--rs-duration-press) var(--rs-ease-out);
+  }
+}
