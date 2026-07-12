@@ -1,9 +1,39 @@
 .link {
   cursor: pointer;
   margin: 0;
-  transition: opacity 0.2s ease;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link {
+    transition:
+      text-decoration-color var(--rs-duration-fast) var(--rs-ease-out),
+      opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  /* Press dims at the snappy press tier; releasing eases back at the base
+     (fast) tier above — quick press, gentle release. */
+  .link:active {
+    transition: opacity var(--rs-duration-press) var(--rs-ease-out);
+  }
 }
 
 .link:hover {
-  opacity: 0.8;
+  text-decoration-color: currentColor;
+}
+
+.link:active {
+  opacity: 0.7;
+}
+
+.link:focus {
+  outline: none;
+}
+
+.link:focus-visible {
+  outline: var(--rs-focus-ring);
+  border-radius: var(--rs-radius-1);
 }
