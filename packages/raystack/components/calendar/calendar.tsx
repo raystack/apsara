@@ -176,6 +176,7 @@ export const Calendar = function ({
                 render={
                   <button
                     {...buttonProps}
+                    disabled={loadingData || buttonProps.disabled}
                     className={cx(
                       buttonProps.className,
                       hasDateInfo && styles.dayButtonWithInfo
@@ -194,17 +195,23 @@ export const Calendar = function ({
             </Tooltip>
           );
         },
-        MonthGrid: props =>
-          loadingData ? (
-            <Skeleton
-              count={5}
-              height='18px'
-              width='252px'
-              style={{ marginBottom: 'var(--rs-space-6)' }}
-            />
-          ) : (
-            <table {...props} />
-          )
+        MonthGrid: props => (
+          <div className={styles.monthGridWrap}>
+            <table {...props} aria-busy={loadingData || undefined} />
+            <div
+              className={styles.monthGridSkeleton}
+              data-visible={loadingData || undefined}
+              aria-hidden='true'
+            >
+              <Skeleton
+                count={5}
+                height='18px'
+                width='252px'
+                style={{ marginBottom: 'var(--rs-space-6)' }}
+              />
+            </div>
+          </div>
+        )
       }}
       classNames={{
         caption_label: styles.captionLabel,

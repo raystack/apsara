@@ -73,7 +73,7 @@
   width: var(--rs-space-10, 40px);
   height: var(--rs-space-10, 40px);
   background-color: var(--rs-color-background-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--rs-radius-5);
   color: var(--rs-color-foreground-base-primary);
   font-style: normal;
   text-align: center;
@@ -92,9 +92,20 @@
   width: var(--rs-space-10, 40px);
   height: var(--rs-space-10, 40px);
   flex-shrink: 0;
-  border-radius: var(--rs-radius-5);
   border: 1px solid var(--rs-color-border-accent-emphasis-hover);
   background-color: transparent;
+}
+
+.day:not(.disabled):not(.outside):not(.selected) .dayButton:active {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.selected:not(.rangeMiddle) .dayButton:active {
+  background-color: var(--rs-color-background-accent-emphasis-hover);
+}
+
+.rangeMiddle .dayButton:active {
+  background-color: var(--rs-color-background-neutral-secondary);
 }
 
 .selected:not(.rangeMiddle) {
@@ -287,6 +298,65 @@
   margin-top: var(--rs-space-2);
 }
 
+.monthGridWrap {
+  position: relative;
+}
+
+.monthGridSkeleton {
+  position: absolute;
+  inset: 0;
+  /* Solid backing so the grid underneath doesn't ghost through mid-fade */
+  background: var(--rs-color-background-base-primary);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.monthGridSkeleton[data-visible] {
+  opacity: 1;
+  visibility: visible;
+  /* Block clicks on the day grid underneath while loading */
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .monthGridSkeleton {
+    /* Exiting: fade opacity, then flip visibility after the fade */
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      visibility 0s linear var(--rs-duration-fast);
+  }
+
+  .monthGridSkeleton[data-visible] {
+    /* Entering: visibility flips immediately, opacity fades in */
+    transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
 .datePickerInput {
   text-align: left;
+}
+
+.datePickerError {
+  display: block;
+  /* Reserved line: the space exists whether or not an error is showing,
+     so appearing/disappearing errors never shift the layout below. */
+  min-height: var(--rs-line-height-mini);
+  margin-top: var(--rs-space-1);
+  color: var(--rs-color-foreground-danger-primary);
+  font-weight: var(--rs-font-weight-regular);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  opacity: 0;
+}
+
+.datePickerError[data-visible] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .datePickerError {
+    transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
 }
