@@ -9,7 +9,7 @@
   cursor: pointer;
   background: var(--rs-color-background-neutral-secondary);
   border-radius: var(--rs-radius-full);
-  transition: background-color 200ms ease;
+  transition: background-color var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 .switch.large {
@@ -56,7 +56,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .thumb {
-    transition: transform 200ms ease-in-out;
+    transition: transform var(--rs-duration-normal) var(--rs-ease-in-out);
   }
 }
 

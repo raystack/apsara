@@ -212,6 +212,10 @@
   .button {
     transition: var(--rs-transition-interactive);
   }
+
+  .button:active {
+    transition: var(--rs-transition-pressed);
+  }
 }
 
 .loader-text {

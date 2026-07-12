@@ -207,7 +207,7 @@
 
 /* ===== Content (stacking visibility) ===== */
 .content {
-  transition: opacity 250ms;
+  transition: opacity var(--rs-duration-moderate) var(--rs-ease-out);
 }
 
 .content[data-behind] {

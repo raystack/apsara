@@ -11,7 +11,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .root {
-    transition: transform 0.2s ease-in-out;
+    transition: transform var(--rs-duration-normal) var(--rs-ease-in-out);
   }
 }
 

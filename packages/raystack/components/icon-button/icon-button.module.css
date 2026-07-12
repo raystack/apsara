@@ -18,6 +18,10 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
+.iconButton:active:not(:disabled) {
+  transition: var(--rs-transition-pressed);
+}
+
 .iconButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;

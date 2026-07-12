@@ -20,7 +20,9 @@
   border: 1px solid var(--rs-color-border-base-secondary);
   cursor: pointer;
   flex-shrink: 0;
-  transition: background-color 150ms ease, border-color 150ms ease;
+  transition:
+    background-color var(--rs-duration-fast) var(--rs-ease-out),
+    border-color var(--rs-duration-fast) var(--rs-ease-out);
 }
 
 /* Size variants */

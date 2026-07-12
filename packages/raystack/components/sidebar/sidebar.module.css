@@ -82,12 +82,7 @@
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   text-decoration: none;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
+  transition: var(--rs-transition-interactive);
   box-sizing: border-box;
 }
 
@@ -201,7 +196,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 .root[data-closed] .nav-text {
@@ -217,7 +212,7 @@
   width: var(--rs-space-2);
   height: 100%;
   cursor: ew-resize;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--rs-duration-normal) var(--rs-ease-out);
   transform: translateX(50%);
 }
 
@@ -304,7 +299,7 @@
   height: var(--rs-space-4);
   color: var(--rs-color-foreground-base-secondary);
   transform: rotate(-90deg);
-  transition: transform 0.2s ease;
+  transition: transform var(--rs-duration-normal) var(--rs-ease-out);
   flex-shrink: 0;
 }
 
@@ -319,7 +314,7 @@
   padding: var(--rs-space-2) var(--rs-space-3);
   color: var(--rs-color-foreground-base-secondary);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 .nav-group-header:hover .nav-group-trailing-icon {

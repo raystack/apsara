@@ -1,7 +1,7 @@
 .link {
   cursor: pointer;
   margin: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 .link:hover {

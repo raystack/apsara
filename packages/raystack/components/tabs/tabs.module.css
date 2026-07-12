@@ -50,7 +50,7 @@
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   border-radius: var(--rs-radius-2);
-  transition: color 0.2s ease;
+  transition: color var(--rs-duration-normal) var(--rs-ease-out);
   flex: 1;
   text-align: center;
   text-overflow: ellipsis;

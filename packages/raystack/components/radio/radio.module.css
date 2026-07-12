@@ -20,7 +20,9 @@
   justify-content: center;
   cursor: pointer;
   box-sizing: border-box;
-  transition: background-color 150ms ease, border-color 150ms ease;
+  transition:
+    background-color var(--rs-duration-fast) var(--rs-ease-out),
+    border-color var(--rs-duration-fast) var(--rs-ease-out);
 }
 
 /* Group-level size — low specificity via :where() so item-level size wins */

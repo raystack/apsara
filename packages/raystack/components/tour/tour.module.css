@@ -72,7 +72,7 @@
    origin. `fade` mode repositions the card while it is hidden, so no glide. */
 @media (prefers-reduced-motion: no-preference) {
   .positioner[data-transition="move"]:has(.popup:not([data-starting-style])) {
-    transition: transform 350ms var(--rs-ease-out);
+    transition: transform var(--rs-duration-slow) var(--rs-ease-out);
   }
 }
 

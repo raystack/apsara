@@ -6,7 +6,7 @@
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   padding: var(--rs-space-1);
-  transition: color 0.2s ease;
+  transition: color var(--rs-duration-normal) var(--rs-ease-out);
   background-color: var(--rs-color-background-base-secondary);
   border: 0.5px solid var(--rs-color-border-base-primary);
   border-radius: var(--rs-radius-1);
