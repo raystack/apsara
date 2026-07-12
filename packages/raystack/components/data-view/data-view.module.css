@@ -52,6 +52,20 @@
 .display-popover-sort-icon {
   height: var(--rs-space-6);
   width: var(--rs-space-6);
+  /* Flip around the icon's own visual centre, not the SVG viewBox origin,
+     so scaleY reads as a clean flip in place instead of a shift. */
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.display-popover-sort-icon[data-order="desc"] {
+  transform: scaleY(-1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .display-popover-sort-icon {
+    transition: transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
 }
 
 .flex-1 {
@@ -205,6 +219,11 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
+.listRow.clickable:active,
+.listRowVirtual.clickable:active {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
 .listRowDivider {
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }
@@ -325,4 +344,34 @@
   padding: var(--rs-space-9) 0;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Scrolled-under edges: header hairline and group-anchor hairline appear only
+   once content scrolls beneath them. See table.module.css for rationale. */
+@supports (animation-timeline: scroll()) {
+  .listHeader {
+    border-bottom-color: transparent;
+    animation: list-header-edge linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0px 24px;
+  }
+
+  .listGroupAnchor {
+    box-shadow: 0 0.5px 0 0 transparent;
+    animation: list-anchor-edge linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0px 24px;
+  }
+}
+
+@keyframes list-header-edge {
+  to {
+    border-bottom-color: var(--rs-color-border-base-primary);
+  }
+}
+
+@keyframes list-anchor-edge {
+  to {
+    box-shadow: 0 0.5px 0 0 var(--rs-color-border-base-primary);
+  }
 }
