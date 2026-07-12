@@ -50,7 +50,7 @@
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   border-radius: var(--rs-radius-2);
-  transition: color 0.2s ease;
+  transition: color var(--rs-duration-normal) var(--rs-ease-out);
   flex: 1;
   text-align: center;
   text-overflow: ellipsis;
@@ -79,6 +79,24 @@
   pointer-events: none;
 }
 
+.trigger:focus-visible {
+  outline: var(--rs-focus-ring);
+}
+
+/* Pressed: the label dips inward. No background box on any variant, so the
+   press never competes with the indicator chip that glides in on release. */
+.trigger:active:not([data-disabled]):not([data-active]) {
+  transform: scale(var(--rs-scale-pressed));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .trigger {
+    transition:
+      color var(--rs-duration-normal) var(--rs-ease-out),
+      transform var(--rs-duration-press) var(--rs-ease-out);
+  }
+}
+
 .trigger-icon {
   display: inline-flex;
   width: var(--rs-space-5);
@@ -94,8 +112,9 @@
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-feather);
-  top: var(--active-tab-top, 0);
-  left: var(--active-tab-left, 0);
+  top: 0;
+  left: 0;
+  translate: var(--active-tab-left, 0) var(--active-tab-top, 0);
   width: var(--active-tab-width, 0);
   height: var(--active-tab-height, 0);
   z-index: 0;
@@ -104,10 +123,9 @@
 @media (prefers-reduced-motion: no-preference) {
   .indicator {
     transition:
-      top 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      left 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-      height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      translate var(--rs-duration-moderate) var(--rs-ease-in-out),
+      width var(--rs-duration-moderate) var(--rs-ease-in-out),
+      height var(--rs-duration-moderate) var(--rs-ease-in-out);
   }
 }
 
@@ -127,9 +145,22 @@
   box-shadow: none;
 }
 
-.variant-standalone .indicator,
+/* Standalone: the indicator is the active chip fill, gliding between tabs. */
+.variant-standalone .indicator {
+  background-color: var(--rs-color-background-neutral-primary);
+  border: 0.5px solid var(--rs-color-border-base-secondary);
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+/* Plain: the indicator is a 1px underline sliding along the bottom edge. */
 .variant-plain .indicator {
-  display: none;
+  height: 1px;
+  translate: var(--active-tab-left, 0px)
+    calc(var(--active-tab-top, 0px) + var(--active-tab-height, 0px) - 1px);
+  background-color: var(--rs-color-border-base-emphasis);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* Standalone variant: chip-like tabs with independent borders */
@@ -140,8 +171,8 @@
 }
 
 .variant-standalone .trigger[data-active] {
-  background: var(--rs-color-background-neutral-primary);
-  border: 0.5px solid var(--rs-color-border-base-secondary);
+  background: transparent;
+  border-color: transparent;
 }
 
 /* Plain variant: text-like tabs with larger gaps */
@@ -159,8 +190,4 @@
   border-radius: 0;
   /* Reserve underline space to prevent layout/typography shifting when active */
   border-bottom: 1px solid transparent;
-}
-
-.variant-plain .trigger[data-active] {
-  border-bottom-color: var(--rs-color-border-base-emphasis);
 }
