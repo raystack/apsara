@@ -19,10 +19,11 @@
   height: var(--rs-space-7);
   flex-shrink: 0;
   background: var(--rs-color-background-base-secondary);
-  border: 0.5px solid var(--rs-color-border-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   color: var(--rs-color-foreground-base-primary);
   cursor: pointer;
   padding: 0;
+  transition: var(--rs-transition-interactive);
 }
 
 .decrement {
@@ -38,6 +39,18 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
+/* Steppers sit inside the field border: keep the ring inside. */
+.decrement:focus-visible,
+.increment:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.decrement:active:not([data-disabled]),
+.increment:active:not([data-disabled]) {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
 .decrement[data-disabled],
 .increment[data-disabled] {
   pointer-events: none;
@@ -50,7 +63,7 @@
   min-width: 0;
   flex: 1 0 0;
   background: var(--rs-color-background-base-primary);
-  border: 0.5px solid var(--rs-color-border-base-primary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   font-family: var(--rs-font-body);
   font-size: var(--rs-font-size-small);
   font-weight: var(--rs-font-weight-regular);
@@ -59,8 +72,22 @@
   color: var(--rs-color-foreground-base-primary);
   text-align: center;
   font-variant-numeric: tabular-nums;
+  transition: var(--rs-transition-interactive);
   outline: none;
   padding: 0 var(--rs-space-2);
+}
+
+.input:focus {
+  border-color: var(--rs-color-border-accent-emphasis);
+  background-color: var(--rs-color-background-base-primary);
+}
+
+.input[data-invalid] {
+  border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.input[data-invalid]:focus {
+  border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
 .input[data-disabled] {
