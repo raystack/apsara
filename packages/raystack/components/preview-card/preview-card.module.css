@@ -103,17 +103,34 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Default mode (no PreviewCard.Viewport): Base UI positions the positioner
+     via transform (floating-ui floatingStyles). Compositor-only. */
   .positioner {
     transition:
-      top var(--animation-duration) var(--easing),
-      left var(--animation-duration) var(--easing),
-      right var(--animation-duration) var(--easing),
-      bottom var(--animation-duration) var(--easing),
       transform var(--animation-duration) var(--easing),
       opacity var(--animation-duration) var(--easing);
   }
 
   .popup {
+    transition:
+      opacity var(--animation-duration) var(--easing),
+      transform var(--animation-duration) var(--easing);
+  }
+
+  /* Viewport-morph mode: Base UI switches to inset positioning
+     (adaptiveOrigin) and drives --popup-width/--popup-height, so animating
+     inset + width/height IS the morph. Layout cost is confined to this popup
+     subtree for the duration of the morph. */
+  .positioner:has(.viewport) {
+    transition:
+      top var(--animation-duration) var(--easing),
+      left var(--animation-duration) var(--easing),
+      right var(--animation-duration) var(--easing),
+      bottom var(--animation-duration) var(--easing),
+      opacity var(--animation-duration) var(--easing);
+  }
+
+  .popup:has(.viewport) {
     transition:
       width var(--animation-duration) var(--easing),
       height var(--animation-duration) var(--easing),
