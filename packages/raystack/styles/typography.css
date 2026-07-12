@@ -103,19 +103,19 @@ h1 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t4);
   font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-t1);
+  line-height: var(--rs-line-height-t4);
 }
 h2 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t3);
   font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-t1);
+  line-height: var(--rs-line-height-t3);
 }
 h3 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t2);
   font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-t1);
+  line-height: var(--rs-line-height-t2);
 }
 h4 {
   font-family: var(--rs-font-title);
