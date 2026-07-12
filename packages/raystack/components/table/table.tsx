@@ -25,8 +25,19 @@ function TableBody({ ...props }: ComponentProps<'tbody'>) {
 }
 TableBody.displayName = 'Table.Body';
 
-function TableRow({ ...props }: ComponentProps<'tr'>) {
-  return <tr {...props} />;
+const row = cva(styles['row'], {
+  variants: {
+    interactive: {
+      true: styles['row-interactive']
+    }
+  }
+});
+function TableRow({
+  className,
+  interactive,
+  ...props
+}: ComponentProps<'tr'> & VariantProps<typeof row>) {
+  return <tr {...props} className={row({ interactive, className })} />;
 }
 TableRow.displayName = 'Table.Row';
 
