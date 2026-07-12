@@ -2,6 +2,7 @@
   width: 100%;
   min-height: var(--rs-space-10);
   padding: var(--rs-space-3) var(--rs-space-7);
+  position: relative; /* anchors .dismiss-btn */
 }
 
 .announcement-bar-gradient {
@@ -25,7 +26,9 @@
 .announcement-bar-normal > .icon,
 .announcement-bar-error > .icon,
 .announcement-bar-normal > .action-btn,
-.announcement-bar-error > .action-btn {
+.announcement-bar-error > .action-btn,
+.announcement-bar-normal > .dismiss-btn,
+.announcement-bar-error > .dismiss-btn {
   color: var(--rs-color-foreground-base-emphasis);
 }
 
@@ -50,4 +53,63 @@
   padding: 0;
   font: inherit;
   color: inherit;
+  border-radius: var(--rs-radius-1);
+  transition: var(--rs-transition-interactive);
+}
+
+.action-btn:hover {
+  opacity: 0.8;
+}
+
+.action-btn:active {
+  opacity: 0.64;
+}
+
+.action-btn:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+
+.dismiss-btn {
+  position: absolute;
+  right: var(--rs-space-3);
+  top: 50%;
+  translate: 0 -50%;
+  color: inherit;
+}
+
+.dismiss-btn:hover:not(:disabled),
+.dismiss-btn:active:not(:disabled) {
+  background-color: transparent;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.dismiss-btn:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Grid-row collapse: fade + height-to-zero without measuring. */
+.collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.collapse-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.collapse-closing {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .collapse {
+    transition:
+      grid-template-rows var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out);
+  }
 }

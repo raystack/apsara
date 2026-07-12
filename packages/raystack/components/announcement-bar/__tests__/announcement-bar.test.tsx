@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { AnnouncementBar } from '../announcement-bar';
 import styles from '../announcement-bar.module.css';
@@ -117,6 +117,67 @@ describe('AnnouncementBar', () => {
       render(<AnnouncementBar text='Test' actionLabel='Action' />);
       const actionBtn = screen.getByRole('button', { name: 'Action' });
       expect(actionBtn).toHaveClass(styles['action-btn']);
+    });
+  });
+
+  describe('Dismissible', () => {
+    it('does not render a dismiss button by default', () => {
+      render(<AnnouncementBar text='Test' />);
+      expect(
+        screen.queryByRole('button', { name: 'Dismiss announcement' })
+      ).not.toBeInTheDocument();
+    });
+
+    it('renders a dismiss button when dismissible', () => {
+      render(<AnnouncementBar text='Test' dismissible />);
+      expect(
+        screen.getByRole('button', { name: 'Dismiss announcement' })
+      ).toBeInTheDocument();
+    });
+
+    it('calls onDismiss after the exit animation when controlled', () => {
+      vi.useFakeTimers();
+      try {
+        const onDismiss = vi.fn();
+        render(
+          <AnnouncementBar text='Test' dismissible onDismiss={onDismiss} />
+        );
+
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Dismiss announcement' })
+        );
+        expect(onDismiss).not.toHaveBeenCalled();
+
+        act(() => {
+          vi.advanceTimersByTime(200);
+        });
+
+        expect(onDismiss).toHaveBeenCalledTimes(1);
+        expect(screen.getByText('Test')).toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('removes itself after the exit animation when uncontrolled', () => {
+      vi.useFakeTimers();
+      try {
+        render(<AnnouncementBar text='Uncontrolled dismiss' dismissible />);
+
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Dismiss announcement' })
+        );
+
+        act(() => {
+          vi.advanceTimersByTime(200);
+        });
+
+        expect(
+          screen.queryByText('Uncontrolled dismiss')
+        ).not.toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 });
