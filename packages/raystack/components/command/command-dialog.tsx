@@ -39,8 +39,8 @@ export function CommandDialogContent({
       <DialogPrimitive.Backdrop
         {...overlayProps}
         className={cx(
-          styles.backdrop,
-          blur && styles.backdropBlur,
+          styles.overlay,
+          blur && styles.overlayBlur,
           overlayClassName
         )}
       />
