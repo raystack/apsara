@@ -54,6 +54,16 @@
   width: var(--rs-space-6);
 }
 
+.display-popover-sort-icon[data-order='desc'] {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .display-popover-sort-icon {
+    transition: transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
 .flex-1 {
   flex: 1;
 }
