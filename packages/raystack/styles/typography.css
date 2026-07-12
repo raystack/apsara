@@ -29,17 +29,19 @@
 
   /* Body Line Heights */
   --rs-line-height-micro: 12px;
-  --rs-line-height-mini: 16px;
+  --rs-line-height-mini: 14px;
   --rs-line-height-small: 16px;
   --rs-line-height-regular: 20px;
   --rs-line-height-large: 24px;
 
-  /* Body Letter spacing */
-  --rs-letter-spacing-micro: 0.5px;
-  --rs-letter-spacing-mini: 0.5px;
-  --rs-letter-spacing-small: 0.4px;
-  --rs-letter-spacing-regular: 0.25px;
-  --rs-letter-spacing-large: 0.5px;
+  /* Body Letter spacing — tuned for Inter, which is spaced generously already.
+     Near-zero at small sizes, slightly negative as size grows. em-based so it
+     scales with font-size. */
+  --rs-letter-spacing-micro: 0.01em;
+  --rs-letter-spacing-mini: 0.005em;
+  --rs-letter-spacing-small: 0em;
+  --rs-letter-spacing-regular: -0.006em;
+  --rs-letter-spacing-large: -0.011em;
 
   /* Title Font Sizes */
   --rs-font-size-t1: 20px;
@@ -48,16 +50,16 @@
   --rs-font-size-t4: 32px;
 
   /* Title Line Heights */
-  --rs-line-height-t1: 24px;
+  --rs-line-height-t1: 28px;
   --rs-line-height-t2: 32px;
   --rs-line-height-t3: 36px;
   --rs-line-height-t4: 40px;
 
   /* Title Letter Spacing */
-  --rs-letter-spacing-t1: 0;
-  --rs-letter-spacing-t2: 0;
-  --rs-letter-spacing-t3: 0;
-  --rs-letter-spacing-t4: 0;
+  --rs-letter-spacing-t1: -0.01em;
+  --rs-letter-spacing-t2: -0.013em;
+  --rs-letter-spacing-t3: -0.016em;
+  --rs-letter-spacing-t4: -0.02em;
 
   /* Mono Font Sizes */
   --rs-font-size-mono-mini: 11px;
@@ -103,19 +105,19 @@ h1 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t4);
   font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-t1);
+  line-height: var(--rs-line-height-t4);
 }
 h2 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t3);
   font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-t1);
+  line-height: var(--rs-line-height-t3);
 }
 h3 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t2);
   font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-t1);
+  line-height: var(--rs-line-height-t2);
 }
 h4 {
   font-family: var(--rs-font-title);
@@ -130,13 +132,3 @@ textarea {
   caret-color: var(--rs-color-border-accent-emphasis);
 }
 
-/* Keyframe Animation */
-@keyframes dissolve-hide {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
