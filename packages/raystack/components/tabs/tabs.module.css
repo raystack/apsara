@@ -79,6 +79,11 @@
   pointer-events: none;
 }
 
+.trigger:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+}
+
 /* Pressed: one step darker than the list surface. Applies instantly
    (no background transition on the trigger) — correct for a press. */
 .trigger:active:not([data-disabled]):not([data-active]) {

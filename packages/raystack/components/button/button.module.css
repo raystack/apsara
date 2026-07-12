@@ -16,7 +16,8 @@
 }
 
 .button:focus-visible {
-  outline: 1px solid var(--rs-color-border-accent-emphasis);
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
 }
 
 .button:focus {

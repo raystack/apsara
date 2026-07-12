@@ -87,3 +87,7 @@
   border-color: transparent;
   outline: none;
 }
+
+.variant-borderless:focus-visible:not(:disabled) {
+  box-shadow: 0 0 0 2px var(--rs-color-border-accent-primary);
+}

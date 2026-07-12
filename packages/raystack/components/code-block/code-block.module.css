@@ -104,3 +104,7 @@
 .content:hover .floatingCopyButton {
   opacity: 1;
 }
+
+.floatingCopyButton:focus-visible {
+  opacity: 1;
+}

@@ -43,6 +43,13 @@
   color: var(--rs-color-foreground-base-secondary);
 }
 
+.breadcrumb-link:focus-visible {
+  outline: none;
+  background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-secondary);
+  border-radius: var(--rs-radius-1);
+}
+
 .breadcrumb-link-active {
   color: var(--rs-color-foreground-base-primary);
   font-weight: var(--rs-font-weight-medium);
@@ -79,6 +86,12 @@
   font-weight: inherit;
   outline: none;
   padding: 0;
+}
+
+.breadcrumb-dropdown-trigger:focus-visible {
+  background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
+  border-radius: var(--rs-radius-1);
 }
 
 .breadcrumb-dropdown-icon {

@@ -46,6 +46,7 @@
 
 .otp-field-input:focus:not([data-readonly]):not([data-invalid]) {
   border-color: var(--rs-color-border-accent-emphasis);
+  box-shadow: 0 0 0 2px var(--rs-color-border-accent-primary);
 }
 
 .otp-field-input[data-invalid] {
@@ -57,6 +58,10 @@
   ),
 .otp-field-input[data-invalid]:focus:not([data-readonly]) {
   border-color: var(--rs-color-border-danger-emphasis-hover);
+}
+
+.otp-field-input[data-invalid]:focus:not([data-readonly]) {
+  box-shadow: 0 0 0 2px var(--rs-color-border-danger-primary);
 }
 
 .otp-field-input[data-disabled],

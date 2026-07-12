@@ -12,6 +12,11 @@
   transition: background-color var(--rs-duration-normal) var(--rs-ease-out);
 }
 
+.switch:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+}
+
 .switch.large {
   width: 34px;
   height: var(--rs-space-6);

@@ -3,6 +3,11 @@
   outline: none;
 }
 
+.trigger:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+}
+
 .trigger:disabled {
   pointer-events: none;
   opacity: 0.5;

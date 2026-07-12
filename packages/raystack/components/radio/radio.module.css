@@ -47,6 +47,11 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
+.radioitem:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+}
+
 .radioitem:active:not([data-disabled]) {
   transform: scale(0.92);
 }

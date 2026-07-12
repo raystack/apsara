@@ -131,6 +131,12 @@
   justify-content: center;
 }
 
+.dismiss-button:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+  border-radius: var(--rs-radius-1);
+}
+
 .dismiss-button:active {
   transform: scale(0.9);
 }

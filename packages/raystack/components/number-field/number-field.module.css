@@ -38,6 +38,12 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
+.decrement:focus-visible,
+.increment:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: -2px;
+}
+
 .decrement:active:not([data-disabled]),
 .increment:active:not([data-disabled]) {
   background: var(--rs-color-background-neutral-secondary);
@@ -66,6 +72,10 @@
   font-variant-numeric: tabular-nums;
   outline: none;
   padding: 0 var(--rs-space-2);
+}
+
+.input:focus {
+  border-color: var(--rs-color-border-accent-emphasis);
 }
 
 .input[data-disabled] {

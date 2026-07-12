@@ -53,6 +53,12 @@
   outline: none;
 }
 
+.thumb:focus-visible .thumbLarge,
+.thumb:focus-visible .thumbSmall {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+}
+
 .thumbLarge {
   width: var(--rs-space-7);
   height: var(--rs-space-6);

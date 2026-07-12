@@ -39,6 +39,17 @@
   cursor: not-allowed;
 }
 
+.toggle:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+}
+
+/* Inside a group the container clips overflow and items sit 1px apart:
+   keep the ring fully inside the item. */
+.group .toggle:focus-visible {
+  outline-offset: -2px;
+}
+
 .size-1 {
   width: var(--rs-space-4);
   height: var(--rs-space-4);

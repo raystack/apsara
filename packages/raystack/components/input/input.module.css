@@ -234,3 +234,8 @@
   border-color: transparent;
   outline: none;
 }
+
+/* Keyboard focus must still be visible on the chromeless variant. */
+.variant-borderless:has(.input-field:focus-visible) {
+  box-shadow: 0 0 0 2px var(--rs-color-border-accent-primary);
+}

@@ -31,9 +31,13 @@
   border-top: none;
 }
 
-.accordion-trigger:hover,
-.accordion-trigger:focus-visible {
+.accordion-trigger:hover {
   background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.accordion-trigger:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: -2px;
 }
 
 .accordion-trigger:active:not(:disabled) {
