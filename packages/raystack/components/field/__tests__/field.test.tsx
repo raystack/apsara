@@ -72,13 +72,13 @@ describe('Field', () => {
       expect(screen.getByText('Enter a valid email')).toBeInTheDocument();
     });
 
-    it('does not render description when error is present', () => {
+    it('keeps description rendered alongside error', () => {
       render(
         <Field description='Enter email' error='Invalid email'>
           content
         </Field>
       );
-      expect(screen.queryByText('Enter email')).not.toBeInTheDocument();
+      expect(screen.getByText('Enter email')).toBeInTheDocument();
       expect(screen.getByText('Invalid email')).toBeInTheDocument();
     });
   });

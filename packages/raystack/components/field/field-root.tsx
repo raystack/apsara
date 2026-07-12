@@ -47,11 +47,13 @@ export function FieldRoot({
         {label && <FieldLabel required={required}>{label}</FieldLabel>}
         <div className={styles.control}>{children}</div>
         {error && (
-          <FieldPrimitive.Error className={styles.error} match>
-            {error}
-          </FieldPrimitive.Error>
+          <div className={styles.errorSlot}>
+            <FieldPrimitive.Error className={styles.error} match>
+              {error}
+            </FieldPrimitive.Error>
+          </div>
         )}
-        {!error && description && (
+        {description && (
           <FieldPrimitive.Description className={styles.description}>
             {description}
           </FieldPrimitive.Description>

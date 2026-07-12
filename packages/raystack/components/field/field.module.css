@@ -28,6 +28,32 @@
   margin: 0;
 }
 
+.errorSlot {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.errorSlot > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .errorSlot {
+    transition:
+      grid-template-rows var(--rs-duration-fast) var(--rs-ease-out),
+      opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  @starting-style {
+    .errorSlot {
+      grid-template-rows: 0fr;
+      opacity: 0;
+    }
+  }
+}
+
 .input {
   width: 100%;
   padding: 0 var(--rs-space-3);
