@@ -138,9 +138,22 @@
   box-shadow: none;
 }
 
-.variant-standalone .indicator,
+/* Standalone: the indicator is the active chip fill, gliding between tabs. */
+.variant-standalone .indicator {
+  background-color: var(--rs-color-background-neutral-primary);
+  border: 0.5px solid var(--rs-color-border-base-secondary);
+  box-sizing: border-box;
+  box-shadow: none;
+}
+
+/* Plain: the indicator is a 1px underline sliding along the bottom edge. */
 .variant-plain .indicator {
-  display: none;
+  height: 1px;
+  translate: var(--active-tab-left, 0px)
+    calc(var(--active-tab-top, 0px) + var(--active-tab-height, 0px) - 1px);
+  background-color: var(--rs-color-border-base-emphasis);
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* Standalone variant: chip-like tabs with independent borders */
@@ -151,8 +164,8 @@
 }
 
 .variant-standalone .trigger[data-active] {
-  background: var(--rs-color-background-neutral-primary);
-  border: 0.5px solid var(--rs-color-border-base-secondary);
+  background: transparent;
+  border-color: transparent;
 }
 
 /* Plain variant: text-like tabs with larger gaps */
@@ -170,10 +183,6 @@
   border-radius: 0;
   /* Reserve underline space to prevent layout/typography shifting when active */
   border-bottom: 1px solid transparent;
-}
-
-.variant-plain .trigger[data-active] {
-  border-bottom-color: var(--rs-color-border-base-emphasis);
 }
 
 /* Plain variant is text-only: dim on press instead of painting a box. */
