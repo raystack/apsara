@@ -10,6 +10,13 @@ vi.mock('~/hooks/useCopyToClipboard', () => ({
   })
 }));
 
+// SVG-asset icons aren't transformed under vitest (only via the rollup
+// build's @svgr/rollup plugin) — mock them like code-block's test does.
+vi.mock('~/icons', () => ({
+  CheckCircleFilledIcon: () => null,
+  CrossCircleFilledIcon: () => null
+}));
+
 describe('CopyButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();

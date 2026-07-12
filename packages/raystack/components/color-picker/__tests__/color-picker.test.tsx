@@ -7,6 +7,12 @@ vi.mock('~/hooks/useCopyToClipboard', () => ({
   useCopyToClipboard: () => ({ copy: mockCopy })
 }));
 
+// Mock icon components used inside CopyButton to avoid invalid element errors
+vi.mock('~/icons', () => ({
+  CheckCircleFilledIcon: () => null,
+  CrossCircleFilledIcon: () => null
+}));
+
 // // Mock ResizeObserver for tests
 // const originalResizeObserver = global.ResizeObserver;
 // beforeAll(() => {

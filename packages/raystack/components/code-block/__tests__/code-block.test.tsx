@@ -14,7 +14,8 @@ vi.mock('~/hooks/useCopyToClipboard', () => ({
 
 // Mock icon components used inside CopyButton to avoid invalid element errors
 vi.mock('~/icons', () => ({
-  CheckCircleFilledIcon: () => null
+  CheckCircleFilledIcon: () => null,
+  CrossCircleFilledIcon: () => null
 }));
 vi.mock('@radix-ui/react-icons', () => ({
   CopyIcon: () => null,

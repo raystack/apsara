@@ -1,0 +1,43 @@
+.iconStack {
+  display: grid;
+  place-items: center;
+}
+
+.icon {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+}
+
+.iconStack[data-status='idle'] .iconCopy,
+.iconStack[data-status='copied'] .iconSuccess,
+.iconStack[data-status='error'] .iconError {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .icon {
+    transform: scale(0.6);
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .iconStack[data-status='idle'] .iconCopy,
+  .iconStack[data-status='copied'] .iconSuccess,
+  .iconStack[data-status='error'] .iconError {
+    transform: scale(1);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
