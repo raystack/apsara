@@ -16,7 +16,8 @@ vi.mock('~/hooks/useCopyToClipboard', () => ({
 vi.mock('@radix-ui/react-icons', () => ({
   CopyIcon: () => null,
   CheckIcon: () => null,
-  ChevronDownIcon: () => null
+  ChevronDownIcon: () => null,
+  CaretSortIcon: () => null
 }));
 
 const JAVASCRIPT_CODE = `function hello() {
