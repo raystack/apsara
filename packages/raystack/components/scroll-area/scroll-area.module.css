@@ -1,6 +1,8 @@
 :root {
-  --rs-scrollbar-size-default: var(--rs-space-2);
-  --rs-scrollbar-size-hover: 6px;
+  --rs-scrollbar-size: 6px; /* track + hit area, and the expanded thumb */
+  --rs-scrollbar-thumb-rest: var(
+    --rs-space-2
+  ); /* 4px — visible thumb at rest */
 }
 
 .root {
@@ -25,42 +27,83 @@
   background: transparent;
   pointer-events: auto;
   position: relative;
-  transition: opacity 150ms ease-out;
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
 }
 
+/* Constant track = constant hit area; the track is transparent so hover never
+   changes layout (no content reflow). The visible bar is the thumb's ::before,
+   which is thinner at rest and grows to fill the track on hover. */
 .scrollbar[data-orientation="vertical"] {
-  width: var(--rs-scrollbar-size-default);
-}
-
-.scrollbar[data-orientation="vertical"]:hover {
-  width: var(--rs-scrollbar-size-hover);
+  width: var(--rs-scrollbar-size);
 }
 
 .scrollbar[data-orientation="horizontal"] {
   flex-direction: column;
-  height: var(--rs-scrollbar-size-default);
-}
-
-.scrollbar[data-orientation="horizontal"]:hover {
-  height: var(--rs-scrollbar-size-hover);
+  height: var(--rs-scrollbar-size);
 }
 
 .thumb {
   flex: 1;
-  background: var(--rs-color-overlay-base-a5);
-  border-radius: var(--rs-radius-2);
-  transition: opacity 150ms ease-out;
-  opacity: 1;
+  position: relative;
   pointer-events: auto;
   touch-action: none;
+  opacity: 1;
+}
+
+/* The drawn bar. The thumb stays the full-size hit area; this pseudo is what
+   you see. It's a pseudo because Base UI writes an inline transform on the
+   thumb to position it — so the thumb's own transform can't be used to size it,
+   and animating the thumb's transform would make it lag while scrolling. */
+.thumb::before {
+  content: "";
+  position: absolute;
+  background: var(--rs-color-overlay-base-a5);
+  border-radius: var(--rs-radius-2);
+  transition: background-color var(--rs-duration-fast) var(--rs-ease-out);
+}
+
+/* Vertical: bar hugs the outer (right) edge and grows inward. */
+.scrollbar[data-orientation="vertical"] .thumb::before {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--rs-scrollbar-thumb-rest);
+}
+
+.scrollbar[data-orientation="vertical"]:hover .thumb::before,
+.scrollbar[data-orientation="vertical"]:active .thumb::before {
+  width: var(--rs-scrollbar-size);
+}
+
+/* Horizontal: bar hugs the bottom edge and grows upward. */
+.scrollbar[data-orientation="horizontal"] .thumb::before {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--rs-scrollbar-thumb-rest);
+}
+
+.scrollbar[data-orientation="horizontal"]:hover .thumb::before,
+.scrollbar[data-orientation="horizontal"]:active .thumb::before {
+  height: var(--rs-scrollbar-size);
+}
+
+/* Deepen the bar one overlay step per state. Base UI exposes no data-pressed;
+   pointer capture holds :active for the whole drag. */
+.scrollbar:hover .thumb::before {
+  background: var(--rs-color-overlay-base-a6);
+}
+
+.scrollbar:active .thumb::before {
+  background: var(--rs-color-overlay-base-a7);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .scrollbar {
+  .thumb::before {
     transition:
-      width 150ms ease-out,
-      height 150ms ease-out,
-      opacity 150ms ease-out;
+      background-color var(--rs-duration-fast) var(--rs-ease-out),
+      width var(--rs-duration-fast) var(--rs-ease-out),
+      height var(--rs-duration-fast) var(--rs-ease-out);
   }
 }
 
