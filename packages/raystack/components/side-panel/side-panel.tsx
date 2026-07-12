@@ -20,6 +20,12 @@ interface SidePanelProps
   extends ComponentProps<'aside'>,
     VariantProps<typeof sidePanelRoot> {}
 
+/**
+ * SidePanel is persistent layout chrome (like Sidebar), not an overlay:
+ * it intentionally has no enter/exit animation. If you conditionally mount
+ * it, it will appear/disappear instantly — prefer keeping it mounted, or use
+ * Drawer/Dialog for transient surfaces.
+ */
 const SidePanelRoot = ({
   side = 'right',
   className,

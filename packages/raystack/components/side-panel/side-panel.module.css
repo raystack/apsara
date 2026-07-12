@@ -1,7 +1,7 @@
 .side-panel {
   width: 400px;
   background: var(--rs-color-background-base-primary);
-  overflow: scroll;
+  overflow: auto;
 }
 
 .side-panel-left {
