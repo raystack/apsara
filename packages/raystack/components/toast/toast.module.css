@@ -66,7 +66,7 @@
   cursor: default;
   z-index: calc(1000 - var(--toast-index));
 
-  transition: opacity 500ms;
+  transition: opacity var(--rs-duration-slow) var(--rs-ease-out);
 }
 
 /* ===== Vertical position: bottom ===== */
@@ -167,6 +167,10 @@
   transform: translateY(calc(-100% - var(--rs-space-7)));
 }
 
+.root[data-starting-style] {
+  opacity: 0;
+}
+
 /* ===== Limited state ===== */
 .root[data-limited] {
   opacity: 0;
@@ -207,7 +211,7 @@
 
 /* ===== Content (stacking visibility) ===== */
 .content {
-  transition: opacity 250ms;
+  transition: opacity var(--rs-duration-moderate) var(--rs-ease-out);
 }
 
 .content[data-behind] {
@@ -294,8 +298,13 @@
 @media (prefers-reduced-motion: no-preference) {
   .root {
     transition:
-      transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 500ms,
-      height 150ms;
+      transform var(--rs-duration-slow) var(--rs-ease-out),
+      opacity var(--rs-duration-slow) var(--rs-ease-out),
+      height var(--rs-duration-fast) var(--rs-ease-out);
   }
+}
+
+/* Track the finger 1:1 while dragging; transitions resume on release. */
+.root[data-swiping] {
+  transition: none;
 }
