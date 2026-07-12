@@ -24,19 +24,59 @@
   height: 100%;
 }
 
-.toggle:hover,
+@media (prefers-reduced-motion: no-preference) {
+  .toggleContent {
+    transition:
+      background-color var(--rs-duration-fast) var(--rs-ease-out),
+      box-shadow var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .group .toggle {
+    /* color entry matches .toggle's own transition (line 9) so both are
+       driven by the same token */
+    transition:
+      color var(--rs-duration-normal) var(--rs-ease-out),
+      background-color var(--rs-duration-fast) var(--rs-ease-out),
+      box-shadow var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
+.toggle:hover {
+  color: var(--rs-color-foreground-base-primary);
+}
+.toggle:hover .toggleContent {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
 .toggle[data-pressed] {
   color: var(--rs-color-foreground-base-primary);
 }
-.toggle:hover .toggleContent,
 .toggle[data-pressed] .toggleContent {
-  background-color: var(--rs-color-background-base-primary-hover);
+  background-color: var(--rs-color-background-neutral-secondary);
+  box-shadow: var(--rs-shadow-inset);
+}
+.toggle[data-pressed]:hover .toggleContent {
+  background-color: var(--rs-color-background-neutral-secondary-hover);
 }
 
 .toggle[data-disabled] {
   opacity: 0.5;
-  pointer-events: none;
+  pointer-events: initial;
   cursor: not-allowed;
+}
+
+.toggle[data-disabled]:not([data-pressed]):hover {
+  color: var(--rs-color-foreground-base-secondary);
+}
+
+.toggle[data-disabled]:not([data-pressed]):hover .toggleContent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.group .toggle[data-disabled]:not([data-pressed]):hover {
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .toggle:focus-visible {
@@ -111,8 +151,7 @@
 }
 
 .group .toggle:hover {
-  background-color: var(--rs-color-background-base-primary);
-  box-shadow: var(--rs-shadow-inset);
+  background-color: var(--rs-color-background-base-primary-hover);
 }
 
 .group .toggle[data-pressed] {
@@ -127,6 +166,6 @@
 
 .group[data-disabled] {
   opacity: 0.5;
-  pointer-events: none;
+  pointer-events: initial;
   cursor: not-allowed;
 }
