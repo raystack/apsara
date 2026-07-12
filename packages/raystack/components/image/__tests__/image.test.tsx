@@ -124,6 +124,18 @@ describe('Image', () => {
       fireEvent.error(img);
       expect(img.src).toContain('/fallback.jpg');
     });
+
+    it('assigns the fallback src exactly once, even if the fallback also errors', () => {
+      render(<Image src='/invalid.jpg' alt='Test' fallback='/fallback.jpg' />);
+      const img = screen.getByRole('img') as HTMLImageElement;
+
+      fireEvent.error(img);
+      expect(img.src).toContain('/fallback.jpg');
+
+      // The fallback itself fails to load — must not re-assign it again.
+      fireEvent.error(img);
+      expect(img.src).toContain('/fallback.jpg');
+    });
   });
 
   describe('Loading Attributes', () => {
