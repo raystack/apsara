@@ -95,16 +95,19 @@
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   background: var(--rs-color-background-base-primary);
   box-shadow: var(--rs-shadow-feather);
+  /* Re-compose the IconButton base transition so hover color feedback is
+     kept, then override its opacity entry with the fast reveal tier.
+     (Duplicate properties in a transition list: the last one wins.) */
+  transition:
+    var(--rs-transition-interactive),
+    opacity var(--rs-duration-fast) var(--rs-ease-out);
 }
 .floatingCopyButton svg {
   width: var(--rs-space-4);
   height: var(--rs-space-5);
 }
 
-.content:hover .floatingCopyButton {
-  opacity: 1;
-}
-
+.content:hover .floatingCopyButton,
 .floatingCopyButton:focus-visible {
   opacity: 1;
 }
