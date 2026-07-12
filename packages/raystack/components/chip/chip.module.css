@@ -131,6 +131,22 @@
   justify-content: center;
 }
 
+.chip-interactive {
+  cursor: pointer;
+  appearance: none;
+  font-family: inherit;
+}
+
+.chip-interactive:focus,
+.dismiss-button:focus {
+  outline: none;
+}
+
+.chip-interactive:focus-visible {
+  outline: 2px solid var(--rs-color-border-accent-emphasis);
+  outline-offset: 1px;
+}
+
 .dismiss-button:focus-visible {
   outline: 2px solid var(--rs-color-border-accent-emphasis);
   outline-offset: 1px;
