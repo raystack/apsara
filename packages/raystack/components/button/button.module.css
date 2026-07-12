@@ -16,11 +16,16 @@
 }
 
 .button:focus-visible {
-  outline: 1px solid var(--rs-color-border-accent-emphasis);
+  outline: var(--rs-focus-ring);
 }
 
-.button:focus {
+.button:focus:not(:focus-visible) {
   outline: none;
+}
+
+/* Accent-filled solid: push the ring off the same-coloured fill. */
+.button-solid-accent:focus-visible {
+  outline-offset: var(--rs-focus-ring-offset-accent);
 }
 
 .button:before,
@@ -208,9 +213,17 @@
   background-color: inherit;
 }
 
+.button:active:not(:disabled):not(.button-disabled):not(.button-loading) {
+  transform: scale(var(--rs-scale-pressed));
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .button {
-    transition: all 0.2s ease;
+    transition: var(--rs-transition-interactive);
+  }
+
+  .button:active {
+    transition: var(--rs-transition-pressed);
   }
 }
 

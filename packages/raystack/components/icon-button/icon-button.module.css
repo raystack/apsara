@@ -12,15 +12,24 @@
   padding: var(--rs-space-1);
 }
 
-.iconButton:hover:not(:disabled),
-.iconButton:active:not(:disabled) {
+.iconButton:hover:not(:disabled) {
   background-color: var(--rs-color-background-base-primary-hover);
   color: var(--rs-color-foreground-base-primary);
+}
+
+.iconButton:active:not(:disabled) {
+  background-color: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
+  transition: var(--rs-transition-pressed);
 }
 
 .iconButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.iconButton:focus-visible {
+  outline: var(--rs-focus-ring);
 }
 
 .iconButton-size-1 {

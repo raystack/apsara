@@ -20,6 +20,9 @@
   justify-content: center;
   cursor: pointer;
   box-sizing: border-box;
+  transition:
+    background-color var(--rs-duration-fast) var(--rs-ease-out),
+    border-color var(--rs-duration-fast) var(--rs-ease-out);
 }
 
 /* Group-level size — low specificity via :where() so item-level size wins */
@@ -42,6 +45,28 @@
 .radioitem:hover {
   border-color: var(--rs-color-border-base-tertiary-hover);
   background: var(--rs-color-background-base-primary-hover);
+}
+
+.radioitem:focus-visible {
+  outline: var(--rs-focus-ring);
+}
+
+/* Checked = accent fill: offset the ring so it clears it. */
+.radioitem[data-checked]:focus-visible {
+  outline-offset: var(--rs-focus-ring-offset-accent);
+}
+
+.radioitem:active:not([data-disabled]) {
+  transform: scale(var(--rs-scale-pressed-strong));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .radioitem {
+    transition:
+      background-color var(--rs-duration-fast) var(--rs-ease-out),
+      border-color var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-press) var(--rs-ease-out);
+  }
 }
 
 .radioitem[data-checked] {
@@ -74,6 +99,26 @@
   width: 100%;
   height: 100%;
   position: relative;
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+}
+
+.indicator[data-starting-style],
+.indicator[data-ending-style],
+.indicator[data-unchecked] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .indicator {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .indicator[data-starting-style],
+  .indicator[data-ending-style] {
+    transform: scale(0.8);
+  }
 }
 
 .indicator::after {

@@ -31,9 +31,18 @@
   border-top: none;
 }
 
-.accordion-trigger:hover,
-.accordion-trigger:focus-visible {
+.accordion-trigger:hover {
   background-color: var(--rs-color-background-base-primary-hover);
+}
+
+/* Trigger sits flush in a clipped container: keep the ring inside. */
+.accordion-trigger:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+.accordion-trigger:active:not(:disabled) {
+  background-color: var(--rs-color-background-neutral-secondary);
 }
 
 .accordion-trigger:disabled {
@@ -80,10 +89,10 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .accordion-icon {
-    transition: transform 150ms ease-in-out;
+    transition: transform var(--rs-duration-fast) var(--rs-ease-in-out);
   }
 
   .accordion-content {
-    transition: height 150ms ease-out;
+    transition: height var(--rs-duration-fast) var(--rs-ease-out);
   }
 }

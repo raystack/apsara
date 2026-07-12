@@ -13,11 +13,6 @@
   overflow: hidden;
 }
 
-.input-wrapper:hover {
-  border-color: var(--rs-color-border-base-focus);
-  background: var(--rs-color-background-base-primary-hover);
-}
-
 .input-wrapper:focus-within,
 .input-wrapper:has(.input-field[data-active="true"]) {
   border-color: var(--rs-color-border-accent-emphasis);
@@ -29,7 +24,6 @@
   border-color: var(--rs-color-border-danger-emphasis);
 }
 
-.input-wrapper:has(.input-field[data-invalid]):hover,
 .input-wrapper:has(.input-field[data-invalid]):focus-within {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
@@ -37,11 +31,6 @@
 .input-wrapper[data-disabled] {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.input-wrapper[data-disabled]:hover {
-  border-color: var(--rs-color-border-base-tertiary);
-  background: var(--rs-color-background-base-primary);
 }
 
 .leading-icon {
@@ -82,10 +71,6 @@
   border-radius: 0;
 }
 
-.input-field:hover {
-  border-color: var(--rs-color-border-base-focus);
-}
-
 .input-field:focus {
   border-color: var(--rs-color-border-accent-emphasis);
 }
@@ -106,10 +91,6 @@
 .has-chips {
   background: var(--rs-color-background-base-primary);
   transition: var(--rs-transition-interactive);
-}
-
-.has-chips:hover {
-  border-color: var(--rs-color-border-base-focus);
 }
 
 .has-chips:focus-within {
@@ -226,11 +207,12 @@
   border-color: transparent;
 }
 
-.variant-borderless:hover {
-  border-color: transparent;
-}
-
 .variant-borderless:focus-within {
   border-color: transparent;
   outline: none;
+}
+
+/* Keyboard focus must still be visible on the chromeless variant. */
+.variant-borderless:has(.input-field:focus-visible) {
+  box-shadow: var(--rs-focus-ring-shadow);
 }
