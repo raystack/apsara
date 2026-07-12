@@ -21,7 +21,7 @@
   letter-spacing: var(--rs-letter-spacing-mini);
   width: fit-content;
   max-width: 400px;
-  transform-origin: var(--transform-origin);
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
 }
 
 .arrow svg {
@@ -55,107 +55,68 @@
   transform: translateY(-50%) translateX(-100%) rotate(90deg);
 }
 
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes slideUpAndFade {
-  from {
-    opacity: 0;
-    transform: translateY(var(--rs-space-1));
-  }
-}
-@keyframes slideRightAndFade {
-  from {
-    opacity: 0;
-    transform: translateX(calc(-1 * var(--rs-space-1)));
-  }
+.content[data-starting-style],
+.content[data-ending-style] {
+  opacity: 0;
 }
 
-@keyframes slideDownAndFade {
-  from {
-    opacity: 0;
+/* Base UI sets data-instant (focus/click/dismiss and grouped-trigger moves):
+   skip the animation but keep the transition machinery. */
+.content[data-instant] {
+  transition-duration: 0ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  /* Per-side directional offset — same vectors as the old keyframes */
+  .content[data-side="top"][data-starting-style],
+  .content[data-side="top"][data-ending-style] {
     transform: translateY(calc(-1 * var(--rs-space-1)));
   }
-}
 
-@keyframes slideLeftAndFade {
-  from {
-    opacity: 0;
+  .content[data-side="right"][data-starting-style],
+  .content[data-side="right"][data-ending-style] {
     transform: translateX(var(--rs-space-1));
   }
-}
 
-@keyframes slideDownRightAndFade {
-  from {
-    opacity: 0;
+  .content[data-side="bottom"][data-starting-style],
+  .content[data-side="bottom"][data-ending-style] {
+    transform: translateY(var(--rs-space-1));
+  }
+
+  .content[data-side="left"][data-starting-style],
+  .content[data-side="left"][data-ending-style] {
+    transform: translateX(calc(-1 * var(--rs-space-1)));
+  }
+
+  /* Aligned variants get a diagonal offset — same vectors as before.
+     Higher specificity (0,4,0) than the side rules (0,3,0), so they win
+     when data-align is start/end. */
+  .content[data-side="top"][data-align="start"][data-starting-style],
+  .content[data-side="top"][data-align="start"][data-ending-style] {
     transform: translate(
       calc(-1 * var(--rs-space-1)),
       calc(-1 * var(--rs-space-1))
     );
   }
-}
 
-@keyframes slideDownLeftAndFade {
-  from {
-    opacity: 0;
+  .content[data-side="top"][data-align="end"][data-starting-style],
+  .content[data-side="top"][data-align="end"][data-ending-style] {
     transform: translate(var(--rs-space-1), calc(-1 * var(--rs-space-1)));
   }
-}
 
-@keyframes slideUpRightAndFade {
-  from {
-    opacity: 0;
+  .content[data-side="bottom"][data-align="start"][data-starting-style],
+  .content[data-side="bottom"][data-align="start"][data-ending-style] {
     transform: translate(calc(-1 * var(--rs-space-1)), var(--rs-space-1));
   }
-}
 
-@keyframes slideUpLeftAndFade {
-  from {
-    opacity: 0;
+  .content[data-side="bottom"][data-align="end"][data-starting-style],
+  .content[data-side="bottom"][data-align="end"][data-ending-style] {
     transform: translate(var(--rs-space-1), var(--rs-space-1));
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .content {
-    animation-duration: var(--rs-duration-fast);
-    animation-timing-function: var(--rs-ease-out);
-  }
-
-  .content[data-open][data-side="top"]:not([data-instant]) {
-    animation-name: slideDownAndFade;
-  }
-
-  .content[data-open][data-side="right"]:not([data-instant]) {
-    animation-name: slideLeftAndFade;
-  }
-
-  .content[data-open][data-side="bottom"]:not([data-instant]) {
-    animation-name: slideUpAndFade;
-  }
-
-  .content[data-open][data-side="left"]:not([data-instant]) {
-    animation-name: slideRightAndFade;
-  }
-
-  .content[data-side="top"][data-align="start"]:not([data-instant]) {
-    animation-name: slideDownRightAndFade;
-  }
-
-  .content[data-side="top"][data-align="end"]:not([data-instant]) {
-    animation-name: slideDownLeftAndFade;
-  }
-
-  .content[data-side="bottom"][data-align="start"]:not([data-instant]) {
-    animation-name: slideUpRightAndFade;
-  }
-
-  .content[data-side="bottom"][data-align="end"]:not([data-instant]) {
-    animation-name: slideUpLeftAndFade;
   }
 }
