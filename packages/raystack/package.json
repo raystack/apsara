@@ -97,8 +97,6 @@
     "dotenv": "^17.2.2",
     "identity-obj-proxy": "^3.0.0",
     "jsdom": "^26.1.0",
-    "np": "^8.0.4",
-    "npm": "^9.7.1",
     "parcel": "^2.9.2",
     "postcss": "^8.4.24",
     "postcss-import": "^16.1.0",

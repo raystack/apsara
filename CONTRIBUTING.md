@@ -222,10 +222,10 @@ Apsara follows an automated release process using GitHub Actions and semantic ve
    # Ensure you're on the correct branch
    git checkout main  # for production release
    # OR
-   git checkout develop  # for release candidate
+   git checkout release/x.y  # for release candidate
    
    # Pull latest changes
-   git pull origin main  # or develop
+   git pull origin main  # or the release branch
    ```
 
 2. **Create and push a tag**:
@@ -255,7 +255,7 @@ The release process includes these automated steps:
 3. **Install** dependencies
 4. **Build** the library using `pnpm ci:build`
 5. **Bump version** in package.json based on the git tag
-6. **Publish** to NPM using `release-it`
+6. **Publish** to NPM using `pnpm publish` (both `@raystack/apsara` and `@raystack/tools-config`)
 7. **Generate** GitHub release notes
 
 ### NPM Publishing

@@ -83,10 +83,9 @@ apsara/
 ├── apps/
 │   ├── www/                    # Documentation website (Fumadocs)
 ├── packages/
-│   ├── eslint-config-custom/   # Shared ESLint configuration
 │   ├── plugin-vscode/          # VS Code extension for Apsara
 │   ├── raystack/              # Main Apsara component library
-│   └── tsconfig/              # Shared TypeScript configurations
+│   └── tools-config/          # Shared Biome and TypeScript configurations
 ├── .github/
 │   └── workflows/             # GitHub Actions for CI/CD
 ├── pnpm-workspace.yaml        # pnpm workspace configuration
@@ -277,14 +276,7 @@ Configuration files:
 
 ### Common Issues
 
-1. **ESLint Configuration Errors**:
-   ```bash
-   # If you encounter ESLint parsing errors
-   # The build process will still work, but linting may fail
-   # This is a known configuration issue with the current setup
-   ```
-
-2. **Node.js Version Issues**:
+1. **Node.js Version Issues**:
    ```bash
    # Ensure you're using Node.js 22+
    node --version
@@ -293,7 +285,7 @@ Configuration files:
    nvm use 22
    ```
 
-3. **pnpm Version Issues**:
+2. **pnpm Version Issues**:
    ```bash
    # Ensure you're using the correct pnpm version
    pnpm --version
@@ -302,7 +294,7 @@ Configuration files:
    npm install -g pnpm@9.3.0
    ```
 
-4. **Build Failures**:
+3. **Build Failures**:
    ```bash
    # Clean and reinstall if builds fail
    pnpm clean
@@ -311,7 +303,7 @@ Configuration files:
    pnpm build:apsara
    ```
 
-5. **Test Failures**:
+4. **Test Failures**:
    ```bash
    # Some tests may be failing in the current codebase
    # Focus on not introducing new test failures
