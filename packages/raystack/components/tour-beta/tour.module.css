@@ -10,7 +10,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .overlay {
-    animation: tour-fade-in 250ms ease;
+    animation: tour-fade-in var(--rs-duration-moderate) var(--rs-ease-out);
   }
 }
 
@@ -31,11 +31,11 @@
 @media (prefers-reduced-motion: no-preference) {
   .spotlight {
     transition:
-      left 300ms cubic-bezier(0.22, 1, 0.36, 1),
-      top 300ms cubic-bezier(0.22, 1, 0.36, 1),
-      width 300ms cubic-bezier(0.22, 1, 0.36, 1),
-      height 300ms cubic-bezier(0.22, 1, 0.36, 1),
-      border-radius 300ms cubic-bezier(0.22, 1, 0.36, 1);
+      left 300ms var(--rs-ease-out),
+      top 300ms var(--rs-ease-out),
+      width 300ms var(--rs-ease-out),
+      height 300ms var(--rs-ease-out),
+      border-radius 300ms var(--rs-ease-out);
   }
 }
 
@@ -52,7 +52,7 @@
    otherwise the first open would animate in from the viewport origin. */
 @media (prefers-reduced-motion: no-preference) {
   .positioner:has(.popup:not([data-starting-style])) {
-    transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform var(--rs-duration-slow) var(--rs-ease-out);
   }
 }
 
@@ -72,15 +72,21 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   transform-origin: var(--transform-origin);
-  transition:
-    opacity 200ms ease,
-    scale 200ms ease;
+  transition: opacity var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 .popup[data-starting-style],
 .popup[data-ending-style] {
   opacity: 0;
   scale: 0.96;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .popup {
+    transition:
+      opacity var(--rs-duration-normal) var(--rs-ease-out),
+      scale var(--rs-duration-normal) var(--rs-ease-out);
+  }
 }
 
 .stepContent {
@@ -91,7 +97,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .stepContent {
-    animation: tour-step-in 250ms cubic-bezier(0.22, 1, 0.36, 1);
+    animation: tour-step-in var(--rs-duration-moderate) var(--rs-ease-out);
   }
 }
 
