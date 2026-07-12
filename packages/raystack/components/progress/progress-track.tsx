@@ -35,7 +35,10 @@ export function ProgressTrack({
 
   return (
     <ProgressPrimitive.Track className={cx(styles.track, className)} {...props}>
-      <ProgressPrimitive.Indicator className={styles.indicator} />
+      <ProgressPrimitive.Indicator
+        className={styles.indicator}
+        style={{ width: '100%' }}
+      />
       {children}
     </ProgressPrimitive.Track>
   );
