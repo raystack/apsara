@@ -96,3 +96,23 @@
   margin: var(--rs-space-2) calc(var(--rs-space-3) * -1);
   background: var(--rs-color-border-base-primary);
 }
+
+.inputContainer {
+  /* Hook for the open-state selector below; matches the wrapper's own
+     positioning so it is a visual no-op. */
+  position: relative;
+}
+
+.triggerIcon {
+  transform: rotate(0deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .triggerIcon {
+    transition: transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
+.inputContainer:has(input[data-popup-open]) .triggerIcon {
+  transform: rotate(180deg);
+}

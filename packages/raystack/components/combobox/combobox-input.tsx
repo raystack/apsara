@@ -22,6 +22,7 @@ export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
       render={
         <Input
           containerRef={inputContainerRef}
+          classNames={{ container: styles.inputContainer }}
           chips={
             multiple && Array.isArray(value)
               ? value.map(val => ({
