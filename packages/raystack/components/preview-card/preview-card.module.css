@@ -1,6 +1,6 @@
 .positioner {
-  --easing: cubic-bezier(0.22, 1, 0.36, 1);
-  --animation-duration: 0.35s;
+  --easing: var(--rs-ease-out);
+  --animation-duration: var(--rs-duration-moderate);
 
   z-index: var(--rs-z-index-portal);
   height: var(--positioner-height);
@@ -103,17 +103,34 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Default mode (no PreviewCard.Viewport): Base UI positions the positioner
+     via transform (floating-ui). Don't transition that transform, or the card
+     eases toward every reposition and swims behind its anchor. The popup owns
+     the entrance (scale below); the positioner only fades — like popover/menu/tooltip. */
   .positioner {
+    transition: opacity var(--animation-duration) var(--easing);
+  }
+
+  .popup {
+    transition:
+      opacity var(--animation-duration) var(--easing),
+      transform var(--animation-duration) var(--easing);
+  }
+
+  /* Viewport-morph mode: Base UI switches to inset positioning
+     (adaptiveOrigin) and drives --popup-width/--popup-height, so animating
+     inset + width/height IS the morph. Layout cost is confined to this popup
+     subtree for the duration of the morph. */
+  .positioner:has(.viewport) {
     transition:
       top var(--animation-duration) var(--easing),
       left var(--animation-duration) var(--easing),
       right var(--animation-duration) var(--easing),
       bottom var(--animation-duration) var(--easing),
-      transform var(--animation-duration) var(--easing),
       opacity var(--animation-duration) var(--easing);
   }
 
-  .popup {
+  .popup:has(.viewport) {
     transition:
       width var(--animation-duration) var(--easing),
       height var(--animation-duration) var(--easing),
