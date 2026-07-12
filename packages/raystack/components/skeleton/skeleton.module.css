@@ -37,6 +37,6 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .animate::after {
-    animation: shimmer var(--skeleton-duration) infinite;
+    animation: shimmer var(--skeleton-duration) linear infinite;
   }
 }

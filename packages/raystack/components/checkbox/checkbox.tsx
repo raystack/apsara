@@ -103,11 +103,19 @@ function CheckboxItem({
     >
       <CheckboxPrimitive.Indicator
         className={styles.indicator}
+        keepMounted
         render={
           render ??
           ((props, state) => (
             <span {...props}>
-              {state.indeterminate ? <IndeterminateIcon /> : <CheckMarkIcon />}
+              {(state.checked ||
+                state.indeterminate ||
+                state.transitionStatus === 'ending') &&
+                (state.indeterminate ? (
+                  <IndeterminateIcon />
+                ) : (
+                  <CheckMarkIcon />
+                ))}
             </span>
           ))
         }
