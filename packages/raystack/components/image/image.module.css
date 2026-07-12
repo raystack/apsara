@@ -31,3 +31,19 @@
 .image-radius-full {
   border-radius: var(--rs-radius-full);
 }
+
+/* Load fade: hidden only after JS confirms an in-flight load, so SSR/no-JS
+   images are never invisible. Cached images skip this entirely. */
+.image-loading {
+  opacity: 0;
+}
+
+.image-loaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .image-loaded {
+    transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}

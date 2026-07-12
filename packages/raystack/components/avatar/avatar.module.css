@@ -11,10 +11,11 @@
   width: var(--rs-space-9, 32px);
   height: var(--rs-space-9, 32px);
   --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.4);
+  --fallback-letter-spacing: 0.03em;
 }
 
-.avatar-full {
-  border-radius: var(--rs-radius-full) !important;
+.avatar.avatar-full {
+  border-radius: var(--rs-radius-full);
 }
 
 .avatar-disabled {
@@ -228,6 +229,18 @@
   vertical-align: middle;
 }
 
+@keyframes avatar-image-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .image-fade-in {
+    animation: avatar-image-in var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
 .fallback {
   width: 100%;
   height: 100%;
@@ -236,14 +249,15 @@
   justify-content: center;
   font-size: var(--fallback-font-size);
   font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-large);
-  letter-spacing: var(--rs-letter-spacing-large);
+  line-height: 1;
+  letter-spacing: var(--fallback-letter-spacing, 0.03em);
 }
 
 .avatar-size-1 {
   width: var(--rs-space-5, 16px);
   height: var(--rs-space-5, 16px);
   --fallback-font-size: calc(var(--rs-space-5, 16px) * 0.4);
+  --fallback-letter-spacing: 0.05em;
   border-radius: var(--rs-radius-2);
 }
 
@@ -251,6 +265,7 @@
   width: var(--rs-space-6, 20px);
   height: var(--rs-space-6, 20px);
   --fallback-font-size: calc(var(--rs-space-6, 20px) * 0.4);
+  --fallback-letter-spacing: 0.05em;
   border-radius: var(--rs-radius-2);
 }
 
@@ -258,6 +273,7 @@
   width: var(--rs-space-7, 24px);
   height: var(--rs-space-7, 24px);
   --fallback-font-size: calc(var(--rs-space-7, 24px) * 0.4);
+  --fallback-letter-spacing: 0.04em;
   border-radius: var(--rs-radius-2);
 }
 
@@ -265,6 +281,7 @@
   width: var(--rs-space-8, 28px);
   height: var(--rs-space-8, 28px);
   --fallback-font-size: calc(var(--rs-space-8, 28px) * 0.35);
+  --fallback-letter-spacing: 0.04em;
   border-radius: var(--rs-radius-2);
 }
 
@@ -272,6 +289,7 @@
   width: var(--rs-space-9, 32px);
   height: var(--rs-space-9, 32px);
   --fallback-font-size: calc(var(--rs-space-9, 32px) * 0.4);
+  --fallback-letter-spacing: 0.03em;
   border-radius: var(--rs-radius-2);
 }
 
@@ -279,6 +297,7 @@
   width: var(--rs-space-10, 40px);
   height: var(--rs-space-10, 40px);
   --fallback-font-size: calc(var(--rs-space-10, 40px) * 0.35);
+  --fallback-letter-spacing: 0.02em;
   border-radius: var(--rs-radius-4);
 }
 
@@ -286,6 +305,7 @@
   width: var(--rs-space-11, 48px);
   height: var(--rs-space-11, 48px);
   --fallback-font-size: calc(var(--rs-space-11, 48px) * 0.35);
+  --fallback-letter-spacing: 0.01em;
   border-radius: var(--rs-radius-4);
 }
 
@@ -293,6 +313,7 @@
   width: var(--rs-space-12, 56px);
   height: var(--rs-space-12, 56px);
   --fallback-font-size: calc(var(--rs-space-12, 56px) * 0.3);
+  --fallback-letter-spacing: 0.01em;
   border-radius: var(--rs-radius-4);
 }
 
@@ -300,6 +321,7 @@
   width: var(--rs-space-13, 64px);
   height: var(--rs-space-13, 64px);
   --fallback-font-size: calc(var(--rs-space-13, 64px) * 0.3);
+  --fallback-letter-spacing: 0em;
   border-radius: var(--rs-radius-4);
 }
 
@@ -307,6 +329,7 @@
   width: var(--rs-space-14, 72px);
   height: var(--rs-space-14, 72px);
   --fallback-font-size: calc(var(--rs-space-14, 72px) * 0.3);
+  --fallback-letter-spacing: 0em;
   border-radius: var(--rs-radius-5);
 }
 
@@ -314,6 +337,7 @@
   width: var(--rs-space-15, 80px);
   height: var(--rs-space-15, 80px);
   --fallback-font-size: calc(var(--rs-space-15, 80px) * 0.3);
+  --fallback-letter-spacing: 0em;
   border-radius: var(--rs-radius-5);
 }
 
@@ -321,6 +345,7 @@
   width: var(--rs-space-16, 96px);
   height: var(--rs-space-16, 96px);
   --fallback-font-size: calc(var(--rs-space-16, 96px) * 0.3);
+  --fallback-letter-spacing: -0.005em;
   border-radius: var(--rs-radius-5);
 }
 
@@ -328,6 +353,7 @@
   width: var(--rs-space-17, 120px);
   height: var(--rs-space-17, 120px);
   --fallback-font-size: calc(var(--rs-space-17, 120px) * 0.3);
+  --fallback-letter-spacing: -0.01em;
   border-radius: var(--rs-radius-5);
 }
 
