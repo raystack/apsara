@@ -194,17 +194,23 @@ export const Calendar = function ({
             </Tooltip>
           );
         },
-        MonthGrid: props =>
-          loadingData ? (
-            <Skeleton
-              count={5}
-              height='18px'
-              width='252px'
-              style={{ marginBottom: 'var(--rs-space-6)' }}
-            />
-          ) : (
+        MonthGrid: props => (
+          <div className={styles.monthGridWrap}>
             <table {...props} />
-          )
+            <div
+              className={styles.monthGridSkeleton}
+              data-visible={loadingData || undefined}
+              aria-hidden='true'
+            >
+              <Skeleton
+                count={5}
+                height='18px'
+                width='252px'
+                style={{ marginBottom: 'var(--rs-space-6)' }}
+              />
+            </div>
+          </div>
+        )
       }}
       classNames={{
         caption_label: styles.captionLabel,

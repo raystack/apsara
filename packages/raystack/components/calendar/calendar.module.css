@@ -73,7 +73,7 @@
   width: var(--rs-space-10, 40px);
   height: var(--rs-space-10, 40px);
   background-color: var(--rs-color-background-base-primary);
-  border-radius: var(--rs-radius-2);
+  border-radius: var(--rs-radius-5);
   color: var(--rs-color-foreground-base-primary);
   font-style: normal;
   text-align: center;
@@ -92,7 +92,6 @@
   width: var(--rs-space-10, 40px);
   height: var(--rs-space-10, 40px);
   flex-shrink: 0;
-  border-radius: var(--rs-radius-5);
   border: 1px solid var(--rs-color-border-accent-emphasis-hover);
   background-color: transparent;
 }
@@ -297,6 +296,41 @@
 .calendarFooter {
   padding: var(--rs-space-3);
   margin-top: var(--rs-space-2);
+}
+
+.monthGridWrap {
+  position: relative;
+}
+
+.monthGridSkeleton {
+  position: absolute;
+  inset: 0;
+  /* Solid backing so the grid underneath doesn't ghost through mid-fade */
+  background: var(--rs-color-background-base-primary);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.monthGridSkeleton[data-visible] {
+  opacity: 1;
+  visibility: visible;
+  /* Block clicks on the day grid underneath while loading */
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .monthGridSkeleton {
+    /* Exiting: fade opacity, then flip visibility after the fade */
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      visibility 0s linear var(--rs-duration-fast);
+  }
+
+  .monthGridSkeleton[data-visible] {
+    /* Entering: visibility flips immediately, opacity fades in */
+    transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+  }
 }
 
 .datePickerInput {
