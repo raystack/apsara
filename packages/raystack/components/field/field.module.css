@@ -76,7 +76,6 @@
 
 .input:focus {
   border-color: var(--rs-color-border-accent-emphasis);
-  background-color: var(--rs-color-background-base-primary);
 }
 
 .input[data-invalid] {

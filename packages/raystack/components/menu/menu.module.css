@@ -8,7 +8,6 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   box-sizing: border-box;
-  min-width: var(--rs-space-15);
 
   padding: var(--rs-space-2);
   background-color: var(--rs-color-background-base-primary);
@@ -95,19 +94,6 @@
   justify-content: center;
   padding: var(--rs-space-4);
   text-align: center;
-}
-
-.leadingIcon {
-  display: flex;
-  align-items: center;
-  color: var(--rs-color-foreground-base-secondary);
-}
-
-.trailingIcon {
-  display: flex;
-  align-items: center;
-  color: var(--rs-color-foreground-base-secondary);
-  margin-left: auto;
 }
 
 .menuBarTrigger[data-pressed] {

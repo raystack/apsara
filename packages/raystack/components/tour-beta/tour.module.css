@@ -72,7 +72,6 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
   transform-origin: var(--transform-origin);
-  transition: opacity var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 .popup[data-starting-style],

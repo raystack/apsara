@@ -24,7 +24,6 @@
 }
 
 .icon svg {
-  border-color: currentColor;
   height: 100%;
   width: 100%;
 }
@@ -86,9 +85,6 @@
 }
 
 .iconLarge svg {
-  height: 100%;
-  width: 100%;
-  border-color: currentColor;
   padding: var(--rs-space-4);
 }
 
@@ -98,12 +94,6 @@
   padding: var(--rs-space-9) var(--rs-space-5);
 }
 
-@keyframes empty-state-enter {
-  from {
-    opacity: 0;
-  }
-}
-
 @keyframes empty-state-enter-rise {
   from {
     opacity: 0;
@@ -111,14 +101,9 @@
   }
 }
 
-.emptyState,
-.emptyStateContent {
-  animation: empty-state-enter var(--rs-duration-moderate) var(--rs-ease-out);
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .emptyState,
   .emptyStateContent {
-    animation-name: empty-state-enter-rise;
+    animation: empty-state-enter-rise var(--rs-duration-moderate) var(--rs-ease-out);
   }
 }

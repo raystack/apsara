@@ -102,7 +102,6 @@
 .checkbox[data-invalid][data-checked],
 .checkbox[data-invalid][data-indeterminate] {
   background: var(--rs-color-background-danger-primary);
-  border-color: var(--rs-color-border-danger-primary);
 }
 
 /* A4: Disabled state */

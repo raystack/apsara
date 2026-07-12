@@ -14,11 +14,6 @@
   background-color: var(--rs-color-background-base-primary);
 }
 
-.inputWrapper > *:hover,
-.inputWrapper > *:focus-within {
-  background: var(--rs-color-background-base-primary);
-}
-
 .list {
   display: flex;
   flex-direction: column;

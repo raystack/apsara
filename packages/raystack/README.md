@@ -1,24 +1,12 @@
-# Apsara
+# Apsara 🧚‍♀️
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](LICENSE) [![Formatted with Biome](https://img.shields.io/badge/Formatted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev/) [![Linted with Biome](https://img.shields.io/badge/Linted_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev) [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
+[![npm version](https://img.shields.io/npm/v/@raystack/apsara?logo=npm&color=cb3837)](https://www.npmjs.com/package/@raystack/apsara)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](LICENSE)
+[![Biome](https://img.shields.io/badge/Biome-60a5fa?logo=biome&logoColor=white)](https://biomejs.dev/)
 
-Apsara 🧚‍♀️ is an open-source React UI component library built on Base UI primitives. It provides enterprise-grade, accessible components designed for building complex data interfaces.
+Apsara is an open-source React component library for building accessible, data-heavy interfaces. It is built on [Base UI](https://base-ui.com/) primitives and written in TypeScript.
 
-<p align="center"><img width=80% src="./apps/www/public/banner.png" /></p>
-
-## Key Features
-
-- **Accessible Components**: Built on Base UI primitives ensuring ARIA compliance and keyboard navigation
-- **Flexible Styling**: Uses vanilla CSS with HTML data-attributes for powerful theming and style customization
-- **Enterprise Ready**: Designed for complex data-driven applications with components like:
-  - Data Tables
-  - Navigation Systems
-  - Form Controls
-  - Feedback Components
-- **Type Safe**: Written in TypeScript with comprehensive type definitions
-- **Modern Stack**: Support for React 18+ and modern development practices
-
-## Installation
+## Install
 
 ```sh
 npm install @raystack/apsara
@@ -26,98 +14,53 @@ npm install @raystack/apsara
 pnpm add @raystack/apsara
 ```
 
+Requires React 19.
+
 ## Usage
 
 ```jsx
-// Add Style import in the root of the project.
+// Import the styles once, at the root of your app.
 import "@raystack/apsara/style.css";
 
-// Import components
 import { Button, Flex } from "@raystack/apsara";
 
-function App() {
+export default function App() {
   return (
     <Flex>
-      <Button type="primary">I am using 🧚‍♀️ Apsara!</Button>
+      <Button variant="solid">Hello from Apsara 🧚‍♀️</Button>
     </Flex>
   );
 }
 ```
 
-## Component Categories
+Icons and hooks ship as separate entry points:
 
-### Layout
+```jsx
+import { ChevronDownIcon } from "@raystack/apsara/icons";
+import { useCopyToClipboard } from "@raystack/apsara/hooks";
+```
 
-- `Box` - Basic layout container
-- `Flex` - Flexbox container
-- `Container` - Responsive wrapper
-- `Sidebar` - Collapsible navigation panel
+## What's inside
 
-### Navigation
+Over 70 components, styled with plain CSS and `data-*` attributes so you can theme them with CSS variables. A few highlights:
 
-- `Breadcrumb` - Navigation breadcrumbs
-- `Tabs` - Tabbed interface
-- `Command` - Command palette interface
+- **Layout** — Box, Flex, Grid, Container, Sidebar, ScrollArea
+- **Navigation** — Tabs, Breadcrumb, Command, Menu, Navbar, Toolbar
+- **Data** — Table, DataTable, DataView, Avatar, Badge, Chip, Meter
+- **Forms** — Input, Select, Combobox, Checkbox, Radio, Switch, Slider, Calendar, ColorPicker
+- **Feedback** — Toast, Tooltip, Callout, Spinner, Indicator
+- **Overlay** — Dialog, Popover, Drawer, ContextMenu
 
-### Data Display
-
-- `Table` - Data table component
-- `Avatar` - User avatar display
-- `Badge` - Status indicators
-- `EmptyState` - Empty state messaging
-
-### Forms
-
-- `Select` - Dropdown selection
-- `Radio` - Radio button groups
-- `IconButton` - Icon-only buttons
-
-### Feedback
-
-- `Tooltip` - Contextual tooltips
-- `Callout` - Informational callouts
-- `Indicator` - Status indicators
-
-### Overlay
-
-- `Popover` - Contextual overlays
-- `Drawer` - Slide-out panels with swipe-to-dismiss
-- `Dialog` - Modal dialogs
-
-## Documentation
-
-Visit our [documentation site](https://apsara.raystack.org) for:
-
-- Interactive examples
-- API references
-- Theme customization
-- Accessibility guidelines
-- Migration guides
+See the [documentation site](https://apsara.raystack.org) for the full list, live examples, and API references.
 
 ## Contributing
 
-We welcome contributions! Here's how you can help:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Setup
+Contributions are welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the workflow and [DEVELOPMENT.md](./DEVELOPMENT.md) for local setup.
 
 ```sh
-# Install dependencies
-pnpm install
-
-# Start development server
-pnpm dev
-
-# Run tests
-pnpm test
-
-# Build library
-pnpm build
+pnpm install   # install dependencies
+pnpm start     # run the library and docs site
+pnpm test      # run tests
 ```
 
 ## License
