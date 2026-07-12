@@ -341,3 +341,33 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+/* Scrolled-under edges: header hairline and group-anchor hairline appear only
+   once content scrolls beneath them. See table.module.css for rationale. */
+@supports (animation-timeline: scroll()) {
+  .listHeader {
+    border-bottom-color: transparent;
+    animation: list-header-edge linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0px 24px;
+  }
+
+  .listGroupAnchor {
+    box-shadow: 0 0.5px 0 0 transparent;
+    animation: list-anchor-edge linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0px 24px;
+  }
+}
+
+@keyframes list-header-edge {
+  to {
+    border-bottom-color: var(--rs-color-border-base-primary);
+  }
+}
+
+@keyframes list-anchor-edge {
+  to {
+    box-shadow: 0 0.5px 0 0 var(--rs-color-border-base-primary);
+  }
+}

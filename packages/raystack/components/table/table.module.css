@@ -90,8 +90,28 @@
   background: var(--rs-color-background-neutral-secondary);
 }
 
-.row[data-state='selected'],
-.row[data-state='selected']:hover,
-.row[data-state='selected']:active {
+.row[data-state="selected"],
+.row[data-state="selected"]:hover,
+.row[data-state="selected"]:active {
   background: var(--rs-color-background-accent-primary);
+}
+
+/* Scrolled-under header edge: the hairline under sticky header cells is drawn
+   only once content has scrolled beneath them, fading in across the first
+   24px of scroll. Tracks scroll 1:1 (state, not motion) so it applies under
+   reduced motion too. Browsers without scroll-driven animation support keep
+   the static border declared on .head. */
+@supports (animation-timeline: scroll()) {
+  .head {
+    border-bottom-color: transparent;
+    animation: header-edge linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0px 24px;
+  }
+}
+
+@keyframes header-edge {
+  to {
+    border-bottom-color: var(--rs-color-border-base-primary);
+  }
 }

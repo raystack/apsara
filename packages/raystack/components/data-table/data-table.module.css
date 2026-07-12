@@ -139,9 +139,9 @@
   background: var(--rs-color-background-neutral-secondary);
 }
 
-.row[data-state='selected'],
-.row[data-state='selected']:hover,
-.row[data-state='selected'].clickable:active {
+.row[data-state="selected"],
+.row[data-state="selected"]:hover,
+.row[data-state="selected"].clickable:active {
   background: var(--rs-color-background-accent-primary);
 }
 
@@ -285,4 +285,25 @@
    * the panel (resolve their `max-width: 100%`) instead of overflowing it. */
   flex: 1;
   min-width: 0;
+}
+
+/* Scrolled-under edge for the virtualized sticky group anchor. The anchor is
+   permanently stuck and coincides with the first natural group header at
+   scroll 0, so "scrolled > 0" is exactly "content is underneath it".
+   (.stickySectionHeader is intentionally NOT gated: its many instances stick
+   at per-element offsets a scroll() timeline can't express — revisit with
+   @container scroll-state(stuck: top) when support matures.) */
+@supports (animation-timeline: scroll()) {
+  .stickyGroupAnchor {
+    box-shadow: 0 0.5px 0 0 transparent;
+    animation: anchor-edge linear both;
+    animation-timeline: scroll(nearest block);
+    animation-range: 0px 24px;
+  }
+}
+
+@keyframes anchor-edge {
+  to {
+    box-shadow: 0 0.5px 0 0 var(--rs-color-border-base-primary);
+  }
 }
