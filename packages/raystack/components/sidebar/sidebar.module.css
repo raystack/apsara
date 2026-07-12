@@ -380,10 +380,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .root,
-  .nav-item,
-  .nav-text,
-  .resizeHandle {
+  .root {
     transition: width 0.2s ease;
   }
 
