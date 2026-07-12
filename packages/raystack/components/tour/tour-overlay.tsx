@@ -1,12 +1,17 @@
 'use client';
 
 import { cx } from 'class-variance-authority';
-import { type ComponentPropsWithoutRef, useEffect, useState } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { createPortal } from 'react-dom';
 import styles from './tour.module.css';
 import { useTourContext } from './tour-context';
 import { usePrefersReducedMotion } from './use-prefers-reduced-motion';
-import { rectsEqual, type SpotlightRect } from './utils';
+import { FADE_OUT_MS, rectsEqual, type SpotlightRect } from './utils';
 
 export interface TourOverlayProps extends ComponentPropsWithoutRef<'div'> {
   /**
@@ -108,9 +113,74 @@ export function TourOverlay({
     if (revealed) setEntered(true);
   }, [open, disabled, revealed]);
 
-  if (!open || !mounted || disabled || !step) return null;
+  const active = open && !disabled && step != null;
   // Requiring the live `spotlightElement` prevents an orphaned dim after a target unmounts.
-  if (targeted && (!spotlightElement || !displayed || !rect)) return null;
+  const orphaned =
+    active && targeted && (!spotlightElement || !displayed || !rect);
+
+  // Frozen copy of the last-painted dim so it can fade out in place after close.
+  const exitFrameRef = useRef<{
+    hole: { x: number; y: number; width: number; height: number } | null;
+    radius: number;
+  } | null>(null);
+
+  const [exiting, setExiting] = useState(false);
+  // Tracks whether we last painted a real, live spotlight (not an orphaned
+  // gap) — only that state has a valid frame worth fading out from.
+  const wasShowingRef = useRef(false);
+  useEffect(() => {
+    if (active && !orphaned) {
+      wasShowingRef.current = true;
+      setExiting(false);
+      return;
+    }
+    if (orphaned) {
+      // Mid-tour orphan: hide instantly (no stale frame to fade from later).
+      wasShowingRef.current = false;
+      setExiting(false);
+      return;
+    }
+    if (!wasShowingRef.current) return;
+    wasShowingRef.current = false;
+    if (reducedMotion) return; // exits are instant under reduced motion
+    setExiting(true);
+    const timer = setTimeout(() => setExiting(false), FADE_OUT_MS);
+    return () => clearTimeout(timer);
+  }, [active, orphaned, reducedMotion]);
+
+  if (!mounted) return null;
+  if (!active) {
+    // Closing: hold the dim for one fade, mirroring the entry.
+    if (!exiting || exitFrameRef.current == null) return null;
+    const frame = exitFrameRef.current;
+    return createPortal(
+      <div
+        {...rest}
+        aria-hidden
+        data-status={status}
+        data-entered='false'
+        data-hole-open='true'
+        className={cx(styles.overlay, className)}
+      >
+        <div
+          className={styles.spotlight}
+          style={
+            frame.hole
+              ? {
+                  left: frame.hole.x,
+                  top: frame.hole.y,
+                  width: frame.hole.width,
+                  height: frame.hole.height,
+                  borderRadius: frame.radius
+                }
+              : { left: '50%', top: '50%', width: 0, height: 0 }
+          }
+        />
+      </div>,
+      document.body
+    );
+  }
+  if (orphaned) return null;
 
   const padding = step.spotlightPadding ?? spotlightPadding;
   const radius = step.spotlightRadius ?? spotlightRadius;
@@ -125,6 +195,8 @@ export function TourOverlay({
           height: rect.height + padding * 2
         }
       : null;
+
+  exitFrameRef.current = { hole, radius };
 
   const holeOpen = fade ? shown : true;
 

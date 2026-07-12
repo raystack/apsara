@@ -1,3 +1,6 @@
+// Must match --rs-duration-fast — the .spotlightCover fade in tour.module.css.
+export const FADE_OUT_MS = 150;
+
 export interface SpotlightRect {
   x: number;
   y: number;

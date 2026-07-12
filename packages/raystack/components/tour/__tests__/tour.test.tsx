@@ -324,6 +324,11 @@ describe('Tour', () => {
     await waitFor(() =>
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     );
+    // The overlay itself holds for one exit fade after a real close — wait
+    // for it to fully unmount before the next assertions rely on its absence.
+    await waitFor(() =>
+      expect(document.querySelector('[data-status]')).not.toBeInTheDocument()
+    );
     fireEvent.click(screen.getByText('unmount'));
 
     // Resume onto the now-missing target.

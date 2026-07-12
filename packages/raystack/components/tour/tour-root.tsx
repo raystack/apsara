@@ -24,10 +24,7 @@ import type {
 } from './types';
 import { usePrefersReducedMotion } from './use-prefers-reduced-motion';
 import { resolveTourTarget, useTourTarget } from './use-tour-target';
-import { rectsEqual } from './utils';
-
-// Must match --rs-duration-fast — the .spotlightCover fade in tour.module.css.
-const FADE_OUT_MS = 150;
+import { FADE_OUT_MS, rectsEqual } from './utils';
 
 const REVEAL_TIMEOUT_MS = 2000;
 
