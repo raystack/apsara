@@ -118,6 +118,10 @@
   aspect-ratio: 1 / 1;
   border-radius: var(--rs-radius-1);
   overflow: hidden;
+  /* thumb transform below resolves 100cqw/100cqh against this box */
+  container-type: size;
+  touch-action: none;
+  user-select: none;
 }
 
 .selectionCanvas {
@@ -128,6 +132,16 @@
 
 .selectionThumb {
   position: absolute;
+  left: 0;
+  top: 0;
   pointer-events: none;
-  transform: translate(-50%, -50%);
+  /* --thumb-x / --thumb-y are unitless 0..1 fractions set from JS.
+     First translate() positions within the container (cq units),
+     second translate() keeps the existing -50% self-centering. */
+  transform: translate(
+      calc(var(--thumb-x, 0) * 100cqw),
+      calc(var(--thumb-y, 0) * 100cqh)
+    )
+    translate(-50%, -50%);
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
 }
