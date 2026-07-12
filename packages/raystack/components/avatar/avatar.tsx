@@ -1,8 +1,20 @@
+'use client';
+
 import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 import { cva, cx, VariantProps } from 'class-variance-authority';
-import { ComponentProps, isValidElement, ReactElement, ReactNode } from 'react';
+import {
+  ComponentProps,
+  isValidElement,
+  ReactElement,
+  ReactNode,
+  useRef,
+  useState
+} from 'react';
 import styles from './avatar.module.css';
 import { AVATAR_COLORS } from './utils';
+
+// Matches Base UI's AvatarRoot ImageLoadingStatus union.
+type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
 const avatar = cva(styles.avatar, {
   variants: {
@@ -164,21 +176,42 @@ const AvatarRoot = ({
   variant,
   color,
   ...props
-}: AvatarProps) => (
-  <AvatarPrimitive.Root
-    className={cx(
-      styles.imageWrapper,
-      avatar({ size, radius, variant, color }),
-      className
-    )}
-    {...props}
-  >
-    <AvatarPrimitive.Image className={image()} src={src} alt={alt} />
-    <AvatarPrimitive.Fallback className={styles.fallback}>
-      {fallback}
-    </AvatarPrimitive.Fallback>
-  </AvatarPrimitive.Root>
-);
+}: AvatarProps) => {
+  const sawLoadingRef = useRef(false);
+  const [fadeIn, setFadeIn] = useState(false);
+  const handleLoadingStatusChange = (status: ImageLoadingStatus) => {
+    if (status === 'loading') {
+      sawLoadingRef.current = true;
+      setFadeIn(false);
+    } else if (status === 'loaded') {
+      // A cached image reports 'loaded' with no 'loading' phase (Base UI never
+      // emits it), so it stays instant; only network loads fade in.
+      setFadeIn(sawLoadingRef.current);
+      sawLoadingRef.current = false;
+    }
+  };
+
+  return (
+    <AvatarPrimitive.Root
+      className={cx(
+        styles.imageWrapper,
+        avatar({ size, radius, variant, color }),
+        className
+      )}
+      {...props}
+    >
+      <AvatarPrimitive.Image
+        className={cx(image(), fadeIn && styles['image-fade-in'])}
+        src={src}
+        alt={alt}
+        onLoadingStatusChange={handleLoadingStatusChange}
+      />
+      <AvatarPrimitive.Fallback className={styles.fallback}>
+        {fallback}
+      </AvatarPrimitive.Fallback>
+    </AvatarPrimitive.Root>
+  );
+};
 
 AvatarRoot.displayName = 'Avatar';
 
