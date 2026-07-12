@@ -6,11 +6,15 @@ import {
   type ComponentProps,
   type CSSProperties,
   type ReactNode,
+  useEffect,
   useState
 } from 'react';
 
 import { IconButton } from '../icon-button';
 import styles from './callout.module.css';
+
+/** Exit duration. Keep in sync with --rs-duration-normal (styles/effects.css:38). */
+const EXIT_MS = 200;
 
 const callout = cva(styles.callout, {
   variants: {
@@ -65,45 +69,56 @@ export function Callout({
   ...props
 }: CalloutProps) {
   // Dismissal is controlled when `onDismiss` is given; otherwise fall back to
-  // uncontrolled and hide the callout internally.
-  const [dismissed, setDismissed] = useState(false);
+  // uncontrolled: play the exit transition, then unmount.
+  const [state, setState] = useState<'open' | 'closing' | 'closed'>('open');
+
+  useEffect(() => {
+    if (state !== 'closing') return;
+    const timer = setTimeout(() => setState('closed'), EXIT_MS);
+    return () => clearTimeout(timer);
+  }, [state]);
+
   const handleDismiss = () => {
     onDismiss?.();
-    if (!onDismiss) setDismissed(true);
+    if (!onDismiss) setState('closing');
   };
-  if (dismissed) return null;
+  if (state === 'closed') return null;
 
   const role = type === 'alert' ? 'alert' : 'status';
 
   return (
-    <div
-      className={callout({ type, variant, highContrast, className })}
-      role={role}
-      aria-live={type === 'alert' ? 'assertive' : 'polite'}
-      {...props}
-    >
-      <div className={styles.container}>
-        <div className={styles.messageContainer}>
-          {icon && (
-            <div className={styles.icon} aria-hidden='true'>
-              {icon}
+    <div className={styles.transitionShell} data-state={state}>
+      <div className={styles.transitionInner}>
+        <div
+          className={callout({ type, variant, highContrast, className })}
+          role={role}
+          aria-live={type === 'alert' ? 'assertive' : 'polite'}
+          {...props}
+        >
+          <div className={styles.container}>
+            <div className={styles.messageContainer}>
+              {icon && (
+                <div className={styles.icon} aria-hidden='true'>
+                  {icon}
+                </div>
+              )}
+              <div className={styles.message}>{children}</div>
             </div>
-          )}
-          <div className={styles.message}>{children}</div>
-        </div>
 
-        <div className={styles.actionsContainer}>
-          {action && <div className={styles.action}>{action}</div>}
-          {dismissible && (
-            <IconButton
-              size={1}
-              className={styles.dismiss}
-              onClick={handleDismiss}
-              aria-label='Dismiss message'
-            >
-              <Cross1Icon />
-            </IconButton>
-          )}
+            <div className={styles.actionsContainer}>
+              {action && <div className={styles.action}>{action}</div>}
+              {dismissible && (
+                <IconButton
+                  size={1}
+                  className={styles.dismiss}
+                  onClick={handleDismiss}
+                  aria-label='Dismiss message'
+                >
+                  <Cross1Icon />
+                </IconButton>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

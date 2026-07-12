@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Callout } from '../callout';
 import styles from '../callout.module.css';
@@ -141,14 +141,26 @@ describe('Callout', () => {
     });
 
     it('hides itself after dismiss when onDismiss is omitted (uncontrolled)', () => {
-      render(<Callout dismissible>Uncontrolled message</Callout>);
+      vi.useFakeTimers();
+      try {
+        render(<Callout dismissible>Uncontrolled message</Callout>);
 
-      fireEvent.click(screen.getByRole('button', { name: 'Dismiss message' }));
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Dismiss message' })
+        );
 
-      expect(
-        screen.queryByText('Uncontrolled message')
-      ).not.toBeInTheDocument();
-      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+        // Exit transition plays first; the callout unmounts after EXIT_MS.
+        act(() => {
+          vi.advanceTimersByTime(200);
+        });
+
+        expect(
+          screen.queryByText('Uncontrolled message')
+        ).not.toBeInTheDocument();
+        expect(screen.queryByRole('status')).not.toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('renders both action and dismissible button', () => {
