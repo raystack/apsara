@@ -16,13 +16,8 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .textarea {
-    transition: all 0.2s ease;
+    transition: var(--rs-transition-interactive);
   }
-}
-
-.textarea:hover {
-  border-color: var(--rs-color-border-base-focus);
-  background: var(--rs-color-background-base-primary-hover);
 }
 
 .textarea:focus:not(:disabled) {
@@ -53,10 +48,6 @@
   border-color: var(--rs-color-border-danger-emphasis);
 }
 
-.textarea[data-invalid]:hover {
-  border-color: var(--rs-color-border-danger-emphasis-hover);
-}
-
 .textarea[data-invalid]:focus {
   border-color: var(--rs-color-border-danger-emphasis-hover);
 }
@@ -79,11 +70,11 @@
   border-color: transparent;
 }
 
-.variant-borderless:hover {
-  border-color: transparent;
-}
-
 .variant-borderless:focus:not(:disabled) {
   border-color: transparent;
   outline: none;
+}
+
+.variant-borderless:focus-visible:not(:disabled) {
+  box-shadow: var(--rs-focus-ring-shadow);
 }

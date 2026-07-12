@@ -9,6 +9,16 @@
   cursor: pointer;
   background: var(--rs-color-background-neutral-secondary);
   border-radius: var(--rs-radius-full);
+  transition: background-color var(--rs-duration-normal) var(--rs-ease-out);
+}
+
+.switch:focus-visible {
+  outline: var(--rs-focus-ring);
+}
+
+/* Checked = accent track: offset the ring so it clears it. */
+.switch[data-checked]:focus-visible {
+  outline-offset: var(--rs-focus-ring-offset-accent);
 }
 
 .switch.large {
@@ -55,7 +65,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .thumb {
-    transition: transform 200ms ease-in-out;
+    transition: transform var(--rs-duration-normal) var(--rs-ease-in-out);
   }
 }
 
@@ -72,4 +82,21 @@
 /* Small switch thumb positioning */
 .switch.small[data-checked] .thumb {
   transform: translateX(var(--rs-space-4));
+}
+
+/* Pressed: the thumb stretches toward the track center (iOS behavior).
+   transform-origin only affects the scale; the translateX values must
+   exactly mirror the resting rules above. */
+.switch:active:not([data-disabled]) .thumb {
+  transform: translateX(var(--rs-space-1)) scaleX(1.15);
+  transform-origin: left center;
+}
+
+.switch[data-checked]:active:not([data-disabled]) .thumb {
+  transform: translateX(var(--rs-space-5)) scaleX(1.15);
+  transform-origin: right center;
+}
+
+.switch.small[data-checked]:active:not([data-disabled]) .thumb {
+  transform: translateX(var(--rs-space-4)) scaleX(1.15);
 }
