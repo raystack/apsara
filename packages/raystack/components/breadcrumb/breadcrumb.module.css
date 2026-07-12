@@ -1,5 +1,5 @@
 .breadcrumb {
-  font-weight: var(--rs-font-weight-medium);
+  font-weight: var(--rs-font-weight-regular);
 }
 
 .breadcrumb-small {
@@ -37,6 +37,7 @@
   text-wrap: nowrap;
   gap: var(--rs-space-2);
   cursor: pointer;
+  transition: color var(--rs-duration-fast) var(--rs-ease-out);
 }
 
 .breadcrumb-link:hover {
