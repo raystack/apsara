@@ -42,6 +42,8 @@
 .indicator {
   height: 100%;
   background-color: var(--rs-color-background-accent-emphasis);
+  transform: scaleX(calc(var(--rs-meter-percentage, 0) / 100));
+  transform-origin: left;
 }
 
 /* Circular variant — viewBox is 72×72, SVG scales to container size */
@@ -53,7 +55,10 @@
 
 .circularSvg {
   --rs-meter-track-size: var(--rs-space-2);
-  --rs-meter-radius: calc((var(--rs-space-14) - var(--rs-meter-track-size) * 2) / 2);
+  --rs-meter-radius: calc(
+    (var(--rs-space-14) - var(--rs-meter-track-size) * 2) /
+    2
+  );
   --rs-meter-circumference: calc(2 * 3.14159265 * var(--rs-meter-radius));
   width: var(--rs-space-14);
   height: var(--rs-space-14);
@@ -86,11 +91,11 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .indicator {
-    transition: width 500ms;
+    transition: transform var(--rs-duration-moderate) linear;
   }
 
   .circularIndicatorCircle {
-    transition: stroke-dashoffset 500ms;
+    transition: stroke-dashoffset var(--rs-duration-moderate) linear;
   }
 }
 
