@@ -79,6 +79,12 @@
   pointer-events: none;
 }
 
+/* Pressed: one step darker than the list surface. Applies instantly
+   (no background transition on the trigger) — correct for a press. */
+.trigger:active:not([data-disabled]):not([data-active]) {
+  background-color: var(--rs-color-background-neutral-secondary-hover);
+}
+
 .trigger-icon {
   display: inline-flex;
   width: var(--rs-space-5);
@@ -163,4 +169,10 @@
 
 .variant-plain .trigger[data-active] {
   border-bottom-color: var(--rs-color-border-base-emphasis);
+}
+
+/* Plain variant is text-only: dim on press instead of painting a box. */
+.variant-plain .trigger:active:not([data-disabled]):not([data-active]) {
+  background-color: transparent;
+  opacity: 0.7;
 }

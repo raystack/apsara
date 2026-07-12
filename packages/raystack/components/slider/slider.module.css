@@ -53,10 +53,6 @@
   outline: none;
 }
 
-.thumb:hover {
-  border-color: var(--rs-color-border-accent-emphasis-hover);
-}
-
 .thumbLarge {
   width: var(--rs-space-7);
   height: var(--rs-space-6);
@@ -90,6 +86,23 @@
 .thumb:hover .thumbLarge,
 .thumb:hover .thumbSmall {
   background-color: var(--rs-color-background-base-secondary);
+}
+
+/* Grabbing: the thumb grows slightly and lifts. Scale lives on the child
+   so the thumb's track position (set inline by Base UI) is never animated. */
+.thumb:active .thumbLarge,
+.thumb:active .thumbSmall {
+  transform: scale(1.08);
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .thumbLarge,
+  .thumbSmall {
+    transition:
+      transform var(--rs-duration-fast) var(--rs-ease-out),
+      box-shadow var(--rs-duration-fast) var(--rs-ease-out);
+  }
 }
 
 .label {

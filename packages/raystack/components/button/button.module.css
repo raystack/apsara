@@ -208,6 +208,10 @@
   background-color: inherit;
 }
 
+.button:active:not(:disabled):not(.button-disabled):not(.button-loading) {
+  transform: scale(0.97);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .button {
     transition: var(--rs-transition-interactive);

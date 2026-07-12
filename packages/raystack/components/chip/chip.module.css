@@ -130,3 +130,13 @@
   align-items: center;
   justify-content: center;
 }
+
+.dismiss-button:active {
+  transform: scale(0.9);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dismiss-button {
+    transition: transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}

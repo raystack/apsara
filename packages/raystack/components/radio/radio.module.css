@@ -47,6 +47,19 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
+.radioitem:active:not([data-disabled]) {
+  transform: scale(0.92);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .radioitem {
+    transition:
+      background-color var(--rs-duration-fast) var(--rs-ease-out),
+      border-color var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
 .radioitem[data-checked] {
   border: 1px solid var(--rs-color-background-accent-emphasis);
   background: var(--rs-color-background-accent-emphasis);

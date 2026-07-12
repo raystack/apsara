@@ -74,3 +74,20 @@
 .switch.small[data-checked] .thumb {
   transform: translateX(var(--rs-space-4));
 }
+
+/* Pressed: the thumb stretches toward the track center (iOS behavior).
+   transform-origin only affects the scale; the translateX values must
+   exactly mirror the resting rules above. */
+.switch:active:not([data-disabled]) .thumb {
+  transform: translateX(var(--rs-space-1)) scaleX(1.15);
+  transform-origin: left center;
+}
+
+.switch[data-checked]:active:not([data-disabled]) .thumb {
+  transform: translateX(var(--rs-space-5)) scaleX(1.15);
+  transform-origin: right center;
+}
+
+.switch.small[data-checked]:active:not([data-disabled]) .thumb {
+  transform: translateX(var(--rs-space-4)) scaleX(1.15);
+}

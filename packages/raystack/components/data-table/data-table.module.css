@@ -120,6 +120,10 @@
   cursor: pointer;
 }
 
+.row.clickable:active {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
 .head {
   position: sticky;
   top: 0;

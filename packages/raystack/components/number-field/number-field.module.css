@@ -38,6 +38,11 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
+.decrement:active:not([data-disabled]),
+.increment:active:not([data-disabled]) {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
 .decrement[data-disabled],
 .increment[data-disabled] {
   pointer-events: none;

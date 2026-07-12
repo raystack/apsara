@@ -108,6 +108,11 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
+.nav-item:active:not([data-disabled="true"]) {
+  background-color: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-primary);
+}
+
 /* keep item highlighted when menu is open */
 .more-trigger[aria-expanded="true"] {
   background-color: var(--rs-color-background-base-primary-hover);

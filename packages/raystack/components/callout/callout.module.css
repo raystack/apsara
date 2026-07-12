@@ -60,13 +60,18 @@
   align-items: center;
 }
 
-/* Dismiss button stays flat: keep the transparent background and base colour on
-   hover/active (overrides IconButton's hover feedback). The descendant selector
+/* Dismiss button stays flat: keep the transparent background and base colour
+   on hover (overrides IconButton's hover feedback). The descendant selector
    out-specifies `.iconButton:hover` regardless of stylesheet order. */
-.callout .dismiss:hover:not(:disabled),
-.callout .dismiss:active:not(:disabled) {
+.callout .dismiss:hover:not(:disabled) {
   background-color: transparent;
   color: var(--rs-color-foreground-base-secondary);
+}
+
+/* Pressed: background stays flat by design; the glyph darkens one step. */
+.callout .dismiss:active:not(:disabled) {
+  background-color: transparent;
+  color: var(--rs-color-foreground-base-primary);
 }
 
 /* Type Variants */

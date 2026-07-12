@@ -45,6 +45,19 @@
   border-color: var(--rs-color-border-base-focus);
 }
 
+.checkbox:active:not([data-disabled]):not([data-readonly]) {
+  transform: scale(0.92);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .checkbox {
+    transition:
+      background-color var(--rs-duration-fast) var(--rs-ease-out),
+      border-color var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
 .checkbox[data-checked] {
   background: var(--rs-color-background-accent-emphasis);
   border: none;

@@ -97,6 +97,18 @@
   background-color: transparent;
 }
 
+.day:not(.disabled):not(.outside):not(.selected) .dayButton:active {
+  background-color: var(--rs-color-background-base-primary-hover);
+}
+
+.selected:not(.rangeMiddle) .dayButton:active {
+  background-color: var(--rs-color-background-accent-emphasis-hover);
+}
+
+.rangeMiddle .dayButton:active {
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
 .selected:not(.rangeMiddle) {
   width: var(--rs-space-10, 40px);
   height: var(--rs-space-10, 40px);

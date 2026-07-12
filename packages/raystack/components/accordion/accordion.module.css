@@ -36,6 +36,10 @@
   background-color: var(--rs-color-background-base-primary-hover);
 }
 
+.accordion-trigger:active:not(:disabled) {
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
 .accordion-trigger:disabled {
   pointer-events: none;
   opacity: 0.5;

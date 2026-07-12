@@ -153,6 +153,10 @@
   color: var(--rs-color-foreground-base-primary);
 }
 
+.trigger:active:not([data-disabled]):not(:disabled) {
+  background-color: var(--rs-color-background-neutral-secondary);
+}
+
 .trigger:focus-visible {
   outline: 1px solid var(--rs-color-border-accent-emphasis);
 }
