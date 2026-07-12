@@ -91,8 +91,8 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
     if (!thumbRef.current) return;
     const x = clamp01(chroma / CHROMA_MAX);
     const y = clamp01(1 - lightness);
-    thumbRef.current.style.left = `${x * 100}%`;
-    thumbRef.current.style.top = `${y * 100}%`;
+    thumbRef.current.style.setProperty('--thumb-x', String(x));
+    thumbRef.current.style.setProperty('--thumb-y', String(y));
     if (!isThumbVisible.current) {
       isThumbVisible.current = true;
       thumbRef.current.style.opacity = '1';
@@ -185,8 +185,8 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
     const x = clamp01(hsl.s / 100);
     const topLightness = x < 0.01 ? 100 : 50 + 50 * (1 - x);
     const y = clamp01(1 - hsl.l / topLightness);
-    thumbRef.current.style.left = `${x * 100}%`;
-    thumbRef.current.style.top = `${y * 100}%`;
+    thumbRef.current.style.setProperty('--thumb-x', String(x));
+    thumbRef.current.style.setProperty('--thumb-y', String(y));
     if (!isThumbVisible.current) {
       isThumbVisible.current = true;
       thumbRef.current.style.opacity = '1';
