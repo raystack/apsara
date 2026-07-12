@@ -1,0 +1,57 @@
+/* Both icons are stacked in one grid cell and cross-fade on copy. */
+.iconSwap {
+  display: grid;
+  place-items: center;
+}
+
+.iconSwap > * {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+}
+
+.checkIcon {
+  opacity: 0;
+}
+
+.iconSwap[data-copied] .copyIcon {
+  opacity: 0;
+}
+
+.iconSwap[data-copied] .checkIcon {
+  opacity: 1;
+}
+
+/* Under motion, the incoming icon grows in and the outgoing shrinks away. */
+@media (prefers-reduced-motion: no-preference) {
+  .iconSwap > * {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .checkIcon {
+    transform: scale(0.8);
+  }
+
+  .iconSwap[data-copied] .copyIcon {
+    transform: scale(0.8);
+  }
+
+  .iconSwap[data-copied] .checkIcon {
+    transform: scale(1);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

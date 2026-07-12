@@ -1,10 +1,10 @@
 'use client';
 
-import { CopyIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
+import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
+import { useEffect, useRef, useState } from 'react';
 import { useCopyToClipboard } from '~/hooks/useCopyToClipboard';
-import { CheckCircleFilledIcon } from '~/icons';
 import { IconButton, IconButtonProps } from '../icon-button/icon-button';
+import styles from './copy-button.module.css';
 
 export interface CopyButtonProps extends IconButtonProps {
   text: string;
@@ -19,28 +19,48 @@ export function CopyButton({
   ...props
 }: CopyButtonProps) {
   const { copy } = useCopyToClipboard();
-  const [isCopied, setIsCopied] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current !== null) clearTimeout(resetTimerRef.current);
+    };
+  }, []);
 
   async function onCopy() {
     const res = await copy(text);
-    if (res) {
-      setIsCopied(true);
-      if (resetIcon) {
-        setTimeout(() => {
-          setIsCopied(false);
-        }, resetTimeout);
-      }
+    if (!res) return;
+    setCopied(true);
+    if (resetIcon) {
+      if (resetTimerRef.current !== null) clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = setTimeout(() => {
+        setCopied(false);
+        resetTimerRef.current = null;
+      }, resetTimeout);
     }
   }
 
   return (
-    <IconButton {...props} onClick={onCopy} data-test-id='copy-button'>
-      {isCopied ? (
-        <CheckCircleFilledIcon color='var(--rs-color-foreground-success-primary)' />
-      ) : (
-        <CopyIcon />
-      )}
-    </IconButton>
+    <>
+      <IconButton
+        aria-label='Copy'
+        {...props}
+        onClick={onCopy}
+        data-test-id='copy-button'
+      >
+        <span className={styles.iconSwap} data-copied={copied || undefined}>
+          <CopyIcon className={styles.copyIcon} />
+          <CheckIcon
+            className={styles.checkIcon}
+            color='var(--rs-color-foreground-success-primary)'
+          />
+        </span>
+      </IconButton>
+      <span className={styles['sr-only']} role='status' aria-live='polite'>
+        {copied ? 'Copied' : ''}
+      </span>
+    </>
   );
 }
 
