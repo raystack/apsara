@@ -1,4 +1,6 @@
+import { cx } from 'class-variance-authority';
 import { type ComponentProps } from 'react';
+import styles from './amount.module.css';
 
 export interface AmountProps extends ComponentProps<'span'> {
   /**
@@ -167,6 +169,7 @@ export const Amount = ({
   groupDigits = true,
   valueInMinorUnits = true,
   hideCurrency = false,
+  className,
   ...props
 }: AmountProps) => {
   try {
@@ -265,10 +268,18 @@ export const Amount = ({
           finalBaseValue
         );
 
-    return <span {...props}>{formattedValue}</span>;
+    return (
+      <span {...props} className={cx(styles.amount, className)}>
+        {formattedValue}
+      </span>
+    );
   } catch (error) {
     console.error('Error formatting amount:', error);
-    return <span {...props}>{String(value)}</span>;
+    return (
+      <span {...props} className={cx(styles.amount, className)}>
+        {String(value)}
+      </span>
+    );
   }
 };
 
