@@ -89,6 +89,23 @@
   box-shadow: var(--rs-shadow-soft);
 }
 
+/* Expand the small thumb's 8×16px hit target to 24×24px (WCAG 2.5.8).
+   Horizontal: (24 − 8) / 2 = 8px; vertical: (24 − 16) / 2 = 4px.
+   Pointer events bubble from the pseudo through .thumbSmall to the
+   Base UI thumb element, so grabbing works from the expanded area. */
+.thumbSmall {
+  position: relative;
+}
+
+.thumbSmall::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -8px;
+  right: -8px;
+}
+
 .thumb:hover .thumbLarge,
 .thumb:hover .thumbSmall {
   background-color: var(--rs-color-background-base-secondary);

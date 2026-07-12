@@ -42,6 +42,20 @@
   min-height: var(--rs-space-4);
 }
 
+/* Expand the small radio's 12px hit target to 24px (WCAG 2.5.8).
+   (24px − 12px) / 2 = 6px per side. Visible size is unchanged. */
+:where(.group-small) .radioitem,
+.radioitem.small {
+  position: relative;
+}
+
+:where(.group-small) .radioitem::before,
+.radioitem.small::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
 .radioitem:hover {
   border-color: var(--rs-color-border-base-tertiary-hover);
   background: var(--rs-color-background-base-primary-hover);

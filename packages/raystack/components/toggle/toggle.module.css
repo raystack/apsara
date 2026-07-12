@@ -60,6 +60,27 @@
   height: var(--rs-space-5);
 }
 
+/* Expand sub-24px hit targets to 24px (WCAG 2.5.8); visible size unchanged.
+   size-1: (24 − 12) / 2 = 6px; size-2: (24 − 16) / 2 = 4px.
+   Inside .group (overflow: clip, 1px gaps) the expansion is clipped at the
+   group edge — that is a known limit; do not change the group's overflow. */
+.size-1,
+.size-2 {
+  position: relative;
+}
+
+.size-1::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+.size-2::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+
 .size-3 {
   width: var(--rs-space-6);
   height: var(--rs-space-6);
