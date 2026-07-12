@@ -169,7 +169,7 @@ describe('Text', () => {
       expect(container.firstChild).toHaveClass(styles['text-strike-through']);
       expect(container.firstChild).toHaveClass(styles['text-underline']);
       expect(container.firstChild).toHaveClass(
-        styles['text-italic-strike-through']
+        styles['text-underline-strike-through']
       );
     });
   });

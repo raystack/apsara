@@ -62,7 +62,7 @@ export const textVariants = cva(styles.text, {
     {
       strikeThrough: true,
       underline: true,
-      className: styles['text-italic-strike-through']
+      className: styles['text-underline-strike-through']
     }
   ]
 });
