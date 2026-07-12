@@ -108,6 +108,16 @@
   cursor: pointer;
 }
 
+.clickable:active {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
+.row[data-state='selected'],
+.row[data-state='selected']:hover,
+.row[data-state='selected'].clickable:active {
+  background: var(--rs-color-background-accent-primary);
+}
+
 .head {
   position: sticky;
   top: 0;
@@ -178,6 +188,13 @@
   display: flex;
   align-items: center;
   box-sizing: border-box;
+}
+
+/* Let virtualized cells show the row's hover/selected/pressed color, like
+   the non-virtualized cells already do via inherited background.
+   `.virtualRow .virtualCell` outspecifies the base `.cell`/`.virtualCell` rule. */
+.virtualRow .virtualCell {
+  background: inherit;
 }
 
 .virtualSectionHeader {

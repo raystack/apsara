@@ -54,7 +54,7 @@
   width: var(--rs-space-6);
 }
 
-.display-popover-sort-icon[data-order='desc'] {
+.display-popover-sort-icon[data-order="desc"] {
   transform: rotate(180deg);
 }
 
@@ -213,6 +213,11 @@
 
 .listRowVirtual:hover {
   background: var(--rs-color-background-base-primary-hover);
+}
+
+.listRow.clickable:active,
+.listRowVirtual.clickable:active {
+  background: var(--rs-color-background-neutral-secondary);
 }
 
 .listRowDivider {

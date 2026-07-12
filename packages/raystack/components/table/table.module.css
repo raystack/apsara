@@ -66,3 +66,32 @@
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
 }
+
+/* Row state hooks. `.row` is applied by Table.Row; visuals only kick in when
+   the consumer sets data-state="selected" or the `interactive` prop. Cells
+   inherit so the row color shows through the opaque .cell background. */
+.row {
+  background: var(--rs-color-background-base-primary);
+}
+
+.row > .cell {
+  background: inherit;
+}
+
+.row-interactive {
+  cursor: pointer;
+}
+
+.row-interactive:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.row-interactive:active {
+  background: var(--rs-color-background-neutral-secondary);
+}
+
+.row[data-state='selected'],
+.row[data-state='selected']:hover,
+.row[data-state='selected']:active {
+  background: var(--rs-color-background-accent-primary);
+}
