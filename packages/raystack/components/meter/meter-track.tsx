@@ -35,7 +35,10 @@ export function MeterTrack({
 
   return (
     <MeterPrimitive.Track className={cx(styles.track, className)} {...props}>
-      <MeterPrimitive.Indicator className={styles.indicator} />
+      <MeterPrimitive.Indicator
+        className={styles.indicator}
+        style={{ width: '100%' }}
+      />
       {children}
     </MeterPrimitive.Track>
   );

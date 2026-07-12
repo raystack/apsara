@@ -42,6 +42,8 @@
 .indicator {
   height: 100%;
   background-color: var(--rs-color-background-accent-emphasis);
+  transform: scaleX(calc(var(--rs-progress-percentage, 0) / 100));
+  transform-origin: left;
 }
 
 /* Circular variant — viewBox is 72×72, SVG scales to container size */
@@ -86,7 +88,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .indicator {
-    transition: width var(--rs-duration-moderate) linear;
+    transition: transform var(--rs-duration-moderate) linear;
   }
 
   .circularIndicatorCircle {
@@ -102,4 +104,51 @@
   font-weight: var(--rs-font-weight-medium);
   text-align: center;
   white-space: nowrap;
+}
+
+/* Indeterminate (value={null}). Static fallback: dimmed centered bar / partial arc. */
+.indicator[data-indeterminate] {
+  transform: scaleX(0.4);
+  transform-origin: center;
+  opacity: 0.6;
+}
+
+.circularSvg[data-indeterminate] .circularIndicatorCircle {
+  stroke-dashoffset: calc(var(--rs-progress-circumference) * 0.75);
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .indicator[data-indeterminate] {
+    opacity: 1;
+    transform-origin: left;
+    transition: none;
+    animation: progress-indeterminate-sweep 1.2s var(--rs-ease-in-out) infinite;
+  }
+
+  .circularSvg[data-indeterminate] {
+    animation: progress-indeterminate-rotate 1.2s linear infinite;
+  }
+
+  .circularSvg[data-indeterminate] .circularIndicatorCircle {
+    opacity: 1;
+  }
+}
+
+@keyframes progress-indeterminate-sweep {
+  from {
+    transform: translateX(-45%) scaleX(0.4);
+  }
+  to {
+    transform: translateX(105%) scaleX(0.4);
+  }
+}
+
+@keyframes progress-indeterminate-rotate {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(270deg);
+  }
 }
