@@ -167,21 +167,17 @@
 .variant-standalone .trigger {
   /* Chip look: no outer padding and visible border */
   border: 0.5px solid var(--rs-color-border-base-primary);
-  background: transparent;
 }
 
 .variant-standalone .trigger[data-active] {
-  background: transparent;
   border-color: transparent;
 }
 
 /* Plain variant: text-like tabs with larger gaps */
 .variant-plain .list {
   gap: var(--rs-space-6);
-  background-color: transparent;
   padding: 0;
   border-radius: 0;
-  box-shadow: none;
   justify-content: center;
 }
 

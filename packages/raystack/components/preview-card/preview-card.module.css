@@ -1,3 +1,7 @@
+/* Default mode (no PreviewCard.Viewport): Base UI positions the positioner
+   via transform (floating-ui). Don't transition that transform, or the card
+   eases toward every reposition and swims behind its anchor. The popup owns
+   the entrance (scale below); the positioner only fades — like popover/menu/tooltip. */
 .positioner {
   --easing: var(--rs-ease-out);
   --animation-duration: var(--rs-duration-moderate);
@@ -29,7 +33,6 @@
 .popup[data-starting-style],
 .popup[data-ending-style] {
   opacity: 0;
-  transform: scale(0.9);
 }
 
 .arrow svg {
@@ -80,41 +83,34 @@
 
 .viewport[data-activation-direction~="left"]
   [data-current][data-starting-style] {
-  translate: -30% 0;
   opacity: 0;
 }
 
 .viewport[data-activation-direction~="right"]
   [data-current][data-starting-style] {
-  translate: 30% 0;
   opacity: 0;
 }
 
 .viewport[data-activation-direction~="left"]
   [data-previous][data-ending-style] {
-  translate: 30% 0;
   opacity: 0;
 }
 
 .viewport[data-activation-direction~="right"]
   [data-previous][data-ending-style] {
-  translate: -30% 0;
   opacity: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Default mode (no PreviewCard.Viewport): Base UI positions the positioner
-     via transform (floating-ui). Don't transition that transform, or the card
-     eases toward every reposition and swims behind its anchor. The popup owns
-     the entrance (scale below); the positioner only fades — like popover/menu/tooltip. */
-  .positioner {
-    transition: opacity var(--animation-duration) var(--easing);
-  }
-
   .popup {
     transition:
       opacity var(--animation-duration) var(--easing),
       transform var(--animation-duration) var(--easing);
+  }
+
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    transform: scale(0.9);
   }
 
   /* Viewport-morph mode: Base UI switches to inset positioning
@@ -143,5 +139,25 @@
     transition:
       translate var(--animation-duration) var(--easing),
       opacity calc(var(--animation-duration) / 2) var(--easing);
+  }
+
+  .viewport[data-activation-direction~="left"]
+    [data-current][data-starting-style] {
+    translate: -30% 0;
+  }
+
+  .viewport[data-activation-direction~="right"]
+    [data-current][data-starting-style] {
+    translate: 30% 0;
+  }
+
+  .viewport[data-activation-direction~="left"]
+    [data-previous][data-ending-style] {
+    translate: 30% 0;
+  }
+
+  .viewport[data-activation-direction~="right"]
+    [data-previous][data-ending-style] {
+    translate: -30% 0;
   }
 }

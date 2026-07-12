@@ -141,7 +141,3 @@
   width: var(--rs-radius-3);
   height: var(--rs-radius-3);
 }
-
-.radioitem[data-disabled] .indicator::after {
-  background: var(--rs-color-foreground-base-emphasis);
-}

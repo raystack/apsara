@@ -98,7 +98,6 @@
 .popup[data-starting-style],
 .popup[data-ending-style] {
   opacity: 0;
-  scale: 0.96;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -107,12 +106,17 @@
       opacity var(--rs-duration-normal) var(--rs-ease-out),
       scale var(--rs-duration-normal) var(--rs-ease-out);
   }
+
+  .popup[data-starting-style],
+  .popup[data-ending-style] {
+    scale: 0.96;
+  }
 }
 
 /* Fade mode: the card is hidden until its target settles. Hiding is instant
    (transition: none) so the reposition and content swap between steps are not
    seen; revealing uses the .popup transition above for a soft fade-in in place. */
-.popup[data-transition="fade"][data-visible="false"] {
+.popup[data-visible="false"] {
   opacity: 0;
   scale: 0.98;
   transition: none;

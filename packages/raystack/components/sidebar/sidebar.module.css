@@ -57,10 +57,6 @@
   align-items: flex-start;
 }
 
-.root[data-closed] .main {
-  align-items: flex-start;
-}
-
 .root [data-collapse-hidden] {
   /* Cap width so the collapse animates to 0; 240px = the sidebar's open width,
      so wider consumer content is already clipped by the sidebar itself. */
@@ -101,10 +97,6 @@
   border: 0;
   background: transparent;
   text-align: left;
-}
-
-.root[data-closed] .nav-item {
-  justify-content: flex-start;
 }
 
 .nav-item:hover {
@@ -259,10 +251,6 @@
   margin-top: var(--rs-space-4);
 }
 
-.root[data-closed] .nav-group {
-  align-items: flex-start;
-}
-
 .nav-group-header {
   display: flex;
   height: var(--rs-space-7);
@@ -316,7 +304,6 @@
   height: var(--rs-space-4);
   color: var(--rs-color-foreground-base-secondary);
   transform: rotate(-90deg);
-  transition: transform var(--rs-duration-normal) var(--rs-ease-out);
   flex-shrink: 0;
 }
 
@@ -393,13 +380,15 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .root {
-    transition: width 0.2s ease;
+    transition: width var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  .nav-group-chevron {
+    transition: transform var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   .nav-group-panel {
-    transition:
-      width 0.2s ease,
-      height 0.2s ease;
+    transition: height var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   .nav-text {
@@ -411,8 +400,8 @@
 
   .root [data-collapse-hidden] {
     transition:
-      max-width 0.2s ease,
-      opacity 0.2s ease,
-      visibility 0.2s ease;
+      max-width var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out),
+      visibility var(--rs-duration-normal) var(--rs-ease-out);
   }
 }

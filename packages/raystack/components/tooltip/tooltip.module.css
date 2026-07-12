@@ -1,7 +1,3 @@
-.trigger {
-  width: fit-content;
-  display: flex;
-}
 .positioner {
   z-index: var(--rs-z-index-portal);
 }

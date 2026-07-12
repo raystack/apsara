@@ -203,16 +203,6 @@
   background-color: transparent;
 }
 
-.button-loading {
-  display: flex;
-  align-items: center;
-}
-
-.button-loading:hover,
-.button-loading:active {
-  background-color: inherit;
-}
-
 .button:active:not(:disabled):not(.button-disabled):not(.button-loading) {
   transform: scale(var(--rs-scale-pressed));
 }

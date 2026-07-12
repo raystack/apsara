@@ -81,8 +81,6 @@
 }
 
 [data-style="modern"] {
-  --rs-font-title: var(--rs-font-inter), sans-serif;
-  --rs-font-body: var(--rs-font-inter), sans-serif;
   font-family: var(--rs-font-body);
 }
 

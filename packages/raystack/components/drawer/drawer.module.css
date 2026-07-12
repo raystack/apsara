@@ -1,7 +1,6 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  min-height: 100dvh;
   z-index: var(--rs-z-index-portal);
   background-color: var(--rs-color-overlay-black-a5);
   opacity: calc(1 - var(--drawer-swipe-progress, 0));
@@ -60,7 +59,6 @@
   color: var(--rs-color-foreground-base-primary);
   overflow-y: auto;
   overscroll-behavior: contain;
-  touch-action: auto;
   will-change: transform;
   transition: opacity var(--rs-duration-drawer) var(--rs-ease-drawer);
 }
