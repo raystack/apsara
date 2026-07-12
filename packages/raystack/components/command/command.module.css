@@ -195,3 +195,11 @@
   outline: none;
   isolation: isolate;
 }
+
+/* Reduced transparency: drop the blur, compensate with a heavier solid scrim */
+@media (prefers-reduced-transparency: reduce) {
+  .backdropBlur {
+    backdrop-filter: none;
+    background-color: var(--rs-color-overlay-black-a9);
+  }
+}

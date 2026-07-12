@@ -167,6 +167,10 @@
   transform: translateY(calc(-100% - var(--rs-space-7)));
 }
 
+.root[data-starting-style] {
+  opacity: 0;
+}
+
 /* ===== Limited state ===== */
 .root[data-limited] {
   opacity: 0;
