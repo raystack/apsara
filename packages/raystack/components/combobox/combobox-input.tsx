@@ -4,7 +4,6 @@ import { Combobox as ComboboxPrimitive } from '@base-ui/react';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { type ComponentProps } from 'react';
 import { Input } from '../input';
-import styles from './combobox.module.css';
 import { useComboboxContext } from './combobox-root';
 
 export interface ComboboxInputProps
@@ -31,7 +30,7 @@ export const ComboboxInput = ({ ref, ...props }: ComboboxInputProps) => {
                 }))
               : undefined
           }
-          trailingIcon={<ChevronDownIcon className={styles.triggerIcon} />}
+          trailingIcon={<ChevronDownIcon />}
           {...props}
         />
       }

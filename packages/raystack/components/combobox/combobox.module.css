@@ -15,6 +15,26 @@
   max-height: 320px;
   min-width: var(--anchor-width);
   overflow: auto;
+  transform-origin: var(--transform-origin);
+  transition: opacity var(--rs-duration-fast) var(--rs-ease-out);
+}
+
+.content[data-starting-style],
+.content[data-ending-style] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .content {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .content[data-starting-style],
+  .content[data-ending-style] {
+    transform: scale(0.97);
+  }
 }
 
 .list {
