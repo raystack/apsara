@@ -69,7 +69,7 @@ function RadioItem({ className, size, ...props }: RadioItemProps) {
       {...props}
       className={radioVariants({ size, className })}
     >
-      <RadioPrimitive.Indicator className={styles.indicator} />
+      <RadioPrimitive.Indicator className={styles.indicator} keepMounted />
     </RadioPrimitive.Root>
   );
 }
