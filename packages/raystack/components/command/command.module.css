@@ -157,23 +157,15 @@
   background-color: var(--rs-color-border-base-primary);
 }
 
-.backdrop {
+.overlay {
   position: fixed;
   inset: 0;
   z-index: var(--rs-z-index-portal);
   background-color: var(--rs-color-overlay-black-a5);
-  transition:
-    opacity 200ms ease-out,
-    backdrop-filter 200ms ease-out;
 }
 
-.backdropBlur {
+.overlayBlur {
   backdrop-filter: var(--rs-blur-lg);
-}
-
-.backdrop[data-starting-style],
-.backdrop[data-ending-style] {
-  opacity: 0;
 }
 
 .viewport {
@@ -202,13 +194,12 @@
   overflow: hidden;
   outline: none;
   isolation: isolate;
-  transition:
-    opacity 200ms ease-out,
-    transform 200ms ease-out;
 }
 
-.dialogPopup[data-starting-style],
-.dialogPopup[data-ending-style] {
-  opacity: 0;
-  transform: scale(0.98);
+/* Reduced transparency: drop the blur, compensate with a heavier solid scrim */
+@media (prefers-reduced-transparency: reduce) {
+  .overlayBlur {
+    backdrop-filter: none;
+    background-color: var(--rs-color-overlay-black-a9);
+  }
 }

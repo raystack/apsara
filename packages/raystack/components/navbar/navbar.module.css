@@ -11,7 +11,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .root {
-    transition: transform 0.2s ease-in-out;
+    transition: transform var(--rs-duration-normal) var(--rs-ease-in-out);
   }
 }
 
@@ -46,4 +46,19 @@
 .end {
   grid-column: 3;
   justify-self: end;
+}
+
+/* Reduced motion: hide-on-scroll degrades to a quick fade instead of a slide */
+@media (prefers-reduced-motion: reduce) {
+  .root {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      visibility var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .root[data-hidden="true"] {
+    transform: none;
+    opacity: 0;
+    visibility: hidden;
+  }
 }
