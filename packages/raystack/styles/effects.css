@@ -1,35 +1,112 @@
 :root {
-    /* Shadows */
-    /* Example usage: box-shadow: var(--rs-shadow-feather); */
-    --rs-shadow-feather: 0px 1px 1px 0px oklch(0 0 0 / 0.06), 0px 4px 4px -1px oklch(0 0 0 / 0.02); /* sm */
-    --rs-shadow-soft: 0px 2px 4px 0px oklch(0 0 0 / 0.04), 0px 1px 2px 0px oklch(0 0 0 / 0.04); /* md */
-    --rs-shadow-lifted: 0px 1px 1px 0px oklch(0 0 0 / 0.07), 0px 2px 5px 0px oklch(0 0 0 / 0.07), 0px 3px 8px 0px oklch(0 0 0 / 0.07); /* lg */
-    --rs-shadow-floating: 0px 1px 1px 0px oklch(0 0 0 / 0.04), 0px 2px 8px 0px oklch(0 0 0 / 0.04), 0px 3px 17px 0px oklch(0 0 0 / 0.04), 0px 4px 30px 0px oklch(0 0 0 / 0.13); /* xl */
-    --rs-shadow-inset: 0px 1px 1px 0px oklch(0 0 0 / 0.04) inset;
+  /* Shadows */
+  /* Example usage: box-shadow: var(--rs-shadow-feather); */
+  --rs-shadow-feather:
+    0px 1px 1px 0px oklch(0 0 0 / 0.06), 0px 4px 4px -1px oklch(0 0 0 / 0.02); /* sm */
+  --rs-shadow-soft:
+    0px 2px 4px 0px oklch(0 0 0 / 0.04), 0px 1px 2px 0px oklch(0 0 0 / 0.04); /* md */
+  --rs-shadow-lifted:
+    0px 1px 1px 0px oklch(0 0 0 / 0.07), 0px 2px 5px 0px oklch(0 0 0 / 0.07), 0px 3px 8px 0px oklch(
+      0 0 0 / 0.07
+    ); /* lg */
+  --rs-shadow-floating:
+    0px 1px 1px 0px oklch(0 0 0 / 0.04), 0px 2px 8px 0px oklch(0 0 0 / 0.04), 0px 3px 17px 0px oklch(
+      0 0 0 / 0.04
+    ), 0px 4px 30px 0px oklch(0 0 0 / 0.13); /* xl */
+  --rs-shadow-inset: 0px 1px 1px 0px oklch(0 0 0 / 0.04) inset;
 
-    /* Transitions */
-    --rs-transition-interactive: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  /* Transitions */
+  --rs-transition-interactive:
+    background-color var(--rs-duration-normal) var(--rs-ease-out),
+    border-color var(--rs-duration-normal) var(--rs-ease-out),
+    color var(--rs-duration-normal) var(--rs-ease-out),
+    box-shadow var(--rs-duration-normal) var(--rs-ease-out),
+    opacity var(--rs-duration-normal) var(--rs-ease-out);
+  /* Pressed states: acknowledge pointer-down near-instantly. Apply on
+       `:active`; releasing falls back to --rs-transition-interactive (200ms). */
+  --rs-transition-pressed:
+    background-color var(--rs-duration-press) var(--rs-ease-out),
+    border-color var(--rs-duration-press) var(--rs-ease-out),
+    color var(--rs-duration-press) var(--rs-ease-out),
+    box-shadow var(--rs-duration-press) var(--rs-ease-out),
+    opacity var(--rs-duration-press) var(--rs-ease-out),
+    transform var(--rs-duration-press) var(--rs-ease-out);
 
-    /* Blurs */
-    /* Example usage: backdrop-filter:: var(--rs-blur-sm); */
-    --rs-blur-sm: blur(0.5px);
-    --rs-blur-md: blur(1px);
-    --rs-blur-lg: blur(2px);
-    --rs-blur-xl: blur(4px);
+  /* Pressed scale: a control shrinks slightly under the finger. Smaller
+       targets need a larger delta to read, so there are two steps. */
+  --rs-scale-pressed: 0.97; /* buttons, tabs, larger controls */
+  --rs-scale-pressed-strong: 0.92; /* checkbox, radio, chip dismiss */
+
+  /* Focus ring: keyboard-focus indicator. The shadow variant is for
+       chromeless text-entry surfaces that have no border to ring. */
+  --rs-focus-ring: 0.5px solid var(--rs-color-border-accent-emphasis);
+  --rs-focus-ring-shadow: 0 0 0 1.5px var(--rs-color-border-accent-primary);
+
+  /* Ring offset: rings sit flush (0) by default. A control adds one of these
+       in its own :focus-visible rule when it needs to — accent-filled controls
+       push the ring out so it clears the same-colour fill; controls in a
+       clipped container pull it in so the ring isn't cut off. */
+  --rs-focus-ring-offset-accent: 2px;
+  --rs-focus-ring-offset-inset: -2px;
+
+  /* Motion */
+  /* Example usage: transition: opacity var(--rs-duration-normal) var(--rs-ease-out); */
+  --rs-ease-out: cubic-bezier(
+    0.22,
+    1,
+    0.36,
+    1
+  ); /* entrances, exits, value changes */
+  --rs-ease-in-out: cubic-bezier(
+    0.77,
+    0,
+    0.175,
+    1
+  ); /* elements moving on screen */
+  --rs-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* iOS-like drawer slide */
+  --rs-duration-press: 100ms; /* pressed/active feedback */
+  --rs-duration-fast: 150ms; /* tooltips, menus, small popups */
+  --rs-duration-normal: 200ms; /* popovers, dialogs, switches */
+  --rs-duration-moderate: 250ms; /* tabs indicator, preview card, tour steps */
+  --rs-duration-slow: 400ms; /* toasts */
+  --rs-duration-drawer: 450ms; /* drawer */
+
+  /* Blurs */
+  /* Example usage: backdrop-filter:: var(--rs-blur-sm); */
+  --rs-blur-sm: blur(0.5px);
+  --rs-blur-md: blur(1px);
+  --rs-blur-lg: blur(2px);
+  --rs-blur-xl: blur(4px);
 }
 
 [data-theme="light"] {
-  --rs-shadow-feather: 0px 1px 1px 0px oklch(0 0 0 / 0.06), 0px 4px 4px -1px oklch(0 0 0 / 0.02);
-  --rs-shadow-soft: 0px 2px 4px 0px oklch(0 0 0 / 0.04), 0px 1px 2px 0px oklch(0 0 0 / 0.04);
-  --rs-shadow-lifted: 0px 1px 1px 0px oklch(0 0 0 / 0.07), 0px 2px 5px 0px oklch(0 0 0 / 0.07), 0px 3px 8px 0px oklch(0 0 0 / 0.07);
-  --rs-shadow-floating: 0px 1px 1px 0px oklch(0 0 0 / 0.04), 0px 2px 8px 0px oklch(0 0 0 / 0.04), 0px 3px 17px 0px oklch(0 0 0 / 0.04), 0px 4px 30px 0px oklch(0 0 0 / 0.13);
+  --rs-shadow-feather:
+    0px 1px 1px 0px oklch(0 0 0 / 0.06), 0px 4px 4px -1px oklch(0 0 0 / 0.02);
+  --rs-shadow-soft:
+    0px 2px 4px 0px oklch(0 0 0 / 0.04), 0px 1px 2px 0px oklch(0 0 0 / 0.04);
+  --rs-shadow-lifted:
+    0px 1px 1px 0px oklch(0 0 0 / 0.07), 0px 2px 5px 0px oklch(0 0 0 / 0.07), 0px 3px 8px 0px oklch(
+      0 0 0 / 0.07
+    );
+  --rs-shadow-floating:
+    0px 1px 1px 0px oklch(0 0 0 / 0.04), 0px 2px 8px 0px oklch(0 0 0 / 0.04), 0px 3px 17px 0px oklch(
+      0 0 0 / 0.04
+    ), 0px 4px 30px 0px oklch(0 0 0 / 0.13);
   --rs-shadow-inset: 0px 1px 1px 0px oklch(0 0 0 / 0.04) inset;
 }
 
 [data-theme="dark"] {
-  --rs-shadow-feather: 0px 1px 1px 0px oklch(0 0 0 / 0.3), 0px 4px 4px -1px oklch(0 0 0 / 0.25);
-  --rs-shadow-soft: 0px 2px 4px 0px oklch(0 0 0 / 0.3), 0px 1px 2px 0px oklch(0 0 0 / 0.25);
-  --rs-shadow-lifted: 0px 1px 1px 0px oklch(0 0 0 / 0.35), 0px 2px 5px 0px oklch(0 0 0 / 0.35), 0px 3px 8px 0px oklch(0 0 0 / 0.35);
-  --rs-shadow-floating: 0px 1px 1px 0px oklch(0 0 0 / 0.3), 0px 2px 8px 0px oklch(0 0 0 / 0.3), 0px 3px 17px 0px oklch(0 0 0 / 0.3), 0px 4px 30px 0px oklch(0 0 0 / 0.4);
+  --rs-shadow-feather:
+    0px 1px 1px 0px oklch(0 0 0 / 0.3), 0px 4px 4px -1px oklch(0 0 0 / 0.25);
+  --rs-shadow-soft:
+    0px 2px 4px 0px oklch(0 0 0 / 0.3), 0px 1px 2px 0px oklch(0 0 0 / 0.25);
+  --rs-shadow-lifted:
+    0px 1px 1px 0px oklch(0 0 0 / 0.35), 0px 2px 5px 0px oklch(0 0 0 / 0.35), 0px 3px 8px 0px oklch(
+      0 0 0 / 0.35
+    );
+  --rs-shadow-floating:
+    0px 1px 1px 0px oklch(0 0 0 / 0.3), 0px 2px 8px 0px oklch(0 0 0 / 0.3), 0px 3px 17px 0px oklch(
+      0 0 0 / 0.3
+    ), 0px 4px 30px 0px oklch(0 0 0 / 0.4);
   --rs-shadow-inset: 0px 1px 1px 0px oklch(0 0 0 / 0.25) inset;
 }
