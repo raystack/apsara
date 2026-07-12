@@ -208,20 +208,29 @@ export function DatePicker({
   }
 
   const defaultTrigger = (
-    <Input
-      size='small'
-      placeholder='Select date'
-      aria-invalid={!!error}
-      className={styles.datePickerInput}
-      trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
-      {...inputProps}
-      ref={popover.inputRef}
-      value={inputValue}
-      onChange={handleInputChange}
-      onFocus={popover.handleInputFocus}
-      onBlur={popover.handleInputBlur}
-      onKeyUp={handleKeyUp}
-    />
+    <>
+      <Input
+        size='small'
+        placeholder='Select date'
+        aria-invalid={!!error}
+        className={styles.datePickerInput}
+        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+        {...inputProps}
+        ref={popover.inputRef}
+        value={inputValue}
+        onChange={handleInputChange}
+        onFocus={popover.handleInputFocus}
+        onBlur={popover.handleInputBlur}
+        onKeyUp={handleKeyUp}
+      />
+      <span
+        className={styles.datePickerError}
+        data-visible={error ? '' : undefined}
+        role='alert'
+      >
+        {error}
+      </span>
+    </>
   );
 
   /*

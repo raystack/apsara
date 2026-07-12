@@ -28,11 +28,41 @@
   margin: 0;
 }
 
+/* Description and error share one slot, stacked in the same grid cell. When an
+   error appears it crossfades in over the description (which fades out), so the
+   hint is replaced smoothly instead of popping. Reduced motion swaps instantly. */
+.helperSlot {
+  display: grid;
+}
+
+.helperSlot > * {
+  grid-area: 1 / 1;
+}
+
+.description[data-hidden] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .helperSlot > * {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      visibility var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  @starting-style {
+    .helperSlot .error {
+      opacity: 0;
+    }
+  }
+}
+
 .input {
   width: 100%;
   padding: 0 var(--rs-space-3);
   border-radius: var(--rs-radius-2);
-  border: 1px solid var(--rs-color-border-base-tertiary);
+  border: 0.5px solid var(--rs-color-border-base-tertiary);
   background: var(--rs-color-background-base-primary);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
@@ -40,13 +70,8 @@
   letter-spacing: var(--rs-letter-spacing-small);
   outline: none;
   box-sizing: border-box;
-  transition: all 0.2s ease;
+  transition: var(--rs-transition-interactive);
   height: var(--rs-space-9);
-}
-
-.input:hover {
-  border-color: var(--rs-color-border-base-focus);
-  background: var(--rs-color-background-base-primary-hover);
 }
 
 .input:focus {
@@ -55,7 +80,11 @@
 }
 
 .input[data-invalid] {
-  border-color: var(--rs-color-border-danger-primary);
+  border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.input[data-invalid]:focus {
+  border-color: var(--rs-color-border-danger-emphasis-hover);
 }
 
 .input[data-disabled] {
