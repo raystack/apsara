@@ -138,7 +138,7 @@
   text-decoration-line: line-through;
 }
 
-.text-italic-strike-through {
+.text-underline-strike-through {
   text-decoration-line: underline line-through;
 }
 
