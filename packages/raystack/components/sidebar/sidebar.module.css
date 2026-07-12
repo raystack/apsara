@@ -61,8 +61,18 @@
   align-items: flex-start;
 }
 
+.root [data-collapse-hidden] {
+  /* Cap width so the collapse animates to 0; 240px = the sidebar's open width,
+     so wider consumer content is already clipped by the sidebar itself. */
+  max-width: 240px;
+}
+
 .root[data-closed] [data-collapse-hidden] {
-  display: none;
+  max-width: 0;
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .footer {
@@ -82,12 +92,7 @@
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   text-decoration: none;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
+  transition: var(--rs-transition-interactive);
   box-sizing: border-box;
 }
 
@@ -110,6 +115,11 @@
 .nav-item:focus-visible {
   outline: none;
   background-color: var(--rs-color-background-base-primary-hover);
+  color: var(--rs-color-foreground-base-primary);
+}
+
+.nav-item:active:not([data-disabled="true"]) {
+  background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
 }
 
@@ -201,13 +211,16 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  transition: opacity 0.2s ease;
+  /* Cap the width so the collapse can animate to 0 (width: auto can't
+     transition). 200px clears any real label; the sidebar caps them narrower. */
+  max-width: 200px;
 }
 
 .root[data-closed] .nav-text {
-  width: 0;
+  max-width: 0;
+  min-width: 0;
   opacity: 0;
-  display: none;
+  visibility: hidden;
 }
 
 .resizeHandle {
@@ -216,8 +229,8 @@
   right: 0;
   width: var(--rs-space-2);
   height: 100%;
-  cursor: ew-resize;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  transition: background-color var(--rs-duration-normal) var(--rs-ease-out);
   transform: translateX(50%);
 }
 
@@ -232,7 +245,6 @@
 .root[data-position="right"] .resizeHandle {
   left: 0;
   right: auto;
-  cursor: ew-resize;
   transform: translateX(-50%);
 }
 
@@ -304,7 +316,7 @@
   height: var(--rs-space-4);
   color: var(--rs-color-foreground-base-secondary);
   transform: rotate(-90deg);
-  transition: transform 0.2s ease;
+  transition: transform var(--rs-duration-normal) var(--rs-ease-out);
   flex-shrink: 0;
 }
 
@@ -319,7 +331,7 @@
   padding: var(--rs-space-2) var(--rs-space-3);
   color: var(--rs-color-foreground-base-secondary);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--rs-duration-normal) var(--rs-ease-out);
 }
 
 .nav-group-header:hover .nav-group-trailing-icon {
@@ -340,7 +352,6 @@
 .nav-group-panel {
   height: var(--accordion-panel-height);
   overflow: hidden;
-  transition: height 0.2s ease;
 }
 
 .nav-group-panel[data-starting-style],
@@ -381,11 +392,27 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .root,
-  .nav-item,
-  .nav-text,
-  .resizeHandle,
-  .nav-group-panel {
+  .root {
     transition: width 0.2s ease;
+  }
+
+  .nav-group-panel {
+    transition:
+      width 0.2s ease,
+      height 0.2s ease;
+  }
+
+  .nav-text {
+    transition:
+      max-width var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out),
+      visibility var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  .root [data-collapse-hidden] {
+    transition:
+      max-width 0.2s ease,
+      opacity 0.2s ease,
+      visibility 0.2s ease;
   }
 }
