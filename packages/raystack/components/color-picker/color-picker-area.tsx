@@ -3,6 +3,7 @@
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
+  KeyboardEvent as ReactKeyboardEvent,
   PointerEvent as ReactPointerEvent,
   useCallback,
   useEffect,
@@ -23,6 +24,11 @@ import {
 // container size; a 96² grid is the sweet spot between a smooth gradient and
 // keeping the per-hue repaint comfortably inside one frame.
 const CANVAS_RES = 96;
+
+// Keyboard nudge sizes in the same normalized 0..1 pad space the pointer
+// uses: 1% of an axis per Arrow press, 10% for Shift+Arrow and PageUp/Down.
+const STEP = 0.01;
+const STEP_LARGE = 0.1;
 
 export type ColorPickerAreaProps = ComponentProps<'div'>;
 
@@ -99,6 +105,16 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
     }
   }, [lightness, chroma]);
 
+  // Shared color-computation path. Takes normalized 0..1 pad coordinates
+  // (x = chroma axis, y = lightness axis) and writes them into OKLCH state.
+  // Pointer drag and keyboard both go through this so behavior can't diverge.
+  const applyPosition = useCallback(
+    (x: number, y: number) => {
+      setColor({ c: clamp01(x) * CHROMA_MAX, l: 1 - clamp01(y) });
+    },
+    [setColor]
+  );
+
   const handlePointerMove = useCallback(
     (event: PointerEvent) => {
       if (!(isDragging.current && containerRef.current)) return;
@@ -107,9 +123,9 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
       const rect = containerRef.current.getBoundingClientRect();
       const x = clamp01((event.clientX - rect.left) / rect.width);
       const y = clamp01((event.clientY - rect.top) / rect.height);
-      setColor({ c: x * CHROMA_MAX, l: 1 - y });
+      applyPosition(x, y);
     },
-    [setColor]
+    [applyPosition]
   );
 
   const handlePointerUp = useCallback(() => {
@@ -134,11 +150,64 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
     [handlePointerMove, handlePointerUp]
   );
 
+  const handleKeyDown = useCallback(
+    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      // Current thumb position, mirrored from the same math the thumb effect
+      // uses (x = chroma / CHROMA_MAX, y = 1 - lightness).
+      let x = clamp01(chroma / CHROMA_MAX);
+      let y = clamp01(1 - lightness);
+      const step = e.shiftKey ? STEP_LARGE : STEP;
+      switch (e.key) {
+        case 'ArrowLeft':
+          x -= step;
+          break;
+        case 'ArrowRight':
+          x += step;
+          break;
+        case 'ArrowUp':
+          y -= step; // up = more lightness (y = 1 - L)
+          break;
+        case 'ArrowDown':
+          y += step;
+          break;
+        case 'PageUp':
+          y -= STEP_LARGE;
+          break;
+        case 'PageDown':
+          y += STEP_LARGE;
+          break;
+        case 'Home':
+          x = 0; // no chroma
+          break;
+        case 'End':
+          x = 1; // max chroma
+          break;
+        default:
+          return; // let other keys (Tab, etc.) pass through
+      }
+      e.preventDefault();
+      applyPosition(x, y);
+    },
+    [applyPosition, chroma, lightness]
+  );
+
+  const valueText =
+    `chroma ${Math.round((chroma / CHROMA_MAX) * 100)}%, ` +
+    `lightness ${Math.round(lightness * 100)}%`;
+
   return (
     <div
       className={cx(styles.selectionRoot, className)}
       onPointerDown={handlePointerDown}
+      onKeyDown={handleKeyDown}
       ref={containerRef}
+      role='slider'
+      tabIndex={0}
+      aria-label='Color area, chroma and lightness'
+      aria-valuetext={valueText}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round((chroma / CHROMA_MAX) * 100)}
       {...props}
     >
       <canvas
@@ -193,6 +262,22 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
     }
   }, [hsl.s, hsl.l]);
 
+  // Shared color-computation path. Takes normalized 0..1 pad coordinates
+  // (x = saturation axis, y = scaled-lightness axis) and round-trips through
+  // hslToOklch into OKLCH state. Pointer drag and keyboard both go through
+  // this so behavior can't diverge.
+  const applyPosition = useCallback(
+    (x: number, y: number) => {
+      const cx0 = clamp01(x);
+      const saturation = cx0 * 100;
+      const topLightness = cx0 < 0.01 ? 100 : 50 + 50 * (1 - cx0);
+      const nextL = topLightness * (1 - clamp01(y));
+      const next = hslToOklch(hsl.h, saturation, nextL);
+      setColor({ l: next.l, c: next.c, h: next.h });
+    },
+    [hsl.h, setColor]
+  );
+
   const handlePointerMove = useCallback(
     (event: PointerEvent) => {
       if (!(isDragging.current && containerRef.current)) return;
@@ -201,13 +286,9 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
       const rect = containerRef.current.getBoundingClientRect();
       const x = clamp01((event.clientX - rect.left) / rect.width);
       const y = clamp01((event.clientY - rect.top) / rect.height);
-      const saturation = x * 100;
-      const topLightness = x < 0.01 ? 100 : 50 + 50 * (1 - x);
-      const nextL = topLightness * (1 - y);
-      const next = hslToOklch(hsl.h, saturation, nextL);
-      setColor({ l: next.l, c: next.c, h: next.h });
+      applyPosition(x, y);
     },
-    [hsl.h, setColor]
+    [applyPosition]
   );
 
   const handlePointerUp = useCallback(() => {
@@ -232,11 +313,66 @@ const HslArea = ({ className, ...props }: ColorPickerAreaProps) => {
     [handlePointerMove, handlePointerUp]
   );
 
+  const handleKeyDown = useCallback(
+    (e: ReactKeyboardEvent<HTMLDivElement>) => {
+      // Current position mirrored from the same math the thumb effect uses.
+      let x = clamp01(hsl.s / 100);
+      const topLightness = x < 0.01 ? 100 : 50 + 50 * (1 - x);
+      let y = clamp01(1 - hsl.l / topLightness);
+      const step = e.shiftKey ? STEP_LARGE : STEP;
+      switch (e.key) {
+        case 'ArrowLeft':
+          x -= step;
+          break;
+        case 'ArrowRight':
+          x += step;
+          break;
+        case 'ArrowUp':
+          y -= step;
+          break;
+        case 'ArrowDown':
+          y += step;
+          break;
+        case 'PageUp':
+          y -= STEP_LARGE;
+          break;
+        case 'PageDown':
+          y += STEP_LARGE;
+          break;
+        case 'Home':
+          x = 0;
+          break;
+        case 'End':
+          x = 1;
+          break;
+        default:
+          return;
+      }
+      e.preventDefault();
+      applyPosition(x, y);
+    },
+    [applyPosition, hsl.s, hsl.l]
+  );
+
+  const topLightnessNow =
+    hsl.s / 100 < 0.01 ? 100 : 50 + 50 * (1 - hsl.s / 100);
+  const valueText =
+    `saturation ${Math.round(hsl.s)}%, ` +
+    `brightness ${Math.round((hsl.l / topLightnessNow) * 100)}%`;
+
   return (
     <div
       className={cx(styles.selectionRoot, className)}
       onPointerDown={handlePointerDown}
+      onKeyDown={handleKeyDown}
       ref={containerRef}
+      role='slider'
+      tabIndex={0}
+      aria-label='Color area, saturation and brightness'
+      aria-valuetext={valueText}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(hsl.s)}
       style={{ background }}
       {...props}
     >
