@@ -123,6 +123,11 @@
   user-select: none;
 }
 
+.selectionRoot:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
 .selectionCanvas {
   display: block;
   width: 100%;

@@ -96,6 +96,48 @@ describe('ColorPicker', () => {
       // assert the background string directly.)
       expect(area.querySelector('canvas')).not.toBeInTheDocument();
     });
+
+    it('is focusable with an accessible slider name', () => {
+      render(
+        <ColorPicker>
+          <ColorPicker.Area />
+        </ColorPicker>
+      );
+
+      const area = screen.getByRole('slider', { name: /color area/i });
+      area.focus();
+      expect(area).toHaveFocus();
+    });
+
+    it('updates the color with arrow keys in oklch mode', () => {
+      const onValueChange = vi.fn();
+      render(
+        <ColorPicker mode='oklch' onValueChange={onValueChange}>
+          <ColorPicker.Area />
+        </ColorPicker>
+      );
+
+      const area = screen.getByRole('slider', { name: /color area/i });
+      area.focus();
+      fireEvent.keyDown(area, { key: 'ArrowRight' });
+
+      expect(onValueChange).toHaveBeenCalled();
+    });
+
+    it('updates the color with arrow keys in hex mode', () => {
+      const onValueChange = vi.fn();
+      render(
+        <ColorPicker mode='hex' onValueChange={onValueChange}>
+          <ColorPicker.Area />
+        </ColorPicker>
+      );
+
+      const area = screen.getByRole('slider', { name: /color area/i });
+      area.focus();
+      fireEvent.keyDown(area, { key: 'ArrowRight' });
+
+      expect(onValueChange).toHaveBeenCalled();
+    });
   });
 
   describe('ColorPicker.Hue', () => {
