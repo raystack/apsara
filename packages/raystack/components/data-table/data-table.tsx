@@ -86,7 +86,7 @@ function DataTableRoot<TData, TValue>({
     setTableQuery(prev => ({
       ...prev,
       ...defaultTableQuery,
-      sort: [defaultSort],
+      sort: defaultSort ? [defaultSort] : [],
       group_by: [defaultGroupOption.id]
     }));
     handleColumnVisibilityChange(initialColumnVisibility);
