@@ -8,7 +8,6 @@
   border: none;
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
-  transition: var(--rs-transition-interactive);
   padding: var(--rs-space-1);
 }
 
@@ -20,7 +19,19 @@
 .iconButton:active:not(:disabled) {
   background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
-  transition: var(--rs-transition-pressed);
+  transform: scale(var(--rs-scale-pressed));
+}
+
+/* The scale applies unconditionally (an instant state change); only the
+   eased tween is motion, so only the transitions are gated. Mirrors button. */
+@media (prefers-reduced-motion: no-preference) {
+  .iconButton {
+    transition: var(--rs-transition-interactive);
+  }
+
+  .iconButton:active {
+    transition: var(--rs-transition-pressed);
+  }
 }
 
 .iconButton:disabled {
