@@ -224,6 +224,14 @@
   background: var(--rs-color-background-neutral-secondary);
 }
 
+/* Inset ring: .listRoot scrolls (overflow: auto), so an outward outline
+   would clip at the container edge. */
+.listRow.clickable:focus-visible,
+.listRowVirtual.clickable:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
 .listRowDivider {
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
 }

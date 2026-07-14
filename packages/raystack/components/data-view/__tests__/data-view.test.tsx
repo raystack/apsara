@@ -230,6 +230,63 @@ describe('DataView', () => {
       await user.click(screen.getByText('John Doe'));
       expect(onRowClick).toHaveBeenCalledWith(mockData[0]);
     });
+
+    it('exposes clickable rows as focusable buttons', () => {
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          onRowClick={vi.fn()}
+        >
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      const row = screen.getByText('John Doe').closest('[role="button"]');
+      expect(row).not.toBeNull();
+      expect(row).toHaveAttribute('tabindex', '0');
+      (row as HTMLElement).focus();
+      expect(row).toHaveFocus();
+    });
+
+    it('activates the row with Enter and Space', async () => {
+      const user = userEvent.setup();
+      const onRowClick = vi.fn();
+      render(
+        <DataView
+          data={mockData}
+          fields={mockFields}
+          defaultSort={defaultSort}
+          onRowClick={onRowClick}
+        >
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      const row = screen
+        .getByText('John Doe')
+        .closest('[role="button"]') as HTMLElement;
+      row.focus();
+
+      await user.keyboard('{Enter}');
+      expect(onRowClick).toHaveBeenCalledWith(mockData[0]);
+
+      await user.keyboard(' ');
+      expect(onRowClick).toHaveBeenCalledTimes(2);
+    });
+
+    it('keeps rows inert without onRowClick', () => {
+      render(
+        <DataView data={mockData} fields={mockFields} defaultSort={defaultSort}>
+          <DataView.List variant='table' columns={mockColumns} />
+        </DataView>
+      );
+      const cell = screen.getByText('John Doe');
+      // The structural role stays; there is no button and no tab stop.
+      expect(cell.closest('[role="button"]')).toBeNull();
+      const row = cell.closest('[role="row"]');
+      expect(row).not.toBeNull();
+      expect(row).not.toHaveAttribute('tabindex');
+    });
   });
 
   describe('Zero / Empty State', () => {

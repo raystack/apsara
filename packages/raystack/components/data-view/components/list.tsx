@@ -3,7 +3,14 @@
 import type { Header, Row } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import { cx } from 'class-variance-authority';
-import { CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  CSSProperties,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef
+} from 'react';
 
 import { Badge } from '../../badge';
 import { Skeleton } from '../../skeleton';
@@ -346,9 +353,21 @@ export function DataViewList<TData, TValue = unknown>({
     const composedStyle: CSSProperties = isVirtual
       ? { ...style, gridTemplateColumns }
       : (style ?? {});
+    const handleRowActivate = () => onRowClick?.(row.original);
+    const handleRowKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+      // Enter and Space both activate, matching a native button.
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault(); // Space would otherwise scroll the page.
+        handleRowActivate();
+      }
+    };
     return (
       <div
-        role={ariaRole === 'table' ? 'row' : 'listitem'}
+        // A clickable row is announced as a button; a plain row keeps its
+        // structural role and stays inert for the keyboard.
+        role={onRowClick ? 'button' : ariaRole === 'table' ? 'row' : 'listitem'}
+        tabIndex={onRowClick ? 0 : undefined}
+        onKeyDown={onRowClick ? handleRowKeyDown : undefined}
         key={key ?? row.id}
         ref={measure}
         data-index={dataIndex}
@@ -359,7 +378,7 @@ export function DataViewList<TData, TValue = unknown>({
           classNames.row
         )}
         style={composedStyle}
-        onClick={() => onRowClick?.(row.original)}
+        onClick={handleRowActivate}
       >
         {renderRowCells(row)}
       </div>
