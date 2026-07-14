@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Sidebar } from '../sidebar';
 import styles from '../sidebar.module.css';
@@ -564,6 +565,35 @@ describe('Sidebar', () => {
 
       expect(screen.getByText('Logs')).toBeInTheDocument();
       expect(screen.getByText('Audit')).toBeInTheDocument();
+    });
+
+    it('marks the keyboard-focused More item with data-highlighted', async () => {
+      const user = userEvent.setup();
+      render(
+        <BasicSidebar>
+          <Sidebar.More label='More items'>
+            <Sidebar.Item href='#'>Logs</Sidebar.Item>
+            <Sidebar.Item href='#'>Audit</Sidebar.Item>
+          </Sidebar.More>
+        </BasicSidebar>
+      );
+
+      const trigger = screen.getByText('More items').closest('button');
+      expect(trigger).toBeInTheDocument();
+      if (!trigger) return;
+      trigger.focus();
+      await user.keyboard('{Enter}');
+
+      const items = await screen.findAllByRole('menuitem');
+      expect(items.length).toBeGreaterThan(0);
+      await user.keyboard('{ArrowDown}');
+
+      // The CSS keys the keyboard highlight off [data-highlighted]; exactly
+      // one item should carry it as focus moves through the menu.
+      const highlighted = items.filter(el =>
+        el.hasAttribute('data-highlighted')
+      );
+      expect(highlighted).toHaveLength(1);
     });
 
     it('sets aria-label for collapsed More trigger', () => {
