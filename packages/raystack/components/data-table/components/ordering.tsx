@@ -21,14 +21,16 @@ export interface OrderingProps {
 }
 
 export function Ordering({ columnList, onChange, value }: OrderingProps) {
+  const currentOrder = value?.order ?? SortOrders.ASC;
+
   function handleColumnChange(columnId: string) {
-    onChange(columnId, value?.order ?? SortOrders.ASC);
+    onChange(columnId, currentOrder);
   }
 
   function handleOrderChange() {
     if (!value) return;
     const newOrder =
-      value.order === SortOrders.ASC ? SortOrders.DESC : SortOrders.ASC;
+      currentOrder === SortOrders.ASC ? SortOrders.DESC : SortOrders.ASC;
     onChange(value.name, newOrder);
   }
 
@@ -71,7 +73,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           size={4}
           disabled={columnList.length === 0}
         >
-          {(value?.order ?? SortOrders.ASC) === SortOrders.ASC ? (
+          {currentOrder === SortOrders.ASC ? (
             <TextAlignTopIcon className={styles['display-popover-sort-icon']} />
           ) : (
             <TextAlignBottomIcon
