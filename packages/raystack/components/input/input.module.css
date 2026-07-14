@@ -62,6 +62,7 @@
   margin: 0;
   border: none;
   background: transparent;
+  color: var(--rs-color-foreground-base-primary);
   font-weight: var(--rs-font-weight-regular);
   font-size: var(--rs-font-size-small);
   line-height: var(--rs-line-height-t2);
@@ -69,6 +70,14 @@
   outline: none;
   box-sizing: border-box;
   border-radius: 0;
+}
+
+.input-field::placeholder {
+  color: var(--rs-color-foreground-base-tertiary);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-t2);
+  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .input-field:focus {
