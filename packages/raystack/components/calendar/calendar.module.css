@@ -257,6 +257,13 @@
   position: relative;
 }
 
+/* Inset ring: day cells pack edge-to-edge in the week row, so a flush or
+   outward ring would collide with the neighbouring day. */
+.dayButton:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
 .dayButtonWithInfo {
   display: grid;
   place-content: center;
