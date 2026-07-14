@@ -83,7 +83,8 @@
   --rs-accent-10: oklch(0.8401 0.0988 178.42);
   --rs-accent-11: oklch(0.5117 0.0955 175.6);
   --rs-accent-12: oklch(0.3496 0.0505 181.31);
-  --rs-accent-contrast: oklch(1 0 0);
+  /* mint-9/10 are light (L~0.87); needs dark text, not white */
+  --rs-accent-contrast: oklch(0 0 0);
 }
 
 [data-accent-color="mint"][data-theme="dark"] {
@@ -99,5 +100,6 @@
   --rs-accent-10: oklch(0.9156 0.079 180);
   --rs-accent-11: oklch(0.7954 0.1181 176.46);
   --rs-accent-12: oklch(0.9306 0.057 168.28);
-  --rs-accent-contrast: oklch(1 0 0);
+  /* mint-9/10 stay light in dark theme too; keep dark text */
+  --rs-accent-contrast: oklch(0 0 0);
 }
