@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;1,400;1,500&display=swap");
 
 :root {
   /* Fonts */
@@ -97,6 +97,10 @@ body {
   /* Font Smoothing */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Only weights 400 and 500 are loaded (see @import above). Fail visibly
+     on any missing weight or style instead of rendering a faked bold/italic. */
+  font-synthesis: none;
 }
 
 h1 {
@@ -104,24 +108,28 @@ h1 {
   font-size: var(--rs-font-size-t4);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-t4);
+  text-wrap: balance;
 }
 h2 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t3);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-t3);
+  text-wrap: balance;
 }
 h3 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t2);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-t2);
+  text-wrap: balance;
 }
 h4 {
   font-family: var(--rs-font-title);
   font-size: var(--rs-font-size-t1);
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-t1);
+  text-wrap: balance;
 }
 
 /* CSS for the text cursor */

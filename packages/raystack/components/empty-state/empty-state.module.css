@@ -49,7 +49,7 @@
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-large);
   letter-spacing: var(--rs-letter-spacing-large);
-  text-wrap: wrap;
+  text-wrap: balance;
   max-width: 360px;
 }
 
@@ -60,7 +60,7 @@
   font-weight: var(--rs-font-weight-regular);
   line-height: var(--rs-line-height-regular);
   letter-spacing: var(--rs-letter-spacing-regular);
-  text-wrap: wrap;
+  text-wrap: pretty;
   max-width: 360px;
 }
 

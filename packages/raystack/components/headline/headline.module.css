@@ -29,7 +29,7 @@
 }
 
 .headline-align-left {
-  text-align: left;
+  text-align: start;
 }
 
 .headline-align-center {
@@ -37,7 +37,7 @@
 }
 
 .headline-align-right {
-  text-align: right;
+  text-align: end;
 }
 
 .headline-truncate {
