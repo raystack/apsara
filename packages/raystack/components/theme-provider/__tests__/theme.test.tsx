@@ -5,6 +5,7 @@ import {
   screen,
   waitFor
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ThemeSwitcher } from '../switcher';
@@ -856,6 +857,45 @@ describe('ThemeSwitcher', () => {
       fireEvent.click(icon!);
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'light');
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('renders a button with an accessible name', () => {
+      render(
+        <Theme defaultTheme='light' enableSystem={false}>
+          <ThemeSwitcher />
+        </Theme>
+      );
+
+      expect(
+        screen.getByRole('button', { name: /switch to dark theme/i })
+      ).toBeInTheDocument();
+    });
+
+    it('toggles the theme with Enter and Space', async () => {
+      const user = userEvent.setup();
+
+      render(
+        <Theme defaultTheme='light' enableSystem={false}>
+          <ThemeSwitcher />
+        </Theme>
+      );
+
+      const button = screen.getByRole('button', { name: /theme/i });
+      button.focus();
+
+      await user.keyboard('{Enter}');
+      expect(localStorageMock.setItem).toHaveBeenLastCalledWith(
+        'theme',
+        'dark'
+      );
+
+      await user.keyboard(' ');
+      expect(localStorageMock.setItem).toHaveBeenLastCalledWith(
+        'theme',
+        'light'
+      );
     });
   });
 });

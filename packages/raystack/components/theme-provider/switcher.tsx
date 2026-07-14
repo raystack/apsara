@@ -2,7 +2,7 @@
 
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
 
-import { Box } from '../box';
+import { IconButton } from '../icon-button';
 import { useTheme } from './theme';
 
 enum Theme {
@@ -11,19 +11,29 @@ enum Theme {
 }
 
 type Props = { size?: number };
+
 export function ThemeSwitcher({ size = 30, ...props }: Props) {
   const { theme, setTheme } = useTheme();
+  const isDark = theme === Theme.DARK;
+
   const onClickHandler = () => {
-    setTheme(theme === Theme.DARK ? Theme.LIGHT : Theme.DARK);
+    setTheme(isDark ? Theme.LIGHT : Theme.DARK);
   };
 
   return (
-    <Box {...props}>
-      {theme === Theme.DARK ? (
-        <SunIcon width={size} height={size} onClick={onClickHandler} />
+    <IconButton
+      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+      onClick={onClickHandler}
+      style={{ width: size, height: size }}
+      {...props}
+    >
+      {isDark ? (
+        <SunIcon width={size} height={size} />
       ) : (
-        <MoonIcon width={size} height={size} onClick={onClickHandler} />
+        <MoonIcon width={size} height={size} />
       )}
-    </Box>
+    </IconButton>
   );
 }
+
+ThemeSwitcher.displayName = 'ThemeSwitcher';
