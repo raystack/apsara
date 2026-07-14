@@ -37,12 +37,14 @@
 
   /* Pressed scale: a control shrinks slightly under the finger. Smaller
        targets need a larger delta to read, so there are two steps. */
-  --rs-scale-pressed: 0.97; /* buttons, tabs, larger controls */
-  --rs-scale-pressed-strong: 0.92; /* checkbox, radio, chip dismiss */
+  --rs-scale-pressed: 0.98; /* buttons, tabs, larger controls */
+  --rs-scale-pressed-strong: 0.94; /* checkbox, radio, chip dismiss */
 
   /* Focus ring: keyboard-focus indicator. The shadow variant is for
-       chromeless text-entry surfaces that have no border to ring. */
-  --rs-focus-ring: 0.5px solid var(--rs-color-border-accent-emphasis);
+       chromeless text-entry surfaces that have no border to ring. Accent by
+       default; a colored control (danger, success, …) overrides
+       `outline-color` in its own :focus-visible rule to match. */
+  --rs-focus-ring: 1px solid var(--rs-color-border-accent-emphasis);
   --rs-focus-ring-shadow: 0 0 0 1.5px var(--rs-color-border-accent-primary);
 
   /* Ring offset: rings sit flush (0) by default. A control adds one of these
