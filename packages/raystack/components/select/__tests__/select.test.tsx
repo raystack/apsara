@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Select } from '../select';
@@ -167,6 +167,36 @@ describe('Select', () => {
       await user.click(options[1]);
       await flushMicrotasks();
       expect(handleValueChange).toHaveBeenCalledWith([]);
+    });
+
+    it('renders a checkbox indicator that reflects selection state', async () => {
+      const user = userEvent.setup();
+      render(<BasicSelect multiple />);
+      await openSelect(user);
+
+      const options = screen.getAllByRole('option');
+      // One checkbox per item (the hidden native input is aria-hidden).
+      expect(within(options[1]).getAllByRole('checkbox')).toHaveLength(1);
+
+      const checkbox = within(options[1]).getByRole('checkbox');
+      expect(checkbox).toHaveAttribute('aria-checked', 'false');
+
+      await user.click(options[1]);
+      await flushMicrotasks();
+      expect(
+        within(screen.getAllByRole('option')[1]).getByRole('checkbox')
+      ).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('fires onValueChange exactly once per click on an option', async () => {
+      const handleValueChange = vi.fn();
+      render(<BasicSelect multiple onValueChange={handleValueChange} />);
+      const user = userEvent.setup();
+      await openSelect(user);
+
+      await user.click(screen.getAllByRole('option')[1]);
+      await flushMicrotasks();
+      expect(handleValueChange).toHaveBeenCalledTimes(1);
     });
   });
 
