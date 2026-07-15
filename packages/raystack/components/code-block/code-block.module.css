@@ -105,7 +105,7 @@
     opacity var(--rs-duration-fast) var(--rs-ease-out);
 }
 .floatingCopyButton svg {
-  width: var(--rs-space-4);
+  width: var(--rs-space-5);
   height: var(--rs-space-5);
 }
 
