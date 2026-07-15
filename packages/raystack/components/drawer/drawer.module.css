@@ -60,6 +60,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   will-change: transform;
+  box-shadow: var(--rs-shadow-floating);
   transition: opacity var(--rs-duration-drawer) var(--rs-ease-drawer);
 }
 
@@ -138,33 +139,11 @@
   height: 100%;
 }
 
+/* Positioning only — IconButton supplies the chrome, states and focus ring. */
 .close {
-  all: unset;
   position: absolute;
   top: var(--rs-space-3);
   right: var(--rs-space-3);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--rs-radius-2);
-  color: var(--rs-color-foreground-base-secondary);
-  padding: var(--rs-space-2);
-  cursor: pointer;
-}
-
-.close:hover {
-  background-color: var(--rs-color-background-base-primary-hover);
-  color: var(--rs-color-foreground-base-primary);
-}
-
-.close:active {
-  background-color: var(--rs-color-background-neutral-secondary);
-  color: var(--rs-color-foreground-base-primary);
-}
-
-.close:focus-visible {
-  outline: 2px solid var(--rs-color-border-base-focus);
-  outline-offset: -1px;
 }
 
 .header {

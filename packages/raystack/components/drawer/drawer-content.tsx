@@ -4,6 +4,7 @@ import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
 import { Cross1Icon } from '@radix-ui/react-icons';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
+import { IconButton } from '../icon-button';
 import styles from './drawer.module.css';
 
 const drawerPopup = cva(styles.drawerPopup, {
@@ -60,6 +61,7 @@ export function DrawerContent({
               <DrawerPrimitive.Close
                 className={styles.close}
                 aria-label={closeLabel}
+                render={<IconButton size={3} />}
               >
                 <Cross1Icon aria-hidden='true' />
               </DrawerPrimitive.Close>
