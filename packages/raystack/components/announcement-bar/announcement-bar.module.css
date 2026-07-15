@@ -51,18 +51,29 @@
   font: inherit;
   color: inherit;
   border-radius: var(--rs-radius-1);
-  transition: var(--rs-transition-interactive);
 }
 
 .action-btn:hover {
   opacity: 0.8;
 }
 
+/* Press reads as scale, not a second dim — 0.64 text mid-press is barely
+   legible on the gradient variant, and hover's 0.8 still applies. */
 .action-btn:active {
-  opacity: 0.64;
+  transform: scale(var(--rs-scale-pressed));
 }
 
 .action-btn:focus-visible {
   outline: 1px solid currentColor;
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .action-btn {
+    transition: var(--rs-transition-interactive);
+  }
+
+  .action-btn:active {
+    transition: var(--rs-transition-pressed);
+  }
 }
