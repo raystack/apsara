@@ -11,10 +11,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 1;
+  visibility: visible;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .clearButtonWrapper {
+    transition:
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      visibility var(--rs-duration-fast) var(--rs-ease-out);
+  }
+}
+
+/* visibility rides the transition so the button stays hittable only while
+   fading, then drops out of hit-testing, tab order and the a11y tree. */
 .container:has(input:placeholder-shown) .clearButtonWrapper {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .clearButton {
