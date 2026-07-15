@@ -93,10 +93,21 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
+/* Mirrors the chip dismiss button so the two siblings feel identical. */
+.removeIconContainer:active {
+  transform: scale(var(--rs-scale-pressed-strong));
+}
+
 /* Remove button sits inside the clipped chip: keep the ring inside. */
 .removeIconContainer:focus-visible {
   outline: var(--rs-focus-ring);
   outline-offset: var(--rs-focus-ring-offset-inset);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .removeIconContainer {
+    transition: transform var(--rs-duration-press) var(--rs-ease-out);
+  }
 }
 
 .removeIcon {
