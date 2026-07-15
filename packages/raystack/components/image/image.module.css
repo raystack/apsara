@@ -2,6 +2,10 @@
   display: block;
   max-width: 100%;
   height: auto;
+  /* Hairline media edge so pale images keep a shape on light surfaces.
+     Outline, not inset shadow — the decoded image paints over a shadow. */
+  outline: 0.5px solid var(--rs-color-overlay-base-a2);
+  outline-offset: -0.5px;
 }
 
 .image-contain {
