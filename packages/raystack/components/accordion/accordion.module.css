@@ -95,4 +95,8 @@
   .accordion-content {
     transition: height var(--rs-duration-fast) var(--rs-ease-out);
   }
+
+  .accordion-trigger {
+    transition: var(--rs-transition-interactive);
+  }
 }

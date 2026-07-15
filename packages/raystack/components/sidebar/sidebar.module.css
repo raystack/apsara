@@ -88,7 +88,6 @@
   color: var(--rs-color-foreground-base-secondary);
   cursor: pointer;
   text-decoration: none;
-  transition: var(--rs-transition-interactive);
   box-sizing: border-box;
 }
 
