@@ -4,7 +4,9 @@
   justify-content: center;
   overflow: hidden;
   position: relative;
-  border: none;
+  /* Hairline media edge; outline paints above the full-bleed image child. */
+  outline: 0.5px solid var(--rs-color-overlay-base-a2);
+  outline-offset: -0.5px;
   border-radius: var(--rs-radius-full);
   background-color: var(--rs-color-background-neutral-secondary);
   color: var(--rs-color-foreground-base-primary);
@@ -379,6 +381,8 @@
 .avatarGroup .avatar {
   border: 1px solid var(--rs-color-background-base-primary);
   box-sizing: content-box;
+  /* The separator border is the edge here; the media hairline would double it. */
+  outline: none;
 }
 
 /* Avatar Group Size Variants */
