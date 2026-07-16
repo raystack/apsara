@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { Field } from '../../field';
 import { OTPField } from '../otp-field';
 import styles from '../otp-field.module.css';
 
@@ -142,6 +143,17 @@ describe('OTPField', () => {
       await user.keyboard('a');
 
       expect(first).toHaveValue('a');
+    });
+
+    it('marks the root data-invalid inside an errored Field (drives the shake)', () => {
+      render(
+        <Field label='Code' error='Incorrect code'>
+          <BasicOTPField length={4} data-testid='root' />
+        </Field>
+      );
+
+      expect(screen.getByTestId('root')).toHaveAttribute('data-invalid');
+      expect(screen.getByTestId('slot-0')).toHaveAttribute('data-invalid');
     });
 
     it('accepts both letters and digits when alphanumeric', async () => {
