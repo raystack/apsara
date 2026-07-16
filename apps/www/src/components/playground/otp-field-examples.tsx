@@ -26,6 +26,27 @@ function ControlledOTP() {
   );
 }
 
+function InvalidOTP() {
+  const [error, setError] = useState<string>();
+  return (
+    <Field
+      label='Verification code'
+      description='The correct code is 123456.'
+      error={error}
+    >
+      <OTPField
+        length={6}
+        onValueChange={() => setError(undefined)}
+        onValueComplete={value => {
+          if (value !== '123456') setError('Incorrect code. Try again.');
+        }}
+      >
+        {renderSlots(6)}
+      </OTPField>
+    </Field>
+  );
+}
+
 function CompleteOTP() {
   const [submitted, setSubmitted] = useState('');
   return (
@@ -91,6 +112,11 @@ export function OTPFieldExamples() {
       <Flex direction='column' gap={9}>
         <Text>onValueComplete:</Text>
         <CompleteOTP />
+      </Flex>
+
+      <Flex direction='column' gap={9}>
+        <Text>Invalid (a wrong code shakes):</Text>
+        <InvalidOTP />
       </Flex>
 
       <Flex direction='column' gap={9}>
