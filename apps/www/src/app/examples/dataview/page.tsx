@@ -501,7 +501,7 @@ const Page = () => {
         </Sidebar.Header>
         <Sidebar.Main>
           <Sidebar.Item
-            href='/examples/dataview-beta'
+            href='/examples/dataview'
             leadingIcon={<SidebarIcon />}
             active
           >
