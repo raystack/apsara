@@ -223,6 +223,9 @@ function DataTableRoot<TData, TValue>({
 
 DataTableRoot.displayName = 'DataTable';
 
+/**
+ * @deprecated Use `DataView` instead. DataTable is deprecated and will not receive new features.
+ */
 export const DataTable = Object.assign(DataTableRoot, {
   Content: Content,
   VirtualizedContent: VirtualizedContent,
