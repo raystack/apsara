@@ -147,13 +147,13 @@ export const onCompleteDemo = {
 }`
 };
 
-export const customSanitizeDemo = {
+export const customNormalizeDemo = {
   type: 'code',
   code: `<OTPField
   length={4}
   validationType="none"
   inputMode="numeric"
-  sanitizeValue={(val) => val.replace(/[^0-3]/g, '')}
+  normalizeValue={(val) => val.replace(/[^0-3]/g, '')}
 >
   {Array.from({ length: 4 }, (_, i) => (
     <OTPField.Input key={i} aria-label={\`Character \${i + 1} of 4\`} />

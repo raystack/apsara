@@ -95,9 +95,11 @@ describe('Accordion', () => {
       const user = userEvent.setup();
       render(<BasicAccordion />);
 
+      // Per APG, triggers are reached with Tab (arrow-key navigation was
+      // dropped from Base UI's accordion in v1.6.0) and toggled with Enter.
       const trigger = screen.getByRole('button', { name: ITEM_2_TEXT });
 
-      await user.keyboard('{Tab}{ArrowDown}{Enter}');
+      await user.keyboard('{Tab}{Tab}{Enter}');
 
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });

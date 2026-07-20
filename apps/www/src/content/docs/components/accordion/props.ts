@@ -39,12 +39,6 @@ export interface AccordionRootProps {
   orientation?: 'horizontal' | 'vertical';
 
   /**
-   * Whether to loop keyboard focus back to the first item when the end is reached
-   * @defaultValue true
-   */
-  loopFocus?: boolean;
-
-  /**
    * Whether to keep the element in the DOM while the panel is closed
    * @defaultValue false
    */

@@ -1,6 +1,6 @@
 'use client';
 
-import { OTPFieldPreview as OTPFieldPrimitive } from '@base-ui/react/otp-field';
+import { OTPField as OTPFieldPrimitive } from '@base-ui/react/otp-field';
 import { Separator as SeparatorPrimitive } from '@base-ui/react/separator';
 import { cx } from 'class-variance-authority';
 import { useFieldContext } from '../field';
