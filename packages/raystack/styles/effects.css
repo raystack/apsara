@@ -45,7 +45,9 @@
        default; a colored control (danger, success, …) overrides
        `outline-color` in its own :focus-visible rule to match. */
   --rs-focus-ring: 1px solid var(--rs-color-border-accent-emphasis);
-  --rs-focus-ring-shadow: 0 0 0 1.5px var(--rs-color-border-accent-primary);
+  /* Box-shadow form of the ring above, for borderless inputs with no border to
+     outline. Kept 1px + accent-emphasis so it matches the outline ring. */
+  --rs-focus-ring-shadow: 0 0 0 1px var(--rs-color-border-accent-emphasis);
 
   /* Ring offset: rings sit flush (0) by default. A control adds one of these
        in its own :focus-visible rule when it needs to — accent-filled controls
