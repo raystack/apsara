@@ -4,7 +4,7 @@ import {
   Combobox as ComboboxPrimitive,
   Select as SelectPrimitive
 } from '@base-ui/react';
-import { CaretSortIcon } from '@radix-ui/react-icons';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { cva, VariantProps } from 'class-variance-authority';
 import { ComponentProps, SVGAttributes } from 'react';
 import { Flex } from '../flex';
@@ -67,7 +67,7 @@ export function SelectTrigger({
       <Flex className={styles.triggerContent} align='center' gap={2}>
         {children}
       </Flex>
-      <CaretSortIcon
+      <ChevronDownIcon
         className={styles.triggerIcon}
         aria-hidden='true'
         {...iconProps}

@@ -72,13 +72,15 @@ describe('Field', () => {
       expect(screen.getByText('Enter a valid email')).toBeInTheDocument();
     });
 
-    it('keeps description rendered alongside error', () => {
+    it('hides the description while an error is showing', () => {
       render(
         <Field description='Enter email' error='Invalid email'>
           content
         </Field>
       );
-      expect(screen.getByText('Enter email')).toBeInTheDocument();
+      // The description is unmounted when an error is present so it does not
+      // leak into the input's aria-describedby alongside the error.
+      expect(screen.queryByText('Enter email')).not.toBeInTheDocument();
       expect(screen.getByText('Invalid email')).toBeInTheDocument();
     });
   });

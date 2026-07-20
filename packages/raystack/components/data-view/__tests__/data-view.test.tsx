@@ -231,7 +231,7 @@ describe('DataView', () => {
       expect(onRowClick).toHaveBeenCalledWith(mockData[0]);
     });
 
-    it('exposes clickable rows as focusable buttons', () => {
+    it('exposes clickable rows as focusable rows', () => {
       render(
         <DataView
           data={mockData}
@@ -242,7 +242,9 @@ describe('DataView', () => {
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
       );
-      const row = screen.getByText('John Doe').closest('[role="button"]');
+      // Clickable rows keep role="row" (so cells stay associated) and become
+      // keyboard-focusable via tabIndex.
+      const row = screen.getByText('John Doe').closest('[role="row"]');
       expect(row).not.toBeNull();
       expect(row).toHaveAttribute('tabindex', '0');
       (row as HTMLElement).focus();
@@ -264,7 +266,7 @@ describe('DataView', () => {
       );
       const row = screen
         .getByText('John Doe')
-        .closest('[role="button"]') as HTMLElement;
+        .closest('[role="row"]') as HTMLElement;
       row.focus();
 
       await user.keyboard('{Enter}');

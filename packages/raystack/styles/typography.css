@@ -14,7 +14,8 @@
   /* Font Families */
   --rs-font-title: var(--rs-font-inter), sans-serif;
   --rs-font-body: var(--rs-font-inter), sans-serif;
-  --rs-font-mono: var(--rs-font-menlo), var(--rs-font-jetbrains-mono), monospace;
+  --rs-font-mono:
+    var(--rs-font-menlo), var(--rs-font-jetbrains-mono), monospace;
 
   /* Font Weights */
   --rs-font-weight-regular: 400;
@@ -81,6 +82,10 @@
 }
 
 [data-style="modern"] {
+  /* Re-declare (not just inherit from :root) so a modern theme nested inside a
+     traditional one resets to Inter instead of inheriting Lora/Josefin. */
+  --rs-font-title: var(--rs-font-inter), sans-serif;
+  --rs-font-body: var(--rs-font-inter), sans-serif;
   font-family: var(--rs-font-body);
 }
 
@@ -137,4 +142,3 @@ input,
 textarea {
   caret-color: var(--rs-color-border-accent-emphasis);
 }
-

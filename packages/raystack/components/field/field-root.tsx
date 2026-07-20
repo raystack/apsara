@@ -48,11 +48,8 @@ export function FieldRoot({
         <div className={styles.control}>{children}</div>
         {(description || error) && (
           <div className={styles.helperSlot}>
-            {description && (
-              <FieldPrimitive.Description
-                className={styles.description}
-                data-hidden={error ? '' : undefined}
-              >
+            {description && !error && (
+              <FieldPrimitive.Description className={styles.description}>
                 {description}
               </FieldPrimitive.Description>
             )}

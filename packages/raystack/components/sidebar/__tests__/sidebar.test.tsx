@@ -276,10 +276,11 @@ describe('Sidebar', () => {
       expect(item).toHaveTextContent('Custom Item');
     });
 
-    it('hides text when collapsed and sets aria-label for screen readers', () => {
+    it('keeps text mounted and sets aria-label when collapsed', () => {
       render(<BasicSidebar open={false} />);
 
-      expect(screen.queryByText(DASHBOARD_ITEM_TEXT)).not.toBeInTheDocument();
+      // The label stays mounted so it can collapse with the sidebar (CSS hides
+      // it); the item is named via aria-label so screen readers still get it.
       const dashboardLink = screen.getByRole('listitem', {
         name: DASHBOARD_ITEM_TEXT
       });

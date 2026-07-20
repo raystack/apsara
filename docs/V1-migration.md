@@ -1326,6 +1326,16 @@ The `render` prop also supports render functions for full control:
 
 **TypeScript:** `HeadlineProps['size']` is now `'t1' | 't2' | 't3' | 't4'` (was `'t1' | 't2' | 't3' | 't4' | 'small' | 'medium' | 'large'`).
 
+**Base `width: 100%` removed (scoped to the `truncate` variant).** The base Headline no longer stretches to fill its container. A `display: block` heading already fills the width in normal flow, so this only affects flex or grid parents, where a Headline used to claim the full row/track. If you relied on that — for example a centered heading, or a Headline used as a full-row flex child — set the width back where you need it:
+
+```tsx
+// Before: filled the row automatically
+<Headline>Section title</Headline>
+
+// After: opt back in where the old behavior was intentional
+<Headline className={styles.fullWidth}>Section title</Headline> // width: 100%
+```
+
 ---
 
 ### Input (formerly InputField)

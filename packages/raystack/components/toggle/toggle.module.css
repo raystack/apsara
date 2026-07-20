@@ -89,10 +89,11 @@
   outline: var(--rs-focus-ring);
 }
 
-/* Inside a group the container clips overflow and items sit 1px apart:
-   keep the ring fully inside the item. */
+/* Inside a group the container clips overflow and items sit 1px apart, and the
+   toggle has its own border: hug it with the ring so it stays inside the item
+   and doesn't read as two separate lines. */
 .group .toggle:focus-visible {
-  outline-offset: var(--rs-focus-ring-offset-inset);
+  outline-offset: var(--rs-focus-ring-offset-inset-border);
 }
 
 .size-1 {

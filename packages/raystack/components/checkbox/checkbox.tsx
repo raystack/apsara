@@ -3,6 +3,7 @@
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import { CheckboxGroup as CheckboxGroupPrimitive } from '@base-ui/react/checkbox-group';
 import { cva, cx, type VariantProps } from 'class-variance-authority';
+import { useRef } from 'react';
 import { useFieldContext } from '../field';
 
 import styles from './checkbox.module.css';
@@ -94,6 +95,12 @@ function CheckboxItem({
 }: CheckboxItemProps) {
   const fieldContext = useFieldContext();
   const resolvedRequired = required ?? fieldContext?.required;
+  // Remember which icon is showing while the indicator is up. During the exit
+  // (transitionStatus 'ending') Base UI has already flipped checked/
+  // indeterminate to the new value, so reading it live would flash the
+  // checkmark for a frame on an indeterminate → unchecked change. Render the
+  // remembered icon during the exit instead.
+  const shownIconRef = useRef<'check' | 'indeterminate'>('check');
 
   return (
     <CheckboxPrimitive.Root
@@ -106,18 +113,30 @@ function CheckboxItem({
         keepMounted
         render={
           render ??
-          ((props, state) => (
-            <span {...props}>
-              {(state.checked ||
-                state.indeterminate ||
-                state.transitionStatus === 'ending') &&
-                (state.indeterminate ? (
-                  <IndeterminateIcon />
-                ) : (
-                  <CheckMarkIcon />
-                ))}
-            </span>
-          ))
+          ((props, state) => {
+            const isEnding = state.transitionStatus === 'ending';
+            if (!isEnding) {
+              shownIconRef.current = state.indeterminate
+                ? 'indeterminate'
+                : 'check';
+            }
+            const showIcon = state.checked || state.indeterminate || isEnding;
+            const icon = isEnding
+              ? shownIconRef.current
+              : state.indeterminate
+                ? 'indeterminate'
+                : 'check';
+            return (
+              <span {...props}>
+                {showIcon &&
+                  (icon === 'indeterminate' ? (
+                    <IndeterminateIcon />
+                  ) : (
+                    <CheckMarkIcon />
+                  ))}
+              </span>
+            );
+          })
         }
       />
     </CheckboxPrimitive.Root>

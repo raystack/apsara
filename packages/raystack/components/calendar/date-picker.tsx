@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { PropsBase } from 'react-day-picker';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -207,6 +207,15 @@ export function DatePicker({
     }
   }
 
+  const errorId = useId();
+  // Link the error text to the input so a user tabbing into an already-erroring
+  // field hears the reason, not just "invalid" (role="alert" alone only fires
+  // when the message first appears). Merge with any consumer-supplied value.
+  const describedBy =
+    [inputProps['aria-describedby'], error ? errorId : undefined]
+      .filter(Boolean)
+      .join(' ') || undefined;
+
   const defaultTrigger = (
     <>
       <Input
@@ -216,6 +225,7 @@ export function DatePicker({
         className={styles.datePickerInput}
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         {...inputProps}
+        aria-describedby={describedBy}
         ref={popover.inputRef}
         value={inputValue}
         onChange={handleInputChange}
@@ -224,6 +234,7 @@ export function DatePicker({
         onKeyUp={handleKeyUp}
       />
       <span
+        id={errorId}
         className={styles.datePickerError}
         data-visible={error ? '' : undefined}
         role='alert'

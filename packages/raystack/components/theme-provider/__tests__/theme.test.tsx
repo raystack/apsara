@@ -820,16 +820,16 @@ describe('ThemeSwitcher', () => {
       expect(icon).toBeInTheDocument();
     });
 
-    it('applies custom size', () => {
+    it('applies custom size to the button box', () => {
       render(
         <Theme defaultTheme='light' enableSystem={false}>
           <ThemeSwitcher size={40} />
         </Theme>
       );
 
-      const icon = document.querySelector('svg');
-      expect(icon).toHaveAttribute('width', '40');
-      expect(icon).toHaveAttribute('height', '40');
+      // size drives the button box; the icon fills it via IconButton's CSS.
+      const button = document.querySelector('button');
+      expect(button).toHaveStyle({ width: '40px', height: '40px' });
     });
   });
 

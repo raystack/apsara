@@ -50,25 +50,21 @@
   /* Ring offset: rings sit flush (0) by default. A control adds one of these
        in its own :focus-visible rule when it needs to — accent-filled controls
        push the ring out so it clears the same-colour fill; controls in a
-       clipped container pull it in so the ring isn't cut off. */
+       clipped container pull it in so the ring isn't cut off. The -border
+       variant pulls in just 1px so the ring hugs a bordered control instead
+       of leaving a gap that reads as a double line. */
   --rs-focus-ring-offset-accent: 2px;
   --rs-focus-ring-offset-inset: -2px;
+  --rs-focus-ring-offset-inset-border: -1px;
 
   /* Motion */
   /* Example usage: transition: opacity var(--rs-duration-normal) var(--rs-ease-out); */
-  --rs-ease-out: cubic-bezier(
-    0.22,
-    1,
-    0.36,
-    1
-  ); /* entrances, exits, value changes */
-  --rs-ease-in-out: cubic-bezier(
-    0.77,
-    0,
-    0.175,
-    1
-  ); /* elements moving on screen */
-  --rs-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* iOS-like drawer slide */
+  /* entrances, exits, value changes */
+  --rs-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  /* elements moving on screen */
+  --rs-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  /* iOS-like drawer slide */
+  --rs-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --rs-duration-press: 100ms; /* pressed/active feedback */
   --rs-duration-fast: 150ms; /* tooltips, menus, small popups */
   --rs-duration-normal: 200ms; /* popovers, dialogs, switches */

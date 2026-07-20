@@ -39,11 +39,12 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-/* Steppers sit inside the field border: keep the ring inside. */
+/* Steppers have their own border: hug it with the ring so they don't read as
+   two separate lines. */
 .decrement:focus-visible,
 .increment:focus-visible {
   outline: var(--rs-focus-ring);
-  outline-offset: var(--rs-focus-ring-offset-inset);
+  outline-offset: var(--rs-focus-ring-offset-inset-border);
 }
 
 .decrement:active:not([data-disabled]),

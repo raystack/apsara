@@ -14,6 +14,13 @@
   background-color: var(--rs-color-background-base-primary);
 }
 
+/* The search bar sits in its own dialog panel, so the borderless input's
+   keyboard focus ring is redundant here. The doubled class outranks the base
+   ring rule without needing !important. */
+.commandInputContainer.commandInputContainer:has(input:focus-visible) {
+  box-shadow: none;
+}
+
 .list {
   display: flex;
   flex-direction: column;
@@ -152,26 +159,12 @@
   background-color: var(--rs-color-border-base-primary);
 }
 
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--rs-z-index-portal);
-  background-color: var(--rs-color-overlay-black-a5);
-}
-
-.overlayBlur {
-  backdrop-filter: var(--rs-blur-lg);
-}
-
+/* No backdrop, so let clicks fall through the viewport to trigger dismissal;
+   the popup itself re-enables pointer events. */
 .viewport {
   position: fixed;
   inset: 0;
   z-index: var(--rs-z-index-portal);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--rs-space-4);
   pointer-events: none;
 }
 
@@ -179,10 +172,17 @@
   pointer-events: auto;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 540px;
+  width: 540px;
+  max-width: 90vw;
   max-height: min(420px, 80vh);
   min-height: 0;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  /* Match Dialog: sit 160px from the top on tall viewports, and fall back to
+     centered on short ones so the popup stays inside the viewport. The input
+     stays put while the list below changes height. */
+  transform: translate(-50%, min(160px, calc(50vh - 50%)));
   background-color: var(--rs-color-background-base-primary);
   border-radius: var(--rs-radius-2);
   box-shadow: var(--rs-shadow-floating);
@@ -191,10 +191,14 @@
   isolation: isolate;
 }
 
-/* Reduced transparency: drop the blur, compensate with a heavier solid scrim */
-@media (prefers-reduced-transparency: reduce) {
-  .overlayBlur {
-    backdrop-filter: none;
-    background-color: var(--rs-color-overlay-black-a9);
+/* Subtlest cue that still animates: a quick opacity-only fade, no movement. */
+@media (prefers-reduced-motion: no-preference) {
+  .dialogPopup {
+    transition: opacity var(--rs-duration-press) var(--rs-ease-out);
+  }
+
+  .dialogPopup[data-starting-style],
+  .dialogPopup[data-ending-style] {
+    opacity: 0;
   }
 }
