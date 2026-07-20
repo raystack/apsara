@@ -31,9 +31,7 @@ export const CodeBlockCode = ({
   const content = children.trim();
 
   useIsomorphicLayoutEffect(() => {
-    // if value is not defined, set the value
     if (!isContextValueDefined) setValue(language);
-    // if should render, store the code
     if (shouldRender) setCode(content);
   }, [
     content,

@@ -22,7 +22,6 @@ export function useMouse<T extends HTMLElement = HTMLElement>(
   const [value, setValue] = useState<UseMouseValue | null>(null);
   const elementRef = useRef<T | null>(null);
 
-  // Handle mouse movement using native MouseEvent
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
       if (!enabled) return;

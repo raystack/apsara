@@ -39,7 +39,6 @@ export function isActiveUrl(
  * Format: /docs/folder-name/file-name or docs/folder-name/file-name
  */
 export const getFolderFromUrl = (url: string): string => {
-  // Remove leading slash if present and split by "/"
   const parts = url.replace(/^\//, '').split('/').filter(Boolean);
 
   // Expected structure: ["docs", folderName?, fileName]

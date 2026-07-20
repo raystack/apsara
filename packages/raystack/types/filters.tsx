@@ -12,9 +12,7 @@ export type FilterValueType = 'string' | 'number' | 'boolean';
 
 export interface FilterValue {
   value?: FilterValueType;
-  // values?: Array<string | number>;
   date?: Date;
-  // dateRange?: DateRange;
 }
 
 export type FilterOperation = {

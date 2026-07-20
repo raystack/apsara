@@ -53,7 +53,6 @@ export default function DemoControls({
         const isIcon = control.type === 'icon';
         const isIconOptional = control.isIconOptional ?? true;
 
-        // For checkbox and icon types, render in a special container
         if (isCheckbox || isIcon) {
           return (
             <div key={prop} className={styles.controlSection}>
@@ -112,7 +111,6 @@ export default function DemoControls({
           );
         }
 
-        // For select type
         if (control.type === 'select') {
           const selectValue =
             propValue !== undefined && propValue !== null
@@ -150,7 +148,6 @@ export default function DemoControls({
           );
         }
 
-        // For text and number types
         return (
           <Field key={prop} label={propLabel} className={styles.inputLabel}>
             <Input

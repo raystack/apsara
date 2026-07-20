@@ -270,7 +270,6 @@ export const getFilterValue = ({
     return { numberValue: value as number, value };
   }
 
-  // Handle string-based types
   return handleStringBasedTypes(filterType, value, operator);
 };
 

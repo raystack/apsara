@@ -177,10 +177,10 @@ const OklchArea = ({ className, ...props }: ColorPickerAreaProps) => {
           y += STEP_LARGE;
           break;
         case 'Home':
-          x = 0; // no chroma
+          x = 0;
           break;
         case 'End':
-          x = 1; // max chroma
+          x = 1;
           break;
         default:
           return; // let other keys (Tab, etc.) pass through

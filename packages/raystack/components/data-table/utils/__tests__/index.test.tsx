@@ -24,7 +24,6 @@ import {
   transformToDataTableQuery
 } from '../index';
 
-// Mock data for tests
 const mockColumns: DataTableColumnDef<unknown, unknown>[] = [
   {
     accessorKey: 'name',

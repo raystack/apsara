@@ -363,9 +363,7 @@ describe('DataView', () => {
           <DataView.List variant='table' columns={mockColumns} />
         </DataView>
       );
-      // Search input
       expect(screen.getByRole('textbox')).toBeInTheDocument();
-      // Filter button
       expect(
         screen.getByRole('button', { name: /filter/i })
       ).toBeInTheDocument();
@@ -476,7 +474,6 @@ describe('DataView', () => {
           <DataView.List name='list' variant='list' columns={mockColumns} />
         </DataView>
       );
-      // Two active rows visible in table
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument();
 

@@ -127,7 +127,6 @@ const Scoped = ({
     }
   }, [isPersistent, storageKey, stored]);
 
-  // Cross-tab sync.
   useEffect(() => {
     if (!isPersistent) return;
     const onStorage = (e: StorageEvent) => {
@@ -234,7 +233,6 @@ const Root = ({
       let resolved = theme;
       if (!resolved) return;
 
-      // If theme is system, resolve it before setting theme
       if (theme === 'system' && enableSystem) {
         resolved = getSystemTheme();
       }
@@ -291,11 +289,10 @@ const Root = ({
       if (theme === undefined) return;
       setThemeState(theme);
 
-      // Save to storage
       try {
         localStorage.setItem(storageKey, theme);
       } catch (e) {
-        // Unsupported
+        // unsupported (private mode, quota exceeded)
       }
     },
     [storageKey]
@@ -313,7 +310,6 @@ const Root = ({
     [theme, forcedTheme, enableSystem, applyTheme]
   );
 
-  // Always listen to System preference
   useEffect(() => {
     const media = window.matchMedia(MEDIA);
 
@@ -323,7 +319,6 @@ const Root = ({
     return () => media.removeEventListener('change', handleMediaQuery);
   }, [handleMediaQuery]);
 
-  // localStorage event handling
   useEffect(() => {
     const handleStorage = (e: StorageEvent) => {
       if (e.key !== storageKey) {
@@ -548,14 +543,13 @@ const ThemeScript = memo(
   () => true
 );
 
-// Helpers
 const getTheme = (key: string, fallback?: string) => {
   if (isServer) return undefined;
   let theme;
   try {
     theme = localStorage.getItem(key) || undefined;
   } catch (e) {
-    // Unsupported
+    // unsupported (private mode, quota exceeded)
   }
   return theme || fallback;
 };

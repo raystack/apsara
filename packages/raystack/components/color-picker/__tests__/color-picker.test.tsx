@@ -7,20 +7,6 @@ vi.mock('~/hooks/useCopyToClipboard', () => ({
   useCopyToClipboard: () => ({ copy: mockCopy })
 }));
 
-// // Mock ResizeObserver for tests
-// const originalResizeObserver = global.ResizeObserver;
-// beforeAll(() => {
-//   global.ResizeObserver = vi.fn().mockImplementation(() => ({
-//     observe: vi.fn(),
-//     unobserve: vi.fn(),
-//     disconnect: vi.fn()
-//   }));
-// });
-
-// afterAll(() => {
-//   global.ResizeObserver = originalResizeObserver;
-// });
-
 describe('ColorPicker', () => {
   describe('ColorPicker Root', () => {
     it('renders color picker root with children', () => {
@@ -173,7 +159,6 @@ describe('ColorPicker', () => {
       const hueSlider = screen.getByTestId('hue-slider');
       expect(hueSlider).toBeInTheDocument();
 
-      // Check that the slider has child elements (track and thumb)
       expect(hueSlider.children.length).toBeGreaterThan(0);
     });
   });
@@ -214,7 +199,6 @@ describe('ColorPicker', () => {
       const alphaSlider = screen.getByTestId('alpha-slider');
       expect(alphaSlider).toBeInTheDocument();
 
-      // Check that the slider has child elements (track and thumb)
       expect(alphaSlider.children.length).toBeGreaterThan(0);
     });
   });
@@ -435,7 +419,6 @@ describe('ColorPicker', () => {
         </ColorPicker>
       );
 
-      // All components should render without errors
       expect(screen.getByTestId('area')).toBeInTheDocument();
       expect(screen.getByTestId('hue')).toBeInTheDocument();
       expect(screen.getByTestId('alpha')).toBeInTheDocument();
@@ -454,7 +437,6 @@ describe('ColorPicker', () => {
         </ColorPicker>
       );
 
-      // All components should render without errors
       expect(screen.getByTestId('area')).toBeInTheDocument();
       expect(screen.getByTestId('hue')).toBeInTheDocument();
       expect(screen.getByTestId('alpha')).toBeInTheDocument();

@@ -18,7 +18,6 @@ type Props = {
 };
 
 function renderNode(node: Node, pathname: string): ReactNode {
-  // Handle folders with both children and index
   if (
     node.type === 'folder' &&
     node.index &&
@@ -35,15 +34,12 @@ function renderNode(node: Node, pathname: string): ReactNode {
           label: styles.label
         }}
       >
-        {/* Render index item first */}
         {renderNode(node.index, pathname)}
-        {/* Recursively render all children */}
         {node.children.map(child => renderNode(child, pathname))}
       </Sidebar.Group>
     );
   }
 
-  // Handle folders with index but no children
   if (
     node.type === 'folder' &&
     node.index &&
@@ -52,7 +48,6 @@ function renderNode(node: Node, pathname: string): ReactNode {
     return renderNode(node.index, pathname);
   }
 
-  // Handle folders normally
   if (node.type === 'folder') {
     return (
       <Sidebar.Group
@@ -69,12 +64,10 @@ function renderNode(node: Node, pathname: string): ReactNode {
     );
   }
 
-  // Handle page items
   if (node.type === 'page') {
     return <SidebarItem item={node} pathname={pathname} key={node.url} />;
   }
 
-  // Handle separators (if needed)
   if (node.type === 'separator') {
     return null;
   }

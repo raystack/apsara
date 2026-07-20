@@ -70,27 +70,17 @@ const formatOklchString = (color: ColorObject): string => {
 };
 
 /**
- * Convert any CSS color string to the requested format.
+ * Convert any CSS color string to the requested format. Returns `null` for
+ * unparseable input.
  *
  * Wide-gamut OKLCH inputs are gamut-mapped into sRGB for `hex`/`rgb`/`hsl`
- * outputs (chroma reduced, lightness and hue preserved), so the result is
- * the closest sRGB representation of the requested color rather than a
- * per-channel-clipped one that would distort hue. `oklch` output preserves
- * the full color, since OKLCH can express the wide gamut natively.
- *
- * Hex is uppercase; uses 8-digit form when alpha < 1. RGB/HSL produce
- * `rgb()`/`rgba()` and `hsl()`/`hsla()`. OKLCH matches the design system's
- * token format (4-decimal L/C, 2-decimal H, hue pinned to 0 when achromatic).
- *
- * Returns `null` for unparseable input.
+ * outputs (chroma reduced, lightness and hue preserved), so the result is the
+ * closest sRGB color rather than a per-channel-clipped one that would distort
+ * hue. `oklch` output preserves the full color, since OKLCH expresses the wide
+ * gamut natively.
  *
  * @example
- *   formatColor('oklch(0.5438 0.191 267.01)', 'hex')   // '#3E63DD'
- *   formatColor('oklch(0.7 0.32 30)', 'hex')           // '#FF5843'
- *   formatColor('red', 'rgb')                          // 'rgb(255, 0, 0)'
- *   formatColor('rgba(255, 0, 0, 0.5)', 'hsl')         // 'hsla(0, 100%, 50%, 0.5)'
- *   formatColor('#FF0000', 'oklch')                    // 'oklch(0.6279 0.2577 29.23)'
- *   formatColor('not a color', 'hex')                  // null
+ *   formatColor('red', 'rgb') // 'rgb(255, 0, 0)'
  */
 export const formatColor = (
   value: string,

@@ -66,7 +66,6 @@ const Page = () => {
     to: dayjs('2027-12-10').toDate()
   });
 
-  // Sample options data with icons
   const selectOptions = [
     { value: 'dashboard', label: 'Dashboard', icon: <RadixBellIcon /> },
     { value: 'analytics', label: 'Analytics', icon: <MixerHorizontalIcon /> },
@@ -431,7 +430,6 @@ const Page = () => {
                     );
                   }
 
-                  // Show info on 15th of any month
                   if (date.getDate() === 15) {
                     return (
                       <Flex
@@ -452,7 +450,6 @@ const Page = () => {
                     );
                   }
 
-                  // Show info for today
                   if (isToday) {
                     return (
                       <Flex
@@ -511,7 +508,6 @@ const Page = () => {
                 <Input size='small' />
               </Flex>
 
-              {/* Button Examples */}
               <Text
                 size='large'
                 weight='medium'
@@ -520,11 +516,9 @@ const Page = () => {
                 Button Examples - All Combinations
               </Text>
 
-              {/* Solid Variant */}
               <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
                 <Text weight='medium'>Solid Variant</Text>
 
-                {/* Normal Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Normal Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -582,7 +576,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Small Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Small Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -695,11 +688,9 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Outline Variant */}
               <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
                 <Text weight='medium'>Outline Variant</Text>
 
-                {/* Normal Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Normal Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -757,7 +748,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Small Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Small Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -880,11 +870,9 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Ghost Variant */}
               <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
                 <Text weight='medium'>Ghost Variant</Text>
 
-                {/* Normal Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Normal Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -942,7 +930,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Small Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Small Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -1055,11 +1042,9 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Text Variant */}
               <Flex direction='column' gap={4} style={{ marginBottom: '32px' }}>
                 <Text weight='medium'>Text Variant</Text>
 
-                {/* Normal Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Normal Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -1117,7 +1102,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Small Size */}
                 <Flex direction='column' gap={2}>
                   <Text size='small'>Small Size:</Text>
                   <Flex gap={2} wrap='wrap'>
@@ -1238,7 +1222,6 @@ const Page = () => {
               </Text>
 
               <Flex direction='column' gap={6}>
-                {/* Solid Variant */}
                 <Flex direction='column' gap={3}>
                   <Text weight='medium'>Solid Variant (Inverted Spinner)</Text>
                   <Flex gap={4} align='center'>
@@ -1254,7 +1237,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Outline Variant */}
                 <Flex direction='column' gap={3}>
                   <Text weight='medium'>
                     Outline Variant (Matching Color Spinner)
@@ -1272,7 +1254,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Ghost Variant */}
                 <Flex direction='column' gap={3}>
                   <Text weight='medium'>
                     Ghost Variant (Matching Color Spinner for colored)
@@ -1290,7 +1271,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Text Variant */}
                 <Flex direction='column' gap={3}>
                   <Text weight='medium'>
                     Text Variant (Matching Color Spinner for colored)
@@ -1311,7 +1291,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Size Variants */}
                 <Flex direction='column' gap={3}>
                   <Text weight='medium'>Size Variants</Text>
                   <Flex gap={4} align='center'>
@@ -1345,7 +1324,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Loading with and without text */}
                 <Flex direction='column' gap={3}>
                   <Text weight='medium'>Loading With/Without Text</Text>
                   <Flex gap={4} align='center'>
@@ -1374,7 +1352,6 @@ const Page = () => {
                   </Flex>
                 </Flex>
 
-                {/* Disabled Loading State */}
                 <Flex direction='column' gap={3}>
                   <Text weight='medium'>Disabled Loading State</Text>
                   <Flex gap={4} align='center'>
@@ -1429,7 +1406,6 @@ const Page = () => {
               />
             </Flex>
 
-            {/* Select component examples */}
             <Text
               size='large'
               weight='medium'
@@ -1453,7 +1429,6 @@ const Page = () => {
             <TextArea />
 
             <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>
-              {/* Normal size select with icons */}
               <Flex direction='column' gap={2}>
                 <Select
                   value={selectValue}
@@ -1496,7 +1471,6 @@ const Page = () => {
             </Flex>
 
             <Flex direction='column' gap={4} style={{ maxWidth: '550px' }}>
-              {/* Normal size select with icons */}
               <Flex direction='column' gap={2}>
                 <Select
                   value={selectValue}
@@ -1537,7 +1511,6 @@ const Page = () => {
                 </Select>
               </Flex>
 
-              {/* Small size select with icons */}
               <Flex direction='column' gap={2}>
                 <Text size='small'>Small size:</Text>
                 <Select value={selectValue2} onValueChange={setSelectValue2}>
@@ -1879,7 +1852,6 @@ const Page = () => {
             </Text>
 
             <Flex direction='column' gap={4} style={{ maxWidth: '300px' }}>
-              {/* Select Examples */}
               <Flex direction='column' gap={2}>
                 <Text size='small'>Disabled Select:</Text>
                 <Select
@@ -1928,37 +1900,13 @@ const Page = () => {
                     ))}
                   </Select.Content>
                 </Select>
-                {/* <Select
-              value={selectValue}
-              onValueChange={value => {
-                console.log(value);
-                setSelectValue(value);
-              }}>
-              <Select.Trigger size="small" variant="outline">
-                <Select.Value placeholder="Choose an option" />
-              </Select.Trigger>
-              <Select.Content>
-                {selectOptions.map(option => (
-                  <Select.Item
-                    key={option.value}
-                    value={option.value}
-                    leadingIcon={option.icon}>
-                    {option.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select> */}
                 <Select value={selectValue} onValueChange={setSelectValue}>
                   <Select.Trigger size='small'>
                     <Select.Value placeholder='Choose an options' />
                   </Select.Trigger>
                   <Select.Content>
                     {selectOptions.map(option => (
-                      <Select.Item
-                        key={option.value}
-                        value={option.value}
-                        // leadingIcon={option.icon}
-                      >
+                      <Select.Item key={option.value} value={option.value}>
                         {option.label}
                       </Select.Item>
                     ))}
@@ -1988,7 +1936,6 @@ const Page = () => {
             </Text>
 
             <Flex direction='column' gap={6}>
-              {/* Basic Amount Examples */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Basic Amount (Minor Units):</Text>
                 <Flex gap={4}>
@@ -2004,7 +1951,6 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Major Units Example */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Major Units (valueInMinorUnits=false):</Text>
                 <Flex gap={4}>
@@ -2035,7 +1981,6 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Currency Display Formats */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Currency Display Formats:</Text>
                 <Flex gap={4}>
@@ -2066,7 +2011,6 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Localization Example */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Different Locales:</Text>
                 <Flex gap={4}>
@@ -2082,7 +2026,6 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Decimal Control */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Decimal Control:</Text>
                 <Flex gap={4}>
@@ -2109,7 +2052,6 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Grouping Control */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Grouping Control:</Text>
                 <Flex gap={4}>
@@ -2127,7 +2069,6 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Error Handling */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Error Handling (Invalid Currency):</Text>
                 <Flex gap={4}>
@@ -2672,7 +2613,6 @@ const Page = () => {
             </Text>
 
             <Flex direction='column' gap={6}>
-              {/* Basic Vertical ScrollArea */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Basic Vertical ScrollArea:</Text>
                 <ScrollArea
@@ -2689,7 +2629,6 @@ const Page = () => {
                 </ScrollArea>
               </Flex>
 
-              {/* Basic Horizontal ScrollArea */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Basic Horizontal ScrollArea:</Text>
                 <ScrollArea style={{ height: '150px', width: '300px' }}>
@@ -2713,7 +2652,6 @@ const Page = () => {
                 </ScrollArea>
               </Flex>
 
-              {/* Both Vertical and Horizontal Scrollbars */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>
                   Both Vertical and Horizontal Scrollbars (Corner auto-added):
@@ -2741,7 +2679,6 @@ const Page = () => {
                 </ScrollArea>
               </Flex>
 
-              {/* Auto Scroll (default) */}
               <Flex direction='column' gap={3}>
                 <Text size='small'>Auto Scroll (default):</Text>
                 <ScrollArea style={{ height: '250px', width: '400px' }}>
@@ -2772,7 +2709,6 @@ const Page = () => {
             </Text>
 
             <Flex direction='column' gap={6} style={{ maxWidth: '600px' }}>
-              {/* Types */}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   Types
@@ -2802,7 +2738,6 @@ const Page = () => {
                 </Flex>
               </Flex>
 
-              {/* Outline */}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   Outline
@@ -2815,7 +2750,6 @@ const Page = () => {
                 </Callout>
               </Flex>
 
-              {/* High contrast */}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   High contrast
@@ -2831,7 +2765,6 @@ const Page = () => {
                 </Callout>
               </Flex>
 
-              {/* Custom icon */}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   Custom icon
@@ -2844,7 +2777,6 @@ const Page = () => {
                 </Callout>
               </Flex>
 
-              {/* With action */}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   With action
@@ -2862,7 +2794,6 @@ const Page = () => {
                 </Callout>
               </Flex>
 
-              {/* Dismissible (controlled) */}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   Dismissible (controlled — consumer removes it in onDismiss)
@@ -2886,7 +2817,6 @@ const Page = () => {
                 )}
               </Flex>
 
-              {/* Custom width */}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   Custom width
@@ -2899,7 +2829,6 @@ const Page = () => {
                 </Callout>
               </Flex>
 
-              {/*Figma replicas*/}
               <Flex direction='column' gap={3}>
                 <Text size='small' variant='secondary'>
                   Figma replicas

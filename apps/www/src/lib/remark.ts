@@ -73,7 +73,6 @@ export function remarkTypeTableToMd() {
           entry.description || ''
         ]);
 
-        // Build MDAST table node with correct types
         const tableNode: Table = {
           type: 'table',
           align: [],

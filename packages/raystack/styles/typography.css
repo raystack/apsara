@@ -96,10 +96,8 @@
 }
 
 body {
-  /* Default Font */
   font-family: var(--rs-font-body);
 
-  /* Font Smoothing */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -137,7 +135,6 @@ h4 {
   text-wrap: balance;
 }
 
-/* CSS for the text cursor */
 input,
 textarea {
   caret-color: var(--rs-color-border-accent-emphasis);

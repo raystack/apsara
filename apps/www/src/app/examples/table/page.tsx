@@ -89,7 +89,6 @@ export const columns: DataTableColumnDef<Payment, unknown>[] = [
     header: 'Amount',
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('amount'));
-      // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
@@ -144,40 +143,6 @@ const Page = () => {
       direction='column'
       gap={8}
     >
-      {/* <Flex direction='column' gap={4}>
-        <DataTable
-          data={filteredData}
-          mode='server'
-          columns={columns}
-          query={tableQuery}
-          onTableQueryChange={setTableQuery}
-          defaultSort={{ name: 'email', order: 'asc' }}
-        >
-          <DataTable.Filters
-            trigger={({ appliedFilters }) =>
-              appliedFilters.size > 0 ? (
-                <IconButton size={4}>
-                  <FilterIcon />
-                </IconButton>
-              ) : (
-                <Button
-                  variant='outline'
-                  size='small'
-                  leadingIcon={<FilterIcon />}
-                  color='neutral'
-                >
-                  Filter
-                </Button>
-              )
-            }
-          />
-          {filteredData.map(item => (
-            <div
-              key={item.id}
-            >{`${item.email} - ${item.amount} - ${item.status}`}</div>
-          ))}
-        </DataTable>
-      </Flex> */}
       <Flex direction='row' gap={4}>
         <DataTable
           data={filteredData}

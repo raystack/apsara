@@ -146,7 +146,6 @@ describe('Calendar', () => {
         />
       );
 
-      // The component should be rendered in the calendar
       expect(
         container.querySelector('[data-testid="custom-date-info"]')
       ).toBeInTheDocument();
@@ -178,7 +177,6 @@ describe('Calendar', () => {
         />
       );
 
-      // Should only have one date with info
       const dateInfos = container.querySelectorAll('[data-testid="date-info"]');
       expect(dateInfos.length).toBeGreaterThanOrEqual(0);
     });
@@ -206,7 +204,6 @@ describe('Calendar', () => {
       const { container } = render(
         <Calendar
           dateInfo={date => {
-            // Show info only on Sundays
             if (date.getDay() === 0) {
               return <div data-testid='sunday-info'>Sunday</div>;
             }
@@ -228,7 +225,6 @@ describe('Calendar', () => {
       const { container } = render(
         <Calendar
           dateInfo={date => {
-            // Show info only for today
             if (
               date.getDate() === today.getDate() &&
               date.getMonth() === today.getMonth() &&

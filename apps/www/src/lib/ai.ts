@@ -1,11 +1,11 @@
 import { promises as fs } from 'fs';
-import path from 'path';
-import { docs } from '@/lib/source';
 import type { InferPageType } from 'fumadocs-core/source';
 import { remarkAutoTypeTable } from 'fumadocs-typescript';
+import path from 'path';
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkMdx from 'remark-mdx';
+import { docs } from '@/lib/source';
 import { remarkTypeTableToMd } from './remark';
 
 const processor = remark()
@@ -21,7 +21,6 @@ const REGEX = {
   PLAYGROUND: /export const playground\s*=\s*{/g
 };
 
-// Inline the demo examples into the content
 function inlineDemoComponents(content: string, demo: string): string {
   const demoMap: Record<string, string[]> = {};
   const formattedDemo = removePlaygroundExportBlock(demo);
@@ -69,11 +68,10 @@ function inlineDemoComponents(content: string, demo: string): string {
   return result;
 }
 
-// Remove the playground export block from the demo file
 function removePlaygroundExportBlock(content: string): string {
   const match = REGEX.PLAYGROUND.exec(content);
 
-  if (!match) return content; // nothing to remove
+  if (!match) return content;
 
   const start = match.index;
   let i = REGEX.PLAYGROUND.lastIndex - 1; // start at opening `{`
@@ -95,7 +93,6 @@ function removePlaygroundExportBlock(content: string): string {
 
 // Remove the frontmatter, import statements, and code blocks from the content
 function formatContent(content: string) {
-  // remove frontmatter values
   let processedContent = content.replace(REGEX.FRONTMATTER, '');
 
   // remove import statements outside of code blocks

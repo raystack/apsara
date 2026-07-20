@@ -60,7 +60,6 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // Table should be rendered
       expect(screen.getByRole('table')).toBeInTheDocument();
     });
 
@@ -109,7 +108,6 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // Check if data is displayed
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(screen.getByText('john@example.com')).toBeInTheDocument();
       expect(screen.getByText('Jane Smith')).toBeInTheDocument();
@@ -304,11 +302,9 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // After applying filter with no matches, empty state should show
       expect(screen.getByTestId('empty-state')).toBeInTheDocument();
       expect(screen.getByText(emptyStateText)).toBeInTheDocument();
       expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
-      // Data should not be visible
       expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
     });
 
@@ -405,7 +401,6 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // Should show emptyState as fallback
       expect(screen.getByTestId('empty-state')).toBeInTheDocument();
       expect(screen.getByText(emptyStateText)).toBeInTheDocument();
     });
@@ -422,7 +417,6 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // Should show default empty state
       expect(screen.getByText('No Data')).toBeInTheDocument();
     });
 
@@ -444,7 +438,6 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // Should show matching data, not empty state
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(screen.queryByTestId('empty-state')).not.toBeInTheDocument();
       expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
@@ -570,11 +563,9 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // Open Display popover and click reset
       await user.click(screen.getByText('Display'));
       await user.click(screen.getByText('Reset to default'));
 
-      // Verify onTableQueryChange was called with default sort and no group
       expect(onTableQueryChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           sort: [{ name: 'name', order: 'asc' }],
@@ -602,7 +593,6 @@ describe('DataTable', () => {
         </DataTable>
       );
 
-      // Data should still be visible, not zero/empty state
       expect(screen.getByText('John Doe')).toBeInTheDocument();
       expect(screen.queryByTestId('zero-state')).not.toBeInTheDocument();
       expect(screen.queryByTestId('empty-state')).not.toBeInTheDocument();

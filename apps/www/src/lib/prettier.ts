@@ -11,11 +11,11 @@ export const getFormattedCode = (code: string) => {
     return prettier
       .format(`(${code})`, prettierOptions)
       .trim()
-      .replace(/;\s*$/, ''); //remove trailing semicolon
+      .replace(/;\s*$/, '');
   } catch (e) {
     return prettier
       .format(`${code}`, prettierOptions)
       .trim()
-      .replace(/;\s*$/, ''); //remove trailing semicolon
+      .replace(/;\s*$/, '');
   }
 };

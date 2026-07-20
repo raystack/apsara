@@ -166,10 +166,8 @@ function DataTableRoot<TData, TValue>({
     }
   }, [searchQuery]);
 
-  // Determine if filters should be visible
-  // Filters should be visible if there is data OR if filters are applied (empty state)
-  // Filters should NOT be visible if no data AND no filters (zero state)
-  // Note: Search alone does not show the filter bar
+  // Show filters when there is data or filters are applied; hide in the zero state.
+  // Search alone does not show the filter bar.
   const shouldShowFilters = useMemo(() => {
     const hasFilters = tableQuery?.filters && tableQuery.filters.length > 0;
 
@@ -178,8 +176,7 @@ function DataTableRoot<TData, TValue>({
       const hasData = (rowModel?.rows?.length ?? 0) > 0;
       return hasData || hasFilters;
     } catch {
-      // If table is not ready yet, check if we have initial data
-      // If no filters and no data, don't show filters
+      // Table not ready yet, so fall back to the initial data.
       return hasFilters || data.length > 0;
     }
   }, [table, tableQuery, data.length]);

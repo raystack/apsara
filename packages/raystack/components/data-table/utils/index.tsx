@@ -250,8 +250,7 @@ export function transformToDataTableQuery(
   };
 }
 
-// Transform DataTableQuery to InternalQuery
-// This reverses the transformation done by transformToDataTableQuery
+// Reverses the transformation done by transformToDataTableQuery.
 export function dataTableQueryToInternal(query: DataTableQuery): InternalQuery {
   const { filters, ...rest } = query;
 
@@ -259,7 +258,6 @@ export function dataTableQueryToInternal(query: DataTableQuery): InternalQuery {
     return rest;
   }
 
-  // Convert DataTableFilter[] to InternalFilter[]
   const internalFilters: InternalFilter[] = filters.map(filter => {
     const {
       operator,
@@ -284,17 +282,17 @@ export function dataTableQueryToInternal(query: DataTableQuery): InternalQuery {
       if (stringValue.startsWith('%') && stringValue.endsWith('%')) {
         transformedFilter = {
           operator: 'contains',
-          value: stringValue.slice(1, -1) // Remove % from both ends
+          value: stringValue.slice(1, -1)
         };
       } else if (stringValue.endsWith('%')) {
         transformedFilter = {
           operator: 'starts_with',
-          value: stringValue.slice(0, -1) // Remove % from end
+          value: stringValue.slice(0, -1)
         };
       } else if (stringValue.startsWith('%')) {
         transformedFilter = {
           operator: 'ends_with',
-          value: stringValue.slice(1) // Remove % from start
+          value: stringValue.slice(1)
         };
       } else {
         // Default to contains if no wildcards (shouldn't happen normally)
@@ -348,7 +346,6 @@ export function getDefaultTableQuery(
   defaultSort?: DataTableSort,
   oldQuery: DataTableQuery = {}
 ): InternalQuery {
-  // Convert DataTableQuery to InternalQuery
   const internalQuery = dataTableQueryToInternal(oldQuery);
 
   return {
