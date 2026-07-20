@@ -27,11 +27,9 @@ export function ThemeSwitcher({ size = 30, ...props }: Props) {
       style={{ width: size, height: size }}
       {...props}
     >
-      {isDark ? (
-        <SunIcon width={size} height={size} />
-      ) : (
-        <MoonIcon width={size} height={size} />
-      )}
+      {/* size drives the button box; IconButton's CSS sizes the icon to fill
+          the padded content area, so the icons don't set their own dimensions. */}
+      {isDark ? <SunIcon /> : <MoonIcon />}
     </IconButton>
   );
 }

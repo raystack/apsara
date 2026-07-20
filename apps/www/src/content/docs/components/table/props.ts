@@ -16,6 +16,12 @@ export interface TableBodyProps {
 export interface TableRowProps {
   /** Additional CSS class names. */
   className?: string;
+  /**
+   * Enables clickable-row styling: a pointer cursor plus hover and active
+   * background states. Use for rows that respond to clicks.
+   * @default false
+   */
+  interactive?: boolean;
 }
 
 export interface TableHeadProps {

@@ -35,10 +35,11 @@
   background-color: var(--rs-color-background-base-primary-hover);
 }
 
-/* Trigger sits flush in a clipped container: keep the ring inside. */
+/* Trigger has its own border: hug it with the ring so they don't read as
+   two separate lines. */
 .accordion-trigger:focus-visible {
   outline: var(--rs-focus-ring);
-  outline-offset: var(--rs-focus-ring-offset-inset);
+  outline-offset: var(--rs-focus-ring-offset-inset-border);
 }
 
 .accordion-trigger:active:not(:disabled) {

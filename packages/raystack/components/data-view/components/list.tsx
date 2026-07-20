@@ -355,6 +355,10 @@ export function DataViewList<TData, TValue = unknown>({
       : (style ?? {});
     const handleRowActivate = () => onRowClick?.(row.original);
     const handleRowKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+      // Only act on keys aimed at the row itself; ignore events bubbling up
+      // from interactive children (buttons, links) so they don't also
+      // trigger row activation.
+      if (event.target !== event.currentTarget) return;
       // Enter and Space both activate, matching a native button.
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault(); // Space would otherwise scroll the page.
@@ -363,9 +367,10 @@ export function DataViewList<TData, TValue = unknown>({
     };
     return (
       <div
-        // A clickable row is announced as a button; a plain row keeps its
-        // structural role and stays inert for the keyboard.
-        role={onRowClick ? 'button' : ariaRole === 'table' ? 'row' : 'listitem'}
+        // Keep the structural role (row/listitem) so cells stay associated with
+        // their row; a clickable row becomes keyboard-activatable via tabIndex +
+        // keydown. Swapping to role="button" would break that association.
+        role={ariaRole === 'table' ? 'row' : 'listitem'}
         tabIndex={onRowClick ? 0 : undefined}
         onKeyDown={onRowClick ? handleRowKeyDown : undefined}
         key={key ?? row.id}

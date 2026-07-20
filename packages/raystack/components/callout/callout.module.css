@@ -264,12 +264,17 @@
 
 .transitionInner {
   min-height: 0;
-  overflow: hidden;
 }
 
 .transitionShell[data-state="closing"] {
   grid-template-rows: 0fr;
   opacity: 0;
+}
+
+/* Clip only while collapsing; when open, let content (focus rings, popovers)
+   overflow the box freely. */
+.transitionShell[data-state="closing"] .transitionInner {
+  overflow: hidden;
 }
 
 @keyframes callout-enter {

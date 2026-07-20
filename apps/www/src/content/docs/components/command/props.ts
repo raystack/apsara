@@ -160,16 +160,6 @@ export interface CommandDialogContentProps {
   /** Additional CSS class names applied to the dialog popup. */
   className?: string;
 
-  /**
-   * Props forwarded to the backdrop element. Set `blur` to `true` to enable
-   * a backdrop blur.
-   * @defaultValue `{ blur: false }`
-   */
-  overlay?: {
-    blur?: boolean;
-    className?: string;
-  };
-
   /** Explicit width for the dialog popup. */
   width?: string | number;
 }

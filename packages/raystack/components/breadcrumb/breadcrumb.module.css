@@ -50,9 +50,7 @@
 }
 
 .breadcrumb-link:focus-visible {
-  outline: none;
-  background-color: var(--rs-color-background-base-primary-hover);
-  color: var(--rs-color-foreground-base-secondary);
+  outline: var(--rs-focus-ring);
   border-radius: var(--rs-radius-1);
 }
 
@@ -95,8 +93,7 @@
 }
 
 .breadcrumb-dropdown-trigger:focus-visible {
-  background-color: var(--rs-color-background-base-primary-hover);
-  color: var(--rs-color-foreground-base-primary);
+  outline: var(--rs-focus-ring);
   border-radius: var(--rs-radius-1);
 }
 

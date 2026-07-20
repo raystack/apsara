@@ -39,11 +39,6 @@
   grid-area: 1 / 1;
 }
 
-.description[data-hidden] {
-  opacity: 0;
-  visibility: hidden;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .helperSlot > * {
     transition:

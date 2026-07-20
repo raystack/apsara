@@ -31,6 +31,7 @@ export const CommandInput = ({
         render={
           <Input
             containerRef={inputContainerRef}
+            classNames={{ container: styles.commandInputContainer }}
             leadingIcon={leadingIcon}
             variant='borderless'
             size={size}

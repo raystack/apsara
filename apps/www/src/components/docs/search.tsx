@@ -15,13 +15,7 @@ import {
   SpaceBetweenVerticallyIcon,
   TextIcon
 } from '@radix-ui/react-icons';
-import {
-  Command,
-  Dialog,
-  EmptyState,
-  IconButton,
-  Spinner
-} from '@raystack/apsara';
+import { Command, EmptyState, IconButton, Spinner } from '@raystack/apsara';
 import {
   flattenTree,
   type Item as PageItem,
@@ -190,15 +184,13 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
   );
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger render={<IconButton size={3} aria-label='Search docs' />}>
-        <MagnifyingGlassIcon />
-      </Dialog.Trigger>
-      <Dialog.Content
-        style={{ width: 512 }}
-        showCloseButton={false}
-        className={styles.searchContainer}
+    <Command.Dialog open={open} onOpenChange={setOpen}>
+      <Command.DialogTrigger
+        render={<IconButton size={3} aria-label='Search docs' />}
       >
+        <MagnifyingGlassIcon />
+      </Command.DialogTrigger>
+      <Command.DialogContent width={512} className={styles.searchContainer}>
         <Command
           items={itemValues}
           mode='none'
@@ -307,7 +299,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
             ))}
           </Command.Content>
         </Command>
-      </Dialog.Content>
-    </Dialog>
+      </Command.DialogContent>
+    </Command.Dialog>
   );
 }

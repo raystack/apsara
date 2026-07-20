@@ -62,11 +62,11 @@ export function SidebarItem({
         fallbackText={shouldShowFallback ? children : undefined}
         className={classNames?.leadingIcon}
       />
-      {!isCollapsed && (
-        <span className={cx(styles['nav-text'], classNames?.text)}>
-          {children}
-        </span>
-      )}
+      {/* Kept mounted so it can collapse with the sidebar (max-width → 0)
+          instead of popping out; CSS hides it when closed. */}
+      <span className={cx(styles['nav-text'], classNames?.text)}>
+        {children}
+      </span>
     </>
   );
 
