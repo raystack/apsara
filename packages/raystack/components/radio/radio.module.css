@@ -47,7 +47,7 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-.radioitem:focus-visible {
+.radioitem:focus-visible:not([data-disabled]) {
   outline: var(--rs-focus-ring);
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
