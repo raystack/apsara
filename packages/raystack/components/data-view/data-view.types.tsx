@@ -1,5 +1,6 @@
 import type {
   ColumnDef,
+  Row,
   Table,
   Updater,
   VisibilityState
@@ -200,6 +201,160 @@ export interface DataViewListProps<TData, TValue = unknown> {
   /** When true, group headers stick under the table header while scrolling. Default false. */
   stickyGroupHeader?: boolean;
   classNames?: DataViewListClassNames;
+}
+
+/** Date inputs accepted by Timeline props and row fields: Date, epoch ms, or a parseable string. */
+export type TimelineDateInput = Date | number | string;
+
+/** Tick granularity of the Timeline axis. */
+export type TimelineScale = 'day' | 'week' | 'month' | 'quarter';
+
+/** Full-height marker line with a badge pinned to the axis (milestones, deadlines). */
+export interface TimelineMarker {
+  date: TimelineDateInput;
+  /** Badge content. Defaults to the marker date formatted as "17 Jan". */
+  label?: React.ReactNode;
+  variant?: 'default' | 'accent' | 'danger';
+}
+
+/**
+ * Geometry + state handed to `renderCard`. The Timeline owns positioning; the
+ * consumer owns the card visual and uses this context to adapt it (e.g. render
+ * a compact stub when `collapsed`).
+ */
+export interface TimelineCardContext {
+  /** Pixel width of the time span (0 when `endField` is omitted). */
+  width: number;
+  /** True when the span is narrower than `minCardWidth`. */
+  collapsed: boolean;
+  laneIndex: number;
+  start: Date;
+  /** Null when `endField` is omitted (point marker). */
+  end: Date | null;
+}
+
+/**
+ * Imperative navigation surface exposed through `actionsRef` on
+ * `DataView.Timeline` (same pattern as Tour's `actionsRef`). Available for the
+ * lifetime of the component; methods no-op (with a dev warning) while the
+ * renderer is hidden — inactive view or no data.
+ */
+export interface TimelineActions {
+  /**
+   * Scroll the viewport so `target` lands at `align` (default `'center'`).
+   * Accepts the `defaultScrollTo` vocabulary: a date input, `'today'`,
+   * `'start'`, or `'end'` (domain edges). Dates outside the domain clamp to
+   * the nearest edge; invalid dates no-op with a dev warning.
+   */
+  scrollTo: (
+    target: TimelineDateInput | 'today' | 'start' | 'end',
+    options?: {
+      align?: 'start' | 'center' | 'end';
+      /** Default `'smooth'` — a navigation action should visibly travel. */
+      behavior?: 'auto' | 'smooth';
+    }
+  ) => void;
+  /** The visible time window, or null while the renderer is hidden. */
+  getVisibleRange: () => [Date, Date] | null;
+}
+
+export type DataViewTimelineClassNames = {
+  root?: string;
+  axis?: string;
+  band?: string;
+  tick?: string;
+  marker?: string;
+  gridline?: string;
+  cursor?: string;
+  canvas?: string;
+  card?: string;
+};
+
+export interface DataViewTimelineProps<TData> {
+  /** Multi-view name. When set, the renderer gates itself on the active view. */
+  name?: string;
+  /** Optional view-scoped field override. Full replacement of root `fields` for this view's active session. */
+  fields?: DataViewField<TData>[];
+
+  /** Accessor key on the row yielding the start date. Rows with a missing/invalid value are skipped. */
+  startField: string;
+  /** Accessor key for the end date. Omitted → point markers; present → variable-width span cards. */
+  endField?: string;
+
+  /**
+   * Renders the card interior. The Timeline owns positioning (x from start,
+   * width from span, lane from packing, scroll); the consumer owns the card
+   * visual entirely — chrome, states, truncation, and the collapsed variant.
+   * Compose `<DataView.DisplayAccess>` inside for Display Properties support.
+   */
+  renderCard: (
+    row: Row<TData>,
+    context: TimelineCardContext
+  ) => React.ReactNode;
+
+  /** Tick granularity of the time axis. Default 'day'. */
+  scale?: TimelineScale;
+  /** Pixel width of one `scale` unit — density/zoom override. */
+  unitWidth?: number;
+  /**
+   * Explicit time domain. Defaults to the data extent (plus today when shown)
+   * with padding. Either way, a domain narrower than the container is extended
+   * at the end so the axis and gridlines always fill the visible width.
+   */
+  range?: [TimelineDateInput, TimelineDateInput];
+  /** Vertical "today" line + axis badge. `true` (default) uses the current date; a date pins it. */
+  today?: boolean | TimelineDateInput;
+  /** Additional full-height marker lines with axis badges. */
+  markers?: TimelineMarker[];
+  /** Vertical gridlines at every axis tick. Default true. */
+  showGridlines?: boolean;
+  /**
+   * Label every Nth `scale` unit on the axis, counted from the domain start
+   * (e.g. `2` on a day scale labels every other day). Labels never render
+   * closer than the collision floor, so a too-dense value degrades gracefully.
+   * Default: the densest interval whose labels fit.
+   */
+  tickInterval?: number;
+  /**
+   * Draw a gridline every Nth `scale` unit, counted from the domain start.
+   * Independent of `tickInterval` and purely visual — cards, the today line,
+   * and the hover cursor still land on every unit. Default 1.
+   */
+  gridlineInterval?: number;
+  /**
+   * Hover crosshair: a darker line snapped to the sub-interval (tick unit)
+   * under the pointer, with a date badge pinned to the axis. Default true.
+   */
+  showCursorLine?: boolean;
+  /** Initial horizontal scroll target. Default 'today'. */
+  defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
+  /** Fires (rAF-throttled) with the visible time range as the user scrolls or resizes. */
+  onVisibleRangeChange?: (range: [Date, Date]) => void;
+  /** Receives the imperative navigation handle (`scrollTo`, `getVisibleRange`). */
+  actionsRef?: React.RefObject<TimelineActions | null>;
+
+  /**
+   * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
+   * interval scheduling); 'one-per-row' gives every row its own lane.
+   */
+  lanePacking?: 'auto' | 'one-per-row';
+  /** Card height in px (cards render at exactly this height; named to match `DataView.List`). Default 66. */
+  estimatedRowHeight?: number;
+  /** Vertical gap between lanes in px. Default 16. */
+  laneGap?: number;
+  /** Spans narrower than this (px) flip `context.collapsed` for `renderCard`. Default 60. */
+  minCardWidth?: number;
+  /**
+   * Assumed width (px) of point-marker cards (rows without `endField`) for
+   * lane packing. Point cards size to their content, so the packer can't know
+   * their width — set this to roughly the widest point card to prevent
+   * horizontal overlap within a lane. Default 120.
+   */
+  estimatedPointWidth?: number;
+
+  /** When true, only cards/gridlines near the visible viewport are rendered (horizontal culling). */
+  virtualized?: boolean;
+  classNames?: DataViewTimelineClassNames;
 }
 
 export type TableQueryUpdateFn = (query: InternalQuery) => InternalQuery;

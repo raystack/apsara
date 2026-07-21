@@ -1,0 +1,976 @@
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import dayjs from 'dayjs';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+
+// SVG icons are inlined via @svgr/rollup at build time. In Vitest they resolve
+// to undefined, so stub the `~/icons` module with no-op components.
+vi.mock('~/icons', () => ({
+  FilterIcon: () => null,
+  __esModule: true
+}));
+
+// biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
+import { DataView } from '../data-view';
+import type {
+  DataViewField,
+  DataViewTimelineProps,
+  TimelineActions
+} from '../data-view.types';
+import { packLanes } from '../utils/pack-lanes';
+import { buildAxis, createTimeScale, toTimestamp } from '../utils/time-scale';
+
+beforeAll(() => {
+  // jsdom doesn't implement ResizeObserver — the timeline observes its scroll
+  // container when viewport tracking is enabled.
+  // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks ResizeObserver
+  (global as any).ResizeObserver =
+    // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks ResizeObserver
+    (global as any).ResizeObserver ||
+    vi.fn().mockImplementation(() => ({
+      observe: vi.fn(),
+      unobserve: vi.fn(),
+      disconnect: vi.fn()
+    }));
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+/* ─────────────────────────── utils: packLanes ────────────────────────── */
+
+describe('packLanes', () => {
+  it('returns no lanes for empty input', () => {
+    expect(packLanes([])).toEqual({ lanes: [], laneCount: 0 });
+  });
+
+  it('packs non-overlapping items into the same lane', () => {
+    const { lanes, laneCount } = packLanes([
+      { x: 0, width: 100 },
+      { x: 120, width: 50 }
+    ]);
+    expect(lanes).toEqual([0, 0]);
+    expect(laneCount).toBe(1);
+  });
+
+  it('opens a new lane for overlapping items', () => {
+    const { lanes, laneCount } = packLanes([
+      { x: 0, width: 100 },
+      { x: 50, width: 100 }
+    ]);
+    expect(lanes).toEqual([0, 1]);
+    expect(laneCount).toBe(2);
+  });
+
+  it('respects the gap: items closer than gapPx do not share a lane', () => {
+    // First ends at 100; second starts at 104 < 100 + 8 → new lane.
+    const tight = packLanes([
+      { x: 0, width: 100 },
+      { x: 104, width: 50 }
+    ]);
+    expect(tight.lanes).toEqual([0, 1]);
+    // Exactly at the gap boundary → same lane.
+    const exact = packLanes([
+      { x: 0, width: 100 },
+      { x: 108, width: 50 }
+    ]);
+    expect(exact.lanes).toEqual([0, 0]);
+  });
+
+  it('assigns lanes by ascending x regardless of input order', () => {
+    const { lanes, laneCount } = packLanes([
+      { x: 220, width: 60 }, // fits after the first item
+      { x: 0, width: 100 },
+      { x: 50, width: 100 } // overlaps the first → lane 1
+    ]);
+    expect(lanes).toEqual([0, 0, 1]);
+    expect(laneCount).toBe(2);
+  });
+});
+
+/* ─────────────────────────── utils: time scale ───────────────────────── */
+
+describe('toTimestamp', () => {
+  it('accepts Date, epoch ms, and parseable strings', () => {
+    const date = new Date('2025-01-05T00:00:00');
+    expect(toTimestamp(date)).toBe(date.getTime());
+    expect(toTimestamp(1736035200000)).toBe(1736035200000);
+    expect(toTimestamp('2025-01-05')).toBe(dayjs('2025-01-05').valueOf());
+  });
+
+  it('returns null for missing or invalid values', () => {
+    expect(toTimestamp(null)).toBeNull();
+    expect(toTimestamp(undefined)).toBeNull();
+    expect(toTimestamp('not-a-date')).toBeNull();
+    expect(toTimestamp(new Date('invalid'))).toBeNull();
+    expect(toTimestamp(Number.NaN)).toBeNull();
+    expect(toTimestamp({})).toBeNull();
+  });
+});
+
+describe('createTimeScale', () => {
+  it('snaps the domain to unit boundaries with padding', () => {
+    const ts = createTimeScale({
+      minTime: dayjs('2025-01-05T10:30:00').valueOf(),
+      maxTime: dayjs('2025-01-20T18:00:00').valueOf(),
+      scale: 'day',
+      unitWidth: 20,
+      padUnits: 2
+    });
+    expect(ts.t0).toBe(dayjs('2025-01-03').startOf('day').valueOf());
+    // startOf(max) + (pad + 1) days.
+    expect(ts.t1).toBe(dayjs('2025-01-23').startOf('day').valueOf());
+  });
+
+  it('extends the domain end to reach minWidth, in whole units', () => {
+    // Jan 1 → Feb 1 = 31 days × 20px = 620px; filling to 1000px needs 50 days.
+    const ts = createTimeScale({
+      minTime: dayjs('2025-01-01').valueOf(),
+      maxTime: dayjs('2025-01-31').valueOf(),
+      scale: 'day',
+      unitWidth: 20,
+      padUnits: 0,
+      minWidth: 1000
+    });
+    expect(ts.t0).toBe(dayjs('2025-01-01').valueOf());
+    expect(ts.t1).toBe(dayjs('2025-02-20').valueOf());
+    expect(ts.totalWidth).toBe(1000);
+  });
+
+  it('never shrinks a domain already wider than minWidth', () => {
+    const ts = createTimeScale({
+      minTime: dayjs('2025-01-01').valueOf(),
+      maxTime: dayjs('2025-01-31').valueOf(),
+      scale: 'day',
+      unitWidth: 20,
+      padUnits: 0,
+      minWidth: 100
+    });
+    expect(ts.t1).toBe(dayjs('2025-02-01').valueOf());
+    expect(ts.totalWidth).toBe(620);
+  });
+
+  it('reaches minWidth on calendar scales with uneven unit lengths', () => {
+    // Months render at (actual ms × pxPerMs), not exactly unitWidth — the
+    // fill must land at or past minWidth despite short months.
+    const ts = createTimeScale({
+      minTime: dayjs('2025-01-15').valueOf(),
+      maxTime: dayjs('2025-02-15').valueOf(),
+      scale: 'month',
+      unitWidth: 96,
+      padUnits: 0,
+      minWidth: 500
+    });
+    expect(ts.totalWidth).toBeGreaterThanOrEqual(500);
+    // Still snapped to a month boundary.
+    expect(dayjs(ts.t1).date()).toBe(1);
+  });
+
+  it('maps time to px linearly and inverts with timeAt', () => {
+    const ts = createTimeScale({
+      minTime: dayjs('2025-01-01').valueOf(),
+      maxTime: dayjs('2025-01-31').valueOf(),
+      scale: 'day',
+      unitWidth: 20,
+      padUnits: 0
+    });
+    expect(ts.x(ts.t0)).toBe(0);
+    expect(ts.x(dayjs('2025-01-05').valueOf())).toBe(80);
+    const time = dayjs('2025-01-11').valueOf();
+    expect(ts.timeAt(ts.x(time))).toBe(time);
+    // Domain = Jan 1 → Feb 1 = 31 days.
+    expect(ts.totalWidth).toBe(31 * 20);
+  });
+});
+
+describe('buildAxis', () => {
+  const januaryScale = createTimeScale({
+    minTime: dayjs('2025-01-01').valueOf(),
+    maxTime: dayjs('2025-01-31').valueOf(),
+    scale: 'day',
+    unitWidth: 20,
+    padUnits: 0
+  });
+
+  it('emits one tick per unit across the domain', () => {
+    const { ticks } = buildAxis(januaryScale, 'day', 20);
+    // Jan 1 … Feb 1 inclusive.
+    expect(ticks).toHaveLength(32);
+    expect(ticks[0].label).toBe('1');
+    expect(ticks[0].x).toBe(0);
+    expect(ticks[4].x).toBe(80);
+  });
+
+  it('thins tick labels below the minimum label spacing', () => {
+    // 20px per tick < 28px minimum → every 2nd label.
+    const thinned = buildAxis(januaryScale, 'day', 20).ticks;
+    expect(thinned[0].showLabel).toBe(true);
+    expect(thinned[1].showLabel).toBe(false);
+    expect(thinned[2].showLabel).toBe(true);
+    // 40px per tick → all labels show.
+    const roomy = buildAxis(
+      createTimeScale({
+        minTime: dayjs('2025-01-01').valueOf(),
+        maxTime: dayjs('2025-01-31').valueOf(),
+        scale: 'day',
+        unitWidth: 40,
+        padUnits: 0
+      }),
+      'day',
+      40
+    ).ticks;
+    expect(roomy.every(t => t.showLabel)).toBe(true);
+  });
+
+  it('labels every Nth unit when labelEvery is passed', () => {
+    const roomyScale = createTimeScale({
+      minTime: dayjs('2025-01-01').valueOf(),
+      maxTime: dayjs('2025-01-31').valueOf(),
+      scale: 'day',
+      unitWidth: 40,
+      padUnits: 0
+    });
+    // 40px fits every label; the override thins to every 2nd anyway.
+    const { ticks } = buildAxis(roomyScale, 'day', 40, 2);
+    expect(ticks.map(t => t.showLabel).slice(0, 4)).toEqual([
+      true,
+      false,
+      true,
+      false
+    ]);
+    expect(ticks[0].index).toBe(0);
+    expect(ticks[3].index).toBe(3);
+  });
+
+  it('collision floor wins over a too-dense labelEvery', () => {
+    // 10px per tick → auto floor is every 3rd; asking for every 2nd degrades.
+    const dense = createTimeScale({
+      minTime: dayjs('2025-01-01').valueOf(),
+      maxTime: dayjs('2025-01-31').valueOf(),
+      scale: 'day',
+      unitWidth: 10,
+      padUnits: 0
+    });
+    const { ticks } = buildAxis(dense, 'day', 10, 2);
+    expect(ticks[0].showLabel).toBe(true);
+    expect(ticks[1].showLabel).toBe(false);
+    expect(ticks[2].showLabel).toBe(false);
+    expect(ticks[3].showLabel).toBe(true);
+  });
+
+  it('emits month bands over day ticks, with the year on the first band', () => {
+    const wide = createTimeScale({
+      minTime: dayjs('2025-01-10').valueOf(),
+      maxTime: dayjs('2025-02-20').valueOf(),
+      scale: 'day',
+      unitWidth: 20,
+      padUnits: 0
+    });
+    const { bands } = buildAxis(wide, 'day', 20);
+    expect(bands.map(b => b.label)).toEqual(['Jan 2025', 'Feb']);
+  });
+
+  it('emits year bands over month ticks', () => {
+    const yearly = createTimeScale({
+      minTime: dayjs('2024-11-01').valueOf(),
+      maxTime: dayjs('2025-03-01').valueOf(),
+      scale: 'month',
+      unitWidth: 96,
+      padUnits: 0
+    });
+    const { bands, ticks } = buildAxis(yearly, 'month', 96);
+    expect(bands.map(b => b.label)).toEqual(['2024', '2025']);
+    expect(ticks[0].label).toBe('Nov');
+  });
+});
+
+/* ─────────────────────────── renderer ────────────────────────── */
+
+type Order = {
+  id: string;
+  title: string;
+  start: string | null;
+  end: string | null;
+};
+
+const fields: DataViewField<Order>[] = [
+  { accessorKey: 'title', label: 'Title', sortable: true }
+];
+
+// x at unitWidth 20 over a Jan 2025 domain: Jan 5 → 80px, Jan 12 → 220px, …
+const orders: Order[] = [
+  { id: 'o1', title: 'Alpha', start: '2025-01-05', end: '2025-01-10' },
+  { id: 'o2', title: 'Beta', start: '2025-01-12', end: '2025-01-15' },
+  { id: 'o3', title: 'Gamma', start: '2025-01-06', end: '2025-01-09' }
+];
+
+function renderTimeline(
+  props: Partial<DataViewTimelineProps<Order>> = {},
+  data: Order[] = orders
+) {
+  return render(
+    <DataView<Order>
+      data={data}
+      fields={fields}
+      mode='client'
+      defaultSort={{ name: 'title', order: 'asc' }}
+      getRowId={(row: Order) => row.id}
+    >
+      <DataView.Timeline<Order>
+        startField='start'
+        endField='end'
+        range={['2025-01-01', '2025-01-31']}
+        scale='day'
+        unitWidth={20}
+        today={false}
+        defaultScrollTo='start'
+        renderCard={(row, context) => (
+          <div
+            data-testid={`card-${row.original.id}`}
+            data-collapsed={String(context.collapsed)}
+            data-lane={context.laneIndex}
+            data-point={String(context.end === null)}
+          >
+            {row.original.title}
+          </div>
+        )}
+        {...props}
+      />
+    </DataView>
+  );
+}
+
+describe('DataView.Timeline', () => {
+  it('positions cards from the time scale (left = start, width = span)', () => {
+    renderTimeline();
+    const wrapper = screen.getByTestId('card-o1').parentElement!;
+    // Jan 5 = 4 days after Jan 1 → 4 × 20px; Jan 5 → Jan 10 = 5 days → 100px.
+    expect(wrapper.style.left).toBe('80px');
+    expect(wrapper.style.width).toBe('100px');
+    expect(wrapper).toHaveAttribute('role', 'listitem');
+  });
+
+  it('packs overlapping cards into separate lanes and reuses free lanes', () => {
+    renderTimeline();
+    // o1 [80..180] and o3 [100..180] overlap → different lanes.
+    expect(screen.getByTestId('card-o1').dataset.lane).toBe('0');
+    expect(screen.getByTestId('card-o3').dataset.lane).toBe('1');
+    // o2 starts at 220 ≥ o1's end + gap → back onto lane 0.
+    expect(screen.getByTestId('card-o2').dataset.lane).toBe('0');
+  });
+
+  it('gives every row its own lane with lanePacking="one-per-row"', () => {
+    renderTimeline({ lanePacking: 'one-per-row' });
+    const lanes = ['o1', 'o2', 'o3'].map(
+      id => screen.getByTestId(`card-${id}`).dataset.lane
+    );
+    expect(new Set(lanes).size).toBe(3);
+  });
+
+  it('flags spans narrower than minCardWidth as collapsed', () => {
+    renderTimeline(undefined, [
+      { id: 'wide', title: 'Wide', start: '2025-01-05', end: '2025-01-10' },
+      { id: 'tiny', title: 'Tiny', start: '2025-01-12', end: '2025-01-14' }
+    ]);
+    // 5 days × 20px = 100px ≥ 60 → not collapsed.
+    expect(screen.getByTestId('card-wide').dataset.collapsed).toBe('false');
+    // 2 days × 20px = 40px < 60 → collapsed.
+    expect(screen.getByTestId('card-tiny').dataset.collapsed).toBe('true');
+  });
+
+  it('renders point markers with intrinsic width when endField is omitted', () => {
+    renderTimeline({ endField: undefined }, [
+      { id: 'p1', title: 'Point', start: '2025-01-05', end: null }
+    ]);
+    const card = screen.getByTestId('card-p1');
+    expect(card.dataset.point).toBe('true');
+    expect(card.parentElement!.style.width).toBe('');
+    expect(card.parentElement!.style.left).toBe('80px');
+  });
+
+  it('culls rows entirely outside an explicit range, keeps overlapping ones', () => {
+    renderTimeline(undefined, [
+      { id: 'in', title: 'Inside', start: '2025-01-05', end: '2025-01-10' },
+      // Crosses the range end (Jan 31) → kept, clipped visually by the canvas.
+      { id: 'edge', title: 'Edge', start: '2025-01-30', end: '2025-02-05' },
+      // Entirely past the range end → dropped (no lane, no card).
+      { id: 'after', title: 'After', start: '2025-02-10', end: '2025-02-15' },
+      // Entirely before the range start → dropped.
+      { id: 'before', title: 'Before', start: '2024-12-01', end: '2024-12-20' }
+    ]);
+    expect(screen.getByTestId('card-in')).toBeInTheDocument();
+    expect(screen.getByTestId('card-edge')).toBeInTheDocument();
+    expect(screen.queryByTestId('card-after')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('card-before')).not.toBeInTheDocument();
+  });
+
+  it('skips rows with a missing start value and warns in dev', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    renderTimeline(undefined, [
+      { id: 'ok', title: 'Ok', start: '2025-01-05', end: '2025-01-10' },
+      { id: 'bad', title: 'Bad', start: null, end: '2025-01-10' }
+    ]);
+    expect(screen.getByTestId('card-ok')).toBeInTheDocument();
+    expect(screen.queryByTestId('card-bad')).toBeNull();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('Skipped 1 row(s)')
+    );
+  });
+
+  it('renders the today line badge and custom markers on the axis', () => {
+    renderTimeline({
+      today: '2025-01-17',
+      markers: [
+        { date: '2025-01-25' },
+        { date: '2025-01-28', label: 'Launch', variant: 'danger' }
+      ]
+    });
+    expect(screen.getByText('17 Jan')).toBeInTheDocument();
+    expect(screen.getByText('25 Jan')).toBeInTheDocument();
+    expect(screen.getByText('Launch')).toBeInTheDocument();
+  });
+
+  it('renders axis bands and tick labels', () => {
+    renderTimeline();
+    expect(screen.getByText('Jan 2025')).toBeInTheDocument();
+    // unitWidth 20 thins labels to every other day (odd days from Jan 1).
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
+
+  it('fires onRowClick with the row data when a card is clicked', async () => {
+    const onRowClick = vi.fn();
+    const user = userEvent.setup();
+    render(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+        onRowClick={onRowClick}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => (
+            <div data-testid={`card-${row.original.id}`}>
+              {row.original.title}
+            </div>
+          )}
+        />
+      </DataView>
+    );
+    await user.click(screen.getByTestId('card-o1'));
+    expect(onRowClick).toHaveBeenCalledWith(orders[0]);
+  });
+
+  it('gates itself on the active view when `name` is set', () => {
+    const views = [
+      { value: 'gantt', label: 'Timeline' },
+      { value: 'other', label: 'Other' }
+    ];
+    const { unmount } = render(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        views={views}
+        defaultView='other'
+      >
+        <DataView.Timeline<Order>
+          name='gantt'
+          startField='start'
+          endField='end'
+          today={false}
+          renderCard={row => <div data-testid={`card-${row.original.id}`} />}
+        />
+      </DataView>
+    );
+    expect(screen.queryByTestId('card-o1')).toBeNull();
+    unmount();
+
+    render(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        views={views}
+        defaultView='gantt'
+      >
+        <DataView.Timeline<Order>
+          name='gantt'
+          startField='start'
+          endField='end'
+          today={false}
+          renderCard={row => <div data-testid={`card-${row.original.id}`} />}
+        />
+      </DataView>
+    );
+    expect(screen.getByTestId('card-o1')).toBeInTheDocument();
+  });
+
+  it('thins gridlines with gridlineInterval while the cursor snaps to every unit', async () => {
+    const { container } = renderTimeline({
+      gridlineInterval: 2,
+      classNames: { gridline: 'test-gridline' }
+    });
+    // 32 ticks (Jan 1 … Feb 1); every 2nd from the domain start → 16 lines.
+    expect(container.getElementsByClassName('test-gridline')).toHaveLength(16);
+
+    // Jan 6 (index 5) has no gridline, but the hover cursor still snaps to it.
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      fireEvent.mouseMove(root, { clientX: 100 });
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    expect(screen.getByText('6 Jan')).toBeInTheDocument();
+  });
+
+  it('extends the domain so the grid fills a container wider than the data span', () => {
+    // jsdom's clientWidth is 0 by default — pretend the scroll container is
+    // 1000px wide. The explicit range renders 620px, so the domain end
+    // extends Feb 1 → Feb 20 and ticks run Jan 1 … Feb 20 = 51 gridlines.
+    vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(1000);
+    const { container } = renderTimeline({
+      classNames: { gridline: 'test-gridline' }
+    });
+    expect(container.getElementsByClassName('test-gridline')).toHaveLength(51);
+    const canvas = container.querySelector('[role="list"]') as HTMLElement;
+    expect(canvas.style.width).toBe('1000px');
+  });
+
+  it('renders nothing when there is no data and not loading', () => {
+    const { container } = renderTimeline(undefined, []);
+    expect(container.querySelector('[role="list"]')).toBeNull();
+  });
+
+  it('shows a cursor line snapped to the hovered sub-interval with a date badge', async () => {
+    const { container } = renderTimeline();
+    const root = container.firstElementChild as HTMLElement;
+    // jsdom rects are all-zero and scrollLeft is 0, so canvasX = clientX.
+    // x=100 at 20px/day from Jan 1 → snapped to Jan 6.
+    await act(async () => {
+      fireEvent.mouseMove(root, { clientX: 100 });
+      await new Promise(resolve => setTimeout(resolve, 30)); // flush rAF
+    });
+    expect(screen.getByText('6 Jan')).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.mouseLeave(root);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    expect(screen.queryByText('6 Jan')).toBeNull();
+  });
+
+  it('does not track the cursor when showCursorLine is false', async () => {
+    const { container } = renderTimeline({ showCursorLine: false });
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      fireEvent.mouseMove(root, { clientX: 100 });
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    expect(screen.queryByText('6 Jan')).toBeNull();
+  });
+
+  it('pans both axes when the background is dragged', async () => {
+    const { container } = renderTimeline();
+    const root = container.firstElementChild as HTMLElement;
+    fireEvent.pointerDown(root, {
+      pointerType: 'mouse',
+      button: 0,
+      pointerId: 1,
+      clientX: 300,
+      clientY: 100
+    });
+    // Pointer moves 50px left / 20px up → content scrolls 50px right / 20px down.
+    fireEvent.pointerMove(root, { pointerId: 1, clientX: 250, clientY: 80 });
+    expect(root.scrollLeft).toBe(50);
+    expect(root.scrollTop).toBe(20);
+    expect(root.dataset.dragging).toBe('true');
+
+    // Hold still past the stale window, then release — no glide.
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    });
+    fireEvent.pointerUp(root, { pointerId: 1 });
+    expect(root.dataset.dragging).toBeUndefined();
+    // Released — further movement no longer pans.
+    fireEvent.pointerMove(root, { pointerId: 1, clientX: 100, clientY: 0 });
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 50));
+    });
+    expect(root.scrollLeft).toBe(50);
+  });
+
+  it('glides with momentum after a fling release', async () => {
+    const { container } = renderTimeline();
+    const root = container.firstElementChild as HTMLElement;
+    fireEvent.pointerDown(root, {
+      pointerType: 'mouse',
+      button: 0,
+      pointerId: 1,
+      clientX: 300,
+      clientY: 100
+    });
+    fireEvent.pointerMove(root, { pointerId: 1, clientX: 250, clientY: 100 });
+    // Release mid-motion — the pan keeps scrolling and decays.
+    fireEvent.pointerUp(root, { pointerId: 1 });
+    expect(root.scrollLeft).toBe(50);
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    });
+    const glided = root.scrollLeft;
+    expect(glided).toBeGreaterThan(50);
+
+    // Wheel input cancels the glide.
+    fireEvent.wheel(root);
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 50));
+    });
+    expect(root.scrollLeft).toBe(glided);
+  });
+
+  it('does not start a pan from a card or from touch pointers', () => {
+    const { container } = renderTimeline();
+    const root = container.firstElementChild as HTMLElement;
+    // Press on a card (row-click territory) — no pan.
+    fireEvent.pointerDown(screen.getByTestId('card-o1'), {
+      pointerType: 'mouse',
+      button: 0,
+      pointerId: 1,
+      clientX: 300,
+      clientY: 100
+    });
+    fireEvent.pointerMove(root, { pointerId: 1, clientX: 200, clientY: 100 });
+    expect(root.scrollLeft).toBe(0);
+
+    // Touch pans natively — the drag handler must not hijack it.
+    fireEvent.pointerDown(root, {
+      pointerType: 'touch',
+      button: 0,
+      pointerId: 2,
+      clientX: 300,
+      clientY: 100
+    });
+    fireEvent.pointerMove(root, { pointerId: 2, clientX: 200, clientY: 100 });
+    expect(root.scrollLeft).toBe(0);
+  });
+
+  it('keeps the left-edge time anchored when the domain is extended', async () => {
+    const { container, rerender } = render(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => <div>{row.original.title}</div>}
+        />
+      </DataView>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    // Viewport's left edge sits at Jan 11 (200px / 20px-per-day from Jan 1).
+    root.scrollLeft = 200;
+
+    // Extend the range a month to the left — t0 moves to Dec 1.
+    rerender(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2024-12-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => <div>{row.original.title}</div>}
+        />
+      </DataView>
+    );
+    // Dec 1 → Jan 11 = 41 days × 20px: the same time stays at the left edge.
+    expect(root.scrollLeft).toBe(820);
+  });
+
+  it('fires onVisibleRangeChange with the visible time window', async () => {
+    const onVisibleRangeChange = vi.fn();
+    renderTimeline({ onVisibleRangeChange });
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+    expect(onVisibleRangeChange).toHaveBeenCalled();
+    const calls = onVisibleRangeChange.mock.calls;
+    const [from, to] = calls[calls.length - 1][0];
+    expect(from).toBeInstanceOf(Date);
+    expect(to).toBeInstanceOf(Date);
+    // jsdom viewport is 0-wide at scrollLeft 0 → both edges sit at t0 (Jan 1).
+    expect(from.getTime()).toBe(dayjs('2025-01-01').valueOf());
+  });
+
+  it('does not re-fire onVisibleRangeChange when the window is unchanged', async () => {
+    const onVisibleRangeChange = vi.fn();
+    // Fresh `markers` array each render → domain/timeScale identity churn
+    // without any change to the actual window.
+    const makeUI = () => (
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          markers={[{ date: '2025-01-20' }]}
+          onVisibleRangeChange={onVisibleRangeChange}
+          renderCard={row => <div>{row.original.title}</div>}
+        />
+      </DataView>
+    );
+    const { container, rerender } = render(makeUI());
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+    const callsAfterMount = onVisibleRangeChange.mock.calls.length;
+    expect(callsAfterMount).toBeGreaterThan(0);
+
+    rerender(makeUI());
+    await act(async () => {
+      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+    expect(onVisibleRangeChange.mock.calls.length).toBe(callsAfterMount);
+
+    // An actual scroll still fires with the new window.
+    const root = container.firstElementChild as HTMLElement;
+    root.scrollLeft = 100;
+    await act(async () => {
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30)); // flush rAF
+    });
+    expect(onVisibleRangeChange.mock.calls.length).toBe(callsAfterMount + 1);
+    const calls = onVisibleRangeChange.mock.calls;
+    const [from] = calls[calls.length - 1][0];
+    expect(from.getTime()).toBe(dayjs('2025-01-06').valueOf());
+  });
+
+  it('restores the scroll position when a gated view is re-activated', () => {
+    const views = [
+      { value: 'gantt', label: 'Timeline' },
+      { value: 'other', label: 'Other' }
+    ];
+    const makeUI = (view: string) => (
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+        views={views}
+        view={view}
+      >
+        <DataView.Timeline<Order>
+          name='gantt'
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => <div data-testid={`card-${row.original.id}`} />}
+        />
+      </DataView>
+    );
+    const { container, rerender } = render(makeUI('gantt'));
+    const root = container.firstElementChild as HTMLElement;
+    // User scrolls to Jan 11 (200px), then switches away and back.
+    root.scrollLeft = 200;
+    fireEvent.scroll(root);
+    rerender(makeUI('other'));
+    expect(screen.queryByTestId('card-o1')).toBeNull();
+
+    rerender(makeUI('gantt'));
+    // The DOM is recreated at scroll 0 — the stashed position must come back
+    // instead of stranding the user at the domain start.
+    const newRoot = container.firstElementChild as HTMLElement;
+    expect(screen.getByTestId('card-o1')).toBeInTheDocument();
+    expect(newRoot.scrollLeft).toBe(200);
+  });
+
+  it('packs point markers using estimatedPointWidth', () => {
+    const points: Order[] = [
+      { id: 'p1', title: 'P1', start: '2025-01-05', end: null }, // x = 80
+      { id: 'p2', title: 'P2', start: '2025-01-08', end: null } // x = 140
+    ];
+    // Default estimate (120px): p1 occupies [80, 200] → p2 at 140 overlaps
+    // → separate lanes, even though the old 24px floor would have packed them.
+    renderTimeline({ endField: undefined }, points);
+    expect(screen.getByTestId('card-p1').dataset.lane).not.toBe(
+      screen.getByTestId('card-p2').dataset.lane
+    );
+  });
+
+  it('shares a lane when estimatedPointWidth says the points fit', () => {
+    const points: Order[] = [
+      { id: 'p1', title: 'P1', start: '2025-01-05', end: null },
+      { id: 'p2', title: 'P2', start: '2025-01-08', end: null }
+    ];
+    // 40px estimate + 8px lane gap ≤ 60px separation → same lane.
+    renderTimeline({ endField: undefined, estimatedPointWidth: 40 }, points);
+    expect(screen.getByTestId('card-p1').dataset.lane).toBe(
+      screen.getByTestId('card-p2').dataset.lane
+    );
+  });
+
+  it('culls cards outside the overscanned viewport when virtualized', () => {
+    // jsdom viewport: left 0, width 0 → overscan 400 → cull window [-400, 400].
+    renderTimeline({ virtualized: true }, [
+      { id: 'near', title: 'Near', start: '2025-01-05', end: '2025-01-10' }, // x = 80
+      { id: 'far', title: 'Far', start: '2025-01-27', end: '2025-01-30' } // x = 520
+    ]);
+    expect(screen.getByTestId('card-near')).toBeInTheDocument();
+    expect(screen.queryByTestId('card-far')).toBeNull();
+  });
+
+  it('does not re-render cards on hover-cursor updates (memoized wrapper)', async () => {
+    const renderSpy = vi.fn();
+    const { container } = renderTimeline({
+      renderCard: row => {
+        renderSpy(row.original.id);
+        return (
+          <div data-testid={`card-${row.original.id}`}>
+            {row.original.title}
+          </div>
+        );
+      }
+    });
+    const callsAfterMount = renderSpy.mock.calls.length;
+    const root = container.firstElementChild as HTMLElement;
+    await act(async () => {
+      fireEvent.mouseMove(root, { clientX: 100 });
+      await new Promise(resolve => setTimeout(resolve, 30));
+    });
+    // The cursor badge proves a root re-render happened…
+    expect(screen.getByText('6 Jan')).toBeInTheDocument();
+    // …but no card interior re-rendered.
+    expect(renderSpy.mock.calls.length).toBe(callsAfterMount);
+  });
+});
+
+/* ─────────────────────── actionsRef (imperative handle) ─────────────────
+   Domain: explicit range Jan 1 → Jan 31 2025, day scale, 20px/unit.
+   t0 = Jan 1, t1 = Feb 1, totalWidth = 620px. jsdom clientWidth is 0, so
+   'center'/'end' alignment offsets collapse to the target's own x. */
+
+describe('DataView.Timeline actionsRef', () => {
+  const makeActionsRef = () => ({ current: null as TimelineActions | null });
+
+  it('scrolls to a date, aligned to the viewport edge requested', () => {
+    const actionsRef = makeActionsRef();
+    const { container } = renderTimeline({ actionsRef });
+    const root = container.firstElementChild as HTMLElement;
+    expect(actionsRef.current).not.toBeNull();
+    // Jan 11 = 10 days after Jan 1 → 10 × 20px.
+    actionsRef.current!.scrollTo('2025-01-11', {
+      align: 'start',
+      behavior: 'auto'
+    });
+    expect(root.scrollLeft).toBe(200);
+  });
+
+  it("resolves 'start' and 'end' to the domain edges", () => {
+    const actionsRef = makeActionsRef();
+    const { container } = renderTimeline({ actionsRef });
+    const root = container.firstElementChild as HTMLElement;
+    actionsRef.current!.scrollTo('end', { behavior: 'auto' });
+    expect(root.scrollLeft).toBe(620);
+    actionsRef.current!.scrollTo('start', { behavior: 'auto' });
+    expect(root.scrollLeft).toBe(0);
+  });
+
+  it('clamps out-of-domain dates to the nearest domain edge', () => {
+    const actionsRef = makeActionsRef();
+    const { container } = renderTimeline({ actionsRef });
+    const root = container.firstElementChild as HTMLElement;
+    actionsRef.current!.scrollTo('2030-06-01', {
+      align: 'start',
+      behavior: 'auto'
+    });
+    expect(root.scrollLeft).toBe(620);
+    actionsRef.current!.scrollTo('1999-01-01', {
+      align: 'start',
+      behavior: 'auto'
+    });
+    expect(root.scrollLeft).toBe(0);
+  });
+
+  it('defaults to smooth behavior via Element.scrollTo when available', () => {
+    const actionsRef = makeActionsRef();
+    const { container } = renderTimeline({ actionsRef });
+    const root = container.firstElementChild as HTMLElement;
+    const scrollToSpy = vi.fn();
+    // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks Element.scrollTo
+    (root as any).scrollTo = scrollToSpy;
+    actionsRef.current!.scrollTo('2025-01-11', { align: 'start' });
+    expect(scrollToSpy).toHaveBeenCalledWith({ left: 200, behavior: 'smooth' });
+  });
+
+  it('warns and no-ops on an invalid date', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const actionsRef = makeActionsRef();
+    const { container } = renderTimeline({ actionsRef });
+    const root = container.firstElementChild as HTMLElement;
+    actionsRef.current!.scrollTo('not-a-date', { behavior: 'auto' });
+    expect(root.scrollLeft).toBe(0);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('invalid date'));
+  });
+
+  it('reports the visible time window from the live scroll position', () => {
+    const actionsRef = makeActionsRef();
+    const { container } = renderTimeline({ actionsRef });
+    const root = container.firstElementChild as HTMLElement;
+    root.scrollLeft = 200;
+    const range = actionsRef.current!.getVisibleRange();
+    expect(range).not.toBeNull();
+    const [from, to] = range!;
+    expect(from.getTime()).toBe(dayjs('2025-01-11').valueOf());
+    // 0-wide jsdom viewport → both edges coincide.
+    expect(to.getTime()).toBe(dayjs('2025-01-11').valueOf());
+  });
+
+  it('no-ops with a dev warning while hidden, and getVisibleRange is null', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const actionsRef = makeActionsRef();
+    renderTimeline({ actionsRef }, []); // no data + not loading → renders null
+    expect(actionsRef.current).not.toBeNull();
+    actionsRef.current!.scrollTo('today');
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('not rendered'));
+    expect(actionsRef.current!.getVisibleRange()).toBeNull();
+  });
+});

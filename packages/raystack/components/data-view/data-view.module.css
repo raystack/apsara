@@ -344,6 +344,162 @@
   pointer-events: none;
 }
 
+/* Timeline renderer — cards absolutely positioned on a continuous time axis.
+   The root is the single scroll container for both axes; the axis strip
+   sticks to the top on vertical scroll and moves with the canvas on
+   horizontal scroll because both share the same explicit content width. */
+.timelineRoot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  /* Reaching the domain edge must not chain into browser navigation
+     (horizontal swipe-back) or scroll the page behind. */
+  overscroll-behavior: contain;
+  background: var(--rs-color-background-base-primary);
+}
+
+/* Drag-to-pan in progress — grabbing cursor everywhere (descendants too, so
+   cards' own cursor styles don't flicker mid-drag) and selection locked. */
+.timelineRoot[data-dragging],
+.timelineRoot[data-dragging] * {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Two-tier ruler: major bands (month/year) on top, minor tick labels below.
+   Marker badges (today, milestones) are pinned here so they stay visible
+   while the marker line runs down the canvas. */
+.timelineAxis {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 52px;
+  box-sizing: border-box;
+  background: var(--rs-color-background-base-primary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.timelineAxisBand {
+  position: absolute;
+  top: var(--rs-space-2);
+  display: flex;
+  box-sizing: border-box;
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  text-transform: uppercase;
+}
+
+/* Sticks to the viewport's left edge while its band is in view (the nearest
+   scroll container is the timeline root). No overflow:hidden on the band —
+   that would break the sticky behavior. */
+.timelineAxisBandLabel {
+  position: sticky;
+  left: var(--rs-space-5);
+  white-space: nowrap;
+}
+
+.timelineAxisTick {
+  position: absolute;
+  bottom: var(--rs-space-2);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--rs-color-foreground-base-tertiary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.timelineAxisMarker {
+  position: absolute;
+  top: var(--rs-space-2);
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+}
+
+/* Hover-cursor date badge — above marker badges, never intercepts events. */
+.timelineAxisCursor {
+  position: absolute;
+  top: var(--rs-space-2);
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  pointer-events: none;
+}
+
+/* min-height keeps gridlines and marker lines running the full pane height
+   even when there are only a few lanes (52px = axis height). overflow:hidden
+   clips cards whose span crosses the domain edge at that edge, instead of
+   letting them dangle past the axis into unscaled space. */
+.timelineCanvas {
+  position: relative;
+  box-sizing: border-box;
+  min-height: calc(100% - 52px);
+  overflow: hidden;
+}
+
+/* Dashed so the grid recedes; marker/today/cursor lines stay solid so they
+   read as data, not grid. */
+.timelineGridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 0.5px dashed var(--rs-color-border-base-primary);
+  pointer-events: none;
+}
+
+.timelineMarkerLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 0.5px solid var(--rs-color-border-base-tertiary);
+  pointer-events: none;
+}
+
+.timelineMarkerLine[data-variant="accent"] {
+  border-left-color: var(--rs-color-border-accent-emphasis);
+}
+
+.timelineMarkerLine[data-variant="danger"] {
+  border-left-color: var(--rs-color-border-danger-emphasis);
+}
+
+/* Hover crosshair — darker than gridlines so the snapped position reads
+   clearly while tracking the pointer. */
+.timelineCursorLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 0.5px solid var(--rs-color-border-base-focus);
+  pointer-events: none;
+}
+
+/* Positioning wrapper only — visually neutral. The card interior (chrome,
+   states, truncation) is consumer-owned via `renderCard`. */
+.timelineCard {
+  position: absolute;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Sticky-left so the filter-summary footer stays aligned to the viewport
+   (not the full canvas width) under horizontal scroll. */
+.timelineFooter {
+  position: sticky;
+  left: 0;
+  width: 100%;
+}
+
 /* Empty/zero sibling container */
 .dataStateContainer {
   display: flex;

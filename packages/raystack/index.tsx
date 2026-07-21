@@ -47,6 +47,12 @@ export {
   DataViewProps,
   DataViewQuery,
   DataViewSort,
+  DataViewTimelineProps,
+  TimelineActions,
+  TimelineCardContext,
+  TimelineDateInput,
+  TimelineMarker,
+  TimelineScale,
   useDataView
 } from './components/data-view';
 export { Dialog } from './components/dialog';
