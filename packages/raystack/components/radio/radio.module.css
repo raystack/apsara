@@ -49,10 +49,6 @@
 
 .radioitem:focus-visible {
   outline: var(--rs-focus-ring);
-}
-
-/* Checked = accent fill: offset the ring so it clears it. */
-.radioitem[data-checked]:focus-visible {
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
 

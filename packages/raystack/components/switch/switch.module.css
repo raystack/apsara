@@ -14,10 +14,6 @@
 
 .switch:focus-visible {
   outline: var(--rs-focus-ring);
-}
-
-/* Checked = accent track: offset the ring so it clears it. */
-.switch[data-checked]:focus-visible {
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
 
