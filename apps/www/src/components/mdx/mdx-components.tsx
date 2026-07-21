@@ -1,4 +1,4 @@
-import { Headline, Tabs, Text } from '@raystack/apsara';
+import { Callout, Headline, Tabs, Text } from '@raystack/apsara';
 import { cx } from 'class-variance-authority';
 import { Image as FrameworkImage } from 'fumadocs-core/framework';
 import Link from 'fumadocs-core/link';
@@ -121,6 +121,12 @@ const mdxComponents = {
   ),
   TokenTable: (props: ComponentPropsWithoutRef<typeof TokenTable>) => (
     <TokenTable {...props} />
+  ),
+  Callout: (props: ComponentPropsWithoutRef<typeof Callout>) => (
+    <Callout
+      {...props}
+      className={cx(styles['prose-callout'], props.className)}
+    />
   ),
   Demo
 };

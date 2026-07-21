@@ -59,6 +59,11 @@
   margin-top: var(--rs-space-3);
 }
 
+.prose-callout {
+  margin: var(--rs-space-5) 0;
+  width: 100%;
+}
+
 /* Markdown table styles */
 .prose-table {
   width: 100%;

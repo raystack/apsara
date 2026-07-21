@@ -29,10 +29,11 @@ export interface OTPFieldProps {
   autoSubmit?: boolean;
 
   /**
-   * Custom sanitization function. Runs before updating the value when
-   * `validationType` is `"none"`.
+   * Function that normalizes the OTP value after whitespace and `validationType`
+   * filtering. Runs on initial/default values, controlled values, and user edits;
+   * should be idempotent.
    */
-  sanitizeValue?: (value: string) => string;
+  normalizeValue?: (value: string) => string;
 
   /**
    * The virtual keyboard hint applied to slot inputs.
@@ -86,8 +87,8 @@ export interface OTPFieldProps {
   onValueChange?: (value: string, eventDetails: unknown) => void;
 
   /**
-   * Callback fired when entered text contains characters rejected by sanitization,
-   * before the OTP value updates.
+   * Callback fired when entered text contains characters rejected during
+   * normalization, before the OTP value updates.
    */
   onValueInvalid?: (value: string, eventDetails: unknown) => void;
 

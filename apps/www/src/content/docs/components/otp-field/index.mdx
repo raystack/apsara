@@ -14,7 +14,7 @@ import {
   readOnlyDemo,
   controlledDemo,
   onCompleteDemo,
-  customSanitizeDemo,
+  customNormalizeDemo,
   withFieldDemo,
 } from "./demo.ts";
 
@@ -102,11 +102,11 @@ Pass `value` and `onValueChange` to control the field from React state.
 
 <Demo data={onCompleteDemo} />
 
-### Custom sanitization
+### Custom normalization
 
-Set `validationType="none"` and provide `sanitizeValue` to restrict input to a custom set of characters.
+Provide `normalizeValue` to restrict input to a custom set of characters. It composes with `validationType` filtering — set `validationType="none"` to rely on it entirely.
 
-<Demo data={customSanitizeDemo} />
+<Demo data={customNormalizeDemo} />
 
 ### With Field
 
