@@ -1,0 +1,74 @@
+---
+title: Reasoning
+description: Collapsible "thinking" section for AI responses — auto-opens while streaming, auto-collapses on completion, with labelled steps.
+source: packages/raystack/components/reasoning
+tag: new
+---
+
+import { preview, streamingDemo, customTriggerDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+```tsx
+import { Reasoning } from '@raystack/apsara'
+
+<Reasoning streaming={isThinking} duration={10}>
+  <Reasoning.Trigger />
+  <Reasoning.Content>
+    <Reasoning.Step label="Gathering ticket updates">
+      {/* indented detail */}
+    </Reasoning.Step>
+  </Reasoning.Content>
+</Reasoning>
+```
+
+Built on `Collapsible`. Drive `streaming` from your transport; everything
+here is presentational and works anywhere — inside a
+[Message](/docs/ai-elements/message) body, a `Chat` scroller, or on its own.
+
+## API Reference
+
+### Reasoning
+
+<auto-type-table path="./props.ts" name="ReasoningProps" />
+
+The open state auto-follows `streaming` (open while `true`, collapsed once it
+flips back) until the user toggles the panel manually — from then on it's
+theirs.
+
+### Reasoning.Trigger
+
+Renders the default status label (shimmering "Thinking…", then "Worked for N
+seconds") plus a chevron; pass children to replace the label.
+
+### Reasoning.Content
+
+The collapsible panel holding the steps.
+
+### Reasoning.Step
+
+A labelled row with optional indented detail.
+
+<auto-type-table path="./props.ts" name="ReasoningStepProps" />
+
+## Examples
+
+### Streaming
+
+Drive `streaming` from your transport; the trigger label and open state
+follow along.
+
+<Demo data={streamingDemo} />
+
+### Custom trigger label
+
+<Demo data={customTriggerDemo} />
+
+## Accessibility
+
+- Inherits Collapsible semantics: the trigger exposes `aria-expanded` and
+  toggles with Enter and Space.
+- The "Thinking…" shimmer and the panel's height tween pause under
+  `prefers-reduced-motion: reduce`.
