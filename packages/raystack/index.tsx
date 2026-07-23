@@ -28,6 +28,14 @@ export {
   type UseChatMessagesReturn,
   useChatMessages
 } from './components/chat';
+export {
+  ChatPanel,
+  type ChatPanelMode,
+  type ChatPanelPosition,
+  type ChatPanelProps,
+  type ChatPanelSide,
+  type ChatPanelSize
+} from './components/chat-panel';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';
 export { CodeBlock } from './components/code-block';
