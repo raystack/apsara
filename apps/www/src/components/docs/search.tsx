@@ -86,7 +86,7 @@ export default function DocsSearch({ pageTree }: { pageTree: Root }) {
        excluded until the user searches. */
     const items = flattened.reduce<Record<string, Item[]>>((acc, item) => {
       const folder = getFolderFromUrl(item.url);
-      if (folder === 'components') return acc;
+      if (folder === 'components' || folder === 'ai-elements') return acc;
       if (!acc[folder]) {
         acc[folder] = [];
       }
