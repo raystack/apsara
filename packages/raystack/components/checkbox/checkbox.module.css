@@ -47,10 +47,6 @@
 
 .checkbox:focus-visible {
   outline: var(--rs-focus-ring);
-}
-
-/* Checked = accent fill: offset the ring so it clears it. */
-.checkbox[data-checked]:focus-visible {
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
 

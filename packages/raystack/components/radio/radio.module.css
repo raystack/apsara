@@ -47,12 +47,8 @@
   background: var(--rs-color-background-base-primary-hover);
 }
 
-.radioitem:focus-visible {
+.radioitem:focus-visible:not([data-disabled]) {
   outline: var(--rs-focus-ring);
-}
-
-/* Checked = accent fill: offset the ring so it clears it. */
-.radioitem[data-checked]:focus-visible {
   outline-offset: var(--rs-focus-ring-offset-accent);
 }
 
