@@ -1,4 +1,4 @@
 {
   "title": "AI Elements",
-  "pages": ["prompt-input"]
+  "pages": ["message", "prompt-input"]
 }

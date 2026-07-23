@@ -74,6 +74,7 @@ export { Link } from './components/link';
 export { List } from './components/list';
 export { Menu } from './components/menu';
 export { Menubar } from './components/menubar';
+export { Message } from './components/message';
 export { Meter } from './components/meter';
 export { Navbar } from './components/navbar';
 export { NumberField } from './components/number-field';
