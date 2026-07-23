@@ -1,0 +1,106 @@
+---
+title: PromptInput
+description: A composer for AI chat and standalone "Ask anything" boxes — auto-growing textarea, toolbar slots, and a status-aware submit button.
+source: packages/raystack/components/prompt-input
+tag: new
+---
+
+import { preview, attachmentsDemo, controlledDemo, disabledDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+Import and assemble the composer. The root is a form that owns submit
+semantics: Enter submits, Shift+Enter inserts a newline, and IME composition
+is respected.
+
+```tsx
+import { PromptInput } from '@raystack/apsara'
+
+<PromptInput onSubmit={send} onStop={stop} status={status}>
+  <PromptInput.Header>{/* attachment previews */}</PromptInput.Header>
+  <PromptInput.Textarea placeholder="Reply…" />
+  <PromptInput.Footer>
+    <PromptInput.Button>Skills</PromptInput.Button>
+    <PromptInput.Submit />
+  </PromptInput.Footer>
+</PromptInput>
+```
+
+`PromptInput` is purely presentational: it never talks to a model or manages a
+request. Pass the lifecycle in through `status` and react to `onSubmit` /
+`onStop` — it works with the AI SDK's `useChat`, a custom SSE client, or
+anything else.
+
+## API Reference
+
+### Root
+
+The `<form>` that holds the value and submit semantics.
+
+<auto-type-table path="./props.ts" name="PromptInputProps" />
+
+### Textarea
+
+The text field, built on `TextArea variant="borderless"`. It grows with its
+content up to a max-height cap (override with
+`--prompt-input-textarea-max-height`), then scrolls.
+
+<auto-type-table path="./props.ts" name="PromptInputTextareaProps" />
+
+### Header
+
+A slot row above the textarea, usually for `Chat.Attachment` previews. Hidden
+while empty.
+
+### Footer
+
+The bottom toolbar row. Hidden while empty.
+
+### Button
+
+A small neutral-ghost `Button` for the toolbar — attach, skills, model pickers
+and similar consumer-owned controls.
+
+<auto-type-table path="./props.ts" name="PromptInputButtonProps" />
+
+### Submit
+
+The trailing send button. It renders ↑ when idle, disables itself while the
+input is empty, shows a spinner while `status="submitted"`, and flips to a
+stop square that calls `onStop` while `status="streaming"`.
+
+<auto-type-table path="./props.ts" name="PromptInputSubmitProps" />
+
+## Examples
+
+### Attachments in the header
+
+Attachment previews are presentational (`Chat.Attachment`); file picking,
+drag-drop and uploads belong to your app.
+
+<Demo data={attachmentsDemo} />
+
+### Controlled value
+
+Control `value` to sync the draft elsewhere — persistence, slash-command
+menus, mention pickers.
+
+<Demo data={controlledDemo} />
+
+### Disabled
+
+<Demo data={disabledDemo} />
+
+## Accessibility
+
+- The root is a native `<form>`; `PromptInput.Submit` is a real submit button,
+  so assistive tech announces the submit affordance for free.
+- Enter submits and Shift+Enter inserts a newline. During IME composition
+  Enter confirms the composition instead of submitting.
+- While a response is in flight the submit button becomes `type="button"` with
+  an updated accessible name ("Stop response") so it can never resubmit the
+  form.
+- The composer frame carries the focus treatment (`:focus-within`), while the
+  borderless textarea suppresses its own duplicate focus ring.
