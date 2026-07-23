@@ -1,0 +1,85 @@
+---
+title: Message
+description: Inert message layout — avatar, header, content, footer, hover actions and bubbles, aligned to either side of a conversation.
+source: packages/raystack/components/message
+tag: new
+---
+
+import { preview, anatomyDemo, groupDemo, bubbleVariantsDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+```tsx
+import { Message } from '@raystack/apsara'
+
+<Message align="end">
+  <Message.Avatar>{/* Avatar */}</Message.Avatar>
+  <Message.Header>Ana</Message.Header>
+  <Message.Content>
+    <Message.Bubble>Hi there!</Message.Bubble>
+  </Message.Content>
+  <Message.Footer>1:52 AM</Message.Footer>
+  <Message.Actions>{/* copy / edit */}</Message.Actions>
+</Message>
+```
+
+`Message` is pure layout — no context, no effects, no chat coupling. It works
+anywhere: inside a `Chat` scroller, a comment thread, or a standalone
+transcript. Scroll behavior (visibility tracking, turn anchoring) belongs to
+[Chat](/docs/ai-elements/chat) — wrap a message in `Chat.Item` to opt in.
+
+## API Reference
+
+### Message
+
+One message. `align` drives which side everything sits on.
+
+<auto-type-table path="./props.ts" name="MessageProps" />
+
+Sub-parts are layout slots: `Message.Avatar` (bottom-aligned beside the
+message), `Message.Header` (sender line), `Message.Content` (the body
+column), `Message.Footer` (timestamp line) and `Message.Actions`
+(hover-revealed controls beside the bubble; always visible on touch devices).
+
+### Message.Group
+
+A flex column that pulls consecutive messages from the same sender closer
+together. Render the avatar and footer once — typically on the group's last
+message.
+
+### Message.Bubble
+
+The message surface.
+
+<auto-type-table path="./props.ts" name="MessageBubbleProps" />
+
+## Examples
+
+### Message anatomy
+
+Avatar, header, footer and hover-revealed actions around the content column.
+
+<Demo data={anatomyDemo} />
+
+### Grouped messages
+
+Consecutive messages from one sender share a group; the avatar and timestamp
+appear once.
+
+<Demo data={groupDemo} />
+
+### Bubble variants
+
+`variant` picks the surface treatment (`solid` or `outline`) and `color` the
+palette (`neutral`, `accent` or `danger`).
+
+<Demo data={bubbleVariantsDemo} />
+
+## Accessibility
+
+- `Message.Actions` reveal on hover **and** on focus-within, and stay visible
+  on touch devices, so keyboard and touch users are not locked out.
+- Message bodies are regular document content — screen readers announce them
+  in reading order with no extra semantics to configure.
