@@ -1,0 +1,206 @@
+/* ---------------------------------- root ---------------------------------- */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  gap: var(--rs-space-3);
+}
+
+/* -------------------------------- messages -------------------------------- */
+
+.messages {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.messages-viewport {
+  width: 100%;
+  height: 100%;
+  overscroll-behavior: contain;
+  /* The scroller owns anchoring/prepend preservation; keep the browser's
+     native scroll anchoring from fighting it. */
+  overflow-anchor: none;
+}
+
+.messages-content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--rs-space-5);
+  padding: var(--rs-space-5);
+  box-sizing: border-box;
+  min-height: 100%;
+}
+
+.messages-spacer {
+  flex-shrink: 0;
+}
+
+/* ---------------------------------- item ---------------------------------- */
+
+/* Offscreen items skip layout and paint entirely; the intrinsic-size
+   placeholder keeps the scrollbar stable while they are skipped. */
+.item {
+  flex-shrink: 0;
+  min-width: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 10rem;
+}
+
+.jump-button {
+  appearance: none;
+  position: absolute;
+  bottom: var(--rs-space-4);
+  left: 50%;
+  transform: translate(-50%, var(--rs-space-2));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  padding: var(--rs-space-2) var(--rs-space-4);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-full);
+  background: var(--rs-color-background-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  box-shadow: var(--rs-shadow-floating);
+  cursor: pointer;
+  outline: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* The scale applies unconditionally (an instant state change); only the
+   eased tween is motion, so only the transitions are gated. Mirrors button. */
+@media (prefers-reduced-motion: no-preference) {
+  .jump-button {
+    transition:
+      background-color var(--rs-duration-fast) var(--rs-ease-out),
+      opacity var(--rs-duration-fast) var(--rs-ease-out),
+      transform var(--rs-duration-fast) var(--rs-ease-out);
+  }
+
+  .jump-button:active {
+    transition: var(--rs-transition-pressed);
+  }
+}
+
+.jump-button[data-active] {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.jump-button:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.jump-button[data-active]:active {
+  transform: translate(-50%, 0) scale(var(--rs-scale-pressed));
+}
+
+.jump-button:focus-visible {
+  outline: var(--rs-focus-ring);
+}
+
+/* -------------------------------- separator ------------------------------- */
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  color: var(--rs-color-foreground-base-tertiary);
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 0.5px;
+  background: var(--rs-color-border-base-primary);
+}
+
+/* ------------------------------- attachment ------------------------------- */
+
+.attachment {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+  padding: var(--rs-space-2);
+  padding-right: var(--rs-space-3);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-3);
+  background: var(--rs-color-background-base-primary);
+}
+
+.attachment[data-state="uploading"] {
+  border-style: dashed;
+}
+
+.attachment[data-state="error"] {
+  border-color: var(--rs-color-border-danger-emphasis);
+}
+
+.attachment-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--rs-space-9);
+  height: var(--rs-space-9);
+  border-radius: var(--rs-radius-2);
+  background: var(--rs-color-background-neutral-secondary);
+  color: var(--rs-color-foreground-base-secondary);
+  overflow: hidden;
+}
+
+.attachment[data-state="error"] .attachment-media {
+  background: var(--rs-color-background-danger-primary);
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.attachment-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rs-space-1);
+  min-width: 0;
+}
+
+.attachment-title {
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  color: var(--rs-color-foreground-base-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attachment-description {
+  font-size: var(--rs-font-size-mini);
+  line-height: var(--rs-line-height-mini);
+  color: var(--rs-color-foreground-base-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attachment[data-state="error"] .attachment-description {
+  color: var(--rs-color-foreground-danger-primary);
+}
+
+.attachment-remove {
+  flex-shrink: 0;
+}
