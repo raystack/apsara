@@ -88,6 +88,7 @@ export {
   type PromptInputStatus
 } from './components/prompt-input';
 export { Radio } from './components/radio';
+export { Reasoning } from './components/reasoning';
 export { ScrollArea } from './components/scroll-area';
 export { Search } from './components/search';
 export { Select } from './components/select';
