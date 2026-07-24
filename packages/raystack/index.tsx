@@ -21,6 +21,13 @@ export {
   RangePicker
 } from './components/calendar';
 export { Callout } from './components/callout';
+export {
+  Chat,
+  type ChatAttachmentState,
+  type ChatMessagesActions,
+  type UseChatMessagesReturn,
+  useChatMessages
+} from './components/chat';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';
 export { CodeBlock } from './components/code-block';

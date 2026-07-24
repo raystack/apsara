@@ -1,0 +1,129 @@
+---
+title: Chat
+description: The conversation scroller — live-edge following, turn anchoring, prepend preservation and visibility tracking, plus separators and attachments.
+source: packages/raystack/components/chat
+tag: new
+---
+
+import { preview, attachmentDemo, streamingDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+```tsx
+import { Chat, Message, Reasoning } from '@raystack/apsara'
+
+<Chat>
+  <Chat.Messages>
+    <Chat.Separator>Today 1:52 AM</Chat.Separator>
+    <Chat.Item messageId="m1" scrollAnchor>
+      <Message align="end">
+        <Message.Content>
+          <Message.Bubble>create a task in design system 2</Message.Bubble>
+        </Message.Content>
+      </Message>
+    </Chat.Item>
+    <Chat.Item messageId="m2">
+      <Message>
+        <Message.Content>
+          <Reasoning duration={10}>
+            <Reasoning.Trigger />
+            <Reasoning.Content>
+              <Reasoning.Step label="Gathering ticket updates" />
+            </Reasoning.Content>
+          </Reasoning>
+          {/* consumer-rendered markdown / chips / cards */}
+        </Message.Content>
+      </Message>
+    </Chat.Item>
+    <Chat.JumpButton />
+  </Chat.Messages>
+</Chat>
+```
+
+`Chat` owns scroll behavior; layout comes from
+[Message](/docs/ai-elements/message) and
+[Reasoning](/docs/ai-elements/reasoning), composed as children. `Chat.Item`
+is the bridge: a neutral wrapper that registers whatever it wraps — a
+message, a separator, a tool-call card — with the scroller. Message bodies
+are children: markdown rendering, entity chips and embedded cards are
+composed by your app — no markdown dependency enters the design system.
+Consumers own messages, streaming and sending; everything here is
+presentational.
+
+## API Reference
+
+### Chat
+
+A flex-column container that sizes `Chat.Messages` against a composer sibling.
+
+### Chat.Messages
+
+The smart scroller. It follows streaming output while the reader is at the
+bottom, stops following once they scroll up, anchors new `scrollAnchor` items
+near the top of the viewport (ChatGPT/Linear style), and keeps the reading
+position stable when older history is prepended.
+
+<auto-type-table path="./props.ts" name="ChatMessagesProps" />
+
+Imperative commands are available through `actionsRef`:
+
+<auto-type-table path="./props.ts" name="ChatMessagesActions" />
+
+### Chat.Item
+
+The per-item behavior unit. It registers its element with the enclosing
+`Chat.Messages` for visibility tracking and `scrollToMessage`, marks the turn
+anchor, and applies `content-visibility: auto` containment so offscreen items
+skip layout and paint. It wraps anything — it has no opinion about what a
+message looks like.
+
+<auto-type-table path="./props.ts" name="ChatItemProps" />
+
+### Chat.JumpButton
+
+The floating "↓ Latest" pill. It appears once the reader leaves the live edge
+and scrolls back down on click. Render it as a child of `Chat.Messages`;
+children replace the default arrow-and-label content.
+
+### useChatMessages
+
+Hook for components rendered inside `Chat.Messages` — active-turn indicators,
+jump-to-message navigation, custom scroll buttons.
+
+<auto-type-table path="./props.ts" name="UseChatMessagesReturn" />
+
+### Chat.Separator
+
+A centered label between hairlines — "Today 1:52 AM". Purely presentational;
+format dates however your app does.
+
+### Chat.Attachment
+
+A presentational attachment preview card for `PromptInput.Header` or message
+bodies. File picking, drag-drop and validation belong to your app.
+
+<auto-type-table path="./props.ts" name="ChatAttachmentProps" />
+
+## Examples
+
+### Attachments
+
+<Demo data={attachmentDemo} />
+
+### Streaming and turn anchoring
+
+Send a message: it anchors near the top while the reply streams below, and
+the "↓ Latest" pill returns you to the live edge after scrolling up.
+
+<Demo data={streamingDemo} />
+
+## Accessibility
+
+- The `Chat.Messages` viewport has `role="log"` with an accessible label, so
+  new messages are announced politely by screen readers.
+- The jump button removes itself from the tab order (`tabindex="-1"`,
+  `aria-hidden`) while the reader is already at the live edge.
+- Programmatic scrolling collapses to instant jumps under
+  `prefers-reduced-motion: reduce`.
