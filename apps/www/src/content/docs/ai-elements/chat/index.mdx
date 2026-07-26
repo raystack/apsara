@@ -12,7 +12,7 @@ import { preview, attachmentDemo, streamingDemo } from "./demo.ts";
 ## Anatomy
 
 ```tsx
-import { Chat, Message, Reasoning } from '@raystack/apsara'
+import { Chat, Message, PromptInput, Reasoning } from '@raystack/apsara'
 
 <Chat>
   <Chat.Messages>
@@ -39,6 +39,9 @@ import { Chat, Message, Reasoning } from '@raystack/apsara'
     </Chat.Item>
     <Chat.JumpButton />
   </Chat.Messages>
+  <Chat.Composer>
+    <PromptInput onSubmit={send}>{/* … */}</PromptInput>
+  </Chat.Composer>
 </Chat>
 ```
 
@@ -86,6 +89,12 @@ message looks like.
 The floating "↓ Latest" pill. It appears once the reader leaves the live edge
 and scrolls back down on click. Render it as a child of `Chat.Messages`;
 children replace the default arrow-and-label content.
+
+### Chat.Composer
+
+The container under the messages, usually holding a
+[PromptInput](/docs/ai-elements/prompt-input). It sits flush against the
+messages viewport and pads the sides and bottom.
 
 ### useChatMessages
 

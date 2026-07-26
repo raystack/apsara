@@ -1,12 +1,25 @@
 'use client';
 
 import { useControlled } from '@base-ui/utils/useControlled';
+import {
+  DndContext,
+  type DragEndEvent,
+  type Modifier,
+  PointerSensor,
+  useDraggable,
+  useSensor,
+  useSensors
+} from '@dnd-kit/core';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
+  CSSProperties,
+  ReactNode,
   PointerEvent as ReactPointerEvent,
+  RefObject,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState
@@ -29,6 +42,9 @@ export interface ChatPanelSize {
   height: number;
 }
 
+/** An element (or ref to one) that confines floating-window dragging. */
+export type ChatPanelDragBoundary = HTMLElement | RefObject<HTMLElement | null>;
+
 /** Keep at least this much of the header on screen while clamping. */
 const HEADER_SAFE_PX = 48;
 
@@ -50,6 +66,36 @@ const RESIZE_DIRECTIONS: ResizeDirection[] = [
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), Math.max(min, max));
+}
+
+interface DragBounds {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+function resolveDragBoundary(
+  boundary: ChatPanelDragBoundary | undefined
+): HTMLElement | null {
+  if (!boundary) return null;
+  return 'current' in boundary ? boundary.current : boundary;
+}
+
+/** A PointerSensor that never starts a drag from interactive children. */
+class ChatPanelPointerSensor extends PointerSensor {
+  static activators = [
+    {
+      eventName: 'onPointerDown' as const,
+      handler: ({ nativeEvent: event }: ReactPointerEvent) => {
+        if (event.button !== 0 || event.isPrimary === false) return false;
+        const target = event.target as Element;
+        return !target.closest(
+          'button, a, input, textarea, select, [data-chat-panel-no-drag]'
+        );
+      }
+    }
+  ];
 }
 
 export interface ChatPanelRootProps extends ComponentProps<'aside'> {
@@ -75,7 +121,7 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
    * starts at the bottom corner on the docked `side`.
    */
   defaultPosition?: ChatPanelPosition;
-  /** Called when dragging or resizing moves the floating window. */
+  /** Called when a drag ends or resizing moves the floating window. */
   onPositionChange?: (position: ChatPanelPosition) => void;
   /** Floating window size in pixels (controlled). */
   size?: ChatPanelSize;
@@ -93,6 +139,11 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
   minSize?: ChatPanelSize;
   /** Largest allowed floating size. Defaults to the viewport. */
   maxSize?: ChatPanelSize;
+  /**
+   * Confines floating-window dragging to an element instead of the
+   * viewport. Accepts the element or a ref to it.
+   */
+  dragBoundary?: ChatPanelDragBoundary;
 }
 
 export function ChatPanelRoot({
@@ -111,10 +162,12 @@ export function ChatPanelRoot({
   onSizeChange,
   minSize,
   maxSize,
+  dragBoundary,
   ref,
   ...props
 }: ChatPanelRootProps) {
   const panelRef = useRef<HTMLElement | null>(null);
+  const draggableId = useId();
 
   const [mode, setModeUnwrapped] = useControlled({
     controlled: modeProp,
@@ -136,7 +189,6 @@ export function ChatPanelRoot({
     state: 'size'
   });
 
-  const [dragging, setDragging] = useState(false);
   const [resizing, setResizing] = useState(false);
 
   const modeRef = useRef(mode);
@@ -160,6 +212,8 @@ export function ChatPanelRoot({
   minSizeRef.current = minSize ?? DEFAULT_MIN_SIZE;
   const maxSizeRef = useRef(maxSize);
   maxSizeRef.current = maxSize;
+  const dragBoundaryRef = useRef(dragBoundary);
+  dragBoundaryRef.current = dragBoundary;
 
   const setMode = useCallback(
     (next: ChatPanelMode) => {
@@ -192,78 +246,102 @@ export function ChatPanelRoot({
     [setSizeUnwrapped]
   );
 
+  const getDragBounds = useCallback((): DragBounds => {
+    const element = resolveDragBoundary(dragBoundaryRef.current);
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      return {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom
+      };
+    }
+    return {
+      left: 0,
+      top: 0,
+      right: window.innerWidth,
+      bottom: window.innerHeight
+    };
+  }, []);
+
   const clampPosition = useCallback(
-    (next: ChatPanelPosition, width: number): ChatPanelPosition => ({
-      x: Math.round(clamp(next.x, 0, window.innerWidth - width)),
-      y: Math.round(clamp(next.y, 0, window.innerHeight - HEADER_SAFE_PX))
-    }),
-    []
+    (next: ChatPanelPosition, width: number): ChatPanelPosition => {
+      const bounds = getDragBounds();
+      return {
+        x: Math.round(clamp(next.x, bounds.left, bounds.right - width)),
+        y: Math.round(clamp(next.y, bounds.top, bounds.bottom - HEADER_SAFE_PX))
+      };
+    },
+    [getDragBounds]
   );
 
   /* ------------------------------- dragging ------------------------------ */
 
-  const dragStateRef = useRef<{
-    pointerId: number;
-    startX: number;
-    startY: number;
-    originX: number;
-    originY: number;
-    width: number;
-  } | null>(null);
+  const sensors = useSensors(useSensor(ChatPanelPointerSensor));
 
-  const handleDragDown = useCallback(
-    (event: ReactPointerEvent<HTMLElement>) => {
-      if (modeRef.current !== 'floating' || event.button !== 0) return;
-      const target = event.target as Element;
-      if (
-        target.closest(
-          'button, a, input, textarea, select, [data-chat-panel-no-drag]'
+  // Clamps the live drag transform the same way the committed position is
+  // clamped: fully inside the bounds horizontally, header kept reachable
+  // vertically.
+  const restrictToDragBounds = useCallback<Modifier>(
+    ({ transform, draggingNodeRect }) => {
+      if (!draggingNodeRect) return transform;
+      const bounds = getDragBounds();
+      return {
+        ...transform,
+        x: clamp(
+          transform.x,
+          bounds.left - draggingNodeRect.left,
+          bounds.right - draggingNodeRect.left - draggingNodeRect.width
+        ),
+        y: clamp(
+          transform.y,
+          bounds.top - draggingNodeRect.top,
+          bounds.bottom - HEADER_SAFE_PX - draggingNodeRect.top
         )
-      ) {
-        return;
-      }
-      const panel = panelRef.current;
-      if (!panel) return;
-      const rect = panel.getBoundingClientRect();
-      dragStateRef.current = {
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-        originX: rect.left,
-        originY: rect.top,
-        width: rect.width
       };
-      event.currentTarget.setPointerCapture(event.pointerId);
-      setDragging(true);
     },
-    []
+    [getDragBounds]
+  );
+  const modifiers = useMemo(
+    () => [restrictToDragBounds],
+    [restrictToDragBounds]
   );
 
-  const handleDragMove = useCallback(
-    (event: ReactPointerEvent<HTMLElement>) => {
-      const state = dragStateRef.current;
-      if (!state || event.pointerId !== state.pointerId) return;
+  const dragOriginRef = useRef<{ x: number; y: number; width: number } | null>(
+    null
+  );
+
+  const handleDragStart = useCallback(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const rect = panel.getBoundingClientRect();
+    dragOriginRef.current = { x: rect.left, y: rect.top, width: rect.width };
+    // Anchor a corner-positioned panel so the drag delta has a fixed origin.
+    if (!positionRef.current) {
+      setPosition({ x: Math.round(rect.left), y: Math.round(rect.top) });
+    }
+  }, [setPosition]);
+
+  // dnd-kit's end delta is the raw translate (modifiers are not applied to
+  // it), so the commit re-clamps with the same bounds as the modifier.
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const origin = dragOriginRef.current;
+      dragOriginRef.current = null;
+      if (!origin) return;
       setPosition(
         clampPosition(
-          {
-            x: state.originX + event.clientX - state.startX,
-            y: state.originY + event.clientY - state.startY
-          },
-          state.width
+          { x: origin.x + event.delta.x, y: origin.y + event.delta.y },
+          origin.width
         )
       );
     },
     [clampPosition, setPosition]
   );
 
-  const handleDragEnd = useCallback((event: ReactPointerEvent<HTMLElement>) => {
-    const state = dragStateRef.current;
-    if (!state || event.pointerId !== state.pointerId) return;
-    dragStateRef.current = null;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    setDragging(false);
+  const handleDragCancel = useCallback(() => {
+    dragOriginRef.current = null;
   }, []);
 
   /* ------------------------------- resizing ------------------------------ */
@@ -387,7 +465,7 @@ export function ChatPanelRoot({
     return () => window.removeEventListener('resize', handleWindowResize);
   }, [mode, clampPosition, setPosition]);
 
-  const contextValue = useMemo<ChatPanelContextValue>(
+  const baseContext = useMemo(
     () => ({
       mode,
       side,
@@ -395,15 +473,9 @@ export function ChatPanelRoot({
       minimize: () => setMode('minimized'),
       restore: () => setMode(previousModeRef.current),
       toggleFloating: () =>
-        setMode(modeRef.current === 'floating' ? 'docked' : 'floating'),
-      dragHandlers: {
-        onPointerDown: handleDragDown,
-        onPointerMove: handleDragMove,
-        onPointerUp: handleDragEnd,
-        onPointerCancel: handleDragEnd
-      }
+        setMode(modeRef.current === 'floating' ? 'docked' : 'floating')
     }),
-    [mode, side, setMode, handleDragDown, handleDragMove, handleDragEnd]
+    [mode, side, setMode]
   );
 
   const floatingStyle =
@@ -423,40 +495,124 @@ export function ChatPanelRoot({
       : null;
 
   return (
+    <DndContext
+      sensors={sensors}
+      modifiers={modifiers}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
+      autoScroll={false}
+    >
+      <ChatPanelFrame
+        draggableId={draggableId}
+        baseContext={baseContext}
+        panelRef={panelRef}
+        mode={mode}
+        side={side}
+        resizing={resizing}
+        floatingStyle={floatingStyle}
+        className={className}
+        style={style}
+        ref={ref}
+        resizeHandles={
+          mode === 'floating'
+            ? RESIZE_DIRECTIONS.map(direction => (
+                <div
+                  key={direction}
+                  aria-hidden='true'
+                  className={cx(
+                    styles['resize-handle'],
+                    styles[`resize-${direction}`]
+                  )}
+                  onPointerDown={handleResizeDown(direction)}
+                  onPointerMove={handleResizeMove}
+                  onPointerUp={handleResizeEnd}
+                  onPointerCancel={handleResizeEnd}
+                />
+              ))
+            : null
+        }
+        {...props}
+      >
+        {children}
+      </ChatPanelFrame>
+    </DndContext>
+  );
+}
+
+ChatPanelRoot.displayName = 'ChatPanel';
+
+interface ChatPanelFrameProps extends ComponentProps<'aside'> {
+  draggableId: string;
+  baseContext: Omit<ChatPanelContextValue, 'dragHandleRef' | 'dragListeners'>;
+  panelRef: RefObject<HTMLElement | null>;
+  mode: ChatPanelMode;
+  side: ChatPanelSide;
+  resizing: boolean;
+  floatingStyle: CSSProperties | null;
+  resizeHandles: ReactNode;
+}
+
+// useDraggable needs the DndContext provider above it, so the frame lives in
+// its own component under the root's DndContext.
+function ChatPanelFrame({
+  draggableId,
+  baseContext,
+  panelRef,
+  mode,
+  side,
+  resizing,
+  floatingStyle,
+  resizeHandles,
+  className,
+  style,
+  children,
+  ref,
+  ...props
+}: ChatPanelFrameProps) {
+  const { setNodeRef, setActivatorNodeRef, listeners, transform, isDragging } =
+    useDraggable({
+      id: draggableId,
+      disabled: mode !== 'floating'
+    });
+
+  const contextValue = useMemo<ChatPanelContextValue>(
+    () => ({
+      ...baseContext,
+      dragHandleRef: setActivatorNodeRef,
+      dragListeners: listeners
+    }),
+    [baseContext, setActivatorNodeRef, listeners]
+  );
+
+  return (
     <aside
       ref={node => {
         panelRef.current = node;
+        setNodeRef(node);
         if (typeof ref === 'function') ref(node);
         else if (ref) ref.current = node;
       }}
       className={cx(styles.root, className)}
       data-mode={mode}
       data-side={side}
-      data-dragging={dragging || undefined}
+      data-dragging={isDragging || undefined}
       data-resizing={resizing || undefined}
-      style={{ ...floatingStyle, ...style }}
+      style={{
+        ...floatingStyle,
+        // The committed position only updates when the drag ends; the live
+        // movement is the dnd-kit transform.
+        ...(transform
+          ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+          : null),
+        ...style
+      }}
       {...props}
     >
       <ChatPanelContext.Provider value={contextValue}>
         {children}
-        {mode === 'floating' &&
-          RESIZE_DIRECTIONS.map(direction => (
-            <div
-              key={direction}
-              aria-hidden='true'
-              className={cx(
-                styles['resize-handle'],
-                styles[`resize-${direction}`]
-              )}
-              onPointerDown={handleResizeDown(direction)}
-              onPointerMove={handleResizeMove}
-              onPointerUp={handleResizeEnd}
-              onPointerCancel={handleResizeEnd}
-            />
-          ))}
+        {resizeHandles}
       </ChatPanelContext.Provider>
     </aside>
   );
 }
-
-ChatPanelRoot.displayName = 'ChatPanel';

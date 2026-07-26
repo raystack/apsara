@@ -24,8 +24,18 @@ export const preview = {
       >
         <PromptInput.Textarea placeholder="Ask anything…" />
         <PromptInput.Footer>
-          <PromptInput.Button>Skills</PromptInput.Button>
-          <PromptInput.Button aria-label="Attach file">📎</PromptInput.Button>
+          <Button type="button" variant="ghost" color="neutral" size="small">
+            Skills
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            color="neutral"
+            size="small"
+            aria-label="Attach file"
+          >
+            📎
+          </Button>
           <PromptInput.Submit />
         </PromptInput.Footer>
       </PromptInput>
@@ -79,7 +89,9 @@ export const disabledDemo = {
   <PromptInput disabled>
     <PromptInput.Textarea placeholder="Read-only conversation" />
     <PromptInput.Footer>
-      <PromptInput.Button>Skills</PromptInput.Button>
+      <Button type="button" variant="ghost" color="neutral" size="small" disabled>
+        Skills
+      </Button>
       <PromptInput.Submit />
     </PromptInput.Footer>
   </PromptInput>

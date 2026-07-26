@@ -39,7 +39,7 @@ export interface ChatPanelProps {
    */
   defaultPosition?: ChatPanelPosition;
 
-  /** Called when dragging or resizing moves the floating window. */
+  /** Called when a drag ends or resizing moves the floating window. */
   onPositionChange?: (position: ChatPanelPosition) => void;
 
   /** Floating window size in pixels (controlled). */
@@ -62,6 +62,12 @@ export interface ChatPanelProps {
 
   /** Largest allowed floating size. Defaults to the viewport. */
   maxSize?: ChatPanelSize;
+
+  /**
+   * Confines floating-window dragging to an element instead of the
+   * viewport. Accepts the element or a ref to it.
+   */
+  dragBoundary?: HTMLElement | React.RefObject<HTMLElement | null>;
 
   /** Custom CSS class names. */
   className?: string;

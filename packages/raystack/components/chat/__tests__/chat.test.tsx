@@ -51,6 +51,18 @@ describe('Chat', () => {
     });
   });
 
+  describe('Chat.Composer', () => {
+    it('renders its children and applies custom className', () => {
+      render(
+        <Chat.Composer data-testid='composer' className='custom'>
+          <textarea placeholder='Reply…' />
+        </Chat.Composer>
+      );
+      expect(screen.getByPlaceholderText('Reply…')).toBeInTheDocument();
+      expect(screen.getByTestId('composer')).toHaveClass('custom');
+    });
+  });
+
   describe('Chat.Attachment', () => {
     it('renders title and description', () => {
       render(<Chat.Attachment title='spec.pdf' description='1.2 MB' />);

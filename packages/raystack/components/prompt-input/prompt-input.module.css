@@ -16,9 +16,11 @@
   }
 }
 
-/* Focus treatment matches Input's wrapper: the border tints accent. */
-.root:focus-within {
-  border-color: var(--rs-color-border-accent-emphasis);
+/* The frame carries the focus treatment: the border tints only for
+   focus-visible focus (textareas match it on click too, so mouse users
+   still see it when focusing the field itself). */
+.root:has(:focus-visible) {
+  border-color: var(--rs-color-border-base-tertiary-hover);
 }
 
 .root[data-disabled] {
@@ -69,10 +71,6 @@
   display: none;
 }
 
-.button {
-  flex-shrink: 0;
-}
-
 .submit {
   appearance: none;
   display: inline-flex;
@@ -81,8 +79,8 @@
   box-sizing: border-box;
   flex-shrink: 0;
   margin-left: auto;
-  width: var(--rs-space-8);
-  height: var(--rs-space-8);
+  width: var(--rs-space-7);
+  height: var(--rs-space-7);
   padding: 0;
   border: none;
   border-radius: var(--rs-radius-full);

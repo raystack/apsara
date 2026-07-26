@@ -1,5 +1,6 @@
 'use client';
 
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   MinusIcon,
   PinLeftIcon,
@@ -17,30 +18,23 @@ export interface ChatPanelHeaderProps extends ComponentProps<'header'> {}
 export function ChatPanelHeader({
   className,
   onPointerDown,
-  onPointerMove,
-  onPointerUp,
-  onPointerCancel,
+  ref,
   ...props
 }: ChatPanelHeaderProps) {
-  const { dragHandlers } = useChatPanelContext('Header');
+  const { dragHandleRef, dragListeners } = useChatPanelContext('Header');
+  const mergedRef = useMergedRefs(dragHandleRef, ref);
 
-  const compose =
-    (
-      theirs: ((event: PointerEvent<HTMLElement>) => void) | undefined,
-      ours: (event: PointerEvent<HTMLElement>) => void
-    ) =>
-    (event: PointerEvent<HTMLElement>) => {
-      theirs?.(event);
-      if (!event.defaultPrevented) ours(event);
-    };
+  const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
+    onPointerDown?.(event);
+    if (event.defaultPrevented) return;
+    dragListeners?.onPointerDown?.(event);
+  };
 
   return (
     <header
+      ref={mergedRef}
       className={cx(styles.header, className)}
-      onPointerDown={compose(onPointerDown, dragHandlers.onPointerDown)}
-      onPointerMove={compose(onPointerMove, dragHandlers.onPointerMove)}
-      onPointerUp={compose(onPointerUp, dragHandlers.onPointerUp)}
-      onPointerCancel={compose(onPointerCancel, dragHandlers.onPointerCancel)}
+      onPointerDown={handlePointerDown}
       {...props}
     />
   );

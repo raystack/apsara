@@ -3,6 +3,24 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ChatPanel } from '../chat-panel';
 
+const mockRect = (left: number, top: number, width: number, height: number) =>
+  ({
+    left,
+    top,
+    width,
+    height,
+    right: left + width,
+    bottom: top + height,
+    x: left,
+    y: top,
+    toJSON: () => ({})
+  }) as DOMRect;
+
+// dnd-kit keeps a click-swallowing capture listener on the document for 50ms
+// after a drag ends; wait it out so later tests can click.
+const flushDragSuppression = () =>
+  new Promise(resolve => setTimeout(resolve, 60));
+
 const BasicChatPanel = (props: Partial<Parameters<typeof ChatPanel>[0]>) => (
   <ChatPanel data-testid='panel' {...props}>
     <ChatPanel.Header data-testid='header'>
@@ -170,7 +188,7 @@ describe('ChatPanel', () => {
       expect(panel.style.top).toBe('60px');
     });
 
-    it('moves the window when the header is dragged', () => {
+    it('moves the window when the header is dragged', async () => {
       const onPositionChange = vi.fn();
       render(
         <BasicChatPanel
@@ -179,26 +197,26 @@ describe('ChatPanel', () => {
           onPositionChange={onPositionChange}
         />
       );
-      const header = screen.getByTestId('header');
-      header.setPointerCapture = vi.fn();
-      header.releasePointerCapture = vi.fn();
-      header.hasPointerCapture = vi.fn().mockReturnValue(true);
       // jsdom reports zero rects; give the panel its real geometry.
       screen.getByTestId('panel').getBoundingClientRect = () =>
-        ({ left: 100, top: 100, width: 400, height: 500 }) as DOMRect;
+        mockRect(100, 100, 400, 500);
 
-      fireEvent.pointerDown(header, {
+      // dnd-kit activates on the header and tracks the pointer on the
+      // document.
+      fireEvent.pointerDown(screen.getByTestId('header'), {
         pointerId: 1,
         button: 0,
+        isPrimary: true,
         clientX: 200,
         clientY: 200
       });
-      fireEvent.pointerMove(header, {
+      fireEvent.pointerMove(document, {
         pointerId: 1,
         clientX: 240,
         clientY: 170
       });
-      fireEvent.pointerUp(header, { pointerId: 1 });
+      fireEvent.pointerUp(document, { pointerId: 1 });
+      await flushDragSuppression();
 
       expect(onPositionChange).toHaveBeenCalled();
       const next =
@@ -221,36 +239,39 @@ describe('ChatPanel', () => {
       fireEvent.pointerDown(button, {
         pointerId: 1,
         button: 0,
+        isPrimary: true,
         clientX: 200,
         clientY: 200
       });
-      fireEvent.pointerMove(screen.getByTestId('header'), {
+      fireEvent.pointerMove(document, {
         pointerId: 1,
         clientX: 260,
         clientY: 260
       });
+      fireEvent.pointerUp(document, { pointerId: 1 });
       expect(onPositionChange).not.toHaveBeenCalled();
     });
 
     it('does not drag while docked', () => {
       const onPositionChange = vi.fn();
       render(<BasicChatPanel onPositionChange={onPositionChange} />);
-      const header = screen.getByTestId('header');
-      fireEvent.pointerDown(header, {
+      fireEvent.pointerDown(screen.getByTestId('header'), {
         pointerId: 1,
         button: 0,
+        isPrimary: true,
         clientX: 10,
         clientY: 10
       });
-      fireEvent.pointerMove(header, {
+      fireEvent.pointerMove(document, {
         pointerId: 1,
         clientX: 50,
         clientY: 50
       });
+      fireEvent.pointerUp(document, { pointerId: 1 });
       expect(onPositionChange).not.toHaveBeenCalled();
     });
 
-    it('clamps the dragged position to the viewport', () => {
+    it('clamps the dragged position to the viewport', async () => {
       const onPositionChange = vi.fn();
       render(
         <BasicChatPanel
@@ -259,26 +280,65 @@ describe('ChatPanel', () => {
           onPositionChange={onPositionChange}
         />
       );
-      const header = screen.getByTestId('header');
-      header.setPointerCapture = vi.fn();
-      header.releasePointerCapture = vi.fn();
-      header.hasPointerCapture = vi.fn().mockReturnValue(true);
+      screen.getByTestId('panel').getBoundingClientRect = () =>
+        mockRect(100, 100, 400, 500);
 
-      fireEvent.pointerDown(header, {
+      fireEvent.pointerDown(screen.getByTestId('header'), {
         pointerId: 1,
         button: 0,
+        isPrimary: true,
         clientX: 200,
         clientY: 200
       });
-      fireEvent.pointerMove(header, {
+      fireEvent.pointerMove(document, {
         pointerId: 1,
         clientX: -5000,
         clientY: -5000
       });
+      fireEvent.pointerUp(document, { pointerId: 1 });
+      await flushDragSuppression();
 
       const next =
         onPositionChange.mock.calls[onPositionChange.mock.calls.length - 1][0];
       expect(next).toEqual({ x: 0, y: 0 });
+    });
+
+    it('clamps the dragged position to the dragBoundary element', async () => {
+      const onPositionChange = vi.fn();
+      const boundary = document.createElement('div');
+      boundary.getBoundingClientRect = () => mockRect(50, 60, 750, 640);
+
+      render(
+        <BasicChatPanel
+          defaultMode='floating'
+          defaultPosition={{ x: 100, y: 100 }}
+          onPositionChange={onPositionChange}
+          dragBoundary={{ current: boundary }}
+        />
+      );
+      screen.getByTestId('panel').getBoundingClientRect = () =>
+        mockRect(100, 100, 400, 500);
+
+      fireEvent.pointerDown(screen.getByTestId('header'), {
+        pointerId: 1,
+        button: 0,
+        isPrimary: true,
+        clientX: 200,
+        clientY: 200
+      });
+      fireEvent.pointerMove(document, {
+        pointerId: 1,
+        clientX: 5000,
+        clientY: 5000
+      });
+      fireEvent.pointerUp(document, { pointerId: 1 });
+      await flushDragSuppression();
+
+      const next =
+        onPositionChange.mock.calls[onPositionChange.mock.calls.length - 1][0];
+      // Right edge: 50 + 750 - 400 wide = 400. Bottom edge keeps the header
+      // reachable: 60 + 640 - 48 = 652.
+      expect(next).toEqual({ x: 400, y: 652 });
     });
 
     it('renders no resize handles while docked', () => {

@@ -3,7 +3,46 @@
 export const preview = {
   type: 'code',
   code: `function ChatPanelPreview() {
+  const RESPONSES = [
+    'Done — I created the task and assigned it to you.',
+    'On it. I\\'ll ping you when the draft is ready to review.',
+    'Good question — the design tokens live in packages/raystack/styles.',
+    'That shipped in the last release; update and it should just work.',
+    'I\\'ve noted it down. Anything else you\\'d like me to pick up?'
+  ];
+
   const [mode, setMode] = React.useState('docked');
+  const [status, setStatus] = React.useState('idle');
+  const [messages, setMessages] = React.useState([
+    { id: 1, role: 'user', text: 'create a task in design system 2' },
+    { id: 2, role: 'assistant', text: RESPONSES[0] }
+  ]);
+  const nextIdRef = React.useRef(3);
+  const timerRef = React.useRef(null);
+
+  React.useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  const handleSubmit = (value, event) => {
+    event.currentTarget.reset();
+    setMessages(prev => [
+      ...prev,
+      { id: nextIdRef.current++, role: 'user', text: value }
+    ]);
+    setStatus('submitted');
+    timerRef.current = setTimeout(() => {
+      const reply = RESPONSES[Math.floor(Math.random() * RESPONSES.length)];
+      setMessages(prev => [
+        ...prev,
+        { id: nextIdRef.current++, role: 'assistant', text: reply }
+      ]);
+      setStatus('idle');
+    }, 900);
+  };
+
+  const handleStop = () => {
+    clearTimeout(timerRef.current);
+    setStatus('idle');
+  };
 
   return (
     <Flex style={{ width: '100%', height: 420, border: '0.5px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)', overflow: 'hidden' }}>
@@ -13,6 +52,7 @@ export const preview = {
           The docked panel is a real flex sibling — it squeezes this content
           instead of covering it. Pop it out or minimize it from the header;
           floating and minimized modes are fixed to the browser viewport.
+          Send a message to get a (canned) reply.
         </Text>
       </Flex>
       <ChatPanel mode={mode} onModeChange={setMode} side="right">
@@ -26,30 +66,38 @@ export const preview = {
         <ChatPanel.Content>
           <Chat>
             <Chat.Messages>
-              <Chat.Item>
-                <Message align="end">
-                  <Message.Content>
-                    <Message.Bubble>create a task in design system 2</Message.Bubble>
-                  </Message.Content>
-                </Message>
-              </Chat.Item>
-              <Chat.Item>
-                <Message>
-                  <Message.Content>
-                    <Text size="small">Done — I created the task and assigned it to you.</Text>
-                  </Message.Content>
-                </Message>
-              </Chat.Item>
+              {messages.map(message => (
+                <Chat.Item key={message.id}>
+                  <Message align={message.role === 'user' ? 'end' : 'start'}>
+                    <Message.Content>
+                      {message.role === 'user' ? (
+                        <Message.Bubble>{message.text}</Message.Bubble>
+                      ) : (
+                        <Text size="small">{message.text}</Text>
+                      )}
+                    </Message.Content>
+                  </Message>
+                </Chat.Item>
+              ))}
+              {status === 'submitted' && (
+                <Chat.Item>
+                  <Message>
+                    <Message.Content>
+                      <Text size="small" variant="secondary">Thinking…</Text>
+                    </Message.Content>
+                  </Message>
+                </Chat.Item>
+              )}
               <Chat.JumpButton />
             </Chat.Messages>
-            <div style={{ padding: 'var(--rs-space-3)' }}>
-              <PromptInput onSubmit={(value, event) => event.currentTarget.reset()}>
+            <Chat.Composer>
+              <PromptInput status={status} onSubmit={handleSubmit} onStop={handleStop}>
                 <PromptInput.Textarea placeholder="Reply…" />
                 <PromptInput.Footer>
                   <PromptInput.Submit />
                 </PromptInput.Footer>
               </PromptInput>
-            </div>
+            </Chat.Composer>
           </Chat>
         </ChatPanel.Content>
         <ChatPanel.Trigger />
@@ -99,6 +147,47 @@ export const controlledDemo = {
         </ChatPanel>
       </Flex>
     </Flex>
+  );
+}`
+};
+
+export const boundedDragDemo = {
+  type: 'code',
+  code: `function BoundedDragChatPanel() {
+  const boundaryRef = React.useRef(null);
+  const [position, setPosition] = React.useState(null);
+
+  // Start the floating window inside the boundary frame.
+  React.useEffect(() => {
+    const rect = boundaryRef.current?.getBoundingClientRect();
+    if (rect) setPosition({ x: rect.left + 24, y: rect.top + 24 });
+  }, []);
+
+  return (
+    <div
+      ref={boundaryRef}
+      style={{ width: '100%', height: 380, border: '1px dashed var(--rs-color-border-base-secondary)', borderRadius: 'var(--rs-radius-4)' }}
+    >
+      <ChatPanel
+        defaultMode="floating"
+        position={position}
+        onPositionChange={setPosition}
+        defaultSize={{ width: 320, height: 280 }}
+        minSize={{ width: 260, height: 220 }}
+        dragBoundary={boundaryRef}
+      >
+        <ChatPanel.Header>
+          <ChatPanel.Title>Assistant</ChatPanel.Title>
+        </ChatPanel.Header>
+        <ChatPanel.Content>
+          <Flex style={{ padding: 'var(--rs-space-5)' }}>
+            <Text size="small" variant="secondary">
+              Drag the header — the window can't leave the dashed frame.
+            </Text>
+          </Flex>
+        </ChatPanel.Content>
+      </ChatPanel>
+    </div>
   );
 }`
 };

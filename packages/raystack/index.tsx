@@ -30,6 +30,7 @@ export {
 } from './components/chat';
 export {
   ChatPanel,
+  type ChatPanelDragBoundary,
   type ChatPanelMode,
   type ChatPanelPosition,
   type ChatPanelProps,

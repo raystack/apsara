@@ -4,6 +4,7 @@ export type {
   ChatPanelSide
 } from './chat-panel-context';
 export type {
+  ChatPanelDragBoundary,
   ChatPanelPosition,
   ChatPanelRootProps as ChatPanelProps,
   ChatPanelSize

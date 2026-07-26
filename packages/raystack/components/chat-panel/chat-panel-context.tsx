@@ -1,16 +1,10 @@
 'use client';
 
-import { createContext, PointerEvent, useContext } from 'react';
+import type { DraggableSyntheticListeners } from '@dnd-kit/core';
+import { createContext, useContext } from 'react';
 
 export type ChatPanelMode = 'docked' | 'floating' | 'minimized';
 export type ChatPanelSide = 'left' | 'right';
-
-export interface ChatPanelDragHandlers {
-  onPointerDown: (event: PointerEvent<HTMLElement>) => void;
-  onPointerMove: (event: PointerEvent<HTMLElement>) => void;
-  onPointerUp: (event: PointerEvent<HTMLElement>) => void;
-  onPointerCancel: (event: PointerEvent<HTMLElement>) => void;
-}
 
 export interface ChatPanelContextValue {
   mode: ChatPanelMode;
@@ -19,7 +13,10 @@ export interface ChatPanelContextValue {
   minimize: () => void;
   restore: () => void;
   toggleFloating: () => void;
-  dragHandlers: ChatPanelDragHandlers;
+  /** dnd-kit activator ref for the drag handle (the header). */
+  dragHandleRef: (element: HTMLElement | null) => void;
+  /** dnd-kit activator listeners; undefined while dragging is disabled. */
+  dragListeners: DraggableSyntheticListeners;
 }
 
 export const ChatPanelContext = createContext<ChatPanelContextValue | null>(

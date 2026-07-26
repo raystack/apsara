@@ -5,7 +5,7 @@ source: packages/raystack/components/chat-panel
 tag: new
 ---
 
-import { preview, controlledDemo, unreadBadgeDemo } from "./demo.ts";
+import { preview, controlledDemo, boundedDragDemo, unreadBadgeDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -38,7 +38,8 @@ survives every transition:
 - **`docked`** — an in-flow sidebar (a flex sibling, like `SidePanel`) that
   squeezes the main content rather than covering it.
 - **`floating`** — the same element switched to `position: fixed`: drag it by
-  the header, resize it from any edge or corner, both viewport-clamped.
+  the header (clamped to the viewport, or to a container via `dragBoundary`)
+  and resize it from any edge or corner.
 - **`minimized`** — the frame collapses to `ChatPanel.Trigger`, a fixed
   corner bubble; clicking it restores the previous mode. If you don't render
   a trigger, minimized shows nothing and your app supplies its own affordance.
@@ -97,6 +98,15 @@ its header.
 
 <Demo data={controlledDemo} />
 
+### Constraining the drag to a container
+
+Dragging is built on [dnd-kit](https://dndkit.com). By default the floating
+window is clamped to the viewport; pass an element (or a ref to one) as
+`dragBoundary` to confine dragging to it instead. The panel keeps
+`position: fixed`, so the boundary only limits where a drag can put it.
+
+<Demo data={boundedDragDemo} />
+
 ### Unread badge on the bubble
 
 <Demo data={unreadBadgeDemo} />
@@ -130,7 +140,8 @@ across sessions:
   panel", "Open chat").
 - Mode transitions never remount the content, so keyboard focus inside the
   thread or composer is preserved when docking or popping out.
-- Dragging clamps so the header can never leave the viewport, and the window
-  re-clamps when the browser is resized.
+- Dragging clamps so the header can never leave the viewport (or the
+  `dragBoundary` container), and the window re-clamps when the browser is
+  resized.
 - Drag and resize are pointer gestures; keep docked mode reachable (the
   ExpandTrigger toggle) so keyboard users can always use the inline layout.
