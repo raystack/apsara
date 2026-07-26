@@ -328,7 +328,9 @@ The Timeline owns **positioning** — the time scale (date → x, span → width
 />
 ```
 
-`context.collapsed` flips when the span is narrower than `minCardWidth` (default 60px) — render a compact stub instead of letting the full card clip. Wrap card fields in `DataView.DisplayAccess` so the toolbar's Display Properties toggles reach them.
+`context.collapsed` flips when the span is narrower than `minCardWidth` (default 60px) — render a compact stub instead of letting the full card clip (point cards never collapse; they size to their content). Wrap card fields in `DataView.DisplayAccess` so the toolbar's Display Properties toggles reach them.
+
+Card height is content-driven, the same contract as `DataView.List` rows: cards auto-measure after paint, each lane sizes to its tallest card, and `estimatedRowHeight` (default 66) is only a layout hint until real heights arrive. Give your card an explicit height if you want uniform cards. Keep `renderCard` referentially stable (define it outside the component or wrap it in `useCallback`) — cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
 
 ### Point markers
 
@@ -377,13 +379,15 @@ const timelineActions = useRef<TimelineActions | null>(null);
 
 `scrollTo(target, { align = "center", behavior = "smooth" })` accepts the same target vocabulary as `defaultScrollTo`. Out-of-domain dates clamp to the nearest domain edge; while the timeline is hidden (inactive view, no data) calls no-op with a dev warning. `getVisibleRange()` returns the visible `[Date, Date]` window (or `null` while hidden) — useful for showing the Today button only when today is off-screen.
 
+Filtering navigates too: when a filter or search change leaves no matching card in the viewport, the timeline scrolls the earliest match into view instead of leaving you parked on empty canvas (a change whose results are already on screen doesn't move the view). Opt out with `scrollToResults={false}`.
+
 ### Loading data by visible range
 
 Offset pagination doesn't fit a 2-D time canvas — the natural unit of fetching is the **visible window**. The recommended pattern is client mode + `onVisibleRangeChange`:
 
 1. Fix the coordinate space with an explicit `range` so the scrollbar stays stable while rows stream in.
 2. On `onVisibleRangeChange`, widen the window by a prefetch pad and fetch rows **overlapping** it (`start <= to AND end >= from` — a containment filter drops cards straddling the window edges).
-3. Track requested buckets (e.g. months) in a `Set` so re-entering a window is free, and dedupe merged rows by id — edge-straddling rows come back from both adjacent fetches.
+3. Track requested buckets (e.g. months) in a `Set` so re-entering a window is free, and dedupe merged rows by id — edge-straddling rows come back from both adjacent fetches. On a failed fetch, delete the affected buckets from the `Set` so scrolling back retries them instead of leaving a permanent hole.
 4. Throttle, don't debounce: a debounce waits for scrolling to stop, leaving a gap of missing cards mid-drag.
 
 ```tsx
@@ -415,4 +419,4 @@ Start with `isLoading={true}` and fire an initial fetch on mount: with no data a
 
 - **Grouping and sorting are bypassed** — cards are positioned by time, so group buckets and sort order have no geometric meaning. Hide both controls while a timeline view is active (`<DataView.DisplayControls hideOrdering hideGrouping />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
 - **`virtualized`** enables horizontal culling: only cards and gridlines near the viewport render. Recommended whenever the domain is long or rows are numerous.
-- **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe.
+- **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe. The pane is a focusable, labelled region (`aria-label`, default "Timeline"), so keyboard users can Tab to it and scroll with the arrow keys.

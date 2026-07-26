@@ -417,8 +417,10 @@ function OrderCard({
 }) {
   const { urgent } = dueState(order);
 
+  // Card height is content-driven (the wrapper auto-measures, like
+  // DataView.List rows) — fix it here so collapsed stubs match full cards.
   const chrome: React.CSSProperties = {
-    height: '100%',
+    height: 64,
     boxSizing: 'border-box',
     borderRadius: 'var(--rs-radius-3)',
     border: `1px solid ${
@@ -596,18 +598,28 @@ const Page = () => {
     inflightRef.current += runs.length;
     setIsLoading(true);
     for (const [firstKey, lastKey] of runs) {
-      fetchOrdersApi(
-        dayjs(`${firstKey}-01`).valueOf(),
-        dayjs(`${lastKey}-01`).endOf('month').valueOf()
-      ).then(rows => {
-        setOrders(prev => {
-          const seen = new Set(prev.map(order => order.id));
-          const fresh = rows.filter(order => !seen.has(order.id));
-          return fresh.length > 0 ? [...prev, ...fresh] : prev;
+      const runFrom = dayjs(`${firstKey}-01`).valueOf();
+      const runTo = dayjs(`${lastKey}-01`).endOf('month').valueOf();
+      fetchOrdersApi(runFrom, runTo)
+        .then(rows => {
+          setOrders(prev => {
+            const seen = new Set(prev.map(order => order.id));
+            const fresh = rows.filter(order => !seen.has(order.id));
+            return fresh.length > 0 ? [...prev, ...fresh] : prev;
+          });
+        })
+        .catch(error => {
+          // Un-mark the failed months so scrolling back retries them —
+          // otherwise a transient failure leaves a permanent hole.
+          for (const key of monthKeysBetween(runFrom, runTo)) {
+            requestedRef.current.delete(key);
+          }
+          console.error('Failed to load orders', error);
+        })
+        .finally(() => {
+          inflightRef.current -= 1;
+          if (inflightRef.current === 0) setIsLoading(false);
         });
-        inflightRef.current -= 1;
-        if (inflightRef.current === 0) setIsLoading(false);
-      });
     }
   }, []);
 

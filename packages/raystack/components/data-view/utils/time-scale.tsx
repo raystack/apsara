@@ -82,14 +82,12 @@ export function createTimeScale(params: {
    */
   minWidth?: number;
 }): TimelineTimeScale {
-  const {
-    minTime,
-    maxTime,
-    scale,
-    unitWidth,
-    padUnits = 0,
-    minWidth = 0
-  } = params;
+  const { minTime, maxTime, scale, padUnits = 0, minWidth = 0 } = params;
+  // Guard: `unitWidth` is consumer-controlled. Zero would make `pxPerMs` 0
+  // (NaN geometry via the Infinity bulk-add below) and a negative value
+  // inverts the scale so the viewport-fill loop never terminates. Clamp to a
+  // 1px floor instead of hanging the render on a bad prop.
+  const unitWidth = Math.max(1, params.unitWidth);
   const pxPerMs = unitWidth / TIMELINE_UNIT_MS[scale];
   const t0 = addUnits(
     startOfUnit(dayjs(Math.min(minTime, maxTime)), scale),
@@ -160,6 +158,12 @@ function tickLabel(date: Dayjs, scale: TimelineScale): string {
  * `labelEvery` labels every Nth unit, counted from the domain start. The
  * collision floor (labels never closer than `TICK_LABEL_MIN_SPACE`) still
  * applies, so a too-dense request degrades instead of overlapping.
+ *
+ * Cost note: this materializes one tick per `scale` unit across the whole
+ * domain on every rebuild — `virtualized` culls what renders, not what gets
+ * built here. Fine at the intended densities (weeks/months, a few years of
+ * days); a `day` scale over a decade-wide `range` allocates ~3.6k ticks per
+ * rebuild and would need windowed generation instead.
  */
 export function buildAxis(
   timeScale: TimelineTimeScale,
@@ -169,7 +173,7 @@ export function buildAxis(
 ): { ticks: TimelineTick[]; bands: TimelineBand[] } {
   const autoLabelEvery = Math.max(
     1,
-    Math.ceil(TICK_LABEL_MIN_SPACE / unitWidth)
+    Math.ceil(TICK_LABEL_MIN_SPACE / Math.max(1, unitWidth))
   );
   const effectiveLabelEvery = Math.max(
     autoLabelEvery,

@@ -718,8 +718,10 @@ function TaskCard({
   task: Task;
   context: TimelineCardContext;
 }) {
+  // Card height is content-driven (the wrapper auto-measures, like
+  // DataView.List rows) — fix it here so collapsed stubs match full cards.
   const chrome: React.CSSProperties = {
-    height: '100%',
+    height: 64,
     boxSizing: 'border-box',
     borderRadius: 'var(--rs-radius-3)',
     border: '1px solid var(--rs-color-border-base-primary)',

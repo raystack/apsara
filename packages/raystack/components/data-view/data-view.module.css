@@ -349,6 +349,7 @@
    sticks to the top on vertical scroll and moves with the canvas on
    horizontal scroll because both share the same explicit content width. */
 .timelineRoot {
+  --timeline-axis-height: 52px;
   position: relative;
   width: 100%;
   height: 100%;
@@ -357,6 +358,15 @@
      (horizontal swipe-back) or scroll the page behind. */
   overscroll-behavior: contain;
   background: var(--rs-color-background-base-primary);
+}
+
+/* Keyboard-focused pane (tabIndex=0 for arrow-key scrolling). Inset ring for
+   the same reason as .listRow: an outward outline would clip against parent
+   overflow. :focus-visible only — a mouse click on the background must not
+   ring the whole pane. */
+.timelineRoot:focus-visible {
+  outline: var(--rs-focus-ring);
+  outline-offset: var(--rs-focus-ring-offset-inset);
 }
 
 /* Drag-to-pan in progress — grabbing cursor everywhere (descendants too, so
@@ -374,7 +384,7 @@
   position: sticky;
   top: 0;
   z-index: 3;
-  height: 52px;
+  height: var(--timeline-axis-height);
   box-sizing: border-box;
   background: var(--rs-color-background-base-primary);
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
@@ -435,13 +445,13 @@
 }
 
 /* min-height keeps gridlines and marker lines running the full pane height
-   even when there are only a few lanes (52px = axis height). overflow:hidden
-   clips cards whose span crosses the domain edge at that edge, instead of
-   letting them dangle past the axis into unscaled space. */
+   even when there are only a few lanes. overflow:hidden clips cards whose
+   span crosses the domain edge at that edge, instead of letting them dangle
+   past the axis into unscaled space. */
 .timelineCanvas {
   position: relative;
   box-sizing: border-box;
-  min-height: calc(100% - 52px);
+  min-height: calc(100% - var(--timeline-axis-height));
   overflow: hidden;
 }
 
@@ -456,6 +466,10 @@
   pointer-events: none;
 }
 
+/* Gridlines, marker lines, and the cursor line all paint beneath cards (DOM
+   order, no z-index) by design — lines are context, cards are content, and a
+   line crossing a card would read as part of it. The axis badge stays visible
+   even where a card occludes the line. */
 .timelineMarkerLine {
   position: absolute;
   top: 0;

@@ -179,6 +179,13 @@ export interface DataViewTimelineProps {
   /** Multi-view name. When set, the renderer gates itself on the active view. */
   name?: string;
 
+  /**
+   * Accessible name of the scroll region. The pane is keyboard-focusable (arrow keys
+   * scroll it natively), so screen readers announce this label on focus.
+   * @defaultValue "Timeline"
+   */
+  'aria-label'?: string;
+
   /** Optional view-scoped field override (full replacement). */
   fields?: DataViewField[];
 
@@ -191,8 +198,10 @@ export interface DataViewTimelineProps {
   /**
    * Renders the card interior. The Timeline owns positioning (x from start,
    * width from span, lane from packing, scroll); the consumer owns the card
-   * visual entirely. Compose `DataView.DisplayAccess` inside for Display
-   * Properties support. (Required)
+   * visual entirely. The first argument is the TanStack `Row` wrapper — the
+   * row data is on `row.original`. Keep the reference stable (`useCallback`):
+   * cards are memoized against it. Compose `DataView.DisplayAccess` inside
+   * for Display Properties support. (Required)
    */
   renderCard: (row: T, context: TimelineCardContext) => ReactNode;
 
@@ -241,11 +250,23 @@ export interface DataViewTimelineProps {
    */
   showCursorLine?: boolean;
 
+  // The literals are named in the description because the rendered type
+  // column can't show them — TS collapses them into TimelineDateInput's
+  // `string` when the union resolves. Same for scrollTo's target below.
   /**
-   * Initial horizontal scroll target.
+   * Initial horizontal scroll target: a date, or one of `'today'` | `'start'` | `'end'`
+   * (the domain edges).
    * @defaultValue "today"
    */
   defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
+
+  /**
+   * After a filter or search change, scroll the earliest matching card into view when
+   * no match is visible in the current viewport. A query change that keeps a card on
+   * screen doesn't move the view.
+   * @defaultValue true
+   */
+  scrollToResults?: boolean;
 
   /** Fires (rAF-throttled) with the visible time range as the user scrolls or resizes. */
   onVisibleRangeChange?: (range: [Date, Date]) => void;
@@ -260,7 +281,9 @@ export interface DataViewTimelineProps {
   lanePacking?: 'auto' | 'one-per-row';
 
   /**
-   * Card height in px (cards render at exactly this height; named to match `DataView.List`).
+   * Estimated card height in px, same contract as `DataView.List`: cards render at their
+   * natural content height and auto-measure after paint; the estimate seeds lane layout
+   * until real heights arrive. Each lane sizes to its tallest card.
    * @defaultValue 66
    */
   estimatedRowHeight?: number;
@@ -324,8 +347,11 @@ export interface TimelineMarker {
 
 export interface TimelineActions {
   /**
-   * Scroll the viewport so the target lands at `align`. Out-of-domain dates
-   * clamp to the nearest edge; no-ops (dev warning) while the renderer is hidden.
+   * Scroll the viewport so the target lands at `align`. The target is a date, or
+   * one of `'today'` | `'start'` | `'end'` (the domain edges) — same vocabulary as
+   * `defaultScrollTo`. Edge alignments keep a small inset so the target doesn't sit
+   * flush against the viewport edge (yields at the domain edges). Out-of-domain
+   * dates clamp to the nearest edge; no-ops (dev warning) while the renderer is hidden.
    */
   scrollTo: (
     target: TimelineDateInput | 'today' | 'start' | 'end',

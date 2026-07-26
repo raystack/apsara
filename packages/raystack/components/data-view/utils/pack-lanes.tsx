@@ -11,7 +11,11 @@ export interface PackLanesResult {
   laneCount: number;
 }
 
-const DEFAULT_LANE_GAP_PX = 8;
+/**
+ * Horizontal gap between cards sharing a lane. Not the vertical gap between
+ * lanes — that's the `laneGap` prop (default 16) applied in timeline.tsx.
+ */
+const DEFAULT_CARD_GAP_PX = 8;
 
 /**
  * Greedy interval scheduling. Items are visited in ascending `x` order and
@@ -22,7 +26,7 @@ const DEFAULT_LANE_GAP_PX = 8;
  */
 export function packLanes(
   items: PackLaneItem[],
-  gapPx: number = DEFAULT_LANE_GAP_PX
+  gapPx: number = DEFAULT_CARD_GAP_PX
 ): PackLanesResult {
   const order = items
     .map((_, i) => i)

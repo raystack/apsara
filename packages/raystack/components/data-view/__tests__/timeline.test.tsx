@@ -15,8 +15,10 @@ import { DataView } from '../data-view';
 import type {
   DataViewField,
   DataViewTimelineProps,
+  InternalFilter,
   TimelineActions
 } from '../data-view.types';
+import { useDataView } from '../hooks/useDataView';
 import { packLanes } from '../utils/pack-lanes';
 import { buildAxis, createTimeScale, toTimestamp } from '../utils/time-scale';
 
@@ -182,6 +184,32 @@ describe('createTimeScale', () => {
     // Domain = Jan 1 → Feb 1 = 31 days.
     expect(ts.totalWidth).toBe(31 * 20);
   });
+
+  it('clamps a zero or negative unitWidth to 1px instead of hanging', () => {
+    // 0 → pxPerMs 0 (NaN geometry); negative → inverted scale whose
+    // viewport-fill loop never terminates. Both clamp to a 1px unit.
+    const zero = createTimeScale({
+      minTime: dayjs('2025-01-01').valueOf(),
+      maxTime: dayjs('2025-01-31').valueOf(),
+      scale: 'day',
+      unitWidth: 0,
+      padUnits: 0,
+      minWidth: 500
+    });
+    expect(Number.isFinite(zero.totalWidth)).toBe(true);
+    expect(zero.totalWidth).toBeGreaterThanOrEqual(500);
+    const negative = createTimeScale({
+      minTime: dayjs('2025-01-01').valueOf(),
+      maxTime: dayjs('2025-01-31').valueOf(),
+      scale: 'day',
+      unitWidth: -20,
+      padUnits: 0,
+      minWidth: 500
+    });
+    expect(negative.pxPerMs).toBeGreaterThan(0);
+    expect(Number.isFinite(negative.totalWidth)).toBe(true);
+    expect(negative.totalWidth).toBeGreaterThanOrEqual(500);
+  });
 });
 
 describe('buildAxis', () => {
@@ -283,6 +311,39 @@ describe('buildAxis', () => {
     expect(bands.map(b => b.label)).toEqual(['2024', '2025']);
     expect(ticks[0].label).toBe('Nov');
   });
+
+  it('builds quarter ticks and year bands (hand-rolled, non-dayjs path)', () => {
+    // Quarter snapping/stepping is hand-rolled (dayjs has no quarter unit
+    // without a plugin): startOfUnit subtracts month % 3, addUnits steps by
+    // 3 months, and tick labels derive Q1–Q4 from the month index.
+    const quarterly = createTimeScale({
+      minTime: dayjs('2024-11-15').valueOf(),
+      maxTime: dayjs('2025-05-10').valueOf(),
+      scale: 'quarter',
+      unitWidth: 140,
+      padUnits: 0
+    });
+    // Nov 15 snaps back to Q4's start; May 10 is in Q2, +1 unit → Jul 1.
+    expect(dayjs(quarterly.t0).format('YYYY-MM-DD')).toBe('2024-10-01');
+    expect(dayjs(quarterly.t1).format('YYYY-MM-DD')).toBe('2025-07-01');
+    const { ticks, bands } = buildAxis(quarterly, 'quarter', 140);
+    expect(ticks.map(t => t.label)).toEqual(['Q4', 'Q1', 'Q2', 'Q3']);
+    expect(ticks[0].x).toBe(0);
+    expect(bands.map(b => b.label)).toEqual(['2024', '2025']);
+  });
+
+  it('builds week ticks snapped to week starts, with month bands', () => {
+    const weekly = createTimeScale({
+      minTime: dayjs('2025-01-05').valueOf(), // a Sunday (dayjs week start)
+      maxTime: dayjs('2025-01-20').valueOf(),
+      scale: 'week',
+      unitWidth: 56,
+      padUnits: 0
+    });
+    const { ticks, bands } = buildAxis(weekly, 'week', 56);
+    expect(ticks.map(t => t.label)).toEqual(['5', '12', '19', '26']);
+    expect(bands.map(b => b.label)).toEqual(['Jan 2025']);
+  });
 });
 
 /* ─────────────────────────── renderer ────────────────────────── */
@@ -304,6 +365,20 @@ const orders: Order[] = [
   { id: 'o2', title: 'Beta', start: '2025-01-12', end: '2025-01-15' },
   { id: 'o3', title: 'Gamma', start: '2025-01-06', end: '2025-01-09' }
 ];
+
+/** Applies a filter through the same context path as the Filters toolbar. */
+function ApplyFilterButton({ filters }: { filters: InternalFilter[] }) {
+  const { updateTableQuery } = useDataView();
+  return (
+    <button
+      type='button'
+      data-testid='apply-filter'
+      onClick={() => updateTableQuery(prev => ({ ...prev, filters }))}
+    >
+      apply
+    </button>
+  );
+}
 
 function renderTimeline(
   props: Partial<DataViewTimelineProps<Order>> = {},
@@ -358,6 +433,48 @@ describe('DataView.Timeline', () => {
     expect(screen.getByTestId('card-o3').dataset.lane).toBe('1');
     // o2 starts at 220 ≥ o1's end + gap → back onto lane 0.
     expect(screen.getByTestId('card-o2').dataset.lane).toBe('0');
+  });
+
+  it('exposes the scroll region as a focusable, labelled region', () => {
+    renderTimeline();
+    const region = screen.getByRole('region', { name: 'Timeline' });
+    // Focusable so keyboard users can scroll the pane with arrow keys —
+    // drag-to-pan is pointer-only.
+    expect(region.tabIndex).toBe(0);
+  });
+
+  it('lets the consumer override the region label via aria-label', () => {
+    renderTimeline({ 'aria-label': 'Order schedule' });
+    expect(
+      screen.getByRole('region', { name: 'Order schedule' })
+    ).toBeInTheDocument();
+  });
+
+  it('stacks lanes from estimatedRowHeight while cards are unmeasured', () => {
+    renderTimeline();
+    // jsdom reports offsetHeight 0 → the estimate (66) drives lane tops:
+    // lane 0 at laneGap 16, lane 1 at 16 + 66 + 16.
+    expect(screen.getByTestId('card-o1').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-o3').parentElement!.style.top).toBe('98px');
+    // Height is content-driven — the wrapper never hard-sizes the card.
+    expect(screen.getByTestId('card-o1').parentElement!.style.height).toBe('');
+  });
+
+  it('re-stacks lanes to the tallest measured card height', () => {
+    // Cards auto-measure after paint (List semantics). Simulate layout by
+    // reporting 90px for card wrappers.
+    const spy = vi
+      .spyOn(HTMLElement.prototype, 'offsetHeight', 'get')
+      .mockImplementation(function (this: HTMLElement) {
+        return this.getAttribute('role') === 'listitem' ? 90 : 0;
+      });
+    renderTimeline();
+    // Lane 0 measured at 90px → lane 1 starts at 16 + 90 + 16.
+    expect(screen.getByTestId('card-o1').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-o3').parentElement!.style.top).toBe(
+      '122px'
+    );
+    spy.mockRestore();
   });
 
   it('gives every row its own lane with lanePacking="one-per-row"', () => {
@@ -777,6 +894,118 @@ describe('DataView.Timeline', () => {
     const calls = onVisibleRangeChange.mock.calls;
     const [from] = calls[calls.length - 1][0];
     expect(from.getTime()).toBe(dayjs('2025-01-06').valueOf());
+
+    // Sub-pixel drift (scroll anchoring's float round-trip, device-pixel
+    // quantization of scrollLeft) is noise, not a scroll — no re-fire.
+    root.scrollLeft = 100.4;
+    await act(async () => {
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30)); // flush rAF
+    });
+    expect(onVisibleRangeChange.mock.calls.length).toBe(callsAfterMount + 1);
+
+    // A whole-pixel move is a real scroll again.
+    root.scrollLeft = 101;
+    await act(async () => {
+      fireEvent.scroll(root);
+      await new Promise(resolve => setTimeout(resolve, 30)); // flush rAF
+    });
+    expect(onVisibleRangeChange.mock.calls.length).toBe(callsAfterMount + 2);
+  });
+
+  it('scrolls the earliest match into view when a filter leaves the viewport empty', () => {
+    const { container } = render(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => <div>{row.original.title}</div>}
+        />
+        <ApplyFilterButton
+          filters={[{ name: 'title', operator: 'eq', value: 'Beta' }]}
+        />
+      </DataView>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    // Parked far past every card (jsdom viewport is 0-wide).
+    root.scrollLeft = 500;
+    fireEvent.click(screen.getByTestId('apply-filter'));
+    // Beta = Jan 12 → 11 days × 20px = 220, landing 24px (the edge inset)
+    // inside the viewport's left edge.
+    expect(root.scrollLeft).toBe(196);
+  });
+
+  it('does not move the view when a filter match is already visible', () => {
+    const { container } = render(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          renderCard={row => <div>{row.original.title}</div>}
+        />
+        <ApplyFilterButton
+          filters={[{ name: 'title', operator: 'eq', value: 'Alpha' }]}
+        />
+      </DataView>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    // Alpha spans x 80–180; a viewport at 100 already shows it.
+    root.scrollLeft = 100;
+    fireEvent.click(screen.getByTestId('apply-filter'));
+    expect(root.scrollLeft).toBe(100);
+  });
+
+  it('keeps the scroll position on filter change when scrollToResults is false', () => {
+    const { container } = render(
+      <DataView<Order>
+        data={orders}
+        fields={fields}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        getRowId={(row: Order) => row.id}
+      >
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          scrollToResults={false}
+          renderCard={row => <div>{row.original.title}</div>}
+        />
+        <ApplyFilterButton
+          filters={[{ name: 'title', operator: 'eq', value: 'Beta' }]}
+        />
+      </DataView>
+    );
+    const root = container.firstElementChild as HTMLElement;
+    root.scrollLeft = 500;
+    fireEvent.click(screen.getByTestId('apply-filter'));
+    expect(root.scrollLeft).toBe(500);
   });
 
   it('restores the scroll position when a gated view is re-activated', () => {
@@ -886,7 +1115,8 @@ describe('DataView.Timeline', () => {
 /* ─────────────────────── actionsRef (imperative handle) ─────────────────
    Domain: explicit range Jan 1 → Jan 31 2025, day scale, 20px/unit.
    t0 = Jan 1, t1 = Feb 1, totalWidth = 620px. jsdom clientWidth is 0, so
-   'center'/'end' alignment offsets collapse to the target's own x. */
+   'center' collapses to the target's own x, while 'start'/'end' offset by
+   the 24px edge inset (clamped at the domain edges). */
 
 describe('DataView.Timeline actionsRef', () => {
   const makeActionsRef = () => ({ current: null as TimelineActions | null });
@@ -896,12 +1126,12 @@ describe('DataView.Timeline actionsRef', () => {
     const { container } = renderTimeline({ actionsRef });
     const root = container.firstElementChild as HTMLElement;
     expect(actionsRef.current).not.toBeNull();
-    // Jan 11 = 10 days after Jan 1 → 10 × 20px.
+    // Jan 11 = 10 days after Jan 1 → 10 × 20px, minus the 24px edge inset.
     actionsRef.current!.scrollTo('2025-01-11', {
       align: 'start',
       behavior: 'auto'
     });
-    expect(root.scrollLeft).toBe(200);
+    expect(root.scrollLeft).toBe(176);
   });
 
   it("resolves 'start' and 'end' to the domain edges", () => {
@@ -918,11 +1148,13 @@ describe('DataView.Timeline actionsRef', () => {
     const actionsRef = makeActionsRef();
     const { container } = renderTimeline({ actionsRef });
     const root = container.firstElementChild as HTMLElement;
+    // Clamped to t1 (x 620), then the 24px edge inset applies.
     actionsRef.current!.scrollTo('2030-06-01', {
       align: 'start',
       behavior: 'auto'
     });
-    expect(root.scrollLeft).toBe(620);
+    expect(root.scrollLeft).toBe(596);
+    // Clamped to t0 (x 0) — the inset yields to the scroll floor.
     actionsRef.current!.scrollTo('1999-01-01', {
       align: 'start',
       behavior: 'auto'
@@ -938,7 +1170,7 @@ describe('DataView.Timeline actionsRef', () => {
     // biome-ignore lint/suspicious/noExplicitAny: jsdom lacks Element.scrollTo
     (root as any).scrollTo = scrollToSpy;
     actionsRef.current!.scrollTo('2025-01-11', { align: 'start' });
-    expect(scrollToSpy).toHaveBeenCalledWith({ left: 200, behavior: 'smooth' });
+    expect(scrollToSpy).toHaveBeenCalledWith({ left: 176, behavior: 'smooth' });
   });
 
   it('warns and no-ops on an invalid date', () => {
