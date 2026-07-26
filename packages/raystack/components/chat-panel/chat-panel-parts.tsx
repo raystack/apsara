@@ -1,14 +1,9 @@
 'use client';
 
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import {
-  MinusIcon,
-  PinLeftIcon,
-  PinRightIcon,
-  SizeIcon
-} from '@radix-ui/react-icons';
+import { MinusIcon, SizeIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, MouseEvent, PointerEvent } from 'react';
+import { ComponentProps, MouseEvent, PointerEvent, ReactNode } from 'react';
 import { IconButton, type IconButtonProps } from '../icon-button/icon-button';
 import styles from './chat-panel.module.css';
 import { useChatPanelContext } from './chat-panel-context';
@@ -102,7 +97,19 @@ export function ChatPanelMinimizeTrigger({
 
 ChatPanelMinimizeTrigger.displayName = 'ChatPanel.MinimizeTrigger';
 
-export interface ChatPanelExpandTriggerProps extends IconButtonProps {}
+export interface ChatPanelExpandTriggerState {
+  /** Whether the panel is currently floating (true) or docked (false). */
+  floating: boolean;
+}
+
+export interface ChatPanelExpandTriggerProps
+  extends Omit<IconButtonProps, 'children'> {
+  /**
+   * The icon. Defaults to a size icon in both states; pass a render
+   * function to swap icons based on the current state.
+   */
+  children?: ReactNode | ((state: ChatPanelExpandTriggerState) => ReactNode);
+}
 
 export function ChatPanelExpandTrigger({
   children,
@@ -110,7 +117,7 @@ export function ChatPanelExpandTrigger({
   'aria-label': ariaLabel,
   ...props
 }: ChatPanelExpandTriggerProps) {
-  const { mode, side, toggleFloating } = useChatPanelContext('ExpandTrigger');
+  const { mode, toggleFloating } = useChatPanelContext('ExpandTrigger');
   const floating = mode === 'floating';
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -118,6 +125,9 @@ export function ChatPanelExpandTrigger({
     if (event.defaultPrevented) return;
     toggleFloating();
   };
+
+  const resolvedChildren =
+    typeof children === 'function' ? children({ floating }) : children;
 
   return (
     <IconButton
@@ -128,16 +138,7 @@ export function ChatPanelExpandTrigger({
       onClick={handleClick}
       {...props}
     >
-      {children ??
-        (floating ? (
-          side === 'left' ? (
-            <PinLeftIcon />
-          ) : (
-            <PinRightIcon />
-          )
-        ) : (
-          <SizeIcon />
-        ))}
+      {resolvedChildren ?? <SizeIcon />}
     </IconButton>
   );
 }

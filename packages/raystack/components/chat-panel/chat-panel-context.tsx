@@ -1,7 +1,7 @@
 'use client';
 
 import type { DraggableSyntheticListeners } from '@dnd-kit/core';
-import { createContext, useContext } from 'react';
+import { createContext, RefObject, useContext } from 'react';
 
 export type ChatPanelMode = 'docked' | 'floating' | 'minimized';
 export type ChatPanelSide = 'left' | 'right';
@@ -17,6 +17,10 @@ export interface ChatPanelContextValue {
   dragHandleRef: (element: HTMLElement | null) => void;
   /** dnd-kit activator listeners; undefined while dragging is disabled. */
   dragListeners: DraggableSyntheticListeners;
+  /** dnd-kit id of the minimized bubble's draggable. */
+  bubbleDraggableId: string;
+  /** The bubble element, so the root can measure it when a drag starts. */
+  bubbleElementRef: RefObject<HTMLElement | null>;
 }
 
 export const ChatPanelContext = createContext<ChatPanelContextValue | null>(

@@ -5,7 +5,7 @@ source: packages/raystack/components/chat-panel
 tag: new
 ---
 
-import { preview, controlledDemo, boundedDragDemo, unreadBadgeDemo } from "./demo.ts";
+import { preview, controlledDemo, boundedDragDemo, resizeDemo, draggableBubbleDemo, unreadBadgeDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -38,8 +38,11 @@ survives every transition:
 - **`docked`** — an in-flow sidebar (a flex sibling, like `SidePanel`) that
   squeezes the main content rather than covering it.
 - **`floating`** — the same element switched to `position: fixed`: drag it by
-  the header (clamped to the viewport, or to a container via `dragBoundary`)
-  and resize it from any edge or corner.
+  the header (clamped to the viewport, or to a container via `dragBoundary`;
+  disable with `draggable={false}`) and resize it from any edge or corner
+  (constrain the axes with `resize`). Out of the box resizing can only
+  shrink the window below its initial size — pass a larger `maxSize` to let
+  it grow.
 - **`minimized`** — the frame collapses to `ChatPanel.Trigger`, a fixed
   corner bubble; clicking it restores the previous mode. If you don't render
   a trigger, minimized shows nothing and your app supplies its own affordance.
@@ -75,7 +78,15 @@ A slot row at the end of the header for controls.
 
 Ready-made mode buttons for `ChatPanel.Actions`, built on `IconButton`.
 MinimizeTrigger switches to `minimized`; ExpandTrigger toggles between
-`docked` and `floating` with a matching icon and accessible name.
+`docked` and `floating` with a state-aware accessible name. Both render a
+default icon (minus / size) that children override; ExpandTrigger children
+also accept a render function receiving `{ floating }` for per-state icons:
+
+```tsx
+<ChatPanel.ExpandTrigger>
+  {({ floating }) => (floating ? <PinRightIcon /> : <SizeIcon />)}
+</ChatPanel.ExpandTrigger>
+```
 
 ### Content
 
@@ -84,7 +95,9 @@ height.
 
 ### Trigger
 
-The minimized-state corner bubble.
+The minimized-state corner bubble. Children replace the default chat icon,
+and `draggable` lets the bubble be dragged around the viewport — a completed
+drag never triggers the restore click.
 
 <auto-type-table path="./props.ts" name="ChatPanelTriggerProps" />
 
@@ -106,6 +119,19 @@ window is clamped to the viewport; pass an element (or a ref to one) as
 `position: fixed`, so the boundary only limits where a drag can put it.
 
 <Demo data={boundedDragDemo} />
+
+### Constraining the resize axes
+
+`resize` mirrors the CSS `resize` property: `both` (default), `horizontal`,
+`vertical` or `none`. Only the handles for the allowed axes render. The
+default `maxSize` is the initial floating size, so this demo passes a larger
+one to allow growing.
+
+<Demo data={resizeDemo} />
+
+### Draggable minimized bubble
+
+<Demo data={draggableBubbleDemo} />
 
 ### Unread badge on the bubble
 

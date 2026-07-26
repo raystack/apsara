@@ -83,7 +83,9 @@
   box-sizing: border-box;
 }
 
-.root[data-mode="floating"] .header {
+/* Gated on data-draggable (not floating mode alone) so draggable={false}
+   drops the grab affordance with the listeners. */
+.root[data-draggable] .header {
   cursor: grab;
   user-select: none;
   touch-action: none;
@@ -172,6 +174,17 @@
 
 .trigger:focus-visible {
   outline: var(--rs-focus-ring);
+}
+
+.trigger[data-draggable] {
+  touch-action: none;
+}
+
+/* The eased transform tween would lag the pointer mid-drag. */
+.trigger[data-dragging] {
+  transition: none;
+  cursor: grabbing;
+  user-select: none;
 }
 
 /* Resize handles line the floating window's edges and corners. */

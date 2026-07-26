@@ -24,6 +24,7 @@ export { Callout } from './components/callout';
 export {
   Chat,
   type ChatAttachmentState,
+  type ChatJumpButtonProps,
   type ChatMessagesActions,
   type UseChatMessagesReturn,
   useChatMessages
@@ -31,11 +32,15 @@ export {
 export {
   ChatPanel,
   type ChatPanelDragBoundary,
+  type ChatPanelExpandTriggerProps,
+  type ChatPanelExpandTriggerState,
   type ChatPanelMode,
   type ChatPanelPosition,
   type ChatPanelProps,
+  type ChatPanelResize,
   type ChatPanelSide,
-  type ChatPanelSize
+  type ChatPanelSize,
+  type ChatPanelTriggerProps
 } from './components/chat-panel';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';

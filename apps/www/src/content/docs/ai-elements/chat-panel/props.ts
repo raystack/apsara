@@ -60,8 +60,26 @@ export interface ChatPanelProps {
    */
   minSize?: ChatPanelSize;
 
-  /** Largest allowed floating size. Defaults to the viewport. */
+  /**
+   * Largest allowed floating size, always additionally clamped by the
+   * viewport.
+   * @defaultValue the initial floating size — out of the box the window can
+   * only shrink; pass a larger `maxSize` to let it grow.
+   */
   maxSize?: ChatPanelSize;
+
+  /**
+   * Which axes the floating window can be resized on; mirrors the CSS
+   * `resize` property vocabulary.
+   * @defaultValue "both"
+   */
+  resize?: 'both' | 'horizontal' | 'vertical' | 'none';
+
+  /**
+   * Whether the floating window can be dragged by its header.
+   * @defaultValue true
+   */
+  draggable?: boolean;
 
   /**
    * Confines floating-window dragging to an element instead of the
@@ -79,6 +97,13 @@ export interface ChatPanelTriggerProps {
    * for unread counts.
    */
   children?: React.ReactNode;
+
+  /**
+   * Whether the minimized bubble can be dragged around the viewport. The
+   * dropped position is kept across minimize/restore cycles.
+   * @defaultValue false
+   */
+  draggable?: boolean;
 
   /**
    * Accessible name of the bubble.

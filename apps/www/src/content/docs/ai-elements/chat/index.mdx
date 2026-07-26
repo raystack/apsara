@@ -87,8 +87,11 @@ message looks like.
 ### Chat.JumpButton
 
 The floating "↓ Latest" pill. It appears once the reader leaves the live edge
-and scrolls back down on click. Render it as a child of `Chat.Messages`;
-children replace the default arrow-and-label content.
+and scrolls back down on click. Render it as a child of `Chat.Messages`.
+Children are the text slot ("Latest" by default); the leading icon renders
+regardless, swap it with `leadingIcon` or remove it with `leadingIcon={null}`.
+
+<auto-type-table path="./props.ts" name="ChatJumpButtonProps" />
 
 ### Chat.Composer
 

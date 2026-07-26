@@ -109,6 +109,21 @@
   outline: var(--rs-focus-ring);
 }
 
+/* Rendered smaller than the icon's native 15px box. */
+.jump-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.jump-icon > svg {
+  width: 100%;
+  height: 100%;
+}
+
 /* -------------------------------- composer -------------------------------- */
 
 /* Sits flush against the messages viewport; the messages' own content

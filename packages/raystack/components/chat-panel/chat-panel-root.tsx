@@ -4,6 +4,7 @@ import { useControlled } from '@base-ui/utils/useControlled';
 import {
   DndContext,
   type DragEndEvent,
+  type DragStartEvent,
   type Modifier,
   PointerSensor,
   useDraggable,
@@ -53,16 +54,15 @@ const DEFAULT_MIN_SIZE: ChatPanelSize = { width: 280, height: 320 };
 
 type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
-const RESIZE_DIRECTIONS: ResizeDirection[] = [
-  'n',
-  's',
-  'e',
-  'w',
-  'ne',
-  'nw',
-  'se',
-  'sw'
-];
+/** Which resize handles to render, mirroring the CSS `resize` vocabulary. */
+export type ChatPanelResize = 'both' | 'horizontal' | 'vertical' | 'none';
+
+const RESIZE_HANDLES: Record<ChatPanelResize, ResizeDirection[]> = {
+  both: ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'],
+  horizontal: ['e', 'w'],
+  vertical: ['n', 's'],
+  none: []
+};
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), Math.max(min, max));
@@ -82,7 +82,11 @@ function resolveDragBoundary(
   return 'current' in boundary ? boundary.current : boundary;
 }
 
-/** A PointerSensor that never starts a drag from interactive children. */
+/**
+ * A PointerSensor that never starts a drag from interactive children. The
+ * minimized bubble is the one draggable button: its listeners are only
+ * attached while its drag is enabled, so allowing it here is safe.
+ */
 class ChatPanelPointerSensor extends PointerSensor {
   static activators = [
     {
@@ -90,6 +94,7 @@ class ChatPanelPointerSensor extends PointerSensor {
       handler: ({ nativeEvent: event }: ReactPointerEvent) => {
         if (event.button !== 0 || event.isPrimary === false) return false;
         const target = event.target as Element;
+        if (target.closest('[data-chat-panel-trigger]')) return true;
         return !target.closest(
           'button, a, input, textarea, select, [data-chat-panel-no-drag]'
         );
@@ -137,8 +142,25 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
    * @defaultValue { width: 280, height: 320 }
    */
   minSize?: ChatPanelSize;
-  /** Largest allowed floating size. Defaults to the viewport. */
+  /**
+   * Largest allowed floating size, always additionally clamped by the
+   * viewport.
+   * @defaultValue the initial floating size — out of the box the window can
+   * only shrink; pass a larger `maxSize` to let it grow.
+   */
   maxSize?: ChatPanelSize;
+  /**
+   * Which axes the floating window can be resized on; mirrors the CSS
+   * `resize` property vocabulary.
+   * @defaultValue "both"
+   */
+  resize?: ChatPanelResize;
+  /**
+   * Whether the floating window can be dragged by its header. Shadows the
+   * (useless here) native `draggable` attribute.
+   * @defaultValue true
+   */
+  draggable?: boolean;
   /**
    * Confines floating-window dragging to an element instead of the
    * viewport. Accepts the element or a ref to it.
@@ -162,12 +184,16 @@ export function ChatPanelRoot({
   onSizeChange,
   minSize,
   maxSize,
+  resize = 'both',
+  draggable = true,
   dragBoundary,
   ref,
   ...props
 }: ChatPanelRootProps) {
   const panelRef = useRef<HTMLElement | null>(null);
+  const bubbleElementRef = useRef<HTMLElement | null>(null);
   const draggableId = useId();
+  const bubbleDraggableId = useId();
 
   const [mode, setModeUnwrapped] = useControlled({
     controlled: modeProp,
@@ -190,6 +216,14 @@ export function ChatPanelRoot({
   });
 
   const [resizing, setResizing] = useState(false);
+  // Where the minimized bubble was dropped; internal only, survives
+  // minimize/restore cycles because it lives here rather than in the trigger.
+  const [bubblePosition, setBubblePosition] =
+    useState<ChatPanelPosition | null>(null);
+
+  // The size the window first resolved to; the default maxSize, so a custom
+  // defaultSize never contradicts its own max.
+  const initialSizeRef = useRef(sizeProp ?? defaultSize ?? DEFAULT_SIZE);
 
   const modeRef = useRef(mode);
   modeRef.current = mode;
@@ -210,8 +244,8 @@ export function ChatPanelRoot({
   onSizeChangeRef.current = onSizeChange;
   const minSizeRef = useRef(minSize ?? DEFAULT_MIN_SIZE);
   minSizeRef.current = minSize ?? DEFAULT_MIN_SIZE;
-  const maxSizeRef = useRef(maxSize);
-  maxSizeRef.current = maxSize;
+  const maxSizeRef = useRef(maxSize ?? initialSizeRef.current);
+  maxSizeRef.current = maxSize ?? initialSizeRef.current;
   const dragBoundaryRef = useRef(dragBoundary);
   dragBoundaryRef.current = dragBoundary;
 
@@ -278,14 +312,35 @@ export function ChatPanelRoot({
 
   /* ------------------------------- dragging ------------------------------ */
 
-  const sensors = useSensors(useSensor(ChatPanelPointerSensor));
+  // The distance constraint keeps bubble clicks working: a press that moves
+  // less than 4px stays a click and never activates a drag.
+  const sensors = useSensors(
+    useSensor(ChatPanelPointerSensor, {
+      activationConstraint: { distance: 4 }
+    })
+  );
 
   // Clamps the live drag transform the same way the committed position is
   // clamped: fully inside the bounds horizontally, header kept reachable
-  // vertically.
+  // vertically. The bubble is small, so it stays fully on screen instead.
   const restrictToDragBounds = useCallback<Modifier>(
-    ({ transform, draggingNodeRect }) => {
+    ({ transform, draggingNodeRect, active }) => {
       if (!draggingNodeRect) return transform;
+      if (active?.id === bubbleDraggableId) {
+        return {
+          ...transform,
+          x: clamp(
+            transform.x,
+            -draggingNodeRect.left,
+            window.innerWidth - draggingNodeRect.left - draggingNodeRect.width
+          ),
+          y: clamp(
+            transform.y,
+            -draggingNodeRect.top,
+            window.innerHeight - draggingNodeRect.top - draggingNodeRect.height
+          )
+        };
+      }
       const bounds = getDragBounds();
       return {
         ...transform,
@@ -301,7 +356,7 @@ export function ChatPanelRoot({
         )
       };
     },
-    [getDragBounds]
+    [getDragBounds, bubbleDraggableId]
   );
   const modifiers = useMemo(
     () => [restrictToDragBounds],
@@ -311,22 +366,61 @@ export function ChatPanelRoot({
   const dragOriginRef = useRef<{ x: number; y: number; width: number } | null>(
     null
   );
+  const bubbleDragOriginRef = useRef<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null>(null);
 
-  const handleDragStart = useCallback(() => {
-    const panel = panelRef.current;
-    if (!panel) return;
-    const rect = panel.getBoundingClientRect();
-    dragOriginRef.current = { x: rect.left, y: rect.top, width: rect.width };
-    // Anchor a corner-positioned panel so the drag delta has a fixed origin.
-    if (!positionRef.current) {
-      setPosition({ x: Math.round(rect.left), y: Math.round(rect.top) });
-    }
-  }, [setPosition]);
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      if (event.active.id === bubbleDraggableId) {
+        const bubble = bubbleElementRef.current;
+        if (!bubble) return;
+        const rect = bubble.getBoundingClientRect();
+        bubbleDragOriginRef.current = {
+          x: rect.left,
+          y: rect.top,
+          width: rect.width,
+          height: rect.height
+        };
+        return;
+      }
+      const panel = panelRef.current;
+      if (!panel) return;
+      const rect = panel.getBoundingClientRect();
+      dragOriginRef.current = { x: rect.left, y: rect.top, width: rect.width };
+      // Anchor a corner-positioned panel so the drag delta has a fixed origin.
+      if (!positionRef.current) {
+        setPosition({ x: Math.round(rect.left), y: Math.round(rect.top) });
+      }
+    },
+    [setPosition, bubbleDraggableId]
+  );
 
   // dnd-kit's end delta is the raw translate (modifiers are not applied to
   // it), so the commit re-clamps with the same bounds as the modifier.
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
+      if (event.active.id === bubbleDraggableId) {
+        const origin = bubbleDragOriginRef.current;
+        bubbleDragOriginRef.current = null;
+        if (!origin) return;
+        setBubblePosition({
+          x: Math.round(
+            clamp(origin.x + event.delta.x, 0, window.innerWidth - origin.width)
+          ),
+          y: Math.round(
+            clamp(
+              origin.y + event.delta.y,
+              0,
+              window.innerHeight - origin.height
+            )
+          )
+        });
+        return;
+      }
       const origin = dragOriginRef.current;
       dragOriginRef.current = null;
       if (!origin) return;
@@ -337,11 +431,12 @@ export function ChatPanelRoot({
         )
       );
     },
-    [clampPosition, setPosition]
+    [clampPosition, setPosition, bubbleDraggableId]
   );
 
   const handleDragCancel = useCallback(() => {
     dragOriginRef.current = null;
+    bubbleDragOriginRef.current = null;
   }, []);
 
   /* ------------------------------- resizing ------------------------------ */
@@ -473,9 +568,11 @@ export function ChatPanelRoot({
       minimize: () => setMode('minimized'),
       restore: () => setMode(previousModeRef.current),
       toggleFloating: () =>
-        setMode(modeRef.current === 'floating' ? 'docked' : 'floating')
+        setMode(modeRef.current === 'floating' ? 'docked' : 'floating'),
+      bubbleDraggableId,
+      bubbleElementRef
     }),
-    [mode, side, setMode]
+    [mode, side, setMode, bubbleDraggableId]
   );
 
   const floatingStyle =
@@ -492,7 +589,15 @@ export function ChatPanelRoot({
               }
             : null)
         }
-      : null;
+      : mode === 'minimized' && bubblePosition
+        ? {
+            // A dropped bubble overrides the CSS corner pinning.
+            left: bubblePosition.x,
+            top: bubblePosition.y,
+            right: 'auto',
+            bottom: 'auto'
+          }
+        : null;
 
   return (
     <DndContext
@@ -509,6 +614,7 @@ export function ChatPanelRoot({
         panelRef={panelRef}
         mode={mode}
         side={side}
+        draggable={draggable}
         resizing={resizing}
         floatingStyle={floatingStyle}
         className={className}
@@ -516,7 +622,7 @@ export function ChatPanelRoot({
         ref={ref}
         resizeHandles={
           mode === 'floating'
-            ? RESIZE_DIRECTIONS.map(direction => (
+            ? RESIZE_HANDLES[resize].map(direction => (
                 <div
                   key={direction}
                   aria-hidden='true'
@@ -548,6 +654,7 @@ interface ChatPanelFrameProps extends ComponentProps<'aside'> {
   panelRef: RefObject<HTMLElement | null>;
   mode: ChatPanelMode;
   side: ChatPanelSide;
+  draggable: boolean;
   resizing: boolean;
   floatingStyle: CSSProperties | null;
   resizeHandles: ReactNode;
@@ -561,6 +668,7 @@ function ChatPanelFrame({
   panelRef,
   mode,
   side,
+  draggable,
   resizing,
   floatingStyle,
   resizeHandles,
@@ -570,10 +678,11 @@ function ChatPanelFrame({
   ref,
   ...props
 }: ChatPanelFrameProps) {
+  const dragEnabled = mode === 'floating' && draggable;
   const { setNodeRef, setActivatorNodeRef, listeners, transform, isDragging } =
     useDraggable({
       id: draggableId,
-      disabled: mode !== 'floating'
+      disabled: !dragEnabled
     });
 
   const contextValue = useMemo<ChatPanelContextValue>(
@@ -596,6 +705,7 @@ function ChatPanelFrame({
       className={cx(styles.root, className)}
       data-mode={mode}
       data-side={side}
+      data-draggable={dragEnabled || undefined}
       data-dragging={isDragging || undefined}
       data-resizing={resizing || undefined}
       style={{

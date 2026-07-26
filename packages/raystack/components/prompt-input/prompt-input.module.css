@@ -102,6 +102,12 @@
   }
 }
 
+/* Rendered slightly smaller than the icons' native 15px box. */
+.submit > svg {
+  width: 14px;
+  height: 14px;
+}
+
 .submit:hover:not(:disabled) {
   background: var(--rs-color-background-accent-emphasis-hover);
 }

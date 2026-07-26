@@ -60,6 +60,34 @@ export const attachmentsDemo = {
 </div>`
 };
 
+export const statusDemo = {
+  type: 'code',
+  code: `function PromptInputStatuses() {
+  const STATUSES = ['idle', 'submitted', 'streaming', 'error'];
+
+  return (
+    <Flex gap={5} wrap="wrap">
+      {STATUSES.map(status => (
+        <Flex key={status} direction="column" gap={2} style={{ width: 320 }}>
+          <Text size="small" variant="secondary">status="{status}"</Text>
+          <PromptInput
+            status={status}
+            defaultValue="Summarize this thread"
+            onSubmit={() => {}}
+            onStop={() => {}}
+          >
+            <PromptInput.Textarea />
+            <PromptInput.Footer>
+              <PromptInput.Submit />
+            </PromptInput.Footer>
+          </PromptInput>
+        </Flex>
+      ))}
+    </Flex>
+  );
+}`
+};
+
 export const controlledDemo = {
   type: 'code',
   code: `function ControlledPromptInput() {

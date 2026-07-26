@@ -5,7 +5,7 @@ source: packages/raystack/components/prompt-input
 tag: new
 ---
 
-import { preview, attachmentsDemo, controlledDemo, disabledDemo } from "./demo.ts";
+import { preview, attachmentsDemo, statusDemo, controlledDemo, disabledDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -79,6 +79,23 @@ Attachment previews are presentational (`Chat.Attachment`); file picking,
 drag-drop and uploads belong to your app.
 
 <Demo data={attachmentsDemo} />
+
+### Status
+
+`status` reflects the request lifecycle your app manages:
+
+- **`idle`** — the resting state; the submit button shows the send arrow and
+  disables itself while the input is empty.
+- **`submitted`** — the request is sent but nothing has streamed back yet;
+  the button shows a spinner, Enter/submit is blocked, and clicking calls
+  `onStop`.
+- **`streaming`** — tokens are arriving; the button flips to a stop square
+  that calls `onStop`, and submit stays blocked.
+- **`error`** — the request failed; the composer returns to a submittable
+  state (send arrow) so the user can retry. Render your error message
+  outside the composer.
+
+<Demo data={statusDemo} />
 
 ### Controlled value
 

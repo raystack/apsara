@@ -4,8 +4,14 @@ export type {
   ChatPanelSide
 } from './chat-panel-context';
 export type {
+  ChatPanelExpandTriggerProps,
+  ChatPanelExpandTriggerState
+} from './chat-panel-parts';
+export type {
   ChatPanelDragBoundary,
   ChatPanelPosition,
+  ChatPanelResize,
   ChatPanelRootProps as ChatPanelProps,
   ChatPanelSize
 } from './chat-panel-root';
+export type { ChatPanelTriggerProps } from './chat-panel-trigger';
