@@ -560,6 +560,31 @@ export function ChatPanelRoot({
     return () => window.removeEventListener('resize', handleWindowResize);
   }, [mode, clampPosition, setPosition]);
 
+  // Keep a dropped bubble reachable too: unlike the floating window it has
+  // no header to grab, so an off-screen bubble would strand the panel. Runs
+  // on entering minimized as well, covering resizes made in other modes.
+  useEffect(() => {
+    if (mode !== 'minimized' || typeof window === 'undefined') return;
+    const clampBubble = () => {
+      setBubblePosition(current => {
+        if (!current) return current;
+        const rect = bubbleElementRef.current?.getBoundingClientRect();
+        const next = {
+          x: Math.round(
+            clamp(current.x, 0, window.innerWidth - (rect?.width ?? 0))
+          ),
+          y: Math.round(
+            clamp(current.y, 0, window.innerHeight - (rect?.height ?? 0))
+          )
+        };
+        return next.x === current.x && next.y === current.y ? current : next;
+      });
+    };
+    clampBubble();
+    window.addEventListener('resize', clampBubble);
+    return () => window.removeEventListener('resize', clampBubble);
+  }, [mode]);
+
   const baseContext = useMemo(
     () => ({
       mode,

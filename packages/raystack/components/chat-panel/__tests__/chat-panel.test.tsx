@@ -21,6 +21,20 @@ const mockRect = (left: number, top: number, width: number, height: number) =>
 const flushDragSuppression = () =>
   new Promise(resolve => setTimeout(resolve, 60));
 
+// jsdom's viewport is fixed at 1024x768; override it for resize tests.
+const setViewport = (width: number, height: number) => {
+  Object.defineProperty(window, 'innerWidth', {
+    configurable: true,
+    writable: true,
+    value: width
+  });
+  Object.defineProperty(window, 'innerHeight', {
+    configurable: true,
+    writable: true,
+    value: height
+  });
+};
+
 const BasicChatPanel = (props: Partial<Parameters<typeof ChatPanel>[0]>) => (
   <ChatPanel data-testid='panel' {...props}>
     <ChatPanel.Header data-testid='header'>
@@ -709,6 +723,57 @@ describe('ChatPanel', () => {
       const panel = screen.getByTestId('panel');
       expect(panel.style.left).toBe('0px');
       expect(panel.style.top).toBe('0px');
+    });
+
+    it('re-clamps the dropped bubble when the viewport shrinks', async () => {
+      render(<DraggableBubblePanel />);
+      screen.getByTestId('bubble').getBoundingClientRect = () =>
+        mockRect(900, 700, 44, 44);
+
+      dragBubble({ x: 920, y: 720 }, { x: 820, y: 620 });
+      await flushDragSuppression();
+
+      const panel = screen.getByTestId('panel');
+      expect(panel.style.left).toBe('800px');
+
+      try {
+        setViewport(500, 400);
+        fireEvent(window, new Event('resize'));
+        // 500 - 44 wide and 400 - 44 tall: the bubble stays fully on screen.
+        expect(panel.style.left).toBe('456px');
+        expect(panel.style.top).toBe('356px');
+      } finally {
+        setViewport(1024, 768);
+      }
+    });
+
+    it('re-clamps a stale dropped position when re-minimizing', async () => {
+      // The bubble remounts on re-minimize, so mock rects on the prototype.
+      const rectSpy = vi
+        .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+        .mockReturnValue(mockRect(900, 700, 44, 44));
+      try {
+        render(<DraggableBubblePanel />);
+        dragBubble({ x: 920, y: 720 }, { x: 820, y: 620 });
+        await new Promise(resolve => setTimeout(resolve, 150));
+
+        fireEvent.click(screen.getByTestId('bubble'));
+        const panel = screen.getByTestId('panel');
+        expect(panel).toHaveAttribute('data-mode', 'docked');
+
+        // The viewport shrinks while the panel is docked, then re-minimizes:
+        // the stale drop position re-clamps on entering minimized.
+        setViewport(500, 400);
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Minimize chat panel' })
+        );
+        expect(panel).toHaveAttribute('data-mode', 'minimized');
+        expect(panel.style.left).toBe('456px');
+        expect(panel.style.top).toBe('356px');
+      } finally {
+        rectSpy.mockRestore();
+        setViewport(1024, 768);
+      }
     });
 
     it('keeps the dropped position across restore and minimize', async () => {
