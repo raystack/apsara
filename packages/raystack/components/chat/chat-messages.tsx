@@ -6,6 +6,7 @@ import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
   MouseEvent,
+  ReactNode,
   RefObject,
   useCallback,
   useEffect,
@@ -418,12 +419,19 @@ export function ChatMessages({
 
 ChatMessages.displayName = 'Chat.Messages';
 
-export interface ChatJumpButtonProps extends ComponentProps<'button'> {}
+export interface ChatJumpButtonProps extends ComponentProps<'button'> {
+  /**
+   * Icon rendered before the label. Pass `null` to remove it.
+   * @defaultValue an arrow-down icon
+   */
+  leadingIcon?: ReactNode;
+}
 
 export function ChatJumpButton({
   className,
   children,
   onClick,
+  leadingIcon,
   ...props
 }: ChatJumpButtonProps) {
   const { atBottom } = useChatMessagesState('Chat.JumpButton');
@@ -446,12 +454,12 @@ export function ChatJumpButton({
       onClick={handleClick}
       {...props}
     >
-      {children ?? (
-        <>
-          <ArrowDownIcon aria-hidden='true' />
-          <span>Latest</span>
-        </>
+      {leadingIcon !== null && (
+        <span className={styles['jump-icon']} aria-hidden='true'>
+          {leadingIcon ?? <ArrowDownIcon />}
+        </span>
       )}
+      {children ?? 'Latest'}
     </button>
   );
 }

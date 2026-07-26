@@ -1,0 +1,173 @@
+---
+title: ChatPanel
+description: A dockable, floating, minimizable window frame for chat — an inline sidebar that pops out to a draggable, resizable window or collapses to a corner bubble.
+source: packages/raystack/components/chat-panel
+tag: new
+---
+
+import { preview, controlledDemo, boundedDragDemo, resizeDemo, draggableBubbleDemo, unreadBadgeDemo } from "./demo.ts";
+
+<Demo data={preview} />
+
+## Anatomy
+
+```tsx
+import { ChatPanel } from '@raystack/apsara'
+
+<Flex>
+  <MainContent />
+  <ChatPanel mode={mode} onModeChange={setMode} side="right">
+    <ChatPanel.Header>
+      <ChatPanel.Title>Create task in design system 2</ChatPanel.Title>
+      <ChatPanel.Actions>
+        {/* consumer extras, e.g. ⋯ menu */}
+        <ChatPanel.MinimizeTrigger />
+        <ChatPanel.ExpandTrigger />
+      </ChatPanel.Actions>
+    </ChatPanel.Header>
+    <ChatPanel.Content>{/* Chat.Messages + PromptInput */}</ChatPanel.Content>
+    <ChatPanel.Trigger />   {/* minimized bubble */}
+  </ChatPanel>
+</Flex>
+```
+
+The panel mounts **once** in your layout and morphs between modes with pure
+CSS — no portal, no remount, so chat state (scroll position, focus, streams)
+survives every transition:
+
+- **`docked`** — an in-flow sidebar (a flex sibling, like `SidePanel`) that
+  squeezes the main content rather than covering it.
+- **`floating`** — the same element switched to `position: fixed`: drag it by
+  the header (clamped to the viewport, or to a container via `dragBoundary`;
+  disable with `draggable={false}`) and resize it from any edge or corner
+  (constrain the axes with `resize`). Out of the box resizing can only
+  shrink the window below its initial size — pass a larger `maxSize` to let
+  it grow.
+- **`minimized`** — the frame collapses to `ChatPanel.Trigger`, a fixed
+  corner bubble; clicking it restores the previous mode. If you don't render
+  a trigger, minimized shows nothing and your app supplies its own affordance.
+
+There is deliberately no close (×) — header actions are slottable, so apps
+add their own controls next to the ready-made mode triggers.
+
+Because floating and minimized rely on `position: fixed`, mount the panel
+near the layout root: an ancestor with `transform`, `filter` or
+`backdrop-filter` would break fixed positioning.
+
+## API Reference
+
+### Root
+
+<auto-type-table path="./props.ts" name="ChatPanelProps" />
+
+### Header
+
+The title bar. In floating mode it is the drag handle — pointer drags on it
+move the window (interactive children like buttons are excluded, as is
+anything marked `data-chat-panel-no-drag`).
+
+### Title
+
+The heading (`<h2>`), truncated with an ellipsis.
+
+### Actions
+
+A slot row at the end of the header for controls.
+
+### MinimizeTrigger / ExpandTrigger
+
+Ready-made mode buttons for `ChatPanel.Actions`, built on `IconButton`.
+MinimizeTrigger switches to `minimized`; ExpandTrigger toggles between
+`docked` and `floating` with a state-aware accessible name. Both render a
+default icon (minus / size) that children override; ExpandTrigger children
+also accept a render function receiving `{ floating }` for per-state icons:
+
+```tsx
+<ChatPanel.ExpandTrigger>
+  {({ floating }) => (floating ? <PinRightIcon /> : <SizeIcon />)}
+</ChatPanel.ExpandTrigger>
+```
+
+### Content
+
+The body wrapper — a flex column that gives `Chat.Messages` its bounded
+height.
+
+### Trigger
+
+The minimized-state corner bubble. Children replace the default chat icon,
+and `draggable` lets the bubble be dragged around the viewport — a completed
+drag never triggers the restore click.
+
+<auto-type-table path="./props.ts" name="ChatPanelTriggerProps" />
+
+## Examples
+
+### Controlled mode
+
+Control `mode` to persist it, or to open the panel from your own UI. The
+floating window here is fixed to the browser viewport — pop it out and drag
+its header.
+
+<Demo data={controlledDemo} />
+
+### Constraining the drag to a container
+
+Dragging is built on [dnd-kit](https://dndkit.com). By default the floating
+window is clamped to the viewport; pass an element (or a ref to one) as
+`dragBoundary` to confine dragging to it instead. The panel keeps
+`position: fixed`, so the boundary only limits where a drag can put it.
+
+<Demo data={boundedDragDemo} />
+
+### Constraining the resize axes
+
+`resize` mirrors the CSS `resize` property: `both` (default), `horizontal`,
+`vertical` or `none`. Only the handles for the allowed axes render. The
+default `maxSize` is the initial floating size, so this demo passes a larger
+one to allow growing.
+
+<Demo data={resizeDemo} />
+
+### Draggable minimized bubble
+
+<Demo data={draggableBubbleDemo} />
+
+### Unread badge on the bubble
+
+<Demo data={unreadBadgeDemo} />
+
+### Persisting placement
+
+Position and size are controllable for apps that restore the floating window
+across sessions:
+
+```tsx
+<ChatPanel
+  mode={mode}
+  onModeChange={setMode}
+  position={saved.position}
+  onPositionChange={savePosition}
+  size={saved.size}
+  onSizeChange={saveSize}
+  minSize={{ width: 320, height: 400 }}
+>
+  …
+</ChatPanel>
+```
+
+## Accessibility
+
+- The root renders an `<aside>` (`complementary` landmark); give it an
+  `aria-label` when your page has more than one.
+- `ChatPanel.Title` is a real `<h2>` heading.
+- All mode triggers are `IconButton`s with descriptive, state-aware
+  accessible names ("Minimize chat panel", "Pop out chat panel", "Dock chat
+  panel", "Open chat").
+- Mode transitions never remount the content, so keyboard focus inside the
+  thread or composer is preserved when docking or popping out.
+- Dragging clamps so the header can never leave the viewport (or the
+  `dragBoundary` container), and the window and a dropped bubble both
+  re-clamp when the browser is resized.
+- Drag and resize are pointer gestures; keep docked mode reachable (the
+  ExpandTrigger toggle) so keyboard users can always use the inline layout.

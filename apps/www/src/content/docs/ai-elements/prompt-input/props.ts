@@ -70,26 +70,3 @@ export interface PromptInputSubmitProps {
   /** Custom CSS class names. */
   className?: string;
 }
-
-export interface PromptInputButtonProps {
-  /**
-   * Visual style, forwarded to `Button`.
-   * @defaultValue "ghost"
-   */
-  variant?: 'solid' | 'outline' | 'ghost' | 'text';
-
-  /**
-   * Color, forwarded to `Button`.
-   * @defaultValue "neutral"
-   */
-  color?: 'accent' | 'danger' | 'neutral' | 'success';
-
-  /**
-   * Size, forwarded to `Button`.
-   * @defaultValue "small"
-   */
-  size?: 'small' | 'normal';
-
-  /** Custom CSS class names. */
-  className?: string;
-}

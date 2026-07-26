@@ -5,3 +5,4 @@ export {
   type UseChatMessagesReturn,
   useChatMessages
 } from './chat-context';
+export type { ChatJumpButtonProps } from './chat-messages';

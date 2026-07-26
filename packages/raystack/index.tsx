@@ -24,10 +24,24 @@ export { Callout } from './components/callout';
 export {
   Chat,
   type ChatAttachmentState,
+  type ChatJumpButtonProps,
   type ChatMessagesActions,
   type UseChatMessagesReturn,
   useChatMessages
 } from './components/chat';
+export {
+  ChatPanel,
+  type ChatPanelDragBoundary,
+  type ChatPanelExpandTriggerProps,
+  type ChatPanelExpandTriggerState,
+  type ChatPanelMode,
+  type ChatPanelPosition,
+  type ChatPanelProps,
+  type ChatPanelResize,
+  type ChatPanelSide,
+  type ChatPanelSize,
+  type ChatPanelTriggerProps
+} from './components/chat-panel';
 export { Checkbox } from './components/checkbox';
 export { Chip } from './components/chip';
 export { CodeBlock } from './components/code-block';

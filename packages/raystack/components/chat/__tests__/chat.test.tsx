@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createRef } from 'react';
+import { createRef, ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Chat } from '../chat';
 import styles from '../chat.module.css';
@@ -48,6 +48,18 @@ describe('Chat', () => {
     it('renders its children', () => {
       render(<Chat.Separator>Today 1:52 AM</Chat.Separator>);
       expect(screen.getByText('Today 1:52 AM')).toBeInTheDocument();
+    });
+  });
+
+  describe('Chat.Composer', () => {
+    it('renders its children and applies custom className', () => {
+      render(
+        <Chat.Composer data-testid='composer' className='custom'>
+          <textarea placeholder='Reply…' />
+        </Chat.Composer>
+      );
+      expect(screen.getByPlaceholderText('Reply…')).toBeInTheDocument();
+      expect(screen.getByTestId('composer')).toHaveClass('custom');
     });
   });
 
@@ -118,7 +130,55 @@ describe('Chat', () => {
       expect(jump).toHaveAttribute('tabindex', '-1');
       await user.click(jump);
     });
+  });
 
+  describe('Chat.JumpButton', () => {
+    const renderJump = (jump: ReactNode) =>
+      render(<Chat.Messages>{jump}</Chat.Messages>);
+
+    it('renders the default icon and label', () => {
+      renderJump(<Chat.JumpButton data-testid='jump' />);
+      const jump = screen.getByTestId('jump');
+      expect(jump).toHaveTextContent('Latest');
+      expect(
+        jump.querySelector(`.${styles['jump-icon']} svg`)
+      ).toBeInTheDocument();
+    });
+
+    it('renders children as the label, keeping the icon', () => {
+      renderJump(
+        <Chat.JumpButton data-testid='jump'>New replies</Chat.JumpButton>
+      );
+      const jump = screen.getByTestId('jump');
+      expect(jump).toHaveTextContent('New replies');
+      expect(jump).not.toHaveTextContent('Latest');
+      expect(
+        jump.querySelector(`.${styles['jump-icon']} svg`)
+      ).toBeInTheDocument();
+    });
+
+    it('renders a custom leadingIcon', () => {
+      renderJump(
+        <Chat.JumpButton
+          data-testid='jump'
+          leadingIcon={<span data-testid='custom-icon'>↓</span>}
+        />
+      );
+      expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
+      expect(
+        screen.getByTestId('jump').querySelector(`.${styles['jump-icon']} svg`)
+      ).toBeNull();
+    });
+
+    it('removes the icon with leadingIcon={null}', () => {
+      renderJump(<Chat.JumpButton data-testid='jump' leadingIcon={null} />);
+      const jump = screen.getByTestId('jump');
+      expect(jump.querySelector(`.${styles['jump-icon']}`)).toBeNull();
+      expect(jump).toHaveTextContent('Latest');
+    });
+  });
+
+  describe('Chat.Messages commands', () => {
     it('exposes scroll commands through actionsRef', () => {
       const actionsRef = createRef<ChatMessagesActions>();
       render(

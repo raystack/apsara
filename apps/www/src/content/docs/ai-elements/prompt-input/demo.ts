@@ -24,8 +24,18 @@ export const preview = {
       >
         <PromptInput.Textarea placeholder="Ask anything…" />
         <PromptInput.Footer>
-          <PromptInput.Button>Skills</PromptInput.Button>
-          <PromptInput.Button aria-label="Attach file">📎</PromptInput.Button>
+          <Button type="button" variant="ghost" color="neutral" size="small">
+            Skills
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            color="neutral"
+            size="small"
+            aria-label="Attach file"
+          >
+            📎
+          </Button>
           <PromptInput.Submit />
         </PromptInput.Footer>
       </PromptInput>
@@ -48,6 +58,34 @@ export const attachmentsDemo = {
     </PromptInput.Footer>
   </PromptInput>
 </div>`
+};
+
+export const statusDemo = {
+  type: 'code',
+  code: `function PromptInputStatuses() {
+  const STATUSES = ['idle', 'submitted', 'streaming', 'error'];
+
+  return (
+    <Flex gap={5} wrap="wrap">
+      {STATUSES.map(status => (
+        <Flex key={status} direction="column" gap={2} style={{ width: 320 }}>
+          <Text size="small" variant="secondary">status="{status}"</Text>
+          <PromptInput
+            status={status}
+            defaultValue="Summarize this thread"
+            onSubmit={() => {}}
+            onStop={() => {}}
+          >
+            <PromptInput.Textarea />
+            <PromptInput.Footer>
+              <PromptInput.Submit />
+            </PromptInput.Footer>
+          </PromptInput>
+        </Flex>
+      ))}
+    </Flex>
+  );
+}`
 };
 
 export const controlledDemo = {
@@ -79,7 +117,9 @@ export const disabledDemo = {
   <PromptInput disabled>
     <PromptInput.Textarea placeholder="Read-only conversation" />
     <PromptInput.Footer>
-      <PromptInput.Button>Skills</PromptInput.Button>
+      <Button type="button" variant="ghost" color="neutral" size="small" disabled>
+        Skills
+      </Button>
       <PromptInput.Submit />
     </PromptInput.Footer>
   </PromptInput>

@@ -31,14 +31,14 @@ export const preview = {
       </Chat.Item>
       <Chat.JumpButton />
     </Chat.Messages>
-    <div style={{ padding: 'var(--rs-space-3)' }}>
+    <Chat.Composer>
       <PromptInput onSubmit={value => console.log(value)}>
         <PromptInput.Textarea placeholder="Reply…" />
         <PromptInput.Footer>
           <PromptInput.Submit />
         </PromptInput.Footer>
       </PromptInput>
-    </div>
+    </Chat.Composer>
   </Chat>
 </Flex>`
 };
@@ -110,7 +110,7 @@ export const streamingDemo = {
           ))}
           <Chat.JumpButton />
         </Chat.Messages>
-        <div style={{ padding: 'var(--rs-space-3)' }}>
+        <Chat.Composer>
           <PromptInput
             onSubmit={(value, event) => {
               event.currentTarget.reset();
@@ -122,7 +122,7 @@ export const streamingDemo = {
               <PromptInput.Submit />
             </PromptInput.Footer>
           </PromptInput>
-        </div>
+        </Chat.Composer>
       </Chat>
     </Flex>
   );

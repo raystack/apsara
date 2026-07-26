@@ -1,4 +1,4 @@
 {
   "title": "AI Elements",
-  "pages": ["chat", "message", "prompt-input", "reasoning"]
+  "pages": ["chat", "chat-panel", "message", "prompt-input", "reasoning"]
 }

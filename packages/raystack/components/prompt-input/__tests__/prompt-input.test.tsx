@@ -10,7 +10,6 @@ const BasicPromptInput = (
     <PromptInput.Header data-testid='header' />
     <PromptInput.Textarea placeholder='Reply…' />
     <PromptInput.Footer data-testid='footer'>
-      <PromptInput.Button>Skills</PromptInput.Button>
       <PromptInput.Submit data-testid='submit' />
     </PromptInput.Footer>
   </PromptInput>
@@ -18,13 +17,10 @@ const BasicPromptInput = (
 
 describe('PromptInput', () => {
   describe('Basic Rendering', () => {
-    it('renders the textarea, toolbar button and submit', () => {
+    it('renders the textarea and submit', () => {
       render(<BasicPromptInput />);
 
       expect(screen.getByPlaceholderText('Reply…')).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Skills' })
-      ).toBeInTheDocument();
       expect(
         screen.getByRole('button', { name: 'Send message' })
       ).toBeInTheDocument();
@@ -214,11 +210,10 @@ describe('PromptInput', () => {
   });
 
   describe('Disabled state', () => {
-    it('disables the textarea, buttons and submit', () => {
+    it('disables the textarea and submit', () => {
       render(<BasicPromptInput disabled />);
 
       expect(screen.getByPlaceholderText('Reply…')).toBeDisabled();
-      expect(screen.getByRole('button', { name: 'Skills' })).toBeDisabled();
       expect(
         screen.getByRole('button', { name: 'Send message' })
       ).toBeDisabled();

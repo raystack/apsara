@@ -1,0 +1,259 @@
+.root {
+  --chat-panel-docked-width: 360px;
+
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: var(--rs-color-background-base-primary);
+}
+
+/* Docked: a real in-flow sidebar that squeezes its flex siblings. */
+.root[data-mode="docked"] {
+  width: var(--chat-panel-docked-width);
+  flex-shrink: 0;
+  min-height: 0;
+}
+
+.root[data-mode="docked"][data-side="right"] {
+  border-left: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.root[data-mode="docked"][data-side="left"] {
+  border-right: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+/* Floating: same element, switched to a fixed window via CSS only. */
+.root[data-mode="floating"] {
+  position: fixed;
+  z-index: var(--rs-z-index-portal);
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-5);
+  box-shadow: var(--rs-shadow-floating);
+  overflow: hidden;
+  max-width: calc(100vw - var(--rs-space-9));
+  max-height: calc(100vh - var(--rs-space-9));
+}
+
+.root[data-mode="floating"][data-side="right"] {
+  right: var(--rs-space-5);
+  bottom: var(--rs-space-5);
+}
+
+.root[data-mode="floating"][data-side="left"] {
+  left: var(--rs-space-5);
+  bottom: var(--rs-space-5);
+}
+
+.root[data-dragging],
+.root[data-resizing] {
+  user-select: none;
+}
+
+/* Minimized: the frame collapses to the corner trigger. */
+.root[data-mode="minimized"] {
+  position: fixed;
+  z-index: var(--rs-z-index-portal);
+  bottom: var(--rs-space-7);
+  width: auto;
+  height: auto;
+  background: none;
+  border: none;
+}
+
+.root[data-mode="minimized"][data-side="right"] {
+  right: var(--rs-space-7);
+}
+
+.root[data-mode="minimized"][data-side="left"] {
+  left: var(--rs-space-7);
+}
+
+.root[data-mode="minimized"] > :not(.trigger) {
+  display: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  min-height: var(--rs-space-11);
+  padding: var(--rs-space-3) var(--rs-space-5);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* Gated on data-draggable (not floating mode alone) so draggable={false}
+   drops the grab affordance with the listeners. */
+.root[data-draggable] .header {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.root[data-dragging] .header {
+  cursor: grabbing;
+}
+
+.title {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: var(--rs-font-size-small);
+  line-height: var(--rs-line-height-small);
+  font-weight: var(--rs-font-weight-medium);
+  color: var(--rs-color-foreground-base-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-2);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.trigger {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rs-space-11);
+  height: var(--rs-space-11);
+  padding: 0;
+  border: 0.5px solid var(--rs-color-border-base-primary);
+  border-radius: var(--rs-radius-full);
+  background: var(--rs-color-background-base-primary);
+  color: var(--rs-color-foreground-base-primary);
+  box-shadow: var(--rs-shadow-floating);
+  cursor: pointer;
+  outline: none;
+}
+
+/* The scale applies unconditionally (an instant state change); only the
+   eased tween is motion, so only the transitions are gated. Mirrors button. */
+@media (prefers-reduced-motion: no-preference) {
+  .trigger {
+    animation: chat-panel-trigger-in var(--rs-duration-fast) var(--rs-ease-out);
+    transition: var(--rs-transition-interactive);
+  }
+
+  .trigger:active {
+    transition: var(--rs-transition-pressed);
+  }
+}
+
+@keyframes chat-panel-trigger-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.trigger:hover {
+  background: var(--rs-color-background-base-primary-hover);
+}
+
+.trigger:active {
+  transform: scale(var(--rs-scale-pressed));
+}
+
+.trigger:focus-visible {
+  outline: var(--rs-focus-ring);
+}
+
+.trigger[data-draggable] {
+  touch-action: none;
+}
+
+/* The eased transform tween would lag the pointer mid-drag. */
+.trigger[data-dragging] {
+  transition: none;
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Resize handles line the floating window's edges and corners. */
+.resize-handle {
+  position: absolute;
+  z-index: 1;
+  touch-action: none;
+}
+
+.resize-n {
+  top: 0;
+  left: var(--rs-space-3);
+  right: var(--rs-space-3);
+  height: var(--rs-space-2);
+  cursor: ns-resize;
+}
+
+.resize-s {
+  bottom: 0;
+  left: var(--rs-space-3);
+  right: var(--rs-space-3);
+  height: var(--rs-space-2);
+  cursor: ns-resize;
+}
+
+.resize-e {
+  right: 0;
+  top: var(--rs-space-3);
+  bottom: var(--rs-space-3);
+  width: var(--rs-space-2);
+  cursor: ew-resize;
+}
+
+.resize-w {
+  left: 0;
+  top: var(--rs-space-3);
+  bottom: var(--rs-space-3);
+  width: var(--rs-space-2);
+  cursor: ew-resize;
+}
+
+.resize-ne {
+  top: 0;
+  right: 0;
+  width: var(--rs-space-3);
+  height: var(--rs-space-3);
+  cursor: nesw-resize;
+}
+
+.resize-nw {
+  top: 0;
+  left: 0;
+  width: var(--rs-space-3);
+  height: var(--rs-space-3);
+  cursor: nwse-resize;
+}
+
+.resize-se {
+  bottom: 0;
+  right: 0;
+  width: var(--rs-space-3);
+  height: var(--rs-space-3);
+  cursor: nwse-resize;
+}
+
+.resize-sw {
+  bottom: 0;
+  left: 0;
+  width: var(--rs-space-3);
+  height: var(--rs-space-3);
+  cursor: nesw-resize;
+}

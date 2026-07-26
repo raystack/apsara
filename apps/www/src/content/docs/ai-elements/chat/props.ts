@@ -84,6 +84,23 @@ export interface ChatItemProps {
   className?: string;
 }
 
+export interface ChatJumpButtonProps {
+  /**
+   * Icon rendered before the label. Pass `null` to remove it.
+   * @defaultValue an arrow-down icon
+   */
+  leadingIcon?: React.ReactNode;
+
+  /**
+   * The text label.
+   * @defaultValue "Latest"
+   */
+  children?: React.ReactNode;
+
+  /** Custom CSS class names. */
+  className?: string;
+}
+
 export interface ChatAttachmentProps {
   /** File name or main label. */
   title?: React.ReactNode;
