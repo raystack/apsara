@@ -84,6 +84,12 @@ const NAME_POOL = [
   'Order_9'
 ];
 
+/* Orders generated per month. Deliberately dense: enough cards for lane
+   packing to stack several deep inside every status band, which is what makes
+   the grouped swim-lane layout (and horizontal culling) worth looking at. */
+const ORDERS_PER_MONTH_MIN = 18;
+const ORDERS_PER_MONTH_MAX = 26;
+
 const STATUS_LABEL: Record<OrderStatus, string> = {
   scheduled: 'Scheduled',
   'in-progress': 'In progress',
@@ -116,7 +122,9 @@ function ordersForMonth(monthKey: string): Order[] {
   const monthStart = dayjs(`${monthKey}-01`);
   const rng = mulberry32(monthStart.year() * 100 + monthStart.month());
   const today = startOfToday();
-  const count = 5 + Math.floor(rng() * 4); // 5–8 orders per month
+  const count =
+    ORDERS_PER_MONTH_MIN +
+    Math.floor(rng() * (ORDERS_PER_MONTH_MAX - ORDERS_PER_MONTH_MIN + 1));
   return Array.from({ length: count }, (_, i) => {
     const start = monthStart.add(Math.floor(rng() * 27), 'day');
     const due = start.add(2 + Math.floor(rng() * 16), 'day');
@@ -187,6 +195,11 @@ const fields: DataViewField<Order>[] = [
     filterable: true,
     filterType: 'select',
     hideable: true,
+    // Groupable fields drive the Grouping control in Display settings. The
+    // timeline renders one swim-lane section per group; the list view renders
+    // the same groups as section headers.
+    groupable: true,
+    showGroupCount: true,
     filterOptions: ORG_LIST.map(org => ({ value: org, label: org }))
   },
   {
@@ -195,6 +208,10 @@ const fields: DataViewField<Order>[] = [
     filterable: true,
     filterType: 'select',
     hideable: true,
+    groupable: true,
+    showGroupCount: true,
+    // Bucket keys are the raw status values; the band shows these labels.
+    groupLabelsMap: STATUS_LABEL,
     filterOptions: (Object.keys(STATUS_LABEL) as OrderStatus[]).map(status => ({
       value: status,
       label: STATUS_LABEL[status]
@@ -707,6 +724,10 @@ const Page = () => {
           isLoading={isLoading}
           loadingRowCount={3}
           defaultSort={{ name: 'dueDate', order: 'asc' }}
+          /* Opens grouped by status — one swim-lane band per status in the
+             timeline, the same buckets as the list view's group headers.
+             Switch it in Display settings → Grouping. */
+          query={{ group_by: ['status'] }}
           getRowId={(row: Order) => row.id}
           onRowClick={order => orderDialog.openWithPayload(order)}
           views={[
@@ -770,7 +791,12 @@ const Page = () => {
                 <OrderCard order={row.original} context={context} />
               )}
             />
-            <DataView.List name='list' variant='table' columns={orderColumns} />
+            <DataView.List
+              name='list'
+              variant='table'
+              columns={orderColumns}
+              stickyGroupHeader
+            />
             <DataView.EmptyState>
               <EmptyState
                 icon={<FilterIcon />}

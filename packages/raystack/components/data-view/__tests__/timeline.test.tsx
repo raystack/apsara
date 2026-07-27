@@ -14,6 +14,7 @@ vi.mock('~/icons', () => ({
 import { DataView } from '../data-view';
 import type {
   DataViewField,
+  DataViewQuery,
   DataViewTimelineProps,
   InternalFilter,
   TimelineActions
@@ -353,6 +354,7 @@ type Order = {
   title: string;
   start: string | null;
   end: string | null;
+  team?: string;
 };
 
 const fields: DataViewField<Order>[] = [
@@ -382,14 +384,20 @@ function ApplyFilterButton({ filters }: { filters: InternalFilter[] }) {
 
 function renderTimeline(
   props: Partial<DataViewTimelineProps<Order>> = {},
-  data: Order[] = orders
+  data: Order[] = orders,
+  root: {
+    fields?: DataViewField<Order>[];
+    sort?: { name: string; order: 'asc' | 'desc' };
+    query?: DataViewQuery;
+  } = {}
 ) {
   return render(
     <DataView<Order>
       data={data}
-      fields={fields}
+      fields={root.fields ?? fields}
       mode='client'
-      defaultSort={{ name: 'title', order: 'asc' }}
+      defaultSort={root.sort ?? { name: 'title', order: 'asc' }}
+      query={root.query}
       getRowId={(row: Order) => row.id}
     >
       <DataView.Timeline<Order>
@@ -1109,6 +1117,292 @@ describe('DataView.Timeline', () => {
     expect(screen.getByText('6 Jan')).toBeInTheDocument();
     // …but no card interior re-rendered.
     expect(renderSpy.mock.calls.length).toBe(callsAfterMount);
+  });
+});
+
+/* ───────────────────────────── ordering contract ─────────────────────────
+   Sort can't move a card horizontally (x is locked to time), so it only shows
+   up where vertical order is free: `lanePacking="one-per-row"`. `auto` packing
+   stays purely chronological — these two tests are the regression guard. */
+
+describe('DataView.Timeline ordering', () => {
+  const laneOf = (id: string) =>
+    screen.getByTestId(`card-${id}`).dataset.lane as string;
+  const topOf = (id: string) =>
+    screen.getByTestId(`card-${id}`).parentElement!.style.top;
+
+  it('follows the active sort with lanePacking="one-per-row"', () => {
+    // Titles Alpha (o1), Beta (o2), Gamma (o3) → descending puts Gamma first.
+    const { unmount } = renderTimeline({ lanePacking: 'one-per-row' }, orders, {
+      sort: { name: 'title', order: 'desc' }
+    });
+    expect([laneOf('o3'), laneOf('o2'), laneOf('o1')]).toEqual(['0', '1', '2']);
+    unmount();
+
+    renderTimeline({ lanePacking: 'one-per-row' }, orders, {
+      sort: { name: 'title', order: 'asc' }
+    });
+    expect([laneOf('o1'), laneOf('o2'), laneOf('o3')]).toEqual(['0', '1', '2']);
+  });
+
+  it('leaves the packed layout untouched when the sort changes', () => {
+    const { unmount } = renderTimeline(undefined, orders, {
+      sort: { name: 'title', order: 'asc' }
+    });
+    const ascending = ['o1', 'o2', 'o3'].map(id => [laneOf(id), topOf(id)]);
+    unmount();
+
+    renderTimeline(undefined, orders, {
+      sort: { name: 'title', order: 'desc' }
+    });
+    const descending = ['o1', 'o2', 'o3'].map(id => [laneOf(id), topOf(id)]);
+    expect(descending).toEqual(ascending);
+  });
+});
+
+/* ────────────────────────── grouping (swim lanes) ───────────────────────
+   Grouped geometry over the same Jan 2025 domain. Cards are unmeasured in
+   jsdom, so every lane is estimatedRowHeight (66) tall with laneGap 16 and a
+   38px band (List's group-header box) per section:
+
+     Eng     band  0 →  38 | lane 0 top  54 | lane 1 top 136 | section ends 218
+     Design  band 218 → 256 | lane 0 top 272                 | canvas ends 354 */
+
+const groupedFields: DataViewField<Order>[] = [
+  { accessorKey: 'title', label: 'Title', sortable: true },
+  { accessorKey: 'team', label: 'Team', groupable: true, showGroupCount: true }
+];
+
+const groupedOrders: Order[] = [
+  // Eng: a1 [80..180] and a2 [100..180] overlap → two lanes.
+  {
+    id: 'a1',
+    title: 'A1',
+    team: 'Eng',
+    start: '2025-01-05',
+    end: '2025-01-10'
+  },
+  {
+    id: 'a2',
+    title: 'A2',
+    team: 'Eng',
+    start: '2025-01-06',
+    end: '2025-01-09'
+  },
+  // Design: b1 sits at the same x as a1 but packs in its own section → lane 0.
+  {
+    id: 'b1',
+    title: 'B1',
+    team: 'Design',
+    start: '2025-01-05',
+    end: '2025-01-10'
+  }
+];
+
+function renderGrouped(
+  props: Partial<DataViewTimelineProps<Order>> = {},
+  data: Order[] = groupedOrders
+) {
+  return renderTimeline(
+    { classNames: { groupHeader: 'band' }, ...props },
+    data,
+    {
+      fields: groupedFields,
+      query: { group_by: ['team'] }
+    }
+  );
+}
+
+const bands = (container: HTMLElement) =>
+  Array.from(container.getElementsByClassName('band'));
+
+describe('DataView.Timeline grouping', () => {
+  it('renders one band per group, in row-model order, with label and count', () => {
+    const { container } = renderGrouped();
+    // First-occurrence order from `groupData` — the same order List renders.
+    expect(bands(container).map(band => band.textContent)).toEqual([
+      'Eng2',
+      'Design1'
+    ]);
+  });
+
+  it('omits the count badge when the field does not opt in', () => {
+    const { container } = renderTimeline(
+      { classNames: { groupHeader: 'band' } },
+      groupedOrders,
+      {
+        fields: [
+          { accessorKey: 'title', label: 'Title', sortable: true },
+          { accessorKey: 'team', label: 'Team', groupable: true }
+        ],
+        query: { group_by: ['team'] }
+      }
+    );
+    expect(bands(container).map(band => band.textContent)).toEqual([
+      'Eng',
+      'Design'
+    ]);
+  });
+
+  it('packs each section independently and stacks sections vertically', () => {
+    renderGrouped();
+    // Lane indices reported to renderCard are section-relative.
+    expect(screen.getByTestId('card-a1').dataset.lane).toBe('0');
+    expect(screen.getByTestId('card-a2').dataset.lane).toBe('1');
+    expect(screen.getByTestId('card-b1').dataset.lane).toBe('0');
+    // …but the tops are global: Design's lane 0 sits below Eng's lanes.
+    expect(screen.getByTestId('card-a1').parentElement!.style.top).toBe('54px');
+    expect(screen.getByTestId('card-a2').parentElement!.style.top).toBe(
+      '136px'
+    );
+    expect(screen.getByTestId('card-b1').parentElement!.style.top).toBe(
+      '272px'
+    );
+  });
+
+  it('gives each band a slot spanning its whole section, contiguously', () => {
+    const { container } = renderGrouped();
+    // Contiguous slots are what makes a pinned band get pushed out by the
+    // next one exactly as that section arrives (CSS sticky, no JS).
+    const slots = Array.from(
+      container.querySelectorAll<HTMLElement>('[class*="timelineGroupSlot"]')
+    ).map(slot => [slot.style.top, slot.style.height]);
+    expect(slots).toEqual([
+      ['0px', '218px'],
+      ['218px', '136px']
+    ]);
+    const canvas = container.querySelector('[role="list"]') as HTMLElement;
+    expect(canvas.style.height).toBe('354px');
+  });
+
+  it('keeps a card in its own section when it starts under another group', () => {
+    renderGrouped();
+    // Same x as a1 (80px) — proves packing never leaks across sections.
+    expect(screen.getByTestId('card-b1').parentElement!.style.left).toBe(
+      '80px'
+    );
+    expect(screen.getByTestId('card-a1').parentElement!.style.left).toBe(
+      '80px'
+    );
+  });
+
+  it('hides the bands but keeps the sections with showGroupHeaders={false}', () => {
+    const { container } = renderGrouped({ showGroupHeaders: false });
+    expect(bands(container)).toHaveLength(0);
+    expect(container.querySelector('[class*="timelineGroupSlot"]')).toBeNull();
+    // Rows stay grouped (List semantics): the 38px bands are gone, so every
+    // section shifts up, but Design's lane still starts after Eng's two.
+    expect(screen.getByTestId('card-a1').parentElement!.style.top).toBe('16px');
+    expect(screen.getByTestId('card-a2').parentElement!.style.top).toBe('98px');
+    expect(screen.getByTestId('card-b1').parentElement!.style.top).toBe(
+      '196px'
+    );
+  });
+
+  it('drops a group whose cards are all outside the domain', () => {
+    const { container } = renderGrouped({}, [
+      ...groupedOrders,
+      // Entirely past the range end → the whole Ops section disappears.
+      {
+        id: 'c1',
+        title: 'C1',
+        team: 'Ops',
+        start: '2025-03-01',
+        end: '2025-03-05'
+      }
+    ]);
+    expect(bands(container).map(band => band.textContent)).toEqual([
+      'Eng2',
+      'Design1'
+    ]);
+    expect(screen.queryByTestId('card-c1')).toBeNull();
+  });
+
+  it('counts the whole group in the badge even when cards are culled', () => {
+    const { container } = renderGrouped({}, [
+      ...groupedOrders,
+      // A third Eng row outside the range: culled from the canvas, but the
+      // badge still reports `GroupedData.count` — same as List.
+      {
+        id: 'a3',
+        title: 'A3',
+        team: 'Eng',
+        start: '2025-03-01',
+        end: '2025-03-05'
+      }
+    ]);
+    expect(bands(container)[0].textContent).toBe('Eng3');
+    expect(screen.queryByTestId('card-a3')).toBeNull();
+    expect(screen.getByTestId('card-a1')).toBeInTheDocument();
+  });
+
+  it('renders no band layer when grouping is off', () => {
+    const { container } = renderTimeline({
+      classNames: { groupHeader: 'band' }
+    });
+    expect(bands(container)).toHaveLength(0);
+    expect(container.querySelector('[class*="timelineGroupLayer"]')).toBeNull();
+    // Degenerate single-section geometry is the ungrouped layout, unchanged.
+    expect(screen.getByTestId('card-o1').parentElement!.style.top).toBe('16px');
+  });
+
+  it('applies one-per-row packing within each section', () => {
+    renderGrouped({ lanePacking: 'one-per-row' });
+    expect(screen.getByTestId('card-a1').dataset.lane).toBe('0');
+    expect(screen.getByTestId('card-a2').dataset.lane).toBe('1');
+    // Design's single row restarts at lane 0 rather than continuing to 2.
+    expect(screen.getByTestId('card-b1').dataset.lane).toBe('0');
+  });
+
+  it('drops a whole section when its rows are filtered out', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <DataView<Order>
+        data={groupedOrders}
+        fields={[
+          { accessorKey: 'title', label: 'Title', sortable: true },
+          {
+            accessorKey: 'team',
+            label: 'Team',
+            groupable: true,
+            showGroupCount: true,
+            filterable: true,
+            filterType: 'select'
+          }
+        ]}
+        mode='client'
+        defaultSort={{ name: 'title', order: 'asc' }}
+        query={{ group_by: ['team'] }}
+        getRowId={(row: Order) => row.id}
+      >
+        <ApplyFilterButton
+          filters={[
+            { name: 'team', operator: 'eq', value: 'Design', _type: 'select' }
+          ]}
+        />
+        <DataView.Timeline<Order>
+          startField='start'
+          endField='end'
+          range={['2025-01-01', '2025-01-31']}
+          scale='day'
+          unitWidth={20}
+          today={false}
+          defaultScrollTo='start'
+          classNames={{ groupHeader: 'band' }}
+          renderCard={row => (
+            <div data-testid={`card-${row.original.id}`}>
+              {row.original.title}
+            </div>
+          )}
+        />
+      </DataView>
+    );
+    expect(bands(container)).toHaveLength(2);
+    await user.click(screen.getByTestId('apply-filter'));
+    // Only the matching group survives, and it moves to the top of the canvas.
+    expect(bands(container).map(band => band.textContent)).toEqual(['Design1']);
+    expect(screen.queryByTestId('card-a1')).toBeNull();
+    expect(screen.getByTestId('card-b1').parentElement!.style.top).toBe('54px');
   });
 });
 

@@ -638,7 +638,19 @@ const taskSpec: Array<
   ['t5', 'Bug bash', 'Ops', 'todo', 1, 2],
   ['t6', 'Load testing', 'Ops', 'todo', 3, 9],
   ['t7', 'Beta rollout', 'Eng', 'todo', 6, 14],
-  ['t8', 'Launch comms', 'Design', 'todo', 10, 16]
+  ['t8', 'Launch comms', 'Design', 'todo', 10, 16],
+  // Overlapping work per team, so packing stacks a few lanes deep inside each
+  // group section rather than every band being a single row.
+  ['t9', 'Schema migration', 'Eng', 'done', -15, -10],
+  ['t10', 'Icon refresh', 'Design', 'done', -12, -5],
+  ['t11', 'On-call rotation', 'Ops', 'active', -11, -2],
+  ['t12', 'Runbook cleanup', 'Ops', 'done', -14, -8],
+  ['t13', 'Search indexing', 'Eng', 'active', -3, 6],
+  ['t14', 'Motion pass', 'Design', 'active', -2, 5],
+  ['t15', 'Cost review', 'Ops', 'todo', 4, 12],
+  ['t16', 'SSO hardening', 'Eng', 'todo', 8, 15],
+  ['t17', 'Empty states', 'Design', 'todo', 7, 13],
+  ['t18', 'Chaos drill', 'Ops', 'todo', 11, 15]
 ];
 
 const tasks: Task[] = taskSpec.map(([id, title, team, status, from, to]) => ({
@@ -664,6 +676,9 @@ const taskFields: DataViewField<Task>[] = [
     filterable: true,
     filterType: 'select',
     hideable: true,
+    // Groupable → the timeline renders one swim-lane section per team.
+    groupable: true,
+    showGroupCount: true,
     filterOptions: [
       { label: 'Eng', value: 'Eng' },
       { label: 'Design', value: 'Design' },
@@ -676,6 +691,9 @@ const taskFields: DataViewField<Task>[] = [
     filterable: true,
     filterType: 'select',
     hideable: true,
+    groupable: true,
+    showGroupCount: true,
+    groupLabelsMap: { todo: 'To do', active: 'Active', done: 'Done' },
     filterOptions: [
       { label: 'To do', value: 'todo' },
       { label: 'Active', value: 'active' },
@@ -884,8 +902,10 @@ export function DataViewTimelineDemo() {
             >
               Today
             </Button>
-            {/* Sorting/grouping don't affect time-positioned cards — hide them. */}
-            <DataView.DisplayControls hideOrdering hideGrouping />
+            {/* Sort can't move a card horizontally (x is time) and `auto`
+                packing is chronological, so Ordering is hidden. Grouping is
+                left in: it renders swim-lane sections — try Team or Status. */}
+            <DataView.DisplayControls hideOrdering />
           </Flex>
         </DataView.Toolbar>
         {/* Empty state lives inside the flex-1 pane so it centers when the
@@ -902,6 +922,50 @@ export function DataViewTimelineDemo() {
             markers={[
               { date: taskDate(12), label: 'Release', variant: 'accent' }
             ]}
+            renderCard={(row, context) => (
+              <TaskCard task={row.original} context={context} />
+            )}
+          />
+          <DataView.EmptyState>
+            <Text>No tasks match your filters.</Text>
+          </DataView.EmptyState>
+        </Flex>
+      </DataView>
+    </Flex>
+  );
+}
+
+/* ── Grouped timeline demo (swim-lane sections) ────────────────────────────
+   `group_by` in the query is the only wiring grouping needs — the timeline
+   consumes the same group rows `DataView.List` renders as section headers, so
+   labels, order, and counts match between the two views. Packing runs per
+   section, and each band pins under the axis while its section is in view. */
+
+export function DataViewTimelineGroupingDemo() {
+  return (
+    <Flex
+      direction='column'
+      style={{ width: '100%', height: 460, overflow: 'hidden' }}
+    >
+      <DataView<Task>
+        data={tasks}
+        fields={taskFields}
+        defaultSort={{ name: 'start', order: 'asc' }}
+        query={{ group_by: ['team'] }}
+        getRowId={task => task.id}
+      >
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <DataView.DisplayControls hideOrdering />
+        </DataView.Toolbar>
+        <Flex
+          direction='column'
+          justify='center'
+          style={{ flex: 1, overflow: 'hidden', minWidth: 0 }}
+        >
+          <DataView.Timeline<Task>
+            startField='start'
+            endField='end'
             renderCard={(row, context) => (
               <TaskCard task={row.original} context={context} />
             )}

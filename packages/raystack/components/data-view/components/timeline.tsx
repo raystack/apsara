@@ -20,6 +20,7 @@ import { Badge } from '../../badge';
 import styles from '../data-view.module.css';
 import {
   DataViewTimelineProps,
+  GroupedData,
   TimelineActions,
   TimelineCardContext,
   TimelineScale
@@ -38,6 +39,16 @@ import { FilterSummary } from './clear-filters';
 
 const DEFAULT_ROW_HEIGHT = 66;
 const DEFAULT_LANE_GAP = 16;
+/**
+ * Height (px) of a group section's header band: `DataView.List`'s group header
+ * box exactly — `--rs-space-3` padding above and below a small `Badge` (8 + 22
+ * + 8) — so the band reads identically when switching between the two
+ * renderers. Fixed rather than measured because lane tops are derived from it,
+ * so a content-driven height would feed back into the geometry it seeds. (List
+ * only needs its own 36 as a virtualizer estimate, which it corrects by
+ * measuring after paint; the timeline has no such correction pass.)
+ */
+const GROUP_BAND_HEIGHT = 38;
 const DEFAULT_MIN_CARD_WIDTH = 60;
 /** Assumed width of content-sized point cards for lane packing and culling. */
 const DEFAULT_POINT_WIDTH = 120;
@@ -88,6 +99,35 @@ function upperBoundByX(list: readonly { x: number }[], value: number): number {
     else hi = mid;
   }
   return lo;
+}
+
+/** A row with its start/end resolved to timestamps. */
+interface TimedItem<TData> {
+  row: Row<TData>;
+  startTime: number;
+  /** Null when `endField` is omitted (point marker). */
+  endTime: number | null;
+}
+
+/** A timed row placed on the time scale. */
+interface PositionedItem<TData> extends TimedItem<TData> {
+  x: number;
+  spanWidth: number;
+  /** Null for point cards — the wrapper sizes to its content. */
+  renderWidth: number | null;
+  /** Width the lane packer and the culling window assume. */
+  packWidth: number;
+}
+
+/**
+ * One vertical section of the canvas. `group` is the row model's group row
+ * (`groupData` entry) when `group_by` is active, null for the implicit
+ * single section of an ungrouped timeline.
+ */
+interface TimelineSection<TData, TItem> {
+  key: string;
+  group: GroupedData<TData> | null;
+  items: TItem[];
 }
 
 interface TimelineCardViewProps<TData> {
@@ -243,6 +283,7 @@ export function DataViewTimeline<TData>({
   minCardWidth = DEFAULT_MIN_CARD_WIDTH,
   estimatedPointWidth = DEFAULT_POINT_WIDTH,
   virtualized = false,
+  showGroupHeaders = true,
   classNames = {}
 }: DataViewTimelineProps<TData>) {
   const {
@@ -300,42 +341,75 @@ export function DataViewTimeline<TData>({
   const rowModel = table?.getRowModel();
   const { rows = [] } = rowModel || {};
 
-  // Timeline bypasses group headers (RFC §Grouping) — position leaf rows only.
-  const leafRows = useMemo(
-    () => rows.filter(row => !(row.subRows && row.subRows.length > 0)),
-    [rows]
-  );
-
-  // Resolve each row's start/end timestamps. Rows without a valid start are
-  // skipped (dev warning); inverted ranges clamp to zero-length spans.
-  const timedItems = useMemo(() => {
-    const items: {
-      row: Row<TData>;
-      startTime: number;
-      endTime: number | null;
-    }[] = [];
-    let dropped = 0;
-    for (const row of leafRows) {
-      const original = row.original as Record<string, unknown>;
-      const startTime = toTimestamp(original?.[startField]);
-      if (startTime === null) {
-        dropped++;
+  // Sections walked out of the row model exactly as `DataView.List` reads it: a
+  // row with `subRows` is a group header (its `original` is the `groupData`
+  // entry), the leaf rows after it are that group's rows. Section order,
+  // labels, and counts therefore match List for free — in client *and* server
+  // mode, since the root groups unconditionally. Ungrouped data has no group
+  // rows, so the walk yields one implicit section with no band and the
+  // geometry below degenerates to the flat single-section layout.
+  const sections = useMemo(() => {
+    const list: TimelineSection<TData, Row<TData>>[] = [];
+    for (const row of rows) {
+      if (row.subRows && row.subRows.length > 0) {
+        list.push({
+          key: row.id,
+          group: row.original as GroupedData<TData>,
+          items: []
+        });
         continue;
       }
-      let endTime: number | null = null;
-      if (endField) {
-        endTime = toTimestamp(original?.[endField]);
-        if (endTime !== null && endTime < startTime) endTime = startTime;
+      let current = list[list.length - 1];
+      if (!current) {
+        current = { key: '__ungrouped', group: null, items: [] };
+        list.push(current);
       }
-      items.push({ row, startTime, endTime });
+      current.items.push(row);
     }
+    return list;
+  }, [rows]);
+
+  // Resolve each row's start/end timestamps, per section. Rows without a valid
+  // start are skipped (one dev warning for the whole model); inverted ranges
+  // clamp to zero-length spans.
+  const timedSections = useMemo(() => {
+    let dropped = 0;
+    const list = sections.map(section => {
+      const items: TimedItem<TData>[] = [];
+      for (const row of section.items) {
+        const original = row.original as Record<string, unknown>;
+        const startTime = toTimestamp(original?.[startField]);
+        if (startTime === null) {
+          dropped++;
+          continue;
+        }
+        let endTime: number | null = null;
+        if (endField) {
+          endTime = toTimestamp(original?.[endField]);
+          if (endTime !== null && endTime < startTime) endTime = startTime;
+        }
+        items.push({ row, startTime, endTime });
+      }
+      const timed: TimelineSection<TData, TimedItem<TData>> = {
+        key: section.key,
+        group: section.group,
+        items
+      };
+      return timed;
+    });
     if (process.env.NODE_ENV !== 'production' && dropped > 0) {
       console.warn(
         `[DataView.Timeline] Skipped ${dropped} row(s) with a missing or invalid "${startField}" value.`
       );
     }
-    return items;
-  }, [leafRows, startField, endField]);
+    return list;
+  }, [sections, startField, endField]);
+
+  // Flattened for the domain extent — grouping never changes the time domain.
+  const timedItems = useMemo(
+    () => timedSections.flatMap(section => section.items),
+    [timedSections]
+  );
 
   const todayTime = useMemo(() => {
     if (today === false) return null;
@@ -412,47 +486,63 @@ export function DataViewTimeline<TData>({
   // snapping) stays at full `scale`-unit granularity.
   const gridlineEvery = Math.max(1, Math.floor(gridlineInterval));
 
-  // Card geometry. `renderWidth` is null for point markers (no endField) —
-  // the wrapper sizes to its content instead of the time span. Rows entirely
-  // outside the domain are dropped: with an explicit `range`, fetched data
-  // routinely extends past the window (e.g. whole-month API buckets), and
-  // those rows must not render beyond the axis or occupy lanes.
-  const positioned = useMemo(() => {
-    const items: (typeof timedItems)[number][] = [];
-    for (const item of timedItems) {
-      const effectiveEnd = item.endTime ?? item.startTime;
-      if (item.startTime > timeScale.t1 || effectiveEnd < timeScale.t0) {
-        continue;
+  // Card geometry, per section. `renderWidth` is null for point markers (no
+  // endField) — the wrapper sizes to its content instead of the time span. Rows
+  // entirely outside the domain are dropped: with an explicit `range`, fetched
+  // data routinely extends past the window (e.g. whole-month API buckets), and
+  // those rows must not render beyond the axis or occupy lanes. A section left
+  // with no cards is dropped entirely (no band, no empty strip), the same way
+  // the ungrouped timeline silently culls out-of-domain rows.
+  const positionedSections = useMemo(() => {
+    const list: TimelineSection<TData, PositionedItem<TData>>[] = [];
+    for (const section of timedSections) {
+      const items: PositionedItem<TData>[] = [];
+      for (const item of section.items) {
+        const effectiveEnd = item.endTime ?? item.startTime;
+        if (item.startTime > timeScale.t1 || effectiveEnd < timeScale.t0) {
+          continue;
+        }
+        const x = timeScale.x(item.startTime);
+        const spanWidth =
+          item.endTime !== null
+            ? (item.endTime - item.startTime) * timeScale.pxPerMs
+            : 0;
+        const renderWidth =
+          item.endTime !== null ? Math.max(spanWidth, MIN_RENDER_WIDTH) : null;
+        // Point cards (no endField) size to their content, so the packer can't
+        // know their width — `estimatedPointWidth` stands in for lane packing
+        // and culling so wide chips don't overlap within a lane.
+        const packWidth = renderWidth ?? estimatedPointWidth;
+        items.push({ ...item, x, spanWidth, renderWidth, packWidth });
       }
-      items.push(item);
+      if (items.length === 0) continue;
+      list.push({ key: section.key, group: section.group, items });
     }
-    return items.map(item => {
-      const x = timeScale.x(item.startTime);
-      const spanWidth =
-        item.endTime !== null
-          ? (item.endTime - item.startTime) * timeScale.pxPerMs
-          : 0;
-      const renderWidth =
-        item.endTime !== null ? Math.max(spanWidth, MIN_RENDER_WIDTH) : null;
-      // Point cards (no endField) size to their content, so the packer can't
-      // know their width — `estimatedPointWidth` stands in for lane packing
-      // and culling so wide chips don't overlap within a lane.
-      const packWidth = renderWidth ?? estimatedPointWidth;
-      return { ...item, x, spanWidth, renderWidth, packWidth };
-    });
-  }, [timedItems, timeScale, estimatedPointWidth]);
+    return list;
+  }, [timedSections, timeScale, estimatedPointWidth]);
 
-  const { lanes, laneCount } = useMemo(() => {
-    if (lanePacking === 'one-per-row') {
-      return {
-        lanes: positioned.map((_, i) => i),
-        laneCount: positioned.length
-      };
-    }
-    return packLanes(
-      positioned.map(item => ({ x: item.x, width: item.packWidth }))
-    );
-  }, [positioned, lanePacking]);
+  // Lane assignment runs per section, so a card only ever shares a lane with
+  // cards in its own group. Section-relative lanes are what `renderCard` sees
+  // (`context.laneIndex`); `laneOffset` maps them into one global lane list for
+  // the vertical geometry below.
+  const { laidOutSections, laneCount } = useMemo(() => {
+    let offset = 0;
+    const list = positionedSections.map(section => {
+      const packed =
+        lanePacking === 'one-per-row'
+          ? {
+              lanes: section.items.map((_, i) => i),
+              laneCount: section.items.length
+            }
+          : packLanes(
+              section.items.map(item => ({ x: item.x, width: item.packWidth }))
+            );
+      const entry = { ...section, ...packed, laneOffset: offset };
+      offset += packed.laneCount;
+      return entry;
+    });
+    return { laidOutSections: list, laneCount: offset };
+  }, [positionedSections, lanePacking]);
 
   // Measured card heights by row id, `estimatedRowHeight` standing in until a
   // card reports (same estimate-then-measure contract as `DataView.List`).
@@ -470,18 +560,23 @@ export function DataViewTimeline<TData>({
     setMeasureVersion(version => version + 1);
   }, []);
 
-  // Lane assignments zipped in and sorted ascending by x so per-frame culling
-  // can binary-search the visible slice instead of scanning every item. Lane
-  // semantics (packing order, one-per-row row order) are unaffected — lanes
-  // are assigned before the sort. DOM order becomes chronological.
+  // All sections' cards flattened and sorted ascending by x so per-frame
+  // culling can binary-search the visible slice instead of scanning every item.
+  // Lane semantics (packing order, one-per-row row order) are unaffected —
+  // lanes are assigned before the sort. DOM order becomes chronological.
   const cards = useMemo(() => {
-    const list = positioned.map((item, index) => ({
-      ...item,
-      lane: lanes[index]
-    }));
+    const list = laidOutSections.flatMap(section =>
+      section.items.map((item, index) => ({
+        ...item,
+        // Section-relative (renderCard's `context.laneIndex`) …
+        laneIndex: section.lanes[index],
+        // … and global, for the lane-top lookup at render time.
+        lane: section.laneOffset + section.lanes[index]
+      }))
+    );
     list.sort((a, b) => a.x - b.x);
     return list;
-  }, [positioned, lanes]);
+  }, [laidOutSections]);
 
   // Drop measurements for rows that left the data set so a shrunk lane
   // doesn't stay sized to a card that no longer exists.
@@ -500,32 +595,69 @@ export function DataViewTimeline<TData>({
 
   // Vertical geometry. Each lane is as tall as its tallest card — measured
   // height when known, `estimatedRowHeight` until then — so lane tops are
-  // cumulative rather than a fixed pitch.
-  const { laneTops, canvasHeight } = useMemo(() => {
+  // cumulative rather than a fixed pitch. Sections stack: band, then that
+  // section's lanes, then the next section's band. `groupBands` carries each
+  // band's slot (top + full section height) for the sticky pin below.
+  const { laneTops, groupBands, canvasHeight } = useMemo(() => {
     // Reads measuredHeightsRef; measureVersion invalidates on new reports.
     void measureVersion;
     const measured = measuredHeightsRef.current;
-    const heights = new Array<number>(Math.max(laneCount, 1)).fill(0);
+    const heights = new Array<number>(laneCount).fill(0);
     for (const item of cards) {
       const height = measured.get(item.row.id) ?? estimatedRowHeight;
       if (height > heights[item.lane]) heights[item.lane] = height;
     }
-    const tops = new Array<number>(heights.length);
-    let y = laneGap;
-    for (let i = 0; i < heights.length; i++) {
-      // A lane with no cards (empty data) still reserves the estimate.
-      if (heights[i] === 0) heights[i] = estimatedRowHeight;
-      tops[i] = y;
-      y += heights[i] + laneGap;
+    const tops = new Array<number>(laneCount);
+    const bands: {
+      key: string;
+      group: GroupedData<TData>;
+      top: number;
+      height: number;
+    }[] = [];
+    let y = 0;
+    for (const section of laidOutSections) {
+      const sectionTop = y;
+      const banded = showGroupHeaders && section.group !== null;
+      if (banded) y += GROUP_BAND_HEIGHT;
+      y += laneGap;
+      for (let i = 0; i < section.laneCount; i++) {
+        const lane = section.laneOffset + i;
+        // A lane with no cards (empty data) still reserves the estimate.
+        if (heights[lane] === 0) heights[lane] = estimatedRowHeight;
+        tops[lane] = y;
+        y += heights[lane] + laneGap;
+      }
+      // Slots are contiguous (each spans its whole section, trailing gap
+      // included), so a pinned band is pushed out by the next section's band
+      // exactly as that one arrives at the pin line.
+      if (banded && section.group) {
+        bands.push({
+          key: section.key,
+          group: section.group,
+          top: sectionTop,
+          height: y - sectionTop
+        });
+      }
     }
-    return { laneTops: tops, canvasHeight: y };
-  }, [cards, laneCount, estimatedRowHeight, laneGap, measureVersion]);
+    // Nothing positioned (all rows culled, or loading with no rows yet): keep
+    // reserving one lane's worth of canvas so the pane doesn't collapse.
+    if (laneCount === 0) y = estimatedRowHeight + laneGap * 2;
+    return { laneTops: tops, groupBands: bands, canvasHeight: y };
+  }, [
+    cards,
+    laidOutSections,
+    laneCount,
+    estimatedRowHeight,
+    laneGap,
+    showGroupHeaders,
+    measureVersion
+  ]);
 
   // Widens the culling window's left bound: a card is visible when
   // `x + width >= min`, and width isn't sorted — only x is.
   const maxPackWidth = useMemo(
-    () => positioned.reduce((max, item) => Math.max(max, item.packWidth), 0),
-    [positioned]
+    () => cards.reduce((max, item) => Math.max(max, item.packWidth), 0),
+    [cards]
   );
 
   const resolvedMarkers = useMemo(() => {
@@ -1130,6 +1262,43 @@ export function DataViewTimeline<TData>({
         ) : null}
       </div>
 
+      {/* Group section bands. Kept outside the canvas for two reasons: the
+          canvas is `role="list"` (only cards belong in it), and its
+          `overflow: hidden` would neutralize the sticky positioning below.
+          The layer is absolute inside the scroll container, so it scrolls with
+          the content while each band sticks vertically within its own section
+          slot — pinned under the axis, pushed out by the next section's band. */}
+      {groupBands.length > 0 ? (
+        <div
+          className={styles.timelineGroupLayer}
+          style={{ width: timeScale.totalWidth, height: canvasHeight }}
+        >
+          {groupBands.map(band => (
+            <div
+              key={band.key}
+              className={styles.timelineGroupSlot}
+              style={{ top: band.top, height: band.height }}
+            >
+              <div
+                className={cx(
+                  styles.timelineGroupHeader,
+                  classNames.groupHeader
+                )}
+                style={{ height: GROUP_BAND_HEIGHT }}
+              >
+                {/* Sticky-left so the label stays readable while panning. */}
+                <span className={styles.timelineGroupHeaderLabel}>
+                  {band.group.label}
+                  {band.group.showGroupCount ? (
+                    <Badge variant='neutral'>{band.group.count}</Badge>
+                  ) : null}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+
       <div
         role='list'
         className={cx(styles.timelineCanvas, classNames.canvas)}
@@ -1177,7 +1346,7 @@ export function DataViewTimeline<TData>({
               renderWidth={item.renderWidth}
               spanWidth={item.spanWidth}
               collapsed={item.endTime !== null && item.spanWidth < minCardWidth}
-              laneIndex={item.lane}
+              laneIndex={item.laneIndex}
               startTime={item.startTime}
               endTime={item.endTime}
               renderCard={renderCard}

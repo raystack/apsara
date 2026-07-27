@@ -275,7 +275,9 @@ export interface DataViewTimelineProps {
   actionsRef?: RefObject<TimelineActions | null>;
 
   /**
-   * `auto` packs non-overlapping cards into shared lanes; `one-per-row` gives every row its own lane.
+   * `auto` packs non-overlapping cards into shared lanes; `one-per-row` gives every row
+   * its own lane, in row-model (sorted) order. Both apply per group section while
+   * `group_by` is active — cards never share a lane across sections.
    * @defaultValue "auto"
    */
   lanePacking?: 'auto' | 'one-per-row';
@@ -310,7 +312,15 @@ export interface DataViewTimelineProps {
   /** When true, only cards/gridlines near the visible viewport are rendered (horizontal culling). */
   virtualized?: boolean;
 
-  /** Class overrides per part: root, axis, band, tick, marker, gridline, cursor, canvas, card. */
+  /**
+   * Render the group header band above each swim-lane section while `group_by`
+   * is active. False hides the bands only — rows stay grouped into sections
+   * (same contract as `DataViewListProps.showGroupHeaders`).
+   * @defaultValue true
+   */
+  showGroupHeaders?: boolean;
+
+  /** Class overrides per part: root, axis, band, tick, marker, gridline, cursor, canvas, card, groupHeader. */
   classNames?: Record<string, string>;
 }
 
@@ -321,7 +331,10 @@ export interface TimelineCardContext {
   /** True when the span is narrower than `minCardWidth`. */
   collapsed: boolean;
 
-  /** Lane (row) index assigned by packing. */
+  /**
+   * Lane (row) index assigned by packing. Relative to the card's own group
+   * section when `group_by` is active — every section's first lane is 0.
+   */
   laneIndex: number;
 
   /** Resolved start date. */

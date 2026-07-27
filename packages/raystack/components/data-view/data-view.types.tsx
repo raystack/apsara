@@ -230,6 +230,10 @@ export interface TimelineCardContext {
    * point cards (no `endField`) — they size to their content instead.
    */
   collapsed: boolean;
+  /**
+   * Lane (row) index assigned by packing. Relative to the card's own group
+   * section when `group_by` is active — every section's first lane is 0.
+   */
   laneIndex: number;
   start: Date;
   /** Null when `endField` is omitted (point marker). */
@@ -273,6 +277,8 @@ export type DataViewTimelineClassNames = {
   cursor?: string;
   canvas?: string;
   card?: string;
+  /** Group section header band (same name/role as `DataViewListClassNames.groupHeader`). */
+  groupHeader?: string;
 };
 
 export interface DataViewTimelineProps<TData> {
@@ -359,7 +365,9 @@ export interface DataViewTimelineProps<TData> {
 
   /**
    * 'auto' (default) packs non-overlapping cards into shared lanes (greedy
-   * interval scheduling); 'one-per-row' gives every row its own lane.
+   * interval scheduling); 'one-per-row' gives every row its own lane, in
+   * row-model (sorted) order. Both apply per group section when `group_by` is
+   * active — cards never share a lane across sections.
    */
   lanePacking?: 'auto' | 'one-per-row';
   /**
@@ -383,6 +391,13 @@ export interface DataViewTimelineProps<TData> {
 
   /** When true, only cards/gridlines near the visible viewport are rendered (horizontal culling). */
   virtualized?: boolean;
+
+  /**
+   * Render the group header band above each section when `group_by` is active.
+   * Same contract as `DataViewListProps.showGroupHeaders`: false hides the
+   * bands only — rows stay grouped into their sections. Default true.
+   */
+  showGroupHeaders?: boolean;
   classNames?: DataViewTimelineClassNames;
 }
 

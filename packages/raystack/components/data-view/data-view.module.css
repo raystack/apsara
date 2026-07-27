@@ -444,6 +444,65 @@
   pointer-events: none;
 }
 
+/* Group section bands (`group_by` active). The layer sits between the axis and
+   the canvas in z-order: absolutely positioned inside the scroll container so
+   it pans with the content, spanning the canvas box. `pointer-events: none`
+   keeps drag-to-pan and card clicks working through a pinned band. */
+.timelineGroupLayer {
+  position: absolute;
+  top: var(--timeline-axis-height);
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* One slot per section, spanning that section's full height. The band sticks
+   within it, so scrolling past a section slides its band out exactly as the
+   next section's band reaches the pin line — no JS scroll tracking. */
+.timelineGroupSlot {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+/* Pins directly under the sticky axis while its section is in view. Same
+   treatment as `.listGroupHeader` (background, typography, count Badge) so the
+   band is visually identical across renderers — including no hairline, which
+   List's sticky header also does without. Height comes in inline from
+   GROUP_BAND_HEIGHT: lane tops are derived from it, so the band must not size
+   to its content. */
+.timelineGroupHeader {
+  position: sticky;
+  top: var(--timeline-axis-height);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+/* Sticks to the viewport's left edge while its band spans the viewport — same
+   trick as the axis month/year band labels. No overflow:hidden on the band or
+   the slot: either would break this.
+
+   The inset matches `.timelineAxisBandLabel` rather than List's 8px group-header
+   padding: the two are the only left-anchored labels in the renderer and sit
+   directly above one another, so a band label at 8px would read as an 8px
+   stagger against the month label. */
+.timelineGroupHeaderLabel {
+  position: sticky;
+  left: var(--rs-space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  white-space: nowrap;
+}
+
 /* min-height keeps gridlines and marker lines running the full pane height
    even when there are only a few lanes. overflow:hidden clips cards whose
    span crosses the domain edge at that edge, instead of letting them dangle

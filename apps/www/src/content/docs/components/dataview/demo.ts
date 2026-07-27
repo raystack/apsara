@@ -354,8 +354,9 @@ export const timelinePreview = {
               onClick={() => timelineActions.current?.scrollTo("today")}>
               Today
             </Button>
-            {/* Sorting/grouping don't affect time-positioned cards — hide them. */}
-            <DataView.DisplayControls hideOrdering hideGrouping />
+            {/* Sort can't move a time-positioned card — hide Ordering.
+                Grouping is left in: it renders swim-lane sections. */}
+            <DataView.DisplayControls hideOrdering />
           </Flex>
         </DataView.Toolbar>
 
@@ -373,6 +374,45 @@ export const timelinePreview = {
         <DataView.EmptyState>
           <Text>No tasks match your filters.</Text>
         </DataView.EmptyState>
+      </DataView>`
+    }
+  ]
+};
+
+export const timelineGroupingPreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewTimelineGroupingDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* group_by in the query is the whole wiring. The timeline consumes the
+         same group rows DataView.List renders as section headers, so section
+         order, labels, and counts match between the two views. Each band pins
+         under the axis while its section is in view; packing runs per section.
+         Mark the field groupable (and showGroupCount for the badge):
+
+           { accessorKey: "team", label: "Team", groupable: true, showGroupCount: true } */
+
+      <DataView
+        data={tasks}
+        fields={fields}
+        defaultSort={{ name: "start", order: "asc" }}
+        query={{ group_by: ["team"] }}
+        getRowId={(t) => t.id}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <DataView.DisplayControls hideOrdering />
+        </DataView.Toolbar>
+
+        <DataView.Timeline
+          startField="start"
+          endField="end"
+          // showGroupHeaders={false} hides the bands, keeps the sections
+          renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
+        />
       </DataView>`
     }
   ]
