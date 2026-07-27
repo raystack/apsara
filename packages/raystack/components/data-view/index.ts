@@ -20,10 +20,17 @@ export type {
   DataViewProps,
   DataViewQuery,
   DataViewSort,
+  DataViewTimelineClassNames,
+  DataViewTimelineProps,
   GroupByResolver,
   InternalFilter,
   InternalQuery,
   SortOrdersValues,
+  TimelineActions,
+  TimelineCardContext,
+  TimelineDateInput,
+  TimelineMarker,
+  TimelineScale,
   ViewSpec
 } from './data-view.types';
 export { defaultGroupOption } from './data-view.types';

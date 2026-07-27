@@ -19,6 +19,7 @@ import { DataViewEmptyState } from './components/empty-state';
 import { Filters } from './components/filters';
 import { DataViewList } from './components/list';
 import { DataViewSearch } from './components/search';
+import { DataViewTimeline } from './components/timeline';
 import { Toolbar } from './components/toolbar';
 import { DataViewZeroState } from './components/zero-state';
 import { DataViewContext } from './context';
@@ -305,6 +306,7 @@ DataViewRoot.displayName = 'DataView';
 // biome-ignore lint/suspicious/noShadowRestrictedNames: public component name intentionally matches the package export
 export const DataView = Object.assign(DataViewRoot, {
   List: DataViewList,
+  Timeline: DataViewTimeline,
   Custom: DataViewCustom,
   DisplayAccess: DisplayAccess,
   EmptyState: DataViewEmptyState,

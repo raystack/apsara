@@ -16,6 +16,9 @@ import {
   virtualizedGroupingPreview,
   loadingPreview,
   perViewFieldsPreview,
+  timelinePreview,
+  timelineGroupingPreview,
+  timelinePointPreview,
 } from "./demo.ts";
 
 <Demo data={tablePreview} />
@@ -24,7 +27,7 @@ import {
 
 `DataView` owns the data layer — query state (filters, sort, group, search), client/server mode, row model derivation — and lets you pick the renderer that draws it. The same `<DataView>` can host a table, a list, or a free-form view, switchable at runtime without losing query state.
 
-In scope today: `DataView.List` (table + list presentations) and `DataView.Custom` (escape hatch for cards, kanban, gallery, etc.).
+In scope today: `DataView.List` (table + list presentations), `DataView.Timeline` (cards positioned on a continuous time axis — full guide in [Timeline](#timeline)), and `DataView.Custom` (escape hatch for cards, kanban, gallery, etc.).
 
 ## Anatomy
 
@@ -152,6 +155,26 @@ Visibility is a **single global map** on context. `DataView.List` honours it for
 #### Column
 
 <auto-type-table path="./props.ts" name="DataViewListColumn" />
+
+### DataView.Timeline
+
+<auto-type-table path="./props.ts" name="DataViewTimelineProps" />
+
+#### Card context
+
+Passed as the second argument to `renderCard`.
+
+<auto-type-table path="./props.ts" name="TimelineCardContext" />
+
+#### Marker
+
+<auto-type-table path="./props.ts" name="TimelineMarker" />
+
+#### Actions
+
+The imperative handle received through `actionsRef`.
+
+<auto-type-table path="./props.ts" name="TimelineActions" />
 
 ### DataView.Custom
 
@@ -281,3 +304,152 @@ The wire format keeps `group_by: string[]`. To group by something that isn't a r
 ```
 
 In server mode, `onTableQueryChange` fires whenever the query changes. The `DataView.List` shows skeleton loader rows when `isLoading` is true. Filter predicates and sort run on the server — the local TanStack table is manual.
+
+## Timeline
+
+`DataView.Timeline` positions the same row model as cards on a continuous, horizontally scrollable time axis — orders on a delivery schedule, tasks on a Gantt-style plan, releases on a strip. It shares the root's entire data layer: search, filters, grouping, and Display Properties apply to cards exactly as they do to list rows, and it participates in multi-view switching via `name`.
+
+In the demo below: drag the background to pan (with a momentum glide), hover for the snapped date cursor, and use the Today button — wired through `actionsRef` — to jump back. The narrow "B" stub is a span shorter than `minCardWidth`, rendered via `context.collapsed`.
+
+<Demo data={timelinePreview} />
+
+### Cards
+
+The Timeline owns **positioning** — the time scale (date → x, span → width, using real timestamps so variable-length months don't distort placement), lane packing (non-overlapping cards share a lane; `lanePacking="one-per-row"` opts out), the sticky two-tier axis, and scrolling. You own the **card**: `renderCard(row, context)` draws everything visual, the same split as `DataView.List`'s `columns[].cell`.
+
+```tsx
+<DataView.Timeline
+  startField="start"
+  endField="end"
+  renderCard={(row, context) => {
+    // context: { width, collapsed, laneIndex, start, end }
+    if (context.collapsed) return <CompactStub task={row.original} />;
+    return <TaskCard task={row.original} />;
+  }}
+/>
+```
+
+`context.collapsed` flips when the span is narrower than `minCardWidth` (default 60px) — render a compact stub instead of letting the full card clip (point cards never collapse; they size to their content). Wrap card fields in `DataView.DisplayAccess` so the toolbar's Display Properties toggles reach them.
+
+Card height is content-driven, the same contract as `DataView.List` rows: cards auto-measure after paint, each lane sizes to its tallest card, and `estimatedRowHeight` (default 66) is only a layout hint until real heights arrive. Give your card an explicit height if you want uniform cards. Keep `renderCard` referentially stable (define it outside the component or wrap it in `useCallback`) — cards are memoized against it, and an inline closure forces every visible card to re-render on each scroll frame.
+
+### Point markers
+
+Omit `endField` and rows render as point markers at their date — releases, incidents, audit events. The wrapper sizes to the card's content instead of a time span, and `context.end` is `null`. Because the packer can't measure content, it assumes each point card is `estimatedPointWidth` wide (default 120px) when assigning lanes — set it to roughly your widest point card so nearby markers don't overlap in a lane.
+
+<Demo data={timelinePointPreview} />
+
+### Grouping
+
+Set `group_by` (from `DataView.DisplayControls` → Grouping, or on the initial `query`) and the timeline splits into **swim-lane sections** stacked under the single shared time axis: a full-width header band per group, that group's cards lane-packed beneath it. Horizontal position stays purely time — grouping reorganizes vertically only.
+
+<Demo data={timelineGroupingPreview} />
+
+```tsx
+// Mark the field groupable; showGroupCount adds the count badge to the band.
+const fields = [
+  { accessorKey: "team", label: "Team", groupable: true, showGroupCount: true },
+  …
+];
+
+<DataView data={tasks} fields={fields} query={{ group_by: ["team"] }} …>
+  <DataView.Timeline startField="start" endField="end" renderCard={renderCard} />
+</DataView>
+```
+
+The timeline consumes the **same group rows** `DataView.List` renders as section headers — the root's `groupData` output, in first-occurrence order — so section order, labels (`groupLabelsMap`), and counts (`groupCountMap`, or the bucket size) match between views, in client and server mode alike. There's no timeline-specific grouping path to keep in sync.
+
+- **Packing is per section.** A card only ever shares a lane with cards in its own group, and `context.laneIndex` is section-relative (every section starts at lane 0). `lanePacking="one-per-row"` applies within each section too.
+- **Bands pin while their section is in view.** The active band sticks directly under the time axis and is pushed off by the next section's band; its label sticks to the left edge so it stays readable while you pan to a distant month. Always on — pure CSS, no prop.
+- **Empty sections disappear.** A group whose cards all fall outside an explicit `range` (or that has no valid `startField` values) renders nothing — no band, no empty strip. A band that *does* render shows the full group count, even when some of its cards are culled, matching List.
+- **`showGroupHeaders={false}`** hides the bands but keeps the sections — same semantics as the prop on `DataView.List`. Style a band with `classNames.groupHeader`.
+
+Bands are labels only in this release: no chevron, no collapsing.
+
+### Ordering
+
+Sort can't move a card horizontally — x is locked to the start date — so it surfaces in exactly one place: `lanePacking="one-per-row"`, where vertical row order follows the active sort (within each section when grouped). With the default `auto` packing, lanes are assigned by dense chronological first-fit and the sort has no visible effect, so hide the Ordering control (`<DataView.DisplayControls hideOrdering />`) or leave `sortable` off the timeline's per-view `fields` unless you use `one-per-row`.
+
+### Scale and axis
+
+Four props control the axis, and they compose rather than overlap:
+
+- `scale` — the tick unit: `day` (default), `week`, `month`, or `quarter`.
+- `unitWidth` — pixels per unit (defaults: day 20, week 56, month 96, quarter 140). This is the zoom knob.
+- `tickInterval` — label every Nth unit. Labels never render closer than a collision floor, so a too-dense value degrades gracefully instead of overlapping.
+- `gridlineInterval` — draw a gridline every Nth unit. Purely visual: cards, the today line, and cursor snapping still land on every unit.
+
+The domain defaults to the data extent (plus today and markers) with padding. Pass an explicit `range` to fix the coordinate space — essential for range-window loading below, since the scrollbar then never jumps as data streams in. Rows entirely outside an explicit `range` are culled.
+
+### Today and markers
+
+`today` (default `true`) draws a vertical line with a date badge pinned to the axis, at day precision so server and client renders agree. Pin it to a fixed date with `today={date}` or hide it with `today={false}`. `markers` adds more full-height lines for milestones and deadlines:
+
+```tsx
+<DataView.Timeline
+  markers={[
+    { date: "2026-08-01", label: "Code freeze" },
+    { date: "2026-08-15", label: "Release", variant: "accent" },
+    { date: "2026-08-20", label: "EOL", variant: "danger" },
+  ]}
+/>
+```
+
+### Navigation
+
+`defaultScrollTo` (default `'today'`) sets the initial scroll position: a date, `'today'`, `'start'`, or `'end'`. After mount, navigate imperatively through `actionsRef`:
+
+```tsx
+const timelineActions = useRef<TimelineActions | null>(null);
+
+<DataView.Timeline actionsRef={timelineActions} … />
+
+<Button onClick={() => timelineActions.current?.scrollTo("today")}>
+  Today
+</Button>
+```
+
+`scrollTo(target, { align = "center", behavior = "smooth" })` accepts the same target vocabulary as `defaultScrollTo`. Out-of-domain dates clamp to the nearest domain edge; while the timeline is hidden (inactive view, no data) calls no-op with a dev warning. `getVisibleRange()` returns the visible `[Date, Date]` window (or `null` while hidden) — useful for showing the Today button only when today is off-screen.
+
+Filtering navigates too: when a filter or search change leaves no matching card in the viewport, the timeline scrolls the earliest match into view instead of leaving you parked on empty canvas (a change whose results are already on screen doesn't move the view). Opt out with `scrollToResults={false}`.
+
+### Loading data by visible range
+
+Offset pagination doesn't fit a 2-D time canvas — the natural unit of fetching is the **visible window**. The recommended pattern is client mode + `onVisibleRangeChange`:
+
+1. Fix the coordinate space with an explicit `range` so the scrollbar stays stable while rows stream in.
+2. On `onVisibleRangeChange`, widen the window by a prefetch pad and fetch rows **overlapping** it (`start <= to AND end >= from` — a containment filter drops cards straddling the window edges).
+3. Track requested buckets (e.g. months) in a `Set` so re-entering a window is free, and dedupe merged rows by id — edge-straddling rows come back from both adjacent fetches. On a failed fetch, delete the affected buckets from the `Set` so scrolling back retries them instead of leaving a permanent hole.
+4. Throttle, don't debounce: a debounce waits for scrolling to stop, leaving a gap of missing cards mid-drag.
+
+```tsx
+const [orders, setOrders] = useState<Order[]>([]);
+const [isLoading, setIsLoading] = useState(true); // initial fetch in flight
+
+<DataView
+  data={orders}
+  fields={fields}
+  mode="client" // filters/search run locally against loaded rows
+  isLoading={isLoading}
+  defaultSort={{ name: "start", order: "asc" }}
+  getRowId={(o) => o.id}
+>
+  <DataView.Timeline
+    startField="start"
+    endField="end"
+    range={FIXED_RANGE}
+    virtualized
+    onVisibleRangeChange={([from, to]) => throttledLoadWindow(from, to)}
+    renderCard={renderOrderCard}
+  />
+</DataView>
+```
+
+Start with `isLoading={true}` and fire an initial fetch on mount: with no data and no loading flag the timeline renders `null` (the zero state takes over), so `onVisibleRangeChange` would never fire to bootstrap the first window. Keep the row model **cumulative** — the domain is stable, so previously fetched cards stay mounted and scrolling back is instant. Scroll position is anchored by *time*, not pixels: if the domain shifts (a `range` extension, rows prepended by a fetch), the date under the viewport's left edge stays put instead of the content jumping.
+
+### Notes
+
+- **Grouping** renders as swim-lane sections and **sorting** only reaches `lanePacking="one-per-row"` — see [Grouping](#grouping) and [Ordering](#ordering). Hide a control that has no meaning for your configuration (`<DataView.DisplayControls hideOrdering />`), or pass the timeline a per-view `fields` override without `sortable`/`groupable`.
+- **Vertical space is not virtualized.** `virtualized` culls horizontally only, so a grouped timeline renders every section's cards that fall in the visible time window. Deep grouping over thousands of rows will render a tall canvas.
+- **`virtualized`** enables horizontal culling: only cards and gridlines near the viewport render. Recommended whenever the domain is long or rows are numerous.
+- **Interaction** — cards receive row clicks via the root's `onRowClick`; the background supports mouse drag-to-pan with a momentum glide; scrolling past the domain edge won't trigger browser back-swipe. The pane is a focusable, labelled region (`aria-label`, default "Timeline"), so keyboard users can Tab to it and scroll with the arrow keys.

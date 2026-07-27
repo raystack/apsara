@@ -344,6 +344,247 @@
   pointer-events: none;
 }
 
+/* Timeline renderer — cards absolutely positioned on a continuous time axis.
+   The root is the single scroll container for both axes; the axis strip
+   sticks to the top on vertical scroll and moves with the canvas on
+   horizontal scroll because both share the same explicit content width. */
+.timelineRoot {
+  --timeline-axis-height: 52px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  /* Reaching the domain edge must not chain into browser navigation
+     (horizontal swipe-back) or scroll the page behind. */
+  overscroll-behavior: contain;
+  background: var(--rs-color-background-base-primary);
+}
+
+/* The pane stays focusable (tabIndex=0) so arrow/page keys scroll it — but it
+   never draws a focus ring. A ring around a canvas this large reads as a stray
+   blue line rather than a focus indicator: an inset outline is painted over by
+   the absolutely-positioned cards, leaving broken segments down the left edge
+   and a line along the bottom. `outline: none` rather than just dropping the
+   rule, because Chrome auto-focuses scroll containers that have no focusable
+   children and would otherwise paint its own UA outline. */
+.timelineRoot:focus,
+.timelineRoot:focus-visible {
+  outline: none;
+}
+
+/* Drag-to-pan in progress — grabbing cursor everywhere (descendants too, so
+   cards' own cursor styles don't flicker mid-drag) and selection locked. */
+.timelineRoot[data-dragging],
+.timelineRoot[data-dragging] * {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Two-tier ruler: major bands (month/year) on top, minor tick labels below.
+   Marker badges (today, milestones) are pinned here so they stay visible
+   while the marker line runs down the canvas. */
+.timelineAxis {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: var(--timeline-axis-height);
+  /* Never let the flex line squash the axis: the group-band layer is offset by
+     --timeline-axis-height, so a shorter axis would desync the two. */
+  flex-shrink: 0;
+  box-sizing: border-box;
+  background: var(--rs-color-background-base-primary);
+  border-bottom: 0.5px solid var(--rs-color-border-base-primary);
+}
+
+.timelineAxisBand {
+  position: absolute;
+  top: var(--rs-space-2);
+  display: flex;
+  box-sizing: border-box;
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+  text-transform: uppercase;
+}
+
+/* Sticks to the viewport's left edge while its band is in view (the nearest
+   scroll container is the timeline root). No overflow:hidden on the band —
+   that would break the sticky behavior. */
+.timelineAxisBandLabel {
+  position: sticky;
+  left: var(--rs-space-5);
+  white-space: nowrap;
+}
+
+.timelineAxisTick {
+  position: absolute;
+  bottom: var(--rs-space-2);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--rs-color-foreground-base-tertiary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-mini);
+  font-weight: var(--rs-font-weight-regular);
+  line-height: var(--rs-line-height-mini);
+  letter-spacing: var(--rs-letter-spacing-mini);
+}
+
+.timelineAxisMarker {
+  position: absolute;
+  top: var(--rs-space-2);
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+}
+
+/* Hover-cursor date badge — above marker badges, never intercepts events. */
+.timelineAxisCursor {
+  position: absolute;
+  top: var(--rs-space-2);
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  pointer-events: none;
+}
+
+/* Group section bands (`group_by` active). The layer sits between the axis and
+   the canvas in z-order: absolutely positioned inside the scroll container so
+   it pans with the content, spanning the canvas box. `pointer-events: none`
+   keeps drag-to-pan and card clicks working through a pinned band. */
+.timelineGroupLayer {
+  position: absolute;
+  top: var(--timeline-axis-height);
+  left: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* One slot per section, spanning that section's full height. The band sticks
+   within it, so scrolling past a section slides its band out exactly as the
+   next section's band reaches the pin line — no JS scroll tracking. */
+.timelineGroupSlot {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+/* Pins directly under the sticky axis while its section is in view. Same
+   treatment as `.listGroupHeader` (background, typography, count Badge) so the
+   band is visually identical across renderers — including no hairline, which
+   List's sticky header also does without. Height comes in inline from
+   GROUP_BAND_HEIGHT: lane tops are derived from it, so the band must not size
+   to its content. */
+.timelineGroupHeader {
+  position: sticky;
+  top: var(--timeline-axis-height);
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background: var(--rs-color-background-neutral-primary);
+  color: var(--rs-color-foreground-base-primary);
+  font-family: var(--rs-font-body);
+  font-size: var(--rs-font-size-small);
+  font-weight: var(--rs-font-weight-medium);
+  line-height: var(--rs-line-height-small);
+  letter-spacing: var(--rs-letter-spacing-small);
+}
+
+/* Sticks to the viewport's left edge while its band spans the viewport — same
+   trick as the axis month/year band labels. No overflow:hidden on the band or
+   the slot: either would break this.
+
+   The inset matches `.timelineAxisBandLabel` rather than List's 8px group-header
+   padding: the two are the only left-anchored labels in the renderer and sit
+   directly above one another, so a band label at 8px would read as an 8px
+   stagger against the month label. */
+.timelineGroupHeaderLabel {
+  position: sticky;
+  left: var(--rs-space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--rs-space-3);
+  white-space: nowrap;
+}
+
+/* `flex: 1 0 auto` — grow into the pane's leftover height so gridlines and
+   marker lines run its full height even with only a few lanes, but never
+   shrink below the explicit lane geometry (that would clip cards). Growth is
+   bounded by the real free space, so a rendered footer is accounted for.
+   overflow:hidden clips cards whose span crosses the domain edge at that edge,
+   instead of letting them dangle past the axis into unscaled space. */
+.timelineCanvas {
+  position: relative;
+  box-sizing: border-box;
+  flex: 1 0 auto;
+  overflow: hidden;
+}
+
+/* Dashed so the grid recedes; marker/today/cursor lines stay solid so they
+   read as data, not grid. */
+.timelineGridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 0.5px dashed var(--rs-color-border-base-primary);
+  pointer-events: none;
+}
+
+/* Gridlines, marker lines, and the cursor line all paint beneath cards (DOM
+   order, no z-index) by design — lines are context, cards are content, and a
+   line crossing a card would read as part of it. The axis badge stays visible
+   even where a card occludes the line. */
+.timelineMarkerLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 0.5px solid var(--rs-color-border-base-tertiary);
+  pointer-events: none;
+}
+
+.timelineMarkerLine[data-variant="accent"] {
+  border-left-color: var(--rs-color-border-accent-emphasis);
+}
+
+.timelineMarkerLine[data-variant="danger"] {
+  border-left-color: var(--rs-color-border-danger-emphasis);
+}
+
+/* Hover crosshair — darker than gridlines so the snapped position reads
+   clearly while tracking the pointer. */
+.timelineCursorLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 0.5px solid var(--rs-color-border-base-focus);
+  pointer-events: none;
+}
+
+/* Positioning wrapper only — visually neutral. The card interior (chrome,
+   states, truncation) is consumer-owned via `renderCard`. */
+.timelineCard {
+  position: absolute;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Sticky-left so the filter-summary footer stays aligned to the viewport
+   (not the full canvas width) under horizontal scroll. Never shrinks — the
+   canvas absorbs the free height instead. */
+.timelineFooter {
+  position: sticky;
+  left: 0;
+  width: 100%;
+  flex-shrink: 0;
+}
+
 /* Empty/zero sibling container */
 .dataStateContainer {
   display: flex;

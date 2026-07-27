@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, RefObject } from 'react';
 
 // Documentation-only placeholders so `auto-type-table` can render the public
 // API without surfacing real generics (TData is shown as `T` for readability).
@@ -159,10 +159,10 @@ export interface DataViewListColumn {
   accessorKey: string;
 
   /** TanStack-style cell renderer. */
-  cell?: (ctx) => ReactNode;
+  cell?: (ctx: T) => ReactNode;
 
   /** TanStack-style header renderer. Overrides the field `label`. */
-  header?: (ctx) => ReactNode;
+  header?: (ctx: T) => ReactNode;
 
   /**
    * CSS grid track width.
@@ -170,6 +170,214 @@ export interface DataViewListColumn {
    * @defaultValue "1fr"
    */
   width?: string | number;
+}
+
+/** Date inputs accepted by Timeline props and row fields. */
+type TimelineDateInput = Date | number | string;
+
+export interface DataViewTimelineProps {
+  /** Multi-view name. When set, the renderer gates itself on the active view. */
+  name?: string;
+
+  /**
+   * Accessible name of the scroll region. The pane is keyboard-focusable (arrow keys
+   * scroll it natively), so screen readers announce this label on focus.
+   * @defaultValue "Timeline"
+   */
+  'aria-label'?: string;
+
+  /** Optional view-scoped field override (full replacement). */
+  fields?: DataViewField[];
+
+  /** Accessor key on the row yielding the start date. Rows with a missing/invalid value are skipped. (Required) */
+  startField: string;
+
+  /** Accessor key for the end date. Omitted → point markers; present → variable-width span cards. */
+  endField?: string;
+
+  /**
+   * Renders the card interior. The Timeline owns positioning (x from start,
+   * width from span, lane from packing, scroll); the consumer owns the card
+   * visual entirely. The first argument is the TanStack `Row` wrapper — the
+   * row data is on `row.original`. Keep the reference stable (`useCallback`):
+   * cards are memoized against it. Compose `DataView.DisplayAccess` inside
+   * for Display Properties support. (Required)
+   */
+  renderCard: (row: T, context: TimelineCardContext) => ReactNode;
+
+  /**
+   * Tick granularity of the time axis.
+   * @defaultValue "day"
+   */
+  scale?: 'day' | 'week' | 'month' | 'quarter';
+
+  /** Pixel width of one `scale` unit — density/zoom override. Defaults per scale (day 20, week 56, month 96, quarter 140). */
+  unitWidth?: number;
+
+  /**
+   * Explicit time domain. Defaults to the data extent (plus today/markers) with padding.
+   * A domain narrower than the container is extended at the end so the axis and gridlines fill the visible width.
+   */
+  range?: [TimelineDateInput, TimelineDateInput];
+
+  /**
+   * Vertical "today" line + axis badge. `true` uses the current date; a date pins it; `false` hides it.
+   * @defaultValue true
+   */
+  today?: boolean | TimelineDateInput;
+
+  /** Additional full-height marker lines with axis badges (milestones, deadlines). */
+  markers?: TimelineMarker[];
+
+  /**
+   * Vertical gridlines at axis ticks.
+   * @defaultValue true
+   */
+  showGridlines?: boolean;
+
+  /** Label every Nth `scale` unit on the axis. Labels never render closer than the collision floor. Default: densest interval that fits. */
+  tickInterval?: number;
+
+  /**
+   * Draw a gridline every Nth `scale` unit. Purely visual — positioning stays at full unit granularity.
+   * @defaultValue 1
+   */
+  gridlineInterval?: number;
+
+  /**
+   * Hover crosshair snapped to the unit under the pointer, with a date badge on the axis.
+   * @defaultValue true
+   */
+  showCursorLine?: boolean;
+
+  // The literals are named in the description because the rendered type
+  // column can't show them — TS collapses them into TimelineDateInput's
+  // `string` when the union resolves. Same for scrollTo's target below.
+  /**
+   * Initial horizontal scroll target: a date, or one of `'today'` | `'start'` | `'end'`
+   * (the domain edges).
+   * @defaultValue "today"
+   */
+  defaultScrollTo?: TimelineDateInput | 'today' | 'start' | 'end';
+
+  /**
+   * After a filter or search change, scroll the earliest matching card into view when
+   * no match is visible in the current viewport. A query change that keeps a card on
+   * screen doesn't move the view.
+   * @defaultValue true
+   */
+  scrollToResults?: boolean;
+
+  /** Fires (rAF-throttled) with the visible time range as the user scrolls or resizes. */
+  onVisibleRangeChange?: (range: [Date, Date]) => void;
+
+  /** Receives the imperative navigation handle (`scrollTo`, `getVisibleRange`). */
+  actionsRef?: RefObject<TimelineActions | null>;
+
+  /**
+   * `auto` packs non-overlapping cards into shared lanes; `one-per-row` gives every row
+   * its own lane, in row-model (sorted) order. Both apply per group section while
+   * `group_by` is active — cards never share a lane across sections.
+   * @defaultValue "auto"
+   */
+  lanePacking?: 'auto' | 'one-per-row';
+
+  /**
+   * Estimated card height in px, same contract as `DataView.List`: cards render at their
+   * natural content height and auto-measure after paint; the estimate seeds lane layout
+   * until real heights arrive. Each lane sizes to its tallest card.
+   * @defaultValue 66
+   */
+  estimatedRowHeight?: number;
+
+  /**
+   * Vertical gap between lanes in px.
+   * @defaultValue 16
+   */
+  laneGap?: number;
+
+  /**
+   * Spans narrower than this (px) flip `context.collapsed` for `renderCard`.
+   * @defaultValue 60
+   */
+  minCardWidth?: number;
+
+  /**
+   * Assumed width (px) of point-marker cards (rows without `endField`) for lane packing.
+   * Set to roughly the widest point card to prevent horizontal overlap within a lane.
+   * @defaultValue 120
+   */
+  estimatedPointWidth?: number;
+
+  /** When true, only cards/gridlines near the visible viewport are rendered (horizontal culling). */
+  virtualized?: boolean;
+
+  /**
+   * Render the group header band above each swim-lane section while `group_by`
+   * is active. False hides the bands only — rows stay grouped into sections
+   * (same contract as `DataViewListProps.showGroupHeaders`).
+   * @defaultValue true
+   */
+  showGroupHeaders?: boolean;
+
+  /** Class overrides per part: root, axis, band, tick, marker, gridline, cursor, canvas, card, groupHeader. */
+  classNames?: Record<string, string>;
+}
+
+export interface TimelineCardContext {
+  /** Pixel width of the time span (0 when `endField` is omitted). */
+  width: number;
+
+  /** True when the span is narrower than `minCardWidth`. */
+  collapsed: boolean;
+
+  /**
+   * Lane (row) index assigned by packing. Relative to the card's own group
+   * section when `group_by` is active — every section's first lane is 0.
+   */
+  laneIndex: number;
+
+  /** Resolved start date. */
+  start: Date;
+
+  /** Resolved end date. Null when `endField` is omitted (point marker). */
+  end: Date | null;
+}
+
+export interface TimelineMarker {
+  /** Marker position. (Required) */
+  date: TimelineDateInput;
+
+  /** Badge content. Defaults to the marker date formatted as "17 Jan". */
+  label?: ReactNode;
+
+  /**
+   * Badge/line color.
+   * @defaultValue "default"
+   */
+  variant?: 'default' | 'accent' | 'danger';
+}
+
+export interface TimelineActions {
+  /**
+   * Scroll the viewport so the target lands at `align`. The target is a date, or
+   * one of `'today'` | `'start'` | `'end'` (the domain edges) — same vocabulary as
+   * `defaultScrollTo`. Edge alignments keep a small inset so the target doesn't sit
+   * flush against the viewport edge (yields at the domain edges). Out-of-domain
+   * dates clamp to the nearest edge; no-ops (dev warning) while the renderer is hidden.
+   */
+  scrollTo: (
+    target: TimelineDateInput | 'today' | 'start' | 'end',
+    options?: {
+      /** @defaultValue "center" */
+      align?: 'start' | 'center' | 'end';
+      /** @defaultValue "smooth" */
+      behavior?: 'auto' | 'smooth';
+    }
+  ) => void;
+
+  /** The visible time window, or null while the renderer is hidden. */
+  getVisibleRange: () => [Date, Date] | null;
 }
 
 export interface DataViewCustomProps {

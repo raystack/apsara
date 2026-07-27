@@ -331,3 +331,119 @@ export const searchPreview = {
     }
   ]
 };
+
+export const timelinePreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewTimelineDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* The Timeline owns positioning: date → x, span → width, lane packing,
+         the sticky two-tier axis, and native x/y scrolling. The card interior
+         is entirely yours via renderCard. */
+      const timelineActions = useRef<TimelineActions | null>(null);
+
+      <DataView data={tasks} fields={fields} defaultSort={{ name: "start", order: "asc" }} getRowId={(t) => t.id}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <Flex gap={3} align="center">
+            <Button size="small" variant="outline" color="neutral"
+              onClick={() => timelineActions.current?.scrollTo("today")}>
+              Today
+            </Button>
+            {/* Sort can't move a time-positioned card — hide Ordering.
+                Grouping is left in: it renders swim-lane sections. */}
+            <DataView.DisplayControls hideOrdering />
+          </Flex>
+        </DataView.Toolbar>
+
+        <DataView.Timeline
+          startField="start"
+          endField="end"
+          actionsRef={timelineActions}
+          markers={[{ date: releaseDate, label: "Release", variant: "accent" }]}
+          renderCard={(row, context) =>
+            context.collapsed
+              ? <CompactStub task={row.original} />
+              : <TaskCard task={row.original} />
+          }
+        />
+        <DataView.EmptyState>
+          <Text>No tasks match your filters.</Text>
+        </DataView.EmptyState>
+      </DataView>`
+    }
+  ]
+};
+
+export const timelineGroupingPreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewTimelineGroupingDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* group_by in the query is the whole wiring. The timeline consumes the
+         same group rows DataView.List renders as section headers, so section
+         order, labels, and counts match between the two views. Each band pins
+         under the axis while its section is in view; packing runs per section.
+         Mark the field groupable (and showGroupCount for the badge):
+
+           { accessorKey: "team", label: "Team", groupable: true, showGroupCount: true } */
+
+      <DataView
+        data={tasks}
+        fields={fields}
+        defaultSort={{ name: "start", order: "asc" }}
+        query={{ group_by: ["team"] }}
+        getRowId={(t) => t.id}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <DataView.DisplayControls hideOrdering />
+        </DataView.Toolbar>
+
+        <DataView.Timeline
+          startField="start"
+          endField="end"
+          // showGroupHeaders={false} hides the bands, keeps the sections
+          renderCard={(row, context) => <TaskCard task={row.original} context={context} />}
+        />
+      </DataView>`
+    }
+  ]
+};
+
+export const timelinePointPreview = {
+  type: 'code',
+  style: { padding: 0 },
+  previewCode: false,
+  code: `<DataViewTimelinePointDemo />`,
+  codePreview: [
+    {
+      label: 'index.tsx',
+      code: `
+      /* Omit endField → point markers. The wrapper sizes to its content
+         instead of a time span, and context.end is null. */
+      <DataView data={releases} fields={fields} defaultSort={{ name: "date", order: "asc" }} getRowId={(r) => r.id}>
+        <DataView.Toolbar>
+          <DataView.Filters />
+          <DataView.DisplayControls hideOrdering hideGrouping />
+        </DataView.Toolbar>
+        <DataView.Timeline
+          startField="date"
+          estimatedRowHeight={28}
+          renderCard={(row) => (
+            <Badge variant={row.original.channel === "stable" ? "accent" : "neutral"}>
+              {row.original.version}
+            </Badge>
+          )}
+        />
+      </DataView>`
+    }
+  ]
+};
