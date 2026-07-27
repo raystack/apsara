@@ -351,6 +351,8 @@
 .timelineRoot {
   --timeline-axis-height: 52px;
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   overflow: auto;
@@ -360,13 +362,16 @@
   background: var(--rs-color-background-base-primary);
 }
 
-/* Keyboard-focused pane (tabIndex=0 for arrow-key scrolling). Inset ring for
-   the same reason as .listRow: an outward outline would clip against parent
-   overflow. :focus-visible only — a mouse click on the background must not
-   ring the whole pane. */
+/* The pane stays focusable (tabIndex=0) so arrow/page keys scroll it — but it
+   never draws a focus ring. A ring around a canvas this large reads as a stray
+   blue line rather than a focus indicator: an inset outline is painted over by
+   the absolutely-positioned cards, leaving broken segments down the left edge
+   and a line along the bottom. `outline: none` rather than just dropping the
+   rule, because Chrome auto-focuses scroll containers that have no focusable
+   children and would otherwise paint its own UA outline. */
+.timelineRoot:focus,
 .timelineRoot:focus-visible {
-  outline: var(--rs-focus-ring);
-  outline-offset: var(--rs-focus-ring-offset-inset);
+  outline: none;
 }
 
 /* Drag-to-pan in progress — grabbing cursor everywhere (descendants too, so
@@ -385,6 +390,9 @@
   top: 0;
   z-index: 3;
   height: var(--timeline-axis-height);
+  /* Never let the flex line squash the axis: the group-band layer is offset by
+     --timeline-axis-height, so a shorter axis would desync the two. */
+  flex-shrink: 0;
   box-sizing: border-box;
   background: var(--rs-color-background-base-primary);
   border-bottom: 0.5px solid var(--rs-color-border-base-primary);
@@ -503,14 +511,16 @@
   white-space: nowrap;
 }
 
-/* min-height keeps gridlines and marker lines running the full pane height
-   even when there are only a few lanes. overflow:hidden clips cards whose
-   span crosses the domain edge at that edge, instead of letting them dangle
-   past the axis into unscaled space. */
+/* `flex: 1 0 auto` — grow into the pane's leftover height so gridlines and
+   marker lines run its full height even with only a few lanes, but never
+   shrink below the explicit lane geometry (that would clip cards). Growth is
+   bounded by the real free space, so a rendered footer is accounted for.
+   overflow:hidden clips cards whose span crosses the domain edge at that edge,
+   instead of letting them dangle past the axis into unscaled space. */
 .timelineCanvas {
   position: relative;
   box-sizing: border-box;
-  min-height: calc(100% - var(--timeline-axis-height));
+  flex: 1 0 auto;
   overflow: hidden;
 }
 
@@ -566,11 +576,13 @@
 }
 
 /* Sticky-left so the filter-summary footer stays aligned to the viewport
-   (not the full canvas width) under horizontal scroll. */
+   (not the full canvas width) under horizontal scroll. Never shrinks — the
+   canvas absorbs the free height instead. */
 .timelineFooter {
   position: sticky;
   left: 0;
   width: 100%;
+  flex-shrink: 0;
 }
 
 /* Empty/zero sibling container */
