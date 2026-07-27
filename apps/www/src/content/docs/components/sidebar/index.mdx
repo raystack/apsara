@@ -158,11 +158,14 @@ The Sidebar implements the following accessibility features:
 - Proper ARIA roles and attributes
 
   - `role="navigation"` for the main sidebar
-  - `role="banner"` for the header
-  - `role="list"` for item containers (Main groups, Footer) and `role="listitem"` for navigation items
+  - `role="list"` for item containers (Main, group items, Footer) and `role="listitem"` for navigation items and groups, forming valid nested lists
   - `aria-expanded` to indicate sidebar state
   - `aria-current="page"` for active items
   - `aria-disabled="true"` for disabled items
+
+- Truncation handling
+  - Long item and group labels truncate with an ellipsis
+  - Items whose label is clipped show the full text in a tooltip on hover or focus
 
 - Keyboard navigation support
 

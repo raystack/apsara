@@ -172,16 +172,29 @@
   pointer-events: none;
 }
 
+/* Shared label typography; keep in sync with Text size="small" weight="medium"
+   (text.module.css). All three labels hold consumer-provided text of
+   unpredictable length, so they all truncate. */
+.nav-text,
+.nav-group-label,
 .more-menu-item-text {
-  color: var(--rs-color-foreground-base-primary);
   font-size: var(--rs-font-size-small);
   font-style: normal;
   font-weight: var(--rs-font-weight-medium);
   line-height: var(--rs-line-height-small);
   letter-spacing: var(--rs-letter-spacing-small);
-  width: auto;
-  opacity: 1;
-  display: inline;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  /* Flex children min-width to auto, which blocks ellipsis from engaging */
+  min-width: 0;
+}
+
+.more-menu-item-text {
+  color: var(--rs-color-foreground-base-primary);
+  /* The menu popup has no max-width of its own, so cap the label here to
+     keep a long label from stretching the popup. */
+  max-width: 200px;
 }
 
 .nav-leading-icon {
@@ -197,14 +210,6 @@
 
 .nav-text {
   color: var(--rs-color-foreground-base-primary);
-  font-size: var(--rs-font-size-small);
-  font-style: normal;
-  font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   /* Cap the width so the collapse can animate to 0 (width: auto can't
      transition). 200px clears any real label; the sidebar caps them narrower. */
   max-width: 200px;
@@ -285,11 +290,6 @@
 
 .nav-group-label {
   color: var(--rs-color-foreground-base-secondary);
-  font-size: var(--rs-font-size-small);
-  font-style: normal;
-  font-weight: var(--rs-font-weight-medium);
-  line-height: var(--rs-line-height-small);
-  letter-spacing: var(--rs-letter-spacing-small);
 }
 
 .nav-group-trigger {

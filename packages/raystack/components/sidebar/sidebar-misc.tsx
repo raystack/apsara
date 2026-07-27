@@ -21,12 +21,7 @@ export function SidebarHeader({
   ...props
 }: ComponentProps<typeof Flex>) {
   return (
-    <Flex
-      align='center'
-      className={cx(styles.header, className)}
-      role='banner'
-      {...props}
-    />
+    <Flex align='center' className={cx(styles.header, className)} {...props} />
   );
 }
 SidebarHeader.displayName = 'Sidebar.Header';
@@ -97,6 +92,9 @@ export function SidebarNavigationGroup({
     return (
       <section
         className={cx(styles['nav-group'], className)}
+        // listitem (not the section's implicit region) so groups are valid
+        // children of Sidebar.Main's list, mirroring ul > li > ul nesting.
+        role='listitem'
         aria-label={label}
         {...props}
       >
@@ -136,6 +134,7 @@ export function SidebarNavigationGroup({
   return (
     <section
       className={cx(styles['nav-group'], className)}
+      role='listitem'
       aria-label={label}
       {...props}
     >

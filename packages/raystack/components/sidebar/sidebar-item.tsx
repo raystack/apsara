@@ -2,7 +2,14 @@
 
 import { mergeProps, useRender } from '@base-ui/react';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, ReactElement, ReactNode, useContext } from 'react';
+import {
+  ComponentProps,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useRef,
+  useState
+} from 'react';
 import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
@@ -34,6 +41,8 @@ export function SidebarItem({
   const { isCollapsed, hideCollapsedItemTooltip } = useContext(SidebarContext);
   const sidebarMoreContext = useSidebarMoreContext();
   const insideSidebarMore = !!sidebarMoreContext?.isInsideSidebarMore;
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [truncationTooltipOpen, setTruncationTooltipOpen] = useState(false);
 
   const shouldShowFallback =
     leadingIcon == undefined &&
@@ -64,7 +73,7 @@ export function SidebarItem({
       />
       {/* Kept mounted so it can collapse with the sidebar (max-width → 0)
           instead of popping out; CSS hides it when closed. */}
-      <span className={cx(styles['nav-text'], classNames?.text)}>
+      <span ref={textRef} className={cx(styles['nav-text'], classNames?.text)}>
         {children}
       </span>
     </>
@@ -97,7 +106,8 @@ export function SidebarItem({
     return <Menu.Item disabled={disabled} render={content} />;
   }
 
-  if (isCollapsed && !hideCollapsedItemTooltip) {
+  if (isCollapsed) {
+    if (hideCollapsedItemTooltip) return content;
     return (
       <Tooltip>
         <Tooltip.Trigger render={content} />
@@ -108,7 +118,24 @@ export function SidebarItem({
     );
   }
 
-  return content;
+  // Expanded: the label truncates at a fixed max-width, so surface the full
+  // text in a tooltip — but only when it is actually clipped.
+  return (
+    <Tooltip
+      open={truncationTooltipOpen}
+      onOpenChange={open => {
+        const el = textRef.current;
+        setTruncationTooltipOpen(
+          open && el != null && el.scrollWidth > el.clientWidth
+        );
+      }}
+    >
+      <Tooltip.Trigger render={content} />
+      <Tooltip.Content side='right' sideOffset={16}>
+        {children}
+      </Tooltip.Content>
+    </Tooltip>
+  );
 }
 
 SidebarItem.displayName = 'Sidebar.Item';

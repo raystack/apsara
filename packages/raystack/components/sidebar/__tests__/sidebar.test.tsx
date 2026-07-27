@@ -1,4 +1,10 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Sidebar } from '../sidebar';
@@ -181,11 +187,11 @@ describe('Sidebar', () => {
       expect(screen.getByText(HEADER_TEXT)).toBeInTheDocument();
     });
 
-    it('has proper role', () => {
+    it('does not expose a banner landmark', () => {
       render(<BasicSidebar />);
 
-      const header = screen.getByRole('banner');
-      expect(header).toBeInTheDocument();
+      // banner is a page-level landmark and must not be nested in the nav
+      expect(screen.queryByRole('banner')).not.toBeInTheDocument();
     });
   });
 
@@ -199,7 +205,7 @@ describe('Sidebar', () => {
     it('has proper ARIA attributes', () => {
       render(<BasicSidebar />);
 
-      const main = screen.getByRole('group', { name: 'Main navigation' });
+      const main = screen.getByRole('list', { name: 'Main navigation' });
       expect(main).toBeInTheDocument();
     });
   });
@@ -286,6 +292,42 @@ describe('Sidebar', () => {
       });
       expect(dashboardLink).toHaveAttribute('aria-label', DASHBOARD_ITEM_TEXT);
     });
+
+    it('shows a tooltip with the full label when the text is clipped', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      // jsdom has no layout, so simulate a clipped label
+      Object.defineProperty(text, 'scrollWidth', {
+        value: 300,
+        configurable: true
+      });
+      Object.defineProperty(text, 'clientWidth', {
+        value: 100,
+        configurable: true
+      });
+
+      await user.hover(text.closest('a')!);
+
+      await waitFor(() => {
+        // label + tooltip content
+        expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(2);
+      });
+    });
+
+    it('does not show a tooltip when the label is not clipped', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      // jsdom default: scrollWidth === clientWidth → not clipped
+      await user.hover(text.closest('a')!);
+
+      // wait out the tooltip open delay (200ms)
+      await act(() => new Promise(resolve => setTimeout(resolve, 300)));
+      expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(1);
+    });
   });
 
   describe('Sidebar Navigation Group', () => {
@@ -296,10 +338,12 @@ describe('Sidebar', () => {
       expect(screen.getByText(MAIN_GROUP_LABEL)).toBeInTheDocument();
     });
 
-    it('has proper ARIA attributes', () => {
+    it('participates in the main list as a list item', () => {
       render(<BasicSidebar />);
 
-      const group = screen.getByLabelText(MAIN_GROUP_LABEL);
+      // Groups are listitem children of Sidebar.Main's list (ul > li > ul),
+      // not sections, so the list structure stays valid.
+      const group = screen.getByRole('listitem', { name: MAIN_GROUP_LABEL });
       expect(group).toBeInTheDocument();
     });
 
