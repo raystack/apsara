@@ -33,6 +33,10 @@
   border: none;
 }
 
+.root[data-variant="inset"] .header {
+  background: transparent;
+}
+
 .root[data-open] {
   width: 240px;
 }

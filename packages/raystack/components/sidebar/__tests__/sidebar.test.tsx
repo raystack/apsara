@@ -539,6 +539,20 @@ describe('Sidebar', () => {
       expect(dashboardLink).toHaveAttribute('aria-label', DASHBOARD_ITEM_TEXT);
     });
 
+    it('keeps custom header content mounted so data-collapse-hidden can hide it', () => {
+      render(<BasicSidebar open={false} />);
+
+      const nav = screen.getByRole('navigation');
+      const headerText = screen.getByText(HEADER_TEXT);
+
+      // The collapse-hiding CSS targets `[data-closed] [data-collapse-hidden]`;
+      // both attributes must be present on the right elements for header
+      // content (unlike nav items) to actually disappear on collapse.
+      expect(nav).toHaveAttribute('data-closed');
+      expect(headerText).toHaveAttribute('data-collapse-hidden');
+      expect(headerText).toBeInTheDocument();
+    });
+
     it('shows a tooltip with the full label when the text is clipped', async () => {
       const user = userEvent.setup();
       render(<BasicSidebar />);

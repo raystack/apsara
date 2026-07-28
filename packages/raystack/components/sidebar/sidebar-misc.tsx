@@ -10,6 +10,13 @@ import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { useSidebarSafe } from './sidebar-root';
 import { SidebarTrailingVisual } from './sidebar-trailing-visual';
 
+/**
+ * Free-form slot at the top of the sidebar — an avatar, a workspace switcher,
+ * a search box, whatever the header needs to hold. Because its content is
+ * arbitrary, it isn't hidden automatically when the sidebar collapses; add
+ * `data-collapse-hidden` to any child that should disappear on collapse
+ * (e.g. a title next to a leading icon).
+ */
 export function SidebarHeader({
   className,
   ...props
