@@ -7,6 +7,7 @@ import {
 } from './sidebar-misc';
 import { SidebarMore } from './sidebar-more';
 import { SidebarRoot } from './sidebar-root';
+import { SidebarTrigger } from './sidebar-trigger';
 
 export const Sidebar = Object.assign(SidebarRoot, {
   Header: SidebarHeader,
@@ -14,5 +15,6 @@ export const Sidebar = Object.assign(SidebarRoot, {
   Footer: SidebarFooter,
   Item: SidebarItem,
   Group: SidebarNavigationGroup,
-  More: SidebarMore
+  More: SidebarMore,
+  Trigger: SidebarTrigger
 });

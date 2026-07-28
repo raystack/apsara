@@ -6,7 +6,6 @@ import {
   ComponentProps,
   ReactElement,
   ReactNode,
-  useContext,
   useRef,
   useState
 } from 'react';
@@ -15,7 +14,7 @@ import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { useSidebarMoreContext } from './sidebar-more-context';
-import { SidebarContext } from './sidebar-root';
+import { useSidebar } from './sidebar-root';
 
 export interface SidebarItemProps extends ComponentProps<'a'> {
   leadingIcon?: ReactNode;
@@ -38,7 +37,7 @@ export function SidebarItem({
   render = <a />,
   ...props
 }: SidebarItemProps) {
-  const { isCollapsed, hideCollapsedItemTooltip } = useContext(SidebarContext);
+  const { isCollapsed, hideCollapsedItemTooltip } = useSidebar();
   const sidebarMoreContext = useSidebarMoreContext();
   const insideSidebarMore = !!sidebarMoreContext?.isInsideSidebarMore;
   const textRef = useRef<HTMLSpanElement>(null);

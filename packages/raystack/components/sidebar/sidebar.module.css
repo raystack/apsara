@@ -41,6 +41,69 @@
   width: var(--rs-space-12);
 }
 
+/* "hidden" collapse: no icon rail, just a thin strip so the resize handle
+   stays reachable to reopen. No strip at all when collapse is disabled —
+   there's nothing to reopen from. */
+.root[data-closed][data-collapse-mode="hidden"] {
+  width: var(--rs-space-2);
+}
+
+.root[data-closed][data-collapse-mode="hidden"][data-collapse-disabled] {
+  width: 0;
+}
+
+.root[data-closed][data-collapse-mode="hidden"] .header,
+.root[data-closed][data-collapse-mode="hidden"] .main,
+.root[data-closed][data-collapse-mode="hidden"] .footer {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* "hidden" collapse always reveals as a floating panel, never inline —
+   whether from a real open or a hover peek. */
+.root[data-floating] {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 240px;
+  z-index: var(--rs-z-index-portal);
+  background: var(--rs-color-background-base-primary);
+  box-shadow: var(--rs-shadow-lifted);
+}
+
+.root[data-floating][data-position="left"] {
+  left: 0;
+}
+
+.root[data-floating][data-position="right"] {
+  right: 0;
+}
+
+.root[data-floating] .header,
+.root[data-floating] .main,
+.root[data-floating] .footer {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--rs-z-index-portal);
+  background: var(--rs-color-overlay-black-a5);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.backdrop[data-open] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
 .header {
   gap: var(--rs-space-3);
   padding: 0 var(--rs-space-4);
@@ -392,6 +455,40 @@
   display: none;
 }
 
+/* `data-closed` stays true during a peek (it tracks `open`, not `isPeeking`),
+   so every collapse-hiding rule above needs a floating override here — same
+   specificity, so source order is what makes this win the cascade. Otherwise
+   a peek expands the width but the labels stay invisible underneath it. */
+.root[data-floating] [data-collapse-hidden] {
+  max-width: 240px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.root[data-floating] .nav-text {
+  max-width: 200px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.root[data-floating] .nav-group-header {
+  visibility: visible;
+}
+
+.root[data-floating] .nav-group-header::after {
+  visibility: hidden;
+}
+
+.root[data-floating] .nav-group-label {
+  width: auto;
+  opacity: 1;
+  visibility: visible;
+}
+
+.root[data-floating] .nav-group-chevron {
+  display: flex;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .root {
     transition: width var(--rs-duration-normal) var(--rs-ease-out);
@@ -415,6 +512,20 @@
   .root [data-collapse-hidden] {
     transition:
       max-width var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out),
+      visibility var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  .root[data-collapse-mode="hidden"] .header,
+  .root[data-collapse-mode="hidden"] .main,
+  .root[data-collapse-mode="hidden"] .footer {
+    transition:
+      opacity var(--rs-duration-normal) var(--rs-ease-out),
+      visibility var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  .backdrop {
+    transition:
       opacity var(--rs-duration-normal) var(--rs-ease-out),
       visibility var(--rs-duration-normal) var(--rs-ease-out);
   }

@@ -12,10 +12,25 @@ export interface SidebarRootProps {
    */
   defaultOpen?: boolean;
 
-  /** Disable the click to collapse/expand the Sidebar.
+  /** Lets the user collapse and expand the whole sidebar.
+   *  Not the same as `collapsible` on `Sidebar.Group`, which renders a group as an accordion.
    * @default true
    */
   collapsible?: boolean;
+
+  /** What the collapsed state looks like.
+   *  `"icon"` shrinks to an icon rail and pushes content. `"hidden"` disappears
+   *  completely and reveals as a floating panel with a backdrop when opened.
+   * @default "icon"
+   */
+  collapseMode?: 'icon' | 'hidden';
+
+  /** Hovering a collapsed sidebar temporarily reveals it as a floating panel,
+   *  without changing the real open state. Reverts on mouse leave. Has no
+   *  effect when `collapsible` is false, or while the sidebar is open.
+   * @default false
+   */
+  peekOnHover?: boolean;
 
   /** Position of the Sidebar.
    * @default "left"
@@ -32,17 +47,18 @@ export interface SidebarRootProps {
    */
   hideCollapsedItemTooltip?: boolean;
 
-  /** Custom message for the collapsible tooltip.
+  /** Tooltip shown when hovering the collapse/expand handle.
    *  By default, it shows "Click to collapse" when expanded, "Click to expand" when collapsed
    */
-  tooltipMessage?: ReactNode;
+  collapseTooltip?: ReactNode;
 }
 
 export interface SidebarGroupProps {
   /** String for the group title. */
   label: string;
 
-  /** Makes group items collapsible.
+  /** Renders the group as an accordion whose items can be shown or hidden.
+   *  Not the same as `collapsible` on the Sidebar root, which controls the sidebar's own collapse behavior.
    * @default false
    */
   collapsible?: boolean;
@@ -61,8 +77,29 @@ export interface SidebarGroupProps {
   /** Optional ReactNode for group icon. */
   leadingIcon?: ReactNode;
 
+  /** Optional ReactNode for a trailing action icon in the group header. */
+  trailingIcon?: ReactNode;
+
   /** ReactNode for the group content. */
   children?: ReactNode;
+
+  /** Optional class names for customizing parts of the group. */
+  classNames?: {
+    /** Class name for the header row. */
+    header?: string;
+    /** Class name for the items container. */
+    items?: string;
+    /** Class name for the label text. */
+    label?: string;
+    /** Class name for the leading icon container. */
+    icon?: string;
+    /** Class name for the trigger (when `collapsible`). */
+    trigger?: string;
+    /** Class name for the chevron (when `collapsible`). */
+    chevron?: string;
+    /** Class name for the trailing icon container. */
+    trailingIcon?: string;
+  };
 }
 
 export interface SidebarItemProps {
@@ -103,6 +140,13 @@ export interface SidebarItemProps {
     /** Class name for the text element. */
     text?: string;
   };
+}
+
+export interface SidebarTriggerProps {
+  /** Icon rendered inside the trigger.
+   * @default "<ViewVerticalIcon />"
+   */
+  children?: ReactNode;
 }
 
 export interface SidebarMoreProps {

@@ -2,13 +2,13 @@
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { SidebarMoreProvider } from './sidebar-more-context';
-import { SidebarContext } from './sidebar-root';
+import { useSidebar } from './sidebar-root';
 
 export interface SidebarMoreProps {
   children?: ReactNode;
@@ -28,8 +28,7 @@ export function SidebarMore({
   leadingIcon,
   classNames
 }: SidebarMoreProps) {
-  const { isCollapsed, position, hideCollapsedItemTooltip } =
-    useContext(SidebarContext);
+  const { isCollapsed, position, hideCollapsedItemTooltip } = useSidebar();
   if (!children) return null;
   const triggerIcon = leadingIcon ?? (
     <DotsHorizontalIcon width={16} height={16} />

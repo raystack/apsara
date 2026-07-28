@@ -3,17 +3,11 @@
 import { Accordion as AccordionPrimitive } from '@base-ui/react';
 import { TriangleDownIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import {
-  ComponentProps,
-  ReactNode,
-  useCallback,
-  useContext,
-  useState
-} from 'react';
+import { ComponentProps, ReactNode, useCallback, useState } from 'react';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
-import { SidebarContext } from './sidebar-root';
+import { useSidebar } from './sidebar-root';
 import { SidebarTrailingVisual } from './sidebar-trailing-visual';
 
 export function SidebarHeader({
@@ -44,6 +38,11 @@ SidebarFooter.displayName = 'Sidebar.Footer';
 
 export interface SidebarNavigationGroupProps extends ComponentProps<'section'> {
   label: string;
+  /**
+   * Renders the group as an accordion whose items can be shown or hidden.
+   * Unlike `collapsible` on the Sidebar root, this does not affect the
+   * sidebar's own collapse behavior.
+   */
   collapsible?: boolean;
   open?: boolean;
   defaultOpen?: boolean;
@@ -74,7 +73,7 @@ export function SidebarNavigationGroup({
   children,
   ...props
 }: SidebarNavigationGroupProps) {
-  const { isCollapsed } = useContext(SidebarContext);
+  const { isCollapsed } = useSidebar();
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isOpen = isCollapsed || (providedOpen ?? internalOpen);
 
