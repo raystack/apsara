@@ -7,7 +7,7 @@ import { ComponentProps, ReactNode, useCallback, useState } from 'react';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
-import { useSidebar } from './sidebar-root';
+import { useSidebarSafe } from './sidebar-root';
 import { SidebarTrailingVisual } from './sidebar-trailing-visual';
 
 export function SidebarHeader({
@@ -73,7 +73,7 @@ export function SidebarNavigationGroup({
   children,
   ...props
 }: SidebarNavigationGroupProps) {
-  const { isCollapsed } = useSidebar();
+  const { isCollapsed } = useSidebarSafe();
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const isOpen = isCollapsed || (providedOpen ?? internalOpen);
 

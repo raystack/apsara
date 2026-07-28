@@ -42,7 +42,8 @@ export interface SidebarRootProps {
    */
   variant?: 'plain' | 'floating' | 'inset';
 
-  /** Hide tooltips on sidebar items when sidebar is collapsed.
+  /** Hide the tooltips the Sidebar adds to items: the label tooltip when
+   *  collapsed, and the full-text tooltip on clipped labels when expanded.
    * @default false
    */
   hideCollapsedItemTooltip?: boolean;
@@ -51,6 +52,11 @@ export interface SidebarRootProps {
    *  By default, it shows "Click to collapse" when expanded, "Click to expand" when collapsed
    */
   collapseTooltip?: ReactNode;
+
+  /** @deprecated Renamed to `collapseTooltip`. Still works, but will be
+   *  removed in the next major version.
+   */
+  tooltipMessage?: ReactNode;
 }
 
 export interface SidebarGroupProps {

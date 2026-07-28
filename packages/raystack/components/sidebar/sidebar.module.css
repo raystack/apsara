@@ -455,39 +455,9 @@
   display: none;
 }
 
-/* `data-closed` stays true during a peek (it tracks `open`, not `isPeeking`),
-   so every collapse-hiding rule above needs a floating override here — same
-   specificity, so source order is what makes this win the cascade. Otherwise
-   a peek expands the width but the labels stay invisible underneath it. */
-.root[data-floating] [data-collapse-hidden] {
-  max-width: 240px;
-  opacity: 1;
-  visibility: visible;
-}
-
-.root[data-floating] .nav-text {
-  max-width: 200px;
-  opacity: 1;
-  visibility: visible;
-}
-
-.root[data-floating] .nav-group-header {
-  visibility: visible;
-}
-
-.root[data-floating] .nav-group-header::after {
-  visibility: hidden;
-}
-
-.root[data-floating] .nav-group-label {
-  width: auto;
-  opacity: 1;
-  visibility: visible;
-}
-
-.root[data-floating] .nav-group-chevron {
-  display: flex;
-}
+/* No floating overrides are needed for a peek: data-open/data-closed track
+   the visual state (a peek counts as open), so every collapse-hiding rule
+   above turns off during a peek on its own. */
 
 @media (prefers-reduced-motion: no-preference) {
   .root {

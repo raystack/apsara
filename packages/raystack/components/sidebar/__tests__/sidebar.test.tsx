@@ -159,6 +159,17 @@ describe('Sidebar', () => {
         expect(screen.getByText('Toggle navigation')).toBeInTheDocument();
       });
     });
+
+    it('still honors the deprecated tooltipMessage prop', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar open tooltipMessage='Legacy tooltip' />);
+
+      await user.hover(screen.getByRole('button', { name: COLLAPSE_TEXT }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Legacy tooltip')).toBeInTheDocument();
+      });
+    });
   });
 
   describe('collapseMode', () => {
@@ -290,6 +301,109 @@ describe('Sidebar', () => {
       fireEvent.click(handle);
 
       expect(onOpenChange).toHaveBeenCalledWith(true);
+    });
+
+    it('flips the visual open state so collapse-hiding styles turn off', async () => {
+      render(
+        <Sidebar open={false} peekOnHover>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+
+      await waitFor(() => {
+        expect(nav).toHaveAttribute('data-floating');
+      });
+      // data-open/data-closed track the visual state (peek counts as open);
+      // the real state stays on aria-expanded.
+      expect(nav).toHaveAttribute('data-open');
+      expect(nav).not.toHaveAttribute('data-closed');
+      expect(nav).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('shows the floating panel content when peeking with collapseMode="hidden"', async () => {
+      render(
+        <Sidebar open={false} peekOnHover collapseMode='hidden'>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+
+      await waitFor(() => {
+        expect(nav).toHaveAttribute('data-floating');
+      });
+      // Regression: the hidden-mode hiding rules key off data-closed, which
+      // must clear during a peek or the panel reveals 8px wide and empty.
+      expect(nav).not.toHaveAttribute('data-closed');
+    });
+
+    it('stops floating once the sidebar is pinned open while peeking', async () => {
+      render(
+        <Sidebar defaultOpen={false} peekOnHover>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      await waitFor(() => {
+        expect(nav).toHaveAttribute('data-floating');
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Expand sidebar' }));
+
+      // Opening for real supersedes the peek — the sidebar must return to
+      // the layout flow immediately, not stay a fixed overlay.
+      expect(nav).not.toHaveAttribute('data-floating');
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'expanded:not-peeking'
+      );
+    });
+
+    it('holds the peek while a Sidebar.More menu is open', async () => {
+      render(
+        <Sidebar open={false} peekOnHover>
+          <PeekStatus />
+          <Sidebar.Main>
+            <Sidebar.More label='Overflow'>
+              <Sidebar.Item href='#'>Extra</Sidebar.Item>
+            </Sidebar.More>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      });
+
+      fireEvent.click(screen.getByText('Overflow').closest('button')!);
+      expect(screen.getByText('Extra')).toBeInTheDocument();
+
+      // The menu portals to document.body, so moving the pointer into it
+      // fires mouseleave on the sidebar — the peek must survive that.
+      fireEvent.mouseLeave(nav);
+
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'expanded:peeking'
+      );
+
+      // Once the menu closes with the pointer still outside, the peek ends.
+      fireEvent.keyDown(document.activeElement ?? document, {
+        key: 'Escape'
+      });
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'collapsed:not-peeking'
+        );
+      });
     });
   });
 
@@ -470,6 +584,59 @@ describe('Sidebar', () => {
       // wait out the tooltip open delay (200ms)
       await act(() => new Promise(resolve => setTimeout(resolve, 300)));
       expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(1);
+    });
+
+    it('suppresses the clipped-label tooltip via hideCollapsedItemTooltip', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar hideCollapsedItemTooltip />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      Object.defineProperty(text, 'scrollWidth', {
+        value: 300,
+        configurable: true
+      });
+      Object.defineProperty(text, 'clientWidth', {
+        value: 100,
+        configurable: true
+      });
+
+      await user.hover(text.closest('a')!);
+
+      // wait out the tooltip open delay (200ms)
+      await act(() => new Promise(resolve => setTimeout(resolve, 300)));
+      expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(1);
+    });
+
+    it('opens the clipped-label tooltip away from a right-positioned sidebar', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar position='right' />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      Object.defineProperty(text, 'scrollWidth', {
+        value: 300,
+        configurable: true
+      });
+      Object.defineProperty(text, 'clientWidth', {
+        value: 100,
+        configurable: true
+      });
+
+      await user.hover(text.closest('a')!);
+
+      await waitFor(() => {
+        expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(2);
+      });
+      const tooltip = screen
+        .getAllByText(HELP_ITEM_TEXT)
+        .map(el => el.closest('[data-side]'))
+        .find(Boolean);
+      expect(tooltip).toHaveAttribute('data-side', 'left');
+    });
+
+    it('renders standalone outside a Sidebar without crashing', () => {
+      render(<Sidebar.Item href='#'>Alone</Sidebar.Item>);
+
+      expect(screen.getByText('Alone')).toBeInTheDocument();
     });
   });
 

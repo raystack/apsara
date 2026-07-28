@@ -50,7 +50,7 @@ import { Sidebar } from "@raystack/apsara";
 
 ### Root
 
-Groups all parts of the sidebar navigation. Use `collapsible={false}` to hide the resize handle and prevent toggling. Use `hideCollapsedItemTooltip` to disable tooltips on items when the sidebar is collapsed. Use `collapseMode` to choose what the collapsed state looks like, and `peekOnHover` to preview a collapsed sidebar on hover.
+Groups all parts of the sidebar navigation. Use `collapsible={false}` to hide the resize handle and prevent toggling. Use `hideCollapsedItemTooltip` to disable the tooltips the Sidebar adds to items (collapsed labels, and clipped labels when expanded). Use `collapseMode` to choose what the collapsed state looks like, and `peekOnHover` to preview a collapsed sidebar on hover.
 
 <auto-type-table path="./props.ts" name="SidebarRootProps" />
 
@@ -192,7 +192,7 @@ just navigates, like normal — it doesn't change the open state.
 
 ### Custom Tooltip Message
 
-You can customize the tooltip message that appears when hovering over the collapse/expand handle using the `collapseTooltip` prop.
+You can customize the tooltip message that appears when hovering over the collapse/expand handle using the `collapseTooltip` prop. The old `tooltipMessage` name still works, but is deprecated and will be removed in the next major version.
 
 You can use Sidebar as a controlled component to conditionally render different tooltip messages.
 
@@ -206,7 +206,7 @@ Set `collapsible={false}` to hide the resize handle and prevent the sidebar from
 
 ### Hide item tooltips when collapsed
 
-Set `hideCollapsedItemTooltip` to disable tooltips on navigation items when the sidebar is collapsed. Useful when item labels are redundant with the collapse tooltip or you want a cleaner collapsed state.
+Set `hideCollapsedItemTooltip` to disable the tooltips the Sidebar adds to navigation items — the label tooltip when collapsed, and the full-text tooltip on clipped labels when expanded. Useful when you show your own tooltips or want a cleaner collapsed state.
 
 <Demo data={hideTooltipDemo} />
 
@@ -259,7 +259,7 @@ The Sidebar implements the following accessibility features:
 
 - Truncation handling
   - Long item and group labels truncate with an ellipsis
-  - Items whose label is clipped show the full text in a tooltip on hover or focus
+  - Items whose label is clipped show the full text in a tooltip on hover or focus (positioned away from the sidebar's edge based on `position`; disable with `hideCollapsedItemTooltip`)
 
 - Keyboard navigation support
 

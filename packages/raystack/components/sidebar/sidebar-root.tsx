@@ -34,6 +34,32 @@ export function useSidebar(): SidebarContextValue {
   return context;
 }
 
+// Subcomponents rendered outside a <Sidebar> (stories, isolated tests,
+// standalone reuse of an item) worked before the context became nullable,
+// so they fall back to an expanded left sidebar instead of throwing.
+// Internal only — consumers get the throwing hook above.
+const FALLBACK_CONTEXT: SidebarContextValue = {
+  isCollapsed: false,
+  isPeeking: false,
+  open: true,
+  setOpen: () => undefined,
+  collapsible: true,
+  position: 'left',
+  hideCollapsedItemTooltip: undefined
+};
+
+export function useSidebarSafe(): SidebarContextValue {
+  return useContext(SidebarContext) ?? FALLBACK_CONTEXT;
+}
+
+// Menus and tooltips inside the sidebar portal their popups outside the
+// <aside>, so moving the pointer into one fires mouseleave on the sidebar.
+// Popups report their open state here so an active popup holds a hover
+// peek open instead of collapsing it mid-use.
+export const SidebarPopupContext = createContext<(open: boolean) => void>(
+  () => undefined
+);
+
 export interface SidebarRootProps extends ComponentProps<'aside'> {
   position?: 'left' | 'right';
   variant?: 'plain' | 'floating' | 'inset';
@@ -58,6 +84,9 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
   peekOnHover?: boolean;
   /** Tooltip shown when hovering the collapse/expand handle. */
   collapseTooltip?: ReactNode;
+  /** @deprecated Renamed to `collapseTooltip`; will be removed in the next
+   *  major version. Ignored when `collapseTooltip` is set. */
+  tooltipMessage?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -76,6 +105,7 @@ export function SidebarRoot({
   collapseMode = 'icon',
   peekOnHover = false,
   collapseTooltip,
+  tooltipMessage,
   defaultOpen = true,
   children,
   ...props
@@ -84,6 +114,8 @@ export function SidebarRoot({
   const open = providedOpen ?? internalOpen;
   const [isPeeking, setIsPeeking] = useState(false);
   const peekTimeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const openPopupCountRef = useRef(0);
+  const pointerInsideRef = useRef(false);
 
   const handleOpenChange = useCallback(
     (value: boolean) => {
@@ -96,6 +128,7 @@ export function SidebarRoot({
   const canPeek = peekOnHover && collapsible && !open;
 
   const handleMouseEnter = useCallback(() => {
+    pointerInsideRef.current = true;
     if (!canPeek) return;
     peekTimeoutRef.current = setTimeout(
       () => setIsPeeking(true),
@@ -104,20 +137,48 @@ export function SidebarRoot({
   }, [canPeek]);
 
   const handleMouseLeave = useCallback(() => {
+    pointerInsideRef.current = false;
     clearTimeout(peekTimeoutRef.current);
-    setIsPeeking(false);
+    // The pointer may have moved into a portaled popup (a More menu, a
+    // truncation tooltip) that visually belongs to the sidebar; hold the
+    // peek until the popup closes.
+    if (openPopupCountRef.current === 0) setIsPeeking(false);
+  }, []);
+
+  const handlePopupOpenChange = useCallback((popupOpen: boolean) => {
+    openPopupCountRef.current = Math.max(
+      0,
+      openPopupCountRef.current + (popupOpen ? 1 : -1)
+    );
+    if (openPopupCountRef.current === 0 && !pointerInsideRef.current) {
+      setIsPeeking(false);
+    }
   }, []);
 
   useEffect(() => () => clearTimeout(peekTimeoutRef.current), []);
+
+  // Opening for real supersedes a peek. Without this, pinning the sidebar
+  // open while peeking (or during the peek delay) leaves it stuck as a
+  // fixed overlay until the mouse happens to leave.
+  useEffect(() => {
+    if (!open) return;
+    clearTimeout(peekTimeoutRef.current);
+    setIsPeeking(false);
+  }, [open]);
 
   // A "hidden" collapse only ever reveals as a floating panel over content;
   // peeking previews the same floating panel without touching `open`.
   const isFloating = collapseMode === 'hidden' && open;
   const showFloating = isFloating || isPeeking;
+  // data-open/data-closed drive the visuals, so a peek counts as open —
+  // every collapse-hiding CSS rule turns off during a peek for free. The
+  // real state stays in `open` (and aria-expanded).
+  const visualOpen = open || isPeeking;
 
   useEffect(() => {
     if (!isFloating) return;
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
       if (event.key === 'Escape') handleOpenChange(false);
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -136,60 +197,63 @@ export function SidebarRoot({
         hideCollapsedItemTooltip
       }}
     >
-      {collapseMode === 'hidden' && (
-        <div
-          className={styles.backdrop}
-          data-open={isFloating ? '' : undefined}
-          aria-hidden='true'
-          onClick={() => handleOpenChange(false)}
-        />
-      )}
-      <aside
-        className={cx(styles.root, className)}
-        data-position={position}
-        data-variant={variant}
-        data-open={open ? '' : undefined}
-        data-closed={!open ? '' : undefined}
-        data-collapse-disabled={!collapsible ? '' : undefined}
-        data-collapse-mode={collapseMode}
-        data-floating={showFloating ? '' : undefined}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        aria-label='Navigation Sidebar'
-        aria-expanded={open}
-        role='navigation'
-        {...props}
-      >
-        {collapsible && (
-          <Tooltip trackCursorAxis='y'>
-            <Tooltip.Trigger
-              render={
-                <div
-                  className={styles.resizeHandle}
-                  onClick={() => handleOpenChange(!open)}
-                  role='button'
-                  tabIndex={0}
-                  aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleOpenChange(!open);
-                    }
-                  }}
-                />
-              }
-            />
-            <Tooltip.Content
-              side={position === 'left' ? 'right' : 'left'}
-              sideOffset={10}
-            >
-              {collapseTooltip ??
-                (open ? 'Click to collapse' : 'Click to expand')}
-            </Tooltip.Content>
-          </Tooltip>
+      <SidebarPopupContext value={handlePopupOpenChange}>
+        {collapseMode === 'hidden' && (
+          <div
+            className={styles.backdrop}
+            data-open={isFloating ? '' : undefined}
+            aria-hidden='true'
+            onClick={() => handleOpenChange(false)}
+          />
         )}
-        {children}
-      </aside>
+        <aside
+          className={cx(styles.root, className)}
+          data-position={position}
+          data-variant={variant}
+          data-open={visualOpen ? '' : undefined}
+          data-closed={!visualOpen ? '' : undefined}
+          data-collapse-disabled={!collapsible ? '' : undefined}
+          data-collapse-mode={collapseMode}
+          data-floating={showFloating ? '' : undefined}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          aria-label='Navigation Sidebar'
+          aria-expanded={open}
+          role='navigation'
+          {...props}
+        >
+          {collapsible && (
+            <Tooltip trackCursorAxis='y'>
+              <Tooltip.Trigger
+                render={
+                  <div
+                    className={styles.resizeHandle}
+                    onClick={() => handleOpenChange(!open)}
+                    role='button'
+                    tabIndex={0}
+                    aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleOpenChange(!open);
+                      }
+                    }}
+                  />
+                }
+              />
+              <Tooltip.Content
+                side={position === 'left' ? 'right' : 'left'}
+                sideOffset={10}
+              >
+                {collapseTooltip ??
+                  tooltipMessage ??
+                  (open ? 'Click to collapse' : 'Click to expand')}
+              </Tooltip.Content>
+            </Tooltip>
+          )}
+          {children}
+        </aside>
+      </SidebarPopupContext>
     </SidebarContext>
   );
 }

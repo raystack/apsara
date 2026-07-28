@@ -2,13 +2,13 @@
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { SidebarMoreProvider } from './sidebar-more-context';
-import { useSidebar } from './sidebar-root';
+import { SidebarPopupContext, useSidebarSafe } from './sidebar-root';
 
 export interface SidebarMoreProps {
   children?: ReactNode;
@@ -28,7 +28,8 @@ export function SidebarMore({
   leadingIcon,
   classNames
 }: SidebarMoreProps) {
-  const { isCollapsed, position, hideCollapsedItemTooltip } = useSidebar();
+  const { isCollapsed, position, hideCollapsedItemTooltip } = useSidebarSafe();
+  const onPopupOpenChange = useContext(SidebarPopupContext);
   if (!children) return null;
   const triggerIcon = leadingIcon ?? (
     <DotsHorizontalIcon width={16} height={16} />
@@ -56,7 +57,9 @@ export function SidebarMore({
   );
 
   return (
-    <Menu>
+    // The menu portals outside the sidebar; report its open state so
+    // moving the pointer into it doesn't collapse a hover peek.
+    <Menu onOpenChange={open => onPopupOpenChange(open)}>
       {isCollapsed && !hideCollapsedItemTooltip ? (
         <Tooltip>
           <Tooltip.Trigger render={<Menu.Trigger render={triggerContent} />} />

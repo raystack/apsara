@@ -6,6 +6,7 @@ import {
   ComponentProps,
   ReactElement,
   ReactNode,
+  useContext,
   useRef,
   useState
 } from 'react';
@@ -14,7 +15,7 @@ import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
 import { useSidebarMoreContext } from './sidebar-more-context';
-import { useSidebar } from './sidebar-root';
+import { SidebarPopupContext, useSidebarSafe } from './sidebar-root';
 
 export interface SidebarItemProps extends ComponentProps<'a'> {
   leadingIcon?: ReactNode;
@@ -37,11 +38,14 @@ export function SidebarItem({
   render = <a />,
   ...props
 }: SidebarItemProps) {
-  const { isCollapsed, hideCollapsedItemTooltip } = useSidebar();
+  const { isCollapsed, position, hideCollapsedItemTooltip } = useSidebarSafe();
+  const onPopupOpenChange = useContext(SidebarPopupContext);
   const sidebarMoreContext = useSidebarMoreContext();
   const insideSidebarMore = !!sidebarMoreContext?.isInsideSidebarMore;
   const textRef = useRef<HTMLSpanElement>(null);
   const [truncationTooltipOpen, setTruncationTooltipOpen] = useState(false);
+  // Open away from the sidebar's edge, like the More menu and handle tooltip.
+  const tooltipSide = position === 'left' ? 'right' : 'left';
 
   const shouldShowFallback =
     leadingIcon == undefined &&
@@ -105,12 +109,15 @@ export function SidebarItem({
     return <Menu.Item disabled={disabled} render={content} />;
   }
 
+  // One prop opts out of every tooltip the library adds to items — the
+  // collapsed label tooltip and the expanded clipped-label tooltip.
+  if (hideCollapsedItemTooltip) return content;
+
   if (isCollapsed) {
-    if (hideCollapsedItemTooltip) return content;
     return (
       <Tooltip>
         <Tooltip.Trigger render={content} />
-        <Tooltip.Content side='right' sideOffset={16}>
+        <Tooltip.Content side={tooltipSide} sideOffset={16}>
           {children}
         </Tooltip.Content>
       </Tooltip>
@@ -124,13 +131,14 @@ export function SidebarItem({
       open={truncationTooltipOpen}
       onOpenChange={open => {
         const el = textRef.current;
-        setTruncationTooltipOpen(
-          open && el != null && el.scrollWidth > el.clientWidth
-        );
+        const next = open && el != null && el.scrollWidth > el.clientWidth;
+        // Report to the sidebar so an open tooltip holds a hover peek.
+        if (next !== truncationTooltipOpen) onPopupOpenChange(next);
+        setTruncationTooltipOpen(next);
       }}
     >
       <Tooltip.Trigger render={content} />
-      <Tooltip.Content side='right' sideOffset={16}>
+      <Tooltip.Content side={tooltipSide} sideOffset={16}>
         {children}
       </Tooltip.Content>
     </Tooltip>
