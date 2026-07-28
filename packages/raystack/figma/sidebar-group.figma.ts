@@ -1,5 +1,5 @@
 // url=<FIGMA_LINK>?node-id=9136-2831
-// source=https://github.com/raystack/apsara/blob/main/packages/raystack/components/sidebar/sidebar-misc.tsx
+// source=https://github.com/raystack/apsara/blob/main/packages/raystack/components/sidebar/sidebar-group.tsx
 // component=Sidebar.Group
 
 import figma from 'figma';

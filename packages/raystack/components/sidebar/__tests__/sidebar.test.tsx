@@ -129,22 +129,26 @@ describe('Sidebar', () => {
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
-    it('supports keyboard navigation on handle', () => {
+    it('supports keyboard navigation on handle', async () => {
+      const user = userEvent.setup();
       const onOpenChange = vi.fn();
       render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
-      fireEvent.keyDown(handle, { key: 'Enter' });
+      handle.focus();
+      await user.keyboard('{Enter}');
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
-    it('supports space key on handle', () => {
+    it('supports space key on handle', async () => {
+      const user = userEvent.setup();
       const onOpenChange = vi.fn();
       render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
-      fireEvent.keyDown(handle, { key: ' ' });
+      handle.focus();
+      await user.keyboard(' ');
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });

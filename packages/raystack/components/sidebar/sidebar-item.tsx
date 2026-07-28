@@ -7,6 +7,7 @@ import {
   ReactElement,
   ReactNode,
   useContext,
+  useEffect,
   useRef,
   useState
 } from 'react';
@@ -14,7 +15,7 @@ import { Menu } from '../menu';
 import { Tooltip } from '../tooltip';
 import styles from './sidebar.module.css';
 import { SidebarLeadingVisual } from './sidebar-leading-visual';
-import { useSidebarMoreContext } from './sidebar-more-context';
+import { useInsideSidebarMore } from './sidebar-more-context';
 import { SidebarPopupContext, useSidebarSafe } from './sidebar-root';
 
 export interface SidebarItemProps extends ComponentProps<'a'> {
@@ -40,43 +41,46 @@ export function SidebarItem({
 }: SidebarItemProps) {
   const { isCollapsed, position, hideCollapsedItemTooltip } = useSidebarSafe();
   const onPopupOpenChange = useContext(SidebarPopupContext);
-  const sidebarMoreContext = useSidebarMoreContext();
-  const insideSidebarMore = !!sidebarMoreContext?.isInsideSidebarMore;
+  const insideSidebarMore = useInsideSidebarMore();
   const textRef = useRef<HTMLSpanElement>(null);
   const [tooltipOpen, setTooltipOpen] = useState(false);
   // Open away from the sidebar's edge, like the More menu and handle tooltip.
   const tooltipSide = position === 'left' ? 'right' : 'left';
 
+  // Report to the sidebar so an open tooltip holds a hover peek. An effect
+  // (not the onOpenChange handler) so unmounting mid-tooltip still
+  // decrements the sidebar's open-popup count.
+  useEffect(() => {
+    if (!tooltipOpen) return;
+    onPopupOpenChange(true);
+    return () => onPopupOpenChange(false);
+  }, [tooltipOpen, onPopupOpenChange]);
+
   const shouldShowFallback =
-    leadingIcon == undefined &&
+    leadingIcon == null &&
     (isCollapsed || insideSidebarMore) &&
     typeof children === 'string' &&
     children.length > 0;
 
-  const menuChildren = (
+  const itemChildren = (
     <>
       <SidebarLeadingVisual
         leadingIcon={!shouldShowFallback ? leadingIcon : undefined}
         fallbackText={shouldShowFallback ? children : undefined}
         className={classNames?.leadingIcon}
-        render={<span />}
+        render={insideSidebarMore ? <span /> : undefined}
       />
-      <span className={cx(styles['more-menu-item-text'], classNames?.text)}>
-        {children}
-      </span>
-    </>
-  );
-
-  const sidebarChildren = (
-    <>
-      <SidebarLeadingVisual
-        leadingIcon={!shouldShowFallback ? leadingIcon : undefined}
-        fallbackText={shouldShowFallback ? children : undefined}
-        className={classNames?.leadingIcon}
-      />
-      {/* Kept mounted so it can collapse with the sidebar (max-width → 0)
-          instead of popping out; CSS hides it when closed. */}
-      <span ref={textRef} className={cx(styles['nav-text'], classNames?.text)}>
+      {/* In the sidebar, kept mounted so it can collapse with the sidebar
+          (max-width → 0) instead of popping out; CSS hides it when closed. */}
+      <span
+        ref={textRef}
+        className={cx(
+          insideSidebarMore
+            ? styles['more-menu-item-text']
+            : styles['nav-text'],
+          classNames?.text
+        )}
+      >
         {children}
       </span>
     </>
@@ -91,15 +95,15 @@ export function SidebarItem({
           insideSidebarMore ? styles['more-menu-item'] : styles['nav-item'],
           classNames?.root
         ),
-        'data-active': active,
-        'data-disabled': disabled,
+        'data-active': active ? 'true' : undefined,
+        'data-disabled': disabled ? 'true' : undefined,
         'aria-current': active ? 'page' : undefined,
-        'aria-disabled': disabled,
+        'aria-disabled': disabled || undefined,
         ...(!insideSidebarMore ? { role: 'listitem' } : {}),
         ...(isCollapsed && typeof children === 'string' && !insideSidebarMore
           ? { 'aria-label': children }
           : {}),
-        children: insideSidebarMore ? menuChildren : sidebarChildren
+        children: itemChildren
       } as useRender.ComponentProps<'a'>,
       props
     )
@@ -122,12 +126,10 @@ export function SidebarItem({
       open={tooltipOpen}
       onOpenChange={open => {
         const el = textRef.current;
-        const next =
+        setTooltipOpen(
           open &&
-          (isCollapsed || (el != null && el.scrollWidth > el.clientWidth));
-        // Report to the sidebar so an open tooltip holds a hover peek.
-        if (next !== tooltipOpen) onPopupOpenChange(next);
-        setTooltipOpen(next);
+            (isCollapsed || (el != null && el.scrollWidth > el.clientWidth))
+        );
       }}
     >
       <Tooltip.Trigger render={content} />

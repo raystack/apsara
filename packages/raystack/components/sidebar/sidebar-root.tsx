@@ -204,18 +204,11 @@ export function SidebarRoot({
             <Tooltip trackCursorAxis='y'>
               <Tooltip.Trigger
                 render={
-                  <div
-                    className={styles.resizeHandle}
+                  <button
+                    type='button'
+                    className={styles['resize-handle']}
                     onClick={() => handleOpenChange(!open)}
-                    role='button'
-                    tabIndex={0}
                     aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleOpenChange(!open);
-                      }
-                    }}
                   />
                 }
               />
