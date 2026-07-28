@@ -180,11 +180,13 @@ When `collapseMode="hidden"` is closed, the strip is just wide enough for the re
 
 ### Peek on hover
 
-Set `peekOnHover` to temporarily expand a collapsed sidebar while the user
-hovers it, without changing the real `open` state — similar to VS Code's
-auto-hide sidebar. Moving the mouse away reverts it; clicking the resize
-handle or a `Sidebar.Trigger` pins it open for real. Clicking a `Sidebar.Item`
-just navigates, like normal — it doesn't change the open state.
+Set `peekOnHover` to temporarily reveal a collapsed sidebar as an overlay
+above the content while the user hovers it, without pushing the content or
+changing the real `open` state — similar to VS Code's auto-hide sidebar.
+Moving the mouse away reverts it; clicking the resize handle or a
+`Sidebar.Trigger` pins it open for real (which does push content, like a
+normal open). Clicking a `Sidebar.Item` just navigates, like normal — it
+doesn't change the open state.
 
 <Demo data={peekOnHoverDemo} />
 

@@ -25,9 +25,10 @@ export interface SidebarRootProps {
    */
   collapseMode?: 'icon' | 'hidden';
 
-  /** Hovering a collapsed sidebar temporarily expands it in place, without
-   *  changing the real open state. Reverts on mouse leave. Has no effect
-   *  when `collapsible` is false, or while the sidebar is open.
+  /** Hovering a collapsed sidebar temporarily reveals it as an overlay above
+   *  the content, without changing the real open state. Reverts on mouse
+   *  leave. Has no effect when `collapsible` is false, or while the sidebar
+   *  is open.
    * @default false
    */
   peekOnHover?: boolean;

@@ -78,8 +78,8 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
    */
   collapseMode?: 'icon' | 'hidden';
   /**
-   * Hovering a collapsed sidebar temporarily expands it in place, without
-   * changing the real open state. Reverts on mouse leave.
+   * Hovering a collapsed sidebar temporarily reveals it as an overlay above
+   * the content, without changing the real open state. Reverts on mouse leave.
    */
   peekOnHover?: boolean;
   /** Tooltip shown when hovering the collapse/expand handle. */

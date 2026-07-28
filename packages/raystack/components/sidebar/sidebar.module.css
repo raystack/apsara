@@ -60,11 +60,31 @@
   pointer-events: none;
 }
 
-/* A peek expands the sidebar in place, exactly like a real open — no
-   repositioning, so it works inside any container. The shadow is the only
-   hint that the reveal is temporary. */
+/* A peek reveals the sidebar as an overlay: the aside stays in the layout
+   but a negative margin cancels everything beyond its collapsed width, so
+   it paints over the adjacent content instead of pushing it. No fixed
+   positioning, so it stays anchored inside any container. The margin must
+   match the collapsed width of the active collapse mode. */
 .root[data-peeking] {
+  width: 240px;
+  z-index: var(--rs-z-index-portal);
   box-shadow: var(--rs-shadow-lifted);
+}
+
+.root[data-peeking][data-position="left"] {
+  margin-right: calc(var(--rs-space-12) - 240px);
+}
+
+.root[data-peeking][data-position="right"] {
+  margin-left: calc(var(--rs-space-12) - 240px);
+}
+
+.root[data-peeking][data-collapse-mode="hidden"][data-position="left"] {
+  margin-right: calc(var(--rs-space-2) - 240px);
+}
+
+.root[data-peeking][data-collapse-mode="hidden"][data-position="right"] {
+  margin-left: calc(var(--rs-space-2) - 240px);
 }
 
 .header {
@@ -424,7 +444,11 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .root {
-    transition: width var(--rs-duration-normal) var(--rs-ease-out);
+    /* margin moves in lockstep with width during a peek so neighboring
+       content never shifts while the overlay slides out. */
+    transition:
+      width var(--rs-duration-normal) var(--rs-ease-out),
+      margin var(--rs-duration-normal) var(--rs-ease-out);
   }
 
   .nav-group-chevron {
