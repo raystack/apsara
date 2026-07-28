@@ -240,6 +240,50 @@ describe('ChatPanel', () => {
     });
   });
 
+  describe('Mode transitions', () => {
+    it('does not flag a transition on first paint', () => {
+      render(<BasicChatPanel />);
+      expect(screen.getByTestId('panel')).not.toHaveAttribute(
+        'data-mode-changed'
+      );
+    });
+
+    it('flags the transition once the mode changes', async () => {
+      const user = userEvent.setup();
+      render(<BasicChatPanel />);
+
+      await user.click(
+        screen.getByRole('button', { name: 'Pop out chat panel' })
+      );
+
+      expect(screen.getByTestId('panel')).toHaveAttribute('data-mode-changed');
+    });
+
+    it('flags the transition for a controlled mode change too', () => {
+      const { rerender } = render(<BasicChatPanel mode='docked' />);
+      expect(screen.getByTestId('panel')).not.toHaveAttribute(
+        'data-mode-changed'
+      );
+
+      rerender(<BasicChatPanel mode='floating' />);
+      expect(screen.getByTestId('panel')).toHaveAttribute('data-mode-changed');
+    });
+
+    it('keeps the flag after returning to the initial mode', async () => {
+      const user = userEvent.setup();
+      render(<BasicChatPanel />);
+
+      await user.click(
+        screen.getByRole('button', { name: 'Pop out chat panel' })
+      );
+      await user.click(screen.getByRole('button', { name: 'Dock chat panel' }));
+
+      const panel = screen.getByTestId('panel');
+      expect(panel).toHaveAttribute('data-mode', 'docked');
+      expect(panel).toHaveAttribute('data-mode-changed');
+    });
+  });
+
   describe('Floating mode', () => {
     it('applies the floating size as inline style', () => {
       render(
@@ -653,6 +697,18 @@ describe('ChatPanel', () => {
         </ChatPanel>
       );
       expect(screen.getByTestId('badge')).toBeInTheDocument();
+    });
+
+    it('falls back to the co-pilot icon', () => {
+      render(<BasicChatPanel defaultMode='minimized' />);
+      const icon = screen.getByTestId('bubble').querySelector('svg');
+      expect(icon).not.toBeNull();
+      expect(icon).toHaveAttribute('aria-hidden', 'true');
+      // Drawn from currentColor so the bubble's own colour carries through.
+      expect(icon?.querySelector('path')).toHaveAttribute(
+        'fill',
+        'currentColor'
+      );
     });
   });
 

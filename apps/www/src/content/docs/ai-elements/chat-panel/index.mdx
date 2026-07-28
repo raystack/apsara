@@ -95,11 +95,29 @@ height.
 
 ### Trigger
 
-The minimized-state corner bubble. Children replace the default chat icon,
+The minimized-state corner bubble. Children replace the default `CoPilotIcon`,
 and `draggable` lets the bubble be dragged around the viewport — a completed
 drag never triggers the restore click.
 
 <auto-type-table path="./props.ts" name="ChatPanelTriggerProps" />
+
+## Mode transitions
+
+Switching mode flips the panel between in-flow and `position: fixed`, which no
+CSS property can tween, so each mode plays a short transform entrance instead
+of a continuous morph: the docked panel settles onto its edge, the floating
+window scales and lifts into place, and the minimized bubble pops in. All three
+run at `--rs-duration-normal` with `--rs-ease-out`, and all three are skipped
+under `prefers-reduced-motion: reduce`.
+
+The docked slide deliberately runs *inward* rather than as a full-width drawer
+slide from off-edge: a transform still grows the scroll area of the nearest
+scroll container, so sliding outward would flash a horizontal scrollbar in any
+layout that doesn't clip its overflow.
+
+The entrances only play once the panel has actually changed mode — a panel that
+renders docked or minimized on first paint is static — and they stand down
+while a drag or resize is in flight so they never fight the live transform.
 
 ## Examples
 

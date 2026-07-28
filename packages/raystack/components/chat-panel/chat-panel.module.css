@@ -72,6 +72,69 @@
   display: none;
 }
 
+/* ------------------------------ mode changes ------------------------------ */
+
+/* A mode change flips `position` (in-flow <-> fixed), which no property can
+   tween, so each mode plays a short transform/opacity entrance instead. The
+   data-mode-changed gate keeps first paint static; the drag/resize guards
+   keep the animation from fighting the live dnd-kit transform. */
+@media (prefers-reduced-motion: no-preference) {
+  .root[data-mode-changed][data-mode="docked"][data-side="right"] {
+    animation: chat-panel-dock-in-right var(--rs-duration-normal)
+      var(--rs-ease-out);
+  }
+
+  .root[data-mode-changed][data-mode="docked"][data-side="left"] {
+    animation: chat-panel-dock-in-left var(--rs-duration-normal)
+      var(--rs-ease-out);
+  }
+
+  .root[data-mode-changed][data-mode="floating"]:not([data-dragging]):not(
+      [data-resizing]
+    ) {
+    animation: chat-panel-float-in var(--rs-duration-normal) var(--rs-ease-out);
+  }
+}
+
+/* The docked panel is in flow, so it settles onto its edge rather than
+   animating width — the siblings reflow once instead of on every frame. The
+   slide runs *inward* (a short offset towards the content, not a full-width
+   drawer slide from off-edge): a transform still grows the scroll area of the
+   nearest scroll container, so sliding outward would flash a horizontal
+   scrollbar in any layout that doesn't clip its overflow. */
+@keyframes chat-panel-dock-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(calc(-1 * var(--rs-space-5)));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes chat-panel-dock-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(var(--rs-space-5));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes chat-panel-float-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(var(--rs-space-3));
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -144,7 +207,10 @@
    eased tween is motion, so only the transitions are gated. Mirrors button. */
 @media (prefers-reduced-motion: no-preference) {
   .trigger {
-    animation: chat-panel-trigger-in var(--rs-duration-fast) var(--rs-ease-out);
+    /* Same tempo as the docked/floating entrances above, so the three modes
+       read as one transition rather than three unrelated ones. */
+    animation: chat-panel-trigger-in var(--rs-duration-normal)
+      var(--rs-ease-out);
     transition: var(--rs-transition-interactive);
   }
 
@@ -180,8 +246,10 @@
   touch-action: none;
 }
 
-/* The eased transform tween would lag the pointer mid-drag. */
+/* The eased transform tween would lag the pointer mid-drag; the entrance
+   animation would override the live transform outright. */
 .trigger[data-dragging] {
+  animation: none;
   transition: none;
   cursor: grabbing;
   user-select: none;

@@ -225,6 +225,13 @@ export function ChatPanelRoot({
   // defaultSize never contradicts its own max.
   const initialSizeRef = useRef(sizeProp ?? defaultSize ?? DEFAULT_SIZE);
 
+  // The mode entrance animations must not play on first paint, only once the
+  // panel has actually switched modes. Derived during render (not in an
+  // effect) so the very first switch is already animated.
+  const initialModeRef = useRef(mode);
+  const modeChangedRef = useRef(false);
+  if (mode !== initialModeRef.current) modeChangedRef.current = true;
+
   const modeRef = useRef(mode);
   modeRef.current = mode;
   const positionRef = useRef(position);
@@ -641,6 +648,7 @@ export function ChatPanelRoot({
         side={side}
         draggable={draggable}
         resizing={resizing}
+        modeChanged={modeChangedRef.current}
         floatingStyle={floatingStyle}
         className={className}
         style={style}
@@ -681,6 +689,7 @@ interface ChatPanelFrameProps extends ComponentProps<'aside'> {
   side: ChatPanelSide;
   draggable: boolean;
   resizing: boolean;
+  modeChanged: boolean;
   floatingStyle: CSSProperties | null;
   resizeHandles: ReactNode;
 }
@@ -695,6 +704,7 @@ function ChatPanelFrame({
   side,
   draggable,
   resizing,
+  modeChanged,
   floatingStyle,
   resizeHandles,
   className,
@@ -733,6 +743,7 @@ function ChatPanelFrame({
       data-draggable={dragEnabled || undefined}
       data-dragging={isDragging || undefined}
       data-resizing={resizing || undefined}
+      data-mode-changed={modeChanged || undefined}
       style={{
         ...floatingStyle,
         // The committed position only updates when the drag ends; the live
