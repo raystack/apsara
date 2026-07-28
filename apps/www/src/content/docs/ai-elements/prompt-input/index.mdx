@@ -39,7 +39,11 @@ anything else.
 
 ### Root
 
-The `<form>` that holds the value and submit semantics.
+The `<form>` that holds the value and submit semantics. The whole frame reads
+as one field: clicking its dead space — the padding, or the gaps around the
+header and footer slots — focuses the textarea. Controls inside the frame keep
+their own behaviour, and a consumer `onMouseDown` that calls `preventDefault()`
+opts out.
 
 <auto-type-table path="./props.ts" name="PromptInputProps" />
 
@@ -120,3 +124,6 @@ menus, mention pickers.
 - The composer frame carries the focus treatment — the border tints when a
   child has visible focus (`:has(:focus-visible)`) — while the borderless
   textarea suppresses its own duplicate focus ring.
+- Click-to-focus runs on `mousedown` and cancels the default focus shift, so
+  focus never leaves the textarea and back again — a round trip that would
+  dismiss anything anchored to it. Keyboard focus order is untouched.

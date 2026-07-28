@@ -8,6 +8,9 @@
   background: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-4);
+  /* Clicking the frame's dead space focuses the textarea, so the whole thing
+     reads as one field. Controls inside re-assert their own cursor. */
+  cursor: text;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -25,6 +28,7 @@
 
 .root[data-disabled] {
   opacity: 0.5;
+  cursor: default;
 }
 
 .header {

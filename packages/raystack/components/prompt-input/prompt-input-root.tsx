@@ -2,7 +2,14 @@
 
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, FormEvent, useCallback, useMemo, useRef } from 'react';
+import {
+  ComponentProps,
+  FormEvent,
+  MouseEvent,
+  useCallback,
+  useMemo,
+  useRef
+} from 'react';
 import styles from './prompt-input.module.css';
 import {
   PromptInputContext,
@@ -46,6 +53,13 @@ export interface PromptInputRootProps
   disabled?: boolean;
 }
 
+/**
+ * Targets that own the click: their own focus (or activation) must not be
+ * hijacked by the frame's click-to-focus.
+ */
+const INTERACTIVE_TARGET =
+  'button, a[href], input, textarea, select, label, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
+
 export function PromptInputRoot({
   className,
   value: valueProp,
@@ -54,6 +68,7 @@ export function PromptInputRoot({
   onSubmit,
   onStop,
   onReset,
+  onMouseDown,
   status = 'idle',
   disabled = false,
   children,
@@ -107,6 +122,26 @@ export function PromptInputRoot({
     setValue('');
   };
 
+  // The whole frame reads as one field, so its dead space (padding, the
+  // header/footer gaps) focuses the textarea. Handled on mousedown rather
+  // than click so focus never leaves the textarea in the first place —
+  // a blur/refocus round trip would close anything anchored to it.
+  const handleMouseDown = (event: MouseEvent<HTMLFormElement>) => {
+    onMouseDown?.(event);
+    if (event.defaultPrevented || disabled) return;
+    // Secondary buttons open the context menu / paste; leave them be.
+    if (event.button !== 0) return;
+    const target = event.target as HTMLElement;
+    // Controls (and the textarea itself) keep their native behaviour.
+    if (target.closest(INTERACTIVE_TARGET)) return;
+    const textarea = textareaRef.current;
+    if (!textarea || textarea.disabled) return;
+    // Suppresses the default focus shift to the frame, which would blur the
+    // textarea and drop the caret.
+    event.preventDefault();
+    textarea.focus();
+  };
+
   const contextValue = useMemo<PromptInputContextValue>(
     () => ({
       value,
@@ -134,6 +169,7 @@ export function PromptInputRoot({
         data-empty={value.trim() === '' || undefined}
         onSubmit={handleSubmit}
         onReset={handleReset}
+        onMouseDown={handleMouseDown}
         {...props}
       >
         {children}

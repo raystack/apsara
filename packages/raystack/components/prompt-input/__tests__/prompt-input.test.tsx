@@ -219,4 +219,85 @@ describe('PromptInput', () => {
       ).toBeDisabled();
     });
   });
+
+  describe('Click to focus', () => {
+    it('focuses the textarea when the frame is clicked', () => {
+      const { container } = render(<BasicPromptInput />);
+      const form = container.querySelector('form') as HTMLFormElement;
+
+      fireEvent.mouseDown(form);
+
+      expect(screen.getByPlaceholderText('Reply…')).toHaveFocus();
+    });
+
+    it('focuses the textarea from a layout slot', () => {
+      render(<BasicPromptInput />);
+
+      fireEvent.mouseDown(screen.getByTestId('footer'));
+
+      expect(screen.getByPlaceholderText('Reply…')).toHaveFocus();
+    });
+
+    it('prevents the default focus shift so the caret is not dropped', () => {
+      const { container } = render(<BasicPromptInput />);
+      const form = container.querySelector('form') as HTMLFormElement;
+
+      const notCancelled = fireEvent.mouseDown(form);
+
+      expect(notCancelled).toBe(false);
+    });
+
+    it('leaves controls inside the frame alone', () => {
+      render(<BasicPromptInput defaultValue='hello' />);
+      const submit = screen.getByRole('button', { name: 'Send message' });
+
+      const notCancelled = fireEvent.mouseDown(submit);
+
+      expect(notCancelled).toBe(true);
+      expect(screen.getByPlaceholderText('Reply…')).not.toHaveFocus();
+    });
+
+    it('leaves the textarea itself alone so the caret lands where clicked', () => {
+      render(<BasicPromptInput />);
+
+      const notCancelled = fireEvent.mouseDown(
+        screen.getByPlaceholderText('Reply…')
+      );
+
+      expect(notCancelled).toBe(true);
+    });
+
+    it('does nothing while disabled', () => {
+      const { container } = render(<BasicPromptInput disabled />);
+      const form = container.querySelector('form') as HTMLFormElement;
+
+      fireEvent.mouseDown(form);
+
+      expect(screen.getByPlaceholderText('Reply…')).not.toHaveFocus();
+    });
+
+    it('ignores secondary buttons so the context menu still opens', () => {
+      const { container } = render(<BasicPromptInput />);
+      const form = container.querySelector('form') as HTMLFormElement;
+
+      const notCancelled = fireEvent.mouseDown(form, { button: 2 });
+
+      expect(notCancelled).toBe(true);
+      expect(screen.getByPlaceholderText('Reply…')).not.toHaveFocus();
+    });
+
+    it('yields to a consumer that prevents the mousedown', () => {
+      const onMouseDown = vi.fn(event => event.preventDefault());
+      const { container } = render(
+        <PromptInput onMouseDown={onMouseDown}>
+          <PromptInput.Textarea placeholder='Reply…' />
+        </PromptInput>
+      );
+
+      fireEvent.mouseDown(container.querySelector('form') as HTMLFormElement);
+
+      expect(onMouseDown).toHaveBeenCalled();
+      expect(screen.getByPlaceholderText('Reply…')).not.toHaveFocus();
+    });
+  });
 });
