@@ -18,16 +18,16 @@ export interface SidebarRootProps {
    */
   collapsible?: boolean;
 
-  /** What the collapsed state looks like.
-   *  `"icon"` shrinks to an icon rail and pushes content. `"hidden"` disappears
-   *  completely and reveals as a floating panel with a backdrop when opened.
+  /** What the collapsed state looks like. Expanding works the same in both
+   *  modes: the sidebar opens in place and pushes content. `"icon"` collapses
+   *  to an icon rail. `"hidden"` collapses to a thin strip with no visible content.
    * @default "icon"
    */
   collapseMode?: 'icon' | 'hidden';
 
-  /** Hovering a collapsed sidebar temporarily reveals it as a floating panel,
-   *  without changing the real open state. Reverts on mouse leave. Has no
-   *  effect when `collapsible` is false, or while the sidebar is open.
+  /** Hovering a collapsed sidebar temporarily expands it in place, without
+   *  changing the real open state. Reverts on mouse leave. Has no effect
+   *  when `collapsible` is false, or while the sidebar is open.
    * @default false
    */
   peekOnHover?: boolean;

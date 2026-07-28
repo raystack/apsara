@@ -60,48 +60,11 @@
   pointer-events: none;
 }
 
-/* "hidden" collapse always reveals as a floating panel, never inline —
-   whether from a real open or a hover peek. */
-.root[data-floating] {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: 240px;
-  z-index: var(--rs-z-index-portal);
-  background: var(--rs-color-background-base-primary);
+/* A peek expands the sidebar in place, exactly like a real open — no
+   repositioning, so it works inside any container. The shadow is the only
+   hint that the reveal is temporary. */
+.root[data-peeking] {
   box-shadow: var(--rs-shadow-lifted);
-}
-
-.root[data-floating][data-position="left"] {
-  left: 0;
-}
-
-.root[data-floating][data-position="right"] {
-  right: 0;
-}
-
-.root[data-floating] .header,
-.root[data-floating] .main,
-.root[data-floating] .footer {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: var(--rs-z-index-portal);
-  background: var(--rs-color-overlay-black-a5);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.backdrop[data-open] {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
 }
 
 .header {
@@ -489,12 +452,6 @@
   .root[data-collapse-mode="hidden"] .header,
   .root[data-collapse-mode="hidden"] .main,
   .root[data-collapse-mode="hidden"] .footer {
-    transition:
-      opacity var(--rs-duration-normal) var(--rs-ease-out),
-      visibility var(--rs-duration-normal) var(--rs-ease-out);
-  }
-
-  .backdrop {
     transition:
       opacity var(--rs-duration-normal) var(--rs-ease-out),
       visibility var(--rs-duration-normal) var(--rs-ease-out);

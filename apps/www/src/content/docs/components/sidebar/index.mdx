@@ -162,11 +162,11 @@ The `data-collapse-hidden` attribute can be used to conditionally hide elements 
 
 ### Collapse mode
 
-Use `collapseMode` to choose what the collapsed state looks like:
+Use `collapseMode` to choose what the collapsed state looks like. Expanding
+works the same in both modes: the sidebar opens in place and pushes content.
 
-- `"icon"` (default): shrinks to an icon rail and pushes page content aside.
-- `"hidden"`: disappears completely and reveals as a floating panel with a
-  backdrop when opened. Clicking the backdrop or pressing Escape closes it.
+- `"icon"` (default): collapses to an icon rail.
+- `"hidden"`: collapses to a thin strip with no visible content.
 
 For a responsive layout, drive it from your own breakpoint check:
 
@@ -174,15 +174,13 @@ For a responsive layout, drive it from your own breakpoint check:
 <Sidebar collapseMode={isMobile ? 'hidden' : 'icon'} />
 ```
 
-When `collapseMode="hidden"` is closed, it shrinks to a thin strip just wide enough for the resize handle — reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
+When `collapseMode="hidden"` is closed, the strip is just wide enough for the resize handle — reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
 
 <Demo data={collapseModeDemo} />
 
-*Note: the floating panel uses `position: fixed`, so it won't line up correctly if a parent element has its own `transform`, `filter`, or `contain` — avoid those on ancestors of the Sidebar when using `collapseMode="hidden"`.*
-
 ### Peek on hover
 
-Set `peekOnHover` to temporarily reveal a collapsed sidebar when the user
+Set `peekOnHover` to temporarily expand a collapsed sidebar while the user
 hovers it, without changing the real `open` state — similar to VS Code's
 auto-hide sidebar. Moving the mouse away reverts it; clicking the resize
 handle or a `Sidebar.Trigger` pins it open for real. Clicking a `Sidebar.Item`
@@ -265,7 +263,6 @@ The Sidebar implements the following accessibility features:
 
   - Enter/Space to toggle sidebar expansion
   - Tab navigation through interactive elements
-  - Escape closes the floating panel when `collapseMode="hidden"` is open
 
 - Screen reader support
   - Meaningful labels for all interactive elements
@@ -273,5 +270,4 @@ The Sidebar implements the following accessibility features:
   - Clear state indicators
 
 - Known limitations
-  - The `collapseMode="hidden"` floating panel doesn't trap focus or set `aria-modal` — Tab can still reach content behind it. Close it (Escape, or the backdrop) before relying on background content being unreachable.
   - `peekOnHover` is mouse-only; there's no keyboard/focus equivalent that reveals the preview. Keyboard and screen reader users still get each item's full label via the existing per-item tooltip on focus, so no content is unreachable — they just don't get the hover preview shortcut.

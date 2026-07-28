@@ -174,12 +174,11 @@ describe('Sidebar', () => {
 
   describe('collapseMode', () => {
     it('defaults to icon rail collapse (unchanged behavior)', () => {
-      const { container } = render(<BasicSidebar open={false} />);
+      render(<BasicSidebar open={false} />);
 
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveAttribute('data-collapse-mode', 'icon');
-      expect(nav).not.toHaveAttribute('data-floating');
-      expect(container.querySelector(`.${styles.backdrop}`)).toBeNull();
+      expect(nav).not.toHaveAttribute('data-peeking');
     });
 
     it('hides header/main/footer content when collapsed and hidden', () => {
@@ -187,32 +186,22 @@ describe('Sidebar', () => {
 
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveAttribute('data-collapse-mode', 'hidden');
-      expect(nav).not.toHaveAttribute('data-floating');
+      expect(nav).toHaveAttribute('data-closed');
     });
 
-    it('renders as a floating panel with a backdrop when opened', () => {
+    it('expands in place like icon mode when opened', () => {
       const { container } = render(<BasicSidebar open collapseMode='hidden' />);
 
       const nav = screen.getByRole('navigation');
-      expect(nav).toHaveAttribute('data-floating');
-      const backdrop = container.querySelector(`.${styles.backdrop}`);
-      expect(backdrop).toHaveAttribute('data-open');
+      expect(nav).toHaveAttribute('data-open');
+      expect(nav).not.toHaveAttribute('data-peeking');
+      // No overlay chrome: the sidebar opens in the layout flow, so no
+      // backdrop element renders next to the aside.
+      expect(container.children).toHaveLength(1);
+      expect(container.firstElementChild?.tagName).toBe('ASIDE');
     });
 
-    it('closes when the backdrop is clicked', () => {
-      const onOpenChange = vi.fn();
-      const { container } = render(
-        <BasicSidebar open collapseMode='hidden' onOpenChange={onOpenChange} />
-      );
-
-      const backdrop = container.querySelector(`.${styles.backdrop}`);
-      expect(backdrop).not.toBeNull();
-      fireEvent.click(backdrop!);
-
-      expect(onOpenChange).toHaveBeenCalledWith(false);
-    });
-
-    it('closes on Escape while floating', () => {
+    it('does not close on Escape while open', () => {
       const onOpenChange = vi.fn();
       render(
         <BasicSidebar open collapseMode='hidden' onOpenChange={onOpenChange} />
@@ -220,7 +209,7 @@ describe('Sidebar', () => {
 
       fireEvent.keyDown(document, { key: 'Escape' });
 
-      expect(onOpenChange).toHaveBeenCalledWith(false);
+      expect(onOpenChange).not.toHaveBeenCalled();
     });
   });
 
@@ -314,7 +303,7 @@ describe('Sidebar', () => {
       fireEvent.mouseEnter(nav);
 
       await waitFor(() => {
-        expect(nav).toHaveAttribute('data-floating');
+        expect(nav).toHaveAttribute('data-peeking');
       });
       // data-open/data-closed track the visual state (peek counts as open);
       // the real state stays on aria-expanded.
@@ -323,7 +312,7 @@ describe('Sidebar', () => {
       expect(nav).toHaveAttribute('aria-expanded', 'false');
     });
 
-    it('shows the floating panel content when peeking with collapseMode="hidden"', async () => {
+    it('shows the hidden-mode content while peeking', async () => {
       render(
         <Sidebar open={false} peekOnHover collapseMode='hidden'>
           <PeekStatus />
@@ -334,14 +323,14 @@ describe('Sidebar', () => {
       fireEvent.mouseEnter(nav);
 
       await waitFor(() => {
-        expect(nav).toHaveAttribute('data-floating');
+        expect(nav).toHaveAttribute('data-peeking');
       });
       // Regression: the hidden-mode hiding rules key off data-closed, which
       // must clear during a peek or the panel reveals 8px wide and empty.
       expect(nav).not.toHaveAttribute('data-closed');
     });
 
-    it('stops floating once the sidebar is pinned open while peeking', async () => {
+    it('stops peeking once the sidebar is pinned open', async () => {
       render(
         <Sidebar defaultOpen={false} peekOnHover>
           <PeekStatus />
@@ -351,14 +340,14 @@ describe('Sidebar', () => {
       const nav = screen.getByRole('navigation');
       fireEvent.mouseEnter(nav);
       await waitFor(() => {
-        expect(nav).toHaveAttribute('data-floating');
+        expect(nav).toHaveAttribute('data-peeking');
       });
 
       fireEvent.click(screen.getByRole('button', { name: 'Expand sidebar' }));
 
-      // Opening for real supersedes the peek — the sidebar must return to
-      // the layout flow immediately, not stay a fixed overlay.
-      expect(nav).not.toHaveAttribute('data-floating');
+      // Opening for real supersedes the peek — the peek shadow and state
+      // must drop immediately, without waiting for the mouse to leave.
+      expect(nav).not.toHaveAttribute('data-peeking');
       expect(screen.getByTestId('peek-status')).toHaveTextContent(
         'expanded:not-peeking'
       );

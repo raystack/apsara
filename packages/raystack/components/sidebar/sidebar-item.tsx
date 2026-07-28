@@ -43,7 +43,7 @@ export function SidebarItem({
   const sidebarMoreContext = useSidebarMoreContext();
   const insideSidebarMore = !!sidebarMoreContext?.isInsideSidebarMore;
   const textRef = useRef<HTMLSpanElement>(null);
-  const [truncationTooltipOpen, setTruncationTooltipOpen] = useState(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   // Open away from the sidebar's edge, like the More menu and handle tooltip.
   const tooltipSide = position === 'left' ? 'right' : 'left';
 
@@ -113,28 +113,21 @@ export function SidebarItem({
   // collapsed label tooltip and the expanded clipped-label tooltip.
   if (hideCollapsedItemTooltip) return content;
 
-  if (isCollapsed) {
-    return (
-      <Tooltip>
-        <Tooltip.Trigger render={content} />
-        <Tooltip.Content side={tooltipSide} sideOffset={16}>
-          {children}
-        </Tooltip.Content>
-      </Tooltip>
-    );
-  }
-
-  // Expanded: the label truncates at a fixed max-width, so surface the full
-  // text in a tooltip — but only when it is actually clipped.
+  // One always-controlled Tooltip for both states (switching a mounted
+  // Tooltip between controlled and uncontrolled triggers a React warning):
+  // collapsed items always show it; expanded items only when the label is
+  // actually clipped at its max-width.
   return (
     <Tooltip
-      open={truncationTooltipOpen}
+      open={tooltipOpen}
       onOpenChange={open => {
         const el = textRef.current;
-        const next = open && el != null && el.scrollWidth > el.clientWidth;
+        const next =
+          open &&
+          (isCollapsed || (el != null && el.scrollWidth > el.clientWidth));
         // Report to the sidebar so an open tooltip holds a hover peek.
-        if (next !== truncationTooltipOpen) onPopupOpenChange(next);
-        setTruncationTooltipOpen(next);
+        if (next !== tooltipOpen) onPopupOpenChange(next);
+        setTooltipOpen(next);
       }}
     >
       <Tooltip.Trigger render={content} />

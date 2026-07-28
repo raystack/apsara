@@ -71,15 +71,15 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
    */
   collapsible?: boolean;
   /**
-   * What the collapsed state looks like.
-   * - `'icon'`: shrinks to an icon rail, pushes content (default).
-   * - `'hidden'`: disappears completely, reveals as a floating panel with a
-   *   backdrop when opened.
+   * What the collapsed state looks like. Expanding works the same in both
+   * modes: the sidebar opens in place and pushes content.
+   * - `'icon'`: collapses to an icon rail (default).
+   * - `'hidden'`: collapses to a thin strip with no visible content.
    */
   collapseMode?: 'icon' | 'hidden';
   /**
-   * Hovering a collapsed sidebar temporarily reveals it as a floating panel,
-   * without changing the real open state. Reverts on mouse leave.
+   * Hovering a collapsed sidebar temporarily expands it in place, without
+   * changing the real open state. Reverts on mouse leave.
    */
   peekOnHover?: boolean;
   /** Tooltip shown when hovering the collapse/expand handle. */
@@ -166,24 +166,10 @@ export function SidebarRoot({
     setIsPeeking(false);
   }, [open]);
 
-  // A "hidden" collapse only ever reveals as a floating panel over content;
-  // peeking previews the same floating panel without touching `open`.
-  const isFloating = collapseMode === 'hidden' && open;
-  const showFloating = isFloating || isPeeking;
   // data-open/data-closed drive the visuals, so a peek counts as open —
   // every collapse-hiding CSS rule turns off during a peek for free. The
   // real state stays in `open` (and aria-expanded).
   const visualOpen = open || isPeeking;
-
-  useEffect(() => {
-    if (!isFloating) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.defaultPrevented) return;
-      if (event.key === 'Escape') handleOpenChange(false);
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isFloating, handleOpenChange]);
 
   return (
     <SidebarContext
@@ -198,14 +184,6 @@ export function SidebarRoot({
       }}
     >
       <SidebarPopupContext value={handlePopupOpenChange}>
-        {collapseMode === 'hidden' && (
-          <div
-            className={styles.backdrop}
-            data-open={isFloating ? '' : undefined}
-            aria-hidden='true'
-            onClick={() => handleOpenChange(false)}
-          />
-        )}
         <aside
           className={cx(styles.root, className)}
           data-position={position}
@@ -214,7 +192,7 @@ export function SidebarRoot({
           data-closed={!visualOpen ? '' : undefined}
           data-collapse-disabled={!collapsible ? '' : undefined}
           data-collapse-mode={collapseMode}
-          data-floating={showFloating ? '' : undefined}
+          data-peeking={isPeeking ? '' : undefined}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label='Navigation Sidebar'
