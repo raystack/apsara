@@ -348,7 +348,10 @@ export const collapseModeDemo = {
 
 export const peekOnHoverDemo = {
   type: 'code',
-  code: sidebarLayout(`<Sidebar defaultOpen={false} collapseMode="icon" peekOnHover>
+  tabs: [
+    {
+      name: 'Icon (default)',
+      code: sidebarLayout(`<Sidebar defaultOpen={false} collapseMode="icon" peekOnHover>
           <Sidebar.Header>
             <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
@@ -365,7 +368,33 @@ export const peekOnHoverDemo = {
               <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
             </Sidebar.Group>
           </Sidebar.Main>
-        </Sidebar>`),
+        </Sidebar>`)
+    },
+    {
+      name: 'Hidden',
+      code: sidebarLayout(`<Sidebar defaultOpen={false} collapseMode="hidden" peekOnHover>
+          <Sidebar.Trigger
+            style={{ position: "absolute", top: "var(--rs-space-4)", insetInlineStart: "var(--rs-space-2)" }}
+          />
+          <Sidebar.Header>
+            <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
+              <IconButton size={4} aria-label="Logo">
+                <BellIcon width={24} height={24} />
+              </IconButton>
+              <Text size="regular" weight="medium" data-collapse-hidden>Apsara</Text>
+            </Flex>
+          </Sidebar.Header>
+          <Sidebar.Main>
+            <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Overview</Sidebar.Item>
+            <Sidebar.Group label="Main">
+              <Sidebar.Item href="#" leadingIcon={<BellIcon width={16} height={16} />} active>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<FilterIcon width={16} height={16} />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" leadingIcon={<OrganizationIcon width={16} height={16} />}>Settings</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Main>
+        </Sidebar>`)
+    }
+  ],
   style: styleDemo
 };
 
