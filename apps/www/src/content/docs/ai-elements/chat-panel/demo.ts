@@ -64,7 +64,7 @@ export const preview = {
                       {message.role === 'user' ? (
                         <Message.Bubble>{message.text}</Message.Bubble>
                       ) : (
-                        <Text size="small">{message.text}</Text>
+                        <Message.Bubble variant="ghost">{message.text}</Message.Bubble>
                       )}
                     </Message.Content>
                   </Message>

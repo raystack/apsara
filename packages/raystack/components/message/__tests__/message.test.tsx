@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createRef } from 'react';
 import { describe, expect, it } from 'vitest';
+import textStyles from '../../text/text.module.css';
 import { Message } from '../message';
 import styles from '../message.module.css';
 
@@ -80,7 +81,10 @@ describe('Message', () => {
       ['solid', 'danger'],
       ['outline', 'accent'],
       ['outline', 'neutral'],
-      ['outline', 'danger']
+      ['outline', 'danger'],
+      ['ghost', 'accent'],
+      ['ghost', 'neutral'],
+      ['ghost', 'danger']
     ] as const)('renders the %s %s appearance', (variant, color) => {
       render(
         <Message.Bubble data-testid='bubble' variant={variant} color={color}>
@@ -92,6 +96,47 @@ describe('Message', () => {
       expect(bubble).toHaveAttribute('data-color', color);
       expect(bubble).toHaveClass(styles[`bubble-${variant}`]);
       expect(bubble).toHaveClass(styles[`bubble-${color}`]);
+    });
+
+    it('renders the ghost variant as small Text', () => {
+      render(
+        <Message.Bubble data-testid='bubble' variant='ghost'>
+          text
+        </Message.Bubble>
+      );
+      const bubble = screen.getByTestId('bubble');
+      expect(bubble).toHaveClass(textStyles.text);
+      expect(bubble).toHaveClass(textStyles['text-small']);
+      expect(bubble).toHaveClass(textStyles['text-primary']);
+    });
+
+    it.each([
+      ['accent', 'text-accent'],
+      ['danger', 'text-danger']
+    ] as const)('maps ghost %s onto the %s Text colour', (color, textClass) => {
+      render(
+        <Message.Bubble data-testid='bubble' variant='ghost' color={color}>
+          text
+        </Message.Bubble>
+      );
+      expect(screen.getByTestId('bubble')).toHaveClass(textStyles[textClass]);
+    });
+
+    it('leaves the solid variant free of Text classes', () => {
+      render(<Message.Bubble data-testid='bubble'>text</Message.Bubble>);
+      expect(screen.getByTestId('bubble')).not.toHaveClass(textStyles.text);
+    });
+
+    it('keeps a caller className last so it can override the ghost resets', () => {
+      render(
+        <Message.Bubble data-testid='bubble' variant='ghost' className='custom'>
+          text
+        </Message.Bubble>
+      );
+      const bubble = screen.getByTestId('bubble');
+      const classes = bubble.className.split(' ');
+      expect(classes[classes.length - 1]).toBe('custom');
+      expect(classes).toContain(styles['bubble-ghost']);
     });
   });
 });

@@ -25,7 +25,7 @@ export const preview = {
                 <Reasoning.Step label="Creating the task" />
               </Reasoning.Content>
             </Reasoning>
-            <Text size="small">I created the task in Design System 2 and assigned it to you.</Text>
+            <Message.Bubble variant="ghost">I created the task in Design System 2 and assigned it to you.</Message.Bubble>
           </Message.Content>
         </Message>
       </Chat.Item>
@@ -102,7 +102,7 @@ export const streamingDemo = {
                   {message.align === 'end' ? (
                     <Message.Bubble>{message.text}</Message.Bubble>
                   ) : (
-                    <Text size="small">{message.text}</Text>
+                    <Message.Bubble variant="ghost">{message.text}</Message.Bubble>
                   )}
                 </Message.Content>
               </Message>

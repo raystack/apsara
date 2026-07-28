@@ -31,6 +31,25 @@
   justify-items: end;
 }
 
+/* A ghost bubble is full-bleed, so the content column stops shrink-wrapping
+   at 85% and the flexible spacer goes away: the message runs the whole row
+   and the hover actions sit at its far edge. */
+.message:has(.bubble-ghost) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    ".      header  ."
+    "avatar content actions"
+    ".      footer  .";
+}
+
+.message[data-align="end"]:has(.bubble-ghost) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    ".       header  ."
+    "actions content avatar"
+    ".       footer  .";
+}
+
 /* The avatar area only spans the content row, so flex-end anchors it to the
    bubble's bottom edge rather than to the footer line below it. */
 .message-avatar {
@@ -161,4 +180,15 @@
 .bubble-outline.bubble-danger {
   border-color: var(--rs-color-border-danger-emphasis);
   color: var(--rs-color-foreground-danger-primary);
+}
+
+/* Ghost drops the surface: no fill, no border, no padding, and the bubble
+   fills the (widened) content column instead of shrink-wrapping. Typography
+   and colour come from Text — see GHOST_TEXT_VARIANT in message-bubble.tsx. */
+.bubble-ghost {
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
 }
