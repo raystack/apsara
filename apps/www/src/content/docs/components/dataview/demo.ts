@@ -350,21 +350,16 @@ export const rowSelectionPreview = {
 } from "@raystack/apsara";
 import { TransformIcon } from "@radix-ui/react-icons";
 
-// 1. A leading checkbox column. \`select\` is absent from \`fields\`, so
-//    DataView.List treats it as an unmanaged display column: always
-//    rendered, never listed in Display Properties, and the cell receives
-//    { row, table } instead of a TanStack cell context.
 const selectionColumn: DataViewListColumn<Person> = {
   accessorKey: "select",
-  // Wide enough for the leading cell's 24px inset + the checkbox: cells clip
-  // overflow, so a narrower track would cut the box off.
   width: 48,
-  // Select-all tracks the filtered rows, so it reflects what's on screen.
   header: ({ table }) => (
     <Checkbox
       size="small"
       checked={table.getIsAllRowsSelected()}
-      indeterminate={table.getIsSomeRowsSelected()}
+      indeterminate={
+        table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
+      }
       onCheckedChange={(checked) => table.toggleAllRowsSelected(Boolean(checked))}
       aria-label="Select all people"
     />
@@ -374,19 +369,15 @@ const selectionColumn: DataViewListColumn<Person> = {
       size="small"
       checked={row.getIsSelected()}
       onCheckedChange={(checked) => row.toggleSelected(Boolean(checked))}
-      // Keep a row-level onRowClick from firing when the checkbox is hit.
       onClick={(event) => event.stopPropagation()}
       aria-label={\`Select \${row.original.name}\`}
     />
   ),
 };
 
-// 2. Any sibling can read the selection from context — no state threading.
-//    FloatingActions defaults to variant="floating" (position: fixed,
-//    bottom-center), so no positioning CSS is needed at the call site.
 function SelectionBar() {
   const { table } = useDataView<Person>();
-  const selectedCount = table.getSelectedRowModel().rows.length;
+  const selectedCount = table.getSelectedRowModel().flatRows.length;
   if (selectedCount === 0) return null;
 
   return (
@@ -408,8 +399,6 @@ function SelectionBar() {
   );
 }
 
-// 3. Compose. \`getRowId\` keys the selection map by a stable id instead of
-//    the row index, so it survives sorting, filtering, and refetches.
 <DataView
   data={people}
   fields={fields}
@@ -419,7 +408,7 @@ function SelectionBar() {
   <DataView.Toolbar>
     <DataView.Search placeholder="Search people…" />
     <DataView.Filters />
-    <DataView.DisplayControls hideGrouping />
+    <DataView.DisplayControls />
   </DataView.Toolbar>
   <DataView.List variant="table" columns={[selectionColumn, ...tableColumns]} />
   <SelectionBar />

@@ -126,6 +126,33 @@ export function groupData<TData>(
   return groupedData;
 }
 
+export const GROUP_ROW_ID_PREFIX = '__group__:';
+
+export function isGroupRowData<TData>(row: unknown): row is GroupedData<TData> {
+  if (!row || typeof row !== 'object') return false;
+  const candidate = row as GroupedData<TData>;
+  return (
+    Array.isArray(candidate.subRows) && typeof candidate.group_key === 'string'
+  );
+}
+
+/**
+ * Keys group buckets by `group_key` so their ids can't collide with data row
+ * ids. Leaves delegate to `getRowId`, falling back to TanStack's positional
+ * default (which supplying any resolver would otherwise replace).
+ */
+export function createRowIdResolver<TData>(
+  getRowId?: (row: TData, index: number) => string
+) {
+  return (row: TData, index: number, parent?: Row<TData>): string => {
+    if (isGroupRowData<TData>(row)) {
+      return `${GROUP_ROW_ID_PREFIX}${row.group_key}`;
+    }
+    if (getRowId) return getRowId(row, index);
+    return parent ? `${parent.id}.${index}` : String(index);
+  };
+}
+
 const generateFilterMap = (
   filters: InternalFilter[] = []
 ): Map<string, any> => {
@@ -313,20 +340,11 @@ export function dataViewQueryToInternal(query: DataViewQuery): InternalQuery {
 }
 
 /**
- * `getFilteredRowModel` with `flatRows` backfilled.
- *
- * DataView filters with `filterFromLeafRows` so a group survives when one of
- * its children matches. table-core's leaf-first implementation
- * (`filterRowModelFromLeafs`) allocates the model's `flatRows` array but never
- * pushes into it, so every API reading it goes dead the moment a filter or
- * search is active — `table.getIsAllRowsSelected()`,
- * `getIsSomeRowsSelected()`, and `toggleAllRowsSelected()` (via
- * `getPreGroupedRowModel`) among them.
- *
- * The tree in `rows` is correct, so walk it and fill the array **in place**:
- * the model object identity is preserved, so downstream memos (sorting,
- * selection) don't invalidate, and the walk runs once per filter recompute
- * rather than once per read.
+ * `getFilteredRowModel` with `flatRows` backfilled. table-core's
+ * `filterFromLeafRows` path never fills that array, which kills every API
+ * reading it (`getIsAllRowsSelected`, `toggleAllRowsSelected`, …) while a
+ * filter is active. Filled in place to preserve the model identity downstream
+ * memos key on.
  */
 export function getFilteredRowModelWithFlatRows<TData>(): (
   table: Table<TData>
@@ -336,8 +354,6 @@ export function getFilteredRowModelWithFlatRows<TData>(): (
     const getModel = base(table);
     return () => {
       const model = getModel();
-      // Already populated: the unfiltered pass-through and any model we've
-      // filled once before.
       if (model.flatRows.length > 0) return model;
       const collect = (rows: Row<TData>[]) => {
         rows.forEach(row => {

@@ -34,12 +34,14 @@ import {
 } from './data-view.types';
 import {
   hasActiveQuery as computeHasActiveQuery,
+  createRowIdResolver,
   fieldsToColumnDefs,
   getDefaultTableQuery,
   getFilteredRowModelWithFlatRows,
   getInitialColumnVisibility,
   groupData,
   hasQueryChanged,
+  isGroupRowData,
   queryToTableState,
   transformToDataViewQuery
 } from './utils';
@@ -132,10 +134,8 @@ function DataViewRoot<TData>({
     [onColumnVisibilityChange]
   );
 
-  // Row selection is held here rather than left to TanStack's internal state:
-  // the context value is memoized, so a change inside the table instance alone
-  // would never reach `useDataView()` consumers (the table object identity is
-  // stable). Lifting it makes selection a real dependency of the context.
+  // Lifted so a selection change invalidates the memoized context value; the
+  // table instance identity is stable and can't do it.
   const [rowSelection, setRowSelectionState] = useState<RowSelectionState>({});
 
   const handleRowSelectionChange = useCallback(
@@ -200,10 +200,15 @@ function DataViewRoot<TData>({
     }
   }, [tableQuery, onTableQueryChange, mode]);
 
+  const resolveRowId = useMemo(() => createRowIdResolver(getRowId), [getRowId]);
+
   const table = useReactTable({
     data: groupedData as unknown as TData[],
     columns: columnDefs,
-    getRowId,
+    getRowId: resolveRowId,
+    // Group rows render without cells, so they have no checkbox — keeping them
+    // unselectable keeps `rowSelection` one key per data row.
+    enableRowSelection: row => !isGroupRowData(row.original),
     getCoreRowModel: getCoreRowModel(),
     getExpandedRowModel: getExpandedRowModel(),
     getSubRows: row => (row as unknown as GroupedData<TData>)?.subRows || [],
