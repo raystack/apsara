@@ -1,6 +1,7 @@
 'use client';
 
 import { useControlled } from '@base-ui/utils/useControlled';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import {
   DndContext,
   type DragEndEvent,
@@ -57,6 +58,9 @@ type ResizeDirection = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 /** Which resize handles to render, mirroring the CSS `resize` vocabulary. */
 export type ChatPanelResize = 'both' | 'horizontal' | 'vertical' | 'none';
 
+/** How a mode change animates. */
+export type ChatPanelTransition = 'minimal' | 'morph';
+
 const RESIZE_HANDLES: Record<ChatPanelResize, ResizeDirection[]> = {
   both: ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'],
   horizontal: ['e', 'w'],
@@ -80,6 +84,86 @@ function resolveDragBoundary(
 ): HTMLElement | null {
   if (!boundary) return null;
   return 'current' in boundary ? boundary.current : boundary;
+}
+
+/**
+ * The mode the panel is leaving, for the one frame that renders the new mode so
+ * there are values to transition *from*. Null on first paint and once settled.
+ */
+function useModeChange(mode: ChatPanelMode) {
+  const [settledMode, setSettledMode] = useState(mode);
+  const from = settledMode === mode ? null : settledMode;
+
+  useEffect(() => {
+    if (!from) return;
+    const frame = requestAnimationFrame(() => setSettledMode(mode));
+    return () => cancelAnimationFrame(frame);
+  }, [from, mode]);
+
+  return from;
+}
+
+interface MorphBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+function readBox(node: HTMLElement): MorphBox {
+  const { left, top, width, height } = node.getBoundingClientRect();
+  return { x: left, y: top, width, height };
+}
+
+/**
+ * Draws the panel back over the box it just left — an inverse translate and
+ * scale off its top-left corner — and lets go a frame later, so the two modes
+ * read as one shape moving. The old box has to be read while the DOM still
+ * shows the old mode, hence the measurement in render; the inverse can only be
+ * worked out once the new mode has laid out, hence the layout effect.
+ */
+function useMorph(
+  panelRef: RefObject<HTMLElement | null>,
+  mode: ChatPanelMode,
+  starting: boolean,
+  enabled: boolean
+) {
+  const measuredModeRef = useRef(mode);
+  const fromRef = useRef<MorphBox | null>(null);
+
+  if (measuredModeRef.current !== mode) {
+    measuredModeRef.current = mode;
+    const panel = panelRef.current;
+    fromRef.current = enabled && panel ? readBox(panel) : null;
+  }
+
+  useIsoLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const from = fromRef.current;
+    if (!starting || !from) {
+      panel.style.translate = '';
+      panel.style.scale = '';
+      return;
+    }
+    const to = readBox(panel);
+    if (!to.width || !to.height) return;
+    // Minimized is the one mode whose whole content is a single small control.
+    // Blowing the bubble up to the panel's box would stretch its icon into mush
+    // for the length of the tween, so it only travels — from the middle of the
+    // box it is replacing, since there is no shape left to line its edges up
+    // with.
+    if (mode === 'minimized') {
+      const x = from.x + from.width / 2 - (to.x + to.width / 2);
+      const y = from.y + from.height / 2 - (to.y + to.height / 2);
+      panel.style.translate = `${x}px ${y}px`;
+      return;
+    }
+    panel.style.translate = `${from.x - to.x}px ${from.y - to.y}px`;
+    panel.style.scale = `${from.width / to.width} ${from.height / to.height}`;
+    // `mode` is a dependency so a second change mid-tween re-inverts from
+    // wherever the panel has visually reached instead of leaving it stranded.
+  }, [panelRef, starting, mode]);
 }
 
 /**
@@ -166,6 +250,13 @@ export interface ChatPanelRootProps extends ComponentProps<'aside'> {
    * viewport. Accepts the element or a ref to it.
    */
   dragBoundary?: ChatPanelDragBoundary;
+  /**
+   * How a mode change animates. `"minimal"` eases the new mode in from its own
+   * edge or corner; `"morph"` measures the box the panel is leaving and tweens
+   * the new mode out of it, so the panel moves and reshapes into place.
+   * @defaultValue "minimal"
+   */
+  transition?: ChatPanelTransition;
 }
 
 export function ChatPanelRoot({
@@ -187,6 +278,7 @@ export function ChatPanelRoot({
   resize = 'both',
   draggable = true,
   dragBoundary,
+  transition = 'minimal',
   ref,
   ...props
 }: ChatPanelRootProps) {
@@ -224,6 +316,9 @@ export function ChatPanelRoot({
   // The size the window first resolved to; the default maxSize, so a custom
   // defaultSize never contradicts its own max.
   const initialSizeRef = useRef(sizeProp ?? defaultSize ?? DEFAULT_SIZE);
+
+  const modeFrom = useModeChange(mode);
+  useMorph(panelRef, mode, modeFrom !== null, transition === 'morph');
 
   const modeRef = useRef(mode);
   modeRef.current = mode;
@@ -641,6 +736,8 @@ export function ChatPanelRoot({
         side={side}
         draggable={draggable}
         resizing={resizing}
+        transition={transition}
+        modeFrom={modeFrom}
         floatingStyle={floatingStyle}
         className={className}
         style={style}
@@ -681,6 +778,8 @@ interface ChatPanelFrameProps extends ComponentProps<'aside'> {
   side: ChatPanelSide;
   draggable: boolean;
   resizing: boolean;
+  transition: ChatPanelTransition;
+  modeFrom: ChatPanelMode | null;
   floatingStyle: CSSProperties | null;
   resizeHandles: ReactNode;
 }
@@ -695,6 +794,8 @@ function ChatPanelFrame({
   side,
   draggable,
   resizing,
+  transition,
+  modeFrom,
   floatingStyle,
   resizeHandles,
   className,
@@ -733,6 +834,9 @@ function ChatPanelFrame({
       data-draggable={dragEnabled || undefined}
       data-dragging={isDragging || undefined}
       data-resizing={resizing || undefined}
+      data-transition={transition}
+      data-mode-starting={modeFrom ? '' : undefined}
+      data-mode-from={modeFrom ?? undefined}
       style={{
         ...floatingStyle,
         // The committed position only updates when the drag ends; the live

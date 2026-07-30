@@ -1,7 +1,6 @@
 'use client';
 
 import { useDraggable } from '@dnd-kit/core';
-import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
@@ -10,6 +9,7 @@ import {
   useEffect,
   useRef
 } from 'react';
+import { ReactComponent as CoPilotIcon } from '../../icons/assets/co-pilot.svg';
 import styles from './chat-panel.module.css';
 import { useChatPanelContext } from './chat-panel-context';
 
@@ -103,7 +103,7 @@ export function ChatPanelTrigger({
       }}
       {...props}
     >
-      {children ?? <ChatBubbleIcon aria-hidden='true' />}
+      {children ?? <CoPilotIcon aria-hidden='true' />}
     </button>
   );
 }

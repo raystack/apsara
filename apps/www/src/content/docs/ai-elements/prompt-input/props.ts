@@ -40,6 +40,13 @@ export interface PromptInputProps {
    */
   disabled?: boolean;
 
+  /**
+   * The element the frame focuses when its own padding is clicked.
+   * `PromptInput.Textarea` registers itself here on mount; pass a ref of your
+   * own when you render a custom input instead. Whichever is set first wins.
+   */
+  inputRef?: React.RefObject<HTMLElement | null>;
+
   /** Custom CSS class names. */
   className?: string;
 }

@@ -31,6 +31,22 @@
   justify-items: end;
 }
 
+.message:has(.bubble-ghost) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    ".      header  ."
+    "avatar content actions"
+    ".      footer  .";
+}
+
+.message[data-align="end"]:has(.bubble-ghost) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    ".       header  ."
+    "actions content avatar"
+    ".       footer  .";
+}
+
 /* The avatar area only spans the content row, so flex-end anchors it to the
    bubble's bottom edge rather than to the footer line below it. */
 .message-avatar {
@@ -161,4 +177,12 @@
 .bubble-outline.bubble-danger {
   border-color: var(--rs-color-border-danger-emphasis);
   color: var(--rs-color-foreground-danger-primary);
+}
+
+.bubble-ghost {
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
 }

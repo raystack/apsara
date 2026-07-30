@@ -5,7 +5,7 @@ source: packages/raystack/components/chat-panel
 tag: new
 ---
 
-import { preview, controlledDemo, boundedDragDemo, resizeDemo, draggableBubbleDemo, unreadBadgeDemo } from "./demo.ts";
+import { preview, controlledDemo, transitionDemo, boundedDragDemo, resizeDemo, draggableBubbleDemo, unreadBadgeDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -31,9 +31,9 @@ import { ChatPanel } from '@raystack/apsara'
 </Flex>
 ```
 
-The panel mounts **once** in your layout and morphs between modes with pure
-CSS — no portal, no remount, so chat state (scroll position, focus, streams)
-survives every transition:
+The panel mounts **once** in your layout and switches between modes in place —
+no portal, no remount, so chat state (scroll position, focus, streams) survives
+every transition:
 
 - **`docked`** — an in-flow sidebar (a flex sibling, like `SidePanel`) that
   squeezes the main content rather than covering it.
@@ -95,11 +95,43 @@ height.
 
 ### Trigger
 
-The minimized-state corner bubble. Children replace the default chat icon,
+The minimized-state corner bubble. Children replace the default `CoPilotIcon`,
 and `draggable` lets the bubble be dragged around the viewport — a completed
 drag never triggers the restore click.
 
 <auto-type-table path="./props.ts" name="ChatPanelTriggerProps" />
+
+## Mode transitions
+
+Switching mode flips the panel between in-flow and `position: fixed`, which no
+CSS property can tween, so the transform bridges the gap: the panel is rendered
+in its new mode already holding the shape it is coming out of, then eased back
+to rest. `transition` picks which shape that is.
+
+**`minimal`** (default) brings the new mode in from its own edge or corner and
+fades it up: the docked sidebar slides in from the edge it docks to, the
+floating window scales and lifts out of its corner, and the bubble grows out of
+its own. `--rs-duration-normal`.
+
+**`morph`** measures the box the panel is leaving and draws the new mode back
+over it — an inverse `translate` and `scale` off its top-left corner — so the
+panel travels and reshapes into its new place, the way a shared-layout
+animation does. Docking and popping out morph outright. The bubble is a tenth
+of the panel's size, so its two pairs cross-fade as well, and the bubble itself
+only travels — scaling it up to the panel's box would stretch its icon for the
+length of the tween. `--rs-duration-moderate`, because there is real distance to
+cover.
+
+Both use `--rs-ease-out`, so a transition is off the mark on its first frame and
+settles into place rather than easing away from a standstill.
+
+<Demo data={transitionDemo} />
+
+Both are skipped under `prefers-reduced-motion: reduce`, and neither runs on
+first paint — the transition needs a mode to have changed. Only the individual
+transform properties (`scale`, `translate`) are transitioned, never `transform`
+itself: dragging writes an inline `transform`, which stays instant, so a drag
+never lags the pointer and ending one never replays the transition.
 
 ## Examples
 

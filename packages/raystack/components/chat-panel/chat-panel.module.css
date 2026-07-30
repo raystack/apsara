@@ -72,6 +72,94 @@
   display: none;
 }
 
+/* ------------------------------ mode changes ------------------------------ */
+
+/* A morph draws the panel outside its own box on the way in, so the docked
+   panel — in flow, and otherwise painted under its siblings — is raised for the
+   trip. */
+.root[data-transition="morph"][data-mode="docked"] {
+  position: relative;
+  z-index: 1;
+}
+
+/* A mode change flips `position` (in-flow <-> fixed), which no property can
+   tween, so the panel is committed in the new mode holding the shape it is
+   coming out of, then eased back to rest from there. `[data-mode-starting]`
+   marks the single frame that holds those from-values.
+
+   Only the individual transform properties are listed, never `transform`
+   itself: dragging writes an inline `transform`, which stays instant and so
+   cannot be replayed when a drag ends. */
+@media (prefers-reduced-motion: no-preference) {
+  .root {
+    transition:
+      scale var(--rs-duration-normal) var(--rs-ease-out),
+      translate var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out);
+  }
+
+  /* The from-values are jumped to, not tweened into — the tween is the frame
+     after this rule stops applying. */
+  .root[data-mode-starting] {
+    transition: none;
+  }
+
+  /* --------------------------------------------------------------- minimal */
+
+  .root[data-transition="minimal"][data-mode-starting] {
+    opacity: 0;
+  }
+
+  /* A sidebar arrives from the edge it docks to: sliding reads as the panel
+     making room for itself, where a scale pop reads as a bounce. */
+  .root[data-transition="minimal"][data-mode-starting][data-mode="docked"] {
+    translate: var(--rs-space-5) 0;
+  }
+
+  .root[data-transition="minimal"][data-mode-starting][data-mode="docked"][data-side="left"] {
+    translate: calc(-1 * var(--rs-space-5)) 0;
+  }
+
+  /* The floating window and the bubble own a corner, so they grow out of it. */
+  .root[data-transition="minimal"][data-side="right"] {
+    transform-origin: bottom right;
+  }
+
+  .root[data-transition="minimal"][data-side="left"] {
+    transform-origin: bottom left;
+  }
+
+  .root[data-transition="minimal"][data-mode-starting][data-mode="floating"] {
+    scale: 0.94;
+    translate: 0 var(--rs-space-3);
+  }
+
+  .root[data-transition="minimal"][data-mode-starting][data-mode="minimized"] {
+    scale: 0.8;
+  }
+
+  /* ----------------------------------------------------------------- morph */
+
+  /* The from-values are the measured inverse of the box the panel just left,
+     written inline off its top-left corner, so the origin has to stay there for
+     the scale to land back on that box. Real distance to cover, so the longer
+     duration — but still the shared ease-out, which is off the mark on the first
+     frame where a symmetric curve would sit there and read as lag. */
+  .root[data-transition="morph"] {
+    transform-origin: top left;
+    transition-duration: var(--rs-duration-moderate);
+  }
+
+  /* Docked and floating are close enough in shape to morph outright. The bubble
+     is a tenth of their size, so its two pairs cross-fade as well — covering
+     the content stretched on the way out of it, and a whole panel swapped for
+     one small control on the way in. */
+  .root[data-transition="morph"][data-mode-starting][data-mode="minimized"],
+  .root[data-transition="morph"][data-mode-starting][data-mode-from="minimized"] {
+    opacity: 0;
+  }
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -144,23 +232,11 @@
    eased tween is motion, so only the transitions are gated. Mirrors button. */
 @media (prefers-reduced-motion: no-preference) {
   .trigger {
-    animation: chat-panel-trigger-in var(--rs-duration-fast) var(--rs-ease-out);
     transition: var(--rs-transition-interactive);
   }
 
   .trigger:active {
     transition: var(--rs-transition-pressed);
-  }
-}
-
-@keyframes chat-panel-trigger-in {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 

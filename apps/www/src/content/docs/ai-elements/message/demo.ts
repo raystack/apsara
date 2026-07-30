@@ -107,6 +107,42 @@ export const bubbleVariantsDemo = {
   <Message.Bubble variant="outline" color="accent">Accent outline bubble.</Message.Bubble>
   <Message.Bubble variant="outline" color="danger">Danger outline bubble.</Message.Bubble>
 </Flex>`
+    },
+    {
+      name: 'Ghost',
+      code: `<Flex direction="column" gap={3} align="start">
+  <Message.Bubble variant="ghost">No surface at all — plain body copy.</Message.Bubble>
+  <Message.Bubble variant="ghost" color="accent">Accent ghost bubble.</Message.Bubble>
+  <Message.Bubble variant="ghost" color="danger">Danger ghost bubble.</Message.Bubble>
+</Flex>`
     }
   ]
+};
+
+export const ghostDemo = {
+  type: 'code',
+  code: `<Flex direction="column" gap={5} style={{ width: 440 }}>
+  <Message align="end">
+    <Message.Content>
+      <Message.Bubble>Summarise the release notes for me.</Message.Bubble>
+    </Message.Content>
+  </Message>
+  <Message>
+    <Message.Avatar>
+      <Avatar size={3} radius="full" fallback="A" color="indigo" />
+    </Message.Avatar>
+    <Message.Header>Assistant</Message.Header>
+    <Message.Content>
+      <Message.Bubble variant="ghost">
+        Three things shipped: the timeline renderer, the AI element set, and a
+        rewrite of the token docs. The ghost bubble spans the whole row, so
+        long replies read as page content rather than as a chat bubble.
+      </Message.Bubble>
+    </Message.Content>
+    <Message.Footer>1:52 AM</Message.Footer>
+    <Message.Actions>
+      <IconButton size={1} aria-label="Copy message">⧉</IconButton>
+    </Message.Actions>
+  </Message>
+</Flex>`
 };

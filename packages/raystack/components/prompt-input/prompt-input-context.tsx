@@ -10,7 +10,8 @@ export interface PromptInputContextValue {
   status: PromptInputStatus;
   disabled: boolean;
   onStop?: () => void;
-  textareaRef: RefObject<HTMLTextAreaElement | null>;
+  inputRef: RefObject<HTMLElement | null>;
+  registerInput: (node: HTMLElement | null) => void;
   requestSubmit: () => void;
 }
 

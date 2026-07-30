@@ -13,10 +13,12 @@ export interface MessageProps {
 
 export interface MessageBubbleProps {
   /**
-   * Visual style of the message surface.
+   * Visual style of the message surface. `"ghost"` drops the surface
+   * entirely — no background, border or padding — and renders the message as
+   * full-width body copy.
    * @defaultValue "solid"
    */
-  variant?: 'solid' | 'outline';
+  variant?: 'solid' | 'outline' | 'ghost';
 
   /**
    * Color of the message surface.

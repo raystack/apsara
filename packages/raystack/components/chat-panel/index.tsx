@@ -12,6 +12,7 @@ export type {
   ChatPanelPosition,
   ChatPanelResize,
   ChatPanelRootProps as ChatPanelProps,
-  ChatPanelSize
+  ChatPanelSize,
+  ChatPanelTransition
 } from './chat-panel-root';
 export type { ChatPanelTriggerProps } from './chat-panel-trigger';

@@ -5,7 +5,7 @@ source: packages/raystack/components/message
 tag: new
 ---
 
-import { preview, anatomyDemo, groupDemo, bubbleVariantsDemo } from "./demo.ts";
+import { preview, anatomyDemo, groupDemo, bubbleVariantsDemo, ghostDemo } from "./demo.ts";
 
 <Demo data={preview} />
 
@@ -72,10 +72,20 @@ appear once.
 
 ### Bubble variants
 
-`variant` picks the surface treatment (`solid` or `outline`) and `color` the
-palette (`neutral`, `accent` or `danger`).
+`variant` picks the surface treatment (`solid`, `outline` or `ghost`) and
+`color` the palette (`neutral`, `accent` or `danger`).
 
 <Demo data={bubbleVariantsDemo} />
+
+### Ghost bubbles
+
+`variant="ghost"` removes the surface — no background, border or padding — and
+the bubble runs the full width of the message row instead of shrink-wrapping.
+It renders as plain body copy (Text at `size="small"`), which is the
+conventional treatment for assistant replies: the reader's own messages keep a
+bubble, the assistant's read as page content.
+
+<Demo data={ghostDemo} />
 
 ## Accessibility
 

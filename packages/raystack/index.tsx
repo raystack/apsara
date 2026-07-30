@@ -40,6 +40,7 @@ export {
   type ChatPanelResize,
   type ChatPanelSide,
   type ChatPanelSize,
+  type ChatPanelTransition,
   type ChatPanelTriggerProps
 } from './components/chat-panel';
 export { Checkbox } from './components/checkbox';

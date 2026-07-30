@@ -2,7 +2,15 @@
 
 import { useControlled } from '@base-ui/utils/useControlled';
 import { cx } from 'class-variance-authority';
-import { ComponentProps, FormEvent, useCallback, useMemo, useRef } from 'react';
+import {
+  ComponentProps,
+  FormEvent,
+  MouseEvent,
+  RefObject,
+  useCallback,
+  useMemo,
+  useRef
+} from 'react';
 import styles from './prompt-input.module.css';
 import {
   PromptInputContext,
@@ -44,6 +52,12 @@ export interface PromptInputRootProps
    * @defaultValue false
    */
   disabled?: boolean;
+  /**
+   * The element the frame focuses when its own padding is clicked.
+   * `PromptInput.Textarea` registers itself here on mount; pass a ref of your
+   * own when you render a custom input instead. Whichever is set first wins.
+   */
+  inputRef?: RefObject<HTMLElement | null>;
 }
 
 export function PromptInputRoot({
@@ -54,14 +68,26 @@ export function PromptInputRoot({
   onSubmit,
   onStop,
   onReset,
+  onMouseDown,
   status = 'idle',
   disabled = false,
+  inputRef: inputRefProp,
   children,
   ref,
   ...props
 }: PromptInputRootProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const ownInputRef = useRef<HTMLElement | null>(null);
+  const inputRef = inputRefProp ?? ownInputRef;
+
+  const registerInput = useCallback(
+    (node: HTMLElement | null) => {
+      const current = inputRef.current;
+      if (!node || current?.isConnected) return;
+      inputRef.current = node;
+    },
+    [inputRef]
+  );
 
   const [value, setValueUnwrapped] = useControlled({
     controlled: valueProp,
@@ -107,6 +133,19 @@ export function PromptInputRoot({
     setValue('');
   };
 
+  // The frame reads as one field, so a press on its own layout focuses the
+  // input. The header and footer are out of hit testing (see the stylesheet),
+  // so a press on their padding lands on the form itself while their contents
+  // keep their own. Handled on mousedown so focus never leaves the input and
+  // back again — that round trip would dismiss anything anchored to it.
+  const handleMouseDown = (event: MouseEvent<HTMLFormElement>) => {
+    onMouseDown?.(event);
+    if (event.defaultPrevented || disabled || event.button !== 0) return;
+    if (event.target !== event.currentTarget) return;
+    event.preventDefault();
+    inputRef.current?.focus();
+  };
+
   const contextValue = useMemo<PromptInputContextValue>(
     () => ({
       value,
@@ -114,10 +153,20 @@ export function PromptInputRoot({
       status,
       disabled,
       onStop,
-      textareaRef,
+      inputRef,
+      registerInput,
       requestSubmit
     }),
-    [value, setValue, status, disabled, onStop, requestSubmit]
+    [
+      value,
+      setValue,
+      status,
+      disabled,
+      onStop,
+      inputRef,
+      registerInput,
+      requestSubmit
+    ]
   );
 
   return (
@@ -134,6 +183,7 @@ export function PromptInputRoot({
         data-empty={value.trim() === '' || undefined}
         onSubmit={handleSubmit}
         onReset={handleReset}
+        onMouseDown={handleMouseDown}
         {...props}
       >
         {children}

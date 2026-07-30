@@ -8,6 +8,7 @@
   background: var(--rs-color-background-base-primary);
   border: 0.5px solid var(--rs-color-border-base-tertiary);
   border-radius: var(--rs-radius-4);
+  cursor: text;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -25,6 +26,7 @@
 
 .root[data-disabled] {
   opacity: 0.5;
+  cursor: default;
 }
 
 .header {
@@ -51,10 +53,14 @@
   background: transparent;
 }
 
+/* `field-sizing` is what grows the field with its value; min/max-height are the
+   floor it starts at and the cap it scrolls past. Browsers without it fall back
+   to the one row `rows` asks for, and scroll. */
 .root .textarea {
   border: none;
   background: transparent;
   resize: none;
+  field-sizing: content;
   max-height: var(--prompt-input-textarea-max-height);
   min-height: var(--rs-space-9);
   padding: var(--rs-space-3);
@@ -69,6 +75,21 @@
 
 .footer:empty {
   display: none;
+}
+
+/* The frame reads as one field, so a press on the slots' own padding — or on
+   the gap between their controls — has to focus the input. Taking the slots out
+   of hit testing hands those presses to the form, which is the element that
+   focuses; their contents take hit testing back, so a button or a label the
+   consumer drops in keeps its own press. */
+.header,
+.footer {
+  pointer-events: none;
+}
+
+.header > *,
+.footer > * {
+  pointer-events: auto;
 }
 
 .submit {

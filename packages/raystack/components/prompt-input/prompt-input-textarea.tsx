@@ -2,7 +2,7 @@
 
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { cx } from 'class-variance-authority';
-import { ChangeEvent, KeyboardEvent, useLayoutEffect, useRef } from 'react';
+import { ChangeEvent, KeyboardEvent } from 'react';
 import { TextArea, type TextAreaProps } from '../text-area/text-area';
 import styles from './prompt-input.module.css';
 import { usePromptInputContext } from './prompt-input-context';
@@ -23,20 +23,9 @@ export function PromptInputTextarea({
   ...props
 }: PromptInputTextareaProps) {
   const context = usePromptInputContext('Textarea');
-  const localRef = useRef<HTMLTextAreaElement | null>(null);
-  const mergedRef = useMergedRefs(localRef, context.textareaRef, ref);
+  const mergedRef = useMergedRefs(context.registerInput, ref);
 
   const resolvedDisabled = disabled ?? context.disabled;
-
-  // Auto-grow with content: reset to a single row, then take the scroll
-  // height. The CSS max-height caps growth and hands off to scrolling.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: re-measure whenever the value changes.
-  useLayoutEffect(() => {
-    const el = localRef.current;
-    if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
-  }, [context.value]);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     onChange?.(event);
@@ -47,7 +36,6 @@ export function PromptInputTextarea({
     onKeyDown?.(event);
     if (event.defaultPrevented) return;
     if (event.key !== 'Enter' || event.shiftKey) return;
-    // Let IME composition confirm with Enter instead of sending.
     if (event.nativeEvent.isComposing || event.keyCode === 229) return;
     event.preventDefault();
     context.requestSubmit();

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ChatPanel } from '../chat-panel';
@@ -237,6 +237,149 @@ describe('ChatPanel', () => {
         'data-mode',
         'docked'
       );
+    });
+  });
+
+  describe('Mode transitions', () => {
+    // The morph measures the panel in both modes; jsdom reports zero rects.
+    const MORPH_BOXES: Record<string, DOMRect> = {
+      docked: mockRect(640, 0, 360, 800),
+      floating: mockRect(500, 200, 400, 560),
+      minimized: mockRect(956, 700, 44, 44)
+    };
+
+    const mockModeGeometry = () =>
+      vi
+        .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+        .mockImplementation(function (this: HTMLElement) {
+          const mode = this.dataset.mode;
+          return (mode && MORPH_BOXES[mode]) || mockRect(0, 0, 0, 0);
+        });
+
+    it('animates minimally by default', () => {
+      render(<BasicChatPanel />);
+      expect(screen.getByTestId('panel')).toHaveAttribute(
+        'data-transition',
+        'minimal'
+      );
+    });
+
+    it('does not apply the starting style on first paint', () => {
+      render(<BasicChatPanel />);
+      expect(screen.getByTestId('panel')).not.toHaveAttribute(
+        'data-mode-starting'
+      );
+    });
+
+    it('applies the starting style when the mode changes', () => {
+      render(<BasicChatPanel />);
+
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Pop out chat panel' })
+      );
+
+      const panel = screen.getByTestId('panel');
+      expect(panel).toHaveAttribute('data-mode', 'floating');
+      expect(panel).toHaveAttribute('data-mode-starting');
+      expect(panel).toHaveAttribute('data-mode-from', 'docked');
+    });
+
+    it('applies the starting style for a controlled mode change too', () => {
+      const { rerender } = render(<BasicChatPanel mode='docked' />);
+      expect(screen.getByTestId('panel')).not.toHaveAttribute(
+        'data-mode-starting'
+      );
+
+      rerender(<BasicChatPanel mode='floating' />);
+      expect(screen.getByTestId('panel')).toHaveAttribute('data-mode-starting');
+    });
+
+    it('drops the starting style on the next frame, so the rest tweens', async () => {
+      const { rerender } = render(<BasicChatPanel mode='docked' />);
+      rerender(<BasicChatPanel mode='floating' />);
+
+      await waitFor(() =>
+        expect(screen.getByTestId('panel')).not.toHaveAttribute(
+          'data-mode-starting'
+        )
+      );
+      expect(screen.getByTestId('panel')).toHaveAttribute(
+        'data-mode',
+        'floating'
+      );
+    });
+
+    it('leaves the transform alone with the minimal transition', () => {
+      const rectSpy = mockModeGeometry();
+      try {
+        render(<BasicChatPanel />);
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Pop out chat panel' })
+        );
+        const panel = screen.getByTestId('panel');
+        expect(panel.style.translate).toBe('');
+        expect(panel.style.scale).toBe('');
+      } finally {
+        rectSpy.mockRestore();
+      }
+    });
+
+    it('morphs out of the box the panel just left', () => {
+      const rectSpy = mockModeGeometry();
+      try {
+        render(<BasicChatPanel transition='morph' />);
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Pop out chat panel' })
+        );
+
+        // The floating panel is drawn back over the docked box it left:
+        // offset by (640 - 500, 0 - 200) and scaled by 360/400 by 800/560.
+        const panel = screen.getByTestId('panel');
+        expect(panel).toHaveAttribute('data-transition', 'morph');
+        expect(panel.style.translate).toBe('140px -200px');
+        const [x, y] = panel.style.scale.split(' ').map(Number);
+        expect(x).toBeCloseTo(0.9);
+        expect(y).toBeCloseTo(1.4286);
+      } finally {
+        rectSpy.mockRestore();
+      }
+    });
+
+    it('releases the morph transform on the next frame', async () => {
+      const rectSpy = mockModeGeometry();
+      try {
+        render(<BasicChatPanel transition='morph' />);
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Pop out chat panel' })
+        );
+        const panel = screen.getByTestId('panel');
+        expect(panel.style.scale).not.toBe('');
+
+        await waitFor(() => expect(panel.style.scale).toBe(''));
+        expect(panel.style.translate).toBe('');
+      } finally {
+        rectSpy.mockRestore();
+      }
+    });
+
+    it('travels the minimized bubble without scaling it', () => {
+      const rectSpy = mockModeGeometry();
+      try {
+        render(<BasicChatPanel transition='morph' />);
+        fireEvent.click(
+          screen.getByRole('button', { name: 'Minimize chat panel' })
+        );
+
+        // The bubble starts over the middle of the docked box it replaces —
+        // centre (820, 400) against its own (978, 722) — at its own size, so
+        // its icon is never stretched.
+        const panel = screen.getByTestId('panel');
+        expect(panel).toHaveAttribute('data-mode-from', 'docked');
+        expect(panel.style.translate).toBe('-158px -322px');
+        expect(panel.style.scale).toBe('');
+      } finally {
+        rectSpy.mockRestore();
+      }
     });
   });
 
@@ -653,6 +796,17 @@ describe('ChatPanel', () => {
         </ChatPanel>
       );
       expect(screen.getByTestId('badge')).toBeInTheDocument();
+    });
+
+    it('falls back to the co-pilot icon', () => {
+      render(<BasicChatPanel defaultMode='minimized' />);
+      const icon = screen.getByTestId('bubble').querySelector('svg');
+      expect(icon).not.toBeNull();
+      expect(icon).toHaveAttribute('aria-hidden', 'true');
+      expect(icon?.querySelector('path')).toHaveAttribute(
+        'fill',
+        'currentColor'
+      );
     });
   });
 
