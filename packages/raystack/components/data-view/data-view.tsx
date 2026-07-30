@@ -3,8 +3,8 @@
 import {
   getCoreRowModel,
   getExpandedRowModel,
-  getFilteredRowModel,
   getSortedRowModel,
+  RowSelectionState,
   Updater,
   useReactTable,
   VisibilityState
@@ -36,6 +36,7 @@ import {
   hasActiveQuery as computeHasActiveQuery,
   fieldsToColumnDefs,
   getDefaultTableQuery,
+  getFilteredRowModelWithFlatRows,
   getInitialColumnVisibility,
   groupData,
   hasQueryChanged,
@@ -57,6 +58,7 @@ function DataViewRoot<TData>({
   onLoadMore,
   onRowClick,
   onColumnVisibilityChange,
+  onRowSelectionChange,
   getRowId,
   views,
   defaultView,
@@ -130,6 +132,23 @@ function DataViewRoot<TData>({
     [onColumnVisibilityChange]
   );
 
+  // Row selection is held here rather than left to TanStack's internal state:
+  // the context value is memoized, so a change inside the table instance alone
+  // would never reach `useDataView()` consumers (the table object identity is
+  // stable). Lifting it makes selection a real dependency of the context.
+  const [rowSelection, setRowSelectionState] = useState<RowSelectionState>({});
+
+  const handleRowSelectionChange = useCallback(
+    (value: Updater<RowSelectionState>) => {
+      setRowSelectionState(prev => {
+        const newValue = typeof value === 'function' ? value(prev) : value;
+        onRowSelectionChange?.(newValue);
+        return newValue;
+      });
+    },
+    [onRowSelectionChange]
+  );
+
   const [tableQuery, setTableQuery] =
     useState<InternalQuery>(defaultTableQuery);
 
@@ -189,16 +208,19 @@ function DataViewRoot<TData>({
     getExpandedRowModel: getExpandedRowModel(),
     getSubRows: row => (row as unknown as GroupedData<TData>)?.subRows || [],
     getSortedRowModel: mode === 'server' ? undefined : getSortedRowModel(),
-    getFilteredRowModel: mode === 'server' ? undefined : getFilteredRowModel(),
+    getFilteredRowModel:
+      mode === 'server' ? undefined : getFilteredRowModelWithFlatRows(),
     manualSorting: mode === 'server',
     manualFiltering: mode === 'server',
     onColumnVisibilityChange: handleColumnVisibilityChange,
+    onRowSelectionChange: handleRowSelectionChange,
     globalFilterFn: mode === 'server' ? undefined : 'auto',
     initialState: { columnVisibility: initialColumnVisibility },
     filterFromLeafRows: true,
     state: {
       ...reactTableState,
       columnVisibility,
+      rowSelection,
       expanded:
         group_by && group_by !== defaultGroupOption.id ? true : undefined
     }
@@ -260,6 +282,8 @@ function DataViewRoot<TData>({
       shouldShowFilters,
       columnVisibility,
       setColumnVisibility: handleColumnVisibilityChange,
+      rowSelection,
+      setRowSelection: handleRowSelectionChange,
       views,
       activeView,
       setActiveView,
@@ -287,6 +311,8 @@ function DataViewRoot<TData>({
       shouldShowFilters,
       columnVisibility,
       handleColumnVisibilityChange,
+      rowSelection,
+      handleRowSelectionChange,
       views,
       activeView,
       setActiveView,

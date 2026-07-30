@@ -1,5 +1,9 @@
 import type { ColumnDef, Row, Table } from '@tanstack/react-table';
-import { TableState } from '@tanstack/table-core';
+import {
+  getFilteredRowModel,
+  type RowModel,
+  TableState
+} from '@tanstack/table-core';
 import dayjs from 'dayjs';
 
 import { FilterOperatorTypes, FilterType } from '~/types/filters';
@@ -308,7 +312,46 @@ export function dataViewQueryToInternal(query: DataViewQuery): InternalQuery {
   return { ...rest, filters: internalFilters };
 }
 
-/** Leaf count from the row tree. Not `flatRows`: with `filterFromLeafRows`, TanStack's filtered model leaves `flatRows` empty while `rows` is correct. */
+/**
+ * `getFilteredRowModel` with `flatRows` backfilled.
+ *
+ * DataView filters with `filterFromLeafRows` so a group survives when one of
+ * its children matches. table-core's leaf-first implementation
+ * (`filterRowModelFromLeafs`) allocates the model's `flatRows` array but never
+ * pushes into it, so every API reading it goes dead the moment a filter or
+ * search is active — `table.getIsAllRowsSelected()`,
+ * `getIsSomeRowsSelected()`, and `toggleAllRowsSelected()` (via
+ * `getPreGroupedRowModel`) among them.
+ *
+ * The tree in `rows` is correct, so walk it and fill the array **in place**:
+ * the model object identity is preserved, so downstream memos (sorting,
+ * selection) don't invalidate, and the walk runs once per filter recompute
+ * rather than once per read.
+ */
+export function getFilteredRowModelWithFlatRows<TData>(): (
+  table: Table<TData>
+) => () => RowModel<TData> {
+  const base = getFilteredRowModel<TData>();
+  return table => {
+    const getModel = base(table);
+    return () => {
+      const model = getModel();
+      // Already populated: the unfiltered pass-through and any model we've
+      // filled once before.
+      if (model.flatRows.length > 0) return model;
+      const collect = (rows: Row<TData>[]) => {
+        rows.forEach(row => {
+          model.flatRows.push(row);
+          if (row.subRows?.length) collect(row.subRows);
+        });
+      };
+      collect(model.rows);
+      return model;
+    };
+  };
+}
+
+/** Leaf count from the row tree. Kept recursive so it stays correct for the grouped tree, where `flatRows` also counts group rows. */
 export function countLeafRows<T>(rows: Row<T>[]): number {
   return rows.reduce(
     (n, row) => n + (row.subRows?.length ? countLeafRows(row.subRows) : 1),
