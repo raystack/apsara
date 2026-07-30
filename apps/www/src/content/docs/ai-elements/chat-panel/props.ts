@@ -87,6 +87,14 @@ export interface ChatPanelProps {
    */
   dragBoundary?: HTMLElement | React.RefObject<HTMLElement | null>;
 
+  /**
+   * How a mode change animates. `"minimal"` eases the new mode in from its own
+   * edge or corner; `"morph"` measures the box the panel is leaving and tweens
+   * the new mode out of it, so the panel moves and reshapes into place.
+   * @defaultValue "minimal"
+   */
+  transition?: 'minimal' | 'morph';
+
   /** Custom CSS class names. */
   className?: string;
 }

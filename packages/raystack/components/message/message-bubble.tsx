@@ -2,7 +2,7 @@
 
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ComponentProps } from 'react';
-import { textVariants } from '../text/text';
+import { Text } from '../text/text';
 import styles from './message.module.css';
 
 const bubble = cva(styles.bubble, {
@@ -24,8 +24,6 @@ const bubble = cva(styles.bubble, {
   }
 });
 
-// A ghost bubble has no surface, so it is plain body copy: it borrows Text's
-// small-size typography and colour instead of the surface token pairs below.
 const GHOST_TEXT_VARIANT = {
   neutral: 'primary',
   accent: 'accent',
@@ -33,7 +31,7 @@ const GHOST_TEXT_VARIANT = {
 } as const;
 
 export interface MessageBubbleProps
-  extends ComponentProps<'div'>,
+  extends ComponentProps<'p'>,
     VariantProps<typeof bubble> {
   /**
    * Visual style of the message surface. `"ghost"` drops the surface
@@ -53,27 +51,30 @@ export function MessageBubble({
   className,
   variant = 'solid',
   color = 'neutral',
+  ref,
   ...props
 }: MessageBubbleProps) {
-  const bubbleClassName = bubble({ variant, color, className });
+  const bubbleProps = {
+    'data-variant': variant,
+    'data-color': color,
+    className: bubble({ variant, color, className }),
+    ...props
+  };
 
-  return (
-    <div
-      data-variant={variant}
-      data-color={color}
-      className={
-        variant === 'ghost'
-          ? textVariants({
-              size: 'small',
-              variant: GHOST_TEXT_VARIANT[color],
-              // Trails Text's own classes so the ghost resets still win.
-              className: bubbleClassName
-            })
-          : bubbleClassName
-      }
-      {...props}
-    />
-  );
+  // A ghost bubble has no surface, so it is plain body copy and takes its
+  // typography from Text. The others carry their own on the surface classes.
+  if (variant === 'ghost') {
+    return (
+      <Text
+        render={<p ref={ref} />}
+        size='small'
+        variant={GHOST_TEXT_VARIANT[color]}
+        {...bubbleProps}
+      />
+    );
+  }
+
+  return <p ref={ref} {...bubbleProps} />;
 }
 
 MessageBubble.displayName = 'Message.Bubble';

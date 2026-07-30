@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useRef } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { PromptInput } from '../prompt-input';
 
@@ -220,8 +221,12 @@ describe('PromptInput', () => {
     });
   });
 
+  // The header and footer carry `pointer-events: none`, so in a browser a press
+  // on their padding is hit-tested to the form and arrives here with the form as
+  // its target. jsdom applies no stylesheet and does no hit testing, so these
+  // press the form directly — the slots' own presses cannot be simulated.
   describe('Click to focus', () => {
-    it('focuses the textarea when the frame is clicked', () => {
+    it('focuses the textarea when the frame is pressed', () => {
       const { container } = render(<BasicPromptInput />);
       const form = container.querySelector('form') as HTMLFormElement;
 
@@ -230,12 +235,13 @@ describe('PromptInput', () => {
       expect(screen.getByPlaceholderText('Reply…')).toHaveFocus();
     });
 
-    it('focuses the textarea from a layout slot', () => {
+    it('leaves a press that came from a layout slot alone', () => {
       render(<BasicPromptInput />);
 
-      fireEvent.mouseDown(screen.getByTestId('footer'));
+      const notCancelled = fireEvent.mouseDown(screen.getByTestId('footer'));
 
-      expect(screen.getByPlaceholderText('Reply…')).toHaveFocus();
+      expect(notCancelled).toBe(true);
+      expect(screen.getByPlaceholderText('Reply…')).not.toHaveFocus();
     });
 
     it('prevents the default focus shift so the caret is not dropped', () => {
@@ -245,6 +251,40 @@ describe('PromptInput', () => {
       const notCancelled = fireEvent.mouseDown(form);
 
       expect(notCancelled).toBe(false);
+    });
+
+    it('focuses a custom input through the inputRef prop', () => {
+      const CustomInput = () => {
+        const inputRef = useRef<HTMLInputElement>(null);
+        return (
+          <PromptInput inputRef={inputRef}>
+            <input ref={inputRef} placeholder='Custom' />
+          </PromptInput>
+        );
+      };
+      const { container } = render(<CustomInput />);
+
+      fireEvent.mouseDown(container.querySelector('form') as HTMLFormElement);
+
+      expect(screen.getByPlaceholderText('Custom')).toHaveFocus();
+    });
+
+    it('keeps a consumer inputRef that is already set', () => {
+      const CustomInput = () => {
+        const inputRef = useRef<HTMLInputElement>(null);
+        return (
+          <PromptInput inputRef={inputRef}>
+            <input ref={inputRef} placeholder='Custom' />
+            <PromptInput.Textarea placeholder='Reply…' />
+          </PromptInput>
+        );
+      };
+      const { container } = render(<CustomInput />);
+
+      fireEvent.mouseDown(container.querySelector('form') as HTMLFormElement);
+
+      expect(screen.getByPlaceholderText('Custom')).toHaveFocus();
+      expect(screen.getByPlaceholderText('Reply…')).not.toHaveFocus();
     });
 
     it('leaves controls inside the frame alone', () => {

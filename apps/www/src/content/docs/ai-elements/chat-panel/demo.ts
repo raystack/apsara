@@ -151,6 +151,57 @@ export const controlledDemo = {
 }`
 };
 
+export const transitionDemo = {
+  type: 'code',
+  code: `function ChatPanelTransitions() {
+  const [transition, setTransition] = React.useState('morph');
+  const [mode, setMode] = React.useState('docked');
+
+  return (
+    <Flex direction="column" gap={4} style={{ width: '100%' }}>
+      <Flex gap={7} wrap="wrap">
+        <Flex gap={2}>
+          {['minimal', 'morph'].map(type => (
+            <Button key={type} size="small" color="neutral" variant={transition === type ? 'solid' : 'outline'} onClick={() => setTransition(type)}>{type}</Button>
+          ))}
+        </Flex>
+        <Flex gap={2}>
+          {['docked', 'floating', 'minimized'].map(next => (
+            <Button key={next} size="small" color="neutral" variant="ghost" onClick={() => setMode(next)}>{next}</Button>
+          ))}
+        </Flex>
+      </Flex>
+      <Flex style={{ width: '100%', height: 360, border: '0.5px solid var(--rs-color-border-base-primary)', borderRadius: 'var(--rs-radius-4)', overflow: 'hidden' }}>
+        <Flex style={{ flex: 1, padding: 'var(--rs-space-5)' }}>
+          <Text size="small" variant="secondary">
+            Switch modes with either transition to compare them. Morph tweens
+            the panel out of the box it just left; minimal eases it in from its
+            own edge.
+          </Text>
+        </Flex>
+        <ChatPanel transition={transition} mode={mode} onModeChange={setMode} side="right" defaultSize={{ width: 360, height: 440 }}>
+          <ChatPanel.Header>
+            <ChatPanel.Title>Assistant</ChatPanel.Title>
+            <ChatPanel.Actions>
+              <ChatPanel.MinimizeTrigger />
+              <ChatPanel.ExpandTrigger />
+            </ChatPanel.Actions>
+          </ChatPanel.Header>
+          <ChatPanel.Content>
+            <Flex style={{ padding: 'var(--rs-space-5)' }}>
+              <Text size="small" variant="secondary">
+                transition: {transition}
+              </Text>
+            </Flex>
+          </ChatPanel.Content>
+          <ChatPanel.Trigger />
+        </ChatPanel>
+      </Flex>
+    </Flex>
+  );
+}`
+};
+
 export const boundedDragDemo = {
   type: 'code',
   code: `function BoundedDragChatPanel() {

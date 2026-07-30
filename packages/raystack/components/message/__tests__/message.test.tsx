@@ -76,6 +76,35 @@ describe('Message', () => {
     });
 
     it.each([
+      'solid',
+      'outline',
+      'ghost'
+    ] as const)('renders the %s variant as a paragraph', variant => {
+      render(
+        <Message.Bubble data-testid='bubble' variant={variant}>
+          text
+        </Message.Bubble>
+      );
+      expect(screen.getByTestId('bubble').tagName).toBe('P');
+    });
+
+    it('forwards ref to the paragraph', () => {
+      const ref = createRef<HTMLParagraphElement>();
+      render(<Message.Bubble ref={ref}>text</Message.Bubble>);
+      expect(ref.current).toBeInstanceOf(HTMLParagraphElement);
+    });
+
+    it('forwards ref to the ghost paragraph', () => {
+      const ref = createRef<HTMLParagraphElement>();
+      render(
+        <Message.Bubble ref={ref} variant='ghost'>
+          text
+        </Message.Bubble>
+      );
+      expect(ref.current).toBeInstanceOf(HTMLParagraphElement);
+    });
+
+    it.each([
       ['solid', 'accent'],
       ['solid', 'neutral'],
       ['solid', 'danger'],
@@ -98,7 +127,7 @@ describe('Message', () => {
       expect(bubble).toHaveClass(styles[`bubble-${color}`]);
     });
 
-    it('renders the ghost variant as small Text', () => {
+    it('renders the ghost variant with Text', () => {
       render(
         <Message.Bubble data-testid='bubble' variant='ghost'>
           text

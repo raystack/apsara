@@ -40,10 +40,12 @@ anything else.
 ### Root
 
 The `<form>` that holds the value and submit semantics. The whole frame reads
-as one field: clicking its dead space — the padding, or the gaps around the
-header and footer slots — focuses the textarea. Controls inside the frame keep
-their own behaviour, and a consumer `onMouseDown` that calls `preventDefault()`
-opts out.
+as one field: pressing its dead space — the header and footer padding, or the
+gap between their controls — focuses the input, while anything you put in those
+slots keeps its own press. (The slots sit outside hit testing, so those presses
+land on the form, which does the focusing.) `PromptInput.Textarea` registers
+itself as that input on mount; pass `inputRef` when you render a custom input
+instead. A consumer `onMouseDown` that calls `preventDefault()` opts out.
 
 <auto-type-table path="./props.ts" name="PromptInputProps" />
 
@@ -125,5 +127,5 @@ menus, mention pickers.
   child has visible focus (`:has(:focus-visible)`) — while the borderless
   textarea suppresses its own duplicate focus ring.
 - Click-to-focus runs on `mousedown` and cancels the default focus shift, so
-  focus never leaves the textarea and back again — a round trip that would
-  dismiss anything anchored to it. Keyboard focus order is untouched.
+  focus never leaves the input and back again — a round trip that would dismiss
+  anything anchored to it. Keyboard focus order is untouched.

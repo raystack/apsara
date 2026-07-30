@@ -31,9 +31,6 @@
   justify-items: end;
 }
 
-/* A ghost bubble is full-bleed, so the content column stops shrink-wrapping
-   at 85% and the flexible spacer goes away: the message runs the whole row
-   and the hover actions sit at its far edge. */
 .message:has(.bubble-ghost) {
   grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-areas:
@@ -182,9 +179,6 @@
   color: var(--rs-color-foreground-danger-primary);
 }
 
-/* Ghost drops the surface: no fill, no border, no padding, and the bubble
-   fills the (widened) content column instead of shrink-wrapping. Typography
-   and colour come from Text — see GHOST_TEXT_VARIANT in message-bubble.tsx. */
 .bubble-ghost {
   width: 100%;
   padding: 0;

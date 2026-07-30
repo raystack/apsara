@@ -74,64 +74,89 @@
 
 /* ------------------------------ mode changes ------------------------------ */
 
+/* A morph draws the panel outside its own box on the way in, so the docked
+   panel — in flow, and otherwise painted under its siblings — is raised for the
+   trip. */
+.root[data-transition="morph"][data-mode="docked"] {
+  position: relative;
+  z-index: 1;
+}
+
 /* A mode change flips `position` (in-flow <-> fixed), which no property can
-   tween, so each mode plays a short transform/opacity entrance instead. The
-   data-mode-changed gate keeps first paint static; the drag/resize guards
-   keep the animation from fighting the live dnd-kit transform. */
+   tween, so the panel is committed in the new mode holding the shape it is
+   coming out of, then eased back to rest from there. `[data-mode-starting]`
+   marks the single frame that holds those from-values.
+
+   Only the individual transform properties are listed, never `transform`
+   itself: dragging writes an inline `transform`, which stays instant and so
+   cannot be replayed when a drag ends. */
 @media (prefers-reduced-motion: no-preference) {
-  .root[data-mode-changed][data-mode="docked"][data-side="right"] {
-    animation: chat-panel-dock-in-right var(--rs-duration-normal)
-      var(--rs-ease-out);
+  .root {
+    transition:
+      scale var(--rs-duration-normal) var(--rs-ease-out),
+      translate var(--rs-duration-normal) var(--rs-ease-out),
+      opacity var(--rs-duration-normal) var(--rs-ease-out);
   }
 
-  .root[data-mode-changed][data-mode="docked"][data-side="left"] {
-    animation: chat-panel-dock-in-left var(--rs-duration-normal)
-      var(--rs-ease-out);
+  /* The from-values are jumped to, not tweened into — the tween is the frame
+     after this rule stops applying. */
+  .root[data-mode-starting] {
+    transition: none;
   }
 
-  .root[data-mode-changed][data-mode="floating"]:not([data-dragging]):not(
-      [data-resizing]
-    ) {
-    animation: chat-panel-float-in var(--rs-duration-normal) var(--rs-ease-out);
-  }
-}
+  /* --------------------------------------------------------------- minimal */
 
-/* The docked panel is in flow, so it settles onto its edge rather than
-   animating width — the siblings reflow once instead of on every frame. The
-   slide runs *inward* (a short offset towards the content, not a full-width
-   drawer slide from off-edge): a transform still grows the scroll area of the
-   nearest scroll container, so sliding outward would flash a horizontal
-   scrollbar in any layout that doesn't clip its overflow. */
-@keyframes chat-panel-dock-in-right {
-  from {
+  .root[data-transition="minimal"][data-mode-starting] {
     opacity: 0;
-    transform: translateX(calc(-1 * var(--rs-space-5)));
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
-@keyframes chat-panel-dock-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(var(--rs-space-5));
+  /* A sidebar arrives from the edge it docks to: sliding reads as the panel
+     making room for itself, where a scale pop reads as a bounce. */
+  .root[data-transition="minimal"][data-mode-starting][data-mode="docked"] {
+    translate: var(--rs-space-5) 0;
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
 
-@keyframes chat-panel-float-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96) translateY(var(--rs-space-3));
+  .root[data-transition="minimal"][data-mode-starting][data-mode="docked"][data-side="left"] {
+    translate: calc(-1 * var(--rs-space-5)) 0;
   }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+
+  /* The floating window and the bubble own a corner, so they grow out of it. */
+  .root[data-transition="minimal"][data-side="right"] {
+    transform-origin: bottom right;
+  }
+
+  .root[data-transition="minimal"][data-side="left"] {
+    transform-origin: bottom left;
+  }
+
+  .root[data-transition="minimal"][data-mode-starting][data-mode="floating"] {
+    scale: 0.94;
+    translate: 0 var(--rs-space-3);
+  }
+
+  .root[data-transition="minimal"][data-mode-starting][data-mode="minimized"] {
+    scale: 0.8;
+  }
+
+  /* ----------------------------------------------------------------- morph */
+
+  /* The from-values are the measured inverse of the box the panel just left,
+     written inline off its top-left corner, so the origin has to stay there for
+     the scale to land back on that box. Real distance to cover, so the longer
+     duration — but still the shared ease-out, which is off the mark on the first
+     frame where a symmetric curve would sit there and read as lag. */
+  .root[data-transition="morph"] {
+    transform-origin: top left;
+    transition-duration: var(--rs-duration-moderate);
+  }
+
+  /* Docked and floating are close enough in shape to morph outright. The bubble
+     is a tenth of their size, so its two pairs cross-fade as well — covering
+     the content stretched on the way out of it, and a whole panel swapped for
+     one small control on the way in. */
+  .root[data-transition="morph"][data-mode-starting][data-mode="minimized"],
+  .root[data-transition="morph"][data-mode-starting][data-mode-from="minimized"] {
+    opacity: 0;
   }
 }
 
@@ -207,26 +232,11 @@
    eased tween is motion, so only the transitions are gated. Mirrors button. */
 @media (prefers-reduced-motion: no-preference) {
   .trigger {
-    /* Same tempo as the docked/floating entrances above, so the three modes
-       read as one transition rather than three unrelated ones. */
-    animation: chat-panel-trigger-in var(--rs-duration-normal)
-      var(--rs-ease-out);
     transition: var(--rs-transition-interactive);
   }
 
   .trigger:active {
     transition: var(--rs-transition-pressed);
-  }
-}
-
-@keyframes chat-panel-trigger-in {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 
@@ -246,10 +256,8 @@
   touch-action: none;
 }
 
-/* The eased transform tween would lag the pointer mid-drag; the entrance
-   animation would override the live transform outright. */
+/* The eased transform tween would lag the pointer mid-drag. */
 .trigger[data-dragging] {
-  animation: none;
   transition: none;
   cursor: grabbing;
   user-select: none;

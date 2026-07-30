@@ -6,6 +6,7 @@ import {
   ComponentProps,
   FormEvent,
   MouseEvent,
+  RefObject,
   useCallback,
   useMemo,
   useRef
@@ -51,14 +52,13 @@ export interface PromptInputRootProps
    * @defaultValue false
    */
   disabled?: boolean;
+  /**
+   * The element the frame focuses when its own padding is clicked.
+   * `PromptInput.Textarea` registers itself here on mount; pass a ref of your
+   * own when you render a custom input instead. Whichever is set first wins.
+   */
+  inputRef?: RefObject<HTMLElement | null>;
 }
-
-/**
- * Targets that own the click: their own focus (or activation) must not be
- * hijacked by the frame's click-to-focus.
- */
-const INTERACTIVE_TARGET =
-  'button, a[href], input, textarea, select, label, [contenteditable="true"], [tabindex]:not([tabindex="-1"])';
 
 export function PromptInputRoot({
   className,
@@ -71,12 +71,23 @@ export function PromptInputRoot({
   onMouseDown,
   status = 'idle',
   disabled = false,
+  inputRef: inputRefProp,
   children,
   ref,
   ...props
 }: PromptInputRootProps) {
   const formRef = useRef<HTMLFormElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const ownInputRef = useRef<HTMLElement | null>(null);
+  const inputRef = inputRefProp ?? ownInputRef;
+
+  const registerInput = useCallback(
+    (node: HTMLElement | null) => {
+      const current = inputRef.current;
+      if (!node || current?.isConnected) return;
+      inputRef.current = node;
+    },
+    [inputRef]
+  );
 
   const [value, setValueUnwrapped] = useControlled({
     controlled: valueProp,
@@ -122,24 +133,17 @@ export function PromptInputRoot({
     setValue('');
   };
 
-  // The whole frame reads as one field, so its dead space (padding, the
-  // header/footer gaps) focuses the textarea. Handled on mousedown rather
-  // than click so focus never leaves the textarea in the first place —
-  // a blur/refocus round trip would close anything anchored to it.
+  // The frame reads as one field, so a press on its own layout focuses the
+  // input. The header and footer are out of hit testing (see the stylesheet),
+  // so a press on their padding lands on the form itself while their contents
+  // keep their own. Handled on mousedown so focus never leaves the input and
+  // back again — that round trip would dismiss anything anchored to it.
   const handleMouseDown = (event: MouseEvent<HTMLFormElement>) => {
     onMouseDown?.(event);
-    if (event.defaultPrevented || disabled) return;
-    // Secondary buttons open the context menu / paste; leave them be.
-    if (event.button !== 0) return;
-    const target = event.target as HTMLElement;
-    // Controls (and the textarea itself) keep their native behaviour.
-    if (target.closest(INTERACTIVE_TARGET)) return;
-    const textarea = textareaRef.current;
-    if (!textarea || textarea.disabled) return;
-    // Suppresses the default focus shift to the frame, which would blur the
-    // textarea and drop the caret.
+    if (event.defaultPrevented || disabled || event.button !== 0) return;
+    if (event.target !== event.currentTarget) return;
     event.preventDefault();
-    textarea.focus();
+    inputRef.current?.focus();
   };
 
   const contextValue = useMemo<PromptInputContextValue>(
@@ -149,10 +153,20 @@ export function PromptInputRoot({
       status,
       disabled,
       onStop,
-      textareaRef,
+      inputRef,
+      registerInput,
       requestSubmit
     }),
-    [value, setValue, status, disabled, onStop, requestSubmit]
+    [
+      value,
+      setValue,
+      status,
+      disabled,
+      onStop,
+      inputRef,
+      registerInput,
+      requestSubmit
+    ]
   );
 
   return (
