@@ -1,18 +1,22 @@
 'use client';
 
-import { ListBulletIcon, RowsIcon } from '@radix-ui/react-icons';
+import { ListBulletIcon, RowsIcon, TransformIcon } from '@radix-ui/react-icons';
 import {
   Avatar,
   Badge,
   Button,
+  Checkbox,
+  Chip,
   // biome-ignore lint/suspicious/noShadowRestrictedNames: legitimate export name
   DataView,
   DataViewField,
   DataViewListColumn,
   Flex,
+  FloatingActions,
   Text,
   type TimelineActions,
-  type TimelineCardContext
+  type TimelineCardContext,
+  useDataView
 } from '@raystack/apsara';
 import { useMemo, useRef, useState } from 'react';
 
@@ -603,6 +607,114 @@ export function DataViewPerViewFieldsDemo() {
           />
         </DataView>
       </div>
+    </Flex>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Row selection demo — unmanaged checkbox column + a FloatingActions bar.
+// ---------------------------------------------------------------------------
+
+/* `select` is absent from `fields`, so DataView.List treats it as an unmanaged
+   display column: always rendered, never in Display Properties, and the cell
+   receives `{ row, table }` instead of a TanStack cell context. */
+const selectionColumn: DataViewListColumn<Person> = {
+  accessorKey: 'select',
+  /* Wide enough for the leading cell's 24px inset + the checkbox: `.listCell`
+     clips overflow, so a narrower track would cut the box off. */
+  width: 48,
+  /* Select-all tracks the filtered rows, so it reflects what's on screen. */
+  header: ({ table }) => (
+    <Checkbox
+      size='small'
+      checked={table.getIsAllRowsSelected()}
+      indeterminate={table.getIsSomeRowsSelected()}
+      onCheckedChange={checked => table.toggleAllRowsSelected(Boolean(checked))}
+      aria-label='Select all people'
+    />
+  ),
+  cell: ({ row }) => (
+    <Checkbox
+      size='small'
+      checked={row.getIsSelected()}
+      onCheckedChange={checked => row.toggleSelected(Boolean(checked))}
+      // Keep a row-level onRowClick from firing when the checkbox is hit.
+      onClick={event => event.stopPropagation()}
+      aria-label={`Select ${row.original.name}`}
+    />
+  )
+};
+
+const selectionColumns: DataViewListColumn<Person>[] = [
+  selectionColumn,
+  ...tableColumns
+];
+
+/* Selection lives on the table instance, so any sibling can read it from
+   context — no state threading through the DataView tree. */
+function SelectionBar() {
+  const { table } = useDataView<Person>();
+  const selectedCount = table.getSelectedRowModel().rows.length;
+  if (selectedCount === 0) return null;
+
+  return (
+    <FloatingActions aria-label='Selection actions'>
+      <Chip
+        variant='outline'
+        size='large'
+        color='neutral'
+        leadingIcon={<TransformIcon />}
+        isDismissible
+        onDismiss={() => table.resetRowSelection()}
+      >
+        {selectedCount} selected
+      </Chip>
+      <FloatingActions.Separator />
+      <Button variant='outline' color='neutral' size='small'>
+        Change team
+      </Button>
+      <Button variant='outline' color='neutral' size='small'>
+        Archive
+      </Button>
+    </FloatingActions>
+  );
+}
+
+export function DataViewSelectionDemo() {
+  return (
+    <Flex direction='column' gap={4} style={{ width: '100%' }}>
+      {/* `transform` makes this box the containing block for the bar's
+          `position: fixed`, scoping it to the demo instead of the viewport. */}
+      <div
+        style={{
+          height: 400,
+          position: 'relative',
+          overflow: 'hidden',
+          transform: 'translateZ(0)'
+        }}
+      >
+        <DataView
+          data={people}
+          fields={fields}
+          defaultSort={defaultSort}
+          getRowId={person => person.id}
+        >
+          <DataView.Toolbar>
+            <DataView.Search placeholder='Search people…' />
+            <DataView.Filters />
+            {/* Grouping is hidden: group header rows share the row-id space
+                with data rows, so selection and grouping don't mix yet. */}
+            <DataView.DisplayControls hideGrouping />
+          </DataView.Toolbar>
+          <DataView.List
+            variant='table'
+            columns={selectionColumns}
+            classNames={{ root: 'dv-selection-demo-scroll' }}
+          />
+          <SelectionBar />
+        </DataView>
+      </div>
+      <style>{`.dv-selection-demo-scroll { padding-bottom: 64px; }`}</style>
     </Flex>
   );
 }
