@@ -28,7 +28,7 @@ const BasicSidebar = ({
   defaultOpen = true,
   open,
   onOpenChange,
-  collapsible = true,
+  collapsible = 'icon',
   position = 'left',
   children,
   ...props
@@ -119,7 +119,7 @@ describe('Sidebar', () => {
     });
 
     it('does not show handle when not collapsible', () => {
-      render(<BasicSidebar collapsible={false} />);
+      render(<BasicSidebar collapsible='none' />);
 
       const handle = screen.queryByRole('button', { name: COLLAPSE_TEXT });
       expect(handle).not.toBeInTheDocument();
@@ -127,7 +127,7 @@ describe('Sidebar', () => {
 
     it('toggles state when handle is clicked', () => {
       const onOpenChange = vi.fn();
-      render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
+      render(<BasicSidebar open onOpenChange={onOpenChange} />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
       fireEvent.click(handle);
@@ -138,7 +138,7 @@ describe('Sidebar', () => {
     it('supports keyboard navigation on handle', async () => {
       const user = userEvent.setup();
       const onOpenChange = vi.fn();
-      render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
+      render(<BasicSidebar open onOpenChange={onOpenChange} />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
       handle.focus();
@@ -150,7 +150,7 @@ describe('Sidebar', () => {
     it('supports space key on handle', async () => {
       const user = userEvent.setup();
       const onOpenChange = vi.fn();
-      render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
+      render(<BasicSidebar open onOpenChange={onOpenChange} />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
       handle.focus();
@@ -169,20 +169,9 @@ describe('Sidebar', () => {
         expect(screen.getByText('Toggle navigation')).toBeInTheDocument();
       });
     });
-
-    it('still honors the deprecated tooltipMessage prop', async () => {
-      const user = userEvent.setup();
-      render(<BasicSidebar open tooltipMessage='Legacy tooltip' />);
-
-      await user.hover(screen.getByRole('button', { name: COLLAPSE_TEXT }));
-
-      await waitFor(() => {
-        expect(screen.getByText('Legacy tooltip')).toBeInTheDocument();
-      });
-    });
   });
 
-  describe('collapseMode', () => {
+  describe('collapsed appearance (collapsible)', () => {
     it('defaults to icon rail collapse (unchanged behavior)', () => {
       render(<BasicSidebar open={false} />);
 
@@ -192,7 +181,7 @@ describe('Sidebar', () => {
     });
 
     it('hides header/main/footer content when collapsed and hidden', () => {
-      render(<BasicSidebar open={false} collapseMode='hidden' />);
+      render(<BasicSidebar open={false} collapsible='hidden' />);
 
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveAttribute('data-collapse-mode', 'hidden');
@@ -200,7 +189,7 @@ describe('Sidebar', () => {
     });
 
     it('expands in place like icon mode when opened', () => {
-      const { container } = render(<BasicSidebar open collapseMode='hidden' />);
+      const { container } = render(<BasicSidebar open collapsible='hidden' />);
 
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveAttribute('data-open');
@@ -214,7 +203,7 @@ describe('Sidebar', () => {
     it('does not close on Escape while open', () => {
       const onOpenChange = vi.fn();
       render(
-        <BasicSidebar open collapseMode='hidden' onOpenChange={onOpenChange} />
+        <BasicSidebar open collapsible='hidden' onOpenChange={onOpenChange} />
       );
 
       fireEvent.keyDown(document, { key: 'Escape' });
@@ -382,7 +371,7 @@ describe('Sidebar', () => {
 
     it('shows the hidden-mode content while peeking', async () => {
       render(
-        <Sidebar open={false} peekOnHover collapseMode='hidden'>
+        <Sidebar open={false} peekOnHover collapsible='hidden'>
           <PeekStatus />
         </Sidebar>
       );
@@ -657,9 +646,9 @@ describe('Sidebar', () => {
       expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(1);
     });
 
-    it('suppresses the clipped-label tooltip via hideCollapsedItemTooltip', async () => {
+    it('suppresses the clipped-label tooltip via hideItemTooltips', async () => {
       const user = userEvent.setup();
-      render(<BasicSidebar hideCollapsedItemTooltip />);
+      render(<BasicSidebar hideItemTooltips />);
 
       const text = screen.getByText(HELP_ITEM_TEXT);
       Object.defineProperty(text, 'scrollWidth', {
@@ -1093,7 +1082,7 @@ describe('Sidebar', () => {
 
     it('is disabled when the sidebar is not collapsible', () => {
       render(
-        <Sidebar defaultOpen collapsible={false}>
+        <Sidebar defaultOpen collapsible='none'>
           <Sidebar.Header>
             <Sidebar.Trigger data-testid='sidebar-trigger' />
           </Sidebar.Header>
@@ -1148,7 +1137,7 @@ describe('Sidebar', () => {
       const status = screen.getByTestId('collapse-status');
       expect(status).toHaveTextContent('expanded:open');
       expect(status).toHaveAttribute('data-position', 'left');
-      expect(status).toHaveAttribute('data-collapsible', 'true');
+      expect(status).toHaveAttribute('data-collapsible', 'icon');
 
       fireEvent.click(screen.getByTestId('sidebar-trigger'));
       expect(status).toHaveTextContent('collapsed:closed');

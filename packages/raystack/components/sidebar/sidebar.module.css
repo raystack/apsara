@@ -56,11 +56,6 @@
   --sidebar-collapsed-width: var(--rs-space-2);
 }
 
-/* No strip at all when collapse is disabled — there's nothing to reopen from. */
-.root[data-closed][data-collapse-mode="hidden"][data-collapse-disabled] {
-  width: 0;
-}
-
 .root[data-closed][data-collapse-mode="hidden"] .header,
 .root[data-closed][data-collapse-mode="hidden"] .main,
 .root[data-closed][data-collapse-mode="hidden"] .footer {
@@ -264,9 +259,6 @@
   transform: translateX(50%);
 }
 
-.root[data-collapse-disabled] .resize-handle {
-  display: none;
-}
 
 .resize-handle:hover {
   background-color: var(--rs-color-border-base-primary);

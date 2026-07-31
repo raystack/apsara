@@ -12,7 +12,7 @@ import {
   controlledGroupDemo,
   groupIconDemo,
   stateDemo,
-  collapseModeDemo,
+  collapsedAppearanceDemo,
   peekOnHoverDemo,
   tooltipDemo,
   collapsibleDemo,
@@ -50,7 +50,7 @@ import { Sidebar } from "@raystack/apsara";
 
 ### Root
 
-Groups all parts of the sidebar navigation. Use `collapsible={false}` to hide the resize handle and prevent toggling. Use `hideCollapsedItemTooltip` to disable the tooltips the Sidebar adds to items (collapsed labels, and clipped labels when expanded). Use `collapseMode` to choose what the collapsed state looks like, and `peekOnHover` to preview a collapsed sidebar on hover.
+Groups all parts of the sidebar navigation. Use `collapsible` to choose what the collapsed state looks like (`"icon"` or `"hidden"`), or `"none"` to hide the resize handle and prevent toggling. Use `hideItemTooltips` to disable the tooltips the Sidebar adds to items (collapsed labels, and clipped labels when expanded). Use `peekOnHover` to preview a collapsed sidebar on hover.
 
 <auto-type-table path="./props.ts" name="SidebarRootProps" />
 
@@ -80,7 +80,7 @@ The footer section is a container that accepts all `div` props. It's commonly us
 
 A button that toggles the sidebar open/closed. It works whether the Sidebar is controlled or uncontrolled, so you can drop it into a header without wiring up any state yourself. It accepts all `IconButton` props (e.g. `size`) plus the ones below.
 
-*Note: disabled automatically when the Sidebar has `collapsible={false}`. If you use `collapseMode="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer` — those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or drive `open`/`onOpenChange` yourself with a toggle button that lives outside `<Sidebar>` entirely (e.g. in your app's top bar).*
+*Note: disabled automatically when the Sidebar has `collapsible="none"`. If you use `collapsible="hidden"`, don't place `Sidebar.Trigger` inside `Sidebar.Header`/`Main`/`Footer` — those sections are hidden along with the rest of the collapsed content, taking the trigger with them. Render it as a direct child of `<Sidebar>` instead, or drive `open`/`onOpenChange` yourself with a toggle button that lives outside `<Sidebar>` entirely (e.g. in your app's top bar).*
 
 <auto-type-table path="./props.ts" name="SidebarTriggerProps" />
 
@@ -88,7 +88,7 @@ A button that toggles the sidebar open/closed. It works whether the Sidebar is c
 
 Renders a sidebar row that opens an Apsara menu with additional `Sidebar.Item` entries. It can be used inside `Sidebar.Group` or directly under `Sidebar.Main` / `Sidebar.Footer`.
 
-*Note: if `leadingIcon` is not provided, the trigger uses a default dots icon. In collapsed state, it follows the same item tooltip behavior and respects `hideCollapsedItemTooltip`.*
+*Note: if `leadingIcon` is not provided, the trigger uses a default dots icon. In collapsed state, it follows the same item tooltip behavior and respects `hideItemTooltips`.*
 
 <auto-type-table path="./props.ts" name="SidebarMoreProps" />
 
@@ -102,9 +102,9 @@ It returns:
 - `isPeeking` — `true` while a collapsed sidebar is being temporarily revealed via `peekOnHover`
 - `open` — `true` when the sidebar is expanded
 - `setOpen(open)` — expand or collapse the sidebar
-- `collapsible` — whether the sidebar can be collapsed
+- `collapsible` — mirrors the `collapsible` prop: `"icon"`, `"hidden"`, or `"none"` (`"none"` means it cannot be collapsed)
 - `position` — `"left"` or `"right"`
-- `hideCollapsedItemTooltip` — whether item tooltips are disabled in the collapsed state
+- `hideItemTooltips` — whether the tooltips the Sidebar adds to items are disabled
 
 ```tsx
 import { Sidebar, useSidebar } from "@raystack/apsara";
@@ -160,23 +160,24 @@ The `data-collapse-hidden` attribute can be used to conditionally hide elements 
 
 <Demo data={stateDemo} />
 
-### Collapse mode
+### Collapsed appearance
 
-Use `collapseMode` to choose what the collapsed state looks like. Expanding
+Use `collapsible` to choose what the collapsed state looks like. Expanding
 works the same in both modes: the sidebar opens in place and pushes content.
 
 - `"icon"` (default): collapses to an icon rail.
 - `"hidden"`: collapses to a thin strip with no visible content.
+- `"none"`: the sidebar cannot be collapsed at all.
 
 For a responsive layout, drive it from your own breakpoint check:
 
 ```tsx
-<Sidebar collapseMode={isMobile ? 'hidden' : 'icon'} />
+<Sidebar collapsible={isMobile ? 'hidden' : 'icon'} />
 ```
 
-When `collapseMode="hidden"` is closed, the strip is just wide enough for the resize handle — reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
+When `collapsible="hidden"` is closed, the strip is just wide enough for the resize handle — reopen by clicking it, or place a `Sidebar.Trigger` as a direct child of `<Sidebar>` (not inside `Header`/`Main`/`Footer`, which are hidden along with everything else) for a clearer affordance, as in the "Hidden" tab below.
 
-<Demo data={collapseModeDemo} />
+<Demo data={collapsedAppearanceDemo} />
 
 ### Peek on hover
 
@@ -188,7 +189,7 @@ Moving the mouse away reverts it; clicking the resize handle or a
 normal open). Clicking a `Sidebar.Item` just navigates, like normal — it
 doesn't change the open state.
 
-It works with either `collapseMode`. With `"hidden"` there's no icon rail —
+It works with either collapsed appearance. With `"hidden"` there's no icon rail —
 hover the thin strip at the edge to reveal the sidebar, as in the "Hidden"
 tab below.
 
@@ -199,7 +200,7 @@ mouse just passes over the sidebar. Use `peekDelay` to change it.
 
 ### Custom Tooltip Message
 
-You can customize the tooltip message that appears when hovering over the collapse/expand handle using the `collapseTooltip` prop. The old `tooltipMessage` name still works, but is deprecated and will be removed in the next major version.
+You can customize the tooltip message that appears when hovering over the collapse/expand handle using the `collapseTooltip` prop.
 
 You can use Sidebar as a controlled component to conditionally render different tooltip messages.
 
@@ -207,13 +208,13 @@ You can use Sidebar as a controlled component to conditionally render different 
 
 ### Non-collapsible
 
-Set `collapsible={false}` to hide the resize handle and prevent the sidebar from being collapsed or expanded.
+Set `collapsible="none"` to hide the resize handle and prevent the sidebar from being collapsed or expanded.
 
 <Demo data={collapsibleDemo} />
 
 ### Hide item tooltips when collapsed
 
-Set `hideCollapsedItemTooltip` to disable the tooltips the Sidebar adds to navigation items — the label tooltip when collapsed, and the full-text tooltip on clipped labels when expanded. Useful when you show your own tooltips or want a cleaner collapsed state.
+Set `hideItemTooltips` to disable the tooltips the Sidebar adds to navigation items — the label tooltip when collapsed, and the full-text tooltip on clipped labels when expanded. Useful when you show your own tooltips or want a cleaner collapsed state.
 
 <Demo data={hideTooltipDemo} />
 
@@ -266,7 +267,7 @@ The Sidebar implements the following accessibility features:
 
 - Truncation handling
   - Long item and group labels truncate with an ellipsis
-  - Items whose label is clipped show the full text in a tooltip on hover or focus (positioned away from the sidebar's edge based on `position`; disable with `hideCollapsedItemTooltip`)
+  - Items whose label is clipped show the full text in a tooltip on hover or focus (positioned away from the sidebar's edge based on `position`; disable with `hideItemTooltips`)
 
 - Keyboard navigation support
 

@@ -12,23 +12,20 @@ export interface SidebarRootProps {
    */
   defaultOpen?: boolean;
 
-  /** Lets the user collapse and expand the whole sidebar.
+  /** Whether the user can collapse the sidebar, and what the collapsed state
+   *  looks like. `"icon"` collapses to an icon rail. `"hidden"` collapses to
+   *  a thin strip with no visible content. `"none"` prevents collapsing and
+   *  hides the resize handle. Expanding always works the same: the sidebar
+   *  opens in place and pushes content.
    *  Not the same as `collapsible` on `Sidebar.Group`, which renders a group as an accordion.
-   * @default true
-   */
-  collapsible?: boolean;
-
-  /** What the collapsed state looks like. Expanding works the same in both
-   *  modes: the sidebar opens in place and pushes content. `"icon"` collapses
-   *  to an icon rail. `"hidden"` collapses to a thin strip with no visible content.
    * @default "icon"
    */
-  collapseMode?: 'icon' | 'hidden';
+  collapsible?: 'icon' | 'hidden' | 'none';
 
   /** Hovering a collapsed sidebar temporarily reveals it as an overlay above
    *  the content, without changing the real open state. Reverts on mouse
-   *  leave. Has no effect when `collapsible` is false, or while the sidebar
-   *  is open.
+   *  leave. Has no effect when `collapsible` is `"none"`, or while the
+   *  sidebar is open.
    * @default false
    */
   peekOnHover?: boolean;
@@ -53,17 +50,12 @@ export interface SidebarRootProps {
    *  collapsed, and the full-text tooltip on clipped labels when expanded.
    * @default false
    */
-  hideCollapsedItemTooltip?: boolean;
+  hideItemTooltips?: boolean;
 
   /** Tooltip shown when hovering the collapse/expand handle.
    *  By default, it shows "Click to collapse" when expanded, "Click to expand" when collapsed
    */
   collapseTooltip?: ReactNode;
-
-  /** @deprecated Renamed to `collapseTooltip`. Still works, but will be
-   *  removed in the next major version.
-   */
-  tooltipMessage?: ReactNode;
 }
 
 export interface SidebarGroupProps {

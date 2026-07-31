@@ -296,12 +296,12 @@ export const stateDemo = {
   style: styleDemo
 };
 
-export const collapseModeDemo = {
+export const collapsedAppearanceDemo = {
   type: 'code',
   tabs: [
     {
       name: 'Icon (default)',
-      code: sidebarLayout(`<Sidebar defaultOpen={false} collapseMode="icon">
+      code: sidebarLayout(`<Sidebar defaultOpen={false} collapsible="icon">
           <Sidebar.Header>
             <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
@@ -321,7 +321,7 @@ export const collapseModeDemo = {
     },
     {
       name: 'Hidden',
-      code: sidebarLayout(`<Sidebar defaultOpen={false} collapseMode="hidden">
+      code: sidebarLayout(`<Sidebar defaultOpen={false} collapsible="hidden">
           <Sidebar.Trigger
             style={{ position: "absolute", top: "var(--rs-space-4)", insetInlineStart: "var(--rs-space-2)" }}
           />
@@ -351,7 +351,7 @@ export const peekOnHoverDemo = {
   tabs: [
     {
       name: 'Icon (default)',
-      code: sidebarLayout(`<Sidebar defaultOpen={false} collapseMode="icon" peekOnHover>
+      code: sidebarLayout(`<Sidebar defaultOpen={false} collapsible="icon" peekOnHover>
           <Sidebar.Header>
             <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
@@ -372,7 +372,7 @@ export const peekOnHoverDemo = {
     },
     {
       name: 'Hidden',
-      code: sidebarLayout(`<Sidebar defaultOpen={false} collapseMode="hidden" peekOnHover>
+      code: sidebarLayout(`<Sidebar defaultOpen={false} collapsible="hidden" peekOnHover>
           <Sidebar.Trigger
             style={{ position: "absolute", top: "var(--rs-space-4)", insetInlineStart: "var(--rs-space-2)" }}
           />
@@ -429,7 +429,7 @@ export const tooltipDemo = {
 
 export const collapsibleDemo = {
   type: 'code',
-  code: sidebarLayout(`<Sidebar defaultOpen collapsible={false}>
+  code: sidebarLayout(`<Sidebar defaultOpen collapsible="none">
           <Sidebar.Header>
             <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">
@@ -451,7 +451,7 @@ export const collapsibleDemo = {
 
 export const hideTooltipDemo = {
   type: 'code',
-  code: sidebarLayout(`<Sidebar defaultOpen={false} hideCollapsedItemTooltip>
+  code: sidebarLayout(`<Sidebar defaultOpen={false} hideItemTooltips>
           <Sidebar.Header>
             <Flex align="center" gap={3} style={{padding:"var(--rs-space-2)"}}>
               <IconButton size={4} aria-label="Logo">

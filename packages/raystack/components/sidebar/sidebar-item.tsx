@@ -39,7 +39,7 @@ export function SidebarItem({
   render = <a />,
   ...props
 }: SidebarItemProps) {
-  const { isCollapsed, position, hideCollapsedItemTooltip } = useSidebarSafe();
+  const { isCollapsed, position, hideItemTooltips } = useSidebarSafe();
   const onPopupOpenChange = useContext(SidebarPopupContext);
   const insideSidebarMore = useInsideSidebarMore();
   const textRef = useRef<HTMLSpanElement>(null);
@@ -115,7 +115,7 @@ export function SidebarItem({
 
   // One prop opts out of every tooltip the library adds to items — the
   // collapsed label tooltip and the expanded clipped-label tooltip.
-  if (hideCollapsedItemTooltip) return content;
+  if (hideItemTooltips) return content;
 
   // One always-controlled Tooltip for both states (switching a mounted
   // Tooltip between controlled and uncontrolled triggers a React warning):

@@ -21,9 +21,10 @@ export interface SidebarContextValue {
   isPeeking: boolean;
   open: boolean;
   setOpen: (open: boolean) => void;
-  collapsible: boolean;
+  /** Mirrors the `collapsible` prop; `'none'` means it cannot be collapsed. */
+  collapsible: 'icon' | 'hidden' | 'none';
   position: 'left' | 'right';
-  hideCollapsedItemTooltip?: boolean;
+  hideItemTooltips?: boolean;
   /** id of the sidebar element, for `aria-controls` on toggle controls. */
   sidebarId?: string;
 }
@@ -47,9 +48,9 @@ const FALLBACK_CONTEXT: SidebarContextValue = {
   isPeeking: false,
   open: true,
   setOpen: () => undefined,
-  collapsible: true,
+  collapsible: 'icon',
   position: 'left',
-  hideCollapsedItemTooltip: undefined
+  hideItemTooltips: undefined
 };
 
 export function useSidebarSafe(): SidebarContextValue {
@@ -67,20 +68,23 @@ export const SidebarPopupContext = createContext<(open: boolean) => void>(
 export interface SidebarRootProps extends ComponentProps<'aside'> {
   position?: 'left' | 'right';
   variant?: 'plain' | 'floating' | 'inset';
-  hideCollapsedItemTooltip?: boolean;
   /**
-   * Lets the user collapse and expand the whole sidebar.
+   * Hide the tooltips the Sidebar adds to items: the label tooltip when
+   * collapsed, and the full-text tooltip on clipped labels when expanded.
+   */
+  hideItemTooltips?: boolean;
+  /**
+   * Whether the user can collapse the sidebar, and what the collapsed
+   * state looks like. Expanding always works the same: the sidebar opens
+   * in place and pushes content.
+   * - `'icon'`: collapses to an icon rail (default).
+   * - `'hidden'`: collapses to a thin strip with no visible content.
+   * - `'none'`: the sidebar cannot be collapsed; the resize handle is hidden.
+   *
    * Unlike `collapsible` on `Sidebar.Group`, which renders a group
    * as an accordion.
    */
-  collapsible?: boolean;
-  /**
-   * What the collapsed state looks like. Expanding works the same in both
-   * modes: the sidebar opens in place and pushes content.
-   * - `'icon'`: collapses to an icon rail (default).
-   * - `'hidden'`: collapses to a thin strip with no visible content.
-   */
-  collapseMode?: 'icon' | 'hidden';
+  collapsible?: 'icon' | 'hidden' | 'none';
   /**
    * Hovering a collapsed sidebar temporarily reveals it as an overlay above
    * the content, without changing the real open state. Reverts on mouse leave.
@@ -94,9 +98,6 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
   peekDelay?: number;
   /** Tooltip shown when hovering the collapse/expand handle. */
   collapseTooltip?: ReactNode;
-  /** @deprecated Renamed to `collapseTooltip`; will be removed in the next
-   *  major version. Ignored when `collapseTooltip` is set. */
-  tooltipMessage?: ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -113,13 +114,11 @@ export function SidebarRoot({
   onOpenChange,
   onMouseEnter,
   onMouseLeave,
-  hideCollapsedItemTooltip,
-  collapsible = true,
-  collapseMode = 'icon',
+  hideItemTooltips,
+  collapsible = 'icon',
   peekOnHover = false,
   peekDelay = DEFAULT_PEEK_DELAY,
   collapseTooltip,
-  tooltipMessage,
   defaultOpen = true,
   children,
   ...props
@@ -141,7 +140,8 @@ export function SidebarRoot({
     [onOpenChange]
   );
 
-  const canPeek = peekOnHover && collapsible && !open;
+  const canCollapse = collapsible !== 'none';
+  const canPeek = peekOnHover && canCollapse && !open;
 
   const handleMouseEnter = useCallback(
     (event: MouseEvent<HTMLElement>) => {
@@ -201,7 +201,7 @@ export function SidebarRoot({
         setOpen: handleOpenChange,
         collapsible,
         position,
-        hideCollapsedItemTooltip,
+        hideItemTooltips,
         sidebarId
       }}
     >
@@ -213,8 +213,7 @@ export function SidebarRoot({
           data-variant={variant}
           data-open={visualOpen ? '' : undefined}
           data-closed={!visualOpen ? '' : undefined}
-          data-collapse-disabled={!collapsible ? '' : undefined}
-          data-collapse-mode={collapseMode}
+          data-collapse-mode={collapsible}
           data-peeking={isPeeking ? '' : undefined}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
@@ -222,7 +221,7 @@ export function SidebarRoot({
           role='navigation'
           {...props}
         >
-          {collapsible && (
+          {canCollapse && (
             <Tooltip trackCursorAxis='y'>
               <Tooltip.Trigger
                 render={
@@ -241,7 +240,6 @@ export function SidebarRoot({
                 sideOffset={10}
               >
                 {collapseTooltip ??
-                  tooltipMessage ??
                   (open ? 'Click to collapse' : 'Click to expand')}
               </Tooltip.Content>
             </Tooltip>
