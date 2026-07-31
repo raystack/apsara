@@ -66,6 +66,15 @@
   padding: var(--rs-space-3);
 }
 
+/* `PromptInput.Editor` shares the textarea's box inside the frame — same
+   padding, same floor, same cap — minus `field-sizing`, which applies to form
+   controls only: a contentEditable grows with its content natively. */
+.root .editor {
+  max-height: var(--prompt-input-textarea-max-height);
+  min-height: var(--rs-space-9);
+  padding: var(--rs-space-3);
+}
+
 .footer {
   display: flex;
   align-items: center;
