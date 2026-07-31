@@ -259,7 +259,6 @@
   transform: translateX(50%);
 }
 
-
 .resize-handle:hover {
   background-color: var(--rs-color-border-base-primary);
 }
