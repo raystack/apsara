@@ -192,6 +192,9 @@ It works with either `collapseMode`. With `"hidden"` there's no icon rail —
 hover the thin strip at the edge to reveal the sidebar, as in the "Hidden"
 tab below.
 
+The peek starts after a short delay (100ms) so it doesn't trigger when the
+mouse just passes over the sidebar. Use `peekDelay` to change it.
+
 <Demo data={peekOnHoverDemo} />
 
 ### Custom Tooltip Message
@@ -256,7 +259,7 @@ The Sidebar implements the following accessibility features:
 
   - `role="navigation"` for the main sidebar
   - `role="list"` for item containers (Main, group items, Footer) and `role="listitem"` for navigation items and groups, forming valid nested lists
-  - `aria-expanded` to indicate sidebar state, on both the sidebar and `Sidebar.Trigger`
+  - `aria-expanded` and `aria-controls` on the toggle controls (the resize handle and `Sidebar.Trigger`), pointing at the sidebar region they show and hide
   - `aria-current="page"` for active items
   - `aria-disabled="true"` for disabled items
   - `Sidebar.Trigger` announces "Collapse sidebar" or "Expand sidebar" based on state (override via `aria-label`)

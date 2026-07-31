@@ -100,6 +100,12 @@ describe('Sidebar', () => {
       const nav = screen.getByRole('navigation');
       expect(nav).toBeInTheDocument();
       expect(nav).toHaveAttribute('aria-label', 'Navigation Sidebar');
+      // aria-expanded belongs on the toggle control, not the landmark.
+      expect(nav).not.toHaveAttribute('aria-expanded');
+
+      const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
+      expect(handle).toHaveAttribute('aria-expanded', 'true');
+      expect(handle).toHaveAttribute('aria-controls', nav.id);
     });
   });
 
@@ -251,6 +257,62 @@ describe('Sidebar', () => {
       expect(onOpenChange).not.toHaveBeenCalled();
     });
 
+    it('still calls consumer onMouseEnter/onMouseLeave handlers', async () => {
+      const onMouseEnter = vi.fn();
+      const onMouseLeave = vi.fn();
+      render(
+        <Sidebar
+          open={false}
+          peekOnHover
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+        >
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      expect(onMouseEnter).toHaveBeenCalled();
+      // The consumer handler must not replace ours — the peek still starts.
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      });
+
+      fireEvent.mouseLeave(nav);
+      expect(onMouseLeave).toHaveBeenCalled();
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'collapsed:not-peeking'
+      );
+    });
+
+    it('respects a custom peekDelay', async () => {
+      vi.useFakeTimers();
+      try {
+        render(
+          <Sidebar open={false} peekOnHover peekDelay={500}>
+            <PeekStatus />
+          </Sidebar>
+        );
+
+        fireEvent.mouseEnter(screen.getByRole('navigation'));
+
+        act(() => vi.advanceTimersByTime(400));
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'collapsed:not-peeking'
+        );
+
+        act(() => vi.advanceTimersByTime(100));
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('reverts when the mouse leaves', async () => {
       render(
         <Sidebar open={false} peekOnHover>
@@ -310,10 +372,12 @@ describe('Sidebar', () => {
         expect(nav).toHaveAttribute('data-peeking');
       });
       // data-open/data-closed track the visual state (peek counts as open);
-      // the real state stays on aria-expanded.
+      // the real state stays on the resize handle's aria-expanded.
       expect(nav).toHaveAttribute('data-open');
       expect(nav).not.toHaveAttribute('data-closed');
-      expect(nav).toHaveAttribute('aria-expanded', 'false');
+      expect(
+        screen.getByRole('button', { name: 'Expand sidebar' })
+      ).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('shows the hidden-mode content while peeking', async () => {
@@ -993,6 +1057,24 @@ describe('Sidebar', () => {
 
       fireEvent.click(trigger);
       expect(nav).toHaveAttribute('data-open');
+    });
+
+    it('exposes aria-expanded and aria-controls for the sidebar', () => {
+      render(
+        <Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Sidebar.Trigger data-testid='sidebar-trigger' />
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      const trigger = screen.getByTestId('sidebar-trigger');
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(trigger).toHaveAttribute('aria-controls', nav.id);
+
+      fireEvent.click(trigger);
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     it('calls onOpenChange when the sidebar is controlled', () => {

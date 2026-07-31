@@ -4,10 +4,12 @@ import { cx } from 'class-variance-authority';
 import {
   ComponentProps,
   createContext,
+  MouseEvent,
   ReactNode,
   useCallback,
   useContext,
   useEffect,
+  useId,
   useRef,
   useState
 } from 'react';
@@ -22,6 +24,8 @@ export interface SidebarContextValue {
   collapsible: boolean;
   position: 'left' | 'right';
   hideCollapsedItemTooltip?: boolean;
+  /** id of the sidebar element, for `aria-controls` on toggle controls. */
+  sidebarId?: string;
 }
 
 export const SidebarContext = createContext<SidebarContextValue | null>(null);
@@ -82,6 +86,12 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
    * the content, without changing the real open state. Reverts on mouse leave.
    */
   peekOnHover?: boolean;
+  /**
+   * Delay in milliseconds before a hover starts a peek.
+   * Only applies when `peekOnHover` is set.
+   * @default 100
+   */
+  peekDelay?: number;
   /** Tooltip shown when hovering the collapse/expand handle. */
   collapseTooltip?: ReactNode;
   /** @deprecated Renamed to `collapseTooltip`; will be removed in the next
@@ -92,24 +102,30 @@ export interface SidebarRootProps extends ComponentProps<'aside'> {
   onOpenChange?: (open: boolean) => void;
 }
 
-const PEEK_OPEN_DELAY = 100;
+const DEFAULT_PEEK_DELAY = 100;
 
 export function SidebarRoot({
   className,
+  id: providedId,
   position = 'left',
   variant = 'plain',
   open: providedOpen,
   onOpenChange,
+  onMouseEnter,
+  onMouseLeave,
   hideCollapsedItemTooltip,
   collapsible = true,
   collapseMode = 'icon',
   peekOnHover = false,
+  peekDelay = DEFAULT_PEEK_DELAY,
   collapseTooltip,
   tooltipMessage,
   defaultOpen = true,
   children,
   ...props
 }: SidebarRootProps) {
+  const generatedId = useId();
+  const sidebarId = providedId ?? generatedId;
   const [internalOpen, setInternalOpen] = useState(defaultOpen);
   const open = providedOpen ?? internalOpen;
   const [isPeeking, setIsPeeking] = useState(false);
@@ -127,23 +143,28 @@ export function SidebarRoot({
 
   const canPeek = peekOnHover && collapsible && !open;
 
-  const handleMouseEnter = useCallback(() => {
-    pointerInsideRef.current = true;
-    if (!canPeek) return;
-    peekTimeoutRef.current = setTimeout(
-      () => setIsPeeking(true),
-      PEEK_OPEN_DELAY
-    );
-  }, [canPeek]);
+  const handleMouseEnter = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
+      onMouseEnter?.(event);
+      pointerInsideRef.current = true;
+      if (!canPeek) return;
+      peekTimeoutRef.current = setTimeout(() => setIsPeeking(true), peekDelay);
+    },
+    [canPeek, onMouseEnter, peekDelay]
+  );
 
-  const handleMouseLeave = useCallback(() => {
-    pointerInsideRef.current = false;
-    clearTimeout(peekTimeoutRef.current);
-    // The pointer may have moved into a portaled popup (a More menu, a
-    // truncation tooltip) that visually belongs to the sidebar; hold the
-    // peek until the popup closes.
-    if (openPopupCountRef.current === 0) setIsPeeking(false);
-  }, []);
+  const handleMouseLeave = useCallback(
+    (event: MouseEvent<HTMLElement>) => {
+      onMouseLeave?.(event);
+      pointerInsideRef.current = false;
+      clearTimeout(peekTimeoutRef.current);
+      // The pointer may have moved into a portaled popup (a More menu, a
+      // truncation tooltip) that visually belongs to the sidebar; hold the
+      // peek until the popup closes.
+      if (openPopupCountRef.current === 0) setIsPeeking(false);
+    },
+    [onMouseLeave]
+  );
 
   const handlePopupOpenChange = useCallback((popupOpen: boolean) => {
     openPopupCountRef.current = Math.max(
@@ -168,7 +189,7 @@ export function SidebarRoot({
 
   // data-open/data-closed drive the visuals, so a peek counts as open —
   // every collapse-hiding CSS rule turns off during a peek for free. The
-  // real state stays in `open` (and aria-expanded).
+  // real state stays in `open` (and the toggle controls' aria-expanded).
   const visualOpen = open || isPeeking;
 
   return (
@@ -180,11 +201,13 @@ export function SidebarRoot({
         setOpen: handleOpenChange,
         collapsible,
         position,
-        hideCollapsedItemTooltip
+        hideCollapsedItemTooltip,
+        sidebarId
       }}
     >
       <SidebarPopupContext value={handlePopupOpenChange}>
         <aside
+          id={sidebarId}
           className={cx(styles.root, className)}
           data-position={position}
           data-variant={variant}
@@ -196,7 +219,6 @@ export function SidebarRoot({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           aria-label='Navigation Sidebar'
-          aria-expanded={open}
           role='navigation'
           {...props}
         >
@@ -209,6 +231,8 @@ export function SidebarRoot({
                     className={styles['resize-handle']}
                     onClick={() => handleOpenChange(!open)}
                     aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
+                    aria-expanded={open}
+                    aria-controls={sidebarId}
                   />
                 }
               />

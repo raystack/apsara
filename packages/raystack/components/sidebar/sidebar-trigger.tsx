@@ -18,7 +18,7 @@ export function SidebarTrigger({
   'aria-label': ariaLabel,
   ...props
 }: SidebarTriggerProps) {
-  const { open, setOpen, collapsible } = useSidebar();
+  const { open, setOpen, collapsible, sidebarId } = useSidebar();
 
   const handleClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>) => {
@@ -36,6 +36,7 @@ export function SidebarTrigger({
       disabled={!collapsible}
       aria-label={ariaLabel ?? (open ? 'Collapse sidebar' : 'Expand sidebar')}
       aria-expanded={open}
+      aria-controls={sidebarId}
       {...props}
     >
       {children ?? <ViewVerticalIcon />}

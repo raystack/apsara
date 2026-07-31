@@ -33,6 +33,12 @@ export interface SidebarRootProps {
    */
   peekOnHover?: boolean;
 
+  /** Delay in milliseconds before a hover starts a peek. Only applies when
+   *  `peekOnHover` is set.
+   * @default 100
+   */
+  peekDelay?: number;
+
   /** Position of the Sidebar.
    * @default "left"
    */
