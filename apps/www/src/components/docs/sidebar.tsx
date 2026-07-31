@@ -104,7 +104,7 @@ function SidebarItem({ item, pathname }: { item: Item; pathname: string }) {
 export default function DocsSidebar({ pageTree, className }: Props) {
   const pathname = usePathname();
   return (
-    <Sidebar open collapsible={false} className={cx(className, styles.sidebar)}>
+    <Sidebar open collapsible='none' className={cx(className, styles.sidebar)}>
       <Sidebar.Header className={styles.header}>
         <Flex
           align='center'
