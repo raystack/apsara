@@ -13,7 +13,13 @@ CommandDialog.displayName = 'Command.Dialog';
 export const CommandDialogTrigger = forwardRef<
   HTMLButtonElement,
   DialogPrimitive.Trigger.Props
->((props, ref) => <DialogPrimitive.Trigger ref={ref} {...props} />);
+>((props, ref) => (
+  <DialogPrimitive.Trigger
+    ref={ref}
+    data-slot='command-dialog-trigger'
+    {...props}
+  />
+));
 CommandDialogTrigger.displayName = 'Command.DialogTrigger';
 
 export interface CommandDialogContentProps extends DialogPrimitive.Popup.Props {
@@ -38,9 +44,13 @@ export function CommandDialogContent({
 
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Viewport className={styles.viewport}>
+      <DialogPrimitive.Viewport
+        data-slot='command-dialog-viewport'
+        className={styles.viewport}
+      >
         <DialogPrimitive.Popup
           ref={popupRef}
+          data-slot='command-dialog-content'
           className={cx(styles.dialogPopup, className)}
           style={{ width, ...style }}
           initialFocus={openType => {

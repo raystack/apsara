@@ -189,6 +189,7 @@ const Scoped = ({
   return (
     <ThemeContext value={layered}>
       <div
+        data-slot='theme-scope'
         data-theme={layered?.resolvedTheme}
         data-accent-color={layered?.accentColor}
         data-gray-color={layered?.grayColor}
@@ -541,7 +542,11 @@ const ThemeScript = memo(
     })();
 
     return (
-      <script nonce={nonce} dangerouslySetInnerHTML={{ __html: scriptSrc }} />
+      <script
+        nonce={nonce}
+        data-slot='theme-script'
+        dangerouslySetInnerHTML={{ __html: scriptSrc }}
+      />
     );
   },
   // Never re-render this component

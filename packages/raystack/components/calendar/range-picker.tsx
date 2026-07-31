@@ -215,12 +215,17 @@ export function RangePicker({
   };
 
   const defaultTrigger = (
-    <Flex gap={5} className={pickerGroupClassName}>
+    <Flex
+      gap={5}
+      className={pickerGroupClassName}
+      data-slot='range-picker-trigger-group'
+    >
       <Input
         size='small'
         placeholder='Select start date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
+        data-slot='range-picker-start-input'
         {...startInputProps}
         value={startDate}
         readOnly
@@ -234,6 +239,7 @@ export function RangePicker({
         placeholder='Select end date'
         trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
         className={styles.datePickerInput}
+        data-slot='range-picker-end-input'
         {...endInputProps}
         value={endDate}
         readOnly
@@ -266,46 +272,50 @@ export function RangePicker({
     >
       <Popover.Trigger
         nativeButton={false}
-        render={<div>{triggerContent}</div>}
+        render={<div data-slot='range-picker-trigger'>{triggerContent}</div>}
       />
       <Popover.Content
         ref={popover.contentRef}
+        data-slot='range-picker-positioner'
         {...popoverProps}
         className={cx(styles.calendarPopover, popoverProps?.className)}
         side={popoverProps?.side ?? 'top'}
       >
-        <Calendar
-          /*
-           * No `captionLayout` default — 'dropdown' renders Apsara Selects
-           * inside the popover whose unmount loops ("Maximum update depth").
-           * Consumers can opt in via `calendarProps.captionLayout`.
-           */
-          showOutsideDays={false}
-          numberOfMonths={2}
-          defaultMonth={selectedRange.from}
-          {...calendarProps}
-          /*
-           * Must stay after spread: `required` is the discriminator for
-           * RDP's prop union, and a widened value would break the narrowing.
-           */
-          required={true}
-          timeZone={timeZone}
-          onDropdownOpen={popover.markDropdownOpen}
-          mode='range'
-          month={computedDefaultMonth}
-          selected={selectedRange}
-          onSelect={handleSelect}
-          onMonthChange={setCurrentMonth}
-        />
-        {footer && (
-          <Flex
-            align='center'
-            justify='center'
-            className={styles.calendarFooter}
-          >
-            {footer}
-          </Flex>
-        )}
+        <div data-slot='range-picker-content'>
+          <Calendar
+            /*
+             * No `captionLayout` default — 'dropdown' renders Apsara Selects
+             * inside the popover whose unmount loops ("Maximum update depth").
+             * Consumers can opt in via `calendarProps.captionLayout`.
+             */
+            showOutsideDays={false}
+            numberOfMonths={2}
+            defaultMonth={selectedRange.from}
+            {...calendarProps}
+            /*
+             * Must stay after spread: `required` is the discriminator for
+             * RDP's prop union, and a widened value would break the narrowing.
+             */
+            required={true}
+            timeZone={timeZone}
+            onDropdownOpen={popover.markDropdownOpen}
+            mode='range'
+            month={computedDefaultMonth}
+            selected={selectedRange}
+            onSelect={handleSelect}
+            onMonthChange={setCurrentMonth}
+          />
+          {footer && (
+            <Flex
+              align='center'
+              justify='center'
+              className={styles.calendarFooter}
+              data-slot='range-picker-footer'
+            >
+              {footer}
+            </Flex>
+          )}
+        </div>
       </Popover.Content>
     </Popover>
   );

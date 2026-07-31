@@ -100,6 +100,7 @@ export function MenuContent({
   return (
     <MenuPrimitive.Portal>
       <MenuPrimitive.Positioner
+        data-slot='menu-positioner'
         className={styles.positioner}
         sideOffset={sideOffset}
         align={align}
@@ -107,6 +108,7 @@ export function MenuContent({
       >
         <MenuPrimitive.Popup
           ref={ref}
+          data-slot='menu-content'
           className={cx(
             styles.content,
             autocomplete && styles.comboboxContainer,
@@ -151,6 +153,7 @@ export function MenuContent({
               }}
             >
               <AutocompletePrimitive.Input
+                data-slot='menu-search-input'
                 placeholder={searchPlaceholder}
                 className={styles.comboboxInput}
                 ref={inputRef}
@@ -167,6 +170,7 @@ export function MenuContent({
                 tabIndex={-1}
               />
               <AutocompletePrimitive.List
+                data-slot='menu-search-list'
                 className={styles.comboboxContent}
                 ref={containerRef}
               >

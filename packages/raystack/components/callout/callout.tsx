@@ -87,32 +87,57 @@ export function Callout({
   const role = type === 'alert' ? 'alert' : 'status';
 
   return (
-    <div className={styles.transitionShell} data-state={state}>
-      <div className={styles.transitionInner}>
+    <div
+      className={styles.transitionShell}
+      data-state={state}
+      data-slot='callout-transition'
+    >
+      <div
+        className={styles.transitionInner}
+        data-slot='callout-transition-inner'
+      >
         <div
           className={callout({ type, variant, highContrast, className })}
           role={role}
           aria-live={type === 'alert' ? 'assertive' : 'polite'}
+          data-slot='callout'
           {...props}
         >
-          <div className={styles.container}>
-            <div className={styles.messageContainer}>
+          <div className={styles.container} data-slot='callout-container'>
+            <div
+              className={styles.messageContainer}
+              data-slot='callout-message-container'
+            >
               {icon && (
-                <div className={styles.icon} aria-hidden='true'>
+                <div
+                  className={styles.icon}
+                  aria-hidden='true'
+                  data-slot='callout-icon'
+                >
                   {icon}
                 </div>
               )}
-              <div className={styles.message}>{children}</div>
+              <div className={styles.message} data-slot='callout-message'>
+                {children}
+              </div>
             </div>
 
-            <div className={styles.actionsContainer}>
-              {action && <div className={styles.action}>{action}</div>}
+            <div
+              className={styles.actionsContainer}
+              data-slot='callout-actions'
+            >
+              {action && (
+                <div className={styles.action} data-slot='callout-action'>
+                  {action}
+                </div>
+              )}
               {dismissible && (
                 <IconButton
                   size={1}
                   className={styles.dismiss}
                   onClick={handleDismiss}
                   aria-label='Dismiss message'
+                  data-slot='callout-dismiss'
                 >
                   <Cross1Icon />
                 </IconButton>

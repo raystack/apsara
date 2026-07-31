@@ -58,6 +58,7 @@ export function SidebarMore({
       )}
       role='listitem'
       aria-label={isCollapsed ? label : undefined}
+      data-slot='sidebar-more-trigger'
     >
       <SidebarLeadingVisual
         leadingIcon={triggerIcon}
@@ -65,7 +66,12 @@ export function SidebarMore({
       />
       {/* Kept mounted so it can collapse with the sidebar (max-width → 0)
           instead of popping out; CSS hides it when closed. */}
-      <span className={cx(styles['nav-text'], classNames?.text)}>{label}</span>
+      <span
+        className={cx(styles['nav-text'], classNames?.text)}
+        data-slot='sidebar-more-text'
+      >
+        {label}
+      </span>
     </button>
   );
 

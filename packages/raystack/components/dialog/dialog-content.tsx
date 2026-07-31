@@ -26,6 +26,7 @@ export function DialogContent({
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Backdrop
+        data-slot='dialog-backdrop'
         {...overlay}
         className={cx(
           styles.dialogOverlay,
@@ -33,13 +34,17 @@ export function DialogContent({
           overlay?.className
         )}
       />
-      <DialogPrimitive.Viewport className={styles.viewport}>
+      <DialogPrimitive.Viewport
+        className={styles.viewport}
+        data-slot='dialog-viewport'
+      >
         <DialogPrimitive.Popup
           className={cx(
             styles.dialogContent,
             showNestedAnimation && styles.showNestedAnimation,
             className
           )}
+          data-slot='dialog-content'
           {...props}
         >
           {children}

@@ -88,6 +88,25 @@ Each entry in `toasts` is a snapshot of a currently-mounted toast.
 
 Prefer the singleton `toastManager` when triggering toasts from non-React code (interceptors, utility functions, event handlers outside the provider). Use `useToastManager()` inside components when you need access to the live `toasts` array, or want the dispatch call colocated with the rest of the component's logic.
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `toast-viewport` | The region that holds all toasts |
+| `toast` | A single toast root |
+| `toast-content` | Content wrapper inside a toast |
+| `toast-inner` | Layout row holding the icon and text column |
+| `toast-leading-icon` | The leading icon (unless `leadingIcon: null`) |
+| `toast-column` | Column holding the title, actions, and description |
+| `toast-top-row` | Row holding the title and action cluster |
+| `toast-title` | The toast title |
+| `toast-actions` | Cluster holding the action and close buttons |
+| `toast-action` | The action button (when `actionProps`) |
+| `toast-close` | The close button |
+| `toast-description` | The description (when both title and description are set) |
+
 ## Examples
 
 ### Basic Toast

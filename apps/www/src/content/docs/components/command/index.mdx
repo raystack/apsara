@@ -113,6 +113,30 @@ Renders the portal, viewport, and popup for the command palette. There is no bac
 
 <auto-type-table path="./props.ts" name="CommandDialogContentProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `command` | The root panel |
+| `command-input-wrapper` | Wrapper around the search input |
+| `command-input` | The `<input>` element itself |
+| `command-content` | The `Command.Content` list |
+| `command-empty` | `Command.Empty` |
+| `command-group` | `Command.Group` wrapper |
+| `command-label` | `Command.Label` |
+| `command-item` | Each `Command.Item` |
+| `command-item-leading-icon` | Leading icon inside an item (when provided) |
+| `command-item-label` | The item's label text |
+| `command-item-trailing-icon` | Trailing icon inside an item (when provided) |
+| `command-separator` | `Command.Separator` |
+| `command-shortcut` | `Command.Shortcut` wrapper |
+| `command-shortcut-key` | Each `<kbd>` key inside a shortcut |
+| `command-dialog-trigger` | `Command.DialogTrigger` |
+| `command-dialog-viewport` | Viewport wrapper for the dialog popup |
+| `command-dialog-content` | `Command.DialogContent` popup |
+
 ## Examples
 
 ### Inline

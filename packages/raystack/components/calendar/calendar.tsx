@@ -88,10 +88,14 @@ function DropDown({
         size='small'
         variant='text'
         disabled={disabled}
+        data-slot='calendar-dropdown'
       >
         <Select.Value />
       </Select.Trigger>
-      <Select.Content className={styles.dropdownContent}>
+      <Select.Content
+        className={styles.dropdownContent}
+        data-slot='calendar-dropdown-content'
+      >
         {options.map(opt => (
           <Select.Item
             value={opt.value.toString()}
@@ -130,6 +134,7 @@ export const Calendar = function ({
             className={cx(props.className, loadingData && styles.disabled)}
             size={3}
             aria-label='Previous month'
+            data-slot='calendar-nav-previous'
           >
             <ChevronLeftIcon />
           </IconButton>
@@ -141,6 +146,7 @@ export const Calendar = function ({
             className={cx(props.className, loadingData && styles.disabled)}
             size={3}
             aria-label='Next month'
+            data-slot='calendar-nav-next'
           >
             <ChevronRightIcon />
           </IconButton>
@@ -181,27 +187,43 @@ export const Calendar = function ({
                       buttonProps.className,
                       hasDateInfo && styles.dayButtonWithInfo
                     )}
+                    data-slot='calendar-day'
                   >
                     {hasDateInfo && (
-                      <div className={styles.dayInfo}>{dateComponent}</div>
+                      <div
+                        className={styles.dayInfo}
+                        data-slot='calendar-day-info'
+                      >
+                        {dateComponent}
+                      </div>
                     )}
-                    <span className={styles.dayNumber}>
+                    <span
+                      className={styles.dayNumber}
+                      data-slot='calendar-day-number'
+                    >
                       {buttonProps.children}
                     </span>
                   </button>
                 }
               />
-              <Tooltip.Content side='top'>{message}</Tooltip.Content>
+              <Tooltip.Content side='top' data-slot='calendar-day-tooltip'>
+                {message}
+              </Tooltip.Content>
             </Tooltip>
           );
         },
         MonthGrid: props => (
-          <div className={styles.monthGridWrap}>
-            <table {...props} aria-busy={loadingData || undefined} />
+          <div className={styles.monthGridWrap} data-slot='calendar-month-grid'>
+            <table
+              {...props}
+              aria-busy={loadingData || undefined}
+              data-slot='calendar-grid-table'
+            />
             <div
               className={styles.monthGridSkeleton}
               data-visible={loadingData || undefined}
               aria-hidden='true'
+              data-slot='calendar-grid-skeleton'
             >
               <Skeleton
                 count={5}
@@ -237,6 +259,7 @@ export const Calendar = function ({
         ...classNames
       }}
       className={root({ className })}
+      data-slot='calendar'
       mode='single'
       {...props}
     />

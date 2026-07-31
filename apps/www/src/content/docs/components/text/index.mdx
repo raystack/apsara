@@ -33,6 +33,14 @@ Use the `render` prop to change the rendered element or provide a custom render 
 
 <auto-type-table path="./props.ts" name="TextProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `text` | The text element (`<span>` by default, or the element supplied via `render`) |
+
 ## Examples
 
 ### Variant

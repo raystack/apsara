@@ -33,6 +33,7 @@ export function PromptInputSubmit({
       // must not resubmit the form.
       type={busy ? 'button' : 'submit'}
       className={cx(styles.submit, className)}
+      data-slot='prompt-input-submit'
       data-status={context.status}
       disabled={disabled ?? (context.disabled || (!busy && empty))}
       aria-label={ariaLabel ?? (busy ? 'Stop response' : 'Send message')}

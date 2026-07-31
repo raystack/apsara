@@ -59,6 +59,7 @@ const SkeletonBase = (props: SkeletonProps) => {
     <Container
       className={containerClassName}
       aria-hidden='true'
+      data-slot='skeleton'
       style={{
         display: inline ? 'inline-block' : 'flex',
         flexDirection: !inline ? 'column' : undefined,
@@ -70,6 +71,7 @@ const SkeletonBase = (props: SkeletonProps) => {
         <span
           key={i}
           className={skeletonClassName}
+          data-slot='skeleton-item'
           style={
             {
               width: width ?? defaultWidth,

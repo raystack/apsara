@@ -17,7 +17,12 @@ export function SidebarHeader({
   ...props
 }: ComponentProps<typeof Flex>) {
   return (
-    <Flex align='center' className={cx(styles.header, className)} {...props} />
+    <Flex
+      align='center'
+      className={cx(styles.header, className)}
+      data-slot='sidebar-header'
+      {...props}
+    />
   );
 }
 

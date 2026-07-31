@@ -55,6 +55,7 @@ export function MessageBubble({
   ...props
 }: MessageBubbleProps) {
   const bubbleProps = {
+    'data-slot': 'message-bubble',
     'data-variant': variant,
     'data-color': color,
     className: bubble({ variant, color, className }),

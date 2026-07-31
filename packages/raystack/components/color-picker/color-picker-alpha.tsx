@@ -31,13 +31,31 @@ export const ColorPickerAlpha = ({
       step={1}
       value={alpha * 100}
       thumbAlignment='edge'
+      data-slot='color-picker-alpha'
       {...props}
     >
-      <Slider.Control className={styles.sliderControl}>
-        <Slider.Track className={cx(styles.sliderTrack, styles.alphaTrack)}>
-          <div className={styles.alphaTrackGradient} style={trackStyle} />
-          <Slider.Indicator className={styles.sliderRange} />
-          <Slider.Thumb className={styles.sliderThumb} aria-label='Alpha' />
+      <Slider.Control
+        className={styles.sliderControl}
+        data-slot='color-picker-slider-control'
+      >
+        <Slider.Track
+          className={cx(styles.sliderTrack, styles.alphaTrack)}
+          data-slot='color-picker-slider-track'
+        >
+          <div
+            className={styles.alphaTrackGradient}
+            style={trackStyle}
+            data-slot='color-picker-alpha-gradient'
+          />
+          <Slider.Indicator
+            className={styles.sliderRange}
+            data-slot='color-picker-slider-range'
+          />
+          <Slider.Thumb
+            className={styles.sliderThumb}
+            aria-label='Alpha'
+            data-slot='color-picker-slider-thumb'
+          />
         </Slider.Track>
       </Slider.Control>
     </Slider.Root>

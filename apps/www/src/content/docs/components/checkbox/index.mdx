@@ -42,6 +42,17 @@ Groups multiple checkboxes and manages their shared checked state via a `string[
 
 <auto-type-table path="./props.ts" name="CheckboxGroupProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `checkbox` | The checkbox control itself |
+| `checkbox-indicator` | The indicator inside the control |
+| `checkbox-icon` | The check or indeterminate icon (when checked or indeterminate) |
+| `checkbox-group` | The `Checkbox.Group` container |
+
 ## Examples
 
 ### States

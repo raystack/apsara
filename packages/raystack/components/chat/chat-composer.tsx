@@ -8,7 +8,13 @@ export interface ChatComposerProps extends ComponentProps<'div'> {}
 
 /** The container under the messages, usually holding a `PromptInput`. */
 export function ChatComposer({ className, ...props }: ChatComposerProps) {
-  return <div className={cx(styles.composer, className)} {...props} />;
+  return (
+    <div
+      className={cx(styles.composer, className)}
+      data-slot='chat-composer'
+      {...props}
+    />
+  );
 }
 
 ChatComposer.displayName = 'Chat.Composer';

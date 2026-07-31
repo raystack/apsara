@@ -50,11 +50,21 @@ function SliderRoot({
     <SliderPrimitive.Root
       className={slider({ variant, className })}
       thumbAlignment='edge'
+      data-slot='slider'
       {...props}
     >
-      <SliderPrimitive.Control className={styles.control}>
-        <SliderPrimitive.Track className={styles.track}>
-          <SliderPrimitive.Indicator className={styles.indicator} />
+      <SliderPrimitive.Control
+        className={styles.control}
+        data-slot='slider-control'
+      >
+        <SliderPrimitive.Track
+          className={styles.track}
+          data-slot='slider-track'
+        >
+          <SliderPrimitive.Indicator
+            className={styles.indicator}
+            data-slot='slider-indicator'
+          />
           {Array.from({ length: thumbCount }).map((_, i) => (
             <SliderPrimitive.Thumb
               key={i}
@@ -64,14 +74,30 @@ function SliderRoot({
                 getLabel(i) || (isRange ? `Thumb ${i + 1}` : 'Slider thumb')
               }
               data-size={thumbSize}
+              data-slot='slider-thumb'
             >
               {isThumbSmall ? (
-                <div className={styles.thumbSmall} />
+                <div
+                  className={styles.thumbSmall}
+                  data-slot='slider-thumb-grip'
+                />
               ) : (
-                <div className={styles.thumbLarge}>
-                  <div className={styles.thumbLargeLine} />
-                  <div className={styles.thumbLargeLine} />
-                  <div className={styles.thumbLargeLine} />
+                <div
+                  className={styles.thumbLarge}
+                  data-slot='slider-thumb-grip'
+                >
+                  <div
+                    className={styles.thumbLargeLine}
+                    data-slot='slider-thumb-grip-line'
+                  />
+                  <div
+                    className={styles.thumbLargeLine}
+                    data-slot='slider-thumb-grip-line'
+                  />
+                  <div
+                    className={styles.thumbLargeLine}
+                    data-slot='slider-thumb-grip-line'
+                  />
                 </div>
               )}
               {getLabel(i) && (
@@ -79,6 +105,7 @@ function SliderRoot({
                   className={styles.label}
                   size={isThumbSmall ? 'micro' : 'mini'}
                   weight='medium'
+                  data-slot='slider-label'
                 >
                   {getLabel(i)}
                 </Text>
@@ -93,8 +120,12 @@ function SliderRoot({
 
 SliderRoot.displayName = 'Slider';
 
-export const Slider = Object.assign(SliderRoot, {
-  Value: SliderPrimitive.Value
-});
+function SliderValue(props: SliderPrimitive.Value.Props) {
+  return <SliderPrimitive.Value data-slot='slider-value' {...props} />;
+}
 
-Slider.Value.displayName = 'Slider.Value';
+SliderValue.displayName = 'Slider.Value';
+
+export const Slider = Object.assign(SliderRoot, {
+  Value: SliderValue
+});

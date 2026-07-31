@@ -7,7 +7,9 @@ function TableRoot({
   className,
   ...props
 }: ComponentProps<'table'> & VariantProps<typeof table>) {
-  return <table {...props} className={table({ className })} />;
+  return (
+    <table data-slot='table' {...props} className={table({ className })} />
+  );
 }
 TableRoot.displayName = 'Table';
 
@@ -16,12 +18,18 @@ function TableHeader({
   className,
   ...props
 }: ComponentProps<'thead'> & VariantProps<typeof header>) {
-  return <thead {...props} className={header({ className })} />;
+  return (
+    <thead
+      data-slot='table-header'
+      {...props}
+      className={header({ className })}
+    />
+  );
 }
 TableHeader.displayName = 'Table.Header';
 
 function TableBody({ ...props }: ComponentProps<'tbody'>) {
-  return <tbody {...props} />;
+  return <tbody data-slot='table-body' {...props} />;
 }
 TableBody.displayName = 'Table.Body';
 
@@ -37,7 +45,13 @@ function TableRow({
   interactive,
   ...props
 }: ComponentProps<'tr'> & VariantProps<typeof row>) {
-  return <tr {...props} className={row({ interactive, className })} />;
+  return (
+    <tr
+      data-slot='table-row'
+      {...props}
+      className={row({ interactive, className })}
+    />
+  );
 }
 TableRow.displayName = 'Table.Row';
 
@@ -47,7 +61,14 @@ function TableHead({
   scope = 'col',
   ...props
 }: ComponentProps<'th'> & VariantProps<typeof head>) {
-  return <th scope={scope} {...props} className={head({ className })} />;
+  return (
+    <th
+      scope={scope}
+      data-slot='table-head'
+      {...props}
+      className={head({ className })}
+    />
+  );
 }
 TableHead.displayName = 'Table.Head';
 
@@ -56,7 +77,9 @@ function TableCell({
   className,
   ...props
 }: ComponentProps<'td'> & VariantProps<typeof cell>) {
-  return <td {...props} className={cell({ className })} />;
+  return (
+    <td data-slot='table-cell' {...props} className={cell({ className })} />
+  );
 }
 TableCell.displayName = 'Table.Cell';
 
@@ -76,9 +99,15 @@ function SectionHeader({
     <tr
       ref={ref}
       className={sectionHeader({ className: classNames?.row })}
+      data-slot='table-section-header'
       {...rest}
     >
-      <th scope='colgroup' colSpan={colSpan} className={classNames?.cell}>
+      <th
+        scope='colgroup'
+        colSpan={colSpan}
+        className={classNames?.cell}
+        data-slot='table-section-header-cell'
+      >
         {children}
       </th>
     </tr>

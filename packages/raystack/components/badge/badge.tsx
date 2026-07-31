@@ -43,10 +43,23 @@ export const Badge = ({
   ...props
 }: BadgeProps) => {
   return (
-    <span className={badge({ variant, size, className })} {...props}>
-      {icon && <span className={styles['icon']}>{icon}</span>}
+    <span
+      className={badge({ variant, size, className })}
+      data-slot='badge'
+      {...props}
+    >
+      {icon && (
+        <span className={styles['icon']} data-slot='badge-icon'>
+          {icon}
+        </span>
+      )}
       {screenReaderText && (
-        <span className={styles['sr-only']}>{screenReaderText}</span>
+        <span
+          className={styles['sr-only']}
+          data-slot='badge-screen-reader-text'
+        >
+          {screenReaderText}
+        </span>
       )}
       {children}
     </span>

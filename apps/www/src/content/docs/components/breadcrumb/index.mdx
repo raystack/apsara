@@ -78,6 +78,25 @@ Renders a collapsed indicator for hidden breadcrumb items.
 
 <auto-type-table path="./props.ts" name="BreadcrumbEllipsisProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `breadcrumb` | The root `<nav>` |
+| `breadcrumb-list` | The `<ol>` wrapping items |
+| `breadcrumb-item` | The `<li>` wrapping each item |
+| `breadcrumb-link` | The link/span rendering the item's content |
+| `breadcrumb-item-text` | The item's label text (when a leading/trailing icon is set) |
+| `breadcrumb-leading-icon` | Leading icon (when `leadingIcon` is set) |
+| `breadcrumb-trailing-icon` | Trailing icon (when `trailingIcon` is set) |
+| `breadcrumb-dropdown-trigger` | Trigger button (when `dropdownItems` is set) |
+| `breadcrumb-dropdown-icon` | Trigger chevron icon (when `dropdownItems` is set) |
+| `breadcrumb-dropdown-item` | An entry in the dropdown menu |
+| `breadcrumb-separator` | `Breadcrumb.Separator` |
+| `breadcrumb-ellipsis` | `Breadcrumb.Ellipsis` |
+
 ## Examples
 
 ### Size

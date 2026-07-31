@@ -53,6 +53,7 @@ export function Flex({
   ...props
 }: BoxProps) {
   const flexProps = {
+    'data-slot': 'flex',
     className: flex({
       direction,
       align,

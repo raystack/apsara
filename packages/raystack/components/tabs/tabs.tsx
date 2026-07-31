@@ -28,6 +28,7 @@ function TabsRoot({ className, variant, size, ...props }: TabsRootProps) {
   return (
     <TabsPrimitive.Root
       className={cx(tabsRoot({ variant, size }), className)}
+      data-slot='tabs'
       {...props}
     />
   );
@@ -36,9 +37,16 @@ TabsRoot.displayName = 'Tabs.Root';
 
 function TabsList({ className, children, ...props }: TabsPrimitive.List.Props) {
   return (
-    <TabsPrimitive.List className={cx(styles.list, className)} {...props}>
+    <TabsPrimitive.List
+      className={cx(styles.list, className)}
+      data-slot='tabs-list'
+      {...props}
+    >
       {children}
-      <TabsPrimitive.Indicator className={styles.indicator} />
+      <TabsPrimitive.Indicator
+        className={styles.indicator}
+        data-slot='tabs-indicator'
+      />
     </TabsPrimitive.List>
   );
 }
@@ -50,9 +58,17 @@ interface TabsTabProps extends TabsPrimitive.Tab.Props {
 
 function TabsTab({ className, leadingIcon, children, ...props }: TabsTabProps) {
   return (
-    <TabsPrimitive.Tab className={cx(styles.trigger, className)} {...props}>
+    <TabsPrimitive.Tab
+      className={cx(styles.trigger, className)}
+      data-slot='tabs-tab'
+      {...props}
+    >
       {leadingIcon && (
-        <span className={styles['trigger-icon']} aria-hidden>
+        <span
+          className={styles['trigger-icon']}
+          aria-hidden
+          data-slot='tabs-tab-icon'
+        >
           {leadingIcon}
         </span>
       )}
@@ -64,7 +80,11 @@ TabsTab.displayName = 'Tabs.Tab';
 
 function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
   return (
-    <TabsPrimitive.Panel className={cx(styles.content, className)} {...props} />
+    <TabsPrimitive.Panel
+      className={cx(styles.content, className)}
+      data-slot='tabs-content'
+      {...props}
+    />
   );
 }
 TabsContent.displayName = 'Tabs.Content';

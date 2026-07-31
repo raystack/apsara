@@ -25,11 +25,12 @@ export const CommandInput = ({
 }: CommandInputProps) => {
   const { inputContainerRef } = useCommandContext();
   return (
-    <div className={styles.inputWrapper}>
+    <div data-slot='command-input-wrapper' className={styles.inputWrapper}>
       <AutocompletePrimitive.Input
         ref={ref}
         render={
           <Input
+            data-slot='command-input'
             containerRef={inputContainerRef}
             classNames={{ container: styles.commandInputContainer }}
             leadingIcon={leadingIcon}

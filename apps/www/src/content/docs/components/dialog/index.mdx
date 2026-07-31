@@ -86,6 +86,22 @@ Renders the dialog footer section.
 
 <auto-type-table path="./props.ts" name="DialogFooterProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `dialog-backdrop` | The overlay behind the dialog |
+| `dialog-viewport` | Viewport wrapper that positions the dialog |
+| `dialog-content` | The dialog popup |
+| `dialog-header` | The `Dialog.Header` row |
+| `dialog-title` | The `Dialog.Title` element |
+| `dialog-body` | The `Dialog.Body` container |
+| `dialog-description` | The `Dialog.Description` element |
+| `dialog-footer` | The `Dialog.Footer` row |
+| `dialog-close` | The built-in close button (when `showCloseButton`) |
+
 ## Examples
 
 ### Controlled Dialog

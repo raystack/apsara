@@ -45,14 +45,24 @@ export const AnnouncementBar = ({
       justify='center'
       align='center'
       gap={3}
+      data-slot='announcement-bar'
       {...props}
     >
       {leadingIcon && (
-        <span className={styles['icon']} aria-hidden='true'>
+        <span
+          className={styles['icon']}
+          aria-hidden='true'
+          data-slot='announcement-bar-icon'
+        >
           {leadingIcon}
         </span>
       )}
-      <Text className={styles.text} size='small' weight='medium'>
+      <Text
+        className={styles.text}
+        size='small'
+        weight='medium'
+        data-slot='announcement-bar-text'
+      >
         {text}
       </Text>
       {actionLabel || actionIcon ? (
@@ -60,11 +70,20 @@ export const AnnouncementBar = ({
           type='button'
           className={styles['action-btn']}
           onClick={onActionClick}
+          data-slot='announcement-bar-action'
         >
-          <Text size='small' weight='medium'>
+          <Text
+            size='small'
+            weight='medium'
+            data-slot='announcement-bar-action-label'
+          >
             {actionLabel}
           </Text>
-          {actionIcon && <span aria-hidden='true'>{actionIcon}</span>}
+          {actionIcon && (
+            <span aria-hidden='true' data-slot='announcement-bar-action-icon'>
+              {actionIcon}
+            </span>
+          )}
         </button>
       ) : null}
     </Flex>

@@ -58,6 +58,16 @@ A visual separator between slot groups, styled to fit between OTP slots.
 
 <auto-type-table path="./props.ts" name="OTPFieldSeparatorProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `otp-field` | The root container |
+| `otp-field-input` | Each `OTPField.Input` slot |
+| `otp-field-separator` | The `OTPField.Separator` element |
+
 ## Examples
 
 ### With separator

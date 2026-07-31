@@ -46,6 +46,22 @@ Renders a text input control. For label, description, and error support, use wit
 
 <auto-type-table path="./props.ts" name="InputProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `input-container` | The outer wrapper `<div>` |
+| `input-leading-icon` | Wrapper around the leading icon (when `leadingIcon`) |
+| `input-prefix` | The prefix text (when `prefix`) |
+| `input-chip-container` | Wrapper around the chips and the `<input>` element |
+| `input-chip` | Each visible chip (when `chips`) |
+| `input-chip-overflow` | The `+N` overflow count (when chips exceed `maxChipsVisible`) |
+| `input` | The `<input>` element itself |
+| `input-suffix` | The suffix text (when `suffix`) |
+| `input-trailing-icon` | Wrapper around the trailing icon (when `trailingIcon`) |
+
 ## Examples
 
 ### Basic Input

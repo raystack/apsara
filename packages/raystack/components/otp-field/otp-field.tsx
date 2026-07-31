@@ -27,6 +27,7 @@ const OTPFieldRoot = ({
       disabled={resolvedDisabled}
       required={resolvedRequired}
       length={length}
+      data-slot='otp-field'
       {...props}
     />
   );
@@ -40,6 +41,7 @@ const OTPFieldInput = ({ className, ref, ...props }: OTPFieldInputProps) => (
   <OTPFieldPrimitive.Input
     ref={ref}
     className={cx(styles['otp-field-input'], className)}
+    data-slot='otp-field-input'
     {...props}
   />
 );
@@ -60,6 +62,7 @@ const OTPFieldSeparator = ({
     ref={ref}
     orientation='horizontal'
     className={cx(styles['otp-field-separator'], className)}
+    data-slot='otp-field-separator'
     {...props}
   />
 );

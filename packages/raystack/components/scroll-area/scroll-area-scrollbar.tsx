@@ -21,9 +21,13 @@ export function ScrollAreaScrollbar({
       orientation={orientation}
       keepMounted
       className={cx(styles.scrollbar, styles[`scrollbar-${type}`], className)}
+      data-slot='scroll-area-scrollbar'
       {...props}
     >
-      <ScrollAreaPrimitive.Thumb className={styles.thumb} />
+      <ScrollAreaPrimitive.Thumb
+        className={styles.thumb}
+        data-slot='scroll-area-thumb'
+      />
     </ScrollAreaPrimitive.Scrollbar>
   );
 }

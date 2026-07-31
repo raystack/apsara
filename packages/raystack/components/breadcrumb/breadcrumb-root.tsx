@@ -36,9 +36,12 @@ export const BreadcrumbRoot = ({
       className={breadcrumbVariants({ size, className })}
       ref={ref}
       aria-label={ariaLabel ?? 'Breadcrumb'}
+      data-slot='breadcrumb'
       {...props}
     >
-      <ol className={styles['breadcrumb-list']}>{children}</ol>
+      <ol className={styles['breadcrumb-list']} data-slot='breadcrumb-list'>
+        {children}
+      </ol>
     </nav>
   );
 };

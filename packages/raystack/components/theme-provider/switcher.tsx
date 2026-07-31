@@ -25,6 +25,7 @@ export function ThemeSwitcher({ size = 30, ...props }: Props) {
       aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
       onClick={onClickHandler}
       style={{ width: size, height: size }}
+      data-slot='theme-switcher'
       {...props}
     >
       {/* size drives the button box; IconButton's CSS sizes the icon to fill

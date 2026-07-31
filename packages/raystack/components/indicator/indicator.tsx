@@ -41,19 +41,32 @@ export const Indicator = ({
   const accessibilityLabel = ariaLabel || label || `${variant} indicator`;
 
   return (
-    <div className={cx(styles.wrapper, classNames?.container)} {...props}>
+    <div
+      className={cx(styles.wrapper, classNames?.container)}
+      data-slot='indicator'
+      {...props}
+    >
       {children}
       <div
         className={indicator({ variant, className })}
         role='status'
         aria-label={accessibilityLabel}
+        data-slot='indicator-badge'
       >
         {label ? (
-          <span className={styles.label} data-length={label.length.toString()}>
+          <span
+            className={styles.label}
+            data-length={label.length.toString()}
+            data-slot='indicator-label'
+          >
             {label}
           </span>
         ) : (
-          <span className={styles.dot} aria-hidden='true' />
+          <span
+            className={styles.dot}
+            aria-hidden='true'
+            data-slot='indicator-dot'
+          />
         )}
       </div>
     </div>

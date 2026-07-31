@@ -42,6 +42,7 @@ export const ColorPickerInput = ({
       value={value}
       readOnly
       trailingIcon={resolvedTrailingIcon}
+      data-slot='color-picker-input'
       {...props}
     />
   );
