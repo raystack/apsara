@@ -1,9 +1,15 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Sidebar } from '../sidebar';
 import styles from '../sidebar.module.css';
-import { SidebarRootProps } from '../sidebar-root';
+import { SidebarRootProps, useSidebar } from '../sidebar-root';
 
 const HEADER_TEXT = 'Apsara';
 const MAIN_GROUP_LABEL = 'Main';
@@ -22,7 +28,7 @@ const BasicSidebar = ({
   defaultOpen = true,
   open,
   onOpenChange,
-  collapsible = true,
+  collapsible = 'icon',
   position = 'left',
   children,
   ...props
@@ -94,6 +100,12 @@ describe('Sidebar', () => {
       const nav = screen.getByRole('navigation');
       expect(nav).toBeInTheDocument();
       expect(nav).toHaveAttribute('aria-label', 'Navigation Sidebar');
+      // aria-expanded belongs on the toggle control, not the landmark.
+      expect(nav).not.toHaveAttribute('aria-expanded');
+
+      const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
+      expect(handle).toHaveAttribute('aria-expanded', 'true');
+      expect(handle).toHaveAttribute('aria-controls', nav.id);
     });
   });
 
@@ -107,7 +119,7 @@ describe('Sidebar', () => {
     });
 
     it('does not show handle when not collapsible', () => {
-      render(<BasicSidebar collapsible={false} />);
+      render(<BasicSidebar collapsible='none' />);
 
       const handle = screen.queryByRole('button', { name: COLLAPSE_TEXT });
       expect(handle).not.toBeInTheDocument();
@@ -115,7 +127,7 @@ describe('Sidebar', () => {
 
     it('toggles state when handle is clicked', () => {
       const onOpenChange = vi.fn();
-      render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
+      render(<BasicSidebar open onOpenChange={onOpenChange} />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
       fireEvent.click(handle);
@@ -123,24 +135,321 @@ describe('Sidebar', () => {
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
-    it('supports keyboard navigation on handle', () => {
+    it('supports keyboard navigation on handle', async () => {
+      const user = userEvent.setup();
       const onOpenChange = vi.fn();
-      render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
+      render(<BasicSidebar open onOpenChange={onOpenChange} />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
-      fireEvent.keyDown(handle, { key: 'Enter' });
+      handle.focus();
+      await user.keyboard('{Enter}');
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
-    it('supports space key on handle', () => {
+    it('supports space key on handle', async () => {
+      const user = userEvent.setup();
       const onOpenChange = vi.fn();
-      render(<BasicSidebar open onOpenChange={onOpenChange} collapsible />);
+      render(<BasicSidebar open onOpenChange={onOpenChange} />);
 
       const handle = screen.getByRole('button', { name: COLLAPSE_TEXT });
-      fireEvent.keyDown(handle, { key: ' ' });
+      handle.focus();
+      await user.keyboard(' ');
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+
+    it('shows a custom handle tooltip via collapseTooltip', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar open collapseTooltip='Toggle navigation' />);
+
+      await user.hover(screen.getByRole('button', { name: COLLAPSE_TEXT }));
+
+      await waitFor(() => {
+        expect(screen.getByText('Toggle navigation')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('collapsed appearance (collapsible)', () => {
+    it('defaults to icon rail collapse (unchanged behavior)', () => {
+      render(<BasicSidebar open={false} />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-collapse-mode', 'icon');
+      expect(nav).not.toHaveAttribute('data-peeking');
+    });
+
+    it('hides header/main/footer content when collapsed and hidden', () => {
+      render(<BasicSidebar open={false} collapsible='hidden' />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-collapse-mode', 'hidden');
+      expect(nav).toHaveAttribute('data-closed');
+    });
+
+    it('expands in place like icon mode when opened', () => {
+      const { container } = render(<BasicSidebar open collapsible='hidden' />);
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-open');
+      expect(nav).not.toHaveAttribute('data-peeking');
+      // No overlay chrome: the sidebar opens in the layout flow, so no
+      // backdrop element renders next to the aside.
+      expect(container.children).toHaveLength(1);
+      expect(container.firstElementChild?.tagName).toBe('ASIDE');
+    });
+
+    it('does not close on Escape while open', () => {
+      const onOpenChange = vi.fn();
+      render(
+        <BasicSidebar open collapsible='hidden' onOpenChange={onOpenChange} />
+      );
+
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      expect(onOpenChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('peekOnHover', () => {
+    const PeekStatus = () => {
+      const { isCollapsed, isPeeking } = useSidebar();
+      return (
+        <div data-testid='peek-status'>
+          {isCollapsed ? 'collapsed' : 'expanded'}:
+          {isPeeking ? 'peeking' : 'not-peeking'}
+        </div>
+      );
+    };
+
+    it('reveals a collapsed sidebar on hover without changing open state', async () => {
+      const onOpenChange = vi.fn();
+      render(
+        <Sidebar open={false} peekOnHover onOpenChange={onOpenChange}>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'collapsed:not-peeking'
+      );
+
+      fireEvent.mouseEnter(nav);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      });
+      expect(onOpenChange).not.toHaveBeenCalled();
+    });
+
+    it('still calls consumer onMouseEnter/onMouseLeave handlers', async () => {
+      const onMouseEnter = vi.fn();
+      const onMouseLeave = vi.fn();
+      render(
+        <Sidebar
+          open={false}
+          peekOnHover
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+        >
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      expect(onMouseEnter).toHaveBeenCalled();
+      // The consumer handler must not replace ours — the peek still starts.
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      });
+
+      fireEvent.mouseLeave(nav);
+      expect(onMouseLeave).toHaveBeenCalled();
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'collapsed:not-peeking'
+      );
+    });
+
+    it('respects a custom peekDelay', async () => {
+      vi.useFakeTimers();
+      try {
+        render(
+          <Sidebar open={false} peekOnHover peekDelay={500}>
+            <PeekStatus />
+          </Sidebar>
+        );
+
+        fireEvent.mouseEnter(screen.getByRole('navigation'));
+
+        act(() => vi.advanceTimersByTime(400));
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'collapsed:not-peeking'
+        );
+
+        act(() => vi.advanceTimersByTime(100));
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('reverts when the mouse leaves', async () => {
+      render(
+        <Sidebar open={false} peekOnHover>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      });
+
+      fireEvent.mouseLeave(nav);
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'collapsed:not-peeking'
+      );
+    });
+
+    it('pins the sidebar open when the handle is clicked while peeking', async () => {
+      const onOpenChange = vi.fn();
+      render(
+        <Sidebar open={false} peekOnHover onOpenChange={onOpenChange}>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      });
+
+      // `open` is still false during a peek, so the handle still reads as
+      // "Expand sidebar" — clicking it pins the sidebar open for real.
+      const handle = screen.getByRole('button', { name: 'Expand sidebar' });
+      fireEvent.click(handle);
+
+      expect(onOpenChange).toHaveBeenCalledWith(true);
+    });
+
+    it('flips the visual open state so collapse-hiding styles turn off', async () => {
+      render(
+        <Sidebar open={false} peekOnHover>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+
+      await waitFor(() => {
+        expect(nav).toHaveAttribute('data-peeking');
+      });
+      // data-open/data-closed track the visual state (peek counts as open);
+      // the real state stays on the resize handle's aria-expanded.
+      expect(nav).toHaveAttribute('data-open');
+      expect(nav).not.toHaveAttribute('data-closed');
+      expect(
+        screen.getByRole('button', { name: 'Expand sidebar' })
+      ).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('shows the hidden-mode content while peeking', async () => {
+      render(
+        <Sidebar open={false} peekOnHover collapsible='hidden'>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+
+      await waitFor(() => {
+        expect(nav).toHaveAttribute('data-peeking');
+      });
+      // Regression: the hidden-mode hiding rules key off data-closed, which
+      // must clear during a peek or the panel reveals 8px wide and empty.
+      expect(nav).not.toHaveAttribute('data-closed');
+    });
+
+    it('stops peeking once the sidebar is pinned open', async () => {
+      render(
+        <Sidebar defaultOpen={false} peekOnHover>
+          <PeekStatus />
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      await waitFor(() => {
+        expect(nav).toHaveAttribute('data-peeking');
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Expand sidebar' }));
+
+      // Opening for real supersedes the peek — the peek shadow and state
+      // must drop immediately, without waiting for the mouse to leave.
+      expect(nav).not.toHaveAttribute('data-peeking');
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'expanded:not-peeking'
+      );
+    });
+
+    it('holds the peek while a Sidebar.More menu is open', async () => {
+      render(
+        <Sidebar open={false} peekOnHover>
+          <PeekStatus />
+          <Sidebar.Main>
+            <Sidebar.More label='Overflow'>
+              <Sidebar.Item href='#'>Extra</Sidebar.Item>
+            </Sidebar.More>
+          </Sidebar.Main>
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      fireEvent.mouseEnter(nav);
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'expanded:peeking'
+        );
+      });
+
+      fireEvent.click(screen.getByText('Overflow').closest('button')!);
+      expect(screen.getByText('Extra')).toBeInTheDocument();
+
+      // The menu portals to document.body, so moving the pointer into it
+      // fires mouseleave on the sidebar — the peek must survive that.
+      fireEvent.mouseLeave(nav);
+
+      expect(screen.getByTestId('peek-status')).toHaveTextContent(
+        'expanded:peeking'
+      );
+
+      // Once the menu closes with the pointer still outside, the peek ends.
+      fireEvent.keyDown(document.activeElement ?? document, {
+        key: 'Escape'
+      });
+      await waitFor(() => {
+        expect(screen.getByTestId('peek-status')).toHaveTextContent(
+          'collapsed:not-peeking'
+        );
+      });
     });
   });
 
@@ -181,11 +490,11 @@ describe('Sidebar', () => {
       expect(screen.getByText(HEADER_TEXT)).toBeInTheDocument();
     });
 
-    it('has proper role', () => {
+    it('does not expose a banner landmark', () => {
       render(<BasicSidebar />);
 
-      const header = screen.getByRole('banner');
-      expect(header).toBeInTheDocument();
+      // banner is a page-level landmark and must not be nested in the nav
+      expect(screen.queryByRole('banner')).not.toBeInTheDocument();
     });
   });
 
@@ -199,7 +508,7 @@ describe('Sidebar', () => {
     it('has proper ARIA attributes', () => {
       render(<BasicSidebar />);
 
-      const main = screen.getByRole('group', { name: 'Main navigation' });
+      const main = screen.getByRole('list', { name: 'Main navigation' });
       expect(main).toBeInTheDocument();
     });
   });
@@ -286,6 +595,109 @@ describe('Sidebar', () => {
       });
       expect(dashboardLink).toHaveAttribute('aria-label', DASHBOARD_ITEM_TEXT);
     });
+
+    it('keeps custom header content mounted so data-collapse-hidden can hide it', () => {
+      render(<BasicSidebar open={false} />);
+
+      const nav = screen.getByRole('navigation');
+      const headerText = screen.getByText(HEADER_TEXT);
+
+      // The collapse-hiding CSS targets `[data-closed] [data-collapse-hidden]`;
+      // both attributes must be present on the right elements for header
+      // content (unlike nav items) to actually disappear on collapse.
+      expect(nav).toHaveAttribute('data-closed');
+      expect(headerText).toHaveAttribute('data-collapse-hidden');
+      expect(headerText).toBeInTheDocument();
+    });
+
+    it('shows a tooltip with the full label when the text is clipped', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      // jsdom has no layout, so simulate a clipped label
+      Object.defineProperty(text, 'scrollWidth', {
+        value: 300,
+        configurable: true
+      });
+      Object.defineProperty(text, 'clientWidth', {
+        value: 100,
+        configurable: true
+      });
+
+      await user.hover(text.closest('a')!);
+
+      await waitFor(() => {
+        // label + tooltip content
+        expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(2);
+      });
+    });
+
+    it('does not show a tooltip when the label is not clipped', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      // jsdom default: scrollWidth === clientWidth → not clipped
+      await user.hover(text.closest('a')!);
+
+      // wait out the tooltip open delay (200ms)
+      await act(() => new Promise(resolve => setTimeout(resolve, 300)));
+      expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(1);
+    });
+
+    it('suppresses the clipped-label tooltip via hideItemTooltips', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar hideItemTooltips />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      Object.defineProperty(text, 'scrollWidth', {
+        value: 300,
+        configurable: true
+      });
+      Object.defineProperty(text, 'clientWidth', {
+        value: 100,
+        configurable: true
+      });
+
+      await user.hover(text.closest('a')!);
+
+      // wait out the tooltip open delay (200ms)
+      await act(() => new Promise(resolve => setTimeout(resolve, 300)));
+      expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(1);
+    });
+
+    it('opens the clipped-label tooltip away from a right-positioned sidebar', async () => {
+      const user = userEvent.setup();
+      render(<BasicSidebar position='right' />);
+
+      const text = screen.getByText(HELP_ITEM_TEXT);
+      Object.defineProperty(text, 'scrollWidth', {
+        value: 300,
+        configurable: true
+      });
+      Object.defineProperty(text, 'clientWidth', {
+        value: 100,
+        configurable: true
+      });
+
+      await user.hover(text.closest('a')!);
+
+      await waitFor(() => {
+        expect(screen.getAllByText(HELP_ITEM_TEXT)).toHaveLength(2);
+      });
+      const tooltip = screen
+        .getAllByText(HELP_ITEM_TEXT)
+        .map(el => el.closest('[data-side]'))
+        .find(Boolean);
+      expect(tooltip).toHaveAttribute('data-side', 'left');
+    });
+
+    it('renders standalone outside a Sidebar without crashing', () => {
+      render(<Sidebar.Item href='#'>Alone</Sidebar.Item>);
+
+      expect(screen.getByText('Alone')).toBeInTheDocument();
+    });
   });
 
   describe('Sidebar Navigation Group', () => {
@@ -296,10 +708,12 @@ describe('Sidebar', () => {
       expect(screen.getByText(MAIN_GROUP_LABEL)).toBeInTheDocument();
     });
 
-    it('has proper ARIA attributes', () => {
+    it('participates in the main list as a list item', () => {
       render(<BasicSidebar />);
 
-      const group = screen.getByLabelText(MAIN_GROUP_LABEL);
+      // Groups are listitem children of Sidebar.Main's list (ul > li > ul),
+      // not sections, so the list structure stays valid.
+      const group = screen.getByRole('listitem', { name: MAIN_GROUP_LABEL });
       expect(group).toBeInTheDocument();
     });
 
@@ -608,6 +1022,160 @@ describe('Sidebar', () => {
 
       const trigger = screen.getByRole('listitem', { name: 'Overflow' });
       expect(trigger).toHaveAttribute('aria-label', 'Overflow');
+    });
+  });
+
+  describe('Sidebar Trigger', () => {
+    it('toggles an uncontrolled sidebar without the consumer managing state', () => {
+      render(
+        <Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Sidebar.Trigger data-testid='sidebar-trigger' />
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      const trigger = screen.getByTestId('sidebar-trigger');
+      expect(nav).toHaveAttribute('data-open');
+      expect(trigger).toHaveAttribute('aria-label', 'Collapse sidebar');
+
+      fireEvent.click(trigger);
+      expect(nav).toHaveAttribute('data-closed');
+      expect(trigger).toHaveAttribute('aria-label', 'Expand sidebar');
+
+      fireEvent.click(trigger);
+      expect(nav).toHaveAttribute('data-open');
+    });
+
+    it('exposes aria-expanded and aria-controls for the sidebar', () => {
+      render(
+        <Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Sidebar.Trigger data-testid='sidebar-trigger' />
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      const trigger = screen.getByTestId('sidebar-trigger');
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(trigger).toHaveAttribute('aria-controls', nav.id);
+
+      fireEvent.click(trigger);
+      expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('calls onOpenChange when the sidebar is controlled', () => {
+      const onOpenChange = vi.fn();
+      render(
+        <Sidebar open onOpenChange={onOpenChange}>
+          <Sidebar.Header>
+            <Sidebar.Trigger data-testid='sidebar-trigger' />
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      fireEvent.click(screen.getByTestId('sidebar-trigger'));
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+
+    it('is disabled when the sidebar is not collapsible', () => {
+      render(
+        <Sidebar defaultOpen collapsible='none'>
+          <Sidebar.Header>
+            <Sidebar.Trigger data-testid='sidebar-trigger' />
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      expect(screen.getByTestId('sidebar-trigger')).toBeDisabled();
+    });
+
+    it('accepts a custom icon and aria-label', () => {
+      render(
+        <Sidebar defaultOpen>
+          <Sidebar.Header>
+            <Sidebar.Trigger aria-label='Toggle navigation'>
+              <span data-testid='custom-trigger-icon' />
+            </Sidebar.Trigger>
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      expect(screen.getByTestId('custom-trigger-icon')).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Toggle navigation' })
+      ).toBeInTheDocument();
+    });
+  });
+
+  describe('useSidebar', () => {
+    const CollapseStatus = () => {
+      const { isCollapsed, open, position, collapsible } = useSidebar();
+      return (
+        <div
+          data-testid='collapse-status'
+          data-position={position}
+          data-collapsible={collapsible}
+        >
+          {isCollapsed ? 'collapsed' : 'expanded'}:{open ? 'open' : 'closed'}
+        </div>
+      );
+    };
+
+    it('exposes the collapsed state to custom children', () => {
+      render(
+        <Sidebar defaultOpen>
+          <Sidebar.Header>
+            <CollapseStatus />
+            <Sidebar.Trigger data-testid='sidebar-trigger' />
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      const status = screen.getByTestId('collapse-status');
+      expect(status).toHaveTextContent('expanded:open');
+      expect(status).toHaveAttribute('data-position', 'left');
+      expect(status).toHaveAttribute('data-collapsible', 'icon');
+
+      fireEvent.click(screen.getByTestId('sidebar-trigger'));
+      expect(status).toHaveTextContent('collapsed:closed');
+    });
+
+    it('allows custom children to toggle the sidebar via setOpen', () => {
+      const ToggleButton = () => {
+        const { open, setOpen } = useSidebar();
+        return (
+          <button data-testid='custom-toggle' onClick={() => setOpen(!open)}>
+            toggle
+          </button>
+        );
+      };
+
+      render(
+        <Sidebar defaultOpen>
+          <Sidebar.Header>
+            <ToggleButton />
+          </Sidebar.Header>
+        </Sidebar>
+      );
+
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-open');
+
+      fireEvent.click(screen.getByTestId('custom-toggle'));
+      expect(nav).toHaveAttribute('data-closed');
+    });
+
+    it('throws when used outside of a Sidebar', () => {
+      const spy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+      expect(() => render(<CollapseStatus />)).toThrow(
+        'useSidebar must be used inside of a <Sidebar> provider'
+      );
+      spy.mockRestore();
     });
   });
 });

@@ -5,20 +5,19 @@ import { ComponentProps } from 'react';
 import { Flex } from '../flex';
 import styles from './sidebar.module.css';
 
-export function SidebarMain({
+export function SidebarFooter({
   className,
   ...props
 }: ComponentProps<typeof Flex>) {
   return (
     <Flex
-      className={cx(styles.main, className)}
+      className={cx(styles.footer, className)}
       direction='column'
       role='list'
-      gap={2}
-      aria-label='Main navigation'
+      aria-label='Footer navigation'
       {...props}
     />
   );
 }
 
-SidebarMain.displayName = 'Sidebar.Main';
+SidebarFooter.displayName = 'Sidebar.Footer';
