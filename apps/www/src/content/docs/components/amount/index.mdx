@@ -12,6 +12,9 @@ import {
   localeDemo,
   hideDecimalsDemo,
   currencyDisplayDemo,
+  notationDemo,
+  signDisplayDemo,
+  tabularNumsDemo,
   hideCurrencyDemo,
   groupDigitsDemo,
   withTextDemo,
@@ -61,6 +64,24 @@ Formats and displays monetary values with locale and currency support.
 ### currencyDisplay
 
 <Demo data={currencyDisplayDemo} />
+
+### notation
+
+Use `compact` to abbreviate large values, e.g. `$1.2M`. Handy for dashboards and summary views. Compact rounds values by design, so avoid it where the exact amount matters.
+
+<Demo data={notationDemo} />
+
+### signDisplay
+
+Control when the `+`/`-` sign appears. Useful for showing gains and losses.
+
+<Demo data={signDisplayDemo} />
+
+### tabularNums
+
+Tabular (fixed-width) figures are on by default so amounts align digit-for-digit when stacked in table rows. Turn it off in running text, where proportional figures look more natural.
+
+<Demo data={tabularNumsDemo} />
 
 ### hideCurrency
 

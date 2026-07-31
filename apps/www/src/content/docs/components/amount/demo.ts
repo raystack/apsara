@@ -32,8 +32,18 @@ export const playground = {
     },
     currencyDisplay: {
       type: 'select',
-      options: ['symbol', 'code', 'name'],
+      options: ['symbol', 'narrowSymbol', 'code', 'name'],
       defaultValue: 'symbol'
+    },
+    notation: {
+      type: 'select',
+      options: ['standard', 'compact'],
+      defaultValue: 'standard'
+    },
+    signDisplay: {
+      type: 'select',
+      options: ['auto', 'always', 'exceptZero', 'never'],
+      defaultValue: 'auto'
     },
     minimumFractionDigits: {
       type: 'number',
@@ -50,6 +60,10 @@ export const playground = {
     hideCurrency: {
       type: 'checkbox',
       defaultValue: false
+    },
+    tabularNums: {
+      type: 'checkbox',
+      defaultValue: true
     }
   },
   getCode
@@ -119,6 +133,44 @@ export const currencyDisplayDemo = {
     <Amount value={1299} currencyDisplay="symbol" /> {/* $12.99 */}
     <Amount value={1299} currencyDisplay="code" /> {/* USD 12.99 */}
     <Amount value={1299} currencyDisplay="name" /> {/* 12.99 US dollars */}
+  </Flex>
+  `
+};
+
+export const notationDemo = {
+  type: 'code',
+  code: `
+  <Flex gap={4}>
+    <Amount value={120000000} notation="compact" /> {/* $1.2M */}
+    <Amount value={1300000} notation="compact" /> {/* $13K */}
+    <Amount value={120000000} /> {/* $1,200,000.00 */}
+  </Flex>
+  `
+};
+
+export const signDisplayDemo = {
+  type: 'code',
+  code: `
+  <Flex gap={4}>
+    <Amount value={1299} signDisplay="always" /> {/* +$12.99 */}
+    <Amount value={-1299} signDisplay="always" /> {/* -$12.99 */}
+    <Amount value={0} signDisplay="exceptZero" /> {/* $0.00 */}
+    <Amount value={-1299} signDisplay="never" /> {/* $12.99 */}
+  </Flex>
+  `
+};
+
+export const tabularNumsDemo = {
+  type: 'code',
+  code: `
+  <Flex direction="column" gap={2}>
+    {/* Tabular figures (default) keep digits aligned across rows */}
+    <Amount value={111111} />
+    <Amount value={909090} />
+    {/* Proportional figures read better in running text */}
+    <Text>
+      You saved <Amount value={1299} tabularNums={false} /> today
+    </Text>
   </Flex>
   `
 };

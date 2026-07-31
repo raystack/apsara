@@ -46,6 +46,28 @@ export function AmountExamples() {
             />
           </Text>
         </Flex>
+        <Flex gap={5} align='center' direction='column'>
+          <Text>
+            Compact: <Amount value={120000000} notation='compact' />
+          </Text>
+          <Text>
+            Narrow symbol:{' '}
+            <Amount
+              value={1299}
+              locale='en-CA'
+              currencyDisplay='narrowSymbol'
+            />
+          </Text>
+          <Text>
+            Gain: <Amount value={1299} signDisplay='always' />
+          </Text>
+          <Text>
+            Loss: <Amount value={-1299} signDisplay='always' />
+          </Text>
+          <Text>
+            Proportional figures: <Amount value={1111} tabularNums={false} />
+          </Text>
+        </Flex>
       </Flex>
     </PlaygroundLayout>
   );
