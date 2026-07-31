@@ -16,6 +16,7 @@ export function SidebarTrigger({
   onClick,
   children,
   'aria-label': ariaLabel,
+  disabled,
   ...props
 }: SidebarTriggerProps) {
   const { open, setOpen, collapsible, sidebarId } = useSidebar();
@@ -33,7 +34,7 @@ export function SidebarTrigger({
   return (
     <IconButton
       onClick={handleClick}
-      disabled={collapsible === 'none'}
+      disabled={collapsible === 'none' || disabled}
       aria-label={ariaLabel ?? (open ? 'Collapse sidebar' : 'Expand sidebar')}
       aria-expanded={open}
       aria-controls={sidebarId}
