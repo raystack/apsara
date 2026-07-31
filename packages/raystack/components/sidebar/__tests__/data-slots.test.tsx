@@ -34,9 +34,19 @@ describe('Sidebar data-slot contract', () => {
     ]);
   });
 
+  it('exposes the trigger slot on Sidebar.Trigger', () => {
+    const { container } = render(
+      <Sidebar>
+        <Sidebar.Trigger />
+        <Sidebar.Main />
+      </Sidebar>
+    );
+    expect(getSlot(container, 'sidebar-trigger')).not.toBeNull();
+  });
+
   it('omits the toggle slot when the sidebar is not collapsible', () => {
     const { container } = render(
-      <Sidebar collapsible={false}>
+      <Sidebar collapsible='none'>
         <Sidebar.Main />
       </Sidebar>
     );
