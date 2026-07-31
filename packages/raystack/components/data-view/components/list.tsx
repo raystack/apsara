@@ -261,6 +261,7 @@ export function DataViewList<TData, TValue = unknown>({
                 )}
                 style={spec?.styles?.header}
                 data-slot='data-view-list-header-cell'
+                data-column={accessor}
               >
                 {content}
               </div>
@@ -304,6 +305,7 @@ export function DataViewList<TData, TValue = unknown>({
           )}
           style={spec?.styles?.cell}
           data-slot='data-view-list-cell'
+          data-column={accessor}
         >
           {content}
         </div>
@@ -421,6 +423,7 @@ export function DataViewList<TData, TValue = unknown>({
               )}
               style={spec?.styles?.cell}
               data-slot='data-view-list-cell'
+              data-column={accessor}
             >
               <Skeleton containerClassName={styles.skeletonFill} />
             </div>

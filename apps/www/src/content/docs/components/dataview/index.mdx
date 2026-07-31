@@ -224,6 +224,16 @@ Every rendered part carries a stable `data-slot` attribute for [styling and test
 | `data-view-list-loader-row` | Skeleton row while `isLoading` |
 | `data-view-list-sentinel` | Infinite-scroll sentinel |
 
+Header cells, body cells, and loader cells also carry `data-column="{accessorKey}"`, so a single column can be targeted without a per-column `classNames` entry:
+
+```css
+/* Right-align every cell in the "amount" column, header included */
+[data-slot="data-view-list-cell"][data-column="amount"],
+[data-slot="data-view-list-header-cell"][data-column="amount"] {
+  text-align: right;
+}
+```
+
 **Toolbar and filters**
 
 | Slot | Element |

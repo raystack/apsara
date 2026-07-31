@@ -34,6 +34,7 @@ export interface InputProps
   maxChipsVisible?: number;
   variant?: 'default' | 'borderless';
   containerRef?: RefObject<HTMLDivElement | null>;
+  /** @deprecated Use `[data-slot="input-container"]` instead. */
   classNames?: { container?: string };
 }
 

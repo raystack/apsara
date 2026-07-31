@@ -17,6 +17,14 @@ interface EmptyStateProps extends ComponentProps<typeof Flex> {
   subHeading?: ReactNode;
   primaryAction?: ReactNode;
   secondaryAction?: ReactNode;
+  /**
+   * @deprecated Every key has an equivalent `[data-slot]`: `container` ->
+   * `[data-slot="empty-state"]`, `iconContainer` ->
+   * `[data-slot="empty-state-icon-container"]`, `icon` ->
+   * `[data-slot="empty-state-icon"]`, `heading` ->
+   * `[data-slot="empty-state-heading"]`, `subHeading` ->
+   * `[data-slot="empty-state-subheading"]`.
+   */
   classNames?: Partial<Record<classNameKeys, string>>;
   variant?: 'empty1' | 'empty2';
 }

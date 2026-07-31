@@ -107,6 +107,40 @@ describe('DataView data-slot contract', () => {
     ]);
   });
 
+  it('exposes data-column on header and body cells for per-column targeting', () => {
+    const { container } = render(
+      <DataView data={data} fields={fields} defaultSort={defaultSort}>
+        <DataView.List variant='table' columns={columns} />
+      </DataView>
+    );
+    expect(
+      container.querySelector(
+        '[data-slot="data-view-list-header-cell"][data-column="status"]'
+      )
+    ).not.toBeNull();
+    expect(
+      container.querySelector(
+        '[data-slot="data-view-list-cell"][data-column="status"]'
+      )
+    ).not.toBeNull();
+  });
+
+  it('exposes data-column on loader cells while loading', () => {
+    const { container } = render(
+      <DataView
+        data={data}
+        fields={fields}
+        defaultSort={defaultSort}
+        isLoading
+        loadingRowCount={1}
+      >
+        <DataView.List variant='table' columns={columns} />
+      </DataView>
+    );
+    const loaderRow = getSlot(container, 'data-view-list-loader-row');
+    expect(loaderRow?.querySelector('[data-column="status"]')).not.toBeNull();
+  });
+
   it('exposes a slot on loader rows while loading', () => {
     const { container } = render(
       <DataView
@@ -162,6 +196,26 @@ describe('DataView data-slot contract', () => {
       'data-view-display-trigger',
       'filter-chip'
     ]);
+  });
+
+  it('applies Filters classNames.filterChips and classNames.addFilter', () => {
+    const { container } = render(
+      <DataView
+        data={data}
+        fields={fields}
+        defaultSort={defaultSort}
+        query={{
+          filters: [{ name: 'name', operator: 'eq', value: 'John' }]
+        }}
+      >
+        <DataView.Filters
+          classNames={{ filterChips: 'my-chip', addFilter: 'my-add-filter' }}
+        />
+        <DataView.List variant='table' columns={columns} />
+      </DataView>
+    );
+    expect(container.querySelector('.my-chip')).not.toBeNull();
+    expect(container.querySelector('.my-add-filter')).not.toBeNull();
   });
 
   it('exposes slots inside the display controls popover', async () => {

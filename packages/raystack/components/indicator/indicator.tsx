@@ -25,6 +25,7 @@ export interface IndicatorProps
   children?: ReactNode;
   'aria-label'?: string;
   classNames?: {
+    /** @deprecated Use `[data-slot="indicator"]` instead. */
     container?: string;
   };
 }

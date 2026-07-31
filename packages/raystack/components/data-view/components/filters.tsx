@@ -26,13 +26,16 @@ interface AddFilterProps<TData> {
   appliedFiltersSet: Set<string>;
   onAddFilter: (field: DataViewField<TData>) => void;
   children?: Trigger<TData>;
+  /** Applied to the default trigger only — a custom `trigger`/`children` owns its own className. */
+  className?: string;
 }
 
 function AddFilter<TData>({
   fieldList = [],
   appliedFiltersSet,
   onAddFilter,
-  children
+  children,
+  className
 }: AddFilterProps<TData>) {
   const availableFilters = fieldList?.filter(
     f => !appliedFiltersSet.has(f.accessorKey)
@@ -44,7 +47,11 @@ function AddFilter<TData>({
     if (children) return children;
     if (appliedFiltersSet.size > 0) {
       return (
-        <IconButton size={4} data-slot='data-view-add-filter'>
+        <IconButton
+          size={4}
+          className={className}
+          data-slot='data-view-add-filter'
+        >
           <FilterIcon />
         </IconButton>
       );
@@ -55,12 +62,13 @@ function AddFilter<TData>({
         size='small'
         leadingIcon={<FilterIcon />}
         color='neutral'
+        className={className}
         data-slot='data-view-add-filter'
       >
         Filter
       </Button>
     );
-  }, [children, appliedFiltersSet, availableFilters]);
+  }, [children, appliedFiltersSet, availableFilters, className]);
 
   return availableFilters.length > 0 ? (
     <Menu>
@@ -84,7 +92,9 @@ function AddFilter<TData>({
 
 export interface DataViewFiltersProps<TData> {
   classNames?: {
+    /** @deprecated Use `[data-slot="filter-chip"]` instead. */
     filterChips?: string;
+    /** @deprecated Use `[data-slot="data-view-add-filter"]` instead. */
     addFilter?: string;
   };
   className?: string;
@@ -156,6 +166,7 @@ export function Filters<TData>({
         fieldList={filterableFields}
         appliedFiltersSet={appliedFiltersSet}
         onAddFilter={onAddFilter}
+        className={classNames?.addFilter}
       >
         {trigger}
       </AddFilter>

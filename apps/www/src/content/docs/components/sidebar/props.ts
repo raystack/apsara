@@ -90,19 +90,40 @@ export interface SidebarGroupProps {
 
   /** Optional class names for customizing parts of the group. */
   classNames?: {
-    /** Class name for the header row. */
+    /**
+     * Class name for the header row.
+     * @deprecated Use `[data-slot="sidebar-group-header"]` instead.
+     */
     header?: string;
-    /** Class name for the items container. */
+    /**
+     * Class name for the items container.
+     * @deprecated Use `[data-slot="sidebar-group-items"]` instead.
+     */
     items?: string;
-    /** Class name for the label text. */
+    /**
+     * Class name for the label text.
+     * @deprecated Use `[data-slot="sidebar-group-label"]` instead.
+     */
     label?: string;
-    /** Class name for the leading icon container. */
+    /**
+     * Class name for the leading icon container.
+     * @deprecated Use `[data-slot="sidebar-leading-icon"]` instead.
+     */
     icon?: string;
-    /** Class name for the trigger (when `collapsible`). */
+    /**
+     * Class name for the trigger (when `collapsible`).
+     * @deprecated Use `[data-slot="sidebar-group-trigger"]` instead.
+     */
     trigger?: string;
-    /** Class name for the chevron (when `collapsible`). */
+    /**
+     * Class name for the chevron (when `collapsible`).
+     * @deprecated Use `[data-slot="sidebar-group-chevron"]` instead.
+     */
     chevron?: string;
-    /** Class name for the trailing icon container. */
+    /**
+     * Class name for the trailing icon container.
+     * @deprecated Use `[data-slot="sidebar-trailing-icon"]` instead.
+     */
     trailingIcon?: string;
   };
 }
@@ -138,11 +159,20 @@ export interface SidebarItemProps {
 
   /** Optional class names for customizing parts of the item. */
   classNames?: {
-    /** Class name for the root element. */
+    /**
+     * Class name for the root element.
+     * @deprecated Use `[data-slot="sidebar-item"]` instead.
+     */
     root?: string;
-    /** Class name for the leading icon container. */
+    /**
+     * Class name for the leading icon container.
+     * @deprecated Use `[data-slot="sidebar-leading-icon"]` instead.
+     */
     leadingIcon?: string;
-    /** Class name for the text element. */
+    /**
+     * Class name for the text element.
+     * @deprecated Use `[data-slot="sidebar-item-text"]` instead.
+     */
     text?: string;
   };
 }
@@ -166,13 +196,26 @@ export interface SidebarMoreProps {
 
   /** Optional class names for customizing parts of the more trigger/menu. */
   classNames?: {
-    /** Class name for the trigger root element. */
+    /**
+     * Class name for the trigger root element.
+     * @deprecated Use `[data-slot="sidebar-more-trigger"]` instead.
+     */
     root?: string;
-    /** Class name for the leading icon container. */
+    /**
+     * Class name for the leading icon container.
+     * @deprecated Use `[data-slot="sidebar-leading-icon"]` instead.
+     */
     leadingIcon?: string;
-    /** Class name for the text element. */
+    /**
+     * Class name for the text element.
+     * @deprecated Use `[data-slot="sidebar-more-text"]` instead.
+     */
     text?: string;
-    /** Class name for menu content container. */
+    /**
+     * Class name for menu content container. Not deprecated: `Menu.Content`
+     * portals to `document.body`, so a `[data-slot="menu-content"]` selector
+     * can't be scoped to just this instance's dropdown.
+     */
     menuContent?: string;
   };
 }

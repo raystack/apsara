@@ -93,6 +93,10 @@ function SectionHeader({
   ...rest
 }: ComponentProps<'tr'> & {
   colSpan: number;
+  /**
+   * @deprecated Use `[data-slot="table-section-header"]` (row) and
+   * `[data-slot="table-section-header-cell"]` (cell) instead.
+   */
   classNames?: Partial<Record<SectionHeaderClassNames, string>>;
 }) {
   return (
