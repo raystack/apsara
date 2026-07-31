@@ -221,10 +221,12 @@ export function DataViewList<TData, TValue = unknown>({
         ref={headerMeasureRef}
         role={ariaRole === 'table' ? 'rowgroup' : undefined}
         className={cx(styles.listHeader, classNames.header)}
+        data-slot='data-view-list-header'
       >
         <div
           role={ariaRole === 'table' ? 'row' : undefined}
           className={styles.listHeaderRow}
+          data-slot='data-view-list-header-row'
         >
           {renderedAccessors.map(accessor => {
             const spec = columnMap.get(accessor);
@@ -258,6 +260,7 @@ export function DataViewList<TData, TValue = unknown>({
                   classNames.headerCell
                 )}
                 style={spec?.styles?.header}
+                data-slot='data-view-list-header-cell'
               >
                 {content}
               </div>
@@ -300,6 +303,7 @@ export function DataViewList<TData, TValue = unknown>({
             classNames.cell
           )}
           style={spec?.styles?.cell}
+          data-slot='data-view-list-cell'
         >
           {content}
         </div>
@@ -339,6 +343,7 @@ export function DataViewList<TData, TValue = unknown>({
         )}
         style={composedStyle}
         aria-hidden={hidden || undefined}
+        data-slot='data-view-list-group-header'
       >
         {data?.label}
         {data?.showGroupCount ? (
@@ -384,6 +389,7 @@ export function DataViewList<TData, TValue = unknown>({
         )}
         style={composedStyle}
         onClick={handleRowActivate}
+        data-slot='data-view-list-row'
       >
         {renderRowCells(row)}
       </div>
@@ -400,6 +406,7 @@ export function DataViewList<TData, TValue = unknown>({
         className={cx(styles.listLoaderRow, dividers && styles.listRowDivider)}
         aria-busy='true'
         style={{ minHeight: effectiveRowHeight }}
+        data-slot='data-view-list-loader-row'
       >
         {renderedAccessors.map(accessor => {
           const spec = columnMap.get(accessor);
@@ -413,6 +420,7 @@ export function DataViewList<TData, TValue = unknown>({
                 classNames.cell
               )}
               style={spec?.styles?.cell}
+              data-slot='data-view-list-cell'
             >
               <Skeleton containerClassName={styles.skeletonFill} />
             </div>
@@ -427,12 +435,14 @@ export function DataViewList<TData, TValue = unknown>({
       role={ariaRole === 'table' ? 'rowgroup' : undefined}
       className={styles.listBodyVirtual}
       style={{ height: totalSize }}
+      data-slot='data-view-list-body'
     >
       {stickyGroup && stickyGroupHeader ? (
         <div
           aria-hidden='true'
           className={cx(styles.listGroupAnchor, classNames.groupHeader)}
           style={{ top: headerHeight }}
+          data-slot='data-view-list-group-header'
         >
           {stickyGroup.label}
           {stickyGroup.showGroupCount ? (
@@ -474,6 +484,7 @@ export function DataViewList<TData, TValue = unknown>({
     <div
       role={ariaRole === 'table' ? 'rowgroup' : undefined}
       className={styles.listBody}
+      data-slot='data-view-list-body'
     >
       {rows.map(row => {
         const isGroupHeader = row.subRows && row.subRows.length > 0;
@@ -490,11 +501,13 @@ export function DataViewList<TData, TValue = unknown>({
       ref={scrollRef}
       className={cx(styles.listRoot, classNames.root)}
       onScroll={handleScroll}
+      data-slot='data-view-list'
     >
       <div
         role={ariaRole}
         className={styles.listGrid}
         style={{ gridTemplateColumns }}
+        data-slot='data-view-list-grid'
       >
         {renderHeaderRow()}
         {virtualized ? renderVirtualBody() : renderFlatBody()}
@@ -504,6 +517,7 @@ export function DataViewList<TData, TValue = unknown>({
           ref={sentinelRef}
           className={styles.listSentinel}
           aria-hidden='true'
+          data-slot='data-view-list-sentinel'
         />
       </div>
       <FilterSummary />

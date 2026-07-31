@@ -24,6 +24,22 @@ Renders an interactive chip for filtering content.
 
 <auto-type-table path="./props.ts" name="FilterChipProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `filter-chip` | The chip root |
+| `filter-chip-label` | Label group (icon + text) |
+| `filter-chip-label-text` | The label text |
+| `filter-chip-leading-icon` | Leading icon wrapper (when `leadingIcon` is set) |
+| `filter-chip-operation` | The operation control (static text or select trigger) |
+| `filter-chip-operation-text` | The selected operation's text |
+| `filter-chip-value` | The value control (select trigger, date field, or input wrapper) |
+| `filter-chip-remove` | The remove button (when `onRemove` is set) |
+| `filter-chip-remove-icon` | The icon inside the remove button |
+
 ## Examples
 
 ### Input Types

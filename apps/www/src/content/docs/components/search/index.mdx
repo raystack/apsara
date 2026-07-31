@@ -24,6 +24,17 @@ Renders a search input field with clear functionality.
 
 <auto-type-table path="./props.ts" name="SearchProps" />
 
+### Slots
+
+Every rendered part carries a stable `data-slot` attribute for [styling and testing](/docs/styling#with-data-slot):
+
+| Slot | Element |
+|------|---------|
+| `search` | The `role="search"` container |
+| `search-input` | The `<input>` element itself |
+| `search-clear` | Wrapper around the clear button (when `showClearButton`) |
+| `search-clear-button` | The clear button (when `showClearButton`) |
+
 ## Examples
 
 ### Size

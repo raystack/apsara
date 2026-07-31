@@ -44,7 +44,7 @@ function AddFilter<TData>({
     if (children) return children;
     if (appliedFiltersSet.size > 0) {
       return (
-        <IconButton size={4}>
+        <IconButton size={4} data-slot='data-view-add-filter'>
           <FilterIcon />
         </IconButton>
       );
@@ -55,6 +55,7 @@ function AddFilter<TData>({
         size='small'
         leadingIcon={<FilterIcon />}
         color='neutral'
+        data-slot='data-view-add-filter'
       >
         Filter
       </Button>
@@ -68,7 +69,11 @@ function AddFilter<TData>({
       />
       <Menu.Content>
         {availableFilters?.map(field => (
-          <Menu.Item key={field.accessorKey} onClick={() => onAddFilter(field)}>
+          <Menu.Item
+            key={field.accessorKey}
+            onClick={() => onAddFilter(field)}
+            data-slot='data-view-add-filter-item'
+          >
             {field.label}
           </Menu.Item>
         ))}
@@ -126,6 +131,7 @@ export function Filters<TData>({
       align='center'
       className={cx(styles.filterContainer, className)}
       data-has-filter-chips={hasAppliedFilters || undefined}
+      data-slot='data-view-filters'
     >
       {appliedFilters.map(filter => (
         <FilterChip

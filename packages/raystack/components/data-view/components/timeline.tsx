@@ -207,6 +207,7 @@ function TimelineCardViewInner<TData>({
       className={className}
       style={style}
       data-collapsed={collapsed || undefined}
+      data-slot='data-view-timeline-card'
       onClick={onRowClick ? () => onRowClick(row.original) : undefined}
     >
       {renderCard(row, context)}
@@ -1203,6 +1204,7 @@ export function DataViewTimeline<TData>({
       tabIndex={0}
       className={cx(styles.timelineRoot, classNames.root)}
       data-dragging={isDragging || undefined}
+      data-slot='data-view-timeline'
       onScroll={handleScroll}
       onMouseMove={showCursorLine ? handlePointerMove : undefined}
       onMouseLeave={showCursorLine ? handlePointerLeave : undefined}
@@ -1216,15 +1218,22 @@ export function DataViewTimeline<TData>({
       <div
         className={cx(styles.timelineAxis, classNames.axis)}
         style={{ width: timeScale.totalWidth }}
+        data-slot='data-view-timeline-axis'
       >
         {bands.map(band => (
           <div
             key={band.time}
             className={cx(styles.timelineAxisBand, classNames.band)}
             style={{ left: band.x, width: band.width }}
+            data-slot='data-view-timeline-axis-band'
           >
             {/* Sticky-left so the label stays visible while its band spans the viewport. */}
-            <span className={styles.timelineAxisBandLabel}>{band.label}</span>
+            <span
+              className={styles.timelineAxisBandLabel}
+              data-slot='data-view-timeline-axis-band-label'
+            >
+              {band.label}
+            </span>
           </div>
         ))}
         {ticks.map(tick =>
@@ -1233,6 +1242,7 @@ export function DataViewTimeline<TData>({
               key={tick.time}
               className={cx(styles.timelineAxisTick, classNames.tick)}
               style={{ left: tick.x }}
+              data-slot='data-view-timeline-axis-tick'
             >
               {tick.label}
             </div>
@@ -1243,6 +1253,7 @@ export function DataViewTimeline<TData>({
             key={marker.key}
             className={styles.timelineAxisMarker}
             style={{ left: marker.x }}
+            data-slot='data-view-timeline-axis-marker'
           >
             <Badge size='micro' variant={MARKER_BADGE_VARIANT[marker.variant]}>
               {marker.label}
@@ -1254,6 +1265,7 @@ export function DataViewTimeline<TData>({
             aria-hidden='true'
             className={styles.timelineAxisCursor}
             style={{ left: timeScale.x(cursorTime) }}
+            data-slot='data-view-timeline-axis-cursor'
           >
             <Badge size='micro' variant='neutral'>
               {cursorLabel(cursorTime, scale)}
@@ -1272,12 +1284,14 @@ export function DataViewTimeline<TData>({
         <div
           className={styles.timelineGroupLayer}
           style={{ width: timeScale.totalWidth, height: canvasHeight }}
+          data-slot='data-view-timeline-group-layer'
         >
           {groupBands.map(band => (
             <div
               key={band.key}
               className={styles.timelineGroupSlot}
               style={{ top: band.top, height: band.height }}
+              data-slot='data-view-timeline-group-slot'
             >
               <div
                 className={cx(
@@ -1285,9 +1299,13 @@ export function DataViewTimeline<TData>({
                   classNames.groupHeader
                 )}
                 style={{ height: GROUP_BAND_HEIGHT }}
+                data-slot='data-view-timeline-group-header'
               >
                 {/* Sticky-left so the label stays readable while panning. */}
-                <span className={styles.timelineGroupHeaderLabel}>
+                <span
+                  className={styles.timelineGroupHeaderLabel}
+                  data-slot='data-view-timeline-group-header-label'
+                >
                   {band.group.label}
                   {band.group.showGroupCount ? (
                     <Badge variant='neutral'>{band.group.count}</Badge>
@@ -1303,6 +1321,7 @@ export function DataViewTimeline<TData>({
         role='list'
         className={cx(styles.timelineCanvas, classNames.canvas)}
         style={{ width: timeScale.totalWidth, height: canvasHeight }}
+        data-slot='data-view-timeline-canvas'
       >
         {showGridlines
           ? gridTicks.map(tick =>
@@ -1312,6 +1331,7 @@ export function DataViewTimeline<TData>({
                   aria-hidden='true'
                   className={cx(styles.timelineGridline, classNames.gridline)}
                   style={{ left: tick.x }}
+                  data-slot='data-view-timeline-gridline'
                 />
               ) : null
             )
@@ -1323,6 +1343,7 @@ export function DataViewTimeline<TData>({
             className={cx(styles.timelineMarkerLine, classNames.marker)}
             data-variant={marker.variant}
             style={{ left: marker.x }}
+            data-slot='data-view-timeline-marker'
           />
         ))}
         {cursorTime !== null ? (
@@ -1330,6 +1351,7 @@ export function DataViewTimeline<TData>({
             aria-hidden='true'
             className={cx(styles.timelineCursorLine, classNames.cursor)}
             style={{ left: timeScale.x(cursorTime) }}
+            data-slot='data-view-timeline-cursor'
           />
         ) : null}
         {cardSlice.map(item => {
@@ -1359,7 +1381,10 @@ export function DataViewTimeline<TData>({
       </div>
 
       {/* Sticky-left so the footer stays viewport-aligned under horizontal scroll. */}
-      <div className={styles.timelineFooter}>
+      <div
+        className={styles.timelineFooter}
+        data-slot='data-view-timeline-footer'
+      >
         <FilterSummary />
       </div>
     </div>

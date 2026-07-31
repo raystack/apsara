@@ -30,12 +30,13 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
   };
 
   return (
-    <Flex align='center' gap={5}>
+    <Flex align='center' gap={5} data-slot='data-view-ordering'>
       <Text
         size='small'
         weight='medium'
         variant='secondary'
         className={styles['display-popover-properties-label']}
+        data-slot='data-view-ordering-label'
       >
         Ordering
       </Text>
@@ -43,6 +44,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
         gap={3}
         align='center'
         className={styles['display-popover-properties-control']}
+        data-slot='data-view-ordering-control'
       >
         <Select
           onValueChange={handleColumnChange}
@@ -52,6 +54,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           <Select.Trigger
             size='small'
             className={styles['display-popover-properties-select']}
+            data-slot='data-view-ordering-select'
           >
             <Select.Value placeholder='Select value' />
           </Select.Trigger>
@@ -67,6 +70,7 @@ export function Ordering({ columnList, onChange, value }: OrderingProps) {
           onClick={handleOrderChange}
           size={4}
           disabled={columnList.length === 0}
+          data-slot='data-view-ordering-direction'
         >
           <TextAlignBottomIcon
             className={styles['display-popover-sort-icon']}
