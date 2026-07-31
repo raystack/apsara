@@ -139,6 +139,11 @@ interface CurrencyInfo {
   decimals: number;
 }
 
+/**
+ * Sized to hold every valid ISO 4217 code (~180) without eviction;
+ * the cap only guards against unbounded growth from invalid inputs.
+ */
+const CURRENCY_INFO_CACHE_LIMIT = 256;
 const currencyInfoCache = new Map<string, CurrencyInfo>();
 
 /**
@@ -159,6 +164,9 @@ function getCurrencyInfo(currency: string): CurrencyInfo {
       };
     } catch {
       info = { valid: false, decimals: 2 };
+    }
+    if (currencyInfoCache.size >= CURRENCY_INFO_CACHE_LIMIT) {
+      currencyInfoCache.clear();
     }
     currencyInfoCache.set(code, info);
   }
