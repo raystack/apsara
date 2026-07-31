@@ -34,7 +34,7 @@ describe('Command data-slot contract', () => {
     const { container } = render(<BasicCommand />);
     expectSlots(container, [
       'command',
-      'command-input-wrapper',
+      'command-input-container',
       'command-input',
       'command-content',
       'command-empty',

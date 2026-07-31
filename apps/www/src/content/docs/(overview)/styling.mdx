@@ -122,7 +122,39 @@ Combine them freely:
 
 Slots also make reliable selectors for tests (`querySelector('[data-slot="search-clear-button"]')`) instead of reaching for hashed CSS-module classes.
 
-Coverage note: `data-slot` is being rolled out component by component, starting with `Search`, `FilterChip`, and `DataView`. Each component's docs list its slot names as they land.
+#### Styling based on what a component contains
+
+Because every part carries its own slot, a parent can change its own styling based on which children are present — no prop needed to signal it. CSS's `:has()` reaches into descendants:
+
+```css
+/* A filter bar that's tighter when it has no chips yet */
+[data-slot="data-view-filters"]:has([data-slot="filter-chip"]) {
+  gap: var(--rs-space-4);
+}
+
+/* Style a submit button differently only inside a form's footer */
+[data-slot="dialog-footer"] [data-slot="button"] {
+  width: 100%;
+}
+```
+
+With Tailwind's arbitrary variants, the same thing reads as a utility class instead of a stylesheet rule:
+
+```tsx
+<Flex className="has-[[data-slot=filter-chip]]:gap-4">
+  <DataView.Filters />
+</Flex>
+```
+
+```tsx
+<Dialog.Footer className="[&_[data-slot=button]]:w-full">
+  <Button>Save</Button>
+</Dialog.Footer>
+```
+
+This is the same technique as the state-based selectors above (`data-[state=open]:...`) — `data-slot` just gives you a target that's stable across releases instead of one tied to internal markup.
+
+Coverage: every Apsara component exposes `data-slot` on every element it renders (`data-table` is the one exception — it's being phased out in favor of `DataView`). Each component's docs page lists its slot names.
 
 ## Theming with Data Attributes
 
