@@ -1,0 +1,41 @@
+name: Canary Release
+
+# Publishes a preview build of @raystack/apsara to pkg.pr.new on every push
+# to a pull request or to main, so changes can be installed and tested
+# before a real npm release. See https://pkg.pr.new
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Publish to pkg.pr.new
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm 9
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.3.0
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "pnpm"
+
+      - name: Install Dependencies 🔧
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Step 🔧
+        run: pnpm build:apsara
+
+      - name: Publish 🚀
+        run: pnpm exec pkg-pr-new publish ./packages/raystack --comment=update
