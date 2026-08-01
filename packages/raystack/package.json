@@ -79,6 +79,11 @@
   ],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raystack/apsara.git",
+    "directory": "packages/raystack"
+  },
   "devDependencies": {
     "@figma/code-connect": "^1.4.7",
     "@raystack/tools-config": "workspace:*",

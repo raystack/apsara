@@ -24,6 +24,7 @@ Thank you for your interest in contributing to Apsara! This guide will help you 
       - [For Maintainers](#for-maintainers)
     - [Release Workflow Details](#release-workflow-details)
     - [NPM Publishing](#npm-publishing)
+    - [Canary Releases](#canary-releases)
   - [Getting Help](#getting-help)
   - [Code of Conduct](#code-of-conduct)
 
@@ -213,6 +214,11 @@ Apsara follows an automated release process using GitHub Actions and semantic ve
    - Published to NPM with `next` tag
    - Triggered by pushing tags matching `v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+`
 
+3. **Canary Releases**:
+   - Built automatically for every pull request and every push to `main`
+   - Not published to NPM — hosted by [pkg.pr.new](https://pkg.pr.new) instead
+   - No tag or version bump needed
+
 ### Creating a Release
 
 #### For Maintainers
@@ -267,6 +273,24 @@ The library is published as `@raystack/apsara` with the following structure:
 npm install @raystack/apsara
 # or
 pnpm add @raystack/apsara
+```
+
+### Canary Releases
+
+Every pull request gets a preview build of `@raystack/apsara`, so you can try out changes before they're merged or released — no need to wait for a real NPM publish.
+
+The [`canary.yaml`](.github/workflows/canary.yaml) workflow builds the package and publishes it to [pkg.pr.new](https://pkg.pr.new) on every push to a PR or to `main`. pkg.pr.new then comments on the PR with an install command, for example:
+
+```bash
+pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<pr-number>
+```
+
+Install that in a test project to check out the change. The preview build updates automatically as new commits are pushed to the same PR.
+
+Pushes to `main` are published the same way but don't have a PR to comment on. Install those directly using the commit SHA:
+
+```bash
+pnpm add https://pkg.pr.new/raystack/apsara/@raystack/apsara@<commit-sha>
 ```
 
 ## Getting Help
