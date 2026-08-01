@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@raystack/apsara?logo=npm&color=cb3837)](https://www.npmjs.com/package/@raystack/apsara)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?logo=apache)](LICENSE)
 [![Biome](https://img.shields.io/badge/Biome-60a5fa?logo=biome&logoColor=white)](https://biomejs.dev/)
+[![pkg.pr.new](https://pkg.pr.new/badge/raystack/apsara)](https://pkg.pr.new/~/raystack/apsara)
 
 Apsara is an open-source React component library for building accessible, data-heavy interfaces. It is built on [Base UI](https://base-ui.com/) primitives and written in TypeScript.
 
