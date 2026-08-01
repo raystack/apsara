@@ -11,6 +11,12 @@ on:
 
 permissions: {}
 
+# --comment=update edits a single comment per PR; cancel superseded runs so a
+# stale run can't finish after a newer one and leave outdated info behind.
+concurrency:
+  group: canary-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   publish:
     name: Publish to pkg.pr.new
@@ -19,6 +25,8 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Setup pnpm 9
         uses: pnpm/action-setup@v4
