@@ -29,6 +29,9 @@ importers:
       lefthook:
         specifier: ^1.11.12
         version: 1.11.12
+      pkg-pr-new:
+        specifier: ^0.0.86
+        version: 0.0.86
       process:
         specifier: ^0.11.10
         version: 0.11.10
@@ -6396,6 +6399,10 @@ packages:
   pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
+
+  pkg-pr-new@0.0.86:
+    resolution: {integrity: sha512-BwPsw/e1Be7F0SfpxhNc2VSxX7uHgCy46Ck+2Z/vqCwXoePhUBrX/VbcawpAlZgMvQe2iwGbZIQ6HSj9bmCk8A==}
+    hasBin: true
 
   pluralize@2.0.0:
     resolution: {integrity: sha512-TqNZzQCD4S42De9IfnnBvILN7HAW7riLqsCyp8lgjXeysyPlX5HhqKAcJHHHb9XskE4/a+7VGC9zzx8Ls0jOAw==}
@@ -15115,6 +15122,8 @@ snapshots:
   pify@5.0.0: {}
 
   pirates@4.0.6: {}
+
+  pkg-pr-new@0.0.86: {}
 
   pluralize@2.0.0: {}
 
