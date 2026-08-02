@@ -2,7 +2,7 @@
 ID: RFC 004
 Created: August 3, 2026
 Status: Draft
-RFC PR: TBD
+RFC PR: https://github.com/raystack/apsara/pull/880
 ---
 
 # Theme Improvements
