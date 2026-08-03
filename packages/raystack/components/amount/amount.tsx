@@ -52,9 +52,27 @@ export interface AmountProps extends ComponentProps<'span'> {
   /**
    * Currency display format
    * @default 'symbol'
-   * @example 'symbol' - $12.99, 'code' - USD 12.99, 'name' - 12.99 US Dollars
+   * @example 'symbol' - $12.99 (may show "US$" in non-US locales), 'narrowSymbol' - $12.99 (always the narrow symbol), 'code' - USD 12.99, 'name' - 12.99 US Dollars
    */
-  currencyDisplay?: 'symbol' | 'code' | 'name';
+  currencyDisplay?: 'symbol' | 'narrowSymbol' | 'code' | 'name';
+
+  /**
+   * Number formatting notation.
+   * 'compact' abbreviates large values — useful for dashboards and summary views.
+   * Compact rounds aggressively by design; avoid it when the value must render exactly.
+   * @default 'standard'
+   * @example
+   * 'standard' - $1,200,000.00, 'compact' - $1.2M
+   */
+  notation?: 'standard' | 'compact';
+
+  /**
+   * When to show the +/- sign — useful for gains/losses.
+   * @default 'auto'
+   * @example
+   * 'auto' - -$12.99, 'always' - +$12.99, 'exceptZero' - +$12.99 but $0.00, 'never' - $12.99
+   */
+  signDisplay?: 'auto' | 'always' | 'exceptZero' | 'never';
 
   /**
    * Number of minimum fraction digits
@@ -83,41 +101,76 @@ export interface AmountProps extends ComponentProps<'span'> {
    * <Amount value={1299} hideCurrency /> => "12.99"
    */
   hideCurrency?: boolean;
+
+  /**
+   * Use fixed-width (tabular) figures so digits align vertically across rows —
+   * ideal for tables and lists of amounts. Set to false in running text,
+   * where proportional figures look more natural.
+   * @default true
+   */
+  tabularNums?: boolean;
 }
 
 /**
- * Get the number of decimal places for a currency
+ * Intl.NumberFormat construction is expensive, and Amount often renders
+ * hundreds of times in a table. Cache instances module-wide, keyed by
+ * locale + options. The cap guards against unbounded growth when
+ * locales/currencies are dynamic.
  */
-function getCurrencyDecimals(currency: string): number {
-  try {
-    const formatter = new Intl.NumberFormat('en', {
-      style: 'currency',
-      currency: currency.toUpperCase()
-    });
+const FORMATTER_CACHE_LIMIT = 64;
+const formatterCache = new Map<string, Intl.NumberFormat>();
 
-    // Format a number and count the decimal places
-    const formatted = formatter.format(1); // Get string representation of 1 unit with currency symbol
-    const match = formatted.match(/\.([\d]+)/); // Extract the decimal part
-    return match ? match[1].length : 0;
-  } catch {
-    // Default to 2 decimal places
-    return 2;
+function getFormatter(
+  locale: string,
+  options: Intl.NumberFormatOptions
+): Intl.NumberFormat {
+  const key = `${locale}|${JSON.stringify(options)}`;
+  let formatter = formatterCache.get(key);
+  if (!formatter) {
+    formatter = new Intl.NumberFormat(locale, options);
+    if (formatterCache.size >= FORMATTER_CACHE_LIMIT) formatterCache.clear();
+    formatterCache.set(key, formatter);
   }
+  return formatter;
+}
+
+interface CurrencyInfo {
+  valid: boolean;
+  decimals: number;
 }
 
 /**
- * Check if a currency is valid
+ * Sized to hold every valid ISO 4217 code (~180) without eviction;
+ * the cap only guards against unbounded growth from invalid inputs.
  */
-function isValidCurrency(currency: string): boolean {
-  try {
-    new Intl.NumberFormat('en', {
-      style: 'currency',
-      currency: currency.toUpperCase()
-    });
-    return true;
-  } catch {
-    return false;
+const CURRENCY_INFO_CACHE_LIMIT = 256;
+const currencyInfoCache = new Map<string, CurrencyInfo>();
+
+/**
+ * Resolve a currency's validity and decimal places in one cached lookup.
+ */
+function getCurrencyInfo(currency: string): CurrencyInfo {
+  const code = currency.toUpperCase();
+  let info = currencyInfoCache.get(code);
+  if (!info) {
+    try {
+      const formatter = getFormatter('en', {
+        style: 'currency',
+        currency: code
+      });
+      info = {
+        valid: true,
+        decimals: formatter.resolvedOptions().maximumFractionDigits ?? 2
+      };
+    } catch {
+      info = { valid: false, decimals: 2 };
+    }
+    if (currencyInfoCache.size >= CURRENCY_INFO_CACHE_LIMIT) {
+      currencyInfoCache.clear();
+    }
+    currencyInfoCache.set(code, info);
   }
+  return info;
 }
 
 /**
@@ -152,9 +205,14 @@ function isValidCurrency(currency: string): boolean {
  *   Amount: <Amount value={12.99} valueInMinorUnits={false} />  // Shows as "$12.99"
  * </Text>
  *
- * // With groupDigits (default is true)
+ * // Compact notation for dashboards
  * <Text>
- *   Amount: <Amount value={129999999} groupDigits />  // Shows as "$129,999,999.99"
+ *   Revenue: <Amount value={120000000} notation="compact" />  // Shows as "$1.2M"
+ * </Text>
+ *
+ * // Signed amounts for gains/losses
+ * <Text>
+ *   Change: <Amount value={1299} signDisplay="always" />  // Shows as "+$12.99"
  * </Text>
  * ```
  */
@@ -164,11 +222,14 @@ export const Amount = ({
   locale = 'en-US',
   hideDecimals = false,
   currencyDisplay = 'symbol',
+  notation = 'standard',
+  signDisplay = 'auto',
   minimumFractionDigits,
   maximumFractionDigits,
   groupDigits = true,
   valueInMinorUnits = true,
   hideCurrency = false,
+  tabularNums = true,
   className,
   ...props
 }: AmountProps) => {
@@ -183,12 +244,15 @@ export const Amount = ({
       );
     }
 
-    const validCurrency = isValidCurrency(currency) ? currency : 'USD';
-    if (validCurrency !== currency) {
+    const currencyInfo = getCurrencyInfo(currency);
+    const validCurrency = currencyInfo.valid ? currency : 'USD';
+    if (!currencyInfo.valid) {
       console.warn(`Invalid currency code: ${currency}. Falling back to USD.`);
     }
 
-    const decimals = getCurrencyDecimals(validCurrency);
+    const decimals = currencyInfo.valid
+      ? currencyInfo.decimals
+      : getCurrencyInfo('USD').decimals;
 
     /**
      * Convert minor → major units.
@@ -240,12 +304,14 @@ export const Amount = ({
       style: 'currency',
       currency: validCurrency.toUpperCase(),
       currencyDisplay,
+      notation,
+      signDisplay,
       minimumFractionDigits: hideDecimals ? 0 : minimumFractionDigits,
       maximumFractionDigits: hideDecimals ? 0 : maximumFractionDigits,
       useGrouping: groupDigits
     };
 
-    const formatter = new Intl.NumberFormat(locale, formatOptions);
+    const formatter = getFormatter(locale, formatOptions);
 
     /**
      * For hideCurrency, strip the `currency` parts and trim leading/trailing
@@ -269,14 +335,14 @@ export const Amount = ({
         );
 
     return (
-      <span {...props} className={cx(styles.amount, className)}>
+      <span {...props} className={cx(tabularNums && styles.tabular, className)}>
         {formattedValue}
       </span>
     );
   } catch (error) {
     console.error('Error formatting amount:', error);
     return (
-      <span {...props} className={cx(styles.amount, className)}>
+      <span {...props} className={cx(tabularNums && styles.tabular, className)}>
         {String(value)}
       </span>
     );

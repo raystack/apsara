@@ -321,4 +321,118 @@ describe('Amount', () => {
       expect(screen.getByText('12.990')).toBeInTheDocument();
     });
   });
+
+  describe('narrowSymbol', () => {
+    it('renders the narrow symbol instead of the locale-prefixed one', () => {
+      // en-CA formats USD as "US$12.99" with 'symbol'; narrowSymbol drops the prefix.
+      render(
+        <Amount
+          value={1299}
+          currency='USD'
+          locale='en-CA'
+          currencyDisplay='narrowSymbol'
+        />
+      );
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('matches symbol output for the home locale', () => {
+      render(<Amount value={1299} currencyDisplay='narrowSymbol' />);
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+  });
+
+  describe('signDisplay', () => {
+    it('always shows the sign when signDisplay is always', () => {
+      render(<Amount value={1299} signDisplay='always' />);
+      expect(screen.getByText('+$12.99')).toBeInTheDocument();
+    });
+
+    it('shows the sign except for zero when signDisplay is exceptZero', () => {
+      const { rerender } = render(
+        <Amount value={1299} signDisplay='exceptZero' />
+      );
+      expect(screen.getByText('+$12.99')).toBeInTheDocument();
+      rerender(<Amount value={0} signDisplay='exceptZero' />);
+      expect(screen.getByText('$0.00')).toBeInTheDocument();
+    });
+
+    it('hides the sign for negative values when signDisplay is never', () => {
+      render(<Amount value={-1299} signDisplay='never' />);
+      expect(screen.getByText('$12.99')).toBeInTheDocument();
+    });
+
+    it('keeps the sign when hideCurrency strips the currency token', () => {
+      render(<Amount value={1299} signDisplay='always' hideCurrency />);
+      expect(screen.getByText('+12.99')).toBeInTheDocument();
+    });
+  });
+
+  describe('notation', () => {
+    it('renders compact notation for large values', () => {
+      render(<Amount value={120000000} notation='compact' />);
+      expect(screen.getByText('$1.2M')).toBeInTheDocument();
+    });
+
+    it('renders standard notation by default', () => {
+      render(<Amount value={120000000} />);
+      expect(screen.getByText('$1,200,000.00')).toBeInTheDocument();
+    });
+
+    it('rounds small values to compact defaults (no abbreviation below 1K)', () => {
+      // Compact notation caps fraction digits aggressively: 12.99 → "$13".
+      render(<Amount value={1299} notation='compact' />);
+      expect(screen.getByText('$13')).toBeInTheDocument();
+    });
+
+    it('works with hideDecimals', () => {
+      render(<Amount value={125000000} notation='compact' hideDecimals />);
+      expect(screen.getByText('$1M')).toBeInTheDocument();
+    });
+
+    it('works with string values', () => {
+      render(<Amount value='120000000' notation='compact' />);
+      expect(screen.getByText('$1.2M')).toBeInTheDocument();
+    });
+
+    it('works with hideCurrency', () => {
+      render(<Amount value={120000000} notation='compact' hideCurrency />);
+      expect(screen.getByText('1.2M')).toBeInTheDocument();
+    });
+
+    it('respects explicit fraction digits', () => {
+      render(
+        <Amount
+          value={123400000}
+          notation='compact'
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+        />
+      );
+      expect(screen.getByText('$1.23M')).toBeInTheDocument();
+    });
+  });
+
+  describe('tabularNums', () => {
+    it('applies tabular figures by default', () => {
+      const { container } = render(<Amount value={1299} />);
+      const span = container.querySelector('span');
+      expect(span?.className).toContain('tabular');
+    });
+
+    it('omits tabular figures when tabularNums is false', () => {
+      const { container } = render(<Amount value={1299} tabularNums={false} />);
+      const span = container.querySelector('span');
+      expect(span?.className).not.toContain('tabular');
+    });
+
+    it('keeps custom className alongside the tabular class', () => {
+      const { container } = render(
+        <Amount value={1299} className='custom-class' />
+      );
+      const span = container.querySelector('span');
+      expect(span?.className).toContain('custom-class');
+      expect(span?.className).toContain('tabular');
+    });
+  });
 });
