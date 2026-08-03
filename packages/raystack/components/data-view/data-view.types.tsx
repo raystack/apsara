@@ -1,6 +1,7 @@
 import type {
   ColumnDef,
   Row,
+  RowSelectionState,
   Table,
   Updater,
   VisibilityState
@@ -145,6 +146,14 @@ export interface DataViewProps<TData> {
   onLoadMore?: () => Promise<void> | void;
   onRowClick?: (row: TData) => void;
   onColumnVisibilityChange?: (columnVisibility: VisibilityState) => void;
+  /**
+   * Fires with the new selection map whenever rows are selected or deselected
+   * (`row.toggleSelected()`, `table.toggleAllRowsSelected()`, …). Selection
+   * itself lives on the table instance — read it through
+   * `useDataView().table`; this is only for mirroring it outside the tree.
+   * Keys are `getRowId` values (row indices when `getRowId` is omitted).
+   */
+  onRowSelectionChange?: (rowSelection: RowSelectionState) => void;
   /** Stable unique id per row (React key). */
   getRowId?: (row: TData, index: number) => string;
   /** Multi-view configuration. When set, `DataView.DisplayControls` renders a view switcher and renderers gate themselves on the active view via their `name` prop. */
@@ -427,6 +436,11 @@ export type DataViewContextType<TData> = {
   // visibility (lifted to context per RFC §"Unified Column Visibility via DisplayAccess")
   columnVisibility: VisibilityState;
   setColumnVisibility: (value: Updater<VisibilityState>) => void;
+
+  // selection — lifted so a selection change invalidates this context value
+  // (the table instance identity is stable, so it can't do that on its own).
+  rowSelection: RowSelectionState;
+  setRowSelection: (value: Updater<RowSelectionState>) => void;
 
   // multi-view
   views?: ViewSpec[];

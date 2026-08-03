@@ -16,6 +16,7 @@ import {
   virtualizedGroupingPreview,
   loadingPreview,
   perViewFieldsPreview,
+  rowSelectionPreview,
   timelinePreview,
   timelineGroupingPreview,
   timelinePointPreview,
@@ -273,6 +274,24 @@ const listFields = fields.map((f) =>
 
 <DataView.List name="list" variant="list" columns={listColumns} fields={listFields} />;
 ```
+
+### Row selection
+
+DataView doesn't ship a selection toolbar, but the underlying TanStack table instance is exposed via `useDataView()`, so you own the affordance: add a checkbox column to the renderer and float a [`FloatingActions`](/docs/components/floating-actions) bar over the view while rows are selected.
+
+`select` is deliberately **not** declared in `fields` — an accessor with no matching field is an *unmanaged* display column. `DataView.List` always renders it (it never appears in Display Properties, and can't be filtered, sorted, or grouped) and hands the spec a `{ row, table }` context instead of a TanStack cell context. The same applies to row actions and drag handles.
+
+<Demo data={rowSelectionPreview} />
+
+Notes:
+
+- `getRowId` is optional but recommended. Without it, selection falls back to positional keys (`'0'`, `'1'`, … and `'<group>.<index>'` inside a group section). Those come from the `data` array rather than the visible order, so client-side sort, filter, and search are safe — a static dataset needs nothing. What they can't survive is the identity behind a position changing: a refetch or server-mode sort returning rows in a new order moves the selection to whatever now sits at that index, and switching Grouping on or off re-keys the rows, dropping the selection. Pass `getRowId` whenever the data can change under you, and selection follows the row through all of it.
+- Selection state lives on the table instance and is exposed through `useDataView()`. Read it with `table.getSelectedRowModel()`, clear it with `table.resetRowSelection()` (wired to `Chip`'s `onDismiss` above), and mirror it outside the tree with `onRowSelectionChange` on the root if you need it there.
+- The TanStack [row selection API](https://tanstack.com/table/v8/docs/guide/row-selection) is available as documented: `row.getIsSelected()`, `row.toggleSelected()`, `row.getIsSomeSelected()`, `table.getIsAllRowsSelected()`, `getIsSomeRowsSelected()`, `toggleAllRowsSelected()`, `setRowSelection()`, `resetRowSelection()`. The header helpers are computed over the **filtered** rows, so select-all tracks what the user can actually see rather than the whole dataset.
+- The two *handler getters* in that guide — `row.getToggleSelectedHandler()` and `table.getToggleAllRowsSelectedHandler()` — are adapters for a native `<input type="checkbox" onChange>`: they read `event.target.checked`. Apsara's [`Checkbox`](/docs/components/checkbox) reports a boolean through `onCheckedChange`, so the table-level getter throws on `undefined.checked` and the row-level one only works via its "no value means invert" fallback. Call `toggleSelected` / `toggleAllRowsSelected` with the boolean instead, as above.
+- `FloatingActions` defaults to `variant="floating"` (`position: fixed`, bottom-center), so no positioning CSS is needed at the call site. To scope the bar to the view instead of the viewport, give an ancestor `transform`, `filter`, or `contain: paint` so it becomes the containing block for `position: fixed`. Add `padding-bottom` via `classNames.root` if rows would otherwise sit behind the bar.
+- Stop propagation in the checkbox's `onClick` when the root has an `onRowClick` — otherwise ticking a checkbox also activates the row.
+- Grouping works alongside selection. Group header rows are keyed in their own id space and are not selectable — `rowSelection` holds one key per data row, and select-all covers the visible data rows without also flagging the bands. Read the count off `getSelectedRowModel().flatRows` rather than `.rows`: the latter only walks selected *top-level* rows, which is empty while grouping puts every data row one level down.
 
 ### Custom group buckets (`groupByResolvers`)
 
