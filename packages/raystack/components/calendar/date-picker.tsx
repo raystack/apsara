@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PropsBase } from 'react-day-picker';
 import { Input } from '../input';
 import { InputProps } from '../input/input';
@@ -47,6 +47,15 @@ export interface DatePickerProps {
   /** @deprecated Use `slotProps.popover` instead. */
   popoverProps?: PopoverContentProps;
   onSelect?: (date: Date) => void;
+  /**
+   * Fires when the typed-input validation state changes: with a message when
+   * the typed text stops parsing as a valid in-bounds date, and with
+   * `undefined` when it becomes valid again (or the picker commits/closes).
+   * DatePicker renders no error UI of its own — not even `aria-invalid`.
+   * Lift this into `Field`'s `error` prop (or your form library) to display
+   * it; `Field` also wires `aria-invalid` onto the input.
+   */
+  onErrorChange?: (error: string | undefined) => void;
   value?: Date;
   defaultValue?: Date;
   children?:
@@ -65,6 +74,7 @@ export function DatePicker({
   value: valueProp,
   defaultValue,
   onSelect = () => undefined,
+  onErrorChange,
   children,
   showCalendarIcon = true,
   timeZone
@@ -87,7 +97,13 @@ export function DatePicker({
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     valueProp ?? defaultValue
   );
-  const [error, setError] = useState<string>();
+
+  const errorRef = useRef<string | undefined>(undefined);
+
+  function updateError(next: string | undefined) {
+    if (next !== errorRef.current) onErrorChange?.(next);
+    errorRef.current = next;
+  }
 
   // Sync only when controlled — uncontrolled mode keeps its own state.
   // biome-ignore lint/correctness/useExhaustiveDependencies: compare on timestamp, not Date identity
@@ -141,8 +157,9 @@ export function DatePicker({
   function closePicker() {
     popover.disengage();
     const committedDate = selectedDateRef.current;
+    const hadError = errorRef.current !== undefined;
     setInputValue(committedDate ? dayjs(committedDate).format(dateFormat) : '');
-    setError(undefined);
+    updateError(undefined);
     /*
      * Emit the committed Date directly. Going through
      * `dayjs(formattedString).toDate()` re-parses the formatted string without
@@ -152,7 +169,7 @@ export function DatePicker({
      * Skip when nothing was ever selected — `onSelect` is typed
      * `(date: Date) => void` so we don't fire with `undefined`.
      */
-    if (!error && committedDate) onSelect(committedDate);
+    if (!hadError && committedDate) onSelect(committedDate);
   }
 
   function handleSelect(day: Date | undefined) {
@@ -161,7 +178,7 @@ export function DatePicker({
     // clicks the currently-selected day (deselect). Only forward defined
     // dates to consumer `onSelect` — keeps the prop type narrow.
     if (day) onSelect(day);
-    setError(undefined);
+    updateError(undefined);
     popover.disengage();
   }
 
@@ -201,47 +218,26 @@ export function DatePicker({
 
     if (isValid) {
       setSelectedDate(date.toDate());
-      setError(undefined);
+      updateError(undefined);
     } else {
-      setError('Invalid date');
+      updateError('Invalid date');
     }
   }
 
-  const errorId = useId();
-  // Link the error text to the input so a user tabbing into an already-erroring
-  // field hears the reason, not just "invalid" (role="alert" alone only fires
-  // when the message first appears). Merge with any consumer-supplied value.
-  const describedBy =
-    [inputProps['aria-describedby'], error ? errorId : undefined]
-      .filter(Boolean)
-      .join(' ') || undefined;
-
   const defaultTrigger = (
-    <>
-      <Input
-        size='small'
-        placeholder='Select date'
-        aria-invalid={!!error}
-        className={styles.datePickerInput}
-        trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
-        {...inputProps}
-        aria-describedby={describedBy}
-        ref={popover.inputRef}
-        value={inputValue}
-        onChange={handleInputChange}
-        onFocus={popover.handleInputFocus}
-        onBlur={popover.handleInputBlur}
-        onKeyUp={handleKeyUp}
-      />
-      <span
-        id={errorId}
-        className={styles.datePickerError}
-        data-visible={error ? '' : undefined}
-        role='alert'
-      >
-        {error}
-      </span>
-    </>
+    <Input
+      size='small'
+      placeholder='Select date'
+      className={styles.datePickerInput}
+      trailingIcon={showCalendarIcon ? <CalendarIcon /> : undefined}
+      {...inputProps}
+      ref={popover.inputRef}
+      value={inputValue}
+      onChange={handleInputChange}
+      onFocus={popover.handleInputFocus}
+      onBlur={popover.handleInputBlur}
+      onKeyUp={handleKeyUp}
+    />
   );
 
   /*
